@@ -1,0 +1,6 @@
+*.user
+.vs/**
+**/bin/**
+**/obj/**
+**/Release/**
+**/Debug/**

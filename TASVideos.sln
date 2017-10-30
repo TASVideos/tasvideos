@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos", "TASVideos\TASVideos.csproj", "{B386F775-4453-4ADB-906F-F081FE8459EF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B386F775-4453-4ADB-906F-F081FE8459EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B386F775-4453-4ADB-906F-F081FE8459EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B386F775-4453-4ADB-906F-F081FE8459EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B386F775-4453-4ADB-906F-F081FE8459EF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67B2E8BD-92C7-442F-9560-C36E143E8E4C}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,12 @@
+﻿@model  IEnumerable<TASVideos.Data.Entity.Publication>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container">
+    @foreach (var publication in Model)
+    {
+        <h2>Movie: @publication.DummyProperty</h2>
+    }
+</div>
+
