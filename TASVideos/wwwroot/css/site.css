@@ -1,37 +1,37 @@
 ﻿body {
-    background: #EEE url(/images/tasvideosbg.png) 0 -450px repeat-x;
+	background: #EEE url(/images/tasvideosbg.png) 0 -450px repeat-x;
 }
 
 #banner {
-    border-bottom: 4px solid #371682;
-    background: #110828 url(/images/tasvideosbg.png) no-repeat;
+	border-bottom: 4px solid #371682;
+	background: #110828 url(/images/tasvideosbg.png) no-repeat;
 }
 
 #banner #mantra {
-    margin-left: 54px;
-    font-weight: bold;
-    font-family: Verdana;
+	margin-left: 54px;
+	font-weight: bold;
+	font-family: Verdana;
 }
 
 #banner #mantra #brand {
-    color: #FFF;
-    font-size: 17px;
-    font-family: helvetica,arial,sans-serif
+	color: #FFF;
+	font-size: 17px;
+	font-family: helvetica,arial,sans-serif
 }
 
 #banner #mantra #mantra1 {
-    color: #FFF;
-    font-size: 10px;
+	color: #FFF;
+	font-size: 10px;
 }
 
 #banner #mantra #mantra2 {
-    color: #CCD;
-    font-size: 9px;
+	color: #CCD;
+	font-size: 9px;
 }
 
 #banner .navbar-nav > li > a,
 #banner .navbar-nav > li > button {
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-top: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-top: 0;
 }

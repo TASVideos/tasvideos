@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Data
@@ -20,7 +17,7 @@ namespace TASVideos.Data
 				return;   // DB has been seeded
 			}
 
-			var publications = new Publication[]
+			var publications = new []
 			{
 
 				new Publication { DummyProperty = "dummy1" },
