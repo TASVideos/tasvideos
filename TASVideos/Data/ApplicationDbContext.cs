@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Models;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Data
 {
-	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-	{
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-			: base(options)
-		{
-		}
+    public class ApplicationDbContext : IdentityDbContext<User, Role, int>
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
