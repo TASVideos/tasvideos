@@ -20,5 +20,6 @@ namespace TASVideos.Data
 		}
 
 		public DbSet<Publication> Publications { get; set; }
+		public DbSet<Permision> Permissions { get; set; }
 	}
 }
