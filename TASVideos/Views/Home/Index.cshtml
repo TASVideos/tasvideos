@@ -4,6 +4,11 @@
 }
 
 <div class="container">
+	<h2>Users</h2>
+	@foreach (var user in (List<User>)ViewData["Users"])
+	{
+		<p>UserName: @user.UserName</p>
+	}
 	<h2>Roles</h2>
 	<div>
 		@foreach (var role in Model)
