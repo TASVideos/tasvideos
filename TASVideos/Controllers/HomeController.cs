@@ -22,10 +22,12 @@ namespace TASVideos.Controllers
 
 		public IActionResult Index()
 		{
-			var dummyData = _db.Roles
+			var allRoles = _db.Roles
 				.Include(r => r.RolePermission)
 				.ToList();
-			return View(dummyData);
+
+			ViewData["Users"] = _db.Users.ToList();
+			return View(allRoles);
 		}
 
 		public IActionResult About()

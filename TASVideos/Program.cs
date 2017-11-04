@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TASVideos.Data;
-using Microsoft.Extensions.DependencyInjection;
+using TASVideos.Data.Entity;
 
 namespace TASVideos
 {
@@ -22,9 +24,10 @@ namespace TASVideos
 					DbInitializer.Initialize(context);
 
 					var env = services.GetRequiredService<IHostingEnvironment>();
+					var userManager = services.GetRequiredService<UserManager<User>>();
 					if (env.IsDevelopment())
 					{
-						DbInitializer.GenerateDevSampleData(context);
+						DbInitializer.GenerateDevSampleData(context, userManager);
 					}
 
 				}
