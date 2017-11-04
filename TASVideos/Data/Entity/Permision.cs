@@ -17,7 +17,16 @@ namespace TASVideos.Data.Entity
 
 		public int? GroupId { get; set; }
 
-		public virtual ICollection<Role> Roles { get; set; } = new HashSet<Role>();
+		public virtual ICollection<RolePermission> RolePermission { get; set; }
+	}
+
+	public class RolePermission
+	{
+		public int RoleId { get; set; }
+		public Role Role { get; set; }
+
+		public PermissionTo PermissionId { get; set; }
+		public Permision Permision { get; set; }
 	}
 
 	public enum PermissionTo
