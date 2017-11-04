@@ -1,12 +1,14 @@
-﻿using System.Linq;
-
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
 
 namespace TASVideos.Data
 {
 	public static class DbInitializer
 	{
+		/// <summary>
+		/// Creates the database and seeds it with necessary seed data
+		/// Seed data is necessary data for a production release
+		/// </summary>
 		public static void Initialize(ApplicationDbContext context)
 		{
 			// For now, always delete then recreate the database
@@ -17,18 +19,15 @@ namespace TASVideos.Data
 			context.Permissions.AddRange(PermissionSeedData.Permissions);
 			context.Roles.AddRange(RoleSeedData.Roles);
 			context.SaveChanges();
+		}
 
-			// Give all permissions to the Admin role
-			var adminRole = RoleSeedData.Roles.Single(r => r.Name == "Site Admin");
-			var rolePermissions = PermissionSeedData.Permissions.Select(p => new RolePermission
-			{
-				RoleId = adminRole.Id,
-				PermissionId = p.Id
-			});
-
-			context.RolePermission.AddRange(rolePermissions);
-
-			var publications = new []
+		/// <summary>
+		/// Adds optional sample data
+		/// Unlike seed data, sample data is arbitruary data for testing purposes and would not be apart of a production release
+		/// </summary>
+		public static void GenerateDevSampleData(ApplicationDbContext context)
+		{
+			var publications = new[]
 			{
 				new Publication { DummyProperty = "dummy1" },
 				new Publication { DummyProperty = "dummy2" },
