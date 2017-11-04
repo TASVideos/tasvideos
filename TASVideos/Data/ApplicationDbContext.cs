@@ -22,7 +22,7 @@ namespace TASVideos.Data
 				.HasForeignKey(pt => pt.RoleId);
 
 			builder.Entity<RolePermission>()
-				.HasOne(pt => pt.Permision)
+				.HasOne(pt => pt.Permission)
 				.WithMany(t => t.RolePermission)
 				.HasForeignKey(pt => pt.PermissionId);
 
@@ -30,7 +30,7 @@ namespace TASVideos.Data
 		}
 
 		public DbSet<Publication> Publications { get; set; }
-		public DbSet<Permision> Permissions { get; set; }
+		public DbSet<Permission> Permissions { get; set; }
 		public DbSet<RolePermission> RolePermission { get; set; }
 	}
 }

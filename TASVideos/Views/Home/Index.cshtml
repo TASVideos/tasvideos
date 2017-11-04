@@ -1,12 +1,21 @@
-﻿@model  IEnumerable<TASVideos.Data.Entity.Publication>
+﻿@model  IEnumerable<Role>
 @{
 	ViewData["Title"] = "Home";
 }
 
 <div class="container">
-	@foreach (var publication in Model)
-	{
-		<h2>Movie: @publication.DummyProperty</h2>
-	}
+	<h2>Roles</h2>
+	<div>
+		@foreach (var role in Model)
+		{
+			<p>Role: @role.Name</p>
+			<ul>
+				@foreach (var permission in role.RolePermission)
+				{
+					<p>Permission: @permission.PermissionId.ToString()</p>
+				}
+			</ul>
+		}
+	</div>
 </div>
 
