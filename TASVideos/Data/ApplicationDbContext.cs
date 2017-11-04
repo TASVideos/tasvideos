@@ -13,13 +13,24 @@ namespace TASVideos.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+			builder.Entity<RolePermission>()
+				.HasKey(rp => new {rp.RoleId, rp.PermissionId});
+
+			builder.Entity<RolePermission>()
+				.HasOne(pt => pt.Role)
+				.WithMany(p => p.RolePermission)
+				.HasForeignKey(pt => pt.RoleId);
+
+			builder.Entity<RolePermission>()
+				.HasOne(pt => pt.Permision)
+				.WithMany(t => t.RolePermission)
+				.HasForeignKey(pt => pt.PermissionId);
+
 			base.OnModelCreating(builder);
-			// Customize the ASP.NET Identity model and override the defaults if needed.
-			// For example, you can rename the ASP.NET Identity table names and more.
-			// Add your customizations after calling base.OnModelCreating(builder);
 		}
 
 		public DbSet<Publication> Publications { get; set; }
 		public DbSet<Permision> Permissions { get; set; }
+		public DbSet<RolePermission> RolePermission { get; set; }
 	}
 }

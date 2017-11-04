@@ -5,6 +5,6 @@ namespace TASVideos.Data.Entity
 {
 	public class Role : IdentityRole<int>
 	{
-		public virtual ICollection<Permision> Permissions { get; set; } = new HashSet<Permision>();
+		public virtual ICollection<RolePermission> RolePermission { get; set; } = new HashSet<RolePermission>();
 	}
 }
