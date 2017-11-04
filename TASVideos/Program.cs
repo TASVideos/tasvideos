@@ -20,6 +20,13 @@ namespace TASVideos
 				{
 					var context = services.GetRequiredService<ApplicationDbContext>();
 					DbInitializer.Initialize(context);
+
+					var env = services.GetRequiredService<IHostingEnvironment>();
+					if (env.IsDevelopment())
+					{
+						DbInitializer.GenerateDevSampleData(context);
+					}
+
 				}
 				catch (Exception ex)
 				{
