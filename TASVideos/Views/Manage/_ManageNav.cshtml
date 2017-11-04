@@ -1,5 +1,7 @@
-﻿@using TASVideos.Views.Manage
-@inject SignInManager<ApplicationUser> SignInManager
+﻿@using Microsoft.AspNetCore.Identity
+@using TASVideos.Data.Entity
+@using TASVideos.Views.Manage
+@inject SignInManager<User> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
