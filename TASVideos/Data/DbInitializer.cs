@@ -17,6 +17,36 @@ namespace TASVideos.Data
 				return;   // DB has been seeded
 			}
 
+			var permissions = new[]
+			{
+				new Permision {Id = PermissionTo.EditRoles, Name = "Edit Roles"},
+				new Permision {Id = PermissionTo.EditUsers, Name = "Edit Users"}
+			};
+
+			context.Permissions.AddRange(permissions);
+			context.SaveChanges();
+
+			var adminRole = new Role();
+			context.Roles.Add(adminRole);
+			context.SaveChanges();
+
+
+			var rolePermissions = new[]
+			{
+				new RolePermission
+				{
+					PermissionId = permissions[0].Id,
+					RoleId = adminRole.Id
+				},
+				new RolePermission
+				{
+					PermissionId = permissions[1].Id,
+					RoleId = adminRole.Id
+				}
+			};
+
+			context.RolePermission.AddRange(rolePermissions);
+
 			var publications = new []
 			{
 
