@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+
 using TASVideos.Data.Entity;
+using TASVideos.Data.SeedData;
 
 namespace TASVideos.Data
 {
@@ -12,44 +14,22 @@ namespace TASVideos.Data
 			context.Database.EnsureDeleted();
 			context.Database.EnsureCreated();
 
-			if (context.Publications.Any())
-			{
-				return;   // DB has been seeded
-			}
-
-			var permissions = new[]
-			{
-				new Permision {Id = PermissionTo.EditRoles, Name = "Edit Roles"},
-				new Permision {Id = PermissionTo.EditUsers, Name = "Edit Users"}
-			};
-
-			context.Permissions.AddRange(permissions);
+			context.Permissions.AddRange(PermissionSeedData.Permissions);
+			context.Roles.AddRange(RoleSeedData.Roles);
 			context.SaveChanges();
 
-			var adminRole = new Role();
-			context.Roles.Add(adminRole);
-			context.SaveChanges();
-
-
-			var rolePermissions = new[]
+			// Give all permissions to the Admin role
+			var adminRole = RoleSeedData.Roles.Single(r => r.Name == "Site Admin");
+			var rolePermissions = PermissionSeedData.Permissions.Select(p => new RolePermission
 			{
-				new RolePermission
-				{
-					PermissionId = permissions[0].Id,
-					RoleId = adminRole.Id
-				},
-				new RolePermission
-				{
-					PermissionId = permissions[1].Id,
-					RoleId = adminRole.Id
-				}
-			};
+				RoleId = adminRole.Id,
+				PermissionId = p.Id
+			});
 
 			context.RolePermission.AddRange(rolePermissions);
 
 			var publications = new []
 			{
-
 				new Publication { DummyProperty = "dummy1" },
 				new Publication { DummyProperty = "dummy2" },
 				new Publication { DummyProperty = "dummy3" },
