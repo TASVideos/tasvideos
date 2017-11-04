@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Models.ManageViewModels;
 using TASVideos.Services;
@@ -20,8 +21,8 @@ namespace TASVideos.Controllers
 	[Route("[controller]/[action]")]
 	public class ManageController : Controller
 	{
-		private readonly UserManager<ApplicationUser> _userManager;
-		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly UserManager<User> _userManager;
+		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
 		private readonly UrlEncoder _urlEncoder;
@@ -29,8 +30,8 @@ namespace TASVideos.Controllers
 		private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
 		public ManageController(
-		  UserManager<ApplicationUser> userManager,
-		  SignInManager<ApplicationUser> signInManager,
+		  UserManager<User> userManager,
+		  SignInManager<User> signInManager,
 		  IEmailSender emailSender,
 		  ILogger<ManageController> logger,
 		  UrlEncoder urlEncoder)
@@ -121,7 +122,7 @@ namespace TASVideos.Controllers
 			}
 
 			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-			var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString() /*todo*/, code, Request.Scheme);
 			var email = user.Email;
 			await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
 
@@ -266,7 +267,7 @@ namespace TASVideos.Controllers
 				throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
 			}
 
-			var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
+			var info = await _signInManager.GetExternalLoginInfoAsync(user.Id.ToString() /*todo*/);
 			if (info == null)
 			{
 				throw new ApplicationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
