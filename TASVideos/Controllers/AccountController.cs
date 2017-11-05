@@ -203,6 +203,7 @@ namespace TASVideos.Controllers
 			{
 				throw new ApplicationException("A code must be supplied for password reset.");
 			}
+
 			var model = new ResetPasswordViewModel { Code = code };
 			return View(model);
 		}
@@ -216,17 +217,20 @@ namespace TASVideos.Controllers
 			{
 				return View(model);
 			}
+
 			var user = await _userManager.FindByEmailAsync(model.Email);
 			if (user == null)
 			{
 				// Don't reveal that the user does not exist
 				return RedirectToAction(nameof(ResetPasswordConfirmation));
 			}
+
 			var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
 			if (result.Succeeded)
 			{
 				return RedirectToAction(nameof(ResetPasswordConfirmation));
 			}
+
 			AddErrors(result);
 			return View();
 		}
@@ -237,7 +241,6 @@ namespace TASVideos.Controllers
 		{
 			return View();
 		}
-
 
 		[HttpGet]
 		public IActionResult AccessDenied()
