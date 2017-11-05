@@ -81,59 +81,6 @@ namespace TASVideos.Controllers
 
 		[HttpGet]
 		[AllowAnonymous]
-		public async Task<IActionResult> LoginWithRecoveryCode(string returnUrl = null)
-		{
-			// Ensure the user has gone through the username & password screen first
-			var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-			if (user == null)
-			{
-				throw new ApplicationException("Unable to load two-factor authentication user.");
-			}
-
-			ViewData["ReturnUrl"] = returnUrl;
-
-			return View();
-		}
-
-		[HttpPost]
-		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> LoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model, string returnUrl = null)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(model);
-			}
-
-			var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-			if (user == null)
-			{
-				throw new ApplicationException("Unable to load two-factor authentication user.");
-			}
-
-			var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
-
-			var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
-
-			if (result.Succeeded)
-			{
-				_logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
-				return RedirectToLocal(returnUrl);
-			}
-
-			if (result.IsLockedOut)
-			{
-				_logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
-				return RedirectToAction(nameof(Lockout));
-			}
-
-			_logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
-			ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
-			return View();
-		}
-
-		[HttpGet]
-		[AllowAnonymous]
 		public IActionResult Lockout()
 		{
 			return View();
