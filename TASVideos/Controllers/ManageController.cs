@@ -18,7 +18,7 @@ namespace TASVideos.Controllers
 {
 	[Authorize]
 	[Route("[controller]/[action]")]
-	public class ManageController : Controller
+	public class ManageController : BaseController
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
@@ -224,44 +224,5 @@ namespace TASVideos.Controllers
 
 			return RedirectToAction(nameof(SetPassword));
 		}
-
-		#region Helpers
-
-		private void AddErrors(IdentityResult result)
-		{
-			foreach (var error in result.Errors)
-			{
-				ModelState.AddModelError(string.Empty, error.Description);
-			}
-		}
-
-		private string FormatKey(string unformattedKey)
-		{
-			var result = new StringBuilder();
-			int currentPosition = 0;
-			while (currentPosition + 4 < unformattedKey.Length)
-			{
-				result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
-				currentPosition += 4;
-			}
-
-			if (currentPosition < unformattedKey.Length)
-			{
-				result.Append(unformattedKey.Substring(currentPosition));
-			}
-
-			return result.ToString().ToLowerInvariant();
-		}
-
-		private string GenerateQrCodeUri(string email, string unformattedKey)
-		{
-			return string.Format(
-				AuthenicatorUriFormat,
-				_urlEncoder.Encode("TASVideos"),
-				_urlEncoder.Encode(email),
-				unformattedKey);
-		}
-
-		#endregion
 	}
 }

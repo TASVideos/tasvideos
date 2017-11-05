@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication;
@@ -16,7 +15,7 @@ namespace TASVideos.Controllers
 {
 	[Authorize]
 	[Route("[controller]/[action]")]
-	public class AccountController : Controller
+	public class AccountController : BaseController
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
@@ -298,27 +297,5 @@ namespace TASVideos.Controllers
 		{
 			return View();
 		}
-
-		#region Helpers
-
-		private void AddErrors(IdentityResult result)
-		{
-			foreach (var error in result.Errors)
-			{
-				ModelState.AddModelError(string.Empty, error.Description);
-			}
-		}
-
-		private IActionResult RedirectToLocal(string returnUrl)
-		{
-			if (Url.IsLocalUrl(returnUrl))
-			{
-				return Redirect(returnUrl);
-			}
-
-			return RedirectToAction(nameof(HomeController.Index), "Home");
-		}
-
-		#endregion
 	}
 }
