@@ -5,6 +5,11 @@ namespace TASVideos.Models.AccountViewModels
 	public class RegisterViewModel
 	{
 		[Required]
+		[StringLength(256)]
+		[Display(Name = "User Name")]
+		public string UserName { get; set; }
+
+		[Required]
 		[EmailAddress]
 		[Display(Name = "Email")]
 		public string Email { get; set; }
