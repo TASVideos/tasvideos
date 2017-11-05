@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -41,10 +40,6 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Index()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			if (user == null)
-			{
-				throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-			}
 
 			var model = new IndexViewModel
 			{
@@ -67,10 +62,6 @@ namespace TASVideos.Controllers
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			if (user == null)
-			{
-				throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-			}
 
 			var email = user.Email;
 			if (model.Email != email)
@@ -96,10 +87,6 @@ namespace TASVideos.Controllers
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			if (user == null)
-			{
-				throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-			}
 
 			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString() /*todo*/, code, Request.Scheme);
@@ -114,10 +101,6 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> ChangePassword()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			if (user == null)
-			{
-				throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-			}
 
 			var hasPassword = await _userManager.HasPasswordAsync(user);
 			if (!hasPassword)
@@ -139,10 +122,6 @@ namespace TASVideos.Controllers
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			if (user == null)
-			{
-				throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-			}
 
 			var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 			if (!changePasswordResult.Succeeded)
@@ -188,10 +167,6 @@ namespace TASVideos.Controllers
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			if (user == null)
-			{
-				throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-			}
 
 			var addPasswordResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
 			if (!addPasswordResult.Succeeded)
