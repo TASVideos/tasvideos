@@ -10,6 +10,11 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(HomeController.Index), "Home");
 		}
 
+		protected IActionResult RedirectToLogin()
+		{
+			return RedirectToAction(nameof(AccountController.Login), "Account");
+		}
+
 		protected void AddErrors(IdentityResult result)
 		{
 			foreach (var error in result.Errors)

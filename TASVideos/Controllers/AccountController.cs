@@ -134,7 +134,7 @@ namespace TASVideos.Controllers
 		{
 			await _signInManager.SignOutAsync();
 			_logger.LogInformation("User logged out.");
-			return RedirectHome();
+			return RedirectToLogin();
 		}
 
 		[HttpGet]
