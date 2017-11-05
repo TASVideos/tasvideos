@@ -11,10 +11,15 @@ namespace TASVideos.Data
         {
         }
 
+		public DbSet<Permission> Permissions { get; set; }
+		public DbSet<RolePermission> RolePermission { get; set; }
+
+		public DbSet<Publication> Publications { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			builder.Entity<RolePermission>()
-				.HasKey(rp => new {rp.RoleId, rp.PermissionId});
+				.HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
 			builder.Entity<RolePermission>()
 				.HasOne(pt => pt.Role)
@@ -28,9 +33,5 @@ namespace TASVideos.Data
 
 			base.OnModelCreating(builder);
 		}
-
-		public DbSet<Publication> Publications { get; set; }
-		public DbSet<Permission> Permissions { get; set; }
-		public DbSet<RolePermission> RolePermission { get; set; }
 	}
 }
