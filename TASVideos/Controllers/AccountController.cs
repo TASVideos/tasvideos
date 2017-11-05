@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+
 using TASVideos.Data.Entity;
-using TASVideos.Models;
 using TASVideos.Models.AccountViewModels;
 using TASVideos.Services;
 
@@ -68,20 +65,20 @@ namespace TASVideos.Controllers
 					_logger.LogInformation("User logged in.");
 					return RedirectToLocal(returnUrl);
 				}
+
 				if (result.RequiresTwoFactor)
 				{
 					return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
 				}
+
 				if (result.IsLockedOut)
 				{
 					_logger.LogWarning("User account locked out.");
 					return RedirectToAction(nameof(Lockout));
 				}
-				else
-				{
-					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-					return View(model);
-				}
+
+				ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+				return View(model);
 			}
 
 			// If we got this far, something failed, redisplay form
@@ -97,7 +94,7 @@ namespace TASVideos.Controllers
 
 			if (user == null)
 			{
-				throw new ApplicationException($"Unable to load two-factor authentication user.");
+				throw new ApplicationException("Unable to load two-factor authentication user.");
 			}
 
 			var model = new LoginWith2faViewModel { RememberMe = rememberMe };
@@ -152,7 +149,7 @@ namespace TASVideos.Controllers
 			var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 			if (user == null)
 			{
-				throw new ApplicationException($"Unable to load two-factor authentication user.");
+				throw new ApplicationException("Unable to load two-factor authentication user.");
 			}
 
 			ViewData["ReturnUrl"] = returnUrl;
@@ -173,7 +170,7 @@ namespace TASVideos.Controllers
 			var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 			if (user == null)
 			{
-				throw new ApplicationException($"Unable to load two-factor authentication user.");
+				throw new ApplicationException("Unable to load two-factor authentication user.");
 			}
 
 			var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
@@ -185,17 +182,16 @@ namespace TASVideos.Controllers
 				_logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
 				return RedirectToLocal(returnUrl);
 			}
+
 			if (result.IsLockedOut)
 			{
 				_logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
 				return RedirectToAction(nameof(Lockout));
 			}
-			else
-			{
-				_logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
-				ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
-				return View();
-			}
+
+			_logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
+			ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+			return View();
 		}
 
 		[HttpGet]
@@ -239,6 +235,7 @@ namespace TASVideos.Controllers
 					_logger.LogInformation("User created a new account with password.");
 					return RedirectToLocal(returnUrl);
 				}
+
 				AddErrors(result);
 			}
 
@@ -275,6 +272,7 @@ namespace TASVideos.Controllers
 				ErrorMessage = $"Error from external provider: {remoteError}";
 				return RedirectToAction(nameof(Login));
 			}
+
 			var info = await _signInManager.GetExternalLoginInfoAsync();
 			if (info == null)
 			{
@@ -288,18 +286,17 @@ namespace TASVideos.Controllers
 				_logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
 				return RedirectToLocal(returnUrl);
 			}
+
 			if (result.IsLockedOut)
 			{
 				return RedirectToAction(nameof(Lockout));
 			}
-			else
-			{
-				// If the user does not have an account, then ask the user to create an account.
-				ViewData["ReturnUrl"] = returnUrl;
-				ViewData["LoginProvider"] = info.LoginProvider;
-				var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-				return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
-			}
+
+			// If the user does not have an account, then ask the user to create an account.
+			ViewData["ReturnUrl"] = returnUrl;
+			ViewData["LoginProvider"] = info.LoginProvider;
+			var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+			return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
 		}
 
 		[HttpPost]
