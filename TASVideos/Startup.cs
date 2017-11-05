@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
+using TASVideos.Tasks;
 
 namespace TASVideos
 {
@@ -32,6 +33,9 @@ namespace TASVideos
 
 			// Add application services.
 			services.AddTransient<IEmailSender, EmailSender>();
+
+			// Tasks
+			services.AddScoped<PermissionTasks, PermissionTasks>();
 
 			services.AddMvc();
 		}
