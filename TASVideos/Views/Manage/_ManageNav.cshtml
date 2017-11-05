@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using TASVideos.Data.Entity
-@using TASVideos.Views.Manage
+
 @inject SignInManager<User> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
@@ -13,6 +13,5 @@
     {
         <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-action="ExternalLogins">External logins</a></li>
     }
-    <li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-action="TwoFactorAuthentication">Two-factor authentication</a></li>
 </ul>
 
