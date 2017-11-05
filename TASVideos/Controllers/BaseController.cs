@@ -3,8 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TASVideos.Controllers
 {
-    public class BaseController : Controller
-    {
+	public class BaseController : Controller
+	{
+		protected IActionResult RedirectHome()
+		{
+			return RedirectToAction(nameof(HomeController.Index), "Home");
+		}
+
 		protected void AddErrors(IdentityResult result)
 		{
 			foreach (var error in result.Errors)
@@ -20,7 +25,7 @@ namespace TASVideos.Controllers
 				return Redirect(returnUrl);
 			}
 
-			return RedirectToAction(nameof(HomeController.Index), "Home");
+			return RedirectHome();
 		}
 	}
 }
