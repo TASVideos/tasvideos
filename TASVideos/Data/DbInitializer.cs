@@ -37,12 +37,16 @@ namespace TASVideos.Data
 		{
 			foreach (var user in UserSampleData.Users)
 			{
-				var result = AsyncHelpers.RunSync<IdentityResult>(() => userManager
+				var result = AsyncHelpers.RunSync(() => userManager
 					.CreateAsync(user, UserSampleData.SamplePassword));
 				if (!result.Succeeded)
 				{
 					throw new Exception(result.Errors.First().ToString()); // TODO
 				}
+
+				var adminRole = context.Roles.Single(r => r.Name == "Site Admin");
+				var savedUser = context.Users.Single(u => u.UserName == user.UserName);
+				context.UserRoles.Add(new IdentityUserRole<int> {RoleId = adminRole.Id, UserId = savedUser.Id});
 			}
 
 			var publications = new[]
