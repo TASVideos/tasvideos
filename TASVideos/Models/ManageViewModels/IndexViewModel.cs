@@ -12,10 +12,6 @@ namespace TASVideos.Models.ManageViewModels
 		[EmailAddress]
 		public string Email { get; set; }
 
-		[Phone]
-		[Display(Name = "Phone number")]
-		public string PhoneNumber { get; set; }
-
 		public string StatusMessage { get; set; }
 	}
 }
