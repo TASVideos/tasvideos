@@ -9,7 +9,7 @@ using TASVideos.Data;
 
 namespace TASVideos.Controllers
 {
-	public class HomeController : Controller
+	public class HomeController : BaseController
 	{
 		private readonly ApplicationDbContext _db;
 
