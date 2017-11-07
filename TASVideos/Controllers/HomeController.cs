@@ -1,31 +1,20 @@
 ﻿using System.Diagnostics;
-using System.Linq;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Models;
-using TASVideos.Data;
+using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
 	public class HomeController : BaseController
 	{
-		private readonly ApplicationDbContext _db;
-
-		public HomeController(ApplicationDbContext db)
+		public HomeController(UserTasks userTasks)
+			: base (userTasks)
 		{
-			_db = db;
 		}
 
 		public IActionResult Index()
 		{
-			var allRoles = _db.Roles
-				.Include(r => r.RolePermission)
-				.ToList();
-
-			ViewData["Users"] = _db.Users.ToList();
-			return View(allRoles);
+			return View(UserPermissions);
 		}
 
 		public IActionResult Error()

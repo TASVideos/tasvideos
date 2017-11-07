@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 
 using TASVideos.Controllers;
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.Tasks;
 
 namespace TASVideos.Filter
 {
@@ -47,9 +47,9 @@ namespace TASVideos.Filter
 
 			var userId = userClaimsPrincipal.GetUserId();
 
-			var db = (ApplicationDbContext)context.HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
+			var userTasks = (UserTasks)context.HttpContext.RequestServices.GetService(typeof(UserTasks));
 
-			var userPerms = db.GetUserPermissionsById(userId);
+			var userPerms = userTasks.GetUserPermissionsById(userId);
 			var reqs = new HashSet<PermissionTo>(_requiredPermissions);
 
 			if (_matchAny && reqs.Any(r => userPerms.Contains(r)) || reqs.IsSubsetOf(userPerms))

@@ -1,10 +1,35 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Data.Entity;
+using TASVideos.Extensions;
+using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
 	public class BaseController : Controller
 	{
+		private readonly UserTasks _userTasks;
+
+		public BaseController(UserTasks userTasks)
+		{
+			_userTasks = userTasks;
+		}
+
+		public IEnumerable<PermissionTo> UserPermissions
+		{
+			get
+			{
+				if (HttpContext == null || !User.Identity.IsAuthenticated)
+				{
+					return Enumerable.Empty<PermissionTo>();
+				}
+
+				return _userTasks.GetUserPermissionsById(User.GetUserId());
+			}
+		}
+
 		protected IActionResult RedirectHome()
 		{
 			return RedirectToAction(nameof(HomeController.Index), "Home");
