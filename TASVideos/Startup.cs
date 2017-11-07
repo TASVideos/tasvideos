@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Filter;
 using TASVideos.Services;
 using TASVideos.Tasks;
 
@@ -38,7 +39,10 @@ namespace TASVideos
 			services.AddScoped<PermissionTasks, PermissionTasks>();
 			services.AddScoped<UserTasks, UserTasks>();
 
-			services.AddMvc();
+			services.AddMvc(options =>
+			{
+				options.Filters.Add(new SetViewBagAttribute());
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
