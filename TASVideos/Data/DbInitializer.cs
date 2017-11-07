@@ -44,9 +44,11 @@ namespace TASVideos.Data
 					throw new Exception(result.Errors.First().ToString()); // TODO
 				}
 
-				var adminRole = context.Roles.Single(r => r.Name == "Site Admin");
-				var savedUser = context.Users.Single(u => u.UserName == user.UserName);
-				context.UserRoles.Add(new IdentityUserRole<int> {RoleId = adminRole.Id, UserId = savedUser.Id});
+				foreach (var role in context.Roles.ToList())
+				{
+					var savedUser = context.Users.Single(u => u.UserName == user.UserName);
+					context.UserRoles.Add(new IdentityUserRole<int> { RoleId = role.Id, UserId = savedUser.Id });
+				}
 			}
 
 			var publications = new[]
