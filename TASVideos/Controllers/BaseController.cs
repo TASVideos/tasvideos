@@ -12,33 +12,33 @@ namespace TASVideos.Controllers
 {
 	public class BaseController : Controller
 	{
+		private static readonly Version _version = Assembly.GetExecutingAssembly().GetName().Version;
+
 		private readonly UserTasks _userTasks;
+		private IEnumerable<PermissionTo> _userPermission;
 
 		public BaseController(UserTasks userTasks)
 		{
 			_userTasks = userTasks;
 		}
 
-		private static Version _version = Assembly.GetExecutingAssembly().GetName().Version;
-
-		public string Version
-		{
-			get
-			{
-				return $"{_version.Major}.{_version.Minor}.{_version.Build}";
-			}
-		}
+		public string Version => $"{_version.Major}.{_version.Minor}.{_version.Build}";
 
 		public IEnumerable<PermissionTo> UserPermissions
 		{
 			get
 			{
-				if (HttpContext == null || !User.Identity.IsAuthenticated)
+				if (_userPermission == null)
 				{
-					return Enumerable.Empty<PermissionTo>();
+					if (HttpContext == null || !User.Identity.IsAuthenticated)
+					{
+						_userPermission = Enumerable.Empty<PermissionTo>();
+					}
+
+					_userPermission = _userTasks.GetUserPermissionsById(User.GetUserId());
 				}
 
-				return _userTasks.GetUserPermissionsById(User.GetUserId());
+				return _userPermission;
 			}
 		}
 
