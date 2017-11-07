@@ -40,6 +40,13 @@ namespace TASVideos.Data.SeedData
 				Name = "Edit Users",
 				Description = "The ability to edit users and assign/remove roles from the user",
 				Group = PermissionGroups.UserAdministration
+			},
+			new Permission
+			{
+				Id = PermissionTo.EditPermissionDetails,
+				Name = "Edit Permission Metadata",
+				Description = "The ability to edit the description, groups, and any other metadata related to permissions. Note that the behavior of submissions can not be modified.",
+				Group = PermissionGroups.UserAdministration
 			}
 		};
 	}
