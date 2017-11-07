@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Data.Entity;
 using TASVideos.Tasks;
+using TASVideos.Filter;
 
 namespace TASVideos.Controllers
 {
@@ -19,6 +21,13 @@ namespace TASVideos.Controllers
 			var model = _permissionTasks.GetAllPermissionsForDisplay();
 
 			return View(model);
-        }
+		}
+
+		[RequirePermission(PermissionTo.EditPermissionDetails)]
+		public IActionResult Edit()
+		{
+			var model = _permissionTasks.GetAllPermissionsForDisplay();
+			return View(model);
+		}
     }
 }
