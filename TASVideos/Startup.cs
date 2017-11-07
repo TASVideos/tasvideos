@@ -36,6 +36,7 @@ namespace TASVideos
 
 			// Tasks
 			services.AddScoped<PermissionTasks, PermissionTasks>();
+			services.AddScoped<UserTasks, UserTasks>();
 
 			services.AddMvc();
 		}

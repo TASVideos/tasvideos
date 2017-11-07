@@ -5,7 +5,7 @@ namespace TASVideos.Extensions
 {
 	public static class CleamsPrincipalExtensions
 	{
-		public static int UserId(this ClaimsPrincipal user)
+		public static int GetUserId(this ClaimsPrincipal user)
 		{
 			if (user == null || !user.Identity.IsAuthenticated)
 			{
@@ -13,7 +13,7 @@ namespace TASVideos.Extensions
 			}
 
 			return int.Parse(user.Claims
-				.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value)
+				.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
 		}
 	}
 }

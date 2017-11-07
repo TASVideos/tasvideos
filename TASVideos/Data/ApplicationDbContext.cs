@@ -18,19 +18,6 @@ namespace TASVideos.Data
 
 		public DbSet<Publication> Publications { get; set; }
 
-		public IEnumerable<PermissionTo> GetUserPermissionsById(int userId)
-		{
-			return (from user in Users
-					join userRole in UserRoles on user.Id equals userRole.UserId
-					join role in Roles on userRole.RoleId equals role.Id
-					join rolePermission in RolePermission on role.Id equals rolePermission.RoleId
-					join permission in Permissions on rolePermission.PermissionId equals permission.Id
-					where user.Id == userId
-					select permission.Id)
-				.Distinct()
-				.ToList();
-		}
-
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			builder.Entity<RolePermission>()

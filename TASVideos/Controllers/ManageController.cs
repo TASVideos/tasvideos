@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ManageViewModels;
 using TASVideos.Services;
+using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
@@ -22,10 +23,12 @@ namespace TASVideos.Controllers
 		private readonly ILogger _logger;
 
 		public ManageController(
-		  UserManager<User> userManager,
-		  SignInManager<User> signInManager,
-		  IEmailSender emailSender,
-		  ILogger<ManageController> logger)
+			UserManager<User> userManager,
+			SignInManager<User> signInManager,
+			IEmailSender emailSender,
+			ILogger<ManageController> logger,
+			UserTasks userTasks)
+			: base(userTasks)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;

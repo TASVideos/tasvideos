@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using TASVideos.Data.Entity;
 using TASVideos.Models.AccountViewModels;
 using TASVideos.Services;
+using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
@@ -26,7 +27,9 @@ namespace TASVideos.Controllers
 			UserManager<User> userManager,
 			SignInManager<User> signInManager,
 			IEmailSender emailSender,
-			ILogger<AccountController> logger)
+			ILogger<AccountController> logger,
+			UserTasks userTasks)
+			: base(userTasks)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;

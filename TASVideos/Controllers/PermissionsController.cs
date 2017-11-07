@@ -11,7 +11,10 @@ namespace TASVideos.Controllers
 	{
 		private readonly PermissionTasks _permissionTasks;
 
-		public PermissionsController(PermissionTasks permissionTasks)
+		public PermissionsController(
+			PermissionTasks permissionTasks,
+			UserTasks userTasks)
+			: base(userTasks)
 		{
 			_permissionTasks = permissionTasks;
 		}

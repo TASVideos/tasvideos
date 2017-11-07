@@ -1,26 +1,13 @@
-﻿@model  IEnumerable<Role>
+﻿@model  IEnumerable<PermissionTo>
 @{
 	ViewData["Title"] = "Home";
 }
 
 <div class="container">
-	<h2>Users</h2>
-	@foreach (var user in (List<User>)ViewData["Users"])
+	<h2>Your current permissions:</h2>
+	@foreach (var permission in Model)
 	{
-		<p>UserName: @user.UserName</p>
+		<p>@permission.ToString()</p>
 	}
-	<h2>Roles</h2>
-	<div>
-		@foreach (var role in Model)
-		{
-			<p>Role: @role.Name</p>
-			<ul>
-				@foreach (var permission in role.RolePermission)
-				{
-					<p>Permission: @permission.PermissionId.ToString()</p>
-				}
-			</ul>
-		}
-	</div>
 </div>
 
