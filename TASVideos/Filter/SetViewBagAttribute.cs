@@ -22,6 +22,7 @@ namespace TASVideos.Filter
 				if (filterContext.Controller is BaseController baseController)
 				{
 					controller.ViewBag.UserPermission = baseController.UserPermissions;
+					controller.ViewBag.Version = baseController.Version;
 				}
 			}
 

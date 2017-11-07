@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
@@ -15,6 +17,16 @@ namespace TASVideos.Controllers
 		public BaseController(UserTasks userTasks)
 		{
 			_userTasks = userTasks;
+		}
+
+		private static Version _version = Assembly.GetExecutingAssembly().GetName().Version;
+
+		public string Version
+		{
+			get
+			{
+				return $"{_version.Major}.{_version.Minor}.{_version.Build}";
+			}
 		}
 
 		public IEnumerable<PermissionTo> UserPermissions
