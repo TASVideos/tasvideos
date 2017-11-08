@@ -18,10 +18,17 @@
 				<tr>
 					<td>
 						<input type="hidden" asp-for="@Model[i].Id" />
-						<input type="text" class="form-control" asp-for="@Model[i].Name"/>
+						<input type="text" class="form-control" asp-for="@Model[i].Name" maxlength="50"/>
+						<span asp-validation-for="@Model[i].Name" class="text-danger"></span>
 					</td>
-					<td><input type="text" class="form-control" asp-for="@Model[i].Group" /></td>
-					<td><textarea asp-for="@Model[i].Description" class="form-control" rows="3"></textarea></td>
+					<td>
+						<input type="text" class="form-control" asp-for="@Model[i].Group" maxlength="20"/>
+						<span asp-validation-for="@Model[i].Group" class="text-danger"></span>
+					</td>
+					<td>
+						<textarea asp-for="@Model[i].Description" class="form-control" rows="3" maxlength="200"></textarea>
+						<span asp-validation-for="@Model[i].Description" class="text-danger"></span>
+					</td>
 				</tr>
 			}
 		</table>

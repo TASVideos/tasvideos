@@ -19,6 +19,7 @@ namespace TASVideos.Data.Entity
 		[StringLength(200)]
 		public string Description { get; set; }
 
+		[StringLength(20)]
 		public string Group { get; set; }
 
 		public virtual ICollection<RolePermission> RolePermission { get; set; }
