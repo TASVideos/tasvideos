@@ -51,7 +51,7 @@ namespace TASVideos.Controllers
 				return RedirectToAction(nameof(Index));
 			}
 
-			return View(model);
+			return View(model?.ToList());
 		}
     }
 }
