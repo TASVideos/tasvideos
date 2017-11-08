@@ -1,31 +1,33 @@
-﻿@model IEnumerable<PermissionViewModel>
+﻿@model IList<PermissionEditViewModel>
 @{
 	ViewData["Title"] = "Permission Editor";
 }
 
-<h1>TODO</h1>
 <h4>@ViewData["Title"]</h4>
 <p>These are a list of site permissions that are allocated to site roles</p>
-<div class="row">
-	<table class="table table-bordered table-striped">
-		<tr>
-			<th>@Html.DisplayNameFor(m => m.First().Name)</th>
-			<th>@Html.DisplayNameFor(m => m.First().Group)</th>
-			<th>@Html.DisplayNameFor(m => m.First().Roles)</th>
-			<th>@Html.DisplayNameFor(m => m.First().Description)</th>
-		</tr>
-		@foreach (var entry in Model)
-		{
+<form asp-route="Edit" method="post">
+	<div class="row">
+		<table class="table table-bordered table-striped">
 			<tr>
-				<td>@entry.Name</td>
-				<td>@entry.Group</td>
-				<td>@string.Join(",", entry.Roles)</td>
-				<td>@entry.Description</td>
+				<th>@Html.DisplayNameFor(m => m.First().Name)</th>
+				<th>@Html.DisplayNameFor(m => m.First().Group)</th>
+				<th>@Html.DisplayNameFor(m => m.First().Description)</th>
 			</tr>
-		}
-	</table>
-</div>
-
+			@for (int i = 0; i < Model.Count(); i++)
+			{
+				<tr>
+					<td>
+						<input type="hidden" asp-for="@Model[i].Id" />
+						<input type="text" class="form-control" asp-for="@Model[i].Name"/>
+					</td>
+					<td><input type="text" class="form-control" asp-for="@Model[i].Group" /></td>
+					<td><textarea asp-for="@Model[i].Description" class="form-control" rows="3"></textarea></td>
+				</tr>
+			}
+		</table>
+	</div>
+	<button type="submit" class="btn btn-primary">Save</button>
+</form>
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")
 }
