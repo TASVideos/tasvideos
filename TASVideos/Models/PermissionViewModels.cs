@@ -25,15 +25,15 @@ namespace TASVideos.Models
 		public PermissionTo Id { get; set; }
 
 		[Required]
-		[StringLength(50, MinimumLength = 1)]
+		[StringLength(50)]
 		public string Name { get; set; }
 
 		[Required]
-		[StringLength(200, MinimumLength = 1)]
+		[StringLength(200)]
 		public string Description { get; set; }
 
 		[Required]
-		[StringLength(20, MinimumLength = 1)]
+		[StringLength(20)]
 		public string Group { get; set; }
 	}
 }
