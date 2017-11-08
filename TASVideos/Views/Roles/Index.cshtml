@@ -1,0 +1,49 @@
+﻿@model IEnumerable<RoleDisplayViewModel>
+@{
+	ViewData["Title"] = "Role List";
+}
+
+<h4>@ViewData["Title"]</h4>
+<p>These are a list of the site roles</p>
+
+@if (User.Identity.IsAuthenticated)
+{
+	<p>See the <a asp-controller="Permissions" asp-action="Index">Permission List</a> for details on individual permissions</p>
+}
+
+<div class="row">
+	@foreach (var role in Model)
+	{
+		<div class="panel panel-default">
+			<div class="panel-heading">@role.Name</div>
+			<div class="panel-body">
+				<div class="col-sm-6">
+					<div class="row">
+						@if (((IEnumerable<PermissionTo>)ViewBag.UserPermissions).Contains(PermissionTo.EditRoles))
+						{
+							<div>
+								<a asp-action="AddEdit" asp-route-id="@role.Id" style="margin-bottom: 5px" class="btn btn-primary">Edit</a>
+							</div>
+						}
+						@role.Description
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="row">
+						<strong>Permisisons:</strong>
+					</div>
+					@foreach (var permission in role.Permissions)
+					{
+						<div class="row">@permission</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+<a asp-action="AddEdit" class="btn btn-primary">Create New Role</a>
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}
