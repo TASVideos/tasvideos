@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -44,7 +47,12 @@ namespace TASVideos
 			{
 				options.Filters.Add(new SetViewBagAttribute());
 			});
-		}
+
+            //Sets up Dependency Injection for IPrinciple to be able to attain the user whereever we wish.
+		    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+		    services.AddTransient(
+		        provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+        }
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
