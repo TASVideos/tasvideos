@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
 
@@ -33,9 +34,18 @@ namespace TASVideos.Models
 		public string Description { get; set; }
 
 		[Display(Name = "Selected Permissions")]
-		public IEnumerable<PermissionTo> SelectedPermisisons { get; set; }
+		public IEnumerable<PermissionTo> SelectedPermisisons { get; set; } = new List<PermissionTo>();
+
+		public string HackySelectedPermissions
+		{
+			get => string.Join(",", SelectedPermisisons.Select(p => (int)p));
+			set => SelectedPermisisons = value?.Split(",")
+				.Select(int.Parse)
+				.Select(i => (PermissionTo)i)
+				.ToList() ?? new List<PermissionTo>();
+		}
 
 		[Display(Name = "Available Permissions")]
-		public IEnumerable<SelectListItem> AvailablePermissions { get; set; }
+		public IEnumerable<SelectListItem> AvailablePermissions { get; set; } = new List<SelectListItem>();
 	}
 }

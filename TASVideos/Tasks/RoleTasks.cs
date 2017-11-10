@@ -81,7 +81,20 @@ namespace TASVideos.Tasks
 		// TODO: documentation
 		public void AddUpdateRole(RoleEditViewModel model)
 		{
-			// TODO
+			var role = _db.Roles.Single(r => r.Id == model.Id);
+			role.Name = model.Name;
+			role.Description = model.Description;
+
+			_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == model.Id));
+			_db.SaveChanges();
+			_db.RolePermission.AddRange(model.SelectedPermisisons
+				.Select(p => new RolePermission
+				{
+					RoleId = role.Id,
+					PermissionId = p
+				}));
+
+			_db.SaveChanges();
 		}
 	}
 }

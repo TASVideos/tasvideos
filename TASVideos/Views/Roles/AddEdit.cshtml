@@ -1,4 +1,5 @@
-﻿@model RoleEditViewModel
+﻿@using TASVideos.Extensions @*TODO: add to _ViewStart*@
+@model RoleEditViewModel
 @{
 	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Name : "Create a New Role";
 }
@@ -7,27 +8,31 @@
 <div class="container">
 	<form asp-route="Edit" method="post" class="form-horizontal">
 		<input type="hidden" asp-for="@Model.Id" />
-		<div class="col-md-6">
-			<fieldset class="form-group">
-				<label asp-for="@Model.Name" class="control-label col-sm-4"></label>
-				<div class="col-sm-8">
-					<input asp-for="@Model.Name" class="form-control" maxlength="50" />
-					<span asp-validation-for="@Model.Name" class="text-danger"></span>
-				</div>
-			</fieldset>
-			<fieldset class="form-group">
-				<label asp-for="@Model.Description" class="control-label col-sm-4"></label>
-				<div class="col-sm-8">
-					<textarea asp-for="@Model.Description" class="form-control" rows="2" maxlength="200"></textarea>
-					<span asp-validation-for="@Model.Description" class="text-danger"></span>
-				</div>
-			</fieldset>
-			<p>TODO: permission picker goes here</p>
-			<div class="text-center">
-				<button type="submit" class="text-center btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
+		<div class="row">
+			<div class="col-md-6">
+				<fieldset class="form-group">
+					<label asp-for="@Model.Name" class="control-label col-sm-4"></label>
+					<div class="col-sm-8">
+						<input asp-for="@Model.Name" class="form-control" maxlength="50" />
+						<span asp-validation-for="@Model.Name" class="text-danger"></span>
+					</div>
+				</fieldset>
+				<fieldset class="form-group">
+					<label asp-for="@Model.Description" class="control-label col-sm-4"></label>
+					<div class="col-sm-8">
+						<textarea asp-for="@Model.Description" class="form-control" rows="2" maxlength="200"></textarea>
+						<span asp-validation-for="@Model.Description" class="text-danger"></span>
+					</div>
+				</fieldset>
 			</div>
 		</div>
-		<div class="col-md-6"></div>
+		
+			@Html.TwoColumnPickerFor(m => m.HackySelectedPermissions, n => n.AvailablePermissions)
+		
+		
+		<div class="row text-center" style="margin-top: 20px">
+			<button type="submit" class="text-center btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
+		</div>
 	</form>
 </div>
 @section Scripts {
