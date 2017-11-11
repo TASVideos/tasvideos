@@ -54,6 +54,13 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		[RequirePermission(PermissionTo.EditRoles)]
+		public async Task<IActionResult> Delete(int id)
+		{
+			await _roleTasks.DeleteRoleAsync(id);
+			return RedirectToAction(nameof(Index));
+		}
+
 		/// <summary>
 		/// A select list of all available <seealso cref="PermissionTo"/> in the system
 		/// </summary>
