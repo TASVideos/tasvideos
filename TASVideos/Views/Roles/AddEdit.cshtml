@@ -1,5 +1,4 @@
-﻿@using TASVideos.Extensions @*TODO: add to _ViewStart*@
-@model RoleEditViewModel
+﻿@model RoleEditViewModel
 @{
 	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Name : "Create a New Role";
 }
@@ -12,8 +11,8 @@
 		<div class="row">
 			<div class="col-sm-5">
 				<fieldset class="form-group">
-					<label asp-for="@Model.Name" class="control-label col-md-4"></label>
-					<div class="col-md-8">
+					<label asp-for="@Model.Name" class="control-label col-md-3"></label>
+					<div class="col-md-9">
 						<input asp-for="@Model.Name" class="form-control" maxlength="50" />
 						<span asp-validation-for="@Model.Name" class="text-danger"></span>
 					</div>
@@ -21,8 +20,8 @@
 			</div>
 			<div class="col-sm-offset-2 col-sm-5">
 				<fieldset class="form-group">
-					<label asp-for="@Model.Description" class="control-label col-md-4"></label>
-					<div class="col-md-8">
+					<label asp-for="@Model.Description" class="control-label col-md-3"></label>
+					<div class="col-md-9">
 						<textarea asp-for="@Model.Description" class="form-control" rows="3" maxlength="200"></textarea>
 						<span asp-validation-for="@Model.Description" class="text-danger"></span>
 					</div>
