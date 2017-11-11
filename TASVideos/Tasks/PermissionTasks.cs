@@ -58,7 +58,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Updates all of the given <see cref="TASVideos.Data.Entity.Permission" /> records
 		/// </summary>
-		public async Task<int> UpdatePermissionDetailsAsync(IEnumerable<PermissionEditViewModel> model)
+		public async Task UpdatePermissionDetailsAsync(IEnumerable<PermissionEditViewModel> model)
 		{
 			if (model == null)
 			{
@@ -80,7 +80,7 @@ namespace TASVideos.Tasks
 				permission.Group = permModel.Group;
 			}
 
-			return await _db.SaveChangesAsync();
+			await _db.SaveChangesAsync();
 		}
 	}
 }

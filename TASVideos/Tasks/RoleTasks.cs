@@ -64,7 +64,7 @@ namespace TASVideos.Tasks
 		/// If no id is provided, then it is inserted
 		/// </summary>
 		/// <param name="model"></param>
-		public async Task<int> AddUpdateRoleAsync(RoleEditViewModel model)
+		public async Task AddUpdateRoleAsync(RoleEditViewModel model)
 		{
 			Role role;
 			if (model.Id.HasValue)
@@ -89,7 +89,15 @@ namespace TASVideos.Tasks
 					PermissionId = p
 				}));
 
-			return await _db.SaveChangesAsync();
+			await _db.SaveChangesAsync();
+		}
+
+		public async Task DeleteRoleAsync(int id)
+		{
+			var role = await _db.Roles.SingleAsync(r => r.Id == id);
+			_db.Roles.Remove(role);
+
+			await _db.SaveChangesAsync();
 		}
 	}
 }
