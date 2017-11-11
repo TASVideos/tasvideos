@@ -144,83 +144,69 @@ namespace TASVideos.Extensions
 
 			var uniqueFuncName = "twoColumnPicker" + Guid.NewGuid().ToString().Replace("-", "");
 			string script = $@"<script>function {uniqueFuncName}() {{
-				var selectedItemSelector = '{selectedListName}';
-				var hiddenIdsSelector = '{modelName}';
-				var availableNameSelector = '{availableListName}';
-				var addBtnSelector = '{addBtnName}';
-				var addAllBtnSelector = '{addAllBtnName}';
-				var removeBtnSelector = '{removeBtnName}';
-				var removeAllBtnSelector = '{removeAllBtnName}';
-
-				// IE Hack
-				(function () {{
-					if (typeof NodeList.prototype.forEach === 'function') return false;
-					NodeList.prototype.forEach = Array.prototype.forEach;
-				}})();
-
-				document.getElementById(availableNameSelector).addEventListener('dblclick', function() {{
-					document.getElementById(addBtnSelector).click()
+				document.getElementById('{availableListName}').addEventListener('dblclick', function() {{
+					document.getElementById('{addBtnName}').click()
 				}});
 
-				document.getElementById(selectedItemSelector).addEventListener('dblclick', function() {{
-					document.getElementById(removeBtnSelector).click()
+				document.getElementById('{selectedListName}').addEventListener('dblclick', function() {{
+					document.getElementById('{removeBtnName}').click()
 				}});
 
-				document.getElementById(addBtnSelector).addEventListener('click', function () {{
-					var selectedIds = document.getElementById(hiddenIdsSelector).value
+				document.getElementById('{addBtnName}').addEventListener('click', function () {{
+					var selectedIds = document.getElementById('{modelName}').value
 					var tempVals = selectedIds ? selectedIds.split(',') : new Array();
 
-					var aopts = document.querySelectorAll('#' + availableNameSelector + ' option:checked');
+					var aopts = document.querySelectorAll('#{availableListName} option:checked');
 					aopts.forEach(function (elem) {{
 						tempVals.push(elem.value);
-						document.getElementById(selectedItemSelector).appendChild(elem.cloneNode(true));
-						document.getElementById(availableNameSelector).removeChild(elem);
+						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
+						document.getElementById('{availableListName}').removeChild(elem);
 					}});
 
-					document.getElementById(hiddenIdsSelector).value = tempVals.join();
+					document.getElementById('{modelName}').value = tempVals.join();
 				}});
 
-				document.getElementById(addAllBtnSelector).addEventListener('click', function () {{
-					var aopts = document.querySelectorAll('#' + availableNameSelector + ' option');
+				document.getElementById('{addAllBtnName}').addEventListener('click', function () {{
+					var aopts = document.querySelectorAll('#{availableListName} option');
 					var tempVals = new Array();
 
-					var existingIds = document.getElementById(hiddenIdsSelector).value;
+					var existingIds = document.getElementById('{modelName}').value;
 					if (existingIds) {{
 						tempVals = existingIds.split(',');
 					}}
 
 					aopts.forEach(function (elem) {{
 						tempVals.push(elem.value);
-						document.getElementById(selectedItemSelector).appendChild(elem.cloneNode(true));
-						document.getElementById(availableNameSelector).removeChild(elem);
+						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
+						document.getElementById('{availableListName}').removeChild(elem);
 					}});
 
-					document.getElementById(hiddenIdsSelector).value = tempVals.join();
+					document.getElementById('{modelName}').value = tempVals.join();
 				}});
 
-				document.getElementById(removeBtnSelector).addEventListener('click', function () {{
-					var selectedIds = document.getElementById(hiddenIdsSelector).value
+				document.getElementById('{removeBtnName}').addEventListener('click', function () {{
+					var selectedIds = document.getElementById('{modelName}').value
 					var tempVals = selectedIds ? selectedIds.split(',') : new Array();
 
-					var sopts = document.querySelectorAll('#' + selectedItemSelector + ' option:checked');
+					var sopts = document.querySelectorAll('#{selectedListName} option:checked');
 					sopts.forEach(function (elem) {{
-						document.getElementById(availableNameSelector).appendChild(elem.cloneNode(true));
-						document.getElementById(selectedItemSelector).removeChild(elem);
+						document.getElementById('{availableListName}').appendChild(elem.cloneNode(true));
+						document.getElementById('{selectedListName}').removeChild(elem);
 						var index = tempVals.indexOf(elem.value);
 						if (index >= 0) {{
 							tempVals.splice(index, 1);
 						}}
 					}});
 
-					document.getElementById(hiddenIdsSelector).value = tempVals.join();
+					document.getElementById('{modelName}').value = tempVals.join();
 				}});
 
-				document.getElementById(removeAllBtnSelector).addEventListener('click', function () {{
-					var sopts = document.querySelectorAll('#' + selectedItemSelector + ' option');
+				document.getElementById('{removeAllBtnName}').addEventListener('click', function () {{
+					var sopts = document.querySelectorAll('#{selectedListName} option');
 					sopts.forEach(function (elem) {{
-						document.getElementById(availableNameSelector).appendChild(elem.cloneNode(true));
-						document.getElementById(selectedItemSelector).removeChild(elem);
-						document.getElementById(hiddenIdsSelector).value = '';
+						document.getElementById('{availableListName}').appendChild(elem.cloneNode(true));
+						document.getElementById('{selectedListName}').removeChild(elem);
+						document.getElementById('{modelName}').value = '';
 					}});
 				}});
 			}};
