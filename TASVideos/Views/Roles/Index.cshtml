@@ -19,7 +19,7 @@
 			<div class="panel-body">
 				<div class="col-sm-6">
 					<row>
-						@if (((IEnumerable<PermissionTo>)ViewBag.UserPermissions).Contains(PermissionTo.EditRoles))
+						@if (ViewData.UserHasPermission(PermissionTo.EditRoles))
 						{
 							<div>
 								<a asp-action="AddEdit" asp-route-id="@role.Id" class="btn btn-primary mb-m">Edit</a>

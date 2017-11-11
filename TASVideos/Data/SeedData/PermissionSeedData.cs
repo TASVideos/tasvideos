@@ -31,7 +31,14 @@ namespace TASVideos.Data.SeedData
 			{
 				Id = PermissionTo.EditRoles,
 				Name = "Edit Roles",
-				Description = "The ability to edit roles and add/remove privileges to those roles",
+				Description = "The ability to create and edit roles and add/remove privileges to those roles",
+				Group = PermissionGroups.UserAdministration
+			},
+			new Permission
+			{
+				Id = PermissionTo.DeleteRoles,
+				Name = "Delete Roles",
+				Description = "The ability to delete and existing role",
 				Group = PermissionGroups.UserAdministration
 			},
 			new Permission

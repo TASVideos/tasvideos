@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using System.Security.Principal;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -30,10 +28,10 @@ namespace TASVideos
 		{
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
-            services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+
+			services.AddIdentity<User, Role>()
+				.AddEntityFrameworkStores<ApplicationDbContext>()
+				.AddDefaultTokenProviders();
 
 			// Add application services.
 			services.AddTransient<IEmailSender, EmailSender>();
@@ -48,10 +46,10 @@ namespace TASVideos
 				options.Filters.Add(new SetViewBagAttribute());
 			});
 
-            //Sets up Dependency Injection for IPrinciple to be able to attain the user whereever we wish.
-		    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-		    services.AddTransient(
-		        provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+			// Sets up Dependency Injection for IPrinciple to be able to attain the user whereever we wish.
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddTransient(
+				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
         }
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
