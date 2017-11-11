@@ -69,7 +69,13 @@
 		</script>
 		<script src="~/js/site.min.js" asp-append-version="true"></script>
 	</environment>
-
+	<script>
+		// IE Hack
+		(function () {
+			if (typeof NodeList.prototype.forEach === 'function') return false;
+			NodeList.prototype.forEach = Array.prototype.forEach;
+		})();
+	</script>
 	@RenderSection("Scripts", required: false)
 </body>
 </html>
