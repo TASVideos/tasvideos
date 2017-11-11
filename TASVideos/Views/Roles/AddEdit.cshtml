@@ -5,31 +5,31 @@
 }
 
 <h4>@ViewData["Title"]</h4>
+<hr />
 <div class="container">
 	<form asp-route="Edit" method="post" class="form-horizontal">
 		<input type="hidden" asp-for="@Model.Id" />
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-sm-5">
 				<fieldset class="form-group">
-					<label asp-for="@Model.Name" class="control-label col-sm-4"></label>
-					<div class="col-sm-8">
+					<label asp-for="@Model.Name" class="control-label col-md-4"></label>
+					<div class="col-md-8">
 						<input asp-for="@Model.Name" class="form-control" maxlength="50" />
 						<span asp-validation-for="@Model.Name" class="text-danger"></span>
 					</div>
 				</fieldset>
+			</div>
+			<div class="col-sm-offset-2 col-sm-5">
 				<fieldset class="form-group">
-					<label asp-for="@Model.Description" class="control-label col-sm-4"></label>
-					<div class="col-sm-8">
+					<label asp-for="@Model.Description" class="control-label col-md-4"></label>
+					<div class="col-md-8">
 						<textarea asp-for="@Model.Description" class="form-control" rows="2" maxlength="200"></textarea>
 						<span asp-validation-for="@Model.Description" class="text-danger"></span>
 					</div>
 				</fieldset>
 			</div>
 		</div>
-		
-			@Html.TwoColumnPickerFor(m => m.HackySelectedPermissions, n => n.AvailablePermissions)
-		
-		
+		@Html.TwoColumnPickerFor(m => m.HackySelectedPermissions, n => n.AvailablePermissions)
 		<div class="row text-center" style="margin-top: 20px">
 			<button type="submit" class="text-center btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
 		</div>
