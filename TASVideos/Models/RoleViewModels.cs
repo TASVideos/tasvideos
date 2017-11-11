@@ -33,13 +33,13 @@ namespace TASVideos.Models
 		[StringLength(200)]
 		public string Description { get; set; }
 
-		public IEnumerable<PermissionTo> SelectedPermisisons { get; set; } = new List<PermissionTo>();
+		public IEnumerable<PermissionTo> SelectedPermissions { get; set; } = new List<PermissionTo>();
 
 		[Display(Name = "Selected Permissions")]
 		public string SelectedPermissionsStr
 		{
-			get => string.Join(",", SelectedPermisisons.Select(p => (int)p));
-			set => SelectedPermisisons = value?.Split(",")
+			get => string.Join(",", SelectedPermissions.Select(p => (int)p));
+			set => SelectedPermissions = value?.Split(",")
 				.Select(int.Parse)
 				.Select(i => (PermissionTo)i)
 				.ToList() ?? new List<PermissionTo>();

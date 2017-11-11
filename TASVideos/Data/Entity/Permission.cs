@@ -55,7 +55,7 @@ namespace TASVideos.Data.Entity
 
 	/// <summary>
 	/// These are the grouping mechanism to <seealso cref="Permission" />
-	/// The intent is for this to be a convenience for finding and understanding permisisons and to improve the UI experience when assigning them
+	/// The intent is for this to be a convenience for finding and understanding permissions and to improve the UI experience when assigning them
 	/// </summary>
 	public static class PermissionGroups
 	{
