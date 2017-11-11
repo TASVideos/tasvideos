@@ -26,7 +26,7 @@ namespace TASVideos.Models
 
 		[Required]
 		[StringLength(50)]
-		[Display(Name = "Role Name")]
+		[Display(Name = "Name")]
 		public string Name { get; set; }
 
 		[Required]
