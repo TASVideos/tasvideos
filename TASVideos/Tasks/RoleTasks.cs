@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -57,28 +56,9 @@ namespace TASVideos.Tasks
 						.Single(p => p.Id == id.Value)
 					: new RoleEditViewModel();
 
-				model.AvailablePermissions = PermissionsSelectList;
-
 				return model;
 			}
 		}
-
-		/// <summary>
-		/// A select list of all available <seealso cref="PermissionTo"/> in the system
-		/// </summary>
-		public IEnumerable<SelectListItem> PermissionsSelectList =>
-			_db.Permissions
-				.Select(p => new
-				{
-					p.Id,
-					p.Name
-				})
-				.ToList()
-				.Select(p => new SelectListItem
-				{
-					Value = ((int) p.Id).ToString(),
-					Text = p.Name
-				});
 
 		/// <summary>
 		/// Adds or Updates the given <seealso cref="Role"/>

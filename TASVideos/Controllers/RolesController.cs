@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,7 @@ namespace TASVideos.Controllers
 		public IActionResult AddEdit(int? id)
 		{
 			var model = _roleTasks.GetRoleForEdit(id);
+			model.AvailablePermissions = PermissionsSelectList;
 			return View(model);
 		}
 
@@ -50,8 +52,21 @@ namespace TASVideos.Controllers
 				return RedirectToAction(nameof(Index));
 			}
 
-			model.AvailablePermissions = _roleTasks.PermissionsSelectList;
+			model.AvailablePermissions = PermissionsSelectList;
 			return View(model);
 		}
+
+		/// <summary>
+		/// A select list of all available <seealso cref="PermissionTo"/> in the system
+		/// </summary>
+		private static IEnumerable<SelectListItem> PermissionsSelectList =>
+			Enum.GetValues(typeof(PermissionTo))
+				.Cast<PermissionTo>()
+				.ToList()
+				.Select(p => new SelectListItem
+				{
+					Value = ((int)p).ToString(),
+					Text = p.ToString()
+				});
 	}
 }
