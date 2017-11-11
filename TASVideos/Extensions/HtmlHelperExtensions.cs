@@ -43,7 +43,7 @@ namespace TASVideos.Extensions
 
 			if (availableListType.GenericTypeArguments.First() != typeof(SelectListItem))
 			{
-				throw new ArgumentException($"Invalid property type {availableListType}, availableListExpression must be a collection of SelectListItem");
+				throw new ArgumentException($"Invalid property type {availableListType}, availableListExpression must be an {nameof(IEnumerable)} of {nameof(SelectListItem)}");
 			}
 
 			string selectedIds =
