@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,44 +12,41 @@ using TASVideos.Models;
 
 namespace TASVideos.Controllers
 {
-    public class RolesController : BaseController
-    {
+	public class RolesController : BaseController
+	{
 		private readonly RoleTasks _roleTasks;
-		private readonly PermissionTasks _permissionTasks;
 
 		public RolesController(
 			RoleTasks roleTasks,
-			PermissionTasks permissionTasks,
 			UserTasks userTasks
 			)
 			: base(userTasks)
 		{
 			_roleTasks = roleTasks;
-			_permissionTasks = permissionTasks;
 		}
 
 		[AllowAnonymous]
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			var model = _roleTasks.GetAllRolesForDisplay();
+			var model = await _roleTasks.GetAllRolesForDisplayAsync();
 			return View(model);
 		}
 
 		[RequirePermission(PermissionTo.EditRoles)]
-		public IActionResult AddEdit(int? id)
+		public async Task<IActionResult> AddEdit(int? id)
 		{
-			var model = _roleTasks.GetRoleForEdit(id);
+			var model = await _roleTasks.GetRoleForEditAsync(id);
 			model.AvailablePermissions = PermissionsSelectList;
 			return View(model);
 		}
 
 		[HttpPost]
 		[RequirePermission(PermissionTo.EditRoles)]
-		public IActionResult AddEdit(RoleEditViewModel model)
+		public async Task<IActionResult> AddEdit(RoleEditViewModel model)
 		{
 			if (ModelState.IsValid)
 			{
-				_roleTasks.AddUpdateRole(model);
+				await _roleTasks.AddUpdateRoleAsync(model);
 				return RedirectToAction(nameof(Index));
 			}
 

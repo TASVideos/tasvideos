@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
@@ -22,23 +23,22 @@ namespace TASVideos.Controllers
 			_permissionTasks = permissionTasks;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			var model = _permissionTasks.GetAllPermissionsForDisplay();
+			var model = await _permissionTasks.GetAllPermissionsForDisplayAsync();
 			return View(model);
 		}
 
 		[RequirePermission(PermissionTo.EditPermissionDetails)]
-		public IActionResult Edit()
+		public async Task<IActionResult> Edit()
 		{
-			var model = _permissionTasks.GetAllPermissionsForEdit()
-				.ToList();
-			return View(model);
+			var model = await _permissionTasks.GetAllPermissionsForEditAsync();
+			return View(model.ToList());
 		}
 
 		[RequirePermission(PermissionTo.EditPermissionDetails)]
 		[HttpPost]
-		public IActionResult Edit(IEnumerable<PermissionEditViewModel> model)
+		public async Task<IActionResult> Edit(IEnumerable<PermissionEditViewModel> model)
 		{
 			if (model == null)
 			{
@@ -47,7 +47,7 @@ namespace TASVideos.Controllers
 
 			if (ModelState.IsValid)
 			{
-				_permissionTasks.UpdatePermissionDetails(model);
+				await _permissionTasks.UpdatePermissionDetailsAsync(model);
 				return RedirectToAction(nameof(Index));
 			}
 

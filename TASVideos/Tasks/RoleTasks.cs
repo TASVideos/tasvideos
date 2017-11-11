@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -19,9 +20,9 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns all of the <see cref="TASVideos.Data.Entity.Role" /> records for the purpose of display
 		/// </summary>
-		public IEnumerable<RoleDisplayViewModel> GetAllRolesForDisplay()
+		public async Task<IEnumerable<RoleDisplayViewModel>> GetAllRolesForDisplayAsync()
 		{
-			return _db.Roles
+			return await _db.Roles
 				.Include(r => r.RolePermission)
 				.ThenInclude(rp => rp.Role)
 				.OrderBy(r => r.RolePermission.Count)
@@ -34,30 +35,27 @@ namespace TASVideos.Tasks
 						.Select(rp => rp.Permission.Name)
 						.OrderBy(name => name)
 				})
-				.ToList();
+				.ToListAsync();
 		}
 
 		/// <summary>
 		/// Returns a <see cref="TASVideos.Data.Entity.Role" /> with the given id for the purpose of editing
 		/// </summary>
-		public RoleEditViewModel GetRoleForEdit(int? id)
+		public async Task<RoleEditViewModel> GetRoleForEditAsync(int? id)
 		{
-			using (_db.Database.BeginTransaction())
-			{
-				var model = id.HasValue
-					? _db.Roles
-						.Select(p => new RoleEditViewModel
-						{
-							Id = p.Id,
-							Name = p.Name,
-							Description = p.Description,
-							SelectedPermisisons = p.RolePermission.Select(rp => rp.PermissionId)
-						})
-						.Single(p => p.Id == id.Value)
-					: new RoleEditViewModel();
+			var model = id.HasValue
+				? await _db.Roles
+					.Select(p => new RoleEditViewModel
+					{
+						Id = p.Id,
+						Name = p.Name,
+						Description = p.Description,
+						SelectedPermisisons = p.RolePermission.Select(rp => rp.PermissionId)
+					})
+					.SingleAsync(p => p.Id == id.Value)
+				: new RoleEditViewModel();
 
-				return model;
-			}
+			return model;
 		}
 
 		/// <summary>
@@ -66,15 +64,14 @@ namespace TASVideos.Tasks
 		/// If no id is provided, then it is inserted
 		/// </summary>
 		/// <param name="model"></param>
-		public void AddUpdateRole(RoleEditViewModel model)
+		public async Task<int> AddUpdateRoleAsync(RoleEditViewModel model)
 		{
 			Role role;
 			if (model.Id.HasValue)
 			{
-				role = _db.Roles.Single(r => r.Id == model.Id);
-
+				role = await _db.Roles.SingleAsync(r => r.Id == model.Id);
 				_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == model.Id));
-				_db.SaveChanges();
+				await _db.SaveChangesAsync();
 			}
 			else
 			{
@@ -92,7 +89,7 @@ namespace TASVideos.Tasks
 					PermissionId = p
 				}));
 
-			_db.SaveChanges();
+			return await _db.SaveChangesAsync();
 		}
 	}
 }
