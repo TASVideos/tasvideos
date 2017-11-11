@@ -63,7 +63,9 @@ namespace TASVideos.Tasks
 			}
 		}
 
-		// TODO: document
+		/// <summary>
+		/// A select list of all available <seealso cref="PermissionTo"/> in the system
+		/// </summary>
 		public IEnumerable<SelectListItem> PermissionsSelectList =>
 			_db.Permissions
 				.Select(p => new
@@ -78,15 +80,31 @@ namespace TASVideos.Tasks
 					Text = p.Name
 				});
 
-		// TODO: documentation
+		/// <summary>
+		/// Adds or Updates the given <seealso cref="Role"/>
+		/// If an Id is provided, the Role is updated
+		/// If no id is provided, then it is inserted
+		/// </summary>
+		/// <param name="model"></param>
 		public void AddUpdateRole(RoleEditViewModel model)
 		{
-			var role = _db.Roles.Single(r => r.Id == model.Id);
+			Role role;
+			if (model.Id.HasValue)
+			{
+				role = _db.Roles.Single(r => r.Id == model.Id);
+
+				_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == model.Id));
+				_db.SaveChanges();
+			}
+			else
+			{
+				role = new Role();
+				_db.Roles.Attach(role);
+			}
+
 			role.Name = model.Name;
 			role.Description = model.Description;
 
-			_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == model.Id));
-			_db.SaveChanges();
 			_db.RolePermission.AddRange(model.SelectedPermisisons
 				.Select(p => new RolePermission
 				{

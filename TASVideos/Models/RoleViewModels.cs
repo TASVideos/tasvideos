@@ -37,7 +37,7 @@ namespace TASVideos.Models
 		public IEnumerable<PermissionTo> SelectedPermisisons { get; set; } = new List<PermissionTo>();
 
 		[Display(Name = "Selected Permissions")]
-		public string HackySelectedPermissions
+		public string SelectedPermissionsStr
 		{
 			get => string.Join(",", SelectedPermisisons.Select(p => (int)p));
 			set => SelectedPermisisons = value?.Split(",")
