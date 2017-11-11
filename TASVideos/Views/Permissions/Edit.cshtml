@@ -6,33 +6,31 @@
 <h4>@ViewData["Title"]</h4>
 <p>These are a list of site permissions that are allocated to site roles</p>
 <form asp-route="Edit" method="post">
-	<div class="row">
-		<table class="table table-bordered table-striped">
+	<table class="table table-bordered table-striped">
+		<tr>
+			<th>@Html.DisplayNameFor(m => m.First().Name)</th>
+			<th>@Html.DisplayNameFor(m => m.First().Group)</th>
+			<th>@Html.DisplayNameFor(m => m.First().Description)</th>
+		</tr>
+		@for (int i = 0; i < Model.Count; i++)
+		{
 			<tr>
-				<th>@Html.DisplayNameFor(m => m.First().Name)</th>
-				<th>@Html.DisplayNameFor(m => m.First().Group)</th>
-				<th>@Html.DisplayNameFor(m => m.First().Description)</th>
+				<td>
+					<input type="hidden" asp-for="@Model[i].Id" />
+					<input type="text" class="form-control" asp-for="@Model[i].Name" maxlength="50"/>
+					<span asp-validation-for="@Model[i].Name" class="text-danger"></span>
+				</td>
+				<td>
+					<input type="text" class="form-control" asp-for="@Model[i].Group" maxlength="20"/>
+					<span asp-validation-for="@Model[i].Group" class="text-danger"></span>
+				</td>
+				<td>
+					<textarea asp-for="@Model[i].Description" class="form-control" rows="3" maxlength="200"></textarea>
+					<span asp-validation-for="@Model[i].Description" class="text-danger"></span>
+				</td>
 			</tr>
-			@for (int i = 0; i < Model.Count; i++)
-			{
-				<tr>
-					<td>
-						<input type="hidden" asp-for="@Model[i].Id" />
-						<input type="text" class="form-control" asp-for="@Model[i].Name" maxlength="50"/>
-						<span asp-validation-for="@Model[i].Name" class="text-danger"></span>
-					</td>
-					<td>
-						<input type="text" class="form-control" asp-for="@Model[i].Group" maxlength="20"/>
-						<span asp-validation-for="@Model[i].Group" class="text-danger"></span>
-					</td>
-					<td>
-						<textarea asp-for="@Model[i].Description" class="form-control" rows="3" maxlength="200"></textarea>
-						<span asp-validation-for="@Model[i].Description" class="text-danger"></span>
-					</td>
-				</tr>
-			}
-		</table>
-	</div>
+		}
+	</table>	
 	<button type="submit" class="btn btn-primary">Save</button>
 </form>
 @section Scripts {
