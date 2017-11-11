@@ -100,7 +100,7 @@ namespace TASVideos.Extensions
 				<div class='col-xs-2'>
 					<div class='col-sm-offset-3 col-sm-6'>
 						<label class='control-label'> </label>
-						<div class='row' style='margin-bottom: 3px'>
+						<div class='row mb-s'>
 							<button type='button' id='{addBtnName}' class='btn btn-primary btn-xs col-xs-12' aria-label='Add' title='Add'>
 								<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
 							</button>
@@ -111,7 +111,7 @@ namespace TASVideos.Extensions
 								<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
 							</button>
 						</div><br />
-						<div class='row' style='margin-bottom: 3px'>
+						<div class='row mb-s'>
 							<button type='button' id='{removeBtnName}' class='btn btn-primary btn-xs col-xs-12' aria-label='Remove' title='Remove'>
 								<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
 							</button>

@@ -8,7 +8,7 @@
 <row>
 	@if (((IEnumerable<PermissionTo>)ViewBag.UserPermissions).Contains(PermissionTo.EditPermissionDetails))
 	{
-		<a href="@Url.Action("Edit")" style="margin-bottom: 5px" class="pull-right btn btn-primary">Edit</a>
+		<a href="@Url.Action("Edit")" class="pull-right btn btn-primary mb-m">Edit</a>
 	}
 	<table class="table table-bordered table-striped">
 		<tr>

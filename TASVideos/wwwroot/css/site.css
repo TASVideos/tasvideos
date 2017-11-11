@@ -35,3 +35,14 @@
 	padding-bottom: 0;
 	margin-top: 0;
 }
+
+
+/* Atomic Styles */
+.mb-s { margin-bottom: 3px; }
+.mb-m { margin-bottom: 5px; }
+.mb-l { margin-bottom: 10px; }
+
+.mt-s { margin-top: 3px; }
+.mt-m { margin-top: 5px; }
+.mt-l { margin-top: 10px; }
+.mt-el { margin-top: 20px; }

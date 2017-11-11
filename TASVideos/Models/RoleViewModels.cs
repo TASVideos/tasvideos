@@ -33,7 +33,6 @@ namespace TASVideos.Models
 		[StringLength(200)]
 		public string Description { get; set; }
 
-		[Display(Name = "Selected Permissions")]
 		public IEnumerable<PermissionTo> SelectedPermisisons { get; set; } = new List<PermissionTo>();
 
 		[Display(Name = "Selected Permissions")]
