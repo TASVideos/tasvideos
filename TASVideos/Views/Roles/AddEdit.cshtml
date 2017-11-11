@@ -28,7 +28,7 @@
 				</fieldset>
 			</div>
 		</div>
-		@Html.TwoColumnPickerFor(m => m.HackySelectedPermissions, n => n.AvailablePermissions)
+		@Html.TwoColumnPickerFor(m => m.SelectedPermissionsStr, n => n.AvailablePermissions)
 		<div class="row text-center" style="margin-top: 20px">
 			<button type="submit" class="text-center btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
 		</div>
