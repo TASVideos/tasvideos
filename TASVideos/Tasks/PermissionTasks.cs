@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Models;
@@ -20,9 +20,9 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns all of the <see cref="TASVideos.Data.Entity.Permission" /> records for the purpose of display
 		/// </summary>
-		public IEnumerable<PermissionDisplayViewModel> GetAllPermissionsForDisplay()
+		public async Task<IEnumerable<PermissionDisplayViewModel>> GetAllPermissionsForDisplayAsync()
 		{
-			return _db.Permissions
+			return await _db.Permissions
 				.Include(p => p.RolePermission)
 				.ThenInclude(rp => rp.Role)
 				.Select(p => new PermissionDisplayViewModel
@@ -34,15 +34,15 @@ namespace TASVideos.Tasks
 				})
 				.OrderBy(p => p.Group)
 				.ThenBy(p => p.Name)
-				.ToList();
+				.ToListAsync();
 		}
 
 		/// <summary>
 		/// Returns all of the <see cref="TASVideos.Data.Entity.Permission" /> records for the purpose of editing the metadata
 		/// </summary>
-		public IEnumerable<PermissionEditViewModel> GetAllPermissionsForEdit()
+		public async Task<IEnumerable<PermissionEditViewModel>> GetAllPermissionsForEditAsync()
 		{
-			return _db.Permissions
+			return await _db.Permissions
 				.Select(p => new PermissionEditViewModel
 				{
 					Id = p.Id,
@@ -52,13 +52,13 @@ namespace TASVideos.Tasks
 				})
 				.OrderBy(p => p.Group)
 				.ThenBy(p => p.Name)
-				.ToList();
+				.ToListAsync();
 		}
 
 		/// <summary>
 		/// Updates all of the given <see cref="TASVideos.Data.Entity.Permission" /> records
 		/// </summary>
-		public void UpdatePermissionDetails(IEnumerable<PermissionEditViewModel> model)
+		public async Task<int> UpdatePermissionDetailsAsync(IEnumerable<PermissionEditViewModel> model)
 		{
 			if (model == null)
 			{
@@ -67,9 +67,9 @@ namespace TASVideos.Tasks
 
 			var newPermisions = model.ToList();
 
-			var permissions = _db.Permissions
+			var permissions = await _db.Permissions
 				.Where(p => newPermisions.Select(np => np.Id).Contains(p.Id))
-				.ToList();
+				.ToListAsync();
 
 			foreach (var permission in permissions)
 			{
@@ -80,7 +80,7 @@ namespace TASVideos.Tasks
 				permission.Group = permModel.Group;
 			}
 
-			_db.SaveChanges();
+			return await _db.SaveChangesAsync();
 		}
 	}
 }
