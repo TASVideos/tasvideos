@@ -19,8 +19,8 @@ namespace TASVideos.Filter
 			{
 				if (filterContext.Controller is BaseController baseController)
 				{
-					controller.ViewBag.UserPermissions = baseController.UserPermissions;
-					controller.ViewBag.Version = baseController.Version;
+					controller.ViewData["UserPermissions"] = baseController.UserPermissions;
+					controller.ViewData["Version"] = baseController.Version;
 				}
 			}
 
