@@ -8,7 +8,7 @@
 <div class="container">
 	<form asp-route="Edit" method="post" class="form-horizontal">
 		<input type="hidden" asp-for="@Model.Id" />
-		<div class="row">
+		<row>
 			<div class="col-sm-5">
 				<fieldset class="form-group">
 					<label asp-for="@Model.Name" class="control-label col-md-3"></label>
@@ -27,11 +27,11 @@
 					</div>
 				</fieldset>
 			</div>
-		</div>
+		</row>
 		@Html.TwoColumnPickerFor(m => m.SelectedPermissionsStr, n => n.AvailablePermissions)
-		<div class="row text-center" style="margin-top: 20px">
+		<row class="text-center" style="margin-top: 20px">
 			<button type="submit" class="text-center btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
-		</div>
+		</row>
 	</form>
 </div>
 @section Scripts {

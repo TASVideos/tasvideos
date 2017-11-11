@@ -11,14 +11,14 @@
 	<p>See the <a asp-controller="Permissions" asp-action="Index">Permission List</a> for details on individual permissions</p>
 }
 
-<div class="row">
+<row>
 	@foreach (var role in Model)
 	{
 		<div class="panel panel-default">
 			<div class="panel-heading">@role.Name</div>
 			<div class="panel-body">
 				<div class="col-sm-6">
-					<div class="row">
+					<row>
 						@if (((IEnumerable<PermissionTo>)ViewBag.UserPermissions).Contains(PermissionTo.EditRoles))
 						{
 							<div>
@@ -26,21 +26,19 @@
 							</div>
 						}
 						@role.Description
-					</div>
+					</row>
 				</div>
 				<div class="col-sm-6">
-					<div class="row">
-						<strong>Permisisons:</strong>
-					</div>
+					<strong>Permissions:</strong><br />
 					@foreach (var permission in role.Permissions)
 					{
-						<div class="row">@permission</div>
+						@permission<br />
 					}
 				</div>
 			</div>
 		</div>
 	}
-</div>
+</row>
 
 <a asp-action="AddEdit" class="btn btn-primary">Create New Role</a>
 

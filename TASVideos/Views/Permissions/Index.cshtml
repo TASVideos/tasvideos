@@ -5,7 +5,7 @@
 
 <h4>@ViewData["Title"]</h4>
 <p>These are a list of site permissions that are allocated to site roles</p>
-<div class="row">
+<row>
 	@if (((IEnumerable<PermissionTo>)ViewBag.UserPermissions).Contains(PermissionTo.EditPermissionDetails))
 	{
 		<a href="@Url.Action("Edit")" style="margin-bottom: 5px" class="pull-right btn btn-primary">Edit</a>
@@ -27,7 +27,7 @@
 			</tr>
 		}
 	</table>
-</div>
+</row>
 
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")
