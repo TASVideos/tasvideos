@@ -29,7 +29,7 @@
 			</div>
 		</row>
 		@Html.TwoColumnPickerFor(m => m.SelectedPermissionsStr, n => n.AvailablePermissions)
-		<row class="text-center" style="margin-top: 20px">
+		<row class="text-center mt-el">
 			<button type="submit" class="text-center btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
 		</row>
 	</form>
