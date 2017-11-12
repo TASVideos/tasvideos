@@ -50,7 +50,7 @@ namespace TASVideos.Tasks
 						Id = p.Id,
 						Name = p.Name,
 						Description = p.Description,
-						SelectedPermisisons = p.RolePermission.Select(rp => rp.PermissionId)
+						SelectedPermissions = p.RolePermission.Select(rp => rp.PermissionId)
 					})
 					.SingleAsync(p => p.Id == id.Value)
 				: new RoleEditViewModel();
@@ -82,7 +82,7 @@ namespace TASVideos.Tasks
 			role.Name = model.Name;
 			role.Description = model.Description;
 
-			_db.RolePermission.AddRange(model.SelectedPermisisons
+			_db.RolePermission.AddRange(model.SelectedPermissions
 				.Select(p => new RolePermission
 				{
 					RoleId = role.Id,
