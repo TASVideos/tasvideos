@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
@@ -15,8 +13,6 @@ namespace TASVideos.Data
 
 		public DbSet<Permission> Permissions { get; set; }
 		public DbSet<RolePermission> RolePermission { get; set; }
-
-		public DbSet<Publication> Publications { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
