@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +22,7 @@ namespace TASVideos.Controllers
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
+		private readonly UserTasks _userTasks;
 
 		public ProfileController(
 			UserManager<User> userManager,
@@ -34,6 +36,7 @@ namespace TASVideos.Controllers
 			_signInManager = signInManager;
 			_emailSender = emailSender;
 			_logger = logger;
+			_userTasks = userTasks;
 		}
 
 		[TempData]
@@ -49,7 +52,8 @@ namespace TASVideos.Controllers
 				Username = user.UserName,
 				Email = user.Email,
 				IsEmailConfirmed = user.EmailConfirmed,
-				StatusMessage = StatusMessage
+				StatusMessage = StatusMessage,
+				Roles = await _userTasks.GetUserRoles(user.Id)
 			};
 
 			return View(model);

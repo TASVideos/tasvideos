@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Models
 {
@@ -13,6 +14,8 @@ namespace TASVideos.Models
 		public string Email { get; set; }
 
 		public string StatusMessage { get; set; }
+
+		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 	}
 
 	public class ChangePasswordViewModel
