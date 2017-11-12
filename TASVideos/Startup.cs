@@ -29,7 +29,10 @@ namespace TASVideos
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-			services.AddIdentity<User, Role>()
+			services.AddIdentity<User, Role>(config =>
+				{
+					config.SignIn.RequireConfirmedEmail = true;
+				})
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
 
