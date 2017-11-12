@@ -48,4 +48,14 @@ namespace TASVideos.Models
 		[Display(Name = "Available Permissions")]
 		public IEnumerable<SelectListItem> AvailablePermissions { get; set; } = new List<SelectListItem>();
 	}
+
+	/// <summary>
+	/// Represents a conscise view of Role for the User profile screen
+	/// </summary>
+	public class RoleBasicDisplay
+	{
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public string Description { get; set; }
+	}
 }

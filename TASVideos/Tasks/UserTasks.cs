@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 
 namespace TASVideos.Tasks
 {
@@ -46,6 +47,23 @@ namespace TASVideos.Tasks
 				.SelectMany(ur => ur.Role.RolePermission)
 				.Select(rp => rp.PermissionId)
 				.Distinct();
+		}
+
+		public async Task<IEnumerable<RoleBasicDisplay>> GetUserRoles(int userId)
+		{
+			return await _db.Users
+				.Include(u => u.UserRoles)
+				.ThenInclude(ur => ur.Role)
+				.Where(u => u.Id == userId)
+				.SelectMany(u => u.UserRoles)
+				.Select(ur => ur.Role)
+				.Select(r => new RoleBasicDisplay
+				{
+					Id = r.Id,
+					Name = r.Name,
+					Description = r.Description
+				})
+				.ToListAsync();
 		}
 	}
 }
