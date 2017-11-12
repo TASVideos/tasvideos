@@ -2,7 +2,7 @@
 
 namespace TASVideos.Data.Entity
 {
-    public class User : IdentityUser<int>
-    {		
+	public class User : IdentityUser<int>
+	{
 	}
 }
