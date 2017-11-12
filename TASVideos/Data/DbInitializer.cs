@@ -40,10 +40,13 @@ namespace TASVideos.Data
 					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
 				}
 
-				foreach (var role in context.Roles.ToList())
+
+				var savedUser = context.Users.Single(u => u.UserName == user.UserName);
+				savedUser.EmailConfirmed = true;
+				savedUser.LockoutEnabled = false; // TODO: only for admins
+
+				foreach (var role in context.Roles.ToList()) // TODO: only for admins
 				{
-					var savedUser = context.Users.Single(u => u.UserName == user.UserName);
-					savedUser.EmailConfirmed = true;
 					context.UserRoles.Add(new UserRole { RoleId = role.Id, UserId = savedUser.Id });
 				}
 			}
