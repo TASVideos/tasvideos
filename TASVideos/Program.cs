@@ -27,7 +27,7 @@ namespace TASVideos
 					var userManager = services.GetRequiredService<UserManager<User>>();
 					if (env.IsDevelopment())
 					{
-						DbInitializer.GenerateDevSampleData(context, userManager);
+						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
 
 				}
