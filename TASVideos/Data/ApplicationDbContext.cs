@@ -25,7 +25,7 @@ namespace TASVideos.Data
 				entity.HasIndex(e => e.NormalizedUserName)
 					.HasName("UserNameIndex")
 					.IsUnique()
-					.HasFilter("([NormalizedUserName] IS NOT NULL)");
+					.HasFilter($"([{nameof(User.NormalizedUserName)}] IS NOT NULL)");
 			});
 
 			builder.Entity<IdentityUserLogin<int>>(entity =>
