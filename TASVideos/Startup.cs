@@ -32,6 +32,11 @@ namespace TASVideos
 			services.AddIdentity<User, Role>(config =>
 				{
 					config.SignIn.RequireConfirmedEmail = true;
+					config.Password.RequiredLength = 12;
+					config.Password.RequireDigit = false;
+					config.Password.RequireLowercase = false;
+					config.Password.RequireNonAlphanumeric = false;
+					config.Password.RequiredUniqueChars = 4;
 				})
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
