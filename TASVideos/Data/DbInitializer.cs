@@ -43,6 +43,7 @@ namespace TASVideos.Data
 				foreach (var role in context.Roles.ToList())
 				{
 					var savedUser = context.Users.Single(u => u.UserName == user.UserName);
+					savedUser.EmailConfirmed = true;
 					context.UserRoles.Add(new UserRole { RoleId = role.Id, UserId = savedUser.Id });
 				}
 			}
