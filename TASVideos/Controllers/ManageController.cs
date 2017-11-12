@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using TASVideos.Data.Entity;
-using TASVideos.Models.ManageViewModels;
+using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Tasks;
 
