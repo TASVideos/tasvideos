@@ -15,18 +15,18 @@ namespace TASVideos.Controllers
 {
 	[Authorize]
 	[Route("[controller]/[action]")]
-	public class ManageController : BaseController
+	public class ProfileController : BaseController
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
 
-		public ManageController(
+		public ProfileController(
 			UserManager<User> userManager,
 			SignInManager<User> signInManager,
 			IEmailSender emailSender,
-			ILogger<ManageController> logger,
+			ILogger<ProfileController> logger,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
@@ -44,7 +44,7 @@ namespace TASVideos.Controllers
 		{
 			var user = await _userManager.GetUserAsync(User);
 
-			var model = new IndexViewModel
+			var model = new ProfileIndexViewModel
 			{
 				Username = user.UserName,
 				Email = user.Email,
@@ -57,7 +57,7 @@ namespace TASVideos.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Index(IndexViewModel model)
+		public async Task<IActionResult> Index(ProfileIndexViewModel model)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -82,7 +82,7 @@ namespace TASVideos.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> SendVerificationEmail(IndexViewModel model)
+		public async Task<IActionResult> SendVerificationEmail(ProfileIndexViewModel model)
 		{
 			if (!ModelState.IsValid)
 			{
