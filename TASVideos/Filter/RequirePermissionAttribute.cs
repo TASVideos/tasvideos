@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
@@ -41,7 +42,8 @@ namespace TASVideos.Filter
 
 			if (!userClaimsPrincipal.Identity.IsAuthenticated)
 			{
-				context.Result = RedirectHome();
+				
+				context.Result = ReRouteToLogin(context.HttpContext.Request.Path);
 				return;
 			}
 
@@ -63,14 +65,25 @@ namespace TASVideos.Filter
 			}
 			else
 			{
-				context.Result = RedirectHome();
+				context.Result = AccessDenied();
 			}
 		}
 
-		private RedirectToRouteResult RedirectHome()
+		private RedirectToRouteResult ReRouteToLogin(string returnUrl)
 		{
 			return new RedirectToRouteResult(
-				new RouteValueDictionary(new { controller = "Home", action = nameof(HomeController.Index) }));
+				new RouteValueDictionary(new
+				{
+					controller = "Account",
+					action = nameof(AccountController.Login),
+					returnUrl
+				}));
+		}
+
+		private RedirectToRouteResult AccessDenied()
+		{
+			return new RedirectToRouteResult(
+				new RouteValueDictionary(new { controller = "Account", action = nameof(AccountController.AccessDenied) }));
 		}
 	}
 }
