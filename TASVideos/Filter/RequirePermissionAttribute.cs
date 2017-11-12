@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
@@ -35,7 +35,7 @@ namespace TASVideos.Filter
 			_matchAny = matchAny;
 		}
 
-		public override void OnActionExecuting(ActionExecutingContext context)
+		public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
 			var userClaimsPrincipal = context.HttpContext.User;
 
@@ -49,12 +49,12 @@ namespace TASVideos.Filter
 
 			var userTasks = (UserTasks)context.HttpContext.RequestServices.GetService(typeof(UserTasks));
 
-			var userPerms = userTasks.GetUserPermissionsById(userId);
+			var userPerms = await userTasks.GetUserPermissionsByIdAsync(userId);
 			var reqs = new HashSet<PermissionTo>(_requiredPermissions);
 
 			if (_matchAny && reqs.Any(r => userPerms.Contains(r)) || reqs.IsSubsetOf(userPerms))
 			{
-				base.OnActionExecuting(context);
+				await base.OnActionExecutionAsync(context, next);
 			}
 			else if (context.HttpContext.Request.IsAjaxRequest())
 			{
