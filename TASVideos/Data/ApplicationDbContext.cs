@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Data
 {
-	public class ApplicationDbContext : IdentityDbContext<User, Role, int>
+	public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 			: base(options)
@@ -28,31 +27,31 @@ namespace TASVideos.Data
 					.HasFilter($"([{nameof(User.NormalizedUserName)}] IS NOT NULL)");
 			});
 
-			builder.Entity<IdentityUserLogin<int>>(entity =>
+			builder.Entity<UserLogin>(entity =>
 			{
 				entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 				entity.HasIndex(e => e.UserId);
 			});
 
-			builder.Entity<IdentityRoleClaim<int>>(entity =>
+			builder.Entity<RoleClaim>(entity =>
 			{
 				entity.HasIndex(e => e.RoleId);
 			});
 
-			builder.Entity<IdentityUserClaim<int>>(entity =>
+			builder.Entity<UserClaim>(entity =>
 			{
 				entity.HasIndex(e => e.UserId);
 			});
 
-			builder.Entity<IdentityUserRole<int>>(entity =>
+			builder.Entity<UserRole>(entity =>
 			{
 				entity.HasKey(e => new { e.UserId, e.RoleId });
 				entity.HasIndex(e => e.RoleId);
 			});
 
-			builder.Entity<IdentityUserToken<int>>(entity =>
+			builder.Entity<UserToken>(entity =>
 			{
-				entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+				entity.HasKey(e => new {e.UserId, e.LoginProvider, e.Name});
 			});
 
 			builder.Entity<RolePermission>()

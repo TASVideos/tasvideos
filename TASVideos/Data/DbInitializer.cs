@@ -47,7 +47,7 @@ namespace TASVideos.Data
 				foreach (var role in context.Roles.ToList())
 				{
 					var savedUser = context.Users.Single(u => u.UserName == user.UserName);
-					context.UserRoles.Add(new IdentityUserRole<int> { RoleId = role.Id, UserId = savedUser.Id });
+					context.UserRoles.Add(new UserRole { RoleId = role.Id, UserId = savedUser.Id });
 				}
 			}
 
