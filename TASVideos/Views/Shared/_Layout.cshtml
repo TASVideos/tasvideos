@@ -35,7 +35,7 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="@Url.Action("Index", "Home")">Home</a></li>
+					<li><a asp-action="@nameof(HomeController.Index)" asp-controller="Home">Home</a></li>
 				</ul>
 				@await Html.PartialAsync("_LoginPartial")
 			</div>
@@ -45,7 +45,7 @@
 		@RenderBody()
 		<hr />
 		<footer>
-			<p>&copy; 2017 - TASVideos v@(ViewBag.Version)</p>
+			<p>&copy; 2017 - TASVideos v@(ViewData["Version"])</p>
 		</footer>
 	</div>
 

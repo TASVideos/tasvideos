@@ -3,9 +3,9 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace TASVideos.Views.Manage
+namespace TASVideos.Views.Profile
 {
-    public static class ManageNavPages
+    public static class ProfileNavPages
     {
         public static string ActivePageKey => "ActivePage";
 

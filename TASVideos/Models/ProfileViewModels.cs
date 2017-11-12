@@ -2,7 +2,7 @@
 
 namespace TASVideos.Models
 {
-	public class IndexViewModel
+	public class ProfileIndexViewModel
 	{
 		public string Username { get; set; }
 
