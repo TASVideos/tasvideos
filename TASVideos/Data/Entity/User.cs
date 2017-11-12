@@ -3,6 +3,6 @@
 namespace TASVideos.Data.Entity
 {
     public class User : IdentityUser<int>
-    {
-    }
+    {		
+	}
 }

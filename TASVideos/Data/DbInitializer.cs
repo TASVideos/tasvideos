@@ -51,18 +51,6 @@ namespace TASVideos.Data
 				}
 			}
 
-			var publications = new[]
-			{
-				new Publication { DummyProperty = "dummy1" },
-				new Publication { DummyProperty = "dummy2" },
-				new Publication { DummyProperty = "dummy3" },
-			};
-
-			foreach (var p in publications)
-			{
-				context.Publications.Add(p);
-			}
-
 			context.SaveChanges();
 		}
 	}
