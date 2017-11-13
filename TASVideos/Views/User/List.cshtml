@@ -1,0 +1,31 @@
+﻿@model PageOf<UserListViewModel>
+@{
+	ViewData["Title"] = "User Management";
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.First().Id)</th>
+		<th>@Html.DisplayNameFor(m => m.First().UserName)</th>
+		<th>@Html.DisplayNameFor(m => m.First().Roles)</th>
+		<th>Actions</th>
+	</tr>
+	@foreach (var user in Model)
+	{
+		<tr>
+			<td>@user.Id</td>
+			<td>@user.UserName</td>
+			<td>@string.Join(",", user.Roles)</td>
+			<td>
+				<button type="button" class="btn btn-default">View</button>
+				@if (ViewData.UserHasPermission(PermissionTo.EditRoles))
+				{
+					<button type="button" class="btn btn-primary">Edit</button>
+				}
+			</td>
+			
+		</tr>
+	}
+</table>
