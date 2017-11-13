@@ -65,5 +65,62 @@ namespace TASVideos.Tasks
 				})
 				.ToListAsync();
 		}
+
+		// TODO: document
+		public PageOf<UserListViewModel> GetPageOfUsers(PagedModel paging)
+		{
+			var data = _db.Users
+				.Include(u => u.UserRoles)
+				.ThenInclude(ur => ur.Role)
+				.Select(u => new UserListViewModel
+				{
+					Id = u.Id,
+					UserName = u.UserName,
+					Roles = u.UserRoles.Select(ur => ur.Role.Name)
+				})
+				.OrderBy(u => u.Id) // TODO: soring
+				.Paginate(_db, paging.CurrentPage, paging.PageSize, out int rowCount);
+
+			var paged = new PageOf<UserListViewModel>(data)
+			{
+				PageSize = paging.PageSize,
+				CurrentPage = paging.CurrentPage,
+				RowCount = rowCount
+			};
+
+			return paged;
+		}
+
+		// TODO: document, for the read-only user view page
+		public async Task<UserDetailsViewModel> GetUserDetails(int id)
+		{
+			return await _db.Users
+				.Select(u => new UserDetailsViewModel
+				{
+					Id = u.Id,
+					UserName = u.UserName,
+					Roles = u.UserRoles.Select(ur => ur.Role.Name)
+				})
+				.SingleAsync(u => u.Id == id);
+		}
+
+		// TODO: document, for the User/Edit screen
+		public async Task<UserEditViewModel> GetUserForEdit(int id)
+		{
+			return await _db.Users
+				.Select(u => new UserEditViewModel
+				{
+					Id = u.Id,
+					UserName = u.UserName
+				})
+				.SingleAsync(u => u.Id == id);
+		}
+
+		// TODO: document
+		public async Task EditUser(UserEditViewModel model)
+		{
+			var user = await _db.Users.SingleAsync(u => u.Id == model.Id);
+			// TODO edit and save
+		}
 	}
 }

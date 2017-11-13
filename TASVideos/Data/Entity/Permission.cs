@@ -49,8 +49,9 @@ namespace TASVideos.Data.Entity
 		EditSystemPages = 3,
 		EditRoles = 4,
 		DeleteRoles = 5,
-		EditUsers = 6,
-		EditPermissionDetails = 7
+		ViewUsers = 6,
+		EditUsers = 7,
+		EditPermissionDetails = 8
 	}
 
 	/// <summary>

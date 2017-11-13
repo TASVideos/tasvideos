@@ -32,6 +32,7 @@ namespace TASVideos.Data
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
 		{
+			var roles = context.Roles.ToList();
 			foreach (var user in UserSampleData.Users)
 			{
 				var result = await userManager.CreateAsync(user, UserSampleData.SamplePassword);
@@ -45,9 +46,28 @@ namespace TASVideos.Data
 				savedUser.EmailConfirmed = true;
 				savedUser.LockoutEnabled = false; // TODO: only for admins
 
-				foreach (var role in context.Roles.ToList()) // TODO: only for admins
+				foreach (var role in roles) // TODO: only for admins
 				{
 					context.UserRoles.Add(new UserRole { RoleId = role.Id, UserId = savedUser.Id });
+				}
+			}
+
+			// Create lots of throw away users to test things like paging
+			for (int i = 1; i <= 41; i++)
+			{
+				var dummyUser = new User
+				{
+					UserName = $"Dummy{i}",
+					Email = $"Dummy{i}@example.com",
+					EmailConfirmed = SampleGenerator.RandomBool()
+				};
+
+				var result = await userManager.CreateAsync(dummyUser, UserSampleData.SamplePassword);
+
+				if (SampleGenerator.RandomBool())
+				{
+					var role = roles.AtRandom(); // TODO: exclude admin!
+					context.UserRoles.Add(new UserRole { Role = role, User = dummyUser });
 				}
 			}
 

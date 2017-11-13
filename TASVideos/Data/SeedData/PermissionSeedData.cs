@@ -43,6 +43,13 @@ namespace TASVideos.Data.SeedData
 			},
 			new Permission
 			{
+				Id = PermissionTo.ViewUsers,
+				Name = "View Users",
+				Description = "The ability to see other user's profile data in read-only form",
+				Group = PermissionGroups.UserAdministration
+			},
+			new Permission
+			{
 				Id = PermissionTo.EditUsers,
 				Name = "Edit Users",
 				Description = "The ability to edit users and assign/remove roles from the user",
