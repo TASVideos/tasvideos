@@ -19,10 +19,10 @@
 			<td>@user.UserName</td>
 			<td>@string.Join(",", user.Roles)</td>
 			<td>
-				<button type="button" class="btn btn-default">View</button>
+				<a asp-action="Index" asp-route-id="@user.Id" class="btn btn-default">View</a>
 				@if (ViewData.UserHasPermission(PermissionTo.EditRoles))
 				{
-					<button type="button" class="btn btn-primary">Edit</button>
+					<a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
 				}
 			</td>
 			

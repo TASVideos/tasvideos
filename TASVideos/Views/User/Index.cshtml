@@ -3,6 +3,12 @@
 	ViewData["Title"] = Model.UserName;
 }
 
+@if (ViewData.UserHasPermission(PermissionTo.EditUsers))
+{
+	<a asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
+}
+
 <h4>@ViewData["Title"]</h4>
 
-<p>TODO</p>
+<label>Roles</label>
+<div>@string.Join(",", Model.Roles)</div>

@@ -55,11 +55,19 @@ namespace TASVideos.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
+				// TODO: repopulate avaialble roles
 				return View(model);
 			}
 
 			await _userTasks.EditUser(model);
 			return RedirectToAction(nameof(List));
+		}
+
+		[RequirePermission(PermissionTo.EditUsers)]
+		public async Task<IActionResult> Unlock(int id, string returnUrl)
+		{
+			await _userTasks.UnlockUser(id);
+			return RedirectToLocal(returnUrl);
 		}
 	}
 }
