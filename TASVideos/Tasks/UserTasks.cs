@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -107,13 +108,28 @@ namespace TASVideos.Tasks
 		// TODO: document, for the User/Edit screen
 		public async Task<UserEditViewModel> GetUserForEdit(int id)
 		{
-			return await _db.Users
+			// TODO: BeginTransaction
+			var model = await _db.Users
 				.Select(u => new UserEditViewModel
 				{
 					Id = u.Id,
-					UserName = u.UserName
+					UserName = u.UserName,
+					Email = u.Email,
+					EmailConfirmed = u.EmailConfirmed,
+					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue
 				})
 				.SingleAsync(u => u.Id == id);
+
+			model.AvailableRoles = await _db.Roles
+				.Select(r => new SelectListItem
+				{
+					Value = r.Id.ToString(),
+					Text = r.Name,
+					Selected = model.SelectedRoles.Contains(r.Id)
+				})
+				.ToListAsync();
+
+			return model;
 		}
 
 		// TODO: document
@@ -121,6 +137,14 @@ namespace TASVideos.Tasks
 		{
 			var user = await _db.Users.SingleAsync(u => u.Id == model.Id);
 			// TODO edit and save
+		}
+
+		// TODO: document
+		public async Task UnlockUser(int id)
+		{
+			var user = await _db.Users.SingleAsync(u => u.Id == id);
+			user.LockoutEnd = null;
+			await _db.SaveChangesAsync();
 		}
 	}
 }

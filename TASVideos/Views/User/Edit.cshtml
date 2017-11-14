@@ -5,4 +5,50 @@
 
 <h4>@ViewData["Title"]</h4>
 
-<p>TODO</p>
+
+<form asp-route="Edit" method="post">
+	<row>
+		<fieldset class="form-group col-md-5">
+			<label asp-for="UserName" class="control-label"></label>
+			<row>
+				<div class="col-sm-8">
+					<input asp-for="UserName" class="form-control" />
+				
+				</div>
+				<div class="col-sm-4">
+					<button type="button" class="btn btn-default">Check</button>
+				</div>
+			</row>
+			<span asp-validation-for="UserName"></span>
+		</fieldset>
+		<fieldset class="form-group col-md-offset-2 col-md-5">
+			<label asp-for="Email" class="control-label"></label>
+			@if (Model.EmailConfirmed)
+			{
+				<div class="input-group">
+					<label class="form-control">@Model.Email</label>
+					<span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+				</div>
+			}
+			else
+			{
+				<label class="form-control">@Model.Email</label>
+			}
+		</fieldset>
+		@if (Model.IsLockedOut)
+		{
+			<fieldset class="form-group col-md-12">
+				<label class="text-danger"><span class="glyphicon glyphicon-alert"></span> This user is currently locked out</label>
+				<a class="btn btn-default" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
+			</fieldset>
+		}
+	</row>
+	<row>
+		@Html.TwoColumnPickerFor(m => m.SelectedRolesStr, n => n.AvailableRoles)
+	</row>
+	<hr/>
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Update</button>
+		<a asp-action="List" class="btn btn-default">Cancel</a>
+	</div>
+</form>

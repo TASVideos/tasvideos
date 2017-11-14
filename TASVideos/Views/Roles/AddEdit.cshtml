@@ -15,19 +15,19 @@
 		<row>
 			<div class="col-sm-5">
 				<fieldset class="form-group">
-					<label asp-for="@Model.Name" class="control-label col-md-3"></label>
+					<label asp-for="Name" class="control-label col-md-3"></label>
 					<div class="col-md-9">
-						<input asp-for="@Model.Name" class="form-control" maxlength="50" />
-						<span asp-validation-for="@Model.Name" class="text-danger"></span>
+						<input asp-for="Name" class="form-control" maxlength="50" />
+						<span asp-validation-for="Name" class="text-danger"></span>
 					</div>
 				</fieldset>
 			</div>
 			<div class="col-sm-offset-2 col-sm-5">
 				<fieldset class="form-group">
-					<label asp-for="@Model.Description" class="control-label col-md-3"></label>
+					<label asp-for="Description" class="control-label col-md-3"></label>
 					<div class="col-md-9">
-						<textarea asp-for="@Model.Description" class="form-control" rows="3" maxlength="200"></textarea>
-						<span asp-validation-for="@Model.Description" class="text-danger"></span>
+						<textarea asp-for="Description" class="form-control" rows="3" maxlength="200"></textarea>
+						<span asp-validation-for="Description" class="text-danger"></span>
 					</div>
 				</fieldset>
 			</div>
