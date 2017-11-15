@@ -4,74 +4,93 @@
 }
 
 <h4>@ViewData["Title"]</h4>
-
-
+<hr />
 <form asp-route="Edit" method="post">
 	<row>
 		<fieldset class="form-group col-md-5">
 			<label asp-for="UserName" class="control-label"></label>
 			@if (ViewData.UserHasPermission(PermissionTo.EditUsersUserName))
 			{
+				<input asp-for="OriginalUserName" type="hidden" />
 				<row>
-					<div class="col-sm-9">
+					<div class="col-sm-10">
 						<div class="input-group">
 							<input asp-for="UserName" class="form-control"/>
 							<span class="input-group-addon" aria-hidden="true">
-								<span id="user-name-status-good" class="glyphicon glyphicon-ok text-success"></span>
-								<span id="user-name-status-bad" class="hide glyphicon glyphicon-alert text-danger"></span>
-								<span id="user-name-status-unknown" class="hide glyphicon glyphicon-question-sign text-primary"></span>
+								<span id="user-name-status" class="glyphicon glyphicon-ok text-success"></span>
 							</span>
 						</div>
 						<span id="username-exists-message" class="hide text-danger">User name already exists</span>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<button id="check-username" type="button" class="btn btn-default hide">Check</button>
 					</div>
 					<script>
 						(function () {
-							// Store username in hidden field on load, check current name against that, if same don't make the call, just green check it'
-							// on keypress if username is same as orginal immediately set to green check without them having to click check
-							// In addition to examation on fail, disable the update button
 							var checkUserBtn = document.getElementById('check-username');
 							var userNameBox = document.getElementById('UserName');
-							var userNameGoodIcon = document.getElementById('user-name-status-good');
-							var userNameBadIcon = document.getElementById('user-name-status-bad');
-							var userNameUnknownIcon = document.getElementById('user-name-status-unknown');
+							var userNameStatus = document.getElementById('user-name-status');
 							var userNameExistsMessage = document.getElementById('username-exists-message');
+							var originalUserNameBox = document.getElementById('OriginalUserName');
 
-							userNameBox.onkeypress = showCheckUserBtn;
-							userNameBox.onchange = showCheckUserBtn;
+							userNameBox.onkeyup = onUserNameBoxChange;
+							userNameBox.onchange = onUserNameBoxChange;
 
-							function showCheckUserBtn() {
-								checkUserBtn.classList.remove("hide");
-								userNameGoodIcon.classList.add("hide");
-								userNameBadIcon.classList.add("hide");
-								userNameUnknownIcon.classList.remove("hide");
+							function onUserNameBoxChange() {
+								if (userNameBox.value === originalUserNameBox.value) {
+									checkUserBtn.classList.add("hide");
+									markUserNameGood();
+								} else {
+									checkUserBtn.classList.remove("hide");
+									markUserNameUnknown();
+								}
+							}
+
+							function markUserNameUnknown() {
+								userNameStatus.classList.remove('glyphicon-ok', 'text-success');
+								userNameStatus.classList.remove('glyphicon-alert', 'text-danger');
+								userNameStatus.classList.add('glyphicon-question-sign', 'text-primary');
+								userNameExistsMessage.classList.add('hide');
+								document.getElementById('submit-btn').disabled = true;
+							}
+
+							function markUserNameGood() {
+								userNameStatus.classList.add('glyphicon-ok', 'text-success');
+								userNameStatus.classList.remove('glyphicon-alert', 'text-danger');
+								userNameStatus.classList.remove('glyphicon-question-sign', 'text-primary');
+								userNameExistsMessage.classList.add('hide');
+								document.getElementById('submit-btn').disabled = false;
+							}
+
+							function markUserNameBad() {
+								userNameStatus.classList.remove('glyphicon-ok', 'text-success');
+								userNameStatus.classList.add('glyphicon-alert', 'text-danger');
+								userNameStatus.classList.remove('glyphicon-question-sign', 'text-primary');
+								userNameExistsMessage.classList.remove('hide');
+								document.getElementById('submit-btn').disabled = true;
 							}
 
 							checkUserBtn.onclick = function () {
+								if (originalUserNameBox.value === userNameBox.value) {
+									markUserNameGood();
+									return;
+								}
+
 								var xmlhttp = new XMLHttpRequest();
 
 								xmlhttp.onreadystatechange = function () {
-									if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+									if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 										if (xmlhttp.status === 200) {
 											if (xmlhttp.responseText === "true") {
-												userNameGoodIcon.classList.add("hide");
-												userNameBadIcon.classList.remove("hide");
-												userNameUnknownIcon.classList.add("hide");
-												userNameExistsMessage.classList.remove("hide");
+												markUserNameBad();
 											} else {
-												userNameGoodIcon.classList.remove("hide");
-												userNameBadIcon.classList.add("hide");
-												userNameUnknownIcon.classList.add("hide");
-												userNameExistsMessage.classList.add("hide");
+												markUserNameGood();
 											}
 										}
 									}
 								};
 
-								var userName = userNameBox.value;
-								xmlhttp.open("GET", "/User/VerifyUserNameIsUnique?userName=" + userName, true);
+								xmlhttp.open("GET", "/User/VerifyUserNameIsUnique?userName=" + userNameBox.value, true);
 								xmlhttp.send();
 							};
 						})();
@@ -111,7 +130,7 @@
 	@Html.TwoColumnPickerFor(m => m.SelectedRolesStr, n => n.AvailableRoles)
 	<hr/>
 	<div class="text-center">
-		<button type="submit" class="btn btn-primary">Update</button>
+		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
 		<a asp-action="List" class="btn btn-default">Cancel</a>
 	</div>
 </form>
