@@ -146,5 +146,11 @@ namespace TASVideos.Tasks
 			user.LockoutEnd = null;
 			await _db.SaveChangesAsync();
 		}
+
+		public async Task<bool> CheckUserNameExists(string userName)
+		{
+			return await _db.Users
+				.AnyAsync(u => u.UserName == userName);
+		}
 	}
 }

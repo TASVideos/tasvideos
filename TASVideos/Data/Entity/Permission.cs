@@ -51,7 +51,10 @@ namespace TASVideos.Data.Entity
 		DeleteRoles = 5,
 		ViewUsers = 6,
 		EditUsers = 7,
-		EditPermissionDetails = 8
+		EditPermissionDetails = 8,
+		EditUsersUserName = 9,
+		FullAssignRoles = 10,
+		PartialAssignRoles = 11
 	}
 
 	/// <summary>
