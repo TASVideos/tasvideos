@@ -56,6 +56,8 @@ namespace TASVideos.Models
 		[DisplayName("User Name")]
 		public string UserName { get; set; }
 
+		public string OriginalUserName => UserName;
+
 		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
 
 		[DisplayName("Selected Roles")]
