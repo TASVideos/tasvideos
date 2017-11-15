@@ -52,7 +52,7 @@ namespace TASVideos.Data.SeedData
 			{
 				Id = PermissionTo.EditUsers,
 				Name = "Edit Users",
-				Description = "The ability to edit users and assign/remove roles from the user",
+				Description = "The ability to edit basic information about another user",
 				Group = PermissionGroups.UserAdministration
 			},
 			new Permission
@@ -60,6 +60,27 @@ namespace TASVideos.Data.SeedData
 				Id = PermissionTo.EditPermissionDetails,
 				Name = "Edit Permission Metadata",
 				Description = "The ability to edit the description, groups, and any other metadata related to permissions. Note that the behavior of submissions can not be modified.",
+				Group = PermissionGroups.UserAdministration
+			},
+			new Permission
+			{
+				Id = PermissionTo.EditUsersUserName,
+				Name = "Edit User's UserName",
+				Description = $"The ability to change another user's UserName. Users with this {nameof(Permission)} should also have the {nameof(PermissionTo.EditUsers)} {nameof(Permission)}.",
+				Group = PermissionGroups.UserAdministration
+			},
+			new Permission
+			{
+				Id = PermissionTo.FullAssignRoles,
+				Name = "Full Assign Roles to Users",
+				Description = $"The ability to assign any Role to any User, unrestricted. Note that this includes assigning admin roles. This {nameof(Permission)} should be carefully restricted.",
+				Group = PermissionGroups.UserAdministration
+			},
+			new Permission
+			{
+				Id = PermissionTo.PartialAssignRoles,
+				Name = "Partial Assign Roles to Users",
+				Description = $"The ability to assign Roles to any User with some restrictions. A user with this permisison may not assign a {nameof(Permission)} that they do not have, and can not assign the ability to assign Roles",
 				Group = PermissionGroups.UserAdministration
 			}
 		};

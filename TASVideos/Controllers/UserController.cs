@@ -69,5 +69,12 @@ namespace TASVideos.Controllers
 			await _userTasks.UnlockUser(id);
 			return RedirectToLocal(returnUrl);
 		}
+
+		[RequirePermission(PermissionTo.EditUsersUserName)]
+		public async Task<IActionResult> VerifyUserNameIsUnique(string userName)
+		{
+			var exists = await _userTasks.CheckUserNameExists(userName);
+			return Json(exists);
+		}
 	}
 }
