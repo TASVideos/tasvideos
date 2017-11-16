@@ -26,17 +26,6 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<RolePermission> RolePermission { get; set; }
 	}
 
-	// Cross table for a many-to-many relationship between Roles and Permissions
-	// Unforutnatley this is necessary in EF Core 2.0 (Unlike EF 6). Hopefully future iterations will allow us to remove this junko
-	public class RolePermission
-	{
-		public int RoleId { get; set; }
-		public Role Role { get; set; }
-
-		public PermissionTo PermissionId { get; set; }
-		public Permission Permission { get; set; }
-	}
-
 	/// <summary>
 	/// Represents the most granular level permissions possible in the site. All site code is based on these permissions
 	/// The <see cref="Permission" /> table documents these permissions but this is informational and do not affect the site behavior />
