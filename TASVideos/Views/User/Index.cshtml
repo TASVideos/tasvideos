@@ -1,6 +1,6 @@
 ﻿@model UserDetailsViewModel
 @{
-	ViewData["Title"] = Model.UserName;
+	ViewData["Title"] = $"Details for User: {Model.UserName}";
 }
 
 @if (ViewData.UserHasPermission(PermissionTo.EditUsers))
@@ -9,6 +9,49 @@
 }
 
 <h4>@ViewData["Title"]</h4>
+<hr />
 
-<label>Roles</label>
-<div>@string.Join(",", Model.Roles)</div>
+<row>
+	@if (ViewData.UserHasPermission(PermissionTo.EditUsers))
+	{
+		<div class="form-group col-md-6">
+			<label asp-for="Email"></label>
+			<div>@Model.Email</div>
+		</div>
+	}
+	
+	<div class="form-group col-md-6">
+		<label asp-for="EmailConfirmed"></label>
+		@if (Model.EmailConfirmed)
+		{
+			<div><span class="glyphicon glyphicon-check text-success"></span> Yes</div>
+		}
+		else
+		{
+			<div><span class="glyphicon glyphicon-alert text-danger"></span> No</div>
+		}
+	</div>
+</row>
+<row>
+	<div class="form-group col-md-12">
+		<label asp-for="IsLockedOut"></label>
+		@if (Model.IsLockedOut)
+		{
+			<div><span class="glyphicon glyphicon-check text-danger"></span> Locked out</div>
+		}
+		else
+		{
+			<div><span class="glyphicon glyphicon-alert text-success"></span> Not locked</div>
+		}
+	</div>
+</row>
+<row>
+	<div class="form-group col-md-12">
+		<label asp-for="Roles"></label>
+		<div>@(Model.Roles.Any() ? string.Join(",", Model.Roles) : "None")</div>
+	</div>
+</row>
+
+<div class="text-center">
+	<a asp-action="List" class="btn btn-default">Return to List</a>
+</div>
