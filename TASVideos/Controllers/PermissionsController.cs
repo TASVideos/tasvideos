@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
 using TASVideos.Filter;
 using TASVideos.Models;
+using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
@@ -36,8 +36,9 @@ namespace TASVideos.Controllers
 			return View(model.ToList());
 		}
 
-		[RequirePermission(PermissionTo.EditPermissionDetails)]
 		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequirePermission(PermissionTo.EditPermissionDetails)]
 		public async Task<IActionResult> Edit(IEnumerable<PermissionEditViewModel> model)
 		{
 			if (model == null)
