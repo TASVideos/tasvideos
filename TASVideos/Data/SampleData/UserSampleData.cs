@@ -5,13 +5,23 @@ namespace TASVideos.Data.SampleData
 	// User data is sample data not seed data because we do not want to go to production with known credentials
 	public class UserSampleData
 	{
-		public static User[] Users =
+		public static User[] AdminUsers =
 		{
 			new User
 			{
 				UserName = "adelikat",
 				NormalizedUserName = "ADELIKAT",
 				Email = "adelikat@tasvideos.org"
+			}
+		};
+
+		public static User[] Users =
+		{
+			new User
+			{
+				UserName = "Dara.Marks",
+				NormalizedUserName = "DARA.MARKS",
+				Email = "dara.marks@example.com"
 			}
 		};
 
