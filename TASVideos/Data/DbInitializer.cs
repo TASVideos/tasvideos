@@ -22,7 +22,24 @@ namespace TASVideos.Data
 			context.Database.EnsureCreated();
 
 			context.Permissions.AddRange(PermissionSeedData.Permissions);
+			context.Roles.Add(RoleSeedData.AdminRole);
 			context.Roles.AddRange(RoleSeedData.Roles);
+
+			// Make micro roles with 1 permission, for each permission
+			// These are useful for giving people 1-off permissions
+			foreach (var permission in Enum.GetValues(typeof(PermissionTo)).Cast<PermissionTo>())
+			{
+				var role = new Role
+				{
+					Name = permission.ToString(),
+					Description = $"A role containing only the {permission.ToString()} {nameof(Permission)}"
+				};
+
+				role.RolePermission.Add(new RolePermission {Role = role, PermissionId = permission });
+
+				context.Roles.Add(role);
+			}
+
 			context.SaveChanges();
 		}
 
@@ -32,7 +49,26 @@ namespace TASVideos.Data
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
 		{
-			var roles = context.Roles.ToList();
+			var roles = context.Roles.Where(r => r.Name != RoleSeedData.AdminRole.Name).ToList();
+
+			foreach (var admin in UserSampleData.AdminUsers)
+			{
+				var result = await userManager.CreateAsync(admin, UserSampleData.SamplePassword);
+				if (!result.Succeeded)
+				{
+					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
+				}
+
+				var savedAdminUser = context.Users.Single(u => u.UserName == admin.UserName);
+				savedAdminUser.EmailConfirmed = true;
+				savedAdminUser.LockoutEnabled = false;
+
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.AdminRole, User = savedAdminUser });
+
+				// And one random role for testing multi-role
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Roles.AtRandom(), User = savedAdminUser });
+			}
+
 			foreach (var user in UserSampleData.Users)
 			{
 				var result = await userManager.CreateAsync(user, UserSampleData.SamplePassword);
@@ -41,15 +77,11 @@ namespace TASVideos.Data
 					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
 				}
 
-
 				var savedUser = context.Users.Single(u => u.UserName == user.UserName);
 				savedUser.EmailConfirmed = true;
-				savedUser.LockoutEnabled = false; // TODO: only for admins
 
-				foreach (var role in roles) // TODO: only for admins
-				{
-					context.UserRoles.Add(new UserRole { RoleId = role.Id, UserId = savedUser.Id });
-				}
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Roles.AtRandom(), User = savedUser });
+				
 			}
 
 			// Create lots of throw away users to test things like paging
@@ -59,14 +91,17 @@ namespace TASVideos.Data
 				{
 					UserName = $"Dummy{i}",
 					Email = $"Dummy{i}@example.com",
-					EmailConfirmed = SampleGenerator.RandomBool()
+					EmailConfirmed = SampleGenerator.RandomBool(),
+					LockoutEnd = SampleGenerator.RandomBool() && SampleGenerator.RandomBool()
+						? DateTime.Now.AddMonths(1)
+						: (DateTimeOffset?)null
 				};
 
-				var result = await userManager.CreateAsync(dummyUser, UserSampleData.SamplePassword);
+				await userManager.CreateAsync(dummyUser, UserSampleData.SamplePassword);
 
 				if (SampleGenerator.RandomBool())
 				{
-					var role = roles.AtRandom(); // TODO: exclude admin!
+					var role = roles.AtRandom();
 					context.UserRoles.Add(new UserRole { Role = role, User = dummyUser });
 				}
 			}
