@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
 using TASVideos.Filter;
 using TASVideos.Models;
+using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
@@ -41,6 +41,7 @@ namespace TASVideos.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		[RequirePermission(PermissionTo.EditRoles)]
 		public async Task<IActionResult> AddEdit(RoleEditViewModel model)
 		{
