@@ -41,7 +41,6 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-
 		[RequirePermission(PermissionTo.EditUsers)]
 		public async Task<IActionResult> Edit(int id)
 		{

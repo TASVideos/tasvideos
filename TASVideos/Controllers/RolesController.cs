@@ -18,8 +18,7 @@ namespace TASVideos.Controllers
 
 		public RolesController(
 			RoleTasks roleTasks,
-			UserTasks userTasks
-			)
+			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_roleTasks = roleTasks;
