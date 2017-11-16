@@ -31,7 +31,15 @@ namespace TASVideos.Models
 		[DisplayName("User Name")]
 		public string UserName { get; set; }
 
-		[DisplayName("Role")]
+		[DisplayName("Lock out Status")]
+		public bool IsLockedOut { get; set; }
+
+		public string Email { get; set; }
+
+		[DisplayName("Email Confirmed")]
+		public bool EmailConfirmed { get; set; }
+
+		[DisplayName("Current Roles")]
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 	}
 

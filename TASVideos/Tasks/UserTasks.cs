@@ -95,6 +95,9 @@ namespace TASVideos.Tasks
 				{
 					Id = u.Id,
 					UserName = u.UserName,
+					Email = u.Email,
+					EmailConfirmed = u.EmailConfirmed,
+					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
 					Roles = u.UserRoles.Select(ur => ur.Role.Name)
 				})
 				.SingleAsync(u => u.Id == id);
