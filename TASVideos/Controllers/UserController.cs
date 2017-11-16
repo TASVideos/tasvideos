@@ -45,7 +45,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.EditUsers)]
 		public async Task<IActionResult> Edit(int id)
 		{
-			var model = await _userTasks.GetUserForEdit(id);
+			var model = await _userTasks.GetUserForEdit(id, UserPermissions);
 			return View(model);
 		}
 
@@ -55,7 +55,7 @@ namespace TASVideos.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				// TODO: repopulate avaialble roles
+				model.AvailableRoles = await _userTasks.GetAllRolesUserCanAssign(UserPermissions);
 				return View(model);
 			}
 
