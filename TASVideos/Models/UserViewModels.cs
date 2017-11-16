@@ -20,7 +20,10 @@ namespace TASVideos.Models
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 	}
 
-	// TODO: document, for the read-only user view page
+
+	/// <summary>
+	/// Represents a <see cref="TASVideos.Data.Entity.User"/> for the purpose of viewing
+	/// </summary>
 	public class UserDetailsViewModel
 	{
 		public int Id { get; set; }
@@ -32,7 +35,9 @@ namespace TASVideos.Models
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 	}
 
-	// TODO: document, for the User/Edit screen
+	/// <summary>
+	/// Represents a <see cref="TASVideos.Data.Entity.User"/> for the purpose of editing
+	/// </summary>
 	public class UserEditViewModel : UserEditPostViewModel
 	{
 		[EmailAddress]
@@ -42,12 +47,14 @@ namespace TASVideos.Models
 
 		public bool IsLockedOut { get; set; }
 
+		public string OriginalUserName => UserName;
+
 		[DisplayName("Available Roles")]
 		public IEnumerable<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
 	}
 
 	/// <summary>
-	/// Just the fields that can be posted from the User edit page
+	/// Just the fields that can be posted from the <see cref="TASVideos.Data.Entity.User" /> edit page
 	/// </summary>
 	public class UserEditPostViewModel
 	{
@@ -55,8 +62,6 @@ namespace TASVideos.Models
 
 		[DisplayName("User Name")]
 		public string UserName { get; set; }
-
-		public string OriginalUserName => UserName;
 
 		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
 

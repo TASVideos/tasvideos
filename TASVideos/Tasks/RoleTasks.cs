@@ -18,7 +18,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns all of the <see cref="TASVideos.Data.Entity.Role" /> records for the purpose of display
+		/// Returns all of the <see cref="Role" /> records for the purpose of display
 		/// </summary>
 		public async Task<IEnumerable<RoleDisplayViewModel>> GetAllRolesForDisplayAsync()
 		{
@@ -39,7 +39,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a <see cref="TASVideos.Data.Entity.Role" /> with the given id for the purpose of editing
+		/// Returns a <see cref="Role" /> with the given id for the purpose of editing
 		/// </summary>
 		public async Task<RoleEditViewModel> GetRoleForEditAsync(int? id)
 		{
@@ -59,7 +59,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Adds or Updates the given <seealso cref="Role"/>
+		/// Adds or Updates the given <see cref="Role"/>
 		/// If an Id is provided, the Role is updated
 		/// If no id is provided, then it is inserted
 		/// </summary>
