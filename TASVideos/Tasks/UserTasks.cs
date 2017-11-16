@@ -87,7 +87,6 @@ namespace TASVideos.Tasks
 		/// Gets a <see cref="User"/> for the purpose of viewing
 		/// </summary>
 		/// <param name="id"></param>
-		/// <returns></returns>
 		public async Task<UserDetailsViewModel> GetUserDetails(int id)
 		{
 			return await _db.Users

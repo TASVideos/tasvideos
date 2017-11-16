@@ -25,14 +25,14 @@ namespace TASVideos.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			var model = await _permissionTasks.GetAllPermissionsForDisplayAsync();
+			var model = await _permissionTasks.GetAllPermissionsForDisplay();
 			return View(model);
 		}
 
 		[RequirePermission(PermissionTo.EditPermissionDetails)]
 		public async Task<IActionResult> Edit()
 		{
-			var model = await _permissionTasks.GetAllPermissionsForEditAsync();
+			var model = await _permissionTasks.GetAllPermissionsForEdit();
 			return View(model.ToList());
 		}
 
@@ -48,7 +48,7 @@ namespace TASVideos.Controllers
 
 			if (ModelState.IsValid)
 			{
-				await _permissionTasks.UpdatePermissionDetailsAsync(model);
+				await _permissionTasks.UpdatePermissionDetails(model);
 				return RedirectToAction(nameof(Index));
 			}
 
