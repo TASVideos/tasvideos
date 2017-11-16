@@ -104,9 +104,26 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a <see cref="User"/>  with the given id for the purpose of editing
+		/// Gets all of the <see cref="Role"/>s that the current <see cref="User"/> can assign to another user
+		/// The list depends on the current User's <see cref="Permission"/> list
 		/// </summary>
-		public async Task<UserEditViewModel> GetUserForEdit(int id)
+		public async Task<IEnumerable<SelectListItem>> GetAllRolesUserCanAssign(IEnumerable<PermissionTo> userPermissions)
+		{
+			// TODO: use the user's permissions!
+			return await _db.Roles
+				.Select(r => new SelectListItem
+				{
+					Value = r.Id.ToString(),
+					Text = r.Name
+				})
+				.ToListAsync();
+		}
+
+		/// <summary>
+		/// Returns a <see cref="User"/>  with the given id for the purpose of editing
+		/// Which <see cref="Role"/>s are available to assign to the User depends on the current User's <see cref="Permission"/> list
+		/// </summary>
+		public async Task<UserEditViewModel> GetUserForEdit(int id, IEnumerable<PermissionTo> currentUserPermissions)
 		{
 			using (await _db.Database.BeginTransactionAsync())
 			{
@@ -126,14 +143,7 @@ namespace TASVideos.Tasks
 					.Select(ur => ur.RoleId)
 					.ToListAsync();
 
-				model.AvailableRoles = await _db.Roles
-					.Select(r => new SelectListItem
-					{
-						Value = r.Id.ToString(),
-						Text = r.Name,
-						Selected = model.SelectedRoles.Contains(r.Id)
-					})
-					.ToListAsync();
+				model.AvailableRoles = await GetAllRolesUserCanAssign(currentUserPermissions);
 
 				return model;
 			}
