@@ -13,37 +13,52 @@
 			{
 				<input asp-for="OriginalUserName" type="hidden" />
 				<row>
-					<div class="col-sm-10">
+					<div id="user-name-div" class="col-sm-12">
 						<div class="input-group">
-							<input asp-for="UserName" class="form-control"/>
+							<input asp-for="UserName" class="form-control" autocomplete="off" />
 							<span class="input-group-addon" aria-hidden="true">
 								<span id="user-name-status" class="glyphicon glyphicon-ok text-success"></span>
 							</span>
 						</div>
 						<span id="username-exists-message" class="hide text-danger">User name already exists</span>
 					</div>
-					<div class="col-sm-2">
+					<div>
 						<button id="check-username" type="button" class="btn btn-default hide">Check</button>
 					</div>
 					<script>
 						(function () {
 							var checkUserBtn = document.getElementById('check-username');
-							var userNameBox = document.getElementById('UserName');
+							var userNameBox = document.getElementById('@nameof(Model.UserName)');
 							var userNameStatus = document.getElementById('user-name-status');
 							var userNameExistsMessage = document.getElementById('username-exists-message');
-							var originalUserNameBox = document.getElementById('OriginalUserName');
+							var originalUserNameBox = document.getElementById('@nameof(Model.OriginalUserName)');
+							var userNameDiv = document.getElementById('user-name-div');
 
 							userNameBox.onkeyup = onUserNameBoxChange;
 							userNameBox.onchange = onUserNameBoxChange;
 
 							function onUserNameBoxChange() {
 								if (userNameBox.value === originalUserNameBox.value) {
-									checkUserBtn.classList.add("hide");
+									hideCheckNameBtn();
 									markUserNameGood();
 								} else {
-									checkUserBtn.classList.remove("hide");
+									showCheckNameBtn();
 									markUserNameUnknown();
 								}
+							}
+
+							function showCheckNameBtn() {
+								checkUserBtn.classList.remove('hide');
+								checkUserBtn.parentNode.classList.add('col-sm-2');
+								userNameDiv.classList.remove('col-sm-12');
+								userNameDiv.classList.add('col-sm-10');
+							}
+
+							function hideCheckNameBtn() {
+								checkUserBtn.classList.add("hide");
+								checkUserBtn.parentNode.classList.remove('col-sm-2');
+								userNameDiv.classList.remove('col-sm-10');
+								userNameDiv.classList.add('col-sm-12');
 							}
 
 							function markUserNameUnknown() {
@@ -90,7 +105,7 @@
 									}
 								};
 
-								xmlhttp.open("GET", "/User/VerifyUserNameIsUnique?userName=" + userNameBox.value, true);
+								xmlhttp.open("GET", "/User/@(nameof(UserController.VerifyUserNameIsUnique))?userName=" + userNameBox.value, true);
 								xmlhttp.send();
 							};
 						})();
