@@ -27,14 +27,14 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Index()
 		{
-			var model = await _roleTasks.GetAllRolesForDisplayAsync();
+			var model = await _roleTasks.GetAllRolesForDisplay();
 			return View(model);
 		}
 
 		[RequirePermission(PermissionTo.EditRoles)]
 		public async Task<IActionResult> AddEdit(int? id)
 		{
-			var model = await _roleTasks.GetRoleForEditAsync(id);
+			var model = await _roleTasks.GetRoleForEdit(id);
 			model.AvailablePermissions = PermissionsSelectList;
 			return View(model);
 		}
@@ -46,7 +46,7 @@ namespace TASVideos.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				await _roleTasks.AddUpdateRoleAsync(model);
+				await _roleTasks.AddUpdateRole(model);
 				return RedirectToAction(nameof(Index));
 			}
 
@@ -57,7 +57,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.DeleteRoles)]
 		public async Task<IActionResult> Delete(int id)
 		{
-			await _roleTasks.DeleteRoleAsync(id);
+			await _roleTasks.DeleteRole(id);
 			return RedirectToAction(nameof(Index));
 		}
 

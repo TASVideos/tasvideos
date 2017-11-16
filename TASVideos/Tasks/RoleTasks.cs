@@ -20,7 +20,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns all of the <see cref="Role" /> records for the purpose of display
 		/// </summary>
-		public async Task<IEnumerable<RoleDisplayViewModel>> GetAllRolesForDisplayAsync()
+		public async Task<IEnumerable<RoleDisplayViewModel>> GetAllRolesForDisplay()
 		{
 			return await _db.Roles
 				.Include(r => r.RolePermission)
@@ -41,7 +41,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a <see cref="Role" /> with the given id for the purpose of editing
 		/// </summary>
-		public async Task<RoleEditViewModel> GetRoleForEditAsync(int? id)
+		public async Task<RoleEditViewModel> GetRoleForEdit(int? id)
 		{
 			var model = id.HasValue
 				? await _db.Roles
@@ -64,7 +64,7 @@ namespace TASVideos.Tasks
 		/// If no id is provided, then it is inserted
 		/// </summary>
 		/// <param name="model"></param>
-		public async Task AddUpdateRoleAsync(RoleEditViewModel model)
+		public async Task AddUpdateRole(RoleEditViewModel model)
 		{
 			Role role;
 			if (model.Id.HasValue)
@@ -92,7 +92,12 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
-		public async Task DeleteRoleAsync(int id)
+		/// <summary>
+		/// Removes the <see cref="Role" /> with the given id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public async Task DeleteRole(int id)
 		{
 			var role = await _db.Roles.SingleAsync(r => r.Id == id);
 			_db.Roles.Remove(role);

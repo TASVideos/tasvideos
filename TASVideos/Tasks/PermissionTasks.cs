@@ -20,7 +20,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns all of the <see cref="TASVideos.Data.Entity.Permission" /> records for the purpose of display
 		/// </summary>
-		public async Task<IEnumerable<PermissionDisplayViewModel>> GetAllPermissionsForDisplayAsync()
+		public async Task<IEnumerable<PermissionDisplayViewModel>> GetAllPermissionsForDisplay()
 		{
 			return await _db.Permissions
 				.Include(p => p.RolePermission)
@@ -40,7 +40,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns all of the <see cref="TASVideos.Data.Entity.Permission" /> records for the purpose of editing the metadata
 		/// </summary>
-		public async Task<IEnumerable<PermissionEditViewModel>> GetAllPermissionsForEditAsync()
+		public async Task<IEnumerable<PermissionEditViewModel>> GetAllPermissionsForEdit()
 		{
 			return await _db.Permissions
 				.Select(p => new PermissionEditViewModel
@@ -58,7 +58,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Updates all of the given <see cref="TASVideos.Data.Entity.Permission" /> records
 		/// </summary>
-		public async Task UpdatePermissionDetailsAsync(IEnumerable<PermissionEditViewModel> model)
+		public async Task UpdatePermissionDetails(IEnumerable<PermissionEditViewModel> model)
 		{
 			if (model == null)
 			{
