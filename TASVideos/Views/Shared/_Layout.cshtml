@@ -20,7 +20,7 @@
 <body>
 	<nav id="banner" class="navbar navbar-inverse">
 		<div id="mantra">
-			<a id="brand" href="@Url.Action("Index", "Home")">TASVideos</a>
+			<a id="brand" asp-action="Index" asp-controller="Home">TASVideos</a>
 			<div id="mantra1">Tool-assisted game movies</div>
 			<div id="mantra2">When human skills are just not enough</div>
 		</div>
@@ -35,7 +35,7 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li><a asp-action="@nameof(HomeController.Index)" asp-controller="Home">Home</a></li>
+					<li><a asp-action="Index" asp-controller="Home">Home</a></li>
 				</ul>
 				@await Html.PartialAsync("_LoginPartial")
 			</div>

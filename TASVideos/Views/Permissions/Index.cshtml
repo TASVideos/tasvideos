@@ -8,7 +8,7 @@
 <row>
 	@if (ViewData.UserHasPermission(PermissionTo.EditPermissionDetails))
 	{
-		<a href="@Url.Action("Edit")" class="pull-right btn btn-primary mb-m">Edit</a>
+		<a asp-action="Edit" class="pull-right btn btn-primary mb-m">Edit</a>
 	}
 	<table class="table table-bordered table-striped">
 		<tr>
