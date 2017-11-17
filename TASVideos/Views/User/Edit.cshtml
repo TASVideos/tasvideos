@@ -6,12 +6,18 @@
 <h4>@ViewData["Title"]</h4>
 <hr />
 <form asp-route="Edit" method="post">
-	<row>
-		<div class="form-group col-md-6">
-			<label asp-for="CreateTimeStamp"></label>
-			<div>@Model.CreateTimeStamp</div>
-		</div>
-	</row>
+	<div class="form-group">
+		<row>
+			<div class="col-md-5">
+				<label asp-for="CreateTimeStamp"></label>
+				<div>@Model.CreateTimeStamp</div>
+			</div>
+			<div class="col-md-offset-2 col-md-5">
+				<label asp-for="LastLoggedInTimeStamp"></label>
+				<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
+			</div>
+		</row>
+	</div>
 	<row>
 		<fieldset class="form-group col-md-5">
 			<label asp-for="UserName" class="control-label"></label>

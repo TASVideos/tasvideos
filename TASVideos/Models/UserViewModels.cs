@@ -32,6 +32,10 @@ namespace TASVideos.Models
 		[DisplayName("Account Created On")]
 		public DateTime CreateTimeStamp { get; set; }
 
+		[DisplayName("User Last Logged In")]
+		[DisplayFormat(NullDisplayText = "Never")]
+		public DateTime? LastLoggedInTimeStamp { get; set; }
+
 		[DisplayName("User Name")]
 		public string UserName { get; set; }
 
@@ -54,6 +58,10 @@ namespace TASVideos.Models
 	{
 		[DisplayName("Account Created On")]
 		public DateTime CreateTimeStamp { get; set; }
+
+		[DisplayName("User Last Logged In")]
+		[DisplayFormat(NullDisplayText = "Never")]
+		public DateTime? LastLoggedInTimeStamp { get; set; }
 
 		[EmailAddress]
 		public string Email { get; set; }
