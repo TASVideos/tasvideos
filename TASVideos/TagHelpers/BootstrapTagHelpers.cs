@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 namespace TASVideos.TagHelpers
 {
@@ -53,23 +52,6 @@ namespace TASVideos.TagHelpers
 	</div>
 </div>
 ");
-		}
-	}
-
-	public static class TagHelperOutputExtensions
-	{
-		public static void AddCssClass(this TagHelperOutput output, string className)
-		{
-			var existingClass = output.Attributes.FirstOrDefault(a => a.Name == "class");
-			var cssClass = existingClass?.Value.ToString() ?? "";
-			cssClass += $" {className}";
-			var ta = new TagHelperAttribute("class", cssClass);
-			if (existingClass != null)
-			{
-				output.Attributes.Remove(existingClass);
-			}
-
-			output.Attributes.Add(ta);
 		}
 	}
 }
