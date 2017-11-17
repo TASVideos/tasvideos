@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -28,6 +29,9 @@ namespace TASVideos.Models
 	{
 		public int Id { get; set; }
 
+		[DisplayName("Account Created On")]
+		public DateTime CreateTimeStamp { get; set; }
+
 		[DisplayName("User Name")]
 		public string UserName { get; set; }
 
@@ -48,6 +52,9 @@ namespace TASVideos.Models
 	/// </summary>
 	public class UserEditViewModel : UserEditPostViewModel
 	{
+		[DisplayName("Account Created On")]
+		public DateTime CreateTimeStamp { get; set; }
+
 		[EmailAddress]
 		public string Email { get; set; }
 
