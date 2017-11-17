@@ -67,11 +67,11 @@ namespace TASVideos.Controllers
 		private static IEnumerable<SelectListItem> PermissionsSelectList =>
 			Enum.GetValues(typeof(PermissionTo))
 				.Cast<PermissionTo>()
-				.ToList()
 				.Select(p => new SelectListItem
 				{
 					Value = ((int)p).ToString(),
 					Text = p.ToString()
-				});
+				})
+				.ToList();
 	}
 }
