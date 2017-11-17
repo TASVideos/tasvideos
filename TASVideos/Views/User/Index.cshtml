@@ -12,6 +12,12 @@
 <hr />
 
 <row>
+	<div class="form-group col-md-6">
+		<label asp-for="CreateTimeStamp"></label>
+		<div>@Model.CreateTimeStamp</div>
+	</div>
+</row>
+<row>
 	@if (ViewData.UserHasPermission(PermissionTo.EditUsers))
 	{
 		<div class="form-group col-md-6">

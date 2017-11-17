@@ -93,6 +93,7 @@ namespace TASVideos.Tasks
 				.Select(u => new UserDetailsViewModel
 				{
 					Id = u.Id,
+					CreateTimeStamp = u.CreateTimeStamp,
 					UserName = u.UserName,
 					Email = u.Email,
 					EmailConfirmed = u.EmailConfirmed,
@@ -130,10 +131,11 @@ namespace TASVideos.Tasks
 					.Select(u => new UserEditViewModel
 					{
 						Id = u.Id,
+						CreateTimeStamp = u.CreateTimeStamp,
 						UserName = u.UserName,
 						Email = u.Email,
 						EmailConfirmed = u.EmailConfirmed,
-						IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+						IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue
 					})
 					.SingleAsync(u => u.Id == id);
 

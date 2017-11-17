@@ -7,15 +7,21 @@
 <hr />
 <form asp-route="Edit" method="post">
 	<row>
+		<div class="form-group col-md-6">
+			<label asp-for="CreateTimeStamp"></label>
+			<div>@Model.CreateTimeStamp</div>
+		</div>
+	</row>
+	<row>
 		<fieldset class="form-group col-md-5">
 			<label asp-for="UserName" class="control-label"></label>
 			@if (ViewData.UserHasPermission(PermissionTo.EditUsersUserName))
 			{
-				<input asp-for="OriginalUserName" type="hidden" />
+				<input asp-for="OriginalUserName" type="hidden"/>
 				<row>
 					<div id="user-name-div" class="col-sm-12">
 						<div class="input-group">
-							<input asp-for="UserName" class="form-control" autocomplete="off" />
+							<input asp-for="UserName" class="form-control" autocomplete="off"/>
 							<span class="input-group-addon" aria-hidden="true">
 								<span id="user-name-status" class="glyphicon glyphicon-ok text-success"></span>
 							</span>
@@ -26,7 +32,7 @@
 						<button id="check-username" type="button" class="btn btn-default hide">Check</button>
 					</div>
 					<script>
-						(function () {
+						(function() {
 							var checkUserBtn = document.getElementById('check-username');
 							var userNameBox = document.getElementById('@nameof(Model.UserName)');
 							var userNameStatus = document.getElementById('user-name-status');
@@ -85,7 +91,7 @@
 								document.getElementById('submit-btn').disabled = true;
 							}
 
-							checkUserBtn.onclick = function () {
+							checkUserBtn.onclick = function() {
 								if (originalUserNameBox.value === userNameBox.value) {
 									markUserNameGood();
 									return;
@@ -93,7 +99,7 @@
 
 								var xmlhttp = new XMLHttpRequest();
 
-								xmlhttp.onreadystatechange = function () {
+								xmlhttp.onreadystatechange = function() {
 									if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 										if (xmlhttp.status === 200) {
 											if (xmlhttp.responseText === "true") {
@@ -105,7 +111,8 @@
 									}
 								};
 
-								xmlhttp.open("GET", "/User/@(nameof(UserController.VerifyUserNameIsUnique))?userName=" + userNameBox.value, true);
+								xmlhttp.open("GET", "/User/@(nameof(UserController.VerifyUserNameIsUnique))?userName=" + userNameBox.value,
+									true);
 								xmlhttp.send();
 							};
 						})();
