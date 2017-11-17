@@ -34,7 +34,7 @@
 		</row>
 		@Html.TwoColumnPickerFor(m => m.SelectedPermissionsStr, n => n.AvailablePermissions)
 		<row class="text-center mt-el">
-			<button type="submit" class="text-center btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
+			<button type="submit" class="btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
 			<a asp-action="Index" class="btn btn-default">Cancel</a>
 		</row>
 	</form>
