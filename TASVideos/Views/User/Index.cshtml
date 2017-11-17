@@ -11,12 +11,20 @@
 <h4>@ViewData["Title"]</h4>
 <hr />
 
-<row>
-	<div class="form-group col-md-6">
-		<label asp-for="CreateTimeStamp"></label>
-		<div>@Model.CreateTimeStamp</div>
-	</div>
-</row>
+
+<div class="form-group">
+	<row>
+		<div class="col-md-6">
+			<label asp-for="CreateTimeStamp"></label>
+			<div>@Model.CreateTimeStamp</div>
+		</div>
+		<div class="col-md-6">
+			<label asp-for="LastLoggedInTimeStamp"></label>
+			<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
+		</div>
+	</row>
+</div>
+
 <row>
 	@if (ViewData.UserHasPermission(PermissionTo.EditUsers))
 	{

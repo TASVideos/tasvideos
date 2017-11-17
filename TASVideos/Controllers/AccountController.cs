@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Tasks;
@@ -22,6 +23,7 @@ namespace TASVideos.Controllers
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
+		private readonly UserTasks _userTasks;
 
 		public AccountController(
 			UserManager<User> userManager,
@@ -31,6 +33,7 @@ namespace TASVideos.Controllers
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_userTasks = userTasks;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailSender = emailSender;
@@ -65,6 +68,7 @@ namespace TASVideos.Controllers
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User logged in.");
+					await _userTasks.MarkUserLoggedIn(model.UserName);
 					return RedirectToLocal(returnUrl);
 				}
 

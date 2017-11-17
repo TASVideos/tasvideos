@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -94,6 +95,7 @@ namespace TASVideos.Tasks
 				{
 					Id = u.Id,
 					CreateTimeStamp = u.CreateTimeStamp,
+					LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
 					UserName = u.UserName,
 					Email = u.Email,
 					EmailConfirmed = u.EmailConfirmed,
@@ -132,6 +134,7 @@ namespace TASVideos.Tasks
 					{
 						Id = u.Id,
 						CreateTimeStamp = u.CreateTimeStamp,
+						LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
 						UserName = u.UserName,
 						Email = u.Email,
 						EmailConfirmed = u.EmailConfirmed,
@@ -191,6 +194,16 @@ namespace TASVideos.Tasks
 		{
 			return await _db.Users
 				.AnyAsync(u => u.UserName == userName);
+		}
+
+		/// <summary>
+		/// Sets the <see cref="User" /> with the given username's last logged in timestamp to UTC Now
+		/// </summary>
+		public async Task MarkUserLoggedIn(string userName)
+		{
+			var user = await _db.Users.SingleAsync(u => u.UserName == userName);
+			user.LastLoggedInTimeStamp = DateTime.UtcNow;
+			await _db.SaveChangesAsync();
 		}
 
 		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)
