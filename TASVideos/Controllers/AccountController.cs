@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Tasks;
@@ -120,7 +119,7 @@ namespace TASVideos.Controllers
 					_logger.LogInformation("User created a new account with password.");
 
 					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString() /* TODO: this might be bad? We could add a random guid in the user table*/, code, Request.Scheme);
+					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
 					await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
@@ -187,7 +186,7 @@ namespace TASVideos.Controllers
 				// For more information on how to enable account confirmation and password reset please
 				// visit https://go.microsoft.com/fwlink/?LinkID=532713
 				var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-				var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString() /*TODO*/, code, Request.Scheme);
+				var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, Request.Scheme);
 				await _emailSender.SendEmailAsync(model.Email, "Reset Password",
 				   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
 				return RedirectToAction(nameof(ForgotPasswordConfirmation));
