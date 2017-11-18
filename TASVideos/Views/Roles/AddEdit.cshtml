@@ -3,10 +3,7 @@
 	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Name : "Create a New Role";
 }
 
-@if (Model.Id.HasValue && ViewData.UserHasPermission(PermissionTo.DeleteRoles))
-{
-	<delete-button asp-href="@Url.Action($"Delete/{Model.Id}")" class="pull-right text-center">Delete</delete-button>
-}
+<delete-button condition="@Model.Id.HasValue && ViewData.UserHasPermission(PermissionTo.DeleteRoles)" asp-href="@Url.Action($"Delete/{Model.Id}")" class="pull-right text-center">Delete</delete-button>
 <h4>@ViewData["Title"]</h4>
 <hr />
 <div class="container">
