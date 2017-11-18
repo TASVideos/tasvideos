@@ -2,10 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Extensions;
@@ -36,6 +33,7 @@ namespace TASVideos.TagHelpers
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
+			ValidateExpressions();
 			output.TagMode = TagMode.StartTagAndEndTag;
 
 			string selectedIds = (string)IdList.Model;
@@ -94,6 +92,7 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml("<select>");
 			output.Content.AppendHtml("</div>");
 
+			// Middle Column Div
 			output.Content.AppendHtml($@"
 <div class='col-xs-2'>
 	<div class='col-sm-offset-3 col-sm-6'>
@@ -123,7 +122,7 @@ namespace TASVideos.TagHelpers
 	</div>
 </div>
 ");
-
+			// Right Column Div
 			output.Content.AppendHtml("<div class='col-xs-5'>");
 			output.Content.AppendHtml($"<label class='control-label' for='{selectedListName}'>{IdList.ModelExplorer.Metadata.DisplayName}</label>");
 			output.Content.AppendHtml(
@@ -131,9 +130,9 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml(
 				_htmlGenerator.GenerateGroupsAndOptions(null, selectedItems));
 			output.Content.AppendHtml("<select>");
-
 			output.Content.AppendHtml("</div>");
 
+			// Script Tag
 			var uniqueFuncName = "twoColumnPicker" + context.UniqueId;
 			string script = $@"<script>function {uniqueFuncName}() {{
 				document.getElementById('{availableListName}').addEventListener('dblclick', function() {{
@@ -206,7 +205,6 @@ namespace TASVideos.TagHelpers
 			</script>";
 
 			output.Content.AppendHtml(script);
-
 		}
 
 		private void ValidateExpressions()
