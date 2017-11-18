@@ -130,6 +130,10 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml(
 				_htmlGenerator.GenerateGroupsAndOptions(null, selectedItems));
 			output.Content.AppendHtml("<select>");
+
+			output.Content.AppendHtml(
+				_htmlGenerator.GenerateValidationMessage(ViewContext, IdList.ModelExplorer, IdList.Name, null, null, new { @class = "text-danger" }));
+
 			output.Content.AppendHtml("</div>");
 
 			// Script Tag
