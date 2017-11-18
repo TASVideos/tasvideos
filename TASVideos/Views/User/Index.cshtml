@@ -3,14 +3,9 @@
 	ViewData["Title"] = $"Details for User: {Model.UserName}";
 }
 
-@if (ViewData.UserHasPermission(PermissionTo.EditUsers))
-{
-	<a asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
-}
-
+<a condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
 <h4>@ViewData["Title"]</h4>
 <hr />
-
 
 <div class="form-group">
 	<row>
@@ -25,47 +20,48 @@
 	</row>
 </div>
 
-<row>
-	@if (ViewData.UserHasPermission(PermissionTo.EditUsers))
-	{
-		<div class="form-group col-md-6">
+<div class="form-group">
+	<row>
+		<div class="col-md-6" condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)">
 			<label asp-for="Email"></label>
 			<div>@Model.Email</div>
 		</div>
-	}
-	
-	<div class="form-group col-md-6">
-		<label asp-for="EmailConfirmed"></label>
-		@if (Model.EmailConfirmed)
-		{
-			<div><span class="glyphicon glyphicon-check text-success"></span> Yes</div>
-		}
-		else
-		{
-			<div><span class="glyphicon glyphicon-alert text-danger"></span> No</div>
-		}
-	</div>
-</row>
-<row>
-	<div class="form-group col-md-12">
-		<label asp-for="IsLockedOut"></label>
-		@if (Model.IsLockedOut)
-		{
-			<div><span class="glyphicon glyphicon-check text-danger"></span> Locked out</div>
-		}
-		else
-		{
-			<div><span class="glyphicon glyphicon-alert text-success"></span> Not locked</div>
-		}
-	</div>
-</row>
-<row>
-	<div class="form-group col-md-12">
-		<label asp-for="Roles"></label>
-		<div>@(Model.Roles.Any() ? string.Join(",", Model.Roles) : "None")</div>
-	</div>
-</row>
-
+		<div class="col-md-6">
+			<label asp-for="EmailConfirmed"></label>
+			@if (Model.EmailConfirmed)
+			{
+				<div><span class="glyphicon glyphicon-check text-success"></span> Yes</div>
+			}
+			else
+			{
+				<div><span class="glyphicon glyphicon-alert text-danger"></span> No</div>
+			}
+		</div>
+	</row>
+</div>
+<div class="form-group">
+	<row>
+		<div class="col-md-12">
+			<label asp-for="IsLockedOut"></label>
+			@if (Model.IsLockedOut)
+			{
+				<div><span class="glyphicon glyphicon-check text-danger"></span> Locked out</div>
+			}
+			else
+			{
+				<div><span class="glyphicon glyphicon-alert text-success"></span> Not locked</div>
+			}
+		</div>
+	</row>
+</div>
+<div class="form-group">
+	<row>
+		<div class="col-md-12">
+			<label asp-for="Roles"></label>
+			<div>@(Model.Roles.Any() ? string.Join(", ", Model.Roles) : "User is not currently assigned to any Roles")</div>
+		</div>
+	</row>
+</div>
 <div class="text-center">
 	<a asp-action="List" class="btn btn-default">Return to List</a>
 </div>
