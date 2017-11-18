@@ -151,6 +151,8 @@ namespace TASVideos.TagHelpers
 						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{availableListName}').removeChild(elem);
 					}});
+
+					sortLists();
 				}});
 
 				document.getElementById('{addAllBtnName}').addEventListener('click', function () {{
@@ -165,6 +167,8 @@ namespace TASVideos.TagHelpers
 						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{availableListName}').removeChild(elem);
 					}});
+
+					sortLists();
 				}});
 
 				document.getElementById('{removeBtnName}').addEventListener('click', function () {{
@@ -175,6 +179,8 @@ namespace TASVideos.TagHelpers
 
 						document.querySelector('[name=""{modelName}""][v=""' + elem.value + '""]').remove();
 					}});
+
+					sortLists();
 				}});
 
 				document.getElementById('{removeAllBtnName}').addEventListener('click', function () {{
@@ -189,7 +195,27 @@ namespace TASVideos.TagHelpers
 					while (container.lastChild) {{
 						container.removeChild(container.lastChild);
 					}}
+
+					sortLists();
 				}});
+
+				function sortLists() {{
+					sortSelect(document.getElementById('{availableListName}'));
+					sortSelect(document.getElementById('{selectedListName}'));
+				}}
+
+				function sortSelect(elem) {{
+					var tmpAry = [];
+					var selectedValue = elem[elem.selectedIndex] != undefined ? elem[elem.selectedIndex] : null
+					for (var i = 0; i < elem.options.length;i++) tmpAry.push(elem.options[i]);
+					tmpAry.sort(function(a,b){{ return (a.text < b.text)?-1:1; }});
+					while (elem.options.length > 0) elem.options[0] = null;
+					for (var i = 0; i < tmpAry.length; i++) {{
+						elem.options[i] = tmpAry[i];
+					}}
+
+					return;
+				}}
 			}};
 			{uniqueFuncName}();
 			</script>";
