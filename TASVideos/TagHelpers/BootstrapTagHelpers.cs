@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers
 {
@@ -29,12 +28,11 @@ namespace TASVideos.TagHelpers
 			}
 
 			var content = (await output.GetChildContentAsync()).GetContent();
-			var uniqueModalId = "areYouSureModal" + Guid.NewGuid().ToString().Replace("-", "");
 			output.TagName = "div";
 			
 			output.Content.SetHtmlContent($@"
-<button type='button' class='btn btn-danger {existingCssClass}' data-toggle='modal' data-target='#{uniqueModalId}'>{content}</button>
-<div id='{uniqueModalId}' class='modal fade' role='dialog'>
+<button type='button' class='btn btn-danger {existingCssClass}' data-toggle='modal' data-target='#areYouSureModal{context.UniqueId}'>{content}</button>
+<div id='{context.UniqueId}' class='modal fade' role='dialog'>
 	<div class='modal-dialog'>
 		<div class='modal-content'>
 			<div class='modal-header'>
