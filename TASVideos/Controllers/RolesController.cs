@@ -35,6 +35,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> AddEdit(int? id)
 		{
 			var model = await _roleTasks.GetRoleForEdit(id);
+			model.SelectedPermissionsInt = model.SelectedPermissions.Select(p => (int) p);
 			model.AvailablePermissions = PermissionsSelectList;
 			return View(model);
 		}
@@ -46,6 +47,7 @@ namespace TASVideos.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				model.SelectedPermissions = model.SelectedPermissionsInt.Select(pi => (PermissionTo) pi);
 				await _roleTasks.AddUpdateRole(model);
 				return RedirectToAction(nameof(Index));
 			}

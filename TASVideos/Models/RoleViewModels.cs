@@ -35,16 +35,8 @@ namespace TASVideos.Models
 
 		public IEnumerable<PermissionTo> SelectedPermissions { get; set; } = new List<PermissionTo>();
 
-		[Display(Name = "Selected Permissions")]
-		[Required(ErrorMessage = "At least one permissions is required.")]
-		public string SelectedPermissionsStr
-		{
-			get => string.Join(",", SelectedPermissions.Select(p => (int)p));
-			set => SelectedPermissions = value?.Split(",")
-				.Select(int.Parse)
-				.Select(i => (PermissionTo)i)
-				.ToList() ?? new List<PermissionTo>();
-		}
+		[AtLeastOne(ErrorMessage = "At least one permission is required.")]
+		public IEnumerable<int> SelectedPermissionsInt { get; set; } = new List<int>();
 
 		[Display(Name = "Available Permissions")]
 		public IEnumerable<SelectListItem> AvailablePermissions { get; set; } = new List<SelectListItem>();
