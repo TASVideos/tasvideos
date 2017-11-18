@@ -56,18 +56,16 @@ namespace TASVideos.TagHelpers
 			var removeAllBtnName = modelName + "removeAllBtn";
 
 			output.TagName = "div";
-			output.Attributes.Add("style", "display: flex; align-items: center;");
-
 
 			// Generate hidden form element that will contain the selected ids
-			output.Content.AppendHtml($"<span id='{modelContainer}'>");
+			output.Content.AppendHtml($"<div class='row' id='{modelContainer}'>");
 			for (int i = 0; i < selectedIdList.Count; i++)
 			{
-				output.Content.AppendHtml($"<input type='text' v='{selectedIdList[i]}' name='{IdList.Name}' style='visibility: hidden; width: 0' value='{selectedIdList[i]}' />");
+				output.Content.AppendHtml($"<input type='hidden' v='{selectedIdList[i]}' name='{IdList.Name}' value='{selectedIdList[i]}' />");
 			}
 
-			output.Content.AppendHtml("</span>");
-
+			output.Content.AppendHtml("</div>");
+			output.Content.AppendHtml("<div class='row' style='display: flex; align-items: center;'>");
 			// Left Column Div
 			output.Content.AppendHtml("<div class='col-xs-5'>");
 			output.Content.AppendHtml(_htmlGenerator.GenerateLabel(
@@ -144,9 +142,9 @@ namespace TASVideos.TagHelpers
 					aopts.forEach(function (elem) {{
 						var newInp = document.createElement('input')
 						newInp.name = '{modelName}';
+						newInp.type = 'hidden';
 						newInp.value = elem.value;
 						newInp.setAttribute('v', elem.value);
-						newInp.style = 'visibility: hidden; width: 0';
 						document.getElementById('{modelContainer}').appendChild(newInp);
 						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{availableListName}').removeChild(elem);
@@ -160,9 +158,9 @@ namespace TASVideos.TagHelpers
 					aopts.forEach(function (elem) {{
 						var newInp = document.createElement('input')
 						newInp.name = '{modelName}';
+						newInp.type = 'hidden';
 						newInp.value = elem.value;
 						newInp.setAttribute('v', elem.value);
-						newInp.style = 'visibility: hidden; width: 0';
 						document.getElementById('{modelContainer}').appendChild(newInp);
 						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{availableListName}').removeChild(elem);
@@ -221,6 +219,7 @@ namespace TASVideos.TagHelpers
 			</script>";
 
 			output.Content.AppendHtml(script);
+			output.Content.AppendHtml("</div>");
 		}
 
 		private void ValidateExpressions()
