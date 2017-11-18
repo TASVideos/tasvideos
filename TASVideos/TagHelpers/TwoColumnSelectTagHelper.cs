@@ -114,7 +114,14 @@ namespace TASVideos.TagHelpers
 ");
 			// Right Column Div
 			output.Content.AppendHtml("<div class='col-xs-5'>");
-			output.Content.AppendHtml($"<label class='control-label' for='{selectedListName}'>{IdList.ModelExplorer.Metadata.DisplayName}</label>");
+
+			output.Content.AppendHtml(_htmlGenerator.GenerateLabel(
+				ViewContext,
+				IdList.ModelExplorer,
+				modelName,
+				IdList.ModelExplorer.Metadata.DisplayName,
+				new { @class = "control-label" }));
+
 			output.Content.AppendHtml(
 				$"<select class='form-control' id='{selectedListName}' multiple='multiple' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
 			output.Content.AppendHtml(
