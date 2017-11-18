@@ -95,7 +95,7 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 
 			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString() /*todo*/, code, Request.Scheme);
+			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
 			var email = user.Email;
 			await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
 
