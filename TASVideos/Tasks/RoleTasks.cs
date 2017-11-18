@@ -50,7 +50,7 @@ namespace TASVideos.Tasks
 						Id = p.Id,
 						Name = p.Name,
 						Description = p.Description,
-						SelectedPermissions = p.RolePermission.Select(rp => rp.PermissionId)
+						SelectedPermissions = p.RolePermission.Select(rp => (int)rp.PermissionId)
 					})
 					.SingleAsync(p => p.Id == id.Value)
 				: new RoleEditViewModel();
@@ -86,7 +86,7 @@ namespace TASVideos.Tasks
 				.Select(p => new RolePermission
 				{
 					RoleId = role.Id,
-					PermissionId = p
+					PermissionId = (PermissionTo)p
 				}));
 
 			await _db.SaveChangesAsync();

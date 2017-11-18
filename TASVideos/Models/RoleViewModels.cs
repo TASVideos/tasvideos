@@ -33,10 +33,8 @@ namespace TASVideos.Models
 		[StringLength(200)]
 		public string Description { get; set; }
 
-		public IEnumerable<PermissionTo> SelectedPermissions { get; set; } = new List<PermissionTo>();
-
 		[AtLeastOne(ErrorMessage = "At least one permission is required.")]
-		public IEnumerable<int> SelectedPermissionsInt { get; set; } = new List<int>();
+		public IEnumerable<int> SelectedPermissions { get; set; } = new List<int>();
 
 		[Display(Name = "Available Permissions")]
 		public IEnumerable<SelectListItem> AvailablePermissions { get; set; } = new List<SelectListItem>();
