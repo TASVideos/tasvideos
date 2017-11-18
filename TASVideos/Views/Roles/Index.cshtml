@@ -11,34 +11,29 @@
 	<p>See the <a asp-controller="Permissions" asp-action="Index">Permission List</a> for details on individual permissions</p>
 }
 
-<row>
-	@foreach (var role in Model)
-	{
-		<div class="panel panel-default">
-			<div class="panel-heading">@role.Name</div>
-			<div class="panel-body">
-				<div class="col-sm-6">
-					<row>
-						@if (ViewData.UserHasPermission(PermissionTo.EditRoles))
-						{
-							<div>
-								<a asp-action="AddEdit" asp-route-id="@role.Id" class="btn btn-primary mb-m">Edit</a>
-							</div>
-						}
-						@role.Description
-					</row>
-				</div>
-				<div class="col-sm-6">
-					<strong>Permissions:</strong><br />
-					@foreach (var permission in role.Permissions)
-					{
-						@permission<br />
-					}
-				</div>
+@foreach (var role in Model)
+{
+	<div class="panel panel-default">
+		<div class="panel-heading">@role.Name</div>
+		<div class="panel-body">
+			<div class="col-sm-6">
+				<row>
+					<div condition="@ViewData.UserHasPermission(PermissionTo.EditRoles)">
+						<a asp-action="AddEdit" asp-route-id="@role.Id" class="btn btn-primary mb-m">Edit</a>
+					</div>
+					@role.Description
+				</row>
+			</div>
+			<div class="col-sm-6">
+				<strong>Permissions:</strong><br />
+				@foreach (var permission in role.Permissions)
+				{
+					@permission<br />
+				}
 			</div>
 		</div>
-	}
-</row>
+	</div>
+}
 
 <a asp-action="AddEdit" class="btn btn-primary">Create New Role</a>
 
