@@ -58,14 +58,14 @@ namespace TASVideos.TagHelpers
 			output.TagName = "div";
 
 			// Generate hidden form element that will contain the selected ids
-			output.Content.AppendHtml($"<div class='row' id='{modelContainer}'>");
+			output.Content.AppendHtml($"<span id='{modelContainer}'>");
 			for (int i = 0; i < selectedIdList.Count; i++)
 			{
 				output.Content.AppendHtml($"<input type='hidden' v='{selectedIdList[i]}' name='{IdList.Name}' value='{selectedIdList[i]}' />");
 			}
 
-			output.Content.AppendHtml("</div>");
-			output.Content.AppendHtml("<div class='row' style='display: flex; align-items: center;'>");
+			output.Content.AppendHtml("</span>");
+			output.Content.AppendHtml("<div style='display: flex; align-items: center;'>");
 			// Left Column Div
 			output.Content.AppendHtml("<div class='col-xs-5'>");
 			output.Content.AppendHtml(_htmlGenerator.GenerateLabel(
