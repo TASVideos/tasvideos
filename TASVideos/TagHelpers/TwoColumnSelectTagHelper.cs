@@ -65,6 +65,7 @@ namespace TASVideos.TagHelpers
 			{
 				output.Content.AppendHtml($"<input type='text' v='{selectedIdList[i]}' name='{IdList.Name}' style='visibility: hidden; width: 0' value='{selectedIdList[i]}' />");
 			}
+
 			output.Content.AppendHtml("</span>");
 
 			// Left Column Div
