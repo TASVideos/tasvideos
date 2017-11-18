@@ -5,9 +5,9 @@
 
 <h4>@ViewData["Title"]</h4>
 <hr />
-<form asp-route="Edit" method="post">
-	<div class="form-group">
-		<row>
+<form asp-route="Edit">
+	<row>
+		<fieldset class="form-group">
 			<div class="col-md-5">
 				<label asp-for="CreateTimeStamp"></label>
 				<div>@Model.CreateTimeStamp</div>
@@ -16,8 +16,9 @@
 				<label asp-for="LastLoggedInTimeStamp"></label>
 				<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
 			</div>
-		</row>
-	</div>
+		</fieldset>
+	</row>
+	
 	<row>
 		<fieldset class="form-group col-md-5">
 			<label asp-for="UserName" class="control-label"></label>
