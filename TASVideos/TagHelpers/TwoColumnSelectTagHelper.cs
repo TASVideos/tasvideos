@@ -120,7 +120,7 @@ namespace TASVideos.TagHelpers
 				IdList.ModelExplorer,
 				modelName,
 				IdList.ModelExplorer.Metadata.DisplayName,
-				new { @class = "control-label" }));
+				new { @class = "control-label", @for = selectedListName }));
 
 			output.Content.AppendHtml(
 				$"<select class='form-control' id='{selectedListName}' multiple='multiple' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
