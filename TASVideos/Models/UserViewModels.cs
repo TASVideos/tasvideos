@@ -86,16 +86,7 @@ namespace TASVideos.Models
 		[DisplayName("User Name")]
 		public string UserName { get; set; }
 
-		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
-
 		[DisplayName("Selected Roles")]
-		public string SelectedRolesStr
-		{
-			get => string.Join(",", SelectedRoles);
-			set => SelectedRoles = value?
-				.Split(",")
-				.Select(int.Parse)
-				.ToList() ?? new List<int>();
-		}
+		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
 	}
 }

@@ -36,17 +36,10 @@ namespace TASVideos.TagHelpers
 			ValidateExpressions();
 			output.TagMode = TagMode.StartTagAndEndTag;
 
-			string selectedIds = (string)IdList.Model;
-			List<SelectListItem> availableItems = ((IEnumerable<SelectListItem>) AvailableList.Model).ToList();
+			List<int> selectedIdList = ((IEnumerable<int>)IdList.Model).ToList();
+			List<SelectListItem> availableItems = ((IEnumerable<SelectListItem>)AvailableList.Model).ToList();
 
 			int rowSize = RowHeight ?? availableItems.Count.Clamp(8, 14); // Min and Max set by eyeballing it and deciding what looked decent
-
-			var selectedIdList = !string.IsNullOrWhiteSpace(selectedIds)
-				? selectedIds
-					.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-					.Select(int.Parse)
-					.ToList()
-				: new List<int>();
 
 			var selectedItems = availableItems
 				.Where(y => selectedIdList.Contains(int.Parse(y.Value)))
@@ -54,6 +47,7 @@ namespace TASVideos.TagHelpers
 			var remainingItems = availableItems.Except(selectedItems);
 
 			var modelName = IdList.ModelExplorer.Metadata.PropertyName;
+			var modelContainer = modelName + "-id-container";
 			var availableListName = AvailableList.ModelExplorer.Metadata.PropertyName;
 			var selectedListName = "Selected" + modelName;
 			var addBtnName = modelName + "addBtn";
@@ -64,17 +58,14 @@ namespace TASVideos.TagHelpers
 			output.TagName = "div";
 			output.Attributes.Add("style", "display: flex; align-items: center;");
 
+
 			// Generate hidden form element that will contain the selected ids
-			output.Content.AppendHtml(_htmlGenerator.GenerateTextBox(
-				ViewContext,
-				IdList.ModelExplorer,
-				IdList.Name,
-				IdList.Model,
-				null,
-				new
-				{
-					style = "visibility: hidden; width: 0"
-				}));
+			output.Content.AppendHtml($"<span id='{modelContainer}'>");
+			for (int i = 0; i < selectedIdList.Count; i++)
+			{
+				output.Content.AppendHtml($"<input type='text' v='{selectedIdList[i]}' name='{IdList.Name}' style='visibility: hidden; width: 0' value='{selectedIdList[i]}' />");
+			}
+			output.Content.AppendHtml("</span>");
 
 			// Left Column Div
 			output.Content.AppendHtml("<div class='col-xs-5'>");
@@ -148,52 +139,41 @@ namespace TASVideos.TagHelpers
 				}});
 
 				document.getElementById('{addBtnName}').addEventListener('click', function () {{
-					var selectedIds = document.getElementById('{modelName}').value
-					var tempVals = selectedIds ? selectedIds.split(',') : new Array();
-
 					var aopts = document.querySelectorAll('#{availableListName} option:checked');
 					aopts.forEach(function (elem) {{
-						tempVals.push(elem.value);
+						var newInp = document.createElement('input')
+						newInp.name = '{modelName}';
+						newInp.value = elem.value;
+						newInp.setAttribute('v', elem.value);
+						newInp.style = 'visibility: hidden; width: 0';
+						document.getElementById('{modelContainer}').appendChild(newInp);
 						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{availableListName}').removeChild(elem);
 					}});
-
-					document.getElementById('{modelName}').value = tempVals.join();
 				}});
 
 				document.getElementById('{addAllBtnName}').addEventListener('click', function () {{
 					var aopts = document.querySelectorAll('#{availableListName} option');
-					var tempVals = new Array();
-
-					var existingIds = document.getElementById('{modelName}').value;
-					if (existingIds) {{
-						tempVals = existingIds.split(',');
-					}}
-
 					aopts.forEach(function (elem) {{
-						tempVals.push(elem.value);
+						var newInp = document.createElement('input')
+						newInp.name = '{modelName}';
+						newInp.value = elem.value;
+						newInp.setAttribute('v', elem.value);
+						newInp.style = 'visibility: hidden; width: 0';
+						document.getElementById('{modelContainer}').appendChild(newInp);
 						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{availableListName}').removeChild(elem);
 					}});
-
-					document.getElementById('{modelName}').value = tempVals.join();
 				}});
 
 				document.getElementById('{removeBtnName}').addEventListener('click', function () {{
-					var selectedIds = document.getElementById('{modelName}').value
-					var tempVals = selectedIds ? selectedIds.split(',') : new Array();
-
 					var sopts = document.querySelectorAll('#{selectedListName} option:checked');
 					sopts.forEach(function (elem) {{
 						document.getElementById('{availableListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{selectedListName}').removeChild(elem);
-						var index = tempVals.indexOf(elem.value);
-						if (index >= 0) {{
-							tempVals.splice(index, 1);
-						}}
-					}});
 
-					document.getElementById('{modelName}').value = tempVals.join();
+						document.querySelector('[name=""{modelName}""][v=""' + elem.value + '""]').remove();
+					}});
 				}});
 
 				document.getElementById('{removeAllBtnName}').addEventListener('click', function () {{
@@ -201,8 +181,13 @@ namespace TASVideos.TagHelpers
 					sopts.forEach(function (elem) {{
 						document.getElementById('{availableListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{selectedListName}').removeChild(elem);
-						document.getElementById('{modelName}').value = '';
+						
 					}});
+
+					var container = document.getElementById('{modelContainer}');
+					while (container.lastChild) {{
+						container.removeChild(container.lastChild);
+					}}
 				}});
 			}};
 			{uniqueFuncName}();
@@ -214,9 +199,15 @@ namespace TASVideos.TagHelpers
 		private void ValidateExpressions()
 		{
 			var idListType = IdList.ModelExplorer.ModelType;
-			if (idListType != typeof(string))
+			if (!typeof(IEnumerable).IsAssignableFrom(idListType)
+				|| !idListType.IsGenericType)
 			{
-				throw new ArgumentException($"Invalid property type {idListType}, {nameof(IdList)} must be a string");
+				throw new ArgumentException($"Invalid property type {idListType}, {nameof(IdList)} must be a generic collection");
+			}
+
+			if (!idListType.GenericTypeArguments.Contains(typeof(int)))
+			{
+				throw new ArgumentException($"Invalid property type {idListType}, {nameof(IdList)} must be an {nameof(IEnumerable)} of int");
 			}
 
 			var availableListType = AvailableList.ModelExplorer.ModelType;
