@@ -20,7 +20,14 @@ namespace TASVideos.Data.SeedData
 		{
 			Name = "Site Admin",
 			Description = "This is a site administrator that is responsible for maintaining TASVideos",
-			RolePermission = PermissionSeedData.Permissions.Select(p => new RolePermission { Role = AdminRole, Permission = p }).ToArray()
+			RolePermission = PermissionSeedData.Permissions
+				.Select(p => new RolePermission
+				{
+					Role = AdminRole,
+					Permission = p,
+					CanAssign = true
+				})
+				.ToArray()
 		};
 
 		public static Role[] Roles =

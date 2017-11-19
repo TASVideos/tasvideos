@@ -71,16 +71,9 @@ namespace TASVideos.Data.SeedData
 			},
 			new Permission
 			{
-				Id = PermissionTo.FullAssignRoles,
-				Name = "Full Assign Roles to Users",
-				Description = $"The ability to assign any Role to any User, unrestricted. Note that this includes assigning admin roles. This {nameof(Permission)} should be carefully restricted.",
-				Group = PermissionGroups.UserAdministration
-			},
-			new Permission
-			{
-				Id = PermissionTo.PartialAssignRoles,
-				Name = "Partial Assign Roles to Users",
-				Description = $"The ability to assign Roles to any User with some restrictions. A user with this permisison may not assign a {nameof(Permission)} that they do not have, and can not assign the ability to assign Roles",
+				Id = PermissionTo.AssignRoles,
+				Name = "Assign Roles to Users",
+				Description = "The ability to assign Roles to any User with some restrictions. A role can only be assigned if all roles within it are marked as assignable by a role the user has",
 				Group = PermissionGroups.UserAdministration
 			}
 		};
