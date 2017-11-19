@@ -39,9 +39,15 @@
 
 <script>
 	// TODO: scope
-	document.getElementById('SelectedPermissions-two-column-select').listChangedCallback = function() {
-		console.log("changed!");
-	}
+	document.getElementById('SelectedPermissions-two-column-select').addEventListener('two-column-change',
+		function() {
+			console.log("changed!");
+		});
+
+	document.getElementById('SelectedPermissions-two-column-select').addEventListener('two-column-change',
+		function () {
+			console.log("another listener!");
+		});
 </script>
 
 @section Scripts {
