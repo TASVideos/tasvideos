@@ -41,8 +41,7 @@ namespace TASVideos.Data.Entity
 		EditUsers = 7,
 		EditPermissionDetails = 8,
 		EditUsersUserName = 9,
-		FullAssignRoles = 10,
-		PartialAssignRoles = 11
+		AssignRoles = 10,
 	}
 
 	/// <summary>
