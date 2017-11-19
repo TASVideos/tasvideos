@@ -138,6 +138,10 @@ namespace TASVideos.TagHelpers
 			// Script Tag
 			var uniqueFuncName = "twoColumnPicker" + context.UniqueId;
 			string script = $@"<script>function {uniqueFuncName}() {{
+				var twoColumnChangeEvent = new Event('two-column-change');
+				
+				
+
 				document.getElementById('{parentContainerName}').listChangedCallback = null;
 
 				document.getElementById('{availableListName}').addEventListener('dblclick', function() {{
@@ -163,8 +167,8 @@ namespace TASVideos.TagHelpers
 
 					sortLists();
 
-					if (aopts.length && document.getElementById('{parentContainerName}').listChangedCallback) {{
-						document.getElementById('{parentContainerName}').listChangedCallback();
+					if (aopts.length) {{
+						document.getElementById('{parentContainerName}').dispatchEvent(twoColumnChangeEvent);
 					}}
 				}});
 
@@ -183,8 +187,8 @@ namespace TASVideos.TagHelpers
 
 					sortLists();
 
-					if (aopts.length && document.getElementById('{parentContainerName}').listChangedCallback) {{
-						document.getElementById('{parentContainerName}').listChangedCallback();
+					if (aopts.length) {{
+						document.getElementById('{parentContainerName}').dispatchEvent(twoColumnChangeEvent);
 					}}
 				}});
 
@@ -199,8 +203,8 @@ namespace TASVideos.TagHelpers
 
 					sortLists();
 
-					if (sopts.length && document.getElementById('{parentContainerName}').listChangedCallback) {{
-						document.getElementById('{parentContainerName}').listChangedCallback();
+					if (sopts.length) {{
+						document.getElementById('{parentContainerName}').dispatchEvent(twoColumnChangeEvent);
 					}}
 				}});
 
@@ -219,8 +223,8 @@ namespace TASVideos.TagHelpers
 
 					sortLists();
 
-					if (sopts.length && document.getElementById('{parentContainerName}').listChangedCallback) {{
-						document.getElementById('{parentContainerName}').listChangedCallback();
+					if (sopts.length) {{
+						document.getElementById('{parentContainerName}').dispatchEvent(twoColumnChangeEvent);
 					}}
 				}});
 
