@@ -27,7 +27,7 @@
 			<row>
 				<two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
 			</row>
-		</fieldset>
+		</fieldset> 
 		<fieldset class="form-group">
 			<row class="text-center mt-el">
 				<button type="submit" class="btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
@@ -36,6 +36,13 @@
 		</fieldset>
 	</form>
 </div>
+
+<script>
+	// TODO: scope
+	document.getElementById('SelectedPermissions-two-column-select').listChangedCallback = function() {
+		console.log("changed!");
+	}
+</script>
 
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")

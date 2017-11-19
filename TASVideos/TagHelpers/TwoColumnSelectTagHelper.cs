@@ -138,6 +138,8 @@ namespace TASVideos.TagHelpers
 			// Script Tag
 			var uniqueFuncName = "twoColumnPicker" + context.UniqueId;
 			string script = $@"<script>function {uniqueFuncName}() {{
+				document.getElementById('{parentContainerName}').listChangedCallback = null;
+
 				document.getElementById('{availableListName}').addEventListener('dblclick', function() {{
 					document.getElementById('{addBtnName}').click()
 				}});
@@ -160,6 +162,10 @@ namespace TASVideos.TagHelpers
 					}});
 
 					sortLists();
+
+					if (aopts.length && document.getElementById('{parentContainerName}').listChangedCallback) {{
+						document.getElementById('{parentContainerName}').listChangedCallback();
+					}}
 				}});
 
 				document.getElementById('{addAllBtnName}').addEventListener('click', function () {{
@@ -176,6 +182,10 @@ namespace TASVideos.TagHelpers
 					}});
 
 					sortLists();
+
+					if (aopts.length && document.getElementById('{parentContainerName}').listChangedCallback) {{
+						document.getElementById('{parentContainerName}').listChangedCallback();
+					}}
 				}});
 
 				document.getElementById('{removeBtnName}').addEventListener('click', function () {{
@@ -188,6 +198,10 @@ namespace TASVideos.TagHelpers
 					}});
 
 					sortLists();
+
+					if (sopts.length && document.getElementById('{parentContainerName}').listChangedCallback) {{
+						document.getElementById('{parentContainerName}').listChangedCallback();
+					}}
 				}});
 
 				document.getElementById('{removeAllBtnName}').addEventListener('click', function () {{
@@ -204,6 +218,10 @@ namespace TASVideos.TagHelpers
 					}}
 
 					sortLists();
+
+					if (sopts.length && document.getElementById('{parentContainerName}').listChangedCallback) {{
+						document.getElementById('{parentContainerName}').listChangedCallback();
+					}}
 				}});
 
 				function sortLists() {{
