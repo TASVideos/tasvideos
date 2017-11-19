@@ -55,13 +55,15 @@ namespace TASVideos.TagHelpers
 			var removeBtnName = modelName + "removeBtn";
 			var removeAllBtnName = modelName + "removeAllBtn";
 
-			output.TagName = "div";
+			var parentContainerName = $"{modelName}-two-column-select";
 
+			output.TagName = $"div id='{parentContainerName}'";
+			
 			// Generate hidden form element that will contain the selected ids
 			output.Content.AppendHtml($"<span id='{modelContainer}'>");
-			for (int i = 0; i < selectedIdList.Count; i++)
+			foreach (var id in selectedIdList)
 			{
-				output.Content.AppendHtml($"<input type='hidden' v='{selectedIdList[i]}' name='{IdList.Name}' value='{selectedIdList[i]}' />");
+				output.Content.AppendHtml($"<input type='hidden' v='{id}' name='{IdList.Name}' value='{id}' />");
 			}
 
 			output.Content.AppendHtml("</span>");
