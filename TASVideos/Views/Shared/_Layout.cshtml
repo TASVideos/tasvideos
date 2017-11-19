@@ -4,7 +4,29 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - TASVideos</title>
+	<script>
+		// IE Hacks
+		(function () {
+			if (typeof NodeList.prototype.forEach === 'function') return false;
+			NodeList.prototype.forEach = Array.prototype.forEach;
+		})();
 
+		if (!('remove' in Element.prototype)) {
+			Element.prototype.remove = function() {
+				if (this.parentNode) {
+					this.parentNode.removeChild(this);
+				}
+			};
+		}
+
+		var isIE = function () {
+			if (window.navigator.userAgent.indexOf('MSIE') > 0 || window.navigator.userAgent.indexOf('Trident') > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	</script>
 	<environment include="Development">
 		<link rel="shortcut icon" href="http://tasvideos.org/css/.ico" type="image/x-icon">
 		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -69,13 +91,6 @@
 		</script>
 		<script src="~/js/site.min.js" asp-append-version="true"></script>
 	</environment>
-	<script>
-		// IE Hack
-		(function () {
-			if (typeof NodeList.prototype.forEach === 'function') return false;
-			NodeList.prototype.forEach = Array.prototype.forEach;
-		})();
-	</script>
 	@RenderSection("Scripts", required: false)
 </body>
 </html>

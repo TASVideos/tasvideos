@@ -57,7 +57,15 @@ namespace TASVideos.TagHelpers
 
 			var parentContainerName = $"{modelName}-two-column-select";
 
-			output.TagName = $"div id='{parentContainerName}'";
+			output.TagName = "div";
+
+			var idAttr = output.Attributes.FirstOrDefault(a => a.Name == "id");
+			if (idAttr != null)
+			{
+				output.Attributes.Remove(idAttr);
+			}
+
+			output.Attributes.Add("id", parentContainerName);
 			
 			// Generate hidden form element that will contain the selected ids
 			output.Content.AppendHtml($"<span id='{modelContainer}'>");
@@ -81,7 +89,7 @@ namespace TASVideos.TagHelpers
 				$"<select class='form-control' id='{availableListName}' multiple='multiple' name='{availableListName}' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
 			output.Content.AppendHtml(
 				_htmlGenerator.GenerateGroupsAndOptions(null, remainingItems));
-			output.Content.AppendHtml("<select>");
+			output.Content.AppendHtml("</select>");
 			output.Content.AppendHtml("</div>");
 
 			// Middle Column Div
@@ -128,7 +136,7 @@ namespace TASVideos.TagHelpers
 				$"<select class='form-control' id='{selectedListName}' multiple='multiple' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
 			output.Content.AppendHtml(
 				_htmlGenerator.GenerateGroupsAndOptions(null, selectedItems));
-			output.Content.AppendHtml("<select>");
+			output.Content.AppendHtml("</select>");
 
 			output.Content.AppendHtml(
 				_htmlGenerator.GenerateValidationMessage(ViewContext, IdList.ModelExplorer, IdList.Name, null, null, new { @class = "text-danger" }));
@@ -138,7 +146,13 @@ namespace TASVideos.TagHelpers
 			// Script Tag
 			var uniqueFuncName = "twoColumnPicker" + context.UniqueId;
 			string script = $@"<script>function {uniqueFuncName}() {{
-				var twoColumnChangeEvent = new Event('two-column-change');
+				var twoColumnChangeEvent;
+				if (isIE()) {{ // Ugh, support IE
+					twoColumnChangeEvent = document.createEvent('Event');
+					twoColumnChangeEvent.initEvent('two-column-change', true, true)
+				}} else {{
+					twoColumnChangeEvent = new Event('two-column-change');
+				}}
 				
 				
 
