@@ -16,7 +16,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditSystemPages
 		}).ToArray();
 
-		public static Role AdminRole = new Role
+		public static readonly Role AdminRole = new Role
 		{
 			Name = "Site Admin",
 			Description = "This is a site administrator that is responsible for maintaining TASVideos",
@@ -30,7 +30,7 @@ namespace TASVideos.Data.SeedData
 				.ToArray()
 		};
 
-		public static Role[] Roles =
+		public static readonly Role[] Roles =
 		{
 			new Role
 			{
