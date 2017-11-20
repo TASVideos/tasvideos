@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -44,7 +45,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.EditUsers)]
 		public async Task<IActionResult> Edit(int id)
 		{
-			var model = await _userTasks.GetUserForEdit(id, UserPermissions);
+			var model = await _userTasks.GetUserForEdit(id, User.GetUserId());
 			return View(model);
 		}
 
@@ -54,8 +55,8 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Edit(UserEditViewModel model)
 		{
 			if (!ModelState.IsValid)
-			{
-				model.AvailableRoles = await _userTasks.GetAllRolesUserCanAssign(UserPermissions);
+			{	
+				model.AvailableRoles = await _userTasks.GetAllRolesUserCanAssign(User.GetUserId());
 				return View(model);
 			}
 
