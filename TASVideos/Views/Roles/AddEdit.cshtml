@@ -36,7 +36,7 @@
 				<div class="col-sm-offset-7 col-sm-5">
 					<br />
 					<label>Roles that can be assigned: </label>
-					<div id="assignable-roles">Editor, Senior Editor</div>
+					<div id="assignable-roles">None</div>
 				</div>
 			</row>
 		</fieldset>
@@ -51,6 +51,7 @@
 
 <script>
 	// TODO: scope
+	var emptyAssignableRoles = "None";
 	var assignRoles = '@((int)PermissionTo.AssignRoles)';
 	var selectedAssignablePermissionsModelId = '@(nameof(Model.SelectedAssignablePermissions))';
 	var selectedPermissionsListId = 'Selected@(nameof(Model.SelectedPermissions))';
@@ -148,7 +149,7 @@
 						if (data) {
 							document.getElementById("assignable-roles").textContent = data.join(', ');
 						} else {
-							document.getElementById("assignable-roles").textContent = "None";
+							document.getElementById("assignable-roles").textContent = emptyAssignableRoles;
 						}
 					}
 				}
@@ -165,6 +166,8 @@
 			getstr = "/Roles/@(nameof(RolesController.RolesThatCanBeAssignedBy))?" + getstr;
 			xmlhttp.open("GET", getstr, true);
 			xmlhttp.send();
+		} else {
+			document.getElementById("assignable-roles").textContent = emptyAssignableRoles;
 		}
 	}
 
@@ -177,10 +180,7 @@
 		}
 	}
 
-	document.getElementById('SelectedPermissions-two-column-select').addEventListener('two-column-change',
-		function () {
-			onSelectedPermissionsChange();
-		});
+	document.getElementById('SelectedPermissions-two-column-select').addEventListener('two-column-change', onSelectedPermissionsChange);
 
 	document.addEventListener("DOMContentLoaded", onSelectedPermissionsChange);
 
