@@ -18,7 +18,23 @@
 			</div>
 		</fieldset>
 	</row>
-	
+	<row>
+		<fieldset class="form-group">
+			@if (Model.IsLockedOut)
+			{
+				<label class="text-danger col-sm-4"><span class="glyphicon glyphicon-alert"></span> This user is currently locked out</label>
+				<div class="col-sm-1">
+					<a class="btn btn-default" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
+				</div>
+			}
+			else
+			{
+				<div class="col-sm-4">
+					<span class="glyphicon glyphicon-check text-success"></span> Not locked
+				</div>
+			}
+		</fieldset>
+	</row>
 	<row>
 		<fieldset class="form-group col-md-5">
 			<label asp-for="UserName" class="control-label"></label>
@@ -146,15 +162,6 @@
 				<label class="form-control">@Model.Email</label>
 			}
 		</fieldset>
-		@if (Model.IsLockedOut)
-		{
-			<fieldset class="form-group col-md-5">
-				<label class="text-danger col-sm-9"><span class="glyphicon glyphicon-alert"></span> This user is currently locked out</label>
-				<div class="col-sm-3">
-					<a class="btn btn-default" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
-				</div>
-			</fieldset>
-		}
 	</row>
 	<row>
 		<two-column-select id-list="SelectedRoles" available-list="AvailableRoles" />
