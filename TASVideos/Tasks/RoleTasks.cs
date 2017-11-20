@@ -118,10 +118,9 @@ namespace TASVideos.Tasks
 
 		public async Task<IEnumerable<string>> RolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds)
 		{
-			// TODO
 			return await _db.Roles
+				.Where(r => r.RolePermission.All(rp => permissionIds.Contains(rp.PermissionId)))
 				.Select(r => r.Name)
-				.Take(2)
 				.ToListAsync();
 		}
 	}
