@@ -50,7 +50,11 @@ namespace TASVideos.Tasks
 						Id = p.Id,
 						Name = p.Name,
 						Description = p.Description,
-						SelectedPermissions = p.RolePermission.Select(rp => (int)rp.PermissionId)
+						SelectedPermissions = p.RolePermission
+							.Select(rp => (int)rp.PermissionId),
+						SelectedAssignablePermissions = p.RolePermission
+							.Where(rp => rp.CanAssign)
+							.Select(rp => (int)rp.PermissionId)
 					})
 					.SingleAsync(p => p.Id == id.Value)
 				: new RoleEditViewModel();
@@ -86,7 +90,8 @@ namespace TASVideos.Tasks
 				.Select(p => new RolePermission
 				{
 					RoleId = role.Id,
-					PermissionId = (PermissionTo)p
+					PermissionId = (PermissionTo)p,
+					CanAssign = model.SelectedAssignablePermissions.Contains(p)
 				}));
 
 			await _db.SaveChangesAsync();
