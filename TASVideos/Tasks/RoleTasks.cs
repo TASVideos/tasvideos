@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -117,6 +118,15 @@ namespace TASVideos.Tasks
 			_db.Roles.Remove(role);
 
 			await _db.SaveChangesAsync();
+		}
+
+		public async Task<IEnumerable<string>> RolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds)
+		{
+			// TODO
+			return await _db.Roles
+				.Select(r => r.Name)
+				.Take(2)
+				.ToListAsync();
 		}
 	}
 }
