@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -77,7 +76,6 @@ namespace TASVideos.Tasks
 		/// If an Id is provided, the Role is updated
 		/// If no id is provided, then it is inserted
 		/// </summary>
-		/// <param name="model"></param>
 		public async Task AddUpdateRole(RoleEditViewModel model)
 		{
 			Role role;
@@ -110,8 +108,6 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Removes the <see cref="Role" /> with the given id
 		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
 		public async Task DeleteRole(int id)
 		{
 			var role = await _db.Roles.SingleAsync(r => r.Id == id);

@@ -39,7 +39,7 @@ namespace TASVideos.Controllers
 			model.AvailableAssignablePermissions = model.SelectedPermissions
 				.Select(sp => new SelectListItem
 				{
-					Text = ((PermissionTo) sp).ToString(),
+					Text = ((PermissionTo)sp).ToString(),
 					Value = sp.ToString()
 				});
 			return View(model);
