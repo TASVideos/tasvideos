@@ -5,7 +5,9 @@ namespace TASVideos.Data.SampleData
 	// User data is sample data not seed data because we do not want to go to production with known credentials
 	public class UserSampleData
 	{
-		public static User[] AdminUsers =
+		public const string SamplePassword = "Password1234!@#$"; // Obviously no one should use this in production
+
+		public static readonly User[] AdminUsers =
 		{
 			new User
 			{
@@ -15,7 +17,7 @@ namespace TASVideos.Data.SampleData
 			}
 		};
 
-		public static User[] Users =
+		public static readonly User[] Users =
 		{
 			new User
 			{
@@ -24,7 +26,5 @@ namespace TASVideos.Data.SampleData
 				Email = "dara.marks@example.com"
 			}
 		};
-
-		public const string SamplePassword = "Password1234!@#$"; // Obviously no one should use this in production
 	}
 }

@@ -51,7 +51,7 @@ namespace TASVideos.Data
 
 			builder.Entity<UserToken>(entity =>
 			{
-				entity.HasKey(e => new {e.UserId, e.LoginProvider, e.Name});
+				entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
 			});
 
 			builder.Entity<RolePermission>()

@@ -46,7 +46,7 @@ namespace TASVideos.Models
 	}
 
 	/// <summary>
-	/// Represents a conscise view of Role for the User profile screen
+	/// Represents a concise view of Role for the User profile screen
 	/// </summary>
 	public class RoleBasicDisplay
 	{

@@ -8,7 +8,7 @@ namespace TASVideos.Controllers
 	public class HomeController : BaseController
 	{
 		public HomeController(UserTasks userTasks)
-			: base (userTasks)
+			: base(userTasks)
 		{
 		}
 

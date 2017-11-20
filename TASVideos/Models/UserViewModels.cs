@@ -20,7 +20,6 @@ namespace TASVideos.Models
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 	}
 
-
 	/// <summary>
 	/// Represents a <see cref="TASVideos.Data.Entity.User"/> for the purpose of viewing
 	/// </summary>
