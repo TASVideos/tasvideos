@@ -32,10 +32,10 @@ namespace TASVideos.Data
 				var role = new Role
 				{
 					Name = permission.ToString(),
-					Description = $"A role containing only the {permission.ToString()} {nameof(Permission)}"
+					Description = $"A role containing only the {permission} {nameof(Permission)}"
 				};
 
-				role.RolePermission.Add(new RolePermission {Role = role, PermissionId = permission });
+				role.RolePermission.Add(new RolePermission { Role = role, PermissionId = permission });
 
 				context.Roles.Add(role);
 			}
@@ -45,7 +45,7 @@ namespace TASVideos.Data
 
 		/// <summary>
 		/// Adds optional sample data
-		/// Unlike seed data, sample data is arbitruary data for testing purposes and would not be apart of a production release
+		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
 		{
@@ -81,7 +81,6 @@ namespace TASVideos.Data
 				savedUser.EmailConfirmed = true;
 
 				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Roles.AtRandom(), User = savedUser });
-				
 			}
 
 			// Create lots of throw away users to test things like paging
