@@ -43,23 +43,32 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<RoleEditViewModel> GetRoleForEdit(int? id)
 		{
-			var model = id.HasValue
-				? await _db.Roles
-					.Select(p => new RoleEditViewModel
-					{
-						Id = p.Id,
-						Name = p.Name,
-						Description = p.Description,
-						SelectedPermissions = p.RolePermission
-							.Select(rp => (int)rp.PermissionId),
-						SelectedAssignablePermissions = p.RolePermission
-							.Where(rp => rp.CanAssign)
-							.Select(rp => (int)rp.PermissionId)
-					})
-					.SingleAsync(p => p.Id == id.Value)
-				: new RoleEditViewModel();
+			using (await _db.Database.BeginTransactionAsync())
+			{
+				var model = id.HasValue
+					? await _db.Roles
+						.Select(p => new RoleEditViewModel
+						{
+							Id = p.Id,
+							Name = p.Name,
+							Description = p.Description
+						})
+						.SingleAsync(p => p.Id == id.Value)
+					: new RoleEditViewModel();
 
-			return model;
+				model.SelectedPermissions = await _db.RolePermission
+					.Where(rp => rp.RoleId == model.Id)
+					.Select(rp => (int)rp.PermissionId)
+					.ToListAsync();
+
+				model.SelectedAssignablePermissions = await _db.RolePermission
+					.Where(rp => rp.RoleId == model.Id)
+					.Where(rp => rp.CanAssign)
+					.Select(rp => (int)rp.PermissionId)
+					.ToListAsync();
+
+				return model;
+			}
 		}
 
 		/// <summary>
