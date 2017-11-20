@@ -28,7 +28,7 @@
 				<two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
 			</row>
 		</fieldset> 
-		<fieldset class="form-group hide" id="assignable-permissions-section">
+		<fieldset class="form-group hide)" id="assignable-permissions-section">
 			<row>
 				<two-column-select id-list="SelectedAssignablePermissions" available-list="AvailableAssignablePermissions" />
 			</row>
@@ -115,15 +115,23 @@
 		});
 	}
 
+	function onSelectedPermissionsChange() {
+		if (shouldShowAssignRoles()) {
+			document.getElementById('assignable-permissions-section').classList.remove('hide');
+			syncAssignablePerms();
+		} else {
+			document.getElementById('assignable-permissions-section').classList.add('hide');
+		}
+	}
+
 	document.getElementById('SelectedPermissions-two-column-select').addEventListener('two-column-change',
 		function () {
-			if (shouldShowAssignRoles()) {
-				document.getElementById('assignable-permissions-section').classList.remove('hide');
-				syncAssignablePerms();
-			} else {
-				document.getElementById('assignable-permissions-section').classList.add('hide');
-			}
+			onSelectedPermissionsChange();
 		});
+
+	document.addEventListener("DOMContentLoaded", function(event) {
+		onSelectedPermissionsChange();
+	});
 </script>
 
 @section Scripts {
