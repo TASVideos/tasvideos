@@ -14,6 +14,7 @@ namespace TASVideos.Data.SeedData
 		private static readonly PermissionTo[] SeniorEditorRoles = EditorRoles.Concat(new[]
 		{
 			PermissionTo.EditSystemPages,
+			PermissionTo.EditUsers,
 			PermissionTo.AssignRoles
 		}).ToArray();
 

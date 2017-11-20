@@ -54,7 +54,8 @@ namespace TASVideos.Filter
 			var userPerms = await userTasks.GetUserPermissionsByIdAsync(userId);
 			var reqs = new HashSet<PermissionTo>(_requiredPermissions);
 
-			if (_matchAny && reqs.Any(r => userPerms.Contains(r)) || reqs.IsSubsetOf(userPerms))
+			if ((_matchAny && reqs.Any(r => userPerms.Contains(r)))
+				|| reqs.IsSubsetOf(userPerms))
 			{
 				await base.OnActionExecutionAsync(context, next);
 			}
