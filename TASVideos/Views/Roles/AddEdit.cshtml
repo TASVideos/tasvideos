@@ -45,6 +45,7 @@
 <script>
 	// TODO: scope
 	var assignRoles = '@((int)PermissionTo.AssignRoles)';
+	var selectedAssignablePermissionsModelId = '@(nameof(Model.SelectedAssignablePermissions))';
 	var selectedPermissionsListId = 'Selected@(nameof(Model.SelectedPermissions))';
 	var availableAssignableListId = '@(nameof(Model.AvailableAssignablePermissions))';
 	var selectedAssignableListId = 'Selected@(nameof(Model.SelectedAssignablePermissions))';
@@ -107,6 +108,14 @@
 		});
 
 		removedPerms.forEach(function (elem) {
+			console.log('elem.value', elem.value);
+			var id = document.querySelector('[name="' + selectedAssignablePermissionsModelId + '"][v="' + elem.value + '"]');
+			console.log("id", id);
+			if (id) {
+				id.remove();
+			}
+			
+
 			if (availAssignableElem.childNodes.toArray().includes(elem)) {
 				availAssignableElem.removeChild(elem);
 			} else if (selectedAssignableElem.childNodes.toArray().includes(elem)) {
