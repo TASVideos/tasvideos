@@ -19,11 +19,19 @@
 			};
 		}
 
+		// Global browser detection
 		var isIE = function () {
 			if (window.navigator.userAgent.indexOf('MSIE') > 0 || window.navigator.userAgent.indexOf('Trident') > 0) {
 				return true;
 			} else {
 				return false;
+			}
+		}
+
+		// Helpful global "extension" methods, todo - move these somewhere better than this
+		if (!NodeList.toArray) {
+			NodeList.prototype.toArray = function() {
+				return Array.prototype.slice.call(this);
 			}
 		}
 	</script>
