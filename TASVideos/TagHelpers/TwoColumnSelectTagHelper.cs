@@ -153,8 +153,6 @@ namespace TASVideos.TagHelpers
 				}} else {{
 					twoColumnChangeEvent = new Event('two-column-change');
 				}}
-				
-				
 
 				document.getElementById('{parentContainerName}').listChangedCallback = null;
 

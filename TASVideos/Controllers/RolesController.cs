@@ -73,6 +73,13 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
+		[RequirePermission(PermissionTo.EditRoles)]
+		public async Task<IActionResult> RolesThatCanBeAssignedBy(int[] ids)
+		{
+			var result = await _roleTasks.RolesThatCanBeAssignedBy(ids.Select(p => (PermissionTo)p));
+			return Json(result);
+		}
+
 		/// <summary>
 		/// A select list of all available <seealso cref="PermissionTo"/> in the system
 		/// </summary>

@@ -28,9 +28,16 @@
 				<two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
 			</row>
 		</fieldset> 
-		<fieldset class="form-group hide)" id="assignable-permissions-section">
+		<fieldset class="form-group hide" id="assignable-permissions-section">
 			<row>
 				<two-column-select id-list="SelectedAssignablePermissions" available-list="AvailableAssignablePermissions" />
+			</row>
+			<row>
+				<div class="col-sm-offset-7 col-sm-5">
+					<br />
+					<label>Roles that can be assigned: </label>
+					<div id="assignable-roles">Editor, Senior Editor</div>
+				</div>
 			</row>
 		</fieldset>
 		<fieldset class="form-group">
@@ -108,13 +115,11 @@
 		});
 
 		removedPerms.forEach(function (elem) {
-			console.log('elem.value', elem.value);
 			var id = document.querySelector('[name="' + selectedAssignablePermissionsModelId + '"][v="' + elem.value + '"]');
-			console.log("id", id);
 			if (id) {
 				id.remove();
 			}
-			
+
 
 			if (availAssignableElem.childNodes.toArray().includes(elem)) {
 				availAssignableElem.removeChild(elem);
@@ -122,6 +127,45 @@
 				selectedAssignableElem.removeChild(elem);
 			}
 		});
+
+		showRolesCurrentlyAssignable();
+	}
+
+	function showRolesCurrentlyAssignable() {
+		var selector = '[name="' + selectedAssignablePermissionsModelId + '"]';
+		var permissions = document.querySelectorAll(selector)
+			.toArray()
+			.map(function (elem) {
+				return elem.value;
+			});
+
+		if (permissions.length > 0) {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						var data = JSON.parse(xmlhttp.responseText);
+						if (data) {
+							document.getElementById("assignable-roles").textContent = data.join(', ');
+						} else {
+							document.getElementById("assignable-roles").textContent = "None";
+						}
+					}
+				}
+			};
+
+			var getstr = '';
+			for (var i in permissions) {
+				if (permissions.hasOwnProperty(i)) {
+					getstr += 'ids=' + permissions[i] + '&';
+				}
+			}
+
+			getstr = getstr.slice(0, -1);
+			getstr = "/Roles/@(nameof(RolesController.RolesThatCanBeAssignedBy))?" + getstr;
+			xmlhttp.open("GET", getstr, true);
+			xmlhttp.send();
+		}
 	}
 
 	function onSelectedPermissionsChange() {
@@ -138,9 +182,10 @@
 			onSelectedPermissionsChange();
 		});
 
-	document.addEventListener("DOMContentLoaded", function(event) {
-		onSelectedPermissionsChange();
-	});
+	document.addEventListener("DOMContentLoaded", onSelectedPermissionsChange);
+
+	document.getElementById('SelectedAssignablePermissions-two-column-select')
+		.addEventListener('two-column-change', showRolesCurrentlyAssignable);
 </script>
 
 @section Scripts {
