@@ -42,7 +42,6 @@ namespace TASVideos.Filter
 
 			if (!userClaimsPrincipal.Identity.IsAuthenticated)
 			{
-				
 				context.Result = ReRouteToLogin(context.HttpContext.Request.Path);
 				return;
 			}

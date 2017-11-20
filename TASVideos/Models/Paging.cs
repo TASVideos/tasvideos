@@ -10,16 +10,15 @@ namespace TASVideos.Models
 		public PageOf(IEnumerable<T> items)
 		{
 			_items = items;
-			
 		}
 
-		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
-
+		// TODO: sorting
 		public int PageSize { get; set; }
 		public int CurrentPage { get; set; }
 		public int RowCount { get; set; }
-		// TODO: sorting
+
+		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 	}
 
 	/// <summary>

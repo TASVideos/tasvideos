@@ -23,7 +23,7 @@ namespace TASVideos.TagHelpers
 		public ModelExpression AvailableList { get; set; }
 
 		/// <summary>
-		/// An override for the number of rows
+		/// Gets or sets an override for the number of rows the select lists display
 		/// </summary>
 		public int? RowHeight { get; set; }
 
@@ -76,6 +76,7 @@ namespace TASVideos.TagHelpers
 
 			output.Content.AppendHtml("</span>");
 			output.Content.AppendHtml("<div style='display: flex; align-items: center;'>");
+
 			// Left Column Div
 			output.Content.AppendHtml("<div class='col-xs-5'>");
 			output.Content.AppendHtml(_htmlGenerator.GenerateLabel(

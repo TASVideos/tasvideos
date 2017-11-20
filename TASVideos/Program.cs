@@ -29,7 +29,6 @@ namespace TASVideos
 					{
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
-
 				}
 				catch (Exception ex)
 				{

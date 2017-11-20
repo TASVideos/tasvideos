@@ -4,7 +4,7 @@ namespace TASVideos.Data.SeedData
 {
 	public static class PermissionSeedData
 	{
-		public static Permission[] Permissions =
+		public static readonly Permission[] Permissions =
 		{
 			new Permission
 			{
