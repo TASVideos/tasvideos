@@ -7,7 +7,7 @@ using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
-	[RequirePermission(PermissionTo.ViewUsers)]
+	[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
 	public class UserController : BaseController
 	{
 		private readonly UserTasks _userTasks;
