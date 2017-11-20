@@ -36,6 +36,12 @@ namespace TASVideos.Controllers
 		{
 			var model = await _roleTasks.GetRoleForEdit(id);
 			model.AvailablePermissions = PermissionsSelectList;
+			model.AvailableAssignablePermissions = model.SelectedPermissions
+				.Select(sp => new SelectListItem
+				{
+					Text = ((PermissionTo) sp).ToString(),
+					Value = sp.ToString()
+				});
 			return View(model);
 		}
 
@@ -51,6 +57,12 @@ namespace TASVideos.Controllers
 			}
 
 			model.AvailablePermissions = PermissionsSelectList;
+			model.AvailableAssignablePermissions = model.SelectedPermissions
+				.Select(sp => new SelectListItem
+				{
+					Text = ((PermissionTo)sp).ToString(),
+					Value = sp.ToString()
+				});
 			return View(model);
 		}
 
