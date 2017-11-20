@@ -56,7 +56,7 @@ namespace TASVideos.Controllers
 		{
 			if (!ModelState.IsValid)
 			{	
-				model.AvailableRoles = await _userTasks.GetAllRolesUserCanAssign(User.GetUserId());
+				model.AvailableRoles = await _userTasks.GetAllRolesUserCanAssign(User.GetUserId(), model.SelectedRoles);
 				return View(model);
 			}
 
