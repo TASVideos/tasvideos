@@ -116,6 +116,9 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
+		/// <summary>
+		/// Returns a list of names for any <see cref="Role"/> that includes every permission in the given list of permissions
+		/// </summary>
 		public async Task<IEnumerable<string>> RolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds)
 		{
 			return await _db.Roles
