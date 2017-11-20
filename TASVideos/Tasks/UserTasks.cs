@@ -124,7 +124,9 @@ namespace TASVideos.Tasks
 				.Select(r => new SelectListItem
 				{
 					Value = r.Id.ToString(),
-					Text = r.Name
+					Text = r.Name,
+					Disabled = !r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
+						&& assignedRoles.Contains(r.Id)
 				})
 				.ToListAsync();
 		}
