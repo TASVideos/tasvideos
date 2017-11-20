@@ -37,6 +37,12 @@ namespace TASVideos.Models
 
 		[Display(Name = "Available Permissions")]
 		public IEnumerable<SelectListItem> AvailablePermissions { get; set; } = new List<SelectListItem>();
+
+		[Display(Name = "Selected Assignable Permissions")]
+		public IEnumerable<int> SelectedAssignablePermissions { get; set; } = new List<int>();
+
+		[Display(Name = "Available Assignable Permissions")]
+		public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = new List<SelectListItem>();
 	}
 
 	/// <summary>
