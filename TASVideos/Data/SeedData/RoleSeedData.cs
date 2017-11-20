@@ -13,7 +13,8 @@ namespace TASVideos.Data.SeedData
 
 		private static readonly PermissionTo[] SeniorEditorRoles = EditorRoles.Concat(new[]
 		{
-			PermissionTo.EditSystemPages
+			PermissionTo.EditSystemPages,
+			PermissionTo.AssignRoles
 		}).ToArray();
 
 		public static readonly Role AdminRole = new Role
@@ -49,7 +50,8 @@ namespace TASVideos.Data.SeedData
 				RolePermission = SeniorEditorRoles.Select(p => new RolePermission
 				{
 					RoleId = 3, // Meh, for lack of a better way
-					PermissionId = p
+					PermissionId = p,
+					CanAssign = EditorRoles.Contains(p)
 				}).ToArray()
 			}
 		};
