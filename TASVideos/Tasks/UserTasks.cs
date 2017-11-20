@@ -106,9 +106,9 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Gets all of the <see cref="Role"/>s that the current <see cref="User"/> can assign to another user
-		/// The list depends on the current User's <see cref="RolePermission"/> list
+		/// The list depends on the current User's <see cref="RolePermission"/> list and also any Roles already assigned to the user
 		/// </summary>
-		public async Task<IEnumerable<SelectListItem>> GetAllRolesUserCanAssign(int userId)
+		public async Task<IEnumerable<SelectListItem>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles)
 		{
 			var assignablePermissions = await _db.Users
 				.Where(u => u.Id == userId)
@@ -119,7 +119,8 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 
 			return await _db.Roles
-				.Where(r => r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId)))
+				.Where(r => r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
+					|| assignedRoles.Contains(r.Id))
 				.Select(r => new SelectListItem
 				{
 					Value = r.Id.ToString(),
@@ -154,7 +155,7 @@ namespace TASVideos.Tasks
 					.Select(ur => ur.RoleId)
 					.ToListAsync();
 
-				model.AvailableRoles = await GetAllRolesUserCanAssign(currentUserId);
+				model.AvailableRoles = await GetAllRolesUserCanAssign(currentUserId, model.SelectedRoles);
 
 				return model;
 			}
