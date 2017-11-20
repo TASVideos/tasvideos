@@ -41,6 +41,7 @@ namespace TASVideos.Models
 		[Display(Name = "Selected Assignable Permissions")]
 		public IEnumerable<int> SelectedAssignablePermissions { get; set; } = new List<int>();
 
+		// This is actually a dummy property that is never actually used to store data. It serves the purpose of passing metadata into the two column picker
 		[Display(Name = "Available Assignable Permissions")]
 		public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = new List<SelectListItem>();
 	}
