@@ -4,22 +4,24 @@
 }
 <h4>@ViewData["Title"]</h4>
 
-<div class="row">
-	<div class="col-md-3">
+<row>
+	@Html.HiddenFor(m => m.PageSize)
+	@Html.HiddenFor(m => m.CurrentPage)
+	<input type="hidden" asp-for="CurrentPage" condition="Model.NumberOfPages <= 1"/>
+	<div class="col-sm-3 pull-left" condition="@Model.NumberOfPages > 1">
 		<button class="btn btn-default btn-xs" title="First Page"><span class="glyphicon glyphicon-fast-backward"></span></button>
 		<button class="btn btn-default btn-xs" title="Previous Page"><span class="glyphicon glyphicon-chevron-left"></span></button>
 		<button class="btn btn-default btn-xs" role="button" title="Next Page"><span class="glyphicon glyphicon-chevron-right"></span></button>
 		<button class="btn btn-default btn-xs" role="button" title="Last Page"><span class="glyphicon glyphicon-fast-forward"></span></button>
 	</div>
-	<div class="col-md-4 text-right">
+	<div class="@(Model.NumberOfPages > 1 ? "col-sm-4 text-right" : "text-center")">
 		<label>Showing @Model.StartRow - @Model.LastRow of @Model.RowCount</label>
 	</div>
-	<div class="col-md-5 text-right">
+	<div class="col-sm-5 text-right" condition="@Model.NumberOfPages > 1">
 		<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.NumberOfPages" class="input-xs"> Of @Model.NumberOfPages</label>
 		<button class="btn btn-default btn-xs">Go To</button>
 	</div>
-</div>
-
+</row>
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.First().Id)</th>
