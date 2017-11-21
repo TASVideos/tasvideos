@@ -15,7 +15,7 @@ namespace TASVideos.Models
 
 		public int RowCount { get; set; }
 
-		public int NumberOfPages => (int)Math.Ceiling(RowCount / (double)PageSize);
+		public int LastPage => (int)Math.Ceiling(RowCount / (double)PageSize);
 		public int StartRow => ((CurrentPage - 1) * PageSize) + 1;
 		public int LastRow => Math.Min(RowCount, StartRow + PageSize - 1);
 
