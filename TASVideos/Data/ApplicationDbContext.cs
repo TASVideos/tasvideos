@@ -11,7 +11,6 @@ namespace TASVideos.Data
 		{
 		}
 
-		public DbSet<Permission> Permissions { get; set; }
 		public DbSet<RolePermission> RolePermission { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
@@ -61,11 +60,6 @@ namespace TASVideos.Data
 				.HasOne(pt => pt.Role)
 				.WithMany(p => p.RolePermission)
 				.HasForeignKey(pt => pt.RoleId);
-
-			builder.Entity<RolePermission>()
-				.HasOne(pt => pt.Permission)
-				.WithMany(t => t.RolePermission)
-				.HasForeignKey(pt => pt.PermissionId);
 		}
 	}
 }

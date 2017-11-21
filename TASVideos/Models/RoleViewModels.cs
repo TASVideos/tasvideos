@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Models
 {
@@ -12,7 +13,7 @@ namespace TASVideos.Models
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
-		public IEnumerable<string> Permissions { get; set; } = new List<string>();
+		public IEnumerable<PermissionTo> Permissions { get; set; } = new List<PermissionTo>();
 	}
 
 	/// <summary>

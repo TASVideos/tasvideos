@@ -1,15 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
 {
     public class PermissionTasks
-    {
+	{
+		private static readonly List<PermissionDisplayViewModel> _permissionData = Enum.GetValues(typeof(PermissionTo))
+			.Cast<PermissionTo>()
+			.Select(p => new PermissionDisplayViewModel
+			{
+				Id = p,
+				Group = p.Group(),
+				Description = p.Description()
+			})
+			.ToList();
+
 		private readonly ApplicationDbContext _db;
 
 		public PermissionTasks(ApplicationDbContext db)
@@ -18,69 +32,25 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns all of the <see cref="TASVideos.Data.Entity.Permission" /> records for the purpose of display
+		/// Returns a list of all permissions, descriptions and groupings for the purpose of display
 		/// </summary>
 		public async Task<IEnumerable<PermissionDisplayViewModel>> GetAllPermissionsForDisplay()
 		{
-			return await _db.Permissions
-				.Include(p => p.RolePermission)
-				.ThenInclude(rp => rp.Role)
-				.Select(p => new PermissionDisplayViewModel
-				{
-					Name = p.Name,
-					Description = p.Description,
-					Group = p.Group,
-					Roles = p.RolePermission.Select(rp => rp.Role.Name)
-				})
-				.OrderBy(p => p.Group)
-				.ThenBy(p => p.Name)
-				.ToListAsync();
-		}
-
-		/// <summary>
-		/// Returns all of the <see cref="TASVideos.Data.Entity.Permission" /> records for the purpose of editing the metadata
-		/// </summary>
-		public async Task<IEnumerable<PermissionEditViewModel>> GetAllPermissionsForEdit()
-		{
-			return await _db.Permissions
-				.Select(p => new PermissionEditViewModel
-				{
-					Id = p.Id,
-					Name = p.Name,
-					Description = p.Description,
-					Group = p.Group,
-				})
-				.OrderBy(p => p.Group)
-				.ThenBy(p => p.Name)
-				.ToListAsync();
-		}
-
-		/// <summary>
-		/// Updates all of the given <see cref="TASVideos.Data.Entity.Permission" /> records
-		/// </summary>
-		public async Task UpdatePermissionDetails(IEnumerable<PermissionEditViewModel> model)
-		{
-			if (model == null)
+			using (_db.Database.BeginTransactionAsync())
 			{
-				throw new ArgumentException($"{nameof(model)} can not be null");
+				var allRoles = await _db.Roles
+					.Include(r => r.RolePermission)
+					.ToListAsync();
+
+				foreach (var permission in _permissionData)
+				{
+					permission.Roles = allRoles
+						.Where(r => r.RolePermission.Any(p => p.PermissionId == permission.Id))
+						.Select(r => r.Name);
+				}
+
+				return _permissionData;
 			}
-
-			var newPermisions = model.ToList();
-
-			var permissions = await _db.Permissions
-				.Where(p => newPermisions.Select(np => np.Id).Contains(p.Id))
-				.ToListAsync();
-
-			foreach (var permission in permissions)
-			{
-				var permModel = newPermisions.Single(p => p.Id == permission.Id);
-
-				permission.Name = permModel.Name;
-				permission.Description = permModel.Description;
-				permission.Group = permModel.Group;
-			}
-
-			await _db.SaveChangesAsync();
 		}
 	}
 }

@@ -6,8 +6,6 @@
 		public Role Role { get; set; }
 
 		public PermissionTo PermissionId { get; set; }
-		public Permission Permission { get; set; }
-
 		public bool CanAssign { get; set; }
 	}
 }

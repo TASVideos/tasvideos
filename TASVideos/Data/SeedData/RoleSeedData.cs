@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Data.SeedData
@@ -22,11 +23,12 @@ namespace TASVideos.Data.SeedData
 		{
 			Name = "Site Admin",
 			Description = "This is a site administrator that is responsible for maintaining TASVideos",
-			RolePermission = PermissionSeedData.Permissions
+			RolePermission = Enum.GetValues(typeof(PermissionTo))
+				.Cast<PermissionTo>()
 				.Select(p => new RolePermission
 				{
 					Role = AdminRole,
-					Permission = p,
+					PermissionId = p,
 					CanAssign = true
 				})
 				.ToArray()
