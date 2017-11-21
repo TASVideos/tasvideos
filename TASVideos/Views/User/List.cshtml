@@ -9,10 +9,18 @@
 	@Html.HiddenFor(m => m.CurrentPage)
 	<input type="hidden" asp-for="CurrentPage" condition="Model.LastPage <= 1"/>
 	<div class="col-sm-3 pull-left" condition="@Model.LastPage > 1">
-		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="1" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" title="First Page"><span class="glyphicon glyphicon-fast-backward"></span></a>
-		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="@(Model.CurrentPage - 1)" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" title="Previous Page"><span class="glyphicon glyphicon-chevron-left"></span></a>
-		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@(Model.CurrentPage + 1)" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" role="button" title="Next Page"><span class="glyphicon glyphicon-chevron-right"></span></a>
-		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@Model.LastPage" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" role="button" title="Last Page"><span class="glyphicon glyphicon-fast-forward"></span></a>
+		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="1" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" title="First Page">
+			<span class="glyphicon glyphicon-fast-backward"></span>
+		</a>
+		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="@(Model.CurrentPage - 1)" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" title="Previous Page">
+			<span class="glyphicon glyphicon-chevron-left"></span>
+		</a>
+		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@(Model.CurrentPage + 1)" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" role="button" title="Next Page">
+			<span class="glyphicon glyphicon-chevron-right"></span>
+		</a>
+		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@Model.LastPage" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" role="button" title="Last Page">
+			<span class="glyphicon glyphicon-fast-forward"></span>
+		</a>
 	</div>
 	<div class="@(Model.LastPage > 1 ? "col-sm-4 text-right" : "text-center")">
 		<label>Showing @Model.StartRow - @Model.LastRow of @Model.RowCount</label>
