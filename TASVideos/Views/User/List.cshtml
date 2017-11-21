@@ -5,9 +5,6 @@
 <h4>@ViewData["Title"]</h4>
 
 <row>
-	@Html.HiddenFor(m => m.PageSize)
-	@Html.HiddenFor(m => m.CurrentPage)
-	<input type="hidden" asp-for="CurrentPage" condition="Model.LastPage <= 1"/>
 	<div class="col-sm-3 pull-left" condition="@Model.LastPage > 1">
 		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="1" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" title="First Page">
 			<span class="glyphicon glyphicon-fast-backward"></span>
@@ -26,6 +23,7 @@
 		<label>Showing @Model.StartRow - @Model.LastRow of @Model.RowCount</label>
 	</div>
 	<div class="col-sm-5 text-right" condition="@Model.LastPage > 1">
+		@Html.HiddenFor(m => m.PageSize)
 		<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage" class="input-xs"> Of @Model.LastPage</label>
 		<button class="btn btn-default btn-xs">Go To</button>
 	</div>
