@@ -20,14 +20,9 @@ namespace TASVideos.Controllers
 			_userTasks = userTasks;
 		}
 
-		public IActionResult List()
+		public IActionResult List(PagedModel getModel)
 		{
-			var model = _userTasks.GetPageOfUsers(new PagedModel
-			{
-				CurrentPage = 1,
-				PageSize = 20
-			});
-
+			var model = _userTasks.GetPageOfUsers(getModel);
 			return View(model);
 		}
 

@@ -1,10 +1,25 @@
 ﻿@model PageOf<UserListViewModel>
 @{
-	ViewData["Title"] = "User Management";
+	ViewData["Title"] = "User List";
 }
-
 <h4>@ViewData["Title"]</h4>
-<p>Showing page @Model.CurrentPage of @Model.NumberOfPages</p>
+
+<div class="row">
+	<div class="col-md-3">
+		<button class="btn btn-default btn-xs" title="First Page"><span class="glyphicon glyphicon-fast-backward"></span></button>
+		<button class="btn btn-default btn-xs" title="Previous Page"><span class="glyphicon glyphicon-chevron-left"></span></button>
+		<button class="btn btn-default btn-xs" role="button" title="Next Page"><span class="glyphicon glyphicon-chevron-right"></span></button>
+		<button class="btn btn-default btn-xs" role="button" title="Last Page"><span class="glyphicon glyphicon-fast-forward"></span></button>
+	</div>
+	<div class="col-md-4 text-right">
+		<label>Showing @Model.StartRow - @Model.LastRow of @Model.RowCount</label>
+	</div>
+	<div class="col-md-5 text-right">
+		<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.NumberOfPages" class="input-xs"> Of @Model.NumberOfPages</label>
+		<button class="btn btn-default btn-xs">Go To</button>
+	</div>
+</div>
+
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.First().Id)</th>

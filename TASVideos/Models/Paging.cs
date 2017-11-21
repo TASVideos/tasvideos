@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TASVideos.Models
 {
-	public class PageOf<T> : IEnumerable<T>
+	public class PageOf<T> : PagedModel, IEnumerable<T>
 	{
 		private readonly IEnumerable<T> _items;
 
@@ -13,11 +13,11 @@ namespace TASVideos.Models
 			_items = items;
 		}
 
-		// TODO: sorting
-		public int PageSize { get; set; }
-		public int CurrentPage { get; set; }
 		public int RowCount { get; set; }
+
 		public int NumberOfPages => (int)Math.Ceiling(RowCount / (double)PageSize);
+		public int StartRow => ((CurrentPage - 1) * PageSize) + 1;
+		public int LastRow => StartRow + PageSize - 1;
 
 		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
@@ -28,7 +28,9 @@ namespace TASVideos.Models
 	/// </summary>
 	public class PagedModel
 	{
-		public int PageSize { get; set; }
-		public int CurrentPage { get; set; }
+		// TODO: sorting
+		// TODO: filtering?
+		public int PageSize { get; set; } = 10;
+		public int CurrentPage { get; set; } = 1;
 	}
 }
