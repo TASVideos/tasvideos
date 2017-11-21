@@ -4,7 +4,7 @@
 }
 
 <h4>@ViewData["Title"]</h4>
-
+<p>Showing page @Model.CurrentPage of @Model.NumberOfPages</p>
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.First().Id)</th>
@@ -22,7 +22,6 @@
 				<a asp-action="Index" asp-route-id="@user.Id" class="btn btn-default">View</a>
 				<a condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
 			</td>
-			
 		</tr>
 	}
 </table>

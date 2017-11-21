@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace TASVideos.Models
@@ -16,6 +17,7 @@ namespace TASVideos.Models
 		public int PageSize { get; set; }
 		public int CurrentPage { get; set; }
 		public int RowCount { get; set; }
+		public int NumberOfPages => (int)Math.Ceiling(RowCount / (double)PageSize);
 
 		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
