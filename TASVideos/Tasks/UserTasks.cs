@@ -222,7 +222,6 @@ namespace TASVideos.Tasks
 				.Include(u => u.UserRoles)
 				.ThenInclude(u => u.Role)
 				.ThenInclude(r => r.RolePermission)
-				.ThenInclude(rp => rp.Permission)
 				.Where(u => u.Id == userId)
 				.SelectMany(u => u.UserRoles)
 				.SelectMany(ur => ur.Role.RolePermission)

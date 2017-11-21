@@ -21,7 +21,6 @@ namespace TASVideos.Data
 			context.Database.EnsureDeleted();
 			context.Database.EnsureCreated();
 
-			context.Permissions.AddRange(PermissionSeedData.Permissions);
 			context.Roles.Add(RoleSeedData.AdminRole);
 			context.Roles.AddRange(RoleSeedData.Roles);
 
@@ -32,7 +31,7 @@ namespace TASVideos.Data
 				var role = new Role
 				{
 					Name = permission.ToString(),
-					Description = $"A role containing only the {permission} {nameof(Permission)}"
+					Description = $"A role containing only the {permission} permission"
 				};
 
 				role.RolePermission.Add(new RolePermission { Role = role, PermissionId = permission });
