@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace TASVideos.Data
@@ -41,5 +42,33 @@ namespace TASVideos.Data
 
 			return results;
 		}
+
+		public static IOrderedQueryable<T> Sorting<T>(this IQueryable<T> query, IPagingModel paging)
+		{
+			string orderby = paging.SortDescending
+				? nameof(Enumerable.OrderByDescending)
+				: nameof(Enumerable.OrderBy);
+
+			// https://stackoverflow.com/questions/34899933/sorting-using-property-name-as-string
+			// LAMBDA: x => x.[PropertyName]
+			var parameter = Expression.Parameter(typeof(T), "x");
+			Expression property = Expression.Property(parameter, paging.SortBy);
+			var lambda = Expression.Lambda(property, parameter);
+
+			// REFLECTION: source.OrderBy(x => x.Property)
+			var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == orderby && x.GetParameters().Length == 2);
+			var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(T), property.Type);
+			var result = orderByGeneric.Invoke(null, new object[] { query, lambda });
+
+			return (IOrderedQueryable<T>)result;
+		}
+	}
+
+	public interface IPagingModel
+	{
+		string SortBy { get; }
+		bool SortDescending { get; }
+		int PageSize { get; }
+		int CurrentPage { get; }
 	}
 }
