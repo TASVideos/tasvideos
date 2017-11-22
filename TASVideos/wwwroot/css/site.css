@@ -1,4 +1,8 @@
-﻿body {
+﻿a[disabled] {
+	pointer-events: none;
+}
+
+body {
 	background: #EEE url(/images/tasvideosbg.png) 0 -450px repeat-x;
 }
 
