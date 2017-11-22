@@ -23,9 +23,11 @@
 		<label>Showing @Model.StartRow - @Model.LastRow of @Model.RowCount</label>
 	</div>
 	<div class="col-sm-5 text-right" condition="@Model.LastPage > 1">
-		@Html.HiddenFor(m => m.PageSize)
-		<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage" class="input-sm" style="height: 23px; padding: 2px 5px; max-width: 65px;"> Of @Model.LastPage</label>
-		<button class="btn btn-default btn-xs">Go To</button>
+		<form method="GET" asp-action="List">
+			@Html.HiddenFor(m => m.PageSize)
+			<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage" class="input-sm" style="height: 23px; padding: 2px 5px; max-width: 65px;"> Of @Model.LastPage</label>
+			<button type="submit" class="btn btn-default btn-xs">Go To</button>
+		</form>
 	</div>
 </row>
 <table class="table table-bordered table-striped">
