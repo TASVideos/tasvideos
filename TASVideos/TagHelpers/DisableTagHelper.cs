@@ -12,6 +12,7 @@ namespace TASVideos.TagHelpers
 			if (Disable)
 			{
 				output.Attributes.Add("disabled", "disabled");
+				output.Attributes.Add("aria-disabled", "true");
 			}
 		}
 	}
