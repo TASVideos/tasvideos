@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers
 {
@@ -13,6 +14,13 @@ namespace TASVideos.TagHelpers
 			{
 				output.Attributes.Add("disabled", "disabled");
 				output.Attributes.Add("aria-disabled", "true");
+				var tabIndex = output.Attributes.FirstOrDefault(a => a.Name == "tabindex");
+				if (tabIndex != null)
+				{
+					output.Attributes.Remove(tabIndex);
+				}
+
+				output.Attributes.Add("tabindex", "-1");
 			}
 		}
 	}
