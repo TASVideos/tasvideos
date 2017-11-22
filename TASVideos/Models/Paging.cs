@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TASVideos.Data;
 
 namespace TASVideos.Models
 {
@@ -26,10 +27,11 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents all of the data necessary to create a paged query
 	/// </summary>
-	public class PagedModel
+	public class PagedModel : IPagingModel
 	{
-		// TODO: sorting
 		// TODO: filtering?
+		public string SortBy { get; set; } = "Id";
+		public bool SortDescending { get; set; }
 		public int PageSize { get; set; } = 10;
 		public int CurrentPage { get; set; } = 1;
 	}

@@ -65,7 +65,7 @@ namespace TASVideos.Tasks
 			var data = _db.Users
 				.Include(u => u.UserRoles)
 				.ThenInclude(ur => ur.Role)
-				.OrderBy(u => u.Id) // TODO: sorting
+				.Sorting(paging)
 				.Paginate(_db, paging.CurrentPage, paging.PageSize, out int rowCount)
 				.Select(u => new UserListViewModel
 				{
