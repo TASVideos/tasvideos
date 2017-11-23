@@ -14,20 +14,25 @@ namespace TASVideos.Models
 			_items = items;
 		}
 
-		public int RowCount { get; set; }
-
-		public int LastPage => (int)Math.Ceiling(RowCount / (double)PageSize);
-		public int StartRow => ((CurrentPage - 1) * PageSize) + 1;
-		public int LastRow => Math.Min(RowCount, StartRow + PageSize - 1);
+		
 
 		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 	}
 
+	public class PagedModel : PagingModel
+	{
+		public int RowCount { get; set; }
+
+		public int LastPage => (int)Math.Ceiling(RowCount / (double)PageSize);
+		public int StartRow => ((CurrentPage - 1) * PageSize) + 1;
+		public int LastRow => Math.Min(RowCount, StartRow + PageSize - 1);
+	}
+
 	/// <summary>
 	/// Represents all of the data necessary to create a paged query
 	/// </summary>
-	public class PagedModel : IPagingModel
+	public class PagingModel : IPagingModel
 	{
 		// TODO: filtering?
 		public string SortBy { get; set; } = "Id";
