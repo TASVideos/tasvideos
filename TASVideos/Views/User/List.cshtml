@@ -34,8 +34,28 @@
 </row>
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.First().Id)</th>
-		<th>@Html.DisplayNameFor(m => m.First().UserName)</th>
+		<th>
+			<a asp-action="List"
+				asp-route-CurrentPage="1"
+				asp-route-PageSize="@Model.PageSize"
+				asp-route-SortDescending="@(Model.SortBy == nameof(UserListViewModel.Id) && !Model.SortDescending)"
+				asp-route-SortBy="@nameof(UserListViewModel.Id)">
+				@Html.DisplayNameFor(m => m.First().Id)
+				<span condition="@(Model.SortBy == nameof(UserListViewModel.Id) && Model.SortDescending)" class="glyphicon glyphicon-arrow-up"></span>
+				<span condition="@(Model.SortBy == nameof(UserListViewModel.Id) && !Model.SortDescending)" class="glyphicon glyphicon-arrow-down"></span>
+			</a>
+		</th>
+		<th>
+			<a asp-action="List"
+				asp-route-CurrentPage="1"
+				asp-route-PageSize="@Model.PageSize"
+				asp-route-SortDescending="@(Model.SortBy == nameof(UserListViewModel.UserName) && !Model.SortDescending)"
+				asp-route-SortBy="@nameof(UserListViewModel.UserName)">
+				@Html.DisplayNameFor(m => m.First().UserName)
+				<span condition="@(Model.SortBy == nameof(UserListViewModel.UserName) && Model.SortDescending)" class="glyphicon glyphicon-arrow-up"></span>
+				<span condition="@(Model.SortBy == nameof(UserListViewModel.UserName) && !Model.SortDescending)" class="glyphicon glyphicon-arrow-down"></span>
+			</a>
+		</th>
 		<th>@Html.DisplayNameFor(m => m.First().Roles)</th>
 		<th>Actions</th>
 	</tr>
