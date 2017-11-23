@@ -6,16 +6,16 @@
 
 <row>
 	<div class="col-sm-3 pull-left" condition="@Model.LastPage > 1">
-		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="1" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" title="First Page">
+		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="1" asp-route-PageSize="@Model.PageSize" asp-route-SortDescending="@Model.SortDescending" asp-route-SortBy="@Model.SortBy" class="btn btn-default btn-xs" title="First Page">
 			<span class="glyphicon glyphicon-fast-backward"></span>
 		</a>
-		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="@(Model.CurrentPage - 1)" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" title="Previous Page">
+		<a disable="@Model.CurrentPage == 1" asp-action="List" asp-route-CurrentPage="@(Model.CurrentPage - 1)" asp-route-PageSize="@Model.PageSize" asp-route-SortDescending="@Model.SortDescending" asp-route-SortBy="@Model.SortBy" class="btn btn-default btn-xs" title="Previous Page">
 			<span class="glyphicon glyphicon-chevron-left"></span>
 		</a>
-		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@(Model.CurrentPage + 1)" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" role="button" title="Next Page">
+		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@(Model.CurrentPage + 1)" asp-route-PageSize="@Model.PageSize" asp-route-SortDescending="@Model.SortDescending" asp-route-SortBy="@Model.SortBy" class="btn btn-default btn-xs" role="button" title="Next Page">
 			<span class="glyphicon glyphicon-chevron-right"></span>
 		</a>
-		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@Model.LastPage" asp-route-PageSize="@Model.PageSize" class="btn btn-default btn-xs" role="button" title="Last Page">
+		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@Model.LastPage" asp-route-PageSize="@Model.PageSize" asp-route-SortDescending="@Model.SortDescending" asp-route-SortBy="@Model.SortBy" class="btn btn-default btn-xs" role="button" title="Last Page">
 			<span class="glyphicon glyphicon-fast-forward"></span>
 		</a>
 	</div>
@@ -24,7 +24,9 @@
 	</div>
 	<div class="col-sm-5 text-right" condition="@Model.LastPage > 1">
 		<form method="GET" asp-action="List">
-			@Html.HiddenFor(m => m.PageSize)
+			<input type="hidden" asp-for="PageSize" />
+			<input type="hidden" asp-for="SortDescending"/>
+			<input type="hidden" asp-for="SortBy" />
 			<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage" class="input-sm" style="height: 23px; padding: 2px 5px; max-width: 65px;"> Of @Model.LastPage</label>
 			<button type="submit" class="btn btn-default btn-xs">Go To</button>
 		</form>
