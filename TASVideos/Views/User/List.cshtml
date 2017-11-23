@@ -18,6 +18,7 @@
 		<a disable="@Model.CurrentPage == Model.LastPage" asp-action="List" asp-route-CurrentPage="@Model.LastPage" asp-route-PageSize="@Model.PageSize" asp-route-SortDescending="@Model.SortDescending" asp-route-SortBy="@Model.SortBy" class="btn btn-default btn-xs" role="button" title="Last Page">
 			<span class="glyphicon glyphicon-fast-forward"></span>
 		</a>
+		<a asp-action="List" class="btn btn-default btn-xs">Reset</a>
 	</div>
 	<div class="@(Model.LastPage > 1 ? "col-sm-4 text-right" : "text-center")">
 		<label>Showing @Model.StartRow - @Model.LastRow of @Model.RowCount</label>
