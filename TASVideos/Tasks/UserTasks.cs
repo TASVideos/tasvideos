@@ -78,7 +78,9 @@ namespace TASVideos.Tasks
 			{
 				PageSize = paging.PageSize,
 				CurrentPage = paging.CurrentPage,
-				RowCount = rowCount
+				RowCount = rowCount,
+				SortDescending = paging.SortDescending,
+				SortBy = paging.SortBy
 			};
 
 			return paged;
