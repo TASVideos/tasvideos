@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 namespace TASVideos.Data
@@ -55,6 +57,12 @@ namespace TASVideos.Data
 			Expression property = Expression.Property(parameter, paging.SortBy);
 			var lambda = Expression.Lambda(property, parameter);
 
+			var isSortable = typeof(T).GetProperty(paging.SortBy).GetCustomAttributes<SortableAttribute>().Any();
+			if (!isSortable)
+			{
+				throw new InvalidOperationException($"Attempted to sort by non-sortable column {paging.SortBy}");
+			}
+
 			// REFLECTION: source.OrderBy(x => x.Property)
 			var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == orderby && x.GetParameters().Length == 2);
 			var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(T), property.Type);
@@ -62,6 +70,10 @@ namespace TASVideos.Data
 
 			return (IOrderedQueryable<T>)result;
 		}
+	}
+
+	public class SortableAttribute : Attribute
+	{
 	}
 
 	public interface IPagingModel

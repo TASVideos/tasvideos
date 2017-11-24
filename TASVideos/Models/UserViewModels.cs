@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+using TASVideos.Data;
+
 namespace TASVideos.Models
 {
 	/// <summary>
@@ -11,9 +13,11 @@ namespace TASVideos.Models
 	/// </summary>
 	public class UserListViewModel
     {
+		[Sortable]
 		public int Id { get; set; }
 
 		[DisplayName("User Name")]
+		[Sortable]
 		public string UserName { get; set; }
 
 		[DisplayName("Role")]
