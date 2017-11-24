@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,36 +17,39 @@ namespace TASVideos.Data
 		/// </summary>
 		/// <param name="query">The query to paginate and run</param>
 		/// <param name="db">The Entity Framework context instance</param>
-		/// <param name="currentPage">The current page</param>
-		/// <param name="pageSize">The size of each page</param>
-		/// <param name="rowCount">The total result set count before paging</param>
+		/// <param name="paging">The paging data to use</param>
 		/// <typeparam name="T">The result type of the query</typeparam>
-		public static IEnumerable<T> Paginate<T>( // TODO: async?
+		public static PageOf<T> Paginate<T>( // TODO: async?
 			this IOrderedQueryable<T> query,
 			DbContext db,
-			int currentPage,
-			int pageSize,
-			out int rowCount)
+			PagedModel paging)
 			where T : class
 		{
-			int rowsToSkip = ((currentPage < 1 ? 1 : currentPage) - 1) * pageSize;
-
-			IEnumerable<T> results;
-
 			using (db.Database.BeginTransaction())
 			{
-				rowCount = query.Count();
+				int rowsToSkip = ((paging.CurrentPage < 1 ? 1 : paging.CurrentPage) - 1) * paging.PageSize;
 
-				results = query
-					.Skip(rowsToSkip)
-					.Take(pageSize)
-					.ToList();
+			    int rowCount = query.Count();
+
+				IEnumerable<T> results = query
+				    .Skip(rowsToSkip)
+				    .Take(paging.PageSize)
+				    .ToList();
+
+				var pageof = new PageOf<T>(results)
+				{
+					PageSize = paging.PageSize,
+					CurrentPage = paging.CurrentPage,
+					RowCount = rowCount,
+					SortDescending = paging.SortDescending,
+					SortBy = paging.SortBy
+				};
+
+				return pageof;
 			}
-
-			return results;
 		}
 
-		public static IOrderedQueryable<T> Sorting<T>(this IQueryable<T> query, IPagingModel paging)
+		public static IOrderedQueryable<T> SortBy<T>(this IQueryable<T> query, IPagingModel paging)
 		{
 			string orderby = paging.SortDescending
 				? nameof(Enumerable.OrderByDescending)
@@ -82,5 +86,39 @@ namespace TASVideos.Data
 		bool SortDescending { get; }
 		int PageSize { get; }
 		int CurrentPage { get; }
+	}
+
+	public class PageOf<T> : PagedModel, IEnumerable<T>
+	{
+		private readonly IEnumerable<T> _items;
+
+		public PageOf(IEnumerable<T> items)
+		{
+			_items = items;
+		}
+
+		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
+	}
+
+	public class PagedModel : PagingModel
+	{
+		public int RowCount { get; set; }
+
+		public int LastPage => (int)Math.Ceiling(RowCount / (double)PageSize);
+		public int StartRow => ((CurrentPage - 1) * PageSize) + 1;
+		public int LastRow => Math.Min(RowCount, StartRow + PageSize - 1);
+	}
+
+	/// <summary>
+	/// Represents all of the data necessary to create a paged query
+	/// </summary>
+	public class PagingModel : IPagingModel
+	{
+		// TODO: filtering?
+		public string SortBy { get; set; } = "Id";
+		public bool SortDescending { get; set; }
+		public int PageSize { get; set; } = 10;
+		public int CurrentPage { get; set; } = 1;
 	}
 }
