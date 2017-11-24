@@ -6,48 +6,46 @@
 <delete-button condition="@Model.Id.HasValue && ViewData.UserHasPermission(PermissionTo.DeleteRoles)" asp-href="@Url.Action($"Delete/{Model.Id}")" class="pull-right text-center">Delete</delete-button>
 <h4>@ViewData["Title"]</h4>
 <hr />
-<div class="container">
-	<form asp-route="Edit" class="form-horizontal">
-		<input type="hidden" asp-for="@Model.Id" />
-		<fieldset class="form-group">
-			<row>
-				<div class="col-sm-5">
-					<label asp-for="Name" class="control-label"></label>
-					<input asp-for="Name" class="form-control" maxlength="50" />
-					<span asp-validation-for="Name" class="text-danger"></span>
-				</div>
-				<div class="col-sm-offset-2 col-sm-5">
-					<label asp-for="Description" class="control-label"></label>
-					<textarea asp-for="Description" class="form-control" rows="3" maxlength="200"></textarea>
-					<span asp-validation-for="Description" class="text-danger"></span>
-				</div>
-			</row>
-		</fieldset>
-		<fieldset class="form-group">
-			<row>
-				<two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
-			</row>
-		</fieldset> 
-		<fieldset class="form-group hide" id="assignable-permissions-section">
-			<row>
-				<two-column-select id-list="SelectedAssignablePermissions" available-list="AvailableAssignablePermissions" />
-			</row>
-			<row>
-				<div class="col-sm-offset-7 col-sm-5">
-					<br />
-					<label>Roles that can be assigned: </label>
-					<div id="assignable-roles">None</div>
-				</div>
-			</row>
-		</fieldset>
-		<fieldset class="form-group">
-			<row class="text-center mt-el">
-				<button type="submit" class="btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
-				<a asp-action="Index" class="btn btn-default">Cancel</a>
-			</row>
-		</fieldset>
-	</form>
-</div>
+<form asp-route="Edit" class="form-horizontal">
+    <input type="hidden" asp-for="@Model.Id" />
+    <form-group>
+        <row>
+            <div class="col-sm-5">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" maxlength="50" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-sm-offset-2 col-sm-5">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3" maxlength="200"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </row>
+    </form-group>
+    <form-group>
+        <row>
+            <two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
+        </row>
+    </form-group> 
+    <form-group class="hide" id="assignable-permissions-section">
+        <row>
+            <two-column-select id-list="SelectedAssignablePermissions" available-list="AvailableAssignablePermissions" />
+        </row>
+        <row>
+            <div class="col-sm-offset-7 col-sm-5">
+                <br />
+                <label>Roles that can be assigned: </label>
+                <div id="assignable-roles">None</div>
+            </div>
+        </row>
+    </form-group>
+    <form-group>
+        <row class="text-center mt-el">
+            <button type="submit" class="btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
+            <a asp-action="Index" class="btn btn-default">Cancel</a>
+        </row>
+    </form-group>
+</form>
 
 <script>
 	// TODO: scope
