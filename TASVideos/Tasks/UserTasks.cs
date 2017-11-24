@@ -71,19 +71,10 @@ namespace TASVideos.Tasks
 					UserName = u.UserName,
 					Roles = u.UserRoles.Select(ur => ur.Role.Name)
 				})
-				.Sorting(paging)
-				.Paginate(_db, paging.CurrentPage, paging.PageSize, out int rowCount);
+				.SortBy(paging)
+				.Paginate(_db, paging);
 
-			var paged = new PageOf<UserListViewModel>(data)
-			{
-				PageSize = paging.PageSize,
-				CurrentPage = paging.CurrentPage,
-				RowCount = rowCount,
-				SortDescending = paging.SortDescending,
-				SortBy = paging.SortBy
-			};
-
-			return paged;
+			return data;
 		}
 
 		/// <summary>
