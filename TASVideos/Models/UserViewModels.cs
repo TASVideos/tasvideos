@@ -22,6 +22,9 @@ namespace TASVideos.Models
 
 		[DisplayName("Role")]
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
+
+		// Dummy to generate column header
+		public object Actions { get; set; }
 	}
 
 	/// <summary>
