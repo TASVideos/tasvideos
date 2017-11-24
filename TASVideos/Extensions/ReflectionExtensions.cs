@@ -47,5 +47,16 @@ namespace TASVideos.Extensions
 
 			return string.Empty;
 		}
+
+		public static string DisplayName(this PropertyInfo propertyInfo)
+		{
+			var displayAttr = propertyInfo.GetCustomAttribute<DisplayNameAttribute>();
+			if (displayAttr != null)
+			{
+				return displayAttr.DisplayName;
+			}
+
+			return propertyInfo.Name;
+		}
 	}
 }
