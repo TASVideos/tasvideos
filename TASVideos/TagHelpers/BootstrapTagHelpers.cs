@@ -14,6 +14,15 @@ namespace TASVideos.TagHelpers
 		}
 	}
 
+	public class FormGroupTagHelper : TagHelper
+	{
+		public override void Process(TagHelperContext context, TagHelperOutput output)
+		{
+			output.TagName = "fieldset";
+			output.AddCssClass("form-group");
+		}
+	}
+
 	public class DeleteButtonTagHelper : TagHelper
 	{
 		public string AspHref { get; set; }
