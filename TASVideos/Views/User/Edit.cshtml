@@ -7,7 +7,7 @@
 <hr />
 <form asp-route="Edit">
 	<row>
-		<fieldset class="form-group">
+		<form-group>
 			<div class="col-md-5">
 				<label asp-for="CreateTimeStamp"></label>
 				<div>@Model.CreateTimeStamp</div>
@@ -16,10 +16,10 @@
 				<label asp-for="LastLoggedInTimeStamp"></label>
 				<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
 			</div>
-		</fieldset>
+		</form-group>
 	</row>
 	<row>
-		<fieldset class="form-group">
+		<form-group>
 			@if (Model.IsLockedOut)
 			{
 				<label class="text-danger col-sm-4"><span class="glyphicon glyphicon-alert"></span> This user is currently locked out</label>
@@ -33,7 +33,7 @@
 					<span class="glyphicon glyphicon-check text-success"></span> Not locked
 				</div>
 			}
-		</fieldset>
+		</form-group>
 	</row>
 	<row>
 		<fieldset class="form-group col-md-5">
