@@ -10,7 +10,7 @@ using TASVideos.Extensions;
 
 namespace TASVideos.TagHelpers
 {
-	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.NormalOrSelfClosing)]
+	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.WithoutEndTag)]
 	public class SortableTableHeadTagHelper : TagHelper
 	{
 		[HtmlAttributeNotBound]
