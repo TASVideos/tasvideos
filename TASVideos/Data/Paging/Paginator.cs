@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -65,7 +64,7 @@ namespace TASVideos.Data
 			}
 		}
 
-		public static IOrderedQueryable<T> SortBy<T>(this IQueryable<T> query, IPagingModel paging)
+		public static IOrderedQueryable<T> SortBy<T>(this IQueryable<T> query, PagingModel paging)
 		{
 			string orderby = paging.SortDescending
 				? nameof(Enumerable.OrderByDescending)
@@ -90,51 +89,5 @@ namespace TASVideos.Data
 
 			return (IOrderedQueryable<T>)result;
 		}
-	}
-
-	public class SortableAttribute : Attribute
-	{
-	}
-
-	public interface IPagingModel
-	{
-		string SortBy { get; }
-		bool SortDescending { get; }
-		int PageSize { get; }
-		int CurrentPage { get; }
-	}
-
-	public class PageOf<T> : PagedModel, IEnumerable<T>
-	{
-		private readonly IEnumerable<T> _items;
-
-		public PageOf(IEnumerable<T> items)
-		{
-			_items = items;
-		}
-
-		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
-	}
-
-	public class PagedModel : PagingModel
-	{
-		public int RowCount { get; set; }
-
-		public int LastPage => (int)Math.Ceiling(RowCount / (double)PageSize);
-		public int StartRow => ((CurrentPage - 1) * PageSize) + 1;
-		public int LastRow => Math.Min(RowCount, StartRow + PageSize - 1);
-	}
-
-	/// <summary>
-	/// Represents all of the data necessary to create a paged query
-	/// </summary>
-	public class PagingModel : IPagingModel
-	{
-		// TODO: filtering?
-		public string SortBy { get; set; } = "Id";
-		public bool SortDescending { get; set; }
-		public int PageSize { get; set; } = 10;
-		public int CurrentPage { get; set; } = 1;
 	}
 }
