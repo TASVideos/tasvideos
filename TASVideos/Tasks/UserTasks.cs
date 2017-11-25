@@ -124,11 +124,17 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
+		public async Task<string> GetUserNameById(int id)
+		{
+			var user = await _db.Users.SingleAsync(u => u.Id == id);
+			return user.UserName;
+		}
+
 		/// <summary>
 		/// Returns a <see cref="User"/>  with the given id for the purpose of editing
 		/// Which <see cref="Role"/>s are available to assign to the User depends on the User with the given <see cref="currentUserId" />'s <see cref="RolePermission"/> list
 		/// </summary>
-		public async Task<UserEditViewModel> GetUserForEdit(int id, int currentUserId)
+		public async Task<UserEditViewModel> GetUserForEdit(string userName, int currentUserId)
 		{
 			using (await _db.Database.BeginTransactionAsync())
 			{
@@ -143,10 +149,10 @@ namespace TASVideos.Tasks
 						EmailConfirmed = u.EmailConfirmed,
 						IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue
 					})
-					.SingleAsync(u => u.Id == id);
+					.SingleAsync(u => u.UserName == userName);
 
 				model.SelectedRoles = await _db.UserRoles
-					.Where(ur => ur.UserId == id)
+					.Where(ur => ur.UserId == model.Id)
 					.Select(ur => ur.RoleId)
 					.ToListAsync();
 
@@ -197,6 +203,22 @@ namespace TASVideos.Tasks
 		{
 			return await _db.Users
 				.AnyAsync(u => u.UserName == userName);
+		}
+
+		/// <summary>
+		/// Gets a list of <seealso cref="User"/>s that partially match the given part of a username
+		/// </summary>
+		public async Task<Dictionary<int, string>> GetUsersByPartial(string partialUserName)
+		{
+			var upper = partialUserName.ToUpper();
+			return await _db.Users
+				.Where(u => u.NormalizedUserName.Contains(upper))
+				.Select(u => new
+				{
+					u.Id,
+					u.UserName
+				})
+				.ToDictionaryAsync(tkey => tkey.Id, tsource => tsource.UserName);
 		}
 
 		/// <summary>
