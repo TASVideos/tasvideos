@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
@@ -42,8 +43,22 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.EditUsers)]
 		public async Task<IActionResult> Edit(int id)
 		{
-			var model = await _userTasks.GetUserForEdit(id, User.GetUserId());
-			return View(model);
+			if (id > 0)
+			{
+				var userName = await _userTasks.GetUserNameById(id);
+
+				var model = await _userTasks.GetUserForEdit(userName, User.GetUserId());
+				return View(model);
+			}
+
+			return RedirectToAction(nameof(List));
+		}
+
+		[RequirePermission(PermissionTo.EditUsers)]
+		public async Task<IActionResult> EditByName(string userName)
+		{
+			var model = await _userTasks.GetUserForEdit(userName, User.GetUserId());
+			return View(nameof(Edit), model);
 		}
 
 		[HttpPost]
@@ -73,6 +88,17 @@ namespace TASVideos.Controllers
 		{
 			var exists = await _userTasks.CheckUserNameExists(userName);
 			return Json(exists);
+		}
+
+		public async Task<IActionResult> SearchUserName(string partial)
+		{
+			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 1)
+			{
+				var matches = await _userTasks.GetUsersByPartial(partial);
+				return Json(matches);
+			}
+
+			return Json(new Dictionary<int, string>());
 		}
 	}
 }
