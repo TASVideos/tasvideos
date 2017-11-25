@@ -98,7 +98,7 @@ namespace TASVideos.Controllers
 				return Json(matches);
 			}
 
-			return Json(new Dictionary<int, string>());
+			return Json(new List<string>());
 		}
 	}
 }
