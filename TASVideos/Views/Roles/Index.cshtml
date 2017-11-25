@@ -5,7 +5,7 @@
 
 <h4>@ViewData["Title"]</h4>
 <p>These are a list of the site roles</p>
-
+<hr />
 @if (User.Identity.IsAuthenticated)
 {
 	<p>See the <a asp-controller="Permissions" asp-action="Index">Permission List</a> for details on individual permissions</p>
