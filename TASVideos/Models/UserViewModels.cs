@@ -23,6 +23,10 @@ namespace TASVideos.Models
 		[DisplayName("Role")]
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 
+		[DisplayName("Created")]
+		[Sortable]
+		public DateTime CreateTimeStamp { get; set; }
+
 		// Dummy to generate column header
 		public object Actions { get; set; }
 	}

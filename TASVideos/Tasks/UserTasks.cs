@@ -69,6 +69,7 @@ namespace TASVideos.Tasks
 				{
 					Id = u.Id,
 					UserName = u.UserName,
+					CreateTimeStamp = u.CreateTimeStamp,
 					Roles = u.UserRoles.Select(ur => ur.Role.Name)
 				})
 				.SortedPageOf(_db, paging);

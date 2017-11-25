@@ -13,6 +13,7 @@
 			<td>@user.Id</td>
 			<td>@user.UserName</td>
 			<td>@string.Join(",", user.Roles)</td>
+			<td>@user.CreateTimeStamp</td>
 			<td>
 				<a asp-action="Index" asp-route-id="@user.Id" class="btn btn-default">View</a>
 				<a condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
