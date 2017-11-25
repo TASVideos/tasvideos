@@ -1,42 +1,53 @@
-﻿<form asp-action="EditByName" method="GET" class="form-inline">
+﻿<form asp-action="EditByName" method="GET" class="form-inline" id="search-form">
 	<label for="search-username-box">Search User Name: </label>
 	<input id="search-username-box" name="userName" list="search-username-list" required="required" type="search" class="form-control" placeholder="Enter a UserName" autofocus="autofocus" autocomplete="off"/>
 	<button id="go-button" type="submit" class="btn btn-default" disabled="disabled">Go</button>
 	<datalist id="search-username-list"></datalist>
 	<script>
-		(function() {
+		(function () {
 			var searchBox = document.getElementById('search-username-box');
-			var goButton = document.getElementById('go-button');
-			var searchList = document.getElementById('search-username-list');
+			searchBox.onkeyup = function () {
+				
+				var goButton = document.getElementById('go-button');
+				var searchVal = searchBox.value.trim();
+				var dataListId = 'search-username-list-' + searchVal;
+				if (searchVal.length > 1) {
+					var existingList = document.getElementById(dataListId);
+					if (existingList) {
+						searchBox.setAttribute('list', dataListId);
+						return;
+					}
 
-			searchBox.onkeyup = function() {
-				if (searchBox.value.trim().length > 1) {
-					console.log('search: ', searchBox.value.trim());
 					var xmlhttp = new XMLHttpRequest();
 
 					xmlhttp.onreadystatechange = function() {
 						if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 							if (xmlhttp.status === 200) {
-								searchList.innerHTML = '';
+								var newSearchList = document.createElement('datalist');
+								newSearchList.id = dataListId;
+
 								var data = JSON.parse(xmlhttp.responseText);
-								var documentFragment = document.createDocumentFragment();
+
 								for (i in data) {
 									var option = document.createElement('option');
 									option.innerHTML = data[i];
 
-									documentFragment.appendChild(option);
+									newSearchList.appendChild(option);
 								}
 
-								searchList.appendChild(documentFragment);
+								document.getElementById("search-form").appendChild(newSearchList);
+								searchBox.setAttribute('list', dataListId);
 								goButton.removeAttribute('disabled');
 							}
 						}
 					};
 
 					xmlhttp.open("GET",
-						"/User/@(nameof(UserController.SearchUserName))?partial=" + searchBox.value.trim(),
+						"/User/@(nameof(UserController.SearchUserName))?partial=" + searchVal,
 						true);
 					xmlhttp.send();
+				} else {
+					goButton.setAttribute('disabled', 'disabled');
 				}
 			};
 		})();
