@@ -68,7 +68,7 @@
 					<li class="@(ViewContext.Controller() == "Home" ? "active" : "")"><a asp-action="Index" asp-controller="Home">Home</a></li>
 					@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles}))
 					{
-						<li class="dropdown @(ViewContext.Controller() == "Roles" || ViewContext.Controller() == "User" ? "active" : "")">
+						<li class="dropdown @(ViewContext.Controller() == "Roles" || ViewContext.Controller() == "User" || ViewContext.Controller() == "Permissions" ? "active" : "")">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Administration<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers}))
@@ -76,10 +76,8 @@
 									<li><a asp-controller="User" asp-action="List">Users</a></li>
 								}
 
-								@if (ViewData.UserHasPermission(PermissionTo.EditRoles))
-								{
-									<li><a asp-controller="Roles" asp-action="Index">Roles</a></li>
-								}
+								<li><a asp-controller="Roles" asp-action="Index">Roles</a></li>
+								<li><a asp-controller="Permissions" asp-action="Index">Permissions</a></li>
 							</ul>
 						</li>
 					}
