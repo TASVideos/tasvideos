@@ -5,7 +5,7 @@
 {
 	<form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
 		<ul class="nav navbar-nav navbar-right">
-			<li>
+			<li class="@(ViewContext.Controller() == "Profile" ? "active" : "")">
 				<a asp-area="" asp-controller="Profile" asp-action="Index" title="Manage">@UserManager.GetUserName(User)</a>
 			</li>
 			<li>
