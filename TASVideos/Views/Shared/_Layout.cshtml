@@ -4,83 +4,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - TASVideos</title>
-	<script>
-		// ReSharper disable once NativeTypePrototypeExtending
 
-		// Polyfills
-		(function () {
-			if (typeof NodeList.prototype.forEach !== 'function') {
-				NodeList.prototype.forEach = Array.prototype.forEach;
-			}
-
-			if (typeof Element.prototype.remove !== 'function') {
-				Element.prototype.remove = function () {
-					if (this.parentNode) {
-						this.parentNode.removeChild(this);
-					}
-				};
-			}
-
-			if (typeof Array.prototype.includes !== 'function') {
-				Array.prototype.includes = function (searchElement, fromIndex) {
-					// 1. Let O be ? ToObject(this value).
-					var o = Object(this);
-
-					// 2. Let len be ? ToLength(? Get(O, "length")).
-					var len = o.length >>> 0;
-
-					// 3. If len is 0, return false.
-					if (len === 0) {
-						return false;
-					}
-
-					// 4. Let n be ? ToInteger(fromIndex).
-					//    (If fromIndex is undefined, this step produces the value 0.)
-					var n = fromIndex | 0;
-
-					// 5. If n ≥ 0, then
-					//  a. Let k be n.
-					// 6. Else n < 0,
-					//  a. Let k be len + n.
-					//  b. If k < 0, let k be 0.
-					var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
-
-					function sameValueZero(x, y) {
-						return x === y || (typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y));
-					}
-
-					// 7. Repeat, while k < len
-					while (k < len) {
-						// a. Let elementK be the result of ? Get(O, ! ToString(k)).
-						// b. If SameValueZero(searchElement, elementK) is true, return true.
-						if (sameValueZero(o[k], searchElement)) {
-							return true;
-						}
-						// c. Increase k by 1. 
-						k++;
-					}
-
-					// 8. Return false
-					return false;
-				}
-			};
-		})();
-
-		// Global browser detection
-		var isIE = function() {
-			if (window.navigator.userAgent.indexOf('MSIE') > 0 || window.navigator.userAgent.indexOf('Trident') > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		if (typeof NodeList.toArray !== 'function') {
-			NodeList.prototype.toArray = function() {
-				return Array.prototype.slice.call(this);
-			}
-		}
-	</script>
 	<environment include="Development">
 		<link rel="shortcut icon" href="http://tasvideos.org/css/.ico" type="image/x-icon">
 		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -88,10 +12,32 @@
 	</environment>
 	<environment exclude="Development">
 		<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-			  asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-			  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+			asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+			asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
 		<link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
 	</environment>
+	
+	<environment include="Development">
+		<script src="~/lib/jquery/dist/jquery.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+	</environment>
+	<environment exclude="Development">
+		<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+				asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+				asp-fallback-test="window.jQuery"
+				crossorigin="anonymous"
+				integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+		</script>
+		<script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+				asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+				asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+				crossorigin="anonymous"
+				integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+		</script>
+		<script src="~/js/site.min.js" asp-append-version="true"></script>
+	</environment>
+
 </head>
 <body>
 	<nav id="banner" class="navbar navbar-inverse">
@@ -140,26 +86,7 @@
 		</footer>
 	</div>
 
-	<environment include="Development">
-		<script src="~/lib/jquery/dist/jquery.js"></script>
-		<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-		<script src="~/js/site.js" asp-append-version="true"></script>
-	</environment>
-	<environment exclude="Development">
-		<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-				asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-				asp-fallback-test="window.jQuery"
-				crossorigin="anonymous"
-				integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
-		</script>
-		<script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
-				asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-				asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-				crossorigin="anonymous"
-				integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-		</script>
-		<script src="~/js/site.min.js" asp-append-version="true"></script>
-	</environment>
+	
 	@RenderSection("Scripts", required: false)
 </body>
 </html>
