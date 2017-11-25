@@ -3,11 +3,8 @@
 	ViewData["Title"] = "Home";
 }
 
-<div class="container">
-	<h2>Your current permissions:</h2>
-	@foreach (var permission in Model)
-	{
-		<p>@permission.ToString()</p>
-	}
-</div>
-
+<h2>Your current permissions:</h2>
+@foreach (var permission in Model)
+{
+	<p>@permission.ToString()</p>
+}

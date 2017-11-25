@@ -3,7 +3,7 @@
 }
 
 body {
-	background: #EEE url(/images/tasvideosbg.png) 0 -450px repeat-x;
+	background: #EEE linear-gradient(#c2d4fc 0,#eeeeee 250px) repeat-x;
 }
 
 #banner {
