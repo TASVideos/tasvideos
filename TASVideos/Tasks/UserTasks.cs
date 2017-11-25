@@ -208,17 +208,13 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Gets a list of <seealso cref="User"/>s that partially match the given part of a username
 		/// </summary>
-		public async Task<Dictionary<int, string>> GetUsersByPartial(string partialUserName)
+		public async Task<IEnumerable<string>> GetUsersByPartial(string partialUserName)
 		{
 			var upper = partialUserName.ToUpper();
 			return await _db.Users
 				.Where(u => u.NormalizedUserName.Contains(upper))
-				.Select(u => new
-				{
-					u.Id,
-					u.UserName
-				})
-				.ToDictionaryAsync(tkey => tkey.Id, tsource => tsource.UserName);
+				.Select(u => u.UserName)
+				.ToListAsync();
 		}
 
 		/// <summary>
