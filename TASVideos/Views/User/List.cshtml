@@ -3,15 +3,12 @@
 	ViewData["Title"] = "User List";
 }
 <h4>@ViewData["Title"]</h4>
+<row>
+	<form-group class="text-right col-xs-offset-6 col-xs-6">
+		@Html.Partial("~/Views/User/_UserSearch.cshtml")
+	</form-group>
+</row>
 <hr />
-<form-group class="text-right">
-	<row>
-		<div class="col-xs-12">
-			@Html.Partial("~/Views/User/_UserSearch.cshtml")
-		</div>
-	</row>
-</form-group>
-
 @Html.Partial("~/Views/Table/_Pager.cshtml", Model)
 <table class="table table-bordered table-striped">
 	<sortable-table-head paging="@Model" model-type="typeof(UserListViewModel)"/>
