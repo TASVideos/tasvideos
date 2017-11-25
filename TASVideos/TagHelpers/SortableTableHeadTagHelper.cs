@@ -32,8 +32,8 @@ namespace TASVideos.TagHelpers
 				throw new ArgumentException($"{nameof(ModelType)} can not be null");
 			}
 
-			var controller = ViewContext.ActionDescriptor.RouteValues["controller"];
-			var action = ViewContext.ActionDescriptor.RouteValues["action"];
+			var controller = ViewContext.Controller();
+			var action = ViewContext.Action();
 
 			output.TagName = "tr";
 		    output.TagMode = TagMode.StartTagAndEndTag;

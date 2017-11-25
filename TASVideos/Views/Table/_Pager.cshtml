@@ -1,6 +1,6 @@
 @model PagedModel
 @{
-	var controller = ViewContext.ActionDescriptor.RouteValues["controller"];
+	var controller = ViewContext.Controller();
 	var action = ViewContext.ActionDescriptor.RouteValues["action"];
 }
 <row>
