@@ -36,7 +36,7 @@
 		</form-group>
 	</row>
 	<row>
-		<fieldset class="form-group col-md-5">
+		<form-group class="col-md-5">
 			<label asp-for="UserName" class="control-label"></label>
 			@if (ViewData.UserHasPermission(PermissionTo.EditUsersUserName))
 			{
@@ -147,8 +147,8 @@
 			{
 				<label class="form-control">@Model.UserName</label>
 			}
-		</fieldset>
-		<fieldset class="form-group col-md-offset-2 col-md-5">
+		</form-group>
+		<form-group class="col-md-offset-2 col-md-5">
 			<label asp-for="Email" class="control-label"></label>
 			@if (Model.EmailConfirmed)
 			{
@@ -161,7 +161,7 @@
 			{
 				<label class="form-control">@Model.Email</label>
 			}
-		</fieldset>
+		</form-group>
 	</row>
 	<row>
 		<two-column-select id-list="SelectedRoles" available-list="AvailableRoles" />
