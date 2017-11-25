@@ -1,7 +1,7 @@
 @model PagedModel
 @{
 	var controller = ViewContext.Controller();
-	var action = ViewContext.ActionDescriptor.RouteValues["action"];
+	var action = ViewContext.Action();
 }
 <row>
 	<div class="col-sm-3 pull-left" condition="@Model.LastPage > 1">
