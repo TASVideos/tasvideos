@@ -1,3 +1,7 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
@@ -12,6 +16,47 @@ namespace TASVideos.Data
 		}
 
 		public DbSet<RolePermission> RolePermission { get; set; }
+
+		public override int SaveChanges(bool acceptAllChangesOnSuccess)
+		{
+			PerformTrackingUpdates();
+
+			ChangeTracker.AutoDetectChangesEnabled = false;
+			var result = base.SaveChanges(acceptAllChangesOnSuccess);
+			ChangeTracker.AutoDetectChangesEnabled = true;
+
+			return result;
+		}
+
+		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			PerformTrackingUpdates();
+			return base.SaveChangesAsync(cancellationToken);
+		}
+
+		private void PerformTrackingUpdates()
+		{
+			ChangeTracker.DetectChanges();
+
+			foreach (var entry in ChangeTracker.Entries()
+				.Where(e => e.State == EntityState.Added))
+			{
+				if (entry.Entity is ITrackable trackable)
+				{
+					trackable.CreateTimeStamp = DateTime.UtcNow;
+					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+				}
+			}
+
+			foreach (var entry in ChangeTracker.Entries()
+				.Where(e => e.State == EntityState.Modified))
+			{
+				if (entry.Entity is ITrackable trackable)
+				{
+					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+				}
+			}
+		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{

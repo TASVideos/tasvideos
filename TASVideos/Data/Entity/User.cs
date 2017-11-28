@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Identity;
 namespace TASVideos.Data.Entity
 {
 	[Table(nameof(User))]
-	public class User : IdentityUser<int>
+	public class User : IdentityUser<int>, ITrackable
 	{
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 
 		public DateTime CreateTimeStamp { get; set; } = DateTime.UtcNow;
+		public DateTime LastUpdateTimeStamp { get; set; } = DateTime.UtcNow;
 
 		public DateTime? LastLoggedInTimeStamp { get; set; }
 	}
