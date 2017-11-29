@@ -11,7 +11,10 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 
 		public DateTime CreateTimeStamp { get; set; } = DateTime.UtcNow;
+		public string CreateUserName { get; set; }
+
 		public DateTime LastUpdateTimeStamp { get; set; } = DateTime.UtcNow;
+		public string LastUpdateUserName { get; set; }
 
 		public DateTime? LastLoggedInTimeStamp { get; set; }
 	}
