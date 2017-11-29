@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
@@ -10,9 +11,12 @@ namespace TASVideos.Data
 {
 	public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
 	{
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+		private readonly IHttpContextAccessor _httpContext;
+
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
 			: base(options)
 		{
+			_httpContext = httpContextAccessor;
 		}
 
 		public DbSet<RolePermission> RolePermission { get; set; }
@@ -45,6 +49,8 @@ namespace TASVideos.Data
 				{
 					trackable.CreateTimeStamp = DateTime.UtcNow;
 					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+					trackable.CreateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
 				}
 			}
 
@@ -54,6 +60,7 @@ namespace TASVideos.Data
 				if (entry.Entity is ITrackable trackable)
 				{
 					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
 				}
 			}
 		}
