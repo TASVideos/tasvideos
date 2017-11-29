@@ -61,11 +61,8 @@
 
 // Global browser detection
 var isIE = function () {
-	if (window.navigator.userAgent.indexOf('MSIE') > 0 || window.navigator.userAgent.indexOf('Trident') > 0) {
-		return true;
-	} else {
-		return false;
-	}
+	return window.navigator.userAgent.indexOf('MSIE') > 0
+		|| window.navigator.userAgent.indexOf('Trident') > 0;
 }
 
 if (typeof NodeList.toArray !== 'function') {
