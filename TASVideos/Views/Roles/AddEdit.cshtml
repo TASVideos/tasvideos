@@ -178,12 +178,12 @@
 		}
 
 		document.getElementById('SelectedPermissions-two-column-select')
-			.addEventListener('two-column-change', onSelectedPermissionsChange);
+			.addEventListener('@nameof(Model.SelectedPermissions)Changed', onSelectedPermissionsChange);
 
 		document.addEventListener("DOMContentLoaded", onSelectedPermissionsChange);
 
 		document.getElementById('SelectedAssignablePermissions-two-column-select')
-			.addEventListener('two-column-change', showRolesCurrentlyAssignable);
+			.addEventListener('@nameof(Model.SelectedAssignablePermissions)Changed', showRolesCurrentlyAssignable);
 	})();
 </script>
 @section Scripts {
