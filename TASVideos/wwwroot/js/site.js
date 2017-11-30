@@ -14,6 +14,18 @@
 		};
 	}
 
+	if (typeof window.CustomEvent !== 'function') {
+		function CustomEvent(event, params) {
+			params = params || { bubbles: false, cancelable: false, detail: undefined };
+			var evt = document.createEvent('CustomEvent');
+			evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+			return evt;
+		}
+
+		CustomEvent.prototype = window.Event.prototype;
+		window.CustomEvent = CustomEvent;
+	}
+
 	if (typeof Array.prototype.includes !== 'function') {
 		Array.prototype.includes = function (searchElement, fromIndex) {
 			// 1. Let O be ? ToObject(this value).
@@ -59,12 +71,7 @@
 	};
 })();
 
-// Global browser detection
-var isIE = function () {
-	return window.navigator.userAgent.indexOf('MSIE') > 0
-		|| window.navigator.userAgent.indexOf('Trident') > 0;
-}
-
+// Helper "extension methods"
 if (typeof NodeList.toArray !== 'function') {
 	NodeList.prototype.toArray = function () {
 		return Array.prototype.slice.call(this);
