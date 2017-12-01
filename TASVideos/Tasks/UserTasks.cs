@@ -92,6 +92,7 @@ namespace TASVideos.Tasks
 					Email = u.Email,
 					EmailConfirmed = u.EmailConfirmed,
 					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+					TimezoneId = u.TimeZoneId,
 					Roles = u.UserRoles.Select(ur => ur.Role.Name)
 				})
 				.SingleAsync(u => u.Id == id);
