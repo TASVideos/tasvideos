@@ -50,6 +50,7 @@ namespace TASVideos.Controllers
 			{
 				Username = user.UserName,
 				Email = user.Email,
+				TimeZoneId = user.TimeZoneId,
 				IsEmailConfirmed = user.EmailConfirmed,
 				StatusMessage = StatusMessage,
 				Roles = await _userTasks.GetUserRoles(user.Id)
@@ -73,10 +74,16 @@ namespace TASVideos.Controllers
 			if (model.Email != email)
 			{
 				var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
+
 				if (!setEmailResult.Succeeded)
 				{
 					throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
 				}
+			}
+
+			if (model.TimeZoneId != user.TimeZoneId)
+			{
+				await _userTasks.UpdateUserTimeZone(user.Id, model.TimeZoneId);
 			}
 
 			StatusMessage = "Your profile has been updated";

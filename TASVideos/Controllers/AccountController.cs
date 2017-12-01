@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 
 using TASVideos.Data.Entity;
@@ -111,7 +113,8 @@ namespace TASVideos.Controllers
 				var user = new User
 				{
 					UserName = model.UserName,
-					Email = model.Email
+					Email = model.Email,
+					TimeZoneId = model.SelectedTimeZone
 				};
 				var result = await _userManager.CreateAsync(user, model.Password);
 				if (result.Succeeded)

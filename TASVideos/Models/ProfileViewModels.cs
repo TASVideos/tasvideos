@@ -13,6 +13,9 @@ namespace TASVideos.Models
 		[EmailAddress]
 		public string Email { get; set; }
 
+		[Display(Name = "Time Zone")]
+		public string TimeZoneId { get; set; }
+
 		public string StatusMessage { get; set; }
 
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
