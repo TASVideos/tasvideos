@@ -186,6 +186,13 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
+		public async Task UpdateUserTimeZone(int id, string timezoneId)
+		{
+			var user = await _db.Users.SingleAsync(u => u.Id == id);
+			user.TimeZoneId = timezoneId;
+			await _db.SaveChangesAsync();
+		}
+
 		/// <summary>
 		/// Removes the lock out property on a <see cref="User"/>
 		/// </summary>

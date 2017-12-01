@@ -8,14 +8,14 @@ namespace TASVideos.Data.Entity
 	[Table(nameof(User))]
 	public class User : IdentityUser<int>, ITrackable
 	{
-		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
+		public DateTime? LastLoggedInTimeStamp { get; set; }
+		public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
 		public DateTime CreateTimeStamp { get; set; } = DateTime.UtcNow;
 		public string CreateUserName { get; set; }
-
 		public DateTime LastUpdateTimeStamp { get; set; } = DateTime.UtcNow;
 		public string LastUpdateUserName { get; set; }
 
-		public DateTime? LastLoggedInTimeStamp { get; set; }
+		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 	}
 }

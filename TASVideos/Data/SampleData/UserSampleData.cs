@@ -13,7 +13,8 @@ namespace TASVideos.Data.SampleData
 			{
 				UserName = "adelikat",
 				NormalizedUserName = "ADELIKAT",
-				Email = "adelikat@tasvideos.org"
+				Email = "adelikat@tasvideos.org",
+				TimeZoneId = "Central Standard Time"
 			}
 		};
 

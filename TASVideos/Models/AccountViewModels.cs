@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TASVideos.Models
 {
@@ -18,6 +20,9 @@ namespace TASVideos.Models
 
 	public class RegisterViewModel
 	{
+		[Display(Name = "Time Zone")]
+		public string SelectedTimeZone { get; set; }
+
 		[Required]
 		[StringLength(256)]
 		[Display(Name = "User Name")]

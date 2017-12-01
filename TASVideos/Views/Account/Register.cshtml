@@ -22,6 +22,10 @@
 				<span asp-validation-for="Email" class="text-danger"></span>
 			</form-group>
 			<form-group>
+				<label asp-for="SelectedTimeZone"></label>
+				<timezone-picker asp-for="SelectedTimeZone" class="form-control" />
+			</form-group>
+			<form-group>
 				<label asp-for="Password"></label>
 				<input asp-for="Password" class="form-control" />
 				<span asp-validation-for="Password" class="text-danger"></span>
@@ -36,6 +40,23 @@
 	</div>
 </row>
 
+<script>
+	(function () {
+		var selected = document
+			.querySelector('#@nameof(Model.SelectedTimeZone) optgroup option:checked');
+		selected.removeAttribute('selected');
+
+		var timezoneOffset = 0 - new Date().getTimezoneOffset();
+		var timezone = document
+			.querySelectorAll('#@nameof(Model.SelectedTimeZone) optgroup option')
+			.toArray()
+			.filter(function (option) {
+				return option.getAttribute('data-offset') == timezoneOffset;
+			})[0];
+
+		timezone.setAttribute('selected', 'selected');
+	})();
+</script>
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")
 }
