@@ -148,7 +148,8 @@ namespace TASVideos.Tasks
 						UserName = u.UserName,
 						Email = u.Email,
 						EmailConfirmed = u.EmailConfirmed,
-						IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue
+						IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+						TimezoneId = u.TimeZoneId
 					})
 					.SingleAsync(u => u.UserName == userName);
 
@@ -172,6 +173,11 @@ namespace TASVideos.Tasks
 			if (model.UserName != user.UserName)
 			{
 				user.UserName = model.UserName;
+			}
+
+			if (model.TimezoneId != user.TimeZoneId)
+			{
+				user.TimeZoneId = model.TimezoneId;
 			}
 			
 			_db.UserRoles.RemoveRange(_db.UserRoles.Where(ur => ur.User == user));
