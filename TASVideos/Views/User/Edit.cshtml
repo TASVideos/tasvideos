@@ -20,19 +20,25 @@
 	</row>
 	<row>
 		<form-group>
-			@if (Model.IsLockedOut)
-			{
-				<label class="text-danger col-sm-4"><span class="glyphicon glyphicon-alert"></span> This user is currently locked out</label>
-				<div class="col-sm-1">
-					<a class="btn btn-default" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
-				</div>
-			}
-			else
-			{
-				<div class="col-sm-4">
-					<span class="glyphicon glyphicon-check text-success"></span> Not locked
-				</div>
-			}
+			<div class="col-md-5">
+				@if (Model.IsLockedOut)
+				{
+					<label class="text-danger col-sm-4"><span class="glyphicon glyphicon-alert"></span> This user is currently locked out</label>
+					<div class="col-sm-1">
+						<a class="btn btn-default" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
+					</div>
+				}
+				else
+				{
+					<div class="col-sm-4">
+						<span class="glyphicon glyphicon-check text-success"></span> Not locked
+					</div>
+				}
+			</div>
+			<div class="col-md-offset-2 col-md-5">
+				<label asp-for="TimezoneId"></label>
+				<timezone-picker asp-for="TimezoneId" class="form-control"/>
+			</div>
 		</form-group>
 	</row>
 	<row>

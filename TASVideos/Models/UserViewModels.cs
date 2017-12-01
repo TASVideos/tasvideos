@@ -98,6 +98,9 @@ namespace TASVideos.Models
 		[DisplayName("User Name")]
 		public string UserName { get; set; }
 
+		[DisplayName("Time Zone")]
+		public string TimezoneId { get; set; }
+
 		[DisplayName("Selected Roles")]
 		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
 	}
