@@ -41,7 +41,7 @@
 </form-group>
 <form-group>
 	<row>
-		<div class="col-md-12">
+		<div class="col-md-6">
 			<label asp-for="IsLockedOut"></label>
 			@if (Model.IsLockedOut)
 			{
@@ -51,6 +51,10 @@
 			{
 				<div><span class="glyphicon glyphicon-check text-success"></span> Not locked</div>
 			}
+		</div>
+		<div class="col-md-6">
+			<label asp-for="TimezoneId"></label>
+			<div>@(TimeZoneInfo.GetSystemTimeZones().SingleOrDefault(t => t.Id == Model.TimezoneId)?.DisplayName ?? TimeZoneInfo.Utc.DisplayName)</div>
 		</div>
 	</row>
 </form-group>

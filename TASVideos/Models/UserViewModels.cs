@@ -56,6 +56,9 @@ namespace TASVideos.Models
 		[DisplayName("Email Confirmed")]
 		public bool EmailConfirmed { get; set; }
 
+		[DisplayName("Time Zone")]
+		public string TimezoneId { get; set; }
+
 		[DisplayName("Current Roles")]
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 	}
