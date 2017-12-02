@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using TASVideos.WikiEngine;
@@ -32,6 +33,12 @@ namespace WikiTestHarness
 			var wikiAst = new WikiAst(MarkupBox.Text);
 			AstBox.Text = wikiAst.ToString();
 			HtmlBox.Text = wikiAst.ToHtml();
+		}
+
+		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			linkLabel1.LinkVisited = true;
+			Process.Start("http://tasvideos.org/TextFormattingRules.html");
 		}
 	}
 }
