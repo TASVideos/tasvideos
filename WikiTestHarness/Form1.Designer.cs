@@ -30,13 +30,13 @@
 		{
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.label1 = new System.Windows.Forms.Label();
 			this.MarkupBox = new System.Windows.Forms.RichTextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.AstBox = new System.Windows.Forms.RichTextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.HtmlBox = new System.Windows.Forms.RichTextBox();
 			this.RunBtn = new System.Windows.Forms.Button();
+			this.linkLabel1 = new System.Windows.Forms.LinkLabel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -55,9 +55,9 @@
 			// 
 			// splitContainer1.Panel1
 			// 
+			this.splitContainer1.Panel1.Controls.Add(this.linkLabel1);
 			this.splitContainer1.Panel1.Controls.Add(this.RunBtn);
 			this.splitContainer1.Panel1.Controls.Add(this.MarkupBox);
-			this.splitContainer1.Panel1.Controls.Add(this.label1);
 			// 
 			// splitContainer1.Panel2
 			// 
@@ -84,15 +84,6 @@
 			this.splitContainer2.Size = new System.Drawing.Size(563, 790);
 			this.splitContainer2.SplitterDistance = 187;
 			this.splitContainer2.TabIndex = 0;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(12, 9);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(43, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Markup";
 			// 
 			// MarkupBox
 			// 
@@ -158,6 +149,17 @@
 			this.RunBtn.UseVisualStyleBackColor = true;
 			this.RunBtn.Click += new System.EventHandler(this.RunBtn_Click);
 			// 
+			// linkLabel1
+			// 
+			this.linkLabel1.AutoSize = true;
+			this.linkLabel1.Location = new System.Drawing.Point(16, 9);
+			this.linkLabel1.Name = "linkLabel1";
+			this.linkLabel1.Size = new System.Drawing.Size(43, 13);
+			this.linkLabel1.TabIndex = 3;
+			this.linkLabel1.TabStop = true;
+			this.linkLabel1.Text = "Markup";
+			this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+			// 
 			// Form1
 			// 
 			this.AcceptButton = this.RunBtn;
@@ -187,13 +189,13 @@
 
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.SplitContainer splitContainer2;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.RichTextBox MarkupBox;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.RichTextBox AstBox;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.RichTextBox HtmlBox;
 		private System.Windows.Forms.Button RunBtn;
+		private System.Windows.Forms.LinkLabel linkLabel1;
 	}
 }
 
