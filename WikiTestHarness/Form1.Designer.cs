@@ -37,6 +37,7 @@
 			this.HtmlBox = new System.Windows.Forms.RichTextBox();
 			this.RunBtn = new System.Windows.Forms.Button();
 			this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+			this.ProcessingTimeLabel = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -55,6 +56,7 @@
 			// 
 			// splitContainer1.Panel1
 			// 
+			this.splitContainer1.Panel1.Controls.Add(this.ProcessingTimeLabel);
 			this.splitContainer1.Panel1.Controls.Add(this.linkLabel1);
 			this.splitContainer1.Panel1.Controls.Add(this.RunBtn);
 			this.splitContainer1.Panel1.Controls.Add(this.MarkupBox);
@@ -160,6 +162,16 @@
 			this.linkLabel1.Text = "Markup";
 			this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
 			// 
+			// ProcessingTimeLabel
+			// 
+			this.ProcessingTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.ProcessingTimeLabel.AutoSize = true;
+			this.ProcessingTimeLabel.Location = new System.Drawing.Point(100, 769);
+			this.ProcessingTimeLabel.Name = "ProcessingTimeLabel";
+			this.ProcessingTimeLabel.Size = new System.Drawing.Size(88, 13);
+			this.ProcessingTimeLabel.TabIndex = 4;
+			this.ProcessingTimeLabel.Text = "Processing Time:";
+			// 
 			// Form1
 			// 
 			this.AcceptButton = this.RunBtn;
@@ -196,6 +208,7 @@
 		private System.Windows.Forms.RichTextBox HtmlBox;
 		private System.Windows.Forms.Button RunBtn;
 		private System.Windows.Forms.LinkLabel linkLabel1;
+		private System.Windows.Forms.Label ProcessingTimeLabel;
 	}
 }
 
