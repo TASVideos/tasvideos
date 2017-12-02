@@ -23,6 +23,7 @@ namespace WikiTestHarness
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			ProcessingTimeLabel.Text = "";
 			Config = ConfigService.Load<Config>("./config.ini");
 			MarkupBox.Text = Config.WikiMarkup;
 			RunBtn_Click(null, null);
@@ -30,9 +31,16 @@ namespace WikiTestHarness
 
 		private void RunBtn_Click(object sender, EventArgs e)
 		{
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+
 			var wikiAst = new WikiAst(MarkupBox.Text);
-			AstBox.Text = wikiAst.ToString();
 			HtmlBox.Text = wikiAst.ToHtml();
+
+			sw.Stop();
+			ProcessingTimeLabel.Text = $"Total Time: {sw.ElapsedTicks} Ticks";
+
+			AstBox.Text = wikiAst.ToString();
 		}
 
 		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
