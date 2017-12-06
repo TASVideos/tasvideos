@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
+using TASVideos.Extensions;
 
 namespace TASVideos.Data
 {
@@ -30,8 +31,8 @@ namespace TASVideos.Data
 			{
 				var role = new Role
 				{
-					Name = permission.ToString(),
-					Description = $"A role containing only the {permission} permission"
+					Name = permission.EnumDisplayName(),
+					Description = $"A role containing only the {permission.EnumDisplayName()} permission"
 				};
 
 				role.RolePermission.Add(new RolePermission { Role = role, PermissionId = permission });
