@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -89,7 +90,7 @@ namespace TASVideos.Controllers
 				.Select(p => new SelectListItem
 				{
 					Value = ((int)p).ToString(),
-					Text = p.ToString()
+					Text = p.EnumDisplayName()
 				})
 				.ToList();
 	}
