@@ -1,0 +1,75 @@
+using System;
+using System.Linq;
+
+ironmeta Wiki<char, AST.Node>
+{
+	// TODO: Tables
+	LineEnding = "\r\n" | "\r" | "\n";
+
+	InlineTextChild :texttype =
+		Bold(texttype) | Emphasis(texttype) | Smaller(texttype) |
+		Teletype(texttype) | Strikethrough(texttype) | Quote(texttype) |
+		InlineBreak | IfModule(texttype) | Module | LeftBracket | RightBracket | RawInlineText;
+
+	// TODO: Bold, Emphasis, Strikethrough shouldn't contain themselves
+	Bold :texttype = "__" texttype*:a "__" -> { return new AST.Element("b", a.Results); };
+	Emphasis :texttype = "''" texttype*:a "''" -> { return new AST.Element("em", a.Results); };
+	Smaller :texttype = "((" texttype*:a "))" -> { return new AST.Element("small", a.Results); };
+	Teletype :texttype = "{{" texttype*:a "}}" -> { return new AST.Element("tt", a.Results); };
+	Strikethrough :texttype = "---" texttype*:a "---" -> { return new AST.Element("del", a.Results); };
+	Quote :texttype = "««" texttype*:a "»»" -> { return new AST.Element("q", a.Results); };
+	InlineBreak = "%%%" -> { return new AST.Element("br"); };
+	IfModule :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return new AST.IfModule(c.Results.Single(), a.Results); };
+	Module = "[" ModuleText:a "]" -> { return new AST.Module(a.Results.Single()); };
+	ModuleText = /[^\r\n\[\]]*/:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+	LeftBracket = "[[" -> { return new AST.Text("["); };
+	RightBracket = "]]" -> { return new AST.Text("]"); };
+	RawInlineText = InlineChar+:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+	InlineChar = /[^\x00-\x1f_'\(\){}«»-%\[\]]/ |
+		"_" ~"_" |
+		"'" ~"'" |
+		"(" ~"(" |
+		")" ~")" |
+		"{" ~"{" |
+		"}" ~"}" |
+		"«" ~"«" |
+		"»" ~"»" |
+		"-" ~"--" |
+		"%" ~"%%";
+
+	// text within a paragraph
+	PText = InlineTextChild(PText) | PLineEnding;
+	PLineEnding = LineEnding ~(/[> \*#;!]/ | "----" | "%%" | LineEnding) -> { return new AST.Text("\n"); };
+
+	// text within a blockquote
+	KText = InlineTextChild(KText) | KLineEnding;
+	KLineEnding = LineEnding ">" -> { return new AST.Text("\n"); };
+
+	// text within a pre
+	RText = InlineTextChild(RText) | RLineEnding;
+	RLineEnding = LineEnding " " -> { return new AST.Text("\n"); };
+
+	// text constrainted to a single LineEnding
+	IText = InlineTextChild(IText);
+
+	DocumentItem =
+		UnorderedList | OrderedList | TermList | HorizontalRule |
+		Heading | BlockQuote | Preformatted | Directive | Paragraph | EmptyLine;
+	
+	// items that consume one line
+	UnorderedList = "*"+ IText*:a -> { return new AST.Element("ul", a.Results); };
+	OrderedList = "#"+ IText*:a -> { return new AST.Element("ol", a.Results); };
+	// TODO: TermList first part is wrong
+	TermList = ";" IText*:a ":" IText*:b -> { return AST.Element.CreateDefinition(a.Results, b.Results); };
+	HorizontalRule = "---" "-"+ -> { return new AST.Element("hr"); };
+	Heading = "!"{1,4}:a IText*:b -> { return new AST.Element("h" + (5 - a.Inputs.Count()), b.Results); };
+	Directive = "%%" DirectiveText:a -> { return new AST.Element("directive", new[] { a.Results.Single() }); };
+	DirectiveText = /[^\r\n]*/:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+	EmptyLine = "" -> { return Enumerable.Empty<AST.Node>(); };
+	// items that consume multiple line
+	BlockQuote = ">" KText*:a -> { return new AST.Element("blockquote", a.Results); };
+	Preformatted = " " RText*:a -> { return new AST.Element("pre", a.Results); };
+	Paragraph = ~LineEnding PText+:a -> { return new AST.Element("p", a.Results); };
+
+	Document = DocumentItem:head (LineEnding DocumentItem)* LineEnding?;
+}
