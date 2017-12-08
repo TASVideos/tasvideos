@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IronMeta.Library, Version=4.3.5932.39119, Culture=neutral, PublicKeyToken=53410376b33c6719, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronMeta.4.3.0\lib\net45\IronMeta.Library.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -46,6 +49,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Verophyle.Regexp, Version=1.1.5684.13780, Culture=neutral, PublicKeyToken=74cddc3ca888ce35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Verophyle.Regexp.1.1.0\lib\net45\Verophyle.Regexp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\Config.cs" />
