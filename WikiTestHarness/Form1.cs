@@ -34,13 +34,14 @@ namespace WikiTestHarness
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
 
-			var wikiAst = new WikiAst(MarkupBox.Text);
-			HtmlBox.Text = wikiAst.ToHtml();
+
+			var json = Util.DebugParseWikiPage(MarkupBox.Text);
+			AstBox.Text = json;
+
+			HtmlBox.Text = "TODO";
 
 			sw.Stop();
 			ProcessingTimeLabel.Text = $"Total Time: {sw.ElapsedTicks} Ticks";
-
-			AstBox.Text = wikiAst.ToString();
 		}
 
 		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
