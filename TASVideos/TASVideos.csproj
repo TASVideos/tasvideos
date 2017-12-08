@@ -26,4 +26,8 @@
     <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
+  </ItemGroup>
+
 </Project>
