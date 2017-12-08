@@ -6,3 +6,4 @@
 **/Release/**
 **/Debug/**
 **/packages/**
+*.g.cs
