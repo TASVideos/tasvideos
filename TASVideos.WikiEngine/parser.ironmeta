@@ -11,19 +11,19 @@ ironmeta Wiki<char, AST.INode>
 		InlineBreak | IfModule(texttype) | Module | LeftBracket | RightBracket | RawInlineText(excludes);
 
 	// TODO: Bold, Emphasis, Strikethrough shouldn't contain themselves
-	Bold :texttype = "__" texttype*:a "__" -> { return new AST.Element("b", a.Results); };
-	Emphasis :texttype = "''" texttype*:a "''" -> { return new AST.Element("em", a.Results); };
-	Smaller :texttype = "((" texttype*:a "))" -> { return new AST.Element("small", a.Results); };
-	Teletype :texttype = "{{" texttype*:a "}}" -> { return new AST.Element("tt", a.Results); };
-	Strikethrough :texttype = "---" texttype*:a "---" -> { return new AST.Element("del", a.Results); };
-	Quote :texttype = "««" texttype*:a "»»" -> { return new AST.Element("q", a.Results); };
-	InlineBreak = "%%%" -> { return new AST.Element("br"); };
-	IfModule :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return new AST.IfModule(c.Results.Single(), a.Results); };
-	Module = "[" ModuleText:a "]" -> { return new AST.Module(a.Results.Single()); };
-		ModuleText = (~('\r' | '\n' | '[' | ']').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
-	LeftBracket = "[[" -> { return new AST.Text("["); };
-	RightBracket = "]]" -> { return new AST.Text("]"); };
-	RawInlineText :excludes = InlineChar(excludes)+:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+	Bold :texttype = "__" texttype*:a "__" -> { return MakeElt("b", a); };
+	Emphasis :texttype = "''" texttype*:a "''" -> { return MakeElt("em", a); };
+	Smaller :texttype = "((" texttype*:a "))" -> { return MakeElt("small", a); };
+	Teletype :texttype = "{{" texttype*:a "}}" -> { return MakeElt("tt", a); };
+	Strikethrough :texttype = "---" texttype*:a "---" -> { return MakeElt("del", a); };
+	Quote :texttype = "««" texttype*:a "»»" -> { return MakeElt("q", a); };
+	InlineBreak = "%%%" -> { return MakeElt("br"); };
+	IfModule :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return MakeIf(c, a); };
+	Module = "[" ModuleText:a "]" -> { return MakeModule(a); };
+		ModuleText = (~('\r' | '\n' | '[' | ']').)*:a -> { return MakeText(a); };
+	LeftBracket = "[[" -> { return MakeText("["); };
+	RightBracket = "]]" -> { return MakeText("]"); };
+	RawInlineText :excludes = InlineChar(excludes)+:a -> { return MakeText(a); };
 	InlineChar :excludes = ~('\r' | '\n' | '\0' | '_' | '\'' | '(' | ')' | '{' | '}' | '«' | '»' | '-' | '%' | '[' | ']' | excludes). |
 		"_" ~"_" |
 		"'" ~"'" |
@@ -38,15 +38,15 @@ ironmeta Wiki<char, AST.INode>
 
 	// text within a paragraph
 	PText = InlineTextChild(PText, '\0') | PLineEnding;
-	PLineEnding = LineEnding ~('>' | ' ' | '*' | '#' | ';' | '!' | '|' | "----" | "%%" | LineEnding) -> { return new AST.Text("\n"); };
+	PLineEnding = LineEnding ~('>' | ' ' | '*' | '#' | ';' | '!' | '|' | "----" | "%%" | LineEnding) -> { return MakeText("\n"); };
 
 	// text within a blockquote
 	KText = InlineTextChild(KText, '\0') | KLineEnding;
-	KLineEnding = LineEnding ">" -> { return new AST.Text("\n"); };
+	KLineEnding = LineEnding ">" -> { return MakeText("\n"); };
 
 	// text within a pre
-	RText = InlineTextChild(RText, '\0') | RLineEnding;
-	RLineEnding = LineEnding " " -> { return new AST.Text("\n"); };
+	PreText = InlineTextChild(PreText, '\0') | PreLineEnding;
+	PreLineEnding = LineEnding " " -> { return MakeText("\n"); };
 
 	// text constrainted to a single LineEnding
 	IText = InlineTextChild(IText, '\0');
@@ -58,30 +58,34 @@ ironmeta Wiki<char, AST.INode>
 	TableText = InlineTextChild(TableText, '|');
 
 	DocumentItem =
-		UnorderedList | OrderedList | TermList | Table | HorizontalRule |
-		Heading | BlockQuote | Preformatted | Directive | Paragraph | EmptyLine;
+		UnorderedList | OrderedList | TermList | Table | SrcEmbed | HorizontalRule |
+		Heading | UnknownDirective | BlockQuote | Preformatted | Paragraph | EmptyLine;
 	
 	// items that consume one line
-	UnorderedList = "*"+ IText*:a -> { return new AST.Element("ul", a.Results); };
-	OrderedList = "#"+ IText*:a -> { return new AST.Element("ol", a.Results); };
-	HorizontalRule = "---" "-"+ -> { return new AST.Element("hr"); };
-	Heading = "!"{1,4}:a IText*:b -> { return new AST.Element("h" + (5 - a.Inputs.Count()), b.Results); };
-	Directive = "%%" DirectiveText:a -> { return new AST.Element("directive", a.Results); };
-		DirectiveText = (~('\r' | '\n').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
-	EmptyLine = "" -> { return Enumerable.Empty<AST.INode>(); };
-	// items that consume multiple line
-	Table = TableHead (LineEnding TableBody)? | TableBody -> { return new AST.Element("table", _IM_Result.Results); };
-		TableHead = TableHeadRow (LineEnding TableHeadRow)* -> { return new AST.Element("thead", _IM_Result.Results); };
-			TableHeadRow = "||" (HeadCell "||")*:a -> { return new AST.Element("tr", a.Results); };
-				HeadCell = TableText*:a -> { return new AST.Element("th", a.Results ); };
-		TableBody = TableBodyRow (LineEnding TableBodyRow)* -> { return new AST.Element("tbody", _IM_Result.Results); };
-			TableBodyRow = '|' (BodyCell '|')*:a -> { return new AST.Element("tr", a.Results); };
-				BodyCell = TableText*:a -> { return new AST.Element("td", a.Results ); };
-	TermList = TermLine (LineEnding TermLine)* -> { return new AST.Element("dl", _IM_Result.Results); };
-		TermLine = ';' TermText*:a ':' IText*:b -> { return new[] { new AST.Element("dt", a.Results), new AST.Element("dd", b.Results) }; };
-	BlockQuote = ">" KText*:a -> { return new AST.Element("blockquote", a.Results); };
-	Preformatted = " " RText*:a -> { return new AST.Element("pre", a.Results); };
-	Paragraph = ~LineEnding PText+:a -> { return new AST.Element("p", a.Results); };
+	UnorderedList = "*"+ IText*:a -> { return MakeElt("ul", a); };
+	OrderedList = "#"+ IText*:a -> { return MakeElt("ol", a); };
+	HorizontalRule = "---" "-"+ -> { return MakeElt("hr"); };
+	Heading = "!"{1,4}:a IText*:b -> { return MakeElt("h" + (5 - a.Inputs.Count()), b); };
+	UnknownDirective = "%%" DirectiveText:a -> { return MakeElt("directive", a); };
+		DirectiveText = (~('\r' | '\n').)*:a -> { return MakeText(a); };
+	EmptyLine = "";
+	// items that consume multiple lines
+	Table = TableHead (LineEnding TableBody)? | TableBody -> { return MakeElt("table", _IM_Result); };
+		TableHead = TableHeadRow (LineEnding TableHeadRow)* -> { return MakeElt("thead", _IM_Result); };
+			TableHeadRow = "||" (HeadCell "||")*:a -> { return MakeElt("tr", a); };
+				HeadCell = TableText*:a -> { return MakeElt("th", a ); };
+		TableBody = TableBodyRow (LineEnding TableBodyRow)* -> { return MakeElt("tbody", _IM_Result); };
+			TableBodyRow = '|' (BodyCell '|')*:a -> { return MakeElt("tr", a); };
+				BodyCell = TableText*:a -> { return MakeElt("td", a ); };
+	TermList = TermLine (LineEnding TermLine)* -> { return MakeElt("dl", _IM_Result); };
+		TermLine = ';' TermText*:a ':' IText*:b -> { return new[] { MakeElt("dt", a), MakeElt("dd", b) }; };
+	SrcEmbed = "%%SRC_EMBED" SrcSyntax:a LineEnding SrcText?:b LineEnding "%%END_EMBED" -> { return MakeElt("src", b, Attr("syntax", a)); };
+	SrcEmbed = "%%SRC_EMBED" LineEnding SrcText?:b LineEnding "%%END_EMBED" -> { return MakeElt("src", b); };
+		SrcSyntax = ' ' (~('\r' | '\n').)+:a -> { return MakeText(a); };
+		SrcText = (~(LineEnding "%%END_EMBED").)+:a -> { return MakeText(a); };
+	BlockQuote = ">" KText*:a -> { return MakeElt("blockquote", a); };
+	Preformatted = " " PreText*:a -> { return MakeElt("pre", a); };
+	Paragraph = ~LineEnding PText+:a -> { return MakeElt("p", a); };
 
 	Document = DocumentItem (LineEnding DocumentItem)* LineEnding?;
 }
