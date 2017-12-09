@@ -79,8 +79,8 @@ ironmeta Wiki<char, AST.INode>
 				BodyCell = TableText*:a -> { return MakeElt("td", a ); };
 	TermList = TermLine (LineEnding TermLine)* -> { return MakeElt("dl", _IM_Result); };
 		TermLine = ';' TermText*:a ':' IText*:b -> { return new[] { MakeElt("dt", a), MakeElt("dd", b) }; };
-	SrcEmbed = "%%SRC_EMBED" SrcSyntax:a LineEnding SrcText?:b LineEnding "%%END_EMBED" -> { return MakeElt("src", b, Attr("syntax", a)); };
-	SrcEmbed = "%%SRC_EMBED" LineEnding SrcText?:b LineEnding "%%END_EMBED" -> { return MakeElt("src", b); };
+	SrcEmbed = "%%SRC_EMBED" SrcSyntax:a LineEnding SrcText?:b LineEnding "%%END_EMBED" -> { return MakeElt("code", b, Attr("data-syntax", a)); };
+	SrcEmbed = "%%SRC_EMBED" LineEnding SrcText?:b LineEnding "%%END_EMBED" -> { return MakeElt("code", b); };
 		SrcSyntax = ' ' (~('\r' | '\n').)+:a -> { return MakeText(a); };
 		SrcText = (~(LineEnding "%%END_EMBED").)+:a -> { return MakeText(a); };
 	BlockQuote = ">" KText*:a -> { return MakeElt("blockquote", a); };
