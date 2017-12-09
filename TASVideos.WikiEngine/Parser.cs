@@ -7,13 +7,17 @@ namespace TASVideos.WikiEngine
 	using W = IronMeta.Matcher.MatchItem<char, INode>;
 	partial class Wiki
 	{
+		private static string Str(W content)
+		{
+			return new string(content.Inputs.ToArray());
+		}
 		private static INode MakeText(string content)
 		{
 			return new Text(content);
 		}
 		private static INode MakeText(W content)
 		{
-			return new Text(new string(content.Inputs.ToArray()));
+			return new Text(Str(content));
 		}
 		private static INode MakeElt(string tag)
 		{
