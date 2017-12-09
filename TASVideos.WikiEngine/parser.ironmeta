@@ -8,7 +8,7 @@ ironmeta Wiki<char, AST.INode>
 	InlineTextChild :texttype :excludes =
 		Bold(texttype) | Emphasis(texttype) | Smaller(texttype) |
 		Teletype(texttype) | Strikethrough(texttype) | Quote(texttype) |
-		InlineBreak | IfModule(texttype) | Module | LeftBracket | RightBracket | RawInlineText(excludes);
+		InlineBreak | InlineIf(texttype) | Module | LeftBracket | RightBracket | RawInlineText(excludes);
 
 	// TODO: Bold, Emphasis, Strikethrough shouldn't contain themselves
 	Bold :texttype = "__" texttype*:a "__" -> { return MakeElt("b", a); };
@@ -18,7 +18,7 @@ ironmeta Wiki<char, AST.INode>
 	Strikethrough :texttype = "---" texttype*:a "---" -> { return MakeElt("del", a); };
 	Quote :texttype = "««" texttype*:a "»»" -> { return MakeElt("q", a); };
 	InlineBreak = "%%%" -> { return MakeElt("br"); };
-	IfModule :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return MakeIf(c, a); };
+	InlineIf :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return MakeIf(c, a); };
 	Module = "[" ModuleText:a "]" -> { return MakeModule(a); };
 		ModuleText = (~('\r' | '\n' | '[' | ']').)*:a -> { return MakeText(a); };
 	LeftBracket = "[[" -> { return MakeText("["); };
@@ -38,7 +38,7 @@ ironmeta Wiki<char, AST.INode>
 
 	// text within a paragraph
 	PText = InlineTextChild(PText, '\0') | PLineEnding;
-	PLineEnding = LineEnding ~('>' | ' ' | '*' | '#' | ';' | '!' | '|' | "----" | "%%" | LineEnding) -> { return MakeText("\n"); };
+	PLineEnding = LineEnding ~('>' | ' ' | '*' | '#' | ';' | '!' | '|' | "----" | "%%" | "[if:" | "[endif]" | LineEnding) -> { return MakeText("\n"); };
 
 	// text within a blockquote
 	KText = InlineTextChild(KText, '\0') | KLineEnding;
@@ -58,7 +58,7 @@ ironmeta Wiki<char, AST.INode>
 	TableText = InlineTextChild(TableText, '|');
 
 	DocumentItem =
-		UnorderedList | OrderedList | TermList | Toc | Table | SrcEmbed | MultiQuote | Div | HTabs | VTabs | HorizontalRule |
+		UnorderedList | OrderedList | TermList | Toc | Table | SrcEmbed | MultiQuote | Div | HTabs | VTabs | BlockIf | HorizontalRule |
 		Heading | BlockQuote | Preformatted | Paragraph | EmptyLine;
 
 	// items that can contain nested document fragments
@@ -73,6 +73,7 @@ ironmeta Wiki<char, AST.INode>
 			TabName = (~('\r' | '\n' | '%').)+:a -> { return MakeText(a); };
 	HTabs = TabBase("%%TAB_HSTART%%", "%%TAB_END%%", "htabs");
 	VTabs = TabBase("%%TAB_START%%", "%%TAB_END%%", "tabs");
+	BlockIf = "[if:" ModuleText:c "]" LineEnding (DocumentItem LineEnding)*:a "[endif]" -> { return MakeIf(c, a); };
 
 	// items that consume one line
 	UnorderedList = "*"+ IText*:a -> { return MakeElt("ul", a); };
@@ -99,7 +100,7 @@ ironmeta Wiki<char, AST.INode>
 		SrcText = (~(LineEnding "%%END_EMBED").)+:a -> { return MakeText(a); };
 	BlockQuote = ">" KText*:a -> { return MakeElt("blockquote", a); };
 	Preformatted = " " PreText*:a -> { return MakeElt("pre", a); };
-	Paragraph = ~(LineEnding | ("%%" ~'%')) PText+:a -> { return MakeElt("p", a); };
+	Paragraph = ~(LineEnding | ("%%" ~'%') | "[if:" | "[endif]") PText+:a -> { return MakeElt("p", a); };
 
 	Document = DocumentItem (LineEnding DocumentItem)* LineEnding?;
 }
