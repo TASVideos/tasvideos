@@ -78,6 +78,16 @@
 			</div>
 		</div>
 	</nav>
+
+	@if (IsSectionDefined("PageTitle"))
+	{
+		@RenderSection("PageTitle")
+	}
+	else
+	{
+		<h1>@ViewData["Title"]</h1>
+	}
+
 	<div class="container">
 		@RenderBody()
 		<hr />

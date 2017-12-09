@@ -42,6 +42,28 @@ body {
 	font-size: 9px;
 }
 
+.navbar {
+	margin-bottom: 7px !important;
+}
+
+h1 {
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-top: 0;
+	margin-bottom: 20px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	
+	border-radius: 5px;
+	font-size: 17px;
+	line-height: 1.5;
+	background: #531f86;
+	color: #FFF;
+	width: 95%;
+}
+
 /* Atomic Styles */
 .mb-s { margin-bottom: 3px; }
 .mb-m { margin-bottom: 5px; }
