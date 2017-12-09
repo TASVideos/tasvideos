@@ -6,10 +6,10 @@ ironmeta Wiki<char, AST.Node>
 	// TODO: Tables
 	LineEnding = "\r\n" | "\r" | "\n";
 
-	InlineTextChild :texttype =
+	InlineTextChild :texttype :excludes =
 		Bold(texttype) | Emphasis(texttype) | Smaller(texttype) |
 		Teletype(texttype) | Strikethrough(texttype) | Quote(texttype) |
-		InlineBreak | IfModule(texttype) | Module | LeftBracket | RightBracket | RawInlineText;
+		InlineBreak | IfModule(texttype) | Module | LeftBracket | RightBracket | RawInlineText(excludes);
 
 	// TODO: Bold, Emphasis, Strikethrough shouldn't contain themselves
 	Bold :texttype = "__" texttype*:a "__" -> { return new AST.Element("b", a.Results); };
@@ -21,11 +21,11 @@ ironmeta Wiki<char, AST.Node>
 	InlineBreak = "%%%" -> { return new AST.Element("br"); };
 	IfModule :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return new AST.IfModule(c.Results.Single(), a.Results); };
 	Module = "[" ModuleText:a "]" -> { return new AST.Module(a.Results.Single()); };
-	ModuleText = (~('\r' | '\n' | '[' | ']').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+		ModuleText = (~('\r' | '\n' | '[' | ']').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
 	LeftBracket = "[[" -> { return new AST.Text("["); };
 	RightBracket = "]]" -> { return new AST.Text("]"); };
-	RawInlineText = InlineChar+:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
-	InlineChar = ~('\r' | '\n' | '\0' | '_' | '\'' | '(' | ')' | '{' | '}' | '«' | '»' | '-' | '%' | '[' | ']' ). |
+	RawInlineText :excludes = InlineChar(excludes)+:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+	InlineChar :excludes = ~('\r' | '\n' | '\0' | '_' | '\'' | '(' | ')' | '{' | '}' | '«' | '»' | '-' | '%' | '[' | ']' | excludes). |
 		"_" ~"_" |
 		"'" ~"'" |
 		"(" ~"(" |
@@ -38,33 +38,42 @@ ironmeta Wiki<char, AST.Node>
 		"%" ~"%%";
 
 	// text within a paragraph
-	PText = InlineTextChild(PText) | PLineEnding;
-	PLineEnding = LineEnding ~('>' | ' ' | '*' | '#' | ';' | '!' | "----" | "%%" | LineEnding) -> { return new AST.Text("\n"); };
+	PText = InlineTextChild(PText, '\0') | PLineEnding;
+	PLineEnding = LineEnding ~('>' | ' ' | '*' | '#' | ';' | '!' | '|' | "----" | "%%" | LineEnding) -> { return new AST.Text("\n"); };
 
 	// text within a blockquote
-	KText = InlineTextChild(KText) | KLineEnding;
+	KText = InlineTextChild(KText, '\0') | KLineEnding;
 	KLineEnding = LineEnding ">" -> { return new AST.Text("\n"); };
 
 	// text within a pre
-	RText = InlineTextChild(RText) | RLineEnding;
+	RText = InlineTextChild(RText, '\0') | RLineEnding;
 	RLineEnding = LineEnding " " -> { return new AST.Text("\n"); };
 
 	// text constrainted to a single LineEnding
-	IText = InlineTextChild(IText);
+	IText = InlineTextChild(IText, '\0');
+
+	// text missing a colon; for TermList
+	TermText = InlineTextChild(TermText, ':');
+
+	// text missing a pipe; for Tables
+	TableText = InlineTextChild(TableText, '|');
 
 	DocumentItem =
-		UnorderedList | OrderedList | TermList | HorizontalRule |
+		UnorderedList | OrderedList | TermList | TableHead | TableBody | HorizontalRule |
 		Heading | BlockQuote | Preformatted | Directive | Paragraph | EmptyLine;
 	
 	// items that consume one line
 	UnorderedList = "*"+ IText*:a -> { return new AST.Element("ul", a.Results); };
 	OrderedList = "#"+ IText*:a -> { return new AST.Element("ol", a.Results); };
-	// TODO: TermList first part is wrong
-	TermList = ";" IText*:a ":" IText*:b -> { return AST.Element.CreateDefinition(a.Results, b.Results); };
+	TermList = ";" TermText*:a ":" IText*:b -> { return AST.Element.CreateDefinition(a.Results, b.Results); };
+	TableHead = "||" (HeadCell "||")*:a -> { return new AST.Element("tr", a.Results); };
+		HeadCell = TableText*:a -> { return new AST.Element("th", a.Results ); };
+	TableBody = '|' (BodyCell '|')*:a -> { return new AST.Element("tr", a.Results); };
+		BodyCell = TableText*:a -> { return new AST.Element("td", a.Results ); };
 	HorizontalRule = "---" "-"+ -> { return new AST.Element("hr"); };
 	Heading = "!"{1,4}:a IText*:b -> { return new AST.Element("h" + (5 - a.Inputs.Count()), b.Results); };
 	Directive = "%%" DirectiveText:a -> { return new AST.Element("directive", new[] { a.Results.Single() }); };
-	DirectiveText = (~('\r' | '\n').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+		DirectiveText = (~('\r' | '\n').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
 	EmptyLine = "" -> { return Enumerable.Empty<AST.Node>(); };
 	// items that consume multiple line
 	BlockQuote = ">" KText*:a -> { return new AST.Element("blockquote", a.Results); };
