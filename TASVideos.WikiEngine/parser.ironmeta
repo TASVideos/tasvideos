@@ -4,6 +4,7 @@ using System.Linq;
 ironmeta Wiki<char, AST.INode>
 {
 	LineEnding = "\r\n" | "\r" | "\n";
+	LineSeparatedAB :first :second = first (LineEnding second)? | second;
 
 	InlineTextChild :texttype :excludes =
 		Bold(texttype) | Emphasis(texttype) | Smaller(texttype) |
@@ -58,7 +59,7 @@ ironmeta Wiki<char, AST.INode>
 	TableText = InlineTextChild(TableText, '|');
 
 	DocumentItem =
-		UnorderedList | OrderedList | TermList | Toc | Table | SrcEmbed | MultiQuote | Div | HTabs | VTabs | BlockIf | HorizontalRule |
+		List | TermList | Toc | Table | SrcEmbed | MultiQuote | Div | HTabs | VTabs | BlockIf | HorizontalRule |
 		Heading | BlockQuote | Preformatted | Paragraph | EmptyLine;
 
 	// items that can contain nested document fragments
@@ -76,16 +77,19 @@ ironmeta Wiki<char, AST.INode>
 	BlockIf = "[if:" ModuleText:c "]" LineEnding (DocumentItem LineEnding)*:a "[endif]" -> { return MakeIf(c, a); };
 
 	// items that consume one line
-	UnorderedList = "*"+ IText*:a -> { return MakeElt("ul", a); };
-	OrderedList = "#"+ IText*:a -> { return MakeElt("ol", a); };
 	HorizontalRule = "---" "-"+ -> { return MakeElt("hr"); };
 	Heading = "!"{1,4}:a IText*:b -> { return MakeElt("h" + (5 - a.Inputs.Count()), b); };
 	Toc = "%%TOC%%" -> { return MakeElt("toc"); };
 	// UnknownDirective = "%%" DirectiveText:a -> { return MakeElt("directive", a); };
 	//	DirectiveText = (~('\r' | '\n').)*:a -> { return MakeText(a); };
 	EmptyLine = "";
+
 	// items that consume multiple lines
-	Table = (TableHead (LineEnding TableBody)? | TableBody) -> { return MakeElt("table", _IM_Result); };
+	List = DeeperList("");
+		DeeperList :prefix = ListBase(prefix '*', "ul") | ListBase(prefix '#', "ol");
+		ListBase :prefix :tag = ListItem(prefix) (LineEnding ListItem(prefix))* -> { return MakeElt(Str(tag), _IM_Result); };
+		ListItem :prefix = &prefix LineSeparatedAB(prefix IText*, DeeperList(prefix)) -> { return MakeElt("li", _IM_Result); };
+	Table = LineSeparatedAB(TableHead, TableBody) -> { return MakeElt("table", _IM_Result); };
 		TableHead = TableHeadRow (LineEnding TableHeadRow)* -> { return MakeElt("thead", _IM_Result); };
 			TableHeadRow = "||" (HeadCell "||")*:a -> { return MakeElt("tr", a); };
 				HeadCell = TableText*:a -> { return MakeElt("th", a ); };
