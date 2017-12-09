@@ -2,7 +2,13 @@
 
 namespace TASVideos.Models
 {
-    public class WikiEditModel
+	public class WikiViewModel
+	{
+		public string PageName { get; set; }
+		public string Markup { get; set; }
+	}
+
+	public class WikiEditModel
     {
 		public string PageName { get; set; }
 
