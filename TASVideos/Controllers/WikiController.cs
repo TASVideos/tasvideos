@@ -51,5 +51,17 @@ namespace TASVideos.Controllers
 			Util.DebugWriteHtml(input, w);
 			return Content(w.ToString(), "text/plain");
 		}
+
+		public IActionResult RenderWikiPage(string url)
+		{
+			if (url == "Boo/Far")
+			{
+				return Content("Boo Far", "text/plain");
+			}
+			else
+			{
+				return NotFound();
+			}
+		}
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +55,9 @@ namespace TASVideos
 				options.Filters.Add(new SetViewBagAttribute());
 			});
 
+			// TODO: IFileProvider for database markup razors
+			// services.Configure<RazorViewEngineOptions>(opts => opts.FileProviders.Add(new MyFileProvider()));
+
 			// Sets up Dependency Injection for IPrinciple to be able to attain the user whereever we wish.
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
@@ -80,9 +84,8 @@ namespace TASVideos
 
 			app.UseMvc(routes =>
 			{
-				routes.MapRoute(
-					"default",
-					"{controller=Home}/{action=Index}/{id?}");
+				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = "RenderWikiPage" });
 			});
 		}
 	}
