@@ -11,7 +11,8 @@ namespace TASVideos.WikiEngine
 			var result = parser.GetMatch(content, parser.Document);
 			if (result.Success && result.NextIndex == content.Length)
 			{
-				return JsonConvert.SerializeObject(result.Results, Formatting.Indented);
+				var r = result.Results; //TopLevelPasses.MergeDefinitions(result.Results);
+				return JsonConvert.SerializeObject(r, Formatting.Indented);
 			}
 			else
 			{
