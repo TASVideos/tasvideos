@@ -1,0 +1,80 @@
+@model WikiEditModel
+
+@{
+	ViewData["Title"] = $"Editing {Model.PageName}";
+}
+
+<row>
+	<form asp-controller="Wiki" asp-action="Edit" form-method="POST">
+		<div class="col-md-6">
+			<form-group>
+				<row>
+					<form-group class="form-inline">
+						<label asp-for="MinorEdit" class="control-label"></label>
+						<input type="checkbox" class="checkbox" asp-for="MinorEdit" />
+					</form-group>
+
+				</row>
+				<row>
+					<label asp-for="EditComments" class="control-label"></label>
+					<input type="text" asp-for="EditComments" class="form-control" />
+				</row>
+			</form-group>
+			<form-group>
+				<row>
+					<textarea asp-for="Markup" class="form-control" rows="8"></textarea>
+				</row>
+			</form-group>
+			<form-group>
+				<row>
+					<div class="text-center">
+						<button type="button" class="btn btn-default" id="preview-button">Preview</button>
+						<button type="submit" class="btn btn-primary">Save</button>
+						<a href="/@Model.PageName" class="btn btn-default">Cancel</a>
+					</div>
+					<div>
+						<label class="small">By pressing "Save/Edit" you agree to publish this content under the <a href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
+					</div>
+				</row>
+			</form-group>
+		</div>
+	</form>
+</row>
+
+<div class="hide" id="preview-container">
+	<hr />
+	<row>
+		<label>Preview:</label>
+		<button class="btn btn-default">Update</button>
+	</row>
+	<row>
+		<div id="preview-contents" style="border: solid">
+
+		</div>
+	</row>
+</div>
+
+<script>
+	(function () {
+		document.getElementById('preview-button').onclick = function () {
+			var markup = document.getElementById('@nameof(Model.Markup)').value;
+			document.getElementById('preview-container').classList.remove('hide');
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						console.log('responseText', responseText);
+						document.getElementById('preview-contents').html = responseText;
+
+					} else {
+						alert("Something went wrong"); // TODO: more elegant
+					}
+				}
+			};
+
+			xmlhttp.open("GET", "/Wiki/@(nameof(WikiController.GeneratePreview))?markup=" + markup,
+				true);
+			xmlhttp.send();
+		}
+	})()
+</script>
