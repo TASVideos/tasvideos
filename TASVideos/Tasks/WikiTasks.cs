@@ -18,6 +18,29 @@ namespace TASVideos.Tasks
 			_db = db;
 		}
 
+		// TODO: document
+		// returns null if a revision of this page is not found
+		public async Task<WikiViewModel> GetPage(string pageName) // TODO: ability to pass in a particular revision of a page
+		{
+			pageName = pageName.Trim('/');
+			var existingPage = await _db.WikiPages
+				.Where(wp => wp.PageName == pageName)
+				.Where(wp => wp.Child == null)
+				.SingleOrDefaultAsync();
+
+			if (existingPage != null)
+			{
+				return new WikiViewModel
+				{
+					PageName = pageName,
+					Markup = existingPage.Markup
+				};
+			}
+
+			return null;
+		}
+
+		// TODO: document
 		public async Task SavePage(WikiEditModel model)
 		{
 			model.PageName = model.PageName.Trim('/');

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -24,14 +25,28 @@ namespace TASVideos.Controllers
 			_wikiTasks = wikiTasks;
 		}
 
-		public IActionResult Edit(string path)
+		public async Task<IActionResult> Edit(string path)
 		{
 			// TODO: grab page from db based on path
-			var model = new WikiEditModel
+			var existingPage = await _wikiTasks.GetPage(path);
+
+			WikiEditModel model;
+			if (existingPage != null)
 			{
-				PageName = path ?? "/Dummy/Dummy",
-				Markup = "Hello __World__"
-			};
+				model = new WikiEditModel
+				{
+					PageName = path,
+					Markup = existingPage.Markup
+				};
+			}
+			else
+			{
+				model = new WikiEditModel
+				{
+					PageName = path,
+					Markup = ""
+				};
+			}
 
 			return View(model);
 		}
@@ -59,16 +74,18 @@ namespace TASVideos.Controllers
 			return Content(w.ToString(), "text/plain");
 		}
 
-		public IActionResult RenderWikiPage(string url)
+		[AllowAnonymous]
+		public async Task<IActionResult> RenderWikiPage(string url)
 		{
-			if (url == "Boo/Far")
+			var existingPage = await _wikiTasks.GetPage(url);
+
+			if (existingPage != null)
 			{
+				// TODO
 				return Content("Boo Far", "text/plain");
 			}
-			else
-			{
-				return NotFound();
-			}
+
+			return NotFound();
 		}
     }
 }
