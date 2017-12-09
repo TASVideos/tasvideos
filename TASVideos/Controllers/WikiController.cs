@@ -13,10 +13,15 @@ namespace TASVideos.Controllers
 {
 	// TODO: edit permissions
 	public class WikiController : BaseController
-    {
-		public WikiController(UserTasks userTasks)
+	{
+		private readonly WikiTasks _wikiTasks;
+
+		public WikiController(
+			UserTasks userTasks,
+			WikiTasks wikiTasks)
 			: base(userTasks)
 		{
+			_wikiTasks = wikiTasks;
 		}
 
 		public IActionResult Edit(string path)
@@ -31,13 +36,15 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		// TODO: perms
 		[HttpPost]
-		public IActionResult Edit(WikiEditModel model)
+		public async Task<IActionResult> Edit(WikiEditModel model)
 		{
+			model.PageName = model.PageName.Trim('/');
 			if (ModelState.IsValid)
 			{
-				// TODO
-				RedirectHome();
+				await _wikiTasks.SavePage(model);
+				return Redirect("/" + model.PageName);
 			}
 
 			return View(model);

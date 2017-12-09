@@ -6,7 +6,7 @@ namespace TASVideos.Models
     {
 		public string PageName { get; set; }
 
-		
+		[Required]
 		public string Markup { get; set; }
 
 		[Display(Name = "Minor Edit")]
@@ -14,6 +14,6 @@ namespace TASVideos.Models
 
 		[Required] // Yeah, I did that
 		[Display(Name = "Edit Comments")]
-		public string EditComments { get; set; }
+		public string RevisionMessage { get; set; }
     }
 }
