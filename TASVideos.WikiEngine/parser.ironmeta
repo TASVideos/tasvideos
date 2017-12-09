@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-ironmeta Wiki<char, AST.Node>
+ironmeta Wiki<char, AST.INode>
 {
 	// TODO: Tables
 	LineEnding = "\r\n" | "\r" | "\n";
@@ -59,26 +59,30 @@ ironmeta Wiki<char, AST.Node>
 	TableText = InlineTextChild(TableText, '|');
 
 	DocumentItem =
-		UnorderedList | OrderedList | TermList | TableHead | TableBody | HorizontalRule |
+		UnorderedList | OrderedList | TermList | Table | HorizontalRule |
 		Heading | BlockQuote | Preformatted | Directive | Paragraph | EmptyLine;
 	
 	// items that consume one line
 	UnorderedList = "*"+ IText*:a -> { return new AST.Element("ul", a.Results); };
 	OrderedList = "#"+ IText*:a -> { return new AST.Element("ol", a.Results); };
-	TermList = ";" TermText*:a ":" IText*:b -> { return AST.Element.CreateDefinition(a.Results, b.Results); };
-	TableHead = "||" (HeadCell "||")*:a -> { return new AST.Element("tr", a.Results); };
-		HeadCell = TableText*:a -> { return new AST.Element("th", a.Results ); };
-	TableBody = '|' (BodyCell '|')*:a -> { return new AST.Element("tr", a.Results); };
-		BodyCell = TableText*:a -> { return new AST.Element("td", a.Results ); };
 	HorizontalRule = "---" "-"+ -> { return new AST.Element("hr"); };
 	Heading = "!"{1,4}:a IText*:b -> { return new AST.Element("h" + (5 - a.Inputs.Count()), b.Results); };
-	Directive = "%%" DirectiveText:a -> { return new AST.Element("directive", new[] { a.Results.Single() }); };
+	Directive = "%%" DirectiveText:a -> { return new AST.Element("directive", a.Results); };
 		DirectiveText = (~('\r' | '\n').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
-	EmptyLine = "" -> { return Enumerable.Empty<AST.Node>(); };
+	EmptyLine = "" -> { return Enumerable.Empty<AST.INode>(); };
 	// items that consume multiple line
+	Table = TableHead (LineEnding TableBody)? | TableBody -> { return new AST.Element("table", _IM_Result.Results); };
+		TableHead = TableHeadRow (LineEnding TableHeadRow)* -> { return new AST.Element("thead", _IM_Result.Results); };
+			TableHeadRow = "||" (HeadCell "||")*:a -> { return new AST.Element("tr", a.Results); };
+				HeadCell = TableText*:a -> { return new AST.Element("th", a.Results ); };
+		TableBody = TableBodyRow (LineEnding TableBodyRow)* -> { return new AST.Element("tbody", _IM_Result.Results); };
+			TableBodyRow = '|' (BodyCell '|')*:a -> { return new AST.Element("tr", a.Results); };
+				BodyCell = TableText*:a -> { return new AST.Element("td", a.Results ); };
+	TermList = TermLine (LineEnding TermLine)* -> { return new AST.Element("dl", _IM_Result.Results); };
+		TermLine = ';' TermText*:a ':' IText*:b -> { return new[] { new AST.Element("dt", a.Results), new AST.Element("dd", b.Results) }; };
 	BlockQuote = ">" KText*:a -> { return new AST.Element("blockquote", a.Results); };
 	Preformatted = " " RText*:a -> { return new AST.Element("pre", a.Results); };
 	Paragraph = ~LineEnding PText+:a -> { return new AST.Element("p", a.Results); };
 
-	Document = DocumentItem:head (LineEnding DocumentItem)* LineEnding?;
+	Document = DocumentItem (LineEnding DocumentItem)* LineEnding?;
 }
