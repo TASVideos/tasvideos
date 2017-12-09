@@ -6,23 +6,26 @@
 
 <row>
 	<form asp-controller="Wiki" asp-action="Edit" form-method="POST">
+		<input type="hidden" asp-for="PageName" />
 		<div class="col-md-6">
 			<form-group>
 				<row>
 					<form-group class="form-inline">
 						<label asp-for="MinorEdit" class="control-label"></label>
-						<input type="checkbox" class="checkbox" asp-for="MinorEdit" />
+						<input type="checkbox" class="checkbox" asp-for="MinorEdit"/>
 					</form-group>
 
 				</row>
 				<row>
-					<label asp-for="EditComments" class="control-label"></label>
-					<input type="text" asp-for="EditComments" class="form-control" />
+					<label asp-for="RevisionMessage" class="control-label"></label>
+					<input type="text" asp-for="RevisionMessage" class="form-control"/>
+					<span asp-validation-for="RevisionMessage" class="text-danger"></span>
 				</row>
 			</form-group>
 			<form-group>
 				<row>
 					<textarea asp-for="Markup" class="form-control" rows="8"></textarea>
+					<span asp-validation-for="Markup" class="text-danger"></span>
 				</row>
 			</form-group>
 			<form-group>
@@ -77,3 +80,7 @@
 		}
 	})();
 </script>
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}
