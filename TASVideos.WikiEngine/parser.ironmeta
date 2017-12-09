@@ -3,7 +3,6 @@ using System.Linq;
 
 ironmeta Wiki<char, AST.INode>
 {
-	// TODO: Tables
 	LineEnding = "\r\n" | "\r" | "\n";
 
 	InlineTextChild :texttype :excludes =
