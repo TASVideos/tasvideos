@@ -43,9 +43,9 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		public ContentResult GeneratePreview(string markup)
+		[HttpPost]
+		public ContentResult GeneratePreview()
 		{
-			// TODO:
 			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
 			var w = new StringWriter();
 			Util.DebugWriteHtml(input, w);
