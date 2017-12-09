@@ -43,6 +43,9 @@ namespace TASVideos.WikiEngine.AST
 					case '&':
 						w.Write("&amp;");
 						break;
+					case '@':
+						w.Write("&#64;");
+						break;
 					default:
 						w.Write(c);
 						break;
@@ -54,7 +57,7 @@ namespace TASVideos.WikiEngine.AST
 	public class Element : INode
 	{
 		private static readonly Regex AllowedTagNames = new Regex("[a-z]+");
-		private static readonly Regex AllowedAttributeNames = new Regex("[a-z]+");
+		private static readonly Regex AllowedAttributeNames = new Regex("[a-z\\-]+");
 		private static readonly HashSet<string> VoidTags = new HashSet<string>
 		{
 			"area", "base", "br", "col", "embed", "hr", "img", "input",
@@ -122,6 +125,9 @@ namespace TASVideos.WikiEngine.AST
 							break;
 						case '"':
 							w.Write("&quot;");
+							break;
+						case '@':
+							w.Write("&#64;");
 							break;
 						default:
 							w.Write(c);
