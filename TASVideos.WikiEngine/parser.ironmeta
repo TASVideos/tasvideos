@@ -21,11 +21,11 @@ ironmeta Wiki<char, AST.Node>
 	InlineBreak = "%%%" -> { return new AST.Element("br"); };
 	IfModule :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return new AST.IfModule(c.Results.Single(), a.Results); };
 	Module = "[" ModuleText:a "]" -> { return new AST.Module(a.Results.Single()); };
-	ModuleText = /[^\r\n\[\]]*/:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+	ModuleText = (~('\r' | '\n' | '[' | ']').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
 	LeftBracket = "[[" -> { return new AST.Text("["); };
 	RightBracket = "]]" -> { return new AST.Text("]"); };
 	RawInlineText = InlineChar+:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
-	InlineChar = /[^\x00-\x1f_'\(\){}«»-%\[\]]/ |
+	InlineChar = ~('\r' | '\n' | '\0' | '_' | '\'' | '(' | ')' | '{' | '}' | '«' | '»' | '-' | '%' | '[' | ']' ). |
 		"_" ~"_" |
 		"'" ~"'" |
 		"(" ~"(" |
@@ -39,7 +39,7 @@ ironmeta Wiki<char, AST.Node>
 
 	// text within a paragraph
 	PText = InlineTextChild(PText) | PLineEnding;
-	PLineEnding = LineEnding ~(/[> \*#;!]/ | "----" | "%%" | LineEnding) -> { return new AST.Text("\n"); };
+	PLineEnding = LineEnding ~('>' | ' ' | '*' | '#' | ';' | '!' | "----" | "%%" | LineEnding) -> { return new AST.Text("\n"); };
 
 	// text within a blockquote
 	KText = InlineTextChild(KText) | KLineEnding;
@@ -64,7 +64,7 @@ ironmeta Wiki<char, AST.Node>
 	HorizontalRule = "---" "-"+ -> { return new AST.Element("hr"); };
 	Heading = "!"{1,4}:a IText*:b -> { return new AST.Element("h" + (5 - a.Inputs.Count()), b.Results); };
 	Directive = "%%" DirectiveText:a -> { return new AST.Element("directive", new[] { a.Results.Single() }); };
-	DirectiveText = /[^\r\n]*/:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
+	DirectiveText = (~('\r' | '\n').)*:a -> { return new AST.Text(new string(a.Inputs.ToArray())); };
 	EmptyLine = "" -> { return Enumerable.Empty<AST.Node>(); };
 	// items that consume multiple line
 	BlockQuote = ">" KText*:a -> { return new AST.Element("blockquote", a.Results); };
