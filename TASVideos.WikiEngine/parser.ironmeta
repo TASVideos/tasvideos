@@ -58,9 +58,12 @@ ironmeta Wiki<char, AST.INode>
 	// text missing a pipe; for Tables
 	TableText = InlineTextChild(TableText, '|');
 
-	DocumentItem =
+	// allowed at the top level or within certain nested items
+	DocumentFragmentItem =
 		List | TermList | Toc | Table | SrcEmbed | MultiQuote | Div | HTabs | VTabs | BlockIf | HorizontalRule |
 		Heading | BlockQuote | Preformatted | Paragraph | EmptyLine;
+	// allowed at the top level
+	DocumentItem = ImplicitVTabs | DocumentFragmentItem;
 
 	// items that can contain nested document fragments
 	NestedNormal :start :end :tag :attr =
@@ -69,11 +72,12 @@ ironmeta Wiki<char, AST.INode>
 	ClassText = ' ' (~('\r' | '\n').)+:a -> { return MakeText(a); };
 	MultiQuote = NestedNormal("%%QUOTE", "%%QUOTE_END", "quote", "data-author");
 	Div = NestedNormal("%%DIV", "%%DIV_END", "div", "class");
-	TabBase :start :end :tag = start LineEnding Tab+:a end -> { return MakeElt(Str(tag), a); };
-		Tab = "%%TAB " TabName:a "%%" LineEnding (DocumentItem LineEnding)*:b -> { return MakeElt("tab", b, Attr("name", a)); };
+	TabBase :start :tag = start Tab+:a "%%TAB_END%%" -> { return MakeElt(Str(tag), a); };
+		Tab = "%%TAB " TabName:a "%%" LineEnding (DocumentFragmentItem LineEnding)*:b -> { return MakeElt("tab", b, Attr("name", a)); };
 			TabName = (~('\r' | '\n' | '%').)+:a -> { return MakeText(a); };
-	HTabs = TabBase("%%TAB_HSTART%%", "%%TAB_END%%", "htabs");
-	VTabs = TabBase("%%TAB_START%%", "%%TAB_END%%", "tabs");
+	HTabs = TabBase("%%TAB_HSTART%%" LineEnding, "htabs");
+	VTabs = TabBase("%%TAB_START%%" LineEnding, "tabs");
+	ImplicitVTabs = TabBase("", "tabs");
 	BlockIf = "[if:" ModuleText:c "]" LineEnding (DocumentItem LineEnding)*:a "[endif]" -> { return MakeIf(c, a); };
 
 	// items that consume one line
