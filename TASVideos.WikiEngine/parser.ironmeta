@@ -58,7 +58,7 @@ ironmeta Wiki<char, AST.INode>
 	TableText = InlineTextChild(TableText, '|');
 
 	DocumentItem =
-		UnorderedList | OrderedList | TermList | Table | SrcEmbed | MultiQuote | Div | HorizontalRule |
+		UnorderedList | OrderedList | TermList | Toc | Table | SrcEmbed | MultiQuote | Div | HTabs | VTabs | HorizontalRule |
 		Heading | BlockQuote | Preformatted | Paragraph | EmptyLine;
 
 	// items that can contain nested document fragments
@@ -68,12 +68,18 @@ ironmeta Wiki<char, AST.INode>
 	ClassText = ' ' (~('\r' | '\n').)+:a -> { return MakeText(a); };
 	MultiQuote = NestedNormal("%%QUOTE", "%%QUOTE_END", "quote", "data-author");
 	Div = NestedNormal("%%DIV", "%%DIV_END", "div", "class");
+	TabBase :start :end :tag = start LineEnding Tab+:a end -> { return MakeElt(Str(tag), a); };
+		Tab = "%%TAB " TabName:a "%%" LineEnding (DocumentItem LineEnding)*:b -> { return MakeElt("tab", b, Attr("name", a)); };
+			TabName = (~('\r' | '\n' | '%').)+:a -> { return MakeText(a); };
+	HTabs = TabBase("%%TAB_HSTART%%", "%%TAB_END%%", "htabs");
+	VTabs = TabBase("%%TAB_START%%", "%%TAB_END%%", "tabs");
 
 	// items that consume one line
 	UnorderedList = "*"+ IText*:a -> { return MakeElt("ul", a); };
 	OrderedList = "#"+ IText*:a -> { return MakeElt("ol", a); };
 	HorizontalRule = "---" "-"+ -> { return MakeElt("hr"); };
 	Heading = "!"{1,4}:a IText*:b -> { return MakeElt("h" + (5 - a.Inputs.Count()), b); };
+	Toc = "%%TOC%%" -> { return MakeElt("toc"); };
 	// UnknownDirective = "%%" DirectiveText:a -> { return MakeElt("directive", a); };
 	//	DirectiveText = (~('\r' | '\n').)*:a -> { return MakeText(a); };
 	EmptyLine = "";
@@ -93,7 +99,7 @@ ironmeta Wiki<char, AST.INode>
 		SrcText = (~(LineEnding "%%END_EMBED").)+:a -> { return MakeText(a); };
 	BlockQuote = ">" KText*:a -> { return MakeElt("blockquote", a); };
 	Preformatted = " " PreText*:a -> { return MakeElt("pre", a); };
-	Paragraph = ~(LineEnding | "%%") PText+:a -> { return MakeElt("p", a); };
+	Paragraph = ~(LineEnding | ("%%" ~'%')) PText+:a -> { return MakeElt("p", a); };
 
 	Document = DocumentItem (LineEnding DocumentItem)* LineEnding?;
 }
