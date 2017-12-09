@@ -63,8 +63,8 @@
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {
-						console.log('responseText', responseText);
-						document.getElementById('preview-contents').html = responseText;
+						console.log('responseText', xmlhttp.responseText);
+						document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
 
 					} else {
 						alert("Something went wrong"); // TODO: more elegant
@@ -72,9 +72,8 @@
 				}
 			};
 
-			xmlhttp.open("GET", "/Wiki/@(nameof(WikiController.GeneratePreview))?markup=" + markup,
-				true);
-			xmlhttp.send();
+			xmlhttp.open("POST", "/Wiki/@(nameof(WikiController.GeneratePreview))");
+			xmlhttp.send(markup);
 		}
-	})()
+	})();
 </script>

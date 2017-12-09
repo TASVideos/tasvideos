@@ -46,12 +46,10 @@ namespace TASVideos.Controllers
 		public ContentResult GeneratePreview(string markup)
 		{
 			// TODO:
-			//var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-			//var output = Util.DebugParseWikiPage(input);
-			//var w = new StringWriter();
-			//Util.DebugWriteHtml(input, w);
-			//return Content(output + "\n" + w, "text/plain");
-			return Content("Hello <strong>World</strong>");
+			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
+			var w = new StringWriter();
+			Util.DebugWriteHtml(input, w);
+			return Content(w.ToString(), "text/plain");
 		}
     }
 }
