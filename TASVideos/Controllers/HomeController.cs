@@ -33,7 +33,9 @@ namespace TASVideos.Controllers
 		{
 			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
 			var output = TASVideos.WikiEngine.Util.DebugParseWikiPage(input);
-			return Content(output, "text/plain");
+			var w = new StringWriter();
+			TASVideos.WikiEngine.Util.DebugWriteHtml(input, w);
+			return Content(output + "\n" + w.ToString(), "text/plain");
 		}
 	}
 }

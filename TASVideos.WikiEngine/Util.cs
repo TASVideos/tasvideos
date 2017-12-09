@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace TASVideos.WikiEngine
@@ -21,6 +22,20 @@ namespace TASVideos.WikiEngine
 					Error = result.Error,
 					ErrorIndex = result.ErrorIndex
 				});
+			}
+		}
+		public static void DebugWriteHtml(string content, TextWriter w)
+		{
+			var parser = new Wiki();
+			var result = parser.GetMatch(content, parser.Document);
+			if (result.Success && result.NextIndex == content.Length)
+			{
+				foreach (var r in result.Results)
+					r.WriteHtml(w);
+			}
+			else
+			{
+				w.Write($"<!-- ERROR {result.Error} @{result.ErrorIndex} -->");
 			}
 		}
 	}
