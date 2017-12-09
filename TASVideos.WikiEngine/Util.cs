@@ -9,11 +9,18 @@ namespace TASVideos.WikiEngine
 		{
 			var parser = new Wiki();
 			var result = parser.GetMatch(content, parser.Document);
-			if (result.Success)
+			if (result.Success && result.NextIndex == content.Length)
 			{
 				return JsonConvert.SerializeObject(result.Results, Formatting.Indented);
 			}
-			throw new Exception("Waaaaaaaaaaaaaaaaaaaaaaaaaa");
+			else
+			{
+				return JsonConvert.SerializeObject(new
+				{
+					Error = result.Error,
+					ErrorIndex = result.ErrorIndex
+				});
+			}
 		}
 	}
 }
