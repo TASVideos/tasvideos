@@ -72,7 +72,10 @@ namespace TASVideos.WikiEngine
 			return new[]
 			{
 				new Element("ul", new[] { Attr("class", navclass) }, nav),
-				new Element("div", new[] { Attr("class", tabclass) }, content)
+				new Element("div", new[] { Attr("class", "row") }, new[]
+				{
+					new Element("div", new[] { Attr("class", tabclass) }, content)
+				})
 			};
 		}
 
