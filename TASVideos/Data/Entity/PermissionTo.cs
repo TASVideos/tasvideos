@@ -53,6 +53,16 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Assign Roles")]
 		[Group("UserAdministration")]
 		[Description("The ability to assign Roles to any User with some restrictions. A role can only be assigned if all permissions within it are marked as assignable by a role the user has.")]
-		AssignRoles = 9
+		AssignRoles = 9,
+
+		[Display(Name = "Judge Movies")]
+		[Group("Queue Management")]
+		[Description("The ability to judge submissions in the submission queue")]
+		JudgeSubmissions = 10,
+
+		[Display(Name = "Publish Movies")]
+		[Group("Queue Management")]
+		[Description("The ability to publish movies")]
+		PublishMovies = 10,
 	}
 }
