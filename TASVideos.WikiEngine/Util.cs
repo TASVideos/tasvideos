@@ -10,21 +10,38 @@ namespace TASVideos.WikiEngine
 		{
 			var parser = new Wiki();
 			var result = parser.GetMatch(content, parser.Document);
+			var ret = "";
+			var r = result.Results; //TopLevelPasses.MergeDefinitions(result.Results);
+			ret += JsonConvert.SerializeObject(r, Formatting.Indented);
 			if (result.Success && result.NextIndex == content.Length)
 			{
-				var r = result.Results; //TopLevelPasses.MergeDefinitions(result.Results);
-				return JsonConvert.SerializeObject(r, Formatting.Indented);
 			}
 			else
 			{
-				return JsonConvert.SerializeObject(new
+				ret += JsonConvert.SerializeObject(new
 				{
 					Error = result.Error,
 					ErrorIndex = result.ErrorIndex
 				});
 			}
+			return ret;
 		}
 		public static void DebugWriteHtml(string content, TextWriter w)
+		{
+			var parser = new Wiki();
+			var result = parser.GetMatch(content, parser.Document);
+			foreach (var r in result.Results)
+				r.WriteHtml(w);
+			if (result.Success && result.NextIndex == content.Length)
+			{
+			}
+			else
+			{
+				w.Write($"<!-- ERROR {result.Error} @{result.ErrorIndex} -->");
+			}
+		}
+
+		public static void RenderRazor(string content, TextWriter w)
 		{
 			var parser = new Wiki();
 			var result = parser.GetMatch(content, parser.Document);
@@ -35,7 +52,7 @@ namespace TASVideos.WikiEngine
 			}
 			else
 			{
-				w.Write($"<!-- ERROR {result.Error} @{result.ErrorIndex} -->");
+				throw new InvalidOperationException("Parse error at index " + result.ErrorIndex);
 			}
 		}
 	}
