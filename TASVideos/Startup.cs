@@ -56,8 +56,8 @@ namespace TASVideos
 				options.Filters.Add(new SetViewBagAttribute());
 			});
 
-			// TODO: IFileProvider for database markup razors
-			// services.Configure<RazorViewEngineOptions>(opts => opts.FileProviders.Add(new MyFileProvider()));
+			services.Configure<RazorViewEngineOptions>(
+				opts => opts.FileProviders.Add(new Razor.WikiMarkupFileProvider(services.BuildServiceProvider())));
 
 			// Sets up Dependency Injection for IPrinciple to be able to attain the user whereever we wish.
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

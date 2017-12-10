@@ -77,12 +77,13 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> RenderWikiPage(string url)
 		{
+			// TODO: we kind of fetch for the page twice, both here and in the fileprovider
+
 			var existingPage = await _wikiTasks.GetPage(url);
 
 			if (existingPage != null)
 			{
-				// TODO
-				return Content("Boo Far", "text/plain");
+				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.PageName);
 			}
 
 			return NotFound();
