@@ -7,7 +7,7 @@
 <p>These are a list of site permissions that are allocated to site roles</p>
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.First().Id)</th>
+		<th>@Html.DisplayNameFor(m => m.First().Name)</th>
 		<th>@Html.DisplayNameFor(m => m.First().Group)</th>
 		<th>@Html.DisplayNameFor(m => m.First().Roles)</th>
 		<th>@Html.DisplayNameFor(m => m.First().Description)</th>
@@ -15,7 +15,7 @@
 	@foreach (var entry in Model)
 	{
 		<tr>
-			<td>@entry.Id</td>
+			<td>@entry.Name</td>
 			<td>@entry.Group</td>
 			<td>@string.Join(",", entry.Roles)</td>
 			<td>@entry.Description</td>

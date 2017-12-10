@@ -12,11 +12,12 @@ namespace TASVideos.Tasks
 {
     public class PermissionTasks
 	{
-		private static readonly List<PermissionDisplayViewModel> _permissionData = Enum.GetValues(typeof(PermissionTo))
+		private static readonly List<PermissionDisplayViewModel> PermissionData = Enum.GetValues(typeof(PermissionTo))
 			.Cast<PermissionTo>()
 			.Select(p => new PermissionDisplayViewModel
 			{
 				Id = p,
+				Name = p.EnumDisplayName(),
 				Group = p.Group(),
 				Description = p.Description()
 			})
@@ -40,14 +41,14 @@ namespace TASVideos.Tasks
 					.Include(r => r.RolePermission)
 					.ToListAsync();
 
-				foreach (var permission in _permissionData)
+				foreach (var permission in PermissionData)
 				{
 					permission.Roles = allRoles
 						.Where(r => r.RolePermission.Any(p => p.PermissionId == permission.Id))
 						.Select(r => r.Name);
 				}
 
-				return _permissionData;
+				return PermissionData;
 			}
 		}
 	}
