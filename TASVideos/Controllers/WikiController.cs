@@ -88,5 +88,19 @@ namespace TASVideos.Controllers
 
 			return NotFound();
 		}
+
+		public async Task<IActionResult> ViewSource(string path)
+		{
+			var existingPage = await _wikiTasks.GetPage(path);
+
+			var model = new WikiViewModel
+			{
+				PageName = path,
+				Markup = existingPage?.Markup ?? "This page does not yet exist",
+				DbId = existingPage?.DbId ?? 0
+			};
+
+			return View(model);
+		}
     }
 }

@@ -1,0 +1,11 @@
+@model WikiViewModel
+
+@{
+	ViewData["Title"] = "View Page Source";
+}
+
+<row>
+	<label>This is the current source revision for this page</label>
+</row>
+<hr />
+@Model.Markup
