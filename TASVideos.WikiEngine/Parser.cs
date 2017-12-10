@@ -57,6 +57,8 @@ namespace TASVideos.WikiEngine
 				return new[] { new Text("|") };
 			if (text == "expr:UserGetWikiName")
 				return MakeModuleInternal("UserGetWikiName");
+			if (text == "expr:WikiGetCurrentEditLink")
+				return MakeModuleInternal("WikiGetCurrentEditLink");
 			if (text == "user:user_name")
 				return MakeModuleInternal("user_name");
 
