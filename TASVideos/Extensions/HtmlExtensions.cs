@@ -8,38 +8,54 @@ namespace TASVideos.Extensions
     {
 		public static bool WikiCondition<TModel>(this IHtmlHelper<TModel> html, string condition)
 		{
+			bool result = false;
+
+			if (condition.StartsWith('!'))
+			{
+				result = true;
+				condition = condition.TrimStart('!');
+			}
+
 			switch (condition)
 			{
 				default:
 					if (Enum.TryParse(condition, out PermissionTo permission))
 					{
-						return html.ViewData.UserHasPermission(permission);
+						result ^= html.ViewData.UserHasPermission(permission);
 					}
-
-					return false;
+					break;
 
 				case "CanSubmitMovies": // Legacy system: same as UserIsLoggedIn
 				case "CanRateMovies": // Legacy system: same as UserIsLoggedIn
 				case "UserIsLoggedIn":
-					return html.ViewContext.HttpContext.User.Identity.IsAuthenticated;
-
+					result ^= html.ViewContext.HttpContext.User.Identity.IsAuthenticated;
+					break;
 				case "1":
-					return true;
+					result ^= true;
+					break;
 				case "0":
-					return false;
+					result ^= false;
+					break;
 
 				// Support legacy values, these are deprecated
 				case "CanEditPages":
-					return html.ViewData.UserHasPermission(PermissionTo.EditWikiPages);
+					result ^= html.ViewData.UserHasPermission(PermissionTo.EditWikiPages);
+					break;
 				case "UserHasHomepage":
-					return html.ViewContext.HttpContext.User.Identity.IsAuthenticated; // Let's assume every user can have a homepage automatically
+					result ^= html.ViewContext.HttpContext.User.Identity.IsAuthenticated; // Let's assume every user can have a homepage automatically
+					break;
 				case "CanViewSubmissions":
-					return true; // Legacy system always returned true
+					result ^= true; // Legacy system always returned true
+					break;
 				case "CanJudgeMovies":
-					return html.ViewData.UserHasPermission(PermissionTo.JudgeSubmissions);
+					result ^= html.ViewData.UserHasPermission(PermissionTo.JudgeSubmissions);
+					break;
 				case "CanPublishMovies":
-					return html.ViewData.UserHasPermission(PermissionTo.PublishMovies);
+					result ^= html.ViewData.UserHasPermission(PermissionTo.PublishMovies);
+					break;
 			}
+
+			return result;
 		}
     }
 }

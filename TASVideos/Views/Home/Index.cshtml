@@ -1,4 +1,4 @@
-﻿@model  IEnumerable<PermissionTo>
+﻿@model IEnumerable<PermissionTo>
 @{
 	ViewData["Title"] = "Home";
 }
@@ -7,4 +7,25 @@
 @foreach (var permission in Model)
 {
 	<p>@permission.ToString()</p>
+}
+
+
+@if (Html.WikiCondition("UserIsLoggedIn"))
+{
+	<label>Hello logged in user</label><br /><br />
+}
+
+@if (Html.WikiCondition("!UserIsLoggedIn"))
+{
+	<label>you seem to not be logged in, perhaps you should do so</label><br /><br />
+}
+
+@if (Html.WikiCondition("CanEditPages"))
+{
+	<label>congrats you can edit pages</label><br /><br />
+}
+
+@if (Html.WikiCondition("!CanEditPages"))
+{
+	<label>you can not edit pages</label><br /><br />
 }
