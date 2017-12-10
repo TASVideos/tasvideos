@@ -83,7 +83,7 @@ namespace TASVideos.Controllers
 
 			if (existingPage != null)
 			{
-				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.PageName);
+				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.DbId);
 			}
 
 			return NotFound();

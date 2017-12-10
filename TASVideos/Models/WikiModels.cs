@@ -6,6 +6,7 @@ namespace TASVideos.Models
 	{
 		public string PageName { get; set; }
 		public string Markup { get; set; }
+		public int DbId { get; set; }
 	}
 
 	public class WikiEditModel

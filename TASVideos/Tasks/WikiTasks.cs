@@ -32,8 +32,27 @@ namespace TASVideos.Tasks
 			{
 				return new WikiViewModel
 				{
-					PageName = pageName,
-					Markup = existingPage.Markup
+					PageName = existingPage.PageName,
+					Markup = existingPage.Markup,
+					DbId = existingPage.Id
+				};
+			}
+
+			return null;
+		}
+		public async Task<WikiViewModel> GetPage(int dbid)
+		{
+			var existingPage = await _db.WikiPages
+				.Where(wp => wp.Id == dbid)
+				.SingleOrDefaultAsync();
+			
+			if (existingPage != null)
+			{
+				return new WikiViewModel
+				{
+					PageName = existingPage.PageName,
+					Markup = existingPage.Markup,
+					DbId = existingPage.Id
 				};
 			}
 

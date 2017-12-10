@@ -13,7 +13,7 @@ namespace TASVideos.Razor
 		{
 			_provider = provider;
 		}
-		public const string Prefix = "/~~~WIKICONTENT/";
+		public const string Prefix = "/Views/~~~";
 		public IDirectoryContents GetDirectoryContents(string subpath)
 		{
 			return null;
@@ -25,7 +25,7 @@ namespace TASVideos.Razor
 				return null;
 			subpath = subpath.Substring(Prefix.Length);
 			var tasks = (Tasks.WikiTasks)_provider.GetService(typeof(Tasks.WikiTasks));
-			var continuation = tasks.GetPage(subpath);
+			var continuation = tasks.GetPage(int.Parse(subpath));
 			continuation.Wait();
 			var result = continuation.Result;
 			if (result == null)
