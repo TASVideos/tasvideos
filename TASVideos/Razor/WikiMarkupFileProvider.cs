@@ -34,7 +34,7 @@ namespace TASVideos.Razor
 			var ms = new MemoryStream();
 			using (var tw = new StreamWriter(ms))
 			{
-				TASVideos.WikiEngine.Util.RenderRazor(result.Markup, tw);
+				TASVideos.WikiEngine.Util.RenderRazor(result.PageName, result.Markup, tw);
 			}
 			return new MyFileInfo(result.PageName, ms.ToArray());
 		}
