@@ -20,7 +20,7 @@ ironmeta Wiki<char, AST.INode>
 	Quote :texttype = "««" texttype*:a "»»" -> { return MakeElt("q", a); };
 	InlineBreak = "%%%" -> { return MakeElt("br"); };
 	InlineIf :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return MakeIf(c, a); };
-	Module = "[" ModuleText:a "]" -> { return MakeModule(a); };
+	Module = "[" ~"endif" ModuleText:a "]" -> { return MakeModule(a); };
 		ModuleText = (~('\r' | '\n' | '[' | ']').)*:a -> { return MakeText(a); };
 	LeftBracket = "[[" -> { return MakeText("["); };
 	RightBracket = "]]" -> { return MakeText("]"); };
