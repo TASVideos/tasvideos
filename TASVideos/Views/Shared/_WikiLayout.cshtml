@@ -1,0 +1,21 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<div>
+	<label>This is wiki page specific stuff!!!!!!</label>
+</div>
+@RenderBody()
+<div>
+
+</div>
+
+<div>
+	<label>This is a wiki page specific footer!!!!</label>
+</div>
+
+@section Scripts {
+	<!--TODO put a wiki page js file here-->
+	@if (IsSectionDefined("PageTitle"))
+	{
+		@RenderSection("Scripts")
+	}
+}
