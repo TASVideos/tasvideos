@@ -63,6 +63,6 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Publish Movies")]
 		[Group("Queue Management")]
 		[Description("The ability to publish movies")]
-		PublishMovies = 10,
+		PublishMovies = 11,
 	}
 }
