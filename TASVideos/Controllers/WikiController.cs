@@ -86,7 +86,9 @@ namespace TASVideos.Controllers
 				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.DbId);
 			}
 
-			return NotFound();
+
+			var frontFoundPage = await _wikiTasks.GetPageNotFoundPage();
+			return View(Razor.WikiMarkupFileProvider.Prefix + frontFoundPage.DbId);
 		}
 
 		public async Task<IActionResult> ViewSource(string path)
