@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.SeedData;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -57,6 +58,18 @@ namespace TASVideos.Tasks
 			}
 
 			return null;
+		}
+
+		public async Task<WikiViewModel> GetPageNotFoundPage()
+		{
+			string pageName = WikiPageSeedData.PageNotFound; // TODO: make this a const somewhere
+			var page = await GetPage(pageName);
+			if (page == null)
+			{
+				throw new InvalidOperationException("DRAGONS!");
+			}
+
+			return page;
 		}
 
 		// TODO: document

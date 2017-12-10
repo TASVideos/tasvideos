@@ -40,6 +40,11 @@ namespace TASVideos.Data
 			}
 
 			context.SaveChanges();
+
+			foreach (var wikiPage in WikiPageSeedData.SeedPages)
+			{
+				context.WikiPages.Add(wikiPage);
+			}
 		}
 
 		/// <summary>
