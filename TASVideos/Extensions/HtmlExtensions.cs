@@ -36,9 +36,9 @@ namespace TASVideos.Extensions
 				case "CanViewSubmissions":
 					return true; // Legacy system always returned true
 				case "CanJudgeMovies":
-					return false; // TODO: need judge perm
+					return html.ViewData.UserHasPermission(PermissionTo.JudgeSubmissions);
 				case "CanPublishMovies":
-					return false; // TODO: need publish perm;
+					return html.ViewData.UserHasPermission(PermissionTo.PublishMovies);
 			}
 		}
     }
