@@ -47,6 +47,7 @@ namespace TASVideos.WikiEngine
 			var result = parser.GetMatch(content, parser.Document);
 			if (result.Success && result.NextIndex == content.Length)
 			{
+				w.Write(@"@{Layout=""/Views/Shared/_WikiLayout.cshtml"";}");
 				foreach (var r in result.Results)
 					r.WriteHtml(w);
 			}
