@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine
@@ -8,6 +9,12 @@ namespace TASVideos.WikiEngine
 	using W = IronMeta.Matcher.MatchItem<char, INode>;
 	partial class Wiki
 	{
+		private static int UniqueId = 0;
+		private static string GetUniqueId()
+		{
+			var i = Interlocked.Increment(ref UniqueId);
+			return "y-" + i;
+		}
 		private static string Str(W content)
 		{
 			return new string(content.Inputs.ToArray());
@@ -43,6 +50,30 @@ namespace TASVideos.WikiEngine
 		private static INode MakeIf(W condition, W children)
 		{
 			return new IfModule(((Text)condition.Results.Single()).Content, children.Results);
+		}
+		private static IEnumerable<INode> MakeTabs(string navclass, string tabclass, W children)
+		{
+			var nav = new List<INode>();
+			var content = new List<INode>();
+			var first = true;
+			foreach (var child in children.Results.Cast<Element>())
+			{
+				var id = GetUniqueId();
+				nav.Add(new Element("li", first ? new[] { Attr("class", "active") } : new KeyValuePair<string, string>[0], new[]
+				{
+					new Element("a", new[] { Attr("href", "#" + id), Attr("data-toggle", "tab") }, new[]
+					{
+						new Text(child.Attributes["name"])
+					})
+				}));
+				content.Add(new Element("div", new[] { Attr("id", id), Attr("class", first ? "tab-pane active" : "tab-pane") }, child.Children));
+				first = false;
+			}
+			return new[]
+			{
+				new Element("ul", new[] { Attr("class", navclass) }, nav),
+				new Element("div", new[] { Attr("class", tabclass) }, content)
+			};
 		}
 
 		private static readonly Regex Footnote = new Regex(@"^(\d+)$");

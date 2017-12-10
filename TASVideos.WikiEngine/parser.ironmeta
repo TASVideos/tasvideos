@@ -72,12 +72,12 @@ ironmeta Wiki<char, AST.INode>
 	ClassText = ' ' (~('\r' | '\n').)+:a -> { return MakeText(a); };
 	MultiQuote = NestedNormal("%%QUOTE", "%%QUOTE_END", "quote", "data-author");
 	Div = NestedNormal("%%DIV", "%%DIV_END", "div", "class");
-	TabBase :start :tag = start Tab+:a "%%TAB_END%%" -> { return MakeElt(Str(tag), a); };
-		Tab = "%%TAB " TabName:a "%%" LineEnding (DocumentFragmentItem LineEnding)*:b -> { return MakeElt("tab", b, Attr("name", a)); };
+	TabBase :start :navclass :tabclass = start Tab+:a "%%TAB_END%%" -> { return MakeTabs(Str(navclass), Str(tabclass), a); };
+		Tab = "%%TAB " TabName:a "%%"? LineEnding (DocumentFragmentItem LineEnding)*:b -> { return MakeElt("tab", b, Attr("name", a)); };
 			TabName = (~('\r' | '\n' | '%').)+:a -> { return MakeText(a); };
-	HTabs = TabBase("%%TAB_HSTART%%" LineEnding, "htabs");
-	VTabs = TabBase("%%TAB_START%%" LineEnding, "tabs");
-	ImplicitVTabs = TabBase("", "tabs");
+	HTabs = TabBase("%%TAB_HSTART%%" LineEnding, "nav nav-pills nav-stacked col-md-3", "tab-content col-md-9");
+	VTabs = TabBase("%%TAB_START%%" LineEnding, "nav nav-tabs", "tab-content");
+	ImplicitVTabs = TabBase("", "nav nav-tabs", "tab-content");
 	BlockIf = "[if:" ModuleText:c "]" LineEnding (DocumentItem LineEnding)*:a "[endif]" -> { return MakeIf(c, a); };
 
 	// items that consume one line
