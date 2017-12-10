@@ -164,7 +164,27 @@ namespace TASVideos.WikiEngine.AST
 		}
 		public void WriteHtml(TextWriter w)
 		{
-			w.Write("<!-- TODO IF TAG -->");
+			// razor stuff
+			w.Write("@if(Html.WikiCondition(\"");
+			foreach (var c in Condition)
+			{
+				if (c < 0x20)
+				{
+					w.Write($"\\x{((int)c).ToString("x2")}");
+				}
+				else if (c == '"')
+				{
+					w.Write("\\\"");
+				}
+				else
+				{
+					w.Write(c);
+				}
+			}
+			w.Write("\")){<text>");
+			foreach (var c in Children)
+				c.WriteHtml(w);
+			w.Write("</text>}");
 		}
 	}
 
