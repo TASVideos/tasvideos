@@ -21,7 +21,6 @@ namespace TASVideos.Razor
 
 		public IFileInfo GetFileInfo(string subpath)
 		{
-			System.Diagnostics.Debugger.Break();
 			if (!subpath.StartsWith(Prefix))
 				return null;
 			subpath = subpath.Substring(Prefix.Length);
