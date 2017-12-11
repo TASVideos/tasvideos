@@ -23,7 +23,7 @@ namespace TASVideos.Tasks
 		// returns null if a revision of this page is not found
 		public async Task<WikiViewModel> GetPage(string pageName) // TODO: ability to pass in a particular revision of a page
 		{
-			pageName = pageName.Trim('/');
+			pageName = pageName?.Trim('/');
 			var existingPage = await _db.WikiPages
 				.Where(wp => wp.PageName == pageName)
 				.Where(wp => wp.Child == null)
