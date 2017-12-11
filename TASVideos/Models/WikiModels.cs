@@ -11,6 +11,7 @@ namespace TASVideos.Models
 
 	public class WikiEditModel
     {
+		[Required]
 		public string PageName { get; set; }
 
 		[Required]

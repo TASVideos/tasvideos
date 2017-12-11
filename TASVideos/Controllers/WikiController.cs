@@ -55,7 +55,6 @@ namespace TASVideos.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Edit(WikiEditModel model)
 		{
-			model.PageName = model.PageName.Trim('/');
 			if (ModelState.IsValid)
 			{
 				await _wikiTasks.SavePage(model);
