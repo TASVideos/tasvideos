@@ -11,12 +11,11 @@ ironmeta Wiki<char, AST.INode>
 		Teletype(texttype) | Strikethrough(texttype) | Quote(texttype) |
 		InlineBreak | InlineIf(texttype) | Module | LeftBracket | RightBracket | RawInlineText(excludes);
 
-	// TODO: Bold, Emphasis, Strikethrough shouldn't contain themselves
-	Bold :texttype = "__" texttype*:a "__" -> { return MakeElt("b", a); };
-	Emphasis :texttype = "''" texttype*:a "''" -> { return MakeElt("em", a); };
+	Bold :texttype = "__" (~"__" texttype)*:a "__" -> { return MakeElt("b", a); };
+	Emphasis :texttype = "''" (~"''" texttype)*:a "''" -> { return MakeElt("em", a); };
 	Smaller :texttype = "((" texttype*:a "))" -> { return MakeElt("small", a); };
 	Teletype :texttype = "{{" texttype*:a "}}" -> { return MakeElt("tt", a); };
-	Strikethrough :texttype = "---" texttype*:a "---" -> { return MakeElt("del", a); };
+	Strikethrough :texttype = "---" (~"---" texttype)*:a "---" -> { return MakeElt("del", a); };
 	Quote :texttype = "««" texttype*:a "»»" -> { return MakeElt("q", a); };
 	InlineBreak = "%%%" -> { return MakeElt("br"); };
 	InlineIf :texttype = "[if:" ModuleText:c "]" texttype*:a "[endif]" -> { return MakeIf(c, a); };
@@ -26,16 +25,16 @@ ironmeta Wiki<char, AST.INode>
 	RightBracket = "]]" -> { return MakeText("]"); };
 	RawInlineText :excludes = InlineChar(excludes)+:a -> { return MakeText(a); };
 	InlineChar :excludes = ~('\r' | '\n' | '\0' | '_' | '\'' | '(' | ')' | '{' | '}' | '«' | '»' | '-' | '%' | '[' | ']' | excludes). |
-		"_" ~"_" |
-		"'" ~"'" |
-		"(" ~"(" |
-		")" ~")" |
-		"{" ~"{" |
-		"}" ~"}" |
-		"«" ~"«" |
-		"»" ~"»" |
-		"-" ~"--" |
-		"%" ~"%%";
+		'_' ~'_' |
+		'\'' ~'\'' |
+		'(' ~'(' |
+		')' ~')' |
+		'{' ~'{' |
+		'}' ~'}' |
+		'«' ~'«' |
+		'»' ~'»' |
+		'-' ~"--" |
+		'%' ~"%%";
 
 	// text within a paragraph
 	PText = InlineTextChild(PText, '\0') | PLineEnding;
