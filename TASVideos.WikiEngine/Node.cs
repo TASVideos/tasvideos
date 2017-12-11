@@ -56,7 +56,7 @@ namespace TASVideos.WikiEngine.AST
 	
 	public class Element : INode
 	{
-		private static readonly Regex AllowedTagNames = new Regex("^[a-z]+$");
+		private static readonly Regex AllowedTagNames = new Regex("^[a-z0-9]+$");
 		private static readonly Regex AllowedAttributeNames = new Regex("^[a-z\\-]+$");
 		private static readonly HashSet<string> VoidTags = new HashSet<string>
 		{
