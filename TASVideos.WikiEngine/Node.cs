@@ -56,8 +56,8 @@ namespace TASVideos.WikiEngine.AST
 	
 	public class Element : INode
 	{
-		private static readonly Regex AllowedTagNames = new Regex("[a-z]+");
-		private static readonly Regex AllowedAttributeNames = new Regex("[a-z\\-]+");
+		private static readonly Regex AllowedTagNames = new Regex("^[a-z]+$");
+		private static readonly Regex AllowedAttributeNames = new Regex("^[a-z\\-]+$");
 		private static readonly HashSet<string> VoidTags = new HashSet<string>
 		{
 			"area", "base", "br", "col", "embed", "hr", "img", "input",
@@ -165,23 +165,9 @@ namespace TASVideos.WikiEngine.AST
 		public void WriteHtml(TextWriter w)
 		{
 			// razor stuff
-			w.Write("@if(Html.WikiCondition(\"");
-			foreach (var c in Condition)
-			{
-				if (c < 0x20)
-				{
-					w.Write($"\\x{((int)c).ToString("x2")}");
-				}
-				else if (c == '"')
-				{
-					w.Write("\\\"");
-				}
-				else
-				{
-					w.Write(c);
-				}
-			}
-			w.Write("\")){<text>");
+			w.Write("@if(Html.WikiCondition(");
+			Escape.WriteCSharpString(w, Condition);
+			w.Write(")){<text>");
 			foreach (var c in Children)
 				c.WriteHtml(w);
 			w.Write("</text>}");
