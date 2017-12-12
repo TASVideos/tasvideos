@@ -92,7 +92,7 @@ namespace TASVideos.Controllers
 
 			if (existingPage != null)
 			{
-				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.DbId);
+				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id);
 			}
 
 			return RedirectToAction(nameof(PageNotFound), new { url });
@@ -103,14 +103,12 @@ namespace TASVideos.Controllers
 		{
 			var existingPage = await _wikiTasks.GetPage(path);
 
-			var model = new WikiViewModel
+			if (existingPage != null)
 			{
-				PageName = path,
-				Markup = existingPage?.Markup ?? "This page does not yet exist",
-				DbId = existingPage?.DbId ?? 0
-			};
+				return View(existingPage);
+			}
 
-			return View(model);
+			return RedirectHome();
 		}
     }
 }

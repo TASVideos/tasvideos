@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.SeedData;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -19,45 +16,28 @@ namespace TASVideos.Tasks
 			_db = db;
 		}
 
-		// TODO: document
-		// returns null if a revision of this page is not found
-		public async Task<WikiViewModel> GetPage(string pageName) // TODO: ability to pass in a particular revision of a page
+		/// <summary>
+		/// Returns details about a Wiki page with the given <see cref="pageName" />
+		/// </summary>
+		/// <returns>A model representing the Wiki page if it exists else null</returns>
+		public async Task<WikiPage> GetPage(string pageName) // TODO: ability to pass in a particular revision of a page
 		{
 			pageName = pageName?.Trim('/');
-			var existingPage = await _db.WikiPages
+			return await _db.WikiPages
 				.Where(wp => wp.PageName == pageName)
 				.Where(wp => wp.Child == null)
 				.SingleOrDefaultAsync();
-
-			if (existingPage != null)
-			{
-				return new WikiViewModel
-				{
-					PageName = existingPage.PageName,
-					Markup = existingPage.Markup,
-					DbId = existingPage.Id
-				};
-			}
-
-			return null;
 		}
-		public async Task<WikiViewModel> GetPage(int dbid)
+
+		/// <summary>
+		/// Returns details about a Wiki page with the given id
+		/// </summary>
+		/// <returns>A model representing the Wiki page if it exists else null</returns>
+		public async Task<WikiPage> GetPage(int dbid)
 		{
-			var existingPage = await _db.WikiPages
+			return await _db.WikiPages
 				.Where(wp => wp.Id == dbid)
 				.SingleOrDefaultAsync();
-			
-			if (existingPage != null)
-			{
-				return new WikiViewModel
-				{
-					PageName = existingPage.PageName,
-					Markup = existingPage.Markup,
-					DbId = existingPage.Id
-				};
-			}
-
-			return null;
 		}
 
 		// TODO: document
@@ -85,6 +65,7 @@ namespace TASVideos.Tasks
 			if (currentRevision != null)
 			{
 				currentRevision.Child = newRevision;
+				newRevision.Revision = currentRevision.Revision + 1;
 			}
 
 			await _db.SaveChangesAsync();

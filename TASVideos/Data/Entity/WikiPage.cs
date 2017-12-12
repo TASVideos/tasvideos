@@ -5,7 +5,7 @@
 		public int Id { get; set; }
 		public string PageName { get; set; }
 		public string Markup { get; set; }
-
+		public int Revision { get; set; } = 1;
 
 		public bool MinorEdit { get; set; }
 		public string RevisionMessage { get; set; }
