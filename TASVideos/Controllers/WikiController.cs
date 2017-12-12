@@ -68,6 +68,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		// TODO: perms
 		[HttpPost]
 		public ContentResult GeneratePreview()
 		{
@@ -77,6 +78,7 @@ namespace TASVideos.Controllers
 			return Content(w.ToString(), "text/plain");
 		}
 
+		[AllowAnonymous]
 		public IActionResult PageNotFound(string url)
 		{
 			ViewData["Title"] = url?.Trim('/');
@@ -93,9 +95,10 @@ namespace TASVideos.Controllers
 				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.DbId);
 			}
 
-			return RedirectToAction("PageNotFound", new { url });
+			return RedirectToAction(nameof(PageNotFound), new { url });
 		}
 
+		// TODO: perms
 		public async Task<IActionResult> ViewSource(string path)
 		{
 			var existingPage = await _wikiTasks.GetPage(path);
