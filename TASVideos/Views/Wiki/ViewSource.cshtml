@@ -1,11 +1,15 @@
-@model WikiViewModel
+@model WikiPage
 
 @{
 	ViewData["Title"] = "View Page Source";
 }
 
 <row>
-	<label>This is the current source revision for this page</label>
+	<small>
+		Revision @Model.Revision (current)<br />
+		Last Updated by @(Model.LastUpdateUserName ?? "Unknown") on @Model.LastUpdateTimeStamp
+	</small>
 </row>
 <hr />
 @Model.Markup
+
