@@ -2,20 +2,29 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	WikiPage pageData = (WikiPage)ViewData["WikiPage"];
 }
-<!-- Eventually this will show available translations-->
+<!-- Eventually we will show available translations here-->
+@if (Html.UserCanEditWikiPage(pageData.PageName))
+{
+	<div class="text-right">
+		<a class="btn btn-primary" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
+	</div>
+}
+
 @RenderBody()
 <small>
 	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateUserName
 </small>
 <br />
-
-<a class="btn btn-primary btn-xs" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
-<a class="btn btn-warning btn-xs">Move</a>
-<a class="btn btn-danger btn-xs">Delete</a>
-<a class="btn btn-info btn-xs">Page Info and History</a>
-<a class="btn btn-info btn-xs">Last diff</a>
-<a class="btn btn-info btn-xs">List referrers</a>
-<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@pageData.PageName">View Source</a>
+@if (Html.UserCanEditWikiPage(pageData.PageName))
+{
+	<a class="btn btn-primary btn-xs" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
+	<a class="btn btn-warning btn-xs">Move</a>
+	<a class="btn btn-danger btn-xs">Delete</a>
+	<a class="btn btn-info btn-xs">Page Info and History</a>
+	<a class="btn btn-info btn-xs">Last diff</a>
+	<a class="btn btn-info btn-xs">List referrers</a>
+	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@pageData.PageName">View Source</a>
+}
 
 @section Scripts {
 	<!--TODO put a wiki page js file here-->

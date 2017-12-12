@@ -4,9 +4,9 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Extensions
 {
-    public static class HtmlExtensions
-    {
-		public static bool WikiCondition<TModel>(this IHtmlHelper<TModel> html, string condition)
+	public static class HtmlExtensions
+	{
+		public static bool WikiCondition(this IHtmlHelper html, string condition)
 		{
 			bool result = false;
 
@@ -23,6 +23,7 @@ namespace TASVideos.Extensions
 					{
 						result ^= html.ViewData.UserHasPermission(permission);
 					}
+
 					break;
 
 				case "CanSubmitMovies": // Legacy system: same as UserIsLoggedIn
@@ -42,7 +43,8 @@ namespace TASVideos.Extensions
 					result ^= html.ViewData.UserHasPermission(PermissionTo.EditWikiPages);
 					break;
 				case "UserHasHomepage":
-					result ^= html.ViewContext.HttpContext.User.Identity.IsAuthenticated; // Let's assume every user can have a homepage automatically
+					result ^= html.ViewContext.HttpContext.User.Identity
+						.IsAuthenticated; // Let's assume every user can have a homepage automatically
 					break;
 				case "CanViewSubmissions":
 					result ^= true; // Legacy system always returned true
@@ -57,5 +59,25 @@ namespace TASVideos.Extensions
 
 			return result;
 		}
-    }
+
+		public static bool UserCanEditWikiPage(this IHtmlHelper html, string pageName)
+		{
+			if (string.IsNullOrWhiteSpace(pageName))
+			{
+				return false;
+			}
+
+			if (pageName.StartsWith("GameResources/"))
+			{
+				return html.ViewData.UserHasPermission(PermissionTo.EditGameResources);
+			}
+
+			if (pageName.StartsWith("System/"))
+			{
+				
+			}
+
+			return html.ViewData.UserHasPermission(PermissionTo.EditWikiPages);
+		}
+	}
 }
