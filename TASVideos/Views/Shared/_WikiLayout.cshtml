@@ -4,18 +4,18 @@
 }
 <!-- Eventually this will show available translations-->
 @RenderBody()
-
 <small>
 	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateUserName
-	<br />
-	<a asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>|
-	<a>Move</a>|
-	<a>Delete</a>|
-	<a>Page Info and History</a>|
-	<a>Last diff</a>|
-	<a>List referrers</a>|
-	<a asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@pageData.PageName">View Source</a>
 </small>
+<br />
+
+<a class="btn btn-primary btn-xs" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
+<a class="btn btn-warning btn-xs">Move</a>
+<a class="btn btn-danger btn-xs">Delete</a>
+<a class="btn btn-info btn-xs">Page Info and History</a>
+<a class="btn btn-info btn-xs">Last diff</a>
+<a class="btn btn-info btn-xs">List referrers</a>
+<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@pageData.PageName">View Source</a>
 
 @section Scripts {
 	<!--TODO put a wiki page js file here-->
