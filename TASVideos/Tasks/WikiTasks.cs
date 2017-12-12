@@ -60,18 +60,6 @@ namespace TASVideos.Tasks
 			return null;
 		}
 
-		public async Task<WikiViewModel> GetPageNotFoundPage()
-		{
-			string pageName = WikiPageSeedData.PageNotFound; // TODO: make this a const somewhere
-			var page = await GetPage(pageName);
-			if (page == null)
-			{
-				throw new InvalidOperationException("DRAGONS!");
-			}
-
-			return page;
-		}
-
 		// TODO: document
 		public async Task SavePage(WikiEditModel model)
 		{

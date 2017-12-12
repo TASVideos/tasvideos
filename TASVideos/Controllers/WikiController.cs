@@ -74,11 +74,15 @@ namespace TASVideos.Controllers
 			return Content(w.ToString(), "text/plain");
 		}
 
+		public IActionResult PageNotFound(string url)
+		{
+			ViewData["Title"] = url?.Trim('/');
+			return View();
+		}
+
 		[AllowAnonymous]
 		public async Task<IActionResult> RenderWikiPage(string url)
 		{
-			// TODO: we kind of fetch for the page twice, both here and in the fileprovider
-
 			var existingPage = await _wikiTasks.GetPage(url);
 
 			if (existingPage != null)
@@ -86,9 +90,7 @@ namespace TASVideos.Controllers
 				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.DbId);
 			}
 
-
-			var frontFoundPage = await _wikiTasks.GetPageNotFoundPage();
-			return View(Razor.WikiMarkupFileProvider.Prefix + frontFoundPage.DbId);
+			return RedirectToAction("PageNotFound", new { url });
 		}
 
 		public async Task<IActionResult> ViewSource(string path)
