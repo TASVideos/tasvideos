@@ -27,11 +27,14 @@ namespace TASVideos.Controllers
 
 		public async Task<IActionResult> Edit(string path)
 		{
-			// TODO: can't edit a page without the page, check path is empty and if so...do something
-			// TODO: grab page from db based on path
-			var existingPage = await _wikiTasks.GetPage(path);
+			if (string.IsNullOrWhiteSpace(path))
+			{
+				return RedirectHome();
+			}
 
 			WikiEditModel model;
+			var existingPage = await _wikiTasks.GetPage(path);
+
 			if (existingPage != null)
 			{
 				model = new WikiEditModel
