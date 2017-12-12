@@ -18,14 +18,18 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given <see cref="pageName" />
+		/// If a <see cref="revisionId" /> is provided then that revision of the page will be returned
+		/// Else the latest revision is returned
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		public async Task<WikiPage> GetPage(string pageName) // TODO: ability to pass in a particular revision of a page
+		public async Task<WikiPage> GetPage(string pageName, int? revisionId = null) // TODO: ability to pass in a particular revision of a page
 		{
 			pageName = pageName?.Trim('/');
 			return await _db.WikiPages
 				.Where(wp => wp.PageName == pageName)
-				.Where(wp => wp.Child == null)
+				.Where(wp => revisionId != null
+					? wp.Revision == revisionId
+					: wp.Child == null)
 				.SingleOrDefaultAsync();
 		}
 

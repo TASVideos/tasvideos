@@ -99,9 +99,9 @@ namespace TASVideos.Controllers
 		}
 
 		// TODO: perms
-		public async Task<IActionResult> ViewSource(string path)
+		public async Task<IActionResult> ViewSource(string path, int? revision = null)
 		{
-			var existingPage = await _wikiTasks.GetPage(path);
+			var existingPage = await _wikiTasks.GetPage(path, revision);
 
 			if (existingPage != null)
 			{
