@@ -1,4 +1,7 @@
-﻿@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	WikiPage pageData = (WikiPage)@ViewData["WikiPage"];
+}
 
 <div>
 	<label>This is wiki page specific stuff!!!!!!</label>
@@ -8,9 +11,17 @@
 
 </div>
 
-<div>
-	<label>This is a wiki page specific footer!!!!</label>
-</div>
+<small>
+	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateUserName
+	<br />
+	<a asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>|
+	<a>Move</a>|
+	<a>Delete</a>|
+	<a>Page Info and History</a>|
+	<a>Last diff</a>|
+	<a>List referrers</a>|
+	<a asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@pageData.PageName">View Source</a>
+</small>
 
 @section Scripts {
 	<!--TODO put a wiki page js file here-->

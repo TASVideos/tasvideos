@@ -47,7 +47,8 @@ namespace TASVideos.WikiEngine
 			var result = parser.GetMatch(content, parser.Document);
 			if (result.Success && result.NextIndex == content.Length)
 			{
-				w.Write(@"@{ Layout = ""/Views/Shared/_WikiLayout.cshtml""; ViewData[""Title""] = ");
+				w.WriteLine(@"@model WikiPage");
+				w.Write(@"@{ Layout = ""/Views/Shared/_WikiLayout.cshtml""; ViewData[""WikiPage""] = Model; ViewData[""Title""] = ");
 				Escape.WriteCSharpString(w, pageName);
 				w.Write(";}");
 				foreach (var r in result.Results)
