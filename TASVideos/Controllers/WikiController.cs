@@ -27,6 +27,7 @@ namespace TASVideos.Controllers
 
 		public async Task<IActionResult> Edit(string path)
 		{
+			path = path?.Trim('/');
 			if (string.IsNullOrWhiteSpace(path))
 			{
 				return RedirectHome();
@@ -62,7 +63,7 @@ namespace TASVideos.Controllers
 			if (ModelState.IsValid)
 			{
 				await _wikiTasks.SavePage(model);
-				return Redirect("/" + model.PageName);
+				return Redirect("/" + model.PageName.Trim('/'));
 			}
 
 			return View(model);
