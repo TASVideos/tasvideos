@@ -1,15 +1,9 @@
 ﻿@{
 	Layout = "~/Views/Shared/_Layout.cshtml";
-	WikiPage pageData = (WikiPage)@ViewData["WikiPage"];
+	WikiPage pageData = (WikiPage)ViewData["WikiPage"];
 }
-
-<div>
-	<label>This is wiki page specific stuff!!!!!!</label>
-</div>
+<!-- Eventually this will show available translations-->
 @RenderBody()
-<div>
-
-</div>
 
 <small>
 	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateUserName
