@@ -9,6 +9,10 @@
 		Revision @Model.Revision (current)<br />
 		Last Updated by @(Model.LastUpdateUserName ?? "Unknown") on @Model.LastUpdateTimeStamp
 	</small>
+	
+</row>
+<row>
+	<a href="/@Model.PageName" class="btn btn-default">Back to Page</a>
 </row>
 <hr />
 @Model.Markup
