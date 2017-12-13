@@ -17,7 +17,7 @@ TODO - number of hits
 		@foreach (var revision in Model.Revisions)
 		{
 			<tr>
-				<th><a>@revision.Revision</a></th>
+				<th><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></th>
 				<th>@revision.CreateTimeStamp</th>
 				<th>@revision.CreateUserName</th>
 				<th>@revision.MinorEdit</th>
