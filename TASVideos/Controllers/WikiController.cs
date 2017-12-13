@@ -99,7 +99,7 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(PageNotFound), new { url });
 		}
 
-		// TODO: perms
+		[AllowAnonymous]
 		public async Task<IActionResult> ViewSource(string path, int? revision = null)
 		{
 			var existingPage = await _wikiTasks.GetPage(path, revision);
