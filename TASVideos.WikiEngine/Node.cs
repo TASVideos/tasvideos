@@ -22,6 +22,10 @@ namespace TASVideos.WikiEngine.AST
 		NodeType Type { get; }
 		void WriteHtml(TextWriter w);
 	}
+	public interface INodeWithChildren : INode
+	{
+		List<INode> Children { get; }
+	}
 
 	public class Text : INode
 	{
@@ -54,7 +58,7 @@ namespace TASVideos.WikiEngine.AST
 		}
 	}
 	
-	public class Element : INode
+	public class Element : INodeWithChildren
 	{
 		private static readonly Regex AllowedTagNames = new Regex("^[a-z0-9]+$");
 		private static readonly Regex AllowedAttributeNames = new Regex("^[a-z\\-]+$");
@@ -63,11 +67,9 @@ namespace TASVideos.WikiEngine.AST
 			"area", "base", "br", "col", "embed", "hr", "img", "input",
 			"keygen", "link", "meta", "param", "source", "track", "wbr"
 		};
-		private static readonly IEnumerable<INode> EmptyChildren = new INode[0];
-		private static readonly ReadOnlyDictionary<string, string> EmptyAttributes = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>());
 		public NodeType Type => NodeType.Element;
-		public IEnumerable<INode> Children { get; } = EmptyChildren;
-		public IReadOnlyDictionary<string, string> Attributes { get; } = EmptyAttributes;
+		public List<INode> Children { get; } = new List<INode>();
+		public IDictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
 		public string Tag { get; }
 		public Element(string tag)
 		{
@@ -85,31 +87,27 @@ namespace TASVideos.WikiEngine.AST
 		public Element(string tag, IEnumerable<INode> children)
 			:this(tag)
 		{
-			var tmp = children.ToList().AsReadOnly();
-			if (VoidTags.Contains(tag) && tmp.Count > 0)
-			{
-				throw new InvalidOperationException("Void tag with child content!");
-			}
-			Children = tmp;
+			Children.AddRange(children);
 		}
 		public Element(string tag, IEnumerable<KeyValuePair<string, string>> attributes, IEnumerable<INode> children)
 			:this(tag, children)
 		{
-			foreach (var k in attributes.Select(a => a.Key))
-			{
-				if (!AllowedAttributeNames.IsMatch(k))
-				{
-					throw new InvalidOperationException("Invalid attribute name");
-				}
-			}
-			Attributes = new ReadOnlyDictionary<string, string>(attributes.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+			foreach (var kvp in attributes)
+				Attributes.Add(kvp.Key, kvp.Value);
 		}
 		public void WriteHtml(TextWriter w)
-		{
+		{	if (VoidTags.Contains(Tag) && Children.Count > 0)
+			{
+				throw new InvalidOperationException("Void tag with child content!");
+			}
 			w.Write('<');
 			w.Write(Tag);
 			foreach (var a in Attributes)
 			{
+				if (!AllowedAttributeNames.IsMatch(a.Key))
+				{
+					throw new InvalidOperationException("Invalid attribute name");
+				}
 				w.Write(' ');
 				w.Write(a.Key);
 				w.Write("=\"");
@@ -152,15 +150,19 @@ namespace TASVideos.WikiEngine.AST
 		}
 	}
 
-	public class IfModule : INode
+	public class IfModule : INodeWithChildren
 	{
 		public NodeType Type => NodeType.IfModule;
-		public IEnumerable<INode> Children { get; }
+		public List<INode> Children { get; } = new List<INode>();
 		public string Condition { get; }
-		public IfModule(string condition, IEnumerable<INode> children)
+		public IfModule(string condition)
 		{
 			Condition = condition;
-			Children = children.ToList().AsReadOnly();
+		}
+		public IfModule(string condition, IEnumerable<INode> children)
+			: this(condition)
+		{
+			Children.AddRange(children);
 		}
 		public void WriteHtml(TextWriter w)
 		{
