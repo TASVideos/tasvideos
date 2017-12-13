@@ -1,0 +1,29 @@
+@using System.Linq;
+@model WikiHistoryModel
+
+@{
+	ViewData["Title"] = "Page History For " + Model.PageName;
+}
+TODO - number of hits
+<table class="table table-striped">
+	<tbody>
+		<tr>
+			<th>@Html.DisplayNameFor(m => m.Revisions.First().Revision)</th>
+			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateTimeStamp)</th>
+			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateUserName)</th>
+			<th>@Html.DisplayNameFor(m => m.Revisions.First().MinorEdit)</th>
+			<th>@Html.DisplayNameFor(m => m.Revisions.First().RevisionMessage)</th>
+		</tr>
+		@foreach (var revision in Model.Revisions)
+		{
+			<tr>
+				<th><a>@revision.Revision</a></th>
+				<th>@revision.CreateTimeStamp</th>
+				<th>@revision.CreateUserName</th>
+				<th>@revision.MinorEdit</th>
+				<th>@revision.RevisionMessage</th>
+			</tr>
+		}
+	</tbody>
+</table>
+ 

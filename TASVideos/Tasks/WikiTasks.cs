@@ -74,5 +74,28 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 		}
+
+		// TODO: document
+		public async Task<WikiHistoryModel> GetPageHistory(string pageName)
+		{
+			pageName = pageName.Trim('/');
+
+			return new WikiHistoryModel
+			{
+				PageName = pageName,
+				Revisions = await _db.WikiPages
+					.Where(wp => wp.PageName == pageName)
+					.OrderBy(wp => wp.Revision)
+					.Select(wp => new WikiHistoryModel.WikiRevisionModel
+					{
+						Revision = wp.Revision,
+						CreateTimeStamp = wp.CreateTimeStamp,
+						CreateUserName = wp.CreateUserName,
+						MinorEdit = wp.MinorEdit,
+						RevisionMessage = wp.RevisionMessage
+					})
+					.ToListAsync()
+			};
+		}
 	}
 }
