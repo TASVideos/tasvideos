@@ -21,7 +21,7 @@
 	<a class="btn btn-warning btn-xs">Move</a>
 	<a class="btn btn-danger btn-xs">Delete</a>
 }
-<a class="btn btn-info btn-xs">Page Info and History</a>
+<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@pageData.PageName">Page Info and History</a>
 <a class="btn btn-info btn-xs">Last diff</a>
 <a class="btn btn-info btn-xs">List referrers</a>
 <a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@pageData.PageName">View Source</a>

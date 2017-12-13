@@ -111,5 +111,12 @@ namespace TASVideos.Controllers
 
 			return RedirectHome();
 		}
-    }
+
+		[AllowAnonymous]
+		public async Task<IActionResult> PageHistory(string path)
+		{
+			var model = await _wikiTasks.GetPageHistory(path);
+			return View(model);
+		}
+	}
 }
