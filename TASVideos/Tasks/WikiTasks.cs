@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -42,6 +43,15 @@ namespace TASVideos.Tasks
 			return await _db.WikiPages
 				.Where(wp => wp.Id == dbid)
 				.SingleOrDefaultAsync();
+		}
+
+		/// <summary>
+		/// Returns whether or not any revision of the given page exists
+		/// </summary>
+		public async Task<bool> PageExists(string pageName)
+		{
+			return await _db.WikiPages
+				.AnyAsync(wp => wp.PageName == pageName);
 		}
 
 		// TODO: document
@@ -96,6 +106,21 @@ namespace TASVideos.Tasks
 					})
 					.ToListAsync()
 			};
+		}
+
+		// TODO: document
+		public async Task MovePage(WikiMoveModel model)
+		{
+			var existingRevisions = await _db.WikiPages
+				.Where(wp => wp.PageName == model.OriginalPageName)
+				.ToListAsync();
+
+			foreach (var revision in existingRevisions)
+			{
+				revision.PageName = model.DestinationPageName;
+			}
+
+			await _db.SaveChangesAsync();
 		}
 	}
 }

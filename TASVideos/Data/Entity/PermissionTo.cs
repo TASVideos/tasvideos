@@ -64,5 +64,15 @@ namespace TASVideos.Data.Entity
 		[Group("Queue Management")]
 		[Description("The ability to publish movies")]
 		PublishMovies = 11,
+
+		[Display(Name = "Movie Wiki Pages")]
+		[Group("Editing")]
+		[Description("The ability to movie a wiki page to another location")]
+		MoveWikiPages = 12,
+
+		[Display(Name = "Delete Wiki Pages")]
+		[Group("Editing")]
+		[Description("The ability to delete a wiki page")]
+		DeleteWikiPages = 13
 	}
 }
