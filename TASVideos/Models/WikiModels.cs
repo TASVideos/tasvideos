@@ -43,4 +43,13 @@ namespace TASVideos.Models
 			public string RevisionMessage { get; set; }
 		}
 	}
+
+	public class WikiMoveModel
+	{
+		public string OriginalPageName { get; set; }
+
+		[Required]
+		[Display(Name = "Destination Page Name")]
+		public string DestinationPageName { get; set; }
+	}
 }

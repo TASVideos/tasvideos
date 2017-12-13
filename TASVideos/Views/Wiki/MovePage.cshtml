@@ -1,0 +1,34 @@
+@model WikiMoveModel
+
+@{
+	ViewData["Title"] = $"Moving: {Model.OriginalPageName}";
+}
+
+
+
+
+<form asp-action="MovePage">
+	<input type="hidden" asp-for="OriginalPageName"/>
+	<row>
+		<div class="col-md-6">
+			<form-group>
+				<label class="control-label">Original Name</label>
+				<label class="form-control">@Model.OriginalPageName</label>
+			</form-group>
+			<form-group>
+				<label asp-for="DestinationPageName" class="control-label"></label>
+				<input type="text" asp-for="DestinationPageName" class="form-control"/>
+				<span asp-validation-for="DestinationPageName" class="text-danger"></span>
+			</form-group>
+			<div class="text-center">
+				<button type="submit" class="btn btn-primary">Move</button>
+				<a href="/@Model.OriginalPageName" class="btn btn-default">Cancel</a>
+			</div>
+		</div>
+	</row>
+	
+</form>
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}

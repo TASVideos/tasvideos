@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Data.Entity;
+using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
 using TASVideos.WikiEngine;
@@ -116,6 +115,46 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> PageHistory(string path)
 		{
 			var model = await _wikiTasks.GetPageHistory(path);
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.MoveWikiPages)]
+		public async Task<IActionResult> MovePage(string path)
+		{
+			if (!string.IsNullOrWhiteSpace(path))
+			{
+				path = path.Trim('/');
+				if (await _wikiTasks.PageExists(path))
+				{
+					return View(new WikiMoveModel
+					{
+						OriginalPageName = path,
+						DestinationPageName = path
+					});
+				}
+			}
+
+			return RedirectHome();
+		}
+
+		[HttpPost]
+		[RequirePermission(PermissionTo.MoveWikiPages)]
+		public async Task<IActionResult> MovePage(WikiMoveModel model)
+		{
+			model.OriginalPageName = model.OriginalPageName.Trim('/');
+			model.DestinationPageName = model.DestinationPageName.Trim('/');
+
+			if (await _wikiTasks.PageExists(model.DestinationPageName))
+			{
+				ModelState.AddModelError(nameof(WikiMoveModel.DestinationPageName), "The destination page already exists.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				await _wikiTasks.MovePage(model);
+				return Redirect("/" + model.DestinationPageName);
+			}
+
 			return View(model);
 		}
 	}
