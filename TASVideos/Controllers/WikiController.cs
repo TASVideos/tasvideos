@@ -87,9 +87,9 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> RenderWikiPage(string url)
+		public async Task<IActionResult> RenderWikiPage(string url, int? revision = null)
 		{
-			var existingPage = await _wikiTasks.GetPage(url);
+			var existingPage = await _wikiTasks.GetPage(url, revision);
 
 			if (existingPage != null)
 			{
