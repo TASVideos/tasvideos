@@ -134,5 +134,15 @@ namespace TASVideos.Tasks
 				.Select(wp => wp.PageName)
 				.ToListAsync();
 		}
+
+		// TODO: document
+		// Gets all pages that refer to the given page
+		public async Task<IEnumerable<WikiPageReferral>> GetReferrers(string pageName)
+		{
+			pageName = pageName.Trim('/');
+			return await _db.WikiReferrals
+				.Where(wr => wr.Referral == pageName)
+				.ToListAsync();
+		}
 	}
 }
