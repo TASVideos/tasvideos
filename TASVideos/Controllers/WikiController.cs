@@ -157,5 +157,20 @@ namespace TASVideos.Controllers
 
 			return View(model);
 		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Referrers(string path)
+		{
+			if (!string.IsNullOrWhiteSpace(path))
+			{
+				path = path.Trim('/');
+				var referrers = await _wikiTasks.GetReferrers(path);
+				ViewData["PageName"] = path;
+
+				return View(referrers);
+			}
+
+			return RedirectHome();
+		}
 	}
 }
