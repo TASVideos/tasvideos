@@ -32,25 +32,13 @@ namespace TASVideos.Controllers
 				return RedirectHome();
 			}
 
-			WikiEditModel model;
 			var existingPage = await _wikiTasks.GetPage(path);
 
-			if (existingPage != null)
+			var model = new WikiEditModel
 			{
-				model = new WikiEditModel
-				{
-					PageName = path,
-					Markup = existingPage.Markup
-				};
-			}
-			else
-			{
-				model = new WikiEditModel
-				{
-					PageName = path,
-					Markup = ""
-				};
-			}
+				PageName = path,
+				Markup = existingPage?.Markup ?? ""
+			};
 
 			return View(model);
 		}
