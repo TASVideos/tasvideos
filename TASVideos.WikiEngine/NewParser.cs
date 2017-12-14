@@ -211,6 +211,14 @@ namespace TASVideos.WikiEngine
 			else
 				_output.Add(n);
 		}
+		private void AddNonChild(IEnumerable<INode> n)
+		{
+			FinishText();
+			if (_stack.Count > 0)
+				_stack[_stack.Count - 1].Children.AddRange(n);
+			else
+				_output.AddRange(n);			
+		}
 		private void ClearBlockTags()
 		{
 			// any block level tag that isn't explicitly closed in markup
@@ -296,7 +304,7 @@ namespace TASVideos.WikiEngine
 			}
 			else if (Eat('['))
 			{
-				AddNonChild(new Module(EatToBracket()));
+				AddNonChild(Builtins.MakeModule(EatToBracket()));
 			}
 			else if (In("dt") && Eat(':'))
 			{
@@ -586,10 +594,28 @@ namespace TASVideos.WikiEngine
 			FinishText();
 		}
 
+		private static void ReplaceTabs(List<INode> n)
+		{
+			for (var i = 0; i < n.Count; i++)
+			{
+				var e = n[i];
+				if (e.Type == NodeType.Element)
+				{
+					var tag = ((Element)e).Tag;
+					if (tag == "htabs" || tag == "vtabs")
+						n[i] = Builtins.MakeTabs((Element)e);
+				}
+				var cc = n[i] as INodeWithChildren;
+				if (cc != null)
+					ReplaceTabs(cc.Children);
+			}
+		}
+
 		public static List<INode> Parse(string content)
 		{
 			var p = new NewParser { _input = content };
 			p.ParseLoop();
+			ReplaceTabs(p._output);
 			return p._output;
 		}
 	}
