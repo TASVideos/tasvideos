@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity
+﻿using System.Linq;
+
+namespace TASVideos.Data.Entity
 {
 	public class WikiPage : BaseEntity
 	{
@@ -11,5 +13,13 @@
 		public string RevisionMessage { get; set; }
 
 		public virtual WikiPage Child { get; set; } // The latest revision of a page is one with Child = null
+	}
+
+	public static class ActiveQueryableExtensions
+	{
+		public static IQueryable<WikiPage> ThatAreCurrentRevisions(this IQueryable<WikiPage> list)
+		{
+			return list.Where(wp => wp.Child == null);
+		}
 	}
 }

@@ -10,6 +10,8 @@
 	</div>
 }
 
+@await Component.InvokeAsync(nameof(ListSubpages), pageData.PageName)
+
 @RenderBody()
 <small>
 	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateUserName
