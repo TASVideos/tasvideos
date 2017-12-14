@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -121,6 +121,18 @@ namespace TASVideos.Tasks
 			}
 
 			await _db.SaveChangesAsync();
+		}
+
+		// TODO: document
+		public async Task<IEnumerable<string>> GetSubPages(string pageName)
+		{
+			pageName = pageName.Trim('/');
+			return await _db.WikiPages
+				.ThatAreCurrentRevisions()
+				.Where(wp => wp.PageName != pageName)
+				.Where(wp => wp.PageName.StartsWith(pageName))
+				.Select(wp => wp.PageName)
+				.ToListAsync();
 		}
 	}
 }

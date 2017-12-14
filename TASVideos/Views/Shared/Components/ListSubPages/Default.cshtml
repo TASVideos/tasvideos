@@ -1,0 +1,15 @@
+﻿@model IEnumerable<string>
+
+<div condition="@(!Model.Any())">
+	<label>No Subpages</label>
+</div>
+
+<div Condition="@Model.Any()">
+	<label>Subpages:</label>
+	<ul>
+		@foreach (var pageName in Model)
+		{
+			<li><a href="/@pageName">@pageName</a></li>
+		}
+	</ul>
+</div>
