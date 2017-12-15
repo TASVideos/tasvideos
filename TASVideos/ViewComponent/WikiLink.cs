@@ -8,7 +8,7 @@ namespace TASVideos.ViewComponents
 		public IViewComponentResult Invoke(WikiPage pageData, string pp)
 		{
 
-			string[] split = pp?.Split('|') ?? new[] { "", "" };
+			string[] split = pp.Split('|') ?? new[] { "", "" };
 			var model = new WikiLinkModel
 			{
 				Href = split[0].Trim('/'),
