@@ -8,9 +8,11 @@
 	<div class="text-right">
 		<a class="btn btn-primary" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
 	</div>
+	<hr />
 }
 
 @RenderBody()
+<hr />
 <small>
 	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateUserName
 </small>
