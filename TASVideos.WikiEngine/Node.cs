@@ -180,7 +180,8 @@ namespace TASVideos.WikiEngine.AST
 	{
 		private static readonly Dictionary<string, string> ModuleNameMaps = new Dictionary<string, string>
 		{
-			["listsubpages"] = "ListSubpages"
+			["listsubpages"] = "ListSubpages",
+			["__wikiLink"] = "WikiLink"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
