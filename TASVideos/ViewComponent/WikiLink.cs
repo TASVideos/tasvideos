@@ -11,7 +11,10 @@ namespace TASVideos.ViewComponents
 			string[] split = pp.Split('|') ?? new[] { "", "" };
 			var model = new WikiLinkModel
 			{
-				Href = split[0].Trim('/'),
+				Href = split[0]
+					.Trim('/')
+					.Replace(" ", "")
+					.Replace(".html", ""),
 				DisplayText = split.Length > 1 ? split[1] : split[0]
 			};
 
