@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -43,6 +44,11 @@ namespace TASVideos.WikiEngine
 
 			foreach (var r in results)
 				r.WriteHtml(w);
+		}
+
+		public static IEnumerable<string> GetAllWikiLinks(string content)
+		{
+			return NewParser.GetAllWikiLinks(content);
 		}
 	}
 }
