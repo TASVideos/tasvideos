@@ -8,57 +8,42 @@ namespace TASVideos.WikiEngine
 	{
 		public static string DebugParseWikiPage(string content)
 		{
-			var parser = new Wiki();
-			var result = parser.GetMatch(content, parser.Document);
-			var ret = "";
-			var r = result.Results; //TopLevelPasses.MergeDefinitions(result.Results);
-			ret += JsonConvert.SerializeObject(r, Formatting.Indented);
-			if (result.Success && result.NextIndex == content.Length)
+			try
 			{
+				var results = NewParser.Parse(content);
+				return JsonConvert.SerializeObject(results, Formatting.Indented);
 			}
-			else
+			catch (NewParser.SyntaxException e)
 			{
-				ret += JsonConvert.SerializeObject(new
+				return JsonConvert.SerializeObject(new
 				{
-					Error = result.Error,
-					ErrorIndex = result.ErrorIndex
-				});
+					Error = e.Message
+				}, Formatting.Indented);
 			}
-			return ret;
 		}
 		public static void DebugWriteHtml(string content, TextWriter w)
 		{
-			var parser = new Wiki();
-			var result = parser.GetMatch(content, parser.Document);
-			foreach (var r in result.Results)
-				r.WriteHtml(w);
-			if (result.Success && result.NextIndex == content.Length)
+			try
 			{
+				var results = NewParser.Parse(content);
+				foreach (var r in results)
+					r.WriteHtml(w);
 			}
-			else
+			catch (NewParser.SyntaxException e)
 			{
-				w.Write($"<!-- ERROR {result.Error} @{result.ErrorIndex} -->");
+				w.Write($"<!-- ERROR {e.Message} -->");
 			}
 		}
 
 		public static void RenderRazor(string pageName, string content, TextWriter w)
 		{
-			var parser = new Wiki();
-			var result = parser.GetMatch(content, parser.Document);
-			if (result.Success && result.NextIndex == content.Length)
-			{
-				w.WriteLine(@"@model WikiPage");
-				w.Write(@"@{ Layout = ""/Views/Shared/_WikiLayout.cshtml""; ViewData[""WikiPage""] = Model; ViewData[""Title""] = ");
-				Escape.WriteCSharpString(w, pageName);
-				w.Write(";}");
-				foreach (var r in result.Results)
-					r.WriteHtml(w);
-			}
-			else
-			{
-				throw new InvalidOperationException("Parse error at index " + result.ErrorIndex);
-			}
+			var results = NewParser.Parse(content);
+			w.WriteLine(@"@model WikiPage");
+			w.Write(@"@{ Layout = ""/Views/Shared/_WikiLayout.cshtml""; ViewData[""WikiPage""] = Model; ViewData[""Title""] = ");
+			Escape.WriteCSharpString(w, pageName);
+			w.Write(";}");
+			foreach (var r in results)
+				r.WriteHtml(w);
 		}
 	}
 }
-
