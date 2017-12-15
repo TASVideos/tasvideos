@@ -80,6 +80,8 @@ namespace TASVideos.Controllers
 
 			if (existingPage != null)
 			{
+				ViewData["WikiPage"] = existingPage;
+				ViewData["Title"] = existingPage.PageName;
 				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 
