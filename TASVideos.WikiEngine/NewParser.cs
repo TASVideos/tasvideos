@@ -611,6 +611,33 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
+		private static List<string> GetAllWikiLinks(List<INode> n)
+		{
+			// TODO: if we get more of these, make some general purpose Visit stuff
+			var ret = new List<string>();
+			for (var i = 0; i < n.Count; i++)
+			{
+				var e = n[i];
+				if (e.Type == NodeType.Module)
+				{
+					var text = ((Module)e).Text;
+					if (text.StartsWith("__wikiLink|"))
+						ret.Add(text.Substring(11));
+				}
+				var cc = n[i] as INodeWithChildren;
+				if (cc != null)
+					ret.AddRange(GetAllWikiLinks(cc.Children));
+			}
+			return ret;
+		}
+
+		public static List<string> GetAllWikiLinks(string content)
+		{
+			var p = new NewParser { _input = content };
+			p.ParseLoop();
+			return GetAllWikiLinks(p._output);
+		}
+
 		public static List<INode> Parse(string content)
 		{
 			var p = new NewParser { _input = content };
