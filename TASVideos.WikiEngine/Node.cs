@@ -178,6 +178,10 @@ namespace TASVideos.WikiEngine.AST
 
 	public class Module : INode
 	{
+		private static readonly Dictionary<string, string> ModuleNameMaps = new Dictionary<string, string>
+		{
+			["listsubpages"] = "ListSubpages"
+		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
 		public Module(string text)
@@ -186,7 +190,24 @@ namespace TASVideos.WikiEngine.AST
 		}
 		public void WriteHtml(TextWriter w)
 		{
-			w.Write("<!-- TODO MODULE TAG -->");
+			var pp = Text.Split(new[] { '|' }, 2);
+			var moduleName = pp[0];
+			var moduleParams = pp.Length > 1 ? pp[1] : "";
+			if (ModuleNameMaps.TryGetValue(moduleName, out string realModuleName))
+			{
+				w.Write("@await Component.InvokeAsync(");
+				Escape.WriteCSharpString(w, realModuleName);
+				w.Write(", new { pageData = Model, pp = ");
+				Escape.WriteCSharpString(w, moduleParams);
+				w.Write(" })");
+			}
+			else
+			{
+				var div = new Element("div");
+				div.Children.Add(new Text("Unknown module " + moduleName));
+				div.Attributes["class"] = "module-error";
+				div.WriteHtml(w);
+			}
 		}
 	}
 }
