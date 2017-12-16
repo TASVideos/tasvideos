@@ -4,13 +4,21 @@
 }
 
 <a class="btn btn-default" href="/@ViewData["PageName"]">Back to Page</a>
+<br />
+<br />
+<label>Referrers (@Model.Count() Total)</label>
 <hr />
-<label>These pages link to @ViewData["PageName"]</label>
+
 <div>
-	<ul>
-		@foreach (var referral in Model)
-		{
-			<li>@referral.Referrer <br /> @referral.Excerpt</li>
-		}
-	</ul>
+	@foreach (var referral in Model)
+	{
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<a href="/@referral.Referrer">@referral.Referrer</a>
+			</div>
+			<div class="panel-body">
+				<i>@referral.Excerpt</i>
+			</div>
+		</div>
+	}
 </div>

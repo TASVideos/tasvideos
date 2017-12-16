@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -27,6 +28,7 @@ namespace TASVideos.Controllers
 
 		public async Task<IActionResult> Edit(string path)
 		{
+			path = path?.Trim('/');
 			if (! WikiHelper.IsValidWikiPageName(path))
 			{
 				return RedirectHome();
@@ -49,6 +51,13 @@ namespace TASVideos.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				model.Referrals = Util.GetAllWikiLinks(model.Markup)
+					.Select(l => new WikiReferralModel
+					{
+						Link = l,
+						Excerpt = "TODO we need an except here"
+					});
+
 				await _wikiTasks.SavePage(model);
 				return Redirect("/" + model.PageName.Trim('/'));
 			}

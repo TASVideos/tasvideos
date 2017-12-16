@@ -7,7 +7,7 @@ namespace TASVideos.Models
 	public class WikiEditModel
 	{
 		[Required]
-		[ValidWikiPageNameAttribute]
+		[ValidWikiPageName]
 		public string PageName { get; set; }
 
 		[Required]
@@ -19,6 +19,8 @@ namespace TASVideos.Models
 		[Required] // Yeah, I did that
 		[Display(Name = "Edit Comments")]
 		public string RevisionMessage { get; set; }
+
+		public IEnumerable<WikiReferralModel> Referrals { get; set; } = new List<WikiReferralModel>();
 	}
 
 	public class WikiHistoryModel
@@ -52,5 +54,11 @@ namespace TASVideos.Models
 		[Required]
 		[Display(Name = "Destination Page Name")]
 		public string DestinationPageName { get; set; }
+	}
+
+	public class WikiReferralModel
+	{
+		public string Link { get; set; }
+		public string Excerpt { get; set; }
 	}
 }
