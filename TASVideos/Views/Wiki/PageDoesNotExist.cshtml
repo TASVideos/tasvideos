@@ -11,7 +11,7 @@ Want to create it?
 	@*TODO: nuanced permission checks based on page*@
 	@if (User.Identity.IsAuthenticated && ViewData.UserHasPermission(PermissionTo.EditWikiPages))
 	{
-		<li>Click here to <a asp-controller="Wiki" asp-action="Edit" asp-route-path="/@ViewData["Title"]">edit this page</a></li>
+		<li>Click here to <a asp-controller="Wiki" asp-action="Edit" asp-route-path="@ViewData["Title"]">edit this page</a></li>
 		<li>Write the page content, and click Save to create the page.</li>
 	}
 </ul>
