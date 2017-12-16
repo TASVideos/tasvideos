@@ -8,6 +8,8 @@
 <table class="table table-striped">
 	<tbody>
 		<tr>
+			<th>From</th>
+			<th>To</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().Revision)</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateTimeStamp)</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateUserName)</th>
@@ -17,13 +19,101 @@
 		@foreach (var revision in Model.Revisions)
 		{
 			<tr>
-				<th><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></th>
-				<th>@revision.CreateTimeStamp</th>
-				<th>@revision.CreateUserName</th>
-				<th>@revision.MinorEdit</th>
-				<th>@revision.RevisionMessage</th>
+				<td><input name="from-compare" type="radio" value="@revision.Revision" class="comp-radio" /></td>
+				<td><input name="to-compare" type="radio" value="@revision.Revision" class="comp-radio" /></td>
+				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
+				<td>@revision.CreateTimeStamp</td>
+				<td>@revision.CreateUserName</td>
+				<td>@revision.MinorEdit</td>
+				<td>@revision.RevisionMessage</td>
 			</tr>
 		}
 	</tbody>
 </table>
- 
+<button id="compare" disabled="disabled" class="btn btn-default">Compare</button>
+<hr />
+
+<input type="hidden" id="left-revision" />
+<input type="hidden" id="right-revision" />
+<div id="diff-view" class="hide">
+
+</div>
+
+<script>
+	(function () {
+		var compBtn = document.getElementById("compare");
+		var diffView = document.getElementById("diff-view");
+		var leftRevision = document.getElementById("left-revision");
+		var rightRevision = document.getElementById("right-revision");
+
+		compBtn.onclick = function () {
+			var fromRevision = document.querySelector('[name="from-compare"]:checked').value;
+			var toRevision = document.querySelector('[name="to-compare"]:checked').value;
+			var baseUrl = '@Url.Action(nameof(WikiController.DiffData), "Wiki")';
+			var path = '@Model.PageName';
+			var ajaxUrl = baseUrl + '?path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
+
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					diffView.classList.remove("hide");
+					if (xmlhttp.status === 200) {
+						var data = JSON.parse(xmlhttp.responseText);
+						leftRevision.value = data.leftMarkup;
+						rightRevision.value = data.rightMarkup;
+						diffUsingJS(1);
+					}
+				}
+			};
+
+			xmlhttp.open("GET", ajaxUrl, true);
+			xmlhttp.send();
+		}
+
+		function diffUsingJS(viewType) {
+			var base = difflib.stringAsLines(leftRevision.value),
+				newtxt = difflib.stringAsLines(rightRevision.value),
+				sm = new difflib.SequenceMatcher(base, newtxt),
+				opcodes = sm.get_opcodes(),
+				diffoutputdiv = diffView,
+				contextSize = null;
+
+			diffoutputdiv.innerHTML = "";
+			contextSize = contextSize || null;
+
+			diffoutputdiv.appendChild(diffview.buildView({
+				baseTextLines: base,
+				newTextLines: newtxt,
+				opcodes: opcodes,
+				baseTextName: "Base Text",
+				newTextName: "New Text",
+				contextSize: contextSize,
+				viewType: viewType
+			}));
+		}
+
+		document.querySelectorAll('.comp-radio')
+			.toArray()
+			.forEach(function (elem) {
+				elem.addEventListener('click', compareChanged)
+			})
+
+		function compareChanged() {
+			var from = document.querySelector('[name="from-compare"]:checked');
+			var to = document.querySelector('[name="to-compare"]:checked');
+
+			canCompare = from !== null && to !== null && from.value !== to.value;
+			if (canCompare) {
+				compBtn.removeAttribute('disabled');
+			} else {
+				compBtn.setAttribute('disabled', 'disabled');
+			}
+		}
+	})();
+</script>
+
+@section Scripts {
+	<script src="~/js/difflib.js"></script>
+	<script src="~/js/diffview.js"></script>
+	<link rel="stylesheet" href="~/css/diffview.css" />
+}
