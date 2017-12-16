@@ -1,0 +1,56 @@
+@model WikiDiffModel
+
+@{
+	ViewData["Title"] = $"{Model.PageName} - Diff r{Model.LeftRevision} - r{Model.RightRevision}";
+}
+
+<input type="hidden" asp-for="LeftMarkup" rows="8" class="form-control" />
+<input type="hidden" asp-for="RightMarkup" rows="8" class="form-control" />
+
+<row>
+	<button class="btn btn-default" onclick="diffUsingJS(1)">Inline diff</button>
+	<button class="btn btn-default" onclick="diffUsingJS(0)">Side by Side diff</button>
+</row>
+
+<row>
+	<label>Diff</label>
+	<div id="ResultMarkup" class="col-xs-12"></div>
+</row>
+
+
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function (event) {
+		diffUsingJS(1)
+	});
+
+	function diffUsingJS(viewType) {
+		"use strict";
+		var byId = function (id) { return document.getElementById(id); },
+			base = difflib.stringAsLines(byId("LeftMarkup").value),
+			newtxt = difflib.stringAsLines(byId("RightMarkup").value),
+			sm = new difflib.SequenceMatcher(base, newtxt),
+			opcodes = sm.get_opcodes(),
+			diffoutputdiv = byId("ResultMarkup"),
+			contextSize = null;
+
+		diffoutputdiv.innerHTML = "";
+		contextSize = contextSize || null;
+
+		diffoutputdiv.appendChild(diffview.buildView({
+			baseTextLines: base,
+			newTextLines: newtxt,
+			opcodes: opcodes,
+			baseTextName: "Base Text",
+			newTextName: "New Text",
+			contextSize: contextSize,
+			viewType: viewType
+		}));
+	}
+
+</script>
+
+@section Scripts {
+	<script src="~/js/difflib.js"></script>
+	<script src="~/js/diffview.js"></script>
+	<link rel="stylesheet" href="~/css/diffview.css"/>
+}
