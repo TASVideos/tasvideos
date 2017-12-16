@@ -51,16 +51,14 @@ namespace TASVideos.Tasks
 		public async Task<bool> PageExists(string pageName)
 		{
 			return await _db.WikiPages
+
+
 				.AnyAsync(wp => wp.PageName == pageName);
 		}
 
 		// TODO: document
 		public async Task SavePage(WikiEditModel model)
 		{
-			model.PageName = model.PageName.Trim('/');
-
-			// TODO: check if the user is allowed to make a page like this,
-			// Mainly check that it doesn't hit existing controller names
 			var newRevision = new WikiPage
 			{
 				PageName = model.PageName,
@@ -80,6 +78,23 @@ namespace TASVideos.Tasks
 			{
 				currentRevision.Child = newRevision;
 				newRevision.Revision = currentRevision.Revision + 1;
+			}
+
+			// Update Referrerals for this page
+			var existingReferrals = await _db.WikiReferrals
+				.Where(wr => wr.Referrer == model.PageName)
+				.ToListAsync();
+
+			_db.WikiReferrals.RemoveRange(existingReferrals);
+
+			foreach (var newReferral in model.Referrals)
+			{
+				_db.WikiReferrals.Add(new WikiPageReferral
+				{
+					Referrer = model.PageName,
+					Referral = newReferral.Link,
+					Excerpt = newReferral.Excerpt
+				});
 			}
 
 			await _db.SaveChangesAsync();
