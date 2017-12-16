@@ -15,5 +15,5 @@
 	<a href="/@Model.PageName" class="btn btn-default">Back to Page</a>
 </row>
 <hr />
-@Model.Markup
+@Html.Raw(Model.Markup.Replace("\n", "<br />"))
 
