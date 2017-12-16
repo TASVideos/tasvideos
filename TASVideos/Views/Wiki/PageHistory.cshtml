@@ -8,8 +8,7 @@
 <table class="table table-striped">
 	<tbody>
 		<tr>
-			<th>From</th>
-			<th>To</th>
+			<th>Diff</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().Revision)</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateTimeStamp)</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateUserName)</th>
@@ -19,8 +18,7 @@
 		@foreach (var revision in Model.Revisions)
 		{
 			<tr>
-				<td><input name="from-compare" type="radio" value="@revision.Revision" class="comp-radio" /></td>
-				<td><input name="to-compare" type="radio" value="@revision.Revision" class="comp-radio" /></td>
+				<td><input name="compare" type="radio" value="@revision.Revision" class="comp-radio" /></td>
 				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
 				<td>@revision.CreateTimeStamp</td>
 				<td>@revision.CreateUserName</td>
@@ -30,7 +28,7 @@
 		}
 	</tbody>
 </table>
-<button id="compare" disabled="disabled" class="btn btn-default">Compare</button>
+<button id="compare" disabled="disabled" class="btn btn-default">Get Diff</button>
 <hr />
 
 <input type="hidden" id="left-revision" />
@@ -47,8 +45,9 @@
 		var rightRevision = document.getElementById("right-revision");
 
 		compBtn.onclick = function () {
-			var fromRevision = document.querySelector('[name="from-compare"]:checked').value;
-			var toRevision = document.querySelector('[name="to-compare"]:checked').value;
+			var toRevision = parseInt(document.querySelector('[name="compare"]:checked').value);
+			var fromRevision = toRevision - 1;
+			
 			var baseUrl = '@Url.Action(nameof(WikiController.DiffData), "Wiki")';
 			var path = '@Model.PageName';
 			var ajaxUrl = baseUrl + '?path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
@@ -99,11 +98,8 @@
 			})
 
 		function compareChanged() {
-			var from = document.querySelector('[name="from-compare"]:checked');
-			var to = document.querySelector('[name="to-compare"]:checked');
-
-			canCompare = from !== null && to !== null && from.value !== to.value;
-			if (canCompare) {
+			var compare = document.querySelector('[name="compare"]:checked');
+			if (compare !== null) {
 				compBtn.removeAttribute('disabled');
 			} else {
 				compBtn.setAttribute('disabled', 'disabled');
