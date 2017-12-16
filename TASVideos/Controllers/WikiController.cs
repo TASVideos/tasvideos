@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -26,8 +27,7 @@ namespace TASVideos.Controllers
 
 		public async Task<IActionResult> Edit(string path)
 		{
-			path = path?.Trim('/');
-			if (string.IsNullOrWhiteSpace(path))
+			if (! WikiHelper.IsValidWikiPageName(path))
 			{
 				return RedirectHome();
 			}
@@ -67,7 +67,14 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public IActionResult PageNotFound(string url)
+		public IActionResult PageNotFound(string possibleUrl)
+		{
+			ViewData["possibleUrl"] = possibleUrl;
+			return View();
+		}
+
+		[AllowAnonymous]
+		public IActionResult PageDoesNotExist(string url)
 		{
 			ViewData["Title"] = url?.Trim('/');
 			return View();
@@ -76,6 +83,12 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> RenderWikiPage(string url, int? revision = null)
 		{
+			url = url.Trim('/');
+			if (!WikiHelper.IsValidWikiPageName(url))
+			{
+				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.TryConvertToValidPageName(url) });
+			}
+
 			var existingPage = await _wikiTasks.GetPage(url, revision);
 
 			if (existingPage != null)
@@ -85,7 +98,7 @@ namespace TASVideos.Controllers
 				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 
-			return RedirectToAction(nameof(PageNotFound), new { url });
+			return RedirectToAction(nameof(PageDoesNotExist), new { url });
 		}
 
 		[AllowAnonymous]
