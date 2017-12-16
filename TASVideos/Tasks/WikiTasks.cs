@@ -178,6 +178,7 @@ namespace TASVideos.Tasks
 			{
 				return new WikiDiffModel
 				{
+					PageName = pageName,
 					LeftRevision = 0,
 					LeftMarkup = "",
 					RightRevision = 1,
@@ -187,6 +188,7 @@ namespace TASVideos.Tasks
 			
 			return new WikiDiffModel
 			{
+				PageName = pageName,
 				LeftRevision = revisions[1].Revision,
 				LeftMarkup = revisions[1].Markup,
 				RightRevision = revisions[0].Revision,
@@ -202,7 +204,7 @@ namespace TASVideos.Tasks
 					|| wp.Revision == toRevision)
 				.ToListAsync();
 
-			if (revisions.Count != 2)
+			if (fromRevision > 0 && revisions.Count != 2)
 			{
 				throw new InvalidOperationException($"Page \"{pageName}\" or revisions {fromRevision}-{toRevision} could not be found");
 			}
@@ -212,7 +214,7 @@ namespace TASVideos.Tasks
 				PageName = pageName,
 				LeftRevision = fromRevision,
 				RightRevision = toRevision,
-				LeftMarkup = revisions.Single(wp => wp.Revision == fromRevision).Markup,
+				LeftMarkup = fromRevision > 0 ? revisions.Single(wp => wp.Revision == fromRevision).Markup : "",
 				RightMarkup = revisions.Single(wp => wp.Revision == toRevision).Markup
 			};
 		}
