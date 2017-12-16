@@ -184,5 +184,17 @@ namespace TASVideos.Controllers
 
 			return RedirectHome();
 		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Diff(string path, int? fromRevision, int? toRevision)
+		{
+			path = path.Trim('/');
+
+			var model = fromRevision.HasValue && toRevision.HasValue
+				? await _wikiTasks.GetPageDiff(path, fromRevision.Value, toRevision.Value)
+				: await _wikiTasks.GetLatestPageDiff(path);
+
+			return View(model);
+		}
 	}
 }

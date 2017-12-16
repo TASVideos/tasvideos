@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -158,6 +159,62 @@ namespace TASVideos.Tasks
 			return await _db.WikiReferrals
 				.Where(wr => wr.Referral == pageName)
 				.ToListAsync();
+		}
+
+		public async Task<WikiDiffModel> GetLatestPageDiff(string pageName)
+		{
+			var revisions = await _db.WikiPages
+				.Where(wp => wp.PageName == pageName)
+				.OrderByDescending(wp => wp.Revision)
+				.Take(2)
+				.ToListAsync();
+
+			if (!revisions.Any())
+			{
+				throw new InvalidOperationException($"Page \"{pageName}\" could not be found");
+			}
+
+			if (revisions.Count == 1) // Must have only 1 revision
+			{
+				return new WikiDiffModel
+				{
+					LeftRevision = 0,
+					LeftMarkup = "",
+					RightRevision = 1,
+					RightMarkup = revisions.First().Markup
+				};
+			}
+			
+			return new WikiDiffModel
+			{
+				LeftRevision = revisions[1].Revision,
+				LeftMarkup = revisions[1].Markup,
+				RightRevision = revisions[0].Revision,
+				RightMarkup = revisions[0].Markup
+			};
+		}
+
+		public async Task<WikiDiffModel> GetPageDiff(string pageName, int fromRevision, int toRevision)
+		{
+			var revisions = await _db.WikiPages
+				.Where(wp => wp.PageName == pageName)
+				.Where(wp => wp.Revision == fromRevision
+					|| wp.Revision == toRevision)
+				.ToListAsync();
+
+			if (revisions.Count != 2)
+			{
+				throw new InvalidOperationException($"Page \"{pageName}\" or revisions {fromRevision}-{toRevision} could not be found");
+			}
+
+			return new WikiDiffModel
+			{
+				PageName = pageName,
+				LeftRevision = fromRevision,
+				RightRevision = toRevision,
+				LeftMarkup = revisions.Single(wp => wp.Revision == fromRevision).Markup,
+				RightMarkup = revisions.Single(wp => wp.Revision == toRevision).Markup
+			};
 		}
 	}
 }
