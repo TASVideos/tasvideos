@@ -197,12 +197,10 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> DiffData(string path, int fromRevision, int toRevision)
 		{
-			path = path.Trim('/');
-
-			var data = await _wikiTasks.GetPageDiff(path, fromRevision, toRevision);
-
+			var data = await _wikiTasks.GetPageDiff(path.Trim('/'), fromRevision, toRevision);
 			return Json(data);
 		}
 	}

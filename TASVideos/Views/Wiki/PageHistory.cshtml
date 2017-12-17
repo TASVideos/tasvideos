@@ -8,104 +8,87 @@
 <table class="table table-striped">
 	<tbody>
 		<tr>
-			<th>Diff</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().Revision)</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateTimeStamp)</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateUserName)</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().MinorEdit)</th>
 			<th>@Html.DisplayNameFor(m => m.Revisions.First().RevisionMessage)</th>
+			<th>Actions</th>
 		</tr>
 		@foreach (var revision in Model.Revisions)
 		{
 			<tr>
-				<td><input name="compare" type="radio" value="@revision.Revision" class="comp-radio" /></td>
 				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
 				<td>@revision.CreateTimeStamp</td>
 				<td>@revision.CreateUserName</td>
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
+				<td><button class="btn btn-primary" onclick="GetDiff(@revision.Revision)">Diff</button></td>
 			</tr>
 		}
 	</tbody>
 </table>
-<button id="compare" disabled="disabled" class="btn btn-default">Get Diff</button>
 <hr />
 
 <input type="hidden" id="left-revision" />
 <input type="hidden" id="right-revision" />
+<row id="diff-options" class="hide">
+	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff(1)" /> Inline</label>
+	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff(0)" /> Side by Side</label>
+</row>
 <div id="diff-view" class="hide">
 
 </div>
 
 <script>
-	(function () {
-		var compBtn = document.getElementById("compare");
-		var diffView = document.getElementById("diff-view");
-		var leftRevision = document.getElementById("left-revision");
-		var rightRevision = document.getElementById("right-revision");
+	var fromRevision, toRevision;
 
-		compBtn.onclick = function () {
-			var toRevision = parseInt(document.querySelector('[name="compare"]:checked').value);
-			var fromRevision = toRevision - 1;
-			
-			var baseUrl = '@Url.Action(nameof(WikiController.DiffData), "Wiki")';
-			var path = '@Model.PageName';
-			var ajaxUrl = baseUrl + '?path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
+	function GetDiff(revision) {
+		var baseUrl = '@Url.Action(nameof(WikiController.DiffData), "Wiki")';
+		var path = '@Model.PageName';
+		var ajaxUrl = baseUrl + '?path=' + path + '&fromRevision=' + (revision - 1) + '&toRevision=' + revision;
 
-			var xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-					diffView.classList.remove("hide");
-					if (xmlhttp.status === 200) {
-						var data = JSON.parse(xmlhttp.responseText);
-						leftRevision.value = data.leftMarkup;
-						rightRevision.value = data.rightMarkup;
-						diffUsingJS(1);
-					}
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+				document.getElementById("diff-view").classList.remove("hide");
+				document.getElementById("diff-options").classList.remove("hide");
+				if (xmlhttp.status === 200) {
+					var data = JSON.parse(xmlhttp.responseText);
+					document.getElementById("left-revision").value = data.leftMarkup;
+					document.getElementById("right-revision").value = data.rightMarkup;
+					fromRevision = revision - 1;
+					toRevision = revision;
+					generateDiff(1);
 				}
-			};
-
-			xmlhttp.open("GET", ajaxUrl, true);
-			xmlhttp.send();
-		}
-
-		function diffUsingJS(viewType) {
-			var base = difflib.stringAsLines(leftRevision.value),
-				newtxt = difflib.stringAsLines(rightRevision.value),
-				sm = new difflib.SequenceMatcher(base, newtxt),
-				opcodes = sm.get_opcodes(),
-				diffoutputdiv = diffView,
-				contextSize = null;
-
-			diffoutputdiv.innerHTML = "";
-			contextSize = contextSize || null;
-
-			diffoutputdiv.appendChild(diffview.buildView({
-				baseTextLines: base,
-				newTextLines: newtxt,
-				opcodes: opcodes,
-				baseTextName: "Base Text",
-				newTextName: "New Text",
-				contextSize: contextSize,
-				viewType: viewType
-			}));
-		}
-
-		document.querySelectorAll('.comp-radio')
-			.toArray()
-			.forEach(function (elem) {
-				elem.addEventListener('click', compareChanged)
-			})
-
-		function compareChanged() {
-			var compare = document.querySelector('[name="compare"]:checked');
-			if (compare !== null) {
-				compBtn.removeAttribute('disabled');
-			} else {
-				compBtn.setAttribute('disabled', 'disabled');
 			}
-		}
-	})();
+		};
+
+		xmlhttp.open("GET", ajaxUrl, true);
+		xmlhttp.send();
+	}
+
+	function generateDiff(viewType) {
+		var diffView = document.getElementById("diff-view");
+		var base = difflib.stringAsLines(document.getElementById("left-revision").value),
+			newtxt = difflib.stringAsLines(document.getElementById("right-revision").value),
+			opcodes = new difflib.SequenceMatcher(base, newtxt).get_opcodes(),
+			diffoutputdiv = diffView,
+			contextSize = null;
+
+		diffoutputdiv.innerHTML = "";
+		contextSize = contextSize || null;
+
+		diffoutputdiv.appendChild(diffview.buildView({
+			baseTextLines: base,
+			newTextLines: newtxt,
+			opcodes: opcodes,
+			baseTextName: "r" + fromRevision,
+			newTextName: "r" + toRevision,
+			contextSize: contextSize,
+			viewType: viewType
+		}));
+	}
 </script>
 
 @section Scripts {
