@@ -61,7 +61,7 @@ These are non-existing pages that are linked to:
 If you want to help with wiki pages, you will need to be an [EditorGuidelines|editor].  If you have a project in mind, contact [Users|an admin assistant or site admin] with details and you will probably be granted editor access.
 
 !! Various page TODOs
-* Many pages which [=ref.exe?page=TODO|refer] to this TODO page have changes which the editors feel could be made. Be aware that some pages (such as [ArticleIndex]) link to TODO but not for this reason.
+* Many pages which [=Wiki/Referrers?path=TODO|refer] to this TODO page have changes which the editors feel could be made. Be aware that some pages (such as [ArticleIndex]) link to TODO but not for this reason.
 
 !! Adopt the orphans
 * Pages with no links to them, as well as non-existent pages linked from somewhere are found in [Wiki Orphans]; links to these pages should be added elsewhere.  This is an ongoing problem.  It is HIGHLY encouraged that all staff & editors participate in keeping these Orphans fixed.
@@ -183,7 +183,7 @@ Turns into:
 ;Term to be defined: Your explanations appears here.
 ;TAS: A tool-assisted speedrun.
 
-Hint: See the [=wiki.exe?page=TextFormattingRules&mode=source|source code] of this page to see how the markup works.
+Hint: See the [=Wiki/ViewSource?path=TextFormattingRules|source code] of this page to see how the markup works.
 
 
 !! Headings
@@ -282,7 +282,7 @@ __Linking to other internal pages__
 
 To link to any other page that does not have a {{.html} } in the URL,
 take the URL and replace “!http://tasvideos.org/” with “=”%%%
-e.g. [[= movies.cgi ? name = Mega + Man + X]], [[=ref.exe?page=TODO]], [[=forum/]]
+e.g. [[= movies.cgi ? name = Mega + Man + X]], [[=Wiki/Referrers?path=TODO]], [[=forum/]]
 
 * __Footnotes__: create links to footnotes with[[#1]] or any other number (i.e. square brackets + hash + number), and precede the footnote itself with [[1]] (i.e. square brackets + number). Example: [#1]
 
