@@ -4,20 +4,48 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Data.SeedData
 {
-    public class RoleSeedData
+	public class RoleSeedData
 	{
-		private static readonly PermissionTo[] EditorRoles =
+		private static readonly PermissionTo[] EditorPermissions =
 		{
 			PermissionTo.EditWikiPages,
 			PermissionTo.EditGameResources
 		};
 
-		private static readonly PermissionTo[] SeniorEditorRoles = EditorRoles.Concat(new[]
+		private static readonly PermissionTo[] SeniorEditorPermissions = EditorPermissions.Concat(new[]
 		{
 			PermissionTo.EditSystemPages,
 			PermissionTo.EditUsers,
 			PermissionTo.AssignRoles
 		}).ToArray();
+
+		public static readonly Role EditHomePage = new Role
+		{
+			Name = "Edit Home Page",
+			Description = "Contains the EditHomePage permission that allows users to edit their personal homepage. All users have this role by default.",
+			RolePermission = new[]
+			{
+				new RolePermission
+				{
+					Role = EditHomePage,
+					PermissionId = PermissionTo.EditHomePage
+				}
+			}
+		};
+
+		public static readonly Role SubmitMovies = new Role
+		{
+			Name = "Submit Movies",
+			Description = "Contains the SubmitMovies permission that allows users to submit movies. All users have this role by default.",
+			RolePermission = new[]
+			{
+				new RolePermission
+				{
+					Role = EditHomePage,
+					PermissionId = PermissionTo.SubmitMovies
+				}
+			}
+		};
 
 		public static readonly Role AdminRole = new Role
 		{
@@ -40,7 +68,7 @@ namespace TASVideos.Data.SeedData
 			{
 				Name = "Editor",
 				Description = "This is a wiki editor that can edit basic wiki pages",
-				RolePermission = EditorRoles.Select(p => new RolePermission
+				RolePermission = EditorPermissions.Select(p => new RolePermission
 				{
 					RoleId = 2,
 					PermissionId = p
@@ -50,11 +78,11 @@ namespace TASVideos.Data.SeedData
 			{
 				Name = "Senior Editor",
 				Description = "This is a wiki editor that can edit any wiki page, including system pages",
-				RolePermission = SeniorEditorRoles.Select(p => new RolePermission
+				RolePermission = SeniorEditorPermissions.Select(p => new RolePermission
 				{
 					RoleId = 3, // Meh, for lack of a better way
 					PermissionId = p,
-					CanAssign = EditorRoles.Contains(p)
+					CanAssign = EditorPermissions.Contains(p)
 				}).ToArray()
 			}
 		};

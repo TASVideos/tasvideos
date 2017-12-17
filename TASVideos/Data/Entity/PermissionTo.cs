@@ -73,6 +73,16 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Delete Wiki Pages")]
 		[Group("Editing")]
 		[Description("The ability to delete a wiki page")]
-		DeleteWikiPages = 13
+		DeleteWikiPages = 13,
+
+		[Display(Name = "Edit Home Page")]
+		[Group("User")]
+		[Description("The ability to edit a personal homepage. By default, all registered users have this permission, unless revoked.")]
+		EditHomePage = 14,
+
+		[Display(Name = "Submit Movies")]
+		[Group("User")]
+		[Description("The ability to submit a movie to be considered for publication. By default, all registered users have this permission, unless revoked.")]
+		SubmitMovies = 15
 	}
 }

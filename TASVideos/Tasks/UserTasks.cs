@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.SeedData;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -238,6 +239,31 @@ namespace TASVideos.Tasks
 		{
 			var user = await _db.Users.SingleAsync(u => u.UserName == userName);
 			user.LastLoggedInTimeStamp = DateTime.UtcNow;
+			await _db.SaveChangesAsync();
+		}
+
+		/// <summary>
+		/// Adds standard roles to the given user, these are roles all user's should start with
+		/// </summary>
+		public async Task AddStandardRolesToUser(int userId)
+		{
+			var user = await _db.Users.SingleAsync(u => u.Id == userId);
+			var roles = await _db.Roles
+				.Where(r => r.Name == RoleSeedData.EditHomePage.Name
+					|| r.Name == RoleSeedData.SubmitMovies.Name)
+				.ToListAsync();
+
+			foreach (var role in roles)
+			{
+				var userRole = new UserRole
+				{
+					UserId = user.Id,
+					RoleId = role.Id
+				};
+				_db.UserRoles.Add(userRole);
+				user.UserRoles.Add(userRole);
+			}
+
 			await _db.SaveChangesAsync();
 		}
 
