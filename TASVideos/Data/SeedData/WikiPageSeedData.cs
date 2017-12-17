@@ -9,6 +9,19 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "HomePages",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"[TODO]: make this page nicer
+This is a list of homepages for various users.
+
+All users, by default, have the ability to create and edit their homepage.  Log in, and navigate to HomePages/[[your username]] and click the edit button.
+----
+[module:listsubpages]
+"
+			},
+			new WikiPage
+			{
 				PageName = "Wiki",
 				RevisionMessage = InitialCreate,
 				Markup =
