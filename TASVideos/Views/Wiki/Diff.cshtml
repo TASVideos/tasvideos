@@ -8,45 +8,51 @@
 <input type="hidden" asp-for="RightMarkup" rows="8" class="form-control" />
 
 <row>
-	<button class="btn btn-default" onclick="diffUsingJS(1)">Inline diff</button>
-	<button class="btn btn-default" onclick="diffUsingJS(0)">Side by Side diff</button>
+	<label><input name="diff-type" type="radio" value="1" checked="checked" /> Inline</label>
+	<label><input name="diff-type" type="radio" value="0" /> Side by Side</label>
 </row>
-
+<hr />
 <row>
-	<label>Diff</label>
-	<div id="ResultMarkup" class="col-xs-12"></div>
+	<div id="ResultMarkup"></div>
 </row>
-
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function (event) {
 		diffUsingJS(1)
 	});
 
+	document.querySelectorAll('[name="diff-type"]')
+		.toArray()
+		.forEach(function (elem) {
+			elem.addEventListener('click', onRadioChange);
+		});
+
+	function onRadioChange(e) {
+		var type = document.querySelector('[name="diff-type"]:checked').value;
+		diffUsingJS(parseInt(type));
+	}
+
 	function diffUsingJS(viewType) {
-		"use strict";
-		var byId = function (id) { return document.getElementById(id); },
-			base = difflib.stringAsLines(byId("LeftMarkup").value),
-			newtxt = difflib.stringAsLines(byId("RightMarkup").value),
-			sm = new difflib.SequenceMatcher(base, newtxt),
-			opcodes = sm.get_opcodes(),
-			diffoutputdiv = byId("ResultMarkup"),
-			contextSize = null;
+		var leftMarkup = document.getElementById('LeftMarkup').value;
+		var rightMarkup = document.getElementById('RightMarkup').value;
+		var diffElem = document.getElementById('ResultMarkup');
 
-		diffoutputdiv.innerHTML = "";
-		contextSize = contextSize || null;
+		var base = difflib.stringAsLines(leftMarkup);
+		var newtxt = difflib.stringAsLines(rightMarkup);
+		var opcodes = new difflib.SequenceMatcher(base, newtxt).get_opcodes();
 
-		diffoutputdiv.appendChild(diffview.buildView({
+		diffElem.innerHTML = "";
+
+		diffElem.appendChild(diffview.buildView({
 			baseTextLines: base,
 			newTextLines: newtxt,
 			opcodes: opcodes,
-			baseTextName: "Base Text",
-			newTextName: "New Text",
-			contextSize: contextSize,
+			baseTextName:  "r@(Model.LeftRevision)",
+			newTextName: "r@(Model.RightRevision)",
+			contextSize: null,
 			viewType: viewType
 		}));
 	}
-
 </script>
 
 @section Scripts {
