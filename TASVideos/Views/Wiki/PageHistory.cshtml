@@ -59,7 +59,7 @@
 					document.getElementById("right-revision").value = data.rightMarkup;
 					fromRevision = revision - 1;
 					toRevision = revision;
-					generateDiff(1);
+					generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
 				}
 			}
 		};
