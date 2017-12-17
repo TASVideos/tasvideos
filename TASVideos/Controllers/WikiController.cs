@@ -47,6 +47,7 @@ namespace TASVideos.Controllers
 
 		// TODO: perms
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(WikiEditModel model)
 		{
 			if (ModelState.IsValid)

@@ -127,6 +127,9 @@ namespace TASVideos.Controllers
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					_logger.LogInformation("User created a new account with password.");
+
+					await _userTasks.AddStandardRolesToUser(user.Id);
+
 					return RedirectToLocal(returnUrl);
 				}
 

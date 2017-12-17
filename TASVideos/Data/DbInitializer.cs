@@ -23,11 +23,15 @@ namespace TASVideos.Data
 			context.Database.EnsureCreated();
 
 			context.Roles.Add(RoleSeedData.AdminRole);
+			context.Roles.Add(RoleSeedData.SubmitMovies);
+			context.Roles.Add(RoleSeedData.EditHomePage);
 			context.Roles.AddRange(RoleSeedData.Roles);
 
 			// Make micro roles with 1 permission, for each permission
 			// These are useful for giving people 1-off permissions
-			foreach (var permission in Enum.GetValues(typeof(PermissionTo)).Cast<PermissionTo>())
+			foreach (var permission in Enum.GetValues(typeof(PermissionTo))
+				.Cast<PermissionTo>()
+				.Where(p => p != PermissionTo.EditHomePage && p != PermissionTo.SubmitMovies)) // These roles already exist
 			{
 				var role = new Role
 				{
@@ -85,7 +89,8 @@ namespace TASVideos.Data
 				var savedUser = context.Users.Single(u => u.UserName == user.UserName);
 				savedUser.EmailConfirmed = true;
 
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Roles.AtRandom(), User = savedUser });
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.SubmitMovies, User = savedUser });
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.EditHomePage, User = savedUser });
 			}
 
 			// Create lots of throw away users to test things like paging
@@ -103,11 +108,8 @@ namespace TASVideos.Data
 
 				await userManager.CreateAsync(dummyUser, UserSampleData.SamplePassword);
 
-				if (SampleGenerator.RandomBool())
-				{
-					var role = roles.AtRandom();
-					context.UserRoles.Add(new UserRole { Role = role, User = dummyUser });
-				}
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.SubmitMovies, User = dummyUser });
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.EditHomePage, User = dummyUser });
 			}
 
 			await context.SaveChangesAsync();
