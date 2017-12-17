@@ -90,10 +90,11 @@ namespace TASVideos.Tasks
 
 			foreach (var newReferral in model.Referrals)
 			{
+
 				_db.WikiReferrals.Add(new WikiPageReferral
 				{
 					Referrer = model.PageName,
-					Referral = newReferral.Link,
+					Referral = newReferral.Link?.Split('|').FirstOrDefault(),
 					Excerpt = newReferral.Excerpt
 				});
 			}
@@ -222,7 +223,6 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a list of all <see cref="WikiPage"/> records that at not linked by another page
 		/// </summary>
-		/// <returns></returns>
 		public async Task<IEnumerable<WikiOrphanModel>> GetAllOrphans()
 		{
 			return await _db.WikiPages
@@ -234,6 +234,16 @@ namespace TASVideos.Tasks
 					LastUpdateTimeStamp = wp.LastUpdateTimeStamp,
 					LastUpdateUserName = wp.LastUpdateUserName ?? wp.CreateUserName
 				})
+				.ToListAsync();
+		}
+
+		/// <summary>
+		/// Returns a list of all <see cref="WikiPageReferral"/> records that do not link to any existing page
+		/// </summary>
+		public async Task<IEnumerable<WikiPageReferral>> GetAllBrokenLinks()
+		{
+			return await _db.WikiReferrals
+				.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
 				.ToListAsync();
 		}
 	}
