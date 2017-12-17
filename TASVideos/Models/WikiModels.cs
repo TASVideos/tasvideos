@@ -72,4 +72,11 @@ namespace TASVideos.Models
 		public int RightRevision { get; set; }
 		public string RightMarkup { get; set; }
 	}
+
+	public class WikiOrphanModel
+	{
+		public string PageName { get; set; }
+		public DateTime LastUpdateTimeStamp { get; set; }
+		public string LastUpdateUserName { get; set; }
+	}
 }

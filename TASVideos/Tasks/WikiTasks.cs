@@ -218,5 +218,23 @@ namespace TASVideos.Tasks
 				RightMarkup = revisions.Single(wp => wp.Revision == toRevision).Markup
 			};
 		}
+
+		/// <summary>
+		/// Returns a list of all <see cref="WikiPage"/> records that at not linked by another page
+		/// </summary>
+		/// <returns></returns>
+		public async Task<IEnumerable<WikiOrphanModel>> GetAllOrphans()
+		{
+			return await _db.WikiPages
+				.ThatAreCurrentRevisions()
+				.Where(wp => !_db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
+				.Select(wp => new WikiOrphanModel
+				{
+					PageName = wp.PageName,
+					LastUpdateTimeStamp = wp.LastUpdateTimeStamp,
+					LastUpdateUserName = wp.LastUpdateUserName ?? wp.CreateUserName
+				})
+				.ToListAsync();
+		}
 	}
 }

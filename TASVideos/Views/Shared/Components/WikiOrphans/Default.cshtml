@@ -1,0 +1,19 @@
+﻿@model IEnumerable<WikiOrphanModel>
+
+<table class="table table-striped">
+	<tbody>
+		<tr>
+			<th>Last Modified</th>
+			<th>Page</th>
+			<th>Last Author</th>
+		</tr>
+		@foreach (var orphan in Model)
+		{
+			<tr>
+				<td>@orphan.LastUpdateTimeStamp</td>
+				<td><a href="/@orphan.PageName">@orphan.PageName</a></td>
+				<td>@orphan.LastUpdateUserName</td>
+			</tr>
+		}
+	</tbody>
+</table>
