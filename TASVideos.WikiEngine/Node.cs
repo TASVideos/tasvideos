@@ -182,7 +182,8 @@ namespace TASVideos.WikiEngine.AST
 		{
 			["listsubpages"] = "ListSubpages",
 			["__wikiLink"] = "WikiLink",
-			["WikiOrphans"] = "WikiOrphans"
+			["WikiOrphans"] = "WikiOrphans",
+			["BrokenLinks"] = "BrokenLinks"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
