@@ -18,7 +18,7 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function (event) {
-		diffUsingJS(1)
+		generateDiff(1)
 	});
 
 	document.querySelectorAll('[name="diff-type"]')
@@ -29,10 +29,10 @@
 
 	function onRadioChange(e) {
 		var type = document.querySelector('[name="diff-type"]:checked').value;
-		diffUsingJS(parseInt(type));
+		generateDiff(parseInt(type));
 	}
 
-	function diffUsingJS(viewType) {
+	function generateDiff(viewType) {
 		var leftMarkup = document.getElementById('LeftMarkup').value;
 		var rightMarkup = document.getElementById('RightMarkup').value;
 		var diffElem = document.getElementById('ResultMarkup');
