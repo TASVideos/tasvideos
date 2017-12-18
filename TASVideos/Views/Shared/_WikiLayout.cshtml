@@ -1,9 +1,10 @@
 ﻿@{
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	WikiPage pageData = (WikiPage)ViewData["WikiPage"];
+	bool canEdit = WikiHelper.UserCanEditWikiPage(pageData.PageName, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
 <!-- Eventually we will show available translations here-->
-@if (Html.UserCanEditWikiPage(pageData.PageName))
+@if (canEdit)
 {
 	<div class="text-right">
 		<a class="btn btn-primary" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
@@ -14,10 +15,10 @@
 @RenderBody()
 <hr />
 <small>
-	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateUserName
+	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateTimeStamp
 </small>
 <br />
-@if (Html.UserCanEditWikiPage(pageData.PageName))
+@if (canEdit)
 {
 	<a class="btn btn-primary btn-xs" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
 	<a class="btn btn-warning btn-xs" asp-controller="Wiki" asp-action="MovePage" asp-route-path="@pageData.PageName">Move</a>

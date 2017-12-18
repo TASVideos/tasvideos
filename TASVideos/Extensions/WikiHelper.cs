@@ -1,10 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Extensions
 {
 	public static class WikiHelper
 	{
+		public static bool UserCanEditWikiPage(string pageName, string userName, IEnumerable<PermissionTo> userPermissions)
+		{
+			if (userPermissions == null)
+			{
+				throw new ArgumentNullException($"{nameof(userPermissions)} can not be null");
+			}
+
+			if (string.IsNullOrWhiteSpace(pageName) || string.IsNullOrWhiteSpace(userName))
+			{
+				return false;
+			}
+
+			// TODO: this is a lot more complex that this current code, if use only has EditSystemPages for instance, they can also edit non-system pages
+			// Check username and homepage permission in case it is a user homepage
+
+			if (pageName.StartsWith("GameResources/"))
+			{
+				return userPermissions.Contains(PermissionTo.EditGameResources);
+			}
+
+			if (pageName.StartsWith("System/"))
+			{
+				return userPermissions.Contains(PermissionTo.EditSystemPages);
+			}
+
+			return userPermissions.Contains(PermissionTo.EditWikiPages);
+		}
+
 		public static bool IsValidWikiPageName(string pageName)
 		{
 			return !string.IsNullOrWhiteSpace(pageName)

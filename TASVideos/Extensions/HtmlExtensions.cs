@@ -59,25 +59,5 @@ namespace TASVideos.Extensions
 
 			return result;
 		}
-
-		public static bool UserCanEditWikiPage(this IHtmlHelper html, string pageName)
-		{
-			if (string.IsNullOrWhiteSpace(pageName))
-			{
-				return false;
-			}
-
-			if (pageName.StartsWith("GameResources/"))
-			{
-				return html.ViewData.UserHasPermission(PermissionTo.EditGameResources);
-			}
-
-			if (pageName.StartsWith("System/"))
-			{
-				
-			}
-
-			return html.ViewData.UserHasPermission(PermissionTo.EditWikiPages);
-		}
 	}
 }
