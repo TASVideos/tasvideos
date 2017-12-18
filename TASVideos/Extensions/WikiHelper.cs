@@ -21,6 +21,7 @@ namespace TASVideos.Extensions
 				return false;
 			}
 
+			pageName = pageName.Trim('/');
 			// TODO: this is a lot more complex that this current code, if use only has EditSystemPages for instance, they can also edit non-system pages
 			// Check username and homepage permission in case it is a user homepage
 

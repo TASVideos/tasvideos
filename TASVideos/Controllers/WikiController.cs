@@ -26,6 +26,7 @@ namespace TASVideos.Controllers
 			_wikiTasks = wikiTasks;
 		}
 
+		[RequireEdit]
 		public async Task<IActionResult> Edit(string path)
 		{
 			path = path?.Trim('/');
@@ -45,7 +46,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		// TODO: perms
+		[RequireEdit]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(WikiEditModel model)
@@ -66,7 +67,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		// TODO: perms
+		[RequireEdit]
 		[HttpPost]
 		public ContentResult GeneratePreview()
 		{
