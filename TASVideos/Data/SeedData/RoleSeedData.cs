@@ -16,7 +16,8 @@ namespace TASVideos.Data.SeedData
 		{
 			PermissionTo.EditSystemPages,
 			PermissionTo.EditUsers,
-			PermissionTo.AssignRoles
+			PermissionTo.AssignRoles,
+			PermissionTo.MoveWikiPages
 		}).ToArray();
 
 		public static readonly Role EditHomePage = new Role
