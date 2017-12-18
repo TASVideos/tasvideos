@@ -1,19 +1,19 @@
+@{ bool canEdit = WikiHelper.UserCanEditWikiPage((string)ViewData["Title"], User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]); }
 <h2>This page does not yet exist.</h2>
 <br />
 Want to create it?
 <br />
 <ul>
-	@if (!User.Identity.IsAuthenticated)
+	@if (!User.Identity.IsAuthenticated || !canEdit)
 	{
 		<li>If you are an editor or have rights to edit this page, <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="@("/" + ViewData["Title"])">log in</a> to edit the page.</li>
 		<li>If you are not an editor, become an <a asp-action="Index" asp-controller="Roles">editor!</a></li>
 	}
-	@*TODO: nuanced permission checks based on page*@
-	@if (User.Identity.IsAuthenticated && ViewData.UserHasPermission(PermissionTo.EditWikiPages))
+
+	@if (User.Identity.IsAuthenticated && canEdit)
 	{
 		<li>Click here to <a asp-controller="Wiki" asp-action="Edit" asp-route-path="@ViewData["Title"]">edit this page</a></li>
 		<li>Write the page content, and click Save to create the page.</li>
 	}
 </ul>
-
 When creating new pages, always ensure that there is some other page that links to the newly created page. Otherwise your page will just become a <a asp-controller="WikiOrphans" asp-action="Index">wiki orphan</a> that will be quickly forgotten.
