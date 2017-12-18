@@ -42,7 +42,7 @@ namespace TASVideos.Filter
 
 			if (!userClaimsPrincipal.Identity.IsAuthenticated)
 			{
-				context.Result = ReRouteToLogin(context.HttpContext.Request.Path);
+				context.Result = ReRouteToLogin(context.HttpContext.Request.Path + context.HttpContext.Request.QueryString);
 				return;
 			}
 
