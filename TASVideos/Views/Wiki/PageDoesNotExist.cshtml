@@ -4,10 +4,13 @@
 Want to create it?
 <br />
 <ul>
-	@if (!User.Identity.IsAuthenticated || !canEdit)
+	@if (!User.Identity.IsAuthenticated)
 	{
 		<li>If you are an editor or have rights to edit this page, <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="@("/" + ViewData["Title"])">log in</a> to edit the page.</li>
-		<li>If you are not an editor, become an <a asp-action="Index" asp-controller="Roles">editor!</a></li>
+	}
+	else if (!canEdit)
+	{
+		<li>You do not currently have permissions to create this page. If you are not an editor, become an <a asp-action="Index" asp-controller="Roles">editor!</a></li>
 	}
 
 	@if (User.Identity.IsAuthenticated && canEdit)
