@@ -22,8 +22,6 @@ namespace TASVideos.Extensions
 			}
 
 			pageName = pageName.Trim('/');
-			// TODO: this is a lot more complex that this current code, if use only has EditSystemPages for instance, they can also edit non-system pages
-			// Check username and homepage permission in case it is a user homepage
 
 			if (pageName.StartsWith("GameResources/"))
 			{
@@ -33,6 +31,17 @@ namespace TASVideos.Extensions
 			if (pageName.StartsWith("System/"))
 			{
 				return userPermissions.Contains(PermissionTo.EditSystemPages);
+			}
+
+			if (pageName.StartsWith("Homepages/"))
+			{
+				// A home page is defiend as Homepages/[UserName]
+				// If a user can exploit this fact to create an exploit
+				// then we should first reconsider rules about allowed patterns of usernames and what defines a valid wiki page
+				// before deciding to nuke this feature
+				var homepage = pageName.Split("Homepages/")[1];
+				return homepage == userName
+					&& userPermissions.Contains(PermissionTo.EditHomePage);
 			}
 
 			return userPermissions.Contains(PermissionTo.EditWikiPages);
