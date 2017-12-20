@@ -40,7 +40,7 @@ namespace TASVideos.WikiEngine
 		{
 			var results = NewParser.Parse(content);
 			w.WriteLine(@"@model WikiPage");
-			w.Write(@"@{ Layout = ""/Views/Shared/_WikiLayout.cshtml""; }");
+			w.Write(@"@{ Layout = (string)ViewData[""Layout""]; }");
 
 			foreach (var r in results)
 				r.WriteHtml(w);

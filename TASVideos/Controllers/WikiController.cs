@@ -40,6 +40,7 @@ namespace TASVideos.Controllers
 			{
 				ViewData["WikiPage"] = existingPage;
 				ViewData["Title"] = existingPage.PageName;
+				ViewData["Layout"] = "/Views/Shared/_WikiLayout.cshtml";
 				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 
