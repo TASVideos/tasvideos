@@ -193,5 +193,10 @@ namespace TASVideos.Controllers
 
 			return RedirectToAction(nameof(SetPassword));
 		}
+
+		public IActionResult HomePage()
+		{
+			return View();
+		}
 	}
 }
