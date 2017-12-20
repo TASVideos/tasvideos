@@ -1135,8 +1135,7 @@ That is, do not use them.
 				PageName = "System/WikiEditHelp",
 				RevisionMessage = InitialCreate,
 				Markup =
-@"Refer to the [TextFormattingRules] for markup and formatting help.
-
+@"Refer to the [TextFormattingRules] for markup and formatting help.%%%
 Make sure all edits conform to the [EditorGuidelines]"
 			}
 		};
