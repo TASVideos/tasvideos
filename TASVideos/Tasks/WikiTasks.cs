@@ -24,7 +24,7 @@ namespace TASVideos.Tasks
 		/// Else the latest revision is returned
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		public async Task<WikiPage> GetPage(string pageName, int? revisionId = null) // TODO: ability to pass in a particular revision of a page
+		public async Task<WikiPage> GetPage(string pageName, int? revisionId = null)
 		{
 			pageName = pageName?.Trim('/');
 			return await _db.WikiPages
@@ -52,12 +52,16 @@ namespace TASVideos.Tasks
 		public async Task<bool> PageExists(string pageName)
 		{
 			return await _db.WikiPages
-
-
 				.AnyAsync(wp => wp.PageName == pageName);
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Creates a new <see cref="WikiPage"/> with the given data
+		/// If the given page already exists this will be a new page set at revision 1
+		/// If it is an existing page it will be a new revision of that page that
+		/// will be considered to be the latest revision of this page
+		/// <seealso cref="WikiPageReferral"/> entries are also updated
+		/// </summary>
 		public async Task SavePage(WikiEditModel model)
 		{
 			var newRevision = new WikiPage
@@ -102,7 +106,10 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns a revision history for the <see cref="WikiPage"/>
+		/// with the given <see cref="pageName" />
+		/// </summary>
 		public async Task<WikiHistoryModel> GetPageHistory(string pageName)
 		{
 			pageName = pageName.Trim('/');
@@ -125,9 +132,20 @@ namespace TASVideos.Tasks
 			};
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Renames the given wiki page to the destination page
+		/// All revisions are renamed to the new page
+		/// and <seealso cref="WikiPageReferral" /> entries are updated
+		/// </summary>
 		public async Task MovePage(WikiMoveModel model)
 		{
+			if (await PageExists(model.DestinationPageName))
+			{
+				throw new InvalidOperationException($"Cannot move {model.OriginalPageName} to {model.DestinationPageName} because {model.DestinationPageName} already exists.");
+			}
+
+			// TODO: update referrers!!
+
 			var existingRevisions = await _db.WikiPages
 				.Where(wp => wp.PageName == model.OriginalPageName)
 				.ToListAsync();
@@ -140,7 +158,10 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns a list of all pages that are considered subpages
+		/// of the page with the given <see cref="pageName"/>
+		/// </summary>
 		public async Task<IEnumerable<string>> GetSubPages(string pageName)
 		{
 			pageName = pageName.Trim('/');
@@ -152,8 +173,10 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
-		// TODO: document
-		// Gets all pages that refer to the given page
+		/// <summary>
+		/// Returns a list of all wiki pages that have a link (reference)
+		/// to the given <see cref="pageName"/>
+		/// </summary>
 		public async Task<IEnumerable<WikiPageReferral>> GetReferrers(string pageName)
 		{
 			pageName = pageName.Trim('/');
@@ -162,6 +185,12 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
+		/// <summary>
+		/// Returns the data necessary to generate a diff of the
+		/// latest revision of the wiki page with the given <see cref="pageName"/>
+		/// compared against the previous revision
+		/// </summary>
+		/// <exception cref="InvalidOperationException">thrown if the given <see cref="pageName" /> does not exist</exception>
 		public async Task<WikiDiffModel> GetLatestPageDiff(string pageName)
 		{
 			var revisions = await _db.WikiPages
@@ -175,7 +204,8 @@ namespace TASVideos.Tasks
 				throw new InvalidOperationException($"Page \"{pageName}\" could not be found");
 			}
 
-			if (revisions.Count == 1) // Must have only 1 revision
+			// If count is 1, it must be a new page with no history, so compare against nothing
+			if (revisions.Count == 1)
 			{
 				return new WikiDiffModel
 				{
@@ -197,6 +227,13 @@ namespace TASVideos.Tasks
 			};
 		}
 
+		/// <summary>
+		/// Returns the data necessary to generate a diff between
+		/// two revisions of the given page
+		/// </summary>
+		/// <exception cref="InvalidOperationException">If the given <see cref="pageName"/> does not exists
+		/// or if the given <see cref="fromRevision"/> or <see cref="toRevision"/> do not exist
+		/// </exception>
 		public async Task<WikiDiffModel> GetPageDiff(string pageName, int fromRevision, int toRevision)
 		{
 			var revisions = await _db.WikiPages
