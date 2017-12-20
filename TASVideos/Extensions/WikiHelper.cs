@@ -40,8 +40,13 @@ namespace TASVideos.Extensions
 				// then we should first reconsider rules about allowed patterns of usernames and what defines a valid wiki page
 				// before deciding to nuke this feature
 				var homepage = pageName.Split("Homepages/")[1];
-				return homepage == userName
-					&& userPermissions.Contains(PermissionTo.EditHomePage);
+				if (string.Equals(homepage, userName, StringComparison.OrdinalIgnoreCase)
+					&& userPermissions.Contains(PermissionTo.EditHomePage))
+				{
+					return true;
+				}
+
+				// Notice we fall back to EditWikiPages if it is not the user's homepage, regular editors should be able to edit homepages
 			}
 
 			return userPermissions.Contains(PermissionTo.EditWikiPages);
