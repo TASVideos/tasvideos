@@ -143,8 +143,6 @@ namespace TASVideos.Tasks
 				throw new InvalidOperationException($"Cannot move {model.OriginalPageName} to {model.DestinationPageName} because {model.DestinationPageName} already exists.");
 			}
 
-			// TODO: update referrers!!
-
 			var existingRevisions = await _db.WikiPages
 				.Where(wp => wp.PageName == model.OriginalPageName)
 				.ToListAsync();
@@ -155,6 +153,26 @@ namespace TASVideos.Tasks
 			}
 
 			await _db.SaveChangesAsync();
+
+			// Update all Referrals
+			// Referrals can be safely updated since the new page still has the original content 
+			// and any links on them are still correctly referring to other pages
+			var existingReferrals = await _db.WikiReferrals
+				.Where(wr => wr.Referral == model.OriginalPageName)
+				.ToListAsync();
+
+			foreach (var referral in existingReferrals)
+			{
+				referral.Referral = model.DestinationPageName;
+			}
+
+			await _db.SaveChangesAsync();
+
+			// Note that we can not update Referrers since the wiki pages will still
+			// Physically refer to the original page. Those links are broken and it is
+			// Important to keep them listed as broken so they can show up in the Broken Links module
+			// for editors to see and fix. Anyone doing a move operation should know to check broken links
+			// afterwards
 		}
 
 		/// <summary>
