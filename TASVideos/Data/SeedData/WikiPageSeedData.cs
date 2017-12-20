@@ -1137,6 +1137,110 @@ That is, do not use them.
 				Markup =
 @"Refer to the [TextFormattingRules] for markup and formatting help.%%%
 Make sure all edits conform to the [EditorGuidelines]"
+			},
+			new WikiPage
+			{
+				PageName = "EditorGuidelines",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"!!! Guidelines for wiki editors
+
+%%TOC%%
+
+! Requirements
+
+* Ability to write text that conforms to these guidelines and follows the [Text Formatting Rules].
+* Have the desire to actively maintain site articles, movie descriptions, or fixing grammar/spelling/punctuation/formatting errors on the site.
+* Want to become an editor?  Simply ask a [Users|site admin or admin assistant] (either by forum PM or by IRC).
+
+When editing pages just keep the following rules in mind.
+
+! General
+
+* Be considerate, especially when correcting a mistake another editor has made.
+* Leave some time after another contributor's edit before editing a page yourself; they may have minor corrections to make.
+** Also, try not to edit pages in rapid succession yourself.  Minor corrections are acceptable, but please try to accomplish what you are trying to do with as few edits as possible.
+* No marketing speech. Write from a neutral point of view.
+* You will not be able to edit system pages; this includes pages with ""System"" in the title and a handful of other significant pages.
+
+! Minor edits
+
+__Important:__ Multiple edits made by the same editor within half an hour of each other ''no longer'' count as just one edit in [Recent Changes]. The half hour is now reduced to one minute.
+
+* As of now, all non-minor edits are reported immediately to IRC. If you are testing functionality or are just an obsessive editor, either use the preview button, or check minor edit so your edits do not disturb IRC. After you are sure that you are done, you can make a dummy edit and save without checking the minor edit box, if you make a significant change. This includes the [Sand Box].
+* Please don't do mass changes (a small change that is done to 10 pages at the same time), unless you have discussed their need with other editors. Each edit creates a new copy of the page in database, and the site administration prefers quality over quantity.
+
+! Understandable writing
+
+* Write in a way that is easy to understand. Avoid slang and internet shorthand. For some of the site's viewers, English is not their first language.
+* Structure your text carefully, so that the reader does not have to spend unnecessary effort in understanding what is written:
+** Exercise good spelling, grammar, and structure.
+** Use active words. Avoid using passive words like “get” and “have”. They are easily misunderstood and also don't machine-translate well.
+** Avoid acronyms unless they are well-established in their context. It may help to describe what an acronym stands for the first time it is used on a page.
+
+! Editing and commenting
+
+* The main rule is to contribute anonymously and without a personal reference.
+* If you represent yourself (“I think...”), you should prefix your comment with a link to your homepage (“[Bisqwit]: I think...”) or suffix it (“I think... --[Bisqwit]”).
+* The purpose of the edit summary is to describe to others what you changed. Do not use the edit summary as a discussion vehicle. If you must discuss something, do it in the page, on the discussion forum, or in IRC.
+** Keep in mind that your edit summary, if it is a non-minor edit, will normally be posted to [IRCChannel|IRC] so as to keep others informed of your work.
+
+! Wiki markup guidelines
+* __Learn the [text formatting rules].__ If you are familiar with text formatting, it becomes much easier to structure your writing.
+* Do not overuse emphasis.
+* If referring to tasvideos users by username, use the __[[user:foo]__ syntax (instead of __foo__ or __[[foo]__) so it will properly link to the user's homepage if or when the user has one. 
+
+! Creating new pages
+
+Step by step guide:
+# Think of the purpose of this site. Does your planned page serve the audience of the site?
+# Think of a name for your page. The name should contain the essence of the page’s topic. For example, a page of tips and tricks for Rygar would be “[GameResources/NES/Rygar|Rygar Tricks]”.
+#* Don't use characters beyond A-Z, a-z, 0-9 and '/'.
+#* The name should be as short as possible (for easy remembering and easy linking). Do not use acronyms (see above).
+#* If there is danger of confusion (there are multiple different games by the same name, but you are writing only about one of them, for example), add more words to the name.
+# Edit an existing page and add a link to that new page. The [Text formatting rules] explains how to create links. This step is to avoid it becoming a [Wiki orphans|Wiki orphan].
+# Then click the newly created link, which will take you to the page you wanted to create.
+# Click the Edit link on that page.
+
+----
+! Movie editing
+
+Most of the following features are available only to vested editors.
+
+Editors will see an small edit button on the bottom right hand side of a movie module.  This allows them to access the movie edit page.
+
+{{Description}} (also available to normal editors)
+
+Edits the movie description text.
+
+{{Classes}}
+
+Ability to edit the movie categories (such as ""Heavy Glitch Abuse"").  Clicking ""edit classes"" brings up a list of available classes.
+
+When editing movie classes, follow the [Movie Class Guidelines].
+
+{{Files}} (also available to encoders)
+
+Ability to add/remove screenshots, torrent files, mirror and streaming urls.  Accessed from the Edit/add files button.
+
+* If adding a screenshot, remember to click the delete checkbox for the existing one.
+* Never remove the only torrent file for a movie.
+If adding a torrent as a replacement, remember to click the delete checkbox for the existing one.
+* All publications must have at least one valid streaming URL and/or an archive.org mirror URL.
+
+{{Headers}}
+Ability to edit the Player name, Platform, Game name, Game version, Branch name, ROM filename and the ""Hacked movie"" status.  Accessed from the Edit info button.
+
+* Do not change the player without good reason (and admin approval).
+* Follow the [Publisher Guidelines] regarding giving the proper Game Name, Version, Branch, ROM Name, and Movie filenames.
+* The ""hacked game or otherwise impure movie"" checkbox places the movie in the Concept/Demos category.
+
+----
+See also:
+* [Text Formatting Rules]
+** [TextFormattingRules/ListOfModules|List of wiki modules]
+* [User pages] (aka. homepages)
+"
 			}
 		};
 	}
