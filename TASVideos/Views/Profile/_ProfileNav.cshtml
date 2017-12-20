@@ -1,11 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using TASVideos.Data.Entity
-@inject SignInManager<User> SignInManager
-@{
-	var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
-}
 <ul class="nav nav-pills nav-stacked">
 	<li class="@ProfileNavPages.IndexNavClass(ViewContext)"><a asp-action="Index">Profile</a></li>
 	<li class="@ProfileNavPages.ChangePasswordNavClass(ViewContext)"><a asp-action="ChangePassword">Password</a></li>
-	<li condition="@hasExternalLogins" class="@ProfileNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-action="ExternalLogins">External logins</a></li>
 </ul>
