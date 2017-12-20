@@ -1241,6 +1241,41 @@ See also:
 ** [TextFormattingRules/ListOfModules|List of wiki modules]
 * [User pages] (aka. homepages)
 "
+			},
+			new WikiPage
+			{
+				PageName = "RecentChanges",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"[module:ActiveTab|tab=b6]
+
+!!! Most recent changes in texts
+
+Note: This only lists changes in text on this Wiki that are not minor edits.%%%
+To see a list of new movie additions, go to the [new movies] page.%%%
+
+*[=wiki.rss|RSS Feed]
+
+[module:WikiTextChangeLog|limit=50|includetimes=Y]
+
+----
+
+[if:!CanEditPages]Do you want to edit pages? See [Users] to find out how.[endif]
+
+If you're a Recent Changes junkie, you can try switching to [FullRecentChanges], which also lists minor edits.%%%
+Movie maintenance edits are listed at [MovieMaintenanceLog]."
+			},
+			new WikiPage
+			{
+				PageName = "FullRecentChanges",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"[module:ActiveTab|tab=b6]
+
+!! All recent changes in texts
+This page is much like [recent changes] but it also lists minor edits.
+
+[module:WikiTextChangeLog|limit=500|includeminors=1]"
 			}
 		};
 	}
