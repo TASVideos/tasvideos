@@ -94,7 +94,6 @@ namespace TASVideos.Tasks
 
 			foreach (var newReferral in model.Referrals)
 			{
-
 				_db.WikiReferrals.Add(new WikiPageReferral
 				{
 					Referrer = model.PageName,
