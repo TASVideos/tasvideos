@@ -13,7 +13,6 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Controllers
 {
-	// TODO: edit permissions
 	public class WikiController : BaseController
 	{
 		private readonly WikiTasks _wikiTasks;
@@ -26,11 +25,100 @@ namespace TASVideos.Controllers
 			_wikiTasks = wikiTasks;
 		}
 
+		[AllowAnonymous]
+		public async Task<IActionResult> RenderWikiPage(string url, int? revision = null)
+		{
+			url = url.Trim('/');
+			if (!WikiHelper.IsValidWikiPageName(url))
+			{
+				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.TryConvertToValidPageName(url) });
+			}
+
+			var existingPage = await _wikiTasks.GetPage(url, revision);
+
+			if (existingPage != null)
+			{
+				ViewData["WikiPage"] = existingPage;
+				ViewData["Title"] = existingPage.PageName;
+				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
+			}
+
+			return RedirectToAction(nameof(PageDoesNotExist), new { url });
+		}
+
+		[AllowAnonymous]
+		public IActionResult PageNotFound(string possibleUrl)
+		{
+			ViewData["possibleUrl"] = possibleUrl;
+			return View();
+		}
+
+		[AllowAnonymous]
+		public IActionResult PageDoesNotExist(string url)
+		{
+			ViewData["Title"] = url?.Trim('/');
+			return View();
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> ViewSource(string path, int? revision = null)
+		{
+			var existingPage = await _wikiTasks.GetPage(path, revision);
+
+			if (existingPage != null)
+			{
+				return View(existingPage);
+			}
+
+			return RedirectHome();
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> PageHistory(string path)
+		{
+			var model = await _wikiTasks.GetPageHistory(path);
+			return View(model);
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Diff(string path, int? fromRevision, int? toRevision)
+		{
+			path = path.Trim('/');
+
+			var model = fromRevision.HasValue && toRevision.HasValue
+				? await _wikiTasks.GetPageDiff(path, fromRevision.Value, toRevision.Value)
+				: await _wikiTasks.GetLatestPageDiff(path);
+
+			return View(model);
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> DiffData(string path, int fromRevision, int toRevision)
+		{
+			var data = await _wikiTasks.GetPageDiff(path.Trim('/'), fromRevision, toRevision);
+			return Json(data);
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Referrers(string path)
+		{
+			if (!string.IsNullOrWhiteSpace(path))
+			{
+				path = path.Trim('/');
+				var referrers = await _wikiTasks.GetReferrers(path);
+				ViewData["PageName"] = path;
+
+				return View(referrers);
+			}
+
+			return RedirectHome();
+		}
+
 		[RequireEdit]
 		public async Task<IActionResult> Edit(string path)
 		{
 			path = path?.Trim('/');
-			if (! WikiHelper.IsValidWikiPageName(path))
+			if (!WikiHelper.IsValidWikiPageName(path))
 			{
 				return RedirectHome();
 			}
@@ -77,61 +165,6 @@ namespace TASVideos.Controllers
 			return Content(w.ToString(), "text/plain");
 		}
 
-		[AllowAnonymous]
-		public IActionResult PageNotFound(string possibleUrl)
-		{
-			ViewData["possibleUrl"] = possibleUrl;
-			return View();
-		}
-
-		[AllowAnonymous]
-		public IActionResult PageDoesNotExist(string url)
-		{
-			ViewData["Title"] = url?.Trim('/');
-			return View();
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> RenderWikiPage(string url, int? revision = null)
-		{
-			url = url.Trim('/');
-			if (!WikiHelper.IsValidWikiPageName(url))
-			{
-				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.TryConvertToValidPageName(url) });
-			}
-
-			var existingPage = await _wikiTasks.GetPage(url, revision);
-
-			if (existingPage != null)
-			{
-				ViewData["WikiPage"] = existingPage;
-				ViewData["Title"] = existingPage.PageName;
-				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
-			}
-
-			return RedirectToAction(nameof(PageDoesNotExist), new { url });
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> ViewSource(string path, int? revision = null)
-		{
-			var existingPage = await _wikiTasks.GetPage(path, revision);
-
-			if (existingPage != null)
-			{
-				return View(existingPage);
-			}
-
-			return RedirectHome();
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> PageHistory(string path)
-		{
-			var model = await _wikiTasks.GetPageHistory(path);
-			return View(model);
-		}
-
 		[RequirePermission(PermissionTo.MoveWikiPages)]
 		public async Task<IActionResult> MovePage(string path)
 		{
@@ -170,40 +203,6 @@ namespace TASVideos.Controllers
 			}
 
 			return View(model);
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> Referrers(string path)
-		{
-			if (!string.IsNullOrWhiteSpace(path))
-			{
-				path = path.Trim('/');
-				var referrers = await _wikiTasks.GetReferrers(path);
-				ViewData["PageName"] = path;
-
-				return View(referrers);
-			}
-
-			return RedirectHome();
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> Diff(string path, int? fromRevision, int? toRevision)
-		{
-			path = path.Trim('/');
-
-			var model = fromRevision.HasValue && toRevision.HasValue
-				? await _wikiTasks.GetPageDiff(path, fromRevision.Value, toRevision.Value)
-				: await _wikiTasks.GetLatestPageDiff(path);
-
-			return View(model);
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> DiffData(string path, int fromRevision, int toRevision)
-		{
-			var data = await _wikiTasks.GetPageDiff(path.Trim('/'), fromRevision, toRevision);
-			return Json(data);
 		}
 	}
 }
