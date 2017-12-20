@@ -155,7 +155,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[RequireEdit]
+		[AllowAnonymous]
 		[HttpPost]
 		public ContentResult GeneratePreview()
 		{
