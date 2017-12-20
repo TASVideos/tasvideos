@@ -48,7 +48,9 @@
 		</div>
 	</form>
 </row>
-
+<row>
+	@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/WikiEditHelp" })
+</row>
 <div class="hide" id="preview-container">
 	<hr />
 	<row>
@@ -73,9 +75,8 @@
 					if (xmlhttp.status === 200) {
 						console.log('responseText', xmlhttp.responseText);
 						document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
-
 					} else {
-						alert("Something went wrong"); // TODO: more elegant
+						alert("Could not generate preview");
 					}
 				}
 			};

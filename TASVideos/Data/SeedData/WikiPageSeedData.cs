@@ -39,7 +39,6 @@ See also:
 * [Users], listing current editors (and staff members) for the site
 * [Editor Guidelines]
 * [Text Formatting Rules] for information about wiki markup"
-				
 			},
 			new WikiPage
 			{
@@ -137,7 +136,6 @@ Unfortunately, so far I haven't managed to invent/plan a way to
 support alternate language versions of pages on this site.
 But maybe something could be done about it.
 "
-
 			},
 			new WikiPage
 			{
@@ -1131,6 +1129,15 @@ Placing these modules requires [user:adelikat]'s or [user:Nach]'s explicit permi
 That is, do not use them.
 ----
 [1]: Search for your username [=Users/Edit.html?mode=uedit|here] to know your user ID."
+			},
+			new WikiPage
+			{
+				PageName = "System/WikiEditHelp",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"Refer to the [TextFormattingRules] for markup and formatting help.
+
+Make sure all edits conform to the [EditorGuidelines]"
 			}
 		};
 	}
