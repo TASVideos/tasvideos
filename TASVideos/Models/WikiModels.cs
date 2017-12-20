@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Models
 {
+	/// <summary>
+	/// Represents a <see cref="TASVideos.Data.Entity.WikiPage"/> for the purpose of creating a new revision
+	/// </summary>
 	public class WikiEditModel
 	{
 		[Required]
@@ -23,6 +26,9 @@ namespace TASVideos.Models
 		public IEnumerable<WikiReferralModel> Referrals { get; set; } = new List<WikiReferralModel>();
 	}
 
+	/// <summary>
+	/// Represents the revision history for a wiki page 
+	/// </summary>
 	public class WikiHistoryModel
 	{
 		public string PageName { get; set; }
@@ -47,6 +53,9 @@ namespace TASVideos.Models
 		}
 	}
 
+	/// <summary>
+	/// Represents the data necessary to rename a wiki page
+	/// </summary>
 	public class WikiMoveModel
 	{
 		public string OriginalPageName { get; set; }
@@ -56,12 +65,18 @@ namespace TASVideos.Models
 		public string DestinationPageName { get; set; }
 	}
 
+	/// <summary>
+	/// Represents the data necessary to show a wiki page that references another wiki page
+	/// </summary>
 	public class WikiReferralModel
 	{
 		public string Link { get; set; }
 		public string Excerpt { get; set; }
 	}
 
+	/// <summary>
+	/// Represents the data necessary to generate a diff between two revisions of a wiki page
+	/// </summary>
 	public class WikiDiffModel
 	{
 		public string PageName { get; set; }
@@ -73,6 +88,10 @@ namespace TASVideos.Models
 		public string RightMarkup { get; set; }
 	}
 
+	/// <summary>
+	/// Represents a wiki orphan for a list of wiki orphans
+	/// Orphans are wiki pages that are not referenced by any other page
+	/// </summary>
 	public class WikiOrphanModel
 	{
 		public string PageName { get; set; }
