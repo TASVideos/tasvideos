@@ -61,7 +61,7 @@ namespace TASVideos.Filter
 			}
 			else if (context.HttpContext.Request.IsAjaxRequest())
 			{
-				context.HttpContext.Response.StatusCode = HttpStatusCode.Forbidden;
+				context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 				context.Result = new EmptyResult();
 			}
 			else
