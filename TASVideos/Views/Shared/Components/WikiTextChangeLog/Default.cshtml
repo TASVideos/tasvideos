@@ -1,0 +1,24 @@
+﻿@model IEnumerable<WikiTextChangelogModel>
+
+<table class="table table-striped">
+	<tr>
+		<th>Time</th>
+		<th>Page</th>
+		<th>Revision</th>
+		<th>Author</th>
+		<th>Message</th>
+		<th>Diff</th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>@item.CreateTimestamp</td>
+			<td><a href="/@item.PageName">@item.PageName</a></td>
+			<td>@item.RevisionMessage</td>
+			<td>@item.Author</td>
+			<td>@item.RevisionMessage @(item.MinorEdit ? ("(Minor edit)") : "")</td>
+			<td><a asp-controller="Wiki" asp-action="Diff" asp-route-path="@item.PageName" asp-route-fromRevision="@(item.Revision - 1)" asp-route-toRevision="@item.Revision" class="btn btn-default">Diff</a></td>
+		</tr>
+	}
+</table>

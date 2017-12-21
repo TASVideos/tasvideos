@@ -98,4 +98,17 @@ namespace TASVideos.Models
 		public DateTime LastUpdateTimeStamp { get; set; }
 		public string LastUpdateUserName { get; set; }
 	}
+
+	/// <summary>
+	/// Represents a wiki change entry for the WikiTextChangeLog module
+	/// </summary>
+	public class WikiTextChangelogModel
+	{
+		public DateTime CreateTimestamp { get; set; }
+		public string Author { get; set; }
+		public string PageName { get; set; }
+		public int Revision { get; set; }
+		public bool MinorEdit { get; set; }
+		public string RevisionMessage { get; set; }
+	}
 }
