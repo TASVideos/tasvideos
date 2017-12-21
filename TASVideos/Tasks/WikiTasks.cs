@@ -300,5 +300,30 @@ namespace TASVideos.Tasks
 				.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
 				.ToListAsync();
 		}
+
+		// TODO: document
+		public async Task<IEnumerable<WikiTextChangelogModel>> GetWikiChangeLog(int limit, bool includeMinorEdits)
+		{
+			var query = _db.WikiPages
+				.OrderByDescending(wp => wp.CreateTimeStamp)
+				.Take(limit);
+
+			if (!includeMinorEdits)
+			{
+				query = query.Where(wp => !wp.MinorEdit);
+			}
+
+			return await query
+				.Select(wp => new WikiTextChangelogModel
+				{
+					PageName = wp.PageName,
+					Revision = wp.Revision,
+					Author = wp.CreateUserName,
+					CreateTimestamp = wp.CreateTimeStamp,
+					MinorEdit = wp.MinorEdit,
+					RevisionMessage = wp.RevisionMessage
+				})
+				.ToListAsync();
+		}
 	}
 }
