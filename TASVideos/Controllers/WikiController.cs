@@ -28,7 +28,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> RenderWikiPage(string url, int? revision = null)
 		{
-			url = url.Trim('/');
+			url = url.Trim('/').Replace(".html", "");
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
 				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.TryConvertToValidPageName(url) });
