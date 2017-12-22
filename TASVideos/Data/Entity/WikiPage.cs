@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity
 {
 	public class WikiPage : BaseEntity
 	{
 		public int Id { get; set; }
+
+		[Required]
 		public string PageName { get; set; }
+
 		public string Markup { get; set; }
 		public int Revision { get; set; } = 1;
 
