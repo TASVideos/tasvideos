@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using TASVideos.Tasks;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;

@@ -124,11 +124,18 @@ namespace TASVideos.Extensions
 			}
 		}
 
+		// ***************
+		// Parameter helpers
 		// These helpers assist with parsing wiki markup parameters from the user
 		// By design they need to gracefully handle all sorts of nonsense input from the user
+		// ***************
 
-		// TODO: document
-		// Parameter helpers
+		/// <summary>
+		/// Returns the value of the given parameter from the parameter list in string form
+		/// </summary>
+		/// <param name="parameterStr">The full parameter string</param>
+		/// <param name="paramName">the parameter for which to return a value from</param>
+		/// <returns>The value of the given parameter if it is exists, else empty string</returns>
 		public static string GetValueFor(string parameterStr, string paramName)
 		{
 			if (string.IsNullOrWhiteSpace(parameterStr))
@@ -151,10 +158,12 @@ namespace TASVideos.Extensions
 			return "";
 		}
 
-		// TODO: document
-		// If it can determine a bool from the string, returns the value, else null
-		// Values include true/false, yes/no, y/n
-		// null/empty strings will return null, not false
+		/// <summary>
+		/// Takes the given string value and parses it to a bool if possible
+		/// If a true/false value can not be determined, null is returned
+		/// Possible values (case insensitive): true/false, yes/no, y/n
+		/// if a string is null, empty, or whitespace, null is returned
+		/// </summary>
 		public static bool? GetBool(string val)
 		{
 			if (string.IsNullOrWhiteSpace(val))
@@ -180,6 +189,10 @@ namespace TASVideos.Extensions
 			return null;
 		}
 
+		/// <summary>
+		/// Takes the given string and parses it to an int if possible
+		/// If an integer can not ber parsed from the given value, null is returned
+		/// </summary>
 		public static int? GetInt(string val)
 		{
 			var result = int.TryParse(val, out int parsedVal);
