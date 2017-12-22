@@ -114,6 +114,14 @@ namespace TASVideos.Data
 				.HasOne(pt => pt.Role)
 				.WithMany(p => p.RolePermission)
 				.HasForeignKey(pt => pt.RoleId);
+
+			builder.Entity<WikiPage>(entity =>
+			{
+				entity.HasIndex(e => new { e.PageName, e.Revision })
+					.HasName("PageNameIndex")
+					.IsUnique()
+					.HasFilter($"([{nameof(WikiPage.PageName)}] IS NOT NULL)");
+			});
 		}
 	}
 }
