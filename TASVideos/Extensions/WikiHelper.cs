@@ -123,5 +123,72 @@ namespace TASVideos.Extensions
 				minIndex = str.IndexOf(searchstring, minIndex + searchstring.Length);
 			}
 		}
+
+		// These helpers assist with parsing wiki markup parameters from the user
+		// By design they need to gracefully handle all sorts of nonsense input from the user
+
+		// TODO: document
+		// Parameter helpers
+		public static string GetValueFor(string parameterStr, string paramName)
+		{
+			if (string.IsNullOrWhiteSpace(parameterStr))
+			{
+				return "";
+			}
+
+			var lowerParam = paramName.ToLower();
+
+			var args = parameterStr.Split('|');
+			foreach (var arg in args.Where(a => !string.IsNullOrWhiteSpace(a)))
+			{
+				var pair = arg.Split('=');
+				if (pair.Length > 1 && pair[0]?.ToLower() == lowerParam)
+				{
+					return pair[1];
+				}
+			}
+
+			return "";
+		}
+
+		// TODO: document
+		// If it can determine a bool from the string, returns the value, else null
+		// Values include true/false, yes/no, y/n
+		// null/empty strings will return null, not false
+		public static bool? GetBool(string val)
+		{
+			if (string.IsNullOrWhiteSpace(val))
+			{
+				return null;
+			}
+
+			string lowerVal = val.ToLower();
+			if (lowerVal == "true"
+				|| lowerVal == "yes"
+				|| lowerVal == "y")
+			{
+				return true;
+			}
+
+			if (lowerVal == "false"
+				|| lowerVal == "no"
+				|| lowerVal == "n")
+			{
+				return false;
+			}
+
+			return null;
+		}
+
+		public static int? GetInt(string val)
+		{
+			var result = int.TryParse(val, out int parsedVal);
+			if (result)
+			{
+				return parsedVal;
+			}
+
+			return null;
+		}
 	}
 }

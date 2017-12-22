@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TASVideos.Tasks;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 
 namespace TASVideos.ViewComponents
 {
@@ -17,15 +18,23 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			// TODO: parse shenanigans
-			var args = pp?.Split('|');
-
 			int limit = 50;
 			bool includeMinorEdits = true;
 
+			bool? paramIncludeMinorEdits = WikiHelper.GetBool(WikiHelper.GetValueFor(pp, "includeminors"));
+			if (paramIncludeMinorEdits.HasValue)
+			{
+				includeMinorEdits = paramIncludeMinorEdits.Value;
+			}
+
+			int? paramLimit = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "limit"));
+			if (paramLimit.HasValue)
+			{
+				limit = paramLimit.Value;
+			}
+
 			var results = await _wikiTasks.GetWikiChangeLog(limit, includeMinorEdits);
 			return View(results);
-
 		}
 	}
 }
