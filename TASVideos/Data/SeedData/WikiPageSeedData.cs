@@ -1276,6 +1276,17 @@ Movie maintenance edits are listed at [MovieMaintenanceLog]."
 This page is much like [recent changes] but it also lists minor edits.
 
 [module:WikiTextChangeLog|limit=500|includeminors=1]"
+			},
+			new WikiPage
+			{
+				PageName = "SandBox",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"!! Welcome to the Sandbox
+
+This is a page dedicated to experimenting with wiki markup.
+
+By default any registered user can edit this page."
 			}
 		};
 	}
