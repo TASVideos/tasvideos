@@ -2,7 +2,7 @@
 @{
 	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Name : "Create a New Role";
 }
-<delete-button condition="@Model.Id.HasValue && ViewData.UserHasPermission(PermissionTo.DeleteRoles)" asp-href="@Url.Action($"Delete/{Model.Id}")" class="pull-right text-center">Delete</delete-button>
+<delete-button condition="@Model.Id.HasValue && ViewData.UserHasPermission(PermissionTo.DeleteRoles)" asp-href="@Url.Action($"Delete/{Model.Id}")" warning-message="Are you sure you want to delete this Role? This action cannot be undone!" class="pull-right text-center">Delete</delete-button>
 <h4>@ViewData["Title"]</h4>
 <hr />
 <form asp-route="Edit" class="form-horizontal">
