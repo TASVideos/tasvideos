@@ -194,7 +194,7 @@ Turns into:
 ;Term to be defined: Your explanations appears here.
 ;TAS: A tool-assisted speedrun.
 
-Hint: See the [=Wiki/ViewSource?path=TextFormattingRules|source code] of this page to see how the markup works.
+Hint: See the [=wiki.exe?page=TextFormattingRules&mode=source|source code] of this page to see how the markup works.
 
 
 !! Headings
@@ -268,57 +268,57 @@ You can find the number from the URL of the submission.
 
 __Linking to movies__
 
-Construct the link from the movie ID and ""M"". For example, Rockman movie is movie[515M | 515], so the link is written as: [[515M]].%%%
+Construct the link from the movie ID and ""M"". For example, Rockman movie is movie [515M|515], so the link is written as: [[515M]].%%%
 To add a ''custom'' description, write for example: [[515M|rockman movie]]. The internal description can be seen when hovering over the link.
 
-You can find the number at[List All Movies].
+You can find the number at [List All Movies].
 
-(Note: This was recently changed.Before it used to be = movies.cgi ? id = number)
+(Note: This was recently changed. Before it used to be =movies.cgi?id=number)
 
 __Linking to forum topics__
 
-Construct the link from ""=forum/t/"" and the topic ID.For example, the[= forum / t / 629 | Gradius topic] is written as [[=forum/t/629|Gradius topic]].
+Construct the link from ""=forum/t/"" and the topic ID. For example, the [=forum/t/629|Gradius topic] is written as [[=forum/t/629|Gradius topic]].
 
 __Linking to forum posts__
 
-Construct the link from ""=forum/p/"" and post ID.For example, the[= forum / p / 227916#227916|forum rules] is written as [[=forum/p/227916#227916|forum rules]].
+Construct the link from ""=forum/p/"" and post ID. For example, the [=forum/p/227916#227916|forum rules] is written as [[=forum/p/227916#227916|forum rules]].
 
 __Linking to forum profiles__
 
-Construct the link from ""=forum/r/"" and user ID.For example, [user: Nach]'s [=forum/r/17|profile] is written as [[=forum/r/17|profile]].
+Construct the link from ""=forum/r/"" and user ID. For example, [user:Nach]'s [=forum/r/17|profile] is written as [[=forum/r/17|profile]].
 
-Alternatively use ""=forum/r/"" and the username.For example, [user:Bisqwit]'s [=forum/r/Bisqwit|profile] is written as [[=forum/r/Bisqwit|profile]]. However, keep in mind that the link won't work after a user has their name changed.This is why using the user ID is preferred.
+Alternatively use ""=forum/r/"" and the username. For example, [user:Bisqwit]'s [=forum/r/Bisqwit|profile] is written as [[=forum/r/Bisqwit|profile]]. However, keep in mind that the link won't work after a user has their name changed. This is why using the user ID is preferred.
 
 __Linking to other internal pages__
 
-To link to any other page that does not have a {{.html} } in the URL,
+To link to any other page that does not have a {{.html}} in the URL,
 take the URL and replace “!http://tasvideos.org/” with “=”%%%
-e.g. [[= movies.cgi ? name = Mega + Man + X]], [[=Wiki/Referrers?path=TODO]], [[=forum/]]
+e.g. [[=movies.cgi?name=Mega+Man+X]], [[=ref.exe?page=TODO]], [[=forum/]]
 
-* __Footnotes__: create links to footnotes with[[#1]] or any other number (i.e. square brackets + hash + number), and precede the footnote itself with [[1]] (i.e. square brackets + number). Example: [#1]
+* __Footnotes__: create links to footnotes with [[#1]] or any other number (i.e. square brackets + hash + number), and precede the footnote itself with [[1]] (i.e. square brackets + number). Example: [#1]
 
-!!Tables
+!! Tables
 
 Tables are created with lines that begin with vertical bars. ( | ) %%%
-Double vertical bars( || ) create headers.
+Double vertical bars ( || ) create headers.
 
 Example:
- || header1 || header2 || header3 || header4 ||
- | field1a | field2a | | field4a |
- | field1b | field2b with[[|]] vertical bar|field3b with%%''''%a few words|field4b|
+ ||header1||header2||header3||header4||
+ |field1a|field2a| |field4a|
+ |field1b|field2b with [[|]] vertical bar|field3b with%%''''%a few words|field4b|
 becomes:
 ||header1||header2||header3||header4||
 |field1a|field2a| |field4a|
-|field1b|field2b with[|] vertical bar|field3b with%%%a few words|field4b|
+|field1b|field2b with [|] vertical bar|field3b with%%%a few words|field4b|
 %%%
 To output a literal vertical bar in a table, surround it in brackets:  [[|]].
 To output empty cells, put a space between the cell edges.
 
 To ensure that the table format and appearance is consistent (white lattice with border), every row should have one more vertical bar separator than the number of cells in a table row.
 
-!! Mark-Up Language(HTML)
+!! Mark-Up Language (HTML)
 
-* Do not try to use HTML.HTML markup does not work.
+* Do not try to use HTML. HTML markup does not work.
 * < and > and & are themselves, except at the beginning of a line.
 
 !! Table of contents
@@ -359,56 +359,54 @@ Note: Headings can not be embedded in tabs
 
 ! Directives:
 __%''''%TAB_START%%__%%%
-Start a tabset.Usually only needed if you want nested tabs.%%%
+Start a tabset. Usually only needed if you want nested tabs.%%%
 __%''''%TAB_HSTART%%__%%%
 Start a tabset with tabs on left side instead of top.%%%
-__%''''%TAB<name>%%__%%%
-Create a new tab.Starts a tabset if there isn't one.%%%
+__%''''%TAB <name>%%__%%%
+Create a new tab. Starts a tabset if there isn't one.%%%
 __%''''%TAB_END%%__%%%
 End the innermost tabset.%%%
 
 
-* { {%% TAB_} }{{END%%}} is important.If it is missing, odd things happen.
+* {{%%TAB_}}{{END%%}} is important. If it is missing, odd things happen.
 * Tabs can be nested.
 * There must be no headings in the tabs.
 * Ending a tab ends any nested quotes and divs.
 
 Note: In the current implementation of the site, tabs are implemented
-with Javascript.It is not recommended to use them, because the tabs
+with Javascript. It is not recommended to use them, because the tabs
 are not usable with Javascript-challenged browsers.
 
 !! Source code
-__%''''%SRC_EMBED<hilighting> __%%%
+__%''''%SRC_EMBED <hilighting>__%%%
 Start block of code with specified hilighting type. Wiki markup is not processed inside this block.%%%
 __%''''%END_EMBED__%%%
 End a block of code.
 %%SRC_EMBED lua
 function factorial(n)
-local x = 1
+  local x = 1
   for i = 2, n do
-
-x = x * i
-
-end
+    x = x * i
+  end
   return x
 end
 %%END_EMBED
 
 !! Quotations
-__%''''%QUOTE[< name >] __%%%
-Start a quote block (If<name> is specified, that is shown to be quoted).%%%
+__%''''%QUOTE [<name>]__%%%
+Start a quote block (If <name> is specified, that is shown to be quoted).%%%
 __%''''%QUOTE_END__%%%
-End a quote block.Automatically ends any nested tabs and divs.
+End a quote block. Automatically ends any nested tabs and divs.
 
 %%QUOTE Example Person
 Example Quote
 %%QUOTE_END
 
-!! Divs
-__%''''%DIV<class> __%%%
+!! Divs 
+__%''''%DIV <class>__%%%
 Start a div block with given class <class>.%%%
 __%''''%DIV_END__%%%
-End a div block.Automatically ends any nested tabs and quotes.
+End a div block. Automatically ends any nested tabs and quotes.
 
 %%DIV foo
 Example Div
@@ -417,29 +415,29 @@ Example Div
 !! Comments and if macros
 
 * To write something in the source without having it show up in the page, surround the comment with [[i''''f:0]]...[[endif]].
-* Surrounding anything with[[i''''f:1]]...[[endif]] does nothing to the text.
+* Surrounding anything with [[i''''f:1]]...[[endif]] does nothing to the text.
 * The wiki reserves some variables which evaluate to 1 if true and 0 if false:
 ** UserIsLoggedIn
-** CanEditPages(1 if user is an ''[Users|editor]'')
+** CanEditPages (1 if user is an ''[Users|editor]'')
 ** UserHasHomepage
-** CanViewSubmissions(as for now, always 1)
-** CanSubmitMovies(as for now, same as UserIsLoggedOn)
+** CanViewSubmissions (as for now, always 1)
+** CanSubmitMovies (as for now, same as UserIsLoggedOn)
 ** CanJudgeMovies
 ** CanPublishMovies
-** CanRateMovies(as for now, same as UserIsLoggedOn)
+** CanRateMovies (as for now, same as UserIsLoggedOn)
 
 e.g. [[i''''f:!UserIsLoggedIn]]%%%(The ! reverses 1 and 0)
 
 __Other macros__
 
-*[[e''''xpr:UserGetWikiName]] returns the reader's wiki username (if logged on).
-*[[u''''ser:user_name]] links to the homepage of user_name(if there is one).
-*[[module:xxx]] inserts a module which performs some function.See the[TextFormattingRules / ListOfModules | list of modules] for more information.Some modules are restricted.
- 
+* [[e''''xpr:UserGetWikiName]] returns the reader's wiki username (if logged on).
+* [[u''''ser:user_name]] links to the homepage of user_name (if there is one).
+* [[module:xxx]] inserts a module which performs some function. See the [TextFormattingRules/ListOfModules|list of modules] for more information. Some modules are restricted.
+
 !! Character set
 
-* This server uses unicode with UTF-8 encoding.This means that you can use all characters supported by unicode, including the Japanese characters. But please note that not everyone can read them.
- 
+* This server uses unicode with UTF-8 encoding. This means that you can use all characters supported by unicode, including the Japanese characters. But please note that not everyone can read them.
+
 ----
 [1]: This is an example of a footnote."
 			},
