@@ -23,6 +23,15 @@ namespace TASVideos.Extensions
 
 			pageName = pageName.Trim('/');
 
+			// Anyone who can edit anything (including the user's own homepage) should be allowed to edit his
+			if (pageName == "SandBox")
+			{
+				return userPermissions.Contains(PermissionTo.EditGameResources)
+					|| userPermissions.Contains(PermissionTo.EditHomePage)
+					|| userPermissions.Contains(PermissionTo.EditWikiPages)
+					|| userPermissions.Contains(PermissionTo.EditSystemPages);
+			}
+
 			if (pageName.StartsWith("GameResources/"))
 			{
 				return userPermissions.Contains(PermissionTo.EditGameResources);
