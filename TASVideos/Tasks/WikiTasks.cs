@@ -368,5 +368,43 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 		}
+
+		/// <summary>
+		/// Returns a list of all deleted pages for the purpose of display
+		/// </summary>
+		/// <returns></returns>
+		public async Task<IEnumerable<DeletedWikiPageDisplayModel>> GetDeletedPages()
+		{
+			var results = await _db.WikiPages
+				.ThatAreDeleted()
+				.GroupBy(tkey => tkey.PageName)
+				.Select(record => new DeletedWikiPageDisplayModel
+				{
+					PageName = record.Key,
+					RevisionCount = record.Count(),
+					HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
+				})
+				.ToListAsync();
+
+			return results;
+		}
+
+		/// <summary>
+		/// Undeletes all revisions of the given page
+		/// </summary>
+		public async Task UndeletePage(string pageName)
+		{
+			var revisions = await _db.WikiPages
+				.ThatAreDeleted()
+				.Where(wp => wp.PageName == pageName)
+				.ToListAsync();
+
+			foreach (var revision in revisions)
+			{
+				revision.IsDeleted = false;
+			}
+
+			await _db.SaveChangesAsync();
+		}
 	}
 }
