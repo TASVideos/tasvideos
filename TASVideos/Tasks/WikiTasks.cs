@@ -370,6 +370,35 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Performs a soft delete on a single revision of a <see cref="WikiPage"/>
+		/// If the revision is latest revisions, then <see cref="WikiPageReferral"/>
+		/// will be removed where the geven page name is a referrer
+		/// </summary>
+		public async Task DeleteWikiPageRevision(string pageName, int revision)
+		{
+			var wikiPage = await _db.WikiPages
+				.ThatAreNotDeleted()
+				.SingleOrDefaultAsync(wp => wp.PageName == pageName && wp.Revision == revision);
+
+			if (wikiPage != null)
+			{
+				wikiPage.IsDeleted = true;
+
+				// Update referrers if latest revision
+				if (wikiPage.Child == null)
+				{
+					var referrers = await _db.WikiReferrals
+						.Where(wp => wp.Referrer == pageName)
+						.ToListAsync();
+
+					_db.RemoveRange(referrers);
+				}
+
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		/// <summary>
 		/// Returns a list of all deleted pages for the purpose of display
 		/// </summary>
 		/// <returns></returns>
