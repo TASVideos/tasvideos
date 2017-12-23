@@ -206,6 +206,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		[RequirePermission(PermissionTo.DeleteWikiPages)]
 		public async Task<IActionResult> DeletePage(string pageName)
 		{
 			if (!string.IsNullOrWhiteSpace(pageName))
