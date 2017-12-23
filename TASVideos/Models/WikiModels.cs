@@ -112,6 +112,9 @@ namespace TASVideos.Models
 		public string RevisionMessage { get; set; }
 	}
 
+	/// <summary>
+	/// Represents a delete page entry on the DeletedPages list
+	/// </summary>
 	public class DeletedWikiPageDisplayModel
 	{
 		[Display(Name = "Page Name")]
