@@ -192,7 +192,7 @@ namespace TASVideos.Controllers
 			model.OriginalPageName = model.OriginalPageName.Trim('/');
 			model.DestinationPageName = model.DestinationPageName.Trim('/');
 
-			if (await _wikiTasks.PageExists(model.DestinationPageName))
+			if (await _wikiTasks.PageExists(model.DestinationPageName, includeDeleted: true))
 			{
 				ModelState.AddModelError(nameof(WikiMoveModel.DestinationPageName), "The destination page already exists.");
 			}
@@ -205,5 +205,17 @@ namespace TASVideos.Controllers
 
 			return View(model);
 		}
+
+		public async Task<IActionResult> DeletePage(string pageName)
+		{
+			if (!string.IsNullOrWhiteSpace(pageName))
+			{
+				await _wikiTasks.DeleteWikiPage(pageName.Trim('/'));
+			}
+
+			return RedirectHome(); // TODO: is there a better place to relocate?
+		}
+
+		// TODO: DeleteRevision
 	}
 }
