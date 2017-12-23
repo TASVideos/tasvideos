@@ -28,6 +28,7 @@ namespace TASVideos.Tasks
 		{
 			pageName = pageName?.Trim('/');
 			return await _db.WikiPages
+				.ThatAreNotDeleted()
 				.Where(wp => wp.PageName == pageName)
 				.Where(wp => revisionId != null
 					? wp.Revision == revisionId
@@ -42,6 +43,7 @@ namespace TASVideos.Tasks
 		public async Task<WikiPage> GetPage(int dbid)
 		{
 			return await _db.WikiPages
+				.ThatAreNotDeleted()
 				.Where(wp => wp.Id == dbid)
 				.SingleOrDefaultAsync();
 		}
@@ -49,9 +51,13 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns whether or not any revision of the given page exists
 		/// </summary>
-		public async Task<bool> PageExists(string pageName)
+		public async Task<bool> PageExists(string pageName, bool includeDeleted = false)
 		{
-			return await _db.WikiPages
+			var query = includeDeleted
+				? _db.WikiPages
+				: _db.WikiPages.ThatAreNotDeleted();
+
+			return await query
 				.AnyAsync(wp => wp.PageName == pageName);
 		}
 
@@ -117,6 +123,7 @@ namespace TASVideos.Tasks
 			{
 				PageName = pageName,
 				Revisions = await _db.WikiPages
+					.ThatAreNotDeleted()
 					.Where(wp => wp.PageName == pageName)
 					.OrderBy(wp => wp.Revision)
 					.Select(wp => new WikiHistoryModel.WikiRevisionModel
@@ -138,7 +145,9 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task MovePage(WikiMoveModel model)
 		{
-			if (await PageExists(model.DestinationPageName))
+			// TODO: support moving a page to a deleted page
+			// Revision ids would have to be adjusted but it coudl be done
+			if (await PageExists(model.DestinationPageName, includeDeleted: true))
 			{
 				throw new InvalidOperationException($"Cannot move {model.OriginalPageName} to {model.DestinationPageName} because {model.DestinationPageName} already exists.");
 			}
@@ -183,6 +192,7 @@ namespace TASVideos.Tasks
 		{
 			pageName = pageName.Trim('/');
 			return await _db.WikiPages
+				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
 				.Where(wp => wp.PageName.StartsWith(pageName))
@@ -211,6 +221,7 @@ namespace TASVideos.Tasks
 		public async Task<WikiDiffModel> GetLatestPageDiff(string pageName)
 		{
 			var revisions = await _db.WikiPages
+				.ThatAreNotDeleted()
 				.Where(wp => wp.PageName == pageName)
 				.OrderByDescending(wp => wp.Revision)
 				.Take(2)
@@ -227,9 +238,9 @@ namespace TASVideos.Tasks
 				return new WikiDiffModel
 				{
 					PageName = pageName,
-					LeftRevision = 0,
+					LeftRevision = revisions.First().Revision - 1,
 					LeftMarkup = "",
-					RightRevision = 1,
+					RightRevision = revisions.First().Revision,
 					RightMarkup = revisions.First().Markup
 				};
 			}
@@ -280,6 +291,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<WikiOrphanModel>> GetAllOrphans()
 		{
 			return await _db.WikiPages
+				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => !_db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
 				.Select(wp => new WikiOrphanModel
@@ -301,10 +313,14 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns a list of informations about <see cref="WikiPage"/> entries
+		/// ordered by timestamp with the given criteria
+		/// </summary>
 		public async Task<IEnumerable<WikiTextChangelogModel>> GetWikiChangeLog(int limit, bool includeMinorEdits)
 		{
 			var query = _db.WikiPages
+				.ThatAreNotDeleted()
 				.OrderByDescending(wp => wp.CreateTimeStamp)
 				.Take(limit);
 
@@ -324,6 +340,33 @@ namespace TASVideos.Tasks
 					RevisionMessage = wp.RevisionMessage
 				})
 				.ToListAsync();
+		}
+
+		/// <summary>
+		/// Performs a soft delete on all revisions of the given page name,
+		/// In addition <see cref="WikiPageReferral"/> entries are updated
+		/// to remove entries where the given page name is a referrer
+		/// </summary>
+		public async Task DeleteWikiPage(string pageName)
+		{
+			var revisions = await _db.WikiPages
+				.Where(wp => wp.PageName == pageName)
+				.ThatAreNotDeleted()
+				.ToListAsync();
+
+			foreach (var revision in revisions)
+			{
+				revision.IsDeleted = true;
+			}
+
+			// Remove referrers
+			var referrers = await _db.WikiReferrals
+				.Where(wp => wp.Referrer == pageName)
+				.ToListAsync();
+
+			_db.RemoveRange(referrers);
+
+			await _db.SaveChangesAsync();
 		}
 	}
 }
