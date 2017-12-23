@@ -217,7 +217,19 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(WikiController.DeletedPages));
 		}
 
-		// TODO: DeleteRevision
+		[RequirePermission(PermissionTo.DeleteWikiPages)]
+		public async Task<IActionResult> DeleteRevision(string path, int revision)
+		{
+			if (string.IsNullOrWhiteSpace(path) || revision == 0)
+			{
+				return RedirectHome();
+			}
+
+			path = path.Trim('/');
+			await _wikiTasks.DeleteWikiPageRevision(path, revision);
+
+			return Redirect("/" + path);
+		}
 
 		[RequirePermission(PermissionTo.DeleteWikiPages)]
 		public async Task<IActionResult> DeletedPages()
