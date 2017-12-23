@@ -207,16 +207,36 @@ namespace TASVideos.Controllers
 		}
 
 		[RequirePermission(PermissionTo.DeleteWikiPages)]
-		public async Task<IActionResult> DeletePage(string pageName)
+		public async Task<IActionResult> DeletePage(string path)
 		{
-			if (!string.IsNullOrWhiteSpace(pageName))
+			if (!string.IsNullOrWhiteSpace(path))
 			{
-				await _wikiTasks.DeleteWikiPage(pageName.Trim('/'));
+				await _wikiTasks.DeleteWikiPage(path.Trim('/'));
 			}
 
-			return RedirectHome(); // TODO: is there a better place to relocate?
+			return RedirectToAction(nameof(WikiController.DeletedPages));
 		}
 
 		// TODO: DeleteRevision
+
+		[RequirePermission(PermissionTo.DeleteWikiPages)]
+		public async Task<IActionResult> DeletedPages()
+		{
+			var model = await _wikiTasks.GetDeletedPages();
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.DeleteWikiPages)]
+		public async Task<IActionResult> Undelete(string path)
+		{
+			if (string.IsNullOrWhiteSpace(path))
+			{
+				return RedirectHome();
+			}
+
+			path = path.Trim('/');
+			await _wikiTasks.UndeletePage(path);
+			return Redirect("/" + path);
+		}
 	}
 }
