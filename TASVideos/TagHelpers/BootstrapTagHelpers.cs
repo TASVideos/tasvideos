@@ -39,7 +39,7 @@ namespace TASVideos.TagHelpers
 			}
 
 			var content = (await output.GetChildContentAsync()).GetContent();
-			output.TagName = "div";
+			output.TagName = "span";
 			
 			output.Content.SetHtmlContent($@"
 <button type='button' class='btn btn-danger {existingCssClass}' data-toggle='modal' data-target='#areYouSureModal{context.UniqueId}'>{content}</button>
