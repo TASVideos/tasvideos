@@ -1,4 +1,31 @@
-﻿<!DOCTYPE html>
+﻿@functions { 
+	string Active(string menuName)
+	{
+		string active = "active";
+		if (menuName == "Home" && ViewContext.Controller() == "Home")
+		{
+			return active;
+		}
+
+		if (menuName == "Administration" &&
+			(ViewContext.Controller() == "Roles"
+				|| ViewContext.Controller() == "User"
+				|| ViewContext.Controller() == "Permissions"))
+		{
+			return active;
+
+		}
+
+		if (menuName == (string)ViewData["ActiveTab"])
+		{
+			return active;
+		}
+
+		return "";
+	}
+}
+
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8" />
@@ -56,10 +83,10 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="@(ViewContext.Controller() == "Home" ? "active" : "")"><a asp-action="Index" asp-controller="Home">Home</a></li>
+					<li class="@(Active("Home"))"><a asp-action="Index" asp-controller="Home">Home</a></li>
 					@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles}))
 					{
-						<li class="dropdown @(ViewContext.Controller() == "Roles" || ViewContext.Controller() == "User" || ViewContext.Controller() == "Permissions" ? "active" : "")">
+						<li class="dropdown @(Active("Administration"))">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Administration<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers}))
