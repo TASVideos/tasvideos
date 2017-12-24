@@ -21,6 +21,12 @@
 			return active;
 		}
 
+		if (menuName == (string)TempData["ActiveTab"])
+		{
+			return active;
+
+		}
+
 		return "";
 	}
 }
