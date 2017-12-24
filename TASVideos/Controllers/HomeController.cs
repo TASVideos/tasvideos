@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
+	[AllowAnonymous]
 	public class HomeController : BaseController
 	{
 		public HomeController(UserTasks userTasks)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Models
 {
@@ -125,5 +126,20 @@ namespace TASVideos.Models
 
 		[Display(Name = "Existing Page")]
 		public bool HasExistingRevisions { get; set; }
+	}
+
+	/// <summary>
+	/// Represents a page on the SiteMap page
+	/// </summary>
+	public class SiteMapModel
+	{
+		[Display(Name = "Page")]
+		public string PageName { get; set; }
+
+		[Display(Name = "Type")]
+		public bool IsWiki { get; set; }
+
+		[Display(Name = "Access Restriction")]
+		public string AccessRestriction { get; set; }
 	}
 }
