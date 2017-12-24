@@ -260,6 +260,7 @@ namespace TASVideos.Controllers
 			var model = CorePages();
 			var wikiPages = await _wikiTasks.GetSubPages("");
 			model.AddRange(wikiPages
+				.Distinct()
 				.Select(p => new SiteMapModel
 				{
 					PageName = p,
