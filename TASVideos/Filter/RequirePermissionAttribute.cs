@@ -21,6 +21,9 @@ namespace TASVideos.Filter
 		private readonly PermissionTo[] _requiredPermissions;
 		private readonly bool _matchAny;
 
+		public PermissionTo[] RequiredPermissions => _requiredPermissions;
+		public bool MatchAny => _matchAny;
+
 		public RequirePermissionAttribute(PermissionTo requiredPermission)
 		{
 			_requiredPermissions = new[] { requiredPermission };
