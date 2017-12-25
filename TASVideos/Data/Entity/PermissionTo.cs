@@ -83,6 +83,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Submit Movies")]
 		[Group("User")]
 		[Description("The ability to submit a movie to be considered for publication. By default, all registered users have this permission, unless revoked.")]
-		SubmitMovies = 15
+		SubmitMovies = 15,
+
+		[Display(Name = "See Admin Pages")]
+		[Group("WikiAdministration")]
+		[Description("The ability to see certain restricted pages that pertain to administration activities.")]
+		SeeAdminPages = 16
 	}
 }

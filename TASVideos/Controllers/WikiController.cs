@@ -254,7 +254,7 @@ namespace TASVideos.Controllers
 			return Redirect("/" + path);
 		}
 
-		[RequirePermission(PermissionTo.MoveWikiPages)] // For lack of a better permission
+		[RequirePermission(PermissionTo.SeeAdminPages)]
 		public async Task<IActionResult> SiteMap()
 		{
 			var model = CorePages();
