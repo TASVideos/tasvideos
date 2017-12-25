@@ -187,7 +187,8 @@ namespace TASVideos.WikiEngine.AST
 			["WikiTextChangeLog"] = "WikiTextChangeLog",
 			["UserGetWikiName"] = "UserGetWikiName",
 			["ActiveTab"] = "ActiveTab",
-			["WikiGetCurrentEditLink"] = "CurrentEditLink"
+			["WikiGetCurrentEditLink"] = "CurrentEditLink",
+			["user_name"] = "UserName"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
