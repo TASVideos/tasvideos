@@ -22,6 +22,7 @@ namespace TASVideos.Data
 		public DbSet<RolePermission> RolePermission { get; set; }
 		public DbSet<WikiPage> WikiPages { get; set; }
 		public DbSet<WikiPageReferral> WikiReferrals { get; set; }
+		public DbSet<RoleLink> RoleLinks { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
