@@ -165,12 +165,15 @@ namespace TASVideos.Controllers
 
 		[AllowAnonymous]
 		[HttpPost]
-		public ContentResult GeneratePreview()
+		public ViewResult GeneratePreview()
 		{
 			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-			var w = new StringWriter();
-			Util.DebugWriteHtml(input, w);
-			return Content(w.ToString(), "text/plain");
+
+			ViewData["WikiPage"] = null;
+			ViewData["Title"] = "Generated Preview";
+			ViewData["Layout"] = null;
+			_wikiTasks.PreviewStorage = input;
+			return View(Razor.WikiMarkupFileProvider.PreviewName);
 		}
 
 		[RequirePermission(PermissionTo.MoveWikiPages)]
