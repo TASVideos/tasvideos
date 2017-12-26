@@ -9,8 +9,8 @@ using TASVideos.Models;
 
 namespace TASVideos.Tasks
 {
-    public class WikiTasks
-    {
+	public class WikiTasks
+	{
 		private readonly ApplicationDbContext _db;
 
 		public WikiTasks(ApplicationDbContext db)
@@ -434,6 +434,43 @@ namespace TASVideos.Tasks
 			}
 
 			await _db.SaveChangesAsync();
+		}
+		
+		public string PreviewStorage
+		{
+			get
+			{
+				var page = _db.WikiPages
+					.AsNoTracking() // Very important workaround to the unforutnate combination of EF caching and the singleton FileProvider having a different instance of the tasks object
+					.SingleOrDefault(wp => wp.PageName == "PreviewWindow");
+				if (page != null)
+				{
+					return page.Markup;
+				}
+
+				return "";
+			}
+
+			set
+			{
+				var page = _db.WikiPages.SingleOrDefault(wp => wp.PageName == "PreviewWindow" && wp.Revision == 0);
+				if (page != null)
+				{
+					page.Markup = value;
+				}
+				else
+				{
+					_db.Add(new WikiPage
+					{
+						PageName = "PreviewWindow",
+						Markup = value,
+						Revision = 0,
+						RevisionMessage = "Do not touch this"
+					});
+				}
+
+				_db.SaveChanges();
+			}
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using TASVideos.WikiEngine;
+using TASVideos.Tasks;
 
 namespace TASVideos.Razor
 {
@@ -11,6 +12,7 @@ namespace TASVideos.Razor
 		private readonly IServiceProvider _provider;
 
 		public const string Prefix = "/Views/~~~";
+		public const string PreviewName = "/Views/~~~Preview";
 
 		public WikiMarkupFileProvider(IServiceProvider provider)
 		{
@@ -24,33 +26,61 @@ namespace TASVideos.Razor
 
 		public IFileInfo GetFileInfo(string subpath)
 		{
-			if (!subpath.StartsWith(Prefix))
+			if (!subpath.StartsWith(Prefix) && subpath != PreviewName)
 			{
 				return null;
 			}
 
-			subpath = subpath.Substring(Prefix.Length);
-			var tasks = (Tasks.WikiTasks)_provider.GetService(typeof(Tasks.WikiTasks));
-			var continuation = tasks.GetPage(int.Parse(subpath));
-			continuation.Wait();
-			var result = continuation.Result;
-			if (result == null)
+			var tasks = (WikiTasks)_provider.GetService(typeof(WikiTasks));
+			string pageName, markup;
+
+			if (subpath == PreviewName)
 			{
-				return null;
+				pageName = PreviewName;
+				markup = tasks.PreviewStorage;
 			}
-			
+			else
+			{
+				subpath = subpath.Substring(Prefix.Length);
+				var continuation = tasks.GetPage(int.Parse(subpath));
+				continuation.Wait();
+				var result = continuation.Result;
+				if (result == null)
+				{
+					return null;
+				}
+
+				pageName = result.PageName;
+				markup = result.Markup;
+			}
+
 			var ms = new MemoryStream();
 			using (var tw = new StreamWriter(ms))
 			{
-				Util.RenderRazor(result.PageName, result.Markup, tw);
+				Util.RenderRazor(pageName, markup, tw);
 			}
 
-			return new MyFileInfo(result.PageName, ms.ToArray());
+			return new MyFileInfo(pageName, ms.ToArray());
 		}
 
 		public IChangeToken Watch(string filter)
 		{
+			if (filter == PreviewName)
+			{
+				return new ForceChangeToken();
+			}
+
 			return null;
+		}
+
+		private class ForceChangeToken : IChangeToken
+		{
+			public bool HasChanged => true;
+			public bool ActiveChangeCallbacks => false;
+			public IDisposable RegisterChangeCallback(Action<object> callback, object state)
+			{
+				return null;
+			}
 		}
 
 		private class MyFileInfo : IFileInfo
