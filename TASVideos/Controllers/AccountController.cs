@@ -44,6 +44,12 @@ namespace TASVideos.Controllers
 		[TempData]
 		public string ErrorMessage { get; set; }
 
+		[AllowAnonymous]
+		public IActionResult Index()
+		{
+			return RedirectToAction("Login");
+		}
+
 		[HttpGet]
 		[AllowAnonymous]
 		public async Task<IActionResult> Login(string returnUrl = null)
