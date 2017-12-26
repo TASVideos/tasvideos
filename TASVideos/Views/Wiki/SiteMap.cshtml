@@ -13,6 +13,7 @@
 	{
 		<tr>
 			<td>
+				<span Condition="@item.PageName.Contains('/')" style="padding-left: 20px;"></span>
 				<a href="/@item.PageName">@item.PageName</a>
 			</td>
 			<td>@(item.IsWiki ? "Wiki" : "Built In")</td>
