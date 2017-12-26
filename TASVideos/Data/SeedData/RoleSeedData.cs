@@ -73,7 +73,12 @@ namespace TASVideos.Data.SeedData
 				{
 					RoleId = 2,
 					PermissionId = p
-				}).ToArray()
+				}).ToArray(),
+				RoleLinks = new[]
+				{
+					new RoleLink { Link = "EditorGuidelines" },
+					new RoleLink { Link = "TextFormattingRules" }
+				}
 			},
 			new Role
 			{
@@ -84,7 +89,12 @@ namespace TASVideos.Data.SeedData
 					RoleId = 3, // Meh, for lack of a better way
 					PermissionId = p,
 					CanAssign = EditorPermissions.Contains(p)
-				}).ToArray()
+				}).ToArray(),
+				RoleLinks = new[]
+				{
+					new RoleLink { Link = "EditorGuidelines" },
+					new RoleLink { Link = "TextFormattingRules" }
+				}
 			}
 		};
 	}

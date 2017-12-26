@@ -32,7 +32,9 @@ namespace TASVideos.Tasks
 					Name = r.Name,
 					Description = r.Description,
 					Permissions = r.RolePermission
-						.Select(rp => rp.PermissionId)
+						.Select(rp => rp.PermissionId),
+					Links = r.RoleLinks
+						.Select(rl => rl.Link)
 				})
 				.ToListAsync();
 		}

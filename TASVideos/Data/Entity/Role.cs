@@ -18,5 +18,6 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<RolePermission> RolePermission { get; set; } = new HashSet<RolePermission>();
 		public virtual ICollection<UserRole> UserRole { get; set; } = new HashSet<UserRole>();
+		public virtual ICollection<RoleLink> RoleLinks { get; set; } = new HashSet<RoleLink>();
 	}
 }

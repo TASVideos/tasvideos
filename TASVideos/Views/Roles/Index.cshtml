@@ -24,12 +24,26 @@
 					@role.Description
 				</row>
 			</div>
-			<div class="col-sm-6">
-				<strong>Permissions:</strong><br />
-				@foreach (var permission in role.Permissions)
-				{
-					@permission<br />
-				}
+			<div class="col-md-3 col-sm-6">
+				<row>
+					<strong>Permissions:</strong><br />
+					@foreach (var permission in role.Permissions)
+					{
+						@permission<br />
+					}
+				</row>
+			</div>
+			<div condition="@role.Links.Any()" class="col-md-3 col-sm-12">
+				<row>
+					<strong>Related Links:</strong><br />
+					@foreach (var link in role.Links)
+					{
+						<div>
+							<a href="/@link">@link</a>
+						</div>
+
+					}
+				</row>
 			</div>
 		</div>
 	</div>
