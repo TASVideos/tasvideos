@@ -14,6 +14,7 @@ namespace TASVideos.Models
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public IEnumerable<PermissionTo> Permissions { get; set; } = new List<PermissionTo>();
+		public IEnumerable<string> Links { get; set; } = new List<string>();
 	}
 
 	/// <summary>
