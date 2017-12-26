@@ -52,7 +52,8 @@ namespace TASVideos.Tasks
 						{
 							Id = p.Id,
 							Name = p.Name,
-							Description = p.Description
+							Description = p.Description,
+							Links = p.RoleLinks.Select(rl => rl.Link)
 						})
 						.SingleAsync(p => p.Id == id.Value)
 					: new RoleEditViewModel();
@@ -84,6 +85,7 @@ namespace TASVideos.Tasks
 			{
 				role = await _db.Roles.SingleAsync(r => r.Id == model.Id);
 				_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == model.Id));
+				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role.Id == model.Id));
 				await _db.SaveChangesAsync();
 			}
 			else
@@ -102,6 +104,13 @@ namespace TASVideos.Tasks
 					PermissionId = (PermissionTo)p,
 					CanAssign = model.SelectedAssignablePermissions.Contains(p)
 				}));
+
+
+			_db.RoleLinks.AddRange(model.Links.Select(rl => new RoleLink
+			{
+				Link = rl,
+				Role = role
+			}));
 
 			await _db.SaveChangesAsync();
 		}

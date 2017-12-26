@@ -20,6 +20,12 @@
 				<span asp-validation-for="Description" class="text-danger"></span>
 			</div>
 		</row>
+		<row>
+			<div class="col-sm-5">
+				<label asp-for="Links" class="control-label"></label><label> (Comma separated list)</label>
+				<input asp-for="LinksStr" class="form-control" spellcheck="false" autocomplete="off" />
+			</div>
+		</row>
 	</form-group>
 	<form-group>
 		<row>
