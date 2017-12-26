@@ -49,6 +49,15 @@ namespace TASVideos.Models
 
 		[Display(Name = "Available Assignable Permissions")]
 		public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = new List<SelectListItem>();
+
+		[Display(Name = "Related Links")]
+		public IEnumerable<string> Links { get; set; } = new List<string>();
+
+		public string LinksStr
+		{
+			get => string.Join(",", Links);
+			set => Links = !string.IsNullOrWhiteSpace(value) ? value.Split(',') : new string[] { };
+		}
 	}
 
 	/// <summary>
