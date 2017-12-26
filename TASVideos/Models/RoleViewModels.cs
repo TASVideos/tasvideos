@@ -13,7 +13,11 @@ namespace TASVideos.Models
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
+
+		[Display(Name = "Permissions")]
 		public IEnumerable<PermissionTo> Permissions { get; set; } = new List<PermissionTo>();
+
+		[Display(Name = "Related Links")]
 		public IEnumerable<string> Links { get; set; } = new List<string>();
 	}
 
