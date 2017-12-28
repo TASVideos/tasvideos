@@ -201,6 +201,22 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Returns a list of all pages that are considered parents
+		/// of the page with the given <see cref="pageName"/>
+		/// </summary>
+		public async Task<IEnumerable<string>> GetParents(string pageName)
+		{
+			pageName = pageName.Trim('/');
+			return await _db.WikiPages
+				.ThatAreNotDeleted()
+				.ThatAreCurrentRevisions()
+				.Where(wp => wp.PageName != pageName)
+				.Where(wp => pageName.StartsWith(wp.PageName))
+				.Select(wp => wp.PageName)
+				.ToListAsync();
+		}
+
+		/// <summary>
 		/// Returns a list of all wiki pages that have a link (reference)
 		/// to the given <see cref="pageName"/>
 		/// </summary>

@@ -1,0 +1,15 @@
+﻿@model IEnumerable<string>
+
+<div condition="@(!Model.Any())">
+	<label>No Parents</label>
+</div>
+
+<div Condition="@Model.Any()">
+	<label>Parents:</label>
+	<ul>
+		@foreach (var pageName in Model.OrderBy(m => m))
+		{
+			<li><a href="/@pageName">@pageName</a></li>
+		}
+	</ul>
+</div>

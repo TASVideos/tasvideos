@@ -7,7 +7,7 @@
 <div Condition="@Model.Any()">
 	<label>Subpages:</label>
 	<ul>
-		@foreach (var pageName in Model)
+		@foreach (var pageName in Model.OrderBy(m => m))
 		{
 			<li><a href="/@pageName">@pageName</a></li>
 		}
