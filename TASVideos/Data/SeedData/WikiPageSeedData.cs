@@ -1983,6 +1983,17 @@ In the video example to the right, 2-players are used in [1279M|Double Dragon 2]
 !!! See Also
 * [GameResources|Game Resources] - resource pages for specific games.
 * [CommonTricks|Common Tricks] - tricks common to many games."
+			},
+			new WikiPage
+			{
+				PageName = "System",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"This page lists all the system pages.
+
+These pages must not be renamed, because some code in the wiki system refers to them by name
+
+[module:listsubpages]"
 			}
 		};
 	}
