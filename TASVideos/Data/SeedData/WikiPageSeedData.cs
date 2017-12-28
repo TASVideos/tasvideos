@@ -1288,7 +1288,7 @@ By default any registered user can edit this page."
 			},
 			new WikiPage
 			{
-				PageName = "CommonTricks",
+				PageName = "GameResources/CommonTricks",
 				RevisionMessage = InitialCreate,
 				Markup =
 @"[module:listlanguages]
@@ -1663,6 +1663,327 @@ Simply try doing things that you aren't expected to do. Game developers forget a
 !!! See also
 * [Game Resources] ― we have resource pages for other games too!
 * [GameResources/BossFightingGuide|Boss Fighting Guide] ― tricks specific to boss fights"
+			},
+			new WikiPage
+			{
+				PageName = "GameResources/BossFightingGuide",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"%%%
+Fighting perfectly against bosses can be very challenging for even 
+the best TASers. The usage of the strategies listed below can significantly
+improve a movie (in both frame count and entertainment value).
+
+Note: These strategies are not restricted to boss fighting;
+many of them can apply to other situations in games.
+
+%%TOC%%
+
+!!! Knowing
+It is important to know what does it do to fight the boss before actually fighting it, especially for speedrunners. That could imply...
+
+!! Avoid the unnecessary fight
+In most situations the boss must be fought to make progress in the game, but sometimes it is not, and progress can be made without it. If the positive gain from fighting such an optional boss is not worth the time spent on it, then the fight might be unnecessary.
+
+[TODO]: Examples (Castlevania II where the fight rewards almost nothing and some other RPGs).
+----
+!! Evade the supposed fight
+Even if the fight was designed to be compulsory to make progress, it could be skipped with unexpected methods in some situations.
+
+! Avoid the way where the boss gets in
+In some games progress is made when the player character arrives at certain places, while the boss fight is just required to unlock the way to it. However, there may be some other way to reach the destinations. 
+
+''Example:'' In [1144M|Metroid], Samus can access Tourian by luring a rio into the bridge room, freezing the rio, and using it as a floor.
+----
+! Avoid letting the boss spawn or activate
+It may be possible to use a different route, pass through a wall, or
+use another method that prevents the boss from obstructing where it should, or appearing at all.
+From there, the character may be able to continue onward as if it had
+already defeated the boss.
+
+''Example 1:'' In [1054M|Maniac Mansion], if a kid is in the room with Purple Tentacle when a cutscene occurs, Purple Tentacle will become unable to move
+afterward, and so the kid will be able to bypass it.
+
+''Example 2:'' In [734M|Zanac], sprite load can cause some turrets not to spawn.
+
+[TODO]: (Example 3: Torizo skip in Super Metroid. Is it also an example of the next trick?)
+----
+! See whether the character can advance to the next screen
+[module:youtube|v=EewVM_G0YaU|start=1074|loop=1092|align=right|w=224|h=160|hidelink]
+Sometimes it is incorrectly assumed that the boss must be defeated in
+order to allow the character to advance to the next screen. If the
+boss does not offer any useful item when it is defeated, see whether
+the game’s programmers actually sealed the room’s exit.
+
+''Example 1:'' The [962M|Glover] World 3 boss fight opens up a box containing the level-end item. It is possible to glitch into the box and skip the fight entirely.
+
+''Example 2:'' In [1103M|Mega Man], the Cut Man rematch is avoided entirely by using the Magnet Beam glitch to zip into the next room.
+----
+! Replace the end-level trigger
+Even if progress requires the game setting on a ""boss defeated"" flag or running a scripted post-fight event, there may be a way to set on the flag or trigger the event, or even to end the level directly without defeating it.
+
+''Example:'' In the [355M|Battletoads] Rat Race level, killing any running rat
+will cause the game to think that the boss has been defeated.
+----
+!! Fight only the boss
+Although it may not be possible to avoid some bosses, there may be an
+unorthodox way to do the opposite thing: to skip the level and quickly access the boss’s lair.
+
+[TODO]: Example. (Little Samson?)
+----
+!! Skip to the last
+Some games have a final lair that is normally accessible only
+after defeating some bosses located at other places or require. To the full extent, there may be a way to skip to the final boss’s lair, or even the final goal behind it.
+
+[TODO]: Example. (Zelda: A Link to the Past?)
+----
+!!! Planning
+If the boss is decided to be fought, planning should be taken before carrying on.
+
+!! Know what to do
+! Know what the fight is all about
+Sometimes the purpose of the boss fight is not to defeat
+the boss. The character may need to press a button, accept a certain
+amount of damage, or just stand up for enough time.
+
+''Example 1:'' In [1270M|Super Metroid], the first fight against Ridley ends when Samus accepts a certain amount of damage. Therefore, the player’s goal should be
+to lower Samus’s energy level as quickly as possible rather than to
+fight against Ridley.
+
+''Example 2:'' In [549M|Final Fantasy VI], after Vargas uses his Blizzard Fist technique, the usage of Blitz Pummel will start a cutscene in which Vargas resigns the fight — ending the battle much more quickly than defeating him conventionally.
+----
+! Have the correct item
+The boss may be invulnerable or impassible without a particular item.
+Know which item, if any, is necessary in order to overcome the boss,
+and know whether the item is ''really'' necessary.
+----
+!! Plan further
+The boss fight is not everything. More than the fight itself should be considered.
+
+! Minimize time-consuming weapon/item switching
+Sometimes, bosses are susceptible to different weapons or items. If switching takes considerable time (e.g., the player has to pause the game in order to bring up the weapon menu), then it can be quicker to stick to one effective weapon for two or more bosses rather than to select the most effective weapon each time.
+
+If the player is free to decide the order of the boss fights, then choosing the optimal order can help reduce weapon-switching.
+----
+! Minimize automated demos after the fight
+Sometimes defeating the boss will cause a scene where the character must
+wait. If possible, this delay should be avoided.
+
+''Example:'' In [1349M|Super Mario Bros. ""warpless""], it is faster to use fireballs
+on the bosses in order to prevent the slow bridge-destruction scene.
+----
+! Minimize end-level inventories
+In many games, the player receives bonus points for things like health, weapon power, or time. Sometimes it is advantageous to do things like lose health or fire ammo in order to minimize the time that it takes to tabulate these bonuses. Conversely, in some games, instead of receiving a bonus, the game takes time to refill the character after the boss fight. In this case, the player should optimally balance the time that it takes to refill with the speed of the boss fight.
+
+''Example:'' In [467M|Kabuki - Quantum Fighter] the character can take damage during the boss fight without losing time. Thus, there is less of a health bonus.
+----
+! Get in the best position after the fight
+If an exit appears after a fight, position the character so that it can
+go through the exit as early as possible. If the character must accelerate from a complete stop, then have the character already moving at its fastest speed. It may be a good idea to draw the boss toward the exit during the fight. If the boss drops an important item after the fight, make the character grab it as early as possible.
+
+''Example:'' In [1103M|Mega Man], the boss releases its weapon upgrade.
+Mega Man should be positioned to grab the upgrade as soon as it appears.
+----
+! Get the boss in the ideal position on the last hit
+The boss's death (e.g., exploding into debris) can cause lag.
+Having the boss at the edge of the screen can minimize this lag. Alternatively, the debris of the boss may have to leave the screen entirely in order to progress, and so the boss should be in the center of the screen.
+
+''Example 1:'' In Mega Man [476M|5] & [1241M|6], it is optimal to have the boss in one of the far corners of the room so that some of the debris leaves as soon as possible.
+
+''Example 2:'' In Mega Man [545M|4] & [776M|7], the debris from the boss must clear the room before Megaman can get the power-up. In this case, the boss should be in the center of the screen.
+----
+!!! Fighting
+!! Attack early
+! Start the fight early
+There can be various trigger conditions of a boss fight. It could be to scroll the screen, move the character to a certain position, or wait for a timer to count to a specific value. This can be an opportunity for optimizations.
+
+TODO: Examples.
+----
+! Get in the best position when the fight starts
+While seemingly contrary to the previous trick, it can be more advantageous to spend time in putting the character in a more ideal position before the fight begins than starts it as early as possible.
+
+''Example:'' In [1346M|Mega Man 2], it is possible to zip right up next to the boss at the beginning of the fight.
+----
+! Attack as early as possible
+Fire a long-range weapon as early into the battle as possible, as long as the projectile will damage the boss. This moment could be the first frame on which the
+character can use its weapon after a delay (e.g., dialogue). In a side-scroller, the moment could be just before the boss appears on the screen, because the character — after discharging its weapon — will scroll the screen when it continues moving toward the boss. After the first shot, make the character continuously attack the boss on the earliest frame that the boss will accept damage.
+----
+! Hit the boss before the fight begins
+[module:youtube|v=-JRncSed9hw|start=180|loop=194|align=left|w=224|h=160|hidelink]
+[module:youtube|v=EByv1XTLo5Y|start=528|loop=538|align=right|w=224|h=160|hidelink]
+In some cases, it might be possible to hit the boss before it seems possible.%%%
+
+In ''Example 1'' on the left: [425M|Cobra Triangle], the player's boat can fire a shot just before it lands in each level. This extra shot can be used to hit the boss before the boss fight even starts.
+
+In ''Example 2'' on the right: [776M|Mega Man 7], the junk shield weapon can be used in the previous screen in order to hit Freeze Man during the beginning boss cutscene!
+
+Some bosses are glitchy and will accept damage before they visually
+appear on the screen.
+
+''Example 3:'' In [1265M|Power Blade], many of the bosses
+can accept damage before the screen loads, while they have 0 HP — entailing
+instant death. 
+
+''Example 4:'' In [1119M|Castlevania 2], the final boss can accept damage while it materializes onto the screen.
+----
+!! Attack dominantly
+! Affect the boss’s behavior
+In some games, the boss may react to the character’s actions.
+Performing certain actions may prevent the boss from doing undesirable
+things such as jumping, becoming invulnerable, or performing an attack
+that takes time to avoid.
+----
+! Make the boss commit suicide
+See whether the character can trick the boss into falling into a
+hole or spike pit or otherwise damaging itself.
+
+''Example:'' In [485M|Double Dragon], it is possible to knock Abobo onto a conveyor belt that takes him into a hole. Later in the movie, Willy is manipulated into shooting himself with his own gun.
+----
+! Constrain the boss
+[module:youtube|v=CNHw2zwJKBE|start=106|loop=119|align=left|w=224|h=160|hidelink]
+Although the boss should ''look'' menacing, search for a method that greatly conatrains its ability and decisively defeats it. This is usually achieved utilizing some hit-stun or knock-back design on the boss, but some unorthodox way may also work.
+
+''Example 1:'' In [1443M|Metroid], Samus can stun the mini-bosses by repeatedly shooting them at close range.
+
+''Example 2:'' In [1168M|Circle of the Moon], Dracula in the Sealed Room is standing still and open to attack when Nathan enters the room in a glitched way.
+----
+!! Attack effectively
+Avoid attacks that do not count, either miss or get blocked, unless it has a purpose eg. to manipulate randomness.
+
+! Find the weak spot
+Sometimes particular sections of the boss may not accept damage or may
+accept damage but not be essential to the death of the boss. The player
+should know where an attack on the boss will actually contribute to the
+death of the boss.
+
+''Example:'' In [853M|Ghosts ’n Goblins], the dragon’s tail
+can be destroyed, but only the attacks on its head will cause its demise.
+----
+! Know for how long the boss’s invulnerability lasts
+[module:youtube|v=s760jW7HnZc|start=132|loop=175|align=right|w=224|h=160|hidelink]
+The character should not attack the boss when it will not cause any damage, such as (sometimes) at the start of a battle or if the boss has a recovery period after the character does damage to it. Make sure that when the invulnerability wears off, the attack ''damages'' the boss on the first possible frame. This timing entails that the character may need to start charging the weapon while the boss is still invulnerable.
+
+If there is a visual indication of when the boss becomes vulnerable again, such as that it stops blinking, make sure to deliver the next attack(s) on (or, possibly, before) the frame on which the indication begins, lest it become obvious that the character did not attack the boss as soon as possible. If there is a sound that plays whenever the character’s attack does damage or whenever the boss accepts damage, then the player should listen for that sound, lest it become obvious that some attacks were mistimed.
+
+In this clip from [1103M|Mega Man] shows how bullets land on the first frame the boss is vulnerable.  Notice how you can hear shots land at a regular interval.
+----
+! Watch HP in memory
+In some games, bosses will take an unexpected amount of damage if they are hit
+at a certain time or from a certain position. Also, it may be unclear which
+weapon is the strongest against the boss. If the game does not display the
+boss’s exact HP value onscreen, then watching the value in memory while trying different techniques may yield a way to deal more damage than normally possible and/or determine which weapon is the best to use.
+
+''Example 1:'' Many bosses in [1067S|Pulseman] can take 10–12 damage per hit under the right circumstances, whereas a normal hit does only 2 damage.
+
+''Example 2:'' In [830M|Super C], the level 5 boss appears to take damage as it descends, but no damage is registered on the HP address. Worse yet, it will take longer for the boss to become vulnerable if the character shoots it during this time. HP watching may reveal counterintuitive results!
+----
+!! Attack efficiently
+! Find the boss’s weakness
+[module:youtube|v=LcDhcpvqd9o|start=40|loop=52|align=left|w=224|h=160|hidelink]
+[module:youtube|v=NOyhnLe2Ht8|start=1362|loop=1367|align=right|w=224|h=160|hidelink]
+The character may be able to use certain weapons that hurt the boss much
+more than other weapons would. These weapons can be either power-ups
+or elemental-based. For example, a fire-based boss may be weak against
+a water-based weapon.
+
+In [562M|Ninja Gaiden], the Jump-and-Slash technique is always better than the normal technique.
+
+In Mega Man games, bosses are almost always weakest to a particular weapon.  The example on the right, [1346M|Mega man 2] shows a striking example of finding a boss's weakness.
+----
+! Find ways to increase the effectiveness of an attack
+In some cases, weapons do more damage only when certain conditions have been met.
+
+''Example:'' In [1593M|TMNT], the character does more damage if its health is under 50%.  Thus, the character should lose health before the boss fight.
+----
+! Use critical hits
+[module:youtube|v=h1i-JD7ivgc|start=410|loop=437|align=left|w=224|h=160|hidelink]
+[module:youtube|v=h1ZwXC4siKU|start=12|loop=27|align=right|w=224|h=160|hidelink]
+Against bosses in RPGs, the fight probably will be faster if the player
+manipulates randomness in order to make the character deliver critical hits
+instead of normal hits. This randomness may be based on the frame on which the attack is selected or the buttons pressed during menu navigation (or a combination of both).
+
+In the example on the left, [519M|Dragon Warrior 4], The character manipulates nothing but critical hits against a boss (and manipulates the boss to miss with each of its attacks).
+
+Critical Hits aren't limited to RPG movies either.  The example on the right shows a boss fight from [1222M|Castlevania: Harmony of Dissonance] where the character delivers many critical hits in a very short time frame.
+----
+! Pause the game
+[module:youtube|v=s760jW7HnZc|start=690|loop=705|align=right|w=224|h=160|hidelink]
+The boss may continue to accept damage while the game is paused, or it may
+accept damage repeatedly as the game is paused and unpaused.
+
+On the right is the most famous example of this, the ""pause glitch"" in [1103M|Mega Man].  Continuously pausing and unpausing can cause one projectile to damage the boss multiple times.
+----
+! Use the character as a weapon
+In rare cases, the character's physical location can affect the damage dealt to the boss. One possible method for using the character as a weapon is to make
+the character accept damage from the boss on the same frame that the
+character’s weapon hits the boss.
+
+''Example:'' Many bosses in [901M|Castlevania] can accept critical damage from
+the character if they are hit on the correct frame.
+----
+!! Attack quickly
+! Use the fastest method of attack
+[module:youtube|v=6Y666I8W5B4|start=870|loop=885|align=right|w=224|h=160|hidelink]
+Additionally, if a certain attack is faster than another attack, it is
+probably wiser to use the quicker attack, unless the quicker attack is
+so weak that it ultimately entails a longer fight. 
+
+In general, the player should choose whichever attack has the highest
+ratio of damage to time. If the boss has a long invulnerability period
+after it takes damage, then the speed of each attack that the character
+can perform is effectively reduced to the speed at which the boss becomes
+vulnerable; in this case, stronger-but-slower attacks may kill the boss more
+quickly than faster-but-weaker attacks. The player should know how much
+damage ''each'' type of attack does to the boss (e.g., how many bars of
+health an attack reduces and/or how many attacks are needed to kill it).
+
+In the example on the right, [1114M|Zelda II], it is much quicker (and more impressive) to dance on top of the bosses and use downstab than it would be to repeatedly jump and swing.
+----
+! Move near the boss
+During the firepower output period, do not position the character at sniping distance, because attacks will take longer to hit the boss. Also, in many games the character can
+discharge its weapon (e.g., bullets) only after the previously fired
+projectile has disappeared from the screen. Thus, moving next to the
+boss allows the character to attack more frequently. Sometimes the character
+can go inside the boss (by abusing temporary invulnerability
+after being attacked) in order to attack even faster. Some projectiles
+are not absorbed when they damage the boss; in this case it may be
+more efficient to move closer to and to face the edge of the screen so that
+the projectiles from the character’s weapon go offscreen faster.
+----
+! Jump with the boss
+Even if the character has a weapon that can shoot upward, the character
+probably should stay as close to the boss as possible when it jumps.
+In addition to being more efficient, aerial fighting can offer the
+''Matrix''-like fighting that is sought in TAS movies.
+----
+! Find a safe zone
+Without conflicting with the ‘be adjacent’ aspect, find a safe area.
+If the character must dodge the boss’s projectiles or body, then the
+character may need to jump or step back. This dodging entails that
+the character must stop attacking until it reestablishes its position
+and the dangerous objects have cleared out.
+----
+! Take damage
+In some games, it is faster
+to stand in the way and keep attacking while accepting damage than it is
+to avoid the boss’s attacks; the player should use this tactic only if it
+is the fastest possible method (i.e., do not be lazy).
+----
+! Double-team
+[module:youtube|v=EkfEF8ykaUo|start=505|loop=526|align=right|w=197|h=148|hidelink]
+Some games have a ‘two-player simultaneous play’ option. Two players often
+can destroy the boss quicker than one player alone could.
+
+''Example:'' In [499M|Rush ’n Attack], the two players can cover both sides of
+the screen, use teamwork, etc.
+
+In the video example to the right, 2-players are used in [1279M|Double Dragon 2] to toss the final boss back and forth.
+
+----
+!!!See also
+* [Game Resources] ― resource pages for specific games.
+* [GameResources/Common Tricks|Common Tricks] ― tricks common to many games.
+"
 			}
 		};
 	}
