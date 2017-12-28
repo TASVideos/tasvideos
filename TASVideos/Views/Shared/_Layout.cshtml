@@ -90,6 +90,10 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
 					<li class="@(Active("Home"))"><a asp-action="Index" asp-controller="Home">Home</a></li>
+					<li><a href="/Movies">Movies</a></li>
+					<li><a href="/GameResources">Game Resources</a></li>
+					<li><a href="/Articles">Articles</a></li>
+					<li><a href="/EmulatorResources">Emulators</a></li>
 					@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles}))
 					{
 						<li class="dropdown @(Active("Administration"))">
