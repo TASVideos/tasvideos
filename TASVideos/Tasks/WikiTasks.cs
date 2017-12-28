@@ -310,6 +310,7 @@ namespace TASVideos.Tasks
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => !_db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
+				.Where(wp => !wp.PageName.StartsWith("System/")) // These by design aren't orphans they are directly used in the system
 				.Select(wp => new WikiOrphanModel
 				{
 					PageName = wp.PageName,
