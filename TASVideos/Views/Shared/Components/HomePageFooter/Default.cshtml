@@ -1,0 +1,24 @@
+﻿@model UserSummaryModel
+<hr />
+This page is intended to be the personal page for user: @(Model?.UserName ?? ((WikiPage)ViewData["pageData"]).PageName.Replace("HomePages/", "")) <br />
+<br />
+
+@if (Model != null)
+{ 
+	<div>
+		The following additional information is available for this user:<br />
+		<ul>
+			<li>Profile TODO</li>
+			<li>@Model.MovieCount Movies TODO</li>
+			<li>@Model.SubmissionCount Submissions TODO</li>
+			<li>Wiki Edits: @Model.EditCount TODO</li>
+			<li>Awards Won TODO</li>
+		</ul>
+		<label>Note: Opinions expressed on homepages of our users are the personal opinions of those people, and don't necessarily represent the opinion of the whole TASVideos community.</label>
+	</div>
+}
+else
+{
+	<label>This user does not currently exist but this page should be reserved should such a user regiser.</label><br />
+	<label>Wiki Editors, all users can edit their own homepages by default, it is not recommended to create home pages unless explicitely requested by the user</label>
+}

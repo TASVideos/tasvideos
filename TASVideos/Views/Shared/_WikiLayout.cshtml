@@ -17,6 +17,10 @@
 {
 	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/GameResourcesFooter" })
 }
+else if (pageData.PageName.StartsWith("HomePages/"))
+{
+	@await Component.InvokeAsync(nameof(HomePageFooter), new { pageData })
+}
 <hr />
 <small>
 	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateTimeStamp

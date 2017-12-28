@@ -267,6 +267,31 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
+		/// <summary>
+		/// Returns a summary of a <see cref="User" /> with the given <see cref="userName" />
+		/// If a user can not be found, null is returned
+		/// </summary>
+		public async Task<UserSummaryModel> GetUserSummary(string userName)
+		{
+			var user = await _db.Users
+				.SingleOrDefaultAsync(u => u.UserName == userName);
+
+			if (user != null)
+			{
+				return new UserSummaryModel
+				{
+					Id = user.Id,
+					UserName = user.UserName,
+					EditCount = 999, // TODO
+					MovieCount = 999, // TODO
+					SubmissionCount = 999, // TODO
+					// TODO: awards
+				};
+			}
+
+			return null;
+		}
+
 		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)
 		{
 			return _db.Users

@@ -104,4 +104,17 @@ namespace TASVideos.Models
 		[DisplayName("Selected Roles")]
 		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
 	}
+
+	/// <summary>
+	/// Represents a summary of a given user intended to be displayed in places such as their homepage
+	/// </summary>
+	public class UserSummaryModel
+	{
+		public int Id { get; set; }
+		public string UserName { get; set; }
+		public int EditCount { get; set; }
+		public int MovieCount { get; set; }
+		public int SubmissionCount { get; set; }
+		public IEnumerable<string> Awards { get; set; } = new List<string>();
+	}
 }
