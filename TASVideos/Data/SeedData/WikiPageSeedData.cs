@@ -1285,6 +1285,384 @@ This page is much like [recent changes] but it also lists minor edits.
 This is a page dedicated to experimenting with wiki markup.
 
 By default any registered user can edit this page."
+			},
+			new WikiPage
+			{
+				PageName = "CommonTricks",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"[module:listlanguages]
+
+----
+
+!!! Common tricks
+
+''""This is a sparring program. Similar to the programmed''
+''reality of the Matrix. It has the same basic rules – rules''
+''like gravity. What you must learn is that these rules are no''
+''different than the rules of a computer system. Some of''
+''them can be bent. Others – can be broken.""'' ― Morpheus, The Matrix
+
+There are several tricks that can be used (or at least tried)
+in many games to improve the time.  If you are making a movie, be sure to try
+every one of them. Otherwise, try [=forum/viewtopic.php?t=13010|finding your own].
+
+%%TOC%%
+
+!! Unintended things abuses
+
+! Abusing untested code
+''[TODO]: More about untested code.''
+
+Untested code is a primary source of game glitches.
+
+Untested code is not always helpful. For example, in [355M|Battletoads]
+there's one level that is impossible to complete with two players because
+the game testers never actually tried the level with two players.  The game was published containing a serious programming error that prevents the second player from moving (and resulting in his immediate death) in the Clinger-Wingers level.
+
+! Abusing erroneous assumptions
+Due to limited processing power, old console games often make
+erroneous assumptions to reduce the number of calculations the
+game has to make.  Sometimes these errors are just a result of
+programmer oversight.
+
+[module:youtube|v=baubmbgjzAg|start=64|loop=75|align=right|w=197|h=148|hidelink]
+Many interesting examples exist, such as:
+* In [1002M|Super Mario Bros 2], the games assumes that you are standing on an enemy if you are close enough to the top of it. So if you jump at the right spot next to an enemy, the ""ground flag"" is set and you can jump again in midair.
+* The video on the right shows how in [1090M|Rygar], the game assumes you are standing on the ground if you are ducking, so if you walk and duck at small intervals you can walk off cliffs without falling down.
+* In [1334M|Kid Chameleon] and [498M|Solomon's Key], the games assume you are standing on the ground every time a level starts, thus allowing you to do actions in midair at the start of a level, such as jumping or attacking.
+* In [220M|Flashback], the game assumes you have collected items from previous levels even if that's not the case (due to warping). This also applies to most Prince of Persia games.
+
+! Abusing side-effects of pause
+[http://media.tasvideos.org/rockmantricks/pausetrick.gif|right]
+In some games, pausing has unintended side-effects due to programmer oversight:
+* In [1103M|Mega Man], pausing suspends bullets but keeps temporary invulnerability timers running, allowing shots to hit their targets multiple times if you pause while your target is being hit.
+* The example to the right shows [1346M|Mega Man 2] where pausing resets vertical acceleration, which can be used to lessen the effects of gravity and perfom extra wide jumps.
+* In some games, timers or counters continue to change during paused periods, which might allow certain types of luck manipulations. Sometimes it might even cause the timers or counters to overflow/underflow and lead to useful consequences.
+* In most games, pausing creates a sound effect that momentarily disables a sound channel from music. If some scene is synchronized with the music, using pause may break the scene in some ways.
+
+It might be worthwhile to observe what other anomalies are caused by
+pausing in your game.
+
+! Overlapping different game logics
+* [http://www.youtube.com/watch?v=fmgDazOOxTY|Carring an enemy into a boss room], or [http://www.youtube.com/watch?v=TNCzboxA_ug|pulling a boss out to a regular level] may overlap some basic logics. RAM values, correct for each of them separately, mix with each other and sometimes give birth to new objects and routines.
+* [http://www.youtube.com/watch?v=bOweqz4cDlA|Restarting a level] with some basic flags set and other ones (that should be set by common sense along with the first ones) unset sometimes also spawns wrong objects or gives access to the RAM.
+* Bank switching abuse can glitch the normal NMI routines and use values from one game cicle to fill addresses ruling another cicle. This exactly happens in [1686M|RockMan 1 TAS] and calls Level End in a wrong time.
+
+----
+!! Monster damage abuses
+
+! Monster ""damage boost"" abuse
+It is common for games to be designed so that the
+character can't reach certain paths or platforms, but just barely.
+Designers often overlook the boost monsters provide when
+they hit you. By getting hurt at the right place and the
+right time, you can get monsters to boost you into places you normally
+shouldn't be able to go.
+* [901M|Castlevania] and [853M|Ghosts'n Goblins] have examples of this.
+
+In some cases, taking damage sends the character in a direction neglecting obstructions due to oversight of the developers. This can be abused for creating unintended shortcuts.
+* [721M|King Kong 2] has an example of taking damage to go through the gate to the final part of the game.
+
+[module:youtube|v=deOhM2NNNGc|start=474|loop=480|align=right|w=197|h=148|hidelink]
+In some cases, taking damage from powerful attacks flings the character at speeds faster than normal. If planned, this can send the character in the direction desired and save time. [126M|Super Castlevania 4], [868M|Legend of Zelda], [1122M|Link's Awakening], and [318M|Kirby Superstar] are examples of this.
+* [1363M|Symphony of the Night] has examples of taking speed boost, height boost and distance boost resulted from damage.
+%%%%
+[module:youtube|v=CdPFvgKqPv4|start=66|loop=98|align=right|w=197|h=148|hidelink]
+In some cases the damage causes the character to retain that speed as long as he doesn't stop.  In the video example here, [1304M|Adventure Island 4], the character is able to retain a super speed boost for a strikingly long period of time. See also [GameResources/CommonTricks#FrameWindowAbuse|frame window abuse].
+%%%%
+----
+!! Invulnerability abuses
+
+Most games contain some situations where your character is immune to harm.
+
+! Event invulnerability abuse
+
+Often, when the game has started a scripted demo that may
+not be interrupted, like the animation for finishing the level,
+your character becomes invulnerable.  If you touch something lethal
+during this state of game, the game may very well ignore it.  The
+[1000M|Little Nemo] and [1325M|Gremlins 2] movies have examples of this.
+In many games,  such as [690M|Umihara Kawase] and [531M| The Wrath Of Black Manta], lethal
+object collision checks are ignored when entering a door.  In [1346M|Mega Man 2], these checks are ignored when changing weapons.
+
+! Stun invulnerability abuse
+
+In many games, if you take damage you will flicker for a while and
+temporarily become invulnerable, to prevent you from immediately
+taking more damage. This invulnerability can often protect you
+from ""instant death"" hazards, for example, allowing you to safely
+walk on deadly spikes or lava for the duration of the flickering.
+The [545M|Mega Man 4] and [365M|Blaster Master] movies have examples of this.
+
+It may also be advantageous to use such a period of invulnerability to pass through monsters that would otherwise take longer to destroy, or
+to pass through other nearby monsters that would do more damage.  The
+[1051M|Goonies] movie is an example of the former, while [1093M|Castlevania: Circle of the Moon] movie is an example of the latter.
+
+----
+!! Avoid countdowns
+Games often end levels with a score count down screen. The time spent on those screens count as well and should be minimized by causing the underlaying value to be as optimal as possible without losing speed. This usually means avoiding to collect items and having the correct amount of health at the end of the level.
+
+
+!! Extraordinary gameplay
+
+! Abusing death and Game Over
+[module:youtube|v=RuVhJInysBQ|start=424|loop=450|align=right|w=197|h=148|hidelink]
+While it may seem contradictory with goal to do things as fast as possible, it does not have to be. Games commonly reset the player position when the player dies, leading to possible shortcuts. Your health often also set to a known number and you may lose or gain items.
+
+In games with multiple players, this can be used to change the amount of player interaction, for example dead players in an RPG will not get asked for their commands. Dead party members can also act as a form of party change, possibly affecting scripted events that depends on who is in the party.
+
+In multi-player games, one player may be able to die to take advantage of a favorable spawning.  The video example to the right demonstrates this idea in Level 5 of [830M|Super C].  The two players continually die in order to spawn at the top of the screen to save time. 
+
+This can all be abused to save time. Submission doing this are marked with the category [Movies-C3030Y|uses death to save time].
+
+''[TODO]: abusing Game Over.''
+
+! Avoiding saving
+
+It often takes several seconds to manually save the game and is rarely needed in a TAS movie. Similarly, [=#AutoSave|turn off auto-saving].
+
+However, in many games, you can take some advantage, such as to warp back to an earlier position in the level, reset character status, etc. when you load a saved game. It is recommended that you study what consequences can happen after saving the game.
+
+''[TODO]: an example of taking advantage __just from saving__ the game?''
+
+! Reset the game, keep the sram
+
+Game consoles have reset buttons that restart the game from the beginning of the program. This may seem like an obvious suboptimal move, but at times it can be faster to reset the game after saving than continuing with the game. The most common example is letting the game save after finishing a level, but skipping the following cutscene.
+
+! Reset the game, do mind the sram
+
+Writing the save is a sensitive operation. As games often say ""Don't turn off the console"" during saving, ignoring this advice often leads to corrupted saves. Usually the result of a corrupted save is that the game refuses to load the save afterwards. But with careful timing and some luck it's possible to create a corrupt save that the game does accept loading. This can lead to major glitches and subsequent sequence breaking.
+
+----
+!! Input abuses
+! Two or more actions at once
+
+Try to make some input that most probably hasn't been tested, like pressing left+right or up+down at the same time, or use multiple input devices like gamepad+touchscreen simultaneously. It might have bizarre and useful consequences. See the [1210M|Zelda: ALttP] and [1082M|Zelda 2] glitch runs for examples of this.
+
+(Note that some emulators (such as VirtuaNES or old versions of Snes9x and FCEU) don't allow you to press right+left or up+down.  The consoles themselves have no such qualms, though you usually have to press very hard on your controller to press in two opposite directions at once.)
+
+* In [1626M|Shining Soul II], you can duplicate an item by tossing it and moving the item cursor at the same frame.
+
+! Frame window abuse
+
+In some games, there are short periods when you can make valid game input while you are not supposed to do so. Catching such an opportunity might either merely allow you to act earlier, or do things unintended by the developers.
+
+* In [1222M|Castlevania: Harmony of Dissonance], you have can move right before you enter a room through an open door or a scripted event occurs. If you use backdash at certain doorway in such frame windows, glitched warp occurs.
+* In [1410M|Blaster Master], you can turn around right when you are going through a doorway, which causes the game to warp you to the wrong destination.
+* In [1700M|Pokémon Red], the game occasionally allows a short window where it is possible to open the menu during a cutscene, and using this opportunity to save and restore the game, or fly to a different area, can cause the game to get confused about what's going on, allowing memory corruption.
+
+''[TODO]: Another typical example with a different outcome.''
+
+! Alternating buttons
+
+Often, you need to press a button to dispose of some dialog box, or to
+start the game, or something similar. When two buttons can be used
+to activate the same goal, you can press them like this:
+ A, B, A, B, A, B, A, B, etc.
+so that a button is effectively pressed every frame.
+It doesn't save actual time in the movie, but it saves time making the movie, because you don't need to test for the earliest possible frame every time. Some emulators (such as VBA and Snes9x) let you put A and B on autofire starting at different frames to automatically press this sequence of buttons, which is even less effort for you.
+
+Sometimes a game will actually accept the next input every frame, in which case it does actually save time in the movie compared to pressing one of the two buttons as early as possible each time. Also, some games might have been designed
+not thinking it's possible to press buttons so fast, and strange things
+may happen as a result.
+
+Be aware that hexediting may be more cumbersome if you use this technique.
+It may be difficult to determine the exact frame where the input affected
+the game.
+
+----
+
+!! Super speed abuse
+
+When you act inhumanly fast, like pressing a button 30 times
+a second, you might be able to do things that the game
+developers would never have thought possible.
+
+* In some games, you can boost up your speed very high. See [1665M|Sonic Advance] for example.
+* In some games, you can kill a boss while it's spawning, or perhaps before it has a chance to complete a transformation.  See [1119M|Simon's Quest], and [1075M|Super Metroid] for examples of this.
+
+! Outrun the game
+You can often catch the game unprepared if you move at extreme speeds. This means that the game may not have had the time to prepare itself for you being at that point. This means in practice that objects that should be there may not have been created yet. Depending on your exact situation this may be a blessing or a curse.
+
+! Not on camera? Not there!
+Games frequently cheat by only updating objects that are near enough to the camera. If you can somehow outrun the camera you might be able to ignore objects that would otherwise impede your progress.
+
+! Fast motion collision abuse
+[module:youtube|v=hETRzNzpFAI|start=205|loop=213|align=right|w=197|h=148|hidelink]
+Games almost never interpolate motion between frames.  This means that you are in one place on one frame, and in some other place on the next, without actually having traveled the path between them, like we do in the real world.  This is how animation works.
+
+If you are moving very fast, you can sometimes pass through objects
+because the game does not render a frame when you are inside the object.
+Combined with the close approach collision abuse mentioned above,
+the speed may not even need to be very high.  
+
+The example shows [711M|Gradius] collision abuse.  Due to the extreme speed, the ship is able to fly through narrow pieces of ground that would normally destroy the ship.
+%%%%
+----
+!! Collision abuses
+! Close approach collision abuse
+
+Most games don't do pixel-perfect collision checks.  The character's and enemies' sprites (the graphics that you see on-screen) have unusual shapes, while their ""hit-boxes"" are usually actually square.  Games are programmed this way because it’s much easier to program ""is the character's box touching the enemy’s box"" than it is to program ""is any pixel of the character’s graphic touching any pixel of the enemy's graphic.""
+
+In some games, the hit-boxes are actually bigger than the sprites, and you can get hit by an enemy before it seems like you should.  In a lot of games, though, the opposite is true: hit-boxes are actually smaller than the sprites, so you can seemingly touch or even go partially inside enemies without getting hurt.
+The [1330M|SMB1], [1002M|SMB2], and [498M|Solomon's Key] movies have many examples of this.
+
+! Diagonal movement between tiles
+
+Some games check what tile character is on by just checking one point. This may make it possible to pass diagonally between tiles, sometimes useful to get past tiles that are deadly or otherwise harmful.
+
+Example of this applied to Jetpack: [http://www.youtube.com/watch?v=EjTNYr7J_DY]
+
+! Other collision abuses
+[http://media.tasvideos.org/smbtricks/smb_minusentry2.gif|right]
+By various methods (such as pushing into corners in strange ways or
+getting shoved by an enemy) you may sometimes manage to get embedded
+into the floor, walls, or ceiling.  Sometimes when this happens you just
+get stuck and your game is ruined, but other times it might allow you to make use of new routes that weren't possible before.  For example, you might be able to gain support and jump from a wall.  The [1330M|SMB1] and [1031M|SMB2j] movies have examples of this.
+
+In most games, collision calculations are very simple.  As mentioned earlier, because motion is not interpolated, sometimes you can go through enemies or walls if you are traveling fast enough or along an odd enough trajectory. With respect to walls, most games account for this by very quickly ejecting you from the wall to prevent you from getting stuck.  Sometimes, you can trick the game into ejecting you in the wrong direction, which is how walls are initially walked through in [1330M|SMB1].  In other games, wall ejection moves your character at high speed in one direction (usually horizontally) until the game
+finds a place where you can exit the wall.  This is most useful when you can force the game to shoot you off at high speed along your desired path!
+In [1103M|Mega Man] and [1346M|Mega Man 2], even ceilings eject you horizontally, which is why the authors of those movies often perform various antics that result in Mega Man being embedded in the ceiling.
+
+The image on the right shows a classic example in Super Mario Bros (the famous wall glitch that allows entrance into -1)
+
+----
+!! Jumping off ledges
+
+[http://media.tasvideos.org/smbtricks/smb_fallfast.gif|right]
+The speed of playable characters in most games, especially platformers, is nonlinear. This is usually done in form of acceleration: the longer the character moves in a certain direction, the higher their velocity is. Similarly, the longer they fall, the faster they reach a platform underneath the starting point, so it's often preferable to jump shortly before the edge of the platform. Avoid the temptation of running off and falling normally, because often the character will have little-to-no downward velocity for a short period (unless, of course, you need it that way).
+
+Note: Some games have drastically reduced aerial speed. For them, it's usually preferable to do very short jumps only a couple frames before reaching the ledge, or to not do any jumps at all. Be sure to study the physics of the game you're working on well, don't hesitate to use [memory search] to find exact values for character's speed.
+
+----
+!! Subpixel carryover
+
+[module:youtube|v=JisFSMHn8tY|align=right|w=197|h=148|hidelink]
+This is extremely common in NES games (and less common on platforms such as DS and GBA).  Regardless of platform it should be looked into for any game.
+
+The subpixel value represents a fraction of a pixel.  It is used to calculate how many pixels a character moves in a frame.  Often at the end of a level/room, the remainder of this value is not cleared.  This means the value left over will be used on the next level/room.  When possible a high value should be left in a level to give the character a tiny ""head start"" in the next level.
+
+Note: Subpixel variation is a common source of desyncs when copy/pasting movies.  In games with subpixel carryover, the subpixel values should be aligned before copy/pasting.
+
+----
+!! Luck manipulation
+
+Video game consoles are computers.  They do exactly what they
+are told, and will always give the same result when given the
+same input.  There is nothing that is truly random.  The only
+source of true randomness in games is you!
+Games are purely deterministic and depend solely on user input.
+
+Learn to abuse this fact.  You can affect anything that has an element of
+randomness in it, like monster movements or item drops.
+
+Read more at [Luck Manipulation].
+
+----
+!! Lag Reduction
+
+The processing speed of old console systems is limited.
+They can only handle so many objects per frame. If there are
+too many objects on screen at one time, the game slows down, because it
+just can't calculate everything in one frame.
+
+Knowing the cause of this phenomenon is important when making
+a TAS. Often this lag can be minimized by keeping
+the number of on-screen objects low, either by destroying them early,
+or perhaps ''not'' destroying them to prevent an overly complicated
+(and processor intensive) death animation from playing.  Luck manipulation
+can be useful here, too.  In some games, whether or not a monster spawns is
+random.
+
+On-screen objects are not the only cause of processor use. Some
+actions require more calculation than others. For instance,
+being close to enemies, or collecting or using certain items may
+cause the game to lag.
+
+Often lag can happen for unknown reasons, sometimes doing a slightly different strategy which doesn't cost time can prevent the event from occurring. In this instance a [memory search] might help to reduce it
+
+----
+!! Corrupt memory and save data
+The game uses the memory to know what you have done, what you are doing and what you have left to do. If you somehow gain the ability to directly edit memory you have effectively won.
+
+Slipping some wrong values into wrong addresses you can command a game to do arbitrary things. But that requires deep disassembling of the original game code, expert knowledge.
+
+* [2187M|SRAM can be reprogrammed]
+* [2157M|Execution pointer can be controlled]
+* [1945M|Wrong values can be written to critical adresses]
+* [1686M|Critical routines] [2047M|can be interrupted]
+* Category: [Movies-C3058Y|Corrupts memory]
+* Category: [Movies-C3057Y|Corrupts save data]
+
+----
+!! Game options
+''[TODO]: Examples.''
+
+Many games provide game options for you to modify how the games work. It is recommened always to try them out to see if you can save time with certain settings.
+
+! Text speed
+Some games allow you change how fast texts are displayed and fading out. Setting the text speed to the highest level usually saves time, and it is worth trying even if you can skip the texts, because sometimes you might be unable to skip them as quickly due to input limitations.
+
+! Movement/battle animations
+In some role-playing and strategy games, you can turn off or choose simplified versions of movement/battle animations. Choose the fastest way.
+
+! Demos and cutscenes
+Although you are likely to be able to skip them with input if the game provides such options, it might be faster to disable them just at all.
+
+! Difficulty level
+In general, we prefer movies done on the hardest difficulty provided that they demonstrate the best superhuman gameplay, but there are cases where lower difficulty may allow even better demonstration and we prefer that.
+
+Note: In some games, you can access some extra items, stages, bosses and/or achieve some hidden endings if you are on a certain difficulty, which is usually the hardest one. Having this happening might interfere with your decided movie goals. So make sure that you have investigated the secrets in the game.
+
+! Auto-save
+It is usually a waste of time to save the game in a TAS, especially when it is automatically done everytime. Turn the auto-save option off if you are allowed to, otherwise, avoid triggering it as much as possible.
+
+! Date and time
+In many games, these settings affect the randomness in the games. See also [Luck Manipulation].
+
+In some games, when the date and/or time matches with a particular value, some secret game material become accessible.
+
+! User profile
+Typically in many, but not limited to, long games featuring the save and load function, you are often asked to create a user profile before you can save, which usually contains some informations such as your or your game character's name, gender, birthday and so on.
+
+It is usually a good idea to keep the informations as short as possible so that you can spend least time in creating the profile or having the informations cited during your gameplay. In some games, however, the informations in your profile may have deterministic or random effects on the gameplay and you may accordingly manipulate them to be in a favourable way.
+----
+!!! How to find out tricks
+
+!! Study existing materials
+
+Game walkthroughs, FAQs, forum posts, email letters, IRC remarks, etc. If you find or suspect that the game you are TASing has an engine similar to another game that has already had a TAS submitted, check it out to see if particular tricks or glitches used in it are applicable to your game as well.
+
+!! Examine game data
+
+! Read the program
+All games are programs in some form. While they are intended to only be executed by the game system, there is nothing stopping you from reading the program instead. While the program code is most likely not very easy to read, it is the exact rules that the game is made out of.
+
+The best way of understanding the rules is to simply read them and figure out exactly what they mean. You can check exactly how the [Luck Manipulation|random number generator] works or simply why the player character (supposedly) can not move into walls.
+
+This is a very difficult thing to do, it is recommended that you know how to program before you attempt this. This is not normal programming, but on a lower level. You will need to actually understand the instructions that are given to the processor and not what the programmer may have written.
+
+[Reverse Engineering]
+
+! Read the script
+Many games, especially ones with plot, have their own script engines. It commonly controls important events such as when you can go somewhere and how enemies behave.
+
+Learn how the script engine works and examine what the game script does. It can have flaws just like the main program. But most importantly, it allows you to understand what your options are.
+
+! Examine the level data
+Games frequently store important data right inside the level definitions. You can find all sorts of tilemap flags, trigger areas, enemy controls and more! Why waste time guessing where exactly things are when you can simply look them up?
+
+! Examine the data tables
+Games frequently need to store large amounts of values for some purpose, be it the statistics for the items in the game, enemy health values, character statistic growth data or pre-computed math functions. There is no need to waste time hunting for values in memory when you can just read them all in one go.
+
+!! Try things out
+Simply try doing things that you aren't expected to do. Game developers forget about all the possibilities. It is your job to remind them what is actually possible.
+
+----
+!!! See also
+* [Game Resources] ― we have resource pages for other games too!
+* [GameResources/BossFightingGuide|Boss Fighting Guide] ― tricks specific to boss fights"
 			}
 		};
 	}
