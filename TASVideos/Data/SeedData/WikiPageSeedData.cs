@@ -1657,12 +1657,7 @@ Games frequently store important data right inside the level definitions. You ca
 Games frequently need to store large amounts of values for some purpose, be it the statistics for the items in the game, enemy health values, character statistic growth data or pre-computed math functions. There is no need to waste time hunting for values in memory when you can just read them all in one go.
 
 !! Try things out
-Simply try doing things that you aren't expected to do. Game developers forget about all the possibilities. It is your job to remind them what is actually possible.
-
-----
-!!! See also
-* [Game Resources] ― we have resource pages for other games too!
-* [GameResources/BossFightingGuide|Boss Fighting Guide] ― tricks specific to boss fights"
+Simply try doing things that you aren't expected to do. Game developers forget about all the possibilities. It is your job to remind them what is actually possible."
 			},
 			new WikiPage
 			{
@@ -1977,13 +1972,17 @@ can destroy the boss quicker than one player alone could.
 ''Example:'' In [499M|Rush ’n Attack], the two players can cover both sides of
 the screen, use teamwork, etc.
 
-In the video example to the right, 2-players are used in [1279M|Double Dragon 2] to toss the final boss back and forth.
-
-----
-!!!See also
-* [Game Resources] ― resource pages for specific games.
-* [GameResources/Common Tricks|Common Tricks] ― tricks common to many games.
-"
+In the video example to the right, 2-players are used in [1279M|Double Dragon 2] to toss the final boss back and forth."
+			},
+			new WikiPage
+			{
+				PageName = "System/GameResourcesFooter",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"----
+!!! See Also
+* [GameResources|Game Resources] - resource pages for specific games.
+* [CommonTricks|Common Tricks] - tricks common to many games."
 			}
 		};
 	}

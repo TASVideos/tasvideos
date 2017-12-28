@@ -13,6 +13,10 @@
 }
 
 @RenderBody()
+@if (pageData.PageName.StartsWith("GameResources/"))
+{
+	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/GameResourcesFooter" })
+}
 <hr />
 <small>
 	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateTimeStamp
@@ -26,7 +30,6 @@
 <a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="Diff" asp-route-path="@pageData.PageName">Last diff</a>
 <a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="Referrers" asp-route-path="@pageData.PageName">List referrers</a>
 <a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@pageData.PageName">View Source</a>
-
 
 @section Scripts {
 	@if (IsSectionDefined("PageTitle"))
