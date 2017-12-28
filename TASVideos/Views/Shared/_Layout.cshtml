@@ -24,7 +24,6 @@
 		if (menuName == (string)TempData["ActiveTab"])
 		{
 			return active;
-
 		}
 
 		return "";
@@ -90,10 +89,12 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
 					<li class="@(Active("Home"))"><a asp-action="Index" asp-controller="Home">Home</a></li>
-					<li><a href="/Movies">Movies</a></li>
-					<li><a href="/GameResources">Game Resources</a></li>
-					<li><a href="/Articles">Articles</a></li>
-					<li><a href="/EmulatorResources">Emulators</a></li>
+					<li class="@(Active("Movies"))"><a href="/Movies">Movies</a></li>
+					<li class="@Active("Game Resources")"><a href="/GameResources">Game Resources</a></li>
+					<li class="@(Active("Articles"))"><a href="/Articles">Articles</a></li>
+					<li class="@(Active("Emulators"))"><a href="/EmulatorResources">Emulators</a></li>
+					<li class="@(Active("Submissions"))"><a href="/Submissions">Submissions</a></li>
+					<li class="@(Active("News"))"><a href="/Submissions">News</a></li>
 					@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles}))
 					{
 						<li class="dropdown @(Active("Administration"))">
