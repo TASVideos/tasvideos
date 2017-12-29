@@ -110,6 +110,15 @@
 							</ul>
 						</li>
 					}
+					<li class="dropdown @(Active("Wiki"))">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Wiki<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/RecentChanges">Recent Changes</a></li>
+							<li><a href="/WikiOrphans">Orphans</a></li>
+							<li><a href="/TODO">To Do</a></li>
+							<li><a href="/System">System Pages</a></li>
+						</ul>
+					</li>
 				</ul>
 				@await Html.PartialAsync("_LoginPartial")
 			</div>
