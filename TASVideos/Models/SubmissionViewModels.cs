@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TASVideos.Models
@@ -47,6 +48,6 @@ namespace TASVideos.Models
 
 		[Required]
 		[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
-		public byte[] MovieFile { get; set; }
+		public IFormFile MovieFile { get; set; }
 	}
 }
