@@ -2004,6 +2004,112 @@ These pages must not be renamed, because some code in the wiki system refers to 
 See [System] for details.
 ----
 "
+			},
+			new WikiPage
+			{
+				PageName = "GameResources",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"This page lists resources available to specific games.
+Many game-specific tricks/physics may work in some other games. Therefore it's a good
+idea to read all of the resource pages even if you're not playing the particular
+game.
+
+There's also a [GameResources/CommonTricks|Common tricks] page which contains tips
+for finding tricks in games in general.  There is also a [GameResources/BossFightingGuide|Boss Fighting Guide] for boss specific tricks.
+
+Several games have [AddressesUp|memory addresses] available and [password generators] here as well.
+
+[module:GameSubPages]
+
+!!!By system
+----
+[GameResources/NES|Nintendo Entertainment System], [GameResources/SNES|Super Nintendo Entertainment System], [GameResources/N64|Nintendo 64], [GameResources/GBx|Nintendo GB/SGB/GBC/GBA], [GameResources/DS|Nintendo DS], [GameResources/PSX|Sony PlayStation], [GameResources/Genesis|Sega Genesis], [GameResources/SMS|Sega Master System], [GameResources/GC|Nintendo GameCube], [GameResources/Wii|Nintendo Wii], [GameResources/DOS|DOS (PC)], [GameResources/A7800|Atari 7800], [GameResources/Windows|Windows]"
+			},
+			new WikiPage
+			{
+				PageName = "GameResources/NES",
+				RevisionMessage = InitialCreate,
+				Markup = @"Here is listing of game-specific resource pages for Nintendo Entertainment System
+
+[module:ListSubPages]
+"
+			},
+			new WikiPage
+			{
+				PageName = "GameResources/NES/DuckTales",
+				RevisionMessage = InitialCreate,
+				Markup = 
+@"Lua script made by Pasky13, feos and MESHUGGAH: [http://pastebin.com/m94xecjR]
+
+! Y sub pixels
+Works the same way as in [3166S|Chip 'n Dale Rescue Rangers] but [current value + 51] mod 256 instead of [current value + 85] mod 256.
+
+! RNG roll
+On every in-game frame when user has control (so transitions and lag frames don't roll RNG). One could remove a lag frame by removing the direction frame to get a different RNG.
+%%SRC_EMBED asm
+A:00 X:06 Y:01 S:BF P:nvUBdIZc $DC23:20 E6 C2  JSR $C2E6 
+A:00 X:06 Y:01 S:BD P:nvUBdIZc   $C2E6:A2 00     LDX #$00 
+A:00 X:00 Y:01 S:BD P:nvUBdIZc   $C2E8:A0 04     LDY #$04 
+A:00 X:00 Y:04 S:BD P:nvUBdIzc   $C2EA:B5 C0     LDA $C0,X @ $00C0 = #$85 -- RNG 1
+A:85 X:00 Y:04 S:BD P:NvUBdIzc   $C2EC:29 02     AND #$02 
+A:00 X:00 Y:04 S:BD P:nvUBdIZc   $C2EE:85 00     STA $0000 = #$8D 
+A:00 X:00 Y:04 S:BD P:nvUBdIZc   $C2F0:B5 C1     LDA $C1,X @ $00C1 = #$1E -- RNG 2
+A:1E X:00 Y:04 S:BD P:nvUBdIzc   $C2F2:29 02     AND #$02 
+A:02 X:00 Y:04 S:BD P:nvUBdIzc   $C2F4:45 00     EOR $0000 = #$00 
+A:02 X:00 Y:04 S:BD P:nvUBdIzc   $C2F6:18        CLC 
+A:02 X:00 Y:04 S:BD P:nvUBdIzc   $C2F7:F0 01     BEQ $C2FA 
+A:02 X:00 Y:04 S:BD P:nvUBdIzc   $C2F9:38        SEC 
+A:02 X:00 Y:04 S:BD P:nvUBdIzC   $C2FA:76 C0     ROR $C0,X @ $00C0 = #$85 
+A:02 X:00 Y:04 S:BD P:NvUBdIzC   $C2FC:E8        INX 
+A:02 X:01 Y:04 S:BD P:nvUBdIzC   $C2FD:88        DEY 
+A:02 X:01 Y:03 S:BD P:nvUBdIzC   $C2FE:D0 FA     BNE $C2FA 
+A:02 X:01 Y:03 S:BD P:nvUBdIzC   $C2FA:76 C0     ROR $C0,X @ $00C1 = #$1E 
+A:02 X:01 Y:03 S:BD P:NvUBdIzc   $C2FC:E8        INX 
+A:02 X:02 Y:03 S:BD P:nvUBdIzc   $C2FD:88        DEY 
+A:02 X:02 Y:02 S:BD P:nvUBdIzc   $C2FE:D0 FA     BNE $C2FA 
+A:02 X:02 Y:02 S:BD P:nvUBdIzc   $C2FA:76 C0     ROR $C0,X @ $00C2 = #$14 -- RNG 3
+A:02 X:02 Y:02 S:BD P:nvUBdIzc   $C2FC:E8        INX 
+A:02 X:03 Y:02 S:BD P:nvUBdIzc   $C2FD:88        DEY 
+A:02 X:03 Y:01 S:BD P:nvUBdIzc   $C2FE:D0 FA     BNE $C2FA 
+A:02 X:03 Y:01 S:BD P:nvUBdIzc   $C2FA:76 C0     ROR $C0,X @ $00C3 = #$28 -- RNG 4
+A:02 X:03 Y:01 S:BD P:nvUBdIzc   $C2FC:E8        INX 
+A:02 X:04 Y:01 S:BD P:nvUBdIzc   $C2FD:88        DEY 
+A:02 X:04 Y:00 S:BD P:nvUBdIZc   $C2FE:D0 FA     BNE $C2FA 
+A:02 X:04 Y:00 S:BD P:nvUBdIZc   $C300:60        RTS (from $C2E6) -----------------
+%%END_EMBED
+
+! RNG on kill
+Only tested on gorilla so far
+%%SRC_EMBED asm
+$8945:20 DA 89  JSR $89DA
+ $89DA:86 00     STX $0000 = #$09
+ $89DC:A5 C0     LDA $00C0 = #$83 -- RNG 1
+ $89DE:65 C1     ADC $00C1 = #$BA
+ $89E0:85 C1     STA $00C1 = #$BA -- RNG 2
+ $89E2:29 03     AND #$03
+ $89E4:D0 28     BNE $8A0E
+ $8A0E:A6 00     LDX $0000 = #$09
+%%END_EMBED
+
+! Boss 2 RNG
+1st action depends on the last frame of the smoke puff before she transforms into a bird. Her ""pattern"" can be seen at 0x6BF (state if I'm correct). 1st action list:
+* 0x48 - flying to top
+* 0x68 - flying to middle
+* 0x88 - flying low
+%%SRC_EMBED asm
+A:00 X:0F Y:01 S:BB P:nvUbdIZC     $A3A6:A5 C0     LDA $00C0 = #$5E -- RNG 1
+A:5E X:0F Y:01 S:BB P:nvUbdIzC     $A3A8:65 C2     ADC $00C2 = #$03 -- RNG 3
+A:62 X:0F Y:01 S:BB P:nvUbdIzc     $A3AA:85 C1     STA $00C1 = #$BE -- RNG 2
+A:62 X:0F Y:01 S:BB P:nvUbdIzc     $A3AC:29 03     AND #$03
+A:02 X:0F Y:01 S:BB P:nvUbdIzc     $A3AE:A8        TAY
+A:02 X:0F Y:02 S:BB P:nvUbdIzc     $A3AF:B9 8F A5  LDA $A58F,Y @ $A591 = #$88
+A:88 X:0F Y:02 S:BB P:NvUbdIzc     $A3B2:9D B0 06  STA $06B0,X @ $06BF = #$3C
+A:88 X:0F Y:02 S:BB P:NvUbdIzc     $A3B5:60        RTS ------------------------------
+%%END_EMBED
+
+! Boss 3 weirdness
+For whatever reason, the boss can have a different Y speed before each transforming to the rock. The best situation is the 159.000 peak jump on every iteration. Player's  x subpos can manipulate it, something should be too. Boss 3 also has ""inconsistent"" X  speed, so sometimes a rolling can be 1 frame longer."
 			}
 		};
 	}
