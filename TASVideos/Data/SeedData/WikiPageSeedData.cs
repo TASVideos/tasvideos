@@ -1989,11 +1989,21 @@ In the video example to the right, 2-players are used in [1279M|Double Dragon 2]
 				PageName = "System",
 				RevisionMessage = InitialCreate,
 				Markup =
-@"This page lists all the system pages.
+@"This page lists all the system pages. System pages are wiki pages that are embedded into non-editable pages or automatically appended to certain types of wiki pages.
 
 These pages must not be renamed, because some code in the wiki system refers to them by name
 
 [module:listsubpages]"
+			},
+			new WikiPage
+			{
+				PageName = "System/IsSystemPage",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"!!! This page is a system resource ― not a page intended for standalone viewing.
+See [System] for details.
+----
+"
 			}
 		};
 	}

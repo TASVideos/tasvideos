@@ -3,6 +3,12 @@
 	WikiPage pageData = (WikiPage)ViewData["WikiPage"];
 	bool canEdit = WikiHelper.UserCanEditWikiPage(pageData.PageName, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
+
+@if (pageData.PageName.StartsWith("System/"))
+{
+	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/IsSystemPage" })
+}
+
 <!-- Eventually we will show available translations here-->
 @if (canEdit)
 {
