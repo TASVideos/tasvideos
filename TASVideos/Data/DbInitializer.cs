@@ -50,6 +50,11 @@ namespace TASVideos.Data
 			{
 				context.WikiPages.Add(wikiPage);
 			}
+
+			foreach (var system in SystemSeedData.Systems)
+			{
+				context.GameSystems.Add(system);
+			}
 		}
 
 		/// <summary>

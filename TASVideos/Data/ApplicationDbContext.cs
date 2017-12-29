@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Data
 {
@@ -23,6 +25,7 @@ namespace TASVideos.Data
 		public DbSet<WikiPage> WikiPages { get; set; }
 		public DbSet<WikiPageReferral> WikiReferrals { get; set; }
 		public DbSet<RoleLink> RoleLinks { get; set; }
+		public DbSet<GameSystem> GameSystems { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
@@ -122,6 +125,13 @@ namespace TASVideos.Data
 					.HasName("PageNameIndex")
 					.IsUnique()
 					.HasFilter($"([{nameof(WikiPage.PageName)}] IS NOT NULL)");
+			});
+
+			builder.Entity<GameSystem>(entity =>
+			{
+				entity.Property(e => e.Id)
+					.ValueGeneratedNever()
+					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
 			});
 		}
 	}
