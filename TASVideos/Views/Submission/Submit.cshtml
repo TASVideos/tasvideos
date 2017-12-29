@@ -2,5 +2,12 @@
 @{
 	ViewData["Title"] = "Submit Movie";
 }
-
-<h1>TODO!!!!!!!</h1>
+<div class="alert alert-info text-center">
+	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmitMovieHeader" })
+</div>
+<hr />
+<form asp-action="Submit" class="form-horizontal">
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</div>
+</form>

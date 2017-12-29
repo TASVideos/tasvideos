@@ -22,8 +22,21 @@ namespace TASVideos.Controllers
 		}
 
 		[RequirePermission(PermissionTo.SubmitMovies)]
+		public IActionResult Submit()
+		{
+			var model = new SubmissionCreateViewModel();
+			return View(model);
+		}
+
+		[HttpPost]
 		public IActionResult Submit(SubmissionCreateViewModel model)
 		{
+			if (ModelState.IsValid)
+			{
+				// TODO: save data
+				return RedirectToAction(nameof(Index)); // TODO: reroute to actual submission
+			}
+
 			return View(model);
 		}
 	}
