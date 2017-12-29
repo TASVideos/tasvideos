@@ -41,6 +41,12 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.SubmitMovies)]
 		public IActionResult Submit(SubmissionCreateViewModel model)
 		{
+			if (!model.MovieFile.FileName.EndsWith(".zip")
+			|| model.MovieFile.ContentType != "application/x-zip-compressed")
+			{
+				ModelState.AddModelError(nameof(SubmissionCreateViewModel.MovieFile), "Not a valid .zip file");
+			}
+
 			if (ModelState.IsValid)
 			{
 				// TODO: save data
