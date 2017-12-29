@@ -181,15 +181,15 @@ namespace TASVideos.WikiEngine.AST
 		private static readonly Dictionary<string, string> ModuleNameMaps = new Dictionary<string, string>
 		{
 			["listsubpages"] = "ListSubpages",
-			["__wikiLink"] = "WikiLink",
-			["WikiOrphans"] = "WikiOrphans",
-			["BrokenLinks"] = "BrokenLinks",
-			["WikiTextChangeLog"] = "WikiTextChangeLog",
-			["UserGetWikiName"] = "UserGetWikiName",
-			["ActiveTab"] = "ActiveTab",
-			["WikiGetCurrentEditLink"] = "CurrentEditLink",
+			["__wikilink"] = "WikiLink",
+			["wikiorphans"] = "WikiOrphans",
+			["brokenlinks"] = "BrokenLinks",
+			["wikitextchangelog"] = "WikiTextChangeLog",
+			["usergetwikiname"] = "UserGetWikiName",
+			["activetab"] = "ActiveTab",
+			["wikigetcurrenteditlink"] = "CurrentEditLink",
 			["user_name"] = "UserName",
-			["ListParents"] = "ListParents"
+			["listparents"] = "ListParents"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
@@ -202,7 +202,7 @@ namespace TASVideos.WikiEngine.AST
 			var pp = Text.Split(new[] { '|' }, 2);
 			var moduleName = pp[0];
 			var moduleParams = pp.Length > 1 ? pp[1] : "";
-			if (ModuleNameMaps.TryGetValue(moduleName, out string realModuleName))
+			if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
 			{
 				w.Write("@await Component.InvokeAsync(");
 				Escape.WriteCSharpString(w, realModuleName);
