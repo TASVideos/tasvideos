@@ -2335,6 +2335,19 @@ Do not omit any of the information.%%%
 Because this operation requires a staff member to personally update your
 submission, it is greatly recommended that you ensure that your submission
 is perfectly right before submitting it in the first place."
+			},
+			new WikiPage
+			{
+				PageName = "System/SubmitMovieHeader",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"__Please read the [Submission Instructions] before submitting a movie.__
+
+__In particular, please ensure that your movie is complete (not a work in progress), and that it beats all known records if going for speed. Works in progress may be posted in the [=forum/t/10152|WIP thread] or other places. If you are simply looking for a place to store your movie files for distribution to other members, please consider [=userfiles|user files].__
+
+Ignoring these instructions may result in your submission being rejected.
+
+After clicking on ""Save"", please wait for the submission to appear. If you cancel this, the discussion topic will not be created."
 			}
 		};
 	}
