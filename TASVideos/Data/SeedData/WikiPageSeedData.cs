@@ -2390,6 +2390,16 @@ After clicking on ""Save"", please wait for the submission to appear. If you can
 <Explain here things the audience would probably like to see>
 <Explain also things that could be improved in your movie>   
 <You may also suggest screenshots.>"
+			},
+			new WikiPage
+			{
+				PageName = "System/SubmissionWarning",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"%%%
+Before pressing the Save button, please verify that you have read the [Movie Rules] and [Guidelines]. Your movie must be complete and must beat all existing records where applicable. Submissions that do not follow these rules will be rejected.
+
+This submission form is only for movies that are intended to become a publication on this site. Do ''not'' submit if this is not your goal. If you simply want to upload a movie file, use [=userfiles|userfiles] instead."
 			}
 		};
 	}
