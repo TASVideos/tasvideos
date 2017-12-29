@@ -29,15 +29,14 @@ namespace TASVideos.Data.Entity
 		public virtual GameSystem System { get; set; }
 
 		// Metadata, user entered
-
-		[StringLength(50)]
-		public string Branch { get; set; }
+		[StringLength(20)]
+		public string GameVersion { get; set; }
 
 		[StringLength(100)]
 		public string GameName { get; set; }
 
-		[StringLength(20)]
-		public string GameVersion { get; set; }
+		[StringLength(50)]
+		public string Branch { get; set; }
 
 		[StringLength(100)]
 		public string RomName { get; set; }

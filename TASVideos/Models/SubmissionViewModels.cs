@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TASVideos.Models
 {
@@ -12,31 +10,43 @@ namespace TASVideos.Models
 	/// </summary>
 	public class SubmissionCreateViewModel
     {
-		[Display(Name = "Game Version")]
-		[Description("Example: USA")]
+		[Required]
+		[Display(Name = "Game Version", Description = "Example: USA")]
+		[StringLength(20)]
 		public string GameVersion { get; set; }
 
-		[Display(Name = "Game Name")]
-		[Description("Example: Mega Man 2")]
+		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = new List<SelectListItem>();
+
+		[Required]
+		[Display(Name = "Game Name", Description = "Example: Mega Man 2")]
+		[StringLength(100)]
 		public string GameName { get; set; }
 
-		[Display(Name = "Branch Name")]
+		[Required]
+		[Display(Name = "Branch Name", Description = "Example: 100% or princess only; any% can usually be omitted)")]
+		[StringLength(50)]
 		public string BranchName { get; set; }
-		
+
 		// TODO: game id
 
-		[Display(Name = "ROM filename")]
+		[Required]
+		[Display(Name = "ROM filename", Description = "Example: Mega Man II (U) [!].nes")]
+		[StringLength(100)]
 		public string RomName { get; set; }
 
 		[Display(Name = "Emulator and version")]
 		[Description("Example: BizHawk 2.2.1")]
+		[StringLength(50)]
 		public string Emulator { get; set; }
 
 		//TODO: authors
 
-		[Display(Name = "COmments and explanations")]
+		[Required]
+		[Display(Name = "Comments and explanations")]
 		public string Markup { get; set; }
 
+		[Required]
+		[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public byte[] MovieFile { get; set; }
-    }
+	}
 }
