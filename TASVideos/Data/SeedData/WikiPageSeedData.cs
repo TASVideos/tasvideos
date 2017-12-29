@@ -2348,6 +2348,12 @@ __In particular, please ensure that your movie is complete (not a work in progre
 Ignoring these instructions may result in your submission being rejected.
 
 After clicking on ""Save"", please wait for the submission to appear. If you cancel this, the discussion topic will not be created."
+			},
+			new WikiPage
+			{
+				PageName = "System/SubmissionImportant",
+				RevisionMessage = InitialCreate,
+				Markup = @"__Please read the [Submission Instructions] regarding what to write here.__"
 			}
 		};
 	}
