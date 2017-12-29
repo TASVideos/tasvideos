@@ -2110,6 +2110,231 @@ A:88 X:0F Y:02 S:BB P:NvUbdIzc     $A3B5:60        RTS -------------------------
 
 ! Boss 3 weirdness
 For whatever reason, the boss can have a different Y speed before each transforming to the rock. The best situation is the 159.000 peak jump on every iteration. Player's  x subpos can manipulate it, something should be too. Boss 3 also has ""inconsistent"" X  speed, so sometimes a rolling can be 1 frame longer."
+			},
+			new WikiPage
+			{
+				PageName = "SubmissionInstructions",
+				RevisionMessage = InitialCreate,
+				Markup = @"!!! This page in other languages
+
+[module:listlanguages] 
+
+----
+
+[module:ActiveTab|tab=b2]
+!!! Submission instructions
+
+%%TOC%%
+
+!! Before submitting
+
+# Be sure your movie meets the __[movie rules]__ and the __[guidelines]__.
+# Verify that your movie works. Do not submit movies that even you can't view!
+
+! The top line
+
+We only want movies that are interesting to watch.
+
+Failure to comply will result your movie being rejected.%%%
+''Please'' ensure your movie is ''good''. Do not waste the judges' time with movies that have obvious mistakes ― read the [guidelines]!
+
+!! Filling the form
+
+Submitting movies is done at the [Submit Movie] page.
+This page explains how to fill the submission form.
+It is very important that you read it.
+
+! Game name
+
+Please write the official name of the game. For example, if you are submitting a movie for the game Super Mario Bros., write {{Super Mario Bros}}. Do not write {{Super Mario}}, {{SMB}}, {{Mario}}, or {{Mario Bros.}}, since the names may be confused with other titles.
+
+If the game has a Japanese title (or other non-Latin writing system), write the most well-known romanization. The ROM name should indicate the correct name.
+
+! Game version
+
+Please detail the version of the game. Accepted variants include:
+* {{USA}}
+* {{Japan}}
+* {{Japan/USA}} (generic NTSC version)
+* {{Europe}}
+* {{World}}
+Some unusual variants you are not likely to run across also exist.
+If the game has multiple revisions, please indicate the revision too.
+For example: “{{USA r0}}” or “{{USA r1}}”.
+
+The choices are listed in the left-hand list box of the submission page. You must choose one choice from there. Do not write it in the game name.
+
+! ROM filename
+
+The ROM filename may provide hint of what is the version of the game.
+In the [http://en.wikipedia.org/wiki/Good_Tools|Good Tool ROM set],
+the filename encodes most details of the game version,
+for example: {{Final Fantasy III (U) (V1.0) [[!]].smc}}
+
+Please include the file name extension ({{.smc}}, {{.nes}} ...) even
+if your operating system has been configured to hide it from you.
+
+! Author's real name
+
+Please write your real name in this field. Abbreviations are OK.
+The purpose of this field in together with the nickname field is to protect
+you from being confused with other people who use the same nickname.
+
+Non-English authors: You can use the writing system of your native language,
+for example, Cyrillic if you are Russian, kanji if you are Japanese, and so on.
+
+Please don't write a false name in the field. If the administration of
+this site somehow gets to know that the name is false, your submission
+will be rejected.
+
+! Author's nickname
+
+Whatever nickname or handle you are generally known in the internet.
+The administration of this site believes in permanent nicknames.
+A good permanent nickname is one that nobody else will ever use.
+
+An example of a bad nickname: “Naruto92” (models a famous anime character)
+
+The purpose of the nickname is to identify the author of the movie.
+We do not recommend submitting anonymously.
+If your nickname is too generic and you don't provide your real name,
+your submission becomes essentially anonymous.
+
+If you provide your non-abbreviated real name, you do not need to provide a nickname.
+
+Please use only alphanumeric characters in your nickname. Do not use only numbers.
+Special characters, such as these are not allowed: #&!+%@. Do not use any Unicode characters in your nickname.
+
+! Movie file
+
+Our [Movie Rules] page lists all the allowed key-input movie file formats.
+You may not submit files of any other types than listed on that page.
+Changing the file extension will not help.
+
+Please compress your movie file into a __ZIP__ file before sending.
+We do ''not'' accept any other formats!
+
+Include ''only'' the movie file in the ZIP file.
+Nothing else!
+
+Make sure the movie file in the ZIP has no subdirectories in its path, even if the ZIP program you use saves subdirectories by default. The path should be empty.
+
+! Description
+
+It is very important that you describe your movie in the following ways.
+
+* __Which emulator__ did you use? (Version number also required!)
+** Which __emulator settings__? Please list every individual emulation setting which you have modified (does not apply to Dolphin users, see note below).
+* __Which BIOS__ did you use? (Region and revision)
+* If your movie needs some setup (e.g. prepare a memory card) to sync, provide a link to [MovieRules#WeDoNotAllowSaveAnchoredMovies|the verification movie].
+**Not applicable for all systems.
+* Do you use __warps or passwords__?
+* What kind of __programming errors__ do you abuse in the game?
+* Do you __take hits__? Do you use __death__? Do you save and restart in the middle of the movie? How many characters do you control?
+* What are your __aims__? Fastest possible? Maximum score? 100% kills? 100% items? Indicate the priority of each aim in your movie.
+* Please __describe the game__ briefly. It helps those who are unfamiliar with the game.
+* Please __describe the making of the movie__. What was hard? Why would anyone like the result?
+* If your movie is an improvement to an existing movie, please mention which movie it improves upon, how big the improvement is, and describe the improvements.
+
+Note for Dolphin (Gamecube and Wii) submissions: For these movies there are quite many factors that can affect sync. The Dolphin movie file stores a bunch of settings affecting sync on its own (see [DTM]), so you are not required to provide them. Please include the following in your submission additionally to the ones stated above:
+* If your version is patched in any way, provide a link to the __patches or entire source code__. Ask the one who provided you with the binaries, if you don't know how to do that.
+* A __checksum of your ISO__ (SHA1 recommended).
+* Newer Dolphin versions come with free __dsp_*.bin files__ required for DSP LLE emulation; did you use these or the console ones (i.e. did you have to download the two dsp_*.bin files yourself from a non-Dolphin site)?
+
+The submission text uses a special [TextFormattingRules|text formatting system].
+Use * for bullet lists, ! for headings and put an empty line between each of your paragraphs. ''Do not begin lines with spaces.''
+
+It is recommended to write long descriptions in a text editor first.
+
+Things to remember:
+* There is a preview function, so you can check if your text looks as you intended.
+* You can edit (bottom of page, click ""Edit"") the text after submitting, for example if you forgot to include some information, or if to cancel it if you have made a new version.
+* Please check your spelling. Bad spelling makes your message difficult to read, especially for non-native English speakers. If your English is bad, ask someone to translate and proofread it for you.
+* Your submission text is public. Everyone can see it immediately after you submit it.
+
+Additional things you can include:
+* A suggested description for your movie once we publish it.
+* A suggested screenshot for your movie once we publish it. Either give the frame number, or link to an offsite image. Please do not lower the quality or resize it. See [Screenshots] for details.
+* Special subtitles you want to include in your movie. For example, annotations for some events in the movie.
+* If you used RAM Watch to observe memory addresses in the making of your movie, you can use [AddressesUp|this tool] to display a table containing them in your submission.
+* Explain all interesting bits about your movie. Strategy for each stage, techniques you used, methods you used for creating the movie...
+
+Things you do not need to write:
+* Tool-assisted disclaimer, total time, rerecord count. These are included automatically.
+
+!! Troubleshooting
+
+You need to be logged in to submit movies.
+The login procedure is explained at the [login] page.
+
+If the submission fails, ''do not send your file by e-mail''!
+Instead, read the __[movie rules]__ and if it doesn't answer your problem,
+ask in the [=forum/|discussion forums] or the [IRCchannel|#tasvideos IRC channel]
+
+!! After submitting the movie
+
+Your movie will appear in a few places:
+* The [recent changes] page, which lists everything that happens with the pages on this site
+* The [Subs-List|submission list]
+* The [=forum/|discussion forums].
+
+Particularly important is the discussion forums. When you submit a movie,
+a topic will automatically be created for your submission. It allows people
+to comment on your movie and vote for it.
+You are encouraged to follow the discussion and answer questions that may come up after submitting the movie.
+
+If you click “watch this topic for replies” at the page showing the discussion
+of the movie, the site will automatically e-mail you a notification when
+someone comments on your movie.
+
+Eventually, a [users|judge] will decide what to do with your movie.
+Basically, it will either be ''rejected'' or ''accepted'', but there are some other status messages you might see:
+* ''New (unjudged)'' ― No judge has evaluated the submission yet. This is the status your submission will have from the start.
+* ''Needs more information'' ― The judge wants more information in order to make a decision, either from you or from the other forum members.
+* ''Decision delayed'' ― A judge has looked at it but not yet made a decision.
+* ''Publication Underway'' ― The movie has been accepted and is currently being encoded.
+* ''Published'' - The movie has been accepted and the official encode has been made.
+* ''Canceled'' - The author has withdrawn the submission. Or a judge has prematurely rejected the movie. Movies can be uncanceled and resume judging.
+* ''Rejected'' - The movie was not considered good enough to be published. A rejection reason will be provided. Some rejected movies gets a spot on the [Movies/GruefoodDelight|GruefoodDelight] page.
+* ''Obsoleted'' - Another movie has beaten this submission and it is kept for historical purposes.
+
+Note that judging the movie may not happen immediately. Sometimes, movies may be published in a few hours after submitting, and sometimes, they sit in the list for over a year before a decision is made.%%%
+Judges are only humans, and they too have preferences and they might not always have time.
+
+If you notice a flaw in your movie, or submit a new version, please cancel your old submission[#1]. Click ""Edit"" (at the bottom of the page of submission), then change status to ''cancelled''.%%%
+Please append a short comment to the submission explaining why you cancel it.
+
+! Tiers
+
+We have 3 [Tier|tiers] a movie can be accepted to. If the audience likes the movie (""Yes"" votes outweigh ""No"" and ""Meh"", positive reaction in forum posts), it is accepted for [Moons] or [Stars].
+
+If the movie is found boring, it can be accepted for [Vault], but only if it does not contain speed/entertainment tradeoffs of any kind (no damage, pacifist), and is a plain time record. Only 2 types of goals are acceptable for Vault: fastest completion time (any%), and full-completion (such as 100% or best ending). If you are not sure the game would be well received, don't include time sacrifices. You can also post WIPs on Forums to collect the feedback and determine the audience tastes.
+
+!! The bottom line
+
+A “submission” is a candidate for a movie that will be published on this site.
+
+We do not publish movies that break our [Movie Rules].%%%
+We favor movies that follow our [Guidelines]. We only want interesting movies!
+
+Users who abuse the submission mechanism may
+be banned by the discretion of the administration.
+
+----
+
+!![1] Updating submitted movies
+
+If you later notice that your movie needs some ''minor'' changes, such
+as 10 frames of more input to reach the actual ending, you can request
+the submission file to be updated without having to cancel and submit a new movie.
+Such requests are made personally to a [Users|judge]. This chance is only possible if the movie has not been judged or published yet. Send the admin of your choice the following information:
+* The new movie file (pack it into a ZIP file, then send either an URL or the file)
+* Which submission is in question (the URL (address) of the submission or its ID number; ''not'' its name or address of discussion)
+* Why the request should be granted (how the movie changed from the submitted one)
+Do not omit any of the information.%%%
+Because this operation requires a staff member to personally update your
+submission, it is greatly recommended that you ensure that your submission
+is perfectly right before submitting it in the first place."
 			}
 		};
 	}
