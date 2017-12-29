@@ -7,6 +7,11 @@
 			return active;
 		}
 
+		if (menuName == "Submissions" && ViewContext.Controller() == "Submission")
+		{
+			return active;
+		}
+
 		if (menuName == "Administration" &&
 			(ViewContext.Controller() == "Roles"
 				|| ViewContext.Controller() == "User"
@@ -93,7 +98,7 @@
 					<li class="@Active("Game Resources")"><a href="/GameResources">Game Resources</a></li>
 					<li class="@(Active("Articles"))"><a href="/Articles">Articles</a></li>
 					<li class="@(Active("Emulators"))"><a href="/EmulatorResources">Emulators</a></li>
-					<li class="@(Active("Submissions"))"><a href="/Submissions">Submissions</a></li>
+					<li class="@(Active("Submissions"))"><a asp-controller="Submission" asp-action="Index">Submissions</a></li>
 					<li class="@(Active("News"))"><a href="/Submissions">News</a></li>
 					@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles}))
 					{
