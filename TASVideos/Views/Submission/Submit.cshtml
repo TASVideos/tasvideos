@@ -6,8 +6,77 @@
 	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmitMovieHeader" })
 </div>
 <hr />
-<form asp-action="Submit" class="form-horizontal">
-	<div class="text-center">
-		<button type="submit" class="btn btn-primary">Submit</button>
-	</div>
+<form asp-action="Submit">
+	<row>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="GameVersion"></label>
+				<select asp-for="GameVersion" asp-items="@Model.GameVersionOptions" class="form-control"></select>
+				<span asp-validation-for="GameVersion" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="GameName"></label>
+				<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
+				<span asp-validation-for="GameName" class="text-danger"></span>
+			</form-group>
+
+		</div>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="BranchName"></label>
+				<input asp-for="BranchName" class="form-control" placeholder="@Html.DescriptionFor(m => m.BranchName)" />
+				<span asp-validation-for="BranchName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="RomName"></label>
+				<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
+				<span asp-validation-for="RomName" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-xs-12">
+			<form-group>
+				<label asp-for="Markup"></label>
+				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
+				<span asp-validation-for="Markup" class="text-danger"></span>
+				<button id="prefill" type="button" class="btn btn-default">Prefill comments</button>
+				<span>
+					@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmissionImportant" })
+				</span>
+			</form-group>
+		</div>
+	</row>
+	<hr />
+	<row>
+		<div class="text-center">
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</div>
+	</row>
 </form>
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<script>
+	(function() {
+		document.getElementById('prefill').onclick = function () {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						var data = JSON.parse(xmlhttp.responseText);
+						document.getElementById('@(nameof(Model.Markup))').value = data.text;
+						console.log(data.text);
+					}
+				}
+			};
+
+			xmlhttp.open("GET",
+				"/Submission/@(nameof(SubmissionController.PrefillText))",
+				true);
+			xmlhttp.send();
+		};
+	})()
+</script>

@@ -2354,6 +2354,42 @@ After clicking on ""Save"", please wait for the submission to appear. If you can
 				PageName = "System/SubmissionImportant",
 				RevisionMessage = InitialCreate,
 				Markup = @"__Please read the [Submission Instructions] regarding what to write here.__"
+			},
+			new WikiPage
+			{
+				PageName = "System/SubmissionDefaultMessage",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"<Describe the movie briefly here (3 to 8 lines) (it is what RSS viewers will see)>     
+ 
+!! Game objectives
+
+* Emulator used: <Put the emulator name and version here>
+* <List the objectives of your movie here>
+* <Another objective>
+* <And so on>
+
+!! Comments
+
+<Put here a longer explanation of your submission>
+
+!! Stage by stage comments
+
+! <Put the name of the first stage here>
+
+<Explain the first stage here>
+
+! <Put the name of the second stage here>
+
+<Explain the second stage here>
+
+<And so on>
+
+!! Other comments
+
+<Explain here things the audience would probably like to see>
+<Explain also things that could be improved in your movie>   
+<You may also suggest screenshots.>"
 			}
 		};
 	}
