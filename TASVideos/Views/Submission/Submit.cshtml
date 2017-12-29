@@ -6,7 +6,7 @@
 	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmitMovieHeader" })
 </div>
 <hr />
-<form asp-action="Submit">
+<form asp-action="Submit" enctype="multipart/form-data">
 	<row>
 		<div class="col-md-6">
 			<form-group>
