@@ -13,11 +13,16 @@ namespace TASVideos.Controllers
 	public class SubmissionController : BaseController
 	{
 		private readonly WikiTasks _wikiTasks;
+		private readonly SubmissionTasks _submissionTasks;
 
-		public SubmissionController(UserTasks userTasks, WikiTasks wikiTasks)
+		public SubmissionController(
+			UserTasks userTasks,
+			WikiTasks wikiTasks,
+			SubmissionTasks submissionTasks)
 			: base(userTasks)
 		{
 			_wikiTasks = wikiTasks;
+			_submissionTasks = submissionTasks;
 		}
 
 		// Submisison List
@@ -39,7 +44,7 @@ namespace TASVideos.Controllers
 
 		[HttpPost]
 		[RequirePermission(PermissionTo.SubmitMovies)]
-		public IActionResult Submit(SubmissionCreateViewModel model)
+		public async Task<IActionResult> Submit(SubmissionCreateViewModel model)
 		{
 			if (!model.MovieFile.FileName.EndsWith(".zip")
 			|| model.MovieFile.ContentType != "application/x-zip-compressed")
@@ -49,7 +54,7 @@ namespace TASVideos.Controllers
 
 			if (ModelState.IsValid)
 			{
-				// TODO: save data
+				await _submissionTasks.SubmitMovie(model);
 				return RedirectToAction(nameof(Index)); // TODO: reroute to actual submission
 			}
 

@@ -50,6 +50,7 @@ namespace TASVideos
 			services.AddScoped<UserTasks, UserTasks>();
 			services.AddScoped<RoleTasks, RoleTasks>();
 			services.AddScoped<WikiTasks, WikiTasks>();
+			services.AddScoped<SubmissionTasks, SubmissionTasks>();
 
 			services.AddMvc(options =>
 			{
