@@ -35,40 +35,63 @@
 		</div>
 	</row>
 	<row>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="MovieFile"></label>
+				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
+				<input type="file" asp-for="MovieFile" class="form-control" />
+				<span asp-validation-for="MovieFile" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
 		<div class="col-xs-12">
 			<form-group>
 				<label asp-for="Markup"></label>
-				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
-				<span asp-validation-for="Markup" class="text-danger"></span>
-				<button id="prefill" type="button" class="btn btn-default">Prefill comments</button>
 				<span>
 					@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmissionImportant" })
 				</span>
+				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
+				<span asp-validation-for="Markup" class="text-danger"></span>
+				<button id="prefill-btn" type="button" class="btn btn-default">Prefill comments</button>
+
 			</form-group>
 		</div>
 	</row>
 	<hr />
 	<row>
 		<div class="text-center">
-			<button type="submit" class="btn btn-primary">Submit</button>
+			<button id="preview-btn" type="button" class="btn btn-default">Preview</button>
+			<button id="submit-btn" type="submit" class="btn btn-primary hide">Submit</button>
+			<br />
+			<br />
+			<div id="submit-blurb" class="text-center alert-info hide" role="alert">
+				<div>@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmissionWarning" })</div>
+				<label class="small alert-info">By pressing "Submit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
+			</div>
 		</div>
 	</row>
 </form>
+<hr />
+<row id="preview-container" class="hide">
+	<label>Preview:</label><br />
+	<div id="preview-contents" style="border: solid; padding: 5px; border-radius: 5px">
 
+	</div>
+</row>
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")
 }
 
 <script>
 	(function() {
-		document.getElementById('prefill').onclick = function () {
+		document.getElementById('prefill-btn').onclick = function () {
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {
 						var data = JSON.parse(xmlhttp.responseText);
 						document.getElementById('@(nameof(Model.Markup))').value = data.text;
-						console.log(data.text);
 					}
 				}
 			};
@@ -78,5 +101,28 @@
 				true);
 			xmlhttp.send();
 		};
+
+		document.getElementById('preview-btn').onclick = function() {
+			var markup = document.getElementById('@nameof(Model.Markup)').value;
+			if (markup) {
+				document.getElementById('preview-container').classList.remove('hide');
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+						if (xmlhttp.status === 200) {
+							document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
+						} else {
+							alert("Could not generate preview");
+						}
+
+						document.getElementById('submit-btn').classList.remove('hide');
+						document.getElementById('submit-blurb').classList.remove('hide');
+					}
+				};
+
+				xmlhttp.open("POST", "/Wiki/@(nameof(WikiController.GeneratePreview))");
+				xmlhttp.send(markup);
+			}
+		}
 	})()
 </script>

@@ -58,7 +58,7 @@
 		<button class="btn btn-default">Update</button>
 	</row>
 	<row>
-		<div id="preview-contents" style="border: solid">
+		<div id="preview-contents" style="border: solid; padding: 5px; border-radius: 5px">
 
 		</div>
 	</row>
@@ -73,7 +73,6 @@
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {
-						console.log('responseText', xmlhttp.responseText);
 						document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
 					} else {
 						alert("Could not generate preview");
