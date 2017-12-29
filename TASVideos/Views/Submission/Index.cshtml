@@ -1,0 +1,11 @@
+﻿
+<h4>This page list movies that have been submitted for review</h4>
+
+@if (ViewData.UserHasPermission(PermissionTo.SubmitMovies))
+{
+	<a class="btn btn-primary" asp-action="Submit">Submit a Movie</a>
+}
+
+<label>TODO: more content</label>
+
+<h2>TODO: a list of submissions</h2>
