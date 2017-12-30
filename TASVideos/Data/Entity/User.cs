@@ -17,5 +17,6 @@ namespace TASVideos.Data.Entity
 		public string LastUpdateUserName { get; set; }
 
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
+		public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();
 	}
 }

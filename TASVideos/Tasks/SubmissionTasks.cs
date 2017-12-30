@@ -45,11 +45,11 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<int> SubmitMovie(SubmissionCreateViewModel model, string userName)
 		{
-			var user = await _db.Users.SingleAsync(u => u.UserName == userName);
+			var submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
 
 			var submission = new Submission
 			{
-				Submitter = user,
+				Submitter = submitter,
 				GameVersion = model.GameVersion,
 				GameName = model.GameName,
 				Branch = model.BranchName,
@@ -79,6 +79,19 @@ namespace TASVideos.Tasks
 			_db.WikiPages.Add(wikiPage);
 
 			submission.WikiContent = wikiPage;
+
+			// Add authors
+			var users = await _db.Users
+				.Where(u => model.Authors.Contains(u.UserName))
+				.ToListAsync();
+
+			var submissionAuthors = users.Select(u => new SubmissionAuthor
+			{
+				SubmissionId = submission.Id,
+				UserId = u.Id
+			});
+
+			_db.SubmissionAuthors.AddRange(submissionAuthors);
 
 			await _db.SaveChangesAsync();
 
