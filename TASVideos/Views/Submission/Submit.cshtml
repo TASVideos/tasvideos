@@ -135,42 +135,5 @@
 				xmlhttp.send(markup);
 			}
 		}
-		/*
-		document.getElementById('add-author').onclick = function () {
-			var lastIndex = Math.max.apply(null, document.querySelectorAll('.author-row')
-				.toArray()
-				.map(function(elem) {
-					return parseInt(elem.id.slice(1));
-				}));
-
-			var lastElem = document.getElementById('a' + lastIndex);
-			var newIndex = lastIndex + 1;
-			var newElem = lastElem.cloneNode(true);
-			newElem.id = 'a' + newIndex;
-			newElem.id = 'a' + (lastIndex + 1);
-			var input = newElem.querySelector('input');
-			input.value = '';
-			input.id = 'Authors_' + newIndex + '_';
-			input.name = 'Authors[' + newIndex + ']';
-
-			document.getElementById('author-boxes').appendChild(newElem);
-		}
-		*/
-		//document.addEventListener('click', '.remove-author-btn', function() {
-		//	console.log('hi');
-		//});
-
-		//document.querySelectorAll('.remove-author-btn')
-		//	.toArray()
-		//	.forEach(function(elem) {
-		//		elem.onclick = function () {
-		//			if (document.querySelectorAll('.author-row').length > 1) {
-		//				var authorId = elem.getAttribute('data-id');
-					
-		//				var toDelete = document.getElementById('a' + authorId);
-		//				toDelete.remove();
-		//			}
-		//		}
-		//	});
 	})()
 </script>
