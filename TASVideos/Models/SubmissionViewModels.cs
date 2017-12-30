@@ -40,7 +40,9 @@ namespace TASVideos.Models
 		[StringLength(50)]
 		public string Emulator { get; set; }
 
-		//TODO: authors
+		[Display(Name = "Author(s)")]
+		[AtLeastOne(ErrorMessage = "A submission must have at least one author")]
+		public IList<string> Authors { get; set; } = new List<string>();
 
 		[Required]
 		[Display(Name = "Comments and explanations")]
