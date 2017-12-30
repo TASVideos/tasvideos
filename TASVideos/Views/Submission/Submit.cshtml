@@ -86,6 +86,11 @@
 <script>
 	(function() {
 		document.getElementById('prefill-btn').onclick = function () {
+			var markup = document.getElementById('@nameof(Model.Markup)').value;
+			if (markup) {
+				return;
+			}
+
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
