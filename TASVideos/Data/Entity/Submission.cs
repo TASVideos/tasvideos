@@ -10,7 +10,7 @@ namespace TASVideos.Data.Entity
 		public virtual User Submitter { get; set; }
 		
 		// TODO: authors, including authors not registered
-		public string IpAddr { get; set; }
+		
 		// TODO: game id
 		// TODO: intended tier
 

@@ -3,5 +3,10 @@
 	ViewData["Title"] = Model.Id + "S";
 }
 
+<label>Content</label><br />
+<div style="border: solid">
+	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = $"SubmissionContent/S{Model.Id}" })
+</div>
+
 GameName - @Model.GameName
 <div>TODO</div>
