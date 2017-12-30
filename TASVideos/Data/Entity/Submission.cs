@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Data.Entity
@@ -8,9 +9,9 @@ namespace TASVideos.Data.Entity
 		public int Id { get; set; }
 		public virtual WikiPage WikiContent { get; set; }
 		public virtual User Submitter { get; set; }
-		
-		// TODO: authors, including authors not registered
-		
+
+		public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
+
 		// TODO: game id
 		// TODO: intended tier
 
@@ -29,6 +30,9 @@ namespace TASVideos.Data.Entity
 		public virtual GameSystem System { get; set; }
 
 		// Metadata, user entered
+
+		// TODO: additional non-registered authors field
+
 		[StringLength(20)]
 		public string GameVersion { get; set; }
 

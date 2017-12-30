@@ -27,6 +27,7 @@ namespace TASVideos.Data
 		public DbSet<RoleLink> RoleLinks { get; set; }
 		public DbSet<GameSystem> GameSystems { get; set; }
 		public DbSet<Submission> Submissions { get; set; }
+		public DbSet<SubmissionAuthor> SubmissionAuthors { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
@@ -133,6 +134,12 @@ namespace TASVideos.Data
 				entity.Property(e => e.Id)
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+			});
+
+			builder.Entity<SubmissionAuthor>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.SubmissionId });
+				entity.HasIndex(e => e.SubmissionId);
 			});
 		}
 	}
