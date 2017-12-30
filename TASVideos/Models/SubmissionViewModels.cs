@@ -50,4 +50,13 @@ namespace TASVideos.Models
 		[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile MovieFile { get; set; }
 	}
+
+	/// <summary>
+	/// Represents an existing submission for the purpose of display
+	/// </summary>
+	public class SubmissionViewModel
+	{
+		public int Id { get; set; }
+		public string GameName { get; set; }
+	}
 }
