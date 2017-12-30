@@ -43,13 +43,18 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Takes the given data and generates a movie submission
 		/// </summary>
-		public async Task<int> SubmitMovie(SubmissionCreateViewModel model)
+		public async Task<int> SubmitMovie(SubmissionCreateViewModel model, string userName)
 		{
+			var user = await _db.Users.SingleAsync(u => u.UserName == userName);
+
 			var submission = new Submission
 			{
+				Submitter = user,
 				GameVersion = model.GameVersion,
 				GameName = model.GameName,
-				MovieFile = new byte[0] // TODO
+				Branch = model.BranchName,
+				RomName = model.RomName,
+				EmulatorVersion = model.Emulator
 			};
 
 			using (var memoryStream = new MemoryStream())
@@ -61,6 +66,22 @@ namespace TASVideos.Tasks
 			_db.Submissions.Add(submission);
 
 			await _db.SaveChangesAsync();
+
+			// Create a wiki page corresponding to this submission
+			var wikiPage = new WikiPage
+			{
+				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
+				PageName = $"SubmissionContent/S{submission.Id}", // TOOD: amek SubmissionContent a constant
+				MinorEdit = false,
+				Markup = model.Markup
+			};
+
+			_db.WikiPages.Add(wikiPage);
+
+			submission.WikiContent = wikiPage;
+
+			await _db.SaveChangesAsync();
+
 			return submission.Id;
 		}
 	}
