@@ -10,6 +10,23 @@
 	<row>
 		<div class="col-md-6">
 			<form-group>
+				<label asp-for="MovieFile"></label>
+				<input type="file" asp-for="MovieFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
+				<span asp-validation-for="MovieFile" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="Authors"></label>
+				<string-list asp-for="Authors" />
+				<span asp-validation-for="Authors" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-md-6">
+			<form-group>
 				<label asp-for="GameVersion"></label>
 				<select asp-for="GameVersion" asp-items="@Model.GameVersionOptions" class="form-control"></select>
 				<span asp-validation-for="GameVersion" class="text-danger"></span>
@@ -31,23 +48,6 @@
 				<label asp-for="RomName"></label>
 				<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
 				<span asp-validation-for="RomName" class="text-danger"></span>
-			</form-group>
-		</div>
-	</row>
-	<row>
-		<div class="col-md-6">
-			<form-group>
-				<label asp-for="MovieFile"></label>
-				<input type="file" asp-for="MovieFile" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
-				<span asp-validation-for="MovieFile" class="text-danger"></span>
-			</form-group>
-		</div>
-		<div class="col-md-6">
-			<form-group>
-				<label asp-for="Authors"></label>
-				<string-list asp-for="Authors" />
-				<span asp-validation-for="Authors" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
