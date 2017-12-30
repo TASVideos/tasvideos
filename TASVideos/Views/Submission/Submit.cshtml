@@ -38,9 +38,16 @@
 		<div class="col-md-6">
 			<form-group>
 				<label asp-for="MovieFile"></label>
-				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
 				<input type="file" asp-for="MovieFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
 				<span asp-validation-for="MovieFile" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="Authors"></label>
+				<string-list asp-for="Authors" />
+				<span asp-validation-for="Authors" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
@@ -54,7 +61,6 @@
 				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
 				<span asp-validation-for="Markup" class="text-danger"></span>
 				<button id="prefill-btn" type="button" class="btn btn-default">Prefill comments</button>
-
 			</form-group>
 		</div>
 	</row>
@@ -84,7 +90,7 @@
 }
 
 <script>
-	(function() {
+	(function () {
 		document.getElementById('prefill-btn').onclick = function () {
 			var markup = document.getElementById('@nameof(Model.Markup)').value;
 			if (markup) {
@@ -129,5 +135,42 @@
 				xmlhttp.send(markup);
 			}
 		}
+		/*
+		document.getElementById('add-author').onclick = function () {
+			var lastIndex = Math.max.apply(null, document.querySelectorAll('.author-row')
+				.toArray()
+				.map(function(elem) {
+					return parseInt(elem.id.slice(1));
+				}));
+
+			var lastElem = document.getElementById('a' + lastIndex);
+			var newIndex = lastIndex + 1;
+			var newElem = lastElem.cloneNode(true);
+			newElem.id = 'a' + newIndex;
+			newElem.id = 'a' + (lastIndex + 1);
+			var input = newElem.querySelector('input');
+			input.value = '';
+			input.id = 'Authors_' + newIndex + '_';
+			input.name = 'Authors[' + newIndex + ']';
+
+			document.getElementById('author-boxes').appendChild(newElem);
+		}
+		*/
+		//document.addEventListener('click', '.remove-author-btn', function() {
+		//	console.log('hi');
+		//});
+
+		//document.querySelectorAll('.remove-author-btn')
+		//	.toArray()
+		//	.forEach(function(elem) {
+		//		elem.onclick = function () {
+		//			if (document.querySelectorAll('.author-row').length > 1) {
+		//				var authorId = elem.getAttribute('data-id');
+					
+		//				var toDelete = document.getElementById('a' + authorId);
+		//				toDelete.remove();
+		//			}
+		//		}
+		//	});
 	})()
 </script>

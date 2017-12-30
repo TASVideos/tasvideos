@@ -37,8 +37,10 @@ namespace TASVideos.Controllers
 		{
 			var model = new SubmissionCreateViewModel
 			{
-				GameVersionOptions = GameVersionOptions
+				GameVersionOptions = GameVersionOptions,
+				Authors = new List<string> { User.Identity.Name }
 			};
+
 			return View(model);
 		}
 
