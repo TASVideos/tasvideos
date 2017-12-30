@@ -24,6 +24,13 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml("<div class='row'>");
 
 			List<string> stringList = ((IEnumerable<string>)AspFor.Model)?.ToList() ?? new List<string>();
+
+			// We need at least an add button, todo: refactor so this doesn't force the server side to strip out empty strings
+			if (stringList.Count == 0) 
+			{
+				stringList.Add("");
+			}
+
 			for (int i = 0; i < stringList.Count; i++)
 			{
 				output.Content.AppendHtml($@"
