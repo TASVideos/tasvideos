@@ -54,8 +54,8 @@ namespace TASVideos.Controllers
 
 			if (ModelState.IsValid)
 			{
-				await _submissionTasks.SubmitMovie(model);
-				return RedirectToAction(nameof(Index)); // TODO: reroute to actual submission
+				var result = await _submissionTasks.SubmitMovie(model);
+				return RedirectToAction(nameof(View), new { id = result});
 			}
 
 			model.GameVersionOptions = GameVersionOptions;
@@ -67,6 +67,17 @@ namespace TASVideos.Controllers
 		{
 			var page = await _wikiTasks.GetPage("System/SubmissionDefaultMessage");
 			return Json(new {text = page.Markup});
+		}
+
+		public async Task<IActionResult> View(int id)
+		{
+			var submission = await _submissionTasks.GetSubmission(id);
+			if (submission == null)
+			{
+				return NotFound();
+			}
+
+			return View(submission);
 		}
 
 		private static readonly SelectListItem[] GameVersionOptions =
