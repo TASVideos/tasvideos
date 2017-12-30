@@ -13,6 +13,7 @@ namespace TASVideos.Controllers
 {
 	public class SubmissionController : BaseController
 	{
+		private readonly UserTasks _userTasks;
 		private readonly WikiTasks _wikiTasks;
 		private readonly SubmissionTasks _submissionTasks;
 
@@ -22,6 +23,7 @@ namespace TASVideos.Controllers
 			SubmissionTasks submissionTasks)
 			: base(userTasks)
 		{
+			_userTasks = userTasks;
 			_wikiTasks = wikiTasks;
 			_submissionTasks = submissionTasks;
 		}
@@ -56,6 +58,14 @@ namespace TASVideos.Controllers
 			if (!model.Authors.Any())
 			{
 				ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), "A submission must have at least one author"); // TODO: need to use the ATLeastOne attribute error message since it will be localized
+			}
+
+			foreach (var author in model.Authors)
+			{
+				if (!await _userTasks.CheckUserNameExists(author))
+				{
+					ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), $"Could not find user: {author}");
+				}
 			}
 
 			if (!model.MovieFile.FileName.EndsWith(".zip")
