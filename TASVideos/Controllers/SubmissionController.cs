@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,10 +49,24 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.SubmitMovies)]
 		public async Task<IActionResult> Submit(SubmissionCreateViewModel model)
 		{
+			model.Authors = model.Authors
+				.Where(a => !string.IsNullOrWhiteSpace(a))
+				.ToList();
+
+			if (!model.Authors.Any())
+			{
+				ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), "A submission must have at least one author"); // TODO: need to use the ATLeastOne attribute error message since it will be localized
+			}
+
 			if (!model.MovieFile.FileName.EndsWith(".zip")
 			|| model.MovieFile.ContentType != "application/x-zip-compressed")
 			{
 				ModelState.AddModelError(nameof(SubmissionCreateViewModel.MovieFile), "Not a valid .zip file");
+			}
+
+			if (model.MovieFile.Length > 150 * 1024)
+			{
+				ModelState.AddModelError(nameof(SubmissionCreateViewModel.MovieFile), ".zip is too big, are you sure this is a valid movie file?");
 			}
 
 			if (ModelState.IsValid)
