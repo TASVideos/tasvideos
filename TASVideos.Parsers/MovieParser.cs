@@ -11,20 +11,28 @@ namespace TASVideos.MovieParsers
 		// TODO: document
 		public IParseResult Parse(Stream stream)
 		{
-			var zip = new ZipArchive(stream);
-			if (zip.Entries.Count > 1)
+			try
 			{
-				return Error("Multiple files detected in the .zip, only one file is allowed");
+				var zip = new ZipArchive(stream);
+				if (zip.Entries.Count > 1)
+				{
+					return Error("Multiple files detected in the .zip, only one file is allowed");
+				}
+
+				// For testing
+				return new ParseResult
+				{
+					Region = RegionType.Ntsc,
+					Frames = new Random().Next(10000, 250000),
+					SystemCode = "NES",
+					RerecordCount = new Random().Next(10000, 50000)
+				};
 			}
-			
-			// For testing
-			return new ParseResult
+			catch (Exception)
 			{
-				Region = RegionType.Ntsc,
-				Frames = new Random().Next(10000, 250000),
-				SystemCode = "NES",
-				RerecordCount = new Random().Next(10000, 50000)
-			};
+				// TODO: do we want to log here? or catch at a higher layer?
+				return Error("An general error occured while processing the movie file.");
+			}
 		}
 
 		private IParseResult Error(string errorMsg)
