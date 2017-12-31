@@ -23,7 +23,7 @@ namespace TASVideos.WikiEngine
 
 		private void Abort(string msg)
 		{
-			throw new SyntaxException("msg"); 
+			throw new SyntaxException(msg); 
 		}
 		private bool Eat(char c)
 		{
@@ -173,7 +173,7 @@ namespace TASVideos.WikiEngine
 		private void Pop(string tag)
 		{
 			if (!TryPop(tag))
-				throw new InvalidOperationException("Internal parser error: Pop");
+				throw new InvalidOperationException("Internal parser error: Pop " + tag);
 		}
 		private void PopOrPush(string tag)
 		{
