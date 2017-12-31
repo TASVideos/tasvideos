@@ -34,6 +34,7 @@ namespace TASVideos.Tasks
 				{
 					Id = s.Id,
 					SystemDisplayName = s.System.DisplayName,
+					SystemCode = s.System.Code,
 					GameName = s.GameName,
 					GameVersion = s.GameVersion,
 					RomName = s.RomName,
@@ -45,7 +46,8 @@ namespace TASVideos.Tasks
 					CreateTimestamp = s.CreateTimeStamp,
 					Submitter = s.Submitter.UserName,
 					LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
-					LastUpdateUser = s.WikiContent.LastUpdateUserName
+					LastUpdateUser = s.WikiContent.LastUpdateUserName,
+					Status = s.Status
 				})
 				.SingleOrDefaultAsync();
 

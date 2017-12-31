@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Models
 {
@@ -62,6 +63,8 @@ namespace TASVideos.Models
 		[Display(Name = "Console")]
 		public string SystemDisplayName { get; set; }
 
+		public string SystemCode { get; set; }
+
 		[Display(Name = "Game name")]
 		public string GameName { get; set; }
 
@@ -100,5 +103,8 @@ namespace TASVideos.Models
 
 		[Display(Name = "Last Edited by")]
 		public string LastUpdateUser { get; set; }
+
+		[Display(Name = "Status")]
+		public SubmissionStatus Status { get; set; }
 	}
 }
