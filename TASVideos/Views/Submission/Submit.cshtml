@@ -6,6 +6,7 @@
 	@await Component.RenderWiki("System/SubmitMovieHeader")
 </div>
 <hr />
+<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form asp-action="Submit" enctype="multipart/form-data">
 	<row>
 		<div class="col-md-6">

@@ -82,8 +82,12 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Takes the given data and generates a movie submission
+		/// If successful, the Success flag will be true, and the Id field will be
+		/// greater than 0 and represent the id to the newly created submission
+		/// If unsucessful, the success flag will be false, Id will be 0 and the 
+		/// Errors property will be filled with any relevant error messages
 		/// </summary>
-		public async Task<int> SubmitMovie(SubmissionCreateViewModel model, string userName)
+		public async Task<SubmitResult> SubmitMovie(SubmissionCreateViewModel model, string userName)
 		{
 			var submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
 
@@ -98,15 +102,9 @@ namespace TASVideos.Tasks
 				EncodeEmbedLink = model.EncodeEmbedLink
 			};
 
-			using (var memoryStream = new MemoryStream())
-			{
-				await model.MovieFile.CopyToAsync(memoryStream);
-				submission.MovieFile = memoryStream.ToArray();
-			}
-
 			// Parse movie file
 			// TODO: check success, errors, warnings
-			var parseResult = _parser.Parse(new byte[0]);
+			var parseResult = _parser.Parse(model.MovieFile.OpenReadStream());
 			if (parseResult.Success)
 			{
 				submission.FrameRate = 60M; // TODO: look up from lookup table based on system and region
@@ -121,7 +119,13 @@ namespace TASVideos.Tasks
 			}
 			else
 			{
-				// TODO: do something!
+				return new SubmitResult(parseResult.Errors);
+			}
+
+			using (var memoryStream = new MemoryStream())
+			{
+				await model.MovieFile.CopyToAsync(memoryStream);
+				submission.MovieFile = memoryStream.ToArray();
 			}
 
 			// TODO: parser system to derive these values
@@ -161,7 +165,7 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 
-			return submission.Id;
+			return new SubmitResult(submission.Id);
 		}
 	}
 }

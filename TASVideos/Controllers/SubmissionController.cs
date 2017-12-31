@@ -83,7 +83,15 @@ namespace TASVideos.Controllers
 			if (ModelState.IsValid)
 			{
 				var result = await _submissionTasks.SubmitMovie(model, User.Identity.Name);
-				return Redirect($"/{result}S");
+				if (result.Success)
+				{
+					return Redirect($"/{result.Id}S");
+				}
+
+				foreach (var error in result.Errors)
+				{
+					ModelState.AddModelError("", error);
+				}
 			}
 
 			model.GameVersionOptions = GameVersionOptions;
