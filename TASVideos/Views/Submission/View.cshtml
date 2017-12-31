@@ -76,7 +76,7 @@
 	<div class="panel panel-primary">
 		<div class="panel-heading">Submission Comments</div>
 		<div class="panel-body">
-			@await Component.RenderWiki($"SubmissionContent/S{Model.Id}")
+			@await Component.RenderWiki(LinkConstants.SubmissionWikiPage + Model.Id)
 		</div>
 	</div>
 </row>
@@ -86,8 +86,8 @@
 		last edited by @Model.LastUpdateUser on @Model.LastUpdateTimeStamp
 	</small>
 	<br />
-	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@($"SubmissionContent/S{Model.Id}")">Page History</a>
-	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="Diff" asp-route-path="@($"SubmissionContent/S{Model.Id}")">Last diff</a>
+	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)">Page History</a>
+	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="Diff" asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)">Last diff</a>
 	<a asp-controller="Wiki" asp-action="Referrers" asp-route-path="@($"{Model.Id}S")" class="btn btn-info btn-xs">List Referrers</a>
 </row>
 

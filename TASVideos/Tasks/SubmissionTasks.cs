@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Constants;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -110,7 +111,7 @@ namespace TASVideos.Tasks
 			var wikiPage = new WikiPage
 			{
 				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
-				PageName = $"SubmissionContent/S{submission.Id}", // TOOD: amek SubmissionContent a constant
+				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 				MinorEdit = false,
 				Markup = model.Markup
 			};
