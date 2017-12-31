@@ -113,8 +113,7 @@ namespace TASVideos.Tasks
 				submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
 				if (submission.System == null)
 				{
-					// TODO: gracefully handle this
-					throw new InvalidOperationException($"Unknown system type of {parseResult.SystemCode}");
+					return new SubmitResult($"Unknown system type of {parseResult.SystemCode}");
 				}
 			}
 			else
@@ -127,12 +126,6 @@ namespace TASVideos.Tasks
 				await model.MovieFile.CopyToAsync(memoryStream);
 				submission.MovieFile = memoryStream.ToArray();
 			}
-
-			// TODO: parser system to derive these values
-			submission.FrameRate = 60M;
-			submission.Frames = new Random().Next(10000, 250000);
-			submission.System = await _db.GameSystems.SingleAsync(g => g.Code == "NES");
-			submission.RerecordCount = new Random().Next(10000, 50000);
 
 			_db.Submissions.Add(submission);
 			await _db.SaveChangesAsync();
