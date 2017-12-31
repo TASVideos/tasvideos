@@ -70,7 +70,7 @@ namespace TASVideos.Models
 				throw new ArgumentException("Id must be greater than 0");
 			}
 
-			Id = 0;
+			Id = id;
 			Errors = new List<string>();
 		}
 
