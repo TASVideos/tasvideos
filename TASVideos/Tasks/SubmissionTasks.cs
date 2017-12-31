@@ -52,10 +52,13 @@ namespace TASVideos.Tasks
 				})
 				.SingleOrDefaultAsync();
 
-			submissionModel.Authors = await _db.SubmissionAuthors
-				.Where(sa => sa.SubmissionId == submissionModel.Id)
-				.Select(sa => sa.Author.UserName)
-				.ToListAsync();
+			if (submissionModel != null)
+			{
+				submissionModel.Authors = await _db.SubmissionAuthors
+					.Where(sa => sa.SubmissionId == submissionModel.Id)
+					.Select(sa => sa.Author.UserName)
+					.ToListAsync();
+			}
 
 			return submissionModel;
 		}
