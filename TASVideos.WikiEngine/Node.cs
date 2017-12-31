@@ -189,7 +189,8 @@ namespace TASVideos.WikiEngine.AST
 			["activetab"] = "ActiveTab",
 			["wikigetcurrenteditlink"] = "CurrentEditLink",
 			["user_name"] = "UserName",
-			["listparents"] = "ListParents"
+			["listparents"] = "ListParents",
+			["youtube"] = "Youtube"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
