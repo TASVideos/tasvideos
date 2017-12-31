@@ -1,19 +1,74 @@
 ﻿@model SubmissionViewModel
 @{
-	ViewData["Title"] = Model.Id + "S";
+	ViewData["Title"] = $"Submission #{Model.Id}";
+}
+@section PageTitle {
+	<h1>@($"Submission #{Model.Id}: {string.Join(",", Model.Authors)}'s TODO {Model.GameName} in {Model.Time:g} ")</h1>
+}
+
+@functions{
+	string StatusColor(SubmissionStatus status)
+	{
+		switch (status)
+		{
+			default:
+				return "text-info";
+			case SubmissionStatus.Published:
+				return "text-success";
+			case SubmissionStatus.Rejected:
+				return "text-danger";
+			case SubmissionStatus.NeedsMoreInfo:
+			case SubmissionStatus.Delayed:
+				return "text-warning";
+		}
+	}
 }
 
 <row>
-	<div class="col-md-6">
-		<label asp-for="SystemDisplayName"></label><label>@Model.SystemDisplayName</label>
-		<label asp-for="GameVersion"></label><label>@Model.GameVersion</label>
+	<div class="col-md-6" condition="true">
+		<iframe id="adcbedca_0_0_1347714704" type="text/html" style="width:450px;height:370px;margin:0px;" src="//www.youtube.com/embed/UJDwnRqaY1U?rel=0&amp;fs=1" allowfullscreen="true"></iframe>
 	</div>
 	<div class="col-md-6">
-
+		<div class="text-right @(StatusColor(Model.Status))">
+			<h4><label asp-for="Status"></label>: <label class="form-control-static">@Model.Status</label></h4>
+		</div>
+		<table class="table table-bordered table-condensed">
+			<tr>
+				<th><label asp-for="SystemDisplayName"></label></th>
+				<td>@Model.SystemDisplayName</td>
+				<th><label asp-for="Emulator"></label></th>
+				<td>@Model.Emulator</td>
+			</tr>
+			<tr>
+				<th><label asp-for="GameVersion"></label></th>
+				<td>@Model.GameVersion</td>
+				<th><label asp-for="FrameCount"></label></th>
+				<td>@Model.FrameCount</td>
+			</tr>
+			<tr>
+				<th><label asp-for="RomName"></label></th>
+				<td>@Model.RomName</td>
+				<th><label asp-for="FrameRate"></label></th>
+				<td>@Model.FrameRate</td>
+			</tr>
+			<tr>
+				<th><label asp-for="Branch"></label></th>
+				<td>@Model.Branch</td>
+				<th><label asp-for="RerecordCount"></label></th>
+				<td>@Model.RerecordCount</td>
+			</tr>
+		</table>
+		<small>
+			Submitted edited by @Model.Submitter on @Model.CreateTimestamp
+		</small>
+		<div class="btn-toolbar">
+			<a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
+			<a href="#" class="btn btn-default">Discuss and Vote</a>
+			<span class="btn-separator"></span>
+			<a asp-action="Index" class="btn btn-default">Back to Queue</a>
+			<a href="#" class="btn btn-default">All by this submitter</a>
+		</div>
 	</div>
-</row>
-<row>
-	<a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
 </row>
 <hr />
 <row>
@@ -24,5 +79,25 @@
 		</div>
 	</div>
 </row>
+<hr />
+<row>
+	<small>
+		last edited by @Model.LastUpdateUser on @Model.LastUpdateTimeStamp
+	</small>
+	<br />
+	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@($"SubmissionContent/S{Model.Id}")">Page History</a>
+	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="Diff" asp-route-path="@($"SubmissionContent/S{Model.Id}")">Last diff</a>
+	<a asp-controller="Wiki" asp-action="Referrers" asp-route-path="@($"{Model.Id}S")" class="btn btn-info btn-xs">List Referrers</a>
+</row>
 
-<div>TODO</div>
+<style>
+	.btn-separator::after {
+		content: ' ';
+		display: block;
+		float: left;
+		background: #ADADAD;
+		margin: 0 10px;
+		height: 34px;
+		width: 1px;
+	}
+</style>
