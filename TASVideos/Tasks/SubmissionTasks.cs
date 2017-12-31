@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,7 +46,8 @@ namespace TASVideos.Tasks
 					Submitter = s.Submitter.UserName,
 					LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
 					LastUpdateUser = s.WikiContent.LastUpdateUserName,
-					Status = s.Status
+					Status = s.Status,
+					EncodeEmbedLink = s.EncodeEmbedLink
 				})
 				.SingleOrDefaultAsync();
 
@@ -87,7 +87,8 @@ namespace TASVideos.Tasks
 				GameName = model.GameName,
 				Branch = model.BranchName,
 				RomName = model.RomName,
-				EmulatorVersion = model.Emulator
+				EmulatorVersion = model.Emulator,
+				EncodeEmbedLink = model.EncodeEmbedLink
 			};
 
 			using (var memoryStream = new MemoryStream())

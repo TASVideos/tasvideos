@@ -40,6 +40,9 @@ namespace TASVideos.Models
 		[StringLength(50)]
 		public string Emulator { get; set; }
 
+		[Display(Name = "Encode Embedded Link", Description = "Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU")]
+		public string EncodeEmbedLink { get; set; }
+
 		[Display(Name = "Author(s)")]
 		[AtLeastOne(ErrorMessage = "A submission must have at least one author")]
 		public IList<string> Authors { get; set; } = new List<string>();
@@ -79,6 +82,8 @@ namespace TASVideos.Models
 
 		[Display(Name = "Emulator")]
 		public string Emulator { get; set; }
+
+		public string EncodeEmbedLink { get; set; }
 
 		[Display(Name = "FrameCount")]
 		public int FrameCount { get; set; }
