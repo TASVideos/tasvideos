@@ -75,7 +75,7 @@
 	<div class="panel panel-primary">
 		<div class="panel-heading">Submission Comments</div>
 		<div class="panel-body">
-			@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = $"SubmissionContent/S{Model.Id}" })
+			@await Component.RenderWiki($"SubmissionContent/S{Model.Id}")
 		</div>
 	</div>
 </row>
