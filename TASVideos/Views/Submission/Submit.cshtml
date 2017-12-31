@@ -36,6 +36,11 @@
 				<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
 				<span asp-validation-for="GameName" class="text-danger"></span>
 			</form-group>
+			<form-group>
+				<label asp-for="Emulator"></label>
+				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)" />
+				<span asp-validation-for="Emulator" class="text-danger"></span>
+			</form-group>
 		</div>
 		<div class="col-md-6">
 			<form-group>

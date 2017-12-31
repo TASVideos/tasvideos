@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -105,6 +106,17 @@ namespace TASVideos.Controllers
 			}
 
 			return View(submission);
+		}
+
+		public async Task<IActionResult> Download(int id)
+		{
+			var submissionFile = await _submissionTasks.GetSubmissionFile(id);
+			if (submissionFile.Length > 0)
+			{
+				return File(submissionFile, MediaTypeNames.Application.Octet, $"submission{id}.zip");
+			}
+
+			return BadRequest();
 		}
 
 		private static readonly SelectListItem[] GameVersionOptions =

@@ -25,9 +25,10 @@ namespace TASVideos.Data.Entity
 		public byte[] MovieFile { get; set; }
 
 		// Metadata parsed from movie file
-		public int Frames { get; set; }
-		public double Length { get; set; }
 		public virtual GameSystem System { get; set; }
+		public int Frames { get; set; }
+		public decimal FrameRate { get; set; }
+		public int RerecordCount { get; set; }
 
 		// Metadata, user entered
 

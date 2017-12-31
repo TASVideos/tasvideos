@@ -3,10 +3,26 @@
 	ViewData["Title"] = Model.Id + "S";
 }
 
-<label>Content</label><br />
-<div style="border: solid">
-	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = $"SubmissionContent/S{Model.Id}" })
-</div>
+<row>
+	<div class="col-md-6">
+		<label asp-for="SystemDisplayName"></label><label>@Model.SystemDisplayName</label>
+		<label asp-for="GameVersion"></label><label>@Model.GameVersion</label>
+	</div>
+	<div class="col-md-6">
 
-GameName - @Model.GameName
+	</div>
+</row>
+<row>
+	<a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
+</row>
+<hr />
+<row>
+	<div class="panel panel-primary">
+		<div class="panel-heading">Submission Comments</div>
+		<div class="panel-body">
+			@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = $"SubmissionContent/S{Model.Id}" })
+		</div>
+	</div>
+</row>
+
 <div>TODO</div>
