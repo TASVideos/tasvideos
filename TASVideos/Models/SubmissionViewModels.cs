@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
@@ -54,6 +55,44 @@ namespace TASVideos.Models
 		[Required]
 		[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile MovieFile { get; set; }
+	}
+
+	/// <summary>
+	/// Represents the result of attempting to parse and save a submission
+	
+	/// </summary>
+	public class SubmitResult
+	{
+		public SubmitResult(int id)
+		{
+			if (id <= 0)
+			{
+				throw new ArgumentException("Id must be greater than 0");
+			}
+
+			Id = 0;
+			Errors = new List<string>();
+		}
+
+		public SubmitResult(string error, int id = 0)
+			: this (new[] { error }, id)
+		{
+		}
+
+		public SubmitResult(IEnumerable<string> errors, int id = 0)
+		{
+			if ((errors?.Any() ?? false) && id <- 0)
+			{
+				throw new ArgumentException("Errors must not be null or id must be greater than 0");
+			}
+
+			Errors = errors ?? new List<string>();
+			Id = 0;
+		}
+
+		public IEnumerable<string> Errors { get; }
+		public int Id { get; }
+		public bool Success => !Errors.Any();
 	}
 
 	/// <summary>

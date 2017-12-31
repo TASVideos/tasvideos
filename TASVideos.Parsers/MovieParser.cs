@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.IO.Compression;
 
 namespace TASVideos.MovieParsers
 {
 	// TODO: document, entry point for parsers
-	public class MovieParser
+	public sealed class MovieParser
 	{
 		// TODO: document
-		public IParseResult Parse(byte[] zip) // TODO: stream?
+		public IParseResult Parse(Stream stream)
 		{
+			var zip = new ZipArchive(stream);
+			if (zip.Entries.Count > 1)
+			{
+				return Error("Multiple files detected in the .zip, only one file is allowed");
+			}
+			
 			// For testing
 			return new ParseResult
 			{
@@ -18,6 +25,11 @@ namespace TASVideos.MovieParsers
 				SystemCode = "NES",
 				RerecordCount = new Random().Next(10000, 50000)
 			};
+		}
+
+		private IParseResult Error(string errorMsg)
+		{
+			return new ErrorResult(errorMsg);
 		}
 	}
 
@@ -34,6 +46,23 @@ namespace TASVideos.MovieParsers
 		int Frames { get; }
 		string SystemCode { get; } // NES, SNES, Genesis, etc
 		int RerecordCount { get; }
+	}
+
+	public class ErrorResult : IParseResult
+	{
+		public ErrorResult(string errorMsg)
+		{
+			Errors = new[] { errorMsg };
+		}
+
+		public bool Success => false;
+		public IEnumerable<string> Errors { get; internal set; } = new List<string>();
+
+		public IEnumerable<string> Warnings => new List<string>();
+		public RegionType Region => RegionType.Unknown;
+		public int Frames => 0;
+		public string SystemCode => "";
+		public int RerecordCount => -1;
 	}
 
 	public enum RegionType { Unknown, Ntsc, Pal }
