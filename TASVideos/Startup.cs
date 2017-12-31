@@ -87,6 +87,7 @@ namespace TASVideos
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+				routes.MapRoute("submission", "{id}S", defaults: new {controller = "Submission", action = "View"});
 				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = "RenderWikiPage" });
 			});
 		}
