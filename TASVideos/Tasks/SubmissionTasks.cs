@@ -33,11 +33,42 @@ namespace TASVideos.Tasks
 				.Select(s => new SubmissionViewModel // It is important to use a projection here to avoid querying the file data which can be slow
 				{
 					Id = s.Id,
-					GameName = s.GameName
+					SystemDisplayName = s.System.DisplayName,
+					GameName = s.GameName,
+					GameVersion = s.GameVersion,
+					RomName = s.RomName,
+					Branch = s.Branch,
+					Emulator = s.EmulatorVersion,
+					FrameCount = s.Frames,
+					FrameRate = s.FrameRate,
+					RerecordCount = s.RerecordCount,
+					CreateTimestamp = s.CreateTimeStamp,
+					Submitter = s.Submitter.UserName,
+					LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
+					LastUpdateUser = s.WikiContent.LastUpdateUserName
 				})
 				.SingleOrDefaultAsync();
 
+			submissionModel.Authors = await _db.SubmissionAuthors
+				.Where(sa => sa.SubmissionId == submissionModel.Id)
+				.Select(sa => sa.Author.UserName)
+				.ToListAsync();
+
 			return submissionModel;
+		}
+
+		/// <summary>
+		/// Returns the submission file as bytes with the given id
+		/// If no submission is found, an empty byte array is returned
+		/// </summary>
+		public async Task<byte[]> GetSubmissionFile(int id)
+		{
+			var data = await _db.Submissions
+				.Where(s => s.Id == id)
+				.Select(s => s.MovieFile)
+				.SingleOrDefaultAsync();
+
+			return data ?? new byte[0];
 		}
 
 		/// <summary>
@@ -63,8 +94,13 @@ namespace TASVideos.Tasks
 				submission.MovieFile = memoryStream.ToArray();
 			}
 
-			_db.Submissions.Add(submission);
+			// TODO: parser system to derive these values
+			submission.FrameRate = 60M;
+			submission.Frames = new Random().Next(10000, 250000);
+			submission.System = await _db.GameSystems.SingleAsync(g => g.Code == "NES");
+			submission.RerecordCount = new Random().Next(10000, 50000);
 
+			_db.Submissions.Add(submission);
 			await _db.SaveChangesAsync();
 
 			// Create a wiki page corresponding to this submission

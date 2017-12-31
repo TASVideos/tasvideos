@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -35,8 +35,7 @@ namespace TASVideos.Models
 		[StringLength(100)]
 		public string RomName { get; set; }
 
-		[Display(Name = "Emulator and version")]
-		[Description("Example: BizHawk 2.2.1")]
+		[Display(Name = "Emulator and version", Description = "Example: BizHawk 2.2.1")]
 		[StringLength(50)]
 		public string Emulator { get; set; }
 
@@ -59,6 +58,47 @@ namespace TASVideos.Models
 	public class SubmissionViewModel
 	{
 		public int Id { get; set; }
+
+		[Display(Name = "Console")]
+		public string SystemDisplayName { get; set; }
+
+		[Display(Name = "Game name")]
 		public string GameName { get; set; }
+
+		[Display(Name = "Game Version")]
+		public string GameVersion { get; set; }
+
+		[Display(Name = "ROM filename")]
+		public string RomName { get; set; }
+
+		[Display(Name = "Branch")]
+		public string Branch { get; set; }
+
+		[Display(Name = "Emulator")]
+		public string Emulator { get; set; }
+
+		[Display(Name = "FrameCount")]
+		public int FrameCount { get; set; }
+
+		public decimal FrameRate { get; set; }
+
+		public TimeSpan Time => new TimeSpan(0, 0, 0, 0, (int)((FrameCount * FrameRate) / 1000));
+
+		public int RerecordCount { get; set; }
+
+		[Display(Name = "Author")]
+		public IEnumerable<string> Authors { get; set; }
+
+		[Display(Name = "Submitter")]
+		public string Submitter { get; set; }
+
+		[Display(Name = "Submit Date")]
+		public DateTime CreateTimestamp { get; set; }
+
+		[Display(Name = "Last Edited")]
+		public DateTime LastUpdateTimeStamp { get; set; }
+
+		[Display(Name = "Last Edited by")]
+		public string LastUpdateUser { get; set; }
 	}
 }
