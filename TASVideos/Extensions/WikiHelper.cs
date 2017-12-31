@@ -140,6 +140,26 @@ namespace TASVideos.Extensions
 		// ***************
 
 		/// <summary>
+		/// Returns whether or not a parameter is specified in the list
+		/// Returns true as long as the parameter is specified, it does not have to have a corresponding value
+		/// </summary>
+		/// <param name="parameterStr">The full parameter string</param>
+		/// <param name="paramName">the parameter for which to return a value from</param>
+		/// <returns>true if the parameter is specified, else false</returns>
+		public static bool HasParam(string parameterStr, string parameterName)
+		{
+			if (string.IsNullOrWhiteSpace(parameterStr))
+			{
+				return false;
+			}
+
+			return parameterStr
+				.Split('|')
+				.Where(s => !string.IsNullOrWhiteSpace(s))
+				.Any(s => s == parameterName || s.StartsWith(parameterName + "="));
+		}
+
+		/// <summary>
 		/// Returns the value of the given parameter from the parameter list in string form
 		/// </summary>
 		/// <param name="parameterStr">The full parameter string</param>
