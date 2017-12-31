@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
     <ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
   </ItemGroup>
 

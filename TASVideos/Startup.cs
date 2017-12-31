@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
+using TASVideos.MovieParsers;
 using TASVideos.Services;
 using TASVideos.Tasks;
 
@@ -51,6 +52,8 @@ namespace TASVideos
 			services.AddScoped<RoleTasks, RoleTasks>();
 			services.AddScoped<WikiTasks, WikiTasks>();
 			services.AddScoped<SubmissionTasks, SubmissionTasks>();
+
+			services.AddSingleton<MovieParser, MovieParser>();
 
 			services.AddMvc(options =>
 			{

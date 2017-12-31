@@ -7,16 +7,19 @@ using TASVideos.Constants;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.MovieParsers;
 
 namespace TASVideos.Tasks
 {
     public class SubmissionTasks
     {
 		private readonly ApplicationDbContext _db;
+		private readonly MovieParser _parser;
 
-		public SubmissionTasks(ApplicationDbContext db)
+		public SubmissionTasks(ApplicationDbContext db, MovieParser parser)
 		{
 			_db = db;
+			_parser = parser;
 		}
 
 		/// <summary>
@@ -99,6 +102,26 @@ namespace TASVideos.Tasks
 			{
 				await model.MovieFile.CopyToAsync(memoryStream);
 				submission.MovieFile = memoryStream.ToArray();
+			}
+
+			// Parse movie file
+			// TODO: check success, errors, warnings
+			var parseResult = _parser.Parse(new byte[0]);
+			if (parseResult.Success)
+			{
+				submission.FrameRate = 60M; // TODO: look up from lookup table based on system and region
+				submission.Frames = parseResult.Frames;
+				submission.RerecordCount = parseResult.RerecordCount;
+				submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
+				if (submission.System == null)
+				{
+					// TODO: gracefully handle this
+					throw new InvalidOperationException($"Unknown system type of {parseResult.SystemCode}");
+				}
+			}
+			else
+			{
+				// TODO: do something!
 			}
 
 			// TODO: parser system to derive these values
