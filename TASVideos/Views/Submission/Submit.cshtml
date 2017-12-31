@@ -3,7 +3,7 @@
 	ViewData["Title"] = "Submit Movie";
 }
 <div class="alert alert-info text-center">
-	@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmitMovieHeader" })
+	@await Component.RenderWiki("System/SubmitMovieHeader")
 </div>
 <hr />
 <form asp-action="Submit" enctype="multipart/form-data">
@@ -60,7 +60,7 @@
 			<form-group>
 				<label asp-for="Markup"></label>
 				<span>
-					@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmissionImportant" })
+					@await Component.RenderWiki("System/SubmissionImportant")
 				</span>
 				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
 				<span asp-validation-for="Markup" class="text-danger"></span>
@@ -76,7 +76,7 @@
 			<br />
 			<br />
 			<div id="submit-blurb" class="text-center alert-info hide" role="alert">
-				<div>@await Component.InvokeAsync(nameof(RenderWikiPage), new { url = "System/SubmissionWarning" })</div>
+				<div>@await Component.RenderWiki("System/SubmissionWarning")</div>
 				<label class="small alert-info">By pressing "Submit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
 			</div>
 		</div>
