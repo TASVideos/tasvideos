@@ -14,12 +14,8 @@ namespace TASVideos.MovieParsers
 		{
 			var result = new ParseResult
 			{
-				Region = RegionType.Ntsc,
-				SystemCode = "NES",
-				RerecordCount = new Random().Next(10000, 50000)
+				Region = RegionType.Ntsc
 			};
-
-
 
 			var bk2Archive = new ZipArchive(file);
 
@@ -48,6 +44,22 @@ namespace TASVideos.MovieParsers
 					else
 					{
 						result.WarningList.Add("Could not determine the rerecord count, using 0 instead");
+					}
+
+					string platform = GetValue(headerLines, "platform");
+					if (string.IsNullOrWhiteSpace(platform))
+					{
+						return new ErrorResult("Could not determine the System Code");
+					}
+
+					// TODO: bk2's are more complex than this, we need to map bizhawks codes with tasvideos
+					// in bk2's, there are flags for systems like sg, pcecd, etc
+					result.SystemCode = platform;
+
+					int? pal = GetInt(GetValue(headerLines, "pal"));
+					if (pal == 1)
+					{
+						result.Region = RegionType.Pal;
 					}
 				}
 			}
