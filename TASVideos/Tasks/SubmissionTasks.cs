@@ -44,7 +44,7 @@ namespace TASVideos.Tasks
 					Branch = s.Branch,
 					Emulator = s.EmulatorVersion,
 					FrameCount = s.Frames,
-					FrameRate = s.FrameRate,
+					FrameRate = s.SystemFrameRate.FrameRate,
 					RerecordCount = s.RerecordCount,
 					CreateTimestamp = s.CreateTimeStamp,
 					Submitter = s.Submitter.UserName,
@@ -103,11 +103,10 @@ namespace TASVideos.Tasks
 			};
 
 			// Parse movie file
-			// TODO: check success, errors, warnings
+			// TODO: check warnings
 			var parseResult = _parser.Parse(model.MovieFile.OpenReadStream());
 			if (parseResult.Success)
 			{
-				submission.FrameRate = 60M; // TODO: look up from lookup table based on system and region
 				submission.Frames = parseResult.Frames;
 				submission.RerecordCount = parseResult.RerecordCount;
 				submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
@@ -115,6 +114,10 @@ namespace TASVideos.Tasks
 				{
 					return new SubmitResult($"Unknown system type of {parseResult.SystemCode}");
 				}
+
+				submission.SystemFrameRate = await _db.GameSystemFrameRates
+					.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
+						&& f.RegionCode == parseResult.Region.ToString());
 			}
 			else
 			{

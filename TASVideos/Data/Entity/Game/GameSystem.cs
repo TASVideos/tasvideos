@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Data.Entity.Game
 {
@@ -6,8 +7,10 @@ namespace TASVideos.Data.Entity.Game
 	/// Represents the system that a game runs on, such as NES, SNES, Commodore 64, PSX, etc
 	/// </summary>
 	public class GameSystem
-    {
+	{
 		public int Id { get; set; } // Note that this is Non-auto-incrementing, we need Ids to be identical across any database
+
+		public virtual ICollection<GameSystemFrameRate> SystemFrameRates { get; set; } = new HashSet<GameSystemFrameRate>();
 
 		[Required]
 		[StringLength(8)]

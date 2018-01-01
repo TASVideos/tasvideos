@@ -25,5 +25,45 @@ namespace TASVideos.Data.SeedData
 				DisplayName = "Sega Genesis"
 			}
 		};
+
+		public static GameSystemFrameRate[] SystemFrameRates =
+		{
+			new GameSystemFrameRate
+			{
+				GameSystemId = 1,
+				RegionCode = "NTSC",
+				FrameRate = 60.0988138974405
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 1,
+				RegionCode = "PAL",
+				FrameRate = 50.0069789081886
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 2,
+				RegionCode = "NTSC",
+				FrameRate = 60.0988138974405
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 2,
+				RegionCode = "PAL",
+				FrameRate = 50.0069789081886
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 3,
+				RegionCode = "NTSC",
+				FrameRate = 59.922751013550524
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 3,
+				RegionCode = "PAL",
+				FrameRate = 49.70146011994842
+			}
+		};
 	}
 }
