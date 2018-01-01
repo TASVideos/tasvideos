@@ -127,7 +127,7 @@ namespace TASVideos.Models
 		[Display(Name = "FrameCount")]
 		public int FrameCount { get; set; }
 
-		public decimal FrameRate { get; set; }
+		public double FrameRate { get; set; }
 
 		public TimeSpan Time => new TimeSpan(0, 0, 0, 0, (int)((FrameCount * FrameRate) / 1000));
 

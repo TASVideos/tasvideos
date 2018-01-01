@@ -26,6 +26,7 @@ namespace TASVideos.Data
 		public DbSet<WikiPageReferral> WikiReferrals { get; set; }
 		public DbSet<RoleLink> RoleLinks { get; set; }
 		public DbSet<GameSystem> GameSystems { get; set; }
+		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; }
 		public DbSet<Submission> Submissions { get; set; }
 		public DbSet<SubmissionAuthor> SubmissionAuthors { get; set; }
 

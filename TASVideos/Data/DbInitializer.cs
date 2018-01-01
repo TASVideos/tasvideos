@@ -55,6 +55,11 @@ namespace TASVideos.Data
 			{
 				context.GameSystems.Add(system);
 			}
+
+			foreach (var systemFrameRate in SystemSeedData.SystemFrameRates)
+			{
+				context.GameSystemFrameRates.Add(systemFrameRate);
+			}
 		}
 
 		/// <summary>
