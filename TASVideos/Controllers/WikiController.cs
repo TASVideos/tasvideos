@@ -152,8 +152,8 @@ namespace TASVideos.Controllers
 				model.Referrals = Util.GetAllWikiLinks(model.Markup)
 					.Select(l => new WikiReferralModel
 					{
-						Link = l,
-						Excerpt = "TODO we need an except here"
+						Link = l.Link,
+						Excerpt = l.Excerpt
 					});
 
 				await _wikiTasks.SavePage(model);

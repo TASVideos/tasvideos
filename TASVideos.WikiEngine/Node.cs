@@ -20,6 +20,8 @@ namespace TASVideos.WikiEngine.AST
 	{
 		[JsonConverter(typeof(StringEnumConverter))]
 		NodeType Type { get; }
+		int CharStart { get; }
+		int CharEnd { get; set; }
 		void WriteHtml(TextWriter w);
 	}
 	public interface INodeWithChildren : INode
@@ -31,8 +33,11 @@ namespace TASVideos.WikiEngine.AST
 	{
 		public NodeType Type => NodeType.Text;
 		public string Content { get; }
-		public Text(string content)
+		public int CharStart { get; }
+		public int CharEnd { get; set; }
+		public Text(int charStart, string content)
 		{
+			CharStart = charStart;
 			Content = content;
 		}
 		public void WriteHtml(TextWriter w)
@@ -71,7 +76,9 @@ namespace TASVideos.WikiEngine.AST
 		public List<INode> Children { get; } = new List<INode>();
 		public IDictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
 		public string Tag { get; }
-		public Element(string tag)
+		public int CharStart { get; }
+		public int CharEnd { get; set; }
+		public Element(int charStart, string tag)
 		{
 			if (!AllowedTagNames.IsMatch(tag))
 			{
@@ -82,15 +89,16 @@ namespace TASVideos.WikiEngine.AST
 				// we don't escape for these
 				throw new InvalidOperationException("Unsupported tag!");
 			}
+			CharStart = charStart;
 			Tag = tag;
 		}
-		public Element(string tag, IEnumerable<INode> children)
-			:this(tag)
+		public Element(int charStart, string tag, IEnumerable<INode> children)
+			:this(charStart, tag)
 		{
 			Children.AddRange(children);
 		}
-		public Element(string tag, IEnumerable<KeyValuePair<string, string>> attributes, IEnumerable<INode> children)
-			:this(tag, children)
+		public Element(int charStart, string tag, IEnumerable<KeyValuePair<string, string>> attributes, IEnumerable<INode> children)
+			:this(charStart, tag, children)
 		{
 			foreach (var kvp in attributes)
 				Attributes.Add(kvp.Key, kvp.Value);
@@ -155,12 +163,15 @@ namespace TASVideos.WikiEngine.AST
 		public NodeType Type => NodeType.IfModule;
 		public List<INode> Children { get; } = new List<INode>();
 		public string Condition { get; }
-		public IfModule(string condition)
+		public int CharStart { get; }
+		public int CharEnd { get; set; }
+		public IfModule(int charStart, string condition)
 		{
+			CharStart = charStart;
 			Condition = condition;
 		}
-		public IfModule(string condition, IEnumerable<INode> children)
-			: this(condition)
+		public IfModule(int charStart, string condition, IEnumerable<INode> children)
+			: this(charStart, condition)
 		{
 			Children.AddRange(children);
 		}
@@ -194,8 +205,12 @@ namespace TASVideos.WikiEngine.AST
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
-		public Module(string text)
+		public int CharStart { get; }
+		public int CharEnd { get; set; }
+		public Module(int charStart, int charEnd, string text)
 		{
+			CharStart = charStart;
+			CharEnd = charEnd;
 			Text = text;
 		}
 		public void WriteHtml(TextWriter w)
@@ -213,8 +228,8 @@ namespace TASVideos.WikiEngine.AST
 			}
 			else
 			{
-				var div = new Element("div");
-				div.Children.Add(new Text("Unknown module " + moduleName));
+				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
+				div.Children.Add(new Text(CharStart, "Unknown module " + moduleName) { CharEnd = CharEnd });
 				div.Attributes["class"] = "module-error";
 				div.WriteHtml(w);
 			}

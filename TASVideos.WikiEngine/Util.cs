@@ -46,7 +46,7 @@ namespace TASVideos.WikiEngine
 				r.WriteHtml(w);
 		}
 
-		public static IEnumerable<string> GetAllWikiLinks(string content)
+		public static IEnumerable<NewParser.WikiLinkInfo> GetAllWikiLinks(string content)
 		{
 			return NewParser.GetAllWikiLinks(content);
 		}

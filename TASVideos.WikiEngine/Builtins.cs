@@ -20,6 +20,7 @@ namespace TASVideos.WikiEngine
 		}
 		public static INode MakeTabs(Element tabset)
 		{
+			// TODO: Fix up CharEnds
 			var navclass = tabset.Tag == "htabs" ? "nav nav-pills nav-stacked col-md-3" : "nav nav-tabs";
 			var tabclass = tabset.Tag == "htabs" ? "tab-content col-md-9" : "tab-content";
 			var nav = new List<INode>();
@@ -28,81 +29,81 @@ namespace TASVideos.WikiEngine
 			foreach (var child in tabset.Children.Cast<Element>())
 			{
 				var id = GetUniqueId();
-				nav.Add(new Element("li", first ? new[] { Attr("class", "active") } : new KeyValuePair<string, string>[0], new[]
+				nav.Add(new Element(child.CharStart, "li", first ? new[] { Attr("class", "active") } : new KeyValuePair<string, string>[0], new[]
 				{
-					new Element("a", new[] { Attr("href", "#" + id), Attr("data-toggle", "tab") }, new[]
+					new Element(child.CharStart, "a", new[] { Attr("href", "#" + id), Attr("data-toggle", "tab") }, new[]
 					{
-						new Text(child.Attributes["data-name"])
+						new Text(child.CharStart, child.Attributes["data-name"])
 					})
 				}));
-				content.Add(new Element("div", new[] { Attr("id", id), Attr("class", first ? "tab-pane active" : "tab-pane") }, child.Children));
+				content.Add(new Element(child.CharStart, "div", new[] { Attr("id", id), Attr("class", first ? "tab-pane active" : "tab-pane") }, child.Children));
 				first = false;
 			}
-			return new Element("div", new[] { Attr("class", "row") }, new[]
+			return new Element(tabset.CharStart, "div", new[] { Attr("class", "row") }, new[]
 			{
-				new Element("ul", new[] { Attr("class", navclass) }, nav),
-				new Element("div", new[] { Attr("class", tabclass) }, content)
+				new Element(tabset.CharStart, "ul", new[] { Attr("class", navclass) }, nav),
+				new Element(tabset.CharStart, "div", new[] { Attr("class", tabclass) }, content)
 			});
 		}
 
 		private static readonly Regex Footnote = new Regex(@"^(\d+)$");
 		private static readonly Regex FootnoteLink = new Regex(@"^#(\d+)$");
 		private static readonly Regex RealModule = new Regex("^module:(.*)$");
-		public static IEnumerable<INode> MakeModule(string text)
+		public static IEnumerable<INode> MakeModule(int charStart, int charEnd, string text)
 		{
 			if (text == "|") // literal | escape
-				return new[] { new Text("|") };
+				return new[] { new Text(charStart, "|") { CharEnd = charEnd } };
 			if (text == "expr:UserGetWikiName")
-				return MakeModuleInternal("UserGetWikiName");
+				return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
 			if (text == "expr:WikiGetCurrentEditLink")
-				return MakeModuleInternal("WikiGetCurrentEditLink");
+				return MakeModuleInternal(charStart, charEnd, "WikiGetCurrentEditLink");
 			if (text == "user:user_name")
-				return MakeModuleInternal("user_name");
+				return MakeModuleInternal(charStart, charEnd, "user_name");
 
 			Match match;
 			if ((match = Footnote.Match(text)).Success)
-				return MakeFootnote(match.Groups[1].Value);
+				return MakeFootnote(charStart, charEnd, match.Groups[1].Value);
 			if ((match = FootnoteLink.Match(text)).Success)
-				return MakeFootnoteLink(match.Groups[1].Value);
+				return MakeFootnoteLink(charStart, charEnd, match.Groups[1].Value);
 			if ((match = RealModule.Match(text)).Success)
-				return MakeModuleInternal(match.Groups[1].Value);
+				return MakeModuleInternal(charStart, charEnd, match.Groups[1].Value);
 
-			return MakeLinkOrImage(text);
+			return MakeLinkOrImage(charStart, charEnd, text);
 		}
-		private static IEnumerable<INode> MakeModuleInternal(string module)
+		private static IEnumerable<INode> MakeModuleInternal(int charStart, int charEnd, string module)
 		{
 			return new []
 			{
-				new Module(module)
+				new Module(charStart, charEnd, module)
 			};
 		}
-		private static IEnumerable<INode> MakeFootnote(string n)
+		private static IEnumerable<INode> MakeFootnote(int charStart, int charEnd, string n)
 		{
 			return new INode[]
 			{
-				new Text("["),
-				new Element("a", new[] { Attr("id", n) }, new INode[0]),
-				new Element("a", new[] { Attr("href", "#r" + n) }, new []
+				new Text(charStart, "[") { CharEnd = charStart },
+				new Element(charStart, "a", new[] { Attr("id", n) }, new INode[0]) { CharEnd = charStart },
+				new Element(charStart, "a", new[] { Attr("href", "#r" + n) }, new []
 				{
-					new Text(n)
-				}),
-				new Text("]")
+					new Text(charStart, n) { CharEnd = charEnd }
+				}) { CharEnd = charEnd },
+				new Text(charEnd, "]") { CharEnd = charEnd }
 			};
 		}
-		private static IEnumerable<INode> MakeFootnoteLink(string n)
+		private static IEnumerable<INode> MakeFootnoteLink(int charStart, int charEnd, string n)
 		{
 			return new[]
 			{
-				new Element("a", new[] { Attr("id", "r" + n) }, new INode[0]),
-				new Element("sup", new INode[]
+				new Element(charStart, "a", new[] { Attr("id", "r" + n) }, new INode[0]) { CharEnd = charStart },
+				new Element(charStart, "sup", new INode[]
 				{
-					new Text("["),
-					new Element("a", new[] { Attr("href", "#" + n) }, new []
+					new Text(charStart, "[") { CharEnd = charStart },
+					new Element(charStart, "a", new[] { Attr("href", "#" + n) }, new []
 					{
-						new Text(n)
-					}),
-					new Text("]")
-				})
+						new Text(charStart, n) { CharEnd = charEnd }
+					}) { CharEnd = charEnd },
+					new Text(charEnd, "]") { CharEnd = charEnd }
+				}) { CharEnd = charEnd }
 			};
 		}
 
@@ -122,37 +123,37 @@ namespace TASVideos.WikiEngine
 				return "/" + text.Substring(1);
 			return text;
 		}
-		private static IEnumerable<INode> MakeLinkOrImage(string text)
+		private static IEnumerable<INode> MakeLinkOrImage(int charStart, int charEnd, string text)
 		{
 			var pp = text.Split('|');
 			if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
 			{
-				return new[] { MakeLink(pp[0], MakeImage(pp, 1)) };
+				return new[] { MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1)) };
 			}
 			if (IsImage(pp[0]))
 			{
-				return new[] { MakeImage(pp, 0) };
+				return new[] { MakeImage(charStart, charEnd, pp, 0) };
 			}
 			if (IsLink(pp[0]))
 			{
 				if (pp.Length > 1)
 				{
-					return new[] { MakeLink(pp[0], new Text(pp[1])) };
+					return new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, pp[1]) { CharEnd = charEnd }) };
 				}
 				else
 				{
 					// TODO: the existing forum code does this, but that can't possibly be intended??
 					// return new[] { MakeLink(pp[0], new Text(pp[0])) };
 
-					return new[] { MakeLink(pp[0], new Text(UrlFromLinkText(pp[0]))) };
+					return new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, UrlFromLinkText(pp[0])) { CharEnd = charEnd }) };
 				}
 			}
 			// wiki links needs to be in a module because the href, title, and possibly the text will be adjusted/normalized based
 			// on what other wiki pages exist and their content
-			return MakeModuleInternal("__wikiLink|" + text);
+			return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
 		}
 
-		private static INode MakeLink(string text, INode child)
+		private static INode MakeLink(int charStart, int charEnd, string text, INode child)
 		{
 			var attrs = new List<KeyValuePair<string, string>>();
 			attrs.Add(Attr("href", UrlFromLinkText(text)));
@@ -161,9 +162,9 @@ namespace TASVideos.WikiEngine
 				attrs.Add(Attr("rel", "nofollow"));
 				attrs.Add(Attr("class", "extlink"));
 			}
-			return new Element("a", attrs, new[] { child });
+			return new Element(charStart, "a", attrs, new[] { child }) { CharEnd = charEnd };
 		}
-		private static INode MakeImage(string[] pp, int index)
+		private static INode MakeImage(int charStart, int charEnd, string[] pp, int index)
 		{
 			var attrs = new List<KeyValuePair<string, string>>();
 			var classSet = false;
@@ -194,7 +195,7 @@ namespace TASVideos.WikiEngine
 			{
 				attrs.Add(Attr("class", "embed"));
 			}
-			return new Element("img", attrs, new INode[0]);
+			return new Element(charStart, "img", attrs, new INode[0]) { CharEnd = charEnd };
 		}
 	}
 }
