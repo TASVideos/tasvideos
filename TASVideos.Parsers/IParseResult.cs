@@ -21,9 +21,12 @@ namespace TASVideos.MovieParsers
 
 	public class ParseResult : IParseResult
 	{
+		internal List<string> WarningList { get; set; } = new List<string>();
+		internal List<string> ErrorList { get; set; } = new List<string>();
+
 		public bool Success { get; internal set; } = true;
-		public IEnumerable<string> Errors { get; internal set; } = new List<string>();
-		public IEnumerable<string> Warnings { get; internal set; } = new List<string>();
+		public IEnumerable<string> Errors => ErrorList;
+		public IEnumerable<string> Warnings => WarningList;
 
 		public RegionType Region { get; internal set; }
 		public int Frames { get; internal set; }
@@ -39,7 +42,7 @@ namespace TASVideos.MovieParsers
 		}
 
 		public bool Success => false;
-		public IEnumerable<string> Errors { get; internal set; } = new List<string>();
+		public IEnumerable<string> Errors { get; internal set; }
 
 		public IEnumerable<string> Warnings => new List<string>();
 		public RegionType Region => RegionType.Unknown;
