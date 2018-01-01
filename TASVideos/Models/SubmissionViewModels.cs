@@ -128,7 +128,16 @@ namespace TASVideos.Models
 
 		public double FrameRate { get; set; }
 
-		public TimeSpan Time => new TimeSpan(0, 0, 0, 0, (int)((FrameCount * FrameRate) / 1000));
+		public TimeSpan Time
+		{
+			get
+			{
+				int seconds = (int) (FrameCount / FrameRate);
+				double fractionalSeconds = (FrameCount / FrameRate) - seconds;
+				int milliseconds = (int)(Math.Round(fractionalSeconds, 2) * 1000);
+				return new TimeSpan(0, 0, 0, seconds, milliseconds);
+			}
+		}
 
 		public int RerecordCount { get; set; }
 
