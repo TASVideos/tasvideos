@@ -4,7 +4,7 @@
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.EncodeEmbedLink);
 }
 @section PageTitle {
-	<h1>@($"Submission #{Model.Id}: {string.Join(",", Model.Authors)}'s TODO {Model.GameName} in {Model.Time:g} ")</h1>
+	<h1>@($"Submission #{Model.Id}: {string.Join(" & ", Model.Authors)}'s {Model.SystemCode} {Model.GameName} in {Model.Time:g} ")</h1>
 }
 
 @functions{
