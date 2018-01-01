@@ -165,6 +165,90 @@ namespace TASVideos.Data.SeedData
 				Code = "MSX",
 				DisplayName = "MSX Home Computer System"
 			},
+			new GameSystem
+			{
+				Id = 27,
+				Code = "GC",
+				DisplayName = "Nintendo GameCube"
+			},
+			new GameSystem
+			{
+				Id = 28,
+				Code = "Wii",
+				DisplayName = "Nintendo Wii"
+			},
+			new GameSystem
+			{
+				Id = 29,
+				Code = "Windows",
+				DisplayName = "Windows"
+			},
+			new GameSystem
+			{
+				Id = 30,
+				Code = "SG1000",
+				DisplayName = "Sega SG-1000"
+			},
+			new GameSystem
+			{
+				Id = 31,
+				Code = "TI83",
+				DisplayName = "Texas Instruments TI-83 Series"
+			},
+			new GameSystem
+			{
+				Id = 32,
+				Code = "SGX",
+				DisplayName = "SuperGrafx"
+			},
+			new GameSystem
+			{
+				Id = 33,
+				Code = "DOOM",
+				DisplayName = "DooM"
+			},
+			new GameSystem
+			{
+				Id = 34,
+				Code = "A2600",
+				DisplayName = "Atari 2600"
+			},
+			new GameSystem
+			{
+				Id = 35,
+				Code = "Coleco",
+				DisplayName = "ColecoVision"
+			},
+			new GameSystem
+			{
+				Id = 36,
+				Code = "A7800",
+				DisplayName = "Atari 7800"
+			},
+			new GameSystem
+			{
+				Id = 37,
+				Code = "C64",
+				DisplayName = "Commodore 64"
+			},
+			new GameSystem
+			{
+				Id = 41,
+				Code = "AppleII",
+				DisplayName = "Apple II"
+			},
+			new GameSystem
+			{
+				Id = 42,
+				Code = "INTV",
+				DisplayName = "Intellivision"
+			},
+			new GameSystem
+			{
+				Id = 43,
+				Code = "Uzebox",
+				DisplayName = "Uzebox"
+			},
 		};
 
 		public static GameSystemFrameRate[] SystemFrameRates =
@@ -402,6 +486,146 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 26,
 				RegionCode = PAL,
 				FrameRate = 50.158975804566104
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 27,
+				RegionCode = NTSC,
+				FrameRate = 60,
+				Preliminary = true
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 27,
+				RegionCode = PAL,
+				FrameRate = 50,
+				Preliminary = true
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 28,
+				RegionCode = NTSC,
+				FrameRate = 60,
+				Preliminary = true
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 28,
+				RegionCode = PAL,
+				FrameRate = 50,
+				Preliminary = true
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 29,
+				RegionCode = NTSC,
+				FrameRate = 60,
+				Preliminary = true
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 30,
+				RegionCode = NTSC,
+				FrameRate = 59.9227510135505
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 30,
+				RegionCode = PAL,
+				FrameRate = 49.70146011994839
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 31,
+				RegionCode = NTSC,
+				FrameRate = 60,
+				Preliminary = true
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 32,
+				RegionCode = NTSC,
+				FrameRate = 59.8261054534819
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 33,
+				RegionCode = NTSC,
+				FrameRate = 35.0029869215506
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 34,
+				RegionCode = NTSC,
+				FrameRate = 59.9227510135505
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 34,
+				RegionCode = PAL,
+				FrameRate = 49.8607596716149
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 35,
+				RegionCode = NTSC,
+				FrameRate = 59.9227510135505
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 35,
+				RegionCode = PAL,
+				FrameRate = 49.70146011994839
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 36,
+				RegionCode = NTSC,
+				FrameRate = 59.9227510135505
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 36,
+				RegionCode = PAL,
+				FrameRate = 49.70146011994839
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 37,
+				RegionCode = NTSC,
+				FrameRate = 59.826089499853765
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 37,
+				RegionCode = PAL,
+				FrameRate = 50.1245421245421
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 41,
+				RegionCode = NTSC,
+				FrameRate = 60,
+				Preliminary = true
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 41,
+				RegionCode = PAL,
+				FrameRate = 50,
+				Preliminary = true
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 42,
+				RegionCode = NTSC,
+				FrameRate = 59.92
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 43,
+				RegionCode = NTSC,
+				FrameRate = 60.01631993960238
 			},
 		};
 	}
