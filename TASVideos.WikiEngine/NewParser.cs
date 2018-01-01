@@ -15,6 +15,7 @@ namespace TASVideos.WikiEngine
 
 		private List<INode> _output = new List<INode>();
 		private List<INodeWithChildren> _stack = new List<INodeWithChildren>();
+		private int _currentTextStart = -1;
 		private StringBuilder _currentText = new StringBuilder();
 		private string _input;
 		private int _index = 0;
@@ -120,17 +121,21 @@ namespace TASVideos.WikiEngine
 		}
 		private void AddText(char c)
 		{
+			if (_currentText.Length == 0)
+				_currentTextStart = _index;
 			_currentText.Append(c);
 		}
 		private void AddText(string s)
 		{
+			if (_currentText.Length == 0)
+				_currentTextStart = _index;
 			_currentText.Append(s);
 		}
 		private void FinishText()
 		{
 			if (_currentText.Length > 0)
 			{
-				var t = new Text(_currentText.ToString());
+				var t = new Text(_currentTextStart, _currentText.ToString()) { CharEnd = _index };
 				_currentText.Clear();
 				if (_stack.Count > 0)
 					_stack[_stack.Count - 1].Children.Add(t);
@@ -146,6 +151,8 @@ namespace TASVideos.WikiEngine
 				if (e.Type == NodeType.Element && ((Element)e).Tag == tag)
 				{
 					FinishText();
+					for (var j = i; j < _stack.Count; j++)
+						_stack[j].CharEnd = _index;
 					_stack.RemoveRange(i, _stack.Count - i);
 					return true;
 				}
@@ -163,6 +170,8 @@ namespace TASVideos.WikiEngine
 					if (tag == "htabs" || tag == "vtabs")
 					{
 						FinishText();
+						for (var j = i; j < _stack.Count; j++)
+							_stack[j].CharEnd = _index;
 						_stack.RemoveRange(i, _stack.Count - i);
 						return true;
 					}
@@ -187,7 +196,7 @@ namespace TASVideos.WikiEngine
 		}
 		private void Push(string tag)
 		{
-			Push(new Element(tag));
+			Push(new Element(_index, tag));
 		}
 		private bool TryPopIf()
 		{
@@ -197,6 +206,8 @@ namespace TASVideos.WikiEngine
 				if (e.Type == NodeType.IfModule)
 				{
 					FinishText();
+					for (var j = i; j < _stack.Count; j++)
+						_stack[j].CharEnd = _index;
 					_stack.RemoveRange(i, _stack.Count - i);
 					return true;
 				}
@@ -287,7 +298,7 @@ namespace TASVideos.WikiEngine
 			}
 			else if (Eat("%%%"))
 			{
-				AddNonChild(new Element("br"));
+				AddNonChild(new Element(_index, "br") { CharEnd = _index });
 			}
 			else if (Eat("[["))
 				AddText('[');
@@ -295,7 +306,7 @@ namespace TASVideos.WikiEngine
 				AddText(']');
 			else if (Eat("[if:"))
 			{
-				Push(new IfModule(EatToBracket()));
+				Push(new IfModule(_index, EatToBracket()));
 			}
 			else if (Eat("[endif]"))
 			{
@@ -304,7 +315,9 @@ namespace TASVideos.WikiEngine
 			}
 			else if (Eat('['))
 			{
-				AddNonChild(Builtins.MakeModule(EatToBracket()));
+				var start = _index;
+				var content = EatToBracket();
+				AddNonChild(Builtins.MakeModule(start, _index, content));
 			}
 			else if (In("dt") && Eat(':'))
 			{
@@ -403,7 +416,7 @@ namespace TASVideos.WikiEngine
 			{
 				var author = EatClassText();
 				ClearBlockTags();
-				var e = new Element("quote");
+				var e = new Element(_index, "quote");
 				if (author != "")
 					e.Attributes["data-author"] = author;
 				Push(e);
@@ -417,7 +430,7 @@ namespace TASVideos.WikiEngine
 			{
 				var className = EatClassText();
 				ClearBlockTags();
-				var e = new Element("div");
+				var e = new Element(_index, "div");
 				if (className != "")
 					e.Attributes["class"] = className;
 				Push(e);		
@@ -430,7 +443,7 @@ namespace TASVideos.WikiEngine
 					Push("vtabs");
 				else
 					TryPop("tab");
-				var e = new Element("tab");
+				var e = new Element(_index, "tab");
 				e.Attributes["data-name"] = name;
 				Push(e);
 			}
@@ -454,7 +467,7 @@ namespace TASVideos.WikiEngine
 			else if (Eat("[if:"))
 			{
 				ClearBlockTags();
-				Push(new IfModule(EatToBracket()));
+				Push(new IfModule(_index, EatToBracket()));
 			}
 			else if (Eat("[endif]"))
 			{
@@ -465,7 +478,7 @@ namespace TASVideos.WikiEngine
 			{
 				while(Eat('-')) { }
 				ClearBlockTags();
-				AddNonChild(new Element("hr"));
+				AddNonChild(new Element(_index, "hr") { CharEnd = _index });
 			}
 			else if (Eat("!!!!"))
 			{
@@ -495,7 +508,7 @@ namespace TASVideos.WikiEngine
 			{
 				DiscardLine();
 				ClearBlockTags();
-				AddNonChild(new Element("toc"));
+				AddNonChild(new Element(_index, "toc") { CharEnd = _index });
 			}
 			else if (Eat("||"))
 			{				
@@ -543,10 +556,11 @@ namespace TASVideos.WikiEngine
 			{
 				var lang = EatClassText();
 				ClearBlockTags();
-				var e = new Element("code");
+				var e = new Element(_index, "code");
 				if (lang != "")
 					e.Attributes["data-syntax"] = lang;
-				e.Children.Add(new Text(EatSrcEmbedText()));
+				e.Children.Add(new Text(_index, EatSrcEmbedText()) { CharEnd = _index });
+				e.CharEnd = _index;
 				AddNonChild(e);
 			}
 			else if (Eat('>'))
@@ -611,10 +625,10 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
-		private static List<string> GetAllWikiLinks(List<INode> n)
+		private List<WikiLinkInfo> GetAllWikiLinks(List<INode> n)
 		{
 			// TODO: if we get more of these, make some general purpose Visit stuff
-			var ret = new List<string>();
+			var ret = new List<WikiLinkInfo>();
 			for (var i = 0; i < n.Count; i++)
 			{
 				var e = n[i];
@@ -622,7 +636,16 @@ namespace TASVideos.WikiEngine
 				{
 					var text = ((Module)e).Text;
 					if (text.StartsWith("__wikiLink|"))
-						ret.Add(text.Substring(11));
+					{
+						var link = text.Substring(11);
+						var si = Math.Max(e.CharStart - 20, 0);
+						var se = Math.Min(e.CharEnd + 20, _input.Length);
+						ret.Add(new WikiLinkInfo
+						{
+							Link = link,
+							Excerpt = _input.Substring(si, se - si)
+						});
+					}
 				}
 				var cc = n[i] as INodeWithChildren;
 				if (cc != null)
@@ -631,11 +654,17 @@ namespace TASVideos.WikiEngine
 			return ret;
 		}
 
-		public static List<string> GetAllWikiLinks(string content)
+		public class WikiLinkInfo
+		{
+			public string Link { get; set; }
+			public string Excerpt { get; set; }
+		}
+
+		public static List<WikiLinkInfo> GetAllWikiLinks(string content)
 		{
 			var p = new NewParser { _input = content };
 			p.ParseLoop();
-			return GetAllWikiLinks(p._output);
+			return p.GetAllWikiLinks(p._output);
 		}
 
 		public static List<INode> Parse(string content)
