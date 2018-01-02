@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -52,8 +53,19 @@ namespace TASVideos.MovieParsers
 						return new ErrorResult("Could not determine the System Code");
 					}
 
-					// TODO: bk2's are more complex than this, we need to map bizhawks codes with tasvideos
-					// in bk2's, there are flags for systems like sg, pcecd, etc
+					// Some biz system ids do not match tasvideos, convert if needed
+					if (BizToTasvideosSystemIds.ContainsKey(platform))
+					{
+						platform = BizToTasvideosSystemIds[platform];
+					}
+
+					// Check various subsystem flags
+					int? is32x = GetInt(GetValue(headerLines, "is32x"));
+					if (is32x == 1)
+					{
+						platform = "32X";
+					}
+
 					result.SystemCode = platform;
 
 					int? pal = GetInt(GetValue(headerLines, "pal"));
@@ -66,6 +78,11 @@ namespace TASVideos.MovieParsers
 
 			return result;
 		}
+
+		private static Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
+		{
+			["gen"] = "genesis"
+		};
 
 		private static string GetValue(string[] lines, string header) // Case insensitive
 		{
