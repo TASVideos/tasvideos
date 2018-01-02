@@ -6,6 +6,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
 using TASVideos.Extensions;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.Data
 {
@@ -49,6 +50,16 @@ namespace TASVideos.Data
 			foreach (var wikiPage in WikiPageSeedData.SeedPages)
 			{
 				context.WikiPages.Add(wikiPage);
+				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
+				foreach (var referral in referrals)
+				{
+					context.WikiReferrals.Add(new WikiPageReferral
+					{
+						Referrer = wikiPage.PageName,
+						Referral = referral.Link?.Split('|').FirstOrDefault(),
+						Excerpt = referral.Excerpt
+					});
+				}
 			}
 
 			foreach (var system in SystemSeedData.Systems)
