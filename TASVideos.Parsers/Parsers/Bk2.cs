@@ -81,7 +81,9 @@ namespace TASVideos.MovieParsers
 
 		private static Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
 		{
-			["gen"] = "genesis"
+			["gen"] = "genesis",
+			["sat"] = "saturn",
+			["dgb"] = "gb"
 		};
 
 		private static string GetValue(string[] lines, string header) // Case insensitive
