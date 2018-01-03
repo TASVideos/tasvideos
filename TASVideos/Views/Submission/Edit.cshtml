@@ -56,7 +56,6 @@
 				<label asp-for="Markup"></label>
 				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
 				<span asp-validation-for="Markup" class="text-danger"></span>
-				<button id="prefill-btn" type="button" class="btn btn-default">Prefill comments</button>
 			</form-group>
 		</div>
 	</row>
@@ -81,28 +80,6 @@
 
 <script>
 	(function () {
-		document.getElementById('prefill-btn').onclick = function () {
-			var markup = document.getElementById('@nameof(Model.Markup)').value;
-			if (markup) {
-				return;
-			}
-
-			var xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-					if (xmlhttp.status === 200) {
-						var data = JSON.parse(xmlhttp.responseText);
-						document.getElementById('@(nameof(Model.Markup))').value = data.text;
-					}
-				}
-			};
-
-			xmlhttp.open("GET",
-				"/Submission/@(nameof(SubmissionController.PrefillText))",
-				true);
-			xmlhttp.send();
-		};
-
 		document.getElementById('preview-btn').onclick = function() {
 			var markup = document.getElementById('@nameof(Model.Markup)').value;
 			if (markup) {
@@ -117,7 +94,6 @@
 						}
 
 						document.getElementById('submit-btn').classList.remove('hide');
-						document.getElementById('submit-blurb').classList.remove('hide');
 					}
 				};
 
