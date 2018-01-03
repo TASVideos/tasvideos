@@ -27,13 +27,11 @@ namespace TASVideos.Tasks
 		/// for the purpose of display
 		/// If a submission can not be found, null is returned
 		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
 		public async Task<SubmissionViewModel> GetSubmission(int id)
 		{
 			var submissionModel = await _db.Submissions
 				.Where(s => s.Id == id)
-				.Select(s => new SubmissionViewModel // It is important to use a projection here to avoid querying the file data which can be slow
+				.Select(s => new SubmissionViewModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
 				{
 					Id = s.Id,
 					SystemDisplayName = s.System.DisplayName,
@@ -64,6 +62,56 @@ namespace TASVideos.Tasks
 			}
 
 			return submissionModel;
+		}
+
+		/// <summary>
+		/// Returns data for a <see cref="Submission"/> with the given <see cref="id" />
+		/// for the purpose of edit
+		/// If a submission can not be found, null is returned
+		/// </summary>
+
+		public async Task<SubmissionEditModel> GetSubmissionForEdit(int id)
+		{
+			var submissionModel = await _db.Submissions
+				.Where(s => s.Id == id)
+				.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
+				{
+					Id = s.Id,
+					SystemDisplayName = s.System.DisplayName,
+					SystemCode = s.System.Code,
+					GameName = s.GameName,
+					GameVersion = s.GameVersion,
+					RomName = s.RomName,
+					Branch = s.Branch,
+					Emulator = s.EmulatorVersion,
+					FrameCount = s.Frames,
+					FrameRate = s.SystemFrameRate.FrameRate,
+					RerecordCount = s.RerecordCount,
+					CreateTimestamp = s.CreateTimeStamp,
+					Submitter = s.Submitter.UserName,
+					LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
+					LastUpdateUser = s.WikiContent.LastUpdateUserName,
+					Status = s.Status,
+					EncodeEmbedLink = s.EncodeEmbedLink,
+					Markup = s.WikiContent.Markup
+				})
+				.SingleOrDefaultAsync();
+
+			if (submissionModel != null)
+			{
+				submissionModel.Authors = await _db.SubmissionAuthors
+					.Where(sa => sa.SubmissionId == submissionModel.Id)
+					.Select(sa => sa.Author.UserName)
+					.ToListAsync();
+			}
+
+			return submissionModel;
+		}
+
+		public async Task UpdateSubmission(SubmissionEditModel model)
+		{
+			var submission = await _db.Submissions.SingleAsync(s => s.Id == model.Id);
+			// TODO: update logic
 		}
 
 		/// <summary>

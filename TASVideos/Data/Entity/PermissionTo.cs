@@ -88,6 +88,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "See Admin Pages")]
 		[Group("WikiAdministration")]
 		[Description("The ability to see certain restricted pages that pertain to administration activities.")]
-		SeeAdminPages = 16
+		SeeAdminPages = 16,
+
+		[Display(Name = "Edit Submissions")]
+		[Group("Queue Management")]
+		[Description("The ability to edit submission text and basic metadata. Changing statuses, editing movie files, etc. are further restricted by other permissions")]
+		EditSubmissions = 17
 	}
 }
