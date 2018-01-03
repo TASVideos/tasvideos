@@ -53,6 +53,7 @@ namespace TASVideos
 			services.AddScoped<RoleTasks, RoleTasks>();
 			services.AddScoped<WikiTasks, WikiTasks>();
 			services.AddScoped<SubmissionTasks, SubmissionTasks>();
+			services.AddScoped<PlatformTasks, PlatformTasks>();
 
 			services.AddSingleton<MovieParser, MovieParser>();
 

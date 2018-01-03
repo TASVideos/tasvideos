@@ -1,0 +1,19 @@
+﻿@model IEnumerable<PlatformFramerateModel>
+
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.First().SystemCode)</th>
+		<th>@Html.DisplayNameFor(m => m.First().RegionCode)</th>
+		<th>@Html.DisplayNameFor(m => m.First().FrameRate)</th>
+		<th>@Html.DisplayNameFor(m => m.First().Preliminary)</th>
+	</tr>
+	@foreach (var item in Model)
+	{
+		<tr class="@(item.Preliminary ? "alert-warning" : "")">
+			<td>@item.SystemCode</td>
+			<td>@item.RegionCode</td>
+			<td>@item.FrameRate</td>
+			<td>@item.Preliminary.ToYesNo()</td>
+		</tr>
+	}
+</table>

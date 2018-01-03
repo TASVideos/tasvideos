@@ -2400,6 +2400,26 @@ After clicking on ""Save"", please wait for the submission to appear. If you can
 Before pressing the Save button, please verify that you have read the [Movie Rules] and [Guidelines]. Your movie must be complete and must beat all existing records where applicable. Submissions that do not follow these rules will be rejected.
 
 This submission form is only for movies that are intended to become a publication on this site. Do ''not'' submit if this is not your goal. If you simply want to upload a movie file, use [=userfiles|userfiles] instead."
+			},
+			new WikiPage
+			{
+				PageName = "PlatformFramerates",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"[module:listlanguages]
+
+----
+
+This page aims to document the exact framerates of platforms as used for time calculation for submissions and other movie files.
+
+Raw framerates used by the site:
+
+[module:platformframerates]
+
+Additional notes:
+
+* DOS and MSX use movie time to calculate a movie frame count, rather than the other way around.
+* The Windows framerate is not used."
 			}
 		};
 	}
