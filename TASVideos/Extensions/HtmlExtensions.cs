@@ -74,5 +74,10 @@ namespace TASVideos.Extensions
 
 			return new HtmlString(modelExplorer.Metadata.Description);
 		}
+
+		public static string ToYesNo(this bool val)
+		{
+			return val ? "Yes" : "No";
+		}
 	}
 }

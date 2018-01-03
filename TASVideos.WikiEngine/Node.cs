@@ -201,7 +201,8 @@ namespace TASVideos.WikiEngine.AST
 			["wikigetcurrenteditlink"] = "CurrentEditLink",
 			["user_name"] = "UserName",
 			["listparents"] = "ListParents",
-			["youtube"] = "Youtube"
+			["youtube"] = "Youtube",
+			["platformframerates"] = "PlatformFramerates"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
