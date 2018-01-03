@@ -93,6 +93,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Edit Submissions")]
 		[Group("Queue Management")]
 		[Description("The ability to edit submission text and basic metadata. Changing statuses, editing movie files, etc. are further restricted by other permissions")]
-		EditSubmissions = 17
+		EditSubmissions = 17,
+
+		[Display(Name = "Replace Submission Movie File")]
+		[Group("Queue Management")]
+		[Description("The ability to replace the movie file of an existing un-published submission")]
+		ReplaceSubmissionMovieFile = 18
 	}
 }
