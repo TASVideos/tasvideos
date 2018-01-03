@@ -105,6 +105,7 @@ namespace TASVideos.Controllers
 			return Json(new {text = page.Markup});
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> View(int id)
 		{
 			var submission = await _submissionTasks.GetSubmission(id);
@@ -116,6 +117,7 @@ namespace TASVideos.Controllers
 			return View(submission);
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Download(int id)
 		{
 			var submissionFile = await _submissionTasks.GetSubmissionFile(id);
