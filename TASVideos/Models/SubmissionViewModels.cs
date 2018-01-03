@@ -58,7 +58,6 @@ namespace TASVideos.Models
 
 	/// <summary>
 	/// Represents the result of attempting to parse and save a submission
-	
 	/// </summary>
 	public class SubmitResult
 	{
@@ -121,6 +120,7 @@ namespace TASVideos.Models
 		[Display(Name = "Emulator")]
 		public string Emulator { get; set; }
 
+		[Display(Name = "Encode Embed Link")]
 		public string EncodeEmbedLink { get; set; }
 
 		[Display(Name = "FrameCount")]
