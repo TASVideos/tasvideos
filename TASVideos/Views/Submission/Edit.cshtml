@@ -1,0 +1,129 @@
+﻿@model SubmissionEditModel
+@{
+	ViewData["Title"] = $"Edit Submission #{Model.Id}";
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
+<form asp-action="Edit" enctype="multipart/form-data">
+	<row>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="Authors"></label>
+				<string-list asp-for="Authors" />
+				<span asp-validation-for="Authors" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="GameVersion"></label>
+				<select asp-for="GameVersion" asp-items="@Model.GameVersionOptions" class="form-control"></select>
+				<span asp-validation-for="GameVersion" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="GameName"></label>
+				<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
+				<span asp-validation-for="GameName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Emulator"></label>
+				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)" />
+				<span asp-validation-for="Emulator" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="Branch"></label>
+				<input asp-for="Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Branch)" />
+				<span asp-validation-for="Branch" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="RomName"></label>
+				<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
+				<span asp-validation-for="RomName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="EncodeEmbedLink"></label>
+				<input asp-for="EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.EncodeEmbedLink)" />
+				<span asp-validation-for="EncodeEmbedLink" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-xs-12">
+			<form-group>
+				<label asp-for="Markup"></label>
+				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
+				<span asp-validation-for="Markup" class="text-danger"></span>
+				<button id="prefill-btn" type="button" class="btn btn-default">Prefill comments</button>
+			</form-group>
+		</div>
+	</row>
+	<hr />
+	<row>
+		<div class="text-center">
+			<button id="preview-btn" type="button" class="btn btn-default">Preview</button>
+			<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "hide")">Update</button>
+		</div>
+	</row>
+</form>
+<hr />
+<row id="preview-container" class="hide">
+	<label>Preview:</label><br />
+	<div id="preview-contents" style="border: solid; padding: 5px; border-radius: 5px">
+
+	</div>
+</row>
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<script>
+	(function () {
+		document.getElementById('prefill-btn').onclick = function () {
+			var markup = document.getElementById('@nameof(Model.Markup)').value;
+			if (markup) {
+				return;
+			}
+
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						var data = JSON.parse(xmlhttp.responseText);
+						document.getElementById('@(nameof(Model.Markup))').value = data.text;
+					}
+				}
+			};
+
+			xmlhttp.open("GET",
+				"/Submission/@(nameof(SubmissionController.PrefillText))",
+				true);
+			xmlhttp.send();
+		};
+
+		document.getElementById('preview-btn').onclick = function() {
+			var markup = document.getElementById('@nameof(Model.Markup)').value;
+			if (markup) {
+				document.getElementById('preview-container').classList.remove('hide');
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+						if (xmlhttp.status === 200) {
+							document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
+						} else {
+							alert("Could not generate preview");
+						}
+
+						document.getElementById('submit-btn').classList.remove('hide');
+						document.getElementById('submit-blurb').classList.remove('hide');
+					}
+				};
+
+				xmlhttp.open("POST", "/Wiki/@(nameof(WikiController.GeneratePreview))");
+				xmlhttp.send(markup);
+			}
+		}
+	})()
+</script>

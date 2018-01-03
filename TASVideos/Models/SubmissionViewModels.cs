@@ -159,4 +159,14 @@ namespace TASVideos.Models
 		[Display(Name = "Status")]
 		public SubmissionStatus Status { get; set; }
 	}
+
+	// TODO: document
+	public class SubmissionEditModel : SubmissionViewModel
+	{
+		// TODO: properties and stuff, and probably don't inherit
+
+		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = new List<SelectListItem>();
+
+		public string Markup { get; set; }
+	}
 }

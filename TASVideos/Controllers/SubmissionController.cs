@@ -129,6 +129,34 @@ namespace TASVideos.Controllers
 			return BadRequest();
 		}
 
+		[RequirePermission(PermissionTo.EditSubmissions)]
+		public async Task<IActionResult> Edit(int id)
+		{
+			var submission = await _submissionTasks.GetSubmissionForEdit(id);
+
+			if (submission == null)
+			{
+				return NotFound();
+			}
+
+			submission.GameVersionOptions = GameVersionOptions;
+			return View(submission);
+		}
+
+		[HttpPost]
+		[RequirePermission(PermissionTo.EditSubmissions)]
+		public async Task<IActionResult> Edit(SubmissionEditModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				await _submissionTasks.UpdateSubmission(model);
+				return Redirect($"/{model.Id}S");
+			}
+
+			model.GameVersionOptions = GameVersionOptions;
+			return View(model);
+		}
+
 		private static readonly SelectListItem[] GameVersionOptions =
 		{
 			new SelectListItem {Text = "unknown", Value = "unknown"},
