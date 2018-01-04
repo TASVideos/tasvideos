@@ -60,10 +60,29 @@ namespace TASVideos.MovieParsers
 					}
 
 					// Check various subsystem flags
-					int? is32x = GetInt(GetValue(headerLines, "is32x"));
-					if (is32x == 1)
+					if (GetInt(GetValue(headerLines, "is32x")) == 1)
 					{
-						platform = "32X";
+						platform = "32x";
+					}
+					else if (GetInt(GetValue(headerLines, "iscgbmode")) == 1)
+					{
+						platform = "gbc";
+					}
+					else if (GetValue(headerLines, "boardname") == "fds")
+					{
+						platform = "fds";
+					}
+					else if (GetInt(GetValue(headerLines, "issegacdmode")) == 1)
+					{
+						platform = "segacd";
+					}
+					else if (GetInt(GetValue(headerLines, "isggmode")) == 1)
+					{
+						platform = "gg";
+					}
+					else if (GetInt(GetValue(headerLines, "issgmode")) == 1)
+					{
+						platform = "sg1000";
 					}
 
 					result.SystemCode = platform;
@@ -79,11 +98,15 @@ namespace TASVideos.MovieParsers
 			return result;
 		}
 
-		private static Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
+		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
 		{
 			["gen"] = "genesis",
 			["sat"] = "saturn",
-			["dgb"] = "gb"
+			["dgb"] = "gb",
+			["a26"] = "a2600",
+			["a78"] = "a7800",
+			["uze"] = "uzebox",
+			["vb"] = "vboy"
 		};
 
 		private static string GetValue(string[] lines, string header) // Case insensitive
