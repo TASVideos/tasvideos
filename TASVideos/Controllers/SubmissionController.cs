@@ -108,7 +108,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> View(int id)
 		{
-			var submission = await _submissionTasks.GetSubmission(id);
+			var submission = await _submissionTasks.GetSubmission(id, User.Identity.Name);
 			if (submission == null)
 			{
 				return NotFound();
@@ -129,7 +129,7 @@ namespace TASVideos.Controllers
 			return BadRequest();
 		}
 
-		[RequirePermission(PermissionTo.EditSubmissions)]
+		[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 		public async Task<IActionResult> Edit(int id)
 		{
 			var submission = await _submissionTasks.GetSubmissionForEdit(id);
@@ -138,6 +138,16 @@ namespace TASVideos.Controllers
 			{
 				return NotFound();
 			}
+
+			if (!UserPermissions.Contains(PermissionTo.EditSubmissions)) // If user can not edit submissions then they must be an author or the original submitter
+			{
+				if (submission.Submitter == User.Identity.Name
+					|| submission.Authors.Contains(User.Identity.Name))
+				{
+					return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
+				}
+			}
+			
 
 			submission.GameVersionOptions = GameVersionOptions;
 			return View(submission);

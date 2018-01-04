@@ -27,7 +27,7 @@ namespace TASVideos.Tasks
 		/// for the purpose of display
 		/// If a submission can not be found, null is returned
 		/// </summary>
-		public async Task<SubmissionViewModel> GetSubmission(int id)
+		public async Task<SubmissionViewModel> GetSubmission(int id, string userName)
 		{
 			var submissionModel = await _db.Submissions
 				.Where(s => s.Id == id)
@@ -59,6 +59,10 @@ namespace TASVideos.Tasks
 					.Where(sa => sa.SubmissionId == submissionModel.Id)
 					.Select(sa => sa.Author.UserName)
 					.ToListAsync();
+
+				submissionModel.CanEdit = !string.IsNullOrWhiteSpace(userName)
+					&& (userName == submissionModel.Submitter
+						|| submissionModel.Authors.Contains(userName));
 			}
 
 			return submissionModel;

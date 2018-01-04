@@ -99,6 +99,7 @@ namespace TASVideos.Models
 	public class SubmissionViewModel
 	{
 		public int Id { get; set; }
+		public bool CanEdit { get; set; }
 
 		[Display(Name = "Console")]
 		public string SystemDisplayName { get; set; }
@@ -142,7 +143,7 @@ namespace TASVideos.Models
 		public int RerecordCount { get; set; }
 
 		[Display(Name = "Author")]
-		public IEnumerable<string> Authors { get; set; }
+		public IEnumerable<string> Authors { get; set; } = new List<string>();
 
 		[Display(Name = "Submitter")]
 		public string Submitter { get; set; }
