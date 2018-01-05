@@ -88,6 +88,12 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		public async Task<IActionResult> UserEditHistory(string userName)
+		{
+			var model = await _wikiTasks.GetEditHistoryForUser(userName);
+			return View(model);
+		}
+
 		[AllowAnonymous]
 		public async Task<IActionResult> Diff(string path, int? fromRevision, int? toRevision)
 		{
@@ -224,7 +230,7 @@ namespace TASVideos.Controllers
 				await _wikiTasks.DeleteWikiPage(path.Trim('/'));
 			}
 
-			return RedirectToAction(nameof(WikiController.DeletedPages));
+			return RedirectToAction(nameof(DeletedPages));
 		}
 
 		[RequirePermission(PermissionTo.DeleteWikiPages)]

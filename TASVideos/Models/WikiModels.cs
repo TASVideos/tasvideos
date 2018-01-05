@@ -38,6 +38,7 @@ namespace TASVideos.Models
 
 		public class WikiRevisionModel
 		{
+			[Display(Name = "Revision")]
 			public int Revision { get; set; }
 
 			[Display(Name = "Date")]
@@ -45,6 +46,34 @@ namespace TASVideos.Models
 
 			[Display(Name = "Author")]
 			public string CreateUserName { get; set; }
+
+			[Display(Name = "Minor Edit")]
+			public bool MinorEdit { get; set; }
+
+			[Display(Name = "Revision Message")]
+			public string RevisionMessage { get; set; }
+		}
+	}
+
+	/// <summary>
+	/// Represents the edit history for a given user
+	/// </summary>
+	public class UserWikiEditHistoryModel
+	{
+		public string UserName { get; set; }
+
+		public IEnumerable<EditEntry> Edits { get; set; } = new List<EditEntry>();
+
+		public class EditEntry
+		{
+			[Display(Name = "Revision")]
+			public int Revision { get; set; }
+
+			[Display(Name = "Date")]
+			public DateTime CreateTimeStamp { get; set; }
+
+			[Display(Name = "Page")]
+			public string PageName { get; set; }
 
 			[Display(Name = "Minor Edit")]
 			public bool MinorEdit { get; set; }
