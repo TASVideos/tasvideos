@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -61,6 +62,8 @@ namespace TASVideos
 			{
 				options.Filters.Add(new SetViewBagAttribute());
 			});
+
+			services.AddAutoMapper();
 
 			services.Configure<RazorViewEngineOptions>(
 				opts => opts.FileProviders.Add(new Razor.WikiMarkupFileProvider(services.BuildServiceProvider())));

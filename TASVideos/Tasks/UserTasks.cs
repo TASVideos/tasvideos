@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
@@ -141,17 +142,7 @@ namespace TASVideos.Tasks
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				var model = await _db.Users
-					.Select(u => new UserEditViewModel
-					{
-						Id = u.Id,
-						CreateTimeStamp = u.CreateTimeStamp,
-						LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
-						UserName = u.UserName,
-						Email = u.Email,
-						EmailConfirmed = u.EmailConfirmed,
-						IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
-						TimezoneId = u.TimeZoneId
-					})
+					.ProjectTo<UserEditViewModel>()
 					.SingleAsync(u => u.UserName == userName);
 
 				model.SelectedRoles = await _db.UserRoles

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Constants;
 using TASVideos.Data;
@@ -16,15 +17,17 @@ namespace TASVideos.Tasks
 		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
 		private readonly WikiTasks _wikiTasks;
-
+		private readonly IMapper _mapper;
 		public SubmissionTasks(
 			ApplicationDbContext db,
 			MovieParser parser,
-			WikiTasks wikiTasks)
+			WikiTasks wikiTasks,
+			IMapper mapper)
 		{
 			_db = db;
 			_parser = parser;
 			_wikiTasks = wikiTasks;
+			_mapper = mapper;
 		}
 
 		public async Task<bool> UserIsAuthorOrSubmitter(int id, string userName)
@@ -177,17 +180,8 @@ namespace TASVideos.Tasks
 		public async Task<SubmitResult> SubmitMovie(SubmissionCreateViewModel model, string userName)
 		{
 			var submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
-
-			var submission = new Submission
-			{
-				Submitter = submitter,
-				GameVersion = model.GameVersion,
-				GameName = model.GameName,
-				Branch = model.BranchName,
-				RomName = model.RomName,
-				EmulatorVersion = model.Emulator,
-				EncodeEmbedLink = model.EncodeEmbedLink
-			};
+			var submission = _mapper.Map<Submission>(model);
+			submission.Submitter = submitter;
 
 			// Parse movie file
 			// TODO: check warnings
