@@ -13,6 +13,17 @@
 				<span asp-validation-for="Authors" class="text-danger"></span>
 			</form-group>
 		</div>
+		<div class="col-md-6">
+			<form-group class="form-inline">
+				<label asp-for="MinorEdit" class="control-label"></label>
+				<input type="checkbox" class="checkbox" asp-for="MinorEdit"/>
+			</form-group>
+			<form-group>
+				<label asp-for="RevisionMessage"></label>
+				<input asp-for="RevisionMessage" class="form-control"/>
+				<span asp-validation-for="RevisionMessage" class="text-danger"></span>
+			</form-group>
+		</div>
 	</row>
 	<row>
 		<div class="col-md-6">

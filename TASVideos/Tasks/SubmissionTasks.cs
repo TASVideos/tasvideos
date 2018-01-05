@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +7,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.Tasks
 {
@@ -15,11 +15,22 @@ namespace TASVideos.Tasks
     {
 		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
+		private readonly WikiTasks _wikiTasks;
 
-		public SubmissionTasks(ApplicationDbContext db, MovieParser parser)
+		public SubmissionTasks(
+			ApplicationDbContext db,
+			MovieParser parser,
+			WikiTasks wikiTasks)
 		{
 			_db = db;
 			_parser = parser;
+			_wikiTasks = wikiTasks;
+		}
+
+		public async Task<bool> UserIsAuthorOrSubmitter(int id, string userName)
+		{
+			return await _db.Submissions.AnyAsync(s => s.Id == id
+				&& (s.Submitter.UserName == userName || s.SubmissionAuthors.Select(sa => sa.Author.UserName).Contains(userName)));
 		}
 
 		/// <summary>
@@ -114,8 +125,32 @@ namespace TASVideos.Tasks
 
 		public async Task UpdateSubmission(SubmissionEditModel model)
 		{
-			var submission = await _db.Submissions.SingleAsync(s => s.Id == model.Id);
-			// TODO: update logic
+			var submission = await _db.Submissions
+				.SingleAsync(s => s.Id == model.Id);
+
+			submission.GameVersion = model.GameVersion;
+			submission.GameName = model.GameName;
+			submission.EmulatorVersion = model.Emulator;
+			submission.Branch = model.Branch;
+			submission.RomName = model.RomName;
+			submission.EncodeEmbedLink = model.EncodeEmbedLink;
+
+			var id = await _wikiTasks.SavePage(new WikiEditModel
+			{
+				PageName = $"System/SubmissionContent/S{model.Id}",
+				Markup = model.Markup,
+				MinorEdit = model.MinorEdit,
+				RevisionMessage = model.RevisionMessage,
+				Referrals = Util.GetAllWikiLinks(model.Markup)
+					.Select(wl => new WikiReferralModel
+					{
+						Link = wl.Link,
+						Excerpt = wl.Excerpt
+					})
+			});
+
+			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == id);
+			await _db.SaveChangesAsync();
 		}
 
 		/// <summary>
