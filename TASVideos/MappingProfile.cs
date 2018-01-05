@@ -14,6 +14,8 @@ namespace TASVideos
 
 			CreateMap<User, UserEditViewModel>()
 				.ForMember(dest => dest.IsLockedOut, opt => opt.MapFrom(src => src.LockoutEnabled && src.LockoutEnd.HasValue));
+
+			CreateMap<WikiPage, UserWikiEditHistoryModel>();
 		}
 	}
 }
