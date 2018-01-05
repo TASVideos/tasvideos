@@ -73,6 +73,17 @@ namespace TASVideos.Data
 			}
 		}
 
+		public static void Migrate(ApplicationDbContext context)
+		{
+			// TODO
+		}
+
+		public static void RunLegacyImport(ApplicationDbContext context)
+		{
+			// Shoudl only run if it hasn't already run
+			// TODO
+		}
+
 		/// <summary>
 		/// Adds optional sample data
 		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release

@@ -21,13 +21,20 @@ namespace TASVideos
 				try
 				{
 					var context = services.GetRequiredService<ApplicationDbContext>();
-					DbInitializer.Initialize(context);
+					
 
 					var env = services.GetRequiredService<IHostingEnvironment>();
 					var userManager = services.GetRequiredService<UserManager<User>>();
 					if (env.IsDevelopment())
 					{
+						DbInitializer.Initialize(context);
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
+					}
+					else if (env.IsStaging())
+					{
+						DbInitializer.Migrate(context);
+						DbInitializer.RunLegacyImport(context);
+						
 					}
 				}
 				catch (Exception ex)
