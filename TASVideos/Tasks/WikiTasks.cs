@@ -63,12 +63,13 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Creates a new <see cref="WikiPage"/> with the given data
-		/// If the given page already exists this will be a new page set at revision 1
+		/// If the given page does not exist this will be a new page set at revision 1
 		/// If it is an existing page it will be a new revision of that page that
 		/// will be considered to be the latest revision of this page
+		/// <returns>The id of the page created</returns>
 		/// <seealso cref="WikiPageReferral"/> entries are also updated
 		/// </summary>
-		public async Task SavePage(WikiEditModel model)
+		public async Task<int> SavePage(WikiEditModel model)
 		{
 			var newRevision = new WikiPage
 			{
@@ -109,6 +110,7 @@ namespace TASVideos.Tasks
 			}
 
 			await _db.SaveChangesAsync();
+			return newRevision.Id;
 		}
 
 		/// <summary>

@@ -147,16 +147,24 @@ namespace TASVideos.Controllers
 					return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
 				}
 			}
-			
 
 			submission.GameVersionOptions = GameVersionOptions;
 			return View(submission);
 		}
 
 		[HttpPost]
-		[RequirePermission(PermissionTo.EditSubmissions)]
+		[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 		public async Task<IActionResult> Edit(SubmissionEditModel model)
 		{
+			if (!UserPermissions.Contains(PermissionTo.EditSubmissions)) // If user can not edit submissions then they must be an author or the original submitter
+			{
+				var isAuthor = await _submissionTasks.UserIsAuthorOrSubmitter(model.Id, User.Identity.Name);
+				if (!isAuthor)
+				{
+					return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
+				}
+			}
+
 			if (ModelState.IsValid)
 			{
 				await _submissionTasks.UpdateSubmission(model);

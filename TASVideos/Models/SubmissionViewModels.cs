@@ -169,5 +169,11 @@ namespace TASVideos.Models
 		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = new List<SelectListItem>();
 
 		public string Markup { get; set; }
+
+		[Display(Name = "Revision Message")]
+		public string RevisionMessage { get; set; }
+
+		[Display(Name = "Minor Edit")]
+		public bool MinorEdit { get; set; }
 	}
 }
