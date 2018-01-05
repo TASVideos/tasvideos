@@ -264,23 +264,29 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<UserSummaryModel> GetUserSummary(string userName)
 		{
-			var user = await _db.Users
-				.SingleOrDefaultAsync(u => u.UserName == userName);
-
-			if (user != null)
+			using (await _db.Database.BeginTransactionAsync())
 			{
-				return new UserSummaryModel
-				{
-					Id = user.Id,
-					UserName = user.UserName,
-					EditCount = 999, // TODO
-					MovieCount = 999, // TODO
-					SubmissionCount = 999, // TODO
-					// TODO: awards
-				};
-			}
+				var user = await _db.Users
+					.SingleOrDefaultAsync(u => u.UserName == userName);
 
-			return null;
+				if (user != null)
+				{
+					return new UserSummaryModel
+					{
+						Id = user.Id,
+						UserName = user.UserName,
+						EditCount = _db.WikiPages.Count(wp => wp.CreateUserName == userName),
+						MovieCount = 999, // TODO
+						SubmissionCount = _db.Submissions
+							.Count(s => s.SubmissionAuthors
+								.Select(sa => sa.Author.UserName)
+								.Contains(userName))
+						// TODO: awards
+					};
+				}
+
+				return null;
+			}
 		}
 
 		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)
