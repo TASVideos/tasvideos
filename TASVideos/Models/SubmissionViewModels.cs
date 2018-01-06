@@ -181,6 +181,9 @@ namespace TASVideos.Models
 
 		[Display(Name = "Status")]
 		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
+
+		[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
+		public IFormFile MovieFile { get; set; }
 	}
 
 	// TODO: document - for reverifying a status can be set
