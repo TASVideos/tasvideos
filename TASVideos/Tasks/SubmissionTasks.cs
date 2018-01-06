@@ -172,6 +172,18 @@ namespace TASVideos.Tasks
 				submission.Judge = null;
 			}
 
+			if (submission.Status != model.Status)
+			{
+				var history = new SubmissionStatusHistory
+				{
+					SubmissionId = submission.Id,
+					Status = model.Status,
+					Reason = model.StatusChangeReason
+				};
+				submission.History.Add(history);
+				_db.SubmissionStatusHistory.Add(history);
+			}
+
 			submission.GameVersion = model.GameVersion;
 			submission.GameName = model.GameName;
 			submission.EmulatorVersion = model.Emulator;

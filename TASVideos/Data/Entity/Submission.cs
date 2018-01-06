@@ -18,8 +18,8 @@ namespace TASVideos.Data.Entity
 		public virtual User Judge { get; set; }
 		public virtual User Publisher { get; set; }
 
-		//TODO: a history table of status changes, require queue maintainers to put in a message (this can replace the need for users to have to add it into the wiki content)
 		public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
+		public virtual ICollection<SubmissionStatusHistory> History { get; set; } = new HashSet<SubmissionStatusHistory>();
 
 		// TODO: we eventually should want to move these to the file server instead
 		public byte[] MovieFile { get; set; }
