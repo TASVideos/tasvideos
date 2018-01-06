@@ -57,7 +57,7 @@ namespace TASVideos.Extensions
 			}
 
 			if ((currentStatus == SubmissionStatus.New || currentStatus == SubmissionStatus.JudgingUnderWay) // A judge can set a submission to needs more info so long as it does not have a judgment
-				&& (perms.Contains(PermissionTo.JudgeSubmissions) || isAuthorOrSubmitter))
+				&& perms.Contains(PermissionTo.JudgeSubmissions))
 			{
 				list.Add(SubmissionStatus.NeedsMoreInfo);
 			}
