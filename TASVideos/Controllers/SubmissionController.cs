@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -133,11 +134,18 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Edit(int id)
 		{
 			var submission = await _submissionTasks.GetSubmissionForEdit(id);
-
+			
 			if (submission == null)
 			{
 				return NotFound();
 			}
+
+			submission.AvailableStatuses = SubmissionHelper.AvailableStatuses(
+				submission.Status,
+				UserPermissions,
+				submission.CreateTimestamp,
+				submission.Submitter == User.Identity.Name || submission.Authors.Contains(User.Identity.Name),
+				submission.Judge == User.Identity.Name);
 
 			if (!UserPermissions.Contains(PermissionTo.EditSubmissions)) // If user can not edit submissions then they must be an author or the original submitter
 			{
@@ -153,26 +161,41 @@ namespace TASVideos.Controllers
 		}
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 		public async Task<IActionResult> Edit(SubmissionEditModel model)
 		{
+			var subInfo = await _submissionTasks.GetStatusVerificationValues(model.Id, User.Identity.Name);
+			var availableStatus = SubmissionHelper.AvailableStatuses(
+				subInfo.CurrentStatus,
+				UserPermissions,
+				subInfo.CreateDate,
+				subInfo.UserIsAuhtorOrSubmitter,
+				subInfo.UserIsJudge)
+				.ToList();
+
+			if (!availableStatus.Contains(model.Status))
+			{
+				ModelState.AddModelError(nameof(model.Status), $"Invalid status: {model.Status}");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				model.GameVersionOptions = GameVersionOptions;
+				model.AvailableStatuses = availableStatus;
+				return View(model);
+			}
+
 			if (!UserPermissions.Contains(PermissionTo.EditSubmissions)) // If user can not edit submissions then they must be an author or the original submitter
 			{
-				var isAuthor = await _submissionTasks.UserIsAuthorOrSubmitter(model.Id, User.Identity.Name);
-				if (!isAuthor)
+				if (!subInfo.UserIsAuhtorOrSubmitter)
 				{
 					return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
 				}
 			}
 
-			if (ModelState.IsValid)
-			{
-				await _submissionTasks.UpdateSubmission(model);
-				return Redirect($"/{model.Id}S");
-			}
-
-			model.GameVersionOptions = GameVersionOptions;
-			return View(model);
+			await _submissionTasks.UpdateSubmission(model);
+			return Redirect($"/{model.Id}S");
 		}
 
 		private static readonly SelectListItem[] GameVersionOptions =

@@ -98,6 +98,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Replace Submission Movie File")]
 		[Group("Queue Management")]
 		[Description("The ability to replace the movie file of an existing un-published submission")]
-		ReplaceSubmissionMovieFile = 18
+		ReplaceSubmissionMovieFile = 18,
+
+		[Display(Name = "Override Submissison Status")]
+		[Group("Queue Management")]
+		[Description("The ability to set a submission status regardless of condition (exception: published submissions)")]
+		OverrideSubmissionStatus = 19
 	}
 }

@@ -175,5 +175,20 @@ namespace TASVideos.Models
 
 		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; set; }
+
+		[Display(Name = "Judge")]
+		public string Judge { get; set; }
+
+		[Display(Name = "Status")]
+		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
+	}
+
+	// TODO: document - for reverifying a status can be set
+	public class SubmissionStatusValidationModel
+	{
+		public bool UserIsJudge { get; set; }
+		public bool UserIsAuhtorOrSubmitter { get; set; }
+		public SubmissionStatus CurrentStatus { get; set; }
+		public DateTime CreateDate { get; set; }
 	}
 }

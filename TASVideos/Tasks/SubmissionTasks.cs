@@ -30,10 +30,36 @@ namespace TASVideos.Tasks
 			_mapper = mapper;
 		}
 
+		// TODO: document
 		public async Task<bool> UserIsAuthorOrSubmitter(int id, string userName)
 		{
 			return await _db.Submissions.AnyAsync(s => s.Id == id
 				&& (s.Submitter.UserName == userName || s.SubmissionAuthors.Select(sa => sa.Author.UserName).Contains(userName)));
+		}
+
+		/// <summary>
+		/// Returns whether or not the given user is the judge of the submission with the given id
+		/// </summary>
+		public async Task<bool> UserIsJudge(int id, string userName)
+		{
+			return await _db.Submissions.AnyAsync(s => s.Id == id
+				&& s.Judge != null
+				&& s.Judge.UserName == userName);
+		}
+
+		// TODO: document - for reverifying a status can be set
+		public async Task<SubmissionStatusValidationModel> GetStatusVerificationValues(int id, string userName)
+		{
+			return await _db.Submissions
+				.Where(s => s.Id == id)
+				.Select(s => new SubmissionStatusValidationModel
+				{
+					UserIsJudge = s.Judge != null && s.Judge.UserName == userName,
+					UserIsAuhtorOrSubmitter = s.Submitter.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author.UserName == userName),
+					CurrentStatus = s.Status,
+					CreateDate = s.CreateTimeStamp
+				})
+				.SingleAsync();
 		}
 
 		/// <summary>
@@ -111,7 +137,8 @@ namespace TASVideos.Tasks
 					LastUpdateUser = s.WikiContent.LastUpdateUserName,
 					Status = s.Status,
 					EncodeEmbedLink = s.EncodeEmbedLink,
-					Markup = s.WikiContent.Markup
+					Markup = s.WikiContent.Markup,
+					Judge = s.Judge != null ? s.Judge.UserName : ""
 				})
 				.SingleOrDefaultAsync();
 
@@ -137,6 +164,7 @@ namespace TASVideos.Tasks
 			submission.Branch = model.Branch;
 			submission.RomName = model.RomName;
 			submission.EncodeEmbedLink = model.EncodeEmbedLink;
+			submission.Status = model.Status;
 
 			var id = await _wikiTasks.SavePage(new WikiEditModel
 			{
