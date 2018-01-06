@@ -5,14 +5,21 @@
 
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form asp-action="Edit" enctype="multipart/form-data">
-	<row condition="@Model.AvailableStatuses.Any()">
+	<row condition="@Model.AvailableStatuses.Count() > 1">
 		<div class="col-md-6">
 			<form-group>
 				<label asp-for="Status"></label>
 				<select class="form-control" asp-for="Status" asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem {Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Status})"></select>
 			</form-group>
 		</div>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="StatusChangeReason"></label>
+				<input asp-for="StatusChangeReason" type="text" class="form-control" />
+			</form-group>
+		</div>
 	</row>
+	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Status"/>
 	<row>
 		<div class="col-md-6">
 			<form-group>

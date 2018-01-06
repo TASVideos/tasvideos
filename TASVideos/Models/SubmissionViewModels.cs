@@ -179,6 +179,10 @@ namespace TASVideos.Models
 		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; set; }
 
+		[Required]
+		[Display(Name = "Reason")]
+		public string StatusChangeReason { get; set; }
+
 		[Display(Name = "Status")]
 		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
 	}
