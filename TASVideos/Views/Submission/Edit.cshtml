@@ -9,7 +9,7 @@
 		<div class="col-md-6">
 			<form-group>
 				<label asp-for="Status"></label>
-				<select class="form-control" asp-for="Status" asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem {Text = s.ToString(), Value = ((int)s).ToString(), Selected = s == Model.Status})"></select>
+				<select class="form-control" asp-for="Status" asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem {Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Status})"></select>
 			</form-group>
 		</div>
 	</row>
@@ -83,6 +83,7 @@
 		<div class="text-center">
 			<button id="preview-btn" type="button" class="btn btn-default">Preview</button>
 			<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "hide")">Update</button>
+			<a class="btn btn-default" asp-action="View" asp-route-id="@Model.Id">Cancel</a>
 		</div>
 	</row>
 </form>

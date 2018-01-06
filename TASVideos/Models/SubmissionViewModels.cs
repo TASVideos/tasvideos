@@ -159,6 +159,9 @@ namespace TASVideos.Models
 
 		[Display(Name = "Status")]
 		public SubmissionStatus Status { get; set; }
+
+		[Display(Name = "Judge")]
+		public string Judge { get; set; }
 	}
 
 	// TODO: document
@@ -175,9 +178,6 @@ namespace TASVideos.Models
 
 		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; set; }
-
-		[Display(Name = "Judge")]
-		public string Judge { get; set; }
 
 		[Display(Name = "Status")]
 		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();

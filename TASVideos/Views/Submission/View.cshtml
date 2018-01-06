@@ -31,7 +31,11 @@
 	</div>
 	<div class="col-md-@(hasEncode ? 6 : 12)">
 		<div class="text-right @(StatusColor(Model.Status))">
-			<h4><label asp-for="Status"></label>: <label class="form-control-static">@Model.Status</label></h4>
+			<h4><label asp-for="Status"></label>: <label class="form-control-static">@Model.Status.EnumDisplayName()</label></h4>
+			<h5 condition="@(!string.IsNullOrWhiteSpace(Model.Judge))">
+				<label asp-for="Judge"></label>:
+				<a href="/HomePages/@Model.Judge">@Model.Judge</a>
+			</h5>
 		</div>
 		<table class="table table-bordered table-condensed">
 			<tr>

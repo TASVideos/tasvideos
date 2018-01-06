@@ -149,8 +149,8 @@ namespace TASVideos.Controllers
 
 			if (!UserPermissions.Contains(PermissionTo.EditSubmissions)) // If user can not edit submissions then they must be an author or the original submitter
 			{
-				if (submission.Submitter == User.Identity.Name
-					|| submission.Authors.Contains(User.Identity.Name))
+				if (submission.Submitter != User.Identity.Name
+					&& !submission.Authors.Contains(User.Identity.Name))
 				{
 					return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
 				}
@@ -194,7 +194,7 @@ namespace TASVideos.Controllers
 				}
 			}
 
-			await _submissionTasks.UpdateSubmission(model);
+			await _submissionTasks.UpdateSubmission(model, User.Identity.Name);
 			return Redirect($"/{model.Id}S");
 		}
 
