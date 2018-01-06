@@ -56,13 +56,31 @@ namespace TASVideos.Data.Entity
 
 	public enum SubmissionStatus
 	{
+		[Display(Name = "New")]
 		New,
+
+		[Display(Name = "Delayed")]
 		Delayed,
+
+		[Display(Name = "Needs More Info")]
 		NeedsMoreInfo,
+
+		[Display(Name = "Judging Underway")]
 		JudgingUnderWay,
+
+		[Display(Name = "Accepted")]
 		Accepted,
+
+		[Display(Name = "Publication Underway")]
 		PublicationUnderway,
+
+		[Display(Name = "Published")]
 		Published,
-		Rejected
+
+		[Display(Name = "Rejected")]
+		Rejected,
+
+		[Display(Name = "Cancelled")]
+		Cancelled
 	}
 }
