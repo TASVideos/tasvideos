@@ -94,6 +94,15 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Gets the title of a submission with the given id
+		/// If the submission is not found, null is returned
+		/// </summary>
+		public async Task<string> GetTitle(int id)
+		{
+			return (await _db.Submissions.SingleOrDefaultAsync(s => s.Id == id))?.Title;
+		}
+
+		/// <summary>
 		/// Returns data for a <see cref="Submission"/> with the given <see cref="id" />
 		/// for the purpose of edit
 		/// If a submission can not be found, null is returned
