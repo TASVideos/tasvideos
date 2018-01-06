@@ -94,5 +94,23 @@ namespace TASVideos.Extensions
 
 			return list;
 		}
-    }
+
+		/// <summary>
+		/// Determines if the link is in the form of valid submission link ex: 100S
+		/// </summary>
+		/// <returns>The id of the submission if it is a valid link, else null</returns>
+		public static int? IsSubmissionLink(string link)
+		{
+			if (link?.EndsWith("S") ?? false)
+			{
+				var result = int.TryParse(link.Substring(0, link.Length - 1), out int id);
+				if (result)
+				{
+					return id;
+				}
+			}
+
+			return null;
+		}
+	}
 }
