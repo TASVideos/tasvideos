@@ -7,6 +7,5 @@
 		public virtual Submission Submission { get; set; }
 
 		public SubmissionStatus Status { get; set; }
-		public string Reason { get; set; }
-    }
+	}
 }

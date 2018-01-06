@@ -177,8 +177,7 @@ namespace TASVideos.Tasks
 				var history = new SubmissionStatusHistory
 				{
 					SubmissionId = submission.Id,
-					Status = model.Status,
-					Reason = model.StatusChangeReason
+					Status = model.Status
 				};
 				submission.History.Add(history);
 				_db.SubmissionStatusHistory.Add(history);
