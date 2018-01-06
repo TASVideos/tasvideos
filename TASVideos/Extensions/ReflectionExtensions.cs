@@ -26,6 +26,16 @@ namespace TASVideos.Extensions
 				return descriptionAttribute.Description;
 			}
 
+			var displayAttribute = enumValue?.GetType()
+				.GetMember(enumValue.ToString())
+				.Single()
+				.GetCustomAttribute<DisplayAttribute>();
+
+			if (displayAttribute != null)
+			{
+				return displayAttribute.Description ?? string.Empty;
+			}
+
 			return string.Empty;
 		}
 

@@ -44,7 +44,7 @@ namespace TASVideos.Extensions
 			}
 
 			if (currentStatus == SubmissionStatus.New
-				&& isJudge
+				&& perms.Contains(PermissionTo.JudgeSubmissions)
 				&& !isAuthorOrSubmitter) // A judge can claim a new run, unless they are an author or the submitter
 			{
 				list.Add(SubmissionStatus.JudgingUnderWay);

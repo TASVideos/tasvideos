@@ -89,7 +89,8 @@ namespace TASVideos.Tasks
 					LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
 					LastUpdateUser = s.WikiContent.LastUpdateUserName,
 					Status = s.Status,
-					EncodeEmbedLink = s.EncodeEmbedLink
+					EncodeEmbedLink = s.EncodeEmbedLink,
+					Judge = s.Judge != null ? s.Judge.UserName : ""
 				})
 				.SingleOrDefaultAsync();
 
@@ -153,10 +154,23 @@ namespace TASVideos.Tasks
 			return submissionModel;
 		}
 
-		public async Task UpdateSubmission(SubmissionEditModel model)
+		public async Task UpdateSubmission(SubmissionEditModel model, string userName)
 		{
 			var submission = await _db.Submissions
+				.Include(s => s.Judge)
 				.SingleAsync(s => s.Id == model.Id);
+
+			// If a judge is claiming the submission
+			if (model.Status == SubmissionStatus.JudgingUnderWay && submission.Status != SubmissionStatus.JudgingUnderWay)
+			{
+				submission.Judge = await _db.Users.SingleAsync(s => s.UserName == userName);
+			}
+			else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
+					&& model.Status == SubmissionStatus.New
+					&& submission.Judge != null)
+			{
+				submission.Judge = null;
+			}
 
 			submission.GameVersion = model.GameVersion;
 			submission.GameName = model.GameName;
