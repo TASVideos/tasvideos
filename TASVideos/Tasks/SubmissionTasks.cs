@@ -30,23 +30,6 @@ namespace TASVideos.Tasks
 			_mapper = mapper;
 		}
 
-		// TODO: document
-		public async Task<bool> UserIsAuthorOrSubmitter(int id, string userName)
-		{
-			return await _db.Submissions.AnyAsync(s => s.Id == id
-				&& (s.Submitter.UserName == userName || s.SubmissionAuthors.Select(sa => sa.Author.UserName).Contains(userName)));
-		}
-
-		/// <summary>
-		/// Returns whether or not the given user is the judge of the submission with the given id
-		/// </summary>
-		public async Task<bool> UserIsJudge(int id, string userName)
-		{
-			return await _db.Submissions.AnyAsync(s => s.Id == id
-				&& s.Judge != null
-				&& s.Judge.UserName == userName);
-		}
-
 		// TODO: document - for reverifying a status can be set
 		public async Task<SubmissionStatusValidationModel> GetStatusVerificationValues(int id, string userName)
 		{
@@ -114,7 +97,6 @@ namespace TASVideos.Tasks
 		/// for the purpose of edit
 		/// If a submission can not be found, null is returned
 		/// </summary>
-
 		public async Task<SubmissionEditModel> GetSubmissionForEdit(int id)
 		{
 			var submissionModel = await _db.Submissions
