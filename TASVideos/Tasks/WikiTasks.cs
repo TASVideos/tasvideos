@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -342,9 +343,10 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<IEnumerable<WikiPageReferral>> GetAllBrokenLinks()
 		{
-			return await _db.WikiReferrals
-				.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
-				.ToListAsync();
+			return (await _db.WikiReferrals
+					.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
+					.ToListAsync())
+				.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue);
 		}
 
 		/// <summary>
