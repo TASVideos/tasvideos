@@ -12,6 +12,14 @@
 				<select class="form-control" asp-for="Status" asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem {Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Status})"></select>
 			</form-group>
 		</div>
+		<div condition="@ViewData.UserHasPermission(PermissionTo.ReplaceSubmissionMovieFile)" class="col-md-6">
+			<form-group>
+				<label asp-for="MovieFile"></label>
+				<input type="file" asp-for="MovieFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
+				<span asp-validation-for="MovieFile" class="text-danger"></span>
+			</form-group>
+		</div>
 	</row>
 	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Status"/>
 	<row>

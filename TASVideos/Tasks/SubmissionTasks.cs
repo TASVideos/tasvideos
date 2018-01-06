@@ -136,11 +136,43 @@ namespace TASVideos.Tasks
 			return submissionModel;
 		}
 
-		public async Task UpdateSubmission(SubmissionEditModel model, string userName)
+		public async Task<SubmitResult> UpdateSubmission(SubmissionEditModel model, string userName)
 		{
 			var submission = await _db.Submissions
 				.Include(s => s.Judge)
 				.SingleAsync(s => s.Id == model.Id);
+
+
+			// Parse movie file if it exists
+			if (model.MovieFile != null)
+			{
+				// TODO: check warnings
+				var parseResult = _parser.Parse(model.MovieFile.OpenReadStream());
+				if (parseResult.Success)
+				{
+					submission.Frames = parseResult.Frames;
+					submission.RerecordCount = parseResult.RerecordCount;
+					submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
+					if (submission.System == null)
+					{
+						return new SubmitResult($"Unknown system type of {parseResult.SystemCode}");
+					}
+
+					submission.SystemFrameRate = await _db.GameSystemFrameRates
+						.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
+							&& f.RegionCode == parseResult.Region.ToString());
+				}
+				else
+				{
+					return new SubmitResult(parseResult.Errors);
+				}
+
+				using (var memoryStream = new MemoryStream())
+				{
+					await model.MovieFile.CopyToAsync(memoryStream);
+					submission.MovieFile = memoryStream.ToArray();
+				}
+			}
 
 			// If a judge is claiming the submission
 			if (model.Status == SubmissionStatus.JudgingUnderWay && submission.Status != SubmissionStatus.JudgingUnderWay)
@@ -189,6 +221,8 @@ namespace TASVideos.Tasks
 
 			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == id);
 			await _db.SaveChangesAsync();
+
+			return new SubmitResult(submission.Id);
 		}
 
 		/// <summary>
