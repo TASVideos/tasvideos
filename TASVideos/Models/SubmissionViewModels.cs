@@ -27,7 +27,7 @@ namespace TASVideos.Models
 
 		[Display(Name = "Branch Name", Description = "Example: 100% or princess only; any% can usually be omitted)")]
 		[StringLength(50)]
-		public string BranchName { get; set; }
+		public string Branch { get; set; }
 
 		// TODO: game id
 
@@ -129,17 +129,6 @@ namespace TASVideos.Models
 
 		public double FrameRate { get; set; }
 
-		public TimeSpan Time
-		{
-			get
-			{
-				int seconds = (int) (FrameCount / FrameRate);
-				double fractionalSeconds = (FrameCount / FrameRate) - seconds;
-				int milliseconds = (int)(Math.Round(fractionalSeconds, 2) * 1000);
-				return new TimeSpan(0, 0, 0, seconds, milliseconds);
-			}
-		}
-
 		public int RerecordCount { get; set; }
 
 		[Display(Name = "Author")]
@@ -162,6 +151,8 @@ namespace TASVideos.Models
 
 		[Display(Name = "Judge")]
 		public string Judge { get; set; }
+
+		public string Title { get; set; }
 	}
 
 	// TODO: document

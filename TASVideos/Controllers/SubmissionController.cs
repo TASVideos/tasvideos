@@ -59,7 +59,9 @@ namespace TASVideos.Controllers
 
 			if (!model.Authors.Any())
 			{
-				ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), "A submission must have at least one author"); // TODO: need to use the ATLeastOne attribute error message since it will be localized
+				ModelState.AddModelError(
+					nameof(SubmissionCreateViewModel.Authors),
+					"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
 			}
 
 			foreach (var author in model.Authors)
