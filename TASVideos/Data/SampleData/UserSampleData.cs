@@ -18,6 +18,24 @@ namespace TASVideos.Data.SampleData
 			}
 		};
 
+		public static readonly User[] Judges =
+		{
+			new User
+			{
+				UserName = "Judge",
+				NormalizedUserName = "JUDGE",
+				Email = "judge@example.com",
+				TimeZoneId = "Eastern Standard Time"
+			},
+			new User
+			{
+				UserName = "Judge2",
+				NormalizedUserName = "JUDGE2",
+				Email = "judge2@example.com",
+				TimeZoneId = "Eastern Standard Time"
+			}
+		};
+
 		public static readonly User[] Users =
 		{
 			new User

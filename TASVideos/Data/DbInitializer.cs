@@ -110,6 +110,23 @@ namespace TASVideos.Data
 				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Roles.AtRandom(), User = savedAdminUser });
 			}
 
+			foreach (var judge in UserSampleData.Judges)
+			{
+				var result = await userManager.CreateAsync(judge, UserSampleData.SamplePassword);
+				if (!result.Succeeded)
+				{
+					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
+				}
+
+				var savedUser = context.Users.Single(u => u.UserName == judge.UserName);
+				savedUser.EmailConfirmed = true;
+				savedUser.LockoutEnabled = false;
+
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Roles.Single(r => r.Name == "Judge"), User = savedUser });
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.SubmitMovies, User = savedUser });
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.EditHomePage, User = savedUser });
+			}
+
 			foreach (var user in UserSampleData.Users)
 			{
 				var result = await userManager.CreateAsync(user, UserSampleData.SamplePassword);

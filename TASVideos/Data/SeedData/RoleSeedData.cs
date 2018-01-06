@@ -20,6 +20,13 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.MoveWikiPages
 		}).ToArray();
 
+		private static readonly PermissionTo[] JudgePermissions =
+		{
+			PermissionTo.EditSubmissions,
+			PermissionTo.JudgeSubmissions,
+			PermissionTo.ReplaceSubmissionMovieFile
+		};
+
 		public static readonly Role EditHomePage = new Role
 		{
 			Name = "Edit Home Page",
@@ -94,6 +101,20 @@ namespace TASVideos.Data.SeedData
 				{
 					new RoleLink { Link = "EditorGuidelines" },
 					new RoleLink { Link = "TextFormattingRules" }
+				}
+			},
+			new Role
+			{
+				Name = "Judge",
+				Description = "The judges decide which movies will be published and which movies are rejected. They can replace submission files.",
+				RolePermission = JudgePermissions.Select(p => new RolePermission
+				{
+					RoleId = 4, // Meh, for lack of a better way
+					PermissionId = p
+				}).ToArray(),
+				RoleLinks = new[]
+				{
+					new RoleLink { Link = "JudgeGuidelines" }
 				}
 			}
 		};

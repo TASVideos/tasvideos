@@ -2420,6 +2420,274 @@ Additional notes:
 
 * DOS and MSX use movie time to calculate a movie frame count, rather than the other way around.
 * The Windows framerate is not used."
+			},
+			new WikiPage
+			{
+				PageName = "JudgeGuidelines",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"!!! Guidelines for judges
+
+''With great power comes great responsibility''.
+
+This page summarizes and details thoughts the judges should adhere to when watching and judging submissions, and communicating with their authors.
+
+%%TOC%%
+
+!! Sum-up
+
+* Quantity is not quality.
+** Keep the number of different branches per game minimal. A run for a proposed new branch for a game should offer compelling differences relative to previously published runs of that game.
+** Avoid making decisions that undermine this guideline (or other guidelines) now or in the future. For example, don't publish an arbitrarily rule-restricted movie just because there are too few movies for that game; doing so may lead to impossible-to-solve ""why A but not B"" debates later.
+* Hard work should have a reasonable chance of being published. More on this below.
+* Satisfy the audience's expectations.
+
+__There are no laws that work in all possible situations.__%%%
+Each case is slightly different, and a judge is required to use multiple perspectives when judging a movie: both short-term and long-term consequences to (including but not limited to): site content quality; authors' feelings; audience's trust in the site staff; site's maintainability; the rules of TAS.
+
+----
+!!! Judging
+
+!! Watch the entire movie from the input file!  
+Especially with the increase of authors/users encoding and uploading submissions to streaming media sites, it is important that the judge verify the authenticity of the input file itself.  
+
+The input file should sync properly on an approved version of a rerecording emulator. Being an approved version means it can be downloaded from the official website as a packaged release. Development builds don't count as such (unless it's a messy base like Dolphin). Any settings necessary for sync should be documented in the submission properly (edit the submission to include this information if necessary). The settings chosen must be considered legal, and not used to hack the game in some way. If the submission does not sync on at least one official release, it must be __rejected__ (unless there is an unavoidable exception). If it syncs for someone other than the author, it is still valid (so that games/emulators that require similar OS/computer specs to be deterministic have a chance).
+
+The input file should complete the game (or achieve the goal stated in the submission text).  
+
+It should fulfill the claimed goals of the author. I.e., if it is a SMB ""walkathon"", it should not press B.
+
+It should not start from reset, SRAM, or soft-reset unless, of course, that is necessary for the goal choice (such as to unlock a character, or take advantage of newgame+, for instance). Of course this depends on the goal choice being worthwhile too.
+
+!! Act consistent with the message of the site
+                                                                        
+* Reject movies that break the [movie rules].
+* Judge movies in concordance to the [guidelines].
+
+!! Managing game versions/ports on multiple platforms
+
+As we expand to support more platforms this issue becomes more complicated.
+
+In the past, we generally preferred one version of a game. The preference was for the original, such as Wonderboy for SMS instead of NES Adventure Island.
+
+With so many platforms this policy is harder to adhere to. While the situation should be judged on a case by case basis, it should generally be acceptable to have different versions of the same game.
+
+There are several observed schools of thought in regards to ports and conversions considered similar enough to warrant a strong preference. In some cases it becomes similar to ROM selection for the same platform where different regions have noticeable changes in content.
+
+* The first dictates that the ''original'' (chronologically first to be released) version should be preferred. Advantages: indisputable authenticity.
+* The second dictates that the ''more popular'' (more widely spread and/or recognized among the audience) version should be preferred. Advantages: easier and better recognition, better compatibility with existing records.
+* The third dictates that ''the superior'' (such as having expanded content, better graphics or music, more glitches, less lag or shorter loading times) version should be preferred. Advantages: potentially better watching experience, potentially more opportunities for creative timesavers. Superiority in this case can be disputed.
+** There are cases when a submission aspires to a goal only feasible in versions with altered or expanded content. Examples include using [1313M|Maria] which is only present in the Saturn port of Symphony of the Night, and warpless SMB2j movie made on the SNES All-Stars conversion because the later levels are accessible without beating the game multiple times there.
+
+Obviously there are cases where at least two of these options pertain to a single release, as either original or superior version will likely also be considered the most popular. In any case this should be carefully considered on per-game basis with full understanding of the differences between all versions.
+
+----
+!! Be fair
+
+A judge has the greatest control over the content of this website in the long run.
+All judges must act towards the goal of having ''an encouraging and rewarding atmosphere'' for both the players and the audience. You must be fair towards both.
+
+It is fairness towards the audience when judges disqualify worse submissions and qualify the better ones.
+* Too many bad publications turn the audience away.
+* Too few publications turn the audience away (and possibly the players too).
+
+The players must have chances of getting their movie published.
+* Don't demand them do laboursome optimizations that can't actually be noticed under normal viewing conditions [#1]. For example, if a jump performed one frame late still moves the character along its purported trajectory with no interruptions, it is a negligible flaw. If, however, a late jump bumps the character into an obstacle, thus interrupting its movement, it's an easily noticeable mistake.
+* For rejected submissions, refer to the relevant [guidelines] that would improve their chances of being accepted the next time. If possible, point out some specific mistakes.
+
+Every newbie could be the next superstar. Their first submission might be rejected, but don't destroy their self-esteem. Reject with reason, but only in the necessary amount.
+
+[1]: Normal viewing conditions refer to real-time playback with no additional indicators to judge the player's performance; i. e., ''like most people watch these videos''.%%%
+Notice to new players: Experienced TAS makers often possess a great observation skill for typical mistakes in TAS movies. Mistakes unnoticeable to you might still be noticed by experienced TAS players and the judges. (But of course, we don't know and see everything.)
+
+----
+!! Be thorough
+
+Uncover, evaluate and address as many aspects of a given run as possible. This allows for decisions that could serve as a long-term reference or set important precedents in complicated situations. If you miss some of the aspects that might have influenced the final decision, your decision will be imperfect.
+
+! Make sure the movie is optimal and not sloppy
+
+This is mostly covered by the [Guidelines], but whenever you see something that looks like it has potential for improvement, either try it out yourself or ask the author to address it. Note that the run isn't required to be completely unimprovable, it just should not be sloppy. If it uses sub-optimal strategies all over the place, even if it's not obvious for an untrained eye, but which becomes clear when you actually try to improve it, then it should be rejected for sub-optimality.
+
+Always check the runs against existing records, which might be present on other sites (for example, [http://www.speedrun.com/|Speedrun.com], since its goal is to document the latest RTA records). If the author did poor research, help them find a better approach.
+
+! Use your and others' experience
+
+Past decisions can always give an insight if the case is complicated. So refer to the decisions that you know of, to their key points, and to what can be assumed based on them. Ask other judges and the senior judge for opinions for nuances that are possibly outside your scope. However, note that past mistakes don't necessarily justify future ones, so do not use precedents blindly.
+
+! Review future possibilities for obsoletion and rejection
+
+Check the previous submissions for a given game. They may contain decisions on how some future situations for that game should be handled. In some cases, when an exception is being allowed, you may also need to set such regulations for future decisions. Keep in mind though, that as time passes, previous regulations may be rendered obsolete or irrelevant, so examine the situation carefully and apply such regulations wisely.
+
+! Consider the audience's feedback
+
+Viewers that are experienced in the game you're judging can expand your outlook even further by providing good food for thought. Always analyze their opinions and talk to them in order to get valuable information from them.
+
+! Make an elaborate judging note
+
+The research that you've done should be available in the form of reasoning and conclusions based on it. Address in your decision all the aspects that you've accounted for, to make them clear for the author, for the audience, and for the judges of the future submissions that might need to refer to your decision.
+
+----
+!! Tiers and goals
+
+Previously, movies that were found boring by the audience and judges were rejected for a bad game/goal choice. Since the [Vault] was introduced, movies that are judged to be less impressive, but still well-played have a chance to be published. However, not all goals can be accepted to that tier, only the ones that don't trade much time for entertainment (time consuming goals aiming to add entertainment aren't justified if a movie fails to entertain). Allowing these other goals for the Vault would result in lowering the overall quality of TASVideos, due to hosting countless boring movies with arbitrary goals.
+
+The only two goals acceptable for the Vault are ""fastest completion"" (any%) and full completion (100%/best ending). All other goals like ""maximum score"", ""pacifist"", ""no damage"", or ""suboptimal character"" are unvaultable.
+
+If a movie gets good feedback, even an __esoteric goal__ like [2220M|""14%, speedbooster""] can be accepted. For well received movies, the [Moons] tier is selected.
+
+If a movie has an uncommon goal, and receives poor feedback, it must be rejected.
+
+For moons, it becomes important to determine what the overall feedback is.
+* Read the thread, determine the ratio of viewers that enjoyed the movie. See to what extent viewers liked or disliked a movie.
+* Factor in the submission votes. The Moons tier can only be used if the feedback is positive by a strong majority. (([user:Nach] and [user:adelikat] suggest that 80% ''yes'' votes is generally a strong majority.))
+* Watch the movie yourself and compare to the current [Movies-Moons|Moons] and [Movies-Vault|Vault] residents.
+
+----
+!! Branches
+
+Branches exist when a game can be beaten several different ways (approaches). There are 2 types of conditions that may be applied in a TAS:
+* Something the game directly suggests as an option (warp usage, player amount, character).
+* Something the player invents himself (exact completion percent, pacifist, certain glitch set).
+If a run uses some internal game options, it needs a label telling what it uses, as long as there are counterpart branches. If a run uses some self-imposed conditions, it needs a label in most cases.
+
+! Trunk
+
+This is how one could call a run that uses neither internally suggested game conditions (because a game may not have them), nor special self-imposed goals. It is an ""average"" type of completion, that is the most spoiler-free in terms of legitimacy. A traditional type of completion. Since such run avoids everything that other branches may use, there's nothing to put in its label, it's left blank.
+
+''Note:'' blank label is not the same thing as ""any%"". [=forum/p/373887#373887|""Any%"" is relative] and can't be labeled objectively.
+
+! Labels
+
+When figuring out the needed label, one should assess the statistics and answer the question: ""Is the applied approach so common that the opposite is an exception?""
+* If it is ''that'' common, we don't label runs that do it the common way, and label runs that don't, if there are counterpart runs of the same game. 
+* If it's ''not that'' common, we label each approach, if there are counterpart runs of the same game.
+Something must be considered possible unless we are sure it is not. Obsoleted movies should count. Refer to [=forum/p/374098#374098|this post] for examples.
+
+Labels must be lower-case, except for names or something otherwise internally capitalized.
+
+----
+!! Improvements and obsoletions
+
+* Avoid meaningless publications. It may turn the audience away when a large improvement is possible, yet each small incremental change with no visible differences in gameplay finds its way onto the main page.
+** Small improvements have and will be published, but only in a situation where it seems reasonable that ''only those small optimizations are left''. If larger known improvements aren't implemented, it may be grounds for rejection.
+* For improvements to published movies, game choice is no longer a factor for judgment (generally).
+* However, if the submitted movie is clearly improvable as well, it should (usually) be rejected.
+** While it is expected that the new run should use all tricks and techniques known at the time, it is not uncommon for new time-saving techniques to be found during the later stages of making a run. Ideally, the run should be restarted or edited to allow for inclusion of these new discoveries, however, if restarting will be especially time consuming, exceptions can be made to this rule per judge's discretion.
+* Improvements to published movies should meet the site's standards, even if the published movie doesn't (such as use of correct ROM, cheat codes, etc.).
+* Sometimes what is claimed to be an improvement may necessitate a new branch, such as when a huge time-saving glitch is involved (see [1314M|SMW2]), or unusual goal choice is exhibited (as in Princess-only SMB2 run, whose [10M|first iteration] beat [651M|then-current any%]).
+* Sometimes an improvement necessitates a double obsoletion.  
+** This may occur when a new submission aims for a goal in a certain branch (for instance, any%) but also achieves primary goals of other branches (such as low% or 100%) better than their respective published movies (see [1270M|Super Metroid glitched any%]). Another notable example is when a 2-player movie, generally considered to be more entertaining than a 1-player version, also outperforms it time-wise (see [797M|Contra]).
+* Cross-branch, and even cross-tier obsoletions can happen, if the movies really are considered similar enough by the audience and the judges, and the new one is better.
+** Cross-platform obsoletions, on the other hand, are not done unless it's about deliberately identical ports (as happens with modern console games).
+
+----
+!! Game completion point
+
+! Glitched endings
+
+Glitched runs need certain verification on whether the ending really occurs. It can be done by comparing how the game acts after it ended normally, with how it acts after it was glitch-ended. Missing some critical ending routines would mean it was not really completed.
+
+! Input length
+
+There are two basic opinions as to what kind of TAS ending is better:
+* Minimize input length, the game should reach a stage where it completes itself, no matter how long it takes.
+* Game must be brought to a certain completion state as soon as possible, after which no normal game input can prevent the game from completing, even when this lengthens the movie file length considerably.
+
+The author can tweak his movie's ending as a stylistic choice, even after it was accepted (but before it is published). However, a run looking to obsolete a published run needs to do more than just tweak the movie's ending, as we aim to avoid meaningless publications. A run with real improvements is free to use a different ending than previous movies did.
+
+----
+!! Hacks
+
+__By nature, hacks have different criteria for judgment compared to regular games.__
+
+* A hack must be judged for its entertainment value as its own separate game but also in context to the original game.
+* Too many hacks of the same game engine causes the same issues as too many categories of the same game.
+* Quality of the hack should come into play as well. Hacks where only [2338S|sprites are altered] do not make for quality hacks. By contrast, a [1336M|good hack] alters the levels, the physics, the sprites, expands the overall game play, and even combines elements of other games to the point it doesn't feel like the same game engine.
+* Popularity of the hack needs to be considered.
+----
+!! Arbitrary Code
+
+Submissions which contain arbitrary code entered into a game by exploit have some additional requirements, and in some ways are similar to hacks. Most importantly, some research is required to ensure the exploit used is not an emulator bug.
+
+! Playarounds
+
+* Quality of the playaround is important. View what modifications it makes to the game as part of the playaround the same way as judging a hack. Mediocre or minor changes should be rejected.
+* Ensure the run is entertaining on its own merits.
+** A run using a new technique or technically novel approach in its payload programming does not qualify for entertainment on its own.
+** Being the first exploit or a new kind of exploit found in a game does not qualify for entertainment either.
+** These playarounds need to receive very good feedback to the extent that hacks would require. [user:Nach] suggests that >90% ''yes'' votes is considered very good feedback in absence of posts providing such feedback.
+* Ensure that the game appears to be completed in some visual sense.
+* Too many playarounds of the same game engine causes the same issues as too many categories of the same game.
+* [https://en.wikipedia.org/wiki/Payload_%28computing%29|Payloads] must be unique to a game, and somehow connected to it. A payload which would work just as well contextually if executed on any other game for the platform must be rejected.
+** Different variants of the same game such as ''Pokémon Blue'' and ''Red'' are still considered the same game for this purpose. So a payload on a run for ''Blue'' which would also work contextually if applied to ''Red'' is not a disqualification. However, it is always better if the player tailors their payload to the specific game variant.
+*** A payload for a particular game which was already published as part of a run for another game variant should be rejected, unless the newly submitted run can be considered to obsolete the currently published run.
+* Ensure that TASVideos can legally distribute any content a playaround adds to a game.
+
+! Speedruns
+
+* Ensure the arbitrary code used is optimal in terms of how much it skips. Reject runs which skip portions of the game arbitrarily.
+* For games which have no defined ending, typically the run must progress the game to the point there is no new content and the difficulty no longer increases. This still applies to games making use of arbitrary code, and must be seen to objectively and obviously reach this point.
+
+----
+!! Be open
+
+! Collect opinions
+
+The audience has voice. If they don't use it, encourage them to use it.
+
+Read what other people think of the submission.
+* If nobody says anything, try to ignite discussion.
+** This is especially important if the submission does something which could be controversial once people realize it.
+* If someone offers an interesting viewpoint regarding a submission, try to cultivate it.
+* Minority opinions in a discussion are important too, and should be weighed according to their validity.
+
+! Be impartial
+
+* Judge movies, not players.
+
+! Be verbose
+
+Inform people of your actions, your thoughts and everything regarding a particular submission.
+
+Try to express yourself in an encouraging tone, even if you are going to reject a submission.
+----
+!! Editing the submissions
+
+* Apply the [Editor Guidelines] to your editions. Specifically:
+** Do not delete text written by others. (But you can reformat it for readability.)
+** Use clear, easy to read markup and language.
+** Attribute clearly.
+
+Generally, when you add a comment to the submission, your markup should look like this for example (assuming you also have a [Users|homepage] on this site by your name):
+
+ ----
+ [[user:your username]]: Rejected in favor of a [[828S|faster movie]].
+({{828S}} (an example) stands for a link to [828S|submission number 828].)
+----
+!! Replacing submission files
+
+* Judges have the ability to replace a submission file.  
+* This can be done when the submitter finds a small improvement to their submission; it is usually better to incorporate it immediately rather than cancel and submit a new movie.
+* Check that the movie still satisfies its stated goals and that the movie file is good.
+* Use this feature only for small improvements and not major changes. Anything that could possibly invalidate the voting results should definitely be a new submission (such as a controversial trick, a major improvement, or anything that might affect the entertainment value of the movie).
+----
+!! Procedures
+
+* There is a minimum time a submission can be in queue before a verdict can be made (currently 72 hours).  Prior to this time a submission can be set to ''""judging underway""'' or ''""needs more info""''.
+* Use the ''""judging underway""'' feature, and use it sooner rather than later. If you decide to handle a submission set this first so other judges know it is already being taken care of.
+* Let the conversation play out. The audience has a say, so let them say it. If a thread is very active still (many posts in a short time period), let it sit until the conversation dies down a bit.
+* Give a chance for rebuttal. Try to indicate the verdict you are leaning to in a post, or ask questions rather than make statements (""Why did you do x?"" instead of ""x looks improvable""). Give the author a sufficient chance to respond to assumption made about the movie.
+* Avoid saying it ""looks"" improvable. Instead, take the time to show that it __IS__ improvable. Show an existing WIP, or make a short one of your own. Document some specifics rather than making blanket statements impossible to prove.
+----
+
+!!! More reading
+
+* For movie analysis: [Movie Rules], [Guidelines].
+* For editing: [Editor guidelines], [Text formatting rules].
+* For movie editing: [Movie Class Guidelines].
+
+If you're also a publisher, please read the [Publisher guidelines] as well."
 			}
 		};
 	}
