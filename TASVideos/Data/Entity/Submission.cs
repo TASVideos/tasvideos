@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Data.Entity
@@ -52,6 +54,33 @@ namespace TASVideos.Data.Entity
 		
 		[StringLength(50)]
 		public string EmulatorVersion { get; set; }
+
+		/// <summary>
+		/// A de-normalized column consisting of the submission title for display when linked or in the queue
+		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01
+		/// </summary>
+		public string Title { get; set; }
+
+		public TimeSpan Time
+		{
+			get
+			{
+				int seconds = (int) (Frames / SystemFrameRate.FrameRate);
+				double fractionalSeconds = (Frames / SystemFrameRate.FrameRate) - seconds;
+				int milliseconds = (int) (Math.Round(fractionalSeconds, 2) * 1000);
+				var timespan = new TimeSpan(0, 0, 0, seconds, milliseconds);
+
+				return timespan;
+			}
+		}
+
+		public void GenerateTitle()
+		{
+			Title =
+				$"#{Id} {string.Join(" & ", SubmissionAuthors.Select(sa => sa.Author.UserName))}'s {System.Code} {GameName}"
+					+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
+					+ $" in {Time:g}";
+		}
 	}
 
 	public enum SubmissionStatus

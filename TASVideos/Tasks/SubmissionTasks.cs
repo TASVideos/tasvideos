@@ -73,7 +73,8 @@ namespace TASVideos.Tasks
 					LastUpdateUser = s.WikiContent.LastUpdateUserName,
 					Status = s.Status,
 					EncodeEmbedLink = s.EncodeEmbedLink,
-					Judge = s.Judge != null ? s.Judge.UserName : ""
+					Judge = s.Judge != null ? s.Judge.UserName : "",
+					Title = s.Title
 				})
 				.SingleOrDefaultAsync();
 
@@ -140,8 +141,11 @@ namespace TASVideos.Tasks
 		{
 			var submission = await _db.Submissions
 				.Include(s => s.Judge)
+				.Include(s => s.System)
+				.Include(s => s.SystemFrameRate)
+				.Include(s => s.SubmissionAuthors)
+				.ThenInclude(sa => sa.Author)
 				.SingleAsync(s => s.Id == model.Id);
-
 
 			// Parse movie file if it exists
 			if (model.MovieFile != null)
@@ -220,6 +224,8 @@ namespace TASVideos.Tasks
 			});
 
 			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == id);
+
+			submission.GenerateTitle();
 			await _db.SaveChangesAsync();
 
 			return new SubmitResult(submission.Id);
@@ -309,6 +315,8 @@ namespace TASVideos.Tasks
 
 			_db.SubmissionAuthors.AddRange(submissionAuthors);
 
+
+			submission.GenerateTitle();
 			await _db.SaveChangesAsync();
 
 			return new SubmitResult(submission.Id);
