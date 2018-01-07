@@ -94,7 +94,7 @@ namespace TASVideos.Tasks
 			return submissionModel;
 		}
 
-		public async Task<IEnumerable<SubmissionSearchResultModel>> GetSubmissionList(SubmissionSearchCriteriaModel criteria)
+		public async Task<IEnumerable<SubmissionListViewModel>> GetSubmissionList(SubmissionSearchCriteriaModel criteria)
 		{
 			var query = _db.Submissions
 				.Include(s => s.System)
@@ -103,7 +103,7 @@ namespace TASVideos.Tasks
 				.ThenInclude(sa => sa.Author);
 
 			var results = await query.ToListAsync();
-			return results.Select(s => new SubmissionSearchResultModel
+			return results.Select(s => new SubmissionListViewModel
 			{
 				Id = s.Id,
 				System = s.System.Code,

@@ -197,7 +197,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// A single submisison from a submission search
 	/// </summary>
-	public class SubmissionSearchResultModel
+	public class SubmissionListViewModel
 	{
 		[Display(Name = "Movie name")]
 		public string Title => $"{System} {GameName}"
