@@ -1,12 +1,14 @@
 ﻿@model IEnumerable<SubmissionListViewModel>
-@{ 
+@{
 	ViewData["Title"] = "Submission List";
 }
+
 <h4>This page list movies that have been submitted for review</h4>
 
 @if (ViewData.UserHasPermission(PermissionTo.SubmitMovies))
 {
 	<a class="btn btn-primary" asp-action="Submit">Submit a Movie</a>
+	<a asp-action="List" asp-route-user="@User.Identity.Name" class="btn btn-default">My Submissions</a>
 }
 else
 {

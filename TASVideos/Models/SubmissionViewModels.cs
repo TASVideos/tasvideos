@@ -191,6 +191,7 @@ namespace TASVideos.Models
 	/// </summary>
 	public class SubmissionSearchCriteriaModel
 	{
+		public string User { get; set; }
 		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
 	}
 
