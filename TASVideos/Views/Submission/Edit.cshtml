@@ -21,6 +21,14 @@
 			</form-group>
 		</div>
 	</row>
+	<row condition="@ViewData.UserHasPermission(PermissionTo.EditSubmissions)">
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="GameId"></label>
+				<select asp-for="GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-control"></select>
+			</form-group>
+		</div>
+	</row>
 	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Status"/>
 	<row>
 		<div class="col-md-6">

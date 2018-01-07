@@ -175,6 +175,13 @@ namespace TASVideos.Models
 
 		[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile MovieFile { get; set; }
+
+		internal int SystemId { get; set; }
+
+		[Display(Name = "Game")]
+		public int? GameId { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableGames { get; set; }
 	}
 
 	// TODO: document - for reverifying a status can be set

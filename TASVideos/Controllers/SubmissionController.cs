@@ -191,6 +191,11 @@ namespace TASVideos.Controllers
 				model.MovieFile = null;
 			}
 
+			if (!UserPermissions.Contains(PermissionTo.EditSubmissions))
+			{
+				model.GameId = null;
+			}
+
 			var subInfo = await _submissionTasks.GetStatusVerificationValues(model.Id, User.Identity.Name);
 			var availableStatus = SubmissionHelper.AvailableStatuses(
 				subInfo.CurrentStatus,

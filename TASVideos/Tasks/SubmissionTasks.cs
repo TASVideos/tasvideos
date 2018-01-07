@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Constants;
 using TASVideos.Data;
@@ -147,6 +148,7 @@ namespace TASVideos.Tasks
 					Id = s.Id,
 					SystemDisplayName = s.System.DisplayName,
 					SystemCode = s.System.Code,
+					SystemId = s.System.Id,
 					GameName = s.GameName,
 					GameVersion = s.GameVersion,
 					RomName = s.RomName,
@@ -162,7 +164,8 @@ namespace TASVideos.Tasks
 					Status = s.Status,
 					EncodeEmbedLink = s.EncodeEmbedLink,
 					Markup = s.WikiContent.Markup,
-					Judge = s.Judge != null ? s.Judge.UserName : ""
+					Judge = s.Judge != null ? s.Judge.UserName : "",
+					GameId = s.Game != null ? s.Game.Id : (int?)null
 				})
 				.SingleOrDefaultAsync();
 
@@ -171,6 +174,15 @@ namespace TASVideos.Tasks
 				submissionModel.Authors = await _db.SubmissionAuthors
 					.Where(sa => sa.SubmissionId == submissionModel.Id)
 					.Select(sa => sa.Author.UserName)
+					.ToListAsync();
+
+				submissionModel.AvailableGames = await _db.Games
+					.Where(g => g.SystemId == submissionModel.SystemId)
+					.Select(g => new SelectListItem
+					{
+						Value = g.Id.ToString(),
+						Text = g.DisplayName
+					})
 					.ToListAsync();
 			}
 
@@ -239,6 +251,15 @@ namespace TASVideos.Tasks
 				};
 				submission.History.Add(history);
 				_db.SubmissionStatusHistory.Add(history);
+			}
+
+			if (model.GameId.HasValue)
+			{
+				submission.Game = await _db.Games.SingleAsync(g => g.Id == model.Id);
+			}
+			else
+			{
+				submission.Game = null;
 			}
 
 			submission.GameVersion = model.GameVersion;
