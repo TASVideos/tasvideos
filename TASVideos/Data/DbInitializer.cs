@@ -71,6 +71,11 @@ namespace TASVideos.Data
 			{
 				context.GameSystemFrameRates.Add(systemFrameRate);
 			}
+
+			foreach (var game in GameSeedData.Games)
+			{
+				context.Games.Add(game);
+			}
 		}
 
 		public static void Migrate(ApplicationDbContext context)
