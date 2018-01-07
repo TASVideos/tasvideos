@@ -72,7 +72,7 @@
 			<span condition="@ViewData.UserHasPermission(PermissionTo.EditSubmissions)" class="btn-separator"></span>
 			<a condition="@(ViewData.UserHasPermission(PermissionTo.EditSubmissions) || (Model.CanEdit && ViewData.UserHasPermission(PermissionTo.SubmitMovies)))" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
 			<span class="btn-separator"></span>
-			<a asp-action="Index" class="btn btn-default">Back to Queue</a>
+			<a asp-action="List" class="btn btn-default">Back to Queue</a>
 			<a href="#" class="btn btn-default">All by this submitter</a>
 		</div>
 	</div>

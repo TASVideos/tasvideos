@@ -30,9 +30,13 @@ namespace TASVideos.Controllers
 			_submissionTasks = submissionTasks;
 		}
 
-		// Submisison List
+		public IActionResult Index()
+		{
+			return RedirectToAction(nameof(List));
+		}
+
 		[AllowAnonymous]
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> List()
 		{
 			var model = await _submissionTasks.GetSubmissionList(new SubmissionSearchCriteriaModel());
 			return View(model);
