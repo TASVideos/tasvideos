@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -91,6 +92,28 @@ namespace TASVideos.Tasks
 			}
 
 			return submissionModel;
+		}
+
+		public async Task<IEnumerable<SubmissionSearchResultModel>> GetSubmissionList(SubmissionSearchCriteriaModel criteria)
+		{
+			var query = _db.Submissions
+				.Include(s => s.System)
+				.Include(s => s.SystemFrameRate)
+				.Include(s => s.SubmissionAuthors)
+				.ThenInclude(sa => sa.Author);
+
+			var results = await query.ToListAsync();
+			return results.Select(s => new SubmissionSearchResultModel
+			{
+				Id = s.Id,
+				System = s.System.Code,
+				GameName = s.GameName,
+				Time = s.Time,
+				Branch = s.Branch,
+				Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author.UserName)),
+				Submitted = s.CreateTimeStamp,
+				Status = s.Status
+			});
 		}
 
 		/// <summary>

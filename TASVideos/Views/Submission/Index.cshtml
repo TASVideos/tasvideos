@@ -1,4 +1,5 @@
-﻿@{ 
+﻿@model IEnumerable<SubmissionSearchResultModel>
+{ 
 	ViewData["Title"] = "Submission List";
 }
 <h4>This page list movies that have been submitted for review</h4>
@@ -15,4 +16,20 @@ else
 
 <label>TODO: more content</label>
 
-<h2>TODO: a list of submissions</h2>
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.First().Title)</th>
+		<th>@Html.DisplayNameFor(m => m.First().Author)</th>
+		<th>@Html.DisplayNameFor(m => m.First().Submitted)</th>
+		<th>@Html.DisplayNameFor(m => m.First().Status)</th>
+	</tr>
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td><a href="/@(item.Id)S">@item.Title</a></td>
+			<td>@item.Author</td>
+			<td>@item.Submitted</td>
+			<td>@item.Status</td>
+		</tr>
+	}
+</table>
