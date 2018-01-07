@@ -36,9 +36,9 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> List()
+		public async Task<IActionResult> List(SubmissionSearchCriteriaModel getModel)
 		{
-			var model = await _submissionTasks.GetSubmissionList(new SubmissionSearchCriteriaModel());
+			var model = await _submissionTasks.GetSubmissionList(getModel);
 			return View(model);
 		}
 

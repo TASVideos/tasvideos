@@ -96,13 +96,21 @@ namespace TASVideos.Tasks
 
 		public async Task<IEnumerable<SubmissionListViewModel>> GetSubmissionList(SubmissionSearchCriteriaModel criteria)
 		{
-			var query = _db.Submissions
+			IQueryable<Submission> query = _db.Submissions;
+
+			if (!string.IsNullOrWhiteSpace(criteria.User))
+			{
+				query = query.Where(s => s.Submitter.UserName == criteria.User);
+			}
+
+			var iquery = query
+				.Include(s => s.Submitter)
 				.Include(s => s.System)
 				.Include(s => s.SystemFrameRate)
 				.Include(s => s.SubmissionAuthors)
 				.ThenInclude(sa => sa.Author);
 
-			var results = await query.ToListAsync();
+			var results = await iquery.ToListAsync();
 			return results.Select(s => new SubmissionListViewModel
 			{
 				Id = s.Id,
