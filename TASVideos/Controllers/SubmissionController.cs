@@ -32,9 +32,10 @@ namespace TASVideos.Controllers
 
 		// Submisison List
 		[AllowAnonymous]
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			return View();
+			var model = await _submissionTasks.GetSubmissionList(new SubmissionSearchCriteriaModel());
+			return View(model);
 		}
 
 		[RequirePermission(PermissionTo.SubmitMovies)]
