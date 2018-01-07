@@ -14,7 +14,8 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
 
-		// TODO: game id
+		public virtual Game.Game Game { get; set; }
+
 		// TODO: intended tier
 
 		public virtual User Judge { get; set; }
