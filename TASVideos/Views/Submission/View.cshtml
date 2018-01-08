@@ -77,6 +77,7 @@
 			<a href="#" class="btn btn-default">Discuss and Vote</a>
 			<span condition="@ViewData.UserHasPermission(PermissionTo.EditSubmissions)" class="btn-separator"></span>
 			<a condition="@(ViewData.UserHasPermission(PermissionTo.EditSubmissions) || (Model.CanEdit && ViewData.UserHasPermission(PermissionTo.SubmitMovies)))" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+			<a condition="@ViewData.UserHasPermission(PermissionTo.PublishMovies) && Model.Status == SubmissionStatus.Accepted" asp-action="Publish" asp-route-id="@Model.Id" class="btn btn-warning">Publish</a>
 			<span class="btn-separator"></span>
 			<a asp-action="List" class="btn btn-default">Back to Queue</a>
 			<a asp-action="List" asp-route-user="@Model.Submitter" class="btn btn-default">All by this submitter</a>
