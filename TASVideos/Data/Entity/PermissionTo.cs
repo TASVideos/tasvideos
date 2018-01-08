@@ -103,6 +103,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Override Submissison Status")]
 		[Group("Queue Management")]
 		[Description("The ability to set a submission status regardless of condition (exception: published submissions)")]
-		OverrideSubmissionStatus = 19
+		OverrideSubmissionStatus = 19,
+
+		[Display(Name = "Set Tier")]
+		[Group("MovieAdministration")]
+		[Description("The ability to set a published movie's movie tier")]
+		SetTier = 20
 	}
 }

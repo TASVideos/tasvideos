@@ -76,6 +76,11 @@ namespace TASVideos.Data
 			{
 				context.Games.Add(game);
 			}
+
+			foreach (var tier in TierSeedData.Tiers)
+			{
+				context.Tiers.Add(tier);
+			}
 		}
 
 		public static void Migrate(ApplicationDbContext context)

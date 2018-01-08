@@ -191,10 +191,17 @@ namespace TASVideos.Controllers
 				model.MovieFile = null;
 			}
 
+			// TODO: this is bad, an author can null out these values, but if we treat null as no choice, then we have no way to unset these values
 			if (!UserPermissions.Contains(PermissionTo.EditSubmissions))
 			{
 				model.GameId = null;
 			}
+
+			if (!UserPermissions.Contains(PermissionTo.JudgeSubmissions))
+			{
+				model.TierId = null;
+			}
+			///////////////
 
 			var subInfo = await _submissionTasks.GetStatusVerificationValues(model.Id, User.Identity.Name);
 			var availableStatus = SubmissionHelper.AvailableStatuses(

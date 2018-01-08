@@ -76,7 +76,8 @@ namespace TASVideos.Tasks
 					Status = s.Status,
 					EncodeEmbedLink = s.EncodeEmbedLink,
 					Judge = s.Judge != null ? s.Judge.UserName : "",
-					Title = s.Title
+					Title = s.Title,
+					TierName = s.IntendedTier != null ? s.IntendedTier.Name : ""
 				})
 				.SingleOrDefaultAsync();
 
@@ -165,7 +166,8 @@ namespace TASVideos.Tasks
 					EncodeEmbedLink = s.EncodeEmbedLink,
 					Markup = s.WikiContent.Markup,
 					Judge = s.Judge != null ? s.Judge.UserName : "",
-					GameId = s.Game != null ? s.Game.Id : (int?)null
+					GameId = s.Game != null ? s.Game.Id : (int?)null,
+					TierId = s.IntendedTier != null ? s.IntendedTier.Id : (int?)null
 				})
 				.SingleOrDefaultAsync();
 
@@ -182,6 +184,14 @@ namespace TASVideos.Tasks
 					{
 						Value = g.Id.ToString(),
 						Text = g.DisplayName
+					})
+					.ToListAsync();
+
+				submissionModel.AvailableTiers = await _db.Tiers
+					.Select(t => new SelectListItem
+					{
+						Value = t.Id.ToString(),
+						Text = t.Name
 					})
 					.ToListAsync();
 			}
@@ -236,8 +246,8 @@ namespace TASVideos.Tasks
 				submission.Judge = await _db.Users.SingleAsync(s => s.UserName == userName);
 			}
 			else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
-					&& model.Status == SubmissionStatus.New
-					&& submission.Judge != null)
+				&& model.Status == SubmissionStatus.New
+				&& submission.Judge != null)
 			{
 				submission.Judge = null;
 			}
@@ -255,11 +265,16 @@ namespace TASVideos.Tasks
 
 			if (model.GameId.HasValue)
 			{
-				submission.Game = await _db.Games.SingleAsync(g => g.Id == model.Id);
+				submission.Game = await _db.Games.SingleAsync(g => g.Id == model.GameId.Value);
+			}
+
+			if (model.TierId.HasValue)
+			{
+				submission.IntendedTier = await _db.Tiers.SingleAsync(t => t.Id == model.TierId.Value);
 			}
 			else
 			{
-				submission.Game = null;
+				submission.IntendedTier = null;
 			}
 
 			submission.GameVersion = model.GameVersion;

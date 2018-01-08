@@ -21,11 +21,17 @@
 			</form-group>
 		</div>
 	</row>
-	<row condition="@ViewData.UserHasPermission(PermissionTo.EditSubmissions)">
-		<div class="col-md-6">
+	<row>
+		<div condition="@ViewData.UserHasPermission(PermissionTo.EditSubmissions)" class="col-md-6">
 			<form-group>
 				<label asp-for="GameId"></label>
 				<select asp-for="GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-control"></select>
+			</form-group>
+		</div>
+		<div condition="@ViewData.UserHasPermission(PermissionTo.JudgeSubmissions)" class="col-md-6">
+			<form-group>
+				<label asp-for="TierId"></label>
+				<select asp-for="TierId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableTiers)" class="form-control"></select>
 			</form-group>
 		</div>
 	</row>

@@ -28,7 +28,7 @@ namespace TASVideos.Data
 		public DbSet<Submission> Submissions { get; set; }
 		public DbSet<SubmissionAuthor> SubmissionAuthors { get; set; }
 		public DbSet<SubmissionStatusHistory> SubmissionStatusHistory { get; set; }
-
+		public DbSet<Tier> Tiers { get; set; }
 		// Game tables
 		public DbSet<Game> Games { get; set; }
 		public DbSet<GameSystem> GameSystems { get; set; }

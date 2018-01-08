@@ -101,6 +101,9 @@ namespace TASVideos.Models
 		public int Id { get; set; }
 		public bool CanEdit { get; set; }
 
+		[Display(Name = "For tier")]
+		public string TierName { get; set; }
+
 		[Display(Name = "Console")]
 		public string SystemDisplayName { get; set; }
 
@@ -180,8 +183,11 @@ namespace TASVideos.Models
 
 		[Display(Name = "Game")]
 		public int? GameId { get; set; }
-
 		public IEnumerable<SelectListItem> AvailableGames { get; set; }
+
+		[Display(Name = "Intended Tier")]
+		public int? TierId { get; set; }
+		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
 	}
 
 	// TODO: document - for reverifying a status can be set

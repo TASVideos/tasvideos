@@ -16,7 +16,7 @@ namespace TASVideos.Data.Entity
 
 		public virtual Game.Game Game { get; set; }
 
-		// TODO: intended tier
+		public virtual Tier IntendedTier { get; set; }
 
 		public virtual User Judge { get; set; }
 		public virtual User Publisher { get; set; }

@@ -38,7 +38,7 @@ namespace TASVideos.Data.SeedData
 				GoodName = "Ninja Golf",
 				DisplayName = "Ninja Golf",
 				Abbreviation = "njagolf",
-				SystemId = 34,
+				SystemId = 36,
 				SearchKey = "a7800-ninja-golf",
 				YoutubeTags = "Ninja Golf"
 			},
