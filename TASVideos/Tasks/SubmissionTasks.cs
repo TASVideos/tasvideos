@@ -397,5 +397,17 @@ namespace TASVideos.Tasks
 
 			return new SubmitResult(submission.Id);
 		}
+
+		public async Task<SubmissionPublishModel> GetSubmissionForPublish(int id)
+		{
+			return await _db.Submissions
+				.Select(s => new SubmissionPublishModel
+				{
+					Id = s.Id,
+					Title = s.Title,
+					Markup = s.WikiContent.Markup
+				})
+				.SingleAsync();
+		}
 	}
 }

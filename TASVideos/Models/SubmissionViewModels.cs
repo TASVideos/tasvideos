@@ -233,4 +233,11 @@ namespace TASVideos.Models
 		public TimeSpan Time { get; set; }
 		public string Branch { get; set; }
 	}
+
+	public class SubmissionPublishModel
+	{
+		public int Id { get; set; }
+		public string Title { get; set; }
+		public string Markup { get; set; }
+	}
 }

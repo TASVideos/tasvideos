@@ -245,6 +245,32 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		[RequirePermission(PermissionTo.PublishMovies)]
+		public async Task<IActionResult> Publish(int id)
+		{
+			var model = await _submissionTasks.GetSubmissionForPublish(id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[AutoValidateAntiforgeryToken]
+		[RequirePermission(PermissionTo.PublishMovies)]
+		public IActionResult Publish(SubmissionPublishModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			// TODO: save
+			return RedirectHome(); // TODO: navigate to publsihed movie
+		}
+
 		private static readonly SelectListItem[] GameVersionOptions =
 		{
 			new SelectListItem {Text = "unknown", Value = "unknown"},
