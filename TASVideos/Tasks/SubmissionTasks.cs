@@ -401,6 +401,7 @@ namespace TASVideos.Tasks
 		public async Task<SubmissionPublishModel> GetSubmissionForPublish(int id)
 		{
 			return await _db.Submissions
+				.Where(s => s.Id == id && s.Status == SubmissionStatus.Accepted)
 				.Select(s => new SubmissionPublishModel
 				{
 					Id = s.Id,
