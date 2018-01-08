@@ -2688,6 +2688,155 @@ Generally, when you add a comment to the submission, your markup should look lik
 * For movie editing: [Movie Class Guidelines].
 
 If you're also a publisher, please read the [Publisher guidelines] as well."
+			},
+			new WikiPage
+			{
+				PageName = "Vault",
+				RevisionMessage = InitialCreate,
+				Markup = 
+@"[module:listlanguages]
+
+----
+
+[=/css/vaulttier.png] The Vault is a new category of movies we have added. Previously we only published movies people found entertaining, now we also publish movies in this category for record-keeping purposes.
+
+The vault is the lowest publication [tier] at TASVideos.  Its focus is exclusively on collecting tool-assisted speedrun records.
+
+*[Movies-Vault|Current Vault publications]
+*[Movies-Vault-Obsonly|Obsoleted Vault publications]
+
+!! Overview
+* This category represents the fastest completion times for a minimum set of goals.
+* Its purpose is to fulfill the site's goal of being a TAS records site, and a central repository of tool-assisted literature and information.
+
+!! Entertainment requirements
+* Entertainment value has little to no significance
+** However if a movie has entertainment significance which is deemed negatively, such as sickening camera angles, seizure inducing activity, and other rectifiable presentation decisions within it, the movie is ineligible for this category, or any other category for that matter.
+* Opportunities to entertain the audience where it does not affect time is not a requirement. However, it is encouraged and can be used as a tie-breaker for two equally fast movies.
+* It is possible for a faster movie to be published in this category while a slower but ""more entertaining"" movie is published in another tier.
+* Aims to fulfill the site's goal of being a Tool-assisted Speedrun records site, as well as be an information based central repository for the body of TAS literature.
+
+!! Technical requirements
+* Must beat all known unassisted records and beat or match all known tool-assisted records.
+* Must show a proficient understanding of TAS techniques and be perceived as well optimized. I.e. should not have obvious pauses, mistakes, or sloppy play.
+* In rare cases, there will be a sloppier movie that is faster than a more optimized movie due to the use of a major skip discovery. In this case, the faster of the two movies is preferred.
+* The [Guidelines#SelectYourGameWell|guidelines] for difficulty settings, and password use still apply.
+* Must be distinguishable from the best real-time speedruns, and must not be seen as trivial.
+
+!! Game choice
+* Must be clearly definable as a game, which has achievable goals.
+** A game which is simply about wandering aimlessly is not a proper game.
+** A game which is about free form creativity is also not a proper game.
+*** Examples are the main feature of Mario Paint or Color a Dinosaur.
+* Hacks (defined as being modifications of an existing eligible game) are not eligible for this category. We demand hacks with entertainment value, therefore they are judged by the [Moons|Moon tier] requirements.
+* Unlicensed and homebrew games are eligible but may be judged on a game-by-game basis based on their notability.  
+* Games on multi-carts are acceptable unless there is a standalone version available. (For instance, Duck Hunt is okay, but not Duck Hunt on the Mario/Duck Hunt combo cart.)
+* The gameplay still needs to standout from non-assisted play.
+** Example of a (mini)game which does not is Desert Bus.
+* For the purposes of this tier, a game which is a board game, educational game or game show game is not defined as a serious game. Fighting games such as Street Fighter are however, eligible.
+** Examples of unacceptable board games for this tier are [2768S|Chess] and Monopoly.
+** Examples of unacceptable education games for this tier are Sesame Street: Elmo's 123s and ABCs.
+*** A serious game which happens to have some secondary educational elements scattered within it are eligible. If the game clearly presents what is typical game-play in serious games, and prioritizes game-play over education, or the educational portions are of little to no consequence for completing the game, then the game is certainly a serious game.
+* Sports games are allowed for the Vault under certain criteria only: 
+** Team-based sports and sports running with a fixed time, such as baseball, football, soccer, or basketball are not eligible. 
+*** Games featuring multiple successive sports, such as Track & Field and Olympics, are eligible as long as one of the sports fits the criteria.
+** The game must have a meaningful ending point with meaningful completion criteria. 
+*** For example, many sports games have career, storyline, tournament or season modes that end with an ending or credit sequence. These would count as meaningful endings. 
+*** In sports that depend on a variety of environments or situations, such as golf, completion can be defined by clearing every environment or situation in the game. 
+*** TASes that only clear a single event without reaching a meaningful ending to the game are not eligible.
+** The run must not be seen as trivial.
+*** If a run consists of doing a trivial strategy, made only nontrivial by having to do it over the course of several rounds, it will still be judged as trivial. For example, bowling games where the player gets a strike with ten pins every time.
+** Sports games in the Vault are restricted to one game per series per platform. For example, PGA Tour Golf III on the Sega Genesis may obsolete PGA Tour Golf II on the Sega Genesis. Which game obsoletes which is decided by which game makes a more technically impressive run, as decided by a judge.
+*** For games with different characters/groups/countries with different statistics, only the fastest run is accepted. Runs using suboptimal characters are not accepted. 
+* If a ''game'' consists of presenting a story, with little to no user creativity altering the game in any way, then it is unacceptable.
+** This includes games which are overwhelmingly made up of cut scenes, with little to no user interaction anywhere.
+*** For example, Super Adventure Rockman.
+** Games which are of a [http://en.wikipedia.org/wiki/Choose_Your_Own_Adventure|Choose Your Own Adventure] story book variety, where the user has no creative control beyond choosing between predefined choices.
+***For instance, the Arcade version of [http://wikipedia.org/wiki/Dragon's_lair|Dragon's Lair]
+!! Goal choice
+* Must be clearly definable as having completed the game.
+** Games that loop endlessly can still be defined. The completion point is one where there is no new content, and the game is no longer increasing in difficulty.
+* Goal choice is limited to fastest completion time (any%), or full-completion (such as 100% or best ending).
+** Exception: for games with separate, independent level sets (modes, episodes) officially available from start, each level set can have its TAS in Vault.
+** Other goal choices are not eligible for this tier.
+** Save-anchored movies are not eligible for this tier.
+** Goal choice criteria must be clear and non-controversial (a clear consensus on what constitutes full-completion or when a game is completed).
+** Easter eggs are not expected to be a requirement for full-completion
+** Maximum points or score is allowed as a full-completion category, provided that:
+*** There is no better way of defining full completion in the game.
+*** The maximum score is easily defined and absolute - it must not be possible to gain a higher score, even theoretically. It must be definable without being dependent on precise time, speed, or similar requirements.
+*** The maximum score is limited by not being able to gain any more points, not by hitting a score cap or overflow. If it is possible to score points infinitely, score cannot be used to define full completion."
+			},
+			new WikiPage
+			{
+				PageName = "Stars",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"[module:listlanguages]
+
+----
+
+[=/css/favourite.png] ""Stars"" represent the highest publication [tier] at TASVideos. Starred movies are the [Movies-RatingY-Rec|premium/popular/unique movies] on this site, of incredibly high quality and entertainment value.
+
+*[Movies-Stars|Current Star publications]
+*[Movies-Stars-Obsonly|Obsoleted Star publications]
+
+!! Overview
+*This is the highest tier with the strictest publication requirements.
+*The aim of this tier is to be approximately 5-10% of size of the [Moons|Moon] tier.
+*Aims to fulfill the site's goal of exposing as many people as possible to Tool-assisted Speedrun/Superplay movies as an art form.
+
+!! Entertainment requirements
+*Audience engagement is the largest factor (large number of voters, viewers, comments).
+*Also requires approval of one or more admin dedicated to maintaining the Star list (starman role).
+
+
+!! Technical requirements
+*The TAS itself must be perceived as of highest quality.
+*Shining example of entertaining the audience, being impressive, showing a mastery of TAS techniques, using unexpected/seemingly impossible ideas, expertise of the game. 
+
+
+!! Game and goal choice
+* Game choice is a very large factor. The game must be one that engages the audience easily, and does not depend on prior knowledge of Tool-assisted literature; easily grabs attention. (A natural consequence is that game popularity will play a role here, since familiarity of the game increases audience engagement).
+* Game choice must be one that allows for a variety of TAS techniques, strategies, and ideas. In other words, it must be difficult to make an optimized TAS.
+* Goal choice must be one that is easily understood and clear to the audience. 
+* Goal choices must not be too esoteric. It must cater to the average user rather than the TAS experts of the given game.
+
+!! See also
+*[Starman Guidelines]
+*[Tier Maintenance Log]"
+			},
+			new WikiPage
+			{
+				PageName = "Moons",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"[module:listlanguages]
+
+----
+
+[=/css/moontier.png] ""Moons"" represent the middle publication [tier] at TASVideos. It includes movies of high technical quality and entertainment value.
+
+*[Movies-Moons|Current Moon publications]
+*[Movies-Moons-Obsonly|Obsoleted Moon publications]
+
+!! Overview
+*Aims to fulfill the site's goal of being entertainment based and provide impressive and high quality TAS movies to the audience.
+
+!! Entertainment requirements
+* The dominant criteria here is entertainment value to the users. This will be assessed via votes, comments, and views.
+* These movies must be impressive, attempt to entertain the audience even when it does not save time.
+* Speed/entertainment trade-offs are acceptable.
+
+
+!! Technical requirements
+* Must be perceived to be well optimized, and show competence in TAS techniques.
+
+!! Game and goal choice
+* Game choice is a strong factor. The game must be one that facilitates entertainment value when tool-assistance is applied.  
+* Goal choice is not too important in this tier: esoteric and unorthodox goals are acceptable as long as they make for entertaining movies.
+** However the goal choices should be clear, so it's understood what needs to be accomplished in order to obsolete it.
+** Arbitrary goal choices need to offer new TAS material to be accepted. Choices which have no goal other than to create a new game branch are rejected."
 			}
 		};
 	}
