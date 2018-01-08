@@ -69,14 +69,6 @@ namespace TASVideos.Controllers
 					"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
 			}
 
-			foreach (var author in model.Authors)
-			{
-				if (!await _userTasks.CheckUserNameExists(author))
-				{
-					ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), $"Could not find user: {author}");
-				}
-			}
-
 			if (!model.MovieFile.FileName.EndsWith(".zip")
 			|| model.MovieFile.ContentType != "application/x-zip-compressed")
 			{
@@ -86,6 +78,14 @@ namespace TASVideos.Controllers
 			if (model.MovieFile.Length > 150 * 1024)
 			{
 				ModelState.AddModelError(nameof(SubmissionCreateViewModel.MovieFile), ".zip is too big, are you sure this is a valid movie file?");
+			}
+
+			foreach (var author in model.Authors)
+			{
+				if (!await _userTasks.CheckUserNameExists(author))
+				{
+					ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), $"Could not find user: {author}");
+				}
 			}
 
 			if (ModelState.IsValid)

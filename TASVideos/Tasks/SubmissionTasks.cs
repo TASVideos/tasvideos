@@ -54,46 +54,49 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<SubmissionViewModel> GetSubmission(int id, string userName)
 		{
-			var submissionModel = await _db.Submissions
-				.Where(s => s.Id == id)
-				.Select(s => new SubmissionViewModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
-				{
-					Id = s.Id,
-					SystemDisplayName = s.System.DisplayName,
-					SystemCode = s.System.Code,
-					GameName = s.GameName,
-					GameVersion = s.GameVersion,
-					RomName = s.RomName,
-					Branch = s.Branch,
-					Emulator = s.EmulatorVersion,
-					FrameCount = s.Frames,
-					FrameRate = s.SystemFrameRate.FrameRate,
-					RerecordCount = s.RerecordCount,
-					CreateTimestamp = s.CreateTimeStamp,
-					Submitter = s.Submitter.UserName,
-					LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
-					LastUpdateUser = s.WikiContent.LastUpdateUserName,
-					Status = s.Status,
-					EncodeEmbedLink = s.EncodeEmbedLink,
-					Judge = s.Judge != null ? s.Judge.UserName : "",
-					Title = s.Title,
-					TierName = s.IntendedTier != null ? s.IntendedTier.Name : ""
-				})
-				.SingleOrDefaultAsync();
-
-			if (submissionModel != null)
+			using (_db.Database.BeginTransactionAsync())
 			{
-				submissionModel.Authors = await _db.SubmissionAuthors
-					.Where(sa => sa.SubmissionId == submissionModel.Id)
-					.Select(sa => sa.Author.UserName)
-					.ToListAsync();
+				var submissionModel = await _db.Submissions
+					.Where(s => s.Id == id)
+					.Select(s => new SubmissionViewModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
+					{
+						Id = s.Id,
+						SystemDisplayName = s.System.DisplayName,
+						SystemCode = s.System.Code,
+						GameName = s.GameName,
+						GameVersion = s.GameVersion,
+						RomName = s.RomName,
+						Branch = s.Branch,
+						Emulator = s.EmulatorVersion,
+						FrameCount = s.Frames,
+						FrameRate = s.SystemFrameRate.FrameRate,
+						RerecordCount = s.RerecordCount,
+						CreateTimestamp = s.CreateTimeStamp,
+						Submitter = s.Submitter.UserName,
+						LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
+						LastUpdateUser = s.WikiContent.LastUpdateUserName,
+						Status = s.Status,
+						EncodeEmbedLink = s.EncodeEmbedLink,
+						Judge = s.Judge != null ? s.Judge.UserName : "",
+						Title = s.Title,
+						TierName = s.IntendedTier != null ? s.IntendedTier.Name : ""
+					})
+					.SingleOrDefaultAsync();
 
-				submissionModel.CanEdit = !string.IsNullOrWhiteSpace(userName)
-					&& (userName == submissionModel.Submitter
-						|| submissionModel.Authors.Contains(userName));
+				if (submissionModel != null)
+				{
+					submissionModel.Authors = await _db.SubmissionAuthors
+						.Where(sa => sa.SubmissionId == submissionModel.Id)
+						.Select(sa => sa.Author.UserName)
+						.ToListAsync();
+
+					submissionModel.CanEdit = !string.IsNullOrWhiteSpace(userName)
+						&& (userName == submissionModel.Submitter
+							|| submissionModel.Authors.Contains(userName));
+				}
+
+				return submissionModel;
 			}
-
-			return submissionModel;
 		}
 
 		public async Task<IEnumerable<SubmissionListViewModel>> GetSubmissionList(SubmissionSearchCriteriaModel criteria)
@@ -142,61 +145,64 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<SubmissionEditModel> GetSubmissionForEdit(int id)
 		{
-			var submissionModel = await _db.Submissions
-				.Where(s => s.Id == id)
-				.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
-				{
-					Id = s.Id,
-					SystemDisplayName = s.System.DisplayName,
-					SystemCode = s.System.Code,
-					SystemId = s.System.Id,
-					GameName = s.GameName,
-					GameVersion = s.GameVersion,
-					RomName = s.RomName,
-					Branch = s.Branch,
-					Emulator = s.EmulatorVersion,
-					FrameCount = s.Frames,
-					FrameRate = s.SystemFrameRate.FrameRate,
-					RerecordCount = s.RerecordCount,
-					CreateTimestamp = s.CreateTimeStamp,
-					Submitter = s.Submitter.UserName,
-					LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
-					LastUpdateUser = s.WikiContent.LastUpdateUserName,
-					Status = s.Status,
-					EncodeEmbedLink = s.EncodeEmbedLink,
-					Markup = s.WikiContent.Markup,
-					Judge = s.Judge != null ? s.Judge.UserName : "",
-					GameId = s.Game != null ? s.Game.Id : (int?)null,
-					TierId = s.IntendedTier != null ? s.IntendedTier.Id : (int?)null
-				})
-				.SingleOrDefaultAsync();
-
-			if (submissionModel != null)
+			using (_db.Database.BeginTransactionAsync())
 			{
-				submissionModel.Authors = await _db.SubmissionAuthors
-					.Where(sa => sa.SubmissionId == submissionModel.Id)
-					.Select(sa => sa.Author.UserName)
-					.ToListAsync();
-
-				submissionModel.AvailableGames = await _db.Games
-					.Where(g => g.SystemId == submissionModel.SystemId)
-					.Select(g => new SelectListItem
+				var submissionModel = await _db.Submissions
+					.Where(s => s.Id == id)
+					.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 					{
-						Value = g.Id.ToString(),
-						Text = g.DisplayName
+						Id = s.Id,
+						SystemDisplayName = s.System.DisplayName,
+						SystemCode = s.System.Code,
+						SystemId = s.System.Id,
+						GameName = s.GameName,
+						GameVersion = s.GameVersion,
+						RomName = s.RomName,
+						Branch = s.Branch,
+						Emulator = s.EmulatorVersion,
+						FrameCount = s.Frames,
+						FrameRate = s.SystemFrameRate.FrameRate,
+						RerecordCount = s.RerecordCount,
+						CreateTimestamp = s.CreateTimeStamp,
+						Submitter = s.Submitter.UserName,
+						LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
+						LastUpdateUser = s.WikiContent.LastUpdateUserName,
+						Status = s.Status,
+						EncodeEmbedLink = s.EncodeEmbedLink,
+						Markup = s.WikiContent.Markup,
+						Judge = s.Judge != null ? s.Judge.UserName : "",
+						GameId = s.Game != null ? s.Game.Id : (int?)null,
+						TierId = s.IntendedTier != null ? s.IntendedTier.Id : (int?)null
 					})
-					.ToListAsync();
+					.SingleOrDefaultAsync();
 
-				submissionModel.AvailableTiers = await _db.Tiers
-					.Select(t => new SelectListItem
-					{
-						Value = t.Id.ToString(),
-						Text = t.Name
-					})
-					.ToListAsync();
+				if (submissionModel != null)
+				{
+					submissionModel.Authors = await _db.SubmissionAuthors
+						.Where(sa => sa.SubmissionId == submissionModel.Id)
+						.Select(sa => sa.Author.UserName)
+						.ToListAsync();
+
+					submissionModel.AvailableGames = await _db.Games
+						.Where(g => g.SystemId == submissionModel.SystemId)
+						.Select(g => new SelectListItem
+						{
+							Value = g.Id.ToString(),
+							Text = g.DisplayName
+						})
+						.ToListAsync();
+
+					submissionModel.AvailableTiers = await _db.Tiers
+						.Select(t => new SelectListItem
+						{
+							Value = t.Id.ToString(),
+							Text = t.Name
+						})
+						.ToListAsync();
+				}
+
+				return submissionModel;
 			}
-
-			return submissionModel;
 		}
 
 		public async Task<SubmitResult> UpdateSubmission(SubmissionEditModel model, string userName)
@@ -330,9 +336,8 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<SubmitResult> SubmitMovie(SubmissionCreateViewModel model, string userName)
 		{
-			var submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
 			var submission = _mapper.Map<Submission>(model);
-			submission.Submitter = submitter;
+			submission.Submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
 
 			// Parse movie file
 			// TODO: check warnings
