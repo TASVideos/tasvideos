@@ -29,6 +29,7 @@ namespace TASVideos.Data.Entity
 		// TODO: additional non-registered authors field
 
 		[StringLength(20)]
+		[Required]
 		public string GameVersion { get; set; }
 
 		[StringLength(50)]

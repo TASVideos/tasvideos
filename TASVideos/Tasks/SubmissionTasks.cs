@@ -405,15 +405,46 @@ namespace TASVideos.Tasks
 
 		public async Task<SubmissionPublishModel> GetSubmissionForPublish(int id)
 		{
-			return await _db.Submissions
-				.Where(s => s.Id == id && s.Status == SubmissionStatus.Accepted)
-				.Select(s => new SubmissionPublishModel
+			// TODO: pre-validate, don't start the publication process without setting the obsoleting movie(s), intended tier, game, etc
+			using (_db.Database.BeginTransactionAsync())
+			{
+				var model = await _db.Submissions
+					.Where(s => s.Id == id && s.Status == SubmissionStatus.Accepted)
+					.Select(s => new SubmissionPublishModel
+					{
+						Id = s.Id,
+						Title = s.Title,
+						SubmissionMarkup = s.WikiContent.Markup,
+						SystemId = s.System.Id,
+						TierId = s.IntendedTier != null ? s.IntendedTier.Id : (int?)null,
+						Branch = s.Branch,
+						EmulatorVersion = s.EmulatorVersion,
+						GameVersion = s.GameVersion
+					})
+					.SingleOrDefaultAsync();
+
+				if (model != null)
 				{
-					Id = s.Id,
-					Title = s.Title,
-					Markup = s.WikiContent.Markup
-				})
-				.SingleAsync();
+					model.AvailableTiers = await _db.Tiers
+						.Select(t => new SelectListItem
+						{
+							Value = t.Id.ToString(),
+							Text = t.Name
+						})
+						.ToListAsync();
+
+					model.AvailableGames = await _db.Games
+						.Where(g => g.SystemId == model.SystemId)
+						.Select(g => new SelectListItem
+						{
+							Value = g.Id.ToString(),
+							Text = g.DisplayName
+						})
+						.ToListAsync();
+				}
+
+				return model;
+			}
 		}
 	}
 }
