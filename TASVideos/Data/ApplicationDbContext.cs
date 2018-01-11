@@ -29,6 +29,10 @@ namespace TASVideos.Data
 		public DbSet<SubmissionAuthor> SubmissionAuthors { get; set; }
 		public DbSet<SubmissionStatusHistory> SubmissionStatusHistory { get; set; }
 		public DbSet<Tier> Tiers { get; set; }
+
+		public DbSet<Publication> Publications { get; set; }
+		public DbSet<PublicationAuthor> PublicationAuthors { get; set; }
+
 		// Game tables
 		public DbSet<Game> Games { get; set; }
 		public DbSet<GameSystem> GameSystems { get; set; }
@@ -145,6 +149,12 @@ namespace TASVideos.Data
 			{
 				entity.HasKey(e => new { e.UserId, e.SubmissionId });
 				entity.HasIndex(e => e.SubmissionId);
+			});
+
+			builder.Entity<PublicationAuthor>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.PublicationId });
+				entity.HasIndex(e => e.PublicationId);
 			});
 		}
 	}
