@@ -234,10 +234,44 @@ namespace TASVideos.Models
 		public string Branch { get; set; }
 	}
 
+	/// <summary>
+	/// The data necessary to publish a submission
+	/// </summary>
 	public class SubmissionPublishModel
 	{
+		[Required]
+		[StringLength(20)]
+		[Display(Name = "Game version", Description = "(e.g. \"JPN\", \"USA\", \"Europe\", possibly with a \"v1.0\" or \"r0\" style suffix. Language-independent NTSC is \"JPN / USA\". \"any\" is also an option.)")]
+		public string GameVersion { get; set; }
+
+		[Required]
+		[Display(Name = "Game")]
+		public int? GameId { get; set; }
+
+		[StringLength(50)]
+		public string Branch { get; set; }
+
+		[StringLength(50)]
+		public string EmulatorVersion { get; set; }
+
+		public string Markup { get; set; }
+
+		[Display(Name = "Intended Tier")]
+		public int? TierId { get; set; }
+
+		public string MovieFileName { get; set; }
+
+		[Required]
+		[StringLength(100)]
+		public string OnlineWatchingUrl { get; set; }
+
+		// Not used for edit fields
 		public int Id { get; set; }
 		public string Title { get; set; }
-		public string Markup { get; set; }
+		public string SubmissionMarkup { get; set; }
+		public int SystemId { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
+		public IEnumerable<SelectListItem> AvailableGames { get; set; }
 	}
 }
