@@ -14,8 +14,6 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
 
-		public virtual Game.Game Game { get; set; }
-
 		public virtual Tier IntendedTier { get; set; }
 
 		public virtual User Judge { get; set; }
@@ -26,6 +24,8 @@ namespace TASVideos.Data.Entity
 
 		// TODO: we eventually should want to move these to the file server instead
 		public byte[] MovieFile { get; set; }
+
+		public virtual Game.Game Game { get; set; }
 
 		// Metadata parsed from movie file
 		public virtual GameSystem System { get; set; }
