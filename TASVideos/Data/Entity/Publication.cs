@@ -12,6 +12,7 @@ namespace TASVideos.Data.Entity
 		public virtual Game.Game Game { get; set; }
 		public virtual GameSystem System { get; set; }
 		public virtual GameSystemFrameRate SystemFrameRate { get; set; }
+		public virtual GameRom Rom { get; set; }
 
 		public virtual Tier Tier { get; set; }
 
@@ -20,8 +21,6 @@ namespace TASVideos.Data.Entity
 		public virtual Publication ObsoletedBy { get; set; }
 
 		public virtual WikiPage WikiContent { get; set; }
-
-		// TODO: rom table association
 
 		// TODO: we eventually should want to move these to the file server instead
 		public byte[] MovieFile { get; set; }
