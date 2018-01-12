@@ -1,20 +1,17 @@
-﻿using System.Text.RegularExpressions;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Filter;
-using TASVideos.MovieParsers;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos
 {
@@ -48,15 +45,10 @@ namespace TASVideos
 			// Add application services.
 			services.AddTransient<IEmailSender, EmailSender>();
 
-			// Tasks
-			services.AddScoped<PermissionTasks, PermissionTasks>();
-			services.AddScoped<UserTasks, UserTasks>();
-			services.AddScoped<RoleTasks, RoleTasks>();
-			services.AddScoped<WikiTasks, WikiTasks>();
-			services.AddScoped<SubmissionTasks, SubmissionTasks>();
-			services.AddScoped<PlatformTasks, PlatformTasks>();
-
-			services.AddSingleton<MovieParser, MovieParser>();
+			services
+				.AddTasks()
+				.AddWikiProvider()
+				.AddMovieParser();
 
 			services.AddMvc(options =>
 			{
@@ -64,9 +56,6 @@ namespace TASVideos
 			});
 
 			services.AddAutoMapper();
-
-			services.Configure<RazorViewEngineOptions>(
-				opts => opts.FileProviders.Add(new Razor.WikiMarkupFileProvider(services.BuildServiceProvider())));
 
 			// Sets up Dependency Injection for IPrinciple to be able to attain the user whereever we wish.
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
