@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace TASVideos.Data.Entity.Game
 {
@@ -9,6 +10,7 @@ namespace TASVideos.Data.Entity.Game
 	public class Game
 	{
 		public int Id { get; set; }
+		public virtual ICollection<GameRom> Roms { get; set; } = new HashSet<GameRom>();
 
 		[Description("Good Set or some other official naming convention")]
 		public string GoodName { get; set; }
