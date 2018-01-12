@@ -46,8 +46,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		[RequirePermission(PermissionTo.EditRoles)]
 		public async Task<IActionResult> AddEdit(RoleEditViewModel model)
 		{

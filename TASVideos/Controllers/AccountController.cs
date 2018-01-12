@@ -61,9 +61,8 @@ namespace TASVideos.Controllers
 			return View();
 		}
 
-		[HttpPost]
 		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
 		{
 			ViewData["ReturnUrl"] = returnUrl;
@@ -108,9 +107,8 @@ namespace TASVideos.Controllers
 			return View();
 		}
 
-		[HttpPost]
 		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
 		{
 			ViewData["ReturnUrl"] = returnUrl;
@@ -146,8 +144,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Logout()
 		{
 			await _signInManager.SignOutAsync();
@@ -181,9 +178,8 @@ namespace TASVideos.Controllers
 			return View();
 		}
 
-		[HttpPost]
 		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
 		{
 			if (ModelState.IsValid)
@@ -228,9 +224,8 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[HttpPost]
 		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
 		{
 			if (!ModelState.IsValid)
