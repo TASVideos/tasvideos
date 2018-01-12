@@ -167,8 +167,7 @@ namespace TASVideos.Controllers
 			return View(submission);
 		}
 
-		[HttpPost]
-		[AutoValidateAntiforgeryToken]
+		[HttpPost, AutoValidateAntiforgeryToken]
 		[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 		public async Task<IActionResult> Edit(SubmissionEditModel model)
 		{
@@ -257,8 +256,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[HttpPost]
-		[AutoValidateAntiforgeryToken]
+		[HttpPost, AutoValidateAntiforgeryToken]
 		[RequirePermission(PermissionTo.PublishMovies)]
 		public IActionResult Publish(SubmissionPublishModel model)
 		{

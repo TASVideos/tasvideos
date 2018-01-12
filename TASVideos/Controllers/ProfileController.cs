@@ -59,8 +59,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Index(ProfileIndexViewModel model)
 		{
 			if (!ModelState.IsValid)
@@ -90,8 +89,7 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> SendVerificationEmail(ProfileIndexViewModel model)
 		{
 			if (!ModelState.IsValid)
@@ -125,8 +123,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
 		{
 			if (!ModelState.IsValid)
@@ -170,8 +167,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
 		{
 			if (!ModelState.IsValid)

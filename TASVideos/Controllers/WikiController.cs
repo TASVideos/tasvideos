@@ -149,8 +149,7 @@ namespace TASVideos.Controllers
 		}
 
 		[RequireEdit]
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(WikiEditModel model)
 		{
 			if (ModelState.IsValid)
