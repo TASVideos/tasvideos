@@ -14,8 +14,7 @@ namespace TASVideos.Models
 		{
 			if (value is IEnumerable list)
 			{
-				// ReSharper disable once UnusedVariable
-				foreach (var item in list)
+				foreach (var unused in list)
 				{
 					return true;
 				}
