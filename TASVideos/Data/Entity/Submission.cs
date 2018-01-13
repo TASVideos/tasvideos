@@ -26,6 +26,7 @@ namespace TASVideos.Data.Entity
 		public byte[] MovieFile { get; set; }
 
 		public virtual Game.Game Game { get; set; }
+		public virtual GameRom Rom { get; set; }
 
 		// Metadata parsed from movie file
 		public virtual GameSystem System { get; set; }
