@@ -1,0 +1,23 @@
+﻿@model PageOf<GameListModel>
+@{
+	ViewData["Title"] = "Game List";
+}
+<a asp-action="GameEdit" class="btn btn-primary">Create</a>
+<br />
+<br />
+<table class="table table-bordered table-striped">
+	<sortable-table-head paging="@Model" model-type="typeof(GameListModel)"/>
+	@foreach (var game in Model)
+	{
+		<tr>
+			<td>@game.Id</td>
+			<td>@game.SystemCode</td>
+			<td>@game.DisplayName</td>
+			<td>
+				<a asp-controller="Game" asp-action="Index" asp-route-id="@game.Id" class="btn btn-default">View</a>
+				<a asp-action="GameEdit" asp-route-id="@game.Id" class="btn btn-primary">Edit</a>
+			</td>
+		</tr>
+	}
+</table>
+

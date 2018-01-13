@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
 
 namespace TASVideos
@@ -16,6 +17,10 @@ namespace TASVideos
 				.ForMember(dest => dest.IsLockedOut, opt => opt.MapFrom(src => src.LockoutEnabled && src.LockoutEnd.HasValue));
 
 			CreateMap<WikiPage, UserWikiEditHistoryModel>();
+
+			CreateMap<Game, GameEditModel>()
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code));
+			CreateMap<GameEditModel, Game>();
 		}
 	}
 }
