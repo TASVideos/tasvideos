@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -39,10 +37,15 @@ namespace TASVideos.Tasks
 
 		public async Task<GameEditModel> GetGameForEdit(int gameId)
 		{
-			return await _db.Games
+			var model = await _db.Games
 				.Where(g => g.Id == gameId)
 				.ProjectTo<GameEditModel>()
 				.SingleAsync();
+
+			model.CanDelete = !(await _db.Submissions.AnyAsync(s => s.Game.Id == model.Id))
+							&& !(await _db.Publications.AnyAsync(p => p.Game.Id == model.Id));
+
+			return model;
 		}
 
 		public async Task AddUpdateGame(GameEditModel model)
@@ -61,6 +64,22 @@ namespace TASVideos.Tasks
 
 			game.System = await _db.GameSystems.SingleAsync(s => s.Code == model.SystemCode);
 			await _db.SaveChangesAsync();
+		}
+
+		public async Task<bool> DeleteGame(int id)
+		{
+			bool canDelete = !(await _db.Submissions.AnyAsync(s => s.Game.Id == id))
+							&& !(await _db.Publications.AnyAsync(p => p.Game.Id == id));
+
+			if (!canDelete)
+			{
+				return false;
+			}
+
+			var game = await _db.Games.SingleAsync(r => r.Id == id);
+			_db.Games.Remove(game);
+			await _db.SaveChangesAsync();
+			return true;
 		}
 
 		public async Task<RomListModel> GetRomsForGame(int gameId)

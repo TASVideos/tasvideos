@@ -4,6 +4,7 @@
 		? $"Editing Game #{Model.Id} {Model.DisplayName}"
 		: "Create a new Game entry";
 }
+<delete-button condition="@Model.CanDelete" asp-href="@Url.Action("DeleteGame", new { id = Model.Id ?? 0 } )" class="pull-right">Delete</delete-button>
 <form asp-route="GameEdit">
 	<input type="hidden" asp-for="Id" />
 	<row>
