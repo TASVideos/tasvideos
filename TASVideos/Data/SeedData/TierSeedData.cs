@@ -1,5 +1,6 @@
 ﻿using TASVideos.Data.Entity;
 
+// ReSharper disable StyleCop.SA1401
 namespace TASVideos.Data.SeedData
 {
     public static class TierSeedData

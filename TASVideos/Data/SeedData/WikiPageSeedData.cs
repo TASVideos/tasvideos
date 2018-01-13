@@ -1,5 +1,6 @@
 ﻿using TASVideos.Data.Entity;
 
+// ReSharper disable StyleCop.SA1202
 namespace TASVideos.Data.SeedData
 {
 	public class WikiPageSeedData
