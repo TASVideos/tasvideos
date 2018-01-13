@@ -15,7 +15,7 @@ namespace TASVideos.Data.Entity.Game
 		public string Md5 { get; set; }
 
 		[StringLength(40)]
-		public string Sha1 { get; set; }
+		public string Sha1 { get; set; } // TODO: unique constraint
 
 		[StringLength(255)]
 		public string Name { get; set; }
@@ -24,7 +24,7 @@ namespace TASVideos.Data.Entity.Game
 
 		public string Region { get; set; }
 		public string Version { get; set; }
-    }
+	}
 
 	public enum RomTypes
 	{

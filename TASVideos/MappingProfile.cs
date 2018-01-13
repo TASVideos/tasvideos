@@ -21,6 +21,10 @@ namespace TASVideos
 			CreateMap<Game, GameEditModel>()
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code));
 			CreateMap<GameEditModel, Game>();
+
+			CreateMap<GameRom, RomEditModel>()
+				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game.DisplayName));
+			CreateMap<RomEditModel, GameRom>();
 		}
 	}
 }

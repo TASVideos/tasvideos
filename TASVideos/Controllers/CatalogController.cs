@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -27,10 +29,9 @@ namespace TASVideos.Controllers
 			_platformTasks = platformTasks;
 		}
 
-		public async Task<IActionResult> GameList(PagedModel getModel)
+		public IActionResult GameList(PagedModel getModel)
 		{
 			var model = _catalogTasks.GetPageOfGames(getModel);
-			//model.AvailableSystems = await _platformTasks.GetGameSystemDropdownList();
 			return View(model);
 		}
 
@@ -58,25 +59,43 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(GameList));
 		}
 
-		public IActionResult RomList(int gameId)
+		public async Task<IActionResult> RomList(int gameId)
 		{
-			return View();
+			var model = await _catalogTasks.GetRomsForGame(gameId);
+			return View(model);
 		}
 
-		public IActionResult RomView(int romId)
+		public async Task<IActionResult> RomEdit(int gameId, int? romId)
 		{
-			return View();
-		}
+			var model = await _catalogTasks.GetRomForEdit(gameId, romId);
+			model.AvailableRomTypes = Enum.GetValues(typeof(RomTypes))
+				.Cast<RomTypes>()
+				.Select(r => new SelectListItem
+				{
+					Text = r.ToString(),
+					Value = ((int)r).ToString()
+				});
 
-		public IActionResult RomEdit(int? romId)
-		{
-			return View();
+			return View(model);
 		}
 
 		[HttpPost, AutoValidateAntiforgeryToken]
-		public IActionResult RomEdit(object model)
+		public async Task<IActionResult> RomEdit(RomEditModel model)
 		{
-			return View();
+			if (!ModelState.IsValid)
+			{
+				model.AvailableRomTypes = Enum.GetValues(typeof(RomTypes))
+					.Cast<RomTypes>()
+					.Select(r => new SelectListItem
+					{
+						Text = r.ToString(),
+						Value = ((int)r).ToString()
+					});
+				return View(model);
+			}
+
+			await _catalogTasks.AddUpdateRom(model);
+			return RedirectToAction(nameof(RomList), new { gameId = model.GameId });
 		}
 	}
 }
