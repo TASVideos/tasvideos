@@ -40,7 +40,7 @@ namespace TASVideos.Data
 					Description = $"A role containing only the {permission.EnumDisplayName()} permission"
 				};
 
-				role.RolePermission.Add(new RolePermission { Role = role, PermissionId = permission });
+				role.RolePermission.Add(new RolePermission {Role = role, PermissionId = permission});
 
 				context.Roles.Add(role);
 			}
@@ -80,6 +80,13 @@ namespace TASVideos.Data
 			foreach (var tier in TierSeedData.Tiers)
 			{
 				context.Tiers.Add(tier);
+			}
+
+			context.SaveChanges();
+			foreach (var rom in GameSeedData.Roms)
+			{
+				rom.Game = context.Games.First(g => g.GoodName.StartsWith(rom.Name.Substring(0, 3))); // This is bad and not scalable
+				context.Roms.Add(rom);
 			}
 		}
 

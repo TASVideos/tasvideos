@@ -273,5 +273,6 @@ namespace TASVideos.Models
 
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
 		public IEnumerable<SelectListItem> AvailableGames { get; set; }
+		public IEnumerable<SelectListItem> AvailableRoms { get; set; }
 	}
 }
