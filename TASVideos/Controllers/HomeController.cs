@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Models;
@@ -29,15 +27,6 @@ namespace TASVideos.Controllers
 		public IActionResult WikiTest()
 		{
 			return View();
-		}
-
-		public IActionResult WikiTestAjax()
-		{
-			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-			var output = TASVideos.WikiEngine.Util.DebugParseWikiPage(input);
-			var w = new StringWriter();
-			TASVideos.WikiEngine.Util.DebugWriteHtml(input, w);
-			return Content(output + "\n" + w, "text/plain");
 		}
 	}
 }
