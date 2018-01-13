@@ -60,6 +60,21 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(GameList));
 		}
 
+		public async Task<IActionResult> DeleteGame(int id)
+		{
+			var result = await _catalogTasks.DeleteGame(id);
+			if (result)
+			{
+				return RedirectToAction(nameof(GameList));
+			}
+
+			return new ContentResult
+			{
+				Content = $"Unable to delete Game {id}, game is used by a publication or submission",
+				StatusCode = (int)HttpStatusCode.BadRequest
+			};
+		}
+
 		public async Task<IActionResult> RomList(int gameId)
 		{
 			var model = await _catalogTasks.GetRomsForGame(gameId);
