@@ -17,6 +17,15 @@ namespace TASVideos.Data.SeedData
 			},
 			new Game
 			{
+				GoodName = "Bad Dudes",
+				DisplayName = "Bad Dudes",
+				Abbreviation = "Bad Dudes",
+				SystemId = 1,
+				SearchKey = "nes-bad-dudes",
+				YoutubeTags = "Bad Dudes"
+			},
+			new Game
+			{
 				GoodName = "Sonic Advance 2",
 				DisplayName = "Sonic Advance 2",
 				Abbreviation = "SAdva2",
@@ -42,6 +51,40 @@ namespace TASVideos.Data.SeedData
 				SearchKey = "a7800-ninja-golf",
 				YoutubeTags = "Ninja Golf"
 			},
+		};
+
+		public static GameRom[] Roms =
+		{
+			new GameRom
+			{
+				Md5 = "12345", // TODO
+				Sha1 = "12345", // TODO
+				Name = "Super Mario Bros. (W) [!].nes",
+				Region = "Any",
+				Version = "",
+				Type = RomTypes.Good,
+				SystemId = 1
+			},
+			new GameRom
+			{
+				Md5 = "12345", // TODO
+				Sha1 = "12345", // TODO
+				Name = "Bad Dudes (U) [!].nes",
+				Region = "USA",
+				Version = "",
+				Type = RomTypes.Good,
+				SystemId = 1
+			},
+			new GameRom
+			{
+				Md5 = "12345", // TODO
+				Sha1 = "12345", // TODO
+				Name = "E.T. The Extra-terrestrial (U) [!].a26",
+				Region = "USA",
+				Version = "",
+				Type = RomTypes.Good,
+				SystemId = 34
+			}
 		};
 	}
 }

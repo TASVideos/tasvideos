@@ -37,6 +37,7 @@ namespace TASVideos.Data
 		public DbSet<Game> Games { get; set; }
 		public DbSet<GameSystem> GameSystems { get; set; }
 		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; }
+		public DbSet<GameRom> Roms { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
