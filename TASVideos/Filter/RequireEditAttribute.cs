@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -51,7 +49,7 @@ namespace TASVideos.Filter
 			}
 			else if (context.HttpContext.Request.IsAjaxRequest())
 			{
-				context.HttpContext.Response.StatusCode = 403;
+				context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 				context.Result = new EmptyResult();
 			}
 			else

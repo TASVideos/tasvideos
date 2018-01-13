@@ -34,7 +34,7 @@ namespace TASVideos.Extensions
 
 		public static async Task<IHtmlContent> RenderWiki(this IViewComponentHelper component, string pageName)
 		{
-			return await component.InvokeAsync(nameof(RenderWikiPage), new {url = pageName});
+			return await component.InvokeAsync(nameof(RenderWikiPage), new { url = pageName });
 		}
 	}
 }

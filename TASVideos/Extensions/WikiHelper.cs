@@ -7,6 +7,7 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Extensions
 {
+	// ReSharper disable PossibleMultipleEnumeration
 	public static class WikiHelper
 	{
 		public static bool UserCanEditWikiPage(string pageName, string userName, IEnumerable<PermissionTo> userPermissions)
@@ -79,9 +80,12 @@ namespace TASVideos.Extensions
 				return "";
 			}
 
-			pageName = Regex.Replace(pageName
-				.Replace(".html", "")
-				.Trim('/'), @"\s", "");
+			pageName = Regex.Replace(
+				pageName
+					.Replace(".html", "")
+					.Trim('/'),
+				@"\s",
+				"");
 
 			return ConvertProperCase(pageName);
 		}
@@ -90,7 +94,6 @@ namespace TASVideos.Extensions
 		// Slashes must have already been trimmed or it will break
 		private static bool IsProperCased(string pageName)
 		{
-			
 			if (!char.IsUpper(pageName[0]))
 			{
 				return false;
@@ -144,7 +147,7 @@ namespace TASVideos.Extensions
 		/// Returns true as long as the parameter is specified, it does not have to have a corresponding value
 		/// </summary>
 		/// <param name="parameterStr">The full parameter string</param>
-		/// <param name="paramName">the parameter for which to return a value from</param>
+		/// <param name="parameterName">the parameter for which to return a value from</param>
 		/// <returns>true if the parameter is specified, else false</returns>
 		public static bool HasParam(string parameterStr, string parameterName)
 		{
