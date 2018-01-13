@@ -144,6 +144,21 @@ namespace TASVideos.Data
 				entity.Property(e => e.Id)
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+
+				entity.HasIndex(e => e.Code)
+					.IsUnique()
+					.HasFilter($"([{nameof(GameSystem.Code)}] IS NOT NULL)");
+			});
+
+			builder.Entity<GameRom>(entity =>
+			{
+				entity.HasIndex(e => e.Md5)
+					.IsUnique()
+					.HasFilter($"([{nameof(GameRom.Sha1)}] IS NOT NULL)");
+
+				entity.HasIndex(e => e.Sha1)
+					.IsUnique()
+					.HasFilter($"([{nameof(GameRom.Sha1)}] IS NOT NULL)");
 			});
 
 			builder.Entity<SubmissionAuthor>(entity =>

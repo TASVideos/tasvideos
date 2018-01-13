@@ -16,7 +16,7 @@ namespace TASVideos.Data.Entity.Game
 
 		[Required]
 		[StringLength(8)]
-		public string Code { get; set; } // TODO: unique constraint
+		public string Code { get; set; }
 
 		[Required]
 		[StringLength(100)]

@@ -67,8 +67,8 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameRom
 			{
-				Md5 = "12345", // TODO
-				Sha1 = "12345", // TODO
+				Md5 = "123456", // TODO
+				Sha1 = "123456", // TODO
 				Name = "Bad Dudes (U) [!].nes",
 				Region = "USA",
 				Version = "",
@@ -77,8 +77,8 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameRom
 			{
-				Md5 = "12345", // TODO
-				Sha1 = "12345", // TODO
+				Md5 = "1234567", // TODO
+				Sha1 = "1234567", // TODO
 				Name = "E.T. The Extra-terrestrial (U) [!].a26",
 				Region = "USA",
 				Version = "",
