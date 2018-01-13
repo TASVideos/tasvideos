@@ -37,7 +37,7 @@ namespace TASVideos.Controllers
 			var output = TASVideos.WikiEngine.Util.DebugParseWikiPage(input);
 			var w = new StringWriter();
 			TASVideos.WikiEngine.Util.DebugWriteHtml(input, w);
-			return Content(output + "\n" + w.ToString(), "text/plain");
+			return Content(output + "\n" + w, "text/plain");
 		}
 	}
 }

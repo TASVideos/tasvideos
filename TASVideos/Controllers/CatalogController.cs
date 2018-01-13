@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data;
@@ -24,7 +24,7 @@ namespace TASVideos.Controllers
 			CatalogTasks catalogTasks,
 			PlatformTasks platformTasks,
 			UserTasks userTasks)
-			:base(userTasks)
+			: base(userTasks)
 		{
 			_catalogTasks = catalogTasks;
 			_platformTasks = platformTasks;
@@ -119,7 +119,7 @@ namespace TASVideos.Controllers
 			var result = await _catalogTasks.DeleteRom(romId);
 			if (result)
 			{
-				return RedirectToAction(nameof(RomList), new {gameId});
+				return RedirectToAction(nameof(RomList), new { gameId });
 			}
 
 			return new ContentResult
