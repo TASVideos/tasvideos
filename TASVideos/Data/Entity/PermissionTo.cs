@@ -108,6 +108,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Set Tier")]
 		[Group("MovieAdministration")]
 		[Description("The ability to set a published movie's movie tier")]
-		SetTier = 20
+		SetTier = 20,
+
+		[Display(Name = "Catalog Movies")]
+		[Group("MovieAdministration")]
+		[Description("The ability to the game, system, and rom information for movies")]
+		CatalogMovies = 21
 	}
 }

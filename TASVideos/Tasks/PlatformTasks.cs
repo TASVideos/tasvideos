@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.ViewComponents;
@@ -33,5 +34,16 @@ namespace TASVideos.Tasks
 				.ThenBy(p => p.RegionCode)
 				.ToListAsync();
 		}
-    }
+
+		public async Task<IEnumerable<SelectListItem>> GetGameSystemDropdownList()
+		{
+			return await _db.GameSystems
+				.Select(s => new SelectListItem
+				{
+					Text = s.Code,
+					Value = s.Code
+				})
+				.ToListAsync();
+		}
+	}
 }

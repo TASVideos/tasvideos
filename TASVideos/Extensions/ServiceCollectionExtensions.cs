@@ -15,6 +15,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<WikiTasks, WikiTasks>();
 			services.AddScoped<SubmissionTasks, SubmissionTasks>();
 			services.AddScoped<PlatformTasks, PlatformTasks>();
+			services.AddScoped<CatalogTasks, CatalogTasks>();
 
 			return services;
 		}
