@@ -21,7 +21,6 @@ namespace TASVideos
 				try
 				{
 					var context = services.GetRequiredService<ApplicationDbContext>();
-					
 
 					var env = services.GetRequiredService<IHostingEnvironment>();
 					var userManager = services.GetRequiredService<UserManager<User>>();

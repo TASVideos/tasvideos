@@ -21,7 +21,7 @@ namespace TASVideos.ViewComponents
 					var result = int.TryParse(val[0], out int tabIndex);
 					if (result)
 					{
-						switch(tabIndex)
+						switch (tabIndex)
 						{
 							case 0:
 								pp = "Home";
