@@ -35,7 +35,7 @@ namespace TASVideos.MovieParsers
 			{
 				using (var reader = new StreamReader(stream))
 				{
-					string[] headerLines = reader.ReadToEnd().Split(new [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+					string[] headerLines = reader.ReadToEnd().Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
 					int? rerecordVal = GetInt(GetValue(headerLines, "rerecordcount"));
 					if (rerecordVal.HasValue)
@@ -116,7 +116,7 @@ namespace TASVideos.MovieParsers
 				return "";
 			}
 
-			var row = lines.FirstOrDefault(l => l.ToLower().StartsWith(header?.ToLower()))?.ToLower();
+			var row = lines.FirstOrDefault(l => l.ToLower().StartsWith(header.ToLower()))?.ToLower();
 			if (!string.IsNullOrWhiteSpace(row))
 			{
 				var valstr = row.Replace(header.ToLower(), "").Trim().Replace("\r", "").Replace("\n", "");
