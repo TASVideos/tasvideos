@@ -1,11 +1,11 @@
 ﻿@using TASVideos.Tasks
-@inject WikiTasks wikiTasks
+@inject WikiTasks WikiTasks
 
 @{
 	ViewData["Title"] = "Home Page";
 	ViewData.AddActivePage(ProfileNavPages.HomePage);
 	var homePage = WikiHelper.TryConvertToValidPageName($"HomePages/{User.Identity.Name}");
-	bool pageExists = await wikiTasks.PageExists(homePage);
+	bool pageExists = await WikiTasks.PageExists(homePage);
 }
 <br />
 @if (ViewData.UserHasPermission(PermissionTo.EditHomePage))

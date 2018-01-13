@@ -16,7 +16,7 @@
 		<tr>
 			<th style="background-color: #D0D0D0" colspan="6">@group.Key.ToShortDateString()</th>
 		</tr>
-		@foreach (var item in group)
+		foreach (var item in group)
 		{
 			<tr>
 				<td><a href="/@item.PageName">@item.PageName</a> <small>(r@(item.Revision))</small></td>
