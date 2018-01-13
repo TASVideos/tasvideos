@@ -25,6 +25,17 @@ namespace TASVideos.Controllers
 			_roleTasks = roleTasks;
 		}
 
+		// A select list of all available <seealso cref="PermissionTo"/> in the system
+		private static IEnumerable<SelectListItem> PermissionsSelectList =>
+			Enum.GetValues(typeof(PermissionTo))
+				.Cast<PermissionTo>()
+				.Select(p => new SelectListItem
+				{
+					Value = ((int)p).ToString(),
+					Text = p.EnumDisplayName()
+				})
+				.ToList();
+
 		[AllowAnonymous]
 		public async Task<IActionResult> Index()
 		{
@@ -80,18 +91,5 @@ namespace TASVideos.Controllers
 			var result = await _roleTasks.RolesThatCanBeAssignedBy(ids.Select(p => (PermissionTo)p));
 			return Json(result);
 		}
-
-		/// <summary>
-		/// A select list of all available <seealso cref="PermissionTo"/> in the system
-		/// </summary>
-		private static IEnumerable<SelectListItem> PermissionsSelectList =>
-			Enum.GetValues(typeof(PermissionTo))
-				.Cast<PermissionTo>()
-				.Select(p => new SelectListItem
-				{
-					Value = ((int)p).ToString(),
-					Text = p.EnumDisplayName()
-				})
-				.ToList();
 	}
 }

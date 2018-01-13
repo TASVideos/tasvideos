@@ -46,7 +46,9 @@ namespace TASVideos.Controllers
 				ViewData["Layout"] = "/Views/Shared/_WikiLayout.cshtml";
 				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
-			else if (revision.HasValue && await _wikiTasks.PageExists(url)) // Account for garbage revision values
+
+			// Account for garbage revision values
+			if (revision.HasValue && await _wikiTasks.PageExists(url)) 
 			{
 				return Redirect("/" + url);
 			}
