@@ -7,7 +7,7 @@ namespace TASVideos.Data.Entity.Game
 	/// Represents a Game
 	/// This is the central reference point for all site content
 	/// </summary>
-	public class Game
+	public class Game : BaseEntity
 	{
 		public int Id { get; set; }
 		public virtual ICollection<GameRom> Roms { get; set; } = new HashSet<GameRom>();

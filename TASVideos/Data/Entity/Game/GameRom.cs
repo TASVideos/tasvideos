@@ -2,7 +2,7 @@
 
 namespace TASVideos.Data.Entity.Game
 {
-    public class GameRom
+    public class GameRom : BaseEntity
     {
 		public int Id { get; set; }
 
