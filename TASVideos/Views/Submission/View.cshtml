@@ -29,7 +29,7 @@
 	<div class="col-md-6" condition="hasEncode">
 		<iframe type="text/html" style="width:450px;height:370px;margin:0;" src="//@Model.EncodeEmbedLink" allowfullscreen="true"></iframe>
 	</div>
-	<div class="col-md-@(hasEncode ? 6 : 12)">
+	<div class="@(hasEncode ? "col-md-6" : "col-md-12")">
 		<div class="text-right @(StatusColor(Model.Status))">
 			<h4>
 				<label asp-for="Status"></label>: <label class="form-control-static">@Model.Status.EnumDisplayName()</label>
