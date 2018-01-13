@@ -73,11 +73,9 @@
 		var base = difflib.stringAsLines(document.getElementById("left-revision").value),
 			newtxt = difflib.stringAsLines(document.getElementById("right-revision").value),
 			opcodes = new difflib.SequenceMatcher(base, newtxt).get_opcodes(),
-			diffoutputdiv = diffView,
-			contextSize = null;
+			diffoutputdiv = diffView;
 
 		diffoutputdiv.innerHTML = "";
-		contextSize = contextSize || null;
 
 		diffoutputdiv.appendChild(diffview.buildView({
 			baseTextLines: base,
@@ -85,7 +83,7 @@
 			opcodes: opcodes,
 			baseTextName: "r" + fromRevision,
 			newTextName: "r" + toRevision,
-			contextSize: contextSize,
+			contextSize: null,
 			viewType: viewType
 		}));
 	}
