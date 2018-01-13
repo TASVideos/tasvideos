@@ -2,6 +2,11 @@
 
 namespace TASVideos.MovieParsers
 {
+	public enum RegionType
+	{
+		Unknown, Ntsc, Pal
+	}
+
 	// TODO: document
 	public interface IParseResult
 	{
@@ -17,13 +22,8 @@ namespace TASVideos.MovieParsers
 		int RerecordCount { get; }
 	}
 
-	public enum RegionType { Unknown, Ntsc, Pal }
-
 	public class ParseResult : IParseResult
 	{
-		internal List<string> WarningList { get; set; } = new List<string>();
-		internal List<string> ErrorList { get; set; } = new List<string>();
-
 		public bool Success { get; internal set; } = true;
 		public IEnumerable<string> Errors => ErrorList;
 		public IEnumerable<string> Warnings => WarningList;
@@ -32,6 +32,9 @@ namespace TASVideos.MovieParsers
 		public int Frames { get; internal set; }
 		public string SystemCode { get; internal set; }
 		public int RerecordCount { get; internal set; }
+
+		internal List<string> WarningList { get; set; } = new List<string>();
+		internal List<string> ErrorList { get; set; } = new List<string>();
 	}
 
 	public class ErrorResult : IParseResult
