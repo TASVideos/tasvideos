@@ -281,7 +281,6 @@ namespace TASVideos.Tasks
 							.Count(s => s.SubmissionAuthors
 								.Select(sa => sa.Author.UserName)
 								.Contains(userName))
-						// TODO: awards
 					};
 				}
 

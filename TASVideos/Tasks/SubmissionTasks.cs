@@ -396,7 +396,6 @@ namespace TASVideos.Tasks
 
 			_db.SubmissionAuthors.AddRange(submissionAuthors);
 
-
 			submission.GenerateTitle();
 			await _db.SaveChangesAsync();
 

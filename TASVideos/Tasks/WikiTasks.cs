@@ -437,7 +437,6 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a list of all deleted pages for the purpose of display
 		/// </summary>
-		/// <returns></returns>
 		public async Task<IEnumerable<DeletedWikiPageDisplayModel>> GetDeletedPages()
 		{
 			var results = await _db.WikiPages
@@ -472,6 +471,7 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 		
+		// ReSharper disable once StyleCop.SA1201
 		public string PreviewStorage
 		{
 			get

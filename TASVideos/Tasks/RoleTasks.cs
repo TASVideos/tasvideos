@@ -105,7 +105,6 @@ namespace TASVideos.Tasks
 					CanAssign = model.SelectedAssignablePermissions.Contains(p)
 				}));
 
-
 			_db.RoleLinks.AddRange(model.Links.Select(rl => new RoleLink
 			{
 				Link = rl,
