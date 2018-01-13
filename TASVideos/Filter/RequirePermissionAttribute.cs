@@ -18,27 +18,24 @@ namespace TASVideos.Filter
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
 	public class RequirePermissionAttribute : ActionFilterAttribute
 	{
-		private readonly PermissionTo[] _requiredPermissions;
-		private readonly bool _matchAny;
-
-		public PermissionTo[] RequiredPermissions => _requiredPermissions;
-		public bool MatchAny => _matchAny;
-
 		public RequirePermissionAttribute(PermissionTo requiredPermission)
 		{
-			_requiredPermissions = new[] { requiredPermission };
+			RequiredPermissions = new[] { requiredPermission };
 		}
 
 		public RequirePermissionAttribute(params PermissionTo[] requiredPermissions)
 		{
-			_requiredPermissions = requiredPermissions;
+			RequiredPermissions = requiredPermissions;
 		}
 
 		public RequirePermissionAttribute(bool matchAny, params PermissionTo[] requiredPermissions)
 		{
-			_requiredPermissions = requiredPermissions;
-			_matchAny = matchAny;
+			MatchAny = matchAny;
+			RequiredPermissions = requiredPermissions;
 		}
+
+		public bool MatchAny { get; }
+		public PermissionTo[] RequiredPermissions { get; }
 
 		public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
@@ -55,9 +52,9 @@ namespace TASVideos.Filter
 			var userTasks = (UserTasks)context.HttpContext.RequestServices.GetService(typeof(UserTasks));
 
 			var userPerms = await userTasks.GetUserPermissionsByIdAsync(userId);
-			var reqs = new HashSet<PermissionTo>(_requiredPermissions);
+			var reqs = new HashSet<PermissionTo>(RequiredPermissions);
 
-			if ((_matchAny && reqs.Any(r => userPerms.Contains(r)))
+			if ((MatchAny && reqs.Any(r => userPerms.Contains(r)))
 				|| reqs.IsSubsetOf(userPerms))
 			{
 				await base.OnActionExecutionAsync(context, next);
