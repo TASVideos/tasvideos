@@ -28,11 +28,13 @@
 
 								var data = JSON.parse(xmlhttp.responseText);
 
-								for (i in data) {
-									var option = document.createElement('option');
-									option.innerHTML = data[i];
+								for (var i in data) {
+									if (data.hasOwnProperty(i)) {
+										var option = document.createElement('option');
+										option.innerHTML = data[i];
 
-									newSearchList.appendChild(option);
+										newSearchList.appendChild(option);
+									}
 								}
 
 								document.getElementById("search-form").appendChild(newSearchList);

@@ -17,7 +17,7 @@
 </row>
 
 <script type="text/javascript">
-	document.addEventListener("DOMContentLoaded", function (event) {
+	document.addEventListener("DOMContentLoaded", function () {
 		generateDiff(1);
 	});
 
@@ -27,7 +27,7 @@
 			elem.addEventListener('click', onRadioChange);
 		});
 
-	function onRadioChange(e) {
+	function onRadioChange() {
 		var type = document.querySelector('[name="diff-type"]:checked').value;
 		generateDiff(parseInt(type));
 	}
