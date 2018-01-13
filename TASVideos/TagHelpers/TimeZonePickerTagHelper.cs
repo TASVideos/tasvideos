@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -21,7 +20,7 @@ namespace TASVideos.TagHelpers
 			}
 
 			var modelName = For.ModelExplorer.Metadata.PropertyName;
-			var modelValue = (string) For.ModelExplorer.Model;
+			var modelValue = (string)For.ModelExplorer.Model;
 			if (string.IsNullOrWhiteSpace(modelValue))
 			{
 				modelValue = TimeZoneInfo.Utc.Id;

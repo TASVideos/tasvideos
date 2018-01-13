@@ -2,17 +2,17 @@ using System;
 using System.IO;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
-using TASVideos.WikiEngine;
 using TASVideos.Tasks;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.Razor
 {
 	public class WikiMarkupFileProvider : IFileProvider
 	{
-		private readonly IServiceProvider _provider;
-
 		public const string Prefix = "/Views/~~~";
 		public const string PreviewName = "/Views/~~~Preview";
+
+		private readonly IServiceProvider _provider;
 
 		public WikiMarkupFileProvider(IServiceProvider provider)
 		{

@@ -29,8 +29,6 @@ namespace TASVideos.Models
 		[StringLength(50)]
 		public string Branch { get; set; }
 
-		// TODO: game id
-
 		[Required]
 		[Display(Name = "ROM filename", Description = "Example: Mega Man II (U) [!].nes")]
 		[StringLength(100)]
@@ -73,13 +71,13 @@ namespace TASVideos.Models
 		}
 
 		public SubmitResult(string error, int id = 0)
-			: this (new[] { error }, id)
+			: this(new[] { error }, id)
 		{
 		}
 
 		public SubmitResult(IEnumerable<string> errors, int id = 0)
 		{
-			if ((errors?.Any() ?? false) && id <- 0)
+			if ((errors?.Any() ?? false) && id <= 0)
 			{
 				throw new ArgumentException("Errors must not be null or id must be greater than 0");
 			}
@@ -161,8 +159,6 @@ namespace TASVideos.Models
 	// TODO: document
 	public class SubmissionEditModel : SubmissionViewModel
 	{
-		// TODO: properties and stuff, and probably don't inherit
-
 		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = new List<SelectListItem>();
 
 		public string Markup { get; set; }
@@ -179,15 +175,16 @@ namespace TASVideos.Models
 		[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile MovieFile { get; set; }
 
-		internal int SystemId { get; set; }
-
 		[Display(Name = "Game")]
 		public int? GameId { get; set; }
+
 		public IEnumerable<SelectListItem> AvailableGames { get; set; }
 
 		[Display(Name = "Intended Tier")]
 		public int? TierId { get; set; }
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
+
+		internal int SystemId { get; set; }
 	}
 
 	// TODO: document - for reverifying a status can be set

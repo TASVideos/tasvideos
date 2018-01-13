@@ -123,6 +123,7 @@ namespace TASVideos.TagHelpers
 	</div>
 </div>
 ");
+
 			// Right Column Div
 			output.Content.AppendHtml("<div class='col-xs-5'>");
 

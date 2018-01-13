@@ -12,9 +12,8 @@ namespace TASVideos.Models
 
 		public override bool IsValid(object value)
 		{
-			if (value is string)
+			if (value is string str)
 			{
-				var str = (string)value;
 				return WikiHelper.IsValidWikiPageName(str);
 			}
 
