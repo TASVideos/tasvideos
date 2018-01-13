@@ -25,8 +25,6 @@ namespace TASVideos.Data.Entity
 		// TODO: we eventually should want to move these to the file server instead
 		public byte[] MovieFile { get; set; }
 
-		// TODO: additional non-registered authors field
-
 		[StringLength(20)]
 		[Required]
 		public string GameVersion { get; set; }

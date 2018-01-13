@@ -1,3 +1,4 @@
+// ReSharper disable All 
 /***
 This is part of jsdifflib v1.0. <http://snowtide.com/jsdifflib>
 
