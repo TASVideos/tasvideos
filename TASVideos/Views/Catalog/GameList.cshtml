@@ -16,6 +16,7 @@
 			<td>
 				<a asp-controller="Game" asp-action="Index" asp-route-id="@game.Id" class="btn btn-default">View</a>
 				<a asp-action="GameEdit" asp-route-id="@game.Id" class="btn btn-primary">Edit</a>
+				<a asp-action="RomList" asp-route-gameId="@game.Id" class="btn btn-default">Roms</a>
 			</td>
 		</tr>
 	}

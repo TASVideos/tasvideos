@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Models
 {
@@ -58,5 +59,78 @@ namespace TASVideos.Models
 		public string ScreenshotUrl { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+	}
+
+	public class RomListModel
+	{
+		public int GameId { get; set; }
+
+		[Display(Name = "Game")]
+		public string GameDisplayName { get; set; }
+
+		[Display(Name = "System")]
+		public string SystemCode { get; set; }
+
+		public IEnumerable<RomEntry> Roms { get; set; } = new List<RomEntry>();
+
+		public class RomEntry
+		{
+			[Display(Name = "Id")]
+			public int Id { get; set; }
+
+			[Display(Name = "Name")]
+			public string DisplayName { get; set; }
+
+			[Display(Name = "Md5")]
+			public string Md5 { get; set; }
+
+			[Display(Name = "Sha1")]
+			public string Sha1 { get; set; }
+
+			[Display(Name = "Version")]
+			public string Version { get; set; }
+
+			[Display(Name = "Region")]
+			public string Region { get; set; }
+
+			[Display(Name = "Type")]
+			public RomTypes RomType { get; set; }
+		}
+	}
+
+	public class RomEditModel
+	{
+		public int? Id { get; set; }
+		public string SystemCode { get; set; }
+		public int GameId { get; set; }
+		public string GameName { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableRomTypes { get; set; } = new List<SelectListItem>();
+
+		[Required]
+		[StringLength(255)]
+		[Display(Name = "Name")]
+		public string Name { get; set; }
+
+		[Required]
+		[StringLength(32)]
+		[Display(Name = "Md5")]
+		public string Md5 { get; set; }
+
+		[Required]
+		[StringLength(40)]
+		[Display(Name = "Sha1")]
+		public string Sha1 { get; set; }
+
+		[Display(Name = "Version")]
+		public string Version { get; set; }
+
+		[Required]
+		[Display(Name = "Region")]
+		public string Region { get; set; }
+
+		[Required]
+		[Display(Name = "Type")]
+		public RomTypes RomType { get; set; }
 	}
 }
