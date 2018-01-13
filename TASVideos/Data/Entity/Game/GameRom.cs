@@ -2,8 +2,16 @@
 
 namespace TASVideos.Data.Entity.Game
 {
-    public class GameRom : BaseEntity
-    {
+	public enum RomTypes
+	{
+		Unknown,
+		Good,
+		Hack,
+		Bad
+	}
+
+	public class GameRom : BaseEntity
+	{
 		public int Id { get; set; }
 
 		public virtual Game Game { get; set; }
@@ -24,13 +32,5 @@ namespace TASVideos.Data.Entity.Game
 
 		public string Region { get; set; }
 		public string Version { get; set; }
-	}
-
-	public enum RomTypes
-	{
-		Unknown,
-		Good,
-		Hack,
-		Bad
 	}
 }

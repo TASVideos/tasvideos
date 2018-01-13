@@ -2,10 +2,10 @@
 
 namespace TASVideos.Data.Entity
 {
-    public interface ISoftDeletable
-    {
+	public interface ISoftDeletable
+	{
 		bool IsDeleted { get; }
-    }
+	}
 
 	public static class SoftDeleteQueryableExtensions
 	{
