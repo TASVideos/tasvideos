@@ -20,7 +20,8 @@ namespace TASVideos.Extensions
 			bool isAuthorOrSubmitter,
 			bool isJudge)
 		{
-			if (currentStatus == SubmissionStatus.Published) // Published submissions can not be changed
+			// Published submissions can not be changed
+			if (currentStatus == SubmissionStatus.Published)
 			{
 				return new List<SubmissionStatus>(); 
 			}
@@ -31,7 +32,7 @@ namespace TASVideos.Extensions
 			{
 				return Enum.GetValues(typeof(SubmissionStatus))
 					.Cast<SubmissionStatus>()
-					.Except(new[] {SubmissionStatus.Published}); // Published status must only be set when being published
+					.Except(new[] { SubmissionStatus.Published }); // Published status must only be set when being published
 			}
 
 			var list = new List<SubmissionStatus>();
@@ -80,9 +81,9 @@ namespace TASVideos.Extensions
 
 			if ((perms.Contains(PermissionTo.JudgeSubmissions) || isAuthorOrSubmitter) // An author or a judge can cancel a submission if it is not had a verdict
 				&& (currentStatus == SubmissionStatus.New
-					|| currentStatus == SubmissionStatus.JudgingUnderWay)
+					|| currentStatus == SubmissionStatus.JudgingUnderWay
 					|| currentStatus == SubmissionStatus.Delayed
-					|| currentStatus == SubmissionStatus.NeedsMoreInfo)
+					|| currentStatus == SubmissionStatus.NeedsMoreInfo))
 			{
 				list.Add(SubmissionStatus.Cancelled);
 			}

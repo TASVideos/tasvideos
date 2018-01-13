@@ -15,7 +15,7 @@ namespace TASVideos.Data
 	{
 		private readonly IHttpContextAccessor _httpContext;
 
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
+		public ApplicationDbContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor)
 			: base(options)
 		{
 			_httpContext = httpContextAccessor;
@@ -54,33 +54,6 @@ namespace TASVideos.Data
 		{
 			PerformTrackingUpdates();
 			return base.SaveChangesAsync(cancellationToken);
-		}
-
-		private void PerformTrackingUpdates()
-		{
-			ChangeTracker.DetectChanges();
-
-			foreach (var entry in ChangeTracker.Entries()
-				.Where(e => e.State == EntityState.Added))
-			{
-				if (entry.Entity is ITrackable trackable)
-				{
-					trackable.CreateTimeStamp = DateTime.UtcNow;
-					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
-					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
-					trackable.CreateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
-				}
-			}
-
-			foreach (var entry in ChangeTracker.Entries()
-				.Where(e => e.State == EntityState.Modified))
-			{
-				if (entry.Entity is ITrackable trackable)
-				{
-					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
-					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
-				}
-			}
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
@@ -172,6 +145,33 @@ namespace TASVideos.Data
 				entity.HasKey(e => new { e.UserId, e.PublicationId });
 				entity.HasIndex(e => e.PublicationId);
 			});
+		}
+
+		private void PerformTrackingUpdates()
+		{
+			ChangeTracker.DetectChanges();
+
+			foreach (var entry in ChangeTracker.Entries()
+				.Where(e => e.State == EntityState.Added))
+			{
+				if (entry.Entity is ITrackable trackable)
+				{
+					trackable.CreateTimeStamp = DateTime.UtcNow;
+					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+					trackable.CreateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+				}
+			}
+
+			foreach (var entry in ChangeTracker.Entries()
+				.Where(e => e.State == EntityState.Modified))
+			{
+				if (entry.Entity is ITrackable trackable)
+				{
+					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+				}
+			}
 		}
 	}
 }

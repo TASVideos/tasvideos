@@ -32,7 +32,7 @@ namespace TASVideos.Data
 			// These are useful for giving people 1-off permissions
 			foreach (var permission in Enum.GetValues(typeof(PermissionTo))
 				.Cast<PermissionTo>()
-				.Where(p => p != PermissionTo.EditHomePage && p != PermissionTo.SubmitMovies)) // These roles already exist
+				.Where(p => p != PermissionTo.EditHomePage && p != PermissionTo.SubmitMovies))
 			{
 				var role = new Role
 				{
@@ -40,7 +40,7 @@ namespace TASVideos.Data
 					Description = $"A role containing only the {permission.EnumDisplayName()} permission"
 				};
 
-				role.RolePermission.Add(new RolePermission {Role = role, PermissionId = permission});
+				role.RolePermission.Add(new RolePermission { Role = role, PermissionId = permission });
 
 				context.Roles.Add(role);
 			}
@@ -107,8 +107,6 @@ namespace TASVideos.Data
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
 		{
-			var roles = context.Roles.Where(r => r.Name != RoleSeedData.AdminRole.Name).ToList();
-
 			foreach (var admin in UserSampleData.AdminUsers)
 			{
 				var result = await userManager.CreateAsync(admin, UserSampleData.SamplePassword);
