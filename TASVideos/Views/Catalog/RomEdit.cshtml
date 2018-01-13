@@ -7,6 +7,7 @@
 <h4>System: @Model.SystemCode</h4>
 <br />
 <h4>Game: @Model.GameName</h4>
+<delete-button condition="@Model.CanDelete" asp-href="@Url.Action("DeleteRom", new { gameId = Model.GameId, romId = Model.Id ?? 0 } )" class="pull-right">Delete</delete-button>
 <form asp-route="GameEdit">
 	<input type="hidden" asp-for="Id" />
 	<input type="hidden" asp-for="GameId" />

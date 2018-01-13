@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -96,6 +97,21 @@ namespace TASVideos.Controllers
 
 			await _catalogTasks.AddUpdateRom(model);
 			return RedirectToAction(nameof(RomList), new { gameId = model.GameId });
+		}
+
+		public async Task<IActionResult> DeleteRom(int gameId, int romId)
+		{
+			var result = await _catalogTasks.DeleteRom(romId);
+			if (result)
+			{
+				return RedirectToAction(nameof(RomList), new {gameId});
+			}
+
+			return new ContentResult
+			{
+				Content = $"Unable to delete Rom {romId}, rom is used by a publication or submission",
+				StatusCode = (int)HttpStatusCode.BadRequest
+			};
 		}
 	}
 }

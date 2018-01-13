@@ -104,6 +104,7 @@ namespace TASVideos.Models
 		public string SystemCode { get; set; }
 		public int GameId { get; set; }
 		public string GameName { get; set; }
+		public bool CanDelete { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableRomTypes { get; set; } = new List<SelectListItem>();
 
