@@ -110,6 +110,11 @@ namespace TASVideos.Tasks
 				model.GameName = game.DisplayName;
 				model.GameId = game.Id;
 				model.SystemCode = game.System.Code;
+				if (romId.HasValue)
+				{
+					model.CanDelete = !(await _db.Submissions.AnyAsync(s => s.Rom.Id == model.Id))
+						&& !(await _db.Publications.AnyAsync(p => p.Rom.Id == model.Id));
+				}
 
 				return model;
 			}
@@ -132,6 +137,22 @@ namespace TASVideos.Tasks
 			}
 
 			await _db.SaveChangesAsync();
+		}
+
+		public async Task<bool> DeleteRom(int id)
+		{
+			bool canDelete = !(await _db.Submissions.AnyAsync(s => s.Rom.Id == id))
+				&& !(await _db.Publications.AnyAsync(p => p.Rom.Id == id));
+
+			if (!canDelete)
+			{
+				return false;
+			}
+
+			var rom = await _db.Roms.SingleAsync(r => r.Id == id);
+			_db.Roms.Remove(rom);
+			await _db.SaveChangesAsync();
+			return true;
 		}
 	}
 }
