@@ -15,7 +15,7 @@ namespace TASVideos.Data.Entity.Game
 		public string Md5 { get; set; }
 
 		[StringLength(40)]
-		public string Sha1 { get; set; } // TODO: unique constraint
+		public string Sha1 { get; set; }
 
 		[StringLength(255)]
 		public string Name { get; set; }
