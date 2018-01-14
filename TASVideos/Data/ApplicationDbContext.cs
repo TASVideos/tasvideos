@@ -145,6 +145,13 @@ namespace TASVideos.Data
 				entity.HasKey(e => new { e.UserId, e.PublicationId });
 				entity.HasIndex(e => e.PublicationId);
 			});
+
+			builder.Entity<Publication>(entity =>
+			{
+				entity.HasOne(p => p.System)
+					.WithMany(s => s.Publications)
+					.OnDelete(DeleteBehavior.Restrict);
+			});
 		}
 
 		private void PerformTrackingUpdates()

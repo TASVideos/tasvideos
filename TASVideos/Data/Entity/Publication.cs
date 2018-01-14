@@ -13,7 +13,7 @@ namespace TASVideos.Data.Entity
 		public int GameId { get; set; }
 		public virtual Game.Game Game { get; set; }
 
-		//public int SystemId { get; set; }
+		public int SystemId { get; set; }
 		public virtual GameSystem System { get; set; }
 
 		//public int SystemFrameRateId { get; set; }
