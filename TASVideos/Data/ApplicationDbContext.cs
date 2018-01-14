@@ -123,6 +123,13 @@ namespace TASVideos.Data
 					.HasFilter($"([{nameof(GameSystem.Code)}] IS NOT NULL)");
 			});
 
+			builder.Entity<GameSystemFrameRate>(entity =>
+			{
+				entity.HasOne(sf => sf.System)
+					.WithMany(s => s.SystemFrameRates)
+					.OnDelete(DeleteBehavior.Restrict);
+			});
+
 			builder.Entity<GameRom>(entity =>
 			{
 				entity.HasIndex(e => e.Md5)
@@ -150,6 +157,10 @@ namespace TASVideos.Data
 			{
 				entity.HasOne(p => p.System)
 					.WithMany(s => s.Publications)
+					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasOne(p => p.Rom)
+					.WithMany(r => r.Publications)
 					.OnDelete(DeleteBehavior.Restrict);
 			});
 		}

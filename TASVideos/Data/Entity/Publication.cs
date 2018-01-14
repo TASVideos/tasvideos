@@ -16,10 +16,10 @@ namespace TASVideos.Data.Entity
 		public int SystemId { get; set; }
 		public virtual GameSystem System { get; set; }
 
-		//public int SystemFrameRateId { get; set; }
+		public int SystemFrameRateId { get; set; }
 		public virtual GameSystemFrameRate SystemFrameRate { get; set; }
 
-		//public int RomId { get; set; }
+		public int RomId { get; set; }
 		public virtual GameRom Rom { get; set; }
 
 		public int TierId { get; set; }
