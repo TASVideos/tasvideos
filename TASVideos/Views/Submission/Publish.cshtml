@@ -37,7 +37,7 @@
 	</div>
 </div>
 <hr />
-<form asp-action="Publish">
+<form asp-action="Publish" enctype="multipart/form-data">
 	<row>
 		<div class="col-md-6">
 			<form-group>
@@ -70,7 +70,7 @@
 			</form-group>
 			<form-group>
 				<label asp-for="Screenshot"></label>
-				<input type="file" asp-for="Screenshot" />
+				<input type="file" asp-for="Screenshot" class="form-control" />
 				<label>TODO: acceptable screenshot sizes</label>
 				<label>TODO: system page for screenshot info</label>
 				<span asp-validation-for="Screenshot" class="text-danger"></span>
