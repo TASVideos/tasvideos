@@ -47,6 +47,16 @@ namespace TASVideos.Tasks
 				query = query.Where(s => s.Submitter.UserName == criteria.User);
 			}
 
+			if (criteria.Limit.HasValue)
+			{
+				query = query.Take(criteria.Limit.Value);
+			}
+
+			if (criteria.Cutoff.HasValue)
+			{
+				query = query.Where(s => s.CreateTimeStamp >= criteria.Cutoff.Value);
+			}
+
 			var iquery = query
 				.Include(s => s.Submitter)
 				.Include(s => s.System)
