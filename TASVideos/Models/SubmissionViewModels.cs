@@ -286,7 +286,7 @@ namespace TASVideos.Models
 		[Display(Name = "System")]
 		public int? SystemId { get; set; }
 
-		[Display(Name = "System FrameRate")]
+		[Display(Name = "System Framerate")]
 		public int? SystemFrameRateId { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
