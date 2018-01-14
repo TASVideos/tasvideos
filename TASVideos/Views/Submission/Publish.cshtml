@@ -13,13 +13,6 @@
 				<span asp-validation-for="GameVersion" class="text-danger"></span>
 			</form-group>
 		</div>
-		<div class="col-md-6">
-			<form-group>
-				<label asp-for="GameId"></label>
-				<select asp-for="GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
-				<span asp-validation-for="GameId" class="text-danger"></span>
-			</form-group>
-		</div>
 	</row>
 	<div class="text-center">
 		<button type="submit" class="btn btn-primary">Publish</button>

@@ -244,12 +244,12 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.PublishMovies)]
 		public async Task<IActionResult> Publish(int id)
 		{
-			var model = await _submissionTasks.GetSubmissionForPublish(id);
-			if (model == null)
+			if (!await _submissionTasks.CanPublish(id))
 			{
 				return NotFound();
 			}
 
+			var model = await _submissionTasks.GetSubmissionForPublish(id);
 			return View(model);
 		}
 
@@ -263,7 +263,7 @@ namespace TASVideos.Controllers
 			}
 
 			// TODO: save
-			return RedirectHome(); // TODO: navigate to publsihed movie
+			return RedirectHome(); // TODO: navigate to published movie
 		}
 
 		[RequirePermission(PermissionTo.CatalogMovies)]

@@ -404,48 +404,34 @@ namespace TASVideos.Tasks
 			return new SubmitResult(submission.Id);
 		}
 
+		public async Task<bool> CanPublish(int id)
+		{
+			return await _db.Submissions
+				.AnyAsync(s => s.Id == id
+					&& s.SystemId.HasValue
+					&& s.SystemFrameRateId.HasValue
+					&& s.GameId.HasValue
+					&& s.RomId.HasValue
+					&& s.IntendedTierId.HasValue
+					&& s.Status == SubmissionStatus.PublicationUnderway);
+		}
+
 		public async Task<SubmissionPublishModel> GetSubmissionForPublish(int id)
 		{
-			// TODO: pre-validate, don't start the publication process without setting the obsoleting movie(s), intended tier, game, etc
-			using (_db.Database.BeginTransactionAsync())
-			{
-				var model = await _db.Submissions
-					.Where(s => s.Id == id && s.Status == SubmissionStatus.Accepted)
-					.Select(s => new SubmissionPublishModel
-					{
-						Id = s.Id,
-						Title = s.Title,
-						SubmissionMarkup = s.WikiContent.Markup,
-						SystemId = s.System.Id,
-						TierId = s.IntendedTierId,
-						Branch = s.Branch,
-						EmulatorVersion = s.EmulatorVersion,
-						GameVersion = s.GameVersion
-					})
-					.SingleOrDefaultAsync();
-
-				if (model != null)
+			return await _db.Submissions
+				.Where(s => s.Id == id)
+				.Select(s => new SubmissionPublishModel
 				{
-					model.AvailableTiers = await _db.Tiers
-						.Select(t => new SelectListItem
-						{
-							Value = t.Id.ToString(),
-							Text = t.Name
-						})
-						.ToListAsync();
-
-					model.AvailableGames = await _db.Games
-						.Where(g => g.SystemId == model.SystemId)
-						.Select(g => new SelectListItem
-						{
-							Value = g.Id.ToString(),
-							Text = g.DisplayName
-						})
-						.ToListAsync();
-				}
-
-				return model;
-			}
+					Id = s.Id,
+					Title = s.Title,
+					SubmissionMarkup = s.WikiContent.Markup,
+					SystemId = s.System.Id,
+					TierId = s.IntendedTierId,
+					Branch = s.Branch,
+					EmulatorVersion = s.EmulatorVersion,
+					GameVersion = s.GameVersion
+				})
+				.SingleOrDefaultAsync();
 		}
 
 		public async Task<SubmissionCatalogModel> Catalog(int id)
