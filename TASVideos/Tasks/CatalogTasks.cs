@@ -180,6 +180,40 @@ namespace TASVideos.Tasks
 			return true;
 		}
 
+		public async Task<IEnumerable<SelectListItem>> GetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
+		{
+			var items = (await _db.GameSystemFrameRates
+				.Where(g => g.GameSystemId == systemId)
+				.Select(g => new SelectListItem
+				{
+					Value = g.Id.ToString(),
+					Text = g.RegionCode + " " + g.FrameRate
+				})
+				.ToListAsync())
+				.OrderBy(r => r.Value);
+
+			return includeEmpty
+				? UiDefaults.DefaultEntry.Concat(items)
+				: items;
+		}
+
+		public async Task<IEnumerable<SelectListItem>> GetGameDropDownForSystem(int systemId, bool includeEmpty)
+		{
+			var items = (await _db.Games
+				.Where(g => g.SystemId == systemId)
+				.Select(g => new SelectListItem
+				{
+					Value = g.Id.ToString(),
+					Text = g.GoodName
+				})
+				.ToListAsync())
+				.OrderBy(r => r.Value);
+
+			return includeEmpty
+				? UiDefaults.DefaultEntry.Concat(items)
+				: items;
+		}
+
 		public async Task<IEnumerable<SelectListItem>> GetRomDropDownForGame(int gameId, bool includeEmpty)
 		{
 			var items = (await _db.Roms

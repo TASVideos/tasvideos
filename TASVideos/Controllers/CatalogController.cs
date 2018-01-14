@@ -129,6 +129,18 @@ namespace TASVideos.Controllers
 			};
 		}
 
+		public async Task<IActionResult> FrameRateDropDownForSystem(int systemId, bool includeEmpty)
+		{
+			var model = await _catalogTasks.GetFrameRateDropDownForSystem(systemId, includeEmpty);
+			return PartialView("~/Views/Shared/_DropdownItems.cshtml", model);
+		}
+
+		public async Task<IActionResult> GameDropDownForSystem(int systemId, bool includeEmpty)
+		{
+			var model = await _catalogTasks.GetGameDropDownForSystem(systemId, includeEmpty);
+			return PartialView("~/Views/Shared/_DropdownItems.cshtml", model);
+		}
+
 		public async Task<IActionResult> RomDropDownForGame(int gameId, bool includeEmpty)
 		{
 			var model = await _catalogTasks.GetRomDropDownForGame(gameId, includeEmpty);

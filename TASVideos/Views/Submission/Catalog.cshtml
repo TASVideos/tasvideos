@@ -70,9 +70,63 @@
 
 <script>
 	(function () {
+		var systemModel = document.getElementById('@nameof(Model.SystemId)');
+		var frameRateModel = document.getElementById('@nameof(Model.SystemFrameRateId)');
 		var gameModel = document.getElementById('@nameof(Model.GameId)');
 		var romModel = document.getElementById('@nameof(Model.RomId)');
 		var createRomBtn = document.getElementById('create-rom');
+
+		systemModel.onchange = function() {
+			if (this.value) {
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+						if (xmlhttp.status === 200) {
+							gameModel.innerHTML = xmlhttp.responseText;
+						}
+					}
+				};
+
+				xmlhttp.open("GET", "/Catalog/@(nameof(CatalogController.GameDropDownForSystem))?includeEmpty=true&systemId=" + systemModel.value, true);
+				xmlhttp.send();
+
+				var xmlhttp2 = new XMLHttpRequest();
+				xmlhttp2.onreadystatechange = function() {
+					if (xmlhttp2.readyState === XMLHttpRequest.DONE) {
+						if (xmlhttp2.status === 200) {
+							frameRateModel.innerHTML = xmlhttp2.responseText;
+						}
+					}
+				};
+
+				xmlhttp2.open("GET", "/Catalog/@(nameof(CatalogController.FrameRateDropDownForSystem))?includeEmpty=true&systemId=" + systemModel.value, true);
+				xmlhttp2.send();
+			} else {
+				document.querySelectorAll('#@nameof(Model.GameId) option')
+					.toArray()
+					.forEach(function (elem) {
+						if (elem.value) {
+							elem.remove();
+						}
+					});
+
+				document.querySelectorAll('#@nameof(Model.SystemFrameRateId) option')
+					.toArray()
+					.forEach(function (elem) {
+						if (elem.value) {
+							elem.remove();
+						}
+					});
+			}
+
+			document.querySelectorAll('#@nameof(Model.RomId) option')
+					.toArray()
+					.forEach(function (elem) {
+						if (elem.value) {
+							elem.remove();
+						}
+					});
+		}
 
 		gameModel.onchange = function () {
 			if (this.value) {
