@@ -70,6 +70,8 @@ namespace TASVideos.Data.Entity
 		public int? SystemFrameRateId { get; set; }
 		public virtual GameSystemFrameRate SystemFrameRate { get; set; }
 
+		public virtual Publication Publication { get; set; }
+
 		public int Frames { get; set; }
 		public int RerecordCount { get; set; }
 
