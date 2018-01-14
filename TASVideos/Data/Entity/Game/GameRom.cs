@@ -2,6 +2,8 @@
 
 namespace TASVideos.Data.Entity.Game
 {
+	using System.Collections.Generic;
+
 	public enum RomTypes
 	{
 		Unknown,
@@ -16,6 +18,9 @@ namespace TASVideos.Data.Entity.Game
 
 		public int GameId { get; set; }
 		public virtual Game Game { get; set; }
+
+		public ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
+		public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 
 		[StringLength(32)]
 		public string Md5 { get; set; }

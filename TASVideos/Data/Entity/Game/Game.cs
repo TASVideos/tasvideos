@@ -12,15 +12,18 @@ namespace TASVideos.Data.Entity.Game
 		public int Id { get; set; }
 		public virtual ICollection<GameRom> Roms { get; set; } = new HashSet<GameRom>();
 
+		public int SystemId { get; set; }
+		public virtual GameSystem System { get; set; }
+
+		public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
+		public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
+
 		[Description("Good Set or some other official naming convention")]
 		public string GoodName { get; set; }
 
 		public string DisplayName { get; set; }
 
 		public string Abbreviation { get; set; }
-
-		public int SystemId { get; set; }
-		public virtual GameSystem System { get; set; }
 
 		public string SearchKey { get; set; }
 

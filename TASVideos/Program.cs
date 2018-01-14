@@ -33,7 +33,6 @@ namespace TASVideos
 					{
 						DbInitializer.Migrate(context);
 						DbInitializer.RunLegacyImport(context);
-						
 					}
 				}
 				catch (Exception ex)
