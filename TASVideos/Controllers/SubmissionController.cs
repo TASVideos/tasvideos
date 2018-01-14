@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Filter;
@@ -40,6 +42,30 @@ namespace TASVideos.Controllers
 		{
 			var model = await _submissionTasks.GetSubmissionList(getModel);
 			return View(model);
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> View(int id)
+		{
+			var submission = await _submissionTasks.GetSubmission(id, User.Identity.Name);
+			if (submission == null)
+			{
+				return NotFound();
+			}
+
+			return View(submission);
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Download(int id)
+		{
+			var submissionFile = await _submissionTasks.GetSubmissionFile(id);
+			if (submissionFile.Length > 0)
+			{
+				return File(submissionFile, MediaTypeNames.Application.Octet, $"submission{id}.zip");
+			}
+
+			return BadRequest();
 		}
 
 		[RequirePermission(PermissionTo.SubmitMovies)]
@@ -111,30 +137,6 @@ namespace TASVideos.Controllers
 		{
 			var page = await _wikiTasks.GetPage("System/SubmissionDefaultMessage");
 			return Json(new { text = page.Markup });
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> View(int id)
-		{
-			var submission = await _submissionTasks.GetSubmission(id, User.Identity.Name);
-			if (submission == null)
-			{
-				return NotFound();
-			}
-
-			return View(submission);
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> Download(int id)
-		{
-			var submissionFile = await _submissionTasks.GetSubmissionFile(id);
-			if (submissionFile.Length > 0)
-			{
-				return File(submissionFile, MediaTypeNames.Application.Octet, $"submission{id}.zip");
-			}
-
-			return BadRequest();
 		}
 
 		[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
@@ -241,31 +243,6 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[RequirePermission(PermissionTo.PublishMovies)]
-		public async Task<IActionResult> Publish(int id)
-		{
-			if (!await _submissionTasks.CanPublish(id))
-			{
-				return NotFound();
-			}
-
-			var model = await _submissionTasks.GetSubmissionForPublish(id);
-			return View(model);
-		}
-
-		[HttpPost, AutoValidateAntiforgeryToken]
-		[RequirePermission(PermissionTo.PublishMovies)]
-		public async Task<IActionResult> Publish(SubmissionPublishModel model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(model);
-			}
-
-			var id = await _submissionTasks.PublishSubmission(model);
-			return Redirect($"{id}M");
-		}
-
 		[RequirePermission(PermissionTo.CatalogMovies)]
 		public async Task<IActionResult> Catalog(int id)
 		{
@@ -289,6 +266,31 @@ namespace TASVideos.Controllers
 
 			await _submissionTasks.UpdateCatalog(model);
 			return RedirectToAction(nameof(View), new { model.Id });
+		}
+
+		[RequirePermission(PermissionTo.PublishMovies)]
+		public async Task<IActionResult> Publish(int id)
+		{
+			if (!await _submissionTasks.CanPublish(id))
+			{
+				return NotFound();
+			}
+
+			var model = await _submissionTasks.GetSubmissionForPublish(id);
+			return View(model);
+		}
+
+		[HttpPost, AutoValidateAntiforgeryToken]
+		[RequirePermission(PermissionTo.PublishMovies)]
+		public async Task<IActionResult> Publish(SubmissionPublishModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var id = await _submissionTasks.PublishSubmission(model);
+			return Redirect($"{id}M");
 		}
 
 		private static readonly SelectListItem[] GameVersionOptions =
