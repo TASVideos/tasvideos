@@ -32,24 +32,32 @@ namespace TASVideos.ViewComponents
 
 			if (split.Length == 1)
 			{
-				var id = SubmissionHelper.IsSubmissionLink(pp);
-				if (id.HasValue)
+				if (pp.StartsWith("user:"))
 				{
-					var title = await _submissionTasks.GetTitle(id.Value);
-					if (!string.IsNullOrWhiteSpace(title))
-					{
-						model.DisplayText = title;
-					}
+					model.DisplayText = model.DisplayText.Replace("user:", "");
+					model.Href = WikiHelper.TryConvertToValidPageName(model.Href.Replace("user:", "HomePages/"));
 				}
 				else
 				{
-					var mid = SubmissionHelper.IsPublicationLink(pp);
-					if (mid.HasValue)
+					var id = SubmissionHelper.IsSubmissionLink(pp);
+					if (id.HasValue)
 					{
-						var title = await _publicationTasks.GetTitle(mid.Value);
+						var title = await _submissionTasks.GetTitle(id.Value);
 						if (!string.IsNullOrWhiteSpace(title))
 						{
 							model.DisplayText = title;
+						}
+					}
+					else
+					{
+						var mid = SubmissionHelper.IsPublicationLink(pp);
+						if (mid.HasValue)
+						{
+							var title = await _publicationTasks.GetTitle(mid.Value);
+							if (!string.IsNullOrWhiteSpace(title))
+							{
+								model.DisplayText = title;
+							}
 						}
 					}
 				}
