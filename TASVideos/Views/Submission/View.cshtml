@@ -4,7 +4,10 @@
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.EncodeEmbedLink);
 	bool canEdit = ViewData.UserHasPermission(PermissionTo.EditSubmissions)
 		|| (Model.CanEdit && ViewData.UserHasPermission(PermissionTo.SubmitMovies));
-	bool canPublish = ViewData.UserHasPermission(PermissionTo.PublishMovies) && Model.Status == SubmissionStatus.PublicationUnderway;
+	bool canPublish = ViewData.UserHasPermission(PermissionTo.PublishMovies)
+		&& Model.Status == SubmissionStatus.PublicationUnderway
+		&& Model.IsCatalogged
+		&& Model.Publisher == User.Identity.Name;
 }
 @section PageTitle {
 	<h1>@($"Submission {Model.Title}")</h1>
@@ -36,7 +39,6 @@
 		<div class="text-right @(StatusColor(Model.Status))">
 			<h4>
 				<label asp-for="Status"></label>: <label class="form-control-static">@Model.Status.EnumDisplayName()</label>
-
 			</h4>
 			<div condition="@Model.Status == SubmissionStatus.Accepted">
 				<label asp-for="TierName"></label>: <a href="/@Model.TierName">@Model.TierName</a>
@@ -44,6 +46,10 @@
 			<div condition="@(!string.IsNullOrWhiteSpace(Model.Judge))">
 				<label asp-for="Judge"></label>:
 				<a href="/HomePages/@Model.Judge">@Model.Judge</a>
+			</div>
+			<div condition="@(!string.IsNullOrWhiteSpace(Model.Publisher))">
+				<label asp-for="Publisher"></label>:
+				<a href="/HomePages/@Model.Publisher">@Model.Publisher</a>
 			</div>
 		</div>
 		<table class="table table-bordered table-condensed">

@@ -79,7 +79,12 @@ namespace TASVideos.Tasks
 						EncodeEmbedLink = s.EncodeEmbedLink,
 						Judge = s.Judge != null ? s.Judge.UserName : "",
 						Title = s.Title,
-						TierName = s.IntendedTier != null ? s.IntendedTier.Name : ""
+						TierName = s.IntendedTier != null ? s.IntendedTier.Name : "",
+						Publisher = s.Publisher != null ? s.Publisher.UserName : "",
+						SystemId = s.SystemId,
+						SystemFrameRateId = s.SystemFrameRateId,
+						GameId = s.GameId,
+						RomId = s.RomId
 					})
 					.SingleOrDefaultAsync();
 
@@ -198,6 +203,7 @@ namespace TASVideos.Tasks
 		{
 			var submission = await _db.Submissions
 				.Include(s => s.Judge)
+				.Include(s => s.Publisher)
 				.Include(s => s.System)
 				.Include(s => s.SystemFrameRate)
 				.Include(s => s.SubmissionAuthors)
@@ -236,15 +242,27 @@ namespace TASVideos.Tasks
 			}
 
 			// If a judge is claiming the submission
-			if (model.Status == SubmissionStatus.JudgingUnderWay && submission.Status != SubmissionStatus.JudgingUnderWay)
+			if (model.Status == SubmissionStatus.JudgingUnderWay
+				&& submission.Status != SubmissionStatus.JudgingUnderWay)
 			{
-				submission.Judge = await _db.Users.SingleAsync(s => s.UserName == userName);
+				submission.Judge = await _db.Users.SingleAsync(u => u.UserName == userName);
 			}
 			else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
 				&& model.Status == SubmissionStatus.New
 				&& submission.Judge != null)
 			{
 				submission.Judge = null;
+			}
+
+			if (model.Status == SubmissionStatus.PublicationUnderway
+				&& submission.Status != SubmissionStatus.PublicationUnderway)
+			{
+				submission.Publisher = await _db.Users.SingleAsync(u => u.UserName == userName);
+			}
+			else if (submission.Status == SubmissionStatus.Accepted // If publisher is unclaiming, remove them
+				&& model.Status == SubmissionStatus.PublicationUnderway)
+			{
+				submission.Publisher = null;
 			}
 
 			if (submission.Status != model.Status)
@@ -399,7 +417,7 @@ namespace TASVideos.Tasks
 						Title = s.Title,
 						SubmissionMarkup = s.WikiContent.Markup,
 						SystemId = s.System.Id,
-						TierId = s.IntendedTier != null ? s.IntendedTier.Id : (int?)null,
+						TierId = s.IntendedTierId,
 						Branch = s.Branch,
 						EmulatorVersion = s.EmulatorVersion,
 						GameVersion = s.GameVersion
