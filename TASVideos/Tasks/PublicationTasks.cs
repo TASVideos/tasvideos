@@ -1,15 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
+
+using TASVideos.Data;
+using TASVideos.Models;
 
 namespace TASVideos.Tasks
 {
-	using TASVideos.Data;
-	using TASVideos.Models;
-
 	public class PublicationTasks
-    {
+	{
 		private readonly ApplicationDbContext _db;
 
 		public PublicationTasks(ApplicationDbContext db)
