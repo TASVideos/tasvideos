@@ -39,11 +39,13 @@ namespace TASVideos.Data.Entity
 	public class Submission : BaseEntity
 	{
 		public int Id { get; set; }
-		public virtual WikiPage WikiContent { get; set; }
-		public virtual User Submitter { get; set; }
 
+		public virtual WikiPage WikiContent { get; set; }
+
+		public virtual User Submitter { get; set; }
 		public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
 
+		public int? IntendedTierId { get; set; }
 		public virtual Tier IntendedTier { get; set; }
 
 		public virtual User Judge { get; set; }
@@ -55,11 +57,17 @@ namespace TASVideos.Data.Entity
 		// TODO: we eventually should want to move these to the file server instead
 		public byte[] MovieFile { get; set; }
 
+		public int? GameId { get; set; }
 		public virtual Game.Game Game { get; set; }
+
+		public int? RomId { get; set; }
 		public virtual GameRom Rom { get; set; }
 
 		// Metadata parsed from movie file
+		public int? SystemId { get; set; }
 		public virtual GameSystem System { get; set; }
+
+		public int? SystemFrameRateId { get; set; }
 		public virtual GameSystemFrameRate SystemFrameRate { get; set; }
 
 		public int Frames { get; set; }

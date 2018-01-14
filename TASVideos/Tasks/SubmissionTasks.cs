@@ -14,7 +14,9 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Tasks
 {
-    public class SubmissionTasks
+	using System;
+
+	public class SubmissionTasks
     {
 		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
@@ -444,6 +446,70 @@ namespace TASVideos.Tasks
 
 				return model;
 			}
+		}
+
+		public async Task<SubmissionCatalogModel> Catalog(int id)
+		{
+			using (_db.Database.BeginTransactionAsync())
+			{
+				var submission = await _db.Submissions
+					.SingleAsync(s => s.Id == id);
+
+				if (submission == null)
+				{
+					return null;
+				}
+
+				return new SubmissionCatalogModel
+				{
+					Id = submission.Id,
+					RomId = submission.RomId,
+					GameId = submission.GameId,
+					SystemId = submission.SystemId,
+					SystemFrameRateId = submission.SystemFrameRateId,
+					AvailableRoms = await _db.Roms
+						.Where(r => !submission.SystemId.HasValue || r.SystemId == submission.SystemId)
+						.Where(r => !submission.GameId.HasValue || r.GameId == submission.GameId)
+						.Select(r => new SelectListItem
+						{
+							Value = r.Id.ToString(),
+							Text = r.Name
+						})
+						.ToListAsync(),
+					AvailableGames = await _db.Games
+						.Where(g => !submission.SystemId.HasValue || g.SystemId == submission.SystemId)
+						.Select(g => new SelectListItem
+						{
+							Value = g.Id.ToString(),
+							Text = g.GoodName
+						})
+						.ToListAsync(),
+					AvailableSystems = await _db.GameSystems
+						.Select(s => new SelectListItem
+						{
+							Value = s.Id.ToString(),
+							Text = s.Code
+						})
+					.ToListAsync(),
+					AvailableSystemFrameRates = submission.SystemId.HasValue
+						? await _db.GameSystemFrameRates
+							.Where(sf => sf.GameSystemId == submission.SystemId)
+							.Select(sf => new SelectListItem
+							{
+								Value = sf.Id.ToString(),
+								Text = sf.RegionCode + " (" + sf.FrameRate + ")"
+							})
+							.ToListAsync()
+						: new List<SelectListItem>()
+				};
+			}
+		}
+
+		public async Task UpdateCatalog(SubmissionCatalogModel model)
+		{
+			var submission = await _db.Submissions.SingleAsync(s => s.Id == model.Id);
+			_mapper.Map(model, submission);
+			await _db.SaveChangesAsync();
 		}
 	}
 }
