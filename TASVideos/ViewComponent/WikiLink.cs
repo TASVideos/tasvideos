@@ -9,10 +9,12 @@ namespace TASVideos.ViewComponents
 	public class WikiLink : ViewComponent
 	{
 		private readonly SubmissionTasks _submissionTasks;
+		private readonly PublicationTasks _publicationTasks;
 
-		public WikiLink(SubmissionTasks submissionTasks)
+		public WikiLink(SubmissionTasks submissionTasks, PublicationTasks publicationTasks)
 		{
 			_submissionTasks = submissionTasks;
+			_publicationTasks = publicationTasks;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
@@ -39,8 +41,19 @@ namespace TASVideos.ViewComponents
 						model.DisplayText = title;
 					}
 				}
+				else
+				{
+					var mid = SubmissionHelper.IsPublicationLink(pp);
+					if (mid.HasValue)
+					{
+						var title = await _publicationTasks.GetTitle(mid.Value);
+						if (!string.IsNullOrWhiteSpace(title))
+						{
+							model.DisplayText = title;
+						}
+					}
+				}
 			}
-
 
 			return View(model);
 		}
