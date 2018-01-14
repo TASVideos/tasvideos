@@ -31,5 +31,14 @@ namespace TASVideos.Tasks
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}
+
+		/// <summary>
+		/// Gets the title of a movie with the given id
+		/// If the movie is not found, null is returned
+		/// </summary>
+		public async Task<string> GetTitle(int id)
+		{
+			return (await _db.Publications.SingleOrDefaultAsync(s => s.Id == id))?.Title;
+		}
 	}
 }

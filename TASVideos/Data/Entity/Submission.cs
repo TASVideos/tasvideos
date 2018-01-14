@@ -116,7 +116,7 @@ namespace TASVideos.Data.Entity
 		public void GenerateTitle()
 		{
 			Title =
-				$"#{Id} {string.Join(" & ", SubmissionAuthors.Select(sa => sa.Author.UserName))}'s {System.Code} {GameName}"
+				$"#{Id}: {string.Join(" & ", SubmissionAuthors.Select(sa => sa.Author.UserName))}'s {System.Code} {GameName}"
 					+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
 					+ $" in {Time:g}";
 		}

@@ -113,5 +113,23 @@ namespace TASVideos.Extensions
 
 			return null;
 		}
+
+		/// <summary>
+		/// Determines if the link is in the form of valid movie link ex: 100M
+		/// </summary>
+		/// <returns>The id of the movie if it is a valid link, else null</returns>
+		public static int? IsPublicationLink(string link)
+		{
+			if (link?.EndsWith("M") ?? false)
+			{
+				var result = int.TryParse(link.Substring(0, link.Length - 1), out int id);
+				if (result)
+				{
+					return id;
+				}
+			}
+
+			return null;
+		}
 	}
 }
