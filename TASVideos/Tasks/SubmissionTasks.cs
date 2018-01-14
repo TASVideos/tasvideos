@@ -448,15 +448,51 @@ namespace TASVideos.Tasks
 		public async Task<int> PublishSubmission(SubmissionPublishModel model)
 		{
 			var submission = await _db.Submissions
+				.Include(s => s.IntendedTier)
+				.Include(s => s.System)
+				.Include(s => s.SystemFrameRate)
+				.Include(s => s.Game)
+				.Include(s => s.Rom)
+				.Include(s => s.SubmissionAuthors)
+				.ThenInclude(sa => sa.Author)
 				.SingleAsync(s => s.Id == model.Id);
 
 			var publication = new Publication
 			{
-
+				TierId = submission.IntendedTier.Id,
+				SystemId = submission.System.Id,
+				SystemFrameRateId = submission.SystemFrameRate.Id,
+				GameId = submission.Game.Id,
+				RomId = submission.Rom.Id,
+				MovieFile = submission.MovieFile,
+				Branch = submission.Branch,
+				EmulatorVersion = model.EmulatorVersion,
+				OnlineWatchingUrl = model.OnlineWatchingUrl,
+				Frames = submission.Frames,
+				RerecordCount = submission.RerecordCount
 			};
 
+			var publicationAuthors = submission.SubmissionAuthors
+				.Select(sa => new PublicationAuthor
+				{
+					Pubmisison = publication,
+					Author = sa.Author
+				});
+
+			foreach (var author in publicationAuthors)
+			{
+				publication.Authors.Add(author);
+			}
+
+			publication.Submission = submission;
+			_db.Publications.Add(publication);
+
+
+			await _db.SaveChangesAsync(); // Need an Id for the Title
+			publication.GenerateTitle();
 			await _db.SaveChangesAsync();
-			return 0; // TODO
+
+			return publication.Id; // TODO
 		}
 
 		public async Task<SubmissionCatalogModel> Catalog(int id)
