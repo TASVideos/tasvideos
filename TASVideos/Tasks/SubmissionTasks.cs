@@ -154,7 +154,6 @@ namespace TASVideos.Tasks
 						Id = s.Id,
 						SystemDisplayName = s.System.DisplayName,
 						SystemCode = s.System.Code,
-						SystemId = s.System.Id,
 						GameName = s.GameName,
 						GameVersion = s.GameVersion,
 						RomName = s.RomName,

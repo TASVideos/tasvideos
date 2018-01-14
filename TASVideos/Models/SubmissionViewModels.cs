@@ -178,8 +178,6 @@ namespace TASVideos.Models
 		[Display(Name = "Intended Tier")]
 		public int? TierId { get; set; }
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
-
-		internal int SystemId { get; set; }
 	}
 
 	// TODO: document - for reverifying a status can be set
