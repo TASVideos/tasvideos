@@ -157,7 +157,6 @@ namespace TASVideos.Tasks
 			{
 				rom = _mapper.Map<GameRom>(model);
 				rom.Game = await _db.Games.SingleAsync(g => g.Id == model.GameId);
-				rom.System = await _db.GameSystems.SingleAsync(s => s.Code == model.SystemCode);
 				_db.Roms.Add(rom);
 			}
 

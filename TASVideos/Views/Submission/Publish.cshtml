@@ -2,15 +2,78 @@
 @{
 	ViewData["Title"] = $"Publishing Submission #{Model.Title}";
 }
-
+<div class="panel panel-info">
+	
+	<div class="panel-body">
+		<row>
+			<div class="col-xs-12">
+				<a class="btn btn-primary pull-right" asp-action="Catalog" asp-route-id="@Model.Id">Catalog</a>
+			</div>
+		</row>
+		<div class="col-md-6">
+			<row>
+				<label class="col-sm-3" asp-for="Tier"></label>
+				<span class="col-sm-9"><a href="/@Model.Tier">@Html.DisplayFor(m => m.Tier)</a></span>
+			</row>
+			<row>
+				<label class="col-sm-3" asp-for="SystemCode"></label>
+				<span class="col-sm-9">@Html.DisplayFor(m => m.SystemCode)</span>
+			</row>
+			<row>
+				<label class="col-sm-3" asp-for="SystemRegion"></label>
+				<span class="col-sm-9">@Html.DisplayFor(m => m.SystemRegion)</span>
+			</row>
+		</div>
+		<div class="col-md-6">
+			<row>
+				<label class="col-sm-3" asp-for="Game"></label>
+				<span class="col-sm-9"><a asp-controller="Game" asp-action="Index" asp-route-id="@Model.GameId">@Html.DisplayFor(m => m.Game)</a></span>
+			</row>
+			<row>
+				<label class="col-sm-3" asp-for="Rom"></label>
+				<span class="col-sm-9"><a asp-controller="Catalog" asp-action="RomEdit" asp-route-gameId="@Model.GameId" asp-route-romId="@Model.RomId">@Html.DisplayFor(m => m.Rom)</a></span>
+			</row>
+		</div>
+	</div>
+</div>
+<hr />
 <form asp-action="Publish">
 	<row>
 		<div class="col-md-6">
 			<form-group>
-				<label asp-for="GameVersion"></label>
-				<input type="text" asp-for="GameVersion" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.GameVersion)</div>
-				<span asp-validation-for="GameVersion" class="text-danger"></span>
+				<label asp-for="Branch"></label>
+				<input type="text" asp-for="Branch" class="form-control" />
+				<span asp-validation-for="Branch" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="EmulatorVersion"></label>
+				<input type="text" asp-for="EmulatorVersion" class="form-control" />
+				<span asp-validation-for="EmulatorVersion" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="OnlineWatchingUrl"></label>
+				<input type="text" asp-for="OnlineWatchingUrl" class="form-control" />
+				<span asp-validation-for="OnlineWatchingUrl" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="MovieFileName"></label>
+				<div class="input-group">
+					<input type="text" asp-for="MovieFileName" class="form-control" />
+					<span class="input-group-addon">
+						.bk2
+					</span>
+				</div>
+				<div>@Html.DescriptionFor(m => m.MovieFileName)</div>
+				<span asp-validation-for="MovieFileName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Screenshot"></label>
+				<input type="file" asp-for="Screenshot" />
+				<label>TODO: acceptable screenshot sizes</label>
+				<label>TODO: system page for screenshot info</label>
+				<span asp-validation-for="Screenshot" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>

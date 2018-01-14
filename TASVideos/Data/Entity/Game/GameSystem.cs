@@ -12,7 +12,7 @@ namespace TASVideos.Data.Entity.Game
 
 		public virtual ICollection<GameSystemFrameRate> SystemFrameRates { get; set; } = new HashSet<GameSystemFrameRate>();
 
-		public virtual ICollection<Game> Game { get; set; } = new HashSet<Game>();
+		public virtual ICollection<Game> Games { get; set; } = new HashSet<Game>();
 
 		[Required]
 		[StringLength(8)]

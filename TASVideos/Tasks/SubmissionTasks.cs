@@ -418,20 +418,45 @@ namespace TASVideos.Tasks
 
 		public async Task<SubmissionPublishModel> GetSubmissionForPublish(int id)
 		{
-			return await _db.Submissions
-				.Where(s => s.Id == id)
-				.Select(s => new SubmissionPublishModel
-				{
-					Id = s.Id,
-					Title = s.Title,
-					SubmissionMarkup = s.WikiContent.Markup,
-					SystemId = s.System.Id,
-					TierId = s.IntendedTierId,
-					Branch = s.Branch,
-					EmulatorVersion = s.EmulatorVersion,
-					GameVersion = s.GameVersion
-				})
-				.SingleOrDefaultAsync();
+			using (_db.Database.BeginTransactionAsync())
+			{
+				return await _db.Submissions
+					.Where(s => s.Id == id)
+					.Select(s => new SubmissionPublishModel
+					{
+						Id = s.Id,
+						Title = s.Title,
+						SubmissionMarkup = s.WikiContent.Markup,
+
+						SystemCode = s.System.Code,
+						SystemRegion = s.SystemFrameRate.RegionCode + " " + s.SystemFrameRate.FrameRate,
+						Game = s.Game.GoodName,
+						GameId = s.GameId ?? 0,
+						Rom = s.Rom.Name,
+						RomId = s.RomId ?? 0,
+						Tier = s.IntendedTier.Name,
+
+
+						Branch = s.Branch,
+						EmulatorVersion = s.EmulatorVersion
+					})
+					.SingleOrDefaultAsync();
+			}
+		}
+
+		// TODO: document, returns id of the published movie
+		public async Task<int> PublishSubmission(SubmissionPublishModel model)
+		{
+			var submission = await _db.Submissions
+				.SingleAsync(s => s.Id == model.Id);
+
+			var publication = new Publication
+			{
+
+			};
+
+			await _db.SaveChangesAsync();
+			return 0; // TODO
 		}
 
 		public async Task<SubmissionCatalogModel> Catalog(int id)
@@ -454,7 +479,7 @@ namespace TASVideos.Tasks
 					SystemId = submission.SystemId,
 					SystemFrameRateId = submission.SystemFrameRateId,
 					AvailableRoms = await _db.Roms
-						.Where(r => !submission.SystemId.HasValue || r.SystemId == submission.SystemId)
+						.Where(r => !submission.SystemId.HasValue || r.Game.SystemId == submission.SystemId)
 						.Where(r => !submission.GameId.HasValue || r.GameId == submission.GameId)
 						.Select(r => new SelectListItem
 						{

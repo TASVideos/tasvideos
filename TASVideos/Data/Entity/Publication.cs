@@ -9,13 +9,23 @@ namespace TASVideos.Data.Entity
     public class Publication : BaseEntity
     {
 		public int Id { get; set; }
+
+		public int GameId { get; set; }
 		public virtual Game.Game Game { get; set; }
+
+		//public int SystemId { get; set; }
 		public virtual GameSystem System { get; set; }
+
+		//public int SystemFrameRateId { get; set; }
 		public virtual GameSystemFrameRate SystemFrameRate { get; set; }
+
+		//public int RomId { get; set; }
 		public virtual GameRom Rom { get; set; }
 
+		public int TierId { get; set; }
 		public virtual Tier Tier { get; set; }
 
+		public int SubmissionId { get; set; }
 		public virtual Submission Submission { get; set; }
 		public virtual ICollection<PublicationAuthor> Authors { get; set; } = new List<PublicationAuthor>();
 		public virtual Publication ObsoletedBy { get; set; }
@@ -23,17 +33,16 @@ namespace TASVideos.Data.Entity
 		public virtual WikiPage WikiContent { get; set; }
 
 		// TODO: we eventually should want to move these to the file server instead
-		public byte[] MovieFile { get; set; }
-
-		[StringLength(20)]
 		[Required]
-		public string GameVersion { get; set; }
+		public byte[] MovieFile { get; set; }
 
 		[StringLength(50)]
 		public string Branch { get; set; }
 
 		[StringLength(50)]
 		public string EmulatorVersion { get; set; }
+
+		public string OnlineWatchingUrl { get; set; }
 
 		public int Frames { get; set; }
 		public int RerecordCount { get; set; }

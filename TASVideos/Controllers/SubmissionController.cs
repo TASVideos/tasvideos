@@ -255,15 +255,15 @@ namespace TASVideos.Controllers
 
 		[HttpPost, AutoValidateAntiforgeryToken]
 		[RequirePermission(PermissionTo.PublishMovies)]
-		public IActionResult Publish(SubmissionPublishModel model)
+		public async Task<IActionResult> Publish(SubmissionPublishModel model)
 		{
 			if (!ModelState.IsValid)
 			{
 				return View(model);
 			}
 
-			// TODO: save
-			return RedirectHome(); // TODO: navigate to published movie
+			var id = await _submissionTasks.PublishSubmission(model);
+			return Redirect($"{id}M");
 		}
 
 		[RequirePermission(PermissionTo.CatalogMovies)]
