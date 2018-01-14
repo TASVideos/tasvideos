@@ -17,9 +17,6 @@ namespace TASVideos.Data.Entity.Game
 		public int GameId { get; set; }
 		public virtual Game Game { get; set; }
 
-		public int SystemId { get; set; }
-		public virtual GameSystem System { get; set; }
-
 		[StringLength(32)]
 		public string Md5 { get; set; }
 

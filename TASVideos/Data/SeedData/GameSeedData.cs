@@ -64,7 +64,7 @@ namespace TASVideos.Data.SeedData
 				Region = "Any",
 				Version = "",
 				Type = RomTypes.Good,
-				SystemId = 1
+				Game = Games[0]
 			},
 			new GameRom
 			{
@@ -74,7 +74,7 @@ namespace TASVideos.Data.SeedData
 				Region = "USA",
 				Version = "",
 				Type = RomTypes.Good,
-				SystemId = 1
+				Game = Games[1]
 			},
 			new GameRom
 			{
@@ -84,7 +84,7 @@ namespace TASVideos.Data.SeedData
 				Region = "USA",
 				Version = "",
 				Type = RomTypes.Good,
-				SystemId = 34
+				Game = Games[2]
 			}
 		};
 	}
