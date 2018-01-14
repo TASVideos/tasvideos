@@ -346,7 +346,8 @@ namespace TASVideos.Tasks
 			return (await _db.WikiReferrals
 					.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
 					.ToListAsync())
-				.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue);
+				.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue)
+				.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue);
 		}
 
 		/// <summary>
