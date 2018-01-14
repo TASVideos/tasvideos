@@ -14,10 +14,8 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Tasks
 {
-	using System;
-
 	public class SubmissionTasks
-    {
+	{
 		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
 		private readonly WikiTasks _wikiTasks;
@@ -173,8 +171,7 @@ namespace TASVideos.Tasks
 						EncodeEmbedLink = s.EncodeEmbedLink,
 						Markup = s.WikiContent.Markup,
 						Judge = s.Judge != null ? s.Judge.UserName : "",
-						GameId = s.Game != null ? s.Game.Id : (int?)null,
-						TierId = s.IntendedTier != null ? s.IntendedTier.Id : (int?)null
+						TierId = s.IntendedTierId
 					})
 					.SingleOrDefaultAsync();
 
@@ -183,15 +180,6 @@ namespace TASVideos.Tasks
 					submissionModel.Authors = await _db.SubmissionAuthors
 						.Where(sa => sa.SubmissionId == submissionModel.Id)
 						.Select(sa => sa.Author.UserName)
-						.ToListAsync();
-
-					submissionModel.AvailableGames = await _db.Games
-						.Where(g => g.SystemId == submissionModel.SystemId)
-						.Select(g => new SelectListItem
-						{
-							Value = g.Id.ToString(),
-							Text = g.DisplayName
-						})
 						.ToListAsync();
 
 					submissionModel.AvailableTiers = await _db.Tiers
@@ -269,11 +257,6 @@ namespace TASVideos.Tasks
 				};
 				submission.History.Add(history);
 				_db.SubmissionStatusHistory.Add(history);
-			}
-
-			if (model.GameId.HasValue)
-			{
-				submission.Game = await _db.Games.SingleAsync(g => g.Id == model.GameId.Value);
 			}
 
 			if (model.TierId.HasValue)

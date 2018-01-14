@@ -5,11 +5,12 @@
 
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form asp-action="Edit" enctype="multipart/form-data">
+	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Status" />
 	<row condition="@Model.AvailableStatuses.Count() > 1">
 		<div class="col-md-6">
 			<form-group>
 				<label asp-for="Status"></label>
-				<select class="form-control" asp-for="Status" asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem {Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Status})"></select>
+				<select class="form-control" asp-for="Status" asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Status })"></select>
 			</form-group>
 		</div>
 		<div condition="@ViewData.UserHasPermission(PermissionTo.ReplaceSubmissionMovieFile)" class="col-md-6">
@@ -22,12 +23,6 @@
 		</div>
 	</row>
 	<row>
-		<div condition="@ViewData.UserHasPermission(PermissionTo.EditSubmissions)" class="col-md-6">
-			<form-group>
-				<label asp-for="GameId"></label>
-				<select asp-for="GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-control"></select>
-			</form-group>
-		</div>
 		<div condition="@ViewData.UserHasPermission(PermissionTo.JudgeSubmissions)" class="col-md-6">
 			<form-group>
 				<label asp-for="TierId"></label>
@@ -35,23 +30,22 @@
 			</form-group>
 		</div>
 	</row>
-	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Status"/>
 	<row>
 		<div class="col-md-6">
 			<form-group>
 				<label asp-for="Authors"></label>
-				<string-list asp-for="Authors"/>
+				<string-list asp-for="Authors" />
 				<span asp-validation-for="Authors" class="text-danger"></span>
 			</form-group>
 		</div>
 		<div class="col-md-6">
 			<form-group class="form-inline">
 				<label asp-for="MinorEdit" class="control-label"></label>
-				<input type="checkbox" class="checkbox" asp-for="MinorEdit"/>
+				<input type="checkbox" class="checkbox" asp-for="MinorEdit" />
 			</form-group>
 			<form-group>
 				<label asp-for="RevisionMessage"></label>
-				<input asp-for="RevisionMessage" class="form-control"/>
+				<input asp-for="RevisionMessage" class="form-control" />
 				<span asp-validation-for="RevisionMessage" class="text-danger"></span>
 			</form-group>
 		</div>
@@ -65,29 +59,29 @@
 			</form-group>
 			<form-group>
 				<label asp-for="GameName"></label>
-				<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)"/>
+				<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
 				<span asp-validation-for="GameName" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Emulator"></label>
-				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)"/>
+				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)" />
 				<span asp-validation-for="Emulator" class="text-danger"></span>
 			</form-group>
 		</div>
 		<div class="col-md-6">
 			<form-group>
 				<label asp-for="Branch"></label>
-				<input asp-for="Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Branch)"/>
+				<input asp-for="Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Branch)" />
 				<span asp-validation-for="Branch" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="RomName"></label>
-				<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)"/>
+				<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
 				<span asp-validation-for="RomName" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="EncodeEmbedLink"></label>
-				<input asp-for="EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.EncodeEmbedLink)"/>
+				<input asp-for="EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.EncodeEmbedLink)" />
 				<span asp-validation-for="EncodeEmbedLink" class="text-danger"></span>
 			</form-group>
 		</div>
@@ -101,7 +95,7 @@
 			</form-group>
 		</div>
 	</row>
-	<hr/>
+	<hr />
 	<row>
 		<div class="text-center">
 			<button id="preview-btn" type="button" class="btn btn-default">Preview</button>

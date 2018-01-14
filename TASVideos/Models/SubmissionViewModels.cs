@@ -175,11 +175,6 @@ namespace TASVideos.Models
 		[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile MovieFile { get; set; }
 
-		[Display(Name = "Game")]
-		public int? GameId { get; set; }
-
-		public IEnumerable<SelectListItem> AvailableGames { get; set; }
-
 		[Display(Name = "Intended Tier")]
 		public int? TierId { get; set; }
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
