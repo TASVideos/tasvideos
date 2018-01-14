@@ -4,10 +4,15 @@
 		? $"Editing Rom #{Model.Id} {Model.Name}"
 		: "Create a new Rom entry";
 }
-<h4>System: @Model.SystemCode</h4>
-<br />
-<h4>Game: @Model.GameName</h4>
-<delete-button condition="@Model.CanDelete" asp-href="@Url.Action("DeleteRom", new { gameId = Model.GameId, romId = Model.Id ?? 0 } )" class="pull-right">Delete</delete-button>
+<row>
+	<div class="col-xs-12">
+		<div class="pull-left">
+			<h4>System: @Model.SystemCode</h4>
+			<h4>Game: @Model.GameName</h4>
+		</div>
+		<delete-button condition="@Model.CanDelete" asp-href="@Url.Action("DeleteRom", new { gameId = Model.GameId, romId = Model.Id ?? 0 })" class="pull-right">Delete</delete-button>
+	</div>
+</row>
 <form asp-route="GameEdit">
 	<input type="hidden" asp-for="Id" />
 	<input type="hidden" asp-for="GameId" />
