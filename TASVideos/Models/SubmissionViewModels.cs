@@ -98,6 +98,10 @@ namespace TASVideos.Models
 	{
 		public int Id { get; set; }
 		public bool CanEdit { get; set; }
+		public bool IsCatalogged => SystemId.HasValue
+			&& SystemFrameRateId.HasValue
+			&& GameId.HasValue
+			&& RomId.HasValue;
 
 		[Display(Name = "For tier")]
 		public string TierName { get; set; }
@@ -153,7 +157,15 @@ namespace TASVideos.Models
 		[Display(Name = "Judge")]
 		public string Judge { get; set; }
 
+		[Display(Name = "Publisher")]
+		public string Publisher { get; set; }
+
 		public string Title { get; set; }
+
+		internal int? SystemId { get; set; }
+		internal int? SystemFrameRateId { get; set; }
+		internal int? GameId { get; set; }
+		internal int? RomId { get; set; }
 	}
 
 	// TODO: document
