@@ -44,7 +44,7 @@ namespace TASVideos.Controllers
 
 		protected IActionResult RedirectHome()
 		{
-			return RedirectToAction(nameof(HomeController.Index), "Home");
+			return Redirect("/Home/Index");
 		}
 
 		protected IActionResult RedirectToLogin()
