@@ -1,0 +1,11 @@
+﻿@model PublicationViewModel
+@{
+	ViewData["Title"] = $"Movie #{Model.Id}";
+}
+@section PageTitle {
+	<h1>@($"Movie {Model.Title}")</h1>
+}
+
+<h4>this is a published movie!</h4>
+<h4>@Model.Title</h4>
+<h4>Id:  @Model.Id</h4>
