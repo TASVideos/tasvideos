@@ -1,20 +1,17 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Constants;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
 {
-	using System.Collections.Generic;
-
-	using Microsoft.AspNetCore.Mvc.Rendering;
-
-	using TASVideos.Constants;
-
 	public class CatalogTasks
 	{
 		private readonly ApplicationDbContext _db;
@@ -74,8 +71,8 @@ namespace TASVideos.Tasks
 
 		public async Task<bool> DeleteGame(int id)
 		{
-			bool canDelete = !(await _db.Submissions.AnyAsync(s => s.Game.Id == id))
-							&& !(await _db.Publications.AnyAsync(p => p.Game.Id == id));
+			bool canDelete = !await _db.Submissions.AnyAsync(s => s.Game.Id == id)
+				&& !await _db.Publications.AnyAsync(p => p.Game.Id == id);
 
 			if (!canDelete)
 			{
@@ -137,8 +134,8 @@ namespace TASVideos.Tasks
 				model.SystemCode = game.System.Code;
 				if (romId.HasValue)
 				{
-					model.CanDelete = !(await _db.Submissions.AnyAsync(s => s.Rom.Id == model.Id))
-						&& !(await _db.Publications.AnyAsync(p => p.Rom.Id == model.Id));
+					model.CanDelete = !await _db.Submissions.AnyAsync(s => s.Rom.Id == model.Id)
+						&& !await _db.Publications.AnyAsync(p => p.Rom.Id == model.Id);
 				}
 
 				return model;
@@ -165,8 +162,8 @@ namespace TASVideos.Tasks
 
 		public async Task<bool> DeleteRom(int id)
 		{
-			bool canDelete = !(await _db.Submissions.AnyAsync(s => s.Rom.Id == id))
-				&& !(await _db.Publications.AnyAsync(p => p.Rom.Id == id));
+			bool canDelete = !await _db.Submissions.AnyAsync(s => s.Rom.Id == id)
+				&& !await _db.Publications.AnyAsync(p => p.Rom.Id == id);
 
 			if (!canDelete)
 			{

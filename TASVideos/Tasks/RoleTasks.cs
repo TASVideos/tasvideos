@@ -8,8 +8,8 @@ using TASVideos.Models;
 
 namespace TASVideos.Tasks
 {
-    public class RoleTasks
-    {
+	public class RoleTasks
+	{
 		private readonly ApplicationDbContext _db;
 
 		public RoleTasks(ApplicationDbContext db)
