@@ -128,5 +128,11 @@ namespace TASVideos.Controllers
 				StatusCode = (int)HttpStatusCode.BadRequest
 			};
 		}
+
+		public async Task<IActionResult> RomDropDownForGame(int gameId, bool includeEmpty)
+		{
+			var model = await _catalogTasks.GetRomDropDownForGame(gameId, includeEmpty);
+			return PartialView("~/Views/Shared/_DropdownItems.cshtml", model);
+		}
 	}
 }

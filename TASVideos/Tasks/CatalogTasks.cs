@@ -9,7 +9,13 @@ using TASVideos.Models;
 
 namespace TASVideos.Tasks
 {
-    public class CatalogTasks
+	using System.Collections.Generic;
+
+	using Microsoft.AspNetCore.Mvc.Rendering;
+
+	using TASVideos.Constants;
+
+	public class CatalogTasks
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IMapper _mapper;
@@ -172,6 +178,23 @@ namespace TASVideos.Tasks
 			_db.Roms.Remove(rom);
 			await _db.SaveChangesAsync();
 			return true;
+		}
+
+		public async Task<IEnumerable<SelectListItem>> GetRomDropDownForGame(int gameId, bool includeEmpty)
+		{
+			var items = (await _db.Roms
+				.Where(r => r.GameId == gameId)
+				.Select(r => new SelectListItem
+				{
+					Value = r.Id.ToString(),
+					Text = r.Name
+				})
+				.ToListAsync())
+				.OrderBy(r => r.Value);
+
+			return includeEmpty
+				? UiDefaults.DefaultEntry.Concat(items)
+				: items;
 		}
 	}
 }

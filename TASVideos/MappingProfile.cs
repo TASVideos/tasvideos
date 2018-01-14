@@ -13,6 +13,8 @@ namespace TASVideos
 			CreateMap<SubmissionCreateViewModel, Submission>()
 				.ForMember(dest => dest.EmulatorVersion, opt => opt.MapFrom(src => src.Emulator));
 
+			CreateMap<SubmissionCatalogModel, Submission>();
+
 			CreateMap<User, UserEditViewModel>()
 				.ForMember(dest => dest.IsLockedOut, opt => opt.MapFrom(src => src.LockoutEnabled && src.LockoutEnd.HasValue));
 
