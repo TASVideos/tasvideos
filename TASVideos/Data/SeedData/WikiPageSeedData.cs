@@ -10,6 +10,44 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "System/FrontPage",
+				RevisionMessage = InitialCreate,
+				Markup =
+@"[module:ActiveTab|tab=b0]
+[module:welcome]
+[module:topicfeed|t=8694|right|heading=TASVideos News|l=4|hidecontent]
+ 
+!! Featured Movie
+[if:!UserIsLoggedIn]
+[module:DisplayMiniMovie|ratingsort=F|flags=NewcomerRec|notier]
+[endif]
+[if:UserIsLoggedIn]
+[module:DisplayMiniMovie|ratingsort=F|tier=Stars|notier]
+[endif]
+%%%%
+
+!!! Latest Publications
+[module:tabularmovielist|limit=10|tier=Moons,Stars|footer=More...|flink=NewMovies]
+%%%%
+ 
+!!! [=/css/vaulttier.png|left]The [Vault]
+[module:tabularmovielist|limit=10||tier=Vault|footer=More...|flink=NewVaultMovies]
+%%%%
+
+!!! Newest Submissions 
+[module:FrontpageSubmissionList|maxdays=365|maxrels=5]
+%%%
+[Subs-List|More…]
+ 
+!!! Newest WIPs
+[module:usermovies|links=1|limit=5|dashline=1]
+%%%%
+
+!!! Contribute
+Want to [Helping|help]? Everyone has something they can contribute."
+			},
+			new WikiPage
+			{
 				PageName = "HomePages",
 				RevisionMessage = InitialCreate,
 				Markup =

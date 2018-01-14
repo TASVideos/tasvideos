@@ -14,19 +14,9 @@ namespace TASVideos.Controllers
 		{
 		}
 
-		public IActionResult Index()
-		{
-			return View(UserPermissions);
-		}
-
 		public IActionResult Error()
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-
-		public IActionResult WikiTest()
-		{
-			return View();
 		}
 	}
 }
