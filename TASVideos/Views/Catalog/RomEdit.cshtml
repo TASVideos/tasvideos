@@ -23,34 +23,34 @@
 			<form-group>
 				<label asp-for="Name"></label>
 				<input type="text" asp-for="Name" class="form-control" autocomplete="off" />
-				<span asp-validation-for="Name"></span>
+				<span asp-validation-for="Name" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Md5"></label>
 				<input type="text" asp-for="Md5" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Md5"></span>
+				<span asp-validation-for="Md5" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Sha1"></label>
 				<input type="text" asp-for="Sha1" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Sha1"></span>
+				<span asp-validation-for="Sha1" class="text-danger"></span>
 			</form-group>
 		</div>
 		<div class="col-md-6">
 			<form-group>
 				<label asp-for="RomType"></label>
 				<select asp-for="RomType" asp-items="@Model.AvailableRomTypes.OrderBy(s => s.Value)" class="form-control"></select>
-				<span asp-validation-for="SystemCode"></span>
+				<span asp-validation-for="SystemCode" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Version"></label>
 				<input type="text" asp-for="Version" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Version"></span>
+				<span asp-validation-for="Version" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Region"></label>
 				<input type="text" asp-for="Region" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Region"></span>
+				<span asp-validation-for="Region" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
@@ -59,3 +59,7 @@
 		<a asp-action="RomList" asp-route-gameId="@Model.GameId" class="btn btn-default">Cancel</a>
 	</div>
 </form>
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -12,39 +12,39 @@
 			<form-group>
 				<label asp-for="SystemCode"></label>
 				<select asp-for="SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
-				<span asp-validation-for="SystemCode"></span>
+				<span asp-validation-for="SystemCode" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="GoodName"></label>
 				<input type="text" asp-for="GoodName" class="form-control" autocomplete="off" />
-				<span asp-validation-for="GoodName"></span>
+				<span asp-validation-for="GoodName" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="DisplayName"></label>
 				<input type="text" asp-for="DisplayName" class="form-control" autocomplete="off" />
-				<span asp-validation-for="DisplayName"></span>
+				<span asp-validation-for="DisplayName" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Abbreviation"></label>
 				<input type="text" asp-for="Abbreviation" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Abbreviation"></span>
+				<span asp-validation-for="Abbreviation" class="text-danger"></span>
 			</form-group>
 		</div>
 		<div class="col-md-6">
 			<form-group>
 				<label asp-for="SearchKey"></label>
 				<input type="text" asp-for="SearchKey" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="SearchKey"></span>
+				<span asp-validation-for="SearchKey" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="YoutubeTags"></label>
 				<input type="text" asp-for="YoutubeTags" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="YoutubeTags"></span>
+				<span asp-validation-for="YoutubeTags" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="ScreenshotUrl"></label>
 				<input type="text" asp-for="ScreenshotUrl" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="ScreenshotUrl"></span>
+				<span asp-validation-for="ScreenshotUrl" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
@@ -53,3 +53,7 @@
 		<a asp-action="GameList" class="btn btn-default">Cancel</a>
 	</div>
 </form>
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}
