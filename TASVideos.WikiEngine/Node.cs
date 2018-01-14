@@ -202,7 +202,8 @@ namespace TASVideos.WikiEngine.AST
 			["user_name"] = "UserName",
 			["listparents"] = "ListParents",
 			["youtube"] = "Youtube",
-			["platformframerates"] = "PlatformFramerates"
+			["platformframerates"] = "PlatformFramerates",
+			["frontpagesubmissionlist"] = "FrontpageSubmissionList"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
