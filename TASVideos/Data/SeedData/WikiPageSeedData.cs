@@ -30,7 +30,7 @@ namespace TASVideos.Data.SeedData
 [module:tabularmovielist|limit=10|tier=Moons,Stars|footer=More...|flink=NewMovies]
 %%%%
  
-!!! [=/css/vaulttier.png|left]The [Vault]
+!!! [=images/vaulttier.png|left]The [Vault]
 [module:tabularmovielist|limit=10||tier=Vault|footer=More...|flink=NewVaultMovies]
 %%%%
 
