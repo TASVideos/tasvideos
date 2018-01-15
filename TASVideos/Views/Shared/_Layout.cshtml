@@ -74,6 +74,8 @@
 		</script>
 		<script src="~/js/site.min.js" asp-append-version="true"></script>
 	</environment>
+
+	<link href="~/css/prism.css" rel="stylesheet" />
 </head>
 <body>
 	<nav id="banner" class="navbar navbar-inverse">
@@ -149,5 +151,6 @@
 
 	
 	@RenderSection("Scripts", required: false)
+	<script src="~/js/prism.js"></script>
 </body>
 </html>

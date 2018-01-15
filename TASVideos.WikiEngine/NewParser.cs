@@ -559,10 +559,12 @@ namespace TASVideos.WikiEngine
 				ClearBlockTags();
 				var e = new Element(_index, "code");
 				if (lang != "")
-					e.Attributes["data-syntax"] = lang;
+					e.Attributes["class"] = "language-" + lang;
 				e.Children.Add(new Text(_index, EatSrcEmbedText()) { CharEnd = _index });
 				e.CharEnd = _index;
-				AddNonChild(e);
+				var ret = new Element(e.CharStart, "pre") { CharEnd = e.CharEnd };
+				ret.Children.Add(e);
+				AddNonChild(ret);
 			}
 			else if (Eat('>'))
 			{
