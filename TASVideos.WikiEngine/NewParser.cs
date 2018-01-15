@@ -298,6 +298,7 @@ namespace TASVideos.WikiEngine
 			}
 			else if (Eat("%%%"))
 			{
+				while (Eat('%')) { }
 				AddNonChild(new Element(_index, "br") { CharEnd = _index });
 			}
 			else if (Eat("[["))
@@ -476,7 +477,7 @@ namespace TASVideos.WikiEngine
 			}
 			else if (Eat("----"))
 			{
-				while(Eat('-')) { }
+				while (Eat('-')) { }
 				ClearBlockTags();
 				AddNonChild(new Element(_index, "hr") { CharEnd = _index });
 			}
