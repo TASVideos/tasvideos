@@ -286,6 +286,8 @@ namespace TASVideos.Models
 
 		[Display(Name = "Tier")]
 		public string Tier { get; set; }
+
+		public string MovieExtension { get; set; }
 	}
 
 	public class SubmissionCatalogModel

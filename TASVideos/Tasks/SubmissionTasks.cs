@@ -466,7 +466,8 @@ namespace TASVideos.Tasks
 						RomId = s.RomId ?? 0,
 						Tier = s.IntendedTier.Name,
 						Branch = s.Branch,
-						EmulatorVersion = s.EmulatorVersion
+						EmulatorVersion = s.EmulatorVersion,
+						MovieExtension = s.MovieExtension
 					})
 					.SingleOrDefaultAsync();
 			}
