@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System;
+
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +25,16 @@ namespace TASVideos
 		}
 
 		public IConfiguration Configuration { get; }
+
+		public void ConfigureDevelopmentServices(IServiceCollection services)
+		{
+			services.ConfigureApplicationCookie(options =>
+			{
+				options.ExpireTimeSpan = TimeSpan.FromDays(90);
+			});
+
+			ConfigureServices(services);
+		}
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
