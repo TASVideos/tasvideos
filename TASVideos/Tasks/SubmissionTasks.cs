@@ -194,6 +194,7 @@ namespace TASVideos.Tasks
 			{
 				submission.Frames = parseResult.Frames;
 				submission.RerecordCount = parseResult.RerecordCount;
+				submission.MovieExtension = parseResult.FileExtension;
 				submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
 				if (submission.System == null)
 				{

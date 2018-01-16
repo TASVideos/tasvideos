@@ -15,7 +15,8 @@ namespace TASVideos.MovieParsers
 		{
 			var result = new ParseResult
 			{
-				Region = RegionType.Ntsc
+				Region = RegionType.Ntsc,
+				FileExtension = FileExtension
 			};
 
 			var bk2Archive = new ZipArchive(file);
@@ -50,7 +51,7 @@ namespace TASVideos.MovieParsers
 					string platform = GetValue(headerLines, "platform");
 					if (string.IsNullOrWhiteSpace(platform))
 					{
-						return new ErrorResult("Could not determine the System Code");
+						return new ErrorResult("Could not determine the System Code") { FileExtension = FileExtension };
 					}
 
 					// Some biz system ids do not match tasvideos, convert if needed
