@@ -57,6 +57,8 @@ namespace TASVideos.Data.Entity
 		// TODO: we eventually should want to move these to the file server instead
 		public byte[] MovieFile { get; set; }
 
+		public string MovieExtension { get; set; }
+
 		public int? GameId { get; set; }
 		public virtual Game.Game Game { get; set; }
 
