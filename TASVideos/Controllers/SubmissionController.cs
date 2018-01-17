@@ -284,6 +284,12 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.PublishMovies)]
 		public async Task<IActionResult> Publish(SubmissionPublishModel model)
 		{
+			if (model.Screenshot.ContentType == "image/png"
+				&& model.Screenshot.ContentType != "image/jpeg")
+			{
+				ModelState.AddModelError(nameof(model.Screenshot), "Invalid file type. Must be .png or .jpg");
+			}
+
 			if (!ModelState.IsValid)
 			{
 				return View(model);
