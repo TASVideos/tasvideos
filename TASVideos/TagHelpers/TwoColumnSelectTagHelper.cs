@@ -99,23 +99,23 @@ namespace TASVideos.TagHelpers
 	<div class='col-sm-offset-3 col-sm-6'>
 		<label class='control-label'> </label>
 		<div class='row mb-s'>
-			<button type='button' id='{addBtnName}' class='btn btn-primary btn-xs col-xs-12' aria-label='Add' title='Add'>
+			<button type='button' id='{addBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Add' title='Add'>
 				<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
 			</button>
 		</div>
 		<div class='row'>
-			<button type='button' id='{addAllBtnName}' class='btn btn-primary btn-xs col-xs-12' aria-label='Add All' title='Add All'>
+			<button type='button' id='{addAllBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Add All' title='Add All'>
 				<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
 				<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
 			</button>
 		</div><br />
 		<div class='row mb-s'>
-			<button type='button' id='{removeBtnName}' class='btn btn-primary btn-xs col-xs-12' aria-label='Remove' title='Remove'>
+			<button type='button' id='{removeBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Remove' title='Remove'>
 				<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
 			</button>
 		</div>
 		<div class='row'>
-			<button type='button' id='{removeAllBtnName}' class='btn btn-primary btn-xs col-xs-12' aria-label='Remove All' title='Remove All'>
+			<button type='button' id='{removeAllBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Remove All' title='Remove All'>
 				<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
 				<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
 			</button>

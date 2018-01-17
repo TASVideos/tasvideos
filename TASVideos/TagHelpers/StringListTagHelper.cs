@@ -39,7 +39,7 @@ namespace TASVideos.TagHelpers
 		<input type='text' spellcheck='false' class='form-control' id='{modelName}_{i}_' name='{modelName}' value='{stringList[i]}' />
 	</div>
 	<div class='col-xs-2'>
-		<button {(i == 0 ? "id='" + modelName + "-add-btn'" : "")} class='string-list-add-btn btn btn-default {(i > 0 ? "hide": "")}' type='button'><span class='glyphicon glyphicon-plus'></span></button>
+		<button {(i == 0 ? "id='" + modelName + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "hide": "")}' type='button'><span class='glyphicon glyphicon-plus'></span></button>
 		<button onclick='this.parentElement.parentElement.remove()' class='string-list-remove-btn btn btn-danger {(i == 0 ? "hide" : "")}' type='button'><span class='glyphicon glyphicon-remove'></span></button>
 	</div>
 </div>");

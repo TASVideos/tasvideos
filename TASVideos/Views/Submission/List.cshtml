@@ -8,7 +8,7 @@
 @if (ViewData.UserHasPermission(PermissionTo.SubmitMovies))
 {
 	<a class="btn btn-primary" asp-action="Submit">Submit a Movie</a>
-	<a asp-action="List" asp-route-user="@User.Identity.Name" class="btn btn-default">My Submissions</a>
+	<a asp-action="List" asp-route-user="@User.Identity.Name" class="btn btn-secondary">My Submissions</a>
 }
 else
 {

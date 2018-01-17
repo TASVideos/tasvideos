@@ -23,7 +23,7 @@
 				<td>@item.Author</td>
 				<td>@item.RevisionMessage @(item.MinorEdit ? ("(Minor edit)") : "")</td>
 				<td>@item.CreateTimestamp.ToShortTimeString()</td>
-				<td><a asp-controller="Wiki" asp-action="Diff" asp-route-path="@item.PageName" asp-route-fromRevision="@(item.Revision - 1)" asp-route-toRevision="@item.Revision" class="btn btn-default">Diff</a></td>
+				<td><a asp-controller="Wiki" asp-action="Diff" asp-route-path="@item.PageName" asp-route-fromRevision="@(item.Revision - 1)" asp-route-toRevision="@item.Revision" class="btn btn-secondary">Diff</a></td>
 			</tr>
 		}
 	}

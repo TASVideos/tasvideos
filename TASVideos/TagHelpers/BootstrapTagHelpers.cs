@@ -55,7 +55,7 @@ namespace TASVideos.TagHelpers
 			</div>
 			<div class='modal-footer'>
 				<a href='{WebUtility.UrlDecode(AspHref)}' class='text-center btn btn-danger'>Yes</a>
-				<button type='button' class='btn btn-default' data-dismiss='modal'>No</button>
+				<button type='button' class='btn btn-secondary' data-dismiss='modal'>No</button>
 			</div>
 		</div>
 	</div>

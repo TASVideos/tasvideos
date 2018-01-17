@@ -25,7 +25,7 @@
 				{
 					<label class="text-danger col-sm-4"><span class="glyphicon glyphicon-alert"></span> This user is currently locked out</label>
 					<div class="col-sm-1">
-						<a class="btn btn-default" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
+						<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
 					</div>
 				}
 				else
@@ -58,7 +58,7 @@
 						<span id="username-exists-message" class="hide text-danger">User name already exists</span>
 					</div>
 					<div>
-						<button id="check-username" type="button" class="btn btn-default hide">Check</button>
+						<button id="check-username" type="button" class="btn btn-secondary hide">Check</button>
 					</div>
 					<script>
 						(function() {
@@ -175,6 +175,6 @@
 	<hr/>
 	<div class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
-		<a asp-action="List" class="btn btn-default">Cancel</a>
+		<a asp-action="List" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>

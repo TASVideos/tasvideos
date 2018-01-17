@@ -13,7 +13,7 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
-			class="btn btn-default btn-xs" title="First Page">
+			class="btn btn-secondary btn-sm" title="First Page">
 			<span class="glyphicon glyphicon-fast-backward"></span>
 		</a>
 		<a
@@ -24,7 +24,7 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
-			class="btn btn-default btn-xs" title="Previous Page">
+			class="btn btn-secondary btn-sm" title="Previous Page">
 			<span class="glyphicon glyphicon-chevron-left"></span>
 		</a>
 		<a
@@ -35,7 +35,7 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
-			class="btn btn-default btn-xs" title="Next Page">
+			class="btn btn-secondary btn-sm" title="Next Page">
 			<span class="glyphicon glyphicon-chevron-right"></span>
 		</a>
 		<a
@@ -46,10 +46,10 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
-			class="btn btn-default btn-xs" title="Last Page">
+			class="btn btn-secondary btn-sm" title="Last Page">
 			<span class="glyphicon glyphicon-fast-forward"></span>
 		</a>
-		<a asp-action="@action" asp-controller="@controller" class="btn btn-default btn-xs">Reset</a>
+		<a asp-action="@action" asp-controller="@controller" class="btn btn-secondary btn-sm">Reset</a>
 	</div>
 	<div class="@(Model.LastPage > 1 ? "col-sm-4 text-right" : "text-center")">
 		<label>Showing @Model.StartRow - @Model.LastRow of @Model.RowCount</label>
@@ -60,7 +60,7 @@
 			<input type="hidden" asp-for="SortDescending" />
 			<input type="hidden" asp-for="SortBy" />
 			<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage" class="input-sm" style="height: 23px; padding: 2px 5px; max-width: 65px;"> Of @Model.LastPage</label>
-			<button type="submit" class="btn btn-default btn-xs">Go To</button>
+			<button type="submit" class="btn btn-secondary btn-sm">Go To</button>
 		</form>
 	</div>
 </row>
