@@ -250,7 +250,10 @@ namespace TASVideos.Models
 		[StringLength(50)]
 		[Display(Name = "Emulator Version")]
 		public string EmulatorVersion { get; set; }
-		public string Markup { get; set; }
+
+		[Required]
+		[Display(Name = "Movie description")]
+		public string MovieMarkup { get; set; } = "''[TODO]: describe this movie here''";
 
 		[Required]
 		[Display(Name = "Movie Filename", Description = "Please follow the convention: xxxv#-yyy where xxx is author name, # is version and yyy is game name. Special characters such as \"&\" and \"/\" and \".\" and spaces must not occur in the filename.")]
@@ -268,7 +271,9 @@ namespace TASVideos.Models
 		// Not used for edit fields
 		public int Id { get; set; }
 		public string Title { get; set; }
-		public string SubmissionMarkup { get; set; }
+
+		[Display(Name = "Submisison description (for quoting, reference, etc)")]
+		public string Markup { get; set; }
 
 		[Display(Name = "System")]
 		public string SystemCode { get; set; }

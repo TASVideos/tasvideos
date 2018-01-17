@@ -461,8 +461,7 @@ namespace TASVideos.Tasks
 					{
 						Id = s.Id,
 						Title = s.Title,
-						SubmissionMarkup = s.WikiContent.Markup,
-
+						Markup = s.WikiContent.Markup,
 						SystemCode = s.System.Code,
 						SystemRegion = s.SystemFrameRate.RegionCode + " " + s.SystemFrameRate.FrameRate,
 						Game = s.Game.GoodName,
@@ -619,6 +618,18 @@ namespace TASVideos.Tasks
 			};
 			_db.PublicationFiles.Add(screenshot);
 			publication.Files.Add(screenshot);
+
+			// Create a wiki page corresponding to this submission
+			var wikiPage = new WikiPage
+			{
+				RevisionMessage = $"Auto-generated from Movie #{publication.Id}",
+				PageName = LinkConstants.PublicationWikiPage + publication.Id,
+				MinorEdit = false,
+				Markup = model.MovieMarkup
+			};
+
+			_db.WikiPages.Add(wikiPage);
+			publication.WikiContent = wikiPage;
 
 			await _db.SaveChangesAsync();
 
