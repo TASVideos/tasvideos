@@ -3,7 +3,6 @@
 	ViewData["Title"] = $"Publishing Submission #{Model.Title}";
 }
 <div class="panel panel-info">
-	
 	<div class="panel-body">
 		<row>
 			<div class="col-xs-12">
@@ -82,3 +81,7 @@
 		<a asp-action="View" asp-route-id="@Model.Id" class="btn btn-default">Cancel</a>
 	</div>
 </form>
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}
