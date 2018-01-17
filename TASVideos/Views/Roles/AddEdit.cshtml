@@ -5,24 +5,24 @@
 <delete-button condition="@Model.Id.HasValue && ViewData.UserHasPermission(PermissionTo.DeleteRoles)" asp-href="@Url.Action($"Delete/{Model.Id}")" warning-message="Are you sure you want to delete this Role? This action cannot be undone!" class="pull-right text-center">Delete</delete-button>
 <h4>@ViewData["Title"]</h4>
 <hr />
-<form asp-route="Edit" class="form-horizontal">
+<form asp-route="Edit">
 	<input type="hidden" asp-for="@Model.Id" />
 	<form-group>
 		<row>
 			<div class="col-sm-5">
-				<label asp-for="Name" class="control-label"></label>
+				<label asp-for="Name" class="form-control-label"></label>
 				<input asp-for="Name" class="form-control" maxlength="50" />
 				<span asp-validation-for="Name" class="text-danger"></span>
 			</div>
 			<div class="col-sm-offset-2 col-sm-5">
-				<label asp-for="Description" class="control-label"></label>
+				<label asp-for="Description" class="form-control-label"></label>
 				<textarea asp-for="Description" class="form-control" rows="3" maxlength="200"></textarea>
 				<span asp-validation-for="Description" class="text-danger"></span>
 			</div>
 		</row>
 		<row>
 			<div class="col-sm-5">
-				<label asp-for="Links" class="control-label"></label>
+				<label asp-for="Links" class="form-control-label"></label>
 				<string-list asp-for="Links" />
 			</div>
 		</row>

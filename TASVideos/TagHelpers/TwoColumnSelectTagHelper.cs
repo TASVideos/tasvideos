@@ -84,7 +84,7 @@ namespace TASVideos.TagHelpers
 				AvailableList.ModelExplorer,
 				availableListName,
 				AvailableList.ModelExplorer.Metadata.DisplayName,
-				new { @class = "control-label" }));
+				new { @class = "form-control-label" }));
 
 			output.Content.AppendHtml(
 				$"<select class='form-control' id='{availableListName}' multiple='multiple' name='{availableListName}' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
@@ -97,7 +97,7 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml($@"
 <div class='col-xs-2'>
 	<div class='col-sm-offset-3 col-sm-6'>
-		<label class='control-label'> </label>
+		<label class='form-control-label'> </label>
 		<div class='row mb-s'>
 			<button type='button' id='{addBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Add' title='Add'>
 				<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
@@ -132,7 +132,7 @@ namespace TASVideos.TagHelpers
 				IdList.ModelExplorer,
 				modelName,
 				IdList.ModelExplorer.Metadata.DisplayName,
-				new { @class = "control-label", @for = selectedListName }));
+				new { @class = "form-control-label", @for = selectedListName }));
 
 			output.Content.AppendHtml(
 				$"<select class='form-control' id='{selectedListName}' multiple='multiple' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
