@@ -210,6 +210,12 @@ namespace TASVideos.Controllers
 				subInfo.UserIsJudge)
 				.ToList();
 
+			if (!model.TierId.HasValue
+				&& (model.Status == SubmissionStatus.Accepted || model.Status == SubmissionStatus.PublicationUnderway))
+			{
+				ModelState.AddModelError(nameof(model.TierId), "A submission can not be accepted without a Tier");
+			}
+
 			if (ModelState.IsValid)
 			{
 				if (!availableStatus.Contains(model.Status))
@@ -238,6 +244,7 @@ namespace TASVideos.Controllers
 				}
 			}
 
+			model.AvailableTiers = await _submissionTasks.GetAvailableTiers();
 			model.GameVersionOptions = GameVersionOptions;
 			model.AvailableStatuses = availableStatus;
 			return View(model);

@@ -40,6 +40,17 @@ namespace TASVideos.Tasks
 			_hostingEnvironment = hostingEnvironment;
 		}
 
+		public async Task<IEnumerable<SelectListItem>> GetAvailableTiers()
+		{
+			return await _db.Tiers
+				.Select(t => new SelectListItem
+				{
+					Value = t.Id.ToString(),
+					Text = t.Name
+				})
+				.ToListAsync();
+		}
+
 		/// <summary>
 		/// Gets a list of <see cref="Submission"/>s for the submission queue filtered on the given <see cref="criteria" />
 		/// </summary>
