@@ -76,10 +76,27 @@
 			</form-group>
 		</div>
 	</row>
-	<div class="text-center">
-		<button type="submit" class="btn btn-primary">Publish</button>
-		<a asp-action="View" asp-route-id="@Model.Id" class="btn btn-default">Cancel</a>
-	</div>
+	<row>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="MovieMarkup"></label>
+				<textarea asp-for="MovieMarkup" class="form-control" rows="10"></textarea>
+				<span asp-validation-for="MovieMarkup" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="Markup"></label>
+				<textarea readonly class="form-control" rows="10" asp-for="Markup"></textarea>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="text-center">
+			<button type="submit" class="btn btn-primary">Publish</button>
+			<a asp-action="View" asp-route-id="@Model.Id" class="btn btn-default">Cancel</a>
+		</div>
+	</row>
 </form>
 
 @section Scripts {
