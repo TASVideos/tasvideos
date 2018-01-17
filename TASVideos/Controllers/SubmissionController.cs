@@ -296,7 +296,7 @@ namespace TASVideos.Controllers
 			}
 
 			var id = await _submissionTasks.PublishSubmission(model);
-			return Redirect($"{id}M");
+			return Redirect($"/{id}M");
 		}
 
 		private static readonly SelectListItem[] GameVersionOptions =

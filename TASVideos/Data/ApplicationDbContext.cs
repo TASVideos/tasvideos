@@ -32,6 +32,7 @@ namespace TASVideos.Data
 
 		public DbSet<Publication> Publications { get; set; }
 		public DbSet<PublicationAuthor> PublicationAuthors { get; set; }
+		public DbSet<PublicationFile> PublicationFiles { get; set; }
 
 		// Game tables
 		public DbSet<Game> Games { get; set; }

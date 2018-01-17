@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper;
+
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,17 +24,20 @@ namespace TASVideos.Tasks
 		private readonly MovieParser _parser;
 		private readonly WikiTasks _wikiTasks;
 		private readonly IMapper _mapper;
+		private readonly IHostingEnvironment _hostingEnvironment;
 
 		public SubmissionTasks(
 			ApplicationDbContext db,
 			MovieParser parser,
 			WikiTasks wikiTasks,
-			IMapper mapper)
+			IMapper mapper,
+			IHostingEnvironment hostingEnvironment)
 		{
 			_db = db;
 			_parser = parser;
 			_wikiTasks = wikiTasks;
 			_mapper = mapper;
+			_hostingEnvironment = hostingEnvironment;
 		}
 
 		/// <summary>
@@ -594,6 +599,27 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync(); // Need an Id for the Title
 			publication.GenerateTitle();
+
+			byte[] screenshotBytes;
+			using (var memoryStream = new MemoryStream())
+			{
+				await model.Screenshot.CopyToAsync(memoryStream);
+				screenshotBytes = memoryStream.ToArray();
+			}
+
+			string screenshotFileName = $"{publication.Id}M{Path.GetExtension(model.Screenshot.FileName)}";
+			string screenshotPath = Path.Combine(_hostingEnvironment.WebRootPath, "media", screenshotFileName);
+			File.WriteAllBytes(screenshotPath, screenshotBytes);
+
+			var screenshot = new PublicationFile
+			{
+				Publication = publication,
+				Path = screenshotFileName,
+				Type = FileType.Screenshot
+			};
+			_db.PublicationFiles.Add(screenshot);
+			publication.Files.Add(screenshot);
+
 			await _db.SaveChangesAsync();
 
 			return publication.Id;
