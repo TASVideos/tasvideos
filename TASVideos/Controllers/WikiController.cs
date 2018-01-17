@@ -31,11 +31,6 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> RenderWikiPage(string url, int? revision = null)
 		{
-			if (string.IsNullOrWhiteSpace(url))
-			{
-				url = "/System/FrontPage";
-			}
-
 			url = url.Trim('/').Replace(".html", "");
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
