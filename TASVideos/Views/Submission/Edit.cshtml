@@ -27,6 +27,7 @@
 			<form-group>
 				<label asp-for="TierId"></label>
 				<select asp-for="TierId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableTiers)" class="form-control"></select>
+				<span asp-validation-for="TierId" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
