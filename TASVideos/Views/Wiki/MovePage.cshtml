@@ -7,11 +7,11 @@
 	<row>
 		<div class="col-md-6">
 			<form-group>
-				<label class="control-label">Original Name</label>
+				<label class="form-control-label">Original Name</label>
 				<label class="form-control">@Model.OriginalPageName</label>
 			</form-group>
 			<form-group>
-				<label asp-for="DestinationPageName" class="control-label"></label>
+				<label asp-for="DestinationPageName" class="form-control-label"></label>
 				<input type="text" asp-for="DestinationPageName" class="form-control" />
 				<span asp-validation-for="DestinationPageName" class="text-danger"></span>
 			</form-group>
@@ -21,7 +21,6 @@
 			</div>
 		</div>
 	</row>
-
 </form>
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")

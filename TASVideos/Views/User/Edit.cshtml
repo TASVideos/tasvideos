@@ -43,7 +43,7 @@
 	</row>
 	<row>
 		<form-group class="col-md-5">
-			<label asp-for="UserName" class="control-label"></label>
+			<label asp-for="UserName" class="form-control-label"></label>
 			@if (ViewData.UserHasPermission(PermissionTo.EditUsersUserName))
 			{
 				<input asp-for="OriginalUserName" type="hidden"/>
@@ -155,7 +155,7 @@
 			}
 		</form-group>
 		<form-group class="col-md-offset-2 col-md-5">
-			<label asp-for="Email" class="control-label"></label>
+			<label asp-for="Email" class="form-control-label"></label>
 			@if (Model.EmailConfirmed)
 			{
 				<div class="input-group">
