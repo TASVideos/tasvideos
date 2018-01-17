@@ -70,14 +70,14 @@
 				</span>
 				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
 				<span asp-validation-for="Markup" class="text-danger"></span>
-				<button id="prefill-btn" type="button" class="btn btn-default">Prefill comments</button>
+				<button id="prefill-btn" type="button" class="btn btn-secondary">Prefill comments</button>
 			</form-group>
 		</div>
 	</row>
 	<hr />
 	<row>
 		<div class="text-center">
-			<button id="preview-btn" type="button" class="btn btn-default">Preview</button>
+			<button id="preview-btn" type="button" class="btn btn-secondary">Preview</button>
 			<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "hide")">Submit</button>
 			<br />
 			<br />

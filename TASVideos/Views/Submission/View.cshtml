@@ -83,14 +83,14 @@
 		</small>
 		<div class="btn-toolbar">
 			<a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
-			<a href="#" class="btn btn-default">Discuss and Vote</a>
+			<a href="#" class="btn btn-secondary">Discuss and Vote</a>
 			<span condition="@ViewData.UserHasPermission(PermissionTo.EditSubmissions)" class="btn-separator"></span>
 			<a condition="@canEdit" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
 			<a condition="@ViewData.UserHasPermission(PermissionTo.CatalogMovies)" asp-action="Catalog" asp-route-id="@Model.Id" class="btn btn-info">Catalog</a>
 			<a condition="@canPublish" asp-action="Publish" asp-route-id="@Model.Id" class="btn btn-warning">Publish</a>
 			<span class="btn-separator"></span>
-			<a asp-action="List" class="btn btn-default">Back to Queue</a>
-			<a asp-action="List" asp-route-user="@Model.Submitter" class="btn btn-default">All by this submitter</a>
+			<a asp-action="List" class="btn btn-secondary">Back to Queue</a>
+			<a asp-action="List" asp-route-user="@Model.Submitter" class="btn btn-secondary">All by this submitter</a>
 		</div>
 	</div>
 </row>
@@ -109,9 +109,9 @@
 		last edited by @Model.LastUpdateUser on @Model.LastUpdateTimeStamp
 	</small>
 	<br />
-	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)">Page History</a>
-	<a class="btn btn-info btn-xs" asp-controller="Wiki" asp-action="Diff" asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)">Last diff</a>
-	<a asp-controller="Wiki" asp-action="Referrers" asp-route-path="@($"{Model.Id}S")" class="btn btn-info btn-xs">List Referrers</a>
+	<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)">Page History</a>
+	<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="Diff" asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)">Last diff</a>
+	<a asp-controller="Wiki" asp-action="Referrers" asp-route-path="@($"{Model.Id}S")" class="btn btn-info btn-sm">List Referrers</a>
 </row>
 
 <style>
