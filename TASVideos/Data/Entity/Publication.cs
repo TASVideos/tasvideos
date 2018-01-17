@@ -10,6 +10,8 @@ namespace TASVideos.Data.Entity
     {
 		public int Id { get; set; }
 
+		public virtual ICollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
+
 		public int GameId { get; set; }
 		public virtual Game.Game Game { get; set; }
 
