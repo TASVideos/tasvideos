@@ -78,60 +78,67 @@
 	<link href="~/css/prism.css" rel="stylesheet" />
 </head>
 <body>
-	<nav id="banner" class="navbar navbar-inverse">
+	<nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
 		<div id="mantra">
 			<a id="brand" asp-action="Index" asp-controller="Home">TASVideos</a>
 			<div id="mantra1">Tool-assisted game movies</div>
 			<div id="mantra2">When human skills are just not enough</div>
 		</div>
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li class="@(Active("Home"))"><a asp-action="Index" asp-controller="Home">Home</a></li>
-					<li class="@(Active("Movies"))"><a href="/Movies">Movies</a></li>
-					<li class="@Active("Game Resources")"><a href="/GameResources">Game Resources</a></li>
-					<li class="@(Active("Articles"))"><a href="/Articles">Articles</a></li>
-					<li class="@(Active("Emulators"))"><a href="/EmulatorResources">Emulators</a></li>
-					<li class="@(Active("Submissions"))"><a asp-controller="Submission" asp-action="Index">Submissions</a></li>
-					<li class="@(Active("News"))"><a href="/Submissions">News</a></li>
-					@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles}))
-					{
-						<li class="dropdown @(Active("Administration"))">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Administration<span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers}))
-								{
-									<li><a asp-controller="User" asp-action="List">Users</a></li>
-								}
+		
 
-								<li><a asp-controller="Roles" asp-action="Index">Roles</a></li>
-								<li><a asp-controller="Permissions" asp-action="Index">Permissions</a></li>
-							</ul>
-						</li>
-					}
-					<li class="dropdown @(Active("Wiki"))">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Wiki<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="/RecentChanges">Recent Changes</a></li>
-							<li><a href="/WikiOrphans">Orphans</a></li>
-							<li><a href="/TODO">To Do</a></li>
-							<li><a href="/System">System Pages</a></li>
-						</ul>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item @(Active("Home"))">
+					<a class="nav-link" asp-action="Index" asp-controller="Home">Home</a>
+				</li>
+				<li class="nav-item @(Active("Movies"))">
+					<a class="nav-link" href="/Movies">Movies</a>
+				</li>
+				<li class="nav-item @Active("Game Resources")">
+					<a class="nav-link" href="/GameResources">Game Resources</a>
+				</li>
+				<li class="nav-item @(Active("Articles"))">
+					<a class="nav-link" href="/Articles">Articles</a>
+				</li>
+				<li class="nav-item @(Active("Emulators"))">
+					<a class="nav-link" href="/EmulatorResources">Emulators</a>
+				</li>
+				<li class="nav-item @(Active("Submissions"))">
+					<a class="nav-link" asp-controller="Submission" asp-action="Index">Submissions</a>
+				</li>
+				<li class="nav-item @(Active("News"))">
+					<a class="nav-link" href="/Submissions">News</a>
+				</li>
+				@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles}))
+				{
+					<li class="nav-item dropdown @(Active("Administration"))">
+						<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Administration<span class="caret"></span></a>
+						<div class="dropdown-menu">
+							@if (ViewData.UserHasAnyPermission(new[] {PermissionTo.ViewUsers, PermissionTo.EditUsers}))
+							{
+								<a class="dropdown-item" asp-controller="User" asp-action="List">Users</a>
+							}
+							<a class="dropdown-item" asp-controller="Roles" asp-action="Index">Roles</a>
+							<a class="dropdown-item" asp-controller="Permissions" asp-action="Index">Permissions</a>
+						</div>
 					</li>
-				</ul>
-				@await Html.PartialAsync("_LoginPartial")
-			</div>
+				}
+				<li class="nav-item dropdown @(Active("Wiki"))">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Wiki<span class="caret"></span></a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="/RecentChanges">Recent Changes</a>
+						<a class="dropdown-item" href="/WikiOrphans">Orphans</a>
+						<a class="dropdown-item" href="/TODO">To Do</a>
+						<a class="dropdown-item" href="/System">System Pages</a>
+					</div>
+				</li>
+			</ul>
+			@await Html.PartialAsync("_LoginPartial")
 		</div>
 	</nav>
-
 	@if (IsSectionDefined("PageTitle"))
 	{
 		@RenderSection("PageTitle")
@@ -143,13 +150,11 @@
 
 	<div class="container">
 		@RenderBody()
-		<hr />
+		<hr/>
 		<footer>
 			<p>&copy; 2017 - TASVideos v@(ViewData["Version"])</p>
 		</footer>
 	</div>
-
-	
 	@RenderSection("Scripts", required: false)
 	<script src="~/js/prism.js"></script>
 </body>
