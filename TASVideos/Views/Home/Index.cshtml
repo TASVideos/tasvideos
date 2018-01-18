@@ -1,1 +1,4 @@
-﻿@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/FrontPage" })
+﻿@section PageTitle {
+}
+
+@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/FrontPage" })
