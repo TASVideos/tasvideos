@@ -23,17 +23,15 @@ else
 	</div>
 }
 <hr />
-<row>
-	@if (pageExists)
-	{
-		@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = homePage })
-	}
-	else if (ViewData.UserHasPermission(PermissionTo.EditHomePage))
-	{
-		<div class="alert alert-info text-center">
-			<h4>Page does not yet exist</h4>
-			<label class="text-info">By default, all registered users can create and maintain a homepage if they choose.</label><br />
-			<label>Click Edit to create/edit your homepage.</label>
-		</div>
-	}
-</row>
+@if (pageExists)
+{
+	@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = homePage })
+}
+else if (ViewData.UserHasPermission(PermissionTo.EditHomePage))
+{
+	<div class="alert alert-info text-center">
+		<h4>Page does not yet exist</h4>
+		<label class="text-info">By default, all registered users can create and maintain a homepage if they choose.</label><br />
+		<label>Click Edit to create/edit your homepage.</label>
+	</div>
+}
