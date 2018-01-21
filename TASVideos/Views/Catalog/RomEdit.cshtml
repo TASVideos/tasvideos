@@ -4,22 +4,19 @@
 		? $"Editing Rom #{Model.Id} {Model.Name}"
 		: "Create a new Rom entry";
 }
-<row>
-	<div class="col-xs-12">
-		<div class="pull-left">
-			<h4>System: @Model.SystemCode</h4>
-			<h4>Game: @Model.GameName</h4>
-		</div>
-		<delete-button condition="@Model.CanDelete" asp-href="@Url.Action("DeleteRom", new { gameId = Model.GameId, romId = Model.Id ?? 0 })" class="pull-right">Delete</delete-button>
-	</div>
-</row>
+
+<form-group>
+	<delete-button condition="@Model.CanDelete" asp-href="@Url.Action("DeleteRom", new { gameId = Model.GameId, romId = Model.Id ?? 0 })" class="float-right">Delete</delete-button>
+	<h4>System: @Model.SystemCode</h4>
+	<h4>Game: @Model.GameName</h4>
+</form-group>
 <form asp-route="GameEdit">
 	<input type="hidden" asp-for="Id" />
 	<input type="hidden" asp-for="GameId" />
 	<input type="hidden" asp-for="GameName" />
 	<input type="hidden" asp-for="SystemCode" />
 	<row>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Name"></label>
 				<input type="text" asp-for="Name" class="form-control" autocomplete="off" />
@@ -36,7 +33,7 @@
 				<span asp-validation-for="Sha1" class="text-danger"></span>
 			</form-group>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="RomType"></label>
 				<select asp-for="RomType" asp-items="@Model.AvailableRomTypes.OrderBy(s => s.Value)" class="form-control"></select>

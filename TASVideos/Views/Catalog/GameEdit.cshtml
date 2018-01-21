@@ -4,11 +4,13 @@
 		? $"Editing Game #{Model.Id} {Model.DisplayName}"
 		: "Create a new Game entry";
 }
-<delete-button condition="@Model.CanDelete" asp-href="@Url.Action("DeleteGame", new { id = Model.Id ?? 0 } )" class="pull-right">Delete</delete-button>
+<form-group>
+	<delete-button condition="@Model.CanDelete" asp-href="@Url.Action("DeleteGame", new { id = Model.Id ?? 0 } )" class="float-right">Delete</delete-button>
+</form-group>
 <form asp-route="GameEdit">
 	<input type="hidden" asp-for="Id" />
 	<row>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="SystemCode"></label>
 				<select asp-for="SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
@@ -30,7 +32,7 @@
 				<span asp-validation-for="Abbreviation" class="text-danger"></span>
 			</form-group>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="SearchKey"></label>
 				<input type="text" asp-for="SearchKey" class="form-control" autocomplete="off" spellcheck="false" />
