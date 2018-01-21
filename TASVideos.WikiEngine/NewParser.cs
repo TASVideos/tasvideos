@@ -454,7 +454,7 @@ namespace TASVideos.WikiEngine
 				ClearBlockTags();
 				Push("vtabs");
 			}
-			else if (Eat("%%HTAB_START%%"))
+			else if (Eat("%%TAB_HSTART%%"))
 			{
 				DiscardLine();
 				ClearBlockTags();
