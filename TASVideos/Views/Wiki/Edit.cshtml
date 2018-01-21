@@ -1,73 +1,50 @@
 @model WikiEditModel
-
 @{
 	ViewData["Title"] = $"Editing {Model.PageName}";
 }
 
-<row>
-	<form asp-controller="Wiki" asp-action="Edit" form-method="POST">
-		<input type="hidden" asp-for="PageName" />
-		<div class="col-md-6">
-			<form-group>
-				<row>
-					<form-group class="form-inline">
-						<label asp-for="MinorEdit" class="form-control-label"></label>
-						<input type="checkbox" class="checkbox" asp-for="MinorEdit"/>
-					</form-group>
-				</row>
-				<row>
-					<label asp-for="RevisionMessage" class="form-control-label"></label>
-					<input type="text" asp-for="RevisionMessage" class="form-control" autocomplete="off" />
-					<span asp-validation-for="RevisionMessage" class="text-danger"></span>
-				</row>
-			</form-group>
-			
-		</div>
-		<div class="col-md-12">
-			<form-group>
-				<row>
-					<textarea asp-for="Markup" class="form-control" rows="20"></textarea>
-					<span asp-validation-for="Markup" class="text-danger"></span>
-				</row>
-				<row>
-					@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/WikiEditHelp" })
-				</row>
-			</form-group>
-		</div>
-		<div class="col-md-12">
-			<form-group>
-				<row>
-					<div class="text-center">
-						<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
-						<button type="submit" class="btn btn-primary">Save</button>
-						<a href="/@Model.PageName" class="btn btn-secondary">Cancel</a>
-					</div>
-					<div class="text-center alert-info" role="alert">
-						<label class="small alert-info">By pressing "Save/Edit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
-					</div>
-				</row>
-			</form-group>
-		</div>
-	</form>
-</row>
-<div class="hide" id="preview-container">
-	<hr />
-	<row>
-		<label>Preview:</label>
-		<button class="btn btn-secondary">Update</button>
-	</row>
-	<row>
-		<div id="preview-contents" style="border: solid; padding: 5px; border-radius: 5px">
+<form asp-controller="Wiki" asp-action="Edit" form-method="POST">
+	<input type="hidden" asp-for="PageName" />
+	<form-group class="col-lg-6">
+		<row>
+			<div class="form-check">
+				<input type="checkbox" class="form-check-input" asp-for="MinorEdit" />
+				<label asp-for="MinorEdit" class="form-check-label"></label>
+			</div>
+		</row>
+		<row>
+			<label asp-for="RevisionMessage" class="form-control-label"></label>
+			<input type="text" asp-for="RevisionMessage" class="form-control" autocomplete="off" />
+			<span asp-validation-for="RevisionMessage" class="text-danger"></span>
+		</row>
+	</form-group>
+	<form-group>
+		<textarea asp-for="Markup" class="form-control" rows="20"></textarea>
+		<span asp-validation-for="Markup" class="text-danger"></span>
+		@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/WikiEditHelp" })
+	</form-group>
+	<div class="text-center">
+		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a href="/@Model.PageName" class="btn btn-secondary">Cancel</a>
+	</div>
+	<div class="text-center alert-info" role="alert">
+		<label class="small alert-info">By pressing "Save/Edit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
+	</div>
+</form>
 
-		</div>
-	</row>
+<div class="d-none" id="preview-container">
+	<hr />
+	<label>Preview:</label>
+	<button class="btn btn-secondary">Update</button>
+	<div id="preview-contents" class="mt-3" style="border: solid; padding: 5px; border-radius: 5px"></div>
 </div>
 
 <script>
 	(function () {
 		document.getElementById('preview-button').onclick = function () {
 			var markup = document.getElementById('@nameof(Model.Markup)').value;
-			document.getElementById('preview-container').classList.remove('hide');
+			document.getElementById('preview-container').classList.remove('d-none');
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
