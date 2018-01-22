@@ -13,43 +13,37 @@
 
 @foreach (var role in Model)
 {
-	<div class="panel panel-default">
-		<div class="panel-heading">@role.Name</div>
-		<div class="panel-body">
-			<div class="col-sm-6">
-				<row>
+	<div class="card">
+		<div class="card-block p-3">
+			<h5 class="card-title">@role.Name</h5>
+			<row>
+				<div class="col-md-6">
 					<div condition="@ViewData.UserHasPermission(PermissionTo.EditRoles)">
 						<a asp-action="AddEdit" asp-route-id="@role.Id" class="btn btn-primary mb-m">Edit</a>
 					</div>
 					@role.Description
-				</row>
-			</div>
-			<div class="col-md-3 col-sm-6">
-				<row>
-					<strong>@Html.DisplayNameFor(m => m.First().Permissions):</strong><br />
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<strong>@Html.DisplayNameFor(m => m.First().Permissions):</strong><br/>
 					@foreach (var permission in role.Permissions)
 					{
-						@permission<br />
+						<div class="ml-md-0 ml-sm-4">@permission</div>
 					}
-				</row>
-			</div>
-			<div condition="@role.Links.Any()" class="col-md-3 col-sm-12">
-				<row>
-					<strong>@Html.DisplayNameFor(m => m.First().Links):</strong><br />
+				</div>
+				<div condition="@role.Links.Any()" class="col-lg-3 col-md-12">
+					<strong>@Html.DisplayNameFor(m => m.First().Links):</strong><br/>
 					@foreach (var link in role.Links)
 					{
-						<div>
-							<a href="/@link">@link</a>
-						</div>
+						<div class="ml-lg-0 ml-sm-4"><a href="/@link">@link</a></div>
 
 					}
-				</row>
-			</div>
+				</div>
+			</row>
 		</div>
 	</div>
 }
 
-<a asp-action="AddEdit" class="btn btn-primary">Create New Role</a>
+<a asp-action="AddEdit" class="mt-2 btn btn-primary">Create New Role</a>
 
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")
