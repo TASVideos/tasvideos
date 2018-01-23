@@ -14,7 +14,7 @@
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
 			class="btn btn-secondary btn-sm" title="First Page">
-			<span class="glyphicon glyphicon-fast-backward"></span>
+			<span class="fa fa-fast-backward"></span>
 		</a>
 		<a
 			disable="@Model.CurrentPage == 1"
@@ -25,7 +25,7 @@
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
 			class="btn btn-secondary btn-sm" title="Previous Page">
-			<span class="glyphicon glyphicon-chevron-left"></span>
+			<span class="fa fa-chevron-left"></span>
 		</a>
 		<a
 			disable="@Model.CurrentPage == Model.LastPage"
@@ -36,7 +36,7 @@
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
 			class="btn btn-secondary btn-sm" title="Next Page">
-			<span class="glyphicon glyphicon-chevron-right"></span>
+			<span class="fa fa-chevron-right"></span>
 		</a>
 		<a
 			disable="@Model.CurrentPage == Model.LastPage"
@@ -47,7 +47,7 @@
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
 			class="btn btn-secondary btn-sm" title="Last Page">
-			<span class="glyphicon glyphicon-fast-forward"></span>
+			<span class="fa fa-fast-forward"></span>
 		</a>
 		<a asp-action="@action" asp-controller="@controller" class="btn btn-secondary btn-sm">Reset</a>
 	</div>

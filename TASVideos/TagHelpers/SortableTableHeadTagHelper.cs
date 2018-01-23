@@ -56,7 +56,7 @@ namespace TASVideos.TagHelpers
 							? "up"
 							: "down";
 
-						output.Content.AppendHtml($"<span class='glyphicon glyphicon-arrow-{direction}'></span>");
+						output.Content.AppendHtml($"<span class='fa fa-arrow-{direction}'></span>");
 					}
 
 					output.Content.AppendHtml("</a>");

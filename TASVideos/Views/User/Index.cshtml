@@ -30,11 +30,11 @@
 			<label asp-for="EmailConfirmed"></label>
 			@if (Model.EmailConfirmed)
 			{
-				<div><span class="glyphicon glyphicon-check text-success"></span> Yes</div>
+				<div><span class="fa fa-check-square text-success"></span> Yes</div>
 			}
 			else
 			{
-				<div><span class="glyphicon glyphicon-alert text-danger"></span> No</div>
+				<div><span class="fa fa-exclamation-triangle text-danger"></span> No</div>
 			}
 		</div>
 	</row>
@@ -45,11 +45,11 @@
 			<label asp-for="IsLockedOut"></label>
 			@if (Model.IsLockedOut)
 			{
-				<div><span class="glyphicon glyphicon-check text-danger"></span> Locked out</div>
+				<div><span class="fa fa-exclamation-triangle text-danger"></span> Locked out</div>
 			}
 			else
 			{
-				<div><span class="glyphicon glyphicon-check text-success"></span> Not locked</div>
+				<div><span class="fa fa-check-square text-success"></span> Not locked</div>
 			}
 		</div>
 		<div class="col-md-6">

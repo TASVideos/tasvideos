@@ -23,7 +23,7 @@
 			<div class="col-md-5">
 				@if (Model.IsLockedOut)
 				{
-					<label class="text-danger col-sm-4"><span class="glyphicon glyphicon-alert"></span> This user is currently locked out</label>
+					<label class="text-danger col-sm-4"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
 					<div class="col-sm-1">
 						<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
 					</div>
@@ -31,7 +31,7 @@
 				else
 				{
 					<div class="col-sm-4">
-						<span class="glyphicon glyphicon-check text-success"></span> Not locked
+						<span class="fa fa-check-square text-success"></span> Not locked
 					</div>
 				}
 			</div>
@@ -52,13 +52,13 @@
 						<div class="input-group">
 							<input asp-for="UserName" class="form-control" autocomplete="off"/>
 							<span class="input-group-addon" aria-hidden="true">
-								<span id="user-name-status" class="glyphicon glyphicon-ok text-success"></span>
+								<span id="user-name-status" class="fa fa-check-square text-success"></span>
 							</span>
 						</div>
-						<span id="username-exists-message" class="hide text-danger">User name already exists</span>
+						<span id="username-exists-message" class="d-none text-danger">User name already exists</span>
 					</div>
 					<div>
-						<button id="check-username" type="button" class="btn btn-secondary hide">Check</button>
+						<button id="check-username" type="button" class="btn btn-secondary d-none">Check</button>
 					</div>
 					<script>
 						(function() {
@@ -83,40 +83,40 @@
 							}
 
 							function showCheckNameBtn() {
-								checkUserBtn.classList.remove('hide');
+								checkUserBtn.classList.remove('d-none');
 								checkUserBtn.parentNode.classList.add('col-sm-2');
 								userNameDiv.classList.remove('col-sm-12');
 								userNameDiv.classList.add('col-sm-10');
 							}
 
 							function hideCheckNameBtn() {
-								checkUserBtn.classList.add("hide");
+								checkUserBtn.classList.add("div-none");
 								checkUserBtn.parentNode.classList.remove('col-sm-2');
 								userNameDiv.classList.remove('col-sm-10');
 								userNameDiv.classList.add('col-sm-12');
 							}
 
 							function markUserNameUnknown() {
-								userNameStatus.classList.remove('glyphicon-ok', 'text-success');
-								userNameStatus.classList.remove('glyphicon-alert', 'text-danger');
-								userNameStatus.classList.add('glyphicon-question-sign', 'text-primary');
-								userNameExistsMessage.classList.add('hide');
+								userNameStatus.classList.remove('fa-check-square', 'text-success');
+								userNameStatus.classList.remove('fa-exclamation-triangle', 'text-danger');
+								userNameStatus.classList.add('fa-question-circle', 'text-primary');
+								userNameExistsMessage.classList.add('d-none');
 								document.getElementById('submit-btn').disabled = true;
 							}
 
 							function markUserNameGood() {
-								userNameStatus.classList.add('glyphicon-ok', 'text-success');
-								userNameStatus.classList.remove('glyphicon-alert', 'text-danger');
-								userNameStatus.classList.remove('glyphicon-question-sign', 'text-primary');
-								userNameExistsMessage.classList.add('hide');
+								userNameStatus.classList.add('fa-check-square', 'text-success');
+								userNameStatus.classList.remove('fa-exclamation-triangle', 'text-danger');
+								userNameStatus.classList.remove('fa-question-circle', 'text-primary');
+								userNameExistsMessage.classList.add('d-none');
 								document.getElementById('submit-btn').disabled = false;
 							}
 
 							function markUserNameBad() {
-								userNameStatus.classList.remove('glyphicon-ok', 'text-success');
-								userNameStatus.classList.add('glyphicon-alert', 'text-danger');
-								userNameStatus.classList.remove('glyphicon-question-sign', 'text-primary');
-								userNameExistsMessage.classList.remove('hide');
+								userNameStatus.classList.remove('fa-check-square', 'text-success');
+								userNameStatus.classList.add('fa-exclamation-triangle', 'text-danger');
+								userNameStatus.classList.remove('fa-question-circle', 'text-primary');
+								userNameExistsMessage.classList.remove('d-none');
 								document.getElementById('submit-btn').disabled = true;
 							}
 
@@ -160,7 +160,7 @@
 			{
 				<div class="input-group">
 					<label class="form-control">@Model.Email</label>
-					<span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+					<span class="input-group-addon" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
 				</div>
 			}
 			else
