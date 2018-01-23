@@ -2,36 +2,32 @@
 @{
 	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Name : "Create a New Role";
 }
-<delete-button condition="@Model.Id.HasValue && ViewData.UserHasPermission(PermissionTo.DeleteRoles)" asp-href="@Url.Action($"Delete/{Model.Id}")" warning-message="Are you sure you want to delete this Role? This action cannot be undone!" class="pull-right text-center">Delete</delete-button>
+<delete-button condition="@Model.Id.HasValue && ViewData.UserHasPermission(PermissionTo.DeleteRoles)" asp-href="@Url.Action($"Delete/{Model.Id}")" warning-message="Are you sure you want to delete this Role? This action cannot be undone!" class="float-right text-center">Delete</delete-button>
 <h4>@ViewData["Title"]</h4>
 <hr />
 <form asp-route="Edit">
 	<input type="hidden" asp-for="@Model.Id" />
-	<form-group>
-		<row>
-			<div class="col-sm-5">
-				<label asp-for="Name" class="form-control-label"></label>
-				<input asp-for="Name" class="form-control" maxlength="50" />
-				<span asp-validation-for="Name" class="text-danger"></span>
-			</div>
-			<div class="col-sm-offset-2 col-sm-5">
-				<label asp-for="Description" class="form-control-label"></label>
-				<textarea asp-for="Description" class="form-control" rows="3" maxlength="200"></textarea>
-				<span asp-validation-for="Description" class="text-danger"></span>
-			</div>
-		</row>
-		<row>
-			<div class="col-sm-5">
-				<label asp-for="Links" class="form-control-label"></label>
-				<string-list asp-for="Links" />
-			</div>
-		</row>
-	</form-group>
-	<form-group>
-		<row>
-			<two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
-		</row>
-	</form-group>
+	<row>
+		<div class="col-md-5">
+			<label asp-for="Name" class="form-control-label"></label>
+			<input asp-for="Name" class="form-control" maxlength="50" />
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+		<div class="col-md-offset-2 col-md-5">
+			<label asp-for="Description" class="form-control-label"></label>
+			<textarea asp-for="Description" class="form-control" rows="3" maxlength="200"></textarea>
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+	</row>
+	<row>
+		<div class="col-md-5">
+			<label asp-for="Links" class="form-control-label"></label>
+			<string-list asp-for="Links" />
+		</div>
+	</row>
+	
+	<two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
+	
 	<form-group class="hide" id="assignable-permissions-section">
 		<row>
 			<two-column-select id-list="SelectedAssignablePermissions" available-list="AvailableAssignablePermissions" />
