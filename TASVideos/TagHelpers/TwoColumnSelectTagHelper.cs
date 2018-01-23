@@ -95,29 +95,29 @@ namespace TASVideos.TagHelpers
 
 			// Middle Column Div
 			output.Content.AppendHtml($@"
-<div class='col-xs-2'>
-	<div class='col-sm-offset-3 col-sm-6'>
+<div class='col-sm-2'>
+	<div class='col-md-offset-3 col-md-6'>
 		<label class='form-control-label'> </label>
-		<div class='row mb-s'>
+		<div class='row'>
 			<button type='button' id='{addBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Add' title='Add'>
-				<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
+				<i class='fa fa-chevron-right' aria-hidden='true'></span>
 			</button>
 		</div>
 		<div class='row'>
 			<button type='button' id='{addAllBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Add All' title='Add All'>
-				<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
-				<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
+				<span class='fa fa-chevron-right' aria-hidden='true'></span>
+				<span class='fa fa-chevron-right' aria-hidden='true'></span>
 			</button>
 		</div><br />
-		<div class='row mb-s'>
+		<div class='row'>
 			<button type='button' id='{removeBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Remove' title='Remove'>
-				<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
+				<span class='fa fa-chevron-left' aria-hidden='true'></span>
 			</button>
 		</div>
 		<div class='row'>
 			<button type='button' id='{removeAllBtnName}' class='btn btn-primary btn-sm col-xs-12' aria-label='Remove All' title='Remove All'>
-				<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
-				<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
+				<span class='fa fa-chevron-left' aria-hidden='true'></span>
+				<span class='fa fa-chevron-left' aria-hidden='true'></span>
 			</button>
 		</div>
 	</div>

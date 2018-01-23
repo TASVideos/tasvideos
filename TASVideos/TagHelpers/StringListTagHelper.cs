@@ -39,8 +39,8 @@ namespace TASVideos.TagHelpers
 		<input type='text' spellcheck='false' class='form-control' id='{modelName}_{i}_' name='{modelName}' value='{stringList[i]}' />
 	</div>
 	<div class='col-xs-2'>
-		<button {(i == 0 ? "id='" + modelName + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "hide": "")}' type='button'><span class='glyphicon glyphicon-plus'></span></button>
-		<button onclick='this.parentElement.parentElement.remove()' class='string-list-remove-btn btn btn-danger {(i == 0 ? "hide" : "")}' type='button'><span class='glyphicon glyphicon-remove'></span></button>
+		<button {(i == 0 ? "id='" + modelName + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none": "")}' type='button'><span class='fa fa-plus-square'></span></button>
+		<button onclick='this.parentElement.parentElement.remove()' class='string-list-remove-btn btn btn-danger {(i == 0 ? "d-none" : "")}' type='button'><span class='fa fa-remove'></span></button>
 	</div>
 </div>");
 			}
@@ -67,10 +67,10 @@ $@"<script>
 			input.id = 'Authors_' + newIndex + '_';
 			var addBtn = newElem.querySelector('.string-list-add-btn');
 			addBtn.id = '';
-			addBtn.classList.add('hide');
+			addBtn.classList.add('d-none');
 
 			var removeBtn = newElem.querySelector('.string-list-remove-btn');
-			removeBtn.classList.remove('hide');
+			removeBtn.classList.remove('d-none');
 
 			document.querySelector('#{parentContainerName} div[class=""row""]').appendChild(newElem);
 		}}
