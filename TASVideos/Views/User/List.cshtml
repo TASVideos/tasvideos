@@ -2,12 +2,11 @@
 @{
 	ViewData["Title"] = "User List";
 }
+
+<div class="float-right">
+	@Html.Partial("~/Views/User/_UserSearch.cshtml")
+</div>
 <h4>@ViewData["Title"]</h4>
-<row>
-	<form-group class="text-right col-xs-offset-6 col-xs-6">
-		@Html.Partial("~/Views/User/_UserSearch.cshtml")
-	</form-group>
-</row>
 <hr />
 @Html.Partial("~/Views/Table/_Pager.cshtml", Model)
 <table class="table table-bordered table-striped">
