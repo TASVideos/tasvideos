@@ -8,44 +8,39 @@
 <form asp-route="Edit">
 	<input type="hidden" asp-for="@Model.Id" />
 	<row>
-		<div class="col-md-5">
+		<div class="col-lg-5">
 			<label asp-for="Name" class="form-control-label"></label>
 			<input asp-for="Name" class="form-control" maxlength="50" />
 			<span asp-validation-for="Name" class="text-danger"></span>
 		</div>
-		<div class="col-md-offset-2 col-md-5">
+		<div class="offset-lg-2 col-lg-5">
 			<label asp-for="Description" class="form-control-label"></label>
 			<textarea asp-for="Description" class="form-control" rows="3" maxlength="200"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
 	</row>
 	<row>
-		<div class="col-md-5">
+		<div class="col-lg-5">
 			<label asp-for="Links" class="form-control-label"></label>
 			<string-list asp-for="Links" />
 		</div>
 	</row>
-	
-	<two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
-	
-	<form-group class="hide" id="assignable-permissions-section">
-		<row>
-			<two-column-select id-list="SelectedAssignablePermissions" available-list="AvailableAssignablePermissions" />
-		</row>
-		<row>
-			<div class="col-sm-offset-7 col-sm-5">
-				<br />
-				<label>Roles that can be assigned: </label>
+	<form-group>
+		<two-column-select id-list="SelectedPermissions" available-list="AvailablePermissions" />
+	</form-group>
+	<form-group class="d-none" id="assignable-permissions-section">
+		<two-column-select id-list="SelectedAssignablePermissions" available-list="AvailableAssignablePermissions" />
+		<row class="mt-3">
+			<div class="offset-sm-7 col-sm-5">
+				<label class="form-control-label">Roles that can be assigned:</label>
 				<div id="assignable-roles">None</div>
 			</div>
 		</row>
 	</form-group>
-	<form-group>
-		<row class="text-center mt-el">
-			<button type="submit" class="btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
-			<a asp-action="Index" class="btn btn-secondary">Cancel</a>
-		</row>
-	</form-group>
+	<div class="text-center mt-3">
+		<button type="submit" class="btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</button>
+		<a asp-action="Index" class="btn btn-secondary">Cancel</a>
+	</div>
 </form>
 <script>
 	(function() {
@@ -172,10 +167,10 @@
 
 		function onSelectedPermissionsChange() {
 			if (shouldShowAssignRoles()) {
-				document.getElementById('assignable-permissions-section').classList.remove('hide');
+				document.getElementById('assignable-permissions-section').classList.remove('d-none');
 				syncAssignablePerms();
 			} else {
-				document.getElementById('assignable-permissions-section').classList.add('hide');
+				document.getElementById('assignable-permissions-section').classList.add('d-none');
 			}
 		}
 

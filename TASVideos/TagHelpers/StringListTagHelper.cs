@@ -21,7 +21,7 @@ namespace TASVideos.TagHelpers
 			var modelName = AspFor.ModelExplorer.Metadata.PropertyName;
 			var parentContainerName = $"{modelName}-string-list";
 			output.Attributes.Add("id", parentContainerName);
-			output.Content.AppendHtml("<div class='row'>");
+			output.Content.AppendHtml("<div class='string-list-container'>");
 
 			List<string> stringList = ((IEnumerable<string>)AspFor.Model)?.ToList() ?? new List<string>();
 
@@ -34,11 +34,11 @@ namespace TASVideos.TagHelpers
 			for (int i = 0; i < stringList.Count; i++)
 			{
 				output.Content.AppendHtml($@"
-<div class='author-row' data-index='{i}'>
-	<div class='col-xs-10'>
+<div class='author-row row mb-1' data-index='{i}'>
+	<div class='col-10'>
 		<input type='text' spellcheck='false' class='form-control' id='{modelName}_{i}_' name='{modelName}' value='{stringList[i]}' />
 	</div>
-	<div class='col-xs-2'>
+	<div class='col-2'>
 		<button {(i == 0 ? "id='" + modelName + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none": "")}' type='button'><span class='fa fa-plus-square'></span></button>
 		<button onclick='this.parentElement.parentElement.remove()' class='string-list-remove-btn btn btn-danger {(i == 0 ? "d-none" : "")}' type='button'><span class='fa fa-remove'></span></button>
 	</div>
@@ -72,7 +72,7 @@ $@"<script>
 			var removeBtn = newElem.querySelector('.string-list-remove-btn');
 			removeBtn.classList.remove('d-none');
 
-			document.querySelector('#{parentContainerName} div[class=""row""]').appendChild(newElem);
+			document.querySelector('#{parentContainerName} div[class=""string-list-container""]').appendChild(newElem);
 		}}
 	}}
 	{uniqueFuncName}();
