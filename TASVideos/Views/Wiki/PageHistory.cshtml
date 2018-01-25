@@ -31,15 +31,16 @@
 		}
 	</tbody>
 </table>
-<hr />
+
 
 <input type="hidden" id="left-revision" />
 <input type="hidden" id="right-revision" />
-<row id="diff-options" class="hide">
+<div id="diff-options" class="d-none">
+	<hr />
 	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff(1)" /> Inline</label>
 	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff(0)" /> Side by Side</label>
-</row>
-<div id="diff-view" class="hide">
+</div>
+<div id="diff-view" class="d-none">
 
 </div>
 
@@ -54,8 +55,8 @@
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-				document.getElementById("diff-view").classList.remove("hide");
-				document.getElementById("diff-options").classList.remove("hide");
+				document.getElementById("diff-view").classList.remove("d-none");
+				document.getElementById("diff-options").classList.remove("d-none");
 				if (xmlhttp.status === 200) {
 					var data = JSON.parse(xmlhttp.responseText);
 					document.getElementById("left-revision").value = data.leftMarkup;

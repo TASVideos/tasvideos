@@ -4,16 +4,15 @@
 	ViewData["Title"] = "View Page Source";
 }
 
-<row>
+<div>
 	<small>
 		Revision @Model.Revision (current)<br />
 		Last Updated by @(Model.LastUpdateUserName ?? "Unknown") on @Model.LastUpdateTimeStamp
 	</small>
-	
-</row>
-<row>
+</div>
+<div>
 	<a href="/@Model.PageName" class="btn btn-secondary">Back to Page</a>
-</row>
+</div>
 <hr />
 @Html.Raw(Model.Markup.Replace("\n", "<br />"))
 
