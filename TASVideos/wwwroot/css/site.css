@@ -59,3 +59,7 @@ h1 {
 	color: #FFF;
 	width: 95%;
 }
+
+.form-control-label {
+	font-weight: bold;
+}
