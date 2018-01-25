@@ -1,13 +1,4 @@
-﻿/* Override bootstrap navbar bg*/
-.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
-	background-color: inherit !important;
-}
-.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
-	background-color: inherit !important;
-}
-/***/
-
-a[disabled] {
+﻿a[disabled] {
 	pointer-events: none;
 }
 
