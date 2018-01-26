@@ -9,89 +9,90 @@
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form asp-action="Submit" enctype="multipart/form-data">
 	<row>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="MovieFile"></label>
+				<label asp-for="MovieFile" class="form-control-label"></label>
 				<input type="file" asp-for="MovieFile" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
 				<span asp-validation-for="MovieFile" class="text-danger"></span>
 			</form-group>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Authors"></label>
+				<label asp-for="Authors" class="form-control-label"></label>
 				<string-list asp-for="Authors" />
 				<span asp-validation-for="Authors" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
 	<row>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="GameVersion"></label>
+				<label asp-for="GameVersion" class="form-control-label"></label>
 				<select asp-for="GameVersion" asp-items="@Model.GameVersionOptions" class="form-control"></select>
 				<span asp-validation-for="GameVersion" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="GameName"></label>
+				<label asp-for="GameName" class="form-control-label"></label>
 				<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
 				<span asp-validation-for="GameName" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Emulator"></label>
+				<label asp-for="Emulator" class="form-control-label"></label>
 				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)" />
 				<span asp-validation-for="Emulator" class="text-danger"></span>
 			</form-group>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Branch"></label>
+				<label asp-for="Branch" class="form-control-label"></label>
 				<input asp-for="Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Branch)" />
 				<span asp-validation-for="Branch" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="RomName"></label>
+				<label asp-for="RomName" class="form-control-label"></label>
 				<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
 				<span asp-validation-for="RomName" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="EncodeEmbedLink"></label>
+				<label asp-for="EncodeEmbedLink" class="form-control-label"></label>
 				<input asp-for="EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.EncodeEmbedLink)" />
 				<span asp-validation-for="EncodeEmbedLink" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
 	<row>
-		<div class="col-xs-12">
+		<div class="col-12">
 			<form-group>
-				<label asp-for="Markup"></label>
+				<label asp-for="Markup" class="form-control-label"></label>
 				<span>
 					@await Component.RenderWiki("System/SubmissionImportant")
 				</span>
 				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
 				<span asp-validation-for="Markup" class="text-danger"></span>
-				<button id="prefill-btn" type="button" class="btn btn-secondary">Prefill comments</button>
+				<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
 			</form-group>
 		</div>
 	</row>
 	<hr />
 	<row>
-		<div class="text-center">
+		<div class="col-12 text-center">
 			<button id="preview-btn" type="button" class="btn btn-secondary">Preview</button>
-			<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "hide")">Submit</button>
+			<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "d-none")">Submit</button>
 			<br />
 			<br />
-			<div id="submit-blurb" class="text-center alert-info hide" role="alert">
+			<div id="submit-blurb" class="text-center alert-info d-none" role="alert">
 				<div>@await Component.RenderWiki("System/SubmissionWarning")</div>
 				<label class="small alert-info">By pressing "Submit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
 			</div>
 		</div>
 	</row>
 </form>
-<hr />
-<row id="preview-container" class="hide">
+
+<row id="preview-container" class="d-none">
+	<hr />
 	<label>Preview:</label><br />
-	<div id="preview-contents" style="border: solid; padding: 5px; border-radius: 5px">
+	<div class="p-3" id="preview-contents" style="border: solid; border-radius: 5px">
 
 	</div>
 </row>
@@ -126,7 +127,7 @@
 		document.getElementById('preview-btn').onclick = function() {
 			var markup = document.getElementById('@nameof(Model.Markup)').value;
 			if (markup) {
-				document.getElementById('preview-container').classList.remove('hide');
+				document.getElementById('preview-container').classList.remove('d-none');
 				var xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
@@ -136,8 +137,8 @@
 							alert("Could not generate preview");
 						}
 
-						document.getElementById('submit-btn').classList.remove('hide');
-						document.getElementById('submit-blurb').classList.remove('hide');
+						document.getElementById('submit-btn').classList.remove('d-none');
+						document.getElementById('submit-blurb').classList.remove('d-none');
 					}
 				};
 
