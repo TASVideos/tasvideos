@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -26,7 +27,8 @@ namespace TASVideos.Tasks
 				.Select(p => new PublicationViewModel
 				{
 					Id = p.Id,
-					Title = p.Title
+					Title = p.Title,
+					Screenshot = p.Files.Single(f => f.Type == FileType.Screenshot).Path
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}
