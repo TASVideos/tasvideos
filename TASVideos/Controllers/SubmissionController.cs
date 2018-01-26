@@ -297,6 +297,11 @@ namespace TASVideos.Controllers
 				ModelState.AddModelError(nameof(model.Screenshot), "Invalid file type. Must be .png or .jpg");
 			}
 
+			if (model.TorrentFile.Name != "TorrentFile")
+			{
+				ModelState.AddModelError(nameof(model.TorrentFile), "Invalid file type. Must be a .torrent file");
+			}
+
 			if (!ModelState.IsValid)
 			{
 				return View(model);

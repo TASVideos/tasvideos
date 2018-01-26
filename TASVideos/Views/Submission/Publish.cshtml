@@ -54,6 +54,11 @@
 				<input type="text" asp-for="OnlineWatchingUrl" class="form-control" />
 				<span asp-validation-for="OnlineWatchingUrl" class="text-danger"></span>
 			</form-group>
+			<form-group>
+				<label asp-for="MirrorSiteUrl" class="form-control-label"></label>
+				<input type="text" asp-for="MirrorSiteUrl" class="form-control" />
+				<span asp-validation-for="MirrorSiteUrl" class="text-danger"></span>
+			</form-group>
 		</div>
 		<div class="col-lg-6">
 			<form-group>
@@ -72,6 +77,12 @@
 				<input type="file" asp-for="Screenshot" class="form-control" />
 				<label>TODO: acceptable screenshot sizes</label>
 				<label>TODO: system page for screenshot info</label>
+				<span asp-validation-for="Screenshot" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="TorrentFile" class="form-control-label"></label>
+				<input type="file" asp-for="TorrentFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.TorrentFile)</div>
 				<span asp-validation-for="Screenshot" class="text-danger"></span>
 			</form-group>
 		</div>

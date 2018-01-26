@@ -2,7 +2,7 @@
 {
 	public enum FileType
 	{
-		Screenshot, MovieFile
+		Screenshot, MovieFile, Torrent
 	}
 
 	public class PublicationFile : BaseEntity

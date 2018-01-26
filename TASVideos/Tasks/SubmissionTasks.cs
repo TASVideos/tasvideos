@@ -588,6 +588,7 @@ namespace TASVideos.Tasks
 				Branch = submission.Branch,
 				EmulatorVersion = model.EmulatorVersion,
 				OnlineWatchingUrl = model.OnlineWatchingUrl,
+				MirrorSiteUrl = model.MirrorSiteUrl,
 				Frames = submission.Frames,
 				RerecordCount = submission.RerecordCount
 			};
@@ -629,6 +630,26 @@ namespace TASVideos.Tasks
 			};
 			_db.PublicationFiles.Add(screenshot);
 			publication.Files.Add(screenshot);
+
+			byte[] torrentBytes;
+			using (var memoryStream = new MemoryStream())
+			{
+				await model.TorrentFile.CopyToAsync(memoryStream);
+				torrentBytes = memoryStream.ToArray();
+			}
+
+			string torrentFileName = $"{publication.Id}M.torrent";
+			string torrentPath = Path.Combine(_hostingEnvironment.WebRootPath, "media", torrentFileName);
+			File.WriteAllBytes(torrentPath, torrentBytes);
+
+			var torrent = new PublicationFile
+			{
+				Publication = publication,
+				Path = torrentFileName,
+				Type = FileType.Torrent
+			};
+			_db.PublicationFiles.Add(torrent);
+			publication.Files.Add(torrent);
 
 			// Create a wiki page corresponding to this submission
 			var wikiPage = new WikiPage
