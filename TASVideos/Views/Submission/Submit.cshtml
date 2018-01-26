@@ -89,13 +89,15 @@
 	</row>
 </form>
 
-<row id="preview-container" class="d-none">
+<div id="preview-container" class="d-none">
 	<hr />
-	<label>Preview:</label><br />
-	<div class="p-3" id="preview-contents" style="border: solid; border-radius: 5px">
+	<div class="card">
+		<div class="card-header">Preview:</div>
+		<div id="preview-contents" class="card-block">
 
+		</div>
 	</div>
-</row>
+</div>
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")
 }
