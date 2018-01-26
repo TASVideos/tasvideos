@@ -2,62 +2,62 @@
 @{
 	ViewData["Title"] = $"Publishing Submission #{Model.Title}";
 }
-<div class="panel panel-info">
-	<div class="panel-body">
+<div class="card">
+	<div class="card-block">
+		<div class="card-title">
+			<a class="btn btn-primary " asp-action="Catalog" asp-route-id="@Model.Id">Catalog</a>
+		</div>
 		<row>
-			<div class="col-xs-12">
-				<a class="btn btn-primary pull-right" asp-action="Catalog" asp-route-id="@Model.Id">Catalog</a>
+			<div class="col-lg-6">
+				<row>
+					<label class="col-sm-3" asp-for="Tier"></label>
+					<span class="col-sm-9"><a href="/@Model.Tier">@Html.DisplayFor(m => m.Tier)</a></span>
+				</row>
+				<row>
+					<label class="col-sm-3" asp-for="SystemCode"></label>
+					<span class="col-sm-9">@Html.DisplayFor(m => m.SystemCode)</span>
+				</row>
+				<row>
+					<label class="col-sm-3" asp-for="SystemRegion"></label>
+					<span class="col-sm-9">@Html.DisplayFor(m => m.SystemRegion)</span>
+				</row>
+			</div>
+			<div class="col-lg-6">
+				<row>
+					<label class="col-sm-3" asp-for="Game"></label>
+					<span class="col-sm-9"><a asp-controller="Game" asp-action="Index" asp-route-id="@Model.GameId">@Html.DisplayFor(m => m.Game)</a></span>
+				</row>
+				<row>
+					<label class="col-sm-3" asp-for="Rom"></label>
+					<span class="col-sm-9"><a asp-controller="Catalog" asp-action="RomEdit" asp-route-gameId="@Model.GameId" asp-route-romId="@Model.RomId">@Html.DisplayFor(m => m.Rom)</a></span>
+				</row>
 			</div>
 		</row>
-		<div class="col-md-6">
-			<row>
-				<label class="col-sm-3" asp-for="Tier"></label>
-				<span class="col-sm-9"><a href="/@Model.Tier">@Html.DisplayFor(m => m.Tier)</a></span>
-			</row>
-			<row>
-				<label class="col-sm-3" asp-for="SystemCode"></label>
-				<span class="col-sm-9">@Html.DisplayFor(m => m.SystemCode)</span>
-			</row>
-			<row>
-				<label class="col-sm-3" asp-for="SystemRegion"></label>
-				<span class="col-sm-9">@Html.DisplayFor(m => m.SystemRegion)</span>
-			</row>
-		</div>
-		<div class="col-md-6">
-			<row>
-				<label class="col-sm-3" asp-for="Game"></label>
-				<span class="col-sm-9"><a asp-controller="Game" asp-action="Index" asp-route-id="@Model.GameId">@Html.DisplayFor(m => m.Game)</a></span>
-			</row>
-			<row>
-				<label class="col-sm-3" asp-for="Rom"></label>
-				<span class="col-sm-9"><a asp-controller="Catalog" asp-action="RomEdit" asp-route-gameId="@Model.GameId" asp-route-romId="@Model.RomId">@Html.DisplayFor(m => m.Rom)</a></span>
-			</row>
-		</div>
 	</div>
 </div>
 <hr />
 <form asp-action="Publish" enctype="multipart/form-data">
 	<row>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Branch"></label>
+				<label asp-for="Branch" class="form-control-label"></label>
 				<input type="text" asp-for="Branch" class="form-control" />
 				<span asp-validation-for="Branch" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="EmulatorVersion"></label>
+				<label asp-for="EmulatorVersion" class="form-control-label"></label>
 				<input type="text" asp-for="EmulatorVersion" class="form-control" />
 				<span asp-validation-for="EmulatorVersion" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="OnlineWatchingUrl"></label>
+				<label asp-for="OnlineWatchingUrl" class="form-control-label"></label>
 				<input type="text" asp-for="OnlineWatchingUrl" class="form-control" />
 				<span asp-validation-for="OnlineWatchingUrl" class="text-danger"></span>
 			</form-group>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="MovieFileName"></label>
+				<label asp-for="MovieFileName" class="form-control-label"></label>
 				<div class="input-group">
 					<input type="text" asp-for="MovieFileName" class="form-control" />
 					<span class="input-group-addon">
@@ -68,7 +68,7 @@
 				<span asp-validation-for="MovieFileName" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Screenshot"></label>
+				<label asp-for="Screenshot" class="form-control-label"></label>
 				<input type="file" asp-for="Screenshot" class="form-control" />
 				<label>TODO: acceptable screenshot sizes</label>
 				<label>TODO: system page for screenshot info</label>
@@ -77,22 +77,22 @@
 		</div>
 	</row>
 	<row>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="MovieMarkup"></label>
+				<label asp-for="MovieMarkup" class="form-control-label"></label>
 				<textarea asp-for="MovieMarkup" class="form-control" rows="10"></textarea>
 				<span asp-validation-for="MovieMarkup" class="text-danger"></span>
 			</form-group>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Markup"></label>
+				<label asp-for="Markup" class="form-control-label"></label>
 				<textarea readonly class="form-control" rows="10" asp-for="Markup"></textarea>
 			</form-group>
 		</div>
 	</row>
 	<row>
-		<div class="text-center">
+		<div class="col-12 text-center">
 			<button type="submit" class="btn btn-primary">Publish</button>
 			<a asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
 		</div>
