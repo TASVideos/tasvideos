@@ -6,43 +6,43 @@
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form asp-action="Catalog">
 	<row>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="SystemId"></label>
+				<label asp-for="SystemId" class="form-control-label"></label>
 				<select asp-for="SystemId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableSystems)" class="form-control"></select>
 			</form-group>
 			<form-group>
-				<label asp-for="SystemFrameRateId"></label>
+				<label asp-for="SystemFrameRateId" class="form-control-label"></label>
 				<select asp-for="SystemFrameRateId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableSystemFrameRates)" class="form-control"></select>
 			</form-group>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form-group>
 				<row>
-					<div class="col-sm-12">
-						<label asp-for="GameId"></label>
+					<div class="col-12">
+						<label asp-for="GameId" class="form-control-label"></label>
 					</div>
 				</row>
 				<row>
-					<div class="col-sm-10">
+					<div class="col-10">
 						<select asp-for="GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-control"></select>
 					</div>
-					<div class="col-sm-2">
+					<div class="col-2">
 						<a asp-controller="Catalog" asp-action="GameEdit" class="btn btn-primary">New</a>
 					</div>
 				</row>
 			</form-group>
 			<form-group>
 				<row>
-					<div class="col-sm-12">
-						<label asp-for="RomId"></label>
+					<div class="col-12">
+						<label asp-for="RomId" class="form-control-label"></label>
 					</div>
 				</row>
 				<row>
-					<div class="col-sm-10">
+					<div class="col-10">
 						<select asp-for="RomId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableRoms)" class="form-control"></select>
 					</div>
-					<div class="col-sm-2">
+					<div class="col-2">
 						<button disable="!Model.GameId.HasValue" id="create-rom" type="button" class="btn btn-primary" )>New</button>
 					</div>
 				</row>
@@ -51,19 +51,13 @@
 	</row>
 	<hr/>
 	<row>
-		<div class="text-center">
+		<div class="text-center col-12">
 			<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
 			<a class="btn btn-secondary" asp-action="View" asp-route-id="@Model.Id">Cancel</a>
 		</div>
 	</row>
 </form>
-<hr />
-<row id="preview-container" class="hide">
-	<label>Preview:</label><br />
-	<div id="preview-contents" style="border: solid; padding: 5px; border-radius: 5px">
 
-	</div>
-</row>
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")
 }
