@@ -265,8 +265,17 @@ namespace TASVideos.Models
 		public string OnlineWatchingUrl { get; set; }
 
 		[Required]
+		[Display(Name = "Mirror site URL")]
+		[StringLength(100)]
+		public string MirrorSiteUrl { get; set; }
+
+		[Required]
 		[Display(Name = "Screenshot", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile Screenshot { get; set; }
+
+		[Required]
+		[Display(Name = "Torrent file", Description = "(The tracker URL must be http://tracker.tasvideos.org:6969/announce.)")]
+		public IFormFile TorrentFile { get; set; }
 
 		// Not used for edit fields
 		public int Id { get; set; }

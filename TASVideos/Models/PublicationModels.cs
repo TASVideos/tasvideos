@@ -5,5 +5,9 @@
 		public int Id { get; set; }
 		public string Title { get; set; }
 		public string Screenshot { get; set; }
+		public string TorrentLink { get; set; }
+
+		public string OnlineWatchingUrl { get; set; }
+		public string MirrorSiteUrl { get; set; }
 	}
 }

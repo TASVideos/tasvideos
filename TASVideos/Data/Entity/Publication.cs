@@ -45,6 +45,7 @@ namespace TASVideos.Data.Entity
 		public string EmulatorVersion { get; set; }
 
 		public string OnlineWatchingUrl { get; set; }
+		public string MirrorSiteUrl { get; set; }
 
 		public int Frames { get; set; }
 		public int RerecordCount { get; set; }
