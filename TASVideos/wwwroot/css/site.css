@@ -51,12 +51,34 @@ h1 {
 	width: 95%;
 }
 
+.btn-separator::after {
+	content: ' ';
+	display: block;
+	float: left;
+	background: #ADADAD;
+	margin: 0 10px;
+	height: 34px;
+	width: 1px;
+}
+
+/*** Bootstrap customizations **/
 .form-control-label {
 	font-weight: bold;
 }
 
+.card-header {
+	background-color: #eaeaea;
+}
 
 /*************WHY ARE THESE MISSING IN THE BOOSTRAP DIST?????*/
+.card-block {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1 1 auto;
+	-ms-flex: 1 1 auto;
+	flex: 1 1 auto;
+	padding: 1.25rem;
+}
+
 .input-group-addon.form-control-sm,
 .input-group-sm > .input-group-addon,
 .input-group-sm > .input-group-btn > .input-group-addon.btn {
