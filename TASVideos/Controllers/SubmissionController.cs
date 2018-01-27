@@ -304,6 +304,7 @@ namespace TASVideos.Controllers
 
 			if (!ModelState.IsValid)
 			{
+				model.AvailableMoviesToObsolete = await _submissionTasks.GetAvailableMoviesToObsolete(model.SystemId);
 				return View(model);
 			}
 

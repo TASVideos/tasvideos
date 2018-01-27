@@ -472,7 +472,7 @@ namespace TASVideos.Tasks
 		{
 			using (_db.Database.BeginTransactionAsync())
 			{
-				return await _db.Submissions
+				var model = await _db.Submissions
 					.Where(s => s.Id == id)
 					.Select(s => new SubmissionPublishModel
 					{
@@ -480,6 +480,7 @@ namespace TASVideos.Tasks
 						Title = s.Title,
 						Markup = s.WikiContent.Markup,
 						SystemCode = s.System.Code,
+						SystemId = s.SystemId ?? 0,
 						SystemRegion = s.SystemFrameRate.RegionCode + " " + s.SystemFrameRate.FrameRate,
 						Game = s.Game.GoodName,
 						GameId = s.GameId ?? 0,
@@ -491,7 +492,36 @@ namespace TASVideos.Tasks
 						MovieExtension = s.MovieExtension
 					})
 					.SingleOrDefaultAsync();
+
+				if (model != null)
+				{
+					model.AvailableMoviesToObsolete = await _db.Publications
+						.ThatAreCurrent()
+						.Where(p => p.SystemId == model.SystemId)
+						.Select(p => new SelectListItem
+						{
+							Value = p.Id.ToString(),
+							Text = p.Title
+						})
+						.ToListAsync();
+				}
+
+				return model;
 			}
+		}
+
+		// TODO: document
+		public async Task<IEnumerable<SelectListItem>> GetAvailableMoviesToObsolete(int systemId)
+		{
+			return await _db.Publications
+				.ThatAreCurrent()
+				.Where(p => p.SystemId == systemId)
+				.Select(p => new SelectListItem
+				{
+					Value = p.Id.ToString(),
+					Text = p.Title
+				})
+				.ToListAsync();
 		}
 
 		/// <summary>
@@ -700,6 +730,12 @@ namespace TASVideos.Tasks
 			};
 			submission.History.Add(history);
 			_db.SubmissionStatusHistory.Add(history);
+
+			if (model.MovieToObsolete.HasValue)
+			{
+				var toObsolete = await _db.Publications.SingleAsync(p => p.Id == model.MovieToObsolete);
+				toObsolete.ObsoletedById = publication.Id;
+			}
 
 			await _db.SaveChangesAsync();
 

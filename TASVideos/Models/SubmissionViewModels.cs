@@ -243,6 +243,11 @@ namespace TASVideos.Models
 	/// </summary>
 	public class SubmissionPublishModel
 	{
+		[Display(Name = "Select movie to be obsoleted")]
+		public int? MovieToObsolete { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; }
+
 		[StringLength(50)]
 		[Display(Name = "Branch", Description = "(e.g. \"100%\" or \"princess only\"; \"any%\" can usually be omitted)")]
 		public string Branch { get; set; }
@@ -302,6 +307,8 @@ namespace TASVideos.Models
 		public string Tier { get; set; }
 
 		public string MovieExtension { get; set; }
+
+		public int SystemId { get; set; }
 	}
 
 	public class SubmissionCatalogModel

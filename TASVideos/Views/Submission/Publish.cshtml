@@ -37,6 +37,15 @@
 </div>
 <hr />
 <form asp-action="Publish" enctype="multipart/form-data">
+	<input type="hidden" asp-for="SystemId" />
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="MovieToObsolete" class="form-control-label"></label>
+				<select asp-for="MovieToObsolete" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesToObsolete)" class="form-control"></select>
+			</form-group>
+		</div>
+	</row>
 	<row>
 		<input type="hidden" asp-for="MovieExtension" />
 		<div class="col-lg-6">
