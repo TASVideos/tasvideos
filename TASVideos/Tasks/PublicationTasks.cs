@@ -31,7 +31,8 @@ namespace TASVideos.Tasks
 					Screenshot = p.Files.Single(f => f.Type == FileType.Screenshot).Path,
 					TorrentLink = p.Files.Single(f => f.Type == FileType.Torrent).Path,
 					OnlineWatchingUrl = p.OnlineWatchingUrl,
-					MirrorSiteUrl = p.MirrorSiteUrl
+					MirrorSiteUrl = p.MirrorSiteUrl,
+					ObsoletedBy = p.ObsoletedById
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}

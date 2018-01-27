@@ -12,6 +12,9 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
 
+		public int? ObsoletedById { get; set; }
+		public virtual Publication ObsoletedBy { get; set; }
+
 		public int GameId { get; set; }
 		public virtual Game.Game Game { get; set; }
 
@@ -30,7 +33,6 @@ namespace TASVideos.Data.Entity
 		public int SubmissionId { get; set; }
 		public virtual Submission Submission { get; set; }
 		public virtual ICollection<PublicationAuthor> Authors { get; set; } = new List<PublicationAuthor>();
-		public virtual Publication ObsoletedBy { get; set; }
 
 		public virtual WikiPage WikiContent { get; set; }
 
@@ -75,6 +77,19 @@ namespace TASVideos.Data.Entity
 				$"[{Id}] {string.Join(" & ", Authors.Select(sa => sa.Author.UserName))}'s {System.Code} {Game.DisplayName}"
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
 				+ $" in {Time:g}";
+		}
+	}
+
+	public static class PublicationExtensions
+	{
+		public static IQueryable<Publication> ThatAreCurrent(this IQueryable<Publication> publications)
+		{
+			return publications.Where(p => p.ObsoletedById == null);
+		}
+
+		public static IQueryable<Publication> ThatAreObsolete(this IQueryable<Publication> publications)
+		{
+			return publications.Where(p => p.ObsoletedById != null);
 		}
 	}
 }
