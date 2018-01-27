@@ -74,6 +74,11 @@ namespace TASVideos.Tasks
 				query = query.Where(s => s.CreateTimeStamp >= criteria.Cutoff.Value);
 			}
 
+			if (criteria.StatusFilter.Any())
+			{
+				query = query.Where(s => !criteria.StatusFilter.Contains(s.Status));
+			}
+
 			var iquery = query
 				.Include(s => s.Submitter)
 				.Include(s => s.System)
@@ -686,6 +691,8 @@ namespace TASVideos.Tasks
 
 			_db.WikiPages.Add(wikiPage);
 			publication.WikiContent = wikiPage;
+
+			submission.Status = SubmissionStatus.Published;
 
 			await _db.SaveChangesAsync();
 
