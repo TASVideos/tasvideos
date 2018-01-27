@@ -693,6 +693,13 @@ namespace TASVideos.Tasks
 			publication.WikiContent = wikiPage;
 
 			submission.Status = SubmissionStatus.Published;
+			var history = new SubmissionStatusHistory
+			{
+				SubmissionId = submission.Id,
+				Status = SubmissionStatus.Published
+			};
+			submission.History.Add(history);
+			_db.SubmissionStatusHistory.Add(history);
 
 			await _db.SaveChangesAsync();
 
