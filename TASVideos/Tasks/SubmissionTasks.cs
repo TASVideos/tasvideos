@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -584,14 +585,37 @@ namespace TASVideos.Tasks
 				SystemFrameRateId = submission.SystemFrameRate.Id,
 				GameId = submission.Game.Id,
 				RomId = submission.Rom.Id,
-				MovieFile = submission.MovieFile,
 				Branch = submission.Branch,
 				EmulatorVersion = model.EmulatorVersion,
 				OnlineWatchingUrl = model.OnlineWatchingUrl,
 				MirrorSiteUrl = model.MirrorSiteUrl,
 				Frames = submission.Frames,
-				RerecordCount = submission.RerecordCount
+				RerecordCount = submission.RerecordCount,
+				MovieFileName = model.MovieFileName + "." + model.MovieExtension
 			};
+
+			// TODO: why does this not work??
+			//using (var movieFileStream = new MemoryStream())
+			//using (var zipArchive = new ZipArchive(movieFileStream, ZipArchiveMode.Update, false))
+			//{
+			//	var zipEntry = zipArchive.CreateEntry(model.MovieFileName + "." + model.MovieExtension);
+
+			//	using (var originalFileStream = new MemoryStream(submission.MovieFile))
+			//	using (var zipEntryStream = zipEntry.Open())
+			//	{
+			//		var submissionzip = new ZipArchive(originalFileStream);
+			//		var submissionZipEntry = submissionzip.Entries.Single();
+			//		using (var subZipEntryStream = submissionZipEntry.Open())
+			//		{
+			//			await subZipEntryStream.CopyToAsync(zipEntryStream);
+			//		}
+			//	}
+
+			//	publication.MovieFile = movieFileStream.ToArray();
+			//}
+
+			// Hack for now
+			publication.MovieFile = submission.MovieFile;
 
 			var publicationAuthors = submission.SubmissionAuthors
 				.Select(sa => new PublicationAuthor
