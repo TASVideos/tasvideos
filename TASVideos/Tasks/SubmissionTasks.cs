@@ -428,7 +428,7 @@ namespace TASVideos.Tasks
 
 			var id = await _wikiTasks.SavePage(new WikiEditModel
 			{
-				PageName = $"System/SubmissionContent/S{model.Id}",
+				PageName = $"{LinkConstants.SubmissionWikiPage}{model.Id}",
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage,
