@@ -38,6 +38,9 @@ namespace TASVideos.Data.Entity
 		[Required]
 		public byte[] MovieFile { get; set; }
 
+		[Required]
+		public string MovieFileName { get; set; }
+
 		[StringLength(50)]
 		public string Branch { get; set; }
 

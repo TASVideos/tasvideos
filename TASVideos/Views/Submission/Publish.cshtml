@@ -38,6 +38,7 @@
 <hr />
 <form asp-action="Publish" enctype="multipart/form-data">
 	<row>
+		<input type="hidden" asp-for="MovieExtension" />
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Branch" class="form-control-label"></label>

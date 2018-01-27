@@ -44,5 +44,24 @@ namespace TASVideos.Tasks
 		{
 			return (await _db.Publications.SingleOrDefaultAsync(s => s.Id == id))?.Title;
 		}
+
+		/// <summary>
+		/// Returns the publication file as bytes with the given id
+		/// If no publication is found, an empty byte array is returned
+		/// </summary>
+		public async Task<(byte[], string)> GetPublicationMovieFile(int id)
+		{
+			var data = await _db.Publications
+				.Where(s => s.Id == id)
+				.Select(s => new { s.MovieFile, s.MovieFileName })
+				.SingleOrDefaultAsync();
+
+			if (data == null)
+			{
+				return (new byte[0], "");
+			}
+
+			return (data.MovieFile, data.MovieFileName);
+		}
 	}
 }
