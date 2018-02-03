@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using TASVideos.Data;
 using TASVideos.Legacy.Data;
+using TASVideos.Legacy.Imports;
 
 namespace TASVideos.Legacy
 {
@@ -14,7 +15,7 @@ namespace TASVideos.Legacy
 				return;
 			}
 
-			var blah = legacyContext.SiteText.ToList();
+			WikiImporter.ImportWikiPages(context, legacyContext);
 		}
 	}
 }

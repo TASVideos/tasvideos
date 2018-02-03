@@ -47,21 +47,6 @@ namespace TASVideos.Data
 
 			context.SaveChanges();
 
-			foreach (var wikiPage in WikiPageSeedData.SeedPages)
-			{
-				context.WikiPages.Add(wikiPage);
-				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
-				foreach (var referral in referrals)
-				{
-					context.WikiReferrals.Add(new WikiPageReferral
-					{
-						Referrer = wikiPage.PageName,
-						Referral = referral.Link?.Split('|').FirstOrDefault(),
-						Excerpt = referral.Excerpt
-					});
-				}
-			}
-
 			foreach (var system in SystemSeedData.Systems)
 			{
 				context.GameSystems.Add(system);
@@ -101,6 +86,22 @@ namespace TASVideos.Data
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
 		{
+			// TODO: rename to sample data
+			foreach (var wikiPage in WikiPageSeedData.SeedPages)
+			{
+				context.WikiPages.Add(wikiPage);
+				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
+				foreach (var referral in referrals)
+				{
+					context.WikiReferrals.Add(new WikiPageReferral
+					{
+						Referrer = wikiPage.PageName,
+						Referral = referral.Link?.Split('|').FirstOrDefault(),
+						Excerpt = referral.Excerpt
+					});
+				}
+			}
+
 			foreach (var admin in UserSampleData.AdminUsers)
 			{
 				var result = await userManager.CreateAsync(admin, UserSampleData.SamplePassword);

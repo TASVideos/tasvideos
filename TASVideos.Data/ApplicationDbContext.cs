@@ -175,7 +175,11 @@ namespace TASVideos.Data
 			{
 				if (entry.Entity is ITrackable trackable)
 				{
-					trackable.CreateTimeStamp = DateTime.UtcNow;
+					if (trackable.CreateTimeStamp.Year == 1) // Don't set if already set
+					{
+						trackable.CreateTimeStamp = DateTime.UtcNow;
+					}
+
 					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
 					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
 					trackable.CreateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
