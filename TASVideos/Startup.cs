@@ -13,18 +13,21 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Filter;
+using TASVideos.Legacy.Extensions;
 using TASVideos.Services;
 
 namespace TASVideos
 {
-    public class Startup
+	public class Startup
 	{
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, IHostingEnvironment env)
 		{
 			Configuration = configuration;
+			Environment = env;
 		}
 
 		public IConfiguration Configuration { get; }
+		public IHostingEnvironment Environment { get; }
 
 		public void ConfigureDevelopmentServices(IServiceCollection services)
 		{
@@ -73,6 +76,11 @@ namespace TASVideos
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
 				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+
+			if (Environment.IsDevelopment())
+			{
+				services.AddLegacyContext();
+			}
         }
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
