@@ -15,7 +15,7 @@ namespace TASVideos.Data
 	{
 		private readonly IHttpContextAccessor _httpContext;
 
-		public ApplicationDbContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor)
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
 			: base(options)
 		{
 			_httpContext = httpContextAccessor;

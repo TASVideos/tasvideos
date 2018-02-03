@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Legacy.Data;
 
 namespace TASVideos
 {
@@ -21,18 +22,20 @@ namespace TASVideos
 				try
 				{
 					var context = services.GetRequiredService<ApplicationDbContext>();
+					var legacyContext = services.GetRequiredService<NesVideosSiteContext>();
 
 					var env = services.GetRequiredService<IHostingEnvironment>();
 					var userManager = services.GetRequiredService<UserManager<User>>();
 					if (env.IsDevelopment())
 					{
 						DbInitializer.Initialize(context);
-						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
+						DbInitializer.RunLegacyImport(context, legacyContext);
+						//DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
 					else if (env.IsStaging())
 					{
 						DbInitializer.Migrate(context);
-						DbInitializer.RunLegacyImport(context);
+						DbInitializer.RunLegacyImport(context, legacyContext);
 					}
 				}
 				catch (Exception ex)
