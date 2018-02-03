@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TASVideos.Data.SampleData
 {
-	internal static class SampleGenerator
+	public static class SampleGenerator
 	{
 		public static readonly Random Rng = new Random(1); // We want random, but deterministic
 

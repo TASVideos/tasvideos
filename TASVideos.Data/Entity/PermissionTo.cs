@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using TASVideos.Attributes;
+using TASVideos.Data.Attributes;
 
 namespace TASVideos.Data.Entity
 {

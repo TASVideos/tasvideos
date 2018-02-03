@@ -6,7 +6,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
 using TASVideos.Extensions;
-using TASVideos.Legacy.Data;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Data
@@ -93,13 +92,6 @@ namespace TASVideos.Data
 
 		public static void Migrate(ApplicationDbContext context)
 		{
-			// TODO
-		}
-
-		public static void RunLegacyImport(ApplicationDbContext context, NesVideosSiteContext legacyContext)
-		{
-			var blah = legacyContext.SiteText.ToList();
-			// Shoudl only run if it hasn't already run
 			// TODO
 		}
 

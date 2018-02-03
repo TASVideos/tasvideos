@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TASVideos.Attributes
+namespace TASVideos.Data.Attributes
 {
 	public class GroupAttribute : Attribute
 	{
