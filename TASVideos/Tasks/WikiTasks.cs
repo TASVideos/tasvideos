@@ -6,7 +6,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
+using TASVideos.Data.Helpers;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Extensions
+namespace TASVideos.Data.Helpers
 {
     public static class SubmissionHelper
 	{
