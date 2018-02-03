@@ -18,7 +18,6 @@ namespace TASVideos.Legacy.Imports
 			// TODO: page to keep ram down
 			// TODO: Deleted pages
 			// TODO: createdby username (look up by userid)
-			// TODO: created timestamp
 			// TODO: homepages
 
 			List<SiteText> siteTexts = legacyContext.SiteText
