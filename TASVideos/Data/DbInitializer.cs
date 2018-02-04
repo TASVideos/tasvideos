@@ -86,9 +86,19 @@ namespace TASVideos.Data
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
 		{
-			// TODO: rename to sample data
 			foreach (var wikiPage in WikiPageSeedData.SeedPages)
 			{
+				// Account for existing pages
+				var existing = context.WikiPages
+					.ThatAreCurrentRevisions()
+					.SingleOrDefault(w => w.PageName == wikiPage.PageName);
+
+				if (existing != null)
+				{
+					wikiPage.Revision = existing.Revision + 1;
+					existing.Child = wikiPage;
+				}
+
 				context.WikiPages.Add(wikiPage);
 				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
 				foreach (var referral in referrals)
@@ -100,7 +110,11 @@ namespace TASVideos.Data
 						Excerpt = referral.Excerpt
 					});
 				}
+
+				context.SaveChanges();
 			}
+
+			context.SaveChanges();
 
 			foreach (var admin in UserSampleData.AdminUsers)
 			{
