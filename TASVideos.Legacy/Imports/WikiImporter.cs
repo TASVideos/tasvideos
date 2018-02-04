@@ -26,6 +26,14 @@ namespace TASVideos.Legacy.Imports
 
 			foreach (var legacyPage in siteTexts)
 			{
+				string markup = legacyPage.Description;
+				// Shenanigans
+				if (legacyPage.PageName == "Phil" && legacyPage.Revision >= 7 && legacyPage.Revision <= 11)
+				{
+					markup = markup.Replace(":[", ":|");
+				}
+
+
 				var pubId = SubmissionHelper.IsPublicationLink(legacyPage.PageName);
 				var subId = SubmissionHelper.IsSubmissionLink(legacyPage.PageName);
 
@@ -42,7 +50,7 @@ namespace TASVideos.Legacy.Imports
 				var wikiPage = new WikiPage
 				{
 					PageName = pageName,
-					Markup = legacyPage.Description,
+					Markup = markup,
 					Revision = legacyPage.Revision,
 					MinorEdit = legacyPage.MinorEdit == "Y",
 					RevisionMessage = legacyPage.WhyEdit,
@@ -51,6 +59,7 @@ namespace TASVideos.Legacy.Imports
 				};
 
 				context.WikiPages.Add(wikiPage);
+
 				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
 				foreach (var referral in referrals)
 				{
