@@ -10,7 +10,11 @@ namespace TASVideos.WikiEngine
 	{
 		public class SyntaxException : Exception
 		{
-			public SyntaxException(string msg) : base(msg) { }
+			public int TextLocation { get; }
+			public SyntaxException(string msg, int textLocation) : base(msg)
+			{
+				TextLocation = textLocation;
+			}
 		}
 
 		private List<INode> _output = new List<INode>();
@@ -24,7 +28,7 @@ namespace TASVideos.WikiEngine
 
 		private void Abort(string msg)
 		{
-			throw new SyntaxException(msg); 
+			throw new SyntaxException(msg, _index); 
 		}
 		private bool Eat(char c)
 		{
@@ -665,17 +669,51 @@ namespace TASVideos.WikiEngine
 
 		public static List<WikiLinkInfo> GetAllWikiLinks(string content)
 		{
-			var p = new NewParser { _input = content };
-			p.ParseLoop();
-			return p.GetAllWikiLinks(p._output);
+			try
+			{
+				var p = new NewParser { _input = content };
+				p.ParseLoop();
+				return p.GetAllWikiLinks(p._output);
+			}
+			catch (SyntaxException)
+			{
+				// What to do here?
+				return new List<WikiLinkInfo>();
+			}
 		}
 
 		public static List<INode> Parse(string content)
 		{
 			var p = new NewParser { _input = content };
-			p.ParseLoop();
+			try
+			{
+				p.ParseLoop();
+			}
+			catch (SyntaxException e)
+			{
+				return MakeErrorPage(content, e);
+			}
 			ReplaceTabs(p._output);
 			return p._output;
+		}
+
+		public static List<INode> MakeErrorPage(string content, SyntaxException e)
+		{
+			var ret = new List<INode>();
+
+			var head = new Element(0, "h1", new[] { new Text(0, "Syntax Error") });
+			ret.Add(head);
+
+			var elt = new Element(0, "pre");
+			var i = e.TextLocation;
+			elt.Children.Add(new Text(0, content.Substring(0, i)));
+			var marker = new Element(i, "span", new[] { new Element(i, "span", new[] { new Text(i, e.Message) }) });
+			marker.Attributes["class"] = "error-marker";
+			elt.Children.Add(marker);
+			elt.Children.Add(new Text(i, content.Substring(i)));
+			ret.Add(elt);
+
+			return ret;
 		}
 	}
 }
