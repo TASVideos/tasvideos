@@ -16,10 +16,10 @@ namespace TASVideos.Legacy.Imports
 		public static void ImportWikiPages(ApplicationDbContext context, NesVideosSiteContext legacyContext)
 		{
 			// TODO: page to keep ram down
-			// TODO: Deleted pages
 			// TODO: createdby username (look up by userid)
 			// TODO: homepages
 
+			// TODO: check for collisions between pagename+revision for deleted pages vs undeleted versions of the same page
 			List<SiteText> siteTexts = legacyContext.SiteText
 				.OrderBy(s => s.Id)
 				.ToList();
@@ -38,6 +38,7 @@ namespace TASVideos.Legacy.Imports
 				var subId = SubmissionHelper.IsSubmissionLink(legacyPage.PageName);
 
 				string pageName = legacyPage.PageName;
+				bool isDeleted = false;
 				if (pubId.HasValue)
 				{
 					pageName = LinkConstants.PublicationWikiPage + pubId.Value;
@@ -45,6 +46,11 @@ namespace TASVideos.Legacy.Imports
 				else if (subId.HasValue)
 				{
 					pageName = LinkConstants.SubmissionWikiPage + subId.Value;
+				}
+				else if (pageName.StartsWith("DeletedPages/"))
+				{
+					pageName = pageName.Replace("DeletedPages/", "");
+					isDeleted = true;
 				}
 
 				var wikiPage = new WikiPage
@@ -54,7 +60,7 @@ namespace TASVideos.Legacy.Imports
 					Revision = legacyPage.Revision,
 					MinorEdit = legacyPage.MinorEdit == "Y",
 					RevisionMessage = legacyPage.WhyEdit,
-					IsDeleted = false, // TODO
+					IsDeleted = isDeleted,
 					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
 				};
 
