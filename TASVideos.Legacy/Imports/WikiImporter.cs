@@ -27,12 +27,12 @@ namespace TASVideos.Legacy.Imports
 			foreach (var legacyPage in siteTexts)
 			{
 				string markup = legacyPage.Description;
+
 				// Shenanigans
 				if (legacyPage.PageName == "Phil" && legacyPage.Revision >= 7 && legacyPage.Revision <= 11)
 				{
 					markup = markup.Replace(":[", ":|");
 				}
-
 
 				var pubId = SubmissionHelper.IsPublicationLink(legacyPage.PageName);
 				var subId = SubmissionHelper.IsSubmissionLink(legacyPage.PageName);
@@ -73,7 +73,21 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			context.SaveChanges();
-			// TODO: iterate through all wikipages, find max revision and set child references
+
+			// Set child references
+			foreach (var wikiPage in context.WikiPages)
+			{
+				var nextWiki = context.WikiPages
+					.SingleOrDefault(wp => wp.Revision == wikiPage.Revision + 1
+						&& wp.PageName == wikiPage.PageName);
+
+				if (nextWiki != null)
+				{
+					wikiPage.Child = nextWiki;
+				}
+			}
+
+			context.SaveChanges();
 		}
 	}
 }
