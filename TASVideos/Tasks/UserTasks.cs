@@ -276,7 +276,10 @@ namespace TASVideos.Tasks
 						Id = user.Id,
 						UserName = user.UserName,
 						EditCount = _db.WikiPages.Count(wp => wp.CreateUserName == userName),
-						MovieCount = 999, // TODO
+						MovieCount = _db.Publications
+							.Count(p => p.Authors
+								.Select(sa => sa.Author.UserName)
+								.Contains(userName)),
 						SubmissionCount = _db.Submissions
 							.Count(s => s.SubmissionAuthors
 								.Select(sa => sa.Author.UserName)
