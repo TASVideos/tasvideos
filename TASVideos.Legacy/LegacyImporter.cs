@@ -15,7 +15,8 @@ namespace TASVideos.Legacy
 				return;
 			}
 
-			WikiImporter.ImportWikiPages(context, legacyContext);
+			UserImporter.Import(context, legacyContext);
+			WikiImporter.Import(context, legacyContext);
 		}
 	}
 }
