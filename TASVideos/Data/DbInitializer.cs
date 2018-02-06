@@ -22,7 +22,18 @@ namespace TASVideos.Data
 			// When the datbase is more mature we will move towards the Migrations process
 			context.Database.EnsureDeleted();
 			context.Database.EnsureCreated();
+		}
 
+		public static void Migrate(ApplicationDbContext context)
+		{
+			// TODO
+		}
+
+		/// <summary>
+		/// Adds data necessary for production, shoudl be run after legacy migration processes
+		/// </summary>
+		public static void GenerateSeedData(ApplicationDbContext context)
+		{
 			context.Roles.Add(RoleSeedData.AdminRole);
 			context.Roles.Add(RoleSeedData.SubmitMovies);
 			context.Roles.Add(RoleSeedData.EditHomePage);
@@ -73,30 +84,18 @@ namespace TASVideos.Data
 				rom.Game = context.Games.First(g => g.GoodName.StartsWith(rom.Name.Substring(0, 3))); // This is bad and not scalable
 				context.Roms.Add(rom);
 			}
-		}
 
-		public static void Migrate(ApplicationDbContext context)
-		{
-			// TODO
-		}
-
-		/// <summary>
-		/// Adds optional sample data
-		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
-		/// </summary>
-		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
-		{
-			foreach (var wikiPage in WikiPageSeedData.SeedPages)
+			foreach (var wikiPage in WikiPageSeedData.NewRevisions)
 			{
-				// Account for existing pages
-				var existing = context.WikiPages
-					.ThatAreCurrentRevisions()
-					.SingleOrDefault(w => w.PageName == wikiPage.PageName);
+				var currentRevision = context.WikiPages
+					.Where(wp => wp.PageName == wikiPage.PageName)
+					.Where(wp => wp.Child == null)
+					.SingleOrDefault();
 
-				if (existing != null)
+				if (currentRevision != null)
 				{
-					wikiPage.Revision = existing.Revision + 1;
-					existing.Child = wikiPage;
+					wikiPage.Revision = currentRevision.Revision + 1;
+					currentRevision.Child = wikiPage;
 				}
 
 				context.WikiPages.Add(wikiPage);
@@ -110,10 +109,17 @@ namespace TASVideos.Data
 						Excerpt = referral.Excerpt
 					});
 				}
-
-				context.SaveChanges();
 			}
 
+			context.SaveChanges();
+		}
+
+		/// <summary>
+		/// Adds optional sample data
+		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
+		/// </summary>
+		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
+		{
 			context.SaveChanges();
 
 			foreach (var admin in UserSampleData.AdminUsers)
