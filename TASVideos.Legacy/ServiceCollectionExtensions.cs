@@ -6,7 +6,7 @@ namespace TASVideos.Legacy.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{
-		private const string MySqlConnection = "server=localhost;userid=root;pwd=Password1234!@#$;port=3306;database=nesvideos_site;sslmode=none;";
+		private const string MySqlConnection = "server=localhost;userid=root;pwd=;port=3306;database=nesvideos_site;sslmode=none;";
 
 		public static IServiceCollection AddLegacyContext(this IServiceCollection services)
 		{
