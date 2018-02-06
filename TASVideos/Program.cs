@@ -31,12 +31,14 @@ namespace TASVideos
 					{
 						DbInitializer.Initialize(context);
 						LegacyImporter.RunLegacyImport(context, legacyContext);
+						DbInitializer.GenerateSeedData(context);
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
 					else if (env.IsStaging())
 					{
 						DbInitializer.Migrate(context);
 						LegacyImporter.RunLegacyImport(context, legacyContext);
+						DbInitializer.GenerateSeedData(context);
 					}
 				}
 				catch (Exception ex)
