@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Legacy.Data.Entity;
+using TASVideos.Legacy.Data.Site.Entity;
 
-namespace TASVideos.Legacy.Data
+namespace TASVideos.Legacy.Data.Site
 {
 	public class NesVideosSiteContext : DbContext
 	{
@@ -10,10 +10,12 @@ namespace TASVideos.Legacy.Data
 		}
 
 		public DbSet<SiteText> SiteText { get; set; }
+		public DbSet<User> Users { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<SiteText>().ToTable("site_text");
+			modelBuilder.Entity<User>().ToTable("users");
 		}
 	}
 }

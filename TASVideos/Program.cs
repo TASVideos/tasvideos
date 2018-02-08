@@ -7,7 +7,8 @@ using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy;
-using TASVideos.Legacy.Data;
+using TASVideos.Legacy.Data.Forum;
+using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos
 {
@@ -23,21 +24,22 @@ namespace TASVideos
 				try
 				{
 					var context = services.GetRequiredService<ApplicationDbContext>();
-					var legacyContext = services.GetRequiredService<NesVideosSiteContext>();
+					var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
+					var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
 
 					var env = services.GetRequiredService<IHostingEnvironment>();
 					var userManager = services.GetRequiredService<UserManager<User>>();
 					if (env.IsDevelopment())
 					{
 						DbInitializer.Initialize(context);
-						LegacyImporter.RunLegacyImport(context, legacyContext);
+						LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
 						DbInitializer.GenerateSeedData(context);
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
 					else if (env.IsStaging())
 					{
 						DbInitializer.Migrate(context);
-						LegacyImporter.RunLegacyImport(context, legacyContext);
+						LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
 						DbInitializer.GenerateSeedData(context);
 					}
 				}
