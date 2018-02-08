@@ -16,6 +16,8 @@ namespace TASVideos.Data.Entity
 		public DateTime LastUpdateTimeStamp { get; set; } = DateTime.UtcNow;
 		public string LastUpdateUserName { get; set; }
 
+		public string LegacyPassword { get; set; }
+
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 		public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();
 	}

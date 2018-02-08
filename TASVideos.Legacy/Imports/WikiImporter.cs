@@ -5,22 +5,22 @@ using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
-using TASVideos.Legacy.Data;
-using TASVideos.Legacy.Data.Entity;
+using TASVideos.Legacy.Data.Site;
+using TASVideos.Legacy.Data.Site.Entity;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Legacy.Imports
 {
 	public static class WikiImporter
 	{
-		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacyContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			// TODO: page to keep ram down
 			// TODO: createdby username (look up by userid)
 			// TODO: homepages
 
 			// TODO: check for collisions between pagename+revision for deleted pages vs undeleted versions of the same page
-			List<SiteText> siteTexts = legacyContext.SiteText
+			List<SiteText> siteTexts = legacySiteContext.SiteText
 				.OrderBy(s => s.Id)
 				.ToList();
 
