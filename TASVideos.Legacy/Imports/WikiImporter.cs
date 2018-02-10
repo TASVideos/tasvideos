@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
@@ -17,12 +16,12 @@ namespace TASVideos.Legacy.Imports
 		{
 			// TODO: page to keep ram down
 			// TODO: createdby username (look up by userid)
-			// TODO: homepages
 
-			// TODO: check for collisions between pagename+revision for deleted pages vs undeleted versions of the same page
 			List<SiteText> siteTexts = legacySiteContext.SiteText
 				.OrderBy(s => s.Id)
 				.ToList();
+
+			var usernames = context.Users.Select(u => u.UserName).ToList();
 
 			foreach (var legacyPage in siteTexts)
 			{
@@ -91,6 +90,11 @@ namespace TASVideos.Legacy.Imports
 					isDeleted = true;
 				}
 
+				if (usernames.Contains(pageName))
+				{
+					pageName = "HomePages/" + pageName;
+				}
+
 				var wikiPage = new WikiPage
 				{
 					PageName = pageName,
@@ -134,7 +138,7 @@ namespace TASVideos.Legacy.Imports
 			context.SaveChanges();
 		}
 
-		private static Dictionary<(string, int), int> CrystalShardsLookup = new Dictionary<(string, int), int>
+		private static readonly Dictionary<(string, int), int> CrystalShardsLookup = new Dictionary<(string, int), int>
 		{
 			[("GameResources/N64/Kirby64TheCrystalShards", 1)] = 1,
 			[("GameResources/N64/Kirby64TheCrystalShards", 2)] = 2,
