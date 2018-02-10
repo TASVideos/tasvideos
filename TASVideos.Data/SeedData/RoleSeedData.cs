@@ -64,6 +64,14 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.AssignRoles
 		};
 
+		private static readonly PermissionTo[] AdminAssistantPermissions = SeniorEditorPermissions.Concat(new[]
+		{
+			PermissionTo.CatalogMovies,
+			PermissionTo.EditUsers,
+			PermissionTo.EditRoles,
+			PermissionTo.AssignRoles
+		}).ToArray();
+
 		public static readonly Role EditHomePage = new Role
 		{
 			Name = SeedRoleNames.EditHomePage,
@@ -109,6 +117,22 @@ namespace TASVideos.Data.SeedData
 
 		public static readonly Role[] Roles =
 		{
+			new Role
+			{
+				Name = SeedRoleNames.AdminAssistant,
+				Description = "This is a wiki editor that maintain many aspects of the wiki site, including user and role maintenance, and they can assign editors",
+				RolePermission = SeniorEditorPermissions.Select(p => new RolePermission
+				{
+					RoleId = 10, // Meh, for lack of a better way
+					PermissionId = p,
+					CanAssign = EditorPermissions.Contains(p)
+				}).ToArray(),
+				RoleLinks = new[]
+				{
+					new RoleLink { Link = "EditorGuidelines" },
+					new RoleLink { Link = "TextFormattingRules" }
+				}
+			},
 			new Role
 			{
 				Name = SeedRoleNames.Editor,
