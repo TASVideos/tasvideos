@@ -10,6 +10,7 @@ namespace TASVideos.Legacy.Data.Forum
 		}
 
 		public DbSet<Users> Users { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Users>().ToTable("users");

@@ -11,11 +11,19 @@ namespace TASVideos.Legacy.Data.Site
 
 		public DbSet<SiteText> SiteText { get; set; }
 		public DbSet<User> Users { get; set; }
+		public DbSet<UserRole> UserRoles { get; set; }
+		public DbSet<Role> Roles { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<SiteText>().ToTable("site_text");
 			modelBuilder.Entity<User>().ToTable("users");
+			modelBuilder.Entity<UserRole>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.RoleId });
+				entity.ToTable("user_role");
+			});
+			modelBuilder.Entity<Role>().ToTable("roles");
 		}
 	}
 }
