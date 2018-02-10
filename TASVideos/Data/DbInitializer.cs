@@ -98,25 +98,6 @@ namespace TASVideos.Data
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
 		{
-			// Make micro roles with 1 permission, for each permission
-			// These are useful for giving people 1-off permissions
-			foreach (var permission in Enum.GetValues(typeof(PermissionTo))
-				.Cast<PermissionTo>()
-				.Where(p => p != PermissionTo.EditHomePage && p != PermissionTo.SubmitMovies))
-			{
-				var role = new Role
-				{
-					Name = permission.EnumDisplayName(),
-					Description = $"A role containing only the {permission.EnumDisplayName()} permission"
-				};
-
-				role.RolePermission.Add(new RolePermission { Role = role, PermissionId = permission });
-
-				context.Roles.Add(role);
-			}
-
-			context.SaveChanges();
-
 			foreach (var admin in UserSampleData.AdminUsers)
 			{
 				var result = await userManager.CreateAsync(admin, UserSampleData.SamplePassword);
