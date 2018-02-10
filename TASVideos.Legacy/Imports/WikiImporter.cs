@@ -16,12 +16,12 @@ namespace TASVideos.Legacy.Imports
 		{
 			// TODO: page to keep ram down
 			// TODO: createdby username (look up by userid)
-
 			List<SiteText> siteTexts = legacySiteContext.SiteText
 				.OrderBy(s => s.Id)
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
+			var legacyUsers = legacySiteContext.Users.ToList();
 
 			foreach (var legacyPage in siteTexts)
 			{
@@ -103,7 +103,8 @@ namespace TASVideos.Legacy.Imports
 					MinorEdit = legacyPage.MinorEdit == "Y",
 					RevisionMessage = legacyPage.WhyEdit,
 					IsDeleted = isDeleted,
-					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
+					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp),
+					CreateUserName = legacyUsers.Single(u => u.Id == legacyPage.UserId).Name
 				};
 
 				context.WikiPages.Add(wikiPage);
