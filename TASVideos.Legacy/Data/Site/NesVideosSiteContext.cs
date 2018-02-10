@@ -13,6 +13,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<User> Users { get; set; }
 		public DbSet<UserRole> UserRoles { get; set; }
 		public DbSet<Role> Roles { get; set; }
+		public DbSet<Submission> Submissions { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -24,6 +25,7 @@ namespace TASVideos.Legacy.Data.Site
 				entity.ToTable("user_role");
 			});
 			modelBuilder.Entity<Role>().ToTable("roles");
+			modelBuilder.Entity<Submission>().ToTable("submission");
 		}
 	}
 }
