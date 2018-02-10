@@ -37,17 +37,12 @@ namespace TASVideos.Data
 			context.Roles.Add(RoleSeedData.AdminRole);
 			context.Roles.Add(RoleSeedData.SubmitMovies);
 			context.Roles.Add(RoleSeedData.EditHomePage);
+			context.SaveChanges();
+
 			context.Roles.AddRange(RoleSeedData.Roles);
-
-			foreach (var system in SystemSeedData.Systems)
-			{
-				context.GameSystems.Add(system);
-			}
-
-			foreach (var systemFrameRate in SystemSeedData.SystemFrameRates)
-			{
-				context.GameSystemFrameRates.Add(systemFrameRate);
-			}
+			context.GameSystems.AddRange(SystemSeedData.Systems);
+			context.GameSystemFrameRates.AddRange(SystemSeedData.SystemFrameRates);
+			context.SaveChanges();
 		}
 
 		public static void PostMigrateSeedData(ApplicationDbContext context)
