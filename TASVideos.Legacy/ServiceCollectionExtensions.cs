@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TASVideos.Legacy.Data.Site;
+
 using TASVideos.Legacy.Data.Forum;
+using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Extensions
 {

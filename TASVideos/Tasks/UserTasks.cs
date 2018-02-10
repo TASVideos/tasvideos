@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
@@ -15,10 +17,12 @@ namespace TASVideos.Tasks
 	public class UserTasks
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly UserManager<User> _userManager;
 
-		public UserTasks(ApplicationDbContext db)
+		public UserTasks(ApplicationDbContext db, UserManager<User> userManager)
 		{
 			_db = db;
+			_userManager = userManager;
 		}
 
 		/// <summary>
@@ -37,6 +41,20 @@ namespace TASVideos.Tasks
 		{
 			return await GetUserPermissionByIdQuery(userId)
 				.ToListAsync();
+		}
+
+		public async Task<User> GetUser(string userName)
+		{
+			return await _db.Users.SingleAsync(u => u.UserName == userName);
+		}
+
+		public async Task ConvertLegacyPassword(int userId, string password)
+		{
+			var user = await _db.Users.SingleAsync(u => u.Id == userId);
+			user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, password);
+			await _userManager.UpdateSecurityStampAsync(user);
+			user.LegacyPassword = null;
+			await _db.SaveChangesAsync();
 		}
 
 		/// <summary>

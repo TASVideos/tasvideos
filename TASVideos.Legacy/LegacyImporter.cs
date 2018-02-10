@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
@@ -20,7 +21,7 @@ namespace TASVideos.Legacy
 			}
 
 			UserImporter.Import(context, legacySiteContext, legacyForumContext);
-			//WikiImporter.Import(context, legacySiteContext);
+			WikiImporter.Import(context, legacySiteContext);
 		}
 	}
 }
