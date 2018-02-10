@@ -30,33 +30,14 @@ namespace TASVideos.Data
 		}
 
 		/// <summary>
-		/// Adds data necessary for production, shoudl be run after legacy migration processes
+		/// Adds data necessary for production, should be run before legacy migration processes
 		/// </summary>
-		public static void GenerateSeedData(ApplicationDbContext context)
+		public static void PreMigrateSeedData(ApplicationDbContext context)
 		{
 			context.Roles.Add(RoleSeedData.AdminRole);
 			context.Roles.Add(RoleSeedData.SubmitMovies);
 			context.Roles.Add(RoleSeedData.EditHomePage);
 			context.Roles.AddRange(RoleSeedData.Roles);
-
-			// Make micro roles with 1 permission, for each permission
-			// These are useful for giving people 1-off permissions
-			foreach (var permission in Enum.GetValues(typeof(PermissionTo))
-				.Cast<PermissionTo>()
-				.Where(p => p != PermissionTo.EditHomePage && p != PermissionTo.SubmitMovies))
-			{
-				var role = new Role
-				{
-					Name = permission.EnumDisplayName(),
-					Description = $"A role containing only the {permission.EnumDisplayName()} permission"
-				};
-
-				role.RolePermission.Add(new RolePermission { Role = role, PermissionId = permission });
-
-				context.Roles.Add(role);
-			}
-
-			context.SaveChanges();
 
 			foreach (var system in SystemSeedData.Systems)
 			{
@@ -67,7 +48,10 @@ namespace TASVideos.Data
 			{
 				context.GameSystemFrameRates.Add(systemFrameRate);
 			}
+		}
 
+		public static void PostMigrateSeedData(ApplicationDbContext context)
+		{
 			foreach (var game in GameSeedData.Games)
 			{
 				context.Games.Add(game);
@@ -89,8 +73,7 @@ namespace TASVideos.Data
 			{
 				var currentRevision = context.WikiPages
 					.Where(wp => wp.PageName == wikiPage.PageName)
-					.Where(wp => wp.Child == null)
-					.SingleOrDefault();
+					.SingleOrDefault(wp => wp.Child == null);
 
 				if (currentRevision != null)
 				{
@@ -120,6 +103,23 @@ namespace TASVideos.Data
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
 		{
+			// Make micro roles with 1 permission, for each permission
+			// These are useful for giving people 1-off permissions
+			foreach (var permission in Enum.GetValues(typeof(PermissionTo))
+				.Cast<PermissionTo>()
+				.Where(p => p != PermissionTo.EditHomePage && p != PermissionTo.SubmitMovies))
+			{
+				var role = new Role
+				{
+					Name = permission.EnumDisplayName(),
+					Description = $"A role containing only the {permission.EnumDisplayName()} permission"
+				};
+
+				role.RolePermission.Add(new RolePermission { Role = role, PermissionId = permission });
+
+				context.Roles.Add(role);
+			}
+
 			context.SaveChanges();
 
 			foreach (var admin in UserSampleData.AdminUsers)
