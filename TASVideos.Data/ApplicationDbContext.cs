@@ -180,9 +180,20 @@ namespace TASVideos.Data
 						trackable.CreateTimeStamp = DateTime.UtcNow;
 					}
 
-					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
-					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
-					trackable.CreateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+					if (trackable.LastUpdateTimeStamp.Year == 1)
+					{
+						trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+					}
+
+					if (string.IsNullOrWhiteSpace(trackable.LastUpdateUserName))
+					{
+						trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+					}
+
+					if (string.IsNullOrWhiteSpace(trackable.CreateUserName))
+					{
+						trackable.CreateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+					}
 				}
 			}
 
@@ -191,8 +202,15 @@ namespace TASVideos.Data
 			{
 				if (entry.Entity is ITrackable trackable)
 				{
-					trackable.LastUpdateTimeStamp = DateTime.UtcNow;
-					trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+					if (trackable.LastUpdateTimeStamp.Year == 1) // Don't set if already set
+					{
+						trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+					}
+
+					if (string.IsNullOrWhiteSpace(trackable.LastUpdateUserName))
+					{
+						trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+					}
 				}
 			}
 		}
