@@ -21,11 +21,11 @@ namespace TASVideos.Legacy.Imports
 			// gender?
 
 
-			var users = legacySiteContext.Users
+			var legacyUsers = legacySiteContext.Users
 				.OrderBy(u => u.Id)
 				.ToList();
 
-			var forumUsers = legacyForumContext.Users
+			var legacyForumUsers = legacyForumContext.Users
 				.OrderBy(u => u.UserId)
 				.ToList();
 
@@ -35,12 +35,12 @@ namespace TASVideos.Legacy.Imports
 			var roles = context.Roles.ToList();
 
 			// TODO: what to do about these??
-			var wikiNoForum = users
+			var wikiNoForum = legacyUsers
 				.Select(u => u.Name)
-				.Except(forumUsers.Select(u => u.UserName))
+				.Except(legacyForumUsers.Select(u => u.UserName))
 				.ToList();
 
-			foreach (var legacyForumUser in forumUsers)
+			foreach (var legacyForumUser in legacyForumUsers)
 			{
 				if (legacyForumUser.UserName == "Anonymous")
 				{
@@ -62,38 +62,37 @@ namespace TASVideos.Legacy.Imports
 
 				context.Users.Add(newUser);
 
-
-				var legacySiteUser = users.SingleOrDefault(u => u.Name == legacyForumUser.UserName);
+				var legacySiteUser = legacyUsers.SingleOrDefault(u => u.Name == legacyForumUser.UserName);
 
 				if (legacySiteUser != null)
 				{
-					var userRoles = (from lr in luserRoles
+					var legacyUserRoles = (from lr in luserRoles
 									join r in lroles on lr.RoleId equals r.Id
 									where lr.UserId == legacySiteUser.Id
 									select r)
 									.ToList();
 
-					// user = banned User
+					// not having user means they are effectively banned
 					// limited = Limited User
-					if (!userRoles.Select(ur => ur.Name).Contains("user") && !userRoles.Select(ur => ur.Name).Contains("limited"))
+					if (legacyUserRoles.Select(ur => ur.Name).Contains("user"))
 					{
 						context.UserRoles.Add(new UserRole
 						{
-							Role = RoleSeedData.SubmitMovies,
+							Role = roles.Single(r => r.Name == SeedRoleNames.EditHomePage),
 							User = newUser
 						});
-					}
 
-					if (!userRoles.Select(ur => ur.Name).Contains("user"))
-					{
-						context.UserRoles.Add(new UserRole
+						if (!legacyUserRoles.Select(ur => ur.Name).Contains("limited"))
 						{
-							Role = RoleSeedData.EditHomePage,
-							User = newUser
-						});
+							context.UserRoles.Add(new UserRole
+							{
+								Role = roles.Single(r => r.Name == SeedRoleNames.SubmitMovies),
+								User = newUser
+							});
+						}
 					}
 
-					foreach (var userRole in userRoles
+					foreach (var userRole in legacyUserRoles
 						.Where(r => r.Name != "user" && r.Name != "limited"))
 					{
 						var role = GetRoleFromLegacy(userRole.Name, roles);
