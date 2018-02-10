@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+
 using TASVideos.Data;
-using TASVideos.Data.Constants;
-using TASVideos.Data.Entity;
-using TASVideos.Data.Helpers;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
-using TASVideos.Legacy.Data.Site.Entity;
-using TASVideos.WikiEngine;
-
 
 namespace TASVideos.Legacy.Imports
 {
 	public static class UserImporter
 	{
-		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext, NesVideosForumContext legacyForumContext)
+		public static void Import(
+			ApplicationDbContext context,
+			NesVideosSiteContext legacySiteContext,
+			NesVideosForumContext legacyForumContext)
 		{
 			// TODO: roles
 			// TODO: banned users, forum user_active status?
@@ -48,7 +44,10 @@ namespace TASVideos.Legacy.Imports
 					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyForumUser.RegDate),
 					LegacyPassword = legacyForumUser.Password,
 					EmailConfirmed = legacyForumUser.EmailTime != null,
-					Email = legacyForumUser.Email
+					Email = legacyForumUser.Email,
+					NormalizedEmail = legacyForumUser.Email.ToUpper(),
+					CreateUserName = "Automatic Migration",
+					PasswordHash = "",
 				};
 
 				context.Users.Add(newUser);
