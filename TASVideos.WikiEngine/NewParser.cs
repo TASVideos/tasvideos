@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine
@@ -617,46 +619,117 @@ namespace TASVideos.WikiEngine
 
 		private static void ReplaceTabs(List<INode> n)
 		{
-			for (var i = 0; i < n.Count; i++)
+			Replace(n,
+				e => e.Type == NodeType.Element && (((Element)e).Tag == "htabs" || ((Element)e).Tag == "vtabs"),
+				e => Builtins.MakeTabs((Element)e));
+		}
+
+		private static void ReplaceTocs(List<INode> n)
+		{
+			Replace(n,
+				e => e.Type == NodeType.Element && ((Element)e).Tag == "toc",
+				e => GenerateToc(n, e.CharStart));
+		}
+
+		private static void Replace(List<INode> input, Func<INode, bool> predicate, Func<INode, INode> transform)
+		{
+			for (var i = 0; i < input.Count; i++)
 			{
-				var e = n[i];
-				if (e.Type == NodeType.Element)
+				if (predicate(input[i]))
 				{
-					var tag = ((Element)e).Tag;
-					if (tag == "htabs" || tag == "vtabs")
-						n[i] = Builtins.MakeTabs((Element)e);
+					input[i] = transform(input[i]);
 				}
-				var cc = n[i] as INodeWithChildren;
+				var cc = input[i] as INodeWithChildren;
 				if (cc != null)
-					ReplaceTabs(cc.Children);
+					Replace(cc.Children, predicate, transform);
 			}
 		}
 
-		private List<WikiLinkInfo> GetAllWikiLinks(List<INode> n)
+		private static IEnumerable<INode> Find(List<INode> input, Func<INode, bool> predicate)
 		{
-			// TODO: if we get more of these, make some general purpose Visit stuff
-			var ret = new List<WikiLinkInfo>();
-			for (var i = 0; i < n.Count; i++)
+			foreach (var n in input)
 			{
-				var e = n[i];
-				if (e.Type == NodeType.Module)
+				if (predicate(n))
+					yield return n;
+				var cc = n as INodeWithChildren;
+				if (cc != null)
+				{
+					foreach (var c in Find(cc.Children, predicate))
+						yield return c;
+				}
+			}
+		}
+
+		private List<WikiLinkInfo> GetAllWikiLinks()
+		{
+			return Find(_output, e => e.Type == NodeType.Module && ((Module)e).Text.StartsWith("__wikiLink|"))
+				.Select(e =>
 				{
 					var text = ((Module)e).Text;
-					if (text.StartsWith("__wikiLink|"))
+					var link = text.Substring(11);
+					var si = Math.Max(e.CharStart - 20, 0);
+					var se = Math.Min(e.CharEnd + 20, _input.Length);
+					return new WikiLinkInfo
 					{
-						var link = text.Substring(11);
-						var si = Math.Max(e.CharStart - 20, 0);
-						var se = Math.Min(e.CharEnd + 20, _input.Length);
-						ret.Add(new WikiLinkInfo
-						{
-							Link = link,
-							Excerpt = _input.Substring(si, se - si)
-						});
-					}
+						Link = link,
+						Excerpt = _input.Substring(si, se - si)
+					};
+				})
+				.ToList();
+		}
+
+		private static readonly HashSet<string> Headings = new HashSet<string>
+		{
+			// h1, h5, h6 are not involved in TOC generation
+			"h2", "h3", "h4"
+		};
+		
+		private static int HeadingId = 0;
+
+		private static Element GenerateToc(List<INode> document, int charStart)
+		{
+			var headings = Find(document, e => e.Type == NodeType.Element && Headings.Contains(((Element)e).Tag))
+				.Cast<Element>()
+				.ToList();
+
+			var ret = new Element(charStart, "div");
+			ret.Attributes["class"] = "toc";
+			var stack = new Stack<Element>();
+			{
+				var ul = new Element(charStart, "ul");
+				ret.Children.Add(ul);
+				stack.Push(ul);
+			}
+			var pos = 2;
+			foreach (var h in headings)
+			{
+				var i = h.Tag[1] - '0'; // 2, 3, or 4?
+				while (i > pos)
+				{
+					var next = new Element(charStart, "ul");
+					var li = new Element(charStart, "li", new[] { next });
+					stack.Peek().Children.Add(li);
+					stack.Push(next);
+					pos++;
 				}
-				var cc = n[i] as INodeWithChildren;
-				if (cc != null)
-					ret.AddRange(GetAllWikiLinks(cc.Children));
+				while (i < pos)
+				{
+					stack.Pop();
+					pos--;
+				}
+				{
+					var id = "heading-" + Interlocked.Increment(ref HeadingId);
+
+					var link = new Element(charStart, "a");
+					var li = new Element(charStart, "li", new[] { link });
+					link.Attributes["href"] = "#" + id;
+					link.Children.AddRange(h.Children.Select(c => c.Clone()));
+					stack.Peek().Children.Add(li);
+
+					var anchor = new Element(charStart, "a");
+					anchor.Attributes["id"] = id;
+					h.Children.Add(anchor);
+				}
 			}
 			return ret;
 		}
@@ -673,7 +746,7 @@ namespace TASVideos.WikiEngine
 			{
 				var p = new NewParser { _input = content };
 				p.ParseLoop();
-				return p.GetAllWikiLinks(p._output);
+				return p.GetAllWikiLinks();
 			}
 			catch (SyntaxException)
 			{
@@ -694,6 +767,7 @@ namespace TASVideos.WikiEngine
 				return MakeErrorPage(content, e);
 			}
 			ReplaceTabs(p._output);
+			ReplaceTocs(p._output);
 			return p._output;
 		}
 

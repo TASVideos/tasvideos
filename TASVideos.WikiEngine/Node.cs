@@ -23,6 +23,7 @@ namespace TASVideos.WikiEngine.AST
 		int CharStart { get; }
 		int CharEnd { get; set; }
 		void WriteHtml(TextWriter w);
+		INode Clone();
 	}
 	public interface INodeWithChildren : INode
 	{
@@ -61,6 +62,10 @@ namespace TASVideos.WikiEngine.AST
 				}
 			}
 		}
+		public INode Clone()
+		{
+			return (Text)MemberwiseClone();
+		}
 	}
 	
 	public class Element : INodeWithChildren
@@ -73,8 +78,8 @@ namespace TASVideos.WikiEngine.AST
 			"keygen", "link", "meta", "param", "source", "track", "wbr"
 		};
 		public NodeType Type => NodeType.Element;
-		public List<INode> Children { get; } = new List<INode>();
-		public IDictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
+		public List<INode> Children { get; private set; } = new List<INode>();
+		public IDictionary<string, string> Attributes { get; private set; } = new Dictionary<string, string>();
 		public string Tag { get; }
 		public int CharStart { get; }
 		public int CharEnd { get; set; }
@@ -156,12 +161,19 @@ namespace TASVideos.WikiEngine.AST
 				w.Write('>');
 			}
 		}
+		public INode Clone()
+		{
+			var ret = (Element)MemberwiseClone();
+			ret.Children = Children.Select(c => c.Clone()).ToList();
+			ret.Attributes = new Dictionary<string, string>(Attributes);
+			return ret;
+		}
 	}
 
 	public class IfModule : INodeWithChildren
 	{
 		public NodeType Type => NodeType.IfModule;
-		public List<INode> Children { get; } = new List<INode>();
+		public List<INode> Children { get; private set; } = new List<INode>();
 		public string Condition { get; }
 		public int CharStart { get; }
 		public int CharEnd { get; set; }
@@ -184,6 +196,12 @@ namespace TASVideos.WikiEngine.AST
 			foreach (var c in Children)
 				c.WriteHtml(w);
 			w.Write("</text>}");
+		}
+		public INode Clone()
+		{
+			var ret = (IfModule)MemberwiseClone();
+			ret.Children = Children.Select(c => c.Clone()).ToList();
+			return ret;
 		}
 	}
 
@@ -235,6 +253,10 @@ namespace TASVideos.WikiEngine.AST
 				div.Attributes["class"] = "module-error";
 				div.WriteHtml(w);
 			}
+		}
+		public INode Clone()
+		{
+			return (Module)MemberwiseClone();
 		}
 	}
 }
