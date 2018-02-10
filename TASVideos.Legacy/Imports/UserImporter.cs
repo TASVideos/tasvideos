@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
+using TASVideos.Data.SeedData;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
 
@@ -25,14 +28,15 @@ namespace TASVideos.Legacy.Imports
 				.OrderBy(u => u.UserId)
 				.ToList();
 
+			var luserRoles = legacySiteContext.UserRoles.ToList();
+			var lroles = legacySiteContext.Roles.ToList();
+
+			var roles = context.Roles.ToList();
+
+			// TODO: what to do about these??
 			var wikiNoForum = users
 				.Select(u => u.Name)
 				.Except(forumUsers.Select(u => u.UserName))
-				.ToList();
-
-			var forumNoWiki = forumUsers
-				.Select(u => u.UserName)
-				.Except(users.Select(u => u.Name))
 				.ToList();
 
 			foreach (var legacyForumUser in forumUsers)
@@ -54,6 +58,16 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			context.SaveChanges();
+		}
+
+		private static Role GetRoleFromLegacy(string role, List<Role> roles)
+		{
+			switch (role.ToLower())
+			{
+				default:
+				case "editor":
+					return roles.Single(r => r.Name == SeedRoleNames.Editor);
+			}
 		}
 	}
 }
