@@ -18,8 +18,9 @@ namespace TASVideos.Legacy.Imports
 		{
 			// TODO:
 			// forum user_active status?
+			// import forum users that have no wiki, but check if they are forum banned
 			// gender?
-
+			// timezone
 
 			var legacyUsers = legacySiteContext.Users
 				.OrderBy(u => u.Id)
@@ -74,7 +75,8 @@ namespace TASVideos.Legacy.Imports
 
 					// not having user means they are effectively banned
 					// limited = Limited User
-					if (legacyUserRoles.Select(ur => ur.Name).Contains("user"))
+					if (legacyUserRoles.Select(ur => ur.Name).Contains("user")
+						&& !legacyUserRoles.Select(ur => ur.Name).Contains("admin")) // There's no point in adding these roles to admins, they have these perms anyway
 					{
 						context.UserRoles.Add(new UserRole
 						{
