@@ -29,18 +29,15 @@ namespace TASVideos
 
 					var env = services.GetRequiredService<IHostingEnvironment>();
 					var userManager = services.GetRequiredService<UserManager<User>>();
+					
+					DbInitializer.Initialize(context);
+					DbInitializer.PreMigrateSeedData(context);
+					LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
+					DbInitializer.PostMigrateSeedData(context);
+
 					if (env.IsDevelopment())
 					{
-						DbInitializer.Initialize(context);
-						LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
-						DbInitializer.GenerateSeedData(context);
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
-					}
-					else if (env.IsStaging())
-					{
-						DbInitializer.Migrate(context);
-						LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
-						DbInitializer.GenerateSeedData(context);
 					}
 				}
 				catch (Exception ex)
