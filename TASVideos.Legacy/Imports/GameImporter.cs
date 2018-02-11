@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using TASVideos.Data;
@@ -33,7 +32,6 @@ VALUES({gn.Id}, '{gn.Abbreviation}', getutcdate(), '{gn.DisplayName.Replace("'",
 				using (var cmd = new SqlCommand
 				{
 					CommandText = gameQuery.ToString(),
-					CommandType = CommandType.Text,
 					Connection = sqlConnection
 				})
 				{
