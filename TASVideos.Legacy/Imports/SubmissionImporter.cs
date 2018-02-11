@@ -7,6 +7,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
 
+using Microsoft.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using System.Data;
@@ -43,7 +44,6 @@ namespace TASVideos.Legacy.Imports
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var tiers = context.Tiers.ToList();
 
-			ImportHelpers.SetIdentityInsertOn("submissions", context.Database.GetDbConnection().ConnectionString);
 			foreach (var legacySubmission in legacySubmissions)
 			{
 
@@ -105,7 +105,6 @@ namespace TASVideos.Legacy.Imports
 				}
 			}
 
-			ImportHelpers.SetIdentityInsertOn("submissions", context.Database.GetDbConnection().ConnectionString);
 			context.SaveChanges();
 
 			var subs = context.Submissions.ToList();
@@ -125,6 +124,7 @@ namespace TASVideos.Legacy.Imports
 				using (var cmd = new SqlCommand
 				{
 					CommandText = $@"
+SET IDENTITY_INSERT Submissions ON
 INSERT INTO Submissions
 (id, CreateTimeStamp, Frames, LastUpdateTimeStamp, RerecordCount, Status)
 values
