@@ -42,11 +42,6 @@ namespace TASVideos.Legacy.Imports
 			{
 				try
 				{
-					if (legacySubmission.Id < 8)
-					{
-						continue;
-					}
-
 					string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
 					string submitterName = legacySiteUsers.Single(u => u.Id == legacySubmission.UserId).Name;
 					User submitter = users.SingleOrDefault(u => u.UserName == submitterName); // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
