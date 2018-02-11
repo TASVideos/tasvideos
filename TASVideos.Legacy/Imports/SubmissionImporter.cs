@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
+
+using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace TASVideos.Legacy.Imports
 {
@@ -41,17 +43,12 @@ namespace TASVideos.Legacy.Imports
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var tiers = context.Tiers.ToList();
 
-
-			foreach (var legacySubmission in legacySubmissions)
-			{
-				InsertDummySubmission(legacySubmission.Id, context.Database.GetDbConnection().ConnectionString);
-			}
+			InsertDummySubmission(legacySubmissions, context.Database.GetDbConnection().ConnectionString);
 
 			var newSubmissions = context.Submissions.ToList();
 
 			foreach (var legacySubmission in legacySubmissions)
 			{
-				InsertDummySubmission(legacySubmission.Id, context.Database.GetDbConnection().ConnectionString);
 				var submission = newSubmissions.Single(s => s.Id == legacySubmission.Id);
 
 				string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
@@ -120,18 +117,20 @@ namespace TASVideos.Legacy.Imports
 			context.SaveChanges();
 		}
 
-		private static void InsertDummySubmission(int id, string connectionString)
+		private static void InsertDummySubmission(
+			IList<TASVideos.Legacy.Data.Site.Entity.Submission> subs, string connectionString)
 		{
+			var sb = new StringBuilder("SET IDENTITY_INSERT Submissions ON\n");
+			sb.Append(string.Concat(subs.Select(s => $@"
+INSERT INTO Submissions (id, CreateTimeStamp, Frames, LastUpdateTimeStamp, RerecordCount, Status)
+VALUES ({s.Id}, getdate(), 1, getdate(), 1, 1)
+")));
+
 			using (var sqlConnection = new SqlConnection(connectionString))
 			{
 				using (var cmd = new SqlCommand
 				{
-					CommandText = $@"
-SET IDENTITY_INSERT Submissions ON
-INSERT INTO Submissions
-(id, CreateTimeStamp, Frames, LastUpdateTimeStamp, RerecordCount, Status)
-values
-({id}, getdate(), 1, getdate(), 1, 1)",
+					CommandText = sb.ToString(),
 					Connection = sqlConnection
 				})
 				{
