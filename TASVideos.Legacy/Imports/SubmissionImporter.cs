@@ -44,11 +44,18 @@ namespace TASVideos.Legacy.Imports
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var tiers = context.Tiers.ToList();
 
+
 			foreach (var legacySubmission in legacySubmissions)
 			{
-
 				InsertDummySubmission(legacySubmission.Id, context.Database.GetDbConnection().ConnectionString);
-				var submission = context.Submissions.Single(s => s.Id == legacySubmission.Id);
+			}
+
+			var newSubmissions = context.Submissions.ToList();
+
+			foreach (var legacySubmission in legacySubmissions)
+			{
+				InsertDummySubmission(legacySubmission.Id, context.Database.GetDbConnection().ConnectionString);
+				var submission = newSubmissions.Single(s => s.Id == legacySubmission.Id);
 
 				string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
 				string submitterName = legacySiteUsers.Single(u => u.Id == legacySubmission.UserId).Name;
