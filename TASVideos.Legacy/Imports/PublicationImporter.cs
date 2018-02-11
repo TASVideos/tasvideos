@@ -23,10 +23,38 @@ namespace TASVideos.Legacy.Imports
 			var legacyMovieFiles = legacySiteContext.MovieFiles.ToList();
 			var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
 
+			var publicationWikis = context.WikiPages
+				.ThatAreCurrentRevisions()
+				.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
+				.ToList();
+			var systems = context.GameSystems.ToList();
+			var systemFrameRates = context.GameSystemFrameRates.ToList();
+			var tiers = context.Tiers.ToList();
+
 			foreach (var legacyMovie in legacyMovies)
 			{
+				try
+				{
+					string pageName = LinkConstants.PublicationWikiPage + legacyMovie.Id;
+					var system = systems.Single(s => s.Id == legacyMovie.SystemId);
+					var tier = tiers.Single(t => t.Id == legacyMovie.Id);
 
+					var publication = new Publication
+					{
+						System = system,
+						Tier = tier
+					};
+				}
+				catch (Exception ex)
+				{
+
+				}
+				
 			}
+
+			context.SaveChanges();
+
+			// Set obsoleted by flags
 		}
 	}
 }
