@@ -48,12 +48,8 @@ namespace TASVideos.Data
 
 		public static void PostMigrateSeedData(ApplicationDbContext context)
 		{
-			foreach (var game in GameSeedData.Games)
-			{
-				context.Games.Add(game);
-			}
+			context.Games.AddRange(GameSeedData.Games);
 
-			context.SaveChanges();
 			foreach (var rom in GameSeedData.Roms)
 			{
 				rom.Game = context.Games.First(g => g.GoodName.StartsWith(rom.Name.Substring(0, 3))); // This is bad and not scalable
