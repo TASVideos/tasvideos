@@ -17,6 +17,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<Movie> Movies { get; set; }
 		public DbSet<MovieFile> MovieFiles { get; set; }
 		public DbSet<MovieFileStorage> MovieFileStorage { get; set; }
+		public DbSet<GameName> GameNames { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -32,6 +33,7 @@ namespace TASVideos.Legacy.Data.Site
 			modelBuilder.Entity<Movie>().ToTable("movie");
 			modelBuilder.Entity<MovieFile>().ToTable("movie_file");
 			modelBuilder.Entity<MovieFileStorage>().ToTable("movie_file_storage");
+			modelBuilder.Entity<GameName>().ToTable("gamename");
 		}
 	}
 }
