@@ -1,6 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
+using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
@@ -11,11 +15,141 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
+			// TODO:
+			// authors that are not submitters
+			// submitters not in forum 
+
 			var legacySubmissions = legacySiteContext.Submissions
 				.Where(s => s.Id > 0)
 				.ToList();
 
-			int zzz = 0;
+			var legacySiteUsers = legacySiteContext.Users.ToList();
+			var users = context.Users.ToList();
+
+			var submissionWikis = context.WikiPages
+				.ThatAreCurrentRevisions()
+				.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
+				.ToList();
+			var systems = context.GameSystems.ToList();
+			var systemFrameRates = context.GameSystemFrameRates.ToList();
+
+			foreach (var legacySubmission in legacySubmissions)
+			{
+				try
+				{
+					if (legacySubmission.Id < 8)
+					{
+						continue;
+					}
+
+					string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
+					string submitterName = legacySiteUsers.Single(u => u.Id == legacySubmission.UserId).Name;
+					User submitter = users.SingleOrDefault(u => u.UserName == submitterName); // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+
+					var system = systems.Single(s => s.Id == legacySubmission.SystemId);
+					GameSystemFrameRate systemFrameRate;
+
+					if (legacySubmission.GameVersion.ToLower().Contains("euro"))
+					{
+						systemFrameRate = systemFrameRates
+							.SingleOrDefault(sf => sf.GameSystemId == system.Id && sf.RegionCode == "PAL")
+							?? systemFrameRates.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
+					}
+					else
+					{
+						systemFrameRate = systemFrameRates
+							.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
+					}
+
+					var submission = new Submission
+					{
+						WikiContent = submissionWikis.Single(w => w.PageName == pageName),
+						Submitter = submitter,
+						SystemId = system.Id,
+						System = system,
+						SystemFrameRateId = systemFrameRate.Id,
+						SystemFrameRate = systemFrameRate,
+						CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
+						CreateUserName = submitter?.UserName,
+
+						GameName = legacySubmission.GameName,
+						GameVersion = legacySubmission.GameVersion,
+						Frames = legacySubmission.Frames,
+						Status = ConvertStatus(legacySubmission.Status),
+						RomName = legacySubmission.RomName,
+						RerecordCount = legacySubmission.Rerecord,
+						MovieFile = legacySubmission.Content,
+
+						// TODO:
+						// Judge (if StatusBy and Status or judged_by
+						// Publisher (if StatusBy and Status
+					};
+
+					// For now at least
+					if (submitter != null)
+					{
+						var subAuthor = new SubmissionAuthor
+						{
+							Submisison = submission,
+							Author = submitter
+						};
+
+						submission.SubmissionAuthors.Add(subAuthor);
+						context.SubmissionAuthors.Add(subAuthor);
+					}
+					
+					context.Submissions.Add(submission);
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e);
+					continue;
+				}
+			}
+
+			context.SaveChanges();
+
+			try
+			{
+				var subs = context.Submissions.ToList();
+				foreach (var sub in subs)
+				{
+					sub.GenerateTitle();
+				}
+			}
+			catch (Exception ex)
+			{
+				int zzz = 0;
+			}
+
+			context.SaveChanges();
+		}
+
+		private static SubmissionStatus ConvertStatus(string legacyStatus)
+		{
+			switch (legacyStatus)
+			{
+				default:
+					throw new NotImplementedException($"unknown status {legacyStatus}");
+				case "N":
+					return SubmissionStatus.New;
+				case "P":
+					return SubmissionStatus.PublicationUnderway;
+				case "R":
+					return SubmissionStatus.Rejected;
+				case "K":
+					return SubmissionStatus.Accepted;
+				case "C":
+					return SubmissionStatus.Cancelled;
+				case "Q":
+					return SubmissionStatus.NeedsMoreInfo;
+				case "O":
+					return SubmissionStatus.Delayed;
+				case "J":
+					return SubmissionStatus.JudgingUnderWay;
+				case "Y":
+					return SubmissionStatus.Published;
+			}
 		}
 	}
 }
