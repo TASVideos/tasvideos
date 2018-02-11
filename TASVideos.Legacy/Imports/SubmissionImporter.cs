@@ -7,6 +7,10 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
 
+using Microsoft.EntityFrameworkCore;
+using System.Data.SqlClient;
+using System.Data;
+
 namespace TASVideos.Legacy.Imports
 {
 	public static class SubmissionImporter
@@ -39,8 +43,13 @@ namespace TASVideos.Legacy.Imports
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var tiers = context.Tiers.ToList();
 
+			ImportHelpers.SetIdentityInsertOn("submissions", context.Database.GetDbConnection().ConnectionString);
 			foreach (var legacySubmission in legacySubmissions)
 			{
+
+				InsertDummySubmission(legacySubmission.Id, context.Database.GetDbConnection().ConnectionString);
+				var submission = context.Submissions.Single(s => s.Id == legacySubmission.Id);
+
 				string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
 				string submitterName = legacySiteUsers.Single(u => u.Id == legacySubmission.UserId).Name;
 				User submitter = users.SingleOrDefault(u => u.UserName == submitterName); // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
@@ -60,31 +69,27 @@ namespace TASVideos.Legacy.Imports
 						.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
 				}
 
-				var submission = new Submission
-				{
-					WikiContent = submissionWikis.Single(w => w.PageName == pageName),
-					Submitter = submitter,
-					SystemId = system.Id,
-					System = system,
-					SystemFrameRateId = systemFrameRate.Id,
-					SystemFrameRate = systemFrameRate,
-					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
-					CreateUserName = submitter?.UserName,
-
-					GameName = legacySubmission.GameName,
-					GameVersion = legacySubmission.GameVersion,
-					Frames = legacySubmission.Frames,
-					Status = ConvertStatus(legacySubmission.Status),
-					RomName = legacySubmission.RomName,
-					RerecordCount = legacySubmission.Rerecord,
-					MovieFile = legacySubmission.Content,
-					IntendedTier = legacySubmission.IntendedTier.HasValue
-						? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
-						: null
-					// TODO:
-					// Judge (if StatusBy and Status or judged_by
-					// Publisher (if StatusBy and Status
-				};
+				submission.WikiContent = submissionWikis.Single(w => w.PageName == pageName);
+				submission.Submitter = submitter;
+				submission.SystemId = system.Id;
+				submission.System = system;
+				submission.SystemFrameRateId = systemFrameRate.Id;
+				submission.SystemFrameRate = systemFrameRate;
+				submission.CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacySubmission.SubmissionDate);
+				submission.CreateUserName = submitter?.UserName;
+				submission.GameName = legacySubmission.GameName;
+				submission.GameVersion = legacySubmission.GameVersion;
+				submission.Frames = legacySubmission.Frames;
+				submission.Status = ConvertStatus(legacySubmission.Status);
+				submission.RomName = legacySubmission.RomName;
+				submission.RerecordCount = legacySubmission.Rerecord;
+				submission.MovieFile = legacySubmission.Content;
+				submission.IntendedTier = legacySubmission.IntendedTier.HasValue
+					? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
+					: null;
+				// TODO:
+				// Judge (if StatusBy and Status or judged_by
+				// Publisher (if StatusBy and Status
 
 				// For now at least
 				if (submitter != null)
@@ -98,10 +103,9 @@ namespace TASVideos.Legacy.Imports
 					submission.SubmissionAuthors.Add(subAuthor);
 					context.SubmissionAuthors.Add(subAuthor);
 				}
-					
-				context.Submissions.Add(submission);
 			}
 
+			ImportHelpers.SetIdentityInsertOn("submissions", context.Database.GetDbConnection().ConnectionString);
 			context.SaveChanges();
 
 			var subs = context.Submissions.ToList();
@@ -111,6 +115,30 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			context.SaveChanges();
+		}
+
+		private static int InsertDummySubmission(int id, string connectionString)
+		{
+			int identity = 0;
+			using (var sqlConnection = new SqlConnection(connectionString))
+			{
+				using (var cmd = new SqlCommand
+				{
+					CommandText = $@"
+INSERT INTO Submissions
+(id, CreateTimeStamp, Frames, LastUpdateTimeStamp, RerecordCount, Status)
+values
+({id}, getdate(), 1, getdate(), 1, 1)",
+					CommandType = CommandType.Text,
+					Connection = sqlConnection
+				})
+				{
+					sqlConnection.Open();
+					identity = cmd.ExecuteNonQuery();
+				}
+			}
+
+			return identity;
 		}
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)
