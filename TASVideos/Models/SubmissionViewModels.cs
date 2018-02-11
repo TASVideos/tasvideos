@@ -209,7 +209,15 @@ namespace TASVideos.Models
 		public int? Limit { get; set; }
 		public DateTime? Cutoff { get; set; } // Only submissions submitted after this date
 		public string User { get; set; }
-		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus> { SubmissionStatus.Published };
+		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>
+		{
+			SubmissionStatus.New,
+			SubmissionStatus.JudgingUnderWay,
+			SubmissionStatus.Accepted,
+			SubmissionStatus.PublicationUnderway,
+			SubmissionStatus.NeedsMoreInfo,
+			SubmissionStatus.Delayed
+		};
 	}
 
 	/// <summary>

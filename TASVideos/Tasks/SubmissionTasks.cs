@@ -76,7 +76,7 @@ namespace TASVideos.Tasks
 
 			if (criteria.StatusFilter.Any())
 			{
-				query = query.Where(s => !criteria.StatusFilter.Contains(s.Status));
+				query = query.Where(s => criteria.StatusFilter.Contains(s.Status));
 			}
 
 			var iquery = query
