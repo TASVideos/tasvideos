@@ -40,88 +40,73 @@ namespace TASVideos.Legacy.Imports
 
 			foreach (var legacySubmission in legacySubmissions)
 			{
-				try
+				string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
+				string submitterName = legacySiteUsers.Single(u => u.Id == legacySubmission.UserId).Name;
+				User submitter = users.SingleOrDefault(u => u.UserName == submitterName); // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+
+				var system = systems.Single(s => s.Id == legacySubmission.SystemId);
+				GameSystemFrameRate systemFrameRate;
+
+				if (legacySubmission.GameVersion.ToLower().Contains("euro"))
 				{
-					string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
-					string submitterName = legacySiteUsers.Single(u => u.Id == legacySubmission.UserId).Name;
-					User submitter = users.SingleOrDefault(u => u.UserName == submitterName); // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+					systemFrameRate = systemFrameRates
+						.SingleOrDefault(sf => sf.GameSystemId == system.Id && sf.RegionCode == "PAL")
+						?? systemFrameRates.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
+				}
+				else
+				{
+					systemFrameRate = systemFrameRates
+						.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
+				}
 
-					var system = systems.Single(s => s.Id == legacySubmission.SystemId);
-					GameSystemFrameRate systemFrameRate;
+				var submission = new Submission
+				{
+					WikiContent = submissionWikis.Single(w => w.PageName == pageName),
+					Submitter = submitter,
+					SystemId = system.Id,
+					System = system,
+					SystemFrameRateId = systemFrameRate.Id,
+					SystemFrameRate = systemFrameRate,
+					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
+					CreateUserName = submitter?.UserName,
 
-					if (legacySubmission.GameVersion.ToLower().Contains("euro"))
+					GameName = legacySubmission.GameName,
+					GameVersion = legacySubmission.GameVersion,
+					Frames = legacySubmission.Frames,
+					Status = ConvertStatus(legacySubmission.Status),
+					RomName = legacySubmission.RomName,
+					RerecordCount = legacySubmission.Rerecord,
+					MovieFile = legacySubmission.Content,
+					IntendedTier = legacySubmission.IntendedTier.HasValue
+						? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
+						: null
+					// TODO:
+					// Judge (if StatusBy and Status or judged_by
+					// Publisher (if StatusBy and Status
+				};
+
+				// For now at least
+				if (submitter != null)
+				{
+					var subAuthor = new SubmissionAuthor
 					{
-						systemFrameRate = systemFrameRates
-							.SingleOrDefault(sf => sf.GameSystemId == system.Id && sf.RegionCode == "PAL")
-							?? systemFrameRates.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
-					}
-					else
-					{
-						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
-					}
-
-					var submission = new Submission
-					{
-						WikiContent = submissionWikis.Single(w => w.PageName == pageName),
-						Submitter = submitter,
-						SystemId = system.Id,
-						System = system,
-						SystemFrameRateId = systemFrameRate.Id,
-						SystemFrameRate = systemFrameRate,
-						CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
-						CreateUserName = submitter?.UserName,
-
-						GameName = legacySubmission.GameName,
-						GameVersion = legacySubmission.GameVersion,
-						Frames = legacySubmission.Frames,
-						Status = ConvertStatus(legacySubmission.Status),
-						RomName = legacySubmission.RomName,
-						RerecordCount = legacySubmission.Rerecord,
-						MovieFile = legacySubmission.Content,
-						IntendedTier = legacySubmission.IntendedTier.HasValue
-							? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
-							: null
-						// TODO:
-						// Judge (if StatusBy and Status or judged_by
-						// Publisher (if StatusBy and Status
+						Submisison = submission,
+						Author = submitter
 					};
 
-					// For now at least
-					if (submitter != null)
-					{
-						var subAuthor = new SubmissionAuthor
-						{
-							Submisison = submission,
-							Author = submitter
-						};
-
-						submission.SubmissionAuthors.Add(subAuthor);
-						context.SubmissionAuthors.Add(subAuthor);
-					}
+					submission.SubmissionAuthors.Add(subAuthor);
+					context.SubmissionAuthors.Add(subAuthor);
+				}
 					
-					context.Submissions.Add(submission);
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine(e);
-					continue;
-				}
+				context.Submissions.Add(submission);
 			}
 
 			context.SaveChanges();
 
-			try
+			var subs = context.Submissions.ToList();
+			foreach (var sub in subs)
 			{
-				var subs = context.Submissions.ToList();
-				foreach (var sub in subs)
-				{
-					sub.GenerateTitle();
-				}
-			}
-			catch (Exception ex)
-			{
-				int zzz = 0;
+				sub.GenerateTitle();
 			}
 
 			context.SaveChanges();
