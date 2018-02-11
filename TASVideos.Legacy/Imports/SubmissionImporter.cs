@@ -16,6 +16,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			// TODO:
+			// id mismatch! old data has id gps
 			// authors that are not submitters
 			// submitters not in forum 
 			// judge
