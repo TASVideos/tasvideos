@@ -20,6 +20,7 @@ namespace TASVideos.Legacy
 				return;
 			}
 
+			GameImporter.Import(context, legacySiteContext);
 			UserImporter.Import(context, legacySiteContext, legacyForumContext);
 			WikiImporter.Import(context, legacySiteContext);
 			SubmissionImporter.Import(context, legacySiteContext);
