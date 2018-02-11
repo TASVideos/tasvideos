@@ -27,6 +27,7 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var legacyForumUsers = legacyForumContext.Users
+				.Where(u => u.UserName != "Anonymous")
 				.OrderBy(u => u.UserId)
 				.ToList();
 
@@ -36,18 +37,13 @@ namespace TASVideos.Legacy.Imports
 			var roles = context.Roles.ToList();
 
 			// TODO: what to do about these??
-			var wikiNoForum = legacyUsers
-				.Select(u => u.Name)
-				.Except(legacyForumUsers.Select(u => u.UserName))
-				.ToList();
+			//var wikiNoForum = legacyUsers
+			//	.Select(u => u.Name)
+			//	.Except(legacyForumUsers.Select(u => u.UserName))
+			//	.ToList();
 
 			foreach (var legacyForumUser in legacyForumUsers)
 			{
-				if (legacyForumUser.UserName == "Anonymous")
-				{
-					continue;
-				}
-
 				var newUser = new TASVideos.Data.Entity.User
 				{
 					UserName = legacyForumUser.UserName,
