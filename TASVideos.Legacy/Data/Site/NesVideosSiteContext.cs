@@ -14,6 +14,9 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<UserRole> UserRoles { get; set; }
 		public DbSet<Role> Roles { get; set; }
 		public DbSet<Submission> Submissions { get; set; }
+		public DbSet<Movie> Movies { get; set; }
+		public DbSet<MovieFile> MovieFiles { get; set; }
+		public DbSet<MovieFileStorage> MovieFileStorage { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -26,6 +29,9 @@ namespace TASVideos.Legacy.Data.Site
 			});
 			modelBuilder.Entity<Role>().ToTable("roles");
 			modelBuilder.Entity<Submission>().ToTable("submission");
+			modelBuilder.Entity<Movie>().ToTable("movie");
+			modelBuilder.Entity<MovieFile>().ToTable("movie_file");
+			modelBuilder.Entity<MovieFileStorage>().ToTable("movie_file_storage");
 		}
 	}
 }
