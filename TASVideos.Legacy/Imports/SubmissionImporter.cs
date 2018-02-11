@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
 
 using TASVideos.Data;
@@ -7,10 +8,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
 
-using Microsoft.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System.Data.SqlClient;
-using System.Data;
 
 namespace TASVideos.Legacy.Imports
 {
@@ -21,7 +19,6 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			// TODO:
-			// id mismatch! old data has id gps
 			// authors that are not submitters
 			// submitters not in forum 
 			// judge
@@ -123,9 +120,8 @@ namespace TASVideos.Legacy.Imports
 			context.SaveChanges();
 		}
 
-		private static int InsertDummySubmission(int id, string connectionString)
+		private static void InsertDummySubmission(int id, string connectionString)
 		{
-			int identity = 0;
 			using (var sqlConnection = new SqlConnection(connectionString))
 			{
 				using (var cmd = new SqlCommand
@@ -136,16 +132,13 @@ INSERT INTO Submissions
 (id, CreateTimeStamp, Frames, LastUpdateTimeStamp, RerecordCount, Status)
 values
 ({id}, getdate(), 1, getdate(), 1, 1)",
-					CommandType = CommandType.Text,
 					Connection = sqlConnection
 				})
 				{
 					sqlConnection.Open();
-					identity = cmd.ExecuteNonQuery();
+					cmd.ExecuteNonQuery();
 				}
 			}
-
-			return identity;
 		}
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)
