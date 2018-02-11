@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 using TASVideos.Data;
@@ -47,7 +49,7 @@ namespace TASVideos.Legacy.Imports
 				}
 				catch (Exception ex)
 				{
-
+					Console.WriteLine(ex);
 				}
 				
 			}
@@ -55,6 +57,31 @@ namespace TASVideos.Legacy.Imports
 			context.SaveChanges();
 
 			// Set obsoleted by flags
+		}
+
+		private static int InsertDummyPublication(int id, string connectionString)
+		{
+			int identity = 0;
+			using (var sqlConnection = new SqlConnection(connectionString))
+			{
+				using (var cmd = new SqlCommand
+				{
+					CommandText = $@"
+SET IDENTITY_INSERT Publications ON
+INSERT INTO Publications
+( id, CreateTimeStamp, Frames, GameId, LastUpdateTimeStamp, MovieFile, MovieFileName, RerecordCount, RomId, SubmissionId, SystemFrameRateId, SystemId, TierId)
+Values
+({id}, getdate(), 1, 1, getdate(), 1, '', 1, 1, 1, 1, 1, 1)",
+					CommandType = CommandType.Text,
+					Connection = sqlConnection
+				})
+				{
+					sqlConnection.Open();
+					identity = cmd.ExecuteNonQuery();
+				}
+			}
+
+			return identity;
 		}
 	}
 }
