@@ -20,7 +20,9 @@
 			{
 				<div class="input-group">
 					<input asp-for="Email" class="form-control" />
-					<span class="input-group-addon" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
+					<div class="input-group-append">
+						<span class="input-group-text" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
+					</div>
 				</div>
 			}
 			else
@@ -53,5 +55,5 @@
 	}
 }
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
+	@await Html.PartialAsync("_ValidationScriptsPartial")
 }

@@ -3,7 +3,7 @@
 	ViewData["Title"] = $"Publishing Submission #{Model.Title}";
 }
 <div class="card">
-	<div class="card-block">
+	<div class="card-body">
 		<div class="card-title">
 			<a class="btn btn-primary " asp-action="Catalog" asp-route-id="@Model.Id">Catalog</a>
 		</div>
@@ -75,9 +75,11 @@
 				<label asp-for="MovieFileName" class="form-control-label"></label>
 				<div class="input-group">
 					<input type="text" asp-for="MovieFileName" class="form-control" />
-					<span class="input-group-addon">
-						.@Model.MovieExtension
-					</span>
+					<div class="input-group-append">
+						<span class="input-group-text">
+							.@Model.MovieExtension
+						</span>
+					</div>
 				</div>
 				<div>@Html.DescriptionFor(m => m.MovieFileName)</div>
 				<span asp-validation-for="MovieFileName" class="text-danger"></span>

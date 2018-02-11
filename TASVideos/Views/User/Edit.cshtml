@@ -56,9 +56,11 @@
 						<div id="user-name-div" class="col-sm-12">
 							<div class="input-group">
 								<input asp-for="UserName" class="form-control" autocomplete="off"/>
-								<span class="input-group-addon" aria-hidden="true">
-									<span id="user-name-status" class="fa fa-check-square text-success"></span>
-								</span>
+								<div class="input-group-append">
+									<div class="input-group-text" aria-hidden="true">
+										<span id="user-name-status" class="fa fa-check-square text-success"></span>
+									</div>
+								</div>
 							</div>
 							<span id="username-exists-message" class="d-none text-danger">User name already exists</span>
 						</div>
@@ -168,7 +170,9 @@
 				{
 					<div class="input-group">
 						<label class="form-control">@Model.Email</label>
-						<span class="input-group-addon" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
+						<div class="input-group-append">
+							<span class="input-group-text" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
+						</div>
 					</div>
 				}
 				else
