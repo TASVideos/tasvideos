@@ -18,6 +18,10 @@ namespace TASVideos.Legacy.Imports
 			// TODO:
 			// authors that are not submitters
 			// submitters not in forum 
+			// judge
+			// publisher
+			// Game data
+			// MovieExtension
 
 			var legacySubmissions = legacySiteContext.Submissions
 				.Where(s => s.Id > 0)
@@ -32,6 +36,7 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 			var systems = context.GameSystems.ToList();
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
+			var tiers = context.Tiers.ToList();
 
 			foreach (var legacySubmission in legacySubmissions)
 			{
@@ -79,7 +84,9 @@ namespace TASVideos.Legacy.Imports
 						RomName = legacySubmission.RomName,
 						RerecordCount = legacySubmission.Rerecord,
 						MovieFile = legacySubmission.Content,
-
+						IntendedTier = legacySubmission.IntendedTier.HasValue
+							? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
+							: null
 						// TODO:
 						// Judge (if StatusBy and Status or judged_by
 						// Publisher (if StatusBy and Status
