@@ -42,6 +42,7 @@ namespace TASVideos.Data
 			context.Roles.AddRange(RoleSeedData.Roles);
 			context.GameSystems.AddRange(SystemSeedData.Systems);
 			context.GameSystemFrameRates.AddRange(SystemSeedData.SystemFrameRates);
+			context.Tiers.AddRange(TierSeedData.Tiers);
 			context.SaveChanges();
 		}
 
@@ -50,11 +51,6 @@ namespace TASVideos.Data
 			foreach (var game in GameSeedData.Games)
 			{
 				context.Games.Add(game);
-			}
-
-			foreach (var tier in TierSeedData.Tiers)
-			{
-				context.Tiers.Add(tier);
 			}
 
 			context.SaveChanges();
