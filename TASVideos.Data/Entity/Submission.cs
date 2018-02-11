@@ -81,7 +81,7 @@ namespace TASVideos.Data.Entity
 		[StringLength(100)]
 		public string EncodeEmbedLink { get; set; }
 
-		[StringLength(20)]
+		[StringLength(100)]
 		public string GameVersion { get; set; }
 
 		[StringLength(100)]
@@ -90,7 +90,7 @@ namespace TASVideos.Data.Entity
 		[StringLength(50)]
 		public string Branch { get; set; }
 
-		[StringLength(100)]
+		[StringLength(250)]
 		public string RomName { get; set; }
 		
 		[StringLength(50)]

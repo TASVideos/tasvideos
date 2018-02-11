@@ -15,7 +15,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("timestamp")]
 		public int TimeStamp { get; set; }
 
-		[Column("timestamp")]
+		[Column("systemid")]
 		public int SystemId { get; set; }
 
 		[Column("gamename")]
