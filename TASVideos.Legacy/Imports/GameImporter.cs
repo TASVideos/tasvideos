@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
+using Microsoft.EntityFrameworkCore;
 
 namespace TASVideos.Legacy.Imports
 {
@@ -12,25 +16,30 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			var legacyGameNames = legacySiteContext.GameNames.ToList();
-			var systems = context.GameSystems.ToList();
 
-			foreach (var legacyGameName in legacyGameNames)
+			var gameQuery = new StringBuilder("SET IDENTITY_INSERT Games ON\n");
+
+			gameQuery.Append(string.Concat(legacyGameNames.Select(gn =>
+$@"
+INSERT INTO Games
+({nameof(Game.Id)}, {nameof(Game.Abbreviation)}, {nameof(Game.CreateTimeStamp)}, {nameof(Game.DisplayName)},
+{nameof(Game.GoodName)}, {nameof(Game.LastUpdateTimeStamp)}, {nameof(Game.SearchKey)}, {nameof(Game.SystemId)}, {nameof(Game.YoutubeTags)})
+VALUES({gn.Id}, '{gn.Abbreviation}', getutcdate(), '{gn.DisplayName.Replace("'", "''")}', '{gn.GoodName.Replace("'", "''")}', getutcdate(),
+'{gn.SearchKey}', '{gn.SystemId}', '{gn.YoutubeTags.Replace("'", "''")}') ")));
+
+			using (var sqlConnection = new SqlConnection(context.Database.GetDbConnection().ConnectionString))
 			{
-				
-					var game = new Game
-					{
-						System = systems.Single(s => s.Id == legacyGameName.SystemId),
-						GoodName = legacyGameName.GoodName,
-						DisplayName = legacyGameName.DisplayName,
-						Abbreviation = legacyGameName.Abbreviation,
-						SearchKey = legacyGameName.SearchKey,
-						YoutubeTags = legacyGameName.YoutubeTags
-					};
-
-					context.Games.Add(game);
+				sqlConnection.Open();
+				using (var cmd = new SqlCommand
+				{
+					CommandText = gameQuery.ToString(),
+					CommandType = CommandType.Text,
+					Connection = sqlConnection
+				})
+				{
+					cmd.ExecuteNonQuery();
+				}
 			}
-
-			context.SaveChanges();
 		}
 	}
 }
