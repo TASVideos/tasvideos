@@ -1,18 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
     public class GameController : BaseController
     {
-		public GameController(UserTasks userTasks)
+		private readonly GameTasks _gameTasks;
+
+		public GameController(UserTasks userTasks, GameTasks gameTasks)
 			: base(userTasks)
 		{
+			_gameTasks = gameTasks;
 		}
 
-		public IActionResult Index(int id)
+		[AllowAnonymous]
+		public async Task<IActionResult> Index(int id)
 		{
-			return View();
+			var model = await _gameTasks.GetGameForDisplay(id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
 		}
 	}
 }
