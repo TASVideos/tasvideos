@@ -15,6 +15,9 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("gameid")]
 		public int GameId { get; set; } = 0;
 
+		[Column("gameversion")]
+		public string GameVersion { get; set; }
+
 		[Column("systemid")]
 		public int SystemId { get; set; }
 
