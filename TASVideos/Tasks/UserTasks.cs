@@ -45,7 +45,7 @@ namespace TASVideos.Tasks
 
 		public async Task<User> GetUser(string userName)
 		{
-			return await _db.Users.SingleAsync(u => u.UserName == userName);
+			return await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
 		}
 
 		public async Task ConvertLegacyPassword(int userId, string password)
