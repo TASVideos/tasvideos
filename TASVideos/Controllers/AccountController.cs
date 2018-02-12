@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication;
@@ -41,9 +39,6 @@ namespace TASVideos.Controllers
 			_logger = logger;
 		}
 
-		[TempData]
-		public string ErrorMessage { get; set; }
-
 		[AllowAnonymous]
 		public IActionResult Index()
 		{
@@ -68,33 +63,8 @@ namespace TASVideos.Controllers
 			ViewData["ReturnUrl"] = returnUrl;
 			if (ModelState.IsValid)
 			{
-				var user = await _userTasks.GetUser(model.UserName);
-				if (user == null)
-				{
-					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-					return View(model);
-				}
+				var result = await _userTasks.PasswordSignIn(model);
 
-				// If no password, then try to log in with legacy method
-				if (!string.IsNullOrWhiteSpace(user.LegacyPassword))
-				{
-					using (var md5 = MD5.Create())
-					{
-						var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(model.Password));
-						string crypted = BitConverter.ToString(md5Result)
-							.Replace("-", "")
-							.ToLower();
-
-						if (crypted == user.LegacyPassword)
-						{
-							await _userTasks.ConvertLegacyPassword(user.Id, model.Password);
-						}
-					}
-				}	
-
-				// This doesn't count login failures towards account lockout
-				// To enable password failures to trigger account lockout, set lockoutOnFailure: true
-				var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User logged in.");
