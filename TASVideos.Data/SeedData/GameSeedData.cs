@@ -5,7 +5,7 @@ namespace TASVideos.Data.SeedData
 {
     public static class GameSeedData
 	{
-		public static Game[] Games =
+		public static readonly Game[] Games =
 		{
 			new Game
 			{
@@ -54,7 +54,7 @@ namespace TASVideos.Data.SeedData
 			},
 		};
 
-		public static GameRom[] Roms =
+		public static readonly GameRom[] Roms =
 		{
 			new GameRom
 			{
