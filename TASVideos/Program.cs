@@ -23,21 +23,27 @@ namespace TASVideos
 				var services = scope.ServiceProvider;
 				try
 				{
-					var context = services.GetRequiredService<ApplicationDbContext>();
-					var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
-					var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
-
 					var env = services.GetRequiredService<IHostingEnvironment>();
-					var userManager = services.GetRequiredService<UserManager<User>>();
-					
-					DbInitializer.Initialize(context);
-					DbInitializer.PreMigrateSeedData(context);
-					LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
-					DbInitializer.PostMigrateSeedData(context);
+					var context = services.GetRequiredService<ApplicationDbContext>();
 
 					if (env.IsDevelopment())
 					{
+						var userManager = services.GetRequiredService<UserManager<User>>();
+
+						DbInitializer.Initialize(context);
+						DbInitializer.PreMigrateSeedData(context);
+						DbInitializer.PostMigrateSeedData(context);
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
+					}
+					else if (env.IsStaging())
+					{
+						var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
+						var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
+
+						DbInitializer.Initialize(context);
+						DbInitializer.PreMigrateSeedData(context);
+						LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
+						DbInitializer.PostMigrateSeedData(context);
 					}
 				}
 				catch (Exception ex)
