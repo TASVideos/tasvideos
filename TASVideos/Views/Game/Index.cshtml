@@ -1,1 +1,22 @@
-﻿<h4>To do</h4>
+﻿@model GameViewModel
+@{
+	ViewData["Title"] = $"{Model.SystemCode} - {Model.DisplayName}";
+	string wiki = LinkConstants.GameWikiPage + Model.Id;
+	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+}
+
+<div class="card">
+	<div class="card-header">
+		<span class="float-right">
+			<a condition="@canEdit" asp-action="Edit" asp-controller="Wiki" asp-route-path="@wiki" class="btn btn-primary">Edit</a>
+		</span>
+		<h4>Description</h4>
+	</div>
+	<div class="card-body">
+		<div class="card-text">
+			@await Component.RenderWiki(wiki)
+		</div>
+	</div>
+</div>
+<hr />
+
