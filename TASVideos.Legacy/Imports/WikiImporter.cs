@@ -1,5 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+
+using FastMember;
+using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
@@ -15,7 +20,6 @@ namespace TASVideos.Legacy.Imports
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			// TODO: page to keep ram down
-			// TODO: createdby username (look up by userid)
 			List<SiteText> siteTexts = legacySiteContext.SiteText
 				.ToList();
 
@@ -23,6 +27,7 @@ namespace TASVideos.Legacy.Imports
 			var legacyUsers = legacySiteContext.Users.ToList();
 
 			var pages = new List<WikiPage>();
+			var referralList = new List<WikiPageReferral>();
 			foreach (var legacyPage in siteTexts)
 			{
 				string markup = legacyPage.Description;
@@ -33,7 +38,6 @@ namespace TASVideos.Legacy.Imports
 				{
 					pageName = legacyPage.PageName.Replace("System", "System/");
 				}
-
 				else if (legacyPage.PageName == "FrontPage")
 				{
 					pageName = "System/FrontPage";
@@ -65,7 +69,6 @@ namespace TASVideos.Legacy.Imports
 				{
 					markup = markup.Replace(":[", ":|");
 				}
-
 				else if (legacyPage.PageName == "971S" && legacyPage.Revision == 3)
 				{
 					markup = markup.Replace("[Phi:", "[Phil]:");
@@ -104,16 +107,16 @@ namespace TASVideos.Legacy.Imports
 					RevisionMessage = legacyPage.WhyEdit,
 					IsDeleted = isDeleted,
 					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp),
-					CreateUserName = legacyUsers.Single(u => u.Id == legacyPage.UserId).Name
+					CreateUserName = legacyUsers.Single(u => u.Id == legacyPage.UserId).Name,
+					LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
 				};
 
-				context.WikiPages.Add(wikiPage);
 				pages.Add(wikiPage);
 
 				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
 				foreach (var referral in referrals)
 				{
-					context.WikiReferrals.Add(new WikiPageReferral
+					referralList.Add(new WikiPageReferral
 					{
 						Referrer = wikiPage.PageName,
 						Referral = referral.Link?.Split('|').FirstOrDefault(),
@@ -131,11 +134,63 @@ namespace TASVideos.Legacy.Imports
 
 				if (nextWiki != null)
 				{
-					wikiPage.Child = nextWiki;
+					wikiPage.ChildId = nextWiki.Id;
 				}
 			}
 
-			context.SaveChanges();
+			var wikiCopyParams = new[]
+			{
+				nameof(WikiPage.ChildId),
+				nameof(WikiPage.CreateTimeStamp),
+				nameof(WikiPage.CreateUserName),
+				nameof(WikiPage.IsDeleted),
+				nameof(WikiPage.LastUpdateTimeStamp),
+				nameof(WikiPage.LastUpdateUserName),
+				nameof(WikiPage.Markup),
+				nameof(WikiPage.MinorEdit),
+				nameof(WikiPage.PageName),
+				nameof(WikiPage.Revision),
+				nameof(WikiPage.RevisionMessage)
+			};
+
+			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
+			{
+				sqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.WikiPages)}]";
+				sqlCopy.BatchSize = 10000;
+
+				foreach (var param in wikiCopyParams)
+				{
+					sqlCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(pages, wikiCopyParams))
+				{
+					sqlCopy.WriteToServer(reader);
+				}
+			}
+
+			var referralCopyParams = new[]
+			{
+				nameof(WikiPageReferral.Excerpt),
+				nameof(WikiPageReferral.Referral),
+				nameof(WikiPageReferral.Referrer)
+			};
+
+			using (var referralCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
+			{
+				referralCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.WikiReferrals)}]";
+				referralCopy.BatchSize = 100000;
+
+				foreach (var param in referralCopyParams)
+				{
+					referralCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(referralList, referralCopyParams))
+				{
+					referralCopy.WriteToServer(reader);
+				}
+			}
 		}
 
 		private static readonly Dictionary<(string, int), int> CrystalShardsLookup = new Dictionary<(string, int), int>
@@ -174,15 +229,6 @@ namespace TASVideos.Legacy.Imports
 			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 11)] = 32,
 			[("GameResources/N64/Kirby64TheCrystalShards", 22)] = 33,
 			[("GameResources/N64/Kirby64TheCrystalShards", 23)] = 34,
-		};
-
-		private static Dictionary<(string, int), int> MetroidPrimeHuntersLookup = new Dictionary<(string, int), int>
-		{
-			[("DeletedPages/GameResources/DS/MetroidPrimeHunters", 1)] = 1,
-			[("DeletedPages/GameResources/DS/MetroidPrimeHunters", 2)] = 2,
-			[("GameResources/DS/MetroidPrimeHunters", 1)] = 3,
-			[("GameResources/DS/MetroidPrimeHunters", 2)] = 4,
-			[("GameResources/DS/MetroidPrimeHunters", 3)] = 5
 		};
 	}
 }
