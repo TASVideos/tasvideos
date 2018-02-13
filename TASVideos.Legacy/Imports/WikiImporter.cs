@@ -20,6 +20,7 @@ namespace TASVideos.Legacy.Imports
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			List<SiteText> siteTexts = legacySiteContext.SiteText
+				//.Where(s => s.Type == "S" && s.ObsoletedBy == -1 && !(s.PageName == "5029S" && s.Revision == 2)) // TODO: fix this record!
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
