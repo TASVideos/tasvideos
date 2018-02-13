@@ -85,6 +85,7 @@ namespace TASVideos.Legacy.Imports
 				submission.RomName = legacySubmission.RomName;
 				submission.RerecordCount = legacySubmission.Rerecord;
 				submission.MovieFile = legacySubmission.Content;
+				submission.IntendedTierId = legacySubmission.IntendedTier;
 				submission.IntendedTier = legacySubmission.IntendedTier.HasValue
 					? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
 					: null;
@@ -106,10 +107,7 @@ namespace TASVideos.Legacy.Imports
 				}
 			}
 
-			context.SaveChanges();
-
-			var subs = context.Submissions.ToList();
-			foreach (var sub in subs)
+			foreach (var sub in newSubmissions)
 			{
 				sub.GenerateTitle();
 			}
