@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
@@ -20,6 +21,7 @@ namespace TASVideos.Legacy
 				return;
 			}
 
+			RomImporter.Import(context, legacySiteContext);
 			GameImporter.Import(context, legacySiteContext);
 			UserImporter.Import(context, legacySiteContext, legacyForumContext);
 			WikiImporter.Import(context, legacySiteContext);
