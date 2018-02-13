@@ -17,7 +17,6 @@ namespace TASVideos.Legacy.Imports
 			// TODO: page to keep ram down
 			// TODO: createdby username (look up by userid)
 			List<SiteText> siteTexts = legacySiteContext.SiteText
-				.OrderBy(s => s.Id)
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
