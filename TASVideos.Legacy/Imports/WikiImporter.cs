@@ -111,17 +111,6 @@ namespace TASVideos.Legacy.Imports
 				};
 
 				pages.Add(wikiPage);
-
-				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
-				foreach (var referral in referrals)
-				{
-					referralList.Add(new WikiPageReferral
-					{
-						Referrer = wikiPage.PageName,
-						Referral = referral.Link?.Split('|').FirstOrDefault(),
-						Excerpt = referral.Excerpt
-					});
-				}
 			}
 
 			// Set child references
@@ -134,6 +123,21 @@ namespace TASVideos.Legacy.Imports
 				if (nextWiki != null)
 				{
 					wikiPage.ChildId = nextWiki.Id;
+				}
+			}
+
+			// Referrals (only need latest revisions)
+			foreach (var currentPage in pages.Where(p => p.ChildId == null))
+			{
+				var referrals = Util.GetAllWikiLinks(currentPage.Markup);
+				foreach (var referral in referrals)
+				{
+					referralList.Add(new WikiPageReferral
+					{
+						Referrer = currentPage.PageName,
+						Referral = referral.Link?.Split('|').FirstOrDefault(),
+						Excerpt = referral.Excerpt
+					});
 				}
 			}
 
