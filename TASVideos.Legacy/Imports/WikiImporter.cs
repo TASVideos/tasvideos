@@ -23,6 +23,7 @@ namespace TASVideos.Legacy.Imports
 			var usernames = context.Users.Select(u => u.UserName).ToList();
 			var legacyUsers = legacySiteContext.Users.ToList();
 
+			var pages = new List<WikiPage>();
 			foreach (var legacyPage in siteTexts)
 			{
 				string markup = legacyPage.Description;
@@ -108,6 +109,8 @@ namespace TASVideos.Legacy.Imports
 				};
 
 				context.WikiPages.Add(wikiPage);
+				pages.Add(wikiPage);
+
 				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
 				foreach (var referral in referrals)
 				{
@@ -120,13 +123,10 @@ namespace TASVideos.Legacy.Imports
 				}
 			}
 
-			context.SaveChanges();
-
 			// Set child references
-			var wikiList = context.WikiPages.ToList();
-			foreach (var wikiPage in wikiList)
+			foreach (var wikiPage in pages)
 			{
-				var nextWiki = wikiList
+				var nextWiki = pages
 					.SingleOrDefault(wp => wp.Revision == wikiPage.Revision + 1
 						&& wp.PageName == wikiPage.PageName);
 
