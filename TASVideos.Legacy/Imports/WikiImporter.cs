@@ -19,7 +19,6 @@ namespace TASVideos.Legacy.Imports
 	{
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
-			// TODO: page to keep ram down
 			List<SiteText> siteTexts = legacySiteContext.SiteText
 				.ToList();
 
