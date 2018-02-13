@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+
+using FastMember;
+using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -42,50 +46,55 @@ namespace TASVideos.Legacy.Imports
 			//	.Except(legacyForumUsers.Select(u => u.UserName))
 			//	.ToList();
 
+			var users = new List<User>();
+			var userRoles = new List<UserRole>();
 			foreach (var legacyForumUser in legacyForumUsers)
 			{
-				var newUser = new TASVideos.Data.Entity.User
+				var newUser = new User
 				{
+					Id = legacyForumUser.UserId,
 					UserName = legacyForumUser.UserName,
 					NormalizedUserName = legacyForumUser.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyForumUser.RegDate),
+					LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyForumUser.RegDate), // TODO
 					LegacyPassword = legacyForumUser.Password,
 					EmailConfirmed = legacyForumUser.EmailTime != null,
 					Email = legacyForumUser.Email,
 					NormalizedEmail = legacyForumUser.Email.ToUpper(),
 					CreateUserName = "Automatic Migration",
-					PasswordHash = "",
+					PasswordHash = ""
 				};
 
-				context.Users.Add(newUser);
+				users.Add(newUser);
 
 				var legacySiteUser = legacyUsers.SingleOrDefault(u => u.Name == legacyForumUser.UserName);
 
 				if (legacySiteUser != null)
 				{
-					var legacyUserRoles = (from lr in luserRoles
-									join r in lroles on lr.RoleId equals r.Id
-									where lr.UserId == legacySiteUser.Id
-									select r)
-									.ToList();
+					var legacyUserRoles =
+						(from lr in luserRoles
+						join r in lroles on lr.RoleId equals r.Id
+						where lr.UserId == legacySiteUser.Id
+						select r)
+						.ToList();
 
 					// not having user means they are effectively banned
 					// limited = Limited User
 					if (legacyUserRoles.Select(ur => ur.Name).Contains("user")
 						&& !legacyUserRoles.Select(ur => ur.Name).Contains("admin")) // There's no point in adding these roles to admins, they have these perms anyway
 					{
-						context.UserRoles.Add(new UserRole
+						userRoles.Add(new UserRole
 						{
-							Role = roles.Single(r => r.Name == SeedRoleNames.EditHomePage),
-							User = newUser
+							RoleId = roles.Single(r => r.Name == SeedRoleNames.EditHomePage).Id,
+							UserId = newUser.Id
 						});
 
 						if (!legacyUserRoles.Select(ur => ur.Name).Contains("limited"))
 						{
 							context.UserRoles.Add(new UserRole
 							{
-								Role = roles.Single(r => r.Name == SeedRoleNames.SubmitMovies),
-								User = newUser
+								RoleId = roles.Single(r => r.Name == SeedRoleNames.SubmitMovies).Id,
+								UserId = newUser.Id
 							});
 						}
 					}
@@ -98,15 +107,74 @@ namespace TASVideos.Legacy.Imports
 						{
 							context.UserRoles.Add(new UserRole
 							{
-								Role = role,
-								User = newUser
+								RoleId = role.Id,
+								UserId = newUser.Id
 							});
 						}
 					}
 				}
+				else
+				{
+					// TODO: check any kind of active/ban forum status if none, then give them homepage and submit rights
+				}
 			}
 
-			context.SaveChanges();
+			var userCopyParams = new[]
+			{
+				nameof(User.Id),
+				nameof(User.UserName),
+				nameof(User.NormalizedUserName),
+				nameof(User.CreateTimeStamp),
+				nameof(User.LegacyPassword),
+				nameof(User.EmailConfirmed),
+				nameof(User.Email),
+				nameof(User.NormalizedEmail),
+				nameof(User.CreateUserName),
+				nameof(User.PasswordHash),
+				nameof(User.AccessFailedCount),
+				nameof(User.LastUpdateTimeStamp),
+				nameof(User.LockoutEnabled),
+				nameof(User.PhoneNumberConfirmed),
+				nameof(User.TwoFactorEnabled)
+			};
+
+			using (var userSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
+			{
+				userSqlCopy.DestinationTableName = $"[User]";
+				userSqlCopy.BatchSize = 10000;
+
+				foreach (var param in userCopyParams)
+				{
+					userSqlCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(users, userCopyParams))
+				{
+					userSqlCopy.WriteToServer(reader);
+				}
+			}
+
+			var userRoleCopyParmas = new[]
+			{
+				nameof(UserRole.UserId),
+				nameof(UserRole.RoleId)
+			};
+
+			using (var userRoleSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
+			{
+				userRoleSqlCopy.DestinationTableName = $"[UserRoles]";
+				userRoleSqlCopy.BatchSize = 10000;
+
+				foreach (var param in userRoleCopyParmas)
+				{
+					userRoleSqlCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(userRoles, userRoleCopyParmas))
+				{
+					userRoleSqlCopy.WriteToServer(reader);
+				}
+			}
 		}
 
 		private static Role GetRoleFromLegacy(string role, IEnumerable<Role> roles)
