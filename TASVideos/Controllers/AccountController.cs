@@ -69,6 +69,11 @@ namespace TASVideos.Controllers
 			if (ModelState.IsValid)
 			{
 				var user = await _userTasks.GetUser(model.UserName);
+				if (user == null)
+				{
+					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+					return View(model);
+				}
 
 				// If no password, then try to log in with legacy method
 				if (!string.IsNullOrWhiteSpace(user.LegacyPassword))
