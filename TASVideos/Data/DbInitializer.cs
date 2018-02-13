@@ -52,7 +52,7 @@ namespace TASVideos.Data
 
 			foreach (var rom in GameSeedData.Roms)
 			{
-				rom.Game = context.Games.First(g => g.GoodName.StartsWith(rom.Name.Substring(0, 3))); // This is bad and not scalable
+				rom.Game = GameSeedData.Games.First(g => g.GoodName.StartsWith(rom.Name.Substring(0, 3))); // This is bad and not scalable
 				context.Roms.Add(rom);
 			}
 
