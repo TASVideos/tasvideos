@@ -39,6 +39,23 @@ namespace TASVideos.Legacy.Imports
 				roms.Add(rom);
 			}
 
+			// The legacy system barely used roms and they were never enforced, but the new system demands
+			// fully cataloged publications, so let's create a placeholder ROM with the intent of filling in
+			// this info eventually
+			roms.Add(new GameRom
+			{
+				Id = -1,
+				Md5 = "00000000000000000000000000000000",
+				Sha1 = "0000000000000000000000000000000000000000",
+				Name = "Unknown Rom",
+				Type = RomTypes.Unknown,
+				CreateUserName = "adelikat",
+				LastUpdateUserName = "adelikat",
+				CreateTimeStamp = DateTime.UtcNow,
+				LastUpdateTimeStamp = DateTime.UtcNow,
+				GameId = -1 // Placeholder game
+			});
+
 			var copyParams = new[]
 			{
 				nameof(GameRom.Id),
