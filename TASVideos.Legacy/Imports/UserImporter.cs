@@ -140,9 +140,9 @@ namespace TASVideos.Legacy.Imports
 
 			using (var userSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
 			{
-				userSqlCopy.DestinationTableName = $"[User]";
+				userSqlCopy.DestinationTableName = "[User]";
 				userSqlCopy.BatchSize = 10000;
-
+				
 				foreach (var param in userCopyParams)
 				{
 					userSqlCopy.ColumnMappings.Add(param, param);
@@ -162,7 +162,7 @@ namespace TASVideos.Legacy.Imports
 
 			using (var userRoleSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
 			{
-				userRoleSqlCopy.DestinationTableName = $"[UserRoles]";
+				userRoleSqlCopy.DestinationTableName = "[UserRoles]";
 				userRoleSqlCopy.BatchSize = 10000;
 
 				foreach (var param in userRoleCopyParmas)
