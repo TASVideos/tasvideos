@@ -38,12 +38,13 @@ namespace TASVideos.Legacy.Imports
 			var users = context.Users.ToList();
 
 			var submissionWikis = context.WikiPages
+				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
+				.Select(s => new { s.Id, s.PageName })
 				.ToList();
 			var systems = context.GameSystems.ToList();
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
-			var tiers = context.Tiers.ToList();
 
 			var submissions = new List<Submission>();
 			var submissionAuthors = new List<SubmissionAuthor>();
@@ -73,7 +74,6 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = legacySubmission.Id,
 					WikiContentId = submissionWiki.Id,
-					WikiContent = submissionWiki,
 					SubmitterId = submitter?.Id,
 					Submitter = submitter,
 					SystemId = system.Id,
@@ -90,10 +90,7 @@ namespace TASVideos.Legacy.Imports
 					RomName = legacySubmission.RomName,
 					RerecordCount = legacySubmission.Rerecord,
 					MovieFile = legacySubmission.Content,
-					IntendedTierId = legacySubmission.IntendedTier,
-					IntendedTier = legacySubmission.IntendedTier.HasValue
-						? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
-						: null
+					IntendedTierId = legacySubmission.IntendedTier
 				};
 				// TODO:
 				// Judge (if StatusBy and Status or judged_by
