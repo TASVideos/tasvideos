@@ -4,6 +4,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
+using FastMember;
+
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -29,15 +31,23 @@ namespace TASVideos.Legacy.Imports
 			var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
 
 			var publicationWikis = context.WikiPages
+				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
+				.Select(s => new { s.Id, s.PageName })
 				.ToList();
-			var systems = context.GameSystems.ToList();
-			var systemFrameRates = context.GameSystemFrameRates.ToList();
-			var tiers = context.Tiers.ToList();
 
-			InsertDummyPublications(legacyMovies, context.Database.GetDbConnection().ConnectionString);
-			var newpubs = context.Publications.ToList();
+			var submissions = context.Submissions
+				.Select(s => new
+				{
+					s.Id,
+					s.SystemFrameRateId,
+					s.Frames,
+					s.RerecordCount
+				})
+				.ToList();
+
+			List<Publication> publications = new List<Publication>();
 
 			foreach (var legacyMovie in legacyMovies)
 			{
@@ -45,44 +55,56 @@ namespace TASVideos.Legacy.Imports
 				{
 					string pageName = LinkConstants.PublicationWikiPage + legacyMovie.Id;
 					var wiki = publicationWikis.Single(p => p.PageName == pageName);
-					var system = systems.Single(s => s.Id == legacyMovie.SystemId);
-					var tier = tiers.Single(t => t.Id == legacyMovie.Id);
+					var submission = submissions.Single(s => s.Id == legacyMovie.SubmissionId);
+					
 
-					var publication = newpubs.Single(p => p.Id == legacyMovie.Id);
-					publication.System = system;
-					publication.Tier = tier;
+					var publication = new Publication
+					{
+						Id = legacyMovie.Id,
+						SubmissionId = legacyMovie.SubmissionId,
+						TierId = legacyMovie.Tier,
+						//CreateUserName = // TODO: publisher?,
+						CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
+						LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
+						ObsoletedById = legacyMovie.ObsoletedBy,
+						Frames = submission.Frames,
+						RerecordCount = submission.RerecordCount
+					};
+
+					publications.Add(publication);
 
 				}
 				catch (Exception ex)
 				{
 					Console.WriteLine(ex);
 				}
-				
 			}
 
-			context.SaveChanges();
-
-			// Set obsoleted by flags
-		}
-
-		private static void InsertDummyPublications(IList<Movie> movies, string connectionString)
-		{
-			var sb = new StringBuilder("SET IDENTITY_INSERT Publications ON ");
-			sb.AppendLine(string.Concat(movies.Select(m =>
-$@"INSERT INTO Publications ( id, CreateTimeStamp, Frames, GameId, LastUpdateTimeStamp, MovieFile, MovieFileName, RerecordCount, RomId, SubmissionId, SystemFrameRateId, SystemId, TierId)
-Values ({m.Id}, getdate(), 1, 1, getdate(), 1, '', 1, 1, 1, 1, 1, 1)
-")));
-
-			using (var sqlConnection = new SqlConnection(connectionString))
+			var copyParams = new[]
 			{
-				using (var cmd = new SqlCommand
+				nameof(Publication.Id),
+				nameof(Publication.SubmissionId),
+				nameof(Publication.TierId),
+				nameof(Publication.CreateUserName),
+				nameof(Publication.CreateTimeStamp),
+				nameof(Publication.LastUpdateTimeStamp),
+				nameof(Publication.Frames),
+				nameof(Publication.RerecordCount)
+			};
+
+			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
+			{
+				sqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.Publications)}]";
+				sqlCopy.BatchSize = 10000;
+
+				foreach (var param in copyParams)
 				{
-					CommandText = sb.ToString(),
-					Connection = sqlConnection
-				})
+					sqlCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(publications, copyParams))
 				{
-					sqlConnection.Open();
-					cmd.ExecuteNonQuery();
+					sqlCopy.WriteToServer(reader);
 				}
 			}
 		}
