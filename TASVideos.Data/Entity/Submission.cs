@@ -40,9 +40,12 @@ namespace TASVideos.Data.Entity
 	{
 		public int Id { get; set; }
 
+		public int? WikiContentId { get; set; }
 		public virtual WikiPage WikiContent { get; set; }
 
+		public int? SubmitterId { get; set; }
 		public virtual User Submitter { get; set; }
+
 		public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
 
 		public int? IntendedTierId { get; set; }
