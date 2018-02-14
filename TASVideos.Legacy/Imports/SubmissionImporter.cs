@@ -4,6 +4,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
+using FastMember;
+
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -43,14 +45,10 @@ namespace TASVideos.Legacy.Imports
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var tiers = context.Tiers.ToList();
 
-			InsertDummySubmission(legacySubmissions, context.Database.GetDbConnection().ConnectionString);
-
-			var newSubmissions = context.Submissions.ToList();
-
+			var submissions = new List<Submission>();
+			var submissionAuthors = new List<SubmissionAuthor>();
 			foreach (var legacySubmission in legacySubmissions)
 			{
-				var submission = newSubmissions.Single(s => s.Id == legacySubmission.Id);
-
 				string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
 				string submitterName = legacySiteUsers.Single(u => u.Id == legacySubmission.UserId).Name;
 				User submitter = users.SingleOrDefault(u => u.UserName == submitterName); // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
@@ -70,25 +68,33 @@ namespace TASVideos.Legacy.Imports
 						.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
 				}
 
-				submission.WikiContent = submissionWikis.Single(w => w.PageName == pageName);
-				submission.Submitter = submitter;
-				submission.SystemId = system.Id;
-				submission.System = system;
-				submission.SystemFrameRateId = systemFrameRate.Id;
-				submission.SystemFrameRate = systemFrameRate;
-				submission.CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacySubmission.SubmissionDate);
-				submission.CreateUserName = submitter?.UserName;
-				submission.GameName = legacySubmission.GameName;
-				submission.GameVersion = legacySubmission.GameVersion;
-				submission.Frames = legacySubmission.Frames;
-				submission.Status = ConvertStatus(legacySubmission.Status);
-				submission.RomName = legacySubmission.RomName;
-				submission.RerecordCount = legacySubmission.Rerecord;
-				submission.MovieFile = legacySubmission.Content;
-				submission.IntendedTierId = legacySubmission.IntendedTier;
-				submission.IntendedTier = legacySubmission.IntendedTier.HasValue
-					? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
-					: null;
+				var submissionWiki = submissionWikis.Single(w => w.PageName == pageName);
+				var submission = new Submission
+				{
+					Id = legacySubmission.Id,
+					WikiContentId = submissionWiki.Id,
+					WikiContent = submissionWiki,
+					SubmitterId = submitter?.Id,
+					Submitter = submitter,
+					SystemId = system.Id,
+					System = system,
+					SystemFrameRateId = systemFrameRate.Id,
+					SystemFrameRate = systemFrameRate,
+					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
+					CreateUserName = submitter?.UserName,
+					LastUpdateTimeStamp = DateTime.UtcNow, // TODO
+					GameName = legacySubmission.GameName,
+					GameVersion = legacySubmission.GameVersion,
+					Frames = legacySubmission.Frames,
+					Status = ConvertStatus(legacySubmission.Status),
+					RomName = legacySubmission.RomName,
+					RerecordCount = legacySubmission.Rerecord,
+					MovieFile = legacySubmission.Content,
+					IntendedTierId = legacySubmission.IntendedTier,
+					IntendedTier = legacySubmission.IntendedTier.HasValue
+						? tiers.Single(t => t.Id == legacySubmission.IntendedTier)
+						: null
+				};
 				// TODO:
 				// Judge (if StatusBy and Status or judged_by
 				// Publisher (if StatusBy and Status
@@ -98,42 +104,76 @@ namespace TASVideos.Legacy.Imports
 				{
 					var subAuthor = new SubmissionAuthor
 					{
+						SubmissionId = submission.Id,
 						Submisison = submission,
+						UserId = submitter.Id,
 						Author = submitter
 					};
 
 					submission.SubmissionAuthors.Add(subAuthor);
-					context.SubmissionAuthors.Add(subAuthor);
+					submissionAuthors.Add(subAuthor);
+				}
+
+				submission.GenerateTitle();
+				submissions.Add(submission);
+			}
+
+			var subCopyParams = new[]
+			{
+				nameof(Submission.Id),
+				nameof(Submission.WikiContentId),
+				nameof(Submission.SubmitterId),
+				nameof(Submission.SystemId),
+				nameof(Submission.SystemFrameRateId),
+				nameof(Submission.CreateTimeStamp),
+				nameof(Submission.CreateUserName),
+				nameof(Submission.LastUpdateTimeStamp),
+				nameof(Submission.GameName),
+				nameof(Submission.GameVersion),
+				nameof(Submission.Frames),
+				nameof(Submission.Status),
+				nameof(Submission.RomName),
+				nameof(Submission.RerecordCount),
+				nameof(Submission.MovieFile),
+				nameof(Submission.IntendedTierId),
+				nameof(Submission.Title)
+			};
+
+			using (var subSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
+			{
+				subSqlCopy.DestinationTableName = "[Submissions]";
+				subSqlCopy.BatchSize = 10000;
+
+				foreach (var param in subCopyParams)
+				{
+					subSqlCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(submissions, subCopyParams))
+				{
+					subSqlCopy.WriteToServer(reader);
 				}
 			}
 
-			foreach (var sub in newSubmissions)
+			var subAuthorCopyParams = new[]
 			{
-				sub.GenerateTitle();
-			}
+				nameof(SubmissionAuthor.UserId),
+				nameof(SubmissionAuthor.SubmissionId)
+			};
 
-			context.SaveChanges();
-		}
-
-		private static void InsertDummySubmission(
-			IList<TASVideos.Legacy.Data.Site.Entity.Submission> subs, string connectionString)
-		{
-			var sb = new StringBuilder("SET IDENTITY_INSERT Submissions ON\n");
-			sb.Append(string.Concat(subs.Select(s => $@"
-INSERT INTO Submissions (id, CreateTimeStamp, Frames, LastUpdateTimeStamp, RerecordCount, Status)
-VALUES ({s.Id}, getdate(), 1, getdate(), 1, 1)
-")));
-
-			using (var sqlConnection = new SqlConnection(connectionString))
+			using (var subAuthorSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
 			{
-				using (var cmd = new SqlCommand
+				subAuthorSqlCopy.DestinationTableName = "[SubmissionAuthors]";
+				subAuthorSqlCopy.BatchSize = 10000;
+
+				foreach (var param in subAuthorCopyParams)
 				{
-					CommandText = sb.ToString(),
-					Connection = sqlConnection
-				})
+					subAuthorSqlCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(submissionAuthors, subAuthorCopyParams))
 				{
-					sqlConnection.Open();
-					cmd.ExecuteNonQuery();
+					subAuthorSqlCopy.WriteToServer(reader);
 				}
 			}
 		}
