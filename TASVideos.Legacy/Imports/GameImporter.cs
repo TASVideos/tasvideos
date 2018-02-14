@@ -26,7 +26,7 @@ namespace TASVideos.Legacy.Imports
 				var game = new Game
 				{
 					Id = legacyGameName.Id,
-					SystemId =  legacyGameName.SystemId,
+					SystemId = legacyGameName.SystemId,
 					GoodName = legacyGameName.GoodName,
 					DisplayName = legacyGameName.DisplayName,
 					Abbreviation = legacyGameName.Abbreviation,
@@ -38,6 +38,26 @@ namespace TASVideos.Legacy.Imports
 
 				games.Add(game);
 			}
+
+			// The legacy system did not strictly enforce a game for publications
+			// but the new system demands fully cataloged publications
+			// we want a placeholder game entry for publications that lack a game entry
+			// And also for the placeholder rom because roms are also strictly enforced
+			// to have a game
+			games.Add(new Game
+			{
+				Id = -1,
+				SystemId = 1, // Arbitruary, I'd rather not have a placeholder system because it could clutter a lot of parts of the code
+				GoodName = "Unknown Game",
+				DisplayName = "Unknown Game",
+				Abbreviation = "Unknown",
+				SearchKey = "",
+				YoutubeTags = "",
+				CreateUserName = "adelikat",
+				LastUpdateUserName = "adelikat",
+				CreateTimeStamp = DateTime.UtcNow,
+				LastUpdateTimeStamp = DateTime.UtcNow,
+			});
 
 			var copyParams = new[]
 			{
