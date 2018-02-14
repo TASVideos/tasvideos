@@ -23,13 +23,11 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			// TODO:
+			// Judge (if StatusBy and Status or judged_by
+			// Publisher (if StatusBy and Status
 			// authors that are not submitters
 			// submitters not in forum 
-			// judge
-			// publisher
-			// Game data
 			// MovieExtension
-
 			var legacySubmissions = legacySiteContext.Submissions
 				.Where(s => s.Id > 0)
 				.ToList();
@@ -90,11 +88,10 @@ namespace TASVideos.Legacy.Imports
 					RomName = legacySubmission.RomName,
 					RerecordCount = legacySubmission.Rerecord,
 					MovieFile = legacySubmission.Content,
-					IntendedTierId = legacySubmission.IntendedTier
+					IntendedTierId = legacySubmission.IntendedTier,
+					GameId = legacySubmission.GameNameId ?? -1, // Placeholder game if not present
+					RomId = -1 // Legacy system had no notion of Rom for submissions
 				};
-				// TODO:
-				// Judge (if StatusBy and Status or judged_by
-				// Publisher (if StatusBy and Status
 
 				// For now at least
 				if (submitter != null)
@@ -133,7 +130,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.RerecordCount),
 				nameof(Submission.MovieFile),
 				nameof(Submission.IntendedTierId),
-				nameof(Submission.Title)
+				nameof(Submission.Title),
+				nameof(Submission.GameId),
+				nameof(Submission.RomId)
 			};
 
 			using (var subSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
