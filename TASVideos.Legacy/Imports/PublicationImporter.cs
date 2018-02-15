@@ -43,41 +43,53 @@ namespace TASVideos.Legacy.Imports
 					s.Id,
 					s.SystemFrameRateId,
 					s.Frames,
-					s.RerecordCount
+					s.RerecordCount,
+					s.GameId
 				})
 				.ToList();
 
-			List<Publication> publications = new List<Publication>();
+			var publications = new List<Publication>();
 
 			foreach (var legacyMovie in legacyMovies)
 			{
-				try
+				string pageName = LinkConstants.PublicationWikiPage + legacyMovie.Id;
+				var wiki = publicationWikis.Single(p => p.PageName == pageName);
+				var submission = submissions.Single(s => s.Id == legacyMovie.SubmissionId);
+
+				var files = legacyMovieFiles
+					.Where(lmf => lmf.MovieId == legacyMovie.Id)
+					.ToList();
+
+				MovieFile movieFile = null;
+
+				// Find the first of an acceptable movie type
+				var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
+				movieFile = files.First(f => movieTypes.Contains(f.Type));
+
+
+				var movieFileStorage = legacyMovieFileStorage.Single(lmfs => lmfs.FileName == movieFile.FileName);
+
+				var publication = new Publication
 				{
-					string pageName = LinkConstants.PublicationWikiPage + legacyMovie.Id;
-					var wiki = publicationWikis.Single(p => p.PageName == pageName);
-					var submission = submissions.Single(s => s.Id == legacyMovie.SubmissionId);
-					
+					Id = legacyMovie.Id,
+					SubmissionId = legacyMovie.SubmissionId,
+					TierId = legacyMovie.Tier,
+					//CreateUserName = // TODO: publisher?,
+					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
+					LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
+					ObsoletedById = legacyMovie.ObsoletedBy,
+					Frames = submission.Frames,
+					RerecordCount = submission.RerecordCount,
+					RomId = -1, // Place holder
+					GameId = submission.Id,
+					MovieFile = movieFileStorage.FileData,
+					MovieFileName = movieFile.FileName,
+					SystemFrameRateId = submission.SystemFrameRateId.Value,
+					SystemId = legacyMovie.SystemId
+				};
 
-					var publication = new Publication
-					{
-						Id = legacyMovie.Id,
-						SubmissionId = legacyMovie.SubmissionId,
-						TierId = legacyMovie.Tier,
-						//CreateUserName = // TODO: publisher?,
-						CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
-						LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
-						ObsoletedById = legacyMovie.ObsoletedBy,
-						Frames = submission.Frames,
-						RerecordCount = submission.RerecordCount
-					};
-
-					publications.Add(publication);
-
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex);
-				}
+				//publication.GenerateTitle(); // TODO
+				publications.Add(publication);
 			}
 
 			var copyParams = new[]
@@ -89,7 +101,13 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.CreateTimeStamp),
 				nameof(Publication.LastUpdateTimeStamp),
 				nameof(Publication.Frames),
-				nameof(Publication.RerecordCount)
+				nameof(Publication.RerecordCount),
+				nameof(Publication.GameId),
+				nameof(Publication.RomId),
+				nameof(Publication.MovieFile),
+				nameof(Publication.MovieFileName),
+				nameof(Publication.SystemFrameRateId),
+				nameof(Publication.SystemId)
 			};
 
 			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
