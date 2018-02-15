@@ -16,7 +16,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public string FileName { get; set; }
 
 		[Column("filererecords")]
-		public string FileRerecords { get; set; }
+		public int FileRerecords { get; set; }
 
 		[Column("typech")]
 		public string Type { get; set; }
