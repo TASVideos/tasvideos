@@ -15,6 +15,9 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("gameid")]
 		public int GameId { get; set; } = 0;
 
+		[Column("nickname")]
+		public string Branch { get; set; }
+
 		[Column("gameversion")]
 		public string GameVersion { get; set; }
 
@@ -29,6 +32,9 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("obsoleted_by")]
 		public int? ObsoletedBy { get; set; }
+
+		[Column("published_by")]
+		public int PublisherId { get; set; }
 
 		[Column("pubdate")]
 		public int PublishedDate { get; set; }

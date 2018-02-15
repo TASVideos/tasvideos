@@ -30,6 +30,8 @@ namespace TASVideos.Legacy.Imports
 			var legacyMovieFiles = legacySiteContext.MovieFiles.ToList();
 			var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
 
+			var legacyWikiUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
+
 			var publicationWikis = context.WikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
@@ -60,12 +62,13 @@ namespace TASVideos.Legacy.Imports
 					.Where(lmf => lmf.MovieId == legacyMovie.Id)
 					.ToList();
 
+				var publisher = legacyWikiUsers.Single(u => u.Id == legacyMovie.PublisherId);
+
 				MovieFile movieFile = null;
 
 				// Find the first of an acceptable movie type
 				var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
 				movieFile = files.First(f => movieTypes.Contains(f.Type));
-
 
 				var movieFileStorage = legacyMovieFileStorage.Single(lmfs => lmfs.FileName == movieFile.FileName);
 
@@ -74,7 +77,7 @@ namespace TASVideos.Legacy.Imports
 					Id = legacyMovie.Id,
 					SubmissionId = legacyMovie.SubmissionId,
 					TierId = legacyMovie.Tier,
-					//CreateUserName = // TODO: publisher?,
+					CreateUserName = publisher.Name ?? "Unknown",
 					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
 					LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
 					ObsoletedById = legacyMovie.ObsoletedBy,
@@ -85,7 +88,8 @@ namespace TASVideos.Legacy.Imports
 					MovieFile = movieFileStorage.FileData,
 					MovieFileName = movieFile.FileName,
 					SystemFrameRateId = submission.SystemFrameRateId.Value,
-					SystemId = legacyMovie.SystemId
+					SystemId = legacyMovie.SystemId,
+					Branch = legacyMovie.Branch
 				};
 
 				//publication.GenerateTitle(); // TODO
