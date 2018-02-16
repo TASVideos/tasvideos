@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using FastMember;
 using Microsoft.EntityFrameworkCore;
@@ -119,6 +121,33 @@ namespace TASVideos.Legacy.Imports
 				}
 			}
 
+			// Some published authors that have no forum account
+			// Note that by having no password nor legacy password they effectively can not log in without a database change
+			// I think this is correct since these are not active users
+			var portedPlayerNames = new[]
+			{
+				"Morimoto",
+				"Tokushin",
+				"Yy",
+				"Mathieu P",
+				"Linnom",
+				"Mclaud2000",
+				"Ryosuke",
+				"JuanPablo",
+				"qcommand",
+				"Mana."
+			};
+
+			var portedPlayers = portedPlayerNames.Select(p => new User
+			{
+				UserName = p,
+				NormalizedUserName = p.ToUpper(),
+				Email = $"imported{p}@tasvideos.org",
+				NormalizedEmail = $"imported{p}@tasvideos.org".ToUpper(),
+				CreateTimeStamp = DateTime.UtcNow,
+				LastUpdateTimeStamp = DateTime.UtcNow
+			});
+
 			var userCopyParams = new[]
 			{
 				nameof(User.Id),
@@ -173,6 +202,23 @@ namespace TASVideos.Legacy.Imports
 				using (var reader = ObjectReader.Create(userRoles, userRoleCopyParmas))
 				{
 					userRoleSqlCopy.WriteToServer(reader);
+				}
+			}
+
+			using (var playerSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
+			{
+				playerSqlCopy.DestinationTableName = "[User]";
+				playerSqlCopy.BatchSize = 10000;
+
+				var playerParams = userCopyParams.Where(p => p != nameof(User.Id)).ToArray();
+				foreach (var param in playerParams)
+				{
+					playerSqlCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(portedPlayers, playerParams))
+				{
+					playerSqlCopy.WriteToServer(reader);
 				}
 			}
 		}

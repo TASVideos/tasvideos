@@ -33,6 +33,8 @@ namespace TASVideos.Legacy.Imports
 			var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
 
 			var legacyWikiUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
+			var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
+			var legacyUsers = legacySiteContext.Users.ToList();
 
 			var publicationWikis = context.WikiPages
 				.ThatAreNotDeleted()
@@ -59,6 +61,7 @@ namespace TASVideos.Legacy.Imports
 			var systems = context.GameSystems.ToList();
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var games = context.Games.ToList();
+			
 
 			foreach (var legacyMovie in legacyMovies)
 			{
@@ -82,9 +85,23 @@ namespace TASVideos.Legacy.Imports
 
 				var movieFileStorage = legacyMovieFileStorage.Single(lmfs => lmfs.FileName == movieFile.FileName);
 
-				var potentialAuthors = player.Name
-				.Split("&")
-				.Select(s => Regex.Replace(s, @"\s+", ""));
+				var siteUserIds = legacyUserPlayers
+					.Where(p => p.PlayerId == player.Id)
+					.Select(up => up.UserId)
+					.ToList();
+
+				List<string> potentialAuthors;
+				if (siteUserIds.Count == 0)
+				{
+					potentialAuthors = new List<string> { player.Name.ToLower() };
+				}
+				else
+				{
+					potentialAuthors = legacyUsers
+					.Where(u => siteUserIds.Contains(u.Id))
+					.Select(u => u.Name.ToLower())
+					.ToList();
+				}
 
 				var publication = new Publication
 				{
@@ -110,7 +127,7 @@ namespace TASVideos.Legacy.Imports
 				};
 
 				var pauthors = users
-					.Where(u => potentialAuthors.Contains(u.UserName))
+					.Where(u => potentialAuthors.Contains(u.UserName.ToLower()))
 					.Select(u => new PublicationAuthor
 					{
 						UserId = u.Id,

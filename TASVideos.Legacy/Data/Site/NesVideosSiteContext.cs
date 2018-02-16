@@ -20,6 +20,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<GameName> GameNames { get; set; }
 		public DbSet<Rom> Roms { get; set; }
 		public DbSet<Player> Players { get; set; }
+		public DbSet<UserPlayer> UserPlayers { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -30,6 +31,11 @@ namespace TASVideos.Legacy.Data.Site
 				entity.HasKey(e => new { e.UserId, e.RoleId });
 				entity.ToTable("user_role");
 			});
+			modelBuilder.Entity<UserPlayer>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.PlayerId });
+				entity.ToTable("user_player");
+			});
 			modelBuilder.Entity<Role>().ToTable("roles");
 			modelBuilder.Entity<Submission>().ToTable("submission");
 			modelBuilder.Entity<Movie>().ToTable("movie");
@@ -38,6 +44,7 @@ namespace TASVideos.Legacy.Data.Site
 			modelBuilder.Entity<GameName>().ToTable("gamename");
 			modelBuilder.Entity<Rom>().ToTable("roms");
 			modelBuilder.Entity<Player>().ToTable("player");
+
 		}
 	}
 }
