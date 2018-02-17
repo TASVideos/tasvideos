@@ -1,0 +1,22 @@
+﻿@model MiniMovieModel
+
+<div>
+	<div class="card">
+		<div class="card-header">
+			<h4>@Model.Title</h4>
+		</div>
+		<div class="card-body">
+			<row>
+				<div class="col-md-4">
+					<div class="mb-1">
+						<img src="~/media/@Model.Screenshot"/>
+					</div>
+					<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
+				</div>
+				<div class="col-md-8" style="max-height: 200px; overflow-y: auto">
+					@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
+				</div>
+			</row>
+		</div>
+	</div>
+</div>
