@@ -57,16 +57,18 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<IEnumerable<SubmissionListViewModel>> GetSubmissionList(SubmissionSearchCriteriaModel criteria)
 		{
-			IQueryable<Submission> query = _db.Submissions;
+			var iquery = _db.Submissions
+				.Include(s => s.Submitter)
+				.Include(s => s.System)
+				.Include(s => s.SystemFrameRate)
+				.Include(s => s.SubmissionAuthors)
+				.ThenInclude(sa => sa.Author);
+
+			IQueryable<Submission> query = iquery.AsQueryable();
 
 			if (!string.IsNullOrWhiteSpace(criteria.User))
 			{
-				query = query.Where(s => s.Submitter.UserName == criteria.User);
-			}
-
-			if (criteria.Limit.HasValue)
-			{
-				query = query.Take(criteria.Limit.Value);
+				query = iquery.Where(s => s.Submitter.UserName == criteria.User);
 			}
 
 			if (criteria.Cutoff.HasValue)
@@ -79,14 +81,12 @@ namespace TASVideos.Tasks
 				query = query.Where(s => criteria.StatusFilter.Contains(s.Status));
 			}
 
-			var iquery = query
-				.Include(s => s.Submitter)
-				.Include(s => s.System)
-				.Include(s => s.SystemFrameRate)
-				.Include(s => s.SubmissionAuthors)
-				.ThenInclude(sa => sa.Author);
+			if (criteria.Limit.HasValue)
+			{
+				query = query.Take(criteria.Limit.Value);
+			}
 
-			var results = await iquery.ToListAsync();
+			var results = await query.ToListAsync();
 			return results.Select(s => new SubmissionListViewModel
 			{
 				Id = s.Id,
