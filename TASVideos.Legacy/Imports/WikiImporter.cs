@@ -41,6 +41,7 @@ namespace TASVideos.Legacy.Imports
 				else if (legacyPage.PageName == "FrontPage")
 				{
 					pageName = "System/FrontPage";
+					markup = markup.Replace("[module:welcome]", "");
 				}
 
 				// ******** Deleted pages that were recreated *************/
