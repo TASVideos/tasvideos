@@ -33,7 +33,9 @@ namespace TASVideos.Tasks
 					TorrentLink = p.Files.First(f => f.Type == FileType.Torrent).Path,
 					OnlineWatchingUrl = p.OnlineWatchingUrl,
 					MirrorSiteUrl = p.MirrorSiteUrl,
-					ObsoletedBy = p.ObsoletedById
+					ObsoletedBy = p.ObsoletedById,
+					MovieFileName = p.MovieFileName,
+					SubmissionId = p.SubmissionId
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}
