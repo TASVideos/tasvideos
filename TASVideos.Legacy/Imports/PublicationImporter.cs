@@ -106,6 +106,7 @@ namespace TASVideos.Legacy.Imports
 				var publication = new Publication
 				{
 					Id = legacyMovie.Id,
+					WikiContentId = wiki.Id,
 					SubmissionId = legacyMovie.SubmissionId,
 					TierId = legacyMovie.Tier,
 					CreateUserName = publisher.Name ?? "Unknown",
@@ -151,6 +152,7 @@ namespace TASVideos.Legacy.Imports
 			var copyParams = new[]
 			{
 				nameof(Publication.Branch),
+				nameof(Publication.WikiContentId),
 				nameof(Publication.Id),
 				nameof(Publication.SubmissionId),
 				nameof(Publication.TierId),
