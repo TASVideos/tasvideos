@@ -119,7 +119,7 @@ namespace TASVideos.Legacy.Imports
 					CreateUserName = publisher.Name ?? "Unknown",
 					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
 					LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
-					ObsoletedById = legacyMovie.ObsoletedBy,
+					ObsoletedById = legacyMovie.ObsoletedBy == -1 ? null : legacyMovie.ObsoletedBy,
 					Frames = submission.Frames,
 					RerecordCount = submission.RerecordCount,
 					RomId = -1, // Place holder

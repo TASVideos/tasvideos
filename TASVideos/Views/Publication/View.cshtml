@@ -8,7 +8,7 @@
 
 <div condition="@Model.ObsoletedBy.HasValue" class="text-danger">
 	<h4>This movie has been obsoleted!</h4>
-	<a href="/@(Model.Id)M" class="btn btn-primary">Obsoleting Movie</a>
+	<a href="/@(Model.ObsoletedBy)M" class="btn btn-primary">Obsoleting Movie</a>
 </div>
 <div class="card">
 	<div class="card-header">@Model.Title</div>
