@@ -14,14 +14,18 @@ namespace TASVideos.WikiEngine
 			var i = Interlocked.Increment(ref UniqueId);
 			return "y-" + i;
 		}
+
 		private static KeyValuePair<string, string> Attr(string name, string value)
 		{
 			return new KeyValuePair<string, string>(name, value);
 		}
+
 		public static INode MakeTabs(Element tabset)
 		{
 			// TODO: Fix up CharEnds
 			var navclass = tabset.Tag == "htabs" ? "nav nav-pills nav-stacked col-md-3" : "nav nav-tabs";
+			var liClass = tabset.Tag == "htabs" ? "" : "nav-item";
+			var aClass = tabset.Tag == "htabs" ? "" : "nav-link";
 			var tabclass = tabset.Tag == "htabs" ? "tab-content col-md-9" : "tab-content";
 			var nav = new List<INode>();
 			var content = new List<INode>();
@@ -29,19 +33,31 @@ namespace TASVideos.WikiEngine
 			foreach (var child in tabset.Children.Cast<Element>())
 			{
 				var id = GetUniqueId();
-				nav.Add(new Element(child.CharStart, "li", first ? new[] { Attr("class", "active") } : new KeyValuePair<string, string>[0], new[]
-				{
-					new Element(child.CharStart, "a", new[] { Attr("href", "#" + id), Attr("data-toggle", "tab") }, new[]
+				nav.Add(new Element(
+					child.CharStart,
+					"li",
+					new[]
 					{
-						new Text(child.CharStart, child.Attributes["data-name"])
-					})
-				}));
-				content.Add(new Element(child.CharStart, "div", new[] { Attr("id", id), Attr("class", first ? "tab-pane active" : "tab-pane") }, child.Children));
+						Attr("class",  liClass)
+					},
+					new[]
+					{
+						new Element(
+							child.CharStart,
+							"a",
+							new[] { Attr("href", "#" + id), Attr("data-toggle", "tab"), Attr("class", (first ? "active " : "") + aClass) },
+							new[]
+							{
+								new Text(child.CharStart, child.Attributes["data-name"])
+							})
+					}));
+				content.Add(new Element(child.CharStart, "div", new[] { Attr("id", id), Attr("class", "tab-pane" + (first ? "active" : "fade")) }, child.Children));
 				first = false;
 			}
-			return new Element(tabset.CharStart, "div", new[] { Attr("class", "row") }, new[]
+
+			return new Element(tabset.CharStart, "div", new[] { Attr("class", "") }, new[]
 			{
-				new Element(tabset.CharStart, "ul", new[] { Attr("class", navclass) }, nav),
+				new Element(tabset.CharStart, "ul", new[] { Attr("class", navclass), Attr("role", "tablist") }, nav),
 				new Element(tabset.CharStart, "div", new[] { Attr("class", tabclass) }, content)
 			});
 		}

@@ -69,3 +69,11 @@ h1 {
 .card-header {
 	background-color: #eaeaea;
 }
+
+.tab-content {
+	background-color: #fff;
+}
+
+.tab-pane {
+	padding: 10px;
+}
