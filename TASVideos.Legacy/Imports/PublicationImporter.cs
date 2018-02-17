@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -49,8 +50,6 @@ namespace TASVideos.Legacy.Imports
 				})
 				.ToList();
 
-			var publications = new List<Publication>();
-			var publicationAuthors = new List<PublicationAuthor>();
 			var users = context.Users.ToList();
 			var players = legacySiteContext.Players.ToList();
 			var systems = context.GameSystems.ToList();
@@ -58,6 +57,10 @@ namespace TASVideos.Legacy.Imports
 			var games = context.Games.ToList();
 
 			var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
+
+			var publications = new List<Publication>();
+			var publicationAuthors = new List<PublicationAuthor>();
+			var publicationFiles = new List<PublicationFile>();
 
 			foreach (var legacyMovie in legacyMovies)
 			{
@@ -75,6 +78,8 @@ namespace TASVideos.Legacy.Imports
 
 				// Find the first of an acceptable movie type
 				var movieFile = files.First(f => movieTypes.Contains(f.Type));
+
+				var screnshotUrl = files.First(f => f.Type == "H");
 
 				var player = players.Single(p => p.Id == legacyMovie.PlayerId);
 
@@ -142,6 +147,15 @@ namespace TASVideos.Legacy.Imports
 				
 				publication.GenerateTitle();
 				publications.Add(publication);
+
+				publicationFiles.Add(new PublicationFile
+				{
+					Publication = publication,
+					Type = FileType.Screenshot,
+					Path = screnshotUrl.FileName,
+					CreateTimeStamp = DateTime.UtcNow,
+					LastUpdateTimeStamp = DateTime.UtcNow
+				});
 			}
 
 			var copyParams = new[]
@@ -169,6 +183,17 @@ namespace TASVideos.Legacy.Imports
 			{
 				nameof(PublicationAuthor.UserId),
 				nameof(PublicationAuthor.PublicationId)
+			};
+
+			var fileParams = new[]
+			{
+				nameof(PublicationFile.PublicationId),
+				nameof(PublicationFile.Path),
+				nameof(PublicationFile.Type),
+				nameof(PublicationFile.CreateUserName),
+				nameof(PublicationFile.LastUpdateUserName),
+				nameof(PublicationFile.CreateTimeStamp),
+				nameof(PublicationFile.LastUpdateTimeStamp)
 			};
 
 			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
@@ -200,6 +225,22 @@ namespace TASVideos.Legacy.Imports
 				using (var reader = ObjectReader.Create(publicationAuthors, authorParams))
 				{
 					authorSqlCopy.WriteToServer(reader);
+				}
+			}
+
+			using (var fileSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
+			{
+				fileSqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.PublicationFiles)}]";
+				fileSqlCopy.BatchSize = 10000;
+
+				foreach (var param in fileParams)
+				{
+					fileSqlCopy.ColumnMappings.Add(param, param);
+				}
+
+				using (var reader = ObjectReader.Create(publicationFiles, fileParams))
+				{
+					fileSqlCopy.WriteToServer(reader);
 				}
 			}
 		}
