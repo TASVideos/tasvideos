@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 using FastMember;
 
@@ -12,9 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
-using TASVideos.Legacy.Data.Site.Entity;
 
 namespace TASVideos.Legacy.Imports
 {
@@ -61,7 +56,8 @@ namespace TASVideos.Legacy.Imports
 			var systems = context.GameSystems.ToList();
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var games = context.Games.ToList();
-			
+
+			var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
 
 			foreach (var legacyMovie in legacyMovies)
 			{
@@ -78,7 +74,6 @@ namespace TASVideos.Legacy.Imports
 				var game = games.Single(g => g.Id == (submission.GameId ?? -1));
 
 				// Find the first of an acceptable movie type
-				var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
 				var movieFile = files.First(f => movieTypes.Contains(f.Type));
 
 				var player = players.Single(p => p.Id == legacyMovie.PlayerId);
