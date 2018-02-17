@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
 {
@@ -35,6 +36,22 @@ namespace TASVideos.Tasks
 					ObsoletedBy = p.ObsoletedById
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
+		}
+
+		/// <summary>
+		/// Gets publication data for the DisplayMiniMovie module
+		/// </summary>
+		public async Task<MiniMovieModel> GetPublicationMiniMovie(int id)
+		{
+			return await _db.Publications
+				.Select(p => new MiniMovieModel
+				{
+					Id = p.Id,
+					Title = p.Title,
+					Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
+					OnlineWatchingUrl = p.OnlineWatchingUrl,
+				})
+				.SingleAsync(p => p.Id == id);
 		}
 
 		/// <summary>
