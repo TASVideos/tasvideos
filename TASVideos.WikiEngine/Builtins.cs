@@ -51,7 +51,7 @@ namespace TASVideos.WikiEngine
 								new Text(child.CharStart, child.Attributes["data-name"])
 							})
 					}));
-				content.Add(new Element(child.CharStart, "div", new[] { Attr("id", id), Attr("class", "tab-pane" + (first ? "active" : "fade")) }, child.Children));
+				content.Add(new Element(child.CharStart, "div", new[] { Attr("id", id), Attr("class", "tab-pane" + (first ? " active" : " fade")) }, child.Children));
 				first = false;
 			}
 
