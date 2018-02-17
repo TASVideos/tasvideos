@@ -20,8 +20,11 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			// TODO: streaming url links
-			// TODO: archive links
+			// TODO
+			// multiple streaming url links
+			// multiple archive links
+			// multiple movie files
+			// multiple torrents
 
 			var legacyMovies = legacySiteContext.Movies.Where(m => m.Id > 0).ToList();
 			var legacyMovieFiles = legacySiteContext.MovieFiles.ToList();
@@ -81,6 +84,9 @@ namespace TASVideos.Legacy.Imports
 
 				var screnshotUrl = files.First(f => f.Type == "H");
 				var torrentUrls = files.Where(f => torrentTypes.Contains(f.Type));
+				var mirror = files.FirstOrDefault(f => f.Type == "A")?.FileName;
+				var streaming = (files.FirstOrDefault(f => f.Type == "J" && f.FileName.Contains("youtube"))
+					?? files.FirstOrDefault(f => f.Type == "J"))?.FileName;
 
 				var player = players.Single(p => p.Id == legacyMovie.PlayerId);
 
@@ -125,7 +131,9 @@ namespace TASVideos.Legacy.Imports
 					SystemFrameRate = systemFrameRate,
 					SystemId = legacyMovie.SystemId,
 					System = system,
-					Branch = legacyMovie.Branch
+					Branch = legacyMovie.Branch,
+					MirrorSiteUrl = mirror,
+					OnlineWatchingUrl = streaming
 				};
 
 				var pauthors = users
@@ -186,7 +194,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.MovieFileName),
 				nameof(Publication.SystemFrameRateId),
 				nameof(Publication.SystemId),
-				nameof(Publication.Title)
+				nameof(Publication.Title),
+				nameof(Publication.MirrorSiteUrl),
+				nameof(Publication.OnlineWatchingUrl)
 			};
 
 			var authorParams = new[]
