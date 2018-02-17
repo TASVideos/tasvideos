@@ -34,6 +34,7 @@ namespace TASVideos.Data.Entity
 		public virtual Submission Submission { get; set; }
 		public virtual ICollection<PublicationAuthor> Authors { get; set; } = new List<PublicationAuthor>();
 
+		public int WikiContentId { get; set; }
 		public virtual WikiPage WikiContent { get; set; }
 
 		// TODO: we eventually should want to move these to the file server instead
