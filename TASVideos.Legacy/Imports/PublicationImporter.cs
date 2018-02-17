@@ -196,7 +196,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.SystemId),
 				nameof(Publication.Title),
 				nameof(Publication.MirrorSiteUrl),
-				nameof(Publication.OnlineWatchingUrl)
+				nameof(Publication.OnlineWatchingUrl),
+				nameof(Publication.ObsoletedById)
 			};
 
 			var authorParams = new[]
