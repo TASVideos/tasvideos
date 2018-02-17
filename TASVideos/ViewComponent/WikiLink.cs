@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Data.Helpers;
+using TASVideos.Extensions;
 using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
@@ -54,7 +54,7 @@ namespace TASVideos.ViewComponents
 						var mid = SubmissionHelper.IsPublicationLink(pp);
 						if (mid.HasValue)
 						{
-							var title = await _publicationTasks.GetTitle(mid.Value);
+							var title = $"[{mid.Value}]" + (await _publicationTasks.GetTitle(mid.Value));
 							if (!string.IsNullOrWhiteSpace(title))
 							{
 								model.DisplayText = title;
