@@ -22,7 +22,6 @@ namespace TASVideos.Legacy.Imports
 		{
 			// TODO: streaming url links
 			// TODO: archive links
-			// TODO: import screenshots and other media server files
 
 			var legacyMovies = legacySiteContext.Movies.Where(m => m.Id > 0).ToList();
 			var legacyMovieFiles = legacySiteContext.MovieFiles.ToList();
@@ -57,6 +56,7 @@ namespace TASVideos.Legacy.Imports
 			var games = context.Games.ToList();
 
 			var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
+			var torrentTypes = new[] { "M", "N", "O", "P", "T" };
 
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
@@ -80,6 +80,7 @@ namespace TASVideos.Legacy.Imports
 				var movieFile = files.First(f => movieTypes.Contains(f.Type));
 
 				var screnshotUrl = files.First(f => f.Type == "H");
+				var torrentUrls = files.Where(f => torrentTypes.Contains(f.Type));
 
 				var player = players.Single(p => p.Id == legacyMovie.PlayerId);
 
@@ -150,12 +151,21 @@ namespace TASVideos.Legacy.Imports
 
 				publicationFiles.Add(new PublicationFile
 				{
-					Publication = publication,
+					PublicationId = legacyMovie.Id,
 					Type = FileType.Screenshot,
 					Path = screnshotUrl.FileName,
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow
 				});
+
+				publicationFiles.AddRange(torrentUrls.Select(t => new PublicationFile
+				{
+					PublicationId = legacyMovie.Id,
+					Type = FileType.Torrent,
+					Path = t.FileName,
+					CreateTimeStamp = DateTime.UtcNow,
+					LastUpdateTimeStamp = DateTime.UtcNow
+				}));
 			}
 
 			var copyParams = new[]
