@@ -28,8 +28,8 @@ namespace TASVideos.Tasks
 				{
 					Id = p.Id,
 					Title = p.Title,
-					Screenshot = p.Files.Single(f => f.Type == FileType.Screenshot).Path,
-					TorrentLink = p.Files.Single(f => f.Type == FileType.Torrent).Path,
+					Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
+					TorrentLink = p.Files.First(f => f.Type == FileType.Torrent).Path,
 					OnlineWatchingUrl = p.OnlineWatchingUrl,
 					MirrorSiteUrl = p.MirrorSiteUrl,
 					ObsoletedBy = p.ObsoletedById
