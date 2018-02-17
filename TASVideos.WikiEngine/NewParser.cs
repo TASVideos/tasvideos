@@ -165,6 +165,29 @@ namespace TASVideos.WikiEngine
 			}
 			return false;
 		}
+		private bool TryPopTab()
+		{
+			// when popping an individual tab, we don't want to pop through a tabset.  only TAB_END does that
+			for (var i = _stack.Count - 1; i >= 0; i--)
+			{
+				var e = _stack[i];
+				if (e.Type == NodeType.Element)
+				{
+					var tag = ((Element)e).Tag;
+					if (tag == "htabs" || tag == "vtabs")
+						return false;
+					if (tag == "tab")
+					{
+						FinishText();
+						for (var j = i; j < _stack.Count; j++)
+							_stack[j].CharEnd = _index;
+						_stack.RemoveRange(i, _stack.Count - i);
+						return true;
+					}
+				}
+			}
+			return false;			
+		}
 		private bool TryPopTabs()
 		{
 			for (var i = _stack.Count - 1; i >= 0; i--)
@@ -449,7 +472,7 @@ namespace TASVideos.WikiEngine
 				if (!In("vtabs") && !In("htabs"))
 					Push("vtabs");
 				else
-					TryPop("tab");
+					TryPopTab();
 				var e = new Element(_index, "tab");
 				e.Attributes["data-name"] = name;
 				Push(e);
