@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -82,6 +83,28 @@ namespace TASVideos.Tasks
 			}
 
 			return (data.MovieFile, data.MovieFileName);
+		}
+
+		public async Task<IEnumerable<PublicationViewModel>> GetMovieList(PublicationSearchModel searchCriteria)
+		{
+			var results = await _db.Publications
+				.Take(10) // TODO
+				.ToListAsync();
+
+			// TODO: automapper, single movie is the same logic
+			return results
+				.Select(p => new PublicationViewModel
+				{
+					Id = p.Id,
+					Title = p.Title,
+					Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
+					TorrentLink = p.Files.First(f => f.Type == FileType.Torrent).Path,
+					OnlineWatchingUrl = p.OnlineWatchingUrl,
+					MirrorSiteUrl = p.MirrorSiteUrl,
+					ObsoletedBy = p.ObsoletedById,
+					MovieFileName = p.MovieFileName,
+					SubmissionId = p.SubmissionId
+				});
 		}
 	}
 }

@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using TASVideos.Models;
 using TASVideos.Tasks;
 
 
@@ -26,9 +28,10 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public IActionResult List()
+		public async Task<IActionResult> List(string query)
 		{
-			return new EmptyResult();
+			var model = await _publicationTasks.GetMovieList(new PublicationSearchModel());
+			return View(model);
 		}
 
 		[AllowAnonymous]
