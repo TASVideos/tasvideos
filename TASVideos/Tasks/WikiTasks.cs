@@ -5,19 +5,25 @@ using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Tasks
 {
 	public class WikiTasks
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ICacheService _cache;
 
-		public WikiTasks(ApplicationDbContext db)
+		public WikiTasks(
+			ApplicationDbContext db,
+			ICacheService cache)
 		{
 			_db = db;
+			_cache = cache;
 		}
 
 		/// <summary>
@@ -28,14 +34,27 @@ namespace TASVideos.Tasks
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
 		public async Task<WikiPage> GetPage(string pageName, int? revisionId = null)
 		{
+			var cacheKey = $"{nameof(GetPage)}-{pageName}-{revisionId}";
+			if (_cache.IsSet(cacheKey))
+			{
+				return _cache.Get<WikiPage>(cacheKey);
+			}
+
 			pageName = pageName?.Trim('/');
-			return await _db.WikiPages
+			var result = await _db.WikiPages
 				.ThatAreNotDeleted()
 				.Where(wp => wp.PageName == pageName)
 				.Where(wp => revisionId != null
 					? wp.Revision == revisionId
 					: wp.Child == null)
 				.SingleOrDefaultAsync();
+
+			if (result != null)
+			{
+				_cache.Set(cacheKey, result, DurationConstants.OneDayInSeconds);
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -44,10 +63,23 @@ namespace TASVideos.Tasks
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
 		public async Task<WikiPage> GetPage(int dbid)
 		{
-			return await _db.WikiPages
+			var cacheKey = $"{nameof(GetPage)}-{dbid}";
+			if (_cache.IsSet(cacheKey))
+			{
+				return _cache.Get<WikiPage>(cacheKey);
+			}
+
+			var result = await _db.WikiPages
 				.ThatAreNotDeleted()
 				.Where(wp => wp.Id == dbid)
 				.SingleOrDefaultAsync();
+
+			if (result != null)
+			{
+				_cache.Set(cacheKey, result, DurationConstants.OneDayInSeconds);
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -112,6 +144,15 @@ namespace TASVideos.Tasks
 			}
 
 			await _db.SaveChangesAsync();
+
+			// New and old revisions must have cache cleareds
+			if (currentRevision != null)
+			{
+				_cache.Remove($"{nameof(GetPage)}-{currentRevision.PageName}-{currentRevision.Id}");
+			}
+
+			_cache.Remove($"{nameof(GetPage)}-{newRevision.PageName}-{newRevision.Id}");
+
 			return newRevision.Id;
 		}
 
@@ -176,6 +217,10 @@ namespace TASVideos.Tasks
 
 			foreach (var revision in existingRevisions)
 			{
+				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
+				_cache.Remove($"{nameof(GetPage)}-{revision.Id}");
+				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{model.DestinationPageName}");
+
 				revision.PageName = model.DestinationPageName;
 			}
 
@@ -191,6 +236,11 @@ namespace TASVideos.Tasks
 			foreach (var referral in existingReferrals)
 			{
 				referral.Referral = model.DestinationPageName;
+			}
+
+			foreach (var revision in existingRevisions)
+			{
+				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Id}");
 			}
 
 			await _db.SaveChangesAsync();
@@ -394,6 +444,8 @@ namespace TASVideos.Tasks
 			foreach (var revision in revisions)
 			{
 				revision.IsDeleted = true;
+				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
+				_cache.Remove($"{nameof(GetPage)}-{revision.Id}");
 			}
 
 			// Remove referrers
@@ -420,6 +472,8 @@ namespace TASVideos.Tasks
 			if (wikiPage != null)
 			{
 				wikiPage.IsDeleted = true;
+				_cache.Remove($"{nameof(GetPage)}-{wikiPage.PageName}-{wikiPage.Revision}");
+				_cache.Remove($"{nameof(GetPage)}-{wikiPage.Id}");
 
 				// Update referrers if latest revision
 				if (wikiPage.Child == null)
@@ -467,6 +521,8 @@ namespace TASVideos.Tasks
 			foreach (var revision in revisions)
 			{
 				revision.IsDeleted = false;
+				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
+				_cache.Remove($"{nameof(GetPage)}-{revision.Id}");
 			}
 
 			await _db.SaveChangesAsync();
