@@ -82,6 +82,8 @@ namespace TASVideos
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
 				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+
+			services.AddScoped<ICacheService, MemoryCacheService>();
         }
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
