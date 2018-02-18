@@ -99,6 +99,7 @@ namespace TASVideos.Tasks
 			return (data.MovieFile, data.MovieFileName);
 		}
 
+		// TODO: documentation
 		// TODO: paging
 		public async Task<IEnumerable<PublicationViewModel>> GetMovieList(PublicationSearchModel searchCriteria)
 		{
@@ -150,6 +151,35 @@ namespace TASVideos.Tasks
 					SubmissionId = p.SubmissionId
 				})
 				.ToList();
+		}
+
+		public async Task<IEnumerable<TabularMovieListResultModel>> GetTabularMovieList(TabularMovieListSearchModel searchCriteria)
+		{
+			var movies = await _db.Publications
+				.Include(p => p.Tier)
+				.Include(p => p.Game)
+				.Include(p => p.System)
+				.Include(p => p.SystemFrameRate)
+				.Include(p => p.Authors)
+				.ThenInclude(pa => pa.Author)
+				.Where(p => searchCriteria.Tiers.Contains(p.Tier.Name))
+				.OrderByDescending(p => p.CreateTimeStamp)
+				.Take(searchCriteria.Limit)
+				.ToListAsync();
+
+			var results = movies
+				.Select(m => new TabularMovieListResultModel
+				{
+					Id = m.Id,
+					CreateTimeStamp = m.CreateTimeStamp,
+					Time = m.Time,
+					Game = m.Game.DisplayName,
+					Authors = string.Join(",", m.Authors.Select(pa => pa.Author)),
+					ObsoletedBy = null // TODO: previous logic
+				})
+				.ToList();
+
+			return results;
 		}
 	}
 }
