@@ -42,6 +42,7 @@ namespace TASVideos.Tasks
 				.Select(p => new PublicationViewModel
 				{
 					Id = p.Id,
+					CreateTimeStamp = p.CreateTimeStamp,
 					Title = p.Title,
 					Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
 					TorrentLink = p.Files.First(f => f.Type == FileType.Torrent).Path,
@@ -123,6 +124,11 @@ namespace TASVideos.Tasks
 				query = query.ThatAreCurrent();
 			}
 
+			if (searchCriteria.Years.Any())
+			{
+				query = query.Where(p => searchCriteria.Years.Contains(p.CreateTimeStamp.Year));
+			}
+
 			var results = await query
 				.OrderBy(p => p.System.Code)
 				.ThenBy(p => p.Game.DisplayName)
@@ -133,6 +139,7 @@ namespace TASVideos.Tasks
 				.Select(p => new PublicationViewModel
 				{
 					Id = p.Id,
+					CreateTimeStamp = p.CreateTimeStamp,
 					Title = p.Title,
 					Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
 					TorrentLink = p.Files.First(f => f.Type == FileType.Torrent).Path,

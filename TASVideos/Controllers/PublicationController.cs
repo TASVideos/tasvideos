@@ -35,14 +35,16 @@ namespace TASVideos.Controllers
 			var tokenLookup = await _publicationTasks.GetMovieTokenData();
 
 			var tokens = query
-				.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries).
-				Select(s => s.Trim(' '));
+				.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(s => s.Trim(' '))
+				.ToList();
 
 			var searchModel = new PublicationSearchModel
 			{
 				Tiers = tokenLookup.Tiers.Where(t => tokens.Contains(t)),
 				SystemCodes = tokenLookup.SystemCodes.Where(s => tokens.Contains(s)),
-				ShowObsoleted = tokens.Contains("Obs")
+				ShowObsoleted = tokens.Contains("Obs"),
+				Years = tokenLookup.Years.Where(y => tokens.Contains("Y" + y))
 			};
 
 			var model = await _publicationTasks.GetMovieList(searchModel);
