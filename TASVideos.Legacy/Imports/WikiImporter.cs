@@ -74,7 +74,10 @@ namespace TASVideos.Legacy.Imports
 				{
 					markup = markup.Replace("[Phi:", "[Phil]:");
 				}
-
+				else if (legacyPage.PageName == "2884M")
+				{
+					markup = markup.Replace("][", "II");
+				}
 
 				var pubId = SubmissionHelper.IsPublicationLink(legacyPage.PageName);
 				var subId = SubmissionHelper.IsSubmissionLink(legacyPage.PageName);
