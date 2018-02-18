@@ -88,6 +88,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<PublicationViewModel>> GetMovieList(PublicationSearchModel searchCriteria)
 		{
 			var results = await _db.Publications
+				.Include(p => p.Files)
 				.Take(10) // TODO
 				.ToListAsync();
 
@@ -104,7 +105,8 @@ namespace TASVideos.Tasks
 					ObsoletedBy = p.ObsoletedById,
 					MovieFileName = p.MovieFileName,
 					SubmissionId = p.SubmissionId
-				});
+				})
+				.ToList();
 		}
 	}
 }
