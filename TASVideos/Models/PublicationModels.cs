@@ -25,4 +25,24 @@ namespace TASVideos.Models
 		public string OnlineWatchingUrl { get; set; }
 		public string MirrorSiteUrl { get; set; }
 	}
+
+	public class TabularMovieListSearchModel
+	{
+		public int Limit { get; set; } = 10;
+		public IEnumerable<string> Tiers { get; set; } = new List<string>();
+	}
+
+	public class TabularMovieListResultModel
+	{
+		public int Id { get; set; }
+		public DateTime CreateTimeStamp { get; set; }
+		public TimeSpan Time { get; set; }
+
+		public int? ObsoletedBy { get; set; }
+		public TimeSpan? PreviousTime { get; set; }
+		public int PreviousId { get; set; }
+
+		public string Game { get; set; }
+		public string Authors { get; set; }
+	}
 }

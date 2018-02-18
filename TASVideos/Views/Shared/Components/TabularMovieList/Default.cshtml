@@ -1,0 +1,21 @@
+﻿@model IEnumerable<TabularMovieListResultModel>
+
+<table class="table table-striped">
+	<tbody>
+		<tr>
+			<th>Date</th>
+			<th>Game</th>
+			<th>Time</th>
+			<th>By</th>
+		</tr>
+		@foreach (var pub in Model)
+		{
+			<tr>
+				<td>@pub.CreateTimeStamp.ToShortDateString()</td>
+				<td>@pub.Game</td>
+				<td><a href="/@(pub.Id)M">@($"{pub.Time:g}")</a></td>
+				<td>@pub.Authors</td>
+			</tr>
+		}
+	</tbody>
+</table>
