@@ -99,6 +99,11 @@ namespace TASVideos.Legacy.Imports
 					pageName = "HomePages/" + pageName;
 				}
 
+				markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
+				markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
+				markup = markup.Replace("=css/favourite.png", "=images/startier.png");
+
+
 				var wikiPage = new WikiPage
 				{
 					PageName = pageName,
