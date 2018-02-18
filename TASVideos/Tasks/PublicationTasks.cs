@@ -20,6 +20,19 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Gets all the possible values that can be tokens in the Movies- url
+		/// </summary>
+		public async Task<PublicationSearchModel> GetMovieTokenData()
+		{
+			// TODO: cache this call
+			return new PublicationSearchModel
+			{
+				Tiers = await _db.Tiers.Select(t => t.Name).ToListAsync(),
+				SystemCodes = await _db.GameSystems.Select(s => s.Code).ToListAsync()
+			};
+		}
+
+		/// <summary>
 		/// Gets a publication with the given <see cref="id" /> for the purpose of display
 		/// If no publication with the given id is found then null is returned
 		/// </summary>
@@ -85,11 +98,33 @@ namespace TASVideos.Tasks
 			return (data.MovieFile, data.MovieFileName);
 		}
 
+		// TODO: paging
 		public async Task<IEnumerable<PublicationViewModel>> GetMovieList(PublicationSearchModel searchCriteria)
 		{
-			var results = await _db.Publications
+			var query = _db.Publications
+				.Include(p => p.Game)
 				.Include(p => p.Files)
-				.Take(10) // TODO
+				.Include(p => p.Tier)
+				.Include(p => p.System)
+				.AsQueryable();
+
+			if (searchCriteria.SystemCodes.Any())
+			{
+				query = query.Where(p => searchCriteria.SystemCodes.Contains(p.System.Code));
+			}
+
+			if (searchCriteria.Tiers.Any())
+			{
+				query = query.Where(p => searchCriteria.Tiers.Contains(p.Tier.Name));
+			}
+
+			if (!searchCriteria.ShowObsoleted)
+			{
+				query = query.ThatAreCurrent();
+			}
+
+			var results = await query
+				.OrderBy(p => p.Game.DisplayName)
 				.ToListAsync();
 
 			// TODO: automapper, single movie is the same logic
