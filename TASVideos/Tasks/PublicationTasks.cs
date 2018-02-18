@@ -124,7 +124,8 @@ namespace TASVideos.Tasks
 			}
 
 			var results = await query
-				.OrderBy(p => p.Game.DisplayName)
+				.OrderBy(p => p.System.Code)
+				.ThenBy(p => p.Game.DisplayName)
 				.ToListAsync();
 
 			// TODO: automapper, single movie is the same logic
