@@ -6,3 +6,9 @@
 	<h1>TODO</h1>
 }
 
+@foreach (var movie in Model)
+{
+	@Html.Partial("~/Views/Shared/_MovieModule.cshtml", movie)
+	<hr />
+}
+

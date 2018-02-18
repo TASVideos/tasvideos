@@ -6,30 +6,4 @@
 	<h1>@Model.Title</h1>
 }
 
-<div condition="@Model.ObsoletedBy.HasValue" class="text-danger">
-	<h4>This movie has been obsoleted!</h4>
-	<a href="/@(Model.ObsoletedBy)M" class="btn btn-primary">Obsoleting Movie</a>
-</div>
-<div class="card">
-	<div class="card-header">@Model.Title</div>
-	<row>
-		<div class="col-md-4">
-			<div class="mb-1">
-				<img src="~/media/@Model.Screenshot" />
-			</div>
-			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
-			<a asp-controller="Submission" asp-action="View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary">Submission</a>
-		</div>
-		<div class="col-md-7">
-			<row>
-					
-				<a class="col-lg-4" asp-action="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
-				<a class="col-lg-4" href="@Model.TorrentLink">A/V file via BitTorrent</a>
-				<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
-			</row>
-			<row>
-				@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
-			</row>
-		</div>
-	</row>
-</div>
+@Html.Partial("~/Views/Shared/_MovieModule.cshtml", Model)
