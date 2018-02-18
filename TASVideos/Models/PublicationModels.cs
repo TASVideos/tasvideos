@@ -1,5 +1,13 @@
-﻿namespace TASVideos.Models
+﻿using System.Collections.Generic;
+
+namespace TASVideos.Models
 {
+	public class PublicationSearchModel
+	{
+		public IEnumerable<string> SystemCodes { get; set; } = new List<string>();
+		public IEnumerable<string> Tiers { get; set; } = new List<string>();
+	}
+
 	public class PublicationViewModel
 	{
 		public int Id { get; set; }
