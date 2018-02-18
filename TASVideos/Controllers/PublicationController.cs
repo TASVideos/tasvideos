@@ -1,4 +1,6 @@
-﻿using System.Net.Mime;
+﻿using System;
+using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +32,20 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> List(string query)
 		{
-			var model = await _publicationTasks.GetMovieList(new PublicationSearchModel());
+			var tokenLookup = await _publicationTasks.GetMovieTokenData();
+
+			var tokens = query
+				.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries).
+				Select(s => s.Trim(' '));
+
+			var searchModel = new PublicationSearchModel
+			{
+				Tiers = tokenLookup.Tiers.Where(t => tokens.Contains(t)),
+				SystemCodes = tokenLookup.SystemCodes.Where(s => tokens.Contains(s)),
+				ShowObsoleted = tokens.Contains("Obs")
+			};
+
+			var model = await _publicationTasks.GetMovieList(searchModel);
 			return View(model);
 		}
 

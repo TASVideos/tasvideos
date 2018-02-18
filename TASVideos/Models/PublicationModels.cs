@@ -6,6 +6,7 @@ namespace TASVideos.Models
 	{
 		public IEnumerable<string> SystemCodes { get; set; } = new List<string>();
 		public IEnumerable<string> Tiers { get; set; } = new List<string>();
+		public bool ShowObsoleted { get; set; }
 	}
 
 	public class PublicationViewModel
