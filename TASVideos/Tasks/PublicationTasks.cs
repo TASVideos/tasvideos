@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
@@ -13,10 +14,14 @@ namespace TASVideos.Tasks
 	public class PublicationTasks
 	{
 		private readonly ApplicationDbContext _db;
-
-		public PublicationTasks(ApplicationDbContext db)
+		private readonly ICacheService _cache;
+		
+		public PublicationTasks(
+			ApplicationDbContext db,
+			ICacheService cache)
 		{
 			_db = db;
+			_cache = cache;
 		}
 
 		/// <summary>
@@ -24,12 +29,21 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PublicationSearchModel> GetMovieTokenData()
 		{
-			// TODO: cache this call
-			return new PublicationSearchModel
+			var cacheKey = $"{nameof(PublicationTasks)}{nameof(GetMovieTokenData)}";
+			if (_cache.IsSet(cacheKey))
+			{
+				return _cache.Get<PublicationSearchModel>(cacheKey);
+			}
+
+			var result = new PublicationSearchModel
 			{
 				Tiers = await _db.Tiers.Select(t => t.Name).ToListAsync(),
 				SystemCodes = await _db.GameSystems.Select(s => s.Code).ToListAsync()
 			};
+
+			_cache.Set(cacheKey, result);
+
+			return result;
 		}
 
 		/// <summary>
