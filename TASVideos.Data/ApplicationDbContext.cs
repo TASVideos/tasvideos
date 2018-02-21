@@ -36,6 +36,8 @@ namespace TASVideos.Data
 
 		// Game tables
 		public DbSet<Game> Games { get; set; }
+		public DbSet<GameGenre> GameGenres { get; set;}
+		public DbSet<Genre> Genres { get; set;}
 		public DbSet<GameSystem> GameSystems { get; set; }
 		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; }
 		public DbSet<GameRom> Roms { get; set; }
@@ -163,6 +165,20 @@ namespace TASVideos.Data
 				entity.HasOne(p => p.Rom)
 					.WithMany(r => r.Publications)
 					.OnDelete(DeleteBehavior.Restrict);
+			});
+
+			builder.Entity<GameGenre>(entity =>
+			{
+				entity.HasKey(e => new { e.GameId, e.GenreId });
+				entity.HasIndex(e => e.GameId);				
+			});
+
+			builder.Entity<Genre>(entity =>
+			{
+				entity.Property(e => e.Id)
+					.ValueGeneratedNever()
+					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+
 			});
 		}
 

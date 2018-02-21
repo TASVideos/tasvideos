@@ -43,6 +43,7 @@ namespace TASVideos.Data
 			context.GameSystems.AddRange(SystemSeedData.Systems);
 			context.GameSystemFrameRates.AddRange(SystemSeedData.SystemFrameRates);
 			context.Tiers.AddRange(TierSeedData.Tiers);
+			context.Genres.AddRange(GameSeedData.Genres);
 			context.SaveChanges();
 		}
 
