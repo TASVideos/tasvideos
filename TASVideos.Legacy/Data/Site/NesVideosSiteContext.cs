@@ -21,6 +21,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<Rom> Roms { get; set; }
 		public DbSet<Player> Players { get; set; }
 		public DbSet<UserPlayer> UserPlayers { get; set; }
+		public DbSet<ClassType> ClassTypes { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -44,6 +45,7 @@ namespace TASVideos.Legacy.Data.Site
 			modelBuilder.Entity<GameName>().ToTable("gamename");
 			modelBuilder.Entity<Rom>().ToTable("roms");
 			modelBuilder.Entity<Player>().ToTable("player");
+			modelBuilder.Entity<ClassType>().ToTable("classtype");
 
 		}
 	}
