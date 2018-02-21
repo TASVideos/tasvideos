@@ -19,6 +19,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			var legacyGameNames = legacySiteContext.GameNames.ToList();
+			var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
 
 			var games = new List<Game>();
 			foreach (var legacyGameName in legacyGameNames)
