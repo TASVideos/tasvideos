@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-
-using FastMember;
-
-using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Constants;
@@ -78,7 +72,7 @@ namespace TASVideos.Legacy.Imports
 					System = system,
 					SystemFrameRateId = systemFrameRate.Id,
 					SystemFrameRate = systemFrameRate,
-					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
 					CreateUserName = submitter?.UserName,
 					LastUpdateTimeStamp = DateTime.UtcNow, // TODO
 					GameName = legacySubmission.GameName,
@@ -112,7 +106,7 @@ namespace TASVideos.Legacy.Imports
 				submissions.Add(submission);
 			}
 
-			var subCopyParams = new[]
+			var subColumns = new[]
 			{
 				nameof(Submission.Id),
 				nameof(Submission.WikiContentId),
@@ -135,43 +129,15 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.RomId)
 			};
 
-			using (var subSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
-			{
-				subSqlCopy.DestinationTableName = "[Submissions]";
-				subSqlCopy.BatchSize = 10000;
+			submissions.BulkInsert(context, subColumns, nameof(ApplicationDbContext.Submissions));
 
-				foreach (var param in subCopyParams)
-				{
-					subSqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(submissions, subCopyParams))
-				{
-					subSqlCopy.WriteToServer(reader);
-				}
-			}
-
-			var subAuthorCopyParams = new[]
+			var subAuthorColumns = new[]
 			{
 				nameof(SubmissionAuthor.UserId),
 				nameof(SubmissionAuthor.SubmissionId)
 			};
 
-			using (var subAuthorSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
-			{
-				subAuthorSqlCopy.DestinationTableName = "[SubmissionAuthors]";
-				subAuthorSqlCopy.BatchSize = 10000;
-
-				foreach (var param in subAuthorCopyParams)
-				{
-					subAuthorSqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(submissionAuthors, subAuthorCopyParams))
-				{
-					subAuthorSqlCopy.WriteToServer(reader);
-				}
-			}
+			submissionAuthors.BulkInsert(context, subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));
 		}
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)

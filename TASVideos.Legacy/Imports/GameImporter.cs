@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-
-using FastMember;
-using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
@@ -68,7 +64,7 @@ namespace TASVideos.Legacy.Imports
 				LastUpdateTimeStamp = DateTime.UtcNow,
 			});
 
-			var copyParams = new[]
+			var columns = new[]
 			{
 				nameof(Game.Id),
 				nameof(Game.SystemId),
@@ -81,21 +77,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Game.LastUpdateTimeStamp)
 			};
 
-			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
-			{
-				sqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.Games)}]";
-				sqlCopy.BatchSize = 10000;
-
-				foreach (var param in copyParams)
-				{
-					sqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(games, copyParams))
-				{
-					sqlCopy.WriteToServer(reader);
-				}
-			}
+			games.BulkInsert(context, columns, nameof(ApplicationDbContext.Games));
 		}
 	}
 }
