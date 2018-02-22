@@ -20,6 +20,14 @@ namespace TASVideos.Legacy.Imports
 		{
 			var legacyGameNames = legacySiteContext.GameNames.ToList();
 			var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
+			var legacyMovieClass = legacySiteContext.MovieClass.ToList();
+			var legacySubmissions = legacySiteContext.Submissions
+				.Select(s => new { s.Id, s.GameNameId })
+				.ToList();
+
+			var legacyPublications = legacySiteContext.Movies
+				.Select(m => new { m.Id, m.SubmissionId })
+				.ToList();
 
 			var games = new List<Game>();
 			foreach (var legacyGameName in legacyGameNames)
