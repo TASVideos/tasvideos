@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.InteropServices;
-
-using FastMember;
-using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -57,8 +52,8 @@ namespace TASVideos.Legacy.Imports
 					Id = legacyForumUser.UserId,
 					UserName = legacyForumUser.UserName,
 					NormalizedUserName = legacyForumUser.UserName.ToUpper(),
-					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyForumUser.RegDate),
-					LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyForumUser.RegDate), // TODO
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyForumUser.RegDate),
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyForumUser.RegDate), // TODO
 					LegacyPassword = legacyForumUser.Password,
 					EmailConfirmed = legacyForumUser.EmailTime != null,
 					Email = legacyForumUser.Email,
@@ -148,7 +143,7 @@ namespace TASVideos.Legacy.Imports
 				LastUpdateTimeStamp = DateTime.UtcNow
 			});
 
-			var userCopyParams = new[]
+			var userColumns = new[]
 			{
 				nameof(User.Id),
 				nameof(User.UserName),
@@ -167,60 +162,17 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.TwoFactorEnabled)
 			};
 
-			using (var userSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
-			{
-				userSqlCopy.DestinationTableName = "[User]";
-				userSqlCopy.BatchSize = 10000;
-				
-				foreach (var param in userCopyParams)
-				{
-					userSqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(users, userCopyParams))
-				{
-					userSqlCopy.WriteToServer(reader);
-				}
-			}
-
-			var userRoleCopyParmas = new[]
+			var userRoleColumns = new[]
 			{
 				nameof(UserRole.UserId),
 				nameof(UserRole.RoleId)
 			};
 
-			using (var userRoleSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
-			{
-				userRoleSqlCopy.DestinationTableName = "[UserRoles]";
-				userRoleSqlCopy.BatchSize = 10000;
+			users.BulkInsert(context, userColumns, "[User]");
+			userRoles.BulkInsert(context, userRoleColumns, "[UserRoles]");
 
-				foreach (var param in userRoleCopyParmas)
-				{
-					userRoleSqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(userRoles, userRoleCopyParmas))
-				{
-					userRoleSqlCopy.WriteToServer(reader);
-				}
-			}
-
-			using (var playerSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
-			{
-				playerSqlCopy.DestinationTableName = "[User]";
-				playerSqlCopy.BatchSize = 10000;
-
-				var playerParams = userCopyParams.Where(p => p != nameof(User.Id)).ToArray();
-				foreach (var param in playerParams)
-				{
-					playerSqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(portedPlayers, playerParams))
-				{
-					playerSqlCopy.WriteToServer(reader);
-				}
-			}
+			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
+			portedPlayers.BulkInsert(context, playerColumns, "[User]");
 		}
 
 		private static Role GetRoleFromLegacy(string role, IEnumerable<Role> roles)

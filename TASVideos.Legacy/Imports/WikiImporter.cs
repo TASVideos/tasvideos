@@ -2,9 +2,6 @@
 using System.Data.SqlClient;
 using System.Linq;
 
-using FastMember;
-using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
@@ -118,9 +115,9 @@ namespace TASVideos.Legacy.Imports
 					MinorEdit = legacyPage.MinorEdit == "Y",
 					RevisionMessage = legacyPage.WhyEdit,
 					IsDeleted = isDeleted,
-					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp),
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp),
 					CreateUserName = legacyUsers.Single(u => u.Id == legacyPage.UserId).Name,
-					LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
 				};
 
 				pages.Add(wikiPage);
@@ -154,7 +151,7 @@ namespace TASVideos.Legacy.Imports
 				}
 			}
 
-			var wikiCopyParams = new[]
+			var wikiColumns = new[]
 			{
 				nameof(WikiPage.ChildId),
 				nameof(WikiPage.CreateTimeStamp),
@@ -169,44 +166,16 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPage.RevisionMessage)
 			};
 
-			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
-			{
-				sqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.WikiPages)}]";
-				sqlCopy.BatchSize = 10000;
+			pages.BulkInsert(context, wikiColumns, nameof(ApplicationDbContext.WikiPages), SqlBulkCopyOptions.Default);
 
-				foreach (var param in wikiCopyParams)
-				{
-					sqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(pages, wikiCopyParams))
-				{
-					sqlCopy.WriteToServer(reader);
-				}
-			}
-
-			var referralCopyParams = new[]
+			var referralColumns = new[]
 			{
 				nameof(WikiPageReferral.Excerpt),
 				nameof(WikiPageReferral.Referral),
 				nameof(WikiPageReferral.Referrer)
 			};
 
-			using (var referralCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
-			{
-				referralCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.WikiReferrals)}]";
-				referralCopy.BatchSize = 100000;
-
-				foreach (var param in referralCopyParams)
-				{
-					referralCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(referralList, referralCopyParams))
-				{
-					referralCopy.WriteToServer(reader);
-				}
-			}
+			referralList.BulkInsert(context, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000);
 		}
 
 		private static readonly Dictionary<(string, int), int> CrystalShardsLookup = new Dictionary<(string, int), int>

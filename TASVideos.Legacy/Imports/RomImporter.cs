@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-
-using FastMember;
-using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
-
 
 namespace TASVideos.Legacy.Imports
 {
@@ -56,7 +51,7 @@ namespace TASVideos.Legacy.Imports
 				GameId = -1 // Placeholder game
 			});
 
-			var copyParams = new[]
+			var columns = new[]
 			{
 				nameof(GameRom.Id),
 				nameof(GameRom.Md5),
@@ -68,21 +63,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameRom.LastUpdateTimeStamp)
 			};
 
-			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
-			{
-				sqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.Roms)}]";
-				sqlCopy.BatchSize = 10000;
-
-				foreach (var param in copyParams)
-				{
-					sqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(roms, copyParams))
-				{
-					sqlCopy.WriteToServer(reader);
-				}
-			}
+			roms.BulkInsert(context, columns, nameof(ApplicationDbContext.Roms));
 		}
 	}
 }

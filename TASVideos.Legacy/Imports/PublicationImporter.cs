@@ -117,8 +117,8 @@ namespace TASVideos.Legacy.Imports
 					SubmissionId = legacyMovie.SubmissionId,
 					TierId = legacyMovie.Tier,
 					CreateUserName = publisher.Name ?? "Unknown",
-					CreateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
-					LastUpdateTimeStamp = ImportHelpers.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
 					ObsoletedById = legacyMovie.ObsoletedBy == -1 ? null : legacyMovie.ObsoletedBy,
 					Frames = submission.Frames,
 					RerecordCount = submission.RerecordCount,
@@ -176,7 +176,7 @@ namespace TASVideos.Legacy.Imports
 				}));
 			}
 
-			var copyParams = new[]
+			var pubColumns = new[]
 			{
 				nameof(Publication.Branch),
 				nameof(Publication.WikiContentId),
@@ -200,13 +200,17 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.ObsoletedById)
 			};
 
-			var authorParams = new[]
+			publications.BulkInsert(context, pubColumns, nameof(ApplicationDbContext.Publications));
+
+			var pubAuthorColumns = new[]
 			{
 				nameof(PublicationAuthor.UserId),
 				nameof(PublicationAuthor.PublicationId)
 			};
 
-			var fileParams = new[]
+			publicationAuthors.BulkInsert(context, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors), SqlBulkCopyOptions.Default);
+
+			var pubFileColumns = new[]
 			{
 				nameof(PublicationFile.PublicationId),
 				nameof(PublicationFile.Path),
@@ -217,53 +221,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.LastUpdateTimeStamp)
 			};
 
-			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, SqlBulkCopyOptions.KeepIdentity))
-			{
-				sqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.Publications)}]";
-				sqlCopy.BatchSize = 10000;
-
-				foreach (var param in copyParams)
-				{
-					sqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(publications, copyParams))
-				{
-					sqlCopy.WriteToServer(reader);
-				}
-			}
-
-			using (var authorSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
-			{
-				authorSqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.PublicationAuthors)}]";
-				authorSqlCopy.BatchSize = 10000;
-
-				foreach (var param in authorParams)
-				{
-					authorSqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(publicationAuthors, authorParams))
-				{
-					authorSqlCopy.WriteToServer(reader);
-				}
-			}
-
-			using (var fileSqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString))
-			{
-				fileSqlCopy.DestinationTableName = $"[{nameof(ApplicationDbContext.PublicationFiles)}]";
-				fileSqlCopy.BatchSize = 10000;
-
-				foreach (var param in fileParams)
-				{
-					fileSqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(publicationFiles, fileParams))
-				{
-					fileSqlCopy.WriteToServer(reader);
-				}
-			}
+			publicationFiles.BulkInsert(context, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default);
 		}
 	}
 }
