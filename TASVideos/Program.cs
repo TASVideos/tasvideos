@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -29,14 +28,11 @@ namespace TASVideos
 
 					if (env.IsDevelopment())
 					{
-						//if (!context.WikiPages.Any())
-						//{
-							var userManager = services.GetRequiredService<UserManager<User>>();
-							DbInitializer.Initialize(context);
-							DbInitializer.PreMigrateSeedData(context);
-							DbInitializer.PostMigrateSeedData(context);
-							DbInitializer.GenerateDevSampleData(context, userManager).Wait();
-						//}
+						var userManager = services.GetRequiredService<UserManager<User>>();
+						DbInitializer.Initialize(context);
+						DbInitializer.PreMigrateSeedData(context);
+						DbInitializer.PostMigrateSeedData(context);
+						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
 					else if (env.IsStaging())
 					{
