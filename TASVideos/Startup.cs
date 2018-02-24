@@ -39,6 +39,11 @@ namespace TASVideos
 			ConfigureServices(services);
 		}
 
+		public void ConfigureDemoServices(IServiceCollection services)
+		{
+			ConfigureServices(services);
+		}
+
 		public void ConfigureStagingServices(IServiceCollection services)
 		{
 			services.AddLegacyContext();
@@ -89,7 +94,7 @@ namespace TASVideos
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
-			if (env.IsDevelopment())
+			if (env.IsDevelopment() || env.EnvironmentName == "Demo")
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseBrowserLink();
