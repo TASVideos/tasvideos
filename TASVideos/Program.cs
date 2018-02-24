@@ -34,6 +34,10 @@ namespace TASVideos
 						DbInitializer.PostMigrateSeedData(context);
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
+					else if (env.EnvironmentName == "Demo")
+					{
+						context.Database.EnsureCreated();
+					}
 					else if (env.IsStaging())
 					{
 						var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
