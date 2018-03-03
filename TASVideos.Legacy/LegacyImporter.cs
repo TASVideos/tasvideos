@@ -9,8 +9,8 @@ using TASVideos.Legacy.Imports;
 
 namespace TASVideos.Legacy
 {
-    public static class LegacyImporter
-    {
+	public static class LegacyImporter
+	{
 		public static void RunLegacyImport(
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext,
@@ -28,10 +28,10 @@ namespace TASVideos.Legacy
 
 			RomImporter.Import(context, legacySiteContext);
 			GameImporter.Import(context, legacySiteContext);
-			//UserImporter.Import(context, legacySiteContext, legacyForumContext);
-			//WikiImporter.Import(context, legacySiteContext);
-			//SubmissionImporter.Import(context, legacySiteContext);
-			//PublicationImporter.Import(context, legacySiteContext);
+			UserImporter.Import(context, legacySiteContext, legacyForumContext);
+			WikiImporter.Import(context, legacySiteContext);
+			SubmissionImporter.Import(context, legacySiteContext);
+			PublicationImporter.Import(context, legacySiteContext);
 		}
 	}
 }
