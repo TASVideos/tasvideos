@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 using TASVideos.Data;
@@ -19,28 +20,20 @@ namespace TASVideos.Legacy.Imports
 			List<Tag> tags = new List<Tag>();
 			foreach (var classType in legacyClassTypes.Where(t => !t.PositiveText.Contains("Genre")))
 			{
-				try
+				tags.Add(new Tag
+				{
+					Code = classType.Abbreviation,
+					DisplayName = classType.PositiveText
+				});
+
+				if (classType.NegativeText != "N/A")
 				{
 					tags.Add(new Tag
 					{
-						Code = classType.Abbreviation,
-						DisplayName = classType.PositiveText
+						Code = $"no{classType.Abbreviation}",
+						DisplayName = classType.NegativeText
 					});
-
-					if (classType.NegativeText != "N/A")
-					{
-						tags.Add(new Tag
-						{
-							Code = $"no{classType.Abbreviation}",
-							DisplayName = classType.NegativeText
-						});
-					}
 				}
-				catch (Exception e)
-				{
-					int zzz = 0;
-				}
-				
 			}
 
 			var columns = new[]
@@ -49,7 +42,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Tag.DisplayName)
 			};
 
-			tags.BulkInsert(context, columns, nameof(ApplicationDbContext.Tags));
+			tags.BulkInsert(context, columns, nameof(ApplicationDbContext.Tags), SqlBulkCopyOptions.Default);
 		}
 	}
 }
