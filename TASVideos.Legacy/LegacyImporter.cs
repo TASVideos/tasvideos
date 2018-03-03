@@ -26,6 +26,7 @@ namespace TASVideos.Legacy
 			// To speed up query executions
 			legacySiteContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
+			TagImporter.Import(context, legacySiteContext);
 			RomImporter.Import(context, legacySiteContext);
 			GameImporter.Import(context, legacySiteContext);
 			UserImporter.Import(context, legacySiteContext, legacyForumContext);
