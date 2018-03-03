@@ -33,6 +33,9 @@ namespace TASVideos.Data
 		public DbSet<Publication> Publications { get; set; }
 		public DbSet<PublicationAuthor> PublicationAuthors { get; set; }
 		public DbSet<PublicationFile> PublicationFiles { get; set; }
+		public DbSet<PublicationTag> PublicationTags { get; set; }
+		public DbSet<Tag> Tags { get; set; }
+
 
 		// Game tables
 		public DbSet<Game> Games { get; set; }
@@ -170,7 +173,7 @@ namespace TASVideos.Data
 			builder.Entity<GameGenre>(entity =>
 			{
 				entity.HasKey(e => new { e.GameId, e.GenreId });
-				entity.HasIndex(e => e.GameId);				
+				entity.HasIndex(e => e.GameId);
 			});
 
 			builder.Entity<Genre>(entity =>
@@ -178,6 +181,19 @@ namespace TASVideos.Data
 				entity.Property(e => e.Id)
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+			});
+
+			builder.Entity<PublicationTag>(entity =>
+			{
+				entity.HasKey(e => new { e.PublicationId, e.TagId });
+				entity.HasIndex(e => e.PublicationId);
+			});
+
+			builder.Entity<Tag>(entity =>
+			{
+				entity.HasIndex(e => e.Code)
+					.IsUnique()
+					.HasFilter($"([{nameof(Tag.Code)}] IS NOT NULL)");
 			});
 		}
 
