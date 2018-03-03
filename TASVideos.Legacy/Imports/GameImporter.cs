@@ -25,9 +25,36 @@ namespace TASVideos.Legacy.Imports
 				.Select(m => new { m.Id, m.SubmissionId })
 				.ToList();
 
+			var genres = context.Genres.ToList();
+
 			var games = new List<Game>();
+			var gameGenres = new HashSet<GameGenre>();
+
 			foreach (var legacyGameName in legacyGameNames)
 			{
+				var legacyGameGenres = (from p in legacyPublications
+					join s in legacySubmissions on p.SubmissionId equals s.Id
+					join gn in legacyGameNames on s.GameNameId equals gn.Id
+					join mc in legacyMovieClass on p.Id equals mc.MovieId
+					join c in legacyClassTypes on mc.ClassId equals c.Id
+					where c.PositiveText.Contains("Genre")
+						&& gn.Id == legacyGameName.Id
+					select new
+					{
+						c.Id,
+						c.PositiveText
+					})
+					.Distinct();
+
+				foreach (var lgg in legacyGameGenres)
+				{
+					gameGenres.Add(new GameGenre
+					{
+						GenreId = genres.Single(g => g.DisplayName == lgg.PositiveText.Replace("Genre: ", "")).Id,
+						GameId = legacyGameName.Id
+					});
+				}
+
 				var game = new Game
 				{
 					Id = legacyGameName.Id,
@@ -78,6 +105,14 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			games.BulkInsert(context, columns, nameof(ApplicationDbContext.Games));
+
+			var gameGenreColumns = new[]
+			{
+				nameof(GameGenre.GameId),
+				nameof(GameGenre.GenreId)
+			};
+
+			gameGenres.BulkInsert(context, gameGenreColumns, nameof(ApplicationDbContext.GameGenres));
 		}
 	}
 }
