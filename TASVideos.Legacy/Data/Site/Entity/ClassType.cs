@@ -19,5 +19,8 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("specific")]
 		public string Specific { get; set; }
+
+		[Column("old_id")]
+		public int OldId { get; set; }
 	}
 }

@@ -9,5 +9,8 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("classid")]
 		public int ClassId { get; set; }
+
+		[Column("value")]
+		public int Value { get; set; }
 	}
 }
