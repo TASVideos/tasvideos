@@ -19,4 +19,11 @@
 	</div>
 </div>
 <hr />
+<label>Genre:</label>
+<ul>
+	@foreach (var genre in Model.Genres)
+	{
+		<li>@genre</li>
+	}
+</ul>
 

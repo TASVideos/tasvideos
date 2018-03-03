@@ -17,6 +17,7 @@ namespace TASVideos.Data.Entity.Game
 
 		public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 		public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
+		public virtual ICollection<GameGenre> GameGenres { get; set; } = new List<GameGenre>();
 
 		[Description("Good Set or some other official naming convention")]
 		public string GoodName { get; set; }

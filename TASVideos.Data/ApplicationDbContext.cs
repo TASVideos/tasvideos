@@ -36,8 +36,8 @@ namespace TASVideos.Data
 
 		// Game tables
 		public DbSet<Game> Games { get; set; }
-		public DbSet<GameGenre> GameGenres { get; set;}
-		public DbSet<Genre> Genres { get; set;}
+		public DbSet<GameGenre> GameGenres { get; set; }
+		public DbSet<Genre> Genres { get; set; }
 		public DbSet<GameSystem> GameSystems { get; set; }
 		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; }
 		public DbSet<GameRom> Roms { get; set; }
@@ -178,7 +178,6 @@ namespace TASVideos.Data
 				entity.Property(e => e.Id)
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
-
 			});
 		}
 
