@@ -131,5 +131,23 @@ namespace TASVideos.Data.Helpers
 
 			return null;
 		}
+
+		/// <summary>
+		/// Determines if the link is in the form of valid game page link ex: 100G
+		/// </summary>
+		/// <returns>The id of the movie if it is a valid link, else null</returns>
+		public static int? IsGamePageLink(string link)
+		{
+			if (link?.EndsWith("G") ?? false)
+			{
+				var result = int.TryParse(link.Substring(0, link.Length - 1), out int id);
+				if (result)
+				{
+					return id;
+				}
+			}
+
+			return null;
+		}
 	}
 }

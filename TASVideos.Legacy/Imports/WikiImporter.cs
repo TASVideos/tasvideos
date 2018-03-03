@@ -78,6 +78,7 @@ namespace TASVideos.Legacy.Imports
 
 				var pubId = SubmissionHelper.IsPublicationLink(legacyPage.PageName);
 				var subId = SubmissionHelper.IsSubmissionLink(legacyPage.PageName);
+				var gamId = SubmissionHelper.IsGamePageLink(legacyPage.PageName);
 
 				bool isDeleted = false;
 				if (pubId.HasValue)
@@ -87,6 +88,10 @@ namespace TASVideos.Legacy.Imports
 				else if (subId.HasValue)
 				{
 					pageName = LinkConstants.SubmissionWikiPage + subId.Value;
+				}
+				else if (gamId.HasValue)
+				{
+					pageName = LinkConstants.GameWikiPage + gamId.Value;
 				}
 				else if (pageName.StartsWith("DeletedPages/"))
 				{
