@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
-using FastMember;
-
-using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
@@ -29,6 +25,8 @@ namespace TASVideos.Legacy.Imports
 			var legacyMovies = legacySiteContext.Movies.Where(m => m.Id > 0).ToList();
 			var legacyMovieFiles = legacySiteContext.MovieFiles.ToList();
 			var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
+			var legacyMovieClasses = legacySiteContext.MovieClass.ToList();
+			var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
 
 			var legacyWikiUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
 			var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
@@ -57,6 +55,7 @@ namespace TASVideos.Legacy.Imports
 			var systems = context.GameSystems.ToList();
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var games = context.Games.ToList();
+			var tags = context.Tags.ToList();
 
 			var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
 			var torrentTypes = new[] { "M", "N", "O", "P", "T" };
@@ -64,6 +63,7 @@ namespace TASVideos.Legacy.Imports
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();
+			var publicationTags = new List<PublicationTag>();
 
 			foreach (var legacyMovie in legacyMovies)
 			{
@@ -174,6 +174,31 @@ namespace TASVideos.Legacy.Imports
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow
 				}));
+
+				var mcs = legacyMovieClasses
+					.Where(lmc => lmc.MovieId == legacyMovie.Id);
+
+				foreach (var mc in mcs)
+				{
+					var classType = mc.ClassId >= 1000
+						? legacyClassTypes.Single(c => c.Id == mc.ClassId)
+						: legacyClassTypes.Single(c => c.OldId == mc.ClassId);
+
+					if (classType.PositiveText.Contains("Genre"))
+					{
+						continue;
+					}
+
+					var tag = mc.Value == 1
+						? tags.Single(t => t.DisplayName == classType.PositiveText)
+						: tags.Single(t => t.DisplayName == classType.NegativeText);
+
+					publicationTags.Add(new PublicationTag
+					{
+						PublicationId = legacyMovie.Id,
+						TagId = tag.Id
+					});
+				}
 			}
 
 			var pubColumns = new[]
@@ -222,6 +247,14 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			publicationFiles.BulkInsert(context, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default);
+
+			var pubTagColumns = new[]
+			{
+				nameof(PublicationTag.PublicationId),
+				nameof(PublicationTag.TagId)
+			};
+
+			publicationTags.BulkInsert(context, pubTagColumns, nameof(ApplicationDbContext.PublicationTags), SqlBulkCopyOptions.Default);
 		}
 	}
 }
