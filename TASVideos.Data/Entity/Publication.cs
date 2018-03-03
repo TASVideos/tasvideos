@@ -11,6 +11,7 @@ namespace TASVideos.Data.Entity
 		public int Id { get; set; }
 
 		public virtual ICollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
+		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new List<PublicationTag>();
 
 		public int? ObsoletedById { get; set; }
 		public virtual Publication ObsoletedBy { get; set; }
