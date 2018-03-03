@@ -17,7 +17,7 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> Index(int id)
+		public async Task<IActionResult> View(int id)
 		{
 			var model = await _gameTasks.GetGameForDisplay(id);
 			if (model == null)
