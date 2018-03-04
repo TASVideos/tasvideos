@@ -25,7 +25,13 @@ namespace TASVideos.Models
 		public int SubmissionId { get; set; }
 		public string OnlineWatchingUrl { get; set; }
 		public string MirrorSiteUrl { get; set; }
-		public IEnumerable<string> Tags { get; set; } = new List<string>();
+		public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();
+
+		public class TagModel
+		{
+			public string DisplayName { get; set; }
+			public string Code { get; set; }
+		}
 	}
 
 	public class TabularMovieListSearchModel
