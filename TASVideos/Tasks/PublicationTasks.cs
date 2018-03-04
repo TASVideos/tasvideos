@@ -52,21 +52,31 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PublicationViewModel> GetPublicationForDisplay(int id)
 		{
-			return await _db.Publications
-				.Select(p => new PublicationViewModel
-				{
-					Id = p.Id,
-					CreateTimeStamp = p.CreateTimeStamp,
-					Title = p.Title,
-					Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
-					TorrentLink = p.Files.First(f => f.Type == FileType.Torrent).Path,
-					OnlineWatchingUrl = p.OnlineWatchingUrl,
-					MirrorSiteUrl = p.MirrorSiteUrl,
-					ObsoletedBy = p.ObsoletedById,
-					MovieFileName = p.MovieFileName,
-					SubmissionId = p.SubmissionId
-				})
+			var publication = await _db.Publications
+				.Include(p => p.Files)
+				.Include(p => p.PublicationTags)
+				.ThenInclude(pt => pt.Tag)
 				.SingleOrDefaultAsync(p => p.Id == id);
+
+			if (publication != null)
+			{
+				return new PublicationViewModel
+				{
+					Id = publication.Id,
+					CreateTimeStamp = publication.CreateTimeStamp,
+					Title = publication.Title,
+					Screenshot = publication.Files.First(f => f.Type == FileType.Screenshot).Path,
+					TorrentLink = publication.Files.First(f => f.Type == FileType.Torrent).Path,
+					OnlineWatchingUrl = publication.OnlineWatchingUrl,
+					MirrorSiteUrl = publication.MirrorSiteUrl,
+					ObsoletedBy = publication.ObsoletedById,
+					MovieFileName = publication.MovieFileName,
+					SubmissionId = publication.SubmissionId,
+					Tags = publication.PublicationTags.Select(pt => pt.Tag.DisplayName)
+				};
+			}
+
+			return null;
 		}
 
 		/// <summary>
