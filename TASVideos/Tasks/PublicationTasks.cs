@@ -37,8 +37,9 @@ namespace TASVideos.Tasks
 
 			var result = new PublicationSearchModel
 			{
-				Tiers = await _db.Tiers.Select(t => t.Name).ToListAsync(),
-				SystemCodes = await _db.GameSystems.Select(s => s.Code).ToListAsync()
+				Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
+				SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
+				Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync() // TODO: Game genres too?
 			};
 
 			_cache.Set(cacheKey, result);
@@ -152,6 +153,11 @@ namespace TASVideos.Tasks
 			if (searchCriteria.Years.Any())
 			{
 				query = query.Where(p => searchCriteria.Years.Contains(p.CreateTimeStamp.Year));
+			}
+
+			if (searchCriteria.Tags.Any())
+			{
+				query = query.Where(p => p.PublicationTags.Any(t => searchCriteria.Tags.Contains(t.Tag.Code)));
 			}
 
 			var results = await query
