@@ -73,7 +73,13 @@ namespace TASVideos.Tasks
 					ObsoletedBy = publication.ObsoletedById,
 					MovieFileName = publication.MovieFileName,
 					SubmissionId = publication.SubmissionId,
-					Tags = publication.PublicationTags.Select(pt => pt.Tag.DisplayName)
+					Tags = publication.PublicationTags
+						.Select(pt => new PublicationViewModel.TagModel
+						{
+							DisplayName = pt.Tag.DisplayName,
+							Code = pt.Tag.Code
+						})
+						.ToList()
 				};
 			}
 
@@ -133,6 +139,8 @@ namespace TASVideos.Tasks
 				.Include(p => p.Files)
 				.Include(p => p.Tier)
 				.Include(p => p.System)
+				.Include(p => p.PublicationTags)
+				.ThenInclude(p => p.Tag)
 				.AsQueryable();
 
 			if (searchCriteria.SystemCodes.Any())
@@ -178,7 +186,12 @@ namespace TASVideos.Tasks
 					MirrorSiteUrl = p.MirrorSiteUrl,
 					ObsoletedBy = p.ObsoletedById,
 					MovieFileName = p.MovieFileName,
-					SubmissionId = p.SubmissionId
+					SubmissionId = p.SubmissionId,
+					Tags = p.PublicationTags.Select(pt => new PublicationViewModel.TagModel
+					{
+						DisplayName = pt.Tag.DisplayName,
+						Code = pt.Tag.Code
+					})
 				})
 				.ToList();
 		}
