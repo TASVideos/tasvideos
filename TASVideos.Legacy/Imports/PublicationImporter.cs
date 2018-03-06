@@ -30,7 +30,7 @@ namespace TASVideos.Legacy.Imports
 
 			var legacyWikiUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
 			var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
-			var legacyUsers = legacySiteContext.Users.ToList();
+			var legacyUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
 
 			var publicationWikis = context.WikiPages
 				.ThatAreNotDeleted()

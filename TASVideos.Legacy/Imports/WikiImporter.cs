@@ -21,7 +21,7 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
-			var legacyUsers = legacySiteContext.Users.ToList();
+			var legacyUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
 
 			var pages = new List<WikiPage>();
 			var referralList = new List<WikiPageReferral>();
