@@ -26,7 +26,7 @@ namespace TASVideos.Legacy.Imports
 				.Where(s => s.Id > 0)
 				.ToList();
 
-			var legacySiteUsers = legacySiteContext.Users.ToList();
+			var legacySiteUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
 			var users = context.Users.ToList();
 
 			var submissionWikis = context.WikiPages
