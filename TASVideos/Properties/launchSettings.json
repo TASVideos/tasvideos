@@ -8,7 +8,7 @@
 		}
 	},
 	"profiles": {
-		"IIS Express": {
+		"IIS Local": {
 			"commandName": "IISExpress",
 			"launchBrowser": true,
 			"launchUrl": "https://localhost:44385/",
@@ -17,7 +17,16 @@
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			}
 		},
-		"IIS Express Staging": {
+		"IIS Local (No recreate)": {
+			"commandName": "IISExpress",
+			"launchBrowser": true,
+			"launchUrl": "https://localhost:44385/",
+			"environmentVariables": {
+				"ASPNETCORE_preventHostingStartup": "True",
+				"ASPNETCORE_ENVIRONMENT": "Development-NoRecreate"
+			}
+		},
+		"IIS Staging": {
 			"commandName": "IISExpress",
 			"launchBrowser": true,
 			"launchUrl": "https://localhost:44385/",
@@ -33,6 +42,6 @@
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
 			"applicationUrl": "http://localhost:49654/"
-		},
+		}
 	}
 }
