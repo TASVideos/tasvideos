@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Legacy;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
@@ -34,7 +35,7 @@ namespace TASVideos
 						DbInitializer.PostMigrateSeedData(context);
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
-					else if (env.EnvironmentName == "Demo")
+					else if (env.IsLocalWithoutRecreate() || env.IsDemo())
 					{
 						context.Database.EnsureCreated();
 					}
