@@ -55,7 +55,7 @@ namespace TASVideos.Legacy.Imports
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyForumUser.RegDate),
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyForumUser.RegDate), // TODO
 					LegacyPassword = legacyForumUser.Password,
-					EmailConfirmed = legacyForumUser.EmailTime != null,
+					EmailConfirmed = legacyForumUser.EmailTime != null || legacyForumUser.PostCount > 0,
 					Email = legacyForumUser.Email,
 					NormalizedEmail = legacyForumUser.Email.ToUpper(),
 					CreateUserName = "Automatic Migration",
