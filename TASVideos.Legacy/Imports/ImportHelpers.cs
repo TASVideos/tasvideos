@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Text;
 
 using FastMember;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,20 @@ namespace TASVideos.Legacy.Imports
 		public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
 		{
 			// Unix timestamp is seconds past epoch
-			DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-			dtDateTime = dtDateTime.AddSeconds(unixTimeStamp);
-			return dtDateTime;
+			DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+			start = start.AddSeconds(unixTimeStamp);
+			return start;
+		}
+
+		public static string FixString(string input)
+		{
+			var b = new byte[input.Length];
+			for (var i = 0; i < input.Length; i++)
+			{
+				b[i] = (byte)input[i];
+			}
+
+			return Encoding.UTF8.GetString(b);
 		}
 
 		public static void BulkInsert<T>(
