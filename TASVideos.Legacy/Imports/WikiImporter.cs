@@ -18,6 +18,7 @@ namespace TASVideos.Legacy.Imports
 		{
 			List<SiteText> siteTexts = legacySiteContext.SiteText
 				//.Where(s => s.Type == "S" && s.ObsoletedBy == -1 && !(s.PageName == "5029S" && s.Revision == 2)) // TODO: fix this record!
+				//.Where(s => s.ObsoletedBy == -1) // For quick testings
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
@@ -27,7 +28,7 @@ namespace TASVideos.Legacy.Imports
 			var referralList = new List<WikiPageReferral>();
 			foreach (var legacyPage in siteTexts)
 			{
-				string markup = legacyPage.Description;
+				string markup = ImportHelper.FixString(legacyPage.Description);
 				int revision = legacyPage.Revision;
 				string pageName = legacyPage.PageName;
 
