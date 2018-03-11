@@ -26,5 +26,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_email")]
 		public string Email { get; set; }
+
+		[Column("user_posts")]
+		public int PostCount { get; set; }
     }
 }
