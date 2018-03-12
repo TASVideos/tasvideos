@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TASVideos.Data;
@@ -60,9 +61,16 @@ namespace TASVideos
 			host.Run();
 		}
 
-		public static IWebHost BuildWebHost(string[] args) =>
-			WebHost.CreateDefaultBuilder(args)
+		public static IWebHost BuildWebHost(string[] args)
+		{
+			var config = new ConfigurationBuilder()
+				.AddCommandLine(args)
+				.Build();
+
+			return WebHost.CreateDefaultBuilder(args)
+				.UseConfiguration(config)
 				.UseStartup<Startup>()
 				.Build();
+		}
 	}
 }
