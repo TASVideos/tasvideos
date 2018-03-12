@@ -35,6 +35,12 @@
 				"ASPNETCORE_ENVIRONMENT": "Staging"
 			}
 		},
+		"Demo": {
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Demo"
+			}
+		},
 		"TASVideos": {
 			"commandName": "Project",
 			"launchBrowser": true,
