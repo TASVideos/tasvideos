@@ -8,23 +8,29 @@
 		}
 	},
 	"profiles": {
+		"Demo": {
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Demo"
+			}
+		},
 		"IIS Local": {
 			"commandName": "IISExpress",
-			"launchBrowser": true,
-			"launchUrl": "https://localhost:44385/",
 			"environmentVariables": {
 				"ASPNETCORE_preventHostingStartup": "True",
 				"ASPNETCORE_ENVIRONMENT": "Development"
-			}
+			},
+			"launchBrowser": true,
+			"launchUrl": "https://localhost:44385/"
 		},
 		"IIS Local (No recreate)": {
 			"commandName": "IISExpress",
-			"launchBrowser": true,
-			"launchUrl": "https://localhost:44385/",
 			"environmentVariables": {
 				"ASPNETCORE_preventHostingStartup": "True",
 				"ASPNETCORE_ENVIRONMENT": "Development-NoRecreate"
-			}
+			},
+			"launchBrowser": true,
+			"launchUrl": "https://localhost:44385/"
 		},
 		"IIS Staging": {
 			"commandName": "IISExpress",
@@ -33,12 +39,6 @@
 			"environmentVariables": {
 				"ASPNETCORE_preventHostingStartup": "True",
 				"ASPNETCORE_ENVIRONMENT": "Staging"
-			}
-		},
-		"Demo": {
-			"commandName": "Project",
-			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Demo"
 			}
 		},
 		"TASVideos": {
