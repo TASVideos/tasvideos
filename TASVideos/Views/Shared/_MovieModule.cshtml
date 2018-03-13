@@ -12,6 +12,7 @@
 				<img src="~/media/@Model.Screenshot" />
 			</div>
 			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
+			<a asp-controller="Publication" asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary">Publication</a>
 			<a asp-controller="Submission" asp-action="View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary">Submission</a>
 		</div>
 		<div class="col-md-5">
