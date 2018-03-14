@@ -35,9 +35,9 @@ namespace TASVideos.Tasks
 		public async Task<WikiPage> GetPage(string pageName, int? revisionId = null)
 		{
 			var cacheKey = $"{nameof(GetPage)}-{pageName}-{revisionId}";
-			if (_cache.IsSet(cacheKey))
+			if (_cache.TryGetValue(cacheKey, out WikiPage cachedResult))
 			{
-				return _cache.Get<WikiPage>(cacheKey);
+				return cachedResult;
 			}
 
 			pageName = pageName?.Trim('/');
@@ -64,9 +64,9 @@ namespace TASVideos.Tasks
 		public async Task<WikiPage> GetPage(int dbid)
 		{
 			var cacheKey = $"{nameof(GetPage)}-{dbid}";
-			if (_cache.IsSet(cacheKey))
+			if (_cache.TryGetValue(cacheKey, out WikiPage cachedResult))
 			{
-				return _cache.Get<WikiPage>(cacheKey);
+				return cachedResult;
 			}
 
 			var result = await _db.WikiPages

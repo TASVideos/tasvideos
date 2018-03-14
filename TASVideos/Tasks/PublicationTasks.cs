@@ -30,9 +30,9 @@ namespace TASVideos.Tasks
 		public async Task<PublicationSearchModel> GetMovieTokenData()
 		{
 			var cacheKey = $"{nameof(PublicationTasks)}{nameof(GetMovieTokenData)}";
-			if (_cache.IsSet(cacheKey))
+			if (_cache.TryGetValue(cacheKey, out PublicationSearchModel cachedResult))
 			{
-				return _cache.Get<PublicationSearchModel>(cacheKey);
+				return cachedResult;
 			}
 
 			var result = new PublicationSearchModel
