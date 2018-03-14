@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace TASVideos.Services
 {
@@ -12,14 +13,13 @@ namespace TASVideos.Services
 
 	public class MemoryCacheService : ICacheService
 	{
-		// TODO: pass settings in
-		public const int CacheDurationInSeconds = 60;
-
 		private readonly IMemoryCache _cache;
+		private readonly IOptions<AppSettings> _settings;
 
-		public MemoryCacheService(IMemoryCache cache)
+		public MemoryCacheService(IMemoryCache cache, IOptions<AppSettings> settings)
 		{
 			_cache = cache;
+			_settings = settings;
 		}
 
 		public bool TryGetValue<T>(string key, out T value)
@@ -37,7 +37,7 @@ namespace TASVideos.Services
 			using (var entry = _cache.CreateEntry(key))
 			{
 				entry.Value = data;
-				_cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? CacheDurationInSeconds));
+				_cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? _settings.Value.CacheSettings.CacheDurationInSeconds));
 			}
 		}
 	}
