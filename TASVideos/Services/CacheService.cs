@@ -5,9 +5,8 @@ namespace TASVideos.Services
 {
 	public interface ICacheService
 	{
-		T Get<T>(string key);
+		bool TryGetValue<T>(string key, out T value);
 		void Set(string key, object data, int? cacheTime = null);
-		bool IsSet(string key);
 		void Remove(string key);
 	}
 
@@ -23,15 +22,9 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public T Get<T>(string key)
+		public bool TryGetValue<T>(string key, out T value)
 		{
-			_cache.TryGetValue(key, out var obj);
-			return (T)obj;
-		}
-
-		public bool IsSet(string key)
-		{
-			return _cache.TryGetValue(key, out _);
+			return _cache.TryGetValue(key, out value);
 		}
 
 		public void Remove(string key)
@@ -51,21 +44,17 @@ namespace TASVideos.Services
 
 	public class NoCacheService : ICacheService
 	{
-		public T Get<T>(string key)
+		public bool TryGetValue<T>(string key, out T value)
 		{
-			return default(T);
-		}
-
-		public bool IsSet(string key)
-		{
+			value = default(T);
 			return false;
 		}
 
-		public void Remove(string key)
+		public void Set(string key, object data, int? cacheTime)
 		{
 		}
 
-		public void Set(string key, object data, int? cacheTime)
+		public void Remove(string key)
 		{
 		}
 	}
