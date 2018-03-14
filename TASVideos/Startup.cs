@@ -29,6 +29,8 @@ namespace TASVideos
 		public IConfiguration Configuration { get; }
 		public IHostingEnvironment Environment { get; }
 
+		private AppSettings Settings => Configuration.Get<AppSettings>();
+
 		public void ConfigureDevelopmentServices(IServiceCollection services)
 		{
 			services.ConfigureApplicationCookie(options =>
@@ -53,6 +55,8 @@ namespace TASVideos
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.Configure<AppSettings>(Configuration);
+
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -88,8 +92,15 @@ namespace TASVideos
 			services.AddTransient(
 				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
 
-			services.AddScoped<ICacheService, MemoryCacheService>();
-        }
+			if (Settings.CacheSettings.CacheType == "Memory")
+			{
+				services.AddScoped<ICacheService, MemoryCacheService>();
+			}
+			else
+			{
+				services.AddSingleton<ICacheService, NoCacheService>();
+			}
+		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
