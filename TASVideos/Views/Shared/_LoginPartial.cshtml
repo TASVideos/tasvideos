@@ -1,27 +1,28 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
-
-@if (SignInManager.IsSignedIn(User))
-{
-	<form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item @(ViewContext.Controller() == "Profile" ? "active" : "")">
-				<a class="nav-link" asp-area="" asp-controller="Profile" asp-action="Index" title="Manage">@UserManager.GetUserName(User)</a>
+<div class="d-md-flex">
+	@if (SignInManager.IsSignedIn(User))
+	{
+		<form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+			<ul class="navbar-nav">
+				<li class="nav-item @(ViewContext.Controller() == "Profile" ? "active" : "")">
+					<a class="nav-link" asp-area="" asp-controller="Profile" asp-action="Index" title="Manage">@UserManager.GetUserName(User)</a>
+				</li>
+				<li class="nav-item">
+					<button type="submit" class="btn btn-link navbar-btn nav-link">Log out</button>
+				</li>
+			</ul>
+		</form>
+	}
+	else
+	{
+		<ul class="navbar-nav">
+			<li class="nav-item">
+				<a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
 			</li>
 			<li class="nav-item">
-				<button type="submit" class="btn btn-link navbar-btn nav-link">Log out</button>
+				<a class="nav-link" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")">Log in</a>
 			</li>
 		</ul>
-	</form>
-}
-else
-{
-	<ul class="navbar-nav mr-auto">
-		<li class="nav-item">
-			<a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")">Log in</a>
-		</li>
-	</ul>
-}
+	}
+</div>
