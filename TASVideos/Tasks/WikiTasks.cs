@@ -152,6 +152,7 @@ namespace TASVideos.Tasks
 			}
 
 			_cache.Remove($"{nameof(GetPage)}-{newRevision.PageName}-{newRevision.Id}");
+			_cache.Remove($"{nameof(GetPage)}-{model.PageName}-{null}");
 
 			return newRevision.Id;
 		}
@@ -223,6 +224,8 @@ namespace TASVideos.Tasks
 
 				revision.PageName = model.DestinationPageName;
 			}
+
+			_cache.Remove($"{nameof(GetPage)}-{model.OriginalPageName}-{null}");
 
 			await _db.SaveChangesAsync();
 
@@ -446,7 +449,10 @@ namespace TASVideos.Tasks
 				revision.IsDeleted = true;
 				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
 				_cache.Remove($"{nameof(GetPage)}-{revision.Id}");
+				
 			}
+
+			_cache.Remove($"{nameof(GetPage)}-{pageName}-{null}");
 
 			// Remove referrers
 			var referrers = await _db.WikiReferrals
