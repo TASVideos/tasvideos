@@ -66,9 +66,16 @@
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
-
-			@await Html.PartialAsync("_NavBarPartial")
-			@await Html.PartialAsync("_LoginPartial")
+			<div class="container">
+				<div class="d-lg-flex">
+					<div class="mr-auto">
+						@await Html.PartialAsync("_NavBarPartial")
+					</div>
+					<div>
+						@await Html.PartialAsync("_LoginPartial")
+					</div>
+				</div>
+			</div>
 		</div>
 	</nav>
 	@if (IsSectionDefined("PageTitle"))
