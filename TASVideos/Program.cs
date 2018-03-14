@@ -11,6 +11,7 @@ using TASVideos.Extensions;
 using TASVideos.Legacy;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
+using TASVideos.Tasks;
 
 namespace TASVideos
 {
@@ -50,6 +51,9 @@ namespace TASVideos
 						LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
 						DbInitializer.PostMigrateSeedData(context);
 					}
+
+					var wikiTasks = services.GetRequiredService<WikiTasks>();
+					wikiTasks.LoadWikiCache().Wait();
 				}
 				catch (Exception ex)
 				{
