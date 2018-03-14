@@ -27,6 +27,23 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Loads all current wiki pages, intended to be run on startup to pre-load the cache
+		/// </summary>
+		public async Task LoadWikiCache()
+		{
+			var wikiPages = await _db.WikiPages
+				.ThatAreCurrentRevisions()
+				.ThatAreNotDeleted()
+				.ToListAsync();
+
+			foreach (var page in wikiPages)
+			{
+				var cacheKey = $"{nameof(GetPage)}-{page.Id}";
+				_cache.Set(cacheKey, page, DurationConstants.OneDayInSeconds);
+			}
+		}
+
+		/// <summary>
 		/// Returns details about a Wiki page with the given <see cref="pageName" />
 		/// If a <see cref="revisionId" /> is provided then that revision of the page will be returned
 		/// Else the latest revision is returned
