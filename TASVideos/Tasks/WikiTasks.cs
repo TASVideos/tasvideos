@@ -421,7 +421,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a list of informations about <see cref="WikiPage"/> entries
+		/// Returns a list of information about <see cref="WikiPage"/> entries
 		/// ordered by timestamp with the given criteria
 		/// </summary>
 		public async Task<IEnumerable<WikiTextChangelogModel>> GetWikiChangeLog(int limit, bool includeMinorEdits)
@@ -466,7 +466,6 @@ namespace TASVideos.Tasks
 				revision.IsDeleted = true;
 				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
 				_cache.Remove($"{nameof(GetPage)}-{revision.Id}");
-				
 			}
 
 			_cache.Remove($"{nameof(GetPage)}-{pageName}-{null}");
@@ -484,7 +483,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Performs a soft delete on a single revision of a <see cref="WikiPage"/>
 		/// If the revision is latest revisions, then <see cref="WikiPageReferral"/>
-		/// will be removed where the geven page name is a referrer
+		/// will be removed where the given page name is a referrer
 		/// </summary>
 		public async Task DeleteWikiPageRevision(string pageName, int revision)
 		{
