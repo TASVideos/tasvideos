@@ -12,7 +12,7 @@
 			return active;
 		}
 
-		if (menuName == "Administration" &&
+		if (menuName == "Admin" &&
 			(ViewContext.Controller() == "Roles"
 				|| ViewContext.Controller() == "User"
 				|| ViewContext.Controller() == "Permissions"))
@@ -59,8 +59,8 @@
 	</li>
 	@if (ViewData.UserHasAnyPermission(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles }))
 	{
-		<li class="nav-item dropdown @(Active("Administration"))">
-			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Administration<span class="caret"></span></a>
+		<li class="nav-item dropdown @(Active("Admin"))">
+			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
 			<div class="dropdown-menu">
 				@if (ViewData.UserHasAnyPermission(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers }))
 				{
