@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +15,7 @@ using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Legacy.Extensions;
 using TASVideos.Services;
+using TASVideos.Tasks;
 
 namespace TASVideos
 {
@@ -105,7 +105,7 @@ namespace TASVideos
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, WikiTasks wikiTasks)
 		{
 			if (env.IsAnyTestEnvironment())
 			{
@@ -132,6 +132,8 @@ namespace TASVideos
 				routes.MapRoute("movies", "Movies-{query}", defaults: new { controller = "Publication", action = "List" });
 				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = "RenderWikiPage" });
 			});
+
+			wikiTasks.LoadWikiCache().Wait();
 		}
 	}
 }
