@@ -72,6 +72,7 @@ namespace TASVideos.Tasks
 			if (result != null)
 			{
 				_cache.Set(cacheKey, result, DurationConstants.OneDayInSeconds);
+				_cache.Set($"{nameof(GetPage)}-{result.Id}", result, DurationConstants.OneDayInSeconds);
 			}
 
 			return result;
