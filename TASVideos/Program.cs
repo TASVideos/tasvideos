@@ -51,9 +51,6 @@ namespace TASVideos
 						LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
 						DbInitializer.PostMigrateSeedData(context);
 					}
-
-					var wikiTasks = services.GetRequiredService<WikiTasks>();
-					wikiTasks.LoadWikiCache().Wait();
 				}
 				catch (Exception ex)
 				{
