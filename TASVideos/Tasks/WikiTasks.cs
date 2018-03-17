@@ -40,6 +40,9 @@ namespace TASVideos.Tasks
 			{
 				var cacheKey = $"{nameof(GetPage)}-{page.Id}";
 				_cache.Set(cacheKey, page, DurationConstants.OneDayInSeconds);
+
+				var latestRevisionCacheKey = $"{nameof(GetPage)}-{page.PageName}-";
+				_cache.Set(latestRevisionCacheKey, page, DurationConstants.OneDayInSeconds);
 			}
 		}
 
