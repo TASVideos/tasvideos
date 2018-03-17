@@ -29,7 +29,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Loads all current wiki pages, intended to be run on startup to pre-load the cache
 		/// </summary>
-		public async Task LoadWikiCache()
+		public async Task LoadWikiCache(bool onlyIds = false)
 		{
 			var wikiPages = await _db.WikiPages
 				.ThatAreCurrentRevisions()
@@ -41,8 +41,11 @@ namespace TASVideos.Tasks
 				var cacheKey = $"{nameof(GetPage)}-{page.Id}";
 				_cache.Set(cacheKey, page, DurationConstants.OneDayInSeconds);
 
-				var latestRevisionCacheKey = $"{nameof(GetPage)}-{page.PageName}-";
-				_cache.Set(latestRevisionCacheKey, page, DurationConstants.OneDayInSeconds);
+				if (!onlyIds)
+				{
+					var latestRevisionCacheKey = $"{nameof(GetPage)}-{page.PageName}-";
+					_cache.Set(latestRevisionCacheKey, page, DurationConstants.OneDayInSeconds);
+				}
 			}
 		}
 

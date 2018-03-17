@@ -12,11 +12,15 @@ namespace TASVideos.Razor
 		public const string Prefix = "/Views/~~~";
 		public const string PreviewName = "/Views/~~~Preview";
 
-		private readonly IServiceProvider _provider;
+		private readonly WikiTasks _wikiTasks;
 
 		public WikiMarkupFileProvider(IServiceProvider provider)
 		{
-			_provider = provider;
+			// Unfortunatley the singleton cache in WikiTasks is different here than in a non-single class,
+			// so we need to populate another cache just for this
+			// Boo.
+			_wikiTasks = (WikiTasks)provider.GetService(typeof(WikiTasks));
+			_wikiTasks.LoadWikiCache(true).Wait();
 		}
 		
 		public IDirectoryContents GetDirectoryContents(string subpath)
@@ -31,18 +35,17 @@ namespace TASVideos.Razor
 				return null;
 			}
 
-			var tasks = (WikiTasks)_provider.GetService(typeof(WikiTasks));
 			string pageName, markup;
 
 			if (subpath == PreviewName)
 			{
 				pageName = PreviewName;
-				markup = tasks.PreviewStorage;
+				markup = _wikiTasks.PreviewStorage;
 			}
 			else
 			{
 				subpath = subpath.Substring(Prefix.Length);
-				var continuation = tasks.GetPage(int.Parse(subpath));
+				var continuation = _wikiTasks.GetPage(int.Parse(subpath));
 				continuation.Wait();
 				var result = continuation.Result;
 				if (result == null)
