@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Tasks;
@@ -11,14 +12,21 @@ namespace TASVideos.Controllers
 {
 	public class ForumController : BaseController
 	{
-		public ForumController(UserTasks userTasks)
+		private readonly ForumTasks _forumTasks;
+
+		public ForumController(
+			ForumTasks forumTasks,
+			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_forumTasks = forumTasks;
 		}
 
-		public IActionResult Index()
+		[AllowAnonymous]
+		public async Task<IActionResult> Index()
 		{
-			return View();
+			var model = await _forumTasks.GetForumIndex();
+			return View(model);
 		}
 	}
 }
