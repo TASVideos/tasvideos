@@ -1,5 +1,22 @@
-﻿@{
+﻿@model ForumIndexModel
+@{
 	ViewData["Title"] = "TASVideos Forums";
 }
 
-<h4>Coming Soon!</h4>
+@foreach(var cat in Model.Categories.OrderBy(c => c.Ordinal))
+{
+	<div class="card">
+		<div class="card-header">
+			<h4>@cat.Title</h4>
+			@if (!string.IsNullOrWhiteSpace(cat.Description))
+			{
+				<div class="text-small">
+					@cat.Description
+				</div>
+			}
+		</div>
+		<div class="card-body">
+			Coming Coon
+		</div>
+	</div>
+}
