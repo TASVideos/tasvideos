@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
+using TASVideos.Data.Entity.Forum;
+
 namespace TASVideos.Data.Entity
 {
 	[Table(nameof(User))]
@@ -20,5 +22,8 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 		public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();
+
+		public virtual ICollection<ForumTopic> Topics { get; set; } = new HashSet<ForumTopic>();
+		public virtual ICollection<ForumPost> Posts { get; set; } = new HashSet<ForumPost>();
 	}
 }
