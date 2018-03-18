@@ -15,15 +15,20 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		{
 			var topics = legacyForumContext
 				.Topics
+				.Select(t => new
+				{
+					t.Id, t.ForumId, t.Title, t.PosterId, t.Timestamp
+				})
+				.ToList()
 				.Select(t => new ForumTopic
 				{
 					Id = t.Id,
 					ForumId = t.ForumId,
 					Title = t.Title,
 					PosterId = t.PosterId, // TODO: do all these match up?
-					CreateTimeStamp = DateTime.UtcNow, // ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
 					CreateUserName = "LegacyImport",
-					LastUpdateTimeStamp = DateTime.UtcNow, // ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
 					LastUpdateUserName = "LegacyImport"
 				})
 				.ToList();
