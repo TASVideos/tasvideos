@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
+using TASVideos.Legacy.Data.Forum.Entity;
 using TASVideos.Legacy.Data.Site;
 using TASVideos.Legacy.Imports;
 
@@ -33,6 +34,8 @@ namespace TASVideos.Legacy
 			UserImporter.Import(context, legacySiteContext, legacyForumContext);
 
 			ForumCategoriesImporter.Import(context, legacyForumContext);
+			ForumImporter.Import(context, legacyForumContext);
+			ForumTopicImporter.Import(context, legacyForumContext);
 
 			WikiImporter.Import(context, legacySiteContext);
 			SubmissionImporter.Import(context, legacySiteContext);

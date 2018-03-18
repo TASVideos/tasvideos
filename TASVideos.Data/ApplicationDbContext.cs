@@ -48,6 +48,8 @@ namespace TASVideos.Data
 
 		// Forum tables
 		public DbSet<ForumCategory> ForumCategories { get; set; }
+		public DbSet<Forum> Forums { get; set; }
+		public DbSet<ForumTopic> ForumTopics { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
