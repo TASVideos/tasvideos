@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Data
@@ -44,6 +45,9 @@ namespace TASVideos.Data
 		public DbSet<GameSystem> GameSystems { get; set; }
 		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; }
 		public DbSet<GameRom> Roms { get; set; }
+
+		// Forum tables
+		public DbSet<ForumCategory> ForumCategories { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
