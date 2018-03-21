@@ -2,6 +2,8 @@
 using System.Data.SqlClient;
 using System.Linq;
 
+using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
@@ -17,15 +19,14 @@ namespace TASVideos.Legacy.Imports
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			List<SiteText> siteTexts = legacySiteContext.SiteText
+				.Include(s => s.User)
 				//.Where(s => s.Type == "S" && s.ObsoletedBy == -1 && !(s.PageName == "5029S" && s.Revision == 2)) // TODO: fix this record!
 				//.Where(s => s.ObsoletedBy == -1) // For quick testings
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
-			var legacyUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
 
 			var pages = new List<WikiPage>();
-			var referralList = new List<WikiPageReferral>();
 			foreach (var legacyPage in siteTexts)
 			{
 				string markup = ImportHelper.FixString(legacyPage.Description);
@@ -112,9 +113,9 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
 				markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
 
-
-				var wikiPage = new WikiPage
+				pages.Add(new WikiPage
 				{
+					Id = legacyPage.Id,
 					PageName = pageName,
 					Markup = markup,
 					Revision = revision,
@@ -122,39 +123,40 @@ namespace TASVideos.Legacy.Imports
 					RevisionMessage = legacyPage.WhyEdit,
 					IsDeleted = isDeleted,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp),
-					CreateUserName = legacyUsers.Single(u => u.Id == legacyPage.UserId).Name,
+					CreateUserName = legacyPage.User.Name,
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
-				};
-
-				pages.Add(wikiPage);
+				});
 			}
+
+			var dic = pages.ToDictionary(
+				tkey => $"{tkey.PageName}__ImportKey__{tkey.Revision}",
+				tvalue => tvalue);
 
 			// Set child references
 			foreach (var wikiPage in pages)
 			{
-				var nextWiki = pages
-					.SingleOrDefault(wp => wp.Revision == wikiPage.Revision + 1
-						&& wp.PageName == wikiPage.PageName);
+				var result = dic.TryGetValue(
+					$"{wikiPage.PageName}__ImportKey__{wikiPage.Revision + 1}",
+					out WikiPage nextWiki);
 
-				if (nextWiki != null)
+				if (result)
 				{
 					wikiPage.ChildId = nextWiki.Id;
 				}
 			}
 
 			// Referrals (only need latest revisions)
+			var referralList = new List<WikiPageReferral>();
 			foreach (var currentPage in pages.Where(p => p.ChildId == null))
 			{
-				var referrals = Util.GetAllWikiLinks(currentPage.Markup);
-				foreach (var referral in referrals)
-				{
-					referralList.Add(new WikiPageReferral
+				referralList.AddRange(Util
+					.GetAllWikiLinks(currentPage.Markup)
+					.Select(referral => new WikiPageReferral
 					{
 						Referrer = currentPage.PageName,
 						Referral = referral.Link?.Split('|').FirstOrDefault(),
 						Excerpt = referral.Excerpt
-					});
-				}
+					}));
 			}
 
 			var wikiColumns = new[]
