@@ -2,6 +2,8 @@
 using System.Data.SqlClient;
 using System.Linq;
 
+using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
@@ -17,12 +19,12 @@ namespace TASVideos.Legacy.Imports
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			List<SiteText> siteTexts = legacySiteContext.SiteText
+				.Include(s => s.User)
 				//.Where(s => s.Type == "S" && s.ObsoletedBy == -1 && !(s.PageName == "5029S" && s.Revision == 2)) // TODO: fix this record!
 				//.Where(s => s.ObsoletedBy == -1) // For quick testings
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
-			var legacyUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
 
 			var pages = new List<WikiPage>();
 			var referralList = new List<WikiPageReferral>();
@@ -122,7 +124,7 @@ namespace TASVideos.Legacy.Imports
 					RevisionMessage = legacyPage.WhyEdit,
 					IsDeleted = isDeleted,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp),
-					CreateUserName = legacyUsers.Single(u => u.Id == legacyPage.UserId).Name,
+					CreateUserName = legacyPage.User.Name,
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
 				};
 
