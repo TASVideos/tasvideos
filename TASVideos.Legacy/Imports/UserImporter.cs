@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
@@ -24,6 +26,8 @@ namespace TASVideos.Legacy.Imports
 			// timezone
 
 			var legacyUsers = legacySiteContext.Users
+				.Include(u => u.UserRoles)
+				.ThenInclude(ur => ur.Role)
 				.OrderBy(u => u.Id)
 				.ToList();
 
@@ -31,9 +35,6 @@ namespace TASVideos.Legacy.Imports
 				.Where(u => u.UserName != "Anonymous")
 				.OrderBy(u => u.UserId)
 				.ToList();
-
-			var luserRoles = legacySiteContext.UserRoles.ToList();
-			var lroles = legacySiteContext.Roles.ToList();
 
 			var roles = context.Roles.ToList();
 
@@ -68,17 +69,10 @@ namespace TASVideos.Legacy.Imports
 
 				if (legacySiteUser != null)
 				{
-					var legacyUserRoles =
-						(from lr in luserRoles
-						join r in lroles on lr.RoleId equals r.Id
-						where lr.UserId == legacySiteUser.Id
-						select r)
-						.ToList();
-
 					// not having user means they are effectively banned
 					// limited = Limited User
-					if (legacyUserRoles.Select(ur => ur.Name).Contains("user")
-						&& !legacyUserRoles.Select(ur => ur.Name).Contains("admin")) // There's no point in adding these roles to admins, they have these perms anyway
+					if (legacySiteUser.UserRoles.Any(ur => ur.Role.Name == "user")
+						&& legacySiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding these roles to admins, they have these perms anyway
 					{
 						userRoles.Add(new UserRole
 						{
@@ -86,7 +80,7 @@ namespace TASVideos.Legacy.Imports
 							UserId = newUser.Id
 						});
 
-						if (!legacyUserRoles.Select(ur => ur.Name).Contains("limited"))
+						if (legacySiteUser.UserRoles.All(ur => ur.Role.Name != "limited"))
 						{
 							context.UserRoles.Add(new UserRole
 							{
@@ -96,7 +90,7 @@ namespace TASVideos.Legacy.Imports
 						}
 					}
 
-					foreach (var userRole in legacyUserRoles
+					foreach (var userRole in legacySiteUser.UserRoles.Select(ur => ur.Role)
 						.Where(r => r.Name != "user" && r.Name != "limited"))
 					{
 						var role = GetRoleFromLegacy(userRole.Name, roles);
