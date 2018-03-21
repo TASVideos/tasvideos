@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +27,6 @@ namespace TASVideos.Legacy.Imports
 			var usernames = context.Users.Select(u => u.UserName).ToList();
 
 			var pages = new List<WikiPage>();
-			var referralList = new List<WikiPageReferral>();
 			foreach (var legacyPage in siteTexts)
 			{
 				string markup = ImportHelper.FixString(legacyPage.Description);
@@ -115,8 +113,7 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
 				markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
 
-
-				var wikiPage = new WikiPage
+				pages.Add(new WikiPage
 				{
 					Id = legacyPage.Id,
 					PageName = pageName,
@@ -128,9 +125,7 @@ namespace TASVideos.Legacy.Imports
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp),
 					CreateUserName = legacyPage.User.Name,
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
-				};
-
-				pages.Add(wikiPage);
+				});
 			}
 
 			var dic = pages.ToDictionary(
@@ -151,18 +146,17 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			// Referrals (only need latest revisions)
+			var referralList = new List<WikiPageReferral>();
 			foreach (var currentPage in pages.Where(p => p.ChildId == null))
 			{
-				var referrals = Util.GetAllWikiLinks(currentPage.Markup);
-				foreach (var referral in referrals)
-				{
-					referralList.Add(new WikiPageReferral
+				referralList.AddRange(Util
+					.GetAllWikiLinks(currentPage.Markup)
+					.Select(referral => new WikiPageReferral
 					{
 						Referrer = currentPage.PageName,
 						Referral = referral.Link?.Split('|').FirstOrDefault(),
 						Excerpt = referral.Excerpt
-					});
-				}
+					}));
 			}
 
 			var wikiColumns = new[]
