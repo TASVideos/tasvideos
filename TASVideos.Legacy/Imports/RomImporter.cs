@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using TASVideos.Data;
@@ -14,25 +13,20 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			var legacyRoms = legacySiteContext.Roms.Where(r => r.Type == "G").ToList();
-			var roms = new List<GameRom>();
-
-			foreach (var legacyRom in legacyRoms)
-			{
-				var rom = new GameRom
+			var roms = legacySiteContext.Roms
+				.Where(r => r.Type == "G")
+				.Select(r => new GameRom
 				{
-					Id = legacyRom.Id,
-					Md5 = legacyRom.Md5,
-					Sha1 = legacyRom.Sha1,
-					Name = legacyRom.Description,
+					Id = r.Id,
+					Md5 = r.Md5,
+					Sha1 = r.Sha1,
+					Name = r.Description,
 					Type = RomTypes.Good,
-					GameId = legacyRom.GameId,
+					GameId = r.GameId,
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow
-				};
-
-				roms.Add(rom);
-			}
+				})
+				.ToList();
 
 			// The legacy system barely used roms and they were never enforced, but the new system demands
 			// fully cataloged publications, so let's create a placeholder ROM with the intent of filling in
