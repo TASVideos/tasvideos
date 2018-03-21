@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
@@ -117,6 +118,7 @@ namespace TASVideos.Legacy.Imports
 
 				var wikiPage = new WikiPage
 				{
+					Id = legacyPage.Id,
 					PageName = pageName,
 					Markup = markup,
 					Revision = revision,
@@ -131,14 +133,18 @@ namespace TASVideos.Legacy.Imports
 				pages.Add(wikiPage);
 			}
 
+			var dic = pages.ToDictionary(
+				tkey => $"{tkey.PageName}__ImportKey__{tkey.Revision}",
+				tvalue => tvalue);
+
 			// Set child references
 			foreach (var wikiPage in pages)
 			{
-				var nextWiki = pages
-					.SingleOrDefault(wp => wp.Revision == wikiPage.Revision + 1
-						&& wp.PageName == wikiPage.PageName);
+				var result = dic.TryGetValue(
+					$"{wikiPage.PageName}__ImportKey__{wikiPage.Revision + 1}",
+					out WikiPage nextWiki);
 
-				if (nextWiki != null)
+				if (result)
 				{
 					wikiPage.ChildId = nextWiki.Id;
 				}
