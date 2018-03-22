@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -15,10 +14,12 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
+			var legacyClassTypes = legacySiteContext.ClassTypes
+				.Where(t => !t.PositiveText.Contains("Genre"))
+				.ToList();
 			
-			List<Tag> tags = new List<Tag>();
-			foreach (var classType in legacyClassTypes.Where(t => !t.PositiveText.Contains("Genre")))
+			var tags = new List<Tag>();
+			foreach (var classType in legacyClassTypes)
 			{
 				tags.Add(new Tag
 				{
