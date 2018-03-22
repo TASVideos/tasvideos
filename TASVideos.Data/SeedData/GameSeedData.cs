@@ -54,40 +54,6 @@ namespace TASVideos.Data.SeedData
 			},
 		};
 
-		public static readonly GameRom[] Roms =
-		{
-			new GameRom
-			{
-				Md5 = "12345", // TODO
-				Sha1 = "12345", // TODO
-				Name = "Super Mario Bros. (W) [!].nes",
-				Region = "Any",
-				Version = "",
-				Type = RomTypes.Good,
-				Game = Games[0]
-			},
-			new GameRom
-			{
-				Md5 = "123456", // TODO
-				Sha1 = "123456", // TODO
-				Name = "Bad Dudes (U) [!].nes",
-				Region = "USA",
-				Version = "",
-				Type = RomTypes.Good,
-				Game = Games[1]
-			},
-			new GameRom
-			{
-				Md5 = "1234567", // TODO
-				Sha1 = "1234567", // TODO
-				Name = "E.T. The Extra-terrestrial (U) [!].a26",
-				Region = "USA",
-				Version = "",
-				Type = RomTypes.Good,
-				Game = Games[2]
-			}
-		};
-
 		public static readonly Genre[] Genres =
 		{
 			new Genre { Id = 1, DisplayName = "Action" },
