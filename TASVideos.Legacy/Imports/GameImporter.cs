@@ -30,21 +30,35 @@ namespace TASVideos.Legacy.Imports
 			var games = new List<Game>();
 			var gameGenres = new HashSet<GameGenre>();
 
-			foreach (var legacyGameName in legacyGameNames)
+			var lgn = legacyGameNames
+				.Select(g => new
+				{
+					g.Id,
+					g.SystemId,
+					g.GoodName,
+					g.DisplayName,
+					g.Abbreviation,
+					g.SearchKey,
+					g.YoutubeTags,
+					GameGenres =
+						(from s in legacySubmissions
+						 join p in legacyPublications on s.Id equals p.SubmissionId
+						 join mc in legacyMovieClass on p.Id equals mc.MovieId
+						 join c in legacyClassTypes on mc.ClassId equals c.Id
+						 where s.GameNameId == g.Id && c.PositiveText.Contains("Genre")
+						 select new
+						 {
+							 c.Id,
+							 c.PositiveText
+						 })
+						.Distinct()
+						.ToList()
+				})
+				.ToList();
+
+			foreach (var legacyGameName in lgn)
 			{
-				var legacyGameGenres = (from p in legacyPublications
-					join s in legacySubmissions on p.SubmissionId equals s.Id
-					join gn in legacyGameNames on s.GameNameId equals gn.Id
-					join mc in legacyMovieClass on p.Id equals mc.MovieId
-					join c in legacyClassTypes on mc.ClassId equals c.Id
-					where c.PositiveText.Contains("Genre")
-						&& gn.Id == legacyGameName.Id
-					select new
-					{
-						c.Id,
-						c.PositiveText
-					})
-					.Distinct();
+				var legacyGameGenres = legacyGameName.GameGenres;
 
 				foreach (var lgg in legacyGameGenres)
 				{
