@@ -11,6 +11,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("userid")]
 		public int UserId { get; set; }
+		public User User { get; set; }
 
 		[Column("timestamp")]
 		public int TimeStamp { get; set; }
