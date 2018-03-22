@@ -31,6 +31,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("submissionid")]
 		public int SubmissionId { get; set; } = -1;
+		public virtual Submission Submission { get; set; }
 
 		[Column("obsoleted_by")]
 		public int? ObsoletedBy { get; set; }
