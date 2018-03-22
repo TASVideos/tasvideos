@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Legacy.Data.Forum;
-using TASVideos.Legacy.Data.Forum.Entity;
 
 namespace TASVideos.Legacy.Imports
 {
