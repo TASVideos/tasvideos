@@ -51,12 +51,6 @@ namespace TASVideos.Data
 		{
 			context.Games.AddRange(GameSeedData.Games);
 
-			foreach (var rom in GameSeedData.Roms)
-			{
-				rom.Game = GameSeedData.Games.First(g => g.GoodName.StartsWith(rom.Name.Substring(0, 3))); // This is bad and not scalable
-				context.Roms.Add(rom);
-			}
-
 			foreach (var wikiPage in WikiPageSeedData.NewRevisions)
 			{
 				var currentRevision = context.WikiPages
