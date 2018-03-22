@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
+using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
@@ -22,182 +24,184 @@ namespace TASVideos.Legacy.Imports
 			// multiple movie files
 			// multiple torrents
 
-			var legacyMovies = legacySiteContext.Movies.Where(m => m.Id > 0).ToList();
-			var legacyMovieFiles = legacySiteContext.MovieFiles.ToList();
-			var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
-			var legacyMovieClasses = legacySiteContext.MovieClass.ToList();
-			var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
-
-			var legacyWikiUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
-			var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
-			var legacyUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
-
-			var publicationWikis = context.WikiPages
-				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
-				.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
-				.Select(s => new { s.Id, s.PageName })
-				.ToList();
-
-			var submissions = context.Submissions
-				.Select(s => new
-				{
-					s.Id,
-					s.SystemFrameRateId,
-					s.Frames,
-					s.RerecordCount,
-					s.GameId
-				})
-				.ToList();
-
-			var users = context.Users.ToList();
-			var players = legacySiteContext.Players.ToList();
-			var systems = context.GameSystems.ToList();
-			var systemFrameRates = context.GameSystemFrameRates.ToList();
-			var games = context.Games.ToList();
-			var tags = context.Tags.ToList();
-
-			var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
-			var torrentTypes = new[] { "M", "N", "O", "P", "T" };
-
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();
 			var publicationTags = new List<PublicationTag>();
 
-			foreach (var legacyMovie in legacyMovies)
+			using (context.Database.BeginTransaction())
+			using (legacySiteContext.Database.BeginTransaction())
 			{
-				string pageName = LinkConstants.PublicationWikiPage + legacyMovie.Id;
-				var wiki = publicationWikis.Single(p => p.PageName == pageName);
-				var submission = submissions.Single(s => s.Id == legacyMovie.SubmissionId);
-				var files = legacyMovieFiles
-					.Where(lmf => lmf.MovieId == legacyMovie.Id)
-					.ToList();
-				var system = systems.Single(s => s.Id == legacyMovie.SystemId);
-				var publisher = legacyWikiUsers.Single(u => u.Id == legacyMovie.PublisherId);
-				var systemFrameRate = systemFrameRates.Single(s => s.Id == submission.SystemFrameRateId);
-
-				var game = games.Single(g => g.Id == (submission.GameId ?? -1));
-
-				// Find the first of an acceptable movie type
-				var movieFile = files.First(f => movieTypes.Contains(f.Type));
-
-				var screnshotUrl = files.First(f => f.Type == "H");
-				var torrentUrls = files.Where(f => torrentTypes.Contains(f.Type));
-				var mirror = files.FirstOrDefault(f => f.Type == "A")?.FileName;
-				var streaming = (files.FirstOrDefault(f => f.Type == "J" && f.FileName.Contains("youtube"))
-					?? files.FirstOrDefault(f => f.Type == "J"))?.FileName;
-
-				var player = players.Single(p => p.Id == legacyMovie.PlayerId);
-
-				var movieFileStorage = legacyMovieFileStorage.Single(lmfs => lmfs.FileName == movieFile.FileName);
-
-				var siteUserIds = legacyUserPlayers
-					.Where(p => p.PlayerId == player.Id)
-					.Select(up => up.UserId)
+				var legacyMovies = legacySiteContext.Movies
+					.Include(m => m.MovieFiles)
+					.Include(m => m.Publisher)
+					.Include(m => m.Player)
+					.Where(m => m.Id > 0)
 					.ToList();
 
-				List<string> potentialAuthors;
-				if (siteUserIds.Count == 0)
-				{
-					potentialAuthors = new List<string> { player.Name.ToLower() };
-				}
-				else
-				{
-					potentialAuthors = legacyUsers
-					.Where(u => siteUserIds.Contains(u.Id))
-					.Select(u => u.Name.ToLower())
+				var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
+				var legacyMovieClasses = legacySiteContext.MovieClass.ToList();
+				var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
+
+				var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
+				var legacyUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
+
+				var publicationWikis = context.WikiPages
+					.ThatAreNotDeleted()
+					.ThatAreCurrentRevisions()
+					.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
+					.Select(s => new { s.Id, s.PageName })
 					.ToList();
-				}
 
-				var publication = new Publication
-				{
-					Id = legacyMovie.Id,
-					WikiContentId = wiki.Id,
-					SubmissionId = legacyMovie.SubmissionId,
-					TierId = legacyMovie.Tier,
-					CreateUserName = publisher.Name ?? "Unknown",
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
-					ObsoletedById = legacyMovie.ObsoletedBy == -1 ? null : legacyMovie.ObsoletedBy,
-					Frames = submission.Frames,
-					RerecordCount = submission.RerecordCount,
-					RomId = -1, // Place holder
-					GameId = submission.GameId ?? -1,
-					Game = game,
-					MovieFile = movieFileStorage.FileData,
-					MovieFileName = movieFile.FileName,
-					SystemFrameRateId = submission.SystemFrameRateId.Value,
-					SystemFrameRate = systemFrameRate,
-					SystemId = legacyMovie.SystemId,
-					System = system,
-					Branch = legacyMovie.Branch,
-					MirrorSiteUrl = mirror,
-					OnlineWatchingUrl = streaming
-				};
-
-				var pauthors = users
-					.Where(u => potentialAuthors.Contains(u.UserName.ToLower()))
-					.Select(u => new PublicationAuthor
+				var submissions = context.Submissions
+					.Select(s => new
 					{
-						UserId = u.Id,
-						Author = u,
-						PublicationId = legacyMovie.Id,
-						Pubmisison = publication,
+						s.Id,
+						s.SystemFrameRateId,
+						s.Frames,
+						s.RerecordCount,
+						s.GameId
 					})
 					.ToList();
 
-				publicationAuthors.AddRange(pauthors);
+				var users = context.Users.ToList();
+				var systems = context.GameSystems.ToList();
+				var systemFrameRates = context.GameSystemFrameRates.ToList();
+				var games = context.Games.ToList();
+				var tags = context.Tags.ToList();
 
-				foreach (var author in pauthors)
+				var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
+				var torrentTypes = new[] { "M", "N", "O", "P", "T" };
+
+				foreach (var legacyMovie in legacyMovies)
 				{
-					publication.Authors.Add(author);
-				}
-				
-				publication.GenerateTitle();
-				publications.Add(publication);
+					string pageName = LinkConstants.PublicationWikiPage + legacyMovie.Id;
+					var wiki = publicationWikis.Single(p => p.PageName == pageName);
+					var submission = submissions.Single(s => s.Id == legacyMovie.SubmissionId);
 
-				publicationFiles.Add(new PublicationFile
-				{
-					PublicationId = legacyMovie.Id,
-					Type = FileType.Screenshot,
-					Path = screnshotUrl.FileName,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
-				});
+					var system = systems.Single(s => s.Id == legacyMovie.SystemId);
+					var systemFrameRate = systemFrameRates.Single(s => s.Id == submission.SystemFrameRateId);
 
-				publicationFiles.AddRange(torrentUrls.Select(t => new PublicationFile
-				{
-					PublicationId = legacyMovie.Id,
-					Type = FileType.Torrent,
-					Path = t.FileName,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
-				}));
+					var game = games.Single(g => g.Id == (submission.GameId ?? -1));
 
-				var mcs = legacyMovieClasses
-					.Where(lmc => lmc.MovieId == legacyMovie.Id);
+					// Find the first of an acceptable movie type
+					var movieFile = legacyMovie.MovieFiles.First(f => movieTypes.Contains(f.Type));
 
-				foreach (var mc in mcs)
-				{
-					var classType = mc.ClassId >= 1000
-						? legacyClassTypes.Single(c => c.Id == mc.ClassId)
-						: legacyClassTypes.Single(c => c.OldId == mc.ClassId);
+					var screnshotUrl = legacyMovie.MovieFiles.First(f => f.Type == "H");
+					var torrentUrls = legacyMovie.MovieFiles.Where(f => torrentTypes.Contains(f.Type));
+					var mirror = legacyMovie.MovieFiles.FirstOrDefault(f => f.Type == "A")?.FileName;
+					var streaming = (legacyMovie.MovieFiles.FirstOrDefault(f => f.Type == "J" && f.FileName.Contains("youtube"))
+						?? legacyMovie.MovieFiles.FirstOrDefault(f => f.Type == "J"))?.FileName;
 
-					if (classType.PositiveText.Contains("Genre"))
+					var movieFileStorage = legacyMovieFileStorage.Single(lmfs => lmfs.FileName == movieFile.FileName);
+
+					var siteUserIds = legacyUserPlayers
+						.Where(p => p.PlayerId == legacyMovie.Player.Id)
+						.Select(up => up.UserId)
+						.ToList();
+
+					List<string> potentialAuthors;
+					if (siteUserIds.Count == 0)
 					{
-						continue;
+						potentialAuthors = new List<string> { legacyMovie.Player.Name.ToLower() };
+					}
+					else
+					{
+						potentialAuthors = legacyUsers
+						.Where(u => siteUserIds.Contains(u.Id))
+						.Select(u => u.Name.ToLower())
+						.ToList();
 					}
 
-					var tag = mc.Value == 1
-						? tags.Single(t => t.DisplayName == classType.PositiveText)
-						: tags.Single(t => t.DisplayName == classType.NegativeText);
+					var publication = new Publication
+					{
+						Id = legacyMovie.Id,
+						WikiContentId = wiki.Id,
+						SubmissionId = legacyMovie.SubmissionId,
+						TierId = legacyMovie.Tier,
+						CreateUserName = legacyMovie.Publisher.Name ?? "Unknown",
+						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
+						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
+						ObsoletedById = legacyMovie.ObsoletedBy == -1 ? null : legacyMovie.ObsoletedBy,
+						Frames = submission.Frames,
+						RerecordCount = submission.RerecordCount,
+						RomId = -1, // Place holder
+						GameId = submission.GameId ?? -1,
+						Game = game,
+						MovieFile = movieFileStorage.FileData,
+						MovieFileName = movieFile.FileName,
+						SystemFrameRateId = submission.SystemFrameRateId.Value,
+						SystemFrameRate = systemFrameRate,
+						SystemId = legacyMovie.SystemId,
+						System = system,
+						Branch = legacyMovie.Branch,
+						MirrorSiteUrl = mirror,
+						OnlineWatchingUrl = streaming
+					};
 
-					publicationTags.Add(new PublicationTag
+					var pauthors = users
+						.Where(u => potentialAuthors.Contains(u.UserName.ToLower()))
+						.Select(u => new PublicationAuthor
+						{
+							UserId = u.Id,
+							Author = u,
+							PublicationId = legacyMovie.Id,
+							Pubmisison = publication,
+						})
+						.ToList();
+
+					publicationAuthors.AddRange(pauthors);
+
+					foreach (var author in pauthors)
+					{
+						publication.Authors.Add(author);
+					}
+
+					publication.GenerateTitle();
+					publications.Add(publication);
+
+					publicationFiles.Add(new PublicationFile
 					{
 						PublicationId = legacyMovie.Id,
-						TagId = tag.Id
+						Type = FileType.Screenshot,
+						Path = screnshotUrl.FileName,
+						CreateTimeStamp = DateTime.UtcNow,
+						LastUpdateTimeStamp = DateTime.UtcNow
 					});
+
+					publicationFiles.AddRange(torrentUrls.Select(t => new PublicationFile
+					{
+						PublicationId = legacyMovie.Id,
+						Type = FileType.Torrent,
+						Path = t.FileName,
+						CreateTimeStamp = DateTime.UtcNow,
+						LastUpdateTimeStamp = DateTime.UtcNow
+					}));
+
+					var mcs = legacyMovieClasses
+						.Where(lmc => lmc.MovieId == legacyMovie.Id);
+
+					foreach (var mc in mcs)
+					{
+						var classType = mc.ClassId >= 1000
+							? legacyClassTypes.Single(c => c.Id == mc.ClassId)
+							: legacyClassTypes.Single(c => c.OldId == mc.ClassId);
+
+						if (classType.PositiveText.Contains("Genre"))
+						{
+							continue;
+						}
+
+						var tag = mc.Value == 1
+							? tags.Single(t => t.DisplayName == classType.PositiveText)
+							: tags.Single(t => t.DisplayName == classType.NegativeText);
+
+						publicationTags.Add(new PublicationTag
+						{
+							PublicationId = legacyMovie.Id,
+							TagId = tag.Id
+						});
+					}
 				}
 			}
 

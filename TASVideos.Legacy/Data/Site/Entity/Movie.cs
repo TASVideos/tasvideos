@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Site.Entity
@@ -11,6 +12,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("playerid")]
 		public int PlayerId { get; set; }
+		public virtual User Player { get; set; }
 
 		[Column("gameid")]
 		public int GameId { get; set; } = 0;
@@ -35,11 +37,14 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("published_by")]
 		public int PublisherId { get; set; }
+		public virtual User Publisher { get; set; }
 
 		[Column("pubdate")]
 		public int PublishedDate { get; set; }
 
 		[Column("tier")]
 		public int Tier { get; set; } = 2;
+
+		public ICollection<MovieFile> MovieFiles { get; set; } = new HashSet<MovieFile>();
 	}
 }
