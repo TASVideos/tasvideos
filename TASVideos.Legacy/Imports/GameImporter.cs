@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
-using TASVideos.Legacy.Data.Site.Entity;
 
 namespace TASVideos.Legacy.Imports
 {
@@ -15,86 +13,20 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			List<GameName> legacyGameNames;
-			List<ClassTypeDto> legacyClassTypes;
-			List<MovieClass> legacyMovieClass;
-			List<PublicationDto> legacyPublications;
-
-			using (legacySiteContext.Database.BeginTransaction())
-			{
-				legacyGameNames = legacySiteContext.GameNames.ToList();
-
-				legacyClassTypes = legacySiteContext.ClassTypes
-					.Where(c => c.PositiveText.StartsWith("Genre"))
-					.Select(c => new ClassTypeDto
-					{
-						Id = c.Id,
-						PositiveText = c.PositiveText.Replace("Genre: ", "")
-					})
-					.ToList();
-
-				legacyMovieClass = legacySiteContext.MovieClass.ToList();
-
-				legacyPublications = legacySiteContext.Movies
-					.Where(m => m.Submission.GameNameId.HasValue)
-					.Select(m => new PublicationDto
-					{
-						Id = m.Id,
-						GameNameId = m.Submission.GameNameId.Value
-					})
-					.ToList();
-			}
-
-			var genres = context.Genres.ToList();
-
-			var games = new List<Game>();
-			var gameGenres = new HashSet<GameGenre>();
-
-			var lgn = legacyGameNames
-				.Select(g => new
+			var games = legacySiteContext.GameNames
+				.Select(g => new Game
 				{
-					g.Id,
-					g.SystemId,
-					g.GoodName,
-					g.DisplayName,
-					g.Abbreviation,
-					g.SearchKey,
-					g.YoutubeTags,
-					GameGenres =
-						(from p in legacyPublications
-						 join mc in legacyMovieClass on p.Id equals mc.MovieId
-						 join c in legacyClassTypes on mc.ClassId equals c.Id
-						 where p.GameNameId == g.Id
-						 select c)
-						.Distinct()
-						.ToList()
-				})
-				.ToList();
-
-			foreach (var legacyGameName in lgn)
-			{
-				foreach (var lgg in legacyGameName.GameGenres)
-				{
-					gameGenres.Add(new GameGenre
-					{
-						GenreId = genres.Single(g => g.DisplayName == lgg.PositiveText).Id,
-						GameId = legacyGameName.Id
-					});
-				}
-
-				games.Add(new Game
-				{
-					Id = legacyGameName.Id,
-					SystemId = legacyGameName.SystemId,
-					GoodName = legacyGameName.GoodName,
-					DisplayName = legacyGameName.DisplayName,
-					Abbreviation = legacyGameName.Abbreviation,
-					SearchKey = legacyGameName.SearchKey,
-					YoutubeTags = legacyGameName.YoutubeTags,
+					Id = g.Id,
+					SystemId = g.SystemId,
+					GoodName = g.GoodName,
+					DisplayName = g.DisplayName,
+					Abbreviation = g.Abbreviation,
+					SearchKey = g.SearchKey,
+					YoutubeTags = g.YoutubeTags,
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow
-				});
-			}
+				})
+				.ToList();
 
 			games.Add(UnknownGame);
 
@@ -112,14 +44,6 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			games.BulkInsert(context, columns, nameof(ApplicationDbContext.Games));
-
-			var gameGenreColumns = new[]
-			{
-				nameof(GameGenre.GameId),
-				nameof(GameGenre.GenreId)
-			};
-
-			gameGenres.BulkInsert(context, gameGenreColumns, nameof(ApplicationDbContext.GameGenres));
 		}
 
 		// The legacy system did not strictly enforce a game for publications
@@ -141,17 +65,5 @@ namespace TASVideos.Legacy.Imports
 			CreateTimeStamp = DateTime.UtcNow,
 			LastUpdateTimeStamp = DateTime.UtcNow,
 		};
-
-		private class PublicationDto
-		{
-			public int Id { get; set; }
-			public int GameNameId { get; set; }
-		}
-
-		private class ClassTypeDto
-		{
-			public int Id { get; set; }
-			public string PositiveText { get; set; }
-		}
 	}
 }
