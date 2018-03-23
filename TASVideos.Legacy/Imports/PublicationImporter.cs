@@ -34,13 +34,13 @@ namespace TASVideos.Legacy.Imports
 			{
 				var legacyMovies = legacySiteContext.Movies
 					.Include(m => m.MovieFiles)
+					.Include(m => m.MovieClasses)
 					.Include(m => m.Publisher)
 					.Include(m => m.Player)
 					.Where(m => m.Id > 0)
 					.ToList();
 
 				var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
-				var legacyMovieClasses = legacySiteContext.MovieClass.ToList();
 				var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
 
 				var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
@@ -68,7 +68,7 @@ namespace TASVideos.Legacy.Imports
 				var systems = context.GameSystems.ToList();
 				var systemFrameRates = context.GameSystemFrameRates.ToList();
 				var games = context.Games.ToList();
-				var tags = context.Tags.ToList();
+				var tags = context.Tags.Select(t => new { t.Id, t.DisplayName }).ToList();
 
 				var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
 				var torrentTypes = new[] { "M", "N", "O", "P", "T" };
@@ -178,10 +178,7 @@ namespace TASVideos.Legacy.Imports
 						LastUpdateTimeStamp = DateTime.UtcNow
 					}));
 
-					var mcs = legacyMovieClasses
-						.Where(lmc => lmc.MovieId == legacyMovie.Id);
-
-					foreach (var mc in mcs)
+					foreach (var mc in legacyMovie.MovieClasses)
 					{
 						var classType = mc.ClassId >= 1000
 							? legacyClassTypes.Single(c => c.Id == mc.ClassId)
