@@ -47,5 +47,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Tier { get; set; } = 2;
 
 		public ICollection<MovieFile> MovieFiles { get; set; } = new HashSet<MovieFile>();
+		public ICollection<MovieClass> MovieClasses { get; set; } = new List<MovieClass>();
 	}
 }
