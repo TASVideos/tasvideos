@@ -25,6 +25,6 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int? LastUpdateTimestamp { get; set; }
 
 		[Column("post_edit_userid")]
-		public int? LastUpdateUserName { get; set; }
+		public int? LastUpdateUserId { get; set; }
 	}
 }
