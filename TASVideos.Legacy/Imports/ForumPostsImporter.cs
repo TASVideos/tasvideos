@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Data.SqlClient;
 using System.Linq;
 
 using TASVideos.Data;
@@ -13,8 +13,8 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
-			// TODO: posts without a corresponding post text?
-			List<ForumPost> posts = (from p in legacyForumContext.Posts
+			// TODO: posts without a corresponding post text
+			var posts = (from p in legacyForumContext.Posts
 					join pt in legacyForumContext.PostsText on p.Id equals pt.Id
 					join pu in legacyForumContext.Users on p.PosterId equals pu.UserId into ppu
 					from pu in ppu.DefaultIfEmpty()
@@ -57,8 +57,7 @@ namespace TASVideos.Legacy.Imports
 						: !string.IsNullOrWhiteSpace(p.PosterName)
 							? p.PosterName
 							: "Unknown"
-				})
-				.ToList();
+				});
 
 			var columns = new[]
 			{
@@ -74,7 +73,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.LastUpdateUserName)
 			};
 
-			posts.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumPosts));
+			posts.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumPosts), SqlBulkCopyOptions.KeepIdentity, 20000);
 		}
 	}
 }
