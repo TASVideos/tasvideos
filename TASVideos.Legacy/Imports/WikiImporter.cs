@@ -9,7 +9,6 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Legacy.Data.Site;
-using TASVideos.Legacy.Data.Site.Entity;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Legacy.Imports
@@ -18,10 +17,9 @@ namespace TASVideos.Legacy.Imports
 	{
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
-			List<SiteText> siteTexts = legacySiteContext.SiteText
+			var siteTexts = legacySiteContext.SiteText
 				.Include(s => s.User)
-				//.Where(s => s.Type == "S" && s.ObsoletedBy == -1 && !(s.PageName == "5029S" && s.Revision == 2)) // TODO: fix this record!
-				//.Where(s => s.ObsoletedBy == -1) // For quick testings
+				.Where(s => s.PageName != "DeletedPages/Bizhawk/ReleaseHistory") // Not worth preserving history here, revisions were mistakes and revision history is too large
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
@@ -44,14 +42,8 @@ namespace TASVideos.Legacy.Imports
 				}
 
 				// ******** Deleted pages that were recreated *************/
-
-				// Not worth preserving history here, revisions were mistakes and revision history is too large
-				else if (legacyPage.PageName == "DeletedPages/Bizhawk/ReleaseHistory")
-				{
-					continue;
-				}
-
-				else if (legacyPage.PageName == "GameResources/N64/Kirby64TheCrystalShards" || legacyPage.PageName == "DeletedPages/GameResources/N64/Kirby64TheCrystalShards")
+				else if (legacyPage.PageName == "GameResources/N64/Kirby64TheCrystalShards"
+					|| legacyPage.PageName == "DeletedPages/GameResources/N64/Kirby64TheCrystalShards")
 				{
 					revision = CrystalShardsLookup[(legacyPage.PageName, legacyPage.Revision)];
 				}
@@ -135,9 +127,7 @@ namespace TASVideos.Legacy.Imports
 			// Set child references
 			foreach (var wikiPage in pages)
 			{
-				var result = dic.TryGetValue(
-					$"{wikiPage.PageName}__ImportKey__{wikiPage.Revision + 1}",
-					out WikiPage nextWiki);
+				var result = dic.TryGetValue($"{wikiPage.PageName}__ImportKey__{wikiPage.Revision + 1}", out WikiPage nextWiki);
 
 				if (result)
 				{
@@ -146,18 +136,15 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			// Referrals (only need latest revisions)
-			var referralList = new List<WikiPageReferral>();
-			foreach (var currentPage in pages.Where(p => p.ChildId == null))
-			{
-				referralList.AddRange(Util
-					.GetAllWikiLinks(currentPage.Markup)
-					.Select(referral => new WikiPageReferral
-					{
-						Referrer = currentPage.PageName,
-						Referral = referral.Link?.Split('|').FirstOrDefault(),
-						Excerpt = referral.Excerpt
-					}));
-			}
+			var referralList = pages
+				.Where(p => p.ChildId == null)
+				.SelectMany(p => Util.GetAllWikiLinks(p.Markup).Select(referral => new WikiPageReferral
+				{
+					Referrer = p.PageName,
+					Referral = referral.Link?.Split('|').FirstOrDefault(),
+					Excerpt = referral.Excerpt
+				}))
+				.ToList();
 
 			var wikiColumns = new[]
 			{
