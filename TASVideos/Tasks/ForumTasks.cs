@@ -59,8 +59,12 @@ namespace TASVideos.Tasks
 					Title = ft.Title,
 					CreateUserName = ft.CreateUserName,
 					CreateTimestamp = ft.CreateTimeStamp,
+					Type = ft.Type,
+					Views = ft.Views
 					//PostCount = .ForumPosts.Count TODO: use this when EF core isn't worthless
 				})
+				.ToList()
+				.AsQueryable()
 				.SortedPageOf(_db, paging);
 
 			// TODO: use above when EF core isn't worthless
