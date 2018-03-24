@@ -13,7 +13,7 @@
 	<div class="card-body">
 		@foreach (var forum in Model.Forums.OrderBy(f => f.Ordinal))
 		{
-			<strong><a asp-action="Index">@forum.Name</a></strong>
+			<strong><a asp-action="Forum" asp-route-id="@forum.Id">@forum.Name</a></strong>
 			<div class="mb-2 pl-3">
 				<small>
 					@Html.Raw(@forum.Description) @*Dangerous! Be careful who is allowed to edit descriptions!**@

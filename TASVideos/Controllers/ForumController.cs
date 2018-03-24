@@ -28,5 +28,17 @@ namespace TASVideos.Controllers
 			var model = await _forumTasks.GetForumIndex();
 			return View(model);
 		}
+
+		public async Task<IActionResult> Forum(int id)
+		{
+			var model = await _forumTasks.GetForumForDisplay(id);
+
+			if (model != null)
+			{
+				return View(model);
+			}
+
+			return NotFound();
+		}
 	}
 }
