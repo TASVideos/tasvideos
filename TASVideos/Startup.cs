@@ -124,8 +124,6 @@ namespace TASVideos
 				routes.MapRoute("movies", "Movies-{query}", defaults: new { controller = "Publication", action = "List" });
 				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = "RenderWikiPage" });
 			});
-
-			wikiTasks.LoadWikiCache().Wait();
 		}
 	}
 }
