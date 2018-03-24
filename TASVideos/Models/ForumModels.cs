@@ -17,6 +17,8 @@ namespace TASVideos.Models
 		public ForumRequest()
 		{
 			PageSize = 50;
+			SortDescending = true;
+			SortBy = nameof(ForumModel.ForumTopicEntry.CreateTimestamp);
 		}
 
 		public int Id { get; set; }
@@ -32,12 +34,13 @@ namespace TASVideos.Models
 
 		public class ForumTopicEntry
 		{
-			[Sortable]
 			public int Id { get; set; }
 			public string Title { get; set; }
 
 			[Display(Name = "Author")]
 			public string CreateUserName { get; set; }
+
+			[Sortable]
 			public DateTime CreateTimestamp { get; set; }
 
 			public int PostCount { get; set; }

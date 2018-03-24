@@ -9,8 +9,7 @@ namespace TASVideos.Data.Entity.Forum
 		public int ForumId { get; set; }
 		public virtual Forum Forum { get; set; }
 
-		// TODO: why doesn't this work?
-		//public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
+		public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
 
 		public string Title { get; set; }
 

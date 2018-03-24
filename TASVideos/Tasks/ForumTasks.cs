@@ -59,9 +59,18 @@ namespace TASVideos.Tasks
 					Title = ft.Title,
 					CreateUserName = ft.CreateUserName,
 					CreateTimestamp = ft.CreateTimeStamp,
-					PostCount = 99 // TODO
+					//PostCount = .ForumPosts.Count TODO: use this when EF core isn't worthless
 				})
 				.SortedPageOf(_db, paging);
+
+			// TODO: use above when EF core isn't worthless
+			using (_db.Database.BeginTransaction())
+			{
+				foreach (var topic in model.Topics)
+				{
+					topic.PostCount = _db.ForumPosts.Count(fp => fp.TopicId == topic.Id);
+				}
+			}
 
 			return model;
 		}
