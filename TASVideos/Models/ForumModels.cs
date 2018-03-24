@@ -49,4 +49,34 @@ namespace TASVideos.Models
 			public ForumTopicType Type { get; set; }
 		}
 	}
+
+	public class TopicRequest : PagedModel
+	{
+		public TopicRequest()
+		{
+			PageSize = 50;
+			SortDescending = false;
+			SortBy = nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp);
+		}
+
+		public int Id { get; set; }
+	}
+
+	public class ForumTopicModel
+	{
+		public int Id { get; set; }
+		public string Title { get; set; }
+		
+		public PageOf<ForumPostEntry> Posts { get; set; }
+
+		public class ForumPostEntry
+		{
+			public int Id { get; set; }
+			public string PosterName { get; set; }
+			public string Text { get; set; }
+
+			[Sortable]
+			public DateTime CreateTimestamp { get; set; }
+		}
+	}
 }
