@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -28,6 +29,17 @@ namespace TASVideos.Tasks
 					.Include(c => c.Forums)
 					.ToListAsync()
 			};
+		}
+
+		/// <summary>
+		/// Returns a forum and topics for the given <see cref="id" />
+		/// For the purpose of display
+		/// </summary>
+		public async Task<Forum> GetForumForDisplay(int id)
+		{
+			return await _db.Forums
+				.Include(f => f.ForumTopics)
+				.SingleOrDefaultAsync(f => f.Id == id);
 		}
 	}
 }

@@ -1,0 +1,14 @@
+﻿@using TASVideos.Data.Entity.Forum
+@model Forum
+@{
+	ViewData["Title"] = $"TASVideos Forum {Model.Name}";
+}
+
+<h4>Forum: @Model.Name</h4>
+<div>@Model.Description</div>
+@foreach(var topic in Model.ForumTopics)
+{
+	<div>
+		<h5>Topic: @topic.Title</h5>
+	</div>
+}
