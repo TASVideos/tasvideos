@@ -18,8 +18,8 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
 			int id = new Random().Next(0, 2000); // TODO
-			var orphans = await _publicationTasks.GetPublicationMiniMovie(id); // TODO
-			return View(orphans);
+			var movie = await _publicationTasks.GetPublicationMiniMovie(id); // TODO
+			return View(movie);
 		}
 	}
 }
