@@ -152,6 +152,12 @@ namespace TASVideos.Data
 				context.UserRoles.Add(new UserRole { Role = RoleSeedData.EditHomePage, User = dummyUser });
 			}
 
+			context.WikiPages.Add(PublicationSampleData.FrontPage);
+			context.Games.Add(PublicationSampleData.Smb3);
+			context.Roms.Add(PublicationSampleData.Smb3Rom);
+			context.Submissions.Add(PublicationSampleData.MiroMotoSubmission);
+			context.Publications.Add(PublicationSampleData.MorimotoSmb3Pub);
+
 			await context.SaveChangesAsync();
 		}
 	}
