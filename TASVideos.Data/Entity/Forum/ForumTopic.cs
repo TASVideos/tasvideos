@@ -15,5 +15,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		public int PosterId { get; set; }
 		public virtual User Poster { get; set; }
+
+		public int Views { get; set; }
 	}
 }

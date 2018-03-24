@@ -17,7 +17,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				.Topics
 				.Select(t => new
 				{
-					t.Id, t.ForumId, t.Title, t.PosterId, t.Timestamp
+					t.Id, t.ForumId, t.Title, t.PosterId, t.Timestamp, t.Views, Author = t.PosterId > 0 ? t.Poster.UserName : "Unknown"
 				})
 				.ToList()
 				.Select(t => new ForumTopic
@@ -29,9 +29,10 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 						? t.PosterId  // TODO: Some of these do not match up to known users! We should at least put -1 here
 						: -1,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
-					CreateUserName = "LegacyImport",
+					CreateUserName = t.Author,
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
-					LastUpdateUserName = "LegacyImport"
+					LastUpdateUserName = "LegacyImport",
+					Views = t.Views
 				})
 				.ToList();
 
@@ -44,7 +45,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.CreateTimeStamp),
 				nameof(ForumTopic.LastUpdateTimeStamp),
 				nameof(ForumTopic.CreateUserName),
-				nameof(ForumTopic.LastUpdateUserName)
+				nameof(ForumTopic.LastUpdateUserName),
+				nameof(ForumTopic.Views)
 			};
 
 			topics.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumTopics));
