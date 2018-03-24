@@ -32,7 +32,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a forum and topics for the given <see cref="id" />
+		/// Returns a forum and topics for the given id
 		/// For the purpose of display
 		/// </summary>
 		public async Task<ForumModel> GetForumForDisplay(ForumRequest paging)
@@ -63,7 +63,6 @@ namespace TASVideos.Tasks
 					Views = ft.Views
 					//PostCount = .ForumPosts.Count TODO: use this when EF core isn't worthless
 				})
-				.AsQueryable()
 				.SortedPageOf(_db, paging);
 
 			// TODO: use above when EF core isn't worthless
@@ -74,6 +73,35 @@ namespace TASVideos.Tasks
 					topic.PostCount = _db.ForumPosts.Count(fp => fp.TopicId == topic.Id);
 				}
 			}
+
+			return model;
+		}
+
+		// TODO: document
+		public async Task<ForumTopicModel> GetTopicForDisplay(TopicRequest paging)
+		{
+			var model = await _db.ForumTopics
+				.Select(t => new ForumTopicModel
+				{
+					Id = t.Id,
+					Title = t.Title
+				})
+				.SingleOrDefaultAsync(t => t.Id == paging.Id);
+
+			if (model == null)
+			{
+				return null;
+			}
+
+			model.Posts = _db.ForumPosts
+				.Where(p => p.TopicId == paging.Id)
+				.Select(p => new ForumTopicModel.ForumPostEntry
+				{
+					Id = p.Id,
+					PosterName = p.Poster.UserName,
+					Text = p.Text
+				})
+				.SortedPageOf(_db, paging);
 
 			return model;
 		}

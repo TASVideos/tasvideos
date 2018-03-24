@@ -28,7 +28,8 @@ namespace TASVideos.Legacy.Imports
 						p.Timestamp,
 						pt.Subject,
 						pt.Text,
-
+						p.EnableBbCode,
+						p.EnableHtml,
 						p.LastUpdateTimestamp,
 						LastUpdateUserName = lu.UserName,
 
@@ -44,7 +45,8 @@ namespace TASVideos.Legacy.Imports
 					IpAddress = p.IpAddress,
 					Subject = p.Subject,
 					Text = p.Text,
-
+					EnableBbCode = p.EnableBbCode,
+					EnableHtml = p.EnableHtml,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
 					LastUpdateTimeStamp = p.LastUpdateTimestamp.HasValue
 						? ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp.Value)
@@ -70,7 +72,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.CreateTimeStamp),
 				nameof(ForumPost.CreateUserName),
 				nameof(ForumPost.LastUpdateTimeStamp),
-				nameof(ForumPost.LastUpdateUserName)
+				nameof(ForumPost.LastUpdateUserName),
+				nameof(ForumPost.EnableHtml),
+				nameof(ForumPost.EnableBbCode)
 			};
 
 			posts.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumPosts), SqlBulkCopyOptions.KeepIdentity, 20000);

@@ -1,0 +1,24 @@
+﻿@using TASVideos.Data.Entity.Forum
+@model ForumTopicModel
+@{
+	ViewData["Title"] = $"TASVideos Forum {Model.Title}";
+}
+
+<h4>@Model.Title</h4>
+<div>
+	<a asp-controller="ForumTopic" asp-action="Create" asp-route-forumId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
+</div>
+<hr />
+@Html.Partial("~/Views/Table/_Pager.cshtml", Model.Posts)
+
+@foreach (var post in Model.Posts)
+{
+	<div class="card">
+		<div class="card-header">
+			Author: @post.PosterName
+		</div>
+		<div class="card-body">
+			@post.Text
+		</div>
+	</div>
+}

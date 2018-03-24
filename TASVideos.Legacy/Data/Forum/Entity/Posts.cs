@@ -26,5 +26,11 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("post_edit_userid")]
 		public int? LastUpdateUserId { get; set; }
+
+		[Column("enable_html")]
+		public bool EnableHtml { get; set; }
+
+		[Column("enable_bbcode")]
+		public bool EnableBbCode { get; set; }
 	}
 }
