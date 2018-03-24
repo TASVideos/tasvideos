@@ -23,5 +23,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("topic_views")]
 		public int Views { get; set; }
+
+		[Column("topic_type")]
+		public int Type { get; set; }
 	}
 }

@@ -2,6 +2,13 @@
 
 namespace TASVideos.Data.Entity.Forum
 {
+	public enum ForumTopicType
+	{
+		Regular = 0,
+		Sticky = 1,
+		Announcement = 2
+	}
+
 	public class ForumTopic : BaseEntity
 	{
 		public int Id { get; set; }
@@ -17,5 +24,6 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual User Poster { get; set; }
 
 		public int Views { get; set; }
+		public ForumTopicType Type { get; set; }
 	}
 }

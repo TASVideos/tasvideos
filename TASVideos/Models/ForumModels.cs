@@ -44,6 +44,9 @@ namespace TASVideos.Models
 			public DateTime CreateTimestamp { get; set; }
 
 			public int PostCount { get; set; }
+			public int Views { get; set; }
+
+			public ForumTopicType Type { get; set; }
 		}
 	}
 }

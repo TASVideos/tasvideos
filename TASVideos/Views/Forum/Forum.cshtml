@@ -1,6 +1,22 @@
-﻿@model ForumModel
+﻿@using TASVideos.Data.Entity.Forum
+@model ForumModel
 @{
 	ViewData["Title"] = $"TASVideos Forum {Model.Name}";
+}
+
+@functions {
+	string ToTitle(string title, ForumTopicType type)
+	{
+		switch (type)
+		{
+			default:
+				return title;
+			case ForumTopicType.Sticky:
+				return "<b>Stick: </b> " + title;
+			case ForumTopicType.Announcement:
+				return "<b>Announcement</b> " + title;
+		}
+	}
 }
 
 <h4>@Model.Name</h4>
@@ -24,10 +40,10 @@
 	{
 		<tr>
 			<td><span class="fa fa-plus"></span></td>
-			<td>@topic.Title</td>
+			<td>@ToTitle(topic.Title, topic.Type)</td>
 			<td>@(topic.PostCount - 1)</td>
 			<td>@topic.CreateUserName</td>
-			<td>TODO</td>
+			<td>@topic.Type</td>
 			<td>TODO</td>
 		</tr>
 	}
