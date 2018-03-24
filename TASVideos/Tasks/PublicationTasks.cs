@@ -86,6 +86,15 @@ namespace TASVideos.Tasks
 			return null;
 		}
 
+		// TODO: document
+		public async Task<IEnumerable<int>> FrontPageMovieCandidates()
+		{
+			return await _db.Publications
+				.Where(p => p.TierId != 3) // TODO
+				.Select(p => p.Id)
+				.ToListAsync();
+		}
+
 		/// <summary>
 		/// Gets publication data for the DisplayMiniMovie module
 		/// </summary>
