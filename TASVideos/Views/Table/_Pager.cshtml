@@ -40,8 +40,8 @@
 		</a>
 		<a
 			disable="@Model.CurrentPage == Model.LastPage"
-			asp-action="List"
-			asp-controller="User"
+			asp-action="@action"
+			asp-controller="@controller"
 			asp-route-CurrentPage="@Model.LastPage"
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
