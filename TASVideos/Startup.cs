@@ -32,30 +32,22 @@ namespace TASVideos
 
 		private AppSettings Settings => Configuration.Get<AppSettings>();
 
-		public void ConfigureDevelopmentServices(IServiceCollection services)
-		{
-			services.ConfigureApplicationCookie(options =>
-			{
-				options.ExpireTimeSpan = TimeSpan.FromDays(90);
-			});
-
-			ConfigureServices(services);
-		}
-
-		public void ConfigureDemoServices(IServiceCollection services)
-		{
-			ConfigureServices(services);
-		}
-
-		public void ConfigureStagingServices(IServiceCollection services)
-		{
-			services.AddLegacyContext();
-			ConfigureServices(services);
-		}
-
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			if (Environment.IsAnyTestEnvironment())
+			{
+				services.ConfigureApplicationCookie(options =>
+				{
+					options.ExpireTimeSpan = TimeSpan.FromDays(90);
+				});
+			}
+
+			if (Environment.IsLocalWithImport())
+			{
+				services.AddLegacyContext();
+			}
+
 			services.Configure<AppSettings>(Configuration);
 
 			services.AddDbContext<ApplicationDbContext>(options =>
