@@ -43,14 +43,12 @@ namespace TASVideos.Data
 			context.GameSystems.AddRange(SystemSeedData.Systems);
 			context.GameSystemFrameRates.AddRange(SystemSeedData.SystemFrameRates);
 			context.Tiers.AddRange(TierSeedData.Tiers);
-			context.Genres.AddRange(GameSeedData.Genres);
+			context.Genres.AddRange(GenreSeedData.Genres);
 			context.SaveChanges();
 		}
 
 		public static void PostMigrateSeedData(ApplicationDbContext context)
 		{
-			context.Games.AddRange(GameSeedData.Games);
-
 			foreach (var wikiPage in WikiPageSeedData.NewRevisions)
 			{
 				var currentRevision = context.WikiPages

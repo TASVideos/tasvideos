@@ -16,7 +16,7 @@ namespace TASVideos.Legacy.Imports
 		{
 			var gameGenres = new HashSet<GameGenre>();
 
-			var genreLookup = GameSeedData.Genres
+			var genreLookup = GenreSeedData.Genres
 				.ToDictionary(tkey => tkey.DisplayName, tvalue => tvalue.Id);
 
 			var data = (
