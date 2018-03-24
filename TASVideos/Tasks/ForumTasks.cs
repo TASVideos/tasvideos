@@ -35,11 +35,35 @@ namespace TASVideos.Tasks
 		/// Returns a forum and topics for the given <see cref="id" />
 		/// For the purpose of display
 		/// </summary>
-		public async Task<Forum> GetForumForDisplay(int id)
+		public async Task<ForumModel> GetForumForDisplay(ForumRequest paging)
 		{
-			return await _db.Forums
-				.Include(f => f.ForumTopics)
-				.SingleOrDefaultAsync(f => f.Id == id);
+			var model = await _db.Forums
+				.Select(f => new ForumModel
+				{
+					Id = f.Id,
+					Name = f.Name,
+					Description = f.Description
+				})
+				.SingleOrDefaultAsync(f => f.Id == paging.Id);
+
+			if (model == null)
+			{
+				return null;
+			}
+
+			model.Topics = _db.ForumTopics
+				.Where(ft => ft.ForumId == paging.Id)
+				.Select(ft => new ForumModel.ForumTopicEntry
+				{
+					Id = ft.Id,
+					Title = ft.Title,
+					CreateUserName = ft.CreateUserName,
+					CreateTimestamp = ft.CreateTimeStamp,
+					PostCount = 99 // TODO
+				})
+				.SortedPageOf(_db, paging);
+
+			return model;
 		}
 	}
 }
