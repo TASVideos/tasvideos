@@ -1,0 +1,24 @@
+﻿@model TASVideos.Data.Entity.Forum.ForumCategory
+
+<div class="card mb-2">
+	<div class="card-header">
+		<h4>@Model.Title</h4>
+		@if (!string.IsNullOrWhiteSpace(Model.Description))
+		{
+			<div class="text-small">
+				@Model.Description
+			</div>
+		}
+	</div>
+	<div class="card-body">
+		@foreach (var forum in Model.Forums.OrderBy(f => f.Ordinal))
+		{
+			<strong><a asp-action="Index">@forum.Name</a></strong>
+			<div class="mb-2 pl-3">
+				<small>
+					@Html.Raw(@forum.Description) @*Dangerous! Be careful who is allowed to edit descriptions!**@
+				</small>
+			</div>
+		}
+	</div>
+</div>

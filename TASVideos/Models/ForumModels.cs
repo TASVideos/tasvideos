@@ -1,16 +1,11 @@
 ﻿using System.Collections.Generic;
 
+using TASVideos.Data.Entity.Forum;
+
 namespace TASVideos.Models
 {
 	public class ForumIndexModel
 	{
-		public IEnumerable<ForumCategoryModel> Categories { get; set; } = new List<ForumCategoryModel>();
-	}
-
-	public class ForumCategoryModel
-	{
-		public string Title { get; set; }
-		public string Description { get; set; }
-		public int Ordinal { get; set; }
+		public IEnumerable<ForumCategory> Categories { get; set; } = new List<ForumCategory>();
 	}
 }
