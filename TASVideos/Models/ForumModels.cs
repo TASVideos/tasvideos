@@ -54,7 +54,7 @@ namespace TASVideos.Models
 	{
 		public TopicRequest()
 		{
-			PageSize = 50;
+			PageSize = 25;
 			SortDescending = false;
 			SortBy = nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp);
 		}
