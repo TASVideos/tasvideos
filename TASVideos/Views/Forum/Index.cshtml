@@ -2,21 +2,17 @@
 @{
 	ViewData["Title"] = "TASVideos Forums";
 }
-
-@foreach(var cat in Model.Categories.OrderBy(c => c.Ordinal))
-{
-	<div class="card">
-		<div class="card-header">
-			<h4>@cat.Title</h4>
-			@if (!string.IsNullOrWhiteSpace(cat.Description))
-			{
-				<div class="text-small">
-					@cat.Description
-				</div>
-			}
-		</div>
-		<div class="card-body">
-			Coming Coon
-		</div>
+<row>
+	<div class="col-md-6">
+		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
+		{
+			@await Html.PartialAsync("_Category", cat)
+		}
 	</div>
-}
+	<div class="col-md-6">
+		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).SecondHalf())
+		{
+			@await Html.PartialAsync("_Category", cat)
+		}
+	</div>
+</row>

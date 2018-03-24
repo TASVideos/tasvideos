@@ -25,12 +25,7 @@ namespace TASVideos.Tasks
 			return new ForumIndexModel
 			{
 				Categories = await _db.ForumCategories
-					.Select(c => new ForumCategoryModel
-					{
-						Title = c.Title,
-						Description = c.Description,
-						Ordinal = c.Ordinal
-					})
+					.Include(c => c.Forums)
 					.ToListAsync()
 			};
 		}

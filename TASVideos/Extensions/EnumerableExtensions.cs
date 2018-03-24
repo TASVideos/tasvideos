@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TASVideos.Extensions
 {
@@ -23,6 +25,26 @@ namespace TASVideos.Extensions
 				: source.CompareTo(biggest) > 0
 					? biggest
 					: source;
+		}
+
+		/// <summary>
+		/// Returns the first half of the given collection,
+		/// in the case of odd numbers, the odd item is considered in the first half
+		/// </summary>
+		public static IEnumerable<T> FirstHalf<T>(this IEnumerable<T> source)
+		{
+			int half = (int)Math.Ceiling(source.Count() / 2.0);
+			return source.Take(half);
+		}
+
+		/// <summary>
+		/// Returns the second half of the given collection,
+		/// in the case of odd numbers, the odd item is considered in the first half
+		/// </summary>
+		public static IEnumerable<T> SecondHalf<T>(this IEnumerable<T> source)
+		{
+			int half = (int)Math.Ceiling(source.Count() / 2.0);
+			return source.Skip(half);
 		}
 	}
 }
