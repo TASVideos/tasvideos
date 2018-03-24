@@ -9,6 +9,11 @@ namespace TASVideos.Extensions
 			return env.IsEnvironment("Development-NoRecreate");
 		}
 
+		public static bool IsLocalWithImport(this IHostingEnvironment env)
+		{
+			return env.IsEnvironment("Development-Import");
+		}
+
 		public static bool IsDemo(this IHostingEnvironment env)
 		{
 			return env.IsEnvironment("Demo");
@@ -18,6 +23,7 @@ namespace TASVideos.Extensions
 		{
 			return env.IsDevelopment()
 				|| env.IsLocalWithoutRecreate()
+				|| env.IsLocalWithImport()
 				|| env.IsDemo();
 		}
     }

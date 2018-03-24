@@ -41,7 +41,7 @@ namespace TASVideos
 					{
 						context.Database.EnsureCreated();
 					}
-					else if (env.IsStaging())
+					else if (env.IsLocalWithImport())
 					{
 						var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
 						var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
