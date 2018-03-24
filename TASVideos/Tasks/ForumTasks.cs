@@ -63,7 +63,6 @@ namespace TASVideos.Tasks
 					Views = ft.Views
 					//PostCount = .ForumPosts.Count TODO: use this when EF core isn't worthless
 				})
-				.ToList()
 				.AsQueryable()
 				.SortedPageOf(_db, paging);
 
