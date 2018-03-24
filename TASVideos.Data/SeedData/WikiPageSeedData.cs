@@ -5,7 +5,7 @@ namespace TASVideos.Data.SeedData
 {
 	public class WikiPageSeedData
 	{
-		private const string InitialCreate = "Initial Create";
+		public const string InitialCreate = "Initial Create";
 
 		// These update exisint revisions to be relevant to the new system, or create new pages alltogether
 		public static readonly WikiPage[] NewRevisions =
