@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -29,9 +30,10 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		public async Task<IActionResult> Forum(int id)
+		[AllowAnonymous]
+		public async Task<IActionResult> Forum(ForumRequest request)
 		{
-			var model = await _forumTasks.GetForumForDisplay(id);
+			var model = await _forumTasks.GetForumForDisplay(request);
 
 			if (model != null)
 			{

@@ -1,14 +1,35 @@
-﻿@using TASVideos.Data.Entity.Forum
-@model Forum
+﻿@model ForumModel
 @{
 	ViewData["Title"] = $"TASVideos Forum {Model.Name}";
 }
 
-<h4>Forum: @Model.Name</h4>
-<div>@Model.Description</div>
-@foreach(var topic in Model.ForumTopics)
-{
-	<div>
-		<h5>Topic: @topic.Title</h5>
-	</div>
-}
+<h4>@Model.Name</h4>
+<div>
+	<a asp-controller="ForumTopic" asp-action="Create" asp-route-forumId="@Model.Id" class="pull-right btn btn-primary"><span class="fa fa-plus"></span> New Topic</a>
+	<small>@Model.Description</small>
+</div>
+<hr />
+@Html.Partial("~/Views/Table/_Pager.cshtml", Model.Topics)
+
+<table class="table table-striped table-bordered">
+	<tr>
+		<th></th>
+		<th>Topics</th>
+		<th>Replies</th>
+		<th>Author</th>
+		<td>Views</td>
+		<td>Last Post</td>
+	</tr>
+	@foreach (var topic in Model.Topics)
+	{
+		<tr>
+			<td><span class="fa fa-plus"></span></td>
+			<td>@topic.Title</td>
+			<td>@(topic.PostCount - 1)</td>
+			<td>@topic.CreateUserName</td>
+			<td>TODO</td>
+			<td>TODO</td>
+		</tr>
+	}
+</table>
+
