@@ -20,6 +20,11 @@ namespace TASVideos.Legacy.Imports
 
 		public static string FixString(string input)
 		{
+			if (string.IsNullOrEmpty(input))
+			{
+				return input;
+			}
+
 			var b = new byte[input.Length];
 			for (var i = 0; i < input.Length; i++)
 			{

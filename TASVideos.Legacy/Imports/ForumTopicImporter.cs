@@ -25,7 +25,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				{
 					Id = t.Id,
 					ForumId = t.ForumId,
-					Title = t.Title,
+					Title = ImportHelper.FixString(t.Title),
 					PosterId = t.PosterId > 0 // There's one record that is 0 we want to change to -1
 						? t.PosterId  // TODO: Some of these do not match up to known users! We should at least put -1 here
 						: -1,
