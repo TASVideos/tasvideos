@@ -80,7 +80,7 @@ namespace TASVideos.Legacy.Imports
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
 						CreateUserName = submitter?.UserName,
 						LastUpdateTimeStamp = DateTime.UtcNow, // TODO
-						GameName = legacySubmission.GameName,
+						GameName = ImportHelper.FixString(legacySubmission.GameName),
 						GameVersion = legacySubmission.GameVersion,
 						Frames = legacySubmission.Frames,
 						Status = ConvertStatus(legacySubmission.Status),
