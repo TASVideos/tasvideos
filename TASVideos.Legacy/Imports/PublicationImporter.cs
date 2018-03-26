@@ -44,7 +44,11 @@ namespace TASVideos.Legacy.Imports
 				var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
 
 				var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
-				var legacyUsers = legacySiteContext.Users.Select(u => new { u.Id, u.Name }).ToList();
+				var legacyUsers = legacySiteContext.Users
+					.Select(u => new { u.Id, u.Name })
+					.ToList()
+					.Select(u => new { u.Id, Name = ImportHelper.FixString(u.Name) })
+					.ToList();
 
 				var publicationWikis = context.WikiPages
 					.ThatAreNotDeleted()
