@@ -12,7 +12,7 @@
 			default:
 				return title;
 			case ForumTopicType.Sticky:
-				return "<b>Stick: </b> " + title;
+				return "<b>Sticky: </b> " + title;
 			case ForumTopicType.Announcement:
 				return "<b>Announcement</b> " + title;
 		}
@@ -40,7 +40,7 @@
 	{
 		<tr>
 			<td><span class="fa fa-plus"></span></td>
-			<td><a asp-controller="ForumTopic" asp-action="Index" asp-route-id="@topic.Id">@ToTitle(topic.Title, topic.Type)</a></td>
+			<td><a asp-controller="ForumTopic" asp-action="Index" asp-route-id="@topic.Id">@Html.Raw(ToTitle(topic.Title, topic.Type))</a></td>
 			<td>@(topic.PostCount - 1)</td>
 			<td>@topic.CreateUserName</td>
 			<td>@topic.Type</td>
