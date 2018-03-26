@@ -51,7 +51,7 @@ namespace TASVideos.Legacy.Imports
 				var newUser = new User
 				{
 					Id = legacyForumUser.UserId,
-					UserName = legacyForumUser.UserName,
+					UserName = ImportHelper.FixString(legacyForumUser.UserName),
 					NormalizedUserName = legacyForumUser.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyForumUser.RegDate),
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyForumUser.RegDate), // TODO
