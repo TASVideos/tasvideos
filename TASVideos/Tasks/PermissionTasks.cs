@@ -38,13 +38,19 @@ namespace TASVideos.Tasks
 			using (_db.Database.BeginTransactionAsync())
 			{
 				var allRoles = await _db.Roles
-					.Include(r => r.RolePermission)
+					.Select(r => new
+					{
+						r.Name,
+						RolePermissionId = r.RolePermission
+							.Select(p => p.PermissionId)
+							.ToList()
+					})
 					.ToListAsync();
 
 				foreach (var permission in PermissionData)
 				{
 					permission.Roles = allRoles
-						.Where(r => r.RolePermission.Any(p => p.PermissionId == permission.Id))
+						.Where(r => r.RolePermissionId.Any(p => p == permission.Id))
 						.Select(r => r.Name);
 				}
 
