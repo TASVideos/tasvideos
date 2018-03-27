@@ -11,7 +11,7 @@
 	<p>See the <a asp-controller="Permissions" asp-action="Index">Permission List</a> for details on individual permissions</p>
 }
 
-@foreach (var role in Model)
+@foreach (var role in Model.OrderBy(m => m.Permissions.Count()))
 {
 	<div class="card">
 		<div class="card-body p-3">
