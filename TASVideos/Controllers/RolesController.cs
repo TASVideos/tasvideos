@@ -47,6 +47,12 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> AddEdit(int? id)
 		{
 			var model = await _roleTasks.GetRoleForEdit(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
 			model.AvailablePermissions = PermissionsSelectList;
 			model.AvailableAssignablePermissions = model.SelectedPermissions
 				.Select(sp => new SelectListItem

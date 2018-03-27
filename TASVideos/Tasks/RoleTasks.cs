@@ -61,7 +61,12 @@ namespace TASVideos.Tasks
 				})
 				.Where(r => r.Id == id.Value) // Workaround for preview 1 bug: https://github.com/aspnet/EntityFrameworkCore/issues/11092
 				.ToListAsync()) // When this bug is fixed, remove these and do SingleAsync(r => r.Id == id.Value)
-				.Single();
+				.SingleOrDefault();
+
+			if (raw == null)
+			{
+				return null;
+			}
 
 			var model = new RoleEditViewModel
 			{
