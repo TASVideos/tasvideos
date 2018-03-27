@@ -19,19 +19,16 @@ namespace TASVideos.Tasks
 
 		public async Task<IEnumerable<PlatformFramerateModel>> GetAllPlatformFrameRates()
 		{
-			var query = from system in _db.GameSystems
-				join frameRate in _db.GameSystemFrameRates on system.Id equals frameRate.GameSystemId
-				select new PlatformFramerateModel
+			return await _db.GameSystemFrameRates
+				.Select(sf => new PlatformFramerateModel
 				{
-					SystemCode = system.Code,
-					FrameRate = frameRate.FrameRate,
-					RegionCode = frameRate.RegionCode,
-					Preliminary = frameRate.Preliminary
-				};
-
-			return await query
-				.OrderBy(p => p.SystemCode)
-				.ThenBy(p => p.RegionCode)
+					SystemCode = sf.System.Code,
+					FrameRate = sf.FrameRate,
+					RegionCode = sf.RegionCode,
+					Preliminary = sf.Preliminary
+				})
+				.OrderBy(sf => sf.SystemCode)
+				.ThenBy(sf => sf.RegionCode)
 				.ToListAsync();
 		}
 
