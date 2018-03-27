@@ -78,6 +78,12 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> RomList(int gameId)
 		{
 			var model = await _catalogTasks.GetRomsForGame(gameId);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
 			return View(model);
 		}
 
