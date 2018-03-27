@@ -23,18 +23,16 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<RoleDisplayViewModel>> GetAllRolesForDisplay()
 		{
 			return await _db.Roles
-				.Include(r => r.RolePermission)
-				.ThenInclude(rp => rp.Role)
-				.OrderBy(r => r.RolePermission.Count)
+
 				.Select(r => new RoleDisplayViewModel
 				{
 					Id = r.Id,
 					Name = r.Name,
 					Description = r.Description,
 					Permissions = r.RolePermission
-						.Select(rp => rp.PermissionId),
+						.Select(rp => rp.PermissionId).ToList(),
 					Links = r.RoleLinks
-						.Select(rl => rl.Link)
+						.Select(rl => rl.Link).ToList()
 				})
 				.ToListAsync();
 		}
