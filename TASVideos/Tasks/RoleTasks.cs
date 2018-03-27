@@ -23,7 +23,6 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<RoleDisplayViewModel>> GetAllRolesForDisplay()
 		{
 			return await _db.Roles
-
 				.Select(r => new RoleDisplayViewModel
 				{
 					Id = r.Id,
@@ -42,33 +41,42 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<RoleEditViewModel> GetRoleForEdit(int? id)
 		{
-			using (await _db.Database.BeginTransactionAsync())
+			if (!id.HasValue)
 			{
-				var model = id.HasValue
-					? await _db.Roles
-						.Select(p => new RoleEditViewModel
-						{
-							Id = p.Id,
-							Name = p.Name,
-							Description = p.Description,
-							Links = p.RoleLinks.Select(rl => rl.Link)
-						})
-						.SingleAsync(p => p.Id == id.Value)
-					: new RoleEditViewModel();
+				return new RoleEditViewModel();
+			}
 
-				model.SelectedPermissions = await _db.RolePermission
-					.Where(rp => rp.RoleId == model.Id)
-					.Select(rp => (int)rp.PermissionId)
-					.ToListAsync();
+			// Query all the role data first, then slice it up post query
+			// Because EF doesn't like trying to hit the same subtable twice, 
+			// plus that is likely less effecient from a query perspective 
+			// since the projection is only reducing 2 columns
+			var raw = (await _db.Roles
+				.Select(r => new
+				{
+					r.Id,
+					r.Name,
+					r.Description,
+					Links = r.RoleLinks.Select(rl => rl.Link).ToList(),
+					r.RolePermission
+				})
+				.Where(r => r.Id == id.Value) // Workaround for preview 1 bug: https://github.com/aspnet/EntityFrameworkCore/issues/11092
+				.ToListAsync()) // When this bug is fixed, remove these and do SingleAsync(r => r.Id == id.Value)
+				.Single();
 
-				model.SelectedAssignablePermissions = await _db.RolePermission
-					.Where(rp => rp.RoleId == model.Id)
+			var model = new RoleEditViewModel
+			{
+				Id = raw.Id,
+				Name = raw.Name,
+				Description = raw.Description,
+				Links = raw.Links,
+				SelectedPermissions = raw.RolePermission
+					.Select(rp => (int)rp.PermissionId),
+				SelectedAssignablePermissions = raw.RolePermission
 					.Where(rp => rp.CanAssign)
 					.Select(rp => (int)rp.PermissionId)
-					.ToListAsync();
+			};
 
-				return model;
-			}
+			return model;
 		}
 
 		/// <summary>
