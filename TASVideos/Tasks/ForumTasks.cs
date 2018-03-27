@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -60,24 +59,17 @@ namespace TASVideos.Tasks
 					CreateUserName = ft.CreateUserName,
 					CreateTimestamp = ft.CreateTimeStamp,
 					Type = ft.Type,
-					Views = ft.Views
-					//PostCount = .ForumPosts.Count TODO: use this when EF core isn't worthless
+					Views = ft.Views,
+					PostCount = ft.ForumPosts.Count
 				})
 				.SortedPageOf(_db, paging);
-
-			// TODO: use above when EF core isn't worthless
-			using (_db.Database.BeginTransaction())
-			{
-				foreach (var topic in model.Topics)
-				{
-					topic.PostCount = _db.ForumPosts.Count(fp => fp.TopicId == topic.Id);
-				}
-			}
 
 			return model;
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Displays a page of posts for the given topic
+		/// </summary>
 		public async Task<ForumTopicModel> GetTopicForDisplay(TopicRequest paging)
 		{
 			var model = await _db.ForumTopics
