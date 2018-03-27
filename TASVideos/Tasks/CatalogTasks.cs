@@ -26,7 +26,6 @@ namespace TASVideos.Tasks
 		public PageOf<GameListModel> GetPageOfGames(PagedModel paging) // TODO: ability to filter by system
 		{
 			var data = _db.Games
-				.Include(g => g.System)
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
@@ -87,17 +86,14 @@ namespace TASVideos.Tasks
 
 		public async Task<RomListModel> GetRomsForGame(int gameId)
 		{
-			var game = await _db.Games
-				.Include(g => g.System)
-				.SingleAsync(g => g.Id == gameId);
-
-			var data = new RomListModel
-			{
-				GameId = gameId,
-				GameDisplayName = game.DisplayName,
-				SystemCode = game.System.Code,
-				Roms = await _db.Roms
-					.Where(r => r.Game.Id == gameId)
+			return (await _db.Games
+				.Where(g => g.Id == gameId)
+				.Select(g => new RomListModel
+				{
+					GameId = g.Id,
+					GameDisplayName = g.DisplayName,
+					SystemCode = g.System.Code,
+					Roms = g.Roms
 					.Select(r => new RomListModel.RomEntry
 					{
 						Id = r.Id,
@@ -108,10 +104,11 @@ namespace TASVideos.Tasks
 						Region = r.Region,
 						RomType = r.Type
 					})
-					.ToListAsync()
-			};
-
-			return data;
+					.ToList()
+				})
+				.Take(2) // Workaround fix for preview1 bug: https://github.com/aspnet/EntityFrameworkCore/issues/11092
+				.ToListAsync())
+				.SingleOrDefault();
 		}
 
 		public async Task<RomEditModel> GetRomForEdit(int gameId, int? romId)
