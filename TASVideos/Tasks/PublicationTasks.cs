@@ -87,42 +87,6 @@ namespace TASVideos.Tasks
 				.ToListAsync())
 				.SingleOrDefault();
 				//.SingleOrDefaultAsync(p => p.Id == id);
-
-
-			//var publication = await _db.Publications
-			//	.Include(p => p.Files)
-			//	.Include(p => p.PublicationTags)
-			//	.ThenInclude(pt => pt.Tag)
-			//	.SingleOrDefaultAsync(p => p.Id == id);
-
-			//if (publication != null)
-			//{
-			//	return new PublicationViewModel
-			//	{
-			//		Id = publication.Id,
-			//		CreateTimeStamp = publication.CreateTimeStamp,
-			//		Title = publication.Title,
-			//		Files = publication.Files.Select(f => new PublicationViewModel.FileModel
-			//		{
-			//			Path = f.Path,
-			//			Type = f.Type
-			//		}),
-			//		OnlineWatchingUrl = publication.OnlineWatchingUrl,
-			//		MirrorSiteUrl = publication.MirrorSiteUrl,
-			//		ObsoletedBy = publication.ObsoletedById,
-			//		MovieFileName = publication.MovieFileName,
-			//		SubmissionId = publication.SubmissionId,
-			//		Tags = publication.PublicationTags
-			//			.Select(pt => new PublicationViewModel.TagModel
-			//			{
-			//				DisplayName = pt.Tag.DisplayName,
-			//				Code = pt.Tag.Code
-			//			})
-			//			.ToList()
-			//	};
-			//}
-
-			//return null;
 		}
 
 		// TODO: document
