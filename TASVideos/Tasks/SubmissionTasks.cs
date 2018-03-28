@@ -209,31 +209,35 @@ namespace TASVideos.Tasks
 		/// Takes the given data and generates a movie submission
 		/// If successful, the Success flag will be true, and the Id field will be
 		/// greater than 0 and represent the id to the newly created submission
-		/// If unsucessful, the success flag will be false, Id will be 0 and the 
+		/// If unsuccessful, the success flag will be false, Id will be 0 and the 
 		/// Errors property will be filled with any relevant error messages
 		/// </summary>
 		public async Task<SubmitResult> SubmitMovie(SubmissionCreateViewModel model, string userName)
 		{
 			var submission = _mapper.Map<Submission>(model);
-			submission.Submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
 
 			// Parse movie file
 			// TODO: check warnings
 			var parseResult = _parser.Parse(model.MovieFile.OpenReadStream());
 			if (parseResult.Success)
 			{
-				submission.Frames = parseResult.Frames;
-				submission.RerecordCount = parseResult.RerecordCount;
-				submission.MovieExtension = parseResult.FileExtension;
-				submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
-				if (submission.System == null)
+				using (_db.Database.BeginTransaction())
 				{
-					return new SubmitResult($"Unknown system type of {parseResult.SystemCode}");
-				}
+					submission.Frames = parseResult.Frames;
+					submission.RerecordCount = parseResult.RerecordCount;
+					submission.MovieExtension = parseResult.FileExtension;
+					submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
 
-				submission.SystemFrameRate = await _db.GameSystemFrameRates
-					.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
-						&& f.RegionCode == parseResult.Region.ToString());
+					if (submission.System == null)
+					{
+						return new SubmitResult($"Unknown system type of {parseResult.SystemCode}");
+					}
+
+					submission.Submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
+					submission.SystemFrameRate = await _db.GameSystemFrameRates
+						.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
+							&& f.RegionCode == parseResult.Region.ToString());
+				}
 			}
 			else
 			{
