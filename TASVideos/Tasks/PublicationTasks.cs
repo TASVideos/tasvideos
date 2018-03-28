@@ -148,8 +148,11 @@ namespace TASVideos.Tasks
 			return (data.MovieFile, data.MovieFileName);
 		}
 
-		// TODO: documentation
 		// TODO: paging
+		/// <summary>
+		/// Returns a list of publications with the given <see cref="searchCriteria" />
+		/// for the purpose of displaying on a movie listings page
+		/// </summary>
 		public async Task<IEnumerable<PublicationViewModel>> GetMovieList(PublicationSearchModel searchCriteria)
 		{
 			var query = _db.Publications
@@ -208,8 +211,15 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
+		/// <summary>
+		/// Returns a list of publications with the given <see cref="searchCriteria" />
+		/// in a brief table form
+		/// </summary>
 		public async Task<IEnumerable<TabularMovieListResultModel>> GetTabularMovieList(TabularMovieListSearchModel searchCriteria)
 		{
+			// It is important to actually query for an Entity object here instead of a ViewModel
+			// Because we need the title property which is a derived property that can't be done in Linq to Sql
+			// And needs a varierty of information from sub-tables, hence all the includes
 			var movies = await _db.Publications
 				.Include(p => p.Tier)
 				.Include(p => p.Game)
