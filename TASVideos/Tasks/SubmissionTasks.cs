@@ -183,7 +183,9 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<string> GetTitle(int id)
 		{
-			return (await _db.Submissions.SingleOrDefaultAsync(s => s.Id == id))?.Title;
+			return (await _db.Submissions
+				.Select(s => new { s.Id, s.Title })
+				.SingleOrDefaultAsync(s => s.Id == id))?.Title;
 		}
 
 		/// <summary>
