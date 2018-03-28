@@ -56,37 +56,73 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PublicationViewModel> GetPublicationForDisplay(int id)
 		{
-			var publication = await _db.Publications
-				.Include(p => p.Files)
-				.Include(p => p.PublicationTags)
-				.ThenInclude(pt => pt.Tag)
-				.SingleOrDefaultAsync(p => p.Id == id);
-
-			if (publication != null)
-			{
-				return new PublicationViewModel
+			return (await _db.Publications
+				.Select(p => new PublicationViewModel
 				{
-					Id = publication.Id,
-					CreateTimeStamp = publication.CreateTimeStamp,
-					Title = publication.Title,
-					Screenshot = publication.Files.First(f => f.Type == FileType.Screenshot).Path,
-					TorrentLink = publication.Files.First(f => f.Type == FileType.Torrent).Path,
-					OnlineWatchingUrl = publication.OnlineWatchingUrl,
-					MirrorSiteUrl = publication.MirrorSiteUrl,
-					ObsoletedBy = publication.ObsoletedById,
-					MovieFileName = publication.MovieFileName,
-					SubmissionId = publication.SubmissionId,
-					Tags = publication.PublicationTags
+					Id = p.Id,
+					CreateTimeStamp = p.CreateTimeStamp,
+					Title = p.Title,
+					OnlineWatchingUrl = p.OnlineWatchingUrl,
+					MirrorSiteUrl = p.MirrorSiteUrl,
+					ObsoletedBy = p.ObsoletedById,
+					MovieFileName = p.MovieFileName,
+					SubmissionId = p.SubmissionId,
+					Files = p.Files
+						.Select(f => new PublicationViewModel.FileModel
+						{
+							Path = f.Path,
+							Type = f.Type
+						})
+						.ToList(),
+					Tags = p.PublicationTags
 						.Select(pt => new PublicationViewModel.TagModel
 						{
 							DisplayName = pt.Tag.DisplayName,
 							Code = pt.Tag.Code
 						})
 						.ToList()
-				};
-			}
+				})
+				.Where(p => p.Id == id)
+				.Take(2) // Workaround fix for preview1 bug: https://github.com/aspnet/EntityFrameworkCore/issues/11092
+				.ToListAsync())
+				.SingleOrDefault();
+				//.SingleOrDefaultAsync(p => p.Id == id);
 
-			return null;
+
+			//var publication = await _db.Publications
+			//	.Include(p => p.Files)
+			//	.Include(p => p.PublicationTags)
+			//	.ThenInclude(pt => pt.Tag)
+			//	.SingleOrDefaultAsync(p => p.Id == id);
+
+			//if (publication != null)
+			//{
+			//	return new PublicationViewModel
+			//	{
+			//		Id = publication.Id,
+			//		CreateTimeStamp = publication.CreateTimeStamp,
+			//		Title = publication.Title,
+			//		Files = publication.Files.Select(f => new PublicationViewModel.FileModel
+			//		{
+			//			Path = f.Path,
+			//			Type = f.Type
+			//		}),
+			//		OnlineWatchingUrl = publication.OnlineWatchingUrl,
+			//		MirrorSiteUrl = publication.MirrorSiteUrl,
+			//		ObsoletedBy = publication.ObsoletedById,
+			//		MovieFileName = publication.MovieFileName,
+			//		SubmissionId = publication.SubmissionId,
+			//		Tags = publication.PublicationTags
+			//			.Select(pt => new PublicationViewModel.TagModel
+			//			{
+			//				DisplayName = pt.Tag.DisplayName,
+			//				Code = pt.Tag.Code
+			//			})
+			//			.ToList()
+			//	};
+			//}
+
+			//return null;
 		}
 
 		// TODO: document
@@ -192,13 +228,16 @@ namespace TASVideos.Tasks
 					Id = p.Id,
 					CreateTimeStamp = p.CreateTimeStamp,
 					Title = p.Title,
-					Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
-					TorrentLink = p.Files.First(f => f.Type == FileType.Torrent).Path,
 					OnlineWatchingUrl = p.OnlineWatchingUrl,
 					MirrorSiteUrl = p.MirrorSiteUrl,
 					ObsoletedBy = p.ObsoletedById,
 					MovieFileName = p.MovieFileName,
 					SubmissionId = p.SubmissionId,
+					Files = p.Files.Select(f => new PublicationViewModel.FileModel
+					{
+						Path = f.Path,
+						Type = f.Type
+					}),
 					Tags = p.PublicationTags.Select(pt => new PublicationViewModel.TagModel
 					{
 						DisplayName = pt.Tag.DisplayName,

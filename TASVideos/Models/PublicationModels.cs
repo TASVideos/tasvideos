@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using TASVideos.Data.Entity;
+
 namespace TASVideos.Models
 {
 	public class PublicationSearchModel
@@ -19,18 +21,28 @@ namespace TASVideos.Models
 		public DateTime CreateTimeStamp { get; set; }
 		public int? ObsoletedBy { get; set; }
 		public string Title { get; set; }
-		public string Screenshot { get; set; }
-		public string TorrentLink { get; set; }
+		
 		public string MovieFileName { get; set; }
 		public int SubmissionId { get; set; }
 		public string OnlineWatchingUrl { get; set; }
 		public string MirrorSiteUrl { get; set; }
+
 		public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();
+		public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();
+
+		public string Screenshot => Files.First(f => f.Type == FileType.Screenshot).Path;
+		public string TorrentLink => Files.First(f => f.Type == FileType.Torrent).Path;
 
 		public class TagModel
 		{
 			public string DisplayName { get; set; }
 			public string Code { get; set; }
+		}
+
+		public class FileModel
+		{
+			public string Path { get; set; }
+			public FileType Type { get; set; }
 		}
 	}
 
