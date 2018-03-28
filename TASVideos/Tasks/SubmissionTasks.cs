@@ -41,6 +41,9 @@ namespace TASVideos.Tasks
 			_hostingEnvironment = hostingEnvironment;
 		}
 
+		/// <summary>
+		/// Gets a list of available <see cref="Tier" />s
+		/// </summary>
 		public async Task<IEnumerable<SelectListItem>> GetAvailableTiers()
 		{
 			return await _db.Tiers
@@ -86,6 +89,9 @@ namespace TASVideos.Tasks
 				query = query.Take(criteria.Limit.Value);
 			}
 
+			// It is important to actually query for an Entity object here instead of a ViewModel
+			// Because we need the title property which is a derived property that can't be done in Linq to Sql
+			// And needs a varierty of information from sub-tables, hence all the includes
 			var results = await query.ToListAsync();
 			return results.Select(s => new SubmissionListViewModel
 			{
