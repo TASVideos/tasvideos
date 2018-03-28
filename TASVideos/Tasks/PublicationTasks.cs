@@ -153,12 +153,6 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<PublicationViewModel>> GetMovieList(PublicationSearchModel searchCriteria)
 		{
 			var query = _db.Publications
-				.Include(p => p.Game)
-				.Include(p => p.Files)
-				.Include(p => p.Tier)
-				.Include(p => p.System)
-				.Include(p => p.PublicationTags)
-				.ThenInclude(p => p.Tag)
 				.AsQueryable();
 
 			if (searchCriteria.SystemCodes.Any())
@@ -186,13 +180,10 @@ namespace TASVideos.Tasks
 				query = query.Where(p => p.PublicationTags.Any(t => searchCriteria.Tags.Contains(t.Tag.Code)));
 			}
 
-			var results = await query
+			// TODO: automapper, single movie is the same logic
+			return await query
 				.OrderBy(p => p.System.Code)
 				.ThenBy(p => p.Game.DisplayName)
-				.ToListAsync();
-
-			// TODO: automapper, single movie is the same logic
-			return results
 				.Select(p => new PublicationViewModel
 				{
 					Id = p.Id,
@@ -207,14 +198,14 @@ namespace TASVideos.Tasks
 					{
 						Path = f.Path,
 						Type = f.Type
-					}),
+					}).ToList(),
 					Tags = p.PublicationTags.Select(pt => new PublicationViewModel.TagModel
 					{
 						DisplayName = pt.Tag.DisplayName,
 						Code = pt.Tag.Code
-					})
+					}).ToList()
 				})
-				.ToList();
+				.ToListAsync();
 		}
 
 		public async Task<IEnumerable<TabularMovieListResultModel>> GetTabularMovieList(TabularMovieListSearchModel searchCriteria)
