@@ -89,7 +89,11 @@ namespace TASVideos.Tasks
 				//.SingleOrDefaultAsync(p => p.Id == id);
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns a list of potential "interesting" movies
+		/// so that one may be randomly picked as a suggested movie
+		/// Intended for the front page, for newcomers to the site
+		/// </summary>
 		public async Task<IEnumerable<int>> FrontPageMovieCandidates()
 		{
 			return await _db.Publications
