@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -507,22 +506,17 @@ namespace TASVideos.Tasks
 
 				if (model != null)
 				{
-					model.AvailableMoviesToObsolete = await _db.Publications
-						.ThatAreCurrent()
-						.Where(p => p.SystemId == model.SystemId)
-						.Select(p => new SelectListItem
-						{
-							Value = p.Id.ToString(),
-							Text = p.Title
-						})
-						.ToListAsync();
+					model.AvailableMoviesToObsolete = await GetAvailableMoviesToObsolete(model.SystemId);
 				}
 
 				return model;
 			}
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns a list of published, non-obsolete movies for the given system
+		/// Intended to be used for the publication form
+		/// </summary>
 		public async Task<IEnumerable<SelectListItem>> GetAvailableMoviesToObsolete(int systemId)
 		{
 			return await _db.Publications
