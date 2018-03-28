@@ -35,16 +35,19 @@ namespace TASVideos.Tasks
 				return cachedResult;
 			}
 
-			var result = new PublicationSearchModel
+			using (await _db.Database.BeginTransactionAsync())
 			{
-				Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
-				SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
-				Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync() // TODO: Game genres too?
-			};
+				var result = new PublicationSearchModel
+				{
+					Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
+					SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
+					Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync() // TODO: Game genres too?
+				};
 
-			_cache.Set(cacheKey, result);
+				_cache.Set(cacheKey, result);
 
-			return result;
+				return result;
+			}
 		}
 
 		/// <summary>
