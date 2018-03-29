@@ -183,8 +183,8 @@ namespace TASVideos.Controllers
 			ViewData["WikiPage"] = null;
 			ViewData["Title"] = "Generated Preview";
 			ViewData["Layout"] = null;
-			_wikiTasks.PreviewStorage = input;
 			_wikiMarkupFileProvider.PreviewMarkup = input;
+
 			// ReSharper disable once Mvc.ViewNotResolved
 			return View(Razor.WikiMarkupFileProvider.PreviewName);
 		}
