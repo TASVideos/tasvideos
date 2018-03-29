@@ -38,7 +38,7 @@ namespace TASVideos.Tasks
 
 			foreach (var page in wikiPages)
 			{
-				var cacheKey = $"{nameof(GetPage)}-{page.Id}";
+				var cacheKey = $"{nameof(GetPageById)}-{page.Id}";
 				_cache.Set(cacheKey, page, DurationConstants.OneDayInSeconds);
 
 				if (!onlyIds)
@@ -75,7 +75,7 @@ namespace TASVideos.Tasks
 			if (result != null)
 			{
 				_cache.Set(cacheKey, result, DurationConstants.OneDayInSeconds);
-				_cache.Set($"{nameof(GetPage)}-{result.Id}", result, DurationConstants.OneDayInSeconds);
+				_cache.Set($"{nameof(GetPageById)}-{result.Id}", result, DurationConstants.OneDayInSeconds);
 			}
 
 			return result;
@@ -85,9 +85,9 @@ namespace TASVideos.Tasks
 		/// Returns details about a Wiki page with the given id
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		public async Task<WikiPage> GetPage(int dbid)
+		public async Task<WikiPage> GetPageById(int dbid)
 		{
-			var cacheKey = $"{nameof(GetPage)}-{dbid}";
+			var cacheKey = $"{nameof(GetPageById)}-{dbid}";
 			if (_cache.TryGetValue(cacheKey, out WikiPage cachedResult))
 			{
 				return cachedResult;
@@ -169,7 +169,7 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 
-			// New and old revisions must have cache cleareds
+			// New and old revisions must have cache cleared
 			if (currentRevision != null)
 			{
 				_cache.Remove($"{nameof(GetPage)}-{currentRevision.PageName}-{currentRevision.Id}");
@@ -243,7 +243,7 @@ namespace TASVideos.Tasks
 			foreach (var revision in existingRevisions)
 			{
 				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
-				_cache.Remove($"{nameof(GetPage)}-{revision.Id}");
+				_cache.Remove($"{nameof(GetPageById)}-{revision.Id}");
 				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{model.DestinationPageName}");
 
 				revision.PageName = model.DestinationPageName;
@@ -502,7 +502,7 @@ namespace TASVideos.Tasks
 			{
 				wikiPage.IsDeleted = true;
 				_cache.Remove($"{nameof(GetPage)}-{wikiPage.PageName}-{wikiPage.Revision}");
-				_cache.Remove($"{nameof(GetPage)}-{wikiPage.Id}");
+				_cache.Remove($"{nameof(GetPageById)}-{wikiPage.Id}");
 
 				// Update referrers if latest revision
 				if (wikiPage.Child == null)
