@@ -100,8 +100,6 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<RoleBasicDisplay>> GetUserRoles(int userId)
 		{
 			return await _db.Users
-				.Include(u => u.UserRoles)
-				.ThenInclude(ur => ur.Role)
 				.Where(u => u.Id == userId)
 				.SelectMany(u => u.UserRoles)
 				.Select(ur => ur.Role)
@@ -120,14 +118,13 @@ namespace TASVideos.Tasks
 		public PageOf<UserListViewModel> GetPageOfUsers(PagedModel paging)
 		{
 			var data = _db.Users
-				.Include(u => u.UserRoles)
-				.ThenInclude(ur => ur.Role)
 				.Select(u => new UserListViewModel
 				{
 					Id = u.Id,
 					UserName = u.UserName,
 					CreateTimeStamp = u.CreateTimeStamp,
-					Roles = u.UserRoles.Select(ur => ur.Role.Name)
+					Roles = u.UserRoles
+						.Select(ur => ur.Role.Name)
 				})
 				.SortedPageOf(_db, paging);
 
@@ -150,7 +147,7 @@ namespace TASVideos.Tasks
 					EmailConfirmed = u.EmailConfirmed,
 					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
 					TimezoneId = u.TimeZoneId,
-					Roles = u.UserRoles.Select(ur => ur.Role.Name)
+					Roles = u.UserRoles.Select(ur => ur.Role.Name) // TODO: add .ToList() here to avoid n+1 after 2.1 preview1 bug is fixed
 				})
 				.SingleAsync(u => u.Id == id);
 		}
@@ -182,10 +179,16 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
+		/// <summary>
+		/// Returns the username of the <see cref="User"/>
+		/// with the given <see cref="id"/>
+		/// </summary>
 		public async Task<string> GetUserNameById(int id)
 		{
-			var user = await _db.Users.SingleAsync(u => u.Id == id);
-			return user.UserName;
+			return await _db.Users
+				.Where(u => u.Id == id)
+				.Select(u => u.UserName)
+				.SingleAsync();
 		}
 
 		/// <summary>
@@ -322,6 +325,7 @@ namespace TASVideos.Tasks
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				var user = await _db.Users
+					.Select(u => new { u.Id, u.UserName })
 					.SingleOrDefaultAsync(u => u.UserName == userName);
 
 				if (user != null)
@@ -349,9 +353,6 @@ namespace TASVideos.Tasks
 		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)
 		{
 			return _db.Users
-				.Include(u => u.UserRoles)
-				.ThenInclude(u => u.Role)
-				.ThenInclude(r => r.RolePermission)
 				.Where(u => u.Id == userId)
 				.SelectMany(u => u.UserRoles)
 				.SelectMany(ur => ur.Role.RolePermission)

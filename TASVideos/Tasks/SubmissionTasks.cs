@@ -577,7 +577,7 @@ namespace TASVideos.Tasks
 							Value = s.Id.ToString(),
 							Text = s.Code
 						})
-					.ToListAsync(),
+						.ToListAsync(),
 					AvailableSystemFrameRates = submission.SystemId.HasValue
 						? await _db.GameSystemFrameRates
 							.Where(sf => sf.GameSystemId == submission.SystemId)
