@@ -22,7 +22,9 @@ namespace TASVideos.Razor
 			_wikiTasks = (WikiTasks)provider.GetService(typeof(WikiTasks));
 			_wikiTasks.LoadWikiCache(true).Wait();
 		}
-		
+
+		public string PreviewMarkup { get; set; }
+
 		public IDirectoryContents GetDirectoryContents(string subpath)
 		{
 			return null;
@@ -40,7 +42,7 @@ namespace TASVideos.Razor
 			if (subpath == PreviewName)
 			{
 				pageName = PreviewName;
-				markup = _wikiTasks.PreviewStorage;
+				markup = PreviewMarkup;
 			}
 			else
 			{

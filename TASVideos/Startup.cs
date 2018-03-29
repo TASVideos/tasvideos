@@ -68,6 +68,16 @@ namespace TASVideos
 			// Add application services.
 			services.AddTransient<IEmailSender, EmailSender>();
 
+			if (Settings.CacheSettings.CacheType == "Memory")
+			{
+				services.AddMemoryCache();
+				services.AddSingleton<ICacheService, MemoryCacheService>();
+			}
+			else
+			{
+				services.AddSingleton<ICacheService, NoCacheService>();
+			}
+
 			services
 				.AddTasks()
 				.AddWikiProvider()
@@ -84,16 +94,6 @@ namespace TASVideos
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
 				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
-
-			if (Settings.CacheSettings.CacheType == "Memory")
-			{
-				services.AddMemoryCache();
-				services.AddSingleton<ICacheService, MemoryCacheService>();
-			}
-			else
-			{
-				services.AddSingleton<ICacheService, NoCacheService>();
-			}
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

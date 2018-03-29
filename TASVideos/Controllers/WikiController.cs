@@ -11,6 +11,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
+using TASVideos.Razor;
 using TASVideos.Tasks;
 using TASVideos.WikiEngine;
 
@@ -19,13 +20,16 @@ namespace TASVideos.Controllers
 	public class WikiController : BaseController
 	{
 		private readonly WikiTasks _wikiTasks;
+		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
 
 		public WikiController(
 			UserTasks userTasks,
-			WikiTasks wikiTasks)
+			WikiTasks wikiTasks,
+			WikiMarkupFileProvider wikiMarkupFileProvider)
 			: base(userTasks)
 		{
 			_wikiTasks = wikiTasks;
+			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 		}
 
 		[AllowAnonymous]
@@ -180,7 +184,7 @@ namespace TASVideos.Controllers
 			ViewData["Title"] = "Generated Preview";
 			ViewData["Layout"] = null;
 			_wikiTasks.PreviewStorage = input;
-
+			_wikiMarkupFileProvider.PreviewMarkup = input;
 			// ReSharper disable once Mvc.ViewNotResolved
 			return View(Razor.WikiMarkupFileProvider.PreviewName);
 		}
