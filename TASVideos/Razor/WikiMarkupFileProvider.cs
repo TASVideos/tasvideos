@@ -4,13 +4,66 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using TASVideos.Tasks;
 using TASVideos.WikiEngine;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace TASVideos.Razor
 {
 	public class WikiMarkupFileProvider : IFileProvider
 	{
 		public const string Prefix = "/Views/~~~";
-		public const string PreviewName = "/Views/~~~Preview";
+		private const string PreviewNamePrefix = "/Views/~~~Preview";
+		private int _previewNameIndex = 0;
+
+		private struct PreviewMarkupCacheInfo
+		{
+			public DateTime Expiry;
+			public string Markup;
+		}
+
+		private readonly Dictionary<string, PreviewMarkupCacheInfo> _previewCache = new Dictionary<string, PreviewMarkupCacheInfo>();
+
+		private string GetPreviewName()
+		{
+			return PreviewNamePrefix + Interlocked.Increment(ref _previewNameIndex);
+		}
+
+		public string SetPreviewMarkup(string content)
+		{
+			var key = GetPreviewName();
+			lock (_previewCache)
+			{
+				_previewCache.Add(key, new PreviewMarkupCacheInfo
+				{
+					Expiry = DateTime.UtcNow.AddMinutes(1),
+					Markup = content
+				};
+			}
+			return key;
+		}
+
+		private string GetPreviewMarkup(string key)
+		{
+			if (key.EndsWith("00"))
+			{
+				lock (_previewCache)
+				{
+					var now = DateTime.UtcNow;
+					foreach (var kvp in _previewCache.ToList())
+					{
+						if (kvp.Value.Expiry < now)
+						{
+							_previewCache.Remove(kvp.Key);
+						}
+					}
+					return _previewCache[key];
+				}
+			}
+			else
+			{
+				return _previewCache[key];
+			}
+		}
 
 		private readonly WikiTasks _wikiTasks;
 
@@ -39,10 +92,10 @@ namespace TASVideos.Razor
 
 			string pageName, markup;
 
-			if (subpath == PreviewName)
+			if (subpath.StartsWith(PreviewNamePrefix))
 			{
-				pageName = PreviewName;
-				markup = PreviewMarkup;
+				pageName = "foobar"; // what goes here?
+				markup = GetPreviewMarkup(subpath);
 			}
 			else
 			{
