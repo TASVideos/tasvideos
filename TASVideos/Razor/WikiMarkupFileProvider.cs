@@ -1,31 +1,33 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading;
+
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using TASVideos.Tasks;
 using TASVideos.WikiEngine;
-using System.Threading;
-using System.Collections.Generic;
 
 namespace TASVideos.Razor
 {
 	public class WikiMarkupFileProvider : IFileProvider
 	{
 		public const string Prefix = "/Views/~~~";
-		private const string PreviewNamePrefix = "/Views/~~~Preview";
-		private int _previewNameIndex = 0;
-
-		private struct PreviewMarkupCacheInfo
-		{
-			public DateTime Expiry;
-			public string Markup;
-		}
+		private const string PreviewPrefix = "/Views/Preview/~~~";
 
 		private readonly Dictionary<string, PreviewMarkupCacheInfo> _previewCache = new Dictionary<string, PreviewMarkupCacheInfo>();
+		private readonly WikiTasks _wikiTasks;
 
-		private string GetPreviewName()
+		private int _previewNameIndex;
+
+		public WikiMarkupFileProvider(IServiceProvider provider)
 		{
-			return PreviewNamePrefix + Interlocked.Increment(ref _previewNameIndex);
+			// Unfortunatley the singleton cache in WikiTasks is different here than in a non-single class,
+			// so we need to populate another cache just for this
+			// Boo.
+			_wikiTasks = (WikiTasks)provider.GetService(typeof(WikiTasks));
+			_wikiTasks.LoadWikiCache(true).Wait();
 		}
 
 		public string SetPreviewMarkup(string content)
@@ -37,46 +39,11 @@ namespace TASVideos.Razor
 				{
 					Expiry = DateTime.UtcNow.AddMinutes(1),
 					Markup = content
-				};
+				});
 			}
+
 			return key;
 		}
-
-		private string GetPreviewMarkup(string key)
-		{
-			if (key.EndsWith("00"))
-			{
-				lock (_previewCache)
-				{
-					var now = DateTime.UtcNow;
-					foreach (var kvp in _previewCache.ToList())
-					{
-						if (kvp.Value.Expiry < now)
-						{
-							_previewCache.Remove(kvp.Key);
-						}
-					}
-					return _previewCache[key];
-				}
-			}
-			else
-			{
-				return _previewCache[key];
-			}
-		}
-
-		private readonly WikiTasks _wikiTasks;
-
-		public WikiMarkupFileProvider(IServiceProvider provider)
-		{
-			// Unfortunatley the singleton cache in WikiTasks is different here than in a non-single class,
-			// so we need to populate another cache just for this
-			// Boo.
-			_wikiTasks = (WikiTasks)provider.GetService(typeof(WikiTasks));
-			_wikiTasks.LoadWikiCache(true).Wait();
-		}
-
-		public string PreviewMarkup { get; set; }
 
 		public IDirectoryContents GetDirectoryContents(string subpath)
 		{
@@ -85,14 +52,14 @@ namespace TASVideos.Razor
 
 		public IFileInfo GetFileInfo(string subpath)
 		{
-			if (!subpath.StartsWith(Prefix) && subpath != PreviewName)
+			if (!subpath.StartsWith(Prefix) && !subpath.StartsWith(PreviewPrefix))
 			{
 				return null;
 			}
 
 			string pageName, markup;
 
-			if (subpath.StartsWith(PreviewNamePrefix))
+			if (subpath.StartsWith(PreviewPrefix))
 			{
 				pageName = "foobar"; // what goes here?
 				markup = GetPreviewMarkup(subpath);
@@ -123,12 +90,45 @@ namespace TASVideos.Razor
 
 		public IChangeToken Watch(string filter)
 		{
-			if (filter == PreviewName)
+			if (filter.StartsWith(PreviewPrefix))
 			{
 				return new ForceChangeToken();
 			}
 
 			return null;
+		}
+
+		private string GetPreviewMarkup(string key)
+		{
+			if (key.EndsWith("00"))
+			{
+				lock (_previewCache)
+				{
+					var now = DateTime.UtcNow;
+					foreach (var kvp in _previewCache.ToList())
+					{
+						if (kvp.Value.Expiry < now)
+						{
+							_previewCache.Remove(kvp.Key);
+						}
+					}
+
+					return _previewCache[key].Markup;
+				}
+			}
+
+			return _previewCache[key].Markup;
+		}
+
+		private string GetPreviewName()
+		{
+			return PreviewPrefix + Interlocked.Increment(ref _previewNameIndex);
+		}
+
+		private struct PreviewMarkupCacheInfo
+		{
+			public DateTime Expiry;
+			public string Markup;
 		}
 
 		private class ForceChangeToken : IChangeToken
