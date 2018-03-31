@@ -57,7 +57,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Gets a list of <see cref="Submission"/>s for the submission queue filtered on the given <see cref="criteria" />
 		/// </summary>
-		public async Task<IEnumerable<SubmissionListViewModel>> GetSubmissionList(SubmissionSearchCriteriaModel criteria)
+		public async Task<IEnumerable<SubmissionListViewModel>> GetSubmissionList(SubmissionSearchRequest criteria)
 		{
 			var iquery = _db.Submissions
 				.Include(s => s.Submitter)
