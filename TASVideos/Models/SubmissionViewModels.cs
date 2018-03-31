@@ -209,7 +209,9 @@ namespace TASVideos.Models
 		public int? Limit { get; set; }
 		public DateTime? Cutoff { get; set; } // Only submissions submitted after this date
 		public string User { get; set; }
-		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>
+		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
+
+		public static IEnumerable<SubmissionStatus> Default => new[]
 		{
 			SubmissionStatus.New,
 			SubmissionStatus.JudgingUnderWay,
@@ -218,6 +220,8 @@ namespace TASVideos.Models
 			SubmissionStatus.NeedsMoreInfo,
 			SubmissionStatus.Delayed
 		};
+
+		public static IEnumerable<SubmissionStatus> All => Enum.GetValues(typeof(SubmissionStatus)).Cast<SubmissionStatus>();
 	}
 
 	/// <summary>
