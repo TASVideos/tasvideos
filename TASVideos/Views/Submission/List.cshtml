@@ -3,16 +3,28 @@
 	ViewData["Title"] = "Submissions";
 }
 
-@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/SubmissionHeader" })
+
 
 @if (ViewData.UserHasPermission(PermissionTo.SubmitMovies))
 {
-	<div class="mb-2">
-		<a class="btn btn-primary" asp-action="Submit">Submit a Movie</a>
-		<a asp-action="List" asp-route-user="@User.Identity.Name" class="btn btn-secondary">My Submissions</a>
+	<div class="pull-right">
+		<div class="mb-1">
+			<a class="btn btn-primary" asp-action="Submit">Submit a Movie</a>
+		</div>
+		<div>
+			<a asp-action="List" asp-route-user="@User.Identity.Name" class="btn btn-secondary">My Submissions</a>
+		</div>
 	</div>
 }
 
+@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/SubmissionHeader" })
+<hr />
+<form method="get">
+	<input type="hidden" asp-for="User"/>
+	<two-column-select available-list="AvailableStatuses" id-list="StatusFilter"/>
+	<button type="submit" class="btn btn-secondary mt-1">Filter</button>
+</form>
+<hr />
 <label class="pull-right">Total: @Model.Entries.Count()</label>
 <table class="table table-striped table-bordered">
 	<tr>
@@ -27,7 +39,7 @@
 			<td><a href="/@(item.Id)S">@item.Title</a></td>
 			<td>@item.Author</td>
 			<td>@item.Submitted</td>
-			<td>@item.Status</td>
+			<td>@item.Status.EnumDisplayName()</td>
 		</tr>
 	}
 </table>

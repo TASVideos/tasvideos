@@ -95,6 +95,10 @@ namespace TASVideos.Tasks
 			var results = await query.ToListAsync();
 			return new SubmissionListViewModel
 			{
+				User = criteria.User,
+				StatusFilter = criteria.StatusFilter
+					.Cast<int>()
+					.ToList(),
 				Entries = results.Select(s => new SubmissionListViewModel.Entry
 				{
 					Id = s.Id,
