@@ -204,7 +204,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Filter criteria for submission search
 	/// </summary>
-	public class SubmissionSearchCriteriaModel
+	public class SubmissionSearchRequest
 	{
 		public int? Limit { get; set; }
 		public DateTime? Cutoff { get; set; } // Only submissions submitted after this date
