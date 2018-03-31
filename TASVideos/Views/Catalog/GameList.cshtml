@@ -2,11 +2,10 @@
 @{
 	ViewData["Title"] = "Game List";
 }
-<a asp-action="GameEdit" class="btn btn-primary">Create</a>
-<br />
-<br />
+<a asp-action="GameEdit" class="btn btn-primary mb-3">Create</a>
+@Html.Partial("~/Views/Table/_Pager.cshtml", Model)
 <table class="table table-bordered table-striped">
-	<sortable-table-head paging="@Model" model-type="typeof(GameListModel)"/>
+	<sortable-table-head paging="@Model" model-type="typeof(GameListModel)" />
 	@foreach (var game in Model)
 	{
 		<tr>
