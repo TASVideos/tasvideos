@@ -1,22 +1,17 @@
 ﻿@model IEnumerable<SubmissionListViewModel>
 @{
-	ViewData["Title"] = "Submission List";
+	ViewData["Title"] = "Submissions";
 }
 
-<h4>This page list movies that have been submitted for review</h4>
+@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/SubmissionHeader" })
 
 @if (ViewData.UserHasPermission(PermissionTo.SubmitMovies))
 {
-	<a class="btn btn-primary" asp-action="Submit">Submit a Movie</a>
-	<a asp-action="List" asp-route-user="@User.Identity.Name" class="btn btn-secondary">My Submissions</a>
+	<div class="mb-2">
+		<a class="btn btn-primary" asp-action="Submit">Submit a Movie</a>
+		<a asp-action="List" asp-route-user="@User.Identity.Name" class="btn btn-secondary">My Submissions</a>
+	</div>
 }
-else
-{
-	<h4>Want to submit a movie?</h4>
-	<p>TODO: submission instructions wiki go here (instead of on SubmitMovie when a user is not logged in!)</p>
-}
-
-<label>TODO: more content</label>
 
 <table class="table table-striped table-bordered">
 	<tr>
