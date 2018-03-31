@@ -20,7 +20,7 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			var model = new SubmissionSearchCriteriaModel
+			var model = new SubmissionSearchRequest
 			{
 				Limit = 5,
 				Cutoff = DateTime.UtcNow.AddDays(-365)
