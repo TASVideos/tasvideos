@@ -6,14 +6,27 @@ namespace TASVideos.Data.SeedData
 	public class WikiPageSeedData
 	{
 		public const string InitialCreate = "Initial Create";
+		public const string Import = "Modified by Import process";
 
 		// These update exisint revisions to be relevant to the new system, or create new pages alltogether
 		public static readonly WikiPage[] NewRevisions =
 		{
 			new WikiPage
 			{
+				PageName = "System/SubmissionHeader",
+				RevisionMessage = Import,
+				Markup =
+@"This page lists movies that have been submitted for review.
+
+Some of them will eventually end up on the [movies] page, while some of them will [RejectedSubmissions|not make it].
+
+Submitted movies can be published by [Users|certain people].
+"
+			}, 
+			new WikiPage
+			{
 				PageName = "HomePages",
-				RevisionMessage = InitialCreate,
+				RevisionMessage = Import,
 				Markup =
 @"[TODO]: make this page nicer
 This is a list of homepages for various users.
@@ -23,10 +36,10 @@ All users, by default, have the ability to create and edit their homepage.  Log 
 [module:listsubpages]
 "
 			},
-			new WikiPage // TODO: is there not an existing thing to use here?
+			new WikiPage
 			{
 				PageName = "System/WikiEditHelp",
-				RevisionMessage = InitialCreate,
+				RevisionMessage = Import,
 				Markup =
 @"Refer to the [TextFormattingRules] for markup and formatting help.%%%
 Make sure all edits conform to the [EditorGuidelines]"
@@ -58,7 +71,7 @@ After clicking on ""Save"", please wait for the submission to appear. If you can
 			new WikiPage
 			{
 				PageName = "System/SubmissionWarning",
-				RevisionMessage = InitialCreate,
+				RevisionMessage = Import,
 				Markup =
 @"%%%
 Before pressing the Save button, please verify that you have read the [Movie Rules] and [Guidelines]. Your movie must be complete and must beat all existing records where applicable. Submissions that do not follow these rules will be rejected.
