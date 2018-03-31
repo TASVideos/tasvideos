@@ -30,7 +30,7 @@ namespace TASVideos.Controllers
 			_platformTasks = platformTasks;
 		}
 
-		public IActionResult GameList(PagedModel getModel)
+		public IActionResult GameList(GameListRequest getModel)
 		{
 			var model = _catalogTasks.GetPageOfGames(getModel);
 			return View(model);
