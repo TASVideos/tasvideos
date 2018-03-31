@@ -7,7 +7,15 @@ using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Models
 {
-    public class GameListModel
+	public class GameListRequest : PagedModel
+	{
+		public GameListRequest()
+		{
+			PageSize = 25;
+		}
+	}
+
+	public class GameListModel
     {
 		[Sortable]
 		[Display(Name = "Id")]

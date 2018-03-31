@@ -23,7 +23,7 @@ namespace TASVideos.Tasks
 			_mapper = mapper;
 		}
 
-		public PageOf<GameListModel> GetPageOfGames(PagedModel paging) // TODO: ability to filter by system
+		public PageOf<GameListModel> GetPageOfGames(GameListRequest paging) // TODO: ability to filter by system
 		{
 			var data = _db.Games
 				.Select(g => new GameListModel

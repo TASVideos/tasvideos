@@ -4,7 +4,7 @@
 }
 <a asp-action="GameEdit" class="btn btn-primary mb-3">Create</a>
 @Html.Partial("~/Views/Table/_Pager.cshtml", Model)
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-striped table-sm">
 	<sortable-table-head paging="@Model" model-type="typeof(GameListModel)" />
 	@foreach (var game in Model)
 	{
@@ -13,9 +13,9 @@
 			<td>@game.SystemCode</td>
 			<td>@game.DisplayName</td>
 			<td>
-				<a asp-controller="Game" asp-action="View" asp-route-id="@game.Id" class="btn btn-secondary">View</a>
-				<a asp-action="GameEdit" asp-route-id="@game.Id" class="btn btn-primary">Edit</a>
-				<a asp-action="RomList" asp-route-gameId="@game.Id" class="btn btn-secondary">Roms</a>
+				<a asp-controller="Game" asp-action="View" asp-route-id="@game.Id" class="btn btn-sm btn-secondary">View</a>
+				<a asp-action="GameEdit" asp-route-id="@game.Id" class="btn btn-primary btn-sm">Edit</a>
+				<a asp-action="RomList" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm">Roms</a>
 			</td>
 		</tr>
 	}
