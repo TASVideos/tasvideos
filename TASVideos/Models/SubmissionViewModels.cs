@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 
 namespace TASVideos.Models
 {
@@ -229,6 +230,21 @@ namespace TASVideos.Models
 	/// </summary>
 	public class SubmissionListViewModel
 	{
+		public string User { get; set; }
+
+		[Display(Name = "Selected Statuses")]
+		public IEnumerable<int> StatusFilter { get; set; } = new List<int>();
+
+		[Display(Name = "Statuses")]
+		public IEnumerable<SelectListItem> AvailableStatuses => Enum.GetValues(typeof(SubmissionStatus))
+			.Cast<SubmissionStatus>()
+			.Select(s => new SelectListItem
+			{
+				Text = s.EnumDisplayName(),
+				Value = ((int)s).ToString()
+			})
+			.ToList();
+
 		public IEnumerable<Entry> Entries { get; set; } = new List<Entry>();
 
 		public class Entry
