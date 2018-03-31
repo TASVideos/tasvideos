@@ -106,7 +106,7 @@ namespace TASVideos.Tasks
 					GameName = s.GameName,
 					Time = s.Time,
 					Branch = s.Branch,
-					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author.UserName)),
+					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author.UserName).ToList()),
 					Submitted = s.CreateTimeStamp,
 					Status = s.Status
 				}) 
