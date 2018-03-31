@@ -57,7 +57,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Gets a list of <see cref="Submission"/>s for the submission queue filtered on the given <see cref="criteria" />
 		/// </summary>
-		public async Task<IEnumerable<SubmissionListViewModel>> GetSubmissionList(SubmissionSearchRequest criteria)
+		public async Task<SubmissionListViewModel> GetSubmissionList(SubmissionSearchRequest criteria)
 		{
 			var iquery = _db.Submissions
 				.Include(s => s.Submitter)
@@ -93,17 +93,20 @@ namespace TASVideos.Tasks
 			// Because we need the title property which is a derived property that can't be done in Linq to Sql
 			// And needs a varierty of information from sub-tables, hence all the includes
 			var results = await query.ToListAsync();
-			return results.Select(s => new SubmissionListViewModel
+			return new SubmissionListViewModel
 			{
-				Id = s.Id,
-				System = s.System.Code,
-				GameName = s.GameName,
-				Time = s.Time,
-				Branch = s.Branch,
-				Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author.UserName)),
-				Submitted = s.CreateTimeStamp,
-				Status = s.Status
-			});
+				Entries = results.Select(s => new SubmissionListViewModel.Entry
+				{
+					Id = s.Id,
+					System = s.System.Code,
+					GameName = s.GameName,
+					Time = s.Time,
+					Branch = s.Branch,
+					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author.UserName)),
+					Submitted = s.CreateTimeStamp,
+					Status = s.Status
+				}) 
+			};
 		}
 
 		/// <summary>
