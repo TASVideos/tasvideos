@@ -70,7 +70,8 @@ namespace TASVideos.Tasks
 
 			if (!string.IsNullOrWhiteSpace(criteria.User))
 			{
-				query = iquery.Where(s => s.Submitter.UserName == criteria.User);
+				query = iquery.Where(s => s.SubmissionAuthors.Any(sa => sa.Author.UserName == criteria.User)
+					|| s.Submitter.UserName == criteria.User);
 			}
 
 			if (criteria.Cutoff.HasValue)
