@@ -1,8 +1,17 @@
 ﻿@model SystemPageOf<GameListModel>
 @{
-	ViewData["Title"] = "Game List";
+	ViewData["Title"] = "Game List" + (!string.IsNullOrWhiteSpace(Model.SystemCode) ? "/" + Model.SystemCode : string.Empty);
+	var systemsList = (List<SelectListItem>)ViewData["GameSystemList"];
 }
-<a asp-action="GameEdit" class="btn btn-primary mb-3">Create</a>
+
+<a asp-action="GameEdit" class="btn btn-primary mb-3 pull-right">Create</a>
+<form class="form-inline mb-3">
+	<label asp-for="@Model.SystemCode" class="mr-2"></label>
+	<select asp-items="@systemsList" asp-for="@Model.SystemCode" class="form-control mr-2"></select>
+	<button type="Submit" class="btn btn-secondary">Go</button>
+</form>
+
+
 @Html.Partial("~/Views/Table/_SystemPager.cshtml", Model)
 <table class="table table-bordered table-striped table-sm">
 	<sortable-table-head paging="@Model" model-type="typeof(GameListModel)" />
