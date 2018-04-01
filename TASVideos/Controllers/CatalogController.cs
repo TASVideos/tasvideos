@@ -30,9 +30,12 @@ namespace TASVideos.Controllers
 			_platformTasks = platformTasks;
 		}
 
-		public IActionResult GameList(GameListRequest getModel)
+		public async Task<IActionResult> GameList(GameListRequest getModel)
 		{
 			var model = _catalogTasks.GetPageOfGames(getModel);
+			var systems = (await _platformTasks.GetGameSystemDropdownList()).ToList();
+			systems.Insert(0, new SelectListItem { Text = "All", Value = "" });
+			ViewData["GameSystemList"] = systems;
 			return View(model);
 		}
 

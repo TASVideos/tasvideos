@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Data
 {
@@ -19,6 +20,7 @@ namespace TASVideos.Data
 
 	public class SystemPagedModel : PagedModel
 	{
+		[Display(Name = "System")]
 		public string SystemCode { get; set; }
 	}
 
