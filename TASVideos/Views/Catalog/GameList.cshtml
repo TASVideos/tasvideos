@@ -1,9 +1,9 @@
-﻿@model PageOf<GameListModel>
+﻿@model SystemPageOf<GameListModel>
 @{
 	ViewData["Title"] = "Game List";
 }
 <a asp-action="GameEdit" class="btn btn-primary mb-3">Create</a>
-@Html.Partial("~/Views/Table/_Pager.cshtml", Model)
+@Html.Partial("~/Views/Table/_SystemPager.cshtml", Model)
 <table class="table table-bordered table-striped table-sm">
 	<sortable-table-head paging="@Model" model-type="typeof(GameListModel)" />
 	@foreach (var game in Model)

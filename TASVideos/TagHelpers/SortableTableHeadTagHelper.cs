@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -13,6 +16,11 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.WithoutEndTag)]
 	public class SortableTableHeadTagHelper : TagHelper
 	{
+		private static readonly List<string> PagedModelProperties = typeof(PagedModel)
+			.GetProperties()
+			.Select(p => p.Name)
+			.ToList();
+
 		[HtmlAttributeNotBound]
 		[ViewContext]
 		public ViewContext ViewContext { get; set; }
@@ -47,7 +55,7 @@ namespace TASVideos.TagHelpers
 				{
 					var sortDescending = Paging.SortBy == propertyName && !Paging.SortDescending;
 					output.Content.AppendHtml(
-						$"<a href='/{controller}/{action}?CurrentPage={Paging.CurrentPage}&PageSize={Paging.PageSize}&SortDescending={sortDescending}&SortBy={property.Name}'>");
+						$"<a href='/{controller}/{action}?CurrentPage={Paging.CurrentPage}&PageSize={Paging.PageSize}&SortDescending={sortDescending}&SortBy={property.Name}{AdditionalParams()}'>");
 					output.Content.AppendHtml(displayName);
 
 					if (Paging.SortBy == propertyName)
@@ -68,6 +76,19 @@ namespace TASVideos.TagHelpers
 
 				output.Content.AppendHtml("</th>");
 			}
+		}
+
+		private string AdditionalParams()
+		{
+			var sb = new StringBuilder();
+
+			var props = Paging.GetType().GetProperties().Where(p => !PagedModelProperties.Contains(p.Name));
+			foreach (var prop in props)
+			{
+				sb.Append($"&{prop.Name}={prop.GetValue(Paging)}");
+			}
+
+			return sb.ToString();
 		}
 	}
 }

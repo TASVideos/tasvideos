@@ -23,18 +23,31 @@ namespace TASVideos.Tasks
 			_mapper = mapper;
 		}
 
-		public PageOf<GameListModel> GetPageOfGames(GameListRequest paging) // TODO: ability to filter by system
+		public SystemPageOf<GameListModel> GetPageOfGames(GameListRequest paging) // TODO: ability to filter by system
 		{
-			var data = _db.Games
+			var query = !string.IsNullOrWhiteSpace(paging.SystemCode)
+				? _db.Games.Where(g => g.System.Code == paging.SystemCode)
+				: _db.Games;
+
+			var data = query
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
 					SystemCode = g.System.Code
 				})
+				.SortBy(paging)
 				.SortedPageOf(_db, paging);
 
-			return data;
+			return new SystemPageOf<GameListModel>(data)
+			{
+				SystemCode = paging.SystemCode,
+				PageSize = data.PageSize,
+				CurrentPage = data.CurrentPage,
+				RowCount = data.RowCount,
+				SortDescending = data.SortDescending,
+				SortBy = data.SortBy
+			};
 		}
 
 		public async Task<GameEditModel> GetGameForEdit(int gameId)

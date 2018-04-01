@@ -1,5 +1,6 @@
-@model PagedModel
+@model SystemPagedModel
 @{
+	// TODO: is there a better way to do this than a copy-pasta of _Pager?
 	var controller = ViewContext.Controller();
 	var action = ViewContext.Action();
 }
@@ -14,6 +15,7 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
+			asp-route-SystemCode="@Model.SystemCode"
 			class="btn btn-secondary btn-sm" title="First Page">
 			<span class="fa fa-fast-backward"></span>
 		</a>
@@ -25,6 +27,7 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
+			asp-route-SystemCode="@Model.SystemCode"
 			class="btn btn-secondary btn-sm" title="Previous Page">
 			<span class="fa fa-chevron-left"></span>
 		</a>
@@ -36,6 +39,7 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
+			asp-route-SystemCode="@Model.SystemCode"
 			class="btn btn-secondary btn-sm" title="Next Page">
 			<span class="fa fa-chevron-right"></span>
 		</a>
@@ -47,6 +51,7 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
+			asp-route-SystemCode="@Model.SystemCode"
 			class="btn btn-secondary btn-sm" title="Last Page">
 			<span class="fa fa-fast-forward"></span>
 		</a>
@@ -60,6 +65,7 @@
 			<input type="hidden" asp-for="PageSize" />
 			<input type="hidden" asp-for="SortDescending" />
 			<input type="hidden" asp-for="SortBy" />
+			<input type="hidden" asp-for="SystemCode"/>
 			<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage" class="input-sm" style="height: 23px; padding: 2px 5px; max-width: 65px;"> Of @Model.LastPage</label>
 			<button type="submit" class="btn btn-secondary btn-sm">Go To</button>
 		</form>
