@@ -13,6 +13,8 @@ namespace TASVideos.Models
 		{
 			PageSize = 25;
 		}
+
+		public string SystemCode { get; set; }
 	}
 
 	public class GameListModel
