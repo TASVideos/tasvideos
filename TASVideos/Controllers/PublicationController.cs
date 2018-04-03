@@ -4,10 +4,10 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
-
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Controllers
 {
@@ -75,6 +75,19 @@ namespace TASVideos.Controllers
 			}
 
 			return BadRequest();
+		}
+
+		[RequirePermission(PermissionTo.EditPublicationMetaData)]
+		public async Task<IActionResult> Edit(int id)
+		{
+			var model = await _publicationTasks.GetPublicationForEdit(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
 		}
 	}
 }
