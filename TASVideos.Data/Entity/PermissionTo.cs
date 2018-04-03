@@ -112,7 +112,12 @@ namespace TASVideos.Data.Entity
 
 		[Display(Name = "Catalog Movies")]
 		[Group("MovieAdministration")]
-		[Description("The ability to the game, system, and rom information for movies")]
-		CatalogMovies = 21
+		[Description("The ability to edit the game, system, and rom information for movies")]
+		CatalogMovies = 21,
+
+		[Display(Name = "Edit Publication Metadata")]
+		[Group("MovieAdministration")]
+		[Description("The ability to edit publication information such as branch, screenshots, torrents, tags, etc")]
+		EditPublicationMetaData = 22
 	}
 }
