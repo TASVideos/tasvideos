@@ -35,7 +35,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditSystemPages,
 			PermissionTo.EditUsers,
 			PermissionTo.AssignRoles,
-			PermissionTo.MoveWikiPages
+			PermissionTo.MoveWikiPages,
+			PermissionTo.EditPublicationMetaData
 		}).ToArray();
 
 		private static readonly PermissionTo[] JudgePermissions =
@@ -43,7 +44,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditSubmissions,
 			PermissionTo.JudgeSubmissions,
 			PermissionTo.ReplaceSubmissionMovieFile,
-			PermissionTo.CatalogMovies
+			PermissionTo.CatalogMovies,
+			PermissionTo.EditPublicationMetaData
 		};
 
 		private static readonly PermissionTo[] SeniorJudgePermissions = JudgePermissions.Concat(new[]
@@ -56,7 +58,8 @@ namespace TASVideos.Data.SeedData
 		{
 			PermissionTo.PublishMovies,
 			PermissionTo.CatalogMovies,
-			PermissionTo.EditSubmissions
+			PermissionTo.EditSubmissions,
+			PermissionTo.EditPublicationMetaData
 		};
 
 		private static readonly PermissionTo[] SeniorPublisherPermissions =
@@ -69,7 +72,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditUsers,
 			PermissionTo.EditRoles,
-			PermissionTo.AssignRoles
+			PermissionTo.AssignRoles,
+			PermissionTo.EditPublicationMetaData
 		}).ToArray();
 
 		public static readonly Role EditHomePage = new Role
