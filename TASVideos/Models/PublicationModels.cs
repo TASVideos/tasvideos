@@ -65,4 +65,12 @@ namespace TASVideos.Models
 		public string Game { get; set; }
 		public string Authors { get; set; }
 	}
+
+	public class PublicationEditModel
+	{
+		public int Id { get; set; }
+		public string Title { get; set; }
+		public int? ObsoletedBy { get; set; }
+		public string Branch { get; set; }
+	}
 }

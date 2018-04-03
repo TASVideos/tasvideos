@@ -1,0 +1,12 @@
+﻿@model PublicationEditModel
+@{
+	ViewData["Title"] = $"Edit Movie #{Model.Id}";
+}
+@section PageTitle {
+	<h1>@Model.Title</h1>
+}
+
+<h4>TODO</h4>
+<div>ID: @Model.Id</div>
+<div>Obsoleted BY: @Model.ObsoletedBy</div>
+<div>Branch: @Model.Branch</div>

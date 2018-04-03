@@ -246,5 +246,22 @@ namespace TASVideos.Tasks
 
 			return results;
 		}
+
+		/// <summary>
+		/// Gets a <see cref="Publication"/> with the given <see cref="id" /> for the purpose of editing
+		/// If no publication with the given id is found then null is returned
+		/// </summary>
+		public async Task<PublicationEditModel> GetPublicationForEdit(int id)
+		{
+			return await _db.Publications
+				.Select(p => new PublicationEditModel
+				{
+					Id = p.Id,
+					Title = p.Title,
+					ObsoletedBy = p.ObsoletedById,
+					Branch = p.Branch
+				})
+				.SingleOrDefaultAsync(p => p.Id == id);
+		}
 	}
 }
