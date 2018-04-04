@@ -5,8 +5,19 @@
 @section PageTitle {
 	<h1>@Model.Title</h1>
 }
+<form asp-action="Edit">
+	<input type="hidden" asp-for="Id" />
+	<row>
+		<div class="col-lg-6">
+			<label asp-for="Branch"></label>
+			<input type="text" class="form-control" asp-for="Branch" />
+		</div>
+	</row>
+	<div class="text-center mt-3">
+		<button type="submit" class="btn btn-primary">Update</button>
+	</div>
 
+</form>
 <h4>TODO</h4>
-<div>ID: @Model.Id</div>
 <div>Obsoleted BY: @Model.ObsoletedBy</div>
-<div>Branch: @Model.Branch</div>
+

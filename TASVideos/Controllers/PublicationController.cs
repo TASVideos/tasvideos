@@ -89,5 +89,18 @@ namespace TASVideos.Controllers
 
 			return View(model);
 		}
+
+		[HttpPost, AutoValidateAntiforgeryToken]
+		[RequirePermission(PermissionTo.EditPublicationMetaData)]
+		public async Task<IActionResult> Edit(PublicationEditModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			await _publicationTasks.UpdatePublication(model);
+			return RedirectToAction(nameof(View), new { model.Id });
+		}
 	}
 }
