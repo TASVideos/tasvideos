@@ -276,7 +276,8 @@ namespace TASVideos.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return View(model); // TODO: repopulate dropdowns
+				await _submissionTasks.PopulateCatalogDropDowns(model);
+				return View(model);
 			}
 
 			await _submissionTasks.UpdateCatalog(model);
