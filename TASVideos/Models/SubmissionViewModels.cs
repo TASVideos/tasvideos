@@ -39,6 +39,7 @@ namespace TASVideos.Models
 		[StringLength(50)]
 		public string Emulator { get; set; }
 
+		[Url]
 		[Display(Name = "Encode Embedded Link", Description = "Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU")]
 		public string EncodeEmbedLink { get; set; }
 
@@ -127,6 +128,7 @@ namespace TASVideos.Models
 		[Display(Name = "Emulator")]
 		public string Emulator { get; set; }
 
+		[Url]
 		[Display(Name = "Encode Embed Link")]
 		public string EncodeEmbedLink { get; set; }
 
@@ -297,11 +299,13 @@ namespace TASVideos.Models
 		[Display(Name = "Movie Filename", Description = "Please follow the convention: xxxv#-yyy where xxx is author name, # is version and yyy is game name. Special characters such as \"&\" and \"/\" and \".\" and spaces must not occur in the filename.")]
 		public string MovieFileName { get; set; }
 
+		[Url]
 		[Required]
 		[Display(Name = "Online-watching URL")]
 		[StringLength(100)]
 		public string OnlineWatchingUrl { get; set; }
 
+		[Url]
 		[Required]
 		[Display(Name = "Mirror site URL")]
 		[StringLength(100)]
