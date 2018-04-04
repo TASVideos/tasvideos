@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Models
@@ -69,8 +71,12 @@ namespace TASVideos.Models
 	public class PublicationEditModel
 	{
 		public int Id { get; set; }
+		public string SystemCode { get; set; }
+
 		public string Title { get; set; }
 		public int? ObsoletedBy { get; set; }
 		public string Branch { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();
 	}
 }
