@@ -97,7 +97,7 @@ namespace TASVideos.Controllers
 			if (!ModelState.IsValid)
 			{
 				model.AvailableMoviesForObsoletedBy =
-					await _publicationTasks.GetAvailableMoviesForObsoletedBy(model.SystemCode);
+					await _publicationTasks.GetAvailableMoviesForObsoletedBy(model.Id, model.SystemCode);
 
 				return View(model);
 			}

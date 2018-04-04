@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -74,7 +75,10 @@ namespace TASVideos.Models
 		public string SystemCode { get; set; }
 
 		public string Title { get; set; }
+
+		[Display(Name = "Obsoleted By")]
 		public int? ObsoletedBy { get; set; }
+
 		public string Branch { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();

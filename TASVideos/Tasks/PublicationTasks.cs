@@ -261,6 +261,7 @@ namespace TASVideos.Tasks
 					.Select(p => new PublicationEditModel
 					{
 						Id = p.Id,
+						SystemCode = p.System.Code,
 						Title = p.Title,
 						ObsoletedBy = p.ObsoletedById,
 						Branch = p.Branch
@@ -268,23 +269,33 @@ namespace TASVideos.Tasks
 					.SingleOrDefaultAsync(p => p.Id == id);
 
 				model.AvailableMoviesForObsoletedBy =
-					await GetAvailableMoviesForObsoletedBy(model.SystemCode);
+					await GetAvailableMoviesForObsoletedBy(id, model.SystemCode);
 
 				return model;
 			}
 		}
 
 		// TODO: document
-		public async Task<IEnumerable<SelectListItem>> GetAvailableMoviesForObsoletedBy(string systemCode)
+		public async Task<IEnumerable<SelectListItem>> GetAvailableMoviesForObsoletedBy(int id, string systemCode)
 		{
-			return await _db.Publications
-				.Where(p => p.System.Code == systemCode)
-				.Select(p => new SelectListItem
+			return new []
+			{
+				new SelectListItem
 				{
-					Text = p.Title,
-					Value = p.Id.ToString()
-				})
-				.ToListAsync();
+					Text = "",
+					Value = ""
+				}
+			}.Concat(
+				await _db.Publications
+					.ThatAreCurrent()
+					.Where(p => p.System.Code == systemCode)
+					.Where(p => p.Id != id)
+					.Select(p => new SelectListItem
+					{
+						Text = p.Title,
+						Value = p.Id.ToString()
+					})
+					.ToListAsync());
 		}
 
 		// TODO: document
@@ -301,6 +312,8 @@ namespace TASVideos.Tasks
 			if (publication != null)
 			{
 				publication.Branch = model.Branch;
+				publication.ObsoletedById = model.ObsoletedBy;
+
 				publication.GenerateTitle();
 				await _db.SaveChangesAsync();
 			}
