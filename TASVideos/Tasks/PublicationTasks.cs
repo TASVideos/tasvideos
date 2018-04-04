@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -253,17 +255,39 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PublicationEditModel> GetPublicationForEdit(int id)
 		{
-			return await _db.Publications
-				.Select(p => new PublicationEditModel
-				{
-					Id = p.Id,
-					Title = p.Title,
-					ObsoletedBy = p.ObsoletedById,
-					Branch = p.Branch
-				})
-				.SingleOrDefaultAsync(p => p.Id == id);
+			using (await _db.Database.BeginTransactionAsync())
+			{
+				var model = await _db.Publications
+					.Select(p => new PublicationEditModel
+					{
+						Id = p.Id,
+						Title = p.Title,
+						ObsoletedBy = p.ObsoletedById,
+						Branch = p.Branch
+					})
+					.SingleOrDefaultAsync(p => p.Id == id);
+
+				model.AvailableMoviesForObsoletedBy =
+					await GetAvailableMoviesForObsoletedBy(model.SystemCode);
+
+				return model;
+			}
 		}
 
+		// TODO: document
+		public async Task<IEnumerable<SelectListItem>> GetAvailableMoviesForObsoletedBy(string systemCode)
+		{
+			return await _db.Publications
+				.Where(p => p.System.Code == systemCode)
+				.Select(p => new SelectListItem
+				{
+					Text = p.Title,
+					Value = p.Id.ToString()
+				})
+				.ToListAsync();
+		}
+
+		// TODO: document
 		public async Task UpdatePublication(PublicationEditModel model)
 		{
 			var publication = await _db.Publications

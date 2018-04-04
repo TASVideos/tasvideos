@@ -5,8 +5,10 @@
 @section PageTitle {
 	<h1>@Model.Title</h1>
 }
+
 <form asp-action="Edit">
 	<input type="hidden" asp-for="Id" />
+	<input type="hidden" asp-for="SystemCode" />
 	<row>
 		<div class="col-lg-6">
 			<label asp-for="Branch"></label>
