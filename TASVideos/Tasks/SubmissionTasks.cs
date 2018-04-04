@@ -468,7 +468,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns whether or not the <see cref="Submission"/> wiht the given <see cref="id"/>
+		/// Returns whether or not the <see cref="Submission"/> with the given <see cref="id"/>
 		/// is ready to be published
 		/// </summary>
 		public async Task<bool> CanPublish(int id)
@@ -540,7 +540,7 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Returns the <see cref="Submission"/> with the given <see cref="id"/>
-		/// for the purpose of setting <see cref="TASVideos.Data.Entity.Game.Game"/> catalogging information.
+		/// for the purpose of setting <see cref="TASVideos.Data.Entity.Game.Game"/> cataloging information.
 		/// If no submission is found, null is returned
 		/// </summary>
 		public async Task<SubmissionCatalogModel> Catalog(int id)
@@ -612,7 +612,7 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Takes a <see cref="Submission"/> and creates a new <see cref="Publication"/>
-		/// If successful, the id of the new publicaiton is returned
+		/// If successful, the id of the new publication is returned
 		/// </summary>
 		/// <returns>The id of the new <see cref="Publication"/></returns>
 		public async Task<int> PublishSubmission(SubmissionPublishModel model)
