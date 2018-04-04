@@ -11,12 +11,33 @@
 	<input type="hidden" asp-for="SystemCode" />
 	<row>
 		<div class="col-lg-6">
-			<label asp-for="Branch"></label>
-			<input type="text" class="form-control" asp-for="Branch" />
+			<form-group>
+				<label asp-for="Branch"></label>
+				<input type="text" class="form-control" asp-for="Branch" />
+				<span asp-validation-for="Branch" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="ObsoletedBy"></label>
+				<select asp-for="ObsoletedBy" asp-items="@Model.AvailableMoviesForObsoletedBy" class="form-control"></select>
+				<span asp-validation-for="ObsoletedBy" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="EmulatorVersion"></label>
+				<input type="text" class="form-control" asp-for="EmulatorVersion" />
+				<span asp-validation-for="EmulatorVersion" class="text-danger"></span>
+			</form-group>
 		</div>
 		<div class="col-lg-6">
-			<label asp-for="ObsoletedBy"></label>
-			<select asp-for="ObsoletedBy" asp-items="@Model.AvailableMoviesForObsoletedBy" class="form-control"></select>
+			<form-group>
+				<label asp-for="OnlineWatchingUrl"></label>
+				<input type="text" class="form-control" asp-for="OnlineWatchingUrl" />
+				<span asp-validation-for="OnlineWatchingUrl" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="MirrorSiteUrl"></label>
+				<input type="text" class="form-control" asp-for="MirrorSiteUrl" />
+				<span asp-validation-for="MirrorSiteUrl" class="text-danger"></span>
+			</form-group>
 		</div>
 	</row>
 	<div class="text-center mt-3">

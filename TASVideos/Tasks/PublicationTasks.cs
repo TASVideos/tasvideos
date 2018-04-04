@@ -264,7 +264,10 @@ namespace TASVideos.Tasks
 						SystemCode = p.System.Code,
 						Title = p.Title,
 						ObsoletedBy = p.ObsoletedById,
-						Branch = p.Branch
+						Branch = p.Branch,
+						EmulatorVersion = p.EmulatorVersion,
+						OnlineWatchingUrl = p.OnlineWatchingUrl,
+						MirrorSiteUrl = p.MirrorSiteUrl
 					})
 					.SingleOrDefaultAsync(p => p.Id == id);
 
@@ -313,6 +316,9 @@ namespace TASVideos.Tasks
 			{
 				publication.Branch = model.Branch;
 				publication.ObsoletedById = model.ObsoletedBy;
+				publication.EmulatorVersion = model.EmulatorVersion;
+				publication.OnlineWatchingUrl = model.OnlineWatchingUrl;
+				publication.MirrorSiteUrl = model.MirrorSiteUrl;
 
 				publication.GenerateTitle();
 				await _db.SaveChangesAsync();

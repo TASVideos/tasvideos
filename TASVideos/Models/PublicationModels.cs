@@ -79,6 +79,18 @@ namespace TASVideos.Models
 		[Display(Name = "Obsoleted By")]
 		public int? ObsoletedBy { get; set; }
 
+		[Url]
+		[Display(Name = "Online-watching URL")]
+		public string OnlineWatchingUrl { get; set; }
+
+		[Url]
+		[Display(Name = "Mirror site URL")]
+		public string MirrorSiteUrl { get; set; }
+
+		[StringLength(50)]
+		[Display(Name = "Emulator Version")]
+		public string EmulatorVersion { get; set; }
+
 		public string Branch { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();
