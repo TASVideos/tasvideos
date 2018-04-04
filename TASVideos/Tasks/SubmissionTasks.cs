@@ -547,56 +547,68 @@ namespace TASVideos.Tasks
 		{
 			using (_db.Database.BeginTransactionAsync())
 			{
-				var submission = await _db.Submissions
+				var model = await _db.Submissions
+					.Select(s => new SubmissionCatalogModel
+					{
+						Id = s.Id,
+						RomId = s.RomId,
+						GameId = s.GameId,
+						SystemId = s.SystemId,
+						SystemFrameRateId = s.SystemFrameRateId,
+					})
 					.SingleAsync(s => s.Id == id);
 
-				if (submission == null)
+				if (model == null)
 				{
 					return null;
 				}
 
-				return new SubmissionCatalogModel
-				{
-					Id = submission.Id,
-					RomId = submission.RomId,
-					GameId = submission.GameId,
-					SystemId = submission.SystemId,
-					SystemFrameRateId = submission.SystemFrameRateId,
-					AvailableRoms = await _db.Roms
-						.Where(r => !submission.SystemId.HasValue || r.Game.SystemId == submission.SystemId)
-						.Where(r => !submission.GameId.HasValue || r.GameId == submission.GameId)
-						.Select(r => new SelectListItem
+				await PopulateCatalogDropDowns(model);
+				return model;
+			}
+		}
+
+		public async Task PopulateCatalogDropDowns(SubmissionCatalogModel model)
+		{
+			using (_db.Database.BeginTransactionAsync())
+			{
+				model.AvailableRoms = await _db.Roms
+					.Where(r => !model.SystemId.HasValue || r.Game.SystemId == model.SystemId)
+					.Where(r => !model.GameId.HasValue || r.GameId == model.GameId)
+					.Select(r => new SelectListItem
+					{
+						Value = r.Id.ToString(),
+						Text = r.Name
+					})
+					.ToListAsync();
+
+				model.AvailableGames = await _db.Games
+					.Where(g => !model.SystemId.HasValue || g.SystemId == model.SystemId)
+					.Select(g => new SelectListItem
+					{
+						Value = g.Id.ToString(),
+						Text = g.GoodName
+					})
+					.ToListAsync();
+
+				model.AvailableSystems = await _db.GameSystems
+					.Select(s => new SelectListItem
+					{
+						Value = s.Id.ToString(),
+						Text = s.Code
+					})
+					.ToListAsync();
+
+				model.AvailableSystemFrameRates = model.SystemId.HasValue
+					? await _db.GameSystemFrameRates
+						.Where(sf => sf.GameSystemId == model.SystemId)
+						.Select(sf => new SelectListItem
 						{
-							Value = r.Id.ToString(),
-							Text = r.Name
+							Value = sf.Id.ToString(),
+							Text = sf.RegionCode + " (" + sf.FrameRate + ")"
 						})
-						.ToListAsync(),
-					AvailableGames = await _db.Games
-						.Where(g => !submission.SystemId.HasValue || g.SystemId == submission.SystemId)
-						.Select(g => new SelectListItem
-						{
-							Value = g.Id.ToString(),
-							Text = g.GoodName
-						})
-						.ToListAsync(),
-					AvailableSystems = await _db.GameSystems
-						.Select(s => new SelectListItem
-						{
-							Value = s.Id.ToString(),
-							Text = s.Code
-						})
-						.ToListAsync(),
-					AvailableSystemFrameRates = submission.SystemId.HasValue
-						? await _db.GameSystemFrameRates
-							.Where(sf => sf.GameSystemId == submission.SystemId)
-							.Select(sf => new SelectListItem
-							{
-								Value = sf.Id.ToString(),
-								Text = sf.RegionCode + " (" + sf.FrameRate + ")"
-							})
-							.ToListAsync()
-						: new List<SelectListItem>()
-				};
+						.ToListAsync()
+					: new List<SelectListItem>();
 			}
 		}
 
