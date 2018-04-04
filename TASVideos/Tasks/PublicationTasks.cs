@@ -263,5 +263,23 @@ namespace TASVideos.Tasks
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}
+
+		public async Task UpdatePublication(PublicationEditModel model)
+		{
+			var publication = await _db.Publications
+				.Include(p => p.System)
+				.Include(p => p.SystemFrameRate)
+				.Include(p => p.Game)
+				.Include(p => p.Authors)
+				.ThenInclude(pa => pa.Author)
+				.SingleOrDefaultAsync(p => p.Id == model.Id);
+
+			if (publication != null)
+			{
+				publication.Branch = model.Branch;
+				publication.GenerateTitle();
+				await _db.SaveChangesAsync();
+			}
+		}
 	}
 }
