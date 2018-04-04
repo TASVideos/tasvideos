@@ -281,24 +281,16 @@ namespace TASVideos.Tasks
 		// TODO: document
 		public async Task<IEnumerable<SelectListItem>> GetAvailableMoviesForObsoletedBy(int id, string systemCode)
 		{
-			return new []
-			{
-				new SelectListItem
+			return await _db.Publications
+				.ThatAreCurrent()
+				.Where(p => p.System.Code == systemCode)
+				.Where(p => p.Id != id)
+				.Select(p => new SelectListItem
 				{
-					Text = "",
-					Value = ""
-				}
-			}.Concat(
-				await _db.Publications
-					.ThatAreCurrent()
-					.Where(p => p.System.Code == systemCode)
-					.Where(p => p.Id != id)
-					.Select(p => new SelectListItem
-					{
-						Text = p.Title,
-						Value = p.Id.ToString()
-					})
-					.ToListAsync());
+					Text = p.Title,
+					Value = p.Id.ToString()
+				})
+				.ToListAsync();
 		}
 
 		// TODO: document
