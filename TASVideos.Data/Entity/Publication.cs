@@ -35,7 +35,7 @@ namespace TASVideos.Data.Entity
 		public virtual Submission Submission { get; set; }
 		public virtual ICollection<PublicationAuthor> Authors { get; set; } = new List<PublicationAuthor>();
 
-		public int WikiContentId { get; set; }
+		public int? WikiContentId { get; set; } // making this non-nullable is a catch-22 when creating a publication, the wiki needs a publication id and the publication needs a wiki id
 		public virtual WikiPage WikiContent { get; set; }
 
 		// TODO: we eventually should want to move these to the file server instead
