@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,13 +19,16 @@ namespace TASVideos.Tasks
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
+		private readonly IMapper _mapper;
 		
 		public PublicationTasks(
 			ApplicationDbContext db,
-			ICacheService cache)
+			ICacheService cache,
+			IMapper mapper)
 		{
 			_db = db;
 			_cache = cache;
+			_mapper = mapper;
 		}
 
 		/// <summary>
@@ -315,6 +320,88 @@ namespace TASVideos.Tasks
 				publication.GenerateTitle();
 				await _db.SaveChangesAsync();
 			}
+		}
+
+		/// <summary>
+		/// Returns the <see cref="Publication"/> with the given <see cref="id"/>
+		/// for the purpose of setting <see cref="TASVideos.Data.Entity.Game.Game"/> cataloging information.
+		/// If no publication is found, null is returned
+		/// </summary>
+		public async Task<PublicationCatalogModel> Catalog(int id)
+		{
+			using (_db.Database.BeginTransactionAsync())
+			{
+				var model = await _db.Publications
+					.Select(s => new PublicationCatalogModel
+					{
+						Id = s.Id,
+						RomId = s.RomId,
+						GameId = s.GameId,
+						SystemId = s.SystemId,
+						SystemFrameRateId = s.SystemFrameRateId,
+					})
+					.SingleAsync(s => s.Id == id);
+
+				if (model == null)
+				{
+					return null;
+				}
+
+				await PopulateCatalogDropDowns(model);
+				return model;
+			}
+		}
+
+		public async Task PopulateCatalogDropDowns(PublicationCatalogModel model)
+		{
+			using (_db.Database.BeginTransactionAsync())
+			{
+				model.AvailableRoms = await _db.Roms
+					.Where(r => r.GameId == model.GameId)
+					.Where(r => r.Game.SystemId == model.SystemId)
+					.Select(r => new SelectListItem
+					{
+						Value = r.Id.ToString(),
+						Text = r.Name
+					})
+					.ToListAsync();
+
+				model.AvailableGames = await _db.Games
+					.Where(g => g.SystemId == model.SystemId)
+					.Select(g => new SelectListItem
+					{
+						Value = g.Id.ToString(),
+						Text = g.GoodName
+					})
+					.ToListAsync();
+
+				model.AvailableSystems = await _db.GameSystems
+					.Select(s => new SelectListItem
+					{
+						Value = s.Id.ToString(),
+						Text = s.Code
+					})
+					.ToListAsync();
+
+				model.AvailableSystemFrameRates = await _db.GameSystemFrameRates
+					.Where(sf => sf.GameSystemId == model.SystemId)
+					.Select(sf => new SelectListItem
+					{
+						Value = sf.Id.ToString(),
+						Text = sf.RegionCode + " (" + sf.FrameRate + ")"
+					})
+					.ToListAsync();
+			}
+		}
+
+		/// <summary>
+		/// Updates the given <see cref="Publication"/> with the given <see cref="TASVideos.Data.Entity.Game.Game"/> catalog information
+		/// </summary>
+		public async Task UpdateCatalog(PublicationCatalogModel model)
+		{
+			var publication = await _db.Publications.SingleAsync(s => s.Id == model.Id);
+			_mapper.Map(model, publication);
+			await _db.SaveChangesAsync();
 		}
 	}
 }

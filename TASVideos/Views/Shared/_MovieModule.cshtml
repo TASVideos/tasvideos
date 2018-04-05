@@ -15,10 +15,15 @@
 			<a asp-controller="Publication" asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary">Publication</a>
 			<a asp-controller="Submission" asp-action="View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary">Submission</a>
 			<a condition="@ViewData.UserHasPermission(PermissionTo.EditPublicationMetaData)"
-				asp-controller="Publication"
-				asp-action="Edit"
-				asp-route-id="@Model.Id"
-				class="btn btn-secondary">Edit</a>
+			   asp-controller="Publication"
+			   asp-action="Edit"
+			   asp-route-id="@Model.Id"
+			   class="btn btn-secondary">Edit</a>
+			<a condition="@ViewData.UserHasPermission(PermissionTo.CatalogMovies)"
+			   asp-controller="Publication"
+			   asp-action="Catalog"
+			   asp-route-id="@Model.Id"
+			   class="btn btn-secondary">Catalog</a>
 		</div>
 		<div class="col-md-5">
 			<row>
