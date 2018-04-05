@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+    <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+      <UsingTask
+        TaskName="GetVersion"
+        TaskFactory="CodeTaskFactory"
+        AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+        <ParameterGroup>
+          <VersionString ParameterType="System.String" Required="true" />
+          <Version ParameterType="System.String" Output="true" />
+          <Commit ParameterType="System.String" Output="true" />
+          <VersionSuffix ParameterType="System.String" Output="true" />
+        </ParameterGroup>
+        <Task>
+          <!--<Reference Include="" />-->
+          <Using Namespace="System"/>
+          <Using Namespace="System.IO"/>
+          <Using Namespace="System.Text.RegularExpressions" />
+          <Code Type="Fragment" Language="cs">
+            <![CDATA[
+              var match = Regex.Match(VersionString, @"^(?<major>\d+)\.(?<minor>\d+)(\.?(?<patch>\d+))?-(?<revision>\d+)-(?<commit>[a-z0-9-]+)$");
+              int major, minor, patch, revision;
+              Int32.TryParse(match.Groups["major"].Value, out major);
+              Int32.TryParse(match.Groups["minor"].Value, out minor);
+              Int32.TryParse(match.Groups["patch"].Value, out patch);
+              Int32.TryParse(match.Groups["revision"].Value, out revision);
+              _Version = new Version(major, minor, patch, revision).ToString();
+              _Commit = match.Groups["commit"].Value;
+            ]]>
+          </Code>
+        </Task>
+      </UsingTask>
+
+      <UsingTask
+        TaskName="GitExistsInPath"
+        TaskFactory="CodeTaskFactory"
+        AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+        <ParameterGroup>
+          <Exists ParameterType="System.Boolean" Output="true" />
+        </ParameterGroup>
+        <Task>
+          <!--<Reference Include="" />-->
+          <Using Namespace="System"/>
+          <Using Namespace="System.IO"/>
+          <Using Namespace="System.Text.RegularExpressions" />
+          <Code Type="Fragment" Language="cs">
+            <![CDATA[
+            var values = Environment.GetEnvironmentVariable("PATH");
+            foreach (var path in values.Split(';')) {
+                var exeFullPath = Path.Combine(path, "git.exe");
+                if (File.Exists(exeFullPath)) {
+                    Exists = true;
+                    return true;
+                }
+                var cmdFullPath = Path.Combine(path, "git.cmd");
+                if (File.Exists(cmdFullPath)) {
+                    Exists = true;
+                    return true;
+            }
+            }
+            Exists = false;
+            ]]>
+          </Code>
+        </Task>
+      </UsingTask>
+
+      <Target Name="CreateCommonVersionInfo" BeforeTargets="CoreCompile">
+        <Message Importance="high" Text="CreateCommonVersionInfo" />
+
+        <GitExistsInPath>
+          <Output TaskParameter="Exists" PropertyName="GitExists"/>
+        </GitExistsInPath>
+        <Message Importance="High" Text="git not found!" Condition="!$(GitExists)"/>
+
+        <Exec Command="git describe --tags --long --dirty > $(ProjectDir)version.txt" Outputs="$(ProjectDir)version.txt" WorkingDirectory="$(SolutionDir)" IgnoreExitCode="true" Condition="$(GitExists)">
+          <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+        </Exec>
+        <Message Importance="high" Text="Calling git failed with exit code $(ExitCode)" Condition="$(GitExists) And '$(ExitCode)'!='0'" />
+
+        <ReadLinesFromFile File="$(ProjectDir)version.txt" Condition="$(GitExists) And '$(ExitCode)'=='0'">
+          <Output TaskParameter="Lines" ItemName="OutputLines"/>
+        </ReadLinesFromFile>
+        <Message Importance="High" Text="Tags: @(OutputLines)" Condition="$(GitExists) And '$(ExitCode)'=='0'"/>
+
+        <Delete Condition="Exists('$(ProjectDir)version.txt')" Files="$(ProjectDir)version.txt"/>
+
+        <GetVersion VersionString="@(OutputLines)" Condition="$(GitExists) And '$(ExitCode)'=='0'">
+          <Output TaskParameter="Version" PropertyName="VersionString"/>
+          <Output TaskParameter="Commit" PropertyName="Commit"/>
+        </GetVersion>
+
+        <PropertyGroup>
+          <VersionString Condition="'$(VersionString)'==''">0.0.0.0</VersionString>
+        </PropertyGroup>
+
+        <Message Importance="High" Text="Creating CommonVersionInfo.cs with version $(VersionString) $(Commit)" />
+
+        <WriteLinesToFile Overwrite="true" File="$(ProjectDir)CommonAssemblyInfo.cs" Encoding="UTF-8" Lines='using System.Reflection%3B
+
+    // full version: $(VersionString)-$(Commit)
+
+    [assembly: AssemblyVersion("$(VersionString)")]
+    [assembly: AssemblyInformationalVersion("$(VersionString)")] 
+    [assembly: AssemblyFileVersion("$(VersionString)")]' />
+
+      </Target>
+    </Project>

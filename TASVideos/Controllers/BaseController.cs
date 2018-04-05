@@ -22,7 +22,7 @@ namespace TASVideos.Controllers
 			_userTasks = userTasks;
 		}
 
-		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Build}";
+		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
 
 		internal IEnumerable<PermissionTo> UserPermissions
 		{
