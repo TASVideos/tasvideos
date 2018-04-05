@@ -105,5 +105,30 @@ namespace TASVideos.Controllers
 			await _publicationTasks.UpdatePublication(model);
 			return RedirectToAction(nameof(View), new { model.Id });
 		}
+
+		[RequirePermission(PermissionTo.CatalogMovies)]
+		public async Task<IActionResult> Catalog(int id)
+		{
+			var model = await _publicationTasks.Catalog(id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[HttpPost, AutoValidateAntiforgeryToken]
+		[RequirePermission(PermissionTo.CatalogMovies)]
+		public async Task<IActionResult> Catalog(PublicationCatalogModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model); // TODO: repopulate dropdowns
+			}
+
+			await _publicationTasks.UpdateCatalog(model);
+			return RedirectToAction(nameof(View), new { model.Id });
+		}
 	}
 }

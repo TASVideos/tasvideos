@@ -95,4 +95,26 @@ namespace TASVideos.Models
 
 		public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();
 	}
+
+	public class PublicationCatalogModel
+	{
+		public int Id { get; set; }
+
+		[Display(Name = "Rom")]
+		public int RomId { get; set; }
+
+		[Display(Name = "Game")]
+		public int GameId { get; set; }
+
+		[Display(Name = "System")]
+		public int SystemId { get; set; }
+
+		[Display(Name = "System Framerate")]
+		public int SystemFrameRateId { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
+		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
+		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+		public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
+	}
 }
