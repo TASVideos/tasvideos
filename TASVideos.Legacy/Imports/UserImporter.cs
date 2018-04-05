@@ -24,6 +24,8 @@ namespace TASVideos.Legacy.Imports
 			// import forum users that have no wiki, but check if they are forum banned
 			// gender?
 			// timezone
+			// user_avatar_type ?
+			// mood avatars
 
 			var legacyUsers = legacySiteContext.Users
 				.Include(u => u.UserRoles)
@@ -60,7 +62,9 @@ namespace TASVideos.Legacy.Imports
 					Email = legacyForumUser.Email,
 					NormalizedEmail = legacyForumUser.Email.ToUpper(),
 					CreateUserName = "Automatic Migration",
-					PasswordHash = ""
+					PasswordHash = "",
+					Avatar = legacyForumUser.Avatar,
+					From = legacyForumUser.From
 				};
 
 				users.Add(newUser);
@@ -153,7 +157,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.LastUpdateTimeStamp),
 				nameof(User.LockoutEnabled),
 				nameof(User.PhoneNumberConfirmed),
-				nameof(User.TwoFactorEnabled)
+				nameof(User.TwoFactorEnabled),
+				nameof(User.Avatar),
+				nameof(User.From)
 			};
 
 			var userRoleColumns = new[]

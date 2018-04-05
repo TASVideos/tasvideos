@@ -29,5 +29,11 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_posts")]
 		public int PostCount { get; set; }
+
+		[Column("user_avatar")]
+		public string Avatar { get; set; }
+
+		[Column("user_from")]
+		public string From { get; set; }
     }
 }
