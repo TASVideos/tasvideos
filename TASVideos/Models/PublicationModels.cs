@@ -16,6 +16,11 @@ namespace TASVideos.Models
 		public IEnumerable<int> Years { get; set; } = Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1);
 		public IEnumerable<string> Tags { get; set; } = new List<string>();
 		public bool ShowObsoleted { get; set; }
+
+		public bool IsEmpty => (SystemCodes == null || !SystemCodes.Any())
+			&& (Tiers == null || !Tiers.Any())
+			&& (Years == null || !Years.Any())
+			&& (Tags == null || !Tags.Any());
 	}
 
 	public class PublicationViewModel

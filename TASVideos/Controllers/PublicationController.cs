@@ -49,6 +49,12 @@ namespace TASVideos.Controllers
 				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t))
 			};
 
+			// If no valid filter criteria, don't attempt to generate a list (else it would be all movies for what is most likely a malformed URL)
+			if (searchModel.IsEmpty)
+			{
+				return Redirect("Movies");
+			}
+
 			var model = await _publicationTasks.GetMovieList(searchModel);
 			return View(model);
 		}
