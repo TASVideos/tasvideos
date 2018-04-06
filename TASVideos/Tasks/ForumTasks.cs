@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -60,9 +62,13 @@ namespace TASVideos.Tasks
 					CreateTimestamp = ft.CreateTimeStamp,
 					Type = ft.Type,
 					Views = ft.Views,
-					PostCount = ft.ForumPosts.Count
+					PostCount = ft.ForumPosts.Count,
+					LastPost = ft.ForumPosts.Any() ? ft.ForumPosts.Max(fp => fp.CreateTimeStamp) : (DateTime?)null
 				})
-				.SortedPageOf(_db, paging);
+				.OrderByDescending(ft => ft.Type == ForumTopicType.Sticky)
+				.ThenByDescending(ft => ft.Type == ForumTopicType.Announcement)
+				.ThenByDescending(ft => ft.LastPost)
+				.PageOf(_db, paging);
 
 			return model;
 		}
