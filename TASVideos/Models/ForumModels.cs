@@ -75,6 +75,9 @@ namespace TASVideos.Models
 		{
 			public int Id { get; set; }
 			public string PosterName { get; set; }
+			public string PosterAvatar { get; set; }
+			public string PosterLocation { get; set; }
+			public int PosterPostCount { get; set; }
 			public string Text { get; set; }
 
 			[Sortable]
