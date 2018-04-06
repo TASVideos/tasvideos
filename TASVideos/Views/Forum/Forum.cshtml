@@ -39,7 +39,10 @@
 	@foreach (var topic in Model.Topics)
 	{
 		<tr>
-			<td><span class="fa fa-plus"></span></td>
+			<td>
+				<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fa fa-sticky-note"></span>
+				<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fa fa-bullhorn"></span>
+			</td>
 			<td><a asp-controller="ForumTopic" asp-action="Index" asp-route-id="@topic.Id">@Html.Raw(ToTitle(topic.Title, topic.Type))</a></td>
 			<td>@(topic.PostCount - 1)</td>
 			<td>@topic.CreateUserName</td>
