@@ -99,8 +99,10 @@ namespace TASVideos.Tasks
 					PosterName = p.Poster.UserName,
 					PosterAvatar = p.Poster.Avatar,
 					PosterLocation = p.Poster.From,
+					PosterJoined = p.Poster.CreateTimeStamp,
 					PosterPostCount = _db.ForumPosts.Count(fp => fp.PosterId == p.PosterId),
-					Text = p.Text
+					Text = p.Text,
+					Subject = p.Subject
 				})
 				.SortedPageOf(_db, paging);
 

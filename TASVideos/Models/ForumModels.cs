@@ -78,7 +78,10 @@ namespace TASVideos.Models
 			public string PosterAvatar { get; set; }
 			public string PosterLocation { get; set; }
 			public int PosterPostCount { get; set; }
+			public DateTime PosterJoined { get; set; }
+
 			public string Text { get; set; }
+			public string Subject { get; set; }
 
 			[Sortable]
 			public DateTime CreateTimestamp { get; set; }
