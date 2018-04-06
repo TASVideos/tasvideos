@@ -74,6 +74,7 @@ namespace TASVideos.Models
 		public class ForumPostEntry
 		{
 			public int Id { get; set; }
+			public DateTime PostTime { get; set; }
 			public string PosterName { get; set; }
 			public string PosterAvatar { get; set; }
 			public string PosterLocation { get; set; }
