@@ -13,18 +13,46 @@
 
 @foreach (var post in Model.Posts)
 {
-	<div class="card">
-		<div class="card-header">
-			Posted: @post.PostTime
-			Author: @post.PosterName
-			Posts: @post.PosterPostCount
-			Location: @post.PosterLocation
-			Joined: @post.PosterJoined
-			<img src="@post.PosterAvatar"/>
+	<row>
+		<div class="col-5 col-md-3 pr-0">
+			<div class="card text-right">
+				<div class="card-body">
+					<h5 class="card-title">@post.PosterName</h5>
+					<div class="card-text p-0 m-0">
+						<small>
+							Roles TODO
+							(todo points)
+						</small>
+						<br />
+						<img src="@post.PosterAvatar" />
+						<br />
+						<small>
+							Joined: @post.PosterJoined<br/>
+							Posts: @post.PosterPostCount<br/>
+							Location: @post.PosterLocation
+
+						</small>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="card-body">
-			<small>Subject: @post.Subject</small>
-			@post.Text
+		<div class="col-7 col-md-9  pl-0">
+			<div class="card">
+				<div class="card-header">
+					<small>
+						Posted: @post.PostTime
+						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+					</small>
+				</div>
+				<div class="card-body">
+					@post.Text
+				</div>
+				<div class="card-footer">
+					TODO: quote and awards
+					buttons: profile, pm
+				</div>
+				
+			</div>
 		</div>
-	</div>
+	</row>
 }
