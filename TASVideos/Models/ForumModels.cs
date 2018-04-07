@@ -83,6 +83,7 @@ namespace TASVideos.Models
 
 			public string Text { get; set; }
 			public string Subject { get; set; }
+			public string Signature { get; set; }
 
 			[Sortable]
 			public DateTime CreateTimestamp { get; set; }

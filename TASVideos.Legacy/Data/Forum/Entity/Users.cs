@@ -35,5 +35,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_from")]
 		public string From { get; set; }
+
+		[Column("user_sig")]
+		public string Signature { get; set; }
     }
 }

@@ -103,7 +103,8 @@ namespace TASVideos.Tasks
 					PosterJoined = p.Poster.CreateTimeStamp,
 					PosterPostCount = _db.ForumPosts.Count(fp => fp.PosterId == p.PosterId),
 					Text = p.Text,
-					Subject = p.Subject
+					Subject = p.Subject,
+					Signature = p.Poster.Signature
 				})
 				.SortedPageOf(_db, paging);
 
