@@ -1,12 +1,11 @@
-﻿@using TASVideos.Data.Entity.Forum
-@model ForumTopicModel
+﻿@model ForumTopicModel
 @{
 	ViewData["Title"] = $"TASVideos Forum {Model.Title}";
 }
 
 <h4>@Model.Title</h4>
 <div>
-	<a asp-controller="ForumTopic" asp-action="Create" asp-route-forumId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
+	<a asp-controller="ForumPost" asp-action="Create" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
 </div>
 <hr />
 @Html.Partial("~/Views/Table/_Pager.cshtml", Model.Posts)
@@ -30,7 +29,6 @@
 							Joined: @post.PosterJoined<br/>
 							Posts: @post.PosterPostCount<br/>
 							Location: @post.PosterLocation
-
 						</small>
 					</div>
 				</div>

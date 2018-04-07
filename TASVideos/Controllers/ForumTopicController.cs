@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +44,16 @@ namespace TASVideos.Controllers
 		public IActionResult Create(int forumId)
 		{
 			return new EmptyResult();
+		}
+
+		// TODO: permission
+		[Authorize]
+		[HttpPost]
+		public IActionResult GeneratePreview(string post)
+		{
+			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
+
+			return new ContentResult { Content = "TODO: Genereate Preview" };
 		}
 	}
 }
