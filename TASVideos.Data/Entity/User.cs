@@ -20,6 +20,7 @@ namespace TASVideos.Data.Entity
 
 		public string Avatar { get; set; }
 		public string From { get; set; }
+		public string Signature { get; set; }
 
 		public string LegacyPassword { get; set; }
 

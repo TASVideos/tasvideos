@@ -64,7 +64,8 @@ namespace TASVideos.Legacy.Imports
 					CreateUserName = "Automatic Migration",
 					PasswordHash = "",
 					Avatar = legacyForumUser.Avatar,
-					From = legacyForumUser.From
+					From = legacyForumUser.From,
+					Signature = ImportHelper.FixString(legacyForumUser.Signature)
 				};
 
 				users.Add(newUser);
@@ -159,7 +160,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.PhoneNumberConfirmed),
 				nameof(User.TwoFactorEnabled),
 				nameof(User.Avatar),
-				nameof(User.From)
+				nameof(User.From),
+				nameof(User.Signature)
 			};
 
 			var userRoleColumns = new[]
