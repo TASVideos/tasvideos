@@ -1,0 +1,10 @@
+﻿@model UserProfileModel
+@{
+	ViewData["Title"] = $"Profile for {Model.UserName}";
+}
+
+<a condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
+<h4>@ViewData["Title"]</h4>
+<hr />
+
+<h1>TODO</h1>

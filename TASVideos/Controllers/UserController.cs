@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
@@ -11,7 +13,6 @@ using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
-	[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
 	public class UserController : BaseController
 	{
 		private readonly UserTasks _userTasks;
@@ -23,12 +24,14 @@ namespace TASVideos.Controllers
 			_userTasks = userTasks;
 		}
 
+		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
 		public IActionResult List(PagedModel getModel)
 		{
 			var model = _userTasks.GetPageOfUsers(getModel);
 			return View(model);
 		}
 
+		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
 		public async Task<IActionResult> Index(int? id)
 		{
 			if (!id.HasValue)
@@ -89,6 +92,7 @@ namespace TASVideos.Controllers
 			return Json(exists);
 		}
 
+		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
 		public async Task<IActionResult> SearchUserName(string partial)
 		{
 			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 1)
@@ -98,6 +102,18 @@ namespace TASVideos.Controllers
 			}
 
 			return Json(new List<string>());
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Profile(int id)
+		{
+			var model = await _userTasks.GetUserProfile(id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
 		}
 	}
 }

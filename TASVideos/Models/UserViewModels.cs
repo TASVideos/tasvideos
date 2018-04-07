@@ -117,4 +117,14 @@ namespace TASVideos.Models
 		public int SubmissionCount { get; set; }
 		public IEnumerable<string> Awards { get; set; } = new List<string>();
 	}
+
+	/// <summary>
+	/// Represents a user with publically available information
+	/// Intended for the User/Profile page
+	/// </summary>
+	public class UserProfileModel
+	{
+		public int Id { get; set; }
+		public string UserName { get; set; }
+	}
 }

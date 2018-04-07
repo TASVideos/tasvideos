@@ -350,6 +350,22 @@ namespace TASVideos.Tasks
 			}
 		}
 
+		/// <summary>
+		/// Returns publically available user profile information
+		/// for the <see cref="User"/> with the given <see cref="id"/>
+		/// If no user is found, null is returned
+		/// </summary>
+		public async Task<UserProfileModel> GetUserProfile(int id)
+		{
+			return await _db.Users
+				.Select(u => new UserProfileModel
+				{
+					Id = u.Id,
+					UserName = u.UserName
+				})
+				.SingleOrDefaultAsync(u => u.Id == id);
+		}
+
 		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)
 		{
 			return _db.Users

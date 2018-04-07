@@ -48,11 +48,12 @@
 					@post.Text
 				</div>
 				<div class="card-footer">
-					<i>
-						@post.Signature
-					</i>
+					<i>@post.Signature</i>
+					<br />
+					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterId">Profile</a>
 					TODO: awards
-					buttons: profile, pm
+					buttons: pm
+
 				</div>
 			</div>
 		</div>
