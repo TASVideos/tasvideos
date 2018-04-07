@@ -90,4 +90,11 @@ namespace TASVideos.Models
 			public DateTime CreateTimestamp { get; set; }
 		}
 	}
+
+	public class ForumPostModel
+	{
+		public int TopicId { get; set; }
+		public string Subject { get; set; }
+		public string Post { get; set; }
+	}
 }

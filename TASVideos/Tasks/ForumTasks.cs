@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 
@@ -110,6 +111,12 @@ namespace TASVideos.Tasks
 				.SortedPageOf(_db, paging);
 
 			return model;
+		}
+
+		public async Task CreatePost(ForumPostModel model, User user)
+		{
+			// TODO
+			await _db.SaveChangesAsync();
 		}
 	}
 }
