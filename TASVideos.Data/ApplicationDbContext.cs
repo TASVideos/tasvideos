@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 
@@ -37,6 +38,9 @@ namespace TASVideos.Data
 		public DbSet<PublicationTag> PublicationTags { get; set; }
 		public DbSet<Tag> Tags { get; set; }
 
+		public DbSet<Award> Awards { get; set; }
+		public DbSet<PublicationAward> PublicationAwards { get; set; }
+		public DbSet<UserAward> UserAwards { get; set; }
 
 		// Game tables
 		public DbSet<Game> Games { get; set; }
