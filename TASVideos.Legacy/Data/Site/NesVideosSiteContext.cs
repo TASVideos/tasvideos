@@ -9,6 +9,8 @@ namespace TASVideos.Legacy.Data.Site
 		{
 		}
 
+		public DbSet<AwardClass> AwardClasses { get; set; }
+		public DbSet<Awards> Awards { get; set; }
 		public DbSet<SiteText> SiteText { get; set; }
 		public DbSet<User> Users { get; set; }
 		public DbSet<UserRole> UserRoles { get; set; }
@@ -26,6 +28,13 @@ namespace TASVideos.Legacy.Data.Site
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			modelBuilder.Entity<AwardClass>().ToTable("awards_classes");
+			modelBuilder.Entity<Awards>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.MovieId, e.AwardId, e.Year });
+				entity.ToTable("awards");
+			});
+
 			modelBuilder.Entity<SiteText>().ToTable("site_text");
 			modelBuilder.Entity<User>().ToTable("users");
 			modelBuilder.Entity<UserRole>(entity =>

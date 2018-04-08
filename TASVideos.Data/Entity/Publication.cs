@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
+using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Data.Entity
@@ -12,6 +14,7 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
 		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new List<PublicationTag>();
+		public virtual ICollection<PublicationAward> PublicationAwards { get; set; } = new List<PublicationAward>();
 
 		public int? ObsoletedById { get; set; }
 		public virtual Publication ObsoletedBy { get; set; }

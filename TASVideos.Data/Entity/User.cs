@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
+using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Data.Entity
@@ -29,5 +30,7 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<ForumTopic> Topics { get; set; } = new HashSet<ForumTopic>();
 		public virtual ICollection<ForumPost> Posts { get; set; } = new HashSet<ForumPost>();
+
+		public virtual ICollection<UserAward> UserAwards { get; set; } = new HashSet<UserAward>();
 	}
 }
