@@ -47,9 +47,10 @@ namespace TASVideos.Controllers
 
 			// TODO: check if topic can have new posts and user is allowed to post to it
 			var user = await _userManager.GetUserAsync(User);
-			await _forumTasks.CreatePost(model, user);
+			var ipAddress = Request.HttpContext.Connection.RemoteIpAddress;
+			await _forumTasks.CreatePost(model, user, ipAddress.ToString());
 
-			return RedirectToAction(nameof(ForumTopicController.Index), nameof(ForumTopicController), new { id = model.TopicId });
+			return RedirectToAction(nameof(ForumTopicController.Index), "ForumTopic", new { id = model.TopicId });
 		}
 	}
 }
