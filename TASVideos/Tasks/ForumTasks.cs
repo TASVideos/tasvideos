@@ -113,9 +113,22 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		public async Task CreatePost(ForumPostModel model, User user)
+		public async Task CreatePost(ForumPostModel model, User user, string ipAddress)
 		{
-			// TODO
+			var forumPost = new ForumPost
+			{
+				TopicId = model.TopicId,
+				PosterId = user.Id,
+				IpAddress = ipAddress,
+				Subject = model.Subject,
+				Text = model.Post,
+
+				// TODO
+				EnableHtml = true,
+				EnableBbCode = true
+			};
+
+			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
 		}
 	}
