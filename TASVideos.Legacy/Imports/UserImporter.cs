@@ -31,7 +31,6 @@ namespace TASVideos.Legacy.Imports
 			//	.Select(u => u.Name)
 			//	.Except(legacyForumUsers.Select(u => u.UserName))
 			//	.ToList();
-
 			var legacyUsers = legacySiteContext.Users
 				.Include(u => u.UserRoles)
 				.ThenInclude(ur => ur.Role)
@@ -75,35 +74,38 @@ namespace TASVideos.Legacy.Imports
 			var roles = context.Roles.ToList();
 
 			var userRoles = new List<UserRole>();
-			foreach (var user in users)
+
+			var joinedUsers = from user in users
+					join su in legacyUsers on user.UserName equals su.Name into lsu
+					from su in lsu.DefaultIfEmpty()
+					select new { User = user, SiteUser = su };
+
+			foreach (var user in joinedUsers)
 			{
-
-				var legacySiteUser = legacyUsers.SingleOrDefault(u => u.Name == user.UserName);
-
-				if (legacySiteUser != null)
+				if (user.SiteUser != null)
 				{
 					// not having user means they are effectively banned
 					// limited = Limited User
-					if (legacySiteUser.UserRoles.Any(ur => ur.Role.Name == "user")
-						&& legacySiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding these roles to admins, they have these perms anyway
+					if (user.SiteUser.UserRoles.Any(ur => ur.Role.Name == "user")
+						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding these roles to admins, they have these perms anyway
 					{
 						userRoles.Add(new UserRole
 						{
 							RoleId = roles.Single(r => r.Name == SeedRoleNames.EditHomePage).Id,
-							UserId = user.Id
+							UserId = user.User.Id
 						});
 
-						if (legacySiteUser.UserRoles.All(ur => ur.Role.Name != "limited"))
+						if (user.SiteUser.UserRoles.All(ur => ur.Role.Name != "limited"))
 						{
 							context.UserRoles.Add(new UserRole
 							{
 								RoleId = roles.Single(r => r.Name == SeedRoleNames.SubmitMovies).Id,
-								UserId = user.Id
+								UserId = user.User.Id
 							});
 						}
 					}
 
-					foreach (var userRole in legacySiteUser.UserRoles.Select(ur => ur.Role)
+					foreach (var userRole in user.SiteUser.UserRoles.Select(ur => ur.Role)
 						.Where(r => r.Name != "user" && r.Name != "limited"))
 					{
 						var role = GetRoleFromLegacy(userRole.Name, roles);
@@ -112,7 +114,7 @@ namespace TASVideos.Legacy.Imports
 							context.UserRoles.Add(new UserRole
 							{
 								RoleId = role.Id,
-								UserId = user.Id
+								UserId = user.User.Id
 							});
 						}
 					}
