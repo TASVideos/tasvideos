@@ -86,6 +86,8 @@ namespace TASVideos.Models
 			public string Subject { get; set; }
 			public string Signature { get; set; }
 
+			public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
+
 			[Sortable]
 			public DateTime CreateTimestamp { get; set; }
 		}

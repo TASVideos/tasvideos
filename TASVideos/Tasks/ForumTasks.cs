@@ -14,10 +14,14 @@ namespace TASVideos.Tasks
 	public class ForumTasks
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly AwardTasks _awardTasks;
 
-		public ForumTasks(ApplicationDbContext db)
+		public ForumTasks(
+			ApplicationDbContext db,
+			AwardTasks awardTasks)
 		{
 			_db = db;
+			_awardTasks = awardTasks;
 		}
 
 		/// <summary>
@@ -106,9 +110,14 @@ namespace TASVideos.Tasks
 					PosterPostCount = _db.ForumPosts.Count(fp => fp.PosterId == p.PosterId),
 					Text = p.Text,
 					Subject = p.Subject,
-					Signature = p.Poster.Signature
+					Signature = p.Poster.Signature,
 				})
 				.SortedPageOf(_db, paging);
+
+			foreach (var post in model.Posts)
+			{
+				post.Awards = await _awardTasks.GetAllAwardsForUser(post.PosterId);
+			}
 
 			return model;
 		}
