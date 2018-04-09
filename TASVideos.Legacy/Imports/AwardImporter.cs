@@ -27,13 +27,34 @@ namespace TASVideos.Legacy.Imports
 					})
 					.ToList();
 
-				var userAwards = legacySiteContext.Awards
+				var userAwardsDto = legacySiteContext.Awards
 					.Where(a => a.UserId > 0)
-					.Select(a => new UserAward
+					.Select(a => new
 					{
-						AwardId = a.AwardId,
-						UserId = a.UserId,
-						Year = a.Year
+						a.AwardId,
+						a.User.Name,
+						a.Year
+					})
+					.ToList();
+
+				var usersWithAwards = userAwardsDto
+					.Select(u => u.Name)
+					.Distinct()
+					.ToList();
+
+				// Match the user by username to get the user id (legacy awards are off site user id, but the new system uses the forum user id)
+				var users = context.Users
+					.Where(u => usersWithAwards.Contains(u.UserName))
+					.Select(u => new { u.Id, u.UserName })
+					.ToList();
+
+				var userAwards = (from ua in userAwardsDto
+					join u in users on ua.Name equals u.UserName
+					select new UserAward
+					{
+						AwardId = ua.AwardId,
+						Year = ua.Year,
+						UserId = u.Id
 					})
 					.ToList();
 
