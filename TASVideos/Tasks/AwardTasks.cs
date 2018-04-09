@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -45,16 +44,6 @@ namespace TASVideos.Tasks
 				.ToList();
 		}
 
-		private class AwardDto
-		{
-			public string ShortName { get; set; }
-			public string Description { get; set; }
-			public int Year { get; set; }
-			public AwardType Type { get; set; }
-			public int? PublicationId { get; set; }
-			public IEnumerable<int> UserIds { get; set; } = new HashSet<int>();
-		}
-
 		private async Task<IEnumerable<AwardDto>> AllAwardsCache()
 		{
 			if (_cache.TryGetValue(AwardCacheKey, out IEnumerable<AwardDto> awards))
@@ -94,6 +83,16 @@ namespace TASVideos.Tasks
 
 				return allAwards;
 			}
+		}
+
+		private class AwardDto
+		{
+			public string ShortName { get; set; }
+			public string Description { get; set; }
+			public int Year { get; set; }
+			public AwardType Type { get; set; }
+			public int? PublicationId { get; set; }
+			public IEnumerable<int> UserIds { get; set; } = new HashSet<int>();
 		}
 	}
 }

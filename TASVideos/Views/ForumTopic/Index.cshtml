@@ -49,9 +49,13 @@
 					<i>@post.Signature</i>
 					<br />
 					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterId">Profile</a>
-					TODO: awards
-					buttons: pm
-
+					TODO: PM Btn
+					<div class="pull-right">
+					@foreach(var award in post.Awards)
+					{
+						<img src="/awards/@($"{award.ShortName}_{award.Year.ToString().PadLeft(2, '0')}.png")" title="@award.Description" alt="@award.Description" />
+					}
+					</div>
 				</div>
 			</div>
 		</div>
