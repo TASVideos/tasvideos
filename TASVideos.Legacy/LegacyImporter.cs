@@ -28,11 +28,11 @@ namespace TASVideos.Legacy
 			legacySiteContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 			legacyForumContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-			AwardImporter.Import(context, legacySiteContext);
 			TagImporter.Import(context, legacySiteContext);
 			RomImporter.Import(context, legacySiteContext);
 			GameImporter.Import(context, legacySiteContext);
 			UserImporter.Import(context, legacySiteContext, legacyForumContext);
+			AwardImporter.Import(context, legacySiteContext);
 
 			ForumCategoriesImporter.Import(context, legacyForumContext);
 			ForumImporter.Import(context, legacyForumContext);
