@@ -9,6 +9,7 @@ namespace TASVideos.Extensions
 	{
 		public static IServiceCollection AddTasks(this IServiceCollection services)
 		{
+			services.AddScoped<AwardTasks, AwardTasks>();
 			services.AddScoped<PermissionTasks, PermissionTasks>();
 			services.AddScoped<UserTasks, UserTasks>();
 			services.AddScoped<RoleTasks, RoleTasks>();
