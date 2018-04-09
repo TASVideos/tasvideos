@@ -26,31 +26,34 @@ namespace TASVideos.Legacy.Imports
 			// timezone
 			// user_avatar_type ?
 			// mood avatars
-
-			var legacyUsers = legacySiteContext.Users
-				.Include(u => u.UserRoles)
-				.ThenInclude(ur => ur.Role)
-				.OrderBy(u => u.Id)
-				.ToList();
-
-			var legacyForumUsers = legacyForumContext.Users
-				.Where(u => u.UserName != "Anonymous")
-				.OrderBy(u => u.UserId)
-				.ToList();
-
-			var roles = context.Roles.ToList();
-
 			// TODO: what to do about these??
 			//var wikiNoForum = legacyUsers
 			//	.Select(u => u.Name)
 			//	.Except(legacyForumUsers.Select(u => u.UserName))
 			//	.ToList();
 
-			var users = new List<User>();
-			var userRoles = new List<UserRole>();
-			foreach (var legacyForumUser in legacyForumUsers)
-			{
-				var newUser = new User
+			var legacyUsers = legacySiteContext.Users
+				.Include(u => u.UserRoles)
+				.ThenInclude(ur => ur.Role)
+				.ToList();
+
+			var users = legacyForumContext.Users
+				.Where(u => u.UserName != "Anonymous")
+				.Select(legacyForumUser => new
+				{
+					legacyForumUser.UserId,
+					legacyForumUser.UserName,
+					legacyForumUser.RegDate,
+					legacyForumUser.Password,
+					legacyForumUser.EmailTime,
+					legacyForumUser.PostCount,
+					legacyForumUser.Email,
+					legacyForumUser.Avatar,
+					legacyForumUser.From,
+					legacyForumUser.Signature
+				})
+				.ToList()
+				.Select(legacyForumUser => new User
 				{
 					Id = legacyForumUser.UserId,
 					UserName = ImportHelper.FixString(legacyForumUser.UserName),
@@ -66,11 +69,16 @@ namespace TASVideos.Legacy.Imports
 					Avatar = legacyForumUser.Avatar,
 					From = legacyForumUser.From,
 					Signature = ImportHelper.FixString(legacyForumUser.Signature)
-				};
+				})
+				.ToList();
 
-				users.Add(newUser);
+			var roles = context.Roles.ToList();
 
-				var legacySiteUser = legacyUsers.SingleOrDefault(u => u.Name == legacyForumUser.UserName);
+			var userRoles = new List<UserRole>();
+			foreach (var user in users)
+			{
+
+				var legacySiteUser = legacyUsers.SingleOrDefault(u => u.Name == user.UserName);
 
 				if (legacySiteUser != null)
 				{
@@ -82,7 +90,7 @@ namespace TASVideos.Legacy.Imports
 						userRoles.Add(new UserRole
 						{
 							RoleId = roles.Single(r => r.Name == SeedRoleNames.EditHomePage).Id,
-							UserId = newUser.Id
+							UserId = user.Id
 						});
 
 						if (legacySiteUser.UserRoles.All(ur => ur.Role.Name != "limited"))
@@ -90,7 +98,7 @@ namespace TASVideos.Legacy.Imports
 							context.UserRoles.Add(new UserRole
 							{
 								RoleId = roles.Single(r => r.Name == SeedRoleNames.SubmitMovies).Id,
-								UserId = newUser.Id
+								UserId = user.Id
 							});
 						}
 					}
@@ -104,7 +112,7 @@ namespace TASVideos.Legacy.Imports
 							context.UserRoles.Add(new UserRole
 							{
 								RoleId = role.Id,
-								UserId = newUser.Id
+								UserId = user.Id
 							});
 						}
 					}
