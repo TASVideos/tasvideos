@@ -77,37 +77,44 @@ namespace TASVideos.Legacy.Imports
 				var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
 				var torrentTypes = new[] { "M", "N", "O", "P", "T" };
 
-				foreach (var legacyMovie in legacyMovies)
+				var pubs = (from lm in legacyMovies
+					join w in publicationWikis on LinkConstants.PublicationWikiPage + lm.Id equals w.PageName
+					join s in submissions on lm.SubmissionId equals s.Id
+					join sys in systems on lm.SystemId equals sys.Id
+					join sysFr in systemFrameRates on s.SystemFrameRateId equals sysFr.Id
+					join g in games on (s.GameId ?? -1) equals g.Id					
+					join mfs in legacyMovieFileStorage on (lm.MovieFiles.First(f => movieTypes.Contains(f.Type)).FileName) equals mfs.FileName
+					select new
+					{
+						Movie = lm,
+						Wiki = w,
+						Sub = s,
+						System = sys,
+						SystemFrameRates = sysFr,
+						Game = g,
+						MovieFileStorage = mfs
+					})
+					.ToList();
+
+				foreach (var pub in pubs)
 				{
-					string pageName = LinkConstants.PublicationWikiPage + legacyMovie.Id;
-					var wiki = publicationWikis.Single(p => p.PageName == pageName);
-					var submission = submissions.Single(s => s.Id == legacyMovie.SubmissionId);
+					string pageName = LinkConstants.PublicationWikiPage + pub.Movie.Id;
 
-					var system = systems.Single(s => s.Id == legacyMovie.SystemId);
-					var systemFrameRate = systemFrameRates.Single(s => s.Id == submission.SystemFrameRateId);
-
-					var game = games.Single(g => g.Id == (submission.GameId ?? -1));
-
-					// Find the first of an acceptable movie type
-					var movieFile = legacyMovie.MovieFiles.First(f => movieTypes.Contains(f.Type));
-
-					var screnshotUrl = legacyMovie.MovieFiles.First(f => f.Type == "H");
-					var torrentUrls = legacyMovie.MovieFiles.Where(f => torrentTypes.Contains(f.Type));
-					var mirror = legacyMovie.MovieFiles.FirstOrDefault(f => f.Type == "A")?.FileName;
-					var streaming = (legacyMovie.MovieFiles.FirstOrDefault(f => f.Type == "J" && f.FileName.Contains("youtube"))
-						?? legacyMovie.MovieFiles.FirstOrDefault(f => f.Type == "J"))?.FileName;
-
-					var movieFileStorage = legacyMovieFileStorage.Single(lmfs => lmfs.FileName == movieFile.FileName);
+					var screnshotUrl = pub.Movie.MovieFiles.First(f => f.Type == "H");
+					var torrentUrls = pub.Movie.MovieFiles.Where(f => torrentTypes.Contains(f.Type));
+					var mirror = pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "A")?.FileName;
+					var streaming = (pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "J" && f.FileName.Contains("youtube"))
+						?? pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "J"))?.FileName;
 
 					var siteUserIds = legacyUserPlayers
-						.Where(p => p.PlayerId == legacyMovie.Player.Id)
+						.Where(p => p.PlayerId == pub.Movie.Player.Id)
 						.Select(up => up.UserId)
 						.ToList();
 
 					List<string> potentialAuthors;
 					if (siteUserIds.Count == 0)
 					{
-						potentialAuthors = new List<string> { legacyMovie.Player.Name.ToLower() };
+						potentialAuthors = new List<string> { pub.Movie.Player.Name.ToLower() };
 					}
 					else
 					{
@@ -119,26 +126,26 @@ namespace TASVideos.Legacy.Imports
 
 					var publication = new Publication
 					{
-						Id = legacyMovie.Id,
-						WikiContentId = wiki.Id,
-						SubmissionId = legacyMovie.SubmissionId,
-						TierId = legacyMovie.Tier,
-						CreateUserName = legacyMovie.Publisher.Name ?? "Unknown",
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyMovie.PublishedDate),
-						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyMovie.PublishedDate), // TODO
-						ObsoletedById = legacyMovie.ObsoletedBy == -1 ? null : legacyMovie.ObsoletedBy,
-						Frames = submission.Frames,
-						RerecordCount = submission.RerecordCount,
+						Id = pub.Movie.Id,
+						WikiContentId = pub.Wiki.Id,
+						SubmissionId = pub.Movie.SubmissionId,
+						TierId = pub.Movie.Tier,
+						CreateUserName = pub.Movie.Publisher.Name ?? "Unknown",
+						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate),
+						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate), // TODO
+						ObsoletedById = pub.Movie.ObsoletedBy == -1 ? null : pub.Movie.ObsoletedBy,
+						Frames = pub.Sub.Frames,
+						RerecordCount = pub.Sub.RerecordCount,
 						RomId = -1, // Place holder
-						GameId = submission.GameId ?? -1,
-						Game = game,
-						MovieFile = movieFileStorage.FileData,
-						MovieFileName = movieFile.FileName,
-						SystemFrameRateId = submission.SystemFrameRateId.Value,
-						SystemFrameRate = systemFrameRate,
-						SystemId = legacyMovie.SystemId,
-						System = system,
-						Branch = legacyMovie.Branch,
+						GameId = pub.Sub.GameId ?? -1,
+						Game = pub.Game,
+						MovieFile = pub.MovieFileStorage.FileData,
+						MovieFileName = pub.Movie.MovieFiles.First(f => movieTypes.Contains(f.Type)).FileName,
+						SystemFrameRateId = pub.Sub.SystemFrameRateId.Value,
+						SystemFrameRate = pub.SystemFrameRates,
+						SystemId = pub.Movie.SystemId,
+						System = pub.System,
+						Branch = pub.Movie.Branch,
 						MirrorSiteUrl = mirror,
 						OnlineWatchingUrl = streaming
 					};
@@ -149,7 +156,7 @@ namespace TASVideos.Legacy.Imports
 						{
 							UserId = u.Id,
 							Author = u,
-							PublicationId = legacyMovie.Id,
+							PublicationId = pub.Movie.Id,
 							Pubmisison = publication,
 						})
 						.ToList();
@@ -166,7 +173,7 @@ namespace TASVideos.Legacy.Imports
 
 					publicationFiles.Add(new PublicationFile
 					{
-						PublicationId = legacyMovie.Id,
+						PublicationId = pub.Movie.Id,
 						Type = FileType.Screenshot,
 						Path = screnshotUrl.FileName,
 						CreateTimeStamp = DateTime.UtcNow,
@@ -175,14 +182,14 @@ namespace TASVideos.Legacy.Imports
 
 					publicationFiles.AddRange(torrentUrls.Select(t => new PublicationFile
 					{
-						PublicationId = legacyMovie.Id,
+						PublicationId = pub.Movie.Id,
 						Type = FileType.Torrent,
 						Path = t.FileName,
 						CreateTimeStamp = DateTime.UtcNow,
 						LastUpdateTimeStamp = DateTime.UtcNow
 					}));
 
-					foreach (var mc in legacyMovie.MovieClasses)
+					foreach (var mc in pub.Movie.MovieClasses)
 					{
 						var classType = mc.ClassId >= 1000
 							? legacyClassTypes.Single(c => c.Id == mc.ClassId)
@@ -199,7 +206,7 @@ namespace TASVideos.Legacy.Imports
 
 						publicationTags.Add(new PublicationTag
 						{
-							PublicationId = legacyMovie.Id,
+							PublicationId = pub.Movie.Id,
 							TagId = tag.Id
 						});
 					}
