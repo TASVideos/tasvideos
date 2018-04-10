@@ -25,31 +25,38 @@ namespace TASVideos.Legacy.Imports
 			var usernames = context.Users.Select(u => u.UserName).ToList();
 
 			var pages = new List<WikiPage>();
-			foreach (var legacyPage in siteTexts)
-			{
-				string markup = ImportHelper.FixString(legacyPage.Description);
-				int revision = legacyPage.Revision;
-				string pageName = legacyPage.PageName;
 
-				if (legacyPage.PageName.StartsWith("System"))
+			var siteTextWithUser = (from s in siteTexts
+					join u in usernames on s.PageName equals u into uu
+					from u in uu.DefaultIfEmpty()
+					select new { Site = s, User = u })
+					.ToList();
+
+			foreach (var legacyPage in siteTextWithUser)
+			{
+				string markup = ImportHelper.FixString(legacyPage.Site.Description);
+				int revision = legacyPage.Site.Revision;
+				string pageName = legacyPage.Site.PageName;
+
+				if (legacyPage.Site.PageName.StartsWith("System"))
 				{
-					pageName = legacyPage.PageName.Replace("System", "System/");
+					pageName = legacyPage.Site.PageName.Replace("System", "System/");
 				}
-				else if (legacyPage.PageName == "FrontPage")
+				else if (legacyPage.Site.PageName == "FrontPage")
 				{
 					pageName = "System/FrontPage";
 					markup = markup.Replace("[module:welcome]", "");
 				}
 
 				// ******** Deleted pages that were recreated *************/
-				else if (legacyPage.PageName == "GameResources/N64/Kirby64TheCrystalShards"
-					|| legacyPage.PageName == "DeletedPages/GameResources/N64/Kirby64TheCrystalShards")
+				else if (legacyPage.Site.PageName == "GameResources/N64/Kirby64TheCrystalShards"
+					|| legacyPage.Site.PageName == "DeletedPages/GameResources/N64/Kirby64TheCrystalShards")
 				{
-					revision = CrystalShardsLookup[(legacyPage.PageName, legacyPage.Revision)];
+					revision = CrystalShardsLookup[(legacyPage.Site.PageName, legacyPage.Site.Revision)];
 				}
 
 				// This page had 2 deleted pages that came first, so we can just add to the revision number
-				else if (legacyPage.PageName == "GameResources/DS/MetroidPrimeHunters")
+				else if (legacyPage.Site.PageName == "GameResources/DS/MetroidPrimeHunters")
 				{
 					revision += 2;
 				}
@@ -57,22 +64,22 @@ namespace TASVideos.Legacy.Imports
 				// ******** END Deleted pages that were recreated *************/
 
 				// Shenanigans
-				else if (legacyPage.PageName == "Phil" && legacyPage.Revision >= 7 && legacyPage.Revision <= 11)
+				else if (legacyPage.Site.PageName == "Phil" && legacyPage.Site.Revision >= 7 && legacyPage.Site.Revision <= 11)
 				{
 					markup = markup.Replace(":[", ":|");
 				}
-				else if (legacyPage.PageName == "971S" && legacyPage.Revision == 3)
+				else if (legacyPage.Site.PageName == "971S" && legacyPage.Site.Revision == 3)
 				{
 					markup = markup.Replace("[Phi:", "[Phil]:");
 				}
-				else if (legacyPage.PageName == "2884M")
+				else if (legacyPage.Site.PageName == "2884M")
 				{
 					markup = markup.Replace("][", "II");
 				}
 
-				var pubId = SubmissionHelper.IsPublicationLink(legacyPage.PageName);
-				var subId = SubmissionHelper.IsSubmissionLink(legacyPage.PageName);
-				var gamId = SubmissionHelper.IsGamePageLink(legacyPage.PageName);
+				var pubId = SubmissionHelper.IsPublicationLink(legacyPage.Site.PageName);
+				var subId = SubmissionHelper.IsSubmissionLink(legacyPage.Site.PageName);
+				var gamId = SubmissionHelper.IsGamePageLink(legacyPage.Site.PageName);
 
 				bool isDeleted = false;
 				if (pubId.HasValue)
@@ -93,7 +100,7 @@ namespace TASVideos.Legacy.Imports
 					isDeleted = true;
 				}
 
-				if (usernames.Contains(pageName))
+				if (legacyPage.User != null)
 				{
 					pageName = "HomePages/" + pageName;
 				}
@@ -107,16 +114,16 @@ namespace TASVideos.Legacy.Imports
 
 				pages.Add(new WikiPage
 				{
-					Id = legacyPage.Id,
+					Id = legacyPage.Site.Id,
 					PageName = pageName,
 					Markup = markup,
 					Revision = revision,
-					MinorEdit = legacyPage.MinorEdit == "Y",
-					RevisionMessage = legacyPage.WhyEdit,
+					MinorEdit = legacyPage.Site.MinorEdit == "Y",
+					RevisionMessage = legacyPage.Site.WhyEdit,
 					IsDeleted = isDeleted,
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp),
-					CreateUserName = legacyPage.User.Name,
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.CreateTimeStamp)
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
+					CreateUserName = legacyPage.Site.User.Name,
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp)
 				});
 			}
 
@@ -148,6 +155,7 @@ namespace TASVideos.Legacy.Imports
 
 			var wikiColumns = new[]
 			{
+				nameof(WikiPage.Id),
 				nameof(WikiPage.ChildId),
 				nameof(WikiPage.CreateTimeStamp),
 				nameof(WikiPage.CreateUserName),
@@ -161,7 +169,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPage.RevisionMessage)
 			};
 
-			pages.BulkInsert(context, wikiColumns, nameof(ApplicationDbContext.WikiPages), SqlBulkCopyOptions.Default);
+			pages.BulkInsert(context, wikiColumns, nameof(ApplicationDbContext.WikiPages));
 
 			var referralColumns = new[]
 			{
