@@ -46,61 +46,66 @@ namespace TASVideos.Legacy.Imports
 				var systems = context.GameSystems.ToList();
 				var systemFrameRates = context.GameSystemFrameRates.ToList();
 
-				foreach (var legacySubmission in legacySubmissions)
-				{
-					string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Id;
-					User submitter = users.SingleOrDefault(u => u.UserName == legacySubmission.User.Name); // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+				var lSubsWithSystem = (from ls in legacySubmissions
+					join s in systems on ls.SystemId equals s.Id
+					join w in submissionWikis on LinkConstants.SubmissionWikiPage + ls.Id equals w.PageName
+					join u in users on ls.User.Name equals u.UserName into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+					from u in uu.DefaultIfEmpty()
+					select new { Sub = ls, System = s, Wiki = w, Submitter = u })
+					.ToList();
 
-					var system = systems.Single(s => s.Id == legacySubmission.SystemId);
+				foreach (var legacySubmission in lSubsWithSystem)
+				{
+					string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Sub.Id;
+
 					GameSystemFrameRate systemFrameRate;
 
-					if (legacySubmission.GameVersion.ToLower().Contains("euro"))
+					if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro"))
 					{
 						systemFrameRate = systemFrameRates
-							.SingleOrDefault(sf => sf.GameSystemId == system.Id && sf.RegionCode == "PAL")
-							?? systemFrameRates.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
+							.SingleOrDefault(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL")
+							?? systemFrameRates.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
 					}
 					else
 					{
 						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == system.Id && sf.RegionCode == "NTSC");
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
 					}
 
-					var submissionWiki = submissionWikis.Single(w => w.PageName == pageName);
 					var submission = new Submission
 					{
-						Id = legacySubmission.Id,
-						WikiContentId = submissionWiki.Id,
-						SubmitterId = submitter?.Id,
-						Submitter = submitter,
-						SystemId = system.Id,
-						System = system,
+						Id = legacySubmission.Sub.Id,
+						WikiContentId = legacySubmission.Wiki.Id,
+						SubmitterId = legacySubmission.Submitter?.Id,
+						Submitter = legacySubmission.Submitter,
+						SystemId = legacySubmission.System.Id,
+						System = legacySubmission.System,
 						SystemFrameRateId = systemFrameRate.Id,
 						SystemFrameRate = systemFrameRate,
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.SubmissionDate),
-						CreateUserName = submitter?.UserName,
+						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
+						CreateUserName = legacySubmission.Submitter?.UserName,
 						LastUpdateTimeStamp = DateTime.UtcNow, // TODO
-						GameName = ImportHelper.FixString(legacySubmission.GameName),
-						GameVersion = legacySubmission.GameVersion,
-						Frames = legacySubmission.Frames,
-						Status = ConvertStatus(legacySubmission.Status),
-						RomName = legacySubmission.RomName,
-						RerecordCount = legacySubmission.Rerecord,
-						MovieFile = legacySubmission.Content,
-						IntendedTierId = legacySubmission.IntendedTier,
-						GameId = legacySubmission.GameNameId ?? -1, // Placeholder game if not present
+						GameName = ImportHelper.FixString(legacySubmission.Sub.GameName),
+						GameVersion = legacySubmission.Sub.GameVersion,
+						Frames = legacySubmission.Sub.Frames,
+						Status = ConvertStatus(legacySubmission.Sub.Status),
+						RomName = legacySubmission.Sub.RomName,
+						RerecordCount = legacySubmission.Sub.Rerecord,
+						MovieFile = legacySubmission.Sub.Content,
+						IntendedTierId = legacySubmission.Sub.IntendedTier,
+						GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
 						RomId = -1 // Legacy system had no notion of Rom for submissions
 					};
 
 					// For now at least
-					if (submitter != null)
+					if (legacySubmission.Submitter != null)
 					{
 						var subAuthor = new SubmissionAuthor
 						{
 							SubmissionId = submission.Id,
 							Submisison = submission,
-							UserId = submitter.Id,
-							Author = submitter
+							UserId = legacySubmission.Submitter.Id,
+							Author = legacySubmission.Submitter
 						};
 
 						submission.SubmissionAuthors.Add(subAuthor);
