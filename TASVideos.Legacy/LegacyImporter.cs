@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
@@ -32,6 +30,7 @@ namespace TASVideos.Legacy
 			ForumImporter.Import(context, legacyForumContext);
 			ForumTopicImporter.Import(context, legacyForumContext);
 			ForumPostsImporter.Import(context, legacyForumContext);
+			ForumPrivateMessagesImporter.Import(context, legacyForumContext);
 
 			WikiImporter.Import(context, legacySiteContext);
 			SubmissionImporter.Import(context, legacySiteContext);
