@@ -32,5 +32,11 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<ForumPost> Posts { get; set; } = new HashSet<ForumPost>();
 
 		public virtual ICollection<UserAward> UserAwards { get; set; } = new HashSet<UserAward>();
+
+		[ForeignKey(nameof(ForumPrivateMessage.FromUserId))]
+		public virtual ICollection<ForumPrivateMessage> SentPrivateMessages { get; set; } = new HashSet<ForumPrivateMessage>();
+
+		[ForeignKey(nameof(ForumPrivateMessage.ToUserId))]
+		public virtual ICollection<ForumPrivateMessage> ReceivedPrivateMessages { get; set; } = new HashSet<ForumPrivateMessage>();
 	}
 }
