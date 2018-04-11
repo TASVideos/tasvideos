@@ -16,6 +16,8 @@ namespace TASVideos.Legacy.Data.Forum
 		public DbSet<Topics> Topics { get; set; }
 		public DbSet<Posts> Posts { get; set; }
 		public DbSet<PostsText> PostsText { get; set; }
+		public DbSet<PrivateMessage> PrivateMessages { get; set; }
+		public DbSet<PrivateMessageText> PrivateMessageText { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -25,6 +27,8 @@ namespace TASVideos.Legacy.Data.Forum
 			modelBuilder.Entity<Topics>().ToTable("topics");
 			modelBuilder.Entity<Posts>().ToTable("posts");
 			modelBuilder.Entity<PostsText>().ToTable("posts_text");
+			modelBuilder.Entity<PrivateMessage>().ToTable("privmsgs");
+			modelBuilder.Entity<PrivateMessageText>().ToTable("privmsgs_text");
 		}
 	}
 }
