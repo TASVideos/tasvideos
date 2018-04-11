@@ -55,6 +55,7 @@ namespace TASVideos.Data
 		public DbSet<Forum> Forums { get; set; }
 		public DbSet<ForumTopic> ForumTopics { get; set; }
 		public DbSet<ForumPost> ForumPosts { get; set; }
+		public DbSet<ForumPrivateMessage> ForumPrivateMessages { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
@@ -84,6 +85,14 @@ namespace TASVideos.Data
 					.HasName("UserNameIndex")
 					.IsUnique()
 					.HasFilter($"([{nameof(User.NormalizedUserName)}] IS NOT NULL)");
+
+				entity.HasMany(e => e.SentPrivateMessages)
+					.WithOne(e => e.FromUser)
+					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasMany(e => e.ReceivedPrivateMessages)
+					.WithOne(e => e.ToUser)
+					.OnDelete(DeleteBehavior.Restrict);
 			});
 
 			builder.Entity<UserLogin>(entity =>
