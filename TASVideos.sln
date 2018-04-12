@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngine", "TAS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.MovieParsers", "TASVideos.Parsers\TASVideos.MovieParsers.csproj", "{6E24226D-07E3-40B6-BDBA-C964B9CE75A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Legacy", "TASVideos.Legacy\TASVideos.Legacy.csproj", "{6E718986-8E3A-4C50-A341-128E49369E9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Legacy", "TASVideos.Legacy\TASVideos.Legacy.csproj", "{6E718986-8E3A-4C50-A341-128E49369E9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Data", "TASVideos.Data\TASVideos.Data.csproj", "{207BCA9C-B0F3-441F-859A-45E2670542E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Data", "TASVideos.Data\TASVideos.Data.csproj", "{207BCA9C-B0F3-441F-859A-45E2670542E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Test", "TASVideos.Test\TASVideos.Test.csproj", "{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{207BCA9C-B0F3-441F-859A-45E2670542E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{207BCA9C-B0F3-441F-859A-45E2670542E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{207BCA9C-B0F3-441F-859A-45E2670542E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
