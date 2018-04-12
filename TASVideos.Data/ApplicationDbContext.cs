@@ -36,6 +36,7 @@ namespace TASVideos.Data
 		public DbSet<PublicationAuthor> PublicationAuthors { get; set; }
 		public DbSet<PublicationFile> PublicationFiles { get; set; }
 		public DbSet<PublicationTag> PublicationTags { get; set; }
+		public DbSet<PublicationRating> PublicationRatings { get; set; }
 		public DbSet<Tag> Tags { get; set; }
 
 		public DbSet<Award> Awards { get; set; }
@@ -206,6 +207,12 @@ namespace TASVideos.Data
 			builder.Entity<PublicationTag>(entity =>
 			{
 				entity.HasKey(e => new { e.PublicationId, e.TagId });
+				entity.HasIndex(e => e.PublicationId);
+			});
+
+			builder.Entity<PublicationRating>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.PublicationId, e.Type });
 				entity.HasIndex(e => e.PublicationId);
 			});
 
