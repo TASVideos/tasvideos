@@ -25,6 +25,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<UserPlayer> UserPlayers { get; set; }
 		public DbSet<ClassType> ClassTypes { get; set; }
 		public DbSet<MovieClass> MovieClass { get; set; }
+		public DbSet<MovieRating> MovieRating { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -60,6 +61,11 @@ namespace TASVideos.Legacy.Data.Site
 			{
 				entity.HasKey(e => new { e.MovieId, e.ClassId });
 				entity.ToTable("movie_class");
+			});
+			modelBuilder.Entity<MovieRating>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.MovieId });
+				entity.ToTable("movie_rating");
 			});
 		}
 	}

@@ -38,5 +38,7 @@ namespace TASVideos.Data.Entity
 
 		[ForeignKey(nameof(ForumPrivateMessage.ToUserId))]
 		public virtual ICollection<ForumPrivateMessage> ReceivedPrivateMessages { get; set; } = new HashSet<ForumPrivateMessage>();
+
+		public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new HashSet<PublicationRating>();
 	}
 }
