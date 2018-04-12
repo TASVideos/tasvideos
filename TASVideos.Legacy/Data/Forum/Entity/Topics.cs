@@ -26,5 +26,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("topic_type")]
 		public int Type { get; set; }
+
+		[Column("topic_moved_id")]
+		public int TopicMovedId { get; set; }
 	}
 }

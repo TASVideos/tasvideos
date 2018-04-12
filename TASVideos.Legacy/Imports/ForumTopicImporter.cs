@@ -15,6 +15,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		{
 			var topics = legacyForumContext
 				.Topics
+				.Where(t => t.TopicMovedId == 0) // Topic moved id indicates it is not a valid topic anymore, so simply filter them out
 				.Select(t => new
 				{
 					t.Id, t.ForumId, t.Title, t.PosterId, t.Timestamp, t.Views, t.Type,

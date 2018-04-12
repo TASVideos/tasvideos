@@ -68,7 +68,7 @@ namespace TASVideos.Tasks
 					Type = ft.Type,
 					Views = ft.Views,
 					PostCount = ft.ForumPosts.Count,
-					LastPost = ft.ForumPosts.Any() ? ft.ForumPosts.Max(fp => fp.CreateTimeStamp) : (DateTime?)null
+					LastPost = ft.ForumPosts.Max(fp => fp.CreateTimeStamp)
 				})
 				.OrderByDescending(ft => ft.Type == ForumTopicType.Sticky)
 				.ThenByDescending(ft => ft.Type == ForumTopicType.Announcement)
