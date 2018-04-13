@@ -20,6 +20,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<CatalogTasks, CatalogTasks>();
 			services.AddScoped<GameTasks, GameTasks>();
 			services.AddScoped<ForumTasks, ForumTasks>();
+			services.AddScoped<RatingsTasks, RatingsTasks>();
 
 			return services;
 		}

@@ -37,4 +37,10 @@
     <ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Ratings\ViewPublication.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>
