@@ -35,6 +35,9 @@
 				<div><small>@Model.CreateTimeStamp.Date.ToShortDateString()</small></div>
 				@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
 			</row>
+			<row>
+				<div>@Model.RatingCount votes</div>
+			</row>
 		</div>
 		<div class="col-md-2">
 			<small>

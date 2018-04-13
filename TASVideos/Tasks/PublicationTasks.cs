@@ -74,6 +74,7 @@ namespace TASVideos.Tasks
 					ObsoletedBy = p.ObsoletedById,
 					MovieFileName = p.MovieFileName,
 					SubmissionId = p.SubmissionId,
+					RatingCount = p.PublicationRatings.Count / 2,
 					Files = p.Files
 						.Select(f => new PublicationViewModel.FileModel
 						{
@@ -204,6 +205,7 @@ namespace TASVideos.Tasks
 					ObsoletedBy = p.ObsoletedById,
 					MovieFileName = p.MovieFileName,
 					SubmissionId = p.SubmissionId,
+					RatingCount = p.PublicationRatings.Count / 2,
 					Files = p.Files.Select(f => new PublicationViewModel.FileModel
 					{
 						Path = f.Path,
