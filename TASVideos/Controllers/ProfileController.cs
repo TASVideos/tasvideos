@@ -52,6 +52,7 @@ namespace TASVideos.Controllers
 				Email = user.Email,
 				TimeZoneId = user.TimeZoneId,
 				IsEmailConfirmed = user.EmailConfirmed,
+				PublicRatings = user.PublicRatings,
 				StatusMessage = StatusMessage,
 				Roles = await _userTasks.GetUserRoles(user.Id)
 			};
@@ -80,9 +81,9 @@ namespace TASVideos.Controllers
 				}
 			}
 
-			if (model.TimeZoneId != user.TimeZoneId)
+			if (model.TimeZoneId != user.TimeZoneId || model.PublicRatings != user.PublicRatings)
 			{
-				await _userTasks.UpdateUserTimeZone(user.Id, model.TimeZoneId);
+				await _userTasks.UpdateUserProfile(user.Id, model.TimeZoneId, model.PublicRatings);
 			}
 
 			StatusMessage = "Your profile has been updated";
