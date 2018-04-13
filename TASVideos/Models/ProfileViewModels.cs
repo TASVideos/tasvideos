@@ -18,6 +18,9 @@ namespace TASVideos.Models
 
 		public string StatusMessage { get; set; }
 
+		[Display(Name = "Allow Movie Ratings to be public?")]
+		public bool PublicRatings { get; set; }
+
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 	}
 

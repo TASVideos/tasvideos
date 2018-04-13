@@ -36,6 +36,16 @@
 			<label asp-for="TimeZoneId"></label>
 			<timezone-picker asp-for="TimeZoneId" class="form-control" />
 		</form-group>
+		<form-group>
+			<label asp-for="PublicRatings"></label>
+			<div class="btn-group btn-group-toggle" data-toggle="buttons">
+				<label for="@(nameof(Model.PublicRatings))-true" class="btn btn-secondary @(Model.PublicRatings ? "active" : "")">
+					<input id="@(nameof(Model.PublicRatings))-true" type="radio" value="True" asp-for="PublicRatings" /> Yes</label>
+				<label for="@(nameof(Model.PublicRatings))-false" class="btn btn-secondary @(!Model.PublicRatings ? "active" : "")">
+					<input id="@(nameof(Model.PublicRatings))-false" type="radio" value="False" asp-for="PublicRatings" /> No
+				</label>
+			</div>
+		</form-group>
 		<button type="submit" class="btn btn-secondary">Save</button>
 	</form>
 </div>
