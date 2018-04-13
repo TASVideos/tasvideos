@@ -2,7 +2,7 @@
 {
 	public enum PublicationRatingType
 	{
-		Entertainmnet, TechQuality
+		Entertainment, TechQuality
 	}
 
 	public class PublicationRating

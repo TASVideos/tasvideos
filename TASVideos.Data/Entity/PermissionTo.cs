@@ -118,6 +118,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Edit Publication Metadata")]
 		[Group("MovieAdministration")]
 		[Description("The ability to edit publication information such as branch, screenshots, torrents, tags, etc")]
-		EditPublicationMetaData = 22
+		EditPublicationMetaData = 22,
+
+		[Display(Name = "Display Private Ratings")]
+		[Group("MovieAdministration")]
+		[Description("The ability to see publication ratings even from users with non-public ratings")]
+		SeePrivateRatings = 23
 	}
 }

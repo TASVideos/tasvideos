@@ -19,7 +19,7 @@ namespace TASVideos.Legacy.Imports
 					UserId = mr.UserId,
 					PublicationId = mr.MovieId,
 					Type = mr.RatingName == "Entertainment"
-						? PublicationRatingType.Entertainmnet
+						? PublicationRatingType.Entertainment
 						: PublicationRatingType.TechQuality,
 					Value = mr.Value
 				});
