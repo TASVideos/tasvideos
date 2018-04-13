@@ -38,36 +38,38 @@ namespace TASVideos.Legacy.Imports
 
 			var users = legacyForumContext.Users
 				.Where(u => u.UserName != "Anonymous")
-				.Select(legacyForumUser => new
+				.Select(u => new
 				{
-					legacyForumUser.UserId,
-					legacyForumUser.UserName,
-					legacyForumUser.RegDate,
-					legacyForumUser.Password,
-					legacyForumUser.EmailTime,
-					legacyForumUser.PostCount,
-					legacyForumUser.Email,
-					legacyForumUser.Avatar,
-					legacyForumUser.From,
-					legacyForumUser.Signature
+					u.UserId,
+					u.UserName,
+					u.RegDate,
+					u.Password,
+					u.EmailTime,
+					u.PostCount,
+					u.Email,
+					u.Avatar,
+					u.From,
+					u.Signature,
+					u.PublicRatings
 				})
 				.ToList()
-				.Select(legacyForumUser => new User
+				.Select(u => new User
 				{
-					Id = legacyForumUser.UserId,
-					UserName = ImportHelper.FixString(legacyForumUser.UserName),
-					NormalizedUserName = legacyForumUser.UserName.ToUpper(),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyForumUser.RegDate),
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyForumUser.RegDate), // TODO
-					LegacyPassword = legacyForumUser.Password,
-					EmailConfirmed = legacyForumUser.EmailTime != null || legacyForumUser.PostCount > 0,
-					Email = legacyForumUser.Email,
-					NormalizedEmail = legacyForumUser.Email.ToUpper(),
+					Id = u.UserId,
+					UserName = ImportHelper.FixString(u.UserName),
+					NormalizedUserName = u.UserName.ToUpper(),
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate), // TODO
+					LegacyPassword = u.Password,
+					EmailConfirmed = u.EmailTime != null || u.PostCount > 0,
+					Email = u.Email,
+					NormalizedEmail = u.Email.ToUpper(),
 					CreateUserName = "Automatic Migration",
 					PasswordHash = "",
-					Avatar = legacyForumUser.Avatar,
-					From = legacyForumUser.From,
-					Signature = ImportHelper.FixString(legacyForumUser.Signature)
+					Avatar = u.Avatar,
+					From = u.From,
+					Signature = ImportHelper.FixString(u.Signature),
+					PublicRatings = u.PublicRatings
 				})
 				.ToList();
 
@@ -171,7 +173,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.TwoFactorEnabled),
 				nameof(User.Avatar),
 				nameof(User.From),
-				nameof(User.Signature)
+				nameof(User.Signature),
+				nameof(User.PublicRatings)
 			};
 
 			var userRoleColumns = new[]

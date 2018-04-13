@@ -38,5 +38,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_sig")]
 		public string Signature { get; set; }
-    }
+
+		[Column("user_permit_ratingshow")]
+		public bool PublicRatings { get; set; }
+	}
 }

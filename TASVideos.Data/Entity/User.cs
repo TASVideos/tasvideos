@@ -23,6 +23,8 @@ namespace TASVideos.Data.Entity
 		public string From { get; set; }
 		public string Signature { get; set; }
 
+		public bool PublicRatings { get; set; } = true;
+
 		public string LegacyPassword { get; set; }
 
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
