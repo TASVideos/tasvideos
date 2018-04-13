@@ -60,9 +60,13 @@
 </form-group>
 <form-group>
 	<row>
-		<div class="col-md-12">
+		<div class="col-md-6">
 			<label asp-for="Roles" class="form-control-label"></label>
 			<div>@(Model.Roles.Any() ? string.Join(", ", Model.Roles) : "User is not currently assigned to any Roles")</div>
+		</div>
+		<div class="col-md-6">
+			<label asp-for="PublicRatings" class="form-control-label"></label>
+			<div>@Model.PublicRatings.ToYesNo()</div>
 		</div>
 	</row>
 </form-group>

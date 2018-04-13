@@ -59,6 +59,9 @@ namespace TASVideos.Models
 		[DisplayName("Time Zone")]
 		public string TimezoneId { get; set; }
 
+		[DisplayName("Ratings Public?")]
+		public bool PublicRatings { get; set; }
+
 		[DisplayName("Current Roles")]
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 	}

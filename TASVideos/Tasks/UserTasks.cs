@@ -147,6 +147,7 @@ namespace TASVideos.Tasks
 					EmailConfirmed = u.EmailConfirmed,
 					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
 					TimezoneId = u.TimeZoneId,
+					PublicRatings = u.PublicRatings,
 					Roles = u.UserRoles.Select(ur => ur.Role.Name) // TODO: add .ToList() here to avoid n+1 after 2.1 preview1 bug is fixed
 				})
 				.SingleAsync(u => u.Id == id);
