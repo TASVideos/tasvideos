@@ -13,16 +13,38 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			var ratings = legacySiteContext.MovieRating
-				.Select(mr => new PublicationRating
+			var ratingsDto = legacySiteContext.MovieRating
+				.Select(mr => new
 				{
-					UserId = mr.UserId,
+					UserName = mr.User.Name,
 					PublicationId = mr.MovieId,
 					Type = mr.RatingName == "Entertainment"
 						? PublicationRatingType.Entertainment
 						: PublicationRatingType.TechQuality,
-					Value = mr.Value
-				});
+					mr.Value
+				})
+				.ToList();
+
+			var usersWithRatings = ratingsDto
+				.Select(u => u.UserName)
+				.Distinct()
+				.ToList();
+
+			var users = context.Users
+				.Where(u => usersWithRatings.Contains(u.UserName))
+				.Select(u => new { u.Id, u.UserName })
+					.ToList();
+
+			var ratings = (from r in ratingsDto
+				join u in users on r.UserName equals u.UserName
+				select new PublicationRating
+				{
+					UserId = u.Id,
+					PublicationId = r.PublicationId,
+					Type = r.Type,
+					Value = r.Value
+				})
+				.ToList();
 
 			var columns = new[]
 			{
