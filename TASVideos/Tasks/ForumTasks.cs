@@ -106,6 +106,9 @@ namespace TASVideos.Tasks
 					PosterName = p.Poster.UserName,
 					PosterAvatar = p.Poster.Avatar,
 					PosterLocation = p.Poster.From,
+					PosterRoles = p.Poster.UserRoles
+						.Where(ur => !ur.Role.IsDefault)
+						.Select(ur => ur.Role.Name),
 					PosterJoined = p.Poster.CreateTimeStamp,
 					PosterPostCount = _db.ForumPosts.Count(fp => fp.PosterId == p.PosterId),
 					Text = p.Text,
