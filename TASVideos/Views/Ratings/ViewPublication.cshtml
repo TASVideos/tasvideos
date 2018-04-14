@@ -27,18 +27,17 @@
 				<td>@ratings.TechQuality</td>
 			</tr>
 		}
-		@*<tfoot>
+		<tfoot>
 			<tr>
 				<th>Average</th>
-				<td>TODO</td>
-				<td>TODO</td>
+				<td>@Math.Round(Model.Ratings.Where(r => r.Entertainment.HasValue).Select(r => r.Entertainment.Value).Average(), 2)</td>
+				<td>@Math.Round(Model.Ratings.Where(r => r.TechQuality.HasValue).Select(r => r.TechQuality.Value).Average(), 2)</td>
 			</tr>
-		</tfoot>*@
+		</tfoot>
 	</table>
 }
 else
 {
 	<div class="alert alert-warning">No Ratings</div>
-
 }
 
