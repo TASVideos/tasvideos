@@ -300,8 +300,7 @@ namespace TASVideos.Tasks
 		{
 			var user = await _db.Users.SingleAsync(u => u.Id == userId);
 			var roles = await _db.Roles
-				.Where(r => r.Name == RoleSeedData.EditHomePage.Name
-					|| r.Name == RoleSeedData.SubmitMovies.Name)
+				.Where(r => r.IsDefault)
 				.ToListAsync();
 
 			foreach (var role in roles)

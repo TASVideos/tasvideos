@@ -7,6 +7,11 @@ namespace TASVideos.Data.Entity
 {
 	public class Role : IdentityRole<int>, ITrackable
 	{
+		/// <summary>
+		/// Gets or sets a value indicating whether or not the role is automatically assigned to new users
+		/// </summary>
+		public bool IsDefault { get; set; }
+
 		[StringLength(200)]
 		public string Description { get; set; }
 
