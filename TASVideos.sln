@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos", "TASVideos\TASVideos.csproj", "{B386F775-4453-4ADB-906F-F081FE8459EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngine", "TASVideos.WikiEngine\TASVideos.WikiEngine.csproj", "{C2DE4347-54F6-4842-9EFF-8B663C412136}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.MovieParsers", "TASVideos.Parsers\TASVideos.MovieParsers.csproj", "{6E24226D-07E3-40B6-BDBA-C964B9CE75A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Legacy", "TASVideos.Legacy\TASVideos.Legacy.csproj", "{6E718986-8E3A-4C50-A341-128E49369E9A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Data", "TASVideos.Data\TASVideos.Data.csproj", "{207BCA9C-B0F3-441F-859A-45E2670542E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Test", "TASVideos.Test\TASVideos.Test.csproj", "{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B386F775-4453-4ADB-906F-F081FE8459EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B386F775-4453-4ADB-906F-F081FE8459EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B386F775-4453-4ADB-906F-F081FE8459EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B386F775-4453-4ADB-906F-F081FE8459EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2DE4347-54F6-4842-9EFF-8B663C412136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2DE4347-54F6-4842-9EFF-8B663C412136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2DE4347-54F6-4842-9EFF-8B663C412136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2DE4347-54F6-4842-9EFF-8B663C412136}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E24226D-07E3-40B6-BDBA-C964B9CE75A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E24226D-07E3-40B6-BDBA-C964B9CE75A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E24226D-07E3-40B6-BDBA-C964B9CE75A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E24226D-07E3-40B6-BDBA-C964B9CE75A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E718986-8E3A-4C50-A341-128E49369E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E718986-8E3A-4C50-A341-128E49369E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E718986-8E3A-4C50-A341-128E49369E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E718986-8E3A-4C50-A341-128E49369E9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{207BCA9C-B0F3-441F-859A-45E2670542E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{207BCA9C-B0F3-441F-859A-45E2670542E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{207BCA9C-B0F3-441F-859A-45E2670542E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{207BCA9C-B0F3-441F-859A-45E2670542E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81E351CE-2FD4-4E65-97F2-E7E3920F2B16}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67B2E8BD-92C7-442F-9560-C36E143E8E4C}
+	EndGlobalSection
+EndGlobal
