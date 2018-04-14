@@ -81,7 +81,7 @@ namespace TASVideos.Models
 			public string PosterLocation { get; set; }
 			public int PosterPostCount { get; set; }
 			public DateTime PosterJoined { get; set; }
-
+			public IEnumerable<string> PosterRoles { get; set; }
 			public string Text { get; set; }
 			public string Subject { get; set; }
 			public string Signature { get; set; }
