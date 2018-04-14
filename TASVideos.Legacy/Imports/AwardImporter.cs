@@ -49,7 +49,7 @@ namespace TASVideos.Legacy.Imports
 					.ToList();
 
 				var userAwards = (from ua in userAwardsDto
-					join u in users on ua.Name equals u.UserName
+					join u in users on ua.Name.ToLower() equals u.UserName.ToLower()
 					select new UserAward
 					{
 						AwardId = ua.AwardId,
