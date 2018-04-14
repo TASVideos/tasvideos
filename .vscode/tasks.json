@@ -10,6 +10,16 @@
                 "${workspaceFolder}/TASVideos/TASVideos.csproj"
             ],
             "problemMatcher": "$msCompile"
-        }
+		},
+		{
+            "taskName": "build_forumengine",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/TASVideos.ForumEngineTempTest/TASVideos.ForumEngineTempTest.csproj"
+            ],
+            "problemMatcher": "$msCompile"			
+		}
     ]
 }
