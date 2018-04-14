@@ -78,6 +78,7 @@ namespace TASVideos.Data.SeedData
 
 		public static readonly Role EditHomePage = new Role
 		{
+			IsDefault = true,
 			Name = SeedRoleNames.EditHomePage,
 			Description = "Contains the EditHomePage permission that allows users to edit their personal homepage. All users have this role by default.",
 			RolePermission = new[]
@@ -92,6 +93,7 @@ namespace TASVideos.Data.SeedData
 
 		public static readonly Role SubmitMovies = new Role
 		{
+			IsDefault = true,
 			Name = SeedRoleNames.SubmitMovies,
 			Description = "Contains the SubmitMovies permission that allows users to submit movies. All users have this role by default.",
 			RolePermission = new[]
