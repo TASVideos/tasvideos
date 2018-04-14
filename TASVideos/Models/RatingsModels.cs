@@ -12,27 +12,11 @@ namespace TASVideos.Models
 
 		public IEnumerable<RatingEntry> Ratings { get; set; } = new List<RatingEntry>();
 
-		public double AverageEntertainmentRating =>
-			Math.Round(Ratings
-				.Where(r => r.Entertainment.HasValue)
-				.Select(r => r.Entertainment.Value).Average(), 2);
+		public double AverageEntertainmentRating { get; set; }
 
-		public double AverageTechRating =>
-			Math.Round(Ratings
-				.Where(r => r.TechQuality.HasValue)
-				.Select(r => r.Entertainment.Value).Average(), 2);
+		public double AverageTechRating { get; set; }
 
-		// Entertainmnet counts 2:1 over Tech
-		public double OverallRating => Math.Round(Ratings
-				.Where(r => r.Entertainment.HasValue)
-				.Select(r => r.Entertainment.Value)
-				.Concat(Ratings
-					.Where(r => r.Entertainment.HasValue)
-					.Select(r => r.Entertainment.Value))
-				.Concat(Ratings
-					.Where(r => r.TechQuality.HasValue)
-					.Select(r => r.TechQuality.Value))
-				.Average(), 2);
+		public double OverallRating { get; set; }
 
 		public class RatingEntry
 		{
