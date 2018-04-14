@@ -4,23 +4,27 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using TASVideos.Data.Entity;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Controllers
 {
 	public class PublicationController : BaseController
 	{
 		private readonly PublicationTasks _publicationTasks;
+		private readonly RatingsTasks _ratingsTasks;
 
 		public PublicationController(
 			PublicationTasks publicationTasks,
+			RatingsTasks ratingTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_publicationTasks = publicationTasks;
+			_ratingsTasks = ratingTasks;
 		}
 
 		[AllowAnonymous]
@@ -55,7 +59,17 @@ namespace TASVideos.Controllers
 				return Redirect("Movies");
 			}
 
-			var model = await _publicationTasks.GetMovieList(searchModel);
+			var model = (await _publicationTasks
+				.GetMovieList(searchModel))
+				.ToList();
+
+			var ratings = await _ratingsTasks.GetOverallRatingsForPublications(model.Select(m => m.Id));
+
+			foreach (var rating in ratings)
+			{
+				model.First(m => m.Id == rating.Key).OverallRating = rating.Value;
+			}
+
 			return View(model);
 		}
 
@@ -67,6 +81,8 @@ namespace TASVideos.Controllers
 			{
 				return NotFound();
 			}
+
+			model.OverallRating = await _ratingsTasks.GetOverallRatingForPublication(id);
 
 			return View(model);
 		}

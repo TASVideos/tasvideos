@@ -36,8 +36,10 @@
 				@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
 			</row>
 			<row>
-				<div condition="Model.RatingCount <= 2">@Model.RatingCount votes</div>
-				<div Condition="Model.RatingCount > 2"><a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a></div>
+				<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
+				<div Condition="Model.RatingCount > 2">
+					Rating: @Math.Round(Model.OverallRating, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
+				</div>
 			</row>
 		</div>
 		<div class="col-md-2">

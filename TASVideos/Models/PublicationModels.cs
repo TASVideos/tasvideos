@@ -42,6 +42,7 @@ namespace TASVideos.Models
 		public string TorrentLink => Files.First(f => f.Type == FileType.Torrent).Path;
 
 		public double RatingCount { get; set; }
+		public double OverallRating { get; set; }
 
 		public class TagModel
 		{

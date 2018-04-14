@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +30,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a detailed list of all ratings for a <see cref="Publication"/>
 		/// with the given <see cref="publicationId"/>
+		/// If no <see cref="Publication"/> is found, then null is returned
 		/// </summary>
 		public async Task<PublicationRatingsViewModel> GetRatingsForPublication(int publicationId)
 		{
@@ -60,9 +62,103 @@ namespace TASVideos.Tasks
 					.ToList()
 			};
 
+			model.AverageEntertainmentRating = Math.Round(model.Ratings
+				.Where(r => r.Entertainment.HasValue)
+				.Select(r => r.Entertainment.Value).Average(), 2);
+
+			model.AverageTechRating = Math.Round(model.Ratings
+				.Where(r => r.TechQuality.HasValue)
+				.Select(r => r.Entertainment.Value).Average(), 2);
+
+			// Entertainmnet counts 2:1 over Tech
+			model.OverallRating = Math.Round(model.Ratings
+				.Where(r => r.Entertainment.HasValue)
+				.Select(r => r.Entertainment.Value)
+				.Concat(model.Ratings
+					.Where(r => r.Entertainment.HasValue)
+					.Select(r => r.Entertainment.Value))
+				.Concat(model.Ratings
+					.Where(r => r.TechQuality.HasValue)
+					.Select(r => r.TechQuality.Value))
+				.Average(), 2);
+
 			_cache.Set(MovieRatingKey + publicationId, model.OverallRating);
 
 			return model;
+		}
+
+		// TODO: what if an invalid publicationId?
+		// TODO: what if there are no ratings for a publication?
+		/// <summary>
+		/// Calculates the overall rating for a <see cref="Publication"/>
+		/// with the given <see cref="publicationId"/>
+		/// </summary>
+		public async Task<double> GetOverallRatingForPublication(int publicationId)
+		{
+			string cacheKey = MovieRatingKey + publicationId;
+			if (_cache.TryGetValue(cacheKey, out double rating))
+			{
+				return rating;
+			}
+
+			var ratings = await _db.PublicationRatings
+				.Where(pr => pr.PublicationId == publicationId)
+				.ToListAsync();
+
+			var entRatings = ratings
+				.Where(r => r.Type == PublicationRatingType.Entertainment)
+				.Select(r => r.Value)
+				.ToList();
+
+			var techRatings = ratings
+				.Where(r => r.Type == PublicationRatingType.TechQuality)
+				.Select(r => r.Value)
+				.ToList();
+
+			// TODO: calculate this in one place
+			// Entertainmnet counts 2:1 over Tech
+			var overallRating = entRatings
+				.Concat(entRatings)
+				.Concat(techRatings)
+				.Average();
+
+			_cache.Set(cacheKey, overallRating);
+
+			return overallRating;
+		}
+
+		/// <summary>
+		/// Returns the overall rating for the <see cref="Publication"/> with the given <see cref="publicationIds"/>
+		/// </summary>
+		/// <exception cref="ArgumentException">If <see cref="publicationIds"/> is null</exception>
+		public async Task<IDictionary<int, double>> GetOverallRatingsForPublications(IEnumerable<int> publicationIds)
+		{
+			if (publicationIds == null)
+			{
+				throw new ArgumentException($"{nameof(publicationIds)} can not be null");
+			}
+
+			var ratings = new Dictionary<int, double>();
+
+			using (await _db.Database.BeginTransactionAsync())
+			{
+				foreach (var id in publicationIds)
+				{
+					var cacheKey = MovieRatingKey + id;
+					if (_cache.TryGetValue(cacheKey, out double rating))
+					{
+						ratings.Add(id, rating);
+					}
+					else
+					{
+						rating = await GetOverallRatingForPublication(id);
+						_cache.Set(cacheKey, rating);
+						ratings.Add(id, rating);
+					}
+				}
+			}
+
+			return ratings;
 		}
 	}
 }
