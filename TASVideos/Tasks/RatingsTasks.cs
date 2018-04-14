@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,19 +7,29 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Tasks
 {
-    public class RatingsTasks
-    {
+	public class RatingsTasks
+	{
 		private readonly ApplicationDbContext _db;
+		private readonly ICacheService _cache;
 
-		public RatingsTasks(ApplicationDbContext db)
+		private const string MovieRatingKey = "OverallRatingForMovie-";
+
+		public RatingsTasks(
+			ApplicationDbContext db,
+			ICacheService cache)
 		{
 			_db = db;
+			_cache = cache;
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns a detailed list of all ratings for a <see cref="Publication"/>
+		/// with the given <see cref="publicationId"/>
+		/// </summary>
 		public async Task<PublicationRatingsViewModel> GetRatingsForPublication(int publicationId)
 		{
 			var publication = await _db.Publications
@@ -51,7 +60,9 @@ namespace TASVideos.Tasks
 					.ToList()
 			};
 
+			_cache.Set(MovieRatingKey + publicationId, model.OverallRating);
+
 			return model;
 		}
-    }
+	}
 }

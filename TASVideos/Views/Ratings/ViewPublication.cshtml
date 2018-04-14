@@ -13,6 +13,8 @@
 @if (Model.Ratings.Any())
 {
 	<label>@Model.Ratings.Count() total ratings</label>
+	<br />
+	<label>Rating Average: @Model.OverallRating</label>
 	<table class="table table-striped table-bordered">
 		<tr>
 			<th>@Html.DisplayNameFor(m => m.Ratings.First().UserName)</th>
@@ -30,8 +32,8 @@
 		<tfoot>
 			<tr>
 				<th>Average</th>
-				<td>@Math.Round(Model.Ratings.Where(r => r.Entertainment.HasValue).Select(r => r.Entertainment.Value).Average(), 2)</td>
-				<td>@Math.Round(Model.Ratings.Where(r => r.TechQuality.HasValue).Select(r => r.TechQuality.Value).Average(), 2)</td>
+				<td>@Model.AverageEntertainmentRating</td>
+				<td>@Model.AverageTechRating</td>
 			</tr>
 		</tfoot>
 	</table>
