@@ -32,7 +32,7 @@ namespace TASVideos.Legacy.Imports
 						p.EnableHtml,
 						p.LastUpdateTimestamp,
 						LastUpdateUserName = lu.UserName,
-
+						pt.BbCodeUid,
 						p.PosterId,
 						PosterName = pu.UserName
 					})
@@ -44,7 +44,7 @@ namespace TASVideos.Legacy.Imports
 					PosterId = p.PosterId,
 					IpAddress = p.IpAddress,
 					Subject = ImportHelper.FixString(p.Subject),
-					Text = ImportHelper.FixString(p.Text),
+					Text = ImportHelper.FixString(p.Text.Replace(":" + p.BbCodeUid, "")),
 					EnableBbCode = p.EnableBbCode,
 					EnableHtml = p.EnableHtml,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
