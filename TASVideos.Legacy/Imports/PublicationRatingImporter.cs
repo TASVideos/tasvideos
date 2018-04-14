@@ -36,7 +36,7 @@ namespace TASVideos.Legacy.Imports
 					.ToList();
 
 			var ratings = (from r in ratingsDto
-				join u in users on r.UserName equals u.UserName
+				join u in users on r.UserName.ToLower() equals u.UserName.ToLower()
 				select new PublicationRating
 				{
 					UserId = u.Id,
