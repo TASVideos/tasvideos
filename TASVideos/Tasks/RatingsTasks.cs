@@ -117,10 +117,15 @@ namespace TASVideos.Tasks
 
 			// TODO: calculate this in one place
 			// Entertainmnet counts 2:1 over Tech
-			var overallRating = entRatings
-				.Concat(entRatings)
-				.Concat(techRatings)
-				.Average();
+
+			double overallRating = 0;
+			if (entRatings.Count + techRatings.Count > 0)
+			{
+				overallRating = entRatings
+					.Concat(entRatings)
+					.Concat(techRatings)
+					.Average();
+			}
 
 			_cache.Set(cacheKey, overallRating);
 
