@@ -39,7 +39,7 @@ namespace TASVideos.Models
 		public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();
 
 		public string Screenshot => Files.First(f => f.Type == FileType.Screenshot).Path;
-		public string TorrentLink => Files.First(f => f.Type == FileType.Torrent).Path;
+		public string TorrentLink => Files.FirstOrDefault(f => f.Type == FileType.Torrent)?.Path; // Sometimes a movie has no torrent, rare but can happen
 
 		public double RatingCount { get; set; }
 		public double OverallRating { get; set; }
