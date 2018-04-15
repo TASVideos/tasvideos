@@ -2,11 +2,27 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using AngleSharp.Dom;
+using System.Text;
 
 namespace TASVideos.ForumEngine
 {
 	public class HtmlParser
 	{
+		public static bool ContainsHtml(string text)
+		{
+			var p = new AngleSharp.Parser.Html.HtmlParser();
+			var dom = p.Parse("<html><body></body></html>");
+			var nodes = p.ParseFragment(text, dom.Body);
+			var sb = new StringBuilder();
+			foreach (var node in nodes)
+			{
+				if (node.NodeType != NodeType.Text)
+					return false;
+				sb.Append(node.TextContent);
+			}
+			return sb.ToString() == text;
+		}
+
 		public static Element Parse(string text)
 		{
 			var p = new AngleSharp.Parser.Html.HtmlParser();
