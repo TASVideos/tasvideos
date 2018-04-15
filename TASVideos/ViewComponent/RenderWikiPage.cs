@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 using TASVideos.Extensions;
+using TASVideos.Razor;
 using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
@@ -10,10 +11,14 @@ namespace TASVideos.ViewComponents
 	public class RenderWikiPage : ViewComponent
 	{
 		private readonly WikiTasks _wikiTasks;
+		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
 
-		public RenderWikiPage(WikiTasks wikiTasks)
+		public RenderWikiPage(
+			WikiTasks wikiTasks,
+			WikiMarkupFileProvider wikiMarkupFileProvider)
 		{
 			_wikiTasks = wikiTasks;
+			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(string url, int? revision = null)
@@ -31,6 +36,7 @@ namespace TASVideos.ViewComponents
 				ViewData["WikiPage"] = existingPage;
 				ViewData["Title"] = existingPage.PageName;
 				ViewData["Layout"] = null;
+				_wikiMarkupFileProvider.WikiTasks = _wikiTasks;
 				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 
