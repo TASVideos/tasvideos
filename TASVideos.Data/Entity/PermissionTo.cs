@@ -123,6 +123,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Display Private Ratings")]
 		[Group("MovieAdministration")]
 		[Description("The ability to see publication ratings even from users with non-public ratings")]
-		SeePrivateRatings = 23
+		SeePrivateRatings = 23,
+
+		[Display(Name = "See Diagnostics")]
+		[Group("Admin")]
+		[Description("The ability to see high level application and server information such as diagnostics stats and other sensitive information")]
+		SeeDiagnostics = 24
 	}
 }
