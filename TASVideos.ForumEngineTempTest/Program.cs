@@ -22,7 +22,7 @@ namespace TASVideos.ForumEngineTempTest
 			builder.IntegratedSecurity = true;
             using (var connection = new SqlConnection(builder.ToString()))
 			{
-				foreach (var post in connection.Query<Post>("select top 2000 EnableBbCode, EnableHtml, Text from ForumPosts order by CreateTimeStamp desc"))
+				foreach (var post in connection.Query<Post>("select EnableBbCode, EnableHtml, Text from ForumPosts"))
 				{
 					if (post.EnableBbCode)
 					{

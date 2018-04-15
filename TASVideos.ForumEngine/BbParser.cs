@@ -10,14 +10,54 @@ namespace TASVideos.ForumEngine
 		private static readonly Regex OpeningTag = new Regex(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]=]+))?\]");
 		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
 
-		private static readonly HashSet<string> KnownTags = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+		private enum ParseState
 		{
-			"quote", "video", "code", "b", "i", "img", "size", "url", "post", "thread", "movie", "userfile", "u",
-			"sup", "sub", "submission", "list",
-			"spoiler", "wiki", "s", "frames", "tt", "color",
-			// TODO: special processing
-			"*", // list item, has no closer
-			"noparse" // verbatim text inside
+			ChildContent,
+			ChildContentIfParam,
+			NoChildContent,
+			List,
+			ListItem
+		}
+
+		private static readonly Dictionary<string, ParseState> KnownTags = new Dictionary<string, ParseState>
+		{
+			// basic text formatting, no params, and body is content
+			{ "b", ParseState.ChildContent },
+			{ "i", ParseState.ChildContent },
+			{ "u", ParseState.ChildContent },
+			{ "s", ParseState.ChildContent },
+			{ "sub", ParseState.ChildContent },
+			{ "sup", ParseState.ChildContent },
+			{ "tt", ParseState.ChildContent },
+			{ "left", ParseState.ChildContent },
+			{ "right", ParseState.ChildContent },
+			{ "center", ParseState.ChildContent },
+			{ "spoiler", ParseState.ChildContent },
+
+			// with optional params
+			{ "quote", ParseState.ChildContent }, // optional author
+			{ "code", ParseState.NoChildContent }, // optional language
+			{ "img", ParseState.NoChildContent }, // optional size
+			{ "url", ParseState.ChildContentIfParam }, // optional url.  if not given, url in body
+			{ "email", ParseState.ChildContentIfParam }, // like url
+			{ "video", ParseState.NoChildContent }, // like img
+			{ "google", ParseState.NoChildContent }, // search query in body.  optional param `images`
+			{ "thread", ParseState.ChildContentIfParam }, // like url, but the link is a number
+			{ "post", ParseState.ChildContentIfParam }, // like thread
+			{ "movie", ParseState.ChildContentIfParam }, // like thread
+			{ "submission", ParseState.ChildContentIfParam }, // like thread
+			{ "userfile", ParseState.ChildContentIfParam }, // like thread
+			{ "wiki", ParseState.ChildContentIfParam }, // like thread, but the link is a page name
+
+			// other stuff
+			{ "frames", ParseState.NoChildContent }, // no params.  body is something like `200` or `200@60.1`
+			{ "color", ParseState.ChildContent }, // param is a css (?) color
+			{ "size", ParseState.ChildContent }, // param is something relating to font size TODO: what are the values?
+			{ "noparse", ParseState.NoChildContent },
+
+			// list related stuff
+			{ "list", ParseState.List }, // OLs have a param with value ??
+			{ "*", ParseState.ListItem },
 		};
 
 		public static Element Parse(string text)
@@ -49,6 +89,36 @@ namespace TASVideos.ForumEngine
 			}
 		}
 
+		private void Push(Element e)
+		{
+			_stack.Peek().Children.Add(e);
+			_stack.Push(e);
+		}
+
+		private bool ChildrenExpected()
+		{
+			if (KnownTags.TryGetValue(_stack.Peek().Name, out var state))
+			{
+				switch (state)
+				{
+					case ParseState.NoChildContent:
+						return false;
+					case ParseState.ChildContent:
+					case ParseState.List:
+					case ParseState.ListItem:
+					default:
+						return true;
+					case ParseState.ChildContentIfParam:
+						return _stack.Peek().Options != "";
+				}
+			}
+			else
+			{
+				// "li" or "_root"
+				return true;
+			}
+		}
+
 		private void ParseLoop()
 		{
 			while (_index < _input.Length)
@@ -57,59 +127,76 @@ namespace TASVideos.ForumEngine
 				if (c == '[') // check for possible tags
 				{
 					Match m;
-					if ((m = OpeningTag.Match(_input, _index)).Success)
+					if (ChildrenExpected() && (m = OpeningTag.Match(_input, _index)).Success)
 					{
 						var name = m.Groups[1].Value;
 						var options = m.Groups[3].Value;
-						int i;
-						if ((i = name.IndexOf(':')) > 0)
+						if (KnownTags.TryGetValue(name, out var state))
 						{
-							// TODO: wtf is this
-							name = name.Substring(0, i);
-						}
-						if (KnownTags.Contains(name))
-						{
-							FlushText();
 							var e = new Element { Name = name, Options = options };
-							_stack.Peek().Children.Add(e);
-							_stack.Push(e);
-							_index += m.Length;
+							if (state == ParseState.List)
+							{
+								FlushText();
+								_index += m.Length;
+								Push(e);
+								Push(new Element { Name = "li", Options = "" });
+							}
+							else if (state == ParseState.ListItem)
+							{
+								// try to pop a list item, then push a new one
+								if (_stack.Peek().Name == "li")
+								{
+									FlushText();
+									_index += m.Length;
+									_stack.Pop();
+									Push(new Element { Name = "li", Options = "" });
+								}
+								else
+								{
+									_currentText.Append(c);
+								}
+							}
+							else
+							{
+								FlushText();
+								_index += m.Length;
+								Push(e);
+							}
 							continue;
 						}
 						else
 						{
-							// TODO: some warning
-							Console.WriteLine("##### Uknown tag " + name + " ##############################");
-							if (name == "0xED" || name == "color")
-							{
-								Console.WriteLine(_input);
-							}
+							// Tag not recognized?  OK, process as raw text
 						}
 					}
 					else if ((m = ClosingTag.Match(_input, _index)).Success)
 					{
 						var name = m.Groups[1].Value;
-						int i;
-						if ((i = name.IndexOf(':')) > 0)
-						{
-							// TODO: wtf is this
-							name = name.Substring(0, i);
-						}
-						if (_stack.Peek().Name == name)
+						var topName = _stack.Peek().Name;
+						if (topName == name)
 						{
 							FlushText();
-							_stack.Pop();
 							_index += m.Length;
+							_stack.Pop();
+							continue;
+						}
+						else if (topName == "li" && name == "list")
+						{
+							// pop a list
+							FlushText();
+							_index += m.Length;
+							_stack.Pop();
+							_stack.Pop();
 							continue;
 						}
 						else
 						{
-							// TODO: some warning
+							// closing didn't match opening?  OK, process as raw text
 						}
 					}
 					else
 					{
-						Console.WriteLine("nomatch!");
+						// '[' but not followed by a valid tag?  OK, process as raw text
 					}
 				}
 				_currentText.Append(c);
