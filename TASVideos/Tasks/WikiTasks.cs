@@ -26,6 +26,23 @@ namespace TASVideos.Tasks
 			_cache = cache;
 		}
 
+		private List<WikiPage> WikiCache
+		{
+			get
+			{
+				var cacheKey = "WikiCache";
+				if (_cache.TryGetValue(cacheKey, out List<WikiPage> pages))
+				{
+					return pages;
+				}
+
+				pages = new List<WikiPage>();
+				_cache.Set(cacheKey, pages, DurationConstants.OneWeekInSeconds);
+				return pages;
+			}
+		}
+
+
 		/// <summary>
 		/// Loads all current wiki pages, intended to be run on startup to pre-load the cache
 		/// </summary>
@@ -36,14 +53,7 @@ namespace TASVideos.Tasks
 				.ThatAreNotDeleted()
 				.ToListAsync();
 
-			foreach (var page in wikiPages)
-			{
-				var cacheKey = $"{nameof(GetPageById)}-{page.Id}";
-				_cache.Set(cacheKey, page, DurationConstants.OneDayInSeconds);
-
-				var latestRevisionCacheKey = $"{nameof(GetPage)}-{page.PageName}-";
-				_cache.Set(latestRevisionCacheKey, page, DurationConstants.OneDayInSeconds);
-			}
+			WikiCache.AddRange(wikiPages);
 		}
 
 		/// <summary>
@@ -54,10 +64,12 @@ namespace TASVideos.Tasks
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
 		public async Task<WikiPage> GetPage(string pageName, int? revisionId = null)
 		{
-			var cacheKey = $"{nameof(GetPage)}-{pageName}-{revisionId}";
-			if (_cache.TryGetValue(cacheKey, out WikiPage cachedResult))
+			var cachedPage = WikiCache
+				.FirstOrDefault(w => w.PageName == pageName
+					&& (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
+			if (cachedPage != null)
 			{
-				return cachedResult;
+				return cachedPage;
 			}
 
 			pageName = pageName?.Trim('/');
@@ -71,8 +83,7 @@ namespace TASVideos.Tasks
 
 			if (result != null)
 			{
-				_cache.Set(cacheKey, result, DurationConstants.OneDayInSeconds);
-				_cache.Set($"{nameof(GetPageById)}-{result.Id}", result, DurationConstants.OneDayInSeconds);
+				WikiCache.Add(result);
 			}
 
 			return result;
@@ -84,10 +95,10 @@ namespace TASVideos.Tasks
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
 		public async Task<WikiPage> GetPageById(int dbid)
 		{
-			var cacheKey = $"{nameof(GetPageById)}-{dbid}";
-			if (_cache.TryGetValue(cacheKey, out WikiPage cachedResult))
+			var cachedPage = WikiCache.FirstOrDefault(w => w.Id == dbid);
+			if (cachedPage != null)
 			{
-				return cachedResult;
+				return cachedPage;
 			}
 
 			var result = await _db.WikiPages
@@ -97,7 +108,7 @@ namespace TASVideos.Tasks
 
 			if (result != null)
 			{
-				_cache.Set(cacheKey, result, DurationConstants.OneDayInSeconds);
+				WikiCache.Add(result);
 			}
 
 			return result;
@@ -166,14 +177,13 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 
-			// New and old revisions must have cache cleared
-			if (currentRevision != null)
+			WikiCache.Add(newRevision);
+			var cachedCurrentRevision = WikiCache.FirstOrDefault(w => w.PageName == model.PageName && w.ChildId == null);
+			if (cachedCurrentRevision != null)
 			{
-				_cache.Remove($"{nameof(GetPage)}-{currentRevision.PageName}-{currentRevision.Id}");
+				cachedCurrentRevision.Child = newRevision;
+				cachedCurrentRevision.ChildId = newRevision.Id;
 			}
-
-			_cache.Remove($"{nameof(GetPage)}-{newRevision.PageName}-{newRevision.Id}");
-			_cache.Remove($"{nameof(GetPage)}-{model.PageName}-{null}");
 
 			return newRevision.Id;
 		}
@@ -239,14 +249,14 @@ namespace TASVideos.Tasks
 
 			foreach (var revision in existingRevisions)
 			{
-				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
-				_cache.Remove($"{nameof(GetPageById)}-{revision.Id}");
-				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{model.DestinationPageName}");
-
 				revision.PageName = model.DestinationPageName;
-			}
 
-			_cache.Remove($"{nameof(GetPage)}-{model.OriginalPageName}-{null}");
+				var cachedRevision = WikiCache.FirstOrDefault(w => w.Id == revision.Id);
+				if (cachedRevision != null)
+				{
+					cachedRevision.PageName = model.DestinationPageName;
+				}
+			}
 
 			await _db.SaveChangesAsync();
 
@@ -260,11 +270,6 @@ namespace TASVideos.Tasks
 			foreach (var referral in existingReferrals)
 			{
 				referral.Referral = model.DestinationPageName;
-			}
-
-			foreach (var revision in existingRevisions)
-			{
-				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Id}");
 			}
 
 			await _db.SaveChangesAsync();
@@ -468,11 +473,18 @@ namespace TASVideos.Tasks
 			foreach (var revision in revisions)
 			{
 				revision.IsDeleted = true;
-				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
-				_cache.Remove($"{nameof(GetPage)}-{revision.Id}");
 			}
 
-			_cache.Remove($"{nameof(GetPage)}-{pageName}-{null}");
+			var cachedRevisions = WikiCache
+				.Where(w => w.PageName == pageName)
+				.AsQueryable()
+				.ThatAreNotDeleted()
+				.ToList();
+
+			foreach (var cachedRevision in cachedRevisions)
+			{
+				cachedRevision.IsDeleted = true;
+			}
 
 			// Remove referrers
 			var referrers = await _db.WikiReferrals
@@ -498,8 +510,16 @@ namespace TASVideos.Tasks
 			if (wikiPage != null)
 			{
 				wikiPage.IsDeleted = true;
-				_cache.Remove($"{nameof(GetPage)}-{wikiPage.PageName}-{wikiPage.Revision}");
-				_cache.Remove($"{nameof(GetPageById)}-{wikiPage.Id}");
+
+				var cachedRevision = WikiCache
+					.AsQueryable()
+					.ThatAreNotDeleted()
+					.SingleOrDefault(w => w.PageName == pageName && w.Revision == revision);
+
+				if (cachedRevision != null)
+				{
+					cachedRevision.IsDeleted = true;
+				}
 
 				// Update referrers if latest revision
 				if (wikiPage.Child == null)
@@ -547,8 +567,14 @@ namespace TASVideos.Tasks
 			foreach (var revision in revisions)
 			{
 				revision.IsDeleted = false;
-				_cache.Remove($"{nameof(GetPage)}-{revision.PageName}-{revision.Revision}");
-				_cache.Remove($"{nameof(GetPage)}-{revision.Id}");
+
+				var cachedRevision = WikiCache
+					.FirstOrDefault(w => w.Id == revision.Id);
+
+				if (cachedRevision != null)
+				{
+					cachedRevision.IsDeleted = false;
+				}
 			}
 
 			await _db.SaveChangesAsync();
