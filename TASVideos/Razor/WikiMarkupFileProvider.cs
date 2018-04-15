@@ -17,18 +17,10 @@ namespace TASVideos.Razor
 		private const string PreviewPrefix = "/Views/Preview/~~~";
 
 		private readonly Dictionary<string, PreviewMarkupCacheInfo> _previewCache = new Dictionary<string, PreviewMarkupCacheInfo>();
-		private readonly WikiTasks _wikiTasks;
 
 		private int _previewNameIndex;
 
-		public WikiMarkupFileProvider(IServiceProvider provider)
-		{
-			// Unfortunatley the singleton cache in WikiTasks is different here than in a non-single class,
-			// so we need to populate another cache just for this
-			// Boo.
-			_wikiTasks = (WikiTasks)provider.GetService(typeof(WikiTasks));
-			_wikiTasks.LoadWikiCache(true).Wait();
-		}
+		public WikiTasks WikiTasks { get; set; }
 
 		public string SetPreviewMarkup(string content)
 		{
@@ -67,7 +59,7 @@ namespace TASVideos.Razor
 			else
 			{
 				subpath = subpath.Substring(Prefix.Length);
-				var continuation = _wikiTasks.GetPageById(int.Parse(subpath));
+				var continuation = WikiTasks.GetPageById(int.Parse(subpath));
 				continuation.Wait();
 				var result = continuation.Result;
 				if (result == null)
