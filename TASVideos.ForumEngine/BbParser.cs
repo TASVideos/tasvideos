@@ -139,7 +139,7 @@ namespace TASVideos.ForumEngine
 								FlushText();
 								_index += m.Length;
 								Push(e);
-								Push(new Element { Name = "li", Options = "" });
+								Push(new Element { Name = "li" });
 							}
 							else if (state == ParseState.ListItem)
 							{
@@ -149,7 +149,7 @@ namespace TASVideos.ForumEngine
 									FlushText();
 									_index += m.Length;
 									_stack.Pop();
-									Push(new Element { Name = "li", Options = "" });
+									Push(new Element { Name = "li" });
 								}
 								else
 								{
