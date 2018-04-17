@@ -42,7 +42,6 @@ namespace TASVideos.Tasks
 			}
 		}
 
-
 		/// <summary>
 		/// Loads all current wiki pages, intended to be run on startup to pre-load the cache
 		/// </summary>
@@ -237,7 +236,7 @@ namespace TASVideos.Tasks
 		public async Task MovePage(WikiMoveModel model)
 		{
 			// TODO: support moving a page to a deleted page
-			// Revision ids would have to be adjusted but it coudl be done
+			// Revision ids would have to be adjusted but it could be done
 			if (await PageExists(model.DestinationPageName, includeDeleted: true))
 			{
 				throw new InvalidOperationException($"Cannot move {model.OriginalPageName} to {model.DestinationPageName} because {model.DestinationPageName} already exists.");
