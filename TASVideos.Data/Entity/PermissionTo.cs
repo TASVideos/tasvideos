@@ -128,6 +128,11 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "See Diagnostics")]
 		[Group("Admin")]
 		[Description("The ability to see high level application and server information such as diagnostics stats and other sensitive information")]
-		SeeDiagnostics = 24
+		SeeDiagnostics = 24,
+
+		[Display(Name = "Edit recommendation flag")]
+		[Group("MovieAdministration")]
+		[Description("The ability to edit a movie's recomended flag, which flags the movie as recommended to new comers")]
+		EditRecommendation = 25
 	}
 }
