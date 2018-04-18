@@ -36,6 +36,7 @@ namespace TASVideos.Legacy
 			SubmissionImporter.Import(context, legacySiteContext);
 			PublicationImporter.Import(context, legacySiteContext);
 			PublicationRatingImporter.Import(context, legacySiteContext);
+			PublicationFlagImporter.Import(context, legacySiteContext);
 		}
 	}
 }
