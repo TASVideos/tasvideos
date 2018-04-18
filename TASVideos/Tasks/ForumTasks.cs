@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
+using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
 {
@@ -142,6 +144,24 @@ namespace TASVideos.Tasks
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
+		}
+
+		// TODO: document
+		public async Task<IEnumerable<TopicFeedModel.TopicPost>> GetTopicFeed(int topicId, int limit)
+		{
+			return await _db.ForumPosts
+				.Where(p => p.TopicId == topicId)
+				.Select(p => new TopicFeedModel.TopicPost
+				{
+					Id = p.Id,
+					Text = p.Text,
+					Subject = p.Subject,
+					PosterName = p.Poster.UserName,
+					PostTime = p.CreateTimeStamp
+				})
+				.OrderByDescending(p => p.PostTime)
+				.Take(limit)
+				.ToListAsync();
 		}
 	}
 }
