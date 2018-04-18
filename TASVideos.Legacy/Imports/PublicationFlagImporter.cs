@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
@@ -14,9 +12,22 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			var movieFlags = legacySiteContext.MovieFlags
+			var publicationFlags = legacySiteContext.MovieFlags
 				.Where(mf => mf.FlagId != 3) // AVGN
+				.Select(mf => new PublicationFlag
+				{
+					PublicationId = mf.MovieId,
+					FlagId = mf.FlagId
+				})
 				.ToList();
+
+			var columns = new[]
+			{
+				nameof(PublicationFlag.PublicationId),
+				nameof(PublicationFlag.FlagId)
+			};
+
+			publicationFlags.BulkInsert(context, columns, nameof(ApplicationDbContext.PublicationFlags));
 		}
 	}
 }
