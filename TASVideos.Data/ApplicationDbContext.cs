@@ -38,6 +38,7 @@ namespace TASVideos.Data
 		public DbSet<PublicationTag> PublicationTags { get; set; }
 		public DbSet<PublicationRating> PublicationRatings { get; set; }
 		public DbSet<Tag> Tags { get; set; }
+		public DbSet<Flag> Flags { get; set; }
 
 		public DbSet<Award> Awards { get; set; }
 		public DbSet<PublicationAward> PublicationAwards { get; set; }
@@ -198,6 +199,13 @@ namespace TASVideos.Data
 			});
 
 			builder.Entity<Genre>(entity =>
+			{
+				entity.Property(e => e.Id)
+					.ValueGeneratedNever()
+					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+			});
+
+			builder.Entity<Flag>(entity =>
 			{
 				entity.Property(e => e.Id)
 					.ValueGeneratedNever()
