@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
 
@@ -17,6 +15,7 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
 		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new List<PublicationTag>();
+		public virtual ICollection<PublicationFlag> PublicationFlags { get; set; } = new List<PublicationFlag>();
 		public virtual ICollection<PublicationAward> PublicationAwards { get; set; } = new List<PublicationAward>();
 
 		[ForeignKey(nameof(PublicationRating.PublicationId))]
