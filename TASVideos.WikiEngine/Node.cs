@@ -223,7 +223,8 @@ namespace TASVideos.WikiEngine.AST
 			["platformframerates"] = "PlatformFramerates",
 			["frontpagesubmissionlist"] = "FrontpageSubmissionList",
 			["displayminimovie"] = "DisplayMiniMovie",
-			["tabularmovielist"] = "TabularMovieList"
+			["tabularmovielist"] = "TabularMovieList",
+			["topicfeed"] = "TopicFeed"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
