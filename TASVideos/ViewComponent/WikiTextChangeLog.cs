@@ -21,13 +21,13 @@ namespace TASVideos.ViewComponents
 			int limit = 50;
 			bool includeMinorEdits = true;
 
-			bool? paramIncludeMinorEdits = WikiHelper.GetBool(WikiHelper.GetValueFor(pp, "includeminors"));
+			bool? paramIncludeMinorEdits = WikiHelper.GetBool(pp, "includeminors");
 			if (paramIncludeMinorEdits.HasValue)
 			{
 				includeMinorEdits = paramIncludeMinorEdits.Value;
 			}
 
-			int? paramLimit = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "limit"));
+			int? paramLimit = WikiHelper.GetInt(pp, "limit");
 			if (paramLimit.HasValue)
 			{
 				limit = paramLimit.Value;

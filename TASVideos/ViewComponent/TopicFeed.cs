@@ -20,8 +20,8 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			int limit = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "l")) ?? 5;
-			int topicId = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "t"))
+			int limit = WikiHelper.GetInt(pp, "l") ?? 5;
+			int topicId = WikiHelper.GetInt(pp, "t")
 				?? throw new ArgumentException("the parameter t can not be null");
 
 			var model = new TopicFeedModel

@@ -196,24 +196,24 @@ namespace TASVideos.Extensions
 		/// Possible values (case insensitive): true/false, yes/no, y/n
 		/// if a string is null, empty, or whitespace, null is returned
 		/// </summary>
-		public static bool? GetBool(string val)
+		public static bool? GetBool(string parameterStr, string param)
 		{
-			if (string.IsNullOrWhiteSpace(val))
+			if (string.IsNullOrWhiteSpace(param))
 			{
 				return null;
 			}
 
-			string lowerVal = val.ToLower();
-			if (lowerVal == "true"
-				|| lowerVal == "yes"
-				|| lowerVal == "y")
+			string val = GetValueFor(parameterStr, param)?.ToLower();
+			if (val == "true"
+				|| val == "yes"
+				|| val == "y")
 			{
 				return true;
 			}
 
-			if (lowerVal == "false"
-				|| lowerVal == "no"
-				|| lowerVal == "n")
+			if (val == "false"
+				|| val == "no"
+				|| val == "n")
 			{
 				return false;
 			}
@@ -225,8 +225,15 @@ namespace TASVideos.Extensions
 		/// Takes the given string and parses it to an int if possible
 		/// If an integer can not ber parsed from the given value, null is returned
 		/// </summary>
-		public static int? GetInt(string val)
+		public static int? GetInt(string parameterStr, string param)
 		{
+			if (string.IsNullOrWhiteSpace(param))
+			{
+				return null;
+			}
+
+			var val = GetValueFor(parameterStr, param)?.ToLower();
+
 			var result = int.TryParse(val, out int parsedVal);
 			if (result)
 			{
