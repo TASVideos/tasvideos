@@ -29,7 +29,7 @@ namespace TASVideos.Models
 		public DateTime CreateTimeStamp { get; set; }
 		public int? ObsoletedBy { get; set; }
 		public string Title { get; set; }
-		
+		public string TierIconPath { get; set; }
 		public string MovieFileName { get; set; }
 		public int SubmissionId { get; set; }
 		public string OnlineWatchingUrl { get; set; }
