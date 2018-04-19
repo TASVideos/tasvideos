@@ -9,10 +9,10 @@ namespace TASVideos.Data.SeedData
 		{
 			new Tier
 			{
-				Name = "Vault",
-				Weight = 0.75,
-				IconPath = "images/vaulttier.png",
-				Link = "Vault"
+				Name = "Stars",
+				Weight = 1.5,
+				IconPath = "images/startier.png",
+				Link = "Stars"
 			},
 			new Tier
 			{
@@ -23,10 +23,10 @@ namespace TASVideos.Data.SeedData
 			},
 			new Tier
 			{
-				Name = "Stars",
-				Weight = 1.5,
-				IconPath = "images/startier.png",
-				Link = "Stars"
+				Name = "Vault",
+				Weight = 0.75,
+				IconPath = "images/vaulttier.png",
+				Link = "Vault"
 			}
 		};
 	}
