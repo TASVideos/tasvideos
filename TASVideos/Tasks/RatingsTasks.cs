@@ -14,10 +14,10 @@ namespace TASVideos.Tasks
 {
 	public class RatingsTasks
 	{
+		private const string MovieRatingKey = "OverallRatingForMovie-";
+
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
-
-		private const string MovieRatingKey = "OverallRatingForMovie-";
 
 		public RatingsTasks(
 			ApplicationDbContext db,
@@ -68,7 +68,7 @@ namespace TASVideos.Tasks
 
 			model.AverageTechRating = Math.Round(model.Ratings
 				.Where(r => r.TechQuality.HasValue)
-				.Select(r => r.Entertainment.Value).Average(), 2);
+				.Select(r => r.TechQuality.Value).Average(), 2);
 
 			// Entertainmnet counts 2:1 over Tech
 			model.OverallRating = Math.Round(model.Ratings
