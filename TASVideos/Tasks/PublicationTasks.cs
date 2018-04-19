@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -102,10 +103,24 @@ namespace TASVideos.Tasks
 		/// so that one may be randomly picked as a suggested movie
 		/// Intended for the front page, for newcomers to the site
 		/// </summary>
-		public async Task<IEnumerable<int>> FrontPageMovieCandidates()
+		public async Task<IEnumerable<int>> FrontPageMovieCandidates(string tier, string flags)
 		{
-			return await _db.Publications
-				.Where(p => p.TierId != 3) // TODO
+			var query = _db.Publications
+				.ThatAreCurrent()
+				.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(tier))
+			{
+				query = query.Where(p => p.Tier.Name == tier);
+			}
+
+			if (!string.IsNullOrWhiteSpace(flags))
+			{
+				var flagsArr = flags.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+				query = query.Where(p => p.PublicationFlags.Any(pf => flagsArr.Contains(pf.Flag.Token)));
+			}
+
+			return await query
 				.Select(p => p.Id)
 				.ToListAsync();
 		}
