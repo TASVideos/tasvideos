@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -13,13 +15,16 @@ namespace TASVideos.Controllers
 {
 	public class ForumController : BaseController
 	{
+		private readonly UserManager<User> _userManager;
 		private readonly ForumTasks _forumTasks;
 
 		public ForumController(
-			ForumTasks forumTasks,
-			UserTasks userTasks)
+			UserTasks userTasks,
+			UserManager<User> userManager,
+			ForumTasks forumTasks)
 			: base(userTasks)
 		{
+			_userManager = userManager;
 			_forumTasks = forumTasks;
 		}
 
@@ -41,6 +46,14 @@ namespace TASVideos.Controllers
 			}
 
 			return NotFound();
+		}
+
+		[Authorize]
+		public async Task<IActionResult> Inbox()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _forumTasks.GetUserInBox(user);
+			return View(model);
 		}
 	}
 }

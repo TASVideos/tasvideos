@@ -163,5 +163,15 @@ namespace TASVideos.Tasks
 				.Take(limit)
 				.ToListAsync();
 		}
+
+		// TODO: document
+		public async Task<ForumInboxModel> GetUserInBox(User user)
+		{
+			return new ForumInboxModel
+			{
+				UserId = user.Id,
+				UserName = user.UserName
+			};
+		}
 	}
 }
