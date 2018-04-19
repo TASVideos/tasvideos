@@ -22,7 +22,7 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
 			var search = new TabularMovieListSearchModel();
-			var limit = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "limit"));
+			var limit = WikiHelper.GetInt(pp, "limit");
 			if (limit.HasValue)
 			{
 				search.Limit = limit.Value;

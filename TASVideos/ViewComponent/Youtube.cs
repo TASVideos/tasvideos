@@ -11,18 +11,18 @@ namespace TASVideos.ViewComponents
 			var model = new YoutubeModel
 			{
 				Code = WikiHelper.GetValueFor(pp, "v"),
-				Loop = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "loop")),
+				Loop = WikiHelper.GetInt(pp, "loop"),
 				HideLink = WikiHelper.HasParam(pp, "hidelink"),
 				FlashBlock = WikiHelper.HasParam(pp, "flashblock")
 			};
 
-			int? paramWidth = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "width"));
+			int? paramWidth = WikiHelper.GetInt(pp, "width");
 			if (paramWidth.HasValue)
 			{
 				model.Width = paramWidth.Value;
 			}
 
-			int? paramHeight = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "height"));
+			int? paramHeight = WikiHelper.GetInt(pp, "height");
 			if (paramHeight.HasValue)
 			{
 				model.Height = paramHeight.Value;
@@ -35,7 +35,7 @@ namespace TASVideos.ViewComponents
 				model.Align = paramAlign.ToLower();
 			}
 
-			int? startParam = WikiHelper.GetInt(WikiHelper.GetValueFor(pp, "start"));
+			int? startParam = WikiHelper.GetInt(pp, "start");
 			if (startParam.HasValue)
 			{
 				model.Start = startParam.Value;
