@@ -7,7 +7,7 @@ using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
-	public class WikiTextChangeLog : ViewComponent
+	public class WikiTextChangeLog : ModuleComponentBase
 	{
 		private readonly WikiTasks _wikiTasks;
 
@@ -21,13 +21,13 @@ namespace TASVideos.ViewComponents
 			int limit = 50;
 			bool includeMinorEdits = true;
 
-			bool? paramIncludeMinorEdits = WikiHelper.GetBool(pp, "includeminors");
+			bool? paramIncludeMinorEdits = GetBool(pp, "includeminors");
 			if (paramIncludeMinorEdits.HasValue)
 			{
 				includeMinorEdits = paramIncludeMinorEdits.Value;
 			}
 
-			int? paramLimit = WikiHelper.GetInt(pp, "limit");
+			int? paramLimit = GetInt(pp, "limit");
 			if (paramLimit.HasValue)
 			{
 				limit = paramLimit.Value;

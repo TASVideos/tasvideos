@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
-	public class TabularMovieList : ViewComponent
+	public class TabularMovieList : ModuleComponentBase
 	{
 		private readonly PublicationTasks _publicationTasks;
 
@@ -22,13 +20,13 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
 			var search = new TabularMovieListSearchModel();
-			var limit = WikiHelper.GetInt(pp, "limit");
+			var limit = GetInt(pp, "limit");
 			if (limit.HasValue)
 			{
 				search.Limit = limit.Value;
 			}
 
-			var tiersStr = WikiHelper.GetValueFor(pp, "tier");
+			var tiersStr = GetValueFor(pp, "tier");
 			if (!string.IsNullOrWhiteSpace(tiersStr))
 			{
 				search.Tiers = tiersStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
