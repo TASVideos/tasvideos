@@ -1,16 +1,14 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 
 namespace TASVideos.ViewComponents
 {
-	public class ModuleComponentBase : ViewComponent
+	// ***************
+	// Parameter helpers
+	// These helpers assist with parsing wiki markup parameters from the user
+	// By design they need to gracefully handle all sorts of nonsense input from the user
+	// ***************
+	public static class ParamHelper
 	{
-		// ***************
-		// Parameter helpers
-		// These helpers assist with parsing wiki markup parameters from the user
-		// By design they need to gracefully handle all sorts of nonsense input from the user
-		// ***************
-
 		/// <summary>
 		/// Returns whether or not a parameter is specified in the list
 		/// Returns true as long as the parameter is specified, it does not have to have a corresponding value
