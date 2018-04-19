@@ -21,8 +21,8 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
 			var tier = ParamHelper.GetValueFor(pp, "tier");
-
-			var candidateIds = await _publicationTasks.FrontPageMovieCandidates();
+			var flags = ParamHelper.GetValueFor(pp, "flags");
+			var candidateIds = await _publicationTasks.FrontPageMovieCandidates(tier, flags);
 			var id = candidateIds.ToList().AtRandom();
 			var movie = await _publicationTasks.GetPublicationMiniMovie(id);
 			return View(movie);
