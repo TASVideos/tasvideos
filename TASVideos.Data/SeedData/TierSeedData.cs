@@ -9,17 +9,17 @@ namespace TASVideos.Data.SeedData
 		{
 			new Tier
 			{
-				Name = "Stars",
-				Weight = 1.5,
-				IconPath = "images/startier.png",
-				Link = "Stars"
-			},
-			new Tier
-			{
 				Name = "Moons",
 				Weight = 1,
 				IconPath = "images/moontier.png",
 				Link = "Moons"
+			},
+			new Tier
+			{
+				Name = "Stars",
+				Weight = 1.5,
+				IconPath = "images/startier.png",
+				Link = "Stars"
 			},
 			new Tier
 			{
