@@ -2,12 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
-	public class WikiTextChangeLog : ModuleComponentBase
+	public class WikiTextChangeLog : ViewComponent
 	{
 		private readonly WikiTasks _wikiTasks;
 
@@ -21,13 +20,13 @@ namespace TASVideos.ViewComponents
 			int limit = 50;
 			bool includeMinorEdits = true;
 
-			bool? paramIncludeMinorEdits = GetBool(pp, "includeminors");
+			bool? paramIncludeMinorEdits = ParamHelper.GetBool(pp, "includeminors");
 			if (paramIncludeMinorEdits.HasValue)
 			{
 				includeMinorEdits = paramIncludeMinorEdits.Value;
 			}
 
-			int? paramLimit = GetInt(pp, "limit");
+			int? paramLimit = ParamHelper.GetInt(pp, "limit");
 			if (paramLimit.HasValue)
 			{
 				limit = paramLimit.Value;

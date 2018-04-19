@@ -8,7 +8,7 @@ using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
-	public class TabularMovieList : ModuleComponentBase
+	public class TabularMovieList : ViewComponent
 	{
 		private readonly PublicationTasks _publicationTasks;
 
@@ -20,13 +20,13 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
 			var search = new TabularMovieListSearchModel();
-			var limit = GetInt(pp, "limit");
+			var limit = ParamHelper.GetInt(pp, "limit");
 			if (limit.HasValue)
 			{
 				search.Limit = limit.Value;
 			}
 
-			var tiersStr = GetValueFor(pp, "tier");
+			var tiersStr = ParamHelper.GetValueFor(pp, "tier");
 			if (!string.IsNullOrWhiteSpace(tiersStr))
 			{
 				search.Tiers = tiersStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
