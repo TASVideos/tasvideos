@@ -99,4 +99,18 @@ namespace TASVideos.Models
 		public string Subject { get; set; }
 		public string Post { get; set; }
 	}
+
+	public class ForumInboxModel
+	{
+		public int UserId { get; set; }
+		public string UserName { get; set; }
+		public IEnumerable<InboxEntry> Inbox { get; set; } = new List<InboxEntry>();
+
+		public class InboxEntry
+		{
+			public int Id { get; set; }
+			public string Subject { get; set; }
+			public DateTime Sent { get; set; }
+		}
+	}
 }
