@@ -50,7 +50,8 @@ namespace TASVideos.Controllers
 				SystemCodes = tokenLookup.SystemCodes.Where(s => tokens.Contains(s)),
 				ShowObsoleted = tokens.Contains("obs"),
 				Years = tokenLookup.Years.Where(y => tokens.Contains("Y" + y)),
-				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t))
+				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t)),
+				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f))
 			};
 
 			// If no valid filter criteria, don't attempt to generate a list (else it would be all movies for what is most likely a malformed URL)
