@@ -49,7 +49,8 @@ namespace TASVideos.Tasks
 				{
 					Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
 					SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
-					Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync() // TODO: Game genres too?
+					Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(), // TODO: Game genres too?
+					Flags = await _db.Flags.Select(f => f.Token.ToLower()).ToListAsync()
 				};
 
 				_cache.Set(cacheKey, result);
@@ -205,6 +206,11 @@ namespace TASVideos.Tasks
 			if (searchCriteria.Tags.Any())
 			{
 				query = query.Where(p => p.PublicationTags.Any(t => searchCriteria.Tags.Contains(t.Tag.Code)));
+			}
+
+			if (searchCriteria.Flags.Any())
+			{
+				query = query.Where(p => p.PublicationFlags.Any(f => searchCriteria.Flags.Contains(f.Flag.Token)));
 			}
 
 			// TODO: automapper, single movie is the same logic
