@@ -109,8 +109,15 @@ namespace TASVideos.Models
 		public class InboxEntry
 		{
 			public int Id { get; set; }
+
+			[Display(Name = "Subject")]
 			public string Subject { get; set; }
-			public DateTime Sent { get; set; }
+
+			[Display(Name = "From")]
+			public string FromUser { get; set; }
+
+			[Display(Name = "Date")]
+			public DateTime SendDate { get; set; }
 		}
 	}
 }
