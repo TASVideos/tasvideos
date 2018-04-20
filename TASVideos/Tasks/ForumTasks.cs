@@ -170,7 +170,17 @@ namespace TASVideos.Tasks
 			return new ForumInboxModel
 			{
 				UserId = user.Id,
-				UserName = user.UserName
+				UserName = user.UserName,
+				Inbox = await _db.ForumPrivateMessages
+					.Where(pm => pm.ToUserId == user.Id)
+					.Select(pm => new ForumInboxModel.InboxEntry
+					{
+						Id = pm.Id,
+						Subject = pm.Subject,
+						SendDate = pm.CreateTimeStamp,
+						FromUser = pm.FromUser.UserName
+					})
+					.ToListAsync()
 			};
 		}
 	}
