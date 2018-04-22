@@ -183,5 +183,35 @@ namespace TASVideos.Tasks
 					.ToListAsync()
 			};
 		}
+
+		// TODO: document
+		public async Task<ForumPrivateMessageModel> GetPrivateMessage(User user, int id)
+		{
+			var pm = await _db.ForumPrivateMessages
+				.Include(p => p.FromUser)
+				.Where(p => p.Id == id)
+				.Where(p => p.ToUserId == user.Id)
+				.SingleOrDefaultAsync();
+
+			if (pm == null)
+			{
+				return null;
+			}
+
+			pm.ReadOn = DateTime.UtcNow;
+			await _db.SaveChangesAsync();
+
+			var model = new ForumPrivateMessageModel
+			{
+				Id = pm.Id,
+				Subject = pm.Subject,
+				SentOn = pm.CreateTimeStamp,
+				Text = pm.Text,
+				FromUserId = pm.FromUserId,
+				FromUserName = pm.FromUser.UserName
+			};
+
+			return model;
+		}
 	}
 }

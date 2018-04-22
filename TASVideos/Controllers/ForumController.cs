@@ -55,5 +55,19 @@ namespace TASVideos.Controllers
 			var model = await _forumTasks.GetUserInBox(user);
 			return View(model);
 		}
+
+		[Authorize]
+		public async Task<IActionResult> PrivateMessage(int id)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _forumTasks.GetPrivateMessage(user, id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
 	}
 }
