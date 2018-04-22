@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
 
 using TASVideos.Data;
@@ -17,28 +18,48 @@ namespace TASVideos.Legacy.Imports
 			// TODO: types, I think this corresponds to things like "sent, read, etc"
 			// TODO: messages without corresponding text
 			// TODO: this filters out some messages where the to or from users no longer, should those get imported?
-			var privMessages =
+
+			var privMessagesTemp =
 				(from p in legacyForumContext.PrivateMessages
 				 join pt in legacyForumContext.PrivateMessageText on p.Id equals pt.Id
 				 join fromUser in legacyForumContext.Users on p.FromUserId equals fromUser.UserId
+				 where (p.ToUserId > 0 && p.FromUserId > 0) // TODO: do we care about these?
+				 group new { p.Type } by new
+				 {
+					p.ToUserId,
+					p.FromUserId,
+					p.Timestamp,
+					p.Subject,
+					pt.Text,
+					p.EnableBbCode,
+					p.EnableHtml,
+					p.IpAddress,
+					fromUser.UserName
+				 }
+				 into g
 				 select new
 				 {
-					 p.Id,
-					 p.ToUserId,
-					 p.FromUserId,
-					 CreateUserName = fromUser.UserName,
-					 p.Timestamp,
-					 p.Subject,
-					 pt.Text,
-					 p.EnableBbCode,
-					 p.EnableHtml,
-					 p.Type,
-					 p.IpAddress
+					g.Key.ToUserId,
+					g.Key.FromUserId,
+					CreateUserName = g.Key.UserName,
+					g.Key.Timestamp,
+					g.Key.Subject,
+					g.Key.Text,
+					g.Key.EnableBbCode,
+					g.Key.EnableHtml,
+					g.Key.IpAddress,
+					IsRead = g.Any(gg => gg.Type == 0),
+					IsNew = g.Any(gg => gg.Type == 1),
+					//IsSent = g.Any(gg => gg.Type == 2), // Don't need this one
+					IsSavedIn = g.Any(gg => gg.Type == 3),
+					IsSavedOut = g.Any(gg => gg.Type == 4),
+					IsUnread = g.Any(gg => gg.Type == 5),
 				 })
-				.ToList()
+				.ToList();
+
+			var privMessages = privMessagesTemp
 				.Select(p => new ForumPrivateMessage
 				{
-					Id = p.Id,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
 					CreateUserName = p.CreateUserName,
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
@@ -49,13 +70,17 @@ namespace TASVideos.Legacy.Imports
 					Subject = ImportHelper.FixString(p.Subject),
 					Text = ImportHelper.FixString(p.Text),
 					EnableHtml = p.EnableHtml,
-					EnableBbCode = p.EnableBbCode
+					EnableBbCode = p.EnableBbCode,
+					ReadOn = (p.IsRead && !p.IsNew && !p.IsUnread)
+						? DateTime.UtcNow  // Legacy system didn't track date so we will simply use the import date
+						: (DateTime?)null,
+					FromUserSaved = p.IsSavedIn,
+					ToUserSaved = p.IsSavedOut
 				})
 				.ToList();
 
 			var columns = new[]
 			{
-				nameof(ForumPrivateMessage.Id),
 				nameof(ForumPrivateMessage.CreateTimeStamp),
 				nameof(ForumPrivateMessage.CreateUserName),
 				nameof(ForumPrivateMessage.LastUpdateTimeStamp),
@@ -66,10 +91,13 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPrivateMessage.Subject),
 				nameof(ForumPrivateMessage.Text),
 				nameof(ForumPrivateMessage.EnableHtml),
-				nameof(ForumPrivateMessage.EnableBbCode)
+				nameof(ForumPrivateMessage.EnableBbCode),
+				nameof(ForumPrivateMessage.ReadOn),
+				nameof(ForumPrivateMessage.FromUserSaved),
+				nameof(ForumPrivateMessage.ToUserSaved)
 			};
 
-			privMessages.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumPrivateMessages), SqlBulkCopyOptions.KeepIdentity, 20000);
+			privMessages.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumPrivateMessages), SqlBulkCopyOptions.Default, 20000);
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity.Forum
+﻿using System;
+
+namespace TASVideos.Data.Entity.Forum
 {
 	public class ForumPrivateMessage : BaseEntity
 	{
@@ -17,5 +19,10 @@
 
 		public bool EnableHtml { get; set; }
 		public bool EnableBbCode { get; set; }
+
+		//public int Type { get; set; }
+		public DateTime? ReadOn { get; set; } // Only a flag in the legacy system, so the date is the import date for legacy messages
+		public bool FromUserSaved { get; set; }
+		 public bool ToUserSaved { get; set; }
 	}
 }
