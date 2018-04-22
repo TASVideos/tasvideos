@@ -12,7 +12,7 @@
 	@foreach (var entry in Model.Inbox.OrderByDescending(m => m.SendDate))
 	{
 		<tr>
-			<td>@entry.Subject</td>
+			<td><a asp-action="PrivateMessage" asp-route-id="@entry.Id">@entry.Subject</a></td>
 			<td>@entry.FromUser</td>
 			<td>@entry.SendDate</td>
 		</tr>

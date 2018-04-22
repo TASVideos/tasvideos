@@ -1,0 +1,17 @@
+﻿@model ForumPrivateMessageModel
+@{
+	ViewData["Title"] = $"Message from {Model.FromUserName}";
+}
+
+<a href="#" class="btn btn-primary mb-1">Reply</a>
+<div class="card">
+	<div class="card-header">
+		<small class="pull-right">
+			From @Model.FromUserName <br />Sent on @Model.SentOn
+		</small>
+		<h4>@Model.Subject</h4>
+	</div>
+	<div class="card-body">
+		@Model.Text
+	</div>
+</div>
