@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +13,18 @@ namespace TASVideos.Controllers
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly ForumTasks _forumTasks;
+		private readonly PrivateMessageTasks _pmTasks;
 
 		public ForumController(
 			UserTasks userTasks,
 			UserManager<User> userManager,
-			ForumTasks forumTasks)
+			ForumTasks forumTasks,
+			PrivateMessageTasks pmTasks)
 			: base(userTasks)
 		{
 			_userManager = userManager;
 			_forumTasks = forumTasks;
+			_pmTasks = pmTasks;
 		}
 
 		[AllowAnonymous]
@@ -52,7 +51,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Inbox()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var model = await _forumTasks.GetUserInBox(user);
+			var model = await _pmTasks.GetUserInBox(user);
 			return View(model);
 		}
 
@@ -60,7 +59,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> PrivateMessage(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var model = await _forumTasks.GetPrivateMessage(user, id);
+			var model = await _pmTasks.GetPrivateMessage(user, id);
 
 			if (model == null)
 			{

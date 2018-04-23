@@ -21,6 +21,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<GameTasks, GameTasks>();
 			services.AddScoped<ForumTasks, ForumTasks>();
 			services.AddScoped<RatingsTasks, RatingsTasks>();
+			services.AddScoped<PrivateMessageTasks, PrivateMessageTasks>();
 
 			return services;
 		}
