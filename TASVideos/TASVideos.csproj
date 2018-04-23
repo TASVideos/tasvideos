@@ -44,6 +44,9 @@
     <Content Update="Views\Messages\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Messages\Sentbox.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Ratings\ViewPublication.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

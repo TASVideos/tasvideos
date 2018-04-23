@@ -55,6 +55,13 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		public async Task<IActionResult> Sentbox()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _pmTasks.GetUserSentBox(user);
+			return View(model);
+		}
+
 		[Authorize]
 		public async Task<IActionResult> SaveToUser(int id)
 		{
