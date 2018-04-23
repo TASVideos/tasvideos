@@ -1,7 +1,7 @@
 @using TASVideos.Tasks
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
-@inject ForumTasks ForumTasks
+@inject PrivateMessageTasks PmTasks
 @{ 
 	bool isSignedIn = SignInManager.IsSignedIn(User);
 	int notificationCount = 0;
@@ -9,7 +9,7 @@
 	if (isSignedIn)
 	{
 		var user = await UserManager.GetUserAsync(User);
-		notificationCount = await ForumTasks.GetUnreadMessageCount(user);
+		notificationCount = await PmTasks.GetUnreadMessageCount(user);
 	}
 }
 <div class="d-md-flex">
