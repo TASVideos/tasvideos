@@ -58,7 +58,7 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var privMessages = privMessagesTemp
-				.Select(p => new ForumPrivateMessage
+				.Select(p => new PrivateMessage
 				{
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
 					CreateUserName = p.CreateUserName,
@@ -81,20 +81,20 @@ namespace TASVideos.Legacy.Imports
 
 			var columns = new[]
 			{
-				nameof(ForumPrivateMessage.CreateTimeStamp),
-				nameof(ForumPrivateMessage.CreateUserName),
-				nameof(ForumPrivateMessage.LastUpdateTimeStamp),
-				nameof(ForumPrivateMessage.LastUpdateUserName),
-				nameof(ForumPrivateMessage.FromUserId),
-				nameof(ForumPrivateMessage.ToUserId),
-				nameof(ForumPrivateMessage.IpAddress),
-				nameof(ForumPrivateMessage.Subject),
-				nameof(ForumPrivateMessage.Text),
-				nameof(ForumPrivateMessage.EnableHtml),
-				nameof(ForumPrivateMessage.EnableBbCode),
-				nameof(ForumPrivateMessage.ReadOn),
-				nameof(ForumPrivateMessage.FromUserSaved),
-				nameof(ForumPrivateMessage.ToUserSaved)
+				nameof(PrivateMessage.CreateTimeStamp),
+				nameof(PrivateMessage.CreateUserName),
+				nameof(PrivateMessage.LastUpdateTimeStamp),
+				nameof(PrivateMessage.LastUpdateUserName),
+				nameof(PrivateMessage.FromUserId),
+				nameof(PrivateMessage.ToUserId),
+				nameof(PrivateMessage.IpAddress),
+				nameof(PrivateMessage.Subject),
+				nameof(PrivateMessage.Text),
+				nameof(PrivateMessage.EnableHtml),
+				nameof(PrivateMessage.EnableBbCode),
+				nameof(PrivateMessage.ReadOn),
+				nameof(PrivateMessage.FromUserSaved),
+				nameof(PrivateMessage.ToUserSaved)
 			};
 
 			privMessages.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumPrivateMessages), SqlBulkCopyOptions.Default, 20000);
