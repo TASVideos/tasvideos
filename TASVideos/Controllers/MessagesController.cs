@@ -55,6 +55,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		[Authorize]
 		public async Task<IActionResult> Sentbox()
 		{
 			var user = await _userManager.GetUserAsync(User);
