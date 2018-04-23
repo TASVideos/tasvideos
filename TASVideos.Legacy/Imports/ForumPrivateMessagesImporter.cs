@@ -71,7 +71,7 @@ namespace TASVideos.Legacy.Imports
 					Text = ImportHelper.FixString(p.Text),
 					EnableHtml = p.EnableHtml,
 					EnableBbCode = p.EnableBbCode,
-					ReadOn = (p.IsRead && !p.IsNew && !p.IsUnread)
+					ReadOn = !p.IsNew // p.IsUnread // Unread = seen but not read?
 						? DateTime.UtcNow  // Legacy system didn't track date so we will simply use the import date
 						: (DateTime?)null,
 					FromUserSaved = p.IsSavedIn,
