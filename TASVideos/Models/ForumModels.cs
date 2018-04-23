@@ -118,6 +118,8 @@ namespace TASVideos.Models
 
 			[Display(Name = "Date")]
 			public DateTime SendDate { get; set; }
+
+			public bool IsRead { get; set; }
 		}
 	}
 

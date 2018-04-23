@@ -2,17 +2,25 @@
 @{
 	ViewData["Title"] = $"Private messages for {Model.UserName}";
 }
-
-<table>
+<table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.Inbox.First().Subject)</th>
 		<th>@Html.DisplayNameFor(m => m.Inbox.First().FromUser)</th>
 		<th>@Html.DisplayNameFor(m => m.Inbox.First().SendDate)</th>
 	</tr>
-	@foreach (var entry in Model.Inbox.OrderByDescending(m => m.SendDate))
+	@foreach (var entry in Model.Inbox
+	   .OrderBy(m => m.IsRead)
+	   .ThenByDescending(m => m.SendDate))
 	{
 		<tr>
-			<td><a asp-action="PrivateMessage" asp-route-id="@entry.Id">@entry.Subject</a></td>
+			<td>
+
+				<a asp-action="PrivateMessage" asp-route-id="@entry.Id">
+					<span condition="!entry.IsRead" class="fa fa-envelope"></span>
+					<span condition="!entry.IsRead"><strong>@entry.Subject</strong></span>
+					<span condition="entry.IsRead">@entry.Subject</span>
+				</a>
+			</td>
 			<td>@entry.FromUser</td>
 			<td>@entry.SendDate</td>
 		</tr>
