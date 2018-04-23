@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace TASVideos.Data.Entity.Forum
 {
-	public class ForumPrivateMessage : BaseEntity
+	public class PrivateMessage : BaseEntity
 	{
 		public int Id { get; set; }
 
@@ -28,17 +28,17 @@ namespace TASVideos.Data.Entity.Forum
 
 	public static class MessageExtensions
 	{
-		public static IQueryable<ForumPrivateMessage> ToUser(this IQueryable<ForumPrivateMessage> query, User user)
+		public static IQueryable<PrivateMessage> ToUser(this IQueryable<PrivateMessage> query, User user)
 		{
 			return query.Where(m => m.ToUserId == user.Id);
 		}
 
-		public static IQueryable<ForumPrivateMessage> FromUser(this IQueryable<ForumPrivateMessage> query, User user)
+		public static IQueryable<PrivateMessage> FromUser(this IQueryable<PrivateMessage> query, User user)
 		{
 			return query.Where(m => m.FromUserId == user.Id);
 		}
 
-		public static IQueryable<ForumPrivateMessage> ThatAreNotToUserSaved(this IQueryable<ForumPrivateMessage> query)
+		public static IQueryable<PrivateMessage> ThatAreNotToUserSaved(this IQueryable<PrivateMessage> query)
 		{
 			return query.Where(m => !m.ToUserSaved);
 		}

@@ -29,7 +29,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns all of the <see cref="TASVideos.Data.Entity.Forum.ForumPrivateMessage"/>
+		/// Returns all of the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// records where the given <see cref="user"/> is the recipient
 		/// </summary>
 		public async Task<ForumInboxModel> GetUserInBox(User user)
@@ -54,7 +54,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns the <see cref="TASVideos.Data.Entity.Forum.ForumPrivateMessage"/>
+		/// Returns the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// record with the given <see cref="id"/> if the given <see cref="user"/>
 		/// is the recipient
 		/// </summary>
@@ -89,7 +89,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns the the number of unread <see cref="TASVideos.Data.Entity.Forum.ForumPrivateMessage"/>
+		/// Returns the the number of unread <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// for the given <see cref="User" />
 		/// </summary>
 		public async Task<int> GetUnreadMessageCount(User user)

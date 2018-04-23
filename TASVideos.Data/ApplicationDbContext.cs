@@ -59,7 +59,7 @@ namespace TASVideos.Data
 		public DbSet<Forum> Forums { get; set; }
 		public DbSet<ForumTopic> ForumTopics { get; set; }
 		public DbSet<ForumPost> ForumPosts { get; set; }
-		public DbSet<ForumPrivateMessage> ForumPrivateMessages { get; set; }
+		public DbSet<PrivateMessage> ForumPrivateMessages { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
