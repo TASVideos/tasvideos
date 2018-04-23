@@ -17,10 +17,10 @@
 	{
 		<form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
 			<ul class="navbar-nav">
-				<li condition="notificationCount > 0" class="nav-item">
+				<li class="nav-item">
 					<a class="nav-link" asp-controller="Forum" asp-action="Inbox">
-						<span class="badge badge-danger">@notificationCount</span>
-						<span class="sr-only">unread messages</span>
+						<span condition="notificationCount > 0" class="badge badge-danger" >@notificationCount</span>
+						<span condition="notificationCount > 0" class="sr-only">unread messages</span>
 						<span class="fa fa-envelope"></span>
 					</a>
 				</li>
