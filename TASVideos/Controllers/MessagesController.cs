@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -47,7 +48,7 @@ namespace TASVideos.Controllers
 		}
 
 		[Authorize]
-		public async Task<IActionResult> SavedBox()
+		public async Task<IActionResult> Savebox()
 		{
 			var user = await _userManager.GetUserAsync(User);
 			var model = await _pmTasks.GetUserSaveBox(user);
@@ -67,6 +68,24 @@ namespace TASVideos.Controllers
 		{
 			var user = await _userManager.GetUserAsync(User);
 			await _pmTasks.DeleteMessageToUser(user, id);
+			return RedirectToAction(nameof(Inbox));
+		}
+
+		[Authorize]
+		public IActionResult Create()
+		{
+			return View(new PrivateMessageCreateModel());
+		}
+
+		[Authorize]
+		[HttpPost, ValidateAntiForgeryToken]
+		public IActionResult Create(PrivateMessageCreateModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
 			return RedirectToAction(nameof(Inbox));
 		}
 	}
