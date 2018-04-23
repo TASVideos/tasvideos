@@ -14,8 +14,7 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
-			// TODO: attach sig
-			// TODO: types, I think this corresponds to things like "sent, read, etc"
+			// TODO: attach sig? I'm leaning towards this being pointless
 			// TODO: messages without corresponding text
 			// TODO: this filters out some messages where the to or from users no longer, should those get imported?
 
@@ -74,8 +73,8 @@ namespace TASVideos.Legacy.Imports
 					ReadOn = !p.IsNew // p.IsUnread // Unread = seen but not read?
 						? DateTime.UtcNow  // Legacy system didn't track date so we will simply use the import date
 						: (DateTime?)null,
-					FromUserSaved = p.IsSavedIn,
-					ToUserSaved = p.IsSavedOut
+					SavedForFromUser = p.IsSavedIn,
+					SavedForToUser = p.IsSavedOut
 				})
 				.ToList();
 
@@ -93,8 +92,10 @@ namespace TASVideos.Legacy.Imports
 				nameof(PrivateMessage.EnableHtml),
 				nameof(PrivateMessage.EnableBbCode),
 				nameof(PrivateMessage.ReadOn),
-				nameof(PrivateMessage.FromUserSaved),
-				nameof(PrivateMessage.ToUserSaved)
+				nameof(PrivateMessage.SavedForFromUser),
+				nameof(PrivateMessage.SavedForToUser),
+				nameof(PrivateMessage.DeletedForToUser),
+				nameof(PrivateMessage.DeletedForFromUser)
 			};
 
 			privMessages.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumPrivateMessages), SqlBulkCopyOptions.Default, 20000);

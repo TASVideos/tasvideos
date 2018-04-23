@@ -40,6 +40,7 @@ namespace TASVideos.Tasks
 				UserName = user.UserName,
 				Inbox = await _db.ForumPrivateMessages
 					.ToUser(user)
+					.ThatAreToNotUserDeleted()
 					.ThatAreNotToUserSaved()
 					.Select(pm => new ForumInboxModel.InboxEntry
 					{
@@ -55,16 +56,15 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Returns the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
-		/// record with the given <see cref="id"/> if the given <see cref="user"/>
-		/// is the recipient
+		/// record with the given <see cref="id"/> that is addressed to the given <see cref="user"/>
 		/// </summary>
-		public async Task<ForumPrivateMessageModel> GetPrivateMessage(User user, int id)
+		public async Task<ForumPrivateMessageModel> GetPrivateMessageToUser(User user, int id)
 		{
 			var pm = await _db.ForumPrivateMessages
 				.Include(p => p.FromUser)
-				.Where(p => p.Id == id)
 				.ToUser(user)
-				.SingleOrDefaultAsync();
+				.ThatAreToNotUserDeleted()
+				.SingleOrDefaultAsync(p => p.Id == id);
 
 			if (pm == null)
 			{
@@ -101,6 +101,7 @@ namespace TASVideos.Tasks
 			}
 
 			unreadMessageCount = await _db.ForumPrivateMessages
+				.ThatAreToNotUserDeleted()
 				.ToUser(user)
 				.CountAsync(pm => pm.ReadOn == null);
 
@@ -108,15 +109,31 @@ namespace TASVideos.Tasks
 			return unreadMessageCount;
 		}
 
+		// TODO: document
 		public async Task SaveMessageToUser(User user, int id)
 		{
 			var message = await _db.ForumPrivateMessages
 				.ToUser(user)
+				.ThatAreToNotUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == id);
 
 			if (message != null)
 			{
-				message.ToUserSaved = true;
+				message.SavedForToUser = true;
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public async Task DeleteMessageToUser(User user, int id)
+		{
+			var message = await _db.ForumPrivateMessages
+				.ToUser(user)
+				.ThatAreToNotUserDeleted()
+				.SingleOrDefaultAsync(pm => pm.Id == id);
+
+			if (message != null)
+			{
+				message.DeletedForToUser = true;
 				await _db.SaveChangesAsync();
 			}
 		}
