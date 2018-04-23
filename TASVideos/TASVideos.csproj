@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Forum\PrivateMessage.cshtml">
+    <Content Update="Views\Messages\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Ratings\ViewPublication.cshtml">

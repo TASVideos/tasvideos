@@ -14,7 +14,7 @@
 	{
 		<tr>
 			<td>
-				<a asp-action="PrivateMessage" asp-route-id="@entry.Id">
+				<a asp-action="Index" asp-route-id="@entry.Id">
 					<span condition="!entry.IsRead" class="fa fa-envelope"></span>
 					<span condition="!entry.IsRead"><strong>@entry.Subject</strong></span>
 					<span condition="entry.IsRead">@entry.Subject</span>
