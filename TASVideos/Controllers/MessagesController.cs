@@ -45,5 +45,13 @@ namespace TASVideos.Controllers
 			var model = await _pmTasks.GetUserInBox(user);
 			return View(model);
 		}
+
+		[Authorize]
+		public async Task<IActionResult> SaveTo(int id)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			await _pmTasks.SaveMessageToUser(user, id);
+			return RedirectToAction(nameof(Inbox));
+		}
 	}
 }

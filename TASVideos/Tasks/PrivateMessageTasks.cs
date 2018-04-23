@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -38,7 +39,8 @@ namespace TASVideos.Tasks
 				UserId = user.Id,
 				UserName = user.UserName,
 				Inbox = await _db.ForumPrivateMessages
-					.Where(pm => pm.ToUserId == user.Id)
+					.ToUser(user)
+					.ThatAreNotToUserSaved()
 					.Select(pm => new ForumInboxModel.InboxEntry
 					{
 						Id = pm.Id,
@@ -61,7 +63,7 @@ namespace TASVideos.Tasks
 			var pm = await _db.ForumPrivateMessages
 				.Include(p => p.FromUser)
 				.Where(p => p.Id == id)
-				.Where(p => p.ToUserId == user.Id)
+				.ToUser(user)
 				.SingleOrDefaultAsync();
 
 			if (pm == null)
@@ -99,11 +101,24 @@ namespace TASVideos.Tasks
 			}
 
 			unreadMessageCount = await _db.ForumPrivateMessages
-				.Where(pm => pm.ToUserId == user.Id)
+				.ToUser(user)
 				.CountAsync(pm => pm.ReadOn == null);
 
 			_cache.Set(cacheKey, unreadMessageCount, DurationConstants.OneMinuteInSeconds);
 			return unreadMessageCount;
+		}
+
+		public async Task SaveMessageToUser(User user, int id)
+		{
+			var message = await _db.ForumPrivateMessages
+				.ToUser(user)
+				.SingleOrDefaultAsync(pm => pm.Id == id);
+
+			if (message != null)
+			{
+				message.ToUserSaved = true;
+				await _db.SaveChangesAsync();
+			}
 		}
 	}
 }

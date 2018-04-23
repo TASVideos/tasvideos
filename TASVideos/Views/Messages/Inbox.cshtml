@@ -7,6 +7,7 @@
 		<th>@Html.DisplayNameFor(m => m.Inbox.First().Subject)</th>
 		<th>@Html.DisplayNameFor(m => m.Inbox.First().FromUser)</th>
 		<th>@Html.DisplayNameFor(m => m.Inbox.First().SendDate)</th>
+		<th>Actions</th>
 	</tr>
 	@foreach (var entry in Model.Inbox
 	   .OrderBy(m => m.IsRead)
@@ -22,6 +23,7 @@
 			</td>
 			<td>@entry.FromUser</td>
 			<td>@entry.SendDate</td>
+			<td><a asp-action="SaveTo" asp-route-id="@entry.Id" class="btn btn-primary">Save</a></td>
 		</tr>
 	}
 </table>
