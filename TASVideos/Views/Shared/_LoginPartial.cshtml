@@ -18,7 +18,7 @@
 		<form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link" asp-controller="Forum" asp-action="Inbox">
+					<a class="nav-link" asp-controller="Messages" asp-action="Inbox">
 						<span condition="notificationCount > 0" class="badge badge-danger" >@notificationCount</span>
 						<span condition="notificationCount > 0" class="sr-only">unread messages</span>
 						<span class="fa fa-envelope"></span>
