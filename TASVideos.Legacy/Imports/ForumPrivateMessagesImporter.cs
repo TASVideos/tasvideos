@@ -73,8 +73,8 @@ namespace TASVideos.Legacy.Imports
 					ReadOn = !p.IsNew // p.IsUnread // Unread = seen but not read?
 						? DateTime.UtcNow  // Legacy system didn't track date so we will simply use the import date
 						: (DateTime?)null,
-					SavedForFromUser = p.IsSavedIn,
-					SavedForToUser = p.IsSavedOut
+					SavedForFromUser = p.IsSavedOut,
+					SavedForToUser = p.IsSavedIn
 				})
 				.ToList();
 
