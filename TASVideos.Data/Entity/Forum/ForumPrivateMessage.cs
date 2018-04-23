@@ -22,8 +22,11 @@ namespace TASVideos.Data.Entity.Forum
 		public bool EnableBbCode { get; set; }
 
 		public DateTime? ReadOn { get; set; } // Only a flag in the legacy system, so the date is the import date for legacy messages
-		public bool FromUserSaved { get; set; }
-		public bool ToUserSaved { get; set; }
+		public bool SavedForFromUser { get; set; }
+		public bool SavedForToUser { get; set; }
+
+		public bool DeletedForFromUser { get; set; }
+		public bool DeletedForToUser { get; set; }
 	}
 
 	public static class MessageExtensions
@@ -40,7 +43,12 @@ namespace TASVideos.Data.Entity.Forum
 
 		public static IQueryable<PrivateMessage> ThatAreNotToUserSaved(this IQueryable<PrivateMessage> query)
 		{
-			return query.Where(m => !m.ToUserSaved);
+			return query.Where(m => !m.SavedForToUser);
+		}
+
+		public static IQueryable<PrivateMessage> ThatAreToNotUserDeleted(this IQueryable<PrivateMessage> query)
+		{
+			return query.Where(m => !m.DeletedForToUser);
 		}
 	}
 }

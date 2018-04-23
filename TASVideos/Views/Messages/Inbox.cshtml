@@ -23,7 +23,10 @@
 			</td>
 			<td>@entry.FromUser</td>
 			<td>@entry.SendDate</td>
-			<td><a asp-action="SaveTo" asp-route-id="@entry.Id" class="btn btn-primary">Save</a></td>
+			<td>
+				<a asp-action="SaveToUser" asp-route-id="@entry.Id" class="btn btn-primary btn-sm">Save</a>
+				<delete-button class="btn-sm" asp-href="@Url.Action($"DeleteToUser/{entry.Id}")" warning-message="Are you sure you want to remove this message?" asp-action="DeleteToUser" asp-route-id="@entry.Id">Delete</delete-button>
+			</td>
 		</tr>
 	}
 </table>

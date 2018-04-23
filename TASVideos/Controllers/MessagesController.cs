@@ -28,7 +28,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Index(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var model = await _pmTasks.GetPrivateMessage(user, id);
+			var model = await _pmTasks.GetPrivateMessageToUser(user, id);
 
 			if (model == null)
 			{
@@ -47,10 +47,18 @@ namespace TASVideos.Controllers
 		}
 
 		[Authorize]
-		public async Task<IActionResult> SaveTo(int id)
+		public async Task<IActionResult> SaveToUser(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);
 			await _pmTasks.SaveMessageToUser(user, id);
+			return RedirectToAction(nameof(Inbox));
+		}
+
+		[Authorize]
+		public async Task<IActionResult> DeleteToUser(int id)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			await _pmTasks.DeleteMessageToUser(user, id);
 			return RedirectToAction(nameof(Inbox));
 		}
 	}
