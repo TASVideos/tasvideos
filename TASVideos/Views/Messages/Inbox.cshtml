@@ -2,6 +2,11 @@
 @{
 	ViewData["Title"] = $"Private messages for {Model.UserName}";
 }
+
+<div class="mb-1">
+	<a class="btn btn-primary">Create</a>
+	<a class="btn btn-secondary">Saved</a>
+</div>
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.Inbox.First().Subject)</th>

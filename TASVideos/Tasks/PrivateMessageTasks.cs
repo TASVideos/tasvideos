@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,6 +53,23 @@ namespace TASVideos.Tasks
 					})
 					.ToListAsync()
 			};
+		}
+
+		// TODO: documnet
+		public async Task<IEnumerable<SaveBoxModel>> GetUserSaveBox(User user)
+		{
+			return await _db.ForumPrivateMessages
+				.Where(pm => (pm.SavedForFromUser && pm.FromUserId == user.Id)
+					|| (pm.SavedForToUser && pm.ToUserId == user.Id))
+				.Select(pm => new SaveBoxModel
+				{
+					Id = pm.Id,
+					Subject = pm.Subject,
+					FromUser = pm.FromUser.UserName,
+					ToUser = pm.ToUser.UserName,
+					SendDate = pm.CreateTimeStamp
+				})
+				.ToListAsync();
 		}
 
 		/// <summary>
