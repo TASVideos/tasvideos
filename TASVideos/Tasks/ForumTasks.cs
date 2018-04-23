@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
@@ -17,13 +19,16 @@ namespace TASVideos.Tasks
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly AwardTasks _awardTasks;
+		private readonly ICacheService _cache;
 
 		public ForumTasks(
 			ApplicationDbContext db,
-			AwardTasks awardTasks)
+			AwardTasks awardTasks,
+			ICacheService cache)
 		{
 			_db = db;
 			_awardTasks = awardTasks;
+			_cache = cache;
 		}
 
 		/// <summary>
@@ -212,6 +217,23 @@ namespace TASVideos.Tasks
 			};
 
 			return model;
+		}
+
+		// TODO: document
+		public async Task<int> GetUnreadMessageCount(User user)
+		{
+			var cacheKey = $"{nameof(ForumTasks)}-{nameof(GetUnreadMessageCount)}-{user.Id}";
+			if (_cache.TryGetValue(cacheKey, out int unreadMessageCount))
+			{
+				return unreadMessageCount;
+			}
+
+			unreadMessageCount = await _db.ForumPrivateMessages
+				.Where(pm => pm.ToUserId == user.Id)
+				.CountAsync(pm => pm.ReadOn == null);
+
+			_cache.Set(cacheKey, unreadMessageCount, DurationConstants.OneMinuteInSeconds);
+			return unreadMessageCount;
 		}
 	}
 }
