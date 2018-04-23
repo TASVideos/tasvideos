@@ -55,13 +55,13 @@ namespace TASVideos.Tasks
 			};
 		}
 
-		// TODO: documnet
-		public async Task<IEnumerable<SaveBoxModel>> GetUserSaveBox(User user)
+		// TODO: document
+		public async Task<IEnumerable<SaveboxModel>> GetUserSaveBox(User user)
 		{
 			return await _db.ForumPrivateMessages
-				.Where(pm => (pm.SavedForFromUser && pm.FromUserId == user.Id)
-					|| (pm.SavedForToUser && pm.ToUserId == user.Id))
-				.Select(pm => new SaveBoxModel
+				.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == user.Id)
+					|| (pm.SavedForToUser && !pm.DeletedForToUser && pm.ToUserId == user.Id))
+				.Select(pm => new SaveboxModel
 				{
 					Id = pm.Id,
 					Subject = pm.Subject,

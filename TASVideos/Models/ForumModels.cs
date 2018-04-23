@@ -123,7 +123,7 @@ namespace TASVideos.Models
 		}
 	}
 
-	public class SaveBoxModel
+	public class SaveboxModel
 	{
 		public int Id { get; set; }
 
@@ -148,5 +148,10 @@ namespace TASVideos.Models
 		public string Text { get; set; }
 		public int FromUserId { get; set; }
 		public string FromUserName { get; set; }
+	}
+
+	public class PrivateMessageCreateModel
+	{
+
 	}
 }
