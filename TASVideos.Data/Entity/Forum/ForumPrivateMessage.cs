@@ -20,9 +20,8 @@ namespace TASVideos.Data.Entity.Forum
 		public bool EnableHtml { get; set; }
 		public bool EnableBbCode { get; set; }
 
-		//public int Type { get; set; }
 		public DateTime? ReadOn { get; set; } // Only a flag in the legacy system, so the date is the import date for legacy messages
 		public bool FromUserSaved { get; set; }
-		 public bool ToUserSaved { get; set; }
+		public bool ToUserSaved { get; set; }
 	}
 }
