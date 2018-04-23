@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,15 +7,15 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
 {
-    public class PrivateMessageTasks
-    {
+	public class PrivateMessageTasks
+	{
+		private readonly string _messageCountCacheKey = $"{nameof(ForumTasks)}-{nameof(GetUnreadMessageCount)}-";
+
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 
@@ -28,7 +27,10 @@ namespace TASVideos.Tasks
 			_cache = cache;
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns all of the <see cref="TASVideos.Data.Entity.Forum.ForumPrivateMessage"/>
+		/// records where the given <see cref="user"/> is the recipient
+		/// </summary>
 		public async Task<ForumInboxModel> GetUserInBox(User user)
 		{
 			return new ForumInboxModel
@@ -49,7 +51,11 @@ namespace TASVideos.Tasks
 			};
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns the <see cref="TASVideos.Data.Entity.Forum.ForumPrivateMessage"/>
+		/// record with the given <see cref="id"/> if the given <see cref="user"/>
+		/// is the recepient
+		/// </summary>
 		public async Task<ForumPrivateMessageModel> GetPrivateMessage(User user, int id)
 		{
 			var pm = await _db.ForumPrivateMessages
@@ -79,10 +85,13 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns the the number of unread <see cref="TASVideos.Data.Entity.Forum.ForumPrivateMessage"/>
+		/// for the given <see cref="User" />
+		/// </summary>
 		public async Task<int> GetUnreadMessageCount(User user)
 		{
-			var cacheKey = $"{nameof(ForumTasks)}-{nameof(GetUnreadMessageCount)}-{user.Id}";
+			var cacheKey = _messageCountCacheKey + user.Id;
 			if (_cache.TryGetValue(cacheKey, out int unreadMessageCount))
 			{
 				return unreadMessageCount;
