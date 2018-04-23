@@ -47,6 +47,14 @@ namespace TASVideos.Controllers
 		}
 
 		[Authorize]
+		public async Task<IActionResult> SavedBox()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _pmTasks.GetUserSaveBox(user);
+			return View(model);
+		}
+
+		[Authorize]
 		public async Task<IActionResult> SaveToUser(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<SaveBoxModel>
+@{
+	ViewData["Title"] = $"Saved messages for {User.Identity.Name}";
+}
+
+<a asp-action="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span>Inbox</a>
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.First().Subject)</th>
+		<th>@Html.DisplayNameFor(m => m.First().FromUser)</th>
+		<th>@Html.DisplayNameFor(m => m.First().ToUser)</th>
+		<th>@Html.DisplayNameFor(m => m.First().SendDate)</th>
+		<th>Actions</th>
+	</tr>
+	@foreach (var entry in Model
+		.OrderBy(m => m.ToUser == User.Identity.Name)
+		.ThenByDescending(m => m.SendDate))
+	{
+		<tr>
+			<td>
+				<a asp-action="Index" asp-route-id="@entry.Id">@entry.Subject</a>
+			</td>
+			<td>@entry.FromUser</td>
+			<td>@entry.ToUser</td>
+			<td>@entry.SendDate</td>
+			<td>
+				<delete-button class="btn-sm" asp-href="@Url.Action($"DeleteToUser/{entry.Id}")" warning-message="Are you sure you want to remove this message?" asp-action="DeleteToUser" asp-route-id="@entry.Id">Delete</delete-button>
+			</td>
+		</tr>
+	}
+</table>
