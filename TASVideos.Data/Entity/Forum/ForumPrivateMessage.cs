@@ -46,7 +46,7 @@ namespace TASVideos.Data.Entity.Forum
 			return query.Where(m => !m.SavedForToUser);
 		}
 
-		public static IQueryable<PrivateMessage> ThatAreToNotUserDeleted(this IQueryable<PrivateMessage> query)
+		public static IQueryable<PrivateMessage> ThatAreNotToUserDeleted(this IQueryable<PrivateMessage> query)
 		{
 			return query.Where(m => !m.DeletedForToUser);
 		}

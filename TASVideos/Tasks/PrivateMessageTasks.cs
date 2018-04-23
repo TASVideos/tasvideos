@@ -41,7 +41,7 @@ namespace TASVideos.Tasks
 				UserName = user.UserName,
 				Inbox = await _db.ForumPrivateMessages
 					.ToUser(user)
-					.ThatAreToNotUserDeleted()
+					.ThatAreNotToUserDeleted()
 					.ThatAreNotToUserSaved()
 					.Select(pm => new ForumInboxModel.InboxEntry
 					{
@@ -72,6 +72,22 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
+		public async Task<IEnumerable<SentboxModel>> GetUserSentBox(User user)
+		{
+			return await _db.ForumPrivateMessages
+				.ThatAreNotToUserDeleted()
+				.Where(pm => pm.FromUserId == user.Id)
+				.Select(pm => new SentboxModel
+				{
+					Id = pm.Id,
+					Subject = pm.Subject,
+					ToUser = pm.ToUser.UserName,
+					SendDate = pm.CreateTimeStamp,
+					HasBeenRead = pm.ReadOn.HasValue
+				})
+				.ToListAsync();
+		}
+
 		/// <summary>
 		/// Returns the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// record with the given <see cref="id"/> that is addressed to the given <see cref="user"/>
@@ -81,7 +97,7 @@ namespace TASVideos.Tasks
 			var pm = await _db.ForumPrivateMessages
 				.Include(p => p.FromUser)
 				.ToUser(user)
-				.ThatAreToNotUserDeleted()
+				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(p => p.Id == id);
 
 			if (pm == null)
@@ -119,7 +135,7 @@ namespace TASVideos.Tasks
 			}
 
 			unreadMessageCount = await _db.ForumPrivateMessages
-				.ThatAreToNotUserDeleted()
+				.ThatAreNotToUserDeleted()
 				.ToUser(user)
 				.CountAsync(pm => pm.ReadOn == null);
 
@@ -132,7 +148,7 @@ namespace TASVideos.Tasks
 		{
 			var message = await _db.ForumPrivateMessages
 				.ToUser(user)
-				.ThatAreToNotUserDeleted()
+				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == id);
 
 			if (message != null)
@@ -146,7 +162,7 @@ namespace TASVideos.Tasks
 		{
 			var message = await _db.ForumPrivateMessages
 				.ToUser(user)
-				.ThatAreToNotUserDeleted()
+				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == id);
 
 			if (message != null)
