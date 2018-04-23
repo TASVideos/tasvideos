@@ -54,7 +54,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns the <see cref="TASVideos.Data.Entity.Forum.ForumPrivateMessage"/>
 		/// record with the given <see cref="id"/> if the given <see cref="user"/>
-		/// is the recepient
+		/// is the recipient
 		/// </summary>
 		public async Task<ForumPrivateMessageModel> GetPrivateMessage(User user, int id)
 		{
@@ -71,6 +71,7 @@ namespace TASVideos.Tasks
 
 			pm.ReadOn = DateTime.UtcNow;
 			await _db.SaveChangesAsync();
+			_cache.Remove(_messageCountCacheKey + user.Id); // Message count possibly no longer valid
 
 			var model = new ForumPrivateMessageModel
 			{
