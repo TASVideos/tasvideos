@@ -9,26 +9,26 @@ namespace TASVideos.Extensions
 	{
 		public static IServiceCollection AddTasks(this IServiceCollection services)
 		{
-			services.AddScoped<AwardTasks, AwardTasks>();
-			services.AddScoped<PermissionTasks, PermissionTasks>();
-			services.AddScoped<UserTasks, UserTasks>();
-			services.AddScoped<RoleTasks, RoleTasks>();
-			services.AddScoped<WikiTasks, WikiTasks>();
-			services.AddScoped<SubmissionTasks, SubmissionTasks>();
-			services.AddScoped<PublicationTasks, PublicationTasks>();
-			services.AddScoped<PlatformTasks, PlatformTasks>();
-			services.AddScoped<CatalogTasks, CatalogTasks>();
-			services.AddScoped<GameTasks, GameTasks>();
-			services.AddScoped<ForumTasks, ForumTasks>();
-			services.AddScoped<RatingsTasks, RatingsTasks>();
-			services.AddScoped<PrivateMessageTasks, PrivateMessageTasks>();
+			services.AddScoped<AwardTasks>();
+			services.AddScoped<PermissionTasks>();
+			services.AddScoped<UserTasks>();
+			services.AddScoped<RoleTasks>();
+			services.AddScoped<WikiTasks>();
+			services.AddScoped<SubmissionTasks>();
+			services.AddScoped<PublicationTasks>();
+			services.AddScoped<PlatformTasks>();
+			services.AddScoped<CatalogTasks>();
+			services.AddScoped<GameTasks>();
+			services.AddScoped<ForumTasks>();
+			services.AddScoped<RatingsTasks>();
+			services.AddScoped<PrivateMessageTasks>();
 
 			return services;
 		}
 
 		public static IServiceCollection AddMovieParser(this IServiceCollection services)
 		{
-			services.AddSingleton<MovieParser, MovieParser>();
+			services.AddSingleton<MovieParser>();
 			return services;
 		}
 
