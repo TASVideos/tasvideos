@@ -12,6 +12,7 @@ namespace TASVideos.Controllers
 {
 	public class MessagesController : BaseController
 	{
+		private readonly UserTasks _userTasks;
 		private readonly UserManager<User> _userManager;
 		private readonly PrivateMessageTasks _pmTasks;
 
@@ -21,6 +22,7 @@ namespace TASVideos.Controllers
 			PrivateMessageTasks pmTasks)
 			: base(userTasks)
 		{
+			_userTasks = userTasks;
 			_userManager = userManager;
 			_pmTasks = pmTasks;
 		}
@@ -87,12 +89,27 @@ namespace TASVideos.Controllers
 
 		[Authorize]
 		[HttpPost, ValidateAntiForgeryToken]
-		public IActionResult Create(PrivateMessageCreateModel model)
+		public async Task<IActionResult> Create(PrivateMessageCreateModel model)
 		{
+			if (User.Identity.Name == model.ToUser)
+			{
+				ModelState.AddModelError(nameof(PrivateMessageCreateModel.ToUser), "Can not send a message to yourself!");
+			}
+
 			if (!ModelState.IsValid)
 			{
 				return View(model);
 			}
+
+			var exists = await _userTasks.CheckUserNameExists(model.ToUser);
+			if (!exists)
+			{
+				ModelState.AddModelError(nameof(PrivateMessageCreateModel.ToUser), $"{model.ToUser} does not exist");
+				return View(model);
+			}
+
+			var user = await _userManager.GetUserAsync(User);
+			await _pmTasks.SendMessage(user, model, IpAddress.ToString());
 
 			return RedirectToAction(nameof(Inbox));
 		}

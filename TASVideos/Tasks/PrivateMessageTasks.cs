@@ -161,6 +161,7 @@ namespace TASVideos.Tasks
 			}
 		}
 
+		// TODO: document
 		public async Task DeleteMessageToUser(User user, int id)
 		{
 			var message = await _db.ForumPrivateMessages
@@ -173,6 +174,27 @@ namespace TASVideos.Tasks
 				message.DeletedForToUser = true;
 				await _db.SaveChangesAsync();
 			}
+		}
+
+		// TODO: document
+		public async Task SendMessage(User user, PrivateMessageCreateModel model, string ipAddress)
+		{
+			var toUserId = await _db.Users
+				.Where(u => u.UserName == model.ToUser)
+				.Select(u => u.Id)
+				.SingleAsync();
+
+			var message = new PrivateMessage
+			{
+				FromUserId = user.Id,
+				ToUserId = toUserId,
+				Subject = model.Subject,
+				Text = model.Text,
+				IpAddress = ipAddress
+			};
+
+			_db.ForumPrivateMessages.Add(message);
+			await _db.SaveChangesAsync();
 		}
 	}
 }
