@@ -29,7 +29,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Index(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var model = await _pmTasks.GetPrivateMessageToUser(user, id);
+			var model = await _pmTasks.GetMessage(user, id);
 
 			if (model == null)
 			{
