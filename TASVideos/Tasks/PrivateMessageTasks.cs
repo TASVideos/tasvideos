@@ -87,7 +87,7 @@ namespace TASVideos.Tasks
 		/// Returns the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// record with the given <see cref="id"/> if the user has access to the message
 		/// </summary>
-		public async Task<ForumPrivateMessageModel> GetMessage(User user, int id)
+		public async Task<PrivateMessageModel> GetMessage(User user, int id)
 		{
 			var pm = await _db.ForumPrivateMessages
 				.Include(p => p.FromUser)
@@ -109,7 +109,7 @@ namespace TASVideos.Tasks
 				_cache.Remove(_messageCountCacheKey + user.Id); // Message count possibly no longer valid
 			}
 
-			var model = new ForumPrivateMessageModel
+			var model = new PrivateMessageModel
 			{
 				Id = pm.Id,
 				Subject = pm.Subject,

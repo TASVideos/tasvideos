@@ -52,7 +52,7 @@ namespace TASVideos.Models
 		public bool HasBeenRead { get; set; }
 	}
 
-	public class ForumPrivateMessageModel
+	public class PrivateMessageModel
 	{
 		public int Id { get; set; }
 		public string Subject { get; set; }
