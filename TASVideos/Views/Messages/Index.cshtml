@@ -5,7 +5,7 @@
 
 <div class="mb-2">
 	<a asp-action="Inbox" class="btn btn-secondary"><span class="fa fa-arrow-left"></span>Inbox</a>
-	<a condition="Model.CanReply" href="#" class="btn btn-primary">Reply</a>
+	<a condition="Model.CanReply" asp-action="Create" asp-route-replyTo="@Model.Id" class="btn btn-primary">Reply</a>
 </div>
 <div>
 	@Model.FromUserName <span class="fa fa-arrow-right"></span> @Model.ToUserName
