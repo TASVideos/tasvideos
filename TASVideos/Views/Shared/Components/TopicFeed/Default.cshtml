@@ -1,7 +1,7 @@
 ﻿@model TopicFeedModel
 
 <div class="@(Model.RightAlign ? "right-align-topic" : "")">
-	<h3 condition="!string.IsNullOrWhiteSpace(Model.Heading)" class="card-header">@Model.Heading</h3>
+	<h3 condition="!string.IsNullOrWhiteSpace(Model.Heading)" class="card-header" style="background-color: #eaeaea;">@Model.Heading</h3>
 	@foreach (var post in Model.Posts)
 	{
 		<div class="card">
