@@ -2,33 +2,38 @@
 @{
 	ViewData["Title"] = "Create Private Message";
 }
-
 <form asp-action="Create">
-	<form-group class="col-lg-6">
-		<row>
+	<row>
+		<form-group class="col-lg-6">
 			<label asp-for="Subject" class="form-control-label"></label>
 			<input type="text" asp-for="Subject" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Subject" class="text-danger"></span>
-		</row>
-	</form-group>
-	<form-group>
-		<textarea asp-for="Text" class="form-control" rows="20"></textarea>
-		<span asp-validation-for="Text" class="text-danger"></span>
-	</form-group>
+		</form-group>
+		<form-group class="col-lg-6">
+			<label asp-for="ToUser" class="form-control-label"></label>
+			<input type="text" asp-for="ToUser" class="form-control" autocomplete="off" />
+			<span asp-validation-for="ToUser" class="text-danger"></span>
+		</form-group>
+	</row>
+	<row>
+		<form-group class="col-12">
+			<label asp-for="Text" class="form-control-label"></label>
+			<textarea asp-for="Text" class="form-control" rows="20"></textarea>
+			<span asp-validation-for="Text" class="text-danger"></span>
+		</form-group>
+	</row>
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
 		<button type="submit" class="btn btn-primary">Save</button>
 		<a asp-action="Inbox" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>
-
 <div class="d-none" id="preview-container">
 	<hr />
 	<label>Preview:</label>
 	<button class="btn btn-secondary">Update</button>
 	<div id="preview-contents" class="mt-3" style="border: solid; padding: 5px; border-radius: 5px"></div>
 </div>
-
 <script>
 	(function () {
 		document.getElementById('preview-button').onclick = function () {
@@ -50,7 +55,6 @@
 		}
 	})();
 </script>
-
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial")
 }
