@@ -2,6 +2,20 @@
 @{
 	ViewData["Title"] = "Create Private Message";
 }
+
+<div condition="Model.ReplyingTo != null" class="card bg-light mb-3">
+	<div class="card-header">
+		<button type="button" id="quote-btn" class="pull-right btn btn-sm btn-secondary">Quote</button>
+		@Model.ReplyingTo.Subject
+	</div>
+	<div class="card-body">
+		<div class="card-title">
+			@Model.ReplyingTo.FromUserName <span class="fa fa-arrow-right"></span> @Model.ReplyingTo.ToUserName
+		</div>
+		<div class="card-text" id="replying-to-text">@Model.ReplyingTo.Text</div>
+	</div>
+</div>
+
 <form asp-action="Create" id="create-form">
 	<row>
 		<form-group class="col-lg-6">
@@ -96,6 +110,11 @@
 					true);
 				xmlhttp.send();
 			}
+		};
+
+		document.getElementById('quote-btn').onclick = function () {
+			var text = document.getElementById('replying-to-text').innerHTML;
+			document.getElementById('@nameof(Model.Text)').innerHTML = '[quote]' + text + '[/quote]';
 		};
 	})();
 </script>

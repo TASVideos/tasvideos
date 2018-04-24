@@ -86,6 +86,8 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Create(int? replyTo)
 		{
 			string subject = "";
+			string toUser = "";
+			PrivateMessageModel replyingTo = null;
 			if (replyTo > 0)
 			{
 				var user = await _userManager.GetUserAsync(User);
@@ -93,12 +95,25 @@ namespace TASVideos.Controllers
 				if (message != null)
 				{
 					subject = "Re: " + message.Subject;
+					toUser = message.FromUserName;
+					replyingTo = new PrivateMessageModel
+					{
+						Subject = message.Subject,
+						Text = message.Text,
+						SentOn = message.SentOn,
+						FromUserName = message.FromUserName,
+						FromUserId = message.FromUserId,
+						ToUserName = message.ToUserName,
+						ToUserId = message.ToUserId
+					};
 				}
 			}
 
 			return View(new PrivateMessageCreateModel
 			{
-				Subject = subject
+				Subject = subject,
+				ToUser = toUser,
+				ReplyingTo = replyingTo
 			});
 		}
 
