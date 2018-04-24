@@ -31,6 +31,7 @@ namespace TASVideos.Legacy
 			ForumTopicImporter.Import(context, legacyForumContext);
 			ForumPostsImporter.Import(context, legacyForumContext);
 			ForumPrivateMessagesImporter.Import(context, legacyForumContext);
+			ForumPollImporter.Import(context, legacyForumContext);
 
 			WikiImporter.Import(context, legacySiteContext);
 			SubmissionImporter.Import(context, legacySiteContext);
