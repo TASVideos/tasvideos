@@ -1,6 +1,6 @@
-﻿@model ForumInboxModel
+﻿@model IEnumerable<InboxModel>
 @{
-	ViewData["Title"] = $"Private messages for {Model.UserName}";
+	ViewData["Title"] = $"Private messages for {User.Identity.Name}";
 }
 
 <div class="mb-1">
@@ -10,12 +10,12 @@
 </div>
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.Inbox.First().Subject)</th>
-		<th>@Html.DisplayNameFor(m => m.Inbox.First().FromUser)</th>
-		<th>@Html.DisplayNameFor(m => m.Inbox.First().SendDate)</th>
+		<th>@Html.DisplayNameFor(m => m.First().Subject)</th>
+		<th>@Html.DisplayNameFor(m => m.First().FromUser)</th>
+		<th>@Html.DisplayNameFor(m => m.First().SendDate)</th>
 		<th>Actions</th>
 	</tr>
-	@foreach (var entry in Model.Inbox
+	@foreach (var entry in Model
 	   .OrderBy(m => m.IsRead)
 	   .ThenByDescending(m => m.SendDate))
 	{
