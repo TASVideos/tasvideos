@@ -1,15 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TASVideos.Tasks;
+﻿using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.SeedData;
-using TASVideos.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+using TASVideos.Services;
+using TASVideos.Tasks;
 
 namespace TASVideos.Test.MVC.Tasks
 {
@@ -28,7 +25,7 @@ namespace TASVideos.Test.MVC.Tasks
 				var testName = "TestUser";
 				context.Users.Add(new User { Id = 1, UserName = testName });
 				context.SaveChanges();
-				var userTasks = new UserTasks(context, null, null); // TODO: managers
+				var userTasks = new UserTasks(context, null, null, new NoCacheService()); // TODO: managers
 
 				var result = await userTasks.GetUserNameById(1);
 				Assert.AreEqual(testName, result);

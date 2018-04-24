@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,8 @@ namespace TASVideos.Controllers
 				return _userPermission;
 			}
 		}
+
+		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 
 		protected IActionResult RedirectHome()
 		{
