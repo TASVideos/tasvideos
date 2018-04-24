@@ -98,7 +98,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PrivateMessage.DeletedForFromUser)
 			};
 
-			privMessages.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumPrivateMessages), SqlBulkCopyOptions.Default, 20000);
+			privMessages.BulkInsert(context, columns, nameof(ApplicationDbContext.PrivateMessages), SqlBulkCopyOptions.Default, 20000);
 		}
 	}
 }

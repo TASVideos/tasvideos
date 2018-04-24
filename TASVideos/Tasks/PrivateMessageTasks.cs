@@ -35,7 +35,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<IEnumerable<InboxModel>> GetUserInBox(User user)
 		{
-			return await _db.ForumPrivateMessages
+			return await _db.PrivateMessages
 				.ToUser(user)
 				.ThatAreNotToUserDeleted()
 				.ThatAreNotToUserSaved()
@@ -53,7 +53,7 @@ namespace TASVideos.Tasks
 		// TODO: document
 		public async Task<IEnumerable<SaveboxModel>> GetUserSaveBox(User user)
 		{
-			return await _db.ForumPrivateMessages
+			return await _db.PrivateMessages
 				.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == user.Id)
 					|| (pm.SavedForToUser && !pm.DeletedForToUser && pm.ToUserId == user.Id))
 				.Select(pm => new SaveboxModel
@@ -69,7 +69,7 @@ namespace TASVideos.Tasks
 
 		public async Task<IEnumerable<SentboxModel>> GetUserSentBox(User user)
 		{
-			return await _db.ForumPrivateMessages
+			return await _db.PrivateMessages
 				.ThatAreNotToUserDeleted()
 				.Where(pm => pm.FromUserId == user.Id)
 				.Select(pm => new SentboxModel
@@ -89,7 +89,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PrivateMessageModel> GetMessage(User user, int id)
 		{
-			var pm = await _db.ForumPrivateMessages
+			var pm = await _db.PrivateMessages
 				.Include(p => p.FromUser)
 				.Include(p => p.ToUser)
 				.Where(p => (!p.DeletedForFromUser && p.FromUserId == user.Id)
@@ -137,7 +137,7 @@ namespace TASVideos.Tasks
 				return unreadMessageCount;
 			}
 
-			unreadMessageCount = await _db.ForumPrivateMessages
+			unreadMessageCount = await _db.PrivateMessages
 				.ThatAreNotToUserDeleted()
 				.ToUser(user)
 				.CountAsync(pm => pm.ReadOn == null);
@@ -149,7 +149,7 @@ namespace TASVideos.Tasks
 		// TODO: document
 		public async Task SaveMessageToUser(User user, int id)
 		{
-			var message = await _db.ForumPrivateMessages
+			var message = await _db.PrivateMessages
 				.ToUser(user)
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == id);
@@ -164,7 +164,7 @@ namespace TASVideos.Tasks
 		// TODO: document
 		public async Task DeleteMessageToUser(User user, int id)
 		{
-			var message = await _db.ForumPrivateMessages
+			var message = await _db.PrivateMessages
 				.ToUser(user)
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == id);
@@ -193,7 +193,7 @@ namespace TASVideos.Tasks
 				IpAddress = ipAddress
 			};
 
-			_db.ForumPrivateMessages.Add(message);
+			_db.PrivateMessages.Add(message);
 			await _db.SaveChangesAsync();
 		}
 	}
