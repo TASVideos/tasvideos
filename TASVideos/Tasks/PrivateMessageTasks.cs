@@ -33,26 +33,21 @@ namespace TASVideos.Tasks
 		/// Returns all of the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// records where the given <see cref="user"/> is the recipient
 		/// </summary>
-		public async Task<ForumInboxModel> GetUserInBox(User user)
+		public async Task<IEnumerable<InboxModel>> GetUserInBox(User user)
 		{
-			return new ForumInboxModel
-			{
-				UserId = user.Id,
-				UserName = user.UserName,
-				Inbox = await _db.ForumPrivateMessages
-					.ToUser(user)
-					.ThatAreNotToUserDeleted()
-					.ThatAreNotToUserSaved()
-					.Select(pm => new ForumInboxModel.InboxEntry
-					{
-						Id = pm.Id,
-						Subject = pm.Subject,
-						SendDate = pm.CreateTimeStamp,
-						FromUser = pm.FromUser.UserName,
-						IsRead = pm.ReadOn.HasValue
-					})
-					.ToListAsync()
-			};
+			return await _db.ForumPrivateMessages
+				.ToUser(user)
+				.ThatAreNotToUserDeleted()
+				.ThatAreNotToUserSaved()
+				.Select(pm => new InboxModel
+				{
+					Id = pm.Id,
+					Subject = pm.Subject,
+					SendDate = pm.CreateTimeStamp,
+					FromUser = pm.FromUser.UserName,
+					IsRead = pm.ReadOn.HasValue
+				})
+				.ToListAsync();
 		}
 
 		// TODO: document
