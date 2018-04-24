@@ -90,14 +90,15 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Returns the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
-		/// record with the given <see cref="id"/> that is addressed to the given <see cref="user"/>
+		/// record with the given <see cref="id"/> if the user has access to the message
 		/// </summary>
-		public async Task<ForumPrivateMessageModel> GetPrivateMessageToUser(User user, int id)
+		public async Task<ForumPrivateMessageModel> GetMessage(User user, int id)
 		{
 			var pm = await _db.ForumPrivateMessages
 				.Include(p => p.FromUser)
-				.ToUser(user)
-				.ThatAreNotToUserDeleted()
+				.Include(p => p.ToUser)
+				.Where(p => (!p.DeletedForFromUser && p.FromUserId == user.Id)
+					|| (!p.DeletedForToUser && p.ToUserId == user.Id))
 				.SingleOrDefaultAsync(p => p.Id == id);
 
 			if (pm == null)
@@ -105,9 +106,13 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
-			pm.ReadOn = DateTime.UtcNow;
-			await _db.SaveChangesAsync();
-			_cache.Remove(_messageCountCacheKey + user.Id); // Message count possibly no longer valid
+			// If it is the recpient and the message is not deleted
+			if (!pm.ReadOn.HasValue && pm.ToUserId == user.Id)
+			{
+				pm.ReadOn = DateTime.UtcNow;
+				await _db.SaveChangesAsync();
+				_cache.Remove(_messageCountCacheKey + user.Id); // Message count possibly no longer valid
+			}
 
 			var model = new ForumPrivateMessageModel
 			{
@@ -116,7 +121,10 @@ namespace TASVideos.Tasks
 				SentOn = pm.CreateTimeStamp,
 				Text = pm.Text,
 				FromUserId = pm.FromUserId,
-				FromUserName = pm.FromUser.UserName
+				FromUserName = pm.FromUser.UserName,
+				ToUserId = pm.ToUserId,
+				ToUserName = pm.ToUser.UserName,
+				CanReply = pm.ToUserId == user.Id
 			};
 
 			return model;

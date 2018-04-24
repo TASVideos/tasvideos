@@ -3,13 +3,18 @@
 	ViewData["Title"] = $"Message from {Model.FromUserName}";
 }
 
-<a asp-action="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span>Inbox</a>
-<a href="#" class="btn btn-primary mb-1">Reply</a>
+<div class="mb-2">
+	<a asp-action="Inbox" class="btn btn-secondary"><span class="fa fa-arrow-left"></span>Inbox</a>
+	<a condition="Model.CanReply" href="#" class="btn btn-primary">Reply</a>
+</div>
+<div>
+	@Model.FromUserName <span class="fa fa-arrow-right"></span> @Model.ToUserName
+	<small class="pull-right">
+		@Model.SentOn
+	</small>
+</div>
 <div class="card">
 	<div class="card-header">
-		<small class="pull-right">
-			From @Model.FromUserName <br />Sent on @Model.SentOn
-		</small>
 		<h4>@Model.Subject</h4>
 	</div>
 	<div class="card-body">
