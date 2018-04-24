@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Models
@@ -80,7 +81,7 @@ namespace TASVideos.Models
 		public string Text { get; set; }
 
 		[Required]
-		[Display(Name = "Username")]
+		[Display(Name = "Username", Description = "Enter a UserName")]
 		public string ToUser { get; set; }
 	}
 }

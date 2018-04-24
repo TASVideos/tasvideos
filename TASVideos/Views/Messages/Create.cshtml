@@ -2,16 +2,17 @@
 @{
 	ViewData["Title"] = "Create Private Message";
 }
-<form asp-action="Create">
+<form asp-action="Create" id="create-form">
 	<row>
 		<form-group class="col-lg-6">
 			<label asp-for="Subject" class="form-control-label"></label>
-			<input type="text" asp-for="Subject" class="form-control" autocomplete="off" />
+			<input type="text" asp-for="Subject" list="search-username-list" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Subject" class="text-danger"></span>
+			<datalist id="search-username-list"></datalist>
 		</form-group>
 		<form-group class="col-lg-6">
 			<label asp-for="ToUser" class="form-control-label"></label>
-			<input type="text" asp-for="ToUser" class="form-control" autocomplete="off" />
+			<input type="text" asp-for="ToUser" class="form-control" autocomplete="off" placeholder="@Html.DescriptionFor(m => m.ToUser)" />
 			<span asp-validation-for="ToUser" class="text-danger"></span>
 		</form-group>
 	</row>
@@ -53,6 +54,49 @@
 			xmlhttp.open("POST", "/ForumTopic/@(nameof(ForumTopicController.GeneratePreview))");
 			xmlhttp.send(markup);
 		}
+
+		var searchBox = document.getElementById('@nameof(Model.ToUser)');
+		searchBox.onkeyup = function () {
+			var searchVal = searchBox.value.trim();
+			var dataListId = 'search-username-list-' + searchVal;
+			if (searchVal.length > 1) {
+				var existingList = document.getElementById(dataListId);
+				if (existingList) {
+					searchBox.setAttribute('list', dataListId);
+					return;
+				}
+
+				var xmlhttp = new XMLHttpRequest();
+
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+						if (xmlhttp.status === 200) {
+							var newSearchList = document.createElement('datalist');
+							newSearchList.id = dataListId;
+
+							var data = JSON.parse(xmlhttp.responseText);
+
+							for (var i in data) {
+								if (data.hasOwnProperty(i)) {
+									var option = document.createElement('option');
+									option.innerHTML = data[i];
+
+									newSearchList.appendChild(option);
+								}
+							}
+
+							document.getElementById("create-form").appendChild(newSearchList);
+							searchBox.setAttribute('list', dataListId);
+						}
+					}
+				};
+
+				xmlhttp.open("GET",
+					"/User/@(nameof(UserController.SearchUserName))?partial=" + searchVal,
+					true);
+				xmlhttp.send();
+			}
+		};
 	})();
 </script>
 @section Scripts {
