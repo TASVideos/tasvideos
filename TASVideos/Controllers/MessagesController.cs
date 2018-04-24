@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage.Queue.Protocol;
 
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -82,9 +83,23 @@ namespace TASVideos.Controllers
 		}
 
 		[Authorize]
-		public IActionResult Create()
+		public async Task<IActionResult> Create(int? replyTo)
 		{
-			return View(new PrivateMessageCreateModel());
+			string subject = "";
+			if (replyTo > 0)
+			{
+				var user = await _userManager.GetUserAsync(User);
+				var message = await _pmTasks.GetMessage(user, replyTo.Value);
+				if (message != null)
+				{
+					subject = "Re: " + message.Subject;
+				}
+			}
+
+			return View(new PrivateMessageCreateModel
+			{
+				Subject = subject
+			});
 		}
 
 		[Authorize]
