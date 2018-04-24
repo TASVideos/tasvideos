@@ -11,9 +11,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Data.SeedData;
 using TASVideos.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Tasks
 {
@@ -22,15 +23,18 @@ namespace TASVideos.Tasks
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
+		private readonly ICacheService _cache;
 
 		public UserTasks(
 			ApplicationDbContext db,
 			UserManager<User> userManager,
-			SignInManager<User> signInManager)
+			SignInManager<User> signInManager,
+			ICacheService cache)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_cache = cache;
 		}
 
 		/// <summary>
@@ -277,10 +281,21 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<string>> GetUsersByPartial(string partialUserName)
 		{
 			var upper = partialUserName.ToUpper();
-			return await _db.Users
+			var cacheKey = nameof(GetUsersByPartial) + upper;
+
+			if (_cache.TryGetValue(cacheKey, out List<string> list))
+			{
+				return list;
+			}
+
+			list = await _db.Users
 				.Where(u => u.NormalizedUserName.Contains(upper))
 				.Select(u => u.UserName)
 				.ToListAsync();
+
+			_cache.Set(cacheKey, list, DurationConstants.OneMinuteInSeconds);
+
+			return list;
 		}
 
 		/// <summary>
