@@ -18,6 +18,9 @@ namespace TASVideos.Legacy.Data.Forum
 		public DbSet<PostsText> PostsText { get; set; }
 		public DbSet<PrivateMessage> PrivateMessages { get; set; }
 		public DbSet<PrivateMessageText> PrivateMessageText { get; set; }
+		public DbSet<VoteDescription> VoteDescription { get; set; }
+		public DbSet<VoteResult> VoteResult { get; set; }
+		public DbSet<Voter> Voter { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -29,6 +32,19 @@ namespace TASVideos.Legacy.Data.Forum
 			modelBuilder.Entity<PostsText>().ToTable("posts_text");
 			modelBuilder.Entity<PrivateMessage>().ToTable("privmsgs");
 			modelBuilder.Entity<PrivateMessageText>().ToTable("privmsgs_text");
+			modelBuilder.Entity<VoteDescription>().ToTable("vote_desc");
+
+			modelBuilder.Entity<VoteResult>(entity =>
+			{
+				entity.HasKey(e => new { e.Id, e.VoteOptionId });
+				entity.ToTable("vote_results");
+			});
+
+			modelBuilder.Entity<Voter>(entity =>
+			{
+				// TODO: key
+				entity.ToTable("vote_voters");
+			});
 		}
 	}
 }
