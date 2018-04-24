@@ -59,6 +59,10 @@ namespace TASVideos.Data
 		public DbSet<Forum> Forums { get; set; }
 		public DbSet<ForumTopic> ForumTopics { get; set; }
 		public DbSet<ForumPost> ForumPosts { get; set; }
+		public DbSet<ForumPoll> ForumPolls { get; set; }
+		public DbSet<ForumPollOption> ForumPollOptions { get; set; }
+		public DbSet<ForumPollOptionVote> ForumPollOptionVotes { get; set; }
+
 		public DbSet<PrivateMessage> PrivateMessages { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -237,6 +241,13 @@ namespace TASVideos.Data
 				entity.HasIndex(e => e.Code)
 					.IsUnique()
 					.HasFilter($"([{nameof(Tag.Code)}] IS NOT NULL)");
+			});
+
+			builder.Entity<ForumPoll>(entity =>
+			{
+				entity.HasOne(p => p.Topic)
+					.WithOne(t => t.Poll)
+					.HasForeignKey<ForumTopic>(t => t.PollId);
 			});
 		}
 
