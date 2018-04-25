@@ -42,7 +42,7 @@ namespace TASVideos.Legacy.Data.Forum
 
 			modelBuilder.Entity<Voter>(entity =>
 			{
-				// TODO: key
+				entity.HasKey(e => new { e.Id, e.UserId, e.OptionId });
 				entity.ToTable("vote_voters");
 			});
 		}
