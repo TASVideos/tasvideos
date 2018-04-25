@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -55,5 +54,5 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 			topics.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumTopics));
 		}
-    }
+	}
 }

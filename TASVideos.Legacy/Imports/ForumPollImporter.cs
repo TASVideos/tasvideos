@@ -75,6 +75,9 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			forumPollOptions.BulkInsert(context, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions), SqlBulkCopyOptions.Default);
+
+			/******** ForumPollOptionVote ********/
+			var forumVoters = legacyForumContext.VoteResult.ToList();
 		}
 	}
 }

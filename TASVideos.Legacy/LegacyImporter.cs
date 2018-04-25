@@ -33,11 +33,11 @@ namespace TASVideos.Legacy
 			ForumPrivateMessagesImporter.Import(context, legacyForumContext);
 			ForumPollImporter.Import(context, legacyForumContext);
 
-			WikiImporter.Import(context, legacySiteContext);
-			SubmissionImporter.Import(context, legacySiteContext);
-			PublicationImporter.Import(context, legacySiteContext);
-			PublicationRatingImporter.Import(context, legacySiteContext);
-			PublicationFlagImporter.Import(context, legacySiteContext);
+			//WikiImporter.Import(context, legacySiteContext);
+			//SubmissionImporter.Import(context, legacySiteContext);
+			//PublicationImporter.Import(context, legacySiteContext);
+			//PublicationRatingImporter.Import(context, legacySiteContext);
+			//PublicationFlagImporter.Import(context, legacySiteContext);
 		}
 	}
 }

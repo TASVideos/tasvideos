@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Data.Entity.Forum
 {
@@ -11,5 +12,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		public int PollId { get; set; }
 		public virtual ForumPoll Poll { get; set; }
+
+		public virtual ICollection<ForumPollOptionVote> Votes { get; set; } = new HashSet<ForumPollOptionVote>();
 	}
 }
