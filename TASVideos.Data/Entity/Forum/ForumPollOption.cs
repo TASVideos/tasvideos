@@ -10,6 +10,9 @@ namespace TASVideos.Data.Entity.Forum
 		[Required]
 		public string Text { get; set; }
 
+		[Required]
+		public int Ordinal { get; set; }
+
 		public int PollId { get; set; }
 		public virtual ForumPoll Poll { get; set; }
 
