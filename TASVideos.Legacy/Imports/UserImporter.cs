@@ -127,6 +127,16 @@ namespace TASVideos.Legacy.Imports
 				}
 			}
 
+			users.Add(new User
+			{
+				Id = -1,
+				UserName = "Unknown User",
+				NormalizedUserName = "UNKNOWN USER",
+				Email = "",
+				EmailConfirmed = true,
+				LegacyPassword = ""
+			});
+
 			// Some published authors that have no forum account
 			// Note that by having no password nor legacy password they effectively can not log in without a database change
 			// I think this is correct since these are not active users
