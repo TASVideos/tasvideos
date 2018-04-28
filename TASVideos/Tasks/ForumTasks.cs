@@ -102,6 +102,8 @@ namespace TASVideos.Tasks
 				.Select(p => new ForumTopicModel.ForumPostEntry
 				{
 					Id = p.Id,
+					EnableHtml = p.EnableHtml,
+					EnableBbCode = p.EnableBbCode,
 					PosterId = p.PosterId,
 					PostTime = p.CreateTimeStamp,
 					PosterName = p.Poster.UserName,
