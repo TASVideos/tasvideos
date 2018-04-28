@@ -83,10 +83,15 @@ namespace TASVideos.Models
 			public DateTime PosterJoined { get; set; }
 			public IEnumerable<string> PosterRoles { get; set; }
 			public string Text { get; set; }
+			public string RenderedText { get; set; }
 			public string Subject { get; set; }
 			public string Signature { get; set; }
+			public string RenderedSignature { get; set; }
 
 			public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
+
+			public bool EnableHtml { get; set; }
+			public bool EnableBbCode { get; set; }
 
 			[Sortable]
 			public DateTime CreateTimestamp { get; set; }

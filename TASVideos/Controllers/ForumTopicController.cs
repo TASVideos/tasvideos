@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.ForumEngine;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -33,6 +34,23 @@ namespace TASVideos.Controllers
 
 			if (model != null)
 			{
+				foreach (var post in model.Posts)
+				{
+					var parsed = PostParser.Parse(post.Text, post.EnableBbCode, post.EnableHtml);
+					using (var writer = new StringWriter())
+					{
+						parsed.WriteHtml(writer);
+						post.RenderedText = writer.ToString();
+					}
+
+					var sigParsed = PostParser.Parse(post.Signature, post.EnableBbCode, post.EnableHtml);
+					using (var writer = new StringWriter())
+					{
+						sigParsed.WriteHtml(writer);
+						post.RenderedSignature = writer.ToString();
+					}
+				}
+
 				return View(model);
 			}
 
