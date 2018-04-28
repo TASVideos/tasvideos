@@ -26,12 +26,13 @@ namespace TASVideos.ForumEngineTempTest
 			using (var connection = new SqlConnection(builder.ToString()))
 			{
 				var htmlCount = 0;
-				foreach (var post in connection.Query<Post>("select EnableBbCode, EnableHtml, Text, PosterId, Id from ForumPosts"))
+				foreach (var post in connection.Query<Post>("select top 500 EnableBbCode, EnableHtml, Text, PosterId, Id from ForumPosts"))
 				{
 					try
 					{
 						var parsed = PostParser.Parse(post.Text, post.EnableBbCode, post.EnableHtml);
-						if (post.EnableHtml &&HtmlParser.ContainsHtml(post.Text))
+						parsed.WriteHtml(Console.Out);
+						if (post.EnableHtml && HtmlParser.ContainsHtml(post.Text))
 							htmlCount++;
 					}
 					catch (Exception e)
