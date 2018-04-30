@@ -84,4 +84,7 @@ h1 {
 	font-style: italic;
 	background-color: #EEE;
 	border-radius: 0.25rem;
+	border: 1px dashed #4444;
 }
+
+.postbody { white-space: pre-wrap; }
