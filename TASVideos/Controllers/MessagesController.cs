@@ -39,6 +39,7 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
+			model.RenderedText = RenderPost(model.Text, model.EnableBbCode, model.EnableHtml);
 			return View(model);
 		}
 

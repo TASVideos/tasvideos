@@ -119,7 +119,9 @@ namespace TASVideos.Tasks
 				FromUserName = pm.FromUser.UserName,
 				ToUserId = pm.ToUserId,
 				ToUserName = pm.ToUser.UserName,
-				CanReply = pm.ToUserId == user.Id
+				CanReply = pm.ToUserId == user.Id,
+				EnableBbCode = pm.EnableBbCode,
+				EnableHtml = pm.EnableHtml
 			};
 
 			return model;

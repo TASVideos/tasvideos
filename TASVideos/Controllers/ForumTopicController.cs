@@ -36,19 +36,8 @@ namespace TASVideos.Controllers
 			{
 				foreach (var post in model.Posts)
 				{
-					var parsed = PostParser.Parse(post.Text, post.EnableBbCode, post.EnableHtml);
-					using (var writer = new StringWriter())
-					{
-						parsed.WriteHtml(writer);
-						post.RenderedText = writer.ToString();
-					}
-
-					var sigParsed = PostParser.Parse(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
-					using (var writer = new StringWriter())
-					{
-						sigParsed.WriteHtml(writer);
-						post.RenderedSignature = writer.ToString();
-					}
+					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
+					post.RenderedSignature = RenderPost(post.Text, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
 				}
 
 				return View(model);
