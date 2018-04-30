@@ -58,9 +58,10 @@ namespace TASVideos.Controllers
 		[HttpPost]
 		public IActionResult GeneratePreview(string post)
 		{
-			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
+			var text = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
+			var renderedText = RenderPost(text, true, false); // TODO: pass in bbcode flag
 
-			return new ContentResult { Content = "TODO: Genereate Preview" };
+			return new ContentResult { Content = renderedText };
 		}
 	}
 }
