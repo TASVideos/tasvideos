@@ -43,7 +43,7 @@ namespace TASVideos.Controllers
 						post.RenderedText = writer.ToString();
 					}
 
-					var sigParsed = PostParser.Parse(post.Signature, post.EnableBbCode, post.EnableHtml);
+					var sigParsed = PostParser.Parse(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
 					using (var writer = new StringWriter())
 					{
 						sigParsed.WriteHtml(writer);
