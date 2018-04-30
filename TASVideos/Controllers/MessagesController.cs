@@ -83,10 +83,9 @@ namespace TASVideos.Controllers
 		}
 
 		[Authorize]
-		public async Task<IActionResult> Create(int? replyTo)
+		public async Task<IActionResult> Create(int? replyTo, string toUser = "")
 		{
 			string subject = "";
-			string toUser = "";
 			PrivateMessageModel replyingTo = null;
 			if (replyTo > 0)
 			{
