@@ -105,7 +105,7 @@ namespace TASVideos.Tasks
 					EnableHtml = p.EnableHtml,
 					EnableBbCode = p.EnableBbCode,
 					PosterId = p.PosterId,
-					PostTime = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimeStamp,
 					PosterName = p.Poster.UserName,
 					PosterAvatar = p.Poster.Avatar,
 					PosterLocation = p.Poster.From,
@@ -118,7 +118,8 @@ namespace TASVideos.Tasks
 					Subject = p.Subject,
 					Signature = p.Poster.Signature,
 				})
-				.SortedPageOf(_db, paging);
+				.OrderBy(p => p.CreateTimestamp)
+				.PageOf(_db, paging);
 
 			foreach (var post in model.Posts)
 			{

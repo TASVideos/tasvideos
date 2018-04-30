@@ -10,7 +10,7 @@
 <hr />
 @Html.Partial("~/Views/Table/_Pager.cshtml", Model.Posts)
 
-@foreach (var post in Model.Posts)
+@foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp))
 {
 	<row>
 		<div class="col-5 col-md-3 pr-0">
@@ -38,7 +38,7 @@
 			<div class="card">
 				<div class="card-header">
 					<small>
-						Posted: @post.PostTime
+						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
 					</small>
 				</div>
