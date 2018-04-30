@@ -53,7 +53,7 @@
 					<div class="pull-right">
 					@foreach(var award in post.Awards)
 					{
-						<img src="/awards/@($"{award.ShortName}_{award.Year.ToString().PadLeft(2, '0')}.png")" title="@award.Description" alt="@award.Description" />
+						<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{award.ShortName}_{award.Year.ToString().PadLeft(2, '0')}.png")" title="@award.Description" alt="@award.Description" />
 					}
 					</div>
 				</div>
