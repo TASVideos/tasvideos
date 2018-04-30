@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.ForumEngine;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -71,6 +73,17 @@ namespace TASVideos.Controllers
 			}
 
 			return RedirectHome();
+		}
+
+		protected string RenderPost(string text, bool useBbCode, bool useHtml)
+		{
+			var parsed = PostParser.Parse(text, useBbCode, useHtml);
+			using (var writer = new StringWriter())
+			{
+				parsed.WriteHtml(writer);
+				return writer.ToString();
+			}
+
 		}
 	}
 }
