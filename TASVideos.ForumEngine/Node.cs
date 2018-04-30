@@ -161,6 +161,7 @@ namespace TASVideos.ForumEngine
 						w.Write(" wrote:</cite>");
 					}
 					w.Write("<blockquote>");
+					WriteChildren(w);
 					w.Write("</blockquote></div>");
 					break;
 				case "code":

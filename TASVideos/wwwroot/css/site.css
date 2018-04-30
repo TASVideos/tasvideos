@@ -77,3 +77,11 @@ h1 {
 .tab-pane {
 	padding: 10px;
 }
+
+.quotecontainer {
+	margin: 0.75rem;
+	padding: .25rem;
+	font-style: italic;
+	background-color: #EEE;
+	border-radius: 0.25rem;
+}
