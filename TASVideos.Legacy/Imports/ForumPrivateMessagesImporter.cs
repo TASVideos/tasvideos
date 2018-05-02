@@ -4,6 +4,7 @@ using System.Linq;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.ForumEngine;
 using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
@@ -17,7 +18,7 @@ namespace TASVideos.Legacy.Imports
 			// TODO: attach sig? I'm leaning towards this being pointless
 			// TODO: messages without corresponding text
 			// TODO: this filters out some messages where the to or from users no longer, should those get imported?
-
+			// TODO: can we filter out message from a non-existent/inactive/banned user to another? neither will ever see it
 			var data =
 				(from p in legacyForumContext.PrivateMessages
 				join pt in legacyForumContext.PrivateMessageText on p.Id equals pt.Id
@@ -62,14 +63,15 @@ namespace TASVideos.Legacy.Imports
 					IpAddress = g.Key.IpAddress,
 					Subject = ImportHelper.FixString(g.Key.Subject),
 					Text = ImportHelper.FixString(g.Key.Text),
-					EnableHtml = g.Key.EnableHtml,
+					EnableHtml = g.Key.EnableHtml ? HtmlParser.ContainsHtml(ImportHelper.FixString(g.Key.Text)) : false,
 					EnableBbCode = g.Key.EnableBbCode,
 					ReadOn = g.All(gg => gg.Type != 1)
 						? DateTime.UtcNow  // Legacy system didn't track date so we will simply use the import date
 						: (DateTime?)null,
 					SavedForFromUser = g.Any(gg => gg.Type == 4),
 					SavedForToUser = g.Any(gg => gg.Type == 3)
-				});
+				})
+				.ToList();
 
 			var columns = new[]
 			{
