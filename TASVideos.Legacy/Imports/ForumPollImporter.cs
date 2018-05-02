@@ -86,24 +86,25 @@ namespace TASVideos.Legacy.Imports
 			/******** ForumPollOptionVote ********/
 			var legForumVoters = legacyForumContext.Voter.ToList();
 			var newForumOptions = context.ForumPollOptions.ToList();
+
 			var forumPollOptionVotes =
 				(from v in legForumVoters
-				from vr in newForumOptions
-					.Where(vrr => vrr.PollId == v.Id && vrr.Ordinal == v.OptionId)
-				select new ForumPollOptionVote
-				{
-					PollOptionId = vr.Id,
-					UserId = v.UserId,
-					IpAddress = v.IpAddress,
-					CreateTimestamp = DateTime.UtcNow, // Legacy system did not track this
-				})
+				 join po in newForumOptions on new { PollId = v.Id, Ordinal = v.OptionId } equals new { po.PollId, po.Ordinal }
+				 select new ForumPollOptionVote
+				 {
+					 PollOptionId = po.Id,
+					 UserId = v.UserId,
+					 IpAddress = v.IpAddress,
+					 CreateTimestamp = DateTime.UtcNow, // Legacy system did not track this
+				 })
 				.ToList();
 
 			// Insert Unknown User votes for discrepencies between de-normalized vote count and actual vote records
-			var missingVotes = (from po in legForumPollOptions
-								from v in legForumVoters.Where(vv => po.Id == vv.Id && po.VoteOptionId == vv.OptionId)
-								from newPo in newForumOptions.Where(nfo => nfo.PollId == v.Id && nfo.Ordinal == po.VoteOptionId)
-								select new { po, v, newPo })
+			var missingVotes =
+				(from po in legForumPollOptions
+				 join v in legForumVoters on new { po.Id, OptionId = po.VoteOptionId } equals new { v.Id, v.OptionId }
+				 join newPo in newForumOptions on new { PollId = v.Id, Ordinal = po.VoteOptionId } equals new { newPo.PollId, newPo.Ordinal }
+				 select new { po, v, newPo })
 				.GroupBy(tkey => new { tkey.newPo.Id, tkey.po.ResultCount })
 				.Select(g => new { g.Key.Id, g.Key.ResultCount, Actual = g.Count() })
 				.Where(x => x.ResultCount > x.Actual)
