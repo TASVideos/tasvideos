@@ -18,13 +18,14 @@ namespace TASVideos.Legacy.Imports
 			// TODO: messages without corresponding text
 			// TODO: this filters out some messages where the to or from users no longer, should those get imported?
 
-			var privMessagesTemp =
+			var data =
 				(from p in legacyForumContext.PrivateMessages
-				 join pt in legacyForumContext.PrivateMessageText on p.Id equals pt.Id
-				 join fromUser in legacyForumContext.Users on p.FromUserId equals fromUser.UserId
-				 where (p.ToUserId > 0 && p.FromUserId > 0) // TODO: do we care about these?
-				 group new { p.Type } by new
-				 {
+				join pt in legacyForumContext.PrivateMessageText on p.Id equals pt.Id
+				join fromUser in legacyForumContext.Users on p.FromUserId equals fromUser.UserId
+				where p.ToUserId > 0 && p.FromUserId > 0 // TODO: do we care about these?
+				select new
+				{
+					p.Type,
 					p.ToUserId,
 					p.FromUserId,
 					p.Timestamp,
@@ -34,10 +35,24 @@ namespace TASVideos.Legacy.Imports
 					p.EnableHtml,
 					p.IpAddress,
 					fromUser.UserName
-				 }
-				 into g
-				 select new
-				 {
+				})
+				.ToList();
+
+			var privMessagesTemp = data
+				.GroupBy(tkey => new
+				{
+					tkey.ToUserId,
+					tkey.FromUserId,
+					tkey.Timestamp,
+					tkey.Subject,
+					tkey.Text,
+					tkey.EnableBbCode,
+					tkey.EnableHtml,
+					tkey.IpAddress,
+					tkey.UserName
+				})
+				.Select(g => new
+				{
 					g.Key.ToUserId,
 					g.Key.FromUserId,
 					CreateUserName = g.Key.UserName,
@@ -53,8 +68,7 @@ namespace TASVideos.Legacy.Imports
 					IsSavedIn = g.Any(gg => gg.Type == 3),
 					IsSavedOut = g.Any(gg => gg.Type == 4),
 					IsUnread = g.Any(gg => gg.Type == 5),
-				 })
-				.ToList();
+				});
 
 			var privMessages = privMessagesTemp
 				.Select(p => new PrivateMessage
