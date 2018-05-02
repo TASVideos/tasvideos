@@ -63,7 +63,7 @@ namespace TASVideos.Legacy.Imports
 					IpAddress = g.Key.IpAddress,
 					Subject = ImportHelper.FixString(g.Key.Subject),
 					Text = ImportHelper.FixString(g.Key.Text),
-					EnableHtml = g.Key.EnableHtml ? HtmlParser.ContainsHtml(ImportHelper.FixString(g.Key.Text)) : false,
+					EnableHtml = g.Key.EnableHtml && HtmlParser.ContainsHtml(ImportHelper.FixString(g.Key.Text)),
 					EnableBbCode = g.Key.EnableBbCode,
 					ReadOn = g.All(gg => gg.Type != 1)
 						? DateTime.UtcNow  // Legacy system didn't track date so we will simply use the import date
