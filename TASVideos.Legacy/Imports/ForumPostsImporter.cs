@@ -3,6 +3,7 @@ using System.Linq;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.ForumEngine;
 using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
@@ -46,7 +47,7 @@ namespace TASVideos.Legacy.Imports
 					Subject = ImportHelper.FixString(p.Subject),
 					Text = ImportHelper.FixString(p.Text.Replace(":" + p.BbCodeUid, "")),
 					EnableBbCode = p.EnableBbCode,
-					EnableHtml = p.EnableHtml,
+					EnableHtml = p.EnableHtml && HtmlParser.ContainsHtml(ImportHelper.FixString(p.Text.Replace(":" + p.BbCodeUid, ""))),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
 					LastUpdateTimeStamp = p.LastUpdateTimestamp.HasValue
 						? ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp.Value)
