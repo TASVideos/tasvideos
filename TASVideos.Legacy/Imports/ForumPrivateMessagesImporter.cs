@@ -38,7 +38,7 @@ namespace TASVideos.Legacy.Imports
 				})
 				.ToList();
 
-			var privMessagesTemp = data
+			var privMessages = data
 				.GroupBy(tkey => new
 				{
 					tkey.ToUserId,
@@ -51,46 +51,25 @@ namespace TASVideos.Legacy.Imports
 					tkey.IpAddress,
 					tkey.UserName
 				})
-				.Select(g => new
+				.Select(g => new PrivateMessage
 				{
-					g.Key.ToUserId,
-					g.Key.FromUserId,
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
 					CreateUserName = g.Key.UserName,
-					g.Key.Timestamp,
-					g.Key.Subject,
-					g.Key.Text,
-					g.Key.EnableBbCode,
-					g.Key.EnableHtml,
-					g.Key.IpAddress,
-					IsRead = g.Any(gg => gg.Type == 0),
-					IsNew = g.Any(gg => gg.Type == 1),
-					//IsSent = g.Any(gg => gg.Type == 2), // Don't need this one
-					IsSavedIn = g.Any(gg => gg.Type == 3),
-					IsSavedOut = g.Any(gg => gg.Type == 4),
-					IsUnread = g.Any(gg => gg.Type == 5),
-				});
-
-			var privMessages = privMessagesTemp
-				.Select(p => new PrivateMessage
-				{
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
-					CreateUserName = p.CreateUserName,
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
-					LastUpdateUserName = p.CreateUserName,
-					FromUserId = p.FromUserId,
-					ToUserId = p.ToUserId,
-					IpAddress = p.IpAddress,
-					Subject = ImportHelper.FixString(p.Subject),
-					Text = ImportHelper.FixString(p.Text),
-					EnableHtml = p.EnableHtml,
-					EnableBbCode = p.EnableBbCode,
-					ReadOn = !p.IsNew // p.IsUnread // Unread = seen but not read?
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
+					LastUpdateUserName = g.Key.UserName,
+					FromUserId = g.Key.FromUserId,
+					ToUserId = g.Key.ToUserId,
+					IpAddress = g.Key.IpAddress,
+					Subject = ImportHelper.FixString(g.Key.Subject),
+					Text = ImportHelper.FixString(g.Key.Text),
+					EnableHtml = g.Key.EnableHtml,
+					EnableBbCode = g.Key.EnableBbCode,
+					ReadOn = g.All(gg => gg.Type != 1)
 						? DateTime.UtcNow  // Legacy system didn't track date so we will simply use the import date
 						: (DateTime?)null,
-					SavedForFromUser = p.IsSavedOut,
-					SavedForToUser = p.IsSavedIn
-				})
-				.ToList();
+					SavedForFromUser = g.Any(gg => gg.Type == 4),
+					SavedForToUser = g.Any(gg => gg.Type == 3)
+				});
 
 			var columns = new[]
 			{
