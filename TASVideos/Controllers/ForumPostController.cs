@@ -30,9 +30,16 @@ namespace TASVideos.Controllers
 
 		// TODO: permission, auto-added on register?
 		[Authorize]
-		public IActionResult Create(int topicId)
+		public async Task<IActionResult> Create(int topicId)
 		{
-			return View(new ForumPostModel { TopicId = topicId });
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _forumTasks.GetCreatePostData(topicId, user);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
 		}
 
 		// TODO: permission

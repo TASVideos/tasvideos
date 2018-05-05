@@ -1,6 +1,6 @@
-﻿@model ForumPostModel
+﻿@model ForumPostCreateModel
 @{
-	ViewData["Title"] = $"Posting to Forum Topic TODO";
+	ViewData["Title"] = $"Posting to Forum Topic: {Model.TopicTitle}";
 }
 
 <h4>@ViewData["Title"]</h4>
@@ -12,6 +12,50 @@
 			<input type="text" asp-for="Subject" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Subject" class="text-danger"></span>
 		</row>
+	</form-group>
+	<form-group>
+		<div class="btn-group mt-1 mb-1">
+			<button type="button" class="btn btn-info btn-sm"><strong>b</strong></button>
+			<button type="button" class="btn btn-info btn-sm"><i>i</i></button>
+			<button type="button" class="btn btn-info btn-sm"><s>s</s></button>
+			<button type="button" class="btn btn-info btn-sm"><sub>sub</sub></button>
+			<button type="button" class="btn btn-info btn-sm"><sup>sup</sup></button>
+
+		</div>
+
+		<div class="btn-group mt-1 mb-1">
+			<button type="button" class="btn btn-info btn-sm">quote</button>
+			<button type="button" class="btn btn-info btn-sm">url</button>
+			<button type="button" class="btn btn-info btn-sm">img</button>
+			<button type="button" class="btn btn-info btn-sm">code</button>
+			<button type="button" class="btn btn-info btn-sm">noparse</button>
+			<button type="button" class="btn btn-info btn-sm">spoiler</button>
+
+		</div>
+
+		<div class="btn-group mt-1 mb-1">
+			<button type="button" class="btn btn-secondary btn-sm">tt</button>
+			<button type="button" class="btn btn-secondary btn-sm">list</button>
+			<button type="button" class="btn btn-secondary btn-sm">list=</button>
+		</div>
+
+		<div class="btn-group mt-1 mb-1">
+			<button type="button" class="btn btn-secondary btn-sm">left</button>
+			<button type="button" class="btn btn-secondary btn-sm">right</button>
+			<button type="button" class="btn btn-secondary btn-sm">center</button>
+		</div>
+
+		<div class="btn-group mt-1 mb-1">
+			<button type="button" class="btn btn-success btn-sm">frames</button>
+			<button type="button" class="btn btn-success btn-sm">video</button>
+			<button type="button" class="btn btn-success btn-sm">google</button>
+			<button type="button" class="btn btn-success btn-sm">thread</button>
+			<button type="button" class="btn btn-success btn-sm">post</button>
+			<button type="button" class="btn btn-success btn-sm">movie</button>
+			<button type="button" class="btn btn-success btn-sm">submission</button>
+			<button type="button" class="btn btn-success btn-sm">wiki</button>
+			<button type="button" class="btn btn-success btn-sm">userfile</button>
+		</div>
 	</form-group>
 	<form-group>
 		<textarea asp-for="Post" class="form-control" rows="20"></textarea>

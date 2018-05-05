@@ -129,25 +129,6 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		public async Task CreatePost(ForumPostModel model, User user, string ipAddress)
-		{
-			var forumPost = new ForumPost
-			{
-				TopicId = model.TopicId,
-				PosterId = user.Id,
-				IpAddress = ipAddress,
-				Subject = model.Subject,
-				Text = model.Post,
-
-				// TODO
-				EnableHtml = true,
-				EnableBbCode = true
-			};
-
-			_db.ForumPosts.Add(forumPost);
-			await _db.SaveChangesAsync();
-		}
-
 		// TODO: document
 		public async Task<IEnumerable<TopicFeedModel.TopicPost>> GetTopicFeed(int topicId, int limit)
 		{
@@ -164,6 +145,47 @@ namespace TASVideos.Tasks
 				.OrderByDescending(p => p.PostTime)
 				.Take(limit)
 				.ToListAsync();
+		}
+
+		/// <summary>
+		/// Returns necesssary data to display on the create post screen
+		/// </summary>
+		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, User user)
+		{
+			var topic = await _db.ForumTopics
+				.SingleOrDefaultAsync(t => t.Id == topicId);
+
+			if (topic == null)
+			{
+				return null;
+			}
+
+			return new ForumPostCreateModel
+			{
+				
+				TopicId = topicId,
+				TopicTitle = topic.Title
+			};
+		}
+
+		public async Task CreatePost(ForumPostModel model, User user, string ipAddress)
+		{
+			var forumPost = new ForumPost
+			{
+				TopicId = model.TopicId,
+				PosterId = user.Id,
+				IpAddress = ipAddress,
+				Subject = model.Subject,
+				Text = model.Post,
+
+				// TODO: check for bbcode and if none, set this to false?
+				// For now we are not giving the user choices
+				EnableHtml = false,
+				EnableBbCode = true
+			};
+
+			_db.ForumPosts.Add(forumPost);
+			await _db.SaveChangesAsync();
 		}
 	}
 }
