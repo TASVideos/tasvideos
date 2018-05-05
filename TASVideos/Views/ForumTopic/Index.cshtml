@@ -40,6 +40,7 @@
 					<small>
 						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+						<a class="btn btn-info btn-sm pull-right" asp-controller="ForumPost" asp-action="Create" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
 					</small>
 				</div>
 				<div class="card-body">

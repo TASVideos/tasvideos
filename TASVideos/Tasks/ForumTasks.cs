@@ -147,10 +147,18 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
+		public async Task<string> GetPostText(int postId)
+		{
+			return await _db.ForumPosts
+				.Where(p => p.Id == postId)
+				.Select(p => p.Text)
+				.SingleOrDefaultAsync();
+		}
+
 		/// <summary>
 		/// Returns necesssary data to display on the create post screen
 		/// </summary>
-		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, User user)
+		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, User user, int? postId)
 		{
 			var topic = await _db.ForumTopics
 				.SingleOrDefaultAsync(t => t.Id == topicId);
@@ -160,12 +168,23 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
-			return new ForumPostCreateModel
+			var model = new ForumPostCreateModel
 			{
-				
 				TopicId = topicId,
 				TopicTitle = topic.Title
 			};
+
+			if (postId.HasValue)
+			{
+				var post = await _db.ForumPosts
+				.Include(p => p.Poster)
+				.Where(p => p.Id == postId)
+				.SingleOrDefaultAsync();
+
+				model.Post = $"[quote=\"{post.Poster.UserName}\"]{post.Text}[/quote]";
+			}
+
+			return model;
 		}
 
 		public async Task CreatePost(ForumPostModel model, User user, string ipAddress)
