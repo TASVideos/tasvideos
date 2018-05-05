@@ -97,10 +97,25 @@ namespace TASVideos.Models
 		}
 	}
 
+	/// <summary>
+	/// Data necessary to create a post
+	/// </summary>
 	public class ForumPostModel
 	{
 		public int TopicId { get; set; }
 		public string Subject { get; set; }
 		public string Post { get; set; }
+	}
+
+	/// <summary>
+	/// Data necessary to present to the user for creating a post
+	/// as well as the data neccessary to create a post
+	/// </summary>
+	public class ForumPostCreateModel : ForumPostModel
+	{
+		public string TopicTitle { get; set; }
+
+		public string UserAvatar { get; set; }
+		public string UserSignature { get; set; }
 	}
 }
