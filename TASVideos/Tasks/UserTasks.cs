@@ -383,7 +383,7 @@ namespace TASVideos.Tasks
 					Avatar = u.Avatar,
 					Location = u.From,
 					Signature = u.Signature,
-					PublicationCount = u.Publications.Count,
+					PublicationActiveCount = u.Publications.Count(p => !p.Publication.ObsoletedById.HasValue),
 					PublicationObsoleteCount = u.Publications.Count(p => p.Publication.ObsoletedById.HasValue)
 				})
 				.SingleOrDefaultAsync(u => u.Id == id);

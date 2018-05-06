@@ -7,8 +7,8 @@
 
 <div class="card col-md-6">
 	<div class="card-body">
-		<h5 class="card-title"><img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: left" /> @Model.UserName</h5>
-		<br />
+		<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
+		<h4 class="card-title">@Model.UserName</h4>
 		<div class="card-text">
 			<label asp-for="JoinDate"></label>
 			<label>@Html.DisplayFor(m => m.JoinDate)</label>
@@ -20,7 +20,7 @@
 			<label>@Html.DisplayFor(m => m.PostCount)</label>
 			<br />
 			<a condition="Model.PostCount > 0" href="#" class="btn btn-primary">All Posts</a>
-			
+
 			TODO: roles
 			TODO: awards
 		</div>
@@ -29,13 +29,12 @@
 <div class="card col-md-6">
 	<div class="card-body">
 		<h5 class="card-title">Publications</h5>
-		<div condition="Model.PublicationCount == 0" class="card-text">
+		<div condition="!Model.AnyPublications" class="card-text">
 			<i>User has not had any Published Movies</i>
 		</div>
-		<div condition="Model.PublicationCount > 0">
-			Published Movies: @Model.PublicationCount
-			<br />
-			Obsolete: @Model.PublicationObsoleteCount
+		<div condition="Model.AnyPublications">
+			<p>@Model.PublicationActiveCount Active, @Model.PublicationObsoleteCount obsolete</p>
+			<a href="/Movies-Author@(Model.Id)-obs" class="btn btn-primary">View</a>
 		</div>
 	</div>
 </div>
