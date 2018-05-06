@@ -48,8 +48,8 @@ namespace TASVideos.Controllers
 			{
 				Tiers = tokenLookup.Tiers.Where(t => tokens.Contains(t)),
 				SystemCodes = tokenLookup.SystemCodes.Where(s => tokens.Contains(s)),
-				ShowObsoleted = tokens.Contains("obs"), // TOOD: case insensitive
-				Years = tokenLookup.Years.Where(y => tokens.Contains("Y" + y)), // TODO: case insensitive
+				ShowObsoleted = tokens.Contains("obs"),
+				Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)),
 				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t)),
 				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f)),
 				Authors = tokens
