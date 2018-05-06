@@ -29,6 +29,7 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 		public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();
+		public virtual ICollection<PublicationAuthor> Publications { get; set; } = new HashSet<PublicationAuthor>();
 
 		public virtual ICollection<ForumTopic> Topics { get; set; } = new HashSet<ForumTopic>();
 		public virtual ICollection<ForumPost> Posts { get; set; } = new HashSet<ForumPost>();

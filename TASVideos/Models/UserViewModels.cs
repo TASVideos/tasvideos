@@ -129,5 +129,23 @@ namespace TASVideos.Models
 	{
 		public int Id { get; set; }
 		public string UserName { get; set; }
+
+		[Display(Name = "Joined On:")]
+		public DateTime JoinDate { get; set; }
+
+		[Display(Name = "Total posts:")]
+		public int PostCount { get; set; }
+
+		[Display(Name = "Avatar")]
+		public string Avatar { get; set; }
+
+		[Display(Name = "Location")]
+		public string Location { get; set; }
+
+		[Display(Name = "Signature")]
+		public string Signature { get; set; }
+
+		public int PublicationCount { get; set; }
+		public int PublicationObsoleteCount { get; set; }
 	}
 }
