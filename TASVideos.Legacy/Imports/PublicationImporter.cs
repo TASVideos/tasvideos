@@ -157,7 +157,7 @@ namespace TASVideos.Legacy.Imports
 							UserId = u.Id,
 							Author = u,
 							PublicationId = pub.Movie.Id,
-							Pubmisison = publication,
+							Publication = publication,
 						})
 						.ToList();
 
