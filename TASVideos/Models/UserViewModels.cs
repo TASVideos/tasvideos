@@ -145,7 +145,8 @@ namespace TASVideos.Models
 		[Display(Name = "Signature")]
 		public string Signature { get; set; }
 
-		public int PublicationCount { get; set; }
+		public int PublicationActiveCount { get; set; }
 		public int PublicationObsoleteCount { get; set; }
+		public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;
 	}
 }
