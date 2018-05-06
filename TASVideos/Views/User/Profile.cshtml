@@ -19,6 +19,9 @@
 					<label asp-for="JoinDate"></label>
 					<label>@Html.DisplayFor(m => m.JoinDate)</label>
 					<br />
+					<label asp-for="LastLoggedInTimeStamp"></label>
+					<label>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</label>
+					<br />
 					<label asp-for="Location"></label>
 					<label>@Html.DisplayFor(m => m.Location)</label>
 					<br />
@@ -36,12 +39,6 @@
 			</div>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="card-footer">
 				@Html.Raw(Model.Signature)
-			</div>
-		</div>
-		<div class="card mu-1">
-			<div class="card-body">
-				<h5 class="card-title">Ratings</h5>
-				TODO
 			</div>
 		</div>
 	</div>
@@ -74,6 +71,12 @@
 		<div class="card text-right">
 			<div class="card-body">
 				<h5 class="card-title">Wiki</h5>
+				TODO
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Ratings</h5>
 				TODO
 			</div>
 		</div>
