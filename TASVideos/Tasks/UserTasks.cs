@@ -380,6 +380,7 @@ namespace TASVideos.Tasks
 					UserName = u.UserName,
 					PostCount = u.Posts.Count,
 					JoinDate = u.CreateTimeStamp,
+					LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
 					Avatar = u.Avatar,
 					Location = u.From,
 					Signature = u.Signature,

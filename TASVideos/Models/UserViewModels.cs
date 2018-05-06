@@ -133,6 +133,10 @@ namespace TASVideos.Models
 		[Display(Name = "Joined On:")]
 		public DateTime JoinDate { get; set; }
 
+		[Display(Name = "Last Logged In: ")]
+		[DisplayFormat(NullDisplayText = "Never")]
+		public DateTime? LastLoggedInTimeStamp { get; set; }
+
 		[Display(Name = "Total posts:")]
 		public int PostCount { get; set; }
 
