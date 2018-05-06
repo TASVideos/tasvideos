@@ -6,6 +6,6 @@
 		public virtual User Author { get; set; }
 
 		public int PublicationId { get; set; }
-		public virtual Publication Pubmisison { get; set; }
+		public virtual Publication Publication { get; set; }
 	}
 }

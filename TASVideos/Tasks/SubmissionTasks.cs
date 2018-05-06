@@ -681,7 +681,7 @@ namespace TASVideos.Tasks
 			var publicationAuthors = submission.SubmissionAuthors
 				.Select(sa => new PublicationAuthor
 				{
-					Pubmisison = publication,
+					Publication = publication,
 					Author = sa.Author
 				});
 
