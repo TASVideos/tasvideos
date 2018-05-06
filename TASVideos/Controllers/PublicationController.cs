@@ -48,10 +48,17 @@ namespace TASVideos.Controllers
 			{
 				Tiers = tokenLookup.Tiers.Where(t => tokens.Contains(t)),
 				SystemCodes = tokenLookup.SystemCodes.Where(s => tokens.Contains(s)),
-				ShowObsoleted = tokens.Contains("obs"),
-				Years = tokenLookup.Years.Where(y => tokens.Contains("Y" + y)),
+				ShowObsoleted = tokens.Contains("obs"), // TOOD: case insensitive
+				Years = tokenLookup.Years.Where(y => tokens.Contains("Y" + y)), // TODO: case insensitive
 				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t)),
-				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f))
+				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f)),
+				Authors = tokens
+					.Where(t => t.ToLower().Contains("author"))
+					.Select(t => t.ToLower().Replace("author", ""))
+					.Select(t => int.TryParse(t, out var temp) ? temp : (int?)null)
+					.Where(t => t.HasValue)
+					.Select(t => t.Value)
+					.ToList()
 			};
 
 			// If no valid filter criteria, don't attempt to generate a list (else it would be all movies for what is most likely a malformed URL)

@@ -18,11 +18,14 @@ namespace TASVideos.Models
 		public IEnumerable<string> Flags { get; set; } = new List<string>();
 		public bool ShowObsoleted { get; set; }
 
+		public IEnumerable<int> Authors { get; set; } = new List<int>();
+
 		public bool IsEmpty => (SystemCodes == null || !SystemCodes.Any())
 			&& (Tiers == null || !Tiers.Any())
 			&& (Years == null || !Years.Any())
 			&& (Flags == null || !Flags.Any())
-			&& (Tags == null || !Tags.Any());
+			&& (Tags == null || !Tags.Any())
+			&& (Authors == null || !Authors.Any());
 	}
 
 	public class PublicationViewModel
