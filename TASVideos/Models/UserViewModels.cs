@@ -139,7 +139,7 @@ namespace TASVideos.Models
 		[Display(Name = "Avatar")]
 		public string Avatar { get; set; }
 
-		[Display(Name = "Location")]
+		[Display(Name = "Location:")]
 		public string Location { get; set; }
 
 		[Display(Name = "Signature")]
@@ -148,5 +148,11 @@ namespace TASVideos.Models
 		public int PublicationActiveCount { get; set; }
 		public int PublicationObsoleteCount { get; set; }
 		public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;
+		public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
+
+		public int SubmissionCount { get; set; }
+		
+		public IEnumerable<string> Roles { get; set; } = new List<string>();
+		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
 	}
 }

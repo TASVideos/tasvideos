@@ -113,10 +113,10 @@ namespace TASVideos.Tasks
 						.Where(ur => !ur.Role.IsDefault)
 						.Select(ur => ur.Role.Name),
 					PosterJoined = p.Poster.CreateTimeStamp,
-					PosterPostCount = _db.ForumPosts.Count(fp => fp.PosterId == p.PosterId),
+					PosterPostCount = p.Poster.Posts.Count,
 					Text = p.Text,
 					Subject = p.Subject,
-					Signature = p.Poster.Signature,
+					Signature = p.Poster.Signature
 				})
 				.OrderBy(p => p.CreateTimestamp)
 				.PageOf(_db, paging);

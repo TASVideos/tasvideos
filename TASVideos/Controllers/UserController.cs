@@ -16,12 +16,15 @@ namespace TASVideos.Controllers
 	public class UserController : BaseController
 	{
 		private readonly UserTasks _userTasks;
+		private readonly AwardTasks _awardTasks;
 
 		public UserController(
-			UserTasks userTasks)
+			UserTasks userTasks,
+			AwardTasks awardTasks)
 			: base(userTasks)
 		{
 			_userTasks = userTasks;
+			_awardTasks = awardTasks;
 		}
 
 		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
@@ -112,6 +115,13 @@ namespace TASVideos.Controllers
 			{
 				return NotFound();
 			}
+
+			if (!string.IsNullOrWhiteSpace(model.Signature))
+			{
+				model.Signature = RenderPost(model.Signature, true, false);
+			}
+
+			model.Awards = await _awardTasks.GetAllAwardsForUser(id);
 
 			return View(model);
 		}

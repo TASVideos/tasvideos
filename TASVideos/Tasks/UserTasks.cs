@@ -384,7 +384,12 @@ namespace TASVideos.Tasks
 					Location = u.From,
 					Signature = u.Signature,
 					PublicationActiveCount = u.Publications.Count(p => !p.Publication.ObsoletedById.HasValue),
-					PublicationObsoleteCount = u.Publications.Count(p => p.Publication.ObsoletedById.HasValue)
+					PublicationObsoleteCount = u.Publications.Count(p => p.Publication.ObsoletedById.HasValue),
+					PublishedSystems = u.Publications.Select(p => p.Publication.System.Code).Distinct(),
+					Roles = u.UserRoles
+						.Where(ur => !ur.Role.IsDefault)
+						.Select(ur => ur.Role.Name),
+					SubmissionCount = u.Submissions.Count
 				})
 				.SingleOrDefaultAsync(u => u.Id == id);
 		}
