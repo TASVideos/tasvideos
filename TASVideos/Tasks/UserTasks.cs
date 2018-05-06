@@ -377,7 +377,14 @@ namespace TASVideos.Tasks
 				.Select(u => new UserProfileModel
 				{
 					Id = u.Id,
-					UserName = u.UserName
+					UserName = u.UserName,
+					PostCount = u.Posts.Count,
+					JoinDate = u.CreateTimeStamp,
+					Avatar = u.Avatar,
+					Location = u.From,
+					Signature = u.Signature,
+					PublicationCount = u.Publications.Count,
+					PublicationObsoleteCount = u.Publications.Count(p => p.Pubmisison.ObsoletedById.HasValue)
 				})
 				.SingleOrDefaultAsync(u => u.Id == id);
 		}

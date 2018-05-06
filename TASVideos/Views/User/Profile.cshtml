@@ -4,7 +4,59 @@
 }
 
 <a condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
-<h4>@ViewData["Title"]</h4>
-<hr />
 
-<h1>TODO</h1>
+<div class="card col-md-6">
+	<div class="card-body">
+		<h5 class="card-title"><img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: left" /> @Model.UserName</h5>
+		<br />
+		<div class="card-text">
+			<label asp-for="JoinDate"></label>
+			<label>@Html.DisplayFor(m => m.JoinDate)</label>
+			<br />
+			<label asp-for="Location"></label>
+			<label>@Html.DisplayFor(m => m.Location)</label>
+			<br />
+			<label asp-for="PostCount"></label>
+			<label>@Html.DisplayFor(m => m.PostCount)</label>
+			<br />
+			<a condition="Model.PostCount > 0" href="#" class="btn btn-primary">All Posts</a>
+			
+			TODO: roles
+			TODO: awards
+		</div>
+	</div>
+</div>
+<div class="card col-md-6">
+	<div class="card-body">
+		<h5 class="card-title">Publications</h5>
+		<div condition="Model.PublicationCount == 0" class="card-text">
+			<i>User has not had any Published Movies</i>
+		</div>
+		<div condition="Model.PublicationCount > 0">
+			Published Movies: @Model.PublicationCount
+			<br />
+			Obsolete: @Model.PublicationObsoleteCount
+		</div>
+	</div>
+</div>
+
+<div class="card col-md-6">
+	<div class="card-body">
+		<h5 class="card-title">Submissions</h5>
+		TODO
+	</div>
+</div>
+
+<div class="card col-md-6">
+	<div class="card-body">
+		<h5 class="card-title">Ratings</h5>
+		TODO
+	</div>
+</div>
+
+<div class="card col-md-6">
+	<div class="card-body">
+		<h5 class="card-title">Wiki</h5>
+		TODO
+	</div>
+</div>
