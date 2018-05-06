@@ -213,6 +213,11 @@ namespace TASVideos.Tasks
 				query = query.Where(p => p.PublicationFlags.Any(f => searchCriteria.Flags.Contains(f.Flag.Token)));
 			}
 
+			if (searchCriteria.Authors.Any())
+			{
+				query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => searchCriteria.Authors.Contains(a)));
+			}
+
 			// TODO: automapper, single movie is the same logic
 			return await query
 				.OrderBy(p => p.System.Code)
