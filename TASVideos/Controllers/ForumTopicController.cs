@@ -48,9 +48,16 @@ namespace TASVideos.Controllers
 
 		// TODO: permissions, maybe a permission that is auto-added based on post count?
 		[Authorize]
-		public IActionResult Create(int forumId)
+		public async Task<IActionResult> Create(int forumId)
 		{
-			return new EmptyResult();
+			var model = await _forumTasks.GetTopicCreateData(forumId);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
 		}
 
 		// TODO: permission

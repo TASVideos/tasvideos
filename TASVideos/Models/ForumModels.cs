@@ -97,6 +97,12 @@ namespace TASVideos.Models
 		}
 	}
 
+	public class TopicCreateModel
+	{
+		public string ForumName { get; set; }
+		public int ForumId { get; set; }
+	}
+
 	/// <summary>
 	/// Data necessary to create a post
 	/// </summary>

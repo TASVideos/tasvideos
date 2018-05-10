@@ -155,8 +155,24 @@ namespace TASVideos.Tasks
 				.SingleOrDefaultAsync();
 		}
 
+		public async Task<TopicCreateModel> GetTopicCreateData(int forumId)
+		{
+			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == forumId);
+
+			if (forum == null)
+			{
+				return null;
+			}
+
+			return new TopicCreateModel
+			{
+				ForumId = forumId,
+				ForumName = forum.Name
+			};
+		}
+
 		/// <summary>
-		/// Returns necesssary data to display on the create post screen
+		/// Returns necessary data to display on the create post screen
 		/// </summary>
 		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, User user, int? postId)
 		{
