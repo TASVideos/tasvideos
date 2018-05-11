@@ -137,6 +137,8 @@ namespace TASVideos.Tasks
 				.Select(p => new TopicFeedModel.TopicPost
 				{
 					Id = p.Id,
+					EnableBbCode = p.EnableBbCode,
+					EnableHtml = p.EnableBbCode,
 					Text = p.Text,
 					Subject = p.Subject,
 					PosterName = p.Poster.UserName,
