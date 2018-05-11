@@ -14,7 +14,10 @@ namespace TASVideos.ViewComponents
 		public class TopicPost
 		{
 			public int Id { get; set; }
+			public bool EnableBbCode { get; set; }
+			public bool EnableHtml { get; set; }
 			public string Text { get; set; }
+			public string RenderedText { get; set; }
 			public string Subject { get; set; }
 			public string PosterName { get; set; }
 			public DateTime PostTime { get; set; }

@@ -14,10 +14,10 @@
 					</small>
 				</h6>
 				<div condition="Model.HideContent" class="collapse card-text" id="collapse-content-@post.Id">
-					@post.Text
+					@Html.Raw(post.RenderedText)
 				</div>
 				<div condition="!Model.HideContent" class="card-text">
-					@post.Text
+					@Html.Raw(post.RenderedText)
 				</div>
 			</div>
 		</div>

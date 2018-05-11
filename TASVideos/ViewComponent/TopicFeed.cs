@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
+using TASVideos.ForumEngine;
 using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
@@ -31,7 +33,23 @@ namespace TASVideos.ViewComponents
 				Posts = await _forumTasks.GetTopicFeed(topicId, limit)
 			};
 
+			foreach (var post in model.Posts)
+			{
+				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
+			}
+
 			return View(model);
 		}
-    }
+
+		// TODO: this is the same code in BaseController
+		private string RenderPost(string text, bool useBbCode, bool useHtml)
+		{
+			var parsed = PostParser.Parse(text, useBbCode, useHtml);
+			using (var writer = new StringWriter())
+			{
+				parsed.WriteHtml(writer);
+				return writer.ToString();
+			}
+		}
+	}
 }
