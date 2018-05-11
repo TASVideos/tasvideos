@@ -5,11 +5,11 @@ using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
-	public class ListSubpages : ViewComponent
+	public class ListSubPages : ViewComponent
 	{
 		private readonly WikiTasks _wikiTasks;
 
-		public ListSubpages(WikiTasks wikiTasks)
+		public ListSubPages(WikiTasks wikiTasks)
 		{
 			_wikiTasks = wikiTasks;
 		}
