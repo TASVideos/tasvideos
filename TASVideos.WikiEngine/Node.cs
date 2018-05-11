@@ -209,7 +209,7 @@ namespace TASVideos.WikiEngine.AST
 	{
 		private static readonly Dictionary<string, string> ModuleNameMaps = new Dictionary<string, string>
 		{
-			["listsubpages"] = "ListSubpages",
+			["listsubpages"] = "ListSubPages",
 			["__wikilink"] = "WikiLink",
 			["wikiorphans"] = "WikiOrphans",
 			["brokenlinks"] = "BrokenLinks",
