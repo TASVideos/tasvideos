@@ -50,22 +50,8 @@ namespace TASVideos
 
 			services.Configure<AppSettings>(Configuration);
 
-			if (Environment.IsDemo())
-			{
-				var connectionString = System.Environment.GetEnvironmentVariable("TASVideosDbConnection");
-				if (string.IsNullOrWhiteSpace(connectionString))
-				{
-					throw new InvalidOperationException("Database connection string not set");
-				}
-
-				services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(connectionString));
-			}
-			else
-			{
-				services.AddDbContext<ApplicationDbContext>(options =>
+			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-			}
 
 			services.AddIdentity<User, Role>(config =>
 				{
