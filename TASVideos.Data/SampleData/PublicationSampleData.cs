@@ -130,6 +130,7 @@ and contributed greatly to the popularity of speedruns in general.",
 			MovieFileName = "mario3j.fmv",
 			ObsoletedBy = null,
 			OnlineWatchingUrl = "http://www.youtube.com/watch?v=BEcrJLM4GgU",
+			PublicationFlags = MorimotoSmb3PublicationFlags,
 			RerecordCount = 40268,
 			Rom = Smb3Rom,
 			Submission = MiroMotoSubmission,
@@ -138,6 +139,15 @@ and contributed greatly to the popularity of speedruns in general.",
 			TierId = 1,
 			Title = "TODO",
 			WikiContent = MorimotoSmb3PubWiki
+		};
+
+		public static readonly PublicationFlag[] MorimotoSmb3PublicationFlags = new[]
+		{
+			new PublicationFlag
+			{
+				Flag = Array.Find(FlagSeedData.Flags, flag => flag.Token == "NewcomerRec"),
+				Publication = MorimotoSmb3Pub
+			}
 		};
 	}
 }

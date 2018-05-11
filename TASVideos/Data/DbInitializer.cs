@@ -158,6 +158,7 @@ namespace TASVideos.Data
 			context.Roms.Add(PublicationSampleData.Smb3Rom);
 			context.Submissions.Add(PublicationSampleData.MiroMotoSubmission);
 			context.Publications.Add(PublicationSampleData.MorimotoSmb3Pub);
+			context.PublicationFlags.AddRange(PublicationSampleData.MorimotoSmb3PublicationFlags);
 
 			await context.SaveChangesAsync();
 		}
