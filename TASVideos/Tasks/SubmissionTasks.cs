@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -655,28 +656,25 @@ namespace TASVideos.Tasks
 				MovieFileName = model.MovieFileName + "." + model.MovieExtension
 			};
 
-			// TODO: why does this not work??
-			//using (var movieFileStream = new MemoryStream())
-			//using (var zipArchive = new ZipArchive(movieFileStream, ZipArchiveMode.Update, false))
-			//{
-			//	var zipEntry = zipArchive.CreateEntry(model.MovieFileName + "." + model.MovieExtension);
+			// Unzip the submission file, and rezip it while renaming the contained file
+			using (var publicationFileStream = new MemoryStream())
+			{
+				using (var publicationZipArchive = new ZipArchive(publicationFileStream, ZipArchiveMode.Create))
+				using (var submissionFileStream = new MemoryStream(submission.MovieFile))
+				using (var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read))
+				{
+					var publicationZipEntry = publicationZipArchive.CreateEntry(model.MovieFileName + "." + model.MovieExtension);
+					var submissionZipEntry = submissionZipArchive.Entries.Single();
 
-			//	using (var originalFileStream = new MemoryStream(submission.MovieFile))
-			//	using (var zipEntryStream = zipEntry.Open())
-			//	{
-			//		var submissionzip = new ZipArchive(originalFileStream);
-			//		var submissionZipEntry = submissionzip.Entries.Single();
-			//		using (var subZipEntryStream = submissionZipEntry.Open())
-			//		{
-			//			await subZipEntryStream.CopyToAsync(zipEntryStream);
-			//		}
-			//	}
+					using (var publicationZipEntryStream = publicationZipEntry.Open())
+					using (var submissionZipEntryStream = submissionZipEntry.Open())
+					{
+						await submissionZipEntryStream.CopyToAsync(publicationZipEntryStream);
+					}
+				}
 
-			//	publication.MovieFile = movieFileStream.ToArray();
-			//}
-
-			// Hack for now
-			publication.MovieFile = submission.MovieFile;
+				publication.MovieFile = publicationFileStream.ToArray();
+			}
 
 			var publicationAuthors = submission.SubmissionAuthors
 				.Select(sa => new PublicationAuthor
