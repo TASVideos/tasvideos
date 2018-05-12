@@ -60,6 +60,19 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		[Authorize]
+		[HttpPost, ValidateAntiForgeryToken]
+		public IActionResult Create(TopicCreateModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			// TODO
+			return new EmptyResult(); // TODO
+		}
+
 		// TODO: permission
 		[Authorize]
 		[HttpPost]
