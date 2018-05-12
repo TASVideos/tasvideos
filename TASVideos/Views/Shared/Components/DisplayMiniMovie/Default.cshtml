@@ -6,19 +6,11 @@
 			<h4>@Model.Title</h4>
 		</div>
 		<div class="card-body">
-			<row>
-				<div class="col-md-4">
-					<div class="mb-1">
-						<a href="/@(Model.Id)M">
-							<img src="~/media/@Model.Screenshot" />
-						</a>
-					</div>
-					<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
-				</div>
-				<div class="col-md-8" style="max-height: 200px; overflow-y: auto">
-					@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
-				</div>
-			</row>
+			<a href="/@(Model.Id)M">
+				<img src="~/media/@Model.Screenshot" class="pull-left pr-3 pb-1" />
+			</a>
+			@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
+			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
 		</div>
 	</div>
 </div>
