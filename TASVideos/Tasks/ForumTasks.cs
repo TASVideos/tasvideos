@@ -174,6 +174,35 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Creates a new <see cref="ForumTopic" /> and the first <see cref="ForumPost"/> of that topic
+		/// </summary>
+		/// <returns>The id of the newly created <see cref="ForumTopic" /></returns>
+		public async Task<int> CreateTopic(TopicCreatePostModel model, User user, string ipAddress)
+		{
+			var topic = new ForumTopic
+			{
+				Type = model.Type,
+				Title = model.Title,
+				PosterId = user.Id,
+				Poster = user,
+				ForumId = model.ForumId
+			};
+
+			_db.ForumTopics.Add(topic);
+			await _db.SaveChangesAsync();
+
+			var forumPostModel = new ForumPostModel
+			{
+				TopicId = topic.Id,
+				Subject = null,
+				Post = model.Post
+			};
+
+			await CreatePost(forumPostModel, user, ipAddress);
+			return topic.Id;
+		}
+
+		/// <summary>
 		/// Returns necessary data to display on the create post screen
 		/// </summary>
 		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, User user, int? postId)

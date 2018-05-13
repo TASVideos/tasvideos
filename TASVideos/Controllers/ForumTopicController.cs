@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using TASVideos.ForumEngine;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -18,13 +16,16 @@ namespace TASVideos.Controllers
 	public class ForumTopicController : BaseController
 	{
 		private readonly ForumTasks _forumTasks;
+		private readonly UserManager<User> _userManager;
 
 		public ForumTopicController(
 			ForumTasks forumTasks,
-			UserTasks userTasks)
+			UserTasks userTasks,
+			UserManager<User> userManager)
 			: base(userTasks)
 		{
 			_forumTasks = forumTasks;
+			_userManager = userManager;
 		}
 
 		[AllowAnonymous]
@@ -37,7 +38,7 @@ namespace TASVideos.Controllers
 				foreach (var post in model.Posts)
 				{
 					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-					post.RenderedSignature = RenderPost(post.Text, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
+					post.RenderedSignature = RenderPost(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
 				}
 
 				return View(model);
@@ -62,15 +63,17 @@ namespace TASVideos.Controllers
 
 		[Authorize]
 		[HttpPost, ValidateAntiForgeryToken]
-		public IActionResult Create(TopicCreateModel model)
+		public async Task<IActionResult> Create(TopicCreatePostModel model)
 		{
 			if (!ModelState.IsValid)
 			{
 				return View(model);
 			}
 
-			// TODO
-			return new EmptyResult(); // TODO
+			var user = await _userManager.GetUserAsync(User);
+			var topicId = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
+
+			return RedirectToAction(nameof(Index), new { Id = topicId });
 		}
 
 		// TODO: permission
