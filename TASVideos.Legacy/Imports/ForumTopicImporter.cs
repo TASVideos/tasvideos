@@ -30,7 +30,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				})
 				.ToList();
 
-			var topics = legTopics
+			 var topics = legTopics
 				.Select(t => new ForumTopic
 				{
 					Id = t.Id,
@@ -44,7 +44,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
 					LastUpdateUserName = "LegacyImport",
 					Views = t.Views,
-					Type = (ForumTopicType)t.Type
+					Type = (ForumTopicType)t.Type,
+					PollId = t.PollId
 				})
 				.ToList();
 
@@ -59,7 +60,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.CreateUserName),
 				nameof(ForumTopic.LastUpdateUserName),
 				nameof(ForumTopic.Views),
-				nameof(ForumTopic.Type)
+				nameof(ForumTopic.Type),
+				nameof(ForumTopic.PollId)
 			};
 
 			topics.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumTopics));
