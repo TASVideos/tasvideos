@@ -2,11 +2,12 @@
 @{
 	ViewData["Title"] = $"TASVideos Forum {Model.Title}";
 }
-
 <h4>@Model.Title</h4>
 <div>
 	<a asp-controller="ForumPost" asp-action="Create" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
 </div>
+<hr />
+@Html.Partial("~/Views/ForumTopic/_Poll.cshtml", Model.Poll)
 <hr />
 @Html.Partial("~/Views/Table/_Pager.cshtml", Model.Posts)
 
@@ -26,8 +27,8 @@
 						<img src="@post.PosterAvatar" />
 						<br />
 						<small>
-							Joined: @post.PosterJoined.ToShortDateString()<br/>
-							Posts: @post.PosterPostCount<br/>
+							Joined: @post.PosterJoined.ToShortDateString()<br />
+							Posts: @post.PosterPostCount<br />
 							Location: @post.PosterLocation
 						</small>
 					</div>
@@ -52,10 +53,10 @@
 					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterId">Profile</a>
 					<a class="btn btn-secondary btn-sm" condition="User.Identity.IsAuthenticated" asp-controller="Messages" asp-action="Create" asp-route-toUser="@post.PosterName">PM</a>
 					<div class="pull-right">
-					@foreach(var award in post.Awards)
-					{
-						<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{award.ShortName}_{award.Year.ToString().PadLeft(2, '0')}.png")" title="@award.Description" alt="@award.Description" />
-					}
+						@foreach (var award in post.Awards)
+						{
+							<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{award.ShortName}_{award.Year.ToString().PadLeft(2, '0')}.png")" title="@award.Description" alt="@award.Description" />
+						}
 					</div>
 				</div>
 			</div>

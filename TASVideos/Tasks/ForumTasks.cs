@@ -88,7 +88,10 @@ namespace TASVideos.Tasks
 				.Select(t => new ForumTopicModel
 				{
 					Id = t.Id,
-					Title = t.Title
+					Title = t.Title,
+					Poll = t.PollId.HasValue
+						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll.Question }
+						: null
 				})
 				.SingleOrDefaultAsync(t => t.Id == paging.Id);
 
@@ -124,6 +127,19 @@ namespace TASVideos.Tasks
 			foreach (var post in model.Posts)
 			{
 				post.Awards = await _awardTasks.GetAllAwardsForUser(post.PosterId);
+			}
+
+			if (model.Poll != null)
+			{
+				model.Poll.Options = await _db.ForumPollOptions
+					.Where(o => o.PollId == model.Poll.PollId)
+					.Select(o => new ForumTopicModel.PollModel.PollOptionModel
+					{
+						Text = o.Text,
+						Ordinal = o.Ordinal,
+						Voters = o.Votes.Select(v => v.UserId).ToList()
+					})
+					.ToListAsync();
 			}
 
 			return model;
@@ -252,6 +268,35 @@ namespace TASVideos.Tasks
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
+		}
+
+		/// <summary>
+		/// Adds a vote to the given Poll
+		/// </summary>
+		/// <returns>Returns the topic id of the poll, if the poll is found</returns>
+		public async Task<int?> Vote(User user, int pollId, int ordinal, string ipAddress)
+		{
+			var pollOption = await _db.ForumPollOptions
+				.Include(o => o.Poll)
+				.Include(o => o.Votes)
+				.SingleOrDefaultAsync(o => o.PollId == pollId && o.Ordinal == ordinal);
+
+			if (pollOption == null)
+			{
+				return null;
+			}
+
+			if (pollOption.Votes.All(v => v.UserId != user.Id))
+			{
+				pollOption.Votes.Add(new ForumPollOptionVote
+				{
+					User = user,
+					IpAddress = ipAddress
+				});
+				await _db.SaveChangesAsync();
+			}
+
+			return pollOption.Poll.TopicId;
 		}
 	}
 }
