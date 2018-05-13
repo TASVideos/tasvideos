@@ -86,5 +86,20 @@ namespace TASVideos.Controllers
 
 			return new ContentResult { Content = renderedText };
 		}
+
+		[Authorize]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Vote(int pollId, int ordinal)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var topicId = await _forumTasks.Vote(user, pollId, ordinal, IpAddress.ToString());
+
+			if (topicId == null)
+			{
+				return BadRequest();
+			}
+
+			return RedirectToAction(nameof(Index), new { Id = topicId });
+		}
 	}
 }

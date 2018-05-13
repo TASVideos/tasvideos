@@ -68,8 +68,9 @@ namespace TASVideos.Models
 	{
 		public int Id { get; set; }
 		public string Title { get; set; }
-		
+
 		public PageOf<ForumPostEntry> Posts { get; set; }
+		public PollModel Poll { get; set; }
 
 		public class ForumPostEntry
 		{
@@ -94,6 +95,21 @@ namespace TASVideos.Models
 
 			[Sortable]
 			public DateTime CreateTimestamp { get; set; }
+		}
+
+		public class PollModel
+		{
+			public int PollId { get; set; }
+			public string Question { get; set; }
+
+			public IEnumerable<PollOptionModel> Options { get; set; } = new List<PollOptionModel>();
+
+			public class PollOptionModel
+			{
+				public string Text { get; set; }
+				public int Ordinal { get; set; }
+				public ICollection<int> Voters { get; set; } = new List<int>();
+			}
 		}
 	}
 
