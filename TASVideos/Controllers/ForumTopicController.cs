@@ -41,6 +41,11 @@ namespace TASVideos.Controllers
 					post.RenderedSignature = RenderPost(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
 				}
 
+				if (model.Poll != null)
+				{
+					model.Poll.Question = RenderPost(model.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
+				}
+
 				return View(model);
 			}
 
