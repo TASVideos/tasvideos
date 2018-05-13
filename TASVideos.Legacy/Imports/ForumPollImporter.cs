@@ -33,7 +33,8 @@ namespace TASVideos.Legacy.Imports
 					CloseDate = v.VoteLength == 0
 						? (DateTime?)null
 						: ImportHelper.UnixTimeStampToDateTime(v.VoteStart + v.VoteLength)
-				});
+				})
+				.ToList();
 
 			var pollColumns = new[]
 			{
