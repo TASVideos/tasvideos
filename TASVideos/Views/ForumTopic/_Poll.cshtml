@@ -3,6 +3,7 @@
 @{
 	// TODO: ajax vote submit
 	// TODO: make work if more than one poll on the page (not that we intend to do so)
+	// TODO: lurker vote prevent
 	int totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
 
 	bool canVote = false;
@@ -15,8 +16,6 @@
 
 <div class="alert alert-info text-center" role="alert">
 	@Html.Raw(Model.Question)
-	<br />
-	<br />
 	<form asp-action="Vote">
 		<input type="hidden" asp-for="@Model.PollId" />
 		@foreach (var option in Model.Options.OrderBy(o => o.Ordinal))
@@ -34,7 +33,7 @@
 		}
 		<script condition="canVote">
 			(function() {
-				var options = document.querySelectorAll('[name="ordinal"]').toArray().forEach(function(elem) {
+				document.querySelectorAll('[name="ordinal"]').toArray().forEach(function(elem) {
 					elem.addEventListener('change',
 						function() {
 							document.getElementById('vote-btn').removeAttribute('hidden');
