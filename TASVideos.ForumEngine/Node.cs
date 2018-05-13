@@ -276,11 +276,14 @@ namespace TASVideos.ForumEngine
 				case "list":
 					WriteSimpleTag(w, Options == "1" ? "ol" : "ul");
 					break;
-				// these three are only used by converted HTML posts
+				// these four are only used by converted HTML posts
 				case "div":
 				case "p":
 				case "span":
 					WriteSimpleTag(w, Name);
+					break;
+				case "br":
+					w.Write("<br>");
 					break;
 
 				default:
