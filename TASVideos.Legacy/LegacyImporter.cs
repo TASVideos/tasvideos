@@ -48,6 +48,8 @@ namespace TASVideos.Legacy
 			Run("Publication Ratings", () => PublicationRatingImporter.Import(context, legacySiteContext));
 			Run("Publication Flags", () => PublicationFlagImporter.Import(context, legacySiteContext));
 
+			Run("User files", () => UserFileImporter.Import(context, legacySiteContext));
+
 			var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
 			stopwatch.Stop();
 			Console.WriteLine($"Import finished. Total time: {elapsedMilliseconds / 1000.0} seconds");
