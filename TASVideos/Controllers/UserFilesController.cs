@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TASVideos.Data.Entity;
@@ -26,6 +27,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		[Authorize]
 		public async Task<IActionResult> My()
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -36,6 +38,23 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Info(long id)
 		{
 			var model = await _userFileTasks.GetInfo(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			if (model.Hidden)
+			{
+				var user = await _userManager.GetUserAsync(User);
+
+				if (user == null || model.Author != user.UserName)
+				{
+					return NotFound();
+				}
+			}
+
+			await _userFileTasks.IncrementViewCount(id);
 			return View(model);
 		}
 	}

@@ -16,7 +16,9 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			var userMovies = await _userFileTasks.GetLatest(5);
+			var count = ParamHelper.GetInt(pp, "limit").GetValueOrDefault(5);
+			var userMovies = await _userFileTasks.GetLatest(count);
+			var tier = ParamHelper.GetValueFor(pp, "tier");
 			return View(userMovies);
 		}
 	}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -22,6 +23,7 @@ namespace TASVideos.Tasks
 		{
 			var query = _db.UserFiles
 				.Include(userFile => userFile.Author)
+				.Where(userFile => !userFile.Hidden)
 				.OrderByDescending(userFile => userFile.UploadTimestamp)
 				.Take(count);
 
@@ -54,6 +56,9 @@ namespace TASVideos.Tasks
 			};
 		}
 
+		/// <summary>
+		/// Returns the info for the user file with the given id, or null if no such file was found.
+		/// </summary>
 		public async Task<UserFileViewModel> GetInfo(long id)
 		{
 			var file = await _db.UserFiles
@@ -61,7 +66,23 @@ namespace TASVideos.Tasks
 				.Where(userFile => userFile.Id == id)
 				.SingleOrDefaultAsync();
 
-			return ToViewModel(file);
+			return file == null ? null : ToViewModel(file);
+		}
+
+		public async Task IncrementViewCount(long id)
+		{
+			// TODO: Perhaps execute SQL instead?
+			var file = await _db.UserFiles.SingleOrDefaultAsync(userFile => userFile.Id == id);
+			file.Views++;
+			await _db.SaveChangesAsync();
+		}
+
+		public async Task IncrementDownloadCount(long id)
+		{
+			// TODO: Perhaps execute SQL instead?
+			var file = await _db.UserFiles.SingleOrDefaultAsync(userFile => userFile.Id == id);
+			file.Downloads++;
+			await _db.SaveChangesAsync();
 		}
 
 		public async Task<UserFileIndexViewModel> GetIndex()
@@ -82,6 +103,8 @@ namespace TASVideos.Tasks
 			model.Title = file.Title;
 			model.Uploaded = file.UploadTimestamp;
 			model.Views = file.Views;
+			model.Hidden = file.Hidden;
+			model.FileName = file.FileName;
 
 			if (model is UserMovieViewModel movie)
 			{
