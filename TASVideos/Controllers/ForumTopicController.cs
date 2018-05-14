@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
+using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -105,6 +106,21 @@ namespace TASVideos.Controllers
 			}
 
 			return RedirectToAction(nameof(Index), new { Id = topicId });
+		}
+
+		[RequirePermission(PermissionTo.SeePollResults)]
+		public async Task<IActionResult> ViewPollResults(int id)
+		{
+			var model = await _forumTasks.GetPollResults(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			model.Question = RenderPost(model.Question, true, false); // TODO: flags
+
+			return View(model);
 		}
 	}
 }

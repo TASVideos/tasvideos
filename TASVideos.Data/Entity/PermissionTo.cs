@@ -133,6 +133,16 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Edit recommendation flag")]
 		[Group("MovieAdministration")]
 		[Description("The ability to edit a movie's recomended flag, which flags the movie as recommended to new comers")]
-		EditRecommendation = 25
+		EditRecommendation = 25,
+
+		[Display(Name = "Edit Forum Posts")]
+		[Group("ForumModeration")]
+		[Description("The ability to edit post created by another user.")]
+		EditForumPosts = 26,
+
+		[Display(Name = "See Poll Results")]
+		[Group("ForumAdministration")]
+		[Description("The ability to see which users voted on which poll option")]
+		SeePollResults = 27
 	}
 }

@@ -298,5 +298,43 @@ namespace TASVideos.Tasks
 
 			return pollOption.Poll.TopicId;
 		}
+
+		/// <summary>
+		/// Results the vote results of a given <see cref="ForumPoll"/> including
+		/// the voters and which options they voted for
+		/// </summary>
+		public async Task<PollResultModel> GetPollResults(int pollId)
+		{
+			var poll = await _db.ForumPolls
+				.Include(p => p.Topic)
+				.Include(p => p.PollOptions)
+				.ThenInclude(po => po.Votes)
+				.ThenInclude(v => v.User)
+				.SingleOrDefaultAsync(p => p.Id == pollId);
+
+			if (poll == null)
+			{
+				return null;
+			}
+
+			return new PollResultModel
+			{
+				TopicTitle = poll.Topic.Title,
+				TopicId = poll.TopicId,
+				PollId = pollId,
+				Question = poll.Question,
+				Votes = poll.PollOptions
+					.SelectMany(p => p.Votes)
+					.Select(v => new PollResultModel.VoteResult
+					{
+						UserId = v.UserId,
+						UserName = v.User.UserName,
+						Ordinal = v.PollOption.Ordinal,
+						OptionText = v.PollOption.Text,
+						CreateTimestamp = v.CreateTimestamp,
+						IpAddress = v.IpAddress
+					})
+			};
+		}
 	}
 }
