@@ -15,33 +15,34 @@
 }
 
 <div class="alert alert-info text-center" role="alert">
-	@Html.Raw(Model.Question)
-	<form asp-action="Vote">
-		<input type="hidden" asp-for="@Model.PollId" />
-		@foreach (var option in Model.Options.OrderBy(o => o.Ordinal))
-		{
-			int percent = 0;
-			if (totalVotes > 0)
-			{
-				percent = (int)(option.Voters.Count / (double)totalVotes * 100);
-			}
+    <a condition="ViewData.UserHasPermission(PermissionTo.SeePollResults) && totalVotes > 0" asp-action="ViewPollResults" asp-route-id="@Model.PollId" class="btn btn-info pull-right">See Votes</a>
+    @Html.Raw(Model.Question)
+    <form asp-action="Vote">
+        <input type="hidden" asp-for="@Model.PollId"/>
+        @foreach (var option in Model.Options.OrderBy(o => o.Ordinal))
+        {
+            int percent = 0;
+            if (totalVotes > 0)
+            {
+                percent = (int)(option.Voters.Count / (double)totalVotes * 100);
+            }
 
-			<div>
-				<span condition="canVote"><input type="radio" name="ordinal" value="@option.Ordinal"/></span>
-				@option.Text (@option.Voters.Count @(percent)%)
-			</div>
-		}
-		<script condition="canVote">
-			(function() {
-				document.querySelectorAll('[name="ordinal"]').toArray().forEach(function(elem) {
-					elem.addEventListener('change',
-						function() {
-							document.getElementById('vote-btn').removeAttribute('hidden');
-						});
-				});
-			})();
-		</script>
-		<button condition="canVote" hidden="hidden" type="submit" class="btn btn-sm btn-success" id="vote-btn">Vote!</button>
-	</form>
+            <div>
+                <span condition="canVote"><input type="radio" name="ordinal" value="@option.Ordinal"/></span>
+                @option.Text (@option.Voters.Count @(percent)%)
+            </div>
+        }
+        <script condition="canVote">
+            (function() {
+                document.querySelectorAll('[name="ordinal"]').toArray().forEach(function(elem) {
+                    elem.addEventListener('change',
+                        function() {
+                            document.getElementById('vote-btn').removeAttribute('hidden');
+                        });
+                });
+            })();
+        </script>
+        <button condition="canVote" hidden="hidden" type="submit" class="btn btn-sm btn-success" id="vote-btn">Vote!</button>
+    </form>
 </div>
 
