@@ -27,6 +27,8 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<MovieClass> MovieClass { get; set; }
 		public DbSet<MovieRating> MovieRating { get; set; }
 		public DbSet<MovieFlag> MovieFlags { get; set; }
+		public DbSet<UserFile> UserFiles { get; set; }
+		public DbSet<UserFileComment> UserFileComments { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -73,6 +75,8 @@ namespace TASVideos.Legacy.Data.Site
 				entity.HasKey(e => new { e.MovieId, e.FlagId });
 				entity.ToTable("movie_flag");
 			});
+			modelBuilder.Entity<UserFile>().ToTable("user_files");
+			modelBuilder.Entity<UserFileComment>().ToTable("user_files_comments");
 		}
 	}
 }
