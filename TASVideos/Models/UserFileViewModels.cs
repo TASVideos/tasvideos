@@ -41,6 +41,11 @@ namespace TASVideos.Models
 		public int Views { get; set; }
 
 		public int Downloads { get; set; }
+
+		public bool Hidden { get; set; }
+
+		public string FileName { get; set; }
+		public int FileSize { get; internal set; }
 	}
 
 	public class UserMovieViewModel : UserFileViewModel
