@@ -12,12 +12,12 @@
 		<th>@Html.DisplayNameFor(m => m.First().Roles)</th>
 		<th>@Html.DisplayNameFor(m => m.First().Description)</th>
 	</tr>
-	@foreach (var entry in Model)
+	@foreach (var entry in Model.OrderBy(m => m.Id))
 	{
 		<tr>
-			<td>@entry.Name</td>
-			<td>@entry.Group</td>
-			<td>@string.Join(",", entry.Roles)</td>
+			<td nowrap>@entry.Name</td>
+			<td nowrap>@entry.Group</td>
+			<td nowrap>@Html.Raw(string.Join(",<br>", entry.Roles.OrderBy(r => r)))</td>
 			<td>@entry.Description</td>
 		</tr>
 	}
