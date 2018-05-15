@@ -10,7 +10,7 @@ Want to create it?
 	}
 	else if (!canEdit)
 	{
-		<li>You do not currently have permissions to create this page. If you are not an editor, become an <a asp-action="Index" asp-controller="Roles">editor!</a></li>
+		<li>You do not currently have permissions to create this page. If you are not an editor, become an <a asp-action="Index" asp-controller="Roles" asp-route-role="Editor">editor!</a></li>
 	}
 
 	@if (User.Identity.IsAuthenticated && canEdit)

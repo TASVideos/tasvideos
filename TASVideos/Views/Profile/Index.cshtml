@@ -54,12 +54,12 @@
 {
 	<hr />
 	<h4>Roles</h4>
-	<span>Your account has the following <a asp-controller="Roles">Roles</a>:</span>
+	<span>Your account has the following <a asp-controller="Roles" asp-action="List">Roles</a>:</span>
 	foreach (var role in Model.Roles)
 	{
 		<br />
 		<br />
-		<label>@role.Name</label>
+		<label><a asp-controller="Roles" asp-action="Index" asp-route-role="@role.Name">@role.Name</a></label>
 		<br />
 		@role.Description
 	}
