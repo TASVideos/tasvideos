@@ -42,6 +42,9 @@ namespace TASVideos.Tasks
 			};
 		}
 
+		/// <summary>
+		/// Returns the info for the files uploaded by the given user
+		/// </summary>
 		public async Task<UserFileUserIndexViewModel> GetUserIndex(User user)
 		{
 			var query = _db.UserFiles
@@ -88,6 +91,26 @@ namespace TASVideos.Tasks
 		public async Task<UserFileIndexViewModel> GetIndex()
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Returns the contents of the user file with the given id, or null if no such file was
+		/// found.
+		/// </summary>
+		public async Task<UserFileDataViewModel> GetContents(long id)
+		{
+			var file = await _db.UserFiles
+				.Where(userFile => userFile.Id == id)
+				.Select(userFile => new UserFileDataViewModel
+				{
+					AuthorId = userFile.AuthorId,
+					Content = userFile.Content,
+					FileName = userFile.FileName,
+					Hidden = userFile.Hidden,
+				})
+				.SingleOrDefaultAsync();
+
+			return file;
 		}
 
 		private static UserFileViewModel ToViewModel(UserFile file)

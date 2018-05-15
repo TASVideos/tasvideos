@@ -66,4 +66,15 @@ namespace TASVideos.Models
 
 		public IEnumerable<UserFileViewModel> Files { get; set; }
 	}
+
+	public class UserFileDataViewModel
+	{
+		public byte[] Content { get; set; }
+
+		public string FileName { get; set; }
+
+		public bool Hidden { get; set; }
+
+		public int AuthorId { get; set; }
+	}
 }
