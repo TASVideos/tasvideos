@@ -72,8 +72,6 @@
 })();
 
 // Helper "extension methods"
-if (typeof NodeList.toArray !== 'function') {
-	NodeList.prototype.toArray = function () {
-		return Array.prototype.slice.call(this);
-	}
+NodeList.prototype.toArray = function () {
+	return Array.prototype.slice.call(this);
 }
