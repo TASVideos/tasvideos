@@ -7,7 +7,11 @@
 	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumPosts)" asp-controller="ForumPost" asp-action="Create" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
 </div>
 <hr />
-@Html.Partial("~/Views/ForumTopic/_Poll.cshtml", Model.Poll)
+@if (Model.Poll != null)
+{
+	@Html.Partial("~/Views/ForumTopic/_Poll.cshtml", Model.Poll)
+}
+
 <hr />
 @Html.Partial("~/Views/Table/_Pager.cshtml", Model.Posts)
 
