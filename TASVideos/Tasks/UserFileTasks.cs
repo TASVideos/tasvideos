@@ -49,6 +49,8 @@ namespace TASVideos.Tasks
 		{
 			var query = _db.UserFiles
 				.Include(userFile => userFile.Author)
+				.Include(userFile => userFile.Game)
+				.Include(userFile => userFile.System)
 				.Where(userFile => userFile.Author.Id == user.Id);
 
 			var result = await query.ToListAsync();
@@ -66,6 +68,8 @@ namespace TASVideos.Tasks
 		{
 			var file = await _db.UserFiles
 				.Include(userFile => userFile.Author)
+				.Include(userFile => userFile.Game)
+				.Include(userFile => userFile.System)
 				.Where(userFile => userFile.Id == id)
 				.SingleOrDefaultAsync();
 
@@ -106,6 +110,7 @@ namespace TASVideos.Tasks
 					AuthorId = userFile.AuthorId,
 					Content = userFile.Content,
 					FileName = userFile.FileName,
+					FileType = userFile.Type,
 					Hidden = userFile.Hidden,
 				})
 				.SingleOrDefaultAsync();
@@ -128,6 +133,10 @@ namespace TASVideos.Tasks
 			model.Views = file.Views;
 			model.Hidden = file.Hidden;
 			model.FileName = file.FileName;
+			model.FileSize = file.LogicalLength;
+			model.GameId = file.Game?.Id;
+			model.GameName = file.Game?.DisplayName;
+			model.System = file.System?.DisplayName;
 
 			if (model is UserMovieViewModel movie)
 			{

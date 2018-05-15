@@ -45,7 +45,14 @@ namespace TASVideos.Models
 		public bool Hidden { get; set; }
 
 		public string FileName { get; set; }
-		public int FileSize { get; internal set; }
+
+		public int FileSize { get; set; }
+
+		public int? GameId { get; set; }
+
+		public string GameName { get; set; }
+
+		public string System { get; set; }
 	}
 
 	public class UserMovieViewModel : UserFileViewModel
@@ -70,6 +77,8 @@ namespace TASVideos.Models
 		public byte[] Content { get; set; }
 
 		public string FileName { get; set; }
+
+		public string FileType { get; set; }
 
 		public bool Hidden { get; set; }
 
