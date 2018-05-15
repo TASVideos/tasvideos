@@ -18,6 +18,26 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Return the <see cref="Role" /> record with the given <see cref="name"/> for the purpose of display
+		/// </summary>
+		public async Task<RoleDisplayViewModel> GetRoleForDisplay(string name)
+		{
+			return await _db.Roles
+				.Select(r => new RoleDisplayViewModel
+				{
+					Id = r.Id,
+					Name = r.Name,
+					Description = r.Description,
+					Permissions = r.RolePermission
+						.Select(rp => rp.PermissionId).ToList(),
+					Links = r.RoleLinks
+						.Select(rl => rl.Link).ToList()
+				})
+				.Where(r => r.Name == name)
+				.SingleOrDefaultAsync();
+		}
+
+		/// <summary>
 		/// Returns all of the <see cref="Role" /> records for the purpose of display
 		/// </summary>
 		public async Task<IEnumerable<RoleDisplayViewModel>> GetAllRolesForDisplay()
