@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
+using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
-    public class ForumPostController : BaseController
+	public class ForumPostController : BaseController
 	{
 		private readonly ForumTasks _forumTasks;
 		private readonly UserManager<User> _userManager;
@@ -28,8 +29,8 @@ namespace TASVideos.Controllers
 			_userManager = userManager;
 		}
 
-		// TODO: permission, auto-added on register?
 		[Authorize]
+		[RequirePermission(PermissionTo.CreateForumPosts)]
 		public async Task<IActionResult> Create(int topicId, int? quoteId = null)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -43,9 +44,8 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		// TODO: permission
-		[Authorize]
-		[HttpPost]
+		[RequirePermission(PermissionTo.CreateForumPosts)]
+		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(ForumPostModel model)
 		{
 			if (!ModelState.IsValid)
