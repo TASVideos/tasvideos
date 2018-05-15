@@ -143,6 +143,21 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "See Poll Results")]
 		[Group("ForumAdministration")]
 		[Description("The ability to see which users voted on which poll option")]
-		SeePollResults = 27
+		SeePollResults = 27,
+
+		[Display(Name = "Create Forum Posts")]
+		[Group("User")]
+		[Description("The ability to post on the forums. By default, all registered users have this permission, unless revoked.")]
+		CreateForumPosts = 28,
+
+		[Display(Name = "Create Forum Topics")]
+		[Group("User")]
+		[Description("The ability to create new topics on the forums. Experienced users have the ability to do this, unless revoked")]
+		CreateForumTopics = 29,
+
+		[Display(Name = "Vote In Polls")]
+		[Group("User")]
+		[Description("The ability to participate in forum polls. Experienced users have the ability ot do this, unless revoked.")]
+		VoteInPolls = 30
 	}
 }

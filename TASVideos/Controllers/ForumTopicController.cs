@@ -53,8 +53,9 @@ namespace TASVideos.Controllers
 			return NotFound();
 		}
 
-		// TODO: permissions, maybe a permission that is auto-added based on post count?
+		// TODO: auto-add topic permission based on post count, also ability to vote
 		[Authorize]
+		[RequirePermission(PermissionTo.CreateForumTopics)]
 		public async Task<IActionResult> Create(int forumId)
 		{
 			var model = await _forumTasks.GetTopicCreateData(forumId);
@@ -67,8 +68,8 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[Authorize]
 		[HttpPost, ValidateAntiForgeryToken]
+		[RequirePermission(PermissionTo.CreateForumTopics)]
 		public async Task<IActionResult> Create(TopicCreatePostModel model)
 		{
 			if (!ModelState.IsValid)
@@ -82,10 +83,10 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(Index), new { Id = topicId });
 		}
 
-		// TODO: permission
-		[Authorize]
+		// TODO: move this to ForumPostController
 		[HttpPost]
-		public IActionResult GeneratePreview(string post)
+		[RequirePermission(PermissionTo.CreateForumPosts)]
+		public IActionResult GeneratePreview()
 		{
 			var text = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
 			var renderedText = RenderPost(text, true, false); // TODO: pass in bbcode flag
@@ -93,8 +94,8 @@ namespace TASVideos.Controllers
 			return new ContentResult { Content = renderedText };
 		}
 
-		[Authorize]
 		[HttpPost, ValidateAntiForgeryToken]
+		[RequirePermission(PermissionTo.VoteInPolls)]
 		public async Task<IActionResult> Vote(int pollId, int ordinal)
 		{
 			var user = await _userManager.GetUserAsync(User);

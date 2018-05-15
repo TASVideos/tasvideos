@@ -37,6 +37,8 @@ namespace TASVideos.Data
 			context.Roles.Add(RoleSeedData.AdminRole);
 			context.Roles.Add(RoleSeedData.SubmitMovies);
 			context.Roles.Add(RoleSeedData.EditHomePage);
+			context.Roles.Add(RoleSeedData.ForumUser);
+			context.Roles.Add(RoleSeedData.ExperiencedForumUser);
 			context.SaveChanges();
 
 			context.Roles.AddRange(RoleSeedData.Roles);

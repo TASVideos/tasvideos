@@ -4,7 +4,7 @@
 }
 <h4>@Model.Title</h4>
 <div>
-	<a asp-controller="ForumPost" asp-action="Create" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
+	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumPosts)" asp-controller="ForumPost" asp-action="Create" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
 </div>
 <hr />
 @Html.Partial("~/Views/ForumTopic/_Poll.cshtml", Model.Poll)
