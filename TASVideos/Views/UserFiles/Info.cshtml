@@ -1,63 +1,7 @@
 ﻿@model UserFileViewModel
 
 @{
-	ViewData["Title"] = "User movie #" + Model.Id.ToString();
+	ViewData["Title"] = "User movie #" + Model.Id;
 }
 
-@functions {
-	string FormatTime(TimeSpan timeSpan)
-	{
-		if (timeSpan.TotalDays >= 1)
-		{
-			return timeSpan.ToString(@"d\:hh\:mm\:ss\.ff");
-		}
-		else if (timeSpan.TotalHours >= 1)
-		{
-			return timeSpan.ToString(@"h\:mm\:ss\.ff");
-		}
-		else
-		{
-			return timeSpan.ToString(@"mm\:ss\.ff");
-		}
-	}
-}
-
-<div class="card">
-	<div class="card-header">
-		<h4>@ViewData["Title"]</h4>
-	</div>
-
-	<div class="card-body">
-		<h5 class="card-title">
-			@Model.Title
-		</h5>
-
-
-		<div class="card-text">
-			<p>@Model.FileName</p>
-			<p>Uploaded @Model.Uploaded.ToString("G") by @Model.Author</p>
-
-			@if (Model is UserMovieViewModel movie)
-			{
-			<p>In @FormatTime(movie.Length) (@movie.Frames frames), @movie.Rerecords rerecords</p>
-			}
-
-			<p>
-				@Model.Views view@(Model.Views == 1 ? "" : "s"),
-				@Model.Downloads download@(Model.Downloads == 1 ? "" : "s")
-			</p>
-		</div>
-
-		<hr />
-
-		<div class="card-text">
-			<p>@Model.Description</p>
-		</div>
-
-		<hr />
-
-		<div class="card-text">
-			<a asp-action="Download" asp-route-id="@Model.Id">Download</a>
-		</div>
-	</div>
-</div>
+@await Html.PartialAsync("_FileInfo", Model)
