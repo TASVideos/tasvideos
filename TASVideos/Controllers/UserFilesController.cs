@@ -82,11 +82,7 @@ namespace TASVideos.Controllers
 
 			await _userFileTasks.IncrementDownloadCount(id);
 
-			var fileType = new FileExtensionContentTypeProvider().TryGetContentType(model.FileName, out var contentType)
-				? contentType
-				: "application/binary";
-
-			return new FileContentResult(model.Content, fileType)
+			return new FileContentResult(model.Content, "application/x-" + model.FileType)
 			{
 				FileDownloadName = model.FileName
 			};
