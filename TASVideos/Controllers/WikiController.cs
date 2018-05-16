@@ -38,7 +38,7 @@ namespace TASVideos.Controllers
 			url = url.Trim('/').Replace(".html", "");
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
-				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.TryConvertToValidPageName(url) });
+				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = Util.TryConvertToValidPageName(url) });
 			}
 
 			var existingPage = await _wikiTasks.GetPage(url, revision);

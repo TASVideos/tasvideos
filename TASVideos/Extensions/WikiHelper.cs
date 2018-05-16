@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using TASVideos.Data.Entity;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.Extensions
 {
@@ -73,23 +74,6 @@ namespace TASVideos.Extensions
 				&& IsProperCased(pageName);
 		}
 
-		public static string TryConvertToValidPageName(string pageName)
-		{
-			if (string.IsNullOrWhiteSpace(pageName))
-			{
-				return "";
-			}
-
-			pageName = Regex.Replace(
-				pageName
-					.Replace(".html", "")
-					.Trim('/'),
-				@"\s",
-				"");
-
-			return ConvertProperCase(pageName);
-		}
-
 		// Does not check for null that should have already been done
 		// Slashes must have already been trimmed or it will break
 		private static bool IsProperCased(string pageName)
@@ -99,7 +83,7 @@ namespace TASVideos.Extensions
 				return false;
 			}
 
-			var slashes = AllIndexesOf(pageName, "/");
+			var slashes = Util.AllIndexesOf(pageName, "/");
 			foreach (var slash in slashes)
 			{
 				if (!char.IsUpper(pageName[slash + 1]))
@@ -109,31 +93,6 @@ namespace TASVideos.Extensions
 			}
 
 			return true;
-		}
-
-		private static string ConvertProperCase(string pageName)
-		{
-			pageName = char.ToUpper(pageName[0]) + pageName.Substring(1);
-
-			var slashes = AllIndexesOf(pageName, "/");
-			foreach (var slash in slashes)
-			{
-				pageName = pageName.Substring(0, slash + 1)
-					+ char.ToUpper(pageName[slash + 1])
-					+ pageName.Substring(slash + 2);
-			}
-
-			return pageName;
-		}
-
-		private static IEnumerable<int> AllIndexesOf(string str, string searchstring)
-		{
-			int minIndex = str.IndexOf(searchstring);
-			while (minIndex != -1)
-			{
-				yield return minIndex;
-				minIndex = str.IndexOf(searchstring, minIndex + searchstring.Length);
-			}
 		}
 	}
 }

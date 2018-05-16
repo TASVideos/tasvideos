@@ -4,6 +4,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Extensions;
 using TASVideos.Tasks;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
@@ -36,7 +37,7 @@ namespace TASVideos.ViewComponents
 				if (pp.StartsWith("user:"))
 				{
 					model.DisplayText = model.DisplayText.Replace("user:", "");
-					model.Href = WikiHelper.TryConvertToValidPageName(model.Href.Replace("user:", "HomePages/"));
+					model.Href = Util.RenderUserModuleLink(model.Href);
 				}
 				else
 				{
