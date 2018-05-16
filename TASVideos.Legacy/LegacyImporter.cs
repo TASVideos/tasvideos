@@ -35,12 +35,12 @@ namespace TASVideos.Legacy
 			Run("Users", () => UserImporter.Import(context, legacySiteContext, legacyForumContext));
 			Run("Award", () => AwardImporter.Import(context, legacySiteContext));
 
-			//Run("Forum Categories", () => ForumCategoriesImporter.Import(context, legacyForumContext));
-			//Run("Forums", () => ForumImporter.Import(context, legacyForumContext));
-			//Run("Forum Topics", () => ForumTopicImporter.Import(context, legacyForumContext));
-			//Run("Forum Posts", () => ForumPostsImporter.Import(context, legacyForumContext));
-			//Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(context, legacyForumContext));
-			//Run("Forum Polls Importer", () => ForumPollImporter.Import(context, legacyForumContext));
+			Run("Forum Categories", () => ForumCategoriesImporter.Import(context, legacyForumContext));
+			Run("Forums", () => ForumImporter.Import(context, legacyForumContext));
+			Run("Forum Topics", () => ForumTopicImporter.Import(context, legacyForumContext));
+			Run("Forum Posts", () => ForumPostsImporter.Import(context, legacyForumContext));
+			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(context, legacyForumContext));
+			Run("Forum Polls Importer", () => ForumPollImporter.Import(context, legacyForumContext));
 
 			Run("Wiki", () => WikiImporter.Import(context, legacySiteContext));
 			Run("Submissions", () => SubmissionImporter.Import(context, legacySiteContext));
