@@ -27,11 +27,21 @@ namespace TASVideos.Tasks
 				{
 					Id = r.Id,
 					Name = r.Name,
+					IsDefault = r.IsDefault,
 					Description = r.Description,
 					Permissions = r.RolePermission
-						.Select(rp => rp.PermissionId).ToList(),
+						.Select(rp => rp.PermissionId)
+						.ToList(),
 					Links = r.RoleLinks
-						.Select(rl => rl.Link).ToList()
+						.Select(rl => rl.Link)
+						.ToList(),
+					Users = r.UserRole
+						.Select(ur => new RoleDisplayViewModel.UserWithRole
+						{
+							Id = ur.UserId,
+							UserName = ur.User.UserName
+						})
+						.ToList()
 				})
 				.Where(r => r.Name == name)
 				.SingleOrDefaultAsync();
@@ -47,11 +57,21 @@ namespace TASVideos.Tasks
 				{
 					Id = r.Id,
 					Name = r.Name,
+					IsDefault = r.IsDefault,
 					Description = r.Description,
 					Permissions = r.RolePermission
-						.Select(rp => rp.PermissionId).ToList(),
+						.Select(rp => rp.PermissionId)
+						.ToList(),
 					Links = r.RoleLinks
-						.Select(rl => rl.Link).ToList()
+						.Select(rl => rl.Link)
+						.ToList(),
+					Users = r.UserRole
+						.Select(ur => new RoleDisplayViewModel.UserWithRole
+						{
+							Id = ur.UserId,
+							UserName = ur.User.UserName,
+						})
+						.ToList()
 				})
 				.ToListAsync();
 		}
