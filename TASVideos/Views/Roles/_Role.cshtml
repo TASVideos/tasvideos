@@ -1,6 +1,6 @@
 ﻿@model RoleDisplayViewModel
-<div class="card">
-	<div class="card-body p-3">
+<div class="card mb-2">
+	<div class="card-body">
 		<h5 class="card-title">@Model.Name</h5>
 		<row>
 			<div class="col-md-6">
@@ -10,20 +10,33 @@
 				@Model.Description
 			</div>
 			<div class="col-lg-3 col-md-6">
-				<strong>@Html.DisplayNameFor(m => m.Permissions):</strong><br/>
+				<strong>@Html.DisplayNameFor(m => m.Permissions):</strong><br />
 				@foreach (var permission in Model.Permissions)
 				{
 					<div class="ml-md-0 ml-sm-4">@permission</div>
 				}
 			</div>
 			<div condition="@Model.Links.Any()" class="col-lg-3 col-md-12">
-				<strong>@Html.DisplayNameFor(m => m.Links):</strong><br/>
+				<strong>@Html.DisplayNameFor(m => m.Links):</strong><br />
 				@foreach (var link in Model.Links)
 				{
 					<div class="ml-lg-0 ml-sm-4"><a href="/@link">@link</a></div>
-
 				}
 			</div>
 		</row>
+	</div>
+	<div condition="!Model.IsDefault" class="card-footer">
+		<label asp-for="Users" class="form-control-label"></label>
+		<div condition="!Model.Users.Any()">
+			<label class="form-control-label">No users currently have this role.</label>
+		</div>
+		<div condition="Model.Users.Any()">
+			@foreach (var user in Model.Users)
+			{
+			<span class="mr-4 mb-4" style="display: inline-block">
+				<a asp-controller="User" asp-action="Profile" asp-route-id="user.Id">@user.UserName</a>
+			</span>
+			}
+		</div>
 	</div>
 </div>

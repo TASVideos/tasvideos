@@ -10,6 +10,7 @@ namespace TASVideos.Models
 	/// </summary>
 	public class RoleDisplayViewModel
 	{
+		public bool IsDefault { get; set; }
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
@@ -19,6 +20,15 @@ namespace TASVideos.Models
 
 		[Display(Name = "Related Links")]
 		public IEnumerable<string> Links { get; set; } = new List<string>();
+
+		[Display(Name = "Users with this Role")]
+		public IEnumerable<UserWithRole> Users { get; set; } = new List<UserWithRole>();
+
+		public class UserWithRole
+		{
+			public int Id { get; set; }
+			public string UserName { get; set; }
+		}
 	}
 
 	/// <summary>

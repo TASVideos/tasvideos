@@ -14,34 +14,6 @@
 @foreach (var role in Model.OrderBy(m => m.Permissions.Count()))
 {
 	@await Html.PartialAsync("_Role", role)
-	<div class="card">
-		<div class="card-body p-3">
-			<h5 class="card-title">@role.Name</h5>
-			<row>
-				<div class="col-md-6">
-					<div condition="@ViewData.UserHasPermission(PermissionTo.EditRoles)">
-						<a asp-action="AddEdit" asp-route-id="@role.Id" class="btn btn-primary mb-m">Edit</a>
-					</div>
-					@role.Description
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<strong>@Html.DisplayNameFor(m => m.First().Permissions):</strong><br/>
-					@foreach (var permission in role.Permissions)
-					{
-						<div class="ml-md-0 ml-sm-4">@permission</div>
-					}
-				</div>
-				<div condition="@role.Links.Any()" class="col-lg-3 col-md-12">
-					<strong>@Html.DisplayNameFor(m => m.First().Links):</strong><br/>
-					@foreach (var link in role.Links)
-					{
-						<div class="ml-lg-0 ml-sm-4"><a href="/@link">@link</a></div>
-
-					}
-				</div>
-			</row>
-		</div>
-	</div>
 }
 
 <a asp-action="AddEdit" class="mt-2 btn btn-primary">Create New Role</a>
