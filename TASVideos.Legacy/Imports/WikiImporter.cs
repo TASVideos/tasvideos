@@ -20,6 +20,7 @@ namespace TASVideos.Legacy.Imports
 			var siteTexts = legacySiteContext.SiteText
 				.Include(s => s.User)
 				.Where(s => s.PageName != "DeletedPages/Bizhawk/ReleaseHistory") // Not worth preserving history here, revisions were mistakes and revision history is too large
+				.Where(s => s.PageName != "/GameResources/GBx/FZeroGPLegend") // Junk that was fixed
 				.ToList();
 
 			var usernames = context.Users.Select(u => u.UserName).ToList();
