@@ -112,6 +112,13 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
 				markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
 
+				// Fix known links that failed to use the user module
+				markup = markup.Replace("[Bisqwit]", "[user:Bisqwit]");
+				markup = markup.Replace("[Phil]", "[user:Phil]");
+				markup = markup.Replace("[feos]", "[user:feos]");
+				markup = markup.Replace("[adelikat]", "[user:adelikat]");
+				markup = markup.Replace("[Truncated]", "[user:Truncated]");
+
 				pages.Add(new WikiPage
 				{
 					Id = legacyPage.Site.Id,
