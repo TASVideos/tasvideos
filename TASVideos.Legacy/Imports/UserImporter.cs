@@ -38,6 +38,7 @@ namespace TASVideos.Legacy.Imports
 
 			var users = legacyForumContext.Users
 				.Where(u => u.UserName != "Anonymous")
+				.Where(u => u.UserName != "[^_^]") // Nope.
 				.Select(u => new
 				{
 					u.UserId,
