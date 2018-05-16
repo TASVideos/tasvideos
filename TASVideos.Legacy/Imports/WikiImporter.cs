@@ -28,7 +28,7 @@ namespace TASVideos.Legacy.Imports
 			var pages = new List<WikiPage>();
 
 			var siteTextWithUser = (from s in siteTexts
-					join u in usernames on s.PageName.ToLower() equals u.ToLower() into uu
+					join u in usernames on s.PageName.Split("/").First().ToLower() equals u.ToLower() into uu
 					from u in uu.DefaultIfEmpty()
 					select new { Site = s, User = u })
 					.ToList();
