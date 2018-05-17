@@ -36,5 +36,10 @@ namespace TASVideos.Extensions
 		{
 			return await component.InvokeAsync(nameof(RenderWikiPage), new { url = pageName });
 		}
+
+		public static async Task<IHtmlContent> ListParents(this IViewComponentHelper component, WikiPage pageData)
+		{
+			return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
+		}
 	}
 }
