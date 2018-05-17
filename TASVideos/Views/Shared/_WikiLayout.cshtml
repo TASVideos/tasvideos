@@ -6,7 +6,11 @@
 
 @if (pageData.PageName.StartsWith("System/"))
 {
-	@await Component.RenderWiki("System/IsSystemPage")
+	@await Component.RenderWiki("System/IsSystem/Page")
+}
+else if (pageData.PageName.IndexOf('/') > 0)
+{
+	@await Component.ListParents(pageData)
 }
 
 <!-- Eventually we will show available translations here-->
