@@ -65,13 +65,36 @@ namespace TASVideos.Extensions
 
 		public static bool IsValidWikiPageName(string pageName)
 		{
-			return !string.IsNullOrWhiteSpace(pageName)
-				&& !pageName.StartsWith('/')
-				&& !pageName.EndsWith('/')
-				&& Regex.IsMatch(pageName, @"^\S*$")
-				&& char.IsUpper(pageName[0])
-				&& !pageName.EndsWith(".html")
-				&& IsProperCased(pageName);
+			// If the page is a homepage, then don't validate the username portion
+			// However we want to validate any subpages off the user
+			// Ex:
+			// HomePages/My Bad UserName = valid
+			// HomePages/My Bad UserName/My Bad Subpage = invalid
+			string test = pageName;
+			if (IsHomePage(pageName))
+			{
+				test = pageName.Replace("HomePages/", "");
+				var slashIndex = test.IndexOf('/');
+				if (slashIndex == -1)
+				{
+					return true; // Just HomePage/[username] so it is automatically valid
+				}
+
+				test = test.Substring(slashIndex, test.Length - slashIndex);
+			}
+
+			return !string.IsNullOrWhiteSpace(test)
+				&& !test.StartsWith('/')
+				&& !test.EndsWith('/')
+				&& !test.EndsWith(".html")
+				&& Regex.IsMatch(test, @"^\S*$")
+				&& char.IsUpper(test[0])
+				&& IsProperCased(test);
+		}
+
+		private static bool IsHomePage(string pageName)
+		{
+			return pageName.StartsWith("HomePages/");
 		}
 
 		// Does not check for null that should have already been done

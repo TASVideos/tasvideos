@@ -93,6 +93,7 @@ namespace TASVideos.WikiEngine
 
 		private static string ConvertProperCase(string pageName)
 		{
+			pageName = pageName?.Trim('/');
 			pageName = char.ToUpper(pageName[0]) + pageName.Substring(1);
 
 			var slashes = AllIndexesOf(pageName, "/");
