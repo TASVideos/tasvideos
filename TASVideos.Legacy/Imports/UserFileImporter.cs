@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
-
 using Microsoft.EntityFrameworkCore;
-
+using SharpCompress.Compressors.Xz;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
@@ -108,7 +109,7 @@ namespace TASVideos.Legacy.Imports
 				Class = string.Equals(legacyFile.Class, "m", StringComparison.OrdinalIgnoreCase)
 					? UserFileClass.Movie
 					: UserFileClass.Support,
-				Content = legacyFile.Content,
+				Content = Convert(legacyFile.Content),
 				Description = legacyFile.Description,
 				Downloads = legacyFile.Downloads,
 				FileName = legacyFile.Name,
@@ -127,6 +128,41 @@ namespace TASVideos.Legacy.Imports
 				Views = legacyFile.Views,
 				Warnings = legacyFile.Warnings
 			};
+		}
+
+		/// <summary>
+		/// Converts an XZ compressed file to a GZIP compressed file
+		/// </summary>
+		private static byte[] Convert(byte[] content)
+		{
+			if (content == null || content.Length == 0)
+			{
+				return content;
+			}
+
+			try
+			{
+				byte[] result;
+
+				using (var targetStream = new MemoryStream())
+				{
+					using (var gzipStream = new GZipStream(targetStream, CompressionLevel.Optimal))
+					using (var sourceStream = new MemoryStream(content))
+					using (var xzStream = new XZStream(sourceStream))
+					{
+						xzStream.CopyTo(gzipStream);
+					}
+
+					result = targetStream.ToArray();
+				}
+
+				return result;
+			}
+			catch (Exception exception)
+			{
+				Console.WriteLine(exception);
+				return content;
+			}
 		}
 	}
 }

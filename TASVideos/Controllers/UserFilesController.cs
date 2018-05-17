@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.IO.Compression;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -82,7 +84,11 @@ namespace TASVideos.Controllers
 
 			await _userFileTasks.IncrementDownloadCount(id);
 
-			return new FileContentResult(model.Content, "application/x-" + model.FileType)
+			var stream = new GZipStream(
+				new MemoryStream(model.Content),
+				CompressionMode.Decompress);
+
+			return new FileStreamResult(stream, "application/x-" + model.FileType)
 			{
 				FileDownloadName = model.FileName
 			};
