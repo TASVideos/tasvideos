@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -150,6 +151,15 @@ namespace TASVideos.Legacy.Imports
 
 				// Ad properly done user modules but the user page was not the same as the username
 				markup = markup.Replace("[user:Dan]", "[user:Dan_]");
+
+
+				// Mitigate unnecessary ListParent module calls, if they are at the beginning, wipe them.
+				// We can't remove all instances because of pages like Interviews/Phil/GEE2005
+				// Where below the title there is Back To: %%%[module:ListParents]
+				if (markup.StartsWith("[module:listparents]", StringComparison.InvariantCultureIgnoreCase))
+				{
+					markup = Regex.Replace(markup, "[module:listparents]", "", RegexOptions.IgnoreCase);
+				}
 
 				pages.Add(new WikiPage
 				{
