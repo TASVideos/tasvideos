@@ -128,10 +128,28 @@ namespace TASVideos.Legacy.Imports
 
 				// Fix known links that failed to use the user module
 				markup = markup.Replace("[Bisqwit]", "[user:Bisqwit]");
+				markup = markup.Replace("[Nach]", "[user:Nach]");
 				markup = markup.Replace("[Phil]", "[user:Phil]");
 				markup = markup.Replace("[feos]", "[user:feos]");
 				markup = markup.Replace("[adelikat]", "[user:adelikat]");
+				markup = markup.Replace("[Adelikat]", "[user:adelikat]");
 				markup = markup.Replace("[Truncated]", "[user:Truncated]");
+				markup = markup.Replace("[DeHackEd]", "[user:DeHackEd]");
+				markup = markup.Replace("[Walker Boh]", "[user:Walker Boh]");
+				markup = markup.Replace("[Dan_]", "[user:Dan_]");
+				markup = markup.Replace("[Zurreco]", "[user:Zurreco]");
+				markup = markup.Replace("[Nitsuja]", "[user:nitsuja]");
+				markup = markup.Replace("[Baxter]", "[user:Baxter]");
+				markup = markup.Replace("[JXQ]", "[user:JXQ]");
+				markup = markup.Replace("[Randil]", "[user:Randil]");
+				markup = markup.Replace("[Genisto]", "[user:Genisto]");
+				markup = markup.Replace("[BoltR]", "[user:BoltR]");
+				markup = markup.Replace("[Ideamagnate]", "[user:Ideamagnate]");
+				markup = markup.Replace("[FractalFusion]", "[user:FractalFusion]");
+				markup = markup.Replace("[Maza]", "[user:Maza]");
+
+				// Ad properly done user modules but the user page was not the same as the username
+				markup = markup.Replace("[user:Dan]", "[user:Dan_]");
 
 				pages.Add(new WikiPage
 				{
