@@ -427,7 +427,9 @@ namespace TASVideos.Tasks
 					.ToListAsync())
 				.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue)
 				.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue)
-				.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral).HasValue);
+				.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral).HasValue)
+				.Where(wr => wr.Referral != "Subs-List")
+				.Where(wr => wr.Referral != "Movies-");
 		}
 
 		/// <summary>
