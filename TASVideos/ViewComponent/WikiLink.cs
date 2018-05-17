@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
@@ -37,7 +38,7 @@ namespace TASVideos.ViewComponents
 				if (pp.StartsWith("user:"))
 				{
 					model.DisplayText = model.DisplayText.Replace("user:", "");
-					model.Href = Util.RenderUserModuleLink(model.Href);
+					model.Href = WebUtility.UrlEncode(Util.RenderUserModuleLink(model.Href));
 				}
 				else
 				{
