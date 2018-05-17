@@ -23,12 +23,12 @@ namespace TASVideos.Legacy.Imports
 				.Where(s => s.PageName != "/GameResources/GBx/FZeroGPLegend") // Junk that was fixed
 				.ToList();
 
-			var usernames = context.Users.Select(u => u.UserName).ToList();
+			var legUsers = legacySiteContext.Users.Select(u => new { u.Name, u.HomePage }).ToList();
 
 			var pages = new List<WikiPage>();
 
 			var siteTextWithUser = (from s in siteTexts
-					join u in usernames on s.PageName.Split("/").First().ToLower() equals u.ToLower() into uu
+					join u in legUsers on s.PageName.Split("/").First().ToLower() equals u.Name == "TASVideos Grue" ? "tasvideosgrue" : u.HomePage.ToLower() into uu
 					from u in uu.DefaultIfEmpty()
 					select new { Site = s, User = u })
 					.ToList();
@@ -103,7 +103,20 @@ namespace TASVideos.Legacy.Imports
 
 				if (legacyPage.User != null)
 				{
+					// Use the user's name for the pagename instead of the actual page,
+					// We want Homepages to match usernames exactly
+					var slashIndex = pageName.IndexOf("/");
+					if (slashIndex > 0)
+					{
+						pageName = legacyPage.User.Name + pageName.Substring(slashIndex, pageName.Length - slashIndex);
+					}
+					else
+					{
+						pageName = legacyPage.User.Name;
+					}
+
 					pageName = "HomePages/" + pageName;
+
 				}
 
 				markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
