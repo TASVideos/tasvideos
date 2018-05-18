@@ -74,8 +74,8 @@ namespace TASVideos.Extensions
 			if (IsHomePage(pageName))
 			{
 				test = pageName.Replace("HomePages/", "");
-				var slashIndex = test.IndexOf('/');
-				if (slashIndex == -1)
+				var slashIndex = test.IndexOf('/') + 1;
+				if (slashIndex == 0)
 				{
 					return true; // Just HomePage/[username] so it is automatically valid
 				}
