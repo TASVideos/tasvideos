@@ -2,8 +2,8 @@
 @{
 	var pageId = ViewData.UniqueId();
 
-	var parent = Model.FirstOrDefault()?.Split('/').First();
-	var pageGrouping = Model.GroupBy(tkey => tkey.Split('/').Skip(1).FirstOrDefault());
+	var parent = (string)ViewData["Parent"];
+	var pageGrouping = Model.GroupBy(tkey => tkey.Replace(parent + "/", "").Split('/').FirstOrDefault());
 }
 
 <div condition="@Model.Any()" class="card">
@@ -17,7 +17,7 @@
 			@foreach (var pageGroup in pageGrouping.OrderBy(g => g.Key))
 			{
 				<li>
-					<a href="/@pageGroup.Key">@pageGroup.Key.Replace($"{parent}/", "")</a>
+					<a href="/@($"{parent}/{pageGroup.Key}")">@pageGroup.Key.Replace($"{parent}/", "")</a>
 					<ul condition="pageGroup.Count() > 1">
 						@foreach (var subpage in pageGroup.Where(pg => pg != $"{parent}/{pageGroup.Key}").OrderBy(pg => pg))
 						{
