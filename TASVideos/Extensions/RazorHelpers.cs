@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
@@ -40,6 +41,11 @@ namespace TASVideos.Extensions
 		public static async Task<IHtmlContent> ListParents(this IViewComponentHelper component, WikiPage pageData)
 		{
 			return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
+		}
+
+		public static string UniqueId(this ViewDataDictionary viewData)
+		{
+			return "_" + Guid.NewGuid().ToString().Replace("-", "").ToLower();
 		}
 	}
 }

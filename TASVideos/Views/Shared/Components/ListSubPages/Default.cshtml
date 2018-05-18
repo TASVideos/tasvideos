@@ -1,15 +1,20 @@
 ﻿@model IEnumerable<string>
+@{
+	var pageId = ViewData.UniqueId();
+}
 
-<div condition="@(!Model.Any())">
-	<label>No Subpages</label>
-</div>
-
-<div Condition="@Model.Any()">
-	<label>Subpages:</label>
-	<ul>
-		@foreach (var pageName in Model.OrderBy(m => m))
-		{
-			<li><a href="/@pageName">@pageName</a></li>
-		}
-	</ul>
+<div condition="@Model.Any()" class="card">
+	<div class="card-header">
+		<collapsablecontent-header body-id="collapse-content-@pageId">
+			<strong>Subpages for @ViewData["Parent"]</strong>
+		</collapsablecontent-header>
+	</div>
+	<div class="card-body collapse" id="collapse-content-@pageId">
+		<ul>
+			@foreach (var pageName in Model.OrderBy(m => m))
+			{
+				<li><a href="/@pageName">@pageName.Replace("HomePages/", "")</a></li>
+			}
+		</ul>
+	</div>
 </div>
