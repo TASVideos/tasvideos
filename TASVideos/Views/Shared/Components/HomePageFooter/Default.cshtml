@@ -8,11 +8,13 @@ This page is intended to be the personal page for user: @(Model?.UserName ?? ((W
 	<div>
 		The following additional information is available for this user:<br />
 		<ul>
-			<li>Profile TODO</li>
-			<li>@Model.MovieCount Movies</li>
-			<li>@Model.SubmissionCount Submissions TODO</li>
-			<li>Wiki Edits: <a asp-action="UserEditHistory" asp-controller="Wiki" asp-route-userName="@Model.UserName">@Model.EditCount</a></li>
-			<li>Awards Won TODO</li>
+			<li><a asp-controller="User" asp-action="Profile" asp-route-id="@Model.Id">Profile</a></li>
+			<ul>
+				<li><a href="/Movies-Author@(Model.Id)-obs">@Model.MovieCount Movies</a></li>
+				<li><a href="/Subs-List?User=@Model.UserName">@Model.SubmissionCount Submissions</a></li>
+				<li>Wiki Edits: <a asp-action="UserEditHistory" asp-controller="Wiki" asp-route-userName="@Model.UserName">@Model.EditCount</a></li>
+				<li>Awards Won: @Model.AwardsWon</li>
+			</ul>
 		</ul>
 		<label>Note: Opinions expressed on homepages of our users are the personal opinions of those people, and don't necessarily represent the opinion of the whole TASVideos community.</label>
 	</div>
