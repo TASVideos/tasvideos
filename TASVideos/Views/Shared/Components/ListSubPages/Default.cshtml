@@ -9,12 +9,12 @@
 			<strong>Subpages for @ViewData["Parent"]</strong>
 		</collapsablecontent-header>
 	</div>
-	<div class="card-body collapse" id="collapse-content-@pageId">
+	<collapsablecontent-body class="card-body" id="collapse-content-@pageId">
 		<ul>
 			@foreach (var pageName in Model.OrderBy(m => m))
 			{
 				<li><a href="/@pageName">@pageName.Replace("HomePages/", "")</a></li>
 			}
 		</ul>
-	</div>
+	</collapsablecontent-body>
 </div>
