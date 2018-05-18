@@ -84,7 +84,16 @@ h1 {
 	font-style: italic;
 	background-color: #EEE;
 	border-radius: 0.25rem;
-	border: 1px dashed #4444;
+	border: 1px dashed #444;
 }
 
 .postbody { white-space: pre-wrap; }
+
+
+[data-toggle="collapse"] .fa::before {
+	content: "\f139";
+}
+
+[data-toggle="collapse"].collapsed .fa::before {
+	content: "\f13a";
+}

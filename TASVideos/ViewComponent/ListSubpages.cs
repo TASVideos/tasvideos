@@ -17,6 +17,7 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
 			var subpages = await _wikiTasks.GetSubPages(pageData.PageName);
+			ViewData["Parent"] = pageData.PageName;
 			return View(subpages);
 		}
 	}
