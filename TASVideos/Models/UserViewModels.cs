@@ -119,6 +119,7 @@ namespace TASVideos.Models
 		public int MovieCount { get; set; }
 		public int SubmissionCount { get; set; }
 		public IEnumerable<string> Awards { get; set; } = new List<string>();
+		public int AwardsWon { get; set; }
 	}
 
 	/// <summary>
