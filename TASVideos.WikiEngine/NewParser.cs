@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
+
 using System.Threading;
 using TASVideos.WikiEngine.AST;
 
@@ -694,7 +694,9 @@ namespace TASVideos.WikiEngine
 					var se = Math.Min(e.CharEnd + 20, _input.Length);
 					return new WikiLinkInfo
 					{
-						Link = link.StartsWith("user:") ? Util.RenderUserModuleLink(link) : link,
+						Link = link.StartsWith("user:")
+							? Util.RenderUserModuleLink(link)
+							: link.Replace(" ", ""),
 						Excerpt = _input.Substring(si, se - si)
 					};
 				})
