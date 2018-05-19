@@ -180,6 +180,17 @@ namespace TASVideos.Legacy.Imports
 					markup = Regex.Replace(markup, "\\[module:listsubpages\\]", "", RegexOptions.IgnoreCase);
 				}
 
+				// Common markup mistakes
+				markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
+				markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
+				//markup = markup.Replace("[:]", ":"); // A lot of old submissions "escape" colons this way, but not newer things, maybe some kind of legacy behavior, currently it just renders a : NOTE: I saw no instances of [[:]] so this logic should be safe
+				markup = markup.Replace("[''''!'''']", "[[!]]");
+				if (pageName == "InternalSystem/SubmissionContent/S4084")
+				{
+					markup = markup.Replace("[''''C'''']", "[[C]]");
+				}
+				
+
 				pages.Add(new WikiPage
 				{
 					Id = legacyPage.Site.Id,
