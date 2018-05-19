@@ -183,7 +183,6 @@ namespace TASVideos.Legacy.Imports
 				// Common markup mistakes
 				markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
 				markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
-				//markup = markup.Replace("[:]", ":"); // A lot of old submissions "escape" colons this way, but not newer things, maybe some kind of legacy behavior, currently it just renders a : NOTE: I saw no instances of [[:]] so this logic should be safe
 				markup = markup.Replace("[''''!'''']", "[[!]]");
 				if (pageName == "InternalSystem/SubmissionContent/S4084")
 				{
@@ -224,6 +223,7 @@ namespace TASVideos.Legacy.Imports
 			// Referrals (only need latest revisions)
 			var referralList = pages
 				.Where(p => p.ChildId == null)
+				.Where(p => p.PageName != "BizHawk/LuaFunctions") // Hack for now, but shoudl be removed eventually. This page has no links, and has a plethora of unsecaped brackets. BizHawk got a fix for this. Remove this when fix is applied to the page and the page makes its way to test db copies
 				.SelectMany(p => Util.GetAllWikiLinks(p.Markup).Select(referral => new WikiPageReferral
 				{
 					Referrer = p.PageName,
