@@ -11,7 +11,7 @@
 		@foreach (var link in Model)
 		{
 			<tr>
-				<td><a href="/@link.Referral">@link.Referral</a></td>
+				<td style="max-width: 400px; overflow-x: auto"><a href="/@link.Referral">@Html.Encode(link.Referral)</a></td>
 				<td><a href="/@link.Referrer">@link.Referrer</a></td>
 				<td><i>@link.Excerpt</i></td>
 			</tr>
