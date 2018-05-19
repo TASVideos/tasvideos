@@ -21,7 +21,7 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData)
 		{
-			var model = await _userTasks.GetUserSummary(pageData.PageName.Replace("HomePages/", ""));
+			var model = await _userTasks.GetUserSummary(pageData.PageName.Replace("HomePages/", "").Split('/').First());
 			model.AwardsWon = (await _awardTasks.GetAllAwardsForUser(model.Id)).Count();
 			ViewData["pageData"] = pageData;
 			return View(model);
