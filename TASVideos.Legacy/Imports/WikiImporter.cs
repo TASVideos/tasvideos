@@ -137,6 +137,7 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("[Truncated]", "[user:Truncated]");
 				markup = markup.Replace("[DeHackEd]", "[user:DeHackEd]");
 				markup = markup.Replace("[Walker Boh]", "[user:Walker Boh]");
+				markup = markup.Replace("[WalkerBoh]", "[user:Walker Boh]");
 				markup = markup.Replace("[Dan_]", "[user:Dan_]");
 				markup = markup.Replace("[Zurreco]", "[user:Zurreco]");
 				markup = markup.Replace("[Nitsuja]", "[user:nitsuja]");
@@ -148,8 +149,20 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("[Ideamagnate]", "[user:Ideamagnate]");
 				markup = markup.Replace("[FractalFusion]", "[user:FractalFusion]");
 				markup = markup.Replace("[Maza]", "[user:Maza]");
+				markup = markup.Replace("[nifboy]", "[user:nifboy]");
+				markup = markup.Replace("[blip]", "[user:blip]");
+				markup = markup.Replace("[Aktan]", "[user:Aktan]");
+				markup = markup.Replace("[alden]", "[user:alden]");
+				markup = markup.Replace("[andrewg]", "[user:andrewg]");
+				markup = markup.Replace("[AngerFist]", "[user:AngerFist]");
+				markup = markup.Replace("[Aqfaq]", "[user:Aqfaq]");
+				markup = markup.Replace("[arukAdo]", "[user:arukAdo]");
+				markup = markup.Replace("[Flygon]", "[user:Flygon]");
+				markup = markup.Replace("[Fog]", "[user:Fog]");
+				markup = markup.Replace("[mmbossman]", "[user:mmbossman]");
+				markup = markup.Replace("[Comicalflop]", "[user:Comicalflop]");
 
-				// Ad properly done user modules but the user page was not the same as the username
+				// And properly done user modules but the user page was not the same as the username
 				markup = markup.Replace("[user:Dan]", "[user:Dan_]");
 
 
