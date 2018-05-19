@@ -69,6 +69,8 @@ namespace TASVideos.WikiEngine
 		{
 			if (text == "|") // literal | escape
 				return new[] { new Text(charStart, "|") { CharEnd = charEnd } };
+			if (text == ":") // literal : escape (for inside dd/dt)
+				return new[] { new Text(charStart, ":") { CharEnd = charEnd } };
 			if (text == "expr:UserGetWikiName")
 				return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
 			if (text == "expr:WikiGetCurrentEditLink")
