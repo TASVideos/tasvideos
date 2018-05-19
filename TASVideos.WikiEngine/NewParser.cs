@@ -330,8 +330,6 @@ namespace TASVideos.WikiEngine
 				while (Eat('%')) { }
 				AddNonChild(new Element(_index, "br") { CharEnd = _index });
 			}
-			else if (Eat("[:]"))
-				AddText(':');
 			else if (Eat("[["))
 				AddText('[');
 			else if (Eat("]]"))
