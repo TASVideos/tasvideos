@@ -43,6 +43,11 @@ namespace TASVideos.Extensions
 			return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
 		}
 
+		public static async Task<IHtmlContent> HomePageHeader(this IViewComponentHelper component)
+		{
+			return await component.InvokeAsync(nameof(ViewComponents.HomePageHeader), new { });
+		}
+
 		public static string UniqueId(this ViewDataDictionary viewData)
 		{
 			return "_" + Guid.NewGuid().ToString().Replace("-", "").ToLower();
