@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
@@ -28,17 +29,21 @@ namespace TASVideos.ViewComponents
 			{
 				Href = split[0]
 					.Trim('/')
-					.Replace(" ", "")
 					.Replace(".html", ""),
 				DisplayText = split.Length > 1 ? split[1] : split[0]
 			};
+
+			if (!model.Href.StartsWith("user:"))
+			{
+				model.Href = model.Href.Replace(" ", "");
+			}
 
 			if (split.Length == 1)
 			{
 				if (pp.StartsWith("user:"))
 				{
 					model.DisplayText = model.DisplayText.Replace("user:", "");
-					model.Href = WebUtility.UrlEncode(Util.RenderUserModuleLink(model.Href));
+					model.Href = Uri.EscapeUriString(Util.RenderUserModuleLink(model.Href));
 				}
 				else
 				{
