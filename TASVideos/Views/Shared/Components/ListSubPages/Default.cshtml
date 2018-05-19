@@ -21,7 +21,7 @@
 					<ul condition="pageGroup.Count() > 1">
 						@foreach (var subpage in pageGroup.Where(pg => pg != $"{parent}/{pageGroup.Key}").OrderBy(pg => pg))
 						{
-							<li><a href="/@subpage">@subpage.Replace($"HomePages/{pageGroup.Key}/", "")</a></li>
+							<li><a href="/@subpage">@subpage.Replace($"{parent}/{pageGroup.Key}/", "")</a></li>
 						}
 					</ul>
 				</li>
