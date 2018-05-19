@@ -428,6 +428,7 @@ namespace TASVideos.Tasks
 					.Where(wr => wr.Referral != "Subs-List")
 					.Where(wr => !wr.Referral.StartsWith("Movies-"))
 					.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
+					.Where(wr => wr.Referral != "FrontPage")
 					.ToListAsync())
 				.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue)
 				.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue)

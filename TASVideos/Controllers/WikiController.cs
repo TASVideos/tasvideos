@@ -36,6 +36,12 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> RenderWikiPage(string url, int? revision = null)
 		{
 			url = url.Trim('/').Replace(".html", "");
+
+			if (url.ToLower() == "frontpage")
+			{
+				return Redirect("/");
+			}
+
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
 				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = Util.TryConvertToValidPageName(url) });
