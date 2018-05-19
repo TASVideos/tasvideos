@@ -102,6 +102,11 @@ namespace TASVideos.Extensions
 			return pageName.StartsWith("System/");
 		}
 
+		public static bool IsGameResourcesPage(string pageName)
+		{
+			return pageName.StartsWith("GameResources/");
+		}
+
 		// Does not check for null that should have already been done
 		// Slashes must have already been trimmed or it will break
 		private static bool IsProperCased(string pageName)

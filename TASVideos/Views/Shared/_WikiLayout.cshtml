@@ -27,13 +27,17 @@ else if (pageData.PageName.IndexOf('/') > 0)
 }
 
 @RenderBody()
-@if (pageData.PageName.StartsWith("GameResources/"))
+@if (WikiHelper.IsGameResourcesPage(pageData.PageName))
 {
 	@await Component.RenderWiki("System/GameResourcesFooter")
 }
-else if (pageData.PageName.StartsWith("HomePages/"))
+else if (WikiHelper.IsHomePage(pageData.PageName))
 {
 	@await Component.InvokeAsync(nameof(HomePageFooter), new { pageData })
+}
+else
+{
+	@await Component.ListSubPages(pageData)
 }
 <hr />
 <small>
