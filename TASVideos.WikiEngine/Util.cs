@@ -71,12 +71,9 @@ namespace TASVideos.WikiEngine
 				return "";
 			}
 
-			pageName = Regex.Replace(
-				pageName
+			pageName = pageName
 					.Replace(".html", "")
-					.Trim('/'),
-				@"\s",
-				"");
+					.Trim('/');
 
 			return ConvertProperCase(pageName);
 		}
