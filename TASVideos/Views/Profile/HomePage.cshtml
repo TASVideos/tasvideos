@@ -1,10 +1,11 @@
 ﻿@using TASVideos.Tasks
+@using TASVideos.WikiEngine
 @inject WikiTasks WikiTasks
 
 @{
 	ViewData["Title"] = "Home Page";
 	ViewData.AddActivePage(ProfileNavPages.HomePage);
-	var homePage = WikiHelper.TryConvertToValidPageName($"HomePages/{User.Identity.Name}");
+	var homePage = Util.TryConvertToValidPageName($"HomePages/{User.Identity.Name}");
 	bool pageExists = await WikiTasks.PageExists(homePage);
 }
 <br />
