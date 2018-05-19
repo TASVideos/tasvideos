@@ -1,9 +1,10 @@
+@using TASVideos.WikiEngine
 @model UserWikiEditHistoryModel
 
 @{
 	ViewData["Title"] = "Edit Hisstory For User " + Model.UserName;
 }
-<h4>Edit by <a href="/HomePages/@WikiHelper.TryConvertToValidPageName(Model.UserName)">@Model.UserName</a></h4>
+<h4>Edit by <a href="/HomePages/@Util.TryConvertToValidPageName(Model.UserName)">@Model.UserName</a></h4>
 <hr />
 <table class="table table-striped">
 	<tbody>
