@@ -243,11 +243,11 @@ namespace TASVideos.WikiEngine.AST
 			var moduleParams = pp.Length > 1 ? pp[1] : "";
 			if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
 			{
-				w.Write("@await Component.InvokeAsync(");
+				w.Write("@(await Component.InvokeAsync(");
 				Escape.WriteCSharpString(w, realModuleName);
 				w.Write(", new { pageData = Model, pp = ");
 				Escape.WriteCSharpString(w, moduleParams);
-				w.Write(" })");
+				w.Write(" }))");
 			}
 			else
 			{
