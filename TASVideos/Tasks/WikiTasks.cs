@@ -425,12 +425,13 @@ namespace TASVideos.Tasks
 		{
 			return (await _db.WikiReferrals
 					.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
+					.Where(wr => wr.Referral != "Subs-List")
+					.Where(wr => !wr.Referral.StartsWith("Movies-"))
+					.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
 					.ToListAsync())
 				.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue)
 				.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue)
-				.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral).HasValue)
-				.Where(wr => wr.Referral != "Subs-List")
-				.Where(wr => wr.Referral != "Movies-");
+				.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral).HasValue);
 		}
 
 		/// <summary>
