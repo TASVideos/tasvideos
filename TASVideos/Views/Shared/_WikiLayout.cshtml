@@ -4,9 +4,13 @@
 	bool canEdit = WikiHelper.UserCanEditWikiPage(pageData.PageName, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
 
-@if (pageData.PageName.StartsWith("System/"))
+@if (WikiHelper.IsSystemPage(pageData.PageName))
 {
 	@await Component.RenderWiki("System/IsSystem/Page")
+}
+else if (WikiHelper.IsHomePage(pageData.PageName))
+{
+	@await Component.HomePageHeader()
 }
 else if (pageData.PageName.IndexOf('/') > 0)
 {

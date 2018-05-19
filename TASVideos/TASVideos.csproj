@@ -41,6 +41,9 @@
     <Content Update="Views\ForumTopic\_Poll.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Shared\Components\HomePageHeader\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\_CreatePostHelper.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

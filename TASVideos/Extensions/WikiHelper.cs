@@ -92,9 +92,14 @@ namespace TASVideos.Extensions
 				&& IsProperCased(test);
 		}
 
-		private static bool IsHomePage(string pageName)
+		public static bool IsHomePage(string pageName)
 		{
 			return pageName.StartsWith("HomePages/");
+		}
+
+		public static bool IsSystemPage(string pageName)
+		{
+			return pageName.StartsWith("System/");
 		}
 
 		// Does not check for null that should have already been done
