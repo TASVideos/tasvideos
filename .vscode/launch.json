@@ -41,7 +41,7 @@
                 }
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development-NoRecreate"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
