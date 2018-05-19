@@ -158,7 +158,13 @@ namespace TASVideos.Legacy.Imports
 				// Where below the title there is Back To: %%%[module:ListParents]
 				if (markup.StartsWith("[module:listparents]", StringComparison.InvariantCultureIgnoreCase))
 				{
-					markup = Regex.Replace(markup, "[module:listparents]", "", RegexOptions.IgnoreCase);
+					markup = Regex.Replace(markup, "\\[module:listparents\\]", "", RegexOptions.IgnoreCase);
+				}
+
+				// Ditto for pages that end with ListSubPages
+				if (markup.EndsWith("[module:listsubpages]", StringComparison.InvariantCultureIgnoreCase))
+				{
+					markup = Regex.Replace(markup, "\\[module:listsubpages\\]", "", RegexOptions.IgnoreCase);
 				}
 
 				pages.Add(new WikiPage
