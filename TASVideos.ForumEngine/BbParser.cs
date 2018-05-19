@@ -9,6 +9,7 @@ namespace TASVideos.ForumEngine
 	{
 		private static readonly Regex OpeningTag = new Regex(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]=]+))?\]");
 		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
+		private static readonly Regex Url = new Regex(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@]|%[A-Fa-f0-9]{2})+");
 
 		private enum ParseState
 		{
@@ -123,6 +124,17 @@ namespace TASVideos.ForumEngine
 		{
 			while (_index < _input.Length)
 			{
+				Match urlMatch;
+				if (ChildrenExpected() && (urlMatch = Url.Match(_input, _index)).Success)
+				{
+					FlushText();
+					Push(new Element { Name = "url" });
+					_currentText.Append(urlMatch.Value);
+					FlushText();
+					_index += urlMatch.Length;
+					_stack.Pop();
+					continue;
+				}
 				var c = _input[_index++];
 				if (c == '[') // check for possible tags
 				{
