@@ -49,9 +49,7 @@ Make sure all edits conform to the [EditorGuidelines]"
 				Markup =
 @"This page lists all the system pages. System pages are wiki pages that are embedded into non-editable pages or automatically appended to certain types of wiki pages.
 
-These pages must not be renamed, because some code in the wiki system refers to them by name
-
-[module:listsubpages]"
+These pages must not be renamed, because some code in the wiki system refers to them by name"
 			},
 			new WikiPage
 			{
