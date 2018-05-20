@@ -223,7 +223,7 @@ namespace TASVideos.Legacy.Imports
 			// Referrals (only need latest revisions)
 			var referralList = pages
 				.Where(p => p.ChildId == null)
-				.Where(p => p.PageName != "BizHawk/LuaFunctions") // Hack for now, but shoudl be removed eventually. This page has no links, and has a plethora of unsecaped brackets. BizHawk got a fix for this. Remove this when fix is applied to the page and the page makes its way to test db copies
+				.Where(p => p.PageName.ToLower() != "bizhawk/luafunctions") // Hack for now, but shoudl be removed eventually. This page has no links, and has a plethora of unsecaped brackets. BizHawk got a fix for this. Remove this when fix is applied to the page and the page makes its way to test db copies
 				.SelectMany(p => Util.GetAllWikiLinks(p.Markup).Select(referral => new WikiPageReferral
 				{
 					Referrer = p.PageName,
