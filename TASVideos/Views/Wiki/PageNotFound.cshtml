@@ -7,5 +7,5 @@ Please use the proper URL. Although the site handles URLs case-insensitively, if
 @if (!string.IsNullOrWhiteSpace((string)ViewData["possibleUrl"]))
 {
 	<hr />
-	<span><a href="/@ViewData["possibleUrl"]">This link</a> may take you to the intended page if the site guessed your intents right.</span>
+	<span><a href="/@ViewData["possibleUrl"]">@ViewData["possibleUrl"]</a> may take you to the intended page if the site guessed your intents right.</span>
 }
