@@ -15,11 +15,15 @@ namespace TASVideos.Views.Profile
 
 		public static string HomePage => "HomePage";
 
+		public static string Settings => "Settings";
+
 		public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
 		public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 
-		public static string HomePageClass(ViewContext viewContext) => PageNavClass(viewContext, HomePage);
+		public static string HomePageNavClass(ViewContext viewContext) => PageNavClass(viewContext, HomePage);
+
+		public static string SettingsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Settings);
 
 		public static string PageNavClass(ViewContext viewContext, string page)
 		{
