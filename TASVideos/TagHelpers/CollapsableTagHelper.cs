@@ -34,6 +34,8 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement("collapsablecontent-body")]
 	public class CollapsableBodyTagHelper : TagHelper
 	{
+		public bool Show { get; set; }
+
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			var id = output.Attributes.FirstOrDefault(a => a.Name.ToLower() == "id");
@@ -43,6 +45,10 @@ namespace TASVideos.TagHelpers
 			}
 
 			output.AddCssClass("collapse");
+			if (Show)
+			{
+				output.AddCssClass("show");
+			}
 		}
 	}
 }

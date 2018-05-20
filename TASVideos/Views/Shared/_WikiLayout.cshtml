@@ -1,7 +1,6 @@
 ﻿@{
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	WikiPage pageData = (WikiPage)ViewData["WikiPage"];
-	bool canEdit = WikiHelper.UserCanEditWikiPage(pageData.PageName, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 
 	if (pageData.PageName == "GameResources" || WikiHelper.IsGameResourcesPage(pageData.PageName))
 	{
@@ -9,54 +8,9 @@
 	}
 }
 
-@if (WikiHelper.IsSystemPage(pageData.PageName))
-{
-	@await Component.RenderWiki("System/IsSystem/Page")
-}
-else if (WikiHelper.IsHomePage(pageData.PageName))
-{
-	@await Component.HomePageHeader()
-}
-else if (pageData.PageName.IndexOf('/') > 0)
-{
-	@await Component.ListParents(pageData)
-}
-
-<!-- Eventually we will show available translations here-->
-@if (canEdit)
-{
-	<div class="text-right">
-		<a class="btn btn-primary" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
-	</div>
-	<hr />
-}
-
+@await Html.PartialAsync("_WikiLayoutHeader", pageData)
 @RenderBody()
-@if (WikiHelper.IsGameResourcesPage(pageData.PageName))
-{
-	@await Component.RenderWiki("System/GameResourcesFooter")
-}
-else if (WikiHelper.IsHomePage(pageData.PageName))
-{
-	@await Component.InvokeAsync(nameof(HomePageFooter), new { pageData })
-}
-else
-{
-	@await Component.ListSubPages(pageData)
-}
-<hr />
-<small>
-	@pageData.PageName last edited by @pageData.LastUpdateUserName on @pageData.LastUpdateTimeStamp
-</small>
-<br />
-
-<a condition="@canEdit" class="btn btn-primary btn-sm" asp-controller="Wiki" asp-action="Edit" asp-route-path="@pageData.PageName">Edit</a>
-<a condition="@ViewData.UserHasPermission(PermissionTo.MoveWikiPages)" class="btn btn-warning btn-sm" asp-controller="Wiki" asp-action="MovePage" asp-route-path="@pageData.PageName">Move</a>
-<delete-button condition="@ViewData.UserHasPermission(PermissionTo.DeleteWikiPages)" asp-href="@Url.Action("DeletePage", "Wiki", new { path = pageData.PageName })" warning-message="Are you sure you want to delete this page?" class="btn btn-danger btn-sm">Delete</delete-button>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@pageData.PageName">Page History</a>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="Diff" asp-route-path="@pageData.PageName">Last diff</a>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="Referrers" asp-route-path="@pageData.PageName">List referrers</a>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@pageData.PageName">View Source</a>
+@await Html.PartialAsync("_WikiLayoutFooter", pageData)
 
 @section Scripts {
 	@if (IsSectionDefined("PageTitle"))

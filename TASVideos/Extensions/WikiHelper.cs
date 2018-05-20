@@ -92,6 +92,21 @@ namespace TASVideos.Extensions
 				&& IsProperCased(test);
 		}
 
+		public static bool IsHomePage(this WikiPage page)
+		{
+			return IsHomePage(page.PageName);
+		}
+
+		public static bool IsSystemPage(this WikiPage page)
+		{
+			return IsSystemPage(page.PageName);
+		}
+
+		public static bool IsGameResourcesPage(this WikiPage page)
+		{
+			return IsGameResourcesPage(page.PageName);
+		}
+
 		public static bool IsHomePage(string pageName)
 		{
 			return pageName.StartsWith("HomePages/");

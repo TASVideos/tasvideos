@@ -14,10 +14,16 @@ namespace TASVideos.ViewComponents
 			_wikiTasks = wikiTasks;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp = null)
 		{
 			var subpages = await _wikiTasks.GetSubPages(pageData.PageName);
 			ViewData["Parent"] = pageData.PageName;
+			
+			if (pp?.Contains("show") ?? false)
+			{
+				ViewData["show"] = true;
+			}
+
 			return View(subpages);
 		}
 	}

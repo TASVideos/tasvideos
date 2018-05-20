@@ -43,14 +43,39 @@ namespace TASVideos.Extensions
 			return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
 		}
 
-		public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData)
+		public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData, string pp = null)
 		{
-			return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData });
+			return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData, pp });
 		}
 
-		public static async Task<IHtmlContent> HomePageHeader(this IViewComponentHelper component)
+		public static async Task<IHtmlContent> HomePageHeader(this IViewComponentHelper component, WikiPage pageData)
 		{
-			return await component.InvokeAsync(nameof(ViewComponents.HomePageHeader), new { });
+			return await component.InvokeAsync(nameof(ViewComponents.HomePageHeader), new { pageData });
+		}
+
+		public static async Task<IHtmlContent> HomePageFooter(this IViewComponentHelper component, WikiPage pageData)
+		{
+			return await component.InvokeAsync(nameof(ViewComponents.HomePageFooter), new { pageData });
+		}
+
+		public static async Task<IHtmlContent> GameResourcesHeader(this IViewComponentHelper component, WikiPage pageData)
+		{
+			return await component.InvokeAsync(nameof(ViewComponents.GameResourcesHeader), new { pageData });
+		}
+
+		public static async Task<IHtmlContent> GameResourcesFooter(this IViewComponentHelper component, WikiPage pageData)
+		{
+			return await component.InvokeAsync(nameof(ViewComponents.GameResourcesFooter), new { pageData });
+		}
+
+		public static async Task<IHtmlContent> SystemPageHeader(this IViewComponentHelper component, WikiPage pageData)
+		{
+			return await component.InvokeAsync(nameof(ViewComponents.SystemPageHeader), new { pageData });
+		}
+
+		public static async Task<IHtmlContent> SystemPageFooter(this IViewComponentHelper component, WikiPage pageData)
+		{
+			return await component.InvokeAsync(nameof(ViewComponents.SystemPageFooter), new { pageData });
 		}
 
 		public static string UniqueId(this ViewDataDictionary viewData)

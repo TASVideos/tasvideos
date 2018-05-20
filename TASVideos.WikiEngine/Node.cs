@@ -224,7 +224,8 @@ namespace TASVideos.WikiEngine.AST
 			["frontpagesubmissionlist"] = "FrontpageSubmissionList",
 			["displayminimovie"] = "DisplayMiniMovie",
 			["tabularmovielist"] = "TabularMovieList",
-			["topicfeed"] = "TopicFeed"
+			["topicfeed"] = "TopicFeed",
+			["gamename"] = "GameName"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
