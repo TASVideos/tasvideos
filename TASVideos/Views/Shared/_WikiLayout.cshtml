@@ -2,6 +2,11 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	WikiPage pageData = (WikiPage)ViewData["WikiPage"];
 	bool canEdit = WikiHelper.UserCanEditWikiPage(pageData.PageName, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+
+	if (pageData.PageName == "GameResources" || WikiHelper.IsGameResourcesPage(pageData.PageName))
+	{
+		ViewData["ActiveTab"] = "Game Resources";
+	}
 }
 
 @if (WikiHelper.IsSystemPage(pageData.PageName))
