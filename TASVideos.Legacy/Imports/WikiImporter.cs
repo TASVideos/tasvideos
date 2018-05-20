@@ -188,7 +188,9 @@ namespace TASVideos.Legacy.Imports
 				{
 					markup = markup.Replace("[''''C'''']", "[[C]]");
 				}
-				
+
+				markup = markup.Replace("%%TAB_START%%", "%%TAB_END").Replace("%%TAB_END", "%%TAB_END%%");
+				markup = markup.Replace("%%TAB_END%%", "%%TAB_END").Replace("%%TAB_END", "%%TAB_END%%");
 
 				pages.Add(new WikiPage
 				{
