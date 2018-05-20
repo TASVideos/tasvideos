@@ -1,0 +1,69 @@
+﻿@model ProfileIndexViewModel
+@{
+    ViewData["Title"] = "Profile Settings";
+    ViewData.AddActivePage(ProfileNavPages.Settings);
+}
+
+<h4>@ViewData["Title"]</h4>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<div class="col-lg-6">
+	<form method="post">
+		<div asp-validation-summary="All" class="text-danger"></div>
+		<form-group>
+			<label asp-for="Username"></label>
+			<input asp-for="Username" class="form-control" disabled />
+		</form-group>
+		<form-group>
+			<label asp-for="Email"></label>
+			@if (Model.IsEmailConfirmed)
+			{
+				<div class="input-group">
+					<input asp-for="Email" class="form-control" />
+					<div class="input-group-append">
+						<span class="input-group-text" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
+					</div>
+				</div>
+			}
+			else
+			{
+				<input asp-for="Email" class="form-control" />
+				<button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+			}
+			<span asp-validation-for="Email" class="text-danger"></span>
+		</form-group>
+		<form-group>
+			<label asp-for="TimeZoneId"></label>
+			<timezone-picker asp-for="TimeZoneId" class="form-control" />
+		</form-group>
+		<form-group>
+			<label asp-for="PublicRatings"></label>
+			<div class="btn-group btn-group-toggle" data-toggle="buttons">
+				<label for="@(nameof(Model.PublicRatings))-true" class="btn btn-secondary @(Model.PublicRatings ? "active" : "")">
+					<input id="@(nameof(Model.PublicRatings))-true" type="radio" value="True" asp-for="PublicRatings" /> Yes</label>
+				<label for="@(nameof(Model.PublicRatings))-false" class="btn btn-secondary @(!Model.PublicRatings ? "active" : "")">
+					<input id="@(nameof(Model.PublicRatings))-false" type="radio" value="False" asp-for="PublicRatings" /> No
+				</label>
+			</div>
+		</form-group>
+		<button type="submit" class="btn btn-secondary">Save</button>
+	</form>
+</div>
+
+@if (Model.Roles.Any())
+{
+	<hr />
+	<h4>Roles</h4>
+	<span>Your account has the following <a asp-controller="Roles" asp-action="List">Roles</a>:</span>
+	foreach (var role in Model.Roles)
+	{
+		<br />
+		<br />
+		<label><a asp-controller="Roles" asp-action="Index" asp-route-role="@role.Name">@role.Name</a></label>
+		<br />
+		@role.Description
+	}
+}
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}

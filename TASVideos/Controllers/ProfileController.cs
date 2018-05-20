@@ -22,13 +22,15 @@ namespace TASVideos.Controllers
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
 		private readonly UserTasks _userTasks;
+		private readonly AwardTasks _awardTasks;
 
 		public ProfileController(
 			UserManager<User> userManager,
 			SignInManager<User> signInManager,
 			IEmailSender emailSender,
 			ILogger<ProfileController> logger,
-			UserTasks userTasks)
+			UserTasks userTasks,
+			AwardTasks awardTasks)
 			: base(userTasks)
 		{
 			_userManager = userManager;
@@ -36,6 +38,7 @@ namespace TASVideos.Controllers
 			_emailSender = emailSender;
 			_logger = logger;
 			_userTasks = userTasks;
+			_awardTasks = awardTasks;
 		}
 
 		[TempData]
@@ -43,6 +46,33 @@ namespace TASVideos.Controllers
 
 		[HttpGet]
 		public async Task<IActionResult> Index()
+		{
+			if (!User.Identity.IsAuthenticated)
+			{ 
+				return RedirectToLogin();
+			}
+
+			var id = int.Parse(_userManager.GetUserId(User));
+
+			var model = await _userTasks.GetUserProfile(id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			if (!string.IsNullOrWhiteSpace(model.Signature))
+			{
+				model.Signature = RenderPost(model.Signature, true, false);
+			}
+
+			model.Awards = await _awardTasks.GetAllAwardsForUser(id);
+
+			ViewData["ActivePage"] = nameof(Index);
+			return View("~/Views/User/Profile.cshtml", model);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> Settings()
 		{
 			var user = await _userManager.GetUserAsync(User);
 
@@ -61,7 +91,7 @@ namespace TASVideos.Controllers
 		}
 
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> Index(ProfileIndexViewModel model)
+		public async Task<IActionResult> Settings(ProfileIndexViewModel model)
 		{
 			if (!ModelState.IsValid)
 			{
