@@ -4,6 +4,8 @@
 
 	var parent = (string)ViewData["Parent"];
 	var pageGrouping = Model.GroupBy(tkey => tkey.Replace(parent + "/", "").Split('/').FirstOrDefault());
+
+	var show = (bool)(ViewData["show"] ?? false);
 }
 
 <div condition="@Model.Any()" class="card">
@@ -12,7 +14,7 @@
 			<strong>Subpages for @ViewData["Parent"]</strong>
 		</collapsablecontent-header>
 	</div>
-	<collapsablecontent-body class="card-body" id="collapse-content-@pageId">
+	<collapsablecontent-body class="card-body" id="collapse-content-@pageId" show="@show">
 		<ul>
 			@foreach (var pageGroup in pageGrouping.OrderBy(g => g.Key))
 			{

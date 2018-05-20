@@ -3,7 +3,7 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.ViewComponents
 {
-	public class HomePageHeader : ViewComponent
+	public class GameResourcesFooter : ViewComponent
 	{
 		public IViewComponentResult Invoke(WikiPage pageData)
 		{

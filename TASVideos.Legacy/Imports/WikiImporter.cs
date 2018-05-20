@@ -165,6 +165,9 @@ namespace TASVideos.Legacy.Imports
 				// And properly done user modules but the user page was not the same as the username
 				markup = markup.Replace("[user:Dan]", "[user:Dan_]");
 
+				// These are automatic now
+				markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
+				markup = Regex.Replace(markup, "\\[module:gamefooter\\]", "", RegexOptions.IgnoreCase);
 
 				// Mitigate unnecessary ListParent module calls, if they are at the beginning, wipe them.
 				// We can't remove all instances because of pages like Interviews/Phil/GEE2005
