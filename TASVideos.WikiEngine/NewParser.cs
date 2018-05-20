@@ -477,20 +477,21 @@ namespace TASVideos.WikiEngine
 				e.Attributes["data-name"] = name;
 				Push(e);
 			}
-			else if (Eat("%%TAB_START%%"))
+			else if (Eat("%%TAB_START"))
 			{
 				DiscardLine();
 				ClearBlockTags();
 				Push("vtabs");
 			}
-			else if (Eat("%%TAB_HSTART%%"))
+			else if (Eat("%%TAB_HSTART"))
 			{
 				DiscardLine();
 				ClearBlockTags();
 				Push("htabs");
 			}
-			else if (Eat("%%TAB_END%%"))
+			else if (Eat("%%TAB_END"))
 			{
+				DiscardLine();
 				if (!TryPopTabs())
 					Abort("Mismatched %%TAB_END%%");
 			}
