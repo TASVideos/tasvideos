@@ -23,9 +23,9 @@
 				<td>@revision.CreateUserName</td>
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
-				<td>
-					<button class="btn btn-primary" onclick="GetDiff(@revision.Revision)">Diff</button>
-					<delete-button Condition="@ViewData.UserHasPermission(PermissionTo.DeleteWikiPages)" asp-href="@(Url.Action(nameof(WikiController.DeleteRevision), new { path = Model.PageName, revision = revision.Revision }))" warning-message="Are you sure you want to delete this revision?">Delete</delete-button>
+				<td style="min-width: 100px">
+					<button class="btn btn-primary btn-sm" onclick="GetDiff(@revision.Revision)">Diff</button>
+					<delete-button Condition="@ViewData.UserHasPermission(PermissionTo.DeleteWikiPages)" asp-href="@(Url.Action(nameof(WikiController.DeleteRevision), new { path = Model.PageName, revision = revision.Revision }))" warning-message="Are you sure you want to delete this revision?" class="btn-sm"><i class="fa fa-remove"></i></delete-button>
 				</td>
 			</tr>
 		}
