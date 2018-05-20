@@ -248,7 +248,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPage.RevisionMessage)
 			};
 
-			pages.BulkInsert(connectionStr, wikiColumns, nameof(ApplicationDbContext.WikiPages));
+			pages.BulkInsert(connectionStr, wikiColumns, nameof(ApplicationDbContext.WikiPages), bulkCopyTimeout: 1200);
 
 			var referralColumns = new[]
 			{
@@ -257,7 +257,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPageReferral.Referrer)
 			};
 
-			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000);
+			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000, 300);
 		}
 
 		private static readonly Dictionary<(string, int), int> CrystalShardsLookup = new Dictionary<(string, int), int>

@@ -141,7 +141,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.RomId)
 			};
 
-			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions));
+			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
 
 			var subAuthorColumns = new[]
 			{
