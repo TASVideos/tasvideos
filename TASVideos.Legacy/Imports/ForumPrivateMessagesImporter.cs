@@ -12,6 +12,7 @@ namespace TASVideos.Legacy.Imports
 	public static class ForumPrivateMessagesImporter
 	{
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
@@ -93,7 +94,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PrivateMessage.DeletedForFromUser)
 			};
 
-			privMessages.BulkInsert(context, columns, nameof(ApplicationDbContext.PrivateMessages), SqlBulkCopyOptions.Default, 20000);
+			privMessages.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PrivateMessages), SqlBulkCopyOptions.Default, 20000);
 		}
 	}
 }

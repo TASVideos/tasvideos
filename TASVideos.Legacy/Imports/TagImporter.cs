@@ -11,6 +11,7 @@ namespace TASVideos.Legacy.Imports
     public static class TagImporter
     {
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -43,7 +44,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Tag.DisplayName)
 			};
 
-			tags.BulkInsert(context, columns, nameof(ApplicationDbContext.Tags), SqlBulkCopyOptions.Default);
+			tags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Tags), SqlBulkCopyOptions.Default);
 		}
 	}
 }

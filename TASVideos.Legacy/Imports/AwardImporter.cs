@@ -10,6 +10,7 @@ namespace TASVideos.Legacy.Imports
     public static class AwardImporter
     {
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -90,9 +91,9 @@ namespace TASVideos.Legacy.Imports
 					nameof(PublicationAward.Year)
 				};
 
-				awards.BulkInsert(context, awardColumns, nameof(ApplicationDbContext.Awards));
-				userAwards.BulkInsert(context, userAwardColumns, nameof(ApplicationDbContext.UserAwards), SqlBulkCopyOptions.Default);
-				publicationAwards.BulkInsert(context, pubAwardColumns, nameof(ApplicationDbContext.PublicationAwards), SqlBulkCopyOptions.Default);
+				awards.BulkInsert(connectionStr, awardColumns, nameof(ApplicationDbContext.Awards));
+				userAwards.BulkInsert(connectionStr, userAwardColumns, nameof(ApplicationDbContext.UserAwards), SqlBulkCopyOptions.Default);
+				publicationAwards.BulkInsert(connectionStr, pubAwardColumns, nameof(ApplicationDbContext.PublicationAwards), SqlBulkCopyOptions.Default);
 			}
 		}
 	}

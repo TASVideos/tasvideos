@@ -10,6 +10,7 @@ namespace TASVideos.Legacy.Imports
     public static class ForumCategoriesImporter
     {
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
@@ -40,7 +41,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumCategory.LastUpdateUserName)
 			};
 
-			categories.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumCategories));
+			categories.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumCategories));
 		}
     }
 }

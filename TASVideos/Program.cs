@@ -12,6 +12,7 @@ using TASVideos.Legacy;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
 using TASVideos.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace TASVideos
 {
@@ -28,6 +29,7 @@ namespace TASVideos
 				{
 					var env = services.GetRequiredService<IHostingEnvironment>();
 					var context = services.GetRequiredService<ApplicationDbContext>();
+					var settings = services.GetRequiredService<IOptions<AppSettings>>().Value;
 
 					if (env.IsDevelopment())
 					{
@@ -48,7 +50,7 @@ namespace TASVideos
 
 						DbInitializer.Initialize(context);
 						DbInitializer.PreMigrateSeedData(context);
-						LegacyImporter.RunLegacyImport(context, legacySiteContext, legacyForumContext);
+						LegacyImporter.RunLegacyImport(context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);
 						DbInitializer.PostMigrateSeedData(context);
 					}
 				}

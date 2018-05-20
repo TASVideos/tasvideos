@@ -9,6 +9,7 @@ namespace TASVideos.Legacy.Imports
     public static class PublicationFlagImporter
     {
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -27,7 +28,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFlag.FlagId)
 			};
 
-			publicationFlags.BulkInsert(context, columns, nameof(ApplicationDbContext.PublicationFlags));
+			publicationFlags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationFlags));
 		}
 	}
 }

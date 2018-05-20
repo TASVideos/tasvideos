@@ -15,6 +15,7 @@ namespace TASVideos.Legacy.Imports
     public class PublicationImporter
     {
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -237,7 +238,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.ObsoletedById)
 			};
 
-			publications.BulkInsert(context, pubColumns, nameof(ApplicationDbContext.Publications));
+			publications.BulkInsert(connectionStr, pubColumns, nameof(ApplicationDbContext.Publications));
 
 			var pubAuthorColumns = new[]
 			{
@@ -245,7 +246,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationAuthor.PublicationId)
 			};
 
-			publicationAuthors.BulkInsert(context, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors), SqlBulkCopyOptions.Default);
+			publicationAuthors.BulkInsert(connectionStr, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors), SqlBulkCopyOptions.Default);
 
 			var pubFileColumns = new[]
 			{
@@ -258,7 +259,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.LastUpdateTimeStamp)
 			};
 
-			publicationFiles.BulkInsert(context, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default);
+			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default);
 
 			var pubTagColumns = new[]
 			{
@@ -266,7 +267,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationTag.TagId)
 			};
 
-			publicationTags.BulkInsert(context, pubTagColumns, nameof(ApplicationDbContext.PublicationTags), SqlBulkCopyOptions.Default);
+			publicationTags.BulkInsert(connectionStr, pubTagColumns, nameof(ApplicationDbContext.PublicationTags), SqlBulkCopyOptions.Default);
 		}
 	}
 }

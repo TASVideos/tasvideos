@@ -15,6 +15,7 @@ namespace TASVideos.Legacy.Imports
 	public static class SubmissionImporter
 	{
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -140,7 +141,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.RomId)
 			};
 
-			submissions.BulkInsert(context, subColumns, nameof(ApplicationDbContext.Submissions));
+			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions));
 
 			var subAuthorColumns = new[]
 			{
@@ -148,7 +149,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(SubmissionAuthor.SubmissionId)
 			};
 
-			submissionAuthors.BulkInsert(context, subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));
+			submissionAuthors.BulkInsert(connectionStr, subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));
 		}
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)

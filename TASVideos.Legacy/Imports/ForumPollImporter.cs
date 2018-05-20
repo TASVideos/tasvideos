@@ -12,6 +12,7 @@ namespace TASVideos.Legacy.Imports
 	{
 		public static void 
 			Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
@@ -48,7 +49,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPoll.LastUpdateUserName)
 			};
 
-			forumPolls.BulkInsert(context, pollColumns, nameof(ApplicationDbContext.ForumPolls));
+			forumPolls.BulkInsert(connectionStr, pollColumns, nameof(ApplicationDbContext.ForumPolls));
 
 			/******** ForumPollOption ********/
 			var legForumPollOptions =
@@ -82,7 +83,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOption.LastUpdateUserName)
 			};
 
-			forumPollOptions.BulkInsert(context, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions), SqlBulkCopyOptions.Default);
+			forumPollOptions.BulkInsert(connectionStr, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions), SqlBulkCopyOptions.Default);
 
 			/******** ForumPollOptionVote ********/
 			var legForumVoters = legacyForumContext.Voter.ToList();
@@ -135,7 +136,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOptionVote.IpAddress)
 			};
 
-			forumPollOptionVotes.BulkInsert(context, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes), SqlBulkCopyOptions.Default);
+			forumPollOptionVotes.BulkInsert(connectionStr, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes), SqlBulkCopyOptions.Default);
 		}
 	}
 }

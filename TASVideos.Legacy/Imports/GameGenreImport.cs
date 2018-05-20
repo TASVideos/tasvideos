@@ -11,6 +11,7 @@ namespace TASVideos.Legacy.Imports
 	public static class GameGenreImport
 	{
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -49,7 +50,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameGenre.GenreId)
 			};
 
-			gameGenres.BulkInsert(context, gameGenreColumns, nameof(ApplicationDbContext.GameGenres));
+			gameGenres.BulkInsert(connectionStr, gameGenreColumns, nameof(ApplicationDbContext.GameGenres));
 		}
 	}
 }

@@ -36,13 +36,13 @@ namespace TASVideos.Legacy.Imports
 
 		public static void BulkInsert<T>(
 			this IEnumerable<T> data,
-			DbContext context,
+			string connectionString,
 			string[] columnsToCopy,
 			string tableName,
 			SqlBulkCopyOptions options = SqlBulkCopyOptions.KeepIdentity,
 			int batchSize = 10000)
 		{
-			using (var sqlCopy = new SqlBulkCopy(context.Database.GetDbConnection().ConnectionString, options))
+			using (var sqlCopy = new SqlBulkCopy(connectionString, options))
 			{
 				sqlCopy.DestinationTableName = tableName;
 				sqlCopy.BatchSize = batchSize;
