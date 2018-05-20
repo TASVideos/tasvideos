@@ -10,6 +10,7 @@ namespace TASVideos.Legacy.Imports
 	public static class GameImporter
 	{
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -43,7 +44,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Game.LastUpdateTimeStamp)
 			};
 
-			games.BulkInsert(context, columns, nameof(ApplicationDbContext.Games));
+			games.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Games));
 		}
 
 		// The legacy system did not strictly enforce a game for publications

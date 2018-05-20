@@ -15,6 +15,7 @@ namespace TASVideos.Legacy.Imports
 	public static class UserImporter
 	{
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext,
 			NesVideosForumContext legacyForumContext)
@@ -193,11 +194,11 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			users.BulkInsert(context, userColumns, "[User]");
-			userRoles.BulkInsert(context, userRoleColumns, "[UserRoles]");
+			users.BulkInsert(connectionStr, userColumns, "[User]");
+			userRoles.BulkInsert(connectionStr, userRoleColumns, "[UserRoles]");
 
 			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
-			portedPlayers.BulkInsert(context, playerColumns, "[User]");
+			portedPlayers.BulkInsert(connectionStr, playerColumns, "[User]");
 		}
 
 		private static Role GetRoleFromLegacy(string role, IEnumerable<Role> roles)

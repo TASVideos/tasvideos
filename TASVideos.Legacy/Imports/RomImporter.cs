@@ -10,6 +10,7 @@ namespace TASVideos.Legacy.Imports
 	public static class RomImporter
 	{
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -42,7 +43,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameRom.LastUpdateTimeStamp)
 			};
 
-			roms.BulkInsert(context, columns, nameof(ApplicationDbContext.Roms));
+			roms.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Roms));
 		}
 
 		// The legacy system barely used roms and they were never enforced, but the new system demands

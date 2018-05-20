@@ -16,7 +16,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class WikiImporter
 	{
-		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
+		public static void Import(string connectionStr, ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			var siteTexts = legacySiteContext.SiteText
 				.Include(s => s.User)
@@ -248,7 +248,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPage.RevisionMessage)
 			};
 
-			pages.BulkInsert(context, wikiColumns, nameof(ApplicationDbContext.WikiPages));
+			pages.BulkInsert(connectionStr, wikiColumns, nameof(ApplicationDbContext.WikiPages));
 
 			var referralColumns = new[]
 			{
@@ -257,7 +257,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPageReferral.Referrer)
 			};
 
-			referralList.BulkInsert(context, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000);
+			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000);
 		}
 
 		private static readonly Dictionary<(string, int), int> CrystalShardsLookup = new Dictionary<(string, int), int>

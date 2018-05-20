@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
@@ -18,6 +19,7 @@ namespace TASVideos.Legacy
 
 		public static void RunLegacyImport(
 			ApplicationDbContext context,
+			string connectionStr,
 			NesVideosSiteContext legacySiteContext,
 			NesVideosForumContext legacyForumContext)
 		{
@@ -28,25 +30,25 @@ namespace TASVideos.Legacy
 
 			var stopwatch = Stopwatch.StartNew();
 
-			Run("Tags", () => TagImporter.Import(context, legacySiteContext));
-			Run("Roms", () => RomImporter.Import(context, legacySiteContext));
-			Run("Games", () => GameImporter.Import(context, legacySiteContext));
-			Run("GameGenre", () => GameGenreImport.Import(context, legacySiteContext));
-			Run("Users", () => UserImporter.Import(context, legacySiteContext, legacyForumContext));
-			Run("Award", () => AwardImporter.Import(context, legacySiteContext));
+			Run("Tags", () => TagImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Roms", () => RomImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Games", () => GameImporter.Import(connectionStr, context, legacySiteContext));
+			Run("GameGenre", () => GameGenreImport.Import(connectionStr, context, legacySiteContext));
+			Run("Users", () => UserImporter.Import(connectionStr, context, legacySiteContext, legacyForumContext));
+			Run("Award", () => AwardImporter.Import(connectionStr, context, legacySiteContext));
 
-			Run("Forum Categories", () => ForumCategoriesImporter.Import(context, legacyForumContext));
-			Run("Forums", () => ForumImporter.Import(context, legacyForumContext));
-			Run("Forum Topics", () => ForumTopicImporter.Import(context, legacyForumContext));
-			Run("Forum Posts", () => ForumPostsImporter.Import(context, legacyForumContext));
-			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(context, legacyForumContext));
-			Run("Forum Polls Importer", () => ForumPollImporter.Import(context, legacyForumContext));
+			Run("Forum Categories", () => ForumCategoriesImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forums", () => ForumImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Topics", () => ForumTopicImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Polls Importer", () => ForumPollImporter.Import(connectionStr, context, legacyForumContext));
 
-			Run("Wiki", () => WikiImporter.Import(context, legacySiteContext));
-			Run("Submissions", () => SubmissionImporter.Import(context, legacySiteContext));
-			Run("Publications", () => PublicationImporter.Import(context, legacySiteContext));
-			Run("Publication Ratings", () => PublicationRatingImporter.Import(context, legacySiteContext));
-			Run("Publication Flags", () => PublicationFlagImporter.Import(context, legacySiteContext));
+			Run("Wiki", () => WikiImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Submissions", () => SubmissionImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Publications", () => PublicationImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Publication Ratings", () => PublicationRatingImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Publication Flags", () => PublicationFlagImporter.Import(connectionStr, context, legacySiteContext));
 
 			var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
 			stopwatch.Stop();

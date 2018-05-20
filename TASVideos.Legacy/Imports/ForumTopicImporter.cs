@@ -9,6 +9,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
     public static class ForumTopicImporter
     {
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
@@ -64,7 +65,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.PollId)
 			};
 
-			topics.BulkInsert(context, columns, nameof(ApplicationDbContext.ForumTopics));
+			topics.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumTopics));
 		}
 	}
 }

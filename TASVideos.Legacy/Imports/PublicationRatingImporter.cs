@@ -10,6 +10,7 @@ namespace TASVideos.Legacy.Imports
 	public static class PublicationRatingImporter
 	{
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -54,7 +55,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationRating.Value),
 			};
 
-			ratings.BulkInsert(context, columns, nameof(ApplicationDbContext.PublicationRatings), SqlBulkCopyOptions.Default, 20000);
+			ratings.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationRatings), SqlBulkCopyOptions.Default, 20000);
 		}
 	}
 }
