@@ -79,7 +79,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.EnableBbCode)
 			};
 
-			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), SqlBulkCopyOptions.KeepIdentity, 20000);
+			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), SqlBulkCopyOptions.KeepIdentity, 20000, 600);
 		}
 	}
 }

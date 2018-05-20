@@ -238,7 +238,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.ObsoletedById)
 			};
 
-			publications.BulkInsert(connectionStr, pubColumns, nameof(ApplicationDbContext.Publications));
+			publications.BulkInsert(connectionStr, pubColumns, nameof(ApplicationDbContext.Publications), bulkCopyTimeout: 600);
 
 			var pubAuthorColumns = new[]
 			{
