@@ -1,0 +1,17 @@
+﻿@model IEnumerable<GameSubpageModel>
+
+<div class="card-columns">
+	@foreach (var item in Model.OrderBy(m => m.SystemCode))
+	{
+		<div class="card" style="width: 18rem;">
+			<div class="card-body">
+				<div class="card-title">
+					<a href="/@item.PageLink">@item.SystemCode</a>
+				</div>
+				<p class="card-text">
+					@item.SystemDescription
+				</p>
+			</div>
+		</div>
+	}
+</div>
