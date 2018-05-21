@@ -10,6 +10,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Models;
 using TASVideos.Services;
+using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
 {
@@ -584,6 +585,34 @@ namespace TASVideos.Tasks
 			}
 
 			await _db.SaveChangesAsync();
+		}
+
+		public async Task<IEnumerable<GameSubpageModel>> GetGameResourcesSubPages()
+		{
+			using (await _db.Database.BeginTransactionAsync())
+			{
+				var systems = await _db.GameSystems.ToListAsync();
+				var gameResourceSystmes = systems.Select(s => "GameResources/" + s.Code);
+
+				// TODO: from cache
+				var pages = await _db.WikiPages
+					.ThatAreNotDeleted()
+					.ThatAreCurrentRevisions()
+					.Where(wp => gameResourceSystmes.Contains(wp.PageName))
+					.Select(wp => wp.PageName)
+					.ToListAsync();
+
+				return
+					(from s in systems
+					 join wp in pages on s.Code equals wp.Split('/').Last()
+					 select new GameSubpageModel
+					 {
+						 SystemCode = s.Code,
+						 SystemDescription = s.DisplayName,
+						PageLink = "GameResources/" + s.Code
+					 })
+					.ToList();
+			}
 		}
 	}
 }
