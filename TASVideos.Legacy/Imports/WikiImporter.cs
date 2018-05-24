@@ -223,6 +223,10 @@ namespace TASVideos.Legacy.Imports
 			{
 				markup = markup.Replace("][", "II");
 			}
+			else if (st.PageName == "Awards")
+			{
+				markup = markup.Replace("[module:listsubpages]", "");
+			}
 
 			markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
 			markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
