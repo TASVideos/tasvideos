@@ -10,6 +10,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Legacy.Data.Site;
+using TASVideos.Legacy.Data.Site.Entity;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Legacy.Imports
@@ -36,161 +37,9 @@ namespace TASVideos.Legacy.Imports
 
 			foreach (var legacyPage in siteTextWithUser)
 			{
-				string markup = ImportHelper.FixString(legacyPage.Site.Description);
-				int revision = legacyPage.Site.Revision;
-				string pageName = legacyPage.Site.PageName;
-
-				if (legacyPage.Site.PageName.StartsWith("System"))
-				{
-					pageName = legacyPage.Site.PageName.Replace("System", "System/");
-				}
-				else if (legacyPage.Site.PageName == "FrontPage")
-				{
-					pageName = "System/FrontPage";
-					markup = markup.Replace("[module:welcome]", "");
-				}
-
-				// ******** Deleted pages that were recreated *************/
-				else if (legacyPage.Site.PageName == "GameResources/N64/Kirby64TheCrystalShards"
-					|| legacyPage.Site.PageName == "DeletedPages/GameResources/N64/Kirby64TheCrystalShards")
-				{
-					revision = CrystalShardsLookup[(legacyPage.Site.PageName, legacyPage.Site.Revision)];
-				}
-
-				// This page had 2 deleted pages that came first, so we can just add to the revision number
-				else if (legacyPage.Site.PageName == "GameResources/DS/MetroidPrimeHunters")
-				{
-					revision += 2;
-				}
-
-				// ******** END Deleted pages that were recreated *************/
-
-				// Shenanigans
-				else if (legacyPage.Site.PageName == "Phil" && legacyPage.Site.Revision >= 7 && legacyPage.Site.Revision <= 11)
-				{
-					markup = markup.Replace(":[", ":|");
-				}
-				else if (legacyPage.Site.PageName == "971S" && legacyPage.Site.Revision == 3)
-				{
-					markup = markup.Replace("[Phi:", "[Phil]:");
-				}
-				else if (legacyPage.Site.PageName == "2884M")
-				{
-					markup = markup.Replace("][", "II");
-				}
-
-				var pubId = SubmissionHelper.IsPublicationLink(legacyPage.Site.PageName);
-				var subId = SubmissionHelper.IsSubmissionLink(legacyPage.Site.PageName);
-				var gamId = SubmissionHelper.IsGamePageLink(legacyPage.Site.PageName);
-
-				bool isDeleted = false;
-				if (pubId.HasValue)
-				{
-					pageName = LinkConstants.PublicationWikiPage + pubId.Value;
-				}
-				else if (subId.HasValue)
-				{
-					pageName = LinkConstants.SubmissionWikiPage + subId.Value;
-				}
-				else if (gamId.HasValue)
-				{
-					pageName = LinkConstants.GameWikiPage + gamId.Value;
-				}
-				else if (pageName.StartsWith("DeletedPages/"))
-				{
-					pageName = pageName.Replace("DeletedPages/", "");
-					isDeleted = true;
-				}
-
-				if (legacyPage.User != null)
-				{
-					// Use the user's name for the pagename instead of the actual page,
-					// We want Homepages to match usernames exactly
-					var slashIndex = pageName.IndexOf("/");
-					if (slashIndex > 0)
-					{
-						pageName = legacyPage.User.Name + pageName.Substring(slashIndex, pageName.Length - slashIndex);
-					}
-					else
-					{
-						pageName = legacyPage.User.Name;
-					}
-
-					pageName = "HomePages/" + pageName;
-
-				}
-
-				markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
-				markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
-				markup = markup.Replace("=css/favourite.png", "=images/startier.png");
-				markup = markup.Replace("=/css/vaulttier.png", "=images/vaulttier.png");
-				markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
-				markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
-
-				// Fix known links that failed to use the user module
-				markup = markup.Replace("[Bisqwit]", "[user:Bisqwit]");
-				markup = markup.Replace("[Nach]", "[user:Nach]");
-				markup = markup.Replace("[Phil]", "[user:Phil]");
-				markup = markup.Replace("[feos]", "[user:feos]");
-				markup = markup.Replace("[adelikat]", "[user:adelikat]");
-				markup = markup.Replace("[Adelikat]", "[user:adelikat]");
-				markup = markup.Replace("[Truncated]", "[user:Truncated]");
-				markup = markup.Replace("[DeHackEd]", "[user:DeHackEd]");
-				markup = markup.Replace("[Walker Boh]", "[user:Walker Boh]");
-				markup = markup.Replace("[WalkerBoh]", "[user:Walker Boh]");
-				markup = markup.Replace("[Dan_]", "[user:Dan_]");
-				markup = markup.Replace("[Zurreco]", "[user:Zurreco]");
-				markup = markup.Replace("[Nitsuja]", "[user:nitsuja]");
-				markup = markup.Replace("[Baxter]", "[user:Baxter]");
-				markup = markup.Replace("[JXQ]", "[user:JXQ]");
-				markup = markup.Replace("[Randil]", "[user:Randil]");
-				markup = markup.Replace("[Genisto]", "[user:Genisto]");
-				markup = markup.Replace("[BoltR]", "[user:BoltR]");
-				markup = markup.Replace("[Ideamagnate]", "[user:Ideamagnate]");
-				markup = markup.Replace("[FractalFusion]", "[user:FractalFusion]");
-				markup = markup.Replace("[Maza]", "[user:Maza]");
-				markup = markup.Replace("[nifboy]", "[user:nifboy]");
-				markup = markup.Replace("[blip]", "[user:blip]");
-				markup = markup.Replace("[Aktan]", "[user:Aktan]");
-				markup = markup.Replace("[alden]", "[user:alden]");
-				markup = markup.Replace("[andrewg]", "[user:andrewg]");
-				markup = markup.Replace("[AngerFist]", "[user:AngerFist]");
-				markup = markup.Replace("[Aqfaq]", "[user:Aqfaq]");
-				markup = markup.Replace("[arukAdo]", "[user:arukAdo]");
-				markup = markup.Replace("[Flygon]", "[user:Flygon]");
-				markup = markup.Replace("[Fog]", "[user:Fog]");
-				markup = markup.Replace("[mmbossman]", "[user:mmbossman]");
-				markup = markup.Replace("[Comicalflop]", "[user:Comicalflop]");
-
-				// And properly done user modules but the user page was not the same as the username
-				markup = markup.Replace("[user:Dan]", "[user:Dan_]");
-
-				// These are automatic now
-				markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
-				markup = Regex.Replace(markup, "\\[module:gamefooter\\]", "", RegexOptions.IgnoreCase);
-
-				// Mitigate unnecessary ListParent module calls, if they are at the beginning, wipe them.
-				// We can't remove all instances because of pages like Interviews/Phil/GEE2005
-				// Where below the title there is Back To: %%%[module:ListParents]
-				if (markup.StartsWith("[module:listparents]", StringComparison.InvariantCultureIgnoreCase))
-				{
-					markup = Regex.Replace(markup, "\\[module:listparents\\]", "", RegexOptions.IgnoreCase);
-				}
-
-				// Ditto for pages that end with ListSubPages
-				if (markup.EndsWith("[module:listsubpages]", StringComparison.InvariantCultureIgnoreCase))
-				{
-					markup = Regex.Replace(markup, "\\[module:listsubpages\\]", "", RegexOptions.IgnoreCase);
-				}
-
-				// Common markup mistakes
-				markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
-				markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
-				markup = markup.Replace("[''''!'''']", "[[!]]");
-				if (pageName == "InternalSystem/SubmissionContent/S4084")
-				{
-					markup = markup.Replace("[''''C'''']", "[[C]]");
-				}
+				string pageName = PageNameShenanigans(legacyPage.Site, legacyPage.User?.Name);
+				string markup = MarkupShenanigans(legacyPage.Site);
+				int revision = RevisionShenanigans(legacyPage.Site);
 
 				pages.Add(new WikiPage
 				{
@@ -200,7 +49,7 @@ namespace TASVideos.Legacy.Imports
 					Revision = revision,
 					MinorEdit = legacyPage.Site.MinorEdit == "Y",
 					RevisionMessage = legacyPage.Site.WhyEdit,
-					IsDeleted = isDeleted,
+					IsDeleted = legacyPage.Site.PageName.StartsWith("DeletedPages/"),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
 					CreateUserName = legacyPage.Site.User.Name,
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp)
@@ -299,5 +148,175 @@ namespace TASVideos.Legacy.Imports
 			[("GameResources/N64/Kirby64TheCrystalShards", 22)] = 33,
 			[("GameResources/N64/Kirby64TheCrystalShards", 23)] = 34,
 		};
+
+		private static string PageNameShenanigans(SiteText st, string userName)
+		{
+			string pageName = st.PageName;
+			if (pageName.StartsWith("System"))
+			{
+				pageName = pageName.Replace("System", "System/");
+			}
+			else if (pageName == "FrontPage")
+			{
+				pageName = "System/FrontPage";
+			}
+			else if (pageName.StartsWith("DeletedPages/"))
+			{
+				pageName = pageName.Replace("DeletedPages/", "");
+			}
+			else if (!string.IsNullOrEmpty(userName))
+			{
+				// Use the user's name for the pagename instead of the actual page,
+				// We want Homepages to match usernames exactly
+				var slashIndex = pageName.IndexOf("/");
+				if (slashIndex > 0)
+				{
+					pageName = userName + pageName.Substring(slashIndex, pageName.Length - slashIndex);
+				}
+				else
+				{
+					pageName = userName;
+				}
+
+				pageName = "HomePages/" + pageName;
+			}
+			else
+			{
+				var pubId = SubmissionHelper.IsPublicationLink(pageName);
+				var subId = SubmissionHelper.IsSubmissionLink(pageName);
+				var gamId = SubmissionHelper.IsGamePageLink(pageName);
+
+				if (pubId.HasValue)
+				{
+					pageName = LinkConstants.PublicationWikiPage + pubId.Value;
+				}
+				else if (subId.HasValue)
+				{
+					pageName = LinkConstants.SubmissionWikiPage + subId.Value;
+				}
+				else if (gamId.HasValue)
+				{
+					pageName = LinkConstants.GameWikiPage + gamId.Value;
+				}
+			}
+
+			return pageName;
+		}
+
+		private static string MarkupShenanigans(SiteText st)
+		{
+			string markup = ImportHelper.FixString(st.Description);
+
+			if (st.PageName == "FrontPage")
+			{
+				markup = markup.Replace("[module:welcome]", "");
+			}
+			else if (st.PageName == "Phil" && st.Revision >= 7 && st.Revision <= 11)
+			{
+				markup = markup.Replace(":[", ":|");
+			}
+			else if (st.PageName == "971S" && st.Revision == 3)
+			{
+				markup = markup.Replace("[Phi:", "[user:Phil]:");
+			}
+			else if (st.PageName == "2884M")
+			{
+				markup = markup.Replace("][", "II");
+			}
+
+			markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
+			markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
+			markup = markup.Replace("=css/favourite.png", "=images/startier.png");
+			markup = markup.Replace("=/css/vaulttier.png", "=images/vaulttier.png");
+			markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
+			markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
+
+			// Fix known links that failed to use the user module
+			markup = markup.Replace("[Bisqwit]", "[user:Bisqwit]");
+			markup = markup.Replace("[Nach]", "[user:Nach]");
+			markup = markup.Replace("[Phil]", "[user:Phil]");
+			markup = markup.Replace("[feos]", "[user:feos]");
+			markup = markup.Replace("[adelikat]", "[user:adelikat]");
+			markup = markup.Replace("[Adelikat]", "[user:adelikat]");
+			markup = markup.Replace("[Truncated]", "[user:Truncated]");
+			markup = markup.Replace("[DeHackEd]", "[user:DeHackEd]");
+			markup = markup.Replace("[Walker Boh]", "[user:Walker Boh]");
+			markup = markup.Replace("[WalkerBoh]", "[user:Walker Boh]");
+			markup = markup.Replace("[Dan_]", "[user:Dan_]");
+			markup = markup.Replace("[Zurreco]", "[user:Zurreco]");
+			markup = markup.Replace("[Nitsuja]", "[user:nitsuja]");
+			markup = markup.Replace("[Baxter]", "[user:Baxter]");
+			markup = markup.Replace("[JXQ]", "[user:JXQ]");
+			markup = markup.Replace("[Randil]", "[user:Randil]");
+			markup = markup.Replace("[Genisto]", "[user:Genisto]");
+			markup = markup.Replace("[BoltR]", "[user:BoltR]");
+			markup = markup.Replace("[Ideamagnate]", "[user:Ideamagnate]");
+			markup = markup.Replace("[FractalFusion]", "[user:FractalFusion]");
+			markup = markup.Replace("[Maza]", "[user:Maza]");
+			markup = markup.Replace("[nifboy]", "[user:nifboy]");
+			markup = markup.Replace("[blip]", "[user:blip]");
+			markup = markup.Replace("[Aktan]", "[user:Aktan]");
+			markup = markup.Replace("[alden]", "[user:alden]");
+			markup = markup.Replace("[andrewg]", "[user:andrewg]");
+			markup = markup.Replace("[AngerFist]", "[user:AngerFist]");
+			markup = markup.Replace("[Aqfaq]", "[user:Aqfaq]");
+			markup = markup.Replace("[arukAdo]", "[user:arukAdo]");
+			markup = markup.Replace("[Flygon]", "[user:Flygon]");
+			markup = markup.Replace("[Fog]", "[user:Fog]");
+			markup = markup.Replace("[mmbossman]", "[user:mmbossman]");
+			markup = markup.Replace("[Comicalflop]", "[user:Comicalflop]");
+
+			// And properly done user modules but the user page was not the same as the username
+			markup = markup.Replace("[user:Dan]", "[user:Dan_]");
+
+			// These are automatic now
+			markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
+			markup = Regex.Replace(markup, "\\[module:gamefooter\\]", "", RegexOptions.IgnoreCase);
+
+			// Mitigate unnecessary ListParent module calls, if they are at the beginning, wipe them.
+			// We can't remove all instances because of pages like Interviews/Phil/GEE2005
+			// Where below the title there is Back To: %%%[module:ListParents]
+			if (markup.StartsWith("[module:listparents]", StringComparison.InvariantCultureIgnoreCase))
+			{
+				markup = Regex.Replace(markup, "\\[module:listparents\\]", "", RegexOptions.IgnoreCase);
+			}
+
+			// Ditto for pages that end with ListSubPages
+			if (markup.EndsWith("[module:listsubpages]", StringComparison.InvariantCultureIgnoreCase))
+			{
+				markup = Regex.Replace(markup, "\\[module:listsubpages\\]", "", RegexOptions.IgnoreCase);
+			}
+
+			// Common markup mistakes
+			markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
+			markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
+			markup = markup.Replace("[''''!'''']", "[[!]]");
+			if (st.PageName == "4084S")
+			{
+				markup = markup.Replace("[''''C'''']", "[[C]]");
+			}
+
+			return markup;
+		}
+
+		private static int RevisionShenanigans(SiteText st)
+		{
+			int revision = st.Revision;
+
+			// ******** Deleted pages that were recreated *************/
+			if (st.PageName == "GameResources/N64/Kirby64TheCrystalShards"
+					|| st.PageName == "DeletedPages/GameResources/N64/Kirby64TheCrystalShards")
+			{
+				revision = CrystalShardsLookup[(st.PageName, st.Revision)];
+			}
+
+			// This page had 2 deleted pages that came first, so we can just add to the revision number
+			else if (st.PageName == "GameResources/DS/MetroidPrimeHunters")
+			{
+				revision += 2;
+			}
+
+			return revision;
+		}
 	}
 }
