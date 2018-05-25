@@ -26,7 +26,7 @@ namespace TASVideos.Tasks
 			_cache = cache;
 		}
 
-		public async Task<AwardsModuleModel> GetAwardsForModule(int? year)
+		public async Task<AwardsModuleModel> GetAwardsForModule(int year)
 		{
 			var allAwards = await AllAwardsCache();
 
