@@ -26,6 +26,13 @@ namespace TASVideos.Tasks
 			_cache = cache;
 		}
 
+		public async Task<AwardsModuleModel> GetAwardsForModule(int? year)
+		{
+			var allAwards = await AllAwardsCache();
+
+			return new AwardsModuleModel();
+		}
+
 		/// <summary>
 		/// Gets all awards for the user, or any movie for which the user is an author of
 		/// </summary>
