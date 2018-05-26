@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper;
+
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -17,25 +20,28 @@ namespace TASVideos.Tasks
 
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
+		private readonly IMapper _mapper;
 
 		public AwardTasks(
 			ApplicationDbContext db,
-			ICacheService cache)
+			ICacheService cache,
+			IMapper mapper)
 		{
 			_db = db;
 			_cache = cache;
+			_mapper = mapper;
 		}
 
-		public async Task<AwardByYearModel> GetAwardsForModule(int year)
+		public async Task<IEnumerable<AwardDetailsModel>> GetAwardsForModule(int year)
 		{
 			var allAwards = await AllAwardsCache();
 
 			var model = allAwards
 				.Where(a => a.Year + 2000 == year)
+				.Select(_mapper.Map<AwardDetailsModel>)
 				.ToList();
 
-
-			return new AwardByYearModel();
+			return model;
 		}
 
 		/// <summary>
@@ -107,7 +113,7 @@ namespace TASVideos.Tasks
 			}
 		}
 
-		private class AwardDto
+		public class AwardDto
 		{
 			public string ShortName { get; set; }
 			public string Description { get; set; }
