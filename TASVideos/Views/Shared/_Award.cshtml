@@ -1,0 +1,4 @@
+﻿@model AwardDisplayModel
+<a href="/Awards/20@(Model.Year.ToString().PadLeft(2, '0'))" title="Award - @Model.Description">
+	<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{Model.ShortName}_{Model.Year.ToString().PadLeft(2, '0')}.png")" alt="@Model.Description" />
+</a>
