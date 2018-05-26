@@ -5,23 +5,16 @@ using TASVideos.Data.Entity.Awards;
 namespace TASVideos.Models
 {
 	/// <summary>
-	/// Represents all the data necessary for the Awards module for a year
+	/// Represents an award and related data for the Awards module
 	/// </summary>
-	public class AwardByYearModel
+	public class AwardDetailsModel
 	{
-		public AwardType Type { get; set; }
-		public int Year { get; set; }
 		public string ShortName { get; set; }
 		public string Description { get; set; }
-
-		public IEnumerable<int> Movies { get; set; } = new List<int>();
-		public IEnumerable<User> Users { get; set; } = new List<User>();
-
-		public class User
-		{
-			public int Id { get; set; }
-			public string UserName { get; set; }
-		}
+		public int Year { get; set; }
+		public AwardType Type { get; set; }
+		public IEnumerable<int> PublicationIds { get; set; } = new HashSet<int>();
+		public IEnumerable<int> UserIds { get; set; } = new HashSet<int>();
 	}
 
 	/// <summary>

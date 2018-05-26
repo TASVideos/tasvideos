@@ -1,3 +1,6 @@
-﻿@model AwardByYearModel
+﻿@model IEnumerable<AwardDetailsModel>
 
-<h4>TODO</h4>
+@foreach (var award in Model)
+{
+	<p>@award.Description</p>
+}

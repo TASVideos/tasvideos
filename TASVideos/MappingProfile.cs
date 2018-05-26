@@ -2,6 +2,7 @@
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
+using TASVideos.Tasks;
 
 namespace TASVideos
 {
@@ -28,6 +29,8 @@ namespace TASVideos
 			CreateMap<GameRom, RomEditModel>()
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game.DisplayName));
 			CreateMap<RomEditModel, GameRom>();
+
+			CreateMap<AwardTasks.AwardDto, AwardDetailsModel>();
 		}
 	}
 }
