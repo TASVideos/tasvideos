@@ -30,9 +30,9 @@
 					<br />
 					<a condition="Model.PostCount > 0" href="#" class="btn btn-primary">All Posts</a>
 					<div class="pull-right">
-						@foreach (var award in Model.Awards)
+						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 						{
-							<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{award.ShortName}_{award.Year.ToString().PadLeft(2, '0')}.png")" title="@award.Description" alt="@award.Description" />
+							@await Html.PartialAsync("../Shared/_Award.cshtml", award)
 						}
 					</div>
 				</div>

@@ -64,6 +64,7 @@ namespace TASVideos.Tasks
 					.Select(ua => new AwardDto
 					{
 						ShortName = ua.Award.ShortName,
+						Description = ua.Award.Description + " of " + (ua.Year + 2000).ToString(),
 						Year = ua.Year,
 						Type = AwardType.User,
 						PublicationId = null,
@@ -75,6 +76,7 @@ namespace TASVideos.Tasks
 					.Select(pa => new AwardDto
 					{
 						ShortName = pa.Award.ShortName,
+						Description = pa.Award.Description + " of " + (pa.Year + 2000).ToString(),
 						Year = pa.Year,
 						Type = AwardType.Movie,
 						PublicationId = pa.PublicationId,
