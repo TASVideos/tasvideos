@@ -26,11 +26,16 @@ namespace TASVideos.Tasks
 			_cache = cache;
 		}
 
-		public async Task<AwardsModuleModel> GetAwardsForModule(int year)
+		public async Task<AwardByYearModel> GetAwardsForModule(int year)
 		{
 			var allAwards = await AllAwardsCache();
 
-			return new AwardsModuleModel();
+			var model = allAwards
+				.Where(a => a.Year + 2000 == year)
+				.ToList();
+
+
+			return new AwardByYearModel();
 		}
 
 		/// <summary>
@@ -58,35 +63,43 @@ namespace TASVideos.Tasks
 				return awards;
 			}
 
+			// TODO: optimize these with EF 2.1, 2.0 is so bad with GroupBy that it is hopeless
 			using (_db.Database.BeginTransactionAsync())
 			{
 				var userAwards = await _db.UserAwards
-					.Select(ua => new AwardDto
+					.GroupBy(gkey => new { gkey.Award.Description, gkey.Award.ShortName, gkey.Year }, gvalue => gvalue.UserId)
+					.Select(g => new AwardDto
 					{
-						ShortName = ua.Award.ShortName,
-						Description = ua.Award.Description + " of " + (ua.Year + 2000).ToString(),
-						Year = ua.Year,
+						ShortName = g.Key.ShortName,
+						Description = g.Key.Description + " of " + (g.Key.Year + 2000).ToString(),
+						Year = g.Key.Year,
 						Type = AwardType.User,
-						PublicationId = null,
-						UserIds = new[] { ua.UserId }
+						PublicationIds = Enumerable.Empty<int>(),
+						UserIds = g.Select(userId => userId).ToList()
 					})
 					.ToListAsync();
 
-				var movieAwards = await _db.PublicationAwards
-					.Select(pa => new AwardDto
+
+				var pubLists = await _db.PublicationAwards
+					.Include(pa => pa.Award)
+					.Include(pa => pa.Publication)
+					.ThenInclude(pa => pa.Authors)
+					.ToListAsync();
+
+				var publicationAwards = pubLists
+					.GroupBy(gkey => new { gkey.Award.Description, gkey.Award.ShortName, gkey.Year }, gvalue => new { gvalue.PublicationId, UserIds = gvalue.Publication.Authors.Select(a => a.UserId) })
+					.Select(g => new AwardDto
 					{
-						ShortName = pa.Award.ShortName,
-						Description = pa.Award.Description + " of " + (pa.Year + 2000).ToString(),
-						Year = pa.Year,
-						Type = AwardType.Movie,
-						PublicationId = pa.PublicationId,
-						UserIds = pa.Publication.Authors
-							.Select(a => a.UserId)
-							.ToList()
+						ShortName = g.Key.ShortName,
+						Description = g.Key.Description + " of " + (g.Key.Year + 2000).ToString(),
+						Year = g.Key.Year,
+						Type = AwardType.User,
+						PublicationIds = g.Select(gv => gv.PublicationId).ToList(),
+						UserIds = g.SelectMany(gv => gv.UserIds).ToList()
 					})
-					.ToListAsync();
+					.ToList();
 
-				var allAwards = userAwards.Concat(movieAwards);
+				var allAwards = userAwards.Concat(publicationAwards);
 
 				_cache.Set(AwardCacheKey, allAwards, DurationConstants.OneWeekInSeconds);
 
@@ -100,7 +113,7 @@ namespace TASVideos.Tasks
 			public string Description { get; set; }
 			public int Year { get; set; }
 			public AwardType Type { get; set; }
-			public int? PublicationId { get; set; }
+			public IEnumerable<int> PublicationIds { get; set; } = new HashSet<int>();
 			public IEnumerable<int> UserIds { get; set; } = new HashSet<int>();
 		}
 	}

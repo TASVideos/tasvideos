@@ -1,29 +1,26 @@
 ﻿using System.Collections.Generic;
 
+using TASVideos.Data.Entity.Awards;
+
 namespace TASVideos.Models
 {
 	/// <summary>
-	/// Represents all the data necessary for the Awards module
+	/// Represents all the data necessary for the Awards module for a year
 	/// </summary>
-	public class AwardsModuleModel
+	public class AwardByYearModel
 	{
-		public Dictionary<int, AwardDisplayModel> AwardsByYear { get; set; } = new Dictionary<int, AwardDisplayModel>();
+		public AwardType Type { get; set; }
+		public int Year { get; set; }
+		public string ShortName { get; set; }
+		public string Description { get; set; }
 
-		public class AwardYearModel
+		public IEnumerable<int> Movies { get; set; } = new List<int>();
+		public IEnumerable<User> Users { get; set; } = new List<User>();
+
+		public class User
 		{
-			public string ShortName { get; set; }
-			public string Description { get; set; }
-			public int Year { get; set; }
-
-			public IEnumerable<int> Movies { get; set; } = new List<int>();
-
-			public IEnumerable<User> Users { get; set; } = new List<User>();
-
-			public class User
-			{
-				public int Id { get; set; }
-				public string UserName { get; set; }
-			}
+			public int Id { get; set; }
+			public string UserName { get; set; }
 		}
 	}
 
