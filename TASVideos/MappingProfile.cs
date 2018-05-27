@@ -31,6 +31,7 @@ namespace TASVideos
 			CreateMap<RomEditModel, GameRom>();
 
 			CreateMap<AwardTasks.AwardDto, AwardDetailsModel>();
+			CreateMap<AwardTasks.AwardDto.UserDto, AwardDetailsModel.UserModel>();
 		}
 	}
 }

@@ -52,7 +52,7 @@ namespace TASVideos.Tasks
 			var allAwards = await AllAwardsCache();
 
 			return allAwards
-				.Where(a => a.UserIds.Contains(userId))
+				.Where(a => a.Users.Select(u => u.Id).Contains(userId))
 				.Select(ua => new AwardDisplayModel
 				{
 					ShortName = ua.ShortName,
@@ -73,35 +73,54 @@ namespace TASVideos.Tasks
 			using (_db.Database.BeginTransactionAsync())
 			{
 				var userAwards = await _db.UserAwards
-					.GroupBy(gkey => new { gkey.Award.Description, gkey.Award.ShortName, gkey.Year }, gvalue => gvalue.UserId)
+					.GroupBy(gkey => new
+						{
+							gkey.Award.Description, gkey.Award.ShortName, gkey.Year
+						}, gvalue => new AwardDto.UserDto
+						{
+							Id = gvalue.UserId, UserName = gvalue.User.UserName
+						})
 					.Select(g => new AwardDto
 					{
 						ShortName = g.Key.ShortName,
 						Description = g.Key.Description + " of " + (g.Key.Year + 2000).ToString(),
 						Year = g.Key.Year,
 						Type = AwardType.User,
-						PublicationIds = Enumerable.Empty<int>(),
-						UserIds = g.Select(userId => userId).ToList()
+						Publications = Enumerable.Empty<AwardDto.PublicationDto>(),
+						Users = g.ToList()
 					})
 					.ToListAsync();
-
 
 				var pubLists = await _db.PublicationAwards
 					.Include(pa => pa.Award)
 					.Include(pa => pa.Publication)
 					.ThenInclude(pa => pa.Authors)
+					.ThenInclude(a => a.Author)
 					.ToListAsync();
 
 				var publicationAwards = pubLists
-					.GroupBy(gkey => new { gkey.Award.Description, gkey.Award.ShortName, gkey.Year }, gvalue => new { gvalue.PublicationId, UserIds = gvalue.Publication.Authors.Select(a => a.UserId) })
+					.GroupBy(gkey => new
+						{
+							gkey.Award.Description, gkey.Award.ShortName, gkey.Year
+						}, gvalue => new
+						{
+							Publication = new
+							{
+								Id = gvalue.PublicationId, Title = gvalue.Publication.Title
+							},
+							Users = gvalue.Publication.Authors.Select(a => new
+							{
+								a.UserId, a.Author.UserName
+							})
+						})
 					.Select(g => new AwardDto
 					{
 						ShortName = g.Key.ShortName,
 						Description = g.Key.Description + " of " + (g.Key.Year + 2000).ToString(),
 						Year = g.Key.Year,
-						Type = AwardType.User,
-						PublicationIds = g.Select(gv => gv.PublicationId).ToList(),
-						UserIds = g.SelectMany(gv => gv.UserIds).ToList()
+						Type = AwardType.Movie,
+						Publications = g.Select(gv => new AwardDto.PublicationDto { Id = gv.Publication.Id, Title  = gv.Publication.Title }).ToList(),
+						Users = g.SelectMany(gv => gv.Users).Select(u => new AwardDto.UserDto { Id = u.UserId, UserName = u.UserName }).ToList()
 					})
 					.ToList();
 
@@ -119,8 +138,20 @@ namespace TASVideos.Tasks
 			public string Description { get; set; }
 			public int Year { get; set; }
 			public AwardType Type { get; set; }
-			public IEnumerable<int> PublicationIds { get; set; } = new HashSet<int>();
-			public IEnumerable<int> UserIds { get; set; } = new HashSet<int>();
+			public IEnumerable<PublicationDto> Publications { get; set; } = new HashSet<PublicationDto>();
+			public IEnumerable<UserDto> Users { get; set; } = new HashSet<UserDto>();
+
+			public class UserDto
+			{
+				public int Id { get; set; }
+				public string UserName { get; set; }
+			}
+
+			public class PublicationDto
+			{
+				public int Id { get; set; }
+				public string Title { get; set; }
+			}
 		}
 	}
 }
