@@ -21,8 +21,8 @@ namespace TASVideos.Legacy.Imports
 			NesVideosForumContext legacyForumContext)
 		{
 			// TODO:
+			// Check post count and add Experienced Forum User role
 			// forum user_active status?
-			// import forum users that have no wiki, but check if they are forum banned
 			// gender?
 			// timezone
 			// user_avatar_type ?
@@ -35,6 +35,10 @@ namespace TASVideos.Legacy.Imports
 			var legacyUsers = legacySiteContext.Users
 				.Include(u => u.UserRoles)
 				.ThenInclude(ur => ur.Role)
+				.ToList();
+
+			var bannedUsers = legacyForumContext.BanList
+				.Where(b => b.UserId > 0)
 				.ToList();
 
 			var users = legacyForumContext.Users
@@ -81,7 +85,9 @@ namespace TASVideos.Legacy.Imports
 			var joinedUsers = from user in users
 					join su in legacyUsers on user.UserName equals su.Name into lsu
 					from su in lsu.DefaultIfEmpty()
-					select new { User = user, SiteUser = su };
+					join bu in bannedUsers on user.Id equals bu.UserId into bbu
+					from bu in bbu.DefaultIfEmpty()
+					select new { User = user, SiteUser = su, IsBanned = bu != null };
 
 			foreach (var user in joinedUsers)
 			{
@@ -122,9 +128,14 @@ namespace TASVideos.Legacy.Imports
 						}
 					}
 				}
-				else
+				
+				if (!user.IsBanned)
 				{
-					// TODO: check any kind of active/ban forum status if none, then give them homepage and submit rights
+					context.UserRoles.Add(new UserRole
+					{
+						RoleId = roles.Single(r => r.Name == SeedRoleNames.ForumUser).Id,
+						UserId = user.User.Id
+					});
 				}
 			}
 
