@@ -9,8 +9,10 @@ namespace TASVideos.Legacy.Data.Forum
 		{
 		}
 
+
 		public DbSet<Users> Users { get; set; }
 
+		public DbSet<BanList> BanList { get; set; }
 		public DbSet<Categories> Categories { get; set; }
 		public DbSet<Forums> Forums { get; set; }
 		public DbSet<Topics> Topics { get; set; }
@@ -22,9 +24,12 @@ namespace TASVideos.Legacy.Data.Forum
 		public DbSet<VoteResult> VoteResult { get; set; }
 		public DbSet<Voter> Voter { get; set; }
 
+
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Users>().ToTable("users");
+			modelBuilder.Entity<BanList>().ToTable("banlist");
 			modelBuilder.Entity<Categories>().ToTable("categories");
 			modelBuilder.Entity<Forums>().ToTable("forums");
 			modelBuilder.Entity<Topics>().ToTable("topics");
