@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
 using TASVideos.Legacy.Data.Forum;
@@ -21,6 +22,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosForumContext legacyForumContext)
 		{
 			// TODO:
+			// Import forum admin and moderators into appropriate roles
 			// Check post count and add Experienced Forum User role
 			// forum user_active status?
 			// gender?
@@ -37,30 +39,31 @@ namespace TASVideos.Legacy.Imports
 				.ThenInclude(ur => ur.Role)
 				.ToList();
 
-			var bannedUsers = legacyForumContext.BanList
-				.Where(b => b.UserId > 0)
-				.ToList();
+			var users = (from u in legacyForumContext.Users
+						join b in legacyForumContext.BanList on u.UserId equals b.UserId into bb
+						from b in bb.DefaultIfEmpty()
+						where u.UserName != "Anonymous"
+						select new
+						{
+							Id = u.UserId,
+							u.UserName,
+							u.RegDate,
+							u.Password,
+							u.EmailTime,
+							u.PostCount,
+							u.Email,
+							u.Avatar,
+							u.From,
+							u.Signature,
+							u.PublicRatings,
+							IsBanned = b != null
+						})
+						.ToList();
 
-			var users = legacyForumContext.Users
-				.Where(u => u.UserName != "Anonymous")
-				.Select(u => new
-				{
-					u.UserId,
-					u.UserName,
-					u.RegDate,
-					u.Password,
-					u.EmailTime,
-					u.PostCount,
-					u.Email,
-					u.Avatar,
-					u.From,
-					u.Signature,
-					u.PublicRatings
-				})
-				.ToList()
+			var userEntities = users
 				.Select(u => new User
 				{
-					Id = u.UserId,
+					Id = u.Id,
 					UserName = ImportHelper.FixString(u.UserName),
 					NormalizedUserName = u.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
@@ -85,9 +88,7 @@ namespace TASVideos.Legacy.Imports
 			var joinedUsers = from user in users
 					join su in legacyUsers on user.UserName equals su.Name into lsu
 					from su in lsu.DefaultIfEmpty()
-					join bu in bannedUsers on user.Id equals bu.UserId into bbu
-					from bu in bbu.DefaultIfEmpty()
-					select new { User = user, SiteUser = su, IsBanned = bu != null };
+					select new { User = user, SiteUser = su };
 
 			foreach (var user in joinedUsers)
 			{
@@ -129,7 +130,7 @@ namespace TASVideos.Legacy.Imports
 					}
 				}
 				
-				if (!user.IsBanned)
+				if (!user.User.IsBanned)
 				{
 					context.UserRoles.Add(new UserRole
 					{
@@ -137,9 +138,18 @@ namespace TASVideos.Legacy.Imports
 						UserId = user.User.Id
 					});
 				}
+
+				if (user.User.PostCount >= SiteGlobalConstants.VestedPostCount)
+				{
+					context.UserRoles.Add(new UserRole
+					{
+						RoleId = roles.Single(r => r.Name == SeedRoleNames.ExperiencedForumUser).Id,
+						UserId = user.User.Id
+					});
+				}
 			}
 
-			users.Add(new User
+			userEntities.Add(new User
 			{
 				Id = -1,
 				UserName = "Unknown User",
@@ -205,7 +215,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			users.BulkInsert(connectionStr, userColumns, "[User]");
+			userEntities.BulkInsert(connectionStr, userColumns, "[User]");
 			userRoles.BulkInsert(connectionStr, userRoleColumns, "[UserRoles]");
 
 			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
