@@ -4,18 +4,16 @@ using System.Data.SqlClient;
 using System.Text;
 
 using FastMember;
-using Microsoft.EntityFrameworkCore;
 
 namespace TASVideos.Legacy.Imports
 {
 	public static class ImportHelper
 	{
+		private static readonly DateTime UnixStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+
 		public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
 		{
-			// Unix timestamp is seconds past epoch
-			DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-			start = start.AddSeconds(unixTimeStamp);
-			return start;
+			return UnixStart.AddSeconds(unixTimeStamp);
 		}
 
 		public static string FixString(string input)
