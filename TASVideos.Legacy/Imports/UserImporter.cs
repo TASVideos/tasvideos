@@ -23,7 +23,6 @@ namespace TASVideos.Legacy.Imports
 		{
 			// TODO:
 			// Import forum admin and moderators into appropriate roles
-			// forum user_active status?
 			// gender?
 			// timezone
 			// user_avatar_type ?
@@ -55,6 +54,7 @@ namespace TASVideos.Legacy.Imports
 							u.From,
 							u.Signature,
 							u.PublicRatings,
+							u.LastVisitDate,
 							IsBanned = b != null
 						})
 						.ToList();
@@ -76,7 +76,8 @@ namespace TASVideos.Legacy.Imports
 					Avatar = u.Avatar,
 					From = u.From,
 					Signature = ImportHelper.FixString(u.Signature),
-					PublicRatings = u.PublicRatings
+					PublicRatings = u.PublicRatings,
+					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate)
 				})
 				.ToList();
 
@@ -205,7 +206,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.Avatar),
 				nameof(User.From),
 				nameof(User.Signature),
-				nameof(User.PublicRatings)
+				nameof(User.PublicRatings),
+				nameof(User.LastLoggedInTimeStamp)
 			};
 
 			var userRoleColumns = new[]

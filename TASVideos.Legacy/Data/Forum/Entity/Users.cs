@@ -41,5 +41,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_permit_ratingshow")]
 		public bool PublicRatings { get; set; }
+
+		[Column("user_lastvisit")]
+		public int LastVisitDate { get; set; }
 	}
 }
