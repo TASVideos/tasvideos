@@ -13,6 +13,8 @@ using TASVideos.Legacy.Data.Site;
 using TASVideos.Legacy.Data.Site.Entity;
 using TASVideos.WikiEngine;
 
+// ReSharper disable StyleCop.SA1201
+// ReSharper disable StyleCop.SA1503
 namespace TASVideos.Legacy.Imports
 {
 	public static class WikiImporter
@@ -252,50 +254,51 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("[module:listsubpages]", "");
 			}
 
-			markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
-			markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
-			markup = markup.Replace("=css/favourite.png", "=images/startier.png");
-			markup = markup.Replace("=/css/vaulttier.png", "=images/vaulttier.png");
-			markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
-			markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
+			// TODO: would checking if it contains before replacing be faster?
+			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
+			if (markup.Contains("=css/moontier.png")) markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
+			if (markup.Contains("=css/favourite.png")) markup = markup.Replace("=css/favourite.png", "=images/startier.png");
+			if (markup.Contains("=/css/vaulttier.png")) markup = markup.Replace("=/css/vaulttier.png", "=images/vaulttier.png");
+			if (markup.Contains("=/css/moontier.png")) markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
+			if (markup.Contains("=/css/favourite.png")) markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
 
 			// Fix known links that failed to use the user module
-			markup = markup.Replace("[Bisqwit]", "[user:Bisqwit]");
-			markup = markup.Replace("[Nach]", "[user:Nach]");
-			markup = markup.Replace("[Phil]", "[user:Phil]");
-			markup = markup.Replace("[feos]", "[user:feos]");
-			markup = markup.Replace("[adelikat]", "[user:adelikat]");
-			markup = markup.Replace("[Adelikat]", "[user:adelikat]");
-			markup = markup.Replace("[Truncated]", "[user:Truncated]");
-			markup = markup.Replace("[DeHackEd]", "[user:DeHackEd]");
-			markup = markup.Replace("[Walker Boh]", "[user:Walker Boh]");
-			markup = markup.Replace("[WalkerBoh]", "[user:Walker Boh]");
-			markup = markup.Replace("[Dan_]", "[user:Dan_]");
-			markup = markup.Replace("[Zurreco]", "[user:Zurreco]");
-			markup = markup.Replace("[Nitsuja]", "[user:nitsuja]");
-			markup = markup.Replace("[Baxter]", "[user:Baxter]");
-			markup = markup.Replace("[JXQ]", "[user:JXQ]");
-			markup = markup.Replace("[Randil]", "[user:Randil]");
-			markup = markup.Replace("[Genisto]", "[user:Genisto]");
-			markup = markup.Replace("[BoltR]", "[user:BoltR]");
-			markup = markup.Replace("[Ideamagnate]", "[user:Ideamagnate]");
-			markup = markup.Replace("[FractalFusion]", "[user:FractalFusion]");
-			markup = markup.Replace("[Maza]", "[user:Maza]");
-			markup = markup.Replace("[nifboy]", "[user:nifboy]");
-			markup = markup.Replace("[blip]", "[user:blip]");
-			markup = markup.Replace("[Aktan]", "[user:Aktan]");
-			markup = markup.Replace("[alden]", "[user:alden]");
-			markup = markup.Replace("[andrewg]", "[user:andrewg]");
-			markup = markup.Replace("[AngerFist]", "[user:AngerFist]");
-			markup = markup.Replace("[Aqfaq]", "[user:Aqfaq]");
-			markup = markup.Replace("[arukAdo]", "[user:arukAdo]");
-			markup = markup.Replace("[Flygon]", "[user:Flygon]");
-			markup = markup.Replace("[Fog]", "[user:Fog]");
-			markup = markup.Replace("[mmbossman]", "[user:mmbossman]");
-			markup = markup.Replace("[Comicalflop]", "[user:Comicalflop]");
+			if (markup.Contains("[Bisqwit]")) markup = markup.Replace("[Bisqwit]", "[user:Bisqwit]");
+			if (markup.Contains("[Nach]")) markup = markup.Replace("[Nach]", "[user:Nach]");
+			if (markup.Contains("[Phil]")) markup = markup.Replace("[Phil]", "[user:Phil]");
+			if (markup.Contains("[feos]")) markup = markup.Replace("[feos]", "[user:feos]");
+			if (markup.Contains("[adelikat]")) markup = markup.Replace("[adelikat]", "[user:adelikat]");
+			if (markup.Contains("[Adelikat]")) markup = markup.Replace("[Adelikat]", "[user:adelikat]");
+			if (markup.Contains("[Truncated]")) markup = markup.Replace("[Truncated]", "[user:Truncated]");
+			if (markup.Contains("[DeHackEd]")) markup = markup.Replace("[DeHackEd]", "[user:DeHackEd]");
+			if (markup.Contains("[Walker Boh]")) markup = markup.Replace("[Walker Boh]", "[user:Walker Boh]");
+			if (markup.Contains("[WalkerBoh]")) markup = markup.Replace("[WalkerBoh]", "[user:Walker Boh]");
+			if (markup.Contains("[Dan_]")) markup = markup.Replace("[Dan_]", "[user:Dan_]");
+			if (markup.Contains("[Zurreco]")) markup = markup.Replace("[Zurreco]", "[user:Zurreco]");
+			if (markup.Contains("[Nitsuja]")) markup = markup.Replace("[Nitsuja]", "[user:nitsuja]");
+			if (markup.Contains("[Baxter]")) markup = markup.Replace("[Baxter]", "[user:Baxter]");
+			if (markup.Contains("[JXQ]")) markup = markup.Replace("[JXQ]", "[user:JXQ]");
+			if (markup.Contains("[Randil]")) markup = markup.Replace("[Randil]", "[user:Randil]");
+			if (markup.Contains("[Genisto]")) markup = markup.Replace("[Genisto]", "[user:Genisto]");
+			if (markup.Contains("[BoltR]")) markup = markup.Replace("[BoltR]", "[user:BoltR]");
+			if (markup.Contains("[Ideamagnate]")) markup = markup.Replace("[Ideamagnate]", "[user:Ideamagnate]");
+			if (markup.Contains("[FractalFusion]")) markup = markup.Replace("[FractalFusion]", "[user:FractalFusion]");
+			if (markup.Contains("[Maza]")) markup = markup.Replace("[Maza]", "[user:Maza]");
+			if (markup.Contains("[nifboy]")) markup = markup.Replace("[nifboy]", "[user:nifboy]");
+			if (markup.Contains("[blip]")) markup = markup.Replace("[blip]", "[user:blip]");
+			if (markup.Contains("[Aktan]")) markup = markup.Replace("[Aktan]", "[user:Aktan]");
+			if (markup.Contains("[alden]")) markup = markup.Replace("[alden]", "[user:alden]");
+			if (markup.Contains("[andrewg]")) markup = markup.Replace("[andrewg]", "[user:andrewg]");
+			if (markup.Contains("[AngerFist]")) markup = markup.Replace("[AngerFist]", "[user:AngerFist]");
+			if (markup.Contains("[Aqfaq]")) markup = markup.Replace("[Aqfaq]", "[user:Aqfaq]");
+			if (markup.Contains("[arukAdo]")) markup = markup.Replace("[arukAdo]", "[user:arukAdo]");
+			if (markup.Contains("[Flygon]")) markup = markup.Replace("[Flygon]", "[user:Flygon]");
+			if (markup.Contains("[Fog]")) markup = markup.Replace("[Fog]", "[user:Fog]");
+			if (markup.Contains("[mmbossman]")) markup = markup.Replace("[mmbossman]", "[user:mmbossman]");
+			if (markup.Contains("[Comicalflop]")) markup = markup.Replace("[Comicalflop]", "[user:Comicalflop]");
 
 			// And properly done user modules but the user page was not the same as the username
-			markup = markup.Replace("[user:Dan]", "[user:Dan_]");
+			if (markup.Contains("[user:Dan]")) markup = markup.Replace("[user:Dan]", "[user:Dan_]");
 
 			// These are automatic now
 			markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
@@ -316,9 +319,9 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			// Common markup mistakes
-			markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
-			markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
-			markup = markup.Replace("[''''!'''']", "[[!]]");
+			if (markup.Contains(" [!]")) markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
+			if (markup.Contains(")[!]")) markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
+			if (markup.Contains("[''''!'''']")) markup = markup.Replace("[''''!'''']", "[[!]]");
 			if (st.PageName == "4084S")
 			{
 				markup = markup.Replace("[''''C'''']", "[[C]]");
