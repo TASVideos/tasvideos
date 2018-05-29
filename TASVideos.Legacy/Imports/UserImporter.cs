@@ -136,15 +136,15 @@ namespace TASVideos.Legacy.Imports
 						RoleId = roles.Single(r => r.Name == SeedRoleNames.ForumUser).Id,
 						UserId = user.User.Id
 					});
-				}
 
-				if (user.User.PostCount >= SiteGlobalConstants.VestedPostCount)
-				{
-					context.UserRoles.Add(new UserRole
+					if (user.User.PostCount >= SiteGlobalConstants.VestedPostCount)
 					{
-						RoleId = roles.Single(r => r.Name == SeedRoleNames.ExperiencedForumUser).Id,
-						UserId = user.User.Id
-					});
+						context.UserRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == SeedRoleNames.ExperiencedForumUser).Id,
+							UserId = user.User.Id
+						});
+					}
 				}
 			}
 
