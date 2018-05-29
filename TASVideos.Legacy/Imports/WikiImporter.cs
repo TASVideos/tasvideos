@@ -27,7 +27,7 @@ namespace TASVideos.Legacy.Imports
 
 			var legUsers = legacySiteContext.Users.Select(u => new { u.Name, u.HomePage }).ToList();
 
-			var pages = new List<WikiPage>();
+			var pages = new List<WikiPage>(siteTexts.Count);
 
 			var siteTextWithUser = (from s in siteTexts
 					join u in legUsers on s.PageName.Split("/").First().ToLower() equals u.Name == "TASVideos Grue" ? "tasvideosgrue" : u.HomePage.ToLower() into uu
@@ -74,7 +74,7 @@ namespace TASVideos.Legacy.Imports
 			// Referrals (only need latest revisions)
 			var referralList = pages
 				.Where(p => p.ChildId == null)
-				.Where(p => p.PageName.ToLower() != "bizhawk/luafunctions") // Hack for now, but shoudl be removed eventually. This page has no links, and has a plethora of unsecaped brackets. BizHawk got a fix for this. Remove this when fix is applied to the page and the page makes its way to test db copies
+				.Where(p => !NonReferralPages.Contains(p.PageName))
 				.SelectMany(p => Util.GetAllWikiLinks(p.Markup).Select(referral => new WikiPageReferral
 				{
 					Referrer = p.PageName,
@@ -110,6 +110,30 @@ namespace TASVideos.Legacy.Imports
 
 			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000, 300);
 		}
+
+		// These pages do not refer to any other pages, are unlikely to do so in the future, and are rather large, slowing down referral parsing
+		private static readonly string[] NonReferralPages =
+		{
+			"InternalSystem/SubmissionContent/S5085",
+			"Bizhawk/PreviousReleaseHistory",
+			"EmulatorResources/NESAccuracyTests",
+			"Bizhawk/LuaFunctions",
+			"GameResources/Wii/SuperPaperMario",
+			"GameResources/GC/PaperMarioTheThousandYearDoor",
+			"HomePages/Bisqwit/Source/Bots/LunarBall",
+			"GameResources/GBx/MarioAndLuigiSuperstarSaga",
+			"GameResources/DOS/Nethack",
+			"InternalSystem/SubmissionContent/S5085",
+			"Bizhawk/PreviousReleaseHistory",
+			"EmulatorResources/NESAccuracyTests",
+			"Bizhawk/LuaFunctions",
+			"GameResources/Wii/SuperPaperMario",
+			"GameResources/GC/PaperMarioTheThousandYearDoor",
+			"HomePages/Bisqwit/Source/Bots/LunarBall",
+			"GameResources/GBx/MarioAndLuigiSuperstarSaga",
+			"GameResources/DOS/Nethack",
+			"InternalSystem/SubmissionContent/S3776"
+		};
 
 		private static readonly Dictionary<(string, int), int> CrystalShardsLookup = new Dictionary<(string, int), int>
 		{
