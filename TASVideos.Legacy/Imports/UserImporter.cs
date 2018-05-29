@@ -23,7 +23,6 @@ namespace TASVideos.Legacy.Imports
 		{
 			// TODO:
 			// Import forum admin and moderators into appropriate roles
-			// Check post count and add Experienced Forum User role
 			// forum user_active status?
 			// gender?
 			// timezone
