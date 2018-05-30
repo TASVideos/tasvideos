@@ -57,8 +57,6 @@ namespace TASVideos.Legacy.Imports
 
 				foreach (var legacySubmission in lSubsWithSystem)
 				{
-					string pageName = LinkConstants.SubmissionWikiPage + legacySubmission.Sub.Id;
-
 					GameSystemFrameRate systemFrameRate;
 
 					if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro"))
