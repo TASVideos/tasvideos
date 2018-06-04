@@ -14,10 +14,10 @@ namespace TASVideos.Legacy.Extensions
 		public static IServiceCollection AddLegacyContext(this IServiceCollection services)
 		{
 			services.AddDbContext<NesVideosSiteContext>(options =>
-				options.UseMySQL(MySqlSiteConnection));
+				options.UseMySql(MySqlSiteConnection));
 
 			services.AddDbContext<NesVideosForumContext>(options =>
-				options.UseMySQL(MySqlForumConnection));
+				options.UseMySql(MySqlForumConnection));
 
 			return services;
 		}
