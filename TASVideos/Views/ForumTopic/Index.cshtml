@@ -9,12 +9,11 @@
 <hr />
 @if (Model.Poll != null)
 {
-	@Html.Partial("~/Views/ForumTopic/_Poll.cshtml", Model.Poll)
+	<partial name="~/Views/ForumTopic/_Poll.cshtml" model="Model.Poll" />
 }
 
 <hr />
-@Html.Partial("~/Views/Table/_Pager.cshtml", Model.Posts)
-
+<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
 @foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp))
 {
 	<row>
