@@ -43,7 +43,7 @@ namespace TASVideos.Legacy.Imports
 					UserId = u.Id,
 					PublicationId = r.PublicationId,
 					Type = r.Type,
-					Value = r.Value
+					Value = (double)r.Value
 				})
 				.ToList();
 

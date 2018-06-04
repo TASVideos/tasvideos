@@ -15,6 +15,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public string RatingName { get; set; }
 
 		[Column("value")]
-		public double Value { get; set; }
+		public decimal Value { get; set; }
 	}
 }
