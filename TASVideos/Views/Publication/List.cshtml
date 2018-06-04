@@ -5,7 +5,7 @@
 
 @foreach (var movie in Model)
 {
-	@Html.Partial("~/Views/Shared/_MovieModule.cshtml", movie)
+	<partial name="~/Views/Shared/_MovieModule.cshtml" model="movie" />
 	<hr />
 }
 
