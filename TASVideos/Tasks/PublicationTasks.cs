@@ -65,7 +65,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PublicationViewModel> GetPublicationForDisplay(int id)
 		{
-			return (await _db.Publications
+			return await _db.Publications
 				.Select(p => new PublicationViewModel
 				{
 					Id = p.Id,
@@ -93,11 +93,7 @@ namespace TASVideos.Tasks
 						})
 						.ToList()
 				})
-				.Where(p => p.Id == id)
-				.Take(2) // Workaround fix for preview1 bug: https://github.com/aspnet/EntityFrameworkCore/issues/11092
-				.ToListAsync())
-				.SingleOrDefault();
-				//.SingleOrDefaultAsync(p => p.Id == id);
+				.SingleOrDefaultAsync(p => p.Id == id);
 		}
 
 		/// <summary>
