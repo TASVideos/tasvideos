@@ -6,13 +6,13 @@
 	<div class="col-md-6">
 		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
 		{
-			@await Html.PartialAsync("_Category", cat)
+			<partial name="_Category" model="cat" />
 		}
 	</div>
 	<div class="col-md-6">
 		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).SecondHalf())
 		{
-			@await Html.PartialAsync("_Category", cat)
+			<partial name="_Category" model="cat" />
 		}
 	</div>
 </row>

@@ -23,6 +23,15 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Index()
 		{
 			var model = await _forumTasks.GetForumIndex();
+			foreach (var m in model.Categories)
+			{
+				m.Description = RenderHtml(m.Description);
+				foreach (var f in m.Forums)
+				{
+					f.Description = RenderHtml(f.Description);
+				}
+			}
+
 			return View(model);
 		}
 
@@ -33,6 +42,7 @@ namespace TASVideos.Controllers
 
 			if (model != null)
 			{
+				model.Description = RenderHtml(model.Description);
 				return View(model);
 			}
 

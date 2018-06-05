@@ -75,6 +75,11 @@ namespace TASVideos.Controllers
 			return RedirectHome();
 		}
 
+		protected string RenderHtml(string text)
+		{
+			return RenderPost(text, false, true);
+		}
+
 		protected string RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);
