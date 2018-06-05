@@ -48,7 +48,7 @@ namespace TASVideos.Models
 
 			public ForumTopicType Type { get; set; }
 
-			public DateTime LastPost { get; set; }
+			public DateTime? LastPost { get; set; }
 		}
 	}
 

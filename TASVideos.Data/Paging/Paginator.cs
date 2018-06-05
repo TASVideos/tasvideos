@@ -43,14 +43,14 @@ namespace TASVideos.Data
 		{
 			using (db.Database.BeginTransaction())
 			{
-				int rowsToSkip = ((paging.CurrentPage < 1 ? 1 : paging.CurrentPage) - 1) * paging.PageSize;
+				int rowsToSkip = paging.GetRowsToSkip();
 
 			    int rowCount = query.Count();
 
 				IEnumerable<T> results = query
-				    .Skip(rowsToSkip)
-				    .Take(paging.PageSize)
-				    .ToList();
+					.Skip(rowsToSkip)
+					.Take(paging.PageSize)
+					.ToList();
 
 				var pageof = new PageOf<T>(results)
 				{

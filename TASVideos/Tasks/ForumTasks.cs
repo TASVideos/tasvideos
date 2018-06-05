@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,39 +45,58 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<ForumModel> GetForumForDisplay(ForumRequest paging)
 		{
-			var model = await _db.Forums
-				.Select(f => new ForumModel
-				{
-					Id = f.Id,
-					Name = f.Name,
-					Description = f.Description
-				})
-				.SingleOrDefaultAsync(f => f.Id == paging.Id);
-
-			if (model == null)
+			using (await _db.Database.BeginTransactionAsync())
 			{
-				return null;
-			}
+				var model = await _db.Forums
+					.Select(f => new ForumModel
+					{
+						Id = f.Id,
+						Name = f.Name,
+						Description = f.Description
+					})
+					.SingleOrDefaultAsync(f => f.Id == paging.Id);
 
-			model.Topics = _db.ForumTopics
-				.Where(ft => ft.ForumId == paging.Id)
-				.Select(ft => new ForumModel.ForumTopicEntry
+				if (model == null)
 				{
-					Id = ft.Id,
-					Title = ft.Title,
-					CreateUserName = ft.CreateUserName,
-					CreateTimestamp = ft.CreateTimeStamp,
-					Type = ft.Type,
-					Views = ft.Views,
-					PostCount = ft.ForumPosts.Count,
-					LastPost = ft.ForumPosts.Max(fp => fp.CreateTimeStamp)
-				})
-				.OrderByDescending(ft => ft.Type == ForumTopicType.Sticky)
-				.ThenByDescending(ft => ft.Type == ForumTopicType.Announcement)
-				.ThenByDescending(ft => ft.LastPost)
-				.PageOf(_db, paging);
+					return null;
+				}
 
-			return model;
+				var rowsToSkip = paging.GetRowsToSkip();
+				var rowCount = await _db.ForumTopics
+					.Where(ft => ft.ForumId == paging.Id)
+					.CountAsync();
+
+				var results = await _db.ForumTopics
+					.Where(ft => ft.ForumId == paging.Id)
+					.Select(ft => new ForumModel.ForumTopicEntry
+					{
+						Id = ft.Id,
+						Title = ft.Title,
+						CreateUserName = ft.CreateUserName,
+						CreateTimestamp = ft.CreateTimeStamp,
+						Type = ft.Type,
+						Views = ft.Views,
+						PostCount = ft.ForumPosts.Count,
+						LastPost = ft.ForumPosts.Max(fp => (DateTime?)fp.CreateTimeStamp)
+					})
+					.OrderByDescending(ft => ft.Type == ForumTopicType.Sticky)
+					.ThenByDescending(ft => ft.Type == ForumTopicType.Announcement)
+					.ThenByDescending(ft => ft.LastPost)
+					.Skip(rowsToSkip)
+					.Take(paging.PageSize)
+					.ToListAsync();
+
+				model.Topics = new PageOf<ForumModel.ForumTopicEntry>(results)
+				{
+					PageSize = paging.PageSize,
+					CurrentPage = paging.CurrentPage,
+					RowCount = rowCount,
+					SortDescending = paging.SortDescending,
+					SortBy = paging.SortBy
+				};
+
+				return model;
+			}
 		}
 
 		/// <summary>
