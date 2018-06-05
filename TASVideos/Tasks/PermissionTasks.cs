@@ -35,27 +35,24 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<IEnumerable<PermissionDisplayViewModel>> GetAllPermissionsForDisplay()
 		{
-			using (_db.Database.BeginTransactionAsync())
-			{
-				var allRoles = await _db.Roles
-					.Select(r => new
-					{
-						r.Name,
-						RolePermissionId = r.RolePermission
-							.Select(p => p.PermissionId)
-							.ToList()
-					})
-					.ToListAsync();
-
-				foreach (var permission in PermissionData)
+			var allRoles = await _db.Roles
+				.Select(r => new
 				{
-					permission.Roles = allRoles
-						.Where(r => r.RolePermissionId.Any(p => p == permission.Id))
-						.Select(r => r.Name);
-				}
+					r.Name,
+					RolePermissionId = r.RolePermission
+						.Select(p => p.PermissionId)
+						.ToList()
+				})
+				.ToListAsync();
 
-				return PermissionData;
+			foreach (var permission in PermissionData)
+			{
+				permission.Roles = allRoles
+					.Where(r => r.RolePermissionId.Any(p => p == permission.Id))
+					.Select(r => r.Name);
 			}
+
+			return PermissionData;
 		}
 	}
 }
