@@ -32,7 +32,7 @@
 					<div class="pull-right">
 						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 						{
-							@await Html.PartialAsync("../Shared/_Award.cshtml", award)
+							<partial name="../Shared/_Award.cshtml" model="award" />
 						}
 					</div>
 				</div>

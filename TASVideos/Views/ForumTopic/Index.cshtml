@@ -39,7 +39,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-7 col-md-9  pl-0">
+		<div class="col-7 col-md-9 pl-0">
 			<div class="card">
 				<div class="card-header">
 					<small>
@@ -59,7 +59,7 @@
 					<div class="pull-right">
 						@foreach (var award in post.Awards.OrderByDescending(a => a.Year))
 						{
-							@await Html.PartialAsync("../Shared/_Award.cshtml", award)
+							<partial name="../Shared/_Award.cshtml" model="award" />
 						}
 					</div>
 				</div>
