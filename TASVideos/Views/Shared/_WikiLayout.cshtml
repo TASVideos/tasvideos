@@ -8,9 +8,9 @@
 	}
 }
 
-@await Html.PartialAsync("_WikiLayoutHeader", pageData)
+<partial name ="_WikiLayoutHeader" model="pageData" />
 @RenderBody()
-@await Html.PartialAsync("_WikiLayoutFooter", pageData)
+<partial name="_WikiLayoutFooter" model="pageData" />
 
 @section Scripts {
 	@if (IsSectionDefined("PageTitle"))
