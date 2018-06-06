@@ -3,6 +3,11 @@
 	ViewData["Title"] = "TASVideos Forums";
 }
 <row>
+	<div class="col-12 pb-2 pt-2">
+		<a asp-controller="Forum" asp-action="UnansweredPosts" class="pull-right btn btn-secondary btn-sm">Unanswered Posts</a>
+	</div>
+</row>
+<row>
 	<div class="col-md-6">
 		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
 		{
