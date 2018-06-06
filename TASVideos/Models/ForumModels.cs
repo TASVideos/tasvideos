@@ -184,4 +184,25 @@ namespace TASVideos.Models
 			public string IpAddress { get; set; }
 		}
 	}
+
+	public class UnansweredPostModel
+	{
+		public int ForumId { get; set; }
+
+		[Display(Name = "Forum")]
+		public string ForumName { get; set; }
+
+		public int TopicId { get; set; }
+
+		[Display(Name = "Topic")]
+		public string TopicName { get; set; }
+
+		public int AuthorId { get; set; }
+
+		[Display(Name = "Author")]
+		public string AuthorName { get; set; }
+
+		[Display(Name = "Posted On")]
+		public DateTime PostDate { get; set; }
+	}
 }
