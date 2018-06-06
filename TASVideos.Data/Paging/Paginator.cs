@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace TASVideos.Data
@@ -51,6 +53,36 @@ namespace TASVideos.Data
 					.Skip(rowsToSkip)
 					.Take(paging.PageSize)
 					.ToList();
+
+				var pageof = new PageOf<T>(results)
+				{
+					PageSize = paging.PageSize,
+					CurrentPage = paging.CurrentPage,
+					RowCount = rowCount,
+					SortDescending = paging.SortDescending,
+					SortBy = paging.SortBy
+				};
+
+				return pageof;
+			}
+		}
+
+		public static async Task<PageOf<T>> PageOfAsync<T>(
+			this IOrderedQueryable<T> query,
+			DbContext db,
+			PagedModel paging)
+			where T : class
+		{
+			using (await db.Database.BeginTransactionAsync())
+			{
+				int rowsToSkip = paging.GetRowsToSkip();
+
+				int rowCount = await query.CountAsync();
+
+				IEnumerable<T> results = await query
+					.Skip(rowsToSkip)
+					.Take(paging.PageSize)
+					.ToListAsync();
 
 				var pageof = new PageOf<T>(results)
 				{

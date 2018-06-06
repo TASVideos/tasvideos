@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Data;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -47,6 +48,13 @@ namespace TASVideos.Controllers
 			}
 
 			return NotFound();
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> UnansweredPosts(PagedModel paging)
+		{
+			var model = await _forumTasks.GetUnansweredPosts(paging);
+			return View(model);
 		}
 	}
 }

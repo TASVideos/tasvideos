@@ -39,6 +39,9 @@
     <Content Update="Views\ForumTopic\_Poll.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Forum\UnansweredPosts.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Profile\Settings.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

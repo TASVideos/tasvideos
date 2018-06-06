@@ -356,5 +356,26 @@ namespace TASVideos.Tasks
 					})
 			};
 		}
+
+		/// <summary>
+		/// Returns a paged list of topics that have no replies (are only the original post that was created)
+		/// </summary>
+		public async Task<PageOf<UnansweredPostModel>> GetUnansweredPosts(PagedModel paged)
+		{
+			return await _db.ForumTopics
+				.Where(t => t.ForumPosts.Count == 1)
+				.Select(t => new UnansweredPostModel
+				{
+					ForumId = t.ForumId,
+					ForumName = t.Forum.Name,
+					TopicId = t.Id,
+					TopicName = t.Title,
+					AuthorId = t.PosterId,
+					AuthorName = t.Poster.UserName,
+					PostDate = t.CreateTimeStamp
+				})
+				.OrderByDescending(t => t.PostDate)
+				.PageOfAsync(_db, paged);
+		}
 	}
 }

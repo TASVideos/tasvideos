@@ -1,0 +1,32 @@
+﻿@using TASVideos.Data.Entity.Forum
+@model PageOf<UnansweredPostModel>
+@{
+	ViewData["Title"] = "Unanswered Posts";
+}
+
+<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
+
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.First().ForumName)</th>
+		<th>@Html.DisplayNameFor(m => m.First().TopicName)</th>
+		<th>@Html.DisplayNameFor(m => m.First().AuthorName)</th>
+		<th>@Html.DisplayNameFor(m => m.First().PostDate)</th>
+	</tr>
+	@foreach (var post in Model)
+	{
+		<tr>
+			<td>
+				<a asp-action="Forum" asp-route-id="@post.ForumId">@post.ForumName</a>
+			</td>
+			<td>
+				<a asp-controller="ForumTopic" asp-action="Index" asp-route-id="@post.TopicId">@post.TopicName</a>
+			</td>
+			<td>
+				<a asp-controller="User" asp-action="Profile" asp-route-id="@post.AuthorId">@post.AuthorName</a>
+			</td>
+			<td>@post.PostDate</td>
+		</tr>
+	}
+</table>
+
