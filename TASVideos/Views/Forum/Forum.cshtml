@@ -18,7 +18,7 @@
 		}
 	}
 }
-
+<partial Name="_ForumHeader" />
 <h4>@Model.Name</h4>
 <div>
 	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumTopics)" asp-controller="ForumTopic" asp-action="Create" asp-route-forumId="@Model.Id" class="pull-right btn btn-primary"><span class="fa fa-plus"></span> New Topic</a>
