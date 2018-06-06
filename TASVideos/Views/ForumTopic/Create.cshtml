@@ -2,7 +2,7 @@
 @{
 	ViewData["Title"] = $"Creating topic for: {Model.ForumName}";
 }
-
+<partial Name="_ForumHeader" />
 <h4>@Model.ForumName</h4>
 
 <form asp-action="Create" form-method="POST">
