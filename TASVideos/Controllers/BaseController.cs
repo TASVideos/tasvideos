@@ -17,13 +17,14 @@ namespace TASVideos.Controllers
 	{
 		private static readonly Version VersionInfo = Assembly.GetExecutingAssembly().GetName().Version;
 
-		private readonly UserTasks _userTasks;
 		private IEnumerable<PermissionTo> _userPermission;
 
 		public BaseController(UserTasks userTasks)
 		{
-			_userTasks = userTasks;
+			UserTasks = userTasks;
 		}
+
+		protected UserTasks UserTasks { get; }
 
 		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
 
@@ -38,7 +39,7 @@ namespace TASVideos.Controllers
 						_userPermission = Enumerable.Empty<PermissionTo>();
 					}
 
-					_userPermission = _userTasks.GetUserPermissionsById(User.GetUserId());
+					_userPermission = UserTasks.GetUserPermissionsById(User.GetUserId());
 				}
 
 				return _userPermission;
