@@ -15,7 +15,6 @@ namespace TASVideos.Controllers
 {
 	public class UserController : BaseController
 	{
-		private readonly UserTasks _userTasks;
 		private readonly AwardTasks _awardTasks;
 
 		public UserController(
@@ -23,14 +22,13 @@ namespace TASVideos.Controllers
 			AwardTasks awardTasks)
 			: base(userTasks)
 		{
-			_userTasks = userTasks;
 			_awardTasks = awardTasks;
 		}
 
 		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
 		public IActionResult List(PagedModel getModel)
 		{
-			var model = _userTasks.GetPageOfUsers(getModel);
+			var model = UserTasks.GetPageOfUsers(getModel);
 			return View(model);
 		}
 
@@ -42,7 +40,7 @@ namespace TASVideos.Controllers
 				return RedirectToAction(nameof(List));
 			}
 
-			var model = await _userTasks.GetUserDetails(id.Value);
+			var model = await UserTasks.GetUserDetails(id.Value);
 			return View(model);
 		}
 
@@ -51,9 +49,9 @@ namespace TASVideos.Controllers
 		{
 			if (id > 0)
 			{
-				var userName = await _userTasks.GetUserNameById(id);
+				var userName = await UserTasks.GetUserNameById(id);
 
-				var model = await _userTasks.GetUserForEdit(userName, User.GetUserId());
+				var model = await UserTasks.GetUserForEdit(userName, User.GetUserId());
 				return View(model);
 			}
 
@@ -63,7 +61,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.EditUsers)]
 		public async Task<IActionResult> EditByName(string userName)
 		{
-			var model = await _userTasks.GetUserForEdit(userName, User.GetUserId());
+			var model = await UserTasks.GetUserForEdit(userName, User.GetUserId());
 			return View(nameof(Edit), model);
 		}
 
@@ -73,25 +71,25 @@ namespace TASVideos.Controllers
 		{
 			if (!ModelState.IsValid)
 			{	
-				model.AvailableRoles = await _userTasks.GetAllRolesUserCanAssign(User.GetUserId(), model.SelectedRoles);
+				model.AvailableRoles = await UserTasks.GetAllRolesUserCanAssign(User.GetUserId(), model.SelectedRoles);
 				return View(model);
 			}
 
-			await _userTasks.EditUser(model);
+			await UserTasks.EditUser(model);
 			return RedirectToAction(nameof(List));
 		}
 
 		[RequirePermission(PermissionTo.EditUsers)]
 		public async Task<IActionResult> Unlock(int id, string returnUrl)
 		{
-			await _userTasks.UnlockUser(id);
+			await UserTasks.UnlockUser(id);
 			return RedirectToLocal(returnUrl);
 		}
 
 		[RequirePermission(PermissionTo.EditUsersUserName)]
 		public async Task<IActionResult> VerifyUserNameIsUnique(string userName)
 		{
-			var exists = await _userTasks.CheckUserNameExists(userName);
+			var exists = await UserTasks.CheckUserNameExists(userName);
 			return Json(exists);
 		}
 
@@ -100,7 +98,7 @@ namespace TASVideos.Controllers
 		{
 			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 1)
 			{
-				var matches = await _userTasks.GetUsersByPartial(partial);
+				var matches = await UserTasks.GetUsersByPartial(partial);
 				return Json(matches);
 			}
 
@@ -110,7 +108,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Profile(int id)
 		{
-			var model = await _userTasks.GetUserProfile(id);
+			var model = await UserTasks.GetUserProfile(id);
 			if (model == null)
 			{
 				return NotFound();
