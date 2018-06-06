@@ -37,7 +37,7 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> Forum(ForumRequest request)
+		public async Task<IActionResult> Sub(ForumRequest request)
 		{
 			var model = await _forumTasks.GetForumForDisplay(request);
 
