@@ -13,6 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\ForumPost\**" />
+    <Content Remove="Views\ForumPost\**" />
+    <EmbeddedResource Remove="Views\ForumPost\**" />
+    <None Remove="Views\ForumPost\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />

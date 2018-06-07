@@ -1,5 +1,4 @@
-﻿@using TASVideos.Data.Entity.Forum
-@model PageOf<UnansweredPostModel>
+﻿@model PageOf<UnansweredPostModel>
 @{
 	ViewData["Title"] = "Unanswered Posts";
 }
@@ -20,7 +19,7 @@
 				<a asp-action="Subforum" asp-route-id="@post.ForumId">@post.ForumName</a>
 			</td>
 			<td>
-				<a asp-controller="ForumTopic" asp-action="Index" asp-route-id="@post.TopicId">@post.TopicName</a>
+				<a asp-action="Topic" asp-route-id="@post.TopicId">@post.TopicName</a>
 			</td>
 			<td>
 				<a asp-controller="User" asp-action="Profile" asp-route-id="@post.AuthorId">@post.AuthorName</a>
