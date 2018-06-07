@@ -29,15 +29,7 @@ namespace TASVideos.Controllers
 			_userManager = userManager;
 		}
 
-		// TODO: move this to ForumPostController
-		[HttpPost]
-		[RequirePermission(PermissionTo.CreateForumPosts)]
-		public IActionResult GeneratePreview()
-		{
-			var text = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-			var renderedText = RenderPost(text, true, false); // TODO: pass in bbcode flag
-
-			return new ContentResult { Content = renderedText };
-		}
+		
+		
 	}
 }
