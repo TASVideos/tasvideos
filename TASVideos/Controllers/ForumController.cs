@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -145,6 +147,16 @@ namespace TASVideos.Controllers
 			var topicId = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
 
 			return RedirectToAction(nameof(Topic), "Forum", new { Id = topicId });
+		}
+
+		[HttpPost]
+		[RequirePermission(PermissionTo.CreateForumPosts)]
+		public IActionResult GeneratePreview()
+		{
+			var text = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
+			var renderedText = RenderPost(text, true, false); // TODO: pass in bbcode flag
+
+			return new ContentResult { Content = renderedText };
 		}
 	}
 }
