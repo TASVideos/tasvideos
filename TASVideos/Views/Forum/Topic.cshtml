@@ -5,7 +5,7 @@
 <partial Name="_ForumHeader" />
 <h4>@Model.Title</h4>
 <div>
-	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumPosts)" asp-controller="ForumPost" asp-action="Create" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
+	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumPosts)" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
 </div>
 <hr />
 @if (Model.Poll != null)
@@ -45,7 +45,7 @@
 					<small>
 						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
-						<a class="btn btn-info btn-sm pull-right" asp-controller="ForumPost" asp-action="Create" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
+						<a class="btn btn-info btn-sm pull-right" asp-action="CreatePost" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
 					</small>
 				</div>
 				<div class="card-body">

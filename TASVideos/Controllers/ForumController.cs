@@ -149,6 +149,37 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(Topic), "Forum", new { Id = topicId });
 		}
 
+		[Authorize]
+		[RequirePermission(PermissionTo.CreateForumPosts)]
+		public async Task<IActionResult> CreatePost(int topicId, int? quoteId = null)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _forumTasks.GetCreatePostData(topicId, user, quoteId);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.CreateForumPosts)]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> CreatePost(ForumPostModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			// TODO: check if topic can have new posts and user is allowed to post to it
+			var user = await _userManager.GetUserAsync(User);
+			await _forumTasks.CreatePost(model, user, IpAddress.ToString());
+
+			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
+		}
+
 		[HttpPost]
 		[RequirePermission(PermissionTo.CreateForumPosts)]
 		public IActionResult GeneratePreview()
