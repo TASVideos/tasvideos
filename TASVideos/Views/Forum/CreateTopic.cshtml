@@ -15,7 +15,7 @@
 		</row>
 	</form-group>
 	<form-group>
-		<partial name="~/Views/Shared/_CreatePostHelper.cshtml" model="nameof(Model.Post)" />
+		<partial name="_CreatePostHelper.cshtml" model="nameof(Model.Post)" />
 	</form-group>
 	<form-group>
 		<textarea asp-for="Post" class="form-control" rows="20"></textarea>
