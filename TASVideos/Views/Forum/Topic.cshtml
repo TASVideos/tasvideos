@@ -20,8 +20,8 @@
 {
 	<row>
 		<div class="col-5 col-md-3 pr-0">
-			<div class="card text-right">
-				<div class="card-body">
+			<card text-right">
+				<cardbody>
 					<h5 class="card-title">@post.PosterName</h5>
 					<div class="card-text p-0 m-0">
 						<small>
@@ -37,22 +37,22 @@
 							Location: @post.PosterLocation
 						</small>
 					</div>
-				</div>
-			</div>
+				</cardbody>
+			</card>
 		</div>
 		<div class="col-7 col-md-9 pl-0">
-			<div class="card">
-				<div class="card-header">
+			<card>
+				<cardheader>
 					<small>
 						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
 						<a class="btn btn-info btn-sm pull-right" asp-action="CreatePost" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
 					</small>
-				</div>
-				<div class="card-body">
+				</cardheader>
+				<cardbody>
 					@Html.Raw(post.RenderedText)
-				</div>
-				<div class="card-footer">
+				</cardbody>
+				<cardfooter>
 					<small style="font-style: italic">@Html.Raw(post.RenderedSignature)</small>
 					<br />
 					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterId">Profile</a>
@@ -63,8 +63,8 @@
 							<partial name="../Shared/_Award.cshtml" model="award" />
 						}
 					</div>
-				</div>
-			</div>
+				</cardfooter>
+			</card>
 		</div>
 	</row>
 }
