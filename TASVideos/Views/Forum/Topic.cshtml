@@ -7,9 +7,10 @@
 <div>
 	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumPosts)" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
 </div>
-<hr />
+
 @if (Model.Poll != null)
 {
+	<hr />
 	<partial name="_Poll" model="Model.Poll" />
 }
 
