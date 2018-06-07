@@ -116,5 +116,35 @@ namespace TASVideos.Controllers
 
 			return View(model);
 		}
+
+		// TODO: auto-add topic permission based on post count, also ability to vote
+		[Authorize]
+		[RequirePermission(PermissionTo.CreateForumTopics)]
+		public async Task<IActionResult> CreateTopic(int forumId)
+		{
+			var model = await _forumTasks.GetTopicCreateData(forumId);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[HttpPost, ValidateAntiForgeryToken]
+		[RequirePermission(PermissionTo.CreateForumTopics)]
+		public async Task<IActionResult> CreateTopic(TopicCreatePostModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var user = await _userManager.GetUserAsync(User);
+			var topicId = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
+
+			return RedirectToAction(nameof(Topic), "Forum", new { Id = topicId });
+		}
 	}
 }

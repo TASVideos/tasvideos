@@ -29,36 +29,6 @@ namespace TASVideos.Controllers
 			_userManager = userManager;
 		}
 
-		// TODO: auto-add topic permission based on post count, also ability to vote
-		[Authorize]
-		[RequirePermission(PermissionTo.CreateForumTopics)]
-		public async Task<IActionResult> Create(int forumId)
-		{
-			var model = await _forumTasks.GetTopicCreateData(forumId);
-
-			if (model == null)
-			{
-				return NotFound();
-			}
-
-			return View(model);
-		}
-
-		[HttpPost, ValidateAntiForgeryToken]
-		[RequirePermission(PermissionTo.CreateForumTopics)]
-		public async Task<IActionResult> Create(TopicCreatePostModel model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(model);
-			}
-
-			var user = await _userManager.GetUserAsync(User);
-			var topicId = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
-
-			return RedirectToAction(nameof(ForumController.Topic), "Forum", new { Id = topicId });
-		}
-
 		// TODO: move this to ForumPostController
 		[HttpPost]
 		[RequirePermission(PermissionTo.CreateForumPosts)]
