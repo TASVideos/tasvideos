@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
+using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -78,6 +80,21 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> UnansweredPosts(PagedModel paging)
 		{
 			var model = await _forumTasks.GetUnansweredPosts(paging);
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.SeePollResults)]
+		public async Task<IActionResult> ViewPollResults(int id)
+		{
+			var model = await _forumTasks.GetPollResults(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			model.Question = RenderPost(model.Question, true, false); // TODO: flags
+
 			return View(model);
 		}
 	}

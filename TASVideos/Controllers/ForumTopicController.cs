@@ -84,20 +84,5 @@ namespace TASVideos.Controllers
 
 			return RedirectToAction(nameof(ForumController.Index), "Forum", new { Id = topicId });
 		}
-
-		[RequirePermission(PermissionTo.SeePollResults)]
-		public async Task<IActionResult> ViewPollResults(int id)
-		{
-			var model = await _forumTasks.GetPollResults(id);
-
-			if (model == null)
-			{
-				return NotFound();
-			}
-
-			model.Question = RenderPost(model.Question, true, false); // TODO: flags
-
-			return View(model);
-		}
 	}
 }
