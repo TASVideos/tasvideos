@@ -68,6 +68,8 @@ namespace TASVideos.Models
 	{
 		public int Id { get; set; }
 		public string Title { get; set; }
+		public int ForumId { get; set; }
+		public string ForumName { get; set; }
 
 		public PageOf<ForumPostEntry> Posts { get; set; }
 		public PollModel Poll { get; set; }
@@ -145,7 +147,7 @@ namespace TASVideos.Models
 
 	/// <summary>
 	/// Data necessary to present to the user for creating a post
-	/// as well as the data neccessary to create a post
+	/// as well as the data necessary to create a post
 	/// </summary>
 	public class ForumPostCreateModel : ForumPostModel
 	{

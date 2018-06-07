@@ -3,7 +3,7 @@
 	ViewData["Title"] = $"TASVideos Forum {Model.Title}";
 }
 <partial Name="_ForumHeader" />
-<h4>@Model.Title</h4>
+<h4><a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a> -> @Model.Title</h4>
 <div>
 	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumPosts)" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
 </div>
