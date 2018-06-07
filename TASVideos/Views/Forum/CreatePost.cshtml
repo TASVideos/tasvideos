@@ -1,9 +1,9 @@
 ﻿@model ForumPostCreateModel
 @{
-	ViewData["Title"] = $"Posting to Forum Topic: {Model.TopicTitle}";
+	ViewData["Title"] = $"Posting to Topic: {Model.TopicTitle}";
 }
 <partial Name="_ForumHeader" />
-<h4>@ViewData["Title"]</h4>
+<h4>Posting to Topic: <a asp-action="Topic" asp-route-id="@Model.TopicId">@Model.TopicTitle</a></h4>
 
 <form asp-action="CreatePost" form-method="POST">
 	<input type="hidden" asp-for="TopicId" />

@@ -109,6 +109,8 @@ namespace TASVideos.Tasks
 				{
 					Id = t.Id,
 					Title = t.Title,
+					ForumId = t.ForumId,
+					ForumName = t.Forum.Name,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll.Question }
 						: null

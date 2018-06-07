@@ -3,7 +3,7 @@
 	ViewData["Title"] = $"Creating topic for: {Model.ForumName}";
 }
 <partial Name="_ForumHeader" />
-<h4>@Model.ForumName</h4>
+<h4>Cerating topic for: <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a></h4>
 
 <form asp-action="CreateTopic" form-method="POST">
 	<input type="hidden" asp-for="ForumId" />
