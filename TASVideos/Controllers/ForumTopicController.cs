@@ -29,30 +29,6 @@ namespace TASVideos.Controllers
 			_userManager = userManager;
 		}
 
-		[AllowAnonymous]
-		public async Task<IActionResult> Index(TopicRequest request)
-		{
-			var model = await _forumTasks.GetTopicForDisplay(request);
-
-			if (model != null)
-			{
-				foreach (var post in model.Posts)
-				{
-					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-					post.RenderedSignature = RenderPost(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
-				}
-
-				if (model.Poll != null)
-				{
-					model.Poll.Question = RenderPost(model.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
-				}
-
-				return View(model);
-			}
-
-			return NotFound();
-		}
-
 		// TODO: auto-add topic permission based on post count, also ability to vote
 		[Authorize]
 		[RequirePermission(PermissionTo.CreateForumTopics)]
@@ -80,7 +56,7 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			var topicId = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
 
-			return RedirectToAction(nameof(Index), new { Id = topicId });
+			return RedirectToAction(nameof(ForumController.Topic), "Forum", new { Id = topicId });
 		}
 
 		// TODO: move this to ForumPostController
@@ -106,7 +82,7 @@ namespace TASVideos.Controllers
 				return BadRequest();
 			}
 
-			return RedirectToAction(nameof(Index), new { Id = topicId });
+			return RedirectToAction(nameof(ForumController.Index), "Forum", new { Id = topicId });
 		}
 
 		[RequirePermission(PermissionTo.SeePollResults)]

@@ -57,7 +57,7 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			await _forumTasks.CreatePost(model, user, IpAddress.ToString());
 
-			return RedirectToAction(nameof(ForumTopicController.Index), "ForumTopic", new { id = model.TopicId });
+			return RedirectToAction(nameof(ForumController.Topic), "Forum", new { id = model.TopicId });
 		}
 	}
 }
