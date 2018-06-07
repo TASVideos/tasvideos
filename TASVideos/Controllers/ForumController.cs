@@ -51,6 +51,30 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
+		public async Task<IActionResult> Topic(TopicRequest request)
+		{
+			var model = await _forumTasks.GetTopicForDisplay(request);
+
+			if (model != null)
+			{
+				foreach (var post in model.Posts)
+				{
+					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
+					post.RenderedSignature = RenderPost(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
+				}
+
+				if (model.Poll != null)
+				{
+					model.Poll.Question = RenderPost(model.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
+				}
+
+				return View(model);
+			}
+
+			return NotFound();
+		}
+
+		[AllowAnonymous]
 		public async Task<IActionResult> UnansweredPosts(PagedModel paging)
 		{
 			var model = await _forumTasks.GetUnansweredPosts(paging);
