@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
@@ -13,13 +14,16 @@ namespace TASVideos.Controllers
 	public class ForumController : BaseController
 	{
 		private readonly ForumTasks _forumTasks;
+		private readonly UserManager<User> _userManager;
 
 		public ForumController(
+			ForumTasks forumTasks,
 			UserTasks userTasks,
-			ForumTasks forumTasks)
+			UserManager<User> userManager)
 			: base(userTasks)
 		{
 			_forumTasks = forumTasks;
+			_userManager = userManager;
 		}
 
 		[AllowAnonymous]
@@ -81,6 +85,21 @@ namespace TASVideos.Controllers
 		{
 			var model = await _forumTasks.GetUnansweredPosts(paging);
 			return View(model);
+		}
+
+		[HttpPost, ValidateAntiForgeryToken]
+		[RequirePermission(PermissionTo.VoteInPolls)]
+		public async Task<IActionResult> Vote(int pollId, int ordinal)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var topicId = await _forumTasks.Vote(user, pollId, ordinal, IpAddress.ToString());
+
+			if (topicId == null)
+			{
+				return BadRequest();
+			}
+
+			return RedirectToAction(nameof(Topic), new { Id = topicId });
 		}
 
 		[RequirePermission(PermissionTo.SeePollResults)]

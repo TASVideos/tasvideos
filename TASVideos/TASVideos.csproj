@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\ForumTopic\_Poll.cshtml">
+    <Content Update="Views\Forum\_Poll.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Forum\UnansweredPosts.cshtml">
