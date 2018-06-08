@@ -18,12 +18,25 @@
 <partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
 @foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp))
 {
-	<row>
-		<div class="col-5 col-md-3 pr-0">
-			<card text-right">
-				<cardbody>
-					<h5 class="card-title">@post.PosterName</h5>
-					<div class="card-text p-0 m-0">
+	<card>
+		<cardheader>
+			<row>
+				<div class="col-4 border-right">
+					<h5>@post.PosterName</h5>
+				</div>
+				<div class="col-8 pt-0 pb-0">
+					<small>
+						Posted: @post.CreateTimestamp
+						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+						<a class="btn btn-info btn-sm pull-right" asp-action="CreatePost" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
+					</small>
+				</div>
+			</row>
+		</cardheader>
+		<cardbody>
+			<row>
+				<div class="col-4">
+					<div class="card-text text-right">
 						<small>
 							@string.Join(",", post.PosterRoles)
 							(todo points)
@@ -37,22 +50,15 @@
 							Location: @post.PosterLocation
 						</small>
 					</div>
-				</cardbody>
-			</card>
-		</div>
-		<div class="col-7 col-md-9 pl-0">
-			<card>
-				<cardheader>
-					<small>
-						Posted: @post.CreateTimestamp
-						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
-						<a class="btn btn-info btn-sm pull-right" asp-action="CreatePost" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
-					</small>
-				</cardheader>
-				<cardbody>
+				</div>
+				<div class="col-8">
 					@Html.Raw(post.RenderedText)
-				</cardbody>
-				<cardfooter>
+				</div>
+			</row>
+		</cardbody>
+		<cardfooter>
+			<row>
+				<div class="col-12">
 					<small style="font-style: italic">@Html.Raw(post.RenderedSignature)</small>
 					<br />
 					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterId">Profile</a>
@@ -63,8 +69,9 @@
 							<partial name="../Shared/_Award.cshtml" model="award" />
 						}
 					</div>
-				</cardfooter>
-			</card>
-		</div>
-	</row>
+				</div>
+			</row>
+			
+		</cardfooter>
+	</card>
 }
