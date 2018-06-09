@@ -153,6 +153,7 @@ namespace TASVideos.Models
 	public class ForumPostCreateModel : ForumPostModel
 	{
 		public string TopicTitle { get; set; }
+		public bool IsLocked { get; set; }
 
 		public string UserAvatar { get; set; }
 		public string UserSignature { get; set; }

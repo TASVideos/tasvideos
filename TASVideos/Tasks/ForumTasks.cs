@@ -244,7 +244,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns necessary data to display on the create post screen
 		/// </summary>
-		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, User user, int? postId)
+		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, int? postId)
 		{
 			var topic = await _db.ForumTopics
 				.SingleOrDefaultAsync(t => t.Id == topicId);
@@ -257,7 +257,8 @@ namespace TASVideos.Tasks
 			var model = new ForumPostCreateModel
 			{
 				TopicId = topicId,
-				TopicTitle = topic.Title
+				TopicTitle = topic.Title,
+				IsLocked = topic.IsLocked
 			};
 
 			if (postId.HasValue)
@@ -379,6 +380,11 @@ namespace TASVideos.Tasks
 				})
 				.OrderByDescending(t => t.PostDate)
 				.PageOfAsync(_db, paged);
+		}
+
+		public async Task<bool> IsTopicLocked(int topicId)
+		{
+			return await _db.ForumTopics.AnyAsync(t => t.Id == topicId && t.IsLocked);
 		}
 	}
 }

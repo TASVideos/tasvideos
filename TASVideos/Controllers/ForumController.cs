@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -154,14 +155,17 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> CreatePost(int topicId, int? quoteId = null)
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var model = await _forumTasks.GetCreatePostData(topicId, user, quoteId);
+			var model = await _forumTasks.GetCreatePostData(topicId, quoteId);
 
 			if (model == null)
 			{
 				return NotFound();
 			}
 
-			// TODO: check topic is locked and ability to post in locked topics
+			if (model.IsLocked && !UserPermissions.Contains(PermissionTo.PostInLockedTopics))
+			{
+				return AccessDenied();
+			}
 
 			return View(model);
 		}
@@ -175,7 +179,12 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			// TODO: check topic is locked and ability to post in locked topics
+			if (!UserPermissions.Contains(PermissionTo.PostInLockedTopics)
+				&& await _forumTasks.IsTopicLocked(model.TopicId))
+			{
+				return AccessDenied();
+			}
+
 			var user = await _userManager.GetUserAsync(User);
 			await _forumTasks.CreatePost(model, user, IpAddress.ToString());
 
