@@ -76,6 +76,9 @@
     <Content Update="Views\Forum\_ForumHeader.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Shared\_PreviewWindow.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\_Award.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
