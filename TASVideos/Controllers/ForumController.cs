@@ -161,6 +161,8 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
+			// TODO: check topic is locked and ability to post in locked topics
+
 			return View(model);
 		}
 
@@ -173,7 +175,7 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			// TODO: check if topic can have new posts and user is allowed to post to it
+			// TODO: check topic is locked and ability to post in locked topics
 			var user = await _userManager.GetUserAsync(User);
 			await _forumTasks.CreatePost(model, user, IpAddress.ToString());
 

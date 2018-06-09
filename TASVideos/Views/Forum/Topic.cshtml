@@ -6,9 +6,9 @@
 <small class="@(Model.IsLocked ? "alert alert-danger" : "")">
 	<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a> -> @Model.Title <span Condition="Model.IsLocked"> (Locked)</span>
 </small>
-<div>
-	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumPosts)" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
-</div>
+<a condition="ViewData.UserHasPermission(PermissionTo.PostInLockedTopics) ||  (!Model.IsLocked && ViewData.UserHasPermission(PermissionTo.CreateForumPosts))" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary btn-sm pull-right">
+	<span class="fa fa-plus"></span> Post
+</a>
 
 @if (Model.Poll != null)
 {
