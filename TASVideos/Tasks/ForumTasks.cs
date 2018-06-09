@@ -111,6 +111,7 @@ namespace TASVideos.Tasks
 					Title = t.Title,
 					ForumId = t.ForumId,
 					ForumName = t.Forum.Name,
+					IsLocked = t.IsLocked,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll.Question }
 						: null

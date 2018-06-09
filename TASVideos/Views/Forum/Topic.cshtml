@@ -3,7 +3,9 @@
 	ViewData["Title"] = $"TASVideos Forum {Model.Title}";
 }
 <partial Name="_ForumHeader" />
-<h4><a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a> -> @Model.Title</h4>
+<small class="@(Model.IsLocked ? "alert alert-danger" : "")">
+	<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a> -> @Model.Title <span Condition="Model.IsLocked"> (Locked)</span>
+</small>
 <div>
 	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumPosts)" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary"><span class="fa fa-plus"></span>Post</a>
 </div>
@@ -14,7 +16,8 @@
 	<partial name="_Poll" model="Model.Poll" />
 }
 
-<hr />
+<hr condition="Model.IsLocked" />
+<hr condition="!Model.IsLocked" class="mt-0" />
 <partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
 @foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp))
 {
@@ -71,7 +74,6 @@
 					</div>
 				</div>
 			</row>
-			
 		</cardfooter>
 	</card>
 }
