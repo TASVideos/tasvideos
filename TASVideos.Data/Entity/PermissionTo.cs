@@ -145,8 +145,13 @@ namespace TASVideos.Data.Entity
 
 		[Display(Name = "See Poll Results")]
 		[Group("Forum Administration")]
-		[Description("The ability to see which users voted on which poll option")]
+		[Description("The ability to see which users voted on which poll option.")]
 		SeePollResults = 490,
+
+		[Display(Name = "Post In Locked Topics")]
+		[Group("Forum Administration")]
+		[Description("The ability to create a post in a topic that is currently locked.")]
+		PostInLockedTopics = 401,
 
 		#endregion
 
