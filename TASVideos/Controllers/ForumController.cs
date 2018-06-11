@@ -200,6 +200,8 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
+			model.RenderedText = RenderPost(model.Text, model.EnableBbCode, model.EnableHtml);
+
 			// TODO: check if author and last post, or permission to edit posts
 			return View(model);
 		}
@@ -210,11 +212,13 @@ namespace TASVideos.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
+				model.RenderedText = RenderPost(model.Text, model.EnableBbCode, model.EnableHtml);
 				return View(model);
 			}
 
-			// TODO: check if author and last post, or permission to edit posts
+			await _forumTasks.EditPost(model);
 
+			// TODO: check if author and last post, or permission to edit posts
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}
 

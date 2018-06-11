@@ -294,19 +294,33 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
+		// TODO: document
 		public async Task<ForumPostEditModel> GetEditPostData(int postId)
 		{
 			return await _db.ForumPosts
 				.Select(p => new ForumPostEditModel
 				{
 					PostId = p.Id,
+					CreateTimestamp = p.CreateTimeStamp,
 					PosterId = p.PosterId,
+					PosterName = p.Poster.UserName,
+					EnableBbCode = p.EnableBbCode,
+					EnableHtml = p.EnableHtml,
 					TopicId = p.TopicId ?? 0,
 					TopicTitle = p.Topic.Title,
 					Subject = p.Subject,
 					Text = p.Text
 				})
 				.SingleOrDefaultAsync(p => p.PostId == postId);
+		}
+
+		// TODO: document
+		public async Task EditPost(ForumPostEditModel model)
+		{
+			var forumPost = await _db.ForumPosts.SingleAsync(p => p.Id == model.PostId);
+			forumPost.Subject = model.Subject;
+			forumPost.Text = model.Text;
+			await _db.SaveChangesAsync();
 		}
 
 		/// <summary>
