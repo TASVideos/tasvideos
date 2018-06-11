@@ -191,6 +191,33 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}
 
+		[Authorize]
+		public async Task<IActionResult> EditPost(int id)
+		{
+			var model = await _forumTasks.GetEditPostData(id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			// TODO: check if author and last post, or permission to edit posts
+			return View(model);
+		}
+
+		[Authorize]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditPost(ForumPostEditModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			// TODO: check if author and last post, or permission to edit posts
+
+			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
+		}
+
 		[HttpPost]
 		[RequirePermission(PermissionTo.CreateForumPosts)]
 		public IActionResult GeneratePreview()

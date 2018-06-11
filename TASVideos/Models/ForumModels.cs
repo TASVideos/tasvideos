@@ -209,4 +209,16 @@ namespace TASVideos.Models
 		[Display(Name = "Posted On")]
 		public DateTime PostDate { get; set; }
 	}
+
+	public class ForumPostEditModel
+	{
+		public int PostId { get; set; }
+		public int PosterId { get; set; }
+
+		public int TopicId { get; set; }
+		public string TopicTitle { get; set; }
+
+		public string Subject { get; set; }
+		public string Text { get; set; }
+	}
 }

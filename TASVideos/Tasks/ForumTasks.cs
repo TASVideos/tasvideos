@@ -294,6 +294,21 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
+		public async Task<ForumPostEditModel> GetEditPostData(int postId)
+		{
+			return await _db.ForumPosts
+				.Select(p => new ForumPostEditModel
+				{
+					PostId = p.Id,
+					PosterId = p.PosterId,
+					TopicId = p.TopicId ?? 0,
+					TopicTitle = p.Topic.Title,
+					Subject = p.Subject,
+					Text = p.Text
+				})
+				.SingleOrDefaultAsync(p => p.PostId == postId);
+		}
+
 		/// <summary>
 		/// Adds a vote to the given Poll
 		/// </summary>
