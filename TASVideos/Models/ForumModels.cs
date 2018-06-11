@@ -159,6 +159,24 @@ namespace TASVideos.Models
 		public string UserSignature { get; set; }
 	}
 
+	public class ForumPostEditModel
+	{
+		public int PostId { get; set; }
+		public int PosterId { get; set; }
+		public string PosterName { get; set; }
+		public DateTime CreateTimestamp { get; set; }
+
+		public bool EnableBbCode { get; set; }
+		public bool EnableHtml { get; set; }
+
+		public int TopicId { get; set; }
+		public string TopicTitle { get; set; }
+
+		public string Subject { get; set; }
+		public string Text { get; set; }
+		public string RenderedText { get; set; }
+	}
+
 	public class PollResultModel
 	{
 		public string TopicTitle { get; set; }
@@ -208,17 +226,5 @@ namespace TASVideos.Models
 
 		[Display(Name = "Posted On")]
 		public DateTime PostDate { get; set; }
-	}
-
-	public class ForumPostEditModel
-	{
-		public int PostId { get; set; }
-		public int PosterId { get; set; }
-
-		public int TopicId { get; set; }
-		public string TopicTitle { get; set; }
-
-		public string Subject { get; set; }
-		public string Text { get; set; }
 	}
 }
