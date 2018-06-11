@@ -200,6 +200,11 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
+			if (!UserPermissions.Contains(PermissionTo.EditForumPosts) && !model.IsLastPost)
+			{
+				return AccessDenied();
+			}
+
 			model.RenderedText = RenderPost(model.Text, model.EnableBbCode, model.EnableHtml);
 
 			// TODO: check if author and last post, or permission to edit posts
@@ -214,6 +219,12 @@ namespace TASVideos.Controllers
 			{
 				model.RenderedText = RenderPost(model.Text, model.EnableBbCode, model.EnableHtml);
 				return View(model);
+			}
+
+			if (!UserPermissions.Contains(PermissionTo.EditForumPosts))
+			{
+				// check is last post (could have changed)
+				// return view and modelstate error
 			}
 
 			await _forumTasks.EditPost(model);

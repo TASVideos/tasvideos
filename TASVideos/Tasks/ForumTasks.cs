@@ -297,7 +297,7 @@ namespace TASVideos.Tasks
 		// TODO: document
 		public async Task<ForumPostEditModel> GetEditPostData(int postId)
 		{
-			return await _db.ForumPosts
+			var model = await _db.ForumPosts
 				.Select(p => new ForumPostEditModel
 				{
 					PostId = p.Id,
@@ -312,6 +312,14 @@ namespace TASVideos.Tasks
 					Text = p.Text
 				})
 				.SingleOrDefaultAsync(p => p.PostId == postId);
+
+			var lastPostDate = await _db.ForumTopics
+				.Where(t => t.Id == model.TopicId)
+				.MaxAsync(t => t.CreateTimeStamp);
+
+			model.IsLastPost = lastPostDate == model.CreateTimestamp;
+
+			return model;
 		}
 
 		// TODO: document

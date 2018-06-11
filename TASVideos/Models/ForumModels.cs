@@ -175,6 +175,8 @@ namespace TASVideos.Models
 		public string Subject { get; set; }
 		public string Text { get; set; }
 		public string RenderedText { get; set; }
+
+		public bool IsLastPost { get; set; }
 	}
 
 	public class PollResultModel
