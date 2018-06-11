@@ -43,6 +43,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Forum\EditPost.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Forum\_Poll.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

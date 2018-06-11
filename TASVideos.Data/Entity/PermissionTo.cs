@@ -143,15 +143,15 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to edit post created by another user.")]
 		EditForumPosts = 400,
 
-		[Display(Name = "See Poll Results")]
-		[Group("Forum Administration")]
-		[Description("The ability to see which users voted on which poll option.")]
-		SeePollResults = 490,
-
 		[Display(Name = "Post In Locked Topics")]
 		[Group("Forum Administration")]
 		[Description("The ability to create a post in a topic that is currently locked.")]
 		PostInLockedTopics = 401,
+
+		[Display(Name = "See Poll Results")]
+		[Group("Forum Administration")]
+		[Description("The ability to see which users voted on which poll option.")]
+		SeePollResults = 490,
 
 		#endregion
 
