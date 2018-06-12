@@ -294,7 +294,9 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns necessary data to display on the edit post screen
+		/// </summary>
 		public async Task<ForumPostEditModel> GetEditPostData(int postId)
 		{
 			var model = await _db.ForumPosts
@@ -322,6 +324,10 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
+		/// <summary>
+		/// Returns whether or not the poster matches the given user
+		/// and that the post is currently the last post of its topic
+		/// </summary>
 		public async Task<bool> CanEdit(int postId, int userId)
 		{
 			using (await _db.Database.BeginTransactionAsync())
@@ -335,7 +341,10 @@ namespace TASVideos.Tasks
 			}
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Updates the post with the given post id, with the
+		/// given subject and text
+		/// </summary>
 		public async Task EditPost(ForumPostEditModel model)
 		{
 			var forumPost = await _db.ForumPosts.SingleAsync(p => p.Id == model.PostId);
@@ -432,6 +441,9 @@ namespace TASVideos.Tasks
 				.PageOfAsync(_db, paged);
 		}
 
+		/// <summary>
+		/// Returns whether or not the topic with the given topic id is currently locked
+		/// </summary>
 		public async Task<bool> IsTopicLocked(int topicId)
 		{
 			return await _db.ForumTopics.AnyAsync(t => t.Id == topicId && t.IsLocked);
