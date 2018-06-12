@@ -26,7 +26,7 @@
 					<row>
 						<label class="text-danger col-sm-4"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
 						<div class="col-sm-1">
-							<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@($"{Context.Request.Path}{Context.Request.QueryString}")" asp-route-id="@Model.Id">Unlock</a>
+							<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
 						</div>
 					</row>
 				}

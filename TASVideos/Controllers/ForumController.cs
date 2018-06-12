@@ -89,6 +89,20 @@ namespace TASVideos.Controllers
 			return NotFound();
 		}
 
+
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> SetTopicLock(int topicId, bool locked, string returnUrl)
+		{
+			var result = await _forumTasks.SetTopicLock(topicId, locked);
+
+			if (result)
+			{
+				return RedirectToLocal(returnUrl);
+			}
+
+			return NotFound();
+		}
+
 		[AllowAnonymous]
 		public async Task<IActionResult> UnansweredPosts(PagedModel paging)
 		{
