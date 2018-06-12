@@ -175,6 +175,27 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
+		/// <summary>
+		/// Sets a topics locked status
+		/// </summary>
+		/// <returns>True if the topic is found, else false</returns>
+		public async Task<bool> SetTopicLock(int topicId, bool isLocked)
+		{
+			var topic = await _db.ForumTopics.SingleOrDefaultAsync(t => t.Id == topicId);
+			if (topic == null)
+			{
+				return false;
+			}
+
+			if (topic.IsLocked != isLocked)
+			{
+				topic.IsLocked = isLocked;
+				await _db.SaveChangesAsync();
+			}
+
+			return true;
+		}
+
 		// TODO: document
 		public async Task<IEnumerable<TopicFeedModel.TopicPost>> GetTopicFeed(int topicId, int limit)
 		{

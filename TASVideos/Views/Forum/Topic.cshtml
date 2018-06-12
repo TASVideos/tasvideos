@@ -3,12 +3,26 @@
 	ViewData["Title"] = $"TASVideos Forum {Model.Title}";
 }
 <partial Name="_ForumHeader" />
-<small class="@(Model.IsLocked ? "alert alert-danger" : "")">
-	<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a> -> @Model.Title <span Condition="Model.IsLocked"> (Locked)</span>
-</small>
-<a condition="ViewData.UserHasPermission(PermissionTo.PostInLockedTopics) ||  (!Model.IsLocked && ViewData.UserHasPermission(PermissionTo.CreateForumPosts))" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary btn-sm pull-right">
-	<span class="fa fa-plus"></span> Post
-</a>
+<row>
+	<div class="col-12">
+		<form style="display: inline" class="form-inline" condition="@ViewData.UserHasPermission(PermissionTo.LockTopics)" method="POST" asp-action="SetTopicLock" asp-route-topicId="@Model.Id" asp-route-locked="@(!Model.IsLocked)" asp-route-returnUrl="@Context.ReturnUrl()">
+			<button type="submit" class="btn @(Model.IsLocked ? "btn-success" : "btn-warning") btn-sm">
+				<span condition="Model.IsLocked" title="Unlock this topic">
+					<i class="fa fa-unlock"></i>
+				</span>
+				<span condition="!Model.IsLocked" title="Lock this topic">
+					<i class="fa fa-lock"></i>
+				</span>
+			</button>
+		</form>
+		<small class="@(Model.IsLocked ? "alert alert-danger" : "") pt-1 pb-2">
+			<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a> -> @Model.Title <span condition="Model.IsLocked"> (Locked)</span>
+		</small>
+		<a condition="ViewData.UserHasPermission(PermissionTo.PostInLockedTopics) ||  (!Model.IsLocked && ViewData.UserHasPermission(PermissionTo.CreateForumPosts))" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary btn-sm pull-right">
+			<span class="fa fa-plus"></span> Post
+		</a>
+	</div>
+</row>
 
 @if (Model.Poll != null)
 {
@@ -16,8 +30,7 @@
 	<partial name="_Poll" model="Model.Poll" />
 }
 
-<hr condition="Model.IsLocked" />
-<hr condition="!Model.IsLocked" class="mt-0" />
+<hr class="mt-1" />
 <partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
 @foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp))
 {
