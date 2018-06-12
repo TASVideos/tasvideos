@@ -154,7 +154,6 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.CreateForumPosts)]
 		public async Task<IActionResult> CreatePost(int topicId, int? quoteId = null)
 		{
-			var user = await _userManager.GetUserAsync(User);
 			var model = await _forumTasks.GetCreatePostData(topicId, quoteId);
 
 			if (model == null)
