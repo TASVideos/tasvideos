@@ -235,7 +235,6 @@ namespace TASVideos.Controllers
 
 			await _forumTasks.EditPost(model);
 
-			// TODO: check if author and last post, or permission to edit posts
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}
 
