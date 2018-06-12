@@ -89,7 +89,6 @@ namespace TASVideos.Controllers
 			return NotFound();
 		}
 
-
 		[HttpPost, ValidateAntiForgeryToken]
 		[RequirePermission(PermissionTo.LockTopics)]
 		public async Task<IActionResult> SetTopicLock(int topicId, bool locked, string returnUrl)
