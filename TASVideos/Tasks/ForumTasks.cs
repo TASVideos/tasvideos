@@ -322,11 +322,13 @@ namespace TASVideos.Tasks
 				})
 				.SingleOrDefaultAsync(p => p.PostId == postId);
 
-			var hasFollowingPost = await _db.ForumTopics
-				.Where(t => t.Id == model.TopicId)
-				.AnyAsync(t => t.CreateTimeStamp > model.CreateTimestamp);
+			var lastPostId = (await _db.ForumPosts
+				.Where(p => p.TopicId == model.TopicId)
+				.OrderByDescending(p => p.CreateTimeStamp)
+				.FirstAsync())
+				.Id;
 
-			model.IsLastPost = !hasFollowingPost;
+			model.IsLastPost = model.PostId == lastPostId;
 
 			return model;
 		}
@@ -339,12 +341,20 @@ namespace TASVideos.Tasks
 		{
 			using (await _db.Database.BeginTransactionAsync())
 			{
-				var post = await _db.ForumPosts.SingleAsync(p => p.Id == postId);
+				var post = await _db.ForumPosts.SingleOrDefaultAsync(p => p.Id == postId);
 
-				return !(await _db.ForumPosts
-					.Where(p => p.PosterId == userId)
-					.AnyAsync(p => p.TopicId == post.TopicId
-						&& p.CreateTimeStamp > post.CreateTimeStamp));
+				if (post == null || post.PosterId != userId)
+				{
+					return false;
+				}
+
+				var lastPostId = await _db.ForumPosts
+					.Where(p => p.TopicId == post.TopicId)
+					.OrderByDescending(p => p.CreateTimeStamp)
+					.Select(p => p.Id)
+					.FirstAsync();
+
+				return post.Id == lastPostId;
 			}
 		}
 
