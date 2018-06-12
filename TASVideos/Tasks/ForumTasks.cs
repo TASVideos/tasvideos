@@ -313,13 +313,26 @@ namespace TASVideos.Tasks
 				})
 				.SingleOrDefaultAsync(p => p.PostId == postId);
 
-			var lastPostDate = await _db.ForumTopics
+			var hasFollowingPost = await _db.ForumTopics
 				.Where(t => t.Id == model.TopicId)
-				.MaxAsync(t => t.CreateTimeStamp);
+				.AnyAsync(t => t.CreateTimeStamp > model.CreateTimestamp);
 
-			model.IsLastPost = lastPostDate == model.CreateTimestamp;
+			model.IsLastPost = !hasFollowingPost;
 
 			return model;
+		}
+
+		public async Task<bool> CanEdit(int postId, int userId)
+		{
+			using (await _db.Database.BeginTransactionAsync())
+			{
+				var post = await _db.ForumPosts.SingleAsync(p => p.Id == postId);
+
+				return !(await _db.ForumPosts
+					.Where(p => p.PosterId == userId)
+					.AnyAsync(p => p.TopicId == post.TopicId
+						&& p.CreateTimeStamp > post.CreateTimeStamp));
+			}
 		}
 
 		// TODO: document

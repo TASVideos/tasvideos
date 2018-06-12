@@ -53,7 +53,7 @@ namespace TASVideos.Controllers
 			return Redirect("/Home/Index");
 		}
 
-		protected IActionResult AccessDenied()
+		protected IActionResult RedirectAccessDenied()
 		{
 			return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
 		}
