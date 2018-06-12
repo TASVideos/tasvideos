@@ -32,7 +32,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditGameResources
 		};
 
-		private static readonly PermissionTo[] SeniorEditorPermissions = EditorPermissions.Concat(new[]
+		private static readonly PermissionTo[] VestedEditor = EditorPermissions.Concat(new[]
 		{
 			PermissionTo.EditSystemPages,
 			PermissionTo.EditUsers,
@@ -69,7 +69,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.AssignRoles
 		};
 
-		private static readonly PermissionTo[] AdminAssistantPermissions = SeniorEditorPermissions.Concat(new[]
+		private static readonly PermissionTo[] AdminAssistantPermissions = VestedEditor.Concat(new[]
 		{
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditUsers,
@@ -163,12 +163,12 @@ namespace TASVideos.Data.SeedData
 			new Role
 			{
 				Name = SeedRoleNames.AdminAssistant,
-				Description = "This is a wiki editor that maintain many aspects of the wiki site, including user and role maintenance, and they can assign editors",
-				RolePermission = SeniorEditorPermissions.Select(p => new RolePermission
+				Description = "This is a wiki editor that maintain many aspects of the wiki site, including user and role maintenance, and they can assign editors as well as vested editors",
+				RolePermission = AdminAssistantPermissions.Select(p => new RolePermission
 				{
 					RoleId = 12, // Meh, for lack of a better way
 					PermissionId = p,
-					CanAssign = EditorPermissions.Contains(p)
+					CanAssign = VestedEditor.Contains(p)
 				}).ToArray(),
 				RoleLinks = new[]
 				{
@@ -195,7 +195,7 @@ namespace TASVideos.Data.SeedData
 			{
 				Name = SeedRoleNames.VestedEditor,
 				Description = "This is a wiki editor that can edit any wiki page, including system pages",
-				RolePermission = SeniorEditorPermissions.Select(p => new RolePermission
+				RolePermission = VestedEditor.Select(p => new RolePermission
 				{
 					RoleId = 10, // Meh, for lack of a better way
 					PermissionId = p,
