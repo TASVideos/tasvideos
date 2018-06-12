@@ -31,7 +31,9 @@
 					<small>
 						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+						<a condition="post.IsEditable" class="btn btn-primary btn-sm pull-right ml-1" asp-action="EditPost" asp-route-id="@post.Id">Edit</a>
 						<a class="btn btn-info btn-sm pull-right" asp-action="CreatePost" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
+
 					</small>
 				</div>
 			</row>

@@ -98,6 +98,9 @@ namespace TASVideos.Models
 
 			[Sortable]
 			public DateTime CreateTimestamp { get; set; }
+
+			public bool IsLastPost { get; set; }
+			public bool IsEditable { get; set; }
 		}
 
 		public class PollModel

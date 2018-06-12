@@ -123,6 +123,12 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
+			var lastPostId = (await _db.ForumPosts
+				.Where(p => p.TopicId == paging.Id)
+				.OrderByDescending(p => p.CreateTimeStamp)
+				.FirstAsync())
+				.Id;
+
 			model.Posts = _db.ForumPosts
 				.Where(p => p.TopicId == paging.Id)
 				.Select(p => new ForumTopicModel.ForumPostEntry
@@ -142,7 +148,8 @@ namespace TASVideos.Tasks
 					PosterPostCount = p.Poster.Posts.Count,
 					Text = p.Text,
 					Subject = p.Subject,
-					Signature = p.Poster.Signature
+					Signature = p.Poster.Signature,
+					IsLastPost = p.Id == lastPostId
 				})
 				.OrderBy(p => p.CreateTimestamp)
 				.PageOf(_db, paging);
