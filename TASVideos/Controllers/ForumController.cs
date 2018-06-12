@@ -91,6 +91,7 @@ namespace TASVideos.Controllers
 
 
 		[HttpPost, ValidateAntiForgeryToken]
+		[RequirePermission(PermissionTo.LockTopics)]
 		public async Task<IActionResult> SetTopicLock(int topicId, bool locked, string returnUrl)
 		{
 			var result = await _forumTasks.SetTopicLock(topicId, locked);
