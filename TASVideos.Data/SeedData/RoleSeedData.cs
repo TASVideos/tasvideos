@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data.Entity;
 
@@ -21,7 +22,8 @@ namespace TASVideos.Data.SeedData
 		public const string SeniorJudge = "SeniorJudge";
 		public const string Encoder = "Encoder";
 		public const string Publisher = "Publisher";
-		public const string SeniorPublisher = "SeniorPublisher";
+		public const string SeniorPublisher = "Senior Publisher";
+		public const string ForumModerator = "Forum Moderator";
 	}
 
 	public class RoleSeedData
@@ -72,11 +74,14 @@ namespace TASVideos.Data.SeedData
 		private static readonly PermissionTo[] AdminAssistantPermissions = VestedEditor.Concat(new[]
 		{
 			PermissionTo.CatalogMovies,
-			PermissionTo.EditUsers,
-			PermissionTo.EditRoles,
-			PermissionTo.AssignRoles,
-			PermissionTo.EditPublicationMetaData
+			PermissionTo.EditRoles
 		}).ToArray();
+
+		private static readonly PermissionTo[] ModeratorPermissions =
+		{
+			PermissionTo.EditForumPosts,
+			PermissionTo.LockTopics
+		};
 
 		public static readonly Role EditHomePage = new Role
 		{
@@ -166,7 +171,7 @@ namespace TASVideos.Data.SeedData
 				Description = "This is a wiki editor that maintain many aspects of the wiki site, including user and role maintenance, and they can assign editors as well as vested editors",
 				RolePermission = AdminAssistantPermissions.Select(p => new RolePermission
 				{
-					RoleId = 12, // Meh, for lack of a better way
+					RoleId = 13, // Meh, for lack of a better way
 					PermissionId = p,
 					CanAssign = VestedEditor.Contains(p)
 				}).ToArray(),
@@ -182,7 +187,7 @@ namespace TASVideos.Data.SeedData
 				Description = "This is a wiki editor that can edit basic wiki pages",
 				RolePermission = EditorPermissions.Select(p => new RolePermission
 				{
-					RoleId = 11, // Meh, for lack of a better way
+					RoleId = 12, // Meh, for lack of a better way
 					PermissionId = p
 				}).ToArray(),
 				RoleLinks = new[]
@@ -197,7 +202,7 @@ namespace TASVideos.Data.SeedData
 				Description = "This is a wiki editor that can edit any wiki page, including system pages",
 				RolePermission = VestedEditor.Select(p => new RolePermission
 				{
-					RoleId = 10, // Meh, for lack of a better way
+					RoleId = 11, // Meh, for lack of a better way
 					PermissionId = p,
 					CanAssign = EditorPermissions.Contains(p)
 				}).ToArray(),
@@ -213,7 +218,7 @@ namespace TASVideos.Data.SeedData
 				Description = "The judges decide which movies will be published and which movies are rejected. They can replace submission files.",
 				RolePermission = JudgePermissions.Select(p => new RolePermission
 				{
-					RoleId = 9, // Meh, for lack of a better way
+					RoleId = 10, // Meh, for lack of a better way
 					PermissionId = p
 				}).ToArray(),
 				RoleLinks = new[]
@@ -227,7 +232,7 @@ namespace TASVideos.Data.SeedData
 				Description = "The senior judge, in addition to judging movies, can assign judges and settle disputes among judges.",
 				RolePermission = SeniorJudgePermissions.Select(p => new RolePermission
 				{
-					RoleId = 8, // Meh, for lack of a better way
+					RoleId = 9, // Meh, for lack of a better way
 					PermissionId = p,
 					CanAssign = EditorPermissions.Contains(p)
 				}).ToArray(),
@@ -242,7 +247,7 @@ namespace TASVideos.Data.SeedData
 				Description = "Publishers take accepted submissions and turn them into publications.",
 				RolePermission = PublisherPermissions.Select(p => new RolePermission
 				{
-					RoleId = 7, // Meh, for lack of a better way
+					RoleId = 8, // Meh, for lack of a better way
 					PermissionId = p
 				}).ToArray(),
 				RoleLinks = new[] { new RoleLink { Link = "PublisherGuidelines" } }
@@ -253,11 +258,23 @@ namespace TASVideos.Data.SeedData
 				Description = "Senior Publishers, in addition to publishing movies, can assign publishers, set encoding standards, and settle disputes among publishers.",
 				RolePermission = SeniorPublisherPermissions.Select(p => new RolePermission
 				{
-					RoleId = 6, // Meh, for lack of a better way
+					RoleId = 7, // Meh, for lack of a better way
 					PermissionId = p,
 					CanAssign = EditorPermissions.Contains(p)
 				}).ToArray(),
 				RoleLinks = new[] { new RoleLink { Link = "PublisherGuidelines" } }
+			},
+			new Role
+			{
+				Name = SeedRoleNames.ForumModerator,
+				Description = "Forum Moderators monitor forum content, modify posts and lock topics if needed. Moderators can also take limited action against users on a need basis",
+				RolePermission = ModeratorPermissions.Select(p => new RolePermission
+				{
+					RoleId = 6, // Meh, for lack of a better
+					PermissionId = p,
+					CanAssign = false
+				}).ToArray(),
+				RoleLinks = new List<RoleLink>()
 			}
 		};
 	}
