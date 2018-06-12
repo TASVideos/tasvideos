@@ -216,14 +216,6 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
-		public async Task<string> GetPostText(int postId)
-		{
-			return await _db.ForumPosts
-				.Where(p => p.Id == postId)
-				.Select(p => p.Text)
-				.SingleOrDefaultAsync();
-		}
-
 		public async Task<TopicCreateModel> GetTopicCreateData(int forumId)
 		{
 			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == forumId);
