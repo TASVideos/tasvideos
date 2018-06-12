@@ -66,10 +66,16 @@ namespace TASVideos.Controllers
 
 			if (model != null)
 			{
+				int? userId = User.Identity.IsAuthenticated
+					? int.Parse(_userManager.GetUserId(User))
+					: (int?)null;
+
 				foreach (var post in model.Posts)
 				{
 					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
 					post.RenderedSignature = RenderPost(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
+					post.IsEditable = UserPermissions.Contains(PermissionTo.EditForumPosts)
+						|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
 				}
 
 				if (model.Poll != null)
