@@ -164,7 +164,7 @@ namespace TASVideos.Controllers
 
 			if (model.IsLocked && !UserPermissions.Contains(PermissionTo.PostInLockedTopics))
 			{
-				return AccessDenied();
+				return RedirectAccessDenied();
 			}
 
 			return View(model);
@@ -182,7 +182,7 @@ namespace TASVideos.Controllers
 			if (!UserPermissions.Contains(PermissionTo.PostInLockedTopics)
 				&& await _forumTasks.IsTopicLocked(model.TopicId))
 			{
-				return AccessDenied();
+				return RedirectAccessDenied();
 			}
 
 			var user = await _userManager.GetUserAsync(User);
@@ -200,14 +200,16 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
-			if (!UserPermissions.Contains(PermissionTo.EditForumPosts) && !model.IsLastPost)
+			var userId = int.Parse(_userManager.GetUserId(User));
+
+			if (!UserPermissions.Contains(PermissionTo.EditForumPosts)
+				&& !(model.IsLastPost && model.PosterId == userId))
 			{
-				return AccessDenied();
+				return RedirectAccessDenied();
 			}
 
 			model.RenderedText = RenderPost(model.Text, model.EnableBbCode, model.EnableHtml);
 
-			// TODO: check if author and last post, or permission to edit posts
 			return View(model);
 		}
 
@@ -223,8 +225,12 @@ namespace TASVideos.Controllers
 
 			if (!UserPermissions.Contains(PermissionTo.EditForumPosts))
 			{
-				// check is last post (could have changed)
-				// return view and modelstate error
+				var userId = int.Parse(_userManager.GetUserId(User));
+				if (!(await _forumTasks.CanEdit(model.PostId, userId)))
+				{
+					ModelState.AddModelError("", "Unable to edit post. It is no longer the latest post.");
+					return View(model);
+				}
 			}
 
 			await _forumTasks.EditPost(model);
