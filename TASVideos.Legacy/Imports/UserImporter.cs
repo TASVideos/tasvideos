@@ -101,7 +101,7 @@ namespace TASVideos.Legacy.Imports
 					{
 						userRoles.Add(new UserRole
 						{
-							RoleId = roles.Single(r => r.Name == SeedRoleNames.EditHomePage).Id,
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.EditHomePage).Id,
 							UserId = user.User.Id
 						});
 
@@ -109,7 +109,7 @@ namespace TASVideos.Legacy.Imports
 						{
 							context.UserRoles.Add(new UserRole
 							{
-								RoleId = roles.Single(r => r.Name == SeedRoleNames.SubmitMovies).Id,
+								RoleId = roles.Single(r => r.Name == RoleSeedNames.SubmitMovies).Id,
 								UserId = user.User.Id
 							});
 						}
@@ -134,7 +134,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					context.UserRoles.Add(new UserRole
 					{
-						RoleId = roles.Single(r => r.Name == SeedRoleNames.ForumUser).Id,
+						RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumUser).Id,
 						UserId = user.User.Id
 					});
 
@@ -142,7 +142,7 @@ namespace TASVideos.Legacy.Imports
 					{
 						context.UserRoles.Add(new UserRole
 						{
-							RoleId = roles.Single(r => r.Name == SeedRoleNames.ExperiencedForumUser).Id,
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.ExperiencedForumUser).Id,
 							UserId = user.User.Id
 						});
 					}
@@ -230,21 +230,21 @@ namespace TASVideos.Legacy.Imports
 				default:
 					return null;
 				case "editor":
-					return roles.Single(r => r.Name == SeedRoleNames.Editor);
+					return roles.Single(r => r.Name == RoleSeedNames.Editor);
 				case "vestededitor":
-					return roles.Single(r => r.Name == SeedRoleNames.VestedEditor);
+					return roles.Single(r => r.Name == RoleSeedNames.VestedEditor);
 				case "publisher":
-					return roles.Single(r => r.Name == SeedRoleNames.Publisher);
+					return roles.Single(r => r.Name == RoleSeedNames.Publisher);
 				case "seniorpublisher":
-					return roles.Single(r => r.Name == SeedRoleNames.SeniorPublisher);
+					return roles.Single(r => r.Name == RoleSeedNames.SeniorPublisher);
 				case "judge":
-					return roles.Single(r => r.Name == SeedRoleNames.Judge);
+					return roles.Single(r => r.Name == RoleSeedNames.Judge);
 				case "seniorjudge":
-					return roles.Single(r => r.Name == SeedRoleNames.SeniorJudge);
+					return roles.Single(r => r.Name == RoleSeedNames.SeniorJudge);
 				case "adminassistant":
-					return roles.Single(r => r.Name == SeedRoleNames.AdminAssistant);
+					return roles.Single(r => r.Name == RoleSeedNames.AdminAssistant);
 				case "admin":
-					return roles.Single(r => r.Name == SeedRoleNames.Admin);
+					return roles.Single(r => r.Name == RoleSeedNames.Admin);
 			}
 		}
 	}
