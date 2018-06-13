@@ -15,6 +15,8 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class UserImporter
 	{
+		private const int ModeratorGroupId = 272; // This isn't goig to change, so just hard code it
+
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -22,7 +24,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosForumContext legacyForumContext)
 		{
 			// TODO:
-			// Import forum admin and moderators into appropriate roles
+			// Import forum admin
 			// gender?
 			// timezone
 			// user_avatar_type ?
@@ -40,6 +42,8 @@ namespace TASVideos.Legacy.Imports
 			var users = (from u in legacyForumContext.Users
 						join b in legacyForumContext.BanList on u.UserId equals b.UserId into bb
 						from b in bb.DefaultIfEmpty()
+						join ug in legacyForumContext.UserGroups on new { u.UserId, GroupId = ModeratorGroupId } equals new { ug.UserId, ug.GroupId } into ugg
+						from ug in ugg.DefaultIfEmpty()
 						where u.UserName != "Anonymous"
 						select new
 						{
@@ -55,9 +59,12 @@ namespace TASVideos.Legacy.Imports
 							u.Signature,
 							u.PublicRatings,
 							u.LastVisitDate,
-							IsBanned = b != null
+							IsBanned = b != null,
+							IsModerator = ug != null
 						})
 						.ToList();
+
+			var moderators = users.Where(u => u.IsModerator).ToList();
 
 			var userEntities = users
 				.Select(u => new User
@@ -113,6 +120,16 @@ namespace TASVideos.Legacy.Imports
 								UserId = user.User.Id
 							});
 						}
+					}
+
+					if (user.User.IsModerator
+						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
+					{
+						context.UserRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumModerator).Id,
+							UserId = user.User.Id
+						});
 					}
 
 					foreach (var userRole in user.SiteUser.UserRoles.Select(ur => ur.Role)
