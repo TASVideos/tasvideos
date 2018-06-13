@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
@@ -74,45 +75,26 @@ namespace TASVideos.Data
 		}
 
 		/// <summary>
-		/// Adds optional sample data
-		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
+		/// Adds optional sample users for each role in the system for testing purposes
+		/// Roles must already exist before running this
+		/// DO NOT run this on production environments! This generates users with high level access and a default and public password
 		/// </summary>
-		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
+		public static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager<User> userManager)
 		{
-			foreach (var admin in UserSampleData.AdminUsers)
+			// Add users for each Role for testing purposes
+			var roles = await context.Roles.ToListAsync();
+			var defaultRoles = roles.Where(r => r.IsDefault).ToList();
+
+			foreach (var role in roles.Where(r => !r.IsDefault))
 			{
-				var result = await userManager.CreateAsync(admin, UserSampleData.SamplePassword);
-				if (!result.Succeeded)
+				// TODO: make 2 of them
+				var user = new User
 				{
-					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
-				}
-
-				var savedAdminUser = context.Users.Single(u => u.UserName == admin.UserName);
-				savedAdminUser.EmailConfirmed = true;
-				savedAdminUser.LockoutEnabled = false;
-
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Admin, User = savedAdminUser });
-			}
-
-			foreach (var judge in UserSampleData.Judges)
-			{
-				var result = await userManager.CreateAsync(judge, UserSampleData.SamplePassword);
-				if (!result.Succeeded)
-				{
-					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
-				}
-
-				var savedUser = context.Users.Single(u => u.UserName == judge.UserName);
-				savedUser.EmailConfirmed = true;
-				savedUser.LockoutEnabled = false;
-
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Judge, User = savedUser });
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.SubmitMovies, User = savedUser });
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.EditHomePage, User = savedUser });
-			}
-
-			foreach (var user in UserSampleData.Users)
-			{
+					UserName = role.Name.Replace(" ", ""),
+					NormalizedUserName = role.Name.Replace(" ", "").ToUpper(),
+					Email = role.Name + "@example.com",
+					TimeZoneId = "Eastern Standard Time"
+				};
 				var result = await userManager.CreateAsync(user, UserSampleData.SamplePassword);
 				if (!result.Succeeded)
 				{
@@ -121,30 +103,21 @@ namespace TASVideos.Data
 
 				var savedUser = context.Users.Single(u => u.UserName == user.UserName);
 				savedUser.EmailConfirmed = true;
-
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.SubmitMovies, User = savedUser });
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.EditHomePage, User = savedUser });
-			}
-
-			// Create lots of throw away users to test things like paging
-			for (int i = 1; i <= 41; i++)
-			{
-				var dummyUser = new User
+				savedUser.LockoutEnabled = false;
+				context.UserRoles.Add(new UserRole { Role = role, User = savedUser });
+				foreach (var defaultRole in defaultRoles)
 				{
-					UserName = $"Dummy{i}",
-					Email = $"Dummy{i}@example.com",
-					EmailConfirmed = SampleGenerator.RandomBool(),
-					LockoutEnd = SampleGenerator.RandomBool() && SampleGenerator.RandomBool()
-						? DateTime.Now.AddMonths(1)
-						: (DateTimeOffset?)null
-				};
-
-				await userManager.CreateAsync(dummyUser, UserSampleData.SamplePassword);
-
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.SubmitMovies, User = dummyUser });
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.EditHomePage, User = dummyUser });
+					context.UserRoles.Add(new UserRole { Role = defaultRole, User = savedUser });
+				}
 			}
+		}
 
+		/// <summary>
+		/// Adds optional sample data
+		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
+		/// </summary>
+		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
+		{
 			context.WikiPages.Add(PublicationSampleData.FrontPage);
 			context.Games.Add(PublicationSampleData.Smb3);
 			context.Roms.Add(PublicationSampleData.Smb3Rom);
