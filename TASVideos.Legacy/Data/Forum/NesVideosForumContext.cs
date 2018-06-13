@@ -9,9 +9,8 @@ namespace TASVideos.Legacy.Data.Forum
 		{
 		}
 
-
 		public DbSet<Users> Users { get; set; }
-
+		public DbSet<UserGroup> UserGroups { get; set; }
 		public DbSet<BanList> BanList { get; set; }
 		public DbSet<Categories> Categories { get; set; }
 		public DbSet<Forums> Forums { get; set; }
@@ -23,8 +22,6 @@ namespace TASVideos.Legacy.Data.Forum
 		public DbSet<VoteDescription> VoteDescription { get; set; }
 		public DbSet<VoteResult> VoteResult { get; set; }
 		public DbSet<Voter> Voter { get; set; }
-
-
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -49,6 +46,12 @@ namespace TASVideos.Legacy.Data.Forum
 			{
 				entity.HasKey(e => new { e.Id, e.UserId, e.OptionId });
 				entity.ToTable("vote_voters");
+			});
+
+			modelBuilder.Entity<UserGroup>(entity =>
+			{
+				entity.HasKey(e => new { e.GroupId, e.UserId });
+				entity.ToTable("user_group");
 			});
 		}
 	}
