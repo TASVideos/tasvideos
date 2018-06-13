@@ -34,14 +34,7 @@ namespace TASVideos.Data
 		/// </summary>
 		public static void PreMigrateSeedData(ApplicationDbContext context)
 		{
-			context.Roles.Add(RoleSeedData.AdminRole);
-			context.Roles.Add(RoleSeedData.SubmitMovies);
-			context.Roles.Add(RoleSeedData.EditHomePage);
-			context.Roles.Add(RoleSeedData.ForumUser);
-			context.Roles.Add(RoleSeedData.ExperiencedForumUser);
-			context.SaveChanges();
-
-			context.Roles.AddRange(RoleSeedData.Roles);
+			context.Roles.AddRange(RoleSeedData.AllRoles);
 			context.GameSystems.AddRange(SystemSeedData.Systems);
 			context.GameSystemFrameRates.AddRange(SystemSeedData.SystemFrameRates);
 			context.Tiers.AddRange(TierSeedData.Tiers);
@@ -98,10 +91,7 @@ namespace TASVideos.Data
 				savedAdminUser.EmailConfirmed = true;
 				savedAdminUser.LockoutEnabled = false;
 
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.AdminRole, User = savedAdminUser });
-
-				// And one random role for testing multi-role
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Roles.AtRandom(), User = savedAdminUser });
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Admin, User = savedAdminUser });
 			}
 
 			foreach (var judge in UserSampleData.Judges)
@@ -116,7 +106,7 @@ namespace TASVideos.Data
 				savedUser.EmailConfirmed = true;
 				savedUser.LockoutEnabled = false;
 
-				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Roles.Single(r => r.Name == "Judge"), User = savedUser });
+				context.UserRoles.Add(new UserRole { Role = RoleSeedData.Judge, User = savedUser });
 				context.UserRoles.Add(new UserRole { Role = RoleSeedData.SubmitMovies, User = savedUser });
 				context.UserRoles.Add(new UserRole { Role = RoleSeedData.EditHomePage, User = savedUser });
 			}
