@@ -49,7 +49,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.JudgeSubmissions,
 			PermissionTo.ReplaceSubmissionMovieFile,
 			PermissionTo.CatalogMovies,
-			PermissionTo.EditPublicationMetaData
+			PermissionTo.EditPublicationMetaData,
+			PermissionTo.SeeRestrictedForums
 		};
 
 		private static readonly PermissionTo[] SeniorJudgePermissions = JudgePermissions.Concat(new[]
@@ -63,7 +64,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.PublishMovies,
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditSubmissions,
-			PermissionTo.EditPublicationMetaData
+			PermissionTo.EditPublicationMetaData,
+			PermissionTo.SeeRestrictedForums
 		};
 
 		private static readonly PermissionTo[] SeniorPublisherPermissions =
@@ -74,7 +76,8 @@ namespace TASVideos.Data.SeedData
 		private static readonly PermissionTo[] AdminAssistantPermissions = VestedEditorPermissions.Concat(new[]
 		{
 			PermissionTo.CatalogMovies,
-			PermissionTo.EditRoles
+			PermissionTo.EditRoles,
+			PermissionTo.SeeRestrictedForums
 		}).ToArray();
 
 		private static readonly PermissionTo[] ForumModeratorPermissions =

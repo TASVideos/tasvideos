@@ -23,5 +23,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("forum_shortname")]
 		public string ShortName { get; set; }
+
+		[Column("auth_view")]
+		public int AuthView { get; set; }
 	}
 }
