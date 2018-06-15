@@ -48,7 +48,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Subforum(ForumRequest request)
 		{
-			var model = await _forumTasks.GetForumForDisplay(request);
+			var model = await _forumTasks.GetForumForDisplay(request, UserPermissions.Contains(PermissionTo.SeeRestrictedForums));
 
 			if (model != null)
 			{
@@ -62,7 +62,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Topic(TopicRequest request)
 		{
-			var model = await _forumTasks.GetTopicForDisplay(request);
+			var model = await _forumTasks.GetTopicForDisplay(request, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (model != null)
 			{
@@ -74,7 +74,7 @@ namespace TASVideos.Controllers
 				{
 					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
 					post.RenderedSignature = RenderPost(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
-					post.IsEditable = UserPermissions.Contains(PermissionTo.EditForumPosts)
+					post.IsEditable = UserHas(PermissionTo.EditForumPosts)
 						|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
 				}
 
@@ -93,7 +93,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.LockTopics)]
 		public async Task<IActionResult> SetTopicLock(int topicId, bool locked, string returnUrl)
 		{
-			var result = await _forumTasks.SetTopicLock(topicId, locked);
+			var result = await _forumTasks.SetTopicLock(topicId, locked, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (result)
 			{
@@ -106,7 +106,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> UnansweredPosts(PagedModel paging)
 		{
-			var model = await _forumTasks.GetUnansweredPosts(paging);
+			var model = await _forumTasks.GetUnansweredPosts(paging, UserHas(PermissionTo.SeeRestrictedForums));
 			return View(model);
 		}
 
@@ -145,7 +145,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.CreateForumTopics)]
 		public async Task<IActionResult> CreateTopic(int forumId)
 		{
-			var model = await _forumTasks.GetTopicCreateData(forumId);
+			var model = await _forumTasks.GetCreateTopicData(forumId, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (model == null)
 			{
@@ -164,6 +164,15 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			if (!seeRestricted)
+			{
+				if (!await _forumTasks.ForumAccessible(model.ForumId, UserHas(PermissionTo.SeeRestrictedForums)))
+				{
+					return NotFound();
+				}
+			}
+
 			var user = await _userManager.GetUserAsync(User);
 			var topicId = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
 
@@ -174,7 +183,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.CreateForumPosts)]
 		public async Task<IActionResult> CreatePost(int topicId, int? quoteId = null)
 		{
-			var model = await _forumTasks.GetCreatePostData(topicId, quoteId);
+			var model = await _forumTasks.GetCreatePostData(topicId, quoteId, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (model == null)
 			{
@@ -198,6 +207,15 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			if (!seeRestricted)
+			{
+				if (!await _forumTasks.TopicAccessible(model.TopicId, UserHas(PermissionTo.SeeRestrictedForums)))
+				{
+					return NotFound();
+				}
+			}
+
 			if (!UserPermissions.Contains(PermissionTo.PostInLockedTopics)
 				&& await _forumTasks.IsTopicLocked(model.TopicId))
 			{
@@ -213,7 +231,7 @@ namespace TASVideos.Controllers
 		[Authorize]
 		public async Task<IActionResult> EditPost(int id)
 		{
-			var model = await _forumTasks.GetEditPostData(id);
+			var model = await _forumTasks.GetEditPostData(id, UserHas(PermissionTo.SeeRestrictedForums));
 			if (model == null)
 			{
 				return NotFound();
@@ -249,6 +267,15 @@ namespace TASVideos.Controllers
 				{
 					ModelState.AddModelError("", "Unable to edit post. It is no longer the latest post.");
 					return View(model);
+				}
+			}
+
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			if (!seeRestricted)
+			{
+				if (!await _forumTasks.TopicAccessible(model.TopicId, UserHas(PermissionTo.SeeRestrictedForums)))
+				{
+					return NotFound();
 				}
 			}
 

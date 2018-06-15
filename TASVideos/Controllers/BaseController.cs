@@ -46,6 +46,11 @@ namespace TASVideos.Controllers
 			}
 		}
 
+		protected bool UserHas(PermissionTo permission)
+		{
+			return UserPermissions.Contains(permission);
+		}
+
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 
 		protected IActionResult RedirectHome()
