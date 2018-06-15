@@ -43,11 +43,12 @@ namespace TASVideos.Tasks
 		/// Returns a forum and topics for the given id
 		/// For the purpose of display
 		/// </summary>
-		public async Task<ForumModel> GetForumForDisplay(ForumRequest paging)
+		public async Task<ForumModel> GetForumForDisplay(ForumRequest paging, bool allowRestricted)
 		{
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				var model = await _db.Forums
+					.Where(f => allowRestricted || !f.Restricted)
 					.Select(f => new ForumModel
 					{
 						Id = f.Id,
@@ -102,9 +103,10 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Displays a page of posts for the given topic
 		/// </summary>
-		public async Task<ForumTopicModel> GetTopicForDisplay(TopicRequest paging)
+		public async Task<ForumTopicModel> GetTopicForDisplay(TopicRequest paging, bool allowRestricted)
 		{
 			var model = await _db.ForumTopics
+				.Where(f => allowRestricted || !f.Forum.Restricted)
 				.Select(t => new ForumTopicModel
 				{
 					Id = t.Id,
@@ -179,9 +181,12 @@ namespace TASVideos.Tasks
 		/// Sets a topics locked status
 		/// </summary>
 		/// <returns>True if the topic is found, else false</returns>
-		public async Task<bool> SetTopicLock(int topicId, bool isLocked)
+		public async Task<bool> SetTopicLock(int topicId, bool isLocked, bool allowRestricted)
 		{
-			var topic = await _db.ForumTopics.SingleOrDefaultAsync(t => t.Id == topicId);
+			var topic = await _db.ForumTopics
+				.Where(ft => allowRestricted || !ft.Forum.Restricted)
+				.SingleOrDefaultAsync(t => t.Id == topicId);
+
 			if (topic == null)
 			{
 				return false;
@@ -197,10 +202,11 @@ namespace TASVideos.Tasks
 		}
 
 		// TODO: document
-		public async Task<IEnumerable<TopicFeedModel.TopicPost>> GetTopicFeed(int topicId, int limit)
+		public async Task<IEnumerable<TopicFeedModel.TopicPost>> GetTopicFeed(int topicId, int limit, bool allowRestricted)
 		{
 			return await _db.ForumPosts
 				.Where(p => p.TopicId == topicId)
+				.Where(ft => allowRestricted || !ft.Topic.Forum.Restricted)
 				.Select(p => new TopicFeedModel.TopicPost
 				{
 					Id = p.Id,
@@ -216,9 +222,32 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
-		public async Task<TopicCreateModel> GetTopicCreateData(int forumId)
+		/// <summary>
+		/// Returns whether or not a forum exists and if not allowRestircted, then whether it is not restricted
+		/// </summary>
+		public async Task<bool> ForumAccessible(int forumId, bool allowRestricted)
 		{
-			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == forumId);
+			return await _db.Forums
+				.AnyAsync(f => f.Id == forumId
+					&& (allowRestricted || !f.Restricted));
+		}
+
+		/// <summary>
+		/// Returns whether or not a topicm exists and if not allowRestircted, then whether it is not restricted
+		/// </summary>
+		public async Task<bool> TopicAccessible(int topicId, bool allowRestricted)
+		{
+			return await _db.ForumTopics
+				.AnyAsync(t => t.Id == topicId
+					&& (allowRestricted || !t.Forum.Restricted));
+		}
+
+		// TODO: document
+		public async Task<TopicCreateModel> GetCreateTopicData(int forumId, bool allowRestricted)
+		{
+			var forum = await _db.Forums
+				.Where(f => allowRestricted || !f.Restricted)
+				.SingleOrDefaultAsync(f => f.Id == forumId);
 
 			if (forum == null)
 			{
@@ -235,8 +264,11 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Creates a new <see cref="ForumTopic" /> and the first <see cref="ForumPost"/> of that topic
 		/// </summary>
-		/// <returns>The id of the newly created <see cref="ForumTopic" /></returns>
-		public async Task<int> CreateTopic(TopicCreatePostModel model, User user, string ipAddress)
+		/// <returns>
+		/// The id of the newly created <see cref="ForumTopic" />
+		/// If a topic could not be created, returns null
+		/// </returns>
+		public async Task<int?> CreateTopic(TopicCreatePostModel model, User user, string ipAddress)
 		{
 			var topic = new ForumTopic
 			{
@@ -263,10 +295,12 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Returns necessary data to display on the create post screen
+		/// If a topic is not found or not accessible, null is returned
 		/// </summary>
-		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, int? postId)
+		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, int? postId, bool allowRestricted)
 		{
 			var topic = await _db.ForumTopics
+				.Where(ft => allowRestricted || !ft.Forum.Restricted)
 				.SingleOrDefaultAsync(t => t.Id == topicId);
 
 			if (topic == null)
@@ -317,9 +351,10 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns necessary data to display on the edit post screen
 		/// </summary>
-		public async Task<ForumPostEditModel> GetEditPostData(int postId)
+		public async Task<ForumPostEditModel> GetEditPostData(int postId, bool seeRestricted)
 		{
 			var model = await _db.ForumPosts
+				.Where(p => seeRestricted || !p.Topic.Forum.Restricted)
 				.Select(p => new ForumPostEditModel
 				{
 					PostId = p.Id,
@@ -453,9 +488,10 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a paged list of topics that have no replies (are only the original post that was created)
 		/// </summary>
-		public async Task<PageOf<UnansweredPostModel>> GetUnansweredPosts(PagedModel paged)
+		public async Task<PageOf<UnansweredPostModel>> GetUnansweredPosts(PagedModel paged, bool allowRestricted)
 		{
 			return await _db.ForumTopics
+				.Where(t => allowRestricted || !t.Forum.Restricted)
 				.Where(t => t.ForumPosts.Count == 1)
 				.Select(t => new UnansweredPostModel
 				{

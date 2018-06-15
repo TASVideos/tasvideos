@@ -11,7 +11,9 @@
 		}
 	</div>
 	<div class="card-body">
-		@foreach (var forum in Model.Forums.OrderBy(f => f.Ordinal))
+		@foreach (var forum in Model.Forums
+			.OrderBy(f => f.Ordinal)
+			.Where(f => ViewData.UserHasPermission(PermissionTo.SeeRestrictedForums) || !f.Restricted))
 		{
 			<strong><a asp-action="Subforum" asp-route-id="@forum.Id">@forum.Name</a></strong>
 			<div class="mb-2 pl-3">
