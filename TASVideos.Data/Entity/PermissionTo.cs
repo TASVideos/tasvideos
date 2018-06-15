@@ -153,10 +153,15 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to create a post in a topic that is currently locked.")]
 		PostInLockedTopics = 402,
 
+		[Display(Name = "See Restricted Froums")]
+		[Group("Forum Administration")]
+		[Description("The ability to see forums that are restricted from general access.")]
+		SeeRestrictedForums = 490,
+
 		[Display(Name = "See Poll Results")]
 		[Group("Forum Administration")]
 		[Description("The ability to see which users voted on which poll option.")]
-		SeePollResults = 490,
+		SeePollResults = 491,
 
 		#endregion
 

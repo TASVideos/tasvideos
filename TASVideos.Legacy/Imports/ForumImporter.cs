@@ -27,7 +27,8 @@ namespace TASVideos.Legacy.Imports
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow,
 					CreateUserName = "LegacyImport",
-					LastUpdateUserName = "LegacyImport"
+					LastUpdateUserName = "LegacyImport",
+					Restricted = f.AuthView == 2
 				})
 				.ToList();
 
@@ -42,7 +43,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Forum.CreateTimeStamp),
 				nameof(Forum.LastUpdateTimeStamp),
 				nameof(Forum.CreateUserName),
-				nameof(Forum.LastUpdateUserName)
+				nameof(Forum.LastUpdateUserName),
+				nameof(Forum.Restricted)
 			};
 
 			forums.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Forums));
