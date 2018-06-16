@@ -2,11 +2,11 @@
 @{
 	ViewData["Title"] = "Submit Movie";
 }
-<div class="alert alert-info text-center">
+<info-alert dismissible="true">
 	@await Component.RenderWiki("System/SubmitMovieHeader")
-</div>
+</info-alert>
 <hr />
-<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 <form asp-action="Submit" enctype="multipart/form-data">
 	<row>
 		<div class="col-lg-6">

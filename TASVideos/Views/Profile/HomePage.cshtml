@@ -18,10 +18,10 @@
 }
 else
 {
-	<div class="alert alert-warning text-center" role="alert">
+	<warning-alert>
 		<label class="text-warning">Warning: You do not have permissions to edit your homepage</label>
 		<label>By default all users have this permission. Your permission must have been revoked or is otherwise missing</label>
-	</div>
+	</warning-alert>
 }
 <hr />
 @if (pageExists)
@@ -30,9 +30,9 @@ else
 }
 else if (ViewData.UserHasPermission(PermissionTo.EditHomePage))
 {
-	<div class="alert alert-info text-center">
+	<info-alert>
 		<h4>Page does not yet exist</h4>
 		<label class="text-info">By default, all registered users can create and maintain a homepage if they choose.</label><br />
 		<label>Click Edit to create/edit your homepage.</label>
-	</div>
+	</info-alert>
 }

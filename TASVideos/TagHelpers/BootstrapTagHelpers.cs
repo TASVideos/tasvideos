@@ -59,6 +59,45 @@ namespace TASVideos.TagHelpers
 		}
 	}
 
+	public abstract class AlertTagHelper : TagHelper
+	{
+		public bool Dismissible { get; set; }
+
+		protected abstract string Type { get; }
+
+		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+		{
+			var content = (await output.GetChildContentAsync()).GetContent();
+			output.TagName = "div";
+			output.Attributes.Add("role", "alert");
+			output.AddCssClass($"alert alert-{Type} text-center");
+			if (Dismissible)
+			{
+				output.AddCssClass("alert-dismissible");
+				output.Content.SetHtmlContent(
+$@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""close"">
+	<span aria-hidden=""true"">&times;</span>
+</button>
+{content}");
+			}
+		}
+	}
+
+	public class InfoAlertTagHelper : AlertTagHelper
+	{
+		protected override string Type { get; } = "info";
+	}
+
+	public class WarningAlertTagHelper : AlertTagHelper
+	{
+		protected override string Type { get; } = "warning";
+	}
+
+	public class DangerAlertTagHelper : AlertTagHelper
+	{
+		protected override string Type { get; } = "danger";
+	}
+
 	public class DeleteButtonTagHelper : TagHelper
 	{
 		public string AspHref { get; set; }
