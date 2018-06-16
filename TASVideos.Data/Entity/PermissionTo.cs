@@ -153,6 +153,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to create a post in a topic that is currently locked.")]
 		PostInLockedTopics = 402,
 
+		[Display(Name = "Move Topics")]
+		[Group("Forum Administration")]
+		[Description("The ability to move a topic from one forum to another.")]
+		MoveTopics = 403,
+
 		[Display(Name = "See Restricted Froums")]
 		[Group("Forum Administration")]
 		[Description("The ability to see forums that are restricted from general access.")]

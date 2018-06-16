@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -231,5 +232,21 @@ namespace TASVideos.Models
 
 		[Display(Name = "Posted On")]
 		public DateTime PostDate { get; set; }
+	}
+
+	public class MoveTopicModel
+	{
+		[Display(Name = "New Forum")]
+		public int ForumId { get; set; }
+
+		public int TopicId { get; set; }
+
+		[Display(Name = "Topic")]
+		public string TopicTitle { get; set; }
+
+		[Display(Name = "Current Forum")]
+		public string ForumName { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 	}
 }

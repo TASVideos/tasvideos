@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -513,6 +513,50 @@ namespace TASVideos.Tasks
 		public async Task<bool> IsTopicLocked(int topicId)
 		{
 			return await _db.ForumTopics.AnyAsync(t => t.Id == topicId && t.IsLocked);
+		}
+
+		public async Task<MoveTopicModel> GetTopicMoveModel(int topicId, bool allowRestricted)
+		{
+			var model = await _db.ForumTopics
+				.Include(t => t.Forum)
+				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.Select(t => new MoveTopicModel
+				{
+					TopicId = t.Id,
+					TopicTitle = t.Title,
+					ForumId = t.Forum.Id,
+					ForumName = t.Forum.Name
+				})
+				.SingleOrDefaultAsync(t => t.TopicId == topicId);
+
+			if (model != null)
+			{
+				model.AvailableForums = await _db.Forums
+					.Where(f => allowRestricted || !f.Restricted)
+					.Select(f => new SelectListItem
+					{
+						Text = f.Name,
+						Value = f.Id.ToString(),
+						Selected = f.Id == model.ForumId
+					})
+					.ToListAsync();
+			}
+
+			return model;
+		}
+
+		public async Task MoveTopic(MoveTopicModel model, bool allowRestricted)
+		{
+			var topic = await _db.ForumTopics
+				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.Where(t => t.Id == model.TopicId)
+				.SingleOrDefaultAsync();
+
+			if (topic != null)
+			{
+				topic.ForumId = model.ForumId;
+				await _db.SaveChangesAsync();
+			}
 		}
 	}
 }
