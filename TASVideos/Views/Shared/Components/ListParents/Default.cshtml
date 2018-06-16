@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<string>
 
-<div Condition="@Model.Any()" class="alert alert-info">
+<info-alert Condition="@Model.Any()">
 	<label>Parents:</label>
 	<ul>
 		@foreach (var pageName in Model.OrderBy(m => m))
@@ -8,4 +8,4 @@
 			<li><a href="/@pageName">@pageName</a></li>
 		}
 	</ul>
-</div>
+</info-alert>

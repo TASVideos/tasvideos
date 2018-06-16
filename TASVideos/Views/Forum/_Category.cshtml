@@ -1,7 +1,7 @@
 ﻿@model TASVideos.Data.Entity.Forum.ForumCategory
 
-<div class="card mb-2">
-	<div class="card-header">
+<card class="mb-2">
+	<cardheader>
 		<h4>@Model.Title</h4>
 		@if (!string.IsNullOrWhiteSpace(Model.Description))
 		{
@@ -9,8 +9,8 @@
 				@Html.Raw(Model.Description)
 			</div>
 		}
-	</div>
-	<div class="card-body">
+	</cardheader>
+	<cardbody>
 		@foreach (var forum in Model.Forums
 			.OrderBy(f => f.Ordinal)
 			.Where(f => ViewData.UserHasPermission(PermissionTo.SeeRestrictedForums) || !f.Restricted))
@@ -22,5 +22,5 @@
 				</small>
 			</div>
 		}
-	</div>
-</div>
+	</cardbody>
+</card>

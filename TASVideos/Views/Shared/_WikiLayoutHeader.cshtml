@@ -1,5 +1,4 @@
-﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
-@model WikiPage
+﻿@model WikiPage
 @{
 	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
