@@ -83,7 +83,8 @@ namespace TASVideos.Data.SeedData
 		private static readonly PermissionTo[] ForumModeratorPermissions =
 		{
 			PermissionTo.EditForumPosts,
-			PermissionTo.LockTopics
+			PermissionTo.LockTopics,
+			PermissionTo.MoveTopics
 		};
 
 		public static readonly Role EditHomePage = new Role

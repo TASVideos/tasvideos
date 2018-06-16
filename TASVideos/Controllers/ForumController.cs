@@ -167,7 +167,7 @@ namespace TASVideos.Controllers
 			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
 			if (!seeRestricted)
 			{
-				if (!await _forumTasks.ForumAccessible(model.ForumId, UserHas(PermissionTo.SeeRestrictedForums)))
+				if (!await _forumTasks.ForumAccessible(model.ForumId, seeRestricted))
 				{
 					return NotFound();
 				}
@@ -210,7 +210,7 @@ namespace TASVideos.Controllers
 			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
 			if (!seeRestricted)
 			{
-				if (!await _forumTasks.TopicAccessible(model.TopicId, UserHas(PermissionTo.SeeRestrictedForums)))
+				if (!await _forumTasks.TopicAccessible(model.TopicId, seeRestricted))
 				{
 					return NotFound();
 				}
@@ -273,7 +273,7 @@ namespace TASVideos.Controllers
 			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
 			if (!seeRestricted)
 			{
-				if (!await _forumTasks.TopicAccessible(model.TopicId, UserHas(PermissionTo.SeeRestrictedForums)))
+				if (!await _forumTasks.TopicAccessible(model.TopicId, seeRestricted))
 				{
 					return NotFound();
 				}
@@ -292,6 +292,41 @@ namespace TASVideos.Controllers
 			var renderedText = RenderPost(text, true, false); // TODO: pass in bbcode flag
 
 			return new ContentResult { Content = renderedText };
+		}
+
+		[RequirePermission(PermissionTo.MoveTopics)]
+		public async Task<IActionResult> MoveTopic(int id)
+		{
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			if (!seeRestricted)
+			{
+				if (!await _forumTasks.TopicAccessible(id, seeRestricted))
+				{
+					return NotFound();
+				}
+			}
+
+			var model = await _forumTasks.GetTopicMoveModel(id, seeRestricted);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.MoveTopics)]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> MoveTopic(MoveTopicModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			await _forumTasks.MoveTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
+			return RedirectToAction(nameof(Topic), new { id = model.TopicId });
 		}
 	}
 }
