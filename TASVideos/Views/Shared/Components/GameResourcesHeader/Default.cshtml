@@ -1,5 +1,5 @@
 ﻿@model WikiPage
-<div class="alert alert-info">
+<info-alert>
 	<row>
 		<div class="col-md-4">
 			@await Component.ListParents(Model)
@@ -8,5 +8,4 @@
 			@await Component.RenderWiki("System/GameResourcesHeader")
 		</div>
 	</row>
-	
-</div>
+</info-alert>

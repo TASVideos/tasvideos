@@ -41,7 +41,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Frames { get; set; }
 
 		[Column("length")]
-		public double Length { get; set; }
+		public decimal Length { get; set; }
 
 		[Column("rerecords")]
 		public int Rerecord { get; set; }

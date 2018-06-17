@@ -37,6 +37,7 @@ namespace TASVideos
 						DbInitializer.Initialize(context);
 						DbInitializer.PreMigrateSeedData(context);
 						DbInitializer.PostMigrateSeedData(context);
+						DbInitializer.GenerateDevTestUsers(context, userManager).Wait();
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
 					else if (env.IsLocalWithoutRecreate() || env.IsDemo())
@@ -47,11 +48,13 @@ namespace TASVideos
 					{
 						var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
 						var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
+						var userManager = services.GetRequiredService<UserManager<User>>();
 
 						DbInitializer.Initialize(context);
 						DbInitializer.PreMigrateSeedData(context);
 						LegacyImporter.RunLegacyImport(context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);
 						DbInitializer.PostMigrateSeedData(context);
+						DbInitializer.GenerateDevTestUsers(context, userManager).Wait();
 					}
 				}
 				catch (Exception ex)

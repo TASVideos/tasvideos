@@ -26,7 +26,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int CreateTimeStamp { get; set; }
 
 		[Column("points")]
-		public double Points { get; set; }
+		public decimal Points { get; set; }
 
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 		public virtual ICollection<SiteText> SiteTexts { get; set; } = new HashSet<SiteText>();

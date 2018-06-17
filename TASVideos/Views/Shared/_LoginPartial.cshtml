@@ -40,7 +40,7 @@
 				<a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")">Log in</a>
+				<a class="nav-link" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.ReturnUrl()">Log in</a>
 			</li>
 		</ul>
 	}

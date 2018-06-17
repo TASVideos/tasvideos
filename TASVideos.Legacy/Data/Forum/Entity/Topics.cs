@@ -29,5 +29,12 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("topic_moved_id")]
 		public int TopicMovedId { get; set; }
+
+		// Topic status
+		// define('TOPIC_UNLOCKED', 0);
+		// define('TOPIC_LOCKED', 1);
+		// define('TOPIC_MOVED', 2);
+		[Column("topic_status")]
+		public int TopicStatus { get; set; }
 	}
 }

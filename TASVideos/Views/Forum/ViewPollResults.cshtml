@@ -2,11 +2,11 @@
 @{
 	ViewData["Title"] = $"Poll Results for {Model.TopicTitle}";
 }
-
-<a asp-controller="ForumTopic" asp-action="Index" asp-route-id="@Model.TopicId" class="btn btn-secondary"><span class="fa fa-arrow-left"></span>Back</a>
+<partial Name="_ForumHeader" />
+<a asp-action="Topic" asp-route-id="@Model.TopicId" class="btn btn-secondary"><span class="fa fa-arrow-left"></span>Back</a>
 <hr />
 
-<div class="">
+<div>
 	@Html.Raw(Model.Question)
 </div>
 <hr />

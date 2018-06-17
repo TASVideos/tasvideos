@@ -86,11 +86,7 @@ namespace TASVideos.Tasks
 				return new RoleEditViewModel();
 			}
 
-			// Query all the role data first, then slice it up post query
-			// Because EF doesn't like trying to hit the same subtable twice, 
-			// plus that is likely less effecient from a query perspective 
-			// since the projection is only reducing 2 columns
-			var raw = (await _db.Roles
+			var raw = await _db.Roles
 				.Select(r => new
 				{
 					r.Id,
@@ -99,9 +95,7 @@ namespace TASVideos.Tasks
 					Links = r.RoleLinks.Select(rl => rl.Link).ToList(),
 					r.RolePermission
 				})
-				.Where(r => r.Id == id.Value) // Workaround for preview 1 bug: https://github.com/aspnet/EntityFrameworkCore/issues/11092
-				.ToListAsync()) // When this bug is fixed, remove these and do SingleAsync(r => r.Id == id.Value)
-				.SingleOrDefault();
+				.SingleAsync(r => r.Id == id.Value);
 
 			if (raw == null)
 			{

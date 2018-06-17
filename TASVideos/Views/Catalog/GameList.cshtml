@@ -11,8 +11,7 @@
 	<button type="Submit" class="btn btn-secondary">Go</button>
 </form>
 
-
-@Html.Partial("~/Views/Table/_SystemPager.cshtml", Model)
+<partial name="~/Views/Table/_SystemPager.cshtml" model="Model" />
 <table class="table table-bordered table-striped table-sm">
 	<sortable-table-head paging="@Model" model-type="typeof(GameListModel)" />
 	@foreach (var game in Model)

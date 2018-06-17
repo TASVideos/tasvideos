@@ -56,5 +56,7 @@ namespace TASVideos.Data
 		public bool SortDescending { get; set; }
 		public int PageSize { get; set; } = 10;
 		public int CurrentPage { get; set; } = 1;
+
+		public int GetRowsToSkip() => ((CurrentPage< 1 ? 1 : CurrentPage) - 1) * PageSize;
 	}
 }

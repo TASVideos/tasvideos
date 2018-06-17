@@ -17,7 +17,6 @@ namespace TASVideos.Controllers
 {
 	public class SubmissionController : BaseController
 	{
-		private readonly UserTasks _userTasks;
 		private readonly WikiTasks _wikiTasks;
 		private readonly SubmissionTasks _submissionTasks;
 
@@ -27,7 +26,6 @@ namespace TASVideos.Controllers
 			SubmissionTasks submissionTasks)
 			: base(userTasks)
 		{
-			_userTasks = userTasks;
 			_wikiTasks = wikiTasks;
 			_submissionTasks = submissionTasks;
 		}
@@ -116,7 +114,7 @@ namespace TASVideos.Controllers
 
 			foreach (var author in model.Authors)
 			{
-				if (!await _userTasks.CheckUserNameExists(author))
+				if (!await UserTasks.CheckUserNameExists(author))
 				{
 					ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), $"Could not find user: {author}");
 				}

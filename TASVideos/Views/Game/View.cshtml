@@ -5,19 +5,19 @@
 	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
 
-<div class="card">
-	<div class="card-header">
+<card>
+	<cardheader>
 		<span class="float-right">
 			<a condition="@canEdit" asp-action="Edit" asp-controller="Wiki" asp-route-path="@wiki" class="btn btn-primary">Edit</a>
 		</span>
 		<h4>Description</h4>
-	</div>
-	<div class="card-body">
+	</cardheader>
+	<cardbody>
 		<div class="card-text">
 			@await Component.RenderWiki(wiki)
 		</div>
-	</div>
-</div>
+	</cardbody>
+</card>
 <hr />
 <label>Genre:</label>
 <ul>

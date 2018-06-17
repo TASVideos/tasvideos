@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -48,7 +49,7 @@ namespace TASVideos.Models
 
 			public ForumTopicType Type { get; set; }
 
-			public DateTime LastPost { get; set; }
+			public DateTime? LastPost { get; set; }
 		}
 	}
 
@@ -67,7 +68,10 @@ namespace TASVideos.Models
 	public class ForumTopicModel
 	{
 		public int Id { get; set; }
+		public bool IsLocked { get; set; }
 		public string Title { get; set; }
+		public int ForumId { get; set; }
+		public string ForumName { get; set; }
 
 		public PageOf<ForumPostEntry> Posts { get; set; }
 		public PollModel Poll { get; set; }
@@ -95,6 +99,9 @@ namespace TASVideos.Models
 
 			[Sortable]
 			public DateTime CreateTimestamp { get; set; }
+
+			public bool IsLastPost { get; set; }
+			public bool IsEditable { get; set; }
 		}
 
 		public class PollModel
@@ -145,14 +152,35 @@ namespace TASVideos.Models
 
 	/// <summary>
 	/// Data necessary to present to the user for creating a post
-	/// as well as the data neccessary to create a post
+	/// as well as the data necessary to create a post
 	/// </summary>
 	public class ForumPostCreateModel : ForumPostModel
 	{
 		public string TopicTitle { get; set; }
+		public bool IsLocked { get; set; }
 
 		public string UserAvatar { get; set; }
 		public string UserSignature { get; set; }
+	}
+
+	public class ForumPostEditModel
+	{
+		public int PostId { get; set; }
+		public int PosterId { get; set; }
+		public string PosterName { get; set; }
+		public DateTime CreateTimestamp { get; set; }
+
+		public bool EnableBbCode { get; set; }
+		public bool EnableHtml { get; set; }
+
+		public int TopicId { get; set; }
+		public string TopicTitle { get; set; }
+
+		public string Subject { get; set; }
+		public string Text { get; set; }
+		public string RenderedText { get; set; }
+
+		public bool IsLastPost { get; set; }
 	}
 
 	public class PollResultModel
@@ -183,5 +211,42 @@ namespace TASVideos.Models
 			[Display(Name = "IP Address")]
 			public string IpAddress { get; set; }
 		}
+	}
+
+	public class UnansweredPostModel
+	{
+		public int ForumId { get; set; }
+
+		[Display(Name = "Forum")]
+		public string ForumName { get; set; }
+
+		public int TopicId { get; set; }
+
+		[Display(Name = "Topic")]
+		public string TopicName { get; set; }
+
+		public int AuthorId { get; set; }
+
+		[Display(Name = "Author")]
+		public string AuthorName { get; set; }
+
+		[Display(Name = "Posted On")]
+		public DateTime PostDate { get; set; }
+	}
+
+	public class MoveTopicModel
+	{
+		[Display(Name = "New Forum")]
+		public int ForumId { get; set; }
+
+		public int TopicId { get; set; }
+
+		[Display(Name = "Topic")]
+		public string TopicTitle { get; set; }
+
+		[Display(Name = "Current Forum")]
+		public string ForumName { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 	}
 }
