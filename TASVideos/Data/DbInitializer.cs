@@ -110,10 +110,27 @@ namespace TASVideos.Data
 					context.UserRoles.Add(new UserRole { Role = defaultRole, User = savedUser });
 				}
 			}
+
+			foreach (var user in UserSampleData.Users)
+			{
+				var result = await userManager.CreateAsync(user, UserSampleData.SamplePassword);
+				if (!result.Succeeded)
+				{
+					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
+				}
+
+				var savedUser = context.Users.Single(u => u.UserName == user.UserName);
+				savedUser.EmailConfirmed = true;
+				savedUser.LockoutEnabled = false;
+				foreach (var defaultRole in defaultRoles)
+				{
+					context.UserRoles.Add(new UserRole { Role = defaultRole, User = savedUser });
+				}
+			}
 		}
 
 		/// <summary>
-		/// Adds optional sample data
+		/// Adds optional sample dSiteata
 		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
