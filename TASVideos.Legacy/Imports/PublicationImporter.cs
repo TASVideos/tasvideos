@@ -259,7 +259,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.LastUpdateTimeStamp)
 			};
 
-			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default);
+			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default, bulkCopyTimeout: 600);
 
 			var pubTagColumns = new[]
 			{
