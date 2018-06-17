@@ -22,7 +22,6 @@ namespace TASVideos.Controllers
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
-		private readonly UserTasks _userTasks;
 
 		public AccountController(
 			UserManager<User> userManager,
@@ -32,7 +31,6 @@ namespace TASVideos.Controllers
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userTasks = userTasks;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailSender = emailSender;
@@ -63,12 +61,12 @@ namespace TASVideos.Controllers
 			ViewData["ReturnUrl"] = returnUrl;
 			if (ModelState.IsValid)
 			{
-				var result = await _userTasks.PasswordSignIn(model);
+				var result = await UserTasks.PasswordSignIn(model);
 
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User logged in.");
-					await _userTasks.MarkUserLoggedIn(model.UserName);
+					await UserTasks.MarkUserLoggedIn(model.UserName);
 					return RedirectToLocal(returnUrl);
 				}
 
@@ -126,7 +124,7 @@ namespace TASVideos.Controllers
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					_logger.LogInformation("User created a new account with password.");
 
-					await _userTasks.AddStandardRolesToUser(user.Id);
+					await UserTasks.AddStandardRolesToUser(user.Id);
 
 					return RedirectToLocal(returnUrl);
 				}

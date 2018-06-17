@@ -18,14 +18,14 @@
 		}
 	}
 }
-
-<h4>@Model.Name</h4>
+<partial Name="_ForumHeader" />
+<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumTopics)" asp-action="CreateTopic" asp-route-forumId="@Model.Id" class="pull-right btn btn-primary"><span class="fa fa-plus"></span> New Topic</a>
+<h4><a asp-action="Index">Forum</a> -> @Model.Name</h4>
 <div>
-	<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumTopics)" asp-controller="ForumTopic" asp-action="Create" asp-route-forumId="@Model.Id" class="pull-right btn btn-primary"><span class="fa fa-plus"></span> New Topic</a>
-	<small>@Model.Description</small>
+	<small>@Html.Raw(Model.Description)</small>
 </div>
 <hr />
-@Html.Partial("~/Views/Table/_Pager.cshtml", Model.Topics)
+<partial name="~/Views/Table/_Pager.cshtml" model="Model.Topics" />
 
 <table class="table table-striped table-bordered">
 	<tr>
@@ -43,7 +43,7 @@
 				<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fa fa-sticky-note"></span>
 				<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fa fa-bullhorn"></span>
 			</td>
-			<td><a asp-controller="ForumTopic" asp-action="Index" asp-route-id="@topic.Id">@Html.Raw(ToTitle(topic.Title, topic.Type))</a></td>
+			<td><a asp-controller="Forum" asp-action="Topic" asp-route-id="@topic.Id">@Html.Raw(ToTitle(topic.Title, topic.Type))</a></td>
 			<td>@(topic.PostCount - 1)</td>
 			<td>@topic.CreateUserName</td>
 			<td>@topic.Type</td>

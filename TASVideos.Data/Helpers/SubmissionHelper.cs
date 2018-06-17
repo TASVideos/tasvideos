@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Data.Helpers
 {
-    public static class SubmissionHelper
+	public static class SubmissionHelper
 	{
-		public const int MinimumHoursBeforeJudgement = 72;
-
 		/// <summary>
 		/// Returns a list of all available statuses a submission could be set to
 		/// Based on the user's permissions, submission status and date, and authors
@@ -68,7 +68,7 @@ namespace TASVideos.Data.Helpers
 				|| currentStatus == SubmissionStatus.Delayed
 				|| currentStatus == SubmissionStatus.NeedsMoreInfo)
 				&& isJudge && !isAuthorOrSubmitter
-				&& submitDate > DateTime.UtcNow.AddHours(-MinimumHoursBeforeJudgement)) // A judge can claim a new run, unless they are an author or the submitter
+				&& submitDate > DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgement)) // A judge can claim a new run, unless they are an author or the submitter
 			{
 				list.Add(SubmissionStatus.Accepted);
 				list.Add(SubmissionStatus.Rejected);

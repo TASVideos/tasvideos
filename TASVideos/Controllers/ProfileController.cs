@@ -21,7 +21,6 @@ namespace TASVideos.Controllers
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
-		private readonly UserTasks _userTasks;
 		private readonly AwardTasks _awardTasks;
 
 		public ProfileController(
@@ -37,7 +36,6 @@ namespace TASVideos.Controllers
 			_signInManager = signInManager;
 			_emailSender = emailSender;
 			_logger = logger;
-			_userTasks = userTasks;
 			_awardTasks = awardTasks;
 		}
 
@@ -54,7 +52,7 @@ namespace TASVideos.Controllers
 
 			var id = int.Parse(_userManager.GetUserId(User));
 
-			var model = await _userTasks.GetUserProfile(id);
+			var model = await UserTasks.GetUserProfile(id);
 			if (model == null)
 			{
 				return NotFound();
@@ -84,7 +82,7 @@ namespace TASVideos.Controllers
 				IsEmailConfirmed = user.EmailConfirmed,
 				PublicRatings = user.PublicRatings,
 				StatusMessage = StatusMessage,
-				Roles = await _userTasks.GetUserRoles(user.Id)
+				Roles = await UserTasks.GetUserRoles(user.Id)
 			};
 
 			return View(model);
@@ -113,7 +111,7 @@ namespace TASVideos.Controllers
 
 			if (model.TimeZoneId != user.TimeZoneId || model.PublicRatings != user.PublicRatings)
 			{
-				await _userTasks.UpdateUserProfile(user.Id, model.TimeZoneId, model.PublicRatings);
+				await UserTasks.UpdateUserProfile(user.Id, model.TimeZoneId, model.PublicRatings);
 			}
 
 			StatusMessage = "Your profile has been updated";

@@ -208,11 +208,6 @@ namespace TASVideos.Tasks
 					.ProjectTo<UserEditViewModel>()
 					.SingleAsync(u => u.UserName == userName);
 
-				model.SelectedRoles = await _db.UserRoles
-					.Where(ur => ur.UserId == model.Id)
-					.Select(ur => ur.RoleId)
-					.ToListAsync();
-
 				model.AvailableRoles = await GetAllRolesUserCanAssign(currentUserId, model.SelectedRoles);
 
 				return model;

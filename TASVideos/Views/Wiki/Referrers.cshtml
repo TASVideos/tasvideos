@@ -12,13 +12,13 @@
 <div>
 	@foreach (var referral in Model)
 	{
-		<div class="card">
-			<div class="card-header">
+		<card>
+			<cardheader>
 				<a href="/@referral.Referrer">@referral.Referrer</a>
-			</div>
+			</cardheader>
 			<div class="card-block">
 				<i>@referral.Excerpt</i>
 			</div>
-		</div>
+		</card>
 	}
 </div>

@@ -99,7 +99,7 @@ namespace TASVideos.Tasks
 
 		public async Task<RomListModel> GetRomsForGame(int gameId)
 		{
-			return (await _db.Games
+			return await _db.Games
 				.Where(g => g.Id == gameId)
 				.Select(g => new RomListModel
 				{
@@ -119,9 +119,7 @@ namespace TASVideos.Tasks
 					})
 					.ToList()
 				})
-				.Take(2) // Workaround fix for preview1 bug: https://github.com/aspnet/EntityFrameworkCore/issues/11092
-				.ToListAsync())
-				.SingleOrDefault();
+				.SingleOrDefaultAsync();
 		}
 
 		public async Task<RomEditModel> GetRomForEdit(int gameId, int? romId)

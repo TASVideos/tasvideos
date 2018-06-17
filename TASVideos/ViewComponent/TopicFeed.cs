@@ -30,7 +30,7 @@ namespace TASVideos.ViewComponents
 				RightAlign = ParamHelper.HasParam(pp, "right"),
 				Heading = ParamHelper.GetValueFor(pp, "heading"),
 				HideContent = ParamHelper.HasParam(pp, "hidecontent"),
-				Posts = await _forumTasks.GetTopicFeed(topicId, limit)
+				Posts = await _forumTasks.GetTopicFeed(topicId, limit, false /*By design, let's not allow restricted topics as wiki feeds*/)
 			};
 
 			foreach (var post in model.Posts)

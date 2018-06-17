@@ -17,13 +17,14 @@ namespace TASVideos.Controllers
 	{
 		private static readonly Version VersionInfo = Assembly.GetExecutingAssembly().GetName().Version;
 
-		private readonly UserTasks _userTasks;
 		private IEnumerable<PermissionTo> _userPermission;
 
 		public BaseController(UserTasks userTasks)
 		{
-			_userTasks = userTasks;
+			UserTasks = userTasks;
 		}
+
+		protected UserTasks UserTasks { get; }
 
 		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
 
@@ -38,11 +39,16 @@ namespace TASVideos.Controllers
 						_userPermission = Enumerable.Empty<PermissionTo>();
 					}
 
-					_userPermission = _userTasks.GetUserPermissionsById(User.GetUserId());
+					_userPermission = UserTasks.GetUserPermissionsById(User.GetUserId());
 				}
 
 				return _userPermission;
 			}
+		}
+
+		protected bool UserHas(PermissionTo permission)
+		{
+			return UserPermissions.Contains(permission);
 		}
 
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
@@ -50,6 +56,11 @@ namespace TASVideos.Controllers
 		protected IActionResult RedirectHome()
 		{
 			return Redirect("/Home/Index");
+		}
+
+		protected IActionResult RedirectAccessDenied()
+		{
+			return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
 		}
 
 		protected IActionResult RedirectToLogin()
@@ -73,6 +84,11 @@ namespace TASVideos.Controllers
 			}
 
 			return RedirectHome();
+		}
+
+		protected string RenderHtml(string text)
+		{
+			return RenderPost(text, false, true);
 		}
 
 		protected string RenderPost(string text, bool useBbCode, bool useHtml)

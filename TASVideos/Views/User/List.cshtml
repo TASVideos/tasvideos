@@ -4,11 +4,11 @@
 }
 
 <div class="float-right">
-	@Html.Partial("~/Views/User/_UserSearch.cshtml")
+	<partial name="~/Views/User/_UserSearch.cshtml" />
 </div>
 <h4>@ViewData["Title"]</h4>
 <hr />
-@Html.Partial("~/Views/Table/_Pager.cshtml", Model)
+<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
 <table class="table table-bordered table-striped">
 	<sortable-table-head paging="@Model" model-type="typeof(UserListViewModel)"/>
 	@foreach (var user in Model)

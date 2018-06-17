@@ -30,12 +30,15 @@
 		<div condition="!Model.Users.Any()">
 			<label class="form-control-label">No users currently have this role.</label>
 		</div>
-		<div condition="Model.Users.Any()">
+		<div condition="Model.Users.Count > 100">
+			<i>@Model.Users.Count Users (too many to display)</i>
+		</div>
+		<div condition="Model.Users.Any() && Model.Users.Count <= 100">
 			@foreach (var user in Model.Users)
 			{
-			<span class="mr-4 mb-4" style="display: inline-block">
-				<a asp-controller="User" asp-action="Profile" asp-route-id="user.Id">@user.UserName</a>
-			</span>
+				<span class="mr-4 mb-4" style="display: inline-block">
+					<a asp-controller="User" asp-action="Profile" asp-route-id="user.Id">@user.UserName</a>
+				</span>
 			}
 		</div>
 	</div>

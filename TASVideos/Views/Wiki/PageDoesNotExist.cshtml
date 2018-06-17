@@ -6,7 +6,7 @@ Want to create it?
 <ul>
 	@if (!User.Identity.IsAuthenticated)
 	{
-		<li>If you are an editor or have rights to edit this page, <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="@("/" + ViewData["Title"])">log in</a> to edit the page.</li>
+		<li>If you are an editor or have rights to edit this page, <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="@Context.ReturnUrl()">log in</a> to edit the page.</li>
 	}
 	else if (!canEdit)
 	{

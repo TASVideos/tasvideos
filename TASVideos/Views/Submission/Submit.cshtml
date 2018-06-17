@@ -2,11 +2,11 @@
 @{
 	ViewData["Title"] = "Submit Movie";
 }
-<div class="alert alert-info text-center">
+<info-alert dismissible="true">
 	@await Component.RenderWiki("System/SubmitMovieHeader")
-</div>
+</info-alert>
 <hr />
-<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 <form asp-action="Submit" enctype="multipart/form-data">
 	<row>
 		<div class="col-lg-6">
@@ -77,7 +77,7 @@
 	<hr />
 	<row>
 		<div class="col-12 text-center">
-			<button id="preview-btn" type="button" class="btn btn-secondary">Preview</button>
+			<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
 			<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "d-none")">Submit</button>
 			<br />
 			<br />
@@ -89,17 +89,9 @@
 	</row>
 </form>
 
-<div id="preview-container" class="d-none">
-	<hr />
-	<div class="card">
-		<div class="card-header">Preview:</div>
-		<div id="preview-contents" class="card-body">
-
-		</div>
-	</div>
-</div>
+<partial name="_PreviewWindow" model="@((nameof(Model.Markup), $"/Wiki/{nameof(WikiController.GeneratePreview)}"))" />
 @section Scripts {
-	@await Html.PartialAsync("_ValidationScriptsPartial")
+	<partial name="_ValidationScriptsPartial" />
 }
 
 <script>
@@ -126,27 +118,9 @@
 			xmlhttp.send();
 		};
 
-		document.getElementById('preview-btn').onclick = function() {
-			var markup = document.getElementById('@nameof(Model.Markup)').value;
-			if (markup) {
-				document.getElementById('preview-container').classList.remove('d-none');
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.onreadystatechange = function() {
-					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-						if (xmlhttp.status === 200) {
-							document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
-						} else {
-							alert("Could not generate preview");
-						}
-
-						document.getElementById('submit-btn').classList.remove('d-none');
-						document.getElementById('submit-blurb').classList.remove('d-none');
-					}
-				};
-
-				xmlhttp.open("POST", "/Wiki/@(nameof(WikiController.GeneratePreview))");
-				xmlhttp.send(markup);
-			}
-		}
+		document.getElementById('preview-button').addEventListener('click', function () {
+			document.getElementById('submit-btn').classList.remove('d-none');
+			document.getElementById('submit-blurb').classList.remove('d-none');
+		})
 	})()
 </script>
