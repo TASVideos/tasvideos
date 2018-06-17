@@ -2,8 +2,8 @@
 @{
 	ViewData["Title"] = $"Publishing Submission #{Model.Title}";
 }
-<div class="card">
-	<div class="card-body">
+<card>
+	<cardbody>
 		<div class="card-title">
 			<a class="btn btn-primary " asp-action="Catalog" asp-route-id="@Model.Id">Catalog</a>
 		</div>
@@ -33,8 +33,8 @@
 				</row>
 			</div>
 		</row>
-	</div>
-</div>
+	</cardbody>
+</card>
 <hr />
 <form asp-action="Publish" enctype="multipart/form-data">
 	<input type="hidden" asp-for="SystemId" />
