@@ -1,6 +1,6 @@
 ﻿@model RoleDisplayViewModel
-<div class="card mb-2">
-	<div class="card-body">
+<card class="mb-2">
+	<cardbody>
 		<h5 class="card-title">@Model.Name</h5>
 		<row>
 			<div class="col-md-6">
@@ -24,8 +24,8 @@
 				}
 			</div>
 		</row>
-	</div>
-	<div condition="!Model.IsDefault" class="card-footer">
+	</cardbody>
+	<cardfooter condition="!Model.IsDefault">
 		<label asp-for="Users" class="form-control-label"></label>
 		<div condition="!Model.Users.Any()">
 			<label class="form-control-label">No users currently have this role.</label>
@@ -41,5 +41,5 @@
 				</span>
 			}
 		</div>
-	</div>
-</div>
+	</cardfooter>
+</card>
