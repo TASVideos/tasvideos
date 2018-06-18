@@ -44,5 +44,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_lastvisit")]
 		public int LastVisitDate { get; set; }
+
+		[Column("user_timezone")]
+		public decimal TimeZoneOffset { get; set; }
 	}
 }
