@@ -26,7 +26,6 @@ namespace TASVideos.Legacy.Imports
 			// TODO:
 			// Import forum admin
 			// gender?
-			// timezone
 			// user_avatar_type ?
 			// mood avatars
 			// TODO: what to do about these??
