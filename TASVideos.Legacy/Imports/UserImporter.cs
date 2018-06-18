@@ -59,12 +59,13 @@ namespace TASVideos.Legacy.Imports
 							u.Signature,
 							u.PublicRatings,
 							u.LastVisitDate,
+							u.TimeZoneOffset,
 							IsBanned = b != null,
 							IsModerator = ug != null
 						})
 						.ToList();
 
-			var moderators = users.Where(u => u.IsModerator).ToList();
+			var timeZones = TimeZoneInfo.GetSystemTimeZones();
 
 			var userEntities = users
 				.Select(u => new User
@@ -84,7 +85,8 @@ namespace TASVideos.Legacy.Imports
 					From = u.From,
 					Signature = ImportHelper.FixString(u.Signature),
 					PublicRatings = u.PublicRatings,
-					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate)
+					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
+					TimeZoneId = timeZones.First(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset).StandardName
 				})
 				.ToList();
 
@@ -224,7 +226,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.From),
 				nameof(User.Signature),
 				nameof(User.PublicRatings),
-				nameof(User.LastLoggedInTimeStamp)
+				nameof(User.LastLoggedInTimeStamp),
+				nameof(User.TimeZoneId)
 			};
 
 			var userRoleColumns = new[]
