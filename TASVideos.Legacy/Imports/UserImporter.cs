@@ -24,7 +24,6 @@ namespace TASVideos.Legacy.Imports
 			NesVideosForumContext legacyForumContext)
 		{
 			// TODO:
-			// Import forum admin
 			// gender?
 			// user_avatar_type ?
 			// mood avatars
@@ -60,7 +59,8 @@ namespace TASVideos.Legacy.Imports
 							u.LastVisitDate,
 							u.TimeZoneOffset,
 							IsBanned = b != null,
-							IsModerator = ug != null
+							IsModerator = ug != null,
+							IsForumAdmin = u.UserLevel == 1
 						})
 						.ToList();
 
@@ -123,7 +123,16 @@ namespace TASVideos.Legacy.Imports
 						}
 					}
 
-					if (user.User.IsModerator
+					if (user.User.IsForumAdmin
+						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
+					{
+						context.UserRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumAdmin).Id,
+							UserId = user.User.Id
+						});
+					}
+					else if (user.User.IsModerator
 						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
 					{
 						context.UserRoles.Add(new UserRole

@@ -47,5 +47,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_timezone")]
 		public decimal TimeZoneOffset { get; set; }
+
+		[Column("user_level")]
+		public int UserLevel { get; set; }
 	}
 }
