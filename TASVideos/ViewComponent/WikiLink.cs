@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
-using TASVideos.Extensions;
 using TASVideos.Tasks;
 using TASVideos.WikiEngine;
 

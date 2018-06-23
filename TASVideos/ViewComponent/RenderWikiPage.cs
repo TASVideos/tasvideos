@@ -37,7 +37,7 @@ namespace TASVideos.ViewComponents
 				ViewData["Title"] = existingPage.PageName;
 				ViewData["Layout"] = null;
 				_wikiMarkupFileProvider.WikiTasks = _wikiTasks;
-				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
+				return View(WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 
 			return new ContentViewComponentResult("");
