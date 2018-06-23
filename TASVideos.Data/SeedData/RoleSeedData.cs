@@ -305,28 +305,23 @@ namespace TASVideos.Data.SeedData
 			RoleLinks = new List<RoleLink>()
 		};
 
-		public static IEnumerable<Role> AllRoles
-		{
-			get
+		public static IEnumerable<Role> AllRoles =>
+			new[]
 			{
-				return new[]
-				{
-					EditHomePage,
-					SubmitMovies,
-					ForumUser,
-					ExperiencedForumUser,
-					Admin,
-					AdminAssistant,
-					Editor,
-					VestedEditor,
-					Judge,
-					SeniorJudge,
-					Publisher,
-					SeniorPublisher,
-					ForumModerator,
-					ForumAdmin
-				};
-			}
-		}
+				EditHomePage,
+				SubmitMovies,
+				ForumUser,
+				ExperiencedForumUser,
+				Admin,
+				AdminAssistant,
+				Editor,
+				VestedEditor,
+				Judge,
+				SeniorJudge,
+				Publisher,
+				SeniorPublisher,
+				ForumModerator,
+				ForumAdmin
+			};
 	}
 }

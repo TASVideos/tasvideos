@@ -4,6 +4,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Data.SeedData;
 
+// ReSharper disable StaticMemberInitializerReferesToMemberBelow
 namespace TASVideos.Data.SampleData
 {
 	public static class PublicationSampleData
