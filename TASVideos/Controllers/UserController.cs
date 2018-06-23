@@ -47,15 +47,15 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.EditUsers)]
 		public async Task<IActionResult> Edit(int id)
 		{
-			if (id > 0)
-			{
-				var userName = await UserTasks.GetUserNameById(id);
+			var userName = await UserTasks.GetUserNameById(id);
 
-				var model = await UserTasks.GetUserForEdit(userName, User.GetUserId());
-				return View(model);
+			if (userName == null)
+			{
+				return NotFound();
 			}
 
-			return RedirectToAction(nameof(List));
+			var model = await UserTasks.GetUserForEdit(userName, User.GetUserId());
+			return View(model);
 		}
 
 		[RequirePermission(PermissionTo.EditUsers)]
