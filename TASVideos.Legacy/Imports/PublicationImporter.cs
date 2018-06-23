@@ -24,7 +24,6 @@ namespace TASVideos.Legacy.Imports
 			// multiple archive links
 			// multiple movie files
 			// multiple torrents
-
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();
@@ -83,8 +82,8 @@ namespace TASVideos.Legacy.Imports
 					join s in submissions on lm.SubmissionId equals s.Id
 					join sys in systems on lm.SystemId equals sys.Id
 					join sysFr in systemFrameRates on s.SystemFrameRateId equals sysFr.Id
-					join g in games on (s.GameId ?? -1) equals g.Id					
-					join mfs in legacyMovieFileStorage on (lm.MovieFiles.First(f => movieTypes.Contains(f.Type)).FileName) equals mfs.FileName
+					join g in games on s.GameId ?? -1 equals g.Id
+					join mfs in legacyMovieFileStorage on lm.MovieFiles.First(f => movieTypes.Contains(f.Type)).FileName equals mfs.FileName
 					select new
 					{
 						Movie = lm,
@@ -99,8 +98,6 @@ namespace TASVideos.Legacy.Imports
 
 				foreach (var pub in pubs)
 				{
-					string pageName = LinkConstants.PublicationWikiPage + pub.Movie.Id;
-
 					var screnshotUrl = pub.Movie.MovieFiles.First(f => f.Type == "H");
 					var torrentUrls = pub.Movie.MovieFiles.Where(f => torrentTypes.Contains(f.Type));
 					var mirror = pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "A")?.FileName;

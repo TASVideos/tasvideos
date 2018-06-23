@@ -85,6 +85,7 @@ namespace TASVideos.Legacy.Imports
 					Signature = ImportHelper.FixString(u.Signature),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
+					// ReSharper disable once CompareOfFloatsByEqualityOperator
 					TimeZoneId = timeZones.First(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset).StandardName
 				})
 				.ToList();
