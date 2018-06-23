@@ -193,7 +193,7 @@ namespace TASVideos.Tasks
 			return await _db.Users
 				.Where(u => u.Id == id)
 				.Select(u => u.UserName)
-				.SingleAsync();
+				.SingleOrDefaultAsync();
 		}
 
 		/// <summary>

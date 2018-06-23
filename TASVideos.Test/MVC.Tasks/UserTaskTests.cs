@@ -13,23 +13,48 @@ namespace TASVideos.Test.MVC.Tasks
 	[TestClass]
 	public class UserTaskTests
     {
-		[TestMethod]
-		public async Task UserTasks_GetUserNameById_ValidId_ReturnsCorrectName()
+		private UserTasks _userTasks;
+		private ApplicationDbContext _db;
+
+		[TestInitialize]
+		public void Initialize()
 		{
 			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseInMemoryDatabase(databaseName: "What goes here?")
+				.UseInMemoryDatabase("TestDb")
 				.Options;
 
-			using (var context = new ApplicationDbContext(options, null))
-			{
-				var testName = "TestUser";
-				context.Users.Add(new User { Id = 1, UserName = testName });
-				context.SaveChanges();
-				var userTasks = new UserTasks(context, null, null, new NoCacheService()); // TODO: managers
+			_db = new ApplicationDbContext(options, null);
+			_db.Database.EnsureDeleted();
+		}
 
-				var result = await userTasks.GetUserNameById(1);
-				Assert.AreEqual(testName, result);
-			}
+		[TestCleanup]
+		public void Cleanup()
+		{
+			_db.Dispose();
+		}
+
+	    [TestMethod]
+		public async Task UserTasks_GetUserNameById_ValidId_ReturnsCorrectName()
+		{
+			
+			var testName = "TestUser";
+			_db.Users.Add(new User { Id = 1, UserName = testName });
+			_db.SaveChanges();
+			var userTasks = new UserTasks(_db, null, null, new NoCacheService()); // TODO: managers
+
+			var result = await userTasks.GetUserNameById(1);
+			Assert.AreEqual(testName, result);
+		}
+
+		[TestMethod]
+		public async Task UserTasks_GetUserNameById_InvalidId_ReturnsNull()
+		{
+			_db.Users.Add(new User { Id = 2, UserName = "TestUser" });
+			_db.SaveChanges();
+			var userTasks = new UserTasks(_db, null, null, new NoCacheService()); // TODO: managers
+
+			var result = await userTasks.GetUserNameById(1);
+			Assert.IsNull(result);
 		}
     }
 }
