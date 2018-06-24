@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MovieParsers\SampleMovieFiles\0frames.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\2frames.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\inputlog-2frames.bk2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\0frames.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\2frames.bk2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
     <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
