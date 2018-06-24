@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,10 +12,34 @@ using TASVideos.Tasks;
 namespace TASVideos.Test.MVC.Tasks
 {
 	[TestClass]
+	[TestCategory("UserTasks")]
 	public class UserTaskTests
     {
+		private const string TestUserName = "TestUser";
+		private const PermissionTo TestPermission = PermissionTo.CreateForumPosts;
+
 		private UserTasks _userTasks;
 		private ApplicationDbContext _db;
+
+		private static User TestUser => new User
+		{
+			Id = 1,
+			UserName = TestUserName
+		};
+
+		private static Role TestRole => new Role
+		{
+			Id = 1,
+			Name = "TestRole",
+			RolePermission = new[]
+			{
+				new RolePermission
+				{
+					RoleId = 1,
+					PermissionId = TestPermission
+				}
+			}
+		};
 
 		[TestInitialize]
 		public void Initialize()
@@ -25,6 +50,8 @@ namespace TASVideos.Test.MVC.Tasks
 
 			_db = new ApplicationDbContext(options, null);
 			_db.Database.EnsureDeleted();
+
+			_userTasks = new UserTasks(_db, null, null, new NoCacheService()); // TODO: managers
 		}
 
 		[TestCleanup]
@@ -33,28 +60,97 @@ namespace TASVideos.Test.MVC.Tasks
 			_db.Dispose();
 		}
 
-	    [TestMethod]
-		public async Task UserTasks_GetUserNameById_ValidId_ReturnsCorrectName()
+		[TestMethod]
+		public async Task GetUserPermissionsById_UserWithRoleAndPermission()
 		{
-			
-			var testName = "TestUser";
-			_db.Users.Add(new User { Id = 1, UserName = testName });
+			_db.Users.Add(TestUser);
+			_db.Roles.Add(TestRole);
+			_db.UserRoles.Add(new UserRole
+			{
+				UserId = TestUser.Id,
+				RoleId = TestRole.Id
+			});
 			_db.SaveChanges();
-			var userTasks = new UserTasks(_db, null, null, new NoCacheService()); // TODO: managers
 
-			var result = await userTasks.GetUserNameById(1);
-			Assert.AreEqual(testName, result);
+			var result = await _userTasks.GetUserPermissionsById(1);
+			Assert.IsNotNull(result, "Result should not be null");
+			var list = result.ToList();
+			Assert.AreEqual(1, list.Count, "Result should have 1 permission");
+			Assert.AreEqual(TestPermission, list[0], $"Permission must be {nameof(TestPermission)}");
 		}
 
 		[TestMethod]
-		public async Task UserTasks_GetUserNameById_InvalidId_ReturnsNull()
+		[TestCategory("Test124")]
+		public async Task GetUserPermissionsById_UserWIthNoRoles_ReturnsEmptyList()
 		{
-			_db.Users.Add(new User { Id = 2, UserName = "TestUser" });
+			_db.Users.Add(TestUser);
 			_db.SaveChanges();
-			var userTasks = new UserTasks(_db, null, null, new NoCacheService()); // TODO: managers
 
-			var result = await userTasks.GetUserNameById(1);
-			Assert.IsNull(result);
+			var result = await _userTasks.GetUserPermissionsById(1);
+			Assert.IsNotNull(result, "Result should not be null");
+			Assert.AreEqual(0, result.Count(), "User should have no permissions");
 		}
-    }
+
+		[TestMethod]
+		public async Task GetUserPermissionsById_UserWithRoleWithNoPermissions_ReturnsEmptyList()
+		{
+			_db.Users.Add(TestUser);
+			_db.Roles.Add(new Role { Id = 1, Name = "No Permissions" });
+			_db.SaveChanges();
+
+			var result = await _userTasks.GetUserPermissionsById(1);
+			Assert.IsNotNull(result, "Result should not be null");
+			Assert.AreEqual(0, result.Count(), "User should have no permissions");
+		}
+
+		[TestMethod]
+		public async Task GetUserPermissionsById_UserWithRolesWithSamePermissions_ReturnsNoDuplicates()
+		{
+			_db.Users.Add(TestUser);
+			_db.Roles.Add(TestRole);
+			_db.UserRoles.Add(new UserRole
+			{
+				UserId = TestUser.Id,
+				RoleId = TestRole.Id
+			});
+			_db.Roles.Add(new Role
+			{
+				Id = 2,
+				Name = "Redundant Role",
+				RolePermission = new[]
+				{
+					new RolePermission
+					{
+						RoleId = 2,
+						PermissionId = TestPermission
+					}
+				}
+			});
+
+			_db.SaveChanges();
+			var result = await _userTasks.GetUserPermissionsById(1);
+			Assert.IsNotNull(result, "Result should not be null");
+			Assert.AreEqual(1, result.Count(), "User should have 1 permission");
+		}
+
+		[TestMethod]
+		public async Task GetUserNameById_ValidId_ReturnsCorrectName()
+		{
+			_db.Users.Add(TestUser);
+			_db.SaveChanges();
+
+			var result = await _userTasks.GetUserNameById(1);
+			Assert.AreEqual(TestUserName, result, $"UserName should be {nameof(TestUserName)}");
+		}
+
+		[TestMethod]
+		public async Task GetUserNameById_InvalidId_ReturnsNull()
+		{
+			_db.Users.Add(TestUser);
+			_db.SaveChanges();
+
+			var result = await _userTasks.GetUserNameById(int.MaxValue);
+			Assert.IsNull(result, "Result shoudl be null");
+		}
+	}
 }
