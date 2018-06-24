@@ -107,7 +107,8 @@ namespace TASVideos.MovieParsers
 			["a26"] = "a2600",
 			["a78"] = "a7800",
 			["uze"] = "uzebox",
-			["vb"] = "vboy"
+			["vb"] = "vboy",
+			["zxspectrum"] = "zxs"
 		};
 
 		private static string GetValue(string[] lines, string header) // Case insensitive
