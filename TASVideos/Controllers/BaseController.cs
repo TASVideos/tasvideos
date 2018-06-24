@@ -37,7 +37,7 @@ namespace TASVideos.Controllers
 						_userPermission = Enumerable.Empty<PermissionTo>();
 					}
 
-					_userPermission = UserTasks.GetUserPermissionsById(User.GetUserId());
+					_userPermission = UserTasks.GetUserPermissionsById(User.GetUserId()).Result;
 				}
 
 				return _userPermission;
