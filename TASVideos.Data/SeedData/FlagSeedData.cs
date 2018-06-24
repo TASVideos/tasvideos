@@ -32,7 +32,7 @@ namespace TASVideos.Data.SeedData
 			new Flag
 			{
 				Id = 5,
-				Name = "KNown record",
+				Name = "Known record",
 				LinkPath = "Movies-Knownrecords",
 				Token = "Knownrecords"
 			},
