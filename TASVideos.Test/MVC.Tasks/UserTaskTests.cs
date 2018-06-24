@@ -17,6 +17,7 @@ namespace TASVideos.Test.MVC.Tasks
     {
 		private const string TestUserName = "TestUser";
 		private const PermissionTo TestPermission = PermissionTo.CreateForumPosts;
+		private const PermissionTo TestPermission2 = PermissionTo.EditHomePage; // These can't be the same
 
 		private UserTasks _userTasks;
 		private ApplicationDbContext _db;
@@ -131,6 +132,43 @@ namespace TASVideos.Test.MVC.Tasks
 			var result = await _userTasks.GetUserPermissionsById(1);
 			Assert.IsNotNull(result, "Result should not be null");
 			Assert.AreEqual(1, result.Count(), "User should have 1 permission");
+		}
+
+		[TestMethod]
+		public async Task GetUserPermissionsById_MultipleRoles_ReturnsAggregate()
+		{
+			_db.Users.Add(TestUser);
+			_db.Roles.Add(TestRole);
+			_db.UserRoles.Add(new UserRole
+			{
+				UserId = TestUser.Id,
+				RoleId = TestRole.Id
+			});
+			_db.Roles.Add(new Role
+			{
+				Id = 2,
+				Name = "New Role",
+				RolePermission = new[]
+				{
+					new RolePermission
+					{
+						RoleId = 2,
+						PermissionId = TestPermission2
+					}
+				}
+			});
+			_db.UserRoles.Add(new UserRole
+			{
+				UserId = TestUser.Id,
+				RoleId = 2
+			});
+
+			_db.SaveChanges();
+			var result = await _userTasks.GetUserPermissionsById(1);
+			Assert.IsNotNull(result, "Result should not be null");
+			var list = result.ToList();
+			Assert.AreEqual(2, list.Count, "User should have 2 permissions");
+			Assert.AreNotEqual(list[0], list[1], "Permissions must be different");
 		}
 
 		[TestMethod]
