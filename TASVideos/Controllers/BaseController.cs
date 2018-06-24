@@ -24,8 +24,6 @@ namespace TASVideos.Controllers
 			UserTasks = userTasks;
 		}
 
-		protected UserTasks UserTasks { get; }
-
 		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
 
 		internal IEnumerable<PermissionTo> UserPermissions
@@ -46,12 +44,13 @@ namespace TASVideos.Controllers
 			}
 		}
 
+		protected UserTasks UserTasks { get; }
+		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
+
 		protected bool UserHas(PermissionTo permission)
 		{
 			return UserPermissions.Contains(permission);
 		}
-
-		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 
 		protected IActionResult RedirectHome()
 		{
@@ -99,7 +98,6 @@ namespace TASVideos.Controllers
 				parsed.WriteHtml(writer);
 				return writer.ToString();
 			}
-
 		}
 	}
 }

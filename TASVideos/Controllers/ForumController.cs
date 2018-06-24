@@ -48,7 +48,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Subforum(ForumRequest request)
 		{
-			var model = await _forumTasks.GetForumForDisplay(request, UserPermissions.Contains(PermissionTo.SeeRestrictedForums));
+			var model = await _forumTasks.GetForumForDisplay(request, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (model != null)
 			{
@@ -190,7 +190,7 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
-			if (model.IsLocked && !UserPermissions.Contains(PermissionTo.PostInLockedTopics))
+			if (model.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
 			{
 				return RedirectAccessDenied();
 			}
@@ -216,7 +216,7 @@ namespace TASVideos.Controllers
 				}
 			}
 
-			if (!UserPermissions.Contains(PermissionTo.PostInLockedTopics)
+			if (!UserHas(PermissionTo.PostInLockedTopics)
 				&& await _forumTasks.IsTopicLocked(model.TopicId))
 			{
 				return RedirectAccessDenied();
@@ -239,7 +239,7 @@ namespace TASVideos.Controllers
 
 			var userId = int.Parse(_userManager.GetUserId(User));
 
-			if (!UserPermissions.Contains(PermissionTo.EditForumPosts)
+			if (!UserHas(PermissionTo.EditForumPosts)
 				&& !(model.IsLastPost && model.PosterId == userId))
 			{
 				return RedirectAccessDenied();
@@ -260,7 +260,7 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			if (!UserPermissions.Contains(PermissionTo.EditForumPosts))
+			if (!UserHas(PermissionTo.EditForumPosts))
 			{
 				var userId = int.Parse(_userManager.GetUserId(User));
 				if (!(await _forumTasks.CanEdit(model.PostId, userId)))
