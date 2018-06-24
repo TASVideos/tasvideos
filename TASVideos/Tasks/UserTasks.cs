@@ -40,16 +40,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a list of all permissions of the <seea cref="User"/> with the given id
 		/// </summary>
-		public IEnumerable<PermissionTo> GetUserPermissionsById(int userId)
-		{
-			return GetUserPermissionByIdQuery(userId)
-				.ToList();
-		}
-
-		/// <summary>
-		/// Returns a list of all permissions of the <seea cref="User"/> with the given id
-		/// </summary>
-		public async Task<IEnumerable<PermissionTo>> GetUserPermissionsByIdAsync(int userId)
+		public async Task<IEnumerable<PermissionTo>> GetUserPermissionsById(int userId)
 		{
 			return await GetUserPermissionByIdQuery(userId)
 				.ToListAsync();
