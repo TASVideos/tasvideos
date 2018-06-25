@@ -10,11 +10,15 @@
     <None Remove="MovieParsers\SampleMovieFiles\0frames.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\2frames.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\inputlog-2frames.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\MissingHeader.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\MissingInputLog.bk2" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\0frames.bk2" />
-    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\2frames.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\0Frames.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\2Frames.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\MissingHeader.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\MissingInputLog.bk2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -21,7 +21,12 @@ namespace TASVideos.MovieParsers
 
 			var bk2Archive = new ZipArchive(file);
 
-			var inputLogEntry = bk2Archive.Entries.Single(e => e.Name == "Input Log.txt");
+			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Input Log.txt");
+			if (inputLogEntry == null)
+			{
+				return new ErrorResult("Missing Input Log.txt, can not parse") { FileExtension = FileExtension };
+			}
+
 			using (var stream = inputLogEntry.Open())
 			{
 				using (var reader = new StreamReader(stream))
@@ -31,7 +36,12 @@ namespace TASVideos.MovieParsers
 				}
 			}
 
-			var headerEntry = bk2Archive.Entries.Single(e => e.Name == "Header.txt");
+			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Header.txt");
+			if (headerEntry == null)
+			{
+				return new ErrorResult("Missing Header.txt, can not parse") { FileExtension = FileExtension };
+			}
+
 			using (var stream = headerEntry.Open())
 			{
 				using (var reader = new StreamReader(stream))

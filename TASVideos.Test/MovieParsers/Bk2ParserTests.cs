@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers;
@@ -18,9 +19,29 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
+		public void MissingHeader_ErrorResult()
+		{
+			var embbedded = Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream("TASVideos.Test.MovieParsers.SampleMovieFiles.MissingHeader.bk2");
+			var result = _bk2Parser.Parse(embbedded);
+			Assert.AreEqual(false, result.Success, "Result should not be successfull");
+			Assert.IsNotNull(result.Errors, "Errors should not be null");
+			Assert.IsTrue(result.Errors.Any(), "Must be at least one error");
+		}
+
+		[TestMethod]
+		public void MissingInputLog_ErrorResult()
+		{
+			var embbedded = Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream("TASVideos.Test.MovieParsers.SampleMovieFiles.MissingInputLog.bk2");
+			var result = _bk2Parser.Parse(embbedded);
+			Assert.AreEqual(false, result.Success, "Result should not be successfull");
+			Assert.IsNotNull(result.Errors, "Errors should not be null");
+			Assert.IsTrue(result.Errors.Any(), "Must be at least one error");
+		}
+
+		[TestMethod]
 		public void Frames_CorrectResult()
 		{
-			var embbedded = Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream("TASVideos.Test.MovieParsers.SampleMovieFiles.2frames.bk2");
+			var embbedded = Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream("TASVideos.Test.MovieParsers.SampleMovieFiles.2Frames.bk2");
 			var result = _bk2Parser.Parse(embbedded);
 
 			Assert.AreEqual(true, result.Success, "Parsing must be successful");
@@ -30,7 +51,7 @@ namespace TASVideos.Test.MovieParsers
 		[TestMethod]
 		public void Frames_NoInputFrames_Returns0()
 		{
-			var embbedded = Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream("TASVideos.Test.MovieParsers.SampleMovieFiles.0frames.bk2");
+			var embbedded = Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream("TASVideos.Test.MovieParsers.SampleMovieFiles.0Frames.bk2");
 			var result = _bk2Parser.Parse(embbedded);
 
 			Assert.AreEqual(true, result.Success, "Parsing must be successful");
