@@ -12,6 +12,9 @@
     <None Remove="MovieParsers\SampleMovieFiles\inputlog-2frames.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\MissingHeader.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\MissingInputLog.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\nes.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\RerecordCount1.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\RerecordCountMissing.bk2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +22,9 @@
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\2Frames.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\MissingHeader.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\MissingInputLog.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\Nes.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\RerecordCount1.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\RerecordCountMissing.bk2" />
   </ItemGroup>
 
   <ItemGroup>
