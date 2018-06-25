@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Reflection;
-using System.Text;
+﻿using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers;
@@ -28,7 +24,7 @@ namespace TASVideos.Test.MovieParsers
 			var result = _bk2Parser.Parse(embbedded);
 
 			Assert.AreEqual(true, result.Success, "Parsing must be successful");
-			Assert.AreEqual(2, result.Frames, "REsult should have 2 frames");
+			Assert.AreEqual(2, result.Frames, "Result should have 2 frames");
 		}
 
 		[TestMethod]
