@@ -7,10 +7,10 @@ using TASVideos.MovieParsers;
 
 namespace TASVideos.Test.MovieParsers
 {
-    [TestClass]
+	[TestClass]
 	[TestCategory("BK2Parsers")]
 	public class Bk2ParserTests
-    {
+	{
 		private const string Bk2ResourcesPath = "TASVideos.Test.MovieParsers.SampleMovieFiles.";
 		private Bk2 _bk2Parser;
 
@@ -70,6 +70,20 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsNotNull(result.Warnings, "Warnings should not be null");
 			Assert.IsTrue(result.Warnings.Any(), "Must be at least one warning");
 			Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
+		}
+
+		[TestMethod]
+		public void PalFlag_True()
+		{
+			var result = _bk2Parser.Parse(Embedded("Pal1.bk2"));
+			Assert.AreEqual(RegionType.Pal, result.Region, "Region must be Pal");
+		}
+
+		public void PalFlag_Missing_DefaultNtsc()
+		{
+			var result = _bk2Parser.Parse(Embedded("0Frames.bk2"));
+			Assert.AreEqual(RegionType.Ntsc, result.Region, "Region must be Ntsc");
+
 		}
 
 		[TestMethod]
