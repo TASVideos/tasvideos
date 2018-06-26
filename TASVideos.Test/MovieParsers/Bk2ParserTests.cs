@@ -55,14 +55,6 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void System_Nes()
-		{
-			var result = _bk2Parser.Parse(Embedded("Nes.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual("nes", result.SystemCode, "System should be NES");
-		}
-
-		[TestMethod]
 		public void RerecordCount_CorrectResult()
 		{
 			var result = _bk2Parser.Parse(Embedded("RerecordCount1.bk2"));
@@ -79,6 +71,23 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Warnings.Any(), "Must be at least one warning");
 			Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
 		}
+
+		[TestMethod]
+		public void System_Nes()
+		{
+			var result = _bk2Parser.Parse(Embedded("Nes.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual("nes", result.SystemCode, "System should be NES");
+		}
+
+		[TestMethod]
+		public void System_Gbc()
+		{
+			var result = _bk2Parser.Parse(Embedded("Gbc.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual("gbc", result.SystemCode, "System should be GBC");
+		}
+
 
 		private Stream Embedded(string name)
 		{
