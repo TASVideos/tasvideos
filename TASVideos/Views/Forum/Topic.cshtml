@@ -1,0 +1,95 @@
+﻿@model ForumTopicModel
+@{
+	ViewData["Title"] = $"TASVideos Forum {Model.Title}";
+}
+<partial Name="_ForumHeader" />
+<row>
+	<div class="col-12">
+		<a condition="ViewData.UserHasPermission(PermissionTo.MoveTopics)" asp-action="MoveTopic" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Move this topic"><i class="fa fa-location-arrow"></i></a>
+		<form style="display: inline" class="form-inline" condition="@ViewData.UserHasPermission(PermissionTo.LockTopics)" method="POST" asp-action="SetTopicLock" asp-route-topicId="@Model.Id" asp-route-locked="@(!Model.IsLocked)" asp-route-returnUrl="@Context.ReturnUrl()">
+			<button type="submit" class="btn @(Model.IsLocked ? "btn-success" : "btn-warning") btn-sm">
+				<span condition="Model.IsLocked" title="Unlock this topic">
+					<i class="fa fa-unlock"></i>
+				</span>
+				<span condition="!Model.IsLocked" title="Lock this topic">
+					<i class="fa fa-lock"></i>
+				</span>
+			</button>
+		</form>
+		<small class="@(Model.IsLocked ? "alert alert-danger" : "") pt-1 pb-2">
+			<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a> -> @Model.Title <span condition="Model.IsLocked"> (Locked)</span>
+		</small>
+		<a condition="ViewData.UserHasPermission(PermissionTo.PostInLockedTopics) ||  (!Model.IsLocked && ViewData.UserHasPermission(PermissionTo.CreateForumPosts))" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary btn-sm pull-right">
+			<span class="fa fa-plus"></span> Post
+		</a>
+	</div>
+</row>
+
+@if (Model.Poll != null)
+{
+	<hr />
+	<partial name="_Poll" model="Model.Poll" />
+}
+
+<hr class="mt-1" />
+<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
+@foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp))
+{
+	<card>
+		<cardheader>
+			<row>
+				<div class="col-4 border-right">
+					<h5>@post.PosterName</h5>
+				</div>
+				<div class="col-8 pt-0 pb-0">
+					<small>
+						Posted: @post.CreateTimestamp
+						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+						<a condition="post.IsEditable" class="btn btn-primary btn-sm pull-right ml-1" asp-action="EditPost" asp-route-id="@post.Id">Edit</a>
+						<a class="btn btn-info btn-sm pull-right" asp-action="CreatePost" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
+
+					</small>
+				</div>
+			</row>
+		</cardheader>
+		<cardbody>
+			<row>
+				<div class="col-4">
+					<div class="card-text text-right">
+						<small>
+							@string.Join(",", post.PosterRoles)
+							(todo points)
+						</small>
+						<br />
+						<img src="@post.PosterAvatar" />
+						<br />
+						<small>
+							Joined: @post.PosterJoined.ToShortDateString()<br />
+							Posts: @post.PosterPostCount<br />
+							Location: @post.PosterLocation
+						</small>
+					</div>
+				</div>
+				<div class="col-8">
+					@Html.Raw(post.RenderedText)
+				</div>
+			</row>
+		</cardbody>
+		<cardfooter>
+			<row>
+				<div class="col-12">
+					<small style="font-style: italic">@Html.Raw(post.RenderedSignature)</small>
+					<br />
+					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterId">Profile</a>
+					<a class="btn btn-secondary btn-sm" condition="User.Identity.IsAuthenticated" asp-controller="Messages" asp-action="Create" asp-route-toUser="@post.PosterName">PM</a>
+					<div class="pull-right">
+						@foreach (var award in post.Awards.OrderByDescending(a => a.Year))
+						{
+							<partial name="../Shared/_Award.cshtml" model="award" />
+						}
+					</div>
+				</div>
+			</row>
+		</cardfooter>
+	</card>
+}

@@ -17,12 +17,11 @@ namespace TASVideos.Controllers
 	{
 		private static readonly Version VersionInfo = Assembly.GetExecutingAssembly().GetName().Version;
 
-		private readonly UserTasks _userTasks;
 		private IEnumerable<PermissionTo> _userPermission;
 
 		public BaseController(UserTasks userTasks)
 		{
-			_userTasks = userTasks;
+			UserTasks = userTasks;
 		}
 
 		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
@@ -38,18 +37,29 @@ namespace TASVideos.Controllers
 						_userPermission = Enumerable.Empty<PermissionTo>();
 					}
 
-					_userPermission = _userTasks.GetUserPermissionsById(User.GetUserId());
+					_userPermission = UserTasks.GetUserPermissionsById(User.GetUserId()).Result;
 				}
 
 				return _userPermission;
 			}
 		}
 
+		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
+
+		protected bool UserHas(PermissionTo permission)
+		{
+			return UserPermissions.Contains(permission);
+		}
 
 		protected IActionResult RedirectHome()
 		{
 			return Redirect("/Home/Index");
+		}
+
+		protected IActionResult RedirectAccessDenied()
+		{
+			return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
 		}
 
 		protected IActionResult RedirectToLogin()
@@ -75,6 +85,11 @@ namespace TASVideos.Controllers
 			return RedirectHome();
 		}
 
+		protected string RenderHtml(string text)
+		{
+			return RenderPost(text, false, true);
+		}
+
 		protected string RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);
@@ -83,7 +98,6 @@ namespace TASVideos.Controllers
 				parsed.WriteHtml(writer);
 				return writer.ToString();
 			}
-
 		}
 	}
 }

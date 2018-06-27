@@ -39,28 +39,31 @@ namespace TASVideos.Legacy.Imports
 						PosterName = pu.UserName
 					})
 				.ToList()
-				.Select(p => new ForumPost
+				.Select(p =>
 				{
-					Id = p.Id,
-					TopicId = p.TopicId,
-					PosterId = p.PosterId,
-					IpAddress = p.IpAddress,
-					Subject = ImportHelper.FixString(p.Subject),
-					Text = ImportHelper.FixString(p.Text.Replace(":" + p.BbCodeUid, "")),
-					EnableBbCode = p.EnableBbCode,
-					EnableHtml = p.EnableHtml && HtmlParser.ContainsHtml(ImportHelper.FixString(p.Text.Replace(":" + p.BbCodeUid, ""))),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
-					LastUpdateTimeStamp = p.LastUpdateTimestamp.HasValue
-						? ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp.Value)
-						: ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
-					CreateUserName = !string.IsNullOrWhiteSpace(p.PosterName)
-						? p.PosterName
-						: "Unknown",
-					LastUpdateUserName = !string.IsNullOrWhiteSpace(p.LastUpdateUserName)
-						? p.LastUpdateUserName
-						: !string.IsNullOrWhiteSpace(p.PosterName)
-							? p.PosterName
-							: "Unknown"
+					var fixedText = ImportHelper.FixString(p.Text.Replace(":" + p.BbCodeUid, ""));
+					return new ForumPost
+					{
+						Id = p.Id,
+						TopicId = p.TopicId,
+						PosterId = p.PosterId,
+						IpAddress = p.IpAddress,
+						Subject = ImportHelper.FixString(p.Subject),
+						Text = fixedText,
+						EnableBbCode = p.EnableBbCode,
+						EnableHtml = p.EnableHtml && HtmlParser.ContainsHtml(fixedText),
+						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
+						LastUpdateTimeStamp =
+							p.LastUpdateTimestamp.HasValue
+								? ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp.Value)
+								: ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
+						CreateUserName = !string.IsNullOrWhiteSpace(p.PosterName) ? p.PosterName : "Unknown",
+						LastUpdateUserName = !string.IsNullOrWhiteSpace(p.LastUpdateUserName)
+							? p.LastUpdateUserName
+							: !string.IsNullOrWhiteSpace(p.PosterName)
+								? p.PosterName
+								: "Unknown"
+					};
 				});
 
 			var columns = new[]

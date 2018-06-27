@@ -1,6 +1,4 @@
 ﻿@model WikiPage
-<div class="alert alert-info">
-	<div class="text-center">
-		@await Component.RenderWiki("System/IsSystem/Page")
-	</div>
-</div>
+<info-alert>
+	@await Component.RenderWiki("System/IsSystem/Page")
+</info-alert>

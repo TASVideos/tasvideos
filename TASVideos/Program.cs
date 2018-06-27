@@ -1,18 +1,19 @@
 ﻿using System;
+
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Legacy;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
-using TASVideos.Tasks;
-using Microsoft.Extensions.Options;
 
 namespace TASVideos
 {
@@ -37,6 +38,7 @@ namespace TASVideos
 						DbInitializer.Initialize(context);
 						DbInitializer.PreMigrateSeedData(context);
 						DbInitializer.PostMigrateSeedData(context);
+						DbInitializer.GenerateDevTestUsers(context, userManager).Wait();
 						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
 					}
 					else if (env.IsLocalWithoutRecreate() || env.IsDemo())
@@ -47,11 +49,13 @@ namespace TASVideos
 					{
 						var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
 						var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
+						var userManager = services.GetRequiredService<UserManager<User>>();
 
 						DbInitializer.Initialize(context);
 						DbInitializer.PreMigrateSeedData(context);
 						LegacyImporter.RunLegacyImport(context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);
 						DbInitializer.PostMigrateSeedData(context);
+						DbInitializer.GenerateDevTestUsers(context, userManager).Wait();
 					}
 				}
 				catch (Exception ex)

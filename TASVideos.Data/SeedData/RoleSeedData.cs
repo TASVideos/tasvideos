@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data.Entity;
 
@@ -6,7 +7,7 @@ using TASVideos.Data.Entity;
 // ReSharper disable StaticMemberInitializerReferesToMemberBelow
 namespace TASVideos.Data.SeedData
 {
-	public static class SeedRoleNames
+	public static class RoleSeedNames
 	{
 		public const string EditHomePage = "Edit Home Page";
 		public const string SubmitMovies = "Submit Movies";
@@ -18,10 +19,12 @@ namespace TASVideos.Data.SeedData
 		public const string Editor = "Editor";
 		public const string VestedEditor = "Vested Editor";
 		public const string Judge = "Judge";
-		public const string SeniorJudge = "SeniorJudge";
+		public const string SeniorJudge = "Senior Judge";
 		public const string Encoder = "Encoder";
 		public const string Publisher = "Publisher";
-		public const string SeniorPublisher = "SeniorPublisher";
+		public const string SeniorPublisher = "Senior Publisher";
+		public const string ForumModerator = "Forum Moderator";
+		public const string ForumAdmin = "Forum Admin";
 	}
 
 	public class RoleSeedData
@@ -32,7 +35,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditGameResources
 		};
 
-		private static readonly PermissionTo[] SeniorEditorPermissions = EditorPermissions.Concat(new[]
+		private static readonly PermissionTo[] VestedEditorPermissions = EditorPermissions.Concat(new[]
 		{
 			PermissionTo.EditSystemPages,
 			PermissionTo.EditUsers,
@@ -47,7 +50,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.JudgeSubmissions,
 			PermissionTo.ReplaceSubmissionMovieFile,
 			PermissionTo.CatalogMovies,
-			PermissionTo.EditPublicationMetaData
+			PermissionTo.EditPublicationMetaData,
+			PermissionTo.SeeRestrictedForums
 		};
 
 		private static readonly PermissionTo[] SeniorJudgePermissions = JudgePermissions.Concat(new[]
@@ -61,7 +65,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.PublishMovies,
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditSubmissions,
-			PermissionTo.EditPublicationMetaData
+			PermissionTo.EditPublicationMetaData,
+			PermissionTo.SeeRestrictedForums
 		};
 
 		private static readonly PermissionTo[] SeniorPublisherPermissions =
@@ -69,19 +74,29 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.AssignRoles
 		};
 
-		private static readonly PermissionTo[] AdminAssistantPermissions = SeniorEditorPermissions.Concat(new[]
+		private static readonly PermissionTo[] AdminAssistantPermissions = VestedEditorPermissions.Concat(new[]
 		{
 			PermissionTo.CatalogMovies,
-			PermissionTo.EditUsers,
 			PermissionTo.EditRoles,
-			PermissionTo.AssignRoles,
-			PermissionTo.EditPublicationMetaData
+			PermissionTo.SeeRestrictedForums
+		}).ToArray();
+
+		private static readonly PermissionTo[] ForumModeratorPermissions =
+		{
+			PermissionTo.EditForumPosts,
+			PermissionTo.LockTopics,
+			PermissionTo.MoveTopics
+		};
+
+		private static readonly PermissionTo[] ForumAdminPermissions = ForumModeratorPermissions.Concat(new[]
+		{
+			PermissionTo.EditForums
 		}).ToArray();
 
 		public static readonly Role EditHomePage = new Role
 		{
 			IsDefault = true,
-			Name = SeedRoleNames.EditHomePage,
+			Name = RoleSeedNames.EditHomePage,
 			Description = "Contains the EditHomePage permission that allows users to edit their personal homepage. All users have this role by default.",
 			RolePermission = new[]
 			{
@@ -96,7 +111,7 @@ namespace TASVideos.Data.SeedData
 		public static readonly Role SubmitMovies = new Role
 		{
 			IsDefault = true,
-			Name = SeedRoleNames.SubmitMovies,
+			Name = RoleSeedNames.SubmitMovies,
 			Description = "Contains the SubmitMovies permission that allows users to submit movies. All users have this role by default.",
 			RolePermission = new[]
 			{
@@ -111,7 +126,7 @@ namespace TASVideos.Data.SeedData
 		public static readonly Role ForumUser = new Role
 		{
 			IsDefault = true,
-			Name = SeedRoleNames.ForumUser,
+			Name = RoleSeedNames.ForumUser,
 			Description = "Contains the CreateForumPosts permission that allows users to creat forum posts. All users have this role by default.",
 			RolePermission = new[]
 			{
@@ -126,7 +141,7 @@ namespace TASVideos.Data.SeedData
 		public static readonly Role ExperiencedForumUser = new Role
 		{
 			IsDefault = false,
-			Name = SeedRoleNames.ExperiencedForumUser,
+			Name = RoleSeedNames.ExperiencedForumUser,
 			Description = "Contains the CreateForumTopics and VoteInPolls permissions that allow users to create topics and participate in forum polls. This role is automatically applied to experienced users.",
 			RolePermission = new[]
 			{
@@ -143,122 +158,170 @@ namespace TASVideos.Data.SeedData
 			}
 		};
 
-		public static readonly Role AdminRole = new Role
+		public static readonly Role Admin = new Role
 		{
-			Name = SeedRoleNames.Admin,
+			Name = RoleSeedNames.Admin,
 			Description = "This is a site administrator that is responsible for maintaining TASVideos",
 			RolePermission = Enum.GetValues(typeof(PermissionTo))
 				.Cast<PermissionTo>()
 				.Select(p => new RolePermission
 				{
-					Role = AdminRole,
+					Role = Admin,
 					PermissionId = p,
 					CanAssign = true
 				})
 				.ToArray()
 		};
 
-		public static readonly Role[] Roles =
+		public static readonly Role AdminAssistant = new Role
 		{
-			new Role
+			Name = RoleSeedNames.AdminAssistant,
+			Description = "This is a wiki editor that maintain many aspects of the wiki site, including user and role maintenance, and they can assign editors as well as vested editors",
+			RolePermission = AdminAssistantPermissions.Select(p => new RolePermission
 			{
-				Name = SeedRoleNames.AdminAssistant,
-				Description = "This is a wiki editor that maintain many aspects of the wiki site, including user and role maintenance, and they can assign editors",
-				RolePermission = SeniorEditorPermissions.Select(p => new RolePermission
-				{
-					RoleId = 12, // Meh, for lack of a better way
-					PermissionId = p,
-					CanAssign = EditorPermissions.Contains(p)
-				}).ToArray(),
-				RoleLinks = new[]
-				{
-					new RoleLink { Link = "EditorGuidelines" },
-					new RoleLink { Link = "TextFormattingRules" }
-				}
-			},
-			new Role
+				Role = AdminAssistant, // Meh, for lack of a better way
+				PermissionId = p,
+				CanAssign = VestedEditorPermissions.Contains(p)
+			}).ToArray(),
+			RoleLinks = new[]
 			{
-				Name = SeedRoleNames.Editor,
-				Description = "This is a wiki editor that can edit basic wiki pages",
-				RolePermission = EditorPermissions.Select(p => new RolePermission
-				{
-					RoleId = 11, // Meh, for lack of a better way
-					PermissionId = p
-				}).ToArray(),
-				RoleLinks = new[]
-				{
-					new RoleLink { Link = "EditorGuidelines" },
-					new RoleLink { Link = "TextFormattingRules" }
-				}
-			},
-			new Role
-			{
-				Name = SeedRoleNames.VestedEditor,
-				Description = "This is a wiki editor that can edit any wiki page, including system pages",
-				RolePermission = SeniorEditorPermissions.Select(p => new RolePermission
-				{
-					RoleId = 10, // Meh, for lack of a better way
-					PermissionId = p,
-					CanAssign = EditorPermissions.Contains(p)
-				}).ToArray(),
-				RoleLinks = new[]
-				{
-					new RoleLink { Link = "EditorGuidelines" },
-					new RoleLink { Link = "TextFormattingRules" }
-				}
-			},
-			new Role
-			{
-				Name = SeedRoleNames.Judge,
-				Description = "The judges decide which movies will be published and which movies are rejected. They can replace submission files.",
-				RolePermission = JudgePermissions.Select(p => new RolePermission
-				{
-					RoleId = 9, // Meh, for lack of a better way
-					PermissionId = p
-				}).ToArray(),
-				RoleLinks = new[]
-				{
-					new RoleLink { Link = "JudgeGuidelines" }
-				}
-			},
-			new Role
-			{
-				Name = SeedRoleNames.SeniorJudge,
-				Description = "The senior judge, in addition to judging movies, can assign judges and settle disputes among judges.",
-				RolePermission = SeniorJudgePermissions.Select(p => new RolePermission
-				{
-					RoleId = 8, // Meh, for lack of a better way
-					PermissionId = p,
-					CanAssign = EditorPermissions.Contains(p)
-				}).ToArray(),
-				RoleLinks = new[]
-				{
-					new RoleLink { Link = "JudgeGuidelines" }
-				}
-			},
-			new Role
-			{
-				Name = SeedRoleNames.Publisher,
-				Description = "Publishers take accepted submissions and turn them into publications.",
-				RolePermission = PublisherPermissions.Select(p => new RolePermission
-				{
-					RoleId = 7, // Meh, for lack of a better way
-					PermissionId = p
-				}).ToArray(),
-				RoleLinks = new[] { new RoleLink { Link = "PublisherGuidelines" } }
-			},
-			new Role
-			{
-				Name = SeedRoleNames.SeniorPublisher,
-				Description = "Senior Publishers, in addition to publishing movies, can assign publishers, set encoding standards, and settle disputes among publishers.",
-				RolePermission = SeniorPublisherPermissions.Select(p => new RolePermission
-				{
-					RoleId = 6, // Meh, for lack of a better way
-					PermissionId = p,
-					CanAssign = EditorPermissions.Contains(p)
-				}).ToArray(),
-				RoleLinks = new[] { new RoleLink { Link = "PublisherGuidelines" } }
+				new RoleLink { Link = "EditorGuidelines" },
+				new RoleLink { Link = "TextFormattingRules" }
 			}
 		};
+
+		public static readonly Role Editor = new Role
+		{
+			Name = RoleSeedNames.Editor,
+			Description = "This is a wiki editor that can edit basic wiki pages",
+			RolePermission = EditorPermissions.Select(p => new RolePermission
+			{
+				Role = Editor,
+				PermissionId = p
+			}).ToArray(),
+			RoleLinks = new[]
+			{
+				new RoleLink { Link = "EditorGuidelines" },
+				new RoleLink { Link = "TextFormattingRules" }
+			}
+		};
+
+		public static readonly Role VestedEditor = new Role
+		{
+			Name = RoleSeedNames.VestedEditor,
+			Description = "This is a wiki editor that can edit any wiki page, including system pages",
+			RolePermission = VestedEditorPermissions.Select(p => new RolePermission
+			{
+				Role = VestedEditor,
+				PermissionId = p,
+				CanAssign = EditorPermissions.Contains(p)
+			}).ToArray(),
+			RoleLinks = new[]
+			{
+				new RoleLink { Link = "EditorGuidelines" },
+				new RoleLink { Link = "TextFormattingRules" }
+			}
+		};
+
+		public static readonly Role Judge = new Role
+		{
+			Name = RoleSeedNames.Judge,
+			Description = "The judges decide which movies will be published and which movies are rejected. They can replace submission files.",
+			RolePermission = JudgePermissions.Select(p => new RolePermission
+			{
+				RoleId = 10, // Meh, for lack of a better way
+				PermissionId = p
+			}).ToArray(),
+			RoleLinks = new[]
+			{
+				new RoleLink { Link = "JudgeGuidelines" }
+			}
+		};
+
+		public static readonly Role SeniorJudge = new Role
+		{
+			Name = RoleSeedNames.SeniorJudge,
+			Description = "The senior judge, in addition to judging movies, can assign judges and settle disputes among judges.",
+			RolePermission = SeniorJudgePermissions.Select(p => new RolePermission
+			{
+				Role = SeniorJudge,
+				PermissionId = p,
+				CanAssign = EditorPermissions.Contains(p)
+			}).ToArray(),
+			RoleLinks = new[]
+			{
+				new RoleLink { Link = "JudgeGuidelines" }
+			}
+		};
+
+		public static readonly Role Publisher = new Role
+		{
+			Name = RoleSeedNames.Publisher,
+			Description = "Publishers take accepted submissions and turn them into publications.",
+			RolePermission = PublisherPermissions.Select(p => new RolePermission
+			{
+				Role = Publisher,
+				PermissionId = p
+			}).ToArray(),
+			RoleLinks = new[] { new RoleLink { Link = "PublisherGuidelines" } }
+		};
+
+		public static readonly Role SeniorPublisher = new Role
+		{
+			Name = RoleSeedNames.SeniorPublisher,
+			Description = "Senior Publishers, in addition to publishing movies, can assign publishers, set encoding standards, and settle disputes among publishers.",
+			RolePermission = SeniorPublisherPermissions.Select(p => new RolePermission
+			{
+				Role = SeniorPublisher,
+				PermissionId = p,
+				CanAssign = EditorPermissions.Contains(p)
+			}).ToArray(),
+			RoleLinks = new[] { new RoleLink { Link = "PublisherGuidelines" } }
+		};
+
+		public static readonly Role ForumModerator = new Role
+		{
+			Name = RoleSeedNames.ForumModerator,
+			Description = "Forum Moderators monitor forum content, modify posts and lock topics if needed. Moderators can also take limited action against users on a need basis",
+			RolePermission = ForumModeratorPermissions.Select(p => new RolePermission
+			{
+				Role = ForumModerator,
+				PermissionId = p,
+				CanAssign = false
+			}).ToArray(),
+			RoleLinks = new List<RoleLink>()
+		};
+
+		public static readonly Role ForumAdmin = new Role
+		{
+			Name = RoleSeedNames.ForumAdmin,
+			Description = "Form Administrators manage forums and permissions. Administrators can also assign Moderators.",
+			RolePermission = ForumAdminPermissions.Select(p => new RolePermission
+			{
+				Role = ForumAdmin,
+				PermissionId = p,
+				CanAssign = ForumModeratorPermissions.Contains(p)
+			}).ToArray(),
+			RoleLinks = new List<RoleLink>()
+		};
+
+		public static IEnumerable<Role> AllRoles =>
+			new[]
+			{
+				EditHomePage,
+				SubmitMovies,
+				ForumUser,
+				ExperiencedForumUser,
+				Admin,
+				AdminAssistant,
+				Editor,
+				VestedEditor,
+				Judge,
+				SeniorJudge,
+				Publisher,
+				SeniorPublisher,
+				ForumModerator,
+				ForumAdmin
+			};
 	}
 }

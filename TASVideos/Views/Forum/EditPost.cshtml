@@ -1,0 +1,57 @@
+﻿@model ForumPostEditModel
+@{
+	ViewData["Title"] = $"Editing Post for Topic: {Model.TopicTitle}";
+}
+<partial Name="_ForumHeader" />
+<h4>Editing Post for Topic: <a asp-action="Topic" asp-route-id="@Model.TopicId">@Model.TopicTitle</a></h4>
+<div class="alert alert-light p-0">
+	<card>
+		<cardheader>
+			<row>
+				<div class="col-4 border-right">
+					<h5>@Model.PosterName</h5>
+				</div>
+				<div class="col-8 pt-0 pb-0">
+					<small>
+						Posted: @Model.CreateTimestamp
+						<span condition="!string.IsNullOrWhiteSpace(Model.Subject)">Post subject: @Model.Subject</span>
+					</small>
+				</div>
+			</row>
+		</cardheader>
+		<cardbody>
+			@Html.Raw(Model.RenderedText)
+		</cardbody>
+	</card>
+</div>
+<hr />
+<form asp-action="EditPost" form-method="POST">
+	<input type="hidden" asp-for="PostId" />
+	<input type="hidden" asp-for="TopicId" />
+	<input type="hidden" asp-for="TopicTitle" />
+	<input type="hidden" asp-for="EnableBbCode" />
+	<input type="hidden" asp-for="EnableHtml" />
+	<form-group class="col-lg-6">
+		<row>
+			<label asp-for="Subject" class="form-control-label"></label>
+			<input type="text" asp-for="Subject" class="form-control" autocomplete="off" />
+			<span asp-validation-for="Subject" class="text-danger"></span>
+		</row>
+	</form-group>
+	<form-group>
+		<partial name="_CreatePostHelper.cshtml" model="nameof(Model.Text)" />
+	</form-group>
+	<form-group>
+		<textarea asp-for="Text" class="form-control" rows="20"></textarea>
+		<span asp-validation-for="Text" class="text-danger"></span>
+	</form-group>
+	<div class="text-center">
+		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a asp-action="Topic" asp-route-id="@Model.TopicId" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+<partial name="_PreviewWindow" model="@((nameof(Model.Text), $"/Forum/{nameof(ForumController.GeneratePreview)}"))" />
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

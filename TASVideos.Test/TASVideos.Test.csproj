@@ -1,15 +1,40 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="1.2.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="1.2.1" />
+    <None Remove="MovieParsers\SampleMovieFiles\0frames.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\2frames.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\GBC.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\inputlog-2frames.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\MissingHeader.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\MissingInputLog.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\nes.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\Pal1.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\RerecordCount1.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\RerecordCountMissing.bk2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\0Frames.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\2Frames.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\Gbc.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\MissingHeader.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\MissingInputLog.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\Nes.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\Pal1.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\RerecordCount1.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\RerecordCountMissing.bk2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
   </ItemGroup>
 
   <ItemGroup>

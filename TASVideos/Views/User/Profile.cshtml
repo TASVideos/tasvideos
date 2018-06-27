@@ -7,8 +7,8 @@
 
 <row>
 	<div class="col-md-6">
-		<div class="card">
-			<div class="card-body">
+		<card>
+			<cardbody>
 				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
 				<h4 class="card-title">@Model.UserName</h4>
 				<div class="card-text">
@@ -30,21 +30,21 @@
 					<br />
 					<a condition="Model.PostCount > 0" href="#" class="btn btn-primary">All Posts</a>
 					<div class="pull-right">
-						@foreach (var award in Model.Awards)
+						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 						{
-							<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{award.ShortName}_{award.Year.ToString().PadLeft(2, '0')}.png")" title="@award.Description" alt="@award.Description" />
+							<partial name="../Shared/_Award.cshtml" model="award" />
 						}
 					</div>
 				</div>
-			</div>
+			</cardbody>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="card-footer">
 				@Html.Raw(Model.Signature)
 			</div>
-		</div>
+		</card>
 	</div>
 	<div class="col-md-6">
-		<div class="card text-right">
-			<div class="card-body">
+		<card class="text-right">
+			<cardbody>
 				<h5 class="card-title">Publications</h5>
 				<div condition="!Model.AnyPublications" class="card-text">
 					<i>User has not had any Published Movies</i>
@@ -54,10 +54,10 @@
 					<p>Has published movies on these systems: @string.Join(", ", Model.PublishedSystems)</p>
 					<a href="/Movies-Author@(Model.Id)-obs" class="btn btn-primary">View</a>
 				</div>
-			</div>
-		</div>
-		<div class="card text-right">
-			<div class="card-body">
+			</cardbody>
+		</card>
+		<card class="text-right">
+			<cardbody>
 				<h5 class="card-title">Submissions</h5>
 				<div condition="Model.SubmissionCount == 0" class="card-text">
 					<i>User has not had any Submissions</i>
@@ -66,19 +66,19 @@
 					<p>@Model.SubmissionCount Total</p>
 					<a asp-controller="Submission" asp-action="List" asp-route-user="@Model.UserName" class="btn btn-primary">View</a>
 				</div>
-			</div>
-		</div>
-		<div class="card text-right">
+			</cardbody>
+		</card>
+		<card class="text-right">
 			<div class="card-body">
 				<h5 class="card-title">Wiki</h5>
 				TODO
 			</div>
-		</div>
-		<div class="card">
-			<div class="card-body">
+		</card>
+		<card>
+			<cardbody>
 				<h5 class="card-title">Ratings</h5>
 				TODO
-			</div>
-		</div>
+			</cardbody>
+		</card>
 	</div>
 </row>

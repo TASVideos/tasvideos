@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.WindowsAzure.Storage.Queue.Protocol;
 
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -13,7 +12,6 @@ namespace TASVideos.Controllers
 {
 	public class MessagesController : BaseController
 	{
-		private readonly UserTasks _userTasks;
 		private readonly UserManager<User> _userManager;
 		private readonly PrivateMessageTasks _pmTasks;
 
@@ -23,7 +21,6 @@ namespace TASVideos.Controllers
 			PrivateMessageTasks pmTasks)
 			: base(userTasks)
 		{
-			_userTasks = userTasks;
 			_userManager = userManager;
 			_pmTasks = pmTasks;
 		}
@@ -131,7 +128,7 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			var exists = await _userTasks.CheckUserNameExists(model.ToUser);
+			var exists = await UserTasks.CheckUserNameExists(model.ToUser);
 			if (!exists)
 			{
 				ModelState.AddModelError(nameof(PrivateMessageCreateModel.ToUser), $"{model.ToUser} does not exist");

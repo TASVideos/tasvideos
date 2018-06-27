@@ -21,5 +21,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		public string Description { get; set; }
 		public int Ordinal { get; set; }
+
+		public bool Restricted { get; set; }
 	}
 }
