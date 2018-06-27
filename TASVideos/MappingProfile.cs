@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
+using TASVideos.Tasks;
 
 namespace TASVideos
 {
@@ -17,7 +19,8 @@ namespace TASVideos
 			CreateMap<PublicationCatalogModel, Publication>();
 
 			CreateMap<User, UserEditViewModel>()
-				.ForMember(dest => dest.IsLockedOut, opt => opt.MapFrom(src => src.LockoutEnabled && src.LockoutEnd.HasValue));
+				.ForMember(dest => dest.IsLockedOut, opt => opt.MapFrom(src => src.LockoutEnabled && src.LockoutEnd.HasValue))
+				.ForMember(dest => dest.SelectedRoles, opt => opt.MapFrom(src => src.UserRoles.Select(ur => ur.RoleId).ToList()));
 
 			CreateMap<WikiPage, UserWikiEditHistoryModel>();
 
@@ -28,6 +31,9 @@ namespace TASVideos
 			CreateMap<GameRom, RomEditModel>()
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game.DisplayName));
 			CreateMap<RomEditModel, GameRom>();
+
+			CreateMap<AwardTasks.AwardDto, AwardDetailsModel>();
+			CreateMap<AwardTasks.AwardDto.UserDto, AwardDetailsModel.UserModel>();
 		}
 	}
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using TASVideos.Data.Entity;
-using TASVideos.WikiEngine;
 
 namespace TASVideos.Extensions
 {
@@ -122,25 +121,17 @@ namespace TASVideos.Extensions
 			return pageName.StartsWith("GameResources/");
 		}
 
-		// Does not check for null that should have already been done
-		// Slashes must have already been trimmed or it will break
 		private static bool IsProperCased(string pageName)
 		{
-			if (!char.IsUpper(pageName[0]))
+			if (string.IsNullOrWhiteSpace(pageName))
 			{
 				return false;
 			}
 
-			var slashes = Util.AllIndexesOf(pageName, "/");
-			foreach (var slash in slashes)
-			{
-				if (!char.IsUpper(pageName[slash + 1]))
-				{
-					return false;
-				}
-			}
+			var paths = pageName.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
 
-			return true;
+			// Must beging with a capital letter, with one exception, if the path is a year. But only years between 2000-2099 for now. This is to support awards pages: Awards/2007, Awards/2008 etc
+			return paths.All(p => char.IsUpper(p[0]) || (p.Length == 4 && p.StartsWith("20")));
 		}
 	}
 }

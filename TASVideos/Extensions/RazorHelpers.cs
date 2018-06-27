@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -11,8 +12,13 @@ using TASVideos.ViewComponents;
 
 namespace TASVideos.Extensions
 {
-    public static class RazorHelpers
-    {
+	public static class RazorHelpers
+	{
+		public static string ReturnUrl(this HttpContext context)
+		{
+			return $"{context.Request.Path}{context.Request.QueryString}";
+		}
+
 		public static bool UserHasPermission(this ViewDataDictionary viewData, PermissionTo permission)
 		{
 			return ((IEnumerable<PermissionTo>)viewData["UserPermissions"]).Contains(permission);

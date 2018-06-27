@@ -4,11 +4,11 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Data.SeedData;
 
+// ReSharper disable StaticMemberInitializerReferesToMemberBelow
 namespace TASVideos.Data.SampleData
 {
 	public static class PublicationSampleData
 	{
-		// TODO: move to new file
 		public static readonly WikiPage FrontPage = new WikiPage
 		{
 			PageName = "System/FrontPage",

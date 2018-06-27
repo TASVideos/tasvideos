@@ -4,7 +4,7 @@
 }
 <hr />
 @await Component.ListSubPages(pageData, "show")
-<div class="alert alert-info">
+<info-alert>
 	This page is intended to be the personal page for user: @(Model?.UserName ?? pageData.PageName.Replace("HomePages/", "")) <br />
 	<br />
 
@@ -29,4 +29,4 @@
 		<label>This user does not currently exist but this page should be reserved should such a user regiser.</label><br />
 		<label>Wiki Editors, all users can edit their own homepages by default, it is not recommended to create home pages unless explicitely requested by the user</label>
 	}
-</div>
+</info-alert>

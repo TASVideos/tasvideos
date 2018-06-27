@@ -40,16 +40,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a list of all permissions of the <seea cref="User"/> with the given id
 		/// </summary>
-		public IEnumerable<PermissionTo> GetUserPermissionsById(int userId)
-		{
-			return GetUserPermissionByIdQuery(userId)
-				.ToList();
-		}
-
-		/// <summary>
-		/// Returns a list of all permissions of the <seea cref="User"/> with the given id
-		/// </summary>
-		public async Task<IEnumerable<PermissionTo>> GetUserPermissionsByIdAsync(int userId)
+		public async Task<IEnumerable<PermissionTo>> GetUserPermissionsById(int userId)
 		{
 			return await GetUserPermissionByIdQuery(userId)
 				.ToListAsync();
@@ -193,7 +184,7 @@ namespace TASVideos.Tasks
 			return await _db.Users
 				.Where(u => u.Id == id)
 				.Select(u => u.UserName)
-				.SingleAsync();
+				.SingleOrDefaultAsync();
 		}
 
 		/// <summary>
@@ -207,11 +198,6 @@ namespace TASVideos.Tasks
 				var model = await _db.Users
 					.ProjectTo<UserEditViewModel>()
 					.SingleAsync(u => u.UserName == userName);
-
-				model.SelectedRoles = await _db.UserRoles
-					.Where(ur => ur.UserId == model.Id)
-					.Select(ur => ur.RoleId)
-					.ToListAsync();
 
 				model.AvailableRoles = await GetAllRolesUserCanAssign(currentUserId, model.SelectedRoles);
 

@@ -17,7 +17,6 @@ namespace TASVideos.Controllers
 {
 	public class SubmissionController : BaseController
 	{
-		private readonly UserTasks _userTasks;
 		private readonly WikiTasks _wikiTasks;
 		private readonly SubmissionTasks _submissionTasks;
 
@@ -27,7 +26,6 @@ namespace TASVideos.Controllers
 			SubmissionTasks submissionTasks)
 			: base(userTasks)
 		{
-			_userTasks = userTasks;
 			_wikiTasks = wikiTasks;
 			_submissionTasks = submissionTasks;
 		}
@@ -116,7 +114,7 @@ namespace TASVideos.Controllers
 
 			foreach (var author in model.Authors)
 			{
-				if (!await _userTasks.CheckUserNameExists(author))
+				if (!await UserTasks.CheckUserNameExists(author))
 				{
 					ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), $"Could not find user: {author}");
 				}
@@ -165,7 +163,7 @@ namespace TASVideos.Controllers
 				submission.Judge == User.Identity.Name);
 
 			// If user can not edit submissions then they must be an author or the original submitter
-			if (!UserPermissions.Contains(PermissionTo.EditSubmissions))
+			if (!UserHas(PermissionTo.EditSubmissions))
 			{
 				if (submission.Submitter != User.Identity.Name
 					&& !submission.Authors.Contains(User.Identity.Name))
@@ -182,7 +180,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 		public async Task<IActionResult> Edit(SubmissionEditModel model)
 		{
-			if (UserPermissions.Contains(PermissionTo.ReplaceSubmissionMovieFile) && model.MovieFile != null)
+			if (UserHas(PermissionTo.ReplaceSubmissionMovieFile) && model.MovieFile != null)
 			{
 				if (!model.MovieFile.FileName.EndsWith(".zip")
 					|| model.MovieFile.ContentType != "application/x-zip-compressed")
@@ -197,14 +195,14 @@ namespace TASVideos.Controllers
 						".zip is too big, are you sure this is a valid movie file?");
 				}
 			}
-			else if (!UserPermissions.Contains(PermissionTo.ReplaceSubmissionMovieFile))
+			else if (!UserHas(PermissionTo.ReplaceSubmissionMovieFile))
 			{
 				model.MovieFile = null;
 			}
 
 			// TODO: this is bad, an author can null out these values,
 			// but if we treat null as no choice, then we have no way to unset these values
-			if (!UserPermissions.Contains(PermissionTo.JudgeSubmissions))
+			if (!UserHas(PermissionTo.JudgeSubmissions))
 			{
 				model.TierId = null;
 			}
@@ -232,7 +230,7 @@ namespace TASVideos.Controllers
 				}
 
 				// If user can not edit submissions then they must be an author or the original submitter
-				if (!UserPermissions.Contains(PermissionTo.EditSubmissions))
+				if (!UserHas(PermissionTo.EditSubmissions))
 				{
 					if (!subInfo.UserIsAuhtorOrSubmitter)
 					{

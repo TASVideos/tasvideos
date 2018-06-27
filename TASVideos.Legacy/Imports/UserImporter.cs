@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
 using TASVideos.Legacy.Data.Forum;
@@ -14,6 +15,8 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class UserImporter
 	{
+		private const int ModeratorGroupId = 272; // This isn't goig to change, so just hard code it
+
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -21,10 +24,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosForumContext legacyForumContext)
 		{
 			// TODO:
-			// forum user_active status?
-			// import forum users that have no wiki, but check if they are forum banned
 			// gender?
-			// timezone
 			// user_avatar_type ?
 			// mood avatars
 			// TODO: what to do about these??
@@ -37,26 +37,39 @@ namespace TASVideos.Legacy.Imports
 				.ThenInclude(ur => ur.Role)
 				.ToList();
 
-			var users = legacyForumContext.Users
-				.Where(u => u.UserName != "Anonymous")
-				.Select(u => new
-				{
-					u.UserId,
-					u.UserName,
-					u.RegDate,
-					u.Password,
-					u.EmailTime,
-					u.PostCount,
-					u.Email,
-					u.Avatar,
-					u.From,
-					u.Signature,
-					u.PublicRatings
-				})
-				.ToList()
+			var users = (from u in legacyForumContext.Users
+						join b in legacyForumContext.BanList on u.UserId equals b.UserId into bb
+						from b in bb.DefaultIfEmpty()
+						join ug in legacyForumContext.UserGroups on new { u.UserId, GroupId = ModeratorGroupId } equals new { ug.UserId, ug.GroupId } into ugg
+						from ug in ugg.DefaultIfEmpty()
+						where u.UserName != "Anonymous"
+						select new
+						{
+							Id = u.UserId,
+							u.UserName,
+							u.RegDate,
+							u.Password,
+							u.EmailTime,
+							u.PostCount,
+							u.Email,
+							u.Avatar,
+							u.From,
+							u.Signature,
+							u.PublicRatings,
+							u.LastVisitDate,
+							u.TimeZoneOffset,
+							IsBanned = b != null,
+							IsModerator = ug != null,
+							IsForumAdmin = u.UserLevel == 1
+						})
+						.ToList();
+
+			var timeZones = TimeZoneInfo.GetSystemTimeZones();
+
+			var userEntities = users
 				.Select(u => new User
 				{
-					Id = u.UserId,
+					Id = u.Id,
 					UserName = ImportHelper.FixString(u.UserName),
 					NormalizedUserName = u.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
@@ -70,7 +83,10 @@ namespace TASVideos.Legacy.Imports
 					Avatar = u.Avatar,
 					From = u.From,
 					Signature = ImportHelper.FixString(u.Signature),
-					PublicRatings = u.PublicRatings
+					PublicRatings = u.PublicRatings,
+					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
+					// ReSharper disable once CompareOfFloatsByEqualityOperator
+					TimeZoneId = timeZones.First(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset).StandardName
 				})
 				.ToList();
 
@@ -94,7 +110,7 @@ namespace TASVideos.Legacy.Imports
 					{
 						userRoles.Add(new UserRole
 						{
-							RoleId = roles.Single(r => r.Name == SeedRoleNames.EditHomePage).Id,
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.EditHomePage).Id,
 							UserId = user.User.Id
 						});
 
@@ -102,10 +118,29 @@ namespace TASVideos.Legacy.Imports
 						{
 							context.UserRoles.Add(new UserRole
 							{
-								RoleId = roles.Single(r => r.Name == SeedRoleNames.SubmitMovies).Id,
+								RoleId = roles.Single(r => r.Name == RoleSeedNames.SubmitMovies).Id,
 								UserId = user.User.Id
 							});
 						}
+					}
+
+					if (user.User.IsForumAdmin
+						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
+					{
+						context.UserRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumAdmin).Id,
+							UserId = user.User.Id
+						});
+					}
+					else if (user.User.IsModerator
+						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
+					{
+						context.UserRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumModerator).Id,
+							UserId = user.User.Id
+						});
 					}
 
 					foreach (var userRole in user.SiteUser.UserRoles.Select(ur => ur.Role)
@@ -122,13 +157,27 @@ namespace TASVideos.Legacy.Imports
 						}
 					}
 				}
-				else
+				
+				if (!user.User.IsBanned)
 				{
-					// TODO: check any kind of active/ban forum status if none, then give them homepage and submit rights
+					context.UserRoles.Add(new UserRole
+					{
+						RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumUser).Id,
+						UserId = user.User.Id
+					});
+
+					if (user.User.PostCount >= SiteGlobalConstants.VestedPostCount)
+					{
+						context.UserRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.ExperiencedForumUser).Id,
+							UserId = user.User.Id
+						});
+					}
 				}
 			}
 
-			users.Add(new User
+			userEntities.Add(new User
 			{
 				Id = -1,
 				UserName = "Unknown User",
@@ -185,7 +234,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.Avatar),
 				nameof(User.From),
 				nameof(User.Signature),
-				nameof(User.PublicRatings)
+				nameof(User.PublicRatings),
+				nameof(User.LastLoggedInTimeStamp),
+				nameof(User.TimeZoneId)
 			};
 
 			var userRoleColumns = new[]
@@ -194,7 +245,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			users.BulkInsert(connectionStr, userColumns, "[User]");
+			userEntities.BulkInsert(connectionStr, userColumns, "[User]");
 			userRoles.BulkInsert(connectionStr, userRoleColumns, "[UserRoles]");
 
 			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
@@ -208,21 +259,21 @@ namespace TASVideos.Legacy.Imports
 				default:
 					return null;
 				case "editor":
-					return roles.Single(r => r.Name == SeedRoleNames.Editor);
+					return roles.Single(r => r.Name == RoleSeedNames.Editor);
 				case "vestededitor":
-					return roles.Single(r => r.Name == SeedRoleNames.VestedEditor);
+					return roles.Single(r => r.Name == RoleSeedNames.VestedEditor);
 				case "publisher":
-					return roles.Single(r => r.Name == SeedRoleNames.Publisher);
+					return roles.Single(r => r.Name == RoleSeedNames.Publisher);
 				case "seniorpublisher":
-					return roles.Single(r => r.Name == SeedRoleNames.SeniorPublisher);
+					return roles.Single(r => r.Name == RoleSeedNames.SeniorPublisher);
 				case "judge":
-					return roles.Single(r => r.Name == SeedRoleNames.Judge);
+					return roles.Single(r => r.Name == RoleSeedNames.Judge);
 				case "seniorjudge":
-					return roles.Single(r => r.Name == SeedRoleNames.SeniorJudge);
+					return roles.Single(r => r.Name == RoleSeedNames.SeniorJudge);
 				case "adminassistant":
-					return roles.Single(r => r.Name == SeedRoleNames.AdminAssistant);
+					return roles.Single(r => r.Name == RoleSeedNames.AdminAssistant);
 				case "admin":
-					return roles.Single(r => r.Name == SeedRoleNames.Admin);
+					return roles.Single(r => r.Name == RoleSeedNames.Admin);
 			}
 		}
 	}
