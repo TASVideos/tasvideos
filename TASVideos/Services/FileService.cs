@@ -10,17 +10,16 @@ using Microsoft.Net.Http.Headers;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
 
-namespace TASVideos.Tasks
+namespace TASVideos.Services
 {
-	public class FileTasks
+	public class FileService
 	{
 		private readonly ApplicationDbContext _db;
 
 		public object UTF8 { get; private set; }
 
-		public FileTasks(ApplicationDbContext db)
+		public FileService(ApplicationDbContext db)
 		{
 			_db = db;
 		}
@@ -28,7 +27,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Stores the file with the given name in the database, returning the assigned id.
 		/// </summary>
-		public async Task<FileViewModel> StoreFile(
+		public async Task<FileDto> StoreFile(
 			string filename,
 			byte[] contents,
 			CancellationToken cancellationToken = default(CancellationToken))
@@ -70,7 +69,7 @@ namespace TASVideos.Tasks
 			await _db.Files.AddAsync(model, cancellationToken);
 			await _db.SaveChangesAsync(cancellationToken);
 
-			return new FileViewModel
+			return new FileDto
 			{
 				Id = model.Id,
 				Filename = model.Filename,
@@ -81,12 +80,12 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns info about the file with the given id, or null if no such file exists.
 		/// </summary>
-		public async Task<FileViewModel> GetFileInfo(
+		public async Task<FileDto> GetFileInfo(
 			int id,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return await _db.Files
-				.Select(file => new FileViewModel
+				.Select(file => new FileDto
 				{
 					Id = file.Id,
 					Filename = file.Filename,
