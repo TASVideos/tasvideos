@@ -558,5 +558,40 @@ namespace TASVideos.Tasks
 				await _db.SaveChangesAsync();
 			}
 		}
+
+		public async Task<CategoryEditModel> GetCategoryForEdit(int categoryId)
+		{
+			return await _db.ForumCategories
+				.Where(c => c.Id == categoryId)
+				.Select(c => new CategoryEditModel
+				{
+					Id = c.Id,
+					Title = c.Title,
+					Description = c.Description
+				})
+				.SingleOrDefaultAsync();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns>True if a category with the given id is found, else false</returns>
+		public async Task<bool> SaveCategory(CategoryEditModel model)
+		{
+			var category = await _db.ForumCategories.SingleOrDefaultAsync(c => c.Id == model.Id);
+
+			if (category == null)
+			{
+				return false;
+			}
+
+			category.Title = model.Title;
+			category.Description = model.Description;
+
+			await _db.SaveChangesAsync();
+
+			return true;
+		}
 	}
 }

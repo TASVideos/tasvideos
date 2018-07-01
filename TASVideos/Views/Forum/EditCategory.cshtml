@@ -1,0 +1,22 @@
+﻿@model CategoryEditModel
+@{
+	ViewData["Title"] = $"TASVideos Forum {Model.Title}";
+}
+<partial Name="_ForumHeader" />
+
+<form asp-action="EditCategory">
+	<row>
+		<div class="col-lg-6">
+			<label asp-for="Title"></label>
+			<input type="text" asp-for="Title" class="form-control" />
+			<span asp-validation-for="Title" />
+			<label asp-for="Description"></label>
+			<input type="text" asp-for="Description" class="form-control" />
+			<span asp-validation-for="Description" />
+		</div>
+	</row>
+	<hr />
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Update</button>
+	</div>
+</form>
