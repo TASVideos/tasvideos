@@ -328,5 +328,37 @@ namespace TASVideos.Controllers
 			await _forumTasks.MoveTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
 			return RedirectToAction(nameof(Topic), new { id = model.TopicId });
 		}
+
+		[RequirePermission(PermissionTo.EditForums)]
+		public async Task<IActionResult> EditCategory(int id)
+		{
+			var model = await _forumTasks.GetCategoryForEdit(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.EditForums)]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditCategory(CategoryEditModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var result = await _forumTasks.SaveCategory(model);
+
+			if (!result)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
 	}
 }
