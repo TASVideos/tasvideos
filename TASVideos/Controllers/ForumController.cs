@@ -339,6 +339,11 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
+			foreach (var forum in model.Forums)
+			{
+				forum.Description = RenderHtml(forum.Description);
+			}
+
 			return View(model);
 		}
 
