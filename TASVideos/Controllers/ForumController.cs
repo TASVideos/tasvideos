@@ -329,7 +329,7 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(Topic), new { id = model.TopicId });
 		}
 
-		[RequirePermission(PermissionTo.SplitTopic)]
+		[RequirePermission(PermissionTo.SplitTopics)]
 		public async Task<IActionResult> SplitTopic(int id)
 		{
 			var model = await _forumTasks.GetTopicForSplit(id, UserHas(PermissionTo.SeeRestrictedForums));
@@ -346,7 +346,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[RequirePermission(PermissionTo.SplitTopic)]
+		[RequirePermission(PermissionTo.SplitTopics)]
 		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> SplitTopic(SplitTopicModel model)
 		{
@@ -355,7 +355,12 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			var result = await _forumTasks.SplitTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
+			var user = await _userManager.GetUserAsync(User);
+
+			var result = await _forumTasks.SplitTopic(
+				model,
+				UserHas(PermissionTo.SeeRestrictedForums),
+				user);
 
 			if (result == null)
 			{
