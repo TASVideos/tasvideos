@@ -365,5 +365,36 @@ namespace TASVideos.Controllers
 
 			return RedirectToAction(nameof(Index));
 		}
+
+		[RequirePermission(PermissionTo.EditForums)]
+		public async Task<IActionResult> EditForum(int id)
+		{
+			var model = await _forumTasks.GetForumForEdit(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.EditForumPosts)]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditForum(ForumEditModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var result = await _forumTasks.SaveForum(model);
+			if (!result)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Subforum), new { id = model.Id });
+		}
 	}
 }

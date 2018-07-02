@@ -250,6 +250,17 @@ namespace TASVideos.Models
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 	}
 
+	public class ForumEditModel
+	{
+		public int Id { get; set; }
+
+		[Required]
+		public string Name { get; set; }
+
+		[Required]
+		public string Description { get; set; }
+	}
+
 	public class CategoryEditModel
 	{
 		public int Id { get; set; }

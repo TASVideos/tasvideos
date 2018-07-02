@@ -559,6 +559,38 @@ namespace TASVideos.Tasks
 			}
 		}
 
+		public async Task<ForumEditModel> GetForumForEdit(int forumId)
+		{
+			return await _db.Forums
+				.Where(f => f.Id == forumId)
+				.Select(f => new ForumEditModel
+				{
+					Id = f.Id,
+					Name = f.Name,
+					Description = f.Description,
+				})
+				.SingleOrDefaultAsync();
+		}
+
+		/// <summary>
+		/// Saves the given forum data to the category with the given id
+		/// </summary>
+		/// <returns>True if a forum with the given id is found, else false</returns>
+		public async Task<bool> SaveForum(ForumEditModel model)
+		{
+			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == model.Id);
+			if (forum == null)
+			{
+				return false;
+			}
+
+			forum.Name = model.Name;
+			forum.Description = model.Description;
+
+			await _db.SaveChangesAsync();
+			return true;
+		}
+
 		public async Task<CategoryEditModel> GetCategoryForEdit(int categoryId)
 		{
 			return await _db.ForumCategories
