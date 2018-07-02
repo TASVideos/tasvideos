@@ -582,7 +582,8 @@ namespace TASVideos.Tasks
 							Subject = p.Subject,
 							Text = p.Text,
 							PosterId = p.PosterId,
-							PosterName = p.Poster.UserName
+							PosterName = p.Poster.UserName,
+							PosterAvatar = p.Poster.Avatar
 						})
 						.ToList()
 				})
