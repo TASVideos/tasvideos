@@ -46,6 +46,9 @@
     <Content Update="Views\Forum\EditForum.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Forum\SplitTopic.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Forum\MoveTopic.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

@@ -158,15 +158,20 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to move a topic from one forum to another.")]
 		MoveTopics = 403,
 
+		[Display(Name = "Split Topic")]
+		[Group("Forum Administration")]
+		[Description("The ability to split a subset of posts from a topic and create a new topic")]
+		SplitTopic = 404,
+
 		[Display(Name = "Edit Forums")]
 		[Group("Forum Administration")]
 		[Description("The ability to create or edit a forum.")]
-		EditForums = 404,
+		EditForums = 405,
 
 		[Display(Name = "Edit Categories")]
 		[Group("Forum Administration")]
 		[Description("The ability to edit forum categories")]
-		EditCategories = 405,
+		EditCategories = 406,
 
 		[Display(Name = "See Restricted Froums")]
 		[Group("Forum Administration")]
