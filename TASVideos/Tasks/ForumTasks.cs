@@ -567,19 +567,30 @@ namespace TASVideos.Tasks
 				{
 					Id = c.Id,
 					Title = c.Title,
-					Description = c.Description
+					Description = c.Description,
+					Forums = c.Forums
+						.OrderBy(f => f.Ordinal)
+						.Select(f => new CategoryEditModel.ForumEditModel
+						{
+							Id = f.Id,
+							Name = f.Name,
+							Description = f.Description,
+							Ordinal = f.Ordinal
+						})
+						.ToList()
 				})
 				.SingleOrDefaultAsync();
 		}
 
 		/// <summary>
-		/// 
+		/// Saves the given category data to the category with the given id
 		/// </summary>
-		/// <param name="model"></param>
 		/// <returns>True if a category with the given id is found, else false</returns>
 		public async Task<bool> SaveCategory(CategoryEditModel model)
 		{
-			var category = await _db.ForumCategories.SingleOrDefaultAsync(c => c.Id == model.Id);
+			var category = await _db.ForumCategories
+				.Include(c => c.Forums)
+				.SingleOrDefaultAsync(c => c.Id == model.Id);
 
 			if (category == null)
 			{
@@ -588,6 +599,14 @@ namespace TASVideos.Tasks
 
 			category.Title = model.Title;
 			category.Description = model.Description;
+
+			foreach (var forum in category.Forums)
+			{
+				// This is a n squared problem but we don't anticipate enough forums in a single category to be a performance issue
+				// This could be optimized away by joining model.Forums against category.Forums then looping
+				var forumModel = model.Forums.Single(f => f.Id == forum.Id);
+				forum.Ordinal = forumModel.Ordinal;
+			}
 
 			await _db.SaveChangesAsync();
 

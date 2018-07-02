@@ -260,16 +260,15 @@ namespace TASVideos.Models
 
 		public string Description { get; set; }
 
-		public IEnumerable<ForumEditModel> Forums { get; set; } = new List<ForumEditModel>();
+		public IList<ForumEditModel> Forums { get; set; } = new List<ForumEditModel>();
 
 		public class ForumEditModel
 		{
+			public int Id { get; set; }
+
 			[Required]
 			[StringLength(50)]
 			public string Name { get; set; }
-
-			[StringLength(10)]
-			public string ShortName { get; set; }
 
 			public string Description { get; set; }
 			public int Ordinal { get; set; }
