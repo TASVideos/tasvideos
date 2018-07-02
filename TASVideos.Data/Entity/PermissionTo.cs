@@ -163,6 +163,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to create or edit a forum.")]
 		EditForums = 404,
 
+		[Display(Name = "Edit Categories")]
+		[Group("Forum Administration")]
+		[Description("The ability to edit forum categories")]
+		EditCategories = 405,
+
 		[Display(Name = "See Restricted Froums")]
 		[Group("Forum Administration")]
 		[Description("The ability to see forums that are restricted from general access.")]

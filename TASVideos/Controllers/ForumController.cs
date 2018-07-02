@@ -347,7 +347,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[RequirePermission(PermissionTo.EditForums)]
+		[RequirePermission(PermissionTo.EditCategories)]
 		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> EditCategory(CategoryEditModel model)
 		{
