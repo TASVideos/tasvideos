@@ -329,6 +329,42 @@ namespace TASVideos.Controllers
 			return RedirectToAction(nameof(Topic), new { id = model.TopicId });
 		}
 
+		[RequirePermission(PermissionTo.SplitTopic)]
+		public async Task<IActionResult> SplitTopic(int id)
+		{
+			var model = await _forumTasks.GetTopicForSplit(id, UserHas(PermissionTo.SeeRestrictedForums));
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			foreach (var post in model.Posts)
+			{
+				post.Text = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
+			}
+
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.SplitTopic)]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> SplitTopic(SplitTopicModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var result = await _forumTasks.SplitTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
+
+			if (result == null)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Topic), new { id = result });
+		}
+
 		[RequirePermission(PermissionTo.EditForums)]
 		public async Task<IActionResult> EditCategory(int id)
 		{

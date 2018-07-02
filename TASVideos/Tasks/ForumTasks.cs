@@ -559,6 +559,91 @@ namespace TASVideos.Tasks
 			}
 		}
 
+		public async Task<SplitTopicModel> GetTopicForSplit(int topicId, bool allowRestricted)
+		{
+			var model = await _db.ForumTopics
+				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.Where(t => t.Id == topicId)
+				.Select(t => new SplitTopicModel
+				{
+					Id = t.Id,
+					Title = t.Title,
+					SplitTopicName = "(Split from " + t.Title + ")",
+					SplitToForumId = t.Forum.Id,
+					ForumId = t.Forum.Id,
+					ForumName = t.Forum.Name,
+					Posts = t.ForumPosts
+						.Select(p => new SplitTopicModel.Post
+						{
+							Id = p.Id,
+							PostCreateTimeStamp = p.CreateTimeStamp,
+							EnableBbCode = p.EnableBbCode,
+							EnableHtml = p.EnableHtml,
+							Subject = p.Subject,
+							Text = p.Text,
+							PosterId = p.PosterId,
+							PosterName = p.Poster.UserName
+						})
+						.ToList()
+				})
+				.SingleOrDefaultAsync();
+
+			if (model != null)
+			{
+				model.AvailableForums = await _db.Forums
+					.Where(f => allowRestricted || !f.Restricted)
+					.Select(f => new SelectListItem
+					{
+						Text = f.Name,
+						Value = f.Id.ToString(),
+						Selected = f.Id == model.ForumId
+					})
+					.ToListAsync();
+			}
+
+			return model;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns>Returns new topic id, if old topic, split post, and new forum are found, else null</returns>
+		public async Task<int?> SplitTopic(SplitTopicModel model, bool allowRestricted)
+		{
+			var topic = await _db.ForumTopics
+				.Include(t => t.Forum)
+				.Include(t => t.ForumPosts)
+				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.SingleOrDefaultAsync(t => t.Id == model.Id);
+
+			if (topic == null)
+			{
+				return null;
+			}
+
+			var destinationForum = _db.Forums
+				.Where(f => allowRestricted || !f.Restricted)
+				.SingleOrDefaultAsync(f => f.Id == model.SplitToForumId);
+
+			if (destinationForum == null)
+			{
+				return null;
+			}
+
+			var splitOnPost = topic.ForumPosts
+				.SingleOrDefault(p => p.Id == model.PostToSplitId);
+
+			if (splitOnPost == null)
+			{
+				return null;
+			}
+
+			await _db.SaveChangesAsync();
+			// Create new topic, move posts to new topic
+			return 1; // TODO return newly created id
+		}
+
 		public async Task<ForumEditModel> GetForumForEdit(int forumId)
 		{
 			return await _db.Forums
