@@ -5,8 +5,8 @@
 <partial Name="_ForumHeader" />
 <row>
 	<div class="col-12">
-		<a condition="ViewData.UserHasPermission(PermissionTo.MoveTopics)" asp-action="MoveTopic" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Move this topic"><i class="fa fa-location-arrow"></i></a>
-		<form style="display: inline" class="form-inline" condition="@ViewData.UserHasPermission(PermissionTo.LockTopics)" method="POST" asp-action="SetTopicLock" asp-route-topicId="@Model.Id" asp-route-locked="@(!Model.IsLocked)" asp-route-returnUrl="@Context.ReturnUrl()">
+		<a condition="ViewData.UserHas(PermissionTo.MoveTopics)" asp-action="MoveTopic" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Move this topic"><i class="fa fa-location-arrow"></i></a>
+		<form style="display: inline" class="form-inline" condition="@ViewData.UserHas(PermissionTo.LockTopics)" method="POST" asp-action="SetTopicLock" asp-route-topicId="@Model.Id" asp-route-locked="@(!Model.IsLocked)" asp-route-returnUrl="@Context.ReturnUrl()">
 			<button type="submit" class="btn @(Model.IsLocked ? "btn-success" : "btn-warning") btn-sm">
 				<span condition="Model.IsLocked" title="Unlock this topic">
 					<i class="fa fa-unlock"></i>
@@ -19,7 +19,7 @@
 		<small class="@(Model.IsLocked ? "alert alert-danger" : "") pt-1 pb-2">
 			<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a> -> @Model.Title <span condition="Model.IsLocked"> (Locked)</span>
 		</small>
-		<a condition="ViewData.UserHasPermission(PermissionTo.PostInLockedTopics) ||  (!Model.IsLocked && ViewData.UserHasPermission(PermissionTo.CreateForumPosts))" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary btn-sm pull-right">
+		<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics) ||  (!Model.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))" asp-action="CreatePost" asp-route-topicId="@Model.Id" class="btn btn-primary btn-sm pull-right">
 			<span class="fa fa-plus"></span> Post
 		</a>
 	</div>

@@ -65,12 +65,12 @@
 	<li class="nav-item @(Active("News"))">
 		<a class="nav-link" href="/News">News</a>
 	</li>
-	@if (ViewData.UserHasAnyPermission(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles }))
+	@if (ViewData.UserHasAny(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles }))
 	{
 		<li class="nav-item dropdown @(Active("Admin"))">
 			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
 			<div class="dropdown-menu">
-				@if (ViewData.UserHasAnyPermission(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers }))
+				@if (ViewData.UserHasAny(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers }))
 				{
 					<a class="dropdown-item" asp-controller="User" asp-action="List">Users</a>
 				}

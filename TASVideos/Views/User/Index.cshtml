@@ -3,7 +3,7 @@
 	ViewData["Title"] = $"Details for User: {Model.UserName}";
 }
 
-<a condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
+<a condition="@ViewData.UserHas(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
 <h4>@ViewData["Title"]</h4>
 <hr />
 
@@ -22,7 +22,7 @@
 
 <form-group>
 	<row>
-		<div class="col-md-6" condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)">
+		<div class="col-md-6" condition="@ViewData.UserHas(PermissionTo.EditUsers)">
 			<label asp-for="Email" class="form-control-label"></label>
 			<div>@Model.Email</div>
 		</div>

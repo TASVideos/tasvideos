@@ -49,7 +49,7 @@
 		<row>
 			<form-group class="col-md-5">
 				<label asp-for="UserName" class="form-control-label"></label>
-				@if (ViewData.UserHasPermission(PermissionTo.EditUsersUserName))
+				@if (ViewData.UserHas(PermissionTo.EditUsersUserName))
 				{
 					<input asp-for="OriginalUserName" type="hidden"/>
 					<row>
