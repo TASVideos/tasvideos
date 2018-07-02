@@ -22,24 +22,40 @@
 	<div class="border border-info" style="max-height: 500px; overflow-y: auto;">
 		<label asp-for="PostToSplitId" class="form-control-label"></label>
 		<span asp-validation-for="PostToSplitId" class="text-danger"></span>
-		@foreach (var post in Model.Posts.OrderBy(p => p.PostCreateTimeStamp))
-		{
-			<row>
-				<div class="col-md-1">
-					<input type="radio" value="@post.Id" name="@Html.NameFor(m =>m.PostToSplitId)" id="post_@post.Id" />
-				</div>
-				<div class="col-md-11">
-					<card>
-						<cardheader>
-							@post.Subject
-						</cardheader>
-						<cardbody>
-							@Html.Raw(post.Text)
-						</cardbody>
-					</card>
-				</div>
-			</row>
-		}
+		<small>
+			@foreach (var post in Model.Posts.OrderBy(p => p.PostCreateTimeStamp))
+			{
+				<row>
+					<div class="col-md-1">
+						<input class="m-2 custom-radio" type="radio" value="@post.Id" name="@Html.NameFor(m =>m.PostToSplitId)" id="post_@post.Id" />
+					</div>
+					<div class="col-md-11">
+						<card>
+							<cardheader>
+								<row>
+									<div class="col-4 border-right">
+										@post.PosterName
+									</div>
+									<div class="col-8 pt-0 pb-0">
+										@post.Subject
+									</div>
+								</row>
+							</cardheader>
+							<cardbody>
+								<row>
+									<div class="col-4">
+										<img src="@post.PosterAvatar" />
+									</div>
+									<div class="col-8">
+										@Html.Raw(post.Text)
+									</div>
+								</row>
+							</cardbody>
+						</card>
+					</div>
+				</row>
+			}
+		</small>
 	</div>
 	<div class="text-center">
 		<button type="submit" class="btn btn-primary">Split</button>

@@ -320,6 +320,7 @@ namespace TASVideos.Models
 			public string Text { get; set; }
 			public int PosterId { get; set; }
 			public string PosterName { get; set; }
+			public string PosterAvatar { get; set; }
 		}
 	}
 }
