@@ -4,7 +4,7 @@
 		<h5 class="card-title">@Model.Name</h5>
 		<row>
 			<div class="col-md-6">
-				<div condition="@ViewData.UserHasPermission(PermissionTo.EditRoles)">
+				<div condition="@ViewData.UserHas(PermissionTo.EditRoles)">
 					<a asp-action="AddEdit" asp-route-id="@Model.Id" class="btn btn-primary mb-m">Edit</a>
 				</div>
 				@Model.Description

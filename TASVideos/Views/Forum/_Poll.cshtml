@@ -15,7 +15,7 @@
 }
 
 <info-alert>
-	<a condition="ViewData.UserHasPermission(PermissionTo.SeePollResults) && totalVotes > 0" asp-action="ViewPollResults" asp-route-id="@Model.PollId" class="btn btn-info pull-right">See Votes</a>
+	<a condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0" asp-action="ViewPollResults" asp-route-id="@Model.PollId" class="btn btn-info pull-right">See Votes</a>
 	@Html.Raw(Model.Question)
 	<form asp-action="Vote">
 		<input type="hidden" asp-for="@Model.PollId" />

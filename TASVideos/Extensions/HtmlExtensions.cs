@@ -24,7 +24,7 @@ namespace TASVideos.Extensions
 				default:
 					if (Enum.TryParse(condition, out PermissionTo permission))
 					{
-						result ^= html.ViewData.UserHasPermission(permission);
+						result ^= html.ViewData.UserHas(permission);
 					}
 
 					break;
@@ -43,7 +43,7 @@ namespace TASVideos.Extensions
 
 				// Support legacy values, these are deprecated
 				case "CanEditPages":
-					result ^= html.ViewData.UserHasPermission(PermissionTo.EditWikiPages);
+					result ^= html.ViewData.UserHas(PermissionTo.EditWikiPages);
 					break;
 				case "UserHasHomepage":
 					result ^= html.ViewContext.HttpContext.User.Identity
@@ -53,10 +53,10 @@ namespace TASVideos.Extensions
 					result ^= true; // Legacy system always returned true
 					break;
 				case "CanJudgeMovies":
-					result ^= html.ViewData.UserHasPermission(PermissionTo.JudgeSubmissions);
+					result ^= html.ViewData.UserHas(PermissionTo.JudgeSubmissions);
 					break;
 				case "CanPublishMovies":
-					result ^= html.ViewData.UserHasPermission(PermissionTo.PublishMovies);
+					result ^= html.ViewData.UserHas(PermissionTo.PublishMovies);
 					break;
 			}
 

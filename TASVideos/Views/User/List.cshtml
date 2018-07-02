@@ -20,7 +20,7 @@
 			<td>@user.CreateTimeStamp</td>
 			<td>
 				<a asp-action="Index" asp-route-id="@user.Id" class="btn btn-secondary">View</a>
-				<a condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
+				<a condition="@ViewData.UserHas(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
 			</td>
 		</tr>
 	}

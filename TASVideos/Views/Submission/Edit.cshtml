@@ -13,7 +13,7 @@
 				<select class="form-control" asp-for="Status" asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Status })"></select>
 			</form-group>
 		</div>
-		<div condition="@ViewData.UserHasPermission(PermissionTo.ReplaceSubmissionMovieFile)" class="col-lg-6">
+		<div condition="@ViewData.UserHas(PermissionTo.ReplaceSubmissionMovieFile)" class="col-lg-6">
 			<form-group>
 				<label asp-for="MovieFile" class="form-control-label"></label>
 				<input type="file" asp-for="MovieFile" class="form-control" />
@@ -22,7 +22,7 @@
 			</form-group>
 		</div>
 	</row>
-	<row condition="@ViewData.UserHasPermission(PermissionTo.JudgeSubmissions)">
+	<row condition="@ViewData.UserHas(PermissionTo.JudgeSubmissions)">
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="TierId" class="form-control-label"></label>

@@ -2,7 +2,7 @@
 @{
 	ViewData["Title"] = $"Ratings for #{Model.PublicationTitle}";
 
-	var visibleRatings = ViewData.UserHasPermission(PermissionTo.SeePrivateRatings)
+	var visibleRatings = ViewData.UserHas(PermissionTo.SeePrivateRatings)
 		? Model.Ratings
 		: Model.Ratings.Where(r => r.IsPublic);
 }
