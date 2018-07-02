@@ -161,7 +161,7 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Split Topic")]
 		[Group("Forum Administration")]
 		[Description("The ability to split a subset of posts from a topic and create a new topic")]
-		SplitTopic = 404,
+		SplitTopics = 404,
 
 		[Display(Name = "Edit Forums")]
 		[Group("Forum Administration")]

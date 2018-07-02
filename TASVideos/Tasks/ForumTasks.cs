@@ -609,7 +609,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		/// <param name="model"></param>
 		/// <returns>Returns new topic id, if old topic, split post, and new forum are found, else null</returns>
-		public async Task<int?> SplitTopic(SplitTopicModel model, bool allowRestricted)
+		public async Task<int?> SplitTopic(SplitTopicModel model, bool allowRestricted, User user)
 		{
 			var topic = await _db.ForumTopics
 				.Include(t => t.Forum)
@@ -639,9 +639,29 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
+			var newTopic = new ForumTopic
+			{
+				Type = ForumTopicType.Regular,
+				Title = model.SplitTopicName,
+				PosterId = user.Id,
+				Poster = user,
+				ForumId = model.SplitToForumId
+			};
+
+			_db.ForumTopics.Add(newTopic);
 			await _db.SaveChangesAsync();
-			// Create new topic, move posts to new topic
-			return 1; // TODO return newly created id
+
+			var splitPosts = topic.ForumPosts
+				.Where(p => p.Id == splitOnPost.Id
+					|| p.CreateTimeStamp > splitOnPost.CreateTimeStamp);
+
+			foreach (var post in splitPosts)
+			{
+				post.TopicId = newTopic.Id;
+			}
+
+			await _db.SaveChangesAsync();
+			return newTopic.Id;
 		}
 
 		public async Task<ForumEditModel> GetForumForEdit(int forumId)

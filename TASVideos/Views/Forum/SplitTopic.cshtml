@@ -22,7 +22,7 @@
 	<div class="border border-info" style="max-height: 500px; overflow-y: auto;">
 		<label asp-for="PostToSplitId" class="form-control-label"></label>
 		<span asp-validation-for="PostToSplitId" class="text-danger"></span>
-		@foreach (var post in Model.Posts)
+		@foreach (var post in Model.Posts.OrderBy(p => p.PostCreateTimeStamp))
 		{
 			<row>
 				<div class="col-md-1">
