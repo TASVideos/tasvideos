@@ -750,5 +750,44 @@ namespace TASVideos.Tasks
 
 			return true;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="postId"></param>
+		/// <returns>the topic id that contained the post if post is successfully deleted, if user can not delete the post or a post of the given id is not found then null</returns>
+		public async Task<int?> DeletePost(int postId, bool canDelete, bool canSeeRestricted)
+		{
+			var post = await _db.ForumPosts
+				// TODO: add includes?
+				.Where(p => canSeeRestricted || !p.Topic.Forum.Restricted)
+				.SingleOrDefaultAsync(p => p.Id == postId);
+
+
+			if (post == null)
+			{
+				return null;
+			}
+
+			if (!canDelete)
+			{
+				// Check if last post
+				var lastPost = _db.ForumPosts
+					.Where(p => p.TopicId == post.TopicId)
+					.OrderByDescending(p => p.CreateTimeStamp)
+					.First();
+
+				bool isLastPost = lastPost.Id == post.Id;
+				if (!isLastPost)
+				{
+					return null;
+				}
+			}
+
+			_db.ForumPosts.Remove(post);
+			await _db.SaveChangesAsync();
+
+			return post.TopicId;
+		}
 	}
 }

@@ -34,7 +34,7 @@
 
 <hr class="mt-1" />
 <partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
-@foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp))
+@foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp).ToList())
 {
 	<card>
 		<cardheader>
@@ -46,6 +46,7 @@
 					<small>
 						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+						<delete-button condition="post.IsDeletable" asp-href="@Url.Action($"DeletePost/{post.Id}")" warning-message="Are you sure you want to delete this post?" class="btn-sm pull-right ml-1"><i title="Delete this post" class="fa fa-remove"></i></delete-button>
 						<a condition="post.IsEditable" class="btn btn-primary btn-sm pull-right ml-1" asp-action="EditPost" asp-route-id="@post.Id">Edit</a>
 						<a class="btn btn-info btn-sm pull-right" asp-action="CreatePost" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>
 					</small>
