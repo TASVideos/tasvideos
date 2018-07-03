@@ -36,16 +36,19 @@
 <partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
 @foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp).ToList())
 {
-	<card>
+	<card class="@(post.Highlight ? "border-info" : "")">
 		<cardheader>
 			<row>
 				<div class="col-4 border-right">
 					<h5>@post.PosterName</h5>
 				</div>
 				<div class="col-8 pt-0 pb-0">
-					<small>
+					<small style="display: inline-block">
+						<a id="@post.Id" href="/Forum/Post/@(post.Id)#@post.Id" title="Link to this post" class="pull-left"><i class="fa fa-bookmark-o"></i></a>
 						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+					</small>
+					<small>
 						<delete-button condition="post.IsDeletable" asp-href="@Url.Action($"DeletePost/{post.Id}")" warning-message="Are you sure you want to delete this post?" class="btn-sm pull-right ml-1"><i title="Delete this post" class="fa fa-remove"></i></delete-button>
 						<a condition="post.IsEditable" class="btn btn-primary btn-sm pull-right ml-1" asp-action="EditPost" asp-route-id="@post.Id">Edit</a>
 						<a class="btn btn-info btn-sm pull-right" asp-action="CreatePost" asp-route-topicId="@Model.Id" asp-route-quoteId="@post.Id">Quote</a>

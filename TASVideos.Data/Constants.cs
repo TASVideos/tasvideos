@@ -20,4 +20,9 @@
 		public const int VestedPostCount = 3; // Minimum number of posts to become an experienced forum user
 		public const int MinimumHoursBeforeJudgement = 72; // Minimum number of hours before a judge can set a submission to accepted/rejected
 	}
+
+	public static class ForumConstants
+	{
+		public const int PostsPerPage = 25;
+	}
 }
