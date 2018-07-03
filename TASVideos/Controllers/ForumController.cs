@@ -60,6 +60,22 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
+		public async Task<IActionResult> Post(int id)
+		{
+			var model = await _forumTasks.GetPostPosition(id, UserHas(PermissionTo.SeeRestrictedForums));
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return await Topic(new TopicRequest
+			{
+				Id = model.TopicId,
+				Highlight = id
+			});
+		}
+
+		[AllowAnonymous]
 		public async Task<IActionResult> Topic(TopicRequest request)
 		{
 			var model = await _forumTasks.GetTopicForDisplay(request, UserHas(PermissionTo.SeeRestrictedForums));
@@ -69,6 +85,15 @@ namespace TASVideos.Controllers
 				int? userId = User.Identity.IsAuthenticated
 					? int.Parse(_userManager.GetUserId(User))
 					: (int?)null;
+
+				if (request.Highlight.HasValue)
+				{
+					var post = model.Posts.SingleOrDefault(p => p.Id == request.Highlight);
+					if (post != null)
+					{
+						post.Highlight = true;
+					}
+				}
 
 				foreach (var post in model.Posts)
 				{
@@ -85,7 +110,7 @@ namespace TASVideos.Controllers
 					model.Poll.Question = RenderPost(model.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
 				}
 
-				return View(model);
+				return View(nameof(Topic), model);
 			}
 
 			return NotFound();

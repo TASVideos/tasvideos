@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
@@ -98,6 +99,31 @@ namespace TASVideos.Tasks
 
 				return model;
 			}
+		}
+
+		// TODO: document, returns page post is in, or null if post can not be found
+		public async Task<PostViewModel> GetPostPosition(int postId, bool seeRestricted)
+		{
+			var post = await _db.ForumPosts
+				.Where(p => seeRestricted || !p.Topic.Forum.Restricted)
+				.SingleOrDefaultAsync(p => p.Id == postId);
+
+			if (post == null)
+			{
+				return null;
+			}
+
+			var posts = await _db.ForumPosts
+				.Where(p => p.TopicId == post.Id)
+				.OrderBy(p => p.CreateTimeStamp)
+				.ToListAsync();
+
+			var position = posts.IndexOf(post);
+			return new PostViewModel
+			{
+				Page = (position / ForumConstants.PostsPerPage) + 1,
+				TopicId = post.TopicId ?? 0
+			};
 		}
 
 		/// <summary>

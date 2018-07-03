@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Models
@@ -57,12 +58,19 @@ namespace TASVideos.Models
 	{
 		public TopicRequest()
 		{
-			PageSize = 25;
+			PageSize = ForumConstants.PostsPerPage;
 			SortDescending = false;
 			SortBy = nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp);
 		}
 
 		public int Id { get; set; }
+		public int? Highlight { get; set; }
+	}
+
+	public class PostViewModel
+	{
+		public int Page { get; set; }
+		public int TopicId { get; set; }
 	}
 
 	public class ForumTopicModel
@@ -79,6 +87,7 @@ namespace TASVideos.Models
 		public class ForumPostEntry
 		{
 			public int Id { get; set; }
+			public bool Highlight { get; set; }
 			public int PosterId { get; set; }
 			public string PosterName { get; set; }
 			public string PosterAvatar { get; set; }
