@@ -102,6 +102,7 @@ namespace TASVideos.Models
 
 			public bool IsLastPost { get; set; }
 			public bool IsEditable { get; set; }
+			public bool IsDeletable { get; set; }
 		}
 
 		public class PollModel

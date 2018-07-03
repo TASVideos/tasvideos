@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -115,10 +116,10 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 
 			var content = (await output.GetChildContentAsync()).GetContent();
 			output.TagName = "span";
-			
+			var uniqueId = UniqueId();
 			output.Content.SetHtmlContent($@"
-<button type='button' class='btn btn-danger {existingCssClass}' data-toggle='modal' data-target='#areYouSureModal{context.UniqueId}'>{content}</button>
-<div id='areYouSureModal{context.UniqueId}' class='modal fade' role='dialog'>
+<button type='button' class='btn btn-danger {existingCssClass}' data-toggle='modal' data-target='#areYouSureModal{uniqueId}'>{content}</button>
+<div id='areYouSureModal{uniqueId}' class='modal fade' role='dialog'>
 	<div class='modal-dialog'>
 		<div class='modal-content'>
 			<div class='modal-header'>
@@ -136,6 +137,11 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 	</div>
 </div>
 ");
+		}
+
+		private string UniqueId()
+		{
+			return Guid.NewGuid().ToString().Replace("-", "");
 		}
 	}
 }
