@@ -91,7 +91,8 @@ namespace TASVideos.Data.SeedData
 		private static readonly PermissionTo[] ForumAdminPermissions = ForumModeratorPermissions.Concat(new[]
 		{
 			PermissionTo.EditForums,
-			PermissionTo.EditCategories
+			PermissionTo.EditCategories,
+			PermissionTo.DeleteForumPosts
 		}).ToArray();
 
 		public static readonly Role EditHomePage = new Role
