@@ -13,21 +13,35 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Services
 {
-	public class FileService
+	public interface IFileService
+	{
+		/// <summary>
+		/// Stores the file with the given name in the database, returning the assigned id.
+		/// </summary>
+		Task<FileDto> Store(string filename, byte[] contents, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Returns info about the file with the given id, or null if no such file exists.
+		/// </summary>
+		Task<FileDto> GetMetadata(int id, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Generates a FileStreamResult for the file with the given id that can be returned from a
+		/// controller. Returns null if the file does not exist.
+		/// </summary>
+		Task<FileStreamResult> GetFileStreamResult(int id, CancellationToken cancellationToken = default(CancellationToken));
+	}
+
+	public class FileService : IFileService
 	{
 		private readonly ApplicationDbContext _db;
-
-		public object UTF8 { get; private set; }
 
 		public FileService(ApplicationDbContext db)
 		{
 			_db = db;
 		}
 
-		/// <summary>
-		/// Stores the file with the given name in the database, returning the assigned id.
-		/// </summary>
-		public async Task<FileDto> StoreFile(
+		public async Task<FileDto> Store(
 			string filename,
 			byte[] contents,
 			CancellationToken cancellationToken = default(CancellationToken))
@@ -77,10 +91,7 @@ namespace TASVideos.Services
 			};
 		}
 
-		/// <summary>
-		/// Returns info about the file with the given id, or null if no such file exists.
-		/// </summary>
-		public async Task<FileDto> GetFileInfo(
+		public async Task<FileDto> GetMetadata(
 			int id,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -94,10 +105,6 @@ namespace TASVideos.Services
 				.SingleOrDefaultAsync(file => file.Id == id, cancellationToken);
 		}
 
-		/// <summary>
-		/// Generates a FileStreamResult for the file with the given id that can be returned from a
-		/// controller. Returns null if the file does not exist.
-		/// </summary>
 		public async Task<FileStreamResult> GetFileStreamResult(
 			int id,
 			CancellationToken cancellationToken = default(CancellationToken))
