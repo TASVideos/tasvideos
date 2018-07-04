@@ -78,6 +78,8 @@ namespace TASVideos
 				services.AddSingleton<ICacheService, NoCacheService>();
 			}
 
+			services.AddScoped<IFileService, FileService>();
+
 			services
 				.AddTasks()
 				.AddWikiProvider()
