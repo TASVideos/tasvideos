@@ -35,6 +35,10 @@
 	</div>
 	<div class="col-md-6">
 		<form-group>
+			<label asp-for="From" class="form-control-label"></label>
+			<div>@Html.DisplayFor(m => m.From)</div>
+		</form-group>
+		<form-group>
 			<label asp-for="LastLoggedInTimeStamp" class="form-control-label"></label>
 			<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
 		</form-group>

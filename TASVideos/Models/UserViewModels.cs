@@ -62,6 +62,10 @@ namespace TASVideos.Models
 		[DisplayName("Ratings Public?")]
 		public bool PublicRatings { get; set; }
 
+		[Display(Name = "Location")]
+		[DisplayFormat(NullDisplayText = "Not Set")]
+		public string From { get; set; }
+
 		[DisplayName("Current Roles")]
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 	}
