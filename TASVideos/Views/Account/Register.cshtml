@@ -3,15 +3,13 @@
 	// ReSharper disable CoercedEqualsUsing
 	ViewData["Title"] = "Register";
 }
-
 <h2>@ViewData["Title"]</h2>
-
-<row>
-	<div class="col-lg-4">
-		<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-			<h4>Create a new account.</h4>
-			<hr />
-			<div asp-validation-summary="All" class="text-danger"></div>
+<h4>Create a new account.</h4>
+<hr />
+<div asp-validation-summary="All" class="text-danger"></div>
+<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+	<row>
+		<div class="col-md-6">
 			<form-group>
 				<label asp-for="UserName"></label>
 				<input asp-for="UserName" class="form-control" />
@@ -23,10 +21,6 @@
 				<span asp-validation-for="Email" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="SelectedTimeZone"></label>
-				<timezone-picker asp-for="SelectedTimeZone" class="form-control" />
-			</form-group>
-			<form-group>
 				<label asp-for="Password"></label>
 				<input asp-for="Password" class="form-control" />
 				<span asp-validation-for="Password" class="text-danger"></span>
@@ -36,11 +30,23 @@
 				<input asp-for="ConfirmPassword" class="form-control" />
 				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 			</form-group>
-			<button type="submit" class="btn btn-secondary">Register</button>
-		</form>
+		</div>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="SelectedTimeZone"></label>
+				<timezone-picker asp-for="SelectedTimeZone" class="form-control" />
+			</form-group>
+			<form-group>
+				<label asp-for="From"></label>
+				<input asp-for="From" type="text" class="form-control" />
+				<span asp-validation-for="From" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<div class="text-center">
+		<button type="submit" class="btn btn-secondary">Register</button>
 	</div>
-</row>
-
+</form>
 <script>
 	(function () {
 		var selected = document
