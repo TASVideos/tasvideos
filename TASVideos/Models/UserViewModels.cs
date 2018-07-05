@@ -87,6 +87,7 @@ namespace TASVideos.Models
 
 		public bool EmailConfirmed { get; set; }
 
+		[Display(Name = "Locked Status")]
 		public bool IsLockedOut { get; set; }
 
 		public string OriginalUserName => UserName;
@@ -107,6 +108,9 @@ namespace TASVideos.Models
 
 		[DisplayName("Time Zone")]
 		public string TimezoneId { get; set; }
+
+		[Display(Name = "Location")]
+		public string From { get; set; }
 
 		[DisplayName("Selected Roles")]
 		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();

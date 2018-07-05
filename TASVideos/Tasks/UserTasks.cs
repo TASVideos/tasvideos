@@ -223,6 +223,8 @@ namespace TASVideos.Tasks
 			{
 				user.TimeZoneId = model.TimezoneId;
 			}
+
+			user.From = model.From;
 			
 			_db.UserRoles.RemoveRange(_db.UserRoles.Where(ur => ur.User == user));
 			await _db.SaveChangesAsync();

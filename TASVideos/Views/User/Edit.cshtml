@@ -7,62 +7,49 @@
 <hr />
 <form asp-route="Edit">
 	<row>
-		<form-group class="col-md-5">
-			<label asp-for="CreateTimeStamp" class="form-control-label"></label>
-			<div>@Model.CreateTimeStamp</div>
-		</form-group>
-		<form-group class="offset-md-2 col-md-5">
-			<label asp-for="LastLoggedInTimeStamp" class="form-control-label"></label>
-			<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
-		</form-group>
+		<div class="col-12">
+			<form-group condition="Model.IsLockedOut">
+				<label asp-for="IsLockedOut" class="form-control-label"></label>
+				<div>
+					<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
+					<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
+				</div>
+			</form-group>
+			<form-group condition="!Model.IsLockedOut">
+				<label asp-for="IsLockedOut" class="form-control-label"></label>
+				<div>
+					<span class="fa fa-check-square text-success"></span> Not locked
+				</div>
+			</form-group>
+		</div>
 	</row>
 	<row>
-		<form-group class="col-md-5">
-			@if (Model.IsLockedOut)
-			{
-				<row>
-					<label class="text-danger col-sm-4"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
-					<div class="col-sm-1">
-						<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
-					</div>
-				</row>
-			}
-			else
-			{
-				<row>
-					<div class="col-sm-4">
-						<span class="fa fa-check-square text-success"></span> Not locked
-					</div>
-				</row>
-			}
-		</form-group>
-		<form-group class="offset-md-2 col-md-5">
-			<label asp-for="TimezoneId"  class="form-control-label"></label>
-			<timezone-picker asp-for="TimezoneId" class="form-control"/>
-		</form-group>
-	</row>
-	<row>
-		<form-group class="col-md-5">
-			<label asp-for="UserName" class="form-control-label"></label>
-			@if (ViewData.UserHas(PermissionTo.EditUsersUserName))
-			{
-				<input asp-for="OriginalUserName" type="hidden"/>
-				<row>
-					<div id="user-name-div" class="col-sm-12">
-						<div class="input-group">
-							<input asp-for="UserName" class="form-control" autocomplete="off"/>
-							<div class="input-group-append">
-								<div class="input-group-text" aria-hidden="true">
-									<span id="user-name-status" class="fa fa-check-square text-success"></span>
+		<div class="col-md-5">
+			<form-group>
+				<label asp-for="CreateTimeStamp" class="form-control-label"></label>
+				<div>@Model.CreateTimeStamp</div>
+			</form-group>
+			<form-group>
+				<label asp-for="UserName" class="form-control-label"></label>
+				@if (ViewData.UserHas(PermissionTo.EditUsersUserName))
+				{
+					<input asp-for="OriginalUserName" type="hidden" />
+					<row>
+						<div id="user-name-div" class="col-sm-12">
+							<div class="input-group">
+								<input asp-for="UserName" class="form-control" autocomplete="off" />
+								<div class="input-group-append">
+									<div class="input-group-text" aria-hidden="true">
+										<span id="user-name-status" class="fa fa-check-square text-success"></span>
+									</div>
 								</div>
 							</div>
+							<span id="username-exists-message" class="d-none text-danger">User name already exists</span>
 						</div>
-						<span id="username-exists-message" class="d-none text-danger">User name already exists</span>
-					</div>
-					<div>
-						<button id="check-username" type="button" class="btn btn-secondary d-none">Check</button>
-					</div>
-					<script>
+						<div>
+							<button id="check-username" type="button" class="btn btn-secondary d-none">Check</button>
+						</div>
+						<script>
 						(function() {
 							var checkUserBtn = document.getElementById('check-username');
 							var userNameBox = document.getElementById('@nameof(Model.UserName)');
@@ -148,36 +135,52 @@
 								xmlhttp.send();
 							};
 						})();
-					</script>
-					<span asp-validation-for="UserName"></span>
-				</row>
-			}
-			else
-			{
-				<div>
-					<label class="form-control-label">@Model.UserName</label>
-				</div>
-			}
-		</form-group>
-		<form-group class="offset-md-2 col-md-5">
-			<label asp-for="Email" class="form-control-label"></label>
-			@if (Model.EmailConfirmed)
-			{
-				<div class="input-group">
-					<label class="form-control">@Model.Email</label>
-					<div class="input-group-append">
-						<span class="input-group-text" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
+						</script>
+						<span asp-validation-for="UserName"></span>
+					</row>
+				}
+				else
+				{
+					<div>
+						<label class="form-control-label">@Model.UserName</label>
 					</div>
-				</div>
-			}
-			else
-			{
-				<label class="form-control">@Model.Email</label>
-			}
-		</form-group>
+				}
+			</form-group>
+			<form-group>
+				<label asp-for="From" class="form-control-label"></label>
+				<input asp-for="From" type="text" class="form-control" />
+				<span asp-validation-for="From" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="offset-md-2 col-md-5">
+			<form-group>
+				<label asp-for="LastLoggedInTimeStamp" class="form-control-label"></label>
+				<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
+			</form-group>
+			<form-group>
+				<label asp-for="TimezoneId" class="form-control-label"></label>
+				<timezone-picker asp-for="TimezoneId" class="form-control" />
+			</form-group>
+			<form-group>
+				<label asp-for="Email" class="form-control-label"></label>
+				@if (Model.EmailConfirmed)
+				{
+					<div class="input-group">
+						<label class="form-control">@Model.Email</label>
+						<div class="input-group-append">
+							<span class="input-group-text" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
+						</div>
+					</div>
+				}
+				else
+				{
+					<label class="form-control">@Model.Email</label>
+				}
+			</form-group>
+		</div>
 	</row>
 	<two-column-select id-list="SelectedRoles" available-list="AvailableRoles" />
-	<hr/>
+	<hr />
 	<div class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
 		<a asp-action="List" class="btn btn-secondary">Cancel</a>
