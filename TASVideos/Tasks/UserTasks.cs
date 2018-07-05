@@ -234,11 +234,12 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
-		public async Task UpdateUserProfile(int id, string timezoneId, bool publicRatings)
+		public async Task UpdateUserProfile(int id, string timezoneId, bool publicRatings, string from)
 		{
 			var user = await _db.Users.SingleAsync(u => u.Id == id);
 			user.TimeZoneId = timezoneId;
 			user.PublicRatings = publicRatings;
+			user.From = from;
 			await _db.SaveChangesAsync();
 		}
 
