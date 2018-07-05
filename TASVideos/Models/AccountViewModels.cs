@@ -41,6 +41,10 @@ namespace TASVideos.Models
 		[Display(Name = "Confirm password")]
 		[Compare(nameof(Password), ErrorMessage = "The password and confirmation password do not match.")]
 		public string ConfirmPassword { get; set; }
+
+		[Display(Name = "Location")]
+		[StringLength(256)]
+		public string From { get; set; }
 	}
 
 	public class ResetPasswordViewModel

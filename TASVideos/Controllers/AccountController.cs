@@ -110,7 +110,8 @@ namespace TASVideos.Controllers
 				{
 					UserName = model.UserName,
 					Email = model.Email,
-					TimeZoneId = model.SelectedTimeZone
+					TimeZoneId = model.SelectedTimeZone,
+					From = model.From
 				};
 				var result = await _userManager.CreateAsync(user, model.Password);
 				if (result.Succeeded)
