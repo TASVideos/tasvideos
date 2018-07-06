@@ -29,7 +29,7 @@ namespace TASVideos.Filter
 
 			var userTasks = (UserTasks)context.HttpContext.RequestServices.GetService(typeof(UserTasks));
 
-			var userPerms = await userTasks.GetUserPermissionsByIdAsync(userId);
+			var userPerms = await userTasks.GetUserPermissionsById(userId);
 
 			string pageToEdit = "";
 			if (context.HttpContext.Request.Method == "GET" && context.HttpContext.Request.QueryString.Value.Contains("path="))

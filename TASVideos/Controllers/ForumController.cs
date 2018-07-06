@@ -48,7 +48,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Subforum(ForumRequest request)
 		{
-			var model = await _forumTasks.GetForumForDisplay(request, UserPermissions.Contains(PermissionTo.SeeRestrictedForums));
+			var model = await _forumTasks.GetForumForDisplay(request, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (model != null)
 			{
@@ -57,6 +57,22 @@ namespace TASVideos.Controllers
 			}
 
 			return NotFound();
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Post(int id)
+		{
+			var model = await _forumTasks.GetPostPosition(id, UserHas(PermissionTo.SeeRestrictedForums));
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return await Topic(new TopicRequest
+			{
+				Id = model.TopicId,
+				Highlight = id
+			});
 		}
 
 		[AllowAnonymous]
@@ -70,12 +86,23 @@ namespace TASVideos.Controllers
 					? int.Parse(_userManager.GetUserId(User))
 					: (int?)null;
 
+				if (request.Highlight.HasValue)
+				{
+					var post = model.Posts.SingleOrDefault(p => p.Id == request.Highlight);
+					if (post != null)
+					{
+						post.Highlight = true;
+					}
+				}
+
 				foreach (var post in model.Posts)
 				{
 					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
 					post.RenderedSignature = RenderPost(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
 					post.IsEditable = UserHas(PermissionTo.EditForumPosts)
 						|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
+					post.IsDeletable = UserHas(PermissionTo.DeleteForumPosts)
+						|| (userId.HasValue && post.PosterId == userId && post.IsLastPost);
 				}
 
 				if (model.Poll != null)
@@ -83,7 +110,7 @@ namespace TASVideos.Controllers
 					model.Poll.Question = RenderPost(model.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
 				}
 
-				return View(model);
+				return View(nameof(Topic), model);
 			}
 
 			return NotFound();
@@ -190,7 +217,7 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
-			if (model.IsLocked && !UserPermissions.Contains(PermissionTo.PostInLockedTopics))
+			if (model.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
 			{
 				return RedirectAccessDenied();
 			}
@@ -216,7 +243,7 @@ namespace TASVideos.Controllers
 				}
 			}
 
-			if (!UserPermissions.Contains(PermissionTo.PostInLockedTopics)
+			if (!UserHas(PermissionTo.PostInLockedTopics)
 				&& await _forumTasks.IsTopicLocked(model.TopicId))
 			{
 				return RedirectAccessDenied();
@@ -239,7 +266,7 @@ namespace TASVideos.Controllers
 
 			var userId = int.Parse(_userManager.GetUserId(User));
 
-			if (!UserPermissions.Contains(PermissionTo.EditForumPosts)
+			if (!UserHas(PermissionTo.EditForumPosts)
 				&& !(model.IsLastPost && model.PosterId == userId))
 			{
 				return RedirectAccessDenied();
@@ -260,7 +287,7 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			if (!UserPermissions.Contains(PermissionTo.EditForumPosts))
+			if (!UserHas(PermissionTo.EditForumPosts))
 			{
 				var userId = int.Parse(_userManager.GetUserId(User));
 				if (!(await _forumTasks.CanEdit(model.PostId, userId)))
@@ -282,6 +309,21 @@ namespace TASVideos.Controllers
 			await _forumTasks.EditPost(model);
 
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
+		}
+
+		[Authorize]
+		public async Task<IActionResult> DeletePost(int id)
+		{
+			var result = await _forumTasks.DeletePost(
+				id,
+				UserHas(PermissionTo.DeleteForumPosts),
+				UserHas(PermissionTo.SeeRestrictedForums));
+			if (result == null)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Topic), new { id = result });
 		}
 
 		[HttpPost]
@@ -327,6 +369,115 @@ namespace TASVideos.Controllers
 
 			await _forumTasks.MoveTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
 			return RedirectToAction(nameof(Topic), new { id = model.TopicId });
+		}
+
+		[RequirePermission(PermissionTo.SplitTopics)]
+		public async Task<IActionResult> SplitTopic(int id)
+		{
+			var model = await _forumTasks.GetTopicForSplit(id, UserHas(PermissionTo.SeeRestrictedForums));
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			foreach (var post in model.Posts)
+			{
+				post.Text = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
+			}
+
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.SplitTopics)]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> SplitTopic(SplitTopicModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var user = await _userManager.GetUserAsync(User);
+
+			var result = await _forumTasks.SplitTopic(
+				model,
+				UserHas(PermissionTo.SeeRestrictedForums),
+				user);
+
+			if (result == null)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Topic), new { id = result });
+		}
+
+		[RequirePermission(PermissionTo.EditForums)]
+		public async Task<IActionResult> EditCategory(int id)
+		{
+			var model = await _forumTasks.GetCategoryForEdit(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			foreach (var forum in model.Forums)
+			{
+				forum.Description = RenderHtml(forum.Description);
+			}
+
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.EditCategories)]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditCategory(CategoryEditModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var result = await _forumTasks.SaveCategory(model);
+
+			if (!result)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
+
+		[RequirePermission(PermissionTo.EditForums)]
+		public async Task<IActionResult> EditForum(int id)
+		{
+			var model = await _forumTasks.GetForumForEdit(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[RequirePermission(PermissionTo.EditForumPosts)]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditForum(ForumEditModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var result = await _forumTasks.SaveForum(model);
+			if (!result)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Subforum), new { id = model.Id });
 		}
 	}
 }

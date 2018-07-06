@@ -106,7 +106,8 @@ namespace TASVideos.Tasks
 						{
 							Publication = new
 							{
-								Id = gvalue.PublicationId, Title = gvalue.Publication.Title
+								Id = gvalue.PublicationId,
+								Title = gvalue.Publication.Title
 							},
 							Users = gvalue.Publication.Authors.Select(a => new
 							{

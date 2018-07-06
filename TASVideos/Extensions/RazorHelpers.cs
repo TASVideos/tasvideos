@@ -19,12 +19,12 @@ namespace TASVideos.Extensions
 			return $"{context.Request.Path}{context.Request.QueryString}";
 		}
 
-		public static bool UserHasPermission(this ViewDataDictionary viewData, PermissionTo permission)
+		public static bool UserHas(this ViewDataDictionary viewData, PermissionTo permission)
 		{
 			return ((IEnumerable<PermissionTo>)viewData["UserPermissions"]).Contains(permission);
 		}
 
-		public static bool UserHasAnyPermission(this ViewDataDictionary viewData, IEnumerable<PermissionTo> permissions)
+		public static bool UserHasAny(this ViewDataDictionary viewData, IEnumerable<PermissionTo> permissions)
 		{
 			return permissions.Any(permission => ((IEnumerable<PermissionTo>)viewData["UserPermissions"]).Contains(permission));
 		}

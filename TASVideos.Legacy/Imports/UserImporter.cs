@@ -24,9 +24,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosForumContext legacyForumContext)
 		{
 			// TODO:
-			// Import forum admin
 			// gender?
-			// timezone
 			// user_avatar_type ?
 			// mood avatars
 			// TODO: what to do about these??
@@ -59,12 +57,14 @@ namespace TASVideos.Legacy.Imports
 							u.Signature,
 							u.PublicRatings,
 							u.LastVisitDate,
+							u.TimeZoneOffset,
 							IsBanned = b != null,
-							IsModerator = ug != null
+							IsModerator = ug != null,
+							IsForumAdmin = u.UserLevel == 1
 						})
 						.ToList();
 
-			var moderators = users.Where(u => u.IsModerator).ToList();
+			var timeZones = TimeZoneInfo.GetSystemTimeZones();
 
 			var userEntities = users
 				.Select(u => new User
@@ -84,7 +84,9 @@ namespace TASVideos.Legacy.Imports
 					From = u.From,
 					Signature = ImportHelper.FixString(u.Signature),
 					PublicRatings = u.PublicRatings,
-					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate)
+					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
+					// ReSharper disable once CompareOfFloatsByEqualityOperator
+					TimeZoneId = timeZones.First(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset).StandardName
 				})
 				.ToList();
 
@@ -122,7 +124,16 @@ namespace TASVideos.Legacy.Imports
 						}
 					}
 
-					if (user.User.IsModerator
+					if (user.User.IsForumAdmin
+						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
+					{
+						context.UserRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumAdmin).Id,
+							UserId = user.User.Id
+						});
+					}
+					else if (user.User.IsModerator
 						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
 					{
 						context.UserRoles.Add(new UserRole
@@ -224,7 +235,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.From),
 				nameof(User.Signature),
 				nameof(User.PublicRatings),
-				nameof(User.LastLoggedInTimeStamp)
+				nameof(User.LastLoggedInTimeStamp),
+				nameof(User.TimeZoneId)
 			};
 
 			var userRoleColumns = new[]

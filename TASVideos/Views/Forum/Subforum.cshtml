@@ -19,7 +19,8 @@
 	}
 }
 <partial Name="_ForumHeader" />
-<a condition="ViewData.UserHasPermission(PermissionTo.CreateForumTopics)" asp-action="CreateTopic" asp-route-forumId="@Model.Id" class="pull-right btn btn-primary"><span class="fa fa-plus"></span> New Topic</a>
+<a condition="ViewData.UserHas(PermissionTo.EditForums)" asp-action="EditForum" asp-route-id="@Model.Id" class="pull-right btn btn-primary btn-sm">Edit</a>
+<a condition="ViewData.UserHas(PermissionTo.CreateForumTopics)" asp-action="CreateTopic" asp-route-forumId="@Model.Id" class="mr-2 pull-right btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
 <h4><a asp-action="Index">Forum</a> -> @Model.Name</h4>
 <div>
 	<small>@Html.Raw(Model.Description)</small>

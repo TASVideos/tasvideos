@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Models
@@ -57,12 +58,19 @@ namespace TASVideos.Models
 	{
 		public TopicRequest()
 		{
-			PageSize = 25;
+			PageSize = ForumConstants.PostsPerPage;
 			SortDescending = false;
 			SortBy = nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp);
 		}
 
 		public int Id { get; set; }
+		public int? Highlight { get; set; }
+	}
+
+	public class PostViewModel
+	{
+		public int Page { get; set; }
+		public int TopicId { get; set; }
 	}
 
 	public class ForumTopicModel
@@ -79,6 +87,7 @@ namespace TASVideos.Models
 		public class ForumPostEntry
 		{
 			public int Id { get; set; }
+			public bool Highlight { get; set; }
 			public int PosterId { get; set; }
 			public string PosterName { get; set; }
 			public string PosterAvatar { get; set; }
@@ -102,6 +111,7 @@ namespace TASVideos.Models
 
 			public bool IsLastPost { get; set; }
 			public bool IsEditable { get; set; }
+			public bool IsDeletable { get; set; }
 		}
 
 		public class PollModel
@@ -248,5 +258,79 @@ namespace TASVideos.Models
 		public string ForumName { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
+	}
+
+	public class ForumEditModel
+	{
+		public int Id { get; set; }
+
+		[Required]
+		public string Name { get; set; }
+
+		[Required]
+		public string Description { get; set; }
+	}
+
+	public class CategoryEditModel
+	{
+		public int Id { get; set; }
+
+		[Required]
+		[StringLength(30)]
+		public string Title { get; set; }
+
+		public string Description { get; set; }
+
+		public IList<ForumEditModel> Forums { get; set; } = new List<ForumEditModel>();
+
+		public class ForumEditModel
+		{
+			public int Id { get; set; }
+
+			[Required]
+			[StringLength(50)]
+			public string Name { get; set; }
+
+			public string Description { get; set; }
+			public int Ordinal { get; set; }
+		}
+	}
+
+	public class SplitTopicModel
+	{
+		public int Id { get; set; }
+
+		[Required]
+		[Display(Name = "Split On Post")]
+		public int? PostToSplitId { get; set; }
+
+		[Display(Name = "Create New Topic In")]
+		public int SplitToForumId { get; set; }
+
+		[Required]
+		[Display(Name = "New Topic Name")]
+		public string SplitTopicName { get; set; }
+
+		public string Title { get; set; }
+
+		public int ForumId { get; set; }
+		public string ForumName { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
+
+		public IEnumerable<Post> Posts { get; set; } = new List<Post>();
+
+		public class Post
+		{
+			public int Id { get; set; }
+			public DateTime PostCreateTimeStamp { get; set; }
+			public bool EnableHtml { get; set; }
+			public bool EnableBbCode { get; set; }
+			public string Subject { get; set; }
+			public string Text { get; set; }
+			public int PosterId { get; set; }
+			public string PosterName { get; set; }
+			public string PosterAvatar { get; set; }
+		}
 	}
 }

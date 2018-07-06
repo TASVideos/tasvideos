@@ -21,6 +21,9 @@ namespace TASVideos.Models
 		[Display(Name = "Allow Movie Ratings to be public?")]
 		public bool PublicRatings { get; set; }
 
+		[Display(Name = "Location")]
+		public string From { get; set; }
+
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 	}
 
