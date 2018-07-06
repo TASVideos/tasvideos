@@ -62,6 +62,10 @@ namespace TASVideos.Models
 		[DisplayName("Ratings Public?")]
 		public bool PublicRatings { get; set; }
 
+		[Display(Name = "Location")]
+		[DisplayFormat(NullDisplayText = "Not Set")]
+		public string From { get; set; }
+
 		[DisplayName("Current Roles")]
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 	}
@@ -83,6 +87,7 @@ namespace TASVideos.Models
 
 		public bool EmailConfirmed { get; set; }
 
+		[Display(Name = "Locked Status")]
 		public bool IsLockedOut { get; set; }
 
 		public string OriginalUserName => UserName;
@@ -103,6 +108,9 @@ namespace TASVideos.Models
 
 		[DisplayName("Time Zone")]
 		public string TimezoneId { get; set; }
+
+		[Display(Name = "Location")]
+		public string From { get; set; }
 
 		[DisplayName("Selected Roles")]
 		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();

@@ -143,20 +143,40 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to edit post created by another user.")]
 		EditForumPosts = 400,
 
+		[Display(Name = "Delete Forum Posts")]
+		[Group("Forum Moderation")]
+		[Description("The ability to delete post created by another user.")]
+		DeleteForumPosts = 401,
+
 		[Display(Name = "Lock Topics")]
 		[Group("Forum Administration")]
 		[Description("The ability to lock and unlock forum topics.")]
-		LockTopics = 401,
+		LockTopics = 402,
 
 		[Display(Name = "Post In Locked Topics")]
 		[Group("Forum Administration")]
 		[Description("The ability to create a post in a topic that is currently locked.")]
-		PostInLockedTopics = 402,
+		PostInLockedTopics = 403,
 
 		[Display(Name = "Move Topics")]
 		[Group("Forum Administration")]
 		[Description("The ability to move a topic from one forum to another.")]
-		MoveTopics = 403,
+		MoveTopics = 404,
+
+		[Display(Name = "Split Topic")]
+		[Group("Forum Administration")]
+		[Description("The ability to split a subset of posts from a topic and create a new topic")]
+		SplitTopics = 405,
+
+		[Display(Name = "Edit Forums")]
+		[Group("Forum Administration")]
+		[Description("The ability to create or edit a forum.")]
+		EditForums = 406,
+
+		[Display(Name = "Edit Categories")]
+		[Group("Forum Administration")]
+		[Description("The ability to edit forum categories")]
+		EditCategories = 407,
 
 		[Display(Name = "See Restricted Froums")]
 		[Group("Forum Administration")]

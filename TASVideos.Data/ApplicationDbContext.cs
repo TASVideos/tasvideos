@@ -65,6 +65,8 @@ namespace TASVideos.Data
 
 		public DbSet<PrivateMessage> PrivateMessages { get; set; }
 
+		public DbSet<DatabaseFile> Files { get; set; }
+
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
 			PerformTrackingUpdates();

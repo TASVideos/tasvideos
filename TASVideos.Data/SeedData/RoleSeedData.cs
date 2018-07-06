@@ -24,6 +24,7 @@ namespace TASVideos.Data.SeedData
 		public const string Publisher = "Publisher";
 		public const string SeniorPublisher = "Senior Publisher";
 		public const string ForumModerator = "Forum Moderator";
+		public const string ForumAdmin = "Forum Admin";
 	}
 
 	public class RoleSeedData
@@ -86,6 +87,13 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.LockTopics,
 			PermissionTo.MoveTopics
 		};
+
+		private static readonly PermissionTo[] ForumAdminPermissions = ForumModeratorPermissions.Concat(new[]
+		{
+			PermissionTo.EditForums,
+			PermissionTo.EditCategories,
+			PermissionTo.DeleteForumPosts
+		}).ToArray();
 
 		public static readonly Role EditHomePage = new Role
 		{
@@ -286,27 +294,36 @@ namespace TASVideos.Data.SeedData
 			RoleLinks = new List<RoleLink>()
 		};
 
-		public static IEnumerable<Role> AllRoles
+		public static readonly Role ForumAdmin = new Role
 		{
-			get
+			Name = RoleSeedNames.ForumAdmin,
+			Description = "Form Administrators manage forums and permissions. Administrators can also assign Moderators.",
+			RolePermission = ForumAdminPermissions.Select(p => new RolePermission
 			{
-				return new[]
-				{
-					EditHomePage,
-					SubmitMovies,
-					ForumUser,
-					ExperiencedForumUser,
-					Admin,
-					AdminAssistant,
-					Editor,
-					VestedEditor,
-					Judge,
-					SeniorJudge,
-					Publisher,
-					SeniorPublisher,
-					ForumModerator
-				};
-			}
-		}
+				Role = ForumAdmin,
+				PermissionId = p,
+				CanAssign = ForumModeratorPermissions.Contains(p)
+			}).ToArray(),
+			RoleLinks = new List<RoleLink>()
+		};
+
+		public static IEnumerable<Role> AllRoles =>
+			new[]
+			{
+				EditHomePage,
+				SubmitMovies,
+				ForumUser,
+				ExperiencedForumUser,
+				Admin,
+				AdminAssistant,
+				Editor,
+				VestedEditor,
+				Judge,
+				SeniorJudge,
+				Publisher,
+				SeniorPublisher,
+				ForumModerator,
+				ForumAdmin
+			};
 	}
 }

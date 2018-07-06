@@ -82,6 +82,7 @@ namespace TASVideos.Controllers
 				IsEmailConfirmed = user.EmailConfirmed,
 				PublicRatings = user.PublicRatings,
 				StatusMessage = StatusMessage,
+				From = user.From,
 				Roles = await UserTasks.GetUserRoles(user.Id)
 			};
 
@@ -111,7 +112,7 @@ namespace TASVideos.Controllers
 
 			if (model.TimeZoneId != user.TimeZoneId || model.PublicRatings != user.PublicRatings)
 			{
-				await UserTasks.UpdateUserProfile(user.Id, model.TimeZoneId, model.PublicRatings);
+				await UserTasks.UpdateUserProfile(user.Id, model.TimeZoneId, model.PublicRatings, model.From);
 			}
 
 			StatusMessage = "Your profile has been updated";

@@ -21,10 +21,10 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="7.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.0" PrivateAssets="All" />
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,19 +42,21 @@
     <ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
     <ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <Compile Remove="Views\ForumPost\**" />
-    <Content Remove="Views\ForumPost\**" />
-    <EmbeddedResource Remove="Views\ForumPost\**" />
-    <None Remove="Views\ForumPost\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Content Update="Views\Forum\EditForum.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Forum\SplitTopic.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Forum\MoveTopic.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Forum\EditPost.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Forum\EditCategory.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Forum\_Poll.cshtml">

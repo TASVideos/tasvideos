@@ -55,7 +55,7 @@ namespace TASVideos.Controllers
 				ViewData["Title"] = existingPage.PageName;
 				ViewData["Layout"] = "/Views/Shared/_WikiLayout.cshtml";
 				_wikiMarkupFileProvider.WikiTasks = _wikiTasks;
-				return View(Razor.WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
+				return View(WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 
 			// Account for garbage revision values

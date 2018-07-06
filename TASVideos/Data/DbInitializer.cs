@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
-using TASVideos.Extensions;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Data
@@ -138,7 +137,7 @@ namespace TASVideos.Data
 			context.WikiPages.Add(PublicationSampleData.FrontPage);
 			context.Games.Add(PublicationSampleData.Smb3);
 			context.Roms.Add(PublicationSampleData.Smb3Rom);
-			context.Submissions.Add(PublicationSampleData.MiroMotoSubmission);
+			context.Submissions.Add(PublicationSampleData.MorimotoSubmission);
 			context.Publications.Add(PublicationSampleData.MorimotoSmb3Pub);
 			context.PublicationFlags.AddRange(PublicationSampleData.MorimotoSmb3PublicationFlags);
 

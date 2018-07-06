@@ -9,7 +9,7 @@
 	bool pageExists = await WikiTasks.PageExists(homePage);
 }
 <br />
-@if (ViewData.UserHasPermission(PermissionTo.EditHomePage))
+@if (ViewData.UserHas(PermissionTo.EditHomePage))
 {
 	<div class="text-center">
 		<a class="btn btn-primary" asp-controller="Wiki" asp-action="Edit" asp-route-path="@homePage">Edit</a>
@@ -28,7 +28,7 @@ else
 {
 	@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = homePage })
 }
-else if (ViewData.UserHasPermission(PermissionTo.EditHomePage))
+else if (ViewData.UserHas(PermissionTo.EditHomePage))
 {
 	<info-alert>
 		<h4>Page does not yet exist</h4>

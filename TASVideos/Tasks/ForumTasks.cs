@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
@@ -98,6 +99,31 @@ namespace TASVideos.Tasks
 
 				return model;
 			}
+		}
+
+		// TODO: document, returns page post is in, or null if post can not be found
+		public async Task<PostViewModel> GetPostPosition(int postId, bool seeRestricted)
+		{
+			var post = await _db.ForumPosts
+				.Where(p => seeRestricted || !p.Topic.Forum.Restricted)
+				.SingleOrDefaultAsync(p => p.Id == postId);
+
+			if (post == null)
+			{
+				return null;
+			}
+
+			var posts = await _db.ForumPosts
+				.Where(p => p.TopicId == post.Id)
+				.OrderBy(p => p.CreateTimeStamp)
+				.ToListAsync();
+
+			var position = posts.IndexOf(post);
+			return new PostViewModel
+			{
+				Page = (position / ForumConstants.PostsPerPage) + 1,
+				TopicId = post.TopicId ?? 0
+			};
 		}
 
 		/// <summary>
@@ -557,6 +583,237 @@ namespace TASVideos.Tasks
 				topic.ForumId = model.ForumId;
 				await _db.SaveChangesAsync();
 			}
+		}
+
+		public async Task<SplitTopicModel> GetTopicForSplit(int topicId, bool allowRestricted)
+		{
+			var model = await _db.ForumTopics
+				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.Where(t => t.Id == topicId)
+				.Select(t => new SplitTopicModel
+				{
+					Id = t.Id,
+					Title = t.Title,
+					SplitTopicName = "(Split from " + t.Title + ")",
+					SplitToForumId = t.Forum.Id,
+					ForumId = t.Forum.Id,
+					ForumName = t.Forum.Name,
+					Posts = t.ForumPosts
+						.Select(p => new SplitTopicModel.Post
+						{
+							Id = p.Id,
+							PostCreateTimeStamp = p.CreateTimeStamp,
+							EnableBbCode = p.EnableBbCode,
+							EnableHtml = p.EnableHtml,
+							Subject = p.Subject,
+							Text = p.Text,
+							PosterId = p.PosterId,
+							PosterName = p.Poster.UserName,
+							PosterAvatar = p.Poster.Avatar
+						})
+						.ToList()
+				})
+				.SingleOrDefaultAsync();
+
+			if (model != null)
+			{
+				model.AvailableForums = await _db.Forums
+					.Where(f => allowRestricted || !f.Restricted)
+					.Select(f => new SelectListItem
+					{
+						Text = f.Name,
+						Value = f.Id.ToString(),
+						Selected = f.Id == model.ForumId
+					})
+					.ToListAsync();
+			}
+
+			return model;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns>Returns new topic id, if old topic, split post, and new forum are found, else null</returns>
+		public async Task<int?> SplitTopic(SplitTopicModel model, bool allowRestricted, User user)
+		{
+			var topic = await _db.ForumTopics
+				.Include(t => t.Forum)
+				.Include(t => t.ForumPosts)
+				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.SingleOrDefaultAsync(t => t.Id == model.Id);
+
+			if (topic == null)
+			{
+				return null;
+			}
+
+			var destinationForum = _db.Forums
+				.Where(f => allowRestricted || !f.Restricted)
+				.SingleOrDefaultAsync(f => f.Id == model.SplitToForumId);
+
+			if (destinationForum == null)
+			{
+				return null;
+			}
+
+			var splitOnPost = topic.ForumPosts
+				.SingleOrDefault(p => p.Id == model.PostToSplitId);
+
+			if (splitOnPost == null)
+			{
+				return null;
+			}
+
+			var newTopic = new ForumTopic
+			{
+				Type = ForumTopicType.Regular,
+				Title = model.SplitTopicName,
+				PosterId = user.Id,
+				Poster = user,
+				ForumId = model.SplitToForumId
+			};
+
+			_db.ForumTopics.Add(newTopic);
+			await _db.SaveChangesAsync();
+
+			var splitPosts = topic.ForumPosts
+				.Where(p => p.Id == splitOnPost.Id
+					|| p.CreateTimeStamp > splitOnPost.CreateTimeStamp);
+
+			foreach (var post in splitPosts)
+			{
+				post.TopicId = newTopic.Id;
+			}
+
+			await _db.SaveChangesAsync();
+			return newTopic.Id;
+		}
+
+		public async Task<ForumEditModel> GetForumForEdit(int forumId)
+		{
+			return await _db.Forums
+				.Where(f => f.Id == forumId)
+				.Select(f => new ForumEditModel
+				{
+					Id = f.Id,
+					Name = f.Name,
+					Description = f.Description,
+				})
+				.SingleOrDefaultAsync();
+		}
+
+		/// <summary>
+		/// Saves the given forum data to the category with the given id
+		/// </summary>
+		/// <returns>True if a forum with the given id is found, else false</returns>
+		public async Task<bool> SaveForum(ForumEditModel model)
+		{
+			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == model.Id);
+			if (forum == null)
+			{
+				return false;
+			}
+
+			forum.Name = model.Name;
+			forum.Description = model.Description;
+
+			await _db.SaveChangesAsync();
+			return true;
+		}
+
+		public async Task<CategoryEditModel> GetCategoryForEdit(int categoryId)
+		{
+			return await _db.ForumCategories
+				.Where(c => c.Id == categoryId)
+				.Select(c => new CategoryEditModel
+				{
+					Id = c.Id,
+					Title = c.Title,
+					Description = c.Description,
+					Forums = c.Forums
+						.OrderBy(f => f.Ordinal)
+						.Select(f => new CategoryEditModel.ForumEditModel
+						{
+							Id = f.Id,
+							Name = f.Name,
+							Description = f.Description,
+							Ordinal = f.Ordinal
+						})
+						.ToList()
+				})
+				.SingleOrDefaultAsync();
+		}
+
+		/// <summary>
+		/// Saves the given category data to the category with the given id
+		/// </summary>
+		/// <returns>True if a category with the given id is found, else false</returns>
+		public async Task<bool> SaveCategory(CategoryEditModel model)
+		{
+			var category = await _db.ForumCategories
+				.Include(c => c.Forums)
+				.SingleOrDefaultAsync(c => c.Id == model.Id);
+
+			if (category == null)
+			{
+				return false;
+			}
+
+			category.Title = model.Title;
+			category.Description = model.Description;
+
+			foreach (var forum in category.Forums)
+			{
+				// This is a n squared problem but we don't anticipate enough forums in a single category to be a performance issue
+				// This could be optimized away by joining model.Forums against category.Forums then looping
+				var forumModel = model.Forums.Single(f => f.Id == forum.Id);
+				forum.Ordinal = forumModel.Ordinal;
+			}
+
+			await _db.SaveChangesAsync();
+
+			return true;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="postId"></param>
+		/// <returns>the topic id that contained the post if post is successfully deleted, if user can not delete the post or a post of the given id is not found then null</returns>
+		public async Task<int?> DeletePost(int postId, bool canDelete, bool canSeeRestricted)
+		{
+			var post = await _db.ForumPosts
+				// TODO: add includes?
+				.Where(p => canSeeRestricted || !p.Topic.Forum.Restricted)
+				.SingleOrDefaultAsync(p => p.Id == postId);
+
+
+			if (post == null)
+			{
+				return null;
+			}
+
+			if (!canDelete)
+			{
+				// Check if last post
+				var lastPost = _db.ForumPosts
+					.Where(p => p.TopicId == post.TopicId)
+					.OrderByDescending(p => p.CreateTimeStamp)
+					.First();
+
+				bool isLastPost = lastPost.Id == post.Id;
+				if (!isLastPost)
+				{
+					return null;
+				}
+			}
+
+			_db.ForumPosts.Remove(post);
+			await _db.SaveChangesAsync();
+
+			return post.TopicId;
 		}
 	}
 }

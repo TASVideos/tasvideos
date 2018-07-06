@@ -6,56 +6,38 @@
 <h4>@ViewData["Title"]</h4>
 <hr />
 <form asp-route="Edit">
-	<form-group>
-		<row>
-			<div class="col-md-5">
+	<row>
+		<div class="col-12">
+			<form-group condition="Model.IsLockedOut">
+				<label asp-for="IsLockedOut" class="form-control-label"></label>
+				<div>
+					<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
+					<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
+				</div>
+			</form-group>
+			<form-group condition="!Model.IsLockedOut">
+				<label asp-for="IsLockedOut" class="form-control-label"></label>
+				<div>
+					<span class="fa fa-check-square text-success"></span> Not locked
+				</div>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-md-5">
+			<form-group>
 				<label asp-for="CreateTimeStamp" class="form-control-label"></label>
 				<div>@Model.CreateTimeStamp</div>
-			</div>
-			<div class="offset-md-2 col-md-5">
-				<label asp-for="LastLoggedInTimeStamp" class="form-control-label"></label>
-				<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
-			</div>
-		</row>
-	</form-group>
-	<form-group>
-		<row>
-			<div class="col-md-5">
-				@if (Model.IsLockedOut)
-				{
-					<row>
-						<label class="text-danger col-sm-4"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
-						<div class="col-sm-1">
-							<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
-						</div>
-					</row>
-				}
-				else
-				{
-					<row>
-						<div class="col-sm-4">
-							<span class="fa fa-check-square text-success"></span> Not locked
-						</div>
-					</row>
-				}
-			</div>
-			<div class="offset-md-2 col-md-5">
-				<label asp-for="TimezoneId"  class="form-control-label"></label>
-				<timezone-picker asp-for="TimezoneId" class="form-control"/>
-			</div>
-		</row>
-	</form-group>
-	<form-group>
-		<row>
-			<form-group class="col-md-5">
+			</form-group>
+			<form-group>
 				<label asp-for="UserName" class="form-control-label"></label>
-				@if (ViewData.UserHasPermission(PermissionTo.EditUsersUserName))
+				@if (ViewData.UserHas(PermissionTo.EditUsersUserName))
 				{
-					<input asp-for="OriginalUserName" type="hidden"/>
+					<input asp-for="OriginalUserName" type="hidden" />
 					<row>
 						<div id="user-name-div" class="col-sm-12">
 							<div class="input-group">
-								<input asp-for="UserName" class="form-control" autocomplete="off"/>
+								<input asp-for="UserName" class="form-control" autocomplete="off" />
 								<div class="input-group-append">
 									<div class="input-group-text" aria-hidden="true">
 										<span id="user-name-status" class="fa fa-check-square text-success"></span>
@@ -68,91 +50,91 @@
 							<button id="check-username" type="button" class="btn btn-secondary d-none">Check</button>
 						</div>
 						<script>
-							(function() {
-								var checkUserBtn = document.getElementById('check-username');
-								var userNameBox = document.getElementById('@nameof(Model.UserName)');
-								var userNameStatus = document.getElementById('user-name-status');
-								var userNameExistsMessage = document.getElementById('username-exists-message');
-								var originalUserNameBox = document.getElementById('@nameof(Model.OriginalUserName)');
-								var userNameDiv = document.getElementById('user-name-div');
+						(function() {
+							var checkUserBtn = document.getElementById('check-username');
+							var userNameBox = document.getElementById('@nameof(Model.UserName)');
+							var userNameStatus = document.getElementById('user-name-status');
+							var userNameExistsMessage = document.getElementById('username-exists-message');
+							var originalUserNameBox = document.getElementById('@nameof(Model.OriginalUserName)');
+							var userNameDiv = document.getElementById('user-name-div');
 
-								userNameBox.onkeyup = onUserNameBoxChange;
-								userNameBox.onchange = onUserNameBoxChange;
+							userNameBox.onkeyup = onUserNameBoxChange;
+							userNameBox.onchange = onUserNameBoxChange;
 
-								function onUserNameBoxChange() {
-									if (userNameBox.value === originalUserNameBox.value) {
-										hideCheckNameBtn();
-										markUserNameGood();
-									} else {
-										showCheckNameBtn();
-										markUserNameUnknown();
-									}
+							function onUserNameBoxChange() {
+								if (userNameBox.value === originalUserNameBox.value) {
+									hideCheckNameBtn();
+									markUserNameGood();
+								} else {
+									showCheckNameBtn();
+									markUserNameUnknown();
+								}
+							}
+
+							function showCheckNameBtn() {
+								checkUserBtn.classList.remove('d-none');
+								checkUserBtn.parentNode.classList.add('col-sm-2');
+								userNameDiv.classList.remove('col-sm-12');
+								userNameDiv.classList.add('col-sm-10');
+							}
+
+							function hideCheckNameBtn() {
+								checkUserBtn.classList.add("div-none");
+								checkUserBtn.parentNode.classList.remove('col-sm-2');
+								userNameDiv.classList.remove('col-sm-10');
+								userNameDiv.classList.add('col-sm-12');
+							}
+
+							function markUserNameUnknown() {
+								userNameStatus.classList.remove('fa-check-square', 'text-success');
+								userNameStatus.classList.remove('fa-exclamation-triangle', 'text-danger');
+								userNameStatus.classList.add('fa-question-circle', 'text-primary');
+								userNameExistsMessage.classList.add('d-none');
+								document.getElementById('submit-btn').disabled = true;
+							}
+
+							function markUserNameGood() {
+								userNameStatus.classList.add('fa-check-square', 'text-success');
+								userNameStatus.classList.remove('fa-exclamation-triangle', 'text-danger');
+								userNameStatus.classList.remove('fa-question-circle', 'text-primary');
+								userNameExistsMessage.classList.add('d-none');
+								document.getElementById('submit-btn').disabled = false;
+							}
+
+							function markUserNameBad() {
+								userNameStatus.classList.remove('fa-check-square', 'text-success');
+								userNameStatus.classList.add('fa-exclamation-triangle', 'text-danger');
+								userNameStatus.classList.remove('fa-question-circle', 'text-primary');
+								userNameExistsMessage.classList.remove('d-none');
+								document.getElementById('submit-btn').disabled = true;
+							}
+
+							checkUserBtn.onclick = function() {
+								if (originalUserNameBox.value === userNameBox.value) {
+									markUserNameGood();
+									return;
 								}
 
-								function showCheckNameBtn() {
-									checkUserBtn.classList.remove('d-none');
-									checkUserBtn.parentNode.classList.add('col-sm-2');
-									userNameDiv.classList.remove('col-sm-12');
-									userNameDiv.classList.add('col-sm-10');
-								}
+								var xmlhttp = new XMLHttpRequest();
 
-								function hideCheckNameBtn() {
-									checkUserBtn.classList.add("div-none");
-									checkUserBtn.parentNode.classList.remove('col-sm-2');
-									userNameDiv.classList.remove('col-sm-10');
-									userNameDiv.classList.add('col-sm-12');
-								}
-
-								function markUserNameUnknown() {
-									userNameStatus.classList.remove('fa-check-square', 'text-success');
-									userNameStatus.classList.remove('fa-exclamation-triangle', 'text-danger');
-									userNameStatus.classList.add('fa-question-circle', 'text-primary');
-									userNameExistsMessage.classList.add('d-none');
-									document.getElementById('submit-btn').disabled = true;
-								}
-
-								function markUserNameGood() {
-									userNameStatus.classList.add('fa-check-square', 'text-success');
-									userNameStatus.classList.remove('fa-exclamation-triangle', 'text-danger');
-									userNameStatus.classList.remove('fa-question-circle', 'text-primary');
-									userNameExistsMessage.classList.add('d-none');
-									document.getElementById('submit-btn').disabled = false;
-								}
-
-								function markUserNameBad() {
-									userNameStatus.classList.remove('fa-check-square', 'text-success');
-									userNameStatus.classList.add('fa-exclamation-triangle', 'text-danger');
-									userNameStatus.classList.remove('fa-question-circle', 'text-primary');
-									userNameExistsMessage.classList.remove('d-none');
-									document.getElementById('submit-btn').disabled = true;
-								}
-
-								checkUserBtn.onclick = function() {
-									if (originalUserNameBox.value === userNameBox.value) {
-										markUserNameGood();
-										return;
-									}
-
-									var xmlhttp = new XMLHttpRequest();
-
-									xmlhttp.onreadystatechange = function() {
-										if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-											if (xmlhttp.status === 200) {
-												if (xmlhttp.responseText === "true") {
-													markUserNameBad();
-												} else {
-													markUserNameGood();
-												}
+								xmlhttp.onreadystatechange = function() {
+									if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+										if (xmlhttp.status === 200) {
+											if (xmlhttp.responseText === "true") {
+												markUserNameBad();
+											} else {
+												markUserNameGood();
 											}
 										}
-									};
-
-									xmlhttp.open("GET",
-										"/User/@(nameof(UserController.VerifyUserNameIsUnique))?userName=" + userNameBox.value,
-										true);
-									xmlhttp.send();
+									}
 								};
-							})();
+
+								xmlhttp.open("GET",
+									"/User/@(nameof(UserController.VerifyUserNameIsUnique))?userName=" + userNameBox.value,
+									true);
+								xmlhttp.send();
+							};
+						})();
 						</script>
 						<span asp-validation-for="UserName"></span>
 					</row>
@@ -164,7 +146,22 @@
 					</div>
 				}
 			</form-group>
-			<form-group class="offset-md-2 col-md-5">
+			<form-group>
+				<label asp-for="From" class="form-control-label"></label>
+				<input asp-for="From" type="text" class="form-control" />
+				<span asp-validation-for="From" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="offset-md-2 col-md-5">
+			<form-group>
+				<label asp-for="LastLoggedInTimeStamp" class="form-control-label"></label>
+				<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
+			</form-group>
+			<form-group>
+				<label asp-for="TimezoneId" class="form-control-label"></label>
+				<timezone-picker asp-for="TimezoneId" class="form-control" />
+			</form-group>
+			<form-group>
 				<label asp-for="Email" class="form-control-label"></label>
 				@if (Model.EmailConfirmed)
 				{
@@ -180,12 +177,10 @@
 					<label class="form-control">@Model.Email</label>
 				}
 			</form-group>
-		</row>
-	</form-group>
-	<form-group>
-		<two-column-select id-list="SelectedRoles" available-list="AvailableRoles" />
-	</form-group>
-	<hr/>
+		</div>
+	</row>
+	<two-column-select id-list="SelectedRoles" available-list="AvailableRoles" />
+	<hr />
 	<div class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
 		<a asp-action="List" class="btn btn-secondary">Cancel</a>

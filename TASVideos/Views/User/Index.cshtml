@@ -3,45 +3,21 @@
 	ViewData["Title"] = $"Details for User: {Model.UserName}";
 }
 
-<a condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
+<a condition="@ViewData.UserHas(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
 <h4>@ViewData["Title"]</h4>
 <hr />
 
-<form-group>
-	<row>
-		<div class="col-md-6">
+<row>
+	<div class="col-md-6">
+		<form-group>
 			<label asp-for="CreateTimeStamp" class="form-control-label"></label>
 			<div>@Model.CreateTimeStamp</div>
-		</div>
-		<div class="col-md-6">
-			<label asp-for="LastLoggedInTimeStamp" class="form-control-label"></label>
-			<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
-		</div>
-	</row>
-</form-group>
-
-<form-group>
-	<row>
-		<div class="col-md-6" condition="@ViewData.UserHasPermission(PermissionTo.EditUsers)">
+		</form-group>
+		<form-group condition="@ViewData.UserHas(PermissionTo.EditUsers)">
 			<label asp-for="Email" class="form-control-label"></label>
 			<div>@Model.Email</div>
-		</div>
-		<div class="col-md-6">
-			<label asp-for="EmailConfirmed" class="form-control-label"></label>
-			@if (Model.EmailConfirmed)
-			{
-				<div><span class="fa fa-check-square text-success"></span> Yes</div>
-			}
-			else
-			{
-				<div><span class="fa fa-exclamation-triangle text-danger"></span> No</div>
-			}
-		</div>
-	</row>
-</form-group>
-<form-group>
-	<row>
-		<div class="col-md-6">
+		</form-group>
+		<form-group>
 			<label asp-for="IsLockedOut" class="form-control-label"></label>
 			@if (Model.IsLockedOut)
 			{
@@ -51,25 +27,42 @@
 			{
 				<div><span class="fa fa-check-square text-success"></span> Not locked</div>
 			}
-		</div>
-		<div class="col-md-6">
-			<label asp-for="TimezoneId" class="form-control-label"></label>
-			<div>@(TimeZoneInfo.GetSystemTimeZones().SingleOrDefault(t => t.Id == Model.TimezoneId)?.DisplayName ?? TimeZoneInfo.Utc.DisplayName)</div>
-		</div>
-	</row>
-</form-group>
-<form-group>
-	<row>
-		<div class="col-md-6">
+		</form-group>
+		<form-group>
 			<label asp-for="Roles" class="form-control-label"></label>
 			<div>@(Model.Roles.Any() ? string.Join(", ", Model.Roles) : "User is not currently assigned to any Roles")</div>
-		</div>
-		<div class="col-md-6">
+		</form-group>
+	</div>
+	<div class="col-md-6">
+		<form-group>
+			<label asp-for="From" class="form-control-label"></label>
+			<div>@Html.DisplayFor(m => m.From)</div>
+		</form-group>
+		<form-group>
+			<label asp-for="LastLoggedInTimeStamp" class="form-control-label"></label>
+			<div>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</div>
+		</form-group>
+		<form-group>
+			<label asp-for="EmailConfirmed" class="form-control-label"></label>
+			@if (Model.EmailConfirmed)
+			{
+				<div><span class="fa fa-check-square text-success"></span> Yes</div>
+			}
+			else
+			{
+				<div><span class="fa fa-exclamation-triangle text-danger"></span> No</div>
+			}
+		</form-group>
+		<form-group>
+			<label asp-for="TimezoneId" class="form-control-label"></label>
+			<div>@(TimeZoneInfo.GetSystemTimeZones().SingleOrDefault(t => t.Id == Model.TimezoneId)?.DisplayName ?? TimeZoneInfo.Utc.DisplayName)</div>
+		</form-group>
+		<form-group>
 			<label asp-for="PublicRatings" class="form-control-label"></label>
 			<div>@Model.PublicRatings.ToYesNo()</div>
-		</div>
-	</row>
-</form-group>
+		</form-group>
+	</div>
+</row>
 <div class="text-center">
 	<a asp-action="List" class="text-center btn btn-secondary">Return to List</a>
 </div>

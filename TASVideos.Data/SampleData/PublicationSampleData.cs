@@ -4,6 +4,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Data.SeedData;
 
+// ReSharper disable StaticMemberInitializerReferesToMemberBelow
 namespace TASVideos.Data.SampleData
 {
 	public static class PublicationSampleData
@@ -69,6 +70,13 @@ Want to [Helping|help]? Everyone has something they can contribute."
 
 		public static readonly byte[] MorimotoSmb3File = { 0x00 };
 
+		public static readonly WikiPage MorimotoSmb3SubWiki = new WikiPage
+		{
+			PageName = "InternalSystem/SubmissionContent/S1",
+			Markup = "Submission text goes here",
+			RevisionMessage = ""
+		};
+
 		public static readonly WikiPage MorimotoSmb3PubWiki = new WikiPage
 		{
 			PageName = "InternalSystem/PublicationContent/M1",
@@ -85,7 +93,7 @@ and contributed greatly to the popularity of speedruns in general.",
 			RevisionMessage = ""
 		};
 
-		public static readonly Submission MiroMotoSubmission = new Submission
+		public static readonly Submission MorimotoSubmission = new Submission
 		{
 			CreateTimeStamp = DateTime.Parse("2003-11-20 01:00:00.0000000"),
 			CreateUserName = "Bisqwit",
@@ -98,7 +106,10 @@ and contributed greatly to the popularity of speedruns in general.",
 			RomName = "Super Mario Bros. 3 (J).nes",
 			Rom = Smb3Rom,
 			Status = SubmissionStatus.Published,
-			SubmitterId = 1
+			SubmitterId = 1,
+			SystemId = 1,
+			SystemFrameRateId = 1,
+			WikiContent = MorimotoSmb3SubWiki
 		};
 
 		public static readonly PublicationFile Smb3ScreenShot = new PublicationFile
@@ -132,7 +143,7 @@ and contributed greatly to the popularity of speedruns in general.",
 			PublicationFlags = MorimotoSmb3PublicationFlags,
 			RerecordCount = 40268,
 			Rom = Smb3Rom,
-			Submission = MiroMotoSubmission,
+			Submission = MorimotoSubmission,
 			SystemId = 1,
 			SystemFrameRateId = 1,
 			TierId = 1,
