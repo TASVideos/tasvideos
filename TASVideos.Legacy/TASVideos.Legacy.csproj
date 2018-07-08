@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="FastMember.NetCore" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.0-rc2-20180621144030" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
