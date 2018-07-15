@@ -2,17 +2,42 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "taskName": "build",
+            "label": "npm install",
+            "command": "npm",
+            "type": "shell",
+            "args": [
+                "install"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/TASVideos"
+            }
+        },
+        {
+            "label": "npm run build",
+            "command": "npm",
+            "type": "shell",
+            "args": [
+                "run",
+                "build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/TASVideos"
+            },
+            "dependsOn": "npm install"
+        },
+        {
+            "label": "build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
                 "${workspaceFolder}/TASVideos/TASVideos.csproj"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "dependsOn": "npm run build"
 		},
 		{
-            "taskName": "build_forumengine",
+            "label": "build_forumengine",
             "command": "dotnet",
             "type": "process",
             "args": [
