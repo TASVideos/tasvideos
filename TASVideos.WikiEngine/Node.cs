@@ -228,6 +228,7 @@ namespace TASVideos.WikiEngine.AST
 			["gamename"] = "GameName",
 			["gamesubpages"] = "GameSubPages",
 			["awards"] = "Awards"
+			["usermovies"] = "UserMovies"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }

@@ -43,5 +43,8 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<PrivateMessage> ReceivedPrivateMessages { get; set; } = new HashSet<PrivateMessage>();
 
 		public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new HashSet<PublicationRating>();
+
+		public virtual ICollection<UserFile> UserFiles { get; set; } = new HashSet<UserFile>();
+		public virtual ICollection<UserFileComment> UserFileComments { get; set; } = new HashSet<UserFileComment>();
 	}
 }
