@@ -12,14 +12,6 @@
     <VersionSuffix>alpha</VersionSuffix>
   </PropertyGroup>
 
-  <Target Name="npm build" BeforeTargets="Build">
-    <Exec Command="npm run build" />
-  </Target>
-
-  <Target Name="npm install" BeforeTargets="Restore">
-    <Exec Command="npm install" />
-  </Target>
-
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
