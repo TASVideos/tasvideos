@@ -17,6 +17,7 @@ namespace TASVideos.Legacy.Imports
 	public static class UserFileImporter
 	{
 		public static void Import(
+			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
@@ -73,8 +74,8 @@ namespace TASVideos.Legacy.Imports
 					nameof(UserFileComment.UserFileId)
 				};
 
-				userFiles.BulkInsert(context, userFileColumns, nameof(ApplicationDbContext.UserFiles));
-				userFileComments.BulkInsert(context, userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
+				userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles));
+				userFileComments.BulkInsert(connectionStr, userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
 			}
 		}
 
