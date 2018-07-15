@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -74,7 +75,7 @@ namespace TASVideos.Legacy.Imports
 					nameof(UserFileComment.UserFileId)
 				};
 
-				userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles));
+				userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles), SqlBulkCopyOptions.KeepIdentity, 10000, 600);
 				userFileComments.BulkInsert(connectionStr, userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
 			}
 		}
