@@ -1,3 +1,4 @@
+/// <binding AfterBuild='default, clean, copy' />
 const gulp = require("gulp");
 const rimraf = require("rimraf");
 
