@@ -57,7 +57,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public virtual GameName GameName { get; set; }
 
 		[Column("file_hidden")]
-		public byte Hidden { get; set; }
+		public sbyte Hidden { get; set; }
 
 		[Column("file_warnings"), Required]
 		public string Warnings { get; set; }
