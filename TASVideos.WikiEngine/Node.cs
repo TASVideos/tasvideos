@@ -227,7 +227,7 @@ namespace TASVideos.WikiEngine.AST
 			["topicfeed"] = "TopicFeed",
 			["gamename"] = "GameName",
 			["gamesubpages"] = "GameSubPages",
-			["awards"] = "Awards"
+			["awards"] = "Awards",
 			["usermovies"] = "UserMovies"
 		};
 		public NodeType Type => NodeType.Module;

@@ -49,7 +49,7 @@ namespace TASVideos.Legacy
 			Run("Publication Ratings", () => PublicationRatingImporter.Import(connectionStr, context, legacySiteContext));
 			Run("Publication Flags", () => PublicationFlagImporter.Import(connectionStr, context, legacySiteContext));
 
-			Run("User files", () => UserFileImporter.Import(context, legacySiteContext));
+			Run("User files", () => UserFileImporter.Import(connectionStr, context, legacySiteContext));
 
 			var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
 			stopwatch.Stop();
