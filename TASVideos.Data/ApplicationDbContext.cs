@@ -67,6 +67,10 @@ namespace TASVideos.Data
 
 		public DbSet<DatabaseFile> Files { get; set; }
 
+		// Userfiles
+		public DbSet<UserFile> UserFiles { get; set; }
+		public DbSet<UserFileComment> UserFileComments { get; set; }
+
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
 			PerformTrackingUpdates();
@@ -102,6 +106,14 @@ namespace TASVideos.Data
 
 				entity.HasMany(e => e.ReceivedPrivateMessages)
 					.WithOne(e => e.ToUser)
+					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasMany(e => e.UserFiles)
+					.WithOne(e => e.Author)
+					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasMany(e => e.UserFileComments)
+					.WithOne(e => e.User)
 					.OnDelete(DeleteBehavior.Restrict);
 			});
 

@@ -1,0 +1,89 @@
+﻿@model UserFileViewModel
+
+@functions
+{
+	string FormatTime(TimeSpan timeSpan)
+	{
+		var format =
+			timeSpan.TotalDays >= 1 ? @"d\:hh\:mm\:ss\.ff" :
+			timeSpan.TotalHours >= 1 ? @"h\:mm\:ss\.ff" :
+			@"mm\:ss\.ff";
+
+		return timeSpan.ToString(format);
+	}
+
+	string FormatSize(int byteCount)
+	{
+		if (byteCount > 1_000_000_000)
+		{
+			return $"{byteCount / 1_000_000_000f:f2} GB";
+		}
+		else if (byteCount > 1_000_000)
+		{
+			return $"{byteCount / 1_000_000:f2} MB";
+		}
+		else if (byteCount > 1_000)
+		{
+			return $"{byteCount / 1_000f:f2} KB";
+		}
+		else
+		{
+			return $"{byteCount} bytes";
+		}
+	}
+}
+
+<div class="card mb-3">
+	<div class="card-header">
+		<h4>#@Model.Id - @Model.Title</h4>
+	</div>
+
+	<div class="card-body">
+		<div class="card-text">
+			<p>@Model.FileName</p>
+			<p>Uploaded @Model.Uploaded.ToString("G") by @Model.Author</p>
+
+			@if (Model.GameId.HasValue)
+			{
+				<p>
+					For
+					<a href="/Game/@Model.GameId">@Model.GameName</a>
+
+					@if (Model.System != null)
+					{
+						<text>(@Model.System)</text>
+					}
+				</p>
+			}
+
+			@if (Model is UserMovieViewModel movie)
+			{
+				<p>In @FormatTime(movie.Length) (@movie.Frames frames), @movie.Rerecords rerecords</p>
+			}
+
+			<p>
+				@Model.Views view@(Model.Views == 1 ? "" : "s"),
+				@Model.Downloads download@(Model.Downloads == 1 ? "" : "s")
+			</p>
+		</div>
+
+		<hr />
+
+		@if (!string.IsNullOrEmpty(Model.Description))
+		{
+			<div class="card-text">
+				<p>@Model.Description</p>
+			</div>
+
+			<hr />
+		}
+
+		<a asp-action="Download" asp-route-id="@Model.Id" class="card-link">
+			Download (@FormatSize(Model.FileSize))
+		</a>
+
+		<a asp-action="Info" asp-route-id="@Model.Id" class="card-link">
+			Info
+		</a>
+	</div>
+</div>

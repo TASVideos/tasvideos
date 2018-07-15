@@ -1,0 +1,10 @@
+﻿@model UserFileUserIndexViewModel
+
+@{
+	ViewData["Title"] = "My user files";
+}
+
+@foreach (var file in Model.Files)
+{
+	@await Html.PartialAsync("_FileInfo", file)
+}

@@ -2,7 +2,7 @@
 @model UserWikiEditHistoryModel
 
 @{
-	ViewData["Title"] = "Edit Hisstory For User " + Model.UserName;
+	ViewData["Title"] = "Edit History For User " + Model.UserName;
 }
 <h4>Edit by <a href="/HomePages/@Util.TryConvertToValidPageName(Model.UserName)">@Model.UserName</a></h4>
 <hr />
