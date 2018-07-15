@@ -13,13 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\ForumPost\**" />
-    <Content Remove="Views\ForumPost\**" />
-    <EmbeddedResource Remove="Views\ForumPost\**" />
-    <None Remove="Views\ForumPost\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.1" />
@@ -41,7 +34,7 @@
     <ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
     <ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <Content Update="Views\Forum\EditForum.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
