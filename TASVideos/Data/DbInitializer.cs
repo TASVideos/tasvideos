@@ -129,7 +129,7 @@ namespace TASVideos.Data
 		}
 
 		/// <summary>
-		/// Adds optional sample dSiteata
+		/// Adds optional sample data
 		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
 		/// </summary>
 		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
