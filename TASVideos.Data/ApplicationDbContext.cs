@@ -117,6 +117,17 @@ namespace TASVideos.Data
 					.OnDelete(DeleteBehavior.Restrict);
 			});
 
+			builder.Entity<Tier>(entity =>
+			{
+				entity.Property(e => e.Id)
+					.ValueGeneratedNever()
+					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+
+				entity.HasIndex(e => e.Name)
+					.IsUnique()
+					.HasFilter($"([{nameof(Tier.Name)}] IS NOT NULL)");
+			});
+
 			builder.Entity<UserLogin>(entity =>
 			{
 				entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
