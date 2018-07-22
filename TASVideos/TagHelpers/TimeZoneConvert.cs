@@ -38,11 +38,12 @@ namespace TASVideos.TagHelpers
 			var user = await _userManager.GetUserAsync(_claimsPrincipal);
 
 			var dateTime = ConvertedDateTime;
-			if (user != null)
-			{
-				var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
-				dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
-			}
+			// TODO: sort out different timezone naming on different OSes
+			//if (user != null)
+			//{
+			//	var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+			//	dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
+			//}
 
 			output.TagName = "span";
 			output.TagMode = TagMode.StartTagAndEndTag;
