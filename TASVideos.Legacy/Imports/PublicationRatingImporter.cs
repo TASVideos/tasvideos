@@ -34,7 +34,7 @@ namespace TASVideos.Legacy.Imports
 			var users = context.Users
 				.Where(u => usersWithRatings.Contains(u.UserName))
 				.Select(u => new { u.Id, u.UserName })
-					.ToList();
+				.ToList();
 
 			var ratings = (from r in ratingsDto
 				join u in users on r.UserName.ToLower() equals u.UserName.ToLower()
