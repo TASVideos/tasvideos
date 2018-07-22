@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,6 +97,12 @@ namespace TASVideos
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
 				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+
+			if (Settings.EnableGzipCompression)
+			{
+				services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
+				services.AddResponseCompression();
+			}
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -112,8 +119,12 @@ namespace TASVideos
 				app.UseExceptionHandler("/Home/Error");
 			}
 
-			app.UseStaticFiles();
+			if (Settings.EnableGzipCompression)
+			{
+				app.UseResponseCompression();
+			}
 
+			app.UseStaticFiles();
 			app.UseAuthentication();
 
 			app.UseMvc(routes =>

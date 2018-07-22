@@ -2,6 +2,8 @@
 {
 	public class AppSettings
 	{
+		public bool EnableGzipCompression { get; set; }
+
 		public CacheSetting CacheSettings { get; set; } = new CacheSetting();
 
 		public Connections ConnectionStrings { get; set; } = new Connections();
