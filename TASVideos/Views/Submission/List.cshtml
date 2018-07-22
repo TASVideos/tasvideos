@@ -30,7 +30,7 @@
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.Entries.First().Title)</th>
 		<th>@Html.DisplayNameFor(m => m.Entries.First().Author)</th>
-		<th>@Html.DisplayNameFor(m => m.Entries.First().Submitted)</th>
+		<th>@Html.DisplayNameFor(m => m.Entries.First().Submitted))</th>
 		<th>@Html.DisplayNameFor(m => m.Entries.First().Status)</th>
 	</tr>
 	@foreach (var item in Model.Entries)
@@ -38,7 +38,7 @@
 		<tr>
 			<td><a href="/@(item.Id)S">@item.Title</a></td>
 			<td>@item.Author</td>
-			<td>@item.Submitted</td>
+			<td><timezone-convert asp-for="@item.Submitted" /></td>
 			<td>@item.Status.EnumDisplayName()</td>
 		</tr>
 	}
