@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Legacy.Extensions;
-using TASVideos.Tasks;
 
 namespace TASVideos
 {
@@ -67,8 +66,7 @@ namespace TASVideos
 			});
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, WikiTasks wikiTasks)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
 			if (env.IsAnyTestEnvironment())
 			{
