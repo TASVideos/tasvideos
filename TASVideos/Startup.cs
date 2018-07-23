@@ -3,19 +3,12 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Legacy.Extensions;
-using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos
@@ -33,7 +26,6 @@ namespace TASVideos
 
 		private AppSettings Settings => Configuration.Get<AppSettings>();
 
-		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			if (Environment.IsAnyTestEnvironment())
@@ -49,60 +41,30 @@ namespace TASVideos
 				services.AddLegacyContext();
 			}
 
+			if (Settings.EnableGzipCompression)
+			{
+				services.AddGzipCompression();
+			}
+
 			services.Configure<AppSettings>(Configuration);
 
-			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-			services.AddIdentity<User, Role>(config =>
-				{
-					config.SignIn.RequireConfirmedEmail = true;
-					config.Password.RequiredLength = 12;
-					config.Password.RequireDigit = false;
-					config.Password.RequireLowercase = false;
-					config.Password.RequireNonAlphanumeric = false;
-					config.Password.RequiredUniqueChars = 4;
-				})
-				.AddEntityFrameworkStores<ApplicationDbContext>()
-				.AddDefaultTokenProviders();
-
-			// Add application services.
-			services.AddTransient<IEmailSender, EmailSender>();
-
-			if (Settings.CacheSettings.CacheType == "Memory")
-			{
-				services.AddMemoryCache();
-				services.AddSingleton<ICacheService, MemoryCacheService>();
-			}
-			else
-			{
-				services.AddSingleton<ICacheService, NoCacheService>();
-			}
-
-			services.AddScoped<IFileService, FileService>();
-
 			services
+				.AddDbContext(Configuration)
+				.AddCacheService(Settings.CacheSettings)
+				.AddIdentity()
 				.AddTasks()
 				.AddWikiProvider()
-				.AddMovieParser();
+				.AddMovieParser()
+				.AddHttpContext()
+				.AddFileService()
+				.AddEmailService();
+
+			services.AddAutoMapper();
 
 			services.AddMvc(options =>
 			{
 				options.Filters.Add(new SetViewBagAttribute());
 			});
-
-			services.AddAutoMapper();
-
-			// Sets up Dependency Injection for IPrinciple to be able to attain the user whereever we wish.
-			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-			services.AddTransient(
-				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
-
-			if (Settings.EnableGzipCompression)
-			{
-				services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
-				services.AddResponseCompression();
-			}
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
