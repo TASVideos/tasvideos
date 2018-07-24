@@ -1,4 +1,6 @@
 ﻿@section PageTitle {
 }
 
-@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/FrontPage" })
+<cache enabled="@(!User.Identity.IsAuthenticated)" expires-after="@TimeSpan.FromSeconds(60)">
+	@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/FrontPage" })
+</cache>
