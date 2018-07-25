@@ -47,7 +47,7 @@ namespace TASVideos.Legacy.Imports
 				var legacyUsers = legacySiteContext.Users
 					.Select(u => new { u.Id, u.Name })
 					.ToList()
-					.Select(u => new { u.Id, Name = ImportHelper.FixString(u.Name) })
+					.Select(u => new { u.Id, Name = ImportHelper.ConvertUtf8(u.Name) })
 					.ToList();
 
 				var publicationWikis = context.WikiPages

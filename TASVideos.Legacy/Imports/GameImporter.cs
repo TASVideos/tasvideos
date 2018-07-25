@@ -19,8 +19,8 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = g.Id,
 					SystemId = g.SystemId,
-					GoodName = ImportHelper.FixString(g.GoodName),
-					DisplayName = ImportHelper.FixString(g.DisplayName),
+					GoodName = ImportHelper.ConvertUtf8(g.GoodName),
+					DisplayName = ImportHelper.ConvertUtf8(g.DisplayName),
 					Abbreviation = g.Abbreviation,
 					SearchKey = g.SearchKey,
 					YoutubeTags = g.YoutubeTags,

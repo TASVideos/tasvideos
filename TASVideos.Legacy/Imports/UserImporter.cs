@@ -70,7 +70,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(u => new User
 				{
 					Id = u.Id,
-					UserName = ImportHelper.FixString(u.UserName),
+					UserName = ImportHelper.ConvertUtf8(u.UserName),
 					NormalizedUserName = u.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate), // TODO
@@ -82,7 +82,7 @@ namespace TASVideos.Legacy.Imports
 					PasswordHash = "",
 					Avatar = u.Avatar,
 					From = u.From,
-					Signature = ImportHelper.FixString(u.Signature),
+					Signature = ImportHelper.ConvertUtf8(u.Signature),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
 					// ReSharper disable once CompareOfFloatsByEqualityOperator

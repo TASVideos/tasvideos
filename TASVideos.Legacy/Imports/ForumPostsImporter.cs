@@ -41,14 +41,14 @@ namespace TASVideos.Legacy.Imports
 				.ToList()
 				.Select(p =>
 				{
-					var fixedText = ImportHelper.FixString(p.Text.Replace(":" + p.BbCodeUid, ""));
+					var fixedText = ImportHelper.ConvertUtf8(p.Text.Replace(":" + p.BbCodeUid, ""));
 					return new ForumPost
 					{
 						Id = p.Id,
 						TopicId = p.TopicId,
 						PosterId = p.PosterId,
 						IpAddress = p.IpAddress,
-						Subject = ImportHelper.FixString(p.Subject),
+						Subject = ImportHelper.ConvertUtf8(p.Subject),
 						Text = fixedText,
 						EnableBbCode = p.EnableBbCode,
 						EnableHtml = p.EnableHtml && HtmlParser.ContainsHtml(fixedText),
