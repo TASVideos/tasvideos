@@ -27,7 +27,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = v.Id,
 					TopicId = v.TopicId,
-					Question = ImportHelper.ConvertUtf8(v.Text),
+					Question = ImportHelper.ConvertLatin1String(v.Text),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
 					CreateUserName = "Unknown", // TODO: we could try to get the topic creator when not -1 if it is worth it
 					LastUpdateUserName = "Unknown", // Ditto
