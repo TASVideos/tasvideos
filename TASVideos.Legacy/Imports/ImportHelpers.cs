@@ -16,7 +16,7 @@ namespace TASVideos.Legacy.Imports
 			return UnixStart.AddSeconds(unixTimeStamp);
 		}
 
-		public static string FixString(string input)
+		public static string ConvertUtf8(string input)
 		{
 			if (string.IsNullOrEmpty(input))
 			{
@@ -30,6 +30,13 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			return Encoding.UTF8.GetString(b);
+		}
+
+		public static string ConvertLatin1String(string input)
+		{
+			var enc = Encoding.GetEncoding(1252);
+			var data = enc.GetBytes(input);
+			return Encoding.UTF8.GetString(data);
 		}
 
 		public static void BulkInsert<T>(

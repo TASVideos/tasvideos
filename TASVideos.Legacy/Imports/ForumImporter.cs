@@ -20,8 +20,8 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = f.Id,
 					CategoryId = f.CategoryId,
-					Name = ImportHelper.FixString(f.Name),
-					Description = ImportHelper.FixString(f.Description),
+					Name = ImportHelper.ConvertLatin1String(f.Name),
+					Description = ImportHelper.ConvertLatin1String(f.Description),
 					Ordinal = f.Order,
 					ShortName = f.ShortName,
 					CreateTimeStamp = DateTime.UtcNow,
