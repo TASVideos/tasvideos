@@ -70,21 +70,18 @@
 	<li class="nav-item @(Active("News"))">
 		<a class="nav-link" href="/News">News</a>
 	</li>
-	@if (ViewData.UserHasAny(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles }))
-	{
-		<li class="nav-item dropdown @(Active("Admin"))">
-			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
-			<div class="dropdown-menu">
-				@if (ViewData.UserHasAny(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers }))
-				{
-					<a class="dropdown-item" asp-controller="User" asp-action="List">Users</a>
-				}
-				<a class="dropdown-item" asp-controller="Roles" asp-action="List">Roles</a>
-				<a class="dropdown-item" asp-controller="Permissions" asp-action="Index">Permissions</a>
-			</div>
-		</li>
-	}
-	<li class="nav-item dropdown @(Active("Wiki"))">
+	<li condition="ViewData.UserHasAny(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers, PermissionTo.EditRoles })" class="nav-item dropdown @(Active("Admin"))">
+		<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
+		<div class="dropdown-menu">
+			@if (ViewData.UserHasAny(new[] { PermissionTo.ViewUsers, PermissionTo.EditUsers }))
+			{
+				<a class="dropdown-item" asp-controller="User" asp-action="List">Users</a>
+			}
+			<a class="dropdown-item" asp-controller="Roles" asp-action="List">Roles</a>
+			<a class="dropdown-item" asp-controller="Permissions" asp-action="Index">Permissions</a>
+		</div>
+	</li>
+	<li condition="ViewData.UserHasAny(new[] { PermissionTo.EditWikiPages, PermissionTo.EditSystemPages, PermissionTo.MoveWikiPages, PermissionTo.DeleteWikiPages })" class="nav-item dropdown @(Active("Wiki"))">
 		<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Wiki<span class="caret"></span></a>
 		<div class="dropdown-menu">
 			<a class="dropdown-item" href="/RecentChanges">Recent Changes</a>
