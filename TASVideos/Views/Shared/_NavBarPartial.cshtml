@@ -17,6 +17,11 @@
 			return active;
 		}
 
+		if (menuName == "Movies" && ViewContext.Controller() == "Publication")
+		{
+			return active;
+		}
+
 		if (menuName == "Admin" &&
 			(ViewContext.Controller() == "Roles"
 				|| ViewContext.Controller() == "User"
