@@ -9,7 +9,7 @@
 	<row>
 		<div class="col-md-4">
 			<div class="mb-1">
-				<img src="~/media/@Model.Screenshot" />
+				<img src="~/media/@Model.Screenshot" style="max-width: 100%" />
 			</div>
 			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
 			<a asp-controller="Publication" asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary">Publication</a>
