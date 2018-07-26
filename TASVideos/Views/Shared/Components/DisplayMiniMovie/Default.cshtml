@@ -7,7 +7,7 @@
 		</div>
 		<div class="card-body">
 			<a href="/@(Model.Id)M">
-				<img src="~/media/@Model.Screenshot" class="pull-left pr-3 pb-1" />
+				<img src="~/media/@Model.Screenshot" class="pull-left pr-3 pb-1" style="max-width: 80%" />
 			</a>
 			@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
 			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
