@@ -25,13 +25,18 @@
 </div>
 <style>
 	.right-align-topic {
-		float: right;
-		width: 33%;
 		max-height: 440px;
 		overflow-y: auto;
 		border: 1px solid #ccc;
 		border-radius: 5px;
 		margin-left: 20px;
 		margin-top: 15px;
+	}
+
+	@@media (min-width: 768px) {
+		.right-align-topic {
+			float: right;
+			width: 33%;
+		}
 	}
 </style>
