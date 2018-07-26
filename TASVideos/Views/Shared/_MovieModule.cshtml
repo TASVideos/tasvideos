@@ -4,52 +4,58 @@
 	<h4>This movie has been obsoleted!</h4>
 	<a href="/@(Model.ObsoletedBy)M" class="btn btn-primary">Obsoleting Movie</a>
 </div>
-<div class="card">
-	<div class="card-header"><img src="@Model.TierIconPath"/> @Model.Title</div>
-	<row>
-		<div class="col-md-4">
-			<div class="mb-1">
-				<img src="~/media/@Model.Screenshot" style="max-width: 100%" />
-			</div>
-			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
-			<a asp-controller="Publication" asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary">Publication</a>
-			<a asp-controller="Submission" asp-action="View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary">Submission</a>
-			<a condition="@ViewData.UserHas(PermissionTo.EditPublicationMetaData)"
-			   asp-controller="Publication"
-			   asp-action="Edit"
-			   asp-route-id="@Model.Id"
-			   class="btn btn-secondary">Edit</a>
-			<a condition="@ViewData.UserHas(PermissionTo.CatalogMovies)"
-			   asp-controller="Publication"
-			   asp-action="Catalog"
-			   asp-route-id="@Model.Id"
-			   class="btn btn-secondary">Catalog</a>
-		</div>
-		<div class="col-md-5">
-			<row>
-				<a class="col-lg-4" asp-controller="Publication" asp-action="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
-				<a condition="Model.TorrentLink != null" class="col-lg-4" href="@Model.TorrentLink">A/V file via BitTorrent</a>
-				<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
-			</row>
-			<row>
-				<div><small>@Model.CreateTimeStamp.Date.ToShortDateString()</small></div>
-				@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
-			</row>
-			<row>
-				<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
-				<div Condition="Model.RatingCount > 2">
-					Rating: @Math.Round(Model.OverallRating, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
+<card>
+	<cardheader><img src="@Model.TierIconPath"/> @Model.Title</cardheader>
+	<cardbody>
+		<row>
+			<div class="col-md-4">
+				<div>
+					<img src="~/media/@Model.Screenshot" style="max-width: 100%" />
 				</div>
-			</row>
-		</div>
-		<div class="col-md-2">
-			<small>
-				Tags:<br />
-				@foreach (var tag in Model.Tags)
-				{
-					<a href="/Movies-@tag.Code">@tag.DisplayName</a><br />
-				}
-			</small>
-		</div>
-	</row>
-</div>
+				<a href="@Model.OnlineWatchingUrl" class="btn btn-primary btn-sm mt-1">Watch</a>
+				<a asp-controller="Publication" asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1">Publication</a>
+				<a asp-controller="Submission" asp-action="View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
+				<a condition="@ViewData.UserHas(PermissionTo.EditPublicationMetaData)"
+					asp-controller="Publication"
+					asp-action="Edit"
+					asp-route-id="@Model.Id"
+					class="btn btn-secondary btm-sm mt-1">Edit</a>
+				<a condition="@ViewData.UserHas(PermissionTo.CatalogMovies)"
+					asp-controller="Publication"
+					asp-action="Catalog"
+					asp-route-id="@Model.Id"
+					class="btn btn-secondary btn-sm mt-1">Catalog</a>
+			</div>
+			<div class="col-md-5">
+				<row>
+					<a class="col-lg-4" asp-controller="Publication" asp-action="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
+					<a condition="Model.TorrentLink != null" class="col-lg-4" href="@Model.TorrentLink">A/V file via BitTorrent</a>
+					<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
+				</row>
+				<row>
+					<div class="col-12">
+						<div><small>@Model.CreateTimeStamp.Date.ToShortDateString()</small></div>
+						@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
+					</div>
+				</row>
+				<row>
+					<div class="col-12">
+						<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
+						<div Condition="Model.RatingCount > 2">
+							Rating: @Math.Round(Model.OverallRating, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
+						</div>
+					</div>
+				</row>
+			</div>
+			<div class="col-md-2">
+				<small>
+					Tags:<br />
+					@foreach (var tag in Model.Tags)
+					{
+						<a href="/Movies-@tag.Code">@tag.DisplayName</a><br />
+					}
+				</small>
+			</div>
+		</row>
+	</cardbody>
+</card>
