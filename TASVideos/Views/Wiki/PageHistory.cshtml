@@ -4,6 +4,9 @@
 	ViewData["Title"] = "Page History For " + Model.PageName;
 }
 <a class="btn btn-secondary" href="/@WikiHelper.ProcessLink(Model.PageName)">Back to Page</a>
+<div id="diff-view" class="d-none mt-3 border border-secondary" style="max-height: 400px; overflow-y: auto">
+
+</div>
 <hr />
 <table class="table table-striped">
 	<tbody>
@@ -32,16 +35,12 @@
 	</tbody>
 </table>
 
-
 <input type="hidden" id="left-revision" />
 <input type="hidden" id="right-revision" />
 <div id="diff-options" class="d-none">
 	<hr />
 	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff(1)" /> Inline</label>
 	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff(0)" /> Side by Side</label>
-</div>
-<div id="diff-view" class="d-none">
-
 </div>
 
 <script>
