@@ -1,14 +1,17 @@
 @model WikiDiffModel
 
 @{
-	ViewData["Title"] = $"{Model.PageName} - Diff r{Model.LeftRevision} - r{Model.RightRevision}";
+	string link  = WikiHelper.ProcessLink(Model.PageName);
+	ViewData["Title"] = $"{WikiHelper.ProcessLink(link)} - Diff r{Model.LeftRevision} - r{Model.RightRevision}";
 }
 
 <input type="hidden" asp-for="LeftMarkup" rows="8" class="form-control" />
 <input type="hidden" asp-for="RightMarkup" rows="8" class="form-control" />
 
+<a class="btn btn-secondary pull-right" href="/@link">Back to Page</a>
 <row>
-	<label><input name="diff-type" type="radio" value="1" checked="checked" /> Inline</label>
+	
+	<label class="mr-3"><input name="diff-type" type="radio" value="1" checked="checked" /> Inline</label>
 	<label><input name="diff-type" type="radio" value="0" /> Side by Side</label>
 </row>
 <hr />

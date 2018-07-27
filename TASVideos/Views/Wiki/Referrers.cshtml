@@ -1,9 +1,10 @@
 @model IEnumerable<WikiPageReferral>
 @{
-	ViewData["Title"] = $"Referrers for {ViewData["PageName"]}";
+	string link = WikiHelper.ProcessLink((string)ViewData["PageName"]);
+	ViewData["Title"] = $"Referrers for {link}";
 }
 
-<a class="btn btn-secondary" href="/@ViewData["PageName"]">Back to Page</a>
+<a class="btn btn-secondary" href="/@link">Back to Page</a>
 <br />
 <br />
 <label>Referrers (@Model.Count() Total)</label>
