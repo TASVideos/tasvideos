@@ -231,7 +231,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static string MarkupShenanigans(SiteText st)
 		{
-			string markup = ImportHelper.ConvertUtf8(st.Description);
+			string markup = ImportHelper.ConvertLatin1String(st.Description);
 
 			if (st.PageName == "FrontPage")
 			{
