@@ -11,8 +11,8 @@
 		@foreach (var link in Model)
 		{
 			<tr>
-				<td style="max-width: 400px; overflow-x: auto"><a href="/@link.Referral">@Html.Encode(link.Referral)</a></td>
-				<td><a href="/@link.Referrer">@link.Referrer</a></td>
+				<td style="max-width: 400px; overflow-x: auto"><a href="/@WikiHelper.ProcessLink(link.Referral)">@Html.Encode(WikiHelper.ProcessLink(link.Referral))</a></td>
+				<td><a href="/@WikiHelper.ProcessLink(link.Referrer)">@WikiHelper.ProcessLink(link.Referrer)</a></td>
 				<td><i>@link.Excerpt</i></td>
 			</tr>
 		}
