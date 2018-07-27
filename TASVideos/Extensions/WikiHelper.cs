@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Helpers;
 
 namespace TASVideos.Extensions
 {
@@ -119,6 +121,70 @@ namespace TASVideos.Extensions
 		public static bool IsGameResourcesPage(string pageName)
 		{
 			return pageName.StartsWith("GameResources/");
+		}
+
+		/// <summary>
+		/// Fixes Internal system page links to be their public counter parts ex: InternalSystem/SubmissionContent/S4084 to 4084S
+		/// </summary>
+		public static string ProcessLink(string link)
+		{
+			if (IsInternalSubmissionLink(link))
+			{
+				return FixInternalSubmissionLink(link);
+			}
+
+			if (IsInternalPublicationLink(link))
+			{
+				return FixInternalPublicationLink(link);
+			}
+
+			if (IsInternaGameLink(link))
+			{
+				return FixInternalGameLink(link);
+			}
+
+			return link;
+		}
+
+		private static bool IsInternalSubmissionLink(string link)
+		{
+			return link.StartsWith(LinkConstants.SubmissionWikiPage);
+		}
+
+		private static bool IsInternalPublicationLink(string link)
+		{
+			return link.StartsWith(LinkConstants.PublicationWikiPage);
+		}
+
+		private static bool IsInternaGameLink(string link)
+		{
+			return link.StartsWith(LinkConstants.GameWikiPage);
+		}
+
+		private static string FixInternalSubmissionLink(string link)
+		{
+			return FixInternalLink(link, LinkConstants.SubmissionWikiPage, "S");
+		}
+
+		private static string FixInternalPublicationLink(string link)
+		{
+			return FixInternalLink(link, LinkConstants.PublicationWikiPage, "P");
+		}
+
+		private static string FixInternalGameLink(string link)
+		{
+			return FixInternalLink(link, LinkConstants.GameWikiPage, "G");
+		}
+
+		private static string FixInternalLink(string link, string internalPrefix, string suffix)
+		{
+			var result = int.TryParse(link.Replace(internalPrefix, ""), out int id);
+			if (result)
+			{
+				return id + suffix;
+			}
+
+			return "";
 		}
 
 		private static bool IsProperCased(string pageName)
