@@ -24,17 +24,20 @@ namespace TASVideos.Tasks
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
 		private readonly ICacheService _cache;
+		private readonly IPointsService _pointsService;
 
 		public UserTasks(
 			ApplicationDbContext db,
 			UserManager<User> userManager,
 			SignInManager<User> signInManager,
-			ICacheService cache)
+			ICacheService cache,
+			IPointsService pointsService)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_cache = cache;
+			_pointsService = pointsService;
 		}
 
 		/// <summary>
@@ -365,7 +368,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<UserProfileModel> GetUserProfile(int id)
 		{
-			return await _db.Users
+			var model = await _db.Users
 				.Select(u => new UserProfileModel
 				{
 					Id = u.Id,
@@ -390,6 +393,13 @@ namespace TASVideos.Tasks
 					SubmissionCount = u.Submissions.Count
 				})
 				.SingleOrDefaultAsync(u => u.Id == id);
+
+			if (model != null)
+			{
+				model.PlayerPoints = await _pointsService.CalculatePointsForUser(id);
+			}
+
+			return model;
 		}
 
 		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)

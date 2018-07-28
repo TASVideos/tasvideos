@@ -81,6 +81,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<RatingsTasks>();
 			services.AddScoped<PrivateMessageTasks>();
 			services.AddScoped<UserFileTasks>();
+			services.AddScoped<PointsService>();
 
 			return services;
 		}
@@ -113,6 +114,12 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddFileService(this IServiceCollection services)
 		{
 			services.AddScoped<IFileService, FileService>();
+			return services;
+		}
+
+		public static IServiceCollection AddPointsService(this IServiceCollection services)
+		{
+			services.AddScoped<IPointsService, PointsService>();
 			return services;
 		}
 

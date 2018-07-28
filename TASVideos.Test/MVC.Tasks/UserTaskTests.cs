@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using Moq;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
@@ -21,6 +21,7 @@ namespace TASVideos.Test.MVC.Tasks
 
 		private UserTasks _userTasks;
 		private ApplicationDbContext _db;
+		private Mock<IPointsService> _pointsService;
 
 		private static User TestUser => new User
 		{
@@ -45,6 +46,8 @@ namespace TASVideos.Test.MVC.Tasks
 		[TestInitialize]
 		public void Initialize()
 		{
+			_pointsService = new Mock<IPointsService>(MockBehavior.Strict);
+
 			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
 				.UseInMemoryDatabase("TestDb")
 				.Options;
@@ -52,7 +55,7 @@ namespace TASVideos.Test.MVC.Tasks
 			_db = new ApplicationDbContext(options, null);
 			_db.Database.EnsureDeleted();
 
-			_userTasks = new UserTasks(_db, null, null, new NoCacheService()); // TODO: managers
+			_userTasks = new UserTasks(_db, null, null, new NoCacheService(), _pointsService.Object); // TODO: managers
 		}
 
 		[TestCleanup]

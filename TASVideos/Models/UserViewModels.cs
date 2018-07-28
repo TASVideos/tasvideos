@@ -139,6 +139,9 @@ namespace TASVideos.Models
 		public int Id { get; set; }
 		public string UserName { get; set; }
 
+		[Display(Name = "Player Points:")]
+		public int PlayerPoints { get; set;}
+		
 		[Display(Name = "Joined On:")]
 		public DateTime JoinDate { get; set; }
 
