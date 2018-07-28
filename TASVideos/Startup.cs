@@ -51,12 +51,13 @@ namespace TASVideos
 				.AddDbContext(Configuration)
 				.AddCacheService(Settings.CacheSettings)
 				.AddIdentity()
-				.AddTasks()
 				.AddWikiProvider()
 				.AddMovieParser()
 				.AddHttpContext()
 				.AddFileService()
-				.AddEmailService();
+				.AddPointsService()
+				.AddEmailService()
+				.AddTasks();
 
 			services.AddAutoMapper();
 
