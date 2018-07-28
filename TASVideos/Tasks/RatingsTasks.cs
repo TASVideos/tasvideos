@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -17,16 +16,20 @@ namespace TASVideos.Tasks
 		private const string MovieRatingKey = "OverallRatingForMovie-";
 
 		private readonly ApplicationDbContext _db;
+		private readonly IPointsService _pointsService;
 		private readonly ICacheService _cache;
 
 		public RatingsTasks(
 			ApplicationDbContext db,
+			IPointsService pointsService,
 			ICacheService cache)
 		{
 			_db = db;
+			_pointsService = pointsService;
 			_cache = cache;
 		}
 
+		// TODO: refactor to use pointsService for calculations
 		/// <summary>
 		/// Returns a detailed list of all ratings for a <see cref="Publication"/>
 		/// with the given <see cref="publicationId"/>
@@ -34,6 +37,12 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PublicationRatingsViewModel> GetRatingsForPublication(int publicationId)
 		{
+			string cacheKey = MovieRatingKey + publicationId;
+			if (_cache.TryGetValue(cacheKey, out PublicationRatingsViewModel rating))
+			{
+				return rating;
+			}
+
 			var publication = await _db.Publications
 				.Include(p => p.PublicationRatings)
 				.ThenInclude(r => r.User)
@@ -82,88 +91,32 @@ namespace TASVideos.Tasks
 					.Select(r => r.TechQuality.Value))
 				.Average(), 2);
 
-			_cache.Set(MovieRatingKey + publicationId, model.OverallRating);
+			_cache.Set(MovieRatingKey + publicationId, model);
 
 			return model;
 		}
 
-		// TODO: what if an invalid publicationId?
-		// TODO: what if there are no ratings for a publication?
 		/// <summary>
 		/// Calculates the overall rating for a <see cref="Publication"/>
 		/// with the given <see cref="publicationId"/>
+		/// If no ratings exist for the given publication then null is returned
 		/// </summary>
-		public async Task<double> GetOverallRatingForPublication(int publicationId)
+		public async Task<double?> GetOverallRatingForPublication(int publicationId)
 		{
-			string cacheKey = MovieRatingKey + publicationId;
-			if (_cache.TryGetValue(cacheKey, out double rating))
-			{
-				return rating;
-			}
-
-			var ratings = await _db.PublicationRatings
-				.Where(pr => pr.PublicationId == publicationId)
-				.ToListAsync();
-
-			var entRatings = ratings
-				.Where(r => r.Type == PublicationRatingType.Entertainment)
-				.Select(r => r.Value)
-				.ToList();
-
-			var techRatings = ratings
-				.Where(r => r.Type == PublicationRatingType.TechQuality)
-				.Select(r => r.Value)
-				.ToList();
-
-			// TODO: calculate this in one place
-			// Entertainmnet counts 2:1 over Tech
-
-			double overallRating = 0;
-			if (entRatings.Count + techRatings.Count > 0)
-			{
-				overallRating = entRatings
-					.Concat(entRatings)
-					.Concat(techRatings)
-					.Average();
-			}
-
-			_cache.Set(cacheKey, overallRating);
-
-			return overallRating;
+			return (await _pointsService.CalculatePublicationRatings(publicationId))
+				.Overall;
 		}
 
 		/// <summary>
 		/// Returns the overall rating for the <see cref="Publication"/> with the given <see cref="publicationIds"/>
 		/// </summary>
 		/// <exception cref="ArgumentException">If <see cref="publicationIds"/> is null</exception>
-		public async Task<IDictionary<int, double>> GetOverallRatingsForPublications(IEnumerable<int> publicationIds)
+		public async Task<IDictionary<int, double?>> GetOverallRatingsForPublications(IEnumerable<int> publicationIds)
 		{
-			if (publicationIds == null)
-			{
-				throw new ArgumentException($"{nameof(publicationIds)} can not be null");
-			}
-
-			var ratings = new Dictionary<int, double>();
-
-			using (await _db.Database.BeginTransactionAsync())
-			{
-				foreach (var id in publicationIds)
-				{
-					var cacheKey = MovieRatingKey + id;
-					if (_cache.TryGetValue(cacheKey, out double rating))
-					{
-						ratings.Add(id, rating);
-					}
-					else
-					{
-						rating = await GetOverallRatingForPublication(id);
-						_cache.Set(cacheKey, rating);
-						ratings.Add(id, rating);
-					}
-				}
-			}
-
-			return ratings;
+			return (await _pointsService.CalculatePublicationRatings(publicationIds))
+				.ToDictionary(
+					tkey => tkey.Key,
+					tvalue => tvalue.Value.Overall);
 		}
 	}
 }

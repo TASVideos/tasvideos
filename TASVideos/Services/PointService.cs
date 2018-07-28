@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
+using TASVideos.Services.Dtos;
 
 namespace TASVideos.Services
 {
@@ -14,10 +16,24 @@ namespace TASVideos.Services
 		/// </summary>
 		/// <exception>If a user with the given id does not exist</exception>
 		Task<int> CalculatePointsForUser(int id);
+
+		/// <summary>
+		/// Returns the averaged overall, tech, and entertainment ratings for a publication
+		/// with the given id
+		/// </summary>
+		/// <exception>If a publication with the given id does not exist</exception>
+		Task<RatingDto> CalculatePublicationRatings(int id);
+
+		/// <summary>
+		/// A bulk version of <see cref="CalculatePublicationRatings(int)"/>
+		/// </summary>
+		Task<IDictionary<int, RatingDto>> CalculatePublicationRatings(IEnumerable<int> publicationIds);
 	}
 
 	public class PointsService : IPointsService
     {
+		private const string MovieRatingKey = "OverallRatingForMovie-";
+
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 
@@ -35,5 +51,82 @@ namespace TASVideos.Services
 			var user = await _db.Users.SingleAsync(u => u.Id == id);
 			return  new System.Random(DateTime.Now.Millisecond).Next(0, 10000);
 		}
-    }
+		
+		public async Task<RatingDto> CalculatePublicationRatings(int id)
+		{
+			string cacheKey = MovieRatingKey + id;
+			if (_cache.TryGetValue(cacheKey, out RatingDto rating))
+			{
+				return rating;
+			}
+
+			var ratings = await _db.PublicationRatings
+				.Where(pr => pr.PublicationId == id)
+				.ToListAsync();
+
+			var entRatings = ratings
+				.Where(r => r.Type == PublicationRatingType.Entertainment)
+				.Select(r => r.Value)
+				.ToList();
+
+			var techRatings = ratings
+				.Where(r => r.Type == PublicationRatingType.TechQuality)
+				.Select(r => r.Value)
+				.ToList();
+
+			rating = new RatingDto
+			{
+				Entertainment = entRatings.Any()
+					? entRatings.Average()
+					: (double?)null,
+				TechQuality = techRatings.Any()
+					? techRatings.Average()
+					: (double?)null
+			};
+
+			if (entRatings.Any() || techRatings.Any())
+			{
+				// Entertainment counts 2:1 over Tech
+				rating.Overall = entRatings
+					.Concat(entRatings)
+					.Concat(techRatings)
+					.Average();
+			}
+
+			_cache.Set(cacheKey, rating);
+			return rating;
+		}
+
+		public async Task<IDictionary<int, RatingDto>> CalculatePublicationRatings(IEnumerable<int> publicationIds)
+		{
+			if (publicationIds == null)
+			{
+				throw new ArgumentException($"{nameof(publicationIds)} can not be null");
+			}
+
+			var ratings = new Dictionary<int, RatingDto>();
+
+			// TODO: select them all at once then calculate
+			using (await _db.Database.BeginTransactionAsync())
+			{
+				foreach (var id in publicationIds)
+				{
+					var cacheKey = MovieRatingKey + id;
+					if (_cache.TryGetValue(cacheKey, out RatingDto rating))
+					{
+						ratings.Add(id, rating);
+					}
+					else
+					{
+						rating = await CalculatePublicationRatings(id);
+						_cache.Set(cacheKey, rating);
+						ratings.Add(id, rating);
+					}
+				}
+			}
+
+			return ratings;
+		}
+	}
 }
+
