@@ -80,6 +80,8 @@ namespace TASVideos.Models
 
 		public string Game { get; set; }
 		public string Authors { get; set; }
+
+		public string Screenshot { get; set;}
 	}
 
 	public class PublicationEditModel
