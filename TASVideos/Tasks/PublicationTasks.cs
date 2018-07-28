@@ -258,6 +258,7 @@ namespace TASVideos.Tasks
 				.Include(p => p.Game)
 				.Include(p => p.System)
 				.Include(p => p.SystemFrameRate)
+				.Include(p => p.Files)
 				.Include(p => p.Authors)
 				.ThenInclude(pa => pa.Author)
 				.Where(p => searchCriteria.Tiers.Contains(p.Tier.Name))
@@ -272,8 +273,9 @@ namespace TASVideos.Tasks
 					CreateTimeStamp = m.CreateTimeStamp,
 					Time = m.Time,
 					Game = m.Game.DisplayName,
-					Authors = string.Join(",", m.Authors.Select(pa => pa.Author)),
-					ObsoletedBy = null // TODO: previous logic
+					Authors = string.Join(", ", m.Authors.Select(pa => pa.Author)),
+					ObsoletedBy = null, // TODO: previous logic
+					Screenshot = m.Files.First(f => f.Type == FileType.Screenshot).Path
 				})
 				.ToList();
 
