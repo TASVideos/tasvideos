@@ -131,7 +131,7 @@ namespace TASVideos.Models
 	}
 
 	/// <summary>
-	/// Represents a user with publically available information
+	/// Represents a user with publicly available information
 	/// Intended for the User/Profile page
 	/// </summary>
 	public class UserProfileModel
@@ -165,7 +165,7 @@ namespace TASVideos.Models
 
 		public int SubmissionCount { get; set; }
 		
-		public IEnumerable<string> Roles { get; set; } = new List<string>();
+		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
 	}
 }

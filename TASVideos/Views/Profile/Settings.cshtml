@@ -60,19 +60,6 @@
 	</div>
 </form>
 
-@if (Model.Roles.Any())
-{
-	<hr />
-	<h4>Roles</h4>
-	<span>Your account has the following <a asp-controller="Roles" asp-action="List">Roles</a>:</span>
-	<br />
-	<br />
-	foreach (var role in Model.Roles)
-	{
-		<label><a asp-controller="Roles" asp-action="Index" asp-route-role="@role.Name">@role.Name</a></label>
-		<div class="ml-3 mt-1 mb-3">@role.Description</div>
-	}
-}
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 }
