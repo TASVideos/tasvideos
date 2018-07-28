@@ -129,7 +129,7 @@ namespace TASVideos.WikiEngine
 		private static readonly string[] LinkPrefixes = new[] { "=", "http://", "https://", "ftp://", "//" };
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
-		private static readonly Regex ImplicitWikiLink = new Regex("^[A-Za-z0-9._/#\\-]+$");
+		private static readonly Regex ImplicitWikiLink = new Regex(@"^[A-Za-z0-9._/#\-]+(\|[A-Za-z0-9._/#\-]+)?$");
 		private static bool IsLink(string text)
 		{
 			return LinkPrefixes.Any(p => text.StartsWith(p));
