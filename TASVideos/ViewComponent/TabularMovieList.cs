@@ -32,7 +32,8 @@ namespace TASVideos.ViewComponents
 				search.Tiers = tiersStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 			}
 			
-			// TODO: footer and flink
+			ViewData["flink"] = ParamHelper.GetValueFor(pp, "flink");
+			ViewData["footer"] = ParamHelper.GetValueFor(pp, "footer") ?? "More...";
 
 			var model = await _publicationTasks.GetTabularMovieList(search);
 
