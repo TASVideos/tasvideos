@@ -1,6 +1,14 @@
 ﻿@model IEnumerable<TabularMovieListResultModel>
+@{
+	string flink = ViewData["flink"]?.ToString();
+	string footer = ViewData["footer"]?.ToString();
 
+}
 <table class="table table-striped">
+	@if (!string.IsNullOrWhiteSpace(flink))
+	{
+		<caption><a href="/@flink">@footer</a></caption>
+	}
 	<tbody>
 		<tr>
 			<th>Date</th>
