@@ -359,7 +359,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns publically available user profile information
+		/// Returns publicly available user profile information
 		/// for the <see cref="User"/> with the given <see cref="id"/>
 		/// If no user is found, null is returned
 		/// </summary>
@@ -381,7 +381,12 @@ namespace TASVideos.Tasks
 					PublishedSystems = u.Publications.Select(p => p.Publication.System.Code).Distinct(),
 					Roles = u.UserRoles
 						.Where(ur => !ur.Role.IsDefault)
-						.Select(ur => ur.Role.Name),
+						.Select(ur => new RoleBasicDisplay
+						{
+							Id = ur.RoleId,
+							Name = ur.Role.Name,
+							Description = ur.Role.Description
+						}),
 					SubmissionCount = u.Submissions.Count
 				})
 				.SingleOrDefaultAsync(u => u.Id == id);

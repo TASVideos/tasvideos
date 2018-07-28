@@ -8,31 +8,28 @@
 <row>
 	<div class="col-md-6">
 		<card>
+			<cardheader><h4>@Model.UserName</h4></cardheader>
 			<cardbody>
-				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
-				<h4 class="card-title">@Model.UserName</h4>
+				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right"/>
 				<div class="card-text">
-					<label>@string.Join(" / ", Model.Roles)</label>
-					<br />
 					<a href="/HomePages/@Model.UserName">Homepage</a>
-					<br />
+					<br/>
 					<label asp-for="JoinDate"></label>
-					<label>@Html.DisplayFor(m => m.JoinDate)</label>
-					<br />
+					<label>@Model.JoinDate.ToShortDateString()</label>
+					<br/>
 					<label asp-for="LastLoggedInTimeStamp"></label>
-					<label>@Html.DisplayFor(m => m.LastLoggedInTimeStamp)</label>
-					<br />
+					<label>@Model.LastLoggedInTimeStamp?.ToShortDateString()</label>
+					<br/>
 					<label asp-for="Location"></label>
 					<label>@Html.DisplayFor(m => m.Location)</label>
-					<br />
+					<br/>
 					<label asp-for="PostCount"></label>
-					<label>@Html.DisplayFor(m => m.PostCount)</label>
-					<br />
-					<a condition="Model.PostCount > 0" href="#" class="btn btn-primary">All Posts</a>
-					<div class="pull-right">
+					<label><a href="#">@Html.DisplayFor(m => m.PostCount)</a></label>
+					<br/>
+					<div class="pull-right mt-2">
 						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 						{
-							<partial name="../Shared/_Award.cshtml" model="award" />
+							<partial name="../Shared/_Award.cshtml" model="award"/>
 						}
 					</div>
 				</div>
@@ -41,11 +38,28 @@
 				@Html.Raw(Model.Signature)
 			</div>
 		</card>
+		<card>
+			<cardheader><h4>Roles</h4></cardheader>
+			<cardbody>
+				@if (Model.Roles.Any())
+				{
+					foreach (var role in Model.Roles)
+					{
+						<label><a asp-controller="Roles" asp-action="Index" asp-route-role="@role.Name">@role.Name</a></label>
+						<div class="ml-3 mt-1 mb-3">@role.Description</div>
+					}
+				}
+				else
+				{
+					<div class="alert alert-danger">This user has no Roles</div>
+				}
+			</cardbody>
+		</card>
 	</div>
 	<div class="col-md-6">
 		<card class="text-right">
+			<cardheader><h4>Publications</h4></cardheader>
 			<cardbody>
-				<h5 class="card-title">Publications</h5>
 				<div condition="!Model.AnyPublications" class="card-text">
 					<i>User has not had any Published Movies</i>
 				</div>
@@ -57,8 +71,8 @@
 			</cardbody>
 		</card>
 		<card class="text-right">
+			<cardheader><h4>Submissions</h4></cardheader>
 			<cardbody>
-				<h5 class="card-title">Submissions</h5>
 				<div condition="Model.SubmissionCount == 0" class="card-text">
 					<i>User has not had any Submissions</i>
 				</div>
@@ -69,14 +83,14 @@
 			</cardbody>
 		</card>
 		<card class="text-right">
-			<div class="card-body">
-				<h5 class="card-title">Wiki</h5>
-				TODO
-			</div>
-		</card>
-		<card>
+			<cardheader><h4>Wiki</h4></cardheader>
 			<cardbody>
-				<h5 class="card-title">Ratings</h5>
+				TODO
+			</cardbody>
+		</card>
+		<card class="text-right">
+			<cardheader><h4>Ratings</h4></cardheader>
+			<cardbody>
 				TODO
 			</cardbody>
 		</card>
