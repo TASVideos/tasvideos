@@ -71,6 +71,7 @@ h1 {
 	padding: 10px;
 }
 
+// forum post stuff
 .quotecontainer {
 	margin: 0.75rem;
 	padding: .25rem;
@@ -79,9 +80,17 @@ h1 {
 	border-radius: 0.25rem;
 	border: 1px dashed #444;
 }
-
 .postbody { white-space: pre-wrap; }
-
+.a-l { text-align: left; }
+.a-c { text-align: center; }
+.a-r { text-align: right; }
+.spoiler {
+	background-color: black;
+	color: black;
+}
+.spoiler:hover {
+	color: white;
+}
 
 [data-toggle="collapse"] .fa::before {
 	content: "\f139";
