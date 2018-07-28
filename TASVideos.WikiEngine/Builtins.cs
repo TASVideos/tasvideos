@@ -127,6 +127,9 @@ namespace TASVideos.WikiEngine
 
 		private static readonly string[] ImageSuffixes = new[] { ".svg", ".png", ".gif", ".jpg", ".jpeg" };
 		private static readonly string[] LinkPrefixes = new[] { "=", "http://", "https://", "ftp://", "//" };
+		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
+		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
+		private static readonly Regex ImplicitWikiLink = new Regex("^[A-Za-z0-9._/#\\-]$");
 		private static bool IsLink(string text)
 		{
 			return LinkPrefixes.Any(p => text.StartsWith(p));
@@ -166,9 +169,17 @@ namespace TASVideos.WikiEngine
 					return new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, UrlFromLinkText(pp[0])) { CharEnd = charEnd }) };
 				}
 			}
-			// wiki links needs to be in a module because the href, title, and possibly the text will be adjusted/normalized based
-			// on what other wiki pages exist and their content
-			return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
+			// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
+			// any of the other predetermined things we scan for
+			// it could be an internal wiki link, but it could also be a lot of other not-allowed garbage
+			if (ImplicitWikiLink.Match(text).Success)
+			{
+				// wiki links needs to be in a module because the href, title, and possibly the text will be adjusted/normalized based
+				// on what other wiki pages exist and their content
+				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
+			}
+			// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
+			return new[] { new Text(charStart, "[" + text + "]") { CharEnd = charEnd } };
 		}
 
 		private static INode MakeLink(int charStart, int charEnd, string text, INode child)
