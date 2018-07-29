@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json;
@@ -50,7 +51,7 @@ namespace TASVideos.WikiEngine
 
 		public static IEnumerable<NewParser.WikiLinkInfo> GetAllWikiLinks(string content)
 		{
-			return NewParser.GetAllWikiLinks(content);
+			return NewParser.GetAllWikiLinks(content).Where(l => !l.Link.Contains("user:"));
 		}
 	}
 }
