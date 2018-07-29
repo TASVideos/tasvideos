@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json;
@@ -50,58 +51,7 @@ namespace TASVideos.WikiEngine
 
 		public static IEnumerable<NewParser.WikiLinkInfo> GetAllWikiLinks(string content)
 		{
-			return NewParser.GetAllWikiLinks(content);
-		}
-
-
-		public static string RenderUserModuleLink(string value)
-		{
-			if (value.StartsWith("user:"))
-			{
-				return TryConvertToValidPageName(value.Replace("user:", "HomePages/"));
-			}
-
-			return value;
-		}
-
-		public static string TryConvertToValidPageName(string pageName)
-		{
-			if (string.IsNullOrWhiteSpace(pageName))
-			{
-				return "";
-			}
-
-			pageName = pageName
-					.Replace(".html", "")
-					.Trim('/');
-
-			return ConvertProperCase(pageName);
-		}
-
-		public static IEnumerable<int> AllIndexesOf(string str, string searchstring)
-		{
-			int minIndex = str.IndexOf(searchstring);
-			while (minIndex != -1)
-			{
-				yield return minIndex;
-				minIndex = str.IndexOf(searchstring, minIndex + searchstring.Length);
-			}
-		}
-
-		private static string ConvertProperCase(string pageName)
-		{
-			pageName = pageName?.Trim('/');
-			pageName = char.ToUpper(pageName[0]) + pageName.Substring(1);
-
-			var slashes = AllIndexesOf(pageName, "/");
-			foreach (var slash in slashes)
-			{
-				pageName = pageName.Substring(0, slash + 1)
-					+ char.ToUpper(pageName[slash + 1])
-					+ pageName.Substring(slash + 2);
-			}
-
-			return pageName;
+			return NewParser.GetAllWikiLinks(content).Where(l => !l.Link.Contains("user:"));
 		}
 	}
 }
