@@ -42,7 +42,7 @@
 					<div class="col-12">
 						<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
 						<div Condition="Model.RatingCount > 2">
-							Rating: @Math.Round(Model.OverallRating, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
+							Rating: @Math.Round(Model.OverallRating ?? 0, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
 						</div>
 					</div>
 				</row>
