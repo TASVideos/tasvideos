@@ -12,6 +12,11 @@
     <VersionSuffix>alpha</VersionSuffix>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- see https://github.com/aspnet/Razor/issues/2406 -->
+    <_RazorBuildServerPipeName>razor-issues-2406</_RazorBuildServerPipeName>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
