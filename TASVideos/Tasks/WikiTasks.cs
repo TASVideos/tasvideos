@@ -425,6 +425,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<WikiPageReferral>> GetAllBrokenLinks()
 		{
 			return (await _db.WikiReferrals
+					.Where(wr => wr.Referrer != "SandBox")
 					.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
 					.Where(wr => wr.Referral != "Subs-List")
 					.Where(wr => !wr.Referral.StartsWith("Movies-"))
