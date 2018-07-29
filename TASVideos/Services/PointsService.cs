@@ -33,6 +33,7 @@ namespace TASVideos.Services
 	public class PointsService : IPointsService
     {
 		private const string MovieRatingKey = "OverallRatingForMovie-";
+		private const string PlayerPointKey = "PlayerPoints-";
 
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
@@ -48,8 +49,21 @@ namespace TASVideos.Services
 
 		public async Task<int> CalculatePointsForUser(int id)
 		{
+			string cacheKey = PlayerPointKey + id;
+			if (_cache.TryGetValue(cacheKey, out int playerPoints))
+			{
+				return playerPoints;
+			}
+
 			var user = await _db.Users.SingleAsync(u => u.Id == id);
-			return  new System.Random(DateTime.Now.Millisecond).Next(0, 10000);
+
+			//var publications = _db.Publications
+			//	.Where()
+
+			playerPoints =  new System.Random(DateTime.Now.Millisecond).Next(0, 10000);
+			_cache.Set(cacheKey, playerPoints);
+
+			return playerPoints;
 		}
 		
 		public async Task<RatingDto> CalculatePublicationRatings(int id)
