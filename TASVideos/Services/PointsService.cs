@@ -57,8 +57,9 @@ namespace TASVideos.Services
 
 			var user = await _db.Users.SingleAsync(u => u.Id == id);
 
-			//var publications = _db.Publications
-			//	.Where()
+			var publications = await _db.Publications
+				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
+				.ToListAsync();
 
 			playerPoints =  new System.Random(DateTime.Now.Millisecond).Next(0, 10000);
 			_cache.Set(cacheKey, playerPoints);
@@ -95,7 +96,9 @@ namespace TASVideos.Services
 					: (double?)null,
 				TechQuality = techRatings.Any()
 					? techRatings.Average()
-					: (double?)null
+					: (double?)null,
+				TotalEntertainmentVotes = entRatings.Count,
+				TotalTechQualityVotes = techRatings.Count
 			};
 
 			if (entRatings.Any() || techRatings.Any())
