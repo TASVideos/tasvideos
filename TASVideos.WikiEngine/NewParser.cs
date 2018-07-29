@@ -695,9 +695,7 @@ namespace TASVideos.WikiEngine
 					var se = Math.Min(e.CharEnd + 20, _input.Length);
 					return new WikiLinkInfo
 					{
-						Link = link.StartsWith("user:")
-							? Util.RenderUserModuleLink(link)
-							: link.Replace(" ", ""),
+						Link = link,
 						Excerpt = _input.Substring(si, se - si)
 					};
 				})
