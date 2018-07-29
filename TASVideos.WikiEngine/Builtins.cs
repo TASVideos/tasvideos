@@ -75,8 +75,6 @@ namespace TASVideos.WikiEngine
 				return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
 			if (text == "expr:WikiGetCurrentEditLink")
 				return MakeModuleInternal(charStart, charEnd, "WikiGetCurrentEditLink");
-			if (text == "user:user_name")
-				return MakeModuleInternal(charStart, charEnd, "user_name");
 
 			Match match;
 			if ((match = Footnote.Match(text)).Success)
@@ -129,7 +127,7 @@ namespace TASVideos.WikiEngine
 		private static readonly string[] LinkPrefixes = new[] { "=", "http://", "https://", "ftp://", "//" };
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
-		private static readonly Regex ImplicitWikiLink = new Regex(@"^[A-Za-z0-9._/#\-]+(\|.+)?$");
+		private static readonly Regex ImplicitWikiLink = new Regex(@"^(user:)?[A-Za-z0-9._/#\-]+(\|.+)?$");
 		private static bool IsLink(string text)
 		{
 			return LinkPrefixes.Any(p => text.StartsWith(p));

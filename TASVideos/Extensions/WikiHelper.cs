@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -198,6 +199,22 @@ namespace TASVideos.Extensions
 
 			// Must beging with a capital letter, with one exception, if the path is a year. But only years between 2000-2099 for now. This is to support awards pages: Awards/2007, Awards/2008 etc
 			return paths.All(p => char.IsUpper(p[0]) || (p.Length == 4 && p.StartsWith("20")));
+		}
+
+		public static string NormalizeWikiPageName(string link)
+		{
+            if (link.StartsWith("user:"))
+            {
+                link = "HomePages/" + link.Substring(5);
+            }
+            if (link.EndsWith(".html", true, CultureInfo.InvariantCulture))
+            {
+                link = link.Substring(0, link.Length - 5);
+            }
+            link = link.Trim('/');
+            link = link.Replace(" ", ""); // what's this for?
+            link = string.Join("/", link.Split('/').Select(s => char.ToUpperInvariant(s[0]) + s.Substring(1)));
+			return link;
 		}
 	}
 }
