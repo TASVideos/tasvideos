@@ -47,7 +47,7 @@ namespace TASVideos.Models
 		public string TorrentLink => Files.FirstOrDefault(f => f.Type == FileType.Torrent)?.Path; // Sometimes a movie has no torrent, rare but can happen
 
 		public double RatingCount { get; set; }
-		public double OverallRating { get; set; }
+		public double? OverallRating { get; set; }
 
 		public class TagModel
 		{

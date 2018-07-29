@@ -75,7 +75,7 @@ namespace TASVideos.Controllers
 
 			foreach (var rating in ratings)
 			{
-				model.First(m => m.Id == rating.Key).OverallRating = rating.Value ?? 0; // TODO: don't null coalesce, make model rating nullable and handle in view
+				model.First(m => m.Id == rating.Key).OverallRating = rating.Value;
 			}
 
 			return View(model);
@@ -90,8 +90,7 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
-			model.OverallRating = await _ratingsTasks.GetOverallRatingForPublication(id)
-				?? 0; // TODO: Don't null coalesce, handle on in view properly
+			model.OverallRating = await _ratingsTasks.GetOverallRatingForPublication(id);
 
 			return View(model);
 		}
