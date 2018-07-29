@@ -20,7 +20,13 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = c.Id,
 					Title = c.Title,
-					Ordinal = c.Order,
+					Ordinal =  c.Title == "Other"
+						? 30
+						: c.Title == "Completed movies"
+							? 40
+							: c.Title == "Emulators"
+								? 50
+								: c.Order,
 					Description = c.Description,
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow,
