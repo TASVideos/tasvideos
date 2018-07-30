@@ -98,7 +98,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Download(int id)
 		{
-			(var fileBytes, var fileName) = await _publicationTasks.GetPublicationMovieFile(id);
+			var (fileBytes, fileName) = await _publicationTasks.GetPublicationMovieFile(id);
 			if (fileBytes.Length > 0)
 			{
 				return File(fileBytes, MediaTypeNames.Application.Octet, $"{fileName}.zip");
