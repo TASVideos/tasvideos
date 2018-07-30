@@ -92,6 +92,7 @@ namespace TASVideos
 			{
 				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
 				routes.MapRoute("sub-list", "Subs-List", defaults: new { controller = "Submission", action = "List" });
+				routes.MapRoute("players-list", "Players-List", defaults: new { controller = "Publication", action = "Authors"});
 				routes.MapRoute("submission", "{id:int}S", defaults: new { controller = "Submission", action = "View" });
 				routes.MapRoute("movie", "{id:int}M", defaults: new { controller = "Publication", action = "View" });
 				routes.MapRoute("game", "{id:int}G", defaults: new { controller = "Game", action = "View" });

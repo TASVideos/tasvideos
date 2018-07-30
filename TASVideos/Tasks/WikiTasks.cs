@@ -426,6 +426,7 @@ namespace TASVideos.Tasks
 		{
 			return (await _db.WikiReferrals
 					.Where(wr => wr.Referrer != "SandBox")
+					.Where(wr => wr.Referral != "Players-List")
 					.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
 					.Where(wr => !wr.Referral.StartsWith("Subs-"))
 					.Where(wr => !wr.Referral.StartsWith("Movies-"))
