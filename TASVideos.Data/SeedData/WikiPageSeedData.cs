@@ -13,6 +13,12 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "System/PlayersHeader",
+				RevisionMessage = Import,
+				Markup = "Here we remember the names of all the authors that have ever contributed a published movie to this site.%%%"
+			}, 
+			new WikiPage
+			{
 				PageName = "System/SubmissionHeader",
 				RevisionMessage = Import,
 				Markup =
