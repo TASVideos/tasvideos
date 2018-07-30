@@ -6,6 +6,10 @@
 	{
 		ViewData["ActiveTab"] = "Game Resources";
 	}
+	else
+	{
+		ViewData["ActiveTab"] = pageData.PageName;
+	}
 }
 
 <partial name="_WikiLayoutHeader" model="pageData" />
