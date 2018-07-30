@@ -78,8 +78,15 @@
 					<i>User has not had any Submissions</i>
 				</div>
 				<div condition="Model.SubmissionCount > 0" class="card-text">
-					<p>@Model.SubmissionCount Total</p>
-					<a asp-controller="Submission" asp-action="List" asp-route-user="@Model.UserName" class="btn btn-primary">View</a>
+					<p><a asp-controller="Submission" asp-action="List" asp-route-user="@Model.UserName">@Model.SubmissionCount</a> Total</p>
+					@foreach (var sub in Model.Submissions.OrderByDescending(s => s.Count))
+					{
+						<label>
+							<a asp-controller="Submission" asp-action="List" asp-route-user="@Model.UserName" asp-route-statusfilter="@((int)sub.Status)">@sub.Count</a>
+							@sub.Status.EnumDisplayName()
+						</label>
+						<br />
+					}
 				</div>
 			</cardbody>
 		</card>
