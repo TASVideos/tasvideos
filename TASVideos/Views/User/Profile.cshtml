@@ -65,9 +65,13 @@
 				</div>
 				<div condition="Model.AnyPublications">
 					<p>@Html.DisplayNameFor(m => m.PlayerPoints) @Model.PlayerPoints</p>
-					<p>@Model.PublicationActiveCount Active, @Model.PublicationObsoleteCount obsolete</p>
+					<p>
+						<a href="/Movies-Author@(Model.Id)">@Model.PublicationActiveCount</a>
+						Active,
+						<a href="/Movies-Author@(Model.Id)-obs">@Model.PublicationObsoleteCount</a>
+						obsolete
+					</p>
 					<p>Has published movies on these systems: @string.Join(", ", Model.PublishedSystems)</p>
-					<a href="/Movies-Author@(Model.Id)-obs" class="btn btn-primary">View</a>
 				</div>
 			</cardbody>
 		</card>
