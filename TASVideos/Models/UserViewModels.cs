@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Models
 {
@@ -166,9 +168,18 @@ namespace TASVideos.Models
 		public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;
 		public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
 
-		public int SubmissionCount { get; set; }
+		
 		
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
+
+		public int SubmissionCount => Submissions.Sum(s => s.Count);
+
+		public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
+		public class SubmissionEntry
+		{
+			public SubmissionStatus Status { get; set; }
+			public int Count { get; set; }
+		}
 	}
 }

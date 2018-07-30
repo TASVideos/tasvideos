@@ -390,7 +390,13 @@ namespace TASVideos.Tasks
 							Name = ur.Role.Name,
 							Description = ur.Role.Description
 						}),
-					SubmissionCount = u.Submissions.Count
+					Submissions = u.Submissions
+						.GroupBy(s => s.Submisison.Status)
+						.Select(g => new UserProfileModel.SubmissionEntry
+						{
+							Status = g.Key,
+							Count = g.Count()
+						})
 				})
 				.SingleOrDefaultAsync(u => u.Id == id);
 
