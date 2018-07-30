@@ -66,6 +66,9 @@
     <Content Update="Views\Profile\Settings.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Publication\Authors.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\Components\GameSubPages\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

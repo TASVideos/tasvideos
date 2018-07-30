@@ -431,5 +431,19 @@ namespace TASVideos.Tasks
 			_mapper.Map(model, publication);
 			await _db.SaveChangesAsync();
 		}
+
+		public async Task<IEnumerable<AuthorListEntry>> GetPublishedAuthorList()
+		{
+			return await _db.Users
+				.Where(u => u.Publications.Any())
+				.Select(u => new AuthorListEntry
+				{
+					Id = u.Id,
+					UserName = u.UserName,
+					ActivePublicationCount = u.Publications.Count(pa => !pa.Publication.ObsoletedById.HasValue),
+					ObsoletePublicationCount = u.Publications.Count(pa => pa.Publication.ObsoletedById.HasValue)
+				})
+				.ToListAsync();
+		}
 	}
 }

@@ -132,4 +132,18 @@ namespace TASVideos.Models
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 		public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
 	}
+
+	public class AuthorListEntry
+	{
+		public int Id { get; set; }
+
+		[Display(Name = "Author")]
+		public string UserName { get; set; }
+
+		[Display(Name = "Active Movies")]
+		public int ActivePublicationCount { get; set; }
+
+		[Display(Name = "Obsolete Movies")]
+		public int ObsoletePublicationCount { get; set; }
+	}
 }

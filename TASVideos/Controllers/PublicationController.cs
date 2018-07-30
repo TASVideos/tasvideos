@@ -160,5 +160,12 @@ namespace TASVideos.Controllers
 			await _publicationTasks.UpdateCatalog(model);
 			return RedirectToAction(nameof(View), new { model.Id });
 		}
+		
+		[AllowAnonymous]
+		public async Task<IActionResult> Authors()
+		{
+			var model = await _publicationTasks.GetPublishedAuthorList();
+			return View(model);
+		}
 	}
 }
