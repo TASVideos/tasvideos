@@ -168,7 +168,7 @@ namespace TASVideos.Models
 		public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;
 		public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
 
-		
+		public WikiEditModel WikiEdits { get; set; } = new WikiEditModel();
 		
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
@@ -180,6 +180,13 @@ namespace TASVideos.Models
 		{
 			public SubmissionStatus Status { get; set; }
 			public int Count { get; set; }
+		}
+
+		public class WikiEditModel
+		{
+			public int TotalEdits { get; set; }
+			public DateTime? FirstEdit { get; set; }
+			public DateTime? LastEdit { get; set; }
 		}
 	}
 }

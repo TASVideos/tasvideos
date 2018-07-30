@@ -396,13 +396,25 @@ namespace TASVideos.Tasks
 						{
 							Status = g.Key,
 							Count = g.Count()
-						})
+						}),
 				})
 				.SingleOrDefaultAsync(u => u.Id == id);
 
 			if (model != null)
 			{
 				model.PlayerPoints = await _pointsService.CalculatePointsForUser(id);
+
+				var wikiEdits = await _db.WikiPages
+					.ThatAreNotDeleted()
+					.Where(wp => wp.CreateUserName == model.UserName)
+					.ToListAsync();
+
+				if (wikiEdits.Any())
+				{
+					model.WikiEdits.TotalEdits = wikiEdits.Count;
+					model.WikiEdits.FirstEdit = wikiEdits.Min(w => w.CreateTimeStamp);
+					model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimeStamp);
+				}
 			}
 
 			return model;
