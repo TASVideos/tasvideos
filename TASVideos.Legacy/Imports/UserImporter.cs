@@ -58,6 +58,7 @@ namespace TASVideos.Legacy.Imports
 							u.PublicRatings,
 							u.LastVisitDate,
 							u.TimeZoneOffset,
+							u.BbcodeUid,
 							IsBanned = b != null,
 							IsModerator = ug != null,
 							IsForumAdmin = u.UserLevel == 1
@@ -70,7 +71,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(u => new User
 				{
 					Id = u.Id,
-					UserName = ImportHelper.ConvertUtf8(u.UserName),
+					UserName = ImportHelper.ConvertLatin1String(u.UserName),
 					NormalizedUserName = u.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate), // TODO
@@ -82,7 +83,7 @@ namespace TASVideos.Legacy.Imports
 					PasswordHash = "",
 					Avatar = u.Avatar,
 					From = u.From,
-					Signature = ImportHelper.ConvertUtf8(u.Signature),
+					Signature = ImportHelper.ConvertLatin1String(u.Signature.Replace(":" + u.BbcodeUid, "")),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
