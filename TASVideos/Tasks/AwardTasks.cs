@@ -70,7 +70,7 @@ namespace TASVideos.Tasks
 			}
 
 			// TODO: optimize these with EF 2.1, 2.0 is so bad with GroupBy that it is hopeless
-			using (_db.Database.BeginTransactionAsync())
+			using (await _db.Database.BeginTransactionAsync())
 			{
 				var userAwards = await _db.UserAwards
 					.GroupBy(gkey => new
