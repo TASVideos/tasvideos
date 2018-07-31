@@ -33,7 +33,11 @@
 }
 
 <hr class="mt-1" />
-<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
+<row>
+	<div class="col-12">
+		<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
+	</div>
+</row>
 @foreach (var post in Model.Posts.OrderBy(p => p.CreateTimestamp).ToList())
 {
 	<card class="@(post.Highlight ? "border-info" : "")">
@@ -97,3 +101,9 @@
 		</cardfooter>
 	</card>
 }
+<row class="mt-2">
+	<div class="col-12">
+		<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
+	</div>
+</row>
+	
