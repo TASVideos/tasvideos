@@ -94,10 +94,10 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-right">
+		<card class="text-right" condition="Model.WikiEdits.TotalEdits > 0">
 			<cardheader><h4>Wiki</h4></cardheader>
 			<cardbody>
-				<div Condition="Model.WikiEdits.TotalEdits > 0">
+				<div>
 					<p><a asp-controller="Wiki" asp-action="UserEditHistory" asp-route-username="@Model.UserName">@Model.WikiEdits.TotalEdits</a> Total Edits</p>
 					<label>Last Edit On: @Model.WikiEdits.LastEdit?.ToShortDateString()</label>
 					<label>First Edit on: @Model.WikiEdits.FirstEdit?.ToShortDateString()</label>
