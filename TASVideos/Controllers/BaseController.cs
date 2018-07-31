@@ -90,6 +90,16 @@ namespace TASVideos.Controllers
 			return RenderPost(text, false, true);
 		}
 
+		protected string RenderBbcode(string text)
+		{
+			return RenderPost(text, true, false);
+		}
+
+		protected string RenderSignature(string text)
+		{
+			return RenderBbcode(text); // BBcode on, Html off hardcoded, do we want this to be configurable?
+		}
+
 		protected string RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);

@@ -819,5 +819,51 @@ namespace TASVideos.Tasks
 
 			return post.TopicId;
 		}
+
+		public async Task<UserPostsModel> PostsByUser(UserPostsRequest paging, bool allowRestricted)
+		{
+			var model = await _db.Users
+				.Where(u => u.UserName == paging.UserName)
+				.Select(u => new UserPostsModel
+				{
+					Id = u.Id,
+					UserName = u.UserName,
+					Joined = u.CreateTimeStamp,
+					Location = u.From,
+					Avatar = u.Avatar,
+					Signature = u.Signature,
+					Roles = u.UserRoles
+						.Where(ur => !ur.Role.IsDefault)
+						.Select(ur => ur.Role.Name)
+				})
+				.SingleOrDefaultAsync();
+
+			if (model == null)
+			{
+				return null;
+			}
+
+			model.Awards = await _awardTasks.GetAllAwardsForUser(model.Id);
+
+			model.Posts = _db.ForumPosts
+				.Where(p => p.CreateUserName == model.UserName)
+				.Where(p => allowRestricted || !p.Topic.Forum.Restricted)
+				.Select(p => new UserPostsModel.Post
+				{
+					Id = p.Id,
+					CreateTimestamp = p.CreateTimeStamp,
+					EnableHtml = p.EnableHtml,
+					EnableBbCode = p.EnableBbCode,
+					Text = p.Text,
+					Subject = p.Subject,
+					TopicId = p.TopicId ?? 0,
+					TopicTitle = p.Topic.Title,
+					ForumId = p.Topic.ForumId,
+					ForumName = p.Topic.Forum.Name
+				})
+				.SortedPageOf(_db, paging);
+
+			return model;
+		}
 	}
 }
