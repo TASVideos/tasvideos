@@ -24,7 +24,7 @@
 					<label>@Html.DisplayFor(m => m.Location)</label>
 					<br/>
 					<label asp-for="PostCount"></label>
-					<label><a href="#">@Html.DisplayFor(m => m.PostCount)</a></label>
+					<label><a asp-controller="Forum" asp-action="UserPosts" asp-route-id="@Model.UserName">@Html.DisplayFor(m => m.PostCount)</a></label>
 					<br/>
 					<div class="pull-right mt-2">
 						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
