@@ -452,7 +452,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.EditForums)]
 		public async Task<IActionResult> EditForum(int id)
 		{
-			var model = await _forumTasks.GetForumForEdit(id);
+			var model = await _forumTasks.GetForumForEdit(id, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (model == null)
 			{
@@ -471,7 +471,7 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			var result = await _forumTasks.SaveForum(model);
+			var result = await _forumTasks.SaveForum(model, UserHas(PermissionTo.SeeRestrictedForums));
 			if (!result)
 			{
 				return NotFound();

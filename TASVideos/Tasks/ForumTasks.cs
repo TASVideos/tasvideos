@@ -691,9 +691,10 @@ namespace TASVideos.Tasks
 			return newTopic.Id;
 		}
 
-		public async Task<ForumEditModel> GetForumForEdit(int forumId)
+		public async Task<ForumEditModel> GetForumForEdit(int forumId, bool allowRestricted)
 		{
 			return await _db.Forums
+				.Where(f => allowRestricted || !f.Restricted)
 				.Where(f => f.Id == forumId)
 				.Select(f => new ForumEditModel
 				{
@@ -708,9 +709,12 @@ namespace TASVideos.Tasks
 		/// Saves the given forum data to the category with the given id
 		/// </summary>
 		/// <returns>True if a forum with the given id is found, else false</returns>
-		public async Task<bool> SaveForum(ForumEditModel model)
+		public async Task<bool> SaveForum(ForumEditModel model, bool seeRestircted)
 		{
-			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == model.Id);
+			var forum = await _db.Forums
+				.Where(f => seeRestircted || !f.Restricted)
+				.SingleOrDefaultAsync(f => f.Id == model.Id);
+
 			if (forum == null)
 			{
 				return false;
