@@ -98,7 +98,7 @@ namespace TASVideos.Controllers
 				foreach (var post in model.Posts)
 				{
 					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-					post.RenderedSignature = RenderPost(post.Signature, true, false); // BBcode on, Html off hardcoded, do we want this to be configurable?
+					post.RenderedSignature = RenderSignature(post.Signature);
 					post.IsEditable = UserHas(PermissionTo.EditForumPosts)
 						|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
 					post.IsDeletable = UserHas(PermissionTo.DeleteForumPosts)
@@ -478,6 +478,26 @@ namespace TASVideos.Controllers
 			}
 
 			return RedirectToAction(nameof(Subforum), new { id = model.Id });
+		}
+
+		[AllowAnonymous]
+		[Route("[controller]/[action]/{username}")]
+		public async Task<IActionResult> UserPosts(UserPostsRequest request)
+		{
+			var model = await _forumTasks.PostsByUser(request, UserHas(PermissionTo.SeeRestrictedForums));
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			model.RenderedSignature = RenderSignature(model.Signature); 
+			foreach (var post in model.Posts)
+			{
+				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
+			}
+
+			return View(model);
 		}
 	}
 }
