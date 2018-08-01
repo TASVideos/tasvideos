@@ -5,14 +5,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
-using TASVideos.MovieParsers;
 using TASVideos.Services;
 using TASVideos.Tasks;
 
@@ -46,6 +44,7 @@ namespace TASVideos.Extensions
 				services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
 				services.AddResponseCompression();
 			}
+
 			return services;
 		}
 
@@ -60,23 +59,6 @@ namespace TASVideos.Extensions
 			{
 				services.AddSingleton<ICacheService, NoCacheService>();
 			}
-
-			return services;
-		}
-
-		public static IServiceCollection AddIdentity(this IServiceCollection services)
-		{
-			services.AddIdentity<User, Role>(config =>
-				{
-					config.SignIn.RequireConfirmedEmail = true;
-					config.Password.RequiredLength = 12;
-					config.Password.RequireDigit = false;
-					config.Password.RequireLowercase = false;
-					config.Password.RequireNonAlphanumeric = false;
-					config.Password.RequiredUniqueChars = 4;
-				})
-				.AddEntityFrameworkStores<ApplicationDbContext>()
-				.AddDefaultTokenProviders();
 
 			return services;
 		}
@@ -129,6 +111,23 @@ namespace TASVideos.Extensions
 			});
 
 			services.AddHttpContext();
+
+			return services;
+		}
+
+		public static IServiceCollection AddIdentity(this IServiceCollection services)
+		{
+			services.AddIdentity<User, Role>(config =>
+				{
+					config.SignIn.RequireConfirmedEmail = true;
+					config.Password.RequiredLength = 12;
+					config.Password.RequireDigit = false;
+					config.Password.RequireLowercase = false;
+					config.Password.RequireNonAlphanumeric = false;
+					config.Password.RequiredUniqueChars = 4;
+				})
+				.AddEntityFrameworkStores<ApplicationDbContext>()
+				.AddDefaultTokenProviders();
 
 			return services;
 		}
