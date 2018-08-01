@@ -11,13 +11,16 @@ namespace TASVideos.Legacy.Extensions
 		private const string MySqlSiteConnection = "server=localhost;userid=root;pwd=;port=3306;database=nesvideos_site;sslmode=none;";
 		private const string MySqlForumConnection = "server=localhost;userid=root;pwd=;port=3306;database=nesvideos_forum;sslmode=none;";
 
-		public static IServiceCollection AddLegacyContext(this IServiceCollection services)
+		public static IServiceCollection AddTasVideosLegacy(this IServiceCollection services, bool enable)
 		{
-			services.AddDbContext<NesVideosSiteContext>(options =>
-				options.UseMySql(MySqlSiteConnection));
+			if (enable)
+			{
+				services.AddDbContext<NesVideosSiteContext>(options =>
+					options.UseMySql(MySqlSiteConnection));
 
-			services.AddDbContext<NesVideosForumContext>(options =>
-				options.UseMySql(MySqlForumConnection));
+				services.AddDbContext<NesVideosForumContext>(options =>
+					options.UseMySql(MySqlForumConnection));
+			}
 
 			return services;
 		}
