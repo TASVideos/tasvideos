@@ -19,7 +19,7 @@ namespace TASVideos.Data
 		public static void Initialize(ApplicationDbContext context)
 		{
 			// For now, always delete then recreate the database
-			// When the datbase is more mature we will move towards the Migrations process
+			// When the database is more mature we will move towards the Migrations process
 			context.Database.EnsureDeleted();
 			context.Database.EnsureCreated();
 		}
