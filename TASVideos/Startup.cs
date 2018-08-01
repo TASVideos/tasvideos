@@ -41,7 +41,6 @@ namespace TASVideos
 				.AddTasVideosLegacy(Environment.IsLocalWithImport())
 				.AddTasvideosMovieParsers();
 
-
 			// 3rd Party
 			services
 				.AddMvcWithOptions()
@@ -51,36 +50,12 @@ namespace TASVideos
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
-			if (env.IsAnyTestEnvironment())
-			{
-				app.UseDeveloperExceptionPage();
-				app.UseBrowserLink();
-				app.UseDatabaseErrorPage();
-			}
-			else
-			{
-				app.UseExceptionHandler("/Home/Error");
-			}
-
-			if (Settings.EnableGzipCompression)
-			{
-				app.UseResponseCompression();
-			}
-
-			app.UseStaticFiles();
-			app.UseAuthentication();
-
-			app.UseMvc(routes =>
-			{
-				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
-				routes.MapRoute("sub-list", "Subs-List", defaults: new { controller = "Submission", action = "List" });
-				routes.MapRoute("players-list", "Players-List", defaults: new { controller = "Publication", action = "Authors"});
-				routes.MapRoute("submission", "{id:int}S", defaults: new { controller = "Submission", action = "View" });
-				routes.MapRoute("movie", "{id:int}M", defaults: new { controller = "Publication", action = "View" });
-				routes.MapRoute("game", "{id:int}G", defaults: new { controller = "Game", action = "View" });
-				routes.MapRoute("movies", "Movies-{query}", defaults: new { controller = "Publication", action = "List" });
-				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = "RenderWikiPage" });
-			});
+			app
+				.UseExceptionHandlers(env)
+				.UseGzipCompression(Settings)
+				.UseStaticFiles()
+				.UseMvcWithOptions()
+				.UseAuthentication();
 		}
 	}
 }
