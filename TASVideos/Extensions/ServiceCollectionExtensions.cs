@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -9,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Filter;
 using TASVideos.MovieParsers;
 using TASVideos.Services;
 using TASVideos.Tasks;
@@ -17,19 +20,32 @@ namespace TASVideos.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static IServiceCollection AddGzipCompression(this IServiceCollection services)
+		public static IServiceCollection AddAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
-			services.AddResponseCompression();
+			services.Configure<AppSettings>(configuration);
+			return services;
+		}
+
+		public static IServiceCollection AddCookieConfiguration(this IServiceCollection services, IHostingEnvironment env)
+		{
+			if (env.IsAnyTestEnvironment())
+			{
+				services.ConfigureApplicationCookie(options =>
+				{
+					options.ExpireTimeSpan = TimeSpan.FromDays(90);
+				});
+			}
 
 			return services;
 		}
 
-		public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
+		public static IServiceCollection AddGzipCompression(this IServiceCollection services, AppSettings settings)
 		{
-			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
+			if (settings.EnableGzipCompression)
+			{
+				services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
+				services.AddResponseCompression();
+			}
 			return services;
 		}
 
@@ -86,6 +102,15 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
+		public static IServiceCollection AddServices(this IServiceCollection services)
+		{
+			services.AddScoped<IFileService, FileService>();
+			services.AddScoped<IPointsService, PointsService>();
+			services.AddTransient<IEmailSender, EmailSender>();
+
+			return services;
+		}
+
 		public static IServiceCollection AddWikiProvider(this IServiceCollection services)
 		{
 			var provider = new Razor.WikiMarkupFileProvider();
@@ -96,36 +121,24 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddMovieParser(this IServiceCollection services)
+		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services)
 		{
-			services.AddSingleton<MovieParser>();
+			services.AddMvc(options =>
+			{
+				options.Filters.Add(new SetViewBagAttribute());
+			});
+
+			services.AddHttpContext();
+
 			return services;
 		}
 
-		public static IServiceCollection AddHttpContext(this IServiceCollection services)
+		private static IServiceCollection AddHttpContext(this IServiceCollection services)
 		{
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
 				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
 
-			return services;
-		}
-
-		public static IServiceCollection AddFileService(this IServiceCollection services)
-		{
-			services.AddScoped<IFileService, FileService>();
-			return services;
-		}
-
-		public static IServiceCollection AddPointsService(this IServiceCollection services)
-		{
-			services.AddScoped<IPointsService, PointsService>();
-			return services;
-		}
-
-		public static IServiceCollection AddEmailService(this IServiceCollection services)
-		{
-			services.AddTransient<IEmailSender, EmailSender>();
 			return services;
 		}
 	}

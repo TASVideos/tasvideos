@@ -1,14 +1,12 @@
-﻿using System;
-
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using TASVideos.Data;
 using TASVideos.Extensions;
-using TASVideos.Filter;
 using TASVideos.Legacy.Extensions;
+using TASVideos.MovieParsers;
 
 namespace TASVideos
 {
@@ -27,44 +25,28 @@ namespace TASVideos
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			if (Environment.IsAnyTestEnvironment())
-			{
-				services.ConfigureApplicationCookie(options =>
-				{
-					options.ExpireTimeSpan = TimeSpan.FromDays(90);
-				});
-			}
-
-			if (Environment.IsLocalWithImport())
-			{
-				services.AddLegacyContext();
-			}
-
-			if (Settings.EnableGzipCompression)
-			{
-				services.AddGzipCompression();
-			}
-
-			services.Configure<AppSettings>(Configuration);
-
+			// Mvc Project Services
 			services
-				.AddDbContext(Configuration)
+				.AddAppSettings(Configuration)
+				.AddCookieConfiguration(Environment)
+				.AddGzipCompression(Settings)
 				.AddCacheService(Settings.CacheSettings)
+				.AddTasks()
+				.AddServices()
+				.AddWikiProvider();
+
+			// Internal Libraries
+			services
+				.AddTasvideosData(Configuration)
+				.AddTasVideosLegacy(Environment.IsLocalWithImport())
+				.AddTasvideosMovieParsers();
+
+
+			// 3rd Party
+			services
+				.AddMvcWithOptions()
 				.AddIdentity()
-				.AddWikiProvider()
-				.AddMovieParser()
-				.AddHttpContext()
-				.AddFileService()
-				.AddPointsService()
-				.AddEmailService()
-				.AddTasks();
-
-			services.AddAutoMapper();
-
-			services.AddMvc(options =>
-			{
-				options.Filters.Add(new SetViewBagAttribute());
-			});
+				.AddAutoMapper();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
