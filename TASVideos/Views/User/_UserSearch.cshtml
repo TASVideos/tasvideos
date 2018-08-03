@@ -11,7 +11,7 @@
 				var goButton = document.getElementById('go-button');
 				var searchVal = searchBox.value.trim();
 				var dataListId = 'search-username-list-' + searchVal;
-				if (searchVal.length > 1) {
+				if (searchVal.length > 2) {
 					var existingList = document.getElementById(dataListId);
 					if (existingList) {
 						searchBox.setAttribute('list', dataListId);
