@@ -25,22 +25,16 @@ namespace TASVideos.Controllers
 			_awardTasks = awardTasks;
 		}
 
-		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
+		[AllowAnonymous]
+		public IActionResult Index()
+		{
+			return RedirectToAction(nameof(List));
+		}
+
+		[AllowAnonymous]
 		public IActionResult List(PagedModel getModel)
 		{
 			var model = UserTasks.GetPageOfUsers(getModel);
-			return View(model);
-		}
-
-		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
-		public async Task<IActionResult> Index(int? id)
-		{
-			if (!id.HasValue)
-			{
-				return RedirectToAction(nameof(List));
-			}
-
-			var model = await UserTasks.GetUserDetails(id.Value);
 			return View(model);
 		}
 
@@ -93,10 +87,10 @@ namespace TASVideos.Controllers
 			return Json(exists);
 		}
 
-		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
+		[AllowAnonymous]
 		public async Task<IActionResult> SearchUserName(string partial)
 		{
-			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 1)
+			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 2)
 			{
 				var matches = await UserTasks.GetUsersByPartial(partial);
 				return Json(matches);
@@ -106,7 +100,7 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> Profile(int id)
+		public async Task<IActionResult> Profile(string id)
 		{
 			var model = await UserTasks.GetUserProfile(id);
 			if (model == null)
@@ -119,7 +113,7 @@ namespace TASVideos.Controllers
 				model.Signature = RenderPost(model.Signature, true, false);
 			}
 
-			model.Awards = await _awardTasks.GetAllAwardsForUser(id);
+			model.Awards = await _awardTasks.GetAllAwardsForUser(model.Id);
 
 			return View(model);
 		}

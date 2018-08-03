@@ -54,8 +54,8 @@ namespace TASVideos
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
 				.UseStaticFiles()
-				.UseMvcWithOptions()
-				.UseAuthentication();
+				.UseAuthentication()
+				.UseMvcWithOptions();
 		}
 	}
 }

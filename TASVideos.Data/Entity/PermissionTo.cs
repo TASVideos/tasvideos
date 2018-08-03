@@ -197,10 +197,10 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to delete an existing role.")]
 		DeleteRoles = 500,
 
-		[Display(Name = "View Users")]
+		[Display(Name = "View Private User Information")]
 		[Group("User Administration")]
-		[Description("The ability to see other user's profile data in read-only form.")]
-		ViewUsers = 501,
+		[Description("The ability to see private information about a user, such as email address")]
+		ViewPrivateUserData = 501,
 
 		[Display(Name = "Edit Users")]
 		[Group("User Administration")]
