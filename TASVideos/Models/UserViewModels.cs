@@ -163,6 +163,23 @@ namespace TASVideos.Models
 		[Display(Name = "Signature")]
 		public string Signature { get; set; }
 
+		[Display(Name = "Ratings Public?")]
+		public bool PublicRatings { get; set; }
+
+		[Display(Name = "TimeZone:")]
+		public string TimeZone { get; set; }
+
+		// Private info
+		[Display(Name = "Email:")]
+		public string Email { get; set; }
+
+		[DisplayName("Email Confirmed")]
+		public bool EmailConfirmed { get; set; }
+
+		[DisplayName("Locked Out Status")]
+		public bool IsLockedOut { get; set;}
+		//
+
 		public int PublicationActiveCount { get; set; }
 		public int PublicationObsoleteCount { get; set; }
 		public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;

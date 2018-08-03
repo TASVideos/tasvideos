@@ -379,9 +379,14 @@ namespace TASVideos.Tasks
 					Avatar = u.Avatar,
 					Location = u.From,
 					Signature = u.Signature,
+					PublicRatings = u.PublicRatings,
+					TimeZone = u.TimeZoneId,
+					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
 					PublicationActiveCount = u.Publications.Count(p => !p.Publication.ObsoletedById.HasValue),
 					PublicationObsoleteCount = u.Publications.Count(p => p.Publication.ObsoletedById.HasValue),
 					PublishedSystems = u.Publications.Select(p => p.Publication.System.Code).Distinct(),
+					Email = u.Email,
+					EmailConfirmed = u.EmailConfirmed,
 					Roles = u.UserRoles
 						.Where(ur => !ur.Role.IsDefault)
 						.Select(ur => new RoleBasicDisplay
