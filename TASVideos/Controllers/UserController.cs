@@ -90,7 +90,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> SearchUserName(string partial)
 		{
-			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 1)
+			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 2)
 			{
 				var matches = await UserTasks.GetUsersByPartial(partial);
 				return Json(matches);
