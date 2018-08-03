@@ -88,7 +88,7 @@
 				<div class="col-12">
 					<small style="font-style: italic">@Html.Raw(post.RenderedSignature)</small>
 					<br />
-					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterId">Profile</a>
+					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterName">Profile</a>
 					<a class="btn btn-secondary btn-sm" condition="User.Identity.IsAuthenticated" asp-controller="Messages" asp-action="Create" asp-route-toUser="@post.PosterName">PM</a>
 					<div class="pull-right">
 						@foreach (var award in post.Awards.OrderByDescending(a => a.Year))

@@ -130,31 +130,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Gets a <see cref="User"/> for the purpose of viewing
-		/// </summary>
-		public async Task<UserDetailsViewModel> GetUserDetails(int id)
-		{
-			return await _db.Users
-				.Select(u => new UserDetailsViewModel
-				{
-					Id = u.Id,
-					CreateTimeStamp = u.CreateTimeStamp,
-					LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
-					UserName = u.UserName,
-					Email = u.Email,
-					EmailConfirmed = u.EmailConfirmed,
-					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
-					TimezoneId = u.TimeZoneId,
-					PublicRatings = u.PublicRatings,
-					From = u.From,
-					Roles = u.UserRoles
-						.Select(ur => ur.Role.Name) 
-						.ToList()
-				})
-				.SingleAsync(u => u.Id == id);
-		}
-
-		/// <summary>
 		/// Gets all of the <see cref="Role"/>s that the current <see cref="User"/> can assign to another user
 		/// The list depends on the current User's <see cref="RolePermission"/> list and also any Roles already assigned to the user
 		/// </summary>
@@ -363,10 +338,10 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Returns publicly available user profile information
-		/// for the <see cref="User"/> with the given <see cref="id"/>
+		/// for the <see cref="User"/> with the given <see cref="userName"/>
 		/// If no user is found, null is returned
 		/// </summary>
-		public async Task<UserProfileModel> GetUserProfile(int id)
+		public async Task<UserProfileModel> GetUserProfile(string userName)
 		{
 			var model = await _db.Users
 				.Select(u => new UserProfileModel
@@ -403,11 +378,11 @@ namespace TASVideos.Tasks
 							Count = g.Count()
 						}),
 				})
-				.SingleOrDefaultAsync(u => u.Id == id);
+				.SingleOrDefaultAsync(u => u.UserName == userName);
 
 			if (model != null)
 			{
-				model.PlayerPoints = await _pointsService.CalculatePointsForUser(id);
+				model.PlayerPoints = await _pointsService.CalculatePointsForUser(model.Id);
 
 				var wikiEdits = await _db.WikiPages
 					.ThatAreNotDeleted()
