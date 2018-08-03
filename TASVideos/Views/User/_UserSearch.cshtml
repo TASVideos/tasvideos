@@ -1,6 +1,6 @@
-﻿<form asp-action="EditByName" method="GET" class="form-inline" id="search-form">
+﻿<form asp-action="Profile" method="GET" class="form-inline" id="search-form">
 	<label class="mr-2" for="search-username-box">Search: </label>
-	<input id="search-username-box" name="userName" list="search-username-list" required="required" type="search" class="form-control mr-2" placeholder="Enter a UserName" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+	<input id="search-username-box" name="id" list="search-username-list" required="required" type="search" class="form-control mr-2" placeholder="Enter a UserName" autofocus="autofocus" autocomplete="off" spellcheck="false" />
 	<button id="go-button" type="submit" class="btn btn-secondary" disabled="disabled">Go</button>
 	<datalist id="search-username-list"></datalist>
 	<script>
@@ -11,7 +11,7 @@
 				var goButton = document.getElementById('go-button');
 				var searchVal = searchBox.value.trim();
 				var dataListId = 'search-username-list-' + searchVal;
-				if (searchVal.length > 1) {
+				if (searchVal.length > 2) {
 					var existingList = document.getElementById(dataListId);
 					if (existingList) {
 						searchBox.setAttribute('list', dataListId);

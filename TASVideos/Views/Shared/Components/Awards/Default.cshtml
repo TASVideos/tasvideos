@@ -12,7 +12,7 @@
 				<br />
 				@foreach (var user in award.Users)
 				{
-					<a asp-controller="User" asp-action="Profile" asp-route-id="@user.Id" class="pull-right">@user.UserName</a>
+					<a asp-controller="User" asp-action="Profile" asp-route-id="@user.UserName" class="pull-right">@user.UserName</a>
 					<br />
 				}
 			</div>

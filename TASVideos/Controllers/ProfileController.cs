@@ -50,9 +50,9 @@ namespace TASVideos.Controllers
 				return RedirectToLogin();
 			}
 
-			var id = int.Parse(_userManager.GetUserId(User));
+			var userName = _userManager.GetUserName(User);
 
-			var model = await UserTasks.GetUserProfile(id);
+			var model = await UserTasks.GetUserProfile(userName);
 			if (model == null)
 			{
 				return NotFound();
@@ -63,7 +63,7 @@ namespace TASVideos.Controllers
 				model.Signature = RenderPost(model.Signature, true, false);
 			}
 
-			model.Awards = await _awardTasks.GetAllAwardsForUser(id);
+			model.Awards = await _awardTasks.GetAllAwardsForUser(model.Id);
 
 			ViewData["ActivePage"] = nameof(Index);
 			return View("~/Views/User/Profile.cshtml", model);
