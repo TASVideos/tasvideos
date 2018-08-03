@@ -25,14 +25,14 @@ namespace TASVideos.Controllers
 			_awardTasks = awardTasks;
 		}
 
-		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
+		[RequirePermission(true, PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers)]
 		public IActionResult List(PagedModel getModel)
 		{
 			var model = UserTasks.GetPageOfUsers(getModel);
 			return View(model);
 		}
 
-		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
+		[RequirePermission(true, PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers)]
 		public async Task<IActionResult> Index(int? id)
 		{
 			if (!id.HasValue)
@@ -93,7 +93,7 @@ namespace TASVideos.Controllers
 			return Json(exists);
 		}
 
-		[RequirePermission(true, PermissionTo.ViewUsers, PermissionTo.EditUsers)]
+		[RequirePermission(true, PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers)]
 		public async Task<IActionResult> SearchUserName(string partial)
 		{
 			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 1)
