@@ -2,7 +2,7 @@
 @{
 	string flink = ViewData["flink"]?.ToString();
 	string footer = ViewData["footer"]?.ToString();
-	var first = Model.First();
+	var first = Model.FirstOrDefault();
 }
 <hr />
 <row>
@@ -33,10 +33,18 @@
 	</div>
 	<div class="col-lg-3 col-md-4 d-sm-none d-md-block">
 		<figure class="figure pull-right">
+			@if (first != null)
+			{
 			<a href="/@(first.Id)M">
 				<img src="~/media/@first.Screenshot" style="max-width: 100%">
 			</a>
 			<figcaption class="figure-caption">@first.Game by @first.Authors</figcaption>
+			} else
+			{
+				<a href="/NoMovie">Default Movie</a>
+				<figcaption class="figure-caption">Nothing by Nobody</figcaption>
+
+			}
 		</figure>
 	</div>
 </row>
