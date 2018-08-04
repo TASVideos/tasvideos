@@ -44,6 +44,8 @@ namespace TASVideos.Controllers
 			}
 		}
 
+		public string BaseUrl => $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+
 		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 

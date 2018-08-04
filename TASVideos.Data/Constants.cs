@@ -25,4 +25,9 @@
 	{
 		public const int PostsPerPage = 25;
 	}
+
+	public static class PostTypes
+	{
+		public const string Forum = "Forum";
+	}
 }
