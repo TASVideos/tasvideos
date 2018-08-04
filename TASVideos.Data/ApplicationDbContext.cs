@@ -71,6 +71,8 @@ namespace TASVideos.Data
 		public DbSet<UserFile> UserFiles { get; set; }
 		public DbSet<UserFileComment> UserFileComments { get; set; }
 
+		public DbSet<MediaPosts> MediaPosts { get; set;}
+
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
 			PerformTrackingUpdates();
