@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,8 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
 using TASVideos.Services;
+using TASVideos.Services.ExternalMediaPublisher;
+using TASVideos.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Tasks;
 
 namespace TASVideos.Extensions
@@ -89,7 +92,6 @@ namespace TASVideos.Extensions
 			services.AddScoped<IFileService, FileService>();
 			services.AddScoped<IPointsService, PointsService>();
 			services.AddTransient<IEmailSender, EmailSender>();
-
 			return services;
 		}
 
@@ -137,6 +139,21 @@ namespace TASVideos.Extensions
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
 				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+
+			return services;
+		}
+
+		internal static IServiceCollection AddMessengerService(this IServiceCollection services, IHostingEnvironment env, AppSettings settings)
+		{
+			// TODO: config drive services
+			var distributors = new List<IPostDistributor>();
+
+			if (env.IsAnyTestEnvironment())
+			{
+				distributors.Add(new ConsoleDistributor());
+			}
+
+			services.AddSingleton(new ExternalMediaPublisher(distributors));
 
 			return services;
 		}

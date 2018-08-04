@@ -156,6 +156,7 @@ namespace TASVideos.Models
 	public class ForumPostModel
 	{
 		public int TopicId { get; set; }
+		public string TopicTitle { get; set; }
 		public string Subject { get; set; }
 		public string Post { get; set; }
 	}
@@ -166,9 +167,7 @@ namespace TASVideos.Models
 	/// </summary>
 	public class ForumPostCreateModel : ForumPostModel
 	{
-		public string TopicTitle { get; set; }
 		public bool IsLocked { get; set; }
-
 		public string UserAvatar { get; set; }
 		public string UserSignature { get; set; }
 	}
