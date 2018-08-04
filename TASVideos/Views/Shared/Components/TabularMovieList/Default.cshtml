@@ -1,42 +1,73 @@
 ﻿@model IEnumerable<TabularMovieListResultModel>
-@{
+	@{
 	string flink = ViewData["flink"]?.ToString();
 	string footer = ViewData["footer"]?.ToString();
-	var first = Model.First();
-}
-<hr />
-<row>
-	<div class="col-lg-9 col-md-8">
-		<table class="table table-striped table-sm hidden-lg-down">
-			@if (!string.IsNullOrWhiteSpace(flink))
-			{
-				<caption><a href="/@flink">@footer</a></caption>
-			}
-			<tbody>
-				<tr>
-					<th>Date</th>
-					<th>Game</th>
-					<th>Time</th>
-					<th>By</th>
-				</tr>
-				@foreach (var pub in Model)
+	var first = Model.FirstOrDefault();
+	}
+	<hr />
+	<row>
+		<div class="col-lg-9 col-md-8">
+			<table class="table table-striped table-sm hidden-lg-down">
+				@if (!string.IsNullOrWhiteSpace(flink))
 				{
+				<caption><a href="/@flink">@footer</a></caption>
+				}
+				<tbody>
+					<tr>
+						<th>Date</th>
+						<th>Game</th>
+						<th>Time</th>
+						<th>By</th>
+					</tr>
+					@foreach (var pub in Model)
+					{
 					<tr>
 						<td>@pub.CreateTimeStamp.ToShortDateString()</td>
 						<td>@pub.Game</td>
 						<td><a href="/@(pub.Id)M">@($"{pub.Time:g}")</a></td>
 						<td>@pub.Authors</td>
 					</tr>
+<<<<<<< HEAD
 				}
 			</tbody>
 		</table>
 	</div>
 	<div class="col-lg-3 col-md-4 d-sm-none d-md-block">
 		<figure class="figure pull-right">
+			@if (first != null)
+			{
 			<a href="/@(first.Id)M">
 				<img src="~/media/@first.Screenshot" style="max-width: 100%">
 			</a>
 			<figcaption class="figure-caption">@first.Game by @first.Authors</figcaption>
+			} else
+			{
+				<a href="/">No Movie Found</a>
+				<figcaption class="figure-caption">No movie was found</figcaption>
+			}
 		</figure>
 	</div>
 </row>
+=======
+					}
+				</tbody>
+			</table>
+		</div>
+		<div class="col-lg-3 col-md-4 d-sm-none d-md-block">
+			<figure class="figure pull-right">
+				@if (first != null)
+				{
+				<a href="/@(first.Id)M">
+					<img src="~/media/@first.Screenshot" style="max-width: 100%">
+				</a>
+				<figcaption class="figure-caption">@first.Game by @first.Authors</figcaption>
+				} else
+				{
+				<a href="/NoMovie">Default Movie</a>
+				<figcaption class="figure-caption">Nothing Here by Nobody</figcaption>
+
+				}
+			</figure>
+		</div>
+	</row>
+>>>>>>> 6a8dd0fcf89b57112b2a6caca32047b75172eeaa
