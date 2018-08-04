@@ -24,7 +24,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public void Post(IPostable post)
 		{
-			_db.MediaPosts.Add(new MediaPosts
+			_db.MediaPosts.Add(new MediaPost
 			{
 				Title = post.Title,
 				Link = post.Link,

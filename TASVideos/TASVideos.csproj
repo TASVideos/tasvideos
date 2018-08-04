@@ -81,6 +81,9 @@
     <Content Update="Views\Shared\Components\GameResourcesFooter\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Shared\Components\MediaPosts\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\Components\SystemPageFooter\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
