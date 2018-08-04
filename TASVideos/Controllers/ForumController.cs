@@ -10,6 +10,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
 using TASVideos.Models;
+using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -18,15 +19,18 @@ namespace TASVideos.Controllers
 	{
 		private readonly ForumTasks _forumTasks;
 		private readonly UserManager<User> _userManager;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public ForumController(
 			ForumTasks forumTasks,
 			UserTasks userTasks,
-			UserManager<User> userManager)
+			UserManager<User> userManager,
+			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
 			_forumTasks = forumTasks;
 			_userManager = userManager;
+			_publisher = publisher;
 		}
 
 		[AllowAnonymous]
@@ -250,7 +254,13 @@ namespace TASVideos.Controllers
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			await _forumTasks.CreatePost(model, user, IpAddress.ToString());
+			var id = await _forumTasks.CreatePost(model, user, IpAddress.ToString());
+
+			_publisher.SendGeneralForum(
+				$"New reply by {user.UserName}",
+				$"{model.TopicTitle} ({model.Subject})",
+				$"{BaseUrl}/p/{id}#{id}"
+			);
 
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}

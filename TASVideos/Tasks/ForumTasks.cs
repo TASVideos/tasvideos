@@ -354,7 +354,7 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		public async Task CreatePost(ForumPostModel model, User user, string ipAddress)
+		public async Task<int> CreatePost(ForumPostModel model, User user, string ipAddress)
 		{
 			var forumPost = new ForumPost
 			{
@@ -372,6 +372,7 @@ namespace TASVideos.Tasks
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
+			return forumPost.Id;
 		}
 
 		/// <summary>
