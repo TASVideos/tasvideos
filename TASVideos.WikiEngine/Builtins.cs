@@ -65,6 +65,7 @@ namespace TASVideos.WikiEngine
 		private static readonly Regex Footnote = new Regex(@"^(\d+)$");
 		private static readonly Regex FootnoteLink = new Regex(@"^#(\d+)$");
 		private static readonly Regex RealModule = new Regex("^module:(.*)$");
+		private static readonly Regex UserHomepageLink = new Regex("^user:(.*)$");
 		public static IEnumerable<INode> MakeModule(int charStart, int charEnd, string text)
 		{
 			if (text == "|") // literal | escape
@@ -83,6 +84,9 @@ namespace TASVideos.WikiEngine
 				return MakeFootnoteLink(charStart, charEnd, match.Groups[1].Value);
 			if ((match = RealModule.Match(text)).Success)
 				return MakeModuleInternal(charStart, charEnd, match.Groups[1].Value);
+			if ((match = UserHomepageLink.Match(text)).Success)
+				// user homepages are the same __wikiLink module as other wiki links, but match them here so we can catch special characters in user names
+				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + match.Groups[1].Value);
 
 			return MakeLinkOrImage(charStart, charEnd, text);
 		}
@@ -127,7 +131,7 @@ namespace TASVideos.WikiEngine
 		private static readonly string[] LinkPrefixes = new[] { "=", "http://", "https://", "ftp://", "//" };
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
-		private static readonly Regex ImplicitWikiLink = new Regex(@"^(user:)?[A-Za-z0-9._/#\-]+(\|.+)?$");
+		private static readonly Regex ImplicitWikiLink = new Regex(@"^[A-Za-z0-9._/#\-]+(\|.+)?$");
 		private static bool IsLink(string text)
 		{
 			return LinkPrefixes.Any(p => text.StartsWith(p));
