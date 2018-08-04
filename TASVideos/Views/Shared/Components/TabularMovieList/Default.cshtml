@@ -27,7 +27,6 @@
 						<td><a href="/@(pub.Id)M">@($"{pub.Time:g}")</a></td>
 						<td>@pub.Authors</td>
 					</tr>
-<<<<<<< HEAD
 				}
 			</tbody>
 		</table>
@@ -48,26 +47,3 @@
 		</figure>
 	</div>
 </row>
-=======
-					}
-				</tbody>
-			</table>
-		</div>
-		<div class="col-lg-3 col-md-4 d-sm-none d-md-block">
-			<figure class="figure pull-right">
-				@if (first != null)
-				{
-				<a href="/@(first.Id)M">
-					<img src="~/media/@first.Screenshot" style="max-width: 100%">
-				</a>
-				<figcaption class="figure-caption">@first.Game by @first.Authors</figcaption>
-				} else
-				{
-				<a href="/NoMovie">Default Movie</a>
-				<figcaption class="figure-caption">Nothing Here by Nobody</figcaption>
-
-				}
-			</figure>
-		</div>
-	</row>
->>>>>>> 6a8dd0fcf89b57112b2a6caca32047b75172eeaa
