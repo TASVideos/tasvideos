@@ -8,9 +8,17 @@ namespace TASVideos.Data.SeedData
 		public const string InitialCreate = "Initial Create";
 		public const string Import = "Modified by Import process";
 
-		// These update exisint revisions to be relevant to the new system, or create new pages alltogether
+		// These update existing revisions to be relevant to the new system, or create new pages all-together
 		public static readonly WikiPage[] NewRevisions =
 		{
+			new WikiPage
+			{
+				PageName = "MediaPosts",
+				RevisionMessage = Import,
+				Markup = @"Below is a list of recent media post activity (Announcements etc that have went to places like IRC, Discord, etc)
+
+[module:mediaposts|limit=50]"
+			},
 			new WikiPage
 			{
 				PageName = "System/PlayersHeader",
