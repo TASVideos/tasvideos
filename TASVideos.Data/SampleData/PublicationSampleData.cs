@@ -17,7 +17,6 @@ namespace TASVideos.Data.SampleData
 @"[module:ActiveTab|tab=b0]
 [module:topicfeed|t=8694|right|heading=TASVideos News|l=4|hidecontent]
  
-!! Featured Movie
 [if:!UserIsLoggedIn]
 [module:DisplayMiniMovie|ratingsort=F|flags=NewcomerRec|notier]
 [endif]
