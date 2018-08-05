@@ -476,7 +476,8 @@ namespace TASVideos.Tasks
 		/// In addition <see cref="WikiPageReferral"/> entries are updated
 		/// to remove entries where the given page name is a referrer
 		/// </summary>
-		public async Task DeleteWikiPage(string pageName)
+		/// <returns>The number of revisions that were deleted</returns>
+		public async Task<int> DeleteWikiPage(string pageName)
 		{
 			var revisions = await _db.WikiPages
 				.Where(wp => wp.PageName == pageName)
@@ -506,6 +507,7 @@ namespace TASVideos.Tasks
 			_db.RemoveRange(referrers);
 
 			await _db.SaveChangesAsync();
+			return revisions.Count;
 		}
 
 		/// <summary>
@@ -558,6 +560,7 @@ namespace TASVideos.Tasks
 				{
 					PageName = record.Key,
 					RevisionCount = record.Count(),
+
 					// https://github.com/aspnet/EntityFrameworkCore/issues/3103
 					//EF Core 2.1 bug, this no longer works, "Must be reducible node exception
 					//HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)

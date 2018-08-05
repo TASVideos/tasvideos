@@ -259,7 +259,12 @@ namespace TASVideos.Controllers
 		{
 			if (!string.IsNullOrWhiteSpace(path))
 			{
-				await _wikiTasks.DeleteWikiPage(path.Trim('/'));
+				var result = await _wikiTasks.DeleteWikiPage(path.Trim('/'));
+
+				_publisher.SendGeneralWiki(
+					$"Page {path} DELETED by {User.Identity.Name}",
+					$"({result} revisions)",
+					"");
 			}
 
 			return RedirectToAction(nameof(DeletedPages));
@@ -275,6 +280,11 @@ namespace TASVideos.Controllers
 
 			path = path.Trim('/');
 			await _wikiTasks.DeleteWikiPageRevision(path, revision);
+
+			_publisher.SendGeneralWiki(
+					$"Revision {revision} of Page {path} DELETED by {User.Identity.Name}",
+					"",
+					"");
 
 			return Redirect("/" + path);
 		}
