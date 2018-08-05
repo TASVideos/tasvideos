@@ -26,8 +26,9 @@
 		public const int PostsPerPage = 25;
 	}
 
-	public static class PostTypes
+	public static class PostGroups
 	{
 		public const string Forum = "Forum";
+		public const string Wiki = "Wiki";
 	}
 }
