@@ -72,6 +72,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = u.Id,
 					UserName = ImportHelper.ConvertLatin1String(u.UserName),
+					//NormalizedUserName = ImportHelper.ConvertLatin1String(u.UserName).ToUpper(), // TODO: this creates a unique constraint violation, two users must have the same normalized name??
 					NormalizedUserName = u.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate), // TODO
@@ -90,7 +91,7 @@ namespace TASVideos.Legacy.Imports
 					TimeZoneId = timeZones.First(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset).StandardName
 				})
 				.ToList();
-
+			
 			var roles = context.Roles.ToList();
 
 			var userRoles = new List<UserRole>();
