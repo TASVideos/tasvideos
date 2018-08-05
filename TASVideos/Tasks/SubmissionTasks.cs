@@ -446,7 +446,7 @@ namespace TASVideos.Tasks
 			submission.EncodeEmbedLink = model.EncodeEmbedLink;
 			submission.Status = model.Status;
 
-			var id = await _wikiTasks.SavePage(new WikiEditModel
+			var page = await _wikiTasks.SavePage(new WikiEditModel
 			{
 				PageName = $"{LinkConstants.SubmissionWikiPage}{model.Id}",
 				Markup = model.Markup,
@@ -460,7 +460,7 @@ namespace TASVideos.Tasks
 					})
 			});
 
-			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == id);
+			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == page.Id);
 
 			submission.GenerateTitle();
 			await _db.SaveChangesAsync();

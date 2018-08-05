@@ -178,12 +178,12 @@ namespace TASVideos.Controllers
 						Excerpt = l.Excerpt
 					});
 
-				await _wikiTasks.SavePage(model);
+				var result = await _wikiTasks.SavePage(model);
 
-				if (!model.MinorEdit)
+				if (result.Revision == 1 || !model.MinorEdit)
 				{
 					_publisher.SendGeneralWiki(
-						$"Page {model.PageName} edited by {User.Identity.Name}",
+						$"Page {model.PageName} {(result.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
 						$"{model.RevisionMessage}",
 						$"{BaseUrl}/{model.PageName}");
 				}
