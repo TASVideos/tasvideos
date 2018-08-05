@@ -406,10 +406,11 @@ namespace TASVideos.Tasks
 			return await _db.WikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
+				.Where(wp => wp.PageName != "MediaPosts") // Linked by the navbar
 				.Where(wp => !_db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
 				.Where(wp => !wp.PageName.StartsWith("System/")
 					&& !wp.PageName.StartsWith("InternalSystem")) // These by design aren't orphans they are directly used in the system
-				.Where(wp => !wp.PageName.Contains("/")) // Supages are linked by default by the parents, so we know they are not orphans
+				.Where(wp => !wp.PageName.Contains("/")) // Subpages are linked by default by the parents, so we know they are not orphans
 				.Select(wp => new WikiOrphanModel
 				{
 					PageName = wp.PageName,

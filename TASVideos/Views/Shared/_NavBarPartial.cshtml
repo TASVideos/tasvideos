@@ -73,7 +73,8 @@
 	<li condition="ViewData.UserHasAny(new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers, PermissionTo.EditRoles })" class="nav-item dropdown @(Active("Admin"))">
 		<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
 		<div class="dropdown-menu">
-			@if (ViewData.UserHasAny(new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers }))
+			<a class="dropdown-item" href="/MediaPosts">Media Posts</a>
+			@if (ViewData.UserHasAny(new[] {PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers}))
 			{
 				<a class="dropdown-item" asp-controller="User" asp-action="List">Users</a>
 			}
