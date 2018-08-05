@@ -177,7 +177,6 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 
-			WikiCache.Add(newRevision);
 			var cachedCurrentRevision = WikiCache.FirstOrDefault(w => w.PageName == model.PageName && w.ChildId == null);
 			if (cachedCurrentRevision != null)
 			{
@@ -185,6 +184,7 @@ namespace TASVideos.Tasks
 				cachedCurrentRevision.ChildId = newRevision.Id;
 			}
 
+			WikiCache.Add(newRevision);
 			return newRevision.Id;
 		}
 
