@@ -82,7 +82,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<RatingsTasks>();
 			services.AddScoped<PrivateMessageTasks>();
 			services.AddScoped<UserFileTasks>();
-			services.AddScoped<PointsService>();
+			services.AddScoped<MediaTasks>();
 
 			return services;
 		}
@@ -145,16 +145,15 @@ namespace TASVideos.Extensions
 
 		internal static IServiceCollection AddMessengerService(this IServiceCollection services, IHostingEnvironment env, AppSettings settings)
 		{
-			// TODO: config drive services
-			var distributors = new List<IPostDistributor>();
-
 			if (env.IsAnyTestEnvironment())
 			{
-				distributors.Add(new ConsoleDistributor());
+				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
 			}
 
-			services.AddSingleton(new ExternalMediaPublisher(distributors));
+			services.AddScoped<IPostDistributor, DistributorStorage>();
 
+			services.AddTransient<ExternalMediaPublisher>();
+			
 			return services;
 		}
 	}

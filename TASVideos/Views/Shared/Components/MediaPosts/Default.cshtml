@@ -1,0 +1,21 @@
+﻿@model IEnumerable<MediaPost>
+
+<table class="table table-striped">
+	<tr>
+		<th>Title</th>
+		<th>Body</th>
+		<th>Link</th>
+		<th>Type/Group</th>
+		<th>Posted</th>
+	</tr>
+	@foreach (var post in Model)
+	{
+		<tr>
+			<td>@post.Title</td>
+			<td>@post.Body</td>
+			<td><a href="@post.Link">@post.Link</a></td>
+			<td>@post.Type (@post.Group)</td>
+			<td>@post.CreateTimeStamp</td>
+		</tr>
+	}
+</table>

@@ -128,15 +128,30 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<MiniMovieModel> GetPublicationMiniMovie(int id)
 		{
-			return await _db.Publications
-				.Select(p => new MiniMovieModel
-				{
-					Id = p.Id,
-					Title = p.Title,
-					Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
-					OnlineWatchingUrl = p.OnlineWatchingUrl,
-				})
-				.SingleAsync(p => p.Id == id);
+			if (id != 0)
+			{
+				return await _db.Publications
+					.Select(p => new MiniMovieModel
+					{
+						Id = p.Id,
+						Title = p.Title,
+						Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
+						OnlineWatchingUrl = p.OnlineWatchingUrl,
+					})
+					.SingleOrDefaultAsync(p => p.Id == id);
+			}
+			else
+			{
+				return await _db.Publications
+					.Select(p => new MiniMovieModel
+					{
+						Id = 0,
+						Title = "Error",
+						Screenshot = p.Files.FirstOrDefault(f => f.Type == FileType.Screenshot).Path,
+						OnlineWatchingUrl = p.OnlineWatchingUrl,
+					})
+					.SingleAsync(p => p.Id == id);
+			}
 		}
 
 		/// <summary>

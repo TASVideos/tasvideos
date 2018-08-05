@@ -11,7 +11,7 @@ namespace TASVideos.Data.SampleData
 		public static T AtRandom<T>(this ICollection<T> collection)
 		{
 			var randomIndex = Rng.Next(0, collection.Count);
-			return collection.ElementAt(randomIndex);
+			return collection.ElementAtOrDefault(randomIndex);
 		}
 
 		public static decimal RandomDecimal(double min, double max, int decimals)
