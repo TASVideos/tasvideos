@@ -65,6 +65,7 @@ namespace TASVideos.Tasks
 		public async Task<WikiPage> GetPage(string pageName, int? revisionId = null)
 		{
 			var cachedPage = WikiCache
+				.ThatAreNotDeleted()
 				.FirstOrDefault(w => w.PageName == pageName
 					&& (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
 			if (cachedPage != null)
@@ -95,7 +96,9 @@ namespace TASVideos.Tasks
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
 		public async Task<WikiPage> GetPageById(int dbid)
 		{
-			var cachedPage = WikiCache.FirstOrDefault(w => w.Id == dbid);
+			var cachedPage = WikiCache
+				.ThatAreNotDeleted()
+				.FirstOrDefault(w => w.Id == dbid);
 			if (cachedPage != null)
 			{
 				return cachedPage;
@@ -487,7 +490,6 @@ namespace TASVideos.Tasks
 
 			var cachedRevisions = WikiCache
 				.Where(w => w.PageName == pageName)
-				.AsQueryable()
 				.ThatAreNotDeleted()
 				.ToList();
 
@@ -522,7 +524,6 @@ namespace TASVideos.Tasks
 				wikiPage.IsDeleted = true;
 
 				var cachedRevision = WikiCache
-					.AsQueryable()
 					.ThatAreNotDeleted()
 					.SingleOrDefault(w => w.PageName == pageName && w.Revision == revision);
 
