@@ -9,9 +9,6 @@
 		&& Model.IsCatalogged
 		&& Model.Publisher == User.Identity.Name;
 }
-@section PageTitle {
-	<h1>@($"Submission {Model.Title}")</h1>
-}
 
 @functions{
 	string StatusColor(SubmissionStatus status)
@@ -19,16 +16,20 @@
 		switch (status)
 		{
 			default:
-				return "text-info";
+				return "badge-info";
 			case SubmissionStatus.Published:
-				return "text-success";
+				return "badge-success";
 			case SubmissionStatus.Rejected:
-				return "text-danger";
+				return "badge-danger";
 			case SubmissionStatus.NeedsMoreInfo:
 			case SubmissionStatus.Delayed:
-				return "text-warning";
+				return "badge-warning";
 		}
 	}
+}
+
+@section PageTitle {
+	<h1>@($"Submission {Model.Title}") <span class="float-right badge @(StatusColor(Model.Status)) m-1">@Model.Status.EnumDisplayName()</span></h1>
 }
 
 <row>
@@ -37,9 +38,6 @@
 	</div>
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
 		<div class="text-right @(StatusColor(Model.Status))">
-			<h5>
-				<label asp-for="Status"></label>: <label class="form-control-static">@Model.Status.EnumDisplayName()</label>
-			</h5>
 			<div condition="@Model.Status == SubmissionStatus.Accepted">
 				<label asp-for="TierName"></label>: <a href="/@Model.TierName">@Model.TierName</a>
 			</div>

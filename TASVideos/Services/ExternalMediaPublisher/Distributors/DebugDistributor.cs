@@ -17,9 +17,9 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public IEnumerable<PostType> Types => PostTypes;
 
-		public void Post(IPostable message)
+		public void Post(IPostable post)
 		{
-			Console.WriteLine($"New {message.Type} message recieved\n{message.Title}\n{message.Body}\nLink:{message.Link}\nGroup:{message.Group}");
+			Console.WriteLine($"New {post.Type} message recieved\n{post.Title}\n{post.Body}\nLink:{post.Link}\nGroup:{post.Group}");
 		}
 	}
 }
