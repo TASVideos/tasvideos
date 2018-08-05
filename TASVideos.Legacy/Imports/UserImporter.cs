@@ -144,6 +144,15 @@ namespace TASVideos.Legacy.Imports
 						});
 					}
 
+					if (user.User.UserName == "dwangoAC")
+					{
+						context.UserRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.Ambassador).Id,
+							UserId = user.User.Id
+						});
+					}
+
 					foreach (var userRole in user.SiteUser.UserRoles.Select(ur => ur.Role)
 						.Where(r => r.Name != "user" && r.Name != "limited"))
 					{

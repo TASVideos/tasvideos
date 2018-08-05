@@ -12,7 +12,7 @@ namespace TASVideos.Data.Entity
 		/// </summary>
 		public bool IsDefault { get; set; }
 
-		[StringLength(200)]
+		[StringLength(300)]
 		public string Description { get; set; }
 
 		public DateTime CreateTimeStamp { get; set; }
