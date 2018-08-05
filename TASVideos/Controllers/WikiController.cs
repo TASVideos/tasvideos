@@ -306,6 +306,12 @@ namespace TASVideos.Controllers
 
 			path = path.Trim('/');
 			await _wikiTasks.UndeletePage(path);
+
+			_publisher.SendGeneralWiki(
+					$"Page {path} UNDELETED by {User.Identity.Name}",
+					"",
+					$"{BaseUrl}/path");
+
 			return Redirect("/" + path);
 		}
 
