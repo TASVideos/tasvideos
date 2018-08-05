@@ -557,9 +557,20 @@ namespace TASVideos.Tasks
 				{
 					PageName = record.Key,
 					RevisionCount = record.Count(),
-					HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
+					// https://github.com/aspnet/EntityFrameworkCore/issues/3103
+					//EF Core 2.1 bug, this no longer works, "Must be reducible node exception
+					//HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
 				})
 				.ToListAsync();
+
+			// Workaround for EF Core 2.1 issue
+			// https://github.com/aspnet/EntityFrameworkCore/issues/3103
+			// Since we know the cache is up to date we can do the logic there and avoid n+1 trips to the db
+			await LoadWikiCache();
+			foreach (var result in results)
+			{
+				result.HasExistingRevisions = WikiCache.Any(wp => wp.PageName == result.PageName);
+			}
 
 			return results;
 		}
