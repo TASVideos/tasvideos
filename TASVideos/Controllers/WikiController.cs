@@ -12,6 +12,7 @@ using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Razor;
+using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
 using TASVideos.WikiEngine;
 
@@ -21,15 +22,18 @@ namespace TASVideos.Controllers
 	{
 		private readonly WikiTasks _wikiTasks;
 		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public WikiController(
 			UserTasks userTasks,
 			WikiTasks wikiTasks,
-			WikiMarkupFileProvider wikiMarkupFileProvider)
+			WikiMarkupFileProvider wikiMarkupFileProvider,
+			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
 			_wikiTasks = wikiTasks;
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
+			_publisher = publisher;
 		}
 
 		[AllowAnonymous]
@@ -175,6 +179,15 @@ namespace TASVideos.Controllers
 					});
 
 				await _wikiTasks.SavePage(model);
+
+				if (!model.MinorEdit)
+				{
+					_publisher.SendGeneralWiki(
+						$"Page {model.PageName} edited by {User.Identity.Name}",
+						$"{model.RevisionMessage}",
+						$"{BaseUrl}/{model.PageName}");
+				}
+
 				return Redirect("/" + model.PageName.Trim('/'));
 			}
 

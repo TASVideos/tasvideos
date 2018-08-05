@@ -43,7 +43,19 @@ namespace TASVideos.Services.ExternalMediaPublisher
 			publisher.Send(new Post
 			{
 				Type = PostType.General,
-				Group = PostTypes.Forum,
+				Group = PostGroups.Forum,
+				Title = title,
+				Body = body,
+				Link = link
+			});
+		}
+
+		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string link)
+		{
+			publisher.Send(new Post
+			{
+				Type = PostType.General,
+				Group = PostGroups.Wiki,
 				Title = title,
 				Body = body,
 				Link = link

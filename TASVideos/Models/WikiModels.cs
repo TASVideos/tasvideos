@@ -21,6 +21,7 @@ namespace TASVideos.Models
 
 		[Required] // Yeah, I did that
 		[Display(Name = "Edit Comments")]
+		[MaxLength(100)]
 		public string RevisionMessage { get; set; }
 
 		public IEnumerable<WikiReferralModel> Referrals { get; set; } = new List<WikiReferralModel>();
