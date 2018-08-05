@@ -135,7 +135,7 @@ namespace TASVideos.Tasks
 		/// <returns>The id of the page created</returns>
 		/// <seealso cref="WikiPageReferral"/> entries are also updated
 		/// </summary>
-		public async Task<int> SavePage(WikiEditModel model)
+		public async Task<WikiPage> SavePage(WikiEditModel model)
 		{
 			var newRevision = new WikiPage
 			{
@@ -185,7 +185,7 @@ namespace TASVideos.Tasks
 			}
 
 			WikiCache.Add(newRevision);
-			return newRevision.Id;
+			return newRevision;
 		}
 
 		/// <summary>
