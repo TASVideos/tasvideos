@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TASVideos.Data.Entity
 {
@@ -15,7 +16,19 @@ namespace TASVideos.Data.Entity
 			return list.Where(l => !l.IsDeleted);
 		}
 
+		public static IEnumerable<T> ThatAreNotDeleted<T>(this IEnumerable<T> list)
+			where T : class, ISoftDeletable
+		{
+			return list.Where(l => !l.IsDeleted);
+		}
+
 		public static IQueryable<T> ThatAreDeleted<T>(this IQueryable<T> list)
+			where T : class, ISoftDeletable
+		{
+			return list.Where(l => l.IsDeleted);
+		}
+
+		public static IEnumerable<T> ThatAreDeleted<T>(this IEnumerable<T> list)
 			where T : class, ISoftDeletable
 		{
 			return list.Where(l => l.IsDeleted);
