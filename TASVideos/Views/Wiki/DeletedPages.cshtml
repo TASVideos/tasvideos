@@ -11,7 +11,7 @@
 		<th>@Html.DisplayNameFor(m => m.First().HasExistingRevisions)</th>
 		<th>Actions</th>
 	</tr>
-	@foreach (var item in Model)
+	@foreach (var item in Model.OrderByDescending(m => m.PageName))
 	{
 		<tr>
 			<td>@item.PageName</td>
