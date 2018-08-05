@@ -25,6 +25,7 @@ namespace TASVideos.Data.SeedData
 		public const string SeniorPublisher = "Senior Publisher";
 		public const string ForumModerator = "Forum Moderator";
 		public const string ForumAdmin = "Forum Admin";
+		public const string Ambassador = "Ambassador";
 	}
 
 	public class RoleSeedData
@@ -94,6 +95,13 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditCategories,
 			PermissionTo.DeleteForumPosts
 		}).ToArray();
+
+		private static readonly PermissionTo[] AmbassadorPermissions =
+		{
+			PermissionTo.SeeRestrictedForums,
+			PermissionTo.EditWikiPages,
+			PermissionTo.EditSystemPages
+		};
 
 		public static readonly Role EditHomePage = new Role
 		{
@@ -307,6 +315,18 @@ namespace TASVideos.Data.SeedData
 			RoleLinks = new List<RoleLink>()
 		};
 
+		public static readonly Role Ambassador = new Role
+		{
+			Name = RoleSeedNames.Ambassador,
+			Description = "Ambassadors take the burden on themselves to arrange various site related events and also visit game conferences and advertise the site. They handle various public relations issues and can edit most pages on the site.",
+			RolePermission = AmbassadorPermissions.Select(p => new RolePermission
+			{
+				Role = Ambassador,
+				PermissionId = p,
+				CanAssign = false
+			}).ToArray(),
+		};
+
 		public static IEnumerable<Role> AllRoles =>
 			new[]
 			{
@@ -323,7 +343,8 @@ namespace TASVideos.Data.SeedData
 				Publisher,
 				SeniorPublisher,
 				ForumModerator,
-				ForumAdmin
+				ForumAdmin,
+				Ambassador
 			};
 	}
 }
