@@ -122,12 +122,17 @@ namespace TASVideos.Controllers
 
 		[HttpPost, ValidateAntiForgeryToken]
 		[RequirePermission(PermissionTo.LockTopics)]
-		public async Task<IActionResult> SetTopicLock(int topicId, bool locked, string returnUrl)
+		public async Task<IActionResult> SetTopicLock(int topicId, string topicTitle, bool locked, string returnUrl)
 		{
 			var result = await _forumTasks.SetTopicLock(topicId, locked, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (result)
 			{
+				_publisher.SendGeneralForum(
+					$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
+					"",
+					Url.Action(nameof(Topic), new { id = topicId }));
+
 				return RedirectToLocal(returnUrl);
 			}
 
