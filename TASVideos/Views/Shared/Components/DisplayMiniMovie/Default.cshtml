@@ -1,11 +1,12 @@
 ﻿@model MiniMovieModel
 
-@if (Model.Id >= 0)
+@if (Model != null)
 {
 
 <div>
 	<div class="card">
 		<div class="card-header">
+			<h5><span class="pull-right badge badge-info m-1">Featured</span></h5>
 			<h4>@Model.Title</h4>
 		</div>
 		<div class="card-body">
@@ -18,16 +19,4 @@
 	</div>
 </div>
 }
-else
-{
-<div>
-	<div class="card">
-		<div class="card-header">
-			<h4>Error!</h4>
-		</div>
-		<div class="card-body">
-			Unable to display random movie!
-		</div>
-	</div>
-</div>
-}
+
