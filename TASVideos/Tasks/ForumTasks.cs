@@ -249,7 +249,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns whether or not a forum exists and if not allowRestircted, then whether it is not restricted
+		/// Returns whether or not a forum exists and if not allowRestricted, then whether it is not restricted
 		/// </summary>
 		public async Task<bool> ForumAccessible(int forumId, bool allowRestricted)
 		{
@@ -269,7 +269,7 @@ namespace TASVideos.Tasks
 		}
 
 		// TODO: document
-		public async Task<TopicCreateModel> GetCreateTopicData(int forumId, bool allowRestricted)
+		public async Task<TopicCreatePostModel> GetCreateTopicData(int forumId, bool allowRestricted)
 		{
 			var forum = await _db.Forums
 				.Where(f => allowRestricted || !f.Restricted)
@@ -280,7 +280,7 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
-			return new TopicCreateModel
+			return new TopicCreatePostModel
 			{
 				ForumId = forumId,
 				ForumName = forum.Name
@@ -294,7 +294,7 @@ namespace TASVideos.Tasks
 		/// The id of the newly created <see cref="ForumTopic" />
 		/// If a topic could not be created, returns null
 		/// </returns>
-		public async Task<int?> CreateTopic(TopicCreatePostModel model, User user, string ipAddress)
+		public async Task<ForumTopic> CreateTopic(TopicCreatePostModel model, User user, string ipAddress)
 		{
 			var topic = new ForumTopic
 			{
@@ -316,7 +316,7 @@ namespace TASVideos.Tasks
 			};
 
 			await CreatePost(forumPostModel, user, ipAddress);
-			return topic.Id;
+			return topic;
 		}
 
 		/// <summary>

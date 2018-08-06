@@ -50,6 +50,18 @@ namespace TASVideos.Services.ExternalMediaPublisher
 			});
 		}
 
+		public static void SendAdminForum(this ExternalMediaPublisher publisher, string title, string body, string link)
+		{
+			publisher.Send(new Post
+			{
+				Type = PostType.Administrative,
+				Group = PostGroups.Forum,
+				Title = title,
+				Body = body,
+				Link = link
+			});
+		}
+
 		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string link)
 		{
 			publisher.Send(new Post
