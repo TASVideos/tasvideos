@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
@@ -176,7 +177,6 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		// TODO: auto-add topic permission based on post count, also ability to vote
 		[Authorize]
 		[RequirePermission(PermissionTo.CreateForumTopics)]
 		public async Task<IActionResult> CreateTopic(int forumId)
@@ -203,16 +203,31 @@ namespace TASVideos.Controllers
 			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
 			if (!seeRestricted)
 			{
-				if (!await _forumTasks.ForumAccessible(model.ForumId, seeRestricted))
+				if (!await _forumTasks.ForumIsRestricted(model.ForumId, seeRestricted))
 				{
 					return NotFound();
 				}
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			var topicId = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
+			var topic = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
 
-			return RedirectToAction(nameof(Topic), "Forum", new { Id = topicId });
+			//// TODO: auto-add topic permission based on post count, also ability to vote
+
+			var title = $"New Topic: \"{model.Title}\" in {model.Post} TODO:forum name created by {User.Identity.Name}";
+			var body = model.Post.CapAndEllipse(50);
+			var link = Url.Action(nameof(Topic), new { topic.Id });
+
+			if (topic.Forum.Restricted)
+			{
+				_publisher.SendAdminForum(title, body, link);
+			}
+			else
+			{
+				_publisher.SendGeneralForum(title, body, link);
+			}
+
+			return RedirectToAction(nameof(Topic), "Forum", new { topic.Id });
 		}
 
 		[Authorize]
@@ -264,8 +279,7 @@ namespace TASVideos.Controllers
 			_publisher.SendGeneralForum(
 				$"New reply by {user.UserName}",
 				$"{model.TopicTitle} ({model.Subject})",
-				$"{BaseUrl}/p/{id}#{id}"
-			);
+				$"{BaseUrl}/p/{id}#{id}");
 
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}
