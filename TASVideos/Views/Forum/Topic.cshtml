@@ -7,7 +7,7 @@
 	<div class="col-12">
 		<a condition="ViewData.UserHas(PermissionTo.MoveTopics)" asp-action="MoveTopic" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Move this topic"><i class="fa fa-location-arrow"></i></a>
 		<a Condition="ViewData.UserHas(PermissionTo.SplitTopics)" asp-action="SplitTopic" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Split this topic"><i class="fa fa-code-fork"></i></a>
-		<form style="display: inline" class="form-inline" condition="@ViewData.UserHas(PermissionTo.LockTopics)" method="POST" asp-action="SetTopicLock" asp-route-topicId="@Model.Id" asp-route-locked="@(!Model.IsLocked)" asp-route-returnUrl="@Context.ReturnUrl()">
+		<form style="display: inline" class="form-inline" condition="@ViewData.UserHas(PermissionTo.LockTopics)" method="POST" asp-action="SetTopicLock" asp-route-topicId="@Model.Id" asp-route-topictitle="@Model.Title" asp-route-locked="@(!Model.IsLocked)" asp-route-returnUrl="@Context.ReturnUrl()">
 			<button type="submit" class="btn @(Model.IsLocked ? "btn-success" : "btn-warning") btn-sm">
 				<span condition="Model.IsLocked" title="Unlock this topic">
 					<i class="fa fa-unlock"></i>
