@@ -207,15 +207,16 @@ namespace TASVideos.Tasks
 		/// Sets a topics locked status
 		/// </summary>
 		/// <returns>True if the topic is found, else false</returns>
-		public async Task<bool> SetTopicLock(int topicId, bool isLocked, bool allowRestricted)
+		public async Task<(bool Success, bool Restricted)> SetTopicLock(int topicId, bool isLocked, bool allowRestricted)
 		{
 			var topic = await _db.ForumTopics
+				.Include(t => t.Forum)
 				.Where(ft => allowRestricted || !ft.Forum.Restricted)
 				.SingleOrDefaultAsync(t => t.Id == topicId);
 
 			if (topic == null)
 			{
-				return false;
+				return (false, false);
 			}
 
 			if (topic.IsLocked != isLocked)
@@ -224,7 +225,7 @@ namespace TASVideos.Tasks
 				await _db.SaveChangesAsync();
 			}
 
-			return true;
+			return (true, topic.Forum.Restricted);
 		}
 
 		// TODO: document

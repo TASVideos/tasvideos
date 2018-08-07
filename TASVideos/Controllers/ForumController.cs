@@ -128,9 +128,10 @@ namespace TASVideos.Controllers
 		{
 			var result = await _forumTasks.SetTopicLock(topicId, locked, UserHas(PermissionTo.SeeRestrictedForums));
 
-			if (result)
+			if (result.Success)
 			{
-				_publisher.SendGeneralForum(
+				_publisher.SendForum(
+					result.Restricted,
 					$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
 					"",
 					Url.Action(nameof(Topic), new { id = topicId }));
@@ -217,16 +218,11 @@ namespace TASVideos.Controllers
 
 			//// TODO: auto-add topic permission based on post count, also ability to vote
 
-			_publisher.Send(new Post
-			{
-				Type = forum.Restricted
-					? PostType.Administrative
-					: PostType.General,
-				Group = PostGroups.Forum,
-				Title = $"New Topic by {User.Identity.Name} ({forum.ShortName}: {model.Title})",
-				Body = model.Post.CapAndEllipse(50),
-				Link = Url.Action(nameof(Topic), new { topic.Id })
-			});
+			_publisher.SendForum(
+				forum.Restricted,
+				$"New Topic by {User.Identity.Name} ({forum.ShortName}: {model.Title})",
+				model.Post.CapAndEllipse(50),
+				Url.Action(nameof(Topic), new { topic.Id }));
 
 			return RedirectToAction(nameof(Topic), "Forum", new { topic.Id });
 		}
@@ -278,16 +274,11 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			var id = await _forumTasks.CreatePost(model, user, IpAddress.ToString());
 
-			_publisher.Send(new Post
-			{
-				Type = topic.Forum.Restricted
-					? PostType.Administrative
-					: PostType.General,
-				Group = PostGroups.Forum,
-				Title = $"New reply by {user.UserName} ({topic.Forum.ShortName}: {topic.Title}) ({model.Subject})",
-				Body = $"{model.TopicTitle} ({model.Subject})",
-				Link = $"{BaseUrl}/p/{id}#{id}"
-			});
+			_publisher.SendForum(
+				topic.Forum.Restricted,
+				$"New reply by {user.UserName} ({topic.Forum.ShortName}: {topic.Title}) ({model.Subject})",
+				$"{model.TopicTitle} ({model.Subject})",
+				$"{BaseUrl}/p/{id}#{id}");
 
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}
