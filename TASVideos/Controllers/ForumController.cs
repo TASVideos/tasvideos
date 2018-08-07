@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Filter;
@@ -457,6 +456,13 @@ namespace TASVideos.Controllers
 			{
 				return NotFound();
 			}
+
+			var topic = await _forumTasks.GetTopic(result.Value);
+			_publisher.SendForum(
+				topic.Forum.Restricted,
+				$"Topic {topic.Forum.Name}: {topic.Title} SPLIT from {model.ForumName}: {model.Title}",
+				"",
+				$"{BaseUrl}/Forum/Topic/{topic.Id}");
 
 			return RedirectToAction(nameof(Topic), new { id = result });
 		}
