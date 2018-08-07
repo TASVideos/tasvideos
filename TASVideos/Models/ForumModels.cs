@@ -130,14 +130,10 @@ namespace TASVideos.Models
 		}
 	}
 
-	public class TopicCreateModel : TopicCreatePostModel
-	{
-		public string ForumName { get; set; }
-	}
-
 	public class TopicCreatePostModel
 	{
 		public int ForumId { get; set; }
+		public string ForumName { get; set; }
 
 		[Required]
 		[StringLength(100, MinimumLength = 5)]

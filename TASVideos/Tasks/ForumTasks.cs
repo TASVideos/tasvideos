@@ -207,15 +207,16 @@ namespace TASVideos.Tasks
 		/// Sets a topics locked status
 		/// </summary>
 		/// <returns>True if the topic is found, else false</returns>
-		public async Task<bool> SetTopicLock(int topicId, bool isLocked, bool allowRestricted)
+		public async Task<(bool Success, bool Restricted)> SetTopicLock(int topicId, bool isLocked, bool allowRestricted)
 		{
 			var topic = await _db.ForumTopics
+				.Include(t => t.Forum)
 				.Where(ft => allowRestricted || !ft.Forum.Restricted)
 				.SingleOrDefaultAsync(t => t.Id == topicId);
 
 			if (topic == null)
 			{
-				return false;
+				return (false, false);
 			}
 
 			if (topic.IsLocked != isLocked)
@@ -224,7 +225,7 @@ namespace TASVideos.Tasks
 				await _db.SaveChangesAsync();
 			}
 
-			return true;
+			return (true, topic.Forum.Restricted);
 		}
 
 		// TODO: document
@@ -249,17 +250,16 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns whether or not a forum exists and if not allowRestircted, then whether it is not restricted
+		/// Returns whether or not a forum exists
 		/// </summary>
-		public async Task<bool> ForumAccessible(int forumId, bool allowRestricted)
+		/// <returns>null if the forum does not exist, else the forum record</returns>
+		public async Task<Forum> GetForum(int id)
 		{
-			return await _db.Forums
-				.AnyAsync(f => f.Id == forumId
-					&& (allowRestricted || !f.Restricted));
+			return await _db.Forums.SingleOrDefaultAsync(f => f.Id == id);
 		}
 
 		/// <summary>
-		/// Returns whether or not a topicm exists and if not allowRestircted, then whether it is not restricted
+		/// Returns whether or not a topic exists and if not allowRestricted, then whether it is not restricted
 		/// </summary>
 		public async Task<bool> TopicAccessible(int topicId, bool allowRestricted)
 		{
@@ -268,8 +268,15 @@ namespace TASVideos.Tasks
 					&& (allowRestricted || !t.Forum.Restricted));
 		}
 
+		public async Task<ForumTopic> GetTopic(int id)
+		{
+			return await _db.ForumTopics
+				.Include(t => t.Forum)
+				.SingleOrDefaultAsync(t => t.Id == id);
+		}
+
 		// TODO: document
-		public async Task<TopicCreateModel> GetCreateTopicData(int forumId, bool allowRestricted)
+		public async Task<TopicCreatePostModel> GetCreateTopicData(int forumId, bool allowRestricted)
 		{
 			var forum = await _db.Forums
 				.Where(f => allowRestricted || !f.Restricted)
@@ -280,7 +287,7 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
-			return new TopicCreateModel
+			return new TopicCreatePostModel
 			{
 				ForumId = forumId,
 				ForumName = forum.Name
@@ -294,7 +301,7 @@ namespace TASVideos.Tasks
 		/// The id of the newly created <see cref="ForumTopic" />
 		/// If a topic could not be created, returns null
 		/// </returns>
-		public async Task<int?> CreateTopic(TopicCreatePostModel model, User user, string ipAddress)
+		public async Task<ForumTopic> CreateTopic(TopicCreatePostModel model, User user, string ipAddress)
 		{
 			var topic = new ForumTopic
 			{
@@ -316,7 +323,7 @@ namespace TASVideos.Tasks
 			};
 
 			await CreatePost(forumPostModel, user, ipAddress);
-			return topic.Id;
+			return topic;
 		}
 
 		/// <summary>
@@ -572,7 +579,7 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		public async Task MoveTopic(MoveTopicModel model, bool allowRestricted)
+		public async Task<bool> MoveTopic(MoveTopicModel model, bool allowRestricted)
 		{
 			var topic = await _db.ForumTopics
 				.Where(t => allowRestricted || !t.Forum.Restricted)
@@ -583,7 +590,10 @@ namespace TASVideos.Tasks
 			{
 				topic.ForumId = model.ForumId;
 				await _db.SaveChangesAsync();
+				return true;
 			}
+
+			return false;
 		}
 
 		public async Task<SplitTopicModel> GetTopicForSplit(int topicId, bool allowRestricted)

@@ -1,4 +1,4 @@
-﻿@model TopicCreateModel
+﻿@model TopicCreatePostModel
 @{
 	ViewData["Title"] = $"Creating topic for: {Model.ForumName}";
 }
@@ -7,6 +7,7 @@
 
 <form asp-action="CreateTopic" form-method="POST">
 	<input type="hidden" asp-for="ForumId" />
+	<input type="hidden" asp-for="ForumName"/>
 	<form-group class="col-lg-6">
 		<row>
 			<label asp-for="Title" class="form-control-label"></label>

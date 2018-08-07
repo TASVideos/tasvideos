@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
@@ -126,9 +127,10 @@ namespace TASVideos.Controllers
 		{
 			var result = await _forumTasks.SetTopicLock(topicId, locked, UserHas(PermissionTo.SeeRestrictedForums));
 
-			if (result)
+			if (result.Success)
 			{
-				_publisher.SendGeneralForum(
+				_publisher.SendForum(
+					result.Restricted,
 					$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
 					"",
 					Url.Action(nameof(Topic), new { id = topicId }));
@@ -176,7 +178,6 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		// TODO: auto-add topic permission based on post count, also ability to vote
 		[Authorize]
 		[RequirePermission(PermissionTo.CreateForumTopics)]
 		public async Task<IActionResult> CreateTopic(int forumId)
@@ -200,19 +201,29 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
-			if (!seeRestricted)
+			var forum = await _forumTasks.GetForum(model.ForumId);
+			if (forum == null)
 			{
-				if (!await _forumTasks.ForumAccessible(model.ForumId, seeRestricted))
-				{
-					return NotFound();
-				}
+				return NotFound();
+			}
+
+			if (forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums))
+			{
+				return NotFound();
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			var topicId = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
+			var topic = await _forumTasks.CreateTopic(model, user, IpAddress.ToString());
 
-			return RedirectToAction(nameof(Topic), "Forum", new { Id = topicId });
+			//// TODO: auto-add topic permission based on post count, also ability to vote
+
+			_publisher.SendForum(
+				forum.Restricted,
+				$"New Topic by {User.Identity.Name} ({forum.ShortName}: {model.Title})",
+				model.Post.CapAndEllipse(50),
+				Url.Action(nameof(Topic), new { topic.Id }));
+
+			return RedirectToAction(nameof(Topic), "Forum", new { topic.Id });
 		}
 
 		[Authorize]
@@ -243,17 +254,18 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
-			if (!seeRestricted)
+			var topic = await _forumTasks.GetTopic(model.TopicId);
+			if (topic == null)
 			{
-				if (!await _forumTasks.TopicAccessible(model.TopicId, seeRestricted))
-				{
-					return NotFound();
-				}
+				return NotFound();
 			}
 
-			if (!UserHas(PermissionTo.PostInLockedTopics)
-				&& await _forumTasks.IsTopicLocked(model.TopicId))
+			if (topic.Forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums))
+			{
+				return NotFound();
+			}
+
+			if (topic.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
 			{
 				return RedirectAccessDenied();
 			}
@@ -261,11 +273,11 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			var id = await _forumTasks.CreatePost(model, user, IpAddress.ToString());
 
-			_publisher.SendGeneralForum(
-				$"New reply by {user.UserName}",
+			_publisher.SendForum(
+				topic.Forum.Restricted,
+				$"New reply by {user.UserName} ({topic.Forum.ShortName}: {topic.Title}) ({model.Subject})",
 				$"{model.TopicTitle} ({model.Subject})",
-				$"{BaseUrl}/p/{id}#{id}"
-			);
+				$"{BaseUrl}/p/{id}#{id}");
 
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}
@@ -312,14 +324,18 @@ namespace TASVideos.Controllers
 				}
 			}
 
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
-			if (!seeRestricted)
+			var topic = await _forumTasks.GetTopic(model.TopicId);
+			if (topic == null
+				|| (topic.Forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums)))
 			{
-				if (!await _forumTasks.TopicAccessible(model.TopicId, seeRestricted))
-				{
-					return NotFound();
-				}
+				return NotFound();
 			}
+
+			_publisher.SendForum(
+				topic.Forum.Restricted,
+				$"Post edited by {User.Identity.Name} ({topic.Forum.ShortName}: {topic.Title})",
+				"",
+				$"{BaseUrl}/p/{model.PostId}#{model.PostId}");
 
 			await _forumTasks.EditPost(model);
 
@@ -337,6 +353,13 @@ namespace TASVideos.Controllers
 			{
 				return NotFound();
 			}
+
+			var topic = await _forumTasks.GetTopic(result.Value);
+			_publisher.SendForum(
+				topic.Forum.Restricted,
+				$"Post DELETED by {User.Identity.Name} ({topic.Forum.ShortName}: {topic.Title})",
+				$"{BaseUrl}/p/{id}#{id}",
+				$"{BaseUrl}/Forum/Topic/{topic.Id}");
 
 			return RedirectToAction(nameof(Topic), new { id = result });
 		}
@@ -382,7 +405,17 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			await _forumTasks.MoveTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
+			var result = await _forumTasks.MoveTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
+			if (result)
+			{
+				var forum = await _forumTasks.GetForum(model.ForumId);
+				_publisher.SendForum(
+					forum.Restricted,
+					$"Topic {model.TopicTitle} moved from {model.ForumName} to {forum.Name}",
+					"",
+					$"{BaseUrl}/Forum/Topic/{model.TopicId}");
+			}
+
 			return RedirectToAction(nameof(Topic), new { id = model.TopicId });
 		}
 
@@ -423,6 +456,13 @@ namespace TASVideos.Controllers
 			{
 				return NotFound();
 			}
+
+			var topic = await _forumTasks.GetTopic(result.Value);
+			_publisher.SendForum(
+				topic.Forum.Restricted,
+				$"Topic {topic.Forum.Name}: {topic.Title} SPLIT from {model.ForumName}: {model.Title}",
+				"",
+				$"{BaseUrl}/Forum/Topic/{topic.Id}");
 
 			return RedirectToAction(nameof(Topic), new { id = result });
 		}
