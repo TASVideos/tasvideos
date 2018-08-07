@@ -249,13 +249,12 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns whether or not a forum exists and if not allowRestricted, then whether it is not restricted
+		/// Returns whether or not a forum exists
 		/// </summary>
-		public async Task<bool> ForumAccessible(int forumId, bool allowRestricted)
+		/// <returns>null if the forum does not exist, else the forum record</returns>
+		public async Task<Forum> GetForum(int id)
 		{
-			return await _db.Forums
-				.AnyAsync(f => f.Id == forumId
-					&& (allowRestricted || !f.Restricted));
+			return await _db.Forums.SingleOrDefaultAsync(f => f.Id == id);
 		}
 
 		/// <summary>

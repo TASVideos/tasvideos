@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Filter;
@@ -200,13 +201,15 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
-			if (!seeRestricted)
+			var forum = await _forumTasks.GetForum(model.ForumId);
+			if (forum == null)
 			{
-				if (!await _forumTasks.ForumIsRestricted(model.ForumId, seeRestricted))
-				{
-					return NotFound();
-				}
+				return NotFound();
+			}
+
+			if (forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums))
+			{
+				return NotFound();
 			}
 
 			var user = await _userManager.GetUserAsync(User);
@@ -214,18 +217,16 @@ namespace TASVideos.Controllers
 
 			//// TODO: auto-add topic permission based on post count, also ability to vote
 
-			var title = $"New Topic: \"{model.Title}\" in {model.Post} TODO:forum name created by {User.Identity.Name}";
-			var body = model.Post.CapAndEllipse(50);
-			var link = Url.Action(nameof(Topic), new { topic.Id });
-
-			if (topic.Forum.Restricted)
+			_publisher.Send(new Post
 			{
-				_publisher.SendAdminForum(title, body, link);
-			}
-			else
-			{
-				_publisher.SendGeneralForum(title, body, link);
-			}
+				Type = forum.Restricted
+					? PostType.Administrative
+					: PostType.General,
+				Group = PostGroups.Forum,
+				Title = $"New Topic by {User.Identity.Name} ({forum.ShortName}: {model.Title})",
+				Body = model.Post.CapAndEllipse(50),
+				Link = Url.Action(nameof(Topic), new { topic.Id })
+			});
 
 			return RedirectToAction(nameof(Topic), "Forum", new { topic.Id });
 		}
