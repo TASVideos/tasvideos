@@ -9,6 +9,7 @@
 	<input type="hidden" asp-for="Id" />
 	<input type="hidden" asp-for="ForumName" />
 	<input type="hidden" asp-for="ForumId" />
+	<input type="hidden" asp-for="Title" />
 	<form-group class="col-lg-6">
 		<label asp-for="SplitToForumId" class="form-control-label"></label>
 		<select asp-for="SplitToForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-control"></select>
