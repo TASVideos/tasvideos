@@ -258,13 +258,20 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns whether or not a topicm exists and if not allowRestircted, then whether it is not restricted
+		/// Returns whether or not a topic exists and if not allowRestricted, then whether it is not restricted
 		/// </summary>
 		public async Task<bool> TopicAccessible(int topicId, bool allowRestricted)
 		{
 			return await _db.ForumTopics
 				.AnyAsync(t => t.Id == topicId
 					&& (allowRestricted || !t.Forum.Restricted));
+		}
+
+		public async Task<ForumTopic> GetTopic(int id)
+		{
+			return await _db.ForumTopics
+				.Include(t => t.Forum)
+				.SingleOrDefaultAsync(t => t.Id == id);
 		}
 
 		// TODO: document
