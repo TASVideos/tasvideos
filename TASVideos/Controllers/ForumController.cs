@@ -406,7 +406,17 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			await _forumTasks.MoveTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
+			var result = await _forumTasks.MoveTopic(model, UserHas(PermissionTo.SeeRestrictedForums));
+			if (result)
+			{
+				var forum = await _forumTasks.GetForum(model.ForumId);
+				_publisher.SendForum(
+					forum.Restricted,
+					$"Topic {model.TopicTitle} moved from {model.ForumName} to {forum.Name}",
+					"",
+					$"{BaseUrl}/Forum/Topic/{model.TopicId}");
+			}
+
 			return RedirectToAction(nameof(Topic), new { id = model.TopicId });
 		}
 

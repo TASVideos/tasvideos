@@ -579,7 +579,7 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		public async Task MoveTopic(MoveTopicModel model, bool allowRestricted)
+		public async Task<bool> MoveTopic(MoveTopicModel model, bool allowRestricted)
 		{
 			var topic = await _db.ForumTopics
 				.Where(t => allowRestricted || !t.Forum.Restricted)
@@ -590,7 +590,10 @@ namespace TASVideos.Tasks
 			{
 				topic.ForumId = model.ForumId;
 				await _db.SaveChangesAsync();
+				return true;
 			}
+
+			return false;
 		}
 
 		public async Task<SplitTopicModel> GetTopicForSplit(int topicId, bool allowRestricted)
