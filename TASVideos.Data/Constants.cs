@@ -30,5 +30,6 @@
 	{
 		public const string Forum = "Forum";
 		public const string Wiki = "Wiki";
+		public const string Submission = "Submission";
 	}
 }

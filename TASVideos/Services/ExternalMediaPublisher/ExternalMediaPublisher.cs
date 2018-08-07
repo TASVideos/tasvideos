@@ -38,6 +38,18 @@ namespace TASVideos.Services.ExternalMediaPublisher
 
 	public static class ExternalMediaPublisherExtensions
 	{
+		public static void AnnouceSubmission(this ExternalMediaPublisher publisher, string title, string link)
+		{
+			publisher.Send(new Post
+			{
+				Type = PostType.Announcement,
+				Group = PostGroups.Submission,
+				Title = $"New Submission! Go and see {title}",
+				Body = "",
+				Link = link
+			});
+		}
+
 		public static void SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string link)
 		{
 			publisher.Send(new Post
