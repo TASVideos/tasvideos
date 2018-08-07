@@ -11,6 +11,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Filter;
 using TASVideos.Models;
+using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -19,15 +20,18 @@ namespace TASVideos.Controllers
 	{
 		private readonly WikiTasks _wikiTasks;
 		private readonly SubmissionTasks _submissionTasks;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public SubmissionController(
 			UserTasks userTasks,
 			WikiTasks wikiTasks,
-			SubmissionTasks submissionTasks)
+			SubmissionTasks submissionTasks,
+			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
 			_wikiTasks = wikiTasks;
 			_submissionTasks = submissionTasks;
+			_publisher = publisher;
 		}
 
 		public IActionResult Index()
@@ -125,6 +129,9 @@ namespace TASVideos.Controllers
 				var result = await _submissionTasks.SubmitMovie(model, User.Identity.Name);
 				if (result.Success)
 				{
+					var title = await _submissionTasks.GetTitle(result.Id); // TODO: we could return the submsision and not have to take this extra query hit
+					_publisher.AnnouceSubmission(title, $"{BaseUrl}/{result.Id}S");
+
 					return Redirect($"/{result.Id}S");
 				}
 
