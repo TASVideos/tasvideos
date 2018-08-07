@@ -355,6 +355,13 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
+			var topic = await _forumTasks.GetTopic(result.Value);
+			_publisher.SendForum(
+				topic.Forum.Restricted,
+				$"Post DELETED by {User.Identity.Name} ({topic.Forum.ShortName}: {topic.Title})",
+				$"{BaseUrl}/p/{id}#{id}",
+				$"{BaseUrl}/Forum/Topic/{topic.Id}");
+
 			return RedirectToAction(nameof(Topic), new { id = result });
 		}
 
