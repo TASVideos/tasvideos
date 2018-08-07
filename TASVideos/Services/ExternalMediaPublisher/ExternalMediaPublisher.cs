@@ -38,11 +38,25 @@ namespace TASVideos.Services.ExternalMediaPublisher
 
 	public static class ExternalMediaPublisherExtensions
 	{
-		public static void SendGeneralForum(this ExternalMediaPublisher publisher, string title, string body, string link)
+		public static void SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string link)
 		{
 			publisher.Send(new Post
 			{
-				Type = PostType.General,
+				Type = restricted
+					? PostType.Administrative
+					: PostType.General,
+				Group = PostGroups.Forum,
+				Title = title,
+				Body = body,
+				Link = link
+			});
+		}
+
+		public static void SendAdminForum(this ExternalMediaPublisher publisher, string title, string body, string link)
+		{
+			publisher.Send(new Post
+			{
+				Type = PostType.Administrative,
 				Group = PostGroups.Forum,
 				Title = title,
 				Body = body,
