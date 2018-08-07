@@ -325,14 +325,18 @@ namespace TASVideos.Controllers
 				}
 			}
 
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
-			if (!seeRestricted)
+			var topic = await _forumTasks.GetTopic(model.TopicId);
+			if (topic == null
+				|| (topic.Forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums)))
 			{
-				if (!await _forumTasks.TopicAccessible(model.TopicId, seeRestricted))
-				{
-					return NotFound();
-				}
+				return NotFound();
 			}
+
+			_publisher.SendForum(
+				topic.Forum.Restricted,
+				$"Post edited by {User.Identity.Name} ({topic.Forum.ShortName}: {topic.Title})",
+				"",
+				$"{BaseUrl}/p/{model.PostId}#{model.PostId}");
 
 			await _forumTasks.EditPost(model);
 
