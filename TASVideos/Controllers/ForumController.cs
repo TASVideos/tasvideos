@@ -259,17 +259,18 @@ namespace TASVideos.Controllers
 				return View(model);
 			}
 
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
-			if (!seeRestricted)
+			var topic = await _forumTasks.GetTopic(model.TopicId);
+			if (topic == null)
 			{
-				if (!await _forumTasks.TopicAccessible(model.TopicId, seeRestricted))
-				{
-					return NotFound();
-				}
+				return NotFound();
 			}
 
-			if (!UserHas(PermissionTo.PostInLockedTopics)
-				&& await _forumTasks.IsTopicLocked(model.TopicId))
+			if (topic.Forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums))
+			{
+				return NotFound();
+			}
+
+			if (topic.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
 			{
 				return RedirectAccessDenied();
 			}
@@ -277,10 +278,16 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			var id = await _forumTasks.CreatePost(model, user, IpAddress.ToString());
 
-			_publisher.SendGeneralForum(
-				$"New reply by {user.UserName}",
-				$"{model.TopicTitle} ({model.Subject})",
-				$"{BaseUrl}/p/{id}#{id}");
+			_publisher.Send(new Post
+			{
+				Type = topic.Forum.Restricted
+					? PostType.Administrative
+					: PostType.General,
+				Group = PostGroups.Forum,
+				Title = $"New reply by {user.UserName} ({topic.Forum.ShortName}: {topic.Title}) ({model.Subject})",
+				Body = $"{model.TopicTitle} ({model.Subject})",
+				Link = $"{BaseUrl}/p/{id}#{id}"
+			});
 
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}
