@@ -19,6 +19,12 @@ namespace TASVideos.Extensions
 			return env.IsEnvironment("Demo");
 		}
 
+		public static bool IsAnyLocal(this IHostingEnvironment env)
+		{
+			return env.IsLocalWithImport()
+				|| env.IsLocalWithoutRecreate();
+		}
+
 		public static bool IsAnyTestEnvironment(this IHostingEnvironment env)
 		{
 			return env.IsDevelopment()

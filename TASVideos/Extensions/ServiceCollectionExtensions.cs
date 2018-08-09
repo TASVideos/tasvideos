@@ -150,6 +150,11 @@ namespace TASVideos.Extensions
 				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
 			}
 
+			//if (!env.IsAnyLocal()) // TODO: turn this back on
+			{
+				services.AddScoped<IPostDistributor, IrcDistributor>(); // TODO: singleton? transient?
+			}
+
 			services.AddScoped<IPostDistributor, DistributorStorage>();
 
 			services.AddTransient<ExternalMediaPublisher>();
