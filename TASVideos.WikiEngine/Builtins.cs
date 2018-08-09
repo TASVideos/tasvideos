@@ -65,7 +65,6 @@ namespace TASVideos.WikiEngine
 		private static readonly Regex Footnote = new Regex(@"^(\d+)$");
 		private static readonly Regex FootnoteLink = new Regex(@"^#(\d+)$");
 		private static readonly Regex RealModule = new Regex("^module:(.*)$");
-		private static readonly Regex UserHomepageLink = new Regex("^user:(.*)$");
 		public static IEnumerable<INode> MakeModule(int charStart, int charEnd, string text)
 		{
 			if (text == "|") // literal | escape
@@ -84,9 +83,10 @@ namespace TASVideos.WikiEngine
 				return MakeFootnoteLink(charStart, charEnd, match.Groups[1].Value);
 			if ((match = RealModule.Match(text)).Success)
 				return MakeModuleInternal(charStart, charEnd, match.Groups[1].Value);
-			if ((match = UserHomepageLink.Match(text)).Success)
+			if (text.StartsWith("user:"))
 				// user homepages are the same __wikiLink module as other wiki links, but match them here so we can catch special characters in user names
-				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + match.Groups[1].Value);
+				// pass the `user:` part to the module as well so it can disambiguate between regular and user pages
+				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
 
 			return MakeLinkOrImage(charStart, charEnd, text);
 		}
