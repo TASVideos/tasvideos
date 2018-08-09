@@ -33,7 +33,7 @@ namespace TASVideos
 				.AddCacheService(Settings.CacheSettings)
 				.AddTasks()
 				.AddServices()
-				.AddMessengerService(Environment, Settings)
+				.AddExternalMediaPublishing(Environment, Settings)
 				.AddWikiProvider();
 
 			// Internal Libraries
