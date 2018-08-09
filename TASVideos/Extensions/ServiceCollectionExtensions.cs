@@ -143,7 +143,7 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		internal static IServiceCollection AddMessengerService(this IServiceCollection services, IHostingEnvironment env, AppSettings settings)
+		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IHostingEnvironment env, AppSettings settings)
 		{
 			if (env.IsAnyTestEnvironment())
 			{
