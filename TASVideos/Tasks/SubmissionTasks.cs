@@ -165,6 +165,9 @@ namespace TASVideos.Tasks
 					submissionModel.CanEdit = !string.IsNullOrWhiteSpace(userName)
 						&& (userName == submissionModel.Submitter
 							|| submissionModel.Authors.Contains(userName));
+
+					var submissionPageName = LinkConstants.SubmissionWikiPage + submissionModel.Id;
+					submissionModel.TopicId = _db.ForumTopics.SingleOrDefault(t => t.PageName == submissionPageName)?.Id ?? 0;
 				}
 
 				return submissionModel;

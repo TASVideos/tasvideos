@@ -81,7 +81,7 @@
 		</small>
 		<div class="btn-toolbar">
 			<a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
-			<a href="#" class="btn btn-secondary ml-1">Discuss and Vote</a>
+			<a condition="@Model.TopicId > 0" asp-controller="Forum" asp-action="Topic" asp-route-id="@Model.TopicId" class="btn btn-secondary ml-1">Discuss and Vote</a>
 			<span condition="@ViewData.UserHas(PermissionTo.EditSubmissions)" class="btn-separator"></span>
 			<a condition="@canEdit" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
 			<a condition="@ViewData.UserHas(PermissionTo.CatalogMovies)" asp-action="Catalog" asp-route-id="@Model.Id" class="ml-1 btn btn-info">Catalog</a>
