@@ -92,6 +92,14 @@ namespace TASVideos.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+			builder.Entity<ForumTopic>(entity =>
+			{
+				entity.HasIndex(e => e.PageName)
+					.HasName($"{nameof(ForumTopic.PageName)}Index")
+					.IsUnique()
+					.HasFilter($"([{nameof(ForumTopic.PageName)}] IS NOT NULL)");
+			});
+			
 			builder.Entity<User>(entity =>
 			{
 				entity.HasIndex(e => e.NormalizedEmail)
