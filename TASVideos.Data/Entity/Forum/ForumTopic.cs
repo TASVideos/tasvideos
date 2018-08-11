@@ -30,5 +30,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		public int? PollId { get; set; }
 		public virtual ForumPoll Poll { get; set; }
+
+		public string PageName { get; set; }
 	}
 }

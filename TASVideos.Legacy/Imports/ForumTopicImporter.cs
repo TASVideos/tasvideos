@@ -28,7 +28,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					t.Type,
 					t.TopicStatus,
 					Author = t.PosterId > 0 ? t.Poster.UserName : "Unknown",
-					PollId = p != null ? p.Id : (int?)null
+					PollId = p != null ? p.Id : (int?)null,
+					PageName = t.SubmissionId > 0 ? "InternalSystem/SubmissionContent/S" + t.SubmissionId : null
 				})
 				.ToList();
 
@@ -48,7 +49,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					Views = t.Views,
 					Type = (ForumTopicType)t.Type,
 					PollId = t.PollId,
-					IsLocked = t.TopicStatus == 1
+					IsLocked = t.TopicStatus == 1,
+					PageName = t.PageName
 				})
 				.ToList();
 
@@ -65,7 +67,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.Views),
 				nameof(ForumTopic.Type),
 				nameof(ForumTopic.PollId),
-				nameof(ForumTopic.IsLocked)
+				nameof(ForumTopic.IsLocked),
+				nameof(ForumTopic.PageName)
 			};
 
 			topics.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumTopics));
