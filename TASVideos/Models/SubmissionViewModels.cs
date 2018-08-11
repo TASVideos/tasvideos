@@ -99,6 +99,7 @@ namespace TASVideos.Models
 	public class SubmissionViewModel
 	{
 		public int Id { get; set; }
+		public int TopicId { get; set; }
 		public bool CanEdit { get; set; }
 		public bool IsCatalogged => SystemId.HasValue
 			&& SystemFrameRateId.HasValue
