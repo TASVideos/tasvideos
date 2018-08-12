@@ -326,7 +326,7 @@ namespace TASVideos.Tasks
 				Topic = topic,
 				PosterId = SiteGlobalConstants.TASVideoAgentId,
 				Subject = submission.Title,
-				Text = "TODO",
+				Text = SiteGlobalConstants.NewSubmissionPost +  $"<a href=\"/{submission.Id}S\">{submission.Title}</a>",
 				EnableHtml = true,
 				EnableBbCode = false
 			};
