@@ -811,6 +811,24 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 
+			// Create post
+			var topic = await _db.ForumTopics.SingleOrDefaultAsync(f => f.PageName == LinkConstants.SubmissionWikiPage + submission.Id);
+			if (topic != null)
+			{
+				_db.ForumPosts.Add(new ForumPost
+				{
+					TopicId = topic.Id,
+					CreateUserName = SiteGlobalConstants.TASVideoAgent,
+					LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+					PosterId = SiteGlobalConstants.TASVideoAgentId,
+					EnableBbCode = false,
+					EnableHtml = true,
+					Subject = SiteGlobalConstants.NewPublicationPostSubject,
+					Text = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publication.Id.ToString())
+				});
+				await _db.SaveChangesAsync();
+			}
+
 			return publication.Id;
 		}
 	}

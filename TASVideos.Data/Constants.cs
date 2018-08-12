@@ -23,6 +23,9 @@
 		public const string TASVideoAgent = "TASVideoAgent";
 		public const int TASVideoAgentId = 505;
 
+		public const string NewPublicationPostSubject = "Movie published";
+		public const string NewPublicationPost = @"<hr/><b>This movie has been published.</b><br/>The posts before this message apply to the submission, and posts after this message apply to the published movie.<hr/>See the <a href=""/{PublicationId}M"">publication</a><br/><hr/>";
+
 		public const string NewSubmissionPost = @"This topic is for the purpose of discussing ";
 		public const string PollQuestion = @"Vote: Did you like watching this movie? (Vote after watching!)<br/><br/><span style=""color:#C03"">Note: Because of abuse that has happened, lurkers can't vote anymore.</span>";
 	}
