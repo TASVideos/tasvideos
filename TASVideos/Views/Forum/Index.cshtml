@@ -5,7 +5,10 @@
 <partial Name="_ForumHeader"/>
 <row>
 	<div class="col-12 pb-2 pt-2">
-		<a asp-controller="Forum" asp-action="UnansweredPosts" class="pull-right btn btn-secondary btn-sm">Unanswered Posts</a>
+		<div class="pull-right">
+			<a asp-action="NewPosts" condition="@User.Identity.IsAuthenticated" class="btn btn-secondary btn-sm">Posts since last visit</a>
+			<a asp-action="UnansweredPosts" class="btn btn-secondary btn-sm">Unanswered Posts</a>
+		</div>
 	</div>
 </row>
 <row>

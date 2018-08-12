@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -139,6 +140,23 @@ namespace TASVideos.Controllers
 			}
 
 			return NotFound();
+		}
+
+		[Authorize]
+		public async Task<IActionResult> NewPosts(PagedModel request)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _forumTasks.GetPostsSinceLastVisit(
+				request, user.LastLoggedInTimeStamp ?? DateTime.UtcNow,
+				UserHas(PermissionTo.SeeRestrictedForums));
+
+			foreach (var post in model)
+			{
+				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableBbCode);
+				post.RenderedSignature = RenderSignature(post.Signature);
+			}
+
+			return View(model);
 		}
 
 		[AllowAnonymous]
