@@ -23,6 +23,7 @@
 		public const string TASVideoAgent = "TASVideoAgent";
 		public const int TASVideoAgentId = 505;
 
+		public const string NewSubmissionPost = @"This topic is for the purpose of discussing ";
 		public const string PollQuestion = @"Vote: Did you like watching this movie? (Vote after watching!)<br/><br/><span style=""color:#C03"">Note: Because of abuse that has happened, lurkers can't vote anymore.</span>";
 	}
 
