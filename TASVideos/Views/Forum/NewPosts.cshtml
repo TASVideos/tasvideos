@@ -1,0 +1,89 @@
+﻿@model PageOf<PostsSinceLastVisitModel>
+@{
+	ViewData["Title"] = "Forum Posts Since Last Visit";
+}
+
+<div condition="@Model.Any()">
+	<partial Name="_ForumHeader" />
+	<row>
+		<div class="col-12">
+			<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
+		</div>
+	</row>
+	@foreach (var post in Model)
+	{
+		<row>
+			<div class="col-12 pt-2">
+				<small>
+					<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@post.ForumId">@post.ForumName</a> -> <a asp-action="Topic" asp-route-id="@post.TopicId">@post.TopicTitle</a>
+				</small>
+			</div>
+		</row>
+
+		<card>
+			<cardheader>
+				<row>
+					<div class="col-4 border-right">
+						<h5>@post.PosterName</h5>
+					</div>
+					<div class="col-8 pt-0 pb-0">
+						<small style="display: inline-block">
+							<a id="@post.Id" href="/Forum/Post/@(post.Id)#@post.Id" title="Link to this post" class="pull-left"><i class="fa fa-bookmark-o"></i></a>
+							Posted: @post.CreateTimestamp
+							<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+						</small>
+					</div>
+				</row>
+			</cardheader>
+			<cardbody>
+				<row>
+					<div class="col-4">
+						<div class="card-text text-right">
+							<small>
+								@string.Join(",", post.PosterRoles)
+								(todo points)
+							</small>
+							<br />
+							<img src="@post.PosterAvatar" />
+							<br />
+							<small>
+								Joined: @post.PosterJoined.ToShortDateString()<br />
+								Posts: @post.PosterPostCount<br />
+								Location: @post.PosterLocation
+							</small>
+						</div>
+					</div>
+					<div class="col-8">
+						@Html.Raw(post.RenderedText)
+					</div>
+				</row>
+			</cardbody>
+			<cardfooter>
+				<row>
+					<div class="col-12">
+						<small style="font-style: italic">@Html.Raw(post.RenderedSignature)</small>
+						<br />
+						<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-id="@post.PosterName">Profile</a>
+						<a class="btn btn-secondary btn-sm" condition="User.Identity.IsAuthenticated" asp-controller="Messages" asp-action="Create" asp-route-toUser="@post.PosterName">PM</a>
+						<div class="pull-right">
+							@foreach (var award in post.Awards.OrderByDescending(a => a.Year))
+							{
+								<partial name="../Shared/_Award.cshtml" model="award" />
+							}
+						</div>
+					</div>
+				</row>
+			</cardfooter>
+		</card>
+	}
+	<row class="mt-2">
+		<div class="col-12">
+			<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
+		</div>
+	</row>
+</div>
+<div condition="!Model.Any()">
+	<div class="alert alert-info mt-3 text-center">
+		<h4>No posts since last visit</h4>
+	</div>
+</div>

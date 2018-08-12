@@ -519,6 +519,45 @@ namespace TASVideos.Tasks
 			};
 		}
 
+		public async Task<PageOf<PostsSinceLastVisitModel>> GetPostsSinceLastVisit(PagedModel paged, DateTime since, bool allowRestricted)
+		{
+			var model = await _db.ForumPosts
+				.Where(p => allowRestricted || !p.Topic.Forum.Restricted)
+				.Where(p => p.CreateTimeStamp >= since)
+				.Select(p => new PostsSinceLastVisitModel
+				{
+					Id = p.Id,
+					CreateTimestamp = p.CreateTimeStamp,
+					EnableBbCode = p.EnableBbCode,
+					EnableHtml = p.EnableHtml,
+					Text = p.Text,
+					Subject = p.Subject,
+					TopicId = p.TopicId ?? 0,
+					TopicTitle = p.Topic.Title,
+					ForumId = p.Topic.ForumId,
+					ForumName = p.Topic.Forum.Name,
+					PosterId = p.PosterId,
+					PosterName = p.Poster.UserName,
+					PosterRoles = p.Poster.UserRoles
+						.Where(ur => !ur.Role.IsDefault)
+						.Select(ur => ur.Role.Name),
+					PosterLocation = p.Poster.From,
+					Signature = p.Poster.Signature,
+					PosterAvatar = p.Poster.Avatar,
+					PosterJoined = p.Poster.CreateTimeStamp,
+					PosterPostCount = p.Poster.Posts.Count,
+				})
+				.OrderBy(p => p.CreateTimestamp)
+				.PageOfAsync(_db, paged);
+
+			foreach (var post in model)
+			{
+				post.Awards = await _awardTasks.GetAllAwardsForUser(post.PosterId);
+			}
+
+			return model;
+		}
+
 		/// <summary>
 		/// Returns a paged list of topics that have no replies (are only the original post that was created)
 		/// </summary>
