@@ -19,11 +19,18 @@
 	{
 		public const int VestedPostCount = 3; // Minimum number of posts to become an experienced forum user
 		public const int MinimumHoursBeforeJudgement = 72; // Minimum number of hours before a judge can set a submission to accepted/rejected
+
+		public const string TASVideoAgent = "TASVideoAgent";
+		public const int TASVideoAgentId = 505;
+
+		public const string PollQuestion = @"Vote: Did you like watching this movie? (Vote after watching!)<br/><br/><span style=""color:#C03"">Note: Because of abuse that has happened, lurkers can't vote anymore.</span>";
 	}
 
 	public static class ForumConstants
 	{
 		public const int PostsPerPage = 25;
+
+		public const int WorkBenchForumId = 7;
 	}
 
 	public static class PostGroups
