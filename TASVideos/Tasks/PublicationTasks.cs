@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
@@ -65,7 +66,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PublicationViewModel> GetPublicationForDisplay(int id)
 		{
-			return await _db.Publications
+			var publication =  await _db.Publications
 				.Select(p => new PublicationViewModel
 				{
 					Id = p.Id,
@@ -94,6 +95,16 @@ namespace TASVideos.Tasks
 						.ToList()
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
+
+			if (publication != null)
+			{
+				var pageName = LinkConstants.SubmissionWikiPage + publication.SubmissionId;
+				publication.TopicId = (await _db.ForumTopics
+					.SingleOrDefaultAsync(t => t.PageName == pageName))
+					?.Id ?? 0;
+			}
+
+			return publication;
 		}
 
 		/// <summary>

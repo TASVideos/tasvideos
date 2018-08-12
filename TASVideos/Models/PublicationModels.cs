@@ -39,6 +39,7 @@ namespace TASVideos.Models
 		public int SubmissionId { get; set; }
 		public string OnlineWatchingUrl { get; set; }
 		public string MirrorSiteUrl { get; set; }
+		public int TopicId { get; set; }
 
 		public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();
 		public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();
