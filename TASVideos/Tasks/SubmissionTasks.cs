@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.WikiEngine;
@@ -291,6 +292,50 @@ namespace TASVideos.Tasks
 			_db.SubmissionAuthors.AddRange(submissionAuthors);
 
 			submission.GenerateTitle();
+
+			var poll = new ForumPoll
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				Question = SiteGlobalConstants.PollQuestion,
+			};
+
+			
+			_db.ForumPolls.Add(poll);
+
+			await _db.SaveChangesAsync();
+
+
+			// Create Topic in workbench
+			var topic = new ForumTopic
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				ForumId = ForumConstants.WorkBenchForumId,
+				Title = submission.Title,
+				PosterId = SiteGlobalConstants.TASVideoAgentId,
+				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
+				PollId = poll.Id,
+			};
+
+			// Create first post
+			var post = new ForumPost
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				Topic = topic,
+				PosterId = SiteGlobalConstants.TASVideoAgentId,
+				Subject = submission.Title,
+				Text = "TODO",
+				EnableHtml = true,
+				EnableBbCode = false
+			};
+
+			_db.ForumTopics.Add(topic);
+			_db.ForumPosts.Add(post);
+			await _db.SaveChangesAsync();
+
+			poll.TopicId = topic.Id;
 			await _db.SaveChangesAsync();
 
 			return new SubmitResult(submission.Id);
