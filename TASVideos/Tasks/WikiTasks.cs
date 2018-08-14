@@ -38,7 +38,7 @@ namespace TASVideos.Tasks
 				}
 
 				pages = new List<WikiPage>();
-				_cache.Set(cacheKey, pages, DurationConstants.OneWeekInSeconds);
+				_cache.Set(cacheKey, pages, Durations.OneWeekInSeconds);
 				return pages;
 			}
 		}

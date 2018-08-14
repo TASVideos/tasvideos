@@ -127,7 +127,7 @@ namespace TASVideos.Tasks
 
 				var allAwards = userAwards.Concat(publicationAwards);
 
-				_cache.Set(AwardCacheKey, allAwards, DurationConstants.OneWeekInSeconds);
+				_cache.Set(AwardCacheKey, allAwards, Durations.OneWeekInSeconds);
 
 				return allAwards;
 			}
