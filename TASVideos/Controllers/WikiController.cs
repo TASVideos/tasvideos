@@ -332,17 +332,6 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[RequirePermission(PermissionTo.SeeAdminPages)]
-		public async Task<IActionResult> LoadWikiCache()
-		{
-			await _wikiTasks.LoadWikiCache();
-			return new ContentResult
-			{
-				Content = "Cache successfully loaded",
-				StatusCode = 200
-			};
-		}
-
 		private static List<SiteMapModel> _corePages;
 		private List<SiteMapModel> CorePages()
 		{
