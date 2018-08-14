@@ -49,13 +49,12 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Loads all current wiki pages, intended to be run on startup to pre-load the cache
+		/// Loads all current wiki pages into the WikiCache
 		/// </summary>
-		public async Task LoadWikiCache()
+		private async Task LoadWikiCache()
 		{
 			var wikiPages = await _db.WikiPages
 				.ThatAreCurrentRevisions()
-				.ThatAreNotDeleted()
 				.ToListAsync();
 
 			WikiCache.AddRange(wikiPages);
