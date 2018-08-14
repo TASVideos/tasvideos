@@ -10,6 +10,7 @@
 	public static class DurationConstants
 	{
 		public const int OneMinuteInSeconds = 60;
+		public const int FiveMinutesInSeconds = 60 * 5;
 		public const int OneDayInSeconds = 60 * 60 * 24;
 		public const int OneWeekInSeconds = 60 * 60 * 24 * 7;
 	}
