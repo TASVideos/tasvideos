@@ -32,19 +32,16 @@ namespace TASVideos.Controllers
 			{
 				if (_userPermission == null)
 				{
-					if (HttpContext == null || !User.Identity.IsAuthenticated)
-					{
-						_userPermission = Enumerable.Empty<PermissionTo>();
-					}
-
-					_userPermission = UserTasks.GetUserPermissionsById(User.GetUserId()).Result;
+					_userPermission = HttpContext == null || !User.Identity.IsAuthenticated
+						? Enumerable.Empty<PermissionTo>()
+						: UserTasks.GetUserPermissionsById(User.GetUserId()).Result;
 				}
 
 				return _userPermission;
 			}
 		}
 
-		public string BaseUrl => $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+		public string BaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
 		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
