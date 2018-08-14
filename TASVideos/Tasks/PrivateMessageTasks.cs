@@ -144,7 +144,7 @@ namespace TASVideos.Tasks
 				.ToUser(user)
 				.CountAsync(pm => pm.ReadOn == null);
 
-			_cache.Set(cacheKey, unreadMessageCount, DurationConstants.OneMinuteInSeconds);
+			_cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
 			return unreadMessageCount;
 		}
 

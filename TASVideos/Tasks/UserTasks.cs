@@ -263,7 +263,7 @@ namespace TASVideos.Tasks
 				.Select(u => u.UserName)
 				.ToListAsync();
 
-			_cache.Set(cacheKey, list, DurationConstants.OneMinuteInSeconds);
+			_cache.Set(cacheKey, list, Durations.OneMinuteInSeconds);
 
 			return list;
 		}

@@ -7,7 +7,7 @@
 		public const string GameWikiPage = "InternalSystem/GameContent/G";
 	}
 
-	public static class DurationConstants
+	public static class Durations
 	{
 		public const int OneMinuteInSeconds = 60;
 		public const int FiveMinutesInSeconds = 60 * 5;
