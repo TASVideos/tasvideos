@@ -74,12 +74,15 @@ namespace TASVideos.Tasks
 			}
 
 			pageName = pageName?.Trim('/');
-			var result = await _db.WikiPages
+			var query = _db.WikiPages
 				.ThatAreNotDeleted()
-				.Where(wp => wp.PageName == pageName)
-				.Where(wp => revisionId != null
-					? wp.Revision == revisionId
-					: wp.Child == null)
+				.Where(wp => wp.PageName == pageName);
+
+			query = revisionId.HasValue
+				? query.Where(wp => wp.Revision == revisionId)
+				: query.Where(wp => wp.ChildId == null);
+
+			var result = await query
 				.SingleOrDefaultAsync();
 
 			if (result != null)
