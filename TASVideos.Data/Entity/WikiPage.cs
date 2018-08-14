@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace TASVideos.Data.Entity
@@ -25,6 +26,11 @@ namespace TASVideos.Data.Entity
 	public static class ActiveQueryableExtensions
 	{
 		public static IQueryable<WikiPage> ThatAreCurrentRevisions(this IQueryable<WikiPage> list)
+		{
+			return list.Where(wp => wp.Child == null);
+		}
+
+		public static IEnumerable<WikiPage> ThatAreCurrentRevisions(this IEnumerable<WikiPage> list)
 		{
 			return list.Where(wp => wp.Child == null);
 		}
