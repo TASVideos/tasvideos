@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Tasks;
 
@@ -14,9 +13,9 @@ namespace TASVideos.ViewComponents
 			_wikiTasks = wikiTasks;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp = null)
+		public IViewComponentResult Invoke(WikiPage pageData, string pp = null)
 		{
-			var subpages = await _wikiTasks.GetSubPages(pageData.PageName);
+			var subpages = _wikiTasks.GetSubPages(pageData.PageName);
 			ViewData["Parent"] = pageData.PageName;
 			
 			if (pp?.Contains("show") ?? false)

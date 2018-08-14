@@ -25,6 +25,10 @@ namespace TASVideos.Tasks
 		{
 			_db = db;
 			_cache = cache;
+			if (!WikiCache.Any())
+			{
+				LoadWikiCache().Wait();
+			}
 		}
 
 		private List<WikiPage> WikiCache
@@ -39,6 +43,7 @@ namespace TASVideos.Tasks
 
 				pages = new List<WikiPage>();
 				_cache.Set(cacheKey, pages, Durations.OneWeekInSeconds);
+				LoadWikiCache().Wait();
 				return pages;
 			}
 		}
@@ -291,32 +296,32 @@ namespace TASVideos.Tasks
 		/// Returns a list of all pages that are considered subpages
 		/// of the page with the given <see cref="pageName"/>
 		/// </summary>
-		public async Task<IEnumerable<string>> GetSubPages(string pageName)
+		public IEnumerable<string> GetSubPages(string pageName)
 		{
 			pageName = pageName.Trim('/');
-			return await _db.WikiPages
+			return WikiCache
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
 				.Where(wp => wp.PageName.StartsWith(pageName))
 				.Select(wp => wp.PageName)
-				.ToListAsync();
+				.ToList();
 		}
 
 		/// <summary>
 		/// Returns a list of all pages that are considered parents
 		/// of the page with the given <see cref="pageName"/>
 		/// </summary>
-		public async Task<IEnumerable<string>> GetParents(string pageName)
+		public IEnumerable<string> GetParents(string pageName)
 		{
 			pageName = pageName.Trim('/');
-			return await _db.WikiPages
+			return WikiCache
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
 				.Where(wp => pageName.StartsWith(wp.PageName))
 				.Select(wp => wp.PageName)
-				.ToListAsync();
+				.ToList();
 		}
 
 		/// <summary>

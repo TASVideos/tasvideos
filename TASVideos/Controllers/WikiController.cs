@@ -316,10 +316,10 @@ namespace TASVideos.Controllers
 		}
 
 		[RequirePermission(PermissionTo.SeeAdminPages)]
-		public async Task<IActionResult> SiteMap()
+		public IActionResult SiteMap()
 		{
 			var model = CorePages();
-			var wikiPages = await _wikiTasks.GetSubPages("");
+			var wikiPages = _wikiTasks.GetSubPages("");
 			model.AddRange(wikiPages
 				.Distinct()
 				.Select(p => new SiteMapModel
