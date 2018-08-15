@@ -21,7 +21,7 @@ namespace TASVideos.ViewComponents
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string url, int? revision = null)
+		public IViewComponentResult Invoke(string url, int? revision = null)
 		{
 			url = url.Trim('/');
 			if (!WikiHelper.IsValidWikiPageName(url))
@@ -29,7 +29,7 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-			var existingPage = await _wikiTasks.GetPage(url, revision);
+			var existingPage = _wikiTasks.GetPage(url, revision);
 
 			if (existingPage != null)
 			{

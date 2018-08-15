@@ -66,62 +66,23 @@ namespace TASVideos.Tasks
 		/// Else the latest revision is returned
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		public async Task<WikiPage> GetPage(string pageName, int? revisionId = null)
+		public WikiPage GetPage(string pageName, int? revisionId = null)
 		{
-			var cachedPage = WikiCache
+			return WikiCache
 				.ThatAreNotDeleted()
 				.FirstOrDefault(w => w.PageName == pageName
 					&& (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
-			if (cachedPage != null)
-			{
-				return cachedPage;
-			}
-
-			pageName = pageName?.Trim('/');
-			var query = _db.WikiPages
-				.ThatAreNotDeleted()
-				.Where(wp => wp.PageName == pageName);
-
-			query = revisionId.HasValue
-				? query.Where(wp => wp.Revision == revisionId)
-				: query.Where(wp => wp.ChildId == null);
-
-			var result = await query
-				.SingleOrDefaultAsync();
-
-			if (result != null)
-			{
-				WikiCache.Add(result);
-			}
-
-			return result;
 		}
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given id
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		public async Task<WikiPage> GetPageById(int dbid)
+		public WikiPage GetPageById(int dbid)
 		{
-			var cachedPage = WikiCache
+			return WikiCache
 				.ThatAreNotDeleted()
 				.FirstOrDefault(w => w.Id == dbid);
-			if (cachedPage != null)
-			{
-				return cachedPage;
-			}
-
-			var result = await _db.WikiPages
-				.ThatAreNotDeleted()
-				.Where(wp => wp.Id == dbid)
-				.SingleOrDefaultAsync();
-
-			if (result != null)
-			{
-				WikiCache.Add(result);
-			}
-
-			return result;
 		}
 
 		/// <summary>
