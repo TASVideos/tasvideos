@@ -580,13 +580,12 @@ namespace TASVideos.Tasks
 				var systems = await _db.GameSystems.ToListAsync();
 				var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
 
-				// TODO: from cache
-				var pages = await _db.WikiPages
+				var pages = WikiCache
 					.ThatAreNotDeleted()
 					.ThatAreCurrentRevisions()
 					.Where(wp => gameResourceSystems.Contains(wp.PageName))
 					.Select(wp => wp.PageName)
-					.ToListAsync();
+					.ToList();
 
 				return
 					(from s in systems
