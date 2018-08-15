@@ -37,7 +37,7 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> RenderWikiPage(string url, int? revision = null)
+		public IActionResult RenderWikiPage(string url, int? revision = null)
 		{
 			url = url.Trim('/').Replace(".html", "");
 
@@ -63,7 +63,7 @@ namespace TASVideos.Controllers
 			}
 
 			// Account for garbage revision values
-			if (revision.HasValue && await _wikiTasks.PageExists(url)) 
+			if (revision.HasValue && _wikiTasks.PageExists(url)) 
 			{
 				return Redirect("/" + url);
 			}
@@ -209,12 +209,12 @@ namespace TASVideos.Controllers
 		}
 
 		[RequirePermission(PermissionTo.MoveWikiPages)]
-		public async Task<IActionResult> MovePage(string path)
+		public IActionResult MovePage(string path)
 		{
 			if (!string.IsNullOrWhiteSpace(path))
 			{
 				path = path.Trim('/');
-				if (await _wikiTasks.PageExists(path))
+				if (_wikiTasks.PageExists(path))
 				{
 					return View(new WikiMoveModel
 					{
@@ -234,7 +234,7 @@ namespace TASVideos.Controllers
 			model.OriginalPageName = model.OriginalPageName.Trim('/');
 			model.DestinationPageName = model.DestinationPageName.Trim('/');
 
-			if (await _wikiTasks.PageExists(model.DestinationPageName, includeDeleted: true))
+			if (_wikiTasks.PageExists(model.DestinationPageName, includeDeleted: true))
 			{
 				ModelState.AddModelError(nameof(WikiMoveModel.DestinationPageName), "The destination page already exists.");
 			}
@@ -367,7 +367,7 @@ namespace TASVideos.Controllers
 			}
 
 			if (action.GetCustomAttribute<AuthorizeAttribute>() != null
-				|| action.DeclaringType.GetCustomAttribute< AuthorizeAttribute>() != null)
+				|| action.DeclaringType.GetCustomAttribute<AuthorizeAttribute>() != null)
 			{
 				return "Logged In";
 			}
