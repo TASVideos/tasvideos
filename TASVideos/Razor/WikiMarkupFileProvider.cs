@@ -60,8 +60,7 @@ namespace TASVideos.Razor
 			{
 				subpath = subpath.Substring(Prefix.Length);
 				var continuation = WikiTasks.GetPageById(int.Parse(subpath));
-				continuation.Wait();
-				var result = continuation.Result;
+				var result = continuation;
 				if (result == null)
 				{
 					return null;

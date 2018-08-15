@@ -146,9 +146,9 @@ namespace TASVideos.Controllers
 		}
 
 		[RequirePermission(PermissionTo.SubmitMovies)]
-		public async Task<IActionResult> PrefillText()
+		public IActionResult PrefillText()
 		{
-			var page = await _wikiTasks.GetPage("System/SubmissionDefaultMessage");
+			var page = _wikiTasks.GetPage("System/SubmissionDefaultMessage");
 			return Json(new { text = page.Markup });
 		}
 
