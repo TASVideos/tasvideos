@@ -25,6 +25,7 @@ namespace TASVideos.Legacy.Imports
 				.Include(s => s.User)
 				.Where(s => s.PageName != "DeletedPages/Bizhawk/ReleaseHistory") // Not worth preserving history here, revisions were mistakes and revision history is too large
 				.Where(s => s.PageName != "/GameResources/GBx/FZeroGPLegend") // Junk that was fixed
+				.Where(s => s.PageName != "")
 				.ToList();
 
 			var legUsers = legacySiteContext.Users.Select(u => new { u.Name, u.HomePage }).ToList();
