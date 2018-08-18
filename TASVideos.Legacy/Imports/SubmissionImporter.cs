@@ -59,7 +59,8 @@ namespace TASVideos.Legacy.Imports
 				{
 					GameSystemFrameRate systemFrameRate;
 
-					if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro"))
+					if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
+						|| legacySubmission.System.Id == 44) // ZX Spectrum which has no NTSC
 					{
 						systemFrameRate = systemFrameRates
 							.SingleOrDefault(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL")
