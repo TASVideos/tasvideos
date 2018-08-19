@@ -57,8 +57,8 @@
 				}
 			};
 
-			xmlhttp.open("GET",
-				"/User/@(nameof(DiagnosticsController.ClearWikiCache))",
+			xmlhttp.open("POST",
+				"/Diagnostics/@(nameof(DiagnosticsController.ClearWikiCache))",
 				true);
 			xmlhttp.send();
 		};
@@ -83,8 +83,8 @@
 				}
 			};
 
-			xmlhttp.open("GET",
-				"/User/@(nameof(DiagnosticsController.ClearAwardsCache))",
+			xmlhttp.open("POST",
+				"/Diagnostics/@(nameof(DiagnosticsController.ClearAwardsCache))",
 				true);
 			xmlhttp.send();
 		};
