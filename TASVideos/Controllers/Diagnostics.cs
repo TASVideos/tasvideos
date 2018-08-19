@@ -12,9 +12,17 @@ namespace TASVideos.Controllers
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class DiagnosticsController : BaseController
 	{
-		public DiagnosticsController(UserTasks userTasks)
+		private readonly WikiTasks _wikiTasks;
+		private readonly AwardTasks _awardTasks;
+
+		public DiagnosticsController(
+			WikiTasks wikiTasks,
+			AwardTasks awardTasks,
+			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_wikiTasks = wikiTasks;
+			_awardTasks = awardTasks;
 		}
 
 		public IActionResult Index()
@@ -31,6 +39,24 @@ namespace TASVideos.Controllers
 			};
 
 			return Ok(data);
+		}
+
+		public IActionResult CacheControl()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public IActionResult ClearWikiCache()
+		{
+			_wikiTasks.ClearWikiCache();
+			return Json(new { Success = true });
+		}
+
+		public IActionResult ClearAwardsCache()
+		{
+			_awardTasks.ClearAwardsCache();
+			return Json(new { Success = true });
 		}
 
 		private object GetProcessInfo()

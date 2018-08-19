@@ -35,7 +35,7 @@ namespace TASVideos.Tasks
 		{
 			get
 			{
-				var cacheKey = "WikiCache";
+				var cacheKey = CacheKeys.WikiCache;
 				if (_cache.TryGetValue(cacheKey, out List<WikiPage> pages))
 				{
 					return pages;
@@ -58,6 +58,11 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 
 			WikiCache.AddRange(wikiPages);
+		}
+
+		public void ClearWikiCache()
+		{
+			_cache.Remove(CacheKeys.WikiCache);
 		}
 
 		/// <summary>
