@@ -50,13 +50,14 @@ namespace TASVideos.Controllers
 		public IActionResult ClearWikiCache()
 		{
 			_wikiTasks.ClearWikiCache();
-			return Json(new { Success = true });
+			return Ok();
 		}
 
+		[HttpPost]
 		public IActionResult ClearAwardsCache()
 		{
 			_awardTasks.ClearAwardsCache();
-			return Json(new { Success = true });
+			return Ok();
 		}
 
 		private object GetProcessInfo()
