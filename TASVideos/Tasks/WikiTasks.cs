@@ -407,6 +407,7 @@ namespace TASVideos.Tasks
 					.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
 					.Where(wr => !wr.Referral.StartsWith("Subs-"))
 					.Where(wr => !wr.Referral.StartsWith("Movies-"))
+					.Where(wr => !wr.Referral.StartsWith("/forum"))
 					.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
 					.Where(wr => wr.Referral != "FrontPage")
 					.ToListAsync())
