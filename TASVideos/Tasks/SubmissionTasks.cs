@@ -93,7 +93,7 @@ namespace TASVideos.Tasks
 
 			// It is important to actually query for an Entity object here instead of a ViewModel
 			// Because we need the title property which is a derived property that can't be done in Linq to Sql
-			// And needs a varierty of information from sub-tables, hence all the includes
+			// And needs a variety of information from sub-tables, hence all the includes
 			var results = await query.ToListAsync();
 			return new SubmissionListViewModel
 			{
