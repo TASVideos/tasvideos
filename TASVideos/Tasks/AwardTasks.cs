@@ -16,8 +16,6 @@ namespace TASVideos.Tasks
 {
 	public class AwardTasks
 	{
-		private const string AwardCacheKey = "AwardsCache";
-
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 		private readonly IMapper _mapper;
@@ -30,6 +28,11 @@ namespace TASVideos.Tasks
 			_db = db;
 			_cache = cache;
 			_mapper = mapper;
+		}
+
+		public void ClearAwardsCache()
+		{
+			_cache.Remove(CacheKeys.AwardsCache);
 		}
 
 		public async Task<IEnumerable<AwardDetailsModel>> GetAwardsForModule(int year)
@@ -64,7 +67,7 @@ namespace TASVideos.Tasks
 
 		private async Task<IEnumerable<AwardDto>> AllAwardsCache()
 		{
-			if (_cache.TryGetValue(AwardCacheKey, out IEnumerable<AwardDto> awards))
+			if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardDto> awards))
 			{
 				return awards;
 			}
@@ -127,7 +130,7 @@ namespace TASVideos.Tasks
 
 				var allAwards = userAwards.Concat(publicationAwards);
 
-				_cache.Set(AwardCacheKey, allAwards, Durations.OneWeekInSeconds);
+				_cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
 
 				return allAwards;
 			}

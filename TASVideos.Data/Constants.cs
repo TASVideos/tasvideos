@@ -15,6 +15,12 @@
 		public const int OneWeekInSeconds = 60 * 60 * 24 * 7;
 	}
 
+	public static class CacheKeys
+	{
+		public const string WikiCache = "WikiCache";
+		public const string AwardsCache = "AwardsCache";
+	}
+
 	// These perform site functions, maybe they should be in the database?
 	public static class SiteGlobalConstants
 	{
