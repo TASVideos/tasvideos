@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using TASVideos.Controllers;
 
 namespace TASVideos.Extensions
 {
@@ -36,6 +37,7 @@ namespace TASVideos.Extensions
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+				routes.MapRoute("forum-post", "forum/p/{id}", defaults: new { controller = "Forum", action = nameof(ForumController.Post) });
 				routes.MapRoute("sub-list", "Subs-List", defaults: new { controller = "Submission", action = "List" });
 				routes.MapRoute("players-list", "Players-List", defaults: new { controller = "Publication", action = "Authors" });
 				routes.MapRoute("submission", "{id:int}S", defaults: new { controller = "Submission", action = "View" });
