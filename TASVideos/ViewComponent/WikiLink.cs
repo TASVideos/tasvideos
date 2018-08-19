@@ -20,6 +20,7 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
+			pp = pp.Trim('/');
 			var split = pp.Split('|');
 
 			var model = new WikiLinkModel
