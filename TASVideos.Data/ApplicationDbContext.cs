@@ -284,6 +284,11 @@ namespace TASVideos.Data
 					.WithOne(t => t.Poll)
 					.HasForeignKey<ForumTopic>(t => t.PollId);
 			});
+
+			builder.Entity<Submission>(entity =>
+			{
+				entity.HasIndex(e => e.Status);
+			});
 		}
 
 		private void PerformTrackingUpdates()
