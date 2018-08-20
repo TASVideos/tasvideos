@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace TASVideos.Extensions
 {
-	public static class CleamsPrincipalExtensions
+	public static class ClaimsPrincipalExtensions
 	{
 		public static int GetUserId(this ClaimsPrincipal user)
 		{
