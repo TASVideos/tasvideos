@@ -63,7 +63,7 @@ namespace TASVideos.ForumEngine
 
 		public static Element Parse(string text)
 		{
-			var p = new BbParser { _input = text };
+			var p = new BbParser(text);
 			p.ParseLoop();
 			return p._root;
 		}
@@ -71,13 +71,14 @@ namespace TASVideos.ForumEngine
 		private Element _root = new Element { Name = "_root" };
 		private Stack<Element> _stack = new Stack<Element>();
 
-		private string _input;
+		private readonly string _input;
 		private int _index = 0;
 
 		private StringBuilder _currentText = new StringBuilder();
 
-		private BbParser()
+		private BbParser(string input)
 		{
+			_input = input;
 			_stack.Push(_root);
 		}
 
