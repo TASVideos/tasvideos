@@ -104,7 +104,9 @@ namespace TASVideos.Controllers
 				foreach (var post in model.Posts)
 				{
 					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-					post.RenderedSignature = RenderSignature(post.Signature);
+					post.RenderedSignature = !string.IsNullOrWhiteSpace(post.Signature)
+						? RenderSignature(post.Signature)
+						: "";
 					post.IsEditable = UserHas(PermissionTo.EditForumPosts)
 						|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
 					post.IsDeletable = UserHas(PermissionTo.DeleteForumPosts)
