@@ -45,13 +45,19 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns the info for the files uploaded by the given user
 		/// </summary>
-		public async Task<UserFileUserIndexViewModel> GetUserIndex(User user)
+		public async Task<UserFileUserIndexViewModel> GetUserIndex(int userId, bool includeHidden)
 		{
 			var query = _db.UserFiles
 				.Include(userFile => userFile.Author)
 				.Include(userFile => userFile.Game)
 				.Include(userFile => userFile.System)
-				.Where(userFile => userFile.Author.Id == user.Id);
+				.Where(userFile => userFile.Author.Id == userId);
+
+			if (!includeHidden)
+			{
+				query = query.Where(userFile => !userFile.Hidden);
+			}
+				
 
 			var result = await query.ToListAsync();
 
@@ -94,7 +100,7 @@ namespace TASVideos.Tasks
 
 		public async Task<UserFileIndexViewModel> GetIndex()
 		{
-			throw new NotImplementedException();
+			return new UserFileIndexViewModel();
 		}
 
 		/// <summary>

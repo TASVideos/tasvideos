@@ -176,6 +176,18 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Returns the id of the <see cref="User"/>
+		/// with the given <see cref="userName"/>
+		/// </summary>
+		public async Task<int> GetUserIdByName(string userName)
+		{
+			return await _db.Users
+				.Where(u => u.UserName == userName)
+				.Select(u => u.Id)
+				.SingleOrDefaultAsync();
+		}
+
+		/// <summary>
 		/// Returns a <see cref="User"/>  with the given id for the purpose of editing
 		/// Which <see cref="Role"/>s are available to assign to the User depends on the User with the given <see cref="currentUserId" />'s <see cref="RolePermission"/> list
 		/// </summary>
