@@ -9,3 +9,14 @@
 	</div>
 </row>
 
+<card>
+	<cardheader>
+		Users with movies
+	</cardheader>
+	<cardbody>
+		@foreach (var user in Model.UsersWithMovies)
+		{
+			<a asp-action="FilesUser" asp-route-id="@user.UserName">@user.UserName</a><span>(latest: @user.Latest)</span><br />
+		}
+	</cardbody>
+</card>
