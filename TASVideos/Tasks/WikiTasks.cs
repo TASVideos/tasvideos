@@ -408,6 +408,7 @@ namespace TASVideos.Tasks
 					.Where(wr => !wr.Referral.StartsWith("Subs-"))
 					.Where(wr => !wr.Referral.StartsWith("Movies-"))
 					.Where(wr => !wr.Referral.StartsWith("/forum"))
+					.Where(wr => !wr.Referral.StartsWith("/userfiles"))
 					.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
 					.Where(wr => wr.Referral != "FrontPage")
 					.ToListAsync())
