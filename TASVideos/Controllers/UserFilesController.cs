@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
 
 using TASVideos.Data.Entity;
 using TASVideos.Tasks;
@@ -36,8 +35,18 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> My()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var model = await _userFileTasks.GetUserIndex(user);
+			var model = await _userFileTasks.GetUserIndex(user.Id, includeHidden: true);
 			return View(model);
+		}
+
+		[AllowAnonymous]
+		[Route("[controller]/user/{id}")]
+		public async Task<IActionResult> FilesUser(string id)
+		{
+			var userId = await UserTasks.GetUserIdByName(id);
+			var model = await _userFileTasks.GetUserIndex(userId, includeHidden: false);
+
+			return View(nameof(My), model);
 		}
 
 		public async Task<IActionResult> Info(long id)
