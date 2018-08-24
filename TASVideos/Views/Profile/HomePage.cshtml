@@ -4,7 +4,7 @@
 @{
 	ViewData["Title"] = "Home Page";
 	ViewData.AddActivePage(ProfileNavPages.HomePage);
-	var homePage = WikiHelper.NormalizeWikiPageName($"HomePages/{User.Identity.Name}");
+	var homePage = $"HomePages/{User.Identity.Name}";
 	bool pageExists = WikiTasks.PageExists(homePage);
 }
 <br />
