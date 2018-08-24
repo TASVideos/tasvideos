@@ -4,4 +4,4 @@
 	ViewData["Title"] = "User movie #" + Model.Id;
 }
 
-@await Html.PartialAsync("_FileInfo", Model)
+<partial name="_UserFileInfo" model="Model" />
