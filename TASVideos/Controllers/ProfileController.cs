@@ -22,6 +22,7 @@ namespace TASVideos.Controllers
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
 		private readonly AwardTasks _awardTasks;
+		private readonly UserFileTasks _userFileTasks;
 
 		public ProfileController(
 			UserManager<User> userManager,
@@ -29,7 +30,8 @@ namespace TASVideos.Controllers
 			IEmailSender emailSender,
 			ILogger<ProfileController> logger,
 			UserTasks userTasks,
-			AwardTasks awardTasks)
+			AwardTasks awardTasks,
+			UserFileTasks userFileTasks)
 			: base(userTasks)
 		{
 			_userManager = userManager;
@@ -37,6 +39,7 @@ namespace TASVideos.Controllers
 			_emailSender = emailSender;
 			_logger = logger;
 			_awardTasks = awardTasks;
+			_userFileTasks = userFileTasks;
 		}
 
 		[TempData]
@@ -223,6 +226,14 @@ namespace TASVideos.Controllers
 		public IActionResult HomePage()
 		{
 			return View();
+		}
+
+		[Authorize]
+		public async Task<IActionResult> UserFiles()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _userFileTasks.GetUserIndex(user.Id, includeHidden: true);
+			return View(model);
 		}
 	}
 }

@@ -1,0 +1,11 @@
+﻿@model UserFileUserIndexViewModel
+
+@{
+	ViewData["Title"] = "My Files";
+	ViewData.AddActivePage(ProfileNavPages.UserFiles);
+}
+
+@foreach (var file in Model.Files)
+{
+	<partial name="_UserFileInfo" model="file" />
+}

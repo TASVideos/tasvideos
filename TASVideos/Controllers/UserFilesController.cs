@@ -31,14 +31,6 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		[Authorize]
-		public async Task<IActionResult> My()
-		{
-			var user = await _userManager.GetUserAsync(User);
-			var model = await _userFileTasks.GetUserIndex(user.Id, includeHidden: true);
-			return View(model);
-		}
-
 		[AllowAnonymous]
 		[Route("[controller]/user/{id}")]
 		public async Task<IActionResult> FilesUser(string id)
@@ -46,7 +38,7 @@ namespace TASVideos.Controllers
 			var userId = await UserTasks.GetUserIdByName(id);
 			var model = await _userFileTasks.GetUserIndex(userId, includeHidden: false);
 
-			return View(nameof(My), model);
+			return View($"~/Views/Profile/{nameof(ProfileController.UserFiles)}.cshtml", model);
 		}
 
 		public async Task<IActionResult> Info(long id)
