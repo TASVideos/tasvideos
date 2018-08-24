@@ -124,8 +124,7 @@ namespace TASVideos.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				ViewData["ActivePage"] = nameof(Index);
-				return View("~/Views/User/Profile.cshtml", model);
+				return View("Settings", model);
 			}
 
 			var user = await _userManager.GetUserAsync(User);
