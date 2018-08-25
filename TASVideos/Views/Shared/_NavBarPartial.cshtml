@@ -41,6 +41,14 @@
 			return active;
 		}
 
+		// Wiki Controller actions that are not the general wiki page action
+		if (string.IsNullOrWhiteSpace((string)ViewData["ActiveTab"])
+			&& string.IsNullOrWhiteSpace((string)TempData["ActiveTab"])
+			&& menuName == "Wiki" && ViewContext.Controller() == "Wiki")
+		{
+			return active;
+		}
+
 		return "";
 	}
 }
