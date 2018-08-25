@@ -289,7 +289,7 @@ namespace TASVideos.Controllers
 			return Redirect("/" + path);
 		}
 
-		[RequirePermission(PermissionTo.DeleteWikiPages)]
+		[RequirePermission(PermissionTo.SeeDeletedWikiPages)]
 		public async Task<IActionResult> DeletedPages()
 		{
 			var model = await _wikiTasks.GetDeletedPages();
