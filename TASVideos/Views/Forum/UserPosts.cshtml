@@ -26,7 +26,7 @@
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
 					</small>
 					<small class="pull-right">
-						<a asp-action="Forum" asp-route-id="@post.ForumId">@Html.Raw(post.ForumName)</a>
+						<a asp-action="Subforum" asp-route-id="@post.ForumId">@Html.Raw(post.ForumName)</a>
 						 -> 
 						<a asp-action="Topic" asp-route-id="@post.TopicId">@post.TopicTitle</a>
 					</small>
