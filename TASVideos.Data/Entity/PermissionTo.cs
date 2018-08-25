@@ -63,13 +63,18 @@ namespace TASVideos.Data.Entity
 
 		[Display(Name = "Movie Wiki Pages")]
 		[Group("Wiki")]
-		[Description("The ability to movie a wiki page to another location")]
+		[Description("The ability to movie a wiki page to another location.")]
 		MoveWikiPages = 104,
 
 		[Display(Name = "Delete Wiki Pages")]
 		[Group("Wiki")]
-		[Description("The ability to delete a wiki page")]
+		[Description("The ability to delete a wiki pag.e")]
 		DeleteWikiPages = 105,
+
+		[Display(Name = "See Deleted Wiki Pages")]
+		[Group("Wiki")]
+		[Description("The ability to see wiki pages/revisions that were deleted.")]
+		SeeDeletedWikiPages = 106,
 
 		[Display(Name = "See Admin Pages")]
 		[Group("Wiki Administration")]

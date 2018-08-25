@@ -38,6 +38,8 @@ namespace TASVideos.Data.SeedData
 
 		private static readonly PermissionTo[] VestedEditorPermissions = EditorPermissions.Concat(new[]
 		{
+			PermissionTo.SeeDeletedWikiPages,
+			PermissionTo.DeleteWikiPages,
 			PermissionTo.EditSystemPages,
 			PermissionTo.EditUsers,
 			PermissionTo.AssignRoles,

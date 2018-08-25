@@ -20,8 +20,11 @@
 				<a Condition="@item.HasExistingRevisions" href="/@item.PageName">@item.PageName</a>
 			</td>
 			<td>
-				<delete-button Condition="@item.HasExistingRevisions" asp-href="@Url.Action(nameof(WikiController.Undelete), new { path = item.PageName })" warning-message="This page already exists. Undeleting these revisions will merge them into the history of the existing page. Continue?">Undelete</delete-button>
-				<a Condition="!@item.HasExistingRevisions" asp-action="Undelete" asp-route-path="@item.PageName" class="btn btn-primary">Undelete</a>
+				@if (ViewData.UserHas(PermissionTo.DeleteWikiPages))
+				{
+					<delete-button Condition="@item.HasExistingRevisions" asp-href="@Url.Action(nameof(WikiController.Undelete), new { path = item.PageName })" warning-message="This page already exists. Undeleting these revisions will merge them into the history of the existing page. Continue?">Undelete</delete-button>
+					<a Condition="!@item.HasExistingRevisions" asp-action="Undelete" asp-route-path="@item.PageName" class="btn btn-primary">Undelete</a>
+				}
 			</td>
 		</tr>
 	}
