@@ -143,7 +143,9 @@ namespace TASVideos.WikiEngine
 		private static string UrlFromLinkText(string text)
 		{
 			if (text[0] == '=')
-				return "/" + text.Substring(1);
+			{
+				return "/" + text.Substring(text[1] == '/' ? 2 : 1);
+			}
 			return text;
 		}
 		private static IEnumerable<INode> MakeLinkOrImage(int charStart, int charEnd, string text)
