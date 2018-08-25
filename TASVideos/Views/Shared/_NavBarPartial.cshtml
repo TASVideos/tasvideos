@@ -90,6 +90,10 @@
 			<a class="dropdown-item" href="/WikiOrphans">Orphans</a>
 			<a class="dropdown-item" href="/TODO">To Do</a>
 			<a class="dropdown-item" href="/System">System Pages</a>
+			@if (ViewData.UserHas(PermissionTo.SeeDeletedWikiPages))
+			{
+				<a class="dropdown-item" asp-controller="Wiki" asp-action="DeletedPages">Deleted Pages</a>
+			}
 		</div>
 	</li>
 </ul>
