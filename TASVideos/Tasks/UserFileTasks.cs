@@ -100,16 +100,14 @@ namespace TASVideos.Tasks
 
 		public async Task<UserFileIndexViewModel> GetIndex()
 		{
-			var model = new UserFileIndexViewModel();
-			model.UsersWithMovies = await _db.UserFiles
-				.GroupBy(gkey => gkey.Author.UserName, gvalue => gvalue.UploadTimestamp )
-				.Select(uf => new UserFileIndexViewModel.UserWithMovie
-				{
-					UserName = uf.Key,
-					Latest = uf.Max()
-				})
-				.ToListAsync();
-			
+			var model = new UserFileIndexViewModel
+			{
+				UsersWithMovies = await _db.UserFiles
+					.GroupBy(gkey => gkey.Author.UserName, gvalue => gvalue.UploadTimestamp).Select(
+						uf => new UserFileIndexViewModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
+					.ToListAsync()
+			};
+
 			return model;
 		}
 
