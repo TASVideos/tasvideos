@@ -61,7 +61,7 @@ namespace TASVideos.Services
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
 				.ToListAsync();
 
-			playerPoints =  new System.Random(DateTime.Now.Millisecond).Next(0, 10000);
+			playerPoints = new Random(DateTime.Now.Millisecond).Next(0, 10000);
 			_cache.Set(cacheKey, playerPoints);
 
 			return playerPoints;

@@ -25,7 +25,9 @@ namespace TASVideos.Controllers
 			_roleTasks = roleTasks;
 		}
 
-		// A select list of all available <seealso cref="PermissionTo"/> in the system
+		/// <summary>
+		/// A select list of all available <seealso cref="PermissionTo"/> in the system
+		/// </summary>
 		private static IEnumerable<SelectListItem> PermissionsSelectList =>
 			Enum.GetValues(typeof(PermissionTo))
 				.Cast<PermissionTo>()

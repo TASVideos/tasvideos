@@ -68,7 +68,7 @@ namespace TASVideos.Data.Helpers
 				|| currentStatus == SubmissionStatus.Delayed
 				|| currentStatus == SubmissionStatus.NeedsMoreInfo)
 				&& isJudge && !isAuthorOrSubmitter
-				&& submitDate > DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgement)) // A judge can claim a new run, unless they are an author or the submitter
+				&& submitDate > DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgment)) // A judge can claim a new run, unless they are an author or the submitter
 			{
 				list.Add(SubmissionStatus.Accepted);
 				list.Add(SubmissionStatus.Rejected);

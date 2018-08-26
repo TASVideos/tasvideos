@@ -25,7 +25,7 @@
 	public static class SiteGlobalConstants
 	{
 		public const int VestedPostCount = 3; // Minimum number of posts to become an experienced forum user
-		public const int MinimumHoursBeforeJudgement = 72; // Minimum number of hours before a judge can set a submission to accepted/rejected
+		public const int MinimumHoursBeforeJudgment = 72; // Minimum number of hours before a judge can set a submission to accepted/rejected
 
 		public const string TASVideoAgent = "TASVideoAgent";
 		public const int TASVideoAgentId = 505;
