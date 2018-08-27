@@ -1,12 +1,16 @@
 ﻿@model UserRatingsViewModel
 @{
 	ViewData["Title"] = $"Ratings for {Model.UserName}";
+	bool isMyPage = (bool)ViewData["IsMyPage"];
 }
 
-<h4>User: <a asp-action="Profile" asp-route-userName="@Model.UserName">@Model.UserName</a></h4>
-<div condition="!Model.PublicRatings">
+<h4>User: <a asp-controller="User" asp-action="Profile" asp-route-userName="@Model.UserName">@Model.UserName</a></h4>
+<div condition="isMyPage && !Model.PublicRatings" class="alert alert-warning">
+	Your ratings are currently private and will not be visible to others. This can be changed on the <a asp-controller="Profile" asp-action="Settings">Settings Page</a>
+</div>
+<div condition="!isMyPage && !Model.PublicRatings">
 	<div class="alert alert-warning">This user's ratings are private</div>
 </div>
-<div condition="Model.PublicRatings">
+<div condition="isMyPage || Model.PublicRatings">
 	<h4>TODO</h4>
 </div>
