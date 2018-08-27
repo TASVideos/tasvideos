@@ -223,7 +223,6 @@ namespace TASVideos.Controllers
 			return View();
 		}
 
-		[Authorize]
 		public async Task<IActionResult> UserFiles()
 		{
 			var user = await _userManager.GetUserAsync(User);
