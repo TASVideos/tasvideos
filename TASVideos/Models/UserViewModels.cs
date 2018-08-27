@@ -206,4 +206,24 @@ namespace TASVideos.Models
 			public DateTime? LastEdit { get; set; }
 		}
 	}
+
+	/// <summary>
+	/// Represents a user's ratings
+	/// </summary>
+	public class UserRatingsViewModel
+	{
+		public int Id { get; set; }
+		public string UserName { get; set; }
+		public bool PublicRatings { get; set; }
+
+		public IEnumerable<Rating> Ratings { get; set; } = new List<Rating>();
+
+		public class Rating
+		{
+			public int PublicationId { get; set; }
+			public string PublicationTitle { get; set; }
+			public decimal Entertainment { get; set; }
+			public decimal Tech { get; set; }
+		}
+	}
 }

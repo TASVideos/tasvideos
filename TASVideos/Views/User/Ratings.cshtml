@@ -1,0 +1,12 @@
+﻿@model UserRatingsViewModel
+@{
+	ViewData["Title"] = $"Ratings for {Model.UserName}";
+}
+
+<h4>User: <a asp-action="Profile" asp-route-userName="@Model.UserName">@Model.UserName</a></h4>
+<div condition="!Model.PublicRatings">
+	<div class="alert alert-warning">This user's ratings are private</div>
+</div>
+<div condition="Model.PublicRatings">
+	<h4>TODO</h4>
+</div>

@@ -118,5 +118,18 @@ namespace TASVideos.Controllers
 
 			return View(model);
 		}
+
+		[AllowAnonymous]
+		[Route("[controller]/[action]/{userName}")]
+		public async Task<IActionResult> Ratings(string userName)
+		{
+			var model = await UserTasks.GetUserRatings(userName);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
 	}
 }
