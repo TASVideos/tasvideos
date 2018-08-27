@@ -356,6 +356,37 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
+		/// Returns the rating information for the given user
+		/// If user is not found, null is returned
+		/// </summary>
+		public async Task<UserRatingsViewModel> GetUserRatings(string userName)
+		{
+			var model = await _db.Users
+				.Where(u => u.UserName == userName)
+				.Select(u => new UserRatingsViewModel
+				{
+					Id = u.Id,
+					UserName = u.UserName,
+					PublicRatings = u.PublicRatings
+				})
+				.SingleOrDefaultAsync();
+
+			if (model == null)
+			{
+				return null;
+			}
+
+			if (!model.PublicRatings)
+			{
+				return model;
+			}
+
+			// TODO: wrap in transaction
+			// TODO: query rating data
+			return model;
+		}
+
+		/// <summary>
 		/// Returns publicly available user profile information
 		/// for the <see cref="User"/> with the given <see cref="userName"/>
 		/// If no user is found, null is returned
