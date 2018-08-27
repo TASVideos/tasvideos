@@ -100,9 +100,10 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> Profile(string id)
+		[Route("[controller]/[action]/{userName}")]
+		public async Task<IActionResult> Profile(string userName)
 		{
-			var model = await UserTasks.GetUserProfile(id);
+			var model = await UserTasks.GetUserProfile(userName);
 			if (model == null)
 			{
 				return NotFound();
