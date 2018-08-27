@@ -41,6 +41,7 @@ namespace TASVideos.Controllers
 			return View($"~/Views/Profile/{nameof(ProfileController.UserFiles)}.cshtml", model);
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Info(long id)
 		{
 			var model = await _userFileTasks.GetInfo(id);
@@ -64,6 +65,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Download(long id)
 		{
 			var model = await _userFileTasks.GetContents(id);
