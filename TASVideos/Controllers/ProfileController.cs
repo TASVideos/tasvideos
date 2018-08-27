@@ -48,11 +48,6 @@ namespace TASVideos.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
-			if (!User.Identity.IsAuthenticated)
-			{ 
-				return RedirectToLogin();
-			}
-
 			var userName = _userManager.GetUserName(User);
 
 			var model = await UserTasks.GetUserProfile(userName);
