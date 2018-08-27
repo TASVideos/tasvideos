@@ -236,6 +236,7 @@ namespace TASVideos.Controllers
 			var model = await UserTasks.GetUserRatings(user.UserName, includeHidden: true);
 
 			ViewData["IsMyPage"] = true;
+			ViewData["ActivePage"] = nameof(Ratings);
 			return View("~/Views/User/Ratings.cshtml", model);
 		}
 	}
