@@ -19,7 +19,7 @@
 			<td>@string.Join(",", user.Roles)</td>
 			<td>@user.CreateTimeStamp</td>
 			<td>
-				<a asp-action="Profile" asp-route-id="@user.UserName" class="btn btn-secondary">View</a>
+				<a asp-action="Profile" asp-route-userName="@user.UserName" class="btn btn-secondary">View</a>
 				<a condition="@ViewData.UserHas(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
 			</td>
 		</tr>

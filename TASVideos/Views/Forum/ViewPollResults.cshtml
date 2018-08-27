@@ -23,7 +23,7 @@
 	{
 		<tr>
 			<td>@vote.OptionText</td>
-			<td><a asp-controller="User" asp-action="Profile" asp-route-id="@vote.UserName">@vote.UserName</a></td>
+			<td><a asp-controller="User" asp-action="Profile" asp-route-userName="@vote.UserName">@vote.UserName</a></td>
 			<td>@vote.CreateTimestamp</td>
 			<td>@vote.IpAddress</td>
 		</tr>
