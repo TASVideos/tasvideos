@@ -229,5 +229,14 @@ namespace TASVideos.Controllers
 			var model = await _userFileTasks.GetUserIndex(user.Id, includeHidden: true);
 			return View(model);
 		}
+
+		public async Task<IActionResult> Ratings()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await UserTasks.GetUserRatings(user.UserName, includeHidden: true);
+
+			ViewData["IsMyPage"] = true;
+			return View("~/Views/User/Ratings.cshtml", model);
+		}
 	}
 }

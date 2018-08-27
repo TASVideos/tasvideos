@@ -358,8 +358,9 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns the rating information for the given user
 		/// If user is not found, null is returned
+		/// If user has PublicRatings false, then the ratings will be an empty list
 		/// </summary>
-		public async Task<UserRatingsViewModel> GetUserRatings(string userName)
+		public async Task<UserRatingsViewModel> GetUserRatings(string userName, bool includeHidden = false)
 		{
 			var model = await _db.Users
 				.Where(u => u.UserName == userName)
@@ -376,7 +377,7 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
-			if (!model.PublicRatings)
+			if (!model.PublicRatings && !includeHidden)
 			{
 				return model;
 			}

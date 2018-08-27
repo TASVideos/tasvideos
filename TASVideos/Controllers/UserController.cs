@@ -129,6 +129,7 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
+			ViewData["IsMyPage"] = false;
 			return View(model);
 		}
 	}
