@@ -12,40 +12,54 @@
 	<div class="alert alert-warning">This user's ratings are private</div>
 </div>
 <div condition="isMyPage || Model.PublicRatings">
-	<label>Current</label>
-	<table class="table table-bordered">
-		<tr>
-			<th>Movie</th>
-			<th>Average</th>
-			<th>Entertainment</th>
-			<th>Tech Qaulity</th>
-		</tr>
-		@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Average))
-		{
-			<tr>
-				<td>@rating.PublicationTitle</td>
-				<td>@(Math.Round(rating.Average, 1))</td>
-				<td>@rating.Entertainment</td>
-				<td>@rating.Tech</td>
-			</tr>
-		}
-	</table>
-	<label>Obsolete</label>
-	<table class="table table-bordered">
-		<tr>
-			<th>Movie</th>
-			<th>Average</th>
-			<th>Entertainment</th>
-			<th>Tech Qaulity</th>
-		</tr>
-		@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Average))
-		{
-			<tr>
-				<td>@rating.PublicationTitle</td>
-				<td>@(Math.Round(rating.Average, 1))</td>
-				<td>@rating.Entertainment</td>
-				<td>@rating.Tech</td>
-			</tr>
-		}
-	</table>
+	<ul class="nav nav-tabs" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link active" href="#current" role="tab" data-toggle="tab">Current</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#obsolete" role="tab" data-toggle="tab">Obsolete</a>
+		</li>
+	</ul>
+
+	<!-- Tab panes -->
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="current">
+			<table class="table table-bordered">
+				<tr>
+					<th>Movie</th>
+					<th>Average</th>
+					<th>Entertainment</th>
+					<th>Tech Qaulity</th>
+				</tr>
+				@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Average))
+				{
+					<tr>
+						<td>@rating.PublicationTitle</td>
+						<td>@(Math.Round(rating.Average, 1))</td>
+						<td>@rating.Entertainment</td>
+						<td>@rating.Tech</td>
+					</tr>
+				}
+			</table>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="obsolete">
+			<table class="table table-bordered">
+				<tr>
+					<th>Movie</th>
+					<th>Average</th>
+					<th>Entertainment</th>
+					<th>Tech Qaulity</th>
+				</tr>
+				@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Average))
+				{
+					<tr>
+						<td>@rating.PublicationTitle</td>
+						<td>@(Math.Round(rating.Average, 1))</td>
+						<td>@rating.Entertainment</td>
+						<td>@rating.Tech</td>
+					</tr>
+				}
+			</table>
+		</div>
+	</div>
 </div>
