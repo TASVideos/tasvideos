@@ -12,5 +12,21 @@
 	<div class="alert alert-warning">This user's ratings are private</div>
 </div>
 <div condition="isMyPage || Model.PublicRatings">
-	<h4>TODO</h4>
+	<table>
+		<tr>
+			<th>Movie</th>
+			<th>Average</th>
+			<th>Entertainment</th>
+			<th>Tech Qaulity</th>
+		</tr>
+		@foreach (var rating in Model.Ratings.OrderByDescending(r => r.Average))
+		{
+			<tr>
+				<td>@rating.PublicationTitle</td>
+				<td>@(Math.Round(rating.Average, 1))</td>
+				<td>@rating.Entertainment</td>
+				<td>@rating.Tech</td>
+			</tr>
+		}
+	</table>
 </div>
