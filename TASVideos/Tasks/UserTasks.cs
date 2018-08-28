@@ -446,6 +446,15 @@ namespace TASVideos.Tasks
 					model.WikiEdits.FirstEdit = wikiEdits.Min(w => w.CreateTimeStamp);
 					model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimeStamp);
 				}
+
+				if (model.PublicRatings)
+				{
+					model.Ratings.TotalMoviesRated = await _db.PublicationRatings
+						.Where(p => p.UserId == model.Id)
+						.Select(p => p.PublicationId)
+						.Distinct()
+						.CountAsync();
+				}
 			}
 
 			return model;

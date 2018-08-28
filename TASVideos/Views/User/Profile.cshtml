@@ -135,6 +135,9 @@
 			<cardheader><h4>Ratings</h4></cardheader>
 			<cardbody>
 				<label asp-for="PublicRatings"></label> @Model.PublicRatings.ToYesNo()
+				<div condition="Model.PublicRatings">
+					<label>Total Movies Rated: <a asp-action="Ratings" asp-route-userName="@Model.UserName">@Model.Ratings.TotalMoviesRated</a></label>
+				</div>
 			</cardbody>
 		</card>
 	</div>

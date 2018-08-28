@@ -190,8 +190,10 @@ namespace TASVideos.Models
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
 
-		public int SubmissionCount => Submissions.Sum(s => s.Count);
+		public RatingModel Ratings { get; set; } = new RatingModel();
 
+		public int SubmissionCount => Submissions.Sum(s => s.Count);
+		
 		public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
 		public class SubmissionEntry
 		{
@@ -204,6 +206,13 @@ namespace TASVideos.Models
 			public int TotalEdits { get; set; }
 			public DateTime? FirstEdit { get; set; }
 			public DateTime? LastEdit { get; set; }
+		}
+
+		public class RatingModel
+		{
+			// TODO: obsolete vs non-obsolete
+			// TODO: percentage of total non-obsolete
+			public int TotalMoviesRated { get; set; }
 		}
 	}
 
