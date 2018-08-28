@@ -231,8 +231,11 @@ namespace TASVideos.Models
 		{
 			public int PublicationId { get; set; }
 			public string PublicationTitle { get; set; }
-			public decimal Entertainment { get; set; }
-			public decimal Tech { get; set; }
+			public bool IsObsolete { get; set; }
+			public double Entertainment { get; set; }
+			public double Tech { get; set; }
+
+			public double Average => (Entertainment + Entertainment + Tech) / 3.0;
 		}
 	}
 }

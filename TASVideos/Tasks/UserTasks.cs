@@ -382,6 +382,19 @@ namespace TASVideos.Tasks
 				return model;
 			}
 
+			// TODO: aggregate by id and consolidate ent and tech
+			model.Ratings = await _db.PublicationRatings
+				.Where(pr => pr.UserId == model.Id)
+				.Select(pr => new UserRatingsViewModel.Rating
+				{
+					PublicationId = pr.PublicationId,
+					PublicationTitle = pr.Publication.Title,
+					IsObsolete = pr.Publication.ObsoletedById.HasValue,
+					Entertainment = pr.Type == PublicationRatingType.Entertainment ? pr.Value : 0,
+					Tech = pr.Type == PublicationRatingType.TechQuality ? pr.Value : 0,
+				})
+				.ToListAsync();
+
 			// TODO: wrap in transaction
 			// TODO: query rating data
 			return model;
