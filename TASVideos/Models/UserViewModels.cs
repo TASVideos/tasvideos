@@ -232,10 +232,10 @@ namespace TASVideos.Models
 			public int PublicationId { get; set; }
 			public string PublicationTitle { get; set; }
 			public bool IsObsolete { get; set; }
-			public double Entertainment { get; set; }
+			public double? Entertainment { get; set; }
 			public double Tech { get; set; }
 
-			public double Average => (Entertainment + Entertainment + Tech) / 3.0;
+			public double Average => ((Entertainment ?? 0) + (Entertainment ?? 0) + Tech) / 3.0;
 		}
 	}
 }

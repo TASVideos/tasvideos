@@ -12,14 +12,33 @@
 	<div class="alert alert-warning">This user's ratings are private</div>
 </div>
 <div condition="isMyPage || Model.PublicRatings">
-	<table>
+	<label>Current</label>
+	<table class="table table-bordered">
 		<tr>
 			<th>Movie</th>
 			<th>Average</th>
 			<th>Entertainment</th>
 			<th>Tech Qaulity</th>
 		</tr>
-		@foreach (var rating in Model.Ratings.OrderByDescending(r => r.Average))
+		@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Average))
+		{
+			<tr>
+				<td>@rating.PublicationTitle</td>
+				<td>@(Math.Round(rating.Average, 1))</td>
+				<td>@rating.Entertainment</td>
+				<td>@rating.Tech</td>
+			</tr>
+		}
+	</table>
+	<label>Obsolete</label>
+	<table class="table table-bordered">
+		<tr>
+			<th>Movie</th>
+			<th>Average</th>
+			<th>Entertainment</th>
+			<th>Tech Qaulity</th>
+		</tr>
+		@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Average))
 		{
 			<tr>
 				<td>@rating.PublicationTitle</td>

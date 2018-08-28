@@ -382,21 +382,24 @@ namespace TASVideos.Tasks
 				return model;
 			}
 
-			// TODO: aggregate by id and consolidate ent and tech
 			model.Ratings = await _db.PublicationRatings
 				.Where(pr => pr.UserId == model.Id)
+				.GroupBy(gkey => new { gkey.PublicationId, gkey.Publication.Title, gkey.Publication.ObsoletedById }, gvalue => new
+				{
+					gvalue.Type,
+					gvalue.Value
+				})
 				.Select(pr => new UserRatingsViewModel.Rating
 				{
-					PublicationId = pr.PublicationId,
-					PublicationTitle = pr.Publication.Title,
-					IsObsolete = pr.Publication.ObsoletedById.HasValue,
-					Entertainment = pr.Type == PublicationRatingType.Entertainment ? pr.Value : 0,
-					Tech = pr.Type == PublicationRatingType.TechQuality ? pr.Value : 0,
+					PublicationId = pr.Key.PublicationId,
+					PublicationTitle = pr.Key.Title,
+					IsObsolete = pr.Key.ObsoletedById.HasValue,
+					Entertainment = pr.Where(a => a.Type == PublicationRatingType.Entertainment).Select(a => a.Value).Sum(),
+					Tech = pr.Where(a => a.Type == PublicationRatingType.TechQuality).Select(a => a.Value).Sum()
 				})
 				.ToListAsync();
 
 			// TODO: wrap in transaction
-			// TODO: query rating data
 			return model;
 		}
 
