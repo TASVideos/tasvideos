@@ -52,6 +52,11 @@ namespace TASVideos.Controllers
 				Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)),
 				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t)),
 				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f)),
+				MovieIds = tokens
+					.Where(t => t.EndsWith('m'))
+					.Where(t => int.TryParse(t.Substring(0, t.Length - 1), out int unused))
+					.Select(t => int.Parse(t.Substring(0, t.Length - 1)))
+					.ToList(),
 				Authors = tokens
 					.Where(t => t.ToLower().Contains("author"))
 					.Select(t => t.ToLower().Replace("author", ""))
