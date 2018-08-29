@@ -240,6 +240,11 @@ namespace TASVideos.Tasks
 				query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => searchCriteria.Authors.Contains(a)));
 			}
 
+			if (searchCriteria.MovieIds.Any())
+			{
+				query = query.Where(p => searchCriteria.MovieIds.Contains(p.Id));
+			}
+
 			// TODO: automapper, single movie is the same logic
 			return await query
 				.OrderBy(p => p.System.Code)

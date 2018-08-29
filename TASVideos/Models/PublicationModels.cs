@@ -27,7 +27,8 @@ namespace TASVideos.Models
 			&& (Years == null || !Years.Any())
 			&& (Flags == null || !Flags.Any())
 			&& (Tags == null || !Tags.Any())
-			&& (Authors == null || !Authors.Any());
+			&& (Authors == null || !Authors.Any())
+			&& (MovieIds == null || !MovieIds.Any());
 	}
 
 	public class PublicationViewModel
