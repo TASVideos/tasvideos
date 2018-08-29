@@ -205,44 +205,46 @@ namespace TASVideos.Tasks
 			var query = _db.Publications
 				.AsQueryable();
 
-			if (searchCriteria.SystemCodes.Any())
-			{
-				query = query.Where(p => searchCriteria.SystemCodes.Contains(p.System.Code));
-			}
-
-			if (searchCriteria.Tiers.Any())
-			{
-				query = query.Where(p => searchCriteria.Tiers.Contains(p.Tier.Name));
-			}
-
-			if (!searchCriteria.ShowObsoleted)
-			{
-				query = query.ThatAreCurrent();
-			}
-
-			if (searchCriteria.Years.Any())
-			{
-				query = query.Where(p => searchCriteria.Years.Contains(p.CreateTimeStamp.Year));
-			}
-
-			if (searchCriteria.Tags.Any())
-			{
-				query = query.Where(p => p.PublicationTags.Any(t => searchCriteria.Tags.Contains(t.Tag.Code)));
-			}
-
-			if (searchCriteria.Flags.Any())
-			{
-				query = query.Where(p => p.PublicationFlags.Any(f => searchCriteria.Flags.Contains(f.Flag.Token)));
-			}
-
-			if (searchCriteria.Authors.Any())
-			{
-				query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => searchCriteria.Authors.Contains(a)));
-			}
-
 			if (searchCriteria.MovieIds.Any())
 			{
 				query = query.Where(p => searchCriteria.MovieIds.Contains(p.Id));
+			}
+			else
+			{
+				if (searchCriteria.SystemCodes.Any())
+				{
+					query = query.Where(p => searchCriteria.SystemCodes.Contains(p.System.Code));
+				}
+
+				if (searchCriteria.Tiers.Any())
+				{
+					query = query.Where(p => searchCriteria.Tiers.Contains(p.Tier.Name));
+				}
+
+				if (!searchCriteria.ShowObsoleted)
+				{
+					query = query.ThatAreCurrent();
+				}
+
+				if (searchCriteria.Years.Any())
+				{
+					query = query.Where(p => searchCriteria.Years.Contains(p.CreateTimeStamp.Year));
+				}
+
+				if (searchCriteria.Tags.Any())
+				{
+					query = query.Where(p => p.PublicationTags.Any(t => searchCriteria.Tags.Contains(t.Tag.Code)));
+				}
+
+				if (searchCriteria.Flags.Any())
+				{
+					query = query.Where(p => p.PublicationFlags.Any(f => searchCriteria.Flags.Contains(f.Flag.Token)));
+				}
+
+				if (searchCriteria.Authors.Any())
+				{
+					query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => searchCriteria.Authors.Contains(a)));
+				}
 			}
 
 			// TODO: automapper, single movie is the same logic
