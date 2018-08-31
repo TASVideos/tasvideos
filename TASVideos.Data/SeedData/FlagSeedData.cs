@@ -59,6 +59,15 @@ namespace TASVideos.Data.SeedData
 				LinkPath = "NewcomerCorner",
 				Token = "NewcomerRec",
 				PermissionRestriction = PermissionTo.EditRecommendation
+			},
+			new Flag
+			{
+				Id = 9,
+				Name = "Fastest Completion",
+				IconPath = "images/fastest-completion.png",
+				LinkPath = "FastestCompletion",
+				Token = "FastestCompletion",
+				PermissionRestriction = PermissionTo.EditRecommendation
 			}
 		};
     }
