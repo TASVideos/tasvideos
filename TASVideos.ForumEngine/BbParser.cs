@@ -7,7 +7,7 @@ namespace TASVideos.ForumEngine
 {
 	public class BbParser
 	{
-		private static readonly Regex OpeningTag = new Regex(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]=]+))?\]");
+		private static readonly Regex OpeningTag = new Regex(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]]+))?\]");
 		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
 		private static readonly Regex Url = new Regex(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
 
