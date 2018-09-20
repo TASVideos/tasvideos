@@ -92,6 +92,13 @@ namespace TASVideos.Tasks
 							DisplayName = pt.Tag.DisplayName,
 							Code = pt.Tag.Code
 						})
+						.ToList(),
+					GenreTags = p.Game.GameGenres
+						.Select(gg => new PublicationViewModel.TagModel
+						{
+							DisplayName = gg.Genre.DisplayName,
+							Code = gg.Genre.DisplayName // TODO
+						})
 						.ToList()
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
@@ -268,11 +275,20 @@ namespace TASVideos.Tasks
 						Path = f.Path,
 						Type = f.Type
 					}).ToList(),
-					Tags = p.PublicationTags.Select(pt => new PublicationViewModel.TagModel
-					{
-						DisplayName = pt.Tag.DisplayName,
-						Code = pt.Tag.Code
-					}).ToList()
+					Tags = p.PublicationTags
+						.Select(pt => new PublicationViewModel.TagModel
+						{
+							DisplayName = pt.Tag.DisplayName,
+							Code = pt.Tag.Code
+						})
+						.ToList(),
+					GenreTags = p.Game.GameGenres
+						.Select(gg => new PublicationViewModel.TagModel
+						{
+							DisplayName = gg.Genre.DisplayName,
+							Code = gg.Genre.DisplayName // TODO
+						})
+						.ToList()
 				})
 				.ToListAsync();
 		}
