@@ -56,10 +56,16 @@
 			</div>
 			<div class="col-md-2">
 				<small>
-					Tags:<br />
+					Genre:<br />
+					@foreach (var genre in Model.GenreTags)
+					{
+						<label>@genre.DisplayName</label>
+					}
+					<br />
+					Tags:<br/>
 					@foreach (var tag in Model.Tags)
 					{
-						<a href="/Movies-@tag.Code">@tag.DisplayName</a><br />
+						<a href="/Movies-@tag.Code">@tag.DisplayName</a><br/>
 					}
 				</small>
 			</div>

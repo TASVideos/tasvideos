@@ -51,6 +51,7 @@ namespace TASVideos.Controllers
 				ShowObsoleted = tokens.Contains("obs"),
 				Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)),
 				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t)),
+				Genres = tokenLookup.Genres.Where(g => tokens.Contains(g)),
 				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f)),
 				MovieIds = tokens
 					.Where(t => t.EndsWith('m'))
