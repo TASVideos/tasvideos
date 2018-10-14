@@ -50,7 +50,8 @@ namespace TASVideos.Tasks
 				{
 					Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
 					SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
-					Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(), // TODO: Game genres too?
+					Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(),
+					Genres = await _db.Genres.Select(g => g.DisplayName.ToLower()).ToListAsync(),
 					Flags = await _db.Flags.Select(f => f.Token.ToLower()).ToListAsync()
 				};
 
@@ -91,6 +92,13 @@ namespace TASVideos.Tasks
 						{
 							DisplayName = pt.Tag.DisplayName,
 							Code = pt.Tag.Code
+						})
+						.ToList(),
+					GenreTags = p.Game.GameGenres
+						.Select(gg => new PublicationViewModel.TagModel
+						{
+							DisplayName = gg.Genre.DisplayName,
+							Code = gg.Genre.DisplayName // TODO
 						})
 						.ToList()
 				})
@@ -236,6 +244,11 @@ namespace TASVideos.Tasks
 					query = query.Where(p => p.PublicationTags.Any(t => searchCriteria.Tags.Contains(t.Tag.Code)));
 				}
 
+				if (searchCriteria.Genres.Any())
+				{
+					query = query.Where(p => p.Game.GameGenres.Any(gg => searchCriteria.Genres.Contains(gg.Genre.DisplayName)));
+				}
+
 				if (searchCriteria.Flags.Any())
 				{
 					query = query.Where(p => p.PublicationFlags.Any(f => searchCriteria.Flags.Contains(f.Flag.Token)));
@@ -268,11 +281,20 @@ namespace TASVideos.Tasks
 						Path = f.Path,
 						Type = f.Type
 					}).ToList(),
-					Tags = p.PublicationTags.Select(pt => new PublicationViewModel.TagModel
-					{
-						DisplayName = pt.Tag.DisplayName,
-						Code = pt.Tag.Code
-					}).ToList()
+					Tags = p.PublicationTags
+						.Select(pt => new PublicationViewModel.TagModel
+						{
+							DisplayName = pt.Tag.DisplayName,
+							Code = pt.Tag.Code
+						})
+						.ToList(),
+					GenreTags = p.Game.GameGenres
+						.Select(gg => new PublicationViewModel.TagModel
+						{
+							DisplayName = gg.Genre.DisplayName,
+							Code = gg.Genre.DisplayName // TODO
+						})
+						.ToList()
 				})
 				.ToListAsync();
 		}
