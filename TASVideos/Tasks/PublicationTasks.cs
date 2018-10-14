@@ -50,7 +50,8 @@ namespace TASVideos.Tasks
 				{
 					Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
 					SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
-					Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(), // TODO: Game genres too?
+					Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(),
+					Genres = await _db.Genres.Select(g => g.DisplayName.ToLower()).ToListAsync(),
 					Flags = await _db.Flags.Select(f => f.Token.ToLower()).ToListAsync()
 				};
 
@@ -241,6 +242,11 @@ namespace TASVideos.Tasks
 				if (searchCriteria.Tags.Any())
 				{
 					query = query.Where(p => p.PublicationTags.Any(t => searchCriteria.Tags.Contains(t.Tag.Code)));
+				}
+
+				if (searchCriteria.Genres.Any())
+				{
+					query = query.Where(p => p.Game.GameGenres.Any(gg => searchCriteria.Genres.Contains(gg.Genre.DisplayName)));
 				}
 
 				if (searchCriteria.Flags.Any())

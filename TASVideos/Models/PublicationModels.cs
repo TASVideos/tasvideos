@@ -15,7 +15,9 @@ namespace TASVideos.Models
 		public IEnumerable<string> Tiers { get; set; } = new List<string>();
 		public IEnumerable<int> Years { get; set; } = Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1);
 		public IEnumerable<string> Tags { get; set; } = new List<string>();
+		public IEnumerable<string> Genres { get; set; } = new List<string>();
 		public IEnumerable<string> Flags { get; set; } = new List<string>();
+		
 		public bool ShowObsoleted { get; set; }
 
 		public IEnumerable<int> Authors { get; set; } = new List<int>();
@@ -27,6 +29,7 @@ namespace TASVideos.Models
 			&& (Years == null || !Years.Any())
 			&& (Flags == null || !Flags.Any())
 			&& (Tags == null || !Tags.Any())
+			&& (Genres == null || !Genres.Any())
 			&& (Authors == null || !Authors.Any())
 			&& (MovieIds == null || !MovieIds.Any());
 	}
