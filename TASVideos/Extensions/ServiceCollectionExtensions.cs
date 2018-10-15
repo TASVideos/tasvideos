@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO.Compression;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -43,8 +45,11 @@ namespace TASVideos.Extensions
 		{
 			if (settings.EnableGzipCompression)
 			{
-				services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
-				services.AddResponseCompression();
+				services.Configure<GzipCompressionProviderOptions>(options =>
+				{
+					options.Level = CompressionLevel.Fastest;
+				});
+				services.AddResponseCompression(options => options.EnableForHttps = true);
 			}
 
 			return services;
