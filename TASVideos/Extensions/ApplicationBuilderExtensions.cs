@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+
 using TASVideos.Controllers;
 
 namespace TASVideos.Extensions
@@ -34,6 +38,24 @@ namespace TASVideos.Extensions
 
 		public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app)
 		{
+			// Note: out of the box, this middleware will set cache-control
+			// public only when user is logged out, else no-cache
+			// Which is precisely the behavior we want
+			app.UseResponseCaching();
+			app.Use(async (context, next) =>
+			{
+				context.Response.GetTypedHeaders().CacheControl =
+					new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+					{
+						Public = true,
+						MaxAge = TimeSpan.FromSeconds(30)
+					};
+				context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+					new[] { "Accept-Encoding" };
+
+				await next();
+			});
+
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
