@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO.Compression;
 
+using AutoMapper;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -136,6 +138,14 @@ namespace TASVideos.Extensions
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
 
+			return services;
+		}
+
+		public static IServiceCollection AddAutoMapperWithProjections(this IServiceCollection services)
+		{
+			Mapper.Initialize(cfg => cfg.AddProfile(new MappingProfile()));
+			services.AddAutoMapper();
+			  
 			return services;
 		}
 

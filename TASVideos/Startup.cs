@@ -34,7 +34,8 @@ namespace TASVideos
 				.AddTasks()
 				.AddServices()
 				.AddExternalMediaPublishing(Environment, Settings)
-				.AddWikiProvider();
+				.AddWikiProvider()
+				.AddAutoMapperWithProjections();
 
 			// Internal Libraries
 			services
@@ -45,8 +46,7 @@ namespace TASVideos
 			// 3rd Party
 			services
 				.AddMvcWithOptions()
-				.AddIdentity()
-				.AddAutoMapper();
+				.AddIdentity();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
