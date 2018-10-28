@@ -144,6 +144,11 @@ namespace TASVideos.WikiEngine
 		{
 			if (text[0] == '=')
 			{
+				if (text.Length == 1) // Just a single equals, apparently people expect this to link to home
+				{
+					return "/";
+				}
+
 				return "/" + text.Substring(text[1] == '/' ? 2 : 1);
 			}
 			return text;
