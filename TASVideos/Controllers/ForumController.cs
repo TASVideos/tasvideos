@@ -400,7 +400,7 @@ namespace TASVideos.Controllers
 			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
 			if (!seeRestricted)
 			{
-				if (!await _forumTasks.TopicAccessible(id, seeRestricted))
+				if (!await _forumTasks.TopicAccessible(id, false))
 				{
 					return NotFound();
 				}

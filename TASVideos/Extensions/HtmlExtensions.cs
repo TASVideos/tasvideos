@@ -9,6 +9,7 @@ namespace TASVideos.Extensions
 {
 	public static class HtmlExtensions
 	{
+		// ReSharper disable once UnusedMember.Global (Used in Node.cs with string building)
 		public static bool WikiCondition(this IHtmlHelper html, string condition)
 		{
 			bool result = false;

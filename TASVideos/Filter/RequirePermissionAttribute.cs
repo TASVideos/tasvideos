@@ -52,10 +52,10 @@ namespace TASVideos.Filter
 			var userTasks = (UserTasks)context.HttpContext.RequestServices.GetService(typeof(UserTasks));
 
 			var userPerms = await userTasks.GetUserPermissionsById(userId);
-			var reqs = new HashSet<PermissionTo>(RequiredPermissions);
+			var perms = new HashSet<PermissionTo>(RequiredPermissions);
 
-			if ((MatchAny && reqs.Any(r => userPerms.Contains(r)))
-				|| reqs.IsSubsetOf(userPerms))
+			if (MatchAny && perms.Any(r => userPerms.Contains(r))
+				|| perms.IsSubsetOf(userPerms))
 			{
 				await base.OnActionExecutionAsync(context, next);
 			}

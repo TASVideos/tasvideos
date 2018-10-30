@@ -6,7 +6,7 @@
 		|| (Model.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
 	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& Model.Status == SubmissionStatus.PublicationUnderway
-		&& Model.IsCatalogged
+		&& Model.IsCataloged
 		&& Model.Publisher == User.Identity.Name;
 }
 

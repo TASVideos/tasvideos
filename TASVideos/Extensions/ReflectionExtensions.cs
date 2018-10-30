@@ -10,7 +10,7 @@ namespace TASVideos.Extensions
     public static class ReflectionExtensions
     {
 		/// <summary>
-		/// Retruns the <seealso cref="DescriptionAttribute"/> of an Enum if it exists
+		/// Returns the <seealso cref="DescriptionAttribute"/> of an Enum if it exists
 		/// Else it will return and empty string
 		/// If the value is null, an empty string will be returned
 		/// </summary>
@@ -40,7 +40,7 @@ namespace TASVideos.Extensions
 		}
 
 		/// <summary>
-		/// Retruns the <seealso cref="GroupAttribute"/> of an Enum if it exists
+		/// Returns the <seealso cref="GroupAttribute"/> of an Enum if it exists
 		/// Else it will return and empty string
 		/// If the value is null, an empty string will be returned
 		/// </summary>
@@ -60,7 +60,7 @@ namespace TASVideos.Extensions
 		}
 
 		/// <summary>
-		/// Retruns the DisplayAttribute value of a Enum if exists
+		/// Returns the DisplayAttribute value of a Enum if exists
 		/// Else it will return the name of the enum
 		/// If the value is null, an empty string will be returned
 		/// </summary>
