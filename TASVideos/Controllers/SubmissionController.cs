@@ -219,7 +219,7 @@ namespace TASVideos.Controllers
 				subInfo.CurrentStatus,
 				UserPermissions,
 				subInfo.CreateDate,
-				subInfo.UserIsAuhtorOrSubmitter,
+				subInfo.UserIsAuthorOrSubmitter,
 				subInfo.UserIsJudge)
 				.ToList();
 
@@ -239,7 +239,7 @@ namespace TASVideos.Controllers
 				// If user can not edit submissions then they must be an author or the original submitter
 				if (!UserHas(PermissionTo.EditSubmissions))
 				{
-					if (!subInfo.UserIsAuhtorOrSubmitter)
+					if (!subInfo.UserIsAuthorOrSubmitter)
 					{
 						return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
 					}

@@ -210,7 +210,7 @@ namespace TASVideos.Tasks
 				.Select(s => new SubmissionStatusValidationModel
 				{
 					UserIsJudge = s.Judge != null && s.Judge.UserName == userName,
-					UserIsAuhtorOrSubmitter = s.Submitter.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author.UserName == userName),
+					UserIsAuthorOrSubmitter = s.Submitter.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author.UserName == userName),
 					CurrentStatus = s.Status,
 					CreateDate = s.CreateTimeStamp
 				})

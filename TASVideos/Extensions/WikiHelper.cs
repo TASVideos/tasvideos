@@ -47,7 +47,7 @@ namespace TASVideos.Extensions
 
 			if (pageName.StartsWith("Homepages/"))
 			{
-				// A home page is defiend as Homepages/[UserName]
+				// A home page is defined as Homepages/[UserName]
 				// If a user can exploit this fact to create an exploit
 				// then we should first reconsider rules about allowed patterns of usernames and what defines a valid wiki page
 				// before deciding to nuke this feature
@@ -138,7 +138,7 @@ namespace TASVideos.Extensions
 				return FixInternalPublicationLink(link);
 			}
 
-			if (IsInternaGameLink(link))
+			if (IsInternalGameLink(link))
 			{
 				return FixInternalGameLink(link);
 			}
@@ -156,7 +156,7 @@ namespace TASVideos.Extensions
 			return link.StartsWith(LinkConstants.PublicationWikiPage);
 		}
 
-		private static bool IsInternaGameLink(string link)
+		private static bool IsInternalGameLink(string link)
 		{
 			return link.StartsWith(LinkConstants.GameWikiPage);
 		}
@@ -196,7 +196,7 @@ namespace TASVideos.Extensions
 
 			var paths = pageName.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
 
-			// Must beging with a capital letter, with one exception, if the path is a year. But only years between 2000-2099 for now. This is to support awards pages: Awards/2007, Awards/2008 etc
+			// Must begin with a capital letter, with one exception, if the path is a year. But only years between 2000-2099 for now. This is to support awards pages: Awards/2007, Awards/2008 etc
 			return paths.All(p => char.IsUpper(p[0]) || (p.Length == 4 && p.StartsWith("20")));
 		}
 
@@ -209,7 +209,7 @@ namespace TASVideos.Extensions
 			else
 			{
 				// Support links like [Judge Guidelines] linking to [JudgeGuidelines]
-				// We dont' do this replacement if link is a user module in order to support users with spaces such as Walker Boh
+				// We don't do this replacement if link is a user module in order to support users with spaces such as Walker Boh
 				link = link.Replace(" ", "");
 			}
 

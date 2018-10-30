@@ -96,7 +96,7 @@ namespace TASVideos.Controllers
 
 		protected string RenderSignature(string text)
 		{
-			return RenderBbcode(text); // BBcode on, Html off hardcoded, do we want this to be configurable?
+			return RenderBbcode(text); // Bbcode on, Html off hardcoded, do we want this to be configurable?
 		}
 
 		protected string RenderPost(string text, bool useBbCode, bool useHtml)

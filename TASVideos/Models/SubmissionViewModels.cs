@@ -101,7 +101,7 @@ namespace TASVideos.Models
 		public int Id { get; set; }
 		public int TopicId { get; set; }
 		public bool CanEdit { get; set; }
-		public bool IsCatalogged => SystemId.HasValue
+		public bool IsCataloged => SystemId.HasValue
 			&& SystemFrameRateId.HasValue
 			&& GameId.HasValue
 			&& RomId.HasValue;
@@ -200,7 +200,7 @@ namespace TASVideos.Models
 	public class SubmissionStatusValidationModel
 	{
 		public bool UserIsJudge { get; set; }
-		public bool UserIsAuhtorOrSubmitter { get; set; }
+		public bool UserIsAuthorOrSubmitter { get; set; }
 		public SubmissionStatus CurrentStatus { get; set; }
 		public DateTime CreateDate { get; set; }
 	}
@@ -229,7 +229,7 @@ namespace TASVideos.Models
 	}
 
 	/// <summary>
-	/// A single submisison from a submission search
+	/// A single submission from a submission search
 	/// </summary>
 	public class SubmissionListViewModel
 	{
