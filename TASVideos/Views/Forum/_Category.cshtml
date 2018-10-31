@@ -2,7 +2,7 @@
 
 <card class="mb-2">
 	<cardheader>
-		<a condition="ViewData.UserHas(PermissionTo.EditCategories)" asp-action="EditCategory" asp-route-id="@Model.Id" class="btn btn-primary btn-sm pull-right">Edit</a>
+		<a permission="EditCategories" asp-action="EditCategory" asp-route-id="@Model.Id" class="btn btn-primary btn-sm pull-right">Edit</a>
 		<h4>@Model.Title</h4>
 		@if (!string.IsNullOrWhiteSpace(Model.Description))
 		{
