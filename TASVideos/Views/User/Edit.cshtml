@@ -6,23 +6,21 @@
 <h4>@ViewData["Title"]</h4>
 <hr />
 <form asp-route="Edit">
-	<row>
-		<div class="col-12">
-			<form-group condition="Model.IsLockedOut">
-				<label asp-for="IsLockedOut" class="form-control-label"></label>
-				<div>
-					<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
-					<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
-				</div>
-			</form-group>
-			<form-group condition="!Model.IsLockedOut">
-				<label asp-for="IsLockedOut" class="form-control-label"></label>
-				<div>
-					<span class="fa fa-check-square text-success"></span> Not locked
-				</div>
-			</form-group>
-		</div>
-	</row>
+	<fullrow>
+		<form-group condition="Model.IsLockedOut">
+			<label asp-for="IsLockedOut" class="form-control-label"></label>
+			<div>
+				<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
+				<a class="btn btn-secondary" asp-action="Unlock" asp-route-returnurl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
+			</div>
+		</form-group>
+		<form-group condition="!Model.IsLockedOut">
+			<label asp-for="IsLockedOut" class="form-control-label"></label>
+			<div>
+				<span class="fa fa-check-square text-success"></span> Not locked
+			</div>
+		</form-group>
+	</fullrow>
 	<row>
 		<div class="col-md-5">
 			<form-group>

@@ -5,21 +5,16 @@
 
 <div condition="@Model.Any()">
 	<partial Name="_ForumHeader" />
-	<row>
-		<div class="col-12">
-			<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
-		</div>
-	</row>
+	<fullrow>
+		<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
+	</fullrow>
 	@foreach (var post in Model)
 	{
-		<row>
-			<div class="col-12 pt-2">
-				<small>
-					<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@post.ForumId">@post.ForumName</a> -> <a asp-action="Topic" asp-route-id="@post.TopicId">@post.TopicTitle</a>
-				</small>
-			</div>
-		</row>
-
+		<fullrow class="pt-2">
+			<small>
+				<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@post.ForumId">@post.ForumName</a> -> <a asp-action="Topic" asp-route-id="@post.TopicId">@post.TopicTitle</a>
+			</small>
+		</fullrow>
 		<card>
 			<cardheader>
 				<row>
@@ -59,28 +54,24 @@
 				</row>
 			</cardbody>
 			<cardfooter>
-				<row>
-					<div class="col-12">
-						<small style="font-style: italic">@Html.Raw(post.RenderedSignature)</small>
-						<br />
-						<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-userName="@post.PosterName">Profile</a>
-						<a class="btn btn-secondary btn-sm" condition="User.Identity.IsAuthenticated" asp-controller="Messages" asp-action="Create" asp-route-toUser="@post.PosterName">PM</a>
-						<div class="pull-right">
-							@foreach (var award in post.Awards.OrderByDescending(a => a.Year))
-							{
-								<partial name="../Shared/_Award.cshtml" model="award" />
-							}
-						</div>
+				<fullrow>
+					<small style="font-style: italic">@Html.Raw(post.RenderedSignature)</small>
+					<br />
+					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-userName="@post.PosterName">Profile</a>
+					<a class="btn btn-secondary btn-sm" condition="User.Identity.IsAuthenticated" asp-controller="Messages" asp-action="Create" asp-route-toUser="@post.PosterName">PM</a>
+					<div class="pull-right">
+						@foreach (var award in post.Awards.OrderByDescending(a => a.Year))
+						{
+							<partial name="../Shared/_Award.cshtml" model="award" />
+						}
 					</div>
-				</row>
+				</fullrow>
 			</cardfooter>
 		</card>
 	}
-	<row class="mt-2">
-		<div class="col-12">
-			<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
-		</div>
-	</row>
+	<fullrow class="mt-2">
+		<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
+	</fullrow>
 </div>
 <div condition="!Model.Any()">
 	<div class="alert alert-info mt-3 text-center">

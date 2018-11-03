@@ -39,20 +39,16 @@
 					<a condition="Model.TorrentLink != null" class="col-lg-4" href="@Model.TorrentLink">A/V file via BitTorrent</a>
 					<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
 				</row>
-				<row>
-					<div class="col-12">
-						<div><small>@Model.CreateTimeStamp.Date.ToShortDateString()</small></div>
-						@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
+				<fullrow>
+					<div><small>@Model.CreateTimeStamp.Date.ToShortDateString()</small></div>
+					@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
+				</fullrow>
+				<fullrow>
+					<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
+					<div Condition="Model.RatingCount > 2">
+						Rating: @Math.Round(Model.OverallRating ?? 0, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
 					</div>
-				</row>
-				<row>
-					<div class="col-12">
-						<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
-						<div Condition="Model.RatingCount > 2">
-							Rating: @Math.Round(Model.OverallRating ?? 0, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
-						</div>
-					</div>
-				</row>
+				</fullrow>
 			</div>
 			<div class="col-md-2">
 				<small>

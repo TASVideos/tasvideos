@@ -6,11 +6,9 @@
 
 
 <hr class="mt-1" />
-<row>
-	<div class="col-12">
-		<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
-	</div>
-</row>
+<fullrow>
+	<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
+</fullrow>
 @foreach (var post in Model.Posts)
 {
 	<card>
@@ -57,25 +55,21 @@
 			</row>
 		</cardbody>
 		<cardfooter>
-			<row>
-				<div class="col-12">
-					<small style="font-style: italic">@Html.Raw(Model.RenderedSignature)</small>
-					<br />
-					<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-userName="@Model.UserName">Profile</a>
-					<div class="pull-right">
-						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
-						{
-							<partial name="../Shared/_Award.cshtml" model="award" />
-						}
-					</div>
+			<fullrow>
+				<small style="font-style: italic">@Html.Raw(Model.RenderedSignature)</small>
+				<br />
+				<a class="btn btn-info btn-sm" asp-controller="User" asp-action="Profile" asp-route-userName="@Model.UserName">Profile</a>
+				<div class="pull-right">
+					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
+					{
+						<partial name="../Shared/_Award.cshtml" model="award" />
+					}
 				</div>
-			</row>
+			</fullrow>
 		</cardfooter>
 	</card>
 }
-<row class="mt-2">
-	<div class="col-12">
-		<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
-	</div>
-</row>
+<fullrow class="mt-2">
+	<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
+</fullrow>
 	

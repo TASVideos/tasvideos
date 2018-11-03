@@ -3,14 +3,12 @@
 	ViewData["Title"] = "TASVideos Forums";
 }
 <partial Name="_ForumHeader"/>
-<row>
-	<div class="col-12 pb-2 pt-2">
-		<div class="pull-right">
-			<a asp-action="NewPosts" condition="@User.Identity.IsAuthenticated" class="btn btn-secondary btn-sm">Posts since last visit</a>
-			<a asp-action="UnansweredPosts" class="btn btn-secondary btn-sm">Unanswered Posts</a>
-		</div>
+<fullrow class="pb-2 pt-2">
+	<div class="pull-right">
+		<a asp-action="NewPosts" condition="@User.Identity.IsAuthenticated" class="btn btn-secondary btn-sm">Posts since last visit</a>
+		<a asp-action="UnansweredPosts" class="btn btn-secondary btn-sm">Unanswered Posts</a>
 	</div>
-</row>
+</fullrow>
 <row>
 	<div class="col-md-6">
 		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())

@@ -5,13 +5,11 @@
 	ViewData.AddActivePage(ProfileNavPages.UserFiles);
 }
 
-<row>
-	<div class="col-12 mt-2 mb-2">
-		<div class="pull-right">
-			<a asp-controller="UserFiles" asp-action="Index" class="btn btn-secondary">All User Files</a>
-		</div>
+<fullrow class="mt-2 mb-2">
+	<div class="pull-right">
+		<a asp-controller="UserFiles" asp-action="Index" class="btn btn-secondary">All User Files</a>
 	</div>
-</row>
+</fullrow>
 
 
 @foreach (var file in Model.Files.OrderByDescending(f => f.Uploaded))

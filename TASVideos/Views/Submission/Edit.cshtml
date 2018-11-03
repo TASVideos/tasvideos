@@ -87,23 +87,19 @@
 			</form-group>
 		</div>
 	</row>
-	<row>
-		<div class="col-12">
-			<form-group>
-				<label asp-for="Markup" class="form-control-label"></label>
-				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
-				<span asp-validation-for="Markup" class="text-danger"></span>
-			</form-group>
-		</div>
-	</row>
+	<fullrow>
+		<form-group>
+			<label asp-for="Markup" class="form-control-label"></label>
+			<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
+			<span asp-validation-for="Markup" class="text-danger"></span>
+		</form-group>
+	</fullrow>
 	<hr />
-	<row>
-		<div class="col-12 text-center">
-			<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
-			<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "hide")">Update</button>
-			<a class="btn btn-secondary" asp-action="View" asp-route-id="@Model.Id">Cancel</a>
-		</div>
-	</row>
+	<fullrow class="text-center">
+		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
+		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "hide")">Update</button>
+		<a class="btn btn-secondary" asp-action="View" asp-route-id="@Model.Id">Cancel</a>
+	</fullrow>
 </form>
 
 <partial name="_PreviewWindow" model="@((nameof(Model.Markup), $"/Wiki/{nameof(WikiController.GeneratePreview)}"))" />
