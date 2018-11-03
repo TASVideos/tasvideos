@@ -38,6 +38,9 @@ namespace TASVideos.Models
 	{
 		public int Id { get; set; }
 		public DateTime CreateTimeStamp { get; set; }
+		public DateTime LastUpdateTimeStamp { get; set; }
+		public string LastUpdateUser { get; set; }
+
 		public int? ObsoletedBy { get; set; }
 		public string Title { get; set; }
 		public string TierIconPath { get; set; }
