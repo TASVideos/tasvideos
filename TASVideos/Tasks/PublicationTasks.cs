@@ -72,6 +72,8 @@ namespace TASVideos.Tasks
 				{
 					Id = p.Id,
 					CreateTimeStamp = p.CreateTimeStamp,
+					LastUpdateTimeStamp = p.LastUpdateTimeStamp,
+					LastUpdateUser = p.LastUpdateUserName,
 					Title = p.Title,
 					OnlineWatchingUrl = p.OnlineWatchingUrl,
 					MirrorSiteUrl = p.MirrorSiteUrl,

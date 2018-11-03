@@ -7,3 +7,10 @@
 }
 
 <partial name="~/Views/Shared/_MovieModule.cshtml" model="Model" />
+<small>
+	last edited by @Model.LastUpdateUser on @Model.LastUpdateTimeStamp
+</small>
+<br />
+<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)">Page History</a>
+<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="Diff" asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)">Last diff</a>
+<a asp-controller="Wiki" asp-action="Referrers" asp-route-path="@($"{Model.Id}M")" class="btn btn-info btn-sm">List Referrers</a>
