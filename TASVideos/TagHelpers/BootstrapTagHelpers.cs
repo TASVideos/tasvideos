@@ -6,8 +6,20 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers
 {
-    public class RowTagHelper : TagHelper
-    {
+	public class Fullrow : TagHelper
+	{
+		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+		{
+			output.TagName = "div";
+			output.AddCssClass("row");
+
+			var content = (await output.GetChildContentAsync()).GetContent();
+			output.Content.SetHtmlContent($@"<div class=""col-12"">{content}</div>");
+		}
+	}
+
+	public class RowTagHelper : TagHelper
+	{
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			output.TagName = "div";

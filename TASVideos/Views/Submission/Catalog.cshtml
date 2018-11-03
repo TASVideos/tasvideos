@@ -18,11 +18,9 @@
 		</div>
 		<div class="col-lg-6">
 			<form-group>
-				<row>
-					<div class="col-12">
-						<label asp-for="GameId" class="form-control-label"></label>
-					</div>
-				</row>
+				<fullrow>
+					<label asp-for="GameId" class="form-control-label"></label>
+				</fullrow>
 				<row>
 					<div class="col-10">
 						<select asp-for="GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-control"></select>
@@ -33,11 +31,9 @@
 				</row>
 			</form-group>
 			<form-group>
-				<row>
-					<div class="col-12">
+				<fullrow>
 						<label asp-for="RomId" class="form-control-label"></label>
-					</div>
-				</row>
+				</fullrow>
 				<row>
 					<div class="col-10">
 						<select asp-for="RomId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableRoms)" class="form-control"></select>
@@ -50,12 +46,10 @@
 		</div>
 	</row>
 	<hr/>
-	<row>
-		<div class="text-center col-12">
-			<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
-			<a class="btn btn-secondary" asp-action="View" asp-route-id="@Model.Id">Cancel</a>
-		</div>
-	</row>
+	<fullrow class="text-center">
+		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
+		<a class="btn btn-secondary" asp-action="View" asp-route-id="@Model.Id">Cancel</a>
+	</fullrow>
 </form>
 
 @section Scripts {

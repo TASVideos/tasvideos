@@ -61,32 +61,28 @@
 			</form-group>
 		</div>
 	</row>
-	<row>
-		<div class="col-12">
-			<form-group>
-				<label asp-for="Markup" class="form-control-label"></label>
-				<span>
-					@await Component.RenderWiki("System/SubmissionImportant")
-				</span>
-				<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
-				<span asp-validation-for="Markup" class="text-danger"></span>
-				<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
-			</form-group>
-		</div>
-	</row>
+	<fullrow>
+		<form-group>
+			<label asp-for="Markup" class="form-control-label"></label>
+			<span>
+				@await Component.RenderWiki("System/SubmissionImportant")
+			</span>
+			<textarea asp-for="Markup" rows="12" class="form-control"></textarea>
+			<span asp-validation-for="Markup" class="text-danger"></span>
+			<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
+		</form-group>
+	</fullrow>
 	<hr />
-	<row>
-		<div class="col-12 text-center">
-			<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
-			<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "d-none")">Submit</button>
-			<br />
-			<br />
-			<div id="submit-blurb" class="text-center alert-info d-none" role="alert">
-				<div>@await Component.RenderWiki("System/SubmissionWarning")</div>
-				<label class="small alert-info">By pressing "Submit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
-			</div>
+	<fullrow class="text-center">
+		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
+		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup?.Length > 0 ? "" : "d-none")">Submit</button>
+		<br />
+		<br />
+		<div id="submit-blurb" class="text-center alert-info d-none" role="alert">
+			<div>@await Component.RenderWiki("System/SubmissionWarning")</div>
+			<label class="small alert-info">By pressing "Submit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
 		</div>
-	</row>
+	</fullrow>
 </form>
 
 <partial name="_PreviewWindow" model="@((nameof(Model.Markup), $"/Wiki/{nameof(WikiController.GeneratePreview)}"))" />

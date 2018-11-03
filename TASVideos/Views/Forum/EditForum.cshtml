@@ -12,13 +12,11 @@
 			<span asp-validation-for="Name" />
 		</div>
 	</row>
-	<row>
-		<div class="col-12">
-			<label asp-for="Description"></label>
-			<textarea asp-for="Description" class="form-control" rows="4"></textarea>
-			<span asp-validation-for="Description" />
-		</div>
-	</row>
+	<fullrow>
+		<label asp-for="Description"></label>
+		<textarea asp-for="Description" class="form-control" rows="4"></textarea>
+		<span asp-validation-for="Description"></span>
+	</fullrow>
 	<hr />
 	<div class="text-center">
 		<button type="submit" class="btn btn-primary">Update</button>

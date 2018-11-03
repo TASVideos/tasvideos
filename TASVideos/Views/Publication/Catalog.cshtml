@@ -18,11 +18,9 @@
 		</div>
 		<div class="col-lg-6">
 			<form-group>
-				<row>
-					<div class="col-12">
-						<label asp-for="GameId" class="form-control-label"></label>
-					</div>
-				</row>
+				<fullrow>
+					<label asp-for="GameId" class="form-control-label"></label>
+				</fullrow>
 				<row>
 					<div class="col-10">
 						<select asp-for="GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
@@ -33,11 +31,9 @@
 				</row>
 			</form-group>
 			<form-group>
-				<row>
-					<div class="col-12">
-						<label asp-for="RomId" class="form-control-label"></label>
-					</div>
-				</row>
+				<fullrow>
+					<label asp-for="RomId" class="form-control-label"></label>
+				</fullrow>
 				<row>
 					<div class="col-10">
 						<select asp-for="RomId" asp-items="@Model.AvailableRoms" class="form-control"></select>
