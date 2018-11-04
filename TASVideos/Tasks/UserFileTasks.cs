@@ -105,7 +105,19 @@ namespace TASVideos.Tasks
 					.GroupBy(gkey => gkey.Author.UserName, gvalue => gvalue.UploadTimestamp).Select(
 						uf => new UserFileIndexViewModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 					.ToListAsync(),
-				LatestMovies = await GetLatest(10)
+				LatestMovies = await GetLatest(10),
+				GamesWithMovies = await _db.Games
+					.Where(g => g.UserFiles.Any())
+					.OrderBy(g => g.System.Code)
+					.ThenBy(g => g.DisplayName)
+					.Select(g => new UserFileIndexViewModel.GameWithMovie
+					{
+						GameId = g.Id,
+						GameName = g.DisplayName,
+						SystemCode = g.System.Code,
+						Latest = g.UserFiles.Select(uf => uf.UploadTimestamp).Max()
+					})
+					.ToListAsync()
 			};
 
 			return model;

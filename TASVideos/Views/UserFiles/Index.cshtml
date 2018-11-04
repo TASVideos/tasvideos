@@ -39,5 +39,19 @@
 				}
 			</cardbody>
 		</card>
+		<card>
+			<cardheader>
+				Games with movies
+			</cardheader>
+			<cardbody>
+				@foreach (var game in Model.GamesWithMovies)
+				{
+					<div>
+						<a asp-action="Game" asp-route-id="@game.GameId">@game.SystemCode @game.GameName</a>
+						<small>(latest @game.Latest)</small>
+					</div>
+				}
+			</cardbody>
+		</card>
 	</div>
 </row>
