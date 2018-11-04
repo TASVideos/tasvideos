@@ -384,6 +384,9 @@ namespace TASVideos.Tasks
 						SelectedFlags = p.PublicationFlags
 							.Select(pf => pf.FlagId)
 							.ToList(),
+						SelectedTags = p.PublicationTags
+							.Select(pt => pt.TagId)
+							.ToList(),
 						Markup = p.WikiContent.Markup
 					})
 					.SingleOrDefaultAsync(p => p.Id == id);
@@ -392,6 +395,7 @@ namespace TASVideos.Tasks
 					await GetAvailableMoviesForObsoletedBy(id, model.SystemCode);
 
 				model.AvailableFlags = await GetAvailableFlags(userPermissions);
+				model.AvailableTags = await GetAvailableTags();
 
 				return model;
 			}
@@ -407,6 +411,17 @@ namespace TASVideos.Tasks
 					Value = f.Id.ToString(),
 					Disabled = f.PermissionRestriction.HasValue
 						&& !userPermissions.Contains(f.PermissionRestriction.Value)
+				})
+				.ToListAsync();
+		}
+
+		public async Task<IEnumerable<SelectListItem>> GetAvailableTags()
+		{
+			return await _db.Tags
+				.Select(f => new SelectListItem
+				{
+					Text = f.DisplayName,
+					Value = f.Id.ToString(),
 				})
 				.ToListAsync();
 		}
@@ -449,13 +464,28 @@ namespace TASVideos.Tasks
 				publication.GenerateTitle();
 
 				publication.PublicationFlags.Clear();
-				_db.PublicationFlags.RemoveRange(_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
+				_db.PublicationFlags.RemoveRange(
+					_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
+
 				foreach (var flag in model.SelectedFlags)
 				{
 					publication.PublicationFlags.Add(new PublicationFlag
 					{
 						PublicationId = publication.Id,
 						FlagId = flag
+					});
+				}
+
+				publication.PublicationTags.Clear();
+				_db.PublicationTags.RemoveRange(
+					_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
+
+				foreach (var tag in model.SelectedTags)
+				{
+					publication.PublicationTags.Add(new PublicationTag
+					{
+						PublicationId = publication.Id,
+						TagId = tag
 					});
 				}
 

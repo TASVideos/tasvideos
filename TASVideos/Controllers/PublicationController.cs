@@ -134,6 +134,7 @@ namespace TASVideos.Controllers
 				model.AvailableMoviesForObsoletedBy =
 					await _publicationTasks.GetAvailableMoviesForObsoletedBy(model.Id, model.SystemCode);
 				model.AvailableFlags = await _publicationTasks.GetAvailableFlags(UserPermissions);
+				model.AvailableTags = await _publicationTasks.GetAvailableTags();
 
 				return View(model);
 			}
