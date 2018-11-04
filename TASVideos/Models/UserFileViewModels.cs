@@ -82,6 +82,7 @@ namespace TASVideos.Models
 
 	public class UserFileUserIndexViewModel
 	{
+		public string UserName { get; set; }
 		public IEnumerable<UserFileViewModel> Files { get; set; }
 	}
 
