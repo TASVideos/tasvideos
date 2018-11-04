@@ -119,7 +119,13 @@ namespace TASVideos.Models
 
 		public string Branch { get; set; }
 
+		[Display(Name = "Selected Flags")]
+		public IEnumerable<int> SelectedFlags { get; set; } = new List<int>();
+
 		public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();
+
+		[Display(Name = "Available Flags")]
+		public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
 	}
 
 	public class PublicationCatalogModel

@@ -357,15 +357,30 @@ namespace TASVideos.Tasks
 						Branch = p.Branch,
 						EmulatorVersion = p.EmulatorVersion,
 						OnlineWatchingUrl = p.OnlineWatchingUrl,
-						MirrorSiteUrl = p.MirrorSiteUrl
+						MirrorSiteUrl = p.MirrorSiteUrl,
+						SelectedFlags = p.PublicationFlags.Select(pf => pf.FlagId).ToList()
 					})
 					.SingleOrDefaultAsync(p => p.Id == id);
 
 				model.AvailableMoviesForObsoletedBy =
 					await GetAvailableMoviesForObsoletedBy(id, model.SystemCode);
 
+				model.AvailableFlags = await GetAvailableFlags();
+
 				return model;
 			}
+		}
+
+		// TODO: document
+		public async Task<IEnumerable<SelectListItem>> GetAvailableFlags()
+		{
+			return await _db.Flags
+				.Select(f => new SelectListItem
+				{
+					Text = f.Name,
+					Value = f.Id.ToString()
+				})
+				.ToListAsync();
 		}
 
 		// TODO: document
@@ -403,6 +418,17 @@ namespace TASVideos.Tasks
 				publication.MirrorSiteUrl = model.MirrorSiteUrl;
 
 				publication.GenerateTitle();
+
+				publication.PublicationFlags.Clear();
+				foreach (var flag in model.SelectedFlags)
+				{
+					publication.PublicationFlags.Add(new PublicationFlag
+					{
+						PublicationId = publication.Id,
+						FlagId = flag
+					});
+				}
+
 				await _db.SaveChangesAsync();
 			}
 		}
