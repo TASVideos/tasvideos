@@ -116,7 +116,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.EditPublicationMetaData)]
 		public async Task<IActionResult> Edit(int id)
 		{
-			var model = await _publicationTasks.GetPublicationForEdit(id);
+			var model = await _publicationTasks.GetPublicationForEdit(id, UserPermissions);
 
 			if (model == null)
 			{
@@ -134,7 +134,7 @@ namespace TASVideos.Controllers
 			{
 				model.AvailableMoviesForObsoletedBy =
 					await _publicationTasks.GetAvailableMoviesForObsoletedBy(model.Id, model.SystemCode);
-				model.AvailableFlags = await _publicationTasks.GetAvailableFlags();
+				model.AvailableFlags = await _publicationTasks.GetAvailableFlags(UserPermissions);
 
 				return View(model);
 			}
