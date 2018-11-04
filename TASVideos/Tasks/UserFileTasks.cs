@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace TASVideos.Tasks
 			_db = db;
 		}
 
-		public async Task<UserMovieListViewModel> GetLatest(int count)
+		public async Task<IEnumerable<UserMovieListViewModel>> GetLatest(int count)
 		{
 			var query = _db.UserFiles
 				.Include(userFile => userFile.Author)
@@ -29,17 +30,15 @@ namespace TASVideos.Tasks
 
 			var result = await query.ToListAsync();
 
-			return new UserMovieListViewModel
-			{
-				Entries = result.Select(userFile => new UserMovieListViewModel.Entry
+			return result
+				.Select(userFile => new UserMovieListViewModel
 				{
 					Author = userFile.Author.UserName,
 					FileName = userFile.FileName,
 					Id = userFile.Id,
 					Title = userFile.Title,
 					Uploaded = userFile.UploadTimestamp,
-				})
-			};
+				});
 		}
 
 		/// <summary>
