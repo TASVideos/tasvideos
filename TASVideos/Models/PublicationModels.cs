@@ -135,6 +135,9 @@ namespace TASVideos.Models
 		[Display(Name = "Selected Flags")]
 		public IEnumerable<int> SelectedFlags { get; set; } = new List<int>();
 
+		[Display(Name = "Selected Tags")]
+		public IEnumerable<int> SelectedTags { get; set; } = new List<int>();
+
 		[Display(Name = "Revision Message")]
 		public string RevisionMessage { get; set; }
 
@@ -147,6 +150,9 @@ namespace TASVideos.Models
 
 		[Display(Name = "Available Flags")]
 		public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
+
+		[Display(Name = "Available Tags")]
+		public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
 	}
 
 	public class PublicationCatalogModel
