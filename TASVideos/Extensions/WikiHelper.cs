@@ -168,7 +168,7 @@ namespace TASVideos.Extensions
 
 		private static string FixInternalPublicationLink(string link)
 		{
-			return FixInternalLink(link, LinkConstants.PublicationWikiPage, "P");
+			return FixInternalLink(link, LinkConstants.PublicationWikiPage, "M");
 		}
 
 		private static string FixInternalGameLink(string link)
