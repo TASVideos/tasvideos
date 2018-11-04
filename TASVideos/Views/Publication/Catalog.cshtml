@@ -3,17 +3,18 @@
 	ViewData["Title"] = $"Set Catalogging Information for Movie #{Model.Id}";
 }
 
-<danger-alert asp-validation-summary="ModelOnly"></danger-alert>
 <form asp-action="Catalog">
 	<row>
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="SystemId" class="form-control-label"></label>
 				<select asp-for="SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
+				<span asp-validation-for="SystemId" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="SystemFrameRateId" class="form-control-label"></label>
 				<select asp-for="SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-control"></select>
+				<span asp-validation-for="SystemFrameRateId" class="text-danger"></span>
 			</form-group>
 		</div>
 		<div class="col-lg-6">
@@ -24,6 +25,7 @@
 				<row>
 					<div class="col-10">
 						<select asp-for="GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
+						<span asp-validation-for="AvailableGames" class="text-danger"></span>
 					</div>
 					<div class="col-2">
 						<a asp-controller="Catalog" asp-action="GameEdit" class="btn btn-primary">New</a>
@@ -37,6 +39,7 @@
 				<row>
 					<div class="col-10">
 						<select asp-for="RomId" asp-items="@Model.AvailableRoms" class="form-control"></select>
+						<span asp-validation-for="RomId" class="text-danger"></span>
 					</div>
 					<div class="col-2">
 						<button id="create-rom" type="button" class="btn btn-primary" )>New</button>
