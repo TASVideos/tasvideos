@@ -53,6 +53,7 @@ namespace TASVideos.Models
 		public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();
 		public IEnumerable<TagModel> GenreTags { get; set; } = new List<TagModel>();
 		public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();
+		public IEnumerable<FlagModel> Flags { get; set; } = new List<FlagModel>();
 
 		public string Screenshot => Files.First(f => f.Type == FileType.Screenshot).Path;
 		public string TorrentLink => Files.FirstOrDefault(f => f.Type == FileType.Torrent)?.Path; // Sometimes a movie has no torrent, rare but can happen
@@ -70,6 +71,13 @@ namespace TASVideos.Models
 		{
 			public string Path { get; set; }
 			public FileType Type { get; set; }
+		}
+
+		public class FlagModel
+		{
+			public string IconPath { get; set; }
+			public string LinkPath { get; set; }
+			public string Name { get; set; }
 		}
 	}
 

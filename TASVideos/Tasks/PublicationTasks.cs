@@ -105,6 +105,14 @@ namespace TASVideos.Tasks
 						{
 							DisplayName = gg.Genre.DisplayName,
 							Code = gg.Genre.DisplayName // TODO
+						}),
+					Flags = p.PublicationFlags
+						.Where(pf => pf.Flag.IconPath != null)
+						.Select(pf => new PublicationViewModel.FlagModel
+						{
+							IconPath = pf.Flag.IconPath,
+							LinkPath = pf.Flag.LinkPath,
+							Name = pf.Flag.Name
 						})
 						.ToList()
 				})
@@ -300,7 +308,15 @@ namespace TASVideos.Tasks
 							DisplayName = gg.Genre.DisplayName,
 							Code = gg.Genre.DisplayName // TODO
 						})
-						.ToList()
+						.ToList(),
+					Flags = p.PublicationFlags
+						.Where(pf => pf.Flag.IconPath != null)
+						.Select(pf => new PublicationViewModel.FlagModel
+						{
+							IconPath = pf.Flag.IconPath,
+							LinkPath = pf.Flag.LinkPath,
+							Name = pf.Flag.Name
+						})
 				})
 				.ToListAsync();
 		}

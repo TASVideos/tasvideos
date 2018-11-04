@@ -5,7 +5,17 @@
 	<a href="/@(Model.ObsoletedBy)M" class="btn btn-primary">Obsoleting Movie</a>
 </div>
 <card>
-	<cardheader><img src="/@Model.TierIconPath"/> @Model.Title</cardheader>
+	<cardheader>
+		<img src="/@Model.TierIconPath" /> <span>@Model.Title</span>
+		<div class="pull-right">
+			@foreach (var flag in Model.Flags)
+			{
+				<a href="@flag.LinkPath">
+					<img title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
+				</a>
+			}
+		</div>
+	</cardheader>
 	<cardbody>
 		<row>
 			<div class="col-md-4">
