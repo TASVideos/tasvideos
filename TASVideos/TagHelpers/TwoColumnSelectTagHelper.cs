@@ -183,7 +183,7 @@ namespace TASVideos.TagHelpers
 				}});
 
 				document.getElementById('{addAllBtnName}').addEventListener('click', function () {{
-					var aopts = document.querySelectorAll('#{availableListName} option');
+					var aopts = document.querySelectorAll('#{availableListName} option:not(:disabled)');
 					aopts.forEach(function (elem) {{
 						var newInp = document.createElement('input')
 						newInp.name = '{modelName}';
@@ -219,7 +219,7 @@ namespace TASVideos.TagHelpers
 				}});
 
 				document.getElementById('{removeAllBtnName}').addEventListener('click', function () {{
-					var sopts = document.querySelectorAll('#{selectedListName} option');
+					var sopts = document.querySelectorAll('#{selectedListName} option:not(:disabled)');
 					sopts.forEach(function (elem) {{
 						document.getElementById('{availableListName}').appendChild(elem.cloneNode(true));
 						document.getElementById('{selectedListName}').removeChild(elem);
