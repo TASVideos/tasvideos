@@ -7,14 +7,37 @@
 	<a asp-controller="Profile" asp-action="UserFiles" class="pull-right btn btn-primary">My Movies</a>
 </fullrow>
 
-<card>
-	<cardheader>
-		Users with movies
-	</cardheader>
-	<cardbody>
-		@foreach (var user in Model.UsersWithMovies)
-		{
-			<a asp-action="FilesUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: @user.Latest)</span><br />
-		}
-	</cardbody>
-</card>
+<row>
+	<div class="col-md-6">
+		<card>
+			<cardheader>
+				Users with movies
+			</cardheader>
+			<cardbody>
+				@foreach (var user in Model.UsersWithMovies)
+				{
+					<a asp-action="FilesUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: @user.Latest)</span><br />
+				}
+			</cardbody>
+		</card>
+	</div>
+	<div class="col-md-6">
+		<card>
+			<cardheader>
+				Latest Movies
+			</cardheader>
+			<cardbody>
+				@foreach (var file in Model.LatestMovies)
+				{
+					<div class="mb-2">
+						<a asp-action="Info" asp-route-id="@file.Id">@file.FileName</a>
+						<br />
+						<small class="ml-3">
+							by <a asp-controller="User" asp-action="Profile" asp-route-username="@file.Author">@file.Author</a> on @file.Uploaded
+						</small>
+					</div>
+				}
+			</cardbody>
+		</card>
+	</div>
+</row>

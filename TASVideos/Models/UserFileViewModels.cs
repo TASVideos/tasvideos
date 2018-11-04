@@ -62,6 +62,7 @@ namespace TASVideos.Models
 	public class UserFileIndexViewModel
 	{
 		public IEnumerable<UserWithMovie> UsersWithMovies { get; set; } = new List<UserWithMovie>();
+		public IEnumerable<UserMovieListViewModel> LatestMovies { get; set; } = new List<UserMovieListViewModel>();
 
 		public class UserWithMovie
 		{
