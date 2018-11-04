@@ -134,7 +134,7 @@ namespace TASVideos.Tasks
 				newRevision.Revision = currentRevision.Revision + 1;
 			}
 
-			// Update Referrerals for this page
+			// Update Referrals for this page
 			var existingReferrals = await _db.WikiReferrals
 				.Where(wr => wr.Referrer == model.PageName)
 				.ToListAsync();
