@@ -371,6 +371,9 @@ namespace TASVideos.Tasks
 					.Select(p => new PublicationEditModel
 					{
 						Id = p.Id,
+						Tier = p.Tier.Name,
+						TierIconPath = p.Tier.IconPath,
+						TierLink = p.Tier.Link,
 						SystemCode = p.System.Code,
 						Title = p.Title,
 						ObsoletedBy = p.ObsoletedById,
@@ -573,6 +576,55 @@ namespace TASVideos.Tasks
 					ObsoletePublicationCount = u.Publications.Count(pa => pa.Publication.ObsoletedById.HasValue)
 				})
 				.ToListAsync();
+		}
+
+		// TODO: document
+		public async Task<PublicationTierEditModel> GetTiersForEdit(int publicationId)
+		{
+			var model = await _db.Publications
+				.Where(p => p.Id == publicationId)
+				.Select(p => new PublicationTierEditModel
+				{
+					Id = p.Id,
+					Title = p.Title,
+					TierId = p.TierId 
+				})
+				.SingleOrDefaultAsync();
+
+			if (model != null)
+			{
+				model.AvailableTiers = await _db.Tiers
+					.Select(t => new SelectListItem
+					{
+						Text = t.Name,
+						Value = t.Id.ToString()
+					})
+					.ToListAsync();
+			}
+
+			return model;
+		}
+
+		// TODO: document
+		public async Task<bool> UpdateTier(int publicationId, int tierId)
+		{
+			var publication = await _db.Publications
+				.SingleOrDefaultAsync(p => p.Id == publicationId);
+
+			if (publication == null)
+			{
+				return false;
+			}
+
+			var tier = await _db.Tiers.SingleOrDefaultAsync(t => t.Id == tierId);
+			if (tier == null)
+			{
+				return false;
+			}
+
+			publication.TierId = tierId;
+			await _db.SaveChangesAsync();
+			return true;
 		}
 	}
 }
