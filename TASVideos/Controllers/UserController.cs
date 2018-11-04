@@ -103,7 +103,7 @@ namespace TASVideos.Controllers
 		[Route("[controller]/[action]/{userName}")]
 		public async Task<IActionResult> Profile(string userName)
 		{
-			var model = await UserTasks.GetUserProfile(userName);
+			var model = await UserTasks.GetUserProfile(userName, includeHidden: false);
 			if (model == null)
 			{
 				return NotFound();

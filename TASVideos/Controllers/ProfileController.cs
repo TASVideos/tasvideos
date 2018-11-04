@@ -50,7 +50,7 @@ namespace TASVideos.Controllers
 		{
 			var userName = _userManager.GetUserName(User);
 
-			var model = await UserTasks.GetUserProfile(userName);
+			var model = await UserTasks.GetUserProfile(userName, includeHidden: true);
 			if (model == null)
 			{
 				return NotFound();

@@ -408,7 +408,7 @@ namespace TASVideos.Tasks
 		/// for the <see cref="User"/> with the given <see cref="userName"/>
 		/// If no user is found, null is returned
 		/// </summary>
-		public async Task<UserProfileModel> GetUserProfile(string userName)
+		public async Task<UserProfileModel> GetUserProfile(string userName, bool includeHidden)
 		{
 			var model = await _db.Users
 				.Select(u => new UserProfileModel
@@ -446,8 +446,9 @@ namespace TASVideos.Tasks
 						}),
 					UserFiles = new UserProfileModel.UserFilesModel
 					{
-						Total = u.UserFiles.Count,
+						Total = u.UserFiles.Count(uf => includeHidden || !uf.Hidden),
 						Systems = u.UserFiles
+							.Where(uf => includeHidden || !uf.Hidden)
 							.Select(uf => uf.System.Code)
 							.Distinct()
 							.ToList()
