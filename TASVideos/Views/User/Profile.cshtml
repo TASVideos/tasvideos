@@ -3,14 +3,14 @@
 	ViewData["Title"] = $"Profile for {Model.UserName}";
 }
 
-<a condition="@ViewData.UserHas(PermissionTo.EditUsers)" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
+<a permission="EditUsers" asp-action="Edit" asp-route-id="@Model.Id" class="pull-right btn btn-primary">Edit</a>
 
 <row>
 	<div class="col-md-6">
 		<card>
 			<cardheader><h4>@Model.UserName</h4></cardheader>
 			<cardbody>
-				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right"/>
+				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
 				<div class="card-text">
 					<a href="/HomePages/@Model.UserName">Homepage</a>
 					<br />
@@ -82,6 +82,17 @@
 				}
 			</cardbody>
 		</card>
+		<card condition="Model.WikiEdits.TotalEdits > 0">
+			<cardheader><h4>Wiki</h4></cardheader>
+			<cardbody>
+				<div>
+					<p><a asp-controller="Wiki" asp-action="UserEditHistory" asp-route-username="@Model.UserName">@Model.WikiEdits.TotalEdits</a> Total Edits</p>
+					<label>Last Edit On: @Model.WikiEdits.LastEdit?.ToShortDateString()</label>
+					<br />
+					<label>First Edit on: @Model.WikiEdits.FirstEdit?.ToShortDateString()</label>
+				</div>
+			</cardbody>
+		</card>
 	</div>
 	<div class="col-md-6">
 		<card class="text-right">
@@ -121,16 +132,6 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-right" condition="Model.WikiEdits.TotalEdits > 0">
-			<cardheader><h4>Wiki</h4></cardheader>
-			<cardbody>
-				<div>
-					<p><a asp-controller="Wiki" asp-action="UserEditHistory" asp-route-username="@Model.UserName">@Model.WikiEdits.TotalEdits</a> Total Edits</p>
-					<label>Last Edit On: @Model.WikiEdits.LastEdit?.ToShortDateString()</label>
-					<label>First Edit on: @Model.WikiEdits.FirstEdit?.ToShortDateString()</label>
-				</div>
-			</cardbody>
-		</card>
 		<card class="text-right">
 			<cardheader><h4>Ratings</h4></cardheader>
 			<cardbody>
@@ -138,6 +139,17 @@
 				<div condition="Model.PublicRatings">
 					<label>Total Movies Rated: <a asp-action="Ratings" asp-route-userName="@Model.UserName">@Model.Ratings.TotalMoviesRated</a></label>
 				</div>
+			</cardbody>
+		</card>
+		<card class="text-right" condition="Model.UserFiles.Total > 0">
+			<cardheader>
+				<h4>User Files</h4>
+			</cardheader>
+			<cardbody>
+				<a href="/UserFiles/User/@Model.UserName">@Model.UserFiles.Total</a> files
+				<br /><br />
+				<span>Systems:</span><br />
+				@string.Join(", ", Model.UserFiles.Systems.Where(s => !string.IsNullOrWhiteSpace(s)))
 			</cardbody>
 		</card>
 	</div>
