@@ -444,6 +444,14 @@ namespace TASVideos.Tasks
 							Status = g.Key,
 							Count = g.Count()
 						}),
+					UserFiles = new UserProfileModel.UserFilesModel
+					{
+						Total = u.UserFiles.Count,
+						Systems = u.UserFiles
+							.Select(uf => uf.System.Code)
+							.Distinct()
+							.ToList()
+					}
 				})
 				.SingleOrDefaultAsync(u => u.UserName == userName);
 
