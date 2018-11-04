@@ -88,4 +88,13 @@ namespace TASVideos.Models
 
 		public int AuthorId { get; set; }
 	}
+
+	public class GameFileModel
+	{
+		public string SystemCode { get; set; }
+		public int GameId { get; set; }
+		public string GameName { get; set; }
+
+		public IEnumerable<UserFileViewModel> Files { get; set; } = new List<UserFileViewModel>();
+	}
 }

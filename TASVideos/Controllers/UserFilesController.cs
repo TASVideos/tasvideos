@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 using TASVideos.Data.Entity;
 using TASVideos.Tasks;
 
@@ -95,6 +94,17 @@ namespace TASVideos.Controllers
 			{
 				FileDownloadName = model.FileName
 			};
+		}
+
+		public async Task<IActionResult> Game(int id)
+		{
+			var model = await _userFileTasks.GetFilesForGame(id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
 		}
 	}
 }
