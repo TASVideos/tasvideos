@@ -103,6 +103,7 @@ namespace TASVideos.Tasks
 			var model = new UserFileIndexViewModel
 			{
 				UsersWithMovies = await _db.UserFiles
+					.Where(uf => !uf.Hidden)
 					.GroupBy(gkey => gkey.Author.UserName, gvalue => gvalue.UploadTimestamp).Select(
 						uf => new UserFileIndexViewModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 					.ToListAsync(),
@@ -164,6 +165,7 @@ namespace TASVideos.Tasks
 				SystemCode = game.System.Code,
 				GameName = game.DisplayName,
 				Files = game.UserFiles
+					.Where(uf => !uf.Hidden)
 					.Select(ToViewModel)
 					.ToList()
 			};
