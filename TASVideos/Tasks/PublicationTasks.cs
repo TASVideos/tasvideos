@@ -14,6 +14,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.ViewComponents;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.Tasks
 {
@@ -22,15 +23,18 @@ namespace TASVideos.Tasks
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 		private readonly IMapper _mapper;
+		private readonly WikiTasks _wikiTasks;
 		
 		public PublicationTasks(
 			ApplicationDbContext db,
 			ICacheService cache,
-			IMapper mapper)
+			IMapper mapper,
+			WikiTasks wikiTasks)
 		{
 			_db = db;
 			_cache = cache;
 			_mapper = mapper;
+			_wikiTasks = wikiTasks;
 		}
 
 		/// <summary>
@@ -358,7 +362,10 @@ namespace TASVideos.Tasks
 						EmulatorVersion = p.EmulatorVersion,
 						OnlineWatchingUrl = p.OnlineWatchingUrl,
 						MirrorSiteUrl = p.MirrorSiteUrl,
-						SelectedFlags = p.PublicationFlags.Select(pf => pf.FlagId).ToList()
+						SelectedFlags = p.PublicationFlags
+							.Select(pf => pf.FlagId)
+							.ToList(),
+						Markup = p.WikiContent.Markup
 					})
 					.SingleOrDefaultAsync(p => p.Id == id);
 
@@ -402,6 +409,7 @@ namespace TASVideos.Tasks
 		public async Task UpdatePublication(PublicationEditModel model)
 		{
 			var publication = await _db.Publications
+				.Include(p => p.WikiContent)
 				.Include(p => p.System)
 				.Include(p => p.SystemFrameRate)
 				.Include(p => p.Game)
@@ -420,6 +428,7 @@ namespace TASVideos.Tasks
 				publication.GenerateTitle();
 
 				publication.PublicationFlags.Clear();
+				_db.PublicationFlags.RemoveRange(_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
 				foreach (var flag in model.SelectedFlags)
 				{
 					publication.PublicationFlags.Add(new PublicationFlag
@@ -430,6 +439,25 @@ namespace TASVideos.Tasks
 				}
 
 				await _db.SaveChangesAsync();
+
+				if (model.Markup != publication.WikiContent.Markup)
+				{
+					var page = await _wikiTasks.SavePage(new WikiEditModel
+					{
+						PageName = $"{LinkConstants.PublicationWikiPage}{model.Id}",
+						Markup = model.Markup,
+						MinorEdit = model.MinorEdit,
+						RevisionMessage = model.RevisionMessage,
+						Referrals = Util.GetAllWikiLinks(model.Markup)
+							.Select(wl => new WikiReferralModel
+							{
+								Link = wl.Link,
+								Excerpt = wl.Excerpt
+							})
+					});
+
+					publication.WikiContentId = page.Id;
+				}
 			}
 		}
 

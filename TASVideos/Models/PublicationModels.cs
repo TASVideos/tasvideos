@@ -122,6 +122,14 @@ namespace TASVideos.Models
 		[Display(Name = "Selected Flags")]
 		public IEnumerable<int> SelectedFlags { get; set; } = new List<int>();
 
+		[Display(Name = "Revision Message")]
+		public string RevisionMessage { get; set; }
+
+		[Display(Name = "Minor Edit")]
+		public bool MinorEdit { get; set; }
+
+		public string Markup { get; set; }
+
 		public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();
 
 		[Display(Name = "Available Flags")]

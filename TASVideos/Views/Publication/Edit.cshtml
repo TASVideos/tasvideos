@@ -40,9 +40,37 @@
 			</form-group>
 		</div>
 	</row>
-		<two-column-select id-list="SelectedFlags" available-list="AvailableFlags" />
+	<two-column-select id-list="SelectedFlags" available-list="AvailableFlags" />
+	<hr />
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" asp-for="MinorEdit" />
+					<label asp-for="MinorEdit" class="form-check-label"></label>
+				</div>
+				<label asp-for="RevisionMessage" class="form-control-label"></label>
+				<input asp-for="RevisionMessage" class="form-control" />
+				<span asp-validation-for="RevisionMessage" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<fullrow>
+		<form-group>
+			<label asp-for="Markup" class="form-control-label"></label>
+			<textarea asp-for="Markup" rows="6" class="form-control"></textarea>
+			<span asp-validation-for="Markup" class="text-danger"></span>
+		</form-group>
+	</fullrow>
 	<div class="text-center mt-3">
+		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
 		<button type="submit" class="btn btn-primary">Update</button>
 		<a href="/@(Model.Id)M" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>
+
+<partial name="_PreviewWindow" model="@((nameof(Model.Markup), $"/Wiki/{nameof(WikiController.GeneratePreview)}"))" />
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
