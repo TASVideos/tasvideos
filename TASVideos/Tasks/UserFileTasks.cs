@@ -132,6 +132,30 @@ namespace TASVideos.Tasks
 			return file;
 		}
 
+		public async Task<GameFileModel> GetFilesForGame(int gameId)
+		{
+			var game = await _db.Games
+				.Include(g => g.System)
+				.Include(g => g.UserFiles)
+				.ThenInclude(u => u.Author)
+				.SingleOrDefaultAsync(g => g.Id == gameId);
+
+			if (game == null)
+			{
+				return null;
+			}
+
+			return new GameFileModel
+			{
+				GameId = game.Id,
+				SystemCode = game.System.Code,
+				GameName = game.DisplayName,
+				Files = game.UserFiles
+					.Select(ToViewModel)
+					.ToList()
+			};
+		}
+
 		private static UserFileViewModel ToViewModel(UserFile file)
 		{
 			var model = file.Class == UserFileClass.Movie

@@ -1,0 +1,10 @@
+﻿@model GameFileModel
+
+@{
+	ViewData["Title"] = $"Movie for {Model.SystemCode} {Model.GameName}";
+}
+
+@foreach (var file in Model.Files)
+{
+	<partial name="_UserFileInfo" model="file" />
+}
