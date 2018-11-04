@@ -9,6 +9,14 @@
 <form asp-action="Edit">
 	<input type="hidden" asp-for="Id" />
 	<input type="hidden" asp-for="SystemCode" />
+	<fullrow class="mt-2">
+		<label asp-for="Tier"></label>:
+		<a href="/@Model.TierLink">
+			<img src="/@Model.TierIconPath"/>
+		</a>
+		<label class="form-control-label">@Model.Tier</label>
+		<a permission="SetTier" class="btn btn-secondary btn-sm" asp-action="EditTier" asp-route-id="@Model.Id">Edit</a>
+	</fullrow>
 	<row>
 		<div class="col-lg-6">
 			<form-group>

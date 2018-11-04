@@ -110,6 +110,11 @@ namespace TASVideos.Models
 
 		public string Title { get; set; }
 
+		[Display(Name = "Tier")]
+		public string Tier { get; set; }
+		public string TierIconPath { get; set; }
+		public string TierLink { get; set; }
+
 		[Display(Name = "Obsoleted By")]
 		public int? ObsoletedBy { get; set; }
 
@@ -178,5 +183,16 @@ namespace TASVideos.Models
 
 		[Display(Name = "Obsolete Movies")]
 		public int ObsoletePublicationCount { get; set; }
+	}
+
+	public class PublicationTierEditModel
+	{
+		public int Id { get; set; }
+		public string Title { get; set; }
+
+		[Display(Name = "Tier")]
+		public int TierId { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableTiers { get; set; } = new List<SelectListItem>();
 	}
 }

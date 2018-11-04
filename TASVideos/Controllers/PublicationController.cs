@@ -4,7 +4,6 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
 using TASVideos.Models;
@@ -141,6 +140,31 @@ namespace TASVideos.Controllers
 
 			await _publicationTasks.UpdatePublication(model);
 			return RedirectToAction(nameof(View), new { model.Id });
+		}
+
+		[RequirePermission(PermissionTo.SetTier)]
+		public async Task<IActionResult> EditTier(int id)
+		{
+			var model = await _publicationTasks.GetTiersForEdit(id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return View(model);
+		}
+
+		[HttpPost, AutoValidateAntiforgeryToken]
+		[RequirePermission(PermissionTo.SetTier)]
+		public async Task<IActionResult> EditTier(PublicationTierEditModel model)
+		{
+			var result = await _publicationTasks.UpdateTier(model.Id, model.TierId);
+			if (result)
+			{
+				return RedirectToAction(nameof(View), new { model.Id });
+			}
+
+			return NotFound();
 		}
 
 		[RequirePermission(PermissionTo.CatalogMovies)]

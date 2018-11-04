@@ -1,0 +1,24 @@
+﻿@model PublicationTierEditModel
+@{
+	ViewData["Title"] = $"Edit Tier for {Model.Title}";
+}
+
+<form asp-action="EditTier">
+	<row>
+		<div class="col-lg-4 col-sm-6">
+			<form-group>
+				<label asp-for="TierId"></label>
+				<select class="form-control" asp-for="TierId" asp-items="@Model.AvailableTiers"></select>
+				<span asp-validation-for="TierId" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<div class="text-center mt-3">
+		<button type="submit" class="btn btn-primary">Update</button>
+		<a href="/@(Model.Id)M" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
