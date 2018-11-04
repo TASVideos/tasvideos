@@ -35,7 +35,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> FilesUser(string userName)
 		{
 			var userId = await UserTasks.GetUserIdByName(userName);
-			var model = await _userFileTasks.GetUserIndex(userId, includeHidden: false);
+			var model = await _userFileTasks.GetUserIndex(userId, userName, includeHidden: false);
 
 			return View($"~/Views/Profile/{nameof(ProfileController.UserFiles)}.cshtml", model);
 		}

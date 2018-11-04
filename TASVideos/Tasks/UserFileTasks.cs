@@ -44,7 +44,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns the info for the files uploaded by the given user
 		/// </summary>
-		public async Task<UserFileUserIndexViewModel> GetUserIndex(int userId, bool includeHidden)
+		public async Task<UserFileUserIndexViewModel> GetUserIndex(int userId, string userName, bool includeHidden)
 		{
 			var query = _db.UserFiles
 				.Include(userFile => userFile.Author)
@@ -62,6 +62,7 @@ namespace TASVideos.Tasks
 
 			return new UserFileUserIndexViewModel
 			{
+				UserName = userName,
 				Files = result.Select(ToViewModel)
 			};
 		}

@@ -226,7 +226,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> UserFiles()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var model = await _userFileTasks.GetUserIndex(user.Id, includeHidden: true);
+			var model = await _userFileTasks.GetUserIndex(user.Id, user.UserName, includeHidden: true);
 			return View(model);
 		}
 
