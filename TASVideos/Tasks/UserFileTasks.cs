@@ -104,7 +104,8 @@ namespace TASVideos.Tasks
 				UsersWithMovies = await _db.UserFiles
 					.GroupBy(gkey => gkey.Author.UserName, gvalue => gvalue.UploadTimestamp).Select(
 						uf => new UserFileIndexViewModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
-					.ToListAsync()
+					.ToListAsync(),
+				LatestMovies = await GetLatest(10)
 			};
 
 			return model;
