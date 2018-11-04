@@ -363,7 +363,7 @@ namespace TASVideos.Tasks
 		/// Gets a <see cref="Publication"/> with the given <see cref="id" /> for the purpose of editing
 		/// If no publication with the given id is found then null is returned
 		/// </summary>
-		public async Task<PublicationEditModel> GetPublicationForEdit(int id)
+		public async Task<PublicationEditModel> GetPublicationForEdit(int id, IEnumerable<PermissionTo> userPermissions)
 		{
 			using (await _db.Database.BeginTransactionAsync())
 			{
@@ -388,20 +388,22 @@ namespace TASVideos.Tasks
 				model.AvailableMoviesForObsoletedBy =
 					await GetAvailableMoviesForObsoletedBy(id, model.SystemCode);
 
-				model.AvailableFlags = await GetAvailableFlags();
+				model.AvailableFlags = await GetAvailableFlags(userPermissions);
 
 				return model;
 			}
 		}
 
 		// TODO: document
-		public async Task<IEnumerable<SelectListItem>> GetAvailableFlags()
+		public async Task<IEnumerable<SelectListItem>> GetAvailableFlags(IEnumerable<PermissionTo> userPermissions)
 		{
 			return await _db.Flags
 				.Select(f => new SelectListItem
 				{
 					Text = f.Name,
-					Value = f.Id.ToString()
+					Value = f.Id.ToString(),
+					Disabled = f.PermissionRestriction.HasValue
+						&& !userPermissions.Contains(f.PermissionRestriction.Value)
 				})
 				.ToListAsync();
 		}
