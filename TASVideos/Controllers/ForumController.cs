@@ -66,6 +66,12 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
+		public async Task<IActionResult> LegacyPost(int p)
+		{
+			return await Post(p);
+		}
+
+		[AllowAnonymous]
 		public async Task<IActionResult> Post(int id)
 		{
 			var model = await _forumTasks.GetPostPosition(id, UserHas(PermissionTo.SeeRestrictedForums));
