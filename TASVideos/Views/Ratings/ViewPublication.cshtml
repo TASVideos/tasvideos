@@ -23,7 +23,7 @@
 		</tr>
 		@foreach (var ratings in visibleRatings.OrderBy(r => r.UserName))
 		{
-			<tr>
+			<tr @Html.Raw(!ratings.IsPublic ? "style=\"opacity: 0.50\"" : "")>
 				<td>@(ratings.IsPublic ? "" : "*") @ratings.UserName</td>
 				<td>@ratings.Entertainment</td>
 				<td>@ratings.TechQuality</td>
