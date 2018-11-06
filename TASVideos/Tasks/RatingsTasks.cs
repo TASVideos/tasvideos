@@ -13,7 +13,7 @@ namespace TASVideos.Tasks
 {
 	public class RatingsTasks
 	{
-		private const string MovieRatingKey = "OverallRatingForMovie-";
+		private const string MovieRatingKey = "OverallRatingForMovieViewModel-";
 
 		private readonly ApplicationDbContext _db;
 		private readonly IPointsService _pointsService;
