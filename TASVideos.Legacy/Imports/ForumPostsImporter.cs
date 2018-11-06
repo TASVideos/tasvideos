@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -48,7 +49,7 @@ namespace TASVideos.Legacy.Imports
 						TopicId = p.TopicId,
 						PosterId = p.PosterId,
 						IpAddress = p.IpAddress,
-						Subject = ImportHelper.ConvertLatin1String(p.Subject),
+						Subject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject)),
 						Text = fixedText,
 						EnableBbCode = p.EnableBbCode,
 						EnableHtml = p.EnableHtml && HtmlParser.ContainsHtml(fixedText),
