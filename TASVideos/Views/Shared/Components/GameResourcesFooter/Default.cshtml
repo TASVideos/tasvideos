@@ -1,6 +1,6 @@
 ﻿@model WikiPage
 @await Component.ListSubPages(Model, "show")
-<info-alert>
+<div role="alert" class="alert alert-info">
 	@await Component.RenderWiki("System/GameResourcesFooter")
-</info-alert>
+</div>
 
