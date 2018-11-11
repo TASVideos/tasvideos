@@ -33,6 +33,7 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<ForumTopic> Topics { get; set; } = new HashSet<ForumTopic>();
 		public virtual ICollection<ForumPost> Posts { get; set; } = new HashSet<ForumPost>();
+		public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = new HashSet<ForumTopicWatch>();
 
 		public virtual ICollection<UserAward> UserAwards { get; set; } = new HashSet<UserAward>();
 

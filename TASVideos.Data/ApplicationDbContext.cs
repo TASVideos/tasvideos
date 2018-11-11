@@ -62,6 +62,7 @@ namespace TASVideos.Data
 		public DbSet<ForumPoll> ForumPolls { get; set; }
 		public DbSet<ForumPollOption> ForumPollOptions { get; set; }
 		public DbSet<ForumPollOptionVote> ForumPollOptionVotes { get; set; }
+		public DbSet<ForumTopicWatch> ForumTopicWatches { get; set; }
 
 		public DbSet<PrivateMessage> PrivateMessages { get; set; }
 
@@ -123,6 +124,10 @@ namespace TASVideos.Data
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasMany(e => e.UserFileComments)
+					.WithOne(e => e.User)
+					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasMany(e => e.ForumTopicWatches)
 					.WithOne(e => e.User)
 					.OnDelete(DeleteBehavior.Restrict);
 			});
@@ -298,6 +303,12 @@ namespace TASVideos.Data
 			builder.Entity<PrivateMessage>(entity =>
 			{
 				entity.HasIndex(e => new { e.ToUserId, e.ReadOn, e.DeletedForToUser });
+			});
+
+			builder.Entity<ForumTopicWatch>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.ForumTopicId });
+				entity.HasIndex(e => e.ForumTopicId);
 			});
 		}
 
