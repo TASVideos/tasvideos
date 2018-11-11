@@ -1,11 +1,12 @@
 ﻿@model UserSummaryModel
 @{
 	var pageData = (WikiPage)ViewData["pageData"];
+	var user = Model?.UserName ?? pageData.PageName.Replace("HomePages/", "");
 }
 <hr />
 @await Component.ListSubPages(pageData, "show")
-<info-alert>
-	This page is intended to be the personal page for user: @(Model?.UserName ?? pageData.PageName.Replace("HomePages/", "")) <br />
+<div class="alert alert-info" role="alert">
+	This page is intended to be the personal page for user: <a asp-controller="User" asp-action="Profile" asp-route-id="@user">@user</a>
 	<br />
 
 	@if (Model != null)
@@ -21,7 +22,7 @@
 					<li>Awards Won: @Model.AwardsWon</li>
 				</ul>
 			</ul>
-			<label>Note: Opinions expressed on homepages of our users are the personal opinions of those people, and don't necessarily represent the opinion of the whole TASVideos community.</label>
+			<small>Note: Opinions expressed on homepages of our users are the personal opinions of those people, and don't necessarily represent the opinion of the whole TASVideos community.</small>
 		</div>
 	}
 	else
@@ -29,4 +30,4 @@
 		<label>This user does not currently exist but this page should be reserved should such a user regiser.</label><br />
 		<label>Wiki Editors, all users can edit their own homepages by default, it is not recommended to create home pages unless explicitely requested by the user</label>
 	}
-</info-alert>
+</div>
