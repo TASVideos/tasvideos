@@ -74,7 +74,6 @@ namespace TASVideos.Legacy.Imports
 			// Referrals (only need latest revisions)
 			var referralList = pages
 				.Where(p => p.ChildId == null)
-				.Where(p => !NonReferralPages.Contains(p.PageName))
 				.SelectMany(p => Util.GetAllWikiLinks(p.Markup).Select(referral => new WikiPageReferral
 				{
 					Referrer = p.PageName,
@@ -110,30 +109,6 @@ namespace TASVideos.Legacy.Imports
 
 			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000, 300);
 		}
-
-		// These pages do not refer to any other pages, are unlikely to do so in the future, and are rather large, slowing down referral parsing
-		private static readonly string[] NonReferralPages =
-		{
-			"InternalSystem/SubmissionContent/S5085",
-			"Bizhawk/PreviousReleaseHistory",
-			"EmulatorResources/NESAccuracyTests",
-			"Bizhawk/LuaFunctions",
-			"GameResources/Wii/SuperPaperMario",
-			"GameResources/GC/PaperMarioTheThousandYearDoor",
-			"HomePages/Bisqwit/Source/Bots/LunarBall",
-			"GameResources/GBx/MarioAndLuigiSuperstarSaga",
-			"GameResources/DOS/Nethack",
-			"InternalSystem/SubmissionContent/S5085",
-			"Bizhawk/PreviousReleaseHistory",
-			"EmulatorResources/NESAccuracyTests",
-			"Bizhawk/LuaFunctions",
-			"GameResources/Wii/SuperPaperMario",
-			"GameResources/GC/PaperMarioTheThousandYearDoor",
-			"HomePages/Bisqwit/Source/Bots/LunarBall",
-			"GameResources/GBx/MarioAndLuigiSuperstarSaga",
-			"GameResources/DOS/Nethack",
-			"InternalSystem/SubmissionContent/S3776"
-		};
 
 		private static string PageNameShenanigans(SiteText st, string userName)
 		{
