@@ -268,7 +268,7 @@ namespace TASVideos.Tasks
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
-				.Where(wp => wp.PageName.StartsWith(pageName))
+				.Where(wp => wp.PageName.StartsWith(pageName + "/"))
 				.Select(wp => wp.PageName)
 				.ToList();
 		}
