@@ -171,7 +171,8 @@ namespace TASVideos.Tasks
 					PosterLocation = p.Poster.From,
 					PosterRoles = p.Poster.UserRoles
 						.Where(ur => !ur.Role.IsDefault)
-						.Select(ur => ur.Role.Name),
+						.Select(ur => ur.Role.Name)
+						.ToList(),
 					PosterJoined = p.Poster.CreateTimeStamp,
 					PosterPostCount = p.Poster.Posts.Count,
 					Text = p.Text,
