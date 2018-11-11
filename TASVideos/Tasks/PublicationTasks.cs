@@ -317,6 +317,7 @@ namespace TASVideos.Tasks
 							LinkPath = pf.Flag.LinkPath,
 							Name = pf.Flag.Name
 						})
+						.ToList()
 				})
 				.ToListAsync();
 		}
