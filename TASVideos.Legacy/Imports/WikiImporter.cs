@@ -239,33 +239,9 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("[module:welcome]", "");
 				markup = markup.Replace("!! Featured Movie", "");
 			}
-			else if (st.PageName == "Phil" && st.Revision >= 7 && st.Revision <= 11)
-			{
-				markup = markup.Replace(":[", ":|");
-			}
-			else if (st.PageName == "971S" && st.Revision == 3)
-			{
-				markup = markup.Replace("[Phi:", "[user:Phil]:");
-			}
-			else if (st.PageName == "2884M")
-			{
-				markup = markup.Replace("][", "II");
-			}
 			else if (st.PageName == "Awards")
 			{
 				markup = markup.Replace("[module:listsubpages]", "");
-			}
-			else if (st.PageName == "3753S")
-			{
-				markup = markup.Replace("[Moon]", "[Moons]");
-			}
-
-			if (st.PageName == "2649S"
-				|| st.PageName == "3275S"
-				|| st.PageName == "EncodingGuide/PreEncoding"
-				|| st.PageName == "GameResources/DS/ClubPenguinElitePenguinForce")
-			{
-				markup = markup.Replace("[...]", "[[...]]");
 			}
 
 			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
@@ -391,12 +367,6 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("[upthorn|Upthorn]")) markup = markup.Replace("[upthorn|Upthorn]", "[user:upthorn]");
 			if (markup.Contains("[Zggzdydp|zggzdydp]")) markup = markup.Replace("[Zggzdydp|zggzdydp]", "[user:zggzdydp]");
 
-			// Fix links to user subpages
-			if (st.PageName == "2693S")
-			{
-				markup = markup.Replace("[Adelikat|adelikat]", "[user:adelikat]");
-			}
-
 			if (markup.Contains("[Adelikat/AllPlatformsChallenge")) markup = markup.Replace("[Adelikat/AllPlatformsChallenge", "[HomePages/adelikat/AllPlatformsChallenge");
 			if (markup.Contains("[adelikat/AVGN")) markup = markup.Replace("[adelikat/AVGN", "[HomePages/adelikat/AVGN");
 			if (markup.Contains("[adelikat/EmptyQueue")) markup = markup.Replace("[adelikat/EmptyQueue", "[HomePages/adelikat/EmptyQueue");
@@ -442,10 +412,6 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains(" [!]")) markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
 			if (markup.Contains(")[!]")) markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
 			if (markup.Contains("[''''!'''']")) markup = markup.Replace("[''''!'''']", "[[!]]");
-			if (st.PageName == "4084S")
-			{
-				markup = markup.Replace("[''''C'''']", "[[C]]");
-			}
 
 			return markup;
 		}
