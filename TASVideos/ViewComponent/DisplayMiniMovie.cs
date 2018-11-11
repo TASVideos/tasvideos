@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
-using TASVideos.Data.SampleData;
+using TASVideos.Extensions;
 using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
