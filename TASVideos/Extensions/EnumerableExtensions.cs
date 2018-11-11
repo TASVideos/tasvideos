@@ -46,5 +46,14 @@ namespace TASVideos.Extensions
 			int half = (int)Math.Ceiling(source.Count() / 2.0);
 			return source.Skip(half);
 		}
+
+		/// <summary>
+		/// Returns a random entry from the given collection
+		/// </summary>
+		public static T AtRandom<T>(this ICollection<T> collection)
+		{
+			var randomIndex = new Random(DateTime.Now.Millisecond).Next(0, collection.Count);
+			return collection.ElementAtOrDefault(randomIndex);
+		}
 	}
 }
