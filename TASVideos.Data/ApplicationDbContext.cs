@@ -294,6 +294,11 @@ namespace TASVideos.Data
 			{
 				entity.HasIndex(e => e.Hidden);
 			});
+
+			builder.Entity<PrivateMessage>(entity =>
+			{
+				entity.HasIndex(e => new { e.ToUserId, e.ReadOn, e.DeletedForToUser });
+			});
 		}
 
 		private void PerformTrackingUpdates()
