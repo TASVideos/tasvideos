@@ -91,7 +91,7 @@ namespace TASVideos.Legacy.Imports
 				Ip = legacyComment.Ip,
 				ParentId = legacyComment.ParentId,
 				Text = legacyComment.Text,
-				Title = legacyComment.Title,
+				Title = ImportHelper.ConvertLatin1String(legacyComment.Title),
 				UserId = userIdsByName.TryGetValue(legacyComment.User.Name, out var userId)
 				? userId
 				: -1,
