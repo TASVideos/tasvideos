@@ -493,6 +493,7 @@ namespace TASVideos.Tasks
 				.Select(tw => new WatchedTopicsModel
 				{
 					TopicCreateTimeStamp = tw.ForumTopic.CreateTimeStamp,
+					IsNotified = tw.IsNotified,
 					ForumId = tw.ForumTopic.ForumId,
 					ForumTitle = tw.ForumTopic.Forum.Name,
 					TopicId = tw.ForumTopicId,
