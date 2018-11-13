@@ -92,42 +92,42 @@ namespace TASVideos.Controllers
 		{
 			var model = await _forumTasks.GetTopicForDisplay(request, UserHas(PermissionTo.SeeRestrictedForums));
 
-			if (model != null)
+			if (model == null)
 			{
-				int? userId = User.Identity.IsAuthenticated
-					? int.Parse(_userManager.GetUserId(User))
-					: (int?)null;
-
-				if (request.Highlight.HasValue)
-				{
-					var post = model.Posts.SingleOrDefault(p => p.Id == request.Highlight);
-					if (post != null)
-					{
-						post.Highlight = true;
-					}
-				}
-
-				foreach (var post in model.Posts)
-				{
-					post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-					post.RenderedSignature = !string.IsNullOrWhiteSpace(post.Signature)
-						? RenderSignature(post.Signature)
-						: "";
-					post.IsEditable = UserHas(PermissionTo.EditForumPosts)
-						|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
-					post.IsDeletable = UserHas(PermissionTo.DeleteForumPosts)
-						|| (userId.HasValue && post.PosterId == userId && post.IsLastPost);
-				}
-
-				if (model.Poll != null)
-				{
-					model.Poll.Question = RenderPost(model.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
-				}
-
-				return View(nameof(Topic), model);
+				return NotFound();
 			}
 
-			return NotFound();
+			int? userId = User.Identity.IsAuthenticated
+				? int.Parse(_userManager.GetUserId(User))
+				: (int?)null;
+
+			if (request.Highlight.HasValue)
+			{
+				var post = model.Posts.SingleOrDefault(p => p.Id == request.Highlight);
+				if (post != null)
+				{
+					post.Highlight = true;
+				}
+			}
+
+			foreach (var post in model.Posts)
+			{
+				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
+				post.RenderedSignature = !string.IsNullOrWhiteSpace(post.Signature)
+					? RenderSignature(post.Signature)
+					: "";
+				post.IsEditable = UserHas(PermissionTo.EditForumPosts)
+					|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
+				post.IsDeletable = UserHas(PermissionTo.DeleteForumPosts)
+					|| (userId.HasValue && post.PosterId == userId && post.IsLastPost);
+			}
+
+			if (model.Poll != null)
+			{
+				model.Poll.Question = RenderPost(model.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
+			}
+
+			return View(nameof(Topic), model);
 		}
 
 		[HttpPost, ValidateAntiForgeryToken]
