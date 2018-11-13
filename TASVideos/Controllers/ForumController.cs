@@ -97,10 +97,6 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
-			int? userId = User.Identity.IsAuthenticated
-				? int.Parse(_userManager.GetUserId(User))
-				: (int?)null;
-
 			if (request.Highlight.HasValue)
 			{
 				var post = model.Posts.SingleOrDefault(p => p.Id == request.Highlight);
@@ -109,6 +105,10 @@ namespace TASVideos.Controllers
 					post.Highlight = true;
 				}
 			}
+
+			int? userId = User.Identity.IsAuthenticated
+				? int.Parse(_userManager.GetUserId(User))
+				: (int?)null;
 
 			foreach (var post in model.Posts)
 			{
