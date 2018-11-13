@@ -485,6 +485,42 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
+		public async Task<IEnumerable<WatchedTopicsModel>> GetUserWatchedTopics(int userId)
+		{
+			return await _db
+				.ForumTopicWatches
+				.Where(tw => tw.UserId == userId)
+				.Select(tw => new WatchedTopicsModel
+				{
+					TopicCreateTimeStamp = tw.ForumTopic.CreateTimeStamp,
+					ForumId = tw.ForumTopic.ForumId,
+					ForumTitle = tw.ForumTopic.Forum.Name,
+					TopicId = tw.ForumTopicId,
+					TopicTitle = tw.ForumTopic.Title,
+				})
+				.ToListAsync();
+		}
+
+		public async Task StopWatchingTopic(int userId, int topicId)
+		{
+			try
+			{
+				var watch = await _db.ForumTopicWatches
+					.SingleOrDefaultAsync(tw => tw.UserId == userId && tw.ForumTopicId == topicId);
+				_db.ForumTopicWatches.Remove(watch);
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException ex)
+			{
+				// Do nothing
+				// 1) if a watch is already removed, we are done
+				// 2) if a watch was updated (for isntance, someone posted in the topic),
+				//		there isn't much we can do other than reload the page anyway with an error
+				//		An error would only be modestly helpful anyway, and wouldn't save clicks
+				//		However, this would be an nice to have one day
+			}
+		}
+
 		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)
 		{
 			return _db.Users
