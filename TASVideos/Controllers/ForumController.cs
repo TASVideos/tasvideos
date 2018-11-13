@@ -275,9 +275,29 @@ namespace TASVideos.Controllers
 		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> CreatePost(ForumPostModel model)
 		{
+			var user = await _userManager.GetUserAsync(User);
 			if (!ModelState.IsValid)
 			{
-				return View(model);
+				// We have to consider direct posting to this call, including "over-posting",
+				// so all of this logic is necessary
+				var isLocked = await _forumTasks.IsTopicLocked(model.TopicId);
+				if (isLocked && !UserHas(PermissionTo.PostInLockedTopics))
+				{
+					return RedirectAccessDenied();
+				}
+
+				var newModel = new ForumPostCreateModel
+				{
+					TopicId = model.TopicId,
+					TopicTitle = model.TopicTitle,
+					Subject = model.Subject,
+					Post = model.Post,
+					IsLocked = isLocked,
+					UserAvatar = user.Avatar,
+					UserSignature = user.Signature
+				};
+
+				return View(newModel);
 			}
 
 			var topic = await _forumTasks.GetTopic(model.TopicId);
@@ -296,7 +316,6 @@ namespace TASVideos.Controllers
 				return RedirectAccessDenied();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
 			var id = await _forumTasks.CreatePost(model, user, IpAddress.ToString());
 
 			_publisher.SendForum(
