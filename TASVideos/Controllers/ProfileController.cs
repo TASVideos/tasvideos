@@ -14,7 +14,6 @@ using TASVideos.Tasks;
 namespace TASVideos.Controllers
 {
 	[Authorize]
-	[Route("[controller]/[action]")]
 	public class ProfileController : BaseController
 	{
 		private readonly UserManager<User> _userManager;
@@ -228,6 +227,20 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			var model = await _userFileTasks.GetUserIndex(user.Id, user.UserName, includeHidden: true);
 			return View(model);
+		}
+
+		public async Task<IActionResult> WatchedTopics()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await UserTasks.GetUserWatchedTopics(user.Id);
+			return View(model);
+		}
+
+		public async Task<IActionResult> StopWatchingTopic(int id)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			await UserTasks.StopWatchingTopic(user.Id, id);
+			return RedirectToAction(nameof(WatchedTopics));
 		}
 
 		public async Task<IActionResult> Ratings()

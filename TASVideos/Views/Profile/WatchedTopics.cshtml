@@ -1,0 +1,33 @@
+﻿@model IEnumerable<WatchedTopicsModel>
+
+@{
+	ViewData.AddActivePage(ProfileNavPages.Topics);
+}
+
+<h3>You Are Watching the following @Model.Count() Topics:</h3>
+
+<table class="table table-striped">
+	<tr>
+		<th>Forum</th>
+		<th>Topic</th>
+		<th>Stop Watching</th>
+	</tr>
+	@foreach (var watch in Model.OrderByDescending(tw => tw.TopicCreateTimeStamp))
+	{
+		<tr>
+			<td>
+				<a asp-controller="Forum" asp-action="SubForum" asp-route-id="@watch.ForumId">@watch.ForumTitle</a>
+			</td>
+			<td>
+				<a asp-controller="Forum" asp-action="Topic" asp-route-id="@watch.TopicId">@watch.TopicTitle</a>
+			</td>
+			<td>
+				<delete-button
+					warning-message="Are you sure you want to stop watching this topic?"
+					asp-href="/Profile/StopWatchingTopic/@watch.TopicId">
+					<i class="fa fa-remove"></i>
+				</delete-button>
+			</td>
+		</tr>
+	}
+</table>

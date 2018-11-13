@@ -27,6 +27,9 @@ namespace TASVideos.Views.Profile
 		public static string Ratings => "Ratings";
 		public static string RatingsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Ratings);
 
+		public static string Topics => "Topics";
+		public static string TopicsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Topics);
+
 		public static string PageNavClass(ViewContext viewContext, string page)
 		{
 			var activePage = viewContext.ViewData["ActivePage"] as string;

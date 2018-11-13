@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Models
@@ -67,5 +68,14 @@ namespace TASVideos.Models
 		public string ConfirmPassword { get; set; }
 
 		public string StatusMessage { get; set; }
+	}
+
+	public class WatchedTopicsModel
+	{
+		public DateTime TopicCreateTimeStamp { get; set; }
+		public int ForumId { get; set; }
+		public string ForumTitle { get; set; }
+		public int TopicId { get; set; }
+		public string TopicTitle { get; set; }
 	}
 }
