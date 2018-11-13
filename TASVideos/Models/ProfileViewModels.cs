@@ -73,6 +73,7 @@ namespace TASVideos.Models
 	public class WatchedTopicsModel
 	{
 		public DateTime TopicCreateTimeStamp { get; set; }
+		public bool IsNotified { get; set; }
 		public int ForumId { get; set; }
 		public string ForumTitle { get; set; }
 		public int TopicId { get; set; }
