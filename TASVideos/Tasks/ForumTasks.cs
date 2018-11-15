@@ -10,6 +10,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
@@ -929,6 +930,31 @@ namespace TASVideos.Tasks
 			if (watchedTopic != null && watchedTopic.IsNotified)
 			{
 				watchedTopic.IsNotified = false;
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		/// <summary>
+		/// Should be called when a new post is created in a topic
+		/// Will notify all users watchign the topic and mark the IsNotified flag accordingly
+		/// </summary>
+		public async Task NotifyWatchedTopics(int topicId, int posterId)
+		{
+			var watches = await _db.ForumTopicWatches
+				.Where(w => w.ForumTopicId == topicId)
+				.Where(w => w.UserId != posterId)
+				.Where(w => !w.IsNotified)
+				.ToListAsync();
+
+			if (watches.Any())
+			{
+				// TODO: send emails
+				foreach (var watch in watches)
+				{
+					
+					watch.IsNotified = true;
+				}
+
 				await _db.SaveChangesAsync();
 			}
 		}

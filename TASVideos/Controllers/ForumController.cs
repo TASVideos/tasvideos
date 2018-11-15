@@ -329,6 +329,8 @@ namespace TASVideos.Controllers
 				$"{model.TopicTitle} ({model.Subject})",
 				$"{BaseUrl}/p/{id}#{id}");
 
+			await _forumTasks.NotifyWatchedTopics(model.TopicId, user.Id);
+
 			return RedirectToAction(nameof(Topic), "Forum", new { id = model.TopicId });
 		}
 
