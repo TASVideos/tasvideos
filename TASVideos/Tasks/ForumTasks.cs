@@ -19,13 +19,16 @@ namespace TASVideos.Tasks
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly AwardTasks _awardTasks;
+		private readonly IEmailService _emailService;
 
 		public ForumTasks(
 			ApplicationDbContext db,
-			AwardTasks awardTasks)
+			AwardTasks awardTasks,
+			IEmailService emailService)
 		{
 			_db = db;
 			_awardTasks = awardTasks;
+			_emailService = emailService;
 		}
 
 		/// <summary>
@@ -941,6 +944,7 @@ namespace TASVideos.Tasks
 		public async Task NotifyWatchedTopics(int topicId, int posterId)
 		{
 			var watches = await _db.ForumTopicWatches
+				.Include(w => w.User)
 				.Where(w => w.ForumTopicId == topicId)
 				.Where(w => w.UserId != posterId)
 				.Where(w => !w.IsNotified)
@@ -948,10 +952,10 @@ namespace TASVideos.Tasks
 
 			if (watches.Any())
 			{
-				// TODO: send emails
+				await _emailService.SendTopicNotification(watches.Select(w => w.User.Email));
+
 				foreach (var watch in watches)
 				{
-					
 					watch.IsNotified = true;
 				}
 
