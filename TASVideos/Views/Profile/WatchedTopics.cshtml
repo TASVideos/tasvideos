@@ -13,15 +13,15 @@
 		<th>Stop Watching</th>
 	</tr>
 	@foreach (var watch in Model
-		.OrderBy(tw => tw.IsNotified)
+		.OrderBy(tw => !tw.IsNotified)
 		.ThenByDescending(tw => tw.TopicCreateTimeStamp))
 	{
-		<tr style="@(!watch.IsNotified ? "font-style: italic" : "")">
+		<tr style="@(watch.IsNotified ? "font-style: italic" : "")">
 			<td>
 				<a asp-controller="Forum" asp-action="SubForum" asp-route-id="@watch.ForumId">@watch.ForumTitle</a>
 			</td>
 			<td>
-				<i condition="!watch.IsNotified" title="This topic has new replies" class="fa fa-exclamation"></i>
+				<i condition="watch.IsNotified" title="This topic has new replies" class="fa fa-exclamation"></i>
 				<a asp-controller="Forum" asp-action="Topic" asp-route-id="@watch.TopicId">@watch.TopicTitle</a>
 			</td>
 			<td>

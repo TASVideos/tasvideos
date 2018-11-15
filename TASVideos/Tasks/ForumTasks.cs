@@ -916,5 +916,21 @@ namespace TASVideos.Tasks
 
 			return model;
 		}
+
+		/// <summary>
+		/// If a user is watching this topic, this marks the topic
+		/// as not notified, at which point, any new post will cause a notification
+		/// </summary>
+		public async Task MarkTopicAsUnNotifiedForUser(int userId, int topicId)
+		{
+			var watchedTopic = await _db.ForumTopicWatches
+				.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId);
+
+			if (watchedTopic != null && watchedTopic.IsNotified)
+			{
+				watchedTopic.IsNotified = false;
+				await _db.SaveChangesAsync();
+			}
+		}
 	}
 }
