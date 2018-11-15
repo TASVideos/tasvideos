@@ -98,6 +98,8 @@ namespace TASVideos.Extensions
 			services.AddScoped<IFileService, FileService>();
 			services.AddScoped<IPointsService, PointsService>();
 			services.AddTransient<IEmailSender, EmailSender>();
+			services.AddTransient<IEmailService, EmailService>();
+
 			return services;
 		}
 
