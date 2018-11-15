@@ -127,6 +127,11 @@ namespace TASVideos.Controllers
 				model.Poll.Question = RenderPost(model.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
 			}
 
+			if (userId.HasValue)
+			{
+				await _forumTasks.MarkTopicAsUnNotifiedForUser(userId.Value,  model.Id);
+			}
+
 			return View(nameof(Topic), model);
 		}
 
