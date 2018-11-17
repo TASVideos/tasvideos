@@ -386,6 +386,7 @@ namespace TASVideos.Tasks
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
+			await WatchTopic(model.TopicId, user.Id);
 			return forumPost.Id;
 		}
 
