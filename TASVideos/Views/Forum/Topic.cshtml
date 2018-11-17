@@ -4,6 +4,12 @@
 }
 <partial Name="_ForumHeader" />
 <fullrow>
+	<a condition="User.Identity.IsAuthenticated && !Model.IsWatching" class="btn btn-info btn-sm" title="Watch this topic" asp-action="WatchTopic" asp-route-topicId="@Model.Id">
+		<i class="fa fa-search-plus"></i>
+	</a>
+	<a condition="User.Identity.IsAuthenticated && Model.IsWatching" class="btn btn-warning btn-sm" title="Stop watching this topic" asp-action="UnwatchTopic" asp-route-topicId="@Model.Id">
+		<i class="fa fa-search-plus"></i>
+	</a>
 	<a permission="MoveTopics" asp-action="MoveTopic" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Move this topic"><i class="fa fa-location-arrow"></i></a>
 	<a permission="SplitTopics" asp-action="SplitTopic" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Split this topic"><i class="fa fa-code-fork"></i></a>
 	<form style="display: inline" class="form-inline" permission="LockTopics" method="POST" asp-action="SetTopicLock" asp-route-topicId="@Model.Id" asp-route-topictitle="@Model.Title" asp-route-locked="@(!Model.IsLocked)" asp-route-returnUrl="@Context.ReturnUrl()">

@@ -76,6 +76,7 @@ namespace TASVideos.Models
 	public class ForumTopicModel
 	{
 		public int Id { get; set; }
+		public bool IsWatching { get; set; }
 		public bool IsLocked { get; set; }
 		public string Title { get; set; }
 		public int ForumId { get; set; }

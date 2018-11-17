@@ -90,7 +90,11 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Topic(TopicRequest request)
 		{
-			var model = await _forumTasks.GetTopicForDisplay(request, UserHas(PermissionTo.SeeRestrictedForums));
+			int? userId = User.Identity.IsAuthenticated
+				? int.Parse(_userManager.GetUserId(User))
+				: (int?)null;
+
+			var model = await _forumTasks.GetTopicForDisplay(request, UserHas(PermissionTo.SeeRestrictedForums), userId);
 
 			if (model == null)
 			{
@@ -105,10 +109,6 @@ namespace TASVideos.Controllers
 					post.Highlight = true;
 				}
 			}
-
-			int? userId = User.Identity.IsAuthenticated
-				? int.Parse(_userManager.GetUserId(User))
-				: (int?)null;
 
 			foreach (var post in model.Posts)
 			{
@@ -605,6 +605,22 @@ namespace TASVideos.Controllers
 			}
 
 			return View(model);
+		}
+
+		[Authorize]
+		public async Task<IActionResult> WatchTopic(int topicId)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			await _forumTasks.WatchTopic(topicId, user.Id);
+			return RedirectToAction(nameof(Topic), new { Id = topicId });
+		}
+
+		[Authorize]
+		public async Task<IActionResult> UnwatchTopic(int topicId)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			await _forumTasks.UnwatchTopic(topicId, user.Id);
+			return RedirectToAction(nameof(Topic), new { Id = topicId });
 		}
 	}
 }
