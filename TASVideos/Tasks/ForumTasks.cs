@@ -329,6 +329,7 @@ namespace TASVideos.Tasks
 			};
 
 			await CreatePost(forumPostModel, user, ipAddress);
+			await WatchTopic(topic.Id, user.Id);
 			return topic;
 		}
 
