@@ -611,7 +611,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> WatchTopic(int topicId)
 		{
 			var user = await _userManager.GetUserAsync(User);
-			await _forumTasks.WatchTopic(topicId, user.Id);
+			await _forumTasks.WatchTopic(topicId, user.Id, UserHas(PermissionTo.SeeRestrictedForums));
 			return RedirectToAction(nameof(Topic), new { Id = topicId });
 		}
 
@@ -619,7 +619,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> UnwatchTopic(int topicId)
 		{
 			var user = await _userManager.GetUserAsync(User);
-			await _forumTasks.UnwatchTopic(topicId, user.Id);
+			await _forumTasks.UnwatchTopic(topicId, user.Id, UserHas(PermissionTo.SeeRestrictedForums));
 			return RedirectToAction(nameof(Topic), new { Id = topicId });
 		}
 	}
