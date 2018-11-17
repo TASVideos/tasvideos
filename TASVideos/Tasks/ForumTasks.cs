@@ -329,7 +329,7 @@ namespace TASVideos.Tasks
 			};
 
 			await CreatePost(forumPostModel, user, ipAddress);
-			await WatchTopic(topic.Id, user.Id);
+			await WatchTopic(topic.Id, user.Id, canSeeRestricted: true);
 			return topic;
 		}
 
@@ -386,7 +386,7 @@ namespace TASVideos.Tasks
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
-			await WatchTopic(model.TopicId, user.Id);
+			await WatchTopic(model.TopicId, user.Id, canSeeRestricted: true);
 			return forumPost.Id;
 		}
 
@@ -966,9 +966,10 @@ namespace TASVideos.Tasks
 			}
 		}
 
-		public async Task WatchTopic(int topicId, int userId)
+		public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
 		{
 			var watch = await _db.ForumTopicWatches
+				.Where(ft => canSeeRestricted || !ft.ForumTopic.Forum.Restricted)
 				.SingleOrDefaultAsync(w => w.UserId == userId
 				&& w.ForumTopicId == topicId);
 
@@ -984,9 +985,10 @@ namespace TASVideos.Tasks
 			}
 		}
 
-		public async Task UnwatchTopic(int topicId, int userId)
+		public async Task UnwatchTopic(int topicId, int userId, bool canSeeRestricted)
 		{
 			var watch = await _db.ForumTopicWatches
+				.Where(ft => canSeeRestricted || !ft.ForumTopic.Forum.Restricted)
 				.SingleOrDefaultAsync(w => w.UserId == userId
 				&& w.ForumTopicId == topicId);
 
