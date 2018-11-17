@@ -133,13 +133,14 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Displays a page of posts for the given topic
 		/// </summary>
-		public async Task<ForumTopicModel> GetTopicForDisplay(TopicRequest paging, bool allowRestricted)
+		public async Task<ForumTopicModel> GetTopicForDisplay(TopicRequest paging, bool allowRestricted, int? userId)
 		{
 			var model = await _db.ForumTopics
 				.Where(f => allowRestricted || !f.Forum.Restricted)
 				.Select(t => new ForumTopicModel
 				{
 					Id = t.Id,
+					IsWatching = userId.HasValue && t.ForumTopicWatches.Any(ft => ft.UserId == userId.Value),
 					Title = t.Title,
 					ForumId = t.ForumId,
 					ForumName = t.Forum.Name,
@@ -959,6 +960,37 @@ namespace TASVideos.Tasks
 					watch.IsNotified = true;
 				}
 
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public async Task WatchTopic(int topicId, int userId)
+		{
+			var watch = await _db.ForumTopicWatches
+				.SingleOrDefaultAsync(w => w.UserId == userId
+				&& w.ForumTopicId == topicId);
+
+			if (watch == null)
+			{
+				_db.ForumTopicWatches.Add(new ForumTopicWatch
+				{
+					UserId = userId,
+					ForumTopicId = topicId
+				});
+
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public async Task UnwatchTopic(int topicId, int userId)
+		{
+			var watch = await _db.ForumTopicWatches
+				.SingleOrDefaultAsync(w => w.UserId == userId
+				&& w.ForumTopicId == topicId);
+
+			if (watch != null)
+			{
+				_db.ForumTopicWatches.Remove(watch);
 				await _db.SaveChangesAsync();
 			}
 		}
