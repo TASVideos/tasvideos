@@ -28,5 +28,17 @@ namespace TASVideos.Data.Entity
 		{
 			return list.Where(t => t.CreateUserName == userName);
 		}
+
+		public static IQueryable<T> OldestToNewest<T>(this IQueryable<T> list)
+			where T : ITrackable
+		{
+			return list.OrderBy(t => t.CreateTimeStamp);
+		}
+
+		public static IQueryable<T> ByMostRecent<T>(this IQueryable<T> list)
+			where T : ITrackable
+		{
+			return list.OrderByDescending(t => t.CreateTimeStamp);
+		}
 	}
 }

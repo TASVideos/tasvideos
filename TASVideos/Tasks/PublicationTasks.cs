@@ -330,7 +330,7 @@ namespace TASVideos.Tasks
 		{
 			// It is important to actually query for an Entity object here instead of a ViewModel
 			// Because we need the title property which is a derived property that can't be done in Linq to Sql
-			// And needs a varierty of information from sub-tables, hence all the includes
+			// And needs a variety of information from sub-tables, hence all the includes
 			var movies = await _db.Publications
 				.Include(p => p.Tier)
 				.Include(p => p.Game)
@@ -340,7 +340,7 @@ namespace TASVideos.Tasks
 				.Include(p => p.Authors)
 				.ThenInclude(pa => pa.Author)
 				.Where(p => searchCriteria.Tiers.Contains(p.Tier.Name))
-				.OrderByDescending(p => p.CreateTimeStamp)
+				.ByMostRecent()
 				.Take(searchCriteria.Limit)
 				.ToListAsync();
 

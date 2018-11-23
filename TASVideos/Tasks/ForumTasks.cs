@@ -119,7 +119,7 @@ namespace TASVideos.Tasks
 
 			var posts = await _db.ForumPosts
 				.Where(p => p.TopicId == post.TopicId)
-				.OrderBy(p => p.CreateTimeStamp)
+				.OldestToNewest()
 				.ToListAsync();
 
 			var position = posts.IndexOf(post);
@@ -158,7 +158,7 @@ namespace TASVideos.Tasks
 
 			var lastPostId = (await _db.ForumPosts
 				.Where(p => p.TopicId == paging.Id)
-				.OrderByDescending(p => p.CreateTimeStamp)
+				.ByMostRecent()
 				.FirstAsync())
 				.Id;
 
@@ -217,7 +217,7 @@ namespace TASVideos.Tasks
 		{
 			var topic = await _db.ForumTopics
 				.Include(t => t.Forum)
-				.Where(ft => allowRestricted || !ft.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.SingleOrDefaultAsync(t => t.Id == topicId);
 
 			if (topic == null)
@@ -240,6 +240,7 @@ namespace TASVideos.Tasks
 			return await _db.ForumPosts
 				.Where(p => p.TopicId == topicId)
 				.ExcludeRestricted(allowRestricted)
+				.ByMostRecent()
 				.Select(p => new TopicFeedModel.TopicPost
 				{
 					Id = p.Id,
@@ -250,7 +251,6 @@ namespace TASVideos.Tasks
 					PosterName = p.Poster.UserName,
 					PostTime = p.CreateTimeStamp
 				})
-				.OrderByDescending(p => p.PostTime)
 				.Take(limit)
 				.ToListAsync();
 		}
@@ -414,7 +414,7 @@ namespace TASVideos.Tasks
 
 			var lastPostId = (await _db.ForumPosts
 				.Where(p => p.TopicId == model.TopicId)
-				.OrderByDescending(p => p.CreateTimeStamp)
+				.ByMostRecent()
 				.FirstAsync())
 				.Id;
 
@@ -440,7 +440,7 @@ namespace TASVideos.Tasks
 
 				var lastPostId = await _db.ForumPosts
 					.Where(p => p.TopicId == post.TopicId)
-					.OrderByDescending(p => p.CreateTimeStamp)
+					.ByMostRecent()
 					.Select(p => p.Id)
 					.FirstAsync();
 
@@ -613,7 +613,7 @@ namespace TASVideos.Tasks
 			if (model != null)
 			{
 				model.AvailableForums = await _db.Forums
-					.Where(f => allowRestricted || !f.Restricted)
+					.ExcludeRestricted(allowRestricted)
 					.Select(f => new SelectListItem
 					{
 						Text = f.Name,
@@ -676,7 +676,7 @@ namespace TASVideos.Tasks
 			if (model != null)
 			{
 				model.AvailableForums = await _db.Forums
-					.Where(f => allowRestricted || !f.Restricted)
+					.ExcludeRestricted(allowRestricted)
 					.Select(f => new SelectListItem
 					{
 						Text = f.Name,
@@ -860,7 +860,7 @@ namespace TASVideos.Tasks
 				// Check if last post
 				var lastPost = _db.ForumPosts
 					.Where(p => p.TopicId == post.TopicId)
-					.OrderByDescending(p => p.CreateTimeStamp)
+					.ByMostRecent()
 					.First();
 
 				bool isLastPost = lastPost.Id == post.Id;

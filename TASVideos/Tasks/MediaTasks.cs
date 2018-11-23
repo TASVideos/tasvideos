@@ -25,7 +25,7 @@ namespace TASVideos.Tasks
 				.Where(m => m.Type != PostType.Critical.ToString()) // TODO: Permission check to see these
 				.Where(m => m.Type != PostType.Administrative.ToString()) // TODO: Permission check to see these
 				.Where(m => m.Type != PostType.Log.ToString()) // TODO: Permission check to see these (and/or a parameter)
-				.OrderByDescending(m => m.CreateTimeStamp)
+				.ByMostRecent()
 				.Take(limit)
 				.ToListAsync();
 				
