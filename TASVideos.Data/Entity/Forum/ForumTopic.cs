@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TASVideos.Data.Entity.Forum
 {
@@ -33,5 +34,13 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual ForumPoll Poll { get; set; }
 
 		public string PageName { get; set; }
+	}
+
+	public static class ForumTopicQueryableExtensions
+	{
+		public static IQueryable<ForumTopic> ExcludeRestricted(this IQueryable<ForumTopic> list, bool seeRestricted)
+		{
+			return list.Where(f => seeRestricted || !f.Forum.Restricted);
+		}
 	}
 }
