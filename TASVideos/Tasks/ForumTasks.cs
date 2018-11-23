@@ -53,7 +53,7 @@ namespace TASVideos.Tasks
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				var model = await _db.Forums
-					.Where(f => allowRestricted || !f.Restricted)
+					.ExcludeRestricted(allowRestricted)
 					.Select(f => new ForumModel
 					{
 						Id = f.Id,
@@ -109,7 +109,7 @@ namespace TASVideos.Tasks
 		public async Task<PostViewModel> GetPostPosition(int postId, bool seeRestricted)
 		{
 			var post = await _db.ForumPosts
-				.Where(p => seeRestricted || !p.Topic.Forum.Restricted)
+				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(p => p.Id == postId);
 
 			if (post == null)
@@ -136,7 +136,7 @@ namespace TASVideos.Tasks
 		public async Task<ForumTopicModel> GetTopicForDisplay(TopicRequest paging, bool allowRestricted, int? userId)
 		{
 			var model = await _db.ForumTopics
-				.Where(f => allowRestricted || !f.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Select(t => new ForumTopicModel
 				{
 					Id = t.Id,
@@ -239,7 +239,7 @@ namespace TASVideos.Tasks
 		{
 			return await _db.ForumPosts
 				.Where(p => p.TopicId == topicId)
-				.Where(ft => allowRestricted || !ft.Topic.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Select(p => new TopicFeedModel.TopicPost
 				{
 					Id = p.Id,
@@ -270,8 +270,8 @@ namespace TASVideos.Tasks
 		public async Task<bool> TopicAccessible(int topicId, bool allowRestricted)
 		{
 			return await _db.ForumTopics
-				.AnyAsync(t => t.Id == topicId
-					&& (allowRestricted || !t.Forum.Restricted));
+				.ExcludeRestricted(allowRestricted)
+				.AnyAsync(t => t.Id == topicId);
 		}
 
 		public async Task<ForumTopic> GetTopic(int id)
@@ -285,7 +285,7 @@ namespace TASVideos.Tasks
 		public async Task<TopicCreatePostModel> GetCreateTopicData(int forumId, bool allowRestricted)
 		{
 			var forum = await _db.Forums
-				.Where(f => allowRestricted || !f.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.SingleOrDefaultAsync(f => f.Id == forumId);
 
 			if (forum == null)
@@ -340,7 +340,7 @@ namespace TASVideos.Tasks
 		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, int? postId, bool allowRestricted)
 		{
 			var topic = await _db.ForumTopics
-				.Where(ft => allowRestricted || !ft.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.SingleOrDefaultAsync(t => t.Id == topicId);
 
 			if (topic == null)
@@ -396,7 +396,7 @@ namespace TASVideos.Tasks
 		public async Task<ForumPostEditModel> GetEditPostData(int postId, bool seeRestricted)
 		{
 			var model = await _db.ForumPosts
-				.Where(p => seeRestricted || !p.Topic.Forum.Restricted)
+				.ExcludeRestricted(seeRestricted)
 				.Select(p => new ForumPostEditModel
 				{
 					PostId = p.Id,
@@ -530,7 +530,7 @@ namespace TASVideos.Tasks
 		public async Task<PageOf<PostsSinceLastVisitModel>> GetPostsSinceLastVisit(PagedModel paged, DateTime since, bool allowRestricted)
 		{
 			var model = await _db.ForumPosts
-				.Where(p => allowRestricted || !p.Topic.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Where(p => p.CreateTimeStamp >= since)
 				.Select(p => new PostsSinceLastVisitModel
 				{
@@ -572,7 +572,7 @@ namespace TASVideos.Tasks
 		public async Task<PageOf<UnansweredPostModel>> GetUnansweredPosts(PagedModel paged, bool allowRestricted)
 		{
 			return await _db.ForumTopics
-				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Where(t => t.ForumPosts.Count == 1)
 				.Select(t => new UnansweredPostModel
 				{
@@ -600,7 +600,7 @@ namespace TASVideos.Tasks
 		{
 			var model = await _db.ForumTopics
 				.Include(t => t.Forum)
-				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Select(t => new MoveTopicModel
 				{
 					TopicId = t.Id,
@@ -629,7 +629,7 @@ namespace TASVideos.Tasks
 		public async Task<bool> MoveTopic(MoveTopicModel model, bool allowRestricted)
 		{
 			var topic = await _db.ForumTopics
-				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Where(t => t.Id == model.TopicId)
 				.SingleOrDefaultAsync();
 
@@ -646,7 +646,7 @@ namespace TASVideos.Tasks
 		public async Task<SplitTopicModel> GetTopicForSplit(int topicId, bool allowRestricted)
 		{
 			var model = await _db.ForumTopics
-				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Where(t => t.Id == topicId)
 				.Select(t => new SplitTopicModel
 				{
@@ -699,7 +699,7 @@ namespace TASVideos.Tasks
 			var topic = await _db.ForumTopics
 				.Include(t => t.Forum)
 				.Include(t => t.ForumPosts)
-				.Where(t => allowRestricted || !t.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.SingleOrDefaultAsync(t => t.Id == model.Id);
 
 			if (topic == null)
@@ -708,7 +708,7 @@ namespace TASVideos.Tasks
 			}
 
 			var destinationForum = _db.Forums
-				.Where(f => allowRestricted || !f.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.SingleOrDefaultAsync(f => f.Id == model.SplitToForumId);
 
 			if (destinationForum == null)
@@ -752,7 +752,7 @@ namespace TASVideos.Tasks
 		public async Task<ForumEditModel> GetForumForEdit(int forumId, bool allowRestricted)
 		{
 			return await _db.Forums
-				.Where(f => allowRestricted || !f.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Where(f => f.Id == forumId)
 				.Select(f => new ForumEditModel
 				{
@@ -767,10 +767,10 @@ namespace TASVideos.Tasks
 		/// Saves the given forum data to the category with the given id
 		/// </summary>
 		/// <returns>True if a forum with the given id is found, else false</returns>
-		public async Task<bool> SaveForum(ForumEditModel model, bool seeRestircted)
+		public async Task<bool> SaveForum(ForumEditModel model, bool seeRestricted)
 		{
 			var forum = await _db.Forums
-				.Where(f => seeRestircted || !f.Restricted)
+				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(f => f.Id == model.Id);
 
 			if (forum == null)
@@ -847,7 +847,7 @@ namespace TASVideos.Tasks
 		{
 			var post = await _db.ForumPosts
 				// TODO: add includes?
-				.Where(p => canSeeRestricted || !p.Topic.Forum.Restricted)
+				.ExcludeRestricted(canSeeRestricted)
 				.SingleOrDefaultAsync(p => p.Id == postId);
 
 			if (post == null)
@@ -903,7 +903,7 @@ namespace TASVideos.Tasks
 
 			model.Posts = _db.ForumPosts
 				.CreatedBy(model.UserName)
-				.Where(p => allowRestricted || !p.Topic.Forum.Restricted)
+				.ExcludeRestricted(allowRestricted)
 				.Select(p => new UserPostsModel.Post
 				{
 					Id = p.Id,
@@ -967,7 +967,7 @@ namespace TASVideos.Tasks
 		public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
 		{
 			var watch = await _db.ForumTopicWatches
-				.Where(ft => canSeeRestricted || !ft.ForumTopic.Forum.Restricted)
+				.ExcludeRestricted(canSeeRestricted)
 				.SingleOrDefaultAsync(w => w.UserId == userId
 				&& w.ForumTopicId == topicId);
 
@@ -986,7 +986,7 @@ namespace TASVideos.Tasks
 		public async Task UnwatchTopic(int topicId, int userId, bool canSeeRestricted)
 		{
 			var watch = await _db.ForumTopicWatches
-				.Where(ft => canSeeRestricted || !ft.ForumTopic.Forum.Restricted)
+				.ExcludeRestricted(canSeeRestricted)
 				.SingleOrDefaultAsync(w => w.UserId == userId
 				&& w.ForumTopicId == topicId);
 
