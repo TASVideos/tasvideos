@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace TASVideos.Data.Entity
 {
@@ -18,5 +19,13 @@ namespace TASVideos.Data.Entity
 
 		public DateTime LastUpdateTimeStamp { get; set; }
 		public string LastUpdateUserName { get; set; }
+	}
+
+	public static class TrackableQueryableExtensions
+	{
+		public static IQueryable<ITrackable> CreatedBy(this IQueryable<ITrackable> list, string userName)
+		{
+			return list.Where(t => t.CreateUserName == userName);
+		}
 	}
 }
