@@ -74,9 +74,9 @@ namespace TASVideos.Tasks
 		public WikiPage GetPage(string pageName, int? revisionId = null)
 		{
 			return WikiCache
+				.ForPage(pageName)
 				.ThatAreNotDeleted()
-				.FirstOrDefault(w => w.PageName == pageName
-					&& (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
+				.FirstOrDefault(w => (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
 		}
 
 		/// <summary>
@@ -124,8 +124,8 @@ namespace TASVideos.Tasks
 			_db.WikiPages.Add(newRevision);
 
 			var currentRevision = await _db.WikiPages
-				.Where(wp => wp.PageName == model.PageName)
-				.Where(wp => wp.Child == null)
+				.ForPage(model.PageName)
+				.ThatAreCurrentRevisions()
 				.SingleOrDefaultAsync();
 
 			if (currentRevision != null)
@@ -136,7 +136,7 @@ namespace TASVideos.Tasks
 
 			// Update Referrals for this page
 			var existingReferrals = await _db.WikiReferrals
-				.Where(wr => wr.Referrer == model.PageName)
+				.ThatReferTo(model.PageName)
 				.ToListAsync();
 
 			_db.WikiReferrals.RemoveRange(existingReferrals);
@@ -153,7 +153,10 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 
-			var cachedCurrentRevision = WikiCache.FirstOrDefault(w => w.PageName == model.PageName && w.ChildId == null);
+			var cachedCurrentRevision = WikiCache
+				.ForPage(model.PageName)
+				.ThatAreCurrentRevisions()
+				.FirstOrDefault();
 			if (cachedCurrentRevision != null)
 			{
 				cachedCurrentRevision.Child = newRevision;
@@ -176,8 +179,8 @@ namespace TASVideos.Tasks
 			{
 				PageName = pageName,
 				Revisions = await _db.WikiPages
+					.ForPage(pageName)
 					.ThatAreNotDeleted()
-					.Where(wp => wp.PageName == pageName)
 					.OrderBy(wp => wp.Revision)
 					.Select(wp => new WikiHistoryModel.WikiRevisionModel
 					{
@@ -198,7 +201,7 @@ namespace TASVideos.Tasks
 				UserName = userName,
 				Edits = await _db.WikiPages
 					.ThatAreNotDeleted()
-					.Where(wp => wp.CreateUserName == userName)
+					.CreatedBy(userName)
 					.OrderByDescending(wp => wp.CreateTimeStamp)
 					.ProjectTo<UserWikiEditHistoryModel.EditEntry>()
 					.ToListAsync()
@@ -220,7 +223,7 @@ namespace TASVideos.Tasks
 			}
 
 			var existingRevisions = await _db.WikiPages
-				.Where(wp => wp.PageName == model.OriginalPageName)
+				.ForPage(model.OriginalPageName)
 				.ToListAsync();
 
 			foreach (var revision in existingRevisions)
@@ -297,7 +300,7 @@ namespace TASVideos.Tasks
 		{
 			pageName = pageName.Trim('/');
 			return await _db.WikiReferrals
-				.Where(wr => wr.Referral == pageName)
+				.ThatReferTo(pageName)
 				.ToListAsync();
 		}
 
@@ -310,8 +313,8 @@ namespace TASVideos.Tasks
 		public async Task<WikiDiffModel> GetLatestPageDiff(string pageName)
 		{
 			var revisions = await _db.WikiPages
+				.ForPage(pageName)
 				.ThatAreNotDeleted()
-				.Where(wp => wp.PageName == pageName)
 				.OrderByDescending(wp => wp.Revision)
 				.Take(2)
 				.ToListAsync();
@@ -354,7 +357,7 @@ namespace TASVideos.Tasks
 		public async Task<WikiDiffModel> GetPageDiff(string pageName, int fromRevision, int toRevision)
 		{
 			var revisions = await _db.WikiPages
-				.Where(wp => wp.PageName == pageName)
+				.ForPage(pageName)
 				.Where(wp => wp.Revision == fromRevision
 					|| wp.Revision == toRevision)
 				.ToListAsync();
@@ -430,7 +433,7 @@ namespace TASVideos.Tasks
 
 			if (!includeMinorEdits)
 			{
-				query = query.Where(wp => !wp.MinorEdit);
+				query = query.ExcludingMinorEdits();
 			}
 
 			return await query
@@ -455,7 +458,7 @@ namespace TASVideos.Tasks
 		public async Task<int> DeleteWikiPage(string pageName)
 		{
 			var revisions = await _db.WikiPages
-				.Where(wp => wp.PageName == pageName)
+				.ForPage(pageName)
 				.ThatAreNotDeleted()
 				.ToListAsync();
 
@@ -465,7 +468,7 @@ namespace TASVideos.Tasks
 			}
 
 			var cachedRevisions = WikiCache
-				.Where(w => w.PageName == pageName)
+				.ForPage(pageName)
 				.ThatAreNotDeleted()
 				.ToList();
 
@@ -476,7 +479,7 @@ namespace TASVideos.Tasks
 
 			// Remove referrers
 			var referrers = await _db.WikiReferrals
-				.Where(wp => wp.Referrer == pageName)
+				.ThatReferTo(pageName)
 				.ToListAsync();
 
 			_db.RemoveRange(referrers);
@@ -494,7 +497,8 @@ namespace TASVideos.Tasks
 		{
 			var wikiPage = await _db.WikiPages
 				.ThatAreNotDeleted()
-				.SingleOrDefaultAsync(wp => wp.PageName == pageName && wp.Revision == revision);
+				.Revision(pageName, revision)
+				.SingleOrDefaultAsync();
 
 			if (wikiPage != null)
 			{
@@ -502,7 +506,8 @@ namespace TASVideos.Tasks
 
 				var cachedRevision = WikiCache
 					.ThatAreNotDeleted()
-					.SingleOrDefault(w => w.PageName == pageName && w.Revision == revision);
+					.Revision(pageName, revision)
+					.SingleOrDefault();
 
 				if (cachedRevision != null)
 				{
@@ -513,7 +518,7 @@ namespace TASVideos.Tasks
 				if (wikiPage.Child == null)
 				{
 					var referrers = await _db.WikiReferrals
-						.Where(wp => wp.Referrer == pageName)
+						.ThatReferTo(pageName)
 						.ToListAsync();
 
 					_db.RemoveRange(referrers);
@@ -537,8 +542,8 @@ namespace TASVideos.Tasks
 					RevisionCount = record.Count(),
 
 					// https://github.com/aspnet/EntityFrameworkCore/issues/3103
-					//EF Core 2.1 bug, this no longer works, "Must be reducible node exception
-					//HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
+					// EF Core 2.1 bug, this no longer works, "Must be reducible node exception
+					// HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
 				})
 				.ToListAsync();
 
@@ -561,7 +566,7 @@ namespace TASVideos.Tasks
 		{
 			var revisions = await _db.WikiPages
 				.ThatAreDeleted()
-				.Where(wp => wp.PageName == pageName)
+				.ForPage(pageName)
 				.ToListAsync();
 
 			foreach (var revision in revisions)
@@ -596,13 +601,13 @@ namespace TASVideos.Tasks
 
 				return
 					(from s in systems
-					 join wp in pages on s.Code equals wp.Split('/').Last()
-					 select new GameSubpageModel
-					 {
-						 SystemCode = s.Code,
-						 SystemDescription = s.DisplayName,
+					join wp in pages on s.Code equals wp.Split('/').Last()
+					select new GameSubpageModel
+					{
+						SystemCode = s.Code,
+						SystemDescription = s.DisplayName,
 						PageLink = "GameResources/" + s.Code
-					 })
+					})
 					.ToList();
 			}
 		}

@@ -23,7 +23,7 @@ namespace TASVideos.Data.Entity
 		public bool IsDeleted { get; set; }
 	}
 
-	public static class ActiveQueryableExtensions
+	public static class WikiQueryableExtensions
 	{
 		public static IQueryable<WikiPage> ThatAreCurrentRevisions(this IQueryable<WikiPage> list)
 		{
@@ -33,6 +33,31 @@ namespace TASVideos.Data.Entity
 		public static IEnumerable<WikiPage> ThatAreCurrentRevisions(this IEnumerable<WikiPage> list)
 		{
 			return list.Where(wp => wp.Child == null);
+		}
+
+		public static IEnumerable<WikiPage> ForPage(this IEnumerable<WikiPage> list, string pageName)
+		{
+			return list.Where(w => w.PageName == pageName);
+		}
+
+		public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> list, string pageName)
+		{
+			return list.Where(w => w.PageName == pageName);
+		}
+
+		public static IQueryable<WikiPage> Revision(this IQueryable<WikiPage> list, string pageName, int revision)
+		{
+			return list.Where(w => w.PageName == pageName && w.Revision == revision);
+		}
+
+		public static IEnumerable<WikiPage> Revision(this IEnumerable<WikiPage> list, string pageName, int revision)
+		{
+			return list.Where(w => w.PageName == pageName && w.Revision == revision);
+		}
+
+		public static IQueryable<WikiPage> ExcludingMinorEdits(this IQueryable<WikiPage> list)
+		{
+			return list.Where(w => !w.MinorEdit);
 		}
 	}
 }
