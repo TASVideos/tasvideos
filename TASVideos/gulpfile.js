@@ -2,7 +2,7 @@
 const gulp = require("gulp");
 const rimraf = require("rimraf");
 
-// preminified stuff to copy over
+// pre-minified stuff to copy over
 const preminified = [
 	"jquery/dist/jquery.min.js",
 	"jquery-validation/dist/jquery.validate.min.js",
@@ -14,7 +14,7 @@ const preminified = [
 	"font-awesome/fonts/fontawesome-webfont.woff",
 	"font-awesome/fonts/fontawesome-webfont.woff2",
 	"bootstrap/dist/css/bootstrap.min.css",
-	"bootstrap/dist/js/bootstrap.bundle.min.js",
+	"bootstrap/dist/js/bootstrap.bundle.min.js"
 ];
 
 gulp.task("clean", (cb) => {

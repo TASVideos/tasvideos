@@ -1,7 +1,7 @@
 ﻿@model UserFileUserIndexViewModel
 
 @{
-	ViewData["Title"] = @ViewContext.Controller() == "Profile"
+	ViewData["Title"] = ViewContext.Controller() == "Profile"
 		? " My Files"
 		: "User Files for " + Model.UserName;
 

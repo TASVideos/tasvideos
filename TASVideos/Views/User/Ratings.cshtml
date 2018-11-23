@@ -29,7 +29,7 @@
 					<th>Movie</th>
 					<th>Average</th>
 					<th>Entertainment</th>
-					<th>Tech Qaulity</th>
+					<th>Tech Quality</th>
 				</tr>
 				@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Average))
 				{
@@ -48,7 +48,7 @@
 					<th>Movie</th>
 					<th>Average</th>
 					<th>Entertainment</th>
-					<th>Tech Qaulity</th>
+					<th>Tech Quality</th>
 				</tr>
 				@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Average))
 				{
