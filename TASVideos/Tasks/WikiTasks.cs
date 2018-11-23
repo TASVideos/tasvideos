@@ -202,7 +202,7 @@ namespace TASVideos.Tasks
 				Edits = await _db.WikiPages
 					.ThatAreNotDeleted()
 					.CreatedBy(userName)
-					.OrderByDescending(wp => wp.CreateTimeStamp)
+					.ByMostRecent()
 					.ProjectTo<UserWikiEditHistoryModel.EditEntry>()
 					.ToListAsync()
 			};
@@ -428,7 +428,7 @@ namespace TASVideos.Tasks
 		{
 			var query = _db.WikiPages
 				.ThatAreNotDeleted()
-				.OrderByDescending(wp => wp.CreateTimeStamp)
+				.ByMostRecent()
 				.Take(limit);
 
 			if (!includeMinorEdits)
