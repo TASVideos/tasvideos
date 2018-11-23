@@ -118,7 +118,7 @@ namespace TASVideos.Tasks
 			}
 
 			var posts = await _db.ForumPosts
-				.Where(p => p.TopicId == post.Id)
+				.Where(p => p.TopicId == post.TopicId)
 				.OrderBy(p => p.CreateTimeStamp)
 				.ToListAsync();
 
