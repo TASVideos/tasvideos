@@ -73,16 +73,24 @@ namespace TASVideos.Models
 		public int TopicId { get; set; }
 	}
 
-	public interface ForumTopicBreadCrumb
+	public interface ForumTopicActionBar
 	{
-		int Id { get; set; }
-		string Title { get; set; }
-		bool IsLocked { get; set; }
-		int ForumId { get; set; }
-		string ForumName { get; set; }
+		int Id { get; }
+		bool IsLocked { get; }
+		bool IsWatching { get; }
+		string Title { get; }
 	}
 
-	public class ForumTopicModel : ForumTopicBreadCrumb
+	public interface ForumTopicBreadCrumb
+	{
+		int Id { get; }
+		string Title { get; }
+		bool IsLocked { get; }
+		int ForumId { get; }
+		string ForumName { get; }
+	}
+
+	public class ForumTopicModel : ForumTopicActionBar, ForumTopicBreadCrumb
 	{
 		public int Id { get; set; }
 		public bool IsWatching { get; set; }
