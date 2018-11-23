@@ -690,9 +690,9 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// 
+		/// Splits the given topic starting at the given starting post into a new topic
+		/// with the given values
 		/// </summary>
-		/// <param name="model"></param>
 		/// <returns>Returns new topic id, if old topic, split post, and new forum are found, else null</returns>
 		public async Task<int?> SplitTopic(SplitTopicModel model, bool allowRestricted, User user)
 		{
@@ -840,9 +840,8 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// 
+		/// Deletes a post with the given <see cref="postId"/>
 		/// </summary>
-		/// <param name="postId"></param>
 		/// <returns>the topic id that contained the post if post is successfully deleted, if user can not delete the post or a post of the given id is not found then null</returns>
 		public async Task<int?> DeletePost(int postId, bool canDelete, bool canSeeRestricted)
 		{
@@ -850,7 +849,6 @@ namespace TASVideos.Tasks
 				// TODO: add includes?
 				.Where(p => canSeeRestricted || !p.Topic.Forum.Restricted)
 				.SingleOrDefaultAsync(p => p.Id == postId);
-
 
 			if (post == null)
 			{
@@ -904,7 +902,7 @@ namespace TASVideos.Tasks
 			model.Awards = await _awardTasks.GetAllAwardsForUser(model.Id);
 
 			model.Posts = _db.ForumPosts
-				.Where(p => p.CreateUserName == model.UserName)
+				.CreatedBy(model.UserName)
 				.Where(p => allowRestricted || !p.Topic.Forum.Restricted)
 				.Select(p => new UserPostsModel.Post
 				{
@@ -942,7 +940,7 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Should be called when a new post is created in a topic
-		/// Will notify all users watchign the topic and mark the IsNotified flag accordingly
+		/// Will notify all users watching the topic and mark the IsNotified flag accordingly
 		/// </summary>
 		public async Task NotifyWatchedTopics(int topicId, int posterId)
 		{
