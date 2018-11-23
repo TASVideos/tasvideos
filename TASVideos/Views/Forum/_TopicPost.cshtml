@@ -1,0 +1,98 @@
+﻿@model ForumTopicModel.ForumPostEntry
+<card class="@(Model.Highlight ? "border-info" : "")">
+	<cardheader>
+		<row>
+			<div class="col-4 border-right">
+				<h5>@Model.PosterName</h5>
+			</div>
+			<div class="col-8 pt-0 pb-0">
+				<small style="display: inline-block">
+					<a
+						id="@Model.Id" 
+						href="/Forum/Post/@(Model.Id)#@Model.Id" 
+						title="Link to this post" 
+						class="pull-left">
+						<i class="fa fa-bookmark-o"></i>
+					</a>
+					Posted: @Model.CreateTimestamp
+					<span condition="!string.IsNullOrWhiteSpace(Model.Subject)">
+						Post subject: @Model.Subject
+					</span>
+				</small>
+				<small class="pull-right" style="display: inline-block">
+					<a
+						asp-action="CreatePost"
+						asp-route-topicId="@Model.Id"
+						asp-route-quoteId="@Model.Id"
+						class="btn btn-info btn-sm">
+						Quote
+					</a>
+					<a
+						condition="Model.IsEditable"
+						asp-action="EditPost"
+						asp-route-id="@Model.Id"
+						class="btn btn-primary btn-sm">
+						Edit
+					</a>
+					<delete-button
+						condition="Model.IsDeletable"
+						asp-href="@Url.Action($"DeletePost/{Model.Id}")"
+						warning-message="Are you sure you want to delete this post?"
+						class="btn-sm">
+						<i title="Delete this post" class="fa fa-remove"></i>
+					</delete-button>
+				</small>
+			</div>
+		</row>
+	</cardheader>
+	<cardbody>
+		<row>
+			<div class="col-4">
+				<div class="card-text text-right">
+					<small>
+						@string.Join(",", Model.PosterRoles)
+						(todo points)
+					</small>
+					<br />
+					<img src="@Model.PosterAvatar" />
+					<br />
+					<small>
+						Joined: @Model.PosterJoined.ToShortDateString()<br />
+						Posts: @Model.PosterPostCount<br />
+						Location: @Model.PosterLocation
+					</small>
+				</div>
+			</div>
+			<div class="col-8">
+				@Html.Raw(Model.RenderedText)
+			</div>
+		</row>
+	</cardbody>
+	<cardfooter>
+		<fullrow>
+			<small style="font-style: italic">@Html.Raw(Model.RenderedSignature)</small>
+			<br />
+			<a
+				asp-controller="User"
+				asp-action="Profile"
+				asp-route-userName="@Model.PosterName"
+				class="btn btn-info btn-sm">
+				Profile
+			</a>
+			<a
+				condition="User.Identity.IsAuthenticated"
+				asp-controller="Messages"
+				asp-action="Create"
+				asp-route-toUser="@Model.PosterName"
+				class="btn btn-secondary btn-sm">
+				PM
+			</a>
+			<div class="pull-right">
+				@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
+				{
+					<partial name="../Shared/_Award.cshtml" model="award" />
+				}
+			</div>
+		</fullrow>
+	</cardfooter>
+</card>
