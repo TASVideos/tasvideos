@@ -19,19 +19,20 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
-		private List<INode> _output = new List<INode>();
-		private List<INodeWithChildren> _stack = new List<INodeWithChildren>();
+		private readonly List<INode> _output = new List<INode>();
+		private readonly List<INodeWithChildren> _stack = new List<INodeWithChildren>();
+		private readonly StringBuilder _currentText = new StringBuilder();
 		private int _currentTextStart = -1;
-		private StringBuilder _currentText = new StringBuilder();
 		private string _input;
 		private int _index = 0;
-		private delegate void ActionType(NewParser p);
 		private bool _parsingInline = false;
+		private delegate void ActionType(NewParser p);
 
 		private void Abort(string msg)
 		{
 			throw new SyntaxException(msg, _index); 
 		}
+
 		private bool Eat(char c)
 		{
 			if (EOF() || c != _input[_index])

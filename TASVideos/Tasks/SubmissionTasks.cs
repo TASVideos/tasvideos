@@ -704,7 +704,7 @@ namespace TASVideos.Tasks
 				MovieFileName = model.MovieFileName + "." + model.MovieExtension
 			};
 
-			// Unzip the submission file, and rezip it while renaming the contained file
+			// Unzip the submission file, and re-zip it while renaming the contained file
 			using (var publicationFileStream = new MemoryStream())
 			{
 				using (var publicationZipArchive = new ZipArchive(publicationFileStream, ZipArchiveMode.Create))

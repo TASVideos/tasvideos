@@ -511,11 +511,11 @@ namespace TASVideos.Tasks
 				_db.ForumTopicWatches.Remove(watch);
 				await _db.SaveChangesAsync();
 			}
-			catch (DbUpdateConcurrencyException ex)
+			catch (DbUpdateConcurrencyException)
 			{
 				// Do nothing
 				// 1) if a watch is already removed, we are done
-				// 2) if a watch was updated (for isntance, someone posted in the topic),
+				// 2) if a watch was updated (for instance, someone posted in the topic),
 				//		there isn't much we can do other than reload the page anyway with an error
 				//		An error would only be modestly helpful anyway, and wouldn't save clicks
 				//		However, this would be an nice to have one day

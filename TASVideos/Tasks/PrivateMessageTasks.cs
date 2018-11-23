@@ -101,7 +101,7 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
-			// If it is the recpient and the message is not deleted
+			// If it is the recipient and the message is not deleted
 			if (!pm.ReadOn.HasValue && pm.ToUserId == user.Id)
 			{
 				pm.ReadOn = DateTime.UtcNow;
