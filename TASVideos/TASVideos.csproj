@@ -68,6 +68,9 @@
     <Content Update="Views\Forum\UserPosts.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Forum\_TopicActionBar.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Forum\_TopicCrumbs.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
