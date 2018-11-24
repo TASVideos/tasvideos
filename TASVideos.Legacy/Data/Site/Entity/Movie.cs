@@ -11,7 +11,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Id { get; set; }
 
 		[Column("playerid")]
-		public int PlayerId { get; set; }
 		public virtual Player Player { get; set; }
 
 		[Column("gameid")]
