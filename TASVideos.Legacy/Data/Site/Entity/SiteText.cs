@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Site.Entity
 {
-    public class SiteText
-    {
+	public class SiteText
+	{
 		[Key]
 		[Column("id")]
 		public int Id { get; set; }
@@ -14,15 +14,9 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("type")]
 		public string Type { get; set; } = "P";
 
-		[Column("movieid")]
-		public int MovieId { get; set; } = -1;
-
 		[Required]
 		[Column("pagename")]
 		public string PageName { get; set; }
-
-		[Column("submissionid")]
-		public int SubmissionId { get; set; } = -1;
 
 		[Column("minoredit")]
 		[StringLength(1)]
@@ -48,12 +42,5 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("obsoleted_by")]
 		public int ObsoletedBy { get; set; } = -1;
-
-		[Required]
-		[Column("ipaddr")]
-		public string IpAddr { get; set; } = "";
-
-		[Column("num_lines")]
-		public int NumberOfLine { get; set; }
-    }
+	}
 }
