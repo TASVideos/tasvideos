@@ -35,8 +35,8 @@ namespace TASVideos.Legacy.Imports
 					.ToList();
 
 				var userFileComments = legacySiteContext.UserFileComments
-					.Include(userFile => userFile.User)
-					.Select(userFileComment => Convert(userFileComment, userIdsByName))
+					.Include(comment => comment.User)
+					.Select(comment => Convert(comment, userIdsByName))
 					.ToList();
 
 				var userFileColumns = new[]
