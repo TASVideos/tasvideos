@@ -94,7 +94,8 @@ namespace TASVideos.Legacy.Imports
 						MovieFile = legacySubmission.Sub.Content,
 						IntendedTierId = legacySubmission.Sub.IntendedTier,
 						GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
-						RomId = -1 // Legacy system had no notion of Rom for submissions
+						RomId = -1, // Legacy system had no notion of Rom for submissions
+						EmulatorVersion = legacySubmission.Sub.EmulatorVersion?.Cap(50)
 					};
 
 					// For now at least
@@ -137,7 +138,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.IntendedTierId),
 				nameof(Submission.Title),
 				nameof(Submission.GameId),
-				nameof(Submission.RomId)
+				nameof(Submission.RomId),
+				nameof(Submission.EmulatorVersion)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
