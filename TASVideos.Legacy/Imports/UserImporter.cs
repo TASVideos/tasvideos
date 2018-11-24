@@ -15,7 +15,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class UserImporter
 	{
-		private const int ModeratorGroupId = 272; // This isn't goig to change, so just hard code it
+		private const int ModeratorGroupId = 272; // This isn't going to change, so just hard code it
 
 		public static void Import(
 			string connectionStr,

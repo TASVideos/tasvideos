@@ -14,7 +14,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			var publicationFlags = legacySiteContext.MovieFlags
-				.Where(mf => mf.FlagId != 3) // AVGN
+				.Where(mf => mf.FlagId != 3) // A.V.G.N
 				.Select(mf => new PublicationFlag
 				{
 					PublicationId = mf.MovieId,

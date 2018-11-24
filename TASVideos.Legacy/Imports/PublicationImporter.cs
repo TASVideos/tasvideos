@@ -98,7 +98,7 @@ namespace TASVideos.Legacy.Imports
 
 				foreach (var pub in pubs)
 				{
-					var screnshotUrl = pub.Movie.MovieFiles.First(f => f.Type == "H");
+					var screenshotUrl = pub.Movie.MovieFiles.First(f => f.Type == "H");
 					var torrentUrls = pub.Movie.MovieFiles.Where(f => torrentTypes.Contains(f.Type));
 					var mirror = pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "A")?.FileName;
 					var streaming = (pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "J" && f.FileName.Contains("youtube"))
@@ -148,7 +148,7 @@ namespace TASVideos.Legacy.Imports
 						OnlineWatchingUrl = streaming
 					};
 
-					var pauthors = users
+					var pubAuthors = users
 						.Where(u => potentialAuthors.Contains(u.UserName.ToLower()))
 						.Select(u => new PublicationAuthor
 						{
@@ -159,9 +159,9 @@ namespace TASVideos.Legacy.Imports
 						})
 						.ToList();
 
-					publicationAuthors.AddRange(pauthors);
+					publicationAuthors.AddRange(pubAuthors);
 
-					foreach (var author in pauthors)
+					foreach (var author in pubAuthors)
 					{
 						publication.Authors.Add(author);
 					}
@@ -173,7 +173,7 @@ namespace TASVideos.Legacy.Imports
 					{
 						PublicationId = pub.Movie.Id,
 						Type = FileType.Screenshot,
-						Path = screnshotUrl.FileName,
+						Path = screenshotUrl.FileName,
 						CreateTimeStamp = DateTime.UtcNow,
 						LastUpdateTimeStamp = DateTime.UtcNow
 					});
