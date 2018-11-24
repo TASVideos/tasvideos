@@ -36,6 +36,7 @@ namespace TASVideos.Legacy.Imports
 					p.EnableBbCode,
 					p.EnableHtml,
 					p.IpAddress,
+					pt.BbCodeUid,
 					fromUser.UserName
 				})
 				.ToList();
@@ -48,29 +49,34 @@ namespace TASVideos.Legacy.Imports
 					tkey.Timestamp,
 					tkey.Subject,
 					tkey.Text,
+					tkey.BbCodeUid,
 					tkey.EnableBbCode,
 					tkey.EnableHtml,
 					tkey.IpAddress,
 					tkey.UserName
 				})
-				.Select(g => new PrivateMessage
+				.Select(g =>
 				{
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
-					CreateUserName = g.Key.UserName,
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
-					LastUpdateUserName = g.Key.UserName,
-					FromUserId = g.Key.FromUserId,
-					ToUserId = g.Key.ToUserId,
-					IpAddress = g.Key.IpAddress,
-					Subject = ImportHelper.ConvertLatin1String(g.Key.Subject),
-					Text = ImportHelper.ConvertLatin1String(g.Key.Text),
-					EnableHtml = g.Key.EnableHtml && HtmlParser.ContainsHtml(ImportHelper.ConvertLatin1String(g.Key.Text)),
-					EnableBbCode = g.Key.EnableBbCode,
-					ReadOn = g.All(gg => gg.Type != 1)
-						? DateTime.UtcNow  // Legacy system didn't track date so we will simply use the import date
-						: (DateTime?)null,
-					SavedForFromUser = g.Any(gg => gg.Type == 4),
-					SavedForToUser = g.Any(gg => gg.Type == 3)
+					var fixedText = ImportHelper.ConvertLatin1String(g.Key.Text.Replace(":" + g.Key.BbCodeUid, ""));
+					return new PrivateMessage
+					{
+						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
+						CreateUserName = g.Key.UserName,
+						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
+						LastUpdateUserName = g.Key.UserName,
+						FromUserId = g.Key.FromUserId,
+						ToUserId = g.Key.ToUserId,
+						IpAddress = g.Key.IpAddress,
+						Subject = ImportHelper.ConvertLatin1String(g.Key.Subject),
+						Text = fixedText,
+						EnableHtml = g.Key.EnableHtml && HtmlParser.ContainsHtml(fixedText),
+						EnableBbCode = g.Key.EnableBbCode,
+						ReadOn = g.All(gg => gg.Type != 1)
+							? DateTime.UtcNow // Legacy system didn't track date so we will simply use the import date
+							: (DateTime?) null,
+						SavedForFromUser = g.Any(gg => gg.Type == 4),
+						SavedForToUser = g.Any(gg => gg.Type == 3)
+					};
 				})
 				.ToList();
 
