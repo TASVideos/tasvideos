@@ -130,7 +130,7 @@ namespace TASVideos.Legacy.Imports
 						TierId = pub.Movie.Tier,
 						CreateUserName = pub.Movie.Publisher.Name ?? "Unknown",
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate),
-						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate), // TODO
+						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.LastChange),
 						ObsoletedById = pub.Movie.ObsoletedBy == -1 ? null : pub.Movie.ObsoletedBy,
 						Frames = pub.Sub.Frames,
 						RerecordCount = pub.Sub.RerecordCount,
