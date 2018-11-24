@@ -139,7 +139,7 @@ namespace TASVideos.Legacy.Imports
 						Game = pub.Game,
 						MovieFile = pub.MovieFileStorage.FileData,
 						MovieFileName = pub.Movie.MovieFiles.First(f => movieTypes.Contains(f.Type)).FileName,
-						SystemFrameRateId = pub.Sub.SystemFrameRateId.Value,
+						SystemFrameRateId = pub.Sub.SystemFrameRateId ?? 0,
 						SystemFrameRate = pub.SystemFrameRates,
 						SystemId = pub.Movie.SystemId,
 						System = pub.System,
