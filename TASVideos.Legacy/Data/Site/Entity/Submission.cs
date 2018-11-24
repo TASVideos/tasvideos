@@ -22,9 +22,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("gamename")]
 		public string GameName { get; set; }
 
-		[Column("gamename")]
-		public string NickName { get; set; }
-
 		[Column("gameversion")]
 		public string GameVersion { get; set; }
 
@@ -33,9 +30,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("authornick")]
 		public string Author { get; set; }
-
-		[Column("authornick")]
-		public string AuthorNick { get; set; }
 
 		[Column("frames")]
 		public int Frames { get; set; }
@@ -54,9 +48,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("statusby")]
 		public string StatusBy { get; set; }
-
-		[Column("ipaddr")]
-		public string IpAddress { get; set; }
 
 		[Column("content")]
 		public byte[] Content { get; set; }
