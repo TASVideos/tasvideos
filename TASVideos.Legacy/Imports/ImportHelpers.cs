@@ -34,6 +34,11 @@ namespace TASVideos.Legacy.Imports
 
 		public static string ConvertLatin1String(string input)
 		{
+			if (input == null)
+			{
+				return null;
+			}
+
 			var enc = Encoding.GetEncoding(1252);
 			var data = enc.GetBytes(input);
 			return Encoding.UTF8.GetString(data);
@@ -67,6 +72,21 @@ namespace TASVideos.Legacy.Imports
 					sqlCopy.WriteToServer(reader);
 				}
 			}
+		}
+
+		public static string Cap(this string str, int limit)
+		{
+			if (str == null)
+			{
+				return null;
+			}
+
+			if (str.Length < limit)
+			{
+				return str;
+			}
+
+			return str.Substring(0, limit);
 		}
 	}
 }
