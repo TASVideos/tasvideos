@@ -54,10 +54,8 @@ namespace TASVideos.Legacy.Imports
 						EnableBbCode = p.EnableBbCode,
 						EnableHtml = p.EnableHtml && HtmlParser.ContainsHtml(fixedText),
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
-						LastUpdateTimeStamp =
-							p.LastUpdateTimestamp.HasValue
-								? ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp.Value)
-								: ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
+						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
+								?? p.Timestamp),
 						CreateUserName = !string.IsNullOrWhiteSpace(p.PosterName) ? p.PosterName : "Unknown",
 						LastUpdateUserName = !string.IsNullOrWhiteSpace(p.LastUpdateUserName)
 							? p.LastUpdateUserName
