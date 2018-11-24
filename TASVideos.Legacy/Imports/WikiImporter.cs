@@ -127,7 +127,7 @@ namespace TASVideos.Legacy.Imports
 			}
 			else if (!string.IsNullOrEmpty(userName))
 			{
-				// Use the user's name for the pagename instead of the actual page,
+				// Use the user's name for the page name instead of the actual page,
 				// We want Homepages to match usernames exactly
 				var slashIndex = pageName.IndexOf("/");
 				if (slashIndex > 0)
