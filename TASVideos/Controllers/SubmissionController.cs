@@ -129,7 +129,7 @@ namespace TASVideos.Controllers
 				var result = await _submissionTasks.SubmitMovie(model, User.Identity.Name);
 				if (result.Success)
 				{
-					var title = await _submissionTasks.GetTitle(result.Id); // TODO: we could return the submsision and not have to take this extra query hit
+					var title = await _submissionTasks.GetTitle(result.Id); // TODO: we could return the submission and not have to take this extra query hit
 					_publisher.AnnouceSubmission(title, $"{BaseUrl}/{result.Id}S");
 
 					return Redirect($"/{result.Id}S");

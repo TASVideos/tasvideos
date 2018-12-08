@@ -7,13 +7,13 @@
 		: "";
 
 	var embedLink = $"//www.youtube.com/embed/{Model.Code}?version=3&rel=0&start={Model.Start}{loopParams}"; // TODO: this doesn't work right :(
-	var fulllink = $"//www.youtube.com/watch?v={Model.Code}";
-	var floatstyle = !string.IsNullOrWhiteSpace(Model.Align)
+	var fullLink = $"//www.youtube.com/watch?v={Model.Code}";
+	var floatStyle = !string.IsNullOrWhiteSpace(Model.Align)
 		? $"float: {Model.Align.ToLower()};"
 		: "";
 }
-<div style="@floatstyle">
+<div style="@floatStyle">
 	<iframe src="@embedLink" style="width: @(Model.Width)px; height: @(Model.Height)px; margin:0" allowfullscreen="true" type="text/html"></iframe>
 	<br />
-	<a condition="!Model.HideLink" href="@fulllink" rel="nofollow">(Link to video)</a>
+	<a condition="!Model.HideLink" href="@fullLink" rel="nofollow">(Link to video)</a>
 </div>

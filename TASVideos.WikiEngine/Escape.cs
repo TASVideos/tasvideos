@@ -11,7 +11,7 @@ namespace TASVideos.WikiEngine
 			{
 				if (c < 0x20)
 				{
-					w.Write($"\\x{((int)c).ToString("x2")}");
+					w.Write($"\\x{(int)c:x2}");
 				}
 				else if (c == '"')
 				{
