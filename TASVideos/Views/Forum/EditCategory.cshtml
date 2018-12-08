@@ -8,10 +8,10 @@
 		<div class="col-lg-6">
 			<label asp-for="Title"></label>
 			<input type="text" asp-for="Title" class="form-control" />
-			<span asp-validation-for="Title" />
+			<span asp-validation-for="Title" class="text-danger"></span>
 			<label asp-for="Description"></label>
 			<input type="text" asp-for="Description" class="form-control" />
-			<span asp-validation-for="Description" />
+			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
 	</row>
 	<hr />
@@ -56,14 +56,14 @@
 			return;
 		}
 
-		var thiso = document.getElementById('Forums_' + index + '__Ordinal');
-		var nexto = document.getElementById('Forums_' + (index + 1) + '__Ordinal');
+		var thisO = document.getElementById('Forums_' + index + '__Ordinal');
+		var nextO = document.getElementById('Forums_' + (index + 1) + '__Ordinal');
 
-		var thisoVal = thiso.value;
-		var nextoVal = nexto.value;
+		var thisOVal = thisO.value;
+		var nextOVal = nextO.value;
 
-		thiso.value = nextoVal;
-		nexto.value = thisoVal;
+		thisO.value = nextOVal;
+		nextO.value = thisOVal;
 
 		var nextSection = document.querySelector('.forum-section[data-index="' + (index + 1) + '"]');
 
@@ -71,7 +71,6 @@
 		nextSection.dataset.index = index;
 
 		SortForums();
-		DebugBtns();
 	}
 
 	function DecrementOrdinal(elem) {
@@ -81,14 +80,14 @@
 			return;
 		}
 
-		var thiso = document.getElementById('Forums_' + index + '__Ordinal');
-		var prevo = document.getElementById('Forums_' + (index - 1) + '__Ordinal');
+		var thisO = document.getElementById('Forums_' + index + '__Ordinal');
+		var prevO = document.getElementById('Forums_' + (index - 1) + '__Ordinal');
 
-		var thisoVal = thiso.value;
-		var prevoVal = prevo.value;
+		var thisOVal = thisO.value;
+		var prevOVal = prevO.value;
 
-		thiso.value = prevoVal;
-		prevo.value = thisoVal;
+		thisO.value = prevOVal;
+		prevO.value = thisOVal;
 
 		var prevSection = document.querySelector('.forum-section[data-index="' + (index - 1) + '"]');
 		parent.dataset.index = index - 1;
@@ -112,19 +111,19 @@
 
 		for (var i in sections) {
 			var ord = sections[i].querySelectorAll('[id$="Ordinal"]')[0];
-			ord.setAttribute('id', 'Forums_' + i + '__Ordinal')
+			ord.setAttribute('id', 'Forums_' + i + '__Ordinal');
 			ord.setAttribute('name', 'Forums[' + i + '].Ordinal');
 
 			var id = sections[i].querySelectorAll('[id$="Id"]')[0];
-			id.setAttribute('id', 'Forums_' + i + '__Id')
+			id.setAttribute('id', 'Forums_' + i + '__Id');
 			id.setAttribute('name', 'Forums[' + i + '].Id');
 
 			var name = sections[i].querySelectorAll('[id$="Name"]')[0];
-			name.setAttribute('id', 'Forums_' + i + '__Name')
+			name.setAttribute('id', 'Forums_' + i + '__Name');
 			name.setAttribute('name', 'Forums[' + i + '].Name');
 
 			var description = sections[i].querySelectorAll('[id$="Description"]')[0];
-			description.setAttribute('id', 'Forums_' + i + '__Description')
+			description.setAttribute('id', 'Forums_' + i + '__Description');
 			description.setAttribute('name', 'Forums[' + i + '].Description');
 
 			container.appendChild(sections[i]);

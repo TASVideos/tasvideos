@@ -54,7 +54,7 @@ namespace TASVideos.Data
 					.Take(paging.PageSize)
 					.ToList();
 
-				var pageof = new PageOf<T>(results)
+				var pageOf = new PageOf<T>(results)
 				{
 					PageSize = paging.PageSize,
 					CurrentPage = paging.CurrentPage,
@@ -63,7 +63,7 @@ namespace TASVideos.Data
 					SortBy = paging.SortBy
 				};
 
-				return pageof;
+				return pageOf;
 			}
 		}
 

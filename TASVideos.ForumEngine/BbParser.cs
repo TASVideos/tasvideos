@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -68,13 +67,13 @@ namespace TASVideos.ForumEngine
 			return p._root;
 		}
 
-		private Element _root = new Element { Name = "_root" };
-		private Stack<Element> _stack = new Stack<Element>();
+		private readonly Element _root = new Element { Name = "_root" };
+		private readonly Stack<Element> _stack = new Stack<Element>();
 
 		private readonly string _input;
 		private int _index = 0;
 
-		private StringBuilder _currentText = new StringBuilder();
+		private readonly StringBuilder _currentText = new StringBuilder();
 
 		private BbParser(string input)
 		{
