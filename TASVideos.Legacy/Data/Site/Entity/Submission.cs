@@ -58,6 +58,8 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("judged_by")]
 		public int JudgeId { get; set; }
 
+		public virtual User Judge { get; set; }
+
 		[Column("judgedate")]
 		public int JudgeDate { get; set; }
 
