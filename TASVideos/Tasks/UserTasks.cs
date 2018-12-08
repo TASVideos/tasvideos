@@ -438,7 +438,7 @@ namespace TASVideos.Tasks
 							Description = ur.Role.Description
 						}),
 					Submissions = u.Submissions
-						.GroupBy(s => s.Submisison.Status)
+						.GroupBy(s => s.Submission.Status)
 						.Select(g => new UserProfileModel.SubmissionEntry
 						{
 							Status = g.Key,
