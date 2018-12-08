@@ -108,7 +108,7 @@ namespace TASVideos.Legacy.Imports
 						var subAuthor = new SubmissionAuthor
 						{
 							SubmissionId = submission.Id,
-							Submisison = submission,
+							Submission = submission,
 							UserId = legacySubmission.Submitter.Id,
 							Author = legacySubmission.Submitter
 						};
