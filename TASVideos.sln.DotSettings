@@ -2,6 +2,10 @@
 	<s:Boolean x:Key="/Default/CodeEditing/TypingAssist/FormatBlockOnRBrace/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeEditing/TypingAssist/FormatStatementOnSemicolon/@EntryValue">False</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/Browsers/Browsers/@EntryValue">C60+,E12+,FF41+,IE11+,O13+,S8+</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=B386F775_002D4453_002D4ADB_002D906F_002DF081FE8459EF_002Fd_003Awwwroot_002Fd_003Ajs_002Ff_003Adifflib_002Ejs/@EntryIndexedValue">B386F775-4453-4ADB-906F-F081FE8459EF/d:wwwroot/d:js/f:difflib.js</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=B386F775_002D4453_002D4ADB_002D906F_002DF081FE8459EF_002Fd_003Awwwroot_002Fd_003Ajs_002Ff_003Adiffview_002Ejs/@EntryIndexedValue">B386F775-4453-4ADB-906F-F081FE8459EF/d:wwwroot/d:js/f:diffview.js</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=B386F775_002D4453_002D4ADB_002D906F_002DF081FE8459EF_002Fd_003Awwwroot_002Fd_003Ajs_002Ff_003Aprism_002Ejs/@EntryIndexedValue">B386F775-4453-4ADB-906F-F081FE8459EF/d:wwwroot/d:js/f:prism.js</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=B386F775_002D4453_002D4ADB_002D906F_002DF081FE8459EF_002Fd_003Awwwroot_002Fd_003Amedia/@EntryIndexedValue">B386F775-4453-4ADB-906F-F081FE8459EF/d:wwwroot/d:media</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=ArrangeThisQualifier/@EntryIndexedValue">DO_NOT_SHOW</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=CheckNamespace/@EntryIndexedValue">DO_NOT_SHOW</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=Html_002EPathError/@EntryIndexedValue">HINT</s:String>
