@@ -51,7 +51,9 @@ namespace TASVideos.Data.Entity
 		public int? IntendedTierId { get; set; }
 		public virtual Tier IntendedTier { get; set; }
 
+		public int? JudgeId { get; set; }
 		public virtual User Judge { get; set; }
+
 		public virtual User Publisher { get; set; }
 
 		public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
