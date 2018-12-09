@@ -196,7 +196,7 @@ namespace TASVideos.Models
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
 	}
 
-	// TODO: document - for reverifying a status can be set
+	// TODO: document - for re-verifying a status can be set
 	public class SubmissionStatusValidationModel
 	{
 		public bool UserIsJudge { get; set; }

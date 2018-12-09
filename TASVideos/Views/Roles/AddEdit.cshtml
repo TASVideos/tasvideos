@@ -149,16 +149,16 @@
 					}
 				};
 
-				var getstr = '';
+				var getStr = '';
 				for (var i in permissions) {
 					if (permissions.hasOwnProperty(i)) {
-						getstr += 'ids=' + permissions[i] + '&';
+						getStr += 'ids=' + permissions[i] + '&';
 					}
 				}
 
-				getstr = getstr.slice(0, -1);
-				getstr = "/Roles/@(nameof(RolesController.RolesThatCanBeAssignedBy))?" + getstr;
-				xmlhttp.open("GET", getstr, true);
+				getStr = getStr.slice(0, -1);
+				getStr = "/Roles/@(nameof(RolesController.RolesThatCanBeAssignedBy))?" + getStr;
+				xmlhttp.open("GET", getStr, true);
 				xmlhttp.send();
 			} else {
 				document.getElementById("assignable-roles").textContent = emptyAssignableRoles;

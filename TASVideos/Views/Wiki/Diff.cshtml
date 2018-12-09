@@ -41,14 +41,14 @@
 		var diffElem = document.getElementById('ResultMarkup');
 
 		var base = difflib.stringAsLines(leftMarkup);
-		var newtxt = difflib.stringAsLines(rightMarkup);
-		var opcodes = new difflib.SequenceMatcher(base, newtxt).get_opcodes();
+		var newTxt = difflib.stringAsLines(rightMarkup);
+		var opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes();
 
 		diffElem.innerHTML = "";
 
 		diffElem.appendChild(diffview.buildView({
 			baseTextLines: base,
-			newTextLines: newtxt,
+			newTextLines: newTxt,
 			opcodes: opcodes,
 			baseTextName:  "r@(Model.LeftRevision)",
 			newTextName: "r@(Model.RightRevision)",
