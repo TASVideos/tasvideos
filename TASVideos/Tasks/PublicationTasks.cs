@@ -85,6 +85,7 @@ namespace TASVideos.Tasks
 					MovieFileName = p.MovieFileName,
 					SubmissionId = p.SubmissionId,
 					TierIconPath = p.Tier.IconPath,
+					// ReSharper disable once PossibleLossOfFraction
 					RatingCount = p.PublicationRatings.Count / 2,
 					Files = p.Files
 						.Select(f => new PublicationViewModel.FileModel

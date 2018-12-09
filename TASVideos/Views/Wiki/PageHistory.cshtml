@@ -66,8 +66,8 @@
 							elem.classList.remove('table-info');
 						});
 
-					var curr = document.querySelector('tr[data-revision="' + revision + '"]');
-					curr.classList.add('table-primary');
+					var cur = document.querySelector('tr[data-revision="' + revision + '"]');
+					cur.classList.add('table-primary');
 
 					var prev = document.querySelector('tr[data-revision="' + (revision - 1) + '"]');
 					prev.classList.add('table-info');
@@ -89,15 +89,15 @@
 	function generateDiff(viewType) {
 		var diffView = document.getElementById("diff-view");
 		var base = difflib.stringAsLines(document.getElementById("left-revision").value),
-			newtxt = difflib.stringAsLines(document.getElementById("right-revision").value),
-			opcodes = new difflib.SequenceMatcher(base, newtxt).get_opcodes(),
-			diffoutputdiv = diffView;
+			newTxt = difflib.stringAsLines(document.getElementById("right-revision").value),
+			opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes(),
+			diffOutputDiv = diffView;
 
-		diffoutputdiv.innerHTML = "";
+		diffOutputDiv.innerHTML = "";
 
-		diffoutputdiv.appendChild(diffview.buildView({
+		diffOutputDiv.appendChild(diffview.buildView({
 			baseTextLines: base,
-			newTextLines: newtxt,
+			newTextLines: newTxt,
 			opcodes: opcodes,
 			baseTextName: "r" + fromRevision,
 			newTextName: "r" + toRevision,

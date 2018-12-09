@@ -122,10 +122,10 @@ namespace TASVideos.Services
 				? (Stream)new GZipStream(memoryStream, CompressionMode.Decompress)
 				: (Stream)memoryStream;
 
-			const string filetype = "application/octet-stream";
+			const string fileType = "application/octet-stream";
 			var entityTag = $"db-file-{file.Id}";
 
-			return new FileStreamResult(stream, filetype)
+			return new FileStreamResult(stream, fileType)
 			{
 				EntityTag = new EntityTagHeaderValue(entityTag),
 				FileDownloadName = file.Filename,
