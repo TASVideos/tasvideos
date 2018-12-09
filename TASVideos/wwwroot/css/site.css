@@ -59,12 +59,16 @@ h1 {
 	font-weight: bold;
 }
 
+.topic-header {
+	background-color: #EAEAEA;
+}
+
 .card:not(.bg-info):not(.bg-danger):not(.bg-success):not(.bg-warning):not(.bg-light):not(.bg-dark) .card-header {
-	background-color: #eaeaea;
+	background-color: #EAEAEA;
 }
 
 .tab-content {
-	background-color: #fff;
+	background-color: #FFF;
 }
 
 .tab-pane {
@@ -82,11 +86,13 @@ h1 {
 .postbody { white-space: pre-wrap; }
 .a-l { text-align: left; }
 .a-c { text-align: center; }
-.a-r { text-align: right; }
+.a-r { text-align: right; 
+
 .spoiler {
 	background-color: black;
 	color: black;
 }
+
 .spoiler:hover {
 	color: white;
 }
