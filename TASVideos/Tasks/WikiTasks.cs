@@ -83,11 +83,11 @@ namespace TASVideos.Tasks
 		/// Returns details about a Wiki page with the given id
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		public WikiPage GetPageById(int dbid)
+		public WikiPage GetPageById(int dbId)
 		{
 			return WikiCache
 				.ThatAreNotDeleted()
-				.FirstOrDefault(w => w.Id == dbid);
+				.FirstOrDefault(w => w.Id == dbId);
 		}
 
 		/// <summary>
@@ -560,7 +560,7 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Undeletes all revisions of the given page
+		/// Restores all revisions of the given page
 		/// </summary>
 		public async Task UndeletePage(string pageName)
 		{

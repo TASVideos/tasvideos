@@ -69,11 +69,11 @@ namespace TASVideos.Tasks
 				using (var md5 = MD5.Create())
 				{
 					var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(model.Password));
-					string crypted = BitConverter.ToString(md5Result)
+					string encrypted = BitConverter.ToString(md5Result)
 						.Replace("-", "")
 						.ToLower();
 
-					if (crypted == user.LegacyPassword)
+					if (encrypted == user.LegacyPassword)
 					{
 						user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.Password);
 						await _userManager.UpdateSecurityStampAsync(user);
