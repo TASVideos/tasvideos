@@ -79,6 +79,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(RegionType.Pal, result.Region, "Region must be Pal");
 		}
 
+        [TestMethod]
 		public void PalFlag_Missing_DefaultNtsc()
 		{
 			var result = _bk2Parser.Parse(Embedded("0Frames.bk2"));
