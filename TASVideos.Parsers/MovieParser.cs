@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using TASVideos.MovieParsers.Parsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers
 {

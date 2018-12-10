@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using TASVideos.MovieParsers.Result;
 
-namespace TASVideos.MovieParsers
+namespace TASVideos.MovieParsers.Parsers
 {
 	internal interface IParser
 	{
