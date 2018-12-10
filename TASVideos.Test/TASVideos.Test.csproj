@@ -17,6 +17,8 @@
     <None Remove="MovieParsers\SampleMovieFiles\Pal1.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\RerecordCount1.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\RerecordCountMissing.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\savestate.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\sram.bk2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +31,8 @@
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\Pal1.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\RerecordCount1.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\RerecordCountMissing.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\savestate.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\sram.bk2" />
   </ItemGroup>
 
   <ItemGroup>

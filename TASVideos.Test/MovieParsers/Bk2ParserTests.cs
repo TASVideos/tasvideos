@@ -104,6 +104,29 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual("gbc", result.SystemCode, "System should be GBC");
 		}
 
+		[TestMethod]
+		public void StartsFrom_PowerOn()
+		{
+			var result = _bk2Parser.Parse(Embedded("Nes.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual(result.StartType, MovieStartType.PowerOn, "Starts from power-on");
+		}
+
+		[TestMethod]
+		public void StartsFrom_Sram()
+		{
+			var result = _bk2Parser.Parse(Embedded("sram.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual(result.StartType, MovieStartType.Sram, "Starts from SRAM");
+		}
+
+		[TestMethod]
+		public void StartsFrom_Savestate()
+		{
+			var result = _bk2Parser.Parse(Embedded("savestate.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual(result.StartType, MovieStartType.Savestate, "Starts from savestate");
+		}
 
 		private Stream Embedded(string name)
 		{
