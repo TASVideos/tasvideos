@@ -30,15 +30,17 @@ namespace TASVideos.MovieParsers
 					var movieFile = zip.Entries[0];
 					var ext = Path.GetExtension(movieFile.Name).Trim('.').ToLower();
 
-					switch (ext)
+					using (var movieFileStream = movieFile.Open())
 					{
-						default:
-							return Error($".{ext} files are not currently supported.");
-						case "bk2":
-							using (var movieFileStream = movieFile.Open())
-							{
+						switch (ext)
+						{
+							default:
+								return Error($".{ext} files are not currently supported.");
+							case "bk2":
 								return new Bk2().Parse(movieFileStream);
-							}
+							case "fm2":
+								return new Fm2().Parse(movieFileStream);
+						}
 					}
 				}
 			}

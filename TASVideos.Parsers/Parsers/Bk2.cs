@@ -34,17 +34,17 @@ namespace TASVideos.MovieParsers.Parsers
 			{
 				using (var reader = new StreamReader(stream))
 				{
-					var headerLines = reader
+					var header = reader
 						.ReadToEnd()
 						.LineSplit();
 
-					string platform = headerLines.GetValueFor(Keys.Platform);
+					string platform = header.GetValueFor(Keys.Platform);
 					if (string.IsNullOrWhiteSpace(platform))
 					{
 						return Error("Could not determine the System Code");
 					}
 
-					int? rerecordVal = headerLines.GetValueFor(Keys.RerecordCount).ToInt();
+					int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
 					if (rerecordVal.HasValue)
 					{
 						result.RerecordCount = rerecordVal.Value;
@@ -61,43 +61,43 @@ namespace TASVideos.MovieParsers.Parsers
 					}
 
 					// Check various subsystem flags
-					if (headerLines.GetValueFor(Keys.Mode32X).ToInt() == 1)
+					if (header.GetValueFor(Keys.Mode32X).ToBool())
 					{
 						platform = SystemCodes.X32;
 					}
-					else if (headerLines.GetValueFor(Keys.ModeCgb).ToInt() == 1)
+					else if (header.GetValueFor(Keys.ModeCgb).ToBool())
 					{
 						platform = SystemCodes.Gbc;
 					}
-					else if (headerLines.GetValueFor(Keys.Board) == SystemCodes.Fds)
+					else if (header.GetValueFor(Keys.Board) == SystemCodes.Fds)
 					{
 						platform = SystemCodes.Fds;
 					}
-					else if (headerLines.GetValueFor(Keys.ModeSegaCd).ToInt() == 1)
+					else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
 					{
 						platform = SystemCodes.SegaCd;
 					}
-					else if (headerLines.GetValueFor(Keys.ModeGg).ToInt() == 1)
+					else if (header.GetValueFor(Keys.ModeGg).ToBool())
 					{
 						platform = SystemCodes.Gg;
 					}
-					else if (headerLines.GetValueFor(Keys.ModeSg).ToInt() == 1)
+					else if (header.GetValueFor(Keys.ModeSg).ToBool())
 					{
 						platform = SystemCodes.Sg;
 					}
 
 					result.SystemCode = platform;
 
-					if (headerLines.GetValueFor(Keys.Pal).ToInt() == 1)
+					if (header.GetValueFor(Keys.Pal).ToBool())
 					{
 						result.Region = RegionType.Pal;
 					}
 
-					if (headerLines.GetValueFor(Keys.StartsFromSavestate).ToBool())
+					if (header.GetValueFor(Keys.StartsFromSavestate).ToBool())
 					{
 						result.StartType = MovieStartType.Savestate;
 					}
-					else if (headerLines.GetValueFor(Keys.StartsFromSram).ToBool())
+					else if (header.GetValueFor(Keys.StartsFromSram).ToBool())
 					{
 						result.StartType = MovieStartType.Sram;
 					}
