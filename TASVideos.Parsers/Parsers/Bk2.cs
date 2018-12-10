@@ -10,7 +10,9 @@ namespace TASVideos.MovieParsers.Parsers
 	[FileExtension("bk2")]
 	internal class Bk2 : IParser
 	{
-		public static string FileExtension => "bk2";
+		private const string FileExtension = "bk2";
+		private const string HeaderFile = "header.txt";
+		private const string InputFile = "input log.txt";
 
 		public IParseResult Parse(Stream file)
 		{
@@ -22,10 +24,10 @@ namespace TASVideos.MovieParsers.Parsers
 
 			var bk2Archive = new ZipArchive(file);
 
-			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Header.txt");
+			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower() == HeaderFile);
 			if (headerEntry == null)
 			{
-				return Error("Missing Header.txt, can not parse");
+				return Error($"Missing {HeaderFile}, can not parse");
 			}
 
 			using (var stream = headerEntry.Open())
@@ -36,13 +38,13 @@ namespace TASVideos.MovieParsers.Parsers
 						.ReadToEnd()
 						.LineSplit();
 
-					string platform = headerLines.GetValueFor("platform");
+					string platform = headerLines.GetValueFor(Keys.Platform);
 					if (string.IsNullOrWhiteSpace(platform))
 					{
 						return Error("Could not determine the System Code");
 					}
 
-					int? rerecordVal = headerLines.GetValueFor("rerecordcount").ToInt();
+					int? rerecordVal = headerLines.GetValueFor(Keys.RerecordCount).ToInt();
 					if (rerecordVal.HasValue)
 					{
 						result.RerecordCount = rerecordVal.Value;
@@ -59,44 +61,44 @@ namespace TASVideos.MovieParsers.Parsers
 					}
 
 					// Check various subsystem flags
-					if (headerLines.GetValueFor("is32x").ToInt() == 1)
+					if (headerLines.GetValueFor(Keys.Mode32X).ToInt() == 1)
 					{
-						platform = "32x";
+						platform = SystemCodes.X32;
 					}
-					else if (headerLines.GetValueFor("iscgbmode").ToInt() == 1)
+					else if (headerLines.GetValueFor(Keys.ModeCgb).ToInt() == 1)
 					{
-						platform = "gbc";
+						platform = SystemCodes.Gbc;
 					}
-					else if (headerLines.GetValueFor("boardname") == "fds")
+					else if (headerLines.GetValueFor(Keys.Board) == SystemCodes.Fds)
 					{
-						platform = "fds";
+						platform = SystemCodes.Fds;
 					}
-					else if (headerLines.GetValueFor("issegacdmode").ToInt() == 1)
+					else if (headerLines.GetValueFor(Keys.ModeSegaCd).ToInt() == 1)
 					{
-						platform = "segacd";
+						platform = SystemCodes.SegaCd;
 					}
-					else if (headerLines.GetValueFor("isggmode").ToInt() == 1)
+					else if (headerLines.GetValueFor(Keys.ModeGg).ToInt() == 1)
 					{
-						platform = "gg";
+						platform = SystemCodes.Gg;
 					}
-					else if (headerLines.GetValueFor("issgmode").ToInt() == 1)
+					else if (headerLines.GetValueFor(Keys.ModeSg).ToInt() == 1)
 					{
-						platform = "sg1000";
+						platform = SystemCodes.Sg;
 					}
 
 					result.SystemCode = platform;
 
-					if (headerLines.GetValueFor("pal").ToInt() == 1)
+					if (headerLines.GetValueFor(Keys.Pal).ToInt() == 1)
 					{
 						result.Region = RegionType.Pal;
 					}
 				}
 			}
 
-			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Input Log.txt");
+			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower() == InputFile);
 			if (inputLogEntry == null)
 			{
-				return Error("Missing Input Log.txt, can not parse");
+				return Error($"Missing {InputFile}, can not parse");
 			}
 
 			using (var stream = inputLogEntry.Open())
@@ -115,14 +117,14 @@ namespace TASVideos.MovieParsers.Parsers
 
 		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
 		{
-			["gen"] = "genesis",
-			["sat"] = "saturn",
-			["dgb"] = "gb",
-			["a26"] = "a2600",
-			["a78"] = "a7800",
-			["uze"] = "uzebox",
-			["vb"] = "vboy",
-			["zxspectrum"] = "zxs"
+			["gen"] = SystemCodes.Genesis,
+			["sat"] = SystemCodes.Saturn,
+			["dgb"] = SystemCodes.GameBoy,
+			["a26"] = SystemCodes.Atari2600,
+			["a78"] = SystemCodes.Atari7800,
+			["uze"] = SystemCodes.UzeBox,
+			["vb"] = SystemCodes.VirtualBoy,
+			["zxspectrum"] = SystemCodes.ZxSpectrum
 		};
 
 		private static ErrorResult Error(string errorMsg)
@@ -131,6 +133,19 @@ namespace TASVideos.MovieParsers.Parsers
 			{
 				FileExtension = FileExtension
 			};
+		}
+
+		private static class Keys
+		{
+			public const string RerecordCount = "rerecordcount";
+			public const string Platform = "platform";
+			public const string Board = "boardname";
+			public const string Pal = "pal";
+			public const string Mode32X = "is32x";
+			public const string ModeCgb = "iscgbmode";
+			public const string ModeSegaCd = "issegacdmode";
+			public const string ModeGg = "isggmode";
+			public const string ModeSg = "issgmode";
 		}
 	}
 }

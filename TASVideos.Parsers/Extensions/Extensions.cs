@@ -24,12 +24,12 @@ namespace TASVideos.MovieParsers.Extensions
 
 		/// <summary>
 		/// Searches through a list of strings that represents a space separated
-		/// key/value pair, for the given key and returns the value
+		/// key/value pair, for the given key (case insensitive and returns the value
 		/// </summary>
 		/// <param name="lines">The key/value pairs to search</param>
 		/// <param name="key">The key to search for</param>
 		/// <returns>The value if found, else an empty string</returns>
-		public static string GetValueFor(this string[] lines, string key) // Case insensitive
+		public static string GetValueFor(this string[] lines, string key)
 		{
 			if (lines == null || !lines.Any() || string.IsNullOrWhiteSpace(key))
 			{
@@ -55,7 +55,7 @@ namespace TASVideos.MovieParsers.Extensions
 		/// Parses the given string as an integer.
 		/// If value can not be parsed, null is returned
 		/// </summary>
-		public static int? ToInt(string val)
+		public static int? ToInt(this string val)
 		{
 			var result = int.TryParse(val, out var parsedVal);
 			if (result)
