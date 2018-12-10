@@ -16,6 +16,7 @@ namespace TASVideos.MovieParsers.Result
 		public int Frames { get; internal set; }
 		public string SystemCode { get; internal set; }
 		public int RerecordCount { get; internal set; }
+		public MovieStartType StartType { get; internal set; }
 		
 		internal List<ParseWarnings> WarningList { get; set; } = new List<ParseWarnings>();
 		internal List<string> ErrorList { get; set; } = new List<string>();

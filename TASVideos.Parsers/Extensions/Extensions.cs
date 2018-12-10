@@ -65,5 +65,24 @@ namespace TASVideos.MovieParsers.Extensions
 
 			return null;
 		}
+
+		/// <summary>
+		/// Parses the given string as a boolean.
+		/// </summary>
+		/// <returns>True if value is a case insensitive true, or a 1</returns>
+		public static bool ToBool(this string val)
+		{
+			if (string.IsNullOrWhiteSpace(val))
+			{
+				return false;
+			}
+
+			if (int.TryParse(val, out int parsedVal))
+			{
+				return parsedVal == 1;
+			}
+
+			return string.Equals(val, "true", StringComparison.InvariantCultureIgnoreCase);
+		}
 	}
 }
