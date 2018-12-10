@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TASVideos.MovieParsers
+namespace TASVideos.MovieParsers.Parsers
 {
 	/// <summary>
 	/// Decorates an <see cref="IParser" /> implementation to

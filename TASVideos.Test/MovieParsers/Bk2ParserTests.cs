@@ -3,7 +3,8 @@ using System.Linq;
 using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.MovieParsers;
+using TASVideos.MovieParsers.Parsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Test.MovieParsers
 {
