@@ -4,6 +4,7 @@
 	{
 		public const string Atari2600 = "a2600";
 		public const string Atari7800 = "a7800";
+		public const string Nes = "nes";
 		public const string Fds = "fds";
 		public const string GameBoy = "gb";
 		public const string VirtualBoy = "vboy";
