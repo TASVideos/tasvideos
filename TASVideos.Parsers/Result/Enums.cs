@@ -23,6 +23,28 @@
 	}
 
 	/// <summary>
+	/// Indicates the starting state for the movie,
+	/// power-on, dirty SRAM, savestate, etc
+	/// </summary>
+	public enum MovieStartType
+	{
+		/// <summary>
+		/// The movie starts from a full power-cycle with clean SRAM
+		/// </summary>
+		PowerOn,
+
+		/// <summary>
+		/// The movie starts from a power-cycle with dirty SRAM
+		/// </summary>
+		Sram,
+
+		/// <summary>
+		/// The movie starts from a savestate
+		/// </summary>
+		Savestate,
+	}
+
+	/// <summary>
 	/// Indicates a problem with the parsed movie but was not considered
 	/// an error.
 	/// </summary>

@@ -53,5 +53,11 @@ namespace TASVideos.MovieParsers.Result
 		/// Gets the rerecord count of the movie
 		/// </summary>
 		int RerecordCount { get; }
+
+		/// <summary>
+		/// Gets the start type of the movie,
+		/// ex: power-on, sram, savestate
+		/// </summary>
+		MovieStartType StartType { get; }
 	}
 }

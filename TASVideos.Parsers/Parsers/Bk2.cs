@@ -92,6 +92,15 @@ namespace TASVideos.MovieParsers.Parsers
 					{
 						result.Region = RegionType.Pal;
 					}
+
+					if (headerLines.GetValueFor(Keys.StartsFromSavestate).ToBool())
+					{
+						result.StartType = MovieStartType.Savestate;
+					}
+					else if (headerLines.GetValueFor(Keys.StartsFromSram).ToBool())
+					{
+						result.StartType = MovieStartType.Sram;
+					}
 				}
 			}
 
@@ -141,6 +150,8 @@ namespace TASVideos.MovieParsers.Parsers
 			public const string Platform = "platform";
 			public const string Board = "boardname";
 			public const string Pal = "pal";
+			public const string StartsFromSram = "startsfromsaveram";
+			public const string StartsFromSavestate = "startsfromsavestate";
 			public const string Mode32X = "is32x";
 			public const string ModeCgb = "iscgbmode";
 			public const string ModeSegaCd = "issegacdmode";
