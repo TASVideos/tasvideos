@@ -10,7 +10,7 @@ namespace TASVideos.MovieParsers.Parsers
 	[FileExtension("bk2")]
 	internal class Bk2 : IParser
 	{
-		public string FileExtension => "bk2";
+		public static string FileExtension => "bk2";
 
 		public IParseResult Parse(Stream file)
 		{
@@ -25,7 +25,7 @@ namespace TASVideos.MovieParsers.Parsers
 			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Input Log.txt");
 			if (inputLogEntry == null)
 			{
-				return new ErrorResult("Missing Input Log.txt, can not parse") { FileExtension = FileExtension };
+				return Error("Missing Input Log.txt, can not parse");
 			}
 
 			using (var stream = inputLogEntry.Open())
@@ -40,14 +40,16 @@ namespace TASVideos.MovieParsers.Parsers
 			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Header.txt");
 			if (headerEntry == null)
 			{
-				return new ErrorResult("Missing Header.txt, can not parse") { FileExtension = FileExtension };
+				return Error("Missing Header.txt, can not parse");
 			}
 
 			using (var stream = headerEntry.Open())
 			{
 				using (var reader = new StreamReader(stream))
 				{
-					string[] headerLines = reader.ReadToEnd().Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+					string[] headerLines = reader
+						.ReadToEnd()
+						.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
 					int? rerecordVal = GetInt(GetValue(headerLines, "rerecordcount"));
 					if (rerecordVal.HasValue)
@@ -62,7 +64,7 @@ namespace TASVideos.MovieParsers.Parsers
 					string platform = GetValue(headerLines, "platform");
 					if (string.IsNullOrWhiteSpace(platform))
 					{
-						return new ErrorResult("Could not determine the System Code") { FileExtension = FileExtension };
+						return Error("Could not determine the System Code");
 					}
 
 					// Some biz system ids do not match tasvideos, convert if needed
@@ -132,9 +134,13 @@ namespace TASVideos.MovieParsers.Parsers
 			var row = lines.FirstOrDefault(l => l.ToLower().StartsWith(header.ToLower()))?.ToLower();
 			if (!string.IsNullOrWhiteSpace(row))
 			{
-				var valstr = row.Replace(header.ToLower(), "").Trim().Replace("\r", "").Replace("\n", "");
+				var valStr = row
+					.Replace(header.ToLower(), "")
+					.Trim()
+					.Replace("\r", "")
+					.Replace("\n", "");
 				
-				return valstr;
+				return valStr;
 			}
 
 			return "";
@@ -149,6 +155,14 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 
 			return null;
+		}
+
+		private static ErrorResult Error(string errorMsg)
+		{
+			return new ErrorResult(errorMsg)
+			{
+				FileExtension = FileExtension
+			};
 		}
 	}
 }
