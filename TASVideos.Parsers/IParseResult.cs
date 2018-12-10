@@ -22,7 +22,7 @@ namespace TASVideos.MovieParsers
 		int RerecordCount { get; }
 	}
 
-	public class ParseResult : IParseResult
+	internal class ParseResult : IParseResult
 	{
 		public bool Success { get; internal set; } = true;
 		public IEnumerable<string> Errors => ErrorList;
@@ -38,7 +38,7 @@ namespace TASVideos.MovieParsers
 		internal List<string> ErrorList { get; set; } = new List<string>();
 	}
 
-	public class ErrorResult : IParseResult
+	internal class ErrorResult : IParseResult
 	{
 		public ErrorResult(string errorMsg)
 		{
