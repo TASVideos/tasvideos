@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -22,21 +22,6 @@ namespace TASVideos.MovieParsers.Parsers
 
 			var bk2Archive = new ZipArchive(file);
 
-			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Input Log.txt");
-			if (inputLogEntry == null)
-			{
-				return Error("Missing Input Log.txt, can not parse");
-			}
-
-			using (var stream = inputLogEntry.Open())
-			{
-				using (var reader = new StreamReader(stream))
-				{
-					string[] inputLog = reader.ReadToEnd().Split('\n');
-					result.Frames = inputLog.Count(i => i.StartsWith("|"));
-				}
-			}
-
 			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Header.txt");
 			if (headerEntry == null)
 			{
@@ -47,11 +32,17 @@ namespace TASVideos.MovieParsers.Parsers
 			{
 				using (var reader = new StreamReader(stream))
 				{
-					string[] headerLines = reader
+					var headerLines = reader
 						.ReadToEnd()
-						.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+						.LineSplit();
 
-					int? rerecordVal = GetInt(GetValue(headerLines, "rerecordcount"));
+					string platform = headerLines.GetValueFor("platform");
+					if (string.IsNullOrWhiteSpace(platform))
+					{
+						return Error("Could not determine the System Code");
+					}
+
+					int? rerecordVal = headerLines.GetValueFor("rerecordcount").ToInt();
 					if (rerecordVal.HasValue)
 					{
 						result.RerecordCount = rerecordVal.Value;
@@ -61,12 +52,6 @@ namespace TASVideos.MovieParsers.Parsers
 						result.WarningList.Add(ParseWarnings.MissingRerecordCount);
 					}
 
-					string platform = GetValue(headerLines, "platform");
-					if (string.IsNullOrWhiteSpace(platform))
-					{
-						return Error("Could not determine the System Code");
-					}
-
 					// Some biz system ids do not match tasvideos, convert if needed
 					if (BizToTasvideosSystemIds.ContainsKey(platform))
 					{
@@ -74,38 +59,54 @@ namespace TASVideos.MovieParsers.Parsers
 					}
 
 					// Check various subsystem flags
-					if (GetInt(GetValue(headerLines, "is32x")) == 1)
+					if (headerLines.GetValueFor("is32x").ToInt() == 1)
 					{
 						platform = "32x";
 					}
-					else if (GetInt(GetValue(headerLines, "iscgbmode")) == 1)
+					else if (headerLines.GetValueFor("iscgbmode").ToInt() == 1)
 					{
 						platform = "gbc";
 					}
-					else if (GetValue(headerLines, "boardname") == "fds")
+					else if (headerLines.GetValueFor("boardname") == "fds")
 					{
 						platform = "fds";
 					}
-					else if (GetInt(GetValue(headerLines, "issegacdmode")) == 1)
+					else if (headerLines.GetValueFor("issegacdmode").ToInt() == 1)
 					{
 						platform = "segacd";
 					}
-					else if (GetInt(GetValue(headerLines, "isggmode")) == 1)
+					else if (headerLines.GetValueFor("isggmode").ToInt() == 1)
 					{
 						platform = "gg";
 					}
-					else if (GetInt(GetValue(headerLines, "issgmode")) == 1)
+					else if (headerLines.GetValueFor("issgmode").ToInt() == 1)
 					{
 						platform = "sg1000";
 					}
 
 					result.SystemCode = platform;
 
-					int? pal = GetInt(GetValue(headerLines, "pal"));
-					if (pal == 1)
+					if (headerLines.GetValueFor("pal").ToInt() == 1)
 					{
 						result.Region = RegionType.Pal;
 					}
+				}
+			}
+
+			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Input Log.txt");
+			if (inputLogEntry == null)
+			{
+				return Error("Missing Input Log.txt, can not parse");
+			}
+
+			using (var stream = inputLogEntry.Open())
+			{
+				using (var reader = new StreamReader(stream))
+				{
+					result.Frames = reader
+						.ReadToEnd()
+						.LineSplit()
+						.Count(i => i.StartsWith("|"));
 				}
 			}
 
@@ -123,39 +124,6 @@ namespace TASVideos.MovieParsers.Parsers
 			["vb"] = "vboy",
 			["zxspectrum"] = "zxs"
 		};
-
-		private static string GetValue(string[] lines, string header) // Case insensitive
-		{
-			if (lines == null || !lines.Any() || string.IsNullOrWhiteSpace(header))
-			{
-				return "";
-			}
-
-			var row = lines.FirstOrDefault(l => l.ToLower().StartsWith(header.ToLower()))?.ToLower();
-			if (!string.IsNullOrWhiteSpace(row))
-			{
-				var valStr = row
-					.Replace(header.ToLower(), "")
-					.Trim()
-					.Replace("\r", "")
-					.Replace("\n", "");
-				
-				return valStr;
-			}
-
-			return "";
-		}
-
-		private static int? GetInt(string val)
-		{
-			var result = int.TryParse(val, out int parsedVal);
-			if (result)
-			{
-				return parsedVal;
-			}
-
-			return null;
-		}
 
 		private static ErrorResult Error(string errorMsg)
 		{
