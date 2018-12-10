@@ -55,7 +55,7 @@ namespace TASVideos.MovieParsers
 					}
 					else
 					{
-						result.WarningList.Add("Could not determine the rerecord count, using 0 instead");
+						result.WarningList.Add(ParseWarnings.MissingRerecordCount);
 					}
 
 					string platform = GetValue(headerLines, "platform");
