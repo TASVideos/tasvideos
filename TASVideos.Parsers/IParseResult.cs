@@ -7,12 +7,17 @@ namespace TASVideos.MovieParsers
 		Unknown, Ntsc, Pal
 	}
 
+	public enum ParseWarnings
+	{
+		MissingRerecordCount
+	}
+
 	// TODO: document
 	public interface IParseResult
 	{
 		bool Success { get; }
 		IEnumerable<string> Errors { get; } // If success is false, errors should exist
-		IEnumerable<string> Warnings { get; } // If success is true, there might be warnings, need to be checked
+		IEnumerable<ParseWarnings> Warnings { get; } // If success is true, there might be warnings, need to be checked
 
 		// start type? power-on, sram, savestate
 		string FileExtension { get; }
@@ -26,7 +31,7 @@ namespace TASVideos.MovieParsers
 	{
 		public bool Success { get; internal set; } = true;
 		public IEnumerable<string> Errors => ErrorList;
-		public IEnumerable<string> Warnings => WarningList;
+		public IEnumerable<ParseWarnings> Warnings => WarningList;
 
 		public string FileExtension { get; internal set; }
 		public RegionType Region { get; internal set; }
@@ -34,7 +39,7 @@ namespace TASVideos.MovieParsers
 		public string SystemCode { get; internal set; }
 		public int RerecordCount { get; internal set; }
 		
-		internal List<string> WarningList { get; set; } = new List<string>();
+		internal List<ParseWarnings> WarningList { get; set; } = new List<ParseWarnings>();
 		internal List<string> ErrorList { get; set; } = new List<string>();
 	}
 
@@ -48,7 +53,7 @@ namespace TASVideos.MovieParsers
 		public bool Success => false;
 		public IEnumerable<string> Errors { get; internal set; }
 
-		public IEnumerable<string> Warnings => new List<string>();
+		public IEnumerable<ParseWarnings> Warnings => new List<ParseWarnings>();
 		public string FileExtension { get; internal set; }
 		public RegionType Region => RegionType.Unknown;
 		public int Frames => 0;
