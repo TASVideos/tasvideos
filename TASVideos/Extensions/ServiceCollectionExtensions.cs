@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
+using TASVideos.MovieParsers;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
@@ -100,6 +101,12 @@ namespace TASVideos.Extensions
 			services.AddTransient<IEmailSender, EmailSender>();
 			services.AddTransient<IEmailService, EmailService>();
 
+			return services;
+		}
+
+		public static IServiceCollection AddMovieParser(this IServiceCollection services)
+		{
+			services.AddSingleton<MovieParser>();
 			return services;
 		}
 

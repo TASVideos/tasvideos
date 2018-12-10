@@ -32,7 +32,7 @@ namespace TASVideos.MovieParsers
 				using (var reader = new StreamReader(stream))
 				{
 					string[] inputLog = reader.ReadToEnd().Split('\n');
-					result.Frames = inputLog.Count(i => i.StartsWith('|'));
+					result.Frames = inputLog.Count(i => i.StartsWith("|"));
 				}
 			}
 

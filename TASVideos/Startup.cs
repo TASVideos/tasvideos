@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data;
 using TASVideos.Extensions;
 using TASVideos.Legacy.Extensions;
-using TASVideos.MovieParsers;
 
 namespace TASVideos
 {
@@ -40,7 +39,7 @@ namespace TASVideos
 			services
 				.AddTasvideosData(Configuration)
 				.AddTasVideosLegacy(Environment.IsLocalWithImport())
-				.AddTasvideosMovieParsers();
+				.AddMovieParser();
 
 			// 3rd Party
 			services
