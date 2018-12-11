@@ -64,7 +64,7 @@ namespace TASVideos.MovieParsers
 			.Select(t => "." + (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
 					?.Extension);
 
-		private IParser GetParser(string ext)
+		private static IParser GetParser(string ext)
 		{
 			var type = ParserTypes
 				.SingleOrDefault(t => (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
