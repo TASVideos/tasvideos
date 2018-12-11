@@ -111,6 +111,9 @@
     <Content Update="Views\Shared\Components\MediaPosts\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Shared\Components\SupportedMovieTypes\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\Components\SystemPageFooter\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

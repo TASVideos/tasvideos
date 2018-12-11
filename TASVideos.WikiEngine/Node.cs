@@ -228,7 +228,8 @@ namespace TASVideos.WikiEngine.AST
 			["gamesubpages"] = "GameSubPages",
 			["awards"] = "Awards",
 			["usermovies"] = "UserMovies",
-			["mediaposts"] = "MediaPosts"
+			["mediaposts"] = "MediaPosts",
+			["supportedmovietypes"] = "SupportedMovieTypes"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
