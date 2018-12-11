@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Reflection;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
@@ -16,6 +19,13 @@ namespace TASVideos.MovieParsers
 	/// <seealso cref="IParseResult"/>
 	public sealed class MovieParser
 	{
+		private static readonly ICollection<Type> ParserTypes =
+			typeof(IParser).Assembly
+				.GetTypes()
+				.Where(t => typeof(IParser).IsAssignableFrom(t))
+				.Where(t => t != typeof(IParser))
+				.ToList();
+
 		public IParseResult Parse(Stream stream)
 		{
 			try
@@ -30,17 +40,15 @@ namespace TASVideos.MovieParsers
 					var movieFile = zip.Entries[0];
 					var ext = Path.GetExtension(movieFile.Name).Trim('.').ToLower();
 
+					var parser = GetParser(ext);
+					if (parser == null)
+					{
+						return Error($".{ext} files are not currently supported.");
+					}
+
 					using (var movieFileStream = movieFile.Open())
 					{
-						switch (ext)
-						{
-							default:
-								return Error($".{ext} files are not currently supported.");
-							case "bk2":
-								return new Bk2().Parse(movieFileStream);
-							case "fm2":
-								return new Fm2().Parse(movieFileStream);
-						}
+						return parser.Parse(movieFileStream);
 					}
 				}
 			}
@@ -49,6 +57,20 @@ namespace TASVideos.MovieParsers
 				// TODO: do we want to log here? or catch at a higher layer?
 				return Error("An general error occured while processing the movie file.");
 			}
+		}
+
+		private IParser GetParser(string ext)
+		{
+			var type = ParserTypes
+				.SingleOrDefault(t => (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
+					?.Extension == ext);
+			
+			if (type == null)
+			{
+				return null;
+			}
+
+			return Activator.CreateInstance(type) as IParser;
 		}
 
 		private IParseResult Error(string errorMsg)
