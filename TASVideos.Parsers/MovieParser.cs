@@ -78,7 +78,7 @@ namespace TASVideos.MovieParsers
 			return Activator.CreateInstance(type) as IParser;
 		}
 
-		private IParseResult Error(string errorMsg)
+		private static IParseResult Error(string errorMsg)
 		{
 			return new ErrorResult(errorMsg);
 		}
