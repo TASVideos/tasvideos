@@ -20,7 +20,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			// TODO:
-			// Publisher (if StatusBy and Status
+			// Publisher use publication to determine
 			// authors that are not submitters
 			// submitters not in forum 
 			// MovieExtension
