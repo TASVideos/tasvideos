@@ -1,12 +1,14 @@
 ﻿@model SubmissionCreateViewModel
 @{
 	ViewData["Title"] = "Submit Movie";
+	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
 }
 <info-alert dismissible="true">
 	@await Component.RenderWiki("System/SubmitMovieHeader")
 </info-alert>
 <hr />
 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+<warning-alert dismissible="true" condition="notSupportedError">@await Component.RenderWiki("System/SupportedMovieTypes")</warning-alert>
 <form asp-action="Submit" enctype="multipart/form-data">
 	<row>
 		<div class="col-lg-6">

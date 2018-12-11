@@ -13,6 +13,14 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "System/SupportedMovieTypes",
+				RevisionMessage = Import,
+				Markup = @"The following file types are supported for site [Subs-List|submission]
+
+[module:supportedmovietypes]"
+			},
+			new WikiPage
+			{
 				PageName = "MediaPosts",
 				RevisionMessage = Import,
 				Markup = @"Below is a list of recent media post activity (Announcements etc that have went to places like IRC, Discord, etc)

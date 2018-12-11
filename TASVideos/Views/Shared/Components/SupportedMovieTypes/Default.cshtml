@@ -1,6 +1,2 @@
 ﻿@model IEnumerable<string>
-
-@foreach (var type in Model)
-{
-	<label>@type</label><br />
-}
+<div>@string.Join(", ", Model)</div>
