@@ -11,8 +11,8 @@ namespace TASVideos.MovieParsers.Parsers
 	internal class Bk2 : IParser
 	{
 		private const string FileExtension = "bk2";
-		private const string HeaderFile = "header.txt";
-		private const string InputFile = "input log.txt";
+		private const string HeaderFile = "header";
+		private const string InputFile = "input log";
 
 		public IParseResult Parse(Stream file)
 		{
@@ -24,7 +24,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 			var bk2Archive = new ZipArchive(file);
 
-			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower() == HeaderFile);
+			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(HeaderFile));
 			if (headerEntry == null)
 			{
 				return Error($"Missing {HeaderFile}, can not parse");
@@ -104,7 +104,7 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 			}
 
-			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower() == InputFile);
+			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(InputFile));
 			if (inputLogEntry == null)
 			{
 				return Error($"Missing {InputFile}, can not parse");
