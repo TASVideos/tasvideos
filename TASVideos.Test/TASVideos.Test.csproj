@@ -14,6 +14,7 @@
     <None Remove="MovieParsers\SampleMovieFiles\MissingHeader.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\MissingInputLog.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\nes.bk2" />
+    <None Remove="MovieParsers\SampleMovieFiles\NoFileExts.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\Pal1.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\RerecordCount1.bk2" />
     <None Remove="MovieParsers\SampleMovieFiles\RerecordCountMissing.bk2" />
@@ -28,6 +29,7 @@
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\MissingHeader.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\MissingInputLog.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\Nes.bk2" />
+    <EmbeddedResource Include="MovieParsers\SampleMovieFiles\NoFileExts.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\Pal1.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\RerecordCount1.bk2" />
     <EmbeddedResource Include="MovieParsers\SampleMovieFiles\RerecordCountMissing.bk2" />

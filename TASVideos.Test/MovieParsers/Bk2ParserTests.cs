@@ -109,7 +109,7 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _bk2Parser.Parse(Embedded("Nes.bk2"));
 			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual(result.StartType, MovieStartType.PowerOn, "Starts from power-on");
+			Assert.AreEqual(MovieStartType.PowerOn, result.StartType, "Starts from power-on");
 		}
 
 		[TestMethod]
@@ -117,7 +117,7 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _bk2Parser.Parse(Embedded("sram.bk2"));
 			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual(result.StartType, MovieStartType.Sram, "Starts from SRAM");
+			Assert.AreEqual(MovieStartType.Sram, result.StartType, "Starts from SRAM");
 		}
 
 		[TestMethod]
@@ -125,7 +125,16 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _bk2Parser.Parse(Embedded("savestate.bk2"));
 			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual(result.StartType, MovieStartType.Savestate, "Starts from savestate");
+			Assert.AreEqual(MovieStartType.Savestate, result.StartType, "Starts from savestate");
+		}
+
+		[TestMethod]
+		public void InnerFileExtensions_AreNotChecked()
+		{
+			var result = _bk2Parser.Parse(Embedded("NoFileExts.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual("nes", result.SystemCode, "System should be NES");
+			Assert.AreEqual(1, result.Frames,  "Frame count should be 1");
 		}
 
 		private Stream Embedded(string name)
