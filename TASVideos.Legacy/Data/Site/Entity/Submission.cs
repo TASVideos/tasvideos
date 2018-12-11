@@ -56,8 +56,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int SubmissionDate { get; set; }
 
 		[Column("judged_by")]
-		public int JudgeId { get; set; }
-
 		public virtual User Judge { get; set; }
 
 		[Column("judgedate")]
