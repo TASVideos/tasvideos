@@ -20,6 +20,10 @@
     <None Remove="MovieParsers\Bk2SampleFiles\RerecordCountMissing.bk2" />
     <None Remove="MovieParsers\Bk2SampleFiles\savestate.bk2" />
     <None Remove="MovieParsers\Bk2SampleFiles\sram.bk2" />
+    <None Remove="MovieParsers\Fm2SampleFiles\fds.fm2" />
+    <None Remove="MovieParsers\Fm2SampleFiles\ntsc.fm2" />
+    <None Remove="MovieParsers\Fm2SampleFiles\pal.fm2" />
+    <None Remove="MovieParsers\Fm2SampleFiles\savestate.fm2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +39,10 @@
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\RerecordCountMissing.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\savestate.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\sram.bk2" />
+    <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\fds.fm2" />
+    <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\ntsc.fm2" />
+    <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\pal.fm2" />
+    <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\savestate.fm2" />
   </ItemGroup>
 
   <ItemGroup>
