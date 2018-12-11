@@ -12,7 +12,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("BK2Parsers")]
 	public class Bk2ParserTests
 	{
-		private const string Bk2ResourcesPath = "TASVideos.Test.MovieParsers.SampleMovieFiles.";
+		private const string Bk2ResourcesPath = "TASVideos.Test.MovieParsers.Bk2SampleFiles.";
 		private Bk2 _bk2Parser;
 
 		[TestInitialize]
