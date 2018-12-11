@@ -79,7 +79,7 @@ namespace TASVideos.Models
 
 		public SubmitResult(IEnumerable<string> errors, int id = 0)
 		{
-			if ((errors?.Any() ?? false) && id <= 0)
+			if ((errors?.Any() ?? false) == false && id <= 0)
 			{
 				throw new ArgumentException("Errors must not be null or id must be greater than 0");
 			}
