@@ -10,6 +10,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Models;
 using TASVideos.Services;
+using TASVideos.Services.Dtos;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
@@ -18,13 +19,17 @@ namespace TASVideos.Tasks
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
+		private readonly IWikiService _wikiService;
 
 		public WikiTasks(
 			ApplicationDbContext db,
-			ICacheService cache)
+			ICacheService cache,
+			IWikiService wikiService)
 		{
 			_db = db;
 			_cache = cache;
+			_wikiService = wikiService;
+
 			if (!WikiCache.Any())
 			{
 				LoadWikiCache().Wait();
@@ -111,60 +116,16 @@ namespace TASVideos.Tasks
 		/// <returns>The id of the page created</returns>
 		/// <seealso cref="WikiPageReferral"/> entries are also updated
 		/// </summary>
+		[Obsolete("User wiki service instead")]
 		public async Task<WikiPage> SavePage(WikiEditModel model)
 		{
-			var newRevision = new WikiPage
+			return await _wikiService.CreateRevision(new WikiCreateDto
 			{
 				PageName = model.PageName,
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage
-			};
-
-			_db.WikiPages.Add(newRevision);
-
-			var currentRevision = await _db.WikiPages
-				.ForPage(model.PageName)
-				.ThatAreCurrentRevisions()
-				.SingleOrDefaultAsync();
-
-			if (currentRevision != null)
-			{
-				currentRevision.Child = newRevision;
-				newRevision.Revision = currentRevision.Revision + 1;
-			}
-
-			// Update Referrals for this page
-			var existingReferrals = await _db.WikiReferrals
-				.ThatReferTo(model.PageName)
-				.ToListAsync();
-
-			_db.WikiReferrals.RemoveRange(existingReferrals);
-
-			foreach (var newReferral in model.Referrals)
-			{
-				_db.WikiReferrals.Add(new WikiPageReferral
-				{
-					Referrer = model.PageName,
-					Referral = newReferral.Link?.Split('|').FirstOrDefault(),
-					Excerpt = newReferral.Excerpt
-				});
-			}
-
-			await _db.SaveChangesAsync();
-
-			var cachedCurrentRevision = WikiCache
-				.ForPage(model.PageName)
-				.ThatAreCurrentRevisions()
-				.FirstOrDefault();
-			if (cachedCurrentRevision != null)
-			{
-				cachedCurrentRevision.Child = newRevision;
-				cachedCurrentRevision.ChildId = newRevision.Id;
-			}
-
-			WikiCache.Add(newRevision);
-			return newRevision;
+			});
 		}
 
 		/// <summary>

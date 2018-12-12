@@ -16,7 +16,8 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
-using TASVideos.WikiEngine;
+using TASVideos.Services;
+using TASVideos.Services.Dtos;
 
 namespace TASVideos.Tasks
 {
@@ -24,22 +25,22 @@ namespace TASVideos.Tasks
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
-		private readonly WikiTasks _wikiTasks;
 		private readonly IMapper _mapper;
 		private readonly IHostingEnvironment _hostingEnvironment;
+		private readonly IWikiService _wikiService;
 
 		public SubmissionTasks(
 			ApplicationDbContext db,
 			MovieParser parser,
-			WikiTasks wikiTasks,
 			IMapper mapper,
-			IHostingEnvironment hostingEnvironment)
+			IHostingEnvironment hostingEnvironment,
+			IWikiService wikiService)
 		{
 			_db = db;
 			_parser = parser;
-			_wikiTasks = wikiTasks;
 			_mapper = mapper;
 			_hostingEnvironment = hostingEnvironment;
+			_wikiService = wikiService;
 		}
 
 		/// <summary>
@@ -266,17 +267,13 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 
 			// Create a wiki page corresponding to this submission
-			var wikiPage = new WikiPage
+			submission.WikiContent = await _wikiService.CreateRevision(new WikiCreateDto
 			{
-				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
 				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
-				MinorEdit = false,
-				Markup = model.Markup
-			};
-
-			_db.WikiPages.Add(wikiPage);
-
-			submission.WikiContent = wikiPage;
+				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
+				Markup = model.Markup,
+				MinorEdit = false
+			});
 
 			// Add authors
 			var users = await _db.Users
@@ -304,7 +301,6 @@ namespace TASVideos.Tasks
 			_db.ForumPolls.Add(poll);
 
 			await _db.SaveChangesAsync();
-
 
 			// Create Topic in workbench
 			var topic = new ForumTopic
@@ -494,18 +490,12 @@ namespace TASVideos.Tasks
 			submission.EncodeEmbedLink = model.EncodeEmbedLink;
 			submission.Status = model.Status;
 
-			var page = await _wikiTasks.SavePage(new WikiEditModel
+			var page = await _wikiService.CreateRevision(new WikiCreateDto
 			{
 				PageName = $"{LinkConstants.SubmissionWikiPage}{model.Id}",
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage,
-				Referrals = Util.GetAllWikiLinks(model.Markup)
-					.Select(wl => new WikiReferralModel
-					{
-						Link = wl.Link,
-						Excerpt = wl.Excerpt
-					})
 			});
 
 			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == page.Id);
