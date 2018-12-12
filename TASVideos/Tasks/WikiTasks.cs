@@ -65,11 +65,6 @@ namespace TASVideos.Tasks
 			WikiCache.AddRange(wikiPages);
 		}
 
-		public void ClearWikiCache()
-		{
-			_cache.Remove(CacheKeys.WikiCache);
-		}
-
 		/// <summary>
 		/// Returns details about a Wiki page with the given <see cref="pageName" />
 		/// If a <see cref="revisionId" /> is provided then that revision of the page will be returned

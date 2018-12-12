@@ -16,6 +16,11 @@ namespace TASVideos.Services
 		/// Creates a new revision of a wiki page
 		/// </summary>
 		Task<WikiPage> CreateRevision(WikiCreateDto dto);
+
+		/// <summary>
+		/// Clears the wiki cache
+		/// </summary>
+		void ClearCache();
 	}
 
 	public class WikiService : IWikiService
@@ -46,6 +51,11 @@ namespace TASVideos.Services
 		{
 			_db = db;
 			_cache = cache;
+		}
+
+		public void ClearCache()
+		{
+			_cache.Remove(CacheKeys.WikiCache);
 		}
 
 		public async Task<WikiPage> CreateRevision(WikiCreateDto dto)
