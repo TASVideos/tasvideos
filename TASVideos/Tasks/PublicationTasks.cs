@@ -13,8 +13,8 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
+using TASVideos.Services.Dtos;
 using TASVideos.ViewComponents;
-using TASVideos.WikiEngine;
 
 namespace TASVideos.Tasks
 {
@@ -23,18 +23,18 @@ namespace TASVideos.Tasks
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 		private readonly IMapper _mapper;
-		private readonly WikiTasks _wikiTasks;
+		private readonly IWikiService _wikiService;
 		
 		public PublicationTasks(
 			ApplicationDbContext db,
 			ICacheService cache,
 			IMapper mapper,
-			WikiTasks wikiTasks)
+			IWikiService wikiService)
 		{
 			_db = db;
 			_cache = cache;
 			_mapper = mapper;
-			_wikiTasks = wikiTasks;
+			_wikiService = wikiService;
 		}
 
 		/// <summary>
@@ -495,18 +495,12 @@ namespace TASVideos.Tasks
 
 				if (model.Markup != publication.WikiContent.Markup)
 				{
-					var page = await _wikiTasks.SavePage(new WikiEditModel
+					var page = await _wikiService.CreateRevision(new WikiCreateDto
 					{
 						PageName = $"{LinkConstants.PublicationWikiPage}{model.Id}",
 						Markup = model.Markup,
 						MinorEdit = model.MinorEdit,
 						RevisionMessage = model.RevisionMessage,
-						Referrals = Util.GetAllWikiLinks(model.Markup)
-							.Select(wl => new WikiReferralModel
-							{
-								Link = wl.Link,
-								Excerpt = wl.Excerpt
-							})
 					});
 
 					publication.WikiContentId = page.Id;
