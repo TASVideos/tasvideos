@@ -105,13 +105,7 @@ namespace TASVideos.Tasks
 
 		/// <summary>
 		/// Creates a new <see cref="WikiPage"/> with the given data
-		/// If the given page does not exist this will be a new page set at revision 1
-		/// If it is an existing page it will be a new revision of that page that
-		/// will be considered to be the latest revision of this page
-		/// <returns>The id of the page created</returns>
-		/// <seealso cref="WikiPageReferral"/> entries are also updated
 		/// </summary>
-		[Obsolete("User wiki service instead")]
 		public async Task<WikiPage> SavePage(WikiEditModel model)
 		{
 			return await _wikiService.CreateRevision(new WikiCreateDto
