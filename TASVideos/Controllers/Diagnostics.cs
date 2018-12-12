@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -12,17 +13,18 @@ namespace TASVideos.Controllers
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class DiagnosticsController : BaseController
 	{
-		private readonly WikiTasks _wikiTasks;
+		private readonly IWikiService _wikiService;
+
 		private readonly AwardTasks _awardTasks;
 
 		public DiagnosticsController(
-			WikiTasks wikiTasks,
 			AwardTasks awardTasks,
-			UserTasks userTasks)
+			UserTasks userTasks,
+			IWikiService wikiService)
 			: base(userTasks)
 		{
-			_wikiTasks = wikiTasks;
 			_awardTasks = awardTasks;
+			_wikiService = wikiService;
 		}
 
 		public IActionResult Index()
@@ -49,7 +51,7 @@ namespace TASVideos.Controllers
 		[HttpPost]
 		public IActionResult ClearWikiCache()
 		{
-			_wikiTasks.ClearWikiCache();
+			_wikiService.ClearCache();
 			return Ok();
 		}
 
