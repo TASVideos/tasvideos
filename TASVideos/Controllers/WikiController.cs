@@ -171,13 +171,6 @@ namespace TASVideos.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				model.Referrals = Util.GetAllWikiLinks(model.Markup)
-					.Select(l => new WikiReferralModel
-					{
-						Link = l.Link,
-						Excerpt = l.Excerpt
-					});
-
 				var result = await _wikiTasks.SavePage(model);
 
 				if (result.Revision == 1 || !model.MinorEdit)
