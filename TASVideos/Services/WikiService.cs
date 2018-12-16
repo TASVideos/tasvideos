@@ -15,7 +15,21 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Creates a new revision of a wiki page
 		/// </summary>
-		Task<WikiPage> CreateRevision(WikiCreateDto dto);
+		Task<WikiPage> Create(WikiCreateDto dto);
+
+		/// <summary>
+		/// Returns details about a Wiki page with the given <see cref="pageName" />
+		/// If a <see cref="revisionId" /> is provided then that revision of the page will be returned
+		/// Else the latest revision is returned
+		/// </summary>
+		/// <returns>A model representing the Wiki page if it exists else null</returns>
+		WikiPage Revision(string pageName, int? revisionId = null);
+
+		/// <summary>
+		/// Returns details about a Wiki page with the given id
+		/// </summary>
+		/// <returns>A model representing the Wiki page if it exists else null</returns>
+		WikiPage Revision(int dbId);
 
 		/// <summary>
 		/// Clears the wiki cache
@@ -58,7 +72,23 @@ namespace TASVideos.Services
 			_cache.Remove(CacheKeys.WikiCache);
 		}
 
-		public async Task<WikiPage> CreateRevision(WikiCreateDto dto)
+		
+		public WikiPage Revision(string pageName, int? revisionId = null)
+		{
+			return WikiCache
+				.ForPage(pageName)
+				.ThatAreNotDeleted()
+				.FirstOrDefault(w => (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
+		}
+
+		public WikiPage Revision(int dbId)
+		{
+			return WikiCache
+				.ThatAreNotDeleted()
+				.FirstOrDefault(w => w.Id == dbId);
+		}
+
+		public async Task<WikiPage> Create(WikiCreateDto dto)
 		{
 			var newRevision = new WikiPage
 			{

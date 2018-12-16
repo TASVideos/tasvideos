@@ -12,26 +12,29 @@ using TASVideos.Extensions;
 using TASVideos.Filter;
 using TASVideos.Models;
 using TASVideos.Razor;
+using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
-using TASVideos.WikiEngine;
 
 namespace TASVideos.Controllers
 {
 	public class WikiController : BaseController
 	{
 		private readonly WikiTasks _wikiTasks;
+		private readonly IWikiService _wikiService;
 		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public WikiController(
 			UserTasks userTasks,
 			WikiTasks wikiTasks,
+			IWikiService wikiService,
 			WikiMarkupFileProvider wikiMarkupFileProvider,
 			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
 			_wikiTasks = wikiTasks;
+			_wikiService = wikiService;
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 			_publisher = publisher;
 		}
@@ -51,14 +54,14 @@ namespace TASVideos.Controllers
 				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.NormalizeWikiPageName(url) });
 			}
 
-			var existingPage = _wikiTasks.GetPage(url, revision);
+			var existingPage = _wikiService.Revision(url, revision);
 
 			if (existingPage != null)
 			{
 				ViewData["WikiPage"] = existingPage;
 				ViewData["Title"] = existingPage.PageName;
 				ViewData["Layout"] = "/Views/Shared/_WikiLayout.cshtml";
-				_wikiMarkupFileProvider.WikiTasks = _wikiTasks;
+				_wikiMarkupFileProvider.WikiService = _wikiService;
 				return View(WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 
@@ -88,7 +91,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public IActionResult ViewSource(string path, int? revision = null)
 		{
-			var existingPage = _wikiTasks.GetPage(path, revision);
+			var existingPage = _wikiService.Revision(path, revision);
 
 			if (existingPage != null)
 			{
@@ -154,7 +157,7 @@ namespace TASVideos.Controllers
 				return RedirectHome();
 			}
 
-			var existingPage = _wikiTasks.GetPage(path);
+			var existingPage = _wikiService.Revision(path);
 
 			var model = new WikiEditModel
 			{

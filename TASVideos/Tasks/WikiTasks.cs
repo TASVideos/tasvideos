@@ -66,31 +66,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns details about a Wiki page with the given <see cref="pageName" />
-		/// If a <see cref="revisionId" /> is provided then that revision of the page will be returned
-		/// Else the latest revision is returned
-		/// </summary>
-		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		public WikiPage GetPage(string pageName, int? revisionId = null)
-		{
-			return WikiCache
-				.ForPage(pageName)
-				.ThatAreNotDeleted()
-				.FirstOrDefault(w => (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
-		}
-
-		/// <summary>
-		/// Returns details about a Wiki page with the given id
-		/// </summary>
-		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		public WikiPage GetPageById(int dbId)
-		{
-			return WikiCache
-				.ThatAreNotDeleted()
-				.FirstOrDefault(w => w.Id == dbId);
-		}
-
-		/// <summary>
 		/// Returns whether or not any revision of the given page exists
 		/// </summary>
 		public bool PageExists(string pageName, bool includeDeleted = false)
@@ -108,7 +83,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<WikiPage> SavePage(WikiEditModel model)
 		{
-			return await _wikiService.CreateRevision(new WikiCreateDto
+			return await _wikiService.Create(new WikiCreateDto
 			{
 				PageName = model.PageName,
 				Markup = model.Markup,

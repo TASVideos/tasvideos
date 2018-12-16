@@ -495,7 +495,7 @@ namespace TASVideos.Tasks
 
 				if (model.Markup != publication.WikiContent.Markup)
 				{
-					var page = await _wikiService.CreateRevision(new WikiCreateDto
+					var page = await _wikiService.Create(new WikiCreateDto
 					{
 						PageName = $"{LinkConstants.PublicationWikiPage}{model.Id}",
 						Markup = model.Markup,
