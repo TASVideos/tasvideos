@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Services
 {
-	public interface IWikiService
+	public interface IWikiService : IEnumerable<WikiPage>
 	{
 		/// <summary>
 		/// Creates a new revision of a wiki page
@@ -27,7 +28,7 @@ namespace TASVideos.Services
 		/// Else the latest revision is returned
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		WikiPage Revision(string pageName, int? revisionId = null);
+		WikiPage Page(string pageName, int? revisionId = null);
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given id
@@ -71,6 +72,16 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
+		public IEnumerator<WikiPage> GetEnumerator()
+		{
+			return WikiCache.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
 		public bool Exists(string pageName, bool includeDeleted = false)
 		{
 			var query = includeDeleted
@@ -81,7 +92,7 @@ namespace TASVideos.Services
 				.Any(wp => wp.PageName == pageName);
 		}
 
-		public WikiPage Revision(string pageName, int? revisionId = null)
+		public WikiPage Page(string pageName, int? revisionId = null)
 		{
 			return WikiCache
 				.ForPage(pageName)
