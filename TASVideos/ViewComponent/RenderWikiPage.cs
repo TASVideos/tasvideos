@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Extensions;
 using TASVideos.Razor;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {

@@ -18,6 +18,11 @@ namespace TASVideos.Services
 		Task<WikiPage> Create(WikiCreateDto dto);
 
 		/// <summary>
+		/// Returns whether or not any revision of the given page exists
+		/// </summary>
+		bool Exists(string pageName, bool includeDeleted = false);
+
+		/// <summary>
 		/// Returns details about a Wiki page with the given <see cref="pageName" />
 		/// If a <see cref="revisionId" /> is provided then that revision of the page will be returned
 		/// Else the latest revision is returned
@@ -67,12 +72,16 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public void ClearCache()
+		public bool Exists(string pageName, bool includeDeleted = false)
 		{
-			_cache.Remove(CacheKeys.WikiCache);
+			var query = includeDeleted
+				? WikiCache
+				: WikiCache.ThatAreNotDeleted();
+
+			return query
+				.Any(wp => wp.PageName == pageName);
 		}
 
-		
 		public WikiPage Revision(string pageName, int? revisionId = null)
 		{
 			return WikiCache
@@ -125,6 +134,20 @@ namespace TASVideos.Services
 
 			WikiCache.Add(newRevision);
 			return newRevision;
+		}
+
+		public async Task PreLoadCache()
+		{
+			var wikiPages = await _db.WikiPages
+				.ThatAreCurrentRevisions()
+				.ToListAsync();
+
+			WikiCache.AddRange(wikiPages);
+		}
+
+		public void ClearCache()
+		{
+			_cache.Remove(CacheKeys.WikiCache);
 		}
 
 		// Loads all current wiki pages into the WikiCache
