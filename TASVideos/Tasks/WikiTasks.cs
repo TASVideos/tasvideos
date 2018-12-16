@@ -27,22 +27,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Creates a new <see cref="WikiPage"/> with the given data
-		/// </summary>
-		public async Task<WikiPage> SavePage(WikiEditModel model)
-		{
-			var revision = new WikiPage
-			{
-				PageName = model.PageName,
-				Markup = model.Markup,
-				MinorEdit = model.MinorEdit,
-				RevisionMessage = model.RevisionMessage
-			};
-			await _wikiService.Add(revision);
-			return revision;
-		}
-
-		/// <summary>
 		/// Returns a revision history for the <see cref="WikiPage"/>
 		/// with the given <see cref="pageName" />
 		/// </summary>

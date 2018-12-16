@@ -174,12 +174,19 @@ namespace TASVideos.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var result = await _wikiTasks.SavePage(model);
+				var page = new WikiPage
+				{
+					PageName = model.PageName,
+					Markup = model.Markup,
+					MinorEdit = model.MinorEdit,
+					RevisionMessage = model.RevisionMessage
+				};
+				await _wikiService.Add(page);
 
-				if (result.Revision == 1 || !model.MinorEdit)
+				if (page.Revision == 1 || !model.MinorEdit)
 				{
 					_publisher.SendGeneralWiki(
-						$"Page {model.PageName} {(result.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
+						$"Page {model.PageName} {(page.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
 						$"{model.RevisionMessage}",
 						$"{BaseUrl}/{model.PageName}");
 				}
