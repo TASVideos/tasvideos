@@ -306,85 +306,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Performs a soft delete on all revisions of the given page name,
-		/// In addition <see cref="WikiPageReferral"/> entries are updated
-		/// to remove entries where the given page name is a referrer
-		/// </summary>
-		/// <returns>The number of revisions that were deleted</returns>
-		public async Task<int> DeleteWikiPage(string pageName)
-		{
-			var revisions = await _db.WikiPages
-				.ForPage(pageName)
-				.ThatAreNotDeleted()
-				.ToListAsync();
-
-			foreach (var revision in revisions)
-			{
-				revision.IsDeleted = true;
-			}
-
-			var cachedRevisions = WikiCache
-				.ForPage(pageName)
-				.ThatAreNotDeleted()
-				.ToList();
-
-			foreach (var cachedRevision in cachedRevisions)
-			{
-				cachedRevision.IsDeleted = true;
-			}
-
-			// Remove referrers
-			var referrers = await _db.WikiReferrals
-				.ThatReferTo(pageName)
-				.ToListAsync();
-
-			_db.RemoveRange(referrers);
-
-			await _db.SaveChangesAsync();
-			return revisions.Count;
-		}
-
-		/// <summary>
-		/// Performs a soft delete on a single revision of a <see cref="WikiPage"/>
-		/// If the revision is latest revisions, then <see cref="WikiPageReferral"/>
-		/// will be removed where the given page name is a referrer
-		/// </summary>
-		public async Task DeleteWikiPageRevision(string pageName, int revision)
-		{
-			var wikiPage = await _db.WikiPages
-				.ThatAreNotDeleted()
-				.Revision(pageName, revision)
-				.SingleOrDefaultAsync();
-
-			if (wikiPage != null)
-			{
-				wikiPage.IsDeleted = true;
-
-				var cachedRevision = WikiCache
-					.ThatAreNotDeleted()
-					.Revision(pageName, revision)
-					.SingleOrDefault();
-
-				if (cachedRevision != null)
-				{
-					cachedRevision.IsDeleted = true;
-				}
-
-				// Update referrers if latest revision
-				if (wikiPage.Child == null)
-				{
-					var referrers = await _db.WikiReferrals
-						.ThatReferTo(pageName)
-						.ToListAsync();
-
-					_db.RemoveRange(referrers);
-				}
-
-				await _db.SaveChangesAsync();
-			}
-		}
-
-		/// <summary>
 		/// Returns a list of all deleted pages for the purpose of display
 		/// </summary>
 		public async Task<IEnumerable<DeletedWikiPageDisplayModel>> GetDeletedPages()
@@ -413,32 +334,6 @@ namespace TASVideos.Tasks
 			}
 
 			return results;
-		}
-
-		/// <summary>
-		/// Restores all revisions of the given page
-		/// </summary>
-		public async Task UndeletePage(string pageName)
-		{
-			var revisions = await _db.WikiPages
-				.ThatAreDeleted()
-				.ForPage(pageName)
-				.ToListAsync();
-
-			foreach (var revision in revisions)
-			{
-				revision.IsDeleted = false;
-
-				var cachedRevision = _wikiService
-					.FirstOrDefault(w => w.Id == revision.Id);
-
-				if (cachedRevision != null)
-				{
-					cachedRevision.IsDeleted = false;
-				}
-			}
-
-			await _db.SaveChangesAsync();
 		}
 
 		public async Task<IEnumerable<GameSubpageModel>> GetGameResourcesSubPages()

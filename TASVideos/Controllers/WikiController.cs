@@ -255,7 +255,7 @@ namespace TASVideos.Controllers
 		{
 			if (!string.IsNullOrWhiteSpace(path))
 			{
-				var result = await _wikiTasks.DeleteWikiPage(path.Trim('/'));
+				var result = await _wikiService.Delete(path.Trim('/'));
 
 				_publisher.SendGeneralWiki(
 					$"Page {path} DELETED by {User.Identity.Name}",
@@ -275,7 +275,7 @@ namespace TASVideos.Controllers
 			}
 
 			path = path.Trim('/');
-			await _wikiTasks.DeleteWikiPageRevision(path, revision);
+			await _wikiService.Delete(path, revision);
 
 			_publisher.SendGeneralWiki(
 					$"Revision {revision} of Page {path} DELETED by {User.Identity.Name}",
@@ -301,7 +301,7 @@ namespace TASVideos.Controllers
 			}
 
 			path = path.Trim('/');
-			await _wikiTasks.UndeletePage(path);
+			await _wikiService.Undelete(path);
 
 			_publisher.SendGeneralWiki(
 					$"Page {path} UNDELETED by {User.Identity.Name}",
