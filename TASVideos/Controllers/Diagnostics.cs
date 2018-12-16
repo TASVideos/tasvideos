@@ -13,18 +13,18 @@ namespace TASVideos.Controllers
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class DiagnosticsController : BaseController
 	{
-		private readonly IWikiService _wikiService;
+		private readonly IWikiPages _wikiPages;
 
 		private readonly AwardTasks _awardTasks;
 
 		public DiagnosticsController(
 			AwardTasks awardTasks,
 			UserTasks userTasks,
-			IWikiService wikiService)
+			IWikiPages wikiPages)
 			: base(userTasks)
 		{
 			_awardTasks = awardTasks;
-			_wikiService = wikiService;
+			_wikiPages = wikiPages;
 		}
 
 		public IActionResult Index()
@@ -51,7 +51,7 @@ namespace TASVideos.Controllers
 		[HttpPost]
 		public async Task<IActionResult> FlushWikiCache()
 		{
-			await _wikiService.FlushCache();
+			await _wikiPages.FlushCache();
 			return Ok();
 		}
 

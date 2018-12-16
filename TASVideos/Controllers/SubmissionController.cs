@@ -19,18 +19,18 @@ namespace TASVideos.Controllers
 {
 	public class SubmissionController : BaseController
 	{
-		private readonly IWikiService _wikiService;
+		private readonly IWikiPages _wikiPages;
 		private readonly SubmissionTasks _submissionTasks;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public SubmissionController(
 			UserTasks userTasks,
-			IWikiService wikiService,
+			IWikiPages wikiPages,
 			SubmissionTasks submissionTasks,
 			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
-			_wikiService = wikiService;
+			_wikiPages = wikiPages;
 			_submissionTasks = submissionTasks;
 			_publisher = publisher;
 		}
@@ -149,7 +149,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.SubmitMovies)]
 		public IActionResult PrefillText()
 		{
-			var page = _wikiService.Page("System/SubmissionDefaultMessage");
+			var page = _wikiPages.Page("System/SubmissionDefaultMessage");
 			return Json(new { text = page.Markup });
 		}
 

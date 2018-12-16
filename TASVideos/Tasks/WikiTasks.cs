@@ -16,14 +16,14 @@ namespace TASVideos.Tasks
 	public class WikiTasks
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IWikiService _wikiService;
+		private readonly IWikiPages _wikiPages;
 
 		public WikiTasks(
 			ApplicationDbContext db,
-			IWikiService wikiService)
+			IWikiPages wikiPages)
 		{
 			_db = db;
-			_wikiService = wikiService;
+			_wikiPages = wikiPages;
 		}
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace TASVideos.Tasks
 		public IEnumerable<string> GetSubPages(string pageName)
 		{
 			pageName = pageName.Trim('/');
-			return _wikiService
+			return _wikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
@@ -90,7 +90,7 @@ namespace TASVideos.Tasks
 		public IEnumerable<string> GetParents(string pageName)
 		{
 			pageName = pageName.Trim('/');
-			return _wikiService
+			return _wikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
@@ -278,10 +278,10 @@ namespace TASVideos.Tasks
 			// Workaround for EF Core 2.1 issue
 			// https://github.com/aspnet/EntityFrameworkCore/issues/3103
 			// Since we know the cache is up to date we can do the logic there and avoid n+1 trips to the db
-			await _wikiService.PreLoadCache();
+			await _wikiPages.PreLoadCache();
 			foreach (var result in results)
 			{
-				result.HasExistingRevisions = _wikiService.Any(wp => wp.PageName == result.PageName);
+				result.HasExistingRevisions = _wikiPages.Any(wp => wp.PageName == result.PageName);
 			}
 
 			return results;
@@ -294,7 +294,7 @@ namespace TASVideos.Tasks
 				var systems = await _db.GameSystems.ToListAsync();
 				var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
 
-				var pages = _wikiService
+				var pages = _wikiPages
 					.ThatAreNotDeleted()
 					.ThatAreCurrentRevisions()
 					.Where(wp => gameResourceSystems.Contains(wp.PageName))

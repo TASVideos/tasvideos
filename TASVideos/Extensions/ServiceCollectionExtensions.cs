@@ -100,7 +100,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<IPointsService, PointsService>();
 			services.AddTransient<IEmailSender, EmailSender>();
 			services.AddTransient<IEmailService, EmailService>();
-			services.AddTransient<IWikiService, WikiService>();
+			services.AddTransient<IWikiPages, WikiPages>();
 
 			return services;
 		}

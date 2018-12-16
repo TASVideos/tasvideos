@@ -11,7 +11,7 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Services
 {
-	public interface IWikiService : IEnumerable<WikiPage>
+	public interface IWikiPages : IEnumerable<WikiPage>
 	{
 		/// <summary>
 		/// Returns whether or not any revision of the given page exists
@@ -77,7 +77,7 @@ namespace TASVideos.Services
 		Task PreLoadCache();
 	}
 
-	public class WikiService : IWikiService
+	public class WikiPages : IWikiPages
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
@@ -99,7 +99,7 @@ namespace TASVideos.Services
 			}
 		}
 
-		public WikiService(
+		public WikiPages(
 			ApplicationDbContext db,
 			ICacheService cache)
 		{
