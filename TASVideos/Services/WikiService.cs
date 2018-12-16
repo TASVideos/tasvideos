@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Services.Dtos;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Services
@@ -15,7 +14,7 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Creates a new revision of a wiki page
 		/// </summary>
-		Task<WikiPage> Create(WikiCreateDto dto);
+		Task Add(WikiPage revision);
 
 		/// <summary>
 		/// Returns whether or not any revision of the given page exists
@@ -97,43 +96,42 @@ namespace TASVideos.Services
 				.FirstOrDefault(w => w.Id == dbId);
 		}
 
-		public async Task<WikiPage> Create(WikiCreateDto dto)
+		public async Task Add(WikiPage revision)
 		{
-			var newRevision = new WikiPage
-			{
-				PageName = dto.PageName,
-				Markup = dto.Markup,
-				MinorEdit = dto.MinorEdit,
-				RevisionMessage = dto.RevisionMessage
-			};
+			//var newRevision = new WikiPage
+			//{
+			//	PageName = dto.PageName,
+			//	Markup = dto.Markup,
+			//	MinorEdit = dto.MinorEdit,
+			//	RevisionMessage = dto.RevisionMessage
+			//};
 
-			_db.WikiPages.Add(newRevision);
+			_db.WikiPages.Add(revision);
 
 			var currentRevision = await _db.WikiPages
-				.ForPage(dto.PageName)
+				.ForPage(revision.PageName)
 				.ThatAreCurrentRevisions()
 				.SingleOrDefaultAsync();
 
 			if (currentRevision != null)
 			{
-				currentRevision.Child = newRevision;
-				newRevision.Revision = currentRevision.Revision + 1;
+				currentRevision.Child = revision;
+				revision.Revision = currentRevision.Revision + 1;
 			}
 
-			await GenerateReferrals(dto.PageName, dto.Markup);
+			await GenerateReferrals(revision.PageName, revision.Markup);
 		
 			var cachedCurrentRevision = WikiCache
-				.ForPage(dto.PageName)
+				.ForPage(revision.PageName)
 				.ThatAreCurrentRevisions()
 				.FirstOrDefault();
 			if (cachedCurrentRevision != null)
 			{
-				cachedCurrentRevision.Child = newRevision;
-				cachedCurrentRevision.ChildId = newRevision.Id;
+				cachedCurrentRevision.Child = revision;
+				cachedCurrentRevision.ChildId = revision.Id;
 			}
 
-			WikiCache.Add(newRevision);
-			return newRevision;
+			WikiCache.Add(revision);
 		}
 
 		public async Task PreLoadCache()

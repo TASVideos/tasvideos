@@ -10,7 +10,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Services.Dtos;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
@@ -70,13 +69,15 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<WikiPage> SavePage(WikiEditModel model)
 		{
-			return await _wikiService.Create(new WikiCreateDto
+			var revision = new WikiPage
 			{
 				PageName = model.PageName,
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage
-			});
+			};
+			await _wikiService.Add(revision);
+			return revision;
 		}
 
 		/// <summary>

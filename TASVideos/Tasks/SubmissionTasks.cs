@@ -17,7 +17,6 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Services;
-using TASVideos.Services.Dtos;
 
 namespace TASVideos.Tasks
 {
@@ -267,13 +266,15 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 
 			// Create a wiki page corresponding to this submission
-			submission.WikiContent = await _wikiService.Create(new WikiCreateDto
+			var revision = new WikiPage
 			{
 				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
 				Markup = model.Markup,
 				MinorEdit = false
-			});
+			};
+			await _wikiService.Add(revision);
+			submission.WikiContent = revision;
 
 			// Add authors
 			var users = await _db.Users
@@ -490,15 +491,16 @@ namespace TASVideos.Tasks
 			submission.EncodeEmbedLink = model.EncodeEmbedLink;
 			submission.Status = model.Status;
 
-			var page = await _wikiService.Create(new WikiCreateDto
+			var revision = new WikiPage
 			{
 				PageName = $"{LinkConstants.SubmissionWikiPage}{model.Id}",
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage,
-			});
+			};
+			await _wikiService.Add(revision);
 
-			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == page.Id);
+			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == revision.Id);
 
 			submission.GenerateTitle();
 			await _db.SaveChangesAsync();

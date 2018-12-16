@@ -13,7 +13,6 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Services.Dtos;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
@@ -495,15 +494,16 @@ namespace TASVideos.Tasks
 
 				if (model.Markup != publication.WikiContent.Markup)
 				{
-					var page = await _wikiService.Create(new WikiCreateDto
+					var revision = new WikiPage
 					{
 						PageName = $"{LinkConstants.PublicationWikiPage}{model.Id}",
 						Markup = model.Markup,
 						MinorEdit = model.MinorEdit,
 						RevisionMessage = model.RevisionMessage,
-					});
+					};
+					await _wikiService.Add(revision);
 
-					publication.WikiContentId = page.Id;
+					publication.WikiContentId = revision.Id;
 				}
 			}
 		}
