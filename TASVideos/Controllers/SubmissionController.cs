@@ -20,19 +20,16 @@ namespace TASVideos.Controllers
 	public class SubmissionController : BaseController
 	{
 		private readonly IWikiService _wikiService;
-		private readonly WikiTasks _wikiTasks;
 		private readonly SubmissionTasks _submissionTasks;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public SubmissionController(
 			UserTasks userTasks,
-			WikiTasks wikiTasks,
 			IWikiService wikiService,
 			SubmissionTasks submissionTasks,
 			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
-			_wikiTasks = wikiTasks;
 			_wikiService = wikiService;
 			_submissionTasks = submissionTasks;
 			_publisher = publisher;

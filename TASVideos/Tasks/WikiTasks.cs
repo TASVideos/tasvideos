@@ -66,19 +66,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns whether or not any revision of the given page exists
-		/// </summary>
-		public bool PageExists(string pageName, bool includeDeleted = false)
-		{
-			var query = includeDeleted
-				? WikiCache
-				: WikiCache.ThatAreNotDeleted();
-
-			return query
-				.Any(wp => wp.PageName == pageName);
-		}
-
-		/// <summary>
 		/// Creates a new <see cref="WikiPage"/> with the given data
 		/// </summary>
 		public async Task<WikiPage> SavePage(WikiEditModel model)
@@ -142,7 +129,7 @@ namespace TASVideos.Tasks
 		{
 			// TODO: support moving a page to a deleted page
 			// Revision ids would have to be adjusted but it could be done
-			if (PageExists(model.DestinationPageName, includeDeleted: true))
+			if (_wikiService.Exists(model.DestinationPageName, includeDeleted: true))
 			{
 				throw new InvalidOperationException($"Cannot move {model.OriginalPageName} to {model.DestinationPageName} because {model.DestinationPageName} already exists.");
 			}

@@ -66,7 +66,7 @@ namespace TASVideos.Controllers
 			}
 
 			// Account for garbage revision values
-			if (revision.HasValue && _wikiTasks.PageExists(url)) 
+			if (revision.HasValue && _wikiService.Exists(url)) 
 			{
 				return Redirect("/" + url);
 			}
@@ -210,7 +210,7 @@ namespace TASVideos.Controllers
 			if (!string.IsNullOrWhiteSpace(path))
 			{
 				path = path.Trim('/');
-				if (_wikiTasks.PageExists(path))
+				if (_wikiService.Exists(path))
 				{
 					return View(new WikiMoveModel
 					{
@@ -230,7 +230,7 @@ namespace TASVideos.Controllers
 			model.OriginalPageName = model.OriginalPageName.Trim('/');
 			model.DestinationPageName = model.DestinationPageName.Trim('/');
 
-			if (_wikiTasks.PageExists(model.DestinationPageName, includeDeleted: true))
+			if (_wikiService.Exists(model.DestinationPageName, includeDeleted: true))
 			{
 				ModelState.AddModelError(nameof(WikiMoveModel.DestinationPageName), "The destination page already exists.");
 			}
