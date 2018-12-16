@@ -22,18 +22,18 @@ namespace TASVideos.Tasks
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 		private readonly IMapper _mapper;
-		private readonly IWikiService _wikiService;
+		private readonly IWikiPages _wikiPages;
 		
 		public PublicationTasks(
 			ApplicationDbContext db,
 			ICacheService cache,
 			IMapper mapper,
-			IWikiService wikiService)
+			IWikiPages wikiPages)
 		{
 			_db = db;
 			_cache = cache;
 			_mapper = mapper;
-			_wikiService = wikiService;
+			_wikiPages = wikiPages;
 		}
 
 		/// <summary>
@@ -501,7 +501,7 @@ namespace TASVideos.Tasks
 						MinorEdit = model.MinorEdit,
 						RevisionMessage = model.RevisionMessage,
 					};
-					await _wikiService.Add(revision);
+					await _wikiPages.Add(revision);
 
 					publication.WikiContentId = revision.Id;
 				}

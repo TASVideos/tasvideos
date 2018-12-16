@@ -9,14 +9,14 @@ namespace TASVideos.ViewComponents
 {
 	public class RenderWikiPage : ViewComponent
 	{
-		private readonly IWikiService _wikiService;
+		private readonly IWikiPages _wikiPages;
 		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
 
 		public RenderWikiPage(
-			IWikiService wikiService,
+			IWikiPages wikiPages,
 			WikiMarkupFileProvider wikiMarkupFileProvider)
 		{
-			_wikiService = wikiService;
+			_wikiPages = wikiPages;
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 		}
 
@@ -28,14 +28,14 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-			var existingPage = _wikiService.Page(url, revision);
+			var existingPage = _wikiPages.Page(url, revision);
 
 			if (existingPage != null)
 			{
 				ViewData["WikiPage"] = existingPage;
 				ViewData["Title"] = existingPage.PageName;
 				ViewData["Layout"] = null;
-				_wikiMarkupFileProvider.WikiService = _wikiService;
+				_wikiMarkupFileProvider.WikiPages = _wikiPages;
 				return View(WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 

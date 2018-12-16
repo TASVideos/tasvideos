@@ -1,11 +1,11 @@
 ﻿@using TASVideos.Services
-@inject IWikiService WikiService
+@inject IWikiPages WikiPages
 
 @{
 	ViewData["Title"] = "Home Page";
 	ViewData.AddActivePage(ProfileNavPages.HomePage);
 	var homePage = $"HomePages/{User.Identity.Name}";
-	bool pageExists = WikiService.Exists(homePage);
+	bool pageExists = WikiPages.Exists(homePage);
 }
 <br />
 @if (ViewData.UserHas(PermissionTo.EditHomePage))

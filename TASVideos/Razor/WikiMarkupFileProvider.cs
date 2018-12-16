@@ -20,7 +20,7 @@ namespace TASVideos.Razor
 
 		private int _previewNameIndex;
 
-		public IWikiService WikiService { get; set; }
+		public IWikiPages WikiPages { get; set; }
 
 		public string SetPreviewMarkup(string content)
 		{
@@ -59,7 +59,7 @@ namespace TASVideos.Razor
 			else
 			{
 				subpath = subpath.Substring(Prefix.Length);
-				var continuation = WikiService.Revision(int.Parse(subpath));
+				var continuation = WikiPages.Revision(int.Parse(subpath));
 				var result = continuation;
 				if (result == null)
 				{

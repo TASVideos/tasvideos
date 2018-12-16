@@ -21,20 +21,20 @@ namespace TASVideos.Controllers
 	public class WikiController : BaseController
 	{
 		private readonly WikiTasks _wikiTasks;
-		private readonly IWikiService _wikiService;
+		private readonly IWikiPages _wikiPages;
 		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public WikiController(
 			UserTasks userTasks,
 			WikiTasks wikiTasks,
-			IWikiService wikiService,
+			IWikiPages wikiPages,
 			WikiMarkupFileProvider wikiMarkupFileProvider,
 			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
 			_wikiTasks = wikiTasks;
-			_wikiService = wikiService;
+			_wikiPages = wikiPages;
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 			_publisher = publisher;
 		}
@@ -54,19 +54,19 @@ namespace TASVideos.Controllers
 				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.NormalizeWikiPageName(url) });
 			}
 
-			var existingPage = _wikiService.Page(url, revision);
+			var existingPage = _wikiPages.Page(url, revision);
 
 			if (existingPage != null)
 			{
 				ViewData["WikiPage"] = existingPage;
 				ViewData["Title"] = existingPage.PageName;
 				ViewData["Layout"] = "/Views/Shared/_WikiLayout.cshtml";
-				_wikiMarkupFileProvider.WikiService = _wikiService;
+				_wikiMarkupFileProvider.WikiPages = _wikiPages;
 				return View(WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}
 
 			// Account for garbage revision values
-			if (revision.HasValue && _wikiService.Exists(url)) 
+			if (revision.HasValue && _wikiPages.Exists(url)) 
 			{
 				return Redirect("/" + url);
 			}
@@ -91,7 +91,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public IActionResult ViewSource(string path, int? revision = null)
 		{
-			var existingPage = _wikiService.Page(path, revision);
+			var existingPage = _wikiPages.Page(path, revision);
 
 			if (existingPage != null)
 			{
@@ -157,7 +157,7 @@ namespace TASVideos.Controllers
 				return RedirectHome();
 			}
 
-			var existingPage = _wikiService.Page(path);
+			var existingPage = _wikiPages.Page(path);
 
 			var model = new WikiEditModel
 			{
@@ -181,7 +181,7 @@ namespace TASVideos.Controllers
 					MinorEdit = model.MinorEdit,
 					RevisionMessage = model.RevisionMessage
 				};
-				await _wikiService.Add(page);
+				await _wikiPages.Add(page);
 
 				if (page.Revision == 1 || !model.MinorEdit)
 				{
@@ -217,7 +217,7 @@ namespace TASVideos.Controllers
 			if (!string.IsNullOrWhiteSpace(path))
 			{
 				path = path.Trim('/');
-				if (_wikiService.Exists(path))
+				if (_wikiPages.Exists(path))
 				{
 					return View(new WikiMoveModel
 					{
@@ -237,14 +237,14 @@ namespace TASVideos.Controllers
 			model.OriginalPageName = model.OriginalPageName.Trim('/');
 			model.DestinationPageName = model.DestinationPageName.Trim('/');
 
-			if (_wikiService.Exists(model.DestinationPageName, includeDeleted: true))
+			if (_wikiPages.Exists(model.DestinationPageName, includeDeleted: true))
 			{
 				ModelState.AddModelError(nameof(WikiMoveModel.DestinationPageName), "The destination page already exists.");
 			}
 
 			if (ModelState.IsValid)
 			{
-				await _wikiService.Move(model.OriginalPageName, model.DestinationPageName);
+				await _wikiPages.Move(model.OriginalPageName, model.DestinationPageName);
 
 				_publisher.SendGeneralWiki(
 						$"Page {model.OriginalPageName} moved to {model.DestinationPageName} by {User.Identity.Name}",
@@ -262,7 +262,7 @@ namespace TASVideos.Controllers
 		{
 			if (!string.IsNullOrWhiteSpace(path))
 			{
-				var result = await _wikiService.Delete(path.Trim('/'));
+				var result = await _wikiPages.Delete(path.Trim('/'));
 
 				_publisher.SendGeneralWiki(
 					$"Page {path} DELETED by {User.Identity.Name}",
@@ -282,7 +282,7 @@ namespace TASVideos.Controllers
 			}
 
 			path = path.Trim('/');
-			await _wikiService.Delete(path, revision);
+			await _wikiPages.Delete(path, revision);
 
 			_publisher.SendGeneralWiki(
 					$"Revision {revision} of Page {path} DELETED by {User.Identity.Name}",
@@ -308,7 +308,7 @@ namespace TASVideos.Controllers
 			}
 
 			path = path.Trim('/');
-			await _wikiService.Undelete(path);
+			await _wikiPages.Undelete(path);
 
 			_publisher.SendGeneralWiki(
 					$"Page {path} UNDELETED by {User.Identity.Name}",

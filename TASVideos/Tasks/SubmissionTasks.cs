@@ -26,20 +26,20 @@ namespace TASVideos.Tasks
 		private readonly MovieParser _parser;
 		private readonly IMapper _mapper;
 		private readonly IHostingEnvironment _hostingEnvironment;
-		private readonly IWikiService _wikiService;
+		private readonly IWikiPages _wikiPages;
 
 		public SubmissionTasks(
 			ApplicationDbContext db,
 			MovieParser parser,
 			IMapper mapper,
 			IHostingEnvironment hostingEnvironment,
-			IWikiService wikiService)
+			IWikiPages wikiPages)
 		{
 			_db = db;
 			_parser = parser;
 			_mapper = mapper;
 			_hostingEnvironment = hostingEnvironment;
-			_wikiService = wikiService;
+			_wikiPages = wikiPages;
 		}
 
 		/// <summary>
@@ -273,7 +273,7 @@ namespace TASVideos.Tasks
 				Markup = model.Markup,
 				MinorEdit = false
 			};
-			await _wikiService.Add(revision);
+			await _wikiPages.Add(revision);
 			submission.WikiContent = revision;
 
 			// Add authors
@@ -498,7 +498,7 @@ namespace TASVideos.Tasks
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage,
 			};
-			await _wikiService.Add(revision);
+			await _wikiPages.Add(revision);
 
 			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == revision.Id);
 
