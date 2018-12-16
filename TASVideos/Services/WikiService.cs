@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,13 @@ namespace TASVideos.Services
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
 		WikiPage Page(string pageName, int? revisionId = null);
+
+		/// <summary>
+		/// Renames the given wiki page to the destination name
+		/// All revisions are renamed to the new page
+		/// and <seealso cref="WikiPageReferral" /> entries are updated
+		/// </summary>
+		Task Move(string originalName, string destinationName);
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given id
@@ -109,14 +117,6 @@ namespace TASVideos.Services
 
 		public async Task Add(WikiPage revision)
 		{
-			//var newRevision = new WikiPage
-			//{
-			//	PageName = dto.PageName,
-			//	Markup = dto.Markup,
-			//	MinorEdit = dto.MinorEdit,
-			//	RevisionMessage = dto.RevisionMessage
-			//};
-
 			_db.WikiPages.Add(revision);
 
 			var currentRevision = await _db.WikiPages
@@ -143,6 +143,58 @@ namespace TASVideos.Services
 			}
 
 			WikiCache.Add(revision);
+		}
+
+		public async Task Move(string originalName, string destinationName)
+		{
+			if (string.IsNullOrWhiteSpace(destinationName))
+			{
+				throw new ArgumentException($"{destinationName} must have a value.");
+			}
+
+			// TODO: support moving a page to a deleted page
+			// Revision ids would have to be adjusted but it could be done
+			if (Exists(destinationName, includeDeleted: true))
+			{
+				throw new InvalidOperationException($"Cannot move {originalName} to {destinationName} because {destinationName} already exists.");
+			}
+
+			var existingRevisions = await _db.WikiPages
+				.ForPage(originalName)
+				.ToListAsync();
+
+			foreach (var revision in existingRevisions)
+			{
+				revision.PageName = destinationName;
+
+				var cachedRevision = WikiCache.FirstOrDefault(w => w.Id == revision.Id);
+				if (cachedRevision != null)
+				{
+					cachedRevision.PageName = destinationName;
+				}
+			}
+
+			await _db.SaveChangesAsync();
+
+			// Update all Referrals
+			// Referrals can be safely updated since the new page still has the original content 
+			// and any links on them are still correctly referring to other pages
+			var existingReferrals = await _db.WikiReferrals
+				.Where(wr => wr.Referral == originalName)
+				.ToListAsync();
+
+			foreach (var referral in existingReferrals)
+			{
+				referral.Referral = destinationName;
+			}
+
+			await _db.SaveChangesAsync();
+
+			// Note that we can not update Referrers since the wiki pages will still
+			// Physically refer to the original page. Those links are broken and it is
+			// Important to keep them listed as broken so they can show up in the Broken Links module
+			// for editors to see and fix. Anyone doing a move operation should know to check broken links
+			// afterwards
 		}
 
 		public async Task PreLoadCache()

@@ -237,7 +237,7 @@ namespace TASVideos.Controllers
 
 			if (ModelState.IsValid)
 			{
-				await _wikiTasks.MovePage(model);
+				await _wikiService.Move(model.OriginalPageName, model.DestinationPageName);
 
 				_publisher.SendGeneralWiki(
 						$"Page {model.OriginalPageName} moved to {model.DestinationPageName} by {User.Identity.Name}",
