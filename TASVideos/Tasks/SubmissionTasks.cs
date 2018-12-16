@@ -267,7 +267,7 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 
 			// Create a wiki page corresponding to this submission
-			submission.WikiContent = await _wikiService.CreateRevision(new WikiCreateDto
+			submission.WikiContent = await _wikiService.Create(new WikiCreateDto
 			{
 				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
@@ -490,7 +490,7 @@ namespace TASVideos.Tasks
 			submission.EncodeEmbedLink = model.EncodeEmbedLink;
 			submission.Status = model.Status;
 
-			var page = await _wikiService.CreateRevision(new WikiCreateDto
+			var page = await _wikiService.Create(new WikiCreateDto
 			{
 				PageName = $"{LinkConstants.SubmissionWikiPage}{model.Id}",
 				Markup = model.Markup,

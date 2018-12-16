@@ -11,6 +11,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Filter;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
 
@@ -18,6 +19,7 @@ namespace TASVideos.Controllers
 {
 	public class SubmissionController : BaseController
 	{
+		private readonly IWikiService _wikiService;
 		private readonly WikiTasks _wikiTasks;
 		private readonly SubmissionTasks _submissionTasks;
 		private readonly ExternalMediaPublisher _publisher;
@@ -25,11 +27,13 @@ namespace TASVideos.Controllers
 		public SubmissionController(
 			UserTasks userTasks,
 			WikiTasks wikiTasks,
+			IWikiService wikiService,
 			SubmissionTasks submissionTasks,
 			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
 			_wikiTasks = wikiTasks;
+			_wikiService = wikiService;
 			_submissionTasks = submissionTasks;
 			_publisher = publisher;
 		}
@@ -148,7 +152,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.SubmitMovies)]
 		public IActionResult PrefillText()
 		{
-			var page = _wikiTasks.GetPage("System/SubmissionDefaultMessage");
+			var page = _wikiService.Revision("System/SubmissionDefaultMessage");
 			return Json(new { text = page.Markup });
 		}
 

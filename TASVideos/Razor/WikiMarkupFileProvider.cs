@@ -6,7 +6,7 @@ using System.Threading;
 
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
-using TASVideos.Tasks;
+using TASVideos.Services;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Razor
@@ -20,7 +20,7 @@ namespace TASVideos.Razor
 
 		private int _previewNameIndex;
 
-		public WikiTasks WikiTasks { get; set; }
+		public IWikiService WikiService { get; set; }
 
 		public string SetPreviewMarkup(string content)
 		{
@@ -59,7 +59,7 @@ namespace TASVideos.Razor
 			else
 			{
 				subpath = subpath.Substring(Prefix.Length);
-				var continuation = WikiTasks.GetPageById(int.Parse(subpath));
+				var continuation = WikiService.Revision(int.Parse(subpath));
 				var result = continuation;
 				if (result == null)
 				{
