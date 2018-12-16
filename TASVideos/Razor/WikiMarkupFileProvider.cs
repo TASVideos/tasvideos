@@ -37,29 +37,29 @@ namespace TASVideos.Razor
 			return key;
 		}
 
-		public IDirectoryContents GetDirectoryContents(string subpath)
+		public IDirectoryContents GetDirectoryContents(string subPath)
 		{
 			return null;
 		}
 
-		public IFileInfo GetFileInfo(string subpath)
+		public IFileInfo GetFileInfo(string subPath)
 		{
-			if (!subpath.StartsWith(Prefix) && !subpath.StartsWith(PreviewPrefix))
+			if (!subPath.StartsWith(Prefix) && !subPath.StartsWith(PreviewPrefix))
 			{
 				return null;
 			}
 
 			string pageName, markup;
 
-			if (subpath.StartsWith(PreviewPrefix))
+			if (subPath.StartsWith(PreviewPrefix))
 			{
 				pageName = "foobar"; // what goes here?
-				markup = GetPreviewMarkup(subpath);
+				markup = GetPreviewMarkup(subPath);
 			}
 			else
 			{
-				subpath = subpath.Substring(Prefix.Length);
-				var continuation = WikiPages.Revision(int.Parse(subpath));
+				subPath = subPath.Substring(Prefix.Length);
+				var continuation = WikiPages.Revision(int.Parse(subPath));
 				var result = continuation;
 				if (result == null)
 				{

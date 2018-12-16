@@ -274,7 +274,7 @@ namespace TASVideos.Tasks
 				}
 			}
 
-			// TODO: automapper, single movie is the same logic
+			// TODO: AutoMapper, single movie is the same logic
 			return await query
 				.OrderBy(p => p.System.Code)
 				.ThenBy(p => p.Game.DisplayName)

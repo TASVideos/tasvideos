@@ -73,7 +73,7 @@ namespace TASVideos.Models
 		public int TopicId { get; set; }
 	}
 
-	public interface ForumTopicActionBar
+	public interface IForumTopicActionBar
 	{
 		int Id { get; }
 		bool IsLocked { get; }
@@ -81,7 +81,7 @@ namespace TASVideos.Models
 		string Title { get; }
 	}
 
-	public interface ForumTopicBreadCrumb
+	public interface IForumTopicBreadCrumb
 	{
 		int Id { get; }
 		string Title { get; }
@@ -90,7 +90,7 @@ namespace TASVideos.Models
 		string ForumName { get; }
 	}
 
-	public class ForumTopicModel : ForumTopicActionBar, ForumTopicBreadCrumb
+	public class ForumTopicModel : IForumTopicActionBar, IForumTopicBreadCrumb
 	{
 		public int Id { get; set; }
 		public bool IsWatching { get; set; }

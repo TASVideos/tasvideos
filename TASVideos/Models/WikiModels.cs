@@ -94,15 +94,6 @@ namespace TASVideos.Models
 	}
 
 	/// <summary>
-	/// Represents the data necessary to show a wiki page that references another wiki page
-	/// </summary>
-	public class WikiReferralModel
-	{
-		public string Link { get; set; }
-		public string Excerpt { get; set; }
-	}
-
-	/// <summary>
 	/// Represents the data necessary to generate a diff between two revisions of a wiki page
 	/// </summary>
 	public class WikiDiffModel
