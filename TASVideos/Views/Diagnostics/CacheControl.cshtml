@@ -10,11 +10,11 @@
 			</cardheader>
 			<cardbody>
 				<div class="card-title">
-					Clearing this will clear all of the wiki revision markup entries in cache
+					Clicking this will clear all of the wiki revision markup entries and recache them from teh database
 				</div>
 				<div id="clear-wiki-success" class="d-none alert alert-success">Successfully cleared.</div>
 				<div id="clear-wiki-error" class="d-none alert alert-danger">An error occured.</div>
-				<button id="clear-wiki" class="btn btn-danger">Clear</button>
+				<button id="clear-wiki" class="btn btn-danger">Flush</button>
 			</cardbody>
 		</card>
 	</div>
@@ -58,7 +58,7 @@
 			};
 
 			xmlhttp.open("POST",
-				"/Diagnostics/@(nameof(DiagnosticsController.ClearWikiCache))",
+				"/Diagnostics/@(nameof(DiagnosticsController.FlushWikiCache))",
 				true);
 			xmlhttp.send();
 		};
