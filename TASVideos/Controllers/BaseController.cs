@@ -26,20 +26,10 @@ namespace TASVideos.Controllers
 
 		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
 
-		internal IEnumerable<PermissionTo> UserPermissions
-		{
-			get
-			{
-				if (_userPermission == null)
-				{
-					_userPermission = HttpContext == null || !User.Identity.IsAuthenticated
-						? Enumerable.Empty<PermissionTo>()
-						: UserTasks.GetUserPermissionsById(User.GetUserId()).Result;
-				}
-
-				return _userPermission;
-			}
-		}
+		internal IEnumerable<PermissionTo> UserPermissions =>
+			_userPermission ?? (_userPermission = HttpContext == null || !User.Identity.IsAuthenticated
+				? Enumerable.Empty<PermissionTo>()
+				: UserTasks.GetUserPermissionsById(User.GetUserId()).Result);
 
 		public string BaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 

@@ -9,13 +9,13 @@
 		<div class="col-lg-6">
 			<label asp-for="Name"></label>
 			<input type="text" asp-for="Name" class="form-control" />
-			<span asp-validation-for="Name" />
+			<span asp-validation-for="Name" class="text-danger"></span>
 		</div>
 	</row>
 	<fullrow>
 		<label asp-for="Description"></label>
 		<textarea asp-for="Description" class="form-control" rows="4"></textarea>
-		<span asp-validation-for="Description"></span>
+		<span asp-validation-for="Description" class="text-danger"></span>
 	</fullrow>
 	<hr />
 	<div class="text-center">

@@ -1,4 +1,4 @@
-﻿@model ForumTopicActionBar
+﻿@model IForumTopicActionBar
 <a
 	condition="User.Identity.IsAuthenticated && !Model.IsWatching"
 	asp-action="WatchTopic"

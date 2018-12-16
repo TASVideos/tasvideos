@@ -73,7 +73,6 @@ namespace TASVideos.Services
 		/// <summary>
 		/// This is a shim for now, cache should be managed internally
 		/// </summary>
-		/// <returns></returns>
 		Task PreLoadCache();
 	}
 

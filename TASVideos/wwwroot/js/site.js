@@ -15,6 +15,7 @@
 	}
 
 	if (typeof window.CustomEvent !== 'function') {
+		// ReSharper disable once InconsistentNaming
 		function CustomEvent(event, params) {
 			params = params || { bubbles: false, cancelable: false, detail: undefined };
 			var evt = document.createEvent('CustomEvent');
