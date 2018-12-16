@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
@@ -49,9 +49,9 @@ namespace TASVideos.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult ClearWikiCache()
+		public async Task<IActionResult> FlushWikiCache()
 		{
-			_wikiService.ClearCache();
+			await _wikiService.FlushCache();
 			return Ok();
 		}
 

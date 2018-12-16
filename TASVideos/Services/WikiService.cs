@@ -68,7 +68,7 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Clears the wiki cache
 		/// </summary>
-		void ClearCache();
+		Task FlushCache();
 
 		/// <summary>
 		/// This is a shim for now, cache should be managed internally
@@ -320,9 +320,10 @@ namespace TASVideos.Services
 			await _db.SaveChangesAsync();
 		}
 
-		public void ClearCache()
+		public async Task FlushCache()
 		{
 			_cache.Remove(CacheKeys.WikiCache);
+			await PreLoadCache();
 		}
 
 		// Loads all current wiki pages into the WikiCache
