@@ -78,6 +78,11 @@ namespace TASVideos.Services
 		{
 			_db = db;
 			_cache = cache;
+
+			if (!WikiCache.Any())
+			{
+				LoadWikiCache().Wait();
+			}
 		}
 
 		public IEnumerator<WikiPage> GetEnumerator()

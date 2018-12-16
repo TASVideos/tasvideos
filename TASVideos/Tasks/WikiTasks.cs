@@ -28,11 +28,6 @@ namespace TASVideos.Tasks
 			_db = db;
 			_cache = cache;
 			_wikiService = wikiService;
-
-			if (!WikiCache.Any())
-			{
-				LoadWikiCache().Wait();
-			}
 		}
 
 		private List<WikiPage> WikiCache
@@ -128,7 +123,7 @@ namespace TASVideos.Tasks
 		public IEnumerable<string> GetSubPages(string pageName)
 		{
 			pageName = pageName.Trim('/');
-			return WikiCache
+			return _wikiService
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
@@ -144,7 +139,7 @@ namespace TASVideos.Tasks
 		public IEnumerable<string> GetParents(string pageName)
 		{
 			pageName = pageName.Trim('/');
-			return WikiCache
+			return _wikiService
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
@@ -414,7 +409,7 @@ namespace TASVideos.Tasks
 			await LoadWikiCache();
 			foreach (var result in results)
 			{
-				result.HasExistingRevisions = WikiCache.Any(wp => wp.PageName == result.PageName);
+				result.HasExistingRevisions = _wikiService.Any(wp => wp.PageName == result.PageName);
 			}
 
 			return results;
@@ -434,7 +429,7 @@ namespace TASVideos.Tasks
 			{
 				revision.IsDeleted = false;
 
-				var cachedRevision = WikiCache
+				var cachedRevision = _wikiService
 					.FirstOrDefault(w => w.Id == revision.Id);
 
 				if (cachedRevision != null)
@@ -453,7 +448,7 @@ namespace TASVideos.Tasks
 				var systems = await _db.GameSystems.ToListAsync();
 				var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
 
-				var pages = WikiCache
+				var pages = _wikiService
 					.ThatAreNotDeleted()
 					.ThatAreCurrentRevisions()
 					.Where(wp => gameResourceSystems.Contains(wp.PageName))
