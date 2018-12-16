@@ -28,7 +28,7 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-			var existingPage = _wikiService.Revision(url, revision);
+			var existingPage = _wikiService.Page(url, revision);
 
 			if (existingPage != null)
 			{

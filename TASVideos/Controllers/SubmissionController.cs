@@ -149,7 +149,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.SubmitMovies)]
 		public IActionResult PrefillText()
 		{
-			var page = _wikiService.Revision("System/SubmissionDefaultMessage");
+			var page = _wikiService.Page("System/SubmissionDefaultMessage");
 			return Json(new { text = page.Markup });
 		}
 

@@ -54,7 +54,7 @@ namespace TASVideos.Controllers
 				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.NormalizeWikiPageName(url) });
 			}
 
-			var existingPage = _wikiService.Revision(url, revision);
+			var existingPage = _wikiService.Page(url, revision);
 
 			if (existingPage != null)
 			{
@@ -91,7 +91,7 @@ namespace TASVideos.Controllers
 		[AllowAnonymous]
 		public IActionResult ViewSource(string path, int? revision = null)
 		{
-			var existingPage = _wikiService.Revision(path, revision);
+			var existingPage = _wikiService.Page(path, revision);
 
 			if (existingPage != null)
 			{
@@ -157,7 +157,7 @@ namespace TASVideos.Controllers
 				return RedirectHome();
 			}
 
-			var existingPage = _wikiService.Revision(path);
+			var existingPage = _wikiService.Page(path);
 
 			var model = new WikiEditModel
 			{
