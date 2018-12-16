@@ -69,6 +69,12 @@ namespace TASVideos.Services
 		/// Clears the wiki cache
 		/// </summary>
 		void ClearCache();
+
+		/// <summary>
+		/// This is a shim for now, cache should be managed internally
+		/// </summary>
+		/// <returns></returns>
+		Task PreLoadCache();
 	}
 
 	public class WikiService : IWikiService
@@ -88,7 +94,7 @@ namespace TASVideos.Services
 
 				pages = new List<WikiPage>();
 				_cache.Set(cacheKey, pages, Durations.OneWeekInSeconds);
-				LoadWikiCache().Wait();
+				PreLoadCache().Wait();
 				return pages;
 			}
 		}
@@ -102,7 +108,7 @@ namespace TASVideos.Services
 
 			if (!WikiCache.Any())
 			{
-				LoadWikiCache().Wait();
+				PreLoadCache().Wait();
 			}
 		}
 
@@ -314,23 +320,13 @@ namespace TASVideos.Services
 			await _db.SaveChangesAsync();
 		}
 
-
-		public async Task PreLoadCache()
-		{
-			var wikiPages = await _db.WikiPages
-				.ThatAreCurrentRevisions()
-				.ToListAsync();
-
-			WikiCache.AddRange(wikiPages);
-		}
-
 		public void ClearCache()
 		{
 			_cache.Remove(CacheKeys.WikiCache);
 		}
 
 		// Loads all current wiki pages into the WikiCache
-		private async Task LoadWikiCache()
+		public async Task PreLoadCache()
 		{
 			var wikiPages = await _db.WikiPages
 				.ThatAreCurrentRevisions()

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Models;
@@ -17,46 +16,14 @@ namespace TASVideos.Tasks
 	public class WikiTasks
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly ICacheService _cache;
 		private readonly IWikiService _wikiService;
 
 		public WikiTasks(
 			ApplicationDbContext db,
-			ICacheService cache,
 			IWikiService wikiService)
 		{
 			_db = db;
-			_cache = cache;
 			_wikiService = wikiService;
-		}
-
-		private List<WikiPage> WikiCache
-		{
-			get
-			{
-				var cacheKey = CacheKeys.WikiCache;
-				if (_cache.TryGetValue(cacheKey, out List<WikiPage> pages))
-				{
-					return pages;
-				}
-
-				pages = new List<WikiPage>();
-				_cache.Set(cacheKey, pages, Durations.OneWeekInSeconds);
-				LoadWikiCache().Wait();
-				return pages;
-			}
-		}
-
-		/// <summary>
-		/// Loads all current wiki pages into the WikiCache
-		/// </summary>
-		private async Task LoadWikiCache()
-		{
-			var wikiPages = await _db.WikiPages
-				.ThatAreCurrentRevisions()
-				.ToListAsync();
-
-			WikiCache.AddRange(wikiPages);
 		}
 
 		/// <summary>
@@ -327,7 +294,7 @@ namespace TASVideos.Tasks
 			// Workaround for EF Core 2.1 issue
 			// https://github.com/aspnet/EntityFrameworkCore/issues/3103
 			// Since we know the cache is up to date we can do the logic there and avoid n+1 trips to the db
-			await LoadWikiCache();
+			await _wikiService.PreLoadCache();
 			foreach (var result in results)
 			{
 				result.HasExistingRevisions = _wikiService.Any(wp => wp.PageName == result.PageName);
