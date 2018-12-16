@@ -14,11 +14,6 @@ namespace TASVideos.Services
 	public interface IWikiService : IEnumerable<WikiPage>
 	{
 		/// <summary>
-		/// Creates a new revision of a wiki page
-		/// </summary>
-		Task Add(WikiPage revision);
-
-		/// <summary>
 		/// Returns whether or not any revision of the given page exists
 		/// </summary>
 		bool Exists(string pageName, bool includeDeleted = false);
@@ -32,6 +27,11 @@ namespace TASVideos.Services
 		WikiPage Page(string pageName, int? revisionId = null);
 
 		/// <summary>
+		/// Creates a new revision of a wiki page
+		/// </summary>
+		Task Add(WikiPage revision);
+
+		/// <summary>
 		/// Renames the given wiki page to the destination name
 		/// All revisions are renamed to the new page
 		/// and <seealso cref="WikiPageReferral" /> entries are updated
@@ -43,6 +43,27 @@ namespace TASVideos.Services
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
 		WikiPage Revision(int dbId);
+
+		/// <summary>
+		/// Performs a soft delete on all revisions of the given page name,
+		/// In addition <see cref="WikiPageReferral"/> entries are updated
+		/// to remove entries where the given page name is a referrer
+		/// </summary>
+		/// <returns>The number of revisions that were deleted</returns>
+		Task<int> Delete(string pageName);
+
+		/// <summary>
+		/// Performs a soft delete on a single revision of a <see cref="WikiPage"/>
+		/// If the revision is latest revisions, then <see cref="WikiPageReferral"/>
+		/// will be removed where the given page name is a referrer
+		/// </summary>
+		Task Delete(string pageName, int revision);
+
+		
+		/// <summary>
+		/// Restores all revisions of the given page
+		/// </summary>
+		Task Undelete(string pageName);
 
 		/// <summary>
 		/// Clears the wiki cache
@@ -201,6 +222,98 @@ namespace TASVideos.Services
 			// for editors to see and fix. Anyone doing a move operation should know to check broken links
 			// afterwards
 		}
+
+		public async Task<int> Delete(string pageName)
+		{
+			var revisions = await _db.WikiPages
+				.ForPage(pageName)
+				.ThatAreNotDeleted()
+				.ToListAsync();
+
+			foreach (var revision in revisions)
+			{
+				revision.IsDeleted = true;
+			}
+
+			var cachedRevisions = WikiCache
+				.ForPage(pageName)
+				.ThatAreNotDeleted()
+				.ToList();
+
+			foreach (var cachedRevision in cachedRevisions)
+			{
+				cachedRevision.IsDeleted = true;
+			}
+
+			// Remove referrers
+			var referrers = await _db.WikiReferrals
+				.ThatReferTo(pageName)
+				.ToListAsync();
+
+			_db.RemoveRange(referrers);
+
+			await _db.SaveChangesAsync();
+			return revisions.Count;
+		}
+
+		public async Task Delete(string pageName, int revision)
+		{
+			var wikiPage = await _db.WikiPages
+				.ThatAreNotDeleted()
+				.Revision(pageName, revision)
+				.SingleOrDefaultAsync();
+
+			if (wikiPage != null)
+			{
+				wikiPage.IsDeleted = true;
+
+				var cachedRevision = WikiCache
+					.ThatAreNotDeleted()
+					.Revision(pageName, revision)
+					.SingleOrDefault();
+
+				if (cachedRevision != null)
+				{
+					cachedRevision.IsDeleted = true;
+				}
+
+				// Update referrers if latest revision
+				if (wikiPage.Child == null)
+				{
+					var referrers = await _db.WikiReferrals
+						.ThatReferTo(pageName)
+						.ToListAsync();
+
+					_db.RemoveRange(referrers);
+				}
+
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public async Task Undelete(string pageName)
+		{
+			var revisions = await _db.WikiPages
+				.ThatAreDeleted()
+				.ForPage(pageName)
+				.ToListAsync();
+
+			foreach (var revision in revisions)
+			{
+				revision.IsDeleted = false;
+
+				var cachedRevision = WikiCache
+					.FirstOrDefault(w => w.Id == revision.Id);
+
+				if (cachedRevision != null)
+				{
+					cachedRevision.IsDeleted = false;
+				}
+			}
+
+			await _db.SaveChangesAsync();
+		}
+
 
 		public async Task PreLoadCache()
 		{
