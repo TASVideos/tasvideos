@@ -31,6 +31,7 @@ namespace TASVideos.Legacy.Imports
 
 				var userFiles = legacySiteContext.UserFiles
 					.Include(userFile => userFile.User)
+					.ToList()
 					.Select(userFile => Convert(userFile, userIdsByName))
 					.ToList();
 
@@ -124,7 +125,7 @@ namespace TASVideos.Legacy.Imports
 				PhysicalLength = legacyFile.PhysicalLength,
 				Rerecords = (int)legacyFile.Rerecords,
 				SystemId = legacyFile.SystemId,
-				Title = legacyFile.Title,
+				Title = ImportHelper.ConvertLatin1String(legacyFile.Title),
 				Type = legacyFile.Type,
 				UploadTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyFile.Timestamp),
 				Views = legacyFile.Views,
