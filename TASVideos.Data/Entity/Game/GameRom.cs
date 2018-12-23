@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Data.Entity.Game
 {
-	using System.Collections.Generic;
-
 	public enum RomTypes
 	{
 		Unknown,

@@ -39,7 +39,7 @@ namespace TASVideos.Data.Helpers
 
 			if ((currentStatus == SubmissionStatus.JudgingUnderWay && isJudge) // The judge can set back to new if they claimed the submission and are now opting out
 				|| (currentStatus == SubmissionStatus.Rejected && perms.Contains(PermissionTo.JudgeSubmissions)) // A judge can revive a rejected submission by setting it to new
-				|| (currentStatus == SubmissionStatus.Accepted && isJudge))  // A judge can undo their judgement
+				|| (currentStatus == SubmissionStatus.Accepted && isJudge))  // A judge can undo their judgment
 			{
 				list.Add(SubmissionStatus.New);
 			}
