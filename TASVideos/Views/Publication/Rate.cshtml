@@ -1,8 +1,34 @@
 ﻿@model PublicationRateModel
 @{
-	ViewData["Title"] = $"Movie #{Model.Id}";
-}
-@section PageTitle {
-	<h1>@Model.Title</h1>
+	ViewData["Title"] = $"Movie #{Model.Id} - {Model.Title}";
+
+
+	var choices = Enumerable
+		.Range(0, 10)
+		.Select(r => new SelectListItem
+		{
+			Text = r.ToString(),
+			Value = r.ToString()
+		});
 }
 
+<form method="post">
+	<input type="hidden" asp-for="Id" />
+	<input type="hidden" asp-for="Title" />
+	<row>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="EntertainmentRating"></label>
+				<select asp-for="EntertainmentRating" asp-items="choices" class="form-control"></select>
+			</form-group>
+			<form-group>
+				<label asp-for="TechRating"></label>
+				<select asp-for="TechRating" asp-items="choices" class="form-control"></select>
+			</form-group>
+		</div>
+	</row>
+	<hr/>
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Rate</button>
+	</div>
+</form>
