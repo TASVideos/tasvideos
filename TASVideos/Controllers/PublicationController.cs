@@ -217,5 +217,22 @@ namespace TASVideos.Controllers
 
 			return View(model);
 		}
+
+		// TODO: permission to rate movies
+		[Authorize]
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Rate(PublicationRateModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var user = await _userManager.GetUserAsync(User);
+			await _publicationTasks.RatePublication(model, user);
+
+			// TODO: implement returnUrl, can return to either publication or user ratings
+			return RedirectToAction(nameof(ProfileController.Ratings), "Profile");
+		}
 	}
 }

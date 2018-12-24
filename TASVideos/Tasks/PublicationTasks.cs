@@ -683,5 +683,60 @@ namespace TASVideos.Tasks
 					?.Value
 			};
 		}
+
+		public async Task RatePublication(PublicationRateModel model, User user)
+		{
+			if (user == null)
+			{
+				throw new ArgumentException($"{nameof(user)} can not be null.");
+			}
+
+			var ratings = await _db.PublicationRatings
+				.ForPublication(model.Id)
+				.ForUser(user.Id)
+				.ToListAsync();
+
+			if (model.TechRating.HasValue)
+			{
+				var tech = ratings
+					.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality);
+				if (tech != null)
+				{
+					tech.Value = model.TechRating.Value;
+				}
+				else
+				{
+					_db.PublicationRatings.Add(new PublicationRating
+					{
+						PublicationId = model.Id,
+						UserId = user.Id,
+						Type = PublicationRatingType.TechQuality,
+						Value = model.TechRating.Value
+					});
+				}
+			}
+
+			if (model.EntertainmentRating.HasValue)
+			{
+				var entertainment = ratings
+					.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment);
+				if (entertainment != null)
+				{
+					entertainment.Value = model.EntertainmentRating.Value;
+				}
+				else
+				{
+					_db.PublicationRatings.Add(new PublicationRating
+					{
+						PublicationId = model.Id,
+						UserId = user.Id,
+						Type = PublicationRatingType.Entertainment,
+						Value = model.EntertainmentRating.Value
+					});
+				}
+			}
+
+			await _db.SaveChangesAsync();
+		}
 	}
 }
