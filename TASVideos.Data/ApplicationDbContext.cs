@@ -274,6 +274,8 @@ namespace TASVideos.Data
 			{
 				entity.HasKey(e => new { e.UserId, e.PublicationId, e.Type });
 				entity.HasIndex(e => e.PublicationId);
+				entity.HasIndex(e => new { e.UserId, e.PublicationId, e.Type })
+					.IsUnique();
 			});
 
 			builder.Entity<Tag>(entity =>
