@@ -205,7 +205,7 @@ namespace TASVideos.Controllers
 		}
 
 		[RequirePermission(PermissionTo.RateMovies)]
-		public async Task<IActionResult> Rate(int id)
+		public async Task<IActionResult> Rate(int id, string returnUrl = null)
 		{
 			var user = await _userManager.GetUserAsync(User);
 			var model = await _publicationTasks.GetRatingModel(user, id);
@@ -219,7 +219,7 @@ namespace TASVideos.Controllers
 
 		[RequirePermission(PermissionTo.RateMovies)]
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> Rate(PublicationRateModel model)
+		public async Task<IActionResult> Rate(PublicationRateModel model, string returnUrl = null)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -229,7 +229,11 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			await _publicationTasks.RatePublication(model, user);
 
-			// TODO: implement returnUrl, can return to either publication or user ratings
+			if (!string.IsNullOrWhiteSpace(returnUrl))
+			{
+				return RedirectToLocal(returnUrl);
+			}
+
 			return RedirectToAction(nameof(ProfileController.Ratings), "Profile");
 		}
 	}
