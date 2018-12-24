@@ -30,12 +30,12 @@
 					asp-action="Edit"
 					asp-route-id="@Model.Id"
 					class="btn btn-secondary btn-sm mt-1">Edit</a>
-				<a condition="@ViewData.UserHas(PermissionTo.CatalogMovies)"
+				<a permission="CatalogMovies"
 					asp-controller="Publication"
 					asp-action="Catalog"
 					asp-route-id="@Model.Id"
 					class="btn btn-secondary btn-sm mt-1">Catalog</a>
-				<a condition="@Model.TopicId> 0"
+				<a condition="@Model.TopicId > 0"
 					asp-controller="Forum"
 					asp-action="Topic"
 					asp-route-id="@Model.TopicId"
@@ -56,7 +56,16 @@
 				<fullrow>
 					<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
 					<div Condition="Model.RatingCount > 2">
-						Rating: @Math.Round(Model.OverallRating ?? 0, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
+						<span permission="RateMovies">
+							<a
+								asp-controller="Publication"
+								asp-action="Rate"
+								asp-route-id="@Model.Id">
+								Rating
+							</a>: &nbsp;
+						</span>
+						<span condition="!ViewData.UserHas(PermissionTo.RateMovies)">Rating:</span>
+						@Math.Round(Model.OverallRating ?? 0, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
 					</div>
 				</fullrow>
 			</div>
