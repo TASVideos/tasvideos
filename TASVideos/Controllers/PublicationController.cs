@@ -204,8 +204,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		// TODO: permission to rate movies
-		[Authorize]
+		[RequirePermission(PermissionTo.RateMovies)]
 		public async Task<IActionResult> Rate(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -218,8 +217,7 @@ namespace TASVideos.Controllers
 			return View(model);
 		}
 
-		// TODO: permission to rate movies
-		[Authorize]
+		[RequirePermission(PermissionTo.RateMovies)]
 		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Rate(PublicationRateModel model)
 		{
