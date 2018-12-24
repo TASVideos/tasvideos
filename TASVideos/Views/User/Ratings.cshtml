@@ -34,7 +34,7 @@
 				@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Average))
 				{
 					<tr>
-						<td>@rating.PublicationTitle</td>
+						<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
 						<td>@(Math.Round(rating.Average, 1))</td>
 						<td>@rating.Entertainment</td>
 						<td>@rating.Tech</td>
@@ -53,7 +53,7 @@
 				@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Average))
 				{
 					<tr>
-						<td>@rating.PublicationTitle</td>
+						<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
 						<td>@(Math.Round(rating.Average, 1))</td>
 						<td>@rating.Entertainment</td>
 						<td>@rating.Tech</td>
