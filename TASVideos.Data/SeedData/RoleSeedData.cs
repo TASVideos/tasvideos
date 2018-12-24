@@ -72,10 +72,10 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.SeeRestrictedForums
 		};
 
-		private static readonly PermissionTo[] SeniorPublisherPermissions =
+		private static readonly PermissionTo[] SeniorPublisherPermissions = PublisherPermissions.Concat(new[]
 		{
 			PermissionTo.AssignRoles
-		};
+		}).ToArray();
 
 		private static readonly PermissionTo[] AdminAssistantPermissions = VestedEditorPermissions.Concat(new[]
 		{
