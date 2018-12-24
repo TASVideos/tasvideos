@@ -8,10 +8,10 @@
 <div condition="isMyPage && !Model.PublicRatings" class="alert alert-warning">
 	Your ratings are currently private and will not be visible to others. This can be changed on the <a asp-controller="Profile" asp-action="Settings">Settings Page</a>
 </div>
-<div condition="!isMyPage && !Model.PublicRatings">
+<div condition="!isMyPage && !Model.PublicRatings && !ViewData.UserHas(PermissionTo.SeePrivateRatings)">
 	<div class="alert alert-warning">This user's ratings are private</div>
 </div>
-<div condition="isMyPage || Model.PublicRatings">
+<div condition="isMyPage || Model.PublicRatings || ViewData.UserHas(PermissionTo.SeePrivateRatings)">
 	<ul class="nav nav-tabs" role="tablist">
 		<li class="nav-item">
 			<a class="nav-link active" href="#current" role="tab" data-toggle="tab">Current</a>

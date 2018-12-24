@@ -123,7 +123,7 @@ namespace TASVideos.Controllers
 		[Route("[controller]/[action]/{userName}")]
 		public async Task<IActionResult> Ratings(string userName)
 		{
-			var model = await UserTasks.GetUserRatings(userName);
+			var model = await UserTasks.GetUserRatings(userName, UserHas(PermissionTo.SeePrivateRatings));
 			if (model == null)
 			{
 				return NotFound();
