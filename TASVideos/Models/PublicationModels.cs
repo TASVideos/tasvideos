@@ -207,7 +207,10 @@ namespace TASVideos.Models
 		public int Id { get; set; }
 		public string Title { get; set; }
 
-		public decimal TechRating { get; set; }
-		public decimal EntertainmentRating { get; set; }
+		[Display(Name = "Tech Rating")]
+		public double? TechRating { get; set; }
+
+		[Display(Name = "Entertainment Rating")]
+		public double? EntertainmentRating { get; set; }
 	}
 }

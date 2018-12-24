@@ -19,11 +19,13 @@ namespace TASVideos.Controllers
 		private readonly RatingsTasks _ratingsTasks;
 
 		public PublicationController(
+			UserManager<User> userManager,
 			PublicationTasks publicationTasks,
 			RatingsTasks ratingTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_userManager = userManager;
 			_publicationTasks = publicationTasks;
 			_ratingsTasks = ratingTasks;
 		}
@@ -204,10 +206,15 @@ namespace TASVideos.Controllers
 
 		// TODO: permission to rate movies
 		[Authorize]
-		public async Task<IActionResult> Rate()
+		public async Task<IActionResult> Rate(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var model = await _publicationTasks.GetRatingModel(user.Id);
+			var model = await _publicationTasks.GetRatingModel(user, id);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
 			return View(model);
 		}
 	}

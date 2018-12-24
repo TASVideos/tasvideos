@@ -654,15 +654,34 @@ namespace TASVideos.Tasks
 		}
 
 		// TODO: document
-		public async Task<PublicationRateModel> GetRatingModel(User user, int userId)
+		public async Task<PublicationRateModel> GetRatingModel(User user, int publicationId)
 		{
 			if (user == null)
 			{
 				throw new ArgumentException($"{nameof(user)} can not be null.");
 			}
 
-			var model = new PublicationRateModel();
-			return model;
+			var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId);
+			if (publication == null)
+			{
+				return null;
+			}
+
+			var ratings = await _db.PublicationRatings
+				.ForPublication(publicationId)
+				.ForUser(user.Id)
+				.ToListAsync();
+			return new PublicationRateModel
+			{
+				Id = publicationId,
+				Title = publication.Title,
+				TechRating = ratings
+					.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality)
+					?.Value,
+				EntertainmentRating = ratings
+					.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment)
+					?.Value
+			};
 		}
 	}
 }
