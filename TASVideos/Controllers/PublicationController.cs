@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
@@ -13,6 +14,7 @@ namespace TASVideos.Controllers
 {
 	public class PublicationController : BaseController
 	{
+		private readonly UserManager<User> _userManager;
 		private readonly PublicationTasks _publicationTasks;
 		private readonly RatingsTasks _ratingsTasks;
 
@@ -197,6 +199,15 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Authors()
 		{
 			var model = await _publicationTasks.GetPublishedAuthorList();
+			return View(model);
+		}
+
+		// TODO: permission to rate movies
+		[Authorize]
+		public async Task<IActionResult> Rate()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var model = await _publicationTasks.GetRatingModel(user.Id);
 			return View(model);
 		}
 	}

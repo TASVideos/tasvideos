@@ -652,5 +652,17 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 			return true;
 		}
+
+		// TODO: document
+		public async Task<PublicationRateModel> GetRatingModel(User user, int userId)
+		{
+			if (user == null)
+			{
+				throw new ArgumentException($"{nameof(user)} can not be null.");
+			}
+
+			var model = new PublicationRateModel();
+			return model;
+		}
 	}
 }

@@ -201,4 +201,13 @@ namespace TASVideos.Models
 
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; } = new List<SelectListItem>();
 	}
+
+	public class PublicationRateModel
+	{
+		public int Id { get; set; }
+		public string Title { get; set; }
+
+		public decimal TechRating { get; set; }
+		public decimal EntertainmentRating { get; set; }
+	}
 }
