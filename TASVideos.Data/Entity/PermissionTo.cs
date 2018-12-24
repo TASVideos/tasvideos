@@ -27,6 +27,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to submit a movie to be considered for publication. By default, all registered users have this permission, unless revoked.")]
 		SubmitMovies = 3,
 
+		[Display(Name = "Rate Movies")]
+		[Group("User")]
+		[Description("The ability to rate publications. By default, all registered users have this permission, unless revoked.")]
+		RateMovies = 4,
+
 		[Display(Name = "Create Forum Topics")]
 		[Group("User")]
 		[Description("The ability to create new topics on the forums. Experienced users have the ability to do this, unless revoked")]
