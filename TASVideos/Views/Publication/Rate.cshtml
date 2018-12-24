@@ -1,14 +1,16 @@
-﻿@model PublicationRateModel
+﻿@using System.Globalization
+@model PublicationRateModel
 @{
 	ViewData["Title"] = $"Movie #{Model.Id} - {Model.Title}";
 
 
 	var choices = UiDefaults.DefaultEntry.Concat(Enumerable
-		.Range(0, 11)
+		.Range(0, 21)
+		.Select(r => (r / 2.0).ToString(CultureInfo.InvariantCulture))
 		.Select(r => new SelectListItem
 		{
-			Text = r.ToString(),
-			Value = r.ToString()
+			Text = r,
+			Value = r
 		}));
 }
 <div asp-validation-summary="All" class="text-danger"></div>
