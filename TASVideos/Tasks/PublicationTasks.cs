@@ -653,7 +653,9 @@ namespace TASVideos.Tasks
 			return true;
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns movie rating data for hte given user and publication
+		/// </summary>
 		public async Task<PublicationRateModel> GetRatingModel(User user, int publicationId)
 		{
 			if (user == null)
@@ -684,6 +686,9 @@ namespace TASVideos.Tasks
 			};
 		}
 
+		/// <summary>
+		/// Inserts or updates a movie rating for the given publication and user
+		/// </summary>
 		public async Task RatePublication(PublicationRateModel model, User user)
 		{
 			if (user == null)
@@ -691,52 +696,58 @@ namespace TASVideos.Tasks
 				throw new ArgumentException($"{nameof(user)} can not be null.");
 			}
 
+			if (!model.TechRating.HasValue && !model.EntertainmentRating.HasValue)
+			{
+				throw new ArgumentException("At least one rating must be set");
+			}
+
 			var ratings = await _db.PublicationRatings
 				.ForPublication(model.Id)
 				.ForUser(user.Id)
 				.ToListAsync();
 
-			if (model.TechRating.HasValue)
-			{
-				var tech = ratings
-					.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality);
-				if (tech != null)
-				{
-					tech.Value = model.TechRating.Value;
-				}
-				else
-				{
-					_db.PublicationRatings.Add(new PublicationRating
-					{
-						PublicationId = model.Id,
-						UserId = user.Id,
-						Type = PublicationRatingType.TechQuality,
-						Value = model.TechRating.Value
-					});
-				}
-			}
+			var tech = ratings
+				.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality);
 
-			if (model.EntertainmentRating.HasValue)
-			{
-				var entertainment = ratings
-					.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment);
-				if (entertainment != null)
-				{
-					entertainment.Value = model.EntertainmentRating.Value;
-				}
-				else
-				{
-					_db.PublicationRatings.Add(new PublicationRating
-					{
-						PublicationId = model.Id,
-						UserId = user.Id,
-						Type = PublicationRatingType.Entertainment,
-						Value = model.EntertainmentRating.Value
-					});
-				}
-			}
+			var entertainment = ratings
+				.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment);
+
+			UpdateRating(tech, model.Id, user.Id, PublicationRatingType.TechQuality, model.TechRating);
+			UpdateRating(entertainment, model.Id, user.Id, PublicationRatingType.Entertainment, model.EntertainmentRating);
 
 			await _db.SaveChangesAsync();
+		}
+
+		private void UpdateRating(PublicationRating rating, int id, int userId, PublicationRatingType type, double? value)
+		{
+			if (rating != null)
+			{
+				if (value.HasValue)
+				{
+					// Update
+					rating.Value = value.Value;
+				}
+				else
+				{
+					// Remove
+					_db.PublicationRatings.Remove(rating);
+				}
+			}
+			else
+			{
+				if (value.HasValue)
+				{
+					// Add
+					_db.PublicationRatings.Add(new PublicationRating
+					{
+						PublicationId = id,
+						UserId = userId,
+						Type = type,
+						Value = value.Value
+					});
+				}
+				// Else do nothing
+			}
 		}
 	}
 }

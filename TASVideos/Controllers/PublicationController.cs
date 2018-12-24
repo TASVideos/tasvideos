@@ -221,6 +221,11 @@ namespace TASVideos.Controllers
 		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Rate(PublicationRateModel model, string returnUrl = null)
 		{
+			if (!model.EntertainmentRating.HasValue && !model.TechRating.HasValue)
+			{
+				ModelState.AddModelError("", "At least one rating must be set");
+			}
+
 			if (!ModelState.IsValid)
 			{
 				return View(model);
