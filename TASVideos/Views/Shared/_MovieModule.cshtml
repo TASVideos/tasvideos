@@ -60,7 +60,8 @@
 							<a
 								asp-controller="Publication"
 								asp-action="Rate"
-								asp-route-id="@Model.Id">
+								asp-route-id="@Model.Id"
+								asp-route-returnUrl="@Context.ReturnUrl()">
 								Rating
 							</a>: &nbsp;
 						</span>
