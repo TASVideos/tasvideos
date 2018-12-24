@@ -9,9 +9,8 @@ namespace TASVideos.Data.SeedData
 {
 	public static class RoleSeedNames
 	{
-		public const string EditHomePage = "Edit Home Page";
-		public const string SubmitMovies = "Submit Movies";
-		public const string ForumUser = "Forum User";
+		public const string DefaultUser = "Default User";
+		public const string LimitedUser = "Limited User";
 		public const string ExperiencedForumUser = "Experienced Forum User";
 
 		public const string Admin = "Site Admin";
@@ -30,6 +29,15 @@ namespace TASVideos.Data.SeedData
 
 	public class RoleSeedData
 	{
+		private static readonly PermissionTo[] DefaultUserPermissions =
+		{
+			PermissionTo.RateMovies,
+			PermissionTo.EditHomePage,
+			PermissionTo.SubmitMovies,
+			PermissionTo.CreateForumPosts
+
+		};
+
 		private static readonly PermissionTo[] EditorPermissions =
 		{
 			PermissionTo.EditWikiPages,
@@ -106,49 +114,30 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditSystemPages
 		};
 
-		public static readonly Role EditHomePage = new Role
+		public static readonly Role DefaultUser = new Role
 		{
 			IsDefault = true,
-			Name = RoleSeedNames.EditHomePage,
-			Description = "Contains the EditHomePage permission that allows users to edit their personal homepage. All users have this role by default.",
-			RolePermission = new[]
+			Name = RoleSeedNames.DefaultUser,
+			Description = "Contains basic permissions that all new users receive upon registration. These permissions include posting in forums, submitting and rating movies, and editing a personal homepage.",
+			RolePermission = DefaultUserPermissions.Select(p => new RolePermission
 			{
-				new RolePermission
-				{
-					Role = EditHomePage,
-					PermissionId = PermissionTo.EditHomePage
-				}
-			}
+				Role = DefaultUser,
+				PermissionId = p
+			}).ToArray()
 		};
 
-		public static readonly Role SubmitMovies = new Role
+		public static readonly Role LimitedUser = new Role
 		{
-			IsDefault = true,
-			Name = RoleSeedNames.SubmitMovies,
-			Description = "Contains the SubmitMovies permission that allows users to submit movies. All users have this role by default.",
-			RolePermission = new[]
-			{
-				new RolePermission
+			IsDefault = false,
+			Name = RoleSeedNames.LimitedUser,
+			Description = "Contains all the basic permissions of a default user except the ability to submit movies. This permission is given when a user has abused the submission system but has otherwise not violated site rules.",
+			RolePermission = DefaultUserPermissions
+				.Where(p => p != PermissionTo.SubmitMovies)
+				.Select(p => new RolePermission
 				{
-					Role = SubmitMovies,
-					PermissionId = PermissionTo.SubmitMovies
-				}
-			}
-		};
-
-		public static readonly Role ForumUser = new Role
-		{
-			IsDefault = true,
-			Name = RoleSeedNames.ForumUser,
-			Description = "Contains the CreateForumPosts permission that allows users to creat forum posts. All users have this role by default.",
-			RolePermission = new[]
-			{
-				new RolePermission
-				{
-					Role = ForumUser,
-					PermissionId = PermissionTo.CreateForumPosts
-				}
-			}
+					Role = LimitedUser,
+					PermissionId = p
+				}).ToArray()
 		};
 
 		public static readonly Role ExperiencedForumUser = new Role
@@ -333,9 +322,8 @@ namespace TASVideos.Data.SeedData
 		public static IEnumerable<Role> AllRoles =>
 			new[]
 			{
-				EditHomePage,
-				SubmitMovies,
-				ForumUser,
+				DefaultUser,
+				LimitedUser,
 				ExperiencedForumUser,
 				Admin,
 				AdminAssistant,
