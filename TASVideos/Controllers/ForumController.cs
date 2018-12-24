@@ -139,12 +139,12 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.LockTopics)]
 		public async Task<IActionResult> SetTopicLock(int topicId, string topicTitle, bool locked, string returnUrl)
 		{
-			var result = await _forumTasks.SetTopicLock(topicId, locked, UserHas(PermissionTo.SeeRestrictedForums));
+			var (success, restricted) = await _forumTasks.SetTopicLock(topicId, locked, UserHas(PermissionTo.SeeRestrictedForums));
 
-			if (result.Success)
+			if (success)
 			{
 				_publisher.SendForum(
-					result.Restricted,
+					restricted,
 					$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
 					"",
 					Url.Action(nameof(Topic), new { id = topicId }));
