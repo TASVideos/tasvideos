@@ -1,8 +1,9 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using AngleSharp.Dom;
+using System.Linq;
 using System.Text;
+
+using AngleSharp.Dom;
 
 namespace TASVideos.ForumEngine
 {
@@ -20,6 +21,7 @@ namespace TASVideos.ForumEngine
 					return false;
 				sb.Append(node.TextContent);
 			}
+
 			return sb.ToString() == text;
 		}
 
@@ -85,14 +87,17 @@ namespace TASVideos.ForumEngine
 			{
 				return new Element { Name = name, Children = e.ChildNodes.SelectMany(NodeToNodes).ToList() };
 			}
+
 			if (NoOptionVoidElements.TryGetValue(e.TagName, out name))
 			{
 				return new Element { Name = name };
 			}
+
 			if (_junkedTags.Contains(e.TagName))
 			{
 				return new Text { Content = e.OuterHtml };
 			}
+
 			if (e.TagName == "A")
 			{
 				var href = e.GetAttribute("href");
@@ -100,15 +105,18 @@ namespace TASVideos.ForumEngine
 					throw new Exception("Empty href");
 				return new Element { Name = "url", Options = href, Children = e.ChildNodes.SelectMany(NodeToNodes).ToList() };
 			}
+
 			if (e.TagName == "SMALL")
 			{
 				// TODO: What are the right Options to use here?
 				return new Element { Name = "size", Options = "small", Children = e.ChildNodes.SelectMany(NodeToNodes).ToList() };
 			}
+
 			if (e.TagName == "HR")
 			{
 				return new Text { Content = "\n" };
 			}
+
 			throw new Exception("Unknown tag " + e.TagName);
 		}
 	}

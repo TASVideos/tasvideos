@@ -113,11 +113,9 @@ namespace TASVideos.ForumEngine
 						return _stack.Peek().Options != "";
 				}
 			}
-			else
-			{
-				// "li" or "_root"
-				return true;
-			}
+
+			// "li" or "_root"
+			return true;
 		}
 
 		private void ParseLoop()
@@ -135,6 +133,7 @@ namespace TASVideos.ForumEngine
 					_stack.Pop();
 					continue;
 				}
+
 				var c = _input[_index++];
 				if (c == '[') // check for possible tags
 				{
@@ -174,6 +173,7 @@ namespace TASVideos.ForumEngine
 								_index += m.Length;
 								Push(e);
 							}
+
 							continue;
 						}
 						else
@@ -211,8 +211,10 @@ namespace TASVideos.ForumEngine
 						// '[' but not followed by a valid tag?  OK, process as raw text
 					}
 				}
+
 				_currentText.Append(c);
 			}
+
 			FlushText();
 		}
 	}

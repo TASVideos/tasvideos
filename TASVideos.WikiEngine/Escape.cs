@@ -22,6 +22,7 @@ namespace TASVideos.WikiEngine
 					w.Write(c);
 				}
 			}
+
 			w.Write('"');
 		}
 	}
