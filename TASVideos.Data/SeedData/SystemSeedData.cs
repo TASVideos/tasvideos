@@ -3,7 +3,7 @@
 // ReSharper disable StyleCop.SA1401
 namespace TASVideos.Data.SeedData
 {
-    public class SystemSeedData
+	public class SystemSeedData
 	{
 		public const string Ntsc = "NTSC";
 		public const string Pal = "PAL";
