@@ -14,7 +14,7 @@ namespace TASVideos.Models
 	/// Represents a <seealso cref="TASVideos.Data.Entity.User"/> entry list of users
 	/// </summary>
 	public class UserListViewModel
-    {
+	{
 		[Sortable]
 		public int Id { get; set; }
 
@@ -104,7 +104,7 @@ namespace TASVideos.Models
 
 		[Display(Name = "Player Points:")]
 		public int PlayerPoints { get; set; }
-		
+
 		[Display(Name = "Joined On:")]
 		public DateTime JoinDate { get; set; }
 
@@ -146,7 +146,7 @@ namespace TASVideos.Models
 		public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
 
 		public WikiEditModel WikiEdits { get; set; } = new WikiEditModel();
-		
+
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
 		public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();

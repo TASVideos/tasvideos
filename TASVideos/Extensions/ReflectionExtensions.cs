@@ -7,8 +7,8 @@ using TASVideos.Data.Attributes;
 
 namespace TASVideos.Extensions
 {
-    public static class ReflectionExtensions
-    {
+	public static class ReflectionExtensions
+	{
 		/// <summary>
 		/// Returns the <seealso cref="DescriptionAttribute"/> of an Enum if it exists
 		/// Else it will return and empty string

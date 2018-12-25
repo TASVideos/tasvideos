@@ -27,11 +27,13 @@ namespace TASVideos.Razor
 			var key = GetPreviewName();
 			lock (_previewCache)
 			{
-				_previewCache.Add(key, new PreviewMarkupCacheInfo
-				{
-					Expiry = DateTime.UtcNow.AddMinutes(1),
-					Markup = content
-				});
+				_previewCache.Add(
+					key, 
+					new PreviewMarkupCacheInfo
+					{
+						Expiry = DateTime.UtcNow.AddMinutes(1),
+						Markup = content
+					});
 			}
 
 			return key;

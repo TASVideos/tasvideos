@@ -59,7 +59,6 @@ namespace TASVideos.Services
 		/// </summary>
 		Task Delete(string pageName, int revision);
 
-		
 		/// <summary>
 		/// Restores all revisions of the given page
 		/// </summary>
@@ -81,6 +80,19 @@ namespace TASVideos.Services
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 
+		public WikiPages(
+			ApplicationDbContext db,
+			ICacheService cache)
+		{
+			_db = db;
+			_cache = cache;
+
+			if (!WikiCache.Any())
+			{
+				PreLoadCache().Wait();
+			}
+		}
+
 		private List<WikiPage> WikiCache
 		{
 			get
@@ -95,19 +107,6 @@ namespace TASVideos.Services
 				_cache.Set(cacheKey, pages, Durations.OneWeekInSeconds);
 				PreLoadCache().Wait();
 				return pages;
-			}
-		}
-
-		public WikiPages(
-			ApplicationDbContext db,
-			ICacheService cache)
-		{
-			_db = db;
-			_cache = cache;
-
-			if (!WikiCache.Any())
-			{
-				PreLoadCache().Wait();
 			}
 		}
 
@@ -348,7 +347,7 @@ namespace TASVideos.Services
 				{
 					Referrer = pageName,
 					Referral = wl.Link,
-					Excerpt =  wl.Excerpt
+					Excerpt = wl.Excerpt
 				});
 
 			_db.WikiReferrals.AddRange(referrers);
