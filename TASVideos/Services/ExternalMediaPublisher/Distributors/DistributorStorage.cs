@@ -6,8 +6,8 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
-    public class DistributorStorage : IPostDistributor
-    {
+	public class DistributorStorage : IPostDistributor
+	{
 		private static readonly IEnumerable<PostType> PostTypes = Enum
 			.GetValues(typeof(PostType))
 			.OfType<PostType>()
@@ -34,5 +34,5 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			});
 			_db.SaveChanges();
 		}
-    }
+	}
 }

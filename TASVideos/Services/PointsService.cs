@@ -46,7 +46,6 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-
 		public async Task<int> CalculatePointsForUser(int id)
 		{
 			string cacheKey = PlayerPointKey + id;
@@ -146,4 +145,3 @@ namespace TASVideos.Services
 		}
 	}
 }
-
