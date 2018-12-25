@@ -56,7 +56,6 @@ namespace TASVideos.Tasks
 			{
 				query = query.Where(userFile => !userFile.Hidden);
 			}
-				
 
 			var result = await query.ToListAsync();
 

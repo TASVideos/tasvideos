@@ -10,7 +10,7 @@ using TASVideos.Models;
 
 namespace TASVideos.Tasks
 {
-    public class PermissionTasks
+	public class PermissionTasks
 	{
 		private static readonly List<PermissionDisplayViewModel> PermissionData = Enum.GetValues(typeof(PermissionTo))
 			.Cast<PermissionTo>()

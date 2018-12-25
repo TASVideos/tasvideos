@@ -7,8 +7,8 @@ using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
-    public class FrontpageSubmissionList : ViewComponent
-    {
+	public class FrontpageSubmissionList : ViewComponent
+	{
 		private readonly SubmissionTasks _submissionTasks;
 
 		public FrontpageSubmissionList(SubmissionTasks submissionTasks)

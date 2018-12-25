@@ -298,7 +298,6 @@ namespace TASVideos.Tasks
 				Question = SiteGlobalConstants.PollQuestion,
 			};
 
-			
 			_db.ForumPolls.Add(poll);
 
 			await _db.SaveChangesAsync();
@@ -323,7 +322,7 @@ namespace TASVideos.Tasks
 				Topic = topic,
 				PosterId = SiteGlobalConstants.TASVideoAgentId,
 				Subject = submission.Title,
-				Text = SiteGlobalConstants.NewSubmissionPost +  $"<a href=\"/{submission.Id}S\">{submission.Title}</a>",
+				Text = SiteGlobalConstants.NewSubmissionPost + $"<a href=\"/{submission.Id}S\">{submission.Title}</a>",
 				EnableHtml = true,
 				EnableBbCode = false
 			};

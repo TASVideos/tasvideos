@@ -71,25 +71,33 @@ namespace TASVideos.Tasks
 					.ToList()
 			};
 
-			model.AverageEntertainmentRating = Math.Round(model.Ratings
-				.Where(r => r.Entertainment.HasValue)
-				.Select(r => r.Entertainment.Value).Average(), 2);
+			model.AverageEntertainmentRating = Math.Round(
+				model.Ratings
+					.Where(r => r.Entertainment.HasValue)
+					.Select(r => r.Entertainment.Value)
+					.Average(), 
+				2);
 
-			model.AverageTechRating = Math.Round(model.Ratings
-				.Where(r => r.TechQuality.HasValue)
-				.Select(r => r.TechQuality.Value).Average(), 2);
+			model.AverageTechRating = Math.Round(
+				model.Ratings
+					.Where(r => r.TechQuality.HasValue)
+					.Select(r => r.TechQuality.Value)
+					.Average(), 
+				2);
 
 			// Entertainment counts 2:1 over Tech
-			model.OverallRating = Math.Round(model.Ratings
-				.Where(r => r.Entertainment.HasValue)
-				.Select(r => r.Entertainment.Value)
-				.Concat(model.Ratings
+			model.OverallRating = Math.Round(
+				model.Ratings
 					.Where(r => r.Entertainment.HasValue)
-					.Select(r => r.Entertainment.Value))
-				.Concat(model.Ratings
-					.Where(r => r.TechQuality.HasValue)
-					.Select(r => r.TechQuality.Value))
-				.Average(), 2);
+					.Select(r => r.Entertainment.Value)
+					.Concat(model.Ratings
+						.Where(r => r.Entertainment.HasValue)
+						.Select(r => r.Entertainment.Value))
+					.Concat(model.Ratings
+						.Where(r => r.TechQuality.HasValue)
+						.Select(r => r.TechQuality.Value))
+					.Average(), 
+				2);
 
 			_cache.Set(MovieRatingKey + publicationId, model);
 

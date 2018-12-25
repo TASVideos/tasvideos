@@ -70,7 +70,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<PublicationViewModel> GetPublicationForDisplay(int id)
 		{
-			var publication =  await _db.Publications
+			var publication = await _db.Publications
 				.Select(p => new PublicationViewModel
 				{
 					Id = p.Id,
@@ -746,6 +746,7 @@ namespace TASVideos.Tasks
 						Value = value.Value
 					});
 				}
+
 				// Else do nothing
 			}
 		}

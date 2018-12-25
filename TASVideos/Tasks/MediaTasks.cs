@@ -9,8 +9,8 @@ using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Tasks
 {
-    public class MediaTasks
-    {
+	public class MediaTasks
+	{
 		private readonly ApplicationDbContext _db;
 
 		public MediaTasks(ApplicationDbContext db)
@@ -28,7 +28,6 @@ namespace TASVideos.Tasks
 				.ByMostRecent()
 				.Take(limit)
 				.ToListAsync();
-				
 		}
-    }
+	}
 }
