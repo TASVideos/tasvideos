@@ -2,29 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="MovieParsers\Bk2SampleFiles\0frames.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\2frames.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\GBC.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\inputlog-2frames.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\MissingHeader.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\MissingInputLog.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\nes.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\NoFileExts.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\Pal1.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\RerecordCount1.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\RerecordCountMissing.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\savestate.bk2" />
-    <None Remove="MovieParsers\Bk2SampleFiles\sram.bk2" />
-    <None Remove="MovieParsers\Fm2SampleFiles\fds.fm2" />
-    <None Remove="MovieParsers\Fm2SampleFiles\ntsc.fm2" />
-    <None Remove="MovieParsers\Fm2SampleFiles\pal.fm2" />
-    <None Remove="MovieParsers\Fm2SampleFiles\savestate.fm2" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\0Frames.bk2" />
@@ -46,8 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Microsoft.AspNetCore.All" />
-	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
