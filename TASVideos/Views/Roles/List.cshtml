@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RoleDisplayViewModel>
+﻿@model IEnumerable<RoleDisplayModel>
 @{
 	ViewData["Title"] = "Role List";
 }
@@ -11,6 +11,7 @@
 	<p>See the <a asp-controller="Permissions" asp-action="Index">Permission List</a> for details on individual permissions</p>
 }
 
+@* ReSharper disable once UnusedVariable *@
 @foreach (var role in Model.OrderBy(m => m.Permissions.Count()))
 {
 	<partial name="_Role", model="role" />

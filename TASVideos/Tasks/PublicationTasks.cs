@@ -68,10 +68,10 @@ namespace TASVideos.Tasks
 		/// Gets a publication with the given <see cref="id" /> for the purpose of display
 		/// If no publication with the given id is found then null is returned
 		/// </summary>
-		public async Task<PublicationViewModel> GetPublicationForDisplay(int id)
+		public async Task<PublicationModel> GetPublicationForDisplay(int id)
 		{
 			var publication = await _db.Publications
-				.Select(p => new PublicationViewModel
+				.Select(p => new PublicationModel
 				{
 					Id = p.Id,
 					CreateTimeStamp = p.CreateTimeStamp,
@@ -87,28 +87,28 @@ namespace TASVideos.Tasks
 					// ReSharper disable once PossibleLossOfFraction
 					RatingCount = p.PublicationRatings.Count / 2,
 					Files = p.Files
-						.Select(f => new PublicationViewModel.FileModel
+						.Select(f => new PublicationModel.FileModel
 						{
 							Path = f.Path,
 							Type = f.Type
 						})
 						.ToList(),
 					Tags = p.PublicationTags
-						.Select(pt => new PublicationViewModel.TagModel
+						.Select(pt => new PublicationModel.TagModel
 						{
 							DisplayName = pt.Tag.DisplayName,
 							Code = pt.Tag.Code
 						})
 						.ToList(),
 					GenreTags = p.Game.GameGenres
-						.Select(gg => new PublicationViewModel.TagModel
+						.Select(gg => new PublicationModel.TagModel
 						{
 							DisplayName = gg.Genre.DisplayName,
 							Code = gg.Genre.DisplayName // TODO
 						}),
 					Flags = p.PublicationFlags
 						.Where(pf => pf.Flag.IconPath != null)
-						.Select(pf => new PublicationViewModel.FlagModel
+						.Select(pf => new PublicationModel.FlagModel
 						{
 							IconPath = pf.Flag.IconPath,
 							LinkPath = pf.Flag.LinkPath,
@@ -222,7 +222,7 @@ namespace TASVideos.Tasks
 		/// Returns a list of publications with the given <see cref="searchCriteria" />
 		/// for the purpose of displaying on a movie listings page
 		/// </summary>
-		public async Task<IEnumerable<PublicationViewModel>> GetMovieList(PublicationSearchModel searchCriteria)
+		public async Task<IEnumerable<PublicationModel>> GetMovieList(PublicationSearchModel searchCriteria)
 		{
 			var query = _db.Publications
 				.AsQueryable();
@@ -278,7 +278,7 @@ namespace TASVideos.Tasks
 			return await query
 				.OrderBy(p => p.System.Code)
 				.ThenBy(p => p.Game.DisplayName)
-				.Select(p => new PublicationViewModel
+				.Select(p => new PublicationModel
 				{
 					Id = p.Id,
 					CreateTimeStamp = p.CreateTimeStamp,
@@ -290,20 +290,20 @@ namespace TASVideos.Tasks
 					SubmissionId = p.SubmissionId,
 					RatingCount = p.PublicationRatings.Count / 2,
 					TierIconPath = p.Tier.IconPath,
-					Files = p.Files.Select(f => new PublicationViewModel.FileModel
+					Files = p.Files.Select(f => new PublicationModel.FileModel
 					{
 						Path = f.Path,
 						Type = f.Type
 					}).ToList(),
 					Tags = p.PublicationTags
-						.Select(pt => new PublicationViewModel.TagModel
+						.Select(pt => new PublicationModel.TagModel
 						{
 							DisplayName = pt.Tag.DisplayName,
 							Code = pt.Tag.Code
 						})
 						.ToList(),
 					GenreTags = p.Game.GameGenres
-						.Select(gg => new PublicationViewModel.TagModel
+						.Select(gg => new PublicationModel.TagModel
 						{
 							DisplayName = gg.Genre.DisplayName,
 							Code = gg.Genre.DisplayName // TODO
@@ -311,7 +311,7 @@ namespace TASVideos.Tasks
 						.ToList(),
 					Flags = p.PublicationFlags
 						.Where(pf => pf.Flag.IconPath != null)
-						.Select(pf => new PublicationViewModel.FlagModel
+						.Select(pf => new PublicationModel.FlagModel
 						{
 							IconPath = pf.Flag.IconPath,
 							LinkPath = pf.Flag.LinkPath,

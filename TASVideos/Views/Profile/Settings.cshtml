@@ -1,4 +1,4 @@
-﻿@model ProfileIndexViewModel
+﻿@model ProfileIndexModel
 @{
 	ViewData["Title"] = "Profile Settings";
 	ViewData.AddActivePage(ProfileNavPages.Settings);
@@ -34,11 +34,15 @@
 			<form-group>
 				<label asp-for="PublicRatings"></label>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
-					<label for="@(nameof(Model.PublicRatings))-true" class="btn btn-secondary @(Model.PublicRatings ? "active" : "")">
-						<input id="@(nameof(Model.PublicRatings))-true" type="radio" value="True" asp-for="PublicRatings" /> Yes
+					@{
+						var trueId = nameof(Model.PublicRatings) + "-true";
+						var falseId = nameof(Model.PublicRatings) + "-false";
+					}
+					<label for="@trueId" class="btn btn-secondary @(Model.PublicRatings ? "active" : "")">
+						<input id="@trueId" type="radio" value="True" asp-for="PublicRatings"/> Yes
 					</label>
-					<label for="@(nameof(Model.PublicRatings))-false" class="btn btn-secondary @(!Model.PublicRatings ? "active" : "")">
-						<input id="@(nameof(Model.PublicRatings))-false" type="radio" value="False" asp-for="PublicRatings" /> No
+					<label for="@falseId" class="btn btn-secondary @(!Model.PublicRatings ? "active" : "")">
+						<input id="@falseId-false" type="radio" value="False" asp-for="PublicRatings"/> No
 					</label>
 				</div>
 			</form-group>

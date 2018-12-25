@@ -4,6 +4,7 @@
 	ViewData["Title"] = $"Movie for {Model.SystemCode} {Model.GameName}";
 }
 
+@* ReSharper disable once UnusedVariable *@
 @foreach (var file in Model.Files)
 {
 	<partial name="_UserFileInfo" model="file" />

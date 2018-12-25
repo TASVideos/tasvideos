@@ -12,9 +12,9 @@ namespace TASVideos.Tasks
 {
 	public class PermissionTasks
 	{
-		private static readonly List<PermissionDisplayViewModel> PermissionData = Enum.GetValues(typeof(PermissionTo))
+		private static readonly List<PermissionDisplayModel> PermissionData = Enum.GetValues(typeof(PermissionTo))
 			.Cast<PermissionTo>()
-			.Select(p => new PermissionDisplayViewModel
+			.Select(p => new PermissionDisplayModel
 			{
 				Id = p,
 				Name = p.EnumDisplayName(),
@@ -33,7 +33,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a list of all permissions, descriptions and groupings for the purpose of display
 		/// </summary>
-		public async Task<IEnumerable<PermissionDisplayViewModel>> GetAllPermissionsForDisplay()
+		public async Task<IEnumerable<PermissionDisplayModel>> GetAllPermissionsForDisplay()
 		{
 			var allRoles = await _db.Roles
 				.Select(r => new

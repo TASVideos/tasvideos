@@ -96,7 +96,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents an existing submission for the purpose of display
 	/// </summary>
-	public class SubmissionViewModel
+	public class SubmissionDisplayModel
 	{
 		public int Id { get; set; }
 		public int TopicId { get; set; }
@@ -175,7 +175,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents a submission for the purpose of editing
 	/// </summary>
-	public class SubmissionEditModel : SubmissionViewModel
+	public class SubmissionEditModel : SubmissionDisplayModel
 	{
 		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = new List<SelectListItem>();
 
@@ -236,7 +236,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// A single submission from a submission search
 	/// </summary>
-	public class SubmissionListViewModel
+	public class SubmissionListModel
 	{
 		public string User { get; set; }
 

@@ -1,4 +1,4 @@
-﻿@model UserFileViewModel
+﻿@model UserFileModel
 
 @functions
 {
@@ -56,7 +56,7 @@
 				</p>
 			}
 
-			@if (Model is UserMovieViewModel movie)
+			@if (Model is UserMovieModel movie)
 			{
 				<p>In @FormatTime(movie.Length) (@movie.Frames frames), @movie.Rerecords rerecords</p>
 			}

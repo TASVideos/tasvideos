@@ -6,7 +6,7 @@ namespace TASVideos.Models
 	/// Represents a <see cref="TASVideos.Data.Entity.Game.Game"/> for the purpose of displaying
 	/// on a dedicated page
 	/// </summary>
-	public class GameViewModel
+	public class GameDisplayModel
 	{
 		public int Id { get; set; }
 		public string DisplayName { get; set; }

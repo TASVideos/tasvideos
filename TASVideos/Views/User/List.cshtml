@@ -1,4 +1,4 @@
-﻿@model PageOf<UserListViewModel>
+﻿@model PageOf<UserListModel>
 @{
 	ViewData["Title"] = "User List";
 }
@@ -10,7 +10,7 @@
 <hr />
 <partial name="~/Views/Table/_Pager.cshtml" model="Model" />
 <table class="table table-bordered table-striped">
-	<sortable-table-head paging="@Model" model-type="typeof(UserListViewModel)"/>
+	<sortable-table-head paging="@Model" model-type="typeof(UserListModel)"/>
 	@foreach (var user in Model)
 	{
 		<tr>

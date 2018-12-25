@@ -34,7 +34,7 @@ namespace TASVideos.Models
 			&& (MovieIds == null || !MovieIds.Any());
 	}
 
-	public class PublicationViewModel
+	public class PublicationModel
 	{
 		public int Id { get; set; }
 		public DateTime CreateTimeStamp { get; set; }

@@ -17,7 +17,7 @@ namespace TASVideos.Tasks
 			_db = db;
 		}
 
-		public async Task<GameViewModel> GetGameForDisplay(int id)
+		public async Task<GameDisplayModel> GetGameForDisplay(int id)
 		{
 			var game = await _db.Games
 				.Include(g => g.System)
@@ -27,7 +27,7 @@ namespace TASVideos.Tasks
 
 			if (game != null)
 			{
-				var model = new GameViewModel
+				var model = new GameDisplayModel
 				{
 					Id = game.Id,
 					DisplayName = game.DisplayName,

@@ -61,7 +61,7 @@ namespace TASVideos.Controllers
 
 		[HttpPost, ValidateAntiForgeryToken]
 		[RequirePermission(PermissionTo.EditUsers)]
-		public async Task<IActionResult> Edit(UserEditViewModel model)
+		public async Task<IActionResult> Edit(UserEditModel model)
 		{
 			if (!ModelState.IsValid)
 			{	

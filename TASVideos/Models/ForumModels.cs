@@ -143,7 +143,7 @@ namespace TASVideos.Models
 		public int? Highlight { get; set; }
 	}
 
-	public class PostViewModel
+	public class PostPositionModel
 	{
 		public int Page { get; set; }
 		public int TopicId { get; set; }

@@ -8,7 +8,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents a Role entry for the purpose of display
 	/// </summary>
-	public class RoleDisplayViewModel
+	public class RoleDisplayModel
 	{
 		public bool IsDefault { get; set; }
 		public int Id { get; set; }
@@ -34,7 +34,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents a Role entry for the purpose of editing
 	/// </summary>
-	public class RoleEditViewModel
+	public class RoleEditModel
 	{
 		public int? Id { get; set; }
 

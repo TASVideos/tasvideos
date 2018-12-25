@@ -18,7 +18,7 @@ namespace TASVideos.Models
 	}
 
 	public class GameListModel
-    {
+	{
 		[Sortable]
 		[Display(Name = "Id")]
 		public int Id { get; set; }
