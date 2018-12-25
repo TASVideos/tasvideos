@@ -51,7 +51,6 @@ namespace TASVideos.TagHelpers
 				.ThenBy(t => t.DisplayName)
 				.ToList();
 
-
 			foreach (var optgroup in groups)
 			{
 				output.Content.AppendHtml($"<optgroup label='{optgroup.ToString()}'>");

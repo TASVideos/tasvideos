@@ -384,11 +384,18 @@ namespace TASVideos.Tasks
 
 			model.Ratings = await _db.PublicationRatings
 				.Where(pr => pr.UserId == model.Id)
-				.GroupBy(gkey => new { gkey.PublicationId, gkey.Publication.Title, gkey.Publication.ObsoletedById }, gvalue => new
-				{
-					gvalue.Type,
-					gvalue.Value
-				})
+				.GroupBy(
+					gkey => new
+					{
+						gkey.PublicationId,
+						gkey.Publication.Title,
+						gkey.Publication.ObsoletedById
+					}, 
+					gvalue => new
+					{
+						gvalue.Type,
+						gvalue.Value
+					})
 				.Select(pr => new UserRatingsViewModel.Rating
 				{
 					PublicationId = pr.Key.PublicationId,
