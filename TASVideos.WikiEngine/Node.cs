@@ -1,10 +1,11 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.IO;
-using System.Text.RegularExpressions;
 
 namespace TASVideos.WikiEngine.AST
 {
@@ -15,6 +16,7 @@ namespace TASVideos.WikiEngine.AST
 		IfModule,
 		Module
 	}
+
 	public interface INode
 	{
 		[JsonConverter(typeof(StringEnumConverter))]
@@ -24,6 +26,7 @@ namespace TASVideos.WikiEngine.AST
 		void WriteHtml(TextWriter w);
 		INode Clone();
 	}
+
 	public interface INodeWithChildren : INode
 	{
 		List<INode> Children { get; }
@@ -96,19 +99,23 @@ namespace TASVideos.WikiEngine.AST
 			CharStart = charStart;
 			Tag = tag;
 		}
+
 		public Element(int charStart, string tag, IEnumerable<INode> children)
 			:this(charStart, tag)
 		{
 			Children.AddRange(children);
 		}
+
 		public Element(int charStart, string tag, IEnumerable<KeyValuePair<string, string>> attributes, IEnumerable<INode> children)
 			:this(charStart, tag, children)
 		{
 			foreach (var kvp in attributes)
 				Attributes.Add(kvp.Key, kvp.Value);
 		}
+
 		public void WriteHtml(TextWriter w)
-		{	if (VoidTags.Contains(Tag) && Children.Count > 0)
+		{
+			if (VoidTags.Contains(Tag) && Children.Count > 0)
 			{
 				throw new InvalidOperationException("Void tag with child content!");
 			}
@@ -181,11 +188,13 @@ namespace TASVideos.WikiEngine.AST
 			CharStart = charStart;
 			Condition = condition;
 		}
+
 		public IfModule(int charStart, string condition, IEnumerable<INode> children)
 			: this(charStart, condition)
 		{
 			Children.AddRange(children);
 		}
+
 		public void WriteHtml(TextWriter w)
 		{
 			// razor stuff
@@ -196,6 +205,7 @@ namespace TASVideos.WikiEngine.AST
 				c.WriteHtml(w);
 			w.Write("</text>}");
 		}
+
 		public INode Clone()
 		{
 			var ret = (IfModule)MemberwiseClone();
@@ -241,6 +251,7 @@ namespace TASVideos.WikiEngine.AST
 			CharEnd = charEnd;
 			Text = text;
 		}
+
 		public void WriteHtml(TextWriter w)
 		{
 			var pp = Text.Split(new[] { '|' }, 2);

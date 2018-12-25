@@ -6,8 +6,8 @@ using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
-    public class GameController : BaseController
-    {
+	public class GameController : BaseController
+	{
 		private readonly GameTasks _gameTasks;
 
 		public GameController(UserTasks userTasks, GameTasks gameTasks)
