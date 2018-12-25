@@ -43,6 +43,7 @@ namespace TASVideos.WikiEngine.AST
 			CharStart = charStart;
 			Content = content;
 		}
+
 		public void WriteHtml(TextWriter w)
 		{
 			foreach (var c in Content)
@@ -64,6 +65,7 @@ namespace TASVideos.WikiEngine.AST
 				}
 			}
 		}
+
 		public INode Clone()
 		{
 			return (Text)MemberwiseClone();
@@ -91,23 +93,25 @@ namespace TASVideos.WikiEngine.AST
 			{
 				throw new InvalidOperationException("Invalid tag name");
 			}
+
 			if (tag == "script" || tag == "style")
 			{
 				// we don't escape for these
 				throw new InvalidOperationException("Unsupported tag!");
 			}
+
 			CharStart = charStart;
 			Tag = tag;
 		}
 
 		public Element(int charStart, string tag, IEnumerable<INode> children)
-			:this(charStart, tag)
+			: this(charStart, tag)
 		{
 			Children.AddRange(children);
 		}
 
 		public Element(int charStart, string tag, IEnumerable<KeyValuePair<string, string>> attributes, IEnumerable<INode> children)
-			:this(charStart, tag, children)
+			: this(charStart, tag, children)
 		{
 			foreach (var kvp in attributes)
 				Attributes.Add(kvp.Key, kvp.Value);
@@ -119,6 +123,7 @@ namespace TASVideos.WikiEngine.AST
 			{
 				throw new InvalidOperationException("Void tag with child content!");
 			}
+
 			w.Write('<');
 			w.Write(Tag);
 			foreach (var a in Attributes)
@@ -151,8 +156,10 @@ namespace TASVideos.WikiEngine.AST
 							break;
 					}
 				}
+
 				w.Write('"');
 			}
+
 			if (VoidTags.Contains(Tag))
 			{
 				w.Write(" />");
@@ -167,6 +174,7 @@ namespace TASVideos.WikiEngine.AST
 				w.Write('>');
 			}
 		}
+
 		public INode Clone()
 		{
 			var ret = (Element)MemberwiseClone();
@@ -273,6 +281,7 @@ namespace TASVideos.WikiEngine.AST
 				div.WriteHtml(w);
 			}
 		}
+
 		public INode Clone()
 		{
 			return (Module)MemberwiseClone();

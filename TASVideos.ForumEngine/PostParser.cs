@@ -10,10 +10,9 @@ namespace TASVideos.ForumEngine
 			if (enableHtml)
 			{
 				var ret = HtmlParser.Parse(text);
-				if (enableBbCode)
-					return RecursiveBbParse(ret).Cast<Element>().Single();
-				else
-					return ret;
+				return enableBbCode 
+					? RecursiveBbParse(ret).Cast<Element>().Single() 
+					: ret;
 			}
 			else if (enableBbCode)
 			{
@@ -35,6 +34,7 @@ namespace TASVideos.ForumEngine
 				e.Children = e.Children.SelectMany(RecursiveBbParse).ToList();
 				return new[] { e };
 			}
+
 			var t = n as Text;
 			var results = BbParser.Parse(t.Content);
 			return results.Children;

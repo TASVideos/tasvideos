@@ -8,7 +8,7 @@ namespace TASVideos.WikiEngine
 {
 	public static class Builtins
 	{
-		private static int UniqueId = 0;
+		private static int UniqueId;
 		private static string GetUniqueId()
 		{
 			var i = Interlocked.Increment(ref UniqueId);
@@ -90,26 +90,29 @@ namespace TASVideos.WikiEngine
 
 			return MakeLinkOrImage(charStart, charEnd, text);
 		}
+
 		private static IEnumerable<INode> MakeModuleInternal(int charStart, int charEnd, string module)
 		{
-			return new []
+			return new[]
 			{
 				new Module(charStart, charEnd, module)
 			};
 		}
+
 		private static IEnumerable<INode> MakeFootnote(int charStart, int charEnd, string n)
 		{
 			return new INode[]
 			{
 				new Text(charStart, "[") { CharEnd = charStart },
 				new Element(charStart, "a", new[] { Attr("id", n) }, new INode[0]) { CharEnd = charStart },
-				new Element(charStart, "a", new[] { Attr("href", "#r" + n) }, new []
+				new Element(charStart, "a", new[] { Attr("href", "#r" + n) }, new[]
 				{
 					new Text(charStart, n) { CharEnd = charEnd }
 				}) { CharEnd = charEnd },
 				new Text(charEnd, "]") { CharEnd = charEnd }
 			};
 		}
+
 		private static IEnumerable<INode> MakeFootnoteLink(int charStart, int charEnd, string n)
 		{
 			return new[]
@@ -129,6 +132,7 @@ namespace TASVideos.WikiEngine
 
 		private static readonly string[] ImageSuffixes = { ".svg", ".png", ".gif", ".jpg", ".jpeg" };
 		private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//" };
+
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
 		private static readonly Regex ImplicitWikiLink = new Regex(@"^[A-Za-z0-9._/#\- ]+(\|.+)?$");
@@ -136,10 +140,12 @@ namespace TASVideos.WikiEngine
 		{
 			return LinkPrefixes.Any(text.StartsWith);
 		}
+
 		private static bool IsImage(string text)
 		{
 			return IsLink(text) && ImageSuffixes.Any(text.EndsWith);
 		}
+
 		private static string UrlFromLinkText(string text)
 		{
 			if (text[0] == '=')
@@ -151,8 +157,10 @@ namespace TASVideos.WikiEngine
 
 				return "/" + text.Substring(text[1] == '/' ? 2 : 1);
 			}
+
 			return text;
 		}
+
 		private static IEnumerable<INode> MakeLinkOrImage(int charStart, int charEnd, string text)
 		{
 			var pp = text.Split('|');
@@ -160,10 +168,12 @@ namespace TASVideos.WikiEngine
 			{
 				return new[] { MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1)) };
 			}
+
 			if (IsImage(pp[0]))
 			{
 				return new[] { MakeImage(charStart, charEnd, pp, 0) };
 			}
+
 			if (IsLink(pp[0]))
 			{
 				if (pp.Length > 1)
@@ -178,6 +188,7 @@ namespace TASVideos.WikiEngine
 					return new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, UrlFromLinkText(pp[0])) { CharEnd = charEnd }) };
 				}
 			}
+
 			// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
 			// any of the other predetermined things we scan for
 			// it could be an internal wiki link, but it could also be a lot of other not-allowed garbage
@@ -187,21 +198,26 @@ namespace TASVideos.WikiEngine
 				// on what other wiki pages exist and their content
 				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
 			}
+
 			// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
 			return new[] { new Text(charStart, "[" + text + "]") { CharEnd = charEnd } };
 		}
 
 		private static INode MakeLink(int charStart, int charEnd, string text, INode child)
 		{
-			var attrs = new List<KeyValuePair<string, string>>();
-			attrs.Add(Attr("href", UrlFromLinkText(text)));
+			var attrs = new List<KeyValuePair<string, string>>
+			{
+				Attr("href", UrlFromLinkText(text))
+			};
 			if (text[0] != '=') // external
 			{
 				attrs.Add(Attr("rel", "nofollow"));
 				attrs.Add(Attr("class", "extlink"));
 			}
+
 			return new Element(charStart, "a", attrs, new[] { child }) { CharEnd = charEnd };
 		}
+
 		private static INode MakeImage(int charStart, int charEnd, string[] pp, int index)
 		{
 			var attrs = new List<KeyValuePair<string, string>>();
@@ -229,10 +245,12 @@ namespace TASVideos.WikiEngine
 					attrs.Add(Attr("alt", s.Substring(4)));
 				}
 			}
+
 			if (!classSet)
 			{
 				attrs.Add(Attr("class", "embed"));
 			}
+
 			return new Element(charStart, "img", attrs, new INode[0]) { CharEnd = charEnd };
 		}
 	}
