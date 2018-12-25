@@ -224,7 +224,7 @@ namespace TASVideos.Tasks
 		/// If unsuccessful, the success flag will be false, Id will be 0 and the 
 		/// Errors property will be filled with any relevant error messages
 		/// </summary>
-		public async Task<SubmitResult> SubmitMovie(SubmissionCreateViewModel model, string userName)
+		public async Task<SubmitResult> SubmitMovie(SubmissionCreateModel model, string userName)
 		{
 			var submission = _mapper.Map<Submission>(model);
 

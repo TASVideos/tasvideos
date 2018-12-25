@@ -12,8 +12,8 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents a movie to submit to the submission queue for the submit page
 	/// </summary>
-	public class SubmissionCreateViewModel
-    {
+	public class SubmissionCreateModel
+	{
 		[Required]
 		[Display(Name = "Game Version", Description = "Example: USA")]
 		[StringLength(20)]
@@ -172,7 +172,9 @@ namespace TASVideos.Models
 		internal int? RomId { get; set; }
 	}
 
-	// TODO: document
+	/// <summary>
+	/// Represents a submission for the purpose of editing
+	/// </summary>
 	public class SubmissionEditModel : SubmissionViewModel
 	{
 		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = new List<SelectListItem>();
@@ -196,7 +198,10 @@ namespace TASVideos.Models
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
 	}
 
-	// TODO: document - for re-verifying a status can be set
+	/// <summary>
+	/// Represents the data necessary to determine if a submission status can be
+	/// set on a given submission with for a given user
+	/// </summary>
 	public class SubmissionStatusValidationModel
 	{
 		public bool UserIsJudge { get; set; }

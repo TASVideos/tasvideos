@@ -12,7 +12,7 @@ namespace TASVideos
 	{
 		public MappingProfile()
 		{
-			CreateMap<SubmissionCreateViewModel, Submission>()
+			CreateMap<SubmissionCreateModel, Submission>()
 				.ForMember(dest => dest.EmulatorVersion, opt => opt.MapFrom(src => src.Emulator));
 
 			CreateMap<SubmissionCatalogModel, Submission>();
