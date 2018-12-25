@@ -56,7 +56,7 @@ namespace TASVideos.Controllers
 
 		[AllowAnonymous]
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+		public async Task<IActionResult> Login(LoginModel model, string returnUrl = null)
 		{
 			ViewData["ReturnUrl"] = returnUrl;
 			if (ModelState.IsValid)
@@ -101,7 +101,7 @@ namespace TASVideos.Controllers
 
 		[AllowAnonymous]
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+		public async Task<IActionResult> Register(RegisterModel model, string returnUrl = null)
 		{
 			ViewData["ReturnUrl"] = returnUrl;
 			if (ModelState.IsValid)
@@ -173,7 +173,7 @@ namespace TASVideos.Controllers
 
 		[AllowAnonymous]
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+		public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -215,13 +215,13 @@ namespace TASVideos.Controllers
 				throw new ApplicationException("A code must be supplied for password reset.");
 			}
 
-			var model = new ResetPasswordViewModel { Code = code };
+			var model = new ResetPasswordModel { Code = code };
 			return View(model);
 		}
 
 		[AllowAnonymous]
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+		public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
 		{
 			if (!ModelState.IsValid)
 			{

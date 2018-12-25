@@ -2,7 +2,7 @@
 
 namespace TASVideos.Models
 {
-	public class LoginViewModel
+	public class LoginModel
 	{
 		[Required]
 		[Display(Name = "User Name")]
@@ -16,7 +16,7 @@ namespace TASVideos.Models
 		public bool RememberMe { get; set; }
 	}
 
-	public class RegisterViewModel
+	public class RegisterModel
 	{
 		[Display(Name = "Time Zone")]
 		public string SelectedTimeZone { get; set; }
@@ -47,7 +47,7 @@ namespace TASVideos.Models
 		public string From { get; set; }
 	}
 
-	public class ResetPasswordViewModel
+	public class ResetPasswordModel
 	{
 		[Required]
 		[EmailAddress]
@@ -66,18 +66,10 @@ namespace TASVideos.Models
 		public string Code { get; set; }
 	}
 
-	public class ForgotPasswordViewModel
+	public class ForgotPasswordModel
 	{
 		[Required]
 		[EmailAddress]
 		public string Email { get; set; }
-	}
-
-	public class LoginWithRecoveryCodeViewModel
-	{
-		[Required]
-		[DataType(DataType.Text)]
-		[Display(Name = "Recovery Code")]
-		public string RecoveryCode { get; set; }
 	}
 }
