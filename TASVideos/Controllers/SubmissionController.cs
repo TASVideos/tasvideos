@@ -82,7 +82,7 @@ namespace TASVideos.Controllers
 		[RequirePermission(PermissionTo.SubmitMovies)]
 		public IActionResult Submit()
 		{
-			var model = new SubmissionCreateViewModel
+			var model = new SubmissionCreateModel
 			{
 				GameVersionOptions = GameVersionOptions,
 				Authors = new List<string> { User.Identity.Name }
@@ -93,7 +93,7 @@ namespace TASVideos.Controllers
 
 		[HttpPost]
 		[RequirePermission(PermissionTo.SubmitMovies)]
-		public async Task<IActionResult> Submit(SubmissionCreateViewModel model)
+		public async Task<IActionResult> Submit(SubmissionCreateModel model)
 		{
 			model.Authors = model.Authors
 				.Where(a => !string.IsNullOrWhiteSpace(a))
@@ -102,26 +102,26 @@ namespace TASVideos.Controllers
 			if (!model.Authors.Any())
 			{
 				ModelState.AddModelError(
-					nameof(SubmissionCreateViewModel.Authors),
+					nameof(SubmissionCreateModel.Authors),
 					"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
 			}
 
 			if (!model.MovieFile.FileName.EndsWith(".zip")
 			|| model.MovieFile.ContentType != "application/x-zip-compressed")
 			{
-				ModelState.AddModelError(nameof(SubmissionCreateViewModel.MovieFile), "Not a valid .zip file");
+				ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), "Not a valid .zip file");
 			}
 
 			if (model.MovieFile.Length > 150 * 1024)
 			{
-				ModelState.AddModelError(nameof(SubmissionCreateViewModel.MovieFile), ".zip is too big, are you sure this is a valid movie file?");
+				ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), ".zip is too big, are you sure this is a valid movie file?");
 			}
 
 			foreach (var author in model.Authors)
 			{
 				if (!await UserTasks.CheckUserNameExists(author))
 				{
-					ModelState.AddModelError(nameof(SubmissionCreateViewModel.Authors), $"Could not find user: {author}");
+					ModelState.AddModelError(nameof(SubmissionCreateModel.Authors), $"Could not find user: {author}");
 				}
 			}
 
@@ -193,13 +193,13 @@ namespace TASVideos.Controllers
 				if (!model.MovieFile.FileName.EndsWith(".zip")
 					|| model.MovieFile.ContentType != "application/x-zip-compressed")
 				{
-					ModelState.AddModelError(nameof(SubmissionCreateViewModel.MovieFile), "Not a valid .zip file");
+					ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), "Not a valid .zip file");
 				}
 
 				if (model.MovieFile.Length > 150 * 1024)
 				{
 					ModelState.AddModelError(
-						nameof(SubmissionCreateViewModel.MovieFile),
+						nameof(SubmissionCreateModel.MovieFile),
 						".zip is too big, are you sure this is a valid movie file?");
 				}
 			}

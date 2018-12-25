@@ -1,6 +1,7 @@
-﻿@model SubmissionCreateViewModel
+﻿@model SubmissionCreateModel
 @{
 	ViewData["Title"] = "Submit Movie";
+	// ReSharper disable once UnusedVariable
 	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
 }
 <info-alert dismissible="true">
