@@ -85,7 +85,6 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _bk2Parser.Parse(Embedded("0Frames.bk2"));
 			Assert.AreEqual(RegionType.Ntsc, result.Region, "Region must be Ntsc");
-
 		}
 
 		[TestMethod]
