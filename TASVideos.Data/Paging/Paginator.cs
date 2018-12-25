@@ -11,7 +11,6 @@ namespace TASVideos.Data
 {
 	public static class Paginator
 	{
-
 		/// <summary>
 		/// Takes an ordered query and returns a paged result set and a result count that has been executed.
 		/// The <see cref="DbContext" /> is used to create a single transaction scope for both the query and count and execute those queries.

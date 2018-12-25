@@ -2,8 +2,8 @@
 
 namespace TASVideos.Data.SeedData
 {
-    public static class FlagSeedData
-    {
+	public static class FlagSeedData
+	{
 		public static readonly Flag[] Flags =
 		{
 			new Flag
@@ -70,5 +70,5 @@ namespace TASVideos.Data.SeedData
 				PermissionRestriction = PermissionTo.EditRecommendation
 			}
 		};
-    }
+	}
 }
