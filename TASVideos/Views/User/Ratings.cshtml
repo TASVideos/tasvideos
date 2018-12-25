@@ -1,6 +1,8 @@
-﻿@model UserRatingsViewModel
+﻿@model UserRatingsModel
 @{
 	ViewData["Title"] = $"Ratings for {Model.UserName}";
+
+	// ReSharper disable once UnusedVariable
 	bool isMyPage = (bool)ViewData["IsMyPage"];
 }
 

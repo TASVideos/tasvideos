@@ -71,7 +71,7 @@ namespace TASVideos.Controllers
 		{
 			var user = await _userManager.GetUserAsync(User);
 
-			var model = new ProfileIndexViewModel
+			var model = new ProfileIndexModel
 			{
 				Username = user.UserName,
 				Email = user.Email,
@@ -87,7 +87,7 @@ namespace TASVideos.Controllers
 		}
 
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> Settings(ProfileIndexViewModel model)
+		public async Task<IActionResult> Settings(ProfileIndexModel model)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -117,7 +117,7 @@ namespace TASVideos.Controllers
 		}
 
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> SendVerificationEmail(ProfileIndexViewModel model)
+		public async Task<IActionResult> SendVerificationEmail(ProfileIndexModel model)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -146,12 +146,12 @@ namespace TASVideos.Controllers
 				return RedirectToAction(nameof(SetPassword));
 			}
 
-			var model = new ChangePasswordViewModel { StatusMessage = StatusMessage };
+			var model = new ChangePasswordModel { StatusMessage = StatusMessage };
 			return View(model);
 		}
 
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+		public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -190,12 +190,12 @@ namespace TASVideos.Controllers
 				return RedirectToAction(nameof(ChangePassword));
 			}
 
-			var model = new SetPasswordViewModel { StatusMessage = StatusMessage };
+			var model = new SetPasswordModel { StatusMessage = StatusMessage };
 			return View(model);
 		}
 
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
+		public async Task<IActionResult> SetPassword(SetPasswordModel model)
 		{
 			if (!ModelState.IsValid)
 			{

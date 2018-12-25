@@ -106,7 +106,7 @@ namespace TASVideos.Tasks
 		}
 
 		// TODO: document, returns page post is in, or null if post can not be found
-		public async Task<PostViewModel> GetPostPosition(int postId, bool seeRestricted)
+		public async Task<PostPositionModel> GetPostPosition(int postId, bool seeRestricted)
 		{
 			var post = await _db.ForumPosts
 				.ExcludeRestricted(seeRestricted)
@@ -123,7 +123,7 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 
 			var position = posts.IndexOf(post);
-			return new PostViewModel
+			return new PostPositionModel
 			{
 				Page = (position / ForumConstants.PostsPerPage) + 1,
 				TopicId = post.TopicId ?? 0

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Models
 {
-	public class ProfileIndexViewModel
+	public class ProfileIndexModel
 	{
 		public string Username { get; set; }
 
@@ -28,7 +28,7 @@ namespace TASVideos.Models
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 	}
 
-	public class ChangePasswordViewModel
+	public class ChangePasswordModel
 	{
 		[Required]
 		[DataType(DataType.Password)]
@@ -49,12 +49,7 @@ namespace TASVideos.Models
 		public string StatusMessage { get; set; }
 	}
 
-	public class GenerateRecoveryCodesViewModel
-	{
-		public string[] RecoveryCodes { get; set; }
-	}
-
-	public class SetPasswordViewModel
+	public class SetPasswordModel
 	{
 		[Required]
 		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]

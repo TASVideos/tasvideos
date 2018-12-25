@@ -20,10 +20,10 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Return the <see cref="Role" /> record with the given <see cref="name"/> for the purpose of display
 		/// </summary>
-		public async Task<RoleDisplayViewModel> GetRoleForDisplay(string name)
+		public async Task<RoleDisplayModel> GetRoleForDisplay(string name)
 		{
 			return await _db.Roles
-				.Select(r => new RoleDisplayViewModel
+				.Select(r => new RoleDisplayModel
 				{
 					Id = r.Id,
 					Name = r.Name,
@@ -36,7 +36,7 @@ namespace TASVideos.Tasks
 						.Select(rl => rl.Link)
 						.ToList(),
 					Users = r.UserRole
-						.Select(ur => new RoleDisplayViewModel.UserWithRole
+						.Select(ur => new RoleDisplayModel.UserWithRole
 						{
 							Id = ur.UserId,
 							UserName = ur.User.UserName
@@ -50,10 +50,10 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns all of the <see cref="Role" /> records for the purpose of display
 		/// </summary>
-		public async Task<IEnumerable<RoleDisplayViewModel>> GetAllRolesForDisplay()
+		public async Task<IEnumerable<RoleDisplayModel>> GetAllRolesForDisplay()
 		{
 			return await _db.Roles
-				.Select(r => new RoleDisplayViewModel
+				.Select(r => new RoleDisplayModel
 				{
 					Id = r.Id,
 					Name = r.Name,
@@ -66,7 +66,7 @@ namespace TASVideos.Tasks
 						.Select(rl => rl.Link)
 						.ToList(),
 					Users = r.UserRole
-						.Select(ur => new RoleDisplayViewModel.UserWithRole
+						.Select(ur => new RoleDisplayModel.UserWithRole
 						{
 							Id = ur.UserId,
 							UserName = ur.User.UserName,
@@ -79,11 +79,11 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns a <see cref="Role" /> with the given id for the purpose of editing
 		/// </summary>
-		public async Task<RoleEditViewModel> GetRoleForEdit(int? id)
+		public async Task<RoleEditModel> GetRoleForEdit(int? id)
 		{
 			if (!id.HasValue)
 			{
-				return new RoleEditViewModel();
+				return new RoleEditModel();
 			}
 
 			var raw = await _db.Roles
@@ -102,7 +102,7 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
-			var model = new RoleEditViewModel
+			var model = new RoleEditModel
 			{
 				Id = raw.Id,
 				Name = raw.Name,
@@ -123,7 +123,7 @@ namespace TASVideos.Tasks
 		/// If an Id is provided, the Role is updated
 		/// If no id is provided, then it is inserted
 		/// </summary>
-		public async Task AddUpdateRole(RoleEditViewModel model)
+		public async Task AddUpdateRole(RoleEditModel model)
 		{
 			Role role;
 			if (model.Id.HasValue)

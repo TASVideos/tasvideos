@@ -11,9 +11,9 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Models
 {
 	/// <summary>
-	/// Represents a <seealso cref="TASVideos.Data.Entity.User"/> entry list of users
+	/// Represents a <seealso cref="User"/> entry list of users
 	/// </summary>
-	public class UserListViewModel
+	public class UserListModel
 	{
 		[Sortable]
 		public int Id { get; set; }
@@ -34,9 +34,9 @@ namespace TASVideos.Models
 	}
 
 	/// <summary>
-	/// Represents a <see cref="TASVideos.Data.Entity.User"/> for the purpose of editing
+	/// Represents a <see cref="User"/> for the purpose of editing
 	/// </summary>
-	public class UserEditViewModel : UserEditPostViewModel
+	public class UserEditModel : UserEditPostModel
 	{
 		[DisplayName("Account Created On")]
 		public DateTime CreateTimeStamp { get; set; }
@@ -60,9 +60,9 @@ namespace TASVideos.Models
 	}
 
 	/// <summary>
-	/// Just the fields that can be posted from the <see cref="TASVideos.Data.Entity.User" /> edit page
+	/// Just the fields that can be posted from the <see cref="User" /> edit page
 	/// </summary>
-	public class UserEditPostViewModel
+	public class UserEditPostModel
 	{
 		public int Id { get; set; }
 
@@ -186,7 +186,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents a user's ratings
 	/// </summary>
-	public class UserRatingsViewModel
+	public class UserRatingsModel
 	{
 		public int Id { get; set; }
 		public string UserName { get; set; }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Models
 {
-	public class UserMovieListViewModel
+	public class UserMovieListModel
 	{
 		public long Id { get; set; }
 
@@ -21,7 +21,7 @@ namespace TASVideos.Models
 		public string Title { get; set; }
 	}
 
-	public class UserFileViewModel
+	public class UserFileModel
 	{
 		public long Id { get; set; }
 
@@ -50,7 +50,7 @@ namespace TASVideos.Models
 		public string System { get; set; }
 	}
 
-	public class UserMovieViewModel : UserFileViewModel
+	public class UserMovieModel : UserFileModel
 	{
 		public TimeSpan Length { get; set; }
 
@@ -59,10 +59,10 @@ namespace TASVideos.Models
 		public int Rerecords { get; set; }
 	}
 
-	public class UserFileIndexViewModel
+	public class UserFileIndexModel
 	{
 		public IEnumerable<UserWithMovie> UsersWithMovies { get; set; } = new List<UserWithMovie>();
-		public IEnumerable<UserMovieListViewModel> LatestMovies { get; set; } = new List<UserMovieListViewModel>();
+		public IEnumerable<UserMovieListModel> LatestMovies { get; set; } = new List<UserMovieListModel>();
 		public IEnumerable<GameWithMovie> GamesWithMovies { get; set; } = new List<GameWithMovie>();
 
 		public class UserWithMovie
@@ -80,13 +80,13 @@ namespace TASVideos.Models
 		}
 	}
 
-	public class UserFileUserIndexViewModel
+	public class UserFileUserIndexModel
 	{
 		public string UserName { get; set; }
-		public IEnumerable<UserFileViewModel> Files { get; set; }
+		public IEnumerable<UserFileModel> Files { get; set; }
 	}
 
-	public class UserFileDataViewModel
+	public class UserFileDataModel
 	{
 		public byte[] Content { get; set; }
 
@@ -105,6 +105,6 @@ namespace TASVideos.Models
 		public int GameId { get; set; }
 		public string GameName { get; set; }
 
-		public IEnumerable<UserFileViewModel> Files { get; set; } = new List<UserFileViewModel>();
+		public IEnumerable<UserFileModel> Files { get; set; } = new List<UserFileModel>();
 	}
 }

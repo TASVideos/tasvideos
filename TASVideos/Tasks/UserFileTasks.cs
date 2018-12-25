@@ -20,7 +20,7 @@ namespace TASVideos.Tasks
 			_db = db;
 		}
 
-		public async Task<IEnumerable<UserMovieListViewModel>> GetLatest(int count)
+		public async Task<IEnumerable<UserMovieListModel>> GetLatest(int count)
 		{
 			var query = _db.UserFiles
 				.Include(userFile => userFile.Author)
@@ -31,7 +31,7 @@ namespace TASVideos.Tasks
 			var result = await query.ToListAsync();
 
 			return result
-				.Select(userFile => new UserMovieListViewModel
+				.Select(userFile => new UserMovieListModel
 				{
 					Author = userFile.Author.UserName,
 					FileName = userFile.FileName,
@@ -44,7 +44,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns the info for the files uploaded by the given user
 		/// </summary>
-		public async Task<UserFileUserIndexViewModel> GetUserIndex(int userId, string userName, bool includeHidden)
+		public async Task<UserFileUserIndexModel> GetUserIndex(int userId, string userName, bool includeHidden)
 		{
 			var query = _db.UserFiles
 				.Include(userFile => userFile.Author)
@@ -59,7 +59,7 @@ namespace TASVideos.Tasks
 
 			var result = await query.ToListAsync();
 
-			return new UserFileUserIndexViewModel
+			return new UserFileUserIndexModel
 			{
 				UserName = userName,
 				Files = result.Select(ToViewModel)
@@ -69,7 +69,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns the info for the user file with the given id, or null if no such file was found.
 		/// </summary>
-		public async Task<UserFileViewModel> GetInfo(long id)
+		public async Task<UserFileModel> GetInfo(long id)
 		{
 			var file = await _db.UserFiles
 				.Include(userFile => userFile.Author)
@@ -97,21 +97,21 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
-		public async Task<UserFileIndexViewModel> GetIndex()
+		public async Task<UserFileIndexModel> GetIndex()
 		{
-			var model = new UserFileIndexViewModel
+			var model = new UserFileIndexModel
 			{
 				UsersWithMovies = await _db.UserFiles
 					.Where(uf => !uf.Hidden)
 					.GroupBy(gkey => gkey.Author.UserName, gvalue => gvalue.UploadTimestamp).Select(
-						uf => new UserFileIndexViewModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
+						uf => new UserFileIndexModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 					.ToListAsync(),
 				LatestMovies = await GetLatest(10),
 				GamesWithMovies = await _db.Games
 					.Where(g => g.UserFiles.Any())
 					.OrderBy(g => g.System.Code)
 					.ThenBy(g => g.DisplayName)
-					.Select(g => new UserFileIndexViewModel.GameWithMovie
+					.Select(g => new UserFileIndexModel.GameWithMovie
 					{
 						GameId = g.Id,
 						GameName = g.DisplayName,
@@ -128,11 +128,11 @@ namespace TASVideos.Tasks
 		/// Returns the contents of the user file with the given id, or null if no such file was
 		/// found.
 		/// </summary>
-		public async Task<UserFileDataViewModel> GetContents(long id)
+		public async Task<UserFileDataModel> GetContents(long id)
 		{
 			var file = await _db.UserFiles
 				.Where(userFile => userFile.Id == id)
-				.Select(userFile => new UserFileDataViewModel
+				.Select(userFile => new UserFileDataModel
 				{
 					AuthorId = userFile.AuthorId,
 					Content = userFile.Content,
@@ -170,11 +170,11 @@ namespace TASVideos.Tasks
 			};
 		}
 
-		private static UserFileViewModel ToViewModel(UserFile file)
+		private static UserFileModel ToViewModel(UserFile file)
 		{
 			var model = file.Class == UserFileClass.Movie
-				? new UserMovieViewModel()
-				: new UserFileViewModel();
+				? new UserMovieModel()
+				: new UserFileModel();
 
 			model.Author = file.Author.UserName;
 			model.Description = file.Description;
@@ -190,7 +190,7 @@ namespace TASVideos.Tasks
 			model.GameName = file.Game?.DisplayName;
 			model.System = file.System?.DisplayName;
 
-			if (model is UserMovieViewModel movie)
+			if (model is UserMovieModel movie)
 			{
 				movie.Frames = file.Frames;
 				movie.Length = TimeSpan.FromSeconds((double)file.Length);

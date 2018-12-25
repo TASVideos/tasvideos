@@ -7,7 +7,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents a Permission entry for the purpose of display
 	/// </summary>
-	public class PermissionDisplayViewModel
+	public class PermissionDisplayModel
 	{
 		public PermissionTo Id { get; set; }
 

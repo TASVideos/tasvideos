@@ -59,7 +59,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Gets a list of <see cref="Submission"/>s for the submission queue filtered on the given <see cref="criteria" />
 		/// </summary>
-		public async Task<SubmissionListViewModel> GetSubmissionList(SubmissionSearchRequest criteria)
+		public async Task<SubmissionListModel> GetSubmissionList(SubmissionSearchRequest criteria)
 		{
 			var iquery = _db.Submissions
 				.Include(s => s.Submitter)
@@ -95,13 +95,13 @@ namespace TASVideos.Tasks
 			// Because we need the title property which is a derived property that can't be done in Linq to Sql
 			// And needs a variety of information from sub-tables, hence all the includes
 			var results = await query.ToListAsync();
-			return new SubmissionListViewModel
+			return new SubmissionListModel
 			{
 				User = criteria.User,
 				StatusFilter = criteria.StatusFilter
 					.Cast<int>()
 					.ToList(),
-				Entries = results.Select(s => new SubmissionListViewModel.Entry
+				Entries = results.Select(s => new SubmissionListModel.Entry
 				{
 					Id = s.Id,
 					System = s.System.Code,
@@ -120,13 +120,13 @@ namespace TASVideos.Tasks
 		/// for the purpose of display
 		/// If a submission can not be found, null is returned
 		/// </summary>
-		public async Task<SubmissionViewModel> GetSubmission(int id, string userName)
+		public async Task<SubmissionDisplayModel> GetSubmission(int id, string userName)
 		{
 			using (_db.Database.BeginTransactionAsync())
 			{
 				var submissionModel = await _db.Submissions
 					.Where(s => s.Id == id)
-					.Select(s => new SubmissionViewModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
+					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
 					{
 						Id = s.Id,
 						SystemDisplayName = s.System.DisplayName,

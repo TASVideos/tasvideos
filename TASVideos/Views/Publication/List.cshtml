@@ -1,8 +1,9 @@
-﻿@model IEnumerable<PublicationViewModel>
+﻿@model IEnumerable<PublicationModel>
 @{
 	ViewData["Title"] = $"Tool-assisted movies ({Model.Count()})";
 }
 
+@* ReSharper disable once UnusedVariable *@
 @foreach (var movie in Model)
 {
 	<partial name="~/Views/Shared/_MovieModule.cshtml" model="movie" />

@@ -113,10 +113,10 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Gets a list of <see cref="User"/>s for the purpose of a user list
 		/// </summary>
-		public PageOf<UserListViewModel> GetPageOfUsers(PagedModel paging)
+		public PageOf<UserListModel> GetPageOfUsers(PagedModel paging)
 		{
 			var data = _db.Users
-				.Select(u => new UserListViewModel
+				.Select(u => new UserListModel
 				{
 					Id = u.Id,
 					UserName = u.UserName,
@@ -191,12 +191,12 @@ namespace TASVideos.Tasks
 		/// Returns a <see cref="User"/>  with the given id for the purpose of editing
 		/// Which <see cref="Role"/>s are available to assign to the User depends on the User with the given <see cref="currentUserId" />'s <see cref="RolePermission"/> list
 		/// </summary>
-		public async Task<UserEditViewModel> GetUserForEdit(string userName, int currentUserId)
+		public async Task<UserEditModel> GetUserForEdit(string userName, int currentUserId)
 		{
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				var model = await _db.Users
-					.ProjectTo<UserEditViewModel>()
+					.ProjectTo<UserEditModel>()
 					.SingleAsync(u => u.UserName == userName);
 
 				model.AvailableRoles = await GetAllRolesUserCanAssign(currentUserId, model.SelectedRoles);
@@ -208,7 +208,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Updates the given <see cref="User"/>
 		/// </summary>
-		public async Task EditUser(UserEditPostViewModel model)
+		public async Task EditUser(UserEditPostModel model)
 		{
 			var user = await _db.Users.SingleAsync(u => u.Id == model.Id);
 			if (model.UserName != user.UserName)
@@ -360,11 +360,11 @@ namespace TASVideos.Tasks
 		/// If user is not found, null is returned
 		/// If user has PublicRatings false, then the ratings will be an empty list
 		/// </summary>
-		public async Task<UserRatingsViewModel> GetUserRatings(string userName, bool includeHidden = false)
+		public async Task<UserRatingsModel> GetUserRatings(string userName, bool includeHidden = false)
 		{
 			var model = await _db.Users
 				.Where(u => u.UserName == userName)
-				.Select(u => new UserRatingsViewModel
+				.Select(u => new UserRatingsModel
 				{
 					Id = u.Id,
 					UserName = u.UserName,
@@ -396,7 +396,7 @@ namespace TASVideos.Tasks
 						gvalue.Type,
 						gvalue.Value
 					})
-				.Select(pr => new UserRatingsViewModel.Rating
+				.Select(pr => new UserRatingsModel.Rating
 				{
 					PublicationId = pr.Key.PublicationId,
 					PublicationTitle = pr.Key.Title,

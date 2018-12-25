@@ -35,10 +35,10 @@ namespace TASVideos.Tasks
 		/// with the given <see cref="publicationId"/>
 		/// If no <see cref="Publication"/> is found, then null is returned
 		/// </summary>
-		public async Task<PublicationRatingsViewModel> GetRatingsForPublication(int publicationId)
+		public async Task<PublicationRatingsModel> GetRatingsForPublication(int publicationId)
 		{
 			string cacheKey = MovieRatingKey + publicationId;
-			if (_cache.TryGetValue(cacheKey, out PublicationRatingsViewModel rating))
+			if (_cache.TryGetValue(cacheKey, out PublicationRatingsModel rating))
 			{
 				return rating;
 			}
@@ -53,7 +53,7 @@ namespace TASVideos.Tasks
 				return null;
 			}
 
-			var model = new PublicationRatingsViewModel
+			var model = new PublicationRatingsModel
 			{
 				PublicationId = publication.Id,
 				PublicationTitle = publication.Title,
@@ -61,7 +61,7 @@ namespace TASVideos.Tasks
 					.GroupBy(
 						key => new { key.PublicationId, key.User.UserName, key.User.PublicRatings },
 						grp => new { grp.Type, grp.Value })
-					.Select(g => new PublicationRatingsViewModel.RatingEntry
+					.Select(g => new PublicationRatingsModel.RatingEntry
 					{
 						UserName = g.Key.UserName,
 						IsPublic = g.Key.PublicRatings,

@@ -86,7 +86,7 @@ namespace TASVideos.Controllers
 
 		[HttpPost, ValidateAntiForgeryToken]
 		[RequirePermission(PermissionTo.EditRoles)]
-		public async Task<IActionResult> AddEdit(RoleEditViewModel model)
+		public async Task<IActionResult> AddEdit(RoleEditModel model)
 		{
 			model.Links = model.Links.Where(l => !string.IsNullOrWhiteSpace(l));
 			if (ModelState.IsValid)

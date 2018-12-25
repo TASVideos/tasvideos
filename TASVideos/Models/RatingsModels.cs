@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Models
 {
-	public class PublicationRatingsViewModel
+	public class PublicationRatingsModel
 	{
 		public int PublicationId { get; set; }
 		public string PublicationTitle { get; set; }
