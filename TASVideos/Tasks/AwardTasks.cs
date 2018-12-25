@@ -76,10 +76,12 @@ namespace TASVideos.Tasks
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				var userAwards = await _db.UserAwards
-					.GroupBy(gkey => new
+					.GroupBy(
+						gkey => new
 						{
 							gkey.Award.Description, gkey.Award.ShortName, gkey.Year
-						}, gvalue => new AwardDto.UserDto
+						}, 
+						gvalue => new AwardDto.UserDto
 						{
 							Id = gvalue.UserId, UserName = gvalue.User.UserName
 						})
@@ -102,15 +104,17 @@ namespace TASVideos.Tasks
 					.ToListAsync();
 
 				var publicationAwards = pubLists
-					.GroupBy(gkey => new
+					.GroupBy(
+						gkey => new
 						{
 							gkey.Award.Description, gkey.Award.ShortName, gkey.Year
-						}, gvalue => new
+						},
+						gvalue => new
 						{
 							Publication = new
 							{
 								Id = gvalue.PublicationId,
-								Title = gvalue.Publication.Title
+								gvalue.Publication.Title
 							},
 							Users = gvalue.Publication.Authors.Select(a => new
 							{

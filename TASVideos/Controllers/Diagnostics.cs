@@ -70,7 +70,6 @@ namespace TASVideos.Controllers
 
 				return new
 				{
-
 					TotalMemoryUsage = $"{(process.PrivateMemorySize64 / 1024 / 1024):n0} MB"
 				};
 			}
