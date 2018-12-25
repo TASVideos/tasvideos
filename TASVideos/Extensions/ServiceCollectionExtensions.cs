@@ -159,15 +159,6 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		private static IServiceCollection AddHttpContext(this IServiceCollection services)
-		{
-			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-			services.AddTransient(
-				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
-
-			return services;
-		}
-
 		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IHostingEnvironment env, AppSettings settings)
 		{
 			if (env.IsAnyTestEnvironment())
@@ -179,6 +170,15 @@ namespace TASVideos.Extensions
 
 			services.AddTransient<ExternalMediaPublisher>();
 			
+			return services;
+		}
+
+		private static IServiceCollection AddHttpContext(this IServiceCollection services)
+		{
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddTransient(
+				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+
 			return services;
 		}
 	}

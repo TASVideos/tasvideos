@@ -120,7 +120,7 @@ namespace TASVideos.Services
 
 			var stream = file.Compression == Compression.Gzip
 				? (Stream)new GZipStream(memoryStream, CompressionMode.Decompress)
-				: (Stream)memoryStream;
+				: memoryStream;
 
 			const string FileType = "application/octet-stream";
 			var entityTag = $"db-file-{file.Id}";

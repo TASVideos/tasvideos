@@ -160,7 +160,8 @@ namespace TASVideos.Controllers
 		{
 			var user = await _userManager.GetUserAsync(User);
 			var model = await _forumTasks.GetPostsSinceLastVisit(
-				request, user.LastLoggedInTimeStamp ?? DateTime.UtcNow,
+				request, 
+				user.LastLoggedInTimeStamp ?? DateTime.UtcNow,
 				UserHas(PermissionTo.SeeRestrictedForums));
 
 			foreach (var post in model)

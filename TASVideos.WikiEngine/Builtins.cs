@@ -23,10 +23,10 @@ namespace TASVideos.WikiEngine
 		public static INode MakeTabs(Element tabset)
 		{
 			// TODO: Fix up CharEnds
-			var navclass = tabset.Tag == "htabs" ? "nav nav-pills nav-stacked col-md-3" : "nav nav-tabs";
+			var navClass = tabset.Tag == "htabs" ? "nav nav-pills nav-stacked col-md-3" : "nav nav-tabs";
 			var liClass = tabset.Tag == "htabs" ? "" : "nav-item";
 			var aClass = tabset.Tag == "htabs" ? "" : "nav-link";
-			var tabclass = tabset.Tag == "htabs" ? "tab-content col-md-9" : "tab-content";
+			var tabClass = tabset.Tag == "htabs" ? "tab-content col-md-9" : "tab-content";
 			var nav = new List<INode>();
 			var content = new List<INode>();
 			var first = true;
@@ -57,8 +57,8 @@ namespace TASVideos.WikiEngine
 
 			return new Element(tabset.CharStart, "div", new[] { Attr("class", "") }, new[]
 			{
-				new Element(tabset.CharStart, "ul", new[] { Attr("class", navclass), Attr("role", "tablist") }, nav),
-				new Element(tabset.CharStart, "div", new[] { Attr("class", tabclass) }, content)
+				new Element(tabset.CharStart, "ul", new[] { Attr("class", navClass), Attr("role", "tablist") }, nav),
+				new Element(tabset.CharStart, "div", new[] { Attr("class", tabClass) }, content)
 			});
 		}
 

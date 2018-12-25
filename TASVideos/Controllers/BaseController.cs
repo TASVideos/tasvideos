@@ -24,14 +24,14 @@ namespace TASVideos.Controllers
 			UserTasks = userTasks;
 		}
 
+		public string BaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+
 		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
 
 		internal IEnumerable<PermissionTo> UserPermissions =>
 			_userPermission ?? (_userPermission = HttpContext == null || !User.Identity.IsAuthenticated
 				? Enumerable.Empty<PermissionTo>()
 				: UserTasks.GetUserPermissionsById(User.GetUserId()).Result);
-
-		public string BaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
 		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;

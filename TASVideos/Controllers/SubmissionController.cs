@@ -201,8 +201,6 @@ namespace TASVideos.Controllers
 					ModelState.AddModelError(
 						nameof(SubmissionCreateViewModel.MovieFile),
 						".zip is too big, are you sure this is a valid movie file?");
-
-					
 				}
 			}
 			else if (!UserHas(PermissionTo.ReplaceSubmissionMovieFile))
