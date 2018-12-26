@@ -52,18 +52,18 @@ namespace TASVideos.Tasks
 			}
 
 			return await _db.Roles
-				.Select(raw => new RoleEditModel
+				.Select(r => new RoleEditModel
 				{
-					Id = raw.Id,
-					Name = raw.Name,
-					Description = raw.Description,
-					Links = raw.RoleLinks
+					Id = r.Id,
+					Name = r.Name,
+					Description = r.Description,
+					Links = r.RoleLinks
 						.Select(rl => rl.Link)
 						.ToList(),
-					SelectedPermissions = raw.RolePermission
+					SelectedPermissions = r.RolePermission
 						.Select(rp => (int)rp.PermissionId)
 						.ToList(),
-					SelectedAssignablePermissions = raw.RolePermission
+					SelectedAssignablePermissions = r.RolePermission
 						.Where(rp => rp.CanAssign)
 						.Select(rp => (int)rp.PermissionId)
 						.ToList()
@@ -129,7 +129,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<string>> RolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds)
 		{
 			return await _db.Roles
-				.Where(r => r.RolePermission.All(rp => permissionIds.Contains(rp.PermissionId)))
+				.ThatCanBeAssignedBy(permissionIds)
 				.Select(r => r.Name)
 				.ToListAsync();
 		}

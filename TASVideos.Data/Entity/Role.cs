@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+
 using Microsoft.AspNetCore.Identity;
 
 namespace TASVideos.Data.Entity
@@ -24,5 +26,15 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<RolePermission> RolePermission { get; set; } = new HashSet<RolePermission>();
 		public virtual ICollection<UserRole> UserRole { get; set; } = new HashSet<UserRole>();
 		public virtual ICollection<RoleLink> RoleLinks { get; set; } = new HashSet<RoleLink>();
+	}
+
+	public static class RoleExtensions
+	{
+		public static IQueryable<Role> ThatCanBeAssignedBy(this IQueryable<Role> query, IEnumerable<PermissionTo> permissions)
+		{
+			return query
+				.Where(r => r.RolePermission
+					.All(rp => permissions.Contains(rp.PermissionId)));
+		}
 	}
 }
