@@ -51,36 +51,24 @@ namespace TASVideos.Tasks
 				return new RoleEditModel();
 			}
 
-			var raw = await _db.Roles
-				.Select(r => new
+			return await _db.Roles
+				.Select(raw => new RoleEditModel
 				{
-					r.Id,
-					r.Name,
-					r.Description,
-					Links = r.RoleLinks.Select(rl => rl.Link).ToList(),
-					r.RolePermission
+					Id = raw.Id,
+					Name = raw.Name,
+					Description = raw.Description,
+					Links = raw.RoleLinks
+						.Select(rl => rl.Link)
+						.ToList(),
+					SelectedPermissions = raw.RolePermission
+						.Select(rp => (int)rp.PermissionId)
+						.ToList(),
+					SelectedAssignablePermissions = raw.RolePermission
+						.Where(rp => rp.CanAssign)
+						.Select(rp => (int)rp.PermissionId)
+						.ToList()
 				})
-				.SingleAsync(r => r.Id == id.Value);
-
-			if (raw == null)
-			{
-				return null;
-			}
-
-			var model = new RoleEditModel
-			{
-				Id = raw.Id,
-				Name = raw.Name,
-				Description = raw.Description,
-				Links = raw.Links,
-				SelectedPermissions = raw.RolePermission
-					.Select(rp => (int)rp.PermissionId),
-				SelectedAssignablePermissions = raw.RolePermission
-					.Where(rp => rp.CanAssign)
-					.Select(rp => (int)rp.PermissionId)
-			};
-
-			return model;
+				.SingleOrDefaultAsync(r => r.Id == id.Value);
 		}
 
 		/// <summary>
