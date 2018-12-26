@@ -226,7 +226,16 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<SubmitResult> SubmitMovie(SubmissionCreateModel model, string userName)
 		{
-			var submission = _mapper.Map<Submission>(model);
+			// TODO: set up auto-mapper, the v8 upgrade didn't like a default mapping
+			var submission = new Submission
+			{
+				GameVersion = model.GameVersion,
+				GameName = model.GameName,
+				Branch = model.Branch,
+				RomName = model.RomName,
+				EmulatorVersion = model.Emulator,
+				EncodeEmbedLink = model.EncodeEmbedLink
+			};
 
 			// Parse movie file
 			// TODO: check warnings
