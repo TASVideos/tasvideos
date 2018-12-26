@@ -187,7 +187,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<SelectListItem>> GetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
 		{
 			var items = (await _db.GameSystemFrameRates
-				.Where(g => g.GameSystemId == systemId)
+				.ForSystem(systemId)
 				.Select(g => new SelectListItem
 				{
 					Value = g.Id.ToString(),
@@ -204,7 +204,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<SelectListItem>> GetGameDropDownForSystem(int systemId, bool includeEmpty)
 		{
 			var items = (await _db.Games
-				.Where(g => g.SystemId == systemId)
+				.ForSystem(systemId)
 				.Select(g => new SelectListItem
 				{
 					Value = g.Id.ToString(),
