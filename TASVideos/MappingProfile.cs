@@ -7,7 +7,6 @@ using TASVideos.Tasks;
 
 namespace TASVideos
 {
-	// https://stackoverflow.com/questions/40275195/how-to-setup-automapper-in-asp-net-core
 	public class MappingProfile : Profile
 	{
 		public MappingProfile()
@@ -22,7 +21,11 @@ namespace TASVideos
 			CreateMap<WikiPage, UserWikiEditHistoryModel>();
 
 			CreateMap<Game, GameEditModel>()
-				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code));
+				.ForMember(
+					dest => dest.SystemCode, 
+					opt => opt
+						.MapFrom(src => 
+							src.System.Code));
 			CreateMap<GameEditModel, Game>();
 
 			CreateMap<GameRom, RomEditModel>()
@@ -31,6 +34,25 @@ namespace TASVideos
 
 			CreateMap<AwardTasks.AwardDto, AwardDetailsModel>();
 			CreateMap<AwardTasks.AwardDto.UserDto, AwardDetailsModel.UserModel>();
+
+			CreateMap<Role, RoleDisplayModel>()
+				.ForMember(
+					dest => dest.Permissions,
+					opt => opt.MapFrom(src =>
+						src.RolePermission
+							.Select(rp => rp.PermissionId)
+							.ToList()))
+				.ForMember(
+					dest => dest.Links, 
+					opt => opt.MapFrom(src => 
+						src.RoleLinks
+							.Select(rl => rl.Link)
+							.ToList()));
+
+			CreateMap<UserRole, RoleDisplayModel.UserWithRole>()
+				.ForMember(
+					dest => dest.UserName, 
+					opt => opt.MapFrom(src => src.User.UserName));
 		}
 	}
 }

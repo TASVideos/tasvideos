@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -23,26 +26,7 @@ namespace TASVideos.Tasks
 		public async Task<RoleDisplayModel> GetRoleForDisplay(string name)
 		{
 			return await _db.Roles
-				.Select(r => new RoleDisplayModel
-				{
-					Id = r.Id,
-					Name = r.Name,
-					IsDefault = r.IsDefault,
-					Description = r.Description,
-					Permissions = r.RolePermission
-						.Select(rp => rp.PermissionId)
-						.ToList(),
-					Links = r.RoleLinks
-						.Select(rl => rl.Link)
-						.ToList(),
-					Users = r.UserRole
-						.Select(ur => new RoleDisplayModel.UserWithRole
-						{
-							Id = ur.UserId,
-							UserName = ur.User.UserName
-						})
-						.ToList()
-				})
+				.ProjectTo<RoleDisplayModel>()
 				.Where(r => r.Name == name)
 				.SingleOrDefaultAsync();
 		}
@@ -53,26 +37,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<RoleDisplayModel>> GetAllRolesForDisplay()
 		{
 			return await _db.Roles
-				.Select(r => new RoleDisplayModel
-				{
-					Id = r.Id,
-					Name = r.Name,
-					IsDefault = r.IsDefault,
-					Description = r.Description,
-					Permissions = r.RolePermission
-						.Select(rp => rp.PermissionId)
-						.ToList(),
-					Links = r.RoleLinks
-						.Select(rl => rl.Link)
-						.ToList(),
-					Users = r.UserRole
-						.Select(ur => new RoleDisplayModel.UserWithRole
-						{
-							Id = ur.UserId,
-							UserName = ur.User.UserName,
-						})
-						.ToList()
-				})
+				.ProjectTo<RoleDisplayModel>()
 				.ToListAsync();
 		}
 
