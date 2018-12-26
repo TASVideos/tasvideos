@@ -69,11 +69,11 @@ namespace TASVideos.Tasks
 
 				var rowsToSkip = paging.GetRowsToSkip();
 				var rowCount = await _db.ForumTopics
-					.Where(ft => ft.ForumId == paging.Id)
+					.ForForum(paging.Id)
 					.CountAsync();
 
 				var results = await _db.ForumTopics
-					.Where(ft => ft.ForumId == paging.Id)
+					.ForForum(paging.Id)
 					.Select(ft => new ForumModel.ForumTopicEntry
 					{
 						Id = ft.Id,
@@ -118,7 +118,7 @@ namespace TASVideos.Tasks
 			}
 
 			var posts = await _db.ForumPosts
-				.Where(p => p.TopicId == post.TopicId)
+				.ForTopic(post.TopicId ?? -1)
 				.OldestToNewest()
 				.ToListAsync();
 
@@ -163,7 +163,7 @@ namespace TASVideos.Tasks
 				.Id;
 
 			model.Posts = _db.ForumPosts
-				.Where(p => p.TopicId == paging.Id)
+				.ForTopic(paging.Id)
 				.Select(p => new ForumTopicModel.ForumPostEntry
 				{
 					Id = p.Id,
@@ -196,12 +196,14 @@ namespace TASVideos.Tasks
 			if (model.Poll != null)
 			{
 				model.Poll.Options = await _db.ForumPollOptions
-					.Where(o => o.PollId == model.Poll.PollId)
+					.ForPoll(model.Poll.PollId)
 					.Select(o => new ForumTopicModel.PollModel.PollOptionModel
 					{
 						Text = o.Text,
 						Ordinal = o.Ordinal,
-						Voters = o.Votes.Select(v => v.UserId).ToList()
+						Voters = o.Votes
+							.Select(v => v.UserId)
+							.ToList()
 					})
 					.ToListAsync();
 			}
@@ -238,7 +240,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<TopicFeedModel.TopicPost>> GetTopicFeed(int topicId, int limit, bool allowRestricted)
 		{
 			return await _db.ForumPosts
-				.Where(p => p.TopicId == topicId)
+				.ForTopic(topicId)
 				.ExcludeRestricted(allowRestricted)
 				.ByMostRecent()
 				.Select(p => new TopicFeedModel.TopicPost
@@ -413,7 +415,7 @@ namespace TASVideos.Tasks
 				.SingleOrDefaultAsync(p => p.PostId == postId);
 
 			var lastPostId = (await _db.ForumPosts
-				.Where(p => p.TopicId == model.TopicId)
+				.ForTopic(model.TopicId)
 				.ByMostRecent()
 				.FirstAsync())
 				.Id;
@@ -439,7 +441,7 @@ namespace TASVideos.Tasks
 				}
 
 				var lastPostId = await _db.ForumPosts
-					.Where(p => p.TopicId == post.TopicId)
+					.ForTopic(post.TopicId ?? 0)
 					.ByMostRecent()
 					.Select(p => p.Id)
 					.FirstAsync();
@@ -531,7 +533,7 @@ namespace TASVideos.Tasks
 		{
 			var model = await _db.ForumPosts
 				.ExcludeRestricted(allowRestricted)
-				.Where(p => p.CreateTimeStamp >= since)
+				.Since(since)
 				.Select(p => new PostsSinceLastVisitModel
 				{
 					Id = p.Id,
@@ -548,7 +550,8 @@ namespace TASVideos.Tasks
 					PosterName = p.Poster.UserName,
 					PosterRoles = p.Poster.UserRoles
 						.Where(ur => !ur.Role.IsDefault)
-						.Select(ur => ur.Role.Name),
+						.Select(ur => ur.Role.Name)
+						.ToList(),
 					PosterLocation = p.Poster.From,
 					Signature = p.Poster.Signature,
 					PosterAvatar = p.Poster.Avatar,
@@ -859,7 +862,7 @@ namespace TASVideos.Tasks
 			{
 				// Check if last post
 				var lastPost = _db.ForumPosts
-					.Where(p => p.TopicId == post.TopicId)
+					.ForTopic(post.TopicId ?? -1)
 					.ByMostRecent()
 					.First();
 
