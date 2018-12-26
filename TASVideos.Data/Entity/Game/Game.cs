@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace TASVideos.Data.Entity.Game
 {
@@ -32,5 +33,13 @@ namespace TASVideos.Data.Entity.Game
 		public string YoutubeTags { get; set; }
 
 		public string ScreenshotUrl { get; set; }
+	}
+
+	public static class GameExtensions
+	{
+		public static IQueryable<Game> ForSystem(this IQueryable<Game> query, int systemId)
+		{
+			return query.Where(g => g.SystemId == systemId);
+		}
 	}
 }
