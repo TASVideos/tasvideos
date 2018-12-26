@@ -354,6 +354,11 @@ namespace TASVideos.Models
 		public int SystemId { get; set; }
 	}
 
+	/// <summary>
+	/// Represents the data necessary to catalog a submission.
+	/// Cataloging a submission includes specifying
+	/// the system, region, game, and rom
+	/// </summary>
 	public class SubmissionCatalogModel
 	{
 		public int Id { get; set; }
