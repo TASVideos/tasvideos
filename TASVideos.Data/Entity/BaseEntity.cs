@@ -40,5 +40,11 @@ namespace TASVideos.Data.Entity
 		{
 			return list.OrderByDescending(t => t.CreateTimeStamp);
 		}
+
+		public static IQueryable<T> Since<T>(this IQueryable<T> list, DateTime target)
+			where T: ITrackable
+		{
+			return list.Where(t => t.CreateTimeStamp >= target);
+		}
 	}
 }

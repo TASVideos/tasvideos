@@ -27,5 +27,10 @@ namespace TASVideos.Data.Entity.Forum
 		{
 			return list.Where(f => seeRestricted || !f.Topic.Forum.Restricted);
 		}
+
+		public static IQueryable<ForumPost> ForTopic(this IQueryable<ForumPost> list, int topicId)
+		{
+			return list.Where(p => p.TopicId == topicId);
+		}
 	}
 }
