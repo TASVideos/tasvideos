@@ -23,7 +23,7 @@ namespace TASVideos.Tasks
 			_mapper = mapper;
 		}
 
-		public SystemPageOf<GameListModel> GetPageOfGames(GameListRequest paging) // TODO: ability to filter by system
+		public SystemPageOf<GameListModel> GetPageOfGames(GameListRequest paging)
 		{
 			var query = !string.IsNullOrWhiteSpace(paging.SystemCode)
 				? _db.Games.Where(g => g.System.Code == paging.SystemCode)
