@@ -36,5 +36,10 @@ namespace TASVideos.Data.Entity
 				.Where(r => r.RolePermission
 					.All(rp => permissions.Contains(rp.PermissionId)));
 		}
+
+		public static IQueryable<Role> ThatAreDefault(this IQueryable<Role> query)
+		{
+			return query.Where(r => r.IsDefault);
+		}
 	}
 }

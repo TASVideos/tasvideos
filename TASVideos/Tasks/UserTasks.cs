@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -304,7 +305,7 @@ namespace TASVideos.Tasks
 		{
 			var user = await _db.Users.SingleAsync(u => u.Id == userId);
 			var roles = await _db.Roles
-				.Where(r => r.IsDefault)
+				.ThatAreDefault()
 				.ToListAsync();
 
 			foreach (var role in roles)
@@ -383,7 +384,7 @@ namespace TASVideos.Tasks
 			}
 
 			model.Ratings = await _db.PublicationRatings
-				.Where(pr => pr.UserId == model.Id)
+				.ForUser(model.Id)
 				.GroupBy(
 					gkey => new
 					{
@@ -469,7 +470,7 @@ namespace TASVideos.Tasks
 
 				var wikiEdits = await _db.WikiPages
 					.ThatAreNotDeleted()
-					.Where(wp => wp.CreateUserName == model.UserName)
+					.CreatedBy(model.UserName)
 					.ToListAsync();
 
 				if (wikiEdits.Any())
@@ -496,7 +497,7 @@ namespace TASVideos.Tasks
 		{
 			return await _db
 				.ForumTopicWatches
-				.Where(tw => tw.UserId == userId)
+				.ForUser(userId)
 				.Select(tw => new WatchedTopicsModel
 				{
 					TopicCreateTimeStamp = tw.ForumTopic.CreateTimeStamp,
