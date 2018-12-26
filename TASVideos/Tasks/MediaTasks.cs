@@ -21,7 +21,7 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<MediaPost>> GetPosts(DateTime startDate, int limit)
 		{
 			return await _db.MediaPosts
-				.Where(m => m.CreateTimeStamp >= startDate)
+				.Since(startDate)
 				.Where(m => m.Type != PostType.Critical.ToString()) // TODO: Permission check to see these
 				.Where(m => m.Type != PostType.Administrative.ToString()) // TODO: Permission check to see these
 				.Where(m => m.Type != PostType.Log.ToString()) // TODO: Permission check to see these (and/or a parameter)

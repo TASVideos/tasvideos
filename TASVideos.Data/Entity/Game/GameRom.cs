@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity.Game
 {
@@ -34,5 +35,18 @@ namespace TASVideos.Data.Entity.Game
 
 		public string Region { get; set; }
 		public string Version { get; set; }
+	}
+
+	public static class RomExtensions
+	{
+		public static IQueryable<GameRom> ForGame(this IQueryable<GameRom> query, int gameId)
+		{
+			return query.Where(g => g.GameId == gameId);
+		}
+
+		public static IQueryable<GameRom> ForSystem(this IQueryable<GameRom> query, int systemId)
+		{
+			return query.Where(g => g.Game.SystemId == systemId);
+		}
 	}
 }
