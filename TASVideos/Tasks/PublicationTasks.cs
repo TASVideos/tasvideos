@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.ViewComponents;
@@ -543,8 +544,8 @@ namespace TASVideos.Tasks
 			using (_db.Database.BeginTransactionAsync())
 			{
 				model.AvailableRoms = await _db.Roms
-					.Where(r => r.GameId == model.GameId)
-					.Where(r => r.Game.SystemId == model.SystemId)
+					.ForGame(model.GameId)
+					.ForSystem(model.SystemId)
 					.Select(r => new SelectListItem
 					{
 						Value = r.Id.ToString(),
@@ -553,7 +554,7 @@ namespace TASVideos.Tasks
 					.ToListAsync();
 
 				model.AvailableGames = await _db.Games
-					.Where(g => g.SystemId == model.SystemId)
+					.ForSystem(model.SystemId)
 					.Select(g => new SelectListItem
 					{
 						Value = g.Id.ToString(),
@@ -570,7 +571,7 @@ namespace TASVideos.Tasks
 					.ToListAsync();
 
 				model.AvailableSystemFrameRates = await _db.GameSystemFrameRates
-					.Where(sf => sf.GameSystemId == model.SystemId)
+					.ForSystem(model.SystemId)
 					.Select(sf => new SelectListItem
 					{
 						Value = sf.Id.ToString(),
