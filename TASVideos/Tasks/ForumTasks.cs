@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -102,7 +105,10 @@ namespace TASVideos.Tasks
 			}
 		}
 
-		// TODO: document, returns page post is in, or null if post can not be found
+		/// <summary>
+		/// Returns the position of post is in its parent topic
+		/// If a post with the given id can not be found, null is returned
+		/// </summary>
 		public async Task<PostPositionModel> GetPostPosition(int postId, bool seeRestricted)
 		{
 			var post = await _db.ForumPosts
@@ -233,23 +239,17 @@ namespace TASVideos.Tasks
 			return (true, topic.Forum.Restricted);
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Gets topic data for the given <see cref="topicId" />
+		/// for the purposes of displaying in a topic feed module
+		/// </summary>
 		public async Task<IEnumerable<TopicFeedModel.TopicPost>> GetTopicFeed(int topicId, int limit, bool allowRestricted)
 		{
 			return await _db.ForumPosts
 				.ForTopic(topicId)
 				.ExcludeRestricted(allowRestricted)
 				.ByMostRecent()
-				.Select(p => new TopicFeedModel.TopicPost
-				{
-					Id = p.Id,
-					EnableBbCode = p.EnableBbCode,
-					EnableHtml = p.EnableBbCode,
-					Text = p.Text,
-					Subject = p.Subject,
-					PosterName = p.Poster.UserName,
-					PostTime = p.CreateTimeStamp
-				})
+				.ProjectTo<TopicFeedModel.TopicPost>()
 				.Take(limit)
 				.ToListAsync();
 		}

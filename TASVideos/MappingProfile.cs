@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using AutoMapper;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
 using TASVideos.Tasks;
+using TASVideos.ViewComponents;
 
 namespace TASVideos
 {
@@ -53,6 +55,8 @@ namespace TASVideos
 				.ForMember(
 					dest => dest.UserName, 
 					opt => opt.MapFrom(src => src.User.UserName));
+
+			CreateMap<ForumPost, TopicFeedModel.TopicPost>();
 		}
 	}
 }
