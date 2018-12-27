@@ -85,11 +85,6 @@ namespace TASVideos.Models
 		}
 	}
 
-	public class ForumIndexModel
-	{
-		public IEnumerable<ForumCategory> Categories { get; set; } = new List<ForumCategory>();
-	}
-
 	public class ForumRequest : PagedModel
 	{
 		public ForumRequest()
