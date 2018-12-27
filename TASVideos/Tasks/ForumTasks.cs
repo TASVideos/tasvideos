@@ -280,23 +280,21 @@ namespace TASVideos.Tasks
 				.SingleOrDefaultAsync(t => t.Id == id);
 		}
 
-		// TODO: document
+		/// <summary>
+		/// Returns the data necessary to create a new forum topic
+		/// </summary>
+		/// <seealso cref="ForumTopic"/>
 		public async Task<TopicCreatePostModel> GetCreateTopicData(int forumId, bool allowRestricted)
 		{
-			var forum = await _db.Forums
+			return await _db.Forums
 				.ExcludeRestricted(allowRestricted)
-				.SingleOrDefaultAsync(f => f.Id == forumId);
-
-			if (forum == null)
-			{
-				return null;
-			}
-
-			return new TopicCreatePostModel
-			{
-				ForumId = forumId,
-				ForumName = forum.Name
-			};
+				.Where(f => f.Id == forumId)
+				.Select(f => new TopicCreatePostModel
+				{
+					ForumId = forumId,
+					ForumName = f.Name
+				})
+				.SingleOrDefaultAsync();
 		}
 
 		/// <summary>
@@ -335,24 +333,26 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns necessary data to display on the create post screen
 		/// If a topic is not found or not accessible, null is returned
+		/// If a postId is provided and the post exists, it will be 
+		/// retrieved for the purpose of quoting
 		/// </summary>
 		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, int? postId, bool allowRestricted)
 		{
-			var topic = await _db.ForumTopics
+			var model = await _db.ForumTopics
 				.ExcludeRestricted(allowRestricted)
-				.SingleOrDefaultAsync(t => t.Id == topicId);
+				.Where(t => t.Id == topicId)
+				.Select(t => new ForumPostCreateModel
+				{
+					TopicId = topicId,
+					TopicTitle = t.Title,
+					IsLocked = t.IsLocked
+				})
+				.SingleOrDefaultAsync();
 
-			if (topic == null)
+			if (model == null)
 			{
 				return null;
 			}
-
-			var model = new ForumPostCreateModel
-			{
-				TopicId = topicId,
-				TopicTitle = topic.Title,
-				IsLocked = topic.IsLocked
-			};
 
 			if (postId.HasValue)
 			{
