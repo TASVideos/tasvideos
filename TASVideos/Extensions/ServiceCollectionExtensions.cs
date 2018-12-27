@@ -76,7 +76,6 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddTasks(this IServiceCollection services)
 		{
 			services.AddScoped<AwardTasks>();
-			services.AddScoped<PermissionTasks>();
 			services.AddScoped<UserTasks>();
 			services.AddScoped<RoleTasks>();
 			services.AddScoped<WikiTasks>();
