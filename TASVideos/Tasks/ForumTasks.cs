@@ -34,14 +34,11 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns data necessary for the Forum/Index page
 		/// </summary>
-		public async Task<ForumIndexModel> GetForumIndex()
+		public async Task<ICollection<ForumCategory>> GetForumIndex()
 		{
-			return new ForumIndexModel
-			{
-				Categories = await _db.ForumCategories
-					.Include(c => c.Forums)
-					.ToListAsync()
-			};
+			return await _db.ForumCategories
+				.Include(c => c.Forums)
+				.ToListAsync();
 		}
 
 		/// <summary>

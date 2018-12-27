@@ -1,4 +1,4 @@
-﻿@model ForumIndexModel
+﻿@model IEnumerable<TASVideos.Data.Entity.Forum.ForumCategory>
 @{
 	ViewData["Title"] = "TASVideos Forums";
 }
@@ -11,15 +11,17 @@
 </fullrow>
 <row>
 	<div class="col-md-6">
-		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
+		@* ReSharper disable once UnusedVariable *@
+		@foreach (var cat in Model.OrderBy(c => c.Ordinal).FirstHalf())
 		{
-			<partial name="_Category" model="cat" />
+			<partial name="_Category" model="cat"/>
 		}
 	</div>
 	<div class="col-md-6">
-		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).SecondHalf())
+		@* ReSharper disable once UnusedVariable *@
+		@foreach (var cat in Model.OrderBy(c => c.Ordinal).SecondHalf())
 		{
-			<partial name="_Category" model="cat" />
+			<partial name="_Category" model="cat"/>
 		}
 	</div>
 </row>
