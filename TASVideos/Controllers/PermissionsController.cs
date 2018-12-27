@@ -18,10 +18,10 @@ namespace TASVideos.Controllers
 			_permissionTasks = permissionTasks;
 		}
 
-		public async Task<IActionResult> Index()
-		{
-			var model = await _permissionTasks.GetAllPermissionsForDisplay();
-			return View(model);
-		}
+		//public async Task<IActionResult> Index()
+		//{
+		//	var model = await _permissionTasks.GetAllPermissionsForDisplay();
+		//	return View(model);
+		//}
 	}
 }

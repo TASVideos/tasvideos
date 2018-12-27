@@ -124,10 +124,16 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services)
 		{
 			services.AddResponseCaching();
-			services.AddMvc(options =>
-			{
-				options.Filters.Add(new SetViewBagAttribute());
-			});
+			services
+				.AddMvc(options =>
+				{
+					options.Filters.Add(new SetViewBagAttribute());
+				})
+				.AddRazorPagesOptions(options =>
+				{
+					options.Conventions.AuthorizeFolder("/Account");
+					options.Conventions.AuthorizePage("/Account/Logout");
+				});
 
 			services.AddHttpContext();
 

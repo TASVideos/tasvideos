@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - TASVideos</title>
+
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" />
+	<link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css"/>
+	
+	<link rel="stylesheet" href="~/css/diffview.css" />
+	<link href="~/css/prism.css" rel="stylesheet" />
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js"></script>
+
+	<style>
+		.error-marker {
+			position: relative;
+			border: 2px solid #c00;
+		}
+
+		.error-marker span {
+			position: absolute;
+			background-color: white;
+			padding: 4px;
+			border: 1px solid #c00;
+			color: #c00;
+			bottom: 13px;
+		}
+	</style>
+</head>
+<body>
+	<nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
+		<div id="mantra">
+			<a id="brand" asp-action="Index" asp-controller="Home">TASVideos</a>
+			<div id="mantra1">Tool-assisted game movies</div>
+			<div id="mantra2">When human skills are just not enough</div>
+		</div>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<div class="container">
+				<div class="d-lg-flex">
+					<div class="mr-auto">
+						<partial name="_NavBarPartial" />
+					</div>
+					<div>
+						<partial name="_LoginPartial" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	@if (IsSectionDefined("PageTitle"))
+	{
+		@RenderSection("PageTitle")
+	}
+	else
+	{
+		<h1>@ViewData["Title"]</h1>
+	}
+
+	<div class="container">
+		@RenderBody()
+		<hr/>
+		<footer>
+			<p>&copy; @DateTime.UtcNow.Year - TASVideos v@(ViewData["Version"])</p>
+		</footer>
+	</div>
+	@RenderSection("Scripts", required: false)
+	<script src="~/js/prism.js"></script>
+</body>
+</html>
