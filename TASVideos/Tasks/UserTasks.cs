@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,21 +19,15 @@ namespace TASVideos.Tasks
 	public class UserTasks
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly UserManager<User> _userManager;
-		private readonly SignInManager<User> _signInManager;
 		private readonly ICacheService _cache;
 		private readonly IPointsService _pointsService;
 
 		public UserTasks(
 			ApplicationDbContext db,
-			UserManager<User> userManager,
-			SignInManager<User> signInManager,
 			ICacheService cache,
 			IPointsService pointsService)
 		{
 			_db = db;
-			_userManager = userManager;
-			_signInManager = signInManager;
 			_cache = cache;
 			_pointsService = pointsService;
 		}
@@ -48,49 +39,6 @@ namespace TASVideos.Tasks
 		{
 			return await GetUserPermissionByIdQuery(userId)
 				.ToListAsync();
-		}
-
-		/// <summary>
-		/// Signs in the user with the given username and password
-		/// If the user has a legacy password, this will be checked and
-		/// automatically converted to the new system if successful
-		/// </summary>
-		/// <returns>A SignInResult indicating the result of the call</returns>
-		public async Task<SignInResult> PasswordSignIn(TASVideos.Pages.Account.LoginModel model) // Using the razor page model, eww?
-		{
-			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == model.UserName);
-			if (user == null)
-			{
-				return SignInResult.Failed;
-			}
-
-			// If no password, then try to log in with legacy method
-			if (!string.IsNullOrWhiteSpace(user.LegacyPassword))
-			{
-				using (var md5 = MD5.Create())
-				{
-					var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(model.Password));
-					string encrypted = BitConverter.ToString(md5Result)
-						.Replace("-", "")
-						.ToLower();
-
-					if (encrypted == user.LegacyPassword)
-					{
-						user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.Password);
-						await _userManager.UpdateSecurityStampAsync(user);
-						user.LegacyPassword = null;
-						await _db.SaveChangesAsync();
-					}
-				}
-			}
-
-			// This doesn't count login failures towards account lockout
-			// To enable password failures to trigger account lockout, set lockoutOnFailure: true
-			return await _signInManager.PasswordSignInAsync(
-				model.UserName,
-				model.Password,
-				model.RememberMe,
-				lockoutOnFailure: false);
 		}
 
 		/// <summary>
