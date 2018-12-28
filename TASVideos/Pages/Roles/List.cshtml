@@ -1,0 +1,21 @@
+﻿@page
+@model TASVideos.Pages.Roles.ListModel
+@{
+	ViewData["Title"] = "Role List";
+}
+
+<h4>@ViewData["Title"]</h4>
+<p>These are a list of the site roles</p>
+<hr />
+@if (User.Identity.IsAuthenticated)
+{
+	<p>See the <a asp-page="/Permissions/Index">Permission List</a> for details on individual permissions</p>
+}
+
+@* ReSharper disable once UnusedVariable *@
+@foreach (var role in Model.Roles.OrderBy(m => m.Permissions.Count()))
+{
+	<partial name="_Role", model="role" />
+}
+
+<a asp-action="AddEdit" class="mt-2 btn btn-primary">Create New Role</a>

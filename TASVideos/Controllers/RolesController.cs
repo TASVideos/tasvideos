@@ -38,13 +38,6 @@ namespace TASVideos.Controllers
 				})
 				.ToList();
 
-		[AllowAnonymous]
-		public async Task<IActionResult> List()
-		{
-			var model = await _roleTasks.GetAllRolesForDisplay();
-			return View(model);
-		}
-
 		[RequirePermission(PermissionTo.EditRoles)]
 		public async Task<IActionResult> AddEdit(int? id)
 		{
