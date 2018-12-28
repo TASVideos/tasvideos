@@ -43,12 +43,12 @@ namespace TASVideos.Controllers
 
 		protected IActionResult RedirectHome()
 		{
-			return Redirect("/Home/Index");
+			return RedirectToPage("/Index");
 		}
 
-		protected IActionResult RedirectAccessDenied()
+		protected IActionResult AccessDenied()
 		{
-			return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
+			return RedirectToPage("/Account/AccessDenied");
 		}
 
 		protected IActionResult RedirectToLogin()

@@ -86,10 +86,9 @@ namespace TASVideos.Pages
 				}));
 		}
 
-		private RedirectToRouteResult AccessDenied()
+		private IActionResult AccessDenied()
 		{
-			return new RedirectToRouteResult(
-				new RouteValueDictionary(new { controller = "Account", action = nameof(AccountController.AccessDenied) }));
+			return new RedirectToPageResult("/Account/AccessDenied");
 		}
 	}
 }

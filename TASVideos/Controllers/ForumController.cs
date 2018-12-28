@@ -271,7 +271,7 @@ namespace TASVideos.Controllers
 
 			if (model.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
 			{
-				return RedirectAccessDenied();
+				return AccessDenied();
 			}
 
 			return View(model);
@@ -289,7 +289,7 @@ namespace TASVideos.Controllers
 				var isLocked = await _forumTasks.IsTopicLocked(model.TopicId);
 				if (isLocked && !UserHas(PermissionTo.PostInLockedTopics))
 				{
-					return RedirectAccessDenied();
+					return AccessDenied();
 				}
 
 				var newModel = new ForumPostCreateModel
@@ -319,7 +319,7 @@ namespace TASVideos.Controllers
 
 			if (topic.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
 			{
-				return RedirectAccessDenied();
+				return AccessDenied();
 			}
 
 			var id = await _forumTasks.CreatePost(model, user, IpAddress.ToString());
@@ -349,7 +349,7 @@ namespace TASVideos.Controllers
 			if (!UserHas(PermissionTo.EditForumPosts)
 				&& !(model.IsLastPost && model.PosterId == userId))
 			{
-				return RedirectAccessDenied();
+				return AccessDenied();
 			}
 
 			model.RenderedText = RenderPost(model.Text, model.EnableBbCode, model.EnableHtml);

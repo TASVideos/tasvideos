@@ -176,7 +176,7 @@ namespace TASVideos.Controllers
 				if (submission.Submitter != User.Identity.Name
 					&& !submission.Authors.Contains(User.Identity.Name))
 				{
-					return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
+					return AccessDenied();
 				}
 			}
 
@@ -242,7 +242,7 @@ namespace TASVideos.Controllers
 				{
 					if (!subInfo.UserIsAuthorOrSubmitter)
 					{
-						return RedirectToAction(nameof(AccountController.AccessDenied), "Account");
+						return AccessDenied();
 					}
 				}
 
