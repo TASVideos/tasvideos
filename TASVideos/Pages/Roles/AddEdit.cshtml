@@ -53,10 +53,10 @@
 	(function() {
 		var emptyAssignableRoles = "None";
 		var assignRoles = '@((int)PermissionTo.AssignRoles)';
-		var selectedAssignablePermissionsModelId = '@Html.NameFor(m => m.Role.SelectedAssignablePermissions)';
+		var selectedAssignablePermissionsModelId = '@Html.IdFor(m => m.Role.SelectedAssignablePermissions)';
 		var selectedPermissionsListId = 'Selected@(Html.IdFor(m => m.Role.SelectedPermissions))';
 		var availableAssignableListId = '@Html.NameFor(m => m.AvailableAssignablePermissions)';
-		var selectedAssignableListId = 'Selected@(Html.NameFor(m => m.Role.SelectedAssignablePermissions))';
+		var selectedAssignableListId = 'Selected@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))';
 		
 		function shouldShowAssignRoles() {
 			var hasAssign = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
