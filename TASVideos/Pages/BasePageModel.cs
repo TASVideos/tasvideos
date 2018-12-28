@@ -41,6 +41,11 @@ namespace TASVideos.Pages
 			return RedirectToPage("/Account/AccessDenied");
 		}
 
+		protected IActionResult Login()
+		{
+			return new RedirectToPageResult("Login");
+		}
+
 		protected IActionResult RedirectToLocal(string returnUrl)
 		{
 			if (Url.IsLocalUrl(returnUrl))
