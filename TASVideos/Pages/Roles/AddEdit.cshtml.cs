@@ -16,7 +16,7 @@ using TASVideos.Tasks;
 namespace TASVideos.Pages.Roles
 {
 	// TODO: permission check
-	// [RequirePermission(PermissionTo.EditRoles)]
+	[RequirePermission(PermissionTo.EditRoles)]
 	public class AddEditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
