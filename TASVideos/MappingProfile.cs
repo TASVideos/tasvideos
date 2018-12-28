@@ -49,12 +49,17 @@ namespace TASVideos
 					opt => opt.MapFrom(src => 
 						src.RoleLinks
 							.Select(rl => rl.Link)
-							.ToList()));
-
-			CreateMap<UserRole, RoleDisplayModel.UserWithRole>()
+							.ToList()))
 				.ForMember(
-					dest => dest.UserName, 
-					opt => opt.MapFrom(src => src.User.UserName));
+					dest => dest.Users,
+					opt => opt.MapFrom(src =>
+						src.UserRole
+							.Select(ur => new RoleDisplayModel.UserWithRole
+							{
+								Id = ur.UserId,
+								UserName = ur.User.UserName
+							})
+							.ToList()));
 
 			CreateMap<ForumPost, TopicFeedModel.TopicPost>();
 		}
