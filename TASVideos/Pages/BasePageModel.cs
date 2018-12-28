@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using TASVideos.Controllers;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Tasks;

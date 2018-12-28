@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Tasks;
