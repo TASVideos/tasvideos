@@ -25,7 +25,7 @@ namespace TASVideos.Pages.Roles
 
 		public RoleDisplayModel Role { get; set; }
 
-		public async Task<IActionResult> OnGetAsync(string role)
+		public async Task<IActionResult> OnGet(string role)
 		{
 			if (string.IsNullOrWhiteSpace(role))
 			{

@@ -38,25 +38,6 @@ namespace TASVideos.Controllers
 				})
 				.ToList();
 
-		//[AllowAnonymous]
-		//public async Task<IActionResult> Index(string role)
-		//{
-		//	if (string.IsNullOrWhiteSpace(role))
-		//	{
-		//		return RedirectToAction(nameof(List));
-		//	}
-
-		//	var model = await _roleTasks.GetRoleForDisplay(role);
-
-		//	if (model == null)
-		//	{
-		//		return NotFound();
-		//	}
-
-		//	ViewData["Title"] = "Role: " + role;
-		//	return View("_Role", model);
-		//}
-
 		[AllowAnonymous]
 		public async Task<IActionResult> List()
 		{
