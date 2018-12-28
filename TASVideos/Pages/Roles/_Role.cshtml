@@ -5,7 +5,7 @@
 		<row>
 			<div class="col-md-6">
 				<div condition="@ViewData.UserHas(PermissionTo.EditRoles)">
-					<a asp-action="AddEdit" asp-route-id="@Model.Id" class="btn btn-primary mb-m">Edit</a>
+					<a asp-page="AddEdit" asp-route-id="@Model.Id" class="btn btn-primary mb-m">Edit</a>
 				</div>
 				@Model.Description
 			</div>
