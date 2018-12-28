@@ -17,8 +17,6 @@ namespace TASVideos.Pages
 {
 	public class BasePageModel : PageModel
 	{
-		private static readonly Version VersionInfo = Assembly.GetExecutingAssembly().GetName().Version;
-
 		private IEnumerable<PermissionTo> _userPermission;
 
 		public BasePageModel(UserTasks userTasks)
@@ -28,8 +26,6 @@ namespace TASVideos.Pages
 
 		public string BaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
-		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
-
 		internal IEnumerable<PermissionTo> UserPermissions =>
 			_userPermission ?? (_userPermission = HttpContext == null || !User.Identity.IsAuthenticated
 				? Enumerable.Empty<PermissionTo>()
@@ -37,12 +33,6 @@ namespace TASVideos.Pages
 
 		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
-
-		public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
-		{
-			ViewData["UserPermissions"] = UserPermissions;
-			ViewData["Version"] = Version;
-		}
 
 		public IActionResult AccessDenied()
 		{
@@ -54,5 +44,4 @@ namespace TASVideos.Pages
 			return UserPermissions.Contains(permission);
 		}
 	}
-
 }

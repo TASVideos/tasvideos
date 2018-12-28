@@ -16,6 +16,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Filter;
 using TASVideos.MovieParsers;
+using TASVideos.Pages;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
@@ -126,6 +127,13 @@ namespace TASVideos.Extensions
 				.AddMvc(options =>
 				{
 					options.Filters.Add(new SetViewBagAttribute());
+				})
+				.AddRazorPagesOptions(options =>
+				{
+					options.Conventions
+					.AddFolderApplicationModelConvention(
+						"/",
+						model => model.Filters.Add(new SetViewBag()));
 				});
 
 			services.AddHttpContext();
