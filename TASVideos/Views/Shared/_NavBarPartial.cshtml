@@ -86,8 +86,8 @@
 			{
 				<a class="dropdown-item" asp-controller="User" asp-action="List">Users</a>
 			}
-			<a class="dropdown-item" asp-controller="Roles" asp-action="List">Roles</a>
-			<a class="dropdown-item" asp-controller="Permissions" asp-action="Index">Permissions</a>
+			<a class="dropdown-item" asp-page="/Roles/List">Roles</a>
+			<a class="dropdown-item" asp-page="/Permissions/Index">Permissions</a>
 		</div>
 	</li>
 	<li condition="ViewData.UserHasAny(new[] { PermissionTo.EditWikiPages, PermissionTo.EditSystemPages, PermissionTo.MoveWikiPages, PermissionTo.DeleteWikiPages })" class="nav-item dropdown @(Active("Wiki"))">

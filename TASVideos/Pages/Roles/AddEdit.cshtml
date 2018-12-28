@@ -1,4 +1,4 @@
-﻿@page "{id?}/{handler?}"
+﻿@page "{id?}"
 @model TASVideos.Pages.Roles.AddEditModel
 @{
 	ViewData["Title"] = Model.Role.Id.HasValue ? "Modifying Role: " + Model.Role.Name : "Create a New Role";
@@ -164,7 +164,7 @@
 				}
 
 				getStr = getStr.slice(0, -1);
-				getStr = "/Roles/@(nameof(RolesController.RolesThatCanBeAssignedBy))?" + getStr;
+				getStr = "/Roles/AddEdit?handler=RolesThatCanBeAssignedBy&" + getStr;
 				xmlhttp.open("GET", getStr, true);
 				xmlhttp.send();
 			} else {

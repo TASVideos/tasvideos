@@ -15,7 +15,6 @@ using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Roles
 {
-	// TODO: permission check
 	[RequirePermission(PermissionTo.EditRoles)]
 	public class AddEditModel : BasePageModel
 	{
@@ -96,12 +95,26 @@ namespace TASVideos.Pages.Roles
 			return RedirectToPage("List");
 		}
 
-		// TODO: permission check for PermissionTo.DeleteRoles
 		public async Task<IActionResult> OnGetDelete(int id)
 		{
+			if (!UserHas(PermissionTo.DeleteRoles))
+			{
+				return AccessDenied();
+			}
+
 			_db.Roles.Attach(new Role { Id = id }).State = EntityState.Deleted;
 			await _db.SaveChangesAsync();
 			return RedirectToPage("List");
+		}
+
+		public async Task<IActionResult> OnGetRolesThatCanBeAssignedBy(int[] ids)
+		{
+			var result = await _db.Roles
+				.ThatCanBeAssignedBy(ids.Select(p => (PermissionTo)p))
+				.Select(r => r.Name)
+				.ToListAsync();
+
+			return new JsonResult(result);
 		}
 
 		private async Task AddUpdateRole(RoleEditModel model)
