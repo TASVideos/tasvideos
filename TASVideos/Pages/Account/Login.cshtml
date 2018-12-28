@@ -1,4 +1,5 @@
-﻿@model LoginModel
+﻿@page
+@model LoginModel
 @{
 	ViewData["Title"] = "Log in";
 }
@@ -6,7 +7,7 @@
 <h2>@ViewData["Title"]</h2>
 <row>
 	<section class="col-lg-4">
-		<form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+		<form method="post">
 			<h4>Use a TASVideos account to log in.</h4>
 			<hr />
 			<div asp-validation-summary="All" class="text-danger"></div>
@@ -32,8 +33,8 @@
 				<button type="submit" class="btn btn-secondary">Log in</button>
 			</form-group>
 			<form-group>
-				<p><a asp-action="ForgotPassword">Forgot your password?</a></p>
-				<p><a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a></p>
+				<p><a asp-page="ForgotPassword">Forgot your password?</a></p>
+				<p><a asp-page="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a></p>
 			</form-group>
 		</form>
 	</section>

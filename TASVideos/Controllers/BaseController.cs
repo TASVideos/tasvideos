@@ -51,9 +51,9 @@ namespace TASVideos.Controllers
 			return RedirectToPage("/Account/AccessDenied");
 		}
 
-		protected IActionResult RedirectToLogin()
+		protected IActionResult ReRouteToLogin(string returnUrl = null)
 		{
-			return RedirectToAction(nameof(AccountController.Login), "Account");
+			return new RedirectToPageResult("/Account/Login", returnUrl);
 		}
 
 		protected void AddErrors(IdentityResult result)
