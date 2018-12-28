@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.Logging;
 
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -18,22 +16,16 @@ namespace TASVideos.Controllers
 	[Route("[controller]/[action]")]
 	public class AccountController : BaseController
 	{
-		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
-		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
 
 		public AccountController(
-			UserManager<User> userManager,
 			SignInManager<User> signInManager,
-			IEmailSender emailSender,
 			ILogger<AccountController> logger,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userManager = userManager;
 			_signInManager = signInManager;
-			_emailSender = emailSender;
 			_logger = logger;
 		}
 
@@ -90,52 +82,6 @@ namespace TASVideos.Controllers
 			await _signInManager.SignOutAsync();
 			_logger.LogInformation("User logged out.");
 			return RedirectToLogin();
-		}
-
-		[HttpGet]
-		[AllowAnonymous]
-		public IActionResult ResetPassword(string code = null)
-		{
-			if (code == null)
-			{
-				throw new ApplicationException("A code must be supplied for password reset.");
-			}
-
-			var model = new ResetPasswordModel { Code = code };
-			return View(model);
-		}
-
-		[AllowAnonymous]
-		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(model);
-			}
-
-			var user = await _userManager.FindByEmailAsync(model.Email);
-			if (user == null)
-			{
-				// Don't reveal that the user does not exist
-				return RedirectToAction(nameof(ResetPasswordConfirmation));
-			}
-
-			var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
-			if (result.Succeeded)
-			{
-				return RedirectToAction(nameof(ResetPasswordConfirmation));
-			}
-
-			AddErrors(result);
-			return View();
-		}
-
-		[HttpGet]
-		[AllowAnonymous]
-		public IActionResult ResetPasswordConfirmation()
-		{
-			return View();
 		}
 	}
 }
