@@ -30,7 +30,12 @@ namespace TASVideos.Pages
 		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 
-		public IActionResult AccessDenied()
+		protected IActionResult Home()
+		{
+			return RedirectToPage("/Index");
+		}
+
+		protected IActionResult AccessDenied()
 		{
 			return RedirectToPage("/Account/AccessDenied");
 		}
