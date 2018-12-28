@@ -34,11 +34,4 @@ namespace TASVideos.Models
 
 		public string Code { get; set; }
 	}
-
-	public class ForgotPasswordModel
-	{
-		[Required]
-		[EmailAddress]
-		public string Email { get; set; }
-	}
 }
