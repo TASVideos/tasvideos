@@ -1,4 +1,6 @@
-﻿@section PageTitle {
+﻿@page
+@model IndexModel
+@section PageTitle {
 }
 
 <cache enabled="@(!User.Identity.IsAuthenticated)" expires-after="@TimeSpan.FromSeconds(Durations.FiveMinutesInSeconds)">

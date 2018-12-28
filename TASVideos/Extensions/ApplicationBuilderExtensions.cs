@@ -20,7 +20,7 @@ namespace TASVideos.Extensions
 			}
 			else
 			{
-				app.UseExceptionHandler("/Home/Error");
+				app.UseExceptionHandler("/Error");
 			}
 
 			return app;
