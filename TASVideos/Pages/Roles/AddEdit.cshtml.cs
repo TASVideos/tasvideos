@@ -26,6 +26,9 @@ namespace TASVideos.Pages.Roles
 			_db = db;
 		}
 
+        [FromRoute]
+        public int? Id { get; set; }
+
 		[BindProperty]
 		public RoleEditModel Role { get; set; } = new RoleEditModel();
 
@@ -45,14 +48,14 @@ namespace TASVideos.Pages.Roles
 				})
 				.ToList();
 
-		public async Task OnGet(int? id)
+		public async Task OnGet()
 		{
-			if (id.HasValue)
+			if (Id.HasValue)
 			{
 				Role = await _db.Roles
+                    .Where(r => r.Id == Id.Value)
 					.Select(r => new RoleEditModel
 					{
-						Id = r.Id,
 						Name = r.Name,
 						Description = r.Description,
 						Links = r.RoleLinks
@@ -66,7 +69,7 @@ namespace TASVideos.Pages.Roles
 							.Select(rp => (int)rp.PermissionId)
 							.ToList()
 					})
-					.SingleOrDefaultAsync(r => r.Id == id.Value);
+					.SingleOrDefaultAsync();
 
 				AvailableAssignablePermissions = Role.SelectedPermissions
 					.Select(sp => new SelectListItem
@@ -120,11 +123,11 @@ namespace TASVideos.Pages.Roles
 		private async Task AddUpdateRole(RoleEditModel model)
 		{
 			Role role;
-			if (model.Id.HasValue)
+			if (Id.HasValue)
 			{
-				role = await _db.Roles.SingleAsync(r => r.Id == model.Id);
-				_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == model.Id));
-				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role.Id == model.Id));
+				role = await _db.Roles.SingleAsync(r => r.Id == Id);
+				_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == Id));
+				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role.Id == Id));
 				await _db.SaveChangesAsync();
 			}
 			else
