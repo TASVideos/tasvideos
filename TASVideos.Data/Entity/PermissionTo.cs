@@ -66,7 +66,7 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to create and edit roles and add/remove privileges to those roles.")]
 		EditRoles = 103,
 
-		[Display(Name = "Movie Wiki Pages")]
+		[Display(Name = "Move Wiki Pages")]
 		[Group("Wiki")]
 		[Description("The ability to movie a wiki page to another location.")]
 		MoveWikiPages = 104,
