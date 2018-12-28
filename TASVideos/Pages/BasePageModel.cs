@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -38,6 +39,24 @@ namespace TASVideos.Pages
 		protected IActionResult AccessDenied()
 		{
 			return RedirectToPage("/Account/AccessDenied");
+		}
+
+		protected IActionResult RedirectToLocal(string returnUrl)
+		{
+			if (Url.IsLocalUrl(returnUrl))
+			{
+				return LocalRedirect(returnUrl);
+			}
+
+			return Home();
+		}
+
+		protected void AddErrors(IdentityResult result)
+		{
+			foreach (var error in result.Errors)
+			{
+				ModelState.AddModelError(string.Empty, error.Description);
+			}
 		}
 
 		protected bool UserHas(PermissionTo permission)

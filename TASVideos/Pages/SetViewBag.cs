@@ -20,18 +20,21 @@ namespace TASVideos.Pages
 		
 		public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
 		{
-			var viewData = ((PageResult)context.Result).ViewData;
-			viewData["Version"] = Version;
+			if (context.Result is PageResult pageResult)
+			{
+				var viewData = pageResult.ViewData;
+				viewData["Version"] = Version;
 
-			var userClaimsPrincipal = context.HttpContext.User;
-			if (userClaimsPrincipal.Identity.IsAuthenticated)
-			{
-				var userTasks = (UserTasks)context.HttpContext.RequestServices.GetService(typeof(UserTasks));
-				viewData["UserPermissions"] = await userTasks.GetUserPermissionsById(userClaimsPrincipal.GetUserId());
-			}
-			else
-			{
-				viewData["UserPermissions"] = Enumerable.Empty<PermissionTo>();
+				var userClaimsPrincipal = context.HttpContext.User;
+				if (userClaimsPrincipal.Identity.IsAuthenticated)
+				{
+					var userTasks = (UserTasks)context.HttpContext.RequestServices.GetService(typeof(UserTasks));
+					viewData["UserPermissions"] = await userTasks.GetUserPermissionsById(userClaimsPrincipal.GetUserId());
+				}
+				else
+				{
+					viewData["UserPermissions"] = Enumerable.Empty<PermissionTo>();
+				}
 			}
 
 			await next.Invoke();
