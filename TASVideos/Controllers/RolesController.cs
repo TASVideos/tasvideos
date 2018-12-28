@@ -38,24 +38,24 @@ namespace TASVideos.Controllers
 				})
 				.ToList();
 
-		[AllowAnonymous]
-		public async Task<IActionResult> Index(string role)
-		{
-			if (string.IsNullOrWhiteSpace(role))
-			{
-				return RedirectToAction(nameof(List));
-			}
+		//[AllowAnonymous]
+		//public async Task<IActionResult> Index(string role)
+		//{
+		//	if (string.IsNullOrWhiteSpace(role))
+		//	{
+		//		return RedirectToAction(nameof(List));
+		//	}
 
-			var model = await _roleTasks.GetRoleForDisplay(role);
+		//	var model = await _roleTasks.GetRoleForDisplay(role);
 
-			if (model == null)
-			{
-				return NotFound();
-			}
+		//	if (model == null)
+		//	{
+		//		return NotFound();
+		//	}
 
-			ViewData["Title"] = "Role: " + role;
-			return View("_Role", model);
-		}
+		//	ViewData["Title"] = "Role: " + role;
+		//	return View("_Role", model);
+		//}
 
 		[AllowAnonymous]
 		public async Task<IActionResult> List()
@@ -92,7 +92,7 @@ namespace TASVideos.Controllers
 			if (ModelState.IsValid)
 			{
 				await _roleTasks.AddUpdateRole(model);
-				return RedirectToAction(nameof(Index));
+				return RedirectToPage("Roles/Index");
 			}
 
 			model.AvailablePermissions = PermissionsSelectList;
@@ -109,7 +109,7 @@ namespace TASVideos.Controllers
 		public async Task<IActionResult> Delete(int id)
 		{
 			await _roleTasks.DeleteRole(id);
-			return RedirectToAction(nameof(Index));
+			return RedirectToPage("Roles/Index");
 		}
 
 		[RequirePermission(PermissionTo.EditRoles)]
