@@ -126,11 +126,6 @@ namespace TASVideos.Extensions
 				.AddMvc(options =>
 				{
 					options.Filters.Add(new SetViewBagAttribute());
-				})
-				.AddRazorPagesOptions(options =>
-				{
-					options.Conventions.AuthorizeFolder("/Account");
-					options.Conventions.AuthorizePage("/Account/Logout");
 				});
 
 			services.AddHttpContext();
