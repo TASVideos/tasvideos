@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Models;
+using TASVideos.Pages.Roles.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Roles
