@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Models;
+using TASVideos.Pages.Permissions.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Permissions
@@ -35,7 +35,7 @@ namespace TASVideos.Pages.Permissions
 			_db = db;
 		}
 
-		public IEnumerable<PermissionDisplayModel> Model => PermissionData;
+		public IEnumerable<PermissionDisplayModel> Permissions => PermissionData;
 
 		public async Task OnGet()
 		{
