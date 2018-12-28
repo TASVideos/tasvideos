@@ -73,7 +73,7 @@ namespace TASVideos.Controllers
 				if (result.IsLockedOut)
 				{
 					_logger.LogWarning("User account locked out.");
-					return RedirectToAction(nameof(Lockout));
+					return RedirectToPage("/Account/Lockout");
 				}
 
 				ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -82,13 +82,6 @@ namespace TASVideos.Controllers
 
 			// If we got this far, something failed, redisplay form
 			return View(model);
-		}
-
-		[HttpGet]
-		[AllowAnonymous]
-		public IActionResult Lockout()
-		{
-			return View();
 		}
 
 		[HttpGet]
