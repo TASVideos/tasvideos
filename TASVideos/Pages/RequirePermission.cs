@@ -75,15 +75,9 @@ namespace TASVideos.Pages
 			}
 		}
 
-		private RedirectToRouteResult ReRouteToLogin(string returnUrl)
+		private IActionResult ReRouteToLogin(string returnUrl)
 		{
-			return new RedirectToRouteResult(
-				new RouteValueDictionary(new
-				{
-					controller = "Account",
-					action = nameof(AccountController.Login),
-					returnUrl
-				}));
+			return new RedirectToPageResult("/Account/Login", returnUrl);
 		}
 
 		private IActionResult AccessDenied()

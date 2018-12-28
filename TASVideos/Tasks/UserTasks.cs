@@ -56,7 +56,7 @@ namespace TASVideos.Tasks
 		/// automatically converted to the new system if successful
 		/// </summary>
 		/// <returns>A SignInResult indicating the result of the call</returns>
-		public async Task<SignInResult> PasswordSignIn(LoginModel model)
+		public async Task<SignInResult> PasswordSignIn(TASVideos.Pages.Account.LoginModel model) // Using the razor page model, eww?
 		{
 			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == model.UserName);
 			if (user == null)
