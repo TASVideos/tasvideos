@@ -37,7 +37,7 @@ namespace TASVideos.Pages.Permissions
 
 		public IEnumerable<PermissionDisplayModel> Model => PermissionData;
 
-		public async Task OnGetAsync()
+		public async Task OnGet()
 		{
 			var allRoles = await _db.Roles
 				.Select(r => new
