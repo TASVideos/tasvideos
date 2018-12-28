@@ -10,8 +10,6 @@ namespace TASVideos.Pages.Roles.Models
 	/// </summary>
 	public class RoleEditModel
 	{
-		public int? Id { get; set; }
-
 		[Required]
 		[StringLength(50)]
 		[Display(Name = "Name")]
