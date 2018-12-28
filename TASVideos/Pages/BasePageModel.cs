@@ -4,8 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
+using TASVideos.Controllers;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Tasks;
@@ -35,15 +39,20 @@ namespace TASVideos.Pages
 		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 
-		protected bool UserHas(PermissionTo permission)
-		{
-			return UserPermissions.Contains(permission);
-		}
-
 		public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
 		{
 			ViewData["UserPermissions"] = UserPermissions;
 			ViewData["Version"] = Version;
+		}
+
+		public IActionResult AccessDenied()
+		{
+			return RedirectToAction($"{nameof(AccountController.AccessDenied)}", "Account");
+		}
+
+		protected bool UserHas(PermissionTo permission)
+		{
+			return UserPermissions.Contains(permission);
 		}
 	}
 
