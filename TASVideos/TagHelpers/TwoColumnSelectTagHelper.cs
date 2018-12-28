@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -46,16 +47,17 @@ namespace TASVideos.TagHelpers
 				.ToList();
 			var remainingItems = availableItems.Except(selectedItems);
 
-			var modelName = IdList.ModelExplorer.Metadata.PropertyName;
+			var modelName = IdList.Name;
+			var modelId = IdList.Name.Replace(".", "_");
 			var modelContainer = modelName + "-id-container";
-			var availableListName = AvailableList.ModelExplorer.Metadata.PropertyName;
-			var selectedListName = "Selected" + modelName;
-			var addBtnName = modelName + "addBtn";
-			var addAllBtnName = modelName + "addAllBtn";
-			var removeBtnName = modelName + "removeBtn";
-			var removeAllBtnName = modelName + "removeAllBtn";
+			var availableListName = AvailableList.Name;
+			var selectedListName = "Selected" + modelId;
+			var addBtnName = modelId + "addBtn";
+			var addAllBtnName = modelId + "addAllBtn";
+			var removeBtnName = modelId + "removeBtn";
+			var removeAllBtnName = modelId + "removeAllBtn";
 
-			var parentContainerName = $"{modelName}-two-column-select";
+			var parentContainerName = $"{modelId}-two-column-select";
 
 			output.TagName = "div";
 
@@ -66,7 +68,7 @@ namespace TASVideos.TagHelpers
 			}
 
 			output.Attributes.Add("id", parentContainerName);
-			
+
 			// Generate hidden form element that will contain the selected ids
 			output.Content.AppendHtml($"<span id='{modelContainer}'>");
 			foreach (var id in selectedIdList)

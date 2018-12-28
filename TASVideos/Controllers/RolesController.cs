@@ -21,13 +21,6 @@ namespace TASVideos.Controllers
 			_roleTasks = roleTasks;
 		}
 
-		[RequirePermission(PermissionTo.DeleteRoles)]
-		public async Task<IActionResult> Delete(int id)
-		{
-			await _roleTasks.DeleteRole(id);
-			return RedirectToPage("Roles/Index");
-		}
-
 		[RequirePermission(PermissionTo.EditRoles)]
 		public async Task<IActionResult> RolesThatCanBeAssignedBy(int[] ids)
 		{

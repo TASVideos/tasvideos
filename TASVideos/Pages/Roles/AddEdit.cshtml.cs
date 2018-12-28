@@ -96,6 +96,14 @@ namespace TASVideos.Pages.Roles
 			return RedirectToPage("List");
 		}
 
+		// TODO: permission check for PermissionTo.DeleteRoles
+		public async Task<IActionResult> OnGetDelete(int id)
+		{
+			_db.Roles.Attach(new Role { Id = id }).State = EntityState.Deleted;
+			await _db.SaveChangesAsync();
+			return RedirectToPage("List");
+		}
+
 		private async Task AddUpdateRole(RoleEditModel model)
 		{
 			Role role;
