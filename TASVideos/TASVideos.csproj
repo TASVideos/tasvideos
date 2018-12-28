@@ -143,8 +143,4 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Views\Account\" />
-  </ItemGroup>
 </Project>

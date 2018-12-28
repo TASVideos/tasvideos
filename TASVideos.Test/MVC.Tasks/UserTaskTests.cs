@@ -55,7 +55,7 @@ namespace TASVideos.Test.MVC.Tasks
 			_db = new ApplicationDbContext(options, null);
 			_db.Database.EnsureDeleted();
 
-			_userTasks = new UserTasks(_db, null, null, new NoCacheService(), _pointsService.Object); // TODO: managers
+			_userTasks = new UserTasks(_db, new NoCacheService(), _pointsService.Object);
 		}
 
 		[TestCleanup]
