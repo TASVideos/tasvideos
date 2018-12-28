@@ -23,13 +23,6 @@ namespace TASVideos.Controllers
 			_signInManager = signInManager;
 		}
 
-		[AllowAnonymous]
-		public IActionResult Index()
-		{
-			return RedirectToPage("Account/Login");
-		}
-
-
 		[HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Logout()
 		{
