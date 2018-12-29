@@ -6,7 +6,7 @@
 
 <hr class="mt-1" />
 <fullrow>
-	<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
+	<partial name="_Pager" model="Model.Posts" />
 </fullrow>
 @foreach (var post in Model.Posts)
 {
@@ -69,6 +69,6 @@
 	</card>
 }
 <fullrow class="mt-2">
-	<partial name="~/Views/Table/_Pager.cshtml" model="Model.Posts" />
+	<partial name="_Pager" model="Model.Posts" />
 </fullrow>
 	

@@ -11,7 +11,7 @@
 	<button type="Submit" class="btn btn-secondary">Go</button>
 </form>
 
-<partial name="~/Views/Table/_SystemPager.cshtml" model="Model" />
+<partial name="_SystemPager" model="Model" />
 <table class="table table-bordered table-striped table-sm">
 	<sortable-table-head paging="@Model" model-type="typeof(GameListModel)" />
 	@foreach (var game in Model)

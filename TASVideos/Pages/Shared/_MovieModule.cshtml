@@ -1,4 +1,5 @@
-﻿@model PublicationModel
+﻿@*TODO - move PublicationModel **@
+@model TASVideos.Models.PublicationModel
 
 <div condition="@Model.ObsoletedBy.HasValue" class="text-danger mb-2">
 	<h4>This movie has been obsoleted!</h4>
@@ -26,20 +27,20 @@
 				<a asp-controller="Publication" asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1">Publication</a>
 				<a asp-controller="Submission" asp-action="View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
 				<a condition="@ViewData.UserHas(PermissionTo.EditPublicationMetaData)"
-					asp-controller="Publication"
-					asp-action="Edit"
-					asp-route-id="@Model.Id"
-					class="btn btn-secondary btn-sm mt-1">Edit</a>
+				   asp-controller="Publication"
+				   asp-action="Edit"
+				   asp-route-id="@Model.Id"
+				   class="btn btn-secondary btn-sm mt-1">Edit</a>
 				<a permission="CatalogMovies"
-					asp-controller="Publication"
-					asp-action="Catalog"
-					asp-route-id="@Model.Id"
-					class="btn btn-secondary btn-sm mt-1">Catalog</a>
+				   asp-controller="Publication"
+				   asp-action="Catalog"
+				   asp-route-id="@Model.Id"
+				   class="btn btn-secondary btn-sm mt-1">Catalog</a>
 				<a condition="@Model.TopicId > 0"
-					asp-controller="Forum"
-					asp-action="Topic"
-					asp-route-id="@Model.TopicId"
-					class ="btn btn-secondary btn-sm mt-1">
+				   asp-controller="Forum"
+				   asp-action="Topic"
+				   asp-route-id="@Model.TopicId"
+				   class="btn btn-secondary btn-sm mt-1">
 					Discuss
 				</a>
 			</div>
@@ -57,11 +58,10 @@
 					<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
 					<div Condition="Model.RatingCount > 2">
 						<span permission="RateMovies">
-							<a
-								asp-controller="Publication"
-								asp-action="Rate"
-								asp-route-id="@Model.Id"
-								asp-route-returnUrl="@Context.ReturnUrl()">
+							<a asp-controller="Publication"
+							   asp-action="Rate"
+							   asp-route-id="@Model.Id"
+							   asp-route-returnUrl="@Context.ReturnUrl()">
 								Rating
 							</a>: &nbsp;
 						</span>
@@ -72,7 +72,7 @@
 			</div>
 			<div class="col-md-2">
 				<small condition="Model.GenreTags.Any()">
-					Genre:<br/>
+					Genre:<br />
 					@foreach (var genre in Model.GenreTags)
 					{
 						<a href="/Movies-@genre.Code">@genre.DisplayName</a>
@@ -80,10 +80,10 @@
 					<br />
 				</small>
 				<small condition="Model.Tags.Any()">
-					Tags:<br/>
+					Tags:<br />
 					@foreach (var tag in Model.Tags)
 					{
-						<a href="/Movies-@tag.Code">@tag.DisplayName</a><br/>
+						<a href="/Movies-@tag.Code">@tag.DisplayName</a><br />
 					}
 				</small>
 			</div>

@@ -60,7 +60,7 @@ namespace TASVideos.Controllers
 			{
 				ViewData["WikiPage"] = existingPage;
 				ViewData["Title"] = existingPage.PageName;
-				ViewData["Layout"] = "/Views/Shared/_WikiLayout.cshtml";
+				ViewData["Layout"] = "_WikiLayout";
 				_wikiMarkupFileProvider.WikiPages = _wikiPages;
 				return View(WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
 			}

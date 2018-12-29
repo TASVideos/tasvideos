@@ -118,7 +118,7 @@
     <Content Update="Views\Forum\_ForumHeader.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\_PreviewWindow.cshtml">
+    <Content Update="Pages\Shared\_PreviewWindow.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Shared\_Award.cshtml">
@@ -127,10 +127,10 @@
     <Content Update="Views\Forum\_CreatePostHelper.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\_WikiLayoutFooter.cshtml">
+    <Content Update="Pages\Shared\_WikiLayoutFooter.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\_WikiLayoutHeader.cshtml">
+    <Content Update="Pages\Shared\_WikiLayoutHeader.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\UserFiles\Index.cshtml">
