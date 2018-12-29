@@ -6,7 +6,7 @@
 <div condition="@Model.Any()">
 	<partial Name="_ForumHeader" />
 	<fullrow>
-		<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
+		<partial name="_Pager" model="Model" />
 	</fullrow>
 	@foreach (var post in Model)
 	{
@@ -70,7 +70,7 @@
 		</card>
 	}
 	<fullrow class="mt-2">
-		<partial name="~/Views/Table/_Pager.cshtml" model="Model" />
+		<partial name="_Pager" model="Model" />
 	</fullrow>
 </div>
 <div condition="!Model.Any()">
