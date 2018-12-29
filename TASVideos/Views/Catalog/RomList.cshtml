@@ -3,7 +3,7 @@
 	ViewData["Title"] = $"Roms for {Model.GameDisplayName}";
 }
 <h4>System: @Model.SystemCode</h4>
-<h4>Game: <a asp-controller="Game" asp-action="View" asp-route-id="@Model.GameId">@Model.GameDisplayName</a></h4>
+<h4>Game: <a asp-page="/Game/Index" asp-route-id="@Model.GameId">@Model.GameDisplayName</a></h4>
 <a asp-action="RomEdit" asp-route-gameId="@Model.GameId" class="btn btn-primary">Create</a>
 <hr />
 <table class="table table-bordered table-striped">

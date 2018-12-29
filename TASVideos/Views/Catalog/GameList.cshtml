@@ -21,7 +21,7 @@
 			<td>@game.SystemCode</td>
 			<td>@game.DisplayName</td>
 			<td>
-				<a asp-controller="Game" asp-action="View" asp-route-id="@game.Id" class="btn btn-sm btn-secondary">View</a>
+				<a asp-page="/Game/Index" asp-route-id="@game.Id" class="btn btn-sm btn-secondary">View</a>
 				<a asp-action="GameEdit" asp-route-id="@game.Id" class="btn btn-primary btn-sm">Edit</a>
 				<a asp-action="RomList" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm">Roms</a>
 			</td>
