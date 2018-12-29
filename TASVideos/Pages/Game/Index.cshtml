@@ -1,6 +1,7 @@
-﻿@model GameDisplayModel
+﻿@page "{id}"
+@model TASVideos.Pages.Game.IndexModel
 @{
-	ViewData["Title"] = $"{Model.SystemCode} - {Model.DisplayName}";
+	ViewData["Title"] = $"{Model.Game.SystemCode} - {Model.Game.DisplayName}";
 	string wiki = LinkConstants.GameWikiPage + Model.Id;
 	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
@@ -21,7 +22,7 @@
 <hr />
 <label>Genre:</label>
 <ul>
-	@foreach (var genre in Model.Genres)
+	@foreach (var genre in Model.Game.Genres)
 	{
 		<li>@genre</li>
 	}

@@ -83,7 +83,6 @@ namespace TASVideos.Extensions
 			services.AddScoped<PublicationTasks>();
 			services.AddScoped<PlatformTasks>();
 			services.AddScoped<CatalogTasks>();
-			services.AddScoped<GameTasks>();
 			services.AddScoped<ForumTasks>();
 			services.AddScoped<RatingsTasks>();
 			services.AddScoped<PrivateMessageTasks>();
@@ -130,10 +129,10 @@ namespace TASVideos.Extensions
 				})
 				.AddRazorPagesOptions(options =>
 				{
-					options.Conventions
-					.AddFolderApplicationModelConvention(
+					options.Conventions.AddFolderApplicationModelConvention(
 						"/",
 						model => model.Filters.Add(new SetViewBag()));
+					options.Conventions.AddPageRoute("/Game/Index", "{id:int}G");
 				});
 
 			services.AddHttpContext();
