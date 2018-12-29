@@ -88,31 +88,31 @@
     <Content Update="Views\Publication\EditTier.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\GameSubPages\Default.cshtml">
+    <Content Update="Pages\Shared\Components\GameSubPages\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\GameName\Default.cshtml">
+    <Content Update="Pages\Shared\Components\GameName\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\GameResourcesFooter\Default.cshtml">
+    <Content Update="Pages\Shared\Components\GameResourcesFooter\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\MediaPosts\Default.cshtml">
+    <Content Update="Pages\Shared\Components\MediaPosts\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\SupportedMovieTypes\Default.cshtml">
+    <Content Update="Pages\Shared\Components\SupportedMovieTypes\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\SystemPageFooter\Default.cshtml">
+    <Content Update="Pages\Shared\Components\SystemPageFooter\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\SystemPageHeader\Default.cshtml">
+    <Content Update="Pages\Shared\Components\SystemPageHeader\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\GameResourcesHeader\Default.cshtml">
+    <Content Update="Pages\Shared\Components\GameResourcesHeader\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\HomePageHeader\Default.cshtml">
+    <Content Update="Pages\Shared\Components\HomePageHeader\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Forum\_ForumHeader.cshtml">
