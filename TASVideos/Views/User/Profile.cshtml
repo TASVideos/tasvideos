@@ -56,7 +56,7 @@
 					<div class="pull-right mt-2">
 						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 						{
-							<partial name="../Shared/_Award.cshtml" model="award" />
+							<partial name="_Award" model="award" />
 						}
 					</div>
 				</div>
@@ -72,7 +72,7 @@
 				{
 					foreach (var role in Model.Roles)
 					{
-						<label><a asp-controller="Roles" asp-action="Index" asp-route-role="@role.Name">@role.Name</a></label>
+						<label><a asp-page="/Roles/Index" asp-route-role="@role.Name">@role.Name</a></label>
 						<div class="ml-3 mt-1 mb-3">@role.Description</div>
 					}
 				}
