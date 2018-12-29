@@ -121,7 +121,7 @@
     <Content Update="Pages\Shared\_PreviewWindow.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\_Award.cshtml">
+    <Content Update="Pages\Shared\_Award.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Forum\_CreatePostHelper.cshtml">

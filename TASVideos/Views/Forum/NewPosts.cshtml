@@ -62,7 +62,7 @@
 					<div class="pull-right">
 						@foreach (var award in post.Awards.OrderByDescending(a => a.Year))
 						{
-							<partial name="../Shared/_Award.cshtml" model="award" />
+							<partial name="_Award" model="award" />
 						}
 					</div>
 				</fullrow>
