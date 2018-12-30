@@ -157,9 +157,9 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Updates the given <see cref="User"/>
 		/// </summary>
-		public async Task EditUser(UserEditPostModel model)
+		public async Task EditUser(int id, UserEditPostModel model)
 		{
-			var user = await _db.Users.SingleAsync(u => u.Id == model.Id);
+			var user = await _db.Users.SingleAsync(u => u.Id == id);
 			if (model.UserName != user.UserName)
 			{
 				user.UserName = model.UserName;

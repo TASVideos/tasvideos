@@ -25,38 +25,10 @@ namespace TASVideos.Controllers
 		}
 
 		[RequirePermission(PermissionTo.EditUsers)]
-		public async Task<IActionResult> Edit(int id)
-		{
-			var userName = await UserTasks.GetUserNameById(id);
-
-			if (userName == null)
-			{
-				return NotFound();
-			}
-
-			var model = await UserTasks.GetUserForEdit(userName, User.GetUserId());
-			return View(model);
-		}
-
-		[RequirePermission(PermissionTo.EditUsers)]
 		public async Task<IActionResult> EditByName(string userName)
 		{
 			var model = await UserTasks.GetUserForEdit(userName, User.GetUserId());
-			return View(nameof(Edit), model);
-		}
-
-		[HttpPost, ValidateAntiForgeryToken]
-		[RequirePermission(PermissionTo.EditUsers)]
-		public async Task<IActionResult> Edit(UserEditModel model)
-		{
-			if (!ModelState.IsValid)
-			{	
-				model.AvailableRoles = await UserTasks.GetAllRolesUserCanAssign(User.GetUserId(), model.SelectedRoles);
-				return View(model);
-			}
-
-			await UserTasks.EditUser(model);
-			return RedirectToPage("Users/List");
+			return RedirectToPage("/Users/Edit", model);
 		}
 
 		[RequirePermission(PermissionTo.EditUsers)]
