@@ -51,7 +51,7 @@ namespace TASVideos.Controllers
 
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
-				return RedirectToAction(nameof(PageNotFound), new { possibleUrl = WikiHelper.NormalizeWikiPageName(url) });
+				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiHelper.NormalizeWikiPageName(url) });
 			}
 
 			var existingPage = _wikiPages.Page(url, revision);
@@ -71,21 +71,7 @@ namespace TASVideos.Controllers
 				return Redirect("/" + url);
 			}
 
-			return RedirectToAction(nameof(PageDoesNotExist), new { url });
-		}
-
-		[AllowAnonymous]
-		public IActionResult PageNotFound(string possibleUrl)
-		{
-			ViewData["possibleUrl"] = possibleUrl;
-			return View();
-		}
-
-		[AllowAnonymous]
-		public IActionResult PageDoesNotExist(string url)
-		{
-			ViewData["Title"] = url?.Trim('/');
-			return View();
+			return RedirectToPage("/Wiki/PageDoesNotExist", new { url });
 		}
 
 		[AllowAnonymous]
