@@ -29,8 +29,7 @@
 				</a>
 				<a
 					condition="@ViewData.UserHas(PermissionTo.EditUsers)"
-					asp-controller="User"
-					asp-action="Edit"
+					asp-page="Edit"
 					asp-route-id="@user.Id"
 					class="btn btn-primary">
 					Edit
