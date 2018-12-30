@@ -51,5 +51,11 @@ namespace TASVideos.Pages.Users
 			await UserTasks.EditUser(Id, UserToEdit);
 			return RedirectToPage("List");
 		}
+
+		public async Task<IActionResult> OnGetUnlock(string returnUrl)
+		{
+			await UserTasks.UnlockUser(Id);
+			return RedirectToLocal(returnUrl);
+		}
 	}
 }
