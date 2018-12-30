@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.ForumEngine;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages
@@ -67,6 +69,16 @@ namespace TASVideos.Pages
 		protected bool UserHas(PermissionTo permission)
 		{
 			return UserPermissions.Contains(permission);
+		}
+
+		protected string RenderPost(string text, bool useBbCode, bool useHtml)
+		{
+			var parsed = PostParser.Parse(text, useBbCode, useHtml);
+			using (var writer = new StringWriter())
+			{
+				parsed.WriteHtml(writer);
+				return writer.ToString();
+			}
 		}
 	}
 }

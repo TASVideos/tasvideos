@@ -1,0 +1,24 @@
+﻿@page "{id}"
+@model IndexModel
+@{
+	ViewData["Title"] = $"Message from {Model.Message.FromUserName}";
+}
+
+<div class="mb-2">
+	<a asp-page="Inbox" class="btn btn-secondary"><span class="fa fa-arrow-left"></span>Inbox</a>
+	<a condition="Model.Message.CanReply" asp-page="Create" asp-route-replyTo="@Model.Id" class="btn btn-primary">Reply</a>
+</div>
+<div>
+	@Model.Message.FromUserName <span class="fa fa-arrow-right"></span> @Model.Message.ToUserName
+	<small class="pull-right">
+		@Model.Message.SentOn
+	</small>
+</div>
+<div class="card">
+	<div class="card-header">
+		<h4>@Model.Message.Subject</h4>
+	</div>
+	<div class="card-body">
+		@Html.Raw(Model.Message.RenderedText)
+	</div>
+</div>
