@@ -159,8 +159,7 @@
 				<div condition="Model.PublicRatings">
 					<label>
 						Total Movies Rated:
-						<a asp-controller="User"
-						   asp-action="Ratings"
+						<a asp-page="/User/Ratings"
 						   asp-route-userName="@Model.UserName">
 							@Model.Ratings.TotalMoviesRated
 						</a>
