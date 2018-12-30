@@ -37,5 +37,16 @@ namespace TASVideos.Pages.Users
 
 			return new JsonResult(new List<string>());
 		}
+
+		public async Task<IActionResult> OnGetVerifyUniqueUserName(string userName)
+		{
+			if (string.IsNullOrWhiteSpace(userName))
+			{
+				return new JsonResult(false);
+			}
+
+			var exists = await UserTasks.CheckUserNameExists(userName);
+			return new JsonResult(exists);
+		}
 	}
 }
