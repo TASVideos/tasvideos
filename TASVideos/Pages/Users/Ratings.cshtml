@@ -1,0 +1,7 @@
+﻿@page "{userName}"
+@model RatingsModel
+@{
+	ViewData["Title"] = $"Ratings for {Model.UserName}";
+	ViewData["IsMyPage"] = false;
+}
+<partial name="_Ratings" model="Model.Ratings" />
