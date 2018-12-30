@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Filter;
@@ -23,19 +22,6 @@ namespace TASVideos.Controllers
 			: base(userTasks)
 		{
 			_awardTasks = awardTasks;
-		}
-
-		[AllowAnonymous]
-		public IActionResult Index()
-		{
-			return RedirectToAction(nameof(List));
-		}
-
-		[AllowAnonymous]
-		public IActionResult List(PagedModel getModel)
-		{
-			var model = UserTasks.GetPageOfUsers(getModel);
-			return View(model);
 		}
 
 		[RequirePermission(PermissionTo.EditUsers)]
@@ -70,7 +56,7 @@ namespace TASVideos.Controllers
 			}
 
 			await UserTasks.EditUser(model);
-			return RedirectToAction(nameof(List));
+			return RedirectToPage("Users/List");
 		}
 
 		[RequirePermission(PermissionTo.EditUsers)]
@@ -85,18 +71,6 @@ namespace TASVideos.Controllers
 		{
 			var exists = await UserTasks.CheckUserNameExists(userName);
 			return Json(exists);
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> SearchUserName(string partial)
-		{
-			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 2)
-			{
-				var matches = await UserTasks.GetUsersByPartial(partial);
-				return Json(matches);
-			}
-
-			return Json(new List<string>());
 		}
 
 		[AllowAnonymous]

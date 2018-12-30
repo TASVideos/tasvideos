@@ -1,4 +1,4 @@
-﻿<form asp-action="Profile" method="GET" class="form-inline" id="search-form">
+﻿<form asp-controller="User" asp-action="Profile" method="GET" class="form-inline" id="search-form">
 	<label class="mr-2" for="search-username-box">Search: </label>
 	<input id="search-username-box" name="id" list="search-username-list" required="required" type="search" class="form-control mr-2" placeholder="Enter a UserName" autofocus="autofocus" autocomplete="off" spellcheck="false" />
 	<button id="go-button" type="submit" class="btn btn-secondary" disabled="disabled">Go</button>
@@ -45,7 +45,7 @@
 					};
 
 					xmlhttp.open("GET",
-						"/User/@(nameof(UserController.SearchUserName))?partial=" + searchVal,
+						"/Users/List/Search/?partial=" + searchVal,
 						true);
 					xmlhttp.send();
 				} else {
