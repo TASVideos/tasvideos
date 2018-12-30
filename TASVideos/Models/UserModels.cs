@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using TASVideos.Data;
@@ -13,6 +15,7 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents a <seealso cref="User"/> entry list of users
 	/// </summary>
+	[AllowAnonymous]
 	public class UserListModel
 	{
 		[Sortable]

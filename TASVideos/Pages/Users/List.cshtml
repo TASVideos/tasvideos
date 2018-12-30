@@ -1,0 +1,41 @@
+﻿@page "{handler?}"
+@model ListModel
+@{
+	ViewData["Title"] = "User List";
+}
+
+<div class="float-right">
+	<partial name="_UserSearch" />
+</div>
+<h4>@ViewData["Title"]</h4>
+<hr />
+<partial name="_Pager" model="Model.Users" />
+<table class="table table-bordered table-striped">
+	<sortable-table-head paging="@Model.Users" model-type="typeof(TASVideos.Models.UserListModel)" />
+	@foreach (var user in Model.Users)
+	{
+		<tr>
+			<td>@user.Id</td>
+			<td>@user.UserName</td>
+			<td>@string.Join(",", user.Roles)</td>
+			<td>@user.CreateTimeStamp</td>
+			<td>
+				<a
+					asp-controller="User"
+					asp-action="Profile"
+					asp-route-userName="@user.UserName"
+					class="btn btn-secondary">
+					View
+				</a>
+				<a
+					condition="@ViewData.UserHas(PermissionTo.EditUsers)"
+					asp-controller="User"
+					asp-action="Edit"
+					asp-route-id="@user.Id"
+					class="btn btn-primary">
+					Edit
+				</a>
+			</td>
+		</tr>
+	}
+</table>

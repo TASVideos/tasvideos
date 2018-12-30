@@ -84,7 +84,7 @@
 			<a class="dropdown-item" href="/MediaPosts">Media Posts</a>
 			@if (ViewData.UserHasAny(new[] {PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers}))
 			{
-				<a class="dropdown-item" asp-controller="User" asp-action="List">Users</a>
+				<a class="dropdown-item" asp-page="/Users/List">Users</a>
 			}
 			<a class="dropdown-item" asp-page="/Roles/List">Roles</a>
 			<a class="dropdown-item" asp-page="/Permissions/Index">Permissions</a>
