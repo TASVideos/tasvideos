@@ -37,6 +37,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Content Update="Pages\Shared\_Ratings.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\Shared\_Profile.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -142,7 +145,7 @@
     <Content Update="Views\UserFiles\Game.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\User\Ratings.cshtml">
+    <Content Update="Pages\Users\Ratings.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
