@@ -31,13 +31,6 @@ namespace TASVideos.Controllers
 			return RedirectToPage("/Users/Edit", model);
 		}
 
-		[RequirePermission(PermissionTo.EditUsers)]
-		public async Task<IActionResult> Unlock(int id, string returnUrl)
-		{
-			await UserTasks.UnlockUser(id);
-			return RedirectToLocal(returnUrl);
-		}
-
 		[RequirePermission(PermissionTo.EditUsersUserName)]
 		public async Task<IActionResult> VerifyUserNameIsUnique(string userName)
 		{

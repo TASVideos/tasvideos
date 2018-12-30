@@ -12,7 +12,7 @@
 			<label asp-for="UserToEdit.IsLockedOut" class="form-control-label"></label>
 			<div>
 				<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
-				<a class="btn btn-secondary" asp-controller="User" asp-action="Unlock" asp-route-returnurl="@PageContext.HttpContext.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
+				<a class="btn btn-secondary" asp-page="Edit" asp-page-handler="Unlock" asp-route-returnurl="@PageContext.HttpContext.ReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
 			</div>
 		</form-group>
 		<form-group condition="!Model.UserToEdit.IsLockedOut">
