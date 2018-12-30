@@ -33,7 +33,7 @@
 						<a asp-action="Info" asp-route-id="@file.Id">@file.FileName</a>
 						<br />
 						<small class="ml-3">
-							by <a asp-controller="User" asp-action="Profile" asp-route-username="@file.Author">@file.Author</a> on @file.Uploaded
+							by <a asp-page="/User/Profile" asp-route-username="@file.Author">@file.Author</a> on @file.Uploaded
 						</small>
 					</div>
 				}
