@@ -37,6 +37,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Content Update="Pages\Shared\_Profile.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Diagnostics\CacheControl.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
