@@ -6,11 +6,11 @@ Want to create it?
 <ul>
 	@if (!User.Identity.IsAuthenticated)
 	{
-		<li>If you are an editor or have rights to edit this page, <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="@Context.ReturnUrl()">log in</a> to edit the page.</li>
+		<li>If you are an editor or have rights to edit this page, <a asp-page="/Account/Login" asp-route-returnUrl="@Context.ReturnUrl()">log in</a> to edit the page.</li>
 	}
 	else if (!canEdit)
 	{
-		<li>You do not currently have permissions to create this page. If you are not an editor, become an <a asp-action="Index" asp-controller="Roles" asp-route-role="Editor">editor!</a></li>
+		<li>You do not currently have permissions to create this page. If you are not an editor, become an <a asp-page="/Roles/Index" asp-route-role="Editor">editor!</a></li>
 	}
 
 	@if (User.Identity.IsAuthenticated && canEdit)
