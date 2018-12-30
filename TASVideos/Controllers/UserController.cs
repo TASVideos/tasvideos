@@ -31,13 +31,6 @@ namespace TASVideos.Controllers
 			return RedirectToPage("/Users/Edit", model);
 		}
 
-		[RequirePermission(PermissionTo.EditUsersUserName)]
-		public async Task<IActionResult> VerifyUserNameIsUnique(string userName)
-		{
-			var exists = await UserTasks.CheckUserNameExists(userName);
-			return Json(exists);
-		}
-
 		[AllowAnonymous]
 		[Route("[controller]/[action]/{userName}")]
 		public async Task<IActionResult> Profile(string userName)

@@ -129,7 +129,7 @@
 								};
 
 								xmlhttp.open("GET",
-									"/User/@(nameof(Controllers.UserController.VerifyUserNameIsUnique))?userName=" + userNameBox.value,
+									"/Users/List?handler=VerifyUniqueUserName&userName=" + userNameBox.value,
 									true);
 								xmlhttp.send();
 							};
