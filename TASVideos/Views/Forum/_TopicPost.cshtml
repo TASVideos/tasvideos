@@ -81,9 +81,8 @@
 			</a>
 			<a
 				condition="User.Identity.IsAuthenticated"
-				asp-controller="Messages"
-				asp-action="Create"
-				asp-route-toUser="@Model.PosterName"
+				asp-page="/Messages/Create"
+				asp-route-defaultToUser="@Model.PosterName"
 				class="btn btn-secondary btn-sm">
 				PM
 			</a>

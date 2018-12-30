@@ -178,8 +178,8 @@ namespace TASVideos.Tasks
 			}
 		}
 
-		// TODO: document
-		public async Task SendMessage(User user, PrivateMessageCreateModel model, string ipAddress)
+		// TODO: move this logic into the page
+		public async Task SendMessage(User user, TASVideos.Pages.Messages.CreateModel model, string ipAddress)
 		{
 			var toUserId = await _db.Users
 				.Where(u => u.UserName == model.ToUser)
