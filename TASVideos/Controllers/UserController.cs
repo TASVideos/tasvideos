@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
-using TASVideos.Filter;
-using TASVideos.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -22,13 +18,6 @@ namespace TASVideos.Controllers
 			: base(userTasks)
 		{
 			_awardTasks = awardTasks;
-		}
-
-		[RequirePermission(PermissionTo.EditUsers)]
-		public async Task<IActionResult> EditByName(string userName)
-		{
-			var model = await UserTasks.GetUserForEdit(userName, User.GetUserId());
-			return RedirectToPage("/Users/Edit", model);
 		}
 
 		[AllowAnonymous]
