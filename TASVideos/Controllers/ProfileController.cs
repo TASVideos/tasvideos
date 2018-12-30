@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.KeyVault.Models;
 using Microsoft.Extensions.Logging;
 
 using TASVideos.Data.Entity;
@@ -63,7 +64,7 @@ namespace TASVideos.Controllers
 			model.Awards = await _awardTasks.GetAllAwardsForUser(model.Id);
 
 			ViewData["ActivePage"] = nameof(Index);
-			return View("~/Views/User/Profile.cshtml", model);
+			return View(model);
 		}
 
 		[HttpGet]
@@ -248,7 +249,6 @@ namespace TASVideos.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			var model = await UserTasks.GetUserRatings(user.UserName, includeHidden: true);
 
-			ViewData["IsMyPage"] = true;
 			ViewData["ActivePage"] = nameof(Ratings);
 			return View("~/Views/User/Ratings.cshtml", model);
 		}

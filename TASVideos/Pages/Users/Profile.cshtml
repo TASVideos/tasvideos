@@ -1,0 +1,6 @@
+﻿@page "{userName}"
+@model TASVideos.Pages.Users.ProfileModel
+@{
+	ViewData["Title"] = $"Profile for {Model.Profile.UserName}";
+}
+<partial name="_Profile" model="Model.Profile" />
