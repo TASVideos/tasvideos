@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Filter;
-using TASVideos.Models;
 using TASVideos.Razor;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
@@ -147,81 +142,6 @@ namespace TASVideos.Controllers
 					$"{BaseUrl}/path");
 
 			return Redirect("/" + path);
-		}
-
-		[RequirePermission(PermissionTo.SeeAdminPages)]
-		public IActionResult SiteMap()
-		{
-			var model = CorePages();
-			var wikiPages = _wikiTasks.GetSubPages("");
-			model.AddRange(wikiPages
-				.Distinct()
-				.Select(p => new SiteMapModel
-				{
-					PageName = p,
-					IsWiki = true,
-					AccessRestriction = "Anonymous"
-				}));
-
-			return View(model);
-		}
-
-		private static List<SiteMapModel> _corePages;
-		private List<SiteMapModel> CorePages()
-		{
-			if (_corePages == null)
-			{
-				var asm = Assembly.GetAssembly(typeof(WikiController));
-				_corePages = asm.GetTypes()
-					.Where(type => typeof(Controller).IsAssignableFrom(type))
-					.SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
-					.Where(m => !m.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any())
-					.Where(m => m.GetCustomAttribute<HttpPostAttribute>() == null)
-					.Select(m => new SiteMapModel
-					{
-						PageName = m.Name == "Index"
-							? m.DeclaringType.Name.Replace("Controller", "")
-							: $"{m.DeclaringType.Name.Replace("Controller", "")}/{m.Name}",
-						IsWiki = false,
-						AccessRestriction = AccessRestriction(m)
-					})
-					.ToList();
-			}
-
-			return _corePages;
-		}
-
-		private string AccessRestriction(MethodInfo action)
-		{
-			// This logic is far from robust and full of assumptions, the idea is to tweak as necessary
-			if (action.GetCustomAttribute<AllowAnonymousAttribute>() != null
-				|| action.DeclaringType.GetCustomAttribute<AllowAnonymousAttribute>() != null)
-			{
-				return "Anonymous";
-			}
-
-			if (action.GetCustomAttribute<AuthorizeAttribute>() != null
-				|| action.DeclaringType.GetCustomAttribute<AuthorizeAttribute>() != null)
-			{
-				return "Logged In";
-			}
-
-			if (action.GetCustomAttribute<RequireEditAttribute>() != null
-				|| action.DeclaringType.GetCustomAttribute<RequireEditAttribute>() != null)
-			{
-				return "Edit Permissions";
-			}
-
-			var requiredPermAttr = action.GetCustomAttribute<RequirePermissionAttribute>()
-				?? action.DeclaringType.GetCustomAttribute<RequirePermissionAttribute>();
-			if (requiredPermAttr != null)
-			{
-				return requiredPermAttr.MatchAny
-					? string.Join(" or ", requiredPermAttr.RequiredPermissions)
-					: string.Join(", ", requiredPermAttr.RequiredPermissions);
-			}
-
-			return "Unknown";
 		}
 	}
 }

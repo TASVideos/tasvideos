@@ -1,15 +1,16 @@
-@model IEnumerable<SiteMapModel>
+@page
+@model SiteMapModel
 @{ 
 	ViewData["Title"] = "Site Map";
 }
 
 <table class="table table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.First().PageName)</th>
-		<th>@Html.DisplayNameFor(m => m.First().IsWiki)</th>
-		<th>@Html.DisplayNameFor(m => m.First().AccessRestriction)</th>
+		<th>@Html.DisplayNameFor(m => m.Map.First().PageName)</th>
+		<th>@Html.DisplayNameFor(m => m.Map.First().IsWiki)</th>
+		<th>@Html.DisplayNameFor(m => m.Map.First().AccessRestriction)</th>
 	</tr>
-	@foreach (var item in Model.OrderBy(m => m.PageName))
+	@foreach (var item in Model.Map.OrderBy(m => m.PageName))
 	{
 		<tr>
 			<td>
