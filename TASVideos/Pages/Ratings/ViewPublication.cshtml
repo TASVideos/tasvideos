@@ -1,0 +1,42 @@
+﻿@page "{id}"
+@model ViewPublicationModel
+@{
+	ViewData["Title"] = $"Ratings for #{Model.Publication.PublicationTitle}";
+}
+@section PageTitle {
+	<h1>Rating Details for @Model.Publication.PublicationTitle</h1>
+}
+
+@if (Model.Publication.Ratings.Any())
+{
+	<label>@Model.Publication.Ratings.Count() total ratings</label>
+	<br />
+	<label>Rating Average: @Model.Publication.OverallRating</label>
+	<table class="table table-striped table-bordered">
+		<tr>
+			<th>@Html.DisplayNameFor(m => m.Publication.Ratings.First().UserName)</th>
+			<th>@Html.DisplayNameFor(m => m.Publication.Ratings.First().Entertainment)</th>
+			<th>@Html.DisplayNameFor(m => m.Publication.Ratings.First().TechQuality)</th>
+		</tr>
+		@foreach (var ratings in Model.VisibleRatings.OrderBy(r => r.UserName))
+		{
+			<tr @Html.Raw(!ratings.IsPublic ? "style=\"opacity: 0.50\"" : "")>
+				<td>@(ratings.IsPublic ? "" : "*") @ratings.UserName</td>
+				<td>@ratings.Entertainment</td>
+				<td>@ratings.TechQuality</td>
+			</tr>
+		}
+		<tfoot>
+			<tr>
+				<th>Average</th>
+				<td>@Model.Publication.AverageEntertainmentRating</td>
+				<td>@Model.Publication.AverageTechRating</td>
+			</tr>
+		</tfoot>
+	</table>
+}
+else
+{
+	<warning-alert>No Ratings</warning-alert>
+}
+

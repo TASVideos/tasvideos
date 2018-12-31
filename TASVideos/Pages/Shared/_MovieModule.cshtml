@@ -55,7 +55,10 @@
 					@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
 				</fullrow>
 				<fullrow>
-					<div condition="Model.RatingCount <= 2">@Model.RatingCount votes (too few to display)</div>
+					<div condition="Model.RatingCount <= 2">
+						@Model.RatingCount votes (too few to display)
+						<a asp-page="/Ratings/ViewPublication" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Rate</a>
+					</div>
 					<div Condition="Model.RatingCount > 2">
 						<span permission="RateMovies">
 							<a asp-controller="Publication"
@@ -66,7 +69,7 @@
 							</a>: &nbsp;
 						</span>
 						<span condition="!ViewData.UserHas(PermissionTo.RateMovies)">Rating:</span>
-						@Math.Round(Model.OverallRating ?? 0, 2) (<a asp-controller="Ratings" asp-action="ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
+						@Math.Round(Model.OverallRating ?? 0, 2) (<a asp-page="/Ratings/ViewPublication" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
 					</div>
 				</fullrow>
 			</div>
