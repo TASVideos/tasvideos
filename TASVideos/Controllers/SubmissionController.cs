@@ -35,30 +35,6 @@ namespace TASVideos.Controllers
 			_publisher = publisher;
 		}
 
-		[AllowAnonymous]
-		public async Task<IActionResult> View(int id)
-		{
-			var submission = await _submissionTasks.GetSubmission(id, User.Identity.Name);
-			if (submission == null)
-			{
-				return NotFound();
-			}
-
-			return View(submission);
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> Download(int id)
-		{
-			var submissionFile = await _submissionTasks.GetSubmissionFile(id);
-			if (submissionFile.Length > 0)
-			{
-				return File(submissionFile, MediaTypeNames.Application.Octet, $"submission{id}.zip");
-			}
-
-			return BadRequest();
-		}
-
 		[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 		public async Task<IActionResult> Edit(int id)
 		{
@@ -193,7 +169,7 @@ namespace TASVideos.Controllers
 			}
 
 			await _submissionTasks.UpdateCatalog(model);
-			return RedirectToAction(nameof(View), new { model.Id });
+			return RedirectToPage("/Submission/View", new { model.Id });
 		}
 
 		[RequirePermission(PermissionTo.PublishMovies)]

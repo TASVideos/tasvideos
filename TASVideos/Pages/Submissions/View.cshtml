@@ -1,0 +1,131 @@
+﻿@page "{id}"
+@model ViewModel
+@{
+	ViewData["Title"] = $"Submission #{Model.Id}";
+	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
+	bool canEdit = ViewData.UserHas(PermissionTo.EditSubmissions)
+		|| (Model.Submission.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
+	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
+		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
+		&& Model.Submission.IsCataloged
+		&& Model.Submission.Publisher == User.Identity.Name;
+}
+
+@functions{
+	string StatusColor(SubmissionStatus status)
+	{
+		switch (status)
+		{
+			default:
+				return "badge-info";
+			case SubmissionStatus.Published:
+				return "badge-success";
+			case SubmissionStatus.Rejected:
+				return "badge-danger";
+			case SubmissionStatus.NeedsMoreInfo:
+			case SubmissionStatus.Delayed:
+				return "badge-warning";
+		}
+	}
+}
+
+@section PageTitle {
+	<h1>@($"Submission {Model.Submission.Title}") 
+		<span class="float-right badge @(StatusColor(Model.Submission.Status)) m-1">
+			@Model.Submission.Status.EnumDisplayName()
+		</span>
+	</h1>
+}
+
+<row>
+	<div class="col-lg-6" condition="hasEncode">
+		<iframe type="text/html" style="width:450px;height:370px;margin:0;" src="//@Model.Submission.EncodeEmbedLink" allowfullscreen="true"></iframe>
+	</div>
+	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
+		<div class="text-right @(StatusColor(Model.Submission.Status))">
+			<div condition="@Model.Submission.Status == SubmissionStatus.Accepted">
+				<label asp-for="Submission.TierName"></label>: <a href="/@Model.Submission.TierName">@Model.Submission.TierName</a>
+			</div>
+			<div condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
+				<label asp-for="Submission.Judge"></label>:
+				<a href="/HomePages/@Model.Submission.Judge">@Model.Submission.Judge</a>
+			</div>
+			<div condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
+				<label asp-for="Submission.Publisher"></label>:
+				<a href="/HomePages/@Model.Submission.Publisher">@Model.Submission.Publisher</a>
+			</div>
+		</div>
+		<table class="table table-bordered table-condensed">
+			<tr>
+				<th><label asp-for="Submission.SystemDisplayName"></label></th>
+				<td>@Model.Submission.SystemDisplayName</td>
+				<th><label asp-for="Submission.Emulator"></label></th>
+				<td>@Model.Submission.Emulator</td>
+			</tr>
+			<tr>
+				<th><label asp-for="Submission.GameVersion"></label></th>
+				<td>@Model.Submission.GameVersion</td>
+				<th><label asp-for="Submission.FrameCount"></label></th>
+				<td>@Model.Submission.FrameCount</td>
+			</tr>
+			<tr>
+				<th><label asp-for="Submission.RomName"></label></th>
+				<td>@Model.Submission.RomName</td>
+				<th><label asp-for="Submission.FrameRate"></label></th>
+				<td>@Model.Submission.FrameRate</td>
+			</tr>
+			<tr>
+				<th><label asp-for="Submission.Branch"></label></th>
+				<td>@Model.Submission.Branch</td>
+				<th><label asp-for="Submission.RerecordCount"></label></th>
+				<td>@Model.Submission.RerecordCount</td>
+			</tr>
+		</table>
+		<small>
+			Submitted edited by @Model.Submission.Submitter on @Model.Submission.CreateTimestamp
+		</small>
+		<div class="btn-toolbar">
+			<a asp-page="View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
+			<a condition="@Model.Submission.TopicId > 0" asp-controller="Forum" asp-action="Topic" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary ml-1">Discuss and Vote</a>
+			<span permission="EditSubmissions" class="btn-separator"></span>
+			<a condition="@canEdit" asp-controller="Submission" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+			<a permission="CatalogMovies" asp-controller="Submission" asp-action="Catalog" asp-route-id="@Model.Id" class="ml-1 btn btn-info">Catalog</a>
+			<a condition="@canPublish" asp-controller="Submission" asp-action="Publish" asp-route-id="@Model.Id" class="ml-1 btn btn-warning">Publish</a>
+			<span class="btn-separator"></span>
+			<a asp-page="Index" class="btn btn-secondary">Back to Queue</a>
+			<a asp-page="Index" asp-route-user="@Model.Submission.Submitter" class="ml-1 btn btn-secondary">All by this submitter</a>
+		</div>
+	</div>
+</row>
+<hr />
+<card>
+	<h5 class="card-header">Submission Comments</h5>
+	<cardbody>
+		<div class="card-text">
+			@await Component.RenderWiki(LinkConstants.SubmissionWikiPage + Model.Id)
+		</div>
+	</cardbody>
+</card>
+<hr />
+<small>
+	last edited by @Model.Submission.LastUpdateUser on @Model.Submission.LastUpdateTimeStamp
+</small>
+<br />
+<a
+	asp-page="/Wiki/PageHistory"
+	asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
+	class="btn btn-info btn-sm">
+	Page History
+</a>
+<a
+	asp-page="/Wiki/Diff"
+	asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
+	class="btn btn-info btn-sm">
+	Last diff
+</a>
+<a
+	asp-page="/Wiki/Referrers"
+	asp-route-path="@($"{Model.Id}S")"
+	class="btn btn-info btn-sm">
+	List Referrers
+</a>
