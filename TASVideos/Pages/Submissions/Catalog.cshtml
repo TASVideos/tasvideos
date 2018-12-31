@@ -1,29 +1,30 @@
-﻿@model SubmissionCatalogModel
+﻿@page "{id}"
+@model CatalogModel
 @{
 	ViewData["Title"] = $"Set Catalogging Information for Submission #{Model.Id}";
 }
 
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
-<form asp-action="Catalog">
+<form method="post">
 	<row>
 		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="SystemId" class="form-control-label"></label>
-				<select asp-for="SystemId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableSystems)" class="form-control"></select>
+				<label asp-for="Catalog.SystemId" class="form-control-label"></label>
+				<select asp-for="Catalog.SystemId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Catalog.AvailableSystems)" class="form-control"></select>
 			</form-group>
 			<form-group>
-				<label asp-for="SystemFrameRateId" class="form-control-label"></label>
-				<select asp-for="SystemFrameRateId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableSystemFrameRates)" class="form-control"></select>
+				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
+				<select asp-for="Catalog.SystemFrameRateId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Catalog.AvailableSystemFrameRates)" class="form-control"></select>
 			</form-group>
 		</div>
 		<div class="col-lg-6">
 			<form-group>
 				<fullrow>
-					<label asp-for="GameId" class="form-control-label"></label>
+					<label asp-for="Catalog.GameId" class="form-control-label"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-control"></select>
+						<select asp-for="Catalog.GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Catalog.AvailableGames)" class="form-control"></select>
 					</div>
 					<div class="col-2">
 						<a asp-controller="Catalog" asp-action="GameEdit" class="btn btn-primary">New</a>
@@ -32,23 +33,23 @@
 			</form-group>
 			<form-group>
 				<fullrow>
-						<label asp-for="RomId" class="form-control-label"></label>
+					<label asp-for="Catalog.RomId" class="form-control-label"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="RomId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableRoms)" class="form-control"></select>
+						<select asp-for="Catalog.RomId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Catalog.AvailableRoms)" class="form-control"></select>
 					</div>
 					<div class="col-2">
-						<button disable="!Model.GameId.HasValue" id="create-rom" type="button" class="btn btn-primary" )>New</button>
+						<button disable="!Model.Catalog.GameId.HasValue" id="create-rom" type="button" class="btn btn-primary" )>New</button>
 					</div>
 				</row>
 			</form-group>
 		</div>
 	</row>
-	<hr/>
+	<hr />
 	<fullrow class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
-		<a class="btn btn-secondary" asp-action="View" asp-route-id="@Model.Id">Cancel</a>
+		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
 	</fullrow>
 </form>
 
@@ -56,12 +57,12 @@
 	<partial name="_ValidationScriptsPartial" />
 }
 
-<script>
+	<script>
 	(function () {
-		var systemModel = document.getElementById('@nameof(Model.SystemId)');
-		var frameRateModel = document.getElementById('@nameof(Model.SystemFrameRateId)');
-		var gameModel = document.getElementById('@nameof(Model.GameId)');
-		var romModel = document.getElementById('@nameof(Model.RomId)');
+		var systemModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)');
+		var frameRateModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemFrameRateId)');
+		var gameModel = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)');
+		var romModel = document.getElementById('@Html.IdFor(m => m.Catalog.RomId)');
 		var createRomBtn = document.getElementById('create-rom');
 
 		systemModel.onchange = function() {
@@ -75,7 +76,7 @@
 					}
 				};
 
-				xmlhttp.open("GET", "/Catalog/@(nameof(CatalogController.GameDropDownForSystem))?includeEmpty=true&systemId=" + systemModel.value, true);
+				xmlhttp.open("GET", "/Catalog/@(nameof(Controllers.CatalogController.GameDropDownForSystem))?includeEmpty=true&systemId=" + systemModel.value, true);
 				xmlhttp.send();
 
 				var xmlhttp2 = new XMLHttpRequest();
@@ -87,10 +88,10 @@
 					}
 				};
 
-				xmlhttp2.open("GET", "/Catalog/@(nameof(CatalogController.FrameRateDropDownForSystem))?includeEmpty=true&systemId=" + systemModel.value, true);
+				xmlhttp2.open("GET", "/Catalog/@(nameof(Controllers.CatalogController.FrameRateDropDownForSystem))?includeEmpty=true&systemId=" + systemModel.value, true);
 				xmlhttp2.send();
 			} else {
-				document.querySelectorAll('#@nameof(Model.GameId) option')
+				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.GameId) option')
 					.toArray()
 					.forEach(function (elem) {
 						if (elem.value) {
@@ -98,7 +99,7 @@
 						}
 					});
 
-				document.querySelectorAll('#@nameof(Model.SystemFrameRateId) option')
+				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.SystemFrameRateId) option')
 					.toArray()
 					.forEach(function (elem) {
 						if (elem.value) {
@@ -107,7 +108,7 @@
 					});
 			}
 
-			document.querySelectorAll('#@nameof(Model.RomId) option')
+			document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option')
 					.toArray()
 					.forEach(function (elem) {
 						if (elem.value) {
@@ -129,11 +130,11 @@
 					}
 				};
 
-				xmlhttp.open("GET", "/Catalog/@(nameof(CatalogController.RomDropDownForGame))?includeEmpty=true&gameId=" + gameModel.value, true);
+				xmlhttp.open("GET", "/Catalog/@(nameof(Controllers.CatalogController.RomDropDownForGame))?includeEmpty=true&gameId=" + gameModel.value, true);
 				xmlhttp.send();
 			} else {
 				createRomBtn.setAttribute('disabled', 'disabled');
-				document.querySelectorAll('#@nameof(Model.RomId) option')
+				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option')
 					.toArray()
 					.forEach(function (elem) {
 						if (elem.value) {
@@ -144,9 +145,9 @@
 		}
 
 		document.getElementById('create-rom').onclick = function () {
-			var baseUrl = '@Url.Action(nameof(CatalogController.RomEdit), "Catalog")';
-			var gameId = document.getElementById('@nameof(Model.GameId)').value;
+			var baseUrl = '@Url.Action(nameof(Controllers.CatalogController.RomEdit), "Catalog")';
+			var gameId = gameModel.value;
 			document.location = baseUrl + '?gameId=' + gameId;
 		}
 	})()
-</script>
+	</script>
