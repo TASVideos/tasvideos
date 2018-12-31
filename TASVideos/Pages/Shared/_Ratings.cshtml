@@ -7,7 +7,8 @@
 }
 <h4>User: <a asp-page="/User/Profile" asp-route-userName="@Model.UserName">@Model.UserName</a></h4>
 <div condition="isMyPage && !Model.PublicRatings" class="alert alert-warning">
-	Your ratings are currently private and will not be visible to others. This can be changed on the <a asp-controller="Profile" asp-action="Settings">Settings Page</a>
+	Your ratings are currently private and will not be visible to others. This can be changed on the 
+	<a asp-page="/Profile/Settings">Settings Page</a>
 </div>
 <div condition="!isMyPage && !Model.PublicRatings && !ViewData.UserHas(PermissionTo.SeePrivateRatings)">
 	<div class="alert alert-warning">This user's ratings are private</div>

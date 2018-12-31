@@ -15,7 +15,7 @@
 		<tr>
 			<td>@item.Uploaded.ToString("G", CultureInfo.InvariantCulture)</td>
 			<td>@item.Author</td>
-			<td><a href="/userfiles/info/@item.Id">@item.FileName</a></td>
+			<td><a asp-page="/Userfiles/Info" asp-route-id="@item.Id">@item.FileName</a></td>
 			<td>@item.Title</td>
 		</tr>
 	}

@@ -1,0 +1,36 @@
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+using TASVideos.Models;
+using TASVideos.Tasks;
+
+namespace TASVideos.Pages.UserFiles
+{
+	[AllowAnonymous]
+	public class ForUserModel : BasePageModel
+	{
+		private readonly UserFileTasks _userFileTasks;
+
+		public ForUserModel(
+			UserFileTasks userFileTasks,
+			UserTasks userTasks) 
+			: base(userTasks)
+		{
+			_userFileTasks = userFileTasks;
+		}
+
+		[FromRoute]
+		public string UserName { get; set; }
+
+		public IEnumerable<UserFileModel> Files { get; set; } = new List<UserFileModel>();
+
+		public async Task OnGet()
+		{
+			var userId = await UserTasks.GetUserIdByName(UserName);
+			Files = await _userFileTasks.GetUserIndex(userId, includeHidden: false);
+		}
+	}
+}

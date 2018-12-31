@@ -78,11 +78,11 @@
 			<hr />
 		}
 
-		<a asp-controller="UserFiles" asp-action="Download" asp-route-id="@Model.Id" class="card-link">
+		<a asp-page="/UserFiles/Info" asp-page-handler="Download" asp-route-id="@Model.Id" class="card-link">
 			Download (@FormatSize(Model.FileSize))
 		</a>
 
-		<a asp-controller="UserFiles" asp-action="Info" asp-route-id="@Model.Id" class="card-link">
+		<a asp-page="/UserFiles/Info" asp-route-id="@Model.Id" class="card-link">
 			Info
 		</a>
 	</div>
