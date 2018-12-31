@@ -32,12 +32,12 @@ namespace TASVideos.Controllers
 
 		[AllowAnonymous]
 		[Route("[controller]/user/{userName}")]
-		public async Task<IActionResult> FilesUser(string userName)
+		public async Task<IActionResult> ForUser(string userName)
 		{
 			var userId = await UserTasks.GetUserIdByName(userName);
-			var model = await _userFileTasks.GetUserIndex(userId, userName, includeHidden: false);
-
-			return View($"~/Views/Profile/{nameof(ProfileController.UserFiles)}.cshtml", model);
+			var model = await _userFileTasks.GetUserIndex(userId, includeHidden: false);
+			ViewData["UserName"] = userName;
+			return View(model);
 		}
 
 		[AllowAnonymous]

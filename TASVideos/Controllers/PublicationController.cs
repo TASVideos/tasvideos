@@ -239,7 +239,7 @@ namespace TASVideos.Controllers
 				return RedirectToLocal(returnUrl);
 			}
 
-			return RedirectToAction(nameof(ProfileController.Ratings), "Profile");
+			return RedirectToPage("/Profile/Ratings");
 		}
 	}
 }

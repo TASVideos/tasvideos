@@ -82,10 +82,10 @@
     <Content Update="Views\Forum\UnansweredPosts.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Profile\Settings.cshtml">
+    <Content Update="Pages\Profile\Settings.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Profile\WatchedTopics.cshtml">
+    <Content Update="Pages\Profile\WatchedTopics.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Publication\Authors.cshtml">
@@ -137,6 +137,9 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Shared\_WikiLayoutHeader.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\UserFiles\ForUser.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\UserFiles\Index.cshtml">
