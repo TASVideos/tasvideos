@@ -74,26 +74,6 @@ namespace TASVideos.Controllers
 			return RedirectToPage("/Wiki/PageDoesNotExist", new { url });
 		}
 
-		[AllowAnonymous]
-		public IActionResult ViewSource(string path, int? revision = null)
-		{
-			var existingPage = _wikiPages.Page(path, revision);
-
-			if (existingPage != null)
-			{
-				return View(existingPage);
-			}
-
-			return RedirectHome();
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> PageHistory(string path)
-		{
-			var model = await _wikiTasks.GetPageHistory(path);
-			return View(model);
-		}
-
 		public async Task<IActionResult> UserEditHistory(string userName)
 		{
 			var model = await _wikiTasks.GetEditHistoryForUser(userName);
