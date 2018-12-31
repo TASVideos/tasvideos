@@ -1,12 +1,13 @@
-@model WikiDiffModel
+@page
+@model DiffModel
 
 @{
-	string link  = WikiHelper.ProcessLink(Model.PageName);
-	ViewData["Title"] = $"{WikiHelper.ProcessLink(link)} - Diff r{Model.LeftRevision} - r{Model.RightRevision}";
+	string link  = WikiHelper.ProcessLink(Model.Diff.PageName);
+	ViewData["Title"] = $"{WikiHelper.ProcessLink(link)} - Diff r{Model.Diff.LeftRevision} - r{Model.Diff.RightRevision}";
 }
 
-<input type="hidden" asp-for="LeftMarkup" rows="8" class="form-control" />
-<input type="hidden" asp-for="RightMarkup" rows="8" class="form-control" />
+<input type="hidden" asp-for="Diff.LeftMarkup" rows="8" class="form-control" />
+<input type="hidden" asp-for="Diff.RightMarkup" rows="8" class="form-control" />
 
 <a class="btn btn-secondary pull-right" href="/@link">Back to Page</a>
 <row>
@@ -36,8 +37,8 @@
 	}
 
 	function generateDiff(viewType) {
-		var leftMarkup = document.getElementById('LeftMarkup').value;
-		var rightMarkup = document.getElementById('RightMarkup').value;
+		var leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
+		var rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
 		var diffElem = document.getElementById('ResultMarkup');
 
 		var base = difflib.stringAsLines(leftMarkup);
@@ -50,8 +51,8 @@
 			baseTextLines: base,
 			newTextLines: newTxt,
 			opcodes: opcodes,
-			baseTextName:  "r@(Model.LeftRevision)",
-			newTextName: "r@(Model.RightRevision)",
+			baseTextName:  "r@(Model.Diff.LeftRevision)",
+			newTextName: "r@(Model.Diff.RightRevision)",
 			contextSize: null,
 			viewType: viewType
 		}));
