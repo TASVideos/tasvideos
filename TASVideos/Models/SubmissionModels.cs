@@ -98,7 +98,6 @@ namespace TASVideos.Models
 	/// </summary>
 	public class SubmissionDisplayModel
 	{
-		public int Id { get; set; }
 		public int TopicId { get; set; }
 		public bool CanEdit { get; set; }
 		public bool IsCataloged => SystemId.HasValue
@@ -361,8 +360,6 @@ namespace TASVideos.Models
 	/// </summary>
 	public class SubmissionCatalogModel
 	{
-		public int Id { get; set; }
-
 		[Display(Name = "Rom")]
 		public int? RomId { get; set; }
 

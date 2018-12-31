@@ -25,7 +25,7 @@
 				</div>
 				<a href="@Model.OnlineWatchingUrl" class="btn btn-primary btn-sm mt-1">Watch</a>
 				<a asp-controller="Publication" asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1">Publication</a>
-				<a asp-controller="Submission" asp-action="View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
+				<a asp-page="/Submission/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
 				<a condition="@ViewData.UserHas(PermissionTo.EditPublicationMetaData)"
 				   asp-controller="Publication"
 				   asp-action="Edit"

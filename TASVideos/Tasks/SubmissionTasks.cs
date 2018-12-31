@@ -128,7 +128,6 @@ namespace TASVideos.Tasks
 					.Where(s => s.Id == id)
 					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
 					{
-						Id = s.Id,
 						SystemDisplayName = s.System.DisplayName,
 						SystemCode = s.System.Code,
 						GameName = s.GameName,
@@ -159,7 +158,7 @@ namespace TASVideos.Tasks
 				if (submissionModel != null)
 				{
 					submissionModel.Authors = await _db.SubmissionAuthors
-						.Where(sa => sa.SubmissionId == submissionModel.Id)
+						.Where(sa => sa.SubmissionId == id)
 						.Select(sa => sa.Author.UserName)
 						.ToListAsync();
 
@@ -167,7 +166,7 @@ namespace TASVideos.Tasks
 						&& (userName == submissionModel.Submitter
 							|| submissionModel.Authors.Contains(userName));
 
-					var submissionPageName = LinkConstants.SubmissionWikiPage + submissionModel.Id;
+					var submissionPageName = LinkConstants.SubmissionWikiPage + id;
 					submissionModel.TopicId = _db.ForumTopics.SingleOrDefault(t => t.PageName == submissionPageName)?.Id ?? 0;
 				}
 
@@ -359,7 +358,6 @@ namespace TASVideos.Tasks
 					.Where(s => s.Id == id)
 					.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 					{
-						Id = s.Id,
 						SystemDisplayName = s.System.DisplayName,
 						SystemCode = s.System.Code,
 						GameName = s.GameName,
@@ -385,7 +383,7 @@ namespace TASVideos.Tasks
 				if (submissionModel != null)
 				{
 					submissionModel.Authors = await _db.SubmissionAuthors
-						.Where(sa => sa.SubmissionId == submissionModel.Id)
+						.Where(sa => sa.SubmissionId == id)
 						.Select(sa => sa.Author.UserName)
 						.ToListAsync();
 
@@ -405,7 +403,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Updates an existing <see cref="Submission"/> with the given values
 		/// </summary>
-		public async Task<SubmitResult> UpdateSubmission(SubmissionEditModel model, string userName)
+		public async Task<SubmitResult> UpdateSubmission(int id, SubmissionEditModel model, string userName)
 		{
 			var submission = await _db.Submissions
 				.Include(s => s.Judge)
@@ -414,7 +412,7 @@ namespace TASVideos.Tasks
 				.Include(s => s.SystemFrameRate)
 				.Include(s => s.SubmissionAuthors)
 				.ThenInclude(sa => sa.Author)
-				.SingleAsync(s => s.Id == model.Id);
+				.SingleAsync(s => s.Id == id);
 
 			// Parse movie file if it exists
 			if (model.MovieFile != null)
@@ -501,7 +499,7 @@ namespace TASVideos.Tasks
 
 			var revision = new WikiPage
 			{
-				PageName = $"{LinkConstants.SubmissionWikiPage}{model.Id}",
+				PageName = $"{LinkConstants.SubmissionWikiPage}{id}",
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage,
@@ -597,15 +595,15 @@ namespace TASVideos.Tasks
 			using (_db.Database.BeginTransactionAsync())
 			{
 				var model = await _db.Submissions
+					.Where(s => s.Id == id)
 					.Select(s => new SubmissionCatalogModel
 					{
-						Id = s.Id,
 						RomId = s.RomId,
 						GameId = s.GameId,
 						SystemId = s.SystemId,
 						SystemFrameRateId = s.SystemFrameRateId,
 					})
-					.SingleAsync(s => s.Id == id);
+					.SingleOrDefaultAsync();
 
 				if (model == null)
 				{
@@ -664,9 +662,9 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Updates the given <see cref="Submission"/> with the given <see cref="TASVideos.Data.Entity.Game.Game"/> catalog information
 		/// </summary>
-		public async Task UpdateCatalog(SubmissionCatalogModel model)
+		public async Task UpdateCatalog(int id, SubmissionCatalogModel model)
 		{
-			var submission = await _db.Submissions.SingleAsync(s => s.Id == model.Id);
+			var submission = await _db.Submissions.SingleAsync(s => s.Id == id);
 			_mapper.Map(model, submission);
 			await _db.SaveChangesAsync();
 		}
