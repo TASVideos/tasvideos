@@ -1,0 +1,126 @@
+﻿@page
+@model SubmitModel
+@{
+	ViewData["Title"] = "Submit Movie";
+	// ReSharper disable once UnusedVariable
+	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
+}
+<info-alert dismissible="true">
+	@await Component.RenderWiki("System/SubmitMovieHeader")
+</info-alert>
+<hr />
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+<warning-alert dismissible="true" condition="notSupportedError">@await Component.RenderWiki("System/SupportedMovieTypes")</warning-alert>
+<form method="post" enctype="multipart/form-data">
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Create.MovieFile" class="form-control-label"></label>
+				<input type="file" asp-for="Create.MovieFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Create.MovieFile)</div>
+				<span asp-validation-for="Create.MovieFile" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Create.Authors" class="form-control-label"></label>
+				<string-list asp-for="Create.Authors" />
+				<span asp-validation-for="Create.Authors" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Create.GameVersion" class="form-control-label"></label>
+				<select asp-for="Create.GameVersion" asp-items="@Model.Create.GameVersionOptions" class="form-control"></select>
+				<span asp-validation-for="Create.GameVersion" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Create.GameName" class="form-control-label"></label>
+				<input asp-for="Create.GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.GameName)" />
+				<span asp-validation-for="Create.GameName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Create.Emulator" class="form-control-label"></label>
+				<input asp-for="Create.Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.Emulator)" />
+				<span asp-validation-for="Create.Emulator" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Create.Branch" class="form-control-label"></label>
+				<input asp-for="Create.Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.Branch)" />
+				<span asp-validation-for="Create.Branch" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Create.RomName" class="form-control-label"></label>
+				<input asp-for="Create.RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.RomName)" />
+				<span asp-validation-for="Create.RomName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Create.EncodeEmbedLink" class="form-control-label"></label>
+				<input asp-for="Create.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.EncodeEmbedLink)" />
+				<span asp-validation-for="Create.EncodeEmbedLink" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<fullrow>
+		<form-group>
+			<label asp-for="Create.Markup" class="form-control-label"></label>
+			<span>
+				@await Component.RenderWiki("System/SubmissionImportant")
+			</span>
+			<textarea asp-for="Create.Markup" rows="12" class="form-control"></textarea>
+			<span asp-validation-for="Create.Markup" class="text-danger"></span>
+			<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
+		</form-group>
+	</fullrow>
+	<hr />
+	<fullrow class="text-center">
+		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
+		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Create.Markup?.Length > 0 ? "" : "d-none")">Submit</button>
+		<br />
+		<br />
+		<div id="submit-blurb" class="text-center alert-info d-none" role="alert">
+			<div>@await Component.RenderWiki("System/SubmissionWarning")</div>
+			<label class="small alert-info">By pressing "Submit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.</label>
+		</div>
+	</fullrow>
+</form>
+
+<partial name="_PreviewWindow" model="@((nameof(Model.Create.Markup), $"/Wiki/{nameof(Controllers.WikiController.GeneratePreview)}"))" />
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
+
+<script>
+	(function () {
+		document.getElementById('prefill-btn').onclick = function () {
+			var markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
+			if (markup) {
+				return;
+			}
+
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						var data = JSON.parse(xmlhttp.responseText);
+						document.getElementById('@Html.IdFor(m => m.Create.Markup)').value = data.text;
+					}
+				}
+			};
+
+			xmlhttp.open("GET",
+				"/Submissions/Submit?handler=PrefillText",
+				true);
+			xmlhttp.send();
+		};
+
+		document.getElementById('preview-button').addEventListener('click', function () {
+			document.getElementById('submit-btn').classList.remove('d-none');
+			document.getElementById('submit-blurb').classList.remove('d-none');
+		});
+	})()
+</script>

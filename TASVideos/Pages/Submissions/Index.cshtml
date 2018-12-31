@@ -6,7 +6,7 @@
 
 <div permission="SubmitMovies" class="pull-right">
 	<div class="mb-1">
-		<a class="btn btn-primary" asp-controller="Submission" asp-action="Submit">Submit a Movie</a>
+		<a asp-page="Submit" class="btn btn-primary">Submit a Movie</a>
 	</div>
 	<div>
 		<a asp-page="Index" asp-route-user="@User.Identity.Name" class="btn btn-secondary">
