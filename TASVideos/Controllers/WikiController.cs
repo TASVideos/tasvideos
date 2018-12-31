@@ -108,7 +108,7 @@ namespace TASVideos.Controllers
 					"");
 			}
 
-			return RedirectToAction(nameof(DeletedPages));
+			return RedirectToPage("/Wiki/DeletedPages");
 		}
 
 		[RequirePermission(PermissionTo.DeleteWikiPages)]
@@ -128,13 +128,6 @@ namespace TASVideos.Controllers
 					"");
 
 			return Redirect("/" + path);
-		}
-
-		[RequirePermission(PermissionTo.SeeDeletedWikiPages)]
-		public async Task<IActionResult> DeletedPages()
-		{
-			var model = await _wikiTasks.GetDeletedPages();
-			return View(model);
 		}
 
 		[RequirePermission(PermissionTo.DeleteWikiPages)]
