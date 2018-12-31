@@ -1,10 +1,11 @@
-﻿@model UserFileIndexModel
+﻿@page
+@model IndexModel
 @{
 	ViewData["Title"] = "Movie Storage Space";
 }
 
 <fullrow class="mt-2 mb-2">
-	<a asp-controller="Profile" asp-action="UserFiles" class="pull-right btn btn-primary">My Movies</a>
+	<a asp-page="/Profile/UserFiles" class="pull-right btn btn-primary">My Movies</a>
 </fullrow>
 
 <row>
@@ -14,9 +15,9 @@
 				Users with movies
 			</cardheader>
 			<cardbody>
-				@foreach (var user in Model.UsersWithMovies)
+				@foreach (var user in Model.Data.UsersWithMovies)
 				{
-					<a asp-action="FilesUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: @user.Latest)</span><br />
+					<a asp-page="ForUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: @user.Latest)</span><br />
 				}
 			</cardbody>
 		</card>
@@ -27,10 +28,10 @@
 				Latest Movies
 			</cardheader>
 			<cardbody>
-				@foreach (var file in Model.LatestMovies)
+				@foreach (var file in Model.Data.LatestMovies)
 				{
 					<div class="mb-2">
-						<a asp-action="Info" asp-route-id="@file.Id">@file.FileName</a>
+						<a asp-page="Info" asp-route-id="@file.Id">@file.FileName</a>
 						<br />
 						<small class="ml-3">
 							by <a asp-page="/User/Profile" asp-route-username="@file.Author">@file.Author</a> on @file.Uploaded
@@ -44,10 +45,10 @@
 				Games with movies
 			</cardheader>
 			<cardbody>
-				@foreach (var game in Model.GamesWithMovies)
+				@foreach (var game in Model.Data.GamesWithMovies)
 				{
 					<div>
-						<a asp-action="Game" asp-route-id="@game.GameId">@game.SystemCode @game.GameName</a>
+						<a asp-page="Game" asp-route-id="@game.GameId">@game.SystemCode @game.GameName</a>
 						<small>(latest @game.Latest)</small>
 					</div>
 				}

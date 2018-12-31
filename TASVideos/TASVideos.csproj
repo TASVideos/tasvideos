@@ -139,13 +139,13 @@
     <Content Update="Pages\Shared\_WikiLayoutHeader.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\UserFiles\ForUser.cshtml">
+    <Content Update="Pages\UserFiles\ForUser.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\UserFiles\Index.cshtml">
+    <Content Update="Pages\UserFiles\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\UserFiles\Game.cshtml">
+    <Content Update="Pages\UserFiles\Game.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Users\Ratings.cshtml">
