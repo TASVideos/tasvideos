@@ -1,4 +1,5 @@
-@model UserWikiEditHistoryModel
+@page "{username}"
+@model EditHistoryModel
 
 @{
 	ViewData["Title"] = "Edit History For User " + Model.UserName;
@@ -8,13 +9,13 @@
 <table class="table table-striped">
 	<tbody>
 		<tr>
-			<th>@Html.DisplayNameFor(m => m.Edits.First().PageName)</th>
-			<th>@Html.DisplayNameFor(m => m.Edits.First().CreateTimeStamp)</th>
-			<th>@Html.DisplayNameFor(m => m.Edits.First().MinorEdit)</th>
-			<th>@Html.DisplayNameFor(m => m.Edits.First().RevisionMessage)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Edits.First().PageName)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Edits.First().CreateTimeStamp)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Edits.First().MinorEdit)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Edits.First().RevisionMessage)</th>
 			<th>Actions</th>
 		</tr>
-		@foreach (var revision in Model.Edits)
+		@foreach (var revision in Model.History.Edits)
 		{
 			<tr>
 				<td><a href="/@(revision.PageName)?revision=@revision.Revision">@revision.PageName r@(revision.Revision)</a></td>
@@ -23,7 +24,12 @@
 				<td>@revision.RevisionMessage</td>
 				<td>
 					<button class="btn btn-primary" onclick="GetDiff('@revision.PageName', @revision.Revision)">Diff</button>
-					<delete-button Condition="@ViewData.UserHas(PermissionTo.DeleteWikiPages)" asp-href="@(Url.Action(nameof(WikiController.DeleteRevision), new { path = revision.PageName, revision = revision.Revision }))" warning-message="Are you sure you want to delete this revision?">Delete</delete-button>
+					<delete-button
+						permission="DeleteWikiPages"
+						asp-href="@(Url.Action(nameof(Controllers.WikiController.DeleteRevision), new { path = revision.PageName, revision = revision.Revision }))"
+						warning-message="Are you sure you want to delete this revision?">
+						Delete
+					</delete-button>
 				</td>
 			</tr>
 		}
@@ -45,7 +51,7 @@
 	var fromRevision, toRevision;
 
 	function GetDiff(path, revision) {
-		var baseUrl = '@Url.Action(nameof(WikiController.DiffData), "Wiki")';
+		var baseUrl = '@Url.Action(nameof(Controllers.WikiController.DiffData), "Wiki")';
 		var ajaxUrl = baseUrl + '?path=' + path + '&fromRevision=' + (revision - 1) + '&toRevision=' + revision;
 
 		var xmlhttp = new XMLHttpRequest();
