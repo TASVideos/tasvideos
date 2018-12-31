@@ -15,20 +15,17 @@ namespace TASVideos.Controllers
 {
 	public class WikiController : BaseController
 	{
-		private readonly WikiTasks _wikiTasks;
 		private readonly IWikiPages _wikiPages;
 		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public WikiController(
 			UserTasks userTasks,
-			WikiTasks wikiTasks,
 			IWikiPages wikiPages,
 			WikiMarkupFileProvider wikiMarkupFileProvider,
 			ExternalMediaPublisher publisher)
 			: base(userTasks)
 		{
-			_wikiTasks = wikiTasks;
 			_wikiPages = wikiPages;
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 			_publisher = publisher;
@@ -67,13 +64,6 @@ namespace TASVideos.Controllers
 			}
 
 			return RedirectToPage("/Wiki/PageDoesNotExist", new { url });
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> DiffData(string path, int fromRevision, int toRevision)
-		{
-			var data = await _wikiTasks.GetPageDiff(path.Trim('/'), fromRevision, toRevision);
-			return Json(data);
 		}
 
 		[AllowAnonymous]

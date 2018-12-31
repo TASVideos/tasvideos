@@ -40,5 +40,11 @@ namespace TASVideos.Pages.Wiki
 				? await _wikiTasks.GetPageDiff(Path, FromRevision.Value, ToRevision.Value)
 				: await _wikiTasks.GetLatestPageDiff(Path);
 		}
+
+		public async Task<IActionResult> OnGetDiffData(string path, int fromRevision, int toRevision)
+		{
+			var data = await _wikiTasks.GetPageDiff(path.Trim('/'), fromRevision, toRevision);
+			return new JsonResult(data);
+		}
 	}
 }
