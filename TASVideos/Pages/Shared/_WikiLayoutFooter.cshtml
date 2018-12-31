@@ -1,6 +1,5 @@
 ﻿@model WikiPage
 @{
-
 	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
 
@@ -28,9 +27,15 @@ else
 <br />
 
 <a condition="@canEdit" class="btn btn-primary btn-sm" asp-controller="Wiki" asp-action="Edit" asp-route-path="@Model.PageName">Edit</a>
-<a condition="@ViewData.UserHas(PermissionTo.MoveWikiPages)" class="btn btn-warning btn-sm" asp-controller="Wiki" asp-action="MovePage" asp-route-path="@Model.PageName">Move</a>
-<delete-button condition="@ViewData.UserHas(PermissionTo.DeleteWikiPages)" asp-href="@Url.Action("DeletePage", "Wiki", new { path = Model.PageName })" warning-message="Are you sure you want to delete this page?" class="btn btn-danger btn-sm">Delete</delete-button>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@Model.PageName">Page History</a>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="Diff" asp-route-path="@Model.PageName">Last diff</a>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="Referrers" asp-route-path="@Model.PageName">List referrers</a>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="ViewSource" asp-route-path="@Model.PageName">View Source</a>
+<a permission="MoveWikiPages" class="btn btn-warning btn-sm" asp-controller="Wiki" asp-action="MovePage" asp-route-path="@Model.PageName">Move</a>
+<delete-button
+	condition="@ViewData.UserHas(PermissionTo.DeleteWikiPages)"
+	asp-href="@Url.Action("DeletePage", "Wiki", new { path = Model.PageName })"
+	warning-message="Are you sure you want to delete this page?"
+	class="btn btn-danger btn-sm">
+	Delete
+</delete-button>
+<a class="btn btn-info btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@Model.PageName">Page History</a>
+<a class="btn btn-info btn-sm" asp-page="/Wiki/Diff" asp-route-path="@Model.PageName">Last diff</a>
+<a class="btn btn-info btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@Model.PageName">List referrers</a>
+<a class="btn btn-info btn-sm" asp-page="/Wiki/ViewSource" asp-route-path="@Model.PageName">View Source</a>

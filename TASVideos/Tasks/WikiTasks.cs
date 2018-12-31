@@ -58,18 +58,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a list of all wiki pages that have a link (reference)
-		/// to the given <see cref="pageName"/>
-		/// </summary>
-		public async Task<IEnumerable<WikiPageReferral>> GetReferrers(string pageName)
-		{
-			pageName = pageName.Trim('/');
-			return await _db.WikiReferrals
-				.ThatReferTo(pageName)
-				.ToListAsync();
-		}
-
-		/// <summary>
 		/// Returns the data necessary to generate a diff of the
 		/// latest revision of the wiki page with the given <see cref="pageName"/>
 		/// compared against the previous revision

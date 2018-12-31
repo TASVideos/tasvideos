@@ -75,37 +75,10 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> Diff(string path, int? fromRevision, int? toRevision)
-		{
-			path = path.Trim('/');
-
-			var model = fromRevision.HasValue && toRevision.HasValue
-				? await _wikiTasks.GetPageDiff(path, fromRevision.Value, toRevision.Value)
-				: await _wikiTasks.GetLatestPageDiff(path);
-
-			return View(model);
-		}
-
-		[AllowAnonymous]
 		public async Task<IActionResult> DiffData(string path, int fromRevision, int toRevision)
 		{
 			var data = await _wikiTasks.GetPageDiff(path.Trim('/'), fromRevision, toRevision);
 			return Json(data);
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> Referrers(string path)
-		{
-			if (!string.IsNullOrWhiteSpace(path))
-			{
-				path = path.Trim('/');
-				var referrers = await _wikiTasks.GetReferrers(path);
-				ViewData["PageName"] = path;
-
-				return View(referrers);
-			}
-
-			return RedirectHome();
 		}
 
 		[RequireEdit]
