@@ -26,7 +26,13 @@ else
 </small>
 <br />
 
-<a condition="@canEdit" class="btn btn-primary btn-sm" asp-controller="Wiki" asp-action="Edit" asp-route-path="@Model.PageName">Edit</a>
+<a
+	condition="@canEdit"
+	asp-page="/Wiki/Edit"
+	asp-route-path="@Model.PageName"
+	class="btn btn-primary btn-sm">
+	Edit
+</a>
 <a
 	permission="MoveWikiPages"
 	asp-page="/Wiki/Move"

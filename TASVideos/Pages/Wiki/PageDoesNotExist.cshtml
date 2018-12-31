@@ -23,7 +23,7 @@ Want to create it?
 	@if (User.Identity.IsAuthenticated && canEdit)
 	{
 		<li>Click here to 
-			<a asp-controller="Wiki" asp-action="Edit" asp-route-path="@url">
+			<a asp-page="/Wiki/Edit" asp-route-path="@url">
 				edit this page
 			</a>
 		</li>

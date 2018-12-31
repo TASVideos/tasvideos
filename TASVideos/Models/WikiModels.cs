@@ -10,10 +10,6 @@ namespace TASVideos.Models
 	public class WikiEditModel
 	{
 		[Required]
-		[ValidWikiPageName]
-		public string PageName { get; set; }
-
-		[Required]
 		public string Markup { get; set; }
 
 		[Display(Name = "Minor Edit")]
@@ -89,6 +85,7 @@ namespace TASVideos.Models
 		public string OriginalPageName { get; set; }
 
 		[Required]
+		[ValidWikiPageName]
 		[Display(Name = "Destination Page Name")]
 		public string DestinationPageName { get; set; }
 	}

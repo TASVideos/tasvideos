@@ -82,9 +82,9 @@
 		<div class="btn-toolbar">
 			<a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
 			<a condition="@Model.TopicId > 0" asp-controller="Forum" asp-action="Topic" asp-route-id="@Model.TopicId" class="btn btn-secondary ml-1">Discuss and Vote</a>
-			<span condition="@ViewData.UserHas(PermissionTo.EditSubmissions)" class="btn-separator"></span>
+			<span permission="EditSubmissions" class="btn-separator"></span>
 			<a condition="@canEdit" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-			<a condition="@ViewData.UserHas(PermissionTo.CatalogMovies)" asp-action="Catalog" asp-route-id="@Model.Id" class="ml-1 btn btn-info">Catalog</a>
+			<a permission="CatalogMovies" asp-action="Catalog" asp-route-id="@Model.Id" class="ml-1 btn btn-info">Catalog</a>
 			<a condition="@canPublish" asp-action="Publish" asp-route-id="@Model.Id" class="ml-1 btn btn-warning">Publish</a>
 			<span class="btn-separator"></span>
 			<a asp-action="List" class="btn btn-secondary">Back to Queue</a>
@@ -106,6 +106,21 @@
 	last edited by @Model.LastUpdateUser on @Model.LastUpdateTimeStamp
 </small>
 <br />
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="PageHistory" asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)">Page History</a>
-<a class="btn btn-info btn-sm" asp-controller="Wiki" asp-action="Diff" asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)">Last diff</a>
-<a asp-controller="Wiki" asp-action="Referrers" asp-route-path="@($"{Model.Id}S")" class="btn btn-info btn-sm">List Referrers</a>
+<a
+	asp-page="/Wiki/PageHistory"
+	asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
+	class="btn btn-info btn-sm">
+	Page History
+</a>
+<a
+	asp-page="/Wiki/Diff"
+	asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
+	class="btn btn-info btn-sm">
+	Last diff
+</a>
+<a
+	asp-page="/Wiki/Referrers"
+	asp-route-path="@($"{Model.Id}S")"
+	class="btn btn-info btn-sm">
+	List Referrers
+</a>

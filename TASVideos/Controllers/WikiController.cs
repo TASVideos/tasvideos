@@ -81,55 +81,6 @@ namespace TASVideos.Controllers
 			return Json(data);
 		}
 
-		[RequireEdit]
-		public IActionResult Edit(string path)
-		{
-			path = path?.Trim('/');
-			if (!WikiHelper.IsValidWikiPageName(path))
-			{
-				return RedirectHome();
-			}
-
-			var existingPage = _wikiPages.Page(path);
-
-			var model = new WikiEditModel
-			{
-				PageName = path,
-				Markup = existingPage?.Markup ?? ""
-			};
-
-			return View(model);
-		}
-
-		[RequireEdit]
-		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(WikiEditModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				var page = new WikiPage
-				{
-					PageName = model.PageName,
-					Markup = model.Markup,
-					MinorEdit = model.MinorEdit,
-					RevisionMessage = model.RevisionMessage
-				};
-				await _wikiPages.Add(page);
-
-				if (page.Revision == 1 || !model.MinorEdit)
-				{
-					_publisher.SendGeneralWiki(
-						$"Page {model.PageName} {(page.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
-						$"{model.RevisionMessage}",
-						$"{BaseUrl}/{model.PageName}");
-				}
-
-				return Redirect("/" + model.PageName.Trim('/'));
-			}
-
-			return View(model);
-		}
-
 		[AllowAnonymous]
 		[HttpPost]
 		public ViewResult GeneratePreview()
