@@ -35,26 +35,6 @@ namespace TASVideos.Controllers
 			_publisher = publisher;
 		}
 
-		public IActionResult Index()
-		{
-			return RedirectToAction(nameof(List));
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> List(SubmissionSearchRequest request)
-		{
-			// Defaults
-			if (!request.StatusFilter.Any())
-			{
-				request.StatusFilter = !string.IsNullOrWhiteSpace(request.User)
-					? SubmissionSearchRequest.All
-					: SubmissionSearchRequest.Default;
-			}
-
-			var model = await _submissionTasks.GetSubmissionList(request);
-			return View(model);
-		}
-
 		[AllowAnonymous]
 		public async Task<IActionResult> View(int id)
 		{

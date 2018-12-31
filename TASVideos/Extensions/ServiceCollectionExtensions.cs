@@ -133,6 +133,7 @@ namespace TASVideos.Extensions
 						"/",
 						model => model.Filters.Add(new SetViewBag()));
 					options.Conventions.AddPageRoute("/Game/Index", "{id:int}G");
+					options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");
 				});
 
 			services.AddHttpContext();
