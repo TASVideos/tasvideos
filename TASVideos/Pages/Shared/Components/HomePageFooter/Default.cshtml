@@ -18,7 +18,7 @@
 				<ul>
 					<li><a href="/Movies-Author@(Model.Id)-obs">@Model.MovieCount Movies</a></li>
 					<li><a href="/Subs-List?User=@Model.UserName">@Model.SubmissionCount Submissions</a></li>
-					<li>Wiki Edits: <a asp-action="UserEditHistory" asp-controller="Wiki" asp-route-userName="@Model.UserName">@Model.EditCount</a></li>
+					<li>Wiki Edits: <a asp-page="Wiki/EditHistory" asp-route-userName="@Model.UserName">@Model.EditCount</a></li>
 					<li>Awards Won: @Model.AwardsWon</li>
 				</ul>
 			</ul>

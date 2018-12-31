@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -24,20 +23,6 @@ namespace TASVideos.Tasks
 		{
 			_db = db;
 			_wikiPages = wikiPages;
-		}
-
-		public async Task<UserWikiEditHistoryModel> GetEditHistoryForUser(string userName)
-		{
-			return new UserWikiEditHistoryModel
-			{
-				UserName = userName,
-				Edits = await _db.WikiPages
-					.ThatAreNotDeleted()
-					.CreatedBy(userName)
-					.ByMostRecent()
-					.ProjectTo<UserWikiEditHistoryModel.EditEntry>()
-					.ToListAsync()
-			};
 		}
 
 		/// <summary>

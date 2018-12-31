@@ -88,8 +88,8 @@
 			<cardbody>
 				<div>
 					<p>
-						<a asp-controller="Wiki"
-						   asp-action="UserEditHistory"
+						<a
+						   asp-page="/Wiki/EditHistory"
 						   asp-route-username="@Model.UserName">
 							@Model.WikiEdits.TotalEdits
 						</a> Total Edits
