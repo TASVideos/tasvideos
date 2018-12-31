@@ -51,8 +51,8 @@
 	var fromRevision, toRevision;
 
 	function GetDiff(path, revision) {
-		var baseUrl = '@Url.Action(nameof(Controllers.WikiController.DiffData), "Wiki")';
-		var ajaxUrl = baseUrl + '?path=' + path + '&fromRevision=' + (revision - 1) + '&toRevision=' + revision;
+		var baseUrl = '/Wiki/Diff?handler=DiffData';
+		var ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + (revision - 1) + '&toRevision=' + revision;
 
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
