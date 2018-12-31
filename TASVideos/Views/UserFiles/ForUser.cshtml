@@ -1,0 +1,17 @@
+﻿@model IEnumerable<UserFileModel>
+
+@{
+	ViewData["Title"] = "User Files for " + ViewData["UserName"];
+}
+
+<fullrow class="mt-2 mb-2">
+	<div class="pull-right">
+		<a asp-controller="UserFiles" asp-action="Index" class="btn btn-secondary">All User Files</a>
+	</div>
+</fullrow>
+
+@* ReSharper disable once UnusedVariable *@
+@foreach (var file in Model.OrderByDescending(f => f.Uploaded))
+{
+	<partial name="_UserFileInfo" model="file" />
+}

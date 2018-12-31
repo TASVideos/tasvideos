@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -439,23 +438,6 @@ namespace TASVideos.Tasks
 			}
 
 			return model;
-		}
-
-		public async Task<IEnumerable<WatchedTopicsModel>> GetUserWatchedTopics(int userId)
-		{
-			return await _db
-				.ForumTopicWatches
-				.ForUser(userId)
-				.Select(tw => new WatchedTopicsModel
-				{
-					TopicCreateTimeStamp = tw.ForumTopic.CreateTimeStamp,
-					IsNotified = tw.IsNotified,
-					ForumId = tw.ForumTopic.ForumId,
-					ForumTitle = tw.ForumTopic.Forum.Name,
-					TopicId = tw.ForumTopicId,
-					TopicTitle = tw.ForumTopic.Title,
-				})
-				.ToListAsync();
 		}
 
 		public async Task StopWatchingTopic(int userId, int topicId)

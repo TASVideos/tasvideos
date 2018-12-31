@@ -3,7 +3,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace TASVideos.Views.Profile
+// ReSharper disable StyleCop.SA1201
+namespace TASVideos.Pages.Profile
 {
 	public static class ProfileNavPages
 	{

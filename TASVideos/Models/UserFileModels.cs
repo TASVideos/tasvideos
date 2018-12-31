@@ -80,12 +80,6 @@ namespace TASVideos.Models
 		}
 	}
 
-	public class UserFileUserIndexModel
-	{
-		public string UserName { get; set; }
-		public IEnumerable<UserFileModel> Files { get; set; }
-	}
-
 	public class UserFileDataModel
 	{
 		public byte[] Content { get; set; }

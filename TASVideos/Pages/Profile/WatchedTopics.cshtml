@@ -1,10 +1,11 @@
-﻿@model IEnumerable<WatchedTopicsModel>
-
+﻿@page
+@model WatchedTopicsModel
 @{
+	ViewData["Title"] = "My Watched Topics";
 	ViewData.AddActivePage(ProfileNavPages.Topics);
 }
 
-<h3>You Are Watching the following @Model.Count() Topics:</h3>
+<h3>You Are Watching the following @Model.Watches.Count() Topics:</h3>
 
 <table class="table table-striped">
 	<tr>
@@ -12,7 +13,7 @@
 		<th>Topic</th>
 		<th>Stop Watching</th>
 	</tr>
-	@foreach (var watch in Model
+	@foreach (var watch in Model.Watches
 		.OrderBy(tw => !tw.IsNotified)
 		.ThenByDescending(tw => tw.TopicCreateTimeStamp))
 	{
@@ -27,7 +28,7 @@
 			<td>
 				<delete-button
 					warning-message="Are you sure you want to stop watching this topic?"
-					asp-href="/Profile/StopWatchingTopic/@watch.TopicId">
+					asp-href="/Profile/StopWatchingTopic?topicId=@(watch.TopicId)&handler=StopWatching">
 					<i class="fa fa-remove"></i>
 				</delete-button>
 			</td>
