@@ -1,9 +1,10 @@
-@model WikiHistoryModel
+@page
+@model PageHistoryModel
 
 @{
-	ViewData["Title"] = "Page History For " + Model.PageName;
+	ViewData["Title"] = "Page History For " + Model.History.PageName;
 }
-<a class="btn btn-secondary" href="/@WikiHelper.ProcessLink(Model.PageName)">Back to Page</a>
+<a class="btn btn-secondary" href="/@WikiHelper.ProcessLink(Model.History.PageName)">Back to Page</a>
 <div id="diff-view" class="d-none mt-3 border border-secondary" style="max-height: 400px; overflow-y: auto">
 
 </div>
@@ -11,24 +12,30 @@
 <table class="table table-striped table-light">
 	<tbody>
 		<tr>
-			<th>@Html.DisplayNameFor(m => m.Revisions.First().Revision)</th>
-			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateTimeStamp)</th>
-			<th>@Html.DisplayNameFor(m => m.Revisions.First().CreateUserName)</th>
-			<th>@Html.DisplayNameFor(m => m.Revisions.First().MinorEdit)</th>
-			<th>@Html.DisplayNameFor(m => m.Revisions.First().RevisionMessage)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().Revision)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().CreateTimeStamp)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().CreateUserName)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().MinorEdit)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().RevisionMessage)</th>
 			<th>Actions</th>
 		</tr>
-		@foreach (var revision in Model.Revisions.OrderByDescending(r => r.Revision))
+		@foreach (var revision in Model.History.Revisions.OrderByDescending(r => r.Revision))
 		{
 			<tr data-revision="@revision.Revision">
-				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
+				<td><a href="/@(Model.History.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
 				<td>@revision.CreateTimeStamp</td>
 				<td>@revision.CreateUserName</td>
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
 				<td style="min-width: 100px">
 					<button class="btn btn-primary btn-sm" onclick="GetDiff(@revision.Revision)">Diff</button>
-					<delete-button Condition="@ViewData.UserHas(PermissionTo.DeleteWikiPages)" asp-href="@(Url.Action(nameof(WikiController.DeleteRevision), new { path = Model.PageName, revision = revision.Revision }))" warning-message="Are you sure you want to delete this revision?" class="btn-sm"><i class="fa fa-remove"></i></delete-button>
+					<delete-button
+						condition="@ViewData.UserHas(PermissionTo.DeleteWikiPages)"
+						asp-href="@(Url.Action(nameof(Controllers.WikiController.DeleteRevision), "Wiki", new { path = Model.History.PageName, revision = revision.Revision }))"
+						warning-message="Are you sure you want to delete this revision?"
+						class="btn-sm">
+						<i class="fa fa-remove"></i>
+					</delete-button>
 				</td>
 			</tr>
 		}
@@ -47,8 +54,8 @@
 	var fromRevision, toRevision;
 
 	function GetDiff(revision) {
-		var baseUrl = '@Url.Action(nameof(WikiController.DiffData), "Wiki")';
-		var path = '@Model.PageName';
+		var baseUrl = '@Url.Action(nameof(Controllers.WikiController.DiffData), "Wiki")';
+		var path = '@Model.History.PageName';
 		var ajaxUrl = baseUrl + '?path=' + path + '&fromRevision=' + (revision - 1) + '&toRevision=' + revision;
 
 		var xmlhttp = new XMLHttpRequest();

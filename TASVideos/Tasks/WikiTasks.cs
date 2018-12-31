@@ -26,33 +26,6 @@ namespace TASVideos.Tasks
 			_wikiPages = wikiPages;
 		}
 
-		/// <summary>
-		/// Returns a revision history for the <see cref="WikiPage"/>
-		/// with the given <see cref="pageName" />
-		/// </summary>
-		public async Task<WikiHistoryModel> GetPageHistory(string pageName)
-		{
-			pageName = pageName.Trim('/');
-
-			return new WikiHistoryModel
-			{
-				PageName = pageName,
-				Revisions = await _db.WikiPages
-					.ForPage(pageName)
-					.ThatAreNotDeleted()
-					.OrderBy(wp => wp.Revision)
-					.Select(wp => new WikiHistoryModel.WikiRevisionModel
-					{
-						Revision = wp.Revision,
-						CreateTimeStamp = wp.CreateTimeStamp,
-						CreateUserName = wp.CreateUserName,
-						MinorEdit = wp.MinorEdit,
-						RevisionMessage = wp.RevisionMessage
-					})
-					.ToListAsync()
-			};
-		}
-
 		public async Task<UserWikiEditHistoryModel> GetEditHistoryForUser(string userName)
 		{
 			return new UserWikiEditHistoryModel
