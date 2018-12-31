@@ -144,52 +144,6 @@ namespace TASVideos.Controllers
 			return View(name);
 		}
 
-		[RequirePermission(PermissionTo.MoveWikiPages)]
-		public IActionResult MovePage(string path)
-		{
-			if (!string.IsNullOrWhiteSpace(path))
-			{
-				path = path.Trim('/');
-				if (_wikiPages.Exists(path))
-				{
-					return View(new WikiMoveModel
-					{
-						OriginalPageName = path,
-						DestinationPageName = path
-					});
-				}
-			}
-
-			return RedirectHome();
-		}
-
-		[HttpPost]
-		[RequirePermission(PermissionTo.MoveWikiPages)]
-		public async Task<IActionResult> MovePage(WikiMoveModel model)
-		{
-			model.OriginalPageName = model.OriginalPageName.Trim('/');
-			model.DestinationPageName = model.DestinationPageName.Trim('/');
-
-			if (_wikiPages.Exists(model.DestinationPageName, includeDeleted: true))
-			{
-				ModelState.AddModelError(nameof(WikiMoveModel.DestinationPageName), "The destination page already exists.");
-			}
-
-			if (ModelState.IsValid)
-			{
-				await _wikiPages.Move(model.OriginalPageName, model.DestinationPageName);
-
-				_publisher.SendGeneralWiki(
-						$"Page {model.OriginalPageName} moved to {model.DestinationPageName} by {User.Identity.Name}",
-						"",
-						$"{BaseUrl}/{model.DestinationPageName}");
-
-				return Redirect("/" + model.DestinationPageName);
-			}
-
-			return View(model);
-		}
-
 		[RequirePermission(PermissionTo.DeleteWikiPages)]
 		public async Task<IActionResult> DeletePage(string path)
 		{

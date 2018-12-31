@@ -27,9 +27,14 @@ else
 <br />
 
 <a condition="@canEdit" class="btn btn-primary btn-sm" asp-controller="Wiki" asp-action="Edit" asp-route-path="@Model.PageName">Edit</a>
-<a permission="MoveWikiPages" class="btn btn-warning btn-sm" asp-controller="Wiki" asp-action="MovePage" asp-route-path="@Model.PageName">Move</a>
+<a
+	permission="MoveWikiPages"
+	asp-page="/Wiki/Move"
+	asp-route-path="@Model.PageName"
+	class="btn btn-warning btn-sm">Move
+</a>
 <delete-button
-	condition="@ViewData.UserHas(PermissionTo.DeleteWikiPages)"
+	permission="DeleteWikiPages"
 	asp-href="@Url.Action("DeletePage", "Wiki", new { path = Model.PageName })"
 	warning-message="Are you sure you want to delete this page?"
 	class="btn btn-danger btn-sm">
