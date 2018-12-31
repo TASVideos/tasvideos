@@ -7,7 +7,7 @@
 @if (canEdit)
 {
 	<div class="text-right">
-		<a class="btn btn-primary" asp-controller="Wiki" asp-action="Edit" asp-route-path="@Model.PageName">Edit</a>
+		<a asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn btn-primary">Edit</a>
 	</div>
 	<hr />
 }

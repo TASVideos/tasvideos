@@ -9,7 +9,7 @@
 <card>
 	<cardheader>
 		<span class="float-right">
-			<a condition="@canEdit" asp-action="Edit" asp-controller="Wiki" asp-route-path="@wiki" class="btn btn-primary">Edit</a>
+			<a condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" class="btn btn-primary">Edit</a>
 		</span>
 		<h4>Description</h4>
 	</cardheader>
