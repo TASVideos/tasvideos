@@ -1,0 +1,85 @@
+﻿@page "{id}"
+@model EditModel
+@{
+	ViewData["Title"] = $"Edit Movie #{Model.Id}";
+}
+@section PageTitle {
+	<h1>@Model.Publication.Title</h1>
+}
+
+<form method="post">
+	<input type="hidden" asp-for="Publication.SystemCode" />
+	<fullrow class="mt-2">
+		<label asp-for="Publication.Tier"></label>:
+		<a href="/@Model.Publication.TierLink">
+			<img src="/@Model.Publication.TierIconPath"/>
+		</a>
+		<label class="form-control-label">@Model.Publication.Tier</label>
+		<a permission="SetTier" class="btn btn-secondary btn-sm" asp-controller="Publication" asp-action="EditTier" asp-route-id="@Model.Id">Edit</a>
+	</fullrow>
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Publication.Branch"></label>
+				<input type="text" class="form-control" asp-for="Publication.Branch" />
+				<span asp-validation-for="Publication.Branch" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Publication.ObsoletedBy"></label>
+				<select asp-for="Publication.ObsoletedBy" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Publication.AvailableMoviesForObsoletedBy)" class="form-control"></select>
+				<span asp-validation-for="Publication.ObsoletedBy" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Publication.EmulatorVersion"></label>
+				<input type="text" class="form-control" asp-for="Publication.EmulatorVersion" />
+				<span asp-validation-for="Publication.EmulatorVersion" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Publication.OnlineWatchingUrl"></label>
+				<input type="text" class="form-control" asp-for="Publication.OnlineWatchingUrl" />
+				<span asp-validation-for="Publication.OnlineWatchingUrl" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Publication.MirrorSiteUrl"></label>
+				<input type="text" class="form-control" asp-for="Publication.MirrorSiteUrl" />
+				<span asp-validation-for="Publication.MirrorSiteUrl" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<two-column-select id-list="Publication.SelectedFlags" available-list="AvailableFlags" />
+	<two-column-select id-list="Publication.SelectedTags" available-list="AvailableTags" />
+	<hr />
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" asp-for="Publication.MinorEdit" />
+					<label asp-for="Publication.MinorEdit" class="form-check-label"></label>
+				</div>
+				<label asp-for="Publication.RevisionMessage" class="form-control-label"></label>
+				<input asp-for="Publication.RevisionMessage" class="form-control" />
+				<span asp-validation-for="Publication.RevisionMessage" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<fullrow>
+		<form-group>
+			<label asp-for="Publication.Markup" class="form-control-label"></label>
+			<textarea asp-for="Publication.Markup" rows="6" class="form-control"></textarea>
+			<span asp-validation-for="Publication.Markup" class="text-danger"></span>
+		</form-group>
+	</fullrow>
+	<div class="text-center mt-3">
+		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
+		<button type="submit" class="btn btn-primary">Update</button>
+		<a href="/@(Model.Id)M" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Publication.Markup), $"/Wiki/{nameof(Controllers.WikiController.GeneratePreview)}")" />
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

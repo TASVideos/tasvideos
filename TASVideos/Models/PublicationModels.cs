@@ -105,7 +105,6 @@ namespace TASVideos.Models
 
 	public class PublicationEditModel
 	{
-		public int Id { get; set; }
 		public string SystemCode { get; set; }
 
 		public string Title { get; set; }
