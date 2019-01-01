@@ -40,7 +40,7 @@ namespace TASVideos.TagHelpers
 				throw new ArgumentException($"{nameof(ModelType)} can not be null");
 			}
 
-			var controller = ViewContext.Controller();
+			var controller = ViewContext.PageGroup();
 			var action = ViewContext.Action();
 
 			output.TagName = "tr";

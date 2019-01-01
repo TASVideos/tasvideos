@@ -29,9 +29,28 @@ namespace TASVideos.Extensions
 			return permissions.Any(permission => ((IEnumerable<PermissionTo>)viewData["UserPermissions"]).Contains(permission));
 		}
 
-		public static string Controller(this ViewContext viewContext)
+		public static string Page(this ViewContext viewContext)
 		{
-			return viewContext.ActionDescriptor.RouteValues["controller"];
+			var controller = viewContext.ActionDescriptor.RouteValues["controller"];
+			if (controller != null)
+			{
+				return "/" + controller + "/" + viewContext.Action();
+			}
+
+			return viewContext.ActionDescriptor.DisplayName;
+		}
+
+		public static string PageGroup(this ViewContext viewContext)
+		{
+			string controller = viewContext.ActionDescriptor.RouteValues["controller"];
+			if (controller != null)
+			{
+				return controller;
+			}
+
+			return viewContext.ActionDescriptor.DisplayName
+				?.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+				.FirstOrDefault();
 		}
 
 		public static string Action(this ViewContext viewContext)
