@@ -30,31 +30,6 @@ namespace TASVideos.Controllers
 			_ratingsTasks = ratingTasks;
 		}
 
-		[RequirePermission(PermissionTo.SetTier)]
-		public async Task<IActionResult> EditTier(int id)
-		{
-			var model = await _publicationTasks.GetTiersForEdit(id);
-			if (model == null)
-			{
-				return NotFound();
-			}
-
-			return View(model);
-		}
-
-		[HttpPost, AutoValidateAntiforgeryToken]
-		[RequirePermission(PermissionTo.SetTier)]
-		public async Task<IActionResult> EditTier(PublicationTierEditModel model)
-		{
-			var result = await _publicationTasks.UpdateTier(model.Id, model.TierId);
-			if (result)
-			{
-				return RedirectToPage("/Publications/View", new { model.Id });
-			}
-
-			return NotFound();
-		}
-
 		[RequirePermission(PermissionTo.CatalogMovies)]
 		public async Task<IActionResult> Catalog(int id)
 		{

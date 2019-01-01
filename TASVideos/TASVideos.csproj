@@ -91,7 +91,7 @@
     <Content Update="Views\Publication\Authors.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Publication\EditTier.cshtml">
+    <Content Update="Pages\Publications\EditTier.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Shared\Components\GameSubPages\Default.cshtml">
