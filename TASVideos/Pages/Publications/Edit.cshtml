@@ -15,7 +15,7 @@
 			<img src="/@Model.Publication.TierIconPath"/>
 		</a>
 		<label class="form-control-label">@Model.Publication.Tier</label>
-		<a permission="SetTier" class="btn btn-secondary btn-sm" asp-controller="Publication" asp-action="EditTier" asp-route-id="@Model.Id">Edit</a>
+		<a permission="SetTier" class="btn btn-secondary btn-sm" asp-page="EditTier" asp-route-id="@Model.Id">Edit</a>
 	</fullrow>
 	<row>
 		<div class="col-lg-6">
