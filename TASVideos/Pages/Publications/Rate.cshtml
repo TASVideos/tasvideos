@@ -1,7 +1,8 @@
-﻿@using System.Globalization
-@model PublicationRateModel
+﻿@page "{id}"
+@using System.Globalization
+@model RateModel
 @{
-	ViewData["Title"] = $"Movie #{Model.Id} - {Model.Title}";
+	ViewData["Title"] = $"Movie #{Model.Id} - {Model.Rating.Title}";
 
 
 	var choices = UiDefaults.DefaultEntry.Concat(Enumerable
@@ -15,17 +16,16 @@
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
-	<input type="hidden" asp-for="Id" />
-	<input type="hidden" asp-for="Title" />
+	<input type="hidden" asp-for="Rating.Title" />
 	<row>
 		<div class="col-md-6">
 			<form-group>
-				<label asp-for="EntertainmentRating"></label>
-				<select asp-for="EntertainmentRating" asp-items="choices" class="form-control"></select>
+				<label asp-for="Rating.EntertainmentRating"></label>
+				<select asp-for="Rating.EntertainmentRating" asp-items="choices" class="form-control"></select>
 			</form-group>
 			<form-group>
-				<label asp-for="TechRating"></label>
-				<select asp-for="TechRating" asp-items="choices" class="form-control"></select>
+				<label asp-for="Rating.TechRating"></label>
+				<select asp-for="Rating.TechRating" asp-items="choices" class="form-control"></select>
 			</form-group>
 		</div>
 	</row>

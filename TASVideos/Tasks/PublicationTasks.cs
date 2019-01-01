@@ -662,7 +662,6 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 			return new PublicationRateModel
 			{
-				Id = publicationId,
 				Title = publication.Title,
 				TechRating = ratings
 					.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality)
@@ -676,7 +675,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Inserts or updates a movie rating for the given publication and user
 		/// </summary>
-		public async Task RatePublication(PublicationRateModel model, User user)
+		public async Task RatePublication(int id, PublicationRateModel model, User user)
 		{
 			if (user == null)
 			{
@@ -689,7 +688,7 @@ namespace TASVideos.Tasks
 			}
 
 			var ratings = await _db.PublicationRatings
-				.ForPublication(model.Id)
+				.ForPublication(id)
 				.ForUser(user.Id)
 				.ToListAsync();
 
@@ -699,8 +698,8 @@ namespace TASVideos.Tasks
 			var entertainment = ratings
 				.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment);
 
-			UpdateRating(tech, model.Id, user.Id, PublicationRatingType.TechQuality, model.TechRating);
-			UpdateRating(entertainment, model.Id, user.Id, PublicationRatingType.Entertainment, model.EntertainmentRating);
+			UpdateRating(tech, id, user.Id, PublicationRatingType.TechQuality, model.TechRating);
+			UpdateRating(entertainment, id, user.Id, PublicationRatingType.Entertainment, model.EntertainmentRating);
 
 			await _db.SaveChangesAsync();
 		}
