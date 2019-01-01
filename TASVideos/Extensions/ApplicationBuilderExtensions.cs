@@ -63,7 +63,6 @@ namespace TASVideos.Extensions
 				routes.MapRoute("legacy-post", "forum/viewtopic.php", defaults: new { controller = "Forum", action = nameof(ForumController.LegacyPost) });
 				routes.MapRoute("players-list", "Players-List", defaults: new { controller = "Publication", action = nameof(PublicationController.Authors) });
 				routes.MapRoute("movie", "{id:int}M", defaults: new { controller = "Publication", action = nameof(PublicationController.View) });
-				routes.MapRoute("movies", "Movies-{query}", defaults: new { controller = "Publication", action = nameof(PublicationController.List) });
 				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = nameof(WikiController.RenderWikiPage) });
 			});
 

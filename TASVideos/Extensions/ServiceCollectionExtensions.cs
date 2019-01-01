@@ -135,6 +135,7 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Game/Index", "{id:int}G");
 					options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");
 					options.Conventions.AddPageRoute("/Submissions/View", "{id:int}S");
+					options.Conventions.AddPageRoute("/Publications/Index", "Movies-{query}");
 				});
 
 			services.AddHttpContext();
