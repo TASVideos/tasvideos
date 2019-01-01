@@ -152,8 +152,4 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Views\Publication\" />
-  </ItemGroup>
 </Project>
