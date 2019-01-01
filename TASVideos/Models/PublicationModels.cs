@@ -201,7 +201,6 @@ namespace TASVideos.Models
 
 	public class PublicationRateModel
 	{
-		public int Id { get; set; }
 		public string Title { get; set; }
 
 		[Display(Name = "Tech Rating")]

@@ -59,8 +59,7 @@
 					</div>
 					<div condition="Model.RatingCount > 2">
 						<span permission="RateMovies">
-							<a asp-controller="Publication"
-							   asp-action="Rate"
+							<a asp-page="/Publications/Rate"
 							   asp-route-id="@Model.Id"
 							   asp-route-returnUrl="@Context.ReturnUrl()">
 								Rating
