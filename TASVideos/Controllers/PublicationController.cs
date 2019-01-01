@@ -30,65 +30,7 @@ namespace TASVideos.Controllers
 			_ratingsTasks = ratingTasks;
 		}
 
-		[AllowAnonymous]
-		public IActionResult Index()
-		{
-			return RedirectToAction(nameof(List));
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> List(string query)
-		{
-			var tokenLookup = await _publicationTasks.GetMovieTokenData();
-
-			var tokens = query
-				.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(s => s.Trim(' '))
-				.Select(s => s.ToLower())
-				.ToList();
-
-			var searchModel = new PublicationSearchModel
-			{
-				Tiers = tokenLookup.Tiers.Where(t => tokens.Contains(t)),
-				SystemCodes = tokenLookup.SystemCodes.Where(s => tokens.Contains(s)),
-				ShowObsoleted = tokens.Contains("obs"),
-				Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)),
-				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t)),
-				Genres = tokenLookup.Genres.Where(g => tokens.Contains(g)),
-				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f)),
-				MovieIds = tokens
-					.Where(t => t.EndsWith('m'))
-					.Where(t => int.TryParse(t.Substring(0, t.Length - 1), out int unused))
-					.Select(t => int.Parse(t.Substring(0, t.Length - 1)))
-					.ToList(),
-				Authors = tokens
-					.Where(t => t.ToLower().Contains("author"))
-					.Select(t => t.ToLower().Replace("author", ""))
-					.Select(t => int.TryParse(t, out var temp) ? temp : (int?)null)
-					.Where(t => t.HasValue)
-					.Select(t => t.Value)
-					.ToList()
-			};
-
-			// If no valid filter criteria, don't attempt to generate a list (else it would be all movies for what is most likely a malformed URL)
-			if (searchModel.IsEmpty)
-			{
-				return Redirect("Movies");
-			}
-
-			var model = (await _publicationTasks
-				.GetMovieList(searchModel))
-				.ToList();
-
-			var ratings = await _ratingsTasks.GetOverallRatingsForPublications(model.Select(m => m.Id));
-
-			foreach (var rating in ratings)
-			{
-				model.First(m => m.Id == rating.Key).OverallRating = rating.Value;
-			}
-
-			return View(model);
-		}
+		
 
 		[AllowAnonymous]
 		public async Task<IActionResult> View(int id)
