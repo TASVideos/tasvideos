@@ -27,8 +27,7 @@
 				<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1">Publication</a>
 				<a asp-page="/Submission/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
 				<a permission="EditPublicationMetaData"
-				   asp-controller="Publication"
-				   asp-action="Edit"
+				   asp-page="Edit"
 				   asp-route-id="@Model.Id"
 				   class="btn btn-secondary btn-sm mt-1">Edit</a>
 				<a permission="CatalogMovies"

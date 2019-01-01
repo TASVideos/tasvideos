@@ -370,9 +370,9 @@ namespace TASVideos.Tasks
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				var model = await _db.Publications
+					.Where(p => p.Id == id)
 					.Select(p => new PublicationEditModel
 					{
-						Id = p.Id,
 						Tier = p.Tier.Name,
 						TierIconPath = p.Tier.IconPath,
 						TierLink = p.Tier.Link,
@@ -391,7 +391,7 @@ namespace TASVideos.Tasks
 							.ToList(),
 						Markup = p.WikiContent.Markup
 					})
-					.SingleOrDefaultAsync(p => p.Id == id);
+					.SingleOrDefaultAsync();
 
 				model.AvailableMoviesForObsoletedBy =
 					await GetAvailableMoviesForObsoletedBy(id, model.SystemCode);
@@ -444,7 +444,7 @@ namespace TASVideos.Tasks
 		}
 
 		// TODO: document
-		public async Task UpdatePublication(PublicationEditModel model)
+		public async Task UpdatePublication(int id, PublicationEditModel model)
 		{
 			var publication = await _db.Publications
 				.Include(p => p.WikiContent)
@@ -453,7 +453,7 @@ namespace TASVideos.Tasks
 				.Include(p => p.Game)
 				.Include(p => p.Authors)
 				.ThenInclude(pa => pa.Author)
-				.SingleOrDefaultAsync(p => p.Id == model.Id);
+				.SingleOrDefaultAsync(p => p.Id == id);
 
 			if (publication != null)
 			{
@@ -497,7 +497,7 @@ namespace TASVideos.Tasks
 				{
 					var revision = new WikiPage
 					{
-						PageName = $"{LinkConstants.PublicationWikiPage}{model.Id}",
+						PageName = $"{LinkConstants.PublicationWikiPage}{id}",
 						Markup = model.Markup,
 						MinorEdit = model.MinorEdit,
 						RevisionMessage = model.RevisionMessage,
