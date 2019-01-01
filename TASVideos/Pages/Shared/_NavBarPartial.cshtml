@@ -2,30 +2,30 @@
 	string Active(string menuName)
 	{
 		string active = "active";
-		if (menuName == "Home" && ViewContext.Controller() == "Home")
+		if (menuName == "Home" && ViewContext.PageGroup() == "Index")
 		{
 			return active;
 		}
 
-		if (menuName == "Forum" && ViewContext.Controller() == "Forum")
+		if (menuName == "Forum" && ViewContext.PageGroup() == "Forum")
 		{
 			return active;
 		}
 
-		if (menuName == "Submissions" && ViewContext.Controller() == "Submission")
+		if (menuName == "Submissions" && ViewContext.PageGroup() == "Submissions")
 		{
 			return active;
 		}
 
-		if (menuName == "Movies" && ViewContext.Controller() == "Publication")
+		if (menuName == "Movies" && ViewContext.PageGroup() == "Publications")
 		{
 			return active;
 		}
 
 		if (menuName == "Admin" &&
-			(ViewContext.Controller() == "Roles"
-				|| ViewContext.Controller() == "User"
-				|| ViewContext.Controller() == "Permissions"))
+			(ViewContext.PageGroup() == "Roles"
+				|| ViewContext.PageGroup() == "User"
+				|| ViewContext.PageGroup() == "Permissions"))
 		{
 			return active;
 
@@ -44,7 +44,7 @@
 		// Wiki Controller actions that are not the general wiki page action
 		if (string.IsNullOrWhiteSpace((string)ViewData["ActiveTab"])
 			&& string.IsNullOrWhiteSpace((string)TempData["ActiveTab"])
-			&& menuName == "Wiki" && ViewContext.Controller() == "Wiki")
+			&& menuName == "Wiki" && ViewContext.PageGroup() == "Wiki")
 		{
 			return active;
 		}

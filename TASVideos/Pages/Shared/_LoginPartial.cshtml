@@ -24,7 +24,7 @@
 						<span class="fa fa-envelope"></span>
 					</a>
 				</li>
-				<li class="nav-item @(ViewContext.Controller() == "Profile" ? "active" : "")">
+				<li class="nav-item @(ViewContext.PageGroup() == "Profile" ? "active" : "")">
 					<a class="nav-link" asp-page="/Profile/Index" title="Manage">@UserManager.GetUserName(User)</a>
 				</li>
 				<li class="nav-item">
