@@ -30,34 +30,6 @@ namespace TASVideos.Controllers
 			_ratingsTasks = ratingTasks;
 		}
 
-		
-
-		[AllowAnonymous]
-		public async Task<IActionResult> View(int id)
-		{
-			var model = await _publicationTasks.GetPublicationForDisplay(id);
-			if (model == null)
-			{
-				return NotFound();
-			}
-
-			model.OverallRating = await _ratingsTasks.GetOverallRatingForPublication(id);
-
-			return View(model);
-		}
-
-		[AllowAnonymous]
-		public async Task<IActionResult> Download(int id)
-		{
-			var (fileBytes, fileName) = await _publicationTasks.GetPublicationMovieFile(id);
-			if (fileBytes.Length > 0)
-			{
-				return File(fileBytes, MediaTypeNames.Application.Octet, $"{fileName}.zip");
-			}
-
-			return BadRequest();
-		}
-
 		[RequirePermission(PermissionTo.EditPublicationMetaData)]
 		public async Task<IActionResult> Edit(int id)
 		{
@@ -86,7 +58,7 @@ namespace TASVideos.Controllers
 			}
 
 			await _publicationTasks.UpdatePublication(model);
-			return RedirectToAction(nameof(View), new { model.Id });
+			return RedirectToPage("/Publications/View", new { model.Id });
 		}
 
 		[RequirePermission(PermissionTo.SetTier)]
@@ -108,7 +80,7 @@ namespace TASVideos.Controllers
 			var result = await _publicationTasks.UpdateTier(model.Id, model.TierId);
 			if (result)
 			{
-				return RedirectToAction(nameof(View), new { model.Id });
+				return RedirectToPage("/Publications/View", new { model.Id });
 			}
 
 			return NotFound();
@@ -136,7 +108,7 @@ namespace TASVideos.Controllers
 			}
 
 			await _publicationTasks.UpdateCatalog(model);
-			return RedirectToAction(nameof(View), new { model.Id });
+			return RedirectToPage("/Publications/View", new { model.Id });
 		}
 		
 		[AllowAnonymous]

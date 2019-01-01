@@ -24,7 +24,7 @@
 					<img src="~/media/@Model.Screenshot" style="max-width: 100%" />
 				</div>
 				<a href="@Model.OnlineWatchingUrl" class="btn btn-primary btn-sm mt-1">Watch</a>
-				<a asp-controller="Publication" asp-action="View" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1">Publication</a>
+				<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1">Publication</a>
 				<a asp-page="/Submission/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
 				<a permission="EditPublicationMetaData"
 				   asp-controller="Publication"
@@ -46,7 +46,7 @@
 			</div>
 			<div class="col-md-5">
 				<row>
-					<a class="col-lg-4" asp-controller="Publication" asp-action="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
+					<a class="col-lg-4" asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 					<a condition="Model.TorrentLink != null" class="col-lg-4" href="@Model.TorrentLink">A/V file via BitTorrent</a>
 					<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
 				</row>
@@ -59,7 +59,7 @@
 						@Model.RatingCount votes (too few to display)
 						<a asp-page="/Ratings/ViewPublication" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Rate</a>
 					</div>
-					<div Condition="Model.RatingCount > 2">
+					<div condition="Model.RatingCount > 2">
 						<span permission="RateMovies">
 							<a asp-controller="Publication"
 							   asp-action="Rate"
