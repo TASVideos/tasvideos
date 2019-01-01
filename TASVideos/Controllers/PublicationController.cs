@@ -29,31 +29,6 @@ namespace TASVideos.Controllers
 			_publicationTasks = publicationTasks;
 			_ratingsTasks = ratingTasks;
 		}
-
-		[RequirePermission(PermissionTo.CatalogMovies)]
-		public async Task<IActionResult> Catalog(int id)
-		{
-			var model = await _publicationTasks.Catalog(id);
-			if (model == null)
-			{
-				return NotFound();
-			}
-
-			return View(model);
-		}
-
-		[HttpPost, AutoValidateAntiforgeryToken]
-		[RequirePermission(PermissionTo.CatalogMovies)]
-		public async Task<IActionResult> Catalog(PublicationCatalogModel model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(model); // TODO: repopulate dropdowns
-			}
-
-			await _publicationTasks.UpdateCatalog(model);
-			return RedirectToPage("/Publications/View", new { model.Id });
-		}
 		
 		[AllowAnonymous]
 		public async Task<IActionResult> Authors()

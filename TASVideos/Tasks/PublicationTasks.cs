@@ -519,15 +519,15 @@ namespace TASVideos.Tasks
 			using (_db.Database.BeginTransactionAsync())
 			{
 				var model = await _db.Publications
-					.Select(s => new PublicationCatalogModel
+					.Where(p => p.Id == id)
+					.Select(p => new PublicationCatalogModel
 					{
-						Id = s.Id,
-						RomId = s.RomId,
-						GameId = s.GameId,
-						SystemId = s.SystemId,
-						SystemFrameRateId = s.SystemFrameRateId,
+						RomId = p.RomId,
+						GameId = p.GameId,
+						SystemId = p.SystemId,
+						SystemFrameRateId = p.SystemFrameRateId,
 					})
-					.SingleAsync(s => s.Id == id);
+					.SingleAsync();
 
 				if (model == null)
 				{
@@ -584,9 +584,9 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Updates the given <see cref="Publication"/> with the given <see cref="TASVideos.Data.Entity.Game.Game"/> catalog information
 		/// </summary>
-		public async Task UpdateCatalog(PublicationCatalogModel model)
+		public async Task UpdateCatalog(int id, PublicationCatalogModel model)
 		{
-			var publication = await _db.Publications.SingleAsync(s => s.Id == model.Id);
+			var publication = await _db.Publications.SingleAsync(s => s.Id == id);
 			_mapper.Map(model, publication);
 			await _db.SaveChangesAsync();
 		}

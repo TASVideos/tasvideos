@@ -156,8 +156,6 @@ namespace TASVideos.Models
 
 	public class PublicationCatalogModel
 	{
-		public int Id { get; set; }
-
 		[Display(Name = "Rom")]
 		public int RomId { get; set; }
 
