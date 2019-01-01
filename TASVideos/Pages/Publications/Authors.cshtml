@@ -1,4 +1,5 @@
-﻿@model IEnumerable<AuthorListEntry>
+﻿@page
+@model AuthorsModel
 @{
 	ViewData["Title"] = "Published Authors";
 }
@@ -9,11 +10,11 @@
 
 <table class="table table-striped table-bordered table-sm">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.First().UserName)</th>
-		<th>@Html.DisplayNameFor(m => m.First().ActivePublicationCount)</th>
-		<th>@Html.DisplayNameFor(m => m.First().ObsoletePublicationCount)</th>
+		<th>@Html.DisplayNameFor(m => m.Authors.First().UserName)</th>
+		<th>@Html.DisplayNameFor(m => m.Authors.First().ActivePublicationCount)</th>
+		<th>@Html.DisplayNameFor(m => m.Authors.First().ObsoletePublicationCount)</th>
 	</tr>
-	@foreach (var author in Model
+	@foreach (var author in Model.Authors
 	   .OrderByDescending(a => a.ActivePublicationCount)
 	   .ThenByDescending(a => a.ObsoletePublicationCount)
 	   .ThenBy(a => a.UserName))

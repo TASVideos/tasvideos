@@ -30,13 +30,6 @@ namespace TASVideos.Controllers
 			_ratingsTasks = ratingTasks;
 		}
 		
-		[AllowAnonymous]
-		public async Task<IActionResult> Authors()
-		{
-			var model = await _publicationTasks.GetPublishedAuthorList();
-			return View(model);
-		}
-
 		[RequirePermission(PermissionTo.RateMovies)]
 		public async Task<IActionResult> Rate(int id, string returnUrl = null)
 		{
