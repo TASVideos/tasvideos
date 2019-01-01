@@ -591,20 +591,6 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
-		public async Task<IEnumerable<AuthorListEntry>> GetPublishedAuthorList()
-		{
-			return await _db.Users
-				.Where(u => u.Publications.Any())
-				.Select(u => new AuthorListEntry
-				{
-					Id = u.Id,
-					UserName = u.UserName,
-					ActivePublicationCount = u.Publications.Count(pa => !pa.Publication.ObsoletedById.HasValue),
-					ObsoletePublicationCount = u.Publications.Count(pa => pa.Publication.ObsoletedById.HasValue)
-				})
-				.ToListAsync();
-		}
-
 		// TODO: document
 		public async Task<PublicationTierEditModel> GetTiersForEdit(int publicationId)
 		{

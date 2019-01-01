@@ -88,7 +88,7 @@
     <Content Update="Pages\Profile\WatchedTopics.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Publication\Authors.cshtml">
+    <Content Update="Pages\Publications\Authors.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Publications\EditTier.cshtml">
