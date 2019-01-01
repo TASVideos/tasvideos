@@ -1,14 +1,15 @@
-﻿@model PublicationModel
+﻿@page "{id}"
+@model ViewModel
 @{
 	ViewData["Title"] = $"Movie #{Model.Id}";
 }
 @section PageTitle {
-	<h1>@Model.Title</h1>
+	<h1>@Model.Publication.Title</h1>
 }
 
-<partial name="_MovieModule" model="Model" />
+<partial name="_MovieModule" model="Model.Publication" />
 <small>
-	last edited by @Model.LastUpdateUser on @Model.LastUpdateTimeStamp
+	last edited by @Model.Publication.LastUpdateUser on @Model.Publication.LastUpdateTimeStamp
 </small>
 <br />
 <a
