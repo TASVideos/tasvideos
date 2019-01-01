@@ -31,8 +31,7 @@
 				   asp-route-id="@Model.Id"
 				   class="btn btn-secondary btn-sm mt-1">Edit</a>
 				<a permission="CatalogMovies"
-				   asp-controller="Publication"
-				   asp-action="Catalog"
+				   asp-page="/Publications/Catalog"
 				   asp-route-id="@Model.Id"
 				   class="btn btn-secondary btn-sm mt-1">Catalog</a>
 				<a condition="@Model.TopicId > 0"
