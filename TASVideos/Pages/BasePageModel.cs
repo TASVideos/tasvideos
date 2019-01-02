@@ -80,5 +80,10 @@ namespace TASVideos.Pages
 				return writer.ToString();
 			}
 		}
+
+		protected string RenderHtml(string text)
+		{
+			return RenderPost(text, false, true);
+		}
 	}
 }

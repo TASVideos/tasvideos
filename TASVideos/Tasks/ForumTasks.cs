@@ -35,16 +35,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns data necessary for the Forum/Index page
-		/// </summary>
-		public async Task<ICollection<ForumCategory>> GetForumIndex()
-		{
-			return await _db.ForumCategories
-				.Include(c => c.Forums)
-				.ToListAsync();
-		}
-
-		/// <summary>
 		/// Returns a forum and topics for the given id
 		/// For the purpose of display
 		/// </summary>
