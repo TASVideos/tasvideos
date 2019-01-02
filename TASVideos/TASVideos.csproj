@@ -67,16 +67,16 @@
     <Content Update="Views\Forum\UserPosts.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\_TopicActionBar.cshtml">
+    <Content Update="Pages\Forum\_TopicActionBar.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\_TopicPost.cshtml">
+    <Content Update="Pages\Forum\_TopicPost.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\_TopicCrumbs.cshtml">
+    <Content Update="Pages\Forum\_TopicCrumbs.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\_Poll.cshtml">
+    <Content Update="Pages\Forum\_Poll.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Forum\UnansweredPosts.cshtml">
@@ -121,7 +121,7 @@
     <Content Update="Pages\Shared\Components\HomePageHeader\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\_ForumHeader.cshtml">
+    <Content Update="Pages\Forum\_ForumHeader.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Shared\_PreviewWindow.cshtml">
@@ -130,7 +130,7 @@
     <Content Update="Pages\Shared\_Award.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\_CreatePostHelper.cshtml">
+    <Content Update="Pages\Forum\_CreatePostHelper.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Shared\_WikiLayoutFooter.cshtml">
