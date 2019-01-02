@@ -36,22 +36,6 @@ namespace TASVideos.Controllers
 		}
 
 		[AllowAnonymous]
-		public async Task<IActionResult> Index()
-		{
-			var model = await _forumTasks.GetForumIndex();
-			foreach (var m in model)
-			{
-				m.Description = RenderHtml(m.Description);
-				foreach (var f in m.Forums)
-				{
-					f.Description = RenderHtml(f.Description);
-				}
-			}
-
-			return View(model);
-		}
-
-		[AllowAnonymous]
 		public async Task<IActionResult> Subforum(ForumRequest request)
 		{
 			var model = await _forumTasks.GetForumForDisplay(request, UserHas(PermissionTo.SeeRestrictedForums));
@@ -554,7 +538,7 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
-			return RedirectToAction(nameof(Index));
+			return RedirectToPage("Index");
 		}
 
 		[RequirePermission(PermissionTo.EditForums)]

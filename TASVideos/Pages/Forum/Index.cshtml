@@ -1,8 +1,9 @@
-﻿@model IEnumerable<TASVideos.Data.Entity.Forum.ForumCategory>
+﻿@page
+@model IndexModel
 @{
 	ViewData["Title"] = "TASVideos Forums";
 }
-<partial Name="_ForumHeader"/>
+<partial Name="_ForumHeader" />
 <fullrow class="pb-2 pt-2">
 	<div class="pull-right">
 		<a asp-action="NewPosts" condition="@User.Identity.IsAuthenticated" class="btn btn-secondary btn-sm">Posts since last visit</a>
@@ -12,16 +13,16 @@
 <row>
 	<div class="col-md-6">
 		@* ReSharper disable once UnusedVariable *@
-		@foreach (var cat in Model.OrderBy(c => c.Ordinal).FirstHalf())
+		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
 		{
-			<partial name="_Category" model="cat"/>
+		<partial name="_Category" model="cat" />
 		}
 	</div>
 	<div class="col-md-6">
 		@* ReSharper disable once UnusedVariable *@
-		@foreach (var cat in Model.OrderBy(c => c.Ordinal).SecondHalf())
+		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).SecondHalf())
 		{
-			<partial name="_Category" model="cat"/>
+		<partial name="_Category" model="cat" />
 		}
 	</div>
 </row>
