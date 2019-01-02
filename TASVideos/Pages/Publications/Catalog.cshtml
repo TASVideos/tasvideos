@@ -29,7 +29,7 @@
 						<span asp-validation-for="Catalog.AvailableGames" class="text-danger"></span>
 					</div>
 					<div class="col-2">
-						<a asp-controller="Catalog" asp-action="GameEdit" class="btn btn-primary">New</a>
+						<a asp-page="/Game/Edit" asp-route-id="" class="btn btn-primary">New</a>
 					</div>
 				</row>
 			</form-group>
@@ -150,9 +150,8 @@
 		}
 
 		document.getElementById('create-rom').onclick = function () {
-			var baseUrl = '@Url.Action(nameof(Controllers.CatalogController.RomEdit), "Catalog")';
 			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
-			document.location = baseUrl + '?gameId=' + gameId;
+			document.location = '/Game/' + gameId + '/Rom/Edit';
 		}
 	})()
 </script>

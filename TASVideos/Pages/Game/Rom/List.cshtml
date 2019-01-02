@@ -1,0 +1,35 @@
+﻿@page "/Game/{gameId}/Rom/List"
+@model ListModel
+@{
+	ViewData["Title"] = $"Roms for {Model.Roms.GameDisplayName}";
+}
+<h4>System: @Model.Roms.SystemCode</h4>
+<h4>Game: <a asp-page="/Game/Index" asp-route-id="@Model.GameId">@Model.Roms.GameDisplayName</a></h4>
+<a asp-page="Edit" asp-route-gameId="@Model.GameId" class="btn btn-primary">Create</a>
+<hr />
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().DisplayName)</th>
+		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().Version)</th>
+		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().Region)</th>
+		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().RomType)</th>
+		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().Md5)</th>
+		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().Sha1)</th>
+		<th>Actions</th>
+	</tr>
+	@foreach (var rom in Model.Roms.Roms.OrderBy(r => r.DisplayName))
+	{
+		<tr>
+			<td>@rom.DisplayName</td>
+			<td>@rom.Version</td>
+			<td>@rom.Region</td>
+			<td>@rom.RomType</td>
+			<td>@rom.Md5</td>
+			<td>@rom.Sha1</td>
+			<td>
+				<a asp-page="Edit" asp-route-id="@rom.Id" asp-route-gameId="@Model.GameId" class="btn btn-primary">Edit</a>
+			</td>
+		</tr>
+	}
+</table>
+

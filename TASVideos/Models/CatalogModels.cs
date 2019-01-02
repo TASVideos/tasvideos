@@ -37,7 +37,6 @@ namespace TASVideos.Models
 
 	public class GameEditModel
 	{
-		public int? Id { get; set; }
 		public bool CanDelete { get; set; }
 
 		[Required]
@@ -72,8 +71,6 @@ namespace TASVideos.Models
 
 	public class RomListModel
 	{
-		public int GameId { get; set; }
-
 		[Display(Name = "Game")]
 		public string GameDisplayName { get; set; }
 
@@ -109,13 +106,9 @@ namespace TASVideos.Models
 
 	public class RomEditModel
 	{
-		public int? Id { get; set; }
 		public string SystemCode { get; set; }
-		public int GameId { get; set; }
 		public string GameName { get; set; }
 		public bool CanDelete { get; set; }
-
-		public IEnumerable<SelectListItem> AvailableRomTypes { get; set; } = new List<SelectListItem>();
 
 		[Required]
 		[StringLength(255)]
