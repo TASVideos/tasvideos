@@ -1,0 +1,65 @@
+﻿@page "/Game/{gameId}/Rom/Edit/{id?}/{handler?}"
+@model EditModel
+@{
+	ViewData["Title"] = Model.Id.HasValue
+		? $"Editing Rom #{Model.Id} {Model.Rom.Name}"
+		: "Create a new Rom entry";
+	var deleteLink = $"/Game/{Model.GameId}/Rom/Edit/{Model.Id ?? 0}/Delete";
+}
+
+<form-group>
+	<delete-button 
+		condition="@Model.Rom.CanDelete"
+		asp-href="@deleteLink"
+		class="float-right">Delete</delete-button>
+	<h4>System: @Model.Rom.SystemCode</h4>
+	<h4>Game: @Model.Rom.GameName</h4>
+</form-group>
+<form method="post">
+	<input type="hidden" asp-for="Rom.GameName" />
+	<input type="hidden" asp-for="Rom.SystemCode" />
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Rom.Name"></label>
+				<input type="text" asp-for="Rom.Name" class="form-control" autocomplete="off" />
+				<span asp-validation-for="Rom.Name" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Rom.Md5"></label>
+				<input type="text" asp-for="Rom.Md5" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Rom.Md5" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Rom.Sha1"></label>
+				<input type="text" asp-for="Rom.Sha1" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Rom.Sha1" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Rom.RomType"></label>
+				<select asp-for="Rom.RomType" asp-items="@Model.AvailableRomTypes.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Rom.SystemCode" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Rom.Version"></label>
+				<input type="text" asp-for="Rom.Version" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Rom.Version" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Rom.Region"></label>
+				<input type="text" asp-for="Rom.Region" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Rom.Region" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<div class="text-center">
+		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
+		<a asp-page="List" asp-route-gameId="@Model.GameId" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

@@ -55,20 +55,25 @@ namespace TASVideos.Tasks
 			var model = await _db.Games
 				.Where(g => g.Id == gameId)
 				.ProjectTo<GameEditModel>()
-				.SingleAsync();
+				.SingleOrDefaultAsync();
 
-			model.CanDelete = !(await _db.Submissions.AnyAsync(s => s.Game.Id == model.Id))
-							&& !(await _db.Publications.AnyAsync(p => p.Game.Id == model.Id));
+			if (model == null)
+			{
+				return null;
+			}
+
+			model.CanDelete = !(await _db.Submissions.AnyAsync(s => s.Game.Id == gameId))
+							&& !(await _db.Publications.AnyAsync(p => p.Game.Id == gameId));
 
 			return model;
 		}
 
-		public async Task AddUpdateGame(GameEditModel model)
+		public async Task AddUpdateGame(int? id, GameEditModel model)
 		{
 			Game game;
-			if (model.Id.HasValue)
+			if (id.HasValue)
 			{
-				game = await _db.Games.SingleAsync(g => g.Id == model.Id.Value);
+				game = await _db.Games.SingleAsync(g => g.Id == id.Value);
 				_mapper.Map(model, game);
 			}
 			else
@@ -103,7 +108,6 @@ namespace TASVideos.Tasks
 				.Where(g => g.Id == gameId)
 				.Select(g => new RomListModel
 				{
-					GameId = g.Id,
 					GameDisplayName = g.DisplayName,
 					SystemCode = g.System.Code,
 					Roms = g.Roms
@@ -128,7 +132,12 @@ namespace TASVideos.Tasks
 			{
 				var game = await _db.Games
 					.Include(g => g.System)
-					.SingleAsync(g => g.Id == gameId);
+					.SingleOrDefaultAsync(g => g.Id == gameId);
+
+				if (game == null)
+				{
+					return null;
+				}
 
 				var model = romId.HasValue
 					? await _db.Roms
@@ -138,30 +147,29 @@ namespace TASVideos.Tasks
 					: new RomEditModel();
 
 				model.GameName = game.DisplayName;
-				model.GameId = game.Id;
 				model.SystemCode = game.System.Code;
 				if (romId.HasValue)
 				{
-					model.CanDelete = !await _db.Submissions.AnyAsync(s => s.Rom.Id == model.Id)
-						&& !await _db.Publications.AnyAsync(p => p.Rom.Id == model.Id);
+					model.CanDelete = !await _db.Submissions.AnyAsync(s => s.Rom.Id == romId.Value)
+						&& !await _db.Publications.AnyAsync(p => p.Rom.Id == romId.Value);
 				}
 
 				return model;
 			}
 		}
 
-		public async Task AddUpdateRom(RomEditModel model)
+		public async Task AddUpdateRom(int? id, int gameId, RomEditModel model)
 		{
 			GameRom rom;
-			if (model.Id.HasValue)
+			if (id.HasValue)
 			{
-				rom = await _db.Roms.SingleAsync(r => r.Id == model.Id.Value);
+				rom = await _db.Roms.SingleAsync(r => r.Id == id.Value);
 				_mapper.Map(model, rom);
 			}
 			else
 			{
 				rom = _mapper.Map<GameRom>(model);
-				rom.Game = await _db.Games.SingleAsync(g => g.Id == model.GameId);
+				rom.Game = await _db.Games.SingleAsync(g => g.Id == gameId);
 				_db.Roms.Add(rom);
 			}
 

@@ -27,7 +27,7 @@
 						<select asp-for="Catalog.GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Catalog.AvailableGames)" class="form-control"></select>
 					</div>
 					<div class="col-2">
-						<a asp-controller="Catalog" asp-action="GameEdit" class="btn btn-primary">New</a>
+						<a asp-page="/Game/Edit" asp-route-id="" class="btn btn-primary">New</a>
 					</div>
 				</row>
 			</form-group>
@@ -40,7 +40,11 @@
 						<select asp-for="Catalog.RomId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Catalog.AvailableRoms)" class="form-control"></select>
 					</div>
 					<div class="col-2">
-						<button disable="!Model.Catalog.GameId.HasValue" id="create-rom" type="button" class="btn btn-primary" )>New</button>
+						<button 
+							disable="!Model.Catalog.GameId.HasValue" 
+							id="create-rom" 
+							type="button" 
+							class="btn btn-primary">New</button>
 					</div>
 				</row>
 			</form-group>
@@ -145,9 +149,8 @@
 		}
 
 		document.getElementById('create-rom').onclick = function () {
-			var baseUrl = '@Url.Action(nameof(Controllers.CatalogController.RomEdit), "Catalog")';
-			var gameId = gameModel.value;
-			document.location = baseUrl + '?gameId=' + gameId;
+			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
+			document.location = '/Game/' + gameId + '/Rom/Edit';
 		}
 	})()
 	</script>

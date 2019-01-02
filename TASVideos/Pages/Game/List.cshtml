@@ -1,0 +1,32 @@
+﻿@page
+@model ListModel
+@{
+	ViewData["Title"] = "Game List" + (!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? "/" + Model.Games.SystemCode : string.Empty);
+	var systemsList = (List<SelectListItem>)ViewData["GameSystemList"];
+}
+
+<a asp-page="Edit" class="btn btn-primary mb-3 pull-right">Create</a>
+<form class="form-inline mb-3">
+	<label asp-for="@Model.Games.SystemCode" class="mr-2"></label>
+	<select asp-items="@systemsList" asp-for="@Model.Games.SystemCode" class="form-control mr-2"></select>
+	<button type="Submit" class="btn btn-secondary">Go</button>
+</form>
+
+<partial name="_SystemPager" model="Model.Games" />
+<table class="table table-bordered table-striped table-sm">
+	<sortable-table-head paging="@Model.Games" model-type="typeof(Models.GameListModel)" />
+	@foreach (var game in Model.Games)
+	{
+		<tr>
+			<td>@game.Id</td>
+			<td>@game.SystemCode</td>
+			<td>@game.DisplayName</td>
+			<td>
+				<a asp-page="Index" asp-route-id="@game.Id" class="btn btn-sm btn-secondary">View</a>
+				<a asp-page="Edit" asp-route-id="@game.Id" class="btn btn-primary btn-sm">Edit</a>
+				<a asp-page="Rom/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm">Roms</a>
+			</td>
+		</tr>
+	}
+</table>
+

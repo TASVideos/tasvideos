@@ -1,0 +1,61 @@
+﻿@page "{id?}"
+@model EditModel
+@{
+	ViewData["Title"] = Model.Id.HasValue
+		? $"Editing Game #{Model.Id} {Model.Game.DisplayName}"
+		: "Create a new Game entry";
+}
+<form-group>
+	<delete-button condition="@Model.Game.CanDelete" asp-href="/Game/@(Model.Id ?? 0)?handler=Delete" class="float-right">Delete</delete-button>
+</form-group>
+<form method="post">
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Game.SystemCode"></label>
+				<select asp-for="Game.SystemCode" asp-items="@Model.Game.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Game.SystemCode" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Game.GoodName"></label>
+				<input type="text" asp-for="Game.GoodName" class="form-control" autocomplete="off" />
+				<span asp-validation-for="Game.GoodName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Game.DisplayName"></label>
+				<input type="text" asp-for="Game.DisplayName" class="form-control" autocomplete="off" />
+				<span asp-validation-for="Game.DisplayName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Game.Abbreviation"></label>
+				<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Game.Abbreviation" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Game.SearchKey"></label>
+				<input type="text" asp-for="Game.SearchKey" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Game.SearchKey" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Game.YoutubeTags"></label>
+				<input type="text" asp-for="Game.YoutubeTags" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Game.YoutubeTags" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Game.ScreenshotUrl"></label>
+				<input type="text" asp-for="Game.ScreenshotUrl" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Game.ScreenshotUrl" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<div class="text-center">
+		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
+		<a asp-page="List" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
