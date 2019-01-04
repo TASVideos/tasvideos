@@ -713,37 +713,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Saves the given category data to the category with the given id
-		/// </summary>
-		/// <returns>True if a category with the given id is found, else false</returns>
-		public async Task<bool> SaveCategory(CategoryEditModel model)
-		{
-			var category = await _db.ForumCategories
-				.Include(c => c.Forums)
-				.SingleOrDefaultAsync(c => c.Id == model.Id);
-
-			if (category == null)
-			{
-				return false;
-			}
-
-			category.Title = model.Title;
-			category.Description = model.Description;
-
-			foreach (var forum in category.Forums)
-			{
-				// This is a n squared problem but we don't anticipate enough forums in a single category to be a performance issue
-				// This could be optimized away by joining model.Forums against category.Forums then looping
-				var forumModel = model.Forums.Single(f => f.Id == forum.Id);
-				forum.Ordinal = forumModel.Ordinal;
-			}
-
-			await _db.SaveChangesAsync();
-
-			return true;
-		}
-
-		/// <summary>
 		/// Deletes a post with the given <see cref="postId"/>
 		/// </summary>
 		/// <returns>the topic id that contained the post if post is successfully deleted, if user can not delete the post or a post of the given id is not found then null</returns>

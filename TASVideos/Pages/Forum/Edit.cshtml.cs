@@ -26,6 +26,7 @@ namespace TASVideos.Pages.Forum
 		[FromRoute]
 		public int Id { get; set; }
 
+		[BindProperty]
 		public CategoryEditModel Category { get; set; }
 
 		public async Task<IActionResult> OnGet()
@@ -34,7 +35,6 @@ namespace TASVideos.Pages.Forum
 				.Where(c => c.Id == Id)
 				.Select(c => new CategoryEditModel
 				{
-					Id = c.Id,
 					Title = c.Title,
 					Description = c.Description,
 					Forums = c.Forums
@@ -67,7 +67,7 @@ namespace TASVideos.Pages.Forum
 
 			var category = await _db.ForumCategories
 				.Include(c => c.Forums)
-				.SingleOrDefaultAsync(c => c.Id == Category.Id);
+				.SingleOrDefaultAsync(c => c.Id == Id);
 
 			if (category == null)
 			{

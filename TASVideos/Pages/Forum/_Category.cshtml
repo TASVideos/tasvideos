@@ -16,7 +16,9 @@
 			.OrderBy(f => f.Ordinal)
 			.Where(f => ViewData.UserHas(PermissionTo.SeeRestrictedForums) || !f.Restricted))
 		{
-			<strong><a asp-page="/Forum/Subforum" asp-route-id="@forum.Id">@forum.Name</a></strong>
+			<strong>
+				<a asp-page="/Forum/Subforum/Index" asp-route-id="@forum.Id">@forum.Name</a>
+			</strong>
 			<div class="mb-2 pl-3">
 				<small>
 					@Html.Raw(forum.Description)

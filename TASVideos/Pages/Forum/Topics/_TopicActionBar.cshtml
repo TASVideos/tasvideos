@@ -1,7 +1,8 @@
 ﻿@model IForumTopicActionBar
 <a
 	condition="User.Identity.IsAuthenticated && !Model.IsWatching"
-	asp-action="WatchTopic"
+	asp-page="Index"
+	asp-page-handler="Watch"
 	asp-route-topicId="@Model.Id"
 	class="btn btn-info btn-sm"
 	title="Watch this topic">
@@ -9,7 +10,8 @@
 </a>
 <a 
 	condition="User.Identity.IsAuthenticated && Model.IsWatching"
-	asp-action="UnwatchTopic"
+	asp-page="Index"
+	asp-page-handler="Unwatch"
 	asp-route-topicId="@Model.Id"
 	class="btn btn-warning btn-sm"
 	title="Stop watching this topic" >
@@ -17,7 +19,7 @@
 </a>
 <a
 	permission="MoveTopics"
-	asp-action="MoveTopic"
+	asp-page="Move"
 	asp-route-id="@Model.Id"
 	class="btn btn-sm btn-warning"
 	title="Move this topic">
@@ -25,7 +27,7 @@
 </a>
 <a
 	permission="SplitTopics"
-	asp-action="SplitTopic"
+	asp-page="Split"
 	asp-route-id="@Model.Id"
 	class="btn btn-sm btn-warning"
 	title="Split this topic">
@@ -33,7 +35,8 @@
 </a>
 <form 
 	permission="LockTopics"
-	asp-action="SetTopicLock" 
+	asp-page="Index" 
+	asp-page-handler="Lock"
 	asp-route-topicId="@Model.Id" 
 	asp-route-topictitle="@Model.Title" 
 	asp-route-locked="@(!Model.IsLocked)" 

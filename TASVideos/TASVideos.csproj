@@ -67,16 +67,16 @@
     <Content Update="Pages\Forum\Posts\User.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Pages\Forum\_TopicActionBar.cshtml">
+    <Content Update="Pages\Forum\Topics\_TopicActionBar.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Pages\Forum\_TopicPost.cshtml">
+    <Content Update="Pages\Forum\Topics\_TopicPost.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Pages\Forum\_TopicCrumbs.cshtml">
+    <Content Update="Pages\Forum\Topics\_TopicCrumbs.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Pages\Forum\_Poll.cshtml">
+    <Content Update="Pages\Forum\Topics\_Poll.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Forum\Posts\Unanswered.cshtml">

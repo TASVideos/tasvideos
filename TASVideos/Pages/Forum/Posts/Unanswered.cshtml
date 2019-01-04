@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Unanswered Posts";
 }
 <partial Name="_ForumHeader" />
-<partial name="_Pager" model="Model" />
+<partial name="_Pager" model="Model.Posts" />
 
 <table class="table table-striped table-bordered">
 	<tr>
@@ -17,13 +17,13 @@
 	{
 		<tr>
 			<td>
-				<a asp-page="/Forum/Subforum" asp-route-id="@post.ForumId">@post.ForumName</a>
+				<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a>
 			</td>
 			<td>
-				<a asp-page="/Forum/Topics" asp-route-id="@post.TopicId">@post.TopicName</a>
+				<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicName</a>
 			</td>
 			<td>
-				<a asp-page="/User/Profile" asp-route-userName="@post.AuthorName">@post.AuthorName</a>
+				<a asp-page="/Users/Profile" asp-route-userName="@post.AuthorName">@post.AuthorName</a>
 			</td>
 			<td>@post.PostDate</td>
 		</tr>
