@@ -10,7 +10,7 @@
 	<a asp-page="/Forum/Topics" asp-route-id="@Model.Id">@Model.Topic.Title</a>
 </h4>
 <hr />
-<form form-method="post">
+<form method="post">
 	<input type="hidden" asp-for="Topic.ForumName" />
 	<input type="hidden" asp-for="Topic.ForumId" />
 	<input type="hidden" asp-for="Topic.Title" />
