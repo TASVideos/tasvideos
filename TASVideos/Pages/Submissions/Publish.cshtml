@@ -30,7 +30,11 @@
 				</row>
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Rom"></label>
-					<span class="col-sm-9"><a asp-controller="Catalog" asp-action="RomEdit" asp-route-gameId="@Model.Submission.GameId" asp-route-romId="@Model.Submission.RomId">@Html.DisplayFor(m => m.Submission.Rom)</a></span>
+					<span class="col-sm-9">
+						<a asp-page="/Game/Rom/Edit" asp-controller="Catalog" asp-route-gameId="@Model.Submission.GameId" asp-route-romId="@Model.Submission.RomId">
+							@Html.DisplayFor(m => m.Submission.Rom)
+						</a>
+					</span>
 				</row>
 			</div>
 		</row>
