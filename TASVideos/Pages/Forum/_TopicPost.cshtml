@@ -21,7 +21,7 @@
 				</small>
 				<small class="pull-right" style="display: inline-block">
 					<a
-						asp-action="CreatePost"
+						asp-page="/Forum/Posts/Create"
 						asp-route-topicId="@Model.Id"
 						asp-route-quoteId="@Model.Id"
 						class="btn btn-info btn-sm">
@@ -29,14 +29,14 @@
 					</a>
 					<a
 						condition="Model.IsEditable"
-						asp-action="EditPost"
+						asp-page="/Forum/Posts/Edit"
 						asp-route-id="@Model.Id"
 						class="btn btn-primary btn-sm">
 						Edit
 					</a>
 					<delete-button
 						condition="Model.IsDeletable"
-						asp-href="@Url.Action($"DeletePost/{Model.Id}")"
+						asp-href="@($"/Forum/Posts/{Model.Id}?handler=Delete")"
 						warning-message="Are you sure you want to delete this post?"
 						class="btn-sm">
 						<i title="Delete this post" class="fa fa-remove"></i>

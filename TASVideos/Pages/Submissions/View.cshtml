@@ -86,7 +86,7 @@
 		</small>
 		<div class="btn-toolbar">
 			<a asp-page="View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary">Download</a>
-			<a condition="@Model.Submission.TopicId > 0" asp-controller="Forum" asp-action="Topic" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary ml-1">Discuss and Vote</a>
+			<a condition="@Model.Submission.TopicId > 0" asp-page="/Forum/Topics" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary ml-1">Discuss and Vote</a>
 			<span permission="EditSubmissions" class="btn-separator"></span>
 			<a condition="@canEdit" asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
 			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="ml-1 btn btn-info">Catalog</a>
