@@ -1,7 +1,8 @@
-﻿@using TASVideos.Data.Entity.Forum
-@model ForumModel
+﻿@page "{id}"
+@using TASVideos.Data.Entity.Forum
+@model IndexModel
 @{
-	ViewData["Title"] = $"TASVideos Forum {Model.Name}";
+	ViewData["Title"] = $"TASVideos Forum {Model.Forum.Name}";
 }
 
 @functions {
@@ -19,14 +20,14 @@
 	}
 }
 <partial Name="_ForumHeader" />
-<a permission="EditForums" asp-action="EditForum" asp-route-id="@Model.Id" class="pull-right btn btn-primary btn-sm">Edit</a>
-<a permission="CreateForumTopics" asp-action="CreateTopic" asp-route-forumId="@Model.Id" class="mr-2 pull-right btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
-<h4><a asp-action="Index">Forum</a> -> @Model.Name</h4>
+<a permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="pull-right btn btn-primary btn-sm">Edit</a>
+<a permission="CreateForumTopics" asp-action="CreateTopic" asp-route-forumId="@Model.Forum.Id" class="mr-2 pull-right btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
+<h4><a asp-page="/Forum/Index">Forum</a> -> @Model.Forum.Name</h4>
 <div>
-	<small>@Html.Raw(Model.Description)</small>
+	<small>@Html.Raw(Model.Forum.Description)</small>
 </div>
 <hr />
-<partial name="_Pager" model="Model.Topics" />
+<partial name="_Pager" model="Model.Forum.Topics" />
 
 <table class="table table-striped table-bordered">
 	<tr>
@@ -37,14 +38,18 @@
 		<td>Views</td>
 		<td>Last Post</td>
 	</tr>
-	@foreach (var topic in Model.Topics)
+	@foreach (var topic in Model.Forum.Topics)
 	{
 		<tr>
 			<td>
 				<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fa fa-sticky-note"></span>
 				<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fa fa-bullhorn"></span>
 			</td>
-			<td><a asp-controller="Forum" asp-action="Topic" asp-route-id="@topic.Id">@Html.Raw(ToTitle(topic.Title, topic.Type))</a></td>
+			<td>
+				<a asp-controller="Forum" asp-action="Topic" asp-route-id="@topic.Id">
+					@Html.Raw(ToTitle(topic.Title, topic.Type))
+				</a>
+			</td>
 			<td>@(topic.PostCount - 1)</td>
 			<td>@topic.CreateUserName</td>
 			<td>@topic.Type</td>

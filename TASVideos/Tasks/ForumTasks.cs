@@ -38,7 +38,7 @@ namespace TASVideos.Tasks
 		/// Returns a forum and topics for the given id
 		/// For the purpose of display
 		/// </summary>
-		public async Task<ForumModel> GetForumForDisplay(ForumRequest paging, bool allowRestricted)
+		public async Task<ForumModel> GetForumForDisplay(int id, ForumRequest paging, bool allowRestricted)
 		{
 			using (await _db.Database.BeginTransactionAsync())
 			{
@@ -50,7 +50,7 @@ namespace TASVideos.Tasks
 						Name = f.Name,
 						Description = f.Description
 					})
-					.SingleOrDefaultAsync(f => f.Id == paging.Id);
+					.SingleOrDefaultAsync(f => f.Id == id);
 
 				if (model == null)
 				{
@@ -59,11 +59,11 @@ namespace TASVideos.Tasks
 
 				var rowsToSkip = paging.GetRowsToSkip();
 				var rowCount = await _db.ForumTopics
-					.ForForum(paging.Id)
+					.ForForum(id)
 					.CountAsync();
 
 				var results = await _db.ForumTopics
-					.ForForum(paging.Id)
+					.ForForum(id)
 					.Select(ft => new ForumModel.ForumTopicEntry
 					{
 						Id = ft.Id,
@@ -126,7 +126,7 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Displays a page of posts for the given topic
 		/// </summary>
-		public async Task<ForumTopicModel> GetTopicForDisplay(TopicRequest paging, bool allowRestricted, int? userId)
+		public async Task<ForumTopicModel> GetTopicForDisplay(int id, TopicRequest paging, bool allowRestricted, int? userId)
 		{
 			var model = await _db.ForumTopics
 				.ExcludeRestricted(allowRestricted)
@@ -142,7 +142,7 @@ namespace TASVideos.Tasks
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll.Question }
 						: null
 				})
-				.SingleOrDefaultAsync(t => t.Id == paging.Id);
+				.SingleOrDefaultAsync(t => t.Id == id);
 
 			if (model == null)
 			{
@@ -150,13 +150,13 @@ namespace TASVideos.Tasks
 			}
 
 			var lastPostId = (await _db.ForumPosts
-				.Where(p => p.TopicId == paging.Id)
+				.Where(p => p.TopicId == id)
 				.ByMostRecent()
 				.FirstAsync())
 				.Id;
 
 			model.Posts = _db.ForumPosts
-				.ForTopic(paging.Id)
+				.ForTopic(id)
 				.Select(p => new ForumTopicModel.ForumPostEntry
 				{
 					Id = p.Id,
@@ -281,7 +281,6 @@ namespace TASVideos.Tasks
 				.Where(f => f.Id == forumId)
 				.Select(f => new TopicCreatePostModel
 				{
-					ForumId = forumId,
 					ForumName = f.Name
 				})
 				.SingleOrDefaultAsync();
@@ -294,7 +293,7 @@ namespace TASVideos.Tasks
 		/// The id of the newly created <see cref="ForumTopic" />
 		/// If a topic could not be created, returns null
 		/// </returns>
-		public async Task<ForumTopic> CreateTopic(TopicCreatePostModel model, User user, string ipAddress)
+		public async Task<ForumTopic> CreateTopic(int forumId, TopicCreatePostModel model, User user, string ipAddress)
 		{
 			var topic = new ForumTopic
 			{
@@ -302,7 +301,7 @@ namespace TASVideos.Tasks
 				Title = model.Title,
 				PosterId = user.Id,
 				Poster = user,
-				ForumId = model.ForumId
+				ForumId = forumId
 			};
 
 			_db.ForumTopics.Add(topic);
@@ -310,12 +309,11 @@ namespace TASVideos.Tasks
 
 			var forumPostModel = new ForumPostModel
 			{
-				TopicId = topic.Id,
 				Subject = null,
 				Post = model.Post
 			};
 
-			await CreatePost(forumPostModel, user, ipAddress);
+			await CreatePost(topic.Id, forumPostModel, user, ipAddress);
 			await WatchTopic(topic.Id, user.Id, canSeeRestricted: true);
 			return topic;
 		}
@@ -333,7 +331,6 @@ namespace TASVideos.Tasks
 				.Where(t => t.Id == topicId)
 				.Select(t => new ForumPostCreateModel
 				{
-					TopicId = topicId,
 					TopicTitle = t.Title,
 					IsLocked = t.IsLocked
 				})
@@ -357,11 +354,11 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		public async Task<int> CreatePost(ForumPostModel model, User user, string ipAddress)
+		public async Task<int> CreatePost(int topicId, ForumPostModel model, User user, string ipAddress)
 		{
 			var forumPost = new ForumPost
 			{
-				TopicId = model.TopicId,
+				TopicId = topicId,
 				PosterId = user.Id,
 				IpAddress = ipAddress,
 				Subject = model.Subject,
@@ -375,7 +372,7 @@ namespace TASVideos.Tasks
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
-			await WatchTopic(model.TopicId, user.Id, canSeeRestricted: true);
+			await WatchTopic(topicId, user.Id, canSeeRestricted: true);
 			return forumPost.Id;
 		}
 
@@ -386,9 +383,9 @@ namespace TASVideos.Tasks
 		{
 			var model = await _db.ForumPosts
 				.ExcludeRestricted(seeRestricted)
+				.Where(p => p.Id == postId)
 				.Select(p => new ForumPostEditModel
 				{
-					PostId = p.Id,
 					CreateTimestamp = p.CreateTimeStamp,
 					PosterId = p.PosterId,
 					PosterName = p.Poster.UserName,
@@ -399,7 +396,7 @@ namespace TASVideos.Tasks
 					Subject = p.Subject,
 					Text = p.Text
 				})
-				.SingleOrDefaultAsync(p => p.PostId == postId);
+				.SingleOrDefaultAsync();
 
 			var lastPostId = (await _db.ForumPosts
 				.ForTopic(model.TopicId)
@@ -407,7 +404,7 @@ namespace TASVideos.Tasks
 				.FirstAsync())
 				.Id;
 
-			model.IsLastPost = model.PostId == lastPostId;
+			model.IsLastPost = postId == lastPostId;
 
 			return model;
 		}
@@ -441,9 +438,9 @@ namespace TASVideos.Tasks
 		/// Updates the post with the given post id, with the
 		/// given subject and text
 		/// </summary>
-		public async Task EditPost(ForumPostEditModel model)
+		public async Task EditPost(int id, ForumPostEditModel model)
 		{
-			var forumPost = await _db.ForumPosts.SingleAsync(p => p.Id == model.PostId);
+			var forumPost = await _db.ForumPosts.SingleAsync(p => p.Id == id);
 			forumPost.Subject = model.Subject;
 			forumPost.Text = model.Text;
 			await _db.SaveChangesAsync();
@@ -557,28 +554,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a paged list of topics that have no replies (are only the original post that was created)
-		/// </summary>
-		public async Task<PageOf<UnansweredPostModel>> GetUnansweredPosts(PagedModel paged, bool allowRestricted)
-		{
-			return await _db.ForumTopics
-				.ExcludeRestricted(allowRestricted)
-				.Where(t => t.ForumPosts.Count == 1)
-				.Select(t => new UnansweredPostModel
-				{
-					ForumId = t.ForumId,
-					ForumName = t.Forum.Name,
-					TopicId = t.Id,
-					TopicName = t.Title,
-					AuthorId = t.PosterId,
-					AuthorName = t.Poster.UserName,
-					PostDate = t.CreateTimeStamp
-				})
-				.OrderByDescending(t => t.PostDate)
-				.PageOfAsync(_db, paged);
-		}
-
-		/// <summary>
 		/// Returns whether or not the topic with the given topic id is currently locked
 		/// </summary>
 		public async Task<bool> IsTopicLocked(int topicId)
@@ -589,16 +564,16 @@ namespace TASVideos.Tasks
 		public async Task<MoveTopicModel> GetTopicMoveModel(int topicId, bool allowRestricted)
 		{
 			var model = await _db.ForumTopics
+				.Where(t => t.Id == topicId)
 				.Include(t => t.Forum)
 				.ExcludeRestricted(allowRestricted)
 				.Select(t => new MoveTopicModel
 				{
-					TopicId = t.Id,
 					TopicTitle = t.Title,
 					ForumId = t.Forum.Id,
 					ForumName = t.Forum.Name
 				})
-				.SingleOrDefaultAsync(t => t.TopicId == topicId);
+				.SingleOrDefaultAsync();
 
 			if (model != null)
 			{
@@ -616,12 +591,11 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		public async Task<bool> MoveTopic(MoveTopicModel model, bool allowRestricted)
+		public async Task<bool> MoveTopic(int topicId, MoveTopicModel model, bool allowRestricted)
 		{
 			var topic = await _db.ForumTopics
 				.ExcludeRestricted(allowRestricted)
-				.Where(t => t.Id == model.TopicId)
-				.SingleOrDefaultAsync();
+				.SingleOrDefaultAsync(t => t.Id == topicId);
 
 			if (topic != null)
 			{
@@ -640,7 +614,6 @@ namespace TASVideos.Tasks
 				.Where(t => t.Id == topicId)
 				.Select(t => new SplitTopicModel
 				{
-					Id = t.Id,
 					Title = t.Title,
 					SplitTopicName = "(Split from " + t.Title + ")",
 					SplitToForumId = t.Forum.Id,
@@ -684,13 +657,13 @@ namespace TASVideos.Tasks
 		/// with the given values
 		/// </summary>
 		/// <returns>Returns new topic id, if old topic, split post, and new forum are found, else null</returns>
-		public async Task<int?> SplitTopic(SplitTopicModel model, bool allowRestricted, User user)
+		public async Task<int?> SplitTopic(int id, SplitTopicModel model, bool allowRestricted, User user)
 		{
 			var topic = await _db.ForumTopics
 				.Include(t => t.Forum)
 				.Include(t => t.ForumPosts)
 				.ExcludeRestricted(allowRestricted)
-				.SingleOrDefaultAsync(t => t.Id == model.Id);
+				.SingleOrDefaultAsync(t => t.Id == id);
 
 			if (topic == null)
 			{
@@ -737,65 +710,6 @@ namespace TASVideos.Tasks
 
 			await _db.SaveChangesAsync();
 			return newTopic.Id;
-		}
-
-		public async Task<ForumEditModel> GetForumForEdit(int forumId, bool allowRestricted)
-		{
-			return await _db.Forums
-				.ExcludeRestricted(allowRestricted)
-				.Where(f => f.Id == forumId)
-				.Select(f => new ForumEditModel
-				{
-					Id = f.Id,
-					Name = f.Name,
-					Description = f.Description,
-				})
-				.SingleOrDefaultAsync();
-		}
-
-		/// <summary>
-		/// Saves the given forum data to the category with the given id
-		/// </summary>
-		/// <returns>True if a forum with the given id is found, else false</returns>
-		public async Task<bool> SaveForum(ForumEditModel model, bool seeRestricted)
-		{
-			var forum = await _db.Forums
-				.ExcludeRestricted(seeRestricted)
-				.SingleOrDefaultAsync(f => f.Id == model.Id);
-
-			if (forum == null)
-			{
-				return false;
-			}
-
-			forum.Name = model.Name;
-			forum.Description = model.Description;
-
-			await _db.SaveChangesAsync();
-			return true;
-		}
-
-		public async Task<CategoryEditModel> GetCategoryForEdit(int categoryId)
-		{
-			return await _db.ForumCategories
-				.Where(c => c.Id == categoryId)
-				.Select(c => new CategoryEditModel
-				{
-					Id = c.Id,
-					Title = c.Title,
-					Description = c.Description,
-					Forums = c.Forums
-						.OrderBy(f => f.Ordinal)
-						.Select(f => new CategoryEditModel.ForumEditModel
-						{
-							Id = f.Id,
-							Name = f.Name,
-							Description = f.Description,
-							Ordinal = f.Ordinal
-						})
-						.ToList()
-				})
-				.SingleOrDefaultAsync();
 		}
 
 		/// <summary>

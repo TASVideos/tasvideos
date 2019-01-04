@@ -1,0 +1,57 @@
+﻿@page "{id}"
+@model EditModel
+@{
+	ViewData["Title"] = $"Editing Post for Topic: {Model.Post.TopicTitle}";
+}
+<partial Name="_ForumHeader" />
+<h4>Editing Post for Topic: <a asp-page="/Forum/Topic" asp-route-id="@Model.Post.TopicId">@Model.Post.TopicTitle</a></h4>
+<div class="alert alert-light p-0">
+	<card>
+		<cardheader>
+			<row>
+				<div class="col-4 border-right">
+					<h5>@Model.Post.PosterName</h5>
+				</div>
+				<div class="col-8 pt-0 pb-0">
+					<small>
+						Posted: @Model.Post.CreateTimestamp
+						<span condition="!string.IsNullOrWhiteSpace(Model.Post.Subject)">Post subject: @Model.Post.Subject</span>
+					</small>
+				</div>
+			</row>
+		</cardheader>
+		<cardbody>
+			@Html.Raw(Model.Post.RenderedText)
+		</cardbody>
+	</card>
+</div>
+<hr />
+<form form-method="post">
+	<input type="hidden" asp-for="Post.TopicId" />
+	<input type="hidden" asp-for="Post.TopicTitle" />
+	<input type="hidden" asp-for="Post.EnableBbCode" />
+	<input type="hidden" asp-for="Post.EnableHtml" />
+	<form-group class="col-lg-6">
+		<row>
+			<label asp-for="Post.Subject" class="form-control-label"></label>
+			<input type="text" asp-for="Post.Subject" class="form-control" autocomplete="off" />
+			<span asp-validation-for="Post.Subject" class="text-danger"></span>
+		</row>
+	</form-group>
+	<form-group>
+		<partial name="_CreatePostHelper" model="nameof(Model.Post.Text)" />
+	</form-group>
+	<form-group>
+		<textarea asp-for="Post.Text" class="form-control" rows="20"></textarea>
+		<span asp-validation-for="Post.Text" class="text-danger"></span>
+	</form-group>
+	<div class="text-center">
+		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a asp-page="/Forum/Topics" asp-route-id="@Model.Post.TopicId" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+<partial name="_PreviewWindow" model="@((nameof(Model.Post.Text), $"/Forum/{nameof(Controllers.ForumController.GeneratePreview)}"))" />
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
