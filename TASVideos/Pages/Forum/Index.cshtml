@@ -6,8 +6,8 @@
 <partial Name="_ForumHeader" />
 <fullrow class="pb-2 pt-2">
 	<div class="pull-right">
-		<a asp-action="NewPosts" condition="@User.Identity.IsAuthenticated" class="btn btn-secondary btn-sm">Posts since last visit</a>
-		<a asp-action="UnansweredPosts" class="btn btn-secondary btn-sm">Unanswered Posts</a>
+		<a asp-controller="Forum" asp-action="NewPosts" condition="@User.Identity.IsAuthenticated" class="btn btn-secondary btn-sm">Posts since last visit</a>
+		<a asp-controller="Forum" asp-action="UnansweredPosts" class="btn btn-secondary btn-sm">Unanswered Posts</a>
 	</div>
 </fullrow>
 <row>

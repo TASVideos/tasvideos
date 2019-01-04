@@ -19,7 +19,7 @@
 	{
 		<tr style="@(watch.IsNotified ? "font-style: italic" : "")">
 			<td>
-				<a asp-controller="Forum" asp-action="SubForum" asp-route-id="@watch.ForumId">@watch.ForumTitle</a>
+				<a asp-page="/Forum/SubForum" asp-route-id="@watch.ForumId">@watch.ForumTitle</a>
 			</td>
 			<td>
 				<i condition="watch.IsNotified" title="This topic has new replies" class="fa fa-exclamation"></i>

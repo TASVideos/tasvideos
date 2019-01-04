@@ -2,7 +2,7 @@
 
 <card class="mb-2">
 	<cardheader>
-		<a permission="EditCategories" asp-action="EditCategory" asp-route-id="@Model.Id" class="btn btn-primary btn-sm pull-right">Edit</a>
+		<a permission="EditCategories" asp-controller="Forum" asp-action="EditCategory" asp-route-id="@Model.Id" class="btn btn-primary btn-sm pull-right">Edit</a>
 		<h4>@Model.Title</h4>
 		@if (!string.IsNullOrWhiteSpace(Model.Description))
 		{
@@ -16,7 +16,7 @@
 			.OrderBy(f => f.Ordinal)
 			.Where(f => ViewData.UserHas(PermissionTo.SeeRestrictedForums) || !f.Restricted))
 		{
-			<strong><a asp-action="Subforum" asp-route-id="@forum.Id">@forum.Name</a></strong>
+			<strong><a asp-page="/Forum/Subforum" asp-route-id="@forum.Id">@forum.Name</a></strong>
 			<div class="mb-2 pl-3">
 				<small>
 					@Html.Raw(forum.Description)

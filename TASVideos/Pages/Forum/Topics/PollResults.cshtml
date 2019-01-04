@@ -1,0 +1,32 @@
+﻿@page "{Id}"
+@model PollResultsModel
+@{
+	ViewData["Title"] = $"Poll Results for {Model.Poll.TopicTitle}";
+}
+<partial Name="_ForumHeader" />
+<a asp-page="/Forum/Topics" asp-route-id="@Model.Poll.TopicId" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back</a>
+<hr />
+
+<div>
+	@Html.Raw(Model.Poll.Question)
+</div>
+<hr />
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().OptionText)</th>
+		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().UserName)</th>
+		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().CreateTimestamp)</th>
+		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().IpAddress)</th>
+	</tr>
+	@foreach(var vote in Model.Poll.Votes
+		.OrderBy(v => v.Ordinal)
+		.ThenBy(v => v.UserName))
+	{
+		<tr>
+			<td>@vote.OptionText</td>
+			<td><a asp-page="/User/Profile" asp-route-userName="@vote.UserName">@vote.UserName</a></td>
+			<td>@vote.CreateTimestamp</td>
+			<td>@vote.IpAddress</td>
+		</tr>
+	}
+</table>

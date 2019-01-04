@@ -93,8 +93,6 @@ namespace TASVideos.Models
 			SortDescending = true;
 			SortBy = nameof(ForumModel.ForumTopicEntry.CreateTimestamp);
 		}
-
-		public int Id { get; set; }
 	}
 
 	public class ForumModel
@@ -134,7 +132,6 @@ namespace TASVideos.Models
 			SortBy = nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp);
 		}
 
-		public int Id { get; set; }
 		public int? Highlight { get; set; }
 	}
 
@@ -144,9 +141,9 @@ namespace TASVideos.Models
 		public int TopicId { get; set; }
 	}
 
+	// TODO: rename me? This is a confusing name
 	public class TopicCreatePostModel
 	{
-		public int ForumId { get; set; }
 		public string ForumName { get; set; }
 
 		[Required]
@@ -165,7 +162,6 @@ namespace TASVideos.Models
 	/// </summary>
 	public class ForumPostModel
 	{
-		public int TopicId { get; set; }
 		public string TopicTitle { get; set; }
 		public string Subject { get; set; }
 		public string Post { get; set; }
@@ -184,7 +180,6 @@ namespace TASVideos.Models
 
 	public class ForumPostEditModel
 	{
-		public int PostId { get; set; }
 		public int PosterId { get; set; }
 		public string PosterName { get; set; }
 		public DateTime CreateTimestamp { get; set; }
@@ -259,7 +254,7 @@ namespace TASVideos.Models
 		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
 	}
 
-	public class UnansweredPostModel
+	public class UnansweredPostsModel
 	{
 		public int ForumId { get; set; }
 
@@ -284,8 +279,6 @@ namespace TASVideos.Models
 	{
 		[Display(Name = "New Forum")]
 		public int ForumId { get; set; }
-
-		public int TopicId { get; set; }
 
 		[Display(Name = "Topic")]
 		public string TopicTitle { get; set; }
@@ -334,8 +327,6 @@ namespace TASVideos.Models
 
 	public class SplitTopicModel
 	{
-		public int Id { get; set; }
-
 		[Required]
 		[Display(Name = "Split On Post")]
 		public int? PostToSplitId { get; set; }

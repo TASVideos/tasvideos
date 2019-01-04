@@ -1,18 +1,21 @@
-﻿@model PageOf<PostsSinceLastVisitModel>
+﻿@page
+@model NewModel
 @{
 	ViewData["Title"] = "Forum Posts Since Last Visit";
 }
 
-<div condition="@Model.Any()">
+<div condition="@Model.Posts.Any()">
 	<partial Name="_ForumHeader" />
 	<fullrow>
-		<partial name="_Pager" model="Model" />
+		<partial name="_Pager" model="Model.Posts" />
 	</fullrow>
-	@foreach (var post in Model)
+	@foreach (var post in Model.Posts)
 	{
 		<fullrow class="pt-2">
 			<small>
-				<a asp-action="Index">Forum</a> -> <a asp-action="Subforum" asp-route-id="@post.ForumId">@post.ForumName</a> -> <a asp-action="Topic" asp-route-id="@post.TopicId">@post.TopicTitle</a>
+				<a asp-page="/Forum/Index">Forum</a> -> 
+				<a asp-page="/Forum/Subforum" asp-route-id="@post.ForumId">@post.ForumName</a> -> 
+				<a asp-page="/Forum/Topic" asp-route-id="@post.TopicId">@post.TopicTitle</a>
 			</small>
 		</fullrow>
 		<card>
@@ -70,10 +73,10 @@
 		</card>
 	}
 	<fullrow class="mt-2">
-		<partial name="_Pager" model="Model" />
+		<partial name="_Pager" model="Model.Posts" />
 	</fullrow>
 </div>
-<div condition="!Model.Any()">
+<div condition="!Model.Posts.Any()">
 	<div class="alert alert-info mt-3 text-center">
 		<h4>No posts since last visit</h4>
 	</div>

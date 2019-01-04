@@ -1,0 +1,35 @@
+﻿@model CreateModel
+@{
+	ViewData["Title"] = $"Creating topic for: {Model.Topic.ForumName}";
+}
+<partial Name="_ForumHeader" />
+<h4>Creating topic for: <a asp-page="/Forum/Subforum" asp-route-id="@Model.ForumId">@Model.Topic.ForumName</a></h4>
+
+<form form-method="post">
+	<input type="hidden" asp-for="Topic.ForumName" />
+	<form-group class="col-lg-6">
+		<row>
+			<label asp-for="Topic.Title" class="form-control-label"></label>
+			<input type="text" asp-for="Topic.Title" class="form-control" autocomplete="off" />
+			<span asp-validation-for="Topic.Title" class="text-danger"></span>
+		</row>
+	</form-group>
+	<form-group>
+		<partial name="_CreatePostHelper.cshtml" model="nameof(Model.Topic.Post)" />
+	</form-group>
+	<form-group>
+		<textarea asp-for="Topic.Post" class="form-control" rows="20"></textarea>
+		<span asp-validation-for="Topic.Post" class="text-danger"></span>
+	</form-group>
+	<div class="text-center">
+		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a asp-page="/Forum/Subforum" asp-route-id="@Model.ForumId" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+<partial name="_PreviewWindow" model="@((nameof(Model.Topic.Post), $"/Forum/{nameof(Controllers.ForumController.GeneratePreview)}"))" />
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

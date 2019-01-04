@@ -1,0 +1,136 @@
+﻿@page "{id}"
+@model EditModel
+@{
+	ViewData["Title"] = $"TASVideos Forum Category {Model.Category.Title}";
+}
+<partial Name="_ForumHeader" />
+<form method="post">
+	<row>
+		<div class="col-lg-6">
+			<label asp-for="Category.Title"></label>
+			<input type="text" asp-for="Category.Title" class="form-control" />
+			<span asp-validation-for="Category.Title" class="text-danger"></span>
+			<label asp-for="Category.Description"></label>
+			<input type="text" asp-for="Category.Description" class="form-control" />
+			<span asp-validation-for="Category.Description" class="text-danger"></span>
+		</div>
+	</row>
+	<hr />
+	<div id="forum-container" class="border border-info">
+		@for (int i = 0; i < Model.Category.Forums.Count; i++)
+		{
+			<div class="forum-section border border-info p-2" data-index="@i">
+				<input type="hidden" asp-for="Category.Forums[i].Id" />
+				<input type="hidden" asp-for="Category.Forums[i].Description" />
+				<input type="hidden" asp-for="Category.Forums[i].Name" />
+				<input type="hidden" asp-for="Category.Forums[i].Ordinal" />
+				<div class="pull-right">
+					<button type="button" class="btn btn-secondary btn-sm" onclick="DecrementOrdinal(this)">
+						<i class="fa fa-arrow-up"></i>
+					</button>
+					<button type="button" class="btn btn-secondary btn-sm" onclick="IncrementOrdinal(this)">
+						<i class="fa fa-arrow-down"></i>
+					</button>
+				</div>
+				<strong><a asp-page="/Forum/Subforum" asp-route-id="@Model.Category.Forums[i].Id">@Model.Category.Forums[i].Name</a></strong>
+				<div class="mb-2 pl-3">
+					<small>
+						@Html.Raw(Model.Category.Forums[i].Description)
+					</small>
+				</div>
+			</div>
+		}
+	</div>
+	<hr />
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Update</button>
+		<a asp-page="Index" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+<script>
+	function IncrementOrdinal(elem) {
+		var parent = elem.closest('.forum-section');
+		var index = parseInt(parent.dataset.index);
+
+		var last = document.querySelectorAll('.forum-section').length;
+		if (index >= last - 1) {
+			return;
+		}
+
+		var thisO = document.getElementById('Forums_' + index + '__Ordinal');
+		var nextO = document.getElementById('Forums_' + (index + 1) + '__Ordinal');
+
+		var thisOVal = thisO.value;
+		var nextOVal = nextO.value;
+
+		thisO.value = nextOVal;
+		nextO.value = thisOVal;
+
+		var nextSection = document.querySelector('.forum-section[data-index="' + (index + 1) + '"]');
+
+		parent.dataset.index = index + 1;
+		nextSection.dataset.index = index;
+
+		SortForums();
+	}
+
+	function DecrementOrdinal(elem) {
+		var parent = elem.closest('.forum-section');
+		var index = parseInt(parent.dataset.index);
+		if (index <= 0) {
+			return;
+		}
+
+		var thisO = document.getElementById('Forums_' + index + '__Ordinal');
+		var prevO = document.getElementById('Forums_' + (index - 1) + '__Ordinal');
+
+		var thisOVal = thisO.value;
+		var prevOVal = prevO.value;
+
+		thisO.value = prevOVal;
+		prevO.value = thisOVal;
+
+		var prevSection = document.querySelector('.forum-section[data-index="' + (index - 1) + '"]');
+		parent.dataset.index = index - 1;
+		prevSection.dataset.index = index;
+
+		SortForums();
+	}
+
+	function SortForums() {
+		var sections = document
+			.querySelectorAll('.forum-section')
+			.toArray()
+			.sort(function (a, b) {
+				return a.dataset.index > b.dataset.index;
+			});
+
+		var container = document.getElementById('forum-container');
+		while (container.firstChild) {
+			container.removeChild(container.firstChild);
+		}
+
+		for (var i in sections) {
+			var ord = sections[i].querySelectorAll('[id$="Ordinal"]')[0];
+			ord.setAttribute('id', 'Forums_' + i + '__Ordinal');
+			ord.setAttribute('name', 'Forums[' + i + '].Ordinal');
+
+			var id = sections[i].querySelectorAll('[id$="Id"]')[0];
+			id.setAttribute('id', 'Forums_' + i + '__Id');
+			id.setAttribute('name', 'Forums[' + i + '].Id');
+
+			var name = sections[i].querySelectorAll('[id$="Name"]')[0];
+			name.setAttribute('id', 'Forums_' + i + '__Name');
+			name.setAttribute('name', 'Forums[' + i + '].Name');
+
+			var description = sections[i].querySelectorAll('[id$="Description"]')[0];
+			description.setAttribute('id', 'Forums_' + i + '__Description');
+			description.setAttribute('name', 'Forums[' + i + '].Description');
+
+			container.appendChild(sections[i]);
+		}
+	}
+</script>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

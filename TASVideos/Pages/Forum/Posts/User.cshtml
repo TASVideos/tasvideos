@@ -1,0 +1,76 @@
+﻿@page "{userName}"
+@model UserPostsModel
+@{
+	ViewData["Title"] = $"Posts for {Model.UserName}";
+}
+<partial Name="_ForumHeader" />
+
+<hr class="mt-1" />
+<fullrow>
+	<partial name="_Pager" model="Model.Posts" />
+</fullrow>
+@foreach (var post in Model.Posts)
+{
+	<card>
+		<cardheader>
+			<row>
+				<div class="col-4 border-right">
+					<h5>@Model.UserName</h5>
+				</div>
+				<div class="col-8 pt-0 pb-0">
+					<small style="display: inline-block">
+						<a id="@post.Id" href="/Forum/Post/@(post.Id)#@post.Id" title="Link to this post" class="pull-left"><i class="fa fa-bookmark-o"></i></a>
+						Posted: @post.CreateTimestamp
+						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
+					</small>
+					<small class="pull-right">
+						<a asp-page="/Forum/Subforum" asp-route-id="@post.ForumId">@Html.Raw(post.ForumName)</a>
+						 -> 
+						<a asp-page="/Forum/Topics" asp-route-id="@post.TopicId">@post.TopicTitle</a>
+					</small>
+				</div>
+			</row>
+		</cardheader>
+		<cardbody>
+			<row>
+				<div class="col-4">
+					<div class="card-text text-right">
+						<small>
+							@string.Join(",", Model.Roles)
+							(todo points)
+						</small>
+						<br />
+						<img src="@Model.Avatar" />
+						<br />
+						<small>
+							Joined: @Model.Joined.ToShortDateString()<br />
+							Posts: @Model.Posts.RowCount<br />
+							Location: @Model.Location
+						</small>
+					</div>
+				</div>
+				<div class="col-8">
+					@Html.Raw(post.RenderedText)
+				</div>
+			</row>
+		</cardbody>
+		<cardfooter>
+			<fullrow>
+				<small style="font-style: italic">@Html.Raw(Model.RenderedSignature)</small>
+				<br />
+				<a class="btn btn-info btn-sm" asp-page="/User/Profile" asp-route-userName="@Model.UserName">Profile</a>
+				<div class="pull-right">
+					@* ReSharper disable once UnusedVariable *@
+					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
+					{
+						<partial name="_Award" model="award" />
+					}
+				</div>
+			</fullrow>
+		</cardfooter>
+	</card>
+}
+<fullrow class="mt-2">
+	<partial name="_Pager" model="Model.Posts" />
+</fullrow>
+	

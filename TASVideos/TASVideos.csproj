@@ -46,25 +46,25 @@
     <Content Update="Views\Diagnostics\CacheControl.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\EditForum.cshtml">
+    <Content Update="Pages\Forum\Subforum\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\SplitTopic.cshtml">
+    <Content Update="Pages\Forum\Topics\Split.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\MoveTopic.cshtml">
+    <Content Update="Pages\Forum\Topics\Move.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\EditPost.cshtml">
+    <Content Update="Pages\Forum\Posts\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\EditCategory.cshtml">
+    <Content Update="Pages\Forum\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\NewPosts.cshtml">
+    <Content Update="Pages\Forum\Posts\New.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\UserPosts.cshtml">
+    <Content Update="Pages\Forum\Posts\User.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Forum\_TopicActionBar.cshtml">
@@ -79,7 +79,7 @@
     <Content Update="Pages\Forum\_Poll.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Forum\UnansweredPosts.cshtml">
+    <Content Update="Pages\Forum\Posts\Unanswered.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Pages\Profile\Settings.cshtml">

@@ -1,8 +1,8 @@
 ﻿@model IForumTopicBreadCrumb
 <small class="@(Model.IsLocked ? "alert alert-danger" : "") pt-1 pb-2">
-	<a asp-action="Index">Forum</a>
+	<a asp-page="Index">Forum</a>
 	->
-	<a asp-action="Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a>
+	<a asp-page="Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a>
 	-> @Model.Title
 	<span condition="Model.IsLocked"> (Locked)</span>
 </small>
