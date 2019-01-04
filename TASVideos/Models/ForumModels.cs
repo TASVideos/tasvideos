@@ -42,6 +42,7 @@ namespace TASVideos.Models
 		public class ForumPostEntry
 		{
 			public int Id { get; set; }
+			public int TopicId { get; set; }
 			public bool Highlight { get; set; }
 			public int PosterId { get; set; }
 			public string PosterName { get; set; }
@@ -164,7 +165,7 @@ namespace TASVideos.Models
 	{
 		public string TopicTitle { get; set; }
 		public string Subject { get; set; }
-		public string Post { get; set; }
+		public string Text { get; set; }
 	}
 
 	/// <summary>
@@ -291,8 +292,6 @@ namespace TASVideos.Models
 
 	public class ForumEditModel
 	{
-		public int Id { get; set; }
-
 		[Required]
 		public string Name { get; set; }
 

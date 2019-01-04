@@ -160,6 +160,7 @@ namespace TASVideos.Tasks
 				.Select(p => new ForumTopicModel.ForumPostEntry
 				{
 					Id = p.Id,
+					TopicId = id,
 					EnableHtml = p.EnableHtml,
 					EnableBbCode = p.EnableBbCode,
 					PosterId = p.PosterId,
@@ -310,7 +311,7 @@ namespace TASVideos.Tasks
 			var forumPostModel = new ForumPostModel
 			{
 				Subject = null,
-				Post = model.Post
+				Text = model.Post
 			};
 
 			await CreatePost(topic.Id, forumPostModel, user, ipAddress);
@@ -348,7 +349,7 @@ namespace TASVideos.Tasks
 				.Where(p => p.Id == postId)
 				.SingleOrDefaultAsync();
 
-				model.Post = $"[quote=\"{post.Poster.UserName}\"]{post.Text}[/quote]";
+				model.Text = $"[quote=\"{post.Poster.UserName}\"]{post.Text}[/quote]";
 			}
 
 			return model;
@@ -362,7 +363,7 @@ namespace TASVideos.Tasks
 				PosterId = user.Id,
 				IpAddress = ipAddress,
 				Subject = model.Subject,
-				Text = model.Post,
+				Text = model.Text,
 
 				// TODO: check for bbcode and if none, set this to false?
 				// For now we are not giving the user choices

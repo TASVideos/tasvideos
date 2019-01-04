@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +12,7 @@ using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Subforum
 {
-	[Filter.RequirePermission(PermissionTo.EditForums)]
+	[RequirePermission(PermissionTo.EditForums)]
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
@@ -39,7 +37,6 @@ namespace TASVideos.Pages.Forum.Subforum
 				.Where(f => f.Id == Id)
 				.Select(f => new ForumEditModel
 				{
-					Id = f.Id,
 					Name = f.Name,
 					Description = f.Description,
 				})

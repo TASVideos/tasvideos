@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Forum.Posts
 			_publisher = publisher;
 		}
 
-		[FromQuery]
+		[FromRoute]
 		public int TopicId { get; set; }
 
 		[FromQuery]
@@ -72,7 +72,7 @@ namespace TASVideos.Pages.Forum.Posts
 				{
 					TopicTitle = Post.TopicTitle,
 					Subject = Post.Subject,
-					Post = Post.Post,
+					Text = Post.Text,
 					IsLocked = isLocked,
 					UserAvatar = user.Avatar,
 					UserSignature = user.Signature

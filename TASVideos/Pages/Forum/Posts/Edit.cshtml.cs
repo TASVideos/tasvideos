@@ -90,7 +90,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			await _forumTasks.EditPost(Id, Post);
 
-			return RedirectToPage("/Forum/Topic", new { Id = Post.TopicId });
+			return RedirectToPage("/Forum/Topics/Index", new { Id = Post.TopicId });
 		}
 
 		public async Task<IActionResult> OnGetDelete()

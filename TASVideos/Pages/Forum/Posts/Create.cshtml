@@ -6,7 +6,7 @@
 <partial Name="_ForumHeader" />
 <h4>Posting to Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId">@Model.Post.TopicTitle</a></h4>
 
-<form form-method="POST">
+<form method="POST">
 	<input type="hidden" asp-for="Post.TopicTitle" />
 	<form-group class="col-lg-6">
 		<row>
@@ -16,11 +16,11 @@
 		</row>
 	</form-group>
 	<form-group>
-		<partial name="_CreatePostHelper" model="nameof(Model.Post)" />
+		<partial name="_CreatePostHelper" model="@("Post_Text")" />
 	</form-group>
 	<form-group>
-		<textarea asp-for="Post" class="form-control" rows="20"></textarea>
-		<span asp-validation-for="Post" class="text-danger"></span>
+		<textarea asp-for="Post.Text" class="form-control" rows="20"></textarea>
+		<span asp-validation-for="Post.Text" class="text-danger"></span>
 	</form-group>
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
@@ -29,7 +29,7 @@
 	</div>
 </form>
 
-<partial name="_PreviewWindow" model="@((nameof(Model.Post), $"/Forum/{nameof(Controllers.ForumController.GeneratePreview)}"))" />
+<partial name="_PreviewWindow" model="@(("Post_Text", $"/Forum/{nameof(Controllers.ForumController.GeneratePreview)}"))" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

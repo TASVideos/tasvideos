@@ -6,7 +6,7 @@
 <partial Name="_ForumHeader" />
 <h4>Creating topic for: <a asp-page="/Forum/Subforum" asp-route-id="@Model.ForumId">@Model.Topic.ForumName</a></h4>
 
-<form form-method="post">
+<form method="post">
 	<input type="hidden" asp-for="Topic.ForumName" />
 	<form-group class="col-lg-6">
 		<row>
