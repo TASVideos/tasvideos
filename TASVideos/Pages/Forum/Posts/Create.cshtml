@@ -1,10 +1,10 @@
-﻿@page "{forumId}"
+﻿@page "{topicId}"
 @model CreateModel
 @{
 	ViewData["Title"] = $"Posting to Topic: {Model.Post.TopicTitle}";
 }
 <partial Name="_ForumHeader" />
-<h4>Posting to Topic: <a asp-page="/Forum/Topic/Index" asp-route-id="@Model.TopicId">@Model.Post.TopicTitle</a></h4>
+<h4>Posting to Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId">@Model.Post.TopicTitle</a></h4>
 
 <form form-method="POST">
 	<input type="hidden" asp-for="Post.TopicTitle" />
@@ -16,7 +16,7 @@
 		</row>
 	</form-group>
 	<form-group>
-		<partial name="_CreatePostHelper.cshtml" model="nameof(Model.Post)" />
+		<partial name="_CreatePostHelper" model="nameof(Model.Post)" />
 	</form-group>
 	<form-group>
 		<textarea asp-for="Post" class="form-control" rows="20"></textarea>
@@ -25,7 +25,7 @@
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
 		<button type="submit" class="btn btn-primary">Save</button>
-		<a asp-page="/Forum/Topic/Index" asp-route-id="@Model.TopicId" class="btn btn-secondary">Cancel</a>
+		<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>
 

@@ -35,8 +35,7 @@
 				   asp-route-id="@Model.Id"
 				   class="btn btn-secondary btn-sm mt-1">Catalog</a>
 				<a condition="@Model.TopicId > 0"
-				   asp-controller="Forum"
-				   asp-action="Topic"
+				   asp-page="/Forum/Topics"
 				   asp-route-id="@Model.TopicId"
 				   class="btn btn-secondary btn-sm mt-1">
 					Discuss

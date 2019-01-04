@@ -4,7 +4,7 @@
 	ViewData["Title"] = $"Editing Post for Topic: {Model.Post.TopicTitle}";
 }
 <partial Name="_ForumHeader" />
-<h4>Editing Post for Topic: <a asp-page="/Forum/Topic" asp-route-id="@Model.Post.TopicId">@Model.Post.TopicTitle</a></h4>
+<h4>Editing Post for Topic: <a asp-page="/Forum/Topics" asp-route-id="@Model.Post.TopicId">@Model.Post.TopicTitle</a></h4>
 <div class="alert alert-light p-0">
 	<card>
 		<cardheader>

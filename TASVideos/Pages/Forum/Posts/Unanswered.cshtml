@@ -1,4 +1,5 @@
-﻿@model UnansweredModel
+﻿@page
+@model UnansweredModel
 @{
 	ViewData["Title"] = "Unanswered Posts";
 }
@@ -19,7 +20,7 @@
 				<a asp-page="/Forum/Subforum" asp-route-id="@post.ForumId">@post.ForumName</a>
 			</td>
 			<td>
-				<a asp-page="/Forum/Topic" asp-route-id="@post.TopicId">@post.TopicName</a>
+				<a asp-page="/Forum/Topics" asp-route-id="@post.TopicId">@post.TopicName</a>
 			</td>
 			<td>
 				<a asp-page="/User/Profile" asp-route-userName="@post.AuthorName">@post.AuthorName</a>

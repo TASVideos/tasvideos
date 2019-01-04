@@ -23,7 +23,7 @@
 			</td>
 			<td>
 				<i condition="watch.IsNotified" title="This topic has new replies" class="fa fa-exclamation"></i>
-				<a asp-controller="Forum" asp-action="Topic" asp-route-id="@watch.TopicId">@watch.TopicTitle</a>
+				<a asp-page="/Forum/Topics" asp-route-id="@watch.TopicId">@watch.TopicTitle</a>
 			</td>
 			<td>
 				<delete-button

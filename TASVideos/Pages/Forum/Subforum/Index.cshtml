@@ -21,7 +21,7 @@
 }
 <partial Name="_ForumHeader" />
 <a permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="pull-right btn btn-primary btn-sm">Edit</a>
-<a permission="CreateForumTopics" asp-action="CreateTopic" asp-route-forumId="@Model.Forum.Id" class="mr-2 pull-right btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
+<a permission="CreateForumTopics" asp-page="Create" asp-route-forumId="@Model.Forum.Id" class="mr-2 pull-right btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
 <h4><a asp-page="/Forum/Index">Forum</a> -> @Model.Forum.Name</h4>
 <div>
 	<small>@Html.Raw(Model.Forum.Description)</small>
@@ -46,7 +46,7 @@
 				<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fa fa-bullhorn"></span>
 			</td>
 			<td>
-				<a asp-controller="Forum" asp-action="Topic" asp-route-id="@topic.Id">
+				<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id">
 					@Html.Raw(ToTitle(topic.Title, topic.Type))
 				</a>
 			</td>
