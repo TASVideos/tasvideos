@@ -302,8 +302,6 @@ namespace TASVideos.Models
 
 	public class CategoryEditModel
 	{
-		public int Id { get; set; }
-
 		[Required]
 		[StringLength(30)]
 		public string Title { get; set; }

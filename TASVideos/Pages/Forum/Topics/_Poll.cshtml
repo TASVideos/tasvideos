@@ -15,9 +15,9 @@
 }
 
 <info-alert>
-	<a condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0" asp-action="ViewPollResults" asp-route-id="@Model.PollId" class="btn btn-info pull-right">See Votes</a>
+	<a condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0" asp-page="PollResults" asp-route-id="@Model.PollId" class="btn btn-info pull-right">See Votes</a>
 	@Html.Raw(Model.Question)
-	<form asp-action="Vote">
+	<form asp-page="Index" asp-page-handler="Vote">
 		<input type="hidden" asp-for="@Model.PollId" />
 		@foreach (var option in Model.Options.OrderBy(o => o.Ordinal))
 		{

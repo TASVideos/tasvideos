@@ -49,6 +49,7 @@
 </form>
 <script>
 	function IncrementOrdinal(elem) {
+		console.log('elem', elem);
 		var parent = elem.closest('.forum-section');
 		var index = parseInt(parent.dataset.index);
 
@@ -57,8 +58,8 @@
 			return;
 		}
 
-		var thisO = document.getElementById('Forums_' + index + '__Ordinal');
-		var nextO = document.getElementById('Forums_' + (index + 1) + '__Ordinal');
+		var thisO = document.getElementById('Category_Forums_' + index + '__Ordinal');
+		var nextO = document.getElementById('Category_Forums_' + (index + 1) + '__Ordinal');
 
 		var thisOVal = thisO.value;
 		var nextOVal = nextO.value;
@@ -81,8 +82,8 @@
 			return;
 		}
 
-		var thisO = document.getElementById('Forums_' + index + '__Ordinal');
-		var prevO = document.getElementById('Forums_' + (index - 1) + '__Ordinal');
+		var thisO = document.getElementById('Category_Forums_' + index + '__Ordinal');
+		var prevO = document.getElementById('Category_Forums_' + (index - 1) + '__Ordinal');
 
 		var thisOVal = thisO.value;
 		var prevOVal = prevO.value;
@@ -112,20 +113,20 @@
 
 		for (var i in sections) {
 			var ord = sections[i].querySelectorAll('[id$="Ordinal"]')[0];
-			ord.setAttribute('id', 'Forums_' + i + '__Ordinal');
-			ord.setAttribute('name', 'Forums[' + i + '].Ordinal');
+			ord.setAttribute('id', 'Category_Forums_' + i + '__Ordinal');
+			ord.setAttribute('name', 'Category_Forums[' + i + '].Ordinal');
 
 			var id = sections[i].querySelectorAll('[id$="Id"]')[0];
-			id.setAttribute('id', 'Forums_' + i + '__Id');
-			id.setAttribute('name', 'Forums[' + i + '].Id');
+			id.setAttribute('id', 'Category_Forums_' + i + '__Id');
+			id.setAttribute('name', 'Category_Forums[' + i + '].Id');
 
 			var name = sections[i].querySelectorAll('[id$="Name"]')[0];
-			name.setAttribute('id', 'Forums_' + i + '__Name');
-			name.setAttribute('name', 'Forums[' + i + '].Name');
+			name.setAttribute('id', 'Category_Forums_' + i + '__Name');
+			name.setAttribute('name', 'Category_Forums[' + i + '].Name');
 
 			var description = sections[i].querySelectorAll('[id$="Description"]')[0];
-			description.setAttribute('id', 'Forums_' + i + '__Description');
-			description.setAttribute('name', 'Forums[' + i + '].Description');
+			description.setAttribute('id', 'Category_Forums_' + i + '__Description');
+			description.setAttribute('name', 'Category_Forums[' + i + '].Description');
 
 			container.appendChild(sections[i]);
 		}

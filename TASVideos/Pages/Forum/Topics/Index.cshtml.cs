@@ -12,7 +12,7 @@ using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Topics
 {
-	[Authorize]
+	[AllowAnonymous]
 	public class IndexModel : BasePageModel
 	{
 		private readonly UserManager<User> _userManager;
