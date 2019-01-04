@@ -31,7 +31,7 @@
 					</delete-button>
 					<a
 						condition="!item.HasExistingRevisions"
-						asp-action="Undelete"
+						asp-page="Undelete"
 						asp-route-path="@item.PageName"
 						class="btn btn-primary">
 						Undelete
