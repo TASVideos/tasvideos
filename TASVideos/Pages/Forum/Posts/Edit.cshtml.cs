@@ -111,7 +111,7 @@ namespace TASVideos.Pages.Forum.Posts
 				$"{BaseUrl}/p/{Id}#{Id}",
 				$"{BaseUrl}/Forum/Topic/{topic.Id}");
 
-			return RedirectToPage("/Forum/Topics", new { id = result });
+			return RedirectToPage("/Forum/Topics/Index", new { id = result });
 		}
 	}
 }
