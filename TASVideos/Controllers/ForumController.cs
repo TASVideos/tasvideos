@@ -42,7 +42,7 @@ namespace TASVideos.Controllers
 				return NotFound();
 			}
 
-			return RedirectToPage("/Forum/Topics", new { Id = model.TopicId, Highlight = id });
+			return RedirectToPage("/Forum/Topics/Index", new { Id = model.TopicId, Highlight = id });
 			//return await Topic(new TopicRequest
 			//{
 			//	Id = model.TopicId,
