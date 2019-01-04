@@ -132,7 +132,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var user = await _userManager.GetUserAsync(User);
 			await _forumTasks.WatchTopic(Id, user.Id, UserHas(PermissionTo.SeeRestrictedForums));
-			return RedirectToPage("Topics", new { Id });
+			return RedirectToPage("Index", new { Id });
 		}
 
 		public async Task<IActionResult> OnGetUnwatch()
@@ -144,7 +144,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var user = await _userManager.GetUserAsync(User);
 			await _forumTasks.UnwatchTopic(Id, user.Id, UserHas(PermissionTo.SeeRestrictedForums));
-			return RedirectToPage("Topics", new { Id });
+			return RedirectToPage("Index", new { Id });
 		}
 	}
 }

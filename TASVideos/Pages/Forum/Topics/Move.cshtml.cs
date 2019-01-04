@@ -70,7 +70,7 @@ namespace TASVideos.Pages.Forum.Topics
 					$"{BaseUrl}/Forum/Topics/{Id}");
 			}
 
-			return RedirectToPage("Topics", new { Id });
+			return RedirectToPage("Index", new { Id });
 		}
 	}
 }

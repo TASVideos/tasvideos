@@ -76,9 +76,9 @@ namespace TASVideos.Pages.Forum.Topics
 				topic.Forum.Restricted,
 				$"Topic {topic.Forum.Name}: {topic.Title} SPLIT from {Topic.ForumName}: {Topic.Title}",
 				"",
-				$"{BaseUrl}/Forum/Topic/{topic.Id}");
+				$"{BaseUrl}/Forum/Topics/{topic.Id}");
 
-			return RedirectToPage("/Forum/Topic", new { id = result.Value });
+			return RedirectToPage("Index", new { id = result.Value });
 		}
 	}
 }
