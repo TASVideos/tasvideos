@@ -15,6 +15,11 @@ namespace TASVideos.ViewComponents
 
 		public IViewComponentResult Invoke(WikiPage pageData, string pp = null)
 		{
+			if (pageData == null)
+			{
+				return Content("");
+			}
+
 			var subpages = _wikiTasks.GetSubPages(pageData.PageName);
 			ViewData["Parent"] = pageData.PageName;
 			
