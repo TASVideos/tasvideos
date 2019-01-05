@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using Microsoft.AspNetCore.Identity;
+
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -34,7 +33,6 @@ namespace TASVideos.Controllers
 				: UserTasks.GetUserPermissionsById(User.GetUserId()).Result);
 
 		protected UserTasks UserTasks { get; }
-		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 
 		protected bool UserHas(PermissionTo permission)
 		{
@@ -44,49 +42,6 @@ namespace TASVideos.Controllers
 		protected IActionResult RedirectHome()
 		{
 			return RedirectToPage("/Index");
-		}
-
-		protected IActionResult AccessDenied()
-		{
-			return RedirectToPage("/Account/AccessDenied");
-		}
-
-		protected IActionResult ReRouteToLogin(string returnUrl = null)
-		{
-			return new RedirectToPageResult("/Account/Login", returnUrl);
-		}
-
-		protected void AddErrors(IdentityResult result)
-		{
-			foreach (var error in result.Errors)
-			{
-				ModelState.AddModelError(string.Empty, error.Description);
-			}
-		}
-
-		protected IActionResult RedirectToLocal(string returnUrl)
-		{
-			if (Url.IsLocalUrl(returnUrl))
-			{
-				return Redirect(returnUrl);
-			}
-
-			return RedirectHome();
-		}
-
-		protected string RenderHtml(string text)
-		{
-			return RenderPost(text, false, true);
-		}
-
-		protected string RenderBbcode(string text)
-		{
-			return RenderPost(text, true, false);
-		}
-
-		protected string RenderSignature(string text)
-		{
-			return RenderBbcode(text); // Bbcode on, Html off hardcoded, do we want this to be configurable?
 		}
 
 		protected string RenderPost(string text, bool useBbCode, bool useHtml)
