@@ -1,0 +1,28 @@
+﻿@page
+@{ ViewData["Title"] = "System Information"; }
+@model IndexModel
+@using System.Diagnostics
+@functions {
+	private string GetProcessInfo()
+	{
+		try
+		{
+			var process = Process.GetCurrentProcess();
+			return $"{(process.PrivateMemorySize64 / 1024 / 1024):n0} MB";
+		}
+		catch (PlatformNotSupportedException)
+		{
+			return "Platform Not Supported";
+		}
+	}
+}
+
+<table class="table table-bordered table-striped">
+	<tr><td>Version</td><td>@ViewData["Version"]</td></tr>
+	<tr><td>MachineName</td><td>@Environment.MachineName</td></tr>
+	<tr><td>Is 64 Bit</td><td>@Environment.Is64BitOperatingSystem</td></tr>
+	<tr><td>OS Version</td><td>@Environment.OSVersion.ToString()</td></tr>
+	<tr><td>Processor Count</td><td>@Environment.ProcessorCount</td></tr>
+	<tr><td>ASPNETCORE_ENVIRONMENT</td><td>@Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")</td></tr>
+	<tr><td>Total Memory Usage</td><td>@GetProcessInfo()</td></tr>
+</table>
