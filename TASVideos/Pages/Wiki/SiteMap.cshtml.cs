@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Controllers;
 using TASVideos.Data.Entity;
-using TASVideos.Filter;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Wiki
@@ -74,12 +73,6 @@ namespace TASVideos.Pages.Wiki
 				|| action.DeclaringType.GetCustomAttribute<AuthorizeAttribute>() != null)
 			{
 				return "Logged In";
-			}
-
-			if (action.GetCustomAttribute<RequireEditAttribute>() != null
-				|| action.DeclaringType.GetCustomAttribute<RequireEditAttribute>() != null)
-			{
-				return "Edit Permissions";
 			}
 
 			var requiredPermAttr = action.GetCustomAttribute<Filter.RequirePermissionAttribute>()
