@@ -27,22 +27,7 @@ namespace TASVideos.Controllers
 			_wikiPages = wikiPages;
 		}
 
-		public IActionResult Index()
-		{
-			var data = new
-			{
-				Version,
-				Environment.MachineName,
-				Environment.Is64BitOperatingSystem,
-				OSVersion = Environment.OSVersion.ToString(),
-				Environment.ProcessorCount,
-				Environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
-				ProcessInfo = GetProcessInfo()
-			};
-
-			return Ok(data);
-		}
-
+		
 		public IActionResult CacheControl()
 		{
 			return View();
@@ -60,23 +45,6 @@ namespace TASVideos.Controllers
 		{
 			_awardTasks.ClearAwardsCache();
 			return Ok();
-		}
-
-		private object GetProcessInfo()
-		{
-			try
-			{
-				var process = Process.GetCurrentProcess();
-
-				return new
-				{
-					TotalMemoryUsage = $"{(process.PrivateMemorySize64 / 1024 / 1024):n0} MB"
-				};
-			}
-			catch (PlatformNotSupportedException)
-			{
-				return "Platform Not Supported";
-			}
 		}
 	}
 }
