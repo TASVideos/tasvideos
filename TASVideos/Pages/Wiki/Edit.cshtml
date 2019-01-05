@@ -33,7 +33,7 @@
 	</div>
 </form>
 
-<partial name="_PreviewWindow" model="@((nameof(Model.PageToEdit.Markup), $"/Wiki/{nameof(Controllers.WikiController.GeneratePreview)}"))" />
+<partial name="_PreviewWindow" model="@(("PageToEdit_Markup", $"/Wiki/{nameof(Controllers.WikiController.GeneratePreview)}"))" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
