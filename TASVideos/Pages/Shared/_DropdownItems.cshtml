@@ -2,5 +2,5 @@
 
 @foreach (var item in Model)
 {
-	<option value="@item.Value" @(item.Selected ? "selected" : "")>@item.Text</option>
+	<option value="@item.Value" select="@item.Selected">@item.Text</option>
 }
