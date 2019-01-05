@@ -30,8 +30,8 @@
 				<td style="min-width: 100px">
 					<button class="btn btn-primary btn-sm" onclick="GetDiff(@revision.Revision)">Diff</button>
 					<delete-button
-						condition="@ViewData.UserHas(PermissionTo.DeleteWikiPages)"
-						asp-href="@(Url.Action(nameof(Controllers.WikiController.DeleteRevision), "Wiki", new { path = Model.History.PageName, revision = revision.Revision }))"
+						permission="DeleteWikiPages"
+						asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.History.PageName)&revision=@revision.Revision"
 						warning-message="Are you sure you want to delete this revision?"
 						class="btn-sm">
 						<i class="fa fa-remove"></i>

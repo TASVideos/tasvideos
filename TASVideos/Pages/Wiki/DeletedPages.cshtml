@@ -1,4 +1,4 @@
-@page
+@page "{handler?}"
 @model DeletedPagesModel
 
 @{
@@ -25,13 +25,14 @@
 				{
 					<delete-button
 						condition="@item.HasExistingRevisions"
-						asp-href="@Url.Action(nameof(Controllers.WikiController.Undelete), "Wiki", new { path = item.PageName })"
+						asp-href="/Wiki/DeletedPages/Undelete?path=@item.PageName"
 						warning-message="This page already exists. Undeleting these revisions will merge them into the history of the existing page. Continue?">
 						Undelete
 					</delete-button>
 					<a
 						condition="!item.HasExistingRevisions"
-						asp-page="Undelete"
+						asp-page="DeletedPages"
+						asp-page-handler="Undelete"
 						asp-route-path="@item.PageName"
 						class="btn btn-primary">
 						Undelete

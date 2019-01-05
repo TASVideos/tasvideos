@@ -41,7 +41,7 @@ else
 </a>
 <delete-button
 	permission="DeleteWikiPages"
-	asp-href="@Url.Action("DeletePage", "Wiki", new { path = Model.PageName })"
+	asp-href="/Wiki/DeletedPages/DeletePage?path=@Model.PageName"
 	warning-message="Are you sure you want to delete this page?"
 	class="btn btn-danger btn-sm">
 	Delete
