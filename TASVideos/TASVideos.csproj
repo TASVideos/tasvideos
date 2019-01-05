@@ -43,9 +43,6 @@
     <Content Update="Pages\Shared\_Profile.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Diagnostics\CacheControl.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Pages\Forum\Subforum\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
