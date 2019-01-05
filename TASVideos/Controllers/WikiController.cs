@@ -1,14 +1,10 @@
 ﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Filter;
 using TASVideos.Razor;
 using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -17,18 +13,15 @@ namespace TASVideos.Controllers
 	{
 		private readonly IWikiPages _wikiPages;
 		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
-		private readonly ExternalMediaPublisher _publisher;
 
 		public WikiController(
-			UserTasks userTasks,
 			IWikiPages wikiPages,
 			WikiMarkupFileProvider wikiMarkupFileProvider,
-			ExternalMediaPublisher publisher)
+			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_wikiPages = wikiPages;
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
-			_publisher = publisher;
 		}
 
 		[AllowAnonymous]
@@ -78,60 +71,6 @@ namespace TASVideos.Controllers
 			var name = _wikiMarkupFileProvider.SetPreviewMarkup(input);
 
 			return View(name);
-		}
-
-		[RequirePermission(PermissionTo.DeleteWikiPages)]
-		public async Task<IActionResult> DeletePage(string path)
-		{
-			if (!string.IsNullOrWhiteSpace(path))
-			{
-				var result = await _wikiPages.Delete(path.Trim('/'));
-
-				_publisher.SendGeneralWiki(
-					$"Page {path} DELETED by {User.Identity.Name}",
-					$"({result} revisions)",
-					"");
-			}
-
-			return RedirectToPage("/Wiki/DeletedPages");
-		}
-
-		[RequirePermission(PermissionTo.DeleteWikiPages)]
-		public async Task<IActionResult> DeleteRevision(string path, int revision)
-		{
-			if (string.IsNullOrWhiteSpace(path) || revision == 0)
-			{
-				return RedirectHome();
-			}
-
-			path = path.Trim('/');
-			await _wikiPages.Delete(path, revision);
-
-			_publisher.SendGeneralWiki(
-					$"Revision {revision} of Page {path} DELETED by {User.Identity.Name}",
-					"",
-					"");
-
-			return Redirect("/" + path);
-		}
-
-		[RequirePermission(PermissionTo.DeleteWikiPages)]
-		public async Task<IActionResult> Undelete(string path)
-		{
-			if (string.IsNullOrWhiteSpace(path))
-			{
-				return RedirectHome();
-			}
-
-			path = path.Trim('/');
-			await _wikiPages.Undelete(path);
-
-			_publisher.SendGeneralWiki(
-					$"Page {path} UNDELETED by {User.Identity.Name}",
-					"",
-					$"{BaseUrl}/path");
-
-			return Redirect("/" + path);
 		}
 	}
 }
