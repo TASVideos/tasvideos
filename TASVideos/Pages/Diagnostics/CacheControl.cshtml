@@ -1,0 +1,38 @@
+﻿@page "{handler?}"
+@model CacheControlModel
+@{
+	ViewData["Title"] = "Cache Control";
+}
+
+<row>
+	<div class="col-md-6">
+		<card>
+			<cardheader>
+				Wiki Markup Cache
+			</cardheader>
+			<cardbody>
+				<div class="card-title">
+					Clicking this will clear all of the wiki revision markup entries and recache them from teh database
+				</div>
+				<form method="post" asp-page-handler="FlushWikiCache">
+					<button id="clear-wiki" class="btn btn-danger">Flush</button>
+				</form>
+			</cardbody>
+		</card>
+	</div>
+	<div class="col-md-6">
+		<card>
+			<cardheader>
+				Awards cache
+			</cardheader>
+			<cardbody>
+				<div class="card-title">
+					Clearing this will clear all of the movie and player awards currently cached
+				</div>
+				<form method="post" asp-page-handler="ClearAwardsCache">
+					<button id="clear-awards" class="btn btn-danger">Clear</button>
+				</form>
+			</cardbody>
+		</card>
+	</div>
+</row>
