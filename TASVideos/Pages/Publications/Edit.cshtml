@@ -78,7 +78,7 @@
 	</div>
 </form>
 
-<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Publication.Markup), $"/Wiki/{nameof(Controllers.WikiController.GeneratePreview)}")" />
+<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Publication.Markup), "/Wiki/Preview")" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Extensions;
 using TASVideos.Razor;
@@ -57,20 +55,6 @@ namespace TASVideos.Controllers
 			}
 
 			return RedirectToPage("/Wiki/PageDoesNotExist", new { url });
-		}
-
-		[AllowAnonymous]
-		[HttpPost]
-		public ViewResult GeneratePreview()
-		{
-			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-
-			ViewData["WikiPage"] = null;
-			ViewData["Title"] = "Generated Preview";
-			ViewData["Layout"] = null;
-			var name = _wikiMarkupFileProvider.SetPreviewMarkup(input);
-
-			return View(name);
 		}
 	}
 }

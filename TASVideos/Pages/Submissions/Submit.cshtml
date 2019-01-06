@@ -89,7 +89,7 @@
 	</fullrow>
 </form>
 
-<partial name="_PreviewWindow" model="@((nameof(Model.Create.Markup), $"/Wiki/{nameof(Controllers.WikiController.GeneratePreview)}"))" />
+<partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Create.Markup), "/Wiki/Preview"))" />
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 }
