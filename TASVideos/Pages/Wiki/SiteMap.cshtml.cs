@@ -75,8 +75,8 @@ namespace TASVideos.Pages.Wiki
 				return "Logged In";
 			}
 
-			var requiredPermAttr = action.GetCustomAttribute<Filter.RequirePermissionAttribute>()
-				?? action.DeclaringType.GetCustomAttribute<Filter.RequirePermissionAttribute>();
+			var requiredPermAttr = action.GetCustomAttribute<RequirePermissionAttribute>()
+				?? action.DeclaringType.GetCustomAttribute<RequirePermissionAttribute>();
 			if (requiredPermAttr != null)
 			{
 				return requiredPermAttr.MatchAny

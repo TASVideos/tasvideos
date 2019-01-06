@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.ForumEngine;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -23,8 +21,6 @@ namespace TASVideos.Controllers
 			UserTasks = userTasks;
 		}
 
-		public string BaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-
 		internal string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
 
 		internal IEnumerable<PermissionTo> UserPermissions =>
@@ -37,21 +33,6 @@ namespace TASVideos.Controllers
 		protected bool UserHas(PermissionTo permission)
 		{
 			return UserPermissions.Contains(permission);
-		}
-
-		protected IActionResult RedirectHome()
-		{
-			return RedirectToPage("/Index");
-		}
-
-		protected string RenderPost(string text, bool useBbCode, bool useHtml)
-		{
-			var parsed = PostParser.Parse(text, useBbCode, useHtml);
-			using (var writer = new StringWriter())
-			{
-				parsed.WriteHtml(writer);
-				return writer.ToString();
-			}
 		}
 	}
 }
