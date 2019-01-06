@@ -59,8 +59,6 @@ namespace TASVideos.Extensions
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
-				// TODO: this is wrong anyway
-				//routes.MapRoute("legacy-post", "forum/viewtopic.php", defaults: new { controller = "Forum", action = nameof(ForumController.LegacyPost) });
 				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = nameof(WikiController.RenderWikiPage) });
 			});
 

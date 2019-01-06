@@ -29,10 +29,5 @@ namespace TASVideos.Controllers
 				: UserTasks.GetUserPermissionsById(User.GetUserId()).Result);
 
 		protected UserTasks UserTasks { get; }
-
-		protected bool UserHas(PermissionTo permission)
-		{
-			return UserPermissions.Contains(permission);
-		}
 	}
 }
