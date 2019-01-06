@@ -7,8 +7,9 @@
 <fullrow>
 	<partial name="_TopicActionBar" model="Model.Topic" />
 	<partial name="_TopicCrumbs" model="Model.Topic" />
-	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
-		asp-page="Forum/Posts/Create"
+	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics) 
+		|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
+		asp-page="/Forum/Posts/Create"
 		asp-route-topicId="@Model.Id"
 		class="btn btn-primary btn-sm pull-right">
 		<span class="fa fa-plus"></span> Post
