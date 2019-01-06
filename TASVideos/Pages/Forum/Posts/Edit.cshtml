@@ -51,7 +51,7 @@
 		<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>
-<partial name="_PreviewWindow" model="@(("Post_Text", $"/Forum/{nameof(Controllers.ForumController.GeneratePreview)}"))" />
+<partial name="_PreviewWindow" model="@(("Post_Text", "/Forum/Preview"))" />
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 }

@@ -1,14 +1,8 @@
-﻿using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
-using TASVideos.Filter;
-using TASVideos.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
@@ -48,16 +42,6 @@ namespace TASVideos.Controllers
 			//	Id = model.TopicId,
 			//	Highlight = id
 			//});
-		}
-
-		[HttpPost]
-		[RequirePermission(PermissionTo.CreateForumPosts)]
-		public IActionResult GeneratePreview()
-		{
-			var text = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-			var renderedText = RenderPost(text, true, false); // TODO: pass in bbcode flag
-
-			return new ContentResult { Content = renderedText };
 		}
 	}
 }

@@ -29,7 +29,7 @@
 	</div>
 </form>
 
-<partial name="_PreviewWindow" model="@(("Topic_Post", $"/Forum/{nameof(Controllers.ForumController.GeneratePreview)}"))" />
+<partial name="_PreviewWindow" model="@(("Topic_Post", "/Forum/Preview"))" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
