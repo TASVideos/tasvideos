@@ -80,7 +80,7 @@
 					}
 				};
 
-				xmlhttp.open("GET", "/Catalog/@(nameof(Controllers.CatalogController.GameDropDownForSystem))?includeEmpty=true&systemId=" + systemModel.value, true);
+				xmlhttp.open("GET", "/Game/List/GameDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
 				xmlhttp.send();
 
 				var xmlhttp2 = new XMLHttpRequest();
@@ -92,7 +92,7 @@
 					}
 				};
 
-				xmlhttp2.open("GET", "/Catalog/@(nameof(Controllers.CatalogController.FrameRateDropDownForSystem))?includeEmpty=true&systemId=" + systemModel.value, true);
+				xmlhttp2.open("GET", "/Game/List/FrameRateDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
 				xmlhttp2.send();
 			} else {
 				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.GameId) option')
@@ -134,7 +134,7 @@
 					}
 				};
 
-				xmlhttp.open("GET", "/Catalog/@(nameof(Controllers.CatalogController.RomDropDownForGame))?includeEmpty=true&gameId=" + gameModel.value, true);
+				xmlhttp.open("GET", "/Game/List/RomDropDownForGame?includeEmpty=true&gameId=" + gameModel.value, true);
 				xmlhttp.send();
 			} else {
 				createRomBtn.setAttribute('disabled', 'disabled');
