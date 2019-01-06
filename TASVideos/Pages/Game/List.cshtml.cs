@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -38,6 +41,36 @@ namespace TASVideos.Pages.Game
 			var systems = (await _platformTasks.GetGameSystemDropdownList()).ToList();
 			systems.Insert(0, new SelectListItem { Text = "All", Value = "" });
 			ViewData["GameSystemList"] = systems;
+		}
+
+		public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
+		{
+			var items = await _catalogTasks.GetFrameRateDropDownForSystem(systemId, includeEmpty);
+			return new PartialViewResult
+			{
+				ViewName = "_DropdownItems",
+				ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
+			};
+		}
+
+		public async Task<IActionResult> OnGetGameDropDownForSystem(int systemId, bool includeEmpty)
+		{
+			var items = await _catalogTasks.GetGameDropDownForSystem(systemId, includeEmpty);
+			return new PartialViewResult
+			{
+				ViewName = "_DropdownItems",
+				ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
+			};
+		}
+
+		public async Task<IActionResult> OnGetRomDropDownForGame(int gameId, bool includeEmpty)
+		{
+			var items = await _catalogTasks.GetRomDropDownForGame(gameId, includeEmpty);
+			return new PartialViewResult
+			{
+				ViewName = "_DropdownItems",
+				ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
+			};
 		}
 	}
 }
