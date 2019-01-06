@@ -106,7 +106,7 @@
 	</fullrow>
 </form>
 
-<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), $"/Wiki/{nameof(Controllers.WikiController.GeneratePreview)}")" />
+<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
