@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using TASVideos.Controllers.Filter;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Filter;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
 using TASVideos.Services;
@@ -125,13 +125,13 @@ namespace TASVideos.Extensions
 			services
 				.AddMvc(options =>
 				{
-					options.Filters.Add(new SetViewBagAttribute());
+					options.Filters.Add(new SetControllerViewBagAttribute());
 				})
 				.AddRazorPagesOptions(options =>
 				{
 					options.Conventions.AddFolderApplicationModelConvention(
 						"/",
-						model => model.Filters.Add(new SetViewBag()));
+						model => model.Filters.Add(new SetPageViewBagAttribute()));
 					options.Conventions.AddPageRoute("/Game/Index", "{id:int}G");
 					options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");
 					options.Conventions.AddPageRoute("/Submissions/View", "{id:int}S");

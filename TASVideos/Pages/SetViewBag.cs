@@ -13,7 +13,7 @@ using TASVideos.Tasks;
 namespace TASVideos.Pages
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
-	public class SetViewBag : ResultFilterAttribute
+	public class SetPageViewBagAttribute : ResultFilterAttribute
 	{
 		private static readonly Version VersionInfo = Assembly.GetExecutingAssembly().GetName().Version;
 		private string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
