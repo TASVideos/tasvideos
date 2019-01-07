@@ -3,20 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Extensions;
 using TASVideos.Razor;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Controllers
 {
-	public class WikiController : BaseController
+	public class WikiController : Controller
 	{
 		private readonly IWikiPages _wikiPages;
 		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
 
 		public WikiController(
 			IWikiPages wikiPages,
-			WikiMarkupFileProvider wikiMarkupFileProvider,
-			UserTasks userTasks)
-			: base(userTasks)
+			WikiMarkupFileProvider wikiMarkupFileProvider)
 		{
 			_wikiPages = wikiPages;
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
