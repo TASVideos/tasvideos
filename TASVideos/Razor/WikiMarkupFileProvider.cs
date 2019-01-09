@@ -13,8 +13,8 @@ namespace TASVideos.Razor
 {
 	public class WikiMarkupFileProvider : IFileProvider
 	{
-		public const string Prefix = "/Views/~~~";
-		private const string PreviewPrefix = "/Views/Preview/~~~";
+		public const string Prefix = "/Pages/~~~";
+		private const string PreviewPrefix = "/Pages/Preview/~~~";
 
 		private readonly Dictionary<string, PreviewMarkupCacheInfo> _previewCache = new Dictionary<string, PreviewMarkupCacheInfo>();
 
