@@ -1,3 +1,6 @@
 @page
+@{
+	Layout = "_WikiLayout";
+}
 @model IndexModel
-<partial name="@(Model.RazorPageName)" model="Model.WikiPageData"/>
+<partial name="@(Model.RazorPageName)" model="Model.WikiPageData" />
