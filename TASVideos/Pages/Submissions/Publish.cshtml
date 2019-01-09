@@ -31,7 +31,7 @@
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Rom"></label>
 					<span class="col-sm-9">
-						<a asp-page="/Game/Rom/Edit" asp-controller="Catalog" asp-route-gameId="@Model.Submission.GameId" asp-route-romId="@Model.Submission.RomId">
+						<a asp-page="/Game/Rom/Edit" asp-route-gameId="@Model.Submission.GameId" asp-route-romId="@Model.Submission.RomId">
 							@Html.DisplayFor(m => m.Submission.Rom)
 						</a>
 					</span>

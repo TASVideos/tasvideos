@@ -41,7 +41,7 @@
 			return active;
 		}
 
-		// Wiki Controller actions that are not the general wiki page action
+		// Wiki Razor Pages that are not the general wiki page action
 		if (string.IsNullOrWhiteSpace((string)ViewData["ActiveTab"])
 			&& string.IsNullOrWhiteSpace((string)TempData["ActiveTab"])
 			&& menuName == "Wiki" && ViewContext.PageGroup() == "Wiki")
