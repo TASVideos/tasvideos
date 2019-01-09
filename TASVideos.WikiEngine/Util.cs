@@ -39,11 +39,11 @@ namespace TASVideos.WikiEngine
 		public static void RenderRazor(string pageName, string content, TextWriter w)
 		{
 			var results = NewParser.Parse(content);
-			w.WriteLine(@"@model WikiPage");
-			w.Write(@"@{ Layout = (string)ViewData[""Layout""]; }");
 
 			foreach (var r in results)
+			{
 				r.WriteHtml(w);
+			}
 		}
 
 		public static IEnumerable<NewParser.WikiLinkInfo> GetAllWikiLinks(string content)

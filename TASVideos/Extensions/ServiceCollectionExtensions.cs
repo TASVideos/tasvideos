@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using TASVideos.Controllers.Filter;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
@@ -123,12 +122,10 @@ namespace TASVideos.Extensions
 		{
 			services.AddResponseCaching();
 			services
-				.AddMvc(options =>
-				{
-					options.Filters.Add(new SetControllerViewBagAttribute());
-				})
+				.AddMvc()
 				.AddRazorPagesOptions(options =>
 				{
+					options.Conventions.AddPageRoute("/wiki/index", "{*url}");
 					options.Conventions.AddFolderApplicationModelConvention(
 						"/",
 						model => model.Filters.Add(new SetPageViewBagAttribute()));

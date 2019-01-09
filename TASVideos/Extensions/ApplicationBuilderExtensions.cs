@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-using TASVideos.Controllers;
-
 namespace TASVideos.Extensions
 {
 	public static class ApplicationBuilderExtensions
@@ -56,10 +54,7 @@ namespace TASVideos.Extensions
 				await next();
 			});
 
-			app.UseMvc(routes =>
-			{
-				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = nameof(WikiController.RenderWikiPage) });
-			});
+			app.UseMvc();
 
 			return app;
 		}
