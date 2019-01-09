@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 
-using TASVideos.Controllers;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Tasks;

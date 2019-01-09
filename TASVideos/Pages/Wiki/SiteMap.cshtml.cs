@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using TASVideos.Controllers;
 using TASVideos.Data.Entity;
 using TASVideos.Tasks;
 
@@ -19,7 +18,7 @@ namespace TASVideos.Pages.Wiki
 
 		// TODO: add razor pages to this!
 		private static readonly List<Models.SiteMapModel> CorePages = Assembly
-			.GetAssembly(typeof(WikiController))
+			.GetAssembly(typeof(SiteMapModel))
 			.GetTypes()
 			.Where(type => typeof(Controller).IsAssignableFrom(type))
 			.SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))

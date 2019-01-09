@@ -1,26 +1,33 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Razor;
 using TASVideos.Services;
+using TASVideos.Tasks;
 
-namespace TASVideos.Controllers
+namespace TASVideos.Pages.Wiki
 {
-	public class WikiController : Controller
+	[AllowAnonymous]
+	public class IndexModel : BasePageModel
 	{
 		private readonly IWikiPages _wikiPages;
 		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
 
-		public WikiController(
+		public IndexModel(
 			IWikiPages wikiPages,
-			WikiMarkupFileProvider wikiMarkupFileProvider)
+			WikiMarkupFileProvider wikiMarkupFileProvider,
+			UserTasks userTasks)
+			: base(userTasks)
 		{
 			_wikiPages = wikiPages;
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 		}
 
-		[AllowAnonymous]
-		public IActionResult RenderWikiPage(string url, int? revision = null)
+		public WikiPage WikiPageData { get; set; }
+		public string RazorPageName { get; set; }
+		public IActionResult OnGet(string url, int? revision = null)
 		{
 			url = url.Trim('/').Replace(".html", "");
 
@@ -42,7 +49,10 @@ namespace TASVideos.Controllers
 				ViewData["Title"] = existingPage.PageName;
 				ViewData["Layout"] = "_WikiLayout";
 				_wikiMarkupFileProvider.WikiPages = _wikiPages;
-				return View(WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
+				
+				WikiPageData = existingPage;
+				RazorPageName = WikiMarkupFileProvider.Prefix + existingPage.Id;
+				return Page();
 			}
 
 			// Account for garbage revision values

@@ -31,23 +31,11 @@ namespace TASVideos.Extensions
 
 		public static string Page(this ViewContext viewContext)
 		{
-			var controller = viewContext.ActionDescriptor.RouteValues["controller"];
-			if (controller != null)
-			{
-				return "/" + controller + "/" + viewContext.Action();
-			}
-
 			return viewContext.ActionDescriptor.DisplayName;
 		}
 
 		public static string PageGroup(this ViewContext viewContext)
 		{
-			string controller = viewContext.ActionDescriptor.RouteValues["controller"];
-			if (controller != null)
-			{
-				return controller;
-			}
-
 			return viewContext.ActionDescriptor.DisplayName
 				?.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
 				.FirstOrDefault();
