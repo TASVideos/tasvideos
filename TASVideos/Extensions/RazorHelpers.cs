@@ -41,11 +41,6 @@ namespace TASVideos.Extensions
 				.FirstOrDefault();
 		}
 
-		public static string Action(this ViewContext viewContext)
-		{
-			return viewContext.ActionDescriptor.RouteValues["action"];
-		}
-
 		public static async Task<IHtmlContent> RenderWiki(this IViewComponentHelper component, string pageName)
 		{
 			return await component.InvokeAsync(nameof(RenderWikiPage), new { url = pageName });
