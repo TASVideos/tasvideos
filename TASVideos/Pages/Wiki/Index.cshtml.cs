@@ -25,7 +25,7 @@ namespace TASVideos.Pages.Wiki
 			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 		}
 
-		public WikiPage WikiPageData { get; set; }
+		public WikiPage WikiPage { get; set; }
 		public string RazorPageName { get; set; }
 		public IActionResult OnGet(string url, int? revision = null)
 		{
@@ -41,17 +41,15 @@ namespace TASVideos.Pages.Wiki
 				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiHelper.NormalizeWikiPageName(url) });
 			}
 
-			var existingPage = _wikiPages.Page(url, revision);
+			WikiPage = _wikiPages.Page(url, revision);
 
-			if (existingPage != null)
+			if (WikiPage != null)
 			{
-				ViewData["WikiPage"] = existingPage;
-				ViewData["Title"] = existingPage.PageName;
-				ViewData["Layout"] = "_WikiLayout";
+				ViewData["WikiPage"] = WikiPage;
+				ViewData["Title"] = WikiPage.PageName;
 				_wikiMarkupFileProvider.WikiPages = _wikiPages;
 				
-				WikiPageData = existingPage;
-				RazorPageName = WikiMarkupFileProvider.Prefix + existingPage.Id;
+				RazorPageName = WikiMarkupFileProvider.Prefix + WikiPage.Id;
 				return Page();
 			}
 
