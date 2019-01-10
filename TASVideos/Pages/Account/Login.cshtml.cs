@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Account
 {
+	[AllowAnonymous]
 	public class LoginModel : BasePageModel
 	{
 		private readonly UserManager<User> _userManager;
