@@ -32,11 +32,17 @@ namespace TASVideos.Tasks
 		public IEnumerable<string> GetSubPages(string pageName)
 		{
 			pageName = pageName.Trim('/');
-			return _wikiPages
+			var query = _wikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
-				.Where(wp => wp.PageName != pageName)
-				.Where(wp => wp.PageName.StartsWith(pageName + "/"))
+				.Where(wp => wp.PageName != pageName);
+
+			if (!string.IsNullOrWhiteSpace(pageName))
+			{
+				query = query.Where(wp => wp.PageName.StartsWith(pageName + "/"));
+			}
+
+			return query
 				.Select(wp => wp.PageName)
 				.ToList();
 		}
