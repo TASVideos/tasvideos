@@ -49,7 +49,6 @@
 </form>
 <script>
 	function IncrementOrdinal(elem) {
-		console.log('elem', elem);
 		var parent = elem.closest('.forum-section');
 		var index = parseInt(parent.dataset.index);
 
@@ -103,7 +102,7 @@
 			.querySelectorAll('.forum-section')
 			.toArray()
 			.sort(function (a, b) {
-				return a.dataset.index > b.dataset.index;
+				return a.dataset.index - b.dataset.index;
 			});
 
 		var container = document.getElementById('forum-container');
