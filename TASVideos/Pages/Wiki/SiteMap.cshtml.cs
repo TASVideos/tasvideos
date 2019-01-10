@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
 using TASVideos.Tasks;
@@ -16,22 +15,20 @@ namespace TASVideos.Pages.Wiki
 	{
 		private readonly WikiTasks _wikiTasks;
 
-		// TODO: add razor pages to this!
 		private static readonly List<Models.SiteMapModel> CorePages = Assembly
 			.GetAssembly(typeof(SiteMapModel))
 			.GetTypes()
-			.Where(type => typeof(Controller).IsAssignableFrom(type))
-			.SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
-			.Where(m => !m.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any())
-			.Where(m => m.GetCustomAttribute<HttpPostAttribute>() == null)
-			.Select(m => new Models.SiteMapModel
+			.Where(type => typeof(BasePageModel).IsAssignableFrom(type))
+			.Where(type => type != typeof(BasePageModel))
+			.Select(t => new Models.SiteMapModel
 			{
-				PageName = m.Name == "Index"
-					? m.DeclaringType.Name.Replace("Controller", "")
-					: $"{m.DeclaringType.Name.Replace("Controller", "")}/{m.Name}",
+				PageName = t.Namespace
+					.Replace("TASVideos.Pages.", "")
+					.Replace(".", "/") + "/"
+					+ t.Name.Replace("Model", ""),
 				IsWiki = false,
-				AccessRestriction = AccessRestriction(m)
-			})
+				AccessRestriction = AccessRestriction(t)
+			}) 
 			.ToList();
 
 		public SiteMapModel(
@@ -59,23 +56,20 @@ namespace TASVideos.Pages.Wiki
 				}));
 		}
 
-		private static string AccessRestriction(MethodInfo action)
+		private static string AccessRestriction(Type type)
 		{
 			// This logic is far from robust and full of assumptions, the idea is to tweak as necessary
-			if (action.GetCustomAttribute<AllowAnonymousAttribute>() != null
-				|| action.DeclaringType.GetCustomAttribute<AllowAnonymousAttribute>() != null)
+			if (type.GetCustomAttribute<AllowAnonymousAttribute>() != null)
 			{
 				return "Anonymous";
 			}
 
-			if (action.GetCustomAttribute<AuthorizeAttribute>() != null
-				|| action.DeclaringType.GetCustomAttribute<AuthorizeAttribute>() != null)
+			if (type.GetCustomAttribute<AuthorizeAttribute>() != null)
 			{
 				return "Logged In";
 			}
 
-			var requiredPermAttr = action.GetCustomAttribute<RequirePermissionAttribute>()
-				?? action.DeclaringType.GetCustomAttribute<RequirePermissionAttribute>();
+			var requiredPermAttr = type.GetCustomAttribute<RequirePermissionAttribute>();
 			if (requiredPermAttr != null)
 			{
 				return requiredPermAttr.MatchAny
