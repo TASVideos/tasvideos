@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Routing;
 
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -76,7 +75,7 @@ namespace TASVideos.Pages
 
 		private IActionResult ReRouteToLogin(string returnUrl)
 		{
-			return new RedirectToPageResult("/Account/Login", returnUrl);
+			return new RedirectToPageResult("/Account/Login", new { returnUrl });
 		}
 
 		private IActionResult AccessDenied()
