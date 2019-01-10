@@ -69,6 +69,11 @@ namespace TASVideos.Pages.Wiki
 				return "Logged In";
 			}
 
+			if (type.GetCustomAttribute<RequireEdit>() != null)
+			{
+				return "Any Wiki Editing";
+			}
+
 			var requiredPermAttr = type.GetCustomAttribute<RequirePermissionAttribute>();
 			if (requiredPermAttr != null)
 			{
