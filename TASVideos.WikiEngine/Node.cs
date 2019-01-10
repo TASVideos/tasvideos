@@ -23,7 +23,7 @@ namespace TASVideos.WikiEngine.AST
 		NodeType Type { get; }
 		int CharStart { get; }
 		int CharEnd { get; set; }
-		void WriteHtml(TextWriter w);
+		void WriteRazor(TextWriter w);
 		INode Clone();
 	}
 
@@ -44,7 +44,7 @@ namespace TASVideos.WikiEngine.AST
 			Content = content;
 		}
 
-		public void WriteHtml(TextWriter w)
+		public void WriteRazor(TextWriter w)
 		{
 			foreach (var c in Content)
 			{
@@ -117,7 +117,7 @@ namespace TASVideos.WikiEngine.AST
 				Attributes.Add(kvp.Key, kvp.Value);
 		}
 
-		public void WriteHtml(TextWriter w)
+		public void WriteRazor(TextWriter w)
 		{
 			if (VoidTags.Contains(Tag) && Children.Count > 0)
 			{
@@ -168,7 +168,7 @@ namespace TASVideos.WikiEngine.AST
 			{
 				w.Write('>');
 				foreach (var c in Children)
-					c.WriteHtml(w);
+					c.WriteRazor(w);
 				w.Write("</");
 				w.Write(Tag);
 				w.Write('>');
@@ -203,14 +203,14 @@ namespace TASVideos.WikiEngine.AST
 			Children.AddRange(children);
 		}
 
-		public void WriteHtml(TextWriter w)
+		public void WriteRazor(TextWriter w)
 		{
 			// razor stuff
 			w.Write("@if(Html.WikiCondition(");
 			Escape.WriteCSharpString(w, Condition);
 			w.Write(")){<text>");
 			foreach (var c in Children)
-				c.WriteHtml(w);
+				c.WriteRazor(w);
 			w.Write("</text>}");
 		}
 
@@ -260,7 +260,7 @@ namespace TASVideos.WikiEngine.AST
 			Text = text;
 		}
 
-		public void WriteHtml(TextWriter w)
+		public void WriteRazor(TextWriter w)
 		{
 			var pp = Text.Split(new[] { '|' }, 2);
 			var moduleName = pp[0];
@@ -278,7 +278,7 @@ namespace TASVideos.WikiEngine.AST
 				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
 				div.Children.Add(new Text(CharStart, "Unknown module " + moduleName) { CharEnd = CharEnd });
 				div.Attributes["class"] = "module-error";
-				div.WriteHtml(w);
+				div.WriteRazor(w);
 			}
 		}
 

@@ -22,13 +22,13 @@ namespace TASVideos.WikiEngine
 				}, Formatting.Indented);
 			}
 		}
-		public static void DebugWriteHtml(string content, TextWriter w)
+		public static void DebugWriteRazor(string content, TextWriter w)
 		{
 			try
 			{
 				var results = NewParser.Parse(content);
 				foreach (var r in results)
-					r.WriteHtml(w);
+					r.WriteRazor(w);
 			}
 			catch (NewParser.SyntaxException e)
 			{
@@ -42,7 +42,7 @@ namespace TASVideos.WikiEngine
 
 			foreach (var r in results)
 			{
-				r.WriteHtml(w);
+				r.WriteRazor(w);
 			}
 		}
 
