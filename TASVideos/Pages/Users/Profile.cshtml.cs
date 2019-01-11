@@ -21,6 +21,10 @@ namespace TASVideos.Pages.Users
 			_awardTasks = awardTasks;
 		}
 
+		// Allows for a query based call to this page for Users/List
+		[FromQuery]
+		public string Name { get; set; }
+
 		[FromRoute]
 		public string UserName { get; set; }
 
@@ -28,6 +32,16 @@ namespace TASVideos.Pages.Users
 
 		public async Task<IActionResult> OnGet()
 		{
+			if (string.IsNullOrWhiteSpace(UserName) && string.IsNullOrWhiteSpace(Name))
+			{
+				return RedirectToPage("/Users/List");
+			}
+
+			if (string.IsNullOrWhiteSpace(UserName))
+			{
+				UserName = Name;
+			}
+
 			Profile = await UserTasks.GetUserProfile(UserName, includeHidden: false);
 			if (User == null)
 			{
