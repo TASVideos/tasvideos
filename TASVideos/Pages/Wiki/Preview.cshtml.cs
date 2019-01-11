@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Wiki
 
 		public string Html { get; set; } = "";
 
-		public IActionResult OnPost()
+		public void OnPost()
 		{
 			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
 
@@ -36,10 +36,9 @@ namespace TASVideos.Pages.Wiki
 			// ViewData["Title"] = "Generated Preview";
 			// ViewData["Layout"] = null;
 
-			var sw = new StringWriter(); // TODO: is there a better way to do this without StringWriter, like, by streaming to the page or something?
-			Util.RenderHtml(input, sw);
-			Html = sw.ToString();
-			return Page();
+			var tw = new StreamWriter(Response.Body, Encoding.UTF8);
+			Response.ContentType = "text/plain"; // really HTML, yeah
+			Util.RenderHtml(input, tw);
 		}
 	}
 }
