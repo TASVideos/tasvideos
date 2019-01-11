@@ -60,7 +60,7 @@
 				<fullrow>
 					<small style="font-style: italic">@Html.Raw(post.RenderedSignature)</small>
 					<br />
-					<a class="btn btn-info btn-sm" asp-page="/User/Profile" asp-route-userName="@post.PosterName">Profile</a>
+					<a class="btn btn-info btn-sm" asp-page="/Users/Profile" asp-route-userName="@post.PosterName">Profile</a>
 					<a class="btn btn-secondary btn-sm" condition="User.Identity.IsAuthenticated" asp-page="/Messages/Create" asp-route-toUser="@post.PosterName">PM</a>
 					<div class="pull-right">
 						@foreach (var award in post.Awards.OrderByDescending(a => a.Year))
