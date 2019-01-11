@@ -87,3 +87,10 @@
 NodeList.prototype.toArray = function () {
 	return Array.prototype.slice.call(this);
 };
+
+// does this go here?
+function ajaxModuleHelper(name, params, elementId) {
+	var $element = $("script[data-ajaxmoduleid=" + elementId + "]");
+	// send a get to DoModule?Name={name}&Params={params}
+	// get the HTML back, and then replace $element with it
+}
