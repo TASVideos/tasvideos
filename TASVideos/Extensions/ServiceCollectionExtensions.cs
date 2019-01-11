@@ -137,6 +137,7 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Publications/Authors", "Players-List");
 					options.Conventions.AddPageRoute("/Forum/Posts/Index", "forum/p/{id:int}");
 					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
+					options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
 				});
 
 			services.AddHttpContext();
