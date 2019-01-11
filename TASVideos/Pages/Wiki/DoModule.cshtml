@@ -1,0 +1,3 @@
+@page
+@model DoModuleModel
+@(await Component.InvokeAsync(Model.Name, new { pageData = null, pp = Model.Params }))
