@@ -4,7 +4,7 @@
 		<h5 class="card-title">@Model.Name</h5>
 		<row>
 			<div class="col-md-6">
-				<div condition="@ViewData.UserHas(PermissionTo.EditRoles)">
+				<div permission="EditRoles">
 					<a asp-page="AddEdit" asp-route-id="@Model.Id" class="btn btn-primary mb-m">Edit</a>
 				</div>
 				@Model.Description
@@ -37,7 +37,7 @@
 			@foreach (var user in Model.Users)
 			{
 				<span class="mr-4 mb-4" style="display: inline-block">
-					<a asp-page="/User/Profile" asp-route-userName="@user.UserName">@user.UserName</a>
+					<a asp-page="/Users/Profile" asp-route-userName="@user.UserName">@user.UserName</a>
 				</span>
 			}
 		</div>

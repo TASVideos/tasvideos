@@ -21,13 +21,13 @@
 			<td>@user.CreateTimeStamp</td>
 			<td>
 				<a
-					asp-page="/User/Profile"
+					asp-page="/Users/Profile"
 					asp-route-userName="@user.UserName"
 					class="btn btn-secondary">
 					View
 				</a>
 				<a
-					condition="@ViewData.UserHas(PermissionTo.EditUsers)"
+					permission="EditUsers"
 					asp-page="Edit"
 					asp-route-id="@user.Id"
 					class="btn btn-primary">
