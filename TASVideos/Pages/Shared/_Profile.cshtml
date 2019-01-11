@@ -128,7 +128,7 @@
 				<div condition="Model.SubmissionCount > 0" class="card-text">
 					<p>
 						<a 
-							asp-page="/Submission/Index" 
+							asp-page="/Submissions/Index" 
 							asp-route-user="@Model.UserName">
 						@Model.SubmissionCount
 					</a> Total
@@ -137,7 +137,7 @@
 					{
 						<label>
 							<a 
-								asp-page="/Submission/Index" 
+								asp-page="/Submissions/Index" 
 								asp-route-user="@Model.UserName" 
 								asp-route-statusfilter="@((int)sub.Status)">
 								@sub.Count
