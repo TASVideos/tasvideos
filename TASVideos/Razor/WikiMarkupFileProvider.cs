@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading;
 
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
@@ -14,8 +11,6 @@ namespace TASVideos.Razor
 	public class WikiMarkupFileProvider : IFileProvider
 	{
 		public const string Prefix = "/Pages/~~~";
-
-		private int _previewNameIndex;
 
 		public IWikiPages WikiPages { get; set; }
 
@@ -31,19 +26,16 @@ namespace TASVideos.Razor
 				return null;
 			}
 
-			string pageName, markup;
+			subPath = subPath.Substring(Prefix.Length);
+			var continuation = WikiPages.Revision(int.Parse(subPath));
+			var result = continuation;
+			if (result == null)
+			{
+				return null;
+			}
 
-
-				subPath = subPath.Substring(Prefix.Length);
-				var continuation = WikiPages.Revision(int.Parse(subPath));
-				var result = continuation;
-				if (result == null)
-				{
-					return null;
-				}
-
-				pageName = result.PageName;
-				markup = result.Markup;
+			var pageName = result.PageName;
+			var markup = result.Markup;
 
 			var ms = new MemoryStream();
 			using (var tw = new StreamWriter(ms))
