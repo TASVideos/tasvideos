@@ -107,16 +107,6 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddWikiProvider(this IServiceCollection services)
-		{
-			var provider = new Razor.WikiMarkupFileProvider();
-			services.AddSingleton(provider);
-			services.Configure<RazorViewEngineOptions>(
-				opts => opts.FileProviders.Add(provider));
-
-			return services;
-		}
-
 		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services)
 		{
 			services.AddResponseCaching();
