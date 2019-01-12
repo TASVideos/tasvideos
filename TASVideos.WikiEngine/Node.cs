@@ -32,6 +32,7 @@ namespace TASVideos.WikiEngine.AST
 	public interface IWriterHelper
 	{
 		bool CheckCondition(string condition);
+		string RunViewComponent(string name, string pp);
 	}
 
 	public interface INodeWithChildren : INode
@@ -476,7 +477,20 @@ namespace TASVideos.WikiEngine.AST
 
 		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
 		{
-			w.Write("TODO MODULE");
+			var pp = Text.Split(new[] { '|' }, 2);
+			var moduleName = pp[0];
+			var moduleParams = pp.Length > 1 ? pp[1] : "";
+			if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
+			{
+				w.Write(h.RunViewComponent(realModuleName, moduleParams));
+			}
+			else
+			{
+				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
+				div.Children.Add(new Text(CharStart, "Unknown module " + moduleName) { CharEnd = CharEnd });
+				div.Attributes["class"] = "module-error";
+				div.WriteHtmlDynamic(w, h);
+			}
 		}
 
 		public INode Clone()
