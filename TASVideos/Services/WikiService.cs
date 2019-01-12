@@ -354,4 +354,55 @@ namespace TASVideos.Services
 			await _db.SaveChangesAsync();
 		}
 	}
+
+	public static class WikiPageExtensions
+	{
+		/// <summary>
+		/// Filters the list of wiki pages to only pages that are nest beneath the given page.
+		/// If no pageName is provided, then a master list of subpages is provided
+		/// ex: /Foo/Bar, /Foo/Bar2 and /Foo/Bar/Baz are all subpages of /Foo
+		/// </summary>
+		/// <seealso cref="WikiPage"/>
+		/// <param name="list">The list of wiki pages</param>
+		/// <param name="pageName">the name of the page to get sub pages from</param>
+		public static IEnumerable<WikiPage> ThatAreSubpagesOf(this IEnumerable<WikiPage> list, string pageName)
+		{
+			pageName = pageName.Trim('/');
+			var query = list
+				.ThatAreNotDeleted()
+				.ThatAreCurrentRevisions()
+				.Where(wp => wp.PageName != pageName);
+
+			if (!string.IsNullOrWhiteSpace(pageName))
+			{
+				query = query.Where(wp => wp.PageName.StartsWith(pageName + "/"));
+			}
+
+			return query;
+		}
+
+		/// <summary>
+		/// Filters the list of wiki pages to only pages that are parents of the given page
+		/// ex: /Foo is a parent of /Foo/Bar
+		/// ex: /Foo and /Foo/Bar are parents of /Foo/Bar/Baz
+		/// </summary>
+		/// <seealso cref="WikiPage"/>
+		/// <param name="list">The list of wiki pages</param>
+		/// <param name="pageName">the name of the page to get parent pages from</param>
+		public static IEnumerable<WikiPage> ThatAreParentsOf(this IEnumerable<WikiPage> list, string pageName)
+		{
+			pageName = (pageName ?? "").Trim('/');
+			if (string.IsNullOrWhiteSpace(pageName)
+				|| !pageName.Contains('/')) // Easy optimization, pages without a / have no parents
+			{
+				return Enumerable.Empty<WikiPage>();
+			}
+
+			return list
+				.ThatAreNotDeleted()
+				.ThatAreCurrentRevisions()
+				.Where(wp => wp.PageName != pageName)
+				.Where(wp => pageName.StartsWith(wp.PageName));
+		}
+	}
 }
