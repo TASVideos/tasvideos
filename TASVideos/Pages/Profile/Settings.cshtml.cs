@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
@@ -17,15 +19,18 @@ namespace TASVideos.Pages.Profile
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly IEmailSender _emailSender;
+		private readonly ApplicationDbContext _db;
 
 		public SettingsModel(
 			UserManager<User> userManager,
 			IEmailSender emailSender,
+			ApplicationDbContext db,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
 			_userManager = userManager;
 			_emailSender = emailSender;
+			_db = db;
 		}
 
 		[TempData]
@@ -58,7 +63,8 @@ namespace TASVideos.Pages.Profile
 				return Page();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
+			var id = int.Parse(_userManager.GetUserId(User));
+			var user = await _db.Users.SingleAsync(u => u.Id == id);
 
 			var email = user.Email;
 			if (Settings.Email != email)
@@ -74,7 +80,10 @@ namespace TASVideos.Pages.Profile
 			if (Settings.TimeZoneId != user.TimeZoneId 
 				|| Settings.PublicRatings != user.PublicRatings)
 			{
-				await UserTasks.UpdateUserProfile(user.Id, Settings.TimeZoneId, Settings.PublicRatings, Settings.From);
+				user.TimeZoneId = Settings.TimeZoneId;
+				user.PublicRatings = Settings.PublicRatings;
+				user.From = Settings.From;
+				await _db.SaveChangesAsync();
 			}
 
 			StatusMessage = "Your profile has been updated";

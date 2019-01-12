@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +32,16 @@ namespace TASVideos.Pages.Users
 
 		public void OnGet()
 		{
-			Users = UserTasks.GetPageOfUsers(Search);
+			Users = _db.Users
+				.Select(u => new UserListModel
+				{
+					Id = u.Id,
+					UserName = u.UserName,
+					CreateTimeStamp = u.CreateTimeStamp,
+					Roles = u.UserRoles
+						.Select(ur => ur.Role.Name)
+				})
+				.SortedPageOf(_db, Search);
 		}
 
 		public async Task<IActionResult> OnGetSearch(string partial)

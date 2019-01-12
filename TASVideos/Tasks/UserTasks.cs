@@ -56,34 +56,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Gets a list of <see cref="User"/>s for the purpose of a user list
-		/// </summary>
-		public PageOf<UserListModel> GetPageOfUsers(PagedModel paging)
-		{
-			var data = _db.Users
-				.Select(u => new UserListModel
-				{
-					Id = u.Id,
-					UserName = u.UserName,
-					CreateTimeStamp = u.CreateTimeStamp,
-					Roles = u.UserRoles
-						.Select(ur => ur.Role.Name)
-				})
-				.SortedPageOf(_db, paging);
-
-			return data;
-		}
-
-		public async Task UpdateUserProfile(int id, string timezoneId, bool publicRatings, string from)
-		{
-			var user = await _db.Users.SingleAsync(u => u.Id == id);
-			user.TimeZoneId = timezoneId;
-			user.PublicRatings = publicRatings;
-			user.From = from;
-			await _db.SaveChangesAsync();
-		}
-
-		/// <summary>
 		/// Checks if the given user name already exists in the database
 		/// </summary>
 		public async Task<bool> CheckUserNameExists(string userName)
