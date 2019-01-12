@@ -29,27 +29,6 @@ namespace TASVideos.Tasks
 			_cache = cache;
 		}
 
-		/// <summary>
-		/// Returns all of the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
-		/// records where the given <see cref="user"/> is the recipient
-		/// </summary>
-		public async Task<IEnumerable<InboxModel>> GetUserInBox(User user)
-		{
-			return await _db.PrivateMessages
-				.ToUser(user)
-				.ThatAreNotToUserDeleted()
-				.ThatAreNotToUserSaved()
-				.Select(pm => new InboxModel
-				{
-					Id = pm.Id,
-					Subject = pm.Subject,
-					SendDate = pm.CreateTimeStamp,
-					FromUser = pm.FromUser.UserName,
-					IsRead = pm.ReadOn.HasValue
-				})
-				.ToListAsync();
-		}
-
 		// TODO: document
 		public async Task<IEnumerable<SaveboxModel>> GetUserSaveBox(User user)
 		{
@@ -146,36 +125,6 @@ namespace TASVideos.Tasks
 
 			_cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
 			return unreadMessageCount;
-		}
-
-		// TODO: document
-		public async Task SaveMessageToUser(User user, int id)
-		{
-			var message = await _db.PrivateMessages
-				.ToUser(user)
-				.ThatAreNotToUserDeleted()
-				.SingleOrDefaultAsync(pm => pm.Id == id);
-
-			if (message != null)
-			{
-				message.SavedForToUser = true;
-				await _db.SaveChangesAsync();
-			}
-		}
-
-		// TODO: document
-		public async Task DeleteMessageToUser(User user, int id)
-		{
-			var message = await _db.PrivateMessages
-				.ToUser(user)
-				.ThatAreNotToUserDeleted()
-				.SingleOrDefaultAsync(pm => pm.Id == id);
-
-			if (message != null)
-			{
-				message.DeletedForToUser = true;
-				await _db.SaveChangesAsync();
-			}
 		}
 
 		// TODO: move this logic into the page
