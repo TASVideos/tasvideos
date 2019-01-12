@@ -1,3 +1,4 @@
 @page
 @model DoModuleModel
-@(await Component.InvokeAsync(Model.Name, new { pageData = null, pp = Model.Params }))
+@{ Layout = null; }
+@(await Component.InvokeAsync(Model.Name, new { pageData = (WikiPage)null, pp = Model.Params }))
