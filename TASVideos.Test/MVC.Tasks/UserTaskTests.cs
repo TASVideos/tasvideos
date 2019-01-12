@@ -173,25 +173,5 @@ namespace TASVideos.Test.MVC.Tasks
 			Assert.AreEqual(2, list.Count, "User should have 2 permissions");
 			Assert.AreNotEqual(list[0], list[1], "Permissions must be different");
 		}
-
-		[TestMethod]
-		public async Task GetUserNameById_ValidId_ReturnsCorrectName()
-		{
-			_db.Users.Add(TestUser);
-			_db.SaveChanges();
-
-			var result = await _userTasks.GetUserNameById(1);
-			Assert.AreEqual(TestUserName, result, $"UserName should be {nameof(TestUserName)}");
-		}
-
-		[TestMethod]
-		public async Task GetUserNameById_InvalidId_ReturnsNull()
-		{
-			_db.Users.Add(TestUser);
-			_db.SaveChanges();
-
-			var result = await _userTasks.GetUserNameById(int.MaxValue);
-			Assert.IsNull(result, "Result shoudl be null");
-		}
 	}
 }

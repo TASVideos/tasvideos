@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -75,18 +73,6 @@ namespace TASVideos.Tasks
 				.SortedPageOf(_db, paging);
 
 			return data;
-		}
-
-		/// <summary>
-		/// Returns the username of the <see cref="User"/>
-		/// with the given <see cref="id"/>
-		/// </summary>
-		public async Task<string> GetUserNameById(int id)
-		{
-			return await _db.Users
-				.Where(u => u.Id == id)
-				.Select(u => u.UserName)
-				.SingleOrDefaultAsync();
 		}
 
 		/// <summary>
