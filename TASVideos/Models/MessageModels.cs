@@ -70,23 +70,4 @@ namespace TASVideos.Models
 		public bool EnableBbCode { get; set; }
 		public bool EnableHtml { get; set; }
 	}
-
-	public class PrivateMessageCreateModel
-	{
-		[Display(Name = "Subject")]
-		[Required]
-		[StringLength(100, MinimumLength = 3)]
-		public string Subject { get; set; }
-
-		[Required]
-		[Display(Name = "Message Body")]
-		[StringLength(1000, MinimumLength = 5)]
-		public string Text { get; set; }
-
-		[Required]
-		[Display(Name = "Username", Description = "Enter a UserName")]
-		public string ToUser { get; set; }
-
-		public PrivateMessageModel ReplyingTo { get; set; }
-	}
 }
