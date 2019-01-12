@@ -75,18 +75,6 @@ namespace TASVideos.Tasks
 			return data;
 		}
 
-		/// <summary>
-		/// Returns the id of the <see cref="User"/>
-		/// with the given <see cref="userName"/>
-		/// </summary>
-		public async Task<int> GetUserIdByName(string userName)
-		{
-			return await _db.Users
-				.Where(u => u.UserName == userName)
-				.Select(u => u.Id)
-				.SingleOrDefaultAsync();
-		}
-
 		public async Task UpdateUserProfile(int id, string timezoneId, bool publicRatings, string from)
 		{
 			var user = await _db.Users.SingleAsync(u => u.Id == id);

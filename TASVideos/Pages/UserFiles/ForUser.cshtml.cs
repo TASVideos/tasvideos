@@ -29,8 +29,7 @@ namespace TASVideos.Pages.UserFiles
 
 		public async Task OnGet()
 		{
-			var userId = await UserTasks.GetUserIdByName(UserName);
-			Files = await _userFileTasks.GetUserIndex(userId, includeHidden: false);
+			Files = await _userFileTasks.GetUserIndex(UserName, includeHidden: false);
 		}
 	}
 }

@@ -44,13 +44,13 @@ namespace TASVideos.Tasks
 		/// <summary>
 		/// Returns the info for the files uploaded by the given user
 		/// </summary>
-		public async Task<IEnumerable<UserFileModel>> GetUserIndex(int userId, bool includeHidden)
+		public async Task<IEnumerable<UserFileModel>> GetUserIndex(string userName, bool includeHidden)
 		{
 			var query = _db.UserFiles
 				.Include(userFile => userFile.Author)
 				.Include(userFile => userFile.Game)
 				.Include(userFile => userFile.System)
-				.Where(userFile => userFile.Author.Id == userId);
+				.Where(userFile => userFile.Author.UserName == userName);
 
 			if (!includeHidden)
 			{

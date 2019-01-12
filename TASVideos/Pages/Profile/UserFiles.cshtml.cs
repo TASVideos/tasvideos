@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Profile
 		{
 			var user = await _userManager.GetUserAsync(User);
 			UserName = user.UserName;
-			Files = await _fileTasks.GetUserIndex(user.Id, includeHidden: true);
+			Files = await _fileTasks.GetUserIndex(UserName, includeHidden: true);
 		}
 	}
 }
