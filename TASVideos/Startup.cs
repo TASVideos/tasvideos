@@ -32,7 +32,6 @@ namespace TASVideos
 				.AddTasks()
 				.AddServices()
 				.AddExternalMediaPublishing(Environment, Settings)
-				.AddWikiProvider()
 				.AddAutoMapperWithProjections();
 
 			// Internal Libraries

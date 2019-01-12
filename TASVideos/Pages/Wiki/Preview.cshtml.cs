@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Models;
-using TASVideos.Razor;
 using TASVideos.Tasks;
 using TASVideos.WikiEngine;
 
@@ -16,14 +15,10 @@ namespace TASVideos.Pages.Wiki
 	[IgnoreAntiforgeryToken]
 	public class PreviewModel : BasePageModel
 	{
-		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
-
 		public PreviewModel(
-			WikiMarkupFileProvider wikiMarkupFileProvider,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_wikiMarkupFileProvider = wikiMarkupFileProvider;
 		}
 
 		public string Html { get; set; } = "";

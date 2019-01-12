@@ -9,9 +9,9 @@ namespace TASVideos.Extensions
 {
 	public static class HtmlExtensions
 	{
-		// ReSharper disable once UnusedMember.Global (Used in Node.cs with string building)
-		public static bool WikiCondition(this IHtmlHelper html, string condition)
+		public static bool WikiCondition(ViewContext viewContext, string condition)
 		{
+			var viewData = viewContext.ViewData;
 			bool result = false;
 
 			if (condition.StartsWith('!'))
@@ -25,7 +25,7 @@ namespace TASVideos.Extensions
 				default:
 					if (Enum.TryParse(condition, out PermissionTo permission))
 					{
-						result ^= html.ViewData.UserHas(permission);
+						result ^= viewData.UserHas(permission);
 					}
 
 					break;
@@ -33,7 +33,7 @@ namespace TASVideos.Extensions
 				case "CanSubmitMovies": // Legacy system: same as UserIsLoggedIn
 				case "CanRateMovies": // Legacy system: same as UserIsLoggedIn
 				case "UserIsLoggedIn":
-					result ^= html.ViewContext.HttpContext.User.Identity.IsAuthenticated;
+					result ^= viewContext.HttpContext.User.Identity.IsAuthenticated;
 					break;
 				case "1":
 					result ^= true;
@@ -44,24 +44,30 @@ namespace TASVideos.Extensions
 
 				// Support legacy values, these are deprecated
 				case "CanEditPages":
-					result ^= html.ViewData.UserHas(PermissionTo.EditWikiPages);
+					result ^= viewData.UserHas(PermissionTo.EditWikiPages);
 					break;
 				case "UserHasHomepage":
-					result ^= html.ViewContext.HttpContext.User.Identity
+					result ^= viewContext.HttpContext.User.Identity
 						.IsAuthenticated; // Let's assume every user can have a homepage automatically
 					break;
 				case "CanViewSubmissions":
 					result ^= true; // Legacy system always returned true
 					break;
 				case "CanJudgeMovies":
-					result ^= html.ViewData.UserHas(PermissionTo.JudgeSubmissions);
+					result ^= viewData.UserHas(PermissionTo.JudgeSubmissions);
 					break;
 				case "CanPublishMovies":
-					result ^= html.ViewData.UserHas(PermissionTo.PublishMovies);
+					result ^= viewData.UserHas(PermissionTo.PublishMovies);
 					break;
 			}
 
 			return result;
+		}
+	
+		// ReSharper disable once UnusedMember.Global (Used in Node.cs with string building)
+		public static bool WikiCondition(this IHtmlHelper html, string condition)
+		{
+			return WikiCondition(html.ViewContext, condition);
 		}
 
 		// https://stackoverflow.com/questions/6578495/how-do-i-display-the-displayattribute-description-attribute-value
