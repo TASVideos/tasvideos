@@ -23,29 +23,7 @@ namespace TASVideos.WikiEngine
 				}, Formatting.Indented);
 			}
 		}
-		public static void DebugWriteRazor(string content, TextWriter w)
-		{
-			try
-			{
-				var results = NewParser.Parse(content);
-				foreach (var r in results)
-					r.WriteRazor(w);
-			}
-			catch (NewParser.SyntaxException e)
-			{
-				w.Write($"<!-- ERROR {e.Message} -->");
-			}
-		}
 
-		public static void RenderRazor(string pageName, string content, TextWriter w)
-		{
-			var results = NewParser.Parse(content);
-
-			foreach (var r in results)
-			{
-				r.WriteRazor(w);
-			}
-		}
 		public static void RenderHtml(string content, TextWriter w)
 		{
 			var results = NewParser.Parse(content);

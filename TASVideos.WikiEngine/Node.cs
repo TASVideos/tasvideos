@@ -23,7 +23,6 @@ namespace TASVideos.WikiEngine.AST
 		NodeType Type { get; }
 		int CharStart { get; }
 		int CharEnd { get; set; }
-		void WriteRazor(TextWriter w);
 		void WriteHtml(TextWriter w);
 		INode Clone();
 		void WriteHtmlDynamic(TextWriter w, IWriterHelper h);
@@ -50,28 +49,6 @@ namespace TASVideos.WikiEngine.AST
 		{
 			CharStart = charStart;
 			Content = content;
-		}
-
-		public void WriteRazor(TextWriter w)
-		{
-			foreach (var c in Content)
-			{
-				switch (c)
-				{
-					case '<':
-						w.Write("&lt;");
-						break;
-					case '&':
-						w.Write("&amp;");
-						break;
-					case '@':
-						w.Write("&#64;");
-						break;
-					default:
-						w.Write(c);
-						break;
-				}
-			}
 		}
 
 		public void WriteHtml(TextWriter w)
@@ -147,64 +124,6 @@ namespace TASVideos.WikiEngine.AST
 		{
 			foreach (var kvp in attributes)
 				Attributes.Add(kvp.Key, kvp.Value);
-		}
-
-		public void WriteRazor(TextWriter w)
-		{
-			if (VoidTags.Contains(Tag) && Children.Count > 0)
-			{
-				throw new InvalidOperationException("Void tag with child content!");
-			}
-
-			w.Write('<');
-			w.Write(Tag);
-			foreach (var a in Attributes)
-			{
-				if (!AllowedAttributeNames.IsMatch(a.Key))
-				{
-					throw new InvalidOperationException("Invalid attribute name");
-				}
-				w.Write(' ');
-				w.Write(a.Key);
-				w.Write("=\"");
-				foreach (var c in a.Value)
-				{
-					switch (c)
-					{
-						case '<':
-							w.Write("&lt;");
-							break;
-						case '&':
-							w.Write("&amp;");
-							break;
-						case '"':
-							w.Write("&quot;");
-							break;
-						case '@':
-							w.Write("&#64;");
-							break;
-						default:
-							w.Write(c);
-							break;
-					}
-				}
-
-				w.Write('"');
-			}
-
-			if (VoidTags.Contains(Tag))
-			{
-				w.Write(" />");
-			}
-			else
-			{
-				w.Write('>');
-				foreach (var c in Children)
-					c.WriteRazor(w);
-				w.Write("</");
-				w.Write(Tag);
-				w.Write('>');
-			}
 		}
 
 		public void WriteHtml(TextWriter w)
@@ -346,16 +265,6 @@ namespace TASVideos.WikiEngine.AST
 			Children.AddRange(children);
 		}
 
-		public void WriteRazor(TextWriter w)
-		{
-			// razor stuff
-			w.Write("@if(Html.WikiCondition(");
-			Escape.WriteCSharpString(w, Condition);
-			w.Write(")){<text>");
-			foreach (var c in Children)
-				c.WriteRazor(w);
-			w.Write("</text>}");
-		}
 		public void WriteHtml(TextWriter w)
 		{
 			var ajaxmoduleid = Interlocked.Increment(ref AjaxModuleId).ToString();
@@ -425,28 +334,6 @@ namespace TASVideos.WikiEngine.AST
 			CharStart = charStart;
 			CharEnd = charEnd;
 			Text = text;
-		}
-
-		public void WriteRazor(TextWriter w)
-		{
-			var pp = Text.Split(new[] { '|' }, 2);
-			var moduleName = pp[0];
-			var moduleParams = pp.Length > 1 ? pp[1] : "";
-			if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
-			{
-				w.Write("@(await Component.InvokeAsync(");
-				Escape.WriteCSharpString(w, realModuleName);
-				w.Write(", new { pageData = Model, pp = ");
-				Escape.WriteCSharpString(w, moduleParams);
-				w.Write(" }))");
-			}
-			else
-			{
-				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-				div.Children.Add(new Text(CharStart, "Unknown module " + moduleName) { CharEnd = CharEnd });
-				div.Attributes["class"] = "module-error";
-				div.WriteRazor(w);
-			}
 		}
 
 		public void WriteHtml(TextWriter w)
