@@ -26,6 +26,12 @@ namespace TASVideos.WikiEngine.AST
 		void WriteRazor(TextWriter w);
 		void WriteHtml(TextWriter w);
 		INode Clone();
+		void WriteHtmlDynamic(TextWriter w, IWriterHelper h);
+	}
+
+	public interface IWriterHelper
+	{
+		bool CheckCondition(string condition);
 	}
 
 	public interface INodeWithChildren : INode
@@ -84,6 +90,11 @@ namespace TASVideos.WikiEngine.AST
 						break;
 				}
 			}			
+		}
+
+		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
+		{
+			WriteHtml(w);
 		}
 
 		public INode Clone()
@@ -250,6 +261,61 @@ namespace TASVideos.WikiEngine.AST
 			}
 		}
 
+		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
+		{
+			if (VoidTags.Contains(Tag) && Children.Count > 0)
+			{
+				throw new InvalidOperationException("Void tag with child content!");
+			}
+
+			w.Write('<');
+			w.Write(Tag);
+			foreach (var a in Attributes)
+			{
+				if (!AllowedAttributeNames.IsMatch(a.Key))
+				{
+					throw new InvalidOperationException("Invalid attribute name");
+				}
+				w.Write(' ');
+				w.Write(a.Key);
+				w.Write("=\"");
+				foreach (var c in a.Value)
+				{
+					switch (c)
+					{
+						case '<':
+							w.Write("&lt;");
+							break;
+						case '&':
+							w.Write("&amp;");
+							break;
+						case '"':
+							w.Write("&quot;");
+							break;
+						default:
+							w.Write(c);
+							break;
+					}
+				}
+
+				w.Write('"');
+			}
+
+			if (VoidTags.Contains(Tag))
+			{
+				w.Write(" />");
+			}
+			else
+			{
+				w.Write('>');
+				foreach (var c in Children)
+					c.WriteHtmlDynamic(w, h);
+				w.Write("</");
+				w.Write(Tag);
+				w.Write('>');
+			}			
+		}
+
 		public INode Clone()
 		{
 			var ret = (Element)MemberwiseClone();
@@ -302,6 +368,15 @@ namespace TASVideos.WikiEngine.AST
 			foreach (var c in Children)
 				c.WriteHtml(w);
 			w.Write("</span>");
+		}
+
+		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
+		{
+			if (h.CheckCondition(Condition))
+			{
+				foreach (var c in Children)
+					c.WriteHtmlDynamic(w, h);				
+			}
 		}
 
 		public INode Clone()
@@ -397,6 +472,11 @@ namespace TASVideos.WikiEngine.AST
 				div.Attributes["class"] = "module-error";
 				div.WriteHtml(w);
 			}
+		}
+
+		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
+		{
+			w.Write("TODO MODULE");
 		}
 
 		public INode Clone()

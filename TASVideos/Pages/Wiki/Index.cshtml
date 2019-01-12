@@ -3,4 +3,4 @@
 	Layout = "_WikiLayout";
 }
 @model IndexModel
-<partial name="@Model.RazorPageName" model="Model.WikiPage" />
+<wiki-markup markup=@Model.Markup />
