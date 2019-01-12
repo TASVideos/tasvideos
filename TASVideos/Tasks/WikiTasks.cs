@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Helpers;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.ViewComponents;
@@ -156,27 +155,6 @@ namespace TASVideos.Tasks
 					LastUpdateUserName = wp.LastUpdateUserName ?? wp.CreateUserName
 				})
 				.ToListAsync();
-		}
-
-		/// <summary>
-		/// Returns a list of all <see cref="WikiPageReferral"/> records that do not link to any existing page
-		/// </summary>
-		public async Task<IEnumerable<WikiPageReferral>> GetAllBrokenLinks()
-		{
-			return (await _db.WikiReferrals
-					.Where(wr => wr.Referrer != "SandBox")
-					.Where(wr => wr.Referral != "Players-List")
-					.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
-					.Where(wr => !wr.Referral.StartsWith("Subs-"))
-					.Where(wr => !wr.Referral.StartsWith("Movies-"))
-					.Where(wr => !wr.Referral.StartsWith("/forum"))
-					.Where(wr => !wr.Referral.StartsWith("/userfiles"))
-					.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
-					.Where(wr => wr.Referral != "FrontPage")
-					.ToListAsync())
-				.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue)
-				.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue)
-				.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral).HasValue);
 		}
 
 		/// <summary>
