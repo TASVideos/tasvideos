@@ -91,6 +91,13 @@ NodeList.prototype.toArray = function () {
 // does this go here?
 function ajaxModuleHelper(name, params, elementId) {
 	var $element = $("script[data-ajaxmoduleid=" + elementId + "]");
-	// send a get to DoModule?Name={name}&Params={params}
-	// get the HTML back, and then replace $element with it
+	var x = new XMLHttpRequest();
+	x.onreadystatechange = function() {
+		if (x.readyState === XMLHttpRequest.DONE && x.status === 200) {
+			$element.replaceWith($(x.responseText));
+		}
+	};
+
+	x.open("GET", "/Wiki/DoModule?Name=" + encodeURIComponent(name) + "&Params=" + encodeURIComponent(params), true);
+	x.send();
 }

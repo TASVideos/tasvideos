@@ -28,17 +28,12 @@ namespace TASVideos.Pages.Wiki
 
 		public string Html { get; set; } = "";
 
-		public void OnPost()
+		public IActionResult OnPost()
 		{
 			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-
-			// ViewData["WikiPage"] = null;
-			// ViewData["Title"] = "Generated Preview";
-			// ViewData["Layout"] = null;
-
-			var tw = new StreamWriter(Response.Body, Encoding.UTF8);
-			Response.ContentType = "text/plain"; // really HTML, yeah
-			Util.RenderHtml(input, tw);
+			var sw = new StringWriter();
+			Util.RenderHtml(input, sw);
+			return Content(sw.ToString(), "text/plain"); // really HTML, yeah
 		}
 	}
 }
