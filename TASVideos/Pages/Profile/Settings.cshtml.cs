@@ -77,14 +77,10 @@ namespace TASVideos.Pages.Profile
 				}
 			}
 
-			if (Settings.TimeZoneId != user.TimeZoneId 
-				|| Settings.PublicRatings != user.PublicRatings)
-			{
-				user.TimeZoneId = Settings.TimeZoneId;
-				user.PublicRatings = Settings.PublicRatings;
-				user.From = Settings.From;
-				await _db.SaveChangesAsync();
-			}
+			user.TimeZoneId = Settings.TimeZoneId;
+			user.PublicRatings = Settings.PublicRatings;
+			user.From = Settings.From;
+			await _db.SaveChangesAsync();
 
 			StatusMessage = "Your profile has been updated";
 			return RedirectToPage("Settings");

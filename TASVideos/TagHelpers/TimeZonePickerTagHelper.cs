@@ -19,7 +19,7 @@ namespace TASVideos.TagHelpers
 				throw new ArgumentException($"Invalid property type {forType}, {nameof(For)} must be a string");
 			}
 
-			var modelName = For.ModelExplorer.Metadata.PropertyName;
+			var modelName = For.Name;
 			var modelValue = (string)For.ModelExplorer.Model;
 			if (string.IsNullOrWhiteSpace(modelValue))
 			{
