@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Wiki
 			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
 			var sw = new StringWriter();
 			Util.RenderHtml(input, sw);
-			return Content(sw.ToString(), "text/plain"); // really HTML, yeah
+			return Content(sw.ToString(), "text/plain"); // really HTML, but a fragment so `text/plain` is good enough
 		}
 	}
 }
