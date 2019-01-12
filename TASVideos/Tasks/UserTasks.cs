@@ -116,16 +116,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Sets the <see cref="User" /> with the given username's last logged in timestamp to UTC Now
-		/// </summary>
-		public async Task MarkUserLoggedIn(string userName)
-		{
-			var user = await _db.Users.SingleAsync(u => u.UserName == userName);
-			user.LastLoggedInTimeStamp = DateTime.UtcNow;
-			await _db.SaveChangesAsync();
-		}
-
-		/// <summary>
 		/// Adds standard roles to the given user, these are roles all user's should start with
 		/// </summary>
 		public async Task AddStandardRolesToUser(int userId)
