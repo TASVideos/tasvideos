@@ -25,5 +25,31 @@ namespace TASVideos.WikiEngine
 
 			w.Write('"');
 		}
+		public static void WriteJsString(TextWriter w, string s)
+		{
+			w.Write('"');
+			foreach (var c in s)
+			{
+				if (c < 0x20)
+				{
+					w.Write($"\\x{(int)c:x2}");
+				}
+				else if (c == '"')
+				{
+					w.Write("\\\"");
+				}
+				else if (c == '/')
+				{
+					// avoid </script> inside string
+					w.Write("\\/");
+				}
+				else
+				{
+					w.Write(c);
+				}
+			}
+
+			w.Write('"');
+		}
 	}
 }

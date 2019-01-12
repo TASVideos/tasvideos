@@ -14,30 +14,10 @@ namespace TASVideos.Razor
 	public class WikiMarkupFileProvider : IFileProvider
 	{
 		public const string Prefix = "/Pages/~~~";
-		private const string PreviewPrefix = "/Pages/Preview/~~~";
-
-		private readonly Dictionary<string, PreviewMarkupCacheInfo> _previewCache = new Dictionary<string, PreviewMarkupCacheInfo>();
 
 		private int _previewNameIndex;
 
 		public IWikiPages WikiPages { get; set; }
-
-		public string SetPreviewMarkup(string content)
-		{
-			var key = GetPreviewName();
-			lock (_previewCache)
-			{
-				_previewCache.Add(
-					key, 
-					new PreviewMarkupCacheInfo
-					{
-						Expiry = DateTime.UtcNow.AddMinutes(1),
-						Markup = content
-					});
-			}
-
-			return key;
-		}
 
 		public IDirectoryContents GetDirectoryContents(string subPath)
 		{
@@ -46,20 +26,14 @@ namespace TASVideos.Razor
 
 		public IFileInfo GetFileInfo(string subPath)
 		{
-			if (!subPath.StartsWith(Prefix) && !subPath.StartsWith(PreviewPrefix))
+			if (!subPath.StartsWith(Prefix))
 			{
 				return null;
 			}
 
 			string pageName, markup;
 
-			if (subPath.StartsWith(PreviewPrefix))
-			{
-				pageName = "foobar"; // what goes here?
-				markup = GetPreviewMarkup(subPath);
-			}
-			else
-			{
+
 				subPath = subPath.Substring(Prefix.Length);
 				var continuation = WikiPages.Revision(int.Parse(subPath));
 				var result = continuation;
@@ -70,7 +44,6 @@ namespace TASVideos.Razor
 
 				pageName = result.PageName;
 				markup = result.Markup;
-			}
 
 			var ms = new MemoryStream();
 			using (var tw = new StreamWriter(ms))
@@ -83,55 +56,7 @@ namespace TASVideos.Razor
 
 		public IChangeToken Watch(string filter)
 		{
-			if (filter.StartsWith(PreviewPrefix))
-			{
-				return new ForceChangeToken();
-			}
-
 			return null;
-		}
-
-		private string GetPreviewMarkup(string key)
-		{
-			if (key.EndsWith("00"))
-			{
-				lock (_previewCache)
-				{
-					var now = DateTime.UtcNow;
-					foreach (var kvp in _previewCache.ToList())
-					{
-						if (kvp.Value.Expiry < now)
-						{
-							_previewCache.Remove(kvp.Key);
-						}
-					}
-
-					return _previewCache[key].Markup;
-				}
-			}
-
-			return _previewCache[key].Markup;
-		}
-
-		private string GetPreviewName()
-		{
-			return PreviewPrefix + Interlocked.Increment(ref _previewNameIndex);
-		}
-
-		private struct PreviewMarkupCacheInfo
-		{
-			public DateTime Expiry;
-			public string Markup;
-		}
-
-		private class ForceChangeToken : IChangeToken
-		{
-			public bool HasChanged => true;
-			public bool ActiveChangeCallbacks => false;
-			public IDisposable RegisterChangeCallback(Action<object> callback, object state)
-			{
-				return null;
-			}
 		}
 
 		private class MyFileInfo : IFileInfo

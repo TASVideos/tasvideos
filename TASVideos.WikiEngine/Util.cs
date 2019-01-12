@@ -45,6 +45,15 @@ namespace TASVideos.WikiEngine
 				r.WriteRazor(w);
 			}
 		}
+		public static void RenderHtml(string content, TextWriter w)
+		{
+			var results = NewParser.Parse(content);
+
+			foreach (var r in results)
+			{
+				r.WriteHtml(w);
+			}
+		}
 
 		public static IEnumerable<NewParser.WikiLinkInfo> GetAllWikiLinks(string content)
 		{

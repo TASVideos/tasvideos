@@ -87,3 +87,46 @@
 NodeList.prototype.toArray = function () {
 	return Array.prototype.slice.call(this);
 };
+
+// does this go here?
+function ajaxModuleHelper(name, params, elementId) {
+	var $element = $("script[data-ajaxmoduleid=" + elementId + "]");
+	if (!$element.length) { // a previous if module call might have removed this from the DOM
+		return;
+	}
+	var x = new XMLHttpRequest();
+	x.onreadystatechange = function() {
+		if (x.readyState === XMLHttpRequest.DONE && x.status === 200) {
+			if ($.contains(document.body, $element[0])) { // an interceding if module call might have removed this from the DOM
+				$element.replaceWith($(x.responseText));
+			}
+		}
+	};
+
+	x.open("GET", "/Wiki/DoModule?Name=" + encodeURIComponent(name) + "&Params=" + encodeURIComponent(params), true);
+	x.send();
+}
+
+function ajaxIfModuleHelper(condition, elementId) {
+	var $element = $("span[data-ajaxmoduleid=" + elementId + "]");
+	if (!$element.length) { // a previous if module call might have removed this from the DOM
+		return;
+	}
+	var x = new XMLHttpRequest();
+	x.onreadystatechange = function() {
+		if (x.readyState === XMLHttpRequest.DONE && x.status === 200) {
+			if ($.contains(document.body, $element[0])) { // an interceding if module call might have removed this from the DOM
+				if (JSON.parse(x.responseText)) {
+					// first child is the script; remove that
+					$element.children().first().remove();
+					$element.replaceWith($element.children());
+				} else {
+					$element.remove();
+				}
+			}
+		}
+	};
+
+	x.open("GET", "/Wiki/DoIfModule?Condition=" + encodeURIComponent(condition), true);
+	x.send();
+}
