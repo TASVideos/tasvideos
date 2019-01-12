@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -308,26 +307,6 @@ namespace TASVideos.Tasks
 			}
 
 			return model;
-		}
-
-		public async Task StopWatchingTopic(int userId, int topicId)
-		{
-			try
-			{
-				var watch = await _db.ForumTopicWatches
-					.SingleOrDefaultAsync(tw => tw.UserId == userId && tw.ForumTopicId == topicId);
-				_db.ForumTopicWatches.Remove(watch);
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// Do nothing
-				// 1) if a watch is already removed, we are done
-				// 2) if a watch was updated (for instance, someone posted in the topic),
-				//		there isn't much we can do other than reload the page anyway with an error
-				//		An error would only be modestly helpful anyway, and wouldn't save clicks
-				//		However, this would be an nice to have one day
-			}
 		}
 
 		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)
