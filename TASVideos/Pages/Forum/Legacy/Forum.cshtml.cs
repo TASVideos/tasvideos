@@ -7,7 +7,7 @@ using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Legacy
 {
-	// Handles legacy forum links to viewforum.php
+	// Handles legacy forum links to viewForum.php
 	[AllowAnonymous]
 	public class ForumModel : BasePageModel
 	{
@@ -20,7 +20,7 @@ namespace TASVideos.Pages.Forum.Legacy
 		[FromQuery]
 		public int? F { get; set; }
 
-		public async Task<IActionResult> OnGet()
+		public IActionResult OnGet()
 		{
 			if (!F.HasValue)
 			{
