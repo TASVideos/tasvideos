@@ -1,24 +1,24 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
 {
 	public class ListParents : ViewComponent
 	{
-		private readonly WikiTasks _wikiTasks;
+		private readonly IWikiPages _wikiPages;
 
-		public ListParents(WikiTasks wikiTasks)
+		public ListParents(IWikiPages wikiPages)
 		{
-			_wikiTasks = wikiTasks;
+			_wikiPages = wikiPages;
 		}
 
 		public IViewComponentResult Invoke(WikiPage pageData, string pp)
 		{
-			var subpages = pageData.PageName.Contains('/')
-				? _wikiTasks.GetParents(pageData.PageName)
-				: Enumerable.Empty<string>();
+			var subpages = _wikiPages
+					.ThatAreParentsOf(pageData.PageName)
+					.ToList();
 
 			return View(subpages);
 		}

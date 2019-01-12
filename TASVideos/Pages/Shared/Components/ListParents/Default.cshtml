@@ -1,11 +1,11 @@
-﻿@model IEnumerable<string>
+﻿@model IEnumerable<WikiPage>
 
-<div class="alert alert-info" Condition="@Model.Any()">
+<div class="alert alert-info" condition="@Model.Any()">
 	<label>Parents:</label>
 	<ul>
-		@foreach (var pageName in Model.OrderBy(m => m))
+		@foreach (var p in Model.OrderBy(m => m.PageName))
 		{
-			<li><a href="/@pageName">@pageName</a></li>
+			<li><a href="/@p.PageName">@p.PageName</a></li>
 		}
 	</ul>
 </div>

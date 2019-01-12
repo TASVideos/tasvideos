@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Wiki
@@ -13,7 +14,7 @@ namespace TASVideos.Pages.Wiki
 	[RequirePermission(PermissionTo.SeeAdminPages)]
 	public class SiteMapModel : BasePageModel
 	{
-		private readonly WikiTasks _wikiTasks;
+		private readonly IWikiPages _wikiPages;
 
 		private static readonly List<Models.SiteMapModel> CorePages = Assembly
 			.GetAssembly(typeof(SiteMapModel))
@@ -32,11 +33,11 @@ namespace TASVideos.Pages.Wiki
 			.ToList();
 
 		public SiteMapModel(
-			WikiTasks wikiTasks,
+			IWikiPages wikiPages,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
-			_wikiTasks = wikiTasks;
+			_wikiPages = wikiPages;
 		}
 
 		// TODO: rename this model
@@ -45,7 +46,11 @@ namespace TASVideos.Pages.Wiki
 		public void OnGet()
 		{
 			Map = CorePages.ToList();
-			var wikiPages = _wikiTasks.GetSubPages("");
+			var wikiPages = _wikiPages
+				.ThatAreSubpagesOf("")
+				.Select(w => w.PageName)
+				.ToList();
+
 			Map.AddRange(wikiPages
 				.Distinct()
 				.Select(p => new Models.SiteMapModel

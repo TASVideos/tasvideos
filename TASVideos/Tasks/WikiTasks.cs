@@ -25,44 +25,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a list of all pages that are considered subpages
-		/// of the page with the given <see cref="pageName"/>
-		/// </summary>
-		public IEnumerable<string> GetSubPages(string pageName)
-		{
-			pageName = pageName.Trim('/');
-			var query = _wikiPages
-				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
-				.Where(wp => wp.PageName != pageName);
-
-			if (!string.IsNullOrWhiteSpace(pageName))
-			{
-				query = query.Where(wp => wp.PageName.StartsWith(pageName + "/"));
-			}
-
-			return query
-				.Select(wp => wp.PageName)
-				.ToList();
-		}
-
-		/// <summary>
-		/// Returns a list of all pages that are considered parents
-		/// of the page with the given <see cref="pageName"/>
-		/// </summary>
-		public IEnumerable<string> GetParents(string pageName)
-		{
-			pageName = pageName.Trim('/');
-			return _wikiPages
-				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
-				.Where(wp => wp.PageName != pageName)
-				.Where(wp => pageName.StartsWith(wp.PageName))
-				.Select(wp => wp.PageName)
-				.ToList();
-		}
-
-		/// <summary>
 		/// Returns the data necessary to generate a diff of the
 		/// latest revision of the wiki page with the given <see cref="pageName"/>
 		/// compared against the previous revision
