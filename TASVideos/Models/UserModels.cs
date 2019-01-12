@@ -39,8 +39,20 @@ namespace TASVideos.Models
 	/// <summary>
 	/// Represents a <see cref="User"/> for the purpose of editing
 	/// </summary>
-	public class UserEditModel : UserEditPostModel
+	public class UserEditModel
 	{
+		[DisplayName("User Name")]
+		public string UserName { get; set; }
+
+		[DisplayName("Time Zone")]
+		public string TimezoneId { get; set; }
+
+		[Display(Name = "Location")]
+		public string From { get; set; }
+
+		[DisplayName("Selected Roles")]
+		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
+
 		[DisplayName("Account Created On")]
 		public DateTime CreateTimeStamp { get; set; }
 
@@ -57,27 +69,6 @@ namespace TASVideos.Models
 		public bool IsLockedOut { get; set; }
 
 		public string OriginalUserName => UserName;
-
-		[DisplayName("Available Roles")]
-		public IEnumerable<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
-	}
-
-	/// <summary>
-	/// Just the fields that can be posted from the <see cref="User" /> edit page
-	/// </summary>
-	public class UserEditPostModel
-	{
-		[DisplayName("User Name")]
-		public string UserName { get; set; }
-
-		[DisplayName("Time Zone")]
-		public string TimezoneId { get; set; }
-
-		[Display(Name = "Location")]
-		public string From { get; set; }
-
-		[DisplayName("Selected Roles")]
-		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
 	}
 
 	/// <summary>
