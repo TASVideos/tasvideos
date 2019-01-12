@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
+using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -24,6 +24,7 @@ namespace TASVideos.WikiEngine.AST
 		int CharStart { get; }
 		int CharEnd { get; set; }
 		void WriteRazor(TextWriter w);
+		void WriteHtml(TextWriter w);
 		INode Clone();
 	}
 
@@ -64,6 +65,25 @@ namespace TASVideos.WikiEngine.AST
 						break;
 				}
 			}
+		}
+
+		public void WriteHtml(TextWriter w)
+		{
+			foreach (var c in Content)
+			{
+				switch (c)
+				{
+					case '<':
+						w.Write("&lt;");
+						break;
+					case '&':
+						w.Write("&amp;");
+						break;
+					default:
+						w.Write(c);
+						break;
+				}
+			}			
 		}
 
 		public INode Clone()
@@ -175,6 +195,61 @@ namespace TASVideos.WikiEngine.AST
 			}
 		}
 
+		public void WriteHtml(TextWriter w)
+		{
+			if (VoidTags.Contains(Tag) && Children.Count > 0)
+			{
+				throw new InvalidOperationException("Void tag with child content!");
+			}
+
+			w.Write('<');
+			w.Write(Tag);
+			foreach (var a in Attributes)
+			{
+				if (!AllowedAttributeNames.IsMatch(a.Key))
+				{
+					throw new InvalidOperationException("Invalid attribute name");
+				}
+				w.Write(' ');
+				w.Write(a.Key);
+				w.Write("=\"");
+				foreach (var c in a.Value)
+				{
+					switch (c)
+					{
+						case '<':
+							w.Write("&lt;");
+							break;
+						case '&':
+							w.Write("&amp;");
+							break;
+						case '"':
+							w.Write("&quot;");
+							break;
+						default:
+							w.Write(c);
+							break;
+					}
+				}
+
+				w.Write('"');
+			}
+
+			if (VoidTags.Contains(Tag))
+			{
+				w.Write(" />");
+			}
+			else
+			{
+				w.Write('>');
+				foreach (var c in Children)
+					c.WriteHtml(w);
+				w.Write("</");
+				w.Write(Tag);
+				w.Write('>');
+			}
+		}
+
 		public INode Clone()
 		{
 			var ret = (Element)MemberwiseClone();
@@ -186,6 +261,7 @@ namespace TASVideos.WikiEngine.AST
 
 	public class IfModule : INodeWithChildren
 	{
+		private static int AjaxModuleId = 0;
 		public NodeType Type => NodeType.IfModule;
 		public List<INode> Children { get; private set; } = new List<INode>();
 		public string Condition { get; }
@@ -213,6 +289,20 @@ namespace TASVideos.WikiEngine.AST
 				c.WriteRazor(w);
 			w.Write("</text>}");
 		}
+		public void WriteHtml(TextWriter w)
+		{
+			var ajaxmoduleid = Interlocked.Increment(ref AjaxModuleId).ToString();
+			w.Write($"<span class=hiddenifmodule data-ajaxmoduleid=\"{ajaxmoduleid}\">");
+			w.Write($"<script>");
+			w.Write("ajaxIfModuleHelper(");
+			Escape.WriteJsString(w, Condition);
+			w.Write(',');
+			Escape.WriteJsString(w, ajaxmoduleid);
+			w.Write(")</script>");
+			foreach (var c in Children)
+				c.WriteHtml(w);
+			w.Write("</span>");
+		}
 
 		public INode Clone()
 		{
@@ -224,6 +314,7 @@ namespace TASVideos.WikiEngine.AST
 
 	public class Module : INode
 	{
+		private static int AjaxModuleId = 0;
 		private static readonly Dictionary<string, string> ModuleNameMaps = new Dictionary<string, string>
 		{
 			["listsubpages"] = "ListSubPages",
@@ -279,6 +370,32 @@ namespace TASVideos.WikiEngine.AST
 				div.Children.Add(new Text(CharStart, "Unknown module " + moduleName) { CharEnd = CharEnd });
 				div.Attributes["class"] = "module-error";
 				div.WriteRazor(w);
+			}
+		}
+
+		public void WriteHtml(TextWriter w)
+		{
+			var pp = Text.Split(new[] { '|' }, 2);
+			var moduleName = pp[0];
+			var moduleParams = pp.Length > 1 ? pp[1] : "";
+			if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
+			{
+				var ajaxmoduleid = Interlocked.Increment(ref AjaxModuleId).ToString();
+				w.Write($"<script data-ajaxmoduleid=\"{ajaxmoduleid}\">");
+				w.Write("ajaxModuleHelper(");
+				Escape.WriteJsString(w, realModuleName);
+				w.Write(',');
+				Escape.WriteJsString(w, moduleParams);
+				w.Write(',');
+				Escape.WriteJsString(w, ajaxmoduleid);
+				w.Write(")</script>");
+			}
+			else
+			{
+				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
+				div.Children.Add(new Text(CharStart, "Unknown module " + moduleName) { CharEnd = CharEnd });
+				div.Attributes["class"] = "module-error";
+				div.WriteHtml(w);
 			}
 		}
 

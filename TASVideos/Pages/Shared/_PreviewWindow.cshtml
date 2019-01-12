@@ -19,7 +19,7 @@
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {
-						document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
+						$(document.getElementById('preview-contents')).empty().append($(xmlhttp.responseText));
 					} else {
 						alert("Could not generate preview");
 					}
