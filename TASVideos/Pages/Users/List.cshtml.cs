@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -13,8 +14,14 @@ namespace TASVideos.Pages.Users
 	[AllowAnonymous]
 	public class ListModel : BasePageModel
 	{
-		public ListModel(UserTasks userTasks) : base(userTasks)
+		private readonly ApplicationDbContext _db;
+
+		public ListModel(
+			ApplicationDbContext db,
+			UserTasks userTasks) 
+			: base(userTasks)
 		{
+			_db = db;
 		}
 
 		[FromQuery]
@@ -45,7 +52,7 @@ namespace TASVideos.Pages.Users
 				return new JsonResult(false);
 			}
 
-			var exists = await UserTasks.CheckUserNameExists(userName);
+			var exists = await _db.Users.Exists(userName);
 			return new JsonResult(exists);
 		}
 	}

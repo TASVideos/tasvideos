@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
@@ -47,5 +51,13 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<UserFile> UserFiles { get; set; } = new HashSet<UserFile>();
 		public virtual ICollection<UserFileComment> UserFileComments { get; set; } = new HashSet<UserFileComment>();
+	}
+
+	public static class UserExtensions
+	{
+		public static async Task<bool> Exists(this IQueryable<User> query, string userName)
+		{
+			return await query.AnyAsync(q => q.UserName == userName);
+		}
 	}
 }

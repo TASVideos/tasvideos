@@ -115,8 +115,7 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<bool> CheckUserNameExists(string userName)
 		{
-			return await _db.Users
-				.AnyAsync(u => u.UserName == userName);
+			return await _db.Users.Exists(userName);
 		}
 
 		/// <summary>
