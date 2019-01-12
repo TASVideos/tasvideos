@@ -67,7 +67,10 @@ namespace TASVideos.Pages.Account
 
 				if (result.Succeeded)
 				{
-					await UserTasks.MarkUserLoggedIn(UserName);
+					var user = await _db.Users.SingleAsync(u => u.UserName == UserName);
+					user.LastLoggedInTimeStamp = DateTime.UtcNow;
+					await _db.SaveChangesAsync();
+
 					return RedirectToLocal(ReturnUrl);
 				}
 
