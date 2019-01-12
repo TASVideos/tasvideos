@@ -29,39 +29,6 @@ namespace TASVideos.Tasks
 			_cache = cache;
 		}
 
-		// TODO: document
-		public async Task<IEnumerable<SaveboxModel>> GetUserSaveBox(User user)
-		{
-			return await _db.PrivateMessages
-				.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == user.Id)
-					|| (pm.SavedForToUser && !pm.DeletedForToUser && pm.ToUserId == user.Id))
-				.Select(pm => new SaveboxModel
-				{
-					Id = pm.Id,
-					Subject = pm.Subject,
-					FromUser = pm.FromUser.UserName,
-					ToUser = pm.ToUser.UserName,
-					SendDate = pm.CreateTimeStamp
-				})
-				.ToListAsync();
-		}
-
-		public async Task<IEnumerable<SentboxModel>> GetUserSentBox(User user)
-		{
-			return await _db.PrivateMessages
-				.ThatAreNotToUserDeleted()
-				.Where(pm => pm.FromUserId == user.Id)
-				.Select(pm => new SentboxModel
-				{
-					Id = pm.Id,
-					Subject = pm.Subject,
-					ToUser = pm.ToUser.UserName,
-					SendDate = pm.CreateTimeStamp,
-					HasBeenRead = pm.ReadOn.HasValue
-				})
-				.ToListAsync();
-		}
-
 		/// <summary>
 		/// Returns the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// record with the given <see cref="id"/> if the user has access to the message

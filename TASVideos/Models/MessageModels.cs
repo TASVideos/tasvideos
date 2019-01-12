@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Models
 {
-	public class InboxModel
+	public class InboxEntry
 	{
 		public int Id { get; set; }
 
@@ -19,7 +19,7 @@ namespace TASVideos.Models
 		public bool IsRead { get; set; }
 	}
 
-	public class SaveboxModel
+	public class SaveboxEntry
 	{
 		public int Id { get; set; }
 
@@ -36,7 +36,7 @@ namespace TASVideos.Models
 		public DateTime SendDate { get; set; }
 	}
 
-	public class SentboxModel
+	public class SentboxEntry
 	{
 		public int Id { get; set; }
 
