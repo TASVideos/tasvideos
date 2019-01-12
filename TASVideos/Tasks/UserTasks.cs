@@ -78,40 +78,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Gets all of the <see cref="Role"/>s that the current <see cref="User"/> can assign to another user
-		/// The list depends on the current User's <see cref="RolePermission"/> list and also any Roles already assigned to the user
-		/// </summary>
-		public async Task<IEnumerable<SelectListItem>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles)
-		{
-			if (assignedRoles == null)
-			{
-				throw new ArgumentException($"{nameof(assignedRoles)} can not be null");
-			}
-
-			var assignedRoleList = assignedRoles.ToList();
-			var assignablePermissions = await _db.Users
-				.Where(u => u.Id == userId)
-				.SelectMany(u => u.UserRoles)
-				.SelectMany(ur => ur.Role.RolePermission)
-				.Where(rp => rp.CanAssign)
-				.Select(rp => rp.PermissionId)
-				.ToListAsync();
-
-			return await _db.Roles
-				.Where(r => r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
-					|| assignedRoleList.Contains(r.Id))
-				.Select(r => new SelectListItem
-				{
-					Value = r.Id.ToString(),
-					Text = r.Name,
-					Disabled = !r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
-						&& assignedRoleList.Any() // EF Core 2.1 issue, needs this or a user with no assigned roles blows up
-						&& assignedRoleList.Contains(r.Id)
-				})
-				.ToListAsync();
-		}
-
-		/// <summary>
 		/// Returns the username of the <see cref="User"/>
 		/// with the given <see cref="id"/>
 		/// </summary>
@@ -135,71 +101,12 @@ namespace TASVideos.Tasks
 				.SingleOrDefaultAsync();
 		}
 
-		/// <summary>
-		/// Returns a <see cref="User"/>  with the given id for the purpose of editing
-		/// Which <see cref="Role"/>s are available to assign to the User depends on the User with the given <see cref="currentUserId" />'s <see cref="RolePermission"/> list
-		/// </summary>
-		public async Task<UserEditModel> GetUserForEdit(string userName, int currentUserId)
-		{
-			using (await _db.Database.BeginTransactionAsync())
-			{
-				var model = await _db.Users
-					.ProjectTo<UserEditModel>()
-					.SingleAsync(u => u.UserName == userName);
-
-				model.AvailableRoles = await GetAllRolesUserCanAssign(currentUserId, model.SelectedRoles);
-
-				return model;
-			}
-		}
-
-		/// <summary>
-		/// Updates the given <see cref="User"/>
-		/// </summary>
-		public async Task EditUser(int id, UserEditPostModel model)
-		{
-			var user = await _db.Users.SingleAsync(u => u.Id == id);
-			if (model.UserName != user.UserName)
-			{
-				user.UserName = model.UserName;
-			}
-
-			if (model.TimezoneId != user.TimeZoneId)
-			{
-				user.TimeZoneId = model.TimezoneId;
-			}
-
-			user.From = model.From;
-			
-			_db.UserRoles.RemoveRange(_db.UserRoles.Where(ur => ur.User == user));
-			await _db.SaveChangesAsync();
-
-			_db.UserRoles.AddRange(model.SelectedRoles
-				.Select(r => new UserRole
-				{
-					User = user,
-					RoleId = r
-				}));
-
-			await _db.SaveChangesAsync();
-		}
-
 		public async Task UpdateUserProfile(int id, string timezoneId, bool publicRatings, string from)
 		{
 			var user = await _db.Users.SingleAsync(u => u.Id == id);
 			user.TimeZoneId = timezoneId;
 			user.PublicRatings = publicRatings;
 			user.From = from;
-			await _db.SaveChangesAsync();
-		}
-
-		/// <summary>
-		/// Removes the lock out property on a <see cref="User"/>
-		/// </summary>
-		public async Task UnlockUser(int id)
-		{
-			var user = await _db.Users.SingleAsync(u => u.Id == id);
-			user.LockoutEnd = null;
 			await _db.SaveChangesAsync();
 		}
 
