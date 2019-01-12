@@ -104,3 +104,7 @@ h1 {
 [data-toggle="collapse"].collapsed .fa::before {
 	content: "\f13a";
 }
+
+.hiddenifmodule {
+	display: none;
+}

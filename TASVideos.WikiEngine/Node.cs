@@ -261,6 +261,7 @@ namespace TASVideos.WikiEngine.AST
 
 	public class IfModule : INodeWithChildren
 	{
+		private static int AjaxModuleId = 0;
 		public NodeType Type => NodeType.IfModule;
 		public List<INode> Children { get; private set; } = new List<INode>();
 		public string Condition { get; }
@@ -290,7 +291,17 @@ namespace TASVideos.WikiEngine.AST
 		}
 		public void WriteHtml(TextWriter w)
 		{
-			w.Write("TODO: IFMODULE");
+			var ajaxmoduleid = Interlocked.Increment(ref AjaxModuleId).ToString();
+			w.Write($"<span class=hiddenifmodule data-ajaxmoduleid=\"{ajaxmoduleid}\">");
+			w.Write($"<script>");
+			w.Write("ajaxIfModuleHelper(");
+			Escape.WriteJsString(w, Condition);
+			w.Write(',');
+			Escape.WriteJsString(w, ajaxmoduleid);
+			w.Write(")</script>");
+			foreach (var c in Children)
+				c.WriteHtml(w);
+			w.Write("</span>");
 		}
 
 		public INode Clone()
