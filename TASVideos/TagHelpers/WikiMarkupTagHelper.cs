@@ -12,7 +12,6 @@ using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.TagHelpers
 {
-	[HtmlTargetElement("wiki-markup", TagStructure = TagStructure.WithoutEndTag)]
 	public class WikiMarkup : TagHelper, IWriterHelper
 	{
 		[ViewContext]
