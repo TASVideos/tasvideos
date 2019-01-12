@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
+using TASVideos.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Messages
@@ -14,16 +19,16 @@ namespace TASVideos.Pages.Messages
 	public class InboxModel : BasePageModel
 	{
 		private readonly UserManager<User> _userManager;
-		private readonly PrivateMessageTasks _pmTasks;
+		private readonly ApplicationDbContext _db;
 
 		public InboxModel(
 			UserManager<User> userManager,
-			PrivateMessageTasks privateMessageTasks,
+			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_userManager = userManager;
-			_pmTasks = privateMessageTasks;
+			_db = db;
 		}
 
 		[FromRoute]
@@ -31,12 +36,24 @@ namespace TASVideos.Pages.Messages
 
 		// TODO: rename this model
 		[BindProperty]
-		public IEnumerable<Models.InboxModel> Messages { get; set; } = new List<Models.InboxModel>();
+		public IEnumerable<InboxEntry> Messages { get; set; } = new List<InboxEntry>();
 
 		public async Task OnGet()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			Messages = await _pmTasks.GetUserInBox(user);
+			Messages = await _db.PrivateMessages
+				.ToUser(user)
+				.ThatAreNotToUserDeleted()
+				.ThatAreNotToUserSaved()
+				.Select(pm => new InboxEntry
+				{
+					Id = pm.Id,
+					Subject = pm.Subject,
+					SendDate = pm.CreateTimeStamp,
+					FromUser = pm.FromUser.UserName,
+					IsRead = pm.ReadOn.HasValue
+				})
+				.ToListAsync();
 		}
 
 		// TODO: make this a post
@@ -48,7 +65,17 @@ namespace TASVideos.Pages.Messages
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			await _pmTasks.SaveMessageToUser(user, Id.Value);
+
+			var message = await _db.PrivateMessages
+				.ToUser(user)
+				.ThatAreNotToUserDeleted()
+				.SingleOrDefaultAsync(pm => pm.Id == Id);
+
+			if (message != null)
+			{
+				message.SavedForToUser = true;
+				await _db.SaveChangesAsync();
+			}
 
 			return RedirectToPage("Inbox");
 		}
@@ -62,7 +89,17 @@ namespace TASVideos.Pages.Messages
 			}
 
 			var user = await _userManager.GetUserAsync(User);
-			await _pmTasks.DeleteMessageToUser(user, Id.Value);
+
+			var message = await _db.PrivateMessages
+				.ToUser(user)
+				.ThatAreNotToUserDeleted()
+				.SingleOrDefaultAsync(pm => pm.Id == Id);
+
+			if (message != null)
+			{
+				message.DeletedForToUser = true;
+				await _db.SaveChangesAsync();
+			}
 
 			return RedirectToPage("Inbox");
 		}
