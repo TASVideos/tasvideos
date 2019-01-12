@@ -32,7 +32,7 @@ namespace TASVideos.WikiEngine.AST
 	public interface IWriterHelper
 	{
 		bool CheckCondition(string condition);
-		string RunViewComponent(string name, string pp);
+		void RunViewComponent(TextWriter w, string name, string pp);
 	}
 
 	public interface INodeWithChildren : INode
@@ -482,7 +482,7 @@ namespace TASVideos.WikiEngine.AST
 			var moduleParams = pp.Length > 1 ? pp[1] : "";
 			if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
 			{
-				w.Write(h.RunViewComponent(realModuleName, moduleParams));
+				h.RunViewComponent(w, realModuleName, moduleParams);
 			}
 			else
 			{

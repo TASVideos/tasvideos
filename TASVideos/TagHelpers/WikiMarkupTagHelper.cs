@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -49,11 +50,11 @@ namespace TASVideos.TagHelpers
             return HtmlExtensions.WikiCondition(ViewContext, condition);
         }
 
-		string IWriterHelper.RunViewComponent(string name, string pp)
+		void IWriterHelper.RunViewComponent(TextWriter w, string name, string pp)
 		{
 			// TODO: Do we want to asyncify this entire thingy?
 			var content = _viewComponentHelper.InvokeAsync(name, new { pageData = PageData, pp }).Result;
-			return content.ToString();
+			content.WriteTo(w, HtmlEncoder.Default);
 		}
 	}
 }
