@@ -178,32 +178,5 @@ namespace TASVideos.Tasks
 
 			return results;
 		}
-
-		public async Task<IEnumerable<GameSubpageModel>> GetGameResourcesSubPages()
-		{
-			using (await _db.Database.BeginTransactionAsync())
-			{
-				var systems = await _db.GameSystems.ToListAsync();
-				var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
-
-				var pages = _wikiPages
-					.ThatAreNotDeleted()
-					.ThatAreCurrentRevisions()
-					.Where(wp => gameResourceSystems.Contains(wp.PageName))
-					.Select(wp => wp.PageName)
-					.ToList();
-
-				return
-					(from s in systems
-					join wp in pages on s.Code equals wp.Split('/').Last()
-					select new GameSubpageModel
-					{
-						SystemCode = s.Code,
-						SystemDescription = s.DisplayName,
-						PageLink = "GameResources/" + s.Code
-					})
-					.ToList();
-			}
-		}
 	}
 }
