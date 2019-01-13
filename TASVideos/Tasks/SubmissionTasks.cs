@@ -175,20 +175,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns the submission file as bytes with the given id
-		/// If no submission is found, an empty byte array is returned
-		/// </summary>
-		public async Task<byte[]> GetSubmissionFile(int id)
-		{
-			var data = await _db.Submissions
-				.Where(s => s.Id == id)
-				.Select(s => s.MovieFile)
-				.SingleOrDefaultAsync();
-
-			return data ?? new byte[0];
-		}
-
-		/// <summary>
 		/// Gets the title of a submission with the given id
 		/// If the submission is not found, null is returned
 		/// </summary>
