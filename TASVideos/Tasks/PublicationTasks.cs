@@ -324,44 +324,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a list of publications with the given <see cref="searchCriteria" />
-		/// in a brief table form
-		/// </summary>
-		public async Task<IEnumerable<TabularMovieListResultModel>> GetTabularMovieList(TabularMovieListSearchModel searchCriteria)
-		{
-			// It is important to actually query for an Entity object here instead of a ViewModel
-			// Because we need the title property which is a derived property that can't be done in Linq to Sql
-			// And needs a variety of information from sub-tables, hence all the includes
-			var movies = await _db.Publications
-				.Include(p => p.Tier)
-				.Include(p => p.Game)
-				.Include(p => p.System)
-				.Include(p => p.SystemFrameRate)
-				.Include(p => p.Files)
-				.Include(p => p.Authors)
-				.ThenInclude(pa => pa.Author)
-				.Where(p => searchCriteria.Tiers.Contains(p.Tier.Name))
-				.ByMostRecent()
-				.Take(searchCriteria.Limit)
-				.ToListAsync();
-
-			var results = movies
-				.Select(m => new TabularMovieListResultModel
-				{
-					Id = m.Id,
-					CreateTimeStamp = m.CreateTimeStamp,
-					Time = m.Time,
-					Game = m.Game.DisplayName,
-					Authors = string.Join(", ", m.Authors.Select(pa => pa.Author)),
-					ObsoletedBy = null, // TODO: previous logic
-					Screenshot = m.Files.First(f => f.Type == FileType.Screenshot).Path
-				})
-				.ToList();
-
-			return results;
-		}
-
-		/// <summary>
 		/// Gets a <see cref="Publication"/> with the given <see cref="id" /> for the purpose of editing
 		/// If no publication with the given id is found then null is returned
 		/// </summary>
