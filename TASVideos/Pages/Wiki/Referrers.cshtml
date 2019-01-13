@@ -9,9 +9,9 @@
 <br />
 <br />
 <label>Referrers (@Model.Referrals.Count() Total)</label>
-<hr />
 
-<div>
+<div condition="Model.Referrals.Any()">
+	<hr />
 	@foreach (var referral in Model.Referrals)
 	{
 		<card>
