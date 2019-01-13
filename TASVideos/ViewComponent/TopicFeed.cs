@@ -1,22 +1,27 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Mvc;
+using AutoMapper.QueryableExtensions;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.ForumEngine;
-using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
     public class TopicFeed : ViewComponent
 	{
-		private readonly ForumTasks _forumTasks;
+		private readonly ApplicationDbContext _db;
 
-		public TopicFeed(ForumTasks forumTasks)
+		public TopicFeed(ApplicationDbContext db)
 		{
-			_forumTasks = forumTasks;
+			_db = db;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
@@ -30,7 +35,13 @@ namespace TASVideos.ViewComponents
 				RightAlign = ParamHelper.HasParam(pp, "right"),
 				Heading = ParamHelper.GetValueFor(pp, "heading"),
 				HideContent = ParamHelper.HasParam(pp, "hidecontent"),
-				Posts = await _forumTasks.GetTopicFeed(topicId, limit, false /*By design, let's not allow restricted topics as wiki feeds*/)
+				Posts = await _db.ForumPosts
+					.ForTopic(topicId)
+					.ExcludeRestricted(false) // By design, let's not allow restricted topics as wiki feeds
+					.ByMostRecent()
+					.ProjectTo<TopicFeedModel.TopicPost>()
+					.Take(limit)
+					.ToListAsync()
 			};
 
 			foreach (var post in model.Posts)

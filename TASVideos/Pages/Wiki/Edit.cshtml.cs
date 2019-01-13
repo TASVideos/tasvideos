@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Wiki
 		public string Path { get; set; }
 
 		[BindProperty]
-		public WikiEditModel PageToEdit { get; set; } = new WikiEditModel();
+		public WikiEditModel PageToEdit { get; set; }
 
 		public IActionResult OnGet()
 		{
