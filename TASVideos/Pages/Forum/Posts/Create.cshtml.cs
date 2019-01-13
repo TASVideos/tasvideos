@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
@@ -16,17 +20,20 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly UserManager<User> _userManager;
 		private readonly ForumTasks _forumTasks;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly ApplicationDbContext _db;
 
 		public CreateModel(
 			UserManager<User> userManager,
 			ForumTasks forumTasks,
 			ExternalMediaPublisher publisher,
+			ApplicationDbContext db,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
 			_userManager = userManager;
 			_forumTasks = forumTasks;
 			_publisher = publisher;
+			_db = db;
 		}
 
 		[FromRoute]
@@ -40,7 +47,16 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			Post = await _forumTasks.GetCreatePostData(TopicId, QuoteId, UserHas(PermissionTo.SeeRestrictedForums));
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			Post = await _db.ForumTopics
+				.ExcludeRestricted(seeRestricted)
+				.Where(t => t.Id == TopicId)
+				.Select(t => new ForumPostCreateModel
+				{
+					TopicTitle = t.Title,
+					IsLocked = t.IsLocked
+				})
+				.SingleOrDefaultAsync();
 
 			if (Post == null)
 			{
@@ -50,6 +66,16 @@ namespace TASVideos.Pages.Forum.Posts
 			if (Post.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
 			{
 				return AccessDenied();
+			}
+
+			if (QuoteId.HasValue)
+			{
+				var post = await _db.ForumPosts
+					.Include(p => p.Poster)
+					.Where(p => p.Id == QuoteId)
+					.SingleOrDefaultAsync();
+
+				Post.Text = $"[quote=\"{post.Poster.UserName}\"]{post.Text}[/quote]";
 			}
 
 			return Page();
@@ -62,7 +88,8 @@ namespace TASVideos.Pages.Forum.Posts
 			{
 				// We have to consider direct posting to this call, including "over-posting",
 				// so all of this logic is necessary
-				var isLocked = await _forumTasks.IsTopicLocked(TopicId);
+				var isLocked = await _db.ForumTopics
+					.AnyAsync(t => t.Id == TopicId && t.IsLocked);
 				if (isLocked && !UserHas(PermissionTo.PostInLockedTopics))
 				{
 					return AccessDenied();

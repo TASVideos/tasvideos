@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +11,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.ViewComponents;
 
 namespace TASVideos.Tasks
 {
@@ -231,21 +227,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Gets topic data for the given <see cref="topicId" />
-		/// for the purposes of displaying in a topic feed module
-		/// </summary>
-		public async Task<IEnumerable<TopicFeedModel.TopicPost>> GetTopicFeed(int topicId, int limit, bool allowRestricted)
-		{
-			return await _db.ForumPosts
-				.ForTopic(topicId)
-				.ExcludeRestricted(allowRestricted)
-				.ByMostRecent()
-				.ProjectTo<TopicFeedModel.TopicPost>()
-				.Take(limit)
-				.ToListAsync();
-		}
-
-		/// <summary>
 		/// Returns whether or not a forum exists
 		/// </summary>
 		/// <returns>null if the forum does not exist, else the forum record</returns>
@@ -317,42 +298,6 @@ namespace TASVideos.Tasks
 			await CreatePost(topic.Id, forumPostModel, user, ipAddress);
 			await WatchTopic(topic.Id, user.Id, canSeeRestricted: true);
 			return topic;
-		}
-
-		/// <summary>
-		/// Returns necessary data to display on the create post screen
-		/// If a topic is not found or not accessible, null is returned
-		/// If a postId is provided and the post exists, it will be 
-		/// retrieved for the purpose of quoting
-		/// </summary>
-		public async Task<ForumPostCreateModel> GetCreatePostData(int topicId, int? postId, bool allowRestricted)
-		{
-			var model = await _db.ForumTopics
-				.ExcludeRestricted(allowRestricted)
-				.Where(t => t.Id == topicId)
-				.Select(t => new ForumPostCreateModel
-				{
-					TopicTitle = t.Title,
-					IsLocked = t.IsLocked
-				})
-				.SingleOrDefaultAsync();
-
-			if (model == null)
-			{
-				return null;
-			}
-
-			if (postId.HasValue)
-			{
-				var post = await _db.ForumPosts
-				.Include(p => p.Poster)
-				.Where(p => p.Id == postId)
-				.SingleOrDefaultAsync();
-
-				model.Text = $"[quote=\"{post.Poster.UserName}\"]{post.Text}[/quote]";
-			}
-
-			return model;
 		}
 
 		public async Task<int> CreatePost(int topicId, ForumPostModel model, User user, string ipAddress)
@@ -512,54 +457,6 @@ namespace TASVideos.Tasks
 						IpAddress = v.IpAddress
 					})
 			};
-		}
-
-		public async Task<PageOf<PostsSinceLastVisitModel>> GetPostsSinceLastVisit(PagedModel paged, DateTime since, bool allowRestricted)
-		{
-			var model = await _db.ForumPosts
-				.ExcludeRestricted(allowRestricted)
-				.Since(since)
-				.Select(p => new PostsSinceLastVisitModel
-				{
-					Id = p.Id,
-					CreateTimestamp = p.CreateTimeStamp,
-					EnableBbCode = p.EnableBbCode,
-					EnableHtml = p.EnableHtml,
-					Text = p.Text,
-					Subject = p.Subject,
-					TopicId = p.TopicId ?? 0,
-					TopicTitle = p.Topic.Title,
-					ForumId = p.Topic.ForumId,
-					ForumName = p.Topic.Forum.Name,
-					PosterId = p.PosterId,
-					PosterName = p.Poster.UserName,
-					PosterRoles = p.Poster.UserRoles
-						.Where(ur => !ur.Role.IsDefault)
-						.Select(ur => ur.Role.Name)
-						.ToList(),
-					PosterLocation = p.Poster.From,
-					Signature = p.Poster.Signature,
-					PosterAvatar = p.Poster.Avatar,
-					PosterJoined = p.Poster.CreateTimeStamp,
-					PosterPostCount = p.Poster.Posts.Count,
-				})
-				.OrderBy(p => p.CreateTimestamp)
-				.PageOfAsync(_db, paged);
-
-			foreach (var post in model)
-			{
-				post.Awards = await _awardTasks.GetAllAwardsForUser(post.PosterId);
-			}
-
-			return model;
-		}
-
-		/// <summary>
-		/// Returns whether or not the topic with the given topic id is currently locked
-		/// </summary>
-		public async Task<bool> IsTopicLocked(int topicId)
-		{
-			return await _db.ForumTopics.AnyAsync(t => t.Id == topicId && t.IsLocked);
 		}
 
 		public async Task<MoveTopicModel> GetTopicMoveModel(int topicId, bool allowRestricted)

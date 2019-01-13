@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -15,16 +17,17 @@ namespace TASVideos.Pages.Forum.Posts
 	public class NewModel : BasePageModel
 	{
 		private readonly UserManager<User> _userManager;
-		private readonly ForumTasks _forumTasks;
+		private readonly ApplicationDbContext _db;
+		
 
 		public NewModel(
 			UserManager<User> userManager,
-			ForumTasks forumTasks,
+			ApplicationDbContext db,
 			UserTasks userTasks)
 		: base(userTasks)
 		{
 			_userManager = userManager;
-			_forumTasks = forumTasks;
+			_db = db;
 		}
 
 		[FromQuery]
@@ -35,10 +38,37 @@ namespace TASVideos.Pages.Forum.Posts
 		public async Task OnGet()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			Posts = await _forumTasks.GetPostsSinceLastVisit(
-				Search, 
-				user.LastLoggedInTimeStamp ?? DateTime.UtcNow,
-				UserHas(PermissionTo.SeeRestrictedForums));
+			var allowRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var since = user.LastLoggedInTimeStamp ?? DateTime.UtcNow;
+			Posts = await _db.ForumPosts
+				.ExcludeRestricted(allowRestricted)
+				.Since(since)
+				.Select(p => new PostsSinceLastVisitModel
+				{
+					Id = p.Id,
+					CreateTimestamp = p.CreateTimeStamp,
+					EnableBbCode = p.EnableBbCode,
+					EnableHtml = p.EnableHtml,
+					Text = p.Text,
+					Subject = p.Subject,
+					TopicId = p.TopicId ?? 0,
+					TopicTitle = p.Topic.Title,
+					ForumId = p.Topic.ForumId,
+					ForumName = p.Topic.Forum.Name,
+					PosterId = p.PosterId,
+					PosterName = p.Poster.UserName,
+					PosterRoles = p.Poster.UserRoles
+						.Where(ur => !ur.Role.IsDefault)
+						.Select(ur => ur.Role.Name)
+						.ToList(),
+					PosterLocation = p.Poster.From,
+					Signature = p.Poster.Signature,
+					PosterAvatar = p.Poster.Avatar,
+					PosterJoined = p.Poster.CreateTimeStamp,
+					PosterPostCount = p.Poster.Posts.Count,
+				})
+				.OrderBy(p => p.CreateTimestamp)
+				.PageOfAsync(_db, Search);
 
 			foreach (var post in Posts)
 			{
