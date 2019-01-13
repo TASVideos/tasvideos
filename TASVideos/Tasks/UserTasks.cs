@@ -220,9 +220,14 @@ namespace TASVideos.Tasks
 					PublicRatings = u.PublicRatings,
 					TimeZone = u.TimeZoneId,
 					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
-					PublicationActiveCount = u.Publications.Count(p => !p.Publication.ObsoletedById.HasValue),
-					PublicationObsoleteCount = u.Publications.Count(p => p.Publication.ObsoletedById.HasValue),
-					PublishedSystems = u.Publications.Select(p => p.Publication.System.Code).Distinct(),
+					PublicationActiveCount = u.Publications
+						.Count(p => !p.Publication.ObsoletedById.HasValue),
+					PublicationObsoleteCount = u.Publications
+						.Count(p => p.Publication.ObsoletedById.HasValue),
+					PublishedSystems = u.Publications
+						.Select(p => p.Publication.System.Code)
+						.Distinct()
+						.ToList(),
 					Email = u.Email,
 					EmailConfirmed = u.EmailConfirmed,
 					Roles = u.UserRoles
@@ -232,14 +237,16 @@ namespace TASVideos.Tasks
 							Id = ur.RoleId,
 							Name = ur.Role.Name,
 							Description = ur.Role.Description
-						}),
+						})
+						.ToList(),
 					Submissions = u.Submissions
 						.GroupBy(s => s.Submission.Status)
 						.Select(g => new UserProfileModel.SubmissionEntry
 						{
 							Status = g.Key,
 							Count = g.Count()
-						}),
+						})
+						.ToList(),
 					UserFiles = new UserProfileModel.UserFilesModel
 					{
 						Total = u.UserFiles.Count(uf => includeHidden || !uf.Hidden),
@@ -259,6 +266,7 @@ namespace TASVideos.Tasks
 				var wikiEdits = await _db.WikiPages
 					.ThatAreNotDeleted()
 					.CreatedBy(model.UserName)
+					.Select(w => new { w.CreateTimeStamp })
 					.ToListAsync();
 
 				if (wikiEdits.Any())
@@ -272,7 +280,6 @@ namespace TASVideos.Tasks
 				{
 					model.Ratings.TotalMoviesRated = await _db.PublicationRatings
 						.Where(p => p.UserId == model.Id)
-						.Select(p => p.PublicationId)
 						.Distinct()
 						.CountAsync();
 				}
