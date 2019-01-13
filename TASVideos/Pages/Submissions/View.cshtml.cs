@@ -29,8 +29,8 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnGet()
 		{
-			var submission = await _submissionTasks.GetSubmission(Id, User.Identity.Name);
-			if (submission == null)
+			Submission = await _submissionTasks.GetSubmission(Id, User.Identity.Name);
+			if (Submission == null)
 			{
 				return NotFound();
 			}
