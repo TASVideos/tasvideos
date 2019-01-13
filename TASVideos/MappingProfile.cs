@@ -62,7 +62,8 @@ namespace TASVideos
 							})
 							.ToList()));
 
-			CreateMap<ForumPost, TopicFeedModel.TopicPost>();
+			CreateMap<ForumPost, TopicFeedModel.TopicPost>()
+				.ForMember(dest => dest.PosterName, opt => opt.MapFrom(src => src.Poster.UserName));
 		}
 	}
 }
