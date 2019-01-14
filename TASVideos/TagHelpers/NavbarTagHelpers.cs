@@ -67,32 +67,47 @@ namespace TASVideos.TagHelpers
 
 		protected bool IsActive()
 		{
+			if (string.IsNullOrWhiteSpace(Activate))
+			{
+				return false;
+			}
+
+			var viewActiveTab = (string)ViewContext.ViewData["ActiveTab"];
+			if (Activate == viewActiveTab)
+			{
+				return true;
+			}
+
+			var tempActiveTab = (string)ViewContext.TempData["ActiveTab"];
+			if (Activate == tempActiveTab)
+			{
+				return true;
+			}
+
+			var page = ViewContext.Page();
+			var pageGroup = ViewContext.PageGroup();
+
+			if (Activate == pageGroup)
+			{
+				return true;
+			}
+
 			switch (Activate)
 			{
-				case "Home" when ViewContext.PageGroup() == "Index":
-				case "Forum" when ViewContext.PageGroup() == "Forum":
-				case "Submissions" when ViewContext.PageGroup() == "Submissions":
-				case "Movies" when ViewContext.PageGroup() == "Publications":
-				case "Admin" when ViewContext.PageGroup() == "Roles":
-				case "Admin" when ViewContext.PageGroup() == "Users":
-				case "Admin" when ViewContext.PageGroup() == "Permissions":
+				case "Home" when pageGroup == "Index":
+				case "Movies" when pageGroup == "Publications":
+				case "Admin" when pageGroup == "Roles":
+				case "Admin" when pageGroup == "Users":
+				case "Admin" when pageGroup == "Permissions":
+				case "Register" when page == "/Account/Register":
+				case "Login" when page == "/Account/Login":
 					return true;
 			}
 
-			if (Activate == (string)ViewContext.ViewData["ActiveTab"])
-			{
-				return true;
-			}
-
-			if (Activate == (string)ViewContext.TempData["ActiveTab"])
-			{
-				return true;
-			}
-
 			// Wiki Razor Pages that are not the general wiki page action
-			if (string.IsNullOrWhiteSpace((string)ViewContext.ViewData["ActiveTab"])
-				&& string.IsNullOrWhiteSpace((string)ViewContext.TempData["ActiveTab"])
-				&& Activate == "Wiki" && ViewContext.PageGroup() == "Wiki")
+			if (string.IsNullOrWhiteSpace(viewActiveTab)
+				&& string.IsNullOrWhiteSpace(tempActiveTab)
+				&& Activate == "Wiki" && pageGroup == "Wiki")
 			{
 				return true;
 			}
