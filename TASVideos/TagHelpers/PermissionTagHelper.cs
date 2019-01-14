@@ -23,4 +23,22 @@ namespace TASVideos.TagHelpers
 			}
 		}
 	}
+
+	[HtmlTargetElement(Attributes = nameof(Permissions))]
+	public class PermissionsTagHelper : TagHelper
+	{
+		public PermissionTo[] Permissions { get; set; }
+
+		[HtmlAttributeNotBound]
+		[ViewContext]
+		public ViewContext ViewContext { get; set; }
+
+		public override void Process(TagHelperContext context, TagHelperOutput output)
+		{
+			if (!ViewContext.ViewData.UserHasAny(Permissions))
+			{
+				output.SuppressOutput();
+			}
+		}
+	}
 }
