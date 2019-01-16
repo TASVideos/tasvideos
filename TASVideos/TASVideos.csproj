@@ -17,6 +17,10 @@
     <_RazorBuildServerPipeName>razor-issues-2406</_RazorBuildServerPipeName>
   </PropertyGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="node copy-deps.js" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />

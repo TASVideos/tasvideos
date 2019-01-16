@@ -1,4 +1,3 @@
-/// <binding AfterBuild='default, clean, copy' />
 // ReSharper disable Es6Feature
 const gulp = require("gulp");
 const rimraf = require("rimraf");
