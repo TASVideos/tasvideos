@@ -47,9 +47,12 @@ for (const name of srcNames) {
 	const srcStat = fs.statSync(srcp);
 	const dstStat = fs.existsSync(dstp) && fs.statSync(dstp);
 
-	if (!dstStat || srcStat.mtimeMs > dstStat.mtimeMs || srcStat.ctimeMs > dstStat.ctimeMs) {
-		console.log("Updating " + name);
+	if (!dstStat) {
+		console.log("Creating " + name);
 		fs.ensureFileSync(dstp);
-		fs.copyFileSync(srcp, dstp);
+		fs.copyFileSync(srcp, dstp, { preserveTimestamps: true });
+	} else if (srcStat.mtimeMs > dstStat.mtimeMs) {
+		console.log("Updating " + name);
+		fs.copyFileSync(srcp, dstp, { preserveTimestamps: true });
 	}
 }
