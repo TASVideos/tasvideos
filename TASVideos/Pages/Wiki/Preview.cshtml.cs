@@ -21,14 +21,13 @@ namespace TASVideos.Pages.Wiki
 		{
 		}
 
-		public string Html { get; set; } = "";
+		public string Markup { get; set; }
 
 		public IActionResult OnPost()
 		{
 			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-			var sw = new StringWriter();
-			Util.RenderHtml(input, sw);
-			return Content(sw.ToString(), "text/plain"); // really HTML, but a fragment so `text/plain` is good enough
+			Markup = input;
+			return Page();
 		}
 	}
 }
