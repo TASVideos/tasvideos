@@ -36,6 +36,8 @@ namespace TASVideos.Pages.Wiki
 		[BindProperty]
 		public WikiEditModel PageToEdit { get; set; }
 
+		public int? Id { get; set; }
+
 		public IActionResult OnGet()
 		{
 			Path = Path?.Trim('/');
@@ -43,11 +45,13 @@ namespace TASVideos.Pages.Wiki
 			{
 				return Home();
 			}
+			var page = _wikiPages.Page(Path);
 
 			PageToEdit = new WikiEditModel
 			{
-				Markup = _wikiPages.Page(Path)?.Markup ?? ""
+				Markup = page?.Markup ?? ""
 			};
+			Id = page?.Id;
 
 			return Page();
 		}
