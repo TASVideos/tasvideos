@@ -124,36 +124,5 @@ namespace TASVideos.Tasks
 				})
 				.ToListAsync();
 		}
-
-		/// <summary>
-		/// Returns a list of all deleted pages for the purpose of display
-		/// </summary>
-		public async Task<IEnumerable<DeletedWikiPageDisplayModel>> GetDeletedPages()
-		{
-			var results = await _db.WikiPages
-				.ThatAreDeleted()
-				.GroupBy(tkey => tkey.PageName)
-				.Select(record => new DeletedWikiPageDisplayModel
-				{
-					PageName = record.Key,
-					RevisionCount = record.Count(),
-
-					// https://github.com/aspnet/EntityFrameworkCore/issues/3103
-					// EF Core 2.1 bug, this no longer works, "Must be reducible node exception
-					// HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
-				})
-				.ToListAsync();
-
-			// Workaround for EF Core 2.1 issue
-			// https://github.com/aspnet/EntityFrameworkCore/issues/3103
-			// Since we know the cache is up to date we can do the logic there and avoid n+1 trips to the db
-			await _wikiPages.PreLoadCache();
-			foreach (var result in results)
-			{
-				result.HasExistingRevisions = _wikiPages.Any(wp => wp.PageName == result.PageName);
-			}
-
-			return results;
-		}
 	}
 }
