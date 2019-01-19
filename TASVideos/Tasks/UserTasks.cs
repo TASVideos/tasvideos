@@ -111,31 +111,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a summary of a <see cref="User" /> with the given <see cref="userName" />
-		/// If a user can not be found, null is returned
-		/// </summary>
-		public async Task<UserSummaryModel> GetUserSummary(string userName)
-		{
-			return await _db.Users
-				.Where(u => u.UserName == userName)
-				.Select(user => new UserSummaryModel
-				{
-					Id = user.Id,
-					UserName = user.UserName,
-					EditCount = _db.WikiPages.Count(wp => wp.CreateUserName == userName),
-					MovieCount = _db.Publications
-						.Count(p => p.Authors
-							.Select(sa => sa.Author.UserName)
-							.Contains(userName)),
-					SubmissionCount = _db.Submissions
-						.Count(s => s.SubmissionAuthors
-							.Select(sa => sa.Author.UserName)
-							.Contains(userName))
-				})
-				.SingleOrDefaultAsync();
-		}
-
-		/// <summary>
 		/// Returns the rating information for the given user
 		/// If user is not found, null is returned
 		/// If user has PublicRatings false, then the ratings will be an empty list
