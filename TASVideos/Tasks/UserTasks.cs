@@ -116,32 +116,23 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<UserSummaryModel> GetUserSummary(string userName)
 		{
-			using (await _db.Database.BeginTransactionAsync())
-			{
-				var user = await _db.Users
-					.Select(u => new { u.Id, u.UserName })
-					.SingleOrDefaultAsync(u => u.UserName == userName);
-
-				if (user != null)
+			return await _db.Users
+				.Where(u => u.UserName == userName)
+				.Select(user => new UserSummaryModel
 				{
-					return new UserSummaryModel
-					{
-						Id = user.Id,
-						UserName = user.UserName,
-						EditCount = _db.WikiPages.Count(wp => wp.CreateUserName == userName),
-						MovieCount = _db.Publications
-							.Count(p => p.Authors
-								.Select(sa => sa.Author.UserName)
-								.Contains(userName)),
-						SubmissionCount = _db.Submissions
-							.Count(s => s.SubmissionAuthors
-								.Select(sa => sa.Author.UserName)
-								.Contains(userName))
-					};
-				}
-
-				return null;
-			}
+					Id = user.Id,
+					UserName = user.UserName,
+					EditCount = _db.WikiPages.Count(wp => wp.CreateUserName == userName),
+					MovieCount = _db.Publications
+						.Count(p => p.Authors
+							.Select(sa => sa.Author.UserName)
+							.Contains(userName)),
+					SubmissionCount = _db.Submissions
+						.Count(s => s.SubmissionAuthors
+							.Select(sa => sa.Author.UserName)
+							.Contains(userName))
+				})
+				.SingleOrDefaultAsync();
 		}
 
 		/// <summary>
