@@ -13,19 +13,6 @@
             }
         },
         {
-            "label": "npm run build",
-            "command": "npm",
-            "type": "shell",
-            "args": [
-                "run",
-                "build"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/TASVideos"
-            },
-            "dependsOn": "npm install"
-        },
-        {
             "label": "build",
             "command": "dotnet",
             "type": "process",
@@ -33,8 +20,7 @@
                 "build",
                 "${workspaceFolder}/TASVideos/TASVideos.csproj"
             ],
-            "problemMatcher": "$msCompile",
-            "dependsOn": "npm run build"
+            "problemMatcher": "$msCompile"
 		},
 		{
             "label": "build_forumengine",
