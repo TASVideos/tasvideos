@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
@@ -14,27 +17,48 @@ namespace TASVideos.Pages.Wiki
 	[RequirePermission(PermissionTo.SeeDeletedWikiPages)]
 	public class DeletedPagesModel : BasePageModel
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IWikiPages _wikiPages;
-		private readonly WikiTasks _wikiTasks;
 
 		public DeletedPagesModel(
+			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
-			WikiTasks wikiTasks,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
+			_db = db;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
-			_wikiTasks = wikiTasks;
 		}
 
 		public IEnumerable<DeletedWikiPageDisplayModel> DeletedPages { get; set; } = new List<DeletedWikiPageDisplayModel>();
 
 		public async Task OnGet()
 		{
-			DeletedPages = await _wikiTasks.GetDeletedPages();
+			DeletedPages = await _db.WikiPages
+				.ThatAreDeleted()
+				.GroupBy(tkey => tkey.PageName)
+				.Select(record => new DeletedWikiPageDisplayModel
+				{
+					PageName = record.Key,
+					RevisionCount = record.Count(),
+
+					// https://github.com/aspnet/EntityFrameworkCore/issues/3103
+					// EF Core 2.1 bug, this no longer works, "Must be reducible node exception
+					// HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
+				})
+				.ToListAsync();
+
+			// Workaround for EF Core 2.1 issue
+			// https://github.com/aspnet/EntityFrameworkCore/issues/3103
+			// Since we know the cache is up to date we can do the logic there and avoid n+1 trips to the db
+			await _wikiPages.PreLoadCache();
+			foreach (var result in DeletedPages)
+			{
+				result.HasExistingRevisions = _wikiPages.Any(wp => wp.PageName == result.PageName);
+			}
 		}
 
 		public async Task<IActionResult> OnGetDeletePage(string path)
