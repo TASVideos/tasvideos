@@ -35,6 +35,7 @@ const srcNames = [
 	"bootstrap/dist/js/bootstrap.bundle.min.js"
 ];
 
+fs.ensureDirSync(dstDir);
 for (const name of walkSync(dstDir)) {
 	if (!srcNames.includes(name.replace(/\\/g,"/"))) {
 		console.log("Removing " + name);
