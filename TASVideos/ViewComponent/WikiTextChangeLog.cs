@@ -1,18 +1,22 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
+using TASVideos.Models;
 
 namespace TASVideos.ViewComponents
 {
 	public class WikiTextChangeLog : ViewComponent
 	{
-		private readonly WikiTasks _wikiTasks;
+		private readonly ApplicationDbContext _db;
 
-		public WikiTextChangeLog(WikiTasks wikiTasks)
+		public WikiTextChangeLog(ApplicationDbContext db)
 		{
-			_wikiTasks = wikiTasks;
+			_db = db;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
@@ -32,8 +36,33 @@ namespace TASVideos.ViewComponents
 				limit = paramLimit.Value;
 			}
 
-			var results = await _wikiTasks.GetWikiChangeLog(limit, includeMinorEdits);
+			var results = await GetWikiChangeLog(limit, includeMinorEdits);
 			return View(results);
+		}
+
+		private async Task<IEnumerable<WikiTextChangelogModel>> GetWikiChangeLog(int limit, bool includeMinorEdits)
+		{
+			var query = _db.WikiPages
+				.ThatAreNotDeleted()
+				.ByMostRecent()
+				.Take(limit);
+
+			if (!includeMinorEdits)
+			{
+				query = query.ExcludingMinorEdits();
+			}
+
+			return await query
+				.Select(wp => new WikiTextChangelogModel
+				{
+					PageName = wp.PageName,
+					Revision = wp.Revision,
+					Author = wp.CreateUserName,
+					CreateTimestamp = wp.CreateTimeStamp,
+					MinorEdit = wp.MinorEdit,
+					RevisionMessage = wp.RevisionMessage
+				})
+				.ToListAsync();
 		}
 	}
 }
