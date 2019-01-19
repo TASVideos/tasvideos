@@ -1,8 +1,11 @@
 ﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -12,16 +15,16 @@ namespace TASVideos.Pages.Game
 	public class EditModel : BasePageModel
 	{
 		private readonly CatalogTasks _catalogTasks;
-		private readonly PlatformTasks _platformTasks;
+		private readonly ApplicationDbContext _db;
 
 		public EditModel(
+			ApplicationDbContext db,
 			CatalogTasks catalogTasks,
-			PlatformTasks platformTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_catalogTasks = catalogTasks;
-			_platformTasks = platformTasks;
+			_db = db;
 		}
 
 		[FromRoute]
@@ -41,7 +44,9 @@ namespace TASVideos.Pages.Game
 				return NotFound();
 			}
 
-			Game.AvailableSystems = await _platformTasks.GetGameSystemDropdownList();
+			Game.AvailableSystems = await _db.GameSystems
+				.ToDropdown()
+				.ToListAsync();
 			return Page();
 		}
 
@@ -50,7 +55,9 @@ namespace TASVideos.Pages.Game
 			
 			if (!ModelState.IsValid)
 			{
-				Game.AvailableSystems = await _platformTasks.GetGameSystemDropdownList();
+				Game.AvailableSystems = await _db.GameSystems
+					.ToDropdown()
+					.ToListAsync();
 				return Page();
 			}
 

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -79,7 +78,6 @@ namespace TASVideos.Extensions
 			services.AddScoped<UserTasks>();
 			services.AddScoped<SubmissionTasks>();
 			services.AddScoped<PublicationTasks>();
-			services.AddScoped<PlatformTasks>();
 			services.AddScoped<CatalogTasks>();
 			services.AddScoped<ForumTasks>();
 			services.AddScoped<RatingsTasks>();

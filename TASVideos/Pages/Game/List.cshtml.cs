@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -17,16 +19,16 @@ namespace TASVideos.Pages.Game
 	public class ListModel : BasePageModel
 	{
 		private readonly CatalogTasks _catalogTasks;
-		private readonly PlatformTasks _platformTasks;
+		private readonly ApplicationDbContext _db;
 
 		public ListModel(
 			CatalogTasks catalogTasks,
-			PlatformTasks platformTasks,
+			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_catalogTasks = catalogTasks;
-			_platformTasks = platformTasks;
+			_db = db;
 		}
 
 		[FromQuery]
@@ -37,8 +39,12 @@ namespace TASVideos.Pages.Game
 		public async Task OnGet()
 		{
 			Games = _catalogTasks.GetPageOfGames(Search);
-			var systems = (await _platformTasks.GetGameSystemDropdownList()).ToList();
+			var systems = await _db.GameSystems
+				.ToDropdown()
+				.ToListAsync();
+
 			systems.Insert(0, new SelectListItem { Text = "All", Value = "" });
+
 			ViewData["GameSystemList"] = systems;
 		}
 
