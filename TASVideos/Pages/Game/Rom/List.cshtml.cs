@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
+using TASVideos.Pages.Game.Rom.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Game.Rom

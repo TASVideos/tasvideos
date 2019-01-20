@@ -1,4 +1,5 @@
 ﻿@page "{handler?}"
+@using TASVideos.Pages.Game.Model
 @model ListModel
 @{
 	ViewData["Title"] = "Game List" + (!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? "/" + Model.Games.SystemCode : string.Empty);
@@ -17,7 +18,7 @@
 
 <partial name="_SystemPager" model="Model.Games" />
 <table class="table table-bordered table-striped table-sm">
-	<sortable-table-head paging="@Model.Games" model-type="typeof(Models.GameListModel)" />
+	<sortable-table-head paging="@Model.Games" model-type="typeof(GameListModel)" />
 	@foreach (var game in Model.Games)
 	{
 		<tr>
