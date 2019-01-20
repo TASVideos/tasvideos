@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
@@ -60,6 +61,12 @@ namespace TASVideos.Pages.Game.Rom
 
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
+
+		[TempData]
+		public string Message { get; set; }
+
+		[TempData]
+		public string MessageType { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -116,7 +123,17 @@ namespace TASVideos.Pages.Game.Rom
 				_db.Roms.Add(rom);
 			}
 
-			await _db.SaveChangesAsync();
+			try
+			{
+				MessageType = Styles.Success;
+				Message = "Rom successfully updated.";
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				MessageType = Styles.Danger;
+				Message = $"Unable to update Rom {Id}, the rom may have already been updated, or the game no longer exists.";
+			}
 
 			return RedirectToPage("List", new { gameId = GameId });
 		}
@@ -130,12 +147,24 @@ namespace TASVideos.Pages.Game.Rom
 
 			if (!await CanBeDeleted())
 			{
+				Message = $"Unable to delete Rom {Id}, rom is used by a publication or submission.";
+				MessageType = Styles.Danger;
 				return RedirectToPage("List");
 			}
 
-			// TODO: catch concurrency exception
-			_db.Roms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
-			await _db.SaveChangesAsync();
+			try
+			{
+				_db.Roms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
+				MessageType = Styles.Success;
+				Message = $"Rom {Id}, deleted successfully.";
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				MessageType = Styles.Danger;
+				Message = $"Unable to delete Rom {Id}, the rom may have already been deleted or updated.";
+			}
+
 			return RedirectToPage("List");
 		}
 

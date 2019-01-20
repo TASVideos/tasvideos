@@ -29,6 +29,14 @@ namespace TASVideos.Pages.Game.Rom
 
 		public RomListModel Roms { get; set; }
 
+		[TempData]
+		public string Message { get; set; }
+
+		[TempData]
+		public string MessageType { get; set; }
+
+		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
+
 		public async Task<IActionResult> OnGet()
 		{
 			Roms = await _db.Games

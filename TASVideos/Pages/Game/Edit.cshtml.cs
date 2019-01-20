@@ -106,7 +106,6 @@ namespace TASVideos.Pages.Game
 			{
 				MessageType = Styles.Danger;
 				Message = $"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.";
-
 			}
 			
 			return RedirectToPage("List");
