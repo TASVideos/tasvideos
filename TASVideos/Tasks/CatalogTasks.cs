@@ -20,30 +20,6 @@ namespace TASVideos.Tasks
 			_mapper = mapper;
 		}
 
-		public async Task<RomListModel> GetRomsForGame(int gameId)
-		{
-			return await _db.Games
-				.Where(g => g.Id == gameId)
-				.Select(g => new RomListModel
-				{
-					GameDisplayName = g.DisplayName,
-					SystemCode = g.System.Code,
-					Roms = g.Roms
-					.Select(r => new RomListModel.RomEntry
-					{
-						Id = r.Id,
-						DisplayName = r.Name,
-						Md5 = r.Md5,
-						Sha1 = r.Sha1,
-						Version = r.Version,
-						Region = r.Region,
-						RomType = r.Type
-					})
-					.ToList()
-				})
-				.SingleOrDefaultAsync();
-		}
-
 		public async Task<RomEditModel> GetRomForEdit(int gameId, int? romId)
 		{
 			using (_db.Database.BeginTransactionAsync())
