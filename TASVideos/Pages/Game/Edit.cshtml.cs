@@ -33,6 +33,9 @@ namespace TASVideos.Pages.Game
 			_mapper = mapper;
 		}
 
+		[TempData]
+		public string Message { get; set; }
+
 		[FromRoute]
 		public int? Id { get; set; }
 
@@ -93,7 +96,16 @@ namespace TASVideos.Pages.Game
 			game.System = await _db.GameSystems
 				.SingleAsync(s => s.Code == Game.SystemCode);
 
-			await _db.SaveChangesAsync();
+			try
+			{
+				Message = "Game successfully updated.";
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				Message = $"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.";
+			}
+			
 			return RedirectToPage("List");
 		}
 
@@ -106,17 +118,19 @@ namespace TASVideos.Pages.Game
 
 			if (!await CanBeDeleted())
 			{
-				return BadRequest($"Unable to delete Game {Id}, game is used by a publication or submission");
+				Message = $"Unable to delete Game {Id}, game is used by a publication or submission.";
+				return RedirectToPage("List");
 			}
 
 			try
 			{
 				_db.Games.Attach(new Data.Entity.Game.Game { Id = Id ?? 0 }).State = EntityState.Deleted;
+				Message = $"Game {Id}, deleted successfully.";
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				// TODO: set TempData message
+				Message = $"Unable to delete Game {Id}, the game may have already been deleted or updated.";
 			}
 
 			return RedirectToPage("List");

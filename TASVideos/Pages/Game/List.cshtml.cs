@@ -31,6 +31,11 @@ namespace TASVideos.Pages.Game
 			_db = db;
 		}
 
+		[TempData]
+		public string Message { get; set; }
+
+		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
+
 		[FromQuery]
 		public GameListRequest Search { get; set; }
 
