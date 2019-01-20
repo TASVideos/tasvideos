@@ -12,7 +12,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
-using TASVideos.Models;
+using TASVideos.Pages.Game.Model;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Game

@@ -14,7 +14,7 @@ using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Models;
+using TASVideos.Pages.Game.Rom.Models;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Game.Rom
