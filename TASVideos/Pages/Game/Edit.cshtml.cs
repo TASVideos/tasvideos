@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
 using Microsoft.AspNetCore.Mvc;
@@ -21,15 +22,18 @@ namespace TASVideos.Pages.Game
 	{
 		private readonly CatalogTasks _catalogTasks;
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
 		public EditModel(
 			ApplicationDbContext db,
 			CatalogTasks catalogTasks,
+			IMapper mapper,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_catalogTasks = catalogTasks;
 			_db = db;
+			_mapper = mapper;
 		}
 
 		[FromRoute]
@@ -72,7 +76,27 @@ namespace TASVideos.Pages.Game
 				return Page();
 			}
 
-			await _catalogTasks.AddUpdateGame(Id, Game);
+			Data.Entity.Game.Game game;
+			if (Id.HasValue)
+			{
+				game = await _db.Games.SingleOrDefaultAsync(g => g.Id == Id.Value);
+				if (game == null)
+				{
+					return NotFound();
+				}
+
+				_mapper.Map(Game, game);
+			}
+			else
+			{
+				game = _mapper.Map<Data.Entity.Game.Game>(Game);
+				_db.Games.Add(game);
+			}
+
+			game.System = await _db.GameSystems
+				.SingleAsync(s => s.Code == Game.SystemCode);
+
+			await _db.SaveChangesAsync();
 			return RedirectToPage("List");
 		}
 
@@ -83,13 +107,22 @@ namespace TASVideos.Pages.Game
 				return NotFound();
 			}
 
-			var result = await _catalogTasks.DeleteGame(Id.Value);
-			if (result)
+			if (!await CanBeDeleted())
 			{
-				return RedirectToPage("List");
+				return BadRequest($"Unable to delete Game {Id}, game is used by a publication or submission");
 			}
 
-			return BadRequest($"Unable to delete Game {Id}, game is used by a publication or submission");
+			var game = await _db.Games
+				.SingleOrDefaultAsync(r => r.Id == Id);
+
+			if (game == null)
+			{
+				return NotFound();
+			}
+
+			_db.Games.Remove(game);
+			await _db.SaveChangesAsync();
+			return RedirectToPage("List");
 		}
 
 		private async Task Initialize()
@@ -98,8 +131,13 @@ namespace TASVideos.Pages.Game
 					.ToDropdown()
 					.ToListAsync();
 
-				CanDelete = !await _db.Submissions.AnyAsync(s => s.Game.Id == Id)
-							&& !await _db.Publications.AnyAsync(p => p.Game.Id == Id);
+				CanDelete = await CanBeDeleted();
+		}
+
+		private async Task<bool> CanBeDeleted()
+		{
+			return !await _db.Submissions.AnyAsync(s => s.Game.Id == Id)
+					&& !await _db.Publications.AnyAsync(p => p.Game.Id == Id);
 		}
 	}
 }
