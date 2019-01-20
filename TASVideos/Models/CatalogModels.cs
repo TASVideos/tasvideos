@@ -37,8 +37,6 @@ namespace TASVideos.Models
 
 	public class GameEditModel
 	{
-		public bool CanDelete { get; set; }
-
 		[Required]
 		[Display(Name = "System")]
 		public string SystemCode { get; set; }
@@ -65,8 +63,6 @@ namespace TASVideos.Models
 
 		[Display(Name = "Screenshot Url")]
 		public string ScreenshotUrl { get; set; }
-
-		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	}
 
 	public class RomListModel
