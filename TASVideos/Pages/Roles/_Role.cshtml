@@ -7,7 +7,12 @@
 				<div permission="EditRoles">
 					<a asp-page="AddEdit" asp-route-id="@Model.Id" class="btn btn-primary mb-m">Edit</a>
 				</div>
-				@Model.Description
+				<span>@Model.Description</span>
+				<div condition="Model.IsDefault">
+					<small>
+						* This role is added to users by default when they register
+					</small>
+				</div>
 			</div>
 			<div class="col-lg-3 col-md-6">
 				<strong>@Html.DisplayNameFor(m => m.Permissions):</strong><br />
