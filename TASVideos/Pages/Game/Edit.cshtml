@@ -6,14 +6,14 @@
 		: "Create a new Game entry";
 }
 <form-group>
-	<delete-button condition="@Model.Game.CanDelete" asp-href="/Game/@(Model.Id ?? 0)?handler=Delete" class="float-right">Delete</delete-button>
+	<delete-button condition="@Model.CanDelete" asp-href="/Game/@(Model.Id ?? 0)?handler=Delete" class="float-right">Delete</delete-button>
 </form-group>
 <form method="post">
 	<row>
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Game.SystemCode"></label>
-				<select asp-for="Game.SystemCode" asp-items="@Model.Game.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
+				<select asp-for="Game.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
 				<span asp-validation-for="Game.SystemCode" class="text-danger"></span>
 			</form-group>
 			<form-group>

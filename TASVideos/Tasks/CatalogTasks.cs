@@ -50,24 +50,6 @@ namespace TASVideos.Tasks
 			};
 		}
 
-		public async Task<GameEditModel> GetGameForEdit(int gameId)
-		{
-			var model = await _db.Games
-				.Where(g => g.Id == gameId)
-				.ProjectTo<GameEditModel>()
-				.SingleOrDefaultAsync();
-
-			if (model == null)
-			{
-				return null;
-			}
-
-			model.CanDelete = !(await _db.Submissions.AnyAsync(s => s.Game.Id == gameId))
-							&& !(await _db.Publications.AnyAsync(p => p.Game.Id == gameId));
-
-			return model;
-		}
-
 		public async Task AddUpdateGame(int? id, GameEditModel model)
 		{
 			Game game;
