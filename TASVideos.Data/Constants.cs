@@ -50,4 +50,14 @@
 		public const string Wiki = "Wiki";
 		public const string Submission = "Submission";
 	}
+
+	// TODO: this is bootstrap specific, maybe it should go in the MVC project
+	// TODO: a better name
+	public static class Styles
+	{
+		public const string Info = "info";
+		public const string Success = "success";
+		public const string Warning = "warning";
+		public const string Danger = "danger";
+	}
 }

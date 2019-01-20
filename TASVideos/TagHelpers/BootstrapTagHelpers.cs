@@ -72,11 +72,11 @@ namespace TASVideos.TagHelpers
 		}
 	}
 
-	public abstract class AlertTagHelper : TagHelper
+	public class AlertTagHelper : TagHelper
 	{
 		public bool Dismissible { get; set; }
 
-		protected abstract string Type { get; }
+		public virtual string Type { get; set; } = "info";
 
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
@@ -98,17 +98,17 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 
 	public class InfoAlertTagHelper : AlertTagHelper
 	{
-		protected override string Type { get; } = "info";
+		public override string Type { get; set; } = "info";
 	}
 
 	public class WarningAlertTagHelper : AlertTagHelper
 	{
-		protected override string Type { get; } = "warning";
+		public override string Type { get; set; } = "warning";
 	}
 
 	public class DangerAlertTagHelper : AlertTagHelper
 	{
-		protected override string Type { get; } = "danger";
+		public override string Type { get; set; } = "danger";
 	}
 
 	public class DeleteButtonTagHelper : TagHelper
