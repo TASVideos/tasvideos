@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Game
 		public int? Id { get; set; }
 
 		[BindProperty]
-		public GameEditModel Game { get; set; }
+		public GameEditModel Game { get; set; } = new GameEditModel();
 
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
@@ -62,10 +62,6 @@ namespace TASVideos.Pages.Game
 				{
 					return NotFound();
 				}
-			}
-			else
-			{
-				Game = new GameEditModel();
 			}
 
 			await Initialize();
