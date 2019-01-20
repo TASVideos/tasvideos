@@ -50,40 +50,6 @@ namespace TASVideos.Tasks
 			};
 		}
 
-		public async Task AddUpdateGame(int? id, GameEditModel model)
-		{
-			Game game;
-			if (id.HasValue)
-			{
-				game = await _db.Games.SingleAsync(g => g.Id == id.Value);
-				_mapper.Map(model, game);
-			}
-			else
-			{
-				game = _mapper.Map<Game>(model);
-				_db.Games.Add(game);
-			}
-
-			game.System = await _db.GameSystems.SingleAsync(s => s.Code == model.SystemCode);
-			await _db.SaveChangesAsync();
-		}
-
-		public async Task<bool> DeleteGame(int id)
-		{
-			bool canDelete = !await _db.Submissions.AnyAsync(s => s.Game.Id == id)
-				&& !await _db.Publications.AnyAsync(p => p.Game.Id == id);
-
-			if (!canDelete)
-			{
-				return false;
-			}
-
-			var game = await _db.Games.SingleAsync(r => r.Id == id);
-			_db.Games.Remove(game);
-			await _db.SaveChangesAsync();
-			return true;
-		}
-
 		public async Task<RomListModel> GetRomsForGame(int gameId)
 		{
 			return await _db.Games
