@@ -3,6 +3,11 @@
 @{
 	ViewData["Title"] = $"Roms for {Model.Roms.GameDisplayName}";
 }
+
+<alert type="@Model.MessageType" condition="Model.ShowMessage" dismissible="true">
+	@Model.Message
+</alert>
+
 <h4>System: @Model.Roms.SystemCode</h4>
 <h4>Game: <a asp-page="/Game/Index" asp-route-id="@Model.GameId">@Model.Roms.GameDisplayName</a></h4>
 <a asp-page="Edit" asp-route-gameId="@Model.GameId" class="btn btn-primary">Create</a>
