@@ -43,16 +43,16 @@ namespace TASVideos.Pages.Game
 
 		public SystemPageOf<GameListModel> Games { get; set; }
 
+		public List<SelectListItem> SystemList { get; set; } = new List<SelectListItem>();
+
 		public async Task OnGet()
 		{
 			Games = GetPageOfGames(Search);
-			var systems = await _db.GameSystems
+			SystemList = await _db.GameSystems
 				.ToDropdown()
 				.ToListAsync();
 
-			systems.Insert(0, new SelectListItem { Text = "All", Value = "" });
-
-			ViewData["GameSystemList"] = systems;
+			SystemList.Insert(0, new SelectListItem { Text = "All", Value = "" });
 		}
 
 		public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
