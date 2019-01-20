@@ -20,18 +20,15 @@ namespace TASVideos.Pages.Game
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class EditModel : BasePageModel
 	{
-		private readonly CatalogTasks _catalogTasks;
 		private readonly ApplicationDbContext _db;
 		private readonly IMapper _mapper;
 
 		public EditModel(
 			ApplicationDbContext db,
-			CatalogTasks catalogTasks,
 			IMapper mapper,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_catalogTasks = catalogTasks;
 			_db = db;
 			_mapper = mapper;
 		}
@@ -112,16 +109,16 @@ namespace TASVideos.Pages.Game
 				return BadRequest($"Unable to delete Game {Id}, game is used by a publication or submission");
 			}
 
-			var game = await _db.Games
-				.SingleOrDefaultAsync(r => r.Id == Id);
-
-			if (game == null)
+			try
 			{
-				return NotFound();
+				_db.Games.Attach(new Data.Entity.Game.Game { Id = Id ?? 0 }).State = EntityState.Deleted;
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				// TODO: set TempData message
 			}
 
-			_db.Games.Remove(game);
-			await _db.SaveChangesAsync();
 			return RedirectToPage("List");
 		}
 
