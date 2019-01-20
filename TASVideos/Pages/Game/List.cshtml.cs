@@ -34,6 +34,9 @@ namespace TASVideos.Pages.Game
 		[TempData]
 		public string Message { get; set; }
 
+		[TempData]
+		public string MessageType { get; set; }
+
 		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
 
 		[FromQuery]

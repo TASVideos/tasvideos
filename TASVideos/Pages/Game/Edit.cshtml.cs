@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Models;
@@ -35,6 +36,9 @@ namespace TASVideos.Pages.Game
 
 		[TempData]
 		public string Message { get; set; }
+
+		[TempData]
+		public string MessageType { get; set; }
 
 		[FromRoute]
 		public int? Id { get; set; }
@@ -98,12 +102,15 @@ namespace TASVideos.Pages.Game
 
 			try
 			{
+				MessageType = Styles.Success;
 				Message = "Game successfully updated.";
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
+				MessageType = Styles.Danger;
 				Message = $"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.";
+
 			}
 			
 			return RedirectToPage("List");
@@ -119,17 +126,20 @@ namespace TASVideos.Pages.Game
 			if (!await CanBeDeleted())
 			{
 				Message = $"Unable to delete Game {Id}, game is used by a publication or submission.";
+				MessageType = Styles.Danger;
 				return RedirectToPage("List");
 			}
 
 			try
 			{
 				_db.Games.Attach(new Data.Entity.Game.Game { Id = Id ?? 0 }).State = EntityState.Deleted;
+				MessageType = Styles.Success;
 				Message = $"Game {Id}, deleted successfully.";
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
+				MessageType = Styles.Danger;
 				Message = $"Unable to delete Game {Id}, the game may have already been deleted or updated.";
 			}
 

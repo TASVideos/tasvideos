@@ -5,9 +5,9 @@
 	var systemsList = (List<SelectListItem>)ViewData["GameSystemList"];
 }
 
-<info-alert condition="Model.ShowMessage" dismissible="true">
+<alert type="@Model.MessageType" condition="Model.ShowMessage" dismissible="true">
 	@Model.Message
-</info-alert>
+</alert>
 
 <a asp-page="Edit" class="btn btn-primary mb-3 pull-right">Create</a>
 <form class="form-inline mb-3">
