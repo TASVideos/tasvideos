@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Roles.Models;
@@ -25,6 +26,12 @@ namespace TASVideos.Pages.Roles
 		{
 			_db = db;
 		}
+
+		[TempData]
+		public string Message { get; set; }
+
+		[TempData]
+		public string MessageType { get; set; }
 
         [FromRoute]
         public int? Id { get; set; }
@@ -95,6 +102,19 @@ namespace TASVideos.Pages.Roles
 			}
 
 			await AddUpdateRole(Role);
+
+			try
+			{
+				MessageType = Styles.Success;
+				Message = "Role successfully updated.";
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				MessageType = Styles.Danger;
+				Message = $"Unable to update Role {Id}, the role may have already been updated, or the game no longer exists.";
+			}
+			
 			return RedirectToPage("List");
 		}
 
@@ -105,8 +125,19 @@ namespace TASVideos.Pages.Roles
 				return AccessDenied();
 			}
 
-			_db.Roles.Attach(new Role { Id = id }).State = EntityState.Deleted;
-			await _db.SaveChangesAsync();
+			try
+			{
+				MessageType = Styles.Success;
+				Message = $"Role {Id}, deleted successfully.";
+				_db.Roles.Attach(new Role { Id = id }).State = EntityState.Deleted;
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				MessageType = Styles.Danger;
+				Message = $"Unable to delete Role {Id}, the role may have already been deleted or updated.";
+			}
+			
 			return RedirectToPage("List");
 		}
 
@@ -152,8 +183,6 @@ namespace TASVideos.Pages.Roles
 				Link = rl,
 				Role = role
 			}));
-
-			await _db.SaveChangesAsync();
 		}
 	}
 }

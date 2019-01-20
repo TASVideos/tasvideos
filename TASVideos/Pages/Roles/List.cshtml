@@ -4,6 +4,10 @@
 	ViewData["Title"] = "Role List";
 }
 
+<alert type="@Model.MessageType" condition="Model.ShowMessage" dismissible="true">
+	@Model.Message
+</alert>
+
 <h4>@ViewData["Title"]</h4>
 <p>These are a list of the site roles</p>
 <hr />
