@@ -5,6 +5,10 @@
 	var systemsList = (List<SelectListItem>)ViewData["GameSystemList"];
 }
 
+<info-alert condition="Model.ShowMessage" dismissible="true">
+	@Model.Message
+</info-alert>
+
 <a asp-page="Edit" class="btn btn-primary mb-3 pull-right">Create</a>
 <form class="form-inline mb-3">
 	<label asp-for="@Model.Games.SystemCode" class="mr-2"></label>
