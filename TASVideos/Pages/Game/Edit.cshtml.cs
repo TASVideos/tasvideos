@@ -114,7 +114,7 @@ namespace TASVideos.Pages.Game
 
 		public async Task<IActionResult> OnGetDelete()
 		{
-			if (Id == null)
+			if (!Id.HasValue)
 			{
 				return NotFound();
 			}

@@ -31,9 +31,7 @@ namespace TASVideos
 							src.System.Code));
 			CreateMap<GameEditModel, Game>();
 
-			CreateMap<GameRom, RomEditModel>()
-				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game.DisplayName));
-			CreateMap<RomEditModel, GameRom>();
+			CreateMap<GameRom, RomEditModel>().ReverseMap();
 
 			CreateMap<AwardTasks.AwardDto, AwardDetailsModel>();
 			CreateMap<AwardTasks.AwardDto.UserDto, AwardDetailsModel.UserModel>();
