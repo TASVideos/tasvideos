@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Constants;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -18,16 +20,13 @@ namespace TASVideos.Pages.Game
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class ListModel : BasePageModel
 	{
-		private readonly CatalogTasks _catalogTasks;
 		private readonly ApplicationDbContext _db;
 
 		public ListModel(
-			CatalogTasks catalogTasks,
 			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_catalogTasks = catalogTasks;
 			_db = db;
 		}
 
@@ -46,7 +45,7 @@ namespace TASVideos.Pages.Game
 
 		public async Task OnGet()
 		{
-			Games = _catalogTasks.GetPageOfGames(Search);
+			Games = GetPageOfGames(Search);
 			var systems = await _db.GameSystems
 				.ToDropdown()
 				.ToListAsync();
@@ -58,7 +57,21 @@ namespace TASVideos.Pages.Game
 
 		public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
 		{
-			var items = await _catalogTasks.GetFrameRateDropDownForSystem(systemId, includeEmpty);
+			var items = await _db.GameSystemFrameRates
+				.ForSystem(systemId)
+				.OrderBy(fr => fr.Id)
+				.Select(g => new SelectListItem
+				{
+					Value = g.Id.ToString(),
+					Text = g.RegionCode + " " + g.FrameRate
+				})
+				.ToListAsync();
+
+			if (includeEmpty)
+			{
+				items = UiDefaults.DefaultEntry.Concat(items).ToList();
+			}
+
 			return new PartialViewResult
 			{
 				ViewName = "_DropdownItems",
@@ -68,7 +81,21 @@ namespace TASVideos.Pages.Game
 
 		public async Task<IActionResult> OnGetGameDropDownForSystem(int systemId, bool includeEmpty)
 		{
-			var items = await _catalogTasks.GetGameDropDownForSystem(systemId, includeEmpty);
+			var items = await _db.Games
+				.OrderBy(g => g.Id)
+				.ForSystem(systemId)
+				.Select(g => new SelectListItem
+				{
+					Value = g.Id.ToString(),
+					Text = g.GoodName
+				})
+				.ToListAsync();
+
+			if (includeEmpty)
+			{
+				items = UiDefaults.DefaultEntry.Concat(items).ToList();
+			}
+
 			return new PartialViewResult
 			{
 				ViewName = "_DropdownItems",
@@ -78,11 +105,52 @@ namespace TASVideos.Pages.Game
 
 		public async Task<IActionResult> OnGetRomDropDownForGame(int gameId, bool includeEmpty)
 		{
-			var items = await _catalogTasks.GetRomDropDownForGame(gameId, includeEmpty);
+			var items = await _db.Roms
+				.Where(r => r.GameId == gameId)
+				.OrderBy(r => r.Id)
+				.Select(r => new SelectListItem
+				{
+					Value = r.Id.ToString(),
+					Text = r.Name
+				})
+				.ToListAsync();
+
+			if (includeEmpty)
+			{
+				items = UiDefaults.DefaultEntry.Concat(items).ToList();
+			}
+
 			return new PartialViewResult
 			{
 				ViewName = "_DropdownItems",
 				ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
+			};
+		}
+
+		private SystemPageOf<GameListModel> GetPageOfGames(GameListRequest paging)
+		{
+			var query = !string.IsNullOrWhiteSpace(paging.SystemCode)
+				? _db.Games.Where(g => g.System.Code == paging.SystemCode)
+				: _db.Games;
+
+			var data = query
+				.Select(g => new GameListModel
+				{
+					Id = g.Id,
+					DisplayName = g.DisplayName,
+					SystemCode = g.System.Code
+				})
+				.SortBy(paging)
+				.SortedPageOf(_db, paging);
+
+			return new SystemPageOf<GameListModel>(data)
+			{
+				SystemCode = paging.SystemCode,
+				PageSize = data.PageSize,
+				CurrentPage = data.CurrentPage,
+				RowCount = data.RowCount,
+				SortDescending = data.SortDescending,
+				SortBy = data.SortBy
 			};
 		}
 	}
