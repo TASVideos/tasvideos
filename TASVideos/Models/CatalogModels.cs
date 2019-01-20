@@ -101,10 +101,6 @@ namespace TASVideos.Models
 
 	public class RomEditModel
 	{
-		public string SystemCode { get; set; }
-		public string GameName { get; set; }
-		public bool CanDelete { get; set; }
-
 		[Required]
 		[StringLength(255)]
 		[Display(Name = "Name")]

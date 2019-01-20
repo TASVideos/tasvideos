@@ -9,15 +9,15 @@
 
 <form-group>
 	<delete-button 
-		condition="@Model.Rom.CanDelete"
+		condition="@Model.CanDelete"
 		asp-href="@deleteLink"
 		class="float-right">Delete</delete-button>
-	<h4>System: @Model.Rom.SystemCode</h4>
-	<h4>Game: @Model.Rom.GameName</h4>
+	<h4>System: @Model.SystemCode</h4>
+	<h4>Game: @Model.GameName</h4>
 </form-group>
 <form method="post">
-	<input type="hidden" asp-for="Rom.GameName" />
-	<input type="hidden" asp-for="Rom.SystemCode" />
+	<input type="hidden" asp-for="GameName" />
+	<input type="hidden" asp-for="SystemCode" />
 	<row>
 		<div class="col-lg-6">
 			<form-group>
@@ -40,7 +40,7 @@
 			<form-group>
 				<label asp-for="Rom.RomType"></label>
 				<select asp-for="Rom.RomType" asp-items="@Model.AvailableRomTypes.OrderBy(s => s.Value)" class="form-control"></select>
-				<span asp-validation-for="Rom.SystemCode" class="text-danger"></span>
+				<span asp-validation-for="Rom.RomType" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Rom.Version"></label>

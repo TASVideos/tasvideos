@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
@@ -25,14 +30,17 @@ namespace TASVideos.Pages.Game.Rom
 				Value = ((int)r).ToString()
 			});
 
-		private readonly CatalogTasks _catalogTasks;
+		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
 		public EditModel(
-			CatalogTasks catalogTasks,
+			ApplicationDbContext db,
+			IMapper mapper,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_catalogTasks = catalogTasks;
+			_db = db;
+			_mapper = mapper;
 		}
 
 		[FromRoute]
@@ -42,17 +50,47 @@ namespace TASVideos.Pages.Game.Rom
 		public int? Id { get; set; }
 
 		[BindProperty]
-		public RomEditModel Rom { get; set; }
+		public RomEditModel Rom { get; set; } = new RomEditModel();
 
+		[BindProperty]
+		public string SystemCode { get; set; }
+
+		[BindProperty]
+		public string GameName { get; set; }
+
+		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
 
 		public async Task<IActionResult> OnGet()
 		{
-			Rom = await _catalogTasks.GetRomForEdit(GameId, Id);
+			if (!Id.HasValue)
+			{
+				return Page();
+			}
+
+			var game = await _db.Games
+				.Include(g => g.System)
+				.SingleOrDefaultAsync(g => g.Id == Id.Value);
+
+			if (game == null)
+			{
+				return NotFound();
+			}
+
+			Rom = await _db.Roms
+				.Where(r => r.Id == Id.Value && r.Game.Id == GameId)
+				.ProjectTo<RomEditModel>()
+				.SingleAsync();
+
 			if (Rom == null)
 			{
 				return NotFound();
 			}
+
+			GameName = game.DisplayName;
+			SystemCode = game.System.Code;
+
+			CanDelete = await CanBeDeleted();
 
 			return Page();
 		}
@@ -61,10 +99,25 @@ namespace TASVideos.Pages.Game.Rom
 		{
 			if (!ModelState.IsValid)
 			{
+				CanDelete = await CanBeDeleted();
 				return Page();
 			}
 
-			await _catalogTasks.AddUpdateRom(Id, GameId, Rom);
+			GameRom rom;
+			if (Id.HasValue)
+			{
+				rom = await _db.Roms.SingleAsync(r => r.Id == Id.Value);
+				_mapper.Map(Rom, rom);
+			}
+			else
+			{
+				rom = _mapper.Map<GameRom>(Rom);
+				rom.Game = await _db.Games.SingleAsync(g => g.Id == GameId);
+				_db.Roms.Add(rom);
+			}
+
+			await _db.SaveChangesAsync();
+
 			return RedirectToPage("List", new { gameId = GameId });
 		}
 
@@ -75,13 +128,21 @@ namespace TASVideos.Pages.Game.Rom
 				return NotFound();
 			}
 
-			var result = await _catalogTasks.DeleteRom(Id.Value);
-			if (result)
+			if (!await CanBeDeleted())
 			{
-				return RedirectToPage("List", new { GameId });
+				return RedirectToPage("List");
 			}
 
-			return BadRequest($"Unable to delete Rom {Id}, rom is used by a publication or submission");
+			// TODO: catch concurrency exception
+			_db.Roms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
+			await _db.SaveChangesAsync();
+			return RedirectToPage("List");
+		}
+
+		private async Task<bool> CanBeDeleted()
+		{
+			return !await _db.Submissions.AnyAsync(s => s.Rom.Id == Id)
+					&& !await _db.Publications.AnyAsync(p => p.Rom.Id == Id);
 		}
 	}
 }
