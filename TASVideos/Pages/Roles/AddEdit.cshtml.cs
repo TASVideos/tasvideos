@@ -64,6 +64,7 @@ namespace TASVideos.Pages.Roles
 					.Select(r => new RoleEditModel
 					{
 						Name = r.Name,
+						IsDefault = r.IsDefault,
 						Description = r.Description,
 						Links = r.RoleLinks
 							.Select(rl => rl.Link)
@@ -168,6 +169,7 @@ namespace TASVideos.Pages.Roles
 			}
 
 			role.Name = model.Name;
+			role.IsDefault = model.IsDefault;
 			role.Description = model.Description;
 
 			_db.RolePermission.AddRange(model.SelectedPermissions

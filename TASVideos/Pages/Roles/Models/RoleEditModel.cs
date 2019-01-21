@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 using TASVideos.Models;
@@ -10,11 +11,13 @@ namespace TASVideos.Pages.Roles.Models
 	/// </summary>
 	public class RoleEditModel
 	{
-		// TODO: IsDefault
         [Required]
 		[StringLength(50)]
 		[Display(Name = "Name")]
 		public string Name { get; set; }
+
+		[Display(Name = "Default", Description = "Default roles are given to all new users when they register")]
+		public bool IsDefault { get; set; }
 
 		[Required]
 		[StringLength(200)]
