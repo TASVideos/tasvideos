@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -52,7 +53,17 @@ namespace TASVideos.Pages.Profile
 				PublicRatings = user.PublicRatings,
 				StatusMessage = StatusMessage,
 				From = user.From,
-				Roles = await UserTasks.GetUserRoles(user.Id)
+				Roles = await _db.Users
+					.Where(u => u.Id == user.Id)
+					.SelectMany(u => u.UserRoles)
+					.Select(ur => ur.Role)
+					.Select(r => new RoleBasicDisplay
+					{
+						Id = r.Id,
+						Name = r.Name,
+						Description = r.Description
+					})
+					.ToListAsync()
 			};
 		}
 

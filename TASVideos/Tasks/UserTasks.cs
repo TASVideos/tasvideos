@@ -38,24 +38,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Gets a list of <see cref="Role"/>s that the given user currently has
-		/// </summary>
-		public async Task<IEnumerable<RoleBasicDisplay>> GetUserRoles(int userId)
-		{
-			return await _db.Users
-				.Where(u => u.Id == userId)
-				.SelectMany(u => u.UserRoles)
-				.Select(ur => ur.Role)
-				.Select(r => new RoleBasicDisplay
-				{
-					Id = r.Id,
-					Name = r.Name,
-					Description = r.Description
-				})
-				.ToListAsync();
-		}
-
-		/// <summary>
 		/// Checks if the given user name already exists in the database
 		/// </summary>
 		public async Task<bool> CheckUserNameExists(string userName)
