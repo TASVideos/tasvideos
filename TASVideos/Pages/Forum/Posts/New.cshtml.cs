@@ -72,7 +72,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			foreach (var post in Posts)
 			{
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableBbCode);
+				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
 				post.RenderedSignature = RenderSignature(post.Signature);
 			}
 		}
