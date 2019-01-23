@@ -366,8 +366,6 @@ namespace TASVideos.Models
 			SortDescending = true;
 			SortBy = nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp);
 		}
-
-		public string UserName { get; set; }
 	}
 
 	public class UserPostsModel

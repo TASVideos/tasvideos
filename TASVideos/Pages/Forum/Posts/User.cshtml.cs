@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			UserPosts = await _forumTasks.PostsByUser(Search, UserHas(PermissionTo.SeeRestrictedForums));
+			UserPosts = await _forumTasks.PostsByUser(UserName, Search, UserHas(PermissionTo.SeeRestrictedForums));
 
 			if (UserPosts == null)
 			{

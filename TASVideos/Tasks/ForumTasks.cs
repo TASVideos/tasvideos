@@ -586,10 +586,10 @@ namespace TASVideos.Tasks
 			return post.TopicId;
 		}
 
-		public async Task<UserPostsModel> PostsByUser(UserPostsRequest paging, bool allowRestricted)
+		public async Task<UserPostsModel> PostsByUser(string userName, UserPostsRequest paging, bool allowRestricted)
 		{
 			var model = await _db.Users
-				.Where(u => u.UserName == paging.UserName)
+				.Where(u => u.UserName == userName)
 				.Select(u => new UserPostsModel
 				{
 					Id = u.Id,
@@ -601,6 +601,7 @@ namespace TASVideos.Tasks
 					Roles = u.UserRoles
 						.Where(ur => !ur.Role.IsDefault)
 						.Select(ur => ur.Role.Name)
+						.ToList()
 				})
 				.SingleOrDefaultAsync();
 
