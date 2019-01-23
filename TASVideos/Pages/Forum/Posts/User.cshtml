@@ -1,5 +1,5 @@
 ﻿@page "{userName}"
-@model UserPostsModel
+@model UserModel
 @{
 	ViewData["Title"] = $"Posts for {Model.UserName}";
 }
@@ -7,9 +7,9 @@
 
 <hr class="mt-1" />
 <fullrow>
-	<partial name="_Pager" model="Model.Posts" />
+	<partial name="_Pager" model="Model.UserPosts.Posts" />
 </fullrow>
-@foreach (var post in Model.Posts)
+@foreach (var post in Model.UserPosts.Posts)
 {
 	<card>
 		<cardheader>
@@ -36,16 +36,16 @@
 				<div class="col-4">
 					<div class="card-text text-right">
 						<small>
-							@string.Join(",", Model.Roles)
+							@string.Join(",", Model.UserPosts.Roles)
 							(todo points)
 						</small>
 						<br />
-						<img src="@Model.Avatar" />
+						<img src="@Model.UserPosts.Avatar" />
 						<br />
 						<small>
-							Joined: @Model.Joined.ToShortDateString()<br />
-							Posts: @Model.Posts.RowCount<br />
-							Location: @Model.Location
+							Joined: @Model.UserPosts.Joined.ToShortDateString()<br />
+							Posts: @Model.UserPosts.Posts.RowCount<br />
+							Location: @Model.UserPosts.Location
 						</small>
 					</div>
 				</div>
@@ -56,12 +56,12 @@
 		</cardbody>
 		<cardfooter>
 			<fullrow>
-				<small style="font-style: italic">@Html.Raw(Model.RenderedSignature)</small>
+				<small style="font-style: italic">@Html.Raw(Model.UserPosts.RenderedSignature)</small>
 				<br />
 				<a class="btn btn-info btn-sm" asp-page="/Users/Profile" asp-route-userName="@Model.UserName">Profile</a>
 				<div class="pull-right">
 					@* ReSharper disable once UnusedVariable *@
-					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
+					@foreach (var award in Model.UserPosts.Awards.OrderByDescending(a => a.Year))
 					{
 						<partial name="_Award" model="award" />
 					}
@@ -71,6 +71,6 @@
 	</card>
 }
 <fullrow class="mt-2">
-	<partial name="_Pager" model="Model.Posts" />
+	<partial name="_Pager" model="Model.UserPosts.Posts" />
 </fullrow>
 	
