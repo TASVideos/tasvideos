@@ -31,67 +31,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns a forum and topics for the given id
-		/// For the purpose of display
-		/// </summary>
-		public async Task<ForumModel> GetForumForDisplay(int id, ForumRequest paging, bool allowRestricted)
-		{
-			using (await _db.Database.BeginTransactionAsync())
-			{
-				var model = await _db.Forums
-					.ExcludeRestricted(allowRestricted)
-					.Select(f => new ForumModel
-					{
-						Id = f.Id,
-						Name = f.Name,
-						Description = f.Description
-					})
-					.SingleOrDefaultAsync(f => f.Id == id);
-
-				if (model == null)
-				{
-					return null;
-				}
-
-				var rowsToSkip = paging.GetRowsToSkip();
-				var rowCount = await _db.ForumTopics
-					.ForForum(id)
-					.CountAsync();
-
-				var results = await _db.ForumTopics
-					.ForForum(id)
-					.Select(ft => new ForumModel.ForumTopicEntry
-					{
-						Id = ft.Id,
-						Title = ft.Title,
-						CreateUserName = ft.CreateUserName,
-						CreateTimestamp = ft.CreateTimeStamp,
-						Type = ft.Type,
-						Views = ft.Views,
-						PostCount = ft.ForumPosts.Count,
-						LastPost = ft.ForumPosts.Max(fp => (DateTime?)fp.CreateTimeStamp)
-					})
-					.OrderByDescending(ft => ft.Type == ForumTopicType.Sticky)
-					.ThenByDescending(ft => ft.Type == ForumTopicType.Announcement)
-					.ThenByDescending(ft => ft.LastPost)
-					.Skip(rowsToSkip)
-					.Take(paging.PageSize)
-					.ToListAsync();
-
-				model.Topics = new PageOf<ForumModel.ForumTopicEntry>(results)
-				{
-					PageSize = paging.PageSize,
-					CurrentPage = paging.CurrentPage,
-					RowCount = rowCount,
-					SortDescending = paging.SortDescending,
-					SortBy = paging.SortBy
-				};
-
-				return model;
-			}
-		}
-
-		/// <summary>
 		/// Returns the position of post is in its parent topic
 		/// If a post with the given id can not be found, null is returned
 		/// </summary>
