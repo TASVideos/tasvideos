@@ -1,9 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
+using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -12,6 +18,15 @@ namespace TASVideos.Pages.Submissions
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel
 	{
+		private static readonly IEnumerable<SelectListItem> Statuses = Enum.GetValues(typeof(SubmissionStatus))
+			.Cast<SubmissionStatus>()
+			.Select(s => new SelectListItem
+			{
+				Text = s.EnumDisplayName(),
+				Value = ((int)s).ToString()
+			})
+			.ToList();
+
 		private readonly SubmissionTasks _submissionTasks;
 
 		public IndexModel(
@@ -26,6 +41,9 @@ namespace TASVideos.Pages.Submissions
 		public SubmissionSearchRequest Search { get; set; } = new SubmissionSearchRequest();
 
 		public SubmissionListModel Submissions { get; set; } = new SubmissionListModel();
+
+		[Display(Name = "Statuses")]
+		public IEnumerable<SelectListItem> AvailableStatuses => Statuses;
 
 		public async Task OnGet()
 		{

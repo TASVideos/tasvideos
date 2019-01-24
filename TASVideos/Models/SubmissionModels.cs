@@ -242,16 +242,6 @@ namespace TASVideos.Models
 		[Display(Name = "Selected Statuses")]
 		public IEnumerable<int> StatusFilter { get; set; } = new List<int>();
 
-		[Display(Name = "Statuses")]
-		public IEnumerable<SelectListItem> AvailableStatuses => Enum.GetValues(typeof(SubmissionStatus))
-			.Cast<SubmissionStatus>()
-			.Select(s => new SelectListItem
-			{
-				Text = s.EnumDisplayName(),
-				Value = ((int)s).ToString()
-			})
-			.ToList();
-
 		public IEnumerable<Entry> Entries { get; set; } = new List<Entry>();
 
 		public class Entry
