@@ -14,6 +14,9 @@
 	<div class="alert alert-warning">This user's ratings are private</div>
 </div>
 <div condition="isMyPage || Model.PublicRatings || ViewData.UserHas(PermissionTo.SeePrivateRatings)">
+	<alert type="@Styles.Warning" condition="!isMyPage && ViewData.UserHas(PermissionTo.SeePrivateRatings)">
+		This user has elected to keep their ratings private. You are seeing this because you have the @nameof(PermissionTo.SeePrivateRatings) permission
+	</alert>
 	<ul class="nav nav-tabs" role="tablist">
 		<li class="nav-item">
 			<a class="nav-link active" href="#current" role="tab" data-toggle="tab">Current</a>
