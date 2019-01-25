@@ -152,12 +152,13 @@
 		<card class="text-right">
 			<cardheader><h4>Ratings</h4></cardheader>
 			<cardbody>
+				<a class="btn btn-warning btn-sm" a asp-page="/Users/Ratings" asp-route-userName="@Model.UserName">See Ratings</a>
 				<label asp-for="PublicRatings"></label> @Model.PublicRatings.ToYesNo()
 				<div condition="Model.PublicRatings">
 					<label>
 						Total Movies Rated:
 						<a asp-page="/Users/Ratings"
-						   asp-route-userName="@Model.UserName">
+							asp-route-userName="@Model.UserName">
 							@Model.Ratings.TotalMoviesRated
 						</a>
 					</label>
