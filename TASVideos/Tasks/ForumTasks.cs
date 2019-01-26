@@ -56,38 +56,6 @@ namespace TASVideos.Tasks
 			};
 		}
 
-		/// <summary>
-		/// Creates a new <see cref="ForumTopic" /> and the first <see cref="ForumPost"/> of that topic
-		/// </summary>
-		/// <returns>
-		/// The id of the newly created <see cref="ForumTopic" />
-		/// If a topic could not be created, returns null
-		/// </returns>
-		public async Task<ForumTopic> CreateTopic(int forumId, TopicCreatePostModel model, User user, string ipAddress)
-		{
-			var topic = new ForumTopic
-			{
-				Type = model.Type,
-				Title = model.Title,
-				PosterId = user.Id,
-				Poster = user,
-				ForumId = forumId
-			};
-
-			_db.ForumTopics.Add(topic);
-			await _db.SaveChangesAsync();
-
-			var forumPostModel = new ForumPostModel
-			{
-				Subject = null,
-				Text = model.Post
-			};
-
-			await CreatePost(topic.Id, forumPostModel, user, ipAddress);
-			await WatchTopic(topic.Id, user.Id, canSeeRestricted: true);
-			return topic;
-		}
-
 		public async Task<int> CreatePost(int topicId, ForumPostModel model, User user, string ipAddress)
 		{
 			var forumPost = new ForumPost

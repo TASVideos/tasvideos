@@ -82,6 +82,30 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			var user = await _userManager.GetUserAsync(User);
+
+			var topic = new ForumTopic
+			{
+				Type = Topic.Type,
+				Title = Topic.Title,
+				PosterId = user.Id,
+				Poster = user,
+				ForumId = ForumId
+			};
+
+			_db.ForumTopics.Add(topic);
+			
+			// TODO: catch DbConcurrencyException
+			await _db.SaveChangesAsync();
+
+			var forumPostModel = new ForumPostModel
+			{
+				Subject = null,
+				Text = Topic.Post
+			};
+
+			await _forumTasks.CreatePost(topic.Id, forumPostModel, user, IpAddress.ToString());
+			await _forumTasks.WatchTopic(topic.Id, user.Id, canSeeRestricted: true);
+
 			var topic = await _forumTasks.CreateTopic(ForumId, Topic, user, IpAddress.ToString());
 
 			//// TODO: auto-add topic permission based on post count, also ability to vote
