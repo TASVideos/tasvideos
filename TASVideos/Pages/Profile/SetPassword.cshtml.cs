@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Profile
@@ -46,7 +47,7 @@ namespace TASVideos.Pages.Profile
 			var user = await _userManager.GetUserAsync(User);
 			if (user == null)
 			{
-				throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+				throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
 			}
 
 			var hasPassword = await _userManager.HasPasswordAsync(user);

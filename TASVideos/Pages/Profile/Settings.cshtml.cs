@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Tasks;
@@ -74,8 +75,7 @@ namespace TASVideos.Pages.Profile
 				return Page();
 			}
 
-			var id = int.Parse(_userManager.GetUserId(User));
-			var user = await _db.Users.SingleAsync(u => u.Id == id);
+			var user = await _userManager.GetUserAsync(User);
 
 			var email = user.Email;
 			if (Settings.Email != email)
