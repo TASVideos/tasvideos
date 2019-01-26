@@ -286,8 +286,6 @@ namespace TASVideos.Models
 
 		[Display(Name = "Current Forum")]
 		public string ForumName { get; set; }
-
-		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 	}
 
 	public class ForumEditModel
