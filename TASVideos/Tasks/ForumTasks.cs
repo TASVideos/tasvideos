@@ -140,40 +140,6 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		/// <summary>
-		/// Sets a topics locked status
-		/// </summary>
-		/// <returns>True if the topic is found, else false</returns>
-		public async Task<(bool Success, bool Restricted)> SetTopicLock(int topicId, bool isLocked, bool allowRestricted)
-		{
-			var topic = await _db.ForumTopics
-				.Include(t => t.Forum)
-				.ExcludeRestricted(allowRestricted)
-				.SingleOrDefaultAsync(t => t.Id == topicId);
-
-			if (topic == null)
-			{
-				return (false, false);
-			}
-
-			if (topic.IsLocked != isLocked)
-			{
-				topic.IsLocked = isLocked;
-				await _db.SaveChangesAsync();
-			}
-
-			return (true, topic.Forum.Restricted);
-		}
-
-		/// <summary>
-		/// Returns whether or not a forum exists
-		/// </summary>
-		/// <returns>null if the forum does not exist, else the forum record</returns>
-		public async Task<Forum> GetForum(int id)
-		{
-			return await _db.Forums.SingleOrDefaultAsync(f => f.Id == id);
-		}
-
 		public async Task<ForumTopic> GetTopic(int id)
 		{
 			return await _db.ForumTopics
