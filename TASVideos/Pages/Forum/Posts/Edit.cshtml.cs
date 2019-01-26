@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,19 +19,16 @@ namespace TASVideos.Pages.Forum.Posts
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ForumTasks _forumTasks;
-		private readonly UserManager<User> _userManager;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
 			ApplicationDbContext db,
-			UserManager<User> userManager,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_db = db;
-			_userManager = userManager;
 			_publisher = publisher;
 			_forumTasks = forumTasks;
 		}
@@ -76,10 +72,8 @@ namespace TASVideos.Pages.Forum.Posts
 
 			Post.IsLastPost = Id == lastPostId;
 
-			var userId = int.Parse(_userManager.GetUserId(User));
-
 			if (!UserHas(PermissionTo.EditForumPosts)
-				&& !(Post.IsLastPost && Post.PosterId == userId))
+				&& !(Post.IsLastPost && Post.PosterId == UserId))
 			{
 				return AccessDenied();
 			}
@@ -99,8 +93,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (!UserHas(PermissionTo.EditForumPosts))
 			{
-				var userId = int.Parse(_userManager.GetUserId(User));
-				if (!(await _forumTasks.CanEdit(Id, userId)))
+				if (!await _forumTasks.CanEdit(Id, UserId))
 				{
 					ModelState.AddModelError("", "Unable to edit post. It is no longer the latest post.");
 					return Page();

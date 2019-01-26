@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
-
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -32,6 +32,23 @@ namespace TASVideos.Pages
 
 		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
+
+		protected int UserId
+		{
+			get
+			{
+				if (User.Identity.IsAuthenticated)
+				{
+					var idClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+					if (idClaim != null)
+					{
+						return int.Parse(idClaim.Value);
+					}
+				}
+
+				return -1;
+			}
+		}
 
 		protected IActionResult Home()
 		{
