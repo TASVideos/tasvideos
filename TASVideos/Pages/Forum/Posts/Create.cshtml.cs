@@ -9,6 +9,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
 
@@ -21,18 +22,21 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly ForumTasks _forumTasks;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ApplicationDbContext _db;
+		private readonly IEmailService _emailService;
 
 		public CreateModel(
 			UserManager<User> userManager,
 			ForumTasks forumTasks,
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
+			IEmailService emailService,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
 			_userManager = userManager;
 			_forumTasks = forumTasks;
 			_publisher = publisher;
+			_emailService = emailService;
 			_db = db;
 		}
 
@@ -135,7 +139,25 @@ namespace TASVideos.Pages.Forum.Posts
 				$"{Post.TopicTitle} ({Post.Subject})",
 				$"{BaseUrl}/p/{id}#{id}");
 
-			await _forumTasks.NotifyWatchedTopics(TopicId, user.Id);
+			// Notify watched topic
+			var watches = await _db.ForumTopicWatches
+				.Include(w => w.User)
+				.Where(w => w.ForumTopicId == TopicId)
+				.Where(w => w.UserId != user.Id)
+				.Where(w => !w.IsNotified)
+				.ToListAsync();
+
+			if (watches.Any())
+			{
+				await _emailService.SendTopicNotification(watches.Select(w => w.User.Email));
+
+				foreach (var watch in watches)
+				{
+					watch.IsNotified = true;
+				}
+
+				await _db.SaveChangesAsync();
+			}
 
 			return RedirectToPage("/Forum/Topic", new { Id = TopicId });
 		}

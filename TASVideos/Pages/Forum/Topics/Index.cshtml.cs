@@ -158,7 +158,14 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (userId.HasValue)
 			{
-				await _forumTasks.MarkTopicAsUnNotifiedForUser(userId.Value,  Id);
+				var watchedTopic = await _db.ForumTopicWatches
+				.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == Id);
+
+				if (watchedTopic != null && watchedTopic.IsNotified)
+				{
+					watchedTopic.IsNotified = false;
+					await _db.SaveChangesAsync();
+				}
 			}
 
 			return Page();

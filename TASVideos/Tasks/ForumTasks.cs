@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -8,24 +7,16 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Tasks
 {
 	public class ForumTasks
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly AwardTasks _awardTasks;
-		private readonly IEmailService _emailService;
 
-		public ForumTasks(
-			ApplicationDbContext db,
-			AwardTasks awardTasks,
-			IEmailService emailService)
+		public ForumTasks(ApplicationDbContext db)
 		{
 			_db = db;
-			_awardTasks = awardTasks;
-			_emailService = emailService;
 		}
 
 		/// <summary>
@@ -76,48 +67,6 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 			await WatchTopic(topicId, user.Id, canSeeRestricted: true);
 			return forumPost.Id;
-		}
-
-		/// <summary>
-		/// If a user is watching this topic, this marks the topic
-		/// as not notified, at which point, any new post will cause a notification
-		/// </summary>
-		public async Task MarkTopicAsUnNotifiedForUser(int userId, int topicId)
-		{
-			var watchedTopic = await _db.ForumTopicWatches
-				.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId);
-
-			if (watchedTopic != null && watchedTopic.IsNotified)
-			{
-				watchedTopic.IsNotified = false;
-				await _db.SaveChangesAsync();
-			}
-		}
-
-		/// <summary>
-		/// Should be called when a new post is created in a topic
-		/// Will notify all users watching the topic and mark the IsNotified flag accordingly
-		/// </summary>
-		public async Task NotifyWatchedTopics(int topicId, int posterId)
-		{
-			var watches = await _db.ForumTopicWatches
-				.Include(w => w.User)
-				.Where(w => w.ForumTopicId == topicId)
-				.Where(w => w.UserId != posterId)
-				.Where(w => !w.IsNotified)
-				.ToListAsync();
-
-			if (watches.Any())
-			{
-				await _emailService.SendTopicNotification(watches.Select(w => w.User.Email));
-
-				foreach (var watch in watches)
-				{
-					watch.IsNotified = true;
-				}
-
-				await _db.SaveChangesAsync();
-			}
 		}
 
 		public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
