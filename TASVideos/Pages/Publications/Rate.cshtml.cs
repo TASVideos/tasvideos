@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -12,17 +14,14 @@ namespace TASVideos.Pages.Publications
 	[RequirePermission(PermissionTo.RateMovies)]
 	public class RateModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
-		private readonly PublicationTasks _publicationTasks;
+		private readonly ApplicationDbContext _db;
 
 		public RateModel(
-			UserManager<User> userManager,
-			PublicationTasks publicationTasks,
+			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userManager = userManager;
-			_publicationTasks = publicationTasks;
+			_db = db;
 		}
 
 		[FromRoute]
@@ -36,8 +35,29 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			var user = await _userManager.GetUserAsync(User);
-			Rating = await _publicationTasks.GetRatingModel(user, Id);
+			var userId = User.GetUserId();
+			var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == Id);
+			if (publication == null)
+			{
+				return NotFound();
+			}
+
+			var ratings = await _db.PublicationRatings
+				.ForPublication(Id)
+				.ForUser(userId)
+				.ToListAsync();
+
+			Rating = new PublicationRateModel
+			{
+				Title = publication.Title,
+				TechRating = ratings
+					.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality)
+					?.Value,
+				EntertainmentRating = ratings
+					.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment)
+					?.Value
+			};
+
 			if (Rating == null)
 			{
 				return NotFound();
@@ -58,8 +78,23 @@ namespace TASVideos.Pages.Publications
 				return Page();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
-			await _publicationTasks.RatePublication(Id, Rating, user);
+			var userId = User.GetUserId();
+
+			var ratings = await _db.PublicationRatings
+				.ForPublication(Id)
+				.ForUser(userId)
+				.ToListAsync();
+
+			var tech = ratings
+				.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality);
+
+			var entertainment = ratings
+				.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment);
+
+			UpdateRating(tech, Id, userId, PublicationRatingType.TechQuality, Rating.TechRating);
+			UpdateRating(entertainment, Id, userId, PublicationRatingType.Entertainment, Rating.EntertainmentRating);
+
+			await _db.SaveChangesAsync();
 
 			if (!string.IsNullOrWhiteSpace(ReturnUrl))
 			{
@@ -67,6 +102,39 @@ namespace TASVideos.Pages.Publications
 			}
 
 			return RedirectToPage("/Profile/Ratings");
+		}
+
+		private void UpdateRating(PublicationRating rating, int id, int userId, PublicationRatingType type, double? value)
+		{
+			if (rating != null)
+			{
+				if (value.HasValue)
+				{
+					// Update
+					rating.Value = value.Value;
+				}
+				else
+				{
+					// Remove
+					_db.PublicationRatings.Remove(rating);
+				}
+			}
+			else
+			{
+				if (value.HasValue)
+				{
+					// Add
+					_db.PublicationRatings.Add(new PublicationRating
+					{
+						PublicationId = id,
+						UserId = userId,
+						Type = type,
+						Value = value.Value
+					});
+				}
+
+				// Else do nothing
+			}
 		}
 	}
 }
