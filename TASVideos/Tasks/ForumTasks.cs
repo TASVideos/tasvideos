@@ -200,43 +200,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns whether or not the poster matches the given user
-		/// and that the post is currently the last post of its topic
-		/// </summary>
-		public async Task<bool> CanEdit(int postId, int userId)
-		{
-			using (await _db.Database.BeginTransactionAsync())
-			{
-				var post = await _db.ForumPosts.SingleOrDefaultAsync(p => p.Id == postId);
-
-				if (post == null || post.PosterId != userId)
-				{
-					return false;
-				}
-
-				var lastPostId = await _db.ForumPosts
-					.ForTopic(post.TopicId ?? 0)
-					.ByMostRecent()
-					.Select(p => p.Id)
-					.FirstAsync();
-
-				return post.Id == lastPostId;
-			}
-		}
-
-		/// <summary>
-		/// Updates the post with the given post id, with the
-		/// given subject and text
-		/// </summary>
-		public async Task EditPost(int id, ForumPostEditModel model)
-		{
-			var forumPost = await _db.ForumPosts.SingleAsync(p => p.Id == id);
-			forumPost.Subject = model.Subject;
-			forumPost.Text = model.Text;
-			await _db.SaveChangesAsync();
-		}
-
-		/// <summary>
 		/// Results the vote results of a given <see cref="ForumPoll"/> including
 		/// the voters and which options they voted for
 		/// </summary>
