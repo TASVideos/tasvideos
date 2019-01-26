@@ -174,16 +174,6 @@ namespace TASVideos.Tasks
 			return await _db.Forums.SingleOrDefaultAsync(f => f.Id == id);
 		}
 
-		/// <summary>
-		/// Returns whether or not a topic exists and if not allowRestricted, then whether it is not restricted
-		/// </summary>
-		public async Task<bool> TopicAccessible(int topicId, bool allowRestricted)
-		{
-			return await _db.ForumTopics
-				.ExcludeRestricted(allowRestricted)
-				.AnyAsync(t => t.Id == topicId);
-		}
-
 		public async Task<ForumTopic> GetTopic(int id)
 		{
 			return await _db.ForumTopics
@@ -396,52 +386,6 @@ namespace TASVideos.Tasks
 						IpAddress = v.IpAddress
 					})
 			};
-		}
-
-		public async Task<MoveTopicModel> GetTopicMoveModel(int topicId, bool allowRestricted)
-		{
-			var model = await _db.ForumTopics
-				.Where(t => t.Id == topicId)
-				.Include(t => t.Forum)
-				.ExcludeRestricted(allowRestricted)
-				.Select(t => new MoveTopicModel
-				{
-					TopicTitle = t.Title,
-					ForumId = t.Forum.Id,
-					ForumName = t.Forum.Name
-				})
-				.SingleOrDefaultAsync();
-
-			if (model != null)
-			{
-				model.AvailableForums = await _db.Forums
-					.ExcludeRestricted(allowRestricted)
-					.Select(f => new SelectListItem
-					{
-						Text = f.Name,
-						Value = f.Id.ToString(),
-						Selected = f.Id == model.ForumId
-					})
-					.ToListAsync();
-			}
-
-			return model;
-		}
-
-		public async Task<bool> MoveTopic(int topicId, MoveTopicModel model, bool allowRestricted)
-		{
-			var topic = await _db.ForumTopics
-				.ExcludeRestricted(allowRestricted)
-				.SingleOrDefaultAsync(t => t.Id == topicId);
-
-			if (topic != null)
-			{
-				topic.ForumId = model.ForumId;
-				await _db.SaveChangesAsync();
-				return true;
-			}
-
-			return false;
 		}
 
 		public async Task<SplitTopicModel> GetTopicForSplit(int topicId, bool allowRestricted)
