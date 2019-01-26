@@ -26,7 +26,7 @@
 			</form-group>
 			<form-group>
 				<label asp-for="Publication.ObsoletedBy"></label>
-				<select asp-for="Publication.ObsoletedBy" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Publication.AvailableMoviesForObsoletedBy)" class="form-control"></select>
+				<select asp-for="Publication.ObsoletedBy" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesForObsoletedBy)" class="form-control"></select>
 				<span asp-validation-for="Publication.ObsoletedBy" class="text-danger"></span>
 			</form-group>
 			<form-group>

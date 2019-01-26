@@ -145,13 +145,7 @@ namespace TASVideos.Models
 
 		public string Markup { get; set; }
 
-		public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();
-
-		[Display(Name = "Available Flags")]
-		public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
-
-		[Display(Name = "Available Tags")]
-		public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
+		
 	}
 
 	public class PublicationCatalogModel
