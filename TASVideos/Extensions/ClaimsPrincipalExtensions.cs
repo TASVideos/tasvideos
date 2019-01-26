@@ -13,7 +13,7 @@ namespace TASVideos.Extensions
 			}
 
 			return int.Parse(user.Claims
-				.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
+				.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
 		}
 	}
 }

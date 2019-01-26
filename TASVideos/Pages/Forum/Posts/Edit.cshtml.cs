@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
@@ -73,7 +74,7 @@ namespace TASVideos.Pages.Forum.Posts
 			Post.IsLastPost = Id == lastPostId;
 
 			if (!UserHas(PermissionTo.EditForumPosts)
-				&& !(Post.IsLastPost && Post.PosterId == UserId))
+				&& !(Post.IsLastPost && Post.PosterId == User.GetUserId()))
 			{
 				return AccessDenied();
 			}
@@ -93,7 +94,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (!UserHas(PermissionTo.EditForumPosts))
 			{
-				if (!await _forumTasks.CanEdit(Id, UserId))
+				if (!await _forumTasks.CanEdit(Id, User.GetUserId()))
 				{
 					ModelState.AddModelError("", "Unable to edit post. It is no longer the latest post.");
 					return Page();
