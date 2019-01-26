@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
@@ -15,17 +18,20 @@ namespace TASVideos.Pages.Forum.Topics
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly UserManager<User> _userManager;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ForumTasks _forumTasks;
 
 		public IndexModel(
+			ApplicationDbContext db,
 			UserManager<User> userManager,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_db = db;
 			_userManager = userManager;
 			_publisher = publisher;
 			_forumTasks = forumTasks;
@@ -107,20 +113,29 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnPostLock(string topicTitle, bool locked, string returnUrl)
 		{
-			var (success, restricted) = await _forumTasks.SetTopicLock(Id, locked, UserHas(PermissionTo.SeeRestrictedForums));
-
-			if (success)
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var topic = await _db.ForumTopics
+				.Include(t => t.Forum)
+				.ExcludeRestricted(seeRestricted)
+				.SingleOrDefaultAsync(t => t.Id == Id);
+			if (topic == null)
 			{
-				_publisher.SendForum(
-					restricted,
-					$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
-					"",
-					$"/Forum/Topics/{Id}");
-
-				return RedirectToLocal(returnUrl);
+				return NotFound();
 			}
 
-			return NotFound();
+			if (topic.IsLocked != locked)
+			{
+				topic.IsLocked = locked;
+				await _db.SaveChangesAsync();
+			}
+
+			_publisher.SendForum(
+				seeRestricted,
+				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
+				"",
+				$"/Forum/Topics/{Id}");
+
+			return RedirectToLocal(returnUrl);
 		}
 
 		public async Task<IActionResult> OnGetWatch()
