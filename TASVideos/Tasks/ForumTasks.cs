@@ -138,13 +138,6 @@ namespace TASVideos.Tasks
 			return model;
 		}
 
-		public async Task<ForumTopic> GetTopic(int id)
-		{
-			return await _db.ForumTopics
-				.Include(t => t.Forum)
-				.SingleOrDefaultAsync(t => t.Id == id);
-		}
-
 		/// <summary>
 		/// Creates a new <see cref="ForumTopic" /> and the first <see cref="ForumPost"/> of that topic
 		/// </summary>

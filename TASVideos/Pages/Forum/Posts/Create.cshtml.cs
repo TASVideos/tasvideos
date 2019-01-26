@@ -108,7 +108,10 @@ namespace TASVideos.Pages.Forum.Posts
 				return Page();
 			}
 
-			var topic = await _forumTasks.GetTopic(TopicId);
+			var topic = await _db.ForumTopics
+				.Include(t => t.Forum)
+				.SingleOrDefaultAsync(t => t.Id == TopicId);
+
 			if (topic == null)
 			{
 				return NotFound();
