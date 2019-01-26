@@ -9,7 +9,7 @@ namespace TASVideos.Extensions
 		{
 			if (user == null || !user.Identity.IsAuthenticated)
 			{
-				return 0;
+				return -1;
 			}
 
 			return int.Parse(user.Claims

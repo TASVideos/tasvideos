@@ -1,5 +1,4 @@
 ﻿@model ForumTopicModel.PollModel
-@inject UserManager<User> UserManager
 @{
 	// TODO: ajax vote submit
 	// TODO: make work if more than one poll on the page (not that we intend to do so)
@@ -9,7 +8,7 @@
 	bool canVote = false;
 	if (User.Identity.IsAuthenticated)
 	{
-		int userId = int.Parse(UserManager.GetUserId(User));
+		int userId = User.GetUserId();
 		canVote = !Model.Options.Any(o => o.Voters.Any(v => v == userId));
 	}
 }

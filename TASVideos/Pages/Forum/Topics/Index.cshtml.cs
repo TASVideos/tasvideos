@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
@@ -48,7 +49,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public async Task<IActionResult> OnGet()
 		{
 			int? userId = User.Identity.IsAuthenticated
-				? int.Parse(_userManager.GetUserId(User))
+				? User.GetUserId()
 				: (int?)null;
 
 			Topic = await _forumTasks
