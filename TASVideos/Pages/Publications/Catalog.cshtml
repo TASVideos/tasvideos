@@ -9,12 +9,12 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Catalog.SystemId" class="form-control-label"></label>
-				<select asp-for="Catalog.SystemId" asp-items="@Model.Catalog.AvailableSystems" class="form-control"></select>
+				<select asp-for="Catalog.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
 				<span asp-validation-for="Catalog.SystemId" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
-				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.Catalog.AvailableSystemFrameRates" class="form-control"></select>
+				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-control"></select>
 				<span asp-validation-for="Catalog.SystemFrameRateId" class="text-danger"></span>
 			</form-group>
 		</div>
@@ -25,8 +25,8 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameId" asp-items="@Model.Catalog.AvailableGames" class="form-control"></select>
-						<span asp-validation-for="Catalog.AvailableGames" class="text-danger"></span>
+						<select asp-for="Catalog.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
+						<span asp-validation-for="AvailableGames" class="text-danger"></span>
 					</div>
 					<div class="col-2">
 						<a asp-page="/Game/Edit" asp-route-id="" class="btn btn-primary">New</a>
@@ -39,7 +39,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.RomId" asp-items="@Model.Catalog.AvailableRoms" class="form-control"></select>
+						<select asp-for="Catalog.RomId" asp-items="@Model.AvailableRoms" class="form-control"></select>
 						<span asp-validation-for="Catalog.RomId" class="text-danger"></span>
 					</div>
 					<div class="col-2">
