@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -21,19 +15,13 @@ namespace TASVideos.Tasks
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
-		private readonly IMapper _mapper;
-		private readonly IWikiPages _wikiPages;
 		
 		public PublicationTasks(
 			ApplicationDbContext db,
-			ICacheService cache,
-			IMapper mapper,
-			IWikiPages wikiPages)
+			ICacheService cache)
 		{
 			_db = db;
 			_cache = cache;
-			_mapper = mapper;
-			_wikiPages = wikiPages;
 		}
 
 		/// <summary>
@@ -178,103 +166,6 @@ namespace TASVideos.Tasks
 						.ToList()
 				})
 				.ToListAsync();
-		}
-
-		/// <summary>
-		/// Returns movie rating data for hte given user and publication
-		/// </summary>
-		public async Task<PublicationRateModel> GetRatingModel(User user, int publicationId)
-		{
-			if (user == null)
-			{
-				throw new ArgumentException($"{nameof(user)} can not be null.");
-			}
-
-			var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId);
-			if (publication == null)
-			{
-				return null;
-			}
-
-			var ratings = await _db.PublicationRatings
-				.ForPublication(publicationId)
-				.ForUser(user.Id)
-				.ToListAsync();
-			return new PublicationRateModel
-			{
-				Title = publication.Title,
-				TechRating = ratings
-					.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality)
-					?.Value,
-				EntertainmentRating = ratings
-					.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment)
-					?.Value
-			};
-		}
-
-		/// <summary>
-		/// Inserts or updates a movie rating for the given publication and user
-		/// </summary>
-		public async Task RatePublication(int id, PublicationRateModel model, User user)
-		{
-			if (user == null)
-			{
-				throw new ArgumentException($"{nameof(user)} can not be null.");
-			}
-
-			if (!model.TechRating.HasValue && !model.EntertainmentRating.HasValue)
-			{
-				throw new ArgumentException("At least one rating must be set");
-			}
-
-			var ratings = await _db.PublicationRatings
-				.ForPublication(id)
-				.ForUser(user.Id)
-				.ToListAsync();
-
-			var tech = ratings
-				.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality);
-
-			var entertainment = ratings
-				.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment);
-
-			UpdateRating(tech, id, user.Id, PublicationRatingType.TechQuality, model.TechRating);
-			UpdateRating(entertainment, id, user.Id, PublicationRatingType.Entertainment, model.EntertainmentRating);
-
-			await _db.SaveChangesAsync();
-		}
-
-		private void UpdateRating(PublicationRating rating, int id, int userId, PublicationRatingType type, double? value)
-		{
-			if (rating != null)
-			{
-				if (value.HasValue)
-				{
-					// Update
-					rating.Value = value.Value;
-				}
-				else
-				{
-					// Remove
-					_db.PublicationRatings.Remove(rating);
-				}
-			}
-			else
-			{
-				if (value.HasValue)
-				{
-					// Add
-					_db.PublicationRatings.Add(new PublicationRating
-					{
-						PublicationId = id,
-						UserId = userId,
-						Type = type,
-						Value = value.Value
-					});
-				}
-
-				// Else do nothing
-			}
 		}
 	}
 }
