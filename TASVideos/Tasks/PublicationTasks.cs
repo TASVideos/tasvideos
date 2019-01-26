@@ -180,55 +180,6 @@ namespace TASVideos.Tasks
 				.ToListAsync();
 		}
 
-		// TODO: document
-		public async Task<PublicationTierEditModel> GetTiersForEdit(int publicationId)
-		{
-			var model = await _db.Publications
-				.Where(p => p.Id == publicationId)
-				.Select(p => new PublicationTierEditModel
-				{
-					Id = p.Id,
-					Title = p.Title,
-					TierId = p.TierId 
-				})
-				.SingleOrDefaultAsync();
-
-			if (model != null)
-			{
-				model.AvailableTiers = await _db.Tiers
-					.Select(t => new SelectListItem
-					{
-						Text = t.Name,
-						Value = t.Id.ToString()
-					})
-					.ToListAsync();
-			}
-
-			return model;
-		}
-
-		// TODO: document
-		public async Task<bool> UpdateTier(int publicationId, int tierId)
-		{
-			var publication = await _db.Publications
-				.SingleOrDefaultAsync(p => p.Id == publicationId);
-
-			if (publication == null)
-			{
-				return false;
-			}
-
-			var tier = await _db.Tiers.SingleOrDefaultAsync(t => t.Id == tierId);
-			if (tier == null)
-			{
-				return false;
-			}
-
-			publication.TierId = tierId;
-			await _db.SaveChangesAsync();
-			return true;
-		}
-
 		/// <summary>
 		/// Returns movie rating data for hte given user and publication
 		/// </summary>

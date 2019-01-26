@@ -9,7 +9,7 @@
 		<div class="col-lg-4 col-sm-6">
 			<form-group>
 				<label asp-for="Publication.TierId"></label>
-				<select class="form-control" asp-for="Publication.TierId" asp-items="@Model.Publication.AvailableTiers"></select>
+				<select class="form-control" asp-for="Publication.TierId" asp-items="@Model.AvailableTiers"></select>
 				<span asp-validation-for="Publication.TierId" class="text-danger"></span>
 			</form-group>
 		</div>

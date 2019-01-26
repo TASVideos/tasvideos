@@ -182,8 +182,6 @@ namespace TASVideos.Models
 
 		[Display(Name = "Tier")]
 		public int TierId { get; set; }
-
-		public IEnumerable<SelectListItem> AvailableTiers { get; set; } = new List<SelectListItem>();
 	}
 
 	public class PublicationRateModel
