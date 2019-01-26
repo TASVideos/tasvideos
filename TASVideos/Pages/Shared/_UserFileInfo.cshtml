@@ -72,9 +72,8 @@
 		@if (!string.IsNullOrEmpty(Model.Description))
 		{
 			<div class="card-text">
-				<p>@Model.Description</p>
+				<wiki-markup markup=@Model.Description></wiki-markup>
 			</div>
-
 			<hr />
 		}
 
