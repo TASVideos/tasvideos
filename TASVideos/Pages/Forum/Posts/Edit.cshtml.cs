@@ -1,10 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
@@ -14,17 +18,20 @@ namespace TASVideos.Pages.Forum.Posts
 	[Authorize]
 	public class EditModel : BasePageModel
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly ForumTasks _forumTasks;
 		private readonly UserManager<User> _userManager;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
+			ApplicationDbContext db,
 			UserManager<User> userManager,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_db = db;
 			_userManager = userManager;
 			_publisher = publisher;
 			_forumTasks = forumTasks;
@@ -38,11 +45,36 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			Post = await _forumTasks.GetEditPostData(Id, UserHas(PermissionTo.SeeRestrictedForums));
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			Post = await _db.ForumPosts
+				.ExcludeRestricted(seeRestricted)
+				.Where(p => p.Id == Id)
+				.Select(p => new ForumPostEditModel
+				{
+					CreateTimestamp = p.CreateTimeStamp,
+					PosterId = p.PosterId,
+					PosterName = p.Poster.UserName,
+					EnableBbCode = p.EnableBbCode,
+					EnableHtml = p.EnableHtml,
+					TopicId = p.TopicId ?? 0,
+					TopicTitle = p.Topic.Title,
+					Subject = p.Subject,
+					Text = p.Text
+				})
+				.SingleOrDefaultAsync();
+
 			if (Post == null)
 			{
 				return NotFound();
 			}
+
+			var lastPostId = (await _db.ForumPosts
+				.ForTopic(Post.TopicId)
+				.ByMostRecent()
+				.FirstAsync())
+				.Id;
+
+			Post.IsLastPost = Id == lastPostId;
 
 			var userId = int.Parse(_userManager.GetUserId(User));
 
