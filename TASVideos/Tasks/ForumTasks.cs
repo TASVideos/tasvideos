@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -145,22 +143,6 @@ namespace TASVideos.Tasks
 			return await _db.ForumTopics
 				.Include(t => t.Forum)
 				.SingleOrDefaultAsync(t => t.Id == id);
-		}
-
-		/// <summary>
-		/// Returns the data necessary to create a new forum topic
-		/// </summary>
-		/// <seealso cref="ForumTopic"/>
-		public async Task<TopicCreatePostModel> GetCreateTopicData(int forumId, bool allowRestricted)
-		{
-			return await _db.Forums
-				.ExcludeRestricted(allowRestricted)
-				.Where(f => f.Id == forumId)
-				.Select(f => new TopicCreatePostModel
-				{
-					ForumName = f.Name
-				})
-				.SingleOrDefaultAsync();
 		}
 
 		/// <summary>
@@ -323,111 +305,6 @@ namespace TASVideos.Tasks
 						IpAddress = v.IpAddress
 					})
 			};
-		}
-
-		public async Task<SplitTopicModel> GetTopicForSplit(int topicId, bool allowRestricted)
-		{
-			var model = await _db.ForumTopics
-				.ExcludeRestricted(allowRestricted)
-				.Where(t => t.Id == topicId)
-				.Select(t => new SplitTopicModel
-				{
-					Title = t.Title,
-					SplitTopicName = "(Split from " + t.Title + ")",
-					SplitToForumId = t.Forum.Id,
-					ForumId = t.Forum.Id,
-					ForumName = t.Forum.Name,
-					Posts = t.ForumPosts
-						.Select(p => new SplitTopicModel.Post
-						{
-							Id = p.Id,
-							PostCreateTimeStamp = p.CreateTimeStamp,
-							EnableBbCode = p.EnableBbCode,
-							EnableHtml = p.EnableHtml,
-							Subject = p.Subject,
-							Text = p.Text,
-							PosterId = p.PosterId,
-							PosterName = p.Poster.UserName,
-							PosterAvatar = p.Poster.Avatar
-						})
-						.ToList()
-				})
-				.SingleOrDefaultAsync();
-
-			if (model != null)
-			{
-				model.AvailableForums = await _db.Forums
-					.ExcludeRestricted(allowRestricted)
-					.Select(f => new SelectListItem
-					{
-						Text = f.Name,
-						Value = f.Id.ToString(),
-						Selected = f.Id == model.ForumId
-					})
-					.ToListAsync();
-			}
-
-			return model;
-		}
-
-		/// <summary>
-		/// Splits the given topic starting at the given starting post into a new topic
-		/// with the given values
-		/// </summary>
-		/// <returns>Returns new topic id, if old topic, split post, and new forum are found, else null</returns>
-		public async Task<int?> SplitTopic(int id, SplitTopicModel model, bool allowRestricted, User user)
-		{
-			var topic = await _db.ForumTopics
-				.Include(t => t.Forum)
-				.Include(t => t.ForumPosts)
-				.ExcludeRestricted(allowRestricted)
-				.SingleOrDefaultAsync(t => t.Id == id);
-
-			if (topic == null)
-			{
-				return null;
-			}
-
-			var destinationForum = _db.Forums
-				.ExcludeRestricted(allowRestricted)
-				.SingleOrDefaultAsync(f => f.Id == model.SplitToForumId);
-
-			if (destinationForum == null)
-			{
-				return null;
-			}
-
-			var splitOnPost = topic.ForumPosts
-				.SingleOrDefault(p => p.Id == model.PostToSplitId);
-
-			if (splitOnPost == null)
-			{
-				return null;
-			}
-
-			var newTopic = new ForumTopic
-			{
-				Type = ForumTopicType.Regular,
-				Title = model.SplitTopicName,
-				PosterId = user.Id,
-				Poster = user,
-				ForumId = model.SplitToForumId
-			};
-
-			_db.ForumTopics.Add(newTopic);
-			await _db.SaveChangesAsync();
-
-			var splitPosts = topic.ForumPosts
-				.Where(p => p.Id == splitOnPost.Id
-					|| p.CreateTimeStamp > splitOnPost.CreateTimeStamp);
-
-			foreach (var post in splitPosts)
-			{
-				post.TopicId = newTopic.Id;
-			}
-
-			await _db.SaveChangesAsync();
-			return newTopic.Id;
 		}
 
 		/// <summary>

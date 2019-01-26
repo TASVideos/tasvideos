@@ -16,7 +16,7 @@
 	<input type="hidden" asp-for="Topic.Title" />
 	<form-group class="col-lg-6">
 		<label asp-for="Topic.SplitToForumId" class="form-control-label"></label>
-		<select asp-for="Topic.SplitToForumId" asp-items="Model.Topic.AvailableForums.OrderBy(f => f.Text)" class="form-control"></select>
+		<select asp-for="Topic.SplitToForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-control"></select>
 		<span asp-validation-for="Topic.SplitToForumId" class="text-danger"></span>
 	</form-group>
 	<form-group class="col-lg-6">

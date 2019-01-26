@@ -338,8 +338,6 @@ namespace TASVideos.Models
 		public int ForumId { get; set; }
 		public string ForumName { get; set; }
 
-		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
-
 		public IEnumerable<Post> Posts { get; set; } = new List<Post>();
 
 		public class Post
