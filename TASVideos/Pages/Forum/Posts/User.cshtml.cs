@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -12,14 +16,17 @@ namespace TASVideos.Pages.Forum.Posts
 	[AllowAnonymous]
 	public class UserModel : BasePageModel
 	{
-		private readonly ForumTasks _forumTasks;
+		private readonly ApplicationDbContext _db;
+		private readonly AwardTasks _awardTasks;
 
 		public UserModel(
-			ForumTasks forumTasks,
+			ApplicationDbContext db,
+			AwardTasks awardTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_forumTasks = forumTasks;
+			_db = db;
+			_awardTasks = awardTasks;
 		}
 
 		[FromRoute]
@@ -32,12 +39,48 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			UserPosts = await _forumTasks.PostsByUser(UserName, Search, UserHas(PermissionTo.SeeRestrictedForums));
+			UserPosts = await _db.Users
+				.Where(u => u.UserName == UserName)
+				.Select(u => new UserPostsModel
+				{
+					Id = u.Id,
+					UserName = u.UserName,
+					Joined = u.CreateTimeStamp,
+					Location = u.From,
+					Avatar = u.Avatar,
+					Signature = u.Signature,
+					Roles = u.UserRoles
+						.Where(ur => !ur.Role.IsDefault)
+						.Select(ur => ur.Role.Name)
+						.ToList()
+				})
+				.SingleOrDefaultAsync();
 
 			if (UserPosts == null)
 			{
 				return NotFound();
 			}
+
+			UserPosts.Awards = await _awardTasks.GetAllAwardsForUser(UserPosts.Id);
+
+			bool seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			UserPosts.Posts = _db.ForumPosts
+				.CreatedBy(UserName)
+				.ExcludeRestricted(seeRestricted)
+				.Select(p => new UserPostsModel.Post
+				{
+					Id = p.Id,
+					CreateTimestamp = p.CreateTimeStamp,
+					EnableHtml = p.EnableHtml,
+					EnableBbCode = p.EnableBbCode,
+					Text = p.Text,
+					Subject = p.Subject,
+					TopicId = p.TopicId ?? 0,
+					TopicTitle = p.Topic.Title,
+					ForumId = p.Topic.ForumId,
+					ForumName = p.Topic.Forum.Name
+				})
+				.SortedPageOf(_db, Search);
 
 			UserPosts.RenderedSignature = RenderSignature(UserPosts.Signature); 
 			foreach (var post in UserPosts.Posts)
