@@ -65,71 +65,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Gets a publication with the given <see cref="id" /> for the purpose of display
-		/// If no publication with the given id is found then null is returned
-		/// </summary>
-		public async Task<PublicationModel> GetPublicationForDisplay(int id)
-		{
-			var publication = await _db.Publications
-				.Select(p => new PublicationModel
-				{
-					Id = p.Id,
-					CreateTimeStamp = p.CreateTimeStamp,
-					LastUpdateTimeStamp = p.LastUpdateTimeStamp,
-					LastUpdateUser = p.LastUpdateUserName,
-					Title = p.Title,
-					OnlineWatchingUrl = p.OnlineWatchingUrl,
-					MirrorSiteUrl = p.MirrorSiteUrl,
-					ObsoletedBy = p.ObsoletedById,
-					MovieFileName = p.MovieFileName,
-					SubmissionId = p.SubmissionId,
-					TierIconPath = p.Tier.IconPath,
-					// ReSharper disable once PossibleLossOfFraction
-					RatingCount = p.PublicationRatings.Count / 2,
-					Files = p.Files
-						.Select(f => new PublicationModel.FileModel
-						{
-							Path = f.Path,
-							Type = f.Type
-						})
-						.ToList(),
-					Tags = p.PublicationTags
-						.Select(pt => new PublicationModel.TagModel
-						{
-							DisplayName = pt.Tag.DisplayName,
-							Code = pt.Tag.Code
-						})
-						.ToList(),
-					GenreTags = p.Game.GameGenres
-						.Select(gg => new PublicationModel.TagModel
-						{
-							DisplayName = gg.Genre.DisplayName,
-							Code = gg.Genre.DisplayName // TODO
-						}),
-					Flags = p.PublicationFlags
-						.Where(pf => pf.Flag.IconPath != null)
-						.Select(pf => new PublicationModel.FlagModel
-						{
-							IconPath = pf.Flag.IconPath,
-							LinkPath = pf.Flag.LinkPath,
-							Name = pf.Flag.Name
-						})
-						.ToList()
-				})
-				.SingleOrDefaultAsync(p => p.Id == id);
-
-			if (publication != null)
-			{
-				var pageName = LinkConstants.SubmissionWikiPage + publication.SubmissionId;
-				publication.TopicId = (await _db.ForumTopics
-					.SingleOrDefaultAsync(t => t.PageName == pageName))
-					?.Id ?? 0;
-			}
-
-			return publication;
-		}
-
-		/// <summary>
 		/// Gets the title of a movie with the given id
 		/// If the movie is not found, null is returned
 		/// </summary>
@@ -138,25 +73,6 @@ namespace TASVideos.Tasks
 			return (await _db.Publications
 				.Select(s => new { s.Id, s.Title })
 				.SingleOrDefaultAsync(s => s.Id == id))?.Title;
-		}
-
-		/// <summary>
-		/// Returns the publication file as bytes with the given id
-		/// If no publication is found, an empty byte array is returned
-		/// </summary>
-		public async Task<(byte[], string)> GetPublicationMovieFile(int id)
-		{
-			var data = await _db.Publications
-				.Where(s => s.Id == id)
-				.Select(s => new { s.MovieFile, s.MovieFileName })
-				.SingleOrDefaultAsync();
-
-			if (data == null)
-			{
-				return (new byte[0], "");
-			}
-
-			return (data.MovieFile, data.MovieFileName);
 		}
 
 		// TODO: paging
