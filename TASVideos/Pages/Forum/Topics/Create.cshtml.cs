@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
@@ -14,17 +18,20 @@ namespace TASVideos.Pages.Forum.Topics
 	[RequirePermission(PermissionTo.CreateForumTopics)]
 	public class CreateModel : BasePageModel
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly UserManager<User> _userManager;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ForumTasks _forumTasks;
 
 		public CreateModel(
+			ApplicationDbContext db,
 			UserManager<User> userManager,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_db = db;
 			_userManager = userManager;
 			_publisher = publisher;
 			_forumTasks = forumTasks;
@@ -38,7 +45,16 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnGet()
 		{
-			Topic = await _forumTasks.GetCreateTopicData(ForumId, UserHas(PermissionTo.SeeRestrictedForums));
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			Topic = await _db.Forums
+				.ExcludeRestricted(seeRestricted)
+				.Where(f => f.Id == ForumId)
+				.Select(f => new TopicCreatePostModel
+				{
+					ForumName = f.Name
+				})
+				.SingleOrDefaultAsync();
+
 			if (Topic == null)
 			{
 				return NotFound();
@@ -54,7 +70,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return Page();
 			}
 
-			var forum = await _forumTasks.GetForum(ForumId);
+			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == ForumId);
 			if (forum == null)
 			{
 				return NotFound();
