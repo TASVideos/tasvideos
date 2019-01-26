@@ -22,6 +22,7 @@ namespace TASVideos.Pages.Forum.Topics
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager<User> _userManager;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly AwardTasks _awardTasks;
 		private readonly ForumTasks _forumTasks;
 
 		public IndexModel(
@@ -29,6 +30,7 @@ namespace TASVideos.Pages.Forum.Topics
 			UserManager<User> userManager,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
+			AwardTasks awardTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
@@ -36,6 +38,7 @@ namespace TASVideos.Pages.Forum.Topics
 			_userManager = userManager;
 			_publisher = publisher;
 			_forumTasks = forumTasks;
+			_awardTasks = awardTasks;
 		}
 
 		[FromRoute]
@@ -52,12 +55,79 @@ namespace TASVideos.Pages.Forum.Topics
 				? User.GetUserId()
 				: (int?)null;
 
-			Topic = await _forumTasks
-				.GetTopicForDisplay(Id, Search, UserHas(PermissionTo.SeeRestrictedForums), userId);
+			bool seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			Topic = await _db.ForumTopics
+				.ExcludeRestricted(seeRestricted)
+				.Select(t => new ForumTopicModel
+				{
+					Id = t.Id,
+					IsWatching = userId.HasValue && t.ForumTopicWatches.Any(ft => ft.UserId == userId.Value),
+					Title = t.Title,
+					ForumId = t.ForumId,
+					ForumName = t.Forum.Name,
+					IsLocked = t.IsLocked,
+					Poll = t.PollId.HasValue
+						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll.Question }
+						: null
+				})
+				.SingleOrDefaultAsync(t => t.Id == Id);
 
 			if (Topic == null)
 			{
 				return NotFound();
+			}
+
+			var lastPostId = (await _db.ForumPosts
+				.Where(p => p.TopicId == Id)
+				.ByMostRecent()
+				.FirstAsync())
+				.Id;
+
+			Topic.Posts = _db.ForumPosts
+				.ForTopic(Id)
+				.Select(p => new ForumTopicModel.ForumPostEntry
+				{
+					Id = p.Id,
+					TopicId = Id,
+					EnableHtml = p.EnableHtml,
+					EnableBbCode = p.EnableBbCode,
+					PosterId = p.PosterId,
+					CreateTimestamp = p.CreateTimeStamp,
+					PosterName = p.Poster.UserName,
+					PosterAvatar = p.Poster.Avatar,
+					PosterLocation = p.Poster.From,
+					PosterRoles = p.Poster.UserRoles
+						.Where(ur => !ur.Role.IsDefault)
+						.Select(ur => ur.Role.Name)
+						.ToList(),
+					PosterJoined = p.Poster.CreateTimeStamp,
+					PosterPostCount = p.Poster.Posts.Count,
+					Text = p.Text,
+					Subject = p.Subject,
+					Signature = p.Poster.Signature,
+					IsLastPost = p.Id == lastPostId
+				})
+				.OrderBy(p => p.CreateTimestamp)
+				.PageOf(_db, Search);
+
+			foreach (var post in Topic.Posts)
+			{
+				post.Awards = await _awardTasks.GetAllAwardsForUser(post.PosterId);
+			}
+
+			if (Topic.Poll != null)
+			{
+				Topic.Poll.Options = await _db.ForumPollOptions
+					.ForPoll(Topic.Poll.PollId)
+					.Select(o => new ForumTopicModel.PollModel.PollOptionModel
+					{
+						Text = o.Text,
+						Ordinal = o.Ordinal,
+						Voters = o.Votes
+							.Select(v => v.UserId)
+							.ToList()
+					})
+					.ToListAsync();
 			}
 
 			if (Search.Highlight.HasValue)
