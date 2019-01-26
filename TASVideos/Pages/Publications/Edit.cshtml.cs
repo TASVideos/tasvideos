@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,8 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Publications
@@ -17,17 +18,17 @@ namespace TASVideos.Pages.Publications
 	[RequirePermission(PermissionTo.EditPublicationMetaData)]
 	public class EditModel : BasePageModel
 	{
-		private readonly PublicationTasks _publicationTasks;
 		private readonly ApplicationDbContext _db;
+		private readonly IWikiPages _wikiPages;
 
 		public EditModel(
 			ApplicationDbContext db,
-			PublicationTasks publicationTasks,
+			IWikiPages wikiPages,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_db = db;
-			_publicationTasks = publicationTasks;
+			_wikiPages = wikiPages;
 		}
 
 		[FromRoute]
@@ -96,7 +97,7 @@ namespace TASVideos.Pages.Publications
 				return Page();
 			}
 
-			await _publicationTasks.UpdatePublication(Id, Publication);
+			await UpdatePublication(Id, Publication);
 			return RedirectToPage("View", new { Id });
 		}
 
@@ -138,5 +139,71 @@ namespace TASVideos.Pages.Publications
 				})
 				.ToListAsync();
 		}
+
+		private async Task UpdatePublication(int id, PublicationEditModel model)
+		{
+			var publication = await _db.Publications
+				.Include(p => p.WikiContent)
+				.Include(p => p.System)
+				.Include(p => p.SystemFrameRate)
+				.Include(p => p.Game)
+				.Include(p => p.Authors)
+				.ThenInclude(pa => pa.Author)
+				.SingleOrDefaultAsync(p => p.Id == id);
+
+			if (publication != null)
+			{
+				publication.Branch = model.Branch;
+				publication.ObsoletedById = model.ObsoletedBy;
+				publication.EmulatorVersion = model.EmulatorVersion;
+				publication.OnlineWatchingUrl = model.OnlineWatchingUrl;
+				publication.MirrorSiteUrl = model.MirrorSiteUrl;
+
+				publication.GenerateTitle();
+
+				publication.PublicationFlags.Clear();
+				_db.PublicationFlags.RemoveRange(
+					_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
+
+				foreach (var flag in model.SelectedFlags)
+				{
+					publication.PublicationFlags.Add(new PublicationFlag
+					{
+						PublicationId = publication.Id,
+						FlagId = flag
+					});
+				}
+
+				publication.PublicationTags.Clear();
+				_db.PublicationTags.RemoveRange(
+					_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
+
+				foreach (var tag in model.SelectedTags)
+				{
+					publication.PublicationTags.Add(new PublicationTag
+					{
+						PublicationId = publication.Id,
+						TagId = tag
+					});
+				}
+
+				await _db.SaveChangesAsync();
+
+				if (model.Markup != publication.WikiContent.Markup)
+				{
+					var revision = new WikiPage
+					{
+						PageName = $"{LinkConstants.PublicationWikiPage}{id}",
+						Markup = model.Markup,
+						MinorEdit = model.MinorEdit,
+						RevisionMessage = model.RevisionMessage,
+					};
+					await _wikiPages.Add(revision);
+
+					publication.WikiContentId = revision.Id;
+				}
+			}
+		}
+
 	}
 }

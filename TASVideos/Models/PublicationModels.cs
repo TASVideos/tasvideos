@@ -144,8 +144,6 @@ namespace TASVideos.Models
 		public bool MinorEdit { get; set; }
 
 		public string Markup { get; set; }
-
-		
 	}
 
 	public class PublicationCatalogModel
@@ -161,8 +159,6 @@ namespace TASVideos.Models
 
 		[Display(Name = "System Framerate")]
 		public int SystemFrameRateId { get; set; }
-
-		
 	}
 
 	public class AuthorListEntry
