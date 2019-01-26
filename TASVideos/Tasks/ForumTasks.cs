@@ -200,39 +200,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns necessary data to display on the edit post screen
-		/// </summary>
-		public async Task<ForumPostEditModel> GetEditPostData(int postId, bool seeRestricted)
-		{
-			var model = await _db.ForumPosts
-				.ExcludeRestricted(seeRestricted)
-				.Where(p => p.Id == postId)
-				.Select(p => new ForumPostEditModel
-				{
-					CreateTimestamp = p.CreateTimeStamp,
-					PosterId = p.PosterId,
-					PosterName = p.Poster.UserName,
-					EnableBbCode = p.EnableBbCode,
-					EnableHtml = p.EnableHtml,
-					TopicId = p.TopicId ?? 0,
-					TopicTitle = p.Topic.Title,
-					Subject = p.Subject,
-					Text = p.Text
-				})
-				.SingleOrDefaultAsync();
-
-			var lastPostId = (await _db.ForumPosts
-				.ForTopic(model.TopicId)
-				.ByMostRecent()
-				.FirstAsync())
-				.Id;
-
-			model.IsLastPost = postId == lastPostId;
-
-			return model;
-		}
-
-		/// <summary>
 		/// Returns whether or not the poster matches the given user
 		/// and that the post is currently the last post of its topic
 		/// </summary>

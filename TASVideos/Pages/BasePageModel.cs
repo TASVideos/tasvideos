@@ -33,23 +33,6 @@ namespace TASVideos.Pages
 		protected UserTasks UserTasks { get; }
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 
-		protected int UserId
-		{
-			get
-			{
-				if (User.Identity.IsAuthenticated)
-				{
-					var idClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-					if (idClaim != null)
-					{
-						return int.Parse(idClaim.Value);
-					}
-				}
-
-				return -1;
-			}
-		}
-
 		protected IActionResult Home()
 		{
 			return RedirectToPage("/Index");
