@@ -106,8 +106,6 @@ namespace TASVideos.Pages.Forum.Topics
 			await _forumTasks.CreatePost(topic.Id, forumPostModel, user, IpAddress.ToString());
 			await _forumTasks.WatchTopic(topic.Id, user.Id, canSeeRestricted: true);
 
-			var topic = await _forumTasks.CreateTopic(ForumId, Topic, user, IpAddress.ToString());
-
 			//// TODO: auto-add topic permission based on post count, also ability to vote
 			
 			_publisher.SendForum(
