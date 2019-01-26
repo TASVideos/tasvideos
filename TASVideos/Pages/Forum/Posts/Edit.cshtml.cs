@@ -19,19 +19,16 @@ namespace TASVideos.Pages.Forum.Posts
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly ForumTasks _forumTasks;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			ForumTasks forumTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_db = db;
 			_publisher = publisher;
-			_forumTasks = forumTasks;
 		}
 
 		[FromRoute]
@@ -130,23 +127,45 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGetDelete()
 		{
-			var result = await _forumTasks.DeletePost(
-				Id,
-				UserHas(PermissionTo.DeleteForumPosts),
-				UserHas(PermissionTo.SeeRestrictedForums));
-			if (result == null)
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var post = await _db.ForumPosts
+				.Include(p => p.Topic)
+				.Include(p => p.Topic.Forum)
+				.ExcludeRestricted(seeRestricted)
+				.SingleOrDefaultAsync(p => p.Id == Id);
+
+			if (post == null)
 			{
 				return NotFound();
 			}
 
-			var topic = await _forumTasks.GetTopic(result.Value);
-			_publisher.SendForum(
-				topic.Forum.Restricted,
-				$"Post DELETED by {User.Identity.Name} ({topic.Forum.ShortName}: {topic.Title})",
-				$"{BaseUrl}/p/{Id}#{Id}",
-				$"{BaseUrl}/Forum/Topic/{topic.Id}");
+			if (!UserHas(PermissionTo.DeleteForumPosts))
+			{
+				// Check if last post
+				var lastPost = _db.ForumPosts
+					.ForTopic(post.TopicId ?? -1)
+					.ByMostRecent()
+					.First();
 
-			return RedirectToPage("/Forum/Topics/Index", new { id = result });
+				bool isLastPost = lastPost.Id == post.Id;
+				if (!isLastPost)
+				{
+					return NotFound();
+				}
+			}
+
+			_db.ForumPosts.Remove(post);
+
+			// TODO: catch DbConcurrencyException
+			await _db.SaveChangesAsync();
+
+			_publisher.SendForum(
+				post.Topic.Forum.Restricted,
+				$"Post DELETED by {User.Identity.Name} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
+				$"{BaseUrl}/p/{Id}#{Id}",
+				$"{BaseUrl}/Forum/Topics/{post.Topic.Id}");
+
+			return RedirectToPage("/Forum/Topics/Index", new { id = post.TopicId });
 		}
 
 		private async Task<bool> CanEdit(ForumPost post, int userId)

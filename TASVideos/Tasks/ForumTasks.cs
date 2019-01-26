@@ -238,43 +238,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Deletes a post with the given <see cref="postId"/>
-		/// </summary>
-		/// <returns>the topic id that contained the post if post is successfully deleted, if user can not delete the post or a post of the given id is not found then null</returns>
-		public async Task<int?> DeletePost(int postId, bool canDelete, bool canSeeRestricted)
-		{
-			var post = await _db.ForumPosts
-				// TODO: add includes?
-				.ExcludeRestricted(canSeeRestricted)
-				.SingleOrDefaultAsync(p => p.Id == postId);
-
-			if (post == null)
-			{
-				return null;
-			}
-
-			if (!canDelete)
-			{
-				// Check if last post
-				var lastPost = _db.ForumPosts
-					.ForTopic(post.TopicId ?? -1)
-					.ByMostRecent()
-					.First();
-
-				bool isLastPost = lastPost.Id == post.Id;
-				if (!isLastPost)
-				{
-					return null;
-				}
-			}
-
-			_db.ForumPosts.Remove(post);
-			await _db.SaveChangesAsync();
-
-			return post.TopicId;
-		}
-
-		/// <summary>
 		/// If a user is watching this topic, this marks the topic
 		/// as not notified, at which point, any new post will cause a notification
 		/// </summary>
