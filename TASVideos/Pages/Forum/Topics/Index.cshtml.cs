@@ -100,15 +100,28 @@ namespace TASVideos.Pages.Forum.Topics
 				return AccessDenied();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
-			var topicId = await _forumTasks.Vote(user, pollId, ordinal, IpAddress.ToString());
+			var pollOption = await _db.ForumPollOptions
+				.Include(o => o.Poll)
+				.Include(o => o.Votes)
+				.SingleOrDefaultAsync(o => o.PollId == pollId && o.Ordinal == ordinal);
 
-			if (topicId == null)
+			if (pollOption == null)
 			{
-				return BadRequest();
+				return NotFound();
 			}
 
-			return RedirectToPage("Index", new { Id = topicId });
+			var user = await _userManager.GetUserAsync(User);
+			if (pollOption.Votes.All(v => v.UserId != user.Id))
+			{
+				pollOption.Votes.Add(new ForumPollOptionVote
+				{
+					User = user,
+					IpAddress = IpAddress.ToString()
+				});
+				await _db.SaveChangesAsync();
+			}
+
+			return RedirectToPage("Index", new { Id = pollOption.Poll.TopicId });
 		}
 
 		public async Task<IActionResult> OnPostLock(string topicTitle, bool locked, string returnUrl)

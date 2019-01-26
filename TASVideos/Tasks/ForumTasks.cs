@@ -288,35 +288,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Adds a vote to the given Poll
-		/// </summary>
-		/// <returns>Returns the topic id of the poll, if the poll is found</returns>
-		public async Task<int?> Vote(User user, int pollId, int ordinal, string ipAddress)
-		{
-			var pollOption = await _db.ForumPollOptions
-				.Include(o => o.Poll)
-				.Include(o => o.Votes)
-				.SingleOrDefaultAsync(o => o.PollId == pollId && o.Ordinal == ordinal);
-
-			if (pollOption == null)
-			{
-				return null;
-			}
-
-			if (pollOption.Votes.All(v => v.UserId != user.Id))
-			{
-				pollOption.Votes.Add(new ForumPollOptionVote
-				{
-					User = user,
-					IpAddress = ipAddress
-				});
-				await _db.SaveChangesAsync();
-			}
-
-			return pollOption.Poll.TopicId;
-		}
-
-		/// <summary>
 		/// Results the vote results of a given <see cref="ForumPoll"/> including
 		/// the voters and which options they voted for
 		/// </summary>
