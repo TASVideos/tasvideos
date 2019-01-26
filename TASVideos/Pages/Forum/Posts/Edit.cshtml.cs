@@ -92,29 +92,38 @@ namespace TASVideos.Pages.Forum.Posts
 				return Page();
 			}
 
+			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+
+			var forumPost = await _db.ForumPosts
+				.Include(p => p.Topic)
+				.Include(p => p.Topic.Forum)
+				.ExcludeRestricted(seeRestricted)
+				.SingleOrDefaultAsync(p => p.Id == Id);
+
+			if (forumPost == null)
+			{
+				return NotFound();
+			}
+
 			if (!UserHas(PermissionTo.EditForumPosts))
 			{
-				if (!await _forumTasks.CanEdit(Id, User.GetUserId()))
+				if (!await CanEdit(forumPost, User.GetUserId()))
 				{
 					ModelState.AddModelError("", "Unable to edit post. It is no longer the latest post.");
 					return Page();
 				}
 			}
 
-			var topic = await _forumTasks.GetTopic(Post.TopicId);
-			if (topic == null
-				|| (topic.Forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums)))
-			{
-				return NotFound();
-			}
+			// TODO: catch DbConcurrencyException
+			forumPost.Subject = Post.Subject;
+			forumPost.Text = Post.Text;
+			await _db.SaveChangesAsync();
 
 			_publisher.SendForum(
-				topic.Forum.Restricted,
-				$"Post edited by {User.Identity.Name} ({topic.Forum.ShortName}: {topic.Title})",
+				forumPost.Topic.Forum.Restricted,
+				$"Post edited by {User.Identity.Name} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
 				"",
 				$"{BaseUrl}/p/{Id}#{Id}");
-
-			await _forumTasks.EditPost(Id, Post);
 
 			return RedirectToPage("/Forum/Topics/Index", new { Id = Post.TopicId });
 		}
@@ -138,6 +147,22 @@ namespace TASVideos.Pages.Forum.Posts
 				$"{BaseUrl}/Forum/Topic/{topic.Id}");
 
 			return RedirectToPage("/Forum/Topics/Index", new { id = result });
+		}
+
+		private async Task<bool> CanEdit(ForumPost post, int userId)
+		{
+			if (post.PosterId != userId)
+			{
+				return false;
+			}
+
+			var lastPostId = await _db.ForumPosts
+				.ForTopic(post.TopicId ?? 0)
+				.ByMostRecent()
+				.Select(p => p.Id)
+				.FirstAsync();
+
+			return post.Id == lastPostId;
 		}
 	}
 }
