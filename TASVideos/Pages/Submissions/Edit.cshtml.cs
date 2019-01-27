@@ -12,6 +12,7 @@ using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Services;
@@ -203,11 +204,7 @@ namespace TASVideos.Pages.Submissions
 		private async Task PopulateAvailableTiers()
 		{
 			AvailableTiers = await _db.Tiers
-				.Select(t => new SelectListItem
-				{
-					Value = t.Id.ToString(),
-					Text = t.Name
-				})
+				.ToDropdown()
 				.ToListAsync();
 		}
 
