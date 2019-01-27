@@ -61,7 +61,7 @@
 				<a class="btn btn-info btn-sm" asp-page="/Users/Profile" asp-route-userName="@Model.UserName">Profile</a>
 				<div class="pull-right">
 					@* ReSharper disable once UnusedVariable *@
-					@foreach (var award in Model.UserPosts.Awards.OrderByDescending(a => a.Year))
+					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 					{
 						<partial name="_Award" model="award" />
 					}

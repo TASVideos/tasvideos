@@ -15,16 +15,19 @@ namespace TASVideos.Pages.Forum.Posts
 	[Authorize]
 	public class NewModel : BasePageModel
 	{
-		private readonly UserManager _userManager;
 		private readonly ApplicationDbContext _db;
+		private readonly UserManager _userManager;
+		private readonly IAwardsCache _awards;
 		
 		public NewModel(
+			ApplicationDbContext db,
 			UserManager userManager,
-			ApplicationDbContext db)
+			IAwardsCache awards)
 		: base(userManager)
 		{
-			_userManager = userManager;
 			_db = db;
+			_userManager = userManager;
+			_awards = awards;
 		}
 
 		[FromQuery]
@@ -69,6 +72,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			foreach (var post in Posts)
 			{
+				post.Awards = await _awards.AwardsForUser(post.PosterId);
 				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
 				post.RenderedSignature = RenderSignature(post.Signature);
 			}

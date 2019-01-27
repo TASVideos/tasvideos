@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -18,16 +19,16 @@ namespace TASVideos.Pages.Forum.Posts
 	public class UserModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly AwardTasks _awardTasks;
+		private readonly IAwardsCache _awards;
 
 		public UserModel(
 			ApplicationDbContext db,
-			AwardTasks awardTasks,
+			IAwardsCache awards,
 			UserManager userManager)
 			: base(userManager)
 		{
 			_db = db;
-			_awardTasks = awardTasks;
+			_awards = awards;
 		}
 
 		[FromRoute]
@@ -37,6 +38,8 @@ namespace TASVideos.Pages.Forum.Posts
 		public UserPostsRequest Search { get; set; }
 
 		public UserPostsModel UserPosts { get; set; }
+
+		public IEnumerable<AwardEntryDto> Awards { get; set; } = new List<AwardEntryDto>(); 
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -62,7 +65,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			UserPosts.Awards = await _awardTasks.GetAllAwardsForUser(UserPosts.Id);
+			Awards = await _awards.AwardsForUser(UserPosts.Id);
 
 			bool seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
 			UserPosts.Posts = _db.ForumPosts
