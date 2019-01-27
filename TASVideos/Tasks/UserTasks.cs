@@ -29,7 +29,12 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<IEnumerable<PermissionTo>> GetUserPermissionsById(int userId)
 		{
-			return await GetUserPermissionByIdQuery(userId)
+			return await _db.Users
+				.Where(u => u.Id == userId)
+				.SelectMany(u => u.UserRoles)
+				.SelectMany(ur => ur.Role.RolePermission)
+				.Select(rp => rp.PermissionId)
+				.Distinct()
 				.ToListAsync();
 		}
 
@@ -175,16 +180,6 @@ namespace TASVideos.Tasks
 			}
 
 			return model;
-		}
-
-		private IQueryable<PermissionTo> GetUserPermissionByIdQuery(int userId)
-		{
-			return _db.Users
-				.Where(u => u.Id == userId)
-				.SelectMany(u => u.UserRoles)
-				.SelectMany(ur => ur.Role.RolePermission)
-				.Select(rp => rp.PermissionId)
-				.Distinct();
 		}
 	}
 }
