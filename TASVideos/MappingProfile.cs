@@ -7,7 +7,6 @@ using TASVideos.Models;
 using TASVideos.Pages.Game.Model;
 using TASVideos.Pages.Game.Rom.Models;
 using TASVideos.Pages.Roles.Models;
-using TASVideos.Tasks;
 using TASVideos.ViewComponents;
 
 namespace TASVideos
@@ -34,9 +33,6 @@ namespace TASVideos
 			CreateMap<GameEditModel, Game>();
 
 			CreateMap<GameRom, RomEditModel>().ReverseMap();
-
-			CreateMap<AwardTasks.AwardDto, AwardDetailsModel>();
-			CreateMap<AwardTasks.AwardDto.UserDto, AwardDetailsModel.UserModel>();
 
 			CreateMap<Role, RoleDisplayModel>()
 				.ForMember(

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Services;
 
 namespace TASVideos.Models
 {
@@ -57,7 +58,7 @@ namespace TASVideos.Models
 			public string Signature { get; set; }
 			public string RenderedSignature { get; set; }
 
-			public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
+			public IEnumerable<AwardEntryDto> Awards { get; set; } = new List<AwardEntryDto>();
 
 			public bool EnableHtml { get; set; }
 			public bool EnableBbCode { get; set; }
@@ -252,7 +253,7 @@ namespace TASVideos.Models
 		public string Signature { get; set; }
 		public string RenderedSignature { get; set; }
 
-		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
+		public IEnumerable<AwardEntryDto> Awards { get; set; } = new List<AwardEntryDto>();
 	}
 
 	public class UnansweredPostsModel
@@ -375,7 +376,6 @@ namespace TASVideos.Models
 		public string RenderedSignature { get; set; }
 
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
-		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
 
 		public PageOf<Post> Posts { get; set; }
 

@@ -6,21 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
 {
     public class HomePageFooter : ViewComponent
     {
 		private readonly ApplicationDbContext _db;
-		private readonly AwardTasks _awardTasks;
+		private readonly IAwardsCache _awards;
 
 		public HomePageFooter(
 			ApplicationDbContext db,
-			AwardTasks awardTasks)
+			IAwardsCache awards)
 		{
 			_db = db;
-			_awardTasks = awardTasks;
+			_awards = awards;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData)
@@ -44,7 +44,7 @@ namespace TASVideos.ViewComponents
 				})
 				.SingleOrDefaultAsync();
 
-			model.AwardsWon = (await _awardTasks.GetAllAwardsForUser(model.Id)).Count();
+			model.AwardsWon = (await _awards.AwardsForUser(model.Id)).Count();
 
 			ViewData["pageData"] = pageData;
 			return View(model);

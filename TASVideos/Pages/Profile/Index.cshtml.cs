@@ -5,22 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Profile
 {
 	[Authorize]
 	public class IndexModel : BasePageModel
 	{
-		private readonly AwardTasks _awardTasks;
+		private readonly IAwardsCache _awards;
 		private readonly UserManager _userManager;
 
 		public IndexModel(
-			AwardTasks awardTasks,
+			IAwardsCache awards,
 			UserManager userManager)
 			: base(userManager)
 		{
-			_awardTasks = awardTasks;
+			_awards = awards;
 			_userManager = userManager;
 		}
 
@@ -39,7 +38,7 @@ namespace TASVideos.Pages.Profile
 				Profile.Signature = RenderPost(Profile.Signature, true, false);
 			}
 
-			Profile.Awards = await _awardTasks.GetAllAwardsForUser(Profile.Id);
+			Profile.Awards = await _awards.AwardsForUser(Profile.Id);
 
 			return Page();
 		}

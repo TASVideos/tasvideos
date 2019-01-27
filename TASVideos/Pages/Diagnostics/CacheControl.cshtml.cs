@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Diagnostics
 {
@@ -12,16 +11,16 @@ namespace TASVideos.Pages.Diagnostics
 	public class CacheControlModel : BasePageModel
 	{
 		private readonly IWikiPages _wikiPages;
-		private readonly AwardTasks _awardTasks;
+		private readonly IAwardsCache _awards;
 
 		public CacheControlModel(
 			IWikiPages wikiPages,
-			AwardTasks awardTasks,
+			IAwardsCache awards,
 			UserManager userManager)
 			: base(userManager)
 		{
 			_wikiPages = wikiPages;
-			_awardTasks = awardTasks;
+			_awards = awards;
 		}
 
 		public async Task<IActionResult> OnPostFlushWikiCache()
@@ -32,8 +31,7 @@ namespace TASVideos.Pages.Diagnostics
 
 		public IActionResult OnPostClearAwardsCache()
 		{
-			// TODO: implement flush instead of clear
-			_awardTasks.ClearAwardsCache();
+			_awards.Flush();
 			return RedirectToPage("CacheControl");
 		}
 	}

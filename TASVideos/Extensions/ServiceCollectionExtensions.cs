@@ -74,7 +74,6 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddTasks(this IServiceCollection services)
 		{
-			services.AddScoped<AwardTasks>();
 			services.AddScoped<ForumTasks>();
 			services.AddScoped<PrivateMessageTasks>();
 			services.AddScoped<UserFileTasks>();
@@ -87,6 +86,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<UserManager>();
 			services.AddScoped<IFileService, FileService>();
 			services.AddScoped<IPointsCalculator, PointsCalculator>();
+			services.AddScoped<IAwardsCache, AwardsCache>();
 			services.AddTransient<IEmailSender, EmailSender>();
 			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IWikiPages, WikiPages>();

@@ -21,21 +21,21 @@ namespace TASVideos.Pages.Forum.Topics
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
-		private readonly AwardTasks _awardTasks;
+		private readonly IAwardsCache _awards;
 		private readonly ForumTasks _forumTasks;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
-			AwardTasks awardTasks,
+			IAwardsCache awards,
 			UserManager userManager)
 			: base(userManager)
 		{
 			_db = db;
 			_publisher = publisher;
 			_forumTasks = forumTasks;
-			_awardTasks = awardTasks;
+			_awards = awards;
 		}
 
 		[FromRoute]
@@ -109,7 +109,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			foreach (var post in Topic.Posts)
 			{
-				post.Awards = await _awardTasks.GetAllAwardsForUser(post.PosterId);
+				post.Awards = await _awards.AwardsForUser(post.PosterId);
 			}
 
 			if (Topic.Poll != null)

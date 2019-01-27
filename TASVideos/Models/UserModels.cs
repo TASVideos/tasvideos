@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 
 namespace TASVideos.Models
 {
@@ -140,7 +141,7 @@ namespace TASVideos.Models
 		public WikiEditModel WikiEdits { get; set; } = new WikiEditModel();
 
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
-		public IEnumerable<AwardDisplayModel> Awards { get; set; } = new List<AwardDisplayModel>();
+		public IEnumerable<AwardEntryDto> Awards { get; set; } = new List<AwardEntryDto>();
 		public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
 
 		public RatingModel Ratings { get; set; } = new RatingModel();
