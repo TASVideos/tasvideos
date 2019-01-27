@@ -6,15 +6,15 @@
 
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form method="post" enctype="multipart/form-data">
-	<input condition="@Model.Submission.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
-	<row condition="@Model.Submission.AvailableStatuses.Count() > 1">
+	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
+	<row condition="@Model.AvailableStatuses.Count() > 1">
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.Status" class="form-control-label"></label>
 				<select 
 					class="form-control" 
 					asp-for="Submission.Status" 
-					asp-items="@Model.Submission.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
+					asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
 			</form-group>
 		</div>
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
@@ -30,7 +30,7 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.TierId" class="form-control-label"></label>
-				<select asp-for="Submission.TierId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Submission.AvailableTiers)" class="form-control"></select>
+				<select asp-for="Submission.TierId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableTiers)" class="form-control"></select>
 				<span asp-validation-for="Submission.TierId" class="text-danger"></span>
 			</form-group>
 		</div>
@@ -59,7 +59,7 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.GameVersion" class="form-control-label"></label>
-				<select asp-for="Submission.GameVersion" asp-items="@Model.Submission.GameVersionOptions" class="form-control"></select>
+				<select asp-for="Submission.GameVersion" asp-items="@Model.GameVersionOptions" class="form-control"></select>
 				<span asp-validation-for="Submission.GameVersion" class="text-danger"></span>
 			</form-group>
 			<form-group>
