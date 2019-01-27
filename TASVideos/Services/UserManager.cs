@@ -230,5 +230,50 @@ namespace TASVideos.Services
 
 			return model;
 		}
+
+		/// <summary>
+		/// Returns the <see cref="PrivateMessage"/>
+		/// record with the given <see cref="id"/> if the user has access to the message
+		/// A user has access if they are the sender or the receiver of the message
+		/// </summary>
+		public async Task<PrivateMessageModel> GetMessage(int userId, int id)
+		{
+			var pm = await _db.PrivateMessages
+				.Include(p => p.FromUser)
+				.Include(p => p.ToUser)
+				.Where(p => (!p.DeletedForFromUser && p.FromUserId == userId)
+					|| (!p.DeletedForToUser && p.ToUserId == userId))
+				.SingleOrDefaultAsync(p => p.Id == id);
+
+			if (pm == null)
+			{
+				return null;
+			}
+
+			// If it is the recipient and the message is not deleted
+			if (!pm.ReadOn.HasValue && pm.ToUserId == userId)
+			{
+				pm.ReadOn = DateTime.UtcNow;
+				await _db.SaveChangesAsync();
+				_cache.Remove(CacheKeys.UnreadMessageCount + userId); // Message count possibly no longer valid
+			}
+
+			var model = new PrivateMessageModel
+			{
+				Id = pm.Id,
+				Subject = pm.Subject,
+				SentOn = pm.CreateTimeStamp,
+				Text = pm.Text,
+				FromUserId = pm.FromUserId,
+				FromUserName = pm.FromUser.UserName,
+				ToUserId = pm.ToUserId,
+				ToUserName = pm.ToUser.UserName,
+				CanReply = pm.ToUserId == userId,
+				EnableBbCode = pm.EnableBbCode,
+				EnableHtml = pm.EnableHtml
+			};
+
+			return model;
+		}
 	}
 }
