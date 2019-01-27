@@ -7,18 +7,15 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Extensions;
-using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
 	public class WikiLink : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly SubmissionTasks _submissionTasks;
 
-		public WikiLink(ApplicationDbContext db, SubmissionTasks submissionTasks)
+		public WikiLink(ApplicationDbContext db)
 		{
-			_submissionTasks = submissionTasks;
 			_db = db;
 		}
 
@@ -45,7 +42,7 @@ namespace TASVideos.ViewComponents
 					var id = SubmissionHelper.IsSubmissionLink(pp);
 					if (id.HasValue)
 					{
-						var title = await _submissionTasks.GetTitle(id.Value);
+						var title = await GetSubmissionTitle(id.Value);
 						if (!string.IsNullOrWhiteSpace(title))
 						{
 							model.DisplayText = title;
@@ -72,6 +69,13 @@ namespace TASVideos.ViewComponents
 		private async Task<string> GetPublicationTitle(int id)
 		{
 			return (await _db.Publications
+				.Select(s => new { s.Id, s.Title })
+				.SingleOrDefaultAsync(s => s.Id == id))?.Title;
+		}
+
+		private async Task<string> GetSubmissionTitle(int id)
+		{
+			return (await _db.Submissions
 				.Select(s => new { s.Id, s.Title })
 				.SingleOrDefaultAsync(s => s.Id == id))?.Title;
 		}
