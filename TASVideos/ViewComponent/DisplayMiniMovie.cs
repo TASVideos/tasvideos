@@ -18,7 +18,7 @@ namespace TASVideos.ViewComponents
 	{
 		private readonly ApplicationDbContext _db;
 
-		public DisplayMiniMovie(PublicationTasks publicationTasks, ApplicationDbContext db)
+		public DisplayMiniMovie(ApplicationDbContext db)
 		{
 			_db = db;
 		}
