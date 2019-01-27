@@ -1,7 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -12,12 +17,15 @@ namespace TASVideos.Pages.Submissions
 	public class PublishModel : BasePageModel
 	{
 		private readonly SubmissionTasks _submissionTasks;
+		private readonly ApplicationDbContext _db;
 
 		public PublishModel(
+			ApplicationDbContext db,
 			SubmissionTasks submissionTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_db = db;
 			_submissionTasks = submissionTasks;
 		}
 
@@ -27,14 +35,45 @@ namespace TASVideos.Pages.Submissions
 		[BindProperty]
 		public SubmissionPublishModel Submission { get; set; } = new SubmissionPublishModel();
 
+		public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; }
+
 		public async Task<IActionResult> OnGet()
 		{
-			if (!await _submissionTasks.CanPublish(Id))
+			Submission = await _db.Submissions
+				.Where(s => s.Id == Id)
+				.Select(s => new SubmissionPublishModel
+				{
+					Id = s.Id,
+					Title = s.Title,
+					Markup = s.WikiContent.Markup,
+					SystemCode = s.System.Code,
+					SystemId = s.SystemId ?? 0,
+					SystemFrameRateId = s.SystemFrameRateId,
+					SystemRegion = s.SystemFrameRate.RegionCode + " " + s.SystemFrameRate.FrameRate,
+					Game = s.Game.GoodName,
+					GameId = s.GameId ?? 0,
+					Rom = s.Rom.Name,
+					RomId = s.RomId ?? 0,
+					Tier = s.IntendedTier != null ? s.IntendedTier.Name : "",
+					Branch = s.Branch,
+					EmulatorVersion = s.EmulatorVersion,
+					MovieExtension = s.MovieExtension,
+					Status = s.Status
+				})
+				.SingleOrDefaultAsync();
+
+			if (Submission == null)
 			{
 				return NotFound();
 			}
 
-			Submission = await _submissionTasks.GetSubmissionForPublish(Id);
+			if (!Submission.CanPublish)
+			{
+				return AccessDenied();
+			}
+
+			await PopulateAvailableMoviesToObsolete(Submission.SystemId);
+
 			return Page();
 		}
 
@@ -55,12 +94,25 @@ namespace TASVideos.Pages.Submissions
 
 			if (!ModelState.IsValid)
 			{
-				Submission.AvailableMoviesToObsolete = await _submissionTasks.GetAvailableMoviesToObsolete(Submission.SystemId);
+				await PopulateAvailableMoviesToObsolete(Submission.SystemId);
 				return Page();
 			}
 
 			var id = await _submissionTasks.PublishSubmission(Submission);
 			return Redirect($"/{id}M");
+		}
+
+		private async Task PopulateAvailableMoviesToObsolete(int systemId)
+		{
+			AvailableMoviesToObsolete = await _db.Publications
+				.ThatAreCurrent()
+				.Where(p => p.SystemId == systemId)
+				.Select(p => new SelectListItem
+				{
+					Value = p.Id.ToString(),
+					Text = p.Title
+				})
+				.ToListAsync();
 		}
 	}
 }
