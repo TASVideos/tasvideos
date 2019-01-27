@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Submissions
 		[FromQuery]
 		public SubmissionSearchRequest Search { get; set; } = new SubmissionSearchRequest();
 
-		public SubmissionListModel Submissions { get; set; } = new SubmissionListModel();
+		public IEnumerable<SubmissionListEntry> Submissions { get; set; } = new List<SubmissionListEntry>();
 
 		[Display(Name = "Statuses")]
 		public IEnumerable<SelectListItem> AvailableStatuses => Statuses;

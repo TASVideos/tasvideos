@@ -6,6 +6,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+
+using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 
 namespace TASVideos.TagHelpers
@@ -37,7 +39,7 @@ namespace TASVideos.TagHelpers
 			ValidateExpressions();
 			output.TagMode = TagMode.StartTagAndEndTag;
 
-			List<int> selectedIdList = ((IEnumerable<int>)IdList.Model).ToList();
+			List<int> selectedIdList = ((IEnumerable)IdList.Model).Cast<int>().ToList();
 			List<SelectListItem> availableItems = ((IEnumerable<SelectListItem>)AvailableList.Model).ToList();
 
 			int rowSize = RowHeight ?? availableItems.Count.Clamp(8, 14); // Min and Max set by eyeballing it and deciding what looked decent
@@ -274,7 +276,8 @@ namespace TASVideos.TagHelpers
 				throw new ArgumentException($"Invalid property type {idListType}, {nameof(IdList)} must be a generic collection");
 			}
 
-			if (!idListType.GenericTypeArguments.Contains(typeof(int)))
+			if (!idListType.GenericTypeArguments.Contains(typeof(int))
+			&& !idListType.GenericTypeArguments.Contains(typeof(SubmissionStatus))) // TODO: Hack, instead find a way that enums of type int can be supported
 			{
 				throw new ArgumentException($"Invalid property type {idListType}, {nameof(IdList)} must be an {nameof(IEnumerable)} of int");
 			}

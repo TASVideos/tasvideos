@@ -201,7 +201,7 @@ namespace TASVideos.Models
 		public string User { get; set; }
 		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
 
-		public static IEnumerable<SubmissionStatus> Default => new[]
+		public static IEnumerable<SubmissionStatus> Default => new List<SubmissionStatus>()
 		{
 			SubmissionStatus.New,
 			SubmissionStatus.JudgingUnderWay,
@@ -214,40 +214,27 @@ namespace TASVideos.Models
 		public static IEnumerable<SubmissionStatus> All => Enum.GetValues(typeof(SubmissionStatus)).Cast<SubmissionStatus>();
 	}
 
-	/// <summary>
-	/// A single submission from a submission search
-	/// </summary>
-	public class SubmissionListModel
+	public class SubmissionListEntry
 	{
-		public string User { get; set; }
+		[Display(Name = "Movie name")]
+		public string Title => $"{System} {GameName}"
+		+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
+		+ $" in {Time:g}";
 
-		[Display(Name = "Selected Statuses")]
-		public IEnumerable<int> StatusFilter { get; set; } = new List<int>();
+		[Display(Name = "Author")]
+		public string Author { get; set; }
 
-		public IEnumerable<Entry> Entries { get; set; } = new List<Entry>();
+		[Display(Name = "Submitted")]
+		public DateTime Submitted { get; set; }
 
-		public class Entry
-		{
-			[Display(Name = "Movie name")]
-			public string Title => $"{System} {GameName}"
-			+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-			+ $" in {Time:g}";
+		[Display(Name = "Status")]
+		public SubmissionStatus Status { get; set; }
 
-			[Display(Name = "Author")]
-			public string Author { get; set; }
-
-			[Display(Name = "Submitted")]
-			public DateTime Submitted { get; set; }
-
-			[Display(Name = "Status")]
-			public SubmissionStatus Status { get; set; }
-
-			public int Id { get; set; }
-			public string System { get; set; }
-			public string GameName { get; set; }
-			public TimeSpan Time { get; set; }
-			public string Branch { get; set; }
-		}
+		public int Id { get; set; }
+		public string System { get; set; }
+		public string GameName { get; set; }
+		public TimeSpan Time { get; set; }
+		public string Branch { get; set; }
 	}
 
 	/// <summary>
