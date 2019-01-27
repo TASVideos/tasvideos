@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using AutoMapper.QueryableExtensions;
 
@@ -12,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -23,8 +20,8 @@ namespace TASVideos.Pages.Wiki
 
 		public EditHistoryModel(
 			ApplicationDbContext db,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 		}

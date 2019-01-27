@@ -9,6 +9,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Posts
@@ -22,8 +23,8 @@ namespace TASVideos.Pages.Forum.Posts
 		public UserModel(
 			ApplicationDbContext db,
 			AwardTasks awardTasks,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_awardTasks = awardTasks;

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Messages
 {
@@ -19,8 +19,8 @@ namespace TASVideos.Pages.Messages
 
 		public SaveboxModel(
 			ApplicationDbContext db,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 		}

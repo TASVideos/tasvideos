@@ -14,7 +14,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -27,8 +27,8 @@ namespace TASVideos.Pages.Submissions
 		public PublishModel(
 			ApplicationDbContext db,
 			IHostingEnvironment hostingEnvironment,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_hostingEnvironment = hostingEnvironment;

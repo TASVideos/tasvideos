@@ -15,7 +15,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Game.Rom.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Game.Rom
 {
@@ -37,8 +37,8 @@ namespace TASVideos.Pages.Game.Rom
 		public EditModel(
 			ApplicationDbContext db,
 			IMapper mapper,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_mapper = mapper;

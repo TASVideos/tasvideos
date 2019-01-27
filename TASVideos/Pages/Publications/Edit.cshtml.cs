@@ -11,7 +11,6 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Publications
 {
@@ -24,8 +23,8 @@ namespace TASVideos.Pages.Publications
 		public EditModel(
 			ApplicationDbContext db,
 			IWikiPages wikiPages,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_wikiPages = wikiPages;

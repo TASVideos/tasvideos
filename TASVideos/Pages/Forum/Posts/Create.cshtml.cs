@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,20 +17,19 @@ namespace TASVideos.Pages.Forum.Posts
 	[RequirePermission(PermissionTo.CreateForumPosts)]
 	public class CreateModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 		private readonly ForumTasks _forumTasks;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ApplicationDbContext _db;
 		private readonly IEmailService _emailService;
 
 		public CreateModel(
-			UserManager<User> userManager,
+			UserManager userManager,
 			ForumTasks forumTasks,
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
-			IEmailService emailService,
-			UserTasks userTasks) 
-			: base(userTasks)
+			IEmailService emailService) 
+			: base(userManager)
 		{
 			_userManager = userManager;
 			_forumTasks = forumTasks;

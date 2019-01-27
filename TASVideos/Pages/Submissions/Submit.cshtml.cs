@@ -32,8 +32,8 @@ namespace TASVideos.Pages.Submissions
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
 			MovieParser parser,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_publisher = publisher;

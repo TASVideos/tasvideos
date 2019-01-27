@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +7,6 @@ using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -23,8 +19,8 @@ namespace TASVideos.Pages.Wiki
 		public EditModel(
 			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_wikiPages = wikiPages;
 			_publisher = publisher;

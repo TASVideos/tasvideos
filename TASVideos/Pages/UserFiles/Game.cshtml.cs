@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.UserFiles
@@ -14,8 +15,8 @@ namespace TASVideos.Pages.UserFiles
 
 		public GameModel(
 			UserFileTasks userFileTasks,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_userFileTasks = userFileTasks;
 		}

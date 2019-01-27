@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -19,8 +19,8 @@ namespace TASVideos.Pages.Wiki
 		private readonly ApplicationDbContext _db;
 		public ReferrersModel(
 			ApplicationDbContext db,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_db = db;
 		}

@@ -1,18 +1,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
-    [AllowAnonymous]
-    public class DoIfModuleModel : BasePageModel
-    {
-        public DoIfModuleModel(UserTasks userTasks)
-                : base(userTasks)
-        {
-        }
+	[AllowAnonymous]
+	public class DoIfModuleModel : BasePageModel
+	{
+		public DoIfModuleModel(UserManager userManager) : base(userManager)
+		{
+		}
 
-        [FromQuery]
-        public string Condition { get; set; }
-    }
+		[FromQuery]
+		public string Condition { get; set; }
+	}
 }

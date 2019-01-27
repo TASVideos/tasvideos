@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -20,8 +20,8 @@ namespace TASVideos.Pages.Wiki
 
 		public DiffModel(
 			ApplicationDbContext db,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 		}

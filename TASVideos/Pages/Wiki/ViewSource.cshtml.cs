@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -14,8 +13,8 @@ namespace TASVideos.Pages.Wiki
 
 		public ViewSourceModel(
 			IWikiPages wikiPages,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_wikiPages = wikiPages;
 		}

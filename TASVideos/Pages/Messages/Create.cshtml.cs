@@ -11,6 +11,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Messages
@@ -24,8 +25,8 @@ namespace TASVideos.Pages.Messages
 		public CreateModel(
 			ApplicationDbContext db,
 			PrivateMessageTasks privateMessageTasks,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_pmTasks = privateMessageTasks;

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +13,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Game.Model;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Game
 {
@@ -27,8 +26,8 @@ namespace TASVideos.Pages.Game
 		public EditModel(
 			ApplicationDbContext db,
 			IMapper mapper,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_mapper = mapper;

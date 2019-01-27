@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -16,8 +15,9 @@ namespace TASVideos.Pages.Wiki
 		private readonly IWikiPages _pages;
 
 		public PreviewModel(
-			UserTasks userTasks, IWikiPages pages)
-			: base(userTasks)
+			UserManager userManager, 
+			IWikiPages pages)
+			: base(userManager)
 		{
 			_pages = pages;
 		}

@@ -10,8 +10,8 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Posts
 {
@@ -24,8 +24,8 @@ namespace TASVideos.Pages.Forum.Posts
 		public EditModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_publisher = publisher;

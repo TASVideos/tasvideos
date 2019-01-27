@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Pages.Roles.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Roles
 {
@@ -17,8 +17,8 @@ namespace TASVideos.Pages.Roles
 	{
 		private readonly ApplicationDbContext _db;
 
-		public IndexModel(ApplicationDbContext db, UserTasks userTasks)
-			: base(userTasks)
+		public IndexModel(ApplicationDbContext db, UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 		}

@@ -11,7 +11,6 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Publications
 {
@@ -27,8 +26,8 @@ namespace TASVideos.Pages.Publications
 			ApplicationDbContext db,
 			ICacheService cache,
 			IPointsCalculator points,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_db = db;
 			_cache = cache;

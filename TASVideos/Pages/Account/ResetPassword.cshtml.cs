@@ -2,22 +2,20 @@
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data.Entity;
-using TASVideos.Tasks;
+
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Account
 {
 	[Authorize]
 	public class ResetPasswordModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 
 		public ResetPasswordModel(
-			UserManager<User> userManager,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_userManager = userManager;
 		}

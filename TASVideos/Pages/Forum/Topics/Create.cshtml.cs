@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +9,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
 
@@ -26,8 +26,8 @@ namespace TASVideos.Pages.Forum.Topics
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_publisher = publisher;

@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum
 {
@@ -12,9 +12,7 @@ namespace TASVideos.Pages.Forum
 	[IgnoreAntiforgeryToken]
 	public class PreviewModel : BasePageModel
 	{
-		public PreviewModel(
-			UserTasks userTasks)
-			: base(userTasks)
+		public PreviewModel(UserManager userManager) : base(userManager)
 		{
 		}
 

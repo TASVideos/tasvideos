@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Legacy
 {
-	// Handles legacy forum links to viewtopic.php
+	// Handles legacy forum links to viewTopic.php
 	[AllowAnonymous]
 	public class TopicModel : BasePageModel
 	{
@@ -16,8 +17,8 @@ namespace TASVideos.Pages.Forum.Legacy
 
 		public TopicModel(
 			ForumTasks forumTasks,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_forumTasks = forumTasks;
 		}
