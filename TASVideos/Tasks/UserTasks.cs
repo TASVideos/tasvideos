@@ -38,14 +38,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Checks if the given user name already exists in the database
-		/// </summary>
-		public async Task<bool> CheckUserNameExists(string userName)
-		{
-			return await _db.Users.Exists(userName);
-		}
-
-		/// <summary>
 		/// Gets a list of <seealso cref="User"/>s that partially match the given part of a username
 		/// </summary>
 		public async Task<IEnumerable<string>> GetUsersByPartial(string partialUserName)
