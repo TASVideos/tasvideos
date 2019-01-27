@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Publications
@@ -17,16 +18,16 @@ namespace TASVideos.Pages.Publications
 	public class ViewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly RatingsTasks _ratingsTasks;
+		private readonly IPointsService _pointsCalculator;
 
 		public ViewModel(
 			ApplicationDbContext db,
-			RatingsTasks ratingsTasks,
+			IPointsService pointsCalculator,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
 			_db = db;
-			_ratingsTasks = ratingsTasks;
+			_pointsCalculator = pointsCalculator;
 		}
 
 		[FromRoute]
@@ -95,7 +96,8 @@ namespace TASVideos.Pages.Publications
 					.SingleOrDefaultAsync(t => t.PageName == pageName))
 					?.Id ?? 0;
 
-			Publication.OverallRating = await _ratingsTasks.GetOverallRatingForPublication(Id);
+			Publication.OverallRating = (await _pointsCalculator.CalculatePublicationRatings(Id))
+				.Overall;
 
 			return Page();
 		}
