@@ -93,7 +93,11 @@ namespace TASVideos.Pages.Submissions
 				var result = await SubmitMovie(Create, User.Identity.Name);
 				if (result.Success)
 				{
-					var title = await _submissionTasks.GetTitle(result.Id); // TODO: we could return the submission and not have to take this extra query hit
+					// TODO: moving SubmitMove logic inline means we have the submission already and we don't have to take this hit
+					var title = (await _db.Submissions
+						.Select(s => new { s.Id, s.Title })
+						.SingleOrDefaultAsync(s => s.Id == result.Id))?.Title;
+
 					_publisher.AnnounceSubmission(title, $"{BaseUrl}/{result.Id}S");
 
 					return Redirect($"/{result.Id}S");
