@@ -3,10 +3,9 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -15,16 +14,13 @@ namespace TASVideos.Pages.UserFiles
 	[AllowAnonymous]
 	public class InfoModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
 		private readonly UserFileTasks _userFileTasks;
 		
 		public InfoModel(
-			UserManager<User> userManager,
 			UserFileTasks userFileTasks,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
-			_userManager = userManager;
 			_userFileTasks = userFileTasks;
 		}
 
@@ -43,9 +39,7 @@ namespace TASVideos.Pages.UserFiles
 
 			if (UserFile.Hidden)
 			{
-				var user = await _userManager.GetUserAsync(User);
-
-				if (user == null || UserFile.Author != user.UserName)
+				if (!User.Identity.IsAuthenticated || UserFile.Author != User.Identity.Name)
 				{
 					return NotFound();
 				}
@@ -67,9 +61,7 @@ namespace TASVideos.Pages.UserFiles
 
 			if (model.Hidden)
 			{
-				var user = await _userManager.GetUserAsync(User);
-
-				if (user == null || model.AuthorId != user.Id)
+				if (!User.Identity.IsAuthenticated || model.AuthorId != User.GetUserId())
 				{
 					return NotFound();
 				}
