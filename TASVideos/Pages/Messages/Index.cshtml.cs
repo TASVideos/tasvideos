@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -13,16 +12,13 @@ namespace TASVideos.Pages.Messages
 	[Authorize]
 	public class IndexModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
 		private readonly PrivateMessageTasks _pmTasks;
 
 		public IndexModel(
-			UserManager<User> userManager,
 			PrivateMessageTasks privateMessageTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userManager = userManager;
 			_pmTasks = privateMessageTasks;
 		}
 
@@ -34,8 +30,7 @@ namespace TASVideos.Pages.Messages
 
 		public async Task<IActionResult> OnGet()
 		{
-			var user = await _userManager.GetUserAsync(User);
-			Message = await _pmTasks.GetMessage(user, Id);
+			Message = await _pmTasks.GetMessage(User.GetUserId(), Id);
 
 			if (Message == null)
 			{
