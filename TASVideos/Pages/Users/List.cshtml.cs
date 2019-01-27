@@ -4,10 +4,13 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Users
@@ -16,13 +19,16 @@ namespace TASVideos.Pages.Users
 	public class ListModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ICacheService _cache;
 
 		public ListModel(
 			ApplicationDbContext db,
+			ICacheService cache,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
 			_db = db;
+			_cache = cache;
 		}
 
 		[FromQuery]
@@ -48,7 +54,7 @@ namespace TASVideos.Pages.Users
 		{
 			if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 2)
 			{
-				var matches = await UserTasks.GetUsersByPartial(partial);
+				var matches = await GetUsersByPartial(partial);
 				return new JsonResult(matches);
 			}
 
@@ -64,6 +70,26 @@ namespace TASVideos.Pages.Users
 
 			var exists = await _db.Users.Exists(userName);
 			return new JsonResult(exists);
+		}
+
+		private async Task<IEnumerable<string>> GetUsersByPartial(string partialUserName)
+		{
+			var upper = partialUserName.ToUpper();
+			var cacheKey = nameof(GetUsersByPartial) + upper;
+
+			if (_cache.TryGetValue(cacheKey, out List<string> list))
+			{
+				return list;
+			}
+
+			list = await _db.Users
+				.Where(u => u.NormalizedUserName.Contains(upper))
+				.Select(u => u.UserName)
+				.ToListAsync();
+
+			_cache.Set(cacheKey, list, Durations.OneMinuteInSeconds);
+
+			return list;
 		}
 	}
 }
