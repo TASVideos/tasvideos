@@ -1,13 +1,13 @@
-@using TASVideos.Tasks
+@using TASVideos.Services
+@inject UserManager UserManager
 @inject SignInManager<User> SignInManager
-@inject PrivateMessageTasks PmTasks
 @{ 
 	bool isSignedIn = SignInManager.IsSignedIn(User);
 	int notificationCount = 0;
 
 	if (isSignedIn)
 	{
-		notificationCount = await PmTasks.GetUnreadMessageCount(User.GetUserId());
+		notificationCount = await UserManager.GetUnreadMessageCount(User.GetUserId());
 	}
 }
 <div class="d-md-flex">
