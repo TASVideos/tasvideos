@@ -21,18 +21,18 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
-		private readonly RatingsTasks _ratingsTasks;
+		private readonly IPointsCalculator _points;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ICacheService cache,
-			RatingsTasks ratingsTasks,
+			IPointsCalculator points,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
 			_db = db;
 			_cache = cache;
-			_ratingsTasks = ratingsTasks;
+			_points = points;
 		}
 
 		[FromRoute]
@@ -81,7 +81,8 @@ namespace TASVideos.Pages.Publications
 
 			Movies = await GetMovieList(searchModel);
 
-			var ratings = await _ratingsTasks.GetOverallRatingsForPublications(Movies.Select(m => m.Id));
+			var ratings = (await _points.PublicationRatings(Movies.Select(m => m.Id)))
+				.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Value.Overall);
 
 			foreach (var rating in ratings)
 			{
