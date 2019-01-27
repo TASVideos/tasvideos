@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Constants;
-using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -15,8 +13,6 @@ namespace TASVideos.Tasks
 {
 	public class PrivateMessageTasks
 	{
-		private readonly string _messageCountCacheKey = $"{nameof(ForumTasks)}-{nameof(GetUnreadMessageCount)}-";
-
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 
@@ -51,7 +47,7 @@ namespace TASVideos.Tasks
 			{
 				pm.ReadOn = DateTime.UtcNow;
 				await _db.SaveChangesAsync();
-				_cache.Remove(_messageCountCacheKey + userId); // Message count possibly no longer valid
+				_cache.Remove(CacheKeys.UnreadMessageCount + userId); // Message count possibly no longer valid
 			}
 
 			var model = new PrivateMessageModel
@@ -70,27 +66,6 @@ namespace TASVideos.Tasks
 			};
 
 			return model;
-		}
-
-		/// <summary>
-		/// Returns the the number of unread <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
-		/// for the given <see cref="User" />
-		/// </summary>
-		public async Task<int> GetUnreadMessageCount(int userId)
-		{
-			var cacheKey = _messageCountCacheKey + userId;
-			if (_cache.TryGetValue(cacheKey, out int unreadMessageCount))
-			{
-				return unreadMessageCount;
-			}
-
-			unreadMessageCount = await _db.PrivateMessages
-				.ThatAreNotToUserDeleted()
-				.ToUser(userId)
-				.CountAsync(pm => pm.ReadOn == null);
-
-			_cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
-			return unreadMessageCount;
 		}
 	}
 }

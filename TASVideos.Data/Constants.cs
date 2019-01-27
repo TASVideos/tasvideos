@@ -19,6 +19,7 @@
 	{
 		public const string WikiCache = "WikiCache";
 		public const string AwardsCache = "AwardsCache";
+		public const string UnreadMessageCount = "UnreadMessageCountCache-";
 	}
 
 	// These perform site functions, maybe they should be in the database?
