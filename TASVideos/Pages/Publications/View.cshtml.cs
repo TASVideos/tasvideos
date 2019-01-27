@@ -96,7 +96,7 @@ namespace TASVideos.Pages.Publications
 					.SingleOrDefaultAsync(t => t.PageName == pageName))
 					?.Id ?? 0;
 
-			Publication.OverallRating = (await _pointsCalculator.CalculatePublicationRatings(Id))
+			Publication.OverallRating = (await _pointsCalculator.PublicationRating(Id))
 				.Overall;
 
 			return Page();

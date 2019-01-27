@@ -209,7 +209,7 @@ namespace TASVideos.Tasks
 
 			if (model != null)
 			{
-				model.PlayerPoints = await _pointsCalculator.CalculatePointsForUser(model.Id);
+				model.PlayerPoints = await _pointsCalculator.PlayerPoints(model.Id);
 
 				var wikiEdits = await _db.WikiPages
 					.ThatAreNotDeleted()
