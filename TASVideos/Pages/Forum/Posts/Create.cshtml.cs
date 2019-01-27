@@ -131,7 +131,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			var id = await _forumTasks.CreatePost(TopicId, Post, user, IpAddress.ToString());
+			var id = await _forumTasks.CreatePost(TopicId, Post, user.Id, IpAddress.ToString());
 
 			_publisher.SendForum(
 				topic.Forum.Restricted,

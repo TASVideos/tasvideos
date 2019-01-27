@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
@@ -21,18 +21,15 @@ namespace TASVideos.Pages.Forum.Topics
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
-		private readonly UserManager<User> _userManager;
 
 		public SplitModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			UserManager<User> userManager,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_db = db;
 			_publisher = publisher;
-			_userManager = userManager;
 		}
 
 		[FromRoute]
@@ -127,14 +124,11 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
-
 			var newTopic = new ForumTopic
 			{
 				Type = ForumTopicType.Regular,
 				Title = Topic.SplitTopicName,
-				PosterId = user.Id,
-				Poster = user,
+				PosterId = User.GetUserId(),
 				ForumId = Topic.SplitToForumId
 			};
 

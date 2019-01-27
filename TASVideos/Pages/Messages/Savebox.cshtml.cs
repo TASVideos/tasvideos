@@ -3,11 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -16,16 +15,13 @@ namespace TASVideos.Pages.Messages
 	[Authorize]
 	public class SaveboxModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
 		private readonly ApplicationDbContext _db;
 
 		public SaveboxModel(
-			UserManager<User> userManager,
 			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userManager = userManager;
 			_db = db;
 		}
 
@@ -33,10 +29,10 @@ namespace TASVideos.Pages.Messages
 
 		public async Task OnGet()
 		{
-			var user = await _userManager.GetUserAsync(User);
+			var userId = User.GetUserId();
 			SaveBox = await _db.PrivateMessages
-				.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == user.Id)
-					|| (pm.SavedForToUser && !pm.DeletedForToUser && pm.ToUserId == user.Id))
+				.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == userId)
+					|| (pm.SavedForToUser && !pm.DeletedForToUser && pm.ToUserId == userId))
 				.Select(pm => new SaveboxEntry
 				{
 					Id = pm.Id,

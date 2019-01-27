@@ -3,13 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -18,16 +17,13 @@ namespace TASVideos.Pages.Messages
 	[Authorize]
 	public class InboxModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
 		private readonly ApplicationDbContext _db;
 
 		public InboxModel(
-			UserManager<User> userManager,
 			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userManager = userManager;
 			_db = db;
 		}
 
@@ -40,9 +36,8 @@ namespace TASVideos.Pages.Messages
 
 		public async Task OnGet()
 		{
-			var user = await _userManager.GetUserAsync(User);
 			Messages = await _db.PrivateMessages
-				.ToUser(user)
+				.ToUser(User.GetUserId())
 				.ThatAreNotToUserDeleted()
 				.ThatAreNotToUserSaved()
 				.Select(pm => new InboxEntry
@@ -64,10 +59,8 @@ namespace TASVideos.Pages.Messages
 				return NotFound();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
-
 			var message = await _db.PrivateMessages
-				.ToUser(user)
+				.ToUser(User.GetUserId())
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == Id);
 
@@ -88,10 +81,8 @@ namespace TASVideos.Pages.Messages
 				return NotFound();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
-
 			var message = await _db.PrivateMessages
-				.ToUser(user)
+				.ToUser(User.GetUserId())
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == Id);
 

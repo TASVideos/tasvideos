@@ -76,9 +76,9 @@ namespace TASVideos.Tasks
 		/// Returns the the number of unread <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// for the given <see cref="User" />
 		/// </summary>
-		public async Task<int> GetUnreadMessageCount(User user)
+		public async Task<int> GetUnreadMessageCount(int userId)
 		{
-			var cacheKey = _messageCountCacheKey + user.Id;
+			var cacheKey = _messageCountCacheKey + userId;
 			if (_cache.TryGetValue(cacheKey, out int unreadMessageCount))
 			{
 				return unreadMessageCount;
@@ -86,7 +86,7 @@ namespace TASVideos.Tasks
 
 			unreadMessageCount = await _db.PrivateMessages
 				.ThatAreNotToUserDeleted()
-				.ToUser(user)
+				.ToUser(userId)
 				.CountAsync(pm => pm.ReadOn == null);
 
 			_cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);

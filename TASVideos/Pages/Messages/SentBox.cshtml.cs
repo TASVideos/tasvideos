@@ -3,12 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 namespace TASVideos.Pages.Messages
@@ -16,16 +15,13 @@ namespace TASVideos.Pages.Messages
 	[Authorize]
 	public class SentboxModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
 		private readonly ApplicationDbContext _db;
 
 		public SentboxModel(
-			UserManager<User> userManager,
 			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userManager = userManager;
 			_db = db;
 		}
 
@@ -33,10 +29,10 @@ namespace TASVideos.Pages.Messages
 
 		public async Task OnGet()
 		{
-			var user = await _userManager.GetUserAsync(User);
+			var userId = User.GetUserId();
 			SentBox = await _db.PrivateMessages
 				.ThatAreNotToUserDeleted()
-				.Where(pm => pm.FromUserId == user.Id)
+				.Where(pm => pm.FromUserId == userId)
 				.Select(pm => new SentboxEntry
 				{
 					Id = pm.Id,

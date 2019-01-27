@@ -19,20 +19,17 @@ namespace TASVideos.Pages.Forum.Topics
 	public class CreateModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly UserManager<User> _userManager;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ForumTasks _forumTasks;
 
 		public CreateModel(
 			ApplicationDbContext db,
-			UserManager<User> userManager,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_db = db;
-			_userManager = userManager;
 			_publisher = publisher;
 			_forumTasks = forumTasks;
 		}
@@ -81,14 +78,13 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
+			int userId = User.GetUserId();
 
 			var topic = new ForumTopic
 			{
 				Type = Topic.Type,
 				Title = Topic.Title,
-				PosterId = user.Id,
-				Poster = user,
+				PosterId = userId,
 				ForumId = ForumId
 			};
 
@@ -103,8 +99,8 @@ namespace TASVideos.Pages.Forum.Topics
 				Text = Topic.Post
 			};
 
-			await _forumTasks.CreatePost(topic.Id, forumPostModel, user, IpAddress.ToString());
-			await _forumTasks.WatchTopic(topic.Id, user.Id, canSeeRestricted: true);
+			await _forumTasks.CreatePost(topic.Id, forumPostModel, userId, IpAddress.ToString());
+			await _forumTasks.WatchTopic(topic.Id, userId, canSeeRestricted: true);
 
 			//// TODO: auto-add topic permission based on post count, also ability to vote
 			
