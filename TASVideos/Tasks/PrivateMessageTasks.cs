@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,13 +32,13 @@ namespace TASVideos.Tasks
 		/// Returns the <see cref="TASVideos.Data.Entity.Forum.PrivateMessage"/>
 		/// record with the given <see cref="id"/> if the user has access to the message
 		/// </summary>
-		public async Task<PrivateMessageModel> GetMessage(User user, int id)
+		public async Task<PrivateMessageModel> GetMessage(int userId, int id)
 		{
 			var pm = await _db.PrivateMessages
 				.Include(p => p.FromUser)
 				.Include(p => p.ToUser)
-				.Where(p => (!p.DeletedForFromUser && p.FromUserId == user.Id)
-					|| (!p.DeletedForToUser && p.ToUserId == user.Id))
+				.Where(p => (!p.DeletedForFromUser && p.FromUserId == userId)
+					|| (!p.DeletedForToUser && p.ToUserId == userId))
 				.SingleOrDefaultAsync(p => p.Id == id);
 
 			if (pm == null)
@@ -48,11 +47,11 @@ namespace TASVideos.Tasks
 			}
 
 			// If it is the recipient and the message is not deleted
-			if (!pm.ReadOn.HasValue && pm.ToUserId == user.Id)
+			if (!pm.ReadOn.HasValue && pm.ToUserId == userId)
 			{
 				pm.ReadOn = DateTime.UtcNow;
 				await _db.SaveChangesAsync();
-				_cache.Remove(_messageCountCacheKey + user.Id); // Message count possibly no longer valid
+				_cache.Remove(_messageCountCacheKey + userId); // Message count possibly no longer valid
 			}
 
 			var model = new PrivateMessageModel
@@ -65,7 +64,7 @@ namespace TASVideos.Tasks
 				FromUserName = pm.FromUser.UserName,
 				ToUserId = pm.ToUserId,
 				ToUserName = pm.ToUser.UserName,
-				CanReply = pm.ToUserId == user.Id,
+				CanReply = pm.ToUserId == userId,
 				EnableBbCode = pm.EnableBbCode,
 				EnableHtml = pm.EnableHtml
 			};
@@ -92,27 +91,6 @@ namespace TASVideos.Tasks
 
 			_cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
 			return unreadMessageCount;
-		}
-
-		// TODO: move this logic into the page
-		public async Task SendMessage(User user, TASVideos.Pages.Messages.CreateModel model, string ipAddress)
-		{
-			var toUserId = await _db.Users
-				.Where(u => u.UserName == model.ToUser)
-				.Select(u => u.Id)
-				.SingleAsync();
-
-			var message = new PrivateMessage
-			{
-				FromUserId = user.Id,
-				ToUserId = toUserId,
-				Subject = model.Subject,
-				Text = model.Text,
-				IpAddress = ipAddress
-			};
-
-			_db.PrivateMessages.Add(message);
-			await _db.SaveChangesAsync();
 		}
 	}
 }

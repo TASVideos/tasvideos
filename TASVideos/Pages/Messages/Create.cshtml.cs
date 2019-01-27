@@ -1,12 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -16,18 +20,15 @@ namespace TASVideos.Pages.Messages
 	public class CreateModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly UserManager<User> _userManager;
 		private readonly PrivateMessageTasks _pmTasks;
 
 		public CreateModel(
 			ApplicationDbContext db,
-			UserManager<User> userManager,
 			PrivateMessageTasks privateMessageTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_db = db;
-			_userManager = userManager;
 			_pmTasks = privateMessageTasks;
 		}
 
@@ -91,8 +92,7 @@ namespace TASVideos.Pages.Messages
 				return Page();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
-			await _pmTasks.SendMessage(user, this, IpAddress.ToString());
+			await SendMessage();
 
 			return RedirectToPage("Inbox");
 		}
@@ -101,8 +101,7 @@ namespace TASVideos.Pages.Messages
 		{
 			if (ReplyTo > 0)
 			{
-				var user = await _userManager.GetUserAsync(User);
-				var message = await _pmTasks.GetMessage(user, ReplyTo.Value);
+				var message = await _pmTasks.GetMessage(User.GetUserId(), ReplyTo.Value);
 				if (message != null)
 				{
 					DefaultToUser = message.FromUserName;
@@ -118,6 +117,26 @@ namespace TASVideos.Pages.Messages
 					};
 				}
 			}
+		}
+
+		private async Task SendMessage()
+		{
+			var toUserId = await _db.Users
+				.Where(u => u.UserName == ToUser)
+				.Select(u => u.Id)
+				.SingleAsync();
+
+			var message = new PrivateMessage
+			{
+				FromUserId = User.GetUserId(),
+				ToUserId = toUserId,
+				Subject = Subject,
+				Text = Text,
+				IpAddress = IpAddress.ToString()
+			};
+
+			_db.PrivateMessages.Add(message);
+			await _db.SaveChangesAsync();
 		}
 	}
 }
