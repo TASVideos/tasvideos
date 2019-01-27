@@ -16,16 +16,16 @@ namespace TASVideos.Tasks
 		private const string MovieRatingKey = "OverallRatingForMovieViewModel-";
 
 		private readonly ApplicationDbContext _db;
-		private readonly IPointsService _pointsService;
+		private readonly IPointsCalculator _pointsCalculator;
 		private readonly ICacheService _cache;
 
 		public RatingsTasks(
 			ApplicationDbContext db,
-			IPointsService pointsService,
+			IPointsCalculator pointsCalculator,
 			ICacheService cache)
 		{
 			_db = db;
-			_pointsService = pointsService;
+			_pointsCalculator = pointsCalculator;
 			_cache = cache;
 		}
 
@@ -110,7 +110,7 @@ namespace TASVideos.Tasks
 		/// <exception cref="ArgumentException">If <see cref="publicationIds"/> is null</exception>
 		public async Task<IDictionary<int, double?>> GetOverallRatingsForPublications(IEnumerable<int> publicationIds)
 		{
-			return (await _pointsService.CalculatePublicationRatings(publicationIds))
+			return (await _pointsCalculator.CalculatePublicationRatings(publicationIds))
 				.ToDictionary(
 					tkey => tkey.Key,
 					tvalue => tvalue.Value.Overall);

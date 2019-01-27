@@ -88,7 +88,7 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddServices(this IServiceCollection services)
 		{
 			services.AddScoped<IFileService, FileService>();
-			services.AddScoped<IPointsService, PointsService>();
+			services.AddScoped<IPointsCalculator, PointsCalculator>();
 			services.AddTransient<IEmailSender, EmailSender>();
 			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IWikiPages, WikiPages>();

@@ -21,7 +21,7 @@ namespace TASVideos.Test.MVC.Tasks
 
 		private UserTasks _userTasks;
 		private ApplicationDbContext _db;
-		private Mock<IPointsService> _pointsService;
+		private Mock<IPointsCalculator> _pointsService;
 
 		private static User TestUser => new User
 		{
@@ -46,7 +46,7 @@ namespace TASVideos.Test.MVC.Tasks
 		[TestInitialize]
 		public void Initialize()
 		{
-			_pointsService = new Mock<IPointsService>(MockBehavior.Strict);
+			_pointsService = new Mock<IPointsCalculator>(MockBehavior.Strict);
 
 			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
 				.UseInMemoryDatabase("TestDb")

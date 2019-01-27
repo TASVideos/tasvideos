@@ -9,7 +9,7 @@ using TASVideos.Services.Dtos;
 
 namespace TASVideos.Services
 {
-    public interface IPointsService
+    public interface IPointsCalculator
 	{
 		/// <summary>
 		/// Returns the player point calculation for the user with the given id
@@ -30,7 +30,7 @@ namespace TASVideos.Services
 		Task<IDictionary<int, RatingDto>> CalculatePublicationRatings(IEnumerable<int> publicationIds);
 	}
 
-	public class PointsService : IPointsService
+	public class PointsCalculator : IPointsCalculator
     {
 		private const string MovieRatingKey = "OverallRatingForMovie-";
 		private const string PlayerPointKey = "PlayerPoints-";
@@ -38,7 +38,7 @@ namespace TASVideos.Services
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 
-		public PointsService(
+		public PointsCalculator(
 			ApplicationDbContext db,
 			ICacheService cache)
 		{

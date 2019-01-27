@@ -16,16 +16,16 @@ namespace TASVideos.Tasks
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
-		private readonly IPointsService _pointsService;
+		private readonly IPointsCalculator _pointsCalculator;
 
 		public UserTasks(
 			ApplicationDbContext db,
 			ICacheService cache,
-			IPointsService pointsService)
+			IPointsCalculator pointsCalculator)
 		{
 			_db = db;
 			_cache = cache;
-			_pointsService = pointsService;
+			_pointsCalculator = pointsCalculator;
 		}
 
 		/// <summary>
@@ -209,7 +209,7 @@ namespace TASVideos.Tasks
 
 			if (model != null)
 			{
-				model.PlayerPoints = await _pointsService.CalculatePointsForUser(model.Id);
+				model.PlayerPoints = await _pointsCalculator.CalculatePointsForUser(model.Id);
 
 				var wikiEdits = await _db.WikiPages
 					.ThatAreNotDeleted()
