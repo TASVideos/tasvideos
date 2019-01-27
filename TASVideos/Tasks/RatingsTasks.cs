@@ -110,7 +110,7 @@ namespace TASVideos.Tasks
 		/// <exception cref="ArgumentException">If <see cref="publicationIds"/> is null</exception>
 		public async Task<IDictionary<int, double?>> GetOverallRatingsForPublications(IEnumerable<int> publicationIds)
 		{
-			return (await _pointsCalculator.CalculatePublicationRatings(publicationIds))
+			return (await _pointsCalculator.PublicationRatings(publicationIds))
 				.ToDictionary(
 					tkey => tkey.Key,
 					tvalue => tvalue.Value.Overall);

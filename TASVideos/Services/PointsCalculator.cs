@@ -9,29 +9,30 @@ using TASVideos.Services.Dtos;
 
 namespace TASVideos.Services
 {
-    public interface IPointsCalculator
+	public interface IPointsCalculator
 	{
 		/// <summary>
-		/// Returns the player point calculation for the user with the given id
+		/// Calculates the player points for the user with the given id.
+		/// If a user with the given <see cref="userId"/> does not exist, 0 is returned
 		/// </summary>
-		/// <exception>If a user with the given id does not exist</exception>
-		Task<int> CalculatePointsForUser(int id);
+		Task<int> PlayerPoints(int userId);
 
 		/// <summary>
 		/// Returns the averaged overall, tech, and entertainment ratings for a publication
-		/// with the given id
+		/// with the given id.
 		/// </summary>
-		/// <exception>If a publication with the given id does not exist</exception>
-		Task<RatingDto> CalculatePublicationRatings(int id);
+		Task<RatingDto> PublicationRating(int id);
 
 		/// <summary>
-		/// A bulk version of <see cref="CalculatePublicationRatings(int)"/>
+		/// Returns the averaged overall, tech, and entertainment ratings for a publication
+		/// with the given set of ids
+		/// <seealso cref="PublicationRating"/>
 		/// </summary>
-		Task<IDictionary<int, RatingDto>> CalculatePublicationRatings(IEnumerable<int> publicationIds);
+		Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds);
 	}
 
 	public class PointsCalculator : IPointsCalculator
-    {
+	{
 		private const string MovieRatingKey = "OverallRatingForMovie-";
 		private const string PlayerPointKey = "PlayerPoints-";
 
@@ -46,15 +47,20 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public async Task<int> CalculatePointsForUser(int id)
+		public async Task<int> PlayerPoints(int userId)
 		{
-			string cacheKey = PlayerPointKey + id;
+			string cacheKey = PlayerPointKey + userId;
 			if (_cache.TryGetValue(cacheKey, out int playerPoints))
 			{
 				return playerPoints;
 			}
 
-			var user = await _db.Users.SingleAsync(u => u.Id == id);
+			var user = await _db.Users
+				.SingleOrDefaultAsync(u => u.Id == userId);
+			if (user == null)
+			{
+				return 0;
+			}
 
 			var publications = await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
@@ -65,8 +71,8 @@ namespace TASVideos.Services
 
 			return playerPoints;
 		}
-		
-		public async Task<RatingDto> CalculatePublicationRatings(int id)
+
+		public async Task<RatingDto> PublicationRating(int id)
 		{
 			string cacheKey = MovieRatingKey + id;
 			if (_cache.TryGetValue(cacheKey, out RatingDto rating))
@@ -113,11 +119,11 @@ namespace TASVideos.Services
 			return rating;
 		}
 
-		public async Task<IDictionary<int, RatingDto>> CalculatePublicationRatings(IEnumerable<int> publicationIds)
+		public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)
 		{
 			if (publicationIds == null)
 			{
-				throw new ArgumentException($"{nameof(publicationIds)} can not be null");
+				publicationIds = new int[0];
 			}
 
 			var ratings = new Dictionary<int, RatingDto>();
@@ -134,7 +140,7 @@ namespace TASVideos.Services
 					}
 					else
 					{
-						rating = await CalculatePublicationRatings(id);
+						rating = await PublicationRating(id);
 						_cache.Set(cacheKey, rating);
 						ratings.Add(id, rating);
 					}
