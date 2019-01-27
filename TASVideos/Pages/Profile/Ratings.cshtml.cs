@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Profile
@@ -10,15 +11,20 @@ namespace TASVideos.Pages.Profile
 	[Authorize]
 	public class RatingsModel : BasePageModel
 	{
-		public RatingsModel(UserTasks userTasks) : base(userTasks)
+		private readonly UserManager _userManager;
+		public RatingsModel(
+			UserManager userManager,
+			UserTasks userTasks) 
+			: base(userTasks)
 		{
+			_userManager = userManager;
 		}
 
 		public UserRatingsModel Ratings { get; set; } = new UserRatingsModel();
 
 		public async Task OnGet()
 		{
-			Ratings = await UserTasks.GetUserRatings(User.Identity.Name, includeHidden: true);
+			Ratings = await _userManager.GetUserRatings(User.Identity.Name, includeHidden: true);
 		}
 	}
 }
