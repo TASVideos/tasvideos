@@ -18,11 +18,11 @@ namespace TASVideos.Pages.Publications
 	public class ViewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IPointsService _pointsCalculator;
+		private readonly IPointsCalculator _pointsCalculator;
 
 		public ViewModel(
 			ApplicationDbContext db,
-			IPointsService pointsCalculator,
+			IPointsCalculator pointsCalculator,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
