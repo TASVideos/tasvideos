@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
-using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Profile
@@ -12,10 +11,10 @@ namespace TASVideos.Pages.Profile
 	[Authorize]
 	public class RatingsModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 
 		public RatingsModel(
-			UserManager<User> userManager,
+			UserManager userManager,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
