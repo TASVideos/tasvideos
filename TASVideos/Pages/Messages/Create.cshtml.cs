@@ -12,7 +12,6 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Messages
 {
@@ -20,16 +19,15 @@ namespace TASVideos.Pages.Messages
 	public class CreateModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly PrivateMessageTasks _pmTasks;
+		private readonly UserManager _userManager;
 
 		public CreateModel(
 			ApplicationDbContext db,
-			PrivateMessageTasks privateMessageTasks,
 			UserManager userManager)
 			: base(userManager)
 		{
 			_db = db;
-			_pmTasks = privateMessageTasks;
+			_userManager = userManager;
 		}
 
 		[FromQuery]
@@ -101,7 +99,7 @@ namespace TASVideos.Pages.Messages
 		{
 			if (ReplyTo > 0)
 			{
-				var message = await _pmTasks.GetMessage(User.GetUserId(), ReplyTo.Value);
+				var message = await _userManager.GetMessage(User.GetUserId(), ReplyTo.Value);
 				if (message != null)
 				{
 					DefaultToUser = message.FromUserName;

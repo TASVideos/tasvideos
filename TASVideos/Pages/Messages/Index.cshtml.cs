@@ -6,21 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Messages
 {
 	[Authorize]
 	public class IndexModel : BasePageModel
 	{
-		private readonly PrivateMessageTasks _pmTasks;
+		private readonly UserManager _userManager;
 
 		public IndexModel(
-			PrivateMessageTasks privateMessageTasks,
 			UserManager userManager)
 			: base(userManager)
 		{
-			_pmTasks = privateMessageTasks;
+			_userManager = userManager;
 		}
 
 		[FromRoute]
@@ -31,7 +29,7 @@ namespace TASVideos.Pages.Messages
 
 		public async Task<IActionResult> OnGet()
 		{
-			Message = await _pmTasks.GetMessage(User.GetUserId(), Id);
+			Message = await _userManager.GetMessage(User.GetUserId(), Id);
 
 			if (Message == null)
 			{
