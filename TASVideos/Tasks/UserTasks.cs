@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
@@ -15,16 +14,13 @@ namespace TASVideos.Tasks
 	public class UserTasks
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly ICacheService _cache;
 		private readonly IPointsCalculator _pointsCalculator;
 
 		public UserTasks(
 			ApplicationDbContext db,
-			ICacheService cache,
 			IPointsCalculator pointsCalculator)
 		{
 			_db = db;
-			_cache = cache;
 			_pointsCalculator = pointsCalculator;
 		}
 
@@ -35,29 +31,6 @@ namespace TASVideos.Tasks
 		{
 			return await GetUserPermissionByIdQuery(userId)
 				.ToListAsync();
-		}
-
-		/// <summary>
-		/// Gets a list of <seealso cref="User"/>s that partially match the given part of a username
-		/// </summary>
-		public async Task<IEnumerable<string>> GetUsersByPartial(string partialUserName)
-		{
-			var upper = partialUserName.ToUpper();
-			var cacheKey = nameof(GetUsersByPartial) + upper;
-
-			if (_cache.TryGetValue(cacheKey, out List<string> list))
-			{
-				return list;
-			}
-
-			list = await _db.Users
-				.Where(u => u.NormalizedUserName.Contains(upper))
-				.Select(u => u.UserName)
-				.ToListAsync();
-
-			_cache.Set(cacheKey, list, Durations.OneMinuteInSeconds);
-
-			return list;
 		}
 
 		/// <summary>
