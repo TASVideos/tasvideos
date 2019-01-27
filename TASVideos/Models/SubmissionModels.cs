@@ -176,8 +176,6 @@ namespace TASVideos.Models
 	/// </summary>
 	public class SubmissionEditModel : SubmissionDisplayModel
 	{
-		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = new List<SelectListItem>();
-
 		public string Markup { get; set; }
 
 		[Display(Name = "Revision Message")]
@@ -186,27 +184,11 @@ namespace TASVideos.Models
 		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; set; }
 
-		[Display(Name = "Status")]
-		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
-
 		[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile MovieFile { get; set; }
 
 		[Display(Name = "Intended Tier")]
 		public int? TierId { get; set; }
-		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
-	}
-
-	/// <summary>
-	/// Represents the data necessary to determine if a submission status can be
-	/// set on a given submission with for a given user
-	/// </summary>
-	public class SubmissionStatusValidationModel
-	{
-		public bool UserIsJudge { get; set; }
-		public bool UserIsAuthorOrSubmitter { get; set; }
-		public SubmissionStatus CurrentStatus { get; set; }
-		public DateTime CreateDate { get; set; }
 	}
 
 	/// <summary>

@@ -1,13 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Helpers;
 using TASVideos.Models;
+using TASVideos.MovieParsers;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Tasks;
@@ -17,19 +22,25 @@ namespace TASVideos.Pages.Submissions
 	[RequirePermission(PermissionTo.SubmitMovies)]
 	public class SubmitModel : BasePageModel
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly MovieParser _parser;
 		private readonly SubmissionTasks _submissionTasks;
 		
 		public SubmitModel(
+			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
+			MovieParser parser,
 			SubmissionTasks submissionTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_db = db;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
+			_parser = parser;
 			_submissionTasks = submissionTasks;
 		}
 
@@ -79,7 +90,7 @@ namespace TASVideos.Pages.Submissions
 
 			if (ModelState.IsValid)
 			{
-				var result = await _submissionTasks.SubmitMovie(Create, User.Identity.Name);
+				var result = await SubmitMovie(Create, User.Identity.Name);
 				if (result.Success)
 				{
 					var title = await _submissionTasks.GetTitle(result.Id); // TODO: we could return the submission and not have to take this extra query hit
@@ -102,6 +113,129 @@ namespace TASVideos.Pages.Submissions
 		{
 			var page = _wikiPages.Page("System/SubmissionDefaultMessage");
 			return new JsonResult(new { text = page.Markup });
+		}
+
+		// TODO: refactor this to be inline, and deal with errors directly instead of through SubmitResult
+		private async Task<SubmitResult> SubmitMovie(SubmissionCreateModel model, string userName)
+		{
+			// TODO: set up auto-mapper, the v8 upgrade didn't like a default mapping
+			var submission = new Submission
+			{
+				GameVersion = model.GameVersion,
+				GameName = model.GameName,
+				Branch = model.Branch,
+				RomName = model.RomName,
+				EmulatorVersion = model.Emulator,
+				EncodeEmbedLink = model.EncodeEmbedLink
+			};
+
+			// Parse movie file
+			// TODO: check warnings
+			var parseResult = _parser.Parse(model.MovieFile.OpenReadStream());
+			if (parseResult.Success)
+			{
+				using (_db.Database.BeginTransaction())
+				{
+					submission.Frames = parseResult.Frames;
+					submission.RerecordCount = parseResult.RerecordCount;
+					submission.MovieExtension = parseResult.FileExtension;
+					submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
+
+					if (submission.System == null)
+					{
+						return new SubmitResult($"Unknown system type of {parseResult.SystemCode}");
+					}
+
+					submission.Submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
+					submission.SystemFrameRate = await _db.GameSystemFrameRates
+						.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
+							&& f.RegionCode == parseResult.Region.ToString());
+				}
+			}
+			else
+			{
+				return new SubmitResult(parseResult.Errors);
+			}
+
+			using (var memoryStream = new MemoryStream())
+			{
+				await model.MovieFile.CopyToAsync(memoryStream);
+				submission.MovieFile = memoryStream.ToArray();
+			}
+
+			_db.Submissions.Add(submission);
+			await _db.SaveChangesAsync();
+
+			// Create a wiki page corresponding to this submission
+			var revision = new WikiPage
+			{
+				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
+				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
+				Markup = model.Markup,
+				MinorEdit = false
+			};
+			await _wikiPages.Add(revision);
+			submission.WikiContent = revision;
+
+			// Add authors
+			var users = await _db.Users
+				.Where(u => model.Authors.Contains(u.UserName))
+				.ToListAsync();
+
+			var submissionAuthors = users.Select(u => new SubmissionAuthor
+			{
+				SubmissionId = submission.Id,
+				UserId = u.Id
+			});
+
+			_db.SubmissionAuthors.AddRange(submissionAuthors);
+
+			submission.GenerateTitle();
+
+			var poll = new ForumPoll
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				Question = SiteGlobalConstants.PollQuestion,
+			};
+
+			_db.ForumPolls.Add(poll);
+
+			await _db.SaveChangesAsync();
+
+			// Create Topic in workbench
+			var topic = new ForumTopic
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				ForumId = ForumConstants.WorkBenchForumId,
+				Title = submission.Title,
+				PosterId = SiteGlobalConstants.TASVideoAgentId,
+				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
+				PollId = poll.Id,
+			};
+
+			// Create first post
+			var post = new ForumPost
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				Topic = topic,
+				PosterId = SiteGlobalConstants.TASVideoAgentId,
+				Subject = submission.Title,
+				Text = SiteGlobalConstants.NewSubmissionPost + $"<a href=\"/{submission.Id}S\">{submission.Title}</a>",
+				EnableHtml = true,
+				EnableBbCode = false
+			};
+
+			_db.ForumTopics.Add(topic);
+			_db.ForumPosts.Add(post);
+			await _db.SaveChangesAsync();
+
+			poll.TopicId = topic.Id;
+			await _db.SaveChangesAsync();
+
+			return new SubmitResult(submission.Id);
 		}
 	}
 }
