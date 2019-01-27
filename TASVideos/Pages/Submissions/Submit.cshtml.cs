@@ -79,7 +79,7 @@ namespace TASVideos.Pages.Submissions
 
 			foreach (var author in Create.Authors)
 			{
-				if (!await UserTasks.CheckUserNameExists(author))
+				if (!await _db.Users.Exists(author))
 				{
 					ModelState.AddModelError(nameof(SubmissionCreateModel.Authors), $"Could not find user: {author}");
 				}

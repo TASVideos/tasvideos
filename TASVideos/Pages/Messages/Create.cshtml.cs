@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Tasks;
@@ -13,15 +15,18 @@ namespace TASVideos.Pages.Messages
 	[Authorize]
 	public class CreateModel : BasePageModel
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly UserManager<User> _userManager;
 		private readonly PrivateMessageTasks _pmTasks;
 
 		public CreateModel(
+			ApplicationDbContext db,
 			UserManager<User> userManager,
 			PrivateMessageTasks privateMessageTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_db = db;
 			_userManager = userManager;
 			_pmTasks = privateMessageTasks;
 		}
@@ -78,7 +83,7 @@ namespace TASVideos.Pages.Messages
 				return Page();
 			}
 
-			var exists = await UserTasks.CheckUserNameExists(ToUser);
+			var exists = await _db.Users.Exists(ToUser);
 			if (!exists)
 			{
 				ModelState.AddModelError(nameof(ToUser), "User does not exist");
