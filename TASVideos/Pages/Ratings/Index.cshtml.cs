@@ -12,11 +12,11 @@ using TASVideos.Tasks;
 namespace TASVideos.Pages.Ratings
 {
 	[AllowAnonymous]
-	public class ViewPublicationModel : BasePageModel
+	public class IndexModel : BasePageModel
 	{
 		private readonly RatingsTasks _ratingsTasks;
 
-		public ViewPublicationModel(
+		public IndexModel(
 			RatingsTasks ratings,
 			UserTasks userTasks) 
 			: base(userTasks)
