@@ -348,10 +348,5 @@ namespace TASVideos.Models
 
 		[Display(Name = "System Framerate")]
 		public int? SystemFrameRateId { get; set; }
-
-		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
-		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
-		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
-		public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
 	}
 }

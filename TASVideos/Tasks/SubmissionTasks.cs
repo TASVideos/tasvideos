@@ -1,19 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 
 namespace TASVideos.Tasks
@@ -21,17 +12,10 @@ namespace TASVideos.Tasks
 	public class SubmissionTasks
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IMapper _mapper;
-		private readonly IHostingEnvironment _hostingEnvironment;
 
-		public SubmissionTasks(
-			ApplicationDbContext db,
-			IMapper mapper,
-			IHostingEnvironment hostingEnvironment)
+		public SubmissionTasks(ApplicationDbContext db)
 		{
 			_db = db;
-			_mapper = mapper;
-			_hostingEnvironment = hostingEnvironment;
 		}
 
 		/// <summary>
@@ -102,90 +86,6 @@ namespace TASVideos.Tasks
 			return (await _db.Submissions
 				.Select(s => new { s.Id, s.Title })
 				.SingleOrDefaultAsync(s => s.Id == id))?.Title;
-		}
-
-		/// <summary>
-		/// Returns the <see cref="Submission"/> with the given <see cref="id"/>
-		/// for the purpose of setting <see cref="TASVideos.Data.Entity.Game.Game"/> cataloging information.
-		/// If no submission is found, null is returned
-		/// </summary>
-		public async Task<SubmissionCatalogModel> Catalog(int id)
-		{
-			using (_db.Database.BeginTransactionAsync())
-			{
-				var model = await _db.Submissions
-					.Where(s => s.Id == id)
-					.Select(s => new SubmissionCatalogModel
-					{
-						RomId = s.RomId,
-						GameId = s.GameId,
-						SystemId = s.SystemId,
-						SystemFrameRateId = s.SystemFrameRateId,
-					})
-					.SingleOrDefaultAsync();
-
-				if (model == null)
-				{
-					return null;
-				}
-
-				await PopulateCatalogDropDowns(model);
-				return model;
-			}
-		}
-
-		public async Task PopulateCatalogDropDowns(SubmissionCatalogModel model)
-		{
-			using (_db.Database.BeginTransactionAsync())
-			{
-				model.AvailableRoms = await _db.Roms
-					.Where(r => !model.SystemId.HasValue || r.Game.SystemId == model.SystemId)
-					.Where(r => !model.GameId.HasValue || r.GameId == model.GameId)
-					.Select(r => new SelectListItem
-					{
-						Value = r.Id.ToString(),
-						Text = r.Name
-					})
-					.ToListAsync();
-
-				model.AvailableGames = await _db.Games
-					.Where(g => !model.SystemId.HasValue || g.SystemId == model.SystemId)
-					.Select(g => new SelectListItem
-					{
-						Value = g.Id.ToString(),
-						Text = g.GoodName
-					})
-					.ToListAsync();
-
-				model.AvailableSystems = await _db.GameSystems
-					.Select(s => new SelectListItem
-					{
-						Value = s.Id.ToString(),
-						Text = s.Code
-					})
-					.ToListAsync();
-
-				model.AvailableSystemFrameRates = model.SystemId.HasValue
-					? await _db.GameSystemFrameRates
-						.Where(sf => sf.GameSystemId == model.SystemId)
-						.Select(sf => new SelectListItem
-						{
-							Value = sf.Id.ToString(),
-							Text = sf.RegionCode + " (" + sf.FrameRate + ")"
-						})
-						.ToListAsync()
-					: new List<SelectListItem>();
-			}
-		}
-
-		/// <summary>
-		/// Updates the given <see cref="Submission"/> with the given <see cref="TASVideos.Data.Entity.Game.Game"/> catalog information
-		/// </summary>
-		public async Task UpdateCatalog(int id, SubmissionCatalogModel model)
-		{
-			var submission = await _db.Submissions.SingleAsync(s => s.Id == id);
-			_mapper.Map(model, submission);
-			await _db.SaveChangesAsync();
 		}
 	}
 }
