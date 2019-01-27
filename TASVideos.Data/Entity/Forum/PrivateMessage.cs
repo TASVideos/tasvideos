@@ -31,14 +31,14 @@ namespace TASVideos.Data.Entity.Forum
 
 	public static class MessageExtensions
 	{
-		public static IQueryable<PrivateMessage> ToUser(this IQueryable<PrivateMessage> query, User user)
+		public static IQueryable<PrivateMessage> ToUser(this IQueryable<PrivateMessage> query, int userId)
 		{
-			return query.Where(m => m.ToUserId == user.Id);
+			return query.Where(m => m.ToUserId == userId);
 		}
 
-		public static IQueryable<PrivateMessage> FromUser(this IQueryable<PrivateMessage> query, User user)
+		public static IQueryable<PrivateMessage> FromUser(this IQueryable<PrivateMessage> query, int userId)
 		{
-			return query.Where(m => m.FromUserId == user.Id);
+			return query.Where(m => m.FromUserId == userId);
 		}
 
 		public static IQueryable<PrivateMessage> ThatAreNotToUserSaved(this IQueryable<PrivateMessage> query)

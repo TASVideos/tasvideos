@@ -13,16 +13,13 @@ namespace TASVideos.Pages.Profile
 	[Authorize]
 	public class IndexModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
 		private readonly AwardTasks _awardTasks;
 
 		public IndexModel(
-			UserManager<User> userManager,
 			AwardTasks awardTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userManager = userManager;
 			_awardTasks = awardTasks;
 		}
 
@@ -30,8 +27,7 @@ namespace TASVideos.Pages.Profile
 
 		public async Task<IActionResult> OnGet()
 		{
-			var userName = _userManager.GetUserName(User);
-			Profile = await UserTasks.GetUserProfile(userName, includeHidden: true);
+			Profile = await UserTasks.GetUserProfile(User.Identity.Name, includeHidden: true);
 			if (Profile == null)
 			{
 				return NotFound();

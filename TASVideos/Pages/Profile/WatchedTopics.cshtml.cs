@@ -3,13 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Profile
@@ -17,15 +16,12 @@ namespace TASVideos.Pages.Profile
 	[Authorize]
 	public class WatchedTopicsModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
 		private readonly ApplicationDbContext _db;
 		public WatchedTopicsModel(
-			UserManager<User> userManager,
 			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_userManager = userManager;
 			_db = db;
 		}
 
@@ -34,10 +30,9 @@ namespace TASVideos.Pages.Profile
 
 		public async Task OnGet()
 		{
-			var user = await _userManager.GetUserAsync(User);
 			Watches = await _db
 				.ForumTopicWatches
-				.ForUser(user.Id)
+				.ForUser(User.GetUserId())
 				.Select(tw => new Models.WatchedTopicsModel
 				{
 					TopicCreateTimeStamp = tw.ForumTopic.CreateTimeStamp,
@@ -52,11 +47,11 @@ namespace TASVideos.Pages.Profile
 
 		public async Task<IActionResult> OnGetStopWatching(int topicId)
 		{
-			var user = await _userManager.GetUserAsync(User);
 			try
 			{
+				var userId = User.GetUserId();
 				var watch = await _db.ForumTopicWatches
-					.SingleOrDefaultAsync(tw => tw.UserId == user.Id && tw.ForumTopicId == topicId);
+					.SingleOrDefaultAsync(tw => tw.UserId == userId && tw.ForumTopicId == topicId);
 				_db.ForumTopicWatches.Remove(watch);
 				await _db.SaveChangesAsync();
 			}

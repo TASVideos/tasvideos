@@ -47,12 +47,12 @@ namespace TASVideos.Tasks
 			};
 		}
 
-		public async Task<int> CreatePost(int topicId, ForumPostModel model, User user, string ipAddress)
+		public async Task<int> CreatePost(int topicId, ForumPostModel model, int userId, string ipAddress)
 		{
 			var forumPost = new ForumPost
 			{
 				TopicId = topicId,
-				PosterId = user.Id,
+				PosterId = userId,
 				IpAddress = ipAddress,
 				Subject = model.Subject,
 				Text = model.Text,
@@ -65,7 +65,7 @@ namespace TASVideos.Tasks
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
-			await WatchTopic(topicId, user.Id, canSeeRestricted: true);
+			await WatchTopic(topicId, userId, canSeeRestricted: true);
 			return forumPost.Id;
 		}
 

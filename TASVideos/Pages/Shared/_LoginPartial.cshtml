@@ -1,6 +1,5 @@
 @using TASVideos.Tasks
 @inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
 @inject PrivateMessageTasks PmTasks
 @{ 
 	bool isSignedIn = SignInManager.IsSignedIn(User);
@@ -8,8 +7,7 @@
 
 	if (isSignedIn)
 	{
-		var user = await UserManager.GetUserAsync(User);
-		notificationCount = await PmTasks.GetUnreadMessageCount(user);
+		notificationCount = await PmTasks.GetUnreadMessageCount(User.GetUserId());
 	}
 }
 <div class="d-md-flex">
@@ -26,7 +24,7 @@
 				</nav-item>
 				<nav-item activate="Profile">
 					<a class="nav-link" asp-page="/Profile/Index" title="Manage">
-						@UserManager.GetUserName(User)
+						@User.Identity.Name
 					</a>
 				</nav-item>
 				<nav-item>
