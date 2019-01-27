@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -90,12 +91,8 @@ namespace TASVideos.Pages.Publications
 		private async Task PopulateAvailableTiers()
 		{
 			AvailableTiers = await _db.Tiers
-			.Select(t => new SelectListItem
-			{
-				Text = t.Name,
-				Value = t.Id.ToString()
-			})
-			.ToListAsync();
+				.ToDropdown()
+				.ToListAsync();
 		}
 	}
 }

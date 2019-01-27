@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Extensions
@@ -16,6 +18,16 @@ namespace TASVideos.Extensions
 				{
 					Text = s.Code,
 					Value = s.Code
+				});
+		}
+
+		public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Tier> query)
+		{
+			return query
+				.Select(s => new SelectListItem
+				{
+					Text = s.Name,
+					Value = s.Id.ToString()
 				});
 		}
 	}
