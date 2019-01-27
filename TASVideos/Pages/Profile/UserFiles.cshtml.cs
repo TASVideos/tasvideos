@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Profile
@@ -13,8 +14,8 @@ namespace TASVideos.Pages.Profile
 
 		public UserFilesModel(
 			UserFileTasks fileTasks,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_fileTasks = fileTasks;
 		}

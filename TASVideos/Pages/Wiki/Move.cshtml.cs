@@ -6,7 +6,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -19,8 +18,8 @@ namespace TASVideos.Pages.Wiki
 		public MoveModel(
 			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_wikiPages = wikiPages;
 			_publisher = publisher;

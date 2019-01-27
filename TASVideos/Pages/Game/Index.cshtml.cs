@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Game
 {
@@ -17,9 +17,9 @@ namespace TASVideos.Pages.Game
 		private readonly ApplicationDbContext _db;
 
 		public IndexModel(
-			UserTasks userTasks,
-			ApplicationDbContext db)
-			: base(userTasks)
+			ApplicationDbContext db,
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 		}

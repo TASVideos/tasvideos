@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Users
 {
@@ -16,9 +15,8 @@ namespace TASVideos.Pages.Users
 		private readonly UserManager _userManager;
 
 		public RatingsModel(
-			UserManager userManager,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_userManager = userManager;
 		}

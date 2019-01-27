@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages
 {
@@ -52,7 +52,7 @@ namespace TASVideos.Pages
 
 			var userId = userClaimsPrincipal.GetUserId();
 
-			var userTasks = (UserTasks)context.HttpContext.RequestServices.GetService(typeof(UserTasks));
+			var userTasks = (UserManager)context.HttpContext.RequestServices.GetService(typeof(UserManager));
 
 			var userPerms = await userTasks.GetUserPermissionsById(userId);
 			var perms = new HashSet<PermissionTo>(RequiredPermissions);

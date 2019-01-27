@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Publications
 {
@@ -18,8 +18,8 @@ namespace TASVideos.Pages.Publications
 
 		public AuthorsModel(
 			ApplicationDbContext db,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_db = db;
 		}

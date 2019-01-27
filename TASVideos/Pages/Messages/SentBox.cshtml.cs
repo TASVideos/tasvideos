@@ -9,7 +9,8 @@ using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
+
 namespace TASVideos.Pages.Messages
 {
 	[Authorize]
@@ -19,8 +20,8 @@ namespace TASVideos.Pages.Messages
 
 		public SentboxModel(
 			ApplicationDbContext db,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 		}

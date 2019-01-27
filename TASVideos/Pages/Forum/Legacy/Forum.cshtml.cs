@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Legacy
@@ -10,8 +11,8 @@ namespace TASVideos.Pages.Forum.Legacy
 	public class ForumModel : BasePageModel
 	{
 		public ForumModel(
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 		}
 

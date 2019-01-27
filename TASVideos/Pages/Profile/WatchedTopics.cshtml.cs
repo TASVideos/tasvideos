@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Profile
 {
@@ -19,8 +19,8 @@ namespace TASVideos.Pages.Profile
 		private readonly ApplicationDbContext _db;
 		public WatchedTopicsModel(
 			ApplicationDbContext db,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 		}

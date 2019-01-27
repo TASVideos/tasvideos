@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum
 {
@@ -17,8 +17,8 @@ namespace TASVideos.Pages.Forum
 
 		public IndexModel(
 			ApplicationDbContext db,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_db = db;
 		}

@@ -17,9 +17,8 @@ namespace TASVideos.Pages.Users
 
 		public ProfileModel(
 			AwardTasks awardTasks,
-			UserManager userManager,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_awardTasks = awardTasks;
 			_userManager = userManager;

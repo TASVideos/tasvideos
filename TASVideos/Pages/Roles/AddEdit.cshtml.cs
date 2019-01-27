@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +11,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Roles.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Roles
@@ -21,8 +21,8 @@ namespace TASVideos.Pages.Roles
 	{
 		private readonly ApplicationDbContext _db;
 
-		public AddEditModel(ApplicationDbContext db, UserTasks userTasks)
-			: base(userTasks)
+		public AddEditModel(ApplicationDbContext db, UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 		}

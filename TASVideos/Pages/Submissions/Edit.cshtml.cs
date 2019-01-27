@@ -16,7 +16,6 @@ using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -31,8 +30,8 @@ namespace TASVideos.Pages.Submissions
 			ApplicationDbContext db,
 			MovieParser parser,
 			IWikiPages wikiPages,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_db = db;
 			_parser = parser;

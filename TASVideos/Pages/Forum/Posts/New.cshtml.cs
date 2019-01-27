@@ -3,27 +3,25 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Posts
 {
 	[Authorize]
 	public class NewModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 		private readonly ApplicationDbContext _db;
 		
 		public NewModel(
-			UserManager<User> userManager,
-			ApplicationDbContext db,
-			UserTasks userTasks)
-		: base(userTasks)
+			UserManager userManager,
+			ApplicationDbContext db)
+		: base(userManager)
 		{
 			_userManager = userManager;
 			_db = db;

@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Account
 {
@@ -18,19 +17,18 @@ namespace TASVideos.Pages.Account
 	public class RegisterModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
 
 		public RegisterModel(
 			ApplicationDbContext db,
-			UserManager<User> userManager,
+			UserManager userManager,
 			SignInManager<User> signInManager,
 			IEmailSender emailSender,
-			ILogger<RegisterModel> logger,
-			UserTasks userTasks)
-			: base(userTasks)
+			ILogger<RegisterModel> logger)
+			: base(userManager)
 		{
 			_db = db;
 			_userManager = userManager;

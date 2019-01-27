@@ -10,7 +10,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -25,8 +24,8 @@ namespace TASVideos.Pages.Wiki
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_db = db;
 			_publisher = publisher;

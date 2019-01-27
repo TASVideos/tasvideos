@@ -11,7 +11,6 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Ratings
 {
@@ -27,8 +26,8 @@ namespace TASVideos.Pages.Ratings
 		public IndexModel(
 			ApplicationDbContext db,
 			ICacheService cache,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_db = db;
 			_cache = cache;

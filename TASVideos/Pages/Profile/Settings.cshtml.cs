@@ -3,32 +3,27 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Profile
 {
 	[Authorize]
 	public class SettingsModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ApplicationDbContext _db;
 
 		public SettingsModel(
-			UserManager<User> userManager,
+			UserManager userManager,
 			IEmailSender emailSender,
-			ApplicationDbContext db,
-			UserTasks userTasks) 
-			: base(userTasks)
+			ApplicationDbContext db) 
+			: base(userManager)
 		{
 			_userManager = userManager;
 			_emailSender = emailSender;

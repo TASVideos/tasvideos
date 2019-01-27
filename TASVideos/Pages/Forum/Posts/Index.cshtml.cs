@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Posts
@@ -16,8 +17,8 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public IndexModel(
 			ForumTasks forumTasks,
-			UserTasks userTasks) 
-			: base(userTasks)
+			UserManager userManager) 
+			: base(userManager)
 		{
 			_forumTasks = forumTasks;
 		}

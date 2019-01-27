@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Extensions;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Messages
@@ -16,8 +17,8 @@ namespace TASVideos.Pages.Messages
 
 		public IndexModel(
 			PrivateMessageTasks privateMessageTasks,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager)
+			: base(userManager)
 		{
 			_pmTasks = privateMessageTasks;
 		}

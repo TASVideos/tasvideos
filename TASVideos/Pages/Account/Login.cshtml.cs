@@ -12,24 +12,23 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Account
 {
 	[AllowAnonymous]
 	public class LoginModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 		private readonly SignInManager<User> _signInManager;
 
 		private readonly ApplicationDbContext _db;
 
 		public LoginModel(
-			UserManager<User> userManager,
+			UserManager userManager,
 			SignInManager<User> signInManager,
-			ApplicationDbContext db,
-			UserTasks userTasks)
-			: base(userTasks)
+			ApplicationDbContext db)
+			: base(userManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;

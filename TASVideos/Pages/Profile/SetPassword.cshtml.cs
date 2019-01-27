@@ -8,21 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Profile
 {
 	[Authorize]
 	public class SetPasswordModel : BasePageModel
 	{
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 		private readonly SignInManager<User> _signInManager;
 
 		public SetPasswordModel(
-			UserManager<User> userManager,
-			SignInManager<User> signInManager,
-			UserTasks userTasks)
-			: base(userTasks)
+			UserManager userManager,
+			SignInManager<User> signInManager)
+			: base(userManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
