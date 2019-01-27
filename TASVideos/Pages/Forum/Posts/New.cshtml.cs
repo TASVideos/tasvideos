@@ -19,7 +19,6 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly UserManager<User> _userManager;
 		private readonly ApplicationDbContext _db;
 		
-
 		public NewModel(
 			UserManager<User> userManager,
 			ApplicationDbContext db,

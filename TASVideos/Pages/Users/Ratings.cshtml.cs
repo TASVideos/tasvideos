@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Users
@@ -12,8 +13,14 @@ namespace TASVideos.Pages.Users
 	[AllowAnonymous]
 	public class RatingsModel : BasePageModel
 	{
-		public RatingsModel(UserTasks userTasks) : base(userTasks)
+		private readonly UserManager _userManager;
+
+		public RatingsModel(
+			UserManager userManager,
+			UserTasks userTasks)
+			: base(userTasks)
 		{
+			_userManager = userManager;
 		}
 
 		[FromRoute]
@@ -23,9 +30,10 @@ namespace TASVideos.Pages.Users
 
 		public async Task<IActionResult> OnGet()
 		{
-			Ratings = await UserTasks.GetUserRatings(
+			Ratings = await _userManager.GetUserRatings(
 				UserName,
 				UserHas(PermissionTo.SeePrivateRatings));
+
 			if (Ratings == null)
 			{
 				return NotFound();

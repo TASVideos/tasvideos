@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Models;
+using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Users
@@ -12,13 +13,16 @@ namespace TASVideos.Pages.Users
 	public class ProfileModel : BasePageModel
 	{
 		private readonly AwardTasks _awardTasks;
+		private readonly UserManager _userManager;
 
 		public ProfileModel(
 			AwardTasks awardTasks,
+			UserManager userManager,
 			UserTasks userTasks) 
 			: base(userTasks)
 		{
 			_awardTasks = awardTasks;
+			_userManager = userManager;
 		}
 
 		// Allows for a query based call to this page for Users/List
@@ -42,7 +46,7 @@ namespace TASVideos.Pages.Users
 				UserName = Name;
 			}
 
-			Profile = await UserTasks.GetUserProfile(UserName, includeHidden: false);
+			Profile = await _userManager.GetUserProfile(UserName, includeHidden: false);
 			if (User == null)
 			{
 				return NotFound();
