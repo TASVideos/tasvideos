@@ -47,7 +47,7 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.MovieToObsolete" class="form-control-label"></label>
-				<select asp-for="Submission.MovieToObsolete" asp-items="@UiDefaults.DefaultEntry.Concat(Model.Submission.AvailableMoviesToObsolete)" class="form-control"></select>
+				<select asp-for="Submission.MovieToObsolete" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesToObsolete)" class="form-control"></select>
 			</form-group>
 		</div>
 	</row>

@@ -294,10 +294,6 @@ namespace TASVideos.Models
 		[Display(Name = "Torrent file", Description = "(The tracker URL must be http://tracker.tasvideos.org:6969/announce.)")]
 		public IFormFile TorrentFile { get; set; }
 
-		// Not used for edit fields
-		public int Id { get; set; }
-		public string Title { get; set; }
-
 		[Display(Name = "Submisison description (for quoting, reference, etc)")]
 		public string Markup { get; set; }
 
@@ -320,6 +316,8 @@ namespace TASVideos.Models
 
 		public string MovieExtension { get; set; }
 
+		// Not used for edit fields
+		public string Title { get; set; }
 		public int SystemId { get; set; }
 		public int? SystemFrameRateId { get; set; }
 		public SubmissionStatus Status { get; set; }
