@@ -76,7 +76,6 @@ namespace TASVideos.Extensions
 		{
 			services.AddScoped<AwardTasks>();
 			services.AddScoped<UserTasks>();
-			services.AddScoped<SubmissionTasks>();
 			services.AddScoped<ForumTasks>();
 			services.AddScoped<PrivateMessageTasks>();
 			services.AddScoped<UserFileTasks>();

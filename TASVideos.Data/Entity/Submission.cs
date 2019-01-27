@@ -107,17 +107,14 @@ namespace TASVideos.Data.Entity
 		/// </summary>
 		public string Title { get; set; }
 
-		public TimeSpan Time
+		public TimeSpan Time()
 		{
-			get
-			{
-				int seconds = (int)(Frames / SystemFrameRate.FrameRate);
-				double fractionalSeconds = (Frames / SystemFrameRate.FrameRate) - seconds;
-				int milliseconds = (int)(Math.Round(fractionalSeconds, 2) * 1000);
-				var timespan = new TimeSpan(0, 0, 0, seconds, milliseconds);
+			int seconds = (int)(Frames / SystemFrameRate.FrameRate);
+			double fractionalSeconds = (Frames / SystemFrameRate.FrameRate) - seconds;
+			int milliseconds = (int)(Math.Round(fractionalSeconds, 2) * 1000);
+			var timespan = new TimeSpan(0, 0, 0, seconds, milliseconds);
 
-				return timespan;
-			}
+			return timespan;
 		}
 
 		public void GenerateTitle()
@@ -125,7 +122,7 @@ namespace TASVideos.Data.Entity
 			Title =
 				$"#{Id}: {string.Join(" & ", SubmissionAuthors.Select(sa => sa.Author.UserName))}'s {System.Code} {GameName}"
 					+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-					+ $" in {Time:g}";
+					+ $" in {Time():g}";
 		}
 	}
 }
