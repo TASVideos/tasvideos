@@ -94,65 +94,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Returns data for a <see cref="Submission"/> with the given <see cref="id" />
-		/// for the purpose of display
-		/// If a submission can not be found, null is returned
-		/// </summary>
-		public async Task<SubmissionDisplayModel> GetSubmission(int id, string userName)
-		{
-			using (_db.Database.BeginTransactionAsync())
-			{
-				var submissionModel = await _db.Submissions
-					.Where(s => s.Id == id)
-					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
-					{
-						SystemDisplayName = s.System.DisplayName,
-						SystemCode = s.System.Code,
-						GameName = s.GameName,
-						GameVersion = s.GameVersion,
-						RomName = s.RomName,
-						Branch = s.Branch,
-						Emulator = s.EmulatorVersion,
-						FrameCount = s.Frames,
-						FrameRate = s.SystemFrameRate.FrameRate,
-						RerecordCount = s.RerecordCount,
-						CreateTimestamp = s.CreateTimeStamp,
-						Submitter = s.Submitter.UserName,
-						LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
-						LastUpdateUser = s.WikiContent.LastUpdateUserName,
-						Status = s.Status,
-						EncodeEmbedLink = s.EncodeEmbedLink,
-						Judge = s.Judge != null ? s.Judge.UserName : "",
-						Title = s.Title,
-						TierName = s.IntendedTier != null ? s.IntendedTier.Name : "",
-						Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-						SystemId = s.SystemId,
-						SystemFrameRateId = s.SystemFrameRateId,
-						GameId = s.GameId,
-						RomId = s.RomId
-					})
-					.SingleOrDefaultAsync();
-
-				if (submissionModel != null)
-				{
-					submissionModel.Authors = await _db.SubmissionAuthors
-						.Where(sa => sa.SubmissionId == id)
-						.Select(sa => sa.Author.UserName)
-						.ToListAsync();
-
-					submissionModel.CanEdit = !string.IsNullOrWhiteSpace(userName)
-						&& (userName == submissionModel.Submitter
-							|| submissionModel.Authors.Contains(userName));
-
-					var submissionPageName = LinkConstants.SubmissionWikiPage + id;
-					submissionModel.TopicId = _db.ForumTopics.SingleOrDefault(t => t.PageName == submissionPageName)?.Id ?? 0;
-				}
-
-				return submissionModel;
-			}
-		}
-
-		/// <summary>
 		/// Gets the title of a submission with the given id
 		/// If the submission is not found, null is returned
 		/// </summary>
