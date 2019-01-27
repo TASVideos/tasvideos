@@ -26,14 +26,12 @@ namespace TASVideos.Pages.Submissions
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly MovieParser _parser;
-		private readonly SubmissionTasks _submissionTasks;
 		
 		public SubmitModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
 			MovieParser parser,
-			SubmissionTasks submissionTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
@@ -41,7 +39,6 @@ namespace TASVideos.Pages.Submissions
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_parser = parser;
-			_submissionTasks = submissionTasks;
 		}
 
 		[BindProperty]

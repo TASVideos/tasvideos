@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Models;
@@ -27,14 +28,14 @@ namespace TASVideos.Pages.Submissions
 			})
 			.ToList();
 
-		private readonly SubmissionTasks _submissionTasks;
+		private readonly ApplicationDbContext _db;
 
 		public IndexModel(
-			SubmissionTasks submissionTasks,
+			ApplicationDbContext db,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
-			_submissionTasks = submissionTasks;
+			_db = db;
 		}
 
 		[FromQuery]
@@ -55,7 +56,9 @@ namespace TASVideos.Pages.Submissions
 					: SubmissionSearchRequest.Default;
 			}
 
-			Submissions = await _submissionTasks.GetSubmissionList(Search);
+			Submissions = await _db.Submissions
+				.SearchBy(Search)
+				.PersistToSubListEntry();
 		}
 	}
 }
