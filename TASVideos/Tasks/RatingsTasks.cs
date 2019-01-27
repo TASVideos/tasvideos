@@ -105,17 +105,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Calculates the overall rating for a <see cref="Publication"/>
-		/// with the given <see cref="publicationId"/>
-		/// If no ratings exist for the given publication then null is returned
-		/// </summary>
-		public async Task<double?> GetOverallRatingForPublication(int publicationId)
-		{
-			return (await _pointsService.CalculatePublicationRatings(publicationId))
-				.Overall;
-		}
-
-		/// <summary>
 		/// Returns the overall rating for the <see cref="Publication"/> with the given <see cref="publicationIds"/>
 		/// </summary>
 		/// <exception cref="ArgumentException">If <see cref="publicationIds"/> is null</exception>
