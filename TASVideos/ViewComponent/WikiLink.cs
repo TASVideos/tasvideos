@@ -1,5 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Extensions;
@@ -9,13 +13,13 @@ namespace TASVideos.ViewComponents
 {
 	public class WikiLink : ViewComponent
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly SubmissionTasks _submissionTasks;
-		private readonly PublicationTasks _publicationTasks;
 
-		public WikiLink(SubmissionTasks submissionTasks, PublicationTasks publicationTasks)
+		public WikiLink(ApplicationDbContext db, SubmissionTasks submissionTasks)
 		{
 			_submissionTasks = submissionTasks;
-			_publicationTasks = publicationTasks;
+			_db = db;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
@@ -52,7 +56,7 @@ namespace TASVideos.ViewComponents
 						var mid = SubmissionHelper.IsPublicationLink(pp);
 						if (mid.HasValue)
 						{
-							var title = $"[{mid.Value}]" + (await _publicationTasks.GetTitle(mid.Value));
+							var title = $"[{mid.Value}]" + (await GetPublicationTitle(mid.Value));
 							if (!string.IsNullOrWhiteSpace(title))
 							{
 								model.DisplayText = title;
@@ -63,6 +67,13 @@ namespace TASVideos.ViewComponents
 			}
 
 			return View(model);
+		}
+
+		private async Task<string> GetPublicationTitle(int id)
+		{
+			return (await _db.Publications
+				.Select(s => new { s.Id, s.Title })
+				.SingleOrDefaultAsync(s => s.Id == id))?.Title;
 		}
 	}
 }
