@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
 using TASVideos.Tasks;
@@ -15,12 +17,14 @@ namespace TASVideos.Pages.Account
 	[AllowAnonymous]
 	public class RegisterModel : BasePageModel
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
 
 		public RegisterModel(
+			ApplicationDbContext db,
 			UserManager<User> userManager,
 			SignInManager<User> signInManager,
 			IEmailSender emailSender,
@@ -28,6 +32,7 @@ namespace TASVideos.Pages.Account
 			UserTasks userTasks)
 			: base(userTasks)
 		{
+			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailSender = emailSender;
@@ -94,7 +99,7 @@ namespace TASVideos.Pages.Account
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					_logger.LogInformation("User created a new account with password.");
 
-					await UserTasks.AddStandardRolesToUser(user.Id);
+					await AddStandardRoles(user.Id);
 
 					return RedirectToLocal(ReturnUrl);
 				}
@@ -104,6 +109,27 @@ namespace TASVideos.Pages.Account
 
 			// If we got this far, something failed, redisplay form
 			return Page();
+		}
+
+		public async Task AddStandardRoles(int userId)
+		{
+			var user = await _db.Users.SingleAsync(u => u.Id == userId);
+			var roles = await _db.Roles
+				.ThatAreDefault()
+				.ToListAsync();
+
+			foreach (var role in roles)
+			{
+				var userRole = new UserRole
+				{
+					UserId = user.Id,
+					RoleId = role.Id
+				};
+				_db.UserRoles.Add(userRole);
+				user.UserRoles.Add(userRole);
+			}
+
+			await _db.SaveChangesAsync();
 		}
 	}
 }
