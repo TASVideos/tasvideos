@@ -53,9 +53,9 @@ namespace TASVideos.Pages.Submissions
 				Search.StatusFilter = !string.IsNullOrWhiteSpace(Search.User)
 					? SubmissionSearchRequest.All
 					: SubmissionSearchRequest.Default;
-
-				Submissions = await _submissionTasks.GetSubmissionList(Search);
 			}
+
+			Submissions = await _submissionTasks.GetSubmissionList(Search);
 		}
 	}
 }
