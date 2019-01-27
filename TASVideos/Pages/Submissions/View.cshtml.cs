@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -16,16 +17,13 @@ namespace TASVideos.Pages.Submissions
 	public class ViewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly SubmissionTasks _submissionTasks;
 
 		public ViewModel(
 			ApplicationDbContext db,
-			SubmissionTasks submissionTasks,
 			UserTasks userTasks)
 			: base(userTasks)
 		{
 			_db = db;
-			_submissionTasks = submissionTasks;
 		}
 
 		[FromRoute]
@@ -35,11 +33,52 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnGet()
 		{
-			Submission = await _submissionTasks.GetSubmission(Id, User.Identity.Name);
+			Submission = await _db.Submissions
+					.Where(s => s.Id == Id)
+					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
+					{
+						SystemDisplayName = s.System.DisplayName,
+						SystemCode = s.System.Code,
+						GameName = s.GameName,
+						GameVersion = s.GameVersion,
+						RomName = s.RomName,
+						Branch = s.Branch,
+						Emulator = s.EmulatorVersion,
+						FrameCount = s.Frames,
+						FrameRate = s.SystemFrameRate.FrameRate,
+						RerecordCount = s.RerecordCount,
+						CreateTimestamp = s.CreateTimeStamp,
+						Submitter = s.Submitter.UserName,
+						LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
+						LastUpdateUser = s.WikiContent.LastUpdateUserName,
+						Status = s.Status,
+						EncodeEmbedLink = s.EncodeEmbedLink,
+						Judge = s.Judge != null ? s.Judge.UserName : "",
+						Title = s.Title,
+						TierName = s.IntendedTier != null ? s.IntendedTier.Name : "",
+						Publisher = s.Publisher != null ? s.Publisher.UserName : "",
+						SystemId = s.SystemId,
+						SystemFrameRateId = s.SystemFrameRateId,
+						GameId = s.GameId,
+						RomId = s.RomId,
+						Authors = s.SubmissionAuthors
+							.Where(sa => sa.SubmissionId == Id)
+							.Select(sa => sa.Author.UserName)
+							.ToList()
+					})
+					.SingleOrDefaultAsync();
+
 			if (Submission == null)
 			{
 				return NotFound();
 			}
+
+			Submission.CanEdit = !string.IsNullOrWhiteSpace(User.Identity.Name)
+				&& (User.Identity.Name == Submission.Submitter
+					|| Submission.Authors.Contains(User.Identity.Name));
+
+			var submissionPageName = LinkConstants.SubmissionWikiPage + Id;
+			Submission.TopicId = _db.ForumTopics.SingleOrDefault(t => t.PageName == submissionPageName)?.Id ?? 0;
 
 			return Page();
 		}
