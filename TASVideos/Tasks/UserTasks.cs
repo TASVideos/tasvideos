@@ -34,30 +34,6 @@ namespace TASVideos.Tasks
 		}
 
 		/// <summary>
-		/// Adds standard roles to the given user, these are roles all user's should start with
-		/// </summary>
-		public async Task AddStandardRolesToUser(int userId)
-		{
-			var user = await _db.Users.SingleAsync(u => u.Id == userId);
-			var roles = await _db.Roles
-				.ThatAreDefault()
-				.ToListAsync();
-
-			foreach (var role in roles)
-			{
-				var userRole = new UserRole
-				{
-					UserId = user.Id,
-					RoleId = role.Id
-				};
-				_db.UserRoles.Add(userRole);
-				user.UserRoles.Add(userRole);
-			}
-
-			await _db.SaveChangesAsync();
-		}
-
-		/// <summary>
 		/// Returns the rating information for the given user
 		/// If user is not found, null is returned
 		/// If user has PublicRatings false, then the ratings will be an empty list
