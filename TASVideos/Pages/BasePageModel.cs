@@ -65,11 +65,6 @@ namespace TASVideos.Pages
 			}
 		}
 
-		protected bool UserHas(PermissionTo permission)
-		{
-			return UserPermissions.Contains(permission);
-		}
-
 		protected string RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);

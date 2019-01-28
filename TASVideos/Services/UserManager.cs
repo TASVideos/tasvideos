@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,15 @@ namespace TASVideos.Services
 			_cache = cache;
 			_db = db;
 			_pointsCalculator = pointsCalculator;
+		}
+
+		// Adds a distinct list of user permissions to their claims so they can be stored
+		// and retrieved from their cookie
+		public async Task AddUserPermissionsToClaims(User user)
+		{
+			var permissions = await GetUserPermissionsById(user.Id);
+			await AddClaimsAsync(user, permissions
+				.Select(p => new Claim(CustomClaimTypes.Permission, ((int)p).ToString())));
 		}
 
 		/// <summary>

@@ -91,7 +91,7 @@ namespace TASVideos.Pages.Submissions
 				.ToListAsync();
 
 			// If user can not edit submissions then they must be an author or the original submitter
-			if (!UserHas(PermissionTo.EditSubmissions))
+			if (!User.Has(PermissionTo.EditSubmissions))
 			{
 				if (Submission.Submitter != User.Identity.Name
 					&& !Submission.Authors.Contains(User.Identity.Name))
@@ -114,7 +114,7 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (UserHas(PermissionTo.ReplaceSubmissionMovieFile) && Submission.MovieFile != null)
+			if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.MovieFile != null)
 			{
 				if (!Submission.MovieFile.FileName.EndsWith(".zip")
 					|| Submission.MovieFile.ContentType != "application/x-zip-compressed")
@@ -129,14 +129,14 @@ namespace TASVideos.Pages.Submissions
 						".zip is too big, are you sure this is a valid movie file?");
 				}
 			}
-			else if (!UserHas(PermissionTo.ReplaceSubmissionMovieFile))
+			else if (!User.Has(PermissionTo.ReplaceSubmissionMovieFile))
 			{
 				Submission.MovieFile = null;
 			}
 
 			// TODO: this is bad, an author can null out these values,
 			// but if we treat null as no choice, then we have no way to unset these values
-			if (!UserHas(PermissionTo.JudgeSubmissions))
+			if (!User.Has(PermissionTo.JudgeSubmissions))
 			{
 				Submission.TierId = null;
 			}
@@ -174,7 +174,7 @@ namespace TASVideos.Pages.Submissions
 				}
 
 				// If user can not edit submissions then they must be an author or the original submitter
-				if (!UserHas(PermissionTo.EditSubmissions))
+				if (!User.Has(PermissionTo.EditSubmissions))
 				{
 					if (!subInfo.UserIsAuthorOrSubmitter)
 					{

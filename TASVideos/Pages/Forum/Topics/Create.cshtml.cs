@@ -42,7 +42,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnGet()
 		{
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			Topic = await _db.Forums
 				.ExcludeRestricted(seeRestricted)
 				.Where(f => f.Id == ForumId)
@@ -73,7 +73,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			if (forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums))
+			if (forum.Restricted && !User.Has(PermissionTo.SeeRestrictedForums))
 			{
 				return NotFound();
 			}

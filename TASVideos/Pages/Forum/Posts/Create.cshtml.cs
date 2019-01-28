@@ -49,7 +49,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			Post = await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
 				.Where(t => t.Id == TopicId)
@@ -65,7 +65,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			if (Post.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
+			if (Post.IsLocked && !User.Has(PermissionTo.PostInLockedTopics))
 			{
 				return AccessDenied();
 			}
@@ -92,7 +92,7 @@ namespace TASVideos.Pages.Forum.Posts
 				// so all of this logic is necessary
 				var isLocked = await _db.ForumTopics
 					.AnyAsync(t => t.Id == TopicId && t.IsLocked);
-				if (isLocked && !UserHas(PermissionTo.PostInLockedTopics))
+				if (isLocked && !User.Has(PermissionTo.PostInLockedTopics))
 				{
 					return AccessDenied();
 				}
@@ -119,12 +119,12 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			if (topic.Forum.Restricted && !UserHas(PermissionTo.SeeRestrictedForums))
+			if (topic.Forum.Restricted && !User.Has(PermissionTo.SeeRestrictedForums))
 			{
 				return NotFound();
 			}
 
-			if (topic.IsLocked && !UserHas(PermissionTo.PostInLockedTopics))
+			if (topic.IsLocked && !User.Has(PermissionTo.PostInLockedTopics))
 			{
 				return AccessDenied();
 			}

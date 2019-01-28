@@ -70,6 +70,8 @@ namespace TASVideos.Pages.Account
 					user.LastLoggedInTimeStamp = DateTime.UtcNow;
 					await _db.SaveChangesAsync();
 
+					await _userManager.AddUserPermissionsToClaims(user);
+
 					return RedirectToLocal(ReturnUrl);
 				}
 

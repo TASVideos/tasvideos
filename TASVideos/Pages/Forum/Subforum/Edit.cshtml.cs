@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		public async Task<IActionResult> OnGet()
 		{
 			Forum = await _db.Forums
-				.ExcludeRestricted(UserHas(PermissionTo.SeeRestrictedForums))
+				.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 				.Where(f => f.Id == Id)
 				.Select(f => new ForumEditModel
 				{
@@ -58,7 +58,7 @@ namespace TASVideos.Pages.Forum.Subforum
 			}
 
 			var forum = await _db.Forums
-				.ExcludeRestricted(UserHas(PermissionTo.SeeRestrictedForums))
+				.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 				.SingleOrDefaultAsync(f => f.Id == Id);
 
 			if (forum == null)

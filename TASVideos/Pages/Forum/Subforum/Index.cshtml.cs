@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Forum.Subforum
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				Forum = await _db.Forums
-					.ExcludeRestricted(UserHas(PermissionTo.SeeRestrictedForums))
+					.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 					.Select(f => new ForumModel
 					{
 						Id = f.Id,

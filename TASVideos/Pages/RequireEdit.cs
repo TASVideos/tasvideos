@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 using TASVideos.Extensions;
-using TASVideos.Services;
 
 namespace TASVideos.Pages
 {
@@ -19,19 +18,13 @@ namespace TASVideos.Pages
 
 		public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
 		{
-			var userClaimsPrincipal = context.HttpContext.User;
+			var user = context.HttpContext.User;
 
-			if (!userClaimsPrincipal.Identity.IsAuthenticated)
+			if (!user.Identity.IsAuthenticated)
 			{
 				context.Result = ReRouteToLogin(context.HttpContext.Request.Path + context.HttpContext.Request.QueryString);
 				return;
 			}
-
-			var userId = userClaimsPrincipal.GetUserId();
-
-			var userTasks = (UserManager)context.HttpContext.RequestServices.GetService(typeof(UserManager));
-
-			var userPerms = await userTasks.GetUserPermissionsById(userId);
 
 			string pageToEdit = "";
 			if (context.HttpContext.Request.QueryString.Value.Contains("path="))
@@ -40,7 +33,7 @@ namespace TASVideos.Pages
 			}
 
 			var canEdit = WikiHelper
-				.UserCanEditWikiPage(pageToEdit, userClaimsPrincipal.Identity.Name, userPerms);
+				.UserCanEditWikiPage(pageToEdit, user.Identity.Name, user.Permissions());
 
 			if (canEdit)
 			{

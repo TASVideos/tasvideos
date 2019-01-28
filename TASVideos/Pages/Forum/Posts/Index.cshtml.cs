@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			var model = await _forumTasks.GetPostPosition(Id, UserHas(PermissionTo.SeeRestrictedForums));
+			var model = await _forumTasks.GetPostPosition(Id, User.Has(PermissionTo.SeeRestrictedForums));
 			if (model == null)
 			{
 				return NotFound();

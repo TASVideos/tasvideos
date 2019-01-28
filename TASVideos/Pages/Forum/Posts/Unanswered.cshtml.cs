@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public async Task OnGet()
 		{
 			Posts = await _db.ForumTopics
-				.ExcludeRestricted(UserHas(PermissionTo.SeeRestrictedForums))
+				.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 				.Where(t => t.ForumPosts.Count == 1)
 				.Select(t => new UnansweredPostsModel
 				{

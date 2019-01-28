@@ -61,4 +61,9 @@
 		public const string Warning = "warning";
 		public const string Danger = "danger";
 	}
+
+	public static class CustomClaimTypes
+	{
+		public const string Permission = "Permission";
+	}
 }

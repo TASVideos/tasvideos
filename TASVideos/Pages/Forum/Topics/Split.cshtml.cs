@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 
-		private bool CanSeeRestricted => UserHas(PermissionTo.SeeRestrictedForums);
+		private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
 
 		public async Task<IActionResult> OnGet()
 		{

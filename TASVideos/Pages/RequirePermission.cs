@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Services;
 
 namespace TASVideos.Pages
 {
@@ -42,19 +41,15 @@ namespace TASVideos.Pages
 
 		public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
 		{
-			var userClaimsPrincipal = context.HttpContext.User;
+			var user = context.HttpContext.User;
 
-			if (!userClaimsPrincipal.Identity.IsAuthenticated)
+			if (!user.Identity.IsAuthenticated)
 			{
 				context.Result = ReRouteToLogin(context.HttpContext.Request.Path + context.HttpContext.Request.QueryString);
 				return;
 			}
 
-			var userId = userClaimsPrincipal.GetUserId();
-
-			var userTasks = (UserManager)context.HttpContext.RequestServices.GetService(typeof(UserManager));
-
-			var userPerms = await userTasks.GetUserPermissionsById(userId);
+			var userPerms = user.Permissions();
 			var perms = new HashSet<PermissionTo>(RequiredPermissions);
 
 			if ((MatchAny && perms.Any(r => userPerms.Contains(r)))
