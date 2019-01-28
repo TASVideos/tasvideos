@@ -113,13 +113,11 @@ namespace TASVideos.Pages.Account
 				}
 			}
 
-			// This doesn't count login failures towards account lockout
-			// To enable password failures to trigger account lockout, set lockoutOnFailure: true
 			return await _signInManager.PasswordSignInAsync(
 				UserName,
 				Password,
 				RememberMe,
-				lockoutOnFailure: false);
+				lockoutOnFailure: true);
 		}
 	}
 }
