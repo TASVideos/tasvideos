@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Publications
 {
@@ -16,10 +14,7 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 
-		public RateModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+		public RateModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

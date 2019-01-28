@@ -12,9 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Users
 {
@@ -23,10 +21,7 @@ namespace TASVideos.Pages.Users
 	{
 		private readonly ApplicationDbContext _db;
 
-		public EditModel(
-			ApplicationDbContext db,
-			UserManager userManager) 
-			: base(userManager)
+		public EditModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

@@ -17,9 +17,7 @@ namespace TASVideos.Pages.Wiki
 
 		public MoveModel(
 			IWikiPages wikiPages,
-			ExternalMediaPublisher publisher,
-			UserManager userManager)
-			: base(userManager)
+			ExternalMediaPublisher publisher)
 		{
 			_wikiPages = wikiPages;
 			_publisher = publisher;

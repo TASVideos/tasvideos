@@ -29,9 +29,7 @@ namespace TASVideos.Pages.Submissions
 		public EditModel(
 			ApplicationDbContext db,
 			MovieParser parser,
-			IWikiPages wikiPages,
-			UserManager userManager)
-			: base(userManager)
+			IWikiPages wikiPages)
 		{
 			_db = db;
 			_parser = parser;

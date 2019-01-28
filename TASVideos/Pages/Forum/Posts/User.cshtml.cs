@@ -22,9 +22,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public UserModel(
 			ApplicationDbContext db,
-			IAwardsCache awards,
-			UserManager userManager)
-			: base(userManager)
+			IAwardsCache awards)
 		{
 			_db = db;
 			_awards = awards;

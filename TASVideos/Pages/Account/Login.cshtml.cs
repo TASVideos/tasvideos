@@ -28,7 +28,6 @@ namespace TASVideos.Pages.Account
 			UserManager userManager,
 			SignInManager<User> signInManager,
 			ApplicationDbContext db)
-			: base(userManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;

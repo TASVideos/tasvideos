@@ -10,7 +10,6 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Publications
 {
@@ -19,10 +18,7 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 
-		public EditTierModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+		public EditTierModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

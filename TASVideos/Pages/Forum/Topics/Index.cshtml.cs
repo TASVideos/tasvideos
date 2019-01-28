@@ -28,9 +28,7 @@ namespace TASVideos.Pages.Forum.Topics
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			ForumTasks forumTasks,
-			IAwardsCache awards,
-			UserManager userManager)
-			: base(userManager)
+			IAwardsCache awards)
 		{
 			_db = db;
 			_publisher = publisher;

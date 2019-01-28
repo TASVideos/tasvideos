@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -17,10 +16,7 @@ namespace TASVideos.Pages.Wiki
 	{
 		private readonly ApplicationDbContext _db;
 
-		public PageHistoryModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+		public PageHistoryModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

@@ -13,7 +13,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Game.Model;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Game
 {
@@ -23,9 +22,7 @@ namespace TASVideos.Pages.Game
 		private readonly ApplicationDbContext _db;
 
 		public ListModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+			ApplicationDbContext db)
 		{
 			_db = db;
 		}

@@ -15,7 +15,6 @@ using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -31,9 +30,7 @@ namespace TASVideos.Pages.Submissions
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
-			MovieParser parser,
-			UserManager userManager)
-			: base(userManager)
+			MovieParser parser)
 		{
 			_db = db;
 			_publisher = publisher;

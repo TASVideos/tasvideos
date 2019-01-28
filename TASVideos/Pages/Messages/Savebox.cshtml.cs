@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Messages
 {
@@ -17,10 +15,7 @@ namespace TASVideos.Pages.Messages
 	{
 		private readonly ApplicationDbContext _db;
 
-		public SaveboxModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+		public SaveboxModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

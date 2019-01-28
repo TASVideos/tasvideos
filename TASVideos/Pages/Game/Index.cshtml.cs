@@ -16,10 +16,7 @@ namespace TASVideos.Pages.Game
 	{
 		private readonly ApplicationDbContext _db;
 
-		public IndexModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+		public IndexModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Legacy
@@ -15,10 +14,7 @@ namespace TASVideos.Pages.Forum.Legacy
 	{
 		private readonly ForumTasks _forumTasks;
 
-		public TopicModel(
-			ForumTasks forumTasks,
-			UserManager userManager) 
-			: base(userManager)
+		public TopicModel(ForumTasks forumTasks)
 		{
 			_forumTasks = forumTasks;
 		}

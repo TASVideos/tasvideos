@@ -7,10 +7,6 @@ namespace TASVideos.Pages.Wiki
 	[AllowAnonymous]
 	public class DoIfModuleModel : BasePageModel
 	{
-		public DoIfModuleModel(UserManager userManager) : base(userManager)
-		{
-		}
-
 		[FromQuery]
 		public string Condition { get; set; }
 	}

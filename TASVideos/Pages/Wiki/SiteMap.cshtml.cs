@@ -31,10 +31,7 @@ namespace TASVideos.Pages.Wiki
 			}) 
 			.ToList();
 
-		public SiteMapModel(
-			IWikiPages wikiPages,
-			UserManager userManager) 
-			: base(userManager)
+		public SiteMapModel(IWikiPages wikiPages)
 		{
 			_wikiPages = wikiPages;
 		}

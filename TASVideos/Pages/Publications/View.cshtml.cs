@@ -21,9 +21,7 @@ namespace TASVideos.Pages.Publications
 
 		public ViewModel(
 			ApplicationDbContext db,
-			IPointsCalculator pointsCalculator,
-			UserManager userManager) 
-			: base(userManager)
+			IPointsCalculator pointsCalculator)
 		{
 			_db = db;
 			_pointsCalculator = pointsCalculator;

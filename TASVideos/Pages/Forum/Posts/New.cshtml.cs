@@ -23,7 +23,6 @@ namespace TASVideos.Pages.Forum.Posts
 			ApplicationDbContext db,
 			UserManager userManager,
 			IAwardsCache awards)
-		: base(userManager)
 		{
 			_db = db;
 			_userManager = userManager;

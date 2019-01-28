@@ -25,9 +25,7 @@ namespace TASVideos.Pages.Ratings
 
 		public IndexModel(
 			ApplicationDbContext db,
-			ICacheService cache,
-			UserManager userManager) 
-			: base(userManager)
+			ICacheService cache)
 		{
 			_db = db;
 			_cache = cache;

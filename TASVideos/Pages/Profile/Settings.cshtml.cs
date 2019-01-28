@@ -22,8 +22,7 @@ namespace TASVideos.Pages.Profile
 		public SettingsModel(
 			UserManager userManager,
 			IEmailSender emailSender,
-			ApplicationDbContext db) 
-			: base(userManager)
+			ApplicationDbContext db)
 		{
 			_userManager = userManager;
 			_emailSender = emailSender;

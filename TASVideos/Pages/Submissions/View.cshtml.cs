@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -18,10 +17,7 @@ namespace TASVideos.Pages.Submissions
 	{
 		private readonly ApplicationDbContext _db;
 
-		public ViewModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+		public ViewModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

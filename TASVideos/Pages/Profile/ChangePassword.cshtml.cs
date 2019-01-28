@@ -19,7 +19,6 @@ namespace TASVideos.Pages.Profile
 		public ChangePasswordModel(
 			SignInManager<User> signInManager,
 			UserManager userManager)
-			: base(userManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
