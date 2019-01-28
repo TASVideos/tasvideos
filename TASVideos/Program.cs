@@ -2,18 +2,17 @@
 
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Legacy;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
+using TASVideos.Services;
 
 namespace TASVideos
 {
@@ -34,7 +33,7 @@ namespace TASVideos
 
 					if (env.IsDevelopment())
 					{
-						var userManager = services.GetRequiredService<UserManager<User>>();
+						var userManager = services.GetRequiredService<UserManager>();
 						DbInitializer.Initialize(context);
 						DbInitializer.PreMigrateSeedData(context);
 						DbInitializer.PostMigrateSeedData(context);
@@ -49,7 +48,7 @@ namespace TASVideos
 					{
 						var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
 						var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
-						var userManager = services.GetRequiredService<UserManager<User>>();
+						var userManager = services.GetRequiredService<UserManager>();
 
 						DbInitializer.Initialize(context);
 						DbInitializer.PreMigrateSeedData(context);

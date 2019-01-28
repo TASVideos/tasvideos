@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using TASVideos.Data.Entity;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Account
@@ -17,14 +12,13 @@ namespace TASVideos.Pages.Account
 	[AllowAnonymous]
 	public class ForgotPasswordModel : PageModel
 	{
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 		private readonly IEmailSender _emailSender;
 
-		public ForgotPasswordModel(UserManager<User> userManager, IEmailSender emailSender)
+		public ForgotPasswordModel(UserManager userManager, IEmailSender emailSender)
 		{
 			_userManager = userManager;
 			_emailSender = emailSender;
-
 		}
 
 		[BindProperty]
