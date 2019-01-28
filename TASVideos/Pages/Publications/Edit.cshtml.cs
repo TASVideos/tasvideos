@@ -78,7 +78,7 @@ namespace TASVideos.Pages.Publications
 			AvailableMoviesForObsoletedBy =
 					await GetAvailableMoviesForObsoletedBy(Publication.SystemCode);
 
-			AvailableFlags = await GetAvailableFlags(UserPermissions);
+			AvailableFlags = await GetAvailableFlags(User.Permissions());
 			AvailableTags = await GetAvailableTags();
 
 			return Page();
@@ -90,7 +90,7 @@ namespace TASVideos.Pages.Publications
 			{
 				AvailableMoviesForObsoletedBy =
 					await GetAvailableMoviesForObsoletedBy(Publication.SystemCode);
-				AvailableFlags = await GetAvailableFlags(UserPermissions);
+				AvailableFlags = await GetAvailableFlags(User.Permissions());
 				AvailableTags = await GetAvailableTags();
 
 				return Page();
@@ -203,6 +203,5 @@ namespace TASVideos.Pages.Publications
 				}
 			}
 		}
-
 	}
 }
