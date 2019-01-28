@@ -3,11 +3,10 @@ using System.Globalization;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-using TASVideos.Data.Entity;
+using TASVideos.Services;
 
 namespace TASVideos.TagHelpers
 {
@@ -15,11 +14,11 @@ namespace TASVideos.TagHelpers
 	public class TimeZoneConvert : TagHelper
 	{
 		private readonly ClaimsPrincipal _claimsPrincipal;
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 
 		public TimeZoneConvert(
 			ClaimsPrincipal claimsPrincipal,
-			UserManager<User> userManager)
+			UserManager userManager)
 		{
 			_claimsPrincipal = claimsPrincipal;
 			_userManager = userManager;
