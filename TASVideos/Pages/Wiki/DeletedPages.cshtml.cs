@@ -62,7 +62,7 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnGetDeletePage(string path)
 		{
-			if (!UserHas(PermissionTo.DeleteWikiPages))
+			if (!User.Has(PermissionTo.DeleteWikiPages))
 			{
 				return AccessDenied();
 			}
@@ -82,7 +82,7 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnGetDeleteRevision(string path, int revision)
 		{
-			if (!UserHas(PermissionTo.DeleteWikiPages))
+			if (!User.Has(PermissionTo.DeleteWikiPages))
 			{
 				return AccessDenied();
 			}
@@ -105,7 +105,7 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnGetUndelete(string path)
 		{
-			if (!UserHas(PermissionTo.DeleteWikiPages))
+			if (!User.Has(PermissionTo.DeleteWikiPages))
 			{
 				return AccessDenied();
 			}

@@ -121,7 +121,7 @@ namespace TASVideos.Pages.Roles
 
 		public async Task<IActionResult> OnGetDelete(int id)
 		{
-			if (!UserHas(PermissionTo.DeleteRoles))
+			if (!User.Has(PermissionTo.DeleteRoles))
 			{
 				return AccessDenied();
 			}

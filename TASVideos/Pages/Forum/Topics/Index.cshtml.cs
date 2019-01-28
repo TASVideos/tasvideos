@@ -52,7 +52,7 @@ namespace TASVideos.Pages.Forum.Topics
 				? User.GetUserId()
 				: (int?)null;
 
-			bool seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			Topic = await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
 				.Select(t => new ForumTopicModel
@@ -142,9 +142,9 @@ namespace TASVideos.Pages.Forum.Topics
 				post.RenderedSignature = !string.IsNullOrWhiteSpace(post.Signature)
 					? RenderSignature(post.Signature)
 					: "";
-				post.IsEditable = UserHas(PermissionTo.EditForumPosts)
+				post.IsEditable = User.Has(PermissionTo.EditForumPosts)
 					|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
-				post.IsDeletable = UserHas(PermissionTo.DeleteForumPosts)
+				post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts)
 					|| (userId.HasValue && post.PosterId == userId && post.IsLastPost);
 			}
 
@@ -170,7 +170,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnPostVote(int pollId, int ordinal)
 		{
-			if (!UserHas(PermissionTo.VoteInPolls))
+			if (!User.Has(PermissionTo.VoteInPolls))
 			{
 				return AccessDenied();
 			}
@@ -201,7 +201,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnPostLock(string topicTitle, bool locked, string returnUrl)
 		{
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			var topic = await _db.ForumTopics
 				.Include(t => t.Forum)
 				.ExcludeRestricted(seeRestricted)
@@ -233,7 +233,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return AccessDenied();
 			}
 
-			await _forumTasks.WatchTopic(Id, User.GetUserId(), UserHas(PermissionTo.SeeRestrictedForums));
+			await _forumTasks.WatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
 			return RedirectToPage("Index", new { Id });
 		}
 
@@ -244,7 +244,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return AccessDenied();
 			}
 
-			await _forumTasks.UnwatchTopic(Id, User.GetUserId(), UserHas(PermissionTo.SeeRestrictedForums));
+			await _forumTasks.UnwatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
 			return RedirectToPage("Index", new { Id });
 		}
 	}

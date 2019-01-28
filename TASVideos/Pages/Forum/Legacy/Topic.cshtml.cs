@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Forum.Legacy
 
 			if (P.HasValue)
 			{
-				var model = await _forumTasks.GetPostPosition(P.Value, UserHas(PermissionTo.SeeRestrictedForums));
+				var model = await _forumTasks.GetPostPosition(P.Value, User.Has(PermissionTo.SeeRestrictedForums));
 				if (model == null)
 				{
 					return NotFound();

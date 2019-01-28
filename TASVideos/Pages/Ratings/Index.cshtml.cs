@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Ratings
 
 		public PublicationRatingsModel Publication { get; set; } = new PublicationRatingsModel();
 
-		public IEnumerable<PublicationRatingsModel.RatingEntry> VisibleRatings => UserHas(PermissionTo.SeePrivateRatings)
+		public IEnumerable<PublicationRatingsModel.RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
 			? Publication.Ratings
 			: Publication.Ratings.Where(r => r.IsPublic);
 

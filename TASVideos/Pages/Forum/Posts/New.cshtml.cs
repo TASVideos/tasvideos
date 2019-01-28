@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public async Task OnGet()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var allowRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var allowRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			var since = user.LastLoggedInTimeStamp ?? DateTime.UtcNow;
 			Posts = await _db.ForumPosts
 				.ExcludeRestricted(allowRestricted)

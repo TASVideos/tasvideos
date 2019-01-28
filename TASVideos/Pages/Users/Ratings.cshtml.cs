@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Users
 		{
 			Ratings = await _userManager.GetUserRatings(
 				UserName,
-				UserHas(PermissionTo.SeePrivateRatings));
+				User.Has(PermissionTo.SeePrivateRatings));
 
 			if (Ratings == null)
 			{

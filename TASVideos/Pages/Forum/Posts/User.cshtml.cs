@@ -67,7 +67,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			Awards = await _awards.AwardsForUser(UserPosts.Id);
 
-			bool seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			UserPosts.Posts = _db.ForumPosts
 				.CreatedBy(UserName)
 				.ExcludeRestricted(seeRestricted)

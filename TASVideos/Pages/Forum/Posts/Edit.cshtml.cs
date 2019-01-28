@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			Post = await _db.ForumPosts
 				.ExcludeRestricted(seeRestricted)
 				.Where(p => p.Id == Id)
@@ -70,7 +70,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			Post.IsLastPost = Id == lastPostId;
 
-			if (!UserHas(PermissionTo.EditForumPosts)
+			if (!User.Has(PermissionTo.EditForumPosts)
 				&& !(Post.IsLastPost && Post.PosterId == User.GetUserId()))
 			{
 				return AccessDenied();
@@ -89,7 +89,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return Page();
 			}
 
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 
 			var forumPost = await _db.ForumPosts
 				.Include(p => p.Topic)
@@ -102,7 +102,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			if (!UserHas(PermissionTo.EditForumPosts))
+			if (!User.Has(PermissionTo.EditForumPosts))
 			{
 				if (!await CanEdit(forumPost, User.GetUserId()))
 				{
@@ -127,7 +127,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGetDelete()
 		{
-			var seeRestricted = UserHas(PermissionTo.SeeRestrictedForums);
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			var post = await _db.ForumPosts
 				.Include(p => p.Topic)
 				.Include(p => p.Topic.Forum)
@@ -139,7 +139,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			if (!UserHas(PermissionTo.DeleteForumPosts))
+			if (!User.Has(PermissionTo.DeleteForumPosts))
 			{
 				// Check if last post
 				var lastPost = _db.ForumPosts

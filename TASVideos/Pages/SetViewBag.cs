@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
-using TASVideos.Services;
 
 namespace TASVideos.Pages
 {
@@ -25,11 +23,10 @@ namespace TASVideos.Pages
 				var viewData = pageResult.ViewData;
 				viewData["Version"] = Version;
 
-				var userClaimsPrincipal = context.HttpContext.User;
-				if (userClaimsPrincipal.Identity.IsAuthenticated)
+				var user = context.HttpContext.User;
+				if (user.Identity.IsAuthenticated)
 				{
-					var userTasks = (UserManager)context.HttpContext.RequestServices.GetService(typeof(UserManager));
-					viewData["UserPermissions"] = await userTasks.GetUserPermissionsById(userClaimsPrincipal.GetUserId());
+					viewData["UserPermissions"] = user.Permissions();
 				}
 				else
 				{
