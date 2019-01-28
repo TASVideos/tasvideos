@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.ForumEngine;
 using TASVideos.Services;
 
@@ -16,7 +12,6 @@ namespace TASVideos.Pages
 	public class BasePageModel : PageModel
 	{
 		private readonly UserManager _userManager;
-		private IEnumerable<PermissionTo> _userPermission;
 
 		public BasePageModel(UserManager userManager)
 		{
@@ -24,11 +19,6 @@ namespace TASVideos.Pages
 		}
 
 		public string BaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-
-		internal IEnumerable<PermissionTo> UserPermissions =>
-			_userPermission ?? (_userPermission = HttpContext == null || !User.Identity.IsAuthenticated
-				? Enumerable.Empty<PermissionTo>()
-				: _userManager.GetUserPermissionsById(User.GetUserId()).Result);
 
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
 

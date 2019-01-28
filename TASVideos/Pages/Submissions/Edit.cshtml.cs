@@ -104,7 +104,7 @@ namespace TASVideos.Pages.Submissions
 
 			AvailableStatuses = SubmissionHelper.AvailableStatuses(
 				Submission.Status,
-				UserPermissions,
+				User.Permissions(),
 				Submission.CreateTimestamp,
 				Submission.Submitter == User.Identity.Name || Submission.Authors.Contains(User.Identity.Name),
 				Submission.Judge == User.Identity.Name);
@@ -154,7 +154,7 @@ namespace TASVideos.Pages.Submissions
 
 			var availableStatus = SubmissionHelper.AvailableStatuses(
 				subInfo.CurrentStatus,
-				UserPermissions,
+				User.Permissions(),
 				subInfo.CreateDate,
 				subInfo.UserIsAuthorOrSubmitter,
 				subInfo.UserIsJudge)
