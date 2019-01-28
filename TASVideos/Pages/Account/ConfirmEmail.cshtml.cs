@@ -10,9 +10,7 @@ namespace TASVideos.Pages.Account
 	{
 		private readonly UserManager _userManager;
 
-		public ConfirmEmailModel(
-			UserManager userManager)
-			: base(userManager)
+		public ConfirmEmailModel(UserManager userManager)
 		{
 			_userManager = userManager;
 		}

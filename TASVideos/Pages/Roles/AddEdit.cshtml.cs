@@ -11,8 +11,6 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Roles.Models;
-using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Roles
 {
@@ -21,8 +19,7 @@ namespace TASVideos.Pages.Roles
 	{
 		private readonly ApplicationDbContext _db;
 
-		public AddEditModel(ApplicationDbContext db, UserManager userManager)
-			: base(userManager)
+		public AddEditModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

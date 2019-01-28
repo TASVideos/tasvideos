@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum
 {
@@ -15,10 +14,8 @@ namespace TASVideos.Pages.Forum
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		public EditModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+
+		public EditModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -14,9 +13,7 @@ namespace TASVideos.Pages.Messages
 	{
 		private readonly UserManager _userManager;
 
-		public IndexModel(
-			UserManager userManager)
-			: base(userManager)
+		public IndexModel(UserManager userManager)
 		{
 			_userManager = userManager;
 		}

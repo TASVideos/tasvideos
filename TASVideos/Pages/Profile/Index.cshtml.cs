@@ -17,7 +17,6 @@ namespace TASVideos.Pages.Profile
 		public IndexModel(
 			IAwardsCache awards,
 			UserManager userManager)
-			: base(userManager)
 		{
 			_awards = awards;
 			_userManager = userManager;

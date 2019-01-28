@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Account
 {
@@ -14,10 +13,7 @@ namespace TASVideos.Pages.Account
 	{
 		private readonly SignInManager<User> _signInManager;
 
-		public LogoutModel(
-			SignInManager<User> signInManager,
-			UserManager userManager)
-			: base(userManager)
+		public LogoutModel(SignInManager<User> signInManager)
 		{
 			_signInManager = signInManager;
 		}

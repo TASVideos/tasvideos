@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -24,7 +23,6 @@ namespace TASVideos.Pages.Messages
 		public CreateModel(
 			ApplicationDbContext db,
 			UserManager userManager)
-			: base(userManager)
 		{
 			_db = db;
 			_userManager = userManager;

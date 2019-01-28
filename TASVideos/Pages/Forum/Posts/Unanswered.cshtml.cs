@@ -17,10 +17,7 @@ namespace TASVideos.Pages.Forum.Posts
 	{
 		private readonly ApplicationDbContext _db;
 
-		public UnansweredModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+		public UnansweredModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

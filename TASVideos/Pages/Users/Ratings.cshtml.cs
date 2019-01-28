@@ -14,9 +14,7 @@ namespace TASVideos.Pages.Users
 	{
 		private readonly UserManager _userManager;
 
-		public RatingsModel(
-			UserManager userManager)
-			: base(userManager)
+		public RatingsModel(UserManager userManager)
 		{
 			_userManager = userManager;
 		}

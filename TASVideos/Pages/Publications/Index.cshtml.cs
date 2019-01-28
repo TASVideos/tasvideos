@@ -25,9 +25,7 @@ namespace TASVideos.Pages.Publications
 		public IndexModel(
 			ApplicationDbContext db,
 			ICacheService cache,
-			IPointsCalculator points,
-			UserManager userManager) 
-			: base(userManager)
+			IPointsCalculator points)
 		{
 			_db = db;
 			_cache = cache;

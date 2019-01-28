@@ -9,9 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Topics
@@ -24,9 +22,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public SplitModel(
 			ApplicationDbContext db,
-			ExternalMediaPublisher publisher,
-			UserManager userManager)
-			: base(userManager)
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_publisher = publisher;

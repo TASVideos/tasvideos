@@ -14,10 +14,7 @@ namespace TASVideos.Pages.Wiki
 	{
 		private readonly IWikiPages _pages;
 
-		public PreviewModel(
-			UserManager userManager, 
-			IWikiPages pages)
-			: base(userManager)
+		public PreviewModel(IWikiPages pages)
 		{
 			_pages = pages;
 		}

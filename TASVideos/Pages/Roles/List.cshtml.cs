@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Pages.Roles.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Roles
 {
@@ -17,8 +16,7 @@ namespace TASVideos.Pages.Roles
 	{
 		private readonly ApplicationDbContext _db;
 
-		public ListModel(ApplicationDbContext db, UserManager userManager)
-			: base(userManager)
+		public ListModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

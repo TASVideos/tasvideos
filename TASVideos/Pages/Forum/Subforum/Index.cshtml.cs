@@ -10,7 +10,6 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Subforum
 {
@@ -19,10 +18,7 @@ namespace TASVideos.Pages.Forum.Subforum
 	{
 		private readonly ApplicationDbContext _db;
 
-		public IndexModel(
-			ApplicationDbContext db,
-			UserManager userManager) 
-			: base(userManager)
+		public IndexModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

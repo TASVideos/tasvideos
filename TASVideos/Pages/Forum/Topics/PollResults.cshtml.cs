@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -16,10 +15,7 @@ namespace TASVideos.Pages.Forum.Topics
 	{
 		private readonly ApplicationDbContext _db;
 
-		public PollResultsModel(
-			ApplicationDbContext db,
-			UserManager userManager)
-			: base(userManager)
+		public PollResultsModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

@@ -5,19 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using TASVideos.ForumEngine;
-using TASVideos.Services;
 
 namespace TASVideos.Pages
 {
 	public class BasePageModel : PageModel
 	{
-		private readonly UserManager _userManager;
-
-		public BasePageModel(UserManager userManager)
-		{
-			_userManager = userManager;
-		}
-
 		public string BaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
 		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;

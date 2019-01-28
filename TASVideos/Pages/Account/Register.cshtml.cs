@@ -28,7 +28,6 @@ namespace TASVideos.Pages.Account
 			SignInManager<User> signInManager,
 			IEmailSender emailSender,
 			ILogger<RegisterModel> logger)
-			: base(userManager)
 		{
 			_db = db;
 			_userManager = userManager;

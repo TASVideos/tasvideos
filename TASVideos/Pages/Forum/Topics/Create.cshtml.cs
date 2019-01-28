@@ -25,9 +25,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public CreateModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			ForumTasks forumTasks,
-			UserManager userManager)
-			: base(userManager)
+			ForumTasks forumTasks)
 		{
 			_db = db;
 			_publisher = publisher;

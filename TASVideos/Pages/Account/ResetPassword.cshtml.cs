@@ -15,7 +15,6 @@ namespace TASVideos.Pages.Account
 
 		public ResetPasswordModel(
 			UserManager userManager)
-			: base(userManager)
 		{
 			_userManager = userManager;
 		}

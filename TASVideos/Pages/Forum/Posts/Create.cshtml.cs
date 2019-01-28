@@ -28,8 +28,7 @@ namespace TASVideos.Pages.Forum.Posts
 			ForumTasks forumTasks,
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
-			IEmailService emailService) 
-			: base(userManager)
+			IEmailService emailService)
 		{
 			_userManager = userManager;
 			_forumTasks = forumTasks;

@@ -8,7 +8,6 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Permissions.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Permissions
 {
@@ -29,8 +28,7 @@ namespace TASVideos.Pages.Permissions
 			})
 			.ToList();
 
-		public IndexModel(ApplicationDbContext db, UserManager userManager)
-			: base(userManager)
+		public IndexModel(ApplicationDbContext db)
 		{
 			_db = db;
 		}

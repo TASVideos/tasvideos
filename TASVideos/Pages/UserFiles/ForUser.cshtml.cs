@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Models;
-using TASVideos.Services;
 using TASVideos.Tasks;
 
 namespace TASVideos.Pages.UserFiles
@@ -15,10 +14,7 @@ namespace TASVideos.Pages.UserFiles
 	{
 		private readonly UserFileTasks _userFileTasks;
 
-		public ForUserModel(
-			UserFileTasks userFileTasks,
-			UserManager userManager) 
-			: base(userManager)
+		public ForUserModel(UserFileTasks userFileTasks)
 		{
 			_userFileTasks = userFileTasks;
 		}

@@ -23,9 +23,7 @@ namespace TASVideos.Pages.Wiki
 		public DeletedPagesModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			IWikiPages wikiPages,
-			UserManager userManager) 
-			: base(userManager)
+			IWikiPages wikiPages)
 		{
 			_db = db;
 			_publisher = publisher;

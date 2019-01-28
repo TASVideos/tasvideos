@@ -15,10 +15,7 @@ namespace TASVideos.Pages.Forum.Posts
 	{
 		private readonly ForumTasks _forumTasks;
 
-		public IndexModel(
-			ForumTasks forumTasks,
-			UserManager userManager) 
-			: base(userManager)
+		public IndexModel(ForumTasks forumTasks)
 		{
 			_forumTasks = forumTasks;
 		}

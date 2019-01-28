@@ -10,7 +10,6 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Publications
 {
@@ -22,9 +21,7 @@ namespace TASVideos.Pages.Publications
 
 		public CatalogModel(
 			ApplicationDbContext db,
-			IMapper mapper,
-			UserManager userManager)
-			: base(userManager)
+			IMapper mapper)
 		{
 			_db = db;
 			_mapper = mapper;

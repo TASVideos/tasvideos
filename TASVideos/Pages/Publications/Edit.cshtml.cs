@@ -22,9 +22,7 @@ namespace TASVideos.Pages.Publications
 
 		public EditModel(
 			ApplicationDbContext db,
-			IWikiPages wikiPages,
-			UserManager userManager)
-			: base(userManager)
+			IWikiPages wikiPages)
 		{
 			_db = db;
 			_wikiPages = wikiPages;

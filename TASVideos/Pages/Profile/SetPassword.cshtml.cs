@@ -21,7 +21,6 @@ namespace TASVideos.Pages.Profile
 		public SetPasswordModel(
 			UserManager userManager,
 			SignInManager<User> signInManager)
-			: base(userManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;

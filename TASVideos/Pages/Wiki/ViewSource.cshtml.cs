@@ -11,10 +11,7 @@ namespace TASVideos.Pages.Wiki
 	{
 		private readonly IWikiPages _wikiPages;
 
-		public ViewSourceModel(
-			IWikiPages wikiPages,
-			UserManager userManager)
-			: base(userManager)
+		public ViewSourceModel(IWikiPages wikiPages)
 		{
 			_wikiPages = wikiPages;
 		}

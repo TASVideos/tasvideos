@@ -15,9 +15,7 @@ namespace TASVideos.Pages.Diagnostics
 
 		public CacheControlModel(
 			IWikiPages wikiPages,
-			IAwardsCache awards,
-			UserManager userManager)
-			: base(userManager)
+			IAwardsCache awards)
 		{
 			_wikiPages = wikiPages;
 			_awards = awards;

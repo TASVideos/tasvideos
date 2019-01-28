@@ -12,10 +12,7 @@ namespace TASVideos.Pages.Wiki
 	{
 		private readonly IWikiPages _wikiPages;
 
-		public IndexModel(
-			IWikiPages wikiPages,
-			UserManager userManager)
-			: base(userManager)
+		public IndexModel(IWikiPages wikiPages)
 		{
 			_wikiPages = wikiPages;
 		}

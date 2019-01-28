@@ -18,9 +18,7 @@ namespace TASVideos.Pages.Wiki
 
 		public EditModel(
 			IWikiPages wikiPages,
-			ExternalMediaPublisher publisher,
-			UserManager userManager)
-			: base(userManager)
+			ExternalMediaPublisher publisher)
 		{
 			_wikiPages = wikiPages;
 			_publisher = publisher;
