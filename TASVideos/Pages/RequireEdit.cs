@@ -1,15 +1,12 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 using TASVideos.Extensions;
 
 namespace TASVideos.Pages
 {
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
-	public class RequireEdit : Attribute, IAsyncPageFilter
+	public class RequireEdit : RequireBase, IAsyncPageFilter
 	{
 		public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
 		{
@@ -22,7 +19,7 @@ namespace TASVideos.Pages
 
 			if (!user.Identity.IsAuthenticated)
 			{
-				context.Result = ReRouteToLogin(context.HttpContext.Request.Path + context.HttpContext.Request.QueryString);
+				context.Result = ReRouteToLogin(context);
 				return;
 			}
 
@@ -39,25 +36,10 @@ namespace TASVideos.Pages
 			{
 				await next.Invoke();
 			}
-			else if (context.HttpContext.Request.IsAjaxRequest())
+			else 
 			{
-				context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-				context.Result = new EmptyResult();
+				Denied(context);
 			}
-			else
-			{
-				context.Result = AccessDenied();
-			}
-		}
-
-		private IActionResult ReRouteToLogin(string returnUrl)
-		{
-			return new RedirectToPageResult("/Account/Login", returnUrl);
-		}
-
-		private IActionResult AccessDenied()
-		{
-			return new RedirectToPageResult("/Account/AccessDenied");
 		}
 	}
 }
