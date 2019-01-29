@@ -29,8 +29,9 @@ namespace TASVideos.Pages
 				pageToEdit = WebUtility.UrlDecode((context.HttpContext.Request.QueryString.Value ?? "path=").Split("path=")[1]);
 			}
 
+			var userPerms = await GetUserPermissions(context);
 			var canEdit = WikiHelper
-				.UserCanEditWikiPage(pageToEdit, user.Identity.Name, user.Permissions());
+				.UserCanEditWikiPage(pageToEdit, user.Identity.Name, userPerms);
 
 			if (canEdit)
 			{

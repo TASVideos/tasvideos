@@ -37,7 +37,7 @@ namespace TASVideos.Pages
 				return;
 			}
 
-			var userPerms = user.Permissions();
+			var userPerms = await GetUserPermissions(context);
 
 			if ((MatchAny && RequiredPermissions.Any(r => userPerms.Contains(r)))
 				|| RequiredPermissions.IsSubsetOf(userPerms))
