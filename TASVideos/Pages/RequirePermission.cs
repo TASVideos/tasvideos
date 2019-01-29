@@ -1,38 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 
 namespace TASVideos.Pages
 {
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
-	public class RequirePermissionAttribute : Attribute, IAsyncPageFilter
+	public class RequirePermissionAttribute : RequireBase, IAsyncPageFilter
 	{
 		public RequirePermissionAttribute(PermissionTo requiredPermission)
 		{
-			RequiredPermissions = new[] { requiredPermission };
-		}
-
-		public RequirePermissionAttribute(params PermissionTo[] requiredPermissions)
-		{
-			RequiredPermissions = requiredPermissions;
+			RequiredPermissions = new HashSet<PermissionTo> { requiredPermission };
 		}
 
 		public RequirePermissionAttribute(bool matchAny, params PermissionTo[] requiredPermissions)
 		{
 			MatchAny = matchAny;
-			RequiredPermissions = requiredPermissions;
+			RequiredPermissions = requiredPermissions.ToHashSet();
 		}
 
 		public bool MatchAny { get; }
-		public PermissionTo[] RequiredPermissions { get; }
+		public HashSet<PermissionTo> RequiredPermissions { get; }
 
 		public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
 		{
@@ -45,37 +33,21 @@ namespace TASVideos.Pages
 
 			if (!user.Identity.IsAuthenticated)
 			{
-				context.Result = ReRouteToLogin(context.HttpContext.Request.Path + context.HttpContext.Request.QueryString);
+				context.Result = ReRouteToLogin(context);
 				return;
 			}
 
 			var userPerms = user.Permissions();
-			var perms = new HashSet<PermissionTo>(RequiredPermissions);
 
-			if ((MatchAny && perms.Any(r => userPerms.Contains(r)))
-				|| perms.IsSubsetOf(userPerms))
+			if ((MatchAny && RequiredPermissions.Any(r => userPerms.Contains(r)))
+				|| RequiredPermissions.IsSubsetOf(userPerms))
 			{
 				await next.Invoke();
 			}
-			else if (context.HttpContext.Request.IsAjaxRequest())
-			{
-				context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-				context.Result = new EmptyResult();
-			}
 			else
 			{
-				context.Result = AccessDenied();
+				Denied(context);
 			}
-		}
-
-		private IActionResult ReRouteToLogin(string returnUrl)
-		{
-			return new RedirectToPageResult("/Account/Login", new { returnUrl });
-		}
-
-		private IActionResult AccessDenied()
-		{
-			return new RedirectToPageResult("/Account/AccessDenied");
 		}
 	}
 }
