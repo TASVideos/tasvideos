@@ -2,6 +2,11 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers
@@ -113,6 +118,17 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 
 	public class DeleteButtonTagHelper : TagHelper
 	{
+		private readonly IHtmlHelper _htmlHelper;
+
+		public DeleteButtonTagHelper(IHtmlHelper helper)
+		{
+			_htmlHelper = helper;
+		}
+
+		[HtmlAttributeNotBound]
+		[ViewContext]
+		public ViewContext ViewContext { get; set; }
+
 		public string AspHref { get; set; }
 
 		public string WarningMessage { get; set; } = "Are you sure you want to delete this record?";
@@ -126,9 +142,13 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 				output.Attributes.Remove(existingClassAttr);
 			}
 
+			((IViewContextAware)_htmlHelper).Contextualize(ViewContext);
 			var content = (await output.GetChildContentAsync()).GetContent();
 			output.TagName = "span";
 			var uniqueId = UniqueId();
+
+			var antiForgeryToken = _htmlHelper.AntiForgeryToken().GetString();
+
 			output.Content.SetHtmlContent($@"
 <button type='button' class='btn btn-danger {existingCssClass}' data-toggle='modal' data-target='#areYouSureModal{uniqueId}'>{content}</button>
 <div id='areYouSureModal{uniqueId}' class='modal fade' role='dialog'>
@@ -142,7 +162,10 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 				<p>{WarningMessage}</p>
 			</div>
 			<div class='modal-footer'>
-				<a href='{WebUtility.UrlDecode(AspHref)}' class='text-center btn btn-danger'>Yes</a>
+				<form action='{WebUtility.UrlDecode(AspHref)}' method='post'>
+					{antiForgeryToken}
+					<button type='submit' class='text-center btn btn-danger'>Yes</button>
+				</form>
 				<button type='button' class='btn btn-secondary' data-dismiss='modal'>No</button>
 			</div>
 		</div>

@@ -14,6 +14,7 @@ using TASVideos.Services;
 namespace TASVideos.Pages.Messages
 {
 	[Authorize]
+	[IgnoreAntiforgeryToken]
 	public class InboxModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
@@ -69,8 +70,7 @@ namespace TASVideos.Pages.Messages
 			return RedirectToPage("Inbox");
 		}
 
-		// TODO: make this a post
-		public async Task<IActionResult> OnGetDelete()
+		public async Task<IActionResult> OnPostDelete()
 		{
 			if (!Id.HasValue)
 			{

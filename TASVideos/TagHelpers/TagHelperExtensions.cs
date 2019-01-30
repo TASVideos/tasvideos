@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using System.Text.Encodings.Web;
+
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers
@@ -17,6 +21,13 @@ namespace TASVideos.TagHelpers
 			}
 
 			output.Attributes.Add(ta);
+		}
+
+		public static string GetString(this IHtmlContent content)
+		{
+		    var writer = new StringWriter();
+		    content.WriteTo(writer, HtmlEncoder.Default);
+		    return writer.ToString();
 		}
 	}
 }
