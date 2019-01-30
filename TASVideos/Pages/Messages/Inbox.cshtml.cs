@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Messages
 {
@@ -27,7 +26,6 @@ namespace TASVideos.Pages.Messages
 		[FromRoute]
 		public int? Id { get; set; }
 
-		// TODO: rename this model
 		[BindProperty]
 		public IEnumerable<InboxEntry> Messages { get; set; } = new List<InboxEntry>();
 
@@ -48,8 +46,7 @@ namespace TASVideos.Pages.Messages
 				.ToListAsync();
 		}
 
-		// TODO: make this a post
-		public async Task<IActionResult> OnGetSave()
+		public async Task<IActionResult> OnPostSave()
 		{
 			if (!Id.HasValue)
 			{
@@ -67,7 +64,7 @@ namespace TASVideos.Pages.Messages
 				await _db.SaveChangesAsync();
 			}
 
-			return RedirectToPage("Inbox");
+			return RedirectToPage("Savebox");
 		}
 
 		public async Task<IActionResult> OnPostDelete()

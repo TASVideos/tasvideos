@@ -37,7 +37,9 @@
 			<td>@entry.FromUser</td>
 			<td>@entry.SendDate</td>
 			<td>
-				<a asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id" class="btn btn-primary btn-sm">Save</a>
+				<form method="post" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id" style="display: inline-block">
+					<button type="submit" class="btn btn-primary btn-sm">Save</button>
+				</form>
 				<delete-button
 					asp-href="/Messages/InBox/@entry.Id/Delete"
 					warning-message="Are you sure you want to remove this message?"
