@@ -49,7 +49,6 @@ namespace TASVideos.Pages
 			if (context.HandlerMethod.HttpMethod == "Post")
 			{
 				var userManager = (UserManager)context.HttpContext.RequestServices.GetService(typeof(UserManager));
-				// TODO: take these permissions and refresh the cookie's claims while we are at it
 				return await userManager.GetUserPermissionsById(context.HttpContext.User.GetUserId());
 			}
 
