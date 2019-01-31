@@ -58,7 +58,7 @@ namespace TASVideos.Pages.Wiki
 			}
 		}
 
-		public async Task<IActionResult> OnGetDeletePage(string path)
+		public async Task<IActionResult> OnPostDeletePage(string path)
 		{
 			if (!User.Has(PermissionTo.DeleteWikiPages))
 			{
@@ -78,7 +78,7 @@ namespace TASVideos.Pages.Wiki
 			return RedirectToPage("DeletedPages");
 		}
 
-		public async Task<IActionResult> OnGetDeleteRevision(string path, int revision)
+		public async Task<IActionResult> OnPostDeleteRevision(string path, int revision)
 		{
 			if (!User.Has(PermissionTo.DeleteWikiPages))
 			{
@@ -101,7 +101,7 @@ namespace TASVideos.Pages.Wiki
 			return Redirect("/" + path);
 		}
 
-		public async Task<IActionResult> OnGetUndelete(string path)
+		public async Task<IActionResult> OnPostUndelete(string path)
 		{
 			if (!User.Has(PermissionTo.DeleteWikiPages))
 			{

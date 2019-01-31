@@ -135,7 +135,7 @@ namespace TASVideos.Pages.Game.Rom
 			return RedirectToPage("List", new { gameId = GameId });
 		}
 
-		public async Task<ActionResult> OnGetDelete()
+		public async Task<ActionResult> OnPostDelete()
 		{
 			if (!Id.HasValue)
 			{
