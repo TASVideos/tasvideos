@@ -1,10 +1,13 @@
 ﻿using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
 using TASVideos.Models;
 using TASVideos.Tasks;
 
@@ -13,10 +16,14 @@ namespace TASVideos.Pages.UserFiles
 	[AllowAnonymous]
 	public class InfoModel : BasePageModel
 	{
+		private readonly ApplicationDbContext _db;
 		private readonly UserFileTasks _userFileTasks;
 		
-		public InfoModel(UserFileTasks userFileTasks)
+		public InfoModel(
+			ApplicationDbContext db,
+			UserFileTasks userFileTasks)
 		{
+			_db = db;
 			_userFileTasks = userFileTasks;
 		}
 
@@ -48,30 +55,35 @@ namespace TASVideos.Pages.UserFiles
 
 		public async Task<IActionResult> OnGetDownload()
 		{
-			var model = await _userFileTasks.GetContents(Id);
+			var file = await _db.UserFiles
+				.Where(userFile => userFile.Id == Id)
+				.SingleOrDefaultAsync();
 
-			if (model == null)
+			if (file == null)
 			{
 				return NotFound();
 			}
 
-			if (model.Hidden)
+			if (file.Hidden)
 			{
-				if (!User.Identity.IsAuthenticated || model.AuthorId != User.GetUserId())
+				if (!User.Identity.IsAuthenticated || file.AuthorId != User.GetUserId())
 				{
 					return NotFound();
 				}
 			}
 
-			await _userFileTasks.IncrementDownloadCount(Id);
+			file.Downloads++;
+
+			// TODO: handle DbConcurrencyException
+			await _db.SaveChangesAsync();
 
 			var stream = new GZipStream(
-				new MemoryStream(model.Content),
+				new MemoryStream(file.Content),
 				CompressionMode.Decompress);
 
-			return new FileStreamResult(stream, "application/x-" + model.FileType)
+			return new FileStreamResult(stream, "application/x-" + file.Type)
 			{
-				FileDownloadName = model.FileName
+				FileDownloadName = file.FileName
 			};
 		}
 	}
