@@ -30,8 +30,8 @@ namespace TASVideos.Pages.Roles
 		[TempData]
 		public string MessageType { get; set; }
 
-        [FromRoute]
-        public int? Id { get; set; }
+		[FromRoute]
+		public int? Id { get; set; }
 
 		[BindProperty]
 		public RoleEditModel Role { get; set; } = new RoleEditModel();
@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Roles
 			if (Id.HasValue)
 			{
 				Role = await _db.Roles
-                    .Where(r => r.Id == Id.Value)
+					.Where(r => r.Id == Id.Value)
 					.Select(r => new RoleEditModel
 					{
 						Name = r.Name,
@@ -112,12 +112,17 @@ namespace TASVideos.Pages.Roles
 				MessageType = Styles.Danger;
 				Message = $"Unable to update Role {Id}, the role may have already been updated, or the game no longer exists.";
 			}
-			
+
 			return RedirectToPage("List");
 		}
 
-		public async Task<IActionResult> OnGetDelete(int id)
+		public async Task<IActionResult> OnPostDelete()
 		{
+			if (!Id.HasValue)
+			{
+				return NotFound();
+			}
+
 			if (!User.Has(PermissionTo.DeleteRoles))
 			{
 				return AccessDenied();
@@ -127,7 +132,7 @@ namespace TASVideos.Pages.Roles
 			{
 				MessageType = Styles.Success;
 				Message = $"Role {Id}, deleted successfully.";
-				_db.Roles.Attach(new Role { Id = id }).State = EntityState.Deleted;
+				_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
@@ -135,7 +140,7 @@ namespace TASVideos.Pages.Roles
 				MessageType = Styles.Danger;
 				Message = $"Unable to delete Role {Id}, the role may have already been deleted or updated.";
 			}
-			
+
 			return RedirectToPage("List");
 		}
 

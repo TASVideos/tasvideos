@@ -1,4 +1,4 @@
-﻿@page "{id?}"
+﻿@page "{id?}/{handler?}"
 @model AddEditModel
 @{
 	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Role.Name : "Create a New Role";
