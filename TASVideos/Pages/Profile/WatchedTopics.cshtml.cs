@@ -41,7 +41,7 @@ namespace TASVideos.Pages.Profile
 				.ToListAsync();
 		}
 
-		public async Task<IActionResult> OnGetStopWatching(int topicId)
+		public async Task<IActionResult> OnPostStopWatching(int topicId)
 		{
 			try
 			{

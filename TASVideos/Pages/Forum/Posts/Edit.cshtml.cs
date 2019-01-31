@@ -121,7 +121,7 @@ namespace TASVideos.Pages.Forum.Posts
 			return RedirectToPage("/Forum/Topics/Index", new { Id = Post.TopicId });
 		}
 
-		public async Task<IActionResult> OnGetDelete()
+		public async Task<IActionResult> OnPostDelete()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			var post = await _db.ForumPosts

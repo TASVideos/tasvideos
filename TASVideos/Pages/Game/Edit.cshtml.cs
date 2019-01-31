@@ -107,7 +107,7 @@ namespace TASVideos.Pages.Game
 			return RedirectToPage("List");
 		}
 
-		public async Task<IActionResult> OnGetDelete()
+		public async Task<IActionResult> OnPostDelete()
 		{
 			if (!Id.HasValue)
 			{
