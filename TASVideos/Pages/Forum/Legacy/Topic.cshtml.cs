@@ -3,20 +3,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Legacy
 {
 	// Handles legacy forum links to viewTopic.php
 	[AllowAnonymous]
-	public class TopicModel : BasePageModel
+	public class TopicModel : BaseForumModel
 	{
-		private readonly ForumTasks _forumTasks;
-
-		public TopicModel(ForumTasks forumTasks)
+		public TopicModel(ApplicationDbContext db) : base (db)
 		{
-			_forumTasks = forumTasks;
 		}
 
 		[FromQuery]
@@ -34,7 +31,7 @@ namespace TASVideos.Pages.Forum.Legacy
 
 			if (P.HasValue)
 			{
-				var model = await _forumTasks.GetPostPosition(P.Value, User.Has(PermissionTo.SeeRestrictedForums));
+				var model = await GetPostPosition(P.Value, User.Has(PermissionTo.SeeRestrictedForums));
 				if (model == null)
 				{
 					return NotFound();

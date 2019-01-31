@@ -1,23 +1,17 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Posts
 {
 	// TODO: how to do this without a redirect
 	[AllowAnonymous]
-	public class IndexModel : BasePageModel
+	public class IndexModel : BaseForumModel
 	{
-		private readonly ForumTasks _forumTasks;
-
-		public IndexModel(ForumTasks forumTasks)
+		public IndexModel(ApplicationDbContext db) : base(db)
 		{
-			_forumTasks = forumTasks;
 		}
 
 		[FromRoute]
@@ -25,7 +19,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			var model = await _forumTasks.GetPostPosition(Id, User.Has(PermissionTo.SeeRestrictedForums));
+			var model = await GetPostPosition(Id, User.Has(PermissionTo.SeeRestrictedForums));
 			if (model == null)
 			{
 				return NotFound();

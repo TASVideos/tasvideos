@@ -8,31 +8,27 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Extensions;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Topics
 {
 	[AllowAnonymous]
-	public class IndexModel : BasePageModel
+	public class IndexModel : BaseForumModel
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IAwardsCache _awards;
-		private readonly ForumTasks _forumTasks;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			ForumTasks forumTasks,
 			IAwardsCache awards)
+			: base(db)
 		{
 			_db = db;
 			_publisher = publisher;
-			_forumTasks = forumTasks;
 			_awards = awards;
 		}
 
@@ -231,7 +227,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return AccessDenied();
 			}
 
-			await _forumTasks.WatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
+			await WatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
 			return RedirectToPage("Index", new { Id });
 		}
 
@@ -242,7 +238,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return AccessDenied();
 			}
 
-			await _forumTasks.UnwatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
+			await UnwatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
 			return RedirectToPage("Index", new { Id });
 		}
 	}
