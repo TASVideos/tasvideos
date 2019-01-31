@@ -9,27 +9,23 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Topics
 {
 	[RequirePermission(PermissionTo.CreateForumTopics)]
-	public class CreateModel : BasePageModel
+	public class CreateModel : BaseForumModel
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
-		private readonly ForumTasks _forumTasks;
 
 		public CreateModel(
 			ApplicationDbContext db,
-			ExternalMediaPublisher publisher,
-			ForumTasks forumTasks)
+			ExternalMediaPublisher publisher)
+			: base(db)
 		{
 			_db = db;
 			_publisher = publisher;
-			_forumTasks = forumTasks;
 		}
 
 		[FromRoute]
@@ -97,8 +93,8 @@ namespace TASVideos.Pages.Forum.Topics
 				Text = Topic.Post
 			};
 
-			await _forumTasks.CreatePost(topic.Id, forumPostModel, userId, IpAddress.ToString());
-			await _forumTasks.WatchTopic(topic.Id, userId, canSeeRestricted: true);
+			await CreatePost(topic.Id, forumPostModel, userId, IpAddress.ToString());
+			await WatchTopic(topic.Id, userId, canSeeRestricted: true);
 
 			//// TODO: auto-add topic permission based on post count, also ability to vote
 			

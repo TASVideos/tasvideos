@@ -10,28 +10,25 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.Forum.Posts
 {
 	[RequirePermission(PermissionTo.CreateForumPosts)]
-	public class CreateModel : BasePageModel
+	public class CreateModel : BaseForumModel
 	{
 		private readonly UserManager _userManager;
-		private readonly ForumTasks _forumTasks;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ApplicationDbContext _db;
 		private readonly IEmailService _emailService;
 
 		public CreateModel(
 			UserManager userManager,
-			ForumTasks forumTasks,
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
 			IEmailService emailService)
+			: base(db)
 		{
 			_userManager = userManager;
-			_forumTasks = forumTasks;
 			_publisher = publisher;
 			_emailService = emailService;
 			_db = db;
@@ -128,7 +125,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			var id = await _forumTasks.CreatePost(TopicId, Post, user.Id, IpAddress.ToString());
+			var id = await CreatePost(TopicId, Post, user.Id, IpAddress.ToString());
 
 			_publisher.SendForum(
 				topic.Forum.Restricted,
