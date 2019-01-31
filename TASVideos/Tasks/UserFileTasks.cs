@@ -84,15 +84,6 @@ namespace TASVideos.Tasks
 			await _db.SaveChangesAsync();
 		}
 
-		public async Task IncrementDownloadCount(long id)
-		{
-			// TODO: Perhaps execute SQL instead?
-			// TODO: handle concurrency exceptions
-			var file = await _db.UserFiles.SingleOrDefaultAsync(userFile => userFile.Id == id);
-			file.Downloads++;
-			await _db.SaveChangesAsync();
-		}
-
 		public async Task<UserFileIndexModel> GetIndex()
 		{
 			var model = new UserFileIndexModel
@@ -118,27 +109,6 @@ namespace TASVideos.Tasks
 			};
 
 			return model;
-		}
-
-		/// <summary>
-		/// Returns the contents of the user file with the given id, or null if no such file was
-		/// found.
-		/// </summary>
-		public async Task<UserFileDataModel> GetContents(long id)
-		{
-			var file = await _db.UserFiles
-				.Where(userFile => userFile.Id == id)
-				.Select(userFile => new UserFileDataModel
-				{
-					AuthorId = userFile.AuthorId,
-					Content = userFile.Content,
-					FileName = userFile.FileName,
-					FileType = userFile.Type,
-					Hidden = userFile.Hidden,
-				})
-				.SingleOrDefaultAsync();
-
-			return file;
 		}
 
 		public async Task<GameFileModel> GetFilesForGame(int gameId)

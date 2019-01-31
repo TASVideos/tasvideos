@@ -80,19 +80,6 @@ namespace TASVideos.Models
 		}
 	}
 
-	public class UserFileDataModel
-	{
-		public byte[] Content { get; set; }
-
-		public string FileName { get; set; }
-
-		public string FileType { get; set; }
-
-		public bool Hidden { get; set; }
-
-		public int AuthorId { get; set; }
-	}
-
 	public class GameFileModel
 	{
 		public string SystemCode { get; set; }
