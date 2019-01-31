@@ -10,12 +10,35 @@ namespace TASVideos.ForumEngine
 		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
 		private static readonly Regex Url = new Regex(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
 
+		/// <summary>
+		/// what content is legal at this time
+		/// </summary>
 		private enum ParseState
 		{
+			/// <summary>
+			/// text and bbcode tags are legal
+			/// </summary>
+			/// <value></value>
 			ChildContent,
+			/// <summary>
+			/// if the parent bbcode tag has a parameter, text and bbcode tags are legal.  otherwise, raw text only
+			/// </summary>
+			/// <value></value>
 			ChildContentIfParam,
+			/// <summary>
+			/// everything except a matching bbcode end tag is raw text
+			/// </summary>
+			/// <value></value>
 			NoChildContent,
+			/// <summary>
+			/// like ChildContent, but including special handling for listitem tags which are not closed
+			/// </summary>
+			/// <value></value>
 			List,
+			/// <summary>
+			/// like ChildContent, but including special handling for listitem tags which are not closed
+			/// </summary>
+			/// <value></value>
 			ListItem
 		}
 
