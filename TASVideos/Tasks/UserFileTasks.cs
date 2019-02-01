@@ -22,14 +22,9 @@ namespace TASVideos.Tasks
 
 		public async Task<IEnumerable<UserMovieListModel>> GetLatest(int count)
 		{
-			var result = await _db.UserFiles
-				.Include(userFile => userFile.Author)
+			return await _db.UserFiles
 				.Where(userFile => !userFile.Hidden)
 				.OrderByDescending(userFile => userFile.UploadTimestamp)
-				.Take(count)
-				.ToListAsync();
-
-			return result
 				.Select(userFile => new UserMovieListModel
 				{
 					Author = userFile.Author.UserName,
@@ -37,7 +32,9 @@ namespace TASVideos.Tasks
 					Id = userFile.Id,
 					Title = userFile.Title,
 					Uploaded = userFile.UploadTimestamp,
-				});
+				})
+				.Take(count)
+				.ToListAsync();
 		}
 
 		/// <summary>
