@@ -29,7 +29,6 @@ namespace TASVideos
 				.AddCookieConfiguration(Environment)
 				.AddGzipCompression(Settings)
 				.AddCacheService(Settings.CacheSettings)
-				.AddTasks()
 				.AddServices()
 				.AddExternalMediaPublishing(Environment, Settings)
 				.AddAutoMapperWithProjections();

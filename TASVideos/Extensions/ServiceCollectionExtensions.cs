@@ -18,7 +18,6 @@ using TASVideos.Pages;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Tasks;
 
 namespace TASVideos.Extensions
 {
@@ -68,13 +67,6 @@ namespace TASVideos.Extensions
 			{
 				services.AddSingleton<ICacheService, NoCacheService>();
 			}
-
-			return services;
-		}
-
-		public static IServiceCollection AddTasks(this IServiceCollection services)
-		{
-			services.AddScoped<UserFileTasks>();
 
 			return services;
 		}

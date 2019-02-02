@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
