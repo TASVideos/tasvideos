@@ -8,7 +8,6 @@ namespace TASVideos.Models
 	/// </summary>
 	public class GameDisplayModel
 	{
-		public int Id { get; set; }
 		public string DisplayName { get; set; }
 		public string Abbreviation { get; set; }
 		public string ScreenshotUrl { get; set; }
