@@ -1,5 +1,4 @@
 ﻿@page "{handler?}"
-@using TASVideos.Pages.Game.Model
 @model ListModel
 @{
 	ViewData["Title"] = "Game List" + (!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? "/" + Model.Games.SystemCode : string.Empty);
