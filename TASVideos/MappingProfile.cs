@@ -60,6 +60,10 @@ namespace TASVideos
 
 			CreateMap<ForumPost, TopicFeedModel.TopicPost>()
 				.ForMember(dest => dest.PosterName, opt => opt.MapFrom(src => src.Poster.UserName));
+
+			CreateMap<UserFile, UserMovieListModel>()
+				.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.UserName))
+				.ForMember(dest => dest.Uploaded, opt => opt.MapFrom(src => src.UploadTimestamp));
 		}
 	}
 }
