@@ -13,12 +13,10 @@ namespace TASVideos.TagHelpers
 {
 	public class WikiMarkup : TagHelper, IWriterHelper
 	{
-		private readonly IHtmlHelper _htmlHelper;
 		private readonly IViewComponentHelper _viewComponentHelper;
 
 		public WikiMarkup(IHtmlHelper htmlHelper, IViewComponentHelper viewComponentHelper)
 		{
-			_htmlHelper = htmlHelper;
 			_viewComponentHelper = viewComponentHelper;
 		}
 
@@ -31,7 +29,6 @@ namespace TASVideos.TagHelpers
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
-			(_htmlHelper as IViewContextAware)?.Contextualize(ViewContext);
 			((IViewContextAware)_viewComponentHelper).Contextualize(ViewContext);
 			output.TagName = "div";
 
