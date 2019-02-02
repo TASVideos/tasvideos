@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity
 {
@@ -63,5 +64,18 @@ namespace TASVideos.Data.Entity
 		public int Downloads { get; set; }
 
 		public virtual ICollection<UserFileComment> Comments { get; set; }
+	}
+
+	public static class UserFileExtensions
+	{
+		public static IQueryable<UserFile> ThatArePublic(this IQueryable<UserFile> query)
+		{
+			return query.Where(q => !q.Hidden);
+		}
+
+		public static IQueryable<UserFile> ByRecentlyUploaded(this IQueryable<UserFile> query)
+		{
+			return query.OrderByDescending(q => q.UploadTimestamp);
+		}
 	}
 }
