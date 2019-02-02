@@ -73,6 +73,16 @@ namespace TASVideos.Data.Entity
 			return query.Where(q => !q.Hidden);
 		}
 
+		public static IQueryable<UserFile> FilterByHidden(this IQueryable<UserFile> query, bool includeHidden)
+		{
+			if (includeHidden)
+			{
+				return query;
+			}
+
+			return query.Where(userFile => !userFile.Hidden);
+		}
+
 		public static IQueryable<UserFile> ThatAreMovies(this IQueryable<UserFile> query)
 		{
 			return query.Where(q => q.Class == UserFileClass.Movie);
