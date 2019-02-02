@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 
 namespace TASVideos.Models
 {
@@ -18,8 +16,6 @@ namespace TASVideos.Models
 		[Display(Name = "Game Version", Description = "Example: USA")]
 		[StringLength(20)]
 		public string GameVersion { get; set; }
-
-		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = new List<SelectListItem>();
 
 		[Required]
 		[Display(Name = "Game Name", Description = "Example: Mega Man 2")]

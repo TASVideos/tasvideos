@@ -5,7 +5,6 @@ namespace TASVideos.Models
 {
 	public class PublicationRatingsModel
 	{
-		public int PublicationId { get; set; }
 		public string PublicationTitle { get; set; }
 
 		public IEnumerable<RatingEntry> Ratings { get; set; } = new List<RatingEntry>();

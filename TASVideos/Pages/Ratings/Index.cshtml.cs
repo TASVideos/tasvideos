@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Ratings
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationRatingsModel Publication { get; set; } = new PublicationRatingsModel();
+		public PublicationRatingsModel Publication { get; set; }
 
 		public IEnumerable<PublicationRatingsModel.RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
 			? Publication.Ratings
@@ -78,7 +78,6 @@ namespace TASVideos.Pages.Ratings
 
 			var model = new PublicationRatingsModel
 			{
-				PublicationId = publication.Id,
 				PublicationTitle = publication.Title,
 				Ratings = publication.PublicationRatings
 					.GroupBy(

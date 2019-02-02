@@ -270,7 +270,6 @@ namespace TASVideos.Services
 
 			var model = new PrivateMessageModel
 			{
-				Id = pm.Id,
 				Subject = pm.Subject,
 				SentOn = pm.CreateTimeStamp,
 				Text = pm.Text,

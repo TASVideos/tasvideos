@@ -1,4 +1,5 @@
 ﻿@page "{id}"
+@using TASVideos.Data.Helpers
 @model EditModel
 @{
 	ViewData["Title"] = $"Edit Submission #{Model.Id}";
@@ -59,7 +60,7 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.GameVersion" class="form-control-label"></label>
-				<select asp-for="Submission.GameVersion" asp-items="@Model.GameVersionOptions" class="form-control"></select>
+				<select asp-for="Submission.GameVersion" asp-items="@SubmissionHelper.GameVersionOptions" class="form-control"></select>
 				<span asp-validation-for="Submission.GameVersion" class="text-danger"></span>
 			</form-group>
 			<form-group>

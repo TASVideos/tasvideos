@@ -37,7 +37,6 @@ namespace TASVideos.Pages.Publications
 				.Where(p => p.Id == Id)
 				.Select(p => new PublicationTierEditModel
 				{
-					Id = p.Id,
 					Title = p.Title,
 					TierId = p.TierId 
 				})
