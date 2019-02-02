@@ -167,51 +167,27 @@ namespace TASVideos.Pages.Submissions
 				ModelState.AddModelError(nameof(Submission.TierId), "A submission can not be accepted without a Tier");
 			}
 
-			if (ModelState.IsValid)
+			if (!availableStatus.Contains(Submission.Status))
 			{
-				if (!availableStatus.Contains(Submission.Status))
-				{
-					ModelState.AddModelError(nameof(Submission.Status), $"Invalid status: {Submission.Status}");
-				}
+				ModelState.AddModelError(nameof(Submission.Status), $"Invalid status: {Submission.Status}");
+			}
 
-				// If user can not edit submissions then they must be an author or the original submitter
-				if (!User.Has(PermissionTo.EditSubmissions))
-				{
-					if (!subInfo.UserIsAuthorOrSubmitter)
-					{
-						return AccessDenied();
-					}
-				}
+			if (!ModelState.IsValid)
+			{
+				await PopulateAvailableTiers();
+				AvailableStatuses = availableStatus;
+				return Page();
+			}
 
-				var result = await UpdateSubmission();
-				if (result.Success)
+			// If user can not edit submissions then they must be an author or the original submitter
+			if (!User.Has(PermissionTo.EditSubmissions))
+			{
+				if (!subInfo.UserIsAuthorOrSubmitter)
 				{
-					return Redirect($"/{Id}S");
-				}
-
-				foreach (var error in result.Errors)
-				{
-					ModelState.AddModelError("", error);
+					return AccessDenied();
 				}
 			}
 
-			await PopulateAvailableTiers();
-			AvailableStatuses = availableStatus;
-
-			return Page();
-		}
-
-		private async Task PopulateAvailableTiers()
-		{
-			AvailableTiers = await _db.Tiers
-				.ToDropdown()
-				.ToListAsync();
-		}
-
-		// TODO: move this logic inline
-		// Id, Submission, User.Identity.Name
-		private async Task<SubmitResult> UpdateSubmission()
-		{
 			var submission = await _db.Submissions
 				.Include(s => s.Judge)
 				.Include(s => s.Publisher)
@@ -226,24 +202,29 @@ namespace TASVideos.Pages.Submissions
 			{
 				// TODO: check warnings
 				var parseResult = _parser.Parse(Submission.MovieFile.OpenReadStream());
-				if (parseResult.Success)
+
+				if (!parseResult.Success)
 				{
-					submission.Frames = parseResult.Frames;
-					submission.RerecordCount = parseResult.RerecordCount;
-					submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
-					if (submission.System == null)
+					foreach (var error in parseResult.Errors)
 					{
-						return new SubmitResult($"Unknown system type of {parseResult.SystemCode}");
+						ModelState.AddModelError("", error);
 					}
 
-					submission.SystemFrameRate = await _db.GameSystemFrameRates
-						.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
-							&& f.RegionCode == parseResult.Region.ToString());
+					return Page();
 				}
-				else
+
+				submission.Frames = parseResult.Frames;
+				submission.RerecordCount = parseResult.RerecordCount;
+				submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
+				if (submission.System == null)
 				{
-					return new SubmitResult(parseResult.Errors);
+					ModelState.AddModelError("", $"Unknown system type of {parseResult.SystemCode}");
+					return Page();
 				}
+
+				submission.SystemFrameRate = await _db.GameSystemFrameRates
+					.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
+						&& f.RegionCode == parseResult.Region.ToString());
 
 				using (var memoryStream = new MemoryStream())
 				{
@@ -287,14 +268,9 @@ namespace TASVideos.Pages.Submissions
 				_db.SubmissionStatusHistory.Add(history);
 			}
 
-			if (Submission.TierId.HasValue)
-			{
-				submission.IntendedTier = await _db.Tiers.SingleAsync(t => t.Id == Submission.TierId.Value);
-			}
-			else
-			{
-				submission.IntendedTier = null;
-			}
+			submission.IntendedTier = Submission.TierId.HasValue
+				? await _db.Tiers.SingleAsync(t => t.Id == Submission.TierId.Value)
+				: null;
 
 			submission.GameVersion = Submission.GameVersion;
 			submission.GameName = Submission.GameName;
@@ -317,8 +293,14 @@ namespace TASVideos.Pages.Submissions
 
 			submission.GenerateTitle();
 			await _db.SaveChangesAsync();
+			return Redirect($"/{Id}S");
+		}
 
-			return new SubmitResult(submission.Id);
+		private async Task PopulateAvailableTiers()
+		{
+			AvailableTiers = await _db.Tiers
+				.ToDropdown()
+				.ToListAsync();
 		}
 	}
 }
