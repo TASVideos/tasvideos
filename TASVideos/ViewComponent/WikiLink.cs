@@ -35,7 +35,7 @@ namespace TASVideos.ViewComponents
 				if (pp.StartsWith("user:"))
 				{
 					model.DisplayText = model.DisplayText.Substring(5);
-					model.Href = "User/Profile/" + model.DisplayText;
+					model.Href = "Users/Profile/" + model.DisplayText;
 				}
 				else
 				{
