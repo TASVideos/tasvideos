@@ -22,6 +22,9 @@ namespace TASVideos.Pages.Submissions.Models
 			SubmissionStatus.Delayed
 		};
 
-		public static IEnumerable<SubmissionStatus> All => Enum.GetValues(typeof(SubmissionStatus)).Cast<SubmissionStatus>();
+		public static IEnumerable<SubmissionStatus> All => Enum
+			.GetValues(typeof(SubmissionStatus))
+			.Cast<SubmissionStatus>()
+			.ToList();
 	}
 }
