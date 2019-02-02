@@ -27,15 +27,9 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<IEnumerable<UserFileModel>> GetUserIndex(string userName, bool includeHidden)
 		{
-			var query = _db.UserFiles
-				.ForAuthor(userName);
-
-			if (!includeHidden)
-			{
-				query = query.Where(userFile => !userFile.Hidden);
-			}
-
-			return await query
+			return await _db.UserFiles
+				.ForAuthor(userName)
+				.FilterByHidden(includeHidden)
 				.ProjectTo<UserFileModel>()
 				.ToListAsync();
 		}
