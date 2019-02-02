@@ -3,7 +3,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
-using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Models;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.UserFiles
 {
@@ -19,14 +18,14 @@ namespace TASVideos.Pages.UserFiles
 	public class InfoModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly UserFileTasks _userFileTasks;
+		private readonly IMapper _mapper;
 		
 		public InfoModel(
 			ApplicationDbContext db,
-			UserFileTasks userFileTasks)
+			IMapper mapper)
 		{
 			_db = db;
-			_userFileTasks = userFileTasks;
+			_mapper = mapper;
 		}
 
 		[FromRoute]
@@ -36,17 +35,19 @@ namespace TASVideos.Pages.UserFiles
 
 		public async Task<IActionResult> OnGet()
 		{
-			UserFile = await _db.UserFiles
+			var file = await _db.UserFiles
+				.Include(uf => uf.Author)
+				.Include(uf => uf.Game)
+				.Include(uf => uf.System)
 				.Where(userFile => userFile.Id == Id)
-				.ProjectTo<UserFileModel>()
 				.SingleOrDefaultAsync();
 
-			if (UserFile == null)
+			if (file == null)
 			{
 				return NotFound();
 			}
 
-			if (UserFile.Hidden)
+			if (file.Hidden)
 			{
 				if (!User.Identity.IsAuthenticated || UserFile.Author != User.Identity.Name)
 				{
@@ -54,7 +55,12 @@ namespace TASVideos.Pages.UserFiles
 				}
 			}
 
-			await _userFileTasks.IncrementViewCount(Id);
+			UserFile = _mapper.Map<UserFileModel>(file);
+
+			file.Views++;
+
+			// TODO: handle DbConcurrencyException
+			await _db.SaveChangesAsync();
 
 			return Page();
 		}
