@@ -82,5 +82,10 @@ namespace TASVideos.Data.Entity
 		{
 			return query.OrderByDescending(q => q.UploadTimestamp);
 		}
+
+		public static IQueryable<UserFile> ForAuthor(this IQueryable<UserFile> query, string userName)
+		{
+			return query.Where(q => q.Author.UserName == userName);
+		}
 	}
 }

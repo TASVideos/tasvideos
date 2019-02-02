@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -14,10 +17,12 @@ namespace TASVideos.Tasks
 	public class UserFileTasks
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
-		public UserFileTasks(ApplicationDbContext db)
+		public UserFileTasks(ApplicationDbContext db, IMapper mapper)
 		{
 			_db = db;
+			_mapper = mapper;
 		}
 
 		/// <summary>
@@ -26,18 +31,16 @@ namespace TASVideos.Tasks
 		public async Task<IEnumerable<UserFileModel>> GetUserIndex(string userName, bool includeHidden)
 		{
 			var query = _db.UserFiles
-				.Include(userFile => userFile.Author)
-				.Include(userFile => userFile.Game)
-				.Include(userFile => userFile.System)
-				.Where(userFile => userFile.Author.UserName == userName);
+				.ForAuthor(userName);
 
 			if (!includeHidden)
 			{
 				query = query.Where(userFile => !userFile.Hidden);
 			}
 
-			var result = await query.ToListAsync();
-			return result.Select(ToViewModel);
+			return await query
+				.ProjectTo<UserFileModel>()
+				.ToListAsync();
 		}
 
 		/// <summary>
@@ -45,14 +48,10 @@ namespace TASVideos.Tasks
 		/// </summary>
 		public async Task<UserFileModel> GetInfo(long id)
 		{
-			var file = await _db.UserFiles
-				.Include(userFile => userFile.Author)
-				.Include(userFile => userFile.Game)
-				.Include(userFile => userFile.System)
+			return await _db.UserFiles
 				.Where(userFile => userFile.Id == id)
+				.ProjectTo<UserFileModel>()
 				.SingleOrDefaultAsync();
-
-			return file == null ? null : ToViewModel(file);
 		}
 
 		public async Task IncrementViewCount(long id)
@@ -84,39 +83,9 @@ namespace TASVideos.Tasks
 				GameName = game.DisplayName,
 				Files = game.UserFiles
 					.Where(uf => !uf.Hidden)
-					.Select(ToViewModel)
+					.Select(_mapper.Map<UserFileModel>)
 					.ToList()
 			};
-		}
-
-		private static UserFileModel ToViewModel(UserFile file)
-		{
-			var model = file.Class == UserFileClass.Movie
-				? new UserMovieModel()
-				: new UserFileModel();
-
-			model.Author = file.Author.UserName;
-			model.Description = file.Description;
-			model.Downloads = file.Downloads;
-			model.Id = file.Id;
-			model.Title = file.Title;
-			model.Uploaded = file.UploadTimestamp;
-			model.Views = file.Views;
-			model.Hidden = file.Hidden;
-			model.FileName = file.FileName;
-			model.FileSize = file.LogicalLength;
-			model.GameId = file.Game?.Id;
-			model.GameName = file.Game?.DisplayName;
-			model.System = file.System?.DisplayName;
-
-			if (model is UserMovieModel movie)
-			{
-				movie.Frames = file.Frames;
-				movie.Length = TimeSpan.FromSeconds((double)file.Length);
-				movie.Rerecords = file.Rerecords;
-			}
-
-			return model;
 		}
 	}
 }
