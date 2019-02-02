@@ -8,6 +8,7 @@ using TASVideos.Pages.Game.Model;
 using TASVideos.Pages.Game.Rom.Models;
 using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.Pages.Wiki.Models;
 using TASVideos.ViewComponents;
 
 namespace TASVideos
