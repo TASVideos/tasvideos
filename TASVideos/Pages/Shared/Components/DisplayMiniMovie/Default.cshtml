@@ -1,9 +1,6 @@
 ﻿@model MiniMovieModel
 
-@if (Model != null)
-{
-
-<div style="max-height: 440px; overflow-y: auto">
+<div condition="Model != null" style="max-height: 440px; overflow-y: auto">
 	<div class="card">
 		<div class="card-header">
 			<h5><span class="pull-right badge badge-info m-1">Featured</span></h5>
@@ -13,10 +10,10 @@
 			<a href="/@(Model.Id)M">
 				<img src="~/media/@Model.Screenshot" class="pull-left pr-3 pb-1" style="max-width: 80%" />
 			</a>
-			@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
+			@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
 		</div>
 	</div>
 </div>
-}
+
 

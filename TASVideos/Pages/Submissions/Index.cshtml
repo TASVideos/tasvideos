@@ -15,7 +15,7 @@
 	</div>
 </div>
 
-@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/SubmissionHeader" })
+@await Component.RenderWiki("System/SubmissionHeader")
 <hr />
 <form method="get">
 	<input type="hidden" asp-for="Search.User"/>

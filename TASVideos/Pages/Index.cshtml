@@ -3,5 +3,5 @@
 }
 
 <cache enabled="@(!User.Identity.IsAuthenticated)" expires-after="@TimeSpan.FromSeconds(Durations.FiveMinutesInSeconds)">
-	@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/FrontPage" })
+	@await Component.RenderWiki("System/FrontPage")
 </cache>
