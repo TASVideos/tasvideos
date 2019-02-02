@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Pages.Users
 {
@@ -30,7 +31,7 @@ namespace TASVideos.Pages.Users
 		public int Id { get; set; }
 
 		[BindProperty]
-		public UserEditModel UserToEdit { get; set; } = new UserEditModel();
+		public UserEditModel UserToEdit { get; set; }
 
 		[DisplayName("Available Roles")]
 		public IEnumerable<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
