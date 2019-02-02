@@ -146,7 +146,12 @@ namespace TASVideos.Pages.Submissions
 					CurrentStatus = s.Status,
 					CreateDate = s.CreateTimeStamp
 				})
-				.SingleAsync();
+				.SingleOrDefaultAsync();
+
+			if (subInfo == null)
+			{
+				return NotFound();
+			}
 
 			var availableStatus = SubmissionHelper.AvailableStatuses(
 				subInfo.CurrentStatus,
