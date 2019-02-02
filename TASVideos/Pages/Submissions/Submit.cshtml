@@ -1,4 +1,5 @@
 ﻿@page
+@using TASVideos.Data.Helpers
 @model SubmitModel
 @{
 	ViewData["Title"] = "Submit Movie";
@@ -33,7 +34,7 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Create.GameVersion" class="form-control-label"></label>
-				<select asp-for="Create.GameVersion" asp-items="@Model.Create.GameVersionOptions" class="form-control"></select>
+				<select asp-for="Create.GameVersion" asp-items="@SubmissionHelper.GameVersionOptions" class="form-control"></select>
 				<span asp-validation-for="Create.GameVersion" class="text-danger"></span>
 			</form-group>
 			<form-group>

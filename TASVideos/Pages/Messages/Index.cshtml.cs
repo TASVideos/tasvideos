@@ -22,7 +22,7 @@ namespace TASVideos.Pages.Messages
 		public int Id { get; set; }
 
 		[BindProperty]
-		public PrivateMessageModel Message { get; set; }  = new PrivateMessageModel();
+		public PrivateMessageModel Message { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{

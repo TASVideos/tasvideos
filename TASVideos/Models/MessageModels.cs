@@ -54,7 +54,6 @@ namespace TASVideos.Models
 
 	public class PrivateMessageModel
 	{
-		public int Id { get; set; }
 		public string Subject { get; set; }
 		public DateTime SentOn { get; set; }
 		public string Text { get; set; }

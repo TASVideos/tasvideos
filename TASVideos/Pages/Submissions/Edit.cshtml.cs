@@ -47,8 +47,6 @@ namespace TASVideos.Pages.Submissions
 
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
 
-		public IEnumerable<SelectListItem> GameVersionOptions { get; set; } = SubmissionHelper.GameVersionOptions;
-
 		public async Task<IActionResult> OnGet()
 		{
 			// TODO: set up auto-mapper and use ProjectTo<>

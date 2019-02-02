@@ -45,7 +45,6 @@ namespace TASVideos.Pages.Submissions
 		{
 			Create = new SubmissionCreateModel
 			{
-				GameVersionOptions = SubmissionHelper.GameVersionOptions,
 				Authors = new List<string> { User.Identity.Name }
 			};
 		}
@@ -103,7 +102,6 @@ namespace TASVideos.Pages.Submissions
 				}
 			}
 
-			Create.GameVersionOptions = SubmissionHelper.GameVersionOptions;
 			return Page();
 		}
 
