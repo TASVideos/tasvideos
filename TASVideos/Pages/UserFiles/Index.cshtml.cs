@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles
 {
@@ -22,7 +23,7 @@ namespace TASVideos.Pages.UserFiles
 			_db = db;
 		}
 
-		public UserFileIndexModel Data { get; set; } = new UserFileIndexModel();
+		public UserFileIndexModel Data { get; set; }
 
 		public async Task OnGet()
 		{

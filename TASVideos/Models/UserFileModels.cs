@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using TASVideos.Data.Entity;
@@ -47,35 +46,5 @@ namespace TASVideos.Models
 		public decimal Length { get; set; }
 		public int Frames { get; set; }
 		public int Rerecords { get; set; }
-	}
-
-	public class UserFileIndexModel
-	{
-		public IEnumerable<UserWithMovie> UsersWithMovies { get; set; } = new List<UserWithMovie>();
-		public IEnumerable<UserMovieListModel> LatestMovies { get; set; } = new List<UserMovieListModel>();
-		public IEnumerable<GameWithMovie> GamesWithMovies { get; set; } = new List<GameWithMovie>();
-
-		public class UserWithMovie
-		{
-			public string UserName { get; set; }
-			public DateTime Latest { get; set; }
-		}
-
-		public class GameWithMovie
-		{
-			public int GameId { get; set; }
-			public string GameName { get; set; }
-			public string SystemCode { get; set; }
-			public DateTime Latest { get; set; }
-		}
-	}
-
-	public class GameFileModel
-	{
-		public string SystemCode { get; set; }
-		public int GameId { get; set; }
-		public string GameName { get; set; }
-
-		public IEnumerable<UserFileModel> Files { get; set; } = new List<UserFileModel>();
 	}
 }

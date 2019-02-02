@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Models;
+using TASVideos.Pages.Messages.Models;
 
 namespace TASVideos.Pages.Messages
 {

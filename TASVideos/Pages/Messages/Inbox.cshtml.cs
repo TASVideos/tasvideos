@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Models;
+using TASVideos.Pages.Messages.Models;
 
 namespace TASVideos.Pages.Messages
 {
