@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
+using TASVideos.Pages.Publications.Models;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Publications
@@ -35,7 +36,7 @@ namespace TASVideos.Pages.Publications
 		[FromRoute]
 		public string Query { get; set; }
 
-		public IEnumerable<PublicationModel> Movies { get; set; } = new List<PublicationModel>();
+		public IEnumerable<PublicationDisplayModel> Movies { get; set; } = new List<PublicationDisplayModel>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -114,7 +115,7 @@ namespace TASVideos.Pages.Publications
 			}
 		}
 
-		private async Task<IList<PublicationModel>> GetMovieList(PublicationSearchModel searchCriteria)
+		private async Task<IList<PublicationDisplayModel>> GetMovieList(PublicationSearchModel searchCriteria)
 		{
 			var query = _db.Publications
 				.AsQueryable();
@@ -170,7 +171,7 @@ namespace TASVideos.Pages.Publications
 			return await query
 				.OrderBy(p => p.System.Code)
 				.ThenBy(p => p.Game.DisplayName)
-				.Select(p => new PublicationModel
+				.Select(p => new PublicationDisplayModel
 				{
 					Id = p.Id,
 					CreateTimeStamp = p.CreateTimeStamp,
@@ -182,20 +183,20 @@ namespace TASVideos.Pages.Publications
 					SubmissionId = p.SubmissionId,
 					RatingCount = p.PublicationRatings.Count / 2,
 					TierIconPath = p.Tier.IconPath,
-					Files = p.Files.Select(f => new PublicationModel.FileModel
+					Files = p.Files.Select(f => new PublicationDisplayModel.FileModel
 					{
 						Path = f.Path,
 						Type = f.Type
 					}).ToList(),
 					Tags = p.PublicationTags
-						.Select(pt => new PublicationModel.TagModel
+						.Select(pt => new PublicationDisplayModel.TagModel
 						{
 							DisplayName = pt.Tag.DisplayName,
 							Code = pt.Tag.Code
 						})
 						.ToList(),
 					GenreTags = p.Game.GameGenres
-						.Select(gg => new PublicationModel.TagModel
+						.Select(gg => new PublicationDisplayModel.TagModel
 						{
 							DisplayName = gg.Genre.DisplayName,
 							Code = gg.Genre.DisplayName // TODO
@@ -203,7 +204,7 @@ namespace TASVideos.Pages.Publications
 						.ToList(),
 					Flags = p.PublicationFlags
 						.Where(pf => pf.Flag.IconPath != null)
-						.Select(pf => new PublicationModel.FlagModel
+						.Select(pf => new PublicationDisplayModel.FlagModel
 						{
 							IconPath = pf.Flag.IconPath,
 							LinkPath = pf.Flag.LinkPath,

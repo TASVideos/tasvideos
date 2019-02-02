@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
+using TASVideos.Pages.Publications.Models;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Publications
