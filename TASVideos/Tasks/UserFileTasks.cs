@@ -33,14 +33,5 @@ namespace TASVideos.Tasks
 				.ProjectTo<UserFileModel>()
 				.ToListAsync();
 		}
-
-		public async Task IncrementViewCount(long id)
-		{
-			// TODO: Perhaps execute SQL instead?
-			// TODO: handle concurrency exceptions
-			var file = await _db.UserFiles.SingleOrDefaultAsync(userFile => userFile.Id == id);
-			file.Views++;
-			await _db.SaveChangesAsync();
-		}
 	}
 }
