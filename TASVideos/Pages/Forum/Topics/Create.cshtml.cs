@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int ForumId { get; set; }
 
 		[BindProperty]
-		public TopicCreatePostModel Topic { get; set; }
+		public TopicCreateModel Topic { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Forum.Topics
 			Topic = await _db.Forums
 				.ExcludeRestricted(seeRestricted)
 				.Where(f => f.Id == ForumId)
-				.Select(f => new TopicCreatePostModel
+				.Select(f => new TopicCreateModel
 				{
 					ForumName = f.Name
 				})

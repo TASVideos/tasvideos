@@ -141,8 +141,7 @@ namespace TASVideos.Models
 		public int TopicId { get; set; }
 	}
 
-	// TODO: rename me? This is a confusing name
-	public class TopicCreatePostModel
+	public class TopicCreateModel
 	{
 		public string ForumName { get; set; }
 
@@ -202,7 +201,6 @@ namespace TASVideos.Models
 		public string TopicTitle { get; set; }
 		public int TopicId { get; set; }
 
-		public int PollId { get; set; }
 		public string Question { get; set; }
 
 		public IEnumerable<VoteResult> Votes { get; set; } = new List<VoteResult>();
