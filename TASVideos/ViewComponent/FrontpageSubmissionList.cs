@@ -6,7 +6,6 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Models;
-using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {

@@ -1,22 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.UserFiles
 {
 	[AllowAnonymous]
 	public class ForUserModel : BasePageModel
 	{
-		private readonly UserFileTasks _userFileTasks;
+		private readonly ApplicationDbContext _db;
 
-		public ForUserModel(UserFileTasks userFileTasks)
+		public ForUserModel(ApplicationDbContext db)
 		{
-			_userFileTasks = userFileTasks;
+			_db = db;
 		}
 
 		[FromRoute]
@@ -26,7 +30,11 @@ namespace TASVideos.Pages.UserFiles
 
 		public async Task OnGet()
 		{
-			Files = await _userFileTasks.GetUserIndex(UserName, includeHidden: false);
+			Files = await _db.UserFiles
+				.ForAuthor(UserName)
+				.FilterByHidden(includeHidden: false)
+				.ProjectTo<UserFileModel>()
+				.ToListAsync();
 		}
 	}
 }
