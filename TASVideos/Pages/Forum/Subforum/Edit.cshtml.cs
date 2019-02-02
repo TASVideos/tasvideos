@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Models;
+using TASVideos.Pages.Forum.Subforum.Models;
 
 namespace TASVideos.Pages.Forum.Subforum
 {

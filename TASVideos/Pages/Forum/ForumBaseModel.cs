@@ -5,7 +5,7 @@ using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Models;
+using TASVideos.Pages.Forum.Models;
 using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum
