@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
-using TASVideos.Models;
+using TASVideos.Pages.Wiki.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 
@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Wiki
 		public string Path { get; set; }
 
 		[BindProperty]
-		public WikiMoveModel Move { get; set; } = new WikiMoveModel();
+		public WikiMoveModel Move { get; set; }
 
 		public IActionResult OnGet()
 		{

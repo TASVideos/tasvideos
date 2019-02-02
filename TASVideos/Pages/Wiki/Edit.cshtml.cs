@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Models;
+using TASVideos.Pages.Wiki.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 
