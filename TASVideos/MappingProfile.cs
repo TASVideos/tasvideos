@@ -9,6 +9,8 @@ using TASVideos.Pages.Game.Rom.Models;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.Pages.UserFiles.Models;
+using TASVideos.Pages.Users.Models;
 using TASVideos.Pages.Wiki.Models;
 using TASVideos.ViewComponents;
 
