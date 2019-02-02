@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
+using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Submissions
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SubmissionCatalogModel Catalog { get; set; } = new SubmissionCatalogModel();
+		public SubmissionCatalogModel Catalog { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
 		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();

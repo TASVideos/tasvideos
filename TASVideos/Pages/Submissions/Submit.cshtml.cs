@@ -10,8 +10,8 @@ using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Models;
 using TASVideos.MovieParsers;
+using TASVideos.Pages.Submissions.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 
@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Submissions
 		}
 
 		[BindProperty]
-		public SubmissionCreateModel Create { get; set; } = new SubmissionCreateModel();
+		public SubmissionCreateModel Create { get; set; }
 
 		public void OnGet()
 		{

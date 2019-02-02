@@ -13,8 +13,8 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Extensions;
-using TASVideos.Models;
 using TASVideos.MovieParsers;
+using TASVideos.Pages.Submissions.Models;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Submissions
