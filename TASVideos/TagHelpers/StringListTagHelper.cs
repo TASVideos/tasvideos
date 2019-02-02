@@ -50,7 +50,7 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml(
 $@"<script>
 	function {uniqueFuncName}() {{
-		var addBtn = document.getElementById('{modelName}-add-btn');
+		var addBtn = document.getElementById('{modelId}-add-btn');
 		addBtn.onclick = function() {{
 			var lastIndex = Math.max.apply(null, document.querySelectorAll('#{parentContainerName} .author-row')
 				.toArray()
