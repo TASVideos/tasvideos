@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Models;
+using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles
 {
