@@ -21,7 +21,7 @@
 	<form-group>
 		<textarea asp-for="PageToEdit.Markup" class="form-control" rows="20"></textarea>
 		<span asp-validation-for="PageToEdit.Markup" class="text-danger"></span>
-		@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = "System/WikiEditHelp" })
+		@await Component.RenderWiki("System/WikiEditHelp")
 	</form-group>
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>

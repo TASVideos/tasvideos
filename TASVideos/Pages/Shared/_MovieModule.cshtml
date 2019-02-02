@@ -1,5 +1,4 @@
-﻿@*TODO - move PublicationModel **@
-@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
+﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
 
 <div condition="@Model.ObsoletedBy.HasValue" class="text-danger mb-2">
 	<h4>This movie has been obsoleted!</h4>
@@ -49,7 +48,7 @@
 				</row>
 				<fullrow>
 					<div><small>@Model.CreateTimeStamp.Date.ToShortDateString()</small></div>
-					@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = LinkConstants.PublicationWikiPage + Model.Id })
+					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 				</fullrow>
 				<fullrow>
 					<div condition="Model.RatingCount <= 2">

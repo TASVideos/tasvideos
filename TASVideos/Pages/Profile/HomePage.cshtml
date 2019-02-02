@@ -26,7 +26,7 @@ else
 <hr />
 @if (pageExists)
 {
-	@await Component.InvokeAsync(typeof(RenderWikiPage), new { url = homePage })
+	@await Component.RenderWiki(homePage)
 }
 else if (ViewData.UserHas(PermissionTo.EditHomePage))
 {
