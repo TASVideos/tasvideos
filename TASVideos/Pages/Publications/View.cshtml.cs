@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Constants;
-using TASVideos.Models;
+using TASVideos.Pages.Publications.Models;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Publications
@@ -30,13 +30,13 @@ namespace TASVideos.Pages.Publications
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationModel Publication { get; set; }
+		public PublicationDisplayModel Publication { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
 			// TODO: AutoMapper, movie list is the same logic
 			Publication = await _db.Publications
-				.Select(p => new PublicationModel
+				.Select(p => new PublicationDisplayModel
 				{
 					Id = p.Id,
 					CreateTimeStamp = p.CreateTimeStamp,
@@ -52,28 +52,28 @@ namespace TASVideos.Pages.Publications
 					// ReSharper disable once PossibleLossOfFraction
 					RatingCount = p.PublicationRatings.Count / 2,
 					Files = p.Files
-						.Select(f => new PublicationModel.FileModel
+						.Select(f => new PublicationDisplayModel.FileModel
 						{
 							Path = f.Path,
 							Type = f.Type
 						})
 						.ToList(),
 					Tags = p.PublicationTags
-						.Select(pt => new PublicationModel.TagModel
+						.Select(pt => new PublicationDisplayModel.TagModel
 						{
 							DisplayName = pt.Tag.DisplayName,
 							Code = pt.Tag.Code
 						})
 						.ToList(),
 					GenreTags = p.Game.GameGenres
-						.Select(gg => new PublicationModel.TagModel
+						.Select(gg => new PublicationDisplayModel.TagModel
 						{
 							DisplayName = gg.Genre.DisplayName,
 							Code = gg.Genre.DisplayName // TODO
 						}),
 					Flags = p.PublicationFlags
 						.Where(pf => pf.Flag.IconPath != null)
-						.Select(pf => new PublicationModel.FlagModel
+						.Select(pf => new PublicationDisplayModel.FlagModel
 						{
 							IconPath = pf.Flag.IconPath,
 							LinkPath = pf.Flag.LinkPath,
