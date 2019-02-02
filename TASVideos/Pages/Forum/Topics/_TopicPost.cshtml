@@ -1,4 +1,5 @@
-﻿@model ForumTopicModel.ForumPostEntry
+﻿@using System.Web
+@model ForumTopicModel.ForumPostEntry
 <card class="@(Model.Highlight ? "border-info" : "")">
 	<cardheader>
 		<row>
@@ -64,7 +65,7 @@
 				</div>
 			</div>
 			<div class="col-8">
-				@Html.Raw(Model.RenderedText)
+				@Html.Raw(HttpUtility.HtmlDecode(Model.RenderedText))
 			</div>
 		</row>
 	</cardbody>
