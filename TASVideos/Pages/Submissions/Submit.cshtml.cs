@@ -10,7 +10,6 @@ using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Data.Helpers;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Services;
@@ -51,111 +50,55 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnPost()
 		{
-			Create.Authors = Create.Authors
-				.Where(a => !string.IsNullOrWhiteSpace(a))
-				.ToList();
+			await ValidateModel();
 
-			if (!Create.Authors.Any())
+			if (!ModelState.IsValid)
 			{
-				ModelState.AddModelError(
-					nameof(SubmissionCreateModel.Authors),
-					"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
+				return Page();
 			}
 
-			if (!Create.MovieFile.FileName.EndsWith(".zip")
-			|| Create.MovieFile.ContentType != "application/x-zip-compressed")
+			// TODO: set up auto-mapper, the v8 upgrade didn't like a default mapping
+			var submission = new Submission
 			{
-				ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), "Not a valid .zip file");
-			}
+				GameVersion = Create.GameVersion,
+				GameName = Create.GameName,
+				Branch = Create.Branch,
+				RomName = Create.RomName,
+				EmulatorVersion = Create.Emulator,
+				EncodeEmbedLink = Create.EncodeEmbedLink
+			};
 
-			if (Create.MovieFile.Length > 150 * 1024)
+			// Parse movie file
+			// TODO: check warnings
+			var parseResult = _parser.Parse(Create.MovieFile.OpenReadStream());
+
+			if (!parseResult.Success)
 			{
-				ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), ".zip is too big, are you sure this is a valid movie file?");
-			}
-
-			foreach (var author in Create.Authors)
-			{
-				if (!await _db.Users.Exists(author))
-				{
-					ModelState.AddModelError(nameof(SubmissionCreateModel.Authors), $"Could not find user: {author}");
-				}
-			}
-
-			if (ModelState.IsValid)
-			{
-				var result = await SubmitMovie(Create, User.Identity.Name);
-				if (result.Success)
-				{
-					// TODO: moving SubmitMove logic inline means we have the submission already and we don't have to take this hit
-					var title = (await _db.Submissions
-						.Select(s => new { s.Id, s.Title })
-						.SingleOrDefaultAsync(s => s.Id == result.Id))?.Title;
-
-					_publisher.AnnounceSubmission(title, $"{BaseUrl}/{result.Id}S");
-
-					return Redirect($"/{result.Id}S");
-				}
-
-				foreach (var error in result.Errors)
+				foreach (var error in parseResult.Errors)
 				{
 					ModelState.AddModelError("", error);
 				}
 			}
 
-			return Page();
-		}
+			submission.Frames = parseResult.Frames;
+			submission.RerecordCount = parseResult.RerecordCount;
+			submission.MovieExtension = parseResult.FileExtension;
+			submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
 
-		public IActionResult OnGetPrefillText()
-		{
-			var page = _wikiPages.Page("System/SubmissionDefaultMessage");
-			return new JsonResult(new { text = page.Markup });
-		}
-
-		// TODO: refactor this to be inline, and deal with errors directly instead of through SubmitResult
-		private async Task<SubmitResult> SubmitMovie(SubmissionCreateModel model, string userName)
-		{
-			// TODO: set up auto-mapper, the v8 upgrade didn't like a default mapping
-			var submission = new Submission
+			if (submission.System == null)
 			{
-				GameVersion = model.GameVersion,
-				GameName = model.GameName,
-				Branch = model.Branch,
-				RomName = model.RomName,
-				EmulatorVersion = model.Emulator,
-				EncodeEmbedLink = model.EncodeEmbedLink
-			};
-
-			// Parse movie file
-			// TODO: check warnings
-			var parseResult = _parser.Parse(model.MovieFile.OpenReadStream());
-			if (parseResult.Success)
-			{
-				using (_db.Database.BeginTransaction())
-				{
-					submission.Frames = parseResult.Frames;
-					submission.RerecordCount = parseResult.RerecordCount;
-					submission.MovieExtension = parseResult.FileExtension;
-					submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
-
-					if (submission.System == null)
-					{
-						return new SubmitResult($"Unknown system type of {parseResult.SystemCode}");
-					}
-
-					submission.Submitter = await _db.Users.SingleAsync(u => u.UserName == userName);
-					submission.SystemFrameRate = await _db.GameSystemFrameRates
-						.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
-							&& f.RegionCode == parseResult.Region.ToString());
-				}
+				ModelState.AddModelError("", $"Unknown system type of {parseResult.SystemCode}");
+				return Page();
 			}
-			else
-			{
-				return new SubmitResult(parseResult.Errors);
-			}
+
+			submission.Submitter = await _db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
+			submission.SystemFrameRate = await _db.GameSystemFrameRates
+				.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
+					&& f.RegionCode == parseResult.Region.ToString());
 
 			using (var memoryStream = new MemoryStream())
 			{
-				await model.MovieFile.CopyToAsync(memoryStream);
+				await Create.MovieFile.CopyToAsync(memoryStream);
 				submission.MovieFile = memoryStream.ToArray();
 			}
 
@@ -167,7 +110,7 @@ namespace TASVideos.Pages.Submissions
 			{
 				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
-				Markup = model.Markup,
+				Markup = Create.Markup,
 				MinorEdit = false
 			};
 			await _wikiPages.Add(revision);
@@ -175,7 +118,7 @@ namespace TASVideos.Pages.Submissions
 
 			// Add authors
 			var users = await _db.Users
-				.Where(u => model.Authors.Contains(u.UserName))
+				.Where(u => Create.Authors.Contains(u.UserName))
 				.ToListAsync();
 
 			var submissionAuthors = users.Select(u => new SubmissionAuthor
@@ -231,7 +174,48 @@ namespace TASVideos.Pages.Submissions
 			poll.TopicId = topic.Id;
 			await _db.SaveChangesAsync();
 
-			return new SubmitResult(submission.Id);
+			_publisher.AnnounceSubmission(submission.Title, $"{BaseUrl}/{submission.Id}S");
+
+			return Redirect($"/{submission.Id}S");
+		}
+
+		public IActionResult OnGetPrefillText()
+		{
+			var page = _wikiPages.Page("System/SubmissionDefaultMessage");
+			return new JsonResult(new { text = page.Markup });
+		}
+
+		private async Task ValidateModel()
+		{
+			Create.Authors = Create.Authors
+				.Where(a => !string.IsNullOrWhiteSpace(a))
+				.ToList();
+
+			if (!Create.Authors.Any())
+			{
+				ModelState.AddModelError(
+					nameof(SubmissionCreateModel.Authors),
+					"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
+			}
+
+			if (!Create.MovieFile.FileName.EndsWith(".zip")
+			|| Create.MovieFile.ContentType != "application/x-zip-compressed")
+			{
+				ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), "Not a valid .zip file");
+			}
+
+			if (Create.MovieFile.Length > 150 * 1024)
+			{
+				ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), ".zip is too big, are you sure this is a valid movie file?");
+			}
+
+			foreach (var author in Create.Authors)
+			{
+				if (!await _db.Users.Exists(author))
+				{
+					ModelState.AddModelError(nameof(SubmissionCreateModel.Authors), $"Could not find user: {author}");
+				}
+			}
 		}
 	}
 }
