@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Profile
