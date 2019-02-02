@@ -56,9 +56,9 @@
 				</p>
 			}
 
-			@if (Model is UserMovieModel movie)
+			@if (Model.IsMovie)
 			{
-				<p>In @FormatTime(movie.Length) (@movie.Frames frames), @movie.Rerecords rerecords</p>
+				<p>In @FormatTime(Model.Time) (@Model.Frames frames), @Model.Rerecords rerecords</p>
 			}
 
 			<p>

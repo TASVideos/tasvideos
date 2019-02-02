@@ -61,9 +61,18 @@ namespace TASVideos
 			CreateMap<ForumPost, TopicFeedModel.TopicPost>()
 				.ForMember(dest => dest.PosterName, opt => opt.MapFrom(src => src.Poster.UserName));
 
+			// TODO: for both of these, the property could be renamed from Uploaded to UploadedTimestamp and reduce some complexity
 			CreateMap<UserFile, UserMovieListModel>()
 				.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.UserName))
 				.ForMember(dest => dest.Uploaded, opt => opt.MapFrom(src => src.UploadTimestamp));
+
+			CreateMap<UserFile, UserFileModel>()
+				.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.UserName))
+				.ForMember(dest => dest.Uploaded, opt => opt.MapFrom(src => src.UploadTimestamp))
+				.ForMember(dest => dest.FileSize, opt => opt.MapFrom(src => src.LogicalLength))
+				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))
+				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
+				.ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System != null ? src.System.DisplayName : ""));
 		}
 	}
 }
