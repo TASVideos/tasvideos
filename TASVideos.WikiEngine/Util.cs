@@ -24,16 +24,6 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
-		public static void RenderHtml(string content, TextWriter w)
-		{
-			var results = NewParser.Parse(content);
-
-			foreach (var r in results)
-			{
-				r.WriteHtml(w);
-			}
-		}
-
 		public static void RenderHtmlDynamic(string content, TextWriter w, IWriterHelper h)
 		{
 			var results = NewParser.Parse(content);
