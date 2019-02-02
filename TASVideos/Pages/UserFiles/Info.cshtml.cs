@@ -3,6 +3,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +36,11 @@ namespace TASVideos.Pages.UserFiles
 
 		public async Task<IActionResult> OnGet()
 		{
-			UserFile = await _userFileTasks.GetInfo(Id);
+			UserFile = await _db.UserFiles
+				.Where(userFile => userFile.Id == Id)
+				.ProjectTo<UserFileModel>()
+				.SingleOrDefaultAsync();
+
 			if (UserFile == null)
 			{
 				return NotFound();
