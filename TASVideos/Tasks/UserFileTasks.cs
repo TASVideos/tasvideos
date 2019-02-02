@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using AutoMapper.QueryableExtensions;
-
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -20,16 +18,6 @@ namespace TASVideos.Tasks
 		public UserFileTasks(ApplicationDbContext db)
 		{
 			_db = db;
-		}
-
-		public async Task<IEnumerable<UserMovieListModel>> GetLatest(int count)
-		{
-			return await _db.UserFiles
-				.ThatArePublic()
-				.ByRecentlyUploaded()
-				.ProjectTo<UserMovieListModel>()
-				.Take(count)
-				.ToListAsync();
 		}
 
 		/// <summary>
