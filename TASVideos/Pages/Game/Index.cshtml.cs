@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Models;
+using TASVideos.Pages.Game.Model;
 
 namespace TASVideos.Pages.Game
 {
