@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Models;
+using TASVideos.Pages.Profile.Models;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Profile
@@ -32,14 +33,13 @@ namespace TASVideos.Pages.Profile
 		[TempData]
 		public string StatusMessage { get; set; }
 
-		// TODO: rename this model, this is not the index page
 		[BindProperty]
-		public ProfileIndexModel Settings { get; set; } = new ProfileIndexModel();
+		public ProfileSsettingsModel Settings { get; set; }
 
 		public async Task OnGet()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			Settings = new ProfileIndexModel
+			Settings = new ProfileSsettingsModel
 			{
 				Username = user.UserName,
 				Email = user.Email,

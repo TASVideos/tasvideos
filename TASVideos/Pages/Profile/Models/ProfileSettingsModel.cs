@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TASVideos.Models;
 
-namespace TASVideos.Models
+namespace TASVideos.Pages.Profile.Models
 {
-	public class ProfileIndexModel
+	public class ProfileSsettingsModel
 	{
 		public string Username { get; set; }
 
@@ -26,15 +26,5 @@ namespace TASVideos.Models
 		public string From { get; set; }
 
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
-	}
-
-	public class WatchedTopicsModel
-	{
-		public DateTime TopicCreateTimeStamp { get; set; }
-		public bool IsNotified { get; set; }
-		public int ForumId { get; set; }
-		public string ForumTitle { get; set; }
-		public int TopicId { get; set; }
-		public string TopicTitle { get; set; }
 	}
 }
