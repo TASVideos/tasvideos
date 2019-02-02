@@ -32,7 +32,6 @@ namespace TASVideos.Pages.Game
 				.Where(g => g.Id == Id)
 				.Select(g => new GameDisplayModel
 				{
-					Id = g.Id,
 					DisplayName = g.DisplayName,
 					Abbreviation = g.Abbreviation,
 					ScreenshotUrl = g.ScreenshotUrl,
