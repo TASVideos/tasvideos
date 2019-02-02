@@ -1,4 +1,0 @@
-@page
-@model DoModuleModel
-@{ Layout = null; }
-@(await Component.InvokeAsync(Model.Name, new { pageData = (WikiPage)null, pp = Model.Params }))
