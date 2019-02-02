@@ -1,23 +1,24 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Tasks;
 
 namespace TASVideos.Pages.UserFiles
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel
 	{
-		private readonly UserFileTasks _userFileTasks;
 		private readonly ApplicationDbContext _db;
 
-		public IndexModel(UserFileTasks userFileTasks, ApplicationDbContext db)
+		public IndexModel(ApplicationDbContext db)
 		{
-			_userFileTasks = userFileTasks;
 			_db = db;
 		}
 
@@ -32,7 +33,12 @@ namespace TASVideos.Pages.UserFiles
 					.GroupBy(gkey => gkey.Author.UserName, gvalue => gvalue.UploadTimestamp).Select(
 						uf => new UserFileIndexModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 					.ToListAsync(),
-				LatestMovies = await _userFileTasks.GetLatest(10),
+				LatestMovies = await _db.UserFiles
+					.ThatArePublic()
+					.ByRecentlyUploaded()
+					.ProjectTo<UserMovieListModel>()
+					.Take(10)
+					.ToListAsync(),
 				GamesWithMovies = await _db.Games
 					.Where(g => g.UserFiles.Any())
 					.OrderBy(g => g.System.Code)

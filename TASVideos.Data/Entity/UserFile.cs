@@ -73,6 +73,11 @@ namespace TASVideos.Data.Entity
 			return query.Where(q => !q.Hidden);
 		}
 
+		public static IQueryable<UserFile> ThatAreMovies(this IQueryable<UserFile> query)
+		{
+			return query.Where(q => q.Class == UserFileClass.Movie);
+		}
+
 		public static IQueryable<UserFile> ByRecentlyUploaded(this IQueryable<UserFile> query)
 		{
 			return query.OrderByDescending(q => q.UploadTimestamp);
