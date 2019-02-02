@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Constants;
-using TASVideos.Models;
+using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Pages.Submissions
 {

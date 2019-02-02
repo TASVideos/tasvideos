@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Models;
+using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.ViewComponents
 {
