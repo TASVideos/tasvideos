@@ -1,0 +1,114 @@
+﻿@page "{id}"
+@using TASVideos.Data.Helpers
+@model EditModel
+@{
+	ViewData["Title"] = $"Edit Submission #{Model.Id}";
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
+<form method="post" enctype="multipart/form-data">
+	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
+	<row condition="@Model.AvailableStatuses.Count() > 1">
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.Status" class="form-control-label"></label>
+				<select 
+					class="form-control" 
+					asp-for="Submission.Status" 
+					asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
+			</form-group>
+		</div>
+		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.MovieFile" class="form-control-label"></label>
+				<input type="file" asp-for="Submission.MovieFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Submission.MovieFile)</div>
+				<span asp-validation-for="Submission.MovieFile" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row permission="JudgeSubmissions">
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.TierId" class="form-control-label"></label>
+				<select asp-for="Submission.TierId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableTiers)" class="form-control"></select>
+				<span asp-validation-for="Submission.TierId" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.Authors" class="form-control-label"></label>
+				<string-list asp-for="Submission.Authors" />
+				<span asp-validation-for="Submission.Authors" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" asp-for="Submission.MinorEdit" />
+					<label asp-for="Submission.MinorEdit" class="form-check-label"></label>
+				</div>
+				<label asp-for="Submission.RevisionMessage" class="form-control-label"></label>
+				<input asp-for="Submission.RevisionMessage" class="form-control" />
+				<span asp-validation-for="Submission.RevisionMessage" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.GameVersion" class="form-control-label"></label>
+				<select asp-for="Submission.GameVersion" asp-items="@SubmissionHelper.GameVersionOptions" class="form-control"></select>
+				<span asp-validation-for="Submission.GameVersion" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.GameName" class="form-control-label"></label>
+				<input asp-for="Submission.GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.GameName)" />
+				<span asp-validation-for="Submission.GameName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.Emulator" class="form-control-label"></label>
+				<input asp-for="Submission.Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Emulator)" />
+				<span asp-validation-for="Submission.Emulator" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.Branch" class="form-control-label"></label>
+				<input asp-for="Submission.Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Branch)" />
+				<span asp-validation-for="Submission.Branch" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.RomName" class="form-control-label"></label>
+				<input asp-for="Submission.RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.RomName)" />
+				<span asp-validation-for="Submission.RomName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.EncodeEmbedLink" class="form-control-label"></label>
+				<input asp-for="Submission.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.EncodeEmbedLink)" />
+				<span asp-validation-for="Submission.EncodeEmbedLink" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<fullrow>
+		<form-group>
+			<label asp-for="Submission.Markup" class="form-control-label"></label>
+			<textarea asp-for="Submission.Markup" rows="12" class="form-control"></textarea>
+			<span asp-validation-for="Submission.Markup" class="text-danger"></span>
+		</form-group>
+	</fullrow>
+	<hr />
+	<fullrow class="text-center">
+		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
+		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Submission.Markup?.Length > 0 ? "" : "hide")">Update</button>
+		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
+	</fullrow>
+</form>
+
+<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

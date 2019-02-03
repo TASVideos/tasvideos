@@ -1,19 +1,21 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
 {
 	public class Awards : ViewComponent
 	{
-		private readonly AwardTasks _awardTasks;
+		private readonly IAwardsCache _awards;
 
-		public Awards(AwardTasks awardTasks)
+		public Awards(IAwardsCache awards)
 		{
-			_awardTasks = awardTasks;
+			_awards = awards;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
@@ -31,7 +33,11 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("Error: parameterless award module no longer supported");
 			}
 
-			var model = await _awardTasks.GetAwardsForModule(year.Value);
+			var allAwards = await _awards.Awards();
+			var model = allAwards
+				.Where(a => a.Year + 2000 == year)
+				.ToList();
+
 			return View(model);
 		}
 	}

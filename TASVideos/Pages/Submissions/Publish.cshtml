@@ -1,0 +1,130 @@
+﻿@page "{id}"
+@model PublishModel
+@{
+	ViewData["Title"] = $"Publishing Submission #{Model.Submission.Title}";
+}
+<card>
+	<cardbody>
+		<div class="card-title">
+			<a class="btn btn-primary " asp-page="Catalog" asp-route-id="@Model.Id">Catalog</a>
+		</div>
+		<row>
+			<div class="col-lg-6">
+				<row>
+					<label class="col-sm-3" asp-for="Submission.Tier"></label>
+					<span class="col-sm-9"><a href="/@Model.Submission.Tier">@Html.DisplayFor(m => m.Submission.Tier)</a></span>
+				</row>
+				<row>
+					<label class="col-sm-3" asp-for="Submission.SystemCode"></label>
+					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.SystemCode)</span>
+				</row>
+				<row>
+					<label class="col-sm-3" asp-for="Submission.SystemRegion"></label>
+					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.SystemRegion)</span>
+				</row>
+			</div>
+			<div class="col-lg-6">
+				<row>
+					<label class="col-sm-3" asp-for="Submission.Game"></label>
+					<span class="col-sm-9"><a asp-page="/Game/Index" asp-route-id="@Model.Submission.GameId">@Html.DisplayFor(m => m.Submission.Game)</a></span>
+				</row>
+				<row>
+					<label class="col-sm-3" asp-for="Submission.Rom"></label>
+					<span class="col-sm-9">
+						<a asp-page="/Game/Rom/Edit" asp-route-gameId="@Model.Submission.GameId" asp-route-romId="@Model.Submission.RomId">
+							@Html.DisplayFor(m => m.Submission.Rom)
+						</a>
+					</span>
+				</row>
+			</div>
+		</row>
+	</cardbody>
+</card>
+<hr />
+<form method="post" enctype="multipart/form-data">
+	<input type="hidden" asp-for="Submission.SystemId" />
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.MovieToObsolete" class="form-control-label"></label>
+				<select asp-for="Submission.MovieToObsolete" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesToObsolete)" class="form-control"></select>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<input type="hidden" asp-for="Submission.MovieExtension" />
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.Branch" class="form-control-label"></label>
+				<input type="text" asp-for="Submission.Branch" class="form-control" />
+				<span asp-validation-for="Submission.Branch" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.EmulatorVersion" class="form-control-label"></label>
+				<input type="text" asp-for="Submission.EmulatorVersion" class="form-control" />
+				<span asp-validation-for="Submission.EmulatorVersion" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.OnlineWatchingUrl" class="form-control-label"></label>
+				<input type="text" asp-for="Submission.OnlineWatchingUrl" class="form-control" />
+				<span asp-validation-for="Submission.OnlineWatchingUrl" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.MirrorSiteUrl" class="form-control-label"></label>
+				<input type="text" asp-for="Submission.MirrorSiteUrl" class="form-control" />
+				<span asp-validation-for="Submission.MirrorSiteUrl" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.MovieFileName" class="form-control-label"></label>
+				<div class="input-group">
+					<input type="text" asp-for="Submission.MovieFileName" class="form-control" />
+					<div class="input-group-append">
+						<span class="input-group-text">
+							.@Model.Submission.MovieExtension
+						</span>
+					</div>
+				</div>
+				<div>@Html.DescriptionFor(m => m.Submission.MovieFileName)</div>
+				<span asp-validation-for="Submission.MovieFileName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.Screenshot" class="form-control-label"></label>
+				<input type="file" asp-for="Submission.Screenshot" class="form-control" />
+				<label>TODO: acceptable screenshot sizes</label>
+				<label>TODO: system page for screenshot info</label>
+				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.TorrentFile" class="form-control-label"></label>
+				<input type="file" asp-for="Submission.TorrentFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Submission.TorrentFile)</div>
+				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.MovieMarkup" class="form-control-label"></label>
+				<textarea asp-for="Submission.MovieMarkup" class="form-control" rows="10"></textarea>
+				<span asp-validation-for="Submission.MovieMarkup" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.Markup" class="form-control-label"></label>
+				<textarea readonly class="form-control" rows="10" asp-for="Submission.Markup"></textarea>
+			</form-group>
+		</div>
+	</row>
+	<fullrow class="text-center">
+		<button type="submit" class="btn btn-primary">Publish</button>
+		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+	</fullrow>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

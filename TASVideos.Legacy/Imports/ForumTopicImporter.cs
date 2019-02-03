@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-
+using System.Net;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Legacy.Imports;
@@ -28,7 +28,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					t.Type,
 					t.TopicStatus,
 					Author = t.PosterId > 0 ? t.Poster.UserName : "Unknown",
-					PollId = p != null ? p.Id : (int?)null
+					PollId = p != null ? p.Id : (int?)null,
+					PageName = t.SubmissionId > 0 ? "InternalSystem/SubmissionContent/S" + t.SubmissionId : null
 				})
 				.ToList();
 
@@ -37,7 +38,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				{
 					Id = t.Id,
 					ForumId = t.ForumId,
-					Title = ImportHelper.ConvertLatin1String(t.Title),
+					Title = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(t.Title)),
 					PosterId = t.PosterId > 0 // There's one record that is 0 we want to change to -1
 						? t.PosterId  // TODO: Some of these do not match up to known users! We should at least put -1 here
 						: -1,
@@ -48,7 +49,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					Views = t.Views,
 					Type = (ForumTopicType)t.Type,
 					PollId = t.PollId,
-					IsLocked = t.TopicStatus == 1
+					IsLocked = t.TopicStatus == 1,
+					PageName = t.PageName
 				})
 				.ToList();
 
@@ -65,7 +67,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.Views),
 				nameof(ForumTopic.Type),
 				nameof(ForumTopic.PollId),
-				nameof(ForumTopic.IsLocked)
+				nameof(ForumTopic.IsLocked),
+				nameof(ForumTopic.PageName)
 			};
 
 			topics.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumTopics));

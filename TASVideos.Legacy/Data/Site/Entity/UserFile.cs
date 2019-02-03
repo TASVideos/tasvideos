@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Site.Entity
@@ -67,10 +66,5 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("file_downloads")]
 		public int Downloads { get; set; }
-
-		[Column("file_comments")]
-		public int CommentCount { get; set; }
-
-		public virtual ICollection<UserFileComment> Comments { get; set; } = new HashSet<UserFileComment>();
 	}
 }

@@ -1,17 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
-    <ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.All" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.4" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
+    <ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
+    <ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
 </Project>

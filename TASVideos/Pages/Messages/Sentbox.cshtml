@@ -1,0 +1,29 @@
+﻿@page
+@model SentboxModel
+@{
+	ViewData["Title"] = $"Saved messages for {User.Identity.Name}";
+}
+
+<a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span>Inbox</a>
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.SentBox.First().Subject)</th>
+		<th>@Html.DisplayNameFor(m => m.SentBox.First().ToUser)</th>
+		<th>@Html.DisplayNameFor(m => m.SentBox.First().ToUser)</th>
+		<th>@Html.DisplayNameFor(m => m.SentBox.First().SendDate)</th>
+	</tr>
+	@foreach (var entry in Model.SentBox
+		.OrderBy(m => m.HasBeenRead)
+		.ThenByDescending(m => m.SendDate))
+	{
+		<tr>
+			<td>
+				<span Condition="@(!entry.HasBeenRead)" class="fa fa-send-o" title="User has not yet read"></span>
+				<a asp-page="Index" asp-route-id="@entry.Id">@entry.Subject</a>
+			</td>
+			<td>@entry.ToUser</td>
+			<td>@entry.ToUser</td>
+			<td>@entry.SendDate</td>
+		</tr>
+	}
+</table>

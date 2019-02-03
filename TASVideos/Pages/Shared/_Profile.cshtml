@@ -1,0 +1,180 @@
+﻿@model UserProfileModel
+<row>
+	<div class="col-md-6">
+		<card>
+			<cardheader><h4>@Model.UserName</h4></cardheader>
+			<cardbody>
+				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
+				<div class="card-text">
+					<a href="/HomePages/@Model.UserName">Homepage</a>
+					<br />
+					<label asp-for="JoinDate"></label>
+					<label>@Model.JoinDate.ToShortDateString()</label>
+					<br />
+					<label asp-for="LastLoggedInTimeStamp"></label>
+					<label>@Model.LastLoggedInTimeStamp?.ToShortDateString()</label>
+					<br />
+					<label asp-for="Location"></label>
+					<label>@Html.DisplayFor(m => m.Location)</label>
+					<br />
+					<label asp-for="PostCount"></label>
+					<label>
+						<a asp-page="/Forum/Posts/User"
+						   asp-route-id="@Model.UserName">
+							@Html.DisplayFor(m => m.PostCount)
+						</a>
+					</label>
+					<br />
+					<label asp-for="TimeZone"></label>
+					<label>@Model.TimeZone</label>
+					<br />
+					<div class="alert alert-info" permission="ViewPrivateUserData">
+						<label asp-for="Email"></label>
+						<label>@Model.Email</label>
+						<br />
+						<label asp-for="EmailConfirmed" class="form-control-label"></label>
+						@if (Model.EmailConfirmed)
+						{
+							<span class="fa fa-check-square text-success"></span><span> Yes</span>
+						}
+						else
+						{
+							<div><span class="fa fa-exclamation-triangle text-danger"></span> No</div>
+						}
+						<br />
+						<label asp-for="IsLockedOut" class="form-control-label"></label>
+						@if (Model.IsLockedOut)
+						{
+							<span class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>
+						}
+						else
+						{
+							<span class="fa fa-check-square text-success"></span><span> Not locked</span>
+						}
+					</div>
+					<div class="pull-right mt-2">
+						@* ReSharper disable once UnusedVariable *@
+						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
+						{
+							<partial name="_Award" model="award" />
+						}
+					</div>
+				</div>
+			</cardbody>
+			<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="card-footer">
+				@Html.Raw(Model.Signature)
+			</div>
+		</card>
+		<card>
+			<cardheader><h4>Roles</h4></cardheader>
+			<cardbody>
+				@if (Model.Roles.Any())
+				{
+					foreach (var role in Model.Roles)
+					{
+						<label><a asp-page="/Roles/Index" asp-route-role="@role.Name">@role.Name</a></label>
+						<div class="ml-3 mt-1 mb-3">@role.Description</div>
+					}
+				}
+				else
+				{
+					<div class="alert alert-danger">This user has no Roles</div>
+				}
+			</cardbody>
+		</card>
+		<card condition="Model.WikiEdits.TotalEdits > 0">
+			<cardheader><h4>Wiki</h4></cardheader>
+			<cardbody>
+				<div>
+					<p>
+						<a
+						   asp-page="/Wiki/EditHistory"
+						   asp-route-username="@Model.UserName">
+							@Model.WikiEdits.TotalEdits
+						</a> Total Edits
+					</p>
+					<label>Last Edit On: @Model.WikiEdits.LastEdit?.ToShortDateString()</label>
+					<br />
+					<label>First Edit on: @Model.WikiEdits.FirstEdit?.ToShortDateString()</label>
+				</div>
+			</cardbody>
+		</card>
+	</div>
+	<div class="col-md-6">
+		<card class="text-right">
+			<cardheader><h4>Publications</h4></cardheader>
+			<cardbody>
+				<div condition="!Model.AnyPublications" class="card-text">
+					<i>User has not had any Published Movies</i>
+				</div>
+				<div condition="Model.AnyPublications">
+					<p>@Html.DisplayNameFor(m => m.PlayerPoints) @Model.PlayerPoints</p>
+					<p>
+						<a href="/Movies-Author@(Model.Id)">@Model.PublicationActiveCount</a>
+						Active,
+						<a href="/Movies-Author@(Model.Id)-obs">@Model.PublicationObsoleteCount</a>
+						obsolete
+					</p>
+					<p>Has published movies on these systems: @string.Join(", ", Model.PublishedSystems)</p>
+				</div>
+			</cardbody>
+		</card>
+		<card class="text-right">
+			<cardheader><h4>Submissions</h4></cardheader>
+			<cardbody>
+				<div condition="Model.SubmissionCount == 0" class="card-text">
+					<i>User has not had any Submissions</i>
+				</div>
+				<div condition="Model.SubmissionCount > 0" class="card-text">
+					<p>
+						<a 
+							asp-page="/Submissions/Index" 
+							asp-route-user="@Model.UserName">
+						@Model.SubmissionCount
+					</a> Total
+					</p>
+					@foreach (var sub in Model.Submissions.OrderByDescending(s => s.Count))
+					{
+						<label>
+							<a 
+								asp-page="/Submissions/Index" 
+								asp-route-user="@Model.UserName" 
+								asp-route-statusfilter="@((int)sub.Status)">
+								@sub.Count
+							</a>
+							@sub.Status.EnumDisplayName()
+						</label>
+						<br />
+					}
+				</div>
+			</cardbody>
+		</card>
+		<card class="text-right">
+			<cardheader><h4>Ratings</h4></cardheader>
+			<cardbody>
+				<a class="btn btn-warning btn-sm" a asp-page="/Users/Ratings" asp-route-userName="@Model.UserName">See Ratings</a>
+				<label asp-for="PublicRatings"></label> @Model.PublicRatings.ToYesNo()
+				<div condition="Model.PublicRatings">
+					<label>
+						Total Movies Rated:
+						<a asp-page="/Users/Ratings"
+							asp-route-userName="@Model.UserName">
+							@Model.Ratings.TotalMoviesRated
+						</a>
+					</label>
+				</div>
+			</cardbody>
+		</card>
+		<card class="text-right" condition="Model.UserFiles.Total > 0">
+			<cardheader>
+				<h4>User Files</h4>
+			</cardheader>
+			<cardbody>
+				<a href="/UserFiles/User/@Model.UserName">@Model.UserFiles.Total</a> files
+				<br /><br />
+				<span>Systems:</span><br />
+				@string.Join(", ", Model.UserFiles.Systems.Where(s => !string.IsNullOrWhiteSpace(s)))
+			</cardbody>
+		</card>
+	</div>
+</row>

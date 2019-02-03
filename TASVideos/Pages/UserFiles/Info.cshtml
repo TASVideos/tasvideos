@@ -1,0 +1,8 @@
+﻿@page "{id}"
+@model InfoModel
+
+@{
+	ViewData["Title"] = "User movie #" + Model.Id;
+}
+
+<partial name="_UserFileInfo" model="Model.UserFile" />

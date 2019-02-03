@@ -1,0 +1,29 @@
+﻿@page "{id}"
+@model EditModel
+@{
+	ViewData["Title"] = $"TASVideos Forum {Model.Forum.Name}";
+}
+<partial Name="_ForumHeader" />
+<form method="post">
+	<row>
+		<div class="col-lg-6">
+			<label asp-for="Forum.Name"></label>
+			<input type="text" asp-for="Forum.Name" class="form-control" />
+			<span asp-validation-for="Forum.Name" class="text-danger"></span>
+		</div>
+	</row>
+	<fullrow>
+		<label asp-for="Forum.Description"></label>
+		<textarea asp-for="Forum.Description" class="form-control" rows="4"></textarea>
+		<span asp-validation-for="Forum.Description" class="text-danger"></span>
+	</fullrow>
+	<hr />
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Update</button>
+		<a asp-page="Index" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

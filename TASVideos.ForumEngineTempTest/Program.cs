@@ -1,39 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using Dapper;
+using System.Linq;
+
+using Microsoft.EntityFrameworkCore;
+
+using TASVideos.Data;
 using TASVideos.ForumEngine;
 
 namespace TASVideos.ForumEngineTempTest
 {
-	class Post
+	public class Program
 	{
-		public bool EnableBbCode { get; set; }
-		public bool EnableHtml { get; set; }
-		public string Text { get; set; }
-		public int PosterId { get; set; }
-		public int Id { get; set; }
-	}
-
-	class Program
-	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
-			var builder = new SqlConnectionStringBuilder();
-			builder.DataSource = "(localdb)\\mssqllocaldb";
-			builder.InitialCatalog = "TASVideos";
-			builder.IntegratedSecurity = true;
-			using (var connection = new SqlConnection(builder.ToString()))
+			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+				.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TASVideos;Trusted_Connection=True;MultipleActiveResultSets=true") // TODO: app settings
+				.Options;
+
+			using (var context = new ApplicationDbContext(options, null))
 			{
+				var posts = context.ForumPosts.Take(500).ToList();
+
 				var htmlCount = 0;
-				foreach (var post in connection.Query<Post>("select top 500 EnableBbCode, EnableHtml, Text, PosterId, Id from ForumPosts"))
+				foreach (var post in posts)
 				{
 					try
 					{
 						var parsed = PostParser.Parse(post.Text, post.EnableBbCode, post.EnableHtml);
 						parsed.WriteHtml(Console.Out);
 						if (post.EnableHtml && HtmlParser.ContainsHtml(post.Text))
+						{
 							htmlCount++;
+						}
 					}
 					catch (Exception e)
 					{
@@ -43,6 +40,7 @@ namespace TASVideos.ForumEngineTempTest
 						return;
 					}
 				}
+
 				Console.WriteLine(htmlCount);
 			}
 		}

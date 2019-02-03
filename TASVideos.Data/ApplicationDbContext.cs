@@ -62,6 +62,7 @@ namespace TASVideos.Data
 		public DbSet<ForumPoll> ForumPolls { get; set; }
 		public DbSet<ForumPollOption> ForumPollOptions { get; set; }
 		public DbSet<ForumPollOptionVote> ForumPollOptionVotes { get; set; }
+		public DbSet<ForumTopicWatch> ForumTopicWatches { get; set; }
 
 		public DbSet<PrivateMessage> PrivateMessages { get; set; }
 
@@ -71,7 +72,7 @@ namespace TASVideos.Data
 		public DbSet<UserFile> UserFiles { get; set; }
 		public DbSet<UserFileComment> UserFileComments { get; set; }
 
-		public DbSet<MediaPost> MediaPosts { get; set;}
+		public DbSet<MediaPost> MediaPosts { get; set; }
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
@@ -92,6 +93,14 @@ namespace TASVideos.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+			builder.Entity<ForumTopic>(entity =>
+			{
+				entity.HasIndex(e => e.PageName)
+					.HasName($"{nameof(ForumTopic.PageName)}Index")
+					.IsUnique()
+					.HasFilter($"([{nameof(ForumTopic.PageName)}] IS NOT NULL)");
+			});
+			
 			builder.Entity<User>(entity =>
 			{
 				entity.HasIndex(e => e.NormalizedEmail)
@@ -115,6 +124,10 @@ namespace TASVideos.Data
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasMany(e => e.UserFileComments)
+					.WithOne(e => e.User)
+					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasMany(e => e.ForumTopicWatches)
 					.WithOne(e => e.User)
 					.OnDelete(DeleteBehavior.Restrict);
 			});
@@ -261,6 +274,8 @@ namespace TASVideos.Data
 			{
 				entity.HasKey(e => new { e.UserId, e.PublicationId, e.Type });
 				entity.HasIndex(e => e.PublicationId);
+				entity.HasIndex(e => new { e.UserId, e.PublicationId, e.Type })
+					.IsUnique();
 			});
 
 			builder.Entity<Tag>(entity =>
@@ -275,6 +290,27 @@ namespace TASVideos.Data
 				entity.HasOne(p => p.Topic)
 					.WithOne(t => t.Poll)
 					.HasForeignKey<ForumTopic>(t => t.PollId);
+			});
+
+			builder.Entity<Submission>(entity =>
+			{
+				entity.HasIndex(e => e.Status);
+			});
+
+			builder.Entity<UserFile>(entity =>
+			{
+				entity.HasIndex(e => e.Hidden);
+			});
+
+			builder.Entity<PrivateMessage>(entity =>
+			{
+				entity.HasIndex(e => new { e.ToUserId, e.ReadOn, e.DeletedForToUser });
+			});
+
+			builder.Entity<ForumTopicWatch>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.ForumTopicId });
+				entity.HasIndex(e => e.ForumTopicId);
 			});
 		}
 

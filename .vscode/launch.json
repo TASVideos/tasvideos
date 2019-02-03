@@ -9,7 +9,7 @@
 		   "type": "coreclr",
 		   "request": "launch",
 		   "preLaunchTask": "build_forumengine",
-		   "program": "${workspaceRoot}/TASVideos.ForumEngineTempTest/bin/Debug/netcoreapp2.0/TASVideos.ForumEngineTempTest.dll",
+		   "program": "${workspaceRoot}/TASVideos.ForumEngineTempTest/bin/Debug/netcoreapp2.2/TASVideos.ForumEngineTempTest.dll",
 		   "args": [],
 		   "cwd": "${workspaceRoot}",
 		   "stopAtEntry": false,
@@ -21,7 +21,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/TASVideos/bin/Debug/netcoreapp2.0/TASVideos.dll",
+            "program": "${workspaceFolder}/TASVideos/bin/Debug/netcoreapp2.2/TASVideos.dll",
             "args": [],
             "cwd": "${workspaceFolder}/TASVideos",
             "stopAtEntry": false,

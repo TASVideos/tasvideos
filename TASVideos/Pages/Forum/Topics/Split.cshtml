@@ -1,0 +1,73 @@
+﻿@page "{id}"
+@model SplitModel
+@{
+	ViewData["Title"] = $"Splitting Topic: {Model.Topic.Title}";
+}
+<partial Name="_ForumHeader" />
+<h4>
+	Splitting Topic: 
+	<a asp-page="/Forum/SubForum" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a> -> 
+	<a asp-page="/Forum/Topics" asp-route-id="@Model.Id">@Model.Topic.Title</a>
+</h4>
+<hr />
+<form method="post">
+	<input type="hidden" asp-for="Topic.ForumName" />
+	<input type="hidden" asp-for="Topic.ForumId" />
+	<input type="hidden" asp-for="Topic.Title" />
+	<form-group class="col-lg-6">
+		<label asp-for="Topic.SplitToForumId" class="form-control-label"></label>
+		<select asp-for="Topic.SplitToForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-control"></select>
+		<span asp-validation-for="Topic.SplitToForumId" class="text-danger"></span>
+	</form-group>
+	<form-group class="col-lg-6">
+		<label asp-for="Topic.SplitTopicName" class="form-control-label"></label>
+		<input type="text" asp-for="Topic.SplitTopicName" class="form-control" />
+		<span asp-validation-for="Topic.SplitTopicName" class="text-danger"></span>
+	</form-group>
+	<div class="border border-info" style="max-height: 500px; overflow-y: auto;">
+		<label asp-for="Topic.PostToSplitId" class="form-control-label"></label>
+		<span asp-validation-for="Topic.PostToSplitId" class="text-danger"></span>
+		<small>
+			@foreach (var post in Model.Topic.Posts.OrderBy(p => p.PostCreateTimeStamp))
+			{
+				<row>
+					<div class="col-md-1">
+						<input class="m-2 custom-radio" type="radio" value="@post.Id" name="@Html.NameFor(m =>m.Topic.PostToSplitId)" id="post_@post.Id" />
+					</div>
+					<div class="col-md-11">
+						<card>
+							<cardheader>
+								<row>
+									<div class="col-4 border-right">
+										@post.PosterName
+									</div>
+									<div class="col-8 pt-0 pb-0">
+										@post.Subject
+									</div>
+								</row>
+							</cardheader>
+							<cardbody>
+								<row>
+									<div class="col-4">
+										<img src="@post.PosterAvatar" />
+									</div>
+									<div class="col-8">
+										@Html.Raw(post.Text)
+									</div>
+								</row>
+							</cardbody>
+						</card>
+					</div>
+				</row>
+			}
+		</small>
+	</div>
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Split</button>
+		<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

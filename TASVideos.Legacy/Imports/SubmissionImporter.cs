@@ -20,18 +20,19 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			// TODO:
-			// Judge (if StatusBy and Status or judged_by
-			// Publisher (if StatusBy and Status
+			// Publisher use publication to determine
 			// authors that are not submitters
 			// submitters not in forum 
 			// MovieExtension
 			var legacySubmissions = legacySiteContext.Submissions
 				.Include(s => s.User)
+				.Include(s => s.Judge)
 				.Where(s => s.Id > 0)
 				.ToList();
 
 			var submissions = new List<Submission>();
 			var submissionAuthors = new List<SubmissionAuthor>();
+			var submissionHistory = new List<SubmissionStatusHistory>();
 
 			using (context.Database.BeginTransaction())
 			{
@@ -52,14 +53,17 @@ namespace TASVideos.Legacy.Imports
 					join w in submissionWikis on LinkConstants.SubmissionWikiPage + ls.Id equals w.PageName
 					join u in users on ImportHelper.ConvertLatin1String(ls.User.Name) equals u.UserName into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
 					from u in uu.DefaultIfEmpty()
-					select new { Sub = ls, System = s, Wiki = w, Submitter = u })
+					join j in users on ImportHelper.ConvertLatin1String(ls.Judge.Name) equals j.UserName into ju
+					from j in ju.DefaultIfEmpty()
+					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j })
 					.ToList();
 
 				foreach (var legacySubmission in lSubsWithSystem)
 				{
 					GameSystemFrameRate systemFrameRate;
 
-					if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro"))
+					if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
+						|| legacySubmission.System.Id == 44) // ZX Spectrum which has no NTSC
 					{
 						systemFrameRate = systemFrameRates
 							.SingleOrDefault(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL")
@@ -93,7 +97,9 @@ namespace TASVideos.Legacy.Imports
 						MovieFile = legacySubmission.Sub.Content,
 						IntendedTierId = legacySubmission.Sub.IntendedTier,
 						GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
-						RomId = -1 // Legacy system had no notion of Rom for submissions
+						RomId = -1, // Legacy system had no notion of Rom for submissions
+						EmulatorVersion = legacySubmission.Sub.EmulatorVersion?.Cap(50),
+						JudgeId = legacySubmission.Judge?.Id
 					};
 
 					// For now at least
@@ -102,13 +108,26 @@ namespace TASVideos.Legacy.Imports
 						var subAuthor = new SubmissionAuthor
 						{
 							SubmissionId = submission.Id,
-							Submisison = submission,
+							Submission = submission,
 							UserId = legacySubmission.Submitter.Id,
 							Author = legacySubmission.Submitter
 						};
 
 						submission.SubmissionAuthors.Add(subAuthor);
 						submissionAuthors.Add(subAuthor);
+					}
+
+					if (legacySubmission.Judge != null)
+					{
+						submissionHistory.Add(new SubmissionStatusHistory
+						{
+							CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
+							CreateUserName = legacySubmission.Judge.UserName,
+							LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
+							LastUpdateUserName = legacySubmission.Judge.UserName,
+							Status = ConvertJudgeStatus(submission.Status),
+							SubmissionId = submission.Id,
+						});
 					}
 
 					submission.GenerateTitle();
@@ -136,7 +155,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.IntendedTierId),
 				nameof(Submission.Title),
 				nameof(Submission.GameId),
-				nameof(Submission.RomId)
+				nameof(Submission.RomId),
+				nameof(Submission.EmulatorVersion),
+				nameof(Submission.JudgeId)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
@@ -148,6 +169,18 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			submissionAuthors.BulkInsert(connectionStr, subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));
+
+			var statusHistoryColumns = new[]
+			{
+				nameof(SubmissionStatusHistory.CreateTimeStamp),
+				nameof(SubmissionStatusHistory.CreateUserName),
+				nameof(SubmissionStatusHistory.LastUpdateTimeStamp),
+				nameof(SubmissionStatusHistory.LastUpdateUserName),
+				nameof(SubmissionStatusHistory.Status),
+				nameof(SubmissionStatusHistory.SubmissionId)
+			};
+
+			submissionHistory.BulkInsert(connectionStr, statusHistoryColumns, nameof(ApplicationDbContext.SubmissionStatusHistory));
 		}
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)
@@ -174,6 +207,33 @@ namespace TASVideos.Legacy.Imports
 					return SubmissionStatus.JudgingUnderWay;
 				case "Y":
 					return SubmissionStatus.Published;
+			}
+		}
+
+		private static SubmissionStatus ConvertJudgeStatus(SubmissionStatus currentStatus)
+		{
+			switch (currentStatus)
+			{
+				default:
+					throw new NotImplementedException($"Submission Import: Have not consideredunknown status {currentStatus}");
+				case SubmissionStatus.New:
+					throw new NotImplementedException($"Submission Import: Have not handled scenario: Has judge is in {currentStatus} status");
+				case SubmissionStatus.PublicationUnderway:
+					return SubmissionStatus.Accepted;
+				case SubmissionStatus.Rejected:
+					return SubmissionStatus.Rejected;
+				case SubmissionStatus.Accepted:
+					return SubmissionStatus.Accepted;
+				case SubmissionStatus.Cancelled:
+					return SubmissionStatus.Cancelled; // Judges cancel submissions on behalf of the author from time to time
+				case SubmissionStatus.NeedsMoreInfo:
+					throw new NotImplementedException($"Submission Import: Have not handled scenario: Has judge is in {currentStatus} status");
+				case SubmissionStatus.Delayed:
+					return SubmissionStatus.Delayed;
+				case SubmissionStatus.JudgingUnderWay:
+					return SubmissionStatus.JudgingUnderWay;
+				case SubmissionStatus.Published:
+					return SubmissionStatus.Accepted;
 			}
 		}
 	}

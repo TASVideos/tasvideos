@@ -1,8 +1,9 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using AngleSharp.Dom;
+using System.Linq;
 using System.Text;
+
+using AngleSharp.Dom;
 
 namespace TASVideos.ForumEngine
 {
@@ -17,10 +18,11 @@ namespace TASVideos.ForumEngine
 			foreach (var node in nodes)
 			{
 				if (node.NodeType != NodeType.Text)
-					return false;
+					return true;
 				sb.Append(node.TextContent);
 			}
-			return sb.ToString() == text;
+
+			return sb.ToString() != text;
 		}
 
 		public static Element Parse(string text)
@@ -46,7 +48,7 @@ namespace TASVideos.ForumEngine
 			}
 		}
 
-		private static Dictionary<string, string> NoOptionElements = new Dictionary<string, string>
+		private static readonly Dictionary<string, string> NoOptionElements = new Dictionary<string, string>
 		{
 			{ "B", "b" },
 			{ "I", "i" },
@@ -65,12 +67,12 @@ namespace TASVideos.ForumEngine
 			{ "SPAN", "span" }, // NOT ALLOWED OR PRODUCED BY BBCODE PARSER
 		};
 
-		private static Dictionary<string, string> NoOptionVoidElements = new Dictionary<string, string>
+		private static readonly Dictionary<string, string> NoOptionVoidElements = new Dictionary<string, string>
 		{
 			{ "BR", "br" } // NOT ALLOWED OR PRODUCED BY BBCODE PARSER
 		};
 
-		private static HashSet<string> JunkedTags = new HashSet<string>
+		private static readonly HashSet<string> _junkedTags = new HashSet<string>
 		{
 			"TABLE",
 			"H4",
@@ -81,19 +83,21 @@ namespace TASVideos.ForumEngine
 
 		private static Node ElementToNode(IElement e)
 		{
-			string name;
-			if (NoOptionElements.TryGetValue(e.TagName, out name))
+			if (NoOptionElements.TryGetValue(e.TagName, out var name))
 			{
 				return new Element { Name = name, Children = e.ChildNodes.SelectMany(NodeToNodes).ToList() };
 			}
+
 			if (NoOptionVoidElements.TryGetValue(e.TagName, out name))
 			{
 				return new Element { Name = name };
 			}
-			if (JunkedTags.Contains(e.TagName))
+
+			if (_junkedTags.Contains(e.TagName))
 			{
 				return new Text { Content = e.OuterHtml };
 			}
+
 			if (e.TagName == "A")
 			{
 				var href = e.GetAttribute("href");
@@ -101,15 +105,18 @@ namespace TASVideos.ForumEngine
 					throw new Exception("Empty href");
 				return new Element { Name = "url", Options = href, Children = e.ChildNodes.SelectMany(NodeToNodes).ToList() };
 			}
+
 			if (e.TagName == "SMALL")
 			{
 				// TODO: What are the right Options to use here?
 				return new Element { Name = "size", Options = "small", Children = e.ChildNodes.SelectMany(NodeToNodes).ToList() };
 			}
+
 			if (e.TagName == "HR")
 			{
 				return new Text { Content = "\n" };
 			}
+
 			throw new Exception("Unknown tag " + e.TagName);
 		}
 	}

@@ -32,8 +32,5 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("privmsgs_enable_html")]
 		public bool EnableHtml { get; set; }
-
-		[Column("privmsgs_attach_sig")]
-		public bool AttachSig { get; set; }
 	}
 }

@@ -4,17 +4,16 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "gulp"
+    "build": "node copy-deps.js"
   },
   "author": "",
   "devDependencies": {
-    "bootstrap": "^4.1.1",
+    "bootstrap": "^4.2.1",
     "font-awesome": "^4.7.0",
-    "gulp": "^3.9.1",
+    "fs-extra": "^7.0.1",
     "jquery": "^3.3.1",
     "jquery-validation": "^1.17.0",
     "jquery-validation-unobtrusive": "^3.2.10",
-    "popper.js": "^1.14.3",
-    "rimraf": "^2.6.2"
+    "popper.js": "^1.14.6"
   }
 }

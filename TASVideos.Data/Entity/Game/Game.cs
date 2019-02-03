@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace TASVideos.Data.Entity.Game
 {
@@ -17,7 +18,8 @@ namespace TASVideos.Data.Entity.Game
 
 		public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 		public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
-		public virtual ICollection<GameGenre> GameGenres { get; set; } = new List<GameGenre>();
+		public virtual ICollection<GameGenre> GameGenres { get; set; } = new HashSet<GameGenre>();
+		public virtual ICollection<UserFile> UserFiles { get; set; } = new HashSet<UserFile>();
 
 		[Description("Good Set or some other official naming convention")]
 		public string GoodName { get; set; }
@@ -31,5 +33,13 @@ namespace TASVideos.Data.Entity.Game
 		public string YoutubeTags { get; set; }
 
 		public string ScreenshotUrl { get; set; }
+	}
+
+	public static class GameExtensions
+	{
+		public static IQueryable<Game> ForSystem(this IQueryable<Game> query, int systemId)
+		{
+			return query.Where(g => g.SystemId == systemId);
+		}
 	}
 }

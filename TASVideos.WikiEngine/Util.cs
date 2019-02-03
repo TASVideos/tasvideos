@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-
 using Newtonsoft.Json;
+using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine
 {
@@ -25,28 +23,15 @@ namespace TASVideos.WikiEngine
 				}, Formatting.Indented);
 			}
 		}
-		public static void DebugWriteHtml(string content, TextWriter w)
-		{
-			try
-			{
-				var results = NewParser.Parse(content);
-				foreach (var r in results)
-					r.WriteHtml(w);
-			}
-			catch (NewParser.SyntaxException e)
-			{
-				w.Write($"<!-- ERROR {e.Message} -->");
-			}
-		}
 
-		public static void RenderRazor(string pageName, string content, TextWriter w)
+		public static void RenderHtmlDynamic(string content, TextWriter w, IWriterHelper h)
 		{
 			var results = NewParser.Parse(content);
-			w.WriteLine(@"@model WikiPage");
-			w.Write(@"@{ Layout = (string)ViewData[""Layout""]; }");
 
 			foreach (var r in results)
-				r.WriteHtml(w);
+			{
+				r.WriteHtmlDynamic(w, h);
+			}			
 		}
 
 		public static IEnumerable<NewParser.WikiLinkInfo> GetAllWikiLinks(string content)

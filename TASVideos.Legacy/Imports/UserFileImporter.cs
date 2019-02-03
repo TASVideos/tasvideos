@@ -31,12 +31,13 @@ namespace TASVideos.Legacy.Imports
 
 				var userFiles = legacySiteContext.UserFiles
 					.Include(userFile => userFile.User)
+					.ToList()
 					.Select(userFile => Convert(userFile, userIdsByName))
 					.ToList();
 
 				var userFileComments = legacySiteContext.UserFileComments
-					.Include(userFile => userFile.User)
-					.Select(userFileComment => Convert(userFileComment, userIdsByName))
+					.Include(comment => comment.User)
+					.Select(comment => Convert(comment, userIdsByName))
 					.ToList();
 
 				var userFileColumns = new[]
@@ -91,7 +92,7 @@ namespace TASVideos.Legacy.Imports
 				Ip = legacyComment.Ip,
 				ParentId = legacyComment.ParentId,
 				Text = legacyComment.Text,
-				Title = legacyComment.Title,
+				Title = ImportHelper.ConvertLatin1String(legacyComment.Title),
 				UserId = userIdsByName.TryGetValue(legacyComment.User.Name, out var userId)
 				? userId
 				: -1,
@@ -124,7 +125,7 @@ namespace TASVideos.Legacy.Imports
 				PhysicalLength = legacyFile.PhysicalLength,
 				Rerecords = (int)legacyFile.Rerecords,
 				SystemId = legacyFile.SystemId,
-				Title = legacyFile.Title,
+				Title = ImportHelper.ConvertLatin1String(legacyFile.Title),
 				Type = legacyFile.Type,
 				UploadTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyFile.Timestamp),
 				Views = legacyFile.Views,

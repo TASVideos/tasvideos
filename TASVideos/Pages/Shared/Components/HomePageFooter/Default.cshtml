@@ -1,0 +1,33 @@
+﻿@model UserSummaryModel
+@{
+	var pageData = (WikiPage)ViewData["pageData"];
+	var user = Model?.UserName ?? pageData.PageName.Replace("HomePages/", "");
+}
+<hr />
+@await Component.ListSubPages(pageData, "show")
+<div class="alert alert-info" role="alert">
+	This page is intended to be the personal page for user: <a asp-page="/Users/Profile" asp-route-id="@user">@user</a>
+	<br />
+
+	@if (Model != null)
+	{
+		<div>
+			The following additional information is available for this user:<br />
+			<ul>
+				<li><a asp-page="/Users/Profile" asp-route-id="@Model.UserName">Profile</a></li>
+				<ul>
+					<li><a href="/Movies-Author@(Model.Id)-obs">@Model.MovieCount Movies</a></li>
+					<li><a href="/Subs-List?User=@Model.UserName">@Model.SubmissionCount Submissions</a></li>
+					<li>Wiki Edits: <a asp-page="Wiki/EditHistory" asp-route-userName="@Model.UserName">@Model.EditCount</a></li>
+					<li>Awards Won: @Model.AwardsWon</li>
+				</ul>
+			</ul>
+			<small>Note: Opinions expressed on homepages of our users are the personal opinions of those people, and don't necessarily represent the opinion of the whole TASVideos community.</small>
+		</div>
+	}
+	else
+	{
+		<label>This user does not currently exist but this page should be reserved should such a user register.</label><br />
+		<label>Wiki Editors, all users can edit their own homepages by default, it is not recommended to create home pages unless explicitly requested by the user</label>
+	}
+</div>

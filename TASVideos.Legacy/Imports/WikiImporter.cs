@@ -23,8 +23,6 @@ namespace TASVideos.Legacy.Imports
 		{
 			var siteTexts = legacySiteContext.SiteText
 				.Include(s => s.User)
-				.Where(s => s.PageName != "DeletedPages/Bizhawk/ReleaseHistory") // Not worth preserving history here, revisions were mistakes and revision history is too large
-				.Where(s => s.PageName != "/GameResources/GBx/FZeroGPLegend") // Junk that was fixed
 				.ToList();
 
 			var legUsers = legacySiteContext.Users.Select(u => new { u.Name, u.HomePage }).ToList();
@@ -76,7 +74,6 @@ namespace TASVideos.Legacy.Imports
 			// Referrals (only need latest revisions)
 			var referralList = pages
 				.Where(p => p.ChildId == null)
-				.Where(p => !NonReferralPages.Contains(p.PageName))
 				.SelectMany(p => Util.GetAllWikiLinks(p.Markup).Select(referral => new WikiPageReferral
 				{
 					Referrer = p.PageName,
@@ -113,68 +110,6 @@ namespace TASVideos.Legacy.Imports
 			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000, 300);
 		}
 
-		// These pages do not refer to any other pages, are unlikely to do so in the future, and are rather large, slowing down referral parsing
-		private static readonly string[] NonReferralPages =
-		{
-			"InternalSystem/SubmissionContent/S5085",
-			"Bizhawk/PreviousReleaseHistory",
-			"EmulatorResources/NESAccuracyTests",
-			"Bizhawk/LuaFunctions",
-			"GameResources/Wii/SuperPaperMario",
-			"GameResources/GC/PaperMarioTheThousandYearDoor",
-			"HomePages/Bisqwit/Source/Bots/LunarBall",
-			"GameResources/GBx/MarioAndLuigiSuperstarSaga",
-			"GameResources/DOS/Nethack",
-			"InternalSystem/SubmissionContent/S5085",
-			"Bizhawk/PreviousReleaseHistory",
-			"EmulatorResources/NESAccuracyTests",
-			"Bizhawk/LuaFunctions",
-			"GameResources/Wii/SuperPaperMario",
-			"GameResources/GC/PaperMarioTheThousandYearDoor",
-			"HomePages/Bisqwit/Source/Bots/LunarBall",
-			"GameResources/GBx/MarioAndLuigiSuperstarSaga",
-			"GameResources/DOS/Nethack",
-			"InternalSystem/SubmissionContent/S3776"
-		};
-
-		private static readonly Dictionary<(string, int), int> CrystalShardsLookup = new Dictionary<(string, int), int>
-		{
-			[("GameResources/N64/Kirby64TheCrystalShards", 1)] = 1,
-			[("GameResources/N64/Kirby64TheCrystalShards", 2)] = 2,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 1)] = 3,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 2)] = 4,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 3)] = 5,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 4)] = 6,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 5)] = 7,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 6)] = 8,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 7)] = 9,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 8)] = 10,
-			[("GameResources/N64/Kirby64TheCrystalShards", 3)] = 11,
-			[("GameResources/N64/Kirby64TheCrystalShards", 4)] = 12,
-			[("GameResources/N64/Kirby64TheCrystalShards", 5)] = 13,
-			[("GameResources/N64/Kirby64TheCrystalShards", 6)] = 14,
-			[("GameResources/N64/Kirby64TheCrystalShards", 7)] = 15,
-			[("GameResources/N64/Kirby64TheCrystalShards", 8)] = 16,
-			[("GameResources/N64/Kirby64TheCrystalShards", 9)] = 17,
-			[("GameResources/N64/Kirby64TheCrystalShards", 10)] = 18,
-			[("GameResources/N64/Kirby64TheCrystalShards", 11)] = 19,
-			[("GameResources/N64/Kirby64TheCrystalShards", 12)] = 20,
-			[("GameResources/N64/Kirby64TheCrystalShards", 13)] = 21,
-			[("GameResources/N64/Kirby64TheCrystalShards", 14)] = 22,
-			[("GameResources/N64/Kirby64TheCrystalShards", 15)] = 23,
-			[("GameResources/N64/Kirby64TheCrystalShards", 16)] = 24,
-			[("GameResources/N64/Kirby64TheCrystalShards", 17)] = 25,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 9)] = 26,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 10)] = 27,
-			[("GameResources/N64/Kirby64TheCrystalShards", 18)] = 28,
-			[("GameResources/N64/Kirby64TheCrystalShards", 19)] = 29,
-			[("GameResources/N64/Kirby64TheCrystalShards", 20)] = 30,
-			[("GameResources/N64/Kirby64TheCrystalShards", 21)] = 31,
-			[("DeletedPages/GameResources/N64/Kirby64TheCrystalShards", 11)] = 32,
-			[("GameResources/N64/Kirby64TheCrystalShards", 22)] = 33,
-			[("GameResources/N64/Kirby64TheCrystalShards", 23)] = 34,
-		};
-
 		private static string PageNameShenanigans(SiteText st, string userName)
 		{
 			string pageName = st.PageName;
@@ -192,7 +127,7 @@ namespace TASVideos.Legacy.Imports
 			}
 			else if (!string.IsNullOrEmpty(userName))
 			{
-				// Use the user's name for the pagename instead of the actual page,
+				// Use the user's name for the page name instead of the actual page,
 				// We want Homepages to match usernames exactly
 				var slashIndex = pageName.IndexOf("/");
 				if (slashIndex > 0)
@@ -238,33 +173,9 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("[module:welcome]", "");
 				markup = markup.Replace("!! Featured Movie", "");
 			}
-			else if (st.PageName == "Phil" && st.Revision >= 7 && st.Revision <= 11)
-			{
-				markup = markup.Replace(":[", ":|");
-			}
-			else if (st.PageName == "971S" && st.Revision == 3)
-			{
-				markup = markup.Replace("[Phi:", "[user:Phil]:");
-			}
-			else if (st.PageName == "2884M")
-			{
-				markup = markup.Replace("][", "II");
-			}
 			else if (st.PageName == "Awards")
 			{
 				markup = markup.Replace("[module:listsubpages]", "");
-			}
-			else if (st.PageName == "3753S")
-			{
-				markup = markup.Replace("[Moon]", "[Moons]");
-			}
-
-			if (st.PageName == "2649S"
-				|| st.PageName == "3275S"
-				|| st.PageName == "EncodingGuide/PreEncoding"
-				|| st.PageName == "GameResources/DS/ClubPenguinElitePenguinForce")
-			{
-				markup = markup.Replace("[...]", "[[...]]");
 			}
 
 			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
@@ -390,12 +301,6 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("[upthorn|Upthorn]")) markup = markup.Replace("[upthorn|Upthorn]", "[user:upthorn]");
 			if (markup.Contains("[Zggzdydp|zggzdydp]")) markup = markup.Replace("[Zggzdydp|zggzdydp]", "[user:zggzdydp]");
 
-			// Fix links to user subpages
-			if (st.PageName == "2693S")
-			{
-				markup = markup.Replace("[Adelikat|adelikat]", "[user:adelikat]");
-			}
-
 			if (markup.Contains("[Adelikat/AllPlatformsChallenge")) markup = markup.Replace("[Adelikat/AllPlatformsChallenge", "[HomePages/adelikat/AllPlatformsChallenge");
 			if (markup.Contains("[adelikat/AVGN")) markup = markup.Replace("[adelikat/AVGN", "[HomePages/adelikat/AVGN");
 			if (markup.Contains("[adelikat/EmptyQueue")) markup = markup.Replace("[adelikat/EmptyQueue", "[HomePages/adelikat/EmptyQueue");
@@ -441,10 +346,6 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains(" [!]")) markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
 			if (markup.Contains(")[!]")) markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
 			if (markup.Contains("[''''!'''']")) markup = markup.Replace("[''''!'''']", "[[!]]");
-			if (st.PageName == "4084S")
-			{
-				markup = markup.Replace("[''''C'''']", "[[C]]");
-			}
 
 			return markup;
 		}
@@ -453,15 +354,8 @@ namespace TASVideos.Legacy.Imports
 		{
 			int revision = st.Revision;
 
-			// ******** Deleted pages that were recreated *************/
-			if (st.PageName == "GameResources/N64/Kirby64TheCrystalShards"
-					|| st.PageName == "DeletedPages/GameResources/N64/Kirby64TheCrystalShards")
-			{
-				revision = CrystalShardsLookup[(st.PageName, st.Revision)];
-			}
-
 			// This page had 2 deleted pages that came first, so we can just add to the revision number
-			else if (st.PageName == "GameResources/DS/MetroidPrimeHunters")
+			if (st.PageName == "GameResources/DS/MetroidPrimeHunters")
 			{
 				revision += 2;
 			}

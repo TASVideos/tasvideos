@@ -1,0 +1,8 @@
+﻿@page
+@model RatingsModel
+@{
+	ViewData["Title"] = "My Ratings";
+	ViewData.AddActivePage(ProfileNavPages.Ratings);
+	ViewData["IsMyPage"] = true;
+}
+<partial name="_Ratings" model="Model.Ratings" />

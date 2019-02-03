@@ -1,0 +1,47 @@
+@using TASVideos.Services
+@inject UserManager UserManager
+@inject SignInManager<User> SignInManager
+@{ 
+	bool isSignedIn = SignInManager.IsSignedIn(User);
+	int notificationCount = 0;
+
+	if (isSignedIn)
+	{
+		notificationCount = await UserManager.GetUnreadMessageCount(User.GetUserId());
+	}
+}
+<div class="d-md-flex">
+	@if (isSignedIn)
+	{
+		<form asp-page="/Account/Logout" method="post" id="logoutForm">
+			<navbar>
+				<nav-item activate="Messages">
+					<a class="nav-link" asp-page="/Messages/Inbox">
+						<span condition="notificationCount > 0" class="badge badge-danger">@notificationCount</span>
+						<span condition="notificationCount > 0" class="sr-only">unread messages</span>
+						<span class="fa fa-envelope"></span>
+					</a>
+				</nav-item>
+				<nav-item activate="Profile">
+					<a class="nav-link" asp-page="/Profile/Index" title="Manage">
+						@User.Identity.Name
+					</a>
+				</nav-item>
+				<nav-item>
+					<button type="submit" class="btn btn-link navbar-btn nav-link">Log out</button>
+				</nav-item>
+			</navbar>
+		</form>
+	}
+	else
+	{
+		<navbar>
+			<nav-item activate="Register">
+				<a class="nav-link" asp-page="/Account/Register">Register</a>
+			</nav-item>
+			<nav-item activate="Login">
+				<a class="nav-link" asp-page="/Account/Login" asp-route-returnUrl="@Context.ReturnUrl()">Log in</a>
+			</nav-item>
+		</navbar>
+	}
+</div>

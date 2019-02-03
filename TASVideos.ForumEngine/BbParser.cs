@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,16 +6,39 @@ namespace TASVideos.ForumEngine
 {
 	public class BbParser
 	{
-		private static readonly Regex OpeningTag = new Regex(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]=]+))?\]");
+		private static readonly Regex OpeningTag = new Regex(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]]+))?\]");
 		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
 		private static readonly Regex Url = new Regex(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
 
+		/// <summary>
+		/// what content is legal at this time
+		/// </summary>
 		private enum ParseState
 		{
+			/// <summary>
+			/// text and bbcode tags are legal
+			/// </summary>
+			/// <value></value>
 			ChildContent,
+			/// <summary>
+			/// if the parent bbcode tag has a parameter, text and bbcode tags are legal.  otherwise, raw text only
+			/// </summary>
+			/// <value></value>
 			ChildContentIfParam,
+			/// <summary>
+			/// everything except a matching bbcode end tag is raw text
+			/// </summary>
+			/// <value></value>
 			NoChildContent,
+			/// <summary>
+			/// like ChildContent, but including special handling for listitem tags which are not closed
+			/// </summary>
+			/// <value></value>
 			List,
+			/// <summary>
+			/// like ChildContent, but including special handling for listitem tags which are not closed
+			/// </summary>
+			/// <value></value>
 			ListItem
 		}
 
@@ -63,21 +85,22 @@ namespace TASVideos.ForumEngine
 
 		public static Element Parse(string text)
 		{
-			var p = new BbParser { _input = text };
+			var p = new BbParser(text);
 			p.ParseLoop();
 			return p._root;
 		}
 
-		private Element _root = new Element { Name = "_root" };
-		private Stack<Element> _stack = new Stack<Element>();
+		private readonly Element _root = new Element { Name = "_root" };
+		private readonly Stack<Element> _stack = new Stack<Element>();
 
-		private string _input;
+		private readonly string _input;
 		private int _index = 0;
 
-		private StringBuilder _currentText = new StringBuilder();
+		private readonly StringBuilder _currentText = new StringBuilder();
 
-		private BbParser()
+		private BbParser(string input)
 		{
+			_input = input;
 			_stack.Push(_root);
 		}
 
@@ -113,11 +136,9 @@ namespace TASVideos.ForumEngine
 						return _stack.Peek().Options != "";
 				}
 			}
-			else
-			{
-				// "li" or "_root"
-				return true;
-			}
+
+			// "li" or "_root"
+			return true;
 		}
 
 		private void ParseLoop()
@@ -135,6 +156,7 @@ namespace TASVideos.ForumEngine
 					_stack.Pop();
 					continue;
 				}
+
 				var c = _input[_index++];
 				if (c == '[') // check for possible tags
 				{
@@ -174,6 +196,7 @@ namespace TASVideos.ForumEngine
 								_index += m.Length;
 								Push(e);
 							}
+
 							continue;
 						}
 						else
@@ -211,8 +234,10 @@ namespace TASVideos.ForumEngine
 						// '[' but not followed by a valid tag?  OK, process as raw text
 					}
 				}
+
 				_currentText.Append(c);
 			}
+
 			FlushText();
 		}
 	}

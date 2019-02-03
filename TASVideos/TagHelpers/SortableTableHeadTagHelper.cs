@@ -40,8 +40,7 @@ namespace TASVideos.TagHelpers
 				throw new ArgumentException($"{nameof(ModelType)} can not be null");
 			}
 
-			var controller = ViewContext.Controller();
-			var action = ViewContext.Action();
+			var page = ViewContext.ActionDescriptor.DisplayName;
 
 			output.TagName = "tr";
 		    output.TagMode = TagMode.StartTagAndEndTag;
@@ -55,7 +54,7 @@ namespace TASVideos.TagHelpers
 				{
 					var sortDescending = Paging.SortBy == propertyName && !Paging.SortDescending;
 					output.Content.AppendHtml(
-						$"<a href='/{controller}/{action}?CurrentPage={Paging.CurrentPage}&PageSize={Paging.PageSize}&SortDescending={sortDescending}&SortBy={property.Name}{AdditionalParams()}'>");
+						$"<a href='{page}?CurrentPage={Paging.CurrentPage}&PageSize={Paging.PageSize}&SortDescending={sortDescending}&SortBy={property.Name}{AdditionalParams()}'>");
 					output.Content.AppendHtml(displayName);
 
 					if (Paging.SortBy == propertyName)

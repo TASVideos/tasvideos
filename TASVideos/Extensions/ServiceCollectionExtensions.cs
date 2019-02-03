@@ -1,21 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO.Compression;
+
+using AutoMapper;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Filter;
+using TASVideos.MovieParsers;
+using TASVideos.Pages;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Tasks;
 
 namespace TASVideos.Extensions
 {
@@ -44,8 +46,11 @@ namespace TASVideos.Extensions
 		{
 			if (settings.EnableGzipCompression)
 			{
-				services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
-				services.AddResponseCompression();
+				services.Configure<GzipCompressionProviderOptions>(options =>
+				{
+					options.Level = CompressionLevel.Fastest;
+				});
+				services.AddResponseCompression(options => options.EnableForHttps = true);
 			}
 
 			return services;
@@ -66,51 +71,46 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddTasks(this IServiceCollection services)
-		{
-			services.AddScoped<AwardTasks>();
-			services.AddScoped<PermissionTasks>();
-			services.AddScoped<UserTasks>();
-			services.AddScoped<RoleTasks>();
-			services.AddScoped<WikiTasks>();
-			services.AddScoped<SubmissionTasks>();
-			services.AddScoped<PublicationTasks>();
-			services.AddScoped<PlatformTasks>();
-			services.AddScoped<CatalogTasks>();
-			services.AddScoped<GameTasks>();
-			services.AddScoped<ForumTasks>();
-			services.AddScoped<RatingsTasks>();
-			services.AddScoped<PrivateMessageTasks>();
-			services.AddScoped<UserFileTasks>();
-			services.AddScoped<MediaTasks>();
-
-			return services;
-		}
-
 		public static IServiceCollection AddServices(this IServiceCollection services)
 		{
+			services.AddScoped<UserManager>();
 			services.AddScoped<IFileService, FileService>();
-			services.AddScoped<IPointsService, PointsService>();
+			services.AddScoped<IPointsCalculator, PointsCalculator>();
+			services.AddScoped<IAwardsCache, AwardsCache>();
 			services.AddTransient<IEmailSender, EmailSender>();
+			services.AddTransient<IEmailService, EmailService>();
+			services.AddTransient<IWikiPages, WikiPages>();
+
 			return services;
 		}
 
-		public static IServiceCollection AddWikiProvider(this IServiceCollection services)
+		public static IServiceCollection AddMovieParser(this IServiceCollection services)
 		{
-			var provider = new Razor.WikiMarkupFileProvider();
-			services.AddSingleton(provider);
-			services.Configure<RazorViewEngineOptions>(
-				opts => opts.FileProviders.Add(provider));
-
+			services.AddSingleton<MovieParser>();
 			return services;
 		}
 
 		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services)
 		{
-			services.AddMvc(options =>
-			{
-				options.Filters.Add(new SetViewBagAttribute());
-			});
+			services.AddResponseCaching();
+			services
+				.AddMvc()
+				.AddRazorPagesOptions(options =>
+				{
+					options.Conventions.AddPageRoute("/wiki/index", "{*url}");
+					options.Conventions.AddFolderApplicationModelConvention(
+						"/",
+						model => model.Filters.Add(new SetPageViewBagAttribute()));
+					options.Conventions.AddPageRoute("/Game/Index", "{id:int}G");
+					options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");
+					options.Conventions.AddPageRoute("/Submissions/View", "{id:int}S");
+					options.Conventions.AddPageRoute("/Publications/Index", "Movies-{query}");
+					options.Conventions.AddPageRoute("/Publications/View", "{id:int}M");
+					options.Conventions.AddPageRoute("/Publications/Authors", "Players-List");
+					options.Conventions.AddPageRoute("/Forum/Posts/Index", "forum/p/{id:int}");
+					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
+					options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
+				});
 
 			services.AddHttpContext();
 
@@ -134,12 +134,11 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		private static IServiceCollection AddHttpContext(this IServiceCollection services)
+		public static IServiceCollection AddAutoMapperWithProjections(this IServiceCollection services)
 		{
-			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-			services.AddTransient(
-				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
-
+			Mapper.Initialize(cfg => cfg.AddProfile(new MappingProfile()));
+			services.AddAutoMapper();
+			  
 			return services;
 		}
 
@@ -159,6 +158,15 @@ namespace TASVideos.Extensions
 
 			services.AddTransient<ExternalMediaPublisher>();
 			
+			return services;
+		}
+
+		private static IServiceCollection AddHttpContext(this IServiceCollection services)
+		{
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddTransient(
+				provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+
 			return services;
 		}
 	}

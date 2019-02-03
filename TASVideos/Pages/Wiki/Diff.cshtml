@@ -1,0 +1,66 @@
+@page
+@model DiffModel
+
+@{
+	string link  = WikiHelper.ProcessLink(Model.Diff.PageName);
+	ViewData["Title"] = $"{WikiHelper.ProcessLink(link)} - Diff r{Model.Diff.LeftRevision} - r{Model.Diff.RightRevision}";
+}
+
+<input type="hidden" asp-for="Diff.LeftMarkup" rows="8" class="form-control" />
+<input type="hidden" asp-for="Diff.RightMarkup" rows="8" class="form-control" />
+
+<a class="btn btn-secondary pull-right" href="/@link">Back to Page</a>
+<row>
+	
+	<label class="mr-3"><input name="diff-type" type="radio" value="1" checked="checked" /> Inline</label>
+	<label><input name="diff-type" type="radio" value="0" /> Side by Side</label>
+</row>
+<hr />
+<row>
+	<div id="ResultMarkup"></div>
+</row>
+
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function () {
+		generateDiff(1);
+	});
+
+	document.querySelectorAll('[name="diff-type"]')
+		.toArray()
+		.forEach(function (elem) {
+			elem.addEventListener('click', onRadioChange);
+		});
+
+	function onRadioChange() {
+		var type = document.querySelector('[name="diff-type"]:checked').value;
+		generateDiff(parseInt(type));
+	}
+
+	function generateDiff(viewType) {
+		var leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
+		var rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
+		var diffElem = document.getElementById('ResultMarkup');
+
+		var base = difflib.stringAsLines(leftMarkup);
+		var newTxt = difflib.stringAsLines(rightMarkup);
+		var opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes();
+
+		diffElem.innerHTML = "";
+
+		diffElem.appendChild(diffview.buildView({
+			baseTextLines: base,
+			newTextLines: newTxt,
+			opcodes: opcodes,
+			baseTextName:  "r@(Model.Diff.LeftRevision)",
+			newTextName: "r@(Model.Diff.RightRevision)",
+			contextSize: null,
+			viewType: viewType
+		}));
+	}
+</script>
+
+@section Scripts {
+	<script src="~/js/difflib.js"></script>
+	<script src="~/js/diffview.js"></script>
+	<link rel="stylesheet" href="~/css/diffview.css"/>
+}

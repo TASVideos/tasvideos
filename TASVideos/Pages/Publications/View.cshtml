@@ -1,0 +1,32 @@
+﻿@page "{id}"
+@model ViewModel
+@{
+	ViewData["Title"] = $"Movie #{Model.Id}";
+}
+@section PageTitle {
+	<h1>@Model.Publication.Title</h1>
+}
+
+<partial name="_MovieModule" model="Model.Publication" />
+<small>
+	last edited by @Model.Publication.LastUpdateUser on @Model.Publication.LastUpdateTimeStamp
+</small>
+<br />
+<a
+	asp-page="/Wiki/PageHistory"
+	asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
+	class="btn btn-info btn-sm">
+	Page History
+</a>
+<a
+	asp-page="/Wiki/Diff"
+	asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
+	class="btn btn-info btn-sm">
+	Last diff
+</a>
+<a
+	asp-page="/Wiki/Referrers"
+	asp-route-path="@($"{Model.Id}M")"
+	class="btn btn-info btn-sm">
+	List Referrers
+</a>

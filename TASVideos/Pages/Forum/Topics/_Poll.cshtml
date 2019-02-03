@@ -1,0 +1,47 @@
+﻿@model ForumTopicModel.PollModel
+@{
+	// TODO: ajax vote submit
+	// TODO: make work if more than one poll on the page (not that we intend to do so)
+	// TODO: lurker vote prevent
+	int totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
+
+	bool canVote = false;
+	if (User.Identity.IsAuthenticated)
+	{
+		int userId = User.GetUserId();
+		canVote = !Model.Options.Any(o => o.Voters.Any(v => v == userId));
+	}
+}
+
+<info-alert>
+	<a condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0" asp-page="PollResults" asp-route-id="@Model.PollId" class="btn btn-info pull-right">See Votes</a>
+	@Html.Raw(Model.Question)
+	<form asp-page="Index" asp-page-handler="Vote">
+		<input type="hidden" asp-for="@Model.PollId" />
+		@foreach (var option in Model.Options.OrderBy(o => o.Ordinal))
+		{
+			int percent = 0;
+			if (totalVotes > 0)
+			{
+				percent = (int)(option.Voters.Count / (double)totalVotes * 100);
+			}
+
+			<div>
+				<span condition="canVote"><input type="radio" name="ordinal" value="@option.Ordinal" /></span>
+				@option.Text (@option.Voters.Count @(percent)%)
+			</div>
+		}
+		<script condition="canVote">
+			(function () {
+				document.querySelectorAll('[name="ordinal"]').toArray().forEach(function (elem) {
+					elem.addEventListener('change',
+						function () {
+							document.getElementById('vote-btn').removeAttribute('hidden');
+						});
+				});
+			})();
+		</script>
+		<button condition="canVote" hidden="hidden" type="submit" class="btn btn-sm btn-success" id="vote-btn">Vote!</button>
+	</form>
+</info-alert>
+

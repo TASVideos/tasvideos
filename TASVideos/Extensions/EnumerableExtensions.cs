@@ -33,8 +33,9 @@ namespace TASVideos.Extensions
 		/// </summary>
 		public static IEnumerable<T> FirstHalf<T>(this IEnumerable<T> source)
 		{
-			int half = (int)Math.Ceiling(source.Count() / 2.0);
-			return source.Take(half);
+			var list = source.ToList();
+			int half = (int)Math.Ceiling(list.Count / 2.0);
+			return list.Take(half);
 		}
 
 		/// <summary>
@@ -43,8 +44,18 @@ namespace TASVideos.Extensions
 		/// </summary>
 		public static IEnumerable<T> SecondHalf<T>(this IEnumerable<T> source)
 		{
-			int half = (int)Math.Ceiling(source.Count() / 2.0);
-			return source.Skip(half);
+			var list = source.ToList();
+			int half = (int)Math.Ceiling(list.Count / 2.0);
+			return list.Skip(half);
+		}
+
+		/// <summary>
+		/// Returns a random entry from the given collection
+		/// </summary>
+		public static T AtRandom<T>(this ICollection<T> collection)
+		{
+			var randomIndex = new Random(DateTime.Now.Millisecond).Next(0, collection.Count);
+			return collection.ElementAtOrDefault(randomIndex);
 		}
 	}
 }

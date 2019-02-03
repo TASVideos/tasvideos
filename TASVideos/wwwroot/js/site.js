@@ -15,6 +15,7 @@
 	}
 
 	if (typeof window.CustomEvent !== 'function') {
+		// ReSharper disable once InconsistentNaming
 		function CustomEvent(event, params) {
 			params = params || { bubbles: false, cancelable: false, detail: undefined };
 			var evt = document.createEvent('CustomEvent');
@@ -33,7 +34,7 @@
 			do {
 				if (el.matches(s)) return el;
 				el = el.parentElement || el.parentNode;
-			} while (el !== null && el.nodeType === 1);
+			} while (el && el.nodeType === 1);
 			return null;
 		};
 
@@ -85,4 +86,4 @@
 // Helper "extension methods"
 NodeList.prototype.toArray = function () {
 	return Array.prototype.slice.call(this);
-}
+};

@@ -1,0 +1,157 @@
+﻿@page "{id}"
+@model CatalogModel
+@{
+	ViewData["Title"] = $"Set Catalogging Information for Movie #{Model.Id}";
+}
+
+<form method="post">
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Catalog.SystemId" class="form-control-label"></label>
+				<select asp-for="Catalog.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
+				<span asp-validation-for="Catalog.SystemId" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
+				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-control"></select>
+				<span asp-validation-for="Catalog.SystemFrameRateId" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<fullrow>
+					<label asp-for="Catalog.GameId" class="form-control-label"></label>
+				</fullrow>
+				<row>
+					<div class="col-10">
+						<select asp-for="Catalog.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
+						<span asp-validation-for="AvailableGames" class="text-danger"></span>
+					</div>
+					<div class="col-2">
+						<a asp-page="/Game/Edit" asp-route-id="" class="btn btn-primary">New</a>
+					</div>
+				</row>
+			</form-group>
+			<form-group>
+				<fullrow>
+					<label asp-for="Catalog.RomId" class="form-control-label"></label>
+				</fullrow>
+				<row>
+					<div class="col-10">
+						<select asp-for="Catalog.RomId" asp-items="@Model.AvailableRoms" class="form-control"></select>
+						<span asp-validation-for="Catalog.RomId" class="text-danger"></span>
+					</div>
+					<div class="col-2">
+						<button id="create-rom" type="button" class="btn btn-primary" )>New</button>
+					</div>
+				</row>
+			</form-group>
+		</div>
+	</row>
+	<hr/>
+	<row>
+		<div class="text-center col-12">
+			<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
+			<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
+		</div>
+	</row>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
+
+<script>
+	(function () {
+		var systemModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)');
+		var frameRateModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemFrameRateId)');
+		var gameModel = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)');
+		var romModel = document.getElementById('@Html.IdFor(m => m.Catalog.RomId)');
+		var createRomBtn = document.getElementById('create-rom');
+
+		systemModel.onchange = function() {
+			if (this.value) {
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+						if (xmlhttp.status === 200) {
+							gameModel.innerHTML = xmlhttp.responseText;
+						}
+					}
+				};
+
+				xmlhttp.open("GET", "/Game/List/GameDropDownForSystem?includeEmpty=false&systemId=" + systemModel.value, true);
+				xmlhttp.send();
+
+				var xmlhttp2 = new XMLHttpRequest();
+				xmlhttp2.onreadystatechange = function() {
+					if (xmlhttp2.readyState === XMLHttpRequest.DONE) {
+						if (xmlhttp2.status === 200) {
+							frameRateModel.innerHTML = xmlhttp2.responseText;
+						}
+					}
+				};
+
+				xmlhttp2.open("GET", "/Game/List/FrameRateDropDownForSystem?includeEmpty=false&systemId=" + systemModel.value, true);
+				xmlhttp2.send();
+			} else {
+				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.GameId) option')
+					.toArray()
+					.forEach(function (elem) {
+						if (elem.value) {
+							elem.remove();
+						}
+					});
+
+				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.SystemFrameRateId) option')
+					.toArray()
+					.forEach(function (elem) {
+						if (elem.value) {
+							elem.remove();
+						}
+					});
+			}
+
+			document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option')
+					.toArray()
+					.forEach(function (elem) {
+						if (elem.value) {
+							elem.remove();
+						}
+					});
+		}
+
+		gameModel.onchange = function () {
+			if (this.value) {
+				createRomBtn.removeAttribute('disabled');
+
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+						if (xmlhttp.status === 200) {
+							romModel.innerHTML = xmlhttp.responseText;
+						}
+					}
+				};
+
+				xmlhttp.open("GET", "/Game/List/RomDropDownForGame?includeEmpty=false&gameId=" + gameModel.value, true);
+				xmlhttp.send();
+			} else {
+				createRomBtn.setAttribute('disabled', 'disabled');
+				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option')
+					.toArray()
+					.forEach(function (elem) {
+						if (elem.value) {
+							elem.remove();
+						}
+					});
+			}
+		}
+
+		document.getElementById('create-rom').onclick = function () {
+			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
+			document.location = '/Game/' + gameId + '/Rom/Edit';
+		}
+	})()
+</script>

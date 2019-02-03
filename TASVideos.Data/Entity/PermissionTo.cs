@@ -27,6 +27,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to submit a movie to be considered for publication. By default, all registered users have this permission, unless revoked.")]
 		SubmitMovies = 3,
 
+		[Display(Name = "Rate Movies")]
+		[Group("User")]
+		[Description("The ability to rate publications. By default, all registered users have this permission, unless revoked.")]
+		RateMovies = 4,
+
 		[Display(Name = "Create Forum Topics")]
 		[Group("User")]
 		[Description("The ability to create new topics on the forums. Experienced users have the ability to do this, unless revoked")]
@@ -61,15 +66,20 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to create and edit roles and add/remove privileges to those roles.")]
 		EditRoles = 103,
 
-		[Display(Name = "Movie Wiki Pages")]
+		[Display(Name = "Move Wiki Pages")]
 		[Group("Wiki")]
-		[Description("The ability to movie a wiki page to another location")]
+		[Description("The ability to movie a wiki page to another location.")]
 		MoveWikiPages = 104,
 
 		[Display(Name = "Delete Wiki Pages")]
 		[Group("Wiki")]
-		[Description("The ability to delete a wiki page")]
+		[Description("The ability to delete a wiki pag.e")]
 		DeleteWikiPages = 105,
+
+		[Display(Name = "See Deleted Wiki Pages")]
+		[Group("Wiki")]
+		[Description("The ability to see wiki pages/revisions that were deleted.")]
+		SeeDeletedWikiPages = 106,
 
 		[Display(Name = "See Admin Pages")]
 		[Group("Wiki Administration")]
