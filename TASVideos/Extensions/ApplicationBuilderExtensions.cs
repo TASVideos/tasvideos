@@ -40,19 +40,22 @@ namespace TASVideos.Extensions
 			// public only when user is logged out, else no-cache
 			// Which is precisely the behavior we want
 			app.UseResponseCaching();
-			/*app.Use(async (context, next) =>
+			app.Use(async (context, next) =>
 			{
-				context.Response.GetTypedHeaders().CacheControl =
-					new Microsoft.Net.Http.Headers.CacheControlHeaderValue
-					{
-						Public = true,
-						MaxAge = TimeSpan.FromSeconds(30)
-					};
-				context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
-					new[] { "Accept-Encoding" };
+				if (!context.User.Identity.IsAuthenticated)
+				{
+					context.Response.GetTypedHeaders().CacheControl =
+						new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+						{
+							Public = true,
+							MaxAge = TimeSpan.FromSeconds(30)
+						};
+					context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+						new[] { "Accept-Encoding", "Cookie" };
+				}
 
 				await next();
-			});*/
+			});
 
 			app.UseMvc();
 
