@@ -1,13 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace TASVideoAgent
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var ircBot = new Tva();
-            await ircBot.Start();
+            ircBot.Loop();
+			string line;
+			while ((line = Console.ReadLine()) != null)
+			{
+				ircBot.AddMessage(line);
+			}
         }
     }
 }
