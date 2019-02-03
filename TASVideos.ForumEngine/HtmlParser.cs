@@ -18,11 +18,11 @@ namespace TASVideos.ForumEngine
 			foreach (var node in nodes)
 			{
 				if (node.NodeType != NodeType.Text)
-					return false;
+					return true;
 				sb.Append(node.TextContent);
 			}
 
-			return sb.ToString() == text;
+			return sb.ToString() != text;
 		}
 
 		public static Element Parse(string text)
