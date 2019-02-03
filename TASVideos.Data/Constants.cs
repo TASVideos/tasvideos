@@ -64,6 +64,6 @@
 
 	public static class CustomClaimTypes
 	{
-		public const string Permission = "Permission";
+		public const string Permission = "P";
 	}
 }
