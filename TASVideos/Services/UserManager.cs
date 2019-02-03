@@ -57,6 +57,12 @@ namespace TASVideos.Services
 		// and retrieved from their cookie
 		public async Task AddUserPermissionsToClaims(User user)
 		{
+			var existingClaims = await GetClaimsAsync(user);
+			if (existingClaims.Any(c => c.Type == CustomClaimTypes.Permission))
+			{
+				return;
+			}
+
 			var permissions = await GetUserPermissionsById(user.Id);
 			await AddClaimsAsync(user, permissions
 				.Select(p => new Claim(CustomClaimTypes.Permission, ((int)p).ToString())));
