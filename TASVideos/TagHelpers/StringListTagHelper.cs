@@ -18,8 +18,9 @@ namespace TASVideos.TagHelpers
 			output.TagMode = TagMode.StartTagAndEndTag;
 			output.TagName = "div";
 
-			var modelName = AspFor.ModelExplorer.Metadata.PropertyName;
-			var parentContainerName = $"{modelName}-string-list";
+			var modelName = AspFor.Name;
+			var modelId = AspFor.Name.Replace(".", "_");
+			var parentContainerName = $"{modelId}-string-list";
 			output.Attributes.Add("id", parentContainerName);
 			output.Content.AppendHtml("<div class='string-list-container'>");
 
@@ -36,10 +37,10 @@ namespace TASVideos.TagHelpers
 				output.Content.AppendHtml($@"
 <div class='author-row row mb-1' data-index='{i}'>
 	<div class='col-10'>
-		<input type='text' spellcheck='false' class='form-control' id='{modelName}_{i}_' name='{modelName}' value='{stringList[i]}' />
+		<input type='text' spellcheck='false' class='form-control' id='{modelId}_{i}_' name='{modelName}' value='{stringList[i]}' />
 	</div>
 	<div class='col-2'>
-		<button {(i == 0 ? "id='" + modelName + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none": "")}' type='button'><span class='fa fa-plus-square'></span></button>
+		<button {(i == 0 ? "id='" + modelId + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none": "")}' type='button'><span class='fa fa-plus-square'></span></button>
 		<button onclick='this.parentElement.parentElement.remove()' class='string-list-remove-btn btn btn-danger {(i == 0 ? "d-none" : "")}' type='button'><span class='fa fa-remove'></span></button>
 	</div>
 </div>");
@@ -49,7 +50,7 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml(
 $@"<script>
 	function {uniqueFuncName}() {{
-		var addBtn = document.getElementById('{modelName}-add-btn');
+		var addBtn = document.getElementById('{modelId}-add-btn');
 		addBtn.onclick = function() {{
 			var lastIndex = Math.max.apply(null, document.querySelectorAll('#{parentContainerName} .author-row')
 				.toArray()

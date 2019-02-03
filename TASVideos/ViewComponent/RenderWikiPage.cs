@@ -1,27 +1,22 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 using TASVideos.Extensions;
-using TASVideos.Razor;
-using TASVideos.Tasks;
+using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
 {
 	public class RenderWikiPage : ViewComponent
 	{
-		private readonly WikiTasks _wikiTasks;
-		private readonly WikiMarkupFileProvider _wikiMarkupFileProvider;
+		private readonly IWikiPages _wikiPages;
 
 		public RenderWikiPage(
-			WikiTasks wikiTasks,
-			WikiMarkupFileProvider wikiMarkupFileProvider)
+			IWikiPages wikiPages)
 		{
-			_wikiTasks = wikiTasks;
-			_wikiMarkupFileProvider = wikiMarkupFileProvider;
+			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string url, int? revision = null)
+		public IViewComponentResult Invoke(string url, int? revision = null)
 		{
 			url = url.Trim('/');
 			if (!WikiHelper.IsValidWikiPageName(url))
@@ -29,15 +24,19 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-			var existingPage = await _wikiTasks.GetPage(url, revision);
+			var existingPage = _wikiPages.Page(url, revision);
 
 			if (existingPage != null)
 			{
+				var model = new RenderWikiPageModel
+				{
+					Markup = existingPage.Markup,
+					PageData = existingPage
+				};
 				ViewData["WikiPage"] = existingPage;
 				ViewData["Title"] = existingPage.PageName;
 				ViewData["Layout"] = null;
-				_wikiMarkupFileProvider.WikiTasks = _wikiTasks;
-				return View(WikiMarkupFileProvider.Prefix + existingPage.Id, existingPage);
+				return View(model);
 			}
 
 			return new ContentViewComponentResult("");

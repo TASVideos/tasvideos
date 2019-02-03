@@ -53,6 +53,7 @@ namespace TASVideos.ForumEngine
 						break;
 				}
 			}
+
 			w.Write('"');
 		}
 	}
@@ -78,11 +79,13 @@ namespace TASVideos.ForumEngine
 				sb.Append(c.Content);
 			return sb.ToString();
 		}
+
 		private void WriteChildren(TextWriter w)
 		{
 			foreach (var c in Children)
 				c.WriteHtml(w);
 		}
+
 		private void WriteSimpleTag(TextWriter w, string t)
 		{
 			w.Write('<');
@@ -93,12 +96,14 @@ namespace TASVideos.ForumEngine
 			w.Write(t);
 			w.Write('>');
 		}
+
 		private void WriteComplexTag(TextWriter w, string open, string close)
 		{
 			w.Write(open);
 			WriteChildren(w);
 			w.Write(close);
 		}
+
 		private bool TryParseSize(out int w, out int h)
 		{
 			var ss = Options.Split('x');
@@ -126,6 +131,7 @@ namespace TASVideos.ForumEngine
 			WriteChildren(w);
 			w.Write("</a>");
 		}
+
 		public void WriteHtml(TextWriter w)
 		{
 			switch (Name)

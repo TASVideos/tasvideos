@@ -11,7 +11,6 @@ namespace TASVideos.Data
 {
 	public static class Paginator
 	{
-
 		/// <summary>
 		/// Takes an ordered query and returns a paged result set and a result count that has been executed.
 		/// The <see cref="DbContext" /> is used to create a single transaction scope for both the query and count and execute those queries.
@@ -54,7 +53,7 @@ namespace TASVideos.Data
 					.Take(paging.PageSize)
 					.ToList();
 
-				var pageof = new PageOf<T>(results)
+				var pageOf = new PageOf<T>(results)
 				{
 					PageSize = paging.PageSize,
 					CurrentPage = paging.CurrentPage,
@@ -63,7 +62,7 @@ namespace TASVideos.Data
 					SortBy = paging.SortBy
 				};
 
-				return pageof;
+				return pageOf;
 			}
 		}
 
@@ -84,7 +83,7 @@ namespace TASVideos.Data
 					.Take(paging.PageSize)
 					.ToListAsync();
 
-				var pageof = new PageOf<T>(results)
+				var pageOf = new PageOf<T>(results)
 				{
 					PageSize = paging.PageSize,
 					CurrentPage = paging.CurrentPage,
@@ -93,13 +92,13 @@ namespace TASVideos.Data
 					SortBy = paging.SortBy
 				};
 
-				return pageof;
+				return pageOf;
 			}
 		}
 
 		public static IOrderedQueryable<T> SortBy<T>(this IQueryable<T> query, PagingModel paging)
 		{
-			string orderby = paging.SortDescending
+			string orderBy = paging.SortDescending
 				? nameof(Enumerable.OrderByDescending)
 				: nameof(Enumerable.OrderBy);
 
@@ -116,7 +115,7 @@ namespace TASVideos.Data
 			}
 
 			// REFLECTION: source.OrderBy(x => x.Property)
-			var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == orderby && x.GetParameters().Length == 2);
+			var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == orderBy && x.GetParameters().Length == 2);
 			var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(T), property.Type);
 			var result = orderByGeneric.Invoke(null, new object[] { query, lambda });
 

@@ -2,8 +2,8 @@
 
 namespace TASVideos.ViewComponents
 {
-    public class PlatformFramerateModel
-    {
+	public class PlatformFramerateModel
+	{
 		[Display(Name = "System")]
 		public string SystemCode { get; set; }
 
@@ -15,5 +15,5 @@ namespace TASVideos.ViewComponents
 
 		[Display(Name = "Preliminary or approximate")]
 		public bool Preliminary { get; set; }
-    }
+	}
 }

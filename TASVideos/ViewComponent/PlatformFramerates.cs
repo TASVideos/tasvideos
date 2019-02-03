@@ -1,22 +1,36 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Tasks;
 
 namespace TASVideos.ViewComponents
 {
 	public class PlatformFramerates : ViewComponent
 	{
-		private readonly PlatformTasks _platFormTasks;
+		private readonly ApplicationDbContext _db;
 
-		public PlatformFramerates(PlatformTasks platFormTasks)
+		public PlatformFramerates(
+			ApplicationDbContext db)
 		{
-			_platFormTasks = platFormTasks;
+			_db = db;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			var model = await _platFormTasks.GetAllPlatformFrameRates();
+			var model = await _db.GameSystemFrameRates
+				.Select(sf => new PlatformFramerateModel
+				{
+					SystemCode = sf.System.Code,
+					FrameRate = sf.FrameRate,
+					RegionCode = sf.RegionCode,
+					Preliminary = sf.Preliminary
+				})
+				.OrderBy(sf => sf.SystemCode)
+				.ThenBy(sf => sf.RegionCode)
+				.ToListAsync();
 			return View(model);
 		}
 	}

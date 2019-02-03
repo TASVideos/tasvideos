@@ -54,8 +54,8 @@ namespace TASVideos.Services
 				using (var originalStream = new MemoryStream(contents))
 				{
 					// This is the default buffer size used by CopyTo
-					const int bufferSize = 81920;
-					await originalStream.CopyToAsync(gzipStream, bufferSize, cancellationToken);
+					const int BufferSize = 81920;
+					await originalStream.CopyToAsync(gzipStream, BufferSize, cancellationToken);
 				}
 
 				gzipContents = compressedStream.ToArray();
@@ -120,12 +120,12 @@ namespace TASVideos.Services
 
 			var stream = file.Compression == Compression.Gzip
 				? (Stream)new GZipStream(memoryStream, CompressionMode.Decompress)
-				: (Stream)memoryStream;
+				: memoryStream;
 
-			const string filetype = "application/octet-stream";
+			const string FileType = "application/octet-stream";
 			var entityTag = $"db-file-{file.Id}";
 
-			return new FileStreamResult(stream, filetype)
+			return new FileStreamResult(stream, FileType)
 			{
 				EntityTag = new EntityTagHeaderValue(entityTag),
 				FileDownloadName = file.Filename,

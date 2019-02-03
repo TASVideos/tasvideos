@@ -1,0 +1,37 @@
+﻿@page "{id}"
+@using System.Globalization
+@model RateModel
+@{
+	ViewData["Title"] = $"Movie #{Model.Id} - {Model.Rating.Title}";
+
+
+	var choices = UiDefaults.DefaultEntry.Concat(Enumerable
+		.Range(0, 21)
+		.Select(r => (r / 2.0).ToString(CultureInfo.InvariantCulture))
+		.Select(r => new SelectListItem
+		{
+			Text = r,
+			Value = r
+		}));
+}
+<div asp-validation-summary="All" class="text-danger"></div>
+<form method="post">
+	<input type="hidden" asp-for="Rating.Title" />
+	<row>
+		<div class="col-md-6">
+			<form-group>
+				<label asp-for="Rating.EntertainmentRating"></label>
+				<select asp-for="Rating.EntertainmentRating" asp-items="choices" class="form-control"></select>
+			</form-group>
+			<form-group>
+				<label asp-for="Rating.TechRating"></label>
+				<select asp-for="Rating.TechRating" asp-items="choices" class="form-control"></select>
+			</form-group>
+		</div>
+	</row>
+	<div class="mt-2 text-center">
+		<button type="submit" class="btn btn-primary">Rate</button>
+	</div>
+</form>
+<hr />
+@await Component.RenderWiki("System/MovieRatingGuidelines")

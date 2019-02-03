@@ -1,0 +1,43 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Submissions";
+}
+
+<div permission="SubmitMovies" class="pull-right">
+	<div class="mb-1">
+		<a asp-page="Submit" class="btn btn-primary">Submit a Movie</a>
+	</div>
+	<div>
+		<a asp-page="Index" asp-route-user="@User.Identity.Name" class="btn btn-secondary">
+			My Submissions
+		</a>
+	</div>
+</div>
+
+@await Component.RenderWiki("System/SubmissionHeader")
+<hr />
+<form method="get">
+	<input type="hidden" asp-for="Search.User"/>
+	<two-column-select available-list="AvailableStatuses" id-list="Search.StatusFilter"/>
+	<button type="submit" class="btn btn-secondary mt-1">Filter</button>
+</form>
+<hr />
+<label class="pull-right">Total: @Model.Submissions.Count()</label>
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.Submissions.First().Title)</th>
+		<th>@Html.DisplayNameFor(m => m.Submissions.First().Author)</th>
+		<th>@Html.DisplayNameFor(m => m.Submissions.First().Submitted)</th>
+		<th>@Html.DisplayNameFor(m => m.Submissions.First().Status)</th>
+	</tr>
+	@foreach (var item in Model.Submissions)
+	{
+		<tr>
+			<td><a href="/@(item.Id)S">@item.Title</a></td>
+			<td>@item.Author</td>
+			<td><timezone-convert asp-for="@item.Submitted" /></td>
+			<td>@item.Status.EnumDisplayName()</td>
+		</tr>
+	}
+</table>

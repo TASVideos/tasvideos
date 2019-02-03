@@ -17,6 +17,7 @@ namespace TASVideos.Legacy.Data.Forum
 		public DbSet<Topics> Topics { get; set; }
 		public DbSet<Posts> Posts { get; set; }
 		public DbSet<PostsText> PostsText { get; set; }
+		public DbSet<TopicWatch> TopicWatch { get; set; }
 		public DbSet<PrivateMessage> PrivateMessages { get; set; }
 		public DbSet<PrivateMessageText> PrivateMessageText { get; set; }
 		public DbSet<VoteDescription> VoteDescription { get; set; }
@@ -52,6 +53,12 @@ namespace TASVideos.Legacy.Data.Forum
 			{
 				entity.HasKey(e => new { e.GroupId, e.UserId });
 				entity.ToTable("user_group");
+			});
+
+			modelBuilder.Entity<TopicWatch>(entity =>
+			{ 
+				entity.HasKey(e => new { e.TopicId, e.UserId });
+				entity.ToTable("topics_watch");
 			});
 		}
 	}

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity.Forum
 {
@@ -23,5 +24,13 @@ namespace TASVideos.Data.Entity.Forum
 		public int Ordinal { get; set; }
 
 		public bool Restricted { get; set; }
+	}
+
+	public static class ForumQueryableExtensions
+	{
+		public static IQueryable<Forum> ExcludeRestricted(this IQueryable<Forum> list, bool seeRestricted)
+		{
+			return list.Where(f => seeRestricted || !f.Restricted);
+		}
 	}
 }

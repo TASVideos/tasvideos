@@ -1,0 +1,57 @@
+﻿<form asp-page="/Users/Profile" method="GET" class="form-inline" id="search-form">
+	<label class="mr-2" for="search-username-box">Search: </label>
+	<input id="search-username-box" name="name" list="search-username-list" required="required" type="search" class="form-control mr-2" placeholder="Enter a UserName" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+	<button id="go-button" type="submit" class="btn btn-secondary" disabled="disabled">Go</button>
+	<datalist id="search-username-list"></datalist>
+	<script>
+		(function () {
+			var searchBox = document.getElementById('search-username-box');
+			searchBox.onkeyup = function () {
+				
+				var goButton = document.getElementById('go-button');
+				var searchVal = searchBox.value.trim();
+				var dataListId = 'search-username-list-' + searchVal;
+				if (searchVal.length > 2) {
+					var existingList = document.getElementById(dataListId);
+					if (existingList) {
+						searchBox.setAttribute('list', dataListId);
+						return;
+					}
+
+					var xmlhttp = new XMLHttpRequest();
+
+					xmlhttp.onreadystatechange = function() {
+						if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+							if (xmlhttp.status === 200) {
+								var newSearchList = document.createElement('datalist');
+								newSearchList.id = dataListId;
+
+								var data = JSON.parse(xmlhttp.responseText);
+
+								for (var i in data) {
+									if (data.hasOwnProperty(i)) {
+										var option = document.createElement('option');
+										option.innerHTML = data[i];
+
+										newSearchList.appendChild(option);
+									}
+								}
+
+								document.getElementById("search-form").appendChild(newSearchList);
+								searchBox.setAttribute('list', dataListId);
+								goButton.removeAttribute('disabled');
+							}
+						}
+					};
+
+					xmlhttp.open("GET",
+						"/Users/List/Search/?partial=" + searchVal,
+						true);
+					xmlhttp.send();
+				} else {
+					goButton.setAttribute('disabled', 'disabled');
+				}
+			};
+		})();
+	</script>
+</form>

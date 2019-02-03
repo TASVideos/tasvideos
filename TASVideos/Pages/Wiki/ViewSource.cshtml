@@ -1,0 +1,17 @@
+@page
+@model ViewSourceModel
+@{
+	ViewData["Title"] = "View Page Source";
+}
+<div>
+	<small>
+		Revision @Model.Revision (current)<br />
+		Last Updated by @(Model.WikiPage.LastUpdateUserName ?? "Unknown") on @Model.WikiPage.LastUpdateTimeStamp
+	</small>
+</div>
+<div>
+	<a href="/@Model.WikiPage.PageName" class="btn btn-secondary">Back to Page</a>
+</div>
+<hr />
+@Html.Raw(Model.WikiPage.Markup.Replace("\n", "<br />"))
+

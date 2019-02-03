@@ -13,14 +13,17 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<Awards> Awards { get; set; }
 		public DbSet<SiteText> SiteText { get; set; }
 		public DbSet<User> Users { get; set; }
+		// ReSharper disable once UnusedMember.Global
 		public DbSet<UserRole> UserRoles { get; set; }
 		public DbSet<Role> Roles { get; set; }
 		public DbSet<Submission> Submissions { get; set; }
 		public DbSet<Movie> Movies { get; set; }
+		// ReSharper disable once UnusedMember.Global
 		public DbSet<MovieFile> MovieFiles { get; set; }
 		public DbSet<MovieFileStorage> MovieFileStorage { get; set; }
 		public DbSet<GameName> GameNames { get; set; }
 		public DbSet<Rom> Roms { get; set; }
+		// ReSharper disable once UnusedMember.Global
 		public DbSet<Player> Players { get; set; }
 		public DbSet<UserPlayer> UserPlayers { get; set; }
 		public DbSet<ClassType> ClassTypes { get; set; }

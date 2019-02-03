@@ -1,0 +1,53 @@
+﻿@page "{id?}/{handler?}"
+@model InboxModel
+@{
+	ViewData["Title"] = $"Private messages for {User.Identity.Name}";
+}
+
+<div class="mb-1">
+	<a class="pull-right btn btn-primary" asp-page="Create">
+		<span class="fa fa-envelope"></span> Create
+	</a>
+	<a class="btn btn-secondary" asp-page="Savebox">
+		<span class="fa fa-check-square"></span> Savebox
+	</a>
+	<a class="btn btn-secondary" asp-page="Sentbox">
+		<span class="fa fa-arrow-right"></span> Sentbox
+	</a>
+</div>
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.Messages.First().Subject)</th>
+		<th>@Html.DisplayNameFor(m => m.Messages.First().FromUser)</th>
+		<th>@Html.DisplayNameFor(m => m.Messages.First().SendDate)</th>
+		<th>Actions</th>
+	</tr>
+	@foreach (var entry in Model.Messages
+	   .OrderBy(m => m.IsRead)
+	   .ThenByDescending(m => m.SendDate))
+	{
+		<tr>
+			<td>
+				<a asp-page="Index" asp-route-id="@entry.Id">
+					<span condition="!entry.IsRead" class="fa fa-envelope"></span>
+					<span condition="!entry.IsRead"><strong>@entry.Subject</strong></span>
+					<span condition="entry.IsRead">@entry.Subject</span>
+				</a>
+			</td>
+			<td>@entry.FromUser</td>
+			<td>@entry.SendDate</td>
+			<td>
+				<form method="post" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id" style="display: inline-block">
+					<button type="submit" class="btn btn-primary btn-sm">Save</button>
+				</form>
+				<delete-button
+					asp-href="/Messages/InBox/@entry.Id/Delete"
+					warning-message="Are you sure you want to remove this message?"
+					class="btn-sm">
+					Delete
+				</delete-button>
+			</td>
+		</tr>
+	}
+</table>
+

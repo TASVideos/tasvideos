@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
+using TASVideos.Services;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Data
@@ -78,7 +78,7 @@ namespace TASVideos.Data
 		/// Roles must already exist before running this
 		/// DO NOT run this on production environments! This generates users with high level access and a default and public password
 		/// </summary>
-		public static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager<User> userManager)
+		public static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager userManager)
 		{
 			// Add users for each Role for testing purposes
 			var roles = await context.Roles.ToListAsync();
@@ -132,7 +132,7 @@ namespace TASVideos.Data
 		/// Adds optional sample data
 		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
 		/// </summary>
-		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager<User> userManager)
+		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager userManager)
 		{
 			context.WikiPages.Add(PublicationSampleData.FrontPage);
 			context.Games.Add(PublicationSampleData.Smb3);

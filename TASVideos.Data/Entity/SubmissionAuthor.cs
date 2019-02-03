@@ -6,6 +6,6 @@
 		public virtual User Author { get; set; }
 
 		public int SubmissionId { get; set; }
-		public virtual Submission Submisison { get; set; }
+		public virtual Submission Submission { get; set; }
 	}
 }

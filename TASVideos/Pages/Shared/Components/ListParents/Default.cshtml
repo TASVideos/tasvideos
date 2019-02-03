@@ -1,0 +1,11 @@
+﻿@model IEnumerable<WikiPage>
+
+<div class="alert alert-info" condition="@Model.Any()">
+	<label>Parents:</label>
+	<ul>
+		@foreach (var p in Model.OrderBy(m => m.PageName))
+		{
+			<li><a href="/@p.PageName">@p.PageName</a></li>
+		}
+	</ul>
+</div>

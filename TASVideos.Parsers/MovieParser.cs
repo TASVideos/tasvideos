@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Reflection;
+using TASVideos.MovieParsers.Parsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers
 {
@@ -8,10 +13,20 @@ namespace TASVideos.MovieParsers
 	/// The entry point for movie file parsers
 	/// Takes a stream of the zip file containing a movie file
 	/// The file must have precisely one file
-	/// TODO: more documentation
+	/// The file is processed and a <see cref="IParseResult"/>
+	/// is returned
 	/// </summary>
+	/// <seealso cref="IParseResult"/>
 	public sealed class MovieParser
 	{
+		private static readonly ICollection<Type> ParserTypes =
+			typeof(IParser).Assembly
+				.GetTypes()
+				.Where(t => typeof(IParser).IsAssignableFrom(t))
+				.Where(t => t != typeof(IParser))
+				.Where(t => t.GetCustomAttributes().OfType<FileExtensionAttribute>().Any())
+				.ToList();
+
 		public IParseResult Parse(Stream stream)
 		{
 			try
@@ -26,15 +41,15 @@ namespace TASVideos.MovieParsers
 					var movieFile = zip.Entries[0];
 					var ext = Path.GetExtension(movieFile.Name).Trim('.').ToLower();
 
-					switch (ext)
+					var parser = GetParser(ext);
+					if (parser == null)
 					{
-						default:
-							return Error($".{ext} files are not currently supported.");
-						case "bk2":
-							using (var movieFileStream = movieFile.Open())
-							{
-								return new Bk2().Parse(movieFileStream);
-							}
+						return Error($".{ext} files are not currently supported.");
+					}
+
+					using (var movieFileStream = movieFile.Open())
+					{
+						return parser.Parse(movieFileStream);
 					}
 				}
 			}
@@ -45,7 +60,25 @@ namespace TASVideos.MovieParsers
 			}
 		}
 
-		private IParseResult Error(string errorMsg)
+		public IEnumerable<string> SupportedMovieExtensions => ParserTypes
+			.Select(t => "." + (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
+					?.Extension);
+
+		private static IParser GetParser(string ext)
+		{
+			var type = ParserTypes
+				.SingleOrDefault(t => (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
+					?.Extension == ext);
+			
+			if (type == null)
+			{
+				return null;
+			}
+
+			return Activator.CreateInstance(type) as IParser;
+		}
+
+		private static IParseResult Error(string errorMsg)
 		{
 			return new ErrorResult(errorMsg);
 		}

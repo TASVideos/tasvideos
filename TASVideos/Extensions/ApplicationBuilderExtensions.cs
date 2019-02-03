@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace TASVideos.Extensions
 {
@@ -15,7 +18,7 @@ namespace TASVideos.Extensions
 			}
 			else
 			{
-				app.UseExceptionHandler("/Home/Error");
+				app.UseExceptionHandler("/Error");
 			}
 
 			return app;
@@ -33,17 +36,28 @@ namespace TASVideos.Extensions
 
 		public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app)
 		{
-			app.UseMvc(routes =>
+			// Note: out of the box, this middleware will set cache-control
+			// public only when user is logged out, else no-cache
+			// Which is precisely the behavior we want
+			app.UseResponseCaching();
+			app.Use(async (context, next) =>
 			{
-				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
-				routes.MapRoute("sub-list", "Subs-List", defaults: new { controller = "Submission", action = "List" });
-				routes.MapRoute("players-list", "Players-List", defaults: new { controller = "Publication", action = "Authors" });
-				routes.MapRoute("submission", "{id:int}S", defaults: new { controller = "Submission", action = "View" });
-				routes.MapRoute("movie", "{id:int}M", defaults: new { controller = "Publication", action = "View" });
-				routes.MapRoute("game", "{id:int}G", defaults: new { controller = "Game", action = "View" });
-				routes.MapRoute("movies", "Movies-{query}", defaults: new { controller = "Publication", action = "List" });
-				routes.MapRoute("wiki", "{*url}", defaults: new { controller = "Wiki", action = "RenderWikiPage" });
+				if (!context.User.Identity.IsAuthenticated)
+				{
+					context.Response.GetTypedHeaders().CacheControl =
+						new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+						{
+							Public = true,
+							MaxAge = TimeSpan.FromSeconds(30)
+						};
+					context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+						new[] { "Accept-Encoding", "Cookie" };
+				}
+
+				await next();
 			});
+
+			app.UseMvc();
 
 			return app;
 		}

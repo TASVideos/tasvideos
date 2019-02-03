@@ -18,9 +18,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("negativetext")]
 		public string NegativeText { get; set; }
 
-		[Column("specific")]
-		public string Specific { get; set; }
-
 		[Column("old_id")]
 		public int OldId { get; set; }
 	}

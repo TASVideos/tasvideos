@@ -3,7 +3,8 @@ using System.Linq;
 using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.MovieParsers;
+using TASVideos.MovieParsers.Parsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Test.MovieParsers
 {
@@ -11,7 +12,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("BK2Parsers")]
 	public class Bk2ParserTests
 	{
-		private const string Bk2ResourcesPath = "TASVideos.Test.MovieParsers.SampleMovieFiles.";
+		private const string Bk2ResourcesPath = "TASVideos.Test.MovieParsers.Bk2SampleFiles.";
 		private Bk2 _bk2Parser;
 
 		[TestInitialize]
@@ -79,11 +80,11 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(RegionType.Pal, result.Region, "Region must be Pal");
 		}
 
+        [TestMethod]
 		public void PalFlag_Missing_DefaultNtsc()
 		{
 			var result = _bk2Parser.Parse(Embedded("0Frames.bk2"));
 			Assert.AreEqual(RegionType.Ntsc, result.Region, "Region must be Ntsc");
-
 		}
 
 		[TestMethod]
@@ -102,6 +103,38 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual("gbc", result.SystemCode, "System should be GBC");
 		}
 
+		[TestMethod]
+		public void StartsFrom_PowerOn()
+		{
+			var result = _bk2Parser.Parse(Embedded("Nes.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual(MovieStartType.PowerOn, result.StartType, "Starts from power-on");
+		}
+
+		[TestMethod]
+		public void StartsFrom_Sram()
+		{
+			var result = _bk2Parser.Parse(Embedded("sram.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual(MovieStartType.Sram, result.StartType, "Starts from SRAM");
+		}
+
+		[TestMethod]
+		public void StartsFrom_Savestate()
+		{
+			var result = _bk2Parser.Parse(Embedded("savestate.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual(MovieStartType.Savestate, result.StartType, "Starts from savestate");
+		}
+
+		[TestMethod]
+		public void InnerFileExtensions_AreNotChecked()
+		{
+			var result = _bk2Parser.Parse(Embedded("NoFileExts.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual("nes", result.SystemCode, "System should be NES");
+			Assert.AreEqual(1, result.Frames,  "Frame count should be 1");
+		}
 
 		private Stream Embedded(string name)
 		{

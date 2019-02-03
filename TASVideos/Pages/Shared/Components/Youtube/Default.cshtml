@@ -1,0 +1,19 @@
+﻿@model YoutubeModel
+@{
+	// TODO: flashblock, do we need this?
+	// https://developers.google.com/youtube/player_parameters#Embedding_a_Player
+	string loopParams = Model.Loop.HasValue
+		? $"&loop=1&end={Model.Start + Model.Loop.Value}&playlist={Model.Code}"
+		: "";
+
+	var embedLink = $"//www.youtube.com/embed/{Model.Code}?version=3&rel=0&start={Model.Start}{loopParams}"; // TODO: this doesn't work right :(
+	var fullLink = $"//www.youtube.com/watch?v={Model.Code}";
+	var floatStyle = !string.IsNullOrWhiteSpace(Model.Align)
+		? $"float: {Model.Align.ToLower()};"
+		: "";
+}
+<div style="@floatStyle">
+	<iframe src="@embedLink" style="width: @(Model.Width)px; height: @(Model.Height)px; margin:0" allowfullscreen="true" type="text/html"></iframe>
+	<br />
+	<a condition="!Model.HideLink" href="@fullLink" rel="nofollow">(Link to video)</a>
+</div>

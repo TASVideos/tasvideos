@@ -1,0 +1,44 @@
+@page "{handler?}"
+@model DeletedPagesModel
+
+@{
+	ViewData["Title"] = "Deleted Pages";
+}
+
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.DeletedPages.First().PageName)</th>
+		<th>@Html.DisplayNameFor(m => m.DeletedPages.First().RevisionCount)</th>
+		<th>@Html.DisplayNameFor(m => m.DeletedPages.First().HasExistingRevisions)</th>
+		<th>Actions</th>
+	</tr>
+	@foreach (var item in Model.DeletedPages.OrderByDescending(m => m.PageName))
+	{
+		<tr>
+			<td>@item.PageName</td>
+			<td>@item.RevisionCount</td>
+			<td>
+				<a Condition="@item.HasExistingRevisions" href="/@item.PageName">@item.PageName</a>
+			</td>
+			<td>
+				@if (ViewData.UserHas(PermissionTo.DeleteWikiPages))
+				{
+					<delete-button
+						condition="@item.HasExistingRevisions"
+						asp-href="/Wiki/DeletedPages/Undelete?path=@item.PageName"
+						warning-message="This page already exists. Undeleting these revisions will merge them into the history of the existing page. Continue?">
+						Undelete
+					</delete-button>
+					<a
+						condition="!item.HasExistingRevisions"
+						asp-page="DeletedPages"
+						asp-page-handler="Undelete"
+						asp-route-path="@item.PageName"
+						class="btn btn-primary">
+						Undelete
+					</a>
+				}
+			</td>
+		</tr>
+	}
+</table>

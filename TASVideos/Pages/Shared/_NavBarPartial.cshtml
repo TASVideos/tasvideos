@@ -1,0 +1,42 @@
+<navbar>
+	<nav-item activate="Home">
+		<a class="nav-link" asp-page="/Index">Home</a>
+	</nav-item>
+	<nav-item activate="Movies">
+		<a class="nav-link" href="/Movies">Movies</a>
+	</nav-item>
+	<nav-item activate="Game Resources">
+		<a class="nav-link" href="/GameResources">Game Resources</a>
+	</nav-item>
+	<nav-item activate="ArticleIndex">
+		<a class="nav-link" href="/ArticleIndex">Articles</a>
+	</nav-item>
+	<nav-item activate="Emulators">
+		<a class="nav-link" href="/EmulatorResources">Emulators</a>
+	</nav-item>
+	<nav-item activate="Submissions">
+		<a class="nav-link" asp-page="/Submissions/Index">Submissions</a>
+	</nav-item>
+	<nav-item activate="Forum">
+		<a class="nav-link" asp-page="/Forum/Index">Forum</a>
+	</nav-item>
+	<nav-item activate="News">
+		<a class="nav-link" href="/News">News</a>
+	</nav-item>
+	<nav-dropdown activate="Admin"
+		permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers, PermissionTo.EditRoles }">
+		<a class="dropdown-item" href="/MediaPosts">Media Posts</a>
+		<a permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers }" class="dropdown-item" asp-page="/Users/List">Users</a>
+		<a class="dropdown-item" asp-page="/Roles/List">Roles</a>
+		<a class="dropdown-item" asp-page="/Permissions/Index">Permissions</a>
+	</nav-dropdown>
+	<nav-dropdown activate ="Wiki"
+		permissions="new[] { PermissionTo.EditWikiPages, PermissionTo.EditSystemPages, PermissionTo.MoveWikiPages, PermissionTo.DeleteWikiPages }">
+		<a class="dropdown-item" href="/SandBox">SandBox</a>
+		<a class="dropdown-item" href="/RecentChanges">Recent Changes</a>
+		<a class="dropdown-item" href="/WikiOrphans">Orphans</a>
+		<a class="dropdown-item" href="/TODO">To Do</a>
+		<a class="dropdown-item" href="/System">System Pages</a>
+		<a permission="SeeDeletedWikiPages" asp-page="/Wiki/DeletedPages" class="dropdown-item">Deleted Pages</a>
+	</nav-dropdown>
+</navbar>

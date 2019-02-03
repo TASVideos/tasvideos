@@ -1,0 +1,33 @@
+﻿@model (string, string)
+
+<div id="preview-container" class="d-none">
+	<hr />
+	<div class="card">
+		<div class="card-header">Preview:</div>
+		<div id="preview-contents" class="card-body">
+
+		</div>
+	</div>
+</div>
+
+<script>
+	(function () {
+		document.getElementById('preview-button').onclick = function () {
+			var markup = document.getElementById('@Model.Item1').value;
+			document.getElementById('preview-container').classList.remove('d-none');
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						$(document.getElementById('preview-contents')).empty().append($(xmlhttp.responseText));
+					} else {
+						alert("Could not generate preview");
+					}
+				}
+			};
+
+			xmlhttp.open("POST", "@Model.Item2");
+			xmlhttp.send(markup);
+		}
+	})();
+</script>

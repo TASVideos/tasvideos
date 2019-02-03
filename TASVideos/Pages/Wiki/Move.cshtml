@@ -1,0 +1,28 @@
+@page
+@model MoveModel
+@{
+	ViewData["Title"] = $"Moving: {Model.Move.OriginalPageName}";
+}
+<form method="post">
+	<input type="hidden" asp-for="Move.OriginalPageName" />
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label class="form-control-label">Original Name</label>
+				<label class="form-control">@Model.Move.OriginalPageName</label>
+			</form-group>
+			<form-group>
+				<label asp-for="Move.DestinationPageName" class="form-control-label"></label>
+				<input type="text" asp-for="Move.DestinationPageName" class="form-control" />
+				<span asp-validation-for="Move.DestinationPageName" class="text-danger"></span>
+			</form-group>
+			<div class="text-center">
+				<button type="submit" class="btn btn-primary">Move</button>
+				<a href="/@Model.Move.OriginalPageName" class="btn btn-secondary">Cancel</a>
+			</div>
+		</div>
+	</row>
+</form>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

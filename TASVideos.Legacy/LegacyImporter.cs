@@ -41,7 +41,8 @@ namespace TASVideos.Legacy
 			Run("Forum Topics", () => ForumTopicImporter.Import(connectionStr, context, legacyForumContext));
 			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, context, legacyForumContext));
 			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Polls Importer", () => ForumPollImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Polls", () => ForumPollImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(connectionStr, context, legacyForumContext));
 
 			Run("Wiki", () => WikiImporter.Import(connectionStr, context, legacySiteContext));
 			Run("Submissions", () => SubmissionImporter.Import(connectionStr, context, legacySiteContext));

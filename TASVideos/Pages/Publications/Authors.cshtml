@@ -1,0 +1,34 @@
+﻿@page
+@model AuthorsModel
+@{
+	ViewData["Title"] = "Published Authors";
+}
+
+<cache enabled="@(!User.Identity.IsAuthenticated)" expires-after="@TimeSpan.FromSeconds(60)">
+	@await Component.RenderWiki("System/PlayersHeader")
+</cache>
+
+<table class="table table-striped table-bordered table-sm">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.Authors.First().UserName)</th>
+		<th>@Html.DisplayNameFor(m => m.Authors.First().ActivePublicationCount)</th>
+		<th>@Html.DisplayNameFor(m => m.Authors.First().ObsoletePublicationCount)</th>
+	</tr>
+	@foreach (var author in Model.Authors
+	   .OrderByDescending(a => a.ActivePublicationCount)
+	   .ThenByDescending(a => a.ObsoletePublicationCount)
+	   .ThenBy(a => a.UserName))
+	{
+		<tr>
+			<td>
+				<a asp-page="/Users/Profile" asp-route-userName="@author.UserName">@author.UserName</a>
+			</td>
+			<td>
+				<a href="/Movies-List-author@(author.Id)">@author.ActivePublicationCount</a>
+			</td>
+			<td>
+				<a href="/Movies-List-author@(author.Id)-obs">@author.ObsoletePublicationCount</a>
+			</td>
+		</tr>
+	}
+</table>

@@ -65,7 +65,7 @@ namespace TASVideos.Data.Entity
 		public int Frames { get; set; }
 		public int RerecordCount { get; set; }
 
-		// Denormalized name for easy recreation
+		// De-normalized name for easy recreation
 		public string Title { get; set; }
 
 		public TimeSpan Time

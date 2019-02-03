@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -48,15 +49,13 @@ namespace TASVideos.Legacy.Imports
 						TopicId = p.TopicId,
 						PosterId = p.PosterId,
 						IpAddress = p.IpAddress,
-						Subject = ImportHelper.ConvertLatin1String(p.Subject),
+						Subject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject)),
 						Text = fixedText,
 						EnableBbCode = p.EnableBbCode,
 						EnableHtml = p.EnableHtml && HtmlParser.ContainsHtml(fixedText),
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
-						LastUpdateTimeStamp =
-							p.LastUpdateTimestamp.HasValue
-								? ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp.Value)
-								: ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
+						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
+								?? p.Timestamp),
 						CreateUserName = !string.IsNullOrWhiteSpace(p.PosterName) ? p.PosterName : "Unknown",
 						LastUpdateUserName = !string.IsNullOrWhiteSpace(p.LastUpdateUserName)
 							? p.LastUpdateUserName

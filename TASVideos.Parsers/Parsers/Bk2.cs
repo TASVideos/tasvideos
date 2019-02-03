@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using TASVideos.MovieParsers.Extensions;
+using TASVideos.MovieParsers.Result;
 
-namespace TASVideos.MovieParsers
+namespace TASVideos.MovieParsers.Parsers
 {
 	[FileExtension("bk2")]
 	internal class Bk2 : IParser
 	{
-		public string FileExtension => "bk2";
+		private const string FileExtension = "bk2";
+		private const string HeaderFile = "header";
+		private const string InputFile = "input log";
 
 		public IParseResult Parse(Stream file)
 		{
@@ -21,47 +24,34 @@ namespace TASVideos.MovieParsers
 
 			var bk2Archive = new ZipArchive(file);
 
-			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Input Log.txt");
-			if (inputLogEntry == null)
-			{
-				return new ErrorResult("Missing Input Log.txt, can not parse") { FileExtension = FileExtension };
-			}
-
-			using (var stream = inputLogEntry.Open())
-			{
-				using (var reader = new StreamReader(stream))
-				{
-					string[] inputLog = reader.ReadToEnd().Split('\n');
-					result.Frames = inputLog.Count(i => i.StartsWith('|'));
-				}
-			}
-
-			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name == "Header.txt");
+			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(HeaderFile));
 			if (headerEntry == null)
 			{
-				return new ErrorResult("Missing Header.txt, can not parse") { FileExtension = FileExtension };
+				return Error($"Missing {HeaderFile}, can not parse");
 			}
 
 			using (var stream = headerEntry.Open())
 			{
 				using (var reader = new StreamReader(stream))
 				{
-					string[] headerLines = reader.ReadToEnd().Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+					var header = reader
+						.ReadToEnd()
+						.LineSplit();
 
-					int? rerecordVal = GetInt(GetValue(headerLines, "rerecordcount"));
+					string platform = header.GetValueFor(Keys.Platform);
+					if (string.IsNullOrWhiteSpace(platform))
+					{
+						return Error("Could not determine the System Code");
+					}
+
+					int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
 					if (rerecordVal.HasValue)
 					{
 						result.RerecordCount = rerecordVal.Value;
 					}
 					else
 					{
-						result.WarningList.Add("Could not determine the rerecord count, using 0 instead");
-					}
-
-					string platform = GetValue(headerLines, "platform");
-					if (string.IsNullOrWhiteSpace(platform))
-					{
-						return new ErrorResult("Could not determine the System Code") { FileExtension = FileExtension };
+						result.WarningList.Add(ParseWarnings.MissingRerecordCount);
 					}
 
 					// Some biz system ids do not match tasvideos, convert if needed
@@ -71,38 +61,63 @@ namespace TASVideos.MovieParsers
 					}
 
 					// Check various subsystem flags
-					if (GetInt(GetValue(headerLines, "is32x")) == 1)
+					if (header.GetValueFor(Keys.Mode32X).ToBool())
 					{
-						platform = "32x";
+						platform = SystemCodes.X32;
 					}
-					else if (GetInt(GetValue(headerLines, "iscgbmode")) == 1)
+					else if (header.GetValueFor(Keys.ModeCgb).ToBool())
 					{
-						platform = "gbc";
+						platform = SystemCodes.Gbc;
 					}
-					else if (GetValue(headerLines, "boardname") == "fds")
+					else if (header.GetValueFor(Keys.Board) == SystemCodes.Fds)
 					{
-						platform = "fds";
+						platform = SystemCodes.Fds;
 					}
-					else if (GetInt(GetValue(headerLines, "issegacdmode")) == 1)
+					else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
 					{
-						platform = "segacd";
+						platform = SystemCodes.SegaCd;
 					}
-					else if (GetInt(GetValue(headerLines, "isggmode")) == 1)
+					else if (header.GetValueFor(Keys.ModeGg).ToBool())
 					{
-						platform = "gg";
+						platform = SystemCodes.Gg;
 					}
-					else if (GetInt(GetValue(headerLines, "issgmode")) == 1)
+					else if (header.GetValueFor(Keys.ModeSg).ToBool())
 					{
-						platform = "sg1000";
+						platform = SystemCodes.Sg;
 					}
 
 					result.SystemCode = platform;
 
-					int? pal = GetInt(GetValue(headerLines, "pal"));
-					if (pal == 1)
+					if (header.GetValueFor(Keys.Pal).ToBool())
 					{
 						result.Region = RegionType.Pal;
 					}
+
+					if (header.GetValueFor(Keys.StartsFromSavestate).ToBool())
+					{
+						result.StartType = MovieStartType.Savestate;
+					}
+					else if (header.GetValueFor(Keys.StartsFromSram).ToBool())
+					{
+						result.StartType = MovieStartType.Sram;
+					}
+				}
+			}
+
+			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(InputFile));
+			if (inputLogEntry == null)
+			{
+				return Error($"Missing {InputFile}, can not parse");
+			}
+
+			using (var stream = inputLogEntry.Open())
+			{
+				using (var reader = new StreamReader(stream))
+				{
+					result.Frames = reader
+						.ReadToEnd()
+						.LineSplit()
+						.Count(i => i.StartsWith("|"));
 				}
 			}
 
@@ -111,43 +126,37 @@ namespace TASVideos.MovieParsers
 
 		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
 		{
-			["gen"] = "genesis",
-			["sat"] = "saturn",
-			["dgb"] = "gb",
-			["a26"] = "a2600",
-			["a78"] = "a7800",
-			["uze"] = "uzebox",
-			["vb"] = "vboy",
-			["zxspectrum"] = "zxs"
+			["gen"] = SystemCodes.Genesis,
+			["sat"] = SystemCodes.Saturn,
+			["dgb"] = SystemCodes.GameBoy,
+			["a26"] = SystemCodes.Atari2600,
+			["a78"] = SystemCodes.Atari7800,
+			["uze"] = SystemCodes.UzeBox,
+			["vb"] = SystemCodes.VirtualBoy,
+			["zxspectrum"] = SystemCodes.ZxSpectrum
 		};
 
-		private static string GetValue(string[] lines, string header) // Case insensitive
+		private static ErrorResult Error(string errorMsg)
 		{
-			if (lines == null || !lines.Any() || string.IsNullOrWhiteSpace(header))
+			return new ErrorResult(errorMsg)
 			{
-				return "";
-			}
-
-			var row = lines.FirstOrDefault(l => l.ToLower().StartsWith(header.ToLower()))?.ToLower();
-			if (!string.IsNullOrWhiteSpace(row))
-			{
-				var valstr = row.Replace(header.ToLower(), "").Trim().Replace("\r", "").Replace("\n", "");
-				
-				return valstr;
-			}
-
-			return "";
+				FileExtension = FileExtension
+			};
 		}
 
-		private static int? GetInt(string val)
+		private static class Keys
 		{
-			var result = int.TryParse(val, out int parsedVal);
-			if (result)
-			{
-				return parsedVal;
-			}
-
-			return null;
+			public const string RerecordCount = "rerecordcount";
+			public const string Platform = "platform";
+			public const string Board = "boardname";
+			public const string Pal = "pal";
+			public const string StartsFromSram = "startsfromsaveram";
+			public const string StartsFromSavestate = "startsfromsavestate";
+			public const string Mode32X = "is32x";
+			public const string ModeCgb = "iscgbmode";
+			public const string ModeSegaCd = "issegacdmode";
+			public const string ModeGg = "isggmode";
+			public const string ModeSg = "issgmode";
 		}
 	}
 }

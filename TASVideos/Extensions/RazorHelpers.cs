@@ -29,14 +29,16 @@ namespace TASVideos.Extensions
 			return permissions.Any(permission => ((IEnumerable<PermissionTo>)viewData["UserPermissions"]).Contains(permission));
 		}
 
-		public static string Controller(this ViewContext viewContext)
+		public static string Page(this ViewContext viewContext)
 		{
-			return viewContext.ActionDescriptor.RouteValues["controller"];
+			return viewContext.ActionDescriptor.DisplayName;
 		}
 
-		public static string Action(this ViewContext viewContext)
+		public static string PageGroup(this ViewContext viewContext)
 		{
-			return viewContext.ActionDescriptor.RouteValues["action"];
+			return viewContext.ActionDescriptor.DisplayName
+				?.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+				.FirstOrDefault();
 		}
 
 		public static async Task<IHtmlContent> RenderWiki(this IViewComponentHelper component, string pageName)

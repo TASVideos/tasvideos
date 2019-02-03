@@ -2,8 +2,8 @@
 
 namespace TASVideos.Data.SeedData
 {
-    public static class FlagSeedData
-    {
+	public static class FlagSeedData
+	{
 		public static readonly Flag[] Flags =
 		{
 			new Flag
@@ -59,7 +59,16 @@ namespace TASVideos.Data.SeedData
 				LinkPath = "NewcomerCorner",
 				Token = "NewcomerRec",
 				PermissionRestriction = PermissionTo.EditRecommendation
+			},
+			new Flag
+			{
+				Id = 9,
+				Name = "Fastest Completion",
+				IconPath = "images/fastest-completion.png",
+				LinkPath = "FastestCompletion",
+				Token = "FastestCompletion",
+				PermissionRestriction = PermissionTo.EditRecommendation
 			}
 		};
-    }
+	}
 }

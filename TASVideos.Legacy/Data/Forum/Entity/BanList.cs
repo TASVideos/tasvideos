@@ -14,8 +14,5 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("ban_ip")]
 		public string IpAddress { get; set; }
-
-		[Column("ban_email")]
-		public string Email { get; set; }
 	}
 }

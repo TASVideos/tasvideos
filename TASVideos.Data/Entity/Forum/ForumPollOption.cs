@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity.Forum
 {
@@ -17,5 +18,13 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual ForumPoll Poll { get; set; }
 
 		public virtual ICollection<ForumPollOptionVote> Votes { get; set; } = new HashSet<ForumPollOptionVote>();
+	}
+
+	public static class ForumPollOptionExtensions
+	{
+		public static IQueryable<ForumPollOption> ForPoll(this IQueryable<ForumPollOption> list, int pollId)
+		{
+			return list.Where(o => o.PollId == pollId);
+		}
 	}
 }

@@ -1,0 +1,32 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "TASVideos Forums";
+}
+<partial Name="_ForumHeader" />
+<fullrow class="pb-2 pt-2">
+	<div class="pull-right">
+		<a asp-page="/Forum/Posts/New" condition="@User.Identity.IsAuthenticated" class="btn btn-secondary btn-sm">
+			Posts since last visit
+		</a>
+		<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm">
+			Unanswered Posts
+		</a>
+	</div>
+</fullrow>
+<row>
+	<div class="col-md-6">
+		@* ReSharper disable once UnusedVariable *@
+		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
+		{
+		<partial name="_Category" model="cat" />
+		}
+	</div>
+	<div class="col-md-6">
+		@* ReSharper disable once UnusedVariable *@
+		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).SecondHalf())
+		{
+		<partial name="_Category" model="cat" />
+		}
+	</div>
+</row>

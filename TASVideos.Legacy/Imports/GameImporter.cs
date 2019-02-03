@@ -55,7 +55,7 @@ namespace TASVideos.Legacy.Imports
 		private static readonly Game UnknownGame = new Game
 		{
 			Id = -1,
-			SystemId = 1, // Arbitruary, I'd rather not have a placeholder system because it could clutter a lot of parts of the code
+			SystemId = 1, // Arbitrary, I'd rather not have a placeholder system because it could clutter a lot of parts of the code
 			GoodName = "Unknown Game",
 			DisplayName = "Unknown Game",
 			Abbreviation = "Unknown",

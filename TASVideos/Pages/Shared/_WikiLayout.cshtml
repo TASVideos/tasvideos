@@ -1,0 +1,20 @@
+﻿@{
+	Layout = "_Layout.cshtml";
+	WikiPage pageData = (WikiPage)ViewData["WikiPage"];
+
+	ViewData["ActiveTab"] = pageData.PageName == "GameResources"
+		|| WikiHelper.IsGameResourcesPage(pageData.PageName)
+		? "Game Resources"
+		: pageData.PageName;
+}
+
+<partial name="_WikiLayoutHeader" model="pageData" />
+@RenderBody()
+<partial name="_WikiLayoutFooter" model="pageData" />
+
+@section Scripts {
+	@if (IsSectionDefined("Scripts"))
+	{
+		@RenderSection("Scripts")
+	}
+}

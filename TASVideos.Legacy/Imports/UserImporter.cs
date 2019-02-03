@@ -15,7 +15,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class UserImporter
 	{
-		private const int ModeratorGroupId = 272; // This isn't goig to change, so just hard code it
+		private const int ModeratorGroupId = 272; // This isn't going to change, so just hard code it
 
 		public static void Import(
 			string connectionStr,
@@ -110,26 +110,40 @@ namespace TASVideos.Legacy.Imports
 					if (user.SiteUser.UserRoles.Any(ur => ur.Role.Name == "user")
 						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding these roles to admins, they have these perms anyway
 					{
-						userRoles.Add(new UserRole
+						if (!user.User.IsBanned)
 						{
-							RoleId = roles.Single(r => r.Name == RoleSeedNames.EditHomePage).Id,
-							UserId = user.User.Id
-						});
-
-						if (user.SiteUser.UserRoles.All(ur => ur.Role.Name != "limited"))
-						{
-							context.UserRoles.Add(new UserRole
+							if (user.SiteUser.UserRoles.Any(ur => ur.Role.Name == "limited"))
 							{
-								RoleId = roles.Single(r => r.Name == RoleSeedNames.SubmitMovies).Id,
-								UserId = user.User.Id
-							});
+								userRoles.Add(new UserRole
+								{
+									RoleId = roles.Single(r => r.Name == RoleSeedNames.LimitedUser).Id,
+									UserId = user.User.Id
+								});
+							}
+							else
+							{
+								userRoles.Add(new UserRole
+								{
+									RoleId = roles.Single(r => r.Name == RoleSeedNames.DefaultUser).Id,
+									UserId = user.User.Id
+								});
+							}
+
+							if (user.User.PostCount >= SiteGlobalConstants.VestedPostCount)
+							{
+								userRoles.Add(new UserRole
+								{
+									RoleId = roles.Single(r => r.Name == RoleSeedNames.ExperiencedForumUser).Id,
+									UserId = user.User.Id
+								});
+							}
 						}
 					}
 
 					if (user.User.IsForumAdmin
 						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
 					{
-						context.UserRoles.Add(new UserRole
+						userRoles.Add(new UserRole
 						{
 							RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumAdmin).Id,
 							UserId = user.User.Id
@@ -138,7 +152,7 @@ namespace TASVideos.Legacy.Imports
 					else if (user.User.IsModerator
 						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
 					{
-						context.UserRoles.Add(new UserRole
+						userRoles.Add(new UserRole
 						{
 							RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumModerator).Id,
 							UserId = user.User.Id
@@ -147,7 +161,7 @@ namespace TASVideos.Legacy.Imports
 
 					if (user.User.UserName == "dwangoAC")
 					{
-						context.UserRoles.Add(new UserRole
+						userRoles.Add(new UserRole
 						{
 							RoleId = roles.Single(r => r.Name == RoleSeedNames.Ambassador).Id,
 							UserId = user.User.Id
@@ -160,30 +174,12 @@ namespace TASVideos.Legacy.Imports
 						var role = GetRoleFromLegacy(userRole.Name, roles);
 						if (role != null)
 						{
-							context.UserRoles.Add(new UserRole
+							userRoles.Add(new UserRole
 							{
 								RoleId = role.Id,
 								UserId = user.User.Id
 							});
 						}
-					}
-				}
-				
-				if (!user.User.IsBanned)
-				{
-					context.UserRoles.Add(new UserRole
-					{
-						RoleId = roles.Single(r => r.Name == RoleSeedNames.ForumUser).Id,
-						UserId = user.User.Id
-					});
-
-					if (user.User.PostCount >= SiteGlobalConstants.VestedPostCount)
-					{
-						context.UserRoles.Add(new UserRole
-						{
-							RoleId = roles.Single(r => r.Name == RoleSeedNames.ExperiencedForumUser).Id,
-							UserId = user.User.Id
-						});
 					}
 				}
 			}

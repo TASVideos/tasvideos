@@ -1,0 +1,30 @@
+﻿@page "{id}"
+@model TASVideos.Pages.Game.IndexModel
+@{
+	ViewData["Title"] = $"{Model.Game.SystemCode} - {Model.Game.DisplayName}";
+	string wiki = LinkConstants.GameWikiPage + Model.Id;
+	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+}
+
+<card>
+	<cardheader>
+		<span class="float-right">
+			<a condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" class="btn btn-primary">Edit</a>
+		</span>
+		<h4>Description</h4>
+	</cardheader>
+	<cardbody>
+		<div class="card-text">
+			@await Component.RenderWiki(wiki)
+		</div>
+	</cardbody>
+</card>
+<hr />
+<label>Genre:</label>
+<ul>
+	@foreach (var genre in Model.Game.Genres)
+	{
+		<li>@genre</li>
+	}
+</ul>
+

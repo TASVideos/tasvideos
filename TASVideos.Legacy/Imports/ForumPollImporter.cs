@@ -101,7 +101,7 @@ namespace TASVideos.Legacy.Imports
 				 })
 				.ToList();
 
-			// Insert Unknown User votes for discrepencies between de-normalized vote count and actual vote records
+			// Insert Unknown User votes for discrepancies between de-normalized vote count and actual vote records
 			var missingVotes =
 				(from po in legForumPollOptions
 				 join v in legForumVoters on new { po.Id, OptionId = po.VoteOptionId } equals new { v.Id, v.OptionId }

@@ -1,0 +1,24 @@
+@page
+@model SiteMapModel
+@{ 
+	ViewData["Title"] = "Site Map";
+}
+
+<table class="table table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.Map.First().PageName)</th>
+		<th>@Html.DisplayNameFor(m => m.Map.First().IsWiki)</th>
+		<th>@Html.DisplayNameFor(m => m.Map.First().AccessRestriction)</th>
+	</tr>
+	@foreach (var item in Model.Map.OrderBy(m => m.PageName))
+	{
+		<tr>
+			<td>
+				<span Condition="@item.PageName.Contains('/')" style="padding-left: 20px;"></span>
+				<a href="/@item.PageName">@item.PageName</a>
+			</td>
+			<td>@(item.IsWiki ? "Wiki" : "Built In")</td>
+			<td>@item.AccessRestriction</td>
+		</tr>
+	}
+</table>

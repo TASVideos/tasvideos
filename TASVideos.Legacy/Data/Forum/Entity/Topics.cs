@@ -36,5 +36,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		// define('TOPIC_MOVED', 2);
 		[Column("topic_status")]
 		public int TopicStatus { get; set; }
+
+		[Column("submissionid")]
+		public int SubmissionId { get; set; }
 	}
 }

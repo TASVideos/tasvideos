@@ -1,9 +1,0 @@
-﻿@model PublicationViewModel
-@{
-	ViewData["Title"] = $"Movie #{Model.Id}";
-}
-@section PageTitle {
-	<h1>@Model.Title</h1>
-}
-
-<partial name="~/Views/Shared/_MovieModule.cshtml" model="Model" />

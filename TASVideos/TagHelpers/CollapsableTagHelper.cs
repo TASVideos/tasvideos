@@ -17,7 +17,7 @@ namespace TASVideos.TagHelpers
 
 			output.TagName = "div";
 
-			// TOOD: sr and aria tags could use something more informative than BodyId
+			// TODO: sr and aria tags could use something more informative than BodyId
 			output.Content.AppendHtml($@"
 <a class='collapsed' data-toggle='collapse' href='#{BodyId}' aria-expanded='false' aria-controls='collapse1'>
 	{content}

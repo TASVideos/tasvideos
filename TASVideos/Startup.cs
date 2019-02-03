@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data;
 using TASVideos.Extensions;
 using TASVideos.Legacy.Extensions;
-using TASVideos.MovieParsers;
 
 namespace TASVideos
 {
@@ -31,22 +29,20 @@ namespace TASVideos
 				.AddCookieConfiguration(Environment)
 				.AddGzipCompression(Settings)
 				.AddCacheService(Settings.CacheSettings)
-				.AddTasks()
 				.AddServices()
 				.AddExternalMediaPublishing(Environment, Settings)
-				.AddWikiProvider();
+				.AddAutoMapperWithProjections();
 
 			// Internal Libraries
 			services
 				.AddTasvideosData(Configuration)
 				.AddTasVideosLegacy(Environment.IsLocalWithImport())
-				.AddTasvideosMovieParsers();
+				.AddMovieParser();
 
 			// 3rd Party
 			services
 				.AddMvcWithOptions()
-				.AddIdentity()
-				.AddAutoMapper();
+				.AddIdentity();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)

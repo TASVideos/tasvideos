@@ -3,7 +3,7 @@
 // ReSharper disable StyleCop.SA1401
 namespace TASVideos.Data.SeedData
 {
-    public static class TierSeedData
+	public static class TierSeedData
 	{
 		public static Tier[] Tiers =
 		{

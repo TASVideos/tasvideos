@@ -1,0 +1,30 @@
+﻿@model WikiPage
+@{
+	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+}
+
+<!-- Eventually we will show available translations here-->
+@if (canEdit)
+{
+	<div class="text-right">
+		<a asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn btn-primary">Edit</a>
+	</div>
+	<hr />
+}
+
+@if (Model.IsSystemPage())
+{
+	@await Component.SystemPageHeader(Model)
+}
+else if (Model.IsGameResourcesPage())
+{
+	@await Component.GameResourcesHeader(Model)
+}
+else if (Model.IsHomePage())
+{
+	@await Component.HomePageHeader(Model)
+}
+else
+{
+	@await Component.ListParents(Model)
+}

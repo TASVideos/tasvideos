@@ -1,0 +1,37 @@
+﻿@page
+@model SaveboxModel
+@{
+	ViewData["Title"] = $"Saved messages for {User.Identity.Name}";
+}
+
+<a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span>Inbox</a>
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.SaveBox.First().Subject)</th>
+		<th>@Html.DisplayNameFor(m => m.SaveBox.First().FromUser)</th>
+		<th>@Html.DisplayNameFor(m => m.SaveBox.First().ToUser)</th>
+		<th>@Html.DisplayNameFor(m => m.SaveBox.First().SendDate)</th>
+		<th>Actions</th>
+	</tr>
+	@foreach (var entry in Model.SaveBox
+		.OrderBy(m => m.ToUser == User.Identity.Name)
+		.ThenByDescending(m => m.SendDate))
+	{
+		<tr>
+			<td>
+				<a asp-page="Index" asp-route-id="@entry.Id">@entry.Subject</a>
+			</td>
+			<td>@entry.FromUser</td>
+			<td>@entry.ToUser</td>
+			<td>@entry.SendDate</td>
+			<td>
+				<delete-button
+					asp-href="/Messages/InBox/@entry.Id/Delete"
+					warning-message="Are you sure you want to remove this message?"
+					class="btn-sm">
+					Delete
+				</delete-button>
+			</td>
+		</tr>
+	}
+</table>

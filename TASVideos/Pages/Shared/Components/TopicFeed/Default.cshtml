@@ -1,0 +1,43 @@
+﻿@model TopicFeedModel
+
+<div class="@(Model.RightAlign ? "right-align-topic" : "")">
+	<h3 condition="!string.IsNullOrWhiteSpace(Model.Heading)" class="card-header topic-header">@Model.Heading</h3>
+	@foreach (var post in Model.Posts)
+	{
+		var collapseId = $"collapse-content-{post.Id}";
+		<div class="card">
+			<div class="card-body">
+				<h5 condition="!Model.HideContent" class="card-title">@post.Subject</h5>
+				<h5 condition="Model.HideContent"><a data-toggle="collapse" href="#@collapseId" role="button" aria-expanded="false">@post.Subject</a></h5>
+				<h6 class="card-subtitle mb-2 text-muted">
+					<small>
+						posted by @post.PosterName at @post.CreateTimeStamp
+					</small>
+				</h6>
+				<div condition="Model.HideContent" class="collapse card-text" id="collapse-content-@post.Id">
+					@Html.Raw(post.RenderedText)
+				</div>
+				<div condition="!Model.HideContent" class="card-text">
+					@Html.Raw(post.RenderedText)
+				</div>
+			</div>
+		</div>
+	}
+</div>
+<style>
+	.right-align-topic {
+		max-height: 440px;
+		overflow-y: auto;
+		border: 1px solid #CCC;
+		border-radius: 5px;
+		margin-left: 20px;
+		margin-top: 15px;
+	}
+
+	@@media (min-width: 768px) {
+		.right-align-topic {
+			float: right;
+			width: 33%;
+		}
+	}
+</style>
