@@ -2,7 +2,7 @@
 
 namespace TASVideos.Pages.Wiki.Models
 {
-	public class SiteMapModel
+	public class SiteMapEntry
 	{
 		[Display(Name = "Page")]
 		public string PageName { get; set; }
