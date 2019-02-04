@@ -144,7 +144,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (Topic.Poll != null)
 			{
-				Topic.Poll.Question = RenderPost(Topic.Poll.Question, false, true); // TODO: do we have bbcode in poll questions??
+				Topic.Poll.Question = RenderPost(Topic.Poll.Question, false, true);
 			}
 
 			if (userId.HasValue)
