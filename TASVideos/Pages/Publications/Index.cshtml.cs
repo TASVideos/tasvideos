@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Pages.Publications.Models;
@@ -92,8 +93,7 @@ namespace TASVideos.Pages.Publications
 
 		private async Task<PublicationSearchModel> GetMovieTokenData()
 		{
-			var cacheKey = "MovieTokenData"; // TODO: make a constants class for cache keys
-			if (_cache.TryGetValue(cacheKey, out PublicationSearchModel cachedResult))
+			if (_cache.TryGetValue(CacheKeys.MovieTokens, out PublicationSearchModel cachedResult))
 			{
 				return cachedResult;
 			}
@@ -109,7 +109,7 @@ namespace TASVideos.Pages.Publications
 					Flags = await _db.Flags.Select(f => f.Token.ToLower()).ToListAsync()
 				};
 
-				_cache.Set(cacheKey, result);
+				_cache.Set(CacheKeys.MovieTokens, result);
 
 				return result;
 			}
