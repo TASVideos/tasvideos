@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Ratings.Models;
 using TASVideos.Services;
@@ -17,9 +18,6 @@ namespace TASVideos.Pages.Ratings
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel
 	{
-		// TODO: move to a constants file
-		private const string MovieRatingKey = "OverallRatingForMovieViewModel-";
-
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 
@@ -60,7 +58,7 @@ namespace TASVideos.Pages.Ratings
 		/// </summary>
 		private async Task<PublicationRatingsModel> GetRatingsForPublication(int publicationId)
 		{
-			string cacheKey = MovieRatingKey + publicationId;
+			string cacheKey = CacheKeys.MovieRatingKey + publicationId;
 			if (_cache.TryGetValue(cacheKey, out PublicationRatingsModel rating))
 			{
 				return rating;
@@ -121,7 +119,7 @@ namespace TASVideos.Pages.Ratings
 					.Average(), 
 				2);
 
-			_cache.Set(MovieRatingKey + publicationId, model);
+			_cache.Set(CacheKeys.MovieRatingKey + publicationId, model);
 
 			return model;
 		}

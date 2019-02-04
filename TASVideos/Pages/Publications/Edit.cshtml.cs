@@ -98,7 +98,6 @@ namespace TASVideos.Pages.Publications
 			return RedirectToPage("View", new { Id });
 		}
 
-		// TODO: document
 		private async Task<IEnumerable<SelectListItem>> GetAvailableFlags(IEnumerable<PermissionTo> userPermissions)
 		{
 			return await _db.Flags
