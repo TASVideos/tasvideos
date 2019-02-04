@@ -10,7 +10,7 @@
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
 	<row>
-		<div class="col-md-6">
+		<column md="6">
 			<form-group>
 				<label asp-for="UserName"></label>
 				<input asp-for="UserName" class="form-control" />
@@ -31,8 +31,8 @@
 				<input asp-for="ConfirmPassword" class="form-control" />
 				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 			</form-group>
-		</div>
-		<div class="col-md-6">
+		</column>
+		<column md="6">
 			<form-group>
 				<label asp-for="SelectedTimeZone"></label>
 				<timezone-picker asp-for="SelectedTimeZone" class="form-control" />
@@ -42,7 +42,7 @@
 				<input asp-for="From" type="text" class="form-control" />
 				<span asp-validation-for="From" class="text-danger"></span>
 			</form-group>
-		</div>
+		</column>
 	</row>
 	<div class="text-center">
 		<button type="submit" class="btn btn-secondary">Register</button>
