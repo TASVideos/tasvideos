@@ -13,7 +13,7 @@
 </fullrow>
 
 @* ReSharper disable once UnusedVariable *@
-@foreach (var file in Model.Files.OrderByDescending(f => f.Uploaded))
+@foreach (var file in Model.Files.OrderByDescending(f => f.UploadedTimestamp))
 {
 	<partial name="_UserFileInfo" model="file" />
 }
