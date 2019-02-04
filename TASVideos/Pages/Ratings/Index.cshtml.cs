@@ -38,43 +38,26 @@ namespace TASVideos.Pages.Ratings
 			? Publication.Ratings
 			: Publication.Ratings.Where(r => r.IsPublic);
 
+		// TODO: refactor to use pointsService for calculations
 		public async Task<IActionResult> OnGet()
 		{
-			Publication = await GetRatingsForPublication(Id);
-			if (Publication == null)
-			{
-				return NotFound();
-			}
-
-			return Page();
-		}
-
-		// TODO: refactor to use pointsService for calculations
-		// TODO: move at least some of this logic inline
-		/// <summary>
-		/// Returns a detailed list of all ratings for a <see cref="Publication"/>
-		/// with the given <see cref="publicationId"/>
-		/// If no <see cref="Publication"/> is found, then null is returned
-		/// </summary>
-		private async Task<PublicationRatingsModel> GetRatingsForPublication(int publicationId)
-		{
-			string cacheKey = CacheKeys.MovieRatingKey + publicationId;
+			string cacheKey = CacheKeys.MovieRatingKey + Id;
 			if (_cache.TryGetValue(cacheKey, out PublicationRatingsModel rating))
 			{
-				return rating;
+				Publication = rating;
 			}
 
 			var publication = await _db.Publications
 				.Include(p => p.PublicationRatings)
 				.ThenInclude(r => r.User)
-				.SingleOrDefaultAsync(p => p.Id == publicationId);
+				.SingleOrDefaultAsync(p => p.Id == Id);
 
 			if (publication == null)
 			{
-				return null;
+				return NotFound();
 			}
 
-			var model = new PublicationRatingsModel
+			Publication = new PublicationRatingsModel
 			{
 				PublicationTitle = publication.Title,
 				Ratings = publication.PublicationRatings
@@ -91,37 +74,36 @@ namespace TASVideos.Pages.Ratings
 					.ToList()
 			};
 
-			model.AverageEntertainmentRating = Math.Round(
-				model.Ratings
-					.Where(r => r.Entertainment.HasValue)
-					.Select(r => r.Entertainment.Value)
-					.Average(), 
-				2);
+			var entertainmentRatings = Publication.Ratings
+				.Where(r => r.Entertainment.HasValue)
+				.Select(r => r.Entertainment.Value)
+				.ToList();
 
-			model.AverageTechRating = Math.Round(
-				model.Ratings
-					.Where(r => r.TechQuality.HasValue)
-					.Select(r => r.TechQuality.Value)
-					.Average(), 
-				2);
+			var techRatings = Publication.Ratings
+				.Where(r => r.TechQuality.HasValue)
+				.Select(r => r.TechQuality.Value)
+				.ToList();
+
+			var overallRatings = entertainmentRatings
+				.Concat(techRatings)
+				.ToList();
+
+			Publication.AverageEntertainmentRating = entertainmentRatings.Any() 
+				? Math.Round(entertainmentRatings.Average(), 2)
+				: 0;
+
+			Publication.AverageTechRating = techRatings.Any()
+				? Math.Round(techRatings.Average(), 2)
+				: 0;
 
 			// Entertainment counts 2:1 over Tech
-			model.OverallRating = Math.Round(
-				model.Ratings
-					.Where(r => r.Entertainment.HasValue)
-					.Select(r => r.Entertainment.Value)
-					.Concat(model.Ratings
-						.Where(r => r.Entertainment.HasValue)
-						.Select(r => r.Entertainment.Value))
-					.Concat(model.Ratings
-						.Where(r => r.TechQuality.HasValue)
-						.Select(r => r.TechQuality.Value))
-					.Average(), 
-				2);
+			Publication.OverallRating = overallRatings.Any()
+				? Math.Round(overallRatings.Average(), 2)
+				: 0;
 
-			_cache.Set(CacheKeys.MovieRatingKey + publicationId, model);
+			_cache.Set(CacheKeys.MovieRatingKey + Id, Publication);
 
-			return model;
+			return Page();
 		}
 	}
 }
