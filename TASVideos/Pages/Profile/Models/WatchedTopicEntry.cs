@@ -2,7 +2,7 @@
 
 namespace TASVideos.Pages.Profile.Models
 {
-	public class WatchedTopicsModel
+	public class WatchedTopicEntry
 	{
 		public DateTime TopicCreateTimeStamp { get; set; }
 		public bool IsNotified { get; set; }

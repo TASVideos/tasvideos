@@ -4,7 +4,7 @@ using TASVideos.Models;
 
 namespace TASVideos.Pages.Profile.Models
 {
-	public class ProfileSsettingsModel
+	public class ProfileSettingsModel
 	{
 		public string Username { get; set; }
 
