@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -29,6 +28,74 @@ namespace TASVideos.TagHelpers
 		{
 			output.TagName = "div";
 			output.AddCssClass("row");
+		}
+	}
+
+	public class ColumnTagHelper : TagHelper
+	{
+		public int? Xs { get; set; }
+		public int? Sm { get; set; } 
+		public int? Md { get; set; } 
+		public int? Lg { get; set; } 
+		
+		public override void Process(TagHelperContext context, TagHelperOutput output)
+		{
+			Validate();
+			output.TagName = "div";
+
+			var classList = new List<string>();
+			if (Xs.HasValue)
+			{
+				classList.Add("col-xs-" + Xs);
+			}
+
+			if (Sm.HasValue)
+			{
+				classList.Add("col-sm-" + Sm);
+			}
+
+			if (Md.HasValue)
+			{
+				classList.Add("col-ms-" + Md);
+			}
+
+			if (Lg.HasValue)
+			{
+				classList.Add("col-lg-" + Lg);
+			}
+
+			if (!classList.Any())
+			{
+				classList.Add("col-12");
+			}
+
+			foreach (var c in classList)
+			{
+				output.AddCssClass(c);
+			}
+		}
+
+		private void Validate()
+		{
+			if (Xs.HasValue && (Xs < 1 || Xs > 12))
+			{
+				throw new ArgumentException($"{nameof(Xs)} must be in the range of 1-12");
+			}
+
+			if (Sm.HasValue && (Sm < 1 || Sm > 12))
+			{
+				throw new ArgumentException($"{nameof(Sm)} must be in the range of 1-12");
+			}
+
+			if (Xs.HasValue && (Md < 1 || Md > 12))
+			{
+				throw new ArgumentException($"{nameof(Md)} must be in the range of 1-12");
+			}
+
+			if (Xs.HasValue && (Lg < 1 || Lg > 12))
+			{
+				throw new ArgumentException($"{nameof(Lg)} must be in the range of 1-12");
+			}
 		}
 	}
 
