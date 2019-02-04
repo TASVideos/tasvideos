@@ -34,12 +34,12 @@ namespace TASVideos.Pages.Profile
 		public string StatusMessage { get; set; }
 
 		[BindProperty]
-		public ProfileSsettingsModel Settings { get; set; }
+		public ProfileSettingsModel Settings { get; set; }
 
 		public async Task OnGet()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			Settings = new ProfileSsettingsModel
+			Settings = new ProfileSettingsModel
 			{
 				Username = user.UserName,
 				Email = user.Email,
