@@ -149,12 +149,17 @@ namespace TASVideos.Services
 					PublicationId = pr.Key.PublicationId,
 					PublicationTitle = pr.Key.Title,
 					IsObsolete = pr.Key.ObsoletedById.HasValue,
-					Entertainment = pr.Where(a => a.Type == PublicationRatingType.Entertainment).Select(a => a.Value).Sum(),
-					Tech = pr.Where(a => a.Type == PublicationRatingType.TechQuality).Select(a => a.Value).Sum()
+					Entertainment = pr
+						.Where(a => a.Type == PublicationRatingType.Entertainment)
+						.Select(a => a.Value)
+						.Sum(),
+					Tech = pr
+						.Where(a => a.Type == PublicationRatingType.TechQuality)
+						.Select(a => a.Value)
+						.Sum()
 				})
 				.ToListAsync();
 
-			// TODO: wrap in transaction
 			return model;
 		}
 
