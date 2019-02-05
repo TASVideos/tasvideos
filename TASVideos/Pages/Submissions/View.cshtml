@@ -45,16 +45,14 @@
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
 		<div class="alert alert-@(statusColor)" role="alert">
 			<h4 class="alert-heading">Status: @Model.Submission.Status.EnumDisplayName()</h4>
-			
-				<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
-					<label asp-for="Submission.Judge"></label>:
-					<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Judge">@Model.Submission.Judge</a>
-				</span>
-				<span class="ml-3" condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
-					<label asp-for="Submission.Publisher"></label>:
-					<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Publisher">@Model.Submission.Publisher</a>
-				</span>
-			
+			<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
+				<label asp-for="Submission.Judge"></label>:
+				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Judge">@Model.Submission.Judge</a>
+			</span>
+			<span class="ml-3" condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
+				<label asp-for="Submission.Publisher"></label>:
+				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Publisher">@Model.Submission.Publisher</a>
+			</span>
 			<div condition="showTier">
 				<hr>
 				<p class="mb-0">
