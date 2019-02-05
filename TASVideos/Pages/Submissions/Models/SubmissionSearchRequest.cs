@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TASVideos.Data.Entity;
 
@@ -10,6 +11,8 @@ namespace TASVideos.Pages.Submissions.Models
 		public int? Limit { get; set; }
 		public DateTime? Cutoff { get; set; } // Only submissions submitted after this date
 		public string User { get; set; }
+
+		[Display(Name = "Status Filter")]
 		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
 
 		public static IEnumerable<SubmissionStatus> Default => new List<SubmissionStatus>()
