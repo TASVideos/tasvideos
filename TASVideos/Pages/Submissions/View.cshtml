@@ -51,11 +51,11 @@
 			</div>
 			<div condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
 				<label asp-for="Submission.Judge"></label>:
-				<a href="/HomePages/@Model.Submission.Judge">@Model.Submission.Judge</a>
+				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Judge">@Model.Submission.Judge</a>
 			</div>
 			<div condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
 				<label asp-for="Submission.Publisher"></label>:
-				<a href="/HomePages/@Model.Submission.Publisher">@Model.Submission.Publisher</a>
+				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Publisher">@Model.Submission.Publisher</a>
 			</div>
 		</div>
 		<table class="table table-bordered table-condensed">
