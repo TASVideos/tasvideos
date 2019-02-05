@@ -80,6 +80,7 @@ namespace TASVideos.Pages.Submissions
 				}
 			}
 
+			submission.MovieStartType = (int)parseResult.StartType;
 			submission.Frames = parseResult.Frames;
 			submission.RerecordCount = parseResult.RerecordCount;
 			submission.MovieExtension = parseResult.FileExtension;

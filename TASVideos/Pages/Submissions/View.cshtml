@@ -80,6 +80,15 @@
 				<th><label asp-for="Submission.RerecordCount"></label></th>
 				<td>@Model.Submission.RerecordCount</td>
 			</tr>
+			<tr>
+				<th><label asp-for="Submission.StartType"></label></th>
+				<td>
+					<span condition="Model.Submission.WarnStartType" class="badge badge-warning">!</span>
+					@(Model.Submission.StartType?.ToString() ?? "Unknown")
+				</td>
+				<th></th>
+				<td></td>
+			</tr>
 		</table>
 		<small>
 			Submitted edited by @Model.Submission.Submitter on @Model.Submission.CreateTimestamp
