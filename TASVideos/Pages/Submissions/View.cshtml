@@ -21,6 +21,8 @@
 		{
 			default:
 				return "info";
+			case SubmissionStatus.Accepted:
+			case SubmissionStatus.PublicationUnderway:
 			case SubmissionStatus.Published:
 				return "success";
 			case SubmissionStatus.Rejected:
@@ -33,11 +35,7 @@
 }
 
 @section PageTitle {
-	<h1>@($"Submission {Model.Submission.Title}") 
-		<span class="float-right badge badge-@(statusColor) m-1">
-			@Model.Submission.Status.EnumDisplayName()
-		</span>
-	</h1>
+	<h1>@($"Submission {Model.Submission.Title}")</h1>
 }
 
 <row>
@@ -45,19 +43,26 @@
 		<iframe type="text/html" style="width:450px;height:370px;margin:0;" src="//@Model.Submission.EncodeEmbedLink" allowfullscreen="true"></iframe>
 	</div>
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
-		<div condition="hasJudgeOrPublisher || showTier" class="text-right alert alert-@(statusColor)">
+		<div class="alert alert-@(statusColor)" role="alert">
+			<h4 class="alert-heading">Status: @Model.Submission.Status.EnumDisplayName()</h4>
+			
+				<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
+					<label asp-for="Submission.Judge"></label>:
+					<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Judge">@Model.Submission.Judge</a>
+				</span>
+				<span class="ml-3" condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
+					<label asp-for="Submission.Publisher"></label>:
+					<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Publisher">@Model.Submission.Publisher</a>
+				</span>
+			
 			<div condition="showTier">
-				<label asp-for="Submission.TierName"></label>: <a href="/@Model.Submission.TierName">@Model.Submission.TierName</a>
-			</div>
-			<div condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
-				<label asp-for="Submission.Judge"></label>:
-				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Judge">@Model.Submission.Judge</a>
-			</div>
-			<div condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
-				<label asp-for="Submission.Publisher"></label>:
-				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Publisher">@Model.Submission.Publisher</a>
+				<hr>
+				<p class="mb-0">
+					<label asp-for="Submission.TierName" class="mb-0"></label>: <a href="/@Model.Submission.TierName">@Model.Submission.TierName</a>
+				</p>
 			</div>
 		</div>
+		
 		<table class="table table-bordered table-condensed">
 			<tr>
 				<th><label asp-for="Submission.SystemDisplayName"></label></th>
