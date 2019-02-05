@@ -17,21 +17,21 @@
 		switch (status)
 		{
 			default:
-				return "badge-info";
+				return "info";
 			case SubmissionStatus.Published:
-				return "badge-success";
+				return "success";
 			case SubmissionStatus.Rejected:
-				return "badge-danger";
+				return "danger";
 			case SubmissionStatus.NeedsMoreInfo:
 			case SubmissionStatus.Delayed:
-				return "badge-warning";
+				return "warning";
 		}
 	}
 }
 
 @section PageTitle {
 	<h1>@($"Submission {Model.Submission.Title}") 
-		<span class="float-right badge @(StatusColor(Model.Submission.Status)) m-1">
+		<span class="float-right badge badge-@(StatusColor(Model.Submission.Status)) m-1">
 			@Model.Submission.Status.EnumDisplayName()
 		</span>
 	</h1>
@@ -42,7 +42,7 @@
 		<iframe type="text/html" style="width:450px;height:370px;margin:0;" src="//@Model.Submission.EncodeEmbedLink" allowfullscreen="true"></iframe>
 	</div>
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
-		<div class="text-right @(StatusColor(Model.Submission.Status))">
+		<div condition="!string.IsNullOrWhiteSpace(Model.Submission.Judge) && string.IsNullOrWhiteSpace(Model.Submission.Publisher)" class="text-right alert alert-@(StatusColor(Model.Submission.Status))">
 			<div condition="@Model.Submission.Status == SubmissionStatus.Accepted">
 				<label asp-for="Submission.TierName"></label>: <a href="/@Model.Submission.TierName">@Model.Submission.TierName</a>
 			</div>
