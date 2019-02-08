@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -87,7 +88,8 @@ namespace TASVideos.TagHelpers
 			var page = ViewContext.Page();
 			var pageGroup = ViewContext.PageGroup();
 
-			if (Activate == pageGroup)
+			// We don't want to activate the wiki menu on every wiki page
+			if (Activate == pageGroup && pageGroup != "Wiki")
 			{
 				return true;
 			}
@@ -101,6 +103,8 @@ namespace TASVideos.TagHelpers
 				case "Admin" when pageGroup == "Permissions":
 				case "Register" when page == "/Account/Register":
 				case "Login" when page == "/Account/Login":
+					return true;
+				case "Wiki" when new[] { "SandBox", "RecentChanges", "WikiOrphans", "TODO", "System", "DeletedPages" }.Contains(viewActiveTab):
 					return true;
 			}
 

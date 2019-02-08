@@ -14,14 +14,13 @@
 <hr />
 <form asp-route="Edit">
 	<row>
-		<div class="col-lg-5">
+		<column lg="5">
 			<form-group>
 				<label asp-for="Role.Name" class="form-control-label"></label>
 				<input asp-for="Role.Name" class="form-control" maxlength="50" />
 				<span asp-validation-for="Role.Name" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" asp-for="Role.IsDefault" />
 					<label asp-for="Role.IsDefault" class="form-check-label"></label>
@@ -29,20 +28,19 @@
 						<small>(@Html.DescriptionFor(m => m.Role.IsDefault))</small>
 					</div>
 				</div>
-
 			</form-group>
-		</div>
-		<div class="offset-lg-2 col-lg-5">
+		</column>
+		<column lg="5" class="offset-lg-2">
 			<label asp-for="Role.Description" class="form-control-label"></label>
 			<textarea asp-for="Role.Description" class="form-control" rows="4" maxlength="200"></textarea>
 			<span asp-validation-for="Role.Description" class="text-danger"></span>
-		</div>
+		</column>
 	</row>
 	<row>
-		<div class="col-lg-5">
+		<column class="col-lg-5">
 			<label asp-for="Role.Links" class="form-control-label"></label>
 			<string-list asp-for="Role.Links" />
-		</div>
+		</column>
 	</row>
 	<form-group>
 		<two-column-select id-list="Role.SelectedPermissions" available-list="AvailablePermissions" />
@@ -50,10 +48,10 @@
 	<form-group class="d-none" id="assignable-permissions-section">
 		<two-column-select id-list="Role.SelectedAssignablePermissions" available-list="AvailableAssignablePermissions" />
 		<row class="mt-3">
-			<div class="offset-sm-7 col-sm-5">
+			<column sm="5" class="offset-sm-7">
 				<label class="form-control-label">Roles that can be assigned:</label>
 				<div id="assignable-roles">None</div>
-			</div>
+			</column>
 		</row>
 	</form-group>
 	<div class="text-center mt-3">
