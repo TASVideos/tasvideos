@@ -32,6 +32,11 @@ namespace TASVideos.Pages.Wiki
 
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
+				if (WikiHelper.IsValidWikiPageName("HomePages/" + url))
+				{
+					return Redirect("HomePages/" + url);
+				}
+
 				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiHelper.NormalizeWikiPageName(url) });
 			}
 
