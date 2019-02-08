@@ -9,7 +9,7 @@ namespace TASVideos.Models
 		public UserFileClass Class { get; set; }
 		public string Title { get; set; }
 		public string Description { get; set; }
-		public DateTime Uploaded { get; set; }
+		public DateTime UploadedTimestamp { get; set; }
 		public string Author { get; set; }
 		public int Views { get; set; }
 		public int Downloads { get; set; }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions.Models
 {
@@ -13,6 +14,9 @@ namespace TASVideos.Pages.Submissions.Models
 			&& SystemFrameRateId.HasValue
 			&& GameId.HasValue
 			&& RomId.HasValue;
+
+		[Display(Name = "Start Type")]
+		public MovieStartType? StartType { get; set; }
 
 		[Display(Name = "For tier")]
 		public string TierName { get; set; }
@@ -73,6 +77,8 @@ namespace TASVideos.Pages.Submissions.Models
 		public string Publisher { get; set; }
 
 		public string Title { get; set; }
+
+		public bool WarnStartType => StartType.HasValue && StartType != MovieStartType.PowerOn;
 
 		internal int? SystemId { get; set; }
 		internal int? SystemFrameRateId { get; set; }

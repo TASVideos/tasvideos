@@ -20,6 +20,8 @@
 		public const string WikiCache = "WikiCache";
 		public const string AwardsCache = "AwardsCache";
 		public const string UnreadMessageCount = "UnreadMessageCountCache-";
+		public const string MovieTokens = "MovieTokenData";
+		public const string MovieRatingKey = "OverallRatingForMovieViewModel-";
 	}
 
 	// These perform site functions, maybe they should be in the database?

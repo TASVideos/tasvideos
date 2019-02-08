@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Constants;
+using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Pages.Submissions
@@ -33,6 +34,7 @@ namespace TASVideos.Pages.Submissions
 					.Where(s => s.Id == Id)
 					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
 					{
+						StartType = (MovieStartType)s.MovieStartType,
 						SystemDisplayName = s.System.DisplayName,
 						SystemCode = s.System.Code,
 						GameName = s.GameName,

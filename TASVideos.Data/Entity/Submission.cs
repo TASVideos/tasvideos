@@ -101,6 +101,8 @@ namespace TASVideos.Data.Entity
 		[StringLength(50)]
 		public string EmulatorVersion { get; set; }
 
+		public int? MovieStartType { get; set; }
+
 		/// <summary>
 		/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
 		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01

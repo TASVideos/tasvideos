@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Pages.Profile.Models;
 
 namespace TASVideos.Pages.Profile
 {
@@ -21,15 +22,14 @@ namespace TASVideos.Pages.Profile
 			_db = db;
 		}
 
-		// TODO: rename this model
-		public IEnumerable<Models.WatchedTopicsModel> Watches { get; set; } = new List<Models.WatchedTopicsModel>();
+		public IEnumerable<WatchedTopicEntry> Watches { get; set; } = new List<WatchedTopicEntry>();
 
 		public async Task OnGet()
 		{
 			Watches = await _db
 				.ForumTopicWatches
 				.ForUser(User.GetUserId())
-				.Select(tw => new Models.WatchedTopicsModel
+				.Select(tw => new WatchedTopicEntry
 				{
 					TopicCreateTimeStamp = tw.ForumTopic.CreateTimeStamp,
 					IsNotified = tw.IsNotified,

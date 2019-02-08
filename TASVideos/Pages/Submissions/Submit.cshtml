@@ -11,27 +11,29 @@
 </info-alert>
 <hr />
 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-<warning-alert dismissible="true" condition="notSupportedError">@await Component.RenderWiki("System/SupportedMovieTypes")</warning-alert>
+<warning-alert dismissible="true" condition="notSupportedError">
+	@await Component.RenderWiki("System/SupportedMovieTypes")
+</warning-alert>
 <form method="post" enctype="multipart/form-data">
 	<row>
-		<div class="col-lg-6">
+		<column lg="6">
 			<form-group>
 				<label asp-for="Create.MovieFile" class="form-control-label"></label>
 				<input type="file" asp-for="Create.MovieFile" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.Create.MovieFile)</div>
 				<span asp-validation-for="Create.MovieFile" class="text-danger"></span>
 			</form-group>
-		</div>
-		<div class="col-lg-6">
+		</column>
+		<column lg="6">
 			<form-group>
 				<label asp-for="Create.Authors" class="form-control-label"></label>
 				<string-list asp-for="Create.Authors" />
 				<span asp-validation-for="Create.Authors" class="text-danger"></span>
 			</form-group>
-		</div>
+		</column>
 	</row>
 	<row>
-		<div class="col-lg-6">
+		<column lg="6">
 			<form-group>
 				<label asp-for="Create.GameVersion" class="form-control-label"></label>
 				<select asp-for="Create.GameVersion" asp-items="@SubmissionHelper.GameVersionOptions" class="form-control"></select>
@@ -47,8 +49,8 @@
 				<input asp-for="Create.Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.Emulator)" />
 				<span asp-validation-for="Create.Emulator" class="text-danger"></span>
 			</form-group>
-		</div>
-		<div class="col-lg-6">
+		</column>
+		<column lg="6">
 			<form-group>
 				<label asp-for="Create.Branch" class="form-control-label"></label>
 				<input asp-for="Create.Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.Branch)" />
@@ -64,7 +66,7 @@
 				<input asp-for="Create.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.EncodeEmbedLink)" />
 				<span asp-validation-for="Create.EncodeEmbedLink" class="text-danger"></span>
 			</form-group>
-		</div>
+		</column>
 	</row>
 	<fullrow>
 		<form-group>
