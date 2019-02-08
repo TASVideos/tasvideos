@@ -149,9 +149,9 @@ namespace TASVideos.Extensions
 				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
 			}
 
-			//if (!env.IsAnyLocal()) // TODO: turn this back on
+			if (!env.IsAnyLocal()) // TODO: turn this back on
 			{
-				services.AddScoped<IPostDistributor, IrcDistributor>(); // TODO: singleton? transient?
+				services.AddSingleton<IPostDistributor, IrcDistributor>();
 			}
 
 			services.AddScoped<IPostDistributor, DistributorStorage>();
