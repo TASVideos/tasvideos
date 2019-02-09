@@ -99,6 +99,13 @@
 
 <script>
 	(function () {
+		document.getElementById('submit-btn').onclick = function () {
+			// Prevent double-click submits
+			var btn = this;
+			setTimeout(function () { btn.disabled = true }, 0);
+			setTimeout(function () { btn.disabled = false }, 750);
+		};
+
 		document.getElementById('prefill-btn').onclick = function () {
 			var markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
 			if (markup) {
