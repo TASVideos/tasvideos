@@ -2,10 +2,12 @@
 @{
 	int totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
 	bool canVote = false;
+	int userId = - 1;
 	if (User.Identity.IsAuthenticated)
 	{
-		int userId = User.GetUserId();
+		userId = User.GetUserId();
 		canVote = !Model.Options.Any(o => o.Voters.Any(v => v == userId));
+
 	}
 }
 
@@ -29,7 +31,8 @@
 			}
 
 			<div>
-				<span condition="canVote"><input type="radio" name="ordinal" value="@option.Ordinal" /></span>
+				<span condition="option.Voters.Any(v => v == userId)" class="fa fa-check text-success"></span>
+				<span condition="canVote"><input type="radio" name="ordinal" value="@option.Ordinal"/></span>
 				@option.Text (@option.Voters.Count @(percent)%)
 			</div>
 		}
