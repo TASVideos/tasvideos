@@ -50,6 +50,13 @@ namespace TASVideos.Pages.Wiki
 				return Page();
 			}
 
+			var homePage = _wikiPages.Page("HomePages/" + url);
+			if (homePage != null)
+			{
+				// We redirected on invalid url homepages, now we have to do the same for valid ones
+				return Redirect("HomePages/" + url);
+			}
+
 			// Account for garbage revision values
 			if (revision.HasValue && _wikiPages.Exists(url)) 
 			{
