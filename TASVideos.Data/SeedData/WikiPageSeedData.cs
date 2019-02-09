@@ -13,6 +13,15 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "System/AvatarRequirements",
+				RevisionMessage = Import,
+				Markup = @"Displays a small graphic image below your details in posts.
+__The size limits for this file are 100x100 pixels and 9 kB.
+Images bigger than that are deleted without warning.__
+Do not use images hosted at Angelfire, or Imageshack, because those images may suddenly turn into huge ""site bandwidth exhausted"" error."
+			},
+			new WikiPage
+			{
 				PageName = "System/SupportedMovieTypes",
 				RevisionMessage = Import,
 				Markup = @"The following file types are supported for site [Subs-List|submission]
