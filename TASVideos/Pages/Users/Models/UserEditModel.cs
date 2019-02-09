@@ -35,6 +35,7 @@ namespace TASVideos.Pages.Users.Models
 		public bool IsLockedOut { get; set; }
 
 		public string Signature { get; set; }
+		public string Avatar { get; set; }
 
 		public string OriginalUserName => UserName;
 	}

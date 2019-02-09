@@ -73,6 +73,7 @@ namespace TASVideos.Pages.Users
 			user.TimeZoneId = UserToEdit.TimezoneId;
 			user.From = UserToEdit.From;
 			user.Signature = UserToEdit.Signature;
+			user.Avatar = UserToEdit.Avatar;
 			
 			_db.UserRoles.RemoveRange(_db.UserRoles.Where(ur => ur.User == user));
 			await _db.SaveChangesAsync();
