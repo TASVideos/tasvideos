@@ -68,4 +68,10 @@
 	{
 		public const string Permission = "P";
 	}
+
+	public static class AvatarRequirements
+	{
+		public const int Width = 100;
+		public const int Height = 100;
+	}
 }

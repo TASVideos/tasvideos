@@ -27,6 +27,9 @@ namespace TASVideos.Pages.Profile.Models
 
 		public string Signature { get; set; }
 
+		[Url]
+		public string Avatar { get; set; }
+
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 	}
 }

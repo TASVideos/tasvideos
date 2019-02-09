@@ -56,7 +56,7 @@ namespace TASVideos.TagHelpers
 
 			if (Md.HasValue)
 			{
-				classList.Add("col-ms-" + Md);
+				classList.Add("col-md-" + Md);
 			}
 
 			if (Lg.HasValue)
