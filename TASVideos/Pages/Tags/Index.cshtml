@@ -4,6 +4,10 @@
 	ViewData["Title"] = "Tag List";
 }
 
+<alert type="@Model.MessageType" condition="Model.ShowMessage" dismissible="true">
+	@Model.Message
+</alert>
+
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>Code</th>

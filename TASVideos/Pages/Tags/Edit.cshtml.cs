@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Tags
@@ -16,6 +18,12 @@ namespace TASVideos.Pages.Tags
 		{
 			_db = db;
 		}
+
+		[TempData]
+		public string Message { get; set; }
+
+		[TempData]
+		public string MessageType { get; set; }
 
 		[FromRoute]
 		public int Id { get; set; }
@@ -52,8 +60,17 @@ namespace TASVideos.Pages.Tags
 			tag.Code = Tag.Code;
 			tag.DisplayName = Tag.DisplayName;
 
-			// TODO: Catch DbConcurrencyException
-			await _db.SaveChangesAsync();
+			try
+			{
+				MessageType = Styles.Success;
+				Message = "Tag successfully updated.";
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				MessageType = Styles.Danger;
+				Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
+			}
 
 			return RedirectToPage("Index");
 		}

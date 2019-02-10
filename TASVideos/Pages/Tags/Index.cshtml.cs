@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -18,6 +19,15 @@ namespace TASVideos.Pages.Tags
 		{
 			_db = db;
 		}
+
+		[TempData]
+		public string Message { get; set; }
+
+		[TempData]
+		public string MessageType { get; set; }
+
+		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
+
 
 		public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
 
