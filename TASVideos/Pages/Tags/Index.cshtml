@@ -1,0 +1,19 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Tag List";
+}
+
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>Code</th>
+		<th>Display Name</th>
+	</tr>
+	@foreach (var tag in Model.Tags)
+	{
+		<tr>
+			<td>@tag.Code</td>
+			<td>@tag.DisplayName</td>
+		</tr>
+	}
+</table>
