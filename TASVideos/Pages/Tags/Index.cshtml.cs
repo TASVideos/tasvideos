@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +10,7 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Tags
 {
+	[RequirePermission(PermissionTo.TagMaintenance)]
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
