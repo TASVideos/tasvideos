@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Tags
 {
+	[RequirePermission(PermissionTo.TagMaintenance)]
 	public class CreateModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
