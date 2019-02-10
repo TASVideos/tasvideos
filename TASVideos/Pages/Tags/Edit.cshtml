@@ -11,6 +11,9 @@
 		warning-message="Are you sure you want to remove this tag?">
 		Delete
 	</delete-button>
+	<a class="btn btn-secondary" asp-page="/Publications/Index" asp-route-query="@Model.Tag.Code">
+		Tag in Use
+	</a>
 </div>
 
 <form method="post">
