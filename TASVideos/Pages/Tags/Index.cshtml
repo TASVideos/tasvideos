@@ -8,12 +8,18 @@
 	<tr>
 		<th>Code</th>
 		<th>Display Name</th>
+		<th></th>
 	</tr>
 	@foreach (var tag in Model.Tags)
 	{
 		<tr>
 			<td>@tag.Code</td>
 			<td>@tag.DisplayName</td>
+			<td>
+				<a class="btn btn-primary" asp-page="Edit" asp-route-id="@tag.Id">
+					Edit
+				</a>
+			</td>
 		</tr>
 	}
 </table>
