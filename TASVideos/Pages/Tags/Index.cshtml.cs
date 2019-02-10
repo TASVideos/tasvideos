@@ -28,12 +28,13 @@ namespace TASVideos.Pages.Tags
 
 		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
 
-
 		public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
 
 		public async Task OnGet()
 		{
-			Tags = await _db.Tags.ToListAsync();
+			Tags = await _db.Tags
+				.OrderBy(t => t.Code)
+				.ToListAsync();
 		}
 	}
 }
