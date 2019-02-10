@@ -31,6 +31,8 @@ namespace TASVideos.Pages.Tags
 		[BindProperty]
 		public Tag Tag { get; set; }
 
+		public bool InUse { get; set; } = true;
+
 		public async Task<IActionResult> OnGet()
 		{
 			Tag = await _db.Tags.SingleOrDefaultAsync(t => t.Id == Id);
@@ -39,6 +41,8 @@ namespace TASVideos.Pages.Tags
 			{
 				return NotFound();
 			}
+
+			InUse = await TagInUse();
 
 			return Page();
 		}
@@ -73,6 +77,33 @@ namespace TASVideos.Pages.Tags
 			}
 
 			return RedirectToPage("Index");
+		}
+
+		public async Task<IActionResult> OnPostDelete()
+		{
+			var inUse = await _db.PublicationTags.AnyAsync(pt => pt.TagId == Id);
+			if (!await TagInUse())
+			{
+				try
+				{
+					MessageType = Styles.Success;
+					Message = $"Tag {Id}, deleted successfully.";
+					_db.Tags.Attach(new Tag { Id = Id }).State = EntityState.Deleted;
+					await _db.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					MessageType = Styles.Danger;
+					Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
+				}
+			}
+
+			return RedirectToPage("Index");
+		}
+
+		private async Task<bool> TagInUse()
+		{
+			return await _db.PublicationTags.AnyAsync(pt => pt.TagId == Id);
 		}
 	}
 }

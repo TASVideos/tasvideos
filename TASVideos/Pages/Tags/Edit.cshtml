@@ -1,8 +1,17 @@
-﻿@page "{id}"
+﻿@page "{id}/{handler?}"
 @model EditModel
 @{
 	ViewData["Title"] = $"Editing Tag {Model.Tag.Code}";
 }
+
+<div class="text-right">
+	<delete-button
+		condition="!Model.InUse"
+		asp-href="/Tags/Edit/@(Model.Tag.Id)/Delete"
+		warning-message="Are you sure you want to remove this tag?">
+		Delete
+	</delete-button>
+</div>
 
 <form method="post">
 	<row>
@@ -17,5 +26,6 @@
 	</row>
 	<div class="text-center mt-3">
 		<button type="submit" class="btn btn-primary">Save</button>
+		<a class="btn btn-secondary" asp-page="Index">Cancel</a>
 	</div>
 </form>
