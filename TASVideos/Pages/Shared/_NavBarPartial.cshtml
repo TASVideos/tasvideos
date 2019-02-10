@@ -24,11 +24,12 @@
 		<a class="nav-link" href="/News">News</a>
 	</nav-item>
 	<nav-dropdown activate="Admin"
-		permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers, PermissionTo.EditRoles }">
+		permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers, PermissionTo.EditRoles, PermissionTo.TagMaintenance }">
 		<a class="dropdown-item" href="/MediaPosts">Media Posts</a>
 		<a permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers }" class="dropdown-item" asp-page="/Users/List">Users</a>
 		<a class="dropdown-item" asp-page="/Roles/List">Roles</a>
 		<a class="dropdown-item" asp-page="/Permissions/Index">Permissions</a>
+		<a permission="TagMaintenance" class="dropdown-item" asp-page="/Tags/Index">Tag Maintenance</a>
 	</nav-dropdown>
 	<nav-dropdown activate ="Wiki"
 		permissions="new[] { PermissionTo.EditWikiPages, PermissionTo.EditSystemPages, PermissionTo.MoveWikiPages, PermissionTo.DeleteWikiPages }">
