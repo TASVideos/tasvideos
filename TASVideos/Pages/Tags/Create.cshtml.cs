@@ -55,6 +55,19 @@ namespace TASVideos.Pages.Tags
 				MessageType = Styles.Danger;
 				Message = "Unable to create Tag.";
 			}
+			catch (DbUpdateException ex)
+			{
+				if (ex.InnerException.Message.Contains("Cannot insert duplicate"))
+				{
+					ModelState.AddModelError($"{nameof(Tag)}.{nameof(Tag.Code)}", $"{nameof(Tag.Code)} {Tag.Code} already exists");
+					MessageType = null;
+					Message = null;
+					return Page();
+				}
+				
+				MessageType = Styles.Danger;
+				Message = "Unable to edit tag due to an unknown error";
+			}
 
 			return RedirectToPage("Index");
 		}

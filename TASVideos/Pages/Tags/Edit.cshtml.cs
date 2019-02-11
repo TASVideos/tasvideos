@@ -75,13 +75,25 @@ namespace TASVideos.Pages.Tags
 				MessageType = Styles.Danger;
 				Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
 			}
+			catch (DbUpdateException ex)
+			{
+				if (ex.InnerException.Message.Contains("Cannot insert duplicate"))
+				{
+					ModelState.AddModelError($"{nameof(Tag)}.{nameof(Tag.Code)}", $"{nameof(Tag.Code)} {Tag.Code} already exists");
+					MessageType = null;
+					Message = null;
+					return Page();
+				}
+				
+				MessageType = Styles.Danger;
+				Message = "Unable to edit tag due to an unknown error";
+			}
 
 			return RedirectToPage("Index");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
 		{
-			var inUse = await _db.PublicationTags.AnyAsync(pt => pt.TagId == Id);
 			if (!await TagInUse())
 			{
 				try
