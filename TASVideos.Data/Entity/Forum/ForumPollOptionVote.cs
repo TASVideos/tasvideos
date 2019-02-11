@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Data.Entity.Forum
 {
@@ -13,6 +14,8 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual User User { get; set; }
 
 		public DateTime CreateTimestamp { get; set; }
+
+		[StringLength(50)]
 		public string IpAddress { get; set; }
 	}
 }

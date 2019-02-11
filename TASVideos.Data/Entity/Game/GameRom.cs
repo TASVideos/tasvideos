@@ -22,18 +22,24 @@ namespace TASVideos.Data.Entity.Game
 		public ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 		public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 
+		[Required]
 		[StringLength(32)]
 		public string Md5 { get; set; }
 
+		[Required]
 		[StringLength(40)]
 		public string Sha1 { get; set; }
 
+		[Required]
 		[StringLength(255)]
 		public string Name { get; set; }
 
 		public RomTypes Type { get; set; }
 
+		[StringLength(50)]
 		public string Region { get; set; }
+
+		[StringLength(50)]
 		public string Version { get; set; }
 	}
 

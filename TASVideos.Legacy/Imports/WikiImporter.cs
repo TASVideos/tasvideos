@@ -48,7 +48,7 @@ namespace TASVideos.Legacy.Imports
 					Markup = markup,
 					Revision = revision,
 					MinorEdit = legacyPage.Site.MinorEdit == "Y",
-					RevisionMessage = legacyPage.Site.WhyEdit,
+					RevisionMessage = legacyPage.Site.WhyEdit.Cap(1000),
 					IsDeleted = legacyPage.Site.PageName.StartsWith("DeletedPages/"),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
 					CreateUserName = legacyPage.Site.User.Name,

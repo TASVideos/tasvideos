@@ -1,12 +1,19 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity
 {
 	public class WikiPageReferral
 	{
 		public int Id { get; set; }
+
+		[StringLength(250)]
 		public string Referrer { get; set; }
+
+		[StringLength(250)]
 		public string Referral { get; set; }
+
+		[StringLength(250)]
 		public string Excerpt { get; set; }
 	}
 

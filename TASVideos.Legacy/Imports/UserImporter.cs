@@ -84,7 +84,7 @@ namespace TASVideos.Legacy.Imports
 					PasswordHash = "",
 					Avatar = u.Avatar,
 					From = u.From,
-					Signature = ImportHelper.ConvertLatin1String(u.Signature.Replace(":" + u.BbcodeUid, "")),
+					Signature = ImportHelper.ConvertLatin1String(u.Signature.Replace(":" + u.BbcodeUid, "")).Cap(1000),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
 					// ReSharper disable once CompareOfFloatsByEqualityOperator

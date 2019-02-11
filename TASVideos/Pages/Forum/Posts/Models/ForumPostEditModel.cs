@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Pages.Forum.Posts.Models
 {
@@ -14,8 +15,12 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public int TopicId { get; set; }
 		public string TopicTitle { get; set; }
 
+		[StringLength(500)]
 		public string Subject { get; set; }
+
+		[Required]
 		public string Text { get; set; }
+
 		public string RenderedText { get; set; }
 
 		public bool IsLastPost { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace TASVideos.Data.Entity.Forum
@@ -20,6 +21,7 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
 		public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = new HashSet<ForumTopicWatch>();
 
+		[StringLength(500)]
 		public string Title { get; set; }
 
 		public int PosterId { get; set; }
@@ -33,6 +35,7 @@ namespace TASVideos.Data.Entity.Forum
 		public int? PollId { get; set; }
 		public virtual ForumPoll Poll { get; set; }
 
+		[StringLength(200)]
 		public string PageName { get; set; }
 	}
 
