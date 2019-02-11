@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 using System.Linq;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity;
 using TASVideos.ForumEngine;
 using TASVideos.Legacy.Data.Forum;
 
@@ -73,7 +73,7 @@ namespace TASVideos.Legacy.Imports
 						EnableBbCode = g.Key.EnableBbCode,
 						ReadOn = g.All(gg => gg.Type != 1)
 							? DateTime.UtcNow // Legacy system didn't track date so we will simply use the import date
-							: (DateTime?) null,
+							: (DateTime?)null,
 						SavedForFromUser = g.Any(gg => gg.Type == 4),
 						SavedForToUser = g.Any(gg => gg.Type == 3)
 					};
