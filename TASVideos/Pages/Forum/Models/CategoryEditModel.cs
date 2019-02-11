@@ -21,7 +21,9 @@ namespace TASVideos.Pages.Forum.Models
 			[StringLength(50)]
 			public string Name { get; set; }
 
+			[StringLength(1000)]
 			public string Description { get; set; }
+
 			public int Ordinal { get; set; }
 		}
 	}
