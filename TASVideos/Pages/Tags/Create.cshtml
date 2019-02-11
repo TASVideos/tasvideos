@@ -1,0 +1,27 @@
+﻿@page
+@model CreateModel
+@{
+	ViewData["Title"] = $"Editing Tag {Model.Tag.Code}";
+}
+
+<form method="post">
+	<row>
+		<column lg="6">
+			<label asp-for="Tag.Code"></label>
+			<input type="text" asp-for="Tag.Code" class="form-control" />
+			<span asp-validation-for="Tag.Code" class="text-danger"></span>
+		</column>
+		<column lg="6" class="mt-lg-0 mt-3">
+			<label asp-for="Tag.DisplayName"></label>
+			<input type="text" asp-for="Tag.DisplayName" class="form-control" />
+			<span asp-validation-for="Tag.DisplayName" class="text-danger"></span>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<button type="submit" class="btn btn-primary">Save</button>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

@@ -24,17 +24,20 @@ namespace TASVideos.Pages.Submissions
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly MovieParser _parser;
-		
+		private readonly UserManager _userManager;
+
 		public SubmitModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
-			MovieParser parser)
+			MovieParser parser,
+			UserManager userManager)
 		{
 			_db = db;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_parser = parser;
+			_userManager = userManager;
 		}
 
 		[BindProperty]
@@ -92,7 +95,7 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
-			submission.Submitter = await _db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
+			submission.Submitter = await _userManager.GetUserAsync(User);
 			submission.SystemFrameRate = await _db.GameSystemFrameRates
 				.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
 					&& f.RegionCode == parseResult.Region.ToString());
@@ -137,6 +140,12 @@ namespace TASVideos.Pages.Submissions
 				CreateUserName = SiteGlobalConstants.TASVideoAgent,
 				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 				Question = SiteGlobalConstants.PollQuestion,
+				PollOptions = new[]
+				{
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
+				}
 			};
 
 			_db.ForumPolls.Add(poll);

@@ -48,6 +48,8 @@ namespace TASVideos.Pages.Profile
 				PublicRatings = user.PublicRatings,
 				StatusMessage = StatusMessage,
 				From = user.From,
+				Signature = user.Signature,
+				Avatar = user.Avatar,
 				Roles = await _db.Users
 					.Where(u => u.Id == user.Id)
 					.SelectMany(u => u.UserRoles)
@@ -85,6 +87,8 @@ namespace TASVideos.Pages.Profile
 			user.TimeZoneId = Settings.TimeZoneId;
 			user.PublicRatings = Settings.PublicRatings;
 			user.From = Settings.From;
+			user.Signature = Settings.Signature;
+			user.Avatar = Settings.Avatar;
 			await _db.SaveChangesAsync();
 
 			StatusMessage = "Your profile has been updated";

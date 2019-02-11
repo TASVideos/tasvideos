@@ -1,8 +1,11 @@
 ﻿@model UserProfileModel
+
 <row>
 	<div class="col-md-6">
 		<card>
-			<cardheader><h4>@Model.UserName</h4></cardheader>
+			<cardheader>
+				<h4>@Model.UserName <a permission="EditUsers" class="btn btn-primary btn-sm" asp-page="/Users/Edit" asp-route-id="@Model.Id">Edit</a></h4>
+			</cardheader>
 			<cardbody>
 				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
 				<div class="card-text">

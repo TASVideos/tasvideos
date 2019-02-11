@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace TASVideos.Data.Entity.Game
@@ -21,17 +22,26 @@ namespace TASVideos.Data.Entity.Game
 		public virtual ICollection<GameGenre> GameGenres { get; set; } = new HashSet<GameGenre>();
 		public virtual ICollection<UserFile> UserFiles { get; set; } = new HashSet<UserFile>();
 
+		[Required]
+		[StringLength(250)]
 		[Description("Good Set or some other official naming convention")]
 		public string GoodName { get; set; }
 
+		[Required]
+		[StringLength(100)]
 		public string DisplayName { get; set; }
 
+		[StringLength(8)]
 		public string Abbreviation { get; set; }
 
+		[StringLength(64)]
 		public string SearchKey { get; set; }
 
+		[Required]
+		[StringLength(250)]
 		public string YoutubeTags { get; set; }
 
+		[StringLength(250)]
 		public string ScreenshotUrl { get; set; }
 	}
 

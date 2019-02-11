@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
 using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Pages.Users
@@ -70,17 +69,11 @@ namespace TASVideos.Pages.Users
 				return NotFound();
 			}
 
-			if (UserToEdit.UserName != user.UserName)
-			{
-				user.UserName = UserToEdit.UserName;
-			}
-
-			if (UserToEdit.TimezoneId != user.TimeZoneId)
-			{
-				user.TimeZoneId = UserToEdit.TimezoneId;
-			}
-
+			user.UserName = UserToEdit.UserName;
+			user.TimeZoneId = UserToEdit.TimezoneId;
 			user.From = UserToEdit.From;
+			user.Signature = UserToEdit.Signature;
+			user.Avatar = UserToEdit.Avatar;
 			
 			_db.UserRoles.RemoveRange(_db.UserRoles.Where(ur => ur.User == user));
 			await _db.SaveChangesAsync();

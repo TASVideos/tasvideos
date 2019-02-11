@@ -180,6 +180,22 @@
 	</row>
 	<two-column-select id-list="UserToEdit.SelectedRoles" available-list="AvailableRoles" />
 	<hr />
+	<row>
+		<column md="5">
+			<label asp-for="UserToEdit.Avatar" class="form-control-label"></label>
+			<input type="text" asp-for="UserToEdit.Avatar" class="form-control" />
+		</column>
+		<column class="offset-md-2" md="5" show="!string.IsNullOrWhiteSpace(Model.UserToEdit.Avatar)">
+			<label class="form-control-label">Preview</label><br />
+			<img id="avatar-img" src="@Model.UserToEdit.Avatar" class="pull-left m-2"/>
+		</column>
+	</row>
+	<hr />
+	<fullrow>
+		<label asp-for="UserToEdit.Signature" class="form-control-label"></label>
+		<textarea asp-for="UserToEdit.Signature" class="form-control" rows="5"></textarea>
+	</fullrow>
+	<hr />
 	<div class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
 		<a asp-page="List" class="btn btn-secondary">Cancel</a>

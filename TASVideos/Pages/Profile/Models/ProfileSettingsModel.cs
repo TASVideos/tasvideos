@@ -25,6 +25,11 @@ namespace TASVideos.Pages.Profile.Models
 		[Display(Name = "Location")]
 		public string From { get; set; }
 
+		public string Signature { get; set; }
+
+		[Url]
+		public string Avatar { get; set; }
+
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 	}
 }

@@ -12,6 +12,7 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual ForumTopic Topic { get; set; }
 
 		[Required]
+		[StringLength(500)]
 		public string Question { get; set; }
 
 		public DateTime? CloseDate { get; set; }

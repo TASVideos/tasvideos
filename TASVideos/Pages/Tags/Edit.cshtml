@@ -1,0 +1,39 @@
+﻿@page "{id}/{handler?}"
+@model EditModel
+@{
+	ViewData["Title"] = $"Editing Tag {Model.Tag.Code}";
+}
+
+<div class="text-right">
+	<delete-button condition="!Model.InUse"
+				   asp-href="/Tags/Edit/@(Model.Tag.Id)/Delete"
+				   warning-message="Are you sure you want to remove this tag?">
+		Delete
+	</delete-button>
+	<a class="btn btn-secondary" asp-page="/Publications/Index" asp-route-query="@Model.Tag.Code">
+		Tag in Use
+	</a>
+</div>
+
+<form method="post">
+	<row>
+		<column lg="6">
+			<label asp-for="Tag.Code"></label>
+			<input type="text" asp-for="Tag.Code" class="form-control" />
+			<span asp-validation-for="Tag.Code" class="text-danger"></span>
+		</column>
+		<column lg="6" class="mt-lg-0 mt-3">
+			<label asp-for="Tag.DisplayName"></label>
+			<input type="text" asp-for="Tag.DisplayName" class="form-control" />
+			<span asp-validation-for="Tag.DisplayName" class="text-danger"></span>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a class="btn btn-secondary" asp-page="Index">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

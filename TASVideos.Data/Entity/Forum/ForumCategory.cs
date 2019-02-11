@@ -14,6 +14,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		public int Ordinal { get; set; }
 
+		[StringLength(1000)]
 		public string Description { get; set; }
 	}
 }
