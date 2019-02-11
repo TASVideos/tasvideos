@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity.Game
 {
@@ -10,6 +11,9 @@ namespace TASVideos.Data.Entity.Game
 		public virtual GameSystem System { get; set; }
 
 		public double FrameRate { get; set; }
+
+		[Required]
+		[StringLength(8)]
 		public string RegionCode { get; set; }
 		public bool Preliminary { get; set; }
 	}

@@ -20,10 +20,12 @@ namespace TASVideos.Pages.Game.Rom.Models
 		[Display(Name = "Sha1")]
 		public string Sha1 { get; set; }
 
+		[StringLength(50)]
 		[Display(Name = "Version")]
 		public string Version { get; set; }
 
 		[Required]
+		[StringLength(50)]
 		[Display(Name = "Region")]
 		public string Region { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace TASVideos.Data.Entity
 	public class User : IdentityUser<int>, ITrackable
 	{
 		public DateTime? LastLoggedInTimeStamp { get; set; }
+
+		[StringLength(250)]
 		public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
 		public DateTime CreateTimeStamp { get; set; } = DateTime.UtcNow;
@@ -23,8 +26,13 @@ namespace TASVideos.Data.Entity
 		public DateTime LastUpdateTimeStamp { get; set; } = DateTime.UtcNow;
 		public string LastUpdateUserName { get; set; }
 
+		[StringLength(250)]
 		public string Avatar { get; set; }
+
+		[StringLength(100)]
 		public string From { get; set; }
+
+		[StringLength(1000)]
 		public string Signature { get; set; }
 
 		public bool PublicRatings { get; set; } = true;

@@ -7,6 +7,7 @@ namespace TASVideos.Pages.Submissions.Models
 	{
 		public string Markup { get; set; }
 
+		[StringLength(1000)]
 		[Display(Name = "Revision Message")]
 		public string RevisionMessage { get; set; }
 
