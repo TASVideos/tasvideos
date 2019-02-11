@@ -130,8 +130,8 @@ namespace TASVideos.Pages.Forum.Posts
 
 			_publisher.SendForum(
 				topic.Forum.Restricted,
-				$"New reply by {user.UserName} ({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
-				$"{Post.TopicTitle} ({Post.Subject})",
+				$"New reply by {user.UserName}",
+				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
 				$"{BaseUrl}/p/{id}#{id}");
 
 			// Notify watched topic
@@ -154,7 +154,7 @@ namespace TASVideos.Pages.Forum.Posts
 				await _db.SaveChangesAsync();
 			}
 
-			return RedirectToPage("/Forum/Topic", new { Id = TopicId });
+			return RedirectToPage("/Forum/Topics/Index", new { Id = TopicId });
 		}
 	}
 }
