@@ -140,6 +140,12 @@ namespace TASVideos.Pages.Submissions
 				CreateUserName = SiteGlobalConstants.TASVideoAgent,
 				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 				Question = SiteGlobalConstants.PollQuestion,
+				PollOptions = new[]
+				{
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
+				}
 			};
 
 			_db.ForumPolls.Add(poll);

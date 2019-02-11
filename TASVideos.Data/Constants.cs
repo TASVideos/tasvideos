@@ -38,6 +38,9 @@
 
 		public const string NewSubmissionPost = @"This topic is for the purpose of discussing ";
 		public const string PollQuestion = @"Vote: Did you like watching this movie? (Vote after watching!)<br/><br/><span style=""color:#C03"">Note: Because of abuse that has happened, lurkers can't vote anymore.</span>";
+		public const string PollOptionYes = "Yes";
+		public const string PollOptionNo = "No";
+		public const string PollOptionsMeh = "Meh";
 	}
 
 	public static class ForumConstants

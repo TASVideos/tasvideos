@@ -32,8 +32,8 @@
 
 			<div>
 				<span condition="option.Voters.Any(v => v == userId)" class="fa fa-check text-success"></span>
-				<span condition="canVote"><input type="radio" name="ordinal" value="@option.Ordinal"/></span>
-				@option.Text (@option.Voters.Count @(percent)%)
+				<span condition="canVote"><input type="radio" name="ordinal" id="_@option.Ordinal" value="@option.Ordinal"/></span>
+				<label for="_@option.Ordinal">@option.Text (@option.Voters.Count @(percent)%)</label>
 			</div>
 		}
 		<script condition="canVote">
