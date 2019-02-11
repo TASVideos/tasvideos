@@ -63,7 +63,7 @@
 	(function() {
 		var emptyAssignableRoles = "None";
 		var assignRoles = '@((int)PermissionTo.AssignRoles)';
-		var selectedAssignablePermissionsModelId = '@Html.IdFor(m => m.Role.SelectedAssignablePermissions)';
+		var selectedAssignablePermissionsModelId = '@Html.NameFor(m => m.Role.SelectedAssignablePermissions)';
 		var selectedPermissionsListId = 'Selected@(Html.IdFor(m => m.Role.SelectedPermissions))';
 		var availableAssignableListId = '@Html.NameFor(m => m.AvailableAssignablePermissions)';
 		var selectedAssignableListId = 'Selected@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))';
@@ -174,7 +174,7 @@
 				}
 
 				getStr = getStr.slice(0, -1);
-				getStr = "/Roles/AddEdit?handler=RolesThatCanBeAssignedBy&" + getStr;
+				getStr = "/Roles/AddEdit/" + "@(Model.Id)" + "/RolesThatCanBeAssignedBy?" + getStr;
 				xmlhttp.open("GET", getStr, true);
 				xmlhttp.send();
 			} else {
