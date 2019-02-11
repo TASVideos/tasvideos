@@ -12,7 +12,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public string Title { get; set; }
 
 		[Required]
-		[StringLength(1000, MinimumLength = 5)]
+		[StringLength(2000, MinimumLength = 5)]
 		public string Post { get; set; }
 
 		public ForumTopicType Type { get; set; } = ForumTopicType.Regular;

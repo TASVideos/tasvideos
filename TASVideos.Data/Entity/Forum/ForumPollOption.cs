@@ -9,6 +9,7 @@ namespace TASVideos.Data.Entity.Forum
 		public int Id { get; set; }
 
 		[Required]
+		[StringLength(250)]
 		public string Text { get; set; }
 
 		[Required]

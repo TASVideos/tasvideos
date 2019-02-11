@@ -9,12 +9,15 @@ namespace TASVideos.Data.Entity
 		public int Id { get; set; }
 
 		[Required]
+		[StringLength(250)]
 		public string PageName { get; set; }
 
 		public string Markup { get; set; }
 		public int Revision { get; set; } = 1;
 
 		public bool MinorEdit { get; set; }
+
+		[StringLength(1000)]
 		public string RevisionMessage { get; set; }
 
 		public int? ChildId { get; set; }

@@ -144,6 +144,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to edit a movie's recomended flag, which flags the movie as recommended to new comers")]
 		EditRecommendation = 304,
 
+		[Display(Name = "Tag Maintenance")]
+		[Group("Publication Maintenance")]
+		[Description("The ability to add, edit, and remove the tags used for publications")]
+		TagMaintenance = 390,
+
 		#endregion
 
 		#region Forum Moderation 400

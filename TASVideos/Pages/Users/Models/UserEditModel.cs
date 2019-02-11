@@ -34,6 +34,9 @@ namespace TASVideos.Pages.Users.Models
 		[Display(Name = "Locked Status")]
 		public bool IsLockedOut { get; set; }
 
+		public string Signature { get; set; }
+		public string Avatar { get; set; }
+
 		public string OriginalUserName => UserName;
 	}
 }

@@ -35,6 +35,7 @@ namespace TASVideos.Pages.Forum.Subforum
 				{
 					Name = f.Name,
 					Description = f.Description,
+					ShortName = f.ShortName
 				})
 				.SingleOrDefaultAsync();
 
