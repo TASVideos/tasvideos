@@ -75,7 +75,7 @@ namespace TASVideos.Pages.Wiki
 			{
 				_publisher.SendGeneralWiki(
 					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
-					$"{PageToEdit.RevisionMessage}",
+					$"({PageToEdit.RevisionMessage}): ",
 					$"{BaseUrl}/{Path}");
 			}
 

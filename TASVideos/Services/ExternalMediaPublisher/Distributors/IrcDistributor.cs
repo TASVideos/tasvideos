@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 
+using TASVideos.Extensions;
+
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
 	public class IrcDistributor : IPostDistributor
@@ -29,7 +31,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public void Post(IPostable post)
 		{
-			var s = $"New {post.Type} message recieved\n{post.Title}\n{post.Body}\nLink:{post.Link}\nGroup:{post.Group}";
+			var s = $"{post.Title.CapAndEllipse(100)} {post.Body.CapAndEllipse(100)} {post.Link}";
 			_bot.AddMessage(s);
 		}
 
@@ -96,12 +98,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 						{
 							try
 							{
-								var toSend = workItem;
-								if (toSend.Length > 100)
-								{
-									toSend = toSend.Substring(0, 97) + "...";
-								}
-								await writer.WriteLineAsync($"PRIVMSG {_settings.Channel} :{toSend}");
+								await writer.WriteLineAsync($"PRIVMSG {_settings.Channel} :{workItem}");
 								await writer.FlushAsync();
 							}
 							catch

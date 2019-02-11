@@ -149,7 +149,7 @@ namespace TASVideos.Extensions
 				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
 			}
 
-			if (!env.IsAnyLocal()) // TODO: turn this back on
+			if (env.IsAnyLocal()) // TODO: turn this back on
 			{
 				services.AddSingleton<IPostDistributor, IrcDistributor>();
 			}
