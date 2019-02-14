@@ -6,8 +6,8 @@
 <partial Name="_ForumHeader" />
 <h4>
 	Splitting Topic: 
-	<a asp-page="/Forum/SubForum" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a> -> 
-	<a asp-page="/Forum/Topics" asp-route-id="@Model.Id">@Model.Topic.Title</a>
+	<a asp-page="/Forum/SubForum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a> -> 
+	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id">@Model.Topic.Title</a>
 </h4>
 <hr />
 <form method="post">
@@ -62,7 +62,7 @@
 			}
 		</small>
 	</div>
-	<div class="text-center">
+	<div class="text-center mt-2">
 		<button type="submit" class="btn btn-primary">Split</button>
 		<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
 	</div>

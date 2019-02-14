@@ -16,6 +16,7 @@ using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Services;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -25,15 +26,18 @@ namespace TASVideos.Pages.Submissions
 		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
 		private readonly IWikiPages _wikiPages;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
 			ApplicationDbContext db,
 			MovieParser parser,
-			IWikiPages wikiPages)
+			IWikiPages wikiPages,
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_parser = parser;
 			_wikiPages = wikiPages;
+			_publisher = publisher;
 		}
 
 		[FromRoute]
@@ -257,8 +261,10 @@ namespace TASVideos.Pages.Submissions
 				submission.Publisher = null;
 			}
 
+			bool statusHasChanged = false;
 			if (submission.Status != Submission.Status)
 			{
+				statusHasChanged = true;
 				var history = new SubmissionStatusHistory
 				{
 					SubmissionId = submission.Id,
@@ -293,6 +299,37 @@ namespace TASVideos.Pages.Submissions
 
 			submission.GenerateTitle();
 			await _db.SaveChangesAsync();
+
+			if (!Submission.MinorEdit)
+			{
+				if (statusHasChanged)
+				{
+					
+					var statusStr = Submission.Status == SubmissionStatus.Accepted
+						? $"{Submission.Status.ToString()} to {(await _db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
+						: Submission.Status.ToString();
+					_publisher.Send(new Post
+					{
+						Type = PostType.General,
+						Group = PostGroups.Submission,
+						Body = "",
+						Title = $"Submission {submission.Title} {statusStr} by {User.Identity.Name}",
+						Link = $"{BaseUrl}/{Id}S"
+					});
+				}
+				else
+				{
+					_publisher.Send(new Post
+					{
+						Type = PostType.General,
+						Group = PostGroups.Submission,
+						Title = $"Submission {submission.Title} edited by {User.Identity.Name}",
+						Body = "",
+						Link = $"{BaseUrl}/{Id}S"
+					});
+				}
+			}
+
 			return Redirect($"/{Id}S");
 		}
 

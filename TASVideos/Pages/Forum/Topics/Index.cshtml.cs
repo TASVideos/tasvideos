@@ -212,10 +212,10 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			_publisher.SendForum(
-				seeRestricted,
+				topic.Forum.Restricted,
 				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
 				"",
-				$"/Forum/Topics/{Id}");
+				$"{BaseUrl}/Forum/Topics/{Id}");
 
 			return RedirectToLocal(returnUrl);
 		}

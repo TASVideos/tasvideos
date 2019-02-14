@@ -158,7 +158,7 @@ namespace TASVideos.Pages.Forum.Posts
 			_publisher.SendForum(
 				post.Topic.Forum.Restricted,
 				$"Post DELETED by {User.Identity.Name} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
-				$"{BaseUrl}/p/{Id}#{Id}",
+				"",
 				$"{BaseUrl}/Forum/Topics/{post.Topic.Id}");
 
 			return RedirectToPage("/Forum/Topics/Index", new { id = post.TopicId });

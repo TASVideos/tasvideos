@@ -102,7 +102,7 @@ namespace TASVideos.Pages.Forum.Topics
 				forum.Restricted,
 				$"New Topic by {User.Identity.Name} ({forum.ShortName}: {Topic.Title})",
 				Topic.Post.CapAndEllipse(50),
-				$"/Forum/Topic{topic.Id}");
+				$"{BaseUrl}/Forum/Topics/{topic.Id}");
 
 			return RedirectToPage("Index", new { topic.Id });
 		}

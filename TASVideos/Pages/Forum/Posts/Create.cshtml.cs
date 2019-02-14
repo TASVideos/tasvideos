@@ -132,7 +132,7 @@ namespace TASVideos.Pages.Forum.Posts
 				topic.Forum.Restricted,
 				$"New reply by {user.UserName}",
 				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
-				$"{BaseUrl}/p/{id}#{id}");
+				$"{BaseUrl}/forum/p/{id}#{id}");
 
 			// Notify watched topic
 			var watches = await _db.ForumTopicWatches
