@@ -146,9 +146,9 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_publisher.SendForum(
 				topic.Forum.Restricted,
-				$"Topic {newForum.Name}: {newTopic.Title} SPLIT from {Topic.ForumName}: {Topic.Title}",
+				$"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Identity.Name} from {Topic.ForumName}: {Topic.Title}",
 				"",
-				$"{BaseUrl}/Forum/Topics/{topic.Id}");
+				$"{BaseUrl}/Forum/Topics/{newTopic.Id}");
 
 			return RedirectToPage("Index", new { id = newTopic.Id });
 		}
