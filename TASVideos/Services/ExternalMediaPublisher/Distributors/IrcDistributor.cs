@@ -2,11 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 
 using TASVideos.Extensions;
 
@@ -18,7 +15,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		private static IrcBot _bot;
 		public IrcDistributor()
 		{
-			lock(Sync)
+			lock (Sync)
 			{
 				if (_bot == null)
 				{
@@ -46,12 +43,18 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private class IrcBot
 		{
+			private readonly Settings _settings = new Settings();
+			private readonly ConcurrentQueue<string> _work = new ConcurrentQueue<string>();
+
 			public IrcBot()
 			{
 				Loop();
 			}
-			private readonly Settings _settings = new Settings();
-			private readonly ConcurrentQueue<string> _work = new ConcurrentQueue<string>();
+
+			public void AddMessage(string item)
+			{
+				_work.Enqueue(item);
+			}
 
 			private async Task ConnectToServer()
 			{
@@ -77,7 +80,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 							Console.WriteLine("<- " + inputLine);
 
 							// split the lines sent from the server by spaces (seems to be the easiest way to parse them)
-							string[] splitInput = inputLine.Split(new char[] { ' ' });
+							string[] splitInput = inputLine.Split(new[] { ' ' });
 
 							if (splitInput[0] == "PING")
 							{
@@ -106,6 +109,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 								_work.Enqueue(workItem);
 								throw;
 							}
+
 							await Task.Delay(10000);
 						}
 						else
@@ -131,11 +135,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 						await Task.Delay(30000);
 					}
 				}
-			}
-
-			public void AddMessage(string item)
-			{
-				_work.Enqueue(item);
+				// ReSharper disable once FunctionNeverReturns
 			}
 		}
 	}
