@@ -100,11 +100,11 @@ namespace TASVideos.Pages.Publications
 
 				AvailableGames = await _db.Games
 					.ForSystem(systemId)
-					.OrderBy(g => g.GoodName)
+					.OrderBy(g => g.DisplayName)
 					.Select(g => new SelectListItem
 					{
 						Value = g.Id.ToString(),
-						Text = g.GoodName
+						Text = g.DisplayName
 					})
 					.ToListAsync();
 
