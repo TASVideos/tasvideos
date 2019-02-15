@@ -47,6 +47,9 @@ namespace TASVideos.Pages.Game.Rom
 		[FromRoute]
 		public int? Id { get; set; }
 
+		[FromQuery]
+		public string ReturnUrl { get; set; }
+
 		[BindProperty]
 		public RomEditModel Rom { get; set; } = new RomEditModel();
 
@@ -132,7 +135,9 @@ namespace TASVideos.Pages.Game.Rom
 				Message = $"Unable to update Rom {Id}, the rom may have already been updated, or the game no longer exists.";
 			}
 
-			return RedirectToPage("List", new { gameId = GameId });
+			return string.IsNullOrWhiteSpace(ReturnUrl)
+				? RedirectToPage("List", new { gameId = GameId })
+				: RedirectToLocal(ReturnUrl);
 		}
 
 		public async Task<ActionResult> OnPostDelete()
