@@ -96,11 +96,11 @@ namespace TASVideos.Pages.Submissions
 
 				AvailableGames = await _db.Games
 					.Where(g => !Catalog.SystemId.HasValue || g.SystemId == Catalog.SystemId)
-					.OrderBy(g => g.GoodName)
+					.OrderBy(g => g.DisplayName)
 					.Select(g => new SelectListItem
 					{
 						Value = g.Id.ToString(),
-						Text = g.GoodName
+						Text = g.DisplayName
 					})
 					.ToListAsync();
 

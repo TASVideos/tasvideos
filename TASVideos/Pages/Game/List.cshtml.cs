@@ -79,12 +79,12 @@ namespace TASVideos.Pages.Game
 		public async Task<IActionResult> OnGetGameDropDownForSystem(int systemId, bool includeEmpty)
 		{
 			var items = await _db.Games
-				.OrderBy(g => g.GoodName)
 				.ForSystem(systemId)
+				.OrderBy(g => g.DisplayName)
 				.Select(g => new SelectListItem
 				{
 					Value = g.Id.ToString(),
-					Text = g.GoodName
+					Text = g.DisplayName
 				})
 				.ToListAsync();
 
