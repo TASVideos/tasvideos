@@ -43,12 +43,13 @@ namespace TASVideos.Pages.Publications
 					.Where(p => p.Id == Id)
 					.Select(p => new PublicationCatalogModel
 					{
+						Title = p.Title,
 						RomId = p.RomId,
 						GameId = p.GameId,
 						SystemId = p.SystemId,
 						SystemFrameRateId = p.SystemFrameRateId,
 					})
-					.SingleAsync();
+					.SingleOrDefaultAsync();
 
 			if (Catalog == null)
 			{
@@ -89,6 +90,7 @@ namespace TASVideos.Pages.Publications
 				AvailableRoms = await _db.Roms
 					.ForGame(gameId)
 					.ForSystem(systemId)
+					.OrderBy(r => r.Name)
 					.Select(r => new SelectListItem
 					{
 						Value = r.Id.ToString(),
@@ -98,6 +100,7 @@ namespace TASVideos.Pages.Publications
 
 				AvailableGames = await _db.Games
 					.ForSystem(systemId)
+					.OrderBy(g => g.GoodName)
 					.Select(g => new SelectListItem
 					{
 						Value = g.Id.ToString(),
@@ -106,6 +109,7 @@ namespace TASVideos.Pages.Publications
 					.ToListAsync();
 
 				AvailableSystems = await _db.GameSystems
+					.OrderBy(s => s.Code)
 					.Select(s => new SelectListItem
 					{
 						Value = s.Id.ToString(),
@@ -115,6 +119,7 @@ namespace TASVideos.Pages.Publications
 
 				AvailableSystemFrameRates = await _db.GameSystemFrameRates
 					.ForSystem(systemId)
+					.OrderBy(sf => sf.RegionCode)
 					.Select(sf => new SelectListItem
 					{
 						Value = sf.Id.ToString(),

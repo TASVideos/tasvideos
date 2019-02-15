@@ -45,6 +45,7 @@ namespace TASVideos.Pages.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new SubmissionCatalogModel
 				{
+					Title = s.Title,
 					RomId = s.RomId,
 					GameId = s.GameId,
 					SystemId = s.SystemId,
@@ -85,6 +86,7 @@ namespace TASVideos.Pages.Submissions
 				AvailableRoms = await _db.Roms
 					.Where(r => !Catalog.SystemId.HasValue || r.Game.SystemId == Catalog.SystemId)
 					.Where(r => !Catalog.GameId.HasValue || r.GameId == Catalog.GameId)
+					.OrderBy(r => r.Name)
 					.Select(r => new SelectListItem
 					{
 						Value = r.Id.ToString(),
@@ -94,6 +96,7 @@ namespace TASVideos.Pages.Submissions
 
 				AvailableGames = await _db.Games
 					.Where(g => !Catalog.SystemId.HasValue || g.SystemId == Catalog.SystemId)
+					.OrderBy(g => g.GoodName)
 					.Select(g => new SelectListItem
 					{
 						Value = g.Id.ToString(),
@@ -102,6 +105,7 @@ namespace TASVideos.Pages.Submissions
 					.ToListAsync();
 
 				AvailableSystems = await _db.GameSystems
+					.OrderBy(s => s.Code)
 					.Select(s => new SelectListItem
 					{
 						Value = s.Id.ToString(),
@@ -112,6 +116,7 @@ namespace TASVideos.Pages.Submissions
 				AvailableSystemFrameRates = Catalog.SystemId.HasValue
 					? await _db.GameSystemFrameRates
 						.Where(sf => sf.GameSystemId == Catalog.SystemId)
+						.OrderBy(sf => sf.RegionCode)
 						.Select(sf => new SelectListItem
 						{
 							Value = sf.Id.ToString(),

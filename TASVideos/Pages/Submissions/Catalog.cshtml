@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model CatalogModel
 @{
-	ViewData["Title"] = $"Set Catalogging Information for Submission #{Model.Id}";
+	ViewData["Title"] = $"Set Catalogging Information for #{Model.Catalog.Title}";
 }
 
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
