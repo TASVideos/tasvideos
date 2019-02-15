@@ -29,7 +29,7 @@
 						<span asp-validation-for="AvailableGames" class="text-danger"></span>
 					</div>
 					<div class="col-2">
-						<a asp-page="/Game/Edit" asp-route-id="" class="btn btn-primary">New</a>
+						<a asp-page="/Game/Edit" asp-route-id="" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()" class="btn btn-primary">New</a>
 					</div>
 				</row>
 			</form-group>

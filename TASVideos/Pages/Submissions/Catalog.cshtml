@@ -27,7 +27,7 @@
 						<select asp-for="Catalog.GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-control"></select>
 					</div>
 					<div class="col-2">
-						<a asp-page="/Game/Edit" asp-route-id="" class="btn btn-primary">New</a>
+						<a asp-page="/Game/Edit" asp-route-id="" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()" class="btn btn-primary">New</a>
 					</div>
 				</row>
 			</form-group>

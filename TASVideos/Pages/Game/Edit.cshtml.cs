@@ -39,6 +39,9 @@ namespace TASVideos.Pages.Game
 		[FromRoute]
 		public int? Id { get; set; }
 
+		[FromQuery]
+		public string ReturnUrl { get; set; }
+
 		[BindProperty]
 		public GameEditModel Game { get; set; } = new GameEditModel();
 
@@ -104,7 +107,9 @@ namespace TASVideos.Pages.Game
 				Message = $"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.";
 			}
 			
-			return RedirectToPage("List");
+			return string.IsNullOrWhiteSpace(ReturnUrl)
+				? RedirectToPage("List")
+				: RedirectToLocal(ReturnUrl);
 		}
 
 		public async Task<IActionResult> OnPostDelete()
