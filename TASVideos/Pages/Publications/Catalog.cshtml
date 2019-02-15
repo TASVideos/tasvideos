@@ -151,7 +151,7 @@
 
 		document.getElementById('create-rom').onclick = function () {
 			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
-			document.location = '/Game/' + gameId + '/Rom/Edit';
+			document.location = '/Game/' + gameId + '/Rom/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()';
 		}
 	})()
 </script>
