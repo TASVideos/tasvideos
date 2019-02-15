@@ -14,6 +14,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Submissions
@@ -24,15 +25,18 @@ namespace TASVideos.Pages.Submissions
 		private readonly ApplicationDbContext _db;
 		private readonly IHostingEnvironment _hostingEnvironment;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IWikiPages _wikiPages;
 
 		public PublishModel(
 			ApplicationDbContext db,
 			IHostingEnvironment hostingEnvironment,
-			ExternalMediaPublisher publisher)
+			ExternalMediaPublisher publisher,
+			IWikiPages wikiPages)
 		{
 			_db = db;
 			_hostingEnvironment = hostingEnvironment;
 			_publisher = publisher;
+			_wikiPages = wikiPages;
 		}
 
 		[FromRoute]
@@ -214,7 +218,7 @@ namespace TASVideos.Pages.Submissions
 				Markup = Submission.MovieMarkup
 			};
 
-			_db.WikiPages.Add(wikiPage);
+			await _wikiPages.Add(wikiPage);
 			publication.WikiContent = wikiPage;
 
 			submission.Status = SubmissionStatus.Published;
