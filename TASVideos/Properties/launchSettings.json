@@ -14,49 +14,35 @@
 				"ASPNETCORE_ENVIRONMENT": "Demo"
 			}
 		},
-		"IIS Local": {
+		"Dev (No recreate)": {
 			"commandName": "IISExpress",
 			"environmentVariables": {
+				"StartupStrategy":  "Minimal", 
 				"ASPNETCORE_preventHostingStartup": "True",
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
 			"launchBrowser": true,
 			"launchUrl": "https://localhost:44385/"
 		},
-		"IIS Local (No recreate)": {
+		"Dev (Sample Data)": {
 			"commandName": "IISExpress",
 			"environmentVariables": {
+				"StartupStrategy":  "Sample", 
 				"ASPNETCORE_preventHostingStartup": "True",
-				"ASPNETCORE_ENVIRONMENT": "Development-NoRecreate"
-			},
-			"launchBrowser": true,
-			"launchUrl": "https://localhost:44385/"
-		},
-		"IIS Local (Import)": {
-			"commandName": "IISExpress",
-			"environmentVariables": {
-				"ASPNETCORE_preventHostingStartup": "True",
-				"ASPNETCORE_ENVIRONMENT": "Development-Import"
-			},
-			"launchBrowser": true,
-			"launchUrl": "https://localhost:44385/"
-		},
-		"IIS Staging": {
-			"commandName": "IISExpress",
-			"launchBrowser": true,
-			"launchUrl": "https://localhost:44385/",
-			"environmentVariables": {
-				"ASPNETCORE_preventHostingStartup": "True",
-				"ASPNETCORE_ENVIRONMENT": "Staging"
-			}
-		},
-		"TASVideos": {
-			"commandName": "Project",
-			"launchBrowser": true,
-			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
-			"applicationUrl": "http://localhost:49654/"
+			"launchBrowser": true,
+			"launchUrl": "https://localhost:44385/"
+		},
+		"Dev (Import)": {
+			"commandName": "IISExpress",
+			"environmentVariables": {
+				"StartupStrategy":  "Import", 
+				"ASPNETCORE_preventHostingStartup": "True",
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			},
+			"launchBrowser": true,
+			"launchUrl": "https://localhost:44385/"
 		}
 	}
 }

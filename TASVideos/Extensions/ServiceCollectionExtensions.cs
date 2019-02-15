@@ -31,7 +31,7 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddCookieConfiguration(this IServiceCollection services, IHostingEnvironment env)
 		{
-			if (env.IsAnyTestEnvironment())
+			if (env.IsDevelopment())
 			{
 				services.ConfigureApplicationCookie(options =>
 				{
@@ -144,12 +144,13 @@ namespace TASVideos.Extensions
 
 		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IHostingEnvironment env, AppSettings settings)
 		{
-			if (env.IsAnyTestEnvironment())
+			if (env.IsDevelopment())
 			{
 				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
 			}
 
-			if (!env.IsAnyLocal())
+			// TODO: always enable, but only start up the irc bot if app settings are provided
+			if (!env.IsDevelopment())
 			{
 				services.AddSingleton<IPostDistributor, IrcDistributor>();
 			}
