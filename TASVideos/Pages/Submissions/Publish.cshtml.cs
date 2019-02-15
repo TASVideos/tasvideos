@@ -14,6 +14,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -22,13 +23,16 @@ namespace TASVideos.Pages.Submissions
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IHostingEnvironment _hostingEnvironment;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public PublishModel(
 			ApplicationDbContext db,
-			IHostingEnvironment hostingEnvironment)
+			IHostingEnvironment hostingEnvironment,
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_hostingEnvironment = hostingEnvironment;
+			_publisher = publisher;
 		}
 
 		[FromRoute]
@@ -83,14 +87,12 @@ namespace TASVideos.Pages.Submissions
 			if (Submission.Screenshot.ContentType != "image/png"
 				&& Submission.Screenshot.ContentType != "image/jpeg")
 			{
-				// TODO: fix name
-				ModelState.AddModelError(nameof(Submission.Screenshot), "Invalid file type. Must be .png or .jpg");
+				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Screenshot)}", "Invalid file type. Must be .png or .jpg");
 			}
 
-			if (Submission.TorrentFile.Name != "TorrentFile")
+			if (!Submission.TorrentFile.FileName.EndsWith(".torrent"))
 			{
-				// TODO: fix name
-				ModelState.AddModelError(nameof(Submission.TorrentFile), "Invalid file type. Must be a .torrent file");
+				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TorrentFile)}", "Invalid file type. Must be a .torrent file");
 			}
 
 			if (!ModelState.IsValid)
@@ -249,6 +251,8 @@ namespace TASVideos.Pages.Submissions
 				});
 				await _db.SaveChangesAsync();
 			}
+
+			_publisher.AnnouncePublication(publication.Title, $"{BaseUrl}/{publication.Id}M");
 
 			return Redirect($"/{publication.Id}M");
 		}
