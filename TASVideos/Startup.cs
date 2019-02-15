@@ -36,7 +36,7 @@ namespace TASVideos
 			// Internal Libraries
 			services
 				.AddTasvideosData(Configuration)
-				.AddTasVideosLegacy(Environment.IsLocalWithImport())
+				.AddTasVideosLegacy(enable: DbInitializer.GetStartupStrategy() == DbInitializer.StartupStrategy.Import)
 				.AddMovieParser();
 
 			// 3rd Party

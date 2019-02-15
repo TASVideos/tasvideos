@@ -1,18 +1,10 @@
 ﻿using System;
-
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 using TASVideos.Data;
-using TASVideos.Extensions;
-using TASVideos.Legacy;
-using TASVideos.Legacy.Data.Forum;
-using TASVideos.Legacy.Data.Site;
-using TASVideos.Services;
 
 namespace TASVideos
 {
@@ -25,37 +17,10 @@ namespace TASVideos
 			using (var scope = host.Services.CreateScope())
 			{
 				var services = scope.ServiceProvider;
+
 				try
 				{
-					var env = services.GetRequiredService<IHostingEnvironment>();
-					var context = services.GetRequiredService<ApplicationDbContext>();
-					var settings = services.GetRequiredService<IOptions<AppSettings>>().Value;
-
-					if (env.IsDevelopment())
-					{
-						var userManager = services.GetRequiredService<UserManager>();
-						DbInitializer.Initialize(context);
-						DbInitializer.PreMigrateSeedData(context);
-						DbInitializer.PostMigrateSeedData(context);
-						DbInitializer.GenerateDevTestUsers(context, userManager).Wait();
-						DbInitializer.GenerateDevSampleData(context, userManager).Wait();
-					}
-					else if (env.IsLocalWithoutRecreate() || env.IsDemo())
-					{
-						context.Database.EnsureCreated();
-					}
-					else if (env.IsLocalWithImport())
-					{
-						var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
-						var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
-						var userManager = services.GetRequiredService<UserManager>();
-
-						DbInitializer.Initialize(context);
-						DbInitializer.PreMigrateSeedData(context);
-						LegacyImporter.RunLegacyImport(context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);
-						DbInitializer.PostMigrateSeedData(context);
-						DbInitializer.GenerateDevTestUsers(context, userManager).Wait();
-					}
+					DbInitializer.InitializeDatabase(services);
 				}
 				catch (Exception ex)
 				{

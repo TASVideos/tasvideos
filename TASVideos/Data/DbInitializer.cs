@@ -2,9 +2,16 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
+using TASVideos.Legacy;
+using TASVideos.Legacy.Data.Forum;
+using TASVideos.Legacy.Data.Site;
 using TASVideos.Services;
 using TASVideos.WikiEngine;
 
@@ -12,11 +19,101 @@ namespace TASVideos.Data
 {
 	public static class DbInitializer
 	{
+		public enum StartupStrategy
+		{
+			/// <summary>
+			/// Does nothing. Simply checks if the database exists.
+			/// No data is imported, schema is not created nor validated
+			/// </summary>
+			Minimal,
+
+			/// <summary>
+			/// Deletes and recreates the database,
+			/// Populates required seed data,
+			/// Generates minimal sample data
+			/// </summary>
+			Sample,
+
+			/// <summary>
+			/// Deletes and recreates the database,
+			/// Populates required seed data,
+			/// Runs the mysql to sql server import
+			/// (this options requires a connection to
+			/// a mysql database of the legacy system)
+			/// </summary>
+			Import
+		}
+
+		public static void InitializeDatabase(IServiceProvider services)
+		{
+			
+			switch (GetStartupStrategy())
+			{
+				case StartupStrategy.Minimal:
+					MinimalStrategy(services);
+					break;
+				case StartupStrategy.Sample:
+					SampleStrategy(services);
+					break;
+				case StartupStrategy.Import:
+					ImportStrategy(services);
+					break;
+			}
+		}
+
+		public static StartupStrategy GetStartupStrategy()
+		{
+			var strategy = Environment.GetEnvironmentVariable(EnvironmentVariables.StartupStrategy);
+			if (!string.IsNullOrWhiteSpace(strategy))
+			{
+				var result = Enum.TryParse(typeof(StartupStrategy), strategy, true, out object strategyObj);
+			
+				if (result)
+				{
+					return (StartupStrategy)strategyObj;
+				}
+			}
+
+			return StartupStrategy.Minimal;
+		}
+
+		private static void MinimalStrategy(IServiceProvider services)
+		{
+			var context = services.GetRequiredService<ApplicationDbContext>();
+			context.Database.EnsureCreated();
+		}
+
+		private static void SampleStrategy(IServiceProvider services)
+		{
+			var context = services.GetRequiredService<ApplicationDbContext>();
+			var userManager = services.GetRequiredService<UserManager>();
+			Initialize(context);
+			PreMigrateSeedData(context);
+			PostMigrateSeedData(context);
+			GenerateDevTestUsers(context, userManager).Wait();
+			GenerateDevSampleData(context).Wait();
+		}
+
+		private static void ImportStrategy(IServiceProvider services)
+		{
+			var context = services.GetRequiredService<ApplicationDbContext>();
+			var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
+			var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
+			var userManager = services.GetRequiredService<UserManager>();
+			var settings = services.GetRequiredService<IOptions<AppSettings>>().Value;
+
+			Initialize(context);
+			PreMigrateSeedData(context);
+			LegacyImporter.RunLegacyImport(context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);
+			PostMigrateSeedData(context);
+			GenerateDevTestUsers(context, userManager).Wait();
+		}
+
 		/// <summary>
 		/// Creates the database and seeds it with necessary seed data
 		/// Seed data is necessary data for a production release
 		/// </summary>
-		public static void Initialize(ApplicationDbContext context)
+		private static void Initialize(ApplicationDbContext context)
 		{
 			// For now, always delete then recreate the database
 			// When the database is more mature we will move towards the Migrations process
@@ -24,15 +121,10 @@ namespace TASVideos.Data
 			context.Database.EnsureCreated();
 		}
 
-		public static void Migrate(ApplicationDbContext context)
-		{
-			// TODO
-		}
-
 		/// <summary>
 		/// Adds data necessary for production, should be run before legacy migration processes
 		/// </summary>
-		public static void PreMigrateSeedData(ApplicationDbContext context)
+		private static void PreMigrateSeedData(ApplicationDbContext context)
 		{
 			context.Roles.AddRange(RoleSeedData.AllRoles);
 			context.GameSystems.AddRange(SystemSeedData.Systems);
@@ -43,7 +135,7 @@ namespace TASVideos.Data
 			context.SaveChanges();
 		}
 
-		public static void PostMigrateSeedData(ApplicationDbContext context)
+		private static void PostMigrateSeedData(ApplicationDbContext context)
 		{
 			foreach (var wikiPage in WikiPageSeedData.NewRevisions)
 			{
@@ -78,7 +170,7 @@ namespace TASVideos.Data
 		/// Roles must already exist before running this
 		/// DO NOT run this on production environments! This generates users with high level access and a default and public password
 		/// </summary>
-		public static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager userManager)
+		private static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager userManager)
 		{
 			// Add users for each Role for testing purposes
 			var roles = await context.Roles.ToListAsync();
@@ -132,7 +224,7 @@ namespace TASVideos.Data
 		/// Adds optional sample data
 		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
 		/// </summary>
-		public static async Task GenerateDevSampleData(ApplicationDbContext context, UserManager userManager)
+		private static async Task GenerateDevSampleData(ApplicationDbContext context)
 		{
 			context.WikiPages.Add(PublicationSampleData.FrontPage);
 			context.Games.Add(PublicationSampleData.Smb3);
@@ -140,7 +232,6 @@ namespace TASVideos.Data
 			context.Submissions.Add(PublicationSampleData.MorimotoSubmission);
 			context.Publications.Add(PublicationSampleData.MorimotoSmb3Pub);
 			context.PublicationFlags.AddRange(PublicationSampleData.MorimotoSmb3PublicationFlags);
-
 			await context.SaveChangesAsync();
 		}
 	}

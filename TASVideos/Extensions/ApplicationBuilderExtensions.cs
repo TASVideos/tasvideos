@@ -10,10 +10,14 @@ namespace TASVideos.Extensions
 	{
 		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostingEnvironment env)
 		{
-			if (env.IsAnyTestEnvironment())
+			if (env.IsDevelopment())
+			{
+				app.UseBrowserLink();
+			}
+
+			if (env.IsDevelopment() || env.IsDemo())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseBrowserLink();
 				app.UseDatabaseErrorPage();
 			}
 			else
