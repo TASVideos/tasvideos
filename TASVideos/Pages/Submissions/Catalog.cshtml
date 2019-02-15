@@ -41,7 +41,7 @@
 					</div>
 					<div class="col-2">
 						<button 
-							disable="!Model.Catalog.GameId.HasValue" 
+							disable="!Model.Catalog.GameId.HasValue || Model.Catalog.GameId == -1" 
 							id="create-rom" 
 							type="button" 
 							class="btn btn-primary">New</button>
