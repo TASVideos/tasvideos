@@ -56,7 +56,7 @@ namespace TASVideos.Pages.Game
 		{
 			var items = await _db.GameSystemFrameRates
 				.ForSystem(systemId)
-				.OrderBy(fr => fr.Id)
+				.OrderBy(fr => fr.RegionCode)
 				.Select(g => new SelectListItem
 				{
 					Value = g.Id.ToString(),
@@ -79,7 +79,7 @@ namespace TASVideos.Pages.Game
 		public async Task<IActionResult> OnGetGameDropDownForSystem(int systemId, bool includeEmpty)
 		{
 			var items = await _db.Games
-				.OrderBy(g => g.Id)
+				.OrderBy(g => g.GoodName)
 				.ForSystem(systemId)
 				.Select(g => new SelectListItem
 				{
@@ -104,7 +104,7 @@ namespace TASVideos.Pages.Game
 		{
 			var items = await _db.Roms
 				.Where(r => r.GameId == gameId)
-				.OrderBy(r => r.Id)
+				.OrderBy(r => r.Name)
 				.Select(r => new SelectListItem
 				{
 					Value = r.Id.ToString(),

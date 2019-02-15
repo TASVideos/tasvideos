@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model CatalogModel
 @{
-	ViewData["Title"] = $"Set Catalogging Information for Movie #{Model.Id}";
+	ViewData["Title"] = $"Set Catalogging Information for {Model.Catalog.Title}";
 }
 
 <form method="post">
