@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -149,12 +150,7 @@ namespace TASVideos.Extensions
 				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
 			}
 
-			// TODO: always enable, but only start up the irc bot if app settings are provided
-			if (!env.IsDevelopment())
-			{
-				services.AddSingleton<IPostDistributor, IrcDistributor>();
-			}
-
+			services.AddSingleton<IPostDistributor, IrcDistributor>();
 			services.AddScoped<IPostDistributor, DistributorStorage>();
 
 			services.AddTransient<ExternalMediaPublisher>();
