@@ -17,15 +17,12 @@
     <_RazorBuildServerPipeName>razor-issues-2406</_RazorBuildServerPipeName>
   </PropertyGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="node copy-deps.js" />
-  </Target>
-
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="1.0.172" />
   </ItemGroup>
 
   <ItemGroup>
