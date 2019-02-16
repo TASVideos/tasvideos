@@ -1,4 +1,8 @@
-﻿namespace TASVideos
+﻿using System;
+
+using TASVideos.Data;
+
+namespace TASVideos
 {
 	public class AppSettings
 	{
@@ -8,7 +12,9 @@
 
 		public Connections ConnectionStrings { get; set; } = new Connections();
 
-		public IrcConnection GeneralIrc { get; set;} = new IrcConnection();
+		public IrcConnection GeneralIrc { get; set; } = new IrcConnection();
+
+		public string StartupStrategy { get; set; }
 
 		public class IrcConnection
 		{
@@ -27,6 +33,25 @@
 		public class Connections
 		{
 			public string DefaultConnection { get; set; }
+		}
+	}
+
+	public static class AppSettingsExtensions
+	{
+		public static DbInitializer.StartupStrategy StartupStrategy(this AppSettings settings)
+		{
+			var strategy = settings.StartupStrategy;
+			if (!string.IsNullOrWhiteSpace(settings.StartupStrategy))
+			{
+				var result = Enum.TryParse(typeof(DbInitializer.StartupStrategy), strategy, true, out object strategyObj);
+			
+				if (result)
+				{
+					return (DbInitializer.StartupStrategy)strategyObj;
+				}
+			}
+
+			return DbInitializer.StartupStrategy.Minimal;
 		}
 	}
 }

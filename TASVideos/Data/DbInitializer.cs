@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
@@ -46,8 +45,8 @@ namespace TASVideos.Data
 
 		public static void InitializeDatabase(IServiceProvider services)
 		{
-			
-			switch (GetStartupStrategy())
+			var settings = services.GetRequiredService<AppSettings>();
+			switch (settings.StartupStrategy())
 			{
 				case StartupStrategy.Minimal:
 					MinimalStrategy(services);
@@ -59,22 +58,6 @@ namespace TASVideos.Data
 					ImportStrategy(services);
 					break;
 			}
-		}
-
-		public static StartupStrategy GetStartupStrategy()
-		{
-			var strategy = Environment.GetEnvironmentVariable(EnvironmentVariables.StartupStrategy);
-			if (!string.IsNullOrWhiteSpace(strategy))
-			{
-				var result = Enum.TryParse(typeof(StartupStrategy), strategy, true, out object strategyObj);
-			
-				if (result)
-				{
-					return (StartupStrategy)strategyObj;
-				}
-			}
-
-			return StartupStrategy.Minimal;
 		}
 
 		private static void MinimalStrategy(IServiceProvider services)
