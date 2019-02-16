@@ -5,6 +5,9 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
 using TASVideos.Extensions;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
@@ -13,13 +16,22 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 	{
 		private static readonly object Sync = new object();
 		private static IrcBot _bot;
-		public IrcDistributor()
+
+		public IrcDistributor(
+			IOptions<AppSettings> settings,
+			ILogger<IrcDistributor> logger)
 		{
+			if (string.IsNullOrWhiteSpace(settings.Value.Irc.Password))
+			{
+				logger.Log(LogLevel.Warning, "Irc bot password not provided. Bot initialization skipped");
+				return;
+			}
+
 			lock (Sync)
 			{
 				if (_bot == null)
 				{
-					_bot = new IrcBot();
+					_bot = new IrcBot(settings.Value.Irc);
 				}
 			}
 		}
@@ -32,22 +44,14 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			_bot.AddMessage(s);
 		}
 
-		private class Settings
-		{
-			public string Server { get; } = "irc.freenode.net";
-			public int Port { get; } = 6667;
-			public string Nick { get; } = "TASVideosAgentD";
-			public string Channel { get; } = "#tasvideosdevirc";
-			public string Password { get; } = "6yR4Bh2NErzFYpby";
-		}
-
 		private class IrcBot
 		{
-			private readonly Settings _settings = new Settings();
+			private readonly AppSettings.IrcConnection _settings;
 			private readonly ConcurrentQueue<string> _work = new ConcurrentQueue<string>();
 
-			public IrcBot()
+			public IrcBot(AppSettings.IrcConnection settings)
 			{
+				_settings = settings;
 				Loop();
 			}
 

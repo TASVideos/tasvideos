@@ -12,7 +12,7 @@ namespace TASVideos
 
 		public Connections ConnectionStrings { get; set; } = new Connections();
 
-		public IrcConnection GeneralIrc { get; set; } = new IrcConnection();
+		public IrcConnection Irc { get; set; } = new IrcConnection();
 
 		public string StartupStrategy { get; set; }
 
@@ -20,8 +20,10 @@ namespace TASVideos
 		{
 			public string Server { get; set; }
 			public string Channel { get; set; }
+			public string SecureChannel { get; set; }
 			public int Port { get; set; }
-			public string BotName { get; set; }
+			public string Nick { get; set; }
+			public string Password { get; set; }
 		}
 
 		public class CacheSetting
