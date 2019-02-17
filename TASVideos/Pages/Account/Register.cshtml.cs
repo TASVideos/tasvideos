@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account
 {
@@ -21,19 +22,22 @@ namespace TASVideos.Pages.Account
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger _logger;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public RegisterModel(
 			ApplicationDbContext db,
 			UserManager userManager,
 			SignInManager<User> signInManager,
 			IEmailSender emailSender,
-			ILogger<RegisterModel> logger)
+			ILogger<RegisterModel> logger,
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailSender = emailSender;
 			_logger = logger;
+			_publisher = publisher;
 		}
 
 		[FromQuery]
@@ -97,7 +101,7 @@ namespace TASVideos.Pages.Account
 					_logger.LogInformation("User created a new account with password.");
 
 					await AddStandardRoles(user.Id);
-
+					_publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"{BaseUrl}/Users/Profile/{user.UserName}");
 					return RedirectToLocal(ReturnUrl);
 				}
 
