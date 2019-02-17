@@ -87,5 +87,17 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Link = link
 			});
 		}
+
+		public static void SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string link)
+		{
+			publisher.Send(new Post
+			{
+				Type = PostType.Administrative,
+				Group = PostGroups.UserManagement,
+				Title = title,
+				Body = body,
+				Link = link
+			});
+		}
 	}
 }

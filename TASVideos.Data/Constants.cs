@@ -60,6 +60,7 @@
 		public const string Forum = "Forum";
 		public const string Wiki = "Wiki";
 		public const string Submission = "Submission";
+		public const string UserManagement = "UserManagement";
 	}
 
 	// TODO: this is bootstrap specific, maybe it should go in the MVC project
