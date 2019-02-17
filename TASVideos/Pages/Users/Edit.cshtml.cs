@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Users.Models;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Users
 {
@@ -20,10 +21,14 @@ namespace TASVideos.Pages.Users
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ExternalMediaPublisher _publisher;
 
-		public EditModel(ApplicationDbContext db)
+		public EditModel(
+			ApplicationDbContext db,
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
+			_publisher = publisher;
 		}
 
 		[FromRoute]
@@ -75,7 +80,13 @@ namespace TASVideos.Pages.Users
 			user.Signature = UserToEdit.Signature;
 			user.Avatar = UserToEdit.Avatar;
 			
-			_db.UserRoles.RemoveRange(_db.UserRoles.Where(ur => ur.User == user));
+			var currentRoles = await _db.UserRoles
+				.Where(ur => ur.User == user)
+				.ToListAsync();
+
+			_db.UserRoles.RemoveRange(currentRoles);
+
+			// TODO: catch DbConcurrencyException
 			await _db.SaveChangesAsync();
 
 			_db.UserRoles.AddRange(UserToEdit.SelectedRoles
@@ -85,7 +96,36 @@ namespace TASVideos.Pages.Users
 					RoleId = r
 				}));
 
+			// TODO: catch DbConcurrencyException
 			await _db.SaveChangesAsync();
+
+			// Announce Role change
+			var allRoles = await _db.Roles.ToListAsync();
+			var currentRoleIds = currentRoles.Select(r => r.RoleId).ToList();
+			var newRoleIds = UserToEdit.SelectedRoles.ToList();
+			var addedRoles = allRoles
+				.Where(r => newRoleIds.Except(currentRoleIds).Contains(r.Id))
+				.Select(r => r.Name)
+				.ToList();
+			var removedRoles = allRoles
+				.Where(r => currentRoleIds.Except(newRoleIds).Contains(r.Id))
+				.Select(r => r.Name)
+				.ToList();
+			if (addedRoles.Any() || removedRoles.Any())
+			{
+				var message = $"user {user.UserName} roles modified by {User.Identity.Name},";
+				if (addedRoles.Any())
+				{
+					message += " added: " + string.Join(",", addedRoles);
+				}
+
+				if (removedRoles.Any())
+				{
+					message += " removed: " + string.Join(",", removedRoles);
+				}
+				
+				_publisher.SendUserManagement(message, "", $"{BaseUrl}/Users/Profile/{user.UserName}");
+			}
 
 			return RedirectToPage("List");
 		}
