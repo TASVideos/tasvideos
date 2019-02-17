@@ -8,3 +8,4 @@
 *.g.cs
 TASVideos/wwwroot/css/site.min.css
 TASVideos/CommonAssemblyInfo.cs
+TASVideos/appsettings.Demo.json
