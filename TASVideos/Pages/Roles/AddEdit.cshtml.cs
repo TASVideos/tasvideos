@@ -11,6 +11,7 @@ using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Roles.Models;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Roles
 {
@@ -18,10 +19,14 @@ namespace TASVideos.Pages.Roles
 	public class AddEditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ExternalMediaPublisher _publisher;
 
-		public AddEditModel(ApplicationDbContext db)
+		public AddEditModel(
+			ApplicationDbContext db,
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
+			_publisher = publisher;
 		}
 
 		[TempData]
@@ -133,6 +138,7 @@ namespace TASVideos.Pages.Roles
 				MessageType = Styles.Success;
 				Message = $"Role {Id}, deleted successfully.";
 				_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
+				_publisher.SendUserManagement($"Role {Id} deleted by {User.Identity.Name}", "", $"{BaseUrl}/Roles/List");
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
@@ -163,11 +169,14 @@ namespace TASVideos.Pages.Roles
 				_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == Id));
 				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role.Id == Id));
 				await _db.SaveChangesAsync();
+
+				_publisher.SendUserManagement($"Role {model.Name} updated by {User.Identity.Name}", "", $"{BaseUrl}/Roles/Index?role={model.Name}");
 			}
 			else
 			{
 				role = new Role();
 				_db.Roles.Attach(role);
+				_publisher.SendUserManagement($"New Role added: {model.Name} by {User.Identity.Name}", "", $"{BaseUrl}/Roles/Index?role={model.Name}");
 			}
 
 			role.Name = model.Name;
