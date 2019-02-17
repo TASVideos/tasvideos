@@ -42,6 +42,12 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public void Post(IPostable post)
 		{
+			// If proper credentials were not provided, the bot was never initialized
+			if (_bot == null)
+			{
+				return;
+			}
+
 			string channel = post.Type == PostType.Administrative
 				? _settings.SecureChannel
 				: _settings.Channel;
