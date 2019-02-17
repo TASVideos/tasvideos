@@ -195,7 +195,6 @@ namespace TASVideos.Services
 					Email = u.Email,
 					EmailConfirmed = u.EmailConfirmed,
 					Roles = u.UserRoles
-						.Where(ur => !ur.Role.IsDefault)
 						.Select(ur => new RoleBasicDisplay
 						{
 							Id = ur.RoleId,
