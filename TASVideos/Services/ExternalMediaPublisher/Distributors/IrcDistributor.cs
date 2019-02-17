@@ -16,11 +16,13 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 	{
 		private static readonly object Sync = new object();
 		private static IrcBot _bot;
+		private readonly AppSettings.IrcConnection _settings;
 
 		public IrcDistributor(
 			IOptions<AppSettings> settings,
 			ILogger<IrcDistributor> logger)
 		{
+			_settings = settings.Value.Irc;
 			if (string.IsNullOrWhiteSpace(settings.Value.Irc.Password))
 			{
 				logger.Log(LogLevel.Warning, "Irc bot password not provided. Bot initialization skipped");
@@ -31,17 +33,21 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			{
 				if (_bot == null)
 				{
-					_bot = new IrcBot(settings.Value.Irc);
+					_bot = new IrcBot(_settings);
 				}
 			}
 		}
 
-		public IEnumerable<PostType> Types => new[] { PostType.General, PostType.Announcement };
+		public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
 
 		public void Post(IPostable post)
 		{
+			string channel = post.Type == PostType.Administrative
+				? _settings.SecureChannel
+				: _settings.Channel;
+
 			var s = $"{post.Title.CapAndEllipse(100)} {post.Body.CapAndEllipse(100)} {post.Link}";
-			_bot.AddMessage(s);
+			_bot.AddMessage(channel, s);
 		}
 
 		private class IrcBot
@@ -55,9 +61,9 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				Loop();
 			}
 
-			public void AddMessage(string item)
+			public void AddMessage(string channel, string item)
 			{
-				_work.Enqueue(item);
+				_work.Enqueue($"PRIVMSG {channel} :{item}");
 			}
 
 			private async Task ConnectToServer()
@@ -96,7 +102,8 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 							switch (splitInput[1])
 							{
 								case "001":
-									await writer.WriteLineAsync("JOIN " + _settings.Channel);
+									var channels = $"{_settings.Channel},{_settings.SecureChannel}";
+									await writer.WriteLineAsync("JOIN " + channels);
 									await writer.FlushAsync();
 									break;
 							}
@@ -105,7 +112,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 						{
 							try
 							{
-								await writer.WriteLineAsync($"PRIVMSG {_settings.Channel} :{workItem}");
+								await writer.WriteLineAsync(workItem);
 								await writer.FlushAsync();
 							}
 							catch
