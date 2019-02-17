@@ -45,8 +45,8 @@ namespace TASVideos.Data
 
 		public static void InitializeDatabase(IServiceProvider services)
 		{
-			var settings = services.GetRequiredService<AppSettings>();
-			switch (settings.StartupStrategy())
+			var settings = services.GetRequiredService<IOptions<AppSettings>>();
+			switch (settings.Value.StartupStrategy())
 			{
 				case StartupStrategy.Minimal:
 					MinimalStrategy(services);
