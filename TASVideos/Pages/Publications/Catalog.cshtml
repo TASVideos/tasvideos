@@ -29,7 +29,7 @@
 						<span asp-validation-for="AvailableGames" class="text-danger"></span>
 					</div>
 					<div class="col-2">
-						<a asp-page="/Game/Edit" asp-route-id="" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()" class="btn btn-primary">New</a>
+						<button id="create-game" type="button" class="btn btn-primary">New</button>
 					</div>
 				</row>
 			</form-group>
@@ -152,6 +152,11 @@
 		document.getElementById('create-rom').onclick = function () {
 			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
 			document.location = '/Game/' + gameId + '/Rom/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()';
+		}
+
+		document.getElementById('create-game').onclick = function () {
+			var systemId = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)').value;
+			document.location = '/Game/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()&systemId=' + systemId;
 		}
 	})()
 </script>
