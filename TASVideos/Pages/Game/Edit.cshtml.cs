@@ -42,6 +42,9 @@ namespace TASVideos.Pages.Game
 		[FromQuery]
 		public string ReturnUrl { get; set; }
 
+		[FromQuery]
+		public int? SystemId { get; set; }
+
 		[BindProperty]
 		public GameEditModel Game { get; set; } = new GameEditModel();
 
@@ -60,6 +63,17 @@ namespace TASVideos.Pages.Game
 				if (Game == null)
 				{
 					return NotFound();
+				}
+			}
+			else if (SystemId.HasValue)
+			{
+				var systemCode = await _db.GameSystems
+					.Where(s => s.Id == SystemId)
+					.Select(s => s.Code)
+					.SingleOrDefaultAsync();
+				if (systemCode != null)
+				{
+					Game.SystemCode = systemCode;
 				}
 			}
 
