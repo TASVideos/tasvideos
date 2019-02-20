@@ -8,8 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Constants;
+using TASVideos.Data.Entity;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -17,10 +19,14 @@ namespace TASVideos.Pages.Submissions
 	public class ViewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IWikiPages _wikiPages;
 
-		public ViewModel(ApplicationDbContext db)
+		public ViewModel(
+			ApplicationDbContext db,
+			IWikiPages wikiPages)
 		{
 			_db = db;
+			_wikiPages = wikiPages;
 		}
 
 		[FromRoute]
@@ -94,6 +100,50 @@ namespace TASVideos.Pages.Submissions
 			}
 
 			return File(submissionFile, MediaTypeNames.Application.Octet, $"submission{Id}.zip");
+		}
+
+		public async Task<IActionResult> OnGetClaim()
+		{
+			if (!User.Has(PermissionTo.JudgeSubmissions))
+			{
+				return AccessDenied();
+			}
+
+			var submission = await _db.Submissions
+				.Include(s => s.WikiContent)
+				.SingleOrDefaultAsync(s => s.Id == Id);
+
+			if (submission == null)
+			{
+				return null;
+			}
+
+			if (submission.Status != SubmissionStatus.New)
+			{
+				return BadRequest("Submission can not be claimed");
+			}
+
+			submission.Status = SubmissionStatus.JudgingUnderWay;
+			var wikiPage = new WikiPage
+			{
+				PageName = submission.WikiContent.PageName,
+				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Identity.Name}]: Claiming for judging.",
+				RevisionMessage = "Claiming for judging"
+			};
+			submission.WikiContent = wikiPage;
+			submission.JudgeId = User.GetUserId();
+
+			try
+			{
+				await _wikiPages.Add(wikiPage);
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				// Assume the status changed and can no longer be claimed
+				return BadRequest("Submission can not be claimed");
+			}
+
+			return RedirectToPage("View", new { Id });
 		}
 	}
 }
