@@ -97,10 +97,11 @@ namespace TASVideos.Pages.Account
 					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
 					await _emailSender.SendEmailConfirmationAsync(Email, callbackUrl);
 
+					await AddStandardRoles(user.Id);
+					await _userManager.AddUserPermissionsToClaims(user);
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					_logger.LogInformation("User created a new account with password.");
 
-					await AddStandardRoles(user.Id);
 					_publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"{BaseUrl}/Users/Profile/{user.UserName}");
 					return RedirectToLocal(ReturnUrl);
 				}
