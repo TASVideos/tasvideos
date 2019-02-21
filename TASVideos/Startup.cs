@@ -42,7 +42,7 @@ namespace TASVideos
 			// 3rd Party
 			services
 				.AddMvcWithOptions()
-				.AddIdentity();
+				.AddIdentity(Environment);
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)

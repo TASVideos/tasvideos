@@ -117,11 +117,11 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddIdentity(this IServiceCollection services)
+		public static IServiceCollection AddIdentity(this IServiceCollection services, IHostingEnvironment env)
 		{
 			services.AddIdentity<User, Role>(config =>
 				{
-					config.SignIn.RequireConfirmedEmail = true;
+					config.SignIn.RequireConfirmedEmail = !env.IsDevelopment();
 					config.Password.RequiredLength = 12;
 					config.Password.RequireDigit = false;
 					config.Password.RequireLowercase = false;
