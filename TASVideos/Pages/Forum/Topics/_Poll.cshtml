@@ -6,7 +6,7 @@
 	if (User.Identity.IsAuthenticated)
 	{
 		userId = User.GetUserId();
-		canVote = !Model.Options.Any(o => o.Voters.Any(v => v == userId));
+		canVote = !Model.Options.Any(o => o.Voters.Any(v => v == userId)) && ViewData.UserHas(PermissionTo.VoteInPolls);
 	}
 }
 
