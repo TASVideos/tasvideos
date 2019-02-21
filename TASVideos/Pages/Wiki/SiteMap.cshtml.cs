@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Wiki
 			.GetTypes()
 			.Where(type => typeof(BasePageModel).IsAssignableFrom(type))
 			.Where(type => type != typeof(BasePageModel))
-			.Select(t => new Models.SiteMapEntry
+			.Select(t => new SiteMapEntry
 			{
 				PageName = t.Namespace
 					.Replace("TASVideos.Pages.", "")
