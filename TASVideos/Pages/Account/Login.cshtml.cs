@@ -59,26 +59,28 @@ namespace TASVideos.Pages.Account
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (ModelState.IsValid)
+			if (!ModelState.IsValid)
 			{
-				var result = await PasswordSignIn();
-
-				if (result.Succeeded)
-				{
-					var user = await _db.Users.SingleAsync(u => u.UserName == UserName);
-					user.LastLoggedInTimeStamp = DateTime.UtcNow;
-					await _db.SaveChangesAsync();
-
-					return RedirectToLocal(ReturnUrl);
-				}
-
-				if (result.IsLockedOut)
-				{
-					return RedirectToPage("/Account/Lockout");
-				}
-
-				ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+				return Page();
 			}
+
+			var result = await PasswordSignIn();
+
+			if (result.Succeeded)
+			{
+				var user = await _db.Users.SingleAsync(u => u.UserName == UserName);
+				user.LastLoggedInTimeStamp = DateTime.UtcNow;
+				await _db.SaveChangesAsync();
+
+				return RedirectToLocal(ReturnUrl);
+			}
+
+			if (result.IsLockedOut)
+			{
+				return RedirectToPage("/Account/Lockout");
+			}
+
+			ModelState.AddModelError(string.Empty, "Invalid login attempt.");
 
 			// If we got this far, something failed, redisplay form
 			return Page();

@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Models;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;

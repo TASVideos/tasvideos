@@ -1,6 +1,5 @@
 ﻿using TASVideos.Data;
 using TASVideos.Data.Constants;
-using TASVideos.Models;
 
 namespace TASVideos.Pages.Forum.Posts.Models
 {

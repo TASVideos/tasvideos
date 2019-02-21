@@ -51,24 +51,25 @@ namespace TASVideos.Pages.Account
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (ModelState.IsValid)
+			if (!ModelState.IsValid)
 			{
-				
-				var user = await _userManager.FindByEmailAsync(Email);
-				if (user == null)
-				{
-					// Don't reveal that the user does not exist
-					return RedirectToPage("ResetPasswordConfirmation");
-				}
-
-				var result = await _userManager.ResetPasswordAsync(user, Code, Password);
-				if (result.Succeeded)
-				{
-					return RedirectToPage("ResetPasswordConfirmation");
-				}
-
-				AddErrors(result);
+				return Page();
 			}
+
+			var user = await _userManager.FindByEmailAsync(Email);
+			if (user == null)
+			{
+				// Don't reveal that the user does not exist
+				return RedirectToPage("ResetPasswordConfirmation");
+			}
+
+			var result = await _userManager.ResetPasswordAsync(user, Code, Password);
+			if (result.Succeeded)
+			{
+				return RedirectToPage("ResetPasswordConfirmation");
+			}
+
+			AddErrors(result);
 
 			// If we got this far, something failed, redisplay form
 			return Page();

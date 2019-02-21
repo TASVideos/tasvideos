@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Models;
 using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Extensions

@@ -11,7 +11,6 @@ using Microsoft.Extensions.Options;
 using TASVideos.Data;
 using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Forum;
 using TASVideos.Models;
 
 namespace TASVideos.Services
