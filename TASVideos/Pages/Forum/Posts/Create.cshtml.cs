@@ -9,6 +9,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Services;
+using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Posts

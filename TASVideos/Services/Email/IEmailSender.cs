@@ -1,25 +1,22 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Options;
 
-namespace TASVideos.Services
+using SendGrid;
+using SendGrid.Helpers.Mail;
+
+namespace TASVideos.Services.Email
 {
-	// This class is used by the application to send email for account confirmation and password reset.
-	// For more details see https://go.microsoft.com/fwlink/?LinkID=532713
 	public interface IEmailSender
 	{
 		/// <summary>
 		/// Sends an email to the given email address,
 		/// with the given subject and message
 		/// </summary>
-		Task SendEmail(string email, string subject, string message);
+		Task SendEmail(IEmail email);
 
 		/// <summary>
 		/// Sends a topic reply notification email to the given email addresses
@@ -40,9 +37,9 @@ namespace TASVideos.Services
 			_env = environment;
 		}
 
-		public Task SendEmail(string email, string subject, string message)
+		public Task SendEmail(IEmail email)
 		{
-			return Execute(_settings.SendGridKey, subject, message, email);
+			return Execute(email);
 		}
 
 		public async Task SendTopicNotification(int postId, int topicId, string topicTitle, string baseUrl, IEnumerable<string> emailAddresses)
@@ -64,22 +61,24 @@ If you no longer wish to watch this topic you can either click the ""Stop watchi
 
 {baseUrl}/Forum/Topics/20848?handler=Unwatch";
 
-			string email = "adelikat@tasvideos.org";
-			// TODO: Task.WhenAll, or WhenAny
-			//foreach (var email in emailAddresses)
-			//{
-				await Execute(_settings.SendGridKey, subject, message, email);
-			//}
+			await Execute(new StandardEmail
+			{
+				Recipients = new[] { "adelikat@tasvideos.org" }, // TODO: hardcoding this for now to avoid accidental spam
+				Subject = subject,
+				Message = message
+			});
 		}
 
-		private Task Execute(string apiKey, string subject, string message, string email)
+		private Task Execute(IEmail email)
 		{
+			string apiKey = _settings.SendGridKey;
 			if (string.IsNullOrWhiteSpace(_settings.SendGridKey))
 			{
 				return Task.CompletedTask;
 			}
 
 			string from = "noreply";
+			string subject = email.Subject;
 			if (!_env.IsProduction())
 			{
 				from = $"TASVideos {_env.EnvironmentName} environment {from}";
@@ -91,10 +90,14 @@ If you no longer wish to watch this topic you can either click the ""Stop watchi
 			{
 				From = new EmailAddress(_settings.SendGridFrom, from),
 				Subject = subject,
-				PlainTextContent = message,
-				HtmlContent = message
+				PlainTextContent = email.Message,
+				HtmlContent = email.Message
 			};
-			msg.AddTo(new EmailAddress(email));
+
+			foreach (var recipient in email.Recipients)
+			{
+				msg.AddTo(new EmailAddress(recipient));
+			}
 
 			// Disable click tracking.
 			// See https://sendgrid.com/docs/User_Guide/Settings/tracking.html

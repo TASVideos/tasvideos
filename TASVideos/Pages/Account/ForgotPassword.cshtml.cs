@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using TASVideos.Services;
+using TASVideos.Services.Email;
 
 namespace TASVideos.Pages.Account
 {
@@ -39,10 +40,13 @@ namespace TASVideos.Pages.Account
 
 				var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 				var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, Request.Scheme);
-				await _emailSender.SendEmail(
-					Email,
-					"Reset Password",
-				   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+				await _emailSender.SendEmail(new SingleEmail
+				{
+					Recipient = Email,
+					Subject = "Reset Password",
+					Message = $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>"
+				});
+
 				return RedirectToPage("ForgotPasswordConfirmation");
 			}
 

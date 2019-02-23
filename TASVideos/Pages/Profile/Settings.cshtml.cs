@@ -10,6 +10,7 @@ using TASVideos.Data;
 using TASVideos.Models;
 using TASVideos.Pages.Profile.Models;
 using TASVideos.Services;
+using TASVideos.Services.Email;
 
 namespace TASVideos.Pages.Profile
 {
