@@ -24,7 +24,7 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Sends a topic reply notification email to the given email addresses
 		/// </summary>
-		Task SendTopicNotification(IEnumerable<string> emailAddresses);
+		Task SendTopicNotification(int postId, int topicId, string topicTitle, string baseUrl, IEnumerable<string> emailAddresses);
 	}
 
 	public class EmailSender : IEmailSender
@@ -45,10 +45,24 @@ namespace TASVideos.Services
 			return Execute(_settings.SendGridKey, subject, message, email);
 		}
 
-		public async Task SendTopicNotification(IEnumerable<string> emailAddresses)
+		public async Task SendTopicNotification(int postId, int topicId, string topicTitle, string baseUrl, IEnumerable<string> emailAddresses)
 		{
-			string subject = "Topic Reply Notification - EZGAmes69 situation";
-			string message = "http://tasvideos.org/forum/viewtopic.php?p=481568#481568";
+			string siteName = "TASVideos";
+			if (!_env.IsProduction())
+			{
+				siteName += $" - {_env.EnvironmentName} environment";
+			}
+
+			string subject = "Topic Reply Notification - " + topicTitle;
+			string message = $@"Hello,
+
+You are receiving this email because you are watching the topic, ""{topicTitle}"" at {siteName}. This topic has received a reply since your last visit. You can use the following link to view the replies made, no more notifications will be sent until you visit the topic.
+
+{baseUrl}/Forum/p/{postId}#{postId}
+
+If you no longer wish to watch this topic you can either click the ""Stop watching this topic link"" found at the top of the topic above, or by clicking the following link:
+
+{baseUrl}/Forum/Topics/20848?handler=Unwatch";
 
 			string email = "adelikat@tasvideos.org";
 			// TODO: Task.WhenAll, or WhenAny
