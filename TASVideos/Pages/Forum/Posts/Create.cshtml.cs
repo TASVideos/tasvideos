@@ -141,6 +141,7 @@ namespace TASVideos.Pages.Forum.Posts
 				.Where(w => !w.IsNotified)
 				.ToListAsync();
 
+			await _emailSender.SendTopicNotification(new [] { "adelikat@tasvideos.org" });
 			if (watches.Any())
 			{
 				await _emailSender.SendTopicNotification(watches.Select(w => w.User.Email));
