@@ -7,6 +7,8 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Hosting;
+
 namespace TASVideos.Services
 {
 	// This class is used by the application to send email for account confirmation and password reset.
@@ -28,9 +30,14 @@ namespace TASVideos.Services
 	public class EmailSender : IEmailSender
 	{
 		private readonly AppSettings _settings;
-		public EmailSender(IOptions<AppSettings> settings)
+		private readonly IHostingEnvironment _env;
+
+		public EmailSender(
+			IHostingEnvironment environment,
+			IOptions<AppSettings> settings)
 		{
 			_settings = settings.Value;
+			_env = environment;
 		}
 
 		public Task SendEmail(string email, string subject, string message)
@@ -58,10 +65,17 @@ namespace TASVideos.Services
 				return Task.CompletedTask;
 			}
 
-			var client = new SendGridClient(apiKey);
-			var msg = new SendGridMessage()
+			string from = "noreply";
+			if (!_env.IsProduction())
 			{
-				From = new EmailAddress(_settings.SendGridFrom, "noreply"),
+				from = $"TASVideos {_env.EnvironmentName} environment {from}";
+				subject = $"TASVideos {_env.EnvironmentName} environment - {subject}";
+			}
+
+			var client = new SendGridClient(apiKey);
+			var msg = new SendGridMessage
+			{
+				From = new EmailAddress(_settings.SendGridFrom, from),
 				Subject = subject,
 				PlainTextContent = message,
 				HtmlContent = message
