@@ -16,6 +16,7 @@ using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
 using TASVideos.Services;
+using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
 

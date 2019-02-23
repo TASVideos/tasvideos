@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
+using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account
