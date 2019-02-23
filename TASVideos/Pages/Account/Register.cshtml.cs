@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Account
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager _userManager;
 		private readonly SignInManager<User> _signInManager;
-		private readonly IEmailSender _emailSender;
+		private readonly IEmailService _emailService;
 		private readonly ILogger _logger;
 		private readonly ExternalMediaPublisher _publisher;
 
@@ -29,14 +29,14 @@ namespace TASVideos.Pages.Account
 			ApplicationDbContext db,
 			UserManager userManager,
 			SignInManager<User> signInManager,
-			IEmailSender emailSender,
+			IEmailService emailService,
 			ILogger<RegisterModel> logger,
 			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
-			_emailSender = emailSender;
+			_emailService = emailService;
 			_logger = logger;
 			_publisher = publisher;
 		}
@@ -96,7 +96,7 @@ namespace TASVideos.Pages.Account
 
 					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
-					await _emailSender.SendEmailConfirmationAsync(Email, callbackUrl);
+					await _emailService.EmailConfirmation(Email, callbackUrl);
 
 					await AddStandardRoles(user.Id);
 					await _userManager.AddUserPermissionsToClaims(user);

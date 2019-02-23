@@ -14,12 +14,12 @@ namespace TASVideos.Pages.Account
 	public class ForgotPasswordModel : PageModel
 	{
 		private readonly UserManager _userManager;
-		private readonly IEmailSender _emailSender;
+		private readonly IEmailService _emailService;
 
-		public ForgotPasswordModel(UserManager userManager, IEmailSender emailSender)
+		public ForgotPasswordModel(UserManager userManager, IEmailService emailService)
 		{
 			_userManager = userManager;
-			_emailSender = emailSender;
+			_emailService = emailService;
 		}
 
 		[BindProperty]
@@ -40,12 +40,7 @@ namespace TASVideos.Pages.Account
 
 				var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 				var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, Request.Scheme);
-				await _emailSender.SendEmail(new SingleEmail
-				{
-					Recipient = Email,
-					Subject = "Reset Password",
-					Message = $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>"
-				});
+				await _emailService.ResetPassword(Email, callbackUrl);
 
 				return RedirectToPage("ForgotPasswordConfirmation");
 			}

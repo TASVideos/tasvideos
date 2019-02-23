@@ -79,6 +79,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<IPointsCalculator, PointsCalculator>();
 			services.AddScoped<IAwardsCache, AwardsCache>();
 			services.AddTransient<IEmailSender, EmailSender>();
+			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IWikiPages, WikiPages>();
 
 			return services;
