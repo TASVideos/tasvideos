@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Account
 
 				var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 				var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, Request.Scheme);
-				await _emailSender.SendEmailAsync(
+				await _emailSender.SendEmail(
 					Email,
 					"Reset Password",
 				   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");

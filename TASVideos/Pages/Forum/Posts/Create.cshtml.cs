@@ -19,18 +19,18 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly UserManager _userManager;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ApplicationDbContext _db;
-		private readonly IEmailService _emailService;
+		private readonly IEmailSender _emailSender;
 
 		public CreateModel(
 			UserManager userManager,
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
-			IEmailService emailService)
+			IEmailSender emailSender)
 			: base(db)
 		{
 			_userManager = userManager;
 			_publisher = publisher;
-			_emailService = emailService;
+			_emailSender = emailSender;
 			_db = db;
 		}
 
@@ -143,7 +143,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (watches.Any())
 			{
-				await _emailService.SendTopicNotification(watches.Select(w => w.User.Email));
+				await _emailSender.SendTopicNotification(watches.Select(w => w.User.Email));
 
 				foreach (var watch in watches)
 				{

@@ -7,7 +7,7 @@ namespace TASVideos.Services
 	{
 		public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
 		{
-			return emailSender.SendEmailAsync(
+			return emailSender.SendEmail(
 				email,
 				"Confirm your email",
 				$"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>");
