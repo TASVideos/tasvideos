@@ -2,17 +2,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "npm install",
-            "command": "npm",
-            "type": "shell",
-            "args": [
-                "install"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/TASVideos"
-            }
-        },
-        {
             "label": "build",
             "command": "dotnet",
             "type": "process",
