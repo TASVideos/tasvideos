@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -17,6 +18,7 @@ namespace TASVideos.Legacy
 		private static readonly Dictionary<string, long> ImportDurations = new Dictionary<string, long>();
 
 		public static void RunLegacyImport(
+			IHostingEnvironment env,
 			ApplicationDbContext context,
 			string connectionStr,
 			NesVideosSiteContext legacySiteContext,
@@ -42,7 +44,12 @@ namespace TASVideos.Legacy
 			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, context, legacyForumContext));
 			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(connectionStr, context, legacyForumContext));
 			Run("Forum Polls", () => ForumPollImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(connectionStr, context, legacyForumContext));
+
+			// We don't want to copy these to other environments, as they can cause users to get unwanted emails
+			if (env.IsProduction())
+			{
+				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(connectionStr, context, legacyForumContext));
+			}
 
 			Run("Wiki", () => WikiImporter.Import(connectionStr, context, legacySiteContext));
 			Run("Submissions", () => SubmissionImporter.Import(connectionStr, context, legacySiteContext));
