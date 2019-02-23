@@ -72,13 +72,22 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddServices(this IServiceCollection services)
+		public static IServiceCollection AddServices(this IServiceCollection services, IHostingEnvironment env)
 		{
 			services.AddScoped<UserManager>();
 			services.AddScoped<IFileService, FileService>();
 			services.AddScoped<IPointsCalculator, PointsCalculator>();
 			services.AddScoped<IAwardsCache, AwardsCache>();
-			services.AddTransient<IEmailSender, EmailSender>();
+
+			if (env.IsDevelopment())
+			{
+				services.AddTransient<IEmailSender, EmailLogger>();
+			}
+			else
+			{
+				services.AddTransient<IEmailSender, EmailSender>();
+			}
+
 			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IWikiPages, WikiPages>();
 
