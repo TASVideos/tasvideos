@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -22,7 +21,6 @@ namespace TASVideos.Pages.Account
 		private readonly UserManager _userManager;
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailService _emailService;
-		private readonly ILogger _logger;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public RegisterModel(
@@ -30,14 +28,12 @@ namespace TASVideos.Pages.Account
 			UserManager userManager,
 			SignInManager<User> signInManager,
 			IEmailService emailService,
-			ILogger<RegisterModel> logger,
 			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailService = emailService;
-			_logger = logger;
 			_publisher = publisher;
 		}
 
@@ -92,8 +88,6 @@ namespace TASVideos.Pages.Account
 				var result = await _userManager.CreateAsync(user, Password);
 				if (result.Succeeded)
 				{
-					_logger.LogInformation("User created a new account with password.");
-
 					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
 					await _emailService.EmailConfirmation(Email, callbackUrl);
@@ -101,7 +95,6 @@ namespace TASVideos.Pages.Account
 					await AddStandardRoles(user.Id);
 					await _userManager.AddUserPermissionsToClaims(user);
 					await _signInManager.SignInAsync(user, isPersistent: false);
-					_logger.LogInformation("User created a new account with password.");
 
 					_publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"{BaseUrl}/Users/Profile/{user.UserName}");
 					return RedirectToLocal(ReturnUrl);
