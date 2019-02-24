@@ -138,7 +138,7 @@ namespace TASVideos.Pages.Forum.Posts
 			var watches = await _db.ForumTopicWatches
 				.Include(w => w.User)
 				.Where(w => w.ForumTopicId == TopicId)
-				//.Where(w => w.UserId != user.Id) // TODO: temp testing
+				.Where(w => w.UserId != user.Id)
 				.Where(w => !w.IsNotified)
 				.ToListAsync();
 

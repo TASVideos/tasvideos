@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Account
 {
-	[Authorize]
 	public class ResetPasswordModel : BasePageModel
 	{
 		private readonly UserManager _userManager;
