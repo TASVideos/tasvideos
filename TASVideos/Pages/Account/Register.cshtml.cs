@@ -88,14 +88,18 @@ namespace TASVideos.Pages.Account
 				var result = await _userManager.CreateAsync(user, Password);
 				if (result.Succeeded)
 				{
-					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
-					await _emailService.EmailConfirmation(Email, callbackUrl);
-
 					await AddStandardRoles(user.Id);
 					await _userManager.AddUserPermissionsToClaims(user);
-					await _signInManager.SignInAsync(user, isPersistent: false);
 
+					if (_userManager.Options.SignIn.RequireConfirmedEmail)
+					{
+						var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+						var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
+						await _emailService.EmailConfirmation(Email, callbackUrl);
+						return RedirectToPage("EmailConfirmationSent");
+					}
+
+					await _signInManager.SignInAsync(user, isPersistent: false);
 					_publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"{BaseUrl}/Users/Profile/{user.UserName}");
 					return RedirectToLocal(ReturnUrl);
 				}
@@ -103,7 +107,6 @@ namespace TASVideos.Pages.Account
 				AddErrors(result);
 			}
 
-			// If we got this far, something failed, redisplay form
 			return Page();
 		}
 
