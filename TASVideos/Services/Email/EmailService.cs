@@ -67,7 +67,11 @@ You are receiving this email because you are watching the topic, ""{template.Top
 
 If you no longer wish to watch this topic you can either click the ""Stop watching this topic link"" found at the top of the topic above, or by clicking the following link:
 
-{template.BaseUrl}/Forum/Topics/20848?handler=Unwatch";
+{template.BaseUrl}/Forum/Topics/20848?handler=Unwatch
+
+--
+Thanks,
+on behalf of TASVideos staff";
 
 			await _emailSender.SendEmail(new StandardEmail
 			{
