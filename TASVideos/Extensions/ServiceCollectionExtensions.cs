@@ -85,7 +85,7 @@ namespace TASVideos.Extensions
 			}
 			else
 			{
-				services.AddTransient<IEmailSender, EmailSender>();
+				services.AddTransient<IEmailSender, SendGridSender>();
 			}
 
 			services.AddTransient<IEmailService, EmailService>();
