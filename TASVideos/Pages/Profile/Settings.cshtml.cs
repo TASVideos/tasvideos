@@ -10,6 +10,7 @@ using TASVideos.Data;
 using TASVideos.Models;
 using TASVideos.Pages.Profile.Models;
 using TASVideos.Services;
+using TASVideos.Services.Email;
 
 namespace TASVideos.Pages.Profile
 {
@@ -17,16 +18,16 @@ namespace TASVideos.Pages.Profile
 	public class SettingsModel : BasePageModel
 	{
 		private readonly UserManager _userManager;
-		private readonly IEmailSender _emailSender;
+		private readonly IEmailService _emailService;
 		private readonly ApplicationDbContext _db;
 
 		public SettingsModel(
 			UserManager userManager,
-			IEmailSender emailSender,
+			IEmailService emailService,
 			ApplicationDbContext db)
 		{
 			_userManager = userManager;
-			_emailSender = emailSender;
+			_emailService = emailService;
 			_db = db;
 		}
 
@@ -106,8 +107,7 @@ namespace TASVideos.Pages.Profile
 
 			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
-			var email = user.Email;
-			await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
+			await _emailService.EmailConfirmation(user.Email, callbackUrl);
 
 			StatusMessage = "Verification email sent. Please check your email.";
 			return RedirectToPage("Settings");

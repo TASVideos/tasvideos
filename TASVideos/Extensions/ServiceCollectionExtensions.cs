@@ -16,6 +16,7 @@ using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
 using TASVideos.Services;
+using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
 
@@ -71,13 +72,23 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddServices(this IServiceCollection services)
+		public static IServiceCollection AddServices(this IServiceCollection services, IHostingEnvironment env)
 		{
 			services.AddScoped<UserManager>();
 			services.AddScoped<IFileService, FileService>();
 			services.AddScoped<IPointsCalculator, PointsCalculator>();
 			services.AddScoped<IAwardsCache, AwardsCache>();
-			services.AddTransient<IEmailSender, EmailSender>();
+
+			if (env.IsDevelopment())
+			{
+				services.AddTransient<IEmailSender, EmailLogger>();
+			}
+			else
+			{
+				services.AddTransient<IEmailSender, SendGridSender>();
+			}
+
+			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IWikiPages, WikiPages>();
 
 			return services;

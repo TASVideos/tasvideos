@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
+using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account
@@ -20,23 +20,20 @@ namespace TASVideos.Pages.Account
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager _userManager;
 		private readonly SignInManager<User> _signInManager;
-		private readonly IEmailSender _emailSender;
-		private readonly ILogger _logger;
+		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public RegisterModel(
 			ApplicationDbContext db,
 			UserManager userManager,
 			SignInManager<User> signInManager,
-			IEmailSender emailSender,
-			ILogger<RegisterModel> logger,
+			IEmailService emailService,
 			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
-			_emailSender = emailSender;
-			_logger = logger;
+			_emailService = emailService;
 			_publisher = publisher;
 		}
 
@@ -91,17 +88,18 @@ namespace TASVideos.Pages.Account
 				var result = await _userManager.CreateAsync(user, Password);
 				if (result.Succeeded)
 				{
-					_logger.LogInformation("User created a new account with password.");
-
-					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
-					await _emailSender.SendEmailConfirmationAsync(Email, callbackUrl);
-
 					await AddStandardRoles(user.Id);
 					await _userManager.AddUserPermissionsToClaims(user);
-					await _signInManager.SignInAsync(user, isPersistent: false);
-					_logger.LogInformation("User created a new account with password.");
 
+					if (_userManager.Options.SignIn.RequireConfirmedEmail)
+					{
+						var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+						var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
+						await _emailService.EmailConfirmation(Email, callbackUrl);
+						return RedirectToPage("EmailConfirmationSent");
+					}
+
+					await _signInManager.SignInAsync(user, isPersistent: false);
 					_publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"{BaseUrl}/Users/Profile/{user.UserName}");
 					return RedirectToLocal(ReturnUrl);
 				}
@@ -109,7 +107,6 @@ namespace TASVideos.Pages.Account
 				AddErrors(result);
 			}
 
-			// If we got this far, something failed, redisplay form
 			return Page();
 		}
 
