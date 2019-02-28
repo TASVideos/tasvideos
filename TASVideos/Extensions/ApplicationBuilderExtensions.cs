@@ -44,22 +44,31 @@ namespace TASVideos.Extensions
 
 			// Browsers seem terrible at this, and this behaves terribly
 			// Query strings seem to not be taken into account for instance
-			//app.Use(async (context, next) =>
-			//{
-			//	if (!context.User.Identity.IsAuthenticated)
-			//	{
-			//		context.Response.GetTypedHeaders().CacheControl =
-			//			new Microsoft.Net.Http.Headers.CacheControlHeaderValue
-			//			{
-			//				Public = true,
-			//				MaxAge = TimeSpan.FromSeconds(30)
-			//			};
-			//		context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
-			//			new[] { "Accept-Encoding" };
-			//	}
+			app.Use(async (context, next) =>
+			{
+				////if (!context.User.Identity.IsAuthenticated)
+				////{
+				////	context.Response.GetTypedHeaders().CacheControl =
+				////		new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+				////		{
+				////			Public = true,
+				////			MaxAge = TimeSpan.FromSeconds(30)
+				////		};
+				////	context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+				////		new[] { "Accept-Encoding" };
+				////}
 
-			//	await next();
-			//});
+				context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+				context.Response.Headers["Referrer-Policy"] = "origin-when-cross-origin";
+				context.Response.Headers["x-powered-by"] = "";
+
+				// TODO: also add in cdn urls, and styles
+				// Also consider images, though that is more complicated because of avatars
+				////string baseUrl = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.PathBase}";
+				////context.Response.Headers["Content-Security-Policy"] = $"script-src {baseUrl}";
+
+				await next();
+			});
 
 			app.UseMvc();
 
