@@ -16,6 +16,9 @@ namespace TASVideos
 
 		public string StartupStrategy { get; set; }
 
+		public string SendGridKey { get; set; }
+		public string SendGridFrom { get; set; }
+
 		public class IrcConnection
 		{
 			public string Server { get; set; }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -79,6 +81,7 @@ namespace TASVideos.Data
 
 		private static void ImportStrategy(IServiceProvider services)
 		{
+			var env = services.GetRequiredService<IHostingEnvironment>();
 			var context = services.GetRequiredService<ApplicationDbContext>();
 			var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
 			var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
@@ -87,7 +90,7 @@ namespace TASVideos.Data
 
 			Initialize(context);
 			PreMigrateSeedData(context);
-			LegacyImporter.RunLegacyImport(context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);
+			LegacyImporter.RunLegacyImport(env, context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);
 			PostMigrateSeedData(context);
 			GenerateDevTestUsers(context, userManager).Wait();
 		}

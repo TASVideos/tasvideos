@@ -9,6 +9,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Services;
+using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Posts
@@ -19,18 +20,18 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly UserManager _userManager;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ApplicationDbContext _db;
-		private readonly IEmailSender _emailSender;
+		private readonly IEmailService _emailService;
 
 		public CreateModel(
 			UserManager userManager,
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
-			IEmailSender emailSender)
+			IEmailService emailService)
 			: base(db)
 		{
 			_userManager = userManager;
 			_publisher = publisher;
-			_emailSender = emailSender;
+			_emailService = emailService;
 			_db = db;
 		}
 
@@ -143,7 +144,16 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (watches.Any())
 			{
-				await _emailSender.SendTopicNotification(watches.Select(w => w.User.Email));
+				await _emailService
+					.TopicReplyNotification(
+						watches.Select(w => w.User.Email),
+						new TopicReplyNotificationTemplate
+						{
+							PostId = id,
+							TopicId = topic.Id,
+							TopicTitle = topic.Title,
+							BaseUrl = BaseUrl
+						});
 
 				foreach (var watch in watches)
 				{
