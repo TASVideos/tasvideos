@@ -20,13 +20,14 @@ namespace TASVideos.Services.Email
 
 	/// <summary>
 	/// Standard implementation of <see cref="IEmailSender"/>
+	/// that uses SendGrid
 	/// </summary>
-	public class EmailSender : IEmailSender
+	public class SendGridSender : IEmailSender
 	{
 		private readonly AppSettings _settings;
 		private readonly IHostingEnvironment _env;
 
-		public EmailSender(
+		public SendGridSender(
 			IHostingEnvironment environment,
 			IOptions<AppSettings> settings)
 		{
@@ -66,12 +67,10 @@ namespace TASVideos.Services.Email
 
 			foreach (var recipient in email.Recipients)
 			{
-				////msg.AddTo(new EmailAddress(recipient));
-				msg.AddTo(new EmailAddress("adelikat@tasvideos.org")); // TODO: for now to avoid accidental spam
+				msg.AddTo(new EmailAddress(recipient));
 			}
 
-			// Disable click tracking.
-			// See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
+			// Disable click tracking. See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
 			msg.SetClickTracking(false, false);
 
 			return client.SendEmailAsync(msg);
