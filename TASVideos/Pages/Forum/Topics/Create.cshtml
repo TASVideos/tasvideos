@@ -1,10 +1,24 @@
-﻿@page "{forumId}"
+﻿@page "{forumId}/{handler?}"
 @model CreateModel
 @{
 	ViewData["Title"] = $"Creating topic for: {Model.Topic.ForumName}";
+	var blah = User.Has(PermissionTo.CreateForumPolls);
 }
 <partial Name="_ForumHeader" />
 <h4>Creating topic for: <a asp-page="/Forum/Subforum" asp-route-id="@Model.ForumId">@Model.Topic.ForumName</a></h4>
+
+<div permission="CreateForumPolls" class="text-right">
+	<button id="add-poll-btn" class="btn btn-primary">Add Poll</button>
+	<script>
+		var addPollBtn = document.getElementById('add-poll-btn');
+		var pollContainer = document.getElementById('poll-container');
+		addPollBtn.classList.add('d-none');
+		pollContainer.classList.remove('d-none');
+	</script>
+	<div id="poll-container" class="d-none">
+		<partial name="_PollCreate" model="new PollCreateModel()" />
+	</div>
+</div>
 
 <form method="post">
 	<input type="hidden" asp-for="Topic.ForumName" />
