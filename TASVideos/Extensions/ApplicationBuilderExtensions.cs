@@ -65,7 +65,9 @@ namespace TASVideos.Extensions
 				// TODO: also add in cdn urls, and styles
 				// Also consider images, though that is more complicated because of avatars
 				////string baseUrl = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.PathBase}";
-				////context.Response.Headers["Content-Security-Policy"] = $"script-src {baseUrl}";
+				////var scriptSrc = $"script-src 'unsafe-inline' {baseUrl} https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com";
+				////var styleSrc = $"style-src 'unsafe-inline' {baseUrl} https://cdnjs.cloudflare.com https://use.fontawesome.com";
+				////context.Response.Headers["Content-Security-Policy"] = $"{scriptSrc}; {styleSrc}";
 
 				await next();
 			});
