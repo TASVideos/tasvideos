@@ -39,6 +39,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Content Update="Pages\Forum\Topics\_PollCreate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\Shared\_Ratings.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
