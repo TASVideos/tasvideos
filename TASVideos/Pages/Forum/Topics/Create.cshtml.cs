@@ -55,7 +55,7 @@ namespace TASVideos.Pages.Forum.Topics
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPost()
+		public async Task<IActionResult> OnPost(PollCreateModel poll)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -95,6 +95,11 @@ namespace TASVideos.Pages.Forum.Topics
 			};
 
 			await CreatePost(topic.Id, forumPostModel, userId, IpAddress.ToString());
+
+			if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
+			{
+				int zzz = 0;
+			}
 
 			//// TODO: auto-add topic permission based on post count, also ability to vote
 			
