@@ -108,3 +108,17 @@ h1 {
 .hiddenifmodule {
 	display: none;
 }
+
+.error-marker {
+	position: relative;
+	border: 2px solid #c00;
+}
+
+	.error-marker span {
+		position: absolute;
+		background-color: white;
+		padding: 4px;
+		border: 1px solid #c00;
+		color: #c00;
+		bottom: 13px;
+	}
