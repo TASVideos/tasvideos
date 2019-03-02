@@ -122,3 +122,19 @@ h1 {
 		color: #c00;
 		bottom: 13px;
 	}
+
+.embed {
+	border: 0
+}
+
+.embedleft {
+	margin-right: 10px;
+	border: 0;
+	float: left
+}
+
+.embedright {
+	margin-left: 10px;
+	border: 0;
+	float: right
+} 
