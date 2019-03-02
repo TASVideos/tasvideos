@@ -78,7 +78,7 @@ namespace TASVideos.ViewComponents
 					Screenshot = p.Files.FirstOrDefault(f => f.Type == FileType.Screenshot).Path,
 					OnlineWatchingUrl = p.OnlineWatchingUrl,
 				})
-				.SingleAsync(p => p.Id == id);
+				.SingleOrDefaultAsync(p => p.Id == id);
 		}
 	}
 }
