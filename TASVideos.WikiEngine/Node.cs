@@ -245,7 +245,8 @@ namespace TASVideos.WikiEngine.AST
 			["awards"] = "Awards",
 			["usermovies"] = "UserMovies",
 			["mediaposts"] = "MediaPosts",
-			["supportedmovietypes"] = "SupportedMovieTypes"
+			["supportedmovietypes"] = "SupportedMovieTypes",
+			["welcome"] = "Welcome"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }

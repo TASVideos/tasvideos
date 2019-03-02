@@ -15,7 +15,7 @@ namespace TASVideos.TagHelpers
 	{
 		private readonly IViewComponentHelper _viewComponentHelper;
 
-		public WikiMarkup(IHtmlHelper htmlHelper, IViewComponentHelper viewComponentHelper)
+		public WikiMarkup(IViewComponentHelper viewComponentHelper)
 		{
 			_viewComponentHelper = viewComponentHelper;
 		}

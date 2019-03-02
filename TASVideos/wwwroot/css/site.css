@@ -108,3 +108,33 @@ h1 {
 .hiddenifmodule {
 	display: none;
 }
+
+.error-marker {
+	position: relative;
+	border: 2px solid #c00;
+}
+
+	.error-marker span {
+		position: absolute;
+		background-color: white;
+		padding: 4px;
+		border: 1px solid #c00;
+		color: #c00;
+		bottom: 13px;
+	}
+
+.embed {
+	border: 0
+}
+
+.embedleft {
+	margin-right: 10px;
+	border: 0;
+	float: left
+}
+
+.embedright {
+	margin-left: 10px;
+	border: 0;
+	float: right
+} 
