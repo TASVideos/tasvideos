@@ -7,5 +7,8 @@ namespace TASVideos.Pages.Diagnostics
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class IndexModel : PageModel
 	{
+		public void OnGet()
+		{
+		}
 	}
 }
