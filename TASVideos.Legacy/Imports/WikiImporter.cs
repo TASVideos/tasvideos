@@ -170,7 +170,6 @@ namespace TASVideos.Legacy.Imports
 
 			if (st.PageName == "FrontPage")
 			{
-				markup = markup.Replace("[module:welcome]", "");
 				markup = markup.Replace("!! Featured Movie", "");
 			}
 			else if (st.PageName == "Awards")
