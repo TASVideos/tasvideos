@@ -9,7 +9,7 @@
 		</form-group>
 		<form-group>
 			<label asp-for="DaysOpen"></label>
-			<input asp-for="DaysOpen" type="number" maxlength="3" class="form-control" placeholder="@Html.DescriptionFor(m => m.DaysOpen)" />
+			<input asp-for="DaysOpen" type="number" min="0" max="365" class="form-control" placeholder="@Html.DescriptionFor(m => m.DaysOpen)" />
 			<span asp-validation-for="DaysOpen" class="text-danger"></span>
 		</form-group>
 		<form-group>
