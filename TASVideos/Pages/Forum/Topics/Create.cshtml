@@ -2,25 +2,48 @@
 @model CreateModel
 @{
 	ViewData["Title"] = $"Creating topic for: {Model.Topic.ForumName}";
-	var blah = User.Has(PermissionTo.CreateForumPolls);
 }
 <partial Name="_ForumHeader" />
 <h4>Creating topic for: <a asp-page="/Forum/Subforum" asp-route-id="@Model.ForumId">@Model.Topic.ForumName</a></h4>
 
-<div permission="CreateForumPolls" class="text-right">
-	<button id="add-poll-btn" class="btn btn-primary">Add Poll</button>
-	<script>
-		var addPollBtn = document.getElementById('add-poll-btn');
-		var pollContainer = document.getElementById('poll-container');
-		addPollBtn.classList.add('d-none');
-		pollContainer.classList.remove('d-none');
-	</script>
-	<div id="poll-container" class="d-none">
-		<partial name="_PollCreate" model="new PollCreateModel()" />
-	</div>
-</div>
 
 <form method="post">
+	<div permission="CreateForumPolls">
+		<button id="add-poll-btn" type="button" class="btn btn-primary">Add Poll</button>
+		<div id="poll-container" class="alert alert-dark d-none">
+			<button id="poll-close" type="button" class="close" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4>Poll</h4>
+			<partial name="_PollCreate" model="new PollCreateModel()" />
+		</div>
+		<script>
+			(function () {
+				var pollContainer = document.getElementById('poll-container');
+				document.getElementById('add-poll-btn').onclick = function () {
+					document.getElementById('add-poll-btn').classList.add('d-none');
+					pollContainer.classList.remove('d-none');
+					pollContainer.querySelectorAll('input')
+						.toArray()
+						.forEach(function (elem) {
+							elem.disabled = false;
+						});
+				}
+
+				document.getElementById('poll-close').onclick = function () {
+					document.getElementById('add-poll-btn').classList.remove('d-none');
+					pollContainer.classList.add('d-none');
+					pollContainer.querySelectorAll('input')
+						.toArray()
+						.forEach(function (elem) {
+							elem.disabled = true;
+						});
+				}
+			})();
+		</script>
+		<hr />
+	</div>
+
 	<input type="hidden" asp-for="Topic.ForumName" />
 	<form-group class="col-lg-6">
 		<row>
