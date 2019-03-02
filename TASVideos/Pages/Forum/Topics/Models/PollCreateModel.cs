@@ -14,12 +14,13 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public int? DaysOpen { get; set; }
 
 		[Display(Name = "Options")]
-		public IEnumerable<string> PollOptions { get; set; } = new List<string>();
+		public IEnumerable<string> PollOptions { get; set; } = new List<string> { "", "" };
 
 		public bool IsValid => 
 			!string.IsNullOrWhiteSpace(Question)
 			&& Question.Length <= 200
 			&& PollOptions != null
-			&& PollOptions.Count(o => !string.IsNullOrWhiteSpace(o)) > 2;
+			&& PollOptions.Count(o => !string.IsNullOrWhiteSpace(o)) > 2
+			&& PollOptions.All(o => o != null && o.Length <= 250);
 	}
 }

@@ -98,7 +98,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
 			{
-				int zzz = 0;
+				await CreatePoll(topic, poll);
 			}
 
 			//// TODO: auto-add topic permission based on post count, also ability to vote
