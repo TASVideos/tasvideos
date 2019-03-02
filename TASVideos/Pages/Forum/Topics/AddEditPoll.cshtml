@@ -1,0 +1,11 @@
+﻿@page "{topicId}"
+@model AddEditPollModel
+@{
+	ViewData["Title"] = $"Poll for Topic {Model.TopicTitle}";
+}
+<partial Name="_ForumHeader" />
+<div class="text-right">
+	<a asp-page="Index" asp-route-id="@Model.TopicId" class="btn btn-secondary">Cancel</a>
+</div>
+
+<p>TODO</p>
