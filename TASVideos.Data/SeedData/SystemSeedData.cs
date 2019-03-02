@@ -234,6 +234,12 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystem
 			{
+				Id = 38,
+				Code = "Linux",
+				DisplayName = "Linux"
+			},
+			new GameSystem
+			{
 				Id = 41,
 				Code = "AppleII",
 				DisplayName = "Apple II"
@@ -607,6 +613,12 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 37,
 				RegionCode = Pal,
 				FrameRate = 50.1245421245421
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 38,
+				RegionCode = Ntsc,
+				FrameRate = 60
 			},
 			new GameSystemFrameRate
 			{

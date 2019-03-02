@@ -74,7 +74,7 @@ namespace TASVideos.Legacy.Imports
 				var games = context.Games.ToList();
 				var tags = context.Tags.Select(t => new { t.Id, t.DisplayName }).ToList();
 
-				var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA" };
+				var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA", "LT" };
 				var torrentTypes = new[] { "M", "N", "O", "P", "T" };
 
 				var pubs = (from lm in legacyMovies
