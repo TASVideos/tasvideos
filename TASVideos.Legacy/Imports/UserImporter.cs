@@ -88,7 +88,8 @@ namespace TASVideos.Legacy.Imports
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
-					TimeZoneId = timeZones.First(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset).StandardName
+					TimeZoneId = timeZones.First(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset).StandardName,
+					SecurityStamp = Guid.NewGuid().ToString("D")
 				})
 				.ToList();
 			
@@ -218,7 +219,8 @@ namespace TASVideos.Legacy.Imports
 				Email = $"imported{p}@tasvideos.org",
 				NormalizedEmail = $"imported{p}@tasvideos.org".ToUpper(),
 				CreateTimeStamp = DateTime.UtcNow,
-				LastUpdateTimeStamp = DateTime.UtcNow
+				LastUpdateTimeStamp = DateTime.UtcNow,
+				SecurityStamp = Guid.NewGuid().ToString("D")
 			});
 
 			var userColumns = new[]
@@ -243,7 +245,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.Signature),
 				nameof(User.PublicRatings),
 				nameof(User.LastLoggedInTimeStamp),
-				nameof(User.TimeZoneId)
+				nameof(User.TimeZoneId),
+				nameof(User.SecurityStamp)
 			};
 
 			var userRoleColumns = new[]

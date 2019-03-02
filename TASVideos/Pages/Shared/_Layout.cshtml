@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - TASVideos</title>
+	<title>@(ViewData["Title"] != null ? ViewData["Title"] + " - " : "")TASVideos</title>
 
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.min.css" />
@@ -16,22 +16,6 @@
 	<script src="~/lib/jquery/jquery.min.js"></script>
 	<script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js"></script>
-
-	<style>
-		.error-marker {
-			position: relative;
-			border: 2px solid #c00;
-		}
-
-		.error-marker span {
-			position: absolute;
-			background-color: white;
-			padding: 4px;
-			border: 1px solid #c00;
-			color: #c00;
-			bottom: 13px;
-		}
-	</style>
 </head>
 <body>
 	<nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
