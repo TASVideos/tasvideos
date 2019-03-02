@@ -38,6 +38,8 @@ namespace TASVideos
 		public class Connections
 		{
 			public string DefaultConnection { get; set; }
+			public string LegacySiteConnection { get; set; }
+			public string LegacyForumConnection { get; set; }
 		}
 	}
 
