@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -7,6 +9,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Models;
 using TASVideos.Pages.Forum.Posts.Models;
+using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum
 {
@@ -63,6 +66,28 @@ namespace TASVideos.Pages.Forum
 			await _db.SaveChangesAsync();
 			await WatchTopic(topicId, userId, canSeeRestricted: true);
 			return forumPost.Id;
+		}
+
+		protected async Task CreatePoll(ForumTopic topic, PollCreateModel model)
+		{
+			var poll = new ForumPoll
+			{
+				TopicId = topic.Id,
+				Question = model.Question,
+				CloseDate = model.DaysOpen.HasValue
+					? DateTime.UtcNow.AddDays(model.DaysOpen.Value)
+					: (DateTime?)null,
+				PollOptions = model.PollOptions.Select((po, i) => new ForumPollOption
+				{
+					Text = po,
+					Ordinal = i
+				})
+				.ToList()
+			};
+
+			_db.ForumPolls.Add(poll);
+			topic.Poll = poll;
+			await _db.SaveChangesAsync();
 		}
 
 		protected async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)

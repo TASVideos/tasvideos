@@ -1,0 +1,21 @@
+﻿@model TASVideos.Pages.Forum.Topics.Models.PollCreateModel
+
+<row>
+	<column lg="6">
+		<form-group>
+			<label asp-for="Question"></label>
+			<input type="text" asp-for="Question" class="form-control" />
+			<span asp-validation-for="Question" class="text-danger"></span>
+		</form-group>
+		<form-group>
+			<label asp-for="DaysOpen"></label>
+			<input asp-for="DaysOpen" type="number" min="0" max="365" class="form-control" placeholder="@Html.DescriptionFor(m => m.DaysOpen)" />
+			<span asp-validation-for="DaysOpen" class="text-danger"></span>
+		</form-group>
+		<form-group>
+			<label asp-for="PollOptions"></label>
+			<string-list asp-for="PollOptions" />
+			<span asp-validation-for="PollOptions" class="text-danger"></span>
+		</form-group>
+	</column>
+</row>

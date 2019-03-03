@@ -193,6 +193,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to edit forum categories")]
 		EditCategories = 407,
 
+		[Display(Name = "Create Polls")]
+		[Group("Forum Administration")]
+		[Description("The ability to participate in forum polls. Experienced users have the ability ot do this, unless revoked.")]
+		CreateForumPolls = 408,
+
 		[Display(Name = "See Restricted Froums")]
 		[Group("Forum Administration")]
 		[Description("The ability to see forums that are restricted from general access.")]
