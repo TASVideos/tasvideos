@@ -66,7 +66,7 @@ namespace TASVideos.Legacy.Imports
 						.ToList();
 
 			var timeZones = TimeZoneInfo.GetSystemTimeZones();
-
+			var utc = TimeZoneInfo.Utc.StandardName;
 			var userEntities = users
 				.Select(u => new User
 				{
@@ -88,7 +88,7 @@ namespace TASVideos.Legacy.Imports
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
-					TimeZoneId = timeZones.First(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset).StandardName,
+					TimeZoneId = timeZones.FirstOrDefault(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset)?.StandardName ?? utc,
 					SecurityStamp = Guid.NewGuid().ToString("D")
 				})
 				.ToList();
