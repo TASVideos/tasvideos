@@ -190,10 +190,10 @@ namespace TASVideos.Pages.Forum.Topics
 				await _db.SaveChangesAsync();
 			}
 
-			return RedirectToPage("Index", new { Id = pollOption.Poll.TopicId });
+			return RedirectToTopic();
 		}
 
-		public async Task<IActionResult> OnPostLock(string topicTitle, bool locked, string returnUrl)
+		public async Task<IActionResult> OnPostLock(string topicTitle, bool locked)
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			var topic = await _db.ForumTopics
@@ -217,7 +217,7 @@ namespace TASVideos.Pages.Forum.Topics
 				"",
 				$"{BaseUrl}/Forum/Topics/{Id}");
 
-			return RedirectToLocal(returnUrl);
+			return RedirectToTopic();
 		}
 
 		public async Task<IActionResult> OnGetWatch()
@@ -228,7 +228,7 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			await WatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
-			return RedirectToPage("Index", new { Id });
+			return RedirectToTopic();
 		}
 
 		public async Task<IActionResult> OnGetUnwatch()
@@ -239,6 +239,16 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			await UnwatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
+			return RedirectToTopic();
+		}
+
+		public async Task<IActionResult> OnPostReset()
+		{
+			return RedirectToTopic();
+		}
+
+		private IActionResult RedirectToTopic()
+		{
 			return RedirectToPage("Index", new { Id });
 		}
 	}

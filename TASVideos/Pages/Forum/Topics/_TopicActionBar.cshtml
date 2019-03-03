@@ -30,14 +30,13 @@
 	<i class="fa fa-code-fork"></i>
 </a>
 <form permission="LockTopics"
-	  asp-page="Index"
-	  asp-page-handler="Lock"
-	  asp-route-id="@Model.Id"
-	  asp-route-topictitle="@Model.Title"
-	  asp-route-locked="@(!Model.IsLocked)"
-	  asp-route-returnUrl="@Context.ReturnUrl()"
-	  method="POST"
-	  style="display: inline">
+	asp-page="Index"
+	asp-page-handler="Lock"
+	asp-route-id="@Model.Id"
+	asp-route-topictitle="@Model.Title"
+	asp-route-locked="@(!Model.IsLocked)"
+	method="POST"
+	style="display: inline">
 	<button type="submit" class="btn @(Model.IsLocked ? "btn-success" : "btn-warning") btn-sm">
 		<span condition="Model.IsLocked" title="Unlock this topic">
 			<i class="fa fa-unlock"></i>
@@ -47,7 +46,13 @@
 		</span>
 	</button>
 </form>
-<a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls) && Model.CanEditPoll"
+<delete-button 
+	condition="ViewData.UserHas(PermissionTo.ResetPollResults) && Model.AnyVotes"
+	asp-href="/Topics/Index/@Model.Id?handler=Reset"
+	warning-message="Resetting the poll is permanent. Are you sure you want to do this?",
+	>
+</delete-button>
+<a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls) && !Model.AnyVotes"
 	asp-page="AddEditPoll",
 	asp-route-topicId="@Model.Id"
 	class="btn btn-warning btn-sm">
