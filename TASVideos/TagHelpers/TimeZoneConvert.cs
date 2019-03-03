@@ -26,6 +26,8 @@ namespace TASVideos.TagHelpers
 
 		public ModelExpression AspFor { get; set; }
 
+		public bool DateOnly { get; set; }
+
 		public DateTime ConvertedDateTime => (DateTime)AspFor.Model;
 
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -35,16 +37,31 @@ namespace TASVideos.TagHelpers
 			var user = await _userManager.GetUserAsync(_claimsPrincipal);
 
 			var dateTime = ConvertedDateTime;
-			// TODO: sort out different timezone naming on different OSes
-			//if (user != null)
-			//{
-			//	var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
-			//	dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
-			//}
+			if (DateOnly)
+			{
+				dateTime = dateTime.Date;
+			}
 
+			if (user != null)
+			{
+				try
+				{
+					var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+					dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
+				}
+				catch
+				{
+					// TImeZoneInfo throws an exception if it can not find the timezone
+					// Eat the exception and simply don't convert
+				}
+			}
+
+			var dateStr = DateOnly
+				? dateTime.ToShortDateString()
+				: dateTime.ToString(CultureInfo.CurrentCulture);
 			output.TagName = "span";
 			output.TagMode = TagMode.StartTagAndEndTag;
-			output.Content.AppendHtml(dateTime.ToString(CultureInfo.CurrentCulture));
+			output.Content.AppendHtml(dateStr);
 		}
 
 		private void ValidateExpression()
