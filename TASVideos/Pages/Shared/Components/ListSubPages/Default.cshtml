@@ -14,7 +14,7 @@
 			<strong>Subpages for @ViewData["Parent"]</strong>
 		</collapsablecontent-header>
 	</div>
-	<collapsablecontent-body class="card-body" id="collapse-content-@pageId" show="@show">
+	<collapsablecontent-body class="card-body" id="collapse-content-@pageId" start-shown="@show">
 		<ul>
 			@foreach (var pageGroup in pageGrouping.OrderBy(g => g.Key))
 			{
