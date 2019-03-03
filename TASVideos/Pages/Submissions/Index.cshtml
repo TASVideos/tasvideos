@@ -36,7 +36,7 @@
 		<tr>
 			<td><a href="/@(item.Id)S">@item.Title</a></td>
 			<td>@item.Author</td>
-			<td><timezone-convert asp-for="@item.Submitted" /></td>
+			<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>
 			<td>@item.Status.EnumDisplayName()</td>
 		</tr>
 	}
