@@ -2,7 +2,17 @@
 	pointer-events: none;
 }
 
+/*.btn {
+	font-size: 1em
+}
+
+.btn-sm {
+	font-size: .750em
+}*/
+
 body {
+	font-family: georgia,"times new roman",serif;
+	font-size: 14px;
 	background: #EEE linear-gradient(#c2d4fc 0,#eeeeee 250px) repeat-x;
 }
 
@@ -33,15 +43,31 @@ body {
 	font-size: 9px;
 }
 
+.btn-sm {
+	font-size: .750rem;
+}
+
 h1 {
 	margin: 0 auto 0 auto;
 	padding: 5px 10px 5px 10px;
 	border-radius: 5px;
-	font-size: 17px;
+	font-size: 1.25em;
 	line-height: 1.5;
 	background: #531f86;
 	color: #FFF;
 	width: 95%;
+}
+
+h2 {
+	font-size: 2em;
+}
+
+h3 {
+	font-size: 1.75em;
+}
+
+h4 {
+	font-size: 1.5em;
 }
 
 .btn-separator::after {
