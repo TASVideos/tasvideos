@@ -61,6 +61,11 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnPostResetVote(int userId)
 		{
+			if (!User.Has(PermissionTo.ResetPollResults))
+			{
+				return AccessDenied();
+			}
+
 			var poll = await _db.ForumPolls
 				.Include(p => p.PollOptions)
 				.ThenInclude(o => o.Votes)
