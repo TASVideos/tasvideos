@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -244,6 +246,32 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnPostReset()
 		{
+			var topic = await _db.ForumTopics
+				.Include(t => t.Poll)
+				.ThenInclude(p => p.PollOptions)
+				.ThenInclude(o => o.Votes)
+				.Where(t => t.Id == Id)
+				.SingleOrDefaultAsync();
+
+			if (topic?.Poll == null)
+			{
+				return NotFound();
+			}
+
+			foreach (var option in topic.Poll.PollOptions)
+			{
+				option.Votes.Clear();
+			}
+
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DBConcurrencyException)
+			{
+				return BadRequest("Unable to reset poll results");
+			}
+
 			return RedirectToTopic();
 		}
 
