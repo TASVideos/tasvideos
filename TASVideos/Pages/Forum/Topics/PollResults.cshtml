@@ -17,6 +17,7 @@
 		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().UserName)</th>
 		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().CreateTimestamp)</th>
 		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().IpAddress)</th>
+		<th permission="ResetPollResults">Reset</th>
 	</tr>
 	@foreach(var vote in Model.Poll.Votes
 		.OrderBy(v => v.Ordinal)
@@ -27,6 +28,17 @@
 			<td><a asp-page="/Users/Profile" asp-route-userName="@vote.UserName">@vote.UserName</a></td>
 			<td>@vote.CreateTimestamp</td>
 			<td>@vote.IpAddress</td>
+			<td permission="ResetPollResults">
+				<form method="post">
+					<input type="hidden" name="userId" value="@vote.UserId" />
+					<button
+						type="submit"
+						class="btn btn-danger"
+						asp-page-handler="ResetVote">
+						<i class="fa fa-remove"></i>
+					</button>
+				</form>
+			</td>
 		</tr>
 	}
 </table>
