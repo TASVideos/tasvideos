@@ -58,5 +58,37 @@ namespace TASVideos.Pages.Forum.Topics
 
 			return Page();
 		}
+
+		public async Task<IActionResult> OnPostResetVote(int userId)
+		{
+			var poll = await _db.ForumPolls
+				.Include(p => p.PollOptions)
+				.ThenInclude(o => o.Votes)
+				.Where(p => p.Id == Id)
+				.SingleOrDefaultAsync();
+
+			if (poll == null)
+			{
+				return NotFound();
+			}
+
+			var votes = poll.PollOptions
+				.SelectMany(o => o.Votes)
+				.Where(v => v.UserId == userId)
+				.ToList();
+
+			_db.ForumPollOptionVotes.RemoveRange(votes);
+
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				// Assume vote was already removed
+			}
+
+			return RedirectToPage("PollResults", new { Id });
+		}
 	}
 }
