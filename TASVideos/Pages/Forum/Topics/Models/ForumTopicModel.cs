@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using TASVideos.Data;
 using TASVideos.Services;
 
@@ -11,6 +13,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		bool IsLocked { get; }
 		bool IsWatching { get; }
 		string Title { get; }
+		bool CanEditPoll { get; }
 	}
 
 	public interface IForumTopicBreadCrumb
@@ -30,6 +33,8 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public string Title { get; set; }
 		public int ForumId { get; set; }
 		public string ForumName { get; set; }
+
+		public bool CanEditPoll => !Poll?.Options.SelectMany(o => o.Voters).Any() ?? true;
 
 		public PageOf<ForumPostEntry> Posts { get; set; }
 		public PollModel Poll { get; set; }
