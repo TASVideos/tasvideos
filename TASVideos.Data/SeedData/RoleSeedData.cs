@@ -103,7 +103,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.SeeRestrictedForums,
 			PermissionTo.EditForums,
 			PermissionTo.EditCategories,
-			PermissionTo.DeleteForumPosts
+			PermissionTo.DeleteForumPosts,
+			PermissionTo.CreateForumPolls
 		}).ToArray();
 
 		private static readonly PermissionTo[] AmbassadorPermissions =

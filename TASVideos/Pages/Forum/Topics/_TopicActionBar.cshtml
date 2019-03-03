@@ -1,48 +1,43 @@
 ﻿@model IForumTopicActionBar
-<a
-	condition="User.Identity.IsAuthenticated && !Model.IsWatching"
-	asp-page="Index"
-	asp-page-handler="Watch"
-	asp-route-id="@Model.Id"
-	class="btn btn-info btn-sm"
-	title="Watch this topic">
+<a condition="User.Identity.IsAuthenticated && !Model.IsWatching"
+   asp-page="Index"
+   asp-page-handler="Watch"
+   asp-route-id="@Model.Id"
+   class="btn btn-info btn-sm"
+   title="Watch this topic">
 	<i class="fa fa-search-plus"></i>
 </a>
-<a 
-	condition="User.Identity.IsAuthenticated && Model.IsWatching"
-	asp-page="Index"
-	asp-page-handler="Unwatch"
-	asp-route-id="@Model.Id"
-	class="btn btn-warning btn-sm"
-	title="Stop watching this topic" >
+<a condition="User.Identity.IsAuthenticated && Model.IsWatching"
+   asp-page="Index"
+   asp-page-handler="Unwatch"
+   asp-route-id="@Model.Id"
+   class="btn btn-warning btn-sm"
+   title="Stop watching this topic">
 	<i class="fa fa-search-plus"></i>
 </a>
-<a
-	permission="MoveTopics"
-	asp-page="Move"
-	asp-route-id="@Model.Id"
-	class="btn btn-sm btn-warning"
-	title="Move this topic">
+<a permission="MoveTopics"
+   asp-page="Move"
+   asp-route-id="@Model.Id"
+   class="btn btn-sm btn-warning"
+   title="Move this topic">
 	<i class="fa fa-location-arrow"></i>
 </a>
-<a
-	permission="SplitTopics"
-	asp-page="Split"
-	asp-route-id="@Model.Id"
-	class="btn btn-sm btn-warning"
-	title="Split this topic">
+<a permission="SplitTopics"
+   asp-page="Split"
+   asp-route-id="@Model.Id"
+   class="btn btn-sm btn-warning"
+   title="Split this topic">
 	<i class="fa fa-code-fork"></i>
 </a>
-<form 
-	permission="LockTopics"
-	asp-page="Index" 
-	asp-page-handler="Lock"
-	asp-route-id="@Model.Id" 
-	asp-route-topictitle="@Model.Title" 
-	asp-route-locked="@(!Model.IsLocked)" 
-	asp-route-returnUrl="@Context.ReturnUrl()" 
-	method="POST"
-	style="display: inline">
+<form permission="LockTopics"
+	  asp-page="Index"
+	  asp-page-handler="Lock"
+	  asp-route-id="@Model.Id"
+	  asp-route-topictitle="@Model.Title"
+	  asp-route-locked="@(!Model.IsLocked)"
+	  asp-route-returnUrl="@Context.ReturnUrl()"
+	  method="POST"
+	  style="display: inline">
 	<button type="submit" class="btn @(Model.IsLocked ? "btn-success" : "btn-warning") btn-sm">
 		<span condition="Model.IsLocked" title="Unlock this topic">
 			<i class="fa fa-unlock"></i>
@@ -52,3 +47,9 @@
 		</span>
 	</button>
 </form>
+<a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls) && Model.CanEditPoll"
+	asp-page="AddEditPoll",
+	asp-route-topicId="@Model.Id"
+	class="btn btn-warning btn-sm">
+	Poll
+</a>
