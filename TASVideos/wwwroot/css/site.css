@@ -2,14 +2,6 @@
 	pointer-events: none;
 }
 
-/*.btn {
-	font-size: 1em
-}
-
-.btn-sm {
-	font-size: .750em
-}*/
-
 body {
 	font-family: georgia,"times new roman",serif;
 	font-size: 14px;
@@ -43,8 +35,16 @@ body {
 	font-size: 9px;
 }
 
+.form-control {
+	font-size: .875rem;
+}
+
+.btn {
+	font-size: .875rem
+}
+
 .btn-sm {
-	font-size: .750rem;
+	font-size: .750rem
 }
 
 h1 {
