@@ -207,6 +207,11 @@ namespace TASVideos.Data.Entity
 		[Group("Forum Administration")]
 		[Description("The ability to see which users voted on which poll option.")]
 		SeePollResults = 491,
+		
+		[Display(Name = "Reset Poll Results")]
+		[Group("Forum Administration")]
+		[Description("The ability to reset a poll result to empty.")]
+		ResetPollResults = 492,
 
 		#endregion
 
