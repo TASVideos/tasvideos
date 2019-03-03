@@ -53,8 +53,7 @@ namespace TASVideos.Pages.Account
 
 		public async Task OnGet()
 		{
-			// Clear the existing external cookie to ensure a clean login process
-			await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+			await HttpContext.SignOutAsync();
 		}
 
 		public async Task<IActionResult> OnPost()
