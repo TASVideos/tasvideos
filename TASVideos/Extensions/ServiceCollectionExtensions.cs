@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO.Compression;
 
 using AutoMapper;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +30,16 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<AppSettings>(configuration);
+			return services;
+		}
+
+		public static IServiceCollection AddRequestLocalization(this IServiceCollection services)
+		{
+			services.Configure<RequestLocalizationOptions>(options =>
+			{
+				options.DefaultRequestCulture = new RequestCulture("en-US");
+				options.SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+			});
 			return services;
 		}
 
