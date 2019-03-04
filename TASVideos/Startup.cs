@@ -26,6 +26,7 @@ namespace TASVideos
 			// Mvc Project Services
 			services
 				.AddAppSettings(Configuration)
+				.AddRequestLocalization()
 				.AddCookieConfiguration(Environment)
 				.AddGzipCompression(Settings)
 				.AddCacheService(Settings.CacheSettings)
@@ -51,6 +52,7 @@ namespace TASVideos
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
 			app
+				.UseRequestLocalization()
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
 				.UseStaticFiles()
