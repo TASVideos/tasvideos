@@ -58,6 +58,8 @@ namespace TASVideos.Extensions
 				////		new[] { "Accept-Encoding" };
 				////}
 
+				context.Response.Headers["X-Xss-Protection"] = "1; mode=block";
+				context.Response.Headers["X-Frame-Options"] = "DENY";
 				context.Response.Headers["X-Content-Type-Options"] = "nosniff";
 				context.Response.Headers["Referrer-Policy"] = "origin-when-cross-origin";
 				context.Response.Headers["x-powered-by"] = "";
