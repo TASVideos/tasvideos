@@ -32,7 +32,8 @@ namespace TASVideos
 				.AddCacheService(Settings.CacheSettings)
 				.AddServices(Environment)
 				.AddExternalMediaPublishing(Environment, Settings)
-				.AddAutoMapperWithProjections();
+				.AddAutoMapperWithProjections()
+				.AddSwagger();
 
 			// Internal Libraries
 			services
@@ -57,6 +58,7 @@ namespace TASVideos
 				.UseGzipCompression(Settings)
 				.UseStaticFiles()
 				.UseAuthentication()
+				.UseSwaggerUi(Environment)
 				.UseMvcWithOptions();
 		}
 	}

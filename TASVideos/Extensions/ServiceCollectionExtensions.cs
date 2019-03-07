@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.IO.Compression;
+using System.Reflection;
 
 using AutoMapper;
 
@@ -14,6 +16,8 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Swashbuckle.AspNetCore.Swagger;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
@@ -22,7 +26,7 @@ using TASVideos.Services;
 using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
-
+using TASVideos.Api.Controllers;
 namespace TASVideos.Extensions
 {
 	public static class ServiceCollectionExtensions
@@ -133,7 +137,8 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Forum/Posts/Index", "forum/p/{id:int}");
 					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
 					options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
-				});
+				})
+				.AddApplicationPart(typeof(PublicationsController).Assembly);
 
 			services.AddHttpContext();
 
@@ -163,6 +168,43 @@ namespace TASVideos.Extensions
 			services.AddAutoMapper();
 			  
 			return services;
+		}
+
+		public static IServiceCollection AddSwagger(this IServiceCollection services)
+		{
+			var version = Assembly.GetExecutingAssembly().GetName().Version;
+
+			return services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc(
+					"v1",
+					new Info
+					{
+						Title = "TASVideos API",
+						Version = $"v{version.Major}.{version.Minor}.{version.Revision}",
+						Description = "API For tasvideos.org content",
+					});
+				c.AddSecurityDefinition(
+					"Bearer",
+					new ApiKeyScheme
+					{
+						In = "header",
+						Description = "Please insert Token into field",
+						Name = "API-Token",
+						Type = "apiKey"
+					});
+
+				// Must explicitly tell Swagger to add the header into the request as of Swagger 2.0.
+				// https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/603
+				c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>()
+				{
+					{ "Bearer", new string[] { } }
+				});
+
+				var basePath = AppContext.BaseDirectory;
+				var xmlPath = Path.Combine(basePath, "TASVideos.Api.xml");
+				c.IncludeXmlComments(xmlPath);
+			});
 		}
 
 		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IHostingEnvironment env, AppSettings settings)
