@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Users
 					Roles = u.UserRoles
 						.Select(ur => ur.Role.Name)
 				})
-				.SortedPageOfAsync(_db, Search);
+				.SortedPageOf(_db, Search);
 		}
 
 		public async Task<IActionResult> OnGetSearch(string partial)

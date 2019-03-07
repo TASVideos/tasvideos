@@ -81,7 +81,7 @@ namespace TASVideos.Pages.Forum.Posts
 					ForumId = p.Topic.ForumId,
 					ForumName = p.Topic.Forum.Name
 				})
-				.SortedPageOfAsync(_db, Search);
+				.SortedPageOf(_db, Search);
 
 			UserPosts.RenderedSignature = RenderSignature(UserPosts.Signature); 
 			foreach (var post in UserPosts.Posts)

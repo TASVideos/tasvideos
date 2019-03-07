@@ -67,7 +67,7 @@ namespace TASVideos.Pages.Forum.Posts
 					PosterPostCount = p.Poster.Posts.Count,
 				})
 				.OrderBy(p => p.CreateTimestamp)
-				.PageOfAsync(_db, Search);
+				.PageOf(_db, Search);
 
 			foreach (var post in Posts)
 			{

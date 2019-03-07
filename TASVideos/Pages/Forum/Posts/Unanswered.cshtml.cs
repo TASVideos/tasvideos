@@ -42,7 +42,7 @@ namespace TASVideos.Pages.Forum.Posts
 					PostDate = t.CreateTimeStamp
 				})
 				.OrderByDescending(t => t.PostDate)
-				.PageOfAsync(_db, Search);
+				.PageOf(_db, Search);
 		}
 	}
 }
