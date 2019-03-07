@@ -76,7 +76,7 @@ namespace TASVideos.Pages.Forum.Topics
 				.FirstAsync())
 				.Id;
 
-			Topic.Posts = _db.ForumPosts
+			Topic.Posts = await _db.ForumPosts
 				.ForTopic(Id)
 				.Select(p => new ForumTopicModel.ForumPostEntry
 				{
@@ -101,7 +101,7 @@ namespace TASVideos.Pages.Forum.Topics
 					IsLastPost = p.Id == lastPostId
 				})
 				.OrderBy(p => p.CreateTimestamp)
-				.PageOf(_db, Search);
+				.PageOfAsync(_db, Search);
 
 			foreach (var post in Topic.Posts)
 			{
