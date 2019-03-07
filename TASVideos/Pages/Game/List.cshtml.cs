@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Game
 
 		public async Task OnGet()
 		{
-			Games = GetPageOfGames(Search);
+			Games = await GetPageOfGames(Search);
 			SystemList = await _db.GameSystems
 				.ToDropdown()
 				.ToListAsync();
@@ -124,21 +124,20 @@ namespace TASVideos.Pages.Game
 			};
 		}
 
-		private SystemPageOf<GameListModel> GetPageOfGames(GameListRequest paging)
+		private async Task<SystemPageOf<GameListModel>> GetPageOfGames(GameListRequest paging)
 		{
 			var query = !string.IsNullOrWhiteSpace(paging.SystemCode)
 				? _db.Games.Where(g => g.System.Code == paging.SystemCode)
 				: _db.Games;
 
-			var data = query
+			var data = await query
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
 					SystemCode = g.System.Code
 				})
-				.SortBy(paging)
-				.SortedPageOf(_db, paging);
+				.SortedPageOfAsync(_db, paging);
 
 			return new SystemPageOf<GameListModel>(data)
 			{

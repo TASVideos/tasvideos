@@ -19,6 +19,22 @@ namespace TASVideos.Data
 		/// <param name="db">The Entity Framework context instance</param>
 		/// <param name="paging">The paging data to use</param>
 		/// <typeparam name="T">The result type of the query</typeparam>
+		public static async Task<PageOf<T>> SortedPageOfAsync<T>(this IQueryable<T> query, DbContext db, PagedModel paging)
+			where T : class
+		{
+			return await query
+				.SortBy(paging)
+				.PageOfAsync(db, paging);
+		}
+
+		/// <summary>
+		/// Takes an ordered query and returns a paged result set and a result count that has been executed.
+		/// The <see cref="DbContext" /> is used to create a single transaction scope for both the query and count and execute those queries.
+		/// </summary>
+		/// <param name="query">The query to paginate and run</param>
+		/// <param name="db">The Entity Framework context instance</param>
+		/// <param name="paging">The paging data to use</param>
+		/// <typeparam name="T">The result type of the query</typeparam>
 		public static PageOf<T> SortedPageOf<T>(this IQueryable<T> query, DbContext db, PagedModel paging)
 			where T : class
 		{
