@@ -33,9 +33,9 @@ namespace TASVideos.Pages.Users
 
 		public PageOf<UserListModel> Users { get; set; }
 
-		public void OnGet()
+		public async Task OnGet()
 		{
-			Users = _db.Users
+			Users = await _db.Users
 				.Select(u => new UserListModel
 				{
 					Id = u.Id,
@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Users
 					Roles = u.UserRoles
 						.Select(ur => ur.Role.Name)
 				})
-				.SortedPageOf(_db, Search);
+				.SortedPageOfAsync(_db, Search);
 		}
 
 		public async Task<IActionResult> OnGetSearch(string partial)

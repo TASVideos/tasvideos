@@ -65,7 +65,7 @@ namespace TASVideos.Pages.Forum.Posts
 			Awards = await _awards.AwardsForUser(UserPosts.Id);
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			UserPosts.Posts = _db.ForumPosts
+			UserPosts.Posts = await _db.ForumPosts
 				.CreatedBy(UserName)
 				.ExcludeRestricted(seeRestricted)
 				.Select(p => new UserPostsModel.Post
@@ -81,7 +81,7 @@ namespace TASVideos.Pages.Forum.Posts
 					ForumId = p.Topic.ForumId,
 					ForumName = p.Topic.Forum.Name
 				})
-				.SortedPageOf(_db, Search);
+				.SortedPageOfAsync(_db, Search);
 
 			UserPosts.RenderedSignature = RenderSignature(UserPosts.Signature); 
 			foreach (var post in UserPosts.Posts)
