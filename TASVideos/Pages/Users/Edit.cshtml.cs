@@ -68,12 +68,19 @@ namespace TASVideos.Pages.Users
 				return Page();
 			}
 
-			var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == Id);
+			var user = await _db.Users.Include(u => u.UserRoles).SingleOrDefaultAsync(u => u.Id == Id);
 			if (user == null)
 			{
 				return NotFound();
 			}
 
+			// Double check user can assign all new the roles they are requesting to assign
+			var rolesThatUserCanAssign = await GetAllRoleIdsUserCanAssign(User.GetUserId(), user.UserRoles.Select(ur => ur.RoleId));
+			if (UserToEdit.SelectedRoles.Except(rolesThatUserCanAssign).Any())
+			{
+				return AccessDenied();
+			}
+			
 			user.UserName = UserToEdit.UserName;
 			user.TimeZoneId = UserToEdit.TimezoneId;
 			user.From = UserToEdit.From;
@@ -86,8 +93,14 @@ namespace TASVideos.Pages.Users
 
 			_db.UserRoles.RemoveRange(currentRoles);
 
-			// TODO: catch DbConcurrencyException
-			await _db.SaveChangesAsync();
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return BadRequest("Unable to modify user. User data may have been modified since the page was opened.");
+			}
 
 			_db.UserRoles.AddRange(UserToEdit.SelectedRoles
 				.Select(r => new UserRole
@@ -96,8 +109,14 @@ namespace TASVideos.Pages.Users
 					RoleId = r
 				}));
 
-			// TODO: catch DbConcurrencyException
-			await _db.SaveChangesAsync();
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return BadRequest("Unable to modify user. User data may have been modified since the page was opened.");
+			}
 
 			// Announce Role change
 			var allRoles = await _db.Roles.ToListAsync();
@@ -170,6 +189,30 @@ namespace TASVideos.Pages.Users
 						&& assignedRoleList.Any() // EF Core 2.1 issue, needs this or a user with no assigned roles blows up
 						&& assignedRoleList.Contains(r.Id)
 				})
+				.ToListAsync();
+		}
+
+		// TODO: reduce copy-pasta
+		private async Task<IEnumerable<int>> GetAllRoleIdsUserCanAssign(int userId, IEnumerable<int> assignedRoles)
+		{
+			if (assignedRoles == null)
+			{
+				throw new ArgumentException($"{nameof(assignedRoles)} can not be null");
+			}
+
+			var assignedRoleList = assignedRoles.ToList();
+			var assignablePermissions = await _db.Users
+				.Where(u => u.Id == userId)
+				.SelectMany(u => u.UserRoles)
+				.SelectMany(ur => ur.Role.RolePermission)
+				.Where(rp => rp.CanAssign)
+				.Select(rp => rp.PermissionId)
+				.ToListAsync();
+
+			return await _db.Roles
+				.Where(r => r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
+					|| assignedRoleList.Contains(r.Id))
+				.Select(r => r.Id)
 				.ToListAsync();
 		}
 	}
