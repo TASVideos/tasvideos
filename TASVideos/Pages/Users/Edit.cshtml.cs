@@ -42,6 +42,11 @@ namespace TASVideos.Pages.Users
 
 		public async Task<IActionResult> OnGet()
 		{
+			if (User.GetUserId() == Id)
+			{
+				return RedirectToPage("/Profile/Settings");
+			}
+
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				UserToEdit = await _db.Users
