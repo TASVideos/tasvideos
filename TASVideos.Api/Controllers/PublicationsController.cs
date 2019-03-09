@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Api.Requests;
+using TASVideos.Api.Responses;
 using TASVideos.Data;
 
 namespace TASVideos.Api.Controllers
@@ -32,25 +34,33 @@ namespace TASVideos.Api.Controllers
 		/// Gets all the things
 		/// </summary>
 		[HttpGet]
-		public async Task<IActionResult> GetAll()
+		public async Task<IActionResult> GetAll(PublicationsRequest request)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest();
+			}
+
+			// TODO: automapper
 			// TODO: set up global exception handling to return a json payload from api calls but error page for page calls
 			try
 			{
-				var pubs = await _db.Publications
-				.Take(10)
-				.Select(p => new
+				var pubs = (await _db.Publications
+				.Select(p => new PublicationsResponse
 				{
-					p.Id,
-					p.Title,
-					p.Branch,
-					p.EmulatorVersion
+					Id = p.Id,
+					Title = p.Title,
+					Branch = p.Branch,
+					EmulatorVersion = p.EmulatorVersion
 				})
-				.ToListAsync();
+				.SortBy(request)
+				.Paginate(request)
+				.ToListAsync())
+				.FieldSelect(request);
 
 				return Ok(pubs);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				return StatusCode(500);
 			}

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -19,7 +18,7 @@ namespace TASVideos.Data
 		/// <param name="db">The Entity Framework context instance</param>
 		/// <param name="paging">The paging data to use</param>
 		/// <typeparam name="T">The result type of the query</typeparam>
-		public static async Task<PageOf<T>> SortedPageOf<T>(this IQueryable<T> query, DbContext db, PagedModel paging)
+		public static async Task<PageOf<T>> SortedPageOf<T>(this IQueryable<T> query, DbContext db, PagingModel paging)
 			where T : class
 		{
 			return await query
@@ -28,9 +27,9 @@ namespace TASVideos.Data
 		}
 
 		public static async Task<PageOf<T>> PageOf<T>(
-			this IOrderedQueryable<T> query,
+			this IQueryable<T> query,
 			DbContext db,
-			PagedModel paging)
+			PagingModel paging)
 			where T : class
 		{
 			using (await db.Database.BeginTransactionAsync())
@@ -57,8 +56,13 @@ namespace TASVideos.Data
 			}
 		}
 
-		public static IOrderedQueryable<T> SortBy<T>(this IQueryable<T> query, ISortable sort)
+		public static IQueryable<T> SortBy<T>(this IQueryable<T> query, ISortable sort)
 		{
+			if (string.IsNullOrWhiteSpace(sort?.SortBy))
+			{
+				return query;
+			}
+
 			string orderBy = sort.SortDescending
 				? nameof(Enumerable.OrderByDescending)
 				: nameof(Enumerable.OrderBy);
@@ -72,7 +76,7 @@ namespace TASVideos.Data
 			var isSortable = typeof(T).GetProperty(sort.SortBy).GetCustomAttributes<SortableAttribute>().Any();
 			if (!isSortable)
 			{
-				throw new InvalidOperationException($"Attempted to sort by non-sortable column {sort.SortBy}");
+				return query;
 			}
 
 			// REFLECTION: source.OrderBy(x => x.Property)
