@@ -5,6 +5,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Data
 {
+	public interface ISortable
+	{
+		string SortBy { get; }
+		bool SortDescending { get; }
+	}
+
 	public class SystemPageOf<T> : SystemPagedModel, IEnumerable<T>
 	{
 		private readonly IEnumerable<T> _items;
@@ -49,7 +55,7 @@ namespace TASVideos.Data
 	/// <summary>
 	/// Represents all of the data necessary to create a paged query
 	/// </summary>
-	public class PagingModel
+	public class PagingModel : ISortable
 	{
 		// TODO: filtering?
 		public string SortBy { get; set; } = "Id";
