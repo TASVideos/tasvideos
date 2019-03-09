@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Users
 			}
 
 			Profile = await _userManager.GetUserProfile(UserName, includeHidden: false);
-			if (User == null)
+			if (Profile == null)
 			{
 				return NotFound();
 			}
