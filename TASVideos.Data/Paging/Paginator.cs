@@ -57,22 +57,22 @@ namespace TASVideos.Data
 			}
 		}
 
-		public static IOrderedQueryable<T> SortBy<T>(this IQueryable<T> query, PagingModel paging)
+		public static IOrderedQueryable<T> SortBy<T>(this IQueryable<T> query, ISortable sort)
 		{
-			string orderBy = paging.SortDescending
+			string orderBy = sort.SortDescending
 				? nameof(Enumerable.OrderByDescending)
 				: nameof(Enumerable.OrderBy);
 
 			// https://stackoverflow.com/questions/34899933/sorting-using-property-name-as-string
 			// LAMBDA: x => x.[PropertyName]
 			var parameter = Expression.Parameter(typeof(T), "x");
-			Expression property = Expression.Property(parameter, paging.SortBy);
+			Expression property = Expression.Property(parameter, sort.SortBy);
 			var lambda = Expression.Lambda(property, parameter);
 
-			var isSortable = typeof(T).GetProperty(paging.SortBy).GetCustomAttributes<SortableAttribute>().Any();
+			var isSortable = typeof(T).GetProperty(sort.SortBy).GetCustomAttributes<SortableAttribute>().Any();
 			if (!isSortable)
 			{
-				throw new InvalidOperationException($"Attempted to sort by non-sortable column {paging.SortBy}");
+				throw new InvalidOperationException($"Attempted to sort by non-sortable column {sort.SortBy}");
 			}
 
 			// REFLECTION: source.OrderBy(x => x.Property)
