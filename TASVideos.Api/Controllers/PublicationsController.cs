@@ -20,6 +20,9 @@ namespace TASVideos.Api.Controllers
 	{
 		private readonly ApplicationDbContext _db;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PublicationsController"/> class. 
+		/// </summary>
 		public PublicationsController(ApplicationDbContext db)
 		{
 			_db = db;
@@ -31,6 +34,7 @@ namespace TASVideos.Api.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAll()
 		{
+			// TODO: set up global exception handling to return a json payload from api calls but error page for page calls
 			try
 			{
 				var pubs = await _db.Publications
@@ -46,14 +50,10 @@ namespace TASVideos.Api.Controllers
 
 				return Ok(pubs);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
-				return BadRequest();
-
+				return StatusCode(500);
 			}
-
-
-			return BadRequest();
 		}
 	}
 }
