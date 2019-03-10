@@ -12,7 +12,7 @@ namespace TASVideos.Pages.Publications.Models
 		public DateTime LastUpdateTimeStamp { get; set; }
 		public string LastUpdateUser { get; set; }
 
-		public int? ObsoletedBy { get; set; }
+		public int? ObsoletedById { get; set; }
 		public string Title { get; set; }
 		public string TierIconPath { get; set; }
 		public string MovieFileName { get; set; }

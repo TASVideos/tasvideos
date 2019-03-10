@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -77,7 +79,12 @@ namespace TASVideos.Pages.Publications
 				return Redirect("Movies");
 			}
 
-			Movies = await GetMovieList(searchModel);
+			Movies = await _db.Publications
+				.OrderBy(p => p.System.Code)
+				.ThenBy(p => p.Game.DisplayName)
+				.FilterByTokens(searchModel)
+				.ProjectTo<PublicationDisplayModel>()
+				.ToListAsync();
 
 			var ratings = (await _points.PublicationRatings(Movies.Select(m => m.Id)))
 				.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Value.Overall);
@@ -112,59 +119,6 @@ namespace TASVideos.Pages.Publications
 
 				return result;
 			}
-		}
-
-		private async Task<IList<PublicationDisplayModel>> GetMovieList(PublicationSearchModel searchCriteria)
-		{
-			var query = _db.Publications
-				.FilterByTokens(searchCriteria);
-
-			// TODO: AutoMapper, single movie is the same logic
-			return await query
-				.OrderBy(p => p.System.Code)
-				.ThenBy(p => p.Game.DisplayName)
-				.Select(p => new PublicationDisplayModel
-				{
-					Id = p.Id,
-					CreateTimeStamp = p.CreateTimeStamp,
-					Title = p.Title,
-					OnlineWatchingUrl = p.OnlineWatchingUrl,
-					MirrorSiteUrl = p.MirrorSiteUrl,
-					ObsoletedBy = p.ObsoletedById,
-					MovieFileName = p.MovieFileName,
-					SubmissionId = p.SubmissionId,
-					RatingCount = p.PublicationRatings.Count / 2,
-					TierIconPath = p.Tier.IconPath,
-					Files = p.Files.Select(f => new PublicationDisplayModel.FileModel
-					{
-						Path = f.Path,
-						Type = f.Type
-					}).ToList(),
-					Tags = p.PublicationTags
-						.Select(pt => new PublicationDisplayModel.TagModel
-						{
-							DisplayName = pt.Tag.DisplayName,
-							Code = pt.Tag.Code
-						})
-						.ToList(),
-					GenreTags = p.Game.GameGenres
-						.Select(gg => new PublicationDisplayModel.TagModel
-						{
-							DisplayName = gg.Genre.DisplayName,
-							Code = gg.Genre.DisplayName // TODO
-						})
-						.ToList(),
-					Flags = p.PublicationFlags
-						.Where(pf => pf.Flag.IconPath != null)
-						.Select(pf => new PublicationDisplayModel.FlagModel
-						{
-							IconPath = pf.Flag.IconPath,
-							LinkPath = pf.Flag.LinkPath,
-							Name = pf.Flag.Name
-						})
-						.ToList()
-				})
-				.ToListAsync();
 		}
 	}
 }
