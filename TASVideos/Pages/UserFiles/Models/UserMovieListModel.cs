@@ -11,7 +11,7 @@ namespace TASVideos.Pages.UserFiles.Models
 		public string Author { get; set; }
 
 		[Display(Name = "Uploaded")]
-		public DateTime UploadedTimestamp { get; set; }
+		public DateTime UploadTimestamp { get; set; }
 
 		[Display(Name = "Filename")]
 		public string FileName { get; set; }

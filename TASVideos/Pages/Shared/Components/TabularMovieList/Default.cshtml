@@ -22,7 +22,7 @@
 					@foreach (var pub in Model)
 					{
 					<tr>
-						<td>@pub.CreateTimeStamp.ToShortDateString()</td>
+						<td><timezone-convert asp-for="@pub.CreateTimeStamp" date-only="true"/></td>
 						<td>@pub.Game</td>
 						<td><a href="/@(pub.Id)M">@($"{pub.Time:g}")</a></td>
 						<td>@pub.Authors</td>

@@ -26,7 +26,7 @@
 		<div class="col-md-5">
 			<form-group>
 				<label asp-for="UserToEdit.CreateTimeStamp" class="form-control-label"></label>
-				<div>@Model.UserToEdit.CreateTimeStamp</div>
+				<div><timezone-convert asp-for="@Model.UserToEdit.CreateTimeStamp"/></div>
 			</form-group>
 			<form-group>
 				<label asp-for="UserToEdit.UserName" class="form-control-label"></label>
