@@ -50,29 +50,21 @@ namespace TASVideos.Api.Controllers
 				return BadRequest();
 			}
 
-			// TODO: set up global exception handling to return a json payload from api calls but error page for page calls
-			try
+			var query = _db.Publications.AsQueryable();
+			
+			if (!string.IsNullOrWhiteSpace(request.SystemCode))
 			{
-				var query = _db.Publications.AsQueryable();
-				
-				if (!string.IsNullOrWhiteSpace(request.SystemCode))
-				{
-					query = query.Where(p => p.System.Code == request.SystemCode);
-				}
-
-				var pubs = (await query
-					.ProjectTo<PublicationsResponse>()
-					.SortBy(request)
-					.Paginate(request)
-					.ToListAsync())
-					.FieldSelect(request);
-
-				return Ok(pubs);
+				query = query.Where(p => p.System.Code == request.SystemCode);
 			}
-			catch (Exception ex)
-			{
-				return StatusCode(500);
-			}
+
+			var pubs = (await query
+				.ProjectTo<PublicationsResponse>()
+				.SortBy(request)
+				.Paginate(request)
+				.ToListAsync())
+				.FieldSelect(request);
+
+			return Ok(pubs);
 		}
 	}
 }
