@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +10,14 @@ using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Data;
 
+/*
+ * General API TODOs:
+ * Not every column is sortable, how do we inform the user which can be sorted by?
+ * Throw bad request when attempting to sort by a non-sortable column
+ * Field selection is purely post processing and returns distinct objects,
+ *	so the record count might be less than the requested count
+ *  how do we document this? or do we want to try to do dynamic queryable field selection?
+ */
 namespace TASVideos.Api.Controllers
 {
 	/// <summary>

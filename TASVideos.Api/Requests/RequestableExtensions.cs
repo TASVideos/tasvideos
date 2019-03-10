@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+
+using TASVideos.Data;
 
 namespace TASVideos.Api.Requests
 {
@@ -120,9 +123,14 @@ namespace TASVideos.Api.Requests
 
 			column = column.Trim('-').Trim('+')?.ToLower();
 
-			var hasProperty = typeof(T).GetProperties().Any(p => p.Name.ToLower() == column);
+			var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
+			
+			if (prop == null)
+			{
+				return query;
+			}
 
-			if (!hasProperty)
+			if (prop.GetCustomAttribute(typeof(SortableAttribute)) == null)
 			{
 				return query;
 			}

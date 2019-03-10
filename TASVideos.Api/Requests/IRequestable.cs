@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Requests
 {
-		/// <summary>
+	/// <summary>
 	/// Represents a request object for which an API endpoint collection
 	/// that can be sorted, paged, and field selected
 	/// </summary>
