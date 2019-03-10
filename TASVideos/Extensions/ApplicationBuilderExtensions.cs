@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace TASVideos.Extensions
 {
@@ -98,7 +102,7 @@ namespace TASVideos.Extensions
 			app.UseSwaggerUI(c =>
 			{
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", appName);
-				c.RoutePrefix = string.Empty;
+				c.RoutePrefix = "api";
 			});
 
 			return app;
