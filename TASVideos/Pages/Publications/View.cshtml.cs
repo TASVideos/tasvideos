@@ -2,6 +2,8 @@
 using System.Net.Mime;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,53 +36,8 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			// TODO: AutoMapper, movie list is the same logic
 			Publication = await _db.Publications
-				.Select(p => new PublicationDisplayModel
-				{
-					Id = p.Id,
-					CreateTimeStamp = p.CreateTimeStamp,
-					LastUpdateTimeStamp = p.LastUpdateTimeStamp,
-					LastUpdateUser = p.LastUpdateUserName,
-					Title = p.Title,
-					OnlineWatchingUrl = p.OnlineWatchingUrl,
-					MirrorSiteUrl = p.MirrorSiteUrl,
-					ObsoletedBy = p.ObsoletedById,
-					MovieFileName = p.MovieFileName,
-					SubmissionId = p.SubmissionId,
-					TierIconPath = p.Tier.IconPath,
-					// ReSharper disable once PossibleLossOfFraction
-					RatingCount = p.PublicationRatings.Count / 2,
-					Files = p.Files
-						.Select(f => new PublicationDisplayModel.FileModel
-						{
-							Path = f.Path,
-							Type = f.Type
-						})
-						.ToList(),
-					Tags = p.PublicationTags
-						.Select(pt => new PublicationDisplayModel.TagModel
-						{
-							DisplayName = pt.Tag.DisplayName,
-							Code = pt.Tag.Code
-						})
-						.ToList(),
-					GenreTags = p.Game.GameGenres
-						.Select(gg => new PublicationDisplayModel.TagModel
-						{
-							DisplayName = gg.Genre.DisplayName,
-							Code = gg.Genre.DisplayName // TODO
-						}),
-					Flags = p.PublicationFlags
-						.Where(pf => pf.Flag.IconPath != null)
-						.Select(pf => new PublicationDisplayModel.FlagModel
-						{
-							IconPath = pf.Flag.IconPath,
-							LinkPath = pf.Flag.LinkPath,
-							Name = pf.Flag.Name
-						})
-						.ToList()
-				})
+				.ProjectTo<PublicationDisplayModel>()
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
 			if (Publication == null)

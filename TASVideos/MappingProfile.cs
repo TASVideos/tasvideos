@@ -78,6 +78,38 @@ namespace TASVideos
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
 				.ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System != null ? src.System.DisplayName : ""));
 
+			CreateMap<Publication, PublicationDisplayModel>()
+				.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count / 2.0))
+				.ForMember(dest => dest.TierIconPath, opt => opt.MapFrom(src => src.Tier.IconPath))
+				.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files
+					.Select(f => new PublicationDisplayModel.FileModel
+					{
+						Path = f.Path,
+						Type = f.Type
+					})
+					.ToList()))
+				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags
+					.Select(pt => new PublicationDisplayModel.TagModel
+					{
+						DisplayName = pt.Tag.DisplayName,
+						Code = pt.Tag.Code
+					})
+					.ToList()))
+				.ForMember(dest => dest.GenreTags, opt => opt.MapFrom(src => src.Game.GameGenres
+					.Select(gg => new PublicationDisplayModel.TagModel
+					{
+						DisplayName = gg.Genre.DisplayName,
+						Code = gg.Genre.DisplayName // TODO
+					})
+					.ToList()))
+				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
+					.Select(pf => new PublicationDisplayModel.FlagModel
+					{
+						IconPath = pf.Flag.IconPath,
+						LinkPath = pf.Flag.LinkPath,
+						Name = pf.Flag.Name
+					})
+					.ToList()));
 
 			// API
 			CreateMap<Publication, PublicationsResponse>()
@@ -86,7 +118,9 @@ namespace TASVideos
 				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate.FrameRate))
 				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.Author.UserName).ToList()))
 				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags.Select(a => a.Tag.Code).ToList()))
-				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags.Select(a => a.Flag.Token).ToList()));
+				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
+					.Select(a => a.Flag.Token)
+					.ToList()));
 		}
 	}
 }

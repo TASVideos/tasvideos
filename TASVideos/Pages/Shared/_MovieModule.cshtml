@@ -1,14 +1,14 @@
 ﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
 
-<div condition="@Model.ObsoletedBy.HasValue" class="text-danger mb-2">
+<div condition="@Model.ObsoletedById.HasValue" class="text-danger mb-2">
 	<h4>This movie has been obsoleted!</h4>
-	<a href="/@(Model.ObsoletedBy)M" class="btn btn-primary">Obsoleting Movie</a>
+	<a href="/@(Model.ObsoletedById)M" class="btn btn-primary">Obsoleting Movie</a>
 </div>
 <card>
 	<cardheader>
 		<img src="/@Model.TierIconPath" /> <span>@Model.Title</span>
 		<div class="pull-right">
-			@foreach (var flag in Model.Flags)
+			@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
 			{
 				<a href="@flag.LinkPath">
 					<img title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
