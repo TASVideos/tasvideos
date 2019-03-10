@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Swashbuckle.AspNetCore.Swagger;
 
+using TASVideos.Api.Controllers;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
@@ -26,7 +27,7 @@ using TASVideos.Services;
 using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Api.Controllers;
+
 namespace TASVideos.Extensions
 {
 	public static class ServiceCollectionExtensions

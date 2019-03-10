@@ -22,6 +22,7 @@ namespace TASVideos.Extensions
 				app.UseExceptionHandler("/Error");
 			}
 
+			app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 			return app;
 		}
 
