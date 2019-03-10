@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using AutoMapper;
+
+using TASVideos.Api.Responses;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
@@ -75,6 +77,16 @@ namespace TASVideos
 				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
 				.ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System != null ? src.System.DisplayName : ""));
+
+
+			// API
+			CreateMap<Publication, PublicationsResponse>()
+				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.Tier.Name))
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
+				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate.FrameRate))
+				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.Author.UserName).ToList()))
+				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags.Select(a => a.Tag.Code).ToList()))
+				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags.Select(a => a.Flag.Token).ToList()));
 		}
 	}
 }

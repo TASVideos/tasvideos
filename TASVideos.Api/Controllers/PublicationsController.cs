@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +50,6 @@ namespace TASVideos.Api.Controllers
 				return BadRequest();
 			}
 
-			// TODO: automapper
 			// TODO: set up global exception handling to return a json payload from api calls but error page for page calls
 			try
 			{
@@ -59,17 +60,12 @@ namespace TASVideos.Api.Controllers
 					query = query.Where(p => p.System.Code == request.SystemCode);
 				}
 
-				var pubs = (await query.Select(p => new PublicationsResponse
-				{
-					Id = p.Id,
-					Title = p.Title,
-					Branch = p.Branch,
-					EmulatorVersion = p.EmulatorVersion
-				})
-				.SortBy(request)
-				.Paginate(request)
-				.ToListAsync())
-				.FieldSelect(request);
+				var pubs = (await query
+					.ProjectTo<PublicationsResponse>()
+					.SortBy(request)
+					.Paginate(request)
+					.ToListAsync())
+					.FieldSelect(request);
 
 				return Ok(pubs);
 			}
