@@ -52,7 +52,8 @@ namespace TASVideos.Legacy.Imports
 					IsDeleted = legacyPage.Site.PageName.StartsWith("DeletedPages/"),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
 					CreateUserName = legacyPage.Site.User.Name,
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp)
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
+					LastUpdateUserName = legacyPage.Site.User.Name
 				});
 			}
 
