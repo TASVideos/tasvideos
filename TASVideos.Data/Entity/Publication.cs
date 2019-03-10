@@ -9,8 +9,24 @@ using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Data.Entity
 {
-    public class Publication : BaseEntity
-    {
+	/// <summary>
+	/// Represents filter criteria for filtering publications
+	/// </summary>
+	public interface IPublicationTokens
+	{
+		IEnumerable<string> SystemCodes { get; }
+		IEnumerable<string> Tiers { get; }
+		IEnumerable<int> Years { get; }
+		IEnumerable<string> Tags { get; }
+		IEnumerable<string> Genres { get; }
+		IEnumerable<string> Flags { get; }
+		IEnumerable<int> Authors { get; }
+		IEnumerable<int> MovieIds { get; }
+		bool ShowObsoleted { get; set; }
+	}
+
+	public class Publication : BaseEntity
+	{
 		public int Id { get; set; }
 
 		public virtual ICollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
@@ -100,6 +116,59 @@ namespace TASVideos.Data.Entity
 		public static IQueryable<Publication> ThatAreObsolete(this IQueryable<Publication> publications)
 		{
 			return publications.Where(p => p.ObsoletedById != null);
+		}
+
+		public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
+		{
+			if (tokens.MovieIds.Any())
+			{
+				return publications.Where(p => tokens.MovieIds.Contains(p.Id));
+			}
+			else
+			{
+				var query = publications;
+				if (tokens.SystemCodes.Any())
+				{
+					query = query.Where(p => tokens.SystemCodes.Contains(p.System.Code));
+				}
+
+				if (tokens.Tiers.Any())
+				{
+					query = query.Where(p => tokens.Tiers.Contains(p.Tier.Name));
+				}
+
+				if (!tokens.ShowObsoleted)
+				{
+					query = query.ThatAreCurrent();
+				}
+
+				if (tokens.Years.Any())
+				{
+					query = query.Where(p => tokens.Years.Contains(p.CreateTimeStamp.Year));
+				}
+
+				if (tokens.Tags.Any())
+				{
+					query = query.Where(p => p.PublicationTags.Any(t => tokens.Tags.Contains(t.Tag.Code)));
+				}
+
+				if (tokens.Genres.Any())
+				{
+					query = query.Where(p => p.Game.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre.DisplayName)));
+				}
+
+				if (tokens.Flags.Any())
+				{
+					query = query.Where(p => p.PublicationFlags.Any(f => tokens.Flags.Contains(f.Flag.Token)));
+				}
+
+				if (tokens.Authors.Any())
+				{
+					query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => tokens.Authors.Contains(a)));
+				}
+
+				return query;
+			}
 		}
 	}
 }
