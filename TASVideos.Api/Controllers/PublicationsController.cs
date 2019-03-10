@@ -45,8 +45,14 @@ namespace TASVideos.Api.Controllers
 			// TODO: set up global exception handling to return a json payload from api calls but error page for page calls
 			try
 			{
-				var pubs = (await _db.Publications
-				.Select(p => new PublicationsResponse
+				var query = _db.Publications.AsQueryable();
+				
+				if (!string.IsNullOrWhiteSpace(request.SystemCode))
+				{
+					query = query.Where(p => p.System.Code == request.SystemCode);
+				}
+
+				var pubs = (await query.Select(p => new PublicationsResponse
 				{
 					Id = p.Id,
 					Title = p.Title,
