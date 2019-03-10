@@ -55,7 +55,7 @@
 			<td>@(topic.PostCount - 1)</td>
 			<td>@topic.CreateUserName</td>
 			<td>@topic.Type</td>
-			<td>@topic.LastPost</td>
+			<td><timezone-convert asp-for="@topic.LastPostDateTime" /></td>
 		</tr>
 	}
 </table>

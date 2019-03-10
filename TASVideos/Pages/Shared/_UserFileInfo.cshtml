@@ -41,7 +41,7 @@
 	<div class="card-body">
 		<div class="card-text">
 			<p>@Model.FileName</p>
-			<p>Uploaded @Model.UploadedTimestamp.ToString("G") by @Model.Author</p>
+			<p>Uploaded <timezone-convert asp-for="@Model.UploadTimestamp" /> by @Model.Author</p>
 
 			@if (Model.GameId.HasValue)
 			{

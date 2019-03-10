@@ -14,7 +14,7 @@
 				</div>
 				<div class="col-8 pt-0 pb-0">
 					<small>
-						Posted: @Model.Post.CreateTimestamp
+						Posted: <timezone-convert asp-for="@Model.Post.CreateTimestamp" /> 
 						<span condition="!string.IsNullOrWhiteSpace(Model.Post.Subject)">Post subject: @Model.Post.Subject</span>
 					</small>
 				</div>

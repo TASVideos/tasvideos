@@ -25,7 +25,7 @@
 			<td>
 				<a asp-page="/Users/Profile" asp-route-userName="@post.AuthorName">@post.AuthorName</a>
 			</td>
-			<td>@post.PostDate</td>
+			<td><timezone-convert asp-for="@post.PostDate"/></td>
 		</tr>
 	}
 </table>

@@ -26,7 +26,7 @@
 		<tr>
 			<td>@vote.OptionText</td>
 			<td><a asp-page="/Users/Profile" asp-route-userName="@vote.UserName">@vote.UserName</a></td>
-			<td>@vote.CreateTimestamp</td>
+			<td><timezone-convert asp-for="@vote.CreateTimestamp" /></td>
 			<td>@vote.IpAddress</td>
 			<td permission="ResetPollResults">
 				<form method="post">
