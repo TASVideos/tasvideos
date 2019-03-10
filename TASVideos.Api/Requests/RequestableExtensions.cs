@@ -52,7 +52,7 @@ namespace TASVideos.Api.Requests
 		{
 			return source
 				.Select(s => s.FieldSelect(adj?.Fields))
-				.Distinct(); // TODO: this doesn't work, distinct by equality
+				.Distinct(ExpandoObjectComparer.Default());
 		}
 
 		/// <summary>
