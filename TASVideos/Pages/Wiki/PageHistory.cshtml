@@ -23,7 +23,7 @@
 		{
 			<tr data-revision="@revision.Revision">
 				<td><a href="/@(Model.History.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
-				<td>@revision.CreateTimeStamp</td>
+				<td><timezone-convert asp-for="@revision.CreateTimeStamp" /></td>
 				<td>@revision.CreateUserName</td>
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>

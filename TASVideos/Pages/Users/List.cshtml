@@ -18,7 +18,7 @@
 			<td>@user.Id</td>
 			<td>@user.UserName</td>
 			<td>@string.Join(",", user.Roles)</td>
-			<td>@user.CreateTimeStamp</td>
+			<td><timezone-convert asp-for="@user.CreateTimeStamp" /></td>
 			<td>
 				<a
 					asp-page="/Users/Profile"

@@ -1,10 +1,8 @@
-﻿@using System.Globalization
-
-@model IEnumerable<TASVideos.Pages.UserFiles.Models.UserMovieListModel>
+﻿@model IEnumerable<TASVideos.Pages.UserFiles.Models.UserMovieListModel>
 
 <table class="table table-striped table-bordered table-sm">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.First().UploadedTimestamp)</th>
+		<th>@Html.DisplayNameFor(m => m.First().UploadTimestamp)</th>
 		<th>@Html.DisplayNameFor(m => m.First().Author)</th>
 		<th>@Html.DisplayNameFor(m => m.First().FileName)</th>
 		<th>@Html.DisplayNameFor(m => m.First().Title)</th>
@@ -13,7 +11,7 @@
 	@foreach (var item in Model)
 	{
 		<tr>
-			<td>@item.UploadedTimestamp.ToString("G", CultureInfo.InvariantCulture)</td>
+			<td><timezone-convert asp-for="@item.UploadTimestamp" date-only="true" /></td>
 			<td>@item.Author</td>
 			<td><a asp-page="/Userfiles/Info" asp-route-id="@item.Id">@item.FileName</a></td>
 			<td>@item.Title</td>

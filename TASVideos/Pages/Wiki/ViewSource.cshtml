@@ -6,7 +6,7 @@
 <div>
 	<small>
 		Revision @Model.Revision (current)<br />
-		Last Updated by @(Model.WikiPage.LastUpdateUserName ?? "Unknown") on @Model.WikiPage.LastUpdateTimeStamp
+		Last Updated by @(Model.WikiPage.CreateUserName ?? "Unknown") on <timezone-convert asp-for="@Model.WikiPage.CreateTimeStamp" /> 
 	</small>
 </div>
 <div>

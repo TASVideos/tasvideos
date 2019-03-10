@@ -22,7 +22,7 @@ else
 
 <hr />
 <small>
-	@Model.PageName last edited by @Model.LastUpdateUserName on @Model.LastUpdateTimeStamp
+	@Model.PageName last edited by @Model.LastUpdateUserName on <timezone-convert asp-for="@Model.LastUpdateTimeStamp" />
 </small>
 <br />
 

@@ -15,7 +15,8 @@
 					<label>@Model.JoinDate.ToShortDateString()</label>
 					<br />
 					<label asp-for="LastLoggedInTimeStamp"></label>
-					<label>@Model.LastLoggedInTimeStamp?.ToShortDateString()</label>
+					<label condition="Model.LastLoggedInTimeStamp.HasValue"><timezone-convert asp-for="@(Model.LastLoggedInTimeStamp ?? DateTime.MinValue)" date-only="true" /></label>
+					<label condition="!Model.LastLoggedInTimeStamp.HasValue">Never</label>
 					<br />
 					<label asp-for="Location"></label>
 					<label>@Html.DisplayFor(m => m.Location)</label>
