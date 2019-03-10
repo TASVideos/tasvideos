@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 
 /*
  * General API TODOs:
@@ -40,9 +41,12 @@ namespace TASVideos.Api.Controllers
 		}
 
 		/// <summary>
-		/// Gets all the things
+		/// Returns a list of publications, filtered by the given criteria
 		/// </summary>
+		/// <response code="200">Returns the list of publications</response>
+		/// <response code="400">The request parameters are invalid</response>
 		[HttpGet]
+		[ProducesResponseType(typeof(IEnumerable<PublicationsResponse>), 200)]
 		public async Task<IActionResult> GetAll(PublicationsRequest request)
 		{
 			if (!ModelState.IsValid)
@@ -50,14 +54,8 @@ namespace TASVideos.Api.Controllers
 				return BadRequest();
 			}
 
-			var query = _db.Publications.AsQueryable();
-			
-			if (!string.IsNullOrWhiteSpace(request.SystemCode))
-			{
-				query = query.Where(p => p.System.Code == request.SystemCode);
-			}
-
-			var pubs = (await query
+			var pubs = (await _db.Publications
+				.FilterByTokens(request)
 				.ProjectTo<PublicationsResponse>()
 				.SortBy(request)
 				.Paginate(request)

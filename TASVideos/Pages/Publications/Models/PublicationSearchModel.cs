@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Publications.Models
 {
-	public class PublicationSearchModel
+	public class PublicationSearchModel : IPublicationTokens
 	{
 		public IEnumerable<string> SystemCodes { get; set; } = new List<string>();
 		public IEnumerable<string> Tiers { get; set; } = new List<string>();
