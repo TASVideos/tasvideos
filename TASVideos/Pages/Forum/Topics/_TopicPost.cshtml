@@ -14,7 +14,7 @@
 						class="pull-left">
 						<i class="fa fa-bookmark-o"></i>
 					</a>
-					Posted: @Model.CreateTimestamp
+					Posted: <timezone-convert asp-for="@Model.CreateTimestamp" /> 
 					<span condition="!string.IsNullOrWhiteSpace(Model.Subject)">
 						Post subject: @Model.Subject
 					</span>
@@ -57,7 +57,7 @@
 					<img src="@Model.PosterAvatar" />
 					<br />
 					<small>
-						Joined: @Model.PosterJoined.ToShortDateString()<br />
+						Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
 						Posts: @Model.PosterPostCount<br />
 						Location: @Model.PosterLocation
 					</small>

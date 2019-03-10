@@ -43,7 +43,7 @@
 						<img src="@Model.UserPosts.Avatar" />
 						<br />
 						<small>
-							Joined: @Model.UserPosts.Joined.ToShortDateString()<br />
+							Joined: <timezone-convert asp-for="@Model.UserPosts.Joined" date-only="true"/><br />
 							Posts: @Model.UserPosts.Posts.RowCount<br />
 							Location: @Model.UserPosts.Location
 						</small>

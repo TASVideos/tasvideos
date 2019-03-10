@@ -1,5 +1,5 @@
 ﻿@model UserProfileModel
-
+@{ var lastLoggedIn = Model.LastLoggedInTimeStamp ?? DateTime.UtcNow; }
 <row>
 	<div class="col-md-6">
 		<card>
@@ -12,10 +12,10 @@
 					<a href="/HomePages/@Model.UserName">Homepage</a>
 					<br />
 					<label asp-for="JoinDate"></label>
-					<label>@Model.JoinDate.ToShortDateString()</label>
+					<label><timezone-convert asp-for="@Model.JoinDate" date-only="true" /></label>
 					<br />
 					<label asp-for="LastLoggedInTimeStamp"></label>
-					<label condition="Model.LastLoggedInTimeStamp.HasValue"><timezone-convert asp-for="@(Model.LastLoggedInTimeStamp ?? DateTime.MinValue)" date-only="true" /></label>
+					<label condition="Model.LastLoggedInTimeStamp.HasValue"><timezone-convert asp-for="@lastLoggedIn" date-only="true" /></label>
 					<label condition="!Model.LastLoggedInTimeStamp.HasValue">Never</label>
 					<br />
 					<label asp-for="Location"></label>
@@ -97,9 +97,9 @@
 							@Model.WikiEdits.TotalEdits
 						</a> Total Edits
 					</p>
-					<label>Last Edit On: @Model.WikiEdits.LastEdit?.ToShortDateString()</label>
+					<label>Last Edit On: <timezone-convert asp-for="@Model.WikiEdits.LastEditDateTime" date-only="true" /></label>
 					<br />
-					<label>First Edit on: @Model.WikiEdits.FirstEdit?.ToShortDateString()</label>
+					<label>First Edit on: <timezone-convert asp-for="@Model.WikiEdits.FirstEditDateTime" date-only="true" /></label>
 				</div>
 			</cardbody>
 		</card>

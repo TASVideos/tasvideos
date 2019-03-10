@@ -17,7 +17,7 @@
 			<cardbody>
 				@foreach (var user in Model.Data.UsersWithMovies)
 				{
-					<a asp-page="ForUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: @user.Latest)</span><br />
+					<a asp-page="ForUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: <timezone-convert asp-for="@user.Latest"/>)</span><br />
 				}
 			</cardbody>
 		</card>
@@ -34,7 +34,7 @@
 						<a asp-page="Info" asp-route-id="@file.Id">@file.FileName</a>
 						<br />
 						<small class="ml-3">
-							by <a asp-page="/Users/Profile" asp-route-username="@file.Author">@file.Author</a> on @file.UploadTimestamp
+							by <a asp-page="/Users/Profile" asp-route-username="@file.Author">@file.Author</a> on <timezone-convert asp-for="@file.UploadTimestamp" /> 
 						</small>
 					</div>
 				}
@@ -49,7 +49,7 @@
 				{
 					<div>
 						<a asp-page="Game" asp-route-id="@game.GameId">@game.SystemCode @game.GameName</a>
-						<small>(latest @game.Latest)</small>
+						<small>(latest <timezone-convert asp-for="@game.Latest"/>)</small>
 					</div>
 				}
 			</cardbody>

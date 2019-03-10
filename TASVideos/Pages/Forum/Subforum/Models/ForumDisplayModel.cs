@@ -31,6 +31,7 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 			public ForumTopicType Type { get; set; }
 
 			public DateTime? LastPost { get; set; }
+			public DateTime LastPostDateTime => LastPost ?? DateTime.UtcNow; // This will never actually be null, EF just requires a nullable DateTime for .Max() operations
 		}
 	}
 }

@@ -83,6 +83,9 @@ namespace TASVideos.Models
 			public int TotalEdits { get; set; }
 			public DateTime? FirstEdit { get; set; }
 			public DateTime? LastEdit { get; set; }
+
+			public DateTime FirstEditDateTime => FirstEdit ?? DateTime.UtcNow;
+			public DateTime LastEditDateTime => LastEdit ?? DateTime.UtcNow;
 		}
 
 		public class RatingModel
