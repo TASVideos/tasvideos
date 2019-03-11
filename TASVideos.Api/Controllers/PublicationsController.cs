@@ -23,7 +23,7 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Api.Controllers
 {
 	/// <summary>
-	/// The publications of tasvideos
+	/// The publications of TASVideos
 	/// </summary>
 	[AllowAnonymous]
 	[Route("api/v1/[controller]")]
@@ -42,10 +42,11 @@ namespace TASVideos.Api.Controllers
 		/// <summary>
 		/// Returns a publication with the given id
 		/// </summary>
-		/// <response code="200">Returns the list of publications</response>
+		/// <response code="200">Returns a publication</response>
 		/// <response code="400">The request parameters are invalid</response>
 		/// <response code="404">A publication with the given id was not found</response>
 		[HttpGet("{id}")]
+		[ProducesResponseType(typeof(PublicationsResponse), 200)]
 		public async Task<IActionResult> Get(int id)
 		{
 			if (!ModelState.IsValid)
