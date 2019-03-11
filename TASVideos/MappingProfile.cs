@@ -121,6 +121,15 @@ namespace TASVideos
 				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
 					.Select(a => a.Flag.Token)
 					.ToList()));
+
+			CreateMap<Submission, SubmissionsResponse>()
+				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.SubmissionAuthors.Select(a => a.Author.UserName).ToList()))
+				.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.IntendedTier != null ? src.IntendedTier.Name : null))
+				.ForMember(dest => dest.Judge, opt => opt.MapFrom(src => src.Judge != null ? src.Judge.UserName : null))
+				.ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Judge != null ? src.Publisher.UserName : null))
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System != null ? src.System.Code : null))
+				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate != null ? src.SystemFrameRate.FrameRate : (double?)null));
 		}
 	}
 }
