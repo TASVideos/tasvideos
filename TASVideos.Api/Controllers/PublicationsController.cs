@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper.QueryableExtensions;
@@ -38,6 +37,32 @@ namespace TASVideos.Api.Controllers
 		public PublicationsController(ApplicationDbContext db)
 		{
 			_db = db;
+		}
+
+		/// <summary>
+		/// Returns a publication with the given id
+		/// </summary>
+		/// <response code="200">Returns the list of publications</response>
+		/// <response code="400">The request parameters are invalid</response>
+		/// <response code="404">A publication with the given id was not found</response>
+		[HttpGet("{id}")]
+		public async Task<IActionResult> Get(int id)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest();
+			}
+
+			var pub = await _db.Publications
+				.ProjectTo<PublicationsResponse>()
+				.SingleOrDefaultAsync(p => p.Id == id);
+
+			if (pub == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(pub);
 		}
 
 		/// <summary>
