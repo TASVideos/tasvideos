@@ -21,12 +21,11 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			var maxDays = ParamHelper.GetInt(pp, "maxdays");
+			// Legacy system supported a max days value, which isn't easily translated to the current filtering
+			// However, we currently have it set to 365 which greatly exceeds any max number
+			// And submissions are frequent enough to not worry about too stale submissions showing up on the front page
 			var maxRecords = ParamHelper.GetInt(pp, "maxrels");
-			var request = new SubmissionSearchRequest
-			{
-				StartDate = DateTime.UtcNow.AddDays(0 - (maxDays ?? 365))
-			};
+			var request = new SubmissionSearchRequest();
 
 			var subs = await _db.Submissions
 				.FilterBy(request)
