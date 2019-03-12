@@ -53,6 +53,7 @@ namespace TASVideos
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
 			app
+				.UseRobots()
 				.UseRequestLocalization()
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)

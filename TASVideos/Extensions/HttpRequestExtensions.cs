@@ -22,5 +22,10 @@ namespace TASVideos.Extensions
 
 			return false;
 		}
+
+		public static bool IsRobotsTxt(this HttpRequest request)
+		{
+			return request?.Path.Value?.EndsWith("robots.txt") ?? false;
+		}
 	}
 }
