@@ -26,9 +26,12 @@ namespace TASVideos.Api.Requests
 		/// </summary>
 		public int? StartYear { get; set; }
 
-		DateTime? ISubmissionFilter.StartDate => StartYear.HasValue
-			? DateTime.UtcNow.AddYears(0 - (DateTime.UtcNow.Year - StartYear.Value))
-			: (DateTime?)null;
+		/// <summary>
+		/// Gets or sets the end year to filter by
+		/// </summary>
+		public int? EndYear { get; set; }
+
+		IEnumerable<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear);
 
 		IEnumerable<SubmissionStatus> ISubmissionFilter.StatusFilter => !string.IsNullOrWhiteSpace(Statuses)
 			? Statuses
