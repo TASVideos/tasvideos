@@ -9,6 +9,19 @@ namespace TASVideos.Extensions
 {
 	public static class ApplicationBuilderExtensions
 	{
+		public static IApplicationBuilder UseRobots(this IApplicationBuilder app)
+		{
+			return app.UseWhen(
+				context => context.Request.IsRobotsTxt(),
+				appBuilder =>
+				{
+					appBuilder.UseMiddleware<RobotHandlingMiddleware>();
+				});
+
+			app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+			return app;
+		}
+
 		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostingEnvironment env)
 		{
 			if (env.IsDevelopment())
