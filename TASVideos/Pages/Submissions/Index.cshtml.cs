@@ -53,7 +53,7 @@ namespace TASVideos.Pages.Submissions
 			}
 
 			Submissions = await _db.Submissions
-				.SearchBy(Search)
+				.FilterBy(Search)
 				.PersistToSubListEntry();
 		}
 	}

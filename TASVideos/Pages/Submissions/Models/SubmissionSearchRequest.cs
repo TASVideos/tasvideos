@@ -6,10 +6,9 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models
 {
-	public class SubmissionSearchRequest
+	public class SubmissionSearchRequest : ISubmissionFilter
 	{
-		public int? Limit { get; set; }
-		public DateTime? Cutoff { get; set; } // Only submissions submitted after this date
+		public DateTime? StartDate { get; set; } // Only submissions submitted after this date
 		public string User { get; set; }
 
 		[Display(Name = "Status Filter")]

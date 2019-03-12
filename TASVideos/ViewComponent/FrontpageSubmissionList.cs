@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,14 +21,16 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
+			var maxDays = ParamHelper.GetInt(pp, "maxdays");
+			var maxRecords = ParamHelper.GetInt(pp, "maxrels");
 			var request = new SubmissionSearchRequest
 			{
-				Limit = 5,
-				Cutoff = DateTime.UtcNow.AddDays(-365)
+				StartDate = DateTime.UtcNow.AddDays(0 - (maxDays ?? 365))
 			};
 
 			var subs = await _db.Submissions
-				.SearchBy(request)
+				.FilterBy(request)
+				.Take(maxRecords ?? 5)
 				.PersistToSubListEntry();
 
 			return View(subs);

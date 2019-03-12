@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Api.Controllers
 {
@@ -75,6 +76,7 @@ namespace TASVideos.Api.Controllers
 			}
 
 			var subs = (await _db.Submissions
+				.FilterBy(request)
 				.ProjectTo<SubmissionsResponse>()
 				.SortBy(request)
 				.Paginate(request)

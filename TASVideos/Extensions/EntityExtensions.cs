@@ -36,32 +36,6 @@ namespace TASVideos.Extensions
 				});
 		}
 
-		public static IQueryable<Submission> SearchBy(this IQueryable<Submission> query, SubmissionSearchRequest criteria)
-		{
-			if (!string.IsNullOrWhiteSpace(criteria.User))
-			{
-				query = query.Where(s => s.SubmissionAuthors.Any(sa => sa.Author.UserName == criteria.User)
-					|| s.Submitter.UserName == criteria.User);
-			}
-
-			if (criteria.Cutoff.HasValue)
-			{
-				query = query.Where(s => s.CreateTimeStamp >= criteria.Cutoff.Value);
-			}
-
-			if (criteria.StatusFilter.Any())
-			{
-				query = query.Where(s => criteria.StatusFilter.Contains(s.Status));
-			}
-
-			if (criteria.Limit.HasValue)
-			{
-				query = query.Take(criteria.Limit.Value);
-			}
-
-			return query;
-		}
-
 		public static async Task<IEnumerable<SubmissionListEntry>> PersistToSubListEntry(this IQueryable<Submission> query)
 		{
 			var iquery = query
