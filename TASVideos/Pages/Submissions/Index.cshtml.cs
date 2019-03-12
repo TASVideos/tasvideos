@@ -47,7 +47,7 @@ namespace TASVideos.Pages.Submissions
 			// Defaults
 			if (!Search.StatusFilter.Any())
 			{
-				Search.StatusFilter = !string.IsNullOrWhiteSpace(Search.User)
+				Search.StatusFilter = !string.IsNullOrWhiteSpace(Search.User) || Search.Years.Any()
 					? SubmissionSearchRequest.All
 					: SubmissionSearchRequest.Default;
 			}

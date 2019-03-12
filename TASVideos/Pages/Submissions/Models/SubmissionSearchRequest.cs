@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Submissions.Models
 {
 	public class SubmissionSearchRequest : ISubmissionFilter
 	{
-		public IEnumerable<int> Years { get; set; } = new int[0];
+		public IEnumerable<int> Years { get; set; } = new List<int>();
 
 		public string User { get; set; }
 
