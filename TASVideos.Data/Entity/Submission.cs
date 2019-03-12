@@ -36,6 +36,13 @@ namespace TASVideos.Data.Entity
 		Cancelled
 	}
 
+	public interface ISubmissionFilter
+	{
+		IEnumerable<SubmissionStatus> StatusFilter { get; }
+		DateTime? StartDate { get; }
+		string User { get; }
+	}
+
 	public class Submission : BaseEntity
 	{
 		public int Id { get; set; }
@@ -125,6 +132,30 @@ namespace TASVideos.Data.Entity
 				$"#{Id}: {string.Join(" & ", SubmissionAuthors.Select(sa => sa.Author.UserName))}'s {System.Code} {GameName}"
 					+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
 					+ $" in {Time():g}";
+		}
+	}
+
+	public static class SubmissionExtensions
+	{
+		public static IQueryable<Submission> FilterBy(this IQueryable<Submission> query, ISubmissionFilter criteria)
+		{
+			if (!string.IsNullOrWhiteSpace(criteria.User))
+			{
+				query = query.Where(s => s.SubmissionAuthors.Any(sa => sa.Author.UserName == criteria.User)
+					|| s.Submitter.UserName == criteria.User);
+			}
+
+			if (criteria.StartDate.HasValue)
+			{
+				query = query.Where(s => s.CreateTimeStamp >= criteria.StartDate.Value);
+			}
+
+			if (criteria.StatusFilter.Any())
+			{
+				query = query.Where(s => criteria.StatusFilter.Contains(s.Status));
+			}
+
+			return query;
 		}
 	}
 }
