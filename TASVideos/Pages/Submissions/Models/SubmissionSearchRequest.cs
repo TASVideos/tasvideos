@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models
@@ -9,6 +12,15 @@ namespace TASVideos.Pages.Submissions.Models
 	public class SubmissionSearchRequest : ISubmissionFilter
 	{
 		public IEnumerable<int> Years { get; set; } = new List<int>();
+
+		public IEnumerable<SelectListItem> AvailableYears => Enumerable
+			.Range(2000, DateTime.UtcNow.Year + 1 - 2000)
+			.OrderByDescending(n => n)
+			.Select(n => new SelectListItem
+			{
+				Text = n.ToString(),
+				Value = n.ToString()
+			});
 
 		public string User { get; set; }
 

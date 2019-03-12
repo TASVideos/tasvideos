@@ -20,6 +20,12 @@
 <form method="get">
 	<input type="hidden" asp-for="Search.User"/>
 	<two-column-select available-list="AvailableStatuses" id-list="Search.StatusFilter"/>
+	<row class="mt-2 mb-2">
+		<column md="5">
+			<label asp-for="Search.Years" class="form-control-label"></label>
+			<select asp-for="Search.Years" asp-items="Model.Search.AvailableYears" multiple class="form-control"></select>
+		</column>
+	</row>
 	<button type="submit" class="btn btn-secondary mt-1">Filter</button>
 </form>
 <hr />
