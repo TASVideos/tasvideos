@@ -39,7 +39,7 @@ namespace TASVideos.Data.Entity
 	public interface ISubmissionFilter
 	{
 		IEnumerable<SubmissionStatus> StatusFilter { get; }
-		DateTime? StartDate { get; }
+		IEnumerable<int> Years { get; }
 		string User { get; }
 	}
 
@@ -145,9 +145,9 @@ namespace TASVideos.Data.Entity
 					|| s.Submitter.UserName == criteria.User);
 			}
 
-			if (criteria.StartDate.HasValue)
+			if (criteria.Years.Any())
 			{
-				query = query.Where(s => s.CreateTimeStamp >= criteria.StartDate.Value);
+				query = query.Where(p => criteria.Years.Contains(p.CreateTimeStamp.Year));
 			}
 
 			if (criteria.StatusFilter.Any())

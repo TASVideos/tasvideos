@@ -8,7 +8,8 @@ namespace TASVideos.Pages.Submissions.Models
 {
 	public class SubmissionSearchRequest : ISubmissionFilter
 	{
-		public DateTime? StartDate { get; set; } // Only submissions submitted after this date
+		public IEnumerable<int> Years { get; set; } = new int[0];
+
 		public string User { get; set; }
 
 		[Display(Name = "Status Filter")]
