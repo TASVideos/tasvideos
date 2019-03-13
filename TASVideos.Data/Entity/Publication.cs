@@ -25,7 +25,7 @@ namespace TASVideos.Data.Entity
 		bool ShowObsoleted { get; set; }
 	}
 
-	public class Publication : BaseEntity
+	public class Publication : BaseEntity, ITimeable
 	{
 		public int Id { get; set; }
 
@@ -84,25 +84,14 @@ namespace TASVideos.Data.Entity
 		// De-normalized name for easy recreation
 		public string Title { get; set; }
 
-		public TimeSpan Time
-		{
-			get
-			{
-				int seconds = (int)(Frames / SystemFrameRate.FrameRate);
-				double fractionalSeconds = (Frames / SystemFrameRate.FrameRate) - seconds;
-				int milliseconds = (int)(Math.Round(fractionalSeconds, 2) * 1000);
-				var timespan = new TimeSpan(0, 0, 0, seconds, milliseconds);
-
-				return timespan;
-			}
-		}
+		double ITimeable.FrameRate => SystemFrameRate.FrameRate; 
 
 		public void GenerateTitle()
 		{
 			Title =
 				$"{string.Join(" & ", Authors.Select(sa => sa.Author.UserName))}'s {System.Code} {Game.DisplayName}"
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-				+ $" in {Time:g}";
+				+ $" in {this.Time():g}";
 		}
 	}
 

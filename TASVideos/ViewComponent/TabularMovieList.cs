@@ -66,7 +66,7 @@ namespace TASVideos.ViewComponents
 				{
 					Id = m.Id,
 					CreateTimeStamp = m.CreateTimeStamp,
-					Time = m.Time,
+					Time = m.Time(),
 					Game = m.Game.DisplayName,
 					Authors = string.Join(", ", m.Authors.Select(pa => pa.Author)),
 					ObsoletedBy = null, // TODO: previous logic

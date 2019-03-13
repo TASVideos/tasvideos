@@ -43,7 +43,7 @@ namespace TASVideos.Data.Entity
 		string User { get; }
 	}
 
-	public class Submission : BaseEntity
+	public class Submission : BaseEntity, ITimeable
 	{
 		public int Id { get; set; }
 
@@ -116,22 +116,14 @@ namespace TASVideos.Data.Entity
 		/// </summary>
 		public string Title { get; set; }
 
-		public TimeSpan Time()
-		{
-			int seconds = (int)(Frames / SystemFrameRate.FrameRate);
-			double fractionalSeconds = (Frames / SystemFrameRate.FrameRate) - seconds;
-			int milliseconds = (int)(Math.Round(fractionalSeconds, 2) * 1000);
-			var timespan = new TimeSpan(0, 0, 0, seconds, milliseconds);
-
-			return timespan;
-		}
+		double ITimeable.FrameRate => SystemFrameRate.FrameRate; 
 
 		public void GenerateTitle()
 		{
 			Title =
 				$"#{Id}: {string.Join(" & ", SubmissionAuthors.Select(sa => sa.Author.UserName))}'s {System.Code} {GameName}"
 					+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-					+ $" in {Time():g}";
+					+ $" in {this.Time():g}";
 		}
 	}
 
