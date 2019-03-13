@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using AutoMapper.QueryableExtensions;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Api.Requests;
@@ -46,7 +43,7 @@ namespace TASVideos.Api.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return BadRequest();
+				return BadRequest(ModelState);
 			}
 
 			var sub = await _db.Submissions
@@ -70,9 +67,14 @@ namespace TASVideos.Api.Controllers
 		[ProducesResponseType(typeof(IEnumerable<SubmissionsResponse>), 200)]
 		public async Task<IActionResult> GetAll(SubmissionsRequest request)
 		{
+			if (!request.IsValidSort(typeof(SubmissionsResponse)))
+			{
+				ModelState.AddModelError(nameof(request.Sort), "Invalid Sort parameter");
+			}
+
 			if (!ModelState.IsValid)
 			{
-				return BadRequest();
+				return BadRequest(ModelState);
 			}
 
 			var subs = (await _db.Submissions
