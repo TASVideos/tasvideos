@@ -17,13 +17,64 @@
 
 @await Component.RenderWiki("System/SubmissionHeader")
 <hr />
-<form method="get">
-	<input type="hidden" asp-for="Search.User"/>
+<form method="get" id="submission-form">
 	<two-column-select available-list="AvailableStatuses" id-list="Search.StatusFilter"/>
 	<row class="mt-2 mb-2">
 		<column md="5">
 			<label asp-for="Search.Years" class="form-control-label"></label>
 			<select asp-for="Search.Years" asp-items="Model.Search.AvailableYears" multiple class="form-control"></select>
+		</column>
+		<column class="offset-md-2" md="5">
+			<label asp-for="Search.User" class="form-control-label"></label>
+			<input autocomplete="off" asp-for="Search.User" type="text" list="@Html.IdFor(m => m.Search.User)-autocomplete" class="form-control" />
+			<datalist id="@Html.IdFor(m => m.Search.User)-autocomplete"></datalist>
+			@*TODO: Turn into a component, this is nearly the same code as the user list search box, and could come in handy in other places*@
+			<script>
+				(function () {
+					var searchBox = document.getElementById('@Html.IdFor(m => m.Search.User)');
+					searchBox.onkeyup = function () {
+						var searchVal = searchBox.value.trim();
+						var dataListId = '@Html.IdFor(m => m.Search.User)-autocomplete-' + searchVal;
+						if (searchVal.length > 2) {
+							var existingList = document.getElementById(dataListId);
+							if (existingList) {
+								searchBox.setAttribute('list', dataListId);
+								return;
+							}
+
+							var xmlhttp = new XMLHttpRequest();
+
+							xmlhttp.onreadystatechange = function() {
+								if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+									if (xmlhttp.status === 200) {
+										var newSearchList = document.createElement('datalist');
+										newSearchList.id = dataListId;
+
+										var data = JSON.parse(xmlhttp.responseText);
+
+										for (var i in data) {
+											if (data.hasOwnProperty(i)) {
+												var option = document.createElement('option');
+												option.innerHTML = data[i];
+
+												newSearchList.appendChild(option);
+											}
+										}
+
+										document.getElementById("submission-form").appendChild(newSearchList);
+										searchBox.setAttribute('list', dataListId);
+									}
+								}
+							};
+
+							xmlhttp.open("GET",
+								"/Subs-List?partial=" + searchVal + "&handler=SearchAuthor",
+								true);
+							xmlhttp.send();
+						}
+					};
+				})();
+			</script>
 		</column>
 	</row>
 	<button type="submit" class="btn btn-secondary mt-1">Filter</button>

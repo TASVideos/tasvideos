@@ -80,7 +80,7 @@ namespace TASVideos.Pages.Users
 			}
 
 			list = await _db.Users
-				.Where(u => u.NormalizedUserName.Contains(upper))
+				.ThatPartiallyMatch(upper)
 				.Select(u => u.UserName)
 				.ToListAsync();
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -55,6 +56,23 @@ namespace TASVideos.Pages.Submissions
 			Submissions = await _db.Submissions
 				.FilterBy(Search)
 				.PersistToSubListEntry();
+		}
+
+		public async Task<IActionResult> OnGetSearchAuthor(string partial)
+		{
+			if (string.IsNullOrWhiteSpace(partial) || partial.Length < 3)
+			{
+				return new JsonResult(new string[0]);
+			}
+
+			var upper = partial.ToUpper();
+			var result = await _db.Users
+				.ThatHaveSubmissions()
+				.ThatPartiallyMatch(upper)
+				.Select(u => u.UserName)
+				.ToListAsync();
+
+			return new JsonResult(result);
 		}
 	}
 }

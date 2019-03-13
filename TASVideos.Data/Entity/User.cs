@@ -67,5 +67,16 @@ namespace TASVideos.Data.Entity
 		{
 			return await query.AnyAsync(q => q.UserName == userName);
 		}
+
+		public static IQueryable<User> ThatHaveSubmissions(this IQueryable<User> query)
+		{
+			return query.Where(u => u.Submissions.Any());
+		}
+
+		public static IQueryable<User> ThatPartiallyMatch(this IQueryable<User> query, string partial)
+		{
+			var upper = partial?.ToUpper();
+			return query.Where(u => u.NormalizedUserName.Contains(upper));
+		}
 	}
 }
