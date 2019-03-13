@@ -99,7 +99,8 @@ namespace TASVideos.Legacy.Imports
 						GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
 						RomId = -1, // Legacy system had no notion of Rom for submissions
 						EmulatorVersion = legacySubmission.Sub.EmulatorVersion?.Cap(50),
-						JudgeId = legacySubmission.Judge?.Id
+						JudgeId = legacySubmission.Judge?.Id,
+						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50)
 					};
 
 					// For now at least
@@ -157,7 +158,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.GameId),
 				nameof(Submission.RomId),
 				nameof(Submission.EmulatorVersion),
-				nameof(Submission.JudgeId)
+				nameof(Submission.JudgeId),
+				nameof(Submission.Branch)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);

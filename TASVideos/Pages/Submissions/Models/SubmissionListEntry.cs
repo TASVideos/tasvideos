@@ -27,5 +27,4 @@ namespace TASVideos.Pages.Submissions.Models
 		public TimeSpan Time { get; set; }
 		public string Branch { get; set; }
 	}
-
 }

@@ -71,5 +71,8 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("intended_tier")]
 		public int? IntendedTier { get; set; }
+
+		[Column("nickname")]
+		public string Branch { get; set; }
 	}
 }
