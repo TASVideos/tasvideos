@@ -51,7 +51,7 @@ namespace TASVideos.Api.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return BadRequest();
+				return BadRequest(ModelState);
 			}
 
 			var pub = await _db.Publications
@@ -75,9 +75,14 @@ namespace TASVideos.Api.Controllers
 		[ProducesResponseType(typeof(IEnumerable<PublicationsResponse>), 200)]
 		public async Task<IActionResult> GetAll(PublicationsRequest request)
 		{
+			if (!request.IsValidSort(typeof(PublicationsResponse)))
+			{
+				ModelState.AddModelError(nameof(request.Sort), "Invalid Sort parameter");
+			}
+
 			if (!ModelState.IsValid)
 			{
-				return BadRequest();
+				return BadRequest(ModelState);
 			}
 
 			var pubs = (await _db.Publications

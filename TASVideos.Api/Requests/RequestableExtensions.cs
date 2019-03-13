@@ -117,6 +117,33 @@ namespace TASVideos.Api.Requests
 			return source;
 		}
 
+		/// <summary>
+		/// Returns whether or not the requested sort is valid based on the destination response
+		/// The sorting is valid if all parameters match properties in the response, and that
+		/// those properties are declared as sortable
+		/// </summary>
+		public static bool IsValidSort(this IRequestable request, Type response)
+		{
+			if (string.IsNullOrWhiteSpace(request?.Sort) || response == null)
+			{
+				return true;
+			}
+
+			var requestedSorts = request.Sort
+				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(s => s.Replace("-", ""))
+				.Select(s => s.Replace("+", ""))
+				.Select(s => s.ToLower());
+
+			var sortableProperties = response
+				.GetProperties()
+				.Where(p => p.GetCustomAttribute<SortableAttribute>() != null)
+				.Select(p => p.Name.ToLower())
+				.ToList();
+
+			return requestedSorts.All(s => sortableProperties.Contains(s));
+		}
+
 		private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string column, bool thenBy)
 		{
 			bool desc = column.StartsWith("-");
