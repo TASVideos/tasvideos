@@ -133,6 +133,9 @@ namespace TASVideos
 
 			CreateMap<GameSystem, SystemsResponse>();
 			CreateMap<GameSystemFrameRate, SystemsResponse.FrameRates>();
+
+			CreateMap<Game, GamesResponse>();
+			CreateMap<GameRom, GamesResponse.GameRom>();
 		}
 	}
 }

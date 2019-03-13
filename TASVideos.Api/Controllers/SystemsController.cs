@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Api.Responses;
 using TASVideos.Data;
-using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Api.Controllers
 {
