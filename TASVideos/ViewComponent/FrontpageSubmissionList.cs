@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -30,7 +30,8 @@ namespace TASVideos.ViewComponents
 			var subs = await _db.Submissions
 				.FilterBy(request)
 				.Take(maxRecords ?? 5)
-				.PersistToSubListEntry();
+				.ToSubListEntry()
+				.ToListAsync();
 
 			return View(subs);
 		}

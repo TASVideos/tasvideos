@@ -55,7 +55,8 @@ namespace TASVideos.Pages.Submissions
 
 			Submissions = await _db.Submissions
 				.FilterBy(Search)
-				.PersistToSubListEntry();
+				.ToSubListEntry()
+				.ToListAsync();
 		}
 
 		public async Task<IActionResult> OnGetSearchAuthor(string partial)
