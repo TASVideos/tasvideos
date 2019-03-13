@@ -130,6 +130,9 @@ namespace TASVideos
 				.ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Judge != null ? src.Publisher.UserName : null))
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System != null ? src.System.Code : null))
 				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate != null ? src.SystemFrameRate.FrameRate : (double?)null));
+
+			CreateMap<GameSystem, SystemsResponse>();
+			CreateMap<GameSystemFrameRate, SystemsResponse.FrameRates>();
 		}
 	}
 }
