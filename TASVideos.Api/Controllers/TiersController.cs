@@ -35,7 +35,7 @@ namespace TASVideos.Api.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return BadRequest();
+				return BadRequest(ModelState);
 			}
 
 			var tiers = await _db.Tiers.ToListAsync();
