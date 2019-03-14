@@ -63,6 +63,18 @@ namespace TASVideos.Data
 				return query;
 			}
 
+			var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == sort.SortBy.ToLower());
+			
+			if (prop == null)
+			{
+				return query;
+			}
+
+			if (prop.GetCustomAttribute(typeof(SortableAttribute)) == null)
+			{
+				return query;
+			}
+
 			string orderBy = sort.SortDescending
 				? nameof(Enumerable.OrderByDescending)
 				: nameof(Enumerable.OrderBy);
