@@ -5,12 +5,18 @@ using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models
 {
-	public class SubmissionSearchRequest : ISubmissionFilter
+	public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 	{
+		public SubmissionSearchRequest()
+		{
+			SortBy = nameof(SubmissionListEntry.Submitted);
+		}
+
 		public IEnumerable<int> Years { get; set; } = new List<int>();
 
 		public IEnumerable<SelectListItem> AvailableYears => Enumerable
