@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models
@@ -15,9 +16,11 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Author")]
 		public string Author { get; set; }
 
+		[Sortable]
 		[Display(Name = "Submitted")]
 		public DateTime Submitted { get; set; }
 
+		[Sortable]
 		[Display(Name = "Status")]
 		public SubmissionStatus Status { get; set; }
 
