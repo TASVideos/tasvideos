@@ -17,9 +17,6 @@ namespace TASVideos.Extensions
 				{
 					appBuilder.UseMiddleware<RobotHandlingMiddleware>();
 				});
-
-			app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-			return app;
 		}
 
 		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostingEnvironment env)
