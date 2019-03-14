@@ -43,6 +43,7 @@ namespace TASVideos.Pages.Users
 					CreateTimeStamp = u.CreateTimeStamp,
 					Roles = u.UserRoles
 						.Select(ur => ur.Role.Name)
+						.ToList()
 				})
 				.SortedPageOf(_db, Search);
 		}
