@@ -15,7 +15,7 @@
 	<button type="Submit" class="btn btn-secondary">Go</button>
 </form>
 
-<partial name="_SystemPager" model="Model.Games" />
+<partial name="_Pager" model="Model.Games" />
 <table class="table table-bordered table-striped table-sm">
 	<sortable-table-head paging="@Model.Games" model-type="typeof(TASVideos.Pages.Game.Model.GameListModel)" />
 	@foreach (var game in Model.Games)
