@@ -1,4 +1,12 @@
-@model PagedModel
+@using System.Reflection
+@model IPaged
+@{
+	var props = Model.GetType().GetProperties(BindingFlags.Public).ToList();
+	var pagedProps = typeof(IPaged).GetProperties(BindingFlags.FlattenHierarchy).ToList();
+
+	var z = Model.AdditionalProperties();
+	int zzz = 0;
+}
 
 <row class="mb-1">
 	<div class="col-md-4 float-left" condition="@Model.LastPage() > 1">
@@ -29,6 +37,7 @@
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-SortDescending="@Model.SortDescending"
 			asp-route-SortBy="@Model.SortBy"
+			asp-all-route-data="@Model.AdditionalProperties()"
 			class="btn btn-secondary btn-sm" title="Next Page">
 			<span class="fa fa-chevron-right"></span>
 		</a>
