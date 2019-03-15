@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Data
 {
-	public interface ISortable
-	{
-		string SortBy { get; }
-		bool SortDescending { get; }
-	}
-
 	public class SystemPageOf<T> : SystemPagedModel, IEnumerable<T>
 	{
 		private readonly IEnumerable<T> _items;
@@ -43,26 +36,19 @@ namespace TASVideos.Data
 		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 	}
 
-	public class PagedModel : PagingModel
+	public class PagedModel : PagingModel, IPaged
 	{
 		public int RowCount { get; set; }
-
-		public int LastPage => (int)Math.Ceiling(RowCount / (double)PageSize);
-		public int StartRow => ((CurrentPage - 1) * PageSize) + 1;
-		public int LastRow => Math.Min(RowCount, StartRow + PageSize - 1);
 	}
 
 	/// <summary>
 	/// Represents all of the data necessary to create a paged query
 	/// </summary>
-	public class PagingModel : ISortable
+	public class PagingModel : ISortable, IPageable
 	{
-		// TODO: filtering?
 		public string SortBy { get; set; } = "Id";
 		public bool SortDescending { get; set; }
 		public int PageSize { get; set; } = 10;
 		public int CurrentPage { get; set; } = 1;
-
-		public int GetRowsToSkip() => ((CurrentPage < 1 ? 1 : CurrentPage) - 1) * PageSize;
 	}
 }
