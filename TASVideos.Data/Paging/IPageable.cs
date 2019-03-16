@@ -1,5 +1,8 @@
 ﻿namespace TASVideos.Data
 {
+	/// <summary>
+	/// Represents a request for a data collection that can be paged
+	/// </summary>
 	public interface IPageable
 	{
 		/// <summary>

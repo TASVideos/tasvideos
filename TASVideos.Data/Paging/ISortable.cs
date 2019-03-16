@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace TASVideos.Data
 {
+	/// <summary>
+	/// Represents a request for a data collection that can be sorted
+	/// </summary>
 	public interface ISortable
 	{
 		/// <summary>
