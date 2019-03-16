@@ -25,7 +25,7 @@ namespace TASVideos.TagHelpers
 		[ViewContext]
 		public ViewContext ViewContext { get; set; }
 
-		public PagedModel Paging { get; set; }
+		public IPaged Paging { get; set; }
 		public Type ModelType { get; set; }
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
