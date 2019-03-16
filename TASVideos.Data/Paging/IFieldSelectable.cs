@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
-namespace TASVideos.Api.Requests
+namespace TASVideos.Data
 {
 	/// <summary>
 	/// Represents a request object that can have field selection.
@@ -17,9 +17,6 @@ namespace TASVideos.Api.Requests
 		string Fields { get; }
 	}
 
-	/// <summary>
-	/// TODO: move me
-	/// </summary>
 	public static class FieldSelectionExtensions
 	{
 		/// <summary>
