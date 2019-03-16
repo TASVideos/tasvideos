@@ -14,7 +14,7 @@ namespace TASVideos.Pages.Submissions.Models
 	{
 		public SubmissionSearchRequest()
 		{
-			SortBy = nameof(SubmissionListEntry.Submitted);
+			Sort = $"{nameof(SubmissionListEntry.Submitted)}";
 		}
 
 		public IEnumerable<int> Years { get; set; } = new List<int>();

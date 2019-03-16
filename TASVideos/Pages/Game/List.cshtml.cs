@@ -145,8 +145,7 @@ namespace TASVideos.Pages.Game
 				PageSize = data.PageSize,
 				CurrentPage = data.CurrentPage,
 				RowCount = data.RowCount,
-				SortDescending = data.SortDescending,
-				SortBy = data.SortBy
+				Sort = data.Sort
 			};
 		}
 	}

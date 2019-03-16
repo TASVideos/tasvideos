@@ -8,8 +8,7 @@
 			asp-all-route-data="@Model.AdditionalProperties()"
 			asp-route-CurrentPage="1"
 			asp-route-PageSize="@Model.PageSize"
-			asp-route-SortDescending="@Model.SortDescending"
-			asp-route-SortBy="@Model.SortBy"
+			asp-route-Sort="@Model.Sort"
 			class="btn btn-secondary btn-sm" title="First Page">
 			<span class="fa fa-fast-backward"></span>
 		</a>
@@ -19,8 +18,7 @@
 			asp-all-route-data="@Model.AdditionalProperties()"
 			asp-route-CurrentPage="@(Model.CurrentPage - 1)"
 			asp-route-PageSize="@Model.PageSize"
-			asp-route-SortDescending="@Model.SortDescending"
-			asp-route-SortBy="@Model.SortBy"
+			asp-route-Sort="@Model.Sort"
 			class="btn btn-secondary btn-sm" title="Previous Page">
 			<span class="fa fa-chevron-left"></span>
 		</a>
@@ -30,8 +28,7 @@
 			asp-all-route-data="@Model.AdditionalProperties()"
 			asp-route-CurrentPage="@(Model.CurrentPage + 1)"
 			asp-route-PageSize="@Model.PageSize"
-			asp-route-SortDescending="@Model.SortDescending"
-			asp-route-SortBy="@Model.SortBy"
+			asp-route-Sort="@Model.Sort"
 			class="btn btn-secondary btn-sm" title="Next Page">
 			<span class="fa fa-chevron-right"></span>
 		</a>
@@ -41,8 +38,7 @@
 			asp-all-route-data="@Model.AdditionalProperties()"
 			asp-route-CurrentPage="@Model.LastPage()"
 			asp-route-PageSize="@Model.PageSize"
-			asp-route-SortDescending="@Model.SortDescending"
-			asp-route-SortBy="@Model.SortBy"
+			asp-route-Sort="@Model.Sort"
 			class="btn btn-secondary btn-sm" title="Last Page">
 			<span class="fa fa-fast-forward"></span>
 		</a>
@@ -54,8 +50,7 @@
 	<div class="col-md-4 text-md-right" condition="@Model.LastPage() > 1">
 		<form method="GET" asp-page="@ViewContext.Page()">
 			<input type="hidden" asp-for="PageSize" />
-			<input type="hidden" asp-for="SortDescending" />
-			<input type="hidden" asp-for="SortBy" />
+			<input type="hidden" asp-for="Sort" />
 			<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage()" class="input-sm" style="height: 23px; padding: 2px 5px; max-width: 65px;"> Of @Model.LastPage()</label>
 			<button type="submit" class="btn btn-secondary btn-sm">Go To</button>
 		</form>

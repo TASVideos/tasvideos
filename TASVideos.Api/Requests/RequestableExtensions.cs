@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-
-using TASVideos.Data;
 
 namespace TASVideos.Api.Requests
 {
@@ -91,103 +87,6 @@ namespace TASVideos.Api.Requests
 			}
 
 			return expando;
-		}
-
-		/// <summary>
-		/// Orders the given collection based on the <see cref="IRequestable.Sort"/> property
-		/// </summary>
-		/// <typeparam name="T">The type of the elements of source.</typeparam>
-		public static IQueryable<T> SortBy<T>(this IQueryable<T> source, IRequestable request)
-		{
-			// TODO: non-sortable columns
-			if (string.IsNullOrWhiteSpace(request?.Sort))
-			{
-				return source;
-			}
-
-			var columns = request.Sort.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
-			bool thenBy = false;
-			foreach (var column in columns)
-			{
-				source = SortByParam(source, column, thenBy);
-				thenBy = true;
-			}
-
-			return source;
-		}
-
-		/// <summary>
-		/// Returns whether or not the requested sort is valid based on the destination response
-		/// The sorting is valid if all parameters match properties in the response, and that
-		/// those properties are declared as sortable
-		/// </summary>
-		public static bool IsValidSort(this IRequestable request, Type response)
-		{
-			if (string.IsNullOrWhiteSpace(request?.Sort) || response == null)
-			{
-				return true;
-			}
-
-			var requestedSorts = request.Sort
-				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(s => s.Replace("-", ""))
-				.Select(s => s.Replace("+", ""))
-				.Select(s => s.ToLower());
-
-			var sortableProperties = response
-				.GetProperties()
-				.Where(p => p.GetCustomAttribute<SortableAttribute>() != null)
-				.Select(p => p.Name.ToLower())
-				.ToList();
-
-			return requestedSorts.All(s => sortableProperties.Contains(s));
-		}
-
-		private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string column, bool thenBy)
-		{
-			bool desc = column.StartsWith("-");
-
-			column = column.Trim('-').Trim('+')?.ToLower();
-
-			var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
-			
-			if (prop == null)
-			{
-				return query;
-			}
-
-			if (prop.GetCustomAttribute(typeof(SortableAttribute)) == null)
-			{
-				return query;
-			}
-
-			string orderBy;
-			if (thenBy)
-			{
-				orderBy = desc
-					? nameof(Queryable.ThenByDescending)
-					: nameof(Queryable.ThenBy);
-			}
-			else
-			{
-				orderBy = desc
-					? nameof(Queryable.OrderByDescending)
-					: nameof(Queryable.OrderBy);
-			}
-
-			// https://stackoverflow.com/questions/34899933/sorting-using-property-name-as-string
-			// LAMBDA: x => x.[PropertyName]
-			var parameter = Expression.Parameter(typeof(T), "x");
-			Expression property = Expression.Property(parameter, column ?? "");
-			var lambda = Expression.Lambda(property, parameter);
-
-			// REFLECTION: source.OrderBy(x => x.Property)
-			var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == orderBy && x.GetParameters().Length == 2);
-			var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(T), property.Type);
-			var result = orderByGeneric.Invoke(null, new object[] { query, lambda });
-
-			return (IQueryable<T>)result;
 		}
 
 		private static ExpandoObject ToExpando<T>(this T obj)

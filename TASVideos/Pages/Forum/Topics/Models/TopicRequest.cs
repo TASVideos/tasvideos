@@ -8,8 +8,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public TopicRequest()
 		{
 			PageSize = ForumConstants.PostsPerPage;
-			SortDescending = false;
-			SortBy = nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp);
+			Sort = $"{nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp)}";
 		}
 
 		public int? Highlight { get; set; }
