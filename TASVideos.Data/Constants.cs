@@ -51,6 +51,7 @@
 	public static class ForumConstants
 	{
 		public const int PostsPerPage = 25;
+		public const int TopicsPerForum = 50;
 
 		public const int WorkBenchForumId = 7;
 	}

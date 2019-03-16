@@ -39,9 +39,14 @@ namespace TASVideos.Data
 
 				int rowCount = await query.CountAsync();
 
-				IEnumerable<T> results = await query
-					.Skip(rowsToSkip)
-					.Take(paging.PageSize)
+				var newQuery = query.Skip(rowsToSkip);
+
+				if (paging.PageSize.HasValue)
+				{
+					newQuery = newQuery.Take(paging.PageSize.Value);
+				}
+
+				IEnumerable<T> results = await newQuery
 					.ToListAsync();
 
 				var pageOf = new PageOf<T>(results)

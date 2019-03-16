@@ -1,4 +1,5 @@
 ﻿using TASVideos.Data;
+using TASVideos.Data.Constants;
 
 namespace TASVideos.Pages.Forum.Subforum.Models
 {
@@ -6,7 +7,7 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 	{
 		public ForumRequest()
 		{
-			PageSize = 50;
+			PageSize = ForumConstants.TopicsPerForum;
 			Sort = $"-{nameof(ForumDisplayModel.ForumTopicEntry.CreateTimestamp)}";
 		}
 	}
