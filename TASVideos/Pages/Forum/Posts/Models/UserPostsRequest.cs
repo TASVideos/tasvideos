@@ -3,7 +3,7 @@ using TASVideos.Data.Constants;
 
 namespace TASVideos.Pages.Forum.Posts.Models
 {
-	public class UserPostsRequest : PagedModel
+	public class UserPostsRequest : PagingModel
 	{
 		public UserPostsRequest()
 		{
