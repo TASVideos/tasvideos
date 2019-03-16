@@ -16,8 +16,8 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.WithoutEndTag)]
 	public class SortableTableHeadTagHelper : TagHelper
 	{
-		private static readonly List<string> PagedModelProperties = typeof(PagedModel)
-			.GetProperties()
+		private static readonly List<string> SortingProperties = typeof(ISortable)
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 			.Select(p => p.Name)
 			.ToList();
 
@@ -25,14 +25,14 @@ namespace TASVideos.TagHelpers
 		[ViewContext]
 		public ViewContext ViewContext { get; set; }
 
-		public IPaged Paging { get; set; }
+		public ISortable Sorting { get; set; }
 		public Type ModelType { get; set; }
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
-			if (Paging == null)
+			if (Sorting == null)
 			{
-				throw new ArgumentException($"{nameof(Paging)} can not be null");
+				throw new ArgumentException($"{nameof(Sorting)} can not be null");
 			}
 
 			if (ModelType == null)
@@ -53,8 +53,8 @@ namespace TASVideos.TagHelpers
 
 				if (isSortable)
 				{
-					var isSort = Paging.IsSortingParam(propertyName);
-					var isDescending = Paging.IsDescending(propertyName);
+					var isSort = Sorting.IsSortingParam(propertyName);
+					var isDescending = Sorting.IsDescending(propertyName);
 
 					// TODO: support multiple sorts
 					var sortStr = propertyName;
@@ -64,7 +64,7 @@ namespace TASVideos.TagHelpers
 					}
 
 					output.Content.AppendHtml(
-						$"<a href='{page}?CurrentPage={Paging.CurrentPage}&PageSize={Paging.PageSize}&Sort={sortStr}{AdditionalParams()}'>");
+						$"<a href='{page}?Sort={sortStr}{AdditionalParams()}'>");
 					output.Content.AppendHtml(displayName);
 
 					if (isSort)
@@ -91,10 +91,10 @@ namespace TASVideos.TagHelpers
 		{
 			var sb = new StringBuilder();
 
-			var props = Paging.GetType().GetProperties().Where(p => !PagedModelProperties.Contains(p.Name));
+			var props = Sorting.GetType().GetProperties().Where(p => !SortingProperties.Contains(p.Name));
 			foreach (var prop in props)
 			{
-				sb.Append($"&{prop.Name}={prop.GetValue(Paging)}");
+				sb.Append($"&{prop.Name}={prop.GetValue(Sorting)}");
 			}
 
 			return sb.ToString();
