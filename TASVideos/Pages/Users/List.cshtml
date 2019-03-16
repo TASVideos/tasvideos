@@ -11,7 +11,7 @@
 <hr />
 <partial name="_Pager" model="Model.Users" />
 <table class="table table-bordered table-striped">
-	<sortable-table-head paging="@Model.Users" model-type="typeof(TASVideos.Pages.Users.Models.UserListModel)" />
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(TASVideos.Pages.Users.Models.UserListModel)" />
 	@foreach (var user in Model.Users)
 	{
 		<tr>

@@ -17,7 +17,7 @@
 
 <partial name="_Pager" model="Model.Games" />
 <table class="table table-bordered table-striped table-sm">
-	<sortable-table-head paging="@Model.Games" model-type="typeof(TASVideos.Pages.Game.Model.GameListModel)" />
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(TASVideos.Pages.Game.Model.GameListModel)" />
 	@foreach (var game in Model.Games)
 	{
 		<tr>
