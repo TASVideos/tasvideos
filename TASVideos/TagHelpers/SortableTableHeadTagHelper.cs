@@ -50,16 +50,26 @@ namespace TASVideos.TagHelpers
 				var isSortable = property.GetCustomAttribute<SortableAttribute>() != null;
 				var displayName = property.DisplayName();
 				var propertyName = property.Name;
+
 				if (isSortable)
 				{
-					var sortDescending = Paging.SortBy == propertyName && !Paging.SortDescending;
+					var isSort = Paging.IsSortingParam(propertyName);
+					var isDescending = Paging.IsDescending(propertyName);
+
+					// TODO: support multiple sorts
+					var sortStr = propertyName;
+					if (isSort && !isDescending)
+					{
+						sortStr = "-" + propertyName;
+					}
+
 					output.Content.AppendHtml(
-						$"<a href='{page}?CurrentPage={Paging.CurrentPage}&PageSize={Paging.PageSize}&SortDescending={sortDescending}&SortBy={property.Name}{AdditionalParams()}'>");
+						$"<a href='{page}?CurrentPage={Paging.CurrentPage}&PageSize={Paging.PageSize}&Sort={sortStr}{AdditionalParams()}'>");
 					output.Content.AppendHtml(displayName);
 
-					if (Paging.SortBy == propertyName)
+					if (isSort)
 					{
-						var direction = Paging.SortDescending
+						var direction = isDescending
 							? "up"
 							: "down";
 
@@ -70,7 +80,7 @@ namespace TASVideos.TagHelpers
 				}
 				else
 				{
-					output.Content.AppendHtml(displayName);    
+					output.Content.AppendHtml(displayName);
 				}
 
 				output.Content.AppendHtml("</th>");

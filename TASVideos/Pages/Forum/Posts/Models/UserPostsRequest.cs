@@ -8,8 +8,7 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public UserPostsRequest()
 		{
 			PageSize = ForumConstants.PostsPerPage;
-			SortDescending = true;
-			SortBy = nameof(UserPostsModel.Post.CreateTimestamp);
+			Sort = $"-{nameof(UserPostsModel.Post.CreateTimestamp)}";
 		}
 	}
 }

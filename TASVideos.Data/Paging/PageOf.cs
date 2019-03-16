@@ -26,8 +26,7 @@ namespace TASVideos.Data
 	/// </summary>
 	public class PagingModel : ISortable, IPageable
 	{
-		public string SortBy { get; set; } = "Id";
-		public bool SortDescending { get; set; }
+		public string Sort { get; set; }
 		public int PageSize { get; set; } = 10;
 		public int CurrentPage { get; set; } = 1;
 	}

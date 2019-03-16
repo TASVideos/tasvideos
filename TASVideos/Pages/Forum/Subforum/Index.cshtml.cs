@@ -78,8 +78,7 @@ namespace TASVideos.Pages.Forum.Subforum
 				PageSize = Search.PageSize,
 				CurrentPage = Search.CurrentPage,
 				RowCount = rowCount,
-				SortDescending = Search.SortDescending,
-				SortBy = Search.SortBy
+				Sort = Search.Sort
 			};
 
 			Forum.Description = RenderHtml(Forum.Description);
