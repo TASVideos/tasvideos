@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Users
 		}
 
 		[FromQuery]
-		public PagedModel Search { get; set; }
+		public PagingModel Search { get; set; }
 
 		public PageOf<UserListModel> Users { get; set; }
 
