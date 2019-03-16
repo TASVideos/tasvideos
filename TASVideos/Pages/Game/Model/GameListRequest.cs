@@ -2,7 +2,7 @@
 
 namespace TASVideos.Pages.Game.Model
 {
-	public class GameListRequest : PagedModel
+	public class GameListRequest : PagingModel
 	{
 		public GameListRequest()
 		{

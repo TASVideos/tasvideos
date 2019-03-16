@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Forum.Posts
 		}
 
 		[FromQuery]
-		public PagedModel Search { get; set; }
+		public PagingModel Search { get; set; }
 
 		public PageOf<PostsSinceLastVisitModel> Posts { get; set; }
 
