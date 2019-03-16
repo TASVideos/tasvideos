@@ -71,7 +71,12 @@ namespace TASVideos.Data
 		/// </summary>
 		public static bool IsValidSort(this ISortable request, Type response)
 		{
-			if (string.IsNullOrWhiteSpace(request?.Sort) || response == null)
+			if (response == null)
+			{
+				return false;
+			}
+
+			if (string.IsNullOrWhiteSpace(request?.Sort))
 			{
 				return true;
 			}
