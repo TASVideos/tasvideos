@@ -2,7 +2,7 @@
 using System.Dynamic;
 using System.Linq;
 
-namespace TASVideos.Api
+namespace TASVideos.Data
 {
 	internal class ExpandoObjectComparer : IEqualityComparer<ExpandoObject>
 	{
@@ -63,7 +63,6 @@ namespace TASVideos.Api
 
 			return true;
 		}
-
 
 		public int GetHashCode(ExpandoObject obj)
 		{
