@@ -1,28 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Data
 {
-	public class SystemPageOf<T> : SystemPagedModel, IEnumerable<T>
-	{
-		private readonly IEnumerable<T> _items;
-
-		public SystemPageOf(IEnumerable<T> items)
-		{
-			_items = items;
-		}
-
-		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
-	}
-
-	public class SystemPagedModel : PagedModel
-	{
-		[Display(Name = "System")]
-		public string SystemCode { get; set; }
-	}
-
 	public class PageOf<T> : PagedModel, IEnumerable<T>
 	{
 		private readonly IEnumerable<T> _items;
