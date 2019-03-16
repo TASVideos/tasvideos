@@ -42,9 +42,7 @@ namespace TASVideos.Data
 				.Where(p => !existingNames.Contains(p.Name))
 				.ToList();
 
-			var myDic = additional.ToDictionary(tkey => tkey.Name, tvalue => tvalue.GetValue(paged)?.ToString());
-
-			return myDic;
+			return additional.ToDictionary(tkey => tkey.Name, tvalue => tvalue.GetValue(paged)?.ToString());
 		}
 	}
 }
