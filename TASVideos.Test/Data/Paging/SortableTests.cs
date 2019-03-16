@@ -5,7 +5,7 @@ using TASVideos.Data;
 
 // TODO: set naming rules separately for test project
 // ReSharper disable InconsistentNaming
-namespace TASVideos.Test.Data
+namespace TASVideos.Test.Data.Paging
 {
 	[TestClass]
 	public class SortableTests
@@ -117,11 +117,17 @@ namespace TASVideos.Test.Data
 		private class TestResponse
 		{
 			[Sortable]
+			// ReSharper disable once UnusedMember.Global
+			// ReSharper disable once UnusedMember.Local
 			public string Foo { get; set; }
 
+			// ReSharper disable once UnusedMember.Global
+			// ReSharper disable once UnusedMember.Local
 			public int Bar { get; set; }
 
 			[Sortable]
+			// ReSharper disable once UnusedMember.Global
+			// ReSharper disable once UnusedMember.Local
 			public bool Baz { get; set; }
 		}
 	}
