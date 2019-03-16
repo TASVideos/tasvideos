@@ -29,12 +29,17 @@ namespace TASVideos.Pages.Users
 		}
 
 		[FromQuery]
-		public PagedModel Search { get; set; } = new PagedModel();
+		public PagedModel Search { get; set; }
 
 		public PageOf<UserListModel> Users { get; set; }
 
 		public async Task OnGet()
 		{
+			if (string.IsNullOrWhiteSpace(Search.Sort))
+			{
+				Search.Sort = $"-{nameof(UserListModel.CreateTimeStamp)}";
+			}
+
 			Users = await _db.Users
 				.Select(u => new UserListModel
 				{
