@@ -1,4 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
+
+using TASVideos.Data;
 
 namespace TASVideos.Api.Requests
 {
@@ -6,7 +9,7 @@ namespace TASVideos.Api.Requests
 	/// Represents a standard api request
 	/// Supports sorting, paging, and field selection parameters
 	/// </summary>
-	public class ApiRequest : IRequestable
+	public class ApiRequest : IFieldSelectable, ISortable, IPageable
 	{
 		/// <summary>
 		/// Gets or sets the total number of records to return
@@ -38,5 +41,26 @@ namespace TASVideos.Api.Requests
 		/// </summary>
 		[StringLength(200)]
 		public string Fields { get; set; }
+	}
+
+	/// <summary>
+	/// Extension methods to perform sorting, paging, and field selection operations
+	/// off the <see cref="ApiRequest"/> class
+	/// </summary>
+	public static class RequestableExtensions
+	{
+		/// <summary>
+		/// Returns a page of data based on the <see cref="IPageable.CurrentPage"/>
+		/// and <see cref="IPageable.PageSize"/> properties
+		/// </summary>
+		/// <typeparam name="T">The type of the elements of source.</typeparam>
+		public static IQueryable<T> Paginate<T>(this IQueryable<T> source, ApiRequest paging)
+		{
+			int offset = paging.GetRowsToSkip();
+			int limit = paging.PageSize ?? ApiConstants.MaxPageSize;
+			return source
+				.Skip(offset)
+				.Take(limit);
+		}
 	}
 }

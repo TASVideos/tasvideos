@@ -14,12 +14,15 @@ namespace TASVideos.Data
 	{
 		public static int LastPage(this IPaged paged)
 		{
-			return (int)Math.Ceiling(paged.RowCount / (double)paged.PageSize);
+			var size = paged?.PageSize ?? 0;
+			var count = paged?.RowCount ?? 0;
+			return (int)Math.Ceiling(count / (double)size);
 		}
 
 		public static int LastRow(this IPaged paged)
 		{
-			return Math.Min(paged.RowCount, paged.StartRow() + paged.PageSize - 1);
+			var size = paged.PageSize ?? 0;
+			return Math.Min(paged.RowCount, paged.StartRow() + size - 1);
 		} 
 
 		public static IDictionary<string, string> AdditionalProperties(this IPaged paged)

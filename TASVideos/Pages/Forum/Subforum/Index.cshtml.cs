@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Subforum.Models;
@@ -70,7 +71,7 @@ namespace TASVideos.Pages.Forum.Subforum
 				.ThenByDescending(ft => ft.Type == ForumTopicType.Announcement)
 				.ThenByDescending(ft => ft.LastPost)
 				.Skip(rowsToSkip)
-				.Take(Search.PageSize)
+				.Take(Search.PageSize ?? ForumConstants.TopicsPerForum)
 				.ToListAsync();
 
 			Forum.Topics = new PageOf<ForumDisplayModel.ForumTopicEntry>(results)

@@ -2,20 +2,31 @@
 {
 	public interface IPageable
 	{
-		int PageSize { get; }
-		int CurrentPage { get; }
+		/// <summary>
+		/// Gets the max number records to return
+		/// </summary>
+		int? PageSize { get; }
+
+		/// <summary>
+		/// Gets the page to start returning records
+		/// </summary>
+		int? CurrentPage { get; }
 	}
 
 	public static class PageableExtensions
 	{
 		public static int GetRowsToSkip(this IPageable pageable)
 		{
-			return ((pageable.CurrentPage < 1 ? 1 : pageable.CurrentPage) - 1) * pageable.PageSize;
+			var current = pageable.CurrentPage ?? 0;
+			var size = pageable.PageSize ?? 0;
+			return ((current < 1 ? 1 : current) - 1) * size;
 		}
 
 		public static int StartRow(this IPageable pageable)
 		{
-			return ((pageable.CurrentPage - 1) * pageable.PageSize) + 1;
+			var current = pageable.CurrentPage ?? 0;
+			var size = pageable.PageSize ?? 0;
+			return ((current - 1) * size) + 1;
 		}
 	}
 }
