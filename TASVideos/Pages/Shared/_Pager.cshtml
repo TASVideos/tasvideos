@@ -49,6 +49,10 @@
 	</div>
 	<div class="col-md-4 text-md-right" condition="@Model.LastPage() > 1">
 		<form method="GET" asp-page="@ViewContext.Page()">
+			@foreach (var prop in Model.AdditionalProperties())
+			{
+				<input type="hidden" name="@prop.Key" value="@prop.Value" />
+			}
 			<input type="hidden" asp-for="PageSize" />
 			<input type="hidden" asp-for="Sort" />
 			<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage()" class="input-sm" style="height: 23px; padding: 2px 5px; max-width: 65px;"> Of @Model.LastPage()</label>
