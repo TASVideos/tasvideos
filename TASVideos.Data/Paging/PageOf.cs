@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TASVideos.Data
 {
-	public class PageOf<T> : PagedModel, IEnumerable<T>
+	public class PageOf<T> : IPaged, IEnumerable<T>
 	{
 		private readonly IEnumerable<T> _items;
 
@@ -12,13 +12,13 @@ namespace TASVideos.Data
 			_items = items;
 		}
 
+		public int RowCount { get; set; }
+		public string Sort { get; set; }
+		public int? PageSize { get; set; }
+		public int? CurrentPage { get; set; }
+
 		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
-	}
-
-	public class PagedModel : PagingModel, IPaged
-	{
-		public int RowCount { get; set; }
 	}
 
 	/// <summary>
