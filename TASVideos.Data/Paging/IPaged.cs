@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
+using TASVideos.Common;
 
 namespace TASVideos.Data
 {
@@ -58,24 +59,6 @@ namespace TASVideos.Data
 				.ToList();
 
 			return additional.ToDictionary(tkey => tkey.Name, tvalue => tvalue.ToValue(paged));
-		}
-
-		private static string ToValue(this PropertyInfo property, object obj)
-		{
-			if (obj == null || property == null)
-			{
-				return null;
-			}
-
-			if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType)
-				&& property.PropertyType.IsGenericType)
-			{
-				var values = ((IEnumerable)property.GetValue(obj)).Cast<object>();
-				var val = string.Join("|", values);
-				return val;
-			}
-
-			return property.GetValue(obj)?.ToString();
 		}
 	}
 }

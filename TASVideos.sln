@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.ForumEngine", "TA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.ForumEngineTempTest", "TASVideos.ForumEngineTempTest\TASVideos.ForumEngineTempTest.csproj", "{A73AD96F-54AD-4A9A-9F27-D303C633C1E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Api", "TASVideos.Api\TASVideos.Api.csproj", "{3CA1C217-1A70-4325-84F0-591ABC2AB1CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Api", "TASVideos.Api\TASVideos.Api.csproj", "{3CA1C217-1A70-4325-84F0-591ABC2AB1CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Common", "TASVideos.Common\TASVideos.Common.csproj", "{EADBD726-2EC5-4405-9D85-8668BEA7B816}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{3CA1C217-1A70-4325-84F0-591ABC2AB1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CA1C217-1A70-4325-84F0-591ABC2AB1CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CA1C217-1A70-4325-84F0-591ABC2AB1CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EADBD726-2EC5-4405-9D85-8668BEA7B816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EADBD726-2EC5-4405-9D85-8668BEA7B816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EADBD726-2EC5-4405-9D85-8668BEA7B816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EADBD726-2EC5-4405-9D85-8668BEA7B816}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
