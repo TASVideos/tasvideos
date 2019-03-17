@@ -1,5 +1,4 @@
 ﻿@page
-@using TASVideos.Pages.Submissions.Models
 @model IndexModel
 @{
 	ViewData["Title"] = "Submissions";
@@ -85,7 +84,7 @@
 <hr />
 <label class="pull-right">Total: @Model.Submissions.Count()</label>
 <table class="table table-striped table-bordered">
-	<sortable-table-head model-type="typeof(SubmissionListEntry)" sorting="Model.Search"/>
+	<sortable-table-head model-type="typeof(TASVideos.Pages.Submissions.Models.SubmissionListEntry)" sorting="Model.Search"/>
 	@foreach (var item in Model.Submissions)
 	{
 		<tr>

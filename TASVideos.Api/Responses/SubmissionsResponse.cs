@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 
 #pragma warning disable 1591
 
