@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data;
 
 // TODO: fix project level settings
@@ -63,6 +65,54 @@ namespace TASVideos.Test.Data.Paging
 			Assert.AreEqual(expected, actual);
 		}
 
+		[TestMethod]
+		public void Paged_AdditionalProperties_NullSafe()
+		{
+			var paged = (IPaged)null;
+			// ReSharper disable once ExpressionIsAlwaysNull
+			var actual = paged.AdditionalProperties();
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count);
+		}
+
+		[TestMethod]
+		public void Paged_AdditionalProperties_EmptyWhenNoAdditional()
+		{
+			var paged = new Paged(1, 1, 1);
+			var actual = paged.AdditionalProperties();
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count);
+		}
+
+		[TestMethod]
+		public void Paged_AdditionalProperties_StringParameter()
+		{
+			var filterVal = "Test";
+			var paged = new TestPagedModel(1, 1, 1)
+			{
+				StringFilter = filterVal
+			};
+
+			var actual = paged.AdditionalProperties();
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(1, actual.Count);
+			Assert.AreEqual(filterVal, actual[nameof(TestPagedModel.StringFilter)]);
+		}
+
+		[TestMethod]
+		public void Paged_AdditionalProperties_EnumerableParameter()
+		{
+			var paged = new EnumerablePagedModel(1, 1, 1)
+			{
+				IdList = new List<int> { 1, 2, 3 }
+			};
+
+			var actual = paged.AdditionalProperties();
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(1, actual.Count);
+			Assert.AreEqual("1,2,3", actual[nameof(EnumerablePagedModel.IdList)]);
+		}
+
 		private class Paged : IPaged
 		{
 			public Paged(int rowCount, int? pageSize, int? currentPage)
@@ -76,6 +126,28 @@ namespace TASVideos.Test.Data.Paging
 			public int? PageSize { get; }
 			public int? CurrentPage { get; }
 			public string Sort => "";
+		}
+
+		private class TestPagedModel : Paged
+		{
+			public TestPagedModel(int rowCount, int? pageSize, int? currentPage)
+				: base(rowCount, pageSize, currentPage)
+			{
+			}
+
+			// ReSharper disable once UnusedAutoPropertyAccessor.Local
+			public string StringFilter { get; set; }
+		}
+
+		private class EnumerablePagedModel : Paged
+		{
+			public EnumerablePagedModel(int rowCount, int? pageSize, int? currentPage)
+				: base(rowCount, pageSize, currentPage)
+			{
+			}
+
+			// ReSharper disable once UnusedAutoPropertyAccessor.Local
+			public IEnumerable<int> IdList { get; set; }
 		}
 	}
 }
