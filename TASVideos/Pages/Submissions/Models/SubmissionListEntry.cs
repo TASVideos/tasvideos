@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using TASVideos.Data;
@@ -15,6 +16,12 @@ namespace TASVideos.Pages.Submissions.Models
 		public string Title => $"{GameName}"
 		+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "");
 
+		[Sortable]
+		public string Branch { get; set; }
+
+		[Display(Name = "Time")]
+		public TimeSpan Time => this.Time();
+
 		[Display(Name = "Author")]
 		public string Author { get; set; }
 
@@ -26,14 +33,29 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Status")]
 		public SubmissionStatus Status { get; set; }
 
-		[Display(Name = "Time")]
-		public TimeSpan Time => this.Time();
-
+		[TableIgnore]
 		public int Id { get; set; }
-		public string GameName { get; set; }
-		public string Branch { get; set; }
 
+		[TableIgnore]
+		public string GameName { get; set; }
+
+		[TableIgnore]
 		public int Frames { get; set; }
+
+		[TableIgnore]
 		public double FrameRate { get; set; }
+	}
+
+	public class SubmissionPageOf<T> : PageOf<T>
+	{
+		public SubmissionPageOf(IEnumerable<T> items)
+			: base(items)
+		{
+		}
+
+		public IEnumerable<int> Years { get; set; } = new List<int>();
+		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
+		public string System { get; set; }
+		public string User { get; set; }
 	}
 }
