@@ -25,10 +25,15 @@ namespace TASVideos.Data
 		/// properties are specified, all the properties are returned
 		/// </summary>
 		/// <typeparam name="T">The type of the elements of source.</typeparam>
-		public static IEnumerable<ExpandoObject> FieldSelect<T>(this IEnumerable<T> source, IFieldSelectable adj)
+		public static IEnumerable<ExpandoObject> FieldSelect<T>(this IEnumerable<T> source, IFieldSelectable fields)
 		{
+			if (string.IsNullOrWhiteSpace(fields?.Fields))
+			{
+				return source.Select(s => s.FieldSelect(""));
+			}
+
 			return source
-				.Select(s => s.FieldSelect(adj?.Fields))
+				.Select(s => s.FieldSelect(fields?.Fields))
 				.Distinct(ExpandoObjectComparer.Default());
 		}
 
