@@ -1,9 +1,5 @@
-﻿using System;
-
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace TASVideos.Extensions
 {

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Extensions

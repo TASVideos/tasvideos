@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Tags

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace TASVideos.Constants
+namespace TASVideos
 {
 	public static class UiDefaults
 	{

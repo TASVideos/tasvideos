@@ -4,7 +4,6 @@ using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-using TASVideos.Data.Constants;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Data.Helpers

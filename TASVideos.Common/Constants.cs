@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Data.Constants
+﻿namespace TASVideos
 {
 	public static class EnvironmentVariables
 	{
