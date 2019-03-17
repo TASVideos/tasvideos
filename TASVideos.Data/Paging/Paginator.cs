@@ -35,7 +35,7 @@ namespace TASVideos.Data
 		{
 			using (await db.Database.BeginTransactionAsync())
 			{
-				int rowsToSkip = paging.GetRowsToSkip();
+				int rowsToSkip = paging.Offset();
 
 				int rowCount = await query.CountAsync();
 

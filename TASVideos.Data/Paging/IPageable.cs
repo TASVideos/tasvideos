@@ -18,18 +18,11 @@
 
 	public static class PageableExtensions
 	{
-		public static int GetRowsToSkip(this IPageable pageable)
+		public static int Offset(this IPageable pageable)
 		{
-			var current = pageable.CurrentPage ?? 0;
-			var size = pageable.PageSize ?? 0;
+			var current = pageable?.CurrentPage ?? 0;
+			var size = pageable?.PageSize ?? 0;
 			return ((current < 1 ? 1 : current) - 1) * size;
-		}
-
-		public static int StartRow(this IPageable pageable)
-		{
-			var current = pageable.CurrentPage ?? 0;
-			var size = pageable.PageSize ?? 0;
-			return ((current - 1) * size) + 1;
 		}
 	}
 }

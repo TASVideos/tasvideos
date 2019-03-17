@@ -49,7 +49,7 @@ namespace TASVideos.Pages.Forum.Subforum
 				return NotFound();
 			}
 
-			var rowsToSkip = Search.GetRowsToSkip();
+			var rowsToSkip = Search.Offset();
 			var rowCount = await _db.ForumTopics
 				.ForForum(Id)
 				.CountAsync();
