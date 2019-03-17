@@ -56,7 +56,7 @@ namespace TASVideos.Api.Requests
 		/// <typeparam name="T">The type of the elements of source.</typeparam>
 		public static IQueryable<T> Paginate<T>(this IQueryable<T> source, ApiRequest paging)
 		{
-			int offset = paging.GetRowsToSkip();
+			int offset = paging.Offset();
 			int limit = paging.PageSize ?? ApiConstants.MaxPageSize;
 			return source
 				.Skip(offset)

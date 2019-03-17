@@ -3,7 +3,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data;
 
-// TODO: set naming rules separately for test project
+// TODO: fix project level settings
 // ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Data.Paging
 {
