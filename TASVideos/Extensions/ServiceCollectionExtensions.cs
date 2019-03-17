@@ -21,6 +21,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using TASVideos.Api.Controllers;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
 using TASVideos.Services;
@@ -142,7 +143,7 @@ namespace TASVideos.Extensions
 				.AddApplicationPart(typeof(PublicationsController).Assembly);
 
 			services.AddHttpContext();
-
+			services.AddMvc(options => options.ValueProviderFactories.AddDelimitedValueProviderFactory('|'));
 			return services;
 		}
 

@@ -71,7 +71,7 @@ namespace TASVideos.Data
 				&& property.PropertyType.IsGenericType)
 			{
 				var values = ((IEnumerable)property.GetValue(obj)).Cast<object>();
-				var val = string.Join(",", values);
+				var val = string.Join("|", values);
 				return val;
 			}
 
