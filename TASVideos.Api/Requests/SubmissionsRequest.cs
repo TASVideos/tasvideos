@@ -31,6 +31,11 @@ namespace TASVideos.Api.Requests
 		/// </summary>
 		public int? EndYear { get; set; }
 
+		/// <summary>
+		/// Gets or sets the system codes to filter by
+		/// </summary>
+		public string Systems { get; set; }
+
 		IEnumerable<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear);
 
 		IEnumerable<SubmissionStatus> ISubmissionFilter.StatusFilter => !string.IsNullOrWhiteSpace(Statuses)
@@ -48,5 +53,6 @@ namespace TASVideos.Api.Requests
 					})
 			: Enumerable.Empty<SubmissionStatus>();
 
+		IEnumerable<string> ISubmissionFilter.Systems => Systems.CsvToStrings();
 	}
 }
