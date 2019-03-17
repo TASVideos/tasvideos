@@ -8,10 +8,12 @@ namespace TASVideos.Pages.Submissions.Models
 {
 	public class SubmissionListEntry : ITimeable
 	{
+		[Sortable]
+		public string System { get; set; }
+
 		[Display(Name = "Movie name")]
-		public string Title => $"{System} {GameName}"
-		+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-		+ $" in {this.Time():g}";
+		public string Title => $"{GameName}"
+		+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "");
 
 		[Display(Name = "Author")]
 		public string Author { get; set; }
@@ -24,8 +26,10 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Status")]
 		public SubmissionStatus Status { get; set; }
 
+		[Display(Name = "Time")]
+		public TimeSpan Time => this.Time();
+
 		public int Id { get; set; }
-		public string System { get; set; }
 		public string GameName { get; set; }
 		public string Branch { get; set; }
 
