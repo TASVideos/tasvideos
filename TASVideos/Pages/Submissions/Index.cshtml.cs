@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+using TASVideos.Constants;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -43,8 +44,15 @@ namespace TASVideos.Pages.Submissions
 		[Display(Name = "Statuses")]
 		public IEnumerable<SelectListItem> AvailableStatuses => Statuses;
 
+		public IEnumerable<SelectListItem> SystemList { get; set; } = new List<SelectListItem>();
+
 		public async Task OnGet()
 		{
+			SystemList = UiDefaults.DefaultEntry.Concat(
+				await _db.GameSystems
+				.ToDropdown()
+				.ToListAsync());
+
 			// Defaults
 			if (!Search.StatusFilter.Any())
 			{

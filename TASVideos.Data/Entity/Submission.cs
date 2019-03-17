@@ -40,6 +40,7 @@ namespace TASVideos.Data.Entity
 	{
 		IEnumerable<SubmissionStatus> StatusFilter { get; }
 		IEnumerable<int> Years { get; }
+		IEnumerable<string> Systems { get; }
 		string User { get; }
 	}
 
@@ -145,6 +146,11 @@ namespace TASVideos.Data.Entity
 			if (criteria.StatusFilter.Any())
 			{
 				query = query.Where(s => criteria.StatusFilter.Contains(s.Status));
+			}
+
+			if (criteria.Systems.Any())
+			{
+				query = query.Where(s => criteria.Systems.Contains(s.System.Code));
 			}
 
 			return query;

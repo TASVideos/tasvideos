@@ -5,6 +5,7 @@ using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+using TASVideos.Api;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -28,6 +29,8 @@ namespace TASVideos.Pages.Submissions.Models
 				Value = n.ToString()
 			});
 
+		public string System { get; set; }
+
 		public string User { get; set; }
 
 		[Display(Name = "Status Filter")]
@@ -47,5 +50,10 @@ namespace TASVideos.Pages.Submissions.Models
 			.GetValues(typeof(SubmissionStatus))
 			.Cast<SubmissionStatus>()
 			.ToList();
+
+		IEnumerable<string> ISubmissionFilter.Systems => string.IsNullOrWhiteSpace(System)
+			? new List<string>()
+			// ReSharper disable once StyleCop.SA1500
+			: new List<string> { System };
 	}
 }
