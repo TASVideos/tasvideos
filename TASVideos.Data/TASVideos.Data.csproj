@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.AspNetCore.All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
+  </ItemGroup>
+
 </Project>
