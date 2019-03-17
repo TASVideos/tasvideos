@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -33,6 +34,11 @@ namespace TASVideos.Data
 
 		public static IDictionary<string, string> AdditionalProperties(this IPaged paged)
 		{
+			if (paged == null)
+			{
+				return new Dictionary<string, string>();
+			}
+
 			var existing = typeof(IPaged)
 				.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 				.Concat(typeof(IPaged)
@@ -51,7 +57,25 @@ namespace TASVideos.Data
 				.Where(p => !existingNames.Contains(p.Name))
 				.ToList();
 
-			return additional.ToDictionary(tkey => tkey.Name, tvalue => tvalue.GetValue(paged)?.ToString());
+			return additional.ToDictionary(tkey => tkey.Name, tvalue => tvalue.ToValue(paged));
+		}
+
+		private static string ToValue(this PropertyInfo property, object obj)
+		{
+			if (obj == null || property == null)
+			{
+				return null;
+			}
+
+			if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType)
+				&& property.PropertyType.IsGenericType)
+			{
+				var values = ((IEnumerable)property.GetValue(obj)).Cast<object>();
+				var val = string.Join(",", values);
+				return val;
+			}
+
+			return property.GetValue(obj)?.ToString();
 		}
 	}
 }
