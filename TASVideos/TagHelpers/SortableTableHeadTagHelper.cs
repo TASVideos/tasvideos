@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -99,10 +100,29 @@ namespace TASVideos.TagHelpers
 			var props = Sorting.GetType().GetProperties().Where(p => !SortingProperties.Contains(p.Name));
 			foreach (var prop in props)
 			{
-				sb.Append($"&{prop.Name}={prop.GetValue(Sorting)}");
+				sb.Append($"&{prop.Name}={ToValue(prop, Sorting)}");
 			}
 
 			return sb.ToString();
+		}
+
+		// TODO: this is copy-pasta from IPaged
+		private static string ToValue(PropertyInfo property, object obj)
+		{
+			if (obj == null || property == null)
+			{
+				return null;
+			}
+
+			if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType)
+				&& property.PropertyType.IsGenericType)
+			{
+				var values = ((IEnumerable)property.GetValue(obj)).Cast<object>();
+				var val = string.Join("|", values);
+				return val;
+			}
+
+			return property.GetValue(obj)?.ToString();
 		}
 	}
 }

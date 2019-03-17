@@ -5,7 +5,6 @@ using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-using TASVideos.Api;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -16,6 +15,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public SubmissionSearchRequest()
 		{
 			Sort = $"{nameof(SubmissionListEntry.Submitted)}";
+			PageSize = int.MaxValue; // TODO: Paging UI
 		}
 
 		public IEnumerable<int> Years { get; set; } = new List<int>();

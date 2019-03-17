@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Submissions
 		[FromQuery]
 		public SubmissionSearchRequest Search { get; set; } = new SubmissionSearchRequest();
 
-		public IEnumerable<SubmissionListEntry> Submissions { get; set; } = new List<SubmissionListEntry>();
+		public SubmissionPageOf<SubmissionListEntry> Submissions { get; set; }
 
 		[Display(Name = "Statuses")]
 		public IEnumerable<SelectListItem> AvailableStatuses => Statuses;
@@ -61,10 +61,22 @@ namespace TASVideos.Pages.Submissions
 					: SubmissionSearchRequest.Default;
 			}
 
-			Submissions = await _db.Submissions
+			var entries = await _db.Submissions
 				.FilterBy(Search)
 				.ToSubListEntry()
 				.SortedPageOf(_db, Search);
+
+			Submissions = new SubmissionPageOf<SubmissionListEntry>(entries)
+			{
+				PageSize = entries.PageSize,
+				CurrentPage = entries.CurrentPage,
+				RowCount = entries.RowCount,
+				Sort = entries.Sort,
+				Years = Search.Years,
+				StatusFilter = Search.StatusFilter,
+				System = Search.System,
+				User = Search.User
+			};
 		}
 
 		public async Task<IActionResult> OnGetSearchAuthor(string partial)
