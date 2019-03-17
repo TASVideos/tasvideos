@@ -110,7 +110,7 @@ namespace TASVideos.Test.Data.Paging
 			var actual = paged.AdditionalProperties();
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(1, actual.Count);
-			Assert.AreEqual("1,2,3", actual[nameof(EnumerablePagedModel.IdList)]);
+			Assert.AreEqual("1|2|3", actual[nameof(EnumerablePagedModel.IdList)]);
 		}
 
 		private class Paged : IPaged
