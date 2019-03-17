@@ -12,9 +12,9 @@ namespace TASVideos.Pages.Submissions.Models
 		[Sortable]
 		public string System { get; set; }
 
-		[Display(Name = "Movie name")]
-		public string Title => $"{GameName}"
-		+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "");
+		[Sortable]
+		[Display(Name = "Title")]
+		public string GameName { get; set; }
 
 		[Sortable]
 		public string Branch { get; set; }
@@ -35,9 +35,6 @@ namespace TASVideos.Pages.Submissions.Models
 
 		[TableIgnore]
 		public int Id { get; set; }
-
-		[TableIgnore]
-		public string GameName { get; set; }
 
 		[TableIgnore]
 		public int Frames { get; set; }

@@ -29,6 +29,7 @@ namespace TASVideos.ViewComponents
 
 			var subs = await _db.Submissions
 				.FilterBy(request)
+				.ByMostRecent()
 				.Take(maxRecords ?? 5)
 				.ToSubListEntry()
 				.ToListAsync();
