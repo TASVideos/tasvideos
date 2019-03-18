@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace TASVideos.Common
+namespace TASVideos.Common.Extensions
 {
 	public static class ReflectionExtensions
 	{
