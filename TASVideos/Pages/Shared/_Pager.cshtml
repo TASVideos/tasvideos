@@ -44,7 +44,7 @@
 		</a>
 		<a asp-page="@ViewContext.Page()" class="btn btn-secondary btn-sm">Reset</a>
 	</div>
-	<div class="@(Model.LastPage() > 1 ? "col-md-4 text-md-center" : "text-md-right")">
+	<div class="@(Model.LastPage() <= 1 ? "ml-3" : "") @(Model.LastPage() > 1 ? "col-md-4 text-md-center" : "text-md-right")">
 		<label>Showing @(Model.Offset() + 1) - @Model.LastRow() of @Model.RowCount</label>
 	</div>
 	<div class="col-md-4 text-md-right" condition="@Model.LastPage() > 1">
