@@ -1,8 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace TASVideos.Common.Extensions
+using TASVideos.Attributes;
+
+namespace TASVideos.Extensions
 {
 	public static class ReflectionExtensions
 	{
@@ -26,6 +30,37 @@ namespace TASVideos.Common.Extensions
 			}
 
 			return property.GetValue(obj)?.ToString();
+		}
+
+		/// <summary>
+		/// Returns the <seealso cref="GroupAttribute"/> of an Enum if it exists
+		/// Else it will return and empty string
+		/// If the value is null, an empty string will be returned
+		/// </summary>
+		public static string Group(this Enum enumValue)
+		{
+			var descriptionAttribute = enumValue?.GetType()
+				.GetMember(enumValue.ToString())
+				.Single()
+				.GetCustomAttribute<GroupAttribute>();
+
+			if (descriptionAttribute != null)
+			{
+				return descriptionAttribute.Name;
+			}
+
+			return string.Empty;
+		}
+
+		public static string DisplayName(this PropertyInfo propertyInfo)
+		{
+			var displayAttr = propertyInfo.GetCustomAttribute<DisplayNameAttribute>();
+			if (displayAttr != null)
+			{
+				return displayAttr.DisplayName;
+			}
+
+			return propertyInfo.Name;
 		}
 	}
 }
