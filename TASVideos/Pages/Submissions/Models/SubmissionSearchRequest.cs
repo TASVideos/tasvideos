@@ -15,7 +15,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public SubmissionSearchRequest()
 		{
 			Sort = $"{nameof(SubmissionListEntry.Submitted)}";
-			PageSize = int.MaxValue; // TODO: Paging UI
+			PageSize = 100;
 		}
 
 		public IEnumerable<int> Years { get; set; } = new List<int>();
