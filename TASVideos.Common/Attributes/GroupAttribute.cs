@@ -1,7 +1,10 @@
 ﻿using System;
 
-namespace TASVideos.Data.Attributes
+namespace TASVideos.Attributes
 {
+	/// <summary>
+	/// Represents a generic group that a class or property might belong
+	/// </summary>
 	public class GroupAttribute : Attribute
 	{
 		public GroupAttribute(string name)
