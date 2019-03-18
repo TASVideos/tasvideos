@@ -1,4 +1,7 @@
-﻿namespace TASVideos.Extensions
+﻿using System;
+using System.Linq;
+
+namespace TASVideos.Extensions
 {
 	public static class StringExtensions
 	{
@@ -14,12 +17,27 @@
 				return null;
 			}
 
-			if (str.Length < limit)
+			if (limit < 0)
+			{
+				throw new ArgumentException($"{nameof(limit)} cannot be less than zero");
+			}
+
+			if (limit == 0)
+			{
+				return "";
+			}
+
+			if (str.Length <= limit)
 			{
 				return str;
 			}
 
-			return str.Substring(0, limit) + "...";
+			if (limit <= 3)
+			{
+				return new string(Enumerable.Repeat('.', limit).ToArray());
+			}
+
+			return str.Substring(0, limit - 3) + "...";
 		}
 	}
 }
