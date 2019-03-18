@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using TASVideos.Data.Attributes;
+using TASVideos.Attributes;
 
 namespace TASVideos.Extensions
 {
