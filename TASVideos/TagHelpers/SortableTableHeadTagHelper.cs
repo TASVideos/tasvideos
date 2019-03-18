@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-using TASVideos.Common;
+using TASVideos.Common.Extensions;
 using TASVideos.Data;
 using TASVideos.Extensions;
 
