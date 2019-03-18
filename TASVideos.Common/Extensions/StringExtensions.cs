@@ -34,7 +34,7 @@ namespace TASVideos.Extensions
 
 			if (limit <= 3)
 			{
-				return new string(Enumerable.Repeat('.', limit).ToArray());
+				return new string('.', limit);
 			}
 
 			return str.Substring(0, limit - 3) + "...";
