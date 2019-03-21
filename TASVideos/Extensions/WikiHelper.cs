@@ -122,6 +122,38 @@ namespace TASVideos.Extensions
 			return pageName.StartsWith("GameResources/");
 		}
 
+		public static int? IsPublicationPage(string pageName)
+		{
+			if (pageName.StartsWith("InternalSystem/PublicationContent/M"))
+			{
+				var result = int.TryParse(pageName
+					.Replace("InternalSystem/PublicationContent/M", ""), out int id);
+
+				if (result)
+				{
+					return id;
+				}
+			}
+
+			return null;
+		}
+
+		public static int? IsSubmissionPage(string pageName)
+		{
+			if (pageName.StartsWith("InternalSystem/SubmissionContent/S"))
+			{
+				var result = int.TryParse(pageName
+					.Replace("InternalSystem/SubmissionContent/S", ""), out int id);
+
+				if (result)
+				{
+					return id;
+				}
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Fixes Internal system page links to be their public counter parts ex: InternalSystem/SubmissionContent/S4084 to 4084S
 		/// </summary>

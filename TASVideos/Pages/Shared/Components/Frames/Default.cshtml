@@ -1,0 +1,6 @@
+﻿@using System.Globalization
+@model FramesModel
+
+<abbr title="@Model.Amount.ToString("N0", CultureInfo.CurrentCulture) Frames @@@Model.Fps FPS">
+	@Model.TimeSpan.ToCondensedString()
+</abbr>
