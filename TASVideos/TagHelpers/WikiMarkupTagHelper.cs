@@ -1,11 +1,15 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.ViewComponents;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
@@ -14,6 +18,7 @@ namespace TASVideos.TagHelpers
 	public class WikiMarkup : TagHelper, IWriterHelper
 	{
 		private readonly IViewComponentHelper _viewComponentHelper;
+		private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new List<KeyValuePair<Regex, string>>();
 
 		public WikiMarkup(IViewComponentHelper viewComponentHelper)
 		{
@@ -37,9 +42,37 @@ namespace TASVideos.TagHelpers
 			output.Content.SetHtmlContent(sw.ToString());
 		}
 
+		bool IWriterHelper.AddTdStyleFilter(string pp)
+		{
+			var regex = ParamHelper.GetValueFor(pp, "pattern");
+			var style = ParamHelper.GetValueFor(pp, "style");
+			if (regex == "" || style == "")
+				return false;
+			try
+			{
+				var r = new Regex(regex, RegexOptions.None, TimeSpan.FromSeconds(1));
+				_tableAttributeRunners.Add(new KeyValuePair<Regex, string>(r, style));
+			}
+			catch
+			{
+				return false;
+			}
+			return true;
+		}
+
 		bool IWriterHelper.CheckCondition(string condition)
 		{
 			return HtmlExtensions.WikiCondition(ViewContext, condition);
+		}
+
+		string IWriterHelper.RunTdStyleFilters(string text)
+		{
+			foreach (var kvp in _tableAttributeRunners)
+			{
+				if (kvp.Key.Match(text).Success)
+					return kvp.Value;
+			}
+			return null;
 		}
 
 		void IWriterHelper.RunViewComponent(TextWriter w, string name, string pp)

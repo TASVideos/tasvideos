@@ -24,12 +24,18 @@ namespace TASVideos.WikiEngine.AST
 		int CharEnd { get; set; }
 		INode Clone();
 		void WriteHtmlDynamic(TextWriter w, IWriterHelper h);
+		/// <summary>
+		/// Get the combined text content of this Node.  May not return useful values for foreign components (Modules)
+		/// </summary>
+		string InnerText(IWriterHelper h);
 	}
 
 	public interface IWriterHelper
 	{
 		bool CheckCondition(string condition);
 		void RunViewComponent(TextWriter w, string name, string pp);
+		bool AddTdStyleFilter(string pp);
+		string RunTdStyleFilters(string text);
 	}
 
 	public interface INodeWithChildren : INode
@@ -71,6 +77,11 @@ namespace TASVideos.WikiEngine.AST
 		public INode Clone()
 		{
 			return (Text)MemberwiseClone();
+		}
+
+		public string InnerText(IWriterHelper h)
+		{
+			return Content;
 		}
 	}
 	
@@ -126,9 +137,19 @@ namespace TASVideos.WikiEngine.AST
 				throw new InvalidOperationException("Void tag with child content!");
 			}
 
+			IEnumerable<KeyValuePair<string, string>> attrs = Attributes;
+			if (Tag == "td")
+			{
+				var style = h.RunTdStyleFilters(InnerText(h));
+				if (style != null)
+				{
+					attrs = attrs.Concat(new[] { new KeyValuePair<string, string>("style", style) });
+				}
+			}
+
 			w.Write('<');
 			w.Write(Tag);
-			foreach (var a in Attributes)
+			foreach (var a in attrs)
 			{
 				if (!AllowedAttributeNames.IsMatch(a.Key))
 				{
@@ -181,6 +202,11 @@ namespace TASVideos.WikiEngine.AST
 			ret.Attributes = new Dictionary<string, string>(Attributes);
 			return ret;
 		}
+
+		public string InnerText(IWriterHelper h)
+		{
+			return string.Join("", Children.Select(c => c.InnerText(h)));
+		}
 	}
 
 	public class IfModule : INodeWithChildren
@@ -216,6 +242,18 @@ namespace TASVideos.WikiEngine.AST
 			var ret = (IfModule)MemberwiseClone();
 			ret.Children = Children.Select(c => c.Clone()).ToList();
 			return ret;
+		}
+
+		public string InnerText(IWriterHelper h)
+		{
+			if (h.CheckCondition(Condition))
+			{
+				return string.Join("", Children.Select(c => c.InnerText(h)));
+			}
+			else
+			{
+				return "";
+			}
 		}
 	}
 
@@ -264,7 +302,17 @@ namespace TASVideos.WikiEngine.AST
 			var pp = Text.Split(new[] { '|' }, 2);
 			var moduleName = pp[0];
 			var moduleParams = pp.Length > 1 ? pp[1] : "";
-			if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
+			if (moduleName?.ToLower() == "settableattributes")
+			{
+				if (!h.AddTdStyleFilter(moduleParams))
+				{
+					var div = new Element(CharStart, "div") { CharEnd = CharEnd };
+					div.Children.Add(new Text(CharStart, "Module Error for settableattributes: Couldn't parse parameter string " + moduleParams) { CharEnd = CharEnd });
+					div.Attributes["class"] = "module-error";
+					div.WriteHtmlDynamic(w, h);					
+				}
+			}
+			else if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
 			{
 				h.RunViewComponent(w, realModuleName, moduleParams);
 			}
@@ -280,6 +328,12 @@ namespace TASVideos.WikiEngine.AST
 		public INode Clone()
 		{
 			return (Module)MemberwiseClone();
+		}
+
+		public string InnerText(IWriterHelper h)
+		{
+			// could actually run the module here... but no.
+			return "";
 		}
 	}
 }
