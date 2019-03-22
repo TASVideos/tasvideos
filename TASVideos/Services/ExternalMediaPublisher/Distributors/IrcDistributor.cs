@@ -64,7 +64,9 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			public IrcBot(AppSettings.IrcConnection settings)
 			{
 				_settings = settings;
+				#pragma warning disable CS4014
 				Loop();
+				#pragma warning restore CS4014
 			}
 
 			public void AddMessage(string channel, string item)
