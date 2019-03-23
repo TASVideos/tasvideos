@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace TASVideos.ViewComponents
 {
@@ -23,10 +24,20 @@ namespace TASVideos.ViewComponents
 				return false;
 			}
 
-			return parameterStr
-				.Split('|')
+			if (string.IsNullOrWhiteSpace(parameterName))
+			{
+				return false;
+			}
+			
+			var parameters = parameterStr
+				.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(s => s.Trim())
+				.Select(s => s.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault())
 				.Where(s => !string.IsNullOrWhiteSpace(s))
-				.Any(s => s == parameterName || s.StartsWith(parameterName + "="));
+				.Select(s => s.Trim())
+				.Where(s => !string.IsNullOrWhiteSpace(s));
+
+			return parameters.Any(s => string.Equals(s, parameterName, StringComparison.OrdinalIgnoreCase));
 		}
 
 		/// <summary>
@@ -42,14 +53,27 @@ namespace TASVideos.ViewComponents
 				return "";
 			}
 
-			var lowerParam = paramName.ToLower();
-
-			var args = parameterStr.Split('|');
-			foreach (var arg in args.Where(a => !string.IsNullOrWhiteSpace(a)))
+			if (string.IsNullOrWhiteSpace(paramName))
 			{
-				var pair = arg.Split('=');
-				if (pair.Length > 1 && pair[0]?.ToLower() == lowerParam)
+				return "";
+			}
+
+			var args = parameterStr
+				.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(s => s.Trim());
+			foreach (var arg in args)
+			{
+				var pair = arg
+					.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries)
+					.Select(s => s.Trim())
+					.ToList();
+				if (pair.Count > 1 && string.Equals(pair[0], paramName, StringComparison.OrdinalIgnoreCase))
 				{
+					if (string.IsNullOrWhiteSpace(pair[1]))
+					{
+						return "";
+					}
+
 					return pair[1];
 				}
 			}
@@ -73,14 +97,16 @@ namespace TASVideos.ViewComponents
 			string val = GetValueFor(parameterStr, param)?.ToLower();
 			if (val == "true"
 				|| val == "yes"
-				|| val == "y")
+				|| val == "y"
+				|| val == "1")
 			{
 				return true;
 			}
 
 			if (val == "false"
 				|| val == "no"
-				|| val == "n")
+				|| val == "n"
+				|| val == "0")
 			{
 				return false;
 			}
