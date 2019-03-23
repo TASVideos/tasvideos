@@ -50,6 +50,11 @@ namespace TASVideos.TagHelpers
 				return false;
 			try
 			{
+				// TODO: What's actually going on with these @s?
+				if (regex[0] == '@')
+					regex = regex.Substring(1);
+				if (regex[regex.Length - 1] == '@')
+					regex = regex.Substring(0, regex.Length - 1);
 				var r = new Regex(regex, RegexOptions.None, TimeSpan.FromSeconds(1));
 				_tableAttributeRunners.Add(new KeyValuePair<Regex, string>(r, style));
 			}
