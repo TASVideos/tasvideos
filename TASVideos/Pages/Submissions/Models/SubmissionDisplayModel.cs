@@ -8,8 +8,6 @@ namespace TASVideos.Pages.Submissions.Models
 {
 	public class SubmissionDisplayModel
 	{
-		public int TopicId { get; set; }
-		public bool CanEdit { get; set; }
 		public bool IsCataloged => SystemId.HasValue
 			&& SystemFrameRateId.HasValue
 			&& GameId.HasValue

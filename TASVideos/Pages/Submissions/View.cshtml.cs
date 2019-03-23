@@ -31,6 +31,13 @@ namespace TASVideos.Pages.Submissions
 		[FromRoute]
 		public int Id { get; set; }
 
+		public int TopicId { get; set; }
+		public int PublicationId { get; set; }
+
+		public bool IsPublished => PublicationId > 0;
+
+		public bool CanEdit { get; set; }
+
 		public SubmissionDisplayModel Submission { get; set; } = new SubmissionDisplayModel();
 
 		public async Task<IActionResult> OnGet()
@@ -76,12 +83,17 @@ namespace TASVideos.Pages.Submissions
 				return NotFound();
 			}
 
-			Submission.CanEdit = !string.IsNullOrWhiteSpace(User.Identity.Name)
+			CanEdit = !string.IsNullOrWhiteSpace(User.Identity.Name)
 				&& (User.Identity.Name == Submission.Submitter
 					|| Submission.Authors.Contains(User.Identity.Name));
 
 			var submissionPageName = LinkConstants.SubmissionWikiPage + Id;
-			Submission.TopicId = _db.ForumTopics.SingleOrDefault(t => t.PageName == submissionPageName)?.Id ?? 0;
+			TopicId = (await _db.ForumTopics.SingleOrDefaultAsync(t => t.PageName == submissionPageName))?.Id ?? 0;
+
+			if (Submission.Status == SubmissionStatus.Published)
+			{
+				PublicationId = (await _db.Publications.SingleOrDefaultAsync(p => p.SubmissionId == Id))?.Id ?? 0;
+			}
 
 			return Page();
 		}

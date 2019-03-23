@@ -4,7 +4,7 @@
 	ViewData["Title"] = $"Submission #{Model.Id}";
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
 	bool canEdit = ViewData.UserHas(PermissionTo.EditSubmissions)
-		|| (Model.Submission.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
+		|| (Model.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
 	bool hasJudgeOrPublisher = !string.IsNullOrWhiteSpace(Model.Submission.Judge) || !string.IsNullOrWhiteSpace(Model.Submission.Publisher);
 	bool showTier = !string.IsNullOrWhiteSpace(Model.Submission.TierName);
 	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
@@ -44,7 +44,8 @@
 	</div>
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
 		<div class="alert alert-@(statusColor)" role="alert">
-			<h4 class="alert-heading">Status: @Model.Submission.Status.EnumDisplayName()</h4>
+			<h4 condition="!Model.IsPublished" class="alert-heading">Status: @Model.Submission.Status.EnumDisplayName()</h4>
+			<h4 condition="Model.IsPublished" class="alert-heading">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></h4>
 			<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
 				<label asp-for="Submission.Judge"></label>:
 				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Judge">@Model.Submission.Judge</a>
@@ -102,7 +103,7 @@
 		<div class="btn-toolbar">
 			<a condition="@ViewData.UserHas(PermissionTo.JudgeSubmissions) && Model.Submission.Status == SubmissionStatus.New" asp-page="View" asp-route-id="@Model.Id" asp-page-handler="Claim" class="btn btn-success mt-2 mr-1">Claim</a>
 			<a asp-page="View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary mt-2">Download</a>
-			<a condition="@Model.Submission.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary ml-1 mt-2">Discuss and Vote</a>
+			<a condition="@Model.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId" class="btn btn-secondary ml-1 mt-2">Discuss and Vote</a>
 			<span permission="EditSubmissions" class="btn-separator mt-2"></span>
 			<a condition="@canEdit" asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-2">Edit</a>
 			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="ml-1 btn btn-info mt-2">Catalog</a>
