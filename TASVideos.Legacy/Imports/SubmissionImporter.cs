@@ -50,9 +50,9 @@ namespace TASVideos.Legacy.Imports
 				var lSubsWithSystem = (from ls in legacySubmissions
 					join s in systems on ls.SystemId equals s.Id
 					join w in submissionWikis on LinkConstants.SubmissionWikiPage + ls.Id equals w.PageName
-					join u in users on ImportHelper.ConvertLatin1String(ls.User.Name) equals u.UserName into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+					join u in users on ImportHelper.ConvertLatin1String(ls.User.Name).ToLower() equals u.UserName.ToLower() into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
 					from u in uu.DefaultIfEmpty()
-					join j in users on ImportHelper.ConvertLatin1String(ls.Judge.Name) equals j.UserName into ju
+					join j in users on ImportHelper.ConvertLatin1String(ls.Judge.Name).ToLower() equals j.UserName.ToLower() into ju
 					from j in ju.DefaultIfEmpty()
 					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j })
 					.ToList();
