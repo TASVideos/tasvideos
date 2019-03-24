@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 
 using FastMember;
@@ -87,6 +88,23 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			return str.Substring(0, limit);
+		}
+
+		public static IEnumerable<string> ParseUserNames(this string authors)
+		{
+			if (string.IsNullOrWhiteSpace(authors))
+			{
+				return Enumerable.Empty<string>();
+			}
+
+			var names = authors
+				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+				.SelectMany(s => s.Split(new[] { "&" }, StringSplitOptions.RemoveEmptyEntries))
+				.SelectMany(s => s.Split(new[] { " and " }, StringSplitOptions.RemoveEmptyEntries))
+				.Select(s => s.Trim())
+				.Where(s => !string.IsNullOrWhiteSpace(s));
+
+			return names;
 		}
 	}
 }

@@ -19,7 +19,6 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			// TODO:
-			// authors that are not submitters
 			// submitters not in forum 
 			// MovieExtension
 			var legacySubmissions = legacySiteContext.Submissions
@@ -114,19 +113,26 @@ namespace TASVideos.Legacy.Imports
 						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50)
 					};
 
-					// For now at least
-					if (legacySubmission.Submitter != null)
-					{
-						var subAuthor = new SubmissionAuthor
+					var authorNames = legacySubmission.Sub.Author
+						.ParseUserNames()
+						.Select(a => a.ToLower())
+						.ToList();
+
+					var authors = users
+						.Where(u => authorNames.Contains(u.UserName.ToLower()))
+						.Select(u => new SubmissionAuthor
 						{
 							SubmissionId = submission.Id,
 							Submission = submission,
-							UserId = legacySubmission.Submitter.Id,
-							Author = legacySubmission.Submitter
-						};
+							UserId = u.Id,
+							Author = u
+						})
+						.ToList();
 
-						submission.SubmissionAuthors.Add(subAuthor);
-						submissionAuthors.Add(subAuthor);
+					foreach (var author in authors)
+					{
+						submission.SubmissionAuthors.Add(author);
+						submissionAuthors.Add(author);
 					}
 
 					if (legacySubmission.Judge != null)
