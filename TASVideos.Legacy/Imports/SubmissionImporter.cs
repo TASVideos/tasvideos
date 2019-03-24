@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,8 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class SubmissionImporter
 	{
+		private static readonly string[] ValidSubmissionFileExtensions = { ".dtm", ".mcm", ".gmv", ".dof", ".dsm", ".bkm", ".mcm", ".fm2", ".vbm" };
+
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -20,7 +24,7 @@ namespace TASVideos.Legacy.Imports
 		{
 			// TODO:
 			// submitters not in forum 
-			// MovieExtension
+			// Cleanup archives by removing multiple entries and other junk
 			var legacySubmissions = legacySiteContext.Submissions
 				.Include(s => s.User)
 				.Include(s => s.Judge)
@@ -110,7 +114,8 @@ namespace TASVideos.Legacy.Imports
 						EmulatorVersion = legacySubmission.Sub.EmulatorVersion?.Cap(50),
 						JudgeId = legacySubmission.Judge?.Id,
 						PublisherId = legacySubmission.Publisher?.Id ?? null,
-						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50)
+						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
+						MovieExtension = GetExtension(legacySubmission.Sub.Content)
 					};
 
 					var authorNames = legacySubmission.Sub.Author
@@ -190,7 +195,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.EmulatorVersion),
 				nameof(Submission.JudgeId),
 				nameof(Submission.Branch),
-				nameof(Submission.PublisherId)
+				nameof(Submission.PublisherId),
+				nameof(Submission.MovieExtension)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
@@ -267,6 +273,31 @@ namespace TASVideos.Legacy.Imports
 					return SubmissionStatus.JudgingUnderWay;
 				case SubmissionStatus.Published:
 					return SubmissionStatus.Accepted;
+			}
+		}
+
+		private static string GetExtension(byte[] content)
+		{
+			if (content == null || content.Length == 0)
+			{
+				return null;
+			}
+
+			using (var submissionFileStream = new MemoryStream(content))
+			using (var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read))
+			{
+				var entries = submissionZipArchive.Entries.ToList();
+				if (entries.Count != 1)
+				{
+					// TODO: cleanup multiple entries while we are at it
+					return entries
+						.Select(e => Path.GetExtension(e.FullName))
+						.Where(s => ValidSubmissionFileExtensions.Contains(s))
+						.Distinct()
+						.FirstOrDefault();
+				}
+
+				return Path.GetExtension(entries[0].FullName);
 			}
 		}
 	}
