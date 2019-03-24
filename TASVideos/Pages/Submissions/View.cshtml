@@ -12,6 +12,7 @@
 		&& Model.Submission.IsCataloged
 		&& Model.Submission.Publisher == User.Identity.Name;
 	string statusColor = StatusColor(Model.Submission.Status);
+	string authors = string.Join(", ", Model.Submission.Authors);
 }
 
 @functions{
@@ -93,8 +94,8 @@
 					<span condition="Model.Submission.WarnStartType" class="badge badge-warning">!</span>
 					@(Model.Submission.StartType?.ToString() ?? "Unknown")
 				</td>
-				<th></th>
-				<td></td>
+				<th>Authors</th>
+				<td>@authors</td>
 			</tr>
 		</table>
 		<small>
