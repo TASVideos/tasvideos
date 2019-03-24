@@ -19,13 +19,13 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			// TODO:
-			// Publisher use publication to determine
 			// authors that are not submitters
 			// submitters not in forum 
 			// MovieExtension
 			var legacySubmissions = legacySiteContext.Submissions
 				.Include(s => s.User)
 				.Include(s => s.Judge)
+				.Include(s => s.Movie)
 				.Where(s => s.Id > 0)
 				.ToList();
 
@@ -44,6 +44,13 @@ namespace TASVideos.Legacy.Imports
 					.Select(s => new { s.Id, s.PageName })
 					.ToList();
 
+				var publicationWikis = context.WikiPages
+					.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
+					.ToList()
+					.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimeStamp, gvalue.CreateUserName, gvalue.PageName })
+					.Select(p => p.First(g => g.CreateTimeStamp == p.Min(pp => pp.CreateTimeStamp)))
+					.ToList();
+
 				var systems = context.GameSystems.ToList();
 				var systemFrameRates = context.GameSystemFrameRates.ToList();
 
@@ -54,7 +61,11 @@ namespace TASVideos.Legacy.Imports
 					from u in uu.DefaultIfEmpty()
 					join j in users on ImportHelper.ConvertLatin1String(ls.Judge.Name).ToLower() equals j.UserName.ToLower() into ju
 					from j in ju.DefaultIfEmpty()
-					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j })
+					join pub in publicationWikis on LinkConstants.PublicationWikiPage + (ls.Movie?.Id ?? -1) equals pub.PageName into pubs
+					from pub in pubs.DefaultIfEmpty()
+					join p in users on ImportHelper.ConvertLatin1String(pub?.CreateUserName) equals p.UserName into pp
+					from p in pp.DefaultIfEmpty()
+					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p })
 					.ToList();
 
 				foreach (var legacySubmission in lSubsWithSystem)
@@ -99,6 +110,7 @@ namespace TASVideos.Legacy.Imports
 						RomId = -1, // Legacy system had no notion of Rom for submissions
 						EmulatorVersion = legacySubmission.Sub.EmulatorVersion?.Cap(50),
 						JudgeId = legacySubmission.Judge?.Id,
+						PublisherId = legacySubmission.Publisher?.Id ?? null,
 						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50)
 					};
 
@@ -158,7 +170,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.RomId),
 				nameof(Submission.EmulatorVersion),
 				nameof(Submission.JudgeId),
-				nameof(Submission.Branch)
+				nameof(Submission.Branch),
+				nameof(Submission.PublisherId)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);

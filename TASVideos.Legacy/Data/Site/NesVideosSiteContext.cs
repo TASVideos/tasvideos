@@ -56,7 +56,7 @@ namespace TASVideos.Legacy.Data.Site
 			});
 			modelBuilder.Entity<Role>().ToTable("roles");
 			modelBuilder.Entity<Submission>().ToTable("submission");
-			modelBuilder.Entity<Movie>().ToTable("movie");
+			modelBuilder.Entity<Movie>().ToTable("movie").HasOne(e => e.Submission);
 			modelBuilder.Entity<MovieFile>().ToTable("movie_file");
 			modelBuilder.Entity<MovieFileStorage>().ToTable("movie_file_storage");
 			modelBuilder.Entity<GameName>().ToTable("gamename");

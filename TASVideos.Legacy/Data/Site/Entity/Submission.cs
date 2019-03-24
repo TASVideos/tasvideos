@@ -74,5 +74,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("nickname")]
 		public string Branch { get; set; }
+
+		public virtual Movie Movie { get; set; }
 	}
 }
