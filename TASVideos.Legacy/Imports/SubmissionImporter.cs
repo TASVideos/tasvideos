@@ -44,7 +44,7 @@ namespace TASVideos.Legacy.Imports
 					.ThatAreNotDeleted()
 					.ThatAreCurrentRevisions()
 					.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
-					.Select(s => new { s.Id, s.PageName })
+					.Select(s => new { s.Id, s.PageName, s.CreateTimeStamp })
 					.ToList();
 
 				var publicationWikis = context.WikiPages
@@ -100,7 +100,7 @@ namespace TASVideos.Legacy.Imports
 						SystemFrameRate = systemFrameRate,
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
 						CreateUserName = legacySubmission.Submitter?.UserName,
-						LastUpdateTimeStamp = DateTime.UtcNow, // TODO
+						LastUpdateTimeStamp = legacySubmission.Wiki.CreateTimeStamp,
 						GameName = ImportHelper.ConvertLatin1String(legacySubmission.Sub.GameName),
 						GameVersion = legacySubmission.Sub.GameVersion,
 						Frames = legacySubmission.Sub.Frames,
