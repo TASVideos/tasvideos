@@ -88,6 +88,8 @@ namespace TASVideos.Legacy.Imports
 							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
 					}
 
+					var extension = GetExtension(legacySubmission.Sub.Content);
+
 					var submission = new Submission
 					{
 						Id = legacySubmission.Sub.Id,
@@ -111,9 +113,9 @@ namespace TASVideos.Legacy.Imports
 						IntendedTierId = legacySubmission.Sub.IntendedTier,
 						GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
 						RomId = -1, // Legacy system had no notion of Rom for submissions
-						EmulatorVersion = legacySubmission.Sub.EmulatorVersion?.Cap(50),
+						EmulatorVersion = CleanAndGuessEmuVersion(legacySubmission.Sub.Id, legacySubmission.Sub.EmulatorVersion, extension),
 						JudgeId = legacySubmission.Judge?.Id,
-						PublisherId = legacySubmission.Publisher?.Id ?? null,
+						PublisherId = legacySubmission.Publisher?.Id,
 						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
 						MovieExtension = GetExtension(legacySubmission.Sub.Content)
 					};
@@ -294,10 +296,49 @@ namespace TASVideos.Legacy.Imports
 						.Select(e => Path.GetExtension(e.FullName))
 						.Where(s => ValidSubmissionFileExtensions.Contains(s))
 						.Distinct()
-						.FirstOrDefault();
+						.FirstOrDefault()
+						?.TrimStart('.');
 				}
 
-				return Path.GetExtension(entries[0].FullName);
+				return Path.GetExtension(entries[0].FullName).TrimStart('.');
+			}
+		}
+
+		private static string CleanAndGuessEmuVersion(int id, string emulatorVersion, string movieExtension)
+		{
+			if (string.IsNullOrWhiteSpace(emulatorVersion))
+			{
+				emulatorVersion = null;
+			}
+			else
+			{
+				emulatorVersion = emulatorVersion.Trim();
+			}
+
+			if (!string.IsNullOrWhiteSpace(emulatorVersion))
+			{
+				return emulatorVersion.Cap(50);
+			}
+
+			// If still null, guess based on movie extension
+			switch (movieExtension)
+			{
+				default:
+					return null;
+				case "vbm":
+					return "VBA";
+				case "fmv":
+					return "Famtasia";
+				case "gmv":
+					return "GENS";
+				case "fcm":
+					return "FCEU0.98";
+				case "m64":
+					return "mupen64 0.5 re-recording v8";
+				case "smv":
+					return id < 1532 // The first known Snes9x 1.51 submission
+						? "Snes9x 1.43"
+						: "Snes9x";
 			}
 		}
 	}
