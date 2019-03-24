@@ -65,7 +65,7 @@ namespace TASVideos.Legacy.Imports
 					from pub in pubs.DefaultIfEmpty()
 					join p in users on ImportHelper.ConvertLatin1String(pub?.CreateUserName) equals p.UserName into pp
 					from p in pp.DefaultIfEmpty()
-					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p })
+					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimeStamp })
 					.ToList();
 
 				foreach (var legacySubmission in lSubsWithSystem)
@@ -138,6 +138,19 @@ namespace TASVideos.Legacy.Imports
 							LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
 							LastUpdateUserName = legacySubmission.Judge.UserName,
 							Status = ConvertJudgeStatus(submission.Status),
+							SubmissionId = submission.Id,
+						});
+					}
+
+					if (legacySubmission.Publisher != null && legacySubmission.PubDate.HasValue)
+					{
+						submissionHistory.Add(new SubmissionStatusHistory
+						{
+							CreateTimeStamp = legacySubmission.PubDate.Value,
+							CreateUserName = legacySubmission.Publisher.UserName,
+							LastUpdateTimeStamp = legacySubmission.PubDate.Value,
+							LastUpdateUserName = legacySubmission.Publisher.UserName,
+							Status = SubmissionStatus.Published,
 							SubmissionId = submission.Id,
 						});
 					}
