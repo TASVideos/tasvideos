@@ -115,6 +115,11 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditSystemPages
 		};
 
+		private static readonly RoleLink[] AdminRoleLinks =
+		{
+			new RoleLink { Link = "AdminGuidelines" },
+		};
+
 		public static readonly Role DefaultUser = new Role
 		{
 			IsDefault = true,
@@ -173,7 +178,8 @@ namespace TASVideos.Data.SeedData
 					PermissionId = p,
 					CanAssign = true
 				})
-				.ToArray()
+				.ToArray(),
+			RoleLinks = AdminRoleLinks
 		};
 
 		public static readonly Role AdminAssistant = new Role
@@ -186,11 +192,11 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = VestedEditorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = new[]
+			RoleLinks = AdminRoleLinks.Concat(new[]
 			{
 				new RoleLink { Link = "EditorGuidelines" },
 				new RoleLink { Link = "TextFormattingRules" }
-			}
+			}).ToList(),
 		};
 
 		public static readonly Role Editor = new Role
@@ -251,10 +257,11 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = EditorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = new[]
+			RoleLinks = AdminRoleLinks.Concat(new[]
 			{
 				new RoleLink { Link = "JudgeGuidelines" }
-			}
+			}).ToList(),
+			
 		};
 
 		public static readonly Role Publisher = new Role
@@ -279,7 +286,7 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = EditorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = new[] { new RoleLink { Link = "PublisherGuidelines" } }
+			RoleLinks = AdminRoleLinks.Concat(new[] { new RoleLink { Link = "PublisherGuidelines" } }).ToList()
 		};
 
 		public static readonly Role ForumModerator = new Role
@@ -305,7 +312,7 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = ForumModeratorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = new List<RoleLink>()
+			RoleLinks = AdminRoleLinks
 		};
 
 		public static readonly Role Ambassador = new Role
