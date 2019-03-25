@@ -8,6 +8,7 @@
 }
 
 <partial name="_MovieModule" model="Model.Publication" />
+@await Component.RenderWiki("System/MovieLinkInstruction")
 <small>
 	last edited by @Model.Publication.LastUpdateUser on @Model.Publication.LastUpdateTimeStamp
 </small>
@@ -30,3 +31,4 @@
 	class="btn btn-info btn-sm">
 	List Referrers
 </a>
+
