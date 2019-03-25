@@ -115,9 +115,9 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditSystemPages
 		};
 
-		private static readonly RoleLink[] AdminRoleLinks =
+		private static readonly List<RoleLink> AdminRoleLinks = new List<RoleLink>
 		{
-			new RoleLink { Link = "AdminGuidelines" },
+			new RoleLink { Link = "AdminGuidelines" }
 		};
 
 		public static readonly Role DefaultUser = new Role
