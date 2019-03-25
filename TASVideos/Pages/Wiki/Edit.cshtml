@@ -29,8 +29,8 @@
 		<a href="/@Model.Path" class="btn btn-secondary">Cancel</a>
 	</div>
 	<div class="text-center alert-info" role="alert">
-		<label class="small alert-info">
-			By pressing "Save/Edit" you agree to publish this content under the <a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> Creative Commons Attribution 2.0</a> license.
+		<label class="alert-info">
+			@await Component.RenderWiki("System/WikiEditNote")
 		</label>
 	</div>
 </form>
