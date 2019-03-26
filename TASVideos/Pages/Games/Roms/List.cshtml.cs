@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Game.Rom.Models;
+using TASVideos.Pages.Games.Roms.Models;
 
-namespace TASVideos.Pages.Game.Rom
+namespace TASVideos.Pages.Games.Roms
 {
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class ListModel : BasePageModel

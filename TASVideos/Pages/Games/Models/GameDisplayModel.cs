@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TASVideos.Pages.Game.Model
+namespace TASVideos.Pages.Games.Models
 {
 	public class GameDisplayModel
 	{

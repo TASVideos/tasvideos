@@ -81,7 +81,7 @@
 					}
 				};
 
-				xmlhttp.open("GET", "/Game/List/GameDropDownForSystem?includeEmpty=false&systemId=" + systemModel.value, true);
+				xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=false&systemId=" + systemModel.value, true);
 				xmlhttp.send();
 
 				var xmlhttp2 = new XMLHttpRequest();
@@ -93,7 +93,7 @@
 					}
 				};
 
-				xmlhttp2.open("GET", "/Game/List/FrameRateDropDownForSystem?includeEmpty=false&systemId=" + systemModel.value, true);
+				xmlhttp2.open("GET", "/Games/List/FrameRateDropDownForSystem?includeEmpty=false&systemId=" + systemModel.value, true);
 				xmlhttp2.send();
 			} else {
 				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.GameId) option')
@@ -135,7 +135,7 @@
 					}
 				};
 
-				xmlhttp.open("GET", "/Game/List/RomDropDownForGame?includeEmpty=false&gameId=" + gameModel.value, true);
+				xmlhttp.open("GET", "/Games/List/RomDropDownForGame?includeEmpty=false&gameId=" + gameModel.value, true);
 				xmlhttp.send();
 			} else {
 				createRomBtn.setAttribute('disabled', 'disabled');
@@ -151,12 +151,12 @@
 
 		document.getElementById('create-rom').onclick = function () {
 			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
-			document.location = '/Game/' + gameId + '/Rom/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()';
+			document.location = '/Games/' + gameId + '/Roms/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()';
 		}
 
 		document.getElementById('create-game').onclick = function () {
 			var systemId = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)').value;
-			document.location = '/Game/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()&systemId=' + systemId;
+			document.location = '/Games/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()&systemId=' + systemId;
 		}
 	})()
 </script>

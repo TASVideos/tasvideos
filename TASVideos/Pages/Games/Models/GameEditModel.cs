@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Game.Model
+namespace TASVideos.Pages.Games.Models
 {
 	public class GameEditModel
 	{

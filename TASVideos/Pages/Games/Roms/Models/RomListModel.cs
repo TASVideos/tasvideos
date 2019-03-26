@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Pages.Game.Rom.Models
+namespace TASVideos.Pages.Games.Roms.Models
 {
 	public class RomListModel
 	{

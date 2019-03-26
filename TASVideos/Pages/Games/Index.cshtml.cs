@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Pages.Game.Model;
+using TASVideos.Pages.Games.Models;
 
-namespace TASVideos.Pages.Game
+namespace TASVideos.Pages.Games
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel
