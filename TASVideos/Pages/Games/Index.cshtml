@@ -1,5 +1,5 @@
 ﻿@page "{id}"
-@model TASVideos.Pages.Game.IndexModel
+@model IndexModel
 @{
 	ViewData["Title"] = $"{Model.Game.SystemCode} - {Model.Game.DisplayName}";
 	string wiki = LinkConstants.GameWikiPage + Model.Id;

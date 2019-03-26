@@ -1,4 +1,4 @@
-﻿@page "/Game/{gameId}/Rom/List"
+﻿@page "/Games/{gameId}/Roms/List"
 @model ListModel
 @{
 	ViewData["Title"] = $"Roms for {Model.Roms.GameDisplayName}";
@@ -9,7 +9,7 @@
 </alert>
 
 <h4>System: @Model.Roms.SystemCode</h4>
-<h4>Game: <a asp-page="/Game/Index" asp-route-id="@Model.GameId">@Model.Roms.GameDisplayName</a></h4>
+<h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.Roms.GameDisplayName</a></h4>
 <a asp-page="Edit" asp-route-gameId="@Model.GameId" class="btn btn-primary">Create</a>
 <hr />
 <table class="table table-bordered table-striped">

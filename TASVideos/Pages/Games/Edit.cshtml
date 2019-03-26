@@ -6,7 +6,7 @@
 		: "Create a new Game entry";
 }
 <form-group>
-	<delete-button condition="@Model.CanDelete" asp-href="/Game/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-right">Delete</delete-button>
+	<delete-button condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-right">Delete</delete-button>
 </form-group>
 <form method="post">
 	<row>

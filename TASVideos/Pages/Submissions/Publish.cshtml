@@ -26,12 +26,12 @@
 			<div class="col-lg-6">
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Game"></label>
-					<span class="col-sm-9"><a asp-page="/Game/Index" asp-route-id="@Model.Submission.GameId">@Html.DisplayFor(m => m.Submission.Game)</a></span>
+					<span class="col-sm-9"><a asp-page="/Games/Index" asp-route-id="@Model.Submission.GameId">@Html.DisplayFor(m => m.Submission.Game)</a></span>
 				</row>
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Rom"></label>
 					<span class="col-sm-9">
-						<a asp-page="/Game/Rom/Edit" asp-route-gameId="@Model.Submission.GameId" asp-route-romId="@Model.Submission.RomId">
+						<a asp-page="/Games/Roms/Edit" asp-route-gameId="@Model.Submission.GameId" asp-route-romId="@Model.Submission.RomId">
 							@Html.DisplayFor(m => m.Submission.Rom)
 						</a>
 					</span>

@@ -1,10 +1,10 @@
-﻿@page "/Game/{gameId}/Rom/Edit/{id?}/{handler?}"
+﻿@page "/Games/{gameId}/Roms/Edit/{id?}/{handler?}"
 @model EditModel
 @{
 	ViewData["Title"] = Model.Id.HasValue
 		? $"Editing Rom #{Model.Id} {Model.Rom.Name}"
 		: "Create a new Rom entry";
-	var deleteLink = $"/Game/{Model.GameId}/Rom/Edit/{Model.Id ?? 0}/Delete";
+	var deleteLink = $"/Games/{Model.GameId}/Roms/Edit/{Model.Id ?? 0}/Delete";
 }
 
 <form-group>

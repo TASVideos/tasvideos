@@ -11,9 +11,9 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
-using TASVideos.Pages.Game.Model;
+using TASVideos.Pages.Games.Models;
 
-namespace TASVideos.Pages.Game
+namespace TASVideos.Pages.Games
 {
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class ListModel : BasePageModel
