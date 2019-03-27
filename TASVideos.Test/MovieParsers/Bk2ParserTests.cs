@@ -22,18 +22,11 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void MissingHeader_ErrorResult()
+		[DataRow("MissingHeader.bk2", DisplayName = "Missing Header creates error")]
+		[DataRow("MissingInputLog.bk2", DisplayName = "Missing Header creates error")]
+		public void Errors(string filename)
 		{
-			var result = _bk2Parser.Parse(Embedded("MissingHeader.bk2"));
-			Assert.AreEqual(false, result.Success, "Result should not be successfull");
-			Assert.IsNotNull(result.Errors, "Errors should not be null");
-			Assert.IsTrue(result.Errors.Any(), "Must be at least one error");
-		}
-
-		[TestMethod]
-		public void MissingInputLog_ErrorResult()
-		{
-			var result = _bk2Parser.Parse(Embedded("MissingInputLog.bk2"));
+			var result = _bk2Parser.Parse(Embedded(filename));
 			Assert.AreEqual(false, result.Success, "Result should not be successfull");
 			Assert.IsNotNull(result.Errors, "Errors should not be null");
 			Assert.IsTrue(result.Errors.Any(), "Must be at least one error");
@@ -88,43 +81,24 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void System_Nes()
+		[DataRow("Nes.bk2", "nes")]
+		[DataRow("Gbc.bk2", "gbc")]
+		public void Systems(string filename, string expectedSystem)
 		{
-			var result = _bk2Parser.Parse(Embedded("Nes.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual("nes", result.SystemCode, "System should be NES");
+			var result = _bk2Parser.Parse(Embedded(filename));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(expectedSystem, result.SystemCode);
 		}
 
 		[TestMethod]
-		public void System_Gbc()
+		[DataRow("Nes.bk2", MovieStartType.PowerOn)]
+		[DataRow("sram.bk2", MovieStartType.Sram)]
+		[DataRow("savestate.bk2", MovieStartType.Savestate)]
+		public void StartsFrom_PowerOn(string filename, MovieStartType expected)
 		{
-			var result = _bk2Parser.Parse(Embedded("Gbc.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual("gbc", result.SystemCode, "System should be GBC");
-		}
-
-		[TestMethod]
-		public void StartsFrom_PowerOn()
-		{
-			var result = _bk2Parser.Parse(Embedded("Nes.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual(MovieStartType.PowerOn, result.StartType, "Starts from power-on");
-		}
-
-		[TestMethod]
-		public void StartsFrom_Sram()
-		{
-			var result = _bk2Parser.Parse(Embedded("sram.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual(MovieStartType.Sram, result.StartType, "Starts from SRAM");
-		}
-
-		[TestMethod]
-		public void StartsFrom_Savestate()
-		{
-			var result = _bk2Parser.Parse(Embedded("savestate.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual(MovieStartType.Savestate, result.StartType, "Starts from savestate");
+			var result = _bk2Parser.Parse(Embedded(filename));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(expected, result.StartType);
 		}
 
 		[TestMethod]
