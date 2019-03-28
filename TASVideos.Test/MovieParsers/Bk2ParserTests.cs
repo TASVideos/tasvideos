@@ -67,17 +67,12 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void PalFlag_True()
+		[DataRow("Pal1.bk2", RegionType.Pal)]
+		[DataRow("0Frames.bk2", RegionType.Ntsc, DisplayName = "Missing flag defaults to Ntsc")]
+		public void PalFlag_True(string fileName, RegionType expected)
 		{
-			var result = _bk2Parser.Parse(Embedded("Pal1.bk2"));
-			Assert.AreEqual(RegionType.Pal, result.Region, "Region must be Pal");
-		}
-
-        [TestMethod]
-		public void PalFlag_Missing_DefaultNtsc()
-		{
-			var result = _bk2Parser.Parse(Embedded("0Frames.bk2"));
-			Assert.AreEqual(RegionType.Ntsc, result.Region, "Region must be Ntsc");
+			var result = _bk2Parser.Parse(Embedded(fileName));
+			Assert.AreEqual(expected, result.Region);
 		}
 
 		[TestMethod]
@@ -107,7 +102,7 @@ namespace TASVideos.Test.MovieParsers
 			var result = _bk2Parser.Parse(Embedded("NoFileExts.bk2"));
 			Assert.IsTrue(result.Success, "Result is successful");
 			Assert.AreEqual("nes", result.SystemCode, "System should be NES");
-			Assert.AreEqual(1, result.Frames,  "Frame count should be 1");
+			Assert.AreEqual(1, result.Frames, "Frame count should be 1");
 		}
 
 		private Stream Embedded(string name)
