@@ -44,6 +44,7 @@ namespace TASVideos.Legacy.Imports
 					.ThatAreNotDeleted()
 					.ThatAreCurrentRevisions()
 					.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
+					.Where(w => !ObsoletePages.Contains(w.PageName))
 					.Select(s => new { s.Id, s.PageName, s.CreateTimeStamp })
 					.ToList();
 
@@ -341,5 +342,32 @@ namespace TASVideos.Legacy.Imports
 						: "Snes9x";
 			}
 		}
+
+		// ReSharper disable once StyleCop.SA1201
+		private static readonly string[] ObsoletePages = 
+		{
+			"System/DiffLineLengthNote",
+			"System/IsDeletedPage",
+			"System/IsPage",
+			"System/LayoutMainMenu",
+			"System/LayoutTinyMenu",
+			"System/MovieBittorrentNag",
+			"System/MovieEditingFailure",
+			"System/MovieNoMovies",
+			"System/MovieRatingAccessDenied",
+			"System/MovieRatingViewAccessDenied",
+			"System/MovieWhyHowReference",
+			"System/NewPageTemplate",
+			"System/NotPageEditor",
+			"System/RestrictedPage",
+			"System/PageNotFound",
+			"System/Pages",
+			"System/RestrictedPage",
+			"System/SubmissionComplete",
+			"System/SubmissionEditingFailure",
+			"System/SubmissionViewingFailur",
+			"System/SubmissionVotingHelp",
+			"System/ViewPageSource"
+		};
 	}
 }
