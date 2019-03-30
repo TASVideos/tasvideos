@@ -23,7 +23,8 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			// TODO: add tier argument, default to moon,stars
+			// TODO: add tier argument, default to moon,stars,
+			// we want to avoid baking in "business logic" like which tiers are award eligible
 			int before = ParamHelper.GetYear(pp, "before")
 				?? DateTime.UtcNow.Year;
 			int after = ParamHelper.GetYear(pp, "after")
