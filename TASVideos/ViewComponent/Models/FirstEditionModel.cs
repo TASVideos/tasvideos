@@ -1,4 +1,6 @@
-﻿namespace TASVideos.ViewComponents.Models
+﻿using System;
+
+namespace TASVideos.ViewComponents.Models
 {
 	public class FirstEditionModel
 	{
@@ -8,5 +10,6 @@
 		public int TierId { get; set; }
 		public string TierIconPath { get; set; }
 		public string TierName { get; set; }
+		public DateTime PublicationDate { get; set; }
 	}
 }
