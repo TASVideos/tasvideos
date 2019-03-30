@@ -23,11 +23,13 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			int? before = ParamHelper.GetInt(pp, "before");
-			int? after = ParamHelper.GetInt(pp, "after");
+			int before = ParamHelper.GetYear(pp, "before")
+				?? DateTime.UtcNow.Year;
+			int after = ParamHelper.GetYear(pp, "after")
+				?? DateTime.UtcNow.AddYears(1).Year;
 
-			var beforeYear = new DateTime(2015, 1, 1);
-			var afterYear = new DateTime(2014, 1, 1);
+			var beforeYear = new DateTime(before, 1, 1);
+			var afterYear = new DateTime(after, 1, 1);
 
 			// TODO: first edition logic
 			var model = await _db.Publications
