@@ -99,5 +99,29 @@ namespace TASVideos.Test.ViewComponents
 			var actual = ParamHelper.GetInt(parameterStr, param);
 			Assert.AreEqual(expected, actual);
 		}
+
+		[TestMethod]
+		[DataRow(null, null, null)]
+		[DataRow("", null, null)]
+		[DataRow("\r \n \t", null, null)]
+		[DataRow(null, "", null)]
+		[DataRow(null, "\r \n \t", null)]
+		[DataRow("num", "num", null)]
+		[DataRow("num=", "num", null)]
+		[DataRow("num=notnumber", "num", null)]
+		[DataRow("num=1.1", "num", null)]
+		[DataRow("num=0", "num", 0)]
+		[DataRow("num=-1", "num", -1)]
+		[DataRow("num=1", "num", 1)]
+		[DataRow("num=999999", "num", 999999)]
+		[DataRow("| num = 1 |", "num", 1)]
+		[DataRow("num=1 1", "num", null)]
+		[DataRow("num=Y", "num", null)]
+		[DataRow("num=Y2014", "num", 2014)]
+		public void GetYear(string parameterStr, string param, int? expected)
+		{
+			var actual = ParamHelper.GetYear(parameterStr, param);
+			Assert.AreEqual(expected, actual);
+		}
 	}
 }

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<TASVideos.ViewComponents.Models.FirstEditionModel>
+
+@{
+	var groups = Model.GroupBy(gkey => new  { gkey.TierId, gkey.TierIconPath, gkey.TierName });
+}
+
+@foreach (var g in groups.OrderByDescending(g => g.Key.TierId))
+{
+	<card>
+		<cardheader>
+			<a href="/@g.Key.TierName">
+				<img src="/@g.Key.TierIconPath" />
+				<strong>@g.Key.TierName</strong>
+			</a>
+			&nbsp;(@g.Count())
+		</cardheader>
+		<cardbody>
+			@foreach (var pub in g.OrderBy(p => p.Id))
+			{
+				<a href="/@(pub.Id)M">@pub.Title</a>
+			<br />
+			}
+		</cardbody>
+	</card>
+	
+	
+}
