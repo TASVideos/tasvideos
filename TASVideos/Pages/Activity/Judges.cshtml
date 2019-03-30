@@ -1,0 +1,10 @@
+﻿@page "{userName}"
+@{ ViewData["Title"] = $"Judge Activity for {Model.UserName}"; }
+@model JudgesModel
+
+<p>Submissions judged by @Model.UserName</p>
+<hr />
+@foreach(var sub in Model.Submissions.OrderBy(s => s.Id))
+{
+	<a href="/@(sub.Id)S">@sub.Title</a><br />
+}

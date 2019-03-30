@@ -1,0 +1,10 @@
+﻿@page "{userName}"
+@{ ViewData["Title"] = $"Publisher Activity for {Model.UserName}"; }
+@model PublishersModel
+
+<p>Movies published by @Model.UserName</p>
+<hr />
+@foreach (var sub in Model.Publications.OrderBy(p => p.Id))
+{
+	<a href="/@(sub.Id)M">@sub.Title</a><br />
+}

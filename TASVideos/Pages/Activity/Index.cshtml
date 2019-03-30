@@ -1,0 +1,56 @@
+﻿@page
+@{ ViewData["Title"] = "User Activity"; }
+@model IndexModel
+
+<row>
+	<column md="6">
+		<card>
+			<cardheader>Judge Counts</cardheader>
+			<cardbody>
+				<table>
+					<tr>
+						<th>User</th>
+						<th>Count</th>
+					</tr>
+					@foreach (var judge in Model.Judges.OrderByDescending(j => j.Count))
+					{
+						<tr>
+							<td>
+								<a asp-page="/Users/Profile" asp-route-username="@judge.UserName">@judge.UserName</a>
+							</td>
+							<td>
+								<a asp-page="/Activity/Judges" asp-route-username="@judge.UserName">@judge.Count</a>
+							</td>
+						</tr>
+					}
+				</table>
+
+			</cardbody>
+		</card>
+	</column>
+	<column md="6">
+		<card>
+			<cardheader>Publisher Counts</cardheader>
+			<cardbody>
+				<table>
+					<tr>
+						<th>User</th>
+						<th>Count</th>
+					</tr>
+					@foreach (var publisher in Model.Publishers.OrderByDescending(j => j.Count))
+					{
+						<tr>
+							<td>
+								<a asp-page="/Users/Profile" asp-route-username="@publisher.UserName">@publisher.UserName</a>
+							</td>
+							<td>
+								<a asp-page="/Activity/Publishers" asp-route-username="@publisher.UserName">@publisher.Count</a>
+							</td>
+						</tr>
+					}
+				</table>
+
+			</cardbody>
+		</card>
+	</column>
+</row>
