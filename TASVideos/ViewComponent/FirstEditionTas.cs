@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,31 +28,62 @@ namespace TASVideos.ViewComponents
 				?? DateTime.UtcNow.Year;
 			int after = ParamHelper.GetYear(pp, "after")
 				?? DateTime.UtcNow.AddYears(1).Year;
+			bool byPlatform = ParamHelper.HasParam(pp, "splitbyplatform");
 
 			var beforeYear = new DateTime(before, 1, 1);
 			var afterYear = new DateTime(after, 1, 1);
 
-			var firstEditions = await _db.Publications
-				.GroupBy(
-					gkey => new { gkey.GameId },
-					gvalue => new { gvalue.Id, gvalue.Submission.CreateTimeStamp })
-				.Select(g => new FirstEditionGames
-				{
-					GameId = g.Key.GameId,
-					PublicationDate = g.Min(gg => gg.CreateTimeStamp)
-				})
-				.Where(g => g.PublicationDate >= afterYear)
-				.Where(g => g.PublicationDate < beforeYear)
-				.ToListAsync();
+			List<FirstEditionGames> firstEditions;
 
-			var firstEditionGames = firstEditions.Select(f => f.GameId).ToList();
+			if (byPlatform)
+			{
+				firstEditions = await _db.Publications
+					.GroupBy(
+						gkey => new { gkey.GameId },
+						gvalue => new { gvalue.Id, gvalue.Submission.CreateTimeStamp })
+					.Select(g => new FirstEditionGames
+					{
+						GameId = g.Key.GameId,
+						PublicationDate = g.Min(gg => gg.CreateTimeStamp)
+					})
+					.Where(g => g.PublicationDate >= afterYear)
+					.Where(g => g.PublicationDate < beforeYear)
+					.ToListAsync();
+			}
+			else
+			{
+				firstEditions = await _db.Publications
+					.GroupBy(
+						gkey => new { gkey.Game.DisplayName },
+						gvalue => new { gvalue.Id, gvalue.Submission.CreateTimeStamp })
+					.Select(g => new FirstEditionGames
+					{
+						GameName = g.Key.DisplayName,
+						PublicationDate = g.Min(gg => gg.CreateTimeStamp)
+					})
+					.Where(g => g.PublicationDate >= afterYear)
+					.Where(g => g.PublicationDate < beforeYear)
+					.ToListAsync();
+			}
 
-			// TODO: first edition logic
-			var pubs = await _db.Publications
+			var query = _db.Publications
 				.Where(p => p.Tier.Weight >= 1) // Exclude Vault
 				.Where(p => p.CreateTimeStamp >= afterYear)
-				.Where(p => p.CreateTimeStamp < beforeYear)
-				.Where(p => firstEditionGames.Contains(p.GameId))
+				.Where(p => p.CreateTimeStamp < beforeYear);
+
+			if (byPlatform)
+			{
+				var firstEditionIds = firstEditions.Select(f => f.GameId).ToList();
+				query = query.Where(p => firstEditionIds.Contains(p.GameId));
+			}
+			else
+			{
+				var firstEditionNames = firstEditions.Select(f => f.GameName).ToList();
+				query = query.Where(p => firstEditionNames.Contains(p.Game.DisplayName));
+			}
+
+			// TODO: first edition logic
+			var pubs = await query
 				.Select(p => new FirstEditionModel
 				{
 					Id = p.Id,
@@ -76,6 +108,7 @@ namespace TASVideos.ViewComponents
 		private class FirstEditionGames
 		{
 			public int GameId { get; set; }
+			public string GameName { get; set; }
 			public DateTime? PublicationDate { get; set; }
 		}
 	}
