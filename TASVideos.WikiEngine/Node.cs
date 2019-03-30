@@ -261,30 +261,30 @@ namespace TASVideos.WikiEngine.AST
 	{
 		private static readonly Dictionary<string, string> ModuleNameMaps = new Dictionary<string, string>
 		{
-			["listsubpages"] = "ListSubPages",
 			["__wikilink"] = "WikiLink",
-			["wikiorphans"] = "WikiOrphans",
+			["awards"] = "Awards",
 			["brokenlinks"] = "BrokenLinks",
-			["wikitextchangelog"] = "WikiTextChangeLog",
-			["usergetwikiname"] = "UserGetWikiName",
 			["activetab"] = "ActiveTab",
-			["wikigetcurrenteditlink"] = "CurrentEditLink",
-			["user_name"] = "UserName",
-			["listparents"] = "ListParents",
-			["youtube"] = "Youtube",
-			["platformframerates"] = "PlatformFramerates",
-			["frontpagesubmissionlist"] = "FrontpageSubmissionList",
 			["displayminimovie"] = "DisplayMiniMovie",
-			["tabularmovielist"] = "TabularMovieList",
-			["topicfeed"] = "TopicFeed",
+			["frames"] = "Frames",
+			["frontpagesubmissionlist"] = "FrontpageSubmissionList",
 			["gamename"] = "GameName",
 			["gamesubpages"] = "GameSubPages",
-			["awards"] = "Awards",
-			["usermovies"] = "UserMovies",
+			["listparents"] = "ListParents",
+			["listsubpages"] = "ListSubPages",
 			["mediaposts"] = "MediaPosts",
+			["platformframerates"] = "PlatformFramerates",
 			["supportedmovietypes"] = "SupportedMovieTypes",
+			["tabularmovielist"] = "TabularMovieList",
+			["topicfeed"] = "TopicFeed",
+			["user_name"] = "UserName",
+			["usergetwikiname"] = "UserGetWikiName",
+			["usermovies"] = "UserMovies",
 			["welcome"] = "Welcome",
-			["frames"] = "Frames"
+			["wikigetcurrenteditlink"] = "CurrentEditLink",
+			["wikiorphans"] = "WikiOrphans",
+			["wikitextchangelog"] = "WikiTextChangeLog",
+			["youtube"] = "Youtube"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
