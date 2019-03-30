@@ -135,5 +135,34 @@ namespace TASVideos.ViewComponents
 
 			return null;
 		}
+
+		/// <summary>
+		/// Takes the given string and parses it to an int if possible
+		/// But also accepts Y prefixed values such as Y2014
+		/// </summary>
+		public static int? GetYear(string parameterStr, string param)
+		{
+			if (string.IsNullOrWhiteSpace(param))
+			{
+				return null;
+			}
+
+			var val = GetValueFor(parameterStr, param)?.ToLower();
+
+			if (string.IsNullOrWhiteSpace(val))
+			{
+				return null;
+			}
+
+			val = val.TrimStart('y');
+
+			var result = int.TryParse(val, out int parsedVal);
+			if (result)
+			{
+				return parsedVal;
+			}
+
+			return null;
+		}
 	}
 }

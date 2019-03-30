@@ -266,6 +266,7 @@ namespace TASVideos.WikiEngine.AST
 			["brokenlinks"] = "BrokenLinks",
 			["activetab"] = "ActiveTab",
 			["displayminimovie"] = "DisplayMiniMovie",
+			["firsteditiontas"] = "FirstEditionTas",
 			["frames"] = "Frames",
 			["frontpagesubmissionlist"] = "FrontpageSubmissionList",
 			["gamename"] = "GameName",
