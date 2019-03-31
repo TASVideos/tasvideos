@@ -24,5 +24,16 @@ namespace TASVideos.Extensions
 					? biggest
 					: source;
 		}
+
+		public static decimal ToPercent(this int val, int total, int precision = 1)
+		{
+			if (total == 0)
+			{
+				return 0;
+			}
+
+			var p = val / (decimal)total;
+			return Math.Round(p * 100, precision);
+		}
 	}
 }

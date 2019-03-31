@@ -1,0 +1,41 @@
+﻿@page "{userName}"
+@{ ViewData["Title"] = $"Judge Activity for {Model.UserName}"; }
+@model JudgesModel
+
+@{
+	var total = Model.Submissions.Count;
+	var acceptedTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Published
+		|| s.Status == SubmissionStatus.Accepted
+		|| s.Status == SubmissionStatus.PublicationUnderway);
+	var rejectedTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Rejected);
+	var cancelledTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Cancelled);
+}
+
+<p>Submissions judged by <a asp-page="/Users/Profile" asp-route-userName="@Model.UserName">@Model.UserName</a></p>
+<hr />
+<label>Total: @total</label><br />
+Accepted: @acceptedTotal (@acceptedTotal.ToPercent(total)%)
+Rejected: @rejectedTotal (@rejectedTotal.ToPercent(total)%)
+Cancelled: @cancelledTotal (@cancelledTotal.ToPercent(total)%)
+<hr />
+<table class="table table-striped">
+	<tr>
+		<th>Date</th>
+		<th>Submission</th>
+		<th>Decision</th>
+	</tr>
+	@foreach (var sub in Model.Submissions.OrderBy(s => s.Id))
+	{
+		<tr>
+			<td>
+				<timezone-convert asp-for="@sub.CreateTimeStamp" date-only="true" />
+			</td>
+			<td>
+				<a href="/@(sub.Id)S">@sub.Title</a>
+			</td>
+			<td>
+				@sub.Status.EnumDisplayName()
+			</td>
+		</tr>
+	}
+</table>

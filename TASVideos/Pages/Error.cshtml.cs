@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Diagnostics;
 
 namespace TASVideos.Pages
 {
@@ -12,7 +11,7 @@ namespace TASVideos.Pages
 
 		public void OnGet()
 		{
-			RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+			RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 		}
 	}
 }
