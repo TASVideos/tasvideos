@@ -106,5 +106,12 @@ namespace TASVideos.Legacy.Imports
 
 			return names;
 		}
+
+		public static string NullOutWhiteSpace(this string str)
+		{
+			return string.IsNullOrWhiteSpace(str)
+				? null
+				: str;
+		}
 	}
 }
