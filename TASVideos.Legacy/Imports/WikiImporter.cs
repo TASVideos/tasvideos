@@ -22,6 +22,7 @@ namespace TASVideos.Legacy.Imports
 		{
 			var siteTexts = legacySiteContext.SiteText
 				.Include(s => s.User)
+				.Where(w => !ObsoletePages.Contains(w.PageName))
 				.ToList();
 
 			var legUsers = legacySiteContext.Users.Select(u => new { u.Name, u.HomePage }).ToList();
@@ -361,5 +362,32 @@ namespace TASVideos.Legacy.Imports
 
 			return revision;
 		}
+
+		// ReSharper disable once StyleCop.SA1201
+		private static readonly string[] ObsoletePages = 
+		{
+			"SystemDiffLineLengthNote",
+			"SystemIsDeletedPage",
+			"SystemIsPage",
+			"SystemLayoutMainMenu",
+			"SystemLayoutTinyMenu",
+			"SystemMovieBittorrentNag",
+			"SystemMovieEditingFailure",
+			"SystemMovieNoMovies",
+			"SystemMovieRatingAccessDenied",
+			"SystemMovieRatingViewAccessDenied",
+			"SystemMovieWhyHowReference",
+			"SystemNewPageTemplate",
+			"SystemNotPageEditor",
+			"SystemRestrictedPage",
+			"SystemPageNotFound",
+			"SystemPages",
+			"SystemRestrictedPage",
+			"SystemSubmissionComplete",
+			"SystemSubmissionEditingFailure",
+			"SystemSubmissionViewingFailur",
+			"SystemSubmissionVotingHelp",
+			"SystemViewPageSource"
+		};
 	}
 }
