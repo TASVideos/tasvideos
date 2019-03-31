@@ -368,17 +368,21 @@ namespace TASVideos.Legacy.Imports
 		{
 			"AccessBlocked",
 			"CacheControl",
+			"Login",
 			"OldMovies",
 			"SiteTechnology",
 			"SiteTechnology/Database",
+			"Urmom", // What fool would do this?
 			"TASSnapshot",
 			"TASSnapshot/Filelist",
 			"SiteTechnology/API",
 			"SandBox", // History for this page isn't important
 			"SubmitMovie",
+
 			"SystemDiffLineLengthNote",
 			"SystemIsDeletedPage",
 			"SystemIsPage",
+			"SystemLayoutLeftMenu",
 			"SystemLayoutMainMenu",
 			"SystemLayoutTinyMenu",
 			"SystemMovieBittorrentNag",
@@ -397,6 +401,7 @@ namespace TASVideos.Legacy.Imports
 			"SystemSubmissionEditingFailure",
 			"SystemSubmissionViewingFailur",
 			"SystemSubmissionVotingHelp",
+			"SystemSubmissionLoginFailure",
 			"SystemViewPageSource"
 		};
 	}
