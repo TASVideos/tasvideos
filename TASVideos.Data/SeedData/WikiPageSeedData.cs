@@ -13,6 +13,12 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "SandBox",
+				RevisionMessage = Import,
+				Markup = "A page for tryout out wiki markup."
+			},
+			new WikiPage
+			{
 				PageName = "JudgeCounts",
 				RevisionMessage = Import,
 				Markup = "This page is obsolete.  See [Activity] instead."

@@ -374,8 +374,8 @@ namespace TASVideos.Legacy.Imports
 			"TASSnapshot",
 			"TASSnapshot/Filelist",
 			"SiteTechnology/API",
+			"SandBox", // History for this page isn't important
 			"SubmitMovie",
-
 			"SystemDiffLineLengthNote",
 			"SystemIsDeletedPage",
 			"SystemIsPage",
