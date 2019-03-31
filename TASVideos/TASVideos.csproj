@@ -59,6 +59,9 @@
     <Content Update="Pages\Shared\Components\FirstEditionTas\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Pages\Shared\Components\RejectedSubmissions\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\Shared\_Ratings.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

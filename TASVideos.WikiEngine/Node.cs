@@ -275,6 +275,7 @@ namespace TASVideos.WikiEngine.AST
 			["listsubpages"] = "ListSubPages",
 			["mediaposts"] = "MediaPosts",
 			["platformframerates"] = "PlatformFramerates",
+			["rejectedsubmissions"] = "RejectedSubmissions",
 			["supportedmovietypes"] = "SupportedMovieTypes",
 			["tabularmovielist"] = "TabularMovieList",
 			["topicfeed"] = "TopicFeed",
