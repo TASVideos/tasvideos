@@ -111,6 +111,9 @@ namespace TASVideos.Data.Entity
 
 		public int? MovieStartType { get; set; }
 
+		public int? RejectionReasonId { get; set; }
+		public virtual SubmissionRejectionReason RejectionReason { get; set; }
+
 		/// <summary>
 		/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
 		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01

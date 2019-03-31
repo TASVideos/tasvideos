@@ -30,6 +30,8 @@ namespace TASVideos.Data
 		public DbSet<Submission> Submissions { get; set; }
 		public DbSet<SubmissionAuthor> SubmissionAuthors { get; set; }
 		public DbSet<SubmissionStatusHistory> SubmissionStatusHistory { get; set; }
+		public DbSet<SubmissionRejectionReason> SubmissionRejectionReasons { get; set; }
+
 		public DbSet<Tier> Tiers { get; set; }
 
 		public DbSet<Publication> Publications { get; set; }
@@ -311,6 +313,15 @@ namespace TASVideos.Data
 			{
 				entity.HasKey(e => new { e.UserId, e.ForumTopicId });
 				entity.HasIndex(e => e.ForumTopicId);
+			});
+
+			builder.Entity<SubmissionRejectionReason>(entity =>
+			{
+				entity.Property(e => e.Id)
+					.ValueGeneratedNever()
+					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+
+				entity.HasIndex(e => e.DisplayName).IsUnique();
 			});
 		}
 
