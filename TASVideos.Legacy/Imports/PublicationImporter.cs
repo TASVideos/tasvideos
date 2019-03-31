@@ -142,7 +142,7 @@ namespace TASVideos.Legacy.Imports
 						SystemFrameRate = pub.SystemFrameRates,
 						SystemId = pub.Movie.SystemId,
 						System = pub.System,
-						Branch = pub.Movie.Branch,
+						Branch = pub.Movie.Branch.NullOutWhiteSpace(),
 						MirrorSiteUrl = mirror,
 						OnlineWatchingUrl = streaming
 					};
