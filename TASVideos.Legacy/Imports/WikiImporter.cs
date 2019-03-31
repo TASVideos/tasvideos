@@ -20,9 +20,11 @@ namespace TASVideos.Legacy.Imports
 	{
 		public static void Import(string connectionStr, ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
+			var blacklist = ObsoletePages.Concat(ObsoletePages.Select(p => "DeletedPages/" + p));
+
 			var siteTexts = legacySiteContext.SiteText
 				.Include(s => s.User)
-				.Where(w => !ObsoletePages.Contains(w.PageName))
+				.Where(w => !blacklist.Contains(w.PageName))
 				.ToList();
 
 			var legUsers = legacySiteContext.Users.Select(u => new { u.Name, u.HomePage }).ToList();
