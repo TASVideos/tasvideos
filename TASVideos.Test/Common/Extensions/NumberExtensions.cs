@@ -20,5 +20,16 @@ namespace TASVideos.Test.Common.Extensions
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(expected, actual);
 		}
+
+		[TestMethod]
+		[DataRow(0, 0, 0.0)]
+		[DataRow(1, 0, 0.0)]
+		[DataRow(80, 100, 80.0)]
+		[DataRow(2, 3, 66.7)]
+		public void ToPercent_Tests(int source, int total, double expected)
+		{
+			var actual = source.ToPercent(total);
+			Assert.AreEqual((decimal)expected, actual);
+		}
 	}
 }
