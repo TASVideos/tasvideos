@@ -1,0 +1,15 @@
+﻿@model IEnumerable<RejectedSubmission>
+
+<table class="table table-striped">
+	<tr>
+		<th>Submission</th>
+		<th>Reason</th>
+	</tr>
+	@foreach (var sub in Model)
+	{
+		<tr>
+			<td><a href="/@(sub.Id)S">@sub.Title</a></td>
+			<td>@sub.Reason</td>
+		</tr>
+	}
+</table>
