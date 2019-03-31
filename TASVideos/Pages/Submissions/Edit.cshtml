@@ -4,7 +4,7 @@
 @{
 	ViewData["Title"] = $"Edit Submission #{Model.Id}";
 }
-
+@Html.ValidationSummary();
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form method="post" enctype="multipart/form-data">
 	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
@@ -12,10 +12,13 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.Status" class="form-control-label"></label>
-				<select 
-					class="form-control" 
-					asp-for="Submission.Status" 
-					asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
+				<select class="form-control"
+						asp-for="Submission.Status"
+						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
+			</form-group>
+			<form-group id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
+				<label asp-for="Submission.RejectionReason" class="form-control-label"></label>
+				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
 			</form-group>
 		</div>
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
@@ -108,6 +111,20 @@
 </form>
 
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
+
+
+<script>
+	(function () {
+		document.getElementById('@Html.IdFor(m => m.Submission.Status)').addEventListener("change", function () {
+			var reject = '@((int)SubmissionStatus.Rejected)';
+			if (this.value === reject) {
+				document.getElementById('rejection-reason').classList.remove('d-none');
+			} else {
+				document.getElementById('rejection-reason').classList.add('d-none');
+			}
+		});
+	})();
+</script>
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
