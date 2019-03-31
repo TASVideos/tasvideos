@@ -13,6 +13,18 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "JudgeCounts",
+				RevisionMessage = Import,
+				Markup = "This page is obsolete.  See [Activity] instead."
+			},
+			new WikiPage
+			{
+				PageName = "PubCounts",
+				RevisionMessage = Import,
+				Markup = "This page is obsolete.  See [Activity] instead."
+			},
+			new WikiPage
+			{
 				PageName = "System/ActivitySummary",
 				RevisionMessage = Import,
 				Markup = @"This page tracks the number of publications as well as the most recent publication for all users that have published a movie."
