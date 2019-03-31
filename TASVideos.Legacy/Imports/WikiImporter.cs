@@ -366,6 +366,16 @@ namespace TASVideos.Legacy.Imports
 		// ReSharper disable once StyleCop.SA1201
 		private static readonly string[] ObsoletePages = 
 		{
+			"AccessBlocked",
+			"CacheControl",
+			"OldMovies",
+			"SiteTechnology",
+			"SiteTechnology/Database",
+			"TASSnapshot",
+			"TASSnapshot/Filelist",
+			"SiteTechnology/API",
+			"SubmitMovie",
+
 			"SystemDiffLineLengthNote",
 			"SystemIsDeletedPage",
 			"SystemIsPage",
