@@ -13,6 +13,12 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "System/ActivitySummary",
+				RevisionMessage = Import,
+				Markup = @"This page tracks the number of publications as well as the most recent publication for all users that have published a movie."
+			},
+			new WikiPage
+			{
 				PageName = "System/AvatarRequirements",
 				RevisionMessage = Import,
 				Markup = @"Displays a small graphic image below your details in posts.
