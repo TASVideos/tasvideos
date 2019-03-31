@@ -19,5 +19,8 @@ namespace TASVideos.Pages.Submissions.Models
 
 		[Display(Name = "Intended Tier")]
 		public int? TierId { get; set; }
+
+		[Display(Name = "Reason")]
+		public int? RejectionReason { get; set; }
 	}
 }

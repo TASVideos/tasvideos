@@ -71,6 +71,9 @@ namespace TASVideos.Pages.Submissions
 						SystemFrameRateId = s.SystemFrameRateId,
 						GameId = s.GameId,
 						RomId = s.RomId,
+						RejectionReasonDisplay = s.RejectionReasonId.HasValue
+							? s.RejectionReason.DisplayName
+							: null,
 						Authors = s.SubmissionAuthors
 							.Where(sa => sa.SubmissionId == Id)
 							.Select(sa => sa.Author.UserName)

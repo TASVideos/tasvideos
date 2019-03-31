@@ -68,14 +68,13 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Status")]
 		public SubmissionStatus Status { get; set; }
 
-		[Display(Name = "Reason")]
-		public int? RejectionReason { get; set; }
-		
 		[Display(Name = "Judge")]
 		public string Judge { get; set; }
 
 		[Display(Name = "Publisher")]
 		public string Publisher { get; set; }
+
+		public string RejectionReasonDisplay { get; set; }
 
 		public string Title { get; set; }
 

@@ -45,7 +45,12 @@
 	</div>
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
 		<div class="alert alert-@(statusColor)" role="alert">
-			<h4 condition="!Model.IsPublished" class="alert-heading">Status: @Model.Submission.Status.EnumDisplayName()</h4>
+			<h4 condition="!Model.IsPublished" class="alert-heading">
+				Status: @Model.Submission.Status.EnumDisplayName()
+				<small condition="@Model.Submission.Status == SubmissionStatus.Rejected">
+					(Reason: @Model.Submission.RejectionReasonDisplay)
+				</small>
+			</h4>
 			<h4 condition="Model.IsPublished" class="alert-heading">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></h4>
 			<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
 				<label asp-for="Submission.Judge"></label>:
