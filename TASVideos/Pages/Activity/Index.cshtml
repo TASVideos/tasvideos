@@ -7,10 +7,11 @@
 		<card>
 			<cardheader>Judge Counts</cardheader>
 			<cardbody>
-				<table>
+				<table class="table">
 					<tr>
 						<th>User</th>
 						<th>Count</th>
+						<th>Time since last</th>
 					</tr>
 					@foreach (var judge in Model.Judges.OrderByDescending(j => j.Count))
 					{
@@ -20,6 +21,9 @@
 							</td>
 							<td>
 								<a asp-page="/Activity/Judges" asp-route-username="@judge.UserName">@judge.Count</a>
+							</td>
+							<td>
+								<span>@judge.LastActivity.DaysAgo()</span>
 							</td>
 						</tr>
 					}
@@ -32,10 +36,11 @@
 		<card>
 			<cardheader>Publisher Counts</cardheader>
 			<cardbody>
-				<table>
+				<table class="table">
 					<tr>
 						<th>User</th>
 						<th>Count</th>
+						<th>Time since last</th>
 					</tr>
 					@foreach (var publisher in Model.Publishers.OrderByDescending(j => j.Count))
 					{
@@ -45,6 +50,9 @@
 							</td>
 							<td>
 								<a asp-page="/Activity/Publishers" asp-route-username="@publisher.UserName">@publisher.Count</a>
+							</td>
+							<td>
+								<span>@publisher.LastActivity.DaysAgo()</span>
 							</td>
 						</tr>
 					}
