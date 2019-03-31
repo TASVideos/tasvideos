@@ -25,17 +25,19 @@ namespace TASVideos.Pages.Activity
 		[FromRoute]
 		public string UserName { get; set; }
 
-		public IEnumerable<MovieEntryModel> Submissions { get; set; } = new List<MovieEntryModel>();
+		public ICollection<SubmissionEntryModel> Submissions { get; set; } = new List<SubmissionEntryModel>();
 
 		public async Task OnGet()
 		{
 			Submissions = await _db.Submissions
 				.Where(s => s.JudgeId.HasValue)
 				.Where(s => s.Judge.UserName == UserName)
-				.Select(s => new MovieEntryModel
+				.Select(s => new SubmissionEntryModel
 				{
 					Id = s.Id,
-					Title = s.Title
+					CreateTimeStamp = s.CreateTimeStamp,
+					Title = s.Title,
+					Status = s.Status
 				})
 				.ToListAsync();
 		}
