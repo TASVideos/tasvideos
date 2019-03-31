@@ -32,6 +32,11 @@ namespace TASVideos.Legacy.Imports
 				.Where(s => s.Id > 0)
 				.ToList();
 
+			var rejectionReasons = legacySiteContext.SubmissionRejections
+				.GroupBy(r => r.Id)
+				.Select(r => new { Id = r.Key, r.First().Reason })
+				.ToList();
+
 			var submissions = new List<Submission>();
 			var submissionAuthors = new List<SubmissionAuthor>();
 			var submissionHistory = new List<SubmissionStatusHistory>();
@@ -68,7 +73,9 @@ namespace TASVideos.Legacy.Imports
 					from pub in pubs.DefaultIfEmpty()
 					join p in users on ImportHelper.ConvertLatin1String(pub?.CreateUserName) equals p.UserName into pp
 					from p in pp.DefaultIfEmpty()
-					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimeStamp })
+					join r in rejectionReasons on ls.Id equals r.Id into rr
+					from r in rr.DefaultIfEmpty()
+					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimeStamp, Rejection = r })
 					.ToList();
 
 				foreach (var legacySubmission in lSubsWithSystem)
@@ -117,7 +124,8 @@ namespace TASVideos.Legacy.Imports
 						JudgeId = legacySubmission.Judge?.Id,
 						PublisherId = legacySubmission.Publisher?.Id,
 						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
-						MovieExtension = GetExtension(legacySubmission.Sub.Content)
+						MovieExtension = GetExtension(legacySubmission.Sub.Content),
+						RejectionReasonId = legacySubmission.Rejection?.Reason
 					};
 
 					var authorNames = legacySubmission.Sub.Author
@@ -198,7 +206,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.JudgeId),
 				nameof(Submission.Branch),
 				nameof(Submission.PublisherId),
-				nameof(Submission.MovieExtension)
+				nameof(Submission.MovieExtension),
+				nameof(Submission.RejectionReasonId)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
