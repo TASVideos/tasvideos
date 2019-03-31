@@ -50,6 +50,8 @@ namespace TASVideos.Pages.Submissions
 
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
 
+		public IEnumerable<SelectListItem> AvailableRejectionReasons { get; set; } = new List<SelectListItem>();
+
 		public async Task<IActionResult> OnGet()
 		{
 			// TODO: set up auto-mapper and use ProjectTo<>
@@ -75,7 +77,8 @@ namespace TASVideos.Pages.Submissions
 					EncodeEmbedLink = s.EncodeEmbedLink,
 					Markup = s.WikiContent.Markup,
 					Judge = s.Judge != null ? s.Judge.UserName : "",
-					TierId = s.IntendedTierId
+					TierId = s.IntendedTierId,
+					RejectionReason = s.RejectionReasonId
 				})
 				.SingleOrDefaultAsync();
 
@@ -99,7 +102,7 @@ namespace TASVideos.Pages.Submissions
 				}
 			}
 
-			await PopulateAvailableTiers();
+			await PopulateDropdowns();
 
 			AvailableStatuses = SubmissionHelper.AvailableStatuses(
 				Submission.Status,
@@ -167,17 +170,17 @@ namespace TASVideos.Pages.Submissions
 			if (!Submission.TierId.HasValue
 				&& (Submission.Status == SubmissionStatus.Accepted || Submission.Status == SubmissionStatus.PublicationUnderway))
 			{
-				ModelState.AddModelError(nameof(Submission.TierId), "A submission can not be accepted without a Tier");
+				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TierId)}", "A submission can not be accepted without a Tier");
 			}
 
 			if (!availableStatus.Contains(Submission.Status))
 			{
-				ModelState.AddModelError(nameof(Submission.Status), $"Invalid status: {Submission.Status}");
+				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Status)}", $"Invalid status: {Submission.Status}");
 			}
 
 			if (!ModelState.IsValid)
 			{
-				await PopulateAvailableTiers();
+				await PopulateDropdowns();
 				AvailableStatuses = availableStatus;
 				return Page();
 			}
@@ -271,6 +274,10 @@ namespace TASVideos.Pages.Submissions
 				};
 				submission.History.Add(history);
 				_db.SubmissionStatusHistory.Add(history);
+
+				submission.RejectionReasonId = Submission.Status == SubmissionStatus.Rejected
+					? Submission.RejectionReason
+					: null;
 			}
 
 			submission.IntendedTier = Submission.TierId.HasValue
@@ -332,9 +339,13 @@ namespace TASVideos.Pages.Submissions
 			return Redirect($"/{Id}S");
 		}
 
-		private async Task PopulateAvailableTiers()
+		private async Task PopulateDropdowns()
 		{
 			AvailableTiers = await _db.Tiers
+				.ToDropdown()
+				.ToListAsync();
+
+			AvailableRejectionReasons = await _db.SubmissionRejectionReasons
 				.ToDropdown()
 				.ToListAsync();
 		}

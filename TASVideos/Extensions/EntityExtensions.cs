@@ -31,6 +31,16 @@ namespace TASVideos.Extensions
 				});
 		}
 
+		public static IQueryable<SelectListItem> ToDropdown(this IQueryable<SubmissionRejectionReason> query)
+		{
+			return query
+				.Select(s => new SelectListItem
+				{
+					Text = s.DisplayName,
+					Value = s.Id.ToString()
+				});
+		}
+
 		public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
 		{
 			return query
