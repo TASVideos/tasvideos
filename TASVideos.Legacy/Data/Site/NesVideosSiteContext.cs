@@ -32,6 +32,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<MovieFlag> MovieFlags { get; set; }
 		public DbSet<UserFile> UserFiles { get; set; }
 		public DbSet<UserFileComment> UserFileComments { get; set; }
+		public DbSet<SubmissionRejections> SubmissionRejections { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -80,6 +81,7 @@ namespace TASVideos.Legacy.Data.Site
 			});
 			modelBuilder.Entity<UserFile>().ToTable("user_files");
 			modelBuilder.Entity<UserFileComment>().ToTable("user_files_comments");
+			modelBuilder.Entity<Entity.SubmissionRejections>().ToTable("rejections");
 		}
 	}
 }
