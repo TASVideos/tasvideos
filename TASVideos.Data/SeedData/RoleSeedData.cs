@@ -26,6 +26,7 @@ namespace TASVideos.Data.SeedData
 		public const string ForumAdmin = "Forum Admin";
 		public const string Ambassador = "Ambassador";
 		public const string SiteDeveloper = "Site developer";
+		public const string EmulatorCoder = "Emulator Coder";
 	}
 
 	public class RoleSeedData
@@ -351,6 +352,12 @@ namespace TASVideos.Data.SeedData
 			RoleLinks = SiteDeveloperLinks
 		};
 
+		public static readonly Role EmulatorCoder = new Role
+		{
+			Name = RoleSeedNames.EmulatorCoder,
+			Description = "Emulator coders are people who have contributed code to site approved rerecording emulators.  This role is \"ceremonial\" and does not have any additional permissions."
+		};
+
 		public static IEnumerable<Role> AllRoles =>
 			new[]
 			{
@@ -368,7 +375,8 @@ namespace TASVideos.Data.SeedData
 				ForumModerator,
 				ForumAdmin,
 				Ambassador,
-				SiteDeveloper
+				SiteDeveloper,
+				EmulatorCoder
 			};
 	}
 }

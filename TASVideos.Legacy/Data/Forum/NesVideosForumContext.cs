@@ -11,6 +11,7 @@ namespace TASVideos.Legacy.Data.Forum
 
 		public DbSet<Users> Users { get; set; }
 		public DbSet<UserGroup> UserGroups { get; set; }
+		public DbSet<UserRanks> UserRanks { get; set; }
 		public DbSet<BanList> BanList { get; set; }
 		public DbSet<Categories> Categories { get; set; }
 		public DbSet<Forums> Forums { get; set; }
@@ -59,6 +60,12 @@ namespace TASVideos.Legacy.Data.Forum
 			{ 
 				entity.HasKey(e => new { e.TopicId, e.UserId });
 				entity.ToTable("topics_watch");
+			});
+
+			modelBuilder.Entity<UserRanks>(entity =>
+			{
+				entity.HasKey(e => new { e.UserId, e.RankId });
+				entity.ToTable("user_rank");
 			});
 		}
 	}
