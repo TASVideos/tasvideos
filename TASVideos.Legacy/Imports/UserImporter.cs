@@ -15,8 +15,10 @@ namespace TASVideos.Legacy.Imports
 	public static class UserImporter
 	{
 		private const int ModeratorGroupId = 272; // This isn't going to change, so just hard code it
-		private static readonly string[] SiteDevelopers = { "natt", "Darkpsy", "Scepheo" };
+		private const int EmulatorCoder = 40; // The rank id in the ranks table
 
+		private static readonly string[] SiteDevelopers = { "natt", "Darkpsy", "Scepheo" };
+		
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -37,9 +39,15 @@ namespace TASVideos.Legacy.Imports
 				.ThenInclude(ur => ur.Role)
 				.ToList();
 
+			var emuCoders = legacyForumContext.UserRanks
+				.Where(ur => ur.RankId == EmulatorCoder)
+				.ToList();
+
 			var users = (from u in legacyForumContext.Users
 						join b in legacyForumContext.BanList on u.UserId equals b.UserId into bb
 						from b in bb.DefaultIfEmpty()
+						join e in emuCoders on u.UserId equals e.UserId into ee
+						from e in ee.DefaultIfEmpty()
 						join ug in legacyForumContext.UserGroups on new { u.UserId, GroupId = ModeratorGroupId } equals new { ug.UserId, ug.GroupId } into ugg
 						from ug in ugg.DefaultIfEmpty()
 						where u.UserName != "Anonymous"
@@ -61,7 +69,8 @@ namespace TASVideos.Legacy.Imports
 							u.BbcodeUid,
 							IsBanned = b != null,
 							IsModerator = ug != null,
-							IsForumAdmin = u.UserLevel == 1
+							IsForumAdmin = u.UserLevel == 1,
+							IsEmuCoder = e != null
 						})
 						.ToList();
 
@@ -174,6 +183,15 @@ namespace TASVideos.Legacy.Imports
 						userRoles.Add(new UserRole
 						{
 							RoleId = roles.Single(r => r.Name == RoleSeedNames.SiteDeveloper).Id,
+							UserId = user.User.Id
+						});
+					}
+
+					if (user.User.IsEmuCoder)
+					{
+						userRoles.Add(new UserRole
+						{
+							RoleId = roles.Single(r => r.Name == RoleSeedNames.EmulatorCoder).Id,
 							UserId = user.User.Id
 						});
 					}
