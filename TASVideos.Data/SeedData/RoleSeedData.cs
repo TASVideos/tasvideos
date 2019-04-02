@@ -25,6 +25,7 @@ namespace TASVideos.Data.SeedData
 		public const string ForumModerator = "Forum Moderator";
 		public const string ForumAdmin = "Forum Admin";
 		public const string Ambassador = "Ambassador";
+		public const string SiteDeveloper = "Site developer";
 	}
 
 	public class RoleSeedData
@@ -113,6 +114,16 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.SeeRestrictedForums,
 			PermissionTo.EditWikiPages,
 			PermissionTo.EditSystemPages
+		};
+
+		private static readonly PermissionTo[] SiteDeveloperPermissions =
+		{
+			PermissionTo.SeeDiagnostics
+		};
+
+		private static readonly List<RoleLink> SiteDeveloperLinks = new List<RoleLink>
+		{
+			new RoleLink { Link = "SiteCodingStandards" }
 		};
 
 		private static readonly List<RoleLink> AdminRoleLinks = new List<RoleLink>
@@ -324,7 +335,20 @@ namespace TASVideos.Data.SeedData
 				Role = Ambassador,
 				PermissionId = p,
 				CanAssign = false
+			}).ToArray()
+		};
+
+		public static readonly Role SiteDeveloper = new Role
+		{
+			Name = RoleSeedNames.SiteDeveloper,
+			Description = "Site developers have access to the site code and can make changes.",
+			RolePermission = SiteDeveloperPermissions.Select(p => new RolePermission
+			{
+				Role = SiteDeveloper,
+				PermissionId = p,
+				CanAssign = false
 			}).ToArray(),
+			RoleLinks = SiteDeveloperLinks
 		};
 
 		public static IEnumerable<Role> AllRoles =>
@@ -343,7 +367,8 @@ namespace TASVideos.Data.SeedData
 				SeniorPublisher,
 				ForumModerator,
 				ForumAdmin,
-				Ambassador
+				Ambassador,
+				SiteDeveloper
 			};
 	}
 }

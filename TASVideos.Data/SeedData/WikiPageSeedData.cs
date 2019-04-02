@@ -13,6 +13,12 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "SiteCodingStandards",
+				RevisionMessage = Import,
+				Markup = "[TODO]: Document coding standards"
+			},
+			new WikiPage
+			{
 				PageName = "SandBox",
 				RevisionMessage = Import,
 				Markup = "A page for tryout out wiki markup."
