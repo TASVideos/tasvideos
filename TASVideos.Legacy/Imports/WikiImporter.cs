@@ -382,6 +382,7 @@ namespace TASVideos.Legacy.Imports
 			"SubmitMovie",
 
 			"SystemDiffLineLengthNote",
+			"SystemUserEditRank",
 			"SystemIsDeletedPage",
 			"SystemIsPage",
 			"SystemLayoutLeftMenu",
