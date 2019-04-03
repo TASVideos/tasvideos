@@ -9,7 +9,7 @@
 			<a class="btn btn-primary " asp-page="Catalog" asp-route-id="@Model.Id">Catalog</a>
 		</div>
 		<row>
-			<div class="col-lg-6">
+			<column lg="6">
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Tier"></label>
 					<span class="col-sm-9"><a href="/@Model.Submission.Tier">@Html.DisplayFor(m => m.Submission.Tier)</a></span>
@@ -22,8 +22,8 @@
 					<label class="col-sm-3" asp-for="Submission.SystemRegion"></label>
 					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.SystemRegion)</span>
 				</row>
-			</div>
-			<div class="col-lg-6">
+			</column>
+			<column lg="6">
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Game"></label>
 					<span class="col-sm-9"><a asp-page="/Games/Index" asp-route-id="@Model.Submission.GameId">@Html.DisplayFor(m => m.Submission.Game)</a></span>
@@ -36,7 +36,7 @@
 						</a>
 					</span>
 				</row>
-			</div>
+			</column>
 		</row>
 	</cardbody>
 </card>
@@ -44,16 +44,12 @@
 <form method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="Submission.SystemId" />
 	<row>
-		<div class="col-lg-6">
+		<input type="hidden" asp-for="Submission.MovieExtension" />
+		<column lg="6">
 			<form-group>
 				<label asp-for="Submission.MovieToObsolete" class="form-control-label"></label>
 				<select asp-for="Submission.MovieToObsolete" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesToObsolete)" class="form-control"></select>
 			</form-group>
-		</div>
-	</row>
-	<row>
-		<input type="hidden" asp-for="Submission.MovieExtension" />
-		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.Branch" class="form-control-label"></label>
 				<input type="text" asp-for="Submission.Branch" class="form-control" />
@@ -74,8 +70,8 @@
 				<input type="text" asp-for="Submission.MirrorSiteUrl" class="form-control" />
 				<span asp-validation-for="Submission.MirrorSiteUrl" class="text-danger"></span>
 			</form-group>
-		</div>
-		<div class="col-lg-6">
+		</column>
+		<column lg="6">
 			<form-group>
 				<label asp-for="Submission.MovieFileName" class="form-control-label"></label>
 				<div class="input-group">
@@ -92,8 +88,7 @@
 			<form-group>
 				<label asp-for="Submission.Screenshot" class="form-control-label"></label>
 				<input type="file" asp-for="Submission.Screenshot" class="form-control" />
-				<label>TODO: acceptable screenshot sizes</label>
-				<label>TODO: system page for screenshot info</label>
+				@await Component.RenderWiki("System/FilesEditingHelp")
 				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
 			</form-group>
 			<form-group>
@@ -102,22 +97,23 @@
 				<div>@Html.DescriptionFor(m => m.Submission.TorrentFile)</div>
 				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
 			</form-group>
-		</div>
+		</column>
 	</row>
+	<hr />
 	<row>
-		<div class="col-lg-6">
+		<column lg="6">
 			<form-group>
 				<label asp-for="Submission.MovieMarkup" class="form-control-label"></label>
 				<textarea asp-for="Submission.MovieMarkup" class="form-control" rows="10"></textarea>
 				<span asp-validation-for="Submission.MovieMarkup" class="text-danger"></span>
 			</form-group>
-		</div>
-		<div class="col-lg-6">
+		</column>
+		<column lg="6">
 			<form-group>
 				<label asp-for="Submission.Markup" class="form-control-label"></label>
 				<textarea readonly class="form-control" rows="10" asp-for="Submission.Markup"></textarea>
 			</form-group>
-		</div>
+		</column>
 	</row>
 	<fullrow class="text-center">
 		<button type="submit" class="btn btn-primary">Publish</button>
