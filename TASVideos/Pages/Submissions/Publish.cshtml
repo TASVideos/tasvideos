@@ -88,7 +88,11 @@
 			<form-group>
 				<label asp-for="Submission.Screenshot" class="form-control-label"></label>
 				<input type="file" asp-for="Submission.Screenshot" class="form-control" />
-				@await Component.RenderWiki("System/FilesEditingHelp")
+				<span>
+					Must be JPEG or PNG and (TODO: screenshot resolutions)
+					<br />
+					(Please read <a href="PublisherGuidelines.html">Publisher guidelines</a> for guidelines regarding screenshot selection.)
+				</span>
 				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
 			</form-group>
 			<form-group>
@@ -115,6 +119,8 @@
 			</form-group>
 		</column>
 	</row>
+	<hr />
+	@await Component.RenderWiki("System/FilesEditingHelp")
 	<fullrow class="text-center">
 		<button type="submit" class="btn btn-primary">Publish</button>
 		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
