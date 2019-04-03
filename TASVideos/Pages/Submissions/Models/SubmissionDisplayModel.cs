@@ -10,8 +10,8 @@ namespace TASVideos.Pages.Submissions.Models
 	{
 		public bool IsCataloged => SystemId.HasValue
 			&& SystemFrameRateId.HasValue
-			&& GameId.HasValue
-			&& RomId.HasValue;
+			&& GameId > 0
+			&& RomId > 0;
 
 		[Display(Name = "Start Type")]
 		public MovieStartType? StartType { get; set; }
