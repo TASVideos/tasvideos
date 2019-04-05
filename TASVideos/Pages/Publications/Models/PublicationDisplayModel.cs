@@ -28,9 +28,8 @@ namespace TASVideos.Pages.Publications.Models
 
 		public string Screenshot => Files.First(f => f.Type == FileType.Screenshot).Path;
 
-		public IEnumerable<string> TorrentLinks => Files
-			.Where(f => f.Type == FileType.Torrent)
-			.Select(f => f.Path);
+		public IEnumerable<FileModel> TorrentLinks => Files
+			.Where(f => f.Type == FileType.Torrent);
 
 		public double RatingCount { get; set; }
 		public double? OverallRating { get; set; }
@@ -43,6 +42,7 @@ namespace TASVideos.Pages.Publications.Models
 
 		public class FileModel
 		{
+			public int Id { get; set; }
 			public string Path { get; set; }
 			public FileType Type { get; set; }
 		}

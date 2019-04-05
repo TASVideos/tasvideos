@@ -84,6 +84,7 @@ namespace TASVideos
 				.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files
 					.Select(f => new PublicationDisplayModel.FileModel
 					{
+						Id = f.Id,
 						Path = f.Path,
 						Type = f.Type
 					})
