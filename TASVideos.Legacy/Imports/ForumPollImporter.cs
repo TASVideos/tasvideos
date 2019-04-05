@@ -19,21 +19,23 @@ namespace TASVideos.Legacy.Imports
 			/******** ForumPoll ********/
 			var legVoteDescriptions = (from p in legacyForumContext.VoteDescription
 				join t in legacyForumContext.Topics on p.TopicId equals t.Id // The join is to filter out orphan polls
-				select p)
+				join u in legacyForumContext.Users on t.PosterId equals u.UserId into uu
+				from u in uu.DefaultIfEmpty()
+				select new { Poll = p, UserName = u != null ? u.UserName : null })
 				.ToList();
 
 			var forumPolls = legVoteDescriptions
 				.Select(v => new ForumPoll
 				{
-					Id = v.Id,
-					TopicId = v.TopicId,
-					Question = ImportHelper.ConvertLatin1String(v.Text),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
-					CreateUserName = "Unknown", // TODO: we could try to get the topic creator when not -1 if it is worth it
-					LastUpdateUserName = "Unknown", // Ditto
-					CloseDate = v.VoteLength == 0
+					Id = v.Poll.Id,
+					TopicId = v.Poll.TopicId,
+					Question = ImportHelper.ConvertLatin1String(v.Poll.Text),
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.Poll.VoteStart),
+					CreateUserName = v.UserName ?? "Unknown",
+					LastUpdateUserName = v.UserName ?? "Unknown",
+					CloseDate = v.Poll.VoteLength == 0
 						? (DateTime?)null
-						: ImportHelper.UnixTimeStampToDateTime(v.VoteStart + v.VoteLength)
+						: ImportHelper.UnixTimeStampToDateTime(v.Poll.VoteStart + v.Poll.VoteLength)
 				})
 				.ToList();
 
