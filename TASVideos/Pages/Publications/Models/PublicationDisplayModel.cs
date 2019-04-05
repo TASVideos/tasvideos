@@ -27,7 +27,10 @@ namespace TASVideos.Pages.Publications.Models
 		public IEnumerable<FlagModel> Flags { get; set; } = new List<FlagModel>();
 
 		public string Screenshot => Files.First(f => f.Type == FileType.Screenshot).Path;
-		public string TorrentLink => Files.FirstOrDefault(f => f.Type == FileType.Torrent)?.Path; // Sometimes a movie has no torrent, rare but can happen
+
+		public IEnumerable<string> TorrentLinks => Files
+			.Where(f => f.Type == FileType.Torrent)
+			.Select(f => f.Path);
 
 		public double RatingCount { get; set; }
 		public double? OverallRating { get; set; }
