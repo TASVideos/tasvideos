@@ -43,7 +43,10 @@
 			<div class="col-md-5">
 				<row>
 					<a class="col-lg-4" asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
-					<a condition="Model.TorrentLink != null" class="col-lg-4" href="@Model.TorrentLink">A/V file via BitTorrent</a>
+					@foreach (var torrent in Model.TorrentLinks)
+					{
+						<a class="col-lg-4" href="@torrent">A/V file via BitTorrent</a>
+					}
 					<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
 				</row>
 				<fullrow>
