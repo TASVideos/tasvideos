@@ -16,7 +16,6 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
-			// TODO: attach sig? I'm leaning towards this being pointless
 			// TODO: messages without corresponding text
 			// TODO: this filters out some messages where the to or from users no longer, should those get imported?
 			// TODO: can we filter out message from a non-existent/inactive/banned user to another? neither will ever see it
