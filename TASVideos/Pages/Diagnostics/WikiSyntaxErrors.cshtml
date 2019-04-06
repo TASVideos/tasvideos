@@ -14,7 +14,7 @@
 		@foreach (var row in Model.Rows)
 		{
 			<tr>
-				<th scope="row">@row.PageName</th>
+				<th scope="row"><a href=@("/" + row.PageName)>@row.PageName</a></th>
 				<td>@row.ErrorMessage</td>
 				<td>
 					@row.ExcerptBefore
