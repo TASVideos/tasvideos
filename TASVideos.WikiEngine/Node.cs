@@ -286,7 +286,8 @@ namespace TASVideos.WikiEngine.AST
 			["wikigetcurrenteditlink"] = "CurrentEditLink",
 			["wikiorphans"] = "WikiOrphans",
 			["wikitextchangelog"] = "WikiTextChangeLog",
-			["youtube"] = "Youtube"
+			["youtube"] = "Youtube",
+			["listlanguages"] = "ListLanguages"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
