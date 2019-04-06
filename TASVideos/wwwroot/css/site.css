@@ -145,7 +145,6 @@ h4 {
 	position: relative;
 	border: 2px solid #c00;
 }
-
 	.error-marker span {
 		position: absolute;
 		background-color: white;
@@ -153,7 +152,11 @@ h4 {
 		border: 1px solid #c00;
 		color: #c00;
 		bottom: 13px;
+		opacity: 0.2;
 	}
+		.error-marker span:hover {
+			opacity: 0.8;
+		}
 
 .embed {
 	border: 0
