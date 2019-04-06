@@ -26,7 +26,15 @@ namespace TASVideos.WikiEngine
 
 		public static void RenderHtmlDynamic(string content, TextWriter w, IWriterHelper h)
 		{
-			var results = NewParser.Parse(content);
+			List<INode> results;
+			try
+			{
+				results = NewParser.Parse(content);
+			}
+			catch (NewParser.SyntaxException e)
+			{
+				results = NewParser.MakeErrorPage(content, e);
+			}
 
 			foreach (var r in results)
 			{
@@ -36,7 +44,14 @@ namespace TASVideos.WikiEngine
 
 		public static IEnumerable<NewParser.WikiLinkInfo> GetAllWikiLinks(string content)
 		{
-			return NewParser.GetAllWikiLinks(content).Where(l => !l.Link.Contains("user:"));
+			try
+			{
+				return NewParser.GetAllWikiLinks(content).Where(l => !l.Link.Contains("user:"));
+			}
+			catch (NewParser.SyntaxException)
+			{
+				return Enumerable.Empty<NewParser.WikiLinkInfo>();
+			}
 		}
 	}
 }
