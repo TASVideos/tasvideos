@@ -24,6 +24,19 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
+		public static NewParser.SyntaxException ParsePageForErrors(string content)
+		{
+			try
+			{
+				NewParser.Parse(content);
+				return null;
+			}
+			catch (NewParser.SyntaxException e)
+			{
+				return e;
+			}
+		}
+
 		public static void RenderHtmlDynamic(string content, TextWriter w, IWriterHelper h)
 		{
 			List<INode> results;

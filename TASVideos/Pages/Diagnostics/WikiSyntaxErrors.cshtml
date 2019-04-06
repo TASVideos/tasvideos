@@ -1,0 +1,27 @@
+@page
+@{ ViewData["Title"] = "Wiki Syntax Errors"; }
+@model WikiSyntaxErrorsModel
+
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Page Name</th>
+			<th>Error Message</th>
+			<th>Excerpt</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var row in Model.Rows)
+		{
+			<tr>
+				<th scope="row">@row.PageName</th>
+				<td>@row.ErrorMessage</td>
+				<td>
+					@row.ExcerptBefore
+					<span class="error-marker"></span>
+					@row.ExcerptAfter
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
