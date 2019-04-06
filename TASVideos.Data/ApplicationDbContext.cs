@@ -302,6 +302,7 @@ namespace TASVideos.Data
 			builder.Entity<UserFile>(entity =>
 			{
 				entity.HasIndex(e => e.Hidden);
+				entity.Property(e => e.Length).HasColumnType("decimal(10, 3)");
 			});
 
 			builder.Entity<PrivateMessage>(entity =>
