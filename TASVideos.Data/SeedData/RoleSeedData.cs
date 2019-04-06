@@ -25,7 +25,7 @@ namespace TASVideos.Data.SeedData
 		public const string ForumModerator = "Forum Moderator";
 		public const string ForumAdmin = "Forum Admin";
 		public const string Ambassador = "Ambassador";
-		public const string SiteDeveloper = "Site developer";
+		public const string SiteDeveloper = "Site Developer";
 		public const string EmulatorCoder = "Emulator Coder";
 	}
 
