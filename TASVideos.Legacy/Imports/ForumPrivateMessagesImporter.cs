@@ -16,14 +16,12 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
-			// TODO: messages without corresponding text
-			// TODO: this filters out some messages where the to or from users no longer, should those get imported?
 			// TODO: can we filter out message from a non-existent/inactive/banned user to another? neither will ever see it
 			var data =
 				(from p in legacyForumContext.PrivateMessages
 				join pt in legacyForumContext.PrivateMessageText on p.Id equals pt.Id
 				join fromUser in legacyForumContext.Users on p.FromUserId equals fromUser.UserId
-				where p.ToUserId > 0 && p.FromUserId > 0 // TODO: do we care about these?
+				where p.ToUserId > 0 && p.FromUserId > 0 // These include delete users, and delete messages, the legacy system puts a negative on user id to soft delete
 				select new
 				{
 					p.Type,
