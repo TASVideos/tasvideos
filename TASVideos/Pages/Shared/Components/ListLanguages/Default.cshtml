@@ -1,1 +1,8 @@
-﻿<span>TODO</span>
+﻿@model IEnumerable<TASVideos.ViewComponents.Models.LanguageEntry>
+
+@foreach (var l in Model)
+{
+	<div>
+		>> <a href="/@l.Path">@l.LanguageCode | @l.LanguageDisplayName</a>
+	</div>
+}

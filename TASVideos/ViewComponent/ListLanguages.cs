@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 using TASVideos.Data.Entity;
 using TASVideos.Services;
+using TASVideos.ViewComponents.Models;
 
 namespace TASVideos.ViewComponents
 {
@@ -20,8 +17,15 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public IViewComponentResult Invoke(WikiPage pageData, string pp)
 		{
+			// This was originally done to put the header with a link back to the english page
+			// Now we always put the parent module on the page which will handle this
+			if (ParamHelper.HasParam(pp, "istranslation"))
+			{
+				return new ContentViewComponentResult("");
+			}
+
 			if (string.IsNullOrWhiteSpace(pageData?.PageName))
 			{
 				return new ContentViewComponentResult("");
@@ -38,21 +42,19 @@ namespace TASVideos.ViewComponents
 
 			var languages = languagesMarkup
 				.Split(',')
-				.ToDictionary(
-					tkey => tkey.Split(":").FirstOrDefault(),
-					tvalue => tvalue.Split(":".LastOrDefault()));
+				.Select(l =>
+				{
+					var split = l.Split(":");
+					return new LanguageEntry
+					{
+						LanguageCode = split.FirstOrDefault(),
+						LanguageDisplayName = split.LastOrDefault(),
+						Path = split.FirstOrDefault() + "/" + pageData.PageName
+					};
+				})
+				.Where(l => _wikiPages.Exists(l.Path));
 
-			var translationPages = languages.Keys
-				.Select(l => l + "/" + pageData.PageName)
-				.ToList();
-
-			var translations = _wikiPages
-				.ThatAreCurrentRevisions()
-				.Where(wp => translationPages.Contains(wp.PageName))
-				.ToList();
-
-
-			return View();
+			return View(languages);
 		}
 	}
 }
