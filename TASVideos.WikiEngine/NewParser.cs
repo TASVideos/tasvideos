@@ -789,6 +789,7 @@ namespace TASVideos.WikiEngine
 			ret.Add(head);
 
 			var elt = new Element(0, "pre");
+			elt.Attributes["class"] = "error-code";
 			var i = e.TextLocation;
 			elt.Children.Add(new Text(0, content.Substring(0, i)));
 			var marker = new Element(i, "span", new[] { new Element(i, "span", new[] { new Text(i, e.Message) }) });

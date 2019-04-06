@@ -135,6 +135,12 @@ h4 {
 	display: none;
 }
 
+.error-code {
+	border: 2px solid #c00;
+	background-color: white;
+	padding: 20px;
+}
+
 .error-marker {
 	position: relative;
 	border: 2px solid #c00;
