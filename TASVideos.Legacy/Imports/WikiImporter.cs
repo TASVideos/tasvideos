@@ -77,6 +77,7 @@ namespace TASVideos.Legacy.Imports
 			// Referrals (only need latest revisions)
 			var referralList = pages
 				.Where(p => p.ChildId == null)
+				.ThatAreNotDeleted()
 				.SelectMany(p => Util.GetAllWikiLinks(p.Markup).Select(referral => new WikiPageReferral
 				{
 					Referrer = p.PageName,
