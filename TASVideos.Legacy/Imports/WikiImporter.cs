@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
+using TASVideos.Data.SeedData;
 using TASVideos.Legacy.Data.Site;
 using TASVideos.Legacy.Data.Site.Entity;
 using TASVideos.WikiEngine;
@@ -74,10 +75,19 @@ namespace TASVideos.Legacy.Imports
 				}
 			}
 
-			// Referrals (only need latest revisions)
-			var referralList = pages
+			// Don't generate referrals for these, since they will be wiped and replaced after import anyway
+			var overrides = WikiPageSeedData.NewRevisions
+				.Select(wp => wp.PageName)
+				.ToList();
+
+			var pagesForReferral = pages
 				.Where(p => p.ChildId == null)
 				.ThatAreNotDeleted()
+				.Where(wp => !overrides.Contains(wp.PageName))
+				.ToList();
+
+			// Referrals (only need latest revisions)
+			var referralList = pagesForReferral
 				.SelectMany(p => Util.GetAllWikiLinks(p.Markup).Select(referral => new WikiPageReferral
 				{
 					Referrer = p.PageName,
