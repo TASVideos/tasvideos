@@ -767,30 +767,15 @@ namespace TASVideos.WikiEngine
 
 		public static List<WikiLinkInfo> GetAllWikiLinks(string content)
 		{
-			try
-			{
-				var p = new NewParser { _input = content };
-				p.ParseLoop();
-				return p.GetAllWikiLinks();
-			}
-			catch (SyntaxException)
-			{
-				// What to do here?
-				return new List<WikiLinkInfo>();
-			}
+			var p = new NewParser { _input = content };
+			p.ParseLoop();
+			return p.GetAllWikiLinks();
 		}
 
 		public static List<INode> Parse(string content)
 		{
 			var p = new NewParser { _input = content };
-			try
-			{
-				p.ParseLoop();
-			}
-			catch (SyntaxException e)
-			{
-				return MakeErrorPage(content, e);
-			}
+			p.ParseLoop();
 			ReplaceTabs(p._output);
 			ReplaceTocs(p._output);
 			return p._output;
