@@ -32,7 +32,7 @@ namespace TASVideos.ViewComponents
 			}
 
 			var languagesMarkup = _wikiPages
-				.Page("System/Languages")
+				.SystemPage("Languages")
 				?.Markup;
 
 			if (string.IsNullOrWhiteSpace(languagesMarkup))
