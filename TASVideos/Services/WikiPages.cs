@@ -403,5 +403,14 @@ namespace TASVideos.Services
 				.Where(wp => wp.PageName != pageName)
 				.Where(wp => pageName.StartsWith(wp.PageName));
 		}
+
+		/// <summary>
+		/// Returns a System page with the given page suffix
+		/// <example>SystemPage("Languages") will return the page System/Languages</example>
+		/// </summary>
+		public static WikiPage SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
+		{
+			return pages.Page("System/" + pageName, revisionId);
+		}
 	}
 }
