@@ -182,6 +182,14 @@ namespace TASVideos.Legacy.Imports
 		{
 			string markup = ImportHelper.ConvertLatin1String(st.Description);
 
+			// TODO: this page has a listparents that needs to be removed
+			// However, we need better shenanigans to handle escaped module text
+			// Ex: [[module:listparents]] since this page is full of these, obviously
+			if (st.PageName == "TextFormattingRules/ListOfModules")
+			{
+				return markup;
+			}
+
 			if (st.PageName == "FrontPage")
 			{
 				markup = markup.Replace("!! Featured Movie", "");
