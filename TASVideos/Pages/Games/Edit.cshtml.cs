@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Games.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Games
 {
@@ -20,13 +22,16 @@ namespace TASVideos.Pages.Games
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IWikiPages _wikiPages;
 		private readonly IMapper _mapper;
 
 		public EditModel(
 			ApplicationDbContext db,
+			IWikiPages wikiPages,
 			IMapper mapper)
 		{
 			_db = db;
+			_wikiPages = wikiPages;
 			_mapper = mapper;
 		}
 
@@ -50,6 +55,8 @@ namespace TASVideos.Pages.Games
 
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+
+		[Display(Name = "Available Genres")]
 		public IEnumerable<SelectListItem> AvailableGenres { get; set; } = new List<SelectListItem>();
 
 		public async Task<IActionResult> OnGet()
@@ -90,6 +97,17 @@ namespace TASVideos.Pages.Games
 				return Page();
 			}
 
+			if (!string.IsNullOrEmpty(Game.GameResourcesPage))
+			{
+				var page = _wikiPages.Page(Game.GameResourcesPage);
+				if (page == null)
+				{
+					ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.GameResourcesPage)}", $"Page {Game.GameResourcesPage} not found");
+					await Initialize();
+					return Page();
+				}
+			}
+
 			Game game;
 			if (Id.HasValue)
 			{
@@ -110,6 +128,7 @@ namespace TASVideos.Pages.Games
 				_db.Games.Add(game);
 			}
 
+			game.GameResourcesPage = Game.GameResourcesPage;
 			game.System = await _db.GameSystems
 				.SingleOrDefaultAsync(s => s.Code == Game.SystemCode);
 

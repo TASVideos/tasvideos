@@ -38,6 +38,10 @@ namespace TASVideos.Pages.Games.Models
 		[Display(Name = "Screenshot Url")]
 		public string ScreenshotUrl { get; set; }
 
+		[StringLength(300)]
+		[Display(Name = "Game Resources Page")]
+		public string GameResourcesPage { get; set; }
+
 		[Display(Name = "Genres")]
 		public IEnumerable<int> Genres { get; set; } = new List<int>();
 	}
