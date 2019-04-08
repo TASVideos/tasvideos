@@ -11,6 +11,16 @@ namespace TASVideos.Extensions
 	/// </summary>
 	public static class EntityExtensions
 	{
+		public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Genre> query)
+		{
+			return query
+				.Select(s => new SelectListItem
+				{
+					Text = s.DisplayName,
+					Value = s.Id.ToString()
+				});
+		}
+
 		public static IQueryable<SelectListItem> ToDropdown(this IQueryable<GameSystem> query)
 		{
 			return query
