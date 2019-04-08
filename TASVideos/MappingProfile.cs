@@ -111,7 +111,10 @@ namespace TASVideos
 
 			CreateMap<Game, GameDisplayModel>()
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
-				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre.DisplayName)));
+				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre.DisplayName)))
+				.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.Roms));
+
+			CreateMap<GameRom, GameDisplayModel.Rom>();
 
 			// API
 			CreateMap<Publication, PublicationsResponse>()
