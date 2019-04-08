@@ -21,11 +21,12 @@ namespace TASVideos.Legacy.Imports
 					SystemId = g.SystemId,
 					GoodName = ImportHelper.ConvertLatin1String(g.GoodName),
 					DisplayName = ImportHelper.ConvertLatin1String(g.DisplayName),
-					Abbreviation = g.Abbreviation,
-					SearchKey = g.SearchKey,
+					Abbreviation = ImportHelper.ConvertLatin1String(g.Abbreviation).NullIfWhiteSpace(),
+					SearchKey = ImportHelper.ConvertLatin1String(g.SearchKey).NullIfWhiteSpace(),
 					YoutubeTags = g.YoutubeTags,
 					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
+					LastUpdateTimeStamp = DateTime.UtcNow,
+					GameResourcesPage = ImportHelper.ConvertLatin1String(g.ResourceName).NullIfWhiteSpace()
 				})
 				.ToList();
 
@@ -41,7 +42,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Game.SearchKey),
 				nameof(Game.YoutubeTags),
 				nameof(Game.CreateTimeStamp),
-				nameof(Game.LastUpdateTimeStamp)
+				nameof(Game.LastUpdateTimeStamp),
+				nameof(Game.GameResourcesPage)
 			};
 
 			games.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Games));
@@ -59,8 +61,8 @@ namespace TASVideos.Legacy.Imports
 			GoodName = "Unknown Game",
 			DisplayName = "Unknown Game",
 			Abbreviation = "Unknown",
-			SearchKey = "",
-			YoutubeTags = "",
+			SearchKey = null,
+			YoutubeTags = "Unknown",
 			CreateUserName = "adelikat",
 			LastUpdateUserName = "adelikat",
 			CreateTimeStamp = DateTime.UtcNow,

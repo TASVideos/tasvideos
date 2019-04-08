@@ -43,6 +43,9 @@ namespace TASVideos.Data.Entity.Game
 
 		[StringLength(250)]
 		public string ScreenshotUrl { get; set; }
+
+		[StringLength(300)]
+		public string GameResourcesPage { get; set; }
 	}
 
 	public static class GameExtensions
