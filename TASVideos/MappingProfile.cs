@@ -32,11 +32,8 @@ namespace TASVideos
 			CreateMap<WikiPage, UserWikiEditHistoryModel>();
 
 			CreateMap<Game, GameEditModel>()
-				.ForMember(
-					dest => dest.SystemCode, 
-					opt => opt
-						.MapFrom(src => 
-							src.System.Code));
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
+				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.GenreId)));
 			CreateMap<GameEditModel, Game>();
 
 			CreateMap<GameRom, RomEditModel>().ReverseMap();

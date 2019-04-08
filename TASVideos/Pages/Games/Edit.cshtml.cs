@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Games.Models;
 
@@ -49,6 +50,7 @@ namespace TASVideos.Pages.Games
 
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+		public IEnumerable<SelectListItem> AvailableGenres { get; set; } = new List<SelectListItem>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -88,25 +90,42 @@ namespace TASVideos.Pages.Games
 				return Page();
 			}
 
-			Data.Entity.Game.Game game;
+			Game game;
 			if (Id.HasValue)
 			{
-				game = await _db.Games.SingleOrDefaultAsync(g => g.Id == Id.Value);
+				game = await _db.Games
+					.Include(g => g.GameGenres)
+					.SingleOrDefaultAsync(g => g.Id == Id.Value);
 				if (game == null)
 				{
 					return NotFound();
 				}
 
+				game.GameGenres.Clear();
 				_mapper.Map(Game, game);
 			}
 			else
 			{
-				game = _mapper.Map<Data.Entity.Game.Game>(Game);
+				game = _mapper.Map<Game>(Game);
 				_db.Games.Add(game);
 			}
 
 			game.System = await _db.GameSystems
-				.SingleAsync(s => s.Code == Game.SystemCode);
+				.SingleOrDefaultAsync(s => s.Code == Game.SystemCode);
+
+			if (game.System == null)
+			{
+				return BadRequest();
+			}
+
+			foreach (var genre in Game.Genres)
+			{
+				game.GameGenres.Add(new GameGenre
+				{
+					Game = game,
+					GenreId = genre
+				});
+			}
 
 			try
 			{
@@ -119,6 +138,8 @@ namespace TASVideos.Pages.Games
 				MessageType = Styles.Danger;
 				Message = $"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.";
 			}
+
+			await _db.SaveChangesAsync();
 			
 			return string.IsNullOrWhiteSpace(ReturnUrl)
 				? RedirectToPage("List")
@@ -141,7 +162,7 @@ namespace TASVideos.Pages.Games
 
 			try
 			{
-				_db.Games.Attach(new Data.Entity.Game.Game { Id = Id ?? 0 }).State = EntityState.Deleted;
+				_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
 				MessageType = Styles.Success;
 				Message = $"Game {Id}, deleted successfully.";
 				await _db.SaveChangesAsync();
@@ -158,10 +179,14 @@ namespace TASVideos.Pages.Games
 		private async Task Initialize()
 		{
 			AvailableSystems = await _db.GameSystems
-					.ToDropdown()
-					.ToListAsync();
+				.ToDropdown()
+				.ToListAsync();
 
-				CanDelete = await CanBeDeleted();
+			AvailableGenres = await _db.Genres
+				.ToDropdown()
+				.ToListAsync();
+
+			CanDelete = await CanBeDeleted();
 		}
 
 		private async Task<bool> CanBeDeleted()

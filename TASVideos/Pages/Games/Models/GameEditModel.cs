@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.Pages.Games.Models
 {
@@ -36,5 +37,8 @@ namespace TASVideos.Pages.Games.Models
 		[StringLength(250)]
 		[Display(Name = "Screenshot Url")]
 		public string ScreenshotUrl { get; set; }
+
+		[Display(Name = "Genres")]
+		public IEnumerable<int> Genres { get; set; } = new List<int>();
 	}
 }
