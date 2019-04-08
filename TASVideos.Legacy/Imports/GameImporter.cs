@@ -61,7 +61,7 @@ namespace TASVideos.Legacy.Imports
 			GoodName = "Unknown Game",
 			DisplayName = "Unknown Game",
 			Abbreviation = "Unknown",
-			SearchKey = null,
+			SearchKey = "Unknown",
 			YoutubeTags = "Unknown",
 			CreateUserName = "adelikat",
 			LastUpdateUserName = "adelikat",
