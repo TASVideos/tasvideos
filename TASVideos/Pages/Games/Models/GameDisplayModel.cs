@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games.Models
 {
@@ -12,5 +13,17 @@ namespace TASVideos.Pages.Games.Models
 		public string GoodName { get; set; }
 		public string GameResourcesPage { get; set; }
 		public IEnumerable<string> Genres { get; set; } = new List<string>();
+
+		public ICollection<Rom> Roms { get; set; } = new List<Rom>();
+		public class Rom
+		{
+			public RomTypes Type { get; set; }
+			public int Id { get; set; }
+			public string Md5 { get; set; }
+			public string Sha1 { get; set; }
+			public string Name { get; set; }
+			public string Region { get; set; }
+			public string Version { get; set; }
+		}
 	}
 }

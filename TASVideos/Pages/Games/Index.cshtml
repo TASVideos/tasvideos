@@ -42,3 +42,35 @@
 		</ul>
 	</column>
 </row>
+<hr />
+<h4>
+	Roms
+	<a permission="CatalogMovies" asp-page="/Games/Roms/List" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()" class="mb-3 pull-right btn btn-primary">Edit</a>
+</h4>
+
+<alert type="warning" condition="!Model.Game.Roms.Any()">
+	No records.
+</alert>
+<div condition="Model.Game.Roms.Any()">
+	<table class="table table-striped">
+		<tr>
+			<th>Type</th>
+			<th>Name</th>
+			<th>Region</th>
+			<th>Version</th>
+			<th>Sha1</th>
+			<th>Md5</th>
+		</tr>
+		<tr>
+			@foreach (var rom in Model.Game.Roms)
+			{
+				<td>@rom.Type.ToString()</td>
+				<td>@rom.Name</td>
+				<td>@rom.Region</td>
+				<td>@rom.Version</td>
+				<td>@rom.Sha1</td>
+				<td>@rom.Md5</td>
+			}
+		</tr>
+	</table>
+</div>
