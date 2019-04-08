@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,16 +32,7 @@ namespace TASVideos.Pages.Games
 		{
 			Game = await _db.Games
 				.Where(g => g.Id == Id)
-				.Select(g => new GameDisplayModel
-				{
-					DisplayName = g.DisplayName,
-					Abbreviation = g.Abbreviation,
-					ScreenshotUrl = g.ScreenshotUrl,
-					SystemCode = g.System.Code,
-					Genres = g.GameGenres
-						.Select(gg => gg.Genre.DisplayName)
-						.ToList()
-				})
+				.ProjectTo<GameDisplayModel>()
 				.SingleOrDefaultAsync();
 		}
 	}

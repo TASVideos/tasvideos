@@ -109,6 +109,10 @@ namespace TASVideos
 					})
 					.ToList()));
 
+			CreateMap<Game, GameDisplayModel>()
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
+				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre.DisplayName)));
+
 			// API
 			CreateMap<Publication, PublicationsResponse>()
 				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.Tier.Name))

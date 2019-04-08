@@ -20,11 +20,25 @@
 	</cardbody>
 </card>
 <hr />
-<label>Genre:</label>
-<ul>
-	@foreach (var genre in Model.Game.Genres)
-	{
-		<li>@genre</li>
-	}
-</ul>
+<a permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()" class="pull-right btn btn-primary">Edit</a>
+<row>
+	<column md="6">
+		<ul>
+			<li>Platform: @Model.Game.SystemCode</li>
+			<li>Abbreviation: @Model.Game.Abbreviation</li>
+			<li>DisplayName: @Model.Game.DisplayName</li>
+			<li>Good tools name: @Model.Game.GoodName</li>
+			<li>Game resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
+		</ul>
 
+	</column>
+	<column md="6">
+		<label>Genre:</label>
+		<ul>
+			@foreach (var genre in Model.Game.Genres)
+			{
+				<li>@genre</li>
+			}
+		</ul>
+	</column>
+</row>
