@@ -34,7 +34,7 @@
 
 <div condition="@Model.ObsoletedById.HasValue" class="text-danger mb-2">
 	<h4>This movie has been obsoleted!</h4>
-	<a href="/@(Model.ObsoletedById)M" class="btn btn-primary">Obsoleting Movie</a>
+	<pub-link id="Model.ObsoletedById.Value" class="btn btn-primary">Obsoleting Movie</pub-link>
 </div>
 <card>
 	<cardheader>
