@@ -32,7 +32,7 @@
 			@foreach (var pub in award.Publications)
 			{
 
-				<a href="/@(pub.Id)M">@pub.Title</a>
+				<pub-link id="pub.Id">@pub.Title</pub-link>
 				<br />
 			}
 		</div>

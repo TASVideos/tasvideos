@@ -12,7 +12,7 @@
 	@foreach (var item in Model)
 	{
 		<tr>
-			<td><a href="/@(item.Id)S">@item.System @item.GameName @(!string.IsNullOrWhiteSpace(item.Branch) ? $"\"{item.Branch}\"" : "")</a></td>
+			<td><sub-link id="item.Id">@item.System @item.GameName @(!string.IsNullOrWhiteSpace(item.Branch) ? $"\"{item.Branch}\"" : "")</sub-link></td>
 			<td>@item.Branch</td>
 			<td>@($"{item.Time:g}")</td>
 			<td>@item.Author</td>

@@ -24,7 +24,7 @@
 					<tr>
 						<td><timezone-convert asp-for="@pub.CreateTimeStamp" date-only="true"/></td>
 						<td>@pub.Game</td>
-						<td><a href="/@(pub.Id)M">@($"{pub.Time:g}")</a></td>
+						<td><pub-link id="pub.Id">@($"{pub.Time:g}")</pub-link></td>
 						<td>@pub.Authors</td>
 					</tr>
 				}
@@ -35,9 +35,9 @@
 		<figure class="figure pull-right">
 			@if (first != null)
 			{
-			<a href="/@(first.Id)M">
+			<pub-link id="first.Id">
 				<img src="~/media/@first.Screenshot" style="max-width: 100%">
-			</a>
+			</pub-link>
 			<figcaption class="figure-caption">@first.Game by @first.Authors</figcaption>
 			}
 		</figure>

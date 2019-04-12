@@ -7,9 +7,9 @@
 			<h4>@Model.Title</h4>
 		</div>
 		<div class="card-body">
-			<a href="/@(Model.Id)M">
+			<pub-link id="Model.Id">
 				<img src="~/media/@Model.Screenshot" class="pull-left pr-3 pb-1" style="max-width: 80%" />
-			</a>
+			</pub-link>
 			@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
 		</div>
