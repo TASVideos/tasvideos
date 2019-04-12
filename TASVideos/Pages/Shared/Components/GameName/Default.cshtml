@@ -1,2 +1,10 @@
-﻿<span>TODO</span>
+﻿@model TASVideos.ViewComponents.Models.GameNameModel
 
+@if (Model.IsSystem)
+{
+	<span>@Model.System</span>
+}
+else
+{
+	<a href="/@(Model.GameId)G">@Model.DisplayName</a>
+}
