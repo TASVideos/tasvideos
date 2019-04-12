@@ -4,7 +4,7 @@
 
 <p>Movies published by @Model.UserName</p>
 <hr />
-@foreach (var sub in Model.Publications.OrderBy(p => p.Id))
+@foreach (var pub in Model.Publications.OrderBy(p => p.Id))
 {
-	<a href="/@(sub.Id)M">@sub.Title</a><br />
+	<pub-link id="pub.Id">@pub.Title</pub-link><br />
 }
