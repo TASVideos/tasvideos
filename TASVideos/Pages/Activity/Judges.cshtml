@@ -31,7 +31,7 @@ Cancelled: @cancelledTotal (@cancelledTotal.ToPercent(total)%)
 				<timezone-convert asp-for="@sub.CreateTimeStamp" date-only="true" />
 			</td>
 			<td>
-				<a href="/@(sub.Id)S">@sub.Title</a>
+				<sub-link id="sub.Id">@sub.Title</sub-link>
 			</td>
 			<td>
 				@sub.Status.EnumDisplayName()
