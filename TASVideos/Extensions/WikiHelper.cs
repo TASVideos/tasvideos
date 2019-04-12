@@ -92,6 +92,39 @@ namespace TASVideos.Extensions
 				&& IsProperCased(test);
 		}
 
+		public static bool IsSystemGameResourcePath(this string path)
+		{
+			if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(path.Trim('/')))
+			{
+				return false;
+			}
+
+			path = path
+				.Trim('/')
+				.Replace("GameResources", "");
+
+			if (path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Length == 1)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		public static string SystemGameResourcePath(this string path)
+		{
+			if (!path.IsSystemGameResourcePath())
+			{
+				return "";
+			}
+
+			return path
+				.Trim('/')
+				.Replace("GameResources", "")
+				.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+				.First();
+		}
+
 		public static bool IsHomePage(this WikiPage page)
 		{
 			return IsHomePage(page.PageName);
