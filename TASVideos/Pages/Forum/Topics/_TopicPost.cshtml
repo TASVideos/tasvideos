@@ -72,12 +72,11 @@
 		<fullrow>
 			<small style="font-style: italic">@Html.Raw(Model.RenderedSignature)</small>
 			<br />
-			<a
-				asp-page="/Users/Profile"
-				asp-route-userName="@Model.PosterName"
+			<profile-link
+				username="@Model.PosterName"
 				class="btn btn-info btn-sm">
 				Profile
-			</a>
+			</profile-link>
 			<a
 				condition="User.Identity.IsAuthenticated"
 				asp-page="/Messages/Create"

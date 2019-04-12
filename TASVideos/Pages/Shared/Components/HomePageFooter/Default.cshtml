@@ -6,7 +6,7 @@
 <hr />
 @await Component.ListSubPages(pageData, "show")
 <div class="alert alert-info" role="alert">
-	This page is intended to be the personal page for user: <a asp-page="/Users/Profile" asp-route-id="@user">@user</a>
+	This page is intended to be the personal page for user: <profile-link username="@user">@user</profile-link>
 	<br />
 
 	@if (Model != null)
@@ -14,7 +14,7 @@
 		<div>
 			The following additional information is available for this user:<br />
 			<ul>
-				<li><a asp-page="/Users/Profile" asp-route-id="@Model.UserName">Profile</a></li>
+				<li><profile-link username="@Model.UserName">Profile</profile-link></li>
 				<ul>
 					<li><a href="/Movies-Author@(Model.Id)-obs">@Model.MovieCount Movies</a></li>
 					<li><a href="/Subs-List?User=@Model.UserName">@Model.SubmissionCount Submissions</a></li>

@@ -54,11 +54,11 @@
 			<h4 condition="Model.IsPublished" class="alert-heading">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></h4>
 			<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
 				<label asp-for="Submission.Judge"></label>:
-				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Judge">@Model.Submission.Judge</a>
+				<profile-link username="@Model.Submission.Judge">@Model.Submission.Judge</profile-link>
 			</span>
 			<span class="ml-3" condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
 				<label asp-for="Submission.Publisher"></label>:
-				<a asp-page="/Users/Profile" asp-route-username="@Model.Submission.Publisher">@Model.Submission.Publisher</a>
+				<profile-link username="@Model.Submission.Publisher">@Model.Submission.Publisher</profile-link>
 			</span>
 			<div condition="showTier">
 				<hr>

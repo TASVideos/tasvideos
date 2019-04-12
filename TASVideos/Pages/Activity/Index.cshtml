@@ -18,7 +18,7 @@
 					{
 						<tr>
 							<td>
-								<a asp-page="/Users/Profile" asp-route-username="@judge.UserName">@judge.UserName</a>
+								<profile-link username="@judge.UserName">@judge.UserName</profile-link>
 							</td>
 							<td>
 								<a asp-page="/Activity/Judges" asp-route-username="@judge.UserName">@judge.Count</a>
@@ -47,7 +47,7 @@
 					{
 						<tr>
 							<td>
-								<a asp-page="/Users/Profile" asp-route-username="@publisher.UserName">@publisher.UserName</a>
+								<profile-link username="@publisher.UserName">@publisher.UserName</profile-link>
 							</td>
 							<td>
 								<a asp-page="/Activity/Publishers" asp-route-username="@publisher.UserName">@publisher.Count</a>

@@ -21,7 +21,7 @@
 	{
 		<tr>
 			<td>
-				<a asp-page="/Users/Profile" asp-route-userName="@author.UserName">@author.UserName</a>
+				<profile-link username="@author.UserName">@author.UserName</profile-link>
 			</td>
 			<td>
 				<a href="/Movies-List-author@(author.Id)">@author.ActivePublicationCount</a>

@@ -11,7 +11,7 @@
 	var cancelledTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Cancelled);
 }
 
-<p>Submissions judged by <a asp-page="/Users/Profile" asp-route-userName="@Model.UserName">@Model.UserName</a></p>
+<p>Submissions judged by <profile-link username="@Model.UserName">@Model.UserName</profile-link></p>
 <hr />
 <label>Total: @total</label><br />
 Accepted: @acceptedTotal (@acceptedTotal.ToPercent(total)%)

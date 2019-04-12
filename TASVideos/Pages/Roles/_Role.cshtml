@@ -42,7 +42,7 @@
 			@foreach (var user in Model.Users)
 			{
 				<span class="mr-4 mb-4" style="display: inline-block">
-					<a asp-page="/Users/Profile" asp-route-userName="@user.UserName">@user.UserName</a>
+					<profile-link username="@user.UserName">@user.UserName</profile-link>
 				</span>
 			}
 		</div>
