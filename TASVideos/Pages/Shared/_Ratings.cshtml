@@ -5,7 +5,7 @@
 	// ReSharper disable once UnusedVariable
 	bool isMyPage = (bool)ViewData["IsMyPage"];
 }
-<h4>User: <a asp-page="/Users/Profile" asp-route-userName="@Model.UserName">@Model.UserName</a></h4>
+<h4>User: <profile-link username="@Model.UserName">@Model.UserName</profile-link></h4>
 <div condition="isMyPage && !Model.PublicRatings" class="alert alert-warning">
 	Your ratings are currently private and will not be visible to others. This can be changed on the 
 	<a asp-page="/Profile/Settings">Settings Page</a>

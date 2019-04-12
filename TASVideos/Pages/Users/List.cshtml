@@ -20,12 +20,11 @@
 			<td>@string.Join(",", user.Roles)</td>
 			<td><timezone-convert asp-for="@user.CreateTimeStamp" /></td>
 			<td>
-				<a
-					asp-page="/Users/Profile"
-					asp-route-userName="@user.UserName"
+				<profile-link
+					username="@user.UserName"
 					class="btn btn-secondary">
 					View
-				</a>
+				</profile-link>
 				<a
 					permission="EditUsers"
 					asp-page="Edit"

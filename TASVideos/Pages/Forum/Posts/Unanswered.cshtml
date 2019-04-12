@@ -23,7 +23,7 @@
 				<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicName</a>
 			</td>
 			<td>
-				<a asp-page="/Users/Profile" asp-route-userName="@post.AuthorName">@post.AuthorName</a>
+				<profile-link username="@post.AuthorName">@post.AuthorName</profile-link>
 			</td>
 			<td><timezone-convert asp-for="@post.PostDate"/></td>
 		</tr>
