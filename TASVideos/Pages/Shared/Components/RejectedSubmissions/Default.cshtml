@@ -8,7 +8,7 @@
 	@foreach (var sub in Model)
 	{
 		<tr>
-			<td><a href="/@(sub.Id)S">@sub.Title</a></td>
+			<td><sub-link id="sub.Id">@sub.Title</sub-link></td>
 			<td>@sub.Reason</td>
 		</tr>
 	}
