@@ -131,7 +131,7 @@ namespace TASVideos.Data.Entity
 
 		[Display(Name = "Edit Publication Metadata")]
 		[Group("Publication Maintenance")]
-		[Description("The ability to edit publication information such as branch, screenshots, torrents, tags, etc")]
+		[Description("The ability to edit publication information such as branch, tags, flags, etc")]
 		EditPublicationMetaData = 302,
 
 		[Display(Name = "Display Private Ratings")]
@@ -143,6 +143,11 @@ namespace TASVideos.Data.Entity
 		[Group("Publication Maintenance")]
 		[Description("The ability to edit a movie's recomended flag, which flags the movie as recommended to new comers")]
 		EditRecommendation = 304,
+
+		[Display(Name = "Edit Publication FIles")]
+		[Group("Publication Maintenance")]
+		[Description("The ability to add/remove publication files such as screenshots and torrents")]
+		EditPublicationFiles = 305,
 
 		[Display(Name = "Tag Maintenance")]
 		[Group("Publication Maintenance")]
