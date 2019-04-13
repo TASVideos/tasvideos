@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TASVideos.Data.Entity
 {
 	public enum FileType
 	{
@@ -12,7 +14,11 @@
 		public int PublicationId { get; set; }
 		public virtual Publication Publication { get; set; }
 
+		[StringLength(250)]
 		public string Path { get; set; }
 		public FileType Type { get; set; }
+
+		[StringLength(250)]
+		public string Description { get; set; }
 	}
 }
