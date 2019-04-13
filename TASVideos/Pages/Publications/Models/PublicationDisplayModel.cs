@@ -26,7 +26,7 @@ namespace TASVideos.Pages.Publications.Models
 		public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();
 		public IEnumerable<FlagModel> Flags { get; set; } = new List<FlagModel>();
 
-		public string Screenshot => Files.First(f => f.Type == FileType.Screenshot).Path;
+		public FileModel Screenshot => Files.First(f => f.Type == FileType.Screenshot);
 
 		public IEnumerable<FileModel> TorrentLinks => Files
 			.Where(f => f.Type == FileType.Torrent);
@@ -45,6 +45,7 @@ namespace TASVideos.Pages.Publications.Models
 			public int Id { get; set; }
 			public string Path { get; set; }
 			public FileType Type { get; set; }
+			public string Description { get; set; }
 		}
 
 		public class FlagModel
