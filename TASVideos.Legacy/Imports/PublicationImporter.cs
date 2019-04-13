@@ -173,7 +173,8 @@ namespace TASVideos.Legacy.Imports
 						Type = FileType.Screenshot,
 						Path = screenshotUrl.FileName,
 						CreateTimeStamp = DateTime.UtcNow,
-						LastUpdateTimeStamp = DateTime.UtcNow
+						LastUpdateTimeStamp = DateTime.UtcNow,
+						Description = screenshotUrl.Description.NullIfWhiteSpace()
 					});
 
 					publicationFiles.AddRange(torrentUrls.Select(t => new PublicationFile
@@ -248,6 +249,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.PublicationId),
 				nameof(PublicationFile.Path),
 				nameof(PublicationFile.Type),
+				nameof(PublicationFile.Description),
 				nameof(PublicationFile.CreateUserName),
 				nameof(PublicationFile.LastUpdateUserName),
 				nameof(PublicationFile.CreateTimeStamp),
