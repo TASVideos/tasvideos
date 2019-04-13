@@ -197,6 +197,7 @@ namespace TASVideos.Legacy.Imports
 			else if (st.PageName == "Awards")
 			{
 				markup = markup.Replace("[module:listsubpages]", "");
+				markup = markup.Replace("/images/awards/", "/awards/");
 			}
 
 			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
