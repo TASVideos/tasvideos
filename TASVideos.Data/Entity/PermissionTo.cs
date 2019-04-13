@@ -144,7 +144,7 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to edit a movie's recomended flag, which flags the movie as recommended to new comers")]
 		EditRecommendation = 304,
 
-		[Display(Name = "Edit Publication FIles")]
+		[Display(Name = "Edit Publication Files")]
 		[Group("Publication Maintenance")]
 		[Description("The ability to add/remove publication files such as screenshots and torrents")]
 		EditPublicationFiles = 305,

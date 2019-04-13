@@ -52,6 +52,9 @@
     <Content Update="Pages\Forum\Topics\_PollCreate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Pages\Publications\EditFile.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\Shared\Components\FirstEditionTas\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
