@@ -83,7 +83,8 @@ namespace TASVideos
 					{
 						Id = f.Id,
 						Path = f.Path,
-						Type = f.Type
+						Type = f.Type,
+						Description = f.Description
 					})
 					.ToList()))
 				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags
