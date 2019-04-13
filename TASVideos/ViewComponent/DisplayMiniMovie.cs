@@ -64,7 +64,14 @@ namespace TASVideos.ViewComponents
 					{
 						Id = p.Id,
 						Title = p.Title,
-						Screenshot = p.Files.First(f => f.Type == FileType.Screenshot).Path,
+						Screenshot = p.Files
+							.Where(f => f.Type == FileType.Screenshot)
+							.Select(f => new MiniMovieModel.ScreenshotFile
+							{
+								Path = f.Path,
+								Description = f.Description
+							})
+							.First(),
 						OnlineWatchingUrl = p.OnlineWatchingUrl,
 					})
 					.SingleOrDefaultAsync(p => p.Id == id);
@@ -75,8 +82,7 @@ namespace TASVideos.ViewComponents
 				{
 					Id = 0,
 					Title = "Error",
-					Screenshot = p.Files.FirstOrDefault(f => f.Type == FileType.Screenshot).Path,
-					OnlineWatchingUrl = p.OnlineWatchingUrl,
+					OnlineWatchingUrl = p.OnlineWatchingUrl
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}

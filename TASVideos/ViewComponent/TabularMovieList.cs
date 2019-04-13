@@ -70,7 +70,14 @@ namespace TASVideos.ViewComponents
 					Game = m.Game.DisplayName,
 					Authors = string.Join(", ", m.Authors.Select(pa => pa.Author)),
 					ObsoletedBy = null, // TODO: previous logic
-					Screenshot = m.Files.First(f => f.Type == FileType.Screenshot).Path
+					Screenshot = m.Files
+						.Where(f => f.Type == FileType.Screenshot)
+						.Select(f => new TabularMovieListResultModel.ScreenshotFile
+						{
+							Path = f.Path,
+							Description = f.Description
+						})
+						.First()
 				})
 				.ToList();
 
