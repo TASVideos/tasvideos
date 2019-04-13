@@ -78,6 +78,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditSubmissions,
 			PermissionTo.EditPublicationMetaData,
+			PermissionTo.EditPublicationFiles,
 			PermissionTo.SeeRestrictedForums
 		};
 
@@ -90,7 +91,9 @@ namespace TASVideos.Data.SeedData
 		{
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditRoles,
-			PermissionTo.SeeRestrictedForums
+			PermissionTo.SeeRestrictedForums,
+			PermissionTo.EditPublicationMetaData,
+			PermissionTo.EditPublicationFiles
 		}).ToArray();
 
 		private static readonly PermissionTo[] ForumModeratorPermissions =
