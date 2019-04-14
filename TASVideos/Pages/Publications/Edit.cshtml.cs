@@ -72,12 +72,7 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
-			AvailableMoviesForObsoletedBy =
-					await GetAvailableMoviesForObsoletedBy(Publication.SystemCode);
-
-			AvailableFlags = await GetAvailableFlags(User.Permissions());
-			AvailableTags = await GetAvailableTags();
-
+			await PopulateDropdowns(Publication.SystemCode);
 			return Page();
 		}
 
@@ -85,11 +80,7 @@ namespace TASVideos.Pages.Publications
 		{
 			if (!ModelState.IsValid)
 			{
-				AvailableMoviesForObsoletedBy =
-					await GetAvailableMoviesForObsoletedBy(Publication.SystemCode);
-				AvailableFlags = await GetAvailableFlags(User.Permissions());
-				AvailableTags = await GetAvailableTags();
-
+				await PopulateDropdowns(Publication.SystemCode);
 				return Page();
 			}
 
@@ -97,9 +88,10 @@ namespace TASVideos.Pages.Publications
 			return RedirectToPage("View", new { Id });
 		}
 
-		private async Task<IEnumerable<SelectListItem>> GetAvailableFlags(IEnumerable<PermissionTo> userPermissions)
+		private async Task PopulateDropdowns(string systemCode)
 		{
-			return await _db.Flags
+			var userPermissions = User.Permissions();
+			AvailableFlags = await _db.Flags
 				.Select(f => new SelectListItem
 				{
 					Text = f.Name,
@@ -108,22 +100,16 @@ namespace TASVideos.Pages.Publications
 						&& !userPermissions.Contains(f.PermissionRestriction.Value)
 				})
 				.ToListAsync();
-		}
 
-		private async Task<IEnumerable<SelectListItem>> GetAvailableTags()
-		{
-			return await _db.Tags
+			AvailableTags = await _db.Tags
 				.Select(f => new SelectListItem
 				{
 					Text = f.DisplayName,
 					Value = f.Id.ToString(),
 				})
 				.ToListAsync();
-		}
 
-		private async Task<IEnumerable<SelectListItem>> GetAvailableMoviesForObsoletedBy(string systemCode)
-		{
-			return await _db.Publications
+			AvailableMoviesForObsoletedBy = await _db.Publications
 				.ThatAreCurrent()
 				.Where(p => p.System.Code == systemCode)
 				.Where(p => p.Id != Id)
