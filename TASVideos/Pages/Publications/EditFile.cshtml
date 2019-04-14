@@ -1,16 +1,37 @@
 ﻿@page "{id}"
 @model EditFileModel
 @{
-	ViewData["Title"] = $"Edit Tier for {Model.Publication.Title}";
+	ViewData["Title"] = $"Edit Files for {Model.Title}";
 }
 
+<h4>Existing Files</h4>
 <form method="post">
-	<row>
-		<div class="col-lg-4 col-sm-6">
-			<form-group>
-			</form-group>
-		</div>
-	</row>
+	<table class="table table-bordered">
+		<tr>
+			<th>Delete</th>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><input type="checkbox" value="@Model.Files.FirstOrDefault(f => f.Type == FileType.Screenshot)?.Id" id="@Html.IdFor(m => m.FilesToRemove)" name="@Html.NameFor(m => m.FilesToRemove)" /></td>
+			<td>@Model.Files.FirstOrDefault(f => f.Type == FileType.Screenshot)?.Path</td>
+			<td>@FileType.Screenshot.ToString()</td>
+			<td><input type="text" class="form-control" asp-for="ExistingScreenshotDescription"/></td>
+		</tr>
+		@foreach (var file in Model.Files
+			.Where(f => f.Type != FileType.Screenshot)
+			.OrderBy(f => f.Type))
+		{
+			<tr>
+				<td><input type="checkbox"/></td>
+				<td>@file.Path</td>
+				<td>@file.Type</td>
+				<td>@file.Description</td>
+			</tr>
+		}
+	</table>
+	<hr />
 	<div class="text-center mt-3">
 		<button type="submit" class="btn btn-primary">Update</button>
 		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
