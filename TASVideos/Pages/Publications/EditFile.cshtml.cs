@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,23 +28,44 @@ namespace TASVideos.Pages.Publications
 		[FromRoute]
 		public int Id { get; set; }
 
+		public string Title { get; set; }
+
 		[BindProperty]
-		public PublicationFileEditModel Publication { get; set; }
+		public IEnumerable<int> FilesToRemove { get; set; } = new List<int>();
+
+		[BindProperty]
+		public string ExistingScreenshotDescription { get; set; }
+
+		[BindProperty]
+		public IFormFile NewScreenshotFile { get; set; }
+
+		[BindProperty]
+		public string NewScreenshotDescription { get; set; }
+
+		[BindProperty]
+		public IEnumerable<IFormFile> TorrentFiles { get; set; }
+
+		public IEnumerable<PublicationFileDisplayModel> Files { get; set; } = new List<PublicationFileDisplayModel>();
 
 		public async Task<IActionResult> OnGet()
 		{
-			Publication = await _db.Publications
+			Title = await _db.Publications
 				.Where(p => p.Id == Id)
-				.Select(p => new PublicationFileEditModel
-				{
-					Title = p.Title,
-				})
+				.Select(p => p.Title)
 				.SingleOrDefaultAsync();
 
-			if (Publication == null)
+			if (Title == null)
 			{
 				return NotFound();
 			}
+
+			Files = await _db.PublicationFiles
+				.Where(f => f.PublicationId == Id)
+				.ProjectTo<PublicationFileDisplayModel>()
+				.ToListAsync();
+
+			// Bind the things
+			ExistingScreenshotDescription = Files.FirstOrDefault(f => f.Type == FileType.Screenshot)?.Description;
 
 			return Page();
 		}
@@ -50,7 +74,26 @@ namespace TASVideos.Pages.Publications
 		{
 			if (!ModelState.IsValid)
 			{
+				// TODO: repopulate things?
 				return Page();
+			}
+
+			var exists = await _db.Publications
+				.AnyAsync(p => p.Id == Id);
+
+			if (!exists)
+			{
+				return NotFound();
+			}
+
+			var files = await _db.PublicationFiles
+				.Where(f => f.PublicationId == Id)
+				.ToListAsync();
+
+			var screenshot = files.FirstOrDefault(f => f.Type == FileType.Screenshot);
+			if (screenshot != null)
+			{
+				screenshot.Description = ExistingScreenshotDescription;
 			}
 
 			// TODO: catch DbConcurrencyException
