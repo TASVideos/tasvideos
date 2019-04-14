@@ -52,6 +52,7 @@ namespace TASVideos.Pages.Publications
 					.Select(p => new PublicationEditModel
 					{
 						Tier = p.Tier.Name,
+						MovieFileName = p.MovieFileName,
 						TierIconPath = p.Tier.IconPath,
 						TierLink = p.Tier.Link,
 						SystemCode = p.System.Code,

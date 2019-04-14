@@ -24,6 +24,10 @@
 		<th>Type</th>
 		<th>Description</th>
 	</tr>
+	<tr>
+		<td><strong>@Model.Publication.MovieFileName</strong></td>
+		<td>Primary Movie File</td>
+	</tr>
 	@foreach (var file in Model.Files.OrderBy(f => f.Type))
 	{
 		<tr>
