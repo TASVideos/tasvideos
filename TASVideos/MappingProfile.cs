@@ -116,6 +116,7 @@ namespace TASVideos
 				.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.Roms));
 
 			CreateMap<GameRom, GameDisplayModel.Rom>();
+			CreateMap<PublicationFile, PublicationFileDisplayModel>();
 
 			// API
 			CreateMap<Publication, PublicationsResponse>()

@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Publications.Models
 {
@@ -44,5 +47,13 @@ namespace TASVideos.Pages.Publications.Models
 		public bool MinorEdit { get; set; }
 
 		public string Markup { get; set; }
+	}
+
+	public class PublicationFileDisplayModel
+	{
+		public int Id { get; set; }
+		public string Path { get; set; }
+		public FileType Type { get; set; }
+		public string Description { get; set; }
 	}
 }
