@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +42,8 @@ namespace TASVideos.Pages.Publications
 		public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
 
 		public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();
+
+		public IEnumerable<PublicationFileDisplayModel> Files { get; set; } = new List<PublicationFileDisplayModel>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -118,6 +122,11 @@ namespace TASVideos.Pages.Publications
 					Text = p.Title,
 					Value = p.Id.ToString()
 				})
+				.ToListAsync();
+
+			Files = await _db.PublicationFiles
+				.Where(f => f.PublicationId == Id)
+				.ProjectTo<PublicationFileDisplayModel>()
 				.ToListAsync();
 		}
 

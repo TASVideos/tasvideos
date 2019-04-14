@@ -15,7 +15,25 @@
 	<label class="form-control-label">@Model.Publication.Tier</label>
 	<a permission="SetTier" class="btn btn-secondary btn-sm" asp-page="EditTier" asp-route-id="@Model.Id">Edit</a>
 </fullrow>
-
+<hr />
+<label>Files:</label>
+<a permission="EditPublicationFiles" asp-page="EditFile" asp-route-id="@Model.Id" class="pull-right btn btn-primary btn-sm mb-2">Edit</a>
+<table class="table table-bordered">
+	<tr>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Description</th>
+	</tr>
+	@foreach (var file in Model.Files.OrderBy(f => f.Type))
+	{
+		<tr>
+			<td>@file.Path</td>
+			<td>@file.Type</td>
+			<td>@file.Description</td>
+		</tr>
+	}
+</table>
+<hr />
 <form method="post">
 	<input type="hidden" asp-for="Publication.SystemCode" />
 	<row>
