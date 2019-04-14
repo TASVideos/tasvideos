@@ -12,6 +12,8 @@ namespace TASVideos.Pages.Publications.Models
 
 		public string Title { get; set; }
 
+		public string MovieFileName { get; set; }
+
 		[Display(Name = "Tier")]
 		public string Tier { get; set; }
 		public string TierIconPath { get; set; }
