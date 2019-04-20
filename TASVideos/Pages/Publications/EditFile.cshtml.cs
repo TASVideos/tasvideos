@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using AutoMapper.QueryableExtensions;
-
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications
 {
@@ -19,33 +17,22 @@ namespace TASVideos.Pages.Publications
 	public class EditFileModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IHostingEnvironment _env;
 
-		public EditFileModel(ApplicationDbContext db)
+		public EditFileModel(ApplicationDbContext db, IHostingEnvironment env)
 		{
 			_db = db;
+			_env = env;
 		}
 
 		[FromRoute]
 		public int Id { get; set; }
 
+		[BindProperty]
 		public string Title { get; set; }
 
 		[BindProperty]
-		public IEnumerable<int> FilesToRemove { get; set; } = new List<int>();
-
-		[BindProperty]
-		public string ExistingScreenshotDescription { get; set; }
-
-		[BindProperty]
-		public IFormFile NewScreenshotFile { get; set; }
-
-		[BindProperty]
-		public string NewScreenshotDescription { get; set; }
-
-		[BindProperty]
-		public IEnumerable<IFormFile> TorrentFiles { get; set; }
-
-		public IEnumerable<PublicationFileDisplayModel> Files { get; set; } = new List<PublicationFileDisplayModel>();
+		public PublicationFilesEditModel Files { get; set; } = new PublicationFilesEditModel();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -59,13 +46,19 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
-			Files = await _db.PublicationFiles
+			var files = await _db.PublicationFiles
 				.Where(f => f.PublicationId == Id)
-				.ProjectTo<PublicationFileDisplayModel>()
 				.ToListAsync();
 
-			// Bind the things
-			ExistingScreenshotDescription = Files.FirstOrDefault(f => f.Type == FileType.Screenshot)?.Description;
+			// Screenshot
+			var screenshot = files.FirstOrDefault(f => f.Type == FileType.Screenshot);
+
+			if (screenshot != null)
+			{
+				Files.ScreenshotDescription = screenshot.Description;
+				Files.ExistingScreenshotName = screenshot.Path;
+			}
+			
 
 			return Page();
 		}
@@ -90,16 +83,65 @@ namespace TASVideos.Pages.Publications
 				.Where(f => f.PublicationId == Id)
 				.ToListAsync();
 
+			// Screenshot
 			var screenshot = files.FirstOrDefault(f => f.Type == FileType.Screenshot);
-			if (screenshot != null)
+
+			if (Files.UseNewScreenshot && Files.NewScreenshot != null)
 			{
-				screenshot.Description = ExistingScreenshotDescription;
+				if (screenshot != null)
+				{
+					_db.PublicationFiles.Remove(screenshot);
+				}
+
+				await SaveScreenshot(Files.NewScreenshot, Files.ScreenshotDescription, Id);
+			}
+			else
+			{
+				if (screenshot != null)
+				{
+					screenshot.Description = Files.ScreenshotDescription;
+				}
 			}
 
 			// TODO: catch DbConcurrencyException
 			await _db.SaveChangesAsync();
 
 			return RedirectToPage("View", new { Id });
+		}
+
+		// TODO: make a service for this, and refactor Publish.cshtml.cs to use it
+		private async Task SaveScreenshot(IFormFile screenshot, string description, int publicationId)
+		{
+			using (var memoryStream = new MemoryStream())
+			{
+				await screenshot.CopyToAsync(memoryStream);
+				var screenshotBytes = memoryStream.ToArray();
+
+				string screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
+				string screenshotPath = Path.Combine(_env.WebRootPath, "media", screenshotFileName);
+				System.IO.File.WriteAllBytes(screenshotPath, screenshotBytes);
+
+				var pubFile = new PublicationFile
+				{
+					PublicationId = publicationId,
+					Path = screenshotFileName,
+					Type = FileType.Screenshot,
+					Description = description
+				};
+
+				_db.PublicationFiles.Add(pubFile);
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public class PublicationFilesEditModel
+		{
+			[StringLength(250)]
+			public string ScreenshotDescription { get; set; }
+
+			public bool UseNewScreenshot { get; set; }
+			public IFormFile NewScreenshot { get; set; }
+			public string ExistingScreenshotName { get; set; }
 		}
 	}
 }
