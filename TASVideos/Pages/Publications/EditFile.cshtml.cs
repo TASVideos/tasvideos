@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Publications
 {
@@ -18,11 +18,11 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IHostingEnvironment _env;
-
-		public EditFileModel(ApplicationDbContext db, IHostingEnvironment env)
+		private readonly IMediaFileUploader _uploader;
+		public EditFileModel(ApplicationDbContext db, IMediaFileUploader uploader)
 		{
 			_db = db;
-			_env = env;
+			_uploader = uploader;
 		}
 
 		[FromRoute]
@@ -93,7 +93,7 @@ namespace TASVideos.Pages.Publications
 					_db.PublicationFiles.Remove(screenshot);
 				}
 
-				await SaveScreenshot(Files.NewScreenshot, Files.ScreenshotDescription, Id);
+				await _uploader.UploadScreenshot(Id, Files.NewScreenshot, Files.ScreenshotDescription);
 			}
 			else
 			{
@@ -107,31 +107,6 @@ namespace TASVideos.Pages.Publications
 			await _db.SaveChangesAsync();
 
 			return RedirectToPage("View", new { Id });
-		}
-
-		// TODO: make a service for this, and refactor Publish.cshtml.cs to use it
-		private async Task SaveScreenshot(IFormFile screenshot, string description, int publicationId)
-		{
-			using (var memoryStream = new MemoryStream())
-			{
-				await screenshot.CopyToAsync(memoryStream);
-				var screenshotBytes = memoryStream.ToArray();
-
-				string screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
-				string screenshotPath = Path.Combine(_env.WebRootPath, "media", screenshotFileName);
-				System.IO.File.WriteAllBytes(screenshotPath, screenshotBytes);
-
-				var pubFile = new PublicationFile
-				{
-					PublicationId = publicationId,
-					Path = screenshotFileName,
-					Type = FileType.Screenshot,
-					Description = description
-				};
-
-				_db.PublicationFiles.Add(pubFile);
-				await _db.SaveChangesAsync();
-			}
 		}
 
 		public class PublicationFilesEditModel
