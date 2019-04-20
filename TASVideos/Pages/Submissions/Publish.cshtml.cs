@@ -25,17 +25,20 @@ namespace TASVideos.Pages.Submissions
 		private readonly IHostingEnvironment _hostingEnvironment;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IWikiPages _wikiPages;
+		private readonly IMediaFileUploader _uploader;
 
 		public PublishModel(
 			ApplicationDbContext db,
 			IHostingEnvironment hostingEnvironment,
 			ExternalMediaPublisher publisher,
-			IWikiPages wikiPages)
+			IWikiPages wikiPages,
+			IMediaFileUploader uploader)
 		{
 			_db = db;
 			_hostingEnvironment = hostingEnvironment;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
+			_uploader = uploader;
 		}
 
 		[FromRoute]
@@ -168,25 +171,8 @@ namespace TASVideos.Pages.Submissions
 			await _db.SaveChangesAsync(); // Need an Id for the Title
 			publication.GenerateTitle();
 
-			byte[] screenshotBytes;
-			using (var memoryStream = new MemoryStream())
-			{
-				await Submission.Screenshot.CopyToAsync(memoryStream);
-				screenshotBytes = memoryStream.ToArray();
-			}
-
-			string screenshotFileName = $"{publication.Id}M{Path.GetExtension(Submission.Screenshot.FileName)}";
-			string screenshotPath = Path.Combine(_hostingEnvironment.WebRootPath, "media", screenshotFileName);
-			System.IO.File.WriteAllBytes(screenshotPath, screenshotBytes);
-
-			var screenshot = new PublicationFile
-			{
-				Publication = publication,
-				Path = screenshotFileName,
-				Type = FileType.Screenshot
-			};
-			_db.PublicationFiles.Add(screenshot);
-			publication.Files.Add(screenshot);
+			// TODO: screenshot description
+			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot, null);
 
 			byte[] torrentBytes;
 			using (var memoryStream = new MemoryStream())
