@@ -93,6 +93,11 @@
 					<br />
 					(Please read <a href="PublisherGuidelines.html">Publisher guidelines</a> for guidelines regarding screenshot selection.)
 				</span>
+			</form-group>
+			<form-group>
+				<label asp-for="Submission.ScreenshotDescription"></label>
+				<input asp-for="Submission.ScreenshotDescription" type="text" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Submission.ScreenshotDescription)</div>
 				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
 			</form-group>
 			<form-group>

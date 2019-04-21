@@ -42,6 +42,10 @@ namespace TASVideos.Pages.Submissions.Models
 		public IFormFile Screenshot { get; set; }
 
 		[Required]
+		[Display(Name = "Description", Description = "Caption, describe what happens in the screenshot")]
+		public string ScreenshotDescription { get; set; }
+
+		[Required]
 		[Display(Name = "Torrent file", Description = "(The tracker URL must be http://tracker.tasvideos.org:6969/announce.)")]
 		public IFormFile TorrentFile { get; set; }
 
