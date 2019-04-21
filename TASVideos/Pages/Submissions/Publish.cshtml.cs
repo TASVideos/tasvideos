@@ -4,6 +4,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -49,24 +51,7 @@ namespace TASVideos.Pages.Submissions
 		{
 			Submission = await _db.Submissions
 				.Where(s => s.Id == Id)
-				.Select(s => new SubmissionPublishModel
-				{
-					Title = s.Title,
-					Markup = s.WikiContent.Markup,
-					SystemCode = s.System.Code,
-					SystemId = s.SystemId ?? 0,
-					SystemFrameRateId = s.SystemFrameRateId,
-					SystemRegion = s.SystemFrameRate.RegionCode + " " + s.SystemFrameRate.FrameRate,
-					Game = s.Game.GoodName,
-					GameId = s.GameId ?? 0,
-					Rom = s.Rom.Name,
-					RomId = s.RomId ?? 0,
-					Tier = s.IntendedTier != null ? s.IntendedTier.Name : "",
-					Branch = s.Branch,
-					EmulatorVersion = s.EmulatorVersion,
-					MovieExtension = s.MovieExtension,
-					Status = s.Status
-				})
+				.ProjectTo<SubmissionPublishModel>()
 				.SingleOrDefaultAsync();
 
 			if (Submission == null)

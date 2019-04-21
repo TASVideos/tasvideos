@@ -118,6 +118,16 @@ namespace TASVideos
 			CreateMap<GameRom, GameDisplayModel.Rom>();
 			CreateMap<PublicationFile, PublicationFileDisplayModel>();
 
+			CreateMap<Submission, SubmissionPublishModel>()
+				.ForMember(dest => dest.Markup, opt => opt.MapFrom(src => src.WikiContent.Markup))
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
+				.ForMember(dest => dest.SystemId, opt => opt.MapFrom(src => src.SystemId ?? 0))
+				.ForMember(dest => dest.SystemRegion, opt => opt.MapFrom(src => src.SystemFrameRate.RegionCode + " " + src.SystemFrameRate.FrameRate))
+				.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game.GoodName))
+				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.GameId ?? 0))
+				.ForMember(dest => dest.RomId, opt => opt.MapFrom(src => src.RomId ?? 0))
+				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.IntendedTier != null ? src.IntendedTier.Name : ""));
+
 			// API
 			CreateMap<Publication, PublicationsResponse>()
 				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.Tier.Name))
