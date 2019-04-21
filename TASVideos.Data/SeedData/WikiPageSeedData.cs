@@ -13,6 +13,18 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "System/FilesEditingHelp",
+				RevisionMessage = Import,
+				Markup = @"! Screenshot guidelines
+
+It is discouraged to reuse screenshots for more than one publication.  In some cases, this may work - mostly for very minor improvements with little overall change in the strategy of the movie.  But overall, it is ideal for each publication to have its own screenshot.
+
+[PublisherGuidelines|Choose good screenshots].%%%
+[Screenshots|Remember to optimize your PNG files].%%%
+[=Forum/Topics/6052|Screenshot discussion].%%%"
+			},
+			new WikiPage
+			{
 				PageName = "SiteCodingStandards",
 				RevisionMessage = Import,
 				Markup = "[TODO]: Document coding standards"
