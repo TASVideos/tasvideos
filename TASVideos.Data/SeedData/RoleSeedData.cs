@@ -92,7 +92,6 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditRoles,
 			PermissionTo.SeeRestrictedForums,
-			PermissionTo.EditPublicationMetaData,
 			PermissionTo.EditPublicationFiles
 		}).ToArray();
 
