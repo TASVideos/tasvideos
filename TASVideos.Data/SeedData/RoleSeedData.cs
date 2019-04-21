@@ -122,7 +122,8 @@ namespace TASVideos.Data.SeedData
 
 		private static readonly PermissionTo[] SiteDeveloperPermissions =
 		{
-			PermissionTo.SeeDiagnostics
+			PermissionTo.SeeDiagnostics,
+			PermissionTo.SeeRestrictedForums
 		};
 
 		private static readonly List<RoleLink> SiteDeveloperLinks = new List<RoleLink>
