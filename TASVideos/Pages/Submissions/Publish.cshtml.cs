@@ -152,8 +152,7 @@ namespace TASVideos.Pages.Submissions
 			await _db.SaveChangesAsync(); // Need an Id for the Title
 			publication.GenerateTitle();
 
-			// TODO: screenshot description
-			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot, null);
+			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot, Submission.ScreenshotDescription);
 			await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile);
 
 			// Create a wiki page corresponding to this submission
