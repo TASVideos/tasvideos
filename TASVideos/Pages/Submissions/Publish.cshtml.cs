@@ -4,7 +4,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,20 +21,17 @@ namespace TASVideos.Pages.Submissions
 	public class PublishModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IHostingEnvironment _hostingEnvironment;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IWikiPages _wikiPages;
 		private readonly IMediaFileUploader _uploader;
 
 		public PublishModel(
 			ApplicationDbContext db,
-			IHostingEnvironment hostingEnvironment,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
 			IMediaFileUploader uploader)
 		{
 			_db = db;
-			_hostingEnvironment = hostingEnvironment;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_uploader = uploader;
@@ -173,26 +169,7 @@ namespace TASVideos.Pages.Submissions
 
 			// TODO: screenshot description
 			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot, null);
-
-			byte[] torrentBytes;
-			using (var memoryStream = new MemoryStream())
-			{
-				await Submission.TorrentFile.CopyToAsync(memoryStream);
-				torrentBytes = memoryStream.ToArray();
-			}
-
-			string torrentFileName = $"{publication.Id}M.torrent";
-			string torrentPath = Path.Combine(_hostingEnvironment.WebRootPath, "media", torrentFileName);
-			System.IO.File.WriteAllBytes(torrentPath, torrentBytes);
-
-			var torrent = new PublicationFile
-			{
-				Publication = publication,
-				Path = torrentFileName,
-				Type = FileType.Torrent
-			};
-			_db.PublicationFiles.Add(torrent);
-			publication.Files.Add(torrent);
+			await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile);
 
 			// Create a wiki page corresponding to this submission
 			var wikiPage = new WikiPage
