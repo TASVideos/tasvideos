@@ -15,6 +15,7 @@ namespace TASVideos.Services
 	public interface IMediaFileUploader
 	{
 		Task UploadScreenshot(int publicationId, IFormFile screenshot, string description);
+		Task UploadTorrent(int publicationId, IFormFile torrent);
 	}
 
 	public class MediaFileUploader : IMediaFileUploader
@@ -48,6 +49,28 @@ namespace TASVideos.Services
 				};
 
 				_db.PublicationFiles.Add(pubFile);
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public async Task UploadTorrent(int publicationId, IFormFile torrent)
+		{
+			using (var memoryStream = new MemoryStream())
+			{
+				await torrent.CopyToAsync(memoryStream);
+				var torrentBytes = memoryStream.ToArray();
+
+				string torrentFileName = $"{publicationId}M.torrent";
+				string torrentPath = Path.Combine(_env.WebRootPath, "media", torrentFileName);
+				File.WriteAllBytes(torrentPath, torrentBytes);
+
+				var torrentFile = new PublicationFile
+				{
+					PublicationId = publicationId,
+					Path = torrentFileName,
+					Type = FileType.Torrent
+				};
+				_db.PublicationFiles.Add(torrentFile);
 				await _db.SaveChangesAsync();
 			}
 		}
