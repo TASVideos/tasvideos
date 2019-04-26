@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,6 @@ namespace TASVideos.Pages.Publications
 	public class EditFileModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IHostingEnvironment _env;
 		private readonly IMediaFileUploader _uploader;
 		public EditFileModel(ApplicationDbContext db, IMediaFileUploader uploader)
 		{
