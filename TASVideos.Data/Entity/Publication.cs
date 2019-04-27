@@ -113,51 +113,49 @@ namespace TASVideos.Data.Entity
 			{
 				return publications.Where(p => tokens.MovieIds.Contains(p.Id));
 			}
-			else
+
+			var query = publications;
+			if (tokens.SystemCodes.Any())
 			{
-				var query = publications;
-				if (tokens.SystemCodes.Any())
-				{
-					query = query.Where(p => tokens.SystemCodes.Contains(p.System.Code));
-				}
-
-				if (tokens.Tiers.Any())
-				{
-					query = query.Where(p => tokens.Tiers.Contains(p.Tier.Name));
-				}
-
-				if (!tokens.ShowObsoleted)
-				{
-					query = query.ThatAreCurrent();
-				}
-
-				if (tokens.Years.Any())
-				{
-					query = query.Where(p => tokens.Years.Contains(p.CreateTimeStamp.Year));
-				}
-
-				if (tokens.Tags.Any())
-				{
-					query = query.Where(p => p.PublicationTags.Any(t => tokens.Tags.Contains(t.Tag.Code)));
-				}
-
-				if (tokens.Genres.Any())
-				{
-					query = query.Where(p => p.Game.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre.DisplayName)));
-				}
-
-				if (tokens.Flags.Any())
-				{
-					query = query.Where(p => p.PublicationFlags.Any(f => tokens.Flags.Contains(f.Flag.Token)));
-				}
-
-				if (tokens.Authors.Any())
-				{
-					query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => tokens.Authors.Contains(a)));
-				}
-
-				return query;
+				query = query.Where(p => tokens.SystemCodes.Contains(p.System.Code));
 			}
+
+			if (tokens.Tiers.Any())
+			{
+				query = query.Where(p => tokens.Tiers.Contains(p.Tier.Name));
+			}
+
+			if (!tokens.ShowObsoleted)
+			{
+				query = query.ThatAreCurrent();
+			}
+
+			if (tokens.Years.Any())
+			{
+				query = query.Where(p => tokens.Years.Contains(p.CreateTimeStamp.Year));
+			}
+
+			if (tokens.Tags.Any())
+			{
+				query = query.Where(p => p.PublicationTags.Any(t => tokens.Tags.Contains(t.Tag.Code)));
+			}
+
+			if (tokens.Genres.Any())
+			{
+				query = query.Where(p => p.Game.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre.DisplayName)));
+			}
+
+			if (tokens.Flags.Any())
+			{
+				query = query.Where(p => p.PublicationFlags.Any(f => tokens.Flags.Contains(f.Flag.Token)));
+			}
+
+			if (tokens.Authors.Any())
+			{
+				query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => tokens.Authors.Contains(a)));
+			}
+
+			return query;
 		}
 	}
 }
