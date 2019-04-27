@@ -96,7 +96,7 @@ namespace TASVideos.TagHelpers
 
 			switch (Activate)
 			{
-				case "Home" when pageGroup == "Index":
+				case "Home" when pageGroup == "Home" || new[] { "WelcomeToTASVideos", "News" }.Contains(viewActiveTab):
 				case "Movies" when pageGroup == "Publications":
 				case "Admin" when pageGroup == "Roles":
 				case "Admin" when pageGroup == "Users":
