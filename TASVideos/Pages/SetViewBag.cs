@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -13,8 +14,9 @@ namespace TASVideos.Pages
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
 	public class SetPageViewBagAttribute : ResultFilterAttribute
 	{
-		private static readonly Version VersionInfo = Assembly.GetExecutingAssembly().GetName().Version;
-		private string Version => $"{VersionInfo.Major}.{VersionInfo.Minor}.{VersionInfo.Revision}";
+		private static readonly FileVersionInfo VersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+		private string Version => $"{VersionInfo.FileMajorPart}.{VersionInfo.FileMinorPart}.{VersionInfo.ProductVersion.Split("+").Skip(1).First().Split(".").First()}";
+		private string VersionSha => VersionInfo.ProductVersion.Split("+").Skip(1).First().Split(".").Last();
 		
 		public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
 		{
@@ -22,6 +24,7 @@ namespace TASVideos.Pages
 			{
 				var viewData = pageResult.ViewData;
 				viewData["Version"] = Version;
+				viewData["VersionSha"] = VersionSha;
 
 				var user = context.HttpContext.User;
 				if (user.Identity.IsAuthenticated)

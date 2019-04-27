@@ -53,7 +53,7 @@
 		@RenderBody()
 		<hr/>
 		<footer>
-			<p>&copy; @DateTime.UtcNow.Year - TASVideos v@(ViewData["Version"])</p>
+			<p>&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/adelikat/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a></p>
 		</footer>
 	</div>
 	@RenderSection("Scripts", required: false)
