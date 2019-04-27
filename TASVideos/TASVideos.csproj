@@ -47,6 +47,10 @@
     <ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
     <ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="..\GitVersion.Portable\GitVersion.exe /updateassemblyinfo .gitversion.cs /ensureassemblyinfo" />
+  </Target>
   
   <ItemGroup>
     <Content Update="Pages\Forum\Topics\_PollCreate.cshtml">
