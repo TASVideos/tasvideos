@@ -92,7 +92,7 @@ namespace TASVideos.Legacy.Imports
 					CreateUserName = "Automatic Migration",
 					PasswordHash = "",
 					Avatar = u.Avatar,
-					From = u.From,
+					From = ImportHelper.ConvertLatin1String(u.From),
 					Signature = ImportHelper.ConvertLatin1String(u.Signature.Replace(":" + u.BbcodeUid, "")).Cap(1000),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
