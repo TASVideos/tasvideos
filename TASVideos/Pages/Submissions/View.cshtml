@@ -48,7 +48,7 @@
 			<h4 condition="!Model.IsPublished" class="alert-heading">
 				Status: @Model.Submission.Status.EnumDisplayName()
 				<small condition="@Model.Submission.Status == SubmissionStatus.Rejected">
-					(Reason: @Model.Submission.RejectionReasonDisplay)
+					<span condition="!string.IsNullOrWhiteSpace(Model.Submission.RejectionReasonDisplay)">(Reason: @Model.Submission.RejectionReasonDisplay)</span>
 				</small>
 			</h4>
 			<h4 condition="Model.IsPublished" class="alert-heading">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></h4>
