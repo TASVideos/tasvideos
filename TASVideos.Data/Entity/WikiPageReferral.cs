@@ -21,7 +21,7 @@ namespace TASVideos.Data.Entity
 	{
 		public static IQueryable<WikiPageReferral> ThatReferTo(this IQueryable<WikiPageReferral> list, string pageName)
 		{
-			return list.Where(wr => wr.Referrer == pageName);
+			return list.Where(wr => wr.Referral == pageName);
 		}
 	}
 }
