@@ -16,6 +16,7 @@ namespace TASVideos.Legacy.Imports
 	public static class SubmissionImporter
 	{
 		private static readonly string[] ValidSubmissionFileExtensions = { ".dtm", ".mcm", ".gmv", ".dof", ".dsm", ".bkm", ".mcm", ".fm2", ".vbm" };
+		private static readonly string[] Legacy60FpsMovieTypes = { "fmv", "vmv", "fcm", "zmv", "smv" };
 
 		public static void Import(
 			string connectionStr,
@@ -82,6 +83,8 @@ namespace TASVideos.Legacy.Imports
 				{
 					GameSystemFrameRate systemFrameRate;
 
+					var movieExtension = GetExtension(legacySubmission.Sub.Content);
+
 					if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
 						|| legacySubmission.System.Id == 44) // ZX Spectrum which has no NTSC
 					{
@@ -91,14 +94,23 @@ namespace TASVideos.Legacy.Imports
 					}
 					else
 					{
-						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
+						if (Legacy60FpsMovieTypes.Contains(movieExtension))
+						{
+							systemFrameRate = systemFrameRates
+								.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC60");
+						}
+						else
+						{
+							systemFrameRate = systemFrameRates
+								.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
+						}
 					}
 
 					var extension = GetExtension(legacySubmission.Sub.Content);
 
 					var submission = new Submission
 					{
+						LegacyTime = Math.Round((double)legacySubmission.Sub.Length, 2).ToString(),
 						Id = legacySubmission.Sub.Id,
 						WikiContentId = legacySubmission.Wiki.Id,
 						SubmitterId = legacySubmission.Submitter?.Id,
@@ -124,7 +136,7 @@ namespace TASVideos.Legacy.Imports
 						JudgeId = legacySubmission.Judge?.Id,
 						PublisherId = legacySubmission.Publisher?.Id,
 						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
-						MovieExtension = GetExtension(legacySubmission.Sub.Content),
+						MovieExtension = movieExtension,
 						RejectionReasonId = legacySubmission.Rejection?.Reason
 					};
 
@@ -177,12 +189,15 @@ namespace TASVideos.Legacy.Imports
 					}
 
 					submission.GenerateTitle();
+					submission.NewTime = Math.Round(submission.Time().TotalSeconds, 2).ToString();
 					submissions.Add(submission);
 				}
 			}
 
 			var subColumns = new[]
 			{
+				nameof(Submission.LegacyTime),
+				nameof(Submission.NewTime),
 				nameof(Submission.Id),
 				nameof(Submission.WikiContentId),
 				nameof(Submission.SubmitterId),
@@ -315,14 +330,9 @@ namespace TASVideos.Legacy.Imports
 
 		private static string CleanAndGuessEmuVersion(int id, string emulatorVersion, string movieExtension)
 		{
-			if (string.IsNullOrWhiteSpace(emulatorVersion))
-			{
-				emulatorVersion = null;
-			}
-			else
-			{
-				emulatorVersion = emulatorVersion.Trim();
-			}
+			emulatorVersion = string.IsNullOrWhiteSpace(emulatorVersion)
+				? null
+				: emulatorVersion.Trim();
 
 			if (!string.IsNullOrWhiteSpace(emulatorVersion))
 			{

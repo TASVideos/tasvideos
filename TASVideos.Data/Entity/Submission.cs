@@ -45,6 +45,9 @@ namespace TASVideos.Data.Entity
 
 	public class Submission : BaseEntity, ITimeable
 	{
+		public string LegacyTime { get; set; }
+		public string NewTime { get; set; }
+
 		public int Id { get; set; }
 
 		public int? WikiContentId { get; set; }
