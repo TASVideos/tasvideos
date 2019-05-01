@@ -16,7 +16,6 @@ namespace TASVideos.Legacy.Imports
 	public static class SubmissionImporter
 	{
 		private static readonly string[] ValidSubmissionFileExtensions = { ".dtm", ".mcm", ".gmv", ".dof", ".dsm", ".bkm", ".mcm", ".fm2", ".vbm" };
-		private static readonly string[] Legacy60FpsMovieTypes = { "fmv", "vmv", "fcm", "zmv", "smv" };
 
 		public static void Import(
 			string connectionStr,
@@ -94,7 +93,12 @@ namespace TASVideos.Legacy.Imports
 					}
 					else
 					{
-						if (Legacy60FpsMovieTypes.Contains(movieExtension))
+						// Legacy support hack. If we have a NTSC60 legacy framerate and the legacy time looks like it was calculated with 60fps
+						// Then use this system framerate instead of NTSC
+						var timeAs60Fps = Math.Round(legacySubmission.Sub.Frames / 60.0, 2);
+						var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
+						if (Math.Abs(timeAs60Fps - legacyTime) < 0.005
+							&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC60"))
 						{
 							systemFrameRate = systemFrameRates
 								.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC60");
