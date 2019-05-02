@@ -568,6 +568,12 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 21,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 22,
 				RegionCode = Ntsc,
 				FrameRate = 59.922751013550524
@@ -577,6 +583,12 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 22,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994842
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 22,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
 			},
 			new GameSystemFrameRate
 			{

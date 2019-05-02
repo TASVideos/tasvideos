@@ -15,8 +15,8 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class SubmissionImporter
 	{
+		private const double RoundingOffset = 0.005;
 		private static readonly string[] ValidSubmissionFileExtensions = { ".dtm", ".mcm", ".gmv", ".dof", ".dsm", ".bkm", ".mcm", ".fm2", ".vbm" };
-
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -89,7 +89,7 @@ namespace TASVideos.Legacy.Imports
 
 					// Legacy support hack. If we have a NTSC60 legacy framerate and the legacy time looks like it was calculated with 60fps
 					// Then use this system framerate instead of NTSC
-					if (Math.Abs(timeAs60Fps - legacyTime) < 0.005
+					if (Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset
 						&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC60"))
 					{
 						systemFrameRate = systemFrameRates
@@ -98,7 +98,7 @@ namespace TASVideos.Legacy.Imports
 
 					// Legacy support hack. If we have a PAL50 legacy framerate and the legacy time looks like it was calculated with 50fps
 					// Then use this system framerate instead of PAL
-					else if (Math.Abs(timeAs50Fps - legacyTime) < 0.005
+					else if (Math.Abs(timeAs50Fps - legacyTime) <RoundingOffset
 							&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL50"))
 					{
 						systemFrameRate = systemFrameRates
