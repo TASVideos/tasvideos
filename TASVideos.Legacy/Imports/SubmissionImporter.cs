@@ -15,7 +15,24 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class SubmissionImporter
 	{
+		private const double RoundingOffset = 0.005;
 		private static readonly string[] ValidSubmissionFileExtensions = { ".dtm", ".mcm", ".gmv", ".dof", ".dsm", ".bkm", ".mcm", ".fm2", ".vbm" };
+
+		// These movies were incorrectly parsed as NTSC, and/or inexplicably did a Math.Ceil instead of rounding so the 60fps detection will fail
+		// So we will hard-code these to preserve legacy data
+		private static readonly int[] Legacy60FpsOverrides = { 304, 454, 459, 1799, 2571, 2602 };
+
+		// More inexplicably rounding that is avoiding detection as a legacy 50fps movie
+		private static readonly int[] Legacy50FpsOverrides = { 766, 1752, 2182 };
+
+		// Incorrectly parsed as Ntsc instead of Pal, but at correct Ntsc fps, not 60
+		private static readonly int[] LegacyNtscOverrides = { 2469, 3100, 6353, 4309, 4810 };
+
+		// Need to be PAL but not 50 fps
+		private static readonly int[] LegacyPalOverrides = { 5232, 5682, 5754 };
+
+		// These were parsed as PAL but game version does not indicate
+		private static readonly int[] C64Pal = { 4526, 5527, 5536, 5543, 5545, 5552, 5554, 5592, 5595, 5596, 5599, 6339 };
 
 		public static void Import(
 			string connectionStr,
@@ -80,10 +97,56 @@ namespace TASVideos.Legacy.Imports
 
 				foreach (var legacySubmission in lSubsWithSystem)
 				{
+					if (legacySubmission.Sub.GameVersion == "PAL")
+					{
+						legacySubmission.Sub.GameVersion = "Europe";
+					}
+
+					var extension = GetExtension(legacySubmission.Sub.Content);
+
 					GameSystemFrameRate systemFrameRate;
 
-					if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
-						|| legacySubmission.System.Id == 44) // ZX Spectrum which has no NTSC
+					var movieExtension = GetExtension(legacySubmission.Sub.Content);
+					var timeAs50Fps = Math.Round(legacySubmission.Sub.Frames / 50.0, 2);
+					var timeAs60Fps = Math.Round(legacySubmission.Sub.Frames / 60.0, 2);
+					var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
+
+					if (LegacyNtscOverrides.Contains(legacySubmission.Sub.Id))
+					{
+						systemFrameRate = systemFrameRates
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
+					}
+					else if (LegacyPalOverrides.Contains(legacySubmission.Sub.Id))
+					{
+						systemFrameRate = systemFrameRates
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL");
+					}
+
+					// Legacy support hack. If we have a NTSC60 legacy framerate and the legacy time looks like it was calculated with 60fps
+					// Then use this system framerate instead of NTSC
+					else if ((Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset
+						&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 60))
+						|| Legacy60FpsOverrides.Contains(legacySubmission.Sub.Id)
+						|| extension == "jrsr") // All these movies were parsed as 60fps, but the database says that DOS is 70fps, weird
+					{
+						systemFrameRate = systemFrameRates
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 60);
+					}
+
+					// Legacy support hack. If we have a PAL50 legacy framerate and the legacy time looks like it was calculated with 50fps
+					// Then use this system framerate instead of PAL
+					else if ((Math.Abs(timeAs50Fps - legacyTime) < RoundingOffset
+							&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50))
+						|| Legacy50FpsOverrides.Contains(legacySubmission.Sub.Id))
+					{
+						systemFrameRate = systemFrameRates
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50);
+					}
+					else if ((legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
+							&& !legacySubmission.Sub.GameVersion.ToLower().Contains("usa")
+							&& legacySubmission.System.Id != 10) // SMS Europe games are still 60fps
+							|| C64Pal.Contains(legacySubmission.Sub.Id)
+							|| legacySubmission.System.Id == 44) // ZX Spectrum is PAL only
 					{
 						systemFrameRate = systemFrameRates
 							.SingleOrDefault(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL")
@@ -94,8 +157,6 @@ namespace TASVideos.Legacy.Imports
 						systemFrameRate = systemFrameRates
 							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
 					}
-
-					var extension = GetExtension(legacySubmission.Sub.Content);
 
 					var submission = new Submission
 					{
@@ -124,7 +185,7 @@ namespace TASVideos.Legacy.Imports
 						JudgeId = legacySubmission.Judge?.Id,
 						PublisherId = legacySubmission.Publisher?.Id,
 						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
-						MovieExtension = GetExtension(legacySubmission.Sub.Content),
+						MovieExtension = movieExtension,
 						RejectionReasonId = legacySubmission.Rejection?.Reason
 					};
 
@@ -315,14 +376,9 @@ namespace TASVideos.Legacy.Imports
 
 		private static string CleanAndGuessEmuVersion(int id, string emulatorVersion, string movieExtension)
 		{
-			if (string.IsNullOrWhiteSpace(emulatorVersion))
-			{
-				emulatorVersion = null;
-			}
-			else
-			{
-				emulatorVersion = emulatorVersion.Trim();
-			}
+			emulatorVersion = string.IsNullOrWhiteSpace(emulatorVersion)
+				? null
+				: emulatorVersion.Trim();
 
 			if (!string.IsNullOrWhiteSpace(emulatorVersion))
 			{

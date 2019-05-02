@@ -280,6 +280,18 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 1,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 1,
+				RegionCode = Pal + "50",
+				FrameRate = 50
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 2,
 				RegionCode = Ntsc,
 				FrameRate = 60.0988138974405
@@ -289,6 +301,18 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 2,
 				RegionCode = Pal,
 				FrameRate = 50.0069789081886
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 2,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 2,
+				RegionCode = Pal + "50",
+				FrameRate = 50
 			},
 			new GameSystemFrameRate
 			{
@@ -304,9 +328,27 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 3,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 3,
+				RegionCode = Pal + "50",
+				FrameRate = 50
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 4,
 				RegionCode = Ntsc,
 				FrameRate = 59.7275005696058
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 4,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
 			},
 			new GameSystemFrameRate
 			{
@@ -322,15 +364,33 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 5,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 6,
 				RegionCode = Ntsc,
 				FrameRate = 59.7275005696058
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 6,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 7,
 				RegionCode = Ntsc,
 				FrameRate = 59.7275005696058
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 7,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
 			},
 			new GameSystemFrameRate
 			{
@@ -354,6 +414,12 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 9,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 10,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
@@ -366,6 +432,18 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 10,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 10,
+				RegionCode = Pal + "50",
+				FrameRate = 50
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 11,
 				RegionCode = Ntsc,
 				FrameRate = 59.29286256195557
@@ -375,6 +453,18 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 11,
 				RegionCode = Pal,
 				FrameRate = 49.764559357596745
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 11,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 11,
+				RegionCode = Pal + "50",
+				FrameRate = 50
 			},
 			new GameSystemFrameRate
 			{
@@ -408,9 +498,21 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 16,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 17,
 				RegionCode = Ntsc,
 				FrameRate = 59.82609828808082
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 17,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
 			},
 			new GameSystemFrameRate
 			{
@@ -420,6 +522,12 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 18,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 19,
 				RegionCode = Ntsc,
 				FrameRate = 60,
@@ -460,6 +568,12 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 21,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 22,
 				RegionCode = Ntsc,
 				FrameRate = 59.922751013550524
@@ -469,12 +583,24 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 22,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994842
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 22,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
 			},
 			new GameSystemFrameRate
 			{
 				GameSystemId = 23,
 				RegionCode = Ntsc,
 				FrameRate = 60.0988138974405
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 23,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
 			},
 			new GameSystemFrameRate
 			{
@@ -580,6 +706,12 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystemFrameRate
 			{
+				GameSystemId = 34,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
 				GameSystemId = 35,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
@@ -589,6 +721,12 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 35,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994839
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 35,
+				RegionCode = Ntsc + "60",
+				FrameRate = 60
 			},
 			new GameSystemFrameRate
 			{
