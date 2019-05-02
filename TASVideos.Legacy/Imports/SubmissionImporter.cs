@@ -20,13 +20,13 @@ namespace TASVideos.Legacy.Imports
 
 		// These movies were incorrectly parsed as NTSC, and/or inexplicably did a Math.Ceil instead of rounding so the 60fps detection will fail
 		// So we will hard-code these to preserve legacy data
-		private static readonly int[] Legacy60FpsOverrides = { 304, 454, 459, 1799, 2571, 2602, 2697, 2868, 2869, 2870, 2872, 2950, 2983, 3081 };
+		private static readonly int[] Legacy60FpsOverrides = { 304, 454, 459, 1799, 2571, 2602, 2697, 2868, 2869, 2870, 2872, 2950, 2983, 3081, 3317, 3478, 3486, 3487, 3585, 3675, 5710, 5794 };
 
 		// More inexplicably rounding that is avoiding detection as a legacy 50fps movie
 		private static readonly int[] Legacy50FpsOverrides = { 766, 1752, 2182 };
 
 		// Incorrectly parsed as Ntsc instead of Pal, but at correct Ntsc fps, not 60
-		private static readonly int[] LegacyNtscOverrides = { 2469, 3100 };
+		private static readonly int[] LegacyNtscOverrides = { 2469, 3100, 6353 };
 
 		public static void Import(
 			string connectionStr,
@@ -123,7 +123,11 @@ namespace TASVideos.Legacy.Imports
 						systemFrameRate = systemFrameRates
 							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50);
 					}
-					else if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
+					else if ((legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
+							&& legacySubmission.Sub.GameName.ToLower() != "usa/europe"
+							&& legacySubmission.Sub.GameName.ToLower() != "usa,europe"
+							&& legacySubmission.System.Id != 10) // SMS Europe games are still 60fps
+						|| legacySubmission.System.Id == 37 // Any C64 submission is going to be PAL
 						|| legacySubmission.System.Id == 44) // ZX Spectrum which has no NTSC
 					{
 						systemFrameRate = systemFrameRates
