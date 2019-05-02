@@ -18,12 +18,16 @@ namespace TASVideos.Legacy.Imports
 		private const double RoundingOffset = 0.005;
 		private static readonly string[] ValidSubmissionFileExtensions = { ".dtm", ".mcm", ".gmv", ".dof", ".dsm", ".bkm", ".mcm", ".fm2", ".vbm" };
 
-		// These movies were incorrectly parsed as NTSC, and inexplicably did a Math.Ceil instead of rounding so the 60fps detection will fail
+		// These movies were incorrectly parsed as NTSC, and/or inexplicably did a Math.Ceil instead of rounding so the 60fps detection will fail
 		// So we will hard-code these to preserve legacy data
-		private static readonly int[] Legacy60FpsOverrides = { 304, 454, 459, 1799, 2182 };
+		private static readonly int[] Legacy60FpsOverrides = { 304, 454, 459, 1799, 2571, 2602, 2697, 2868, 2869, 2870, 2872, 2950, 2983, 3081 };
 
 		// More inexplicably rounding that is avoiding detection as a legacy 50fps movie
-		private static readonly int[] Legacy50FpsOverrides = { 766, 1752 };
+		private static readonly int[] Legacy50FpsOverrides = { 766, 1752, 2182 };
+
+		// Incorrectly parsed as Ntsc instead of Pal, but at correct Ntsc fps, not 60
+		private static readonly int[] LegacyNtscOverrides = { 2469, 3100 };
+
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -94,24 +98,30 @@ namespace TASVideos.Legacy.Imports
 					var timeAs60Fps = Math.Round(legacySubmission.Sub.Frames / 60.0, 2);
 					var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
 
+					if (LegacyNtscOverrides.Contains(legacySubmission.Sub.Id))
+					{
+						systemFrameRate = systemFrameRates
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
+					}
+
 					// Legacy support hack. If we have a NTSC60 legacy framerate and the legacy time looks like it was calculated with 60fps
 					// Then use this system framerate instead of NTSC
-					if ((Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset
-						&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC60"))
+					else if ((Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset
+						&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 60))
 						|| Legacy60FpsOverrides.Contains(legacySubmission.Sub.Id))
 					{
 						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC60");
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 60);
 					}
 
 					// Legacy support hack. If we have a PAL50 legacy framerate and the legacy time looks like it was calculated with 50fps
 					// Then use this system framerate instead of PAL
-					else if ((Math.Abs(timeAs50Fps - legacyTime) <RoundingOffset
-							&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL50"))
+					else if ((Math.Abs(timeAs50Fps - legacyTime) < RoundingOffset
+							&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50))
 						|| Legacy50FpsOverrides.Contains(legacySubmission.Sub.Id))
 					{
 						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL50");
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50);
 					}
 					else if (legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
 						|| legacySubmission.System.Id == 44) // ZX Spectrum which has no NTSC
