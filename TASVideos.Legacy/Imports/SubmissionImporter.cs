@@ -17,6 +17,13 @@ namespace TASVideos.Legacy.Imports
 	{
 		private const double RoundingOffset = 0.005;
 		private static readonly string[] ValidSubmissionFileExtensions = { ".dtm", ".mcm", ".gmv", ".dof", ".dsm", ".bkm", ".mcm", ".fm2", ".vbm" };
+
+		// These movies were incorrectly parsed as NTSC, and inexplicably did a Math.Ceil instead of rounding so the 60fps detection will fail
+		// So we will hard-code these to preserve legacy data
+		private static readonly int[] Legacy60FpsOverrides = { 304, 454, 459, 1799, 2182 };
+
+		// More inexplicably rounding that is avoiding detection as a legacy 50fps movie
+		private static readonly int[] Legacy50FpsOverrides = { 766, 1752 };
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -89,8 +96,9 @@ namespace TASVideos.Legacy.Imports
 
 					// Legacy support hack. If we have a NTSC60 legacy framerate and the legacy time looks like it was calculated with 60fps
 					// Then use this system framerate instead of NTSC
-					if (Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset
+					if ((Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset
 						&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC60"))
+						|| Legacy60FpsOverrides.Contains(legacySubmission.Sub.Id))
 					{
 						systemFrameRate = systemFrameRates
 							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC60");
@@ -98,8 +106,9 @@ namespace TASVideos.Legacy.Imports
 
 					// Legacy support hack. If we have a PAL50 legacy framerate and the legacy time looks like it was calculated with 50fps
 					// Then use this system framerate instead of PAL
-					else if (Math.Abs(timeAs50Fps - legacyTime) <RoundingOffset
+					else if ((Math.Abs(timeAs50Fps - legacyTime) <RoundingOffset
 							&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL50"))
+						|| Legacy50FpsOverrides.Contains(legacySubmission.Sub.Id))
 					{
 						systemFrameRate = systemFrameRates
 							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL50");
