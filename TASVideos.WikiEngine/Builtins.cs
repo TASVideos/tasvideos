@@ -131,7 +131,7 @@ namespace TASVideos.WikiEngine
 		}
 
 		private static readonly string[] ImageSuffixes = { ".svg", ".png", ".gif", ".jpg", ".jpeg" };
-		private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//" };
+		private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//", "irc://" };
 
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
