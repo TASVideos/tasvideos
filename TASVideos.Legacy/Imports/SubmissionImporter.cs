@@ -26,7 +26,10 @@ namespace TASVideos.Legacy.Imports
 		private static readonly int[] Legacy50FpsOverrides = { 766, 1752, 2182 };
 
 		// Incorrectly parsed as Ntsc instead of Pal, but at correct Ntsc fps, not 60
-		private static readonly int[] LegacyNtscOverrides = { 2469, 3100, 6353, 4309 };
+		private static readonly int[] LegacyNtscOverrides = { 2469, 3100, 6353, 4309, 4810 };
+
+		// Need to be PAL but not 50 fps
+		private static readonly int[] LegacyPalOverrides = { 5232, 5682, 5754 };
 
 		// These were parsed as PAL but game version does not indicate
 		private static readonly int[] C64Pal = { 4526, 5527, 5536, 5543, 5545, 5552, 5554, 5592, 5595, 5596, 5599, 6339 };
@@ -112,6 +115,11 @@ namespace TASVideos.Legacy.Imports
 					{
 						systemFrameRate = systemFrameRates
 							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
+					}
+					else if (LegacyPalOverrides.Contains(legacySubmission.Sub.Id))
+					{
+						systemFrameRate = systemFrameRates
+							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL");
 					}
 
 					// Legacy support hack. If we have a NTSC60 legacy framerate and the legacy time looks like it was calculated with 60fps
