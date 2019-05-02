@@ -160,7 +160,6 @@ namespace TASVideos.Legacy.Imports
 
 					var submission = new Submission
 					{
-						LegacyTime = Math.Round((double)legacySubmission.Sub.Length, 2).ToString(),
 						Id = legacySubmission.Sub.Id,
 						WikiContentId = legacySubmission.Wiki.Id,
 						SubmitterId = legacySubmission.Submitter?.Id,
@@ -239,15 +238,12 @@ namespace TASVideos.Legacy.Imports
 					}
 
 					submission.GenerateTitle();
-					submission.NewTime = Math.Round(submission.Time().TotalSeconds, 2).ToString();
 					submissions.Add(submission);
 				}
 			}
 
 			var subColumns = new[]
 			{
-				nameof(Submission.LegacyTime),
-				nameof(Submission.NewTime),
 				nameof(Submission.Id),
 				nameof(Submission.WikiContentId),
 				nameof(Submission.SubmitterId),
