@@ -206,6 +206,9 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("=/css/vaulttier.png")) markup = markup.Replace("=/css/vaulttier.png", "=images/vaulttier.png");
 			if (markup.Contains("=/css/moontier.png")) markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
 			if (markup.Contains("=/css/favourite.png")) markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
+			if (markup.Contains("=/css/newbierec.gif")) markup = markup.Replace("=/css/newbierec.gif", "=images/newbierec.gif");
+			if (markup.Contains("=/css/bolt.png")) markup = markup.Replace("=/css/bolt.png", "=images/notable.png");
+			if (markup.Contains("=/css/verified.png")) markup = markup.Replace("=/css/verified.png", "=images/verified.png");
 
 			// Fix known links that failed to use the user module
 			if (markup.Contains("[Acmlm]")) markup = markup.Replace("[Acmlm]", "[user:Acmlm]");
