@@ -42,7 +42,10 @@ namespace TASVideos.Legacy.Imports
 				.ToList()
 				.Select(p =>
 				{
-					var fixedText = ImportHelper.ConvertLatin1String(p.Text.Replace(":" + p.BbCodeUid, ""));
+					var fixedText = WebUtility.HtmlDecode(
+						ImportHelper.ConvertLatin1String(
+							p.Text.Replace(":" + p.BbCodeUid, "")));
+
 					return new ForumPost
 					{
 						Id = p.Id,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -92,8 +93,11 @@ namespace TASVideos.Legacy.Imports
 					CreateUserName = "Automatic Migration",
 					PasswordHash = "",
 					Avatar = u.Avatar,
-					From = ImportHelper.ConvertLatin1String(u.From),
-					Signature = ImportHelper.ConvertLatin1String(u.Signature.Replace(":" + u.BbcodeUid, "")).Cap(1000),
+					From = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(u.From)),
+					Signature = WebUtility
+						.HtmlDecode(
+							ImportHelper.ConvertLatin1String(u.Signature.Replace(":" + u.BbcodeUid, "")))
+						.Cap(1000),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
