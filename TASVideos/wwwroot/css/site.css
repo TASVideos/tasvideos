@@ -172,4 +172,27 @@ h4 {
 	margin-left: 10px;
 	border: 0;
 	float: right
-} 
+}
+
+article.wiki table {
+	width: 100%;
+	margin-bottom: 1rem;
+	color: #212529;
+	border-collapse: collapse;
+	border: 1px solid #dee2e6;
+}
+
+article.wiki table th,
+article.wiki table td {
+	padding: 0.75rem;
+	vertical-align: top;
+	border: 1px solid #dee2e6;
+}
+
+article.wiki table tbody tr:nth-of-type(odd) {
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+article.wiki table tbody + tbody {
+	border-top: 2px solid #dee2e6;
+}

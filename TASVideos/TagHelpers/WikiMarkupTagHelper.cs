@@ -35,7 +35,8 @@ namespace TASVideos.TagHelpers
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			((IViewContextAware)_viewComponentHelper).Contextualize(ViewContext);
-			output.TagName = "div";
+			output.TagName = "article";
+			output.AddCssClass("wiki");
 
 			var sw = new StringWriter();
 			Util.RenderHtmlDynamic(Markup, sw, this);
