@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Services;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -19,13 +21,16 @@ namespace TASVideos.Pages.Submissions
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IWikiPages _wikiPages;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public ViewModel(
 			ApplicationDbContext db,
-			IWikiPages wikiPages)
+			IWikiPages wikiPages,
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_wikiPages = wikiPages;
+			_publisher = publisher;
 		}
 
 		[FromRoute]
@@ -150,6 +155,14 @@ namespace TASVideos.Pages.Submissions
 			try
 			{
 				await _wikiPages.Add(wikiPage);
+				_publisher.Send(new Post
+				{
+					Type = PostType.General,
+					Group = PostGroups.Submission,
+					Body = "",
+					Title = $"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Identity.Name}",
+					Link = $"{BaseUrl}/{Id}S"
+				});
 			}
 			catch (DbUpdateConcurrencyException)
 			{
