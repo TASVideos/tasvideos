@@ -7,16 +7,9 @@ namespace TASVideos.ForumEngine
 	{
 		public static Element Parse(string text, bool enableBbCode, bool enableHtml)
 		{
-			if (enableHtml)
+			if (enableHtml || enableBbCode)
 			{
-				var ret = HtmlParser.Parse(text);
-				return enableBbCode 
-					? RecursiveBbParse(ret).Cast<Element>().Single() 
-					: ret;
-			}
-			else if (enableBbCode)
-			{
-				return BbParser.Parse(text);
+				return BbParser.Parse(text, enableHtml, enableBbCode);
 			}
 			else
 			{
@@ -24,20 +17,6 @@ namespace TASVideos.ForumEngine
 				ret.Children.Add(new Text { Content = text });
 				return ret;
 			}
-		}
-
-		private static IEnumerable<Node> RecursiveBbParse(Node n)
-		{
-			var e = n as Element;
-			if (e != null)
-			{
-				e.Children = e.Children.SelectMany(RecursiveBbParse).ToList();
-				return new[] { e };
-			}
-
-			var t = n as Text;
-			var results = BbParser.Parse(t.Content);
-			return results.Children;
 		}
 	}
 }

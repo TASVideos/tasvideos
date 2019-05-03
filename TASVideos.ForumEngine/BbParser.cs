@@ -10,6 +10,13 @@ namespace TASVideos.ForumEngine
 		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
 		private static readonly Regex Url = new Regex(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
 
+		// The old system does suport attributes in html tags, but only a few that we probably don't want,
+		// and it doesn't even support the full html syntax for them.  So forget attributes for now
+		private static readonly Regex HtmlOpening = new Regex(@"\G\s*([a-zA-Z]+)\s*>");
+		private static readonly Regex HtmlClosing = new Regex(@"\G\s*\/\s*([a-zA-Z]+)\s*>");
+
+		private static readonly Regex HtmlVoid = new Regex(@"\G\s*([a-zA-Z]+)\s*\/?\s*>");
+
 		/// <summary>
 		/// what content is legal at this time
 		/// </summary>
@@ -81,13 +88,41 @@ namespace TASVideos.ForumEngine
 			// list related stuff
 			{ "list", ParseState.List }, // OLs have a param with value ??
 			{ "*", ParseState.ListItem },
+
+
 		};
 
-		public static Element Parse(string text)
+		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new HashSet<string>
 		{
-			var p = new BbParser(text);
+			// html parsing, except the empty tags <br> and <hr>, as they immediately close
+			// so their parse state is not needed
+			"b",
+			"i",
+			"em",
+			"u",
+			"pre",
+			"code",
+			"tt",
+			"strike",
+			"s",
+			"del",
+			"sup",
+			"sub",
+			"div",
+			"small",
+		};
+
+		public static Element Parse(string text, bool allowHtml, bool allowBb)
+		{
+			var p = new BbParser(text, allowHtml, allowBb);
 			p.ParseLoop();
 			return p._root;
+		}
+		public static bool ContainsHtml(string text, bool allowBb)
+		{
+			var p = new BbParser(text, true, allowBb);
+			p.ParseLoop();
+			return p._didHtml;
 		}
 
 		private readonly Element _root = new Element { Name = "_root" };
@@ -96,11 +131,17 @@ namespace TASVideos.ForumEngine
 		private readonly string _input;
 		private int _index = 0;
 
+		private readonly bool _allowHtml;
+		private readonly bool _allowBb;
+		private bool _didHtml;
+
 		private readonly StringBuilder _currentText = new StringBuilder();
 
-		private BbParser(string input)
+		private BbParser(string input, bool allowHtml, bool allowBb)
 		{
 			_input = input;
+			_allowHtml = allowHtml;
+			_allowBb = allowBb;
 			_stack.Push(_root);
 		}
 
@@ -137,7 +178,7 @@ namespace TASVideos.ForumEngine
 				}
 			}
 
-			// "li" or "_root"
+			// "li" or "_root" or any of the html tags
 			return true;
 		}
 
@@ -145,20 +186,22 @@ namespace TASVideos.ForumEngine
 		{
 			while (_index < _input.Length)
 			{
-				Match urlMatch;
-				if (ChildrenExpected() && (urlMatch = Url.Match(_input, _index)).Success)
 				{
-					FlushText();
-					Push(new Element { Name = "url" });
-					_currentText.Append(urlMatch.Value);
-					FlushText();
-					_index += urlMatch.Length;
-					_stack.Pop();
-					continue;
+					Match m;
+					if (_allowBb && ChildrenExpected() && (m = Url.Match(_input, _index)).Success)
+					{
+						FlushText();
+						Push(new Element { Name = "url" });
+						_currentText.Append(m.Value);
+						FlushText();
+						_index += m.Length;
+						_stack.Pop();
+						continue;
+					}
 				}
 
 				var c = _input[_index++];
-				if (c == '[') // check for possible tags
+				if (_allowBb && c == '[') // check for possible tags
 				{
 					Match m;
 					if (ChildrenExpected() && (m = OpeningTag.Match(_input, _index)).Success)
@@ -232,6 +275,67 @@ namespace TASVideos.ForumEngine
 					else
 					{
 						// '[' but not followed by a valid tag?  OK, process as raw text
+					}
+				}
+				else if (_allowHtml && c == '<') // check for possible HTML tags
+				{
+					Match m;
+					if (ChildrenExpected() && (m = HtmlOpening.Match(_input, _index)).Success)
+					{
+						var name = m.Groups[1].Value.ToLowerInvariant();
+						if (KnownNonEmptyHtmlTags.Contains(name))
+						{
+							var e = new Element { Name = "html:" + name };
+							FlushText();
+							_index += m.Length;
+							Push(e);
+							_didHtml = true;
+							continue;
+						}
+						else
+						{
+							// tag not recognized?  OK, process as raw text
+						}
+					}
+					else if (ChildrenExpected() && (m = HtmlVoid.Match(_input, _index)).Success)
+					{
+						var name = m.Groups[1].Value.ToLowerInvariant();
+						if (name == "br" || name == "hr")
+						{
+							var e = new Element { Name = "html:" + name };
+							FlushText();
+							_index += m.Length;
+							Push(e);
+							_stack.Pop();
+							_didHtml = true;
+							continue;
+						}
+						else
+						{
+							// tag not recognized?  OK, process as raw text
+						}
+					}
+					else if ((m = HtmlClosing.Match(_input, _index)).Success)
+					{
+						var name = m.Groups[1].Value.ToLowerInvariant();
+						name = "html:" + name;
+						var topName = _stack.Peek().Name;
+						if (name == topName)
+						{
+							FlushText();
+							_index += m.Length;
+							_stack.Pop();
+							_didHtml = true;
+							continue;
+						}
+						else
+						{
+							// closing didn't match opening?  OK, process as raw text
+						}
+					}
+					else
+					{
+						// '<' but not followed by a valid tag?  OK, process as raw text
 					}
 				}
 

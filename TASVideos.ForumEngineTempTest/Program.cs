@@ -10,9 +10,19 @@ namespace TASVideos.ForumEngineTempTest
 {
 	public class Program
 	{
-		public static void Main(string[] args)
+		public static void Main()
 		{
-			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+			var content = @"Bonk boff <b>Bu[i]r[/i]p</b>";
+			var containsHtml = BbParser.ContainsHtml(content, true);
+			var parsed = PostParser.Parse(content, true, containsHtml);
+
+			Console.WriteLine(containsHtml);
+			parsed.WriteHtml(Console.Out);
+		}
+
+		public static void MainDa(string[] args)
+		{
+			/*var options = new DbContextOptionsBuilder<ApplicationDbContext>()
 				.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TASVideos;Trusted_Connection=True;MultipleActiveResultSets=true") // TODO: app settings
 				.Options;
 
@@ -42,7 +52,7 @@ namespace TASVideos.ForumEngineTempTest
 				}
 
 				Console.WriteLine(htmlCount);
-			}
+			}*/
 		}
 	}
 }

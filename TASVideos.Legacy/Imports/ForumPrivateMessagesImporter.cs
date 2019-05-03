@@ -54,7 +54,7 @@ namespace TASVideos.Legacy.Imports
 				})
 				.Select(g =>
 				{
-					var fixedText = ImportHelper.ConvertLatin1String(g.Key.Text.Replace(":" + g.Key.BbCodeUid, ""));
+					var fixedText = System.Web.HttpUtility.HtmlDecode(ImportHelper.ConvertLatin1String(g.Key.Text.Replace(":" + g.Key.BbCodeUid, "")));
 					return new PrivateMessage
 					{
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
@@ -66,7 +66,7 @@ namespace TASVideos.Legacy.Imports
 						IpAddress = g.Key.IpAddress,
 						Subject = ImportHelper.ConvertLatin1String(g.Key.Subject),
 						Text = fixedText,
-						EnableHtml = g.Key.EnableHtml && HtmlParser.ContainsHtml(fixedText),
+						EnableHtml = g.Key.EnableHtml && BbParser.ContainsHtml(fixedText, g.Key.EnableBbCode),
 						EnableBbCode = g.Key.EnableBbCode,
 						ReadOn = g.All(gg => gg.Type != 1)
 							? DateTime.UtcNow // Legacy system didn't track date so we will simply use the import date
