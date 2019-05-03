@@ -42,7 +42,7 @@ namespace TASVideos.Legacy.Imports
 				.ToList()
 				.Select(p =>
 				{
-					var fixedText = ImportHelper.ConvertLatin1String(p.Text.Replace(":" + p.BbCodeUid, ""));
+					var fixedText = System.Web.HttpUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Text.Replace(":" + p.BbCodeUid, "")));
 					return new ForumPost
 					{
 						Id = p.Id,
@@ -52,7 +52,7 @@ namespace TASVideos.Legacy.Imports
 						Subject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject)),
 						Text = fixedText,
 						EnableBbCode = p.EnableBbCode,
-						EnableHtml = p.EnableHtml && HtmlParser.ContainsHtml(fixedText),
+						EnableHtml = p.EnableHtml && BbParser.ContainsHtml(fixedText, p.EnableBbCode),
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
 						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
 								?? p.Timestamp),

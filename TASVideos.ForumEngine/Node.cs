@@ -96,6 +96,11 @@ namespace TASVideos.ForumEngine
 			w.Write(t);
 			w.Write('>');
 		}
+		private void WriteSimpleHtmlTag(TextWriter w, string t)
+		{
+			// t looks like `html:b`
+			WriteSimpleTag(w, t.Substring(5));
+		}
 
 		private void WriteComplexTag(TextWriter w, string open, string close)
 		{
@@ -145,6 +150,22 @@ namespace TASVideos.ForumEngine
 				case "tt":
 				case "li":
 					WriteSimpleTag(w, Name);
+					break;
+				case "html:b":
+				case "html:i":
+				case "html:em":
+				case "html:u":
+				case "html:pre":
+				case "html:code":
+				case "html:tt":
+				case "html:strike":
+				case "html:s":
+				case "html:del":
+				case "html:sup":
+				case "html:sub":
+				case "html:div":
+				case "html:small":
+					WriteSimpleHtmlTag(w, Name);
 					break;
 				case "left":
 					WriteComplexTag(w, "<div class=a-l>", "</div>");
@@ -289,7 +310,11 @@ namespace TASVideos.ForumEngine
 					WriteSimpleTag(w, Name);
 					break;
 				case "br":
+				case "html:br":
 					w.Write("<br>");
+					break;
+				case "html:hr":
+					w.Write("<hr>");
 					break;
 
 				default:
