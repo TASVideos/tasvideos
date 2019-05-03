@@ -73,7 +73,10 @@ namespace TASVideos.Services
 				return 0;
 			}
 
-			playerPoints = new Random(DateTime.Now.Millisecond).Next(0, 10000);
+			playerPoints = publications
+				.ThatAreCurrent()
+				.Count() * SiteGlobalConstants.MinimumPlayerPointsForPublication;
+
 			_cache.Set(cacheKey, playerPoints);
 
 			return playerPoints;

@@ -16,6 +16,7 @@ namespace TASVideos.Test.Services
 	{
 		private IPointsCalculator _pointsCalculator;
 		private ApplicationDbContext _db;
+		private static readonly User Player = new User { UserName = "Player" };
 
 		[TestInitialize]
 		public void Initialize()
@@ -38,11 +39,41 @@ namespace TASVideos.Test.Services
 		[TestMethod]
 		public async Task PlayerPoints_UserWithNoMovies_Returns0()
 		{
-			_db.Users.Add(new User { UserName = "TestUser" });
+			_db.Users.Add(Player);
 			_db.SaveChanges();
 			var user = _db.Users.Single();
 			var actual = await _pointsCalculator.PlayerPoints(user.Id);
 			Assert.AreEqual(0, actual);
+		}
+
+		[TestMethod]
+		public async Task PlayerPoints_NoRatings_MinimumPointsReturned()
+		{
+			int numMovies = 2;
+
+			_db.Users.Add(Player);
+			for (int i = 0; i < numMovies; i++)
+			{
+				_db.Publications.Add(new Publication());
+			}
+			
+			_db.SaveChanges();
+			var user = _db.Users.Single();
+			var pa = _db.Publications
+				.ToList()
+				.Select(p => new PublicationAuthor
+				{
+					PublicationId = p.Id,
+					UserId = user.Id
+				})
+				.ToList();
+
+			_db.PublicationAuthors.AddRange(pa);
+			_db.SaveChanges();
+
+			var actual = await _pointsCalculator.PlayerPoints(user.Id);
+			int expected = numMovies * SiteGlobalConstants.MinimumPlayerPointsForPublication;
+			Assert.AreEqual(expected, actual);
 		}
 	}
 }

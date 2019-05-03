@@ -102,6 +102,11 @@ namespace TASVideos.Data.Entity
 			return publications.Where(p => p.ObsoletedById == null);
 		}
 
+		public static IEnumerable<Publication> ThatAreCurrent(this IEnumerable<Publication> publications)
+		{
+			return publications.Where(p => p.ObsoletedById == null);
+		}
+
 		public static IQueryable<Publication> ThatAreObsolete(this IQueryable<Publication> publications)
 		{
 			return publications.Where(p => p.ObsoletedById != null);

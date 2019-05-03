@@ -46,6 +46,8 @@
 		public const string PollOptionYes = "Yes";
 		public const string PollOptionNo = "No";
 		public const string PollOptionsMeh = "Meh";
+
+		public const int MinimumPlayerPointsForPublication = 5;
 	}
 
 	public static class ForumConstants
