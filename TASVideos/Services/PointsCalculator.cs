@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+
+using TASVideos.Api.Responses;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services.Dtos;
@@ -65,6 +67,11 @@ namespace TASVideos.Services
 			var publications = await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
 				.ToListAsync();
+
+			if (!publications.Any())
+			{
+				return 0;
+			}
 
 			playerPoints = new Random(DateTime.Now.Millisecond).Next(0, 10000);
 			_cache.Set(cacheKey, playerPoints);
