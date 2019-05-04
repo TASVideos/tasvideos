@@ -63,7 +63,7 @@ namespace TASVideos.WikiEngine
 		{
 			// TODO: parser combinators
 			int j;
-			for (j = 0; j < _input.Length; j++)
+			for (j = 0; _index + j < _input.Length; j++)
 			{
 				var c = _input[_index + j];
 				switch (c)

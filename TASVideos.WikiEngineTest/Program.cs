@@ -47,7 +47,6 @@ namespace TASVideos.WikiEngineTest
 						wp.PageName,
 						wp.Revision
 					})
-					.Take(20)
 					.ToList();
 				Console.WriteLine($"Found {toProcess.Count} current page revisions.");
 
