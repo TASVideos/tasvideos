@@ -147,6 +147,12 @@ namespace TASVideos.WikiEngine
 			}
 			return ret.ToString();
 		}
+		private int EatPipes()
+		{
+			var start = _index;
+			while (!EOF() && Eat('|')) { }
+			return _index - start;
+		}
 		private void DiscardLine()
 		{
 			while (!EOF() && !EatEOL())
@@ -325,6 +331,8 @@ namespace TASVideos.WikiEngine
 
 		private void ParseInlineText()
 		{
+			int tmp;
+
 			if (Eat("__"))
 				PopOrPush("b");
 			else if (Eat("''"))
@@ -381,21 +389,14 @@ namespace TASVideos.WikiEngine
 				Pop("dt");
 				Push("dd");
 			}
-			else if (In("th") && Eat("||"))
+			else if (In("tr") && (tmp = EatPipes()) > 0)
 			{
-				Pop("th");
+				TryPop("td");
+				TryPop("th");
 				if (EatWhitespaceOnlyToEOLEOF())
 					SwitchToLine();
 				else
-					Push("th");
-			}
-			else if (In("td") && Eat('|'))
-			{
-				Pop("td");
-				if (EatWhitespaceOnlyToEOLEOF())
-					SwitchToLine();
-				else
-					Push("td");
+					Push(tmp == 1 ? "td" : "th");
 			}
 			else if (EatEOL())
 			{
@@ -460,6 +461,8 @@ namespace TASVideos.WikiEngine
 
 		private void ParseStartLine()
 		{
+			int tmp;
+
 			if (StartLineLists())
 			{
 				SwitchToInline();
@@ -568,36 +571,17 @@ namespace TASVideos.WikiEngine
 				ClearBlockTags();
 				AddNonChild(new Element(_index, "toc") { CharEnd = _index });
 			}
-			else if (Eat("||"))
-			{				
-				if (In("tbody"))
-					Pop("table");
-				if (!In("table"))
-				{
-					ClearBlockTags();
-					Push("table");
-				}
-				if (!In("thead"))
-					Push("thead");
-				TryPop("tr");
-				Push("tr");
-				Push("th");
-				SwitchToInline();
-			}
-			else if (Eat('|'))
+			else if ((tmp = EatPipes()) > 0)
 			{
-				if (In("thead"))
-					Pop("thead");
 				if (!In("table"))
 				{
 					ClearBlockTags();
 					Push("table");
-				}
-				if (!In("tbody"))
 					Push("tbody");
+				}
 				TryPop("tr");
 				Push("tr");
-				Push("td");
+				Push(tmp == 1 ? "td" : "th");
 				SwitchToInline();
 			}
 			else if (Eat(';'))
