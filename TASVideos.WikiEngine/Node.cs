@@ -28,6 +28,10 @@ namespace TASVideos.WikiEngine.AST
 		/// Get the combined text content of this Node.  May not return useful values for foreign components (Modules)
 		/// </summary>
 		string InnerText(IWriterHelper h);
+		/// <summary>
+		/// debugging output of all of the data in this node
+		/// </summary>
+		void DumpContentDescriptive(TextWriter w, string padding);
 	}
 
 	public interface IWriterHelper
@@ -82,6 +86,37 @@ namespace TASVideos.WikiEngine.AST
 		public string InnerText(IWriterHelper h)
 		{
 			return Content;
+		}
+
+		public void DumpContentDescriptive(TextWriter w, string padding)
+		{
+			if (Content.Any(c => c < 0x20 && c != '\n'))
+			{
+				w.Write(padding);
+				w.WriteLine("$UNPRINTABLE TEXT!!!");
+			}
+			else
+			{
+				var first = true;
+				foreach (var s in Content.Split('\n'))
+				{
+					if (first)
+					{
+						first = false;
+					}
+					else
+					{
+						w.Write(padding);
+						w.WriteLine("$LF");
+					}
+					if (s.Length > 0)
+					{
+						w.Write(padding);
+						w.Write('"');
+						w.WriteLine(s);
+					}
+				}
+			}
 		}
 	}
 	
@@ -207,6 +242,28 @@ namespace TASVideos.WikiEngine.AST
 		{
 			return string.Join("", Children.Select(c => c.InnerText(h)));
 		}
+
+		public void DumpContentDescriptive(TextWriter w, string padding)
+		{
+			w.Write(padding);
+			w.Write('[');
+			w.Write(Tag);
+			w.Write(' ');
+			foreach (var kvp in Attributes.OrderBy(z => z.Key))
+			{
+				w.Write(kvp.Key);
+				w.Write('=');
+				w.Write(kvp.Value);
+				w.Write(' ');
+			}
+			w.WriteLine();
+			foreach (var child in Children)
+				child.DumpContentDescriptive(w, padding + '\t');
+			w.Write(padding);
+			w.Write(']');
+			w.Write(Tag);
+			w.WriteLine();
+		}
 	}
 
 	public class IfModule : INodeWithChildren
@@ -254,6 +311,22 @@ namespace TASVideos.WikiEngine.AST
 			{
 				return "";
 			}
+		}
+
+		public void DumpContentDescriptive(TextWriter w, string padding)
+		{
+			w.Write(padding);
+			w.Write("?IF ");
+			w.Write(Condition);
+			w.WriteLine();
+			foreach (var child in Children)
+			{
+				child.DumpContentDescriptive(w, padding + '\t');
+			}
+			w.Write(padding);
+			w.Write("?ENDIF ");
+			w.Write(Condition);
+			w.WriteLine();
 		}
 	}
 
@@ -337,6 +410,14 @@ namespace TASVideos.WikiEngine.AST
 		{
 			// could actually run the module here... but no.
 			return "";
+		}
+
+		public void DumpContentDescriptive(TextWriter w, string padding)
+		{
+			w.Write(padding);
+			w.Write('(');
+			w.Write(Text);
+			w.WriteLine(')');
 		}
 	}
 }
