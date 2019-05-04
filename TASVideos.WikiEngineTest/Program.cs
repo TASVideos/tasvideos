@@ -36,6 +36,7 @@ namespace TASVideos.WikiEngineTest
 				.Options;
 
 			var wantUpdate = args.Any(s => s == "--update");
+			var force = args.Any(s => s == "--force");
 
 			using (var context = new ApplicationDbContext(contextOptions, null))
 			{
@@ -58,15 +59,21 @@ namespace TASVideos.WikiEngineTest
 					Console.Write(new string('\b', 8));
 					Console.Write("{0,8}", progress++);
 
-					var path = Path.Combine(settings.OutDir, wp.PageName);
-					(new FileInfo(path)).Directory.Create();
+					var directory = Path.Combine(settings.OutDir, wp.PageName);
+					new DirectoryInfo(directory).Create();
+					var path = Path.Combine(directory, "content");
 
-					var revision = wp.Revision;
-					if (!wantUpdate && File.Exists(path))
+					var existingRevision = -1;
+					if (File.Exists(path))
 					{
 						using (var tr = new StreamReader(path))
-							revision = int.Parse(tr.ReadLine());
+							existingRevision = int.Parse(tr.ReadLine());
 					}
+
+					var revision = wantUpdate ? wp.Revision : existingRevision != -1 ? existingRevision : wp.Revision;
+
+					if (existingRevision == revision && !force)
+						continue;
 
 					var markup = context.WikiPages
 						.Where(p => p.Revision == revision && p.PageName == wp.PageName)
