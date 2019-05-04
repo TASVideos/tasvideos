@@ -12,7 +12,7 @@ namespace TASVideos.ForumEngineTempTest
 	{
 		public static void Main()
 		{
-			var content = @"Bonk boff <b>Bu[i]r[/i]p</b>";
+			var content = @"Bonk bo<br/>ff <b>Bu[i]r<hr>[/i]p</b>";
 			var containsHtml = BbParser.ContainsHtml(content, true);
 			var parsed = PostParser.Parse(content, true, containsHtml);
 

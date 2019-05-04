@@ -280,42 +280,7 @@ namespace TASVideos.ForumEngine
 				else if (_allowHtml && c == '<') // check for possible HTML tags
 				{
 					Match m;
-					if (ChildrenExpected() && (m = HtmlOpening.Match(_input, _index)).Success)
-					{
-						var name = m.Groups[1].Value.ToLowerInvariant();
-						if (KnownNonEmptyHtmlTags.Contains(name))
-						{
-							var e = new Element { Name = "html:" + name };
-							FlushText();
-							_index += m.Length;
-							Push(e);
-							_didHtml = true;
-							continue;
-						}
-						else
-						{
-							// tag not recognized?  OK, process as raw text
-						}
-					}
-					else if (ChildrenExpected() && (m = HtmlVoid.Match(_input, _index)).Success)
-					{
-						var name = m.Groups[1].Value.ToLowerInvariant();
-						if (name == "br" || name == "hr")
-						{
-							var e = new Element { Name = "html:" + name };
-							FlushText();
-							_index += m.Length;
-							Push(e);
-							_stack.Pop();
-							_didHtml = true;
-							continue;
-						}
-						else
-						{
-							// tag not recognized?  OK, process as raw text
-						}
-					}
-					else if ((m = HtmlClosing.Match(_input, _index)).Success)
+					if ((m = HtmlClosing.Match(_input, _index)).Success)
 					{
 						var name = m.Groups[1].Value.ToLowerInvariant();
 						name = "html:" + name;
@@ -331,6 +296,44 @@ namespace TASVideos.ForumEngine
 						else
 						{
 							// closing didn't match opening?  OK, process as raw text
+						}
+					}
+					else if (ChildrenExpected())
+					{
+						if ((m = HtmlOpening.Match(_input, _index)).Success)
+						{
+							var name = m.Groups[1].Value.ToLowerInvariant();
+							if (KnownNonEmptyHtmlTags.Contains(name))
+							{
+								var e = new Element { Name = "html:" + name };
+								FlushText();
+								_index += m.Length;
+								Push(e);
+								_didHtml = true;
+								continue;
+							}
+							else
+							{
+								// tag not recognized?  Might be a void tag, or raw text
+							}
+						}
+						if ((m = HtmlVoid.Match(_input, _index)).Success)
+						{
+							var name = m.Groups[1].Value.ToLowerInvariant();
+							if (name == "br" || name == "hr")
+							{
+								var e = new Element { Name = "html:" + name };
+								FlushText();
+								_index += m.Length;
+								Push(e);
+								_stack.Pop();
+								_didHtml = true;
+								continue;
+							}
+							else
+							{
+								// tag not recognized?  OK, process as raw text
+							}
 						}
 					}
 					else
