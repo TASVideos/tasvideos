@@ -8,13 +8,6 @@ namespace TASVideos.WikiEngine
 {
 	public static class Builtins
 	{
-		private static int UniqueId;
-		private static string GetUniqueId()
-		{
-			var i = Interlocked.Increment(ref UniqueId);
-			return "y-" + i;
-		}
-
 		private static KeyValuePair<string, string> Attr(string name, string value)
 		{
 			return new KeyValuePair<string, string>(name, value);
@@ -30,9 +23,11 @@ namespace TASVideos.WikiEngine
 			var nav = new List<INode>();
 			var content = new List<INode>();
 			var first = true;
+
+			var index = 0;
 			foreach (var child in tabset.Children.Cast<Element>())
 			{
-				var id = GetUniqueId();
+				var id = "tabs-" + tabset.CharStart + "-" + index++;
 				nav.Add(new Element(
 					child.CharStart,
 					"li",

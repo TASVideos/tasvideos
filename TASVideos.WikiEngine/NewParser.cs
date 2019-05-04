@@ -718,8 +718,6 @@ namespace TASVideos.WikiEngine
 			// h1, h5, h6 are not involved in TOC generation
 			"h2", "h3", "h4"
 		};
-		
-		private static int HeadingId = 0;
 
 		private static Element GenerateToc(List<INode> document, int charStart)
 		{
@@ -753,7 +751,7 @@ namespace TASVideos.WikiEngine
 					pos--;
 				}
 				{
-					var id = "heading-" + Interlocked.Increment(ref HeadingId);
+					var id = "heading-" + h.CharStart;
 
 					var link = new Element(charStart, "a");
 					var li = new Element(charStart, "li", new[] { link });
@@ -761,7 +759,7 @@ namespace TASVideos.WikiEngine
 					link.Children.AddRange(h.Children.Select(c => c.Clone()));
 					stack.Peek().Children.Add(li);
 
-					var anchor = new Element(charStart, "a");
+					var anchor = new Element(h.CharStart, "a");
 					anchor.Attributes["id"] = id;
 					h.Children.Add(anchor);
 				}
