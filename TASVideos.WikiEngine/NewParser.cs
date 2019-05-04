@@ -59,6 +59,32 @@ namespace TASVideos.WikiEngine
 		{
 			return Eat("\r\n") || Eat('\r') || Eat('\n');
 		}
+		private bool EatWhitespaceOnlyToEOLEOF()
+		{
+			// TODO: parser combinators
+			int j;
+			for (j = 0; j < _input.Length; j++)
+			{
+				var c = _input[_index + j];
+				switch (c)
+				{
+					case ' ':
+						continue;
+					case '\r':
+						if (j < _input.Length - 1 && _input[_index + j + 1] == '\n')
+							j++;
+						goto case '\n';
+					case '\n':
+						j++;
+						goto end;
+					default:
+						return false;
+				}
+			}
+			end:
+			_index += j;
+			return true;
+		}
 		private bool EOF()
 		{
 			return _index == _input.Length;
@@ -358,7 +384,7 @@ namespace TASVideos.WikiEngine
 			else if (In("th") && Eat("||"))
 			{
 				Pop("th");
-				if (EatEOL())
+				if (EatWhitespaceOnlyToEOLEOF())
 					SwitchToLine();
 				else
 					Push("th");
@@ -366,7 +392,7 @@ namespace TASVideos.WikiEngine
 			else if (In("td") && Eat('|'))
 			{
 				Pop("td");
-				if (EatEOL())
+				if (EatWhitespaceOnlyToEOLEOF())
 					SwitchToLine();
 				else
 					Push("td");
