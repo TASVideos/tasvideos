@@ -81,7 +81,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(u => new User
 				{
 					Id = u.Id,
-					UserName = ImportHelper.ConvertLatin1String(u.UserName),
+					UserName = ImportHelper.ConvertLatin1String(u.UserName).Trim(),
 					//NormalizedUserName = ImportHelper.ConvertLatin1String(u.UserName).ToUpper(), // TODO: this creates a unique constraint violation, two users must have the same normalized name??
 					NormalizedUserName = u.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
@@ -240,7 +240,26 @@ namespace TASVideos.Legacy.Imports
 				"Ryosuke",
 				"JuanPablo",
 				"qcommand",
-				"Mana."
+				"Mana.",
+				"RaverMeister",
+				"SjoerdH",
+				"snark",
+				"ToT",
+
+				// Submitters with no published movies
+				"Deathray",
+				"Ginger",
+				"JakeRyansDad",
+				"KMFDManic",
+				"Remy B.",
+				"ScouSin",
+				"Vazor",
+				"KennyBoy",
+				"megaman",
+				"Oguz",
+				"Vlass14",
+				"dex88",
+				"VladimirContreras"
 			};
 
 			var portedPlayers = portedPlayerNames.Select(p => new User

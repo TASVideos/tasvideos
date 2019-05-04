@@ -189,9 +189,14 @@ namespace TASVideos.Legacy.Imports
 						RejectionReasonId = legacySubmission.Rejection?.Reason
 					};
 
+					if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
+					{
+						legacySubmission.Sub.Author = "DJ FozzBozz & RaverMeister";
+					}
+
 					var authorNames = legacySubmission.Sub.Author
 						.ParseUserNames()
-						.Select(a => a.ToLower())
+						.Select(a => NickCleanup(ImportHelper.ConvertLatin1String(a).ToLower().Trim()))
 						.ToList();
 
 					var authors = users
@@ -404,6 +409,157 @@ namespace TASVideos.Legacy.Imports
 					return id < 1532 // The first known Snes9x 1.51 submission
 						? "Snes9x 1.43"
 						: "Snes9x";
+			}
+		}
+
+		// These users have a variation in their nickname vs their actual username, or liked to have different nicknames for who knows why
+		private static string NickCleanup(string nickName)
+		{
+			switch (nickName)
+			{
+				default:
+					return nickName;
+				case "slash_star_dash":
+				case "slash star dash":
+				case "androgony":
+					return "/*-";
+				case "iiro2":
+					return "anonymous6327";
+				case "arne the great":
+					return "arne_the_great";
+				case "blj":
+					return "backwardlongjump";
+				case "solon":
+					return "boct1584";
+				case "msteinfield":
+					return "aroduc";
+				case "lightblueyoshi":
+					return "bbkaizo";
+				case "bobwhoops":
+					return "bob whoops";
+				case "brandon evans":
+					return "brandon";
+				case "sonic tas team":
+					return "carretero";
+				case "cherrymay":
+					return "cherry";
+				case "david wilson tiziu":
+					return "david wilson";
+				case "devin":
+				case "devin dot com":
+					return "devindotcom";
+				case "pokedroidtas":
+					return "diego montoya";
+				case "error1":
+					return "errror1";
+				case "fisker":
+				case "fisker n.":
+					return "fiskern";
+				case "pocoryu":
+					return "hellfire";
+				case "srb2espyo":
+					return "espyo";
+				case "mister epic":
+					return "gabcm";
+				case "god hand":
+					return "god-hand";
+				case "funkdoc":
+					return "josh the funkdoc";
+				case "gleisonfodão":
+					return "gleison";
+				case "ggheysjr":
+					return "ggg";
+				case "ocean prince":
+					return "hegyak";
+				case "lag.com":
+					return "lagdotcom";
+				case "p.dot":
+					return "dashiznawz";
+				case "undo":
+					return "jonathangm";
+				case "superhappy":
+					return "josh l.";
+				case "legendofmart":
+					return "mart";
+				case "mat1er/sblurb":
+					return "mat1er";
+				case "mickey/vis":
+					return "mickey_vis11189";
+				case "madhatter":
+					return "mr. kelly r. flewin";
+				case "superninja":
+					return "luke";
+				case "mazzic kiegel":
+					return "mazzic";
+				case "michael f":
+				case "エジソン電":
+					return "michael fried";
+				case "tehseven":
+					return "negative seven";
+				case "foda":
+					return "nesrocks";
+				case "david z":
+					return "mclaud2000";
+				case "dmtm":
+				case "laecktoer":
+					return "mr_sweed";
+				case "nif_boy":
+					return "nifboy";
+				case "aka":
+					return "mitjitsu";
+				case "程嘉军":
+				case "j.y":
+					return "mzscla";
+				case "parrot14green":
+					return "parrot14gree";
+				case "p3run4":
+					return "p3r";
+				case "nicfer":
+					return "perfect death";
+				case "phil.":
+					return "phil";
+				case "mcw4v3-x":
+					return "pikachuman";
+				case "shakespeare":
+					return "radz";
+				case "snc":
+					return "snc76976";
+				case "mattias b.":
+					return "tarzan";
+				case "m-eighty":
+					return "mike89";
+				case "jossepi":
+					return "totoro";
+				case "symbolic x":
+					return "p0rtal_0f_rain";
+				case "primo":
+					return "primorial#soup";
+				case "saegotomin":
+					return "megaman";
+				case "superflorian12":
+					return "supermario12";
+				case "terrotim":
+					return "trt";
+				case "samhain-grim":
+					return "vandal";
+				case "a jesus fan":
+					return "teh noj";
+				case "walkerboh":
+					return "walker boh";
+				case "西坡":
+				case "西坡 (xipo)":
+					return "xipo";
+				case "n?k":
+					return "xxnkxx";
+				case "mechakoopa_dttvb":
+				case "mechakoopa revolution":
+					return "yagz";
+				case "lorenzo_the_comic":
+					return "yoni arousement";
+				case "lazy_zefiris":
+					return "zefiris";
+				case "ziplock":
+					return "-ziplock-";
 			}
 		}
 	}

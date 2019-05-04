@@ -31,6 +31,9 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("authornick")]
 		public string Author { get; set; }
 
+		[Column("authorname")]
+		public string RealName { get; set; }
+
 		[Column("frames")]
 		public int Frames { get; set; }
 
