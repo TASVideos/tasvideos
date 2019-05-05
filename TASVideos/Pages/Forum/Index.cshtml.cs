@@ -26,15 +26,6 @@ namespace TASVideos.Pages.Forum
 			Categories = await _db.ForumCategories
 				.Include(c => c.Forums)
 				.ToListAsync();
-
-			foreach (var m in Categories)
-			{
-				m.Description = RenderHtml(m.Description ?? "");
-				foreach (var f in m.Forums)
-				{
-					f.Description = RenderHtml(f.Description);
-				}
-			}
 		}
 	}
 }
