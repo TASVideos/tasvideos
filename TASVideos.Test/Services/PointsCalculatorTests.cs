@@ -41,5 +41,26 @@ namespace TASVideos.Test.Services
 			var actual = PointsCalculator.PlayerPoints(publications);
 			Assert.AreEqual(expected, actual);
 		}
+
+		[TestMethod]
+		[DataRow(-1, null)]
+		[DataRow(0, null)]
+		[DataRow(0.0001, PlayerRanks.FormerPlayer)]
+		[DataRow(0.9, PlayerRanks.FormerPlayer)]
+		[DataRow(1, PlayerRanks.Player)]
+		[DataRow(249, PlayerRanks.Player)]
+		[DataRow(250, PlayerRanks.ActivePlayer)]
+		[DataRow(499, PlayerRanks.ActivePlayer)]
+		[DataRow(500, PlayerRanks.ExperiencedPlayer)]
+		[DataRow(999, PlayerRanks.ExperiencedPlayer)]
+		[DataRow(1000, PlayerRanks.SkilledPlayer)]
+		[DataRow(1999, PlayerRanks.SkilledPlayer)]
+		[DataRow(2000, PlayerRanks.ExpertPlayer)]
+		[DataRow(int.MaxValue, PlayerRanks.ExpertPlayer)]
+		public void PlayerRank(double points, string expected)
+		{
+			var actual = PointsCalculator.PlayerRank((decimal)points);
+			Assert.AreEqual(expected, actual);
+		}
 	}
 }

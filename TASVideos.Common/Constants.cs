@@ -50,6 +50,16 @@
 		public const int MinimumPlayerPointsForPublication = 5;
 	}
 
+	public static class PlayerRanks
+	{
+		public const string FormerPlayer = "Former player";
+		public const string Player = "Player";
+		public const string ActivePlayer = "Active player";
+		public const string ExperiencedPlayer = "Experienced player";
+		public const string SkilledPlayer = "Skilled player";
+		public const string ExpertPlayer = "Expert player";
+	}
+
 	public static class ForumConstants
 	{
 		public const int PostsPerPage = 25;

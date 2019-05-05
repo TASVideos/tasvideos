@@ -15,15 +15,39 @@ namespace TASVideos.Services
 			return publications.Count * SiteGlobalConstants.MinimumPlayerPointsForPublication;
 		}
 
-		// TODO
 		public static string PlayerRank(decimal points)
 		{
-			if (points < 1)
+			if (points <= 0)
 			{
-				return "Former Player";
+				return null;
 			}
 
-			return "Player";
+			if (points < 1)
+			{
+				return PlayerRanks.FormerPlayer;
+			}
+
+			if (points < 250)
+			{
+				return PlayerRanks.Player;
+			}
+
+			if (points < 500)
+			{
+				return PlayerRanks.ActivePlayer;
+			}
+
+			if (points < 1000)
+			{
+				return PlayerRanks.ExperiencedPlayer;
+			}
+
+			if (points < 2000)
+			{
+				return PlayerRanks.SkilledPlayer;
+			}
+
+			return PlayerRanks.ExpertPlayer;
 		}
 
 		/// <summary>
