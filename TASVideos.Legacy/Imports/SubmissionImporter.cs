@@ -423,12 +423,17 @@ namespace TASVideos.Legacy.Imports
 				case "slash star dash":
 				case "androgony":
 					return "/*-";
+				case "catlynat":
+				case "angelaclaws11s2":
+					return "angelaclaws";
 				case "iiro2":
 					return "anonymous6327";
 				case "arne the great":
 					return "arne_the_great";
 				case "blj":
 					return "backwardlongjump";
+				case "brookman":
+					return "the brookman";
 				case "solon":
 					return "boct1584";
 				case "msteinfield":
@@ -443,6 +448,8 @@ namespace TASVideos.Legacy.Imports
 					return "carretero";
 				case "cherrymay":
 					return "cherry";
+				case "curseschris a.k.a. alen":
+					return "curseschris";
 				case "david wilson tiziu":
 					return "david wilson";
 				case "devin":
@@ -452,6 +459,11 @@ namespace TASVideos.Legacy.Imports
 					return "diego montoya";
 				case "error1":
 					return "errror1";
+				case "egxhb":
+				case "nidoqueenofpain":
+					return "egixbacon";
+				case "usta2877":
+					return "bihan";
 				case "fisker":
 				case "fisker n.":
 					return "fiskern";
@@ -461,18 +473,28 @@ namespace TASVideos.Legacy.Imports
 					return "espyo";
 				case "mister epic":
 					return "gabcm";
+				case "gaming-jok":
+					return "nico30620";
 				case "god hand":
 					return "god-hand";
 				case "funkdoc":
 					return "josh the funkdoc";
+				case "hys111111":
+					return "gemini-man";
 				case "gleisonfodão":
 					return "gleison";
 				case "ggheysjr":
 					return "ggg";
+				case "krabe":
+					return "bobypoula";
 				case "ocean prince":
 					return "hegyak";
+				case "igorsantos777":
+					return "igoroliveira666";
 				case "lag.com":
 					return "lagdotcom";
+				case "toonlucas22":
+					return "limo";
 				case "p.dot":
 					return "dashiznawz";
 				case "undo":
@@ -498,6 +520,8 @@ namespace TASVideos.Legacy.Imports
 					return "negative seven";
 				case "foda":
 					return "nesrocks";
+				case "mr_eeh":
+					return "mbm";
 				case "david z":
 					return "mclaud2000";
 				case "dmtm":
@@ -514,8 +538,12 @@ namespace TASVideos.Legacy.Imports
 					return "parrot14gree";
 				case "p3run4":
 					return "p3r";
+				case "promise":
+					return "ouendan";
 				case "nicfer":
 					return "perfect death";
+				case "jok-r":
+					return "nico30620";
 				case "phil.":
 					return "phil";
 				case "mcw4v3-x":
@@ -536,6 +564,12 @@ namespace TASVideos.Legacy.Imports
 					return "primorial#soup";
 				case "saegotomin":
 					return "megaman";
+				case "romaji":
+					return "sack_bot";
+				case "toxicparrot":
+					return "sam";
+				case "soulcal umbreon":
+					return "soulcal";
 				case "superflorian12":
 					return "supermario12";
 				case "terrotim":
@@ -560,6 +594,38 @@ namespace TASVideos.Legacy.Imports
 					return "zefiris";
 				case "ziplock":
 					return "-ziplock-";
+				case "zakky the goatragon":
+					return "zakkydraggy";
+				case "the packle":
+					return "thepackle";
+				case "kowka":
+					return "goddessmaria";
+				case "lars":
+					return "lars_hendrick";
+				case "lazerlemongaming":
+					return "lazerlemon";
+				case "akagitsuneyuki":
+					return "akagitsune yukimura";
+				case "dekutary":
+					return "dekutony";
+				case "wasapi_fi":
+					return "wasapi";
+				case "daniel_1rd":
+					return "dbxv";
+				case "no0bplayer":
+					return "playerone";
+				case "mario3264":
+					return "mario128";
+				case "01garland01":
+					return "garland";
+				case "tapioca2k":
+					return "tapioca";
+				case "smbbot":
+					return "happylee";
+				case "fusionvaria":
+					return "itspersonnal";
+				case "duault":
+					return "zekann";
 			}
 		}
 	}
