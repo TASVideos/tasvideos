@@ -66,16 +66,18 @@ namespace TASVideos.Services
 
 			var publications = await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
+				.Select(p => new PointsCalculator.Publication
+				{
+					Obsolete = p.ObsoletedById.HasValue,
+					TierWeight = (decimal)p.Tier.Weight,
+					AverageRating = 10.0M, // TODO
+					RatingCount = 1, // TODO
+					UserWeight = 1M // TODO
+				})
 				.ToListAsync();
 
-			if (!publications.Any())
-			{
-				return 0;
-			}
-
-			playerPoints = publications
-				.ThatAreCurrent()
-				.Count() * SiteGlobalConstants.MinimumPlayerPointsForPublication;
+			// TODO: do we want to round here?
+			playerPoints = (int)Math.Round(PointsCalculator.PlayerPoints(publications));
 
 			_cache.Set(cacheKey, playerPoints);
 
