@@ -61,10 +61,6 @@ namespace TASVideos.Services
 			public decimal AverageRating { get; set; }
 			public int RatingCount { get; set; }
 			public decimal TierWeight { get; set; }
-
-			// We count ratings from "important" users more than so than normal users (eww)
-			// Also, when people abuse ratings their weight gets set to near zero
-			public decimal UserWeight { get; set; } 
 		}
 	}
 }

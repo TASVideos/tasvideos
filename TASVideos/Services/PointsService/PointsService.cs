@@ -72,7 +72,6 @@ namespace TASVideos.Services
 					TierWeight = (decimal)p.Tier.Weight,
 					AverageRating = 10.0M, // TODO
 					RatingCount = 1, // TODO
-					UserWeight = 1M // TODO, no user permission = 0, author = 0, other logic
 				})
 				.ToListAsync();
 
@@ -84,6 +83,8 @@ namespace TASVideos.Services
 			return playerPoints;
 		}
 
+		// TODO: user weights
+		// TODO: pass in authorId optionally, to exclude them
 		public async Task<RatingDto> PublicationRating(int id)
 		{
 			string cacheKey = MovieRatingKey + id;
