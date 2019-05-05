@@ -19,13 +19,13 @@ namespace TASVideos.Services
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
-		private readonly IPointsCalculator _pointsCalculator;
+		private readonly IPointsService _pointsService;
 
 		// Holy dependencies, batman
 		public UserManager(
 			ApplicationDbContext db,
 			ICacheService cache,
-			IPointsCalculator pointsCalculator,
+			IPointsService pointsService,
 			IUserStore<User> store,
 			IOptions<IdentityOptions> optionsAccessor,
 			IPasswordHasher<User> passwordHasher,
@@ -48,7 +48,7 @@ namespace TASVideos.Services
 		{
 			_cache = cache;
 			_db = db;
-			_pointsCalculator = pointsCalculator;
+			_pointsService = pointsService;
 		}
 
 		// Adds a distinct list of user permissions to their claims so they can be stored
@@ -222,7 +222,7 @@ namespace TASVideos.Services
 
 			if (model != null)
 			{
-				model.PlayerPoints = await _pointsCalculator.PlayerPoints(model.Id);
+				model.PlayerPoints = await _pointsService.PlayerPoints(model.Id);
 
 				var wikiEdits = await _db.WikiPages
 					.ThatAreNotDeleted()

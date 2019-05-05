@@ -95,7 +95,7 @@ namespace TASVideos.Extensions
 		{
 			services.AddScoped<UserManager>();
 			services.AddScoped<IFileService, FileService>();
-			services.AddScoped<IPointsCalculator, PointsCalculator>();
+			services.AddScoped<IPointsService, PointsService>();
 			services.AddScoped<IAwardsCache, AwardsCache>();
 			services.AddScoped<IMediaFileUploader, MediaFileUploader>();
 

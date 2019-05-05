@@ -22,12 +22,12 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
-		private readonly IPointsCalculator _points;
+		private readonly IPointsService _points;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ICacheService cache,
-			IPointsCalculator points)
+			IPointsService points)
 		{
 			_db = db;
 			_cache = cache;

@@ -18,14 +18,14 @@ namespace TASVideos.Pages.Publications
 	public class ViewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IPointsCalculator _pointsCalculator;
+		private readonly IPointsService _pointsService;
 
 		public ViewModel(
 			ApplicationDbContext db,
-			IPointsCalculator pointsCalculator)
+			IPointsService pointsService)
 		{
 			_db = db;
-			_pointsCalculator = pointsCalculator;
+			_pointsService = pointsService;
 		}
 
 		[FromRoute]
@@ -49,7 +49,7 @@ namespace TASVideos.Pages.Publications
 					.SingleOrDefaultAsync(t => t.PageName == pageName))
 					?.Id ?? 0;
 
-			Publication.OverallRating = (await _pointsCalculator.PublicationRating(Id))
+			Publication.OverallRating = (await _pointsService.PublicationRating(Id))
 				.Overall;
 
 			return Page();
