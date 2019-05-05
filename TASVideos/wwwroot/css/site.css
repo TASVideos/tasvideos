@@ -195,3 +195,11 @@ article.wiki table tbody th {
 article.wiki table tbody + tbody {
 	border-top: 2px solid #dee2e6;
 }
+
+.module-error {
+	color: #dc3545;
+	border: 1px solid #dc3545;
+	border-radius: 5px;
+	background-color: #f8d7da;
+	padding: .75rem 1.25rem;
+}
