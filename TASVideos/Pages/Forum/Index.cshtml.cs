@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Forum
 
 			foreach (var m in Categories)
 			{
-				m.Description = RenderHtml(m.Description);
+				m.Description = RenderHtml(m.Description ?? "");
 				foreach (var f in m.Forums)
 				{
 					f.Description = RenderHtml(f.Description);
