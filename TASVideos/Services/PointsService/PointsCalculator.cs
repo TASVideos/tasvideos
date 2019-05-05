@@ -5,14 +5,14 @@ namespace TASVideos.Services
 {
 	public static class PointsCalculator
 	{
-		public static decimal PlayerPoints(ICollection<Publication> ratings)
+		public static decimal PlayerPoints(ICollection<Publication> publications)
 		{
-			if (ratings == null || !ratings.Any())
+			if (publications == null || !publications.Any())
 			{
 				return 0;
 			}
 
-			return ratings.Count * SiteGlobalConstants.MinimumPlayerPointsForPublication;
+			return publications.Count * SiteGlobalConstants.MinimumPlayerPointsForPublication;
 		}
 
 		// TODO

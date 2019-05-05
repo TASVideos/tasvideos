@@ -1,11 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Services;
 
 // ReSharper disable InconsistentNaming
@@ -14,65 +9,36 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class PointsCalculatorTests
 	{
-		private IPointsService _pointsService;
-		private ApplicationDbContext _db;
-		private static readonly User Player = new User { UserName = "Player" };
-
-		[TestInitialize]
-		public void Initialize()
-		{
-			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseInMemoryDatabase("TestDb")
-				.Options;
-			_db = new ApplicationDbContext(options, null);
-			_db.Database.EnsureDeleted();
-			_pointsService = new PointsService(_db, new NoCacheService());
-		}
-
 		[TestMethod]
-		public async Task PlayerPoints_NoUser_Returns0()
+		public void PlayerPoints_Null()
 		{
-			var actual = await _pointsService.PlayerPoints(int.MinValue);
+			var actual = PointsCalculator.PlayerPoints(null);
 			Assert.AreEqual(0, actual);
 		}
 
 		[TestMethod]
-		public async Task PlayerPoints_UserWithNoMovies_Returns0()
+		public void PlayerPoints_NoPublications()
 		{
-			_db.Users.Add(Player);
-			_db.SaveChanges();
-			var user = _db.Users.Single();
-			var actual = await _pointsService.PlayerPoints(user.Id);
+			var actual = PointsCalculator.PlayerPoints(new List<PointsCalculator.Publication>());
 			Assert.AreEqual(0, actual);
 		}
 
 		[TestMethod]
-		public async Task PlayerPoints_NoRatings_MinimumPointsReturned()
+		public void PlayerPoints_PublicationMinimum_IfNotObsolete()
 		{
-			int numMovies = 2;
-
-			_db.Users.Add(Player);
-			for (int i = 0; i < numMovies; i++)
+			var publications = new[]
 			{
-				_db.Publications.Add(new Publication());
-			}
-			
-			_db.SaveChanges();
-			var user = _db.Users.Single();
-			var pa = _db.Publications
-				.ToList()
-				.Select(p => new PublicationAuthor
+				new PointsCalculator.Publication
 				{
-					PublicationId = p.Id,
-					UserId = user.Id
-				})
-				.ToList();
+					Obsolete = false,
+					TierWeight = 0,
+					RatingCount = 0,
+					AverageRating = 0
+				}
+			};
 
-			_db.PublicationAuthors.AddRange(pa);
-			_db.SaveChanges();
-
-			var actual = await _pointsService.PlayerPoints(user.Id);
-			int expected = numMovies * SiteGlobalConstants.MinimumPlayerPointsForPublication;
+			var expected = publications.Length * SiteGlobalConstants.MinimumPlayerPointsForPublication;
+			var actual = PointsCalculator.PlayerPoints(publications);
 			Assert.AreEqual(expected, actual);
 		}
 	}

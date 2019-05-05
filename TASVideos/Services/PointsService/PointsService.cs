@@ -64,6 +64,11 @@ namespace TASVideos.Services
 				return 0;
 			}
 
+			var test = _db.Publications.ToList();
+			var test2 = _db.Publications
+				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
+				.ToList();
+
 			var publications = await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
 				.Select(p => new PointsCalculator.Publication
