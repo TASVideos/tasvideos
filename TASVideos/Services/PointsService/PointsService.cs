@@ -75,8 +75,10 @@ namespace TASVideos.Services
 				})
 				.ToListAsync();
 
+			var averageRatings = AverageRatingCount();
+
 			// TODO: do we want to round here?
-			playerPoints = (int)Math.Round(PointsCalculator.PlayerPoints(publications));
+			playerPoints = (int)Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings));
 
 			_cache.Set(cacheKey, playerPoints);
 
@@ -130,6 +132,16 @@ namespace TASVideos.Services
 
 			_cache.Set(cacheKey, rating);
 			return rating;
+		}
+
+		// TODO: total ratings / (2 * total publications)
+		internal static decimal AverageRatingCount()
+		{
+			// TODO: actually query things, these are are roughly the actual numbers for now
+			var totalRatings = 108544;
+			var totalPublications = 3914;
+
+			return totalRatings / (decimal)(2 * totalPublications);
 		}
 
 		public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)

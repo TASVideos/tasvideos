@@ -74,7 +74,7 @@ namespace TASVideos.Test.Services
 			_db.SaveChanges();
 
 			var actual = await _pointsService.PlayerPoints(user.Id);
-			int expected = numMovies * SiteGlobalConstants.MinimumPlayerPointsForPublication;
+			int expected = numMovies * PlayerPointConstants.MinimumPlayerPointsForPublication;
 			Assert.AreEqual(expected, actual);
 		}
 	}

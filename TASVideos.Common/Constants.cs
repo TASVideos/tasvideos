@@ -46,7 +46,11 @@
 		public const string PollOptionYes = "Yes";
 		public const string PollOptionNo = "No";
 		public const string PollOptionsMeh = "Meh";
+	}
 
+	public static class PlayerPointConstants
+	{
+		public const decimal ObsoleteMultiplier = 0.000001M;
 		public const int MinimumPlayerPointsForPublication = 5;
 	}
 

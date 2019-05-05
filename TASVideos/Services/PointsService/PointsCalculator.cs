@@ -1,18 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TASVideos.Services
 {
 	public static class PointsCalculator
 	{
-		public static decimal PlayerPoints(ICollection<Publication> publications)
+		/// <summary>
+		/// Calculates the player points a player would receive for a movie
+		/// </summary>
+		/// <param name="publications">The rating data for a given movie</param>
+		/// <param name="averageRatingCount">The average number of ratings a movie receives, across the entire site</param>
+		/// <returns>The player points calculated</returns>
+		public static decimal PlayerPoints(ICollection<Publication> publications, decimal averageRatingCount)
 		{
 			if (publications == null || !publications.Any())
 			{
 				return 0;
 			}
 
-			return publications.Count * SiteGlobalConstants.MinimumPlayerPointsForPublication;
+			var points = publications
+				.Select(p => PlayerPointsForMovie(p, averageRatingCount))
+				.Sum();
+
+			return points;
+		}
+
+		internal static decimal PlayerPointsForMovie(Publication publication, decimal averageRatingCount)
+		{
+			var exp = RatingExponent(publication.RatingCount, averageRatingCount);
+
+			var rawPoints = (decimal)Math.Pow((double)publication.AverageRating, (double)exp);
+			var authorMultiplier = (decimal)Math.Pow(publication.AuthorCount, -0.5);
+			var actual = rawPoints * authorMultiplier * publication.TierWeight;
+
+			if (actual < PlayerPointConstants.MinimumPlayerPointsForPublication)
+			{
+				actual = PlayerPointConstants.MinimumPlayerPointsForPublication;
+			}
+
+			if (publication.Obsolete)
+			{
+				actual *= PlayerPointConstants.ObsoleteMultiplier;
+			}
+
+			return actual;
+		}
+
+		internal static decimal RatingExponent(int total, decimal averageRatings)
+		{
+			if (total == 0)
+			{
+				return 0;
+			}
+
+			var exponent = 2.6M - (0.2M * averageRatings / total);
+			if (exponent < 1)
+			{
+				exponent = 1;
+			}
+
+			return exponent;
 		}
 
 		public static string PlayerRank(decimal points)
@@ -61,6 +109,7 @@ namespace TASVideos.Services
 			public decimal AverageRating { get; set; }
 			public int RatingCount { get; set; }
 			public decimal TierWeight { get; set; }
+			public int AuthorCount { get; set; }
 		}
 	}
 }
