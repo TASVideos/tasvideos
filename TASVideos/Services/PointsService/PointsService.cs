@@ -64,11 +64,6 @@ namespace TASVideos.Services
 				return 0;
 			}
 
-			var test = _db.Publications.ToList();
-			var test2 = _db.Publications
-				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
-				.ToList();
-
 			var publications = await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
 				.Select(p => new PointsCalculator.Publication
@@ -77,7 +72,7 @@ namespace TASVideos.Services
 					TierWeight = (decimal)p.Tier.Weight,
 					AverageRating = 10.0M, // TODO
 					RatingCount = 1, // TODO
-					UserWeight = 1M // TODO
+					UserWeight = 1M // TODO, no user permission = 0, author = 0, other logic
 				})
 				.ToListAsync();
 
