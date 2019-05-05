@@ -90,7 +90,7 @@ namespace TASVideos.WikiEngine.AST
 
 		public void DumpContentDescriptive(TextWriter w, string padding)
 		{
-			if (Content.Any(c => c < 0x20 && c != '\n'))
+			if (Content.Any(c => c < 0x20 && c != '\n' && c != '\t'))
 			{
 				w.Write(padding);
 				w.WriteLine("$UNPRINTABLE TEXT!!!");
