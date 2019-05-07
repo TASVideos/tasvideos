@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-using TASVideos.Api.Responses;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services.Dtos;
@@ -37,6 +36,7 @@ namespace TASVideos.Services
 	{
 		private const string MovieRatingKey = "OverallRatingForMovie-";
 		private const string PlayerPointKey = "PlayerPoints-";
+		private const string AverageNumberOfRatingsKey = "AverageNumberOfRatings";
 
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
@@ -76,7 +76,7 @@ namespace TASVideos.Services
 				})
 				.ToListAsync();
 
-			var averageRatings = AverageRatingCount();
+			var averageRatings = await AverageNumberOfRatingsPerPublication();
 
 			// TODO: do we want to round here?
 			playerPoints = (int)Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings));
@@ -135,16 +135,6 @@ namespace TASVideos.Services
 			return rating;
 		}
 
-		// TODO: total ratings / (2 * total publications)
-		internal static decimal AverageRatingCount()
-		{
-			// TODO: actually query things, these are are roughly the actual numbers for now
-			var totalRatings = 108544;
-			var totalPublications = 3914;
-
-			return totalRatings / (decimal)(2 * totalPublications);
-		}
-
 		public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)
 		{
 			if (publicationIds == null)
@@ -174,6 +164,27 @@ namespace TASVideos.Services
 			}
 
 			return ratings;
+		}
+
+		// total ratings / (2 * total publications)
+		internal async Task<decimal> AverageNumberOfRatingsPerPublication()
+		{
+			if (_cache.TryGetValue(AverageNumberOfRatingsKey, out int playerPoints))
+			{
+				return playerPoints;
+			}
+
+			var totalPublications = await _db.Publications.CountAsync();
+
+			decimal avg = 0;
+			if (totalPublications > 0)
+			{
+				var totalRatings = await _db.PublicationRatings.CountAsync();
+				avg = totalRatings / (decimal)(2 * totalPublications);
+			}
+			
+			_cache.Set(AverageNumberOfRatingsKey, avg);
+			return avg;
 		}
 	}
 }
