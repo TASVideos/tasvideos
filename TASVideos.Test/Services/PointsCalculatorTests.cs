@@ -10,7 +10,7 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class PointsCalculatorTests
 	{
-		private const decimal AverageRatingsPerMovie = 13.866M;
+		private const double AverageRatingsPerMovie = 13.866;
 
 		[TestMethod]
 		public void PlayerPoints_Null()
@@ -53,15 +53,15 @@ namespace TASVideos.Test.Services
 			{
 				new PointsCalculator.Publication
 				{
-					AverageRating = 4.45166667M,
+					AverageRating = 4.45166667,
 					RatingCount = 6,
-					TierWeight = 0.75M,
+					TierWeight = 0.75,
 					Obsolete = false,
 					AuthorCount = 1
 				}
 			};
 
-			var roundedExpected = 18.3M;
+			var roundedExpected = 18.3;
 			var actual = PointsCalculator.PlayerPoints(publications, AverageRatingsPerMovie);
 			var roundedActual = Math.Round(actual, 1); // Close enough
 			Assert.AreEqual(roundedExpected, roundedActual);
@@ -85,6 +85,28 @@ namespace TASVideos.Test.Services
 		public void PlayerRank(double points, string expected)
 		{
 			var actual = PointsCalculator.PlayerRank((decimal)points);
+			Assert.AreEqual(expected, actual);
+		}
+
+
+		[TestMethod]
+		[DataRow(0, 0, 0)]
+		[DataRow(0, 1, 0)]
+		[DataRow(1, 0, 2.6)]
+		[DataRow(1, 5, 1.6)]
+		[DataRow(1, 10, 1)]
+		[DataRow(1, 20, 1)]
+		[DataRow(1, 100, 1)]
+		[DataRow(2, 10, 1.6)]
+		[DataRow(4, 10, 2.1)]
+		[DataRow(8, 10, 2.35)]
+		[DataRow(10, 10, 2.4)]
+		[DataRow(16, 10, 2.475)]
+		[DataRow(20, 10, 2.5)]
+		[DataRow(100, 10, 2.58)]
+		public void RatingExponent(int total, double averageRatingsPerMovie, double expected)
+		{
+			var actual = PointsCalculator.RatingExponent(total, averageRatingsPerMovie);
 			Assert.AreEqual(expected, actual);
 		}
 	}

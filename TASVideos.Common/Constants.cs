@@ -50,7 +50,7 @@
 
 	public static class PlayerPointConstants
 	{
-		public const decimal ObsoleteMultiplier = 0.000001M;
+		public const double ObsoleteMultiplier = 0.000001;
 		public const int MinimumPlayerPointsForPublication = 5;
 	}
 

@@ -12,7 +12,7 @@ namespace TASVideos.Services
 		/// <param name="publications">The rating data for a given movie</param>
 		/// <param name="averageRatingCount">The average number of ratings a movie receives, across the entire site</param>
 		/// <returns>The player points calculated</returns>
-		public static decimal PlayerPoints(ICollection<Publication> publications, decimal averageRatingCount)
+		public static double PlayerPoints(ICollection<Publication> publications, double averageRatingCount)
 		{
 			if (publications == null || !publications.Any())
 			{
@@ -26,12 +26,12 @@ namespace TASVideos.Services
 			return points;
 		}
 
-		internal static decimal PlayerPointsForMovie(Publication publication, decimal averageRatingCount)
+		internal static double PlayerPointsForMovie(Publication publication, double averageRatingCount)
 		{
 			var exp = RatingExponent(publication.RatingCount, averageRatingCount);
 
-			var rawPoints = (decimal)Math.Pow((double)publication.AverageRating, (double)exp);
-			var authorMultiplier = (decimal)Math.Pow(publication.AuthorCount, -0.5);
+			var rawPoints = Math.Pow(publication.AverageRating, exp);
+			var authorMultiplier = Math.Pow(publication.AuthorCount, -0.5);
 			var actual = rawPoints * authorMultiplier * publication.TierWeight;
 
 			if (actual < PlayerPointConstants.MinimumPlayerPointsForPublication)
@@ -47,14 +47,14 @@ namespace TASVideos.Services
 			return actual;
 		}
 
-		internal static decimal RatingExponent(int total, decimal averageRatings)
+		internal static double RatingExponent(int total, double averageRatingPerPublications)
 		{
 			if (total == 0)
 			{
 				return 0;
 			}
 
-			var exponent = 2.6M - (0.2M * averageRatings / total);
+			var exponent = 2.6 - (0.2 * averageRatingPerPublications / total);
 			if (exponent < 1)
 			{
 				exponent = 1;
@@ -106,9 +106,9 @@ namespace TASVideos.Services
 			// We still factor in obsolete movies but only at a number less than zero
 			// for the purpose of determining "former player" rank
 			public bool Obsolete { get; set; } 
-			public decimal AverageRating { get; set; }
+			public double AverageRating { get; set; }
 			public int RatingCount { get; set; }
-			public decimal TierWeight { get; set; }
+			public double TierWeight { get; set; }
 			public int AuthorCount { get; set; }
 		}
 	}

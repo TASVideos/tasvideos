@@ -70,8 +70,8 @@ namespace TASVideos.Services
 				{
 					AuthorCount = 1, // TODO
 					Obsolete = p.ObsoletedById.HasValue,
-					TierWeight = (decimal)p.Tier.Weight,
-					AverageRating = 1.0M, // TODO
+					TierWeight = p.Tier.Weight,
+					AverageRating = 1.0, // TODO
 					RatingCount = 1, // TODO
 				})
 				.ToListAsync();
@@ -167,7 +167,7 @@ namespace TASVideos.Services
 		}
 
 		// total ratings / (2 * total publications)
-		internal async Task<decimal> AverageNumberOfRatingsPerPublication()
+		internal async Task<double> AverageNumberOfRatingsPerPublication()
 		{
 			if (_cache.TryGetValue(AverageNumberOfRatingsKey, out int playerPoints))
 			{
@@ -176,11 +176,11 @@ namespace TASVideos.Services
 
 			var totalPublications = await _db.Publications.CountAsync();
 
-			decimal avg = 0;
+			double avg = 0;
 			if (totalPublications > 0)
 			{
 				var totalRatings = await _db.PublicationRatings.CountAsync();
-				avg = totalRatings / (decimal)(2 * totalPublications);
+				avg = totalRatings / (double)(2 * totalPublications);
 			}
 			
 			_cache.Set(AverageNumberOfRatingsKey, avg);
