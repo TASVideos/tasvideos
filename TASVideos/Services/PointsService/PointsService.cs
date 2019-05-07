@@ -68,9 +68,10 @@ namespace TASVideos.Services
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
 				.Select(p => new PointsCalculator.Publication
 				{
+					AuthorCount = 1, // TODO
 					Obsolete = p.ObsoletedById.HasValue,
 					TierWeight = (decimal)p.Tier.Weight,
-					AverageRating = 10.0M, // TODO
+					AverageRating = 1.0M, // TODO
 					RatingCount = 1, // TODO
 				})
 				.ToListAsync();
