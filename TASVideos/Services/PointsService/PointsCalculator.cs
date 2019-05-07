@@ -106,6 +106,8 @@ namespace TASVideos.Services
 		/// </summary>
 		public class Publication
 		{
+			public int Id { get; set; }
+
 			// We still factor in obsolete movies but only at a number less than zero
 			// for the purpose of determining "former player" rank
 			public bool Obsolete { get; set; } 

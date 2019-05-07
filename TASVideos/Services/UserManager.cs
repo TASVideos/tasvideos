@@ -222,7 +222,8 @@ namespace TASVideos.Services
 
 			if (model != null)
 			{
-				model.PlayerPoints = await _pointsService.PlayerPoints(model.Id);
+				// TODO: round to 1 digit?
+				model.PlayerPoints = (int)Math.Round(await _pointsService.PlayerPoints(model.Id));
 
 				var wikiEdits = await _db.WikiPages
 					.ThatAreNotDeleted()

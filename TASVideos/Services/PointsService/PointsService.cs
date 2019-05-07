@@ -16,7 +16,7 @@ namespace TASVideos.Services
 		/// Calculates the player points for the user with the given id.
 		/// If a user with the given <see cref="userId"/> does not exist, 0 is returned
 		/// </summary>
-		Task<int> PlayerPoints(int userId);
+		Task<double> PlayerPoints(int userId);
 
 		/// <summary>
 		/// Returns the averaged overall, tech, and entertainment ratings for a publication
@@ -49,10 +49,10 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public async Task<int> PlayerPoints(int userId)
+		public async Task<double> PlayerPoints(int userId)
 		{
 			string cacheKey = PlayerPointKey + userId;
-			if (_cache.TryGetValue(cacheKey, out int playerPoints))
+			if (_cache.TryGetValue(cacheKey, out double playerPoints))
 			{
 				return playerPoints;
 			}
@@ -64,25 +64,38 @@ namespace TASVideos.Services
 				return 0;
 			}
 
-			var publications = await _db.Publications
+			var dtos = (await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
 				.Select(p => new PointsCalculator.Publication
 				{
-					AuthorCount = 1, // TODO
+					Id = p.Id,
+					AuthorCount = p.Authors.Count,
 					Obsolete = p.ObsoletedById.HasValue,
 					TierWeight = p.Tier.Weight,
-					AverageRating = 1.0, // TODO
-					RatingCount = 1, // TODO
+					RatingCount = p.PublicationRatings.Count,
 				})
-				.ToListAsync();
+				.ToListAsync());
+
+			var publications = dtos
+				.Select(p => new PointsCalculator.Publication
+				{
+					AuthorCount = p.AuthorCount,
+					Obsolete = p.Obsolete,
+					TierWeight = p.TierWeight,
+					RatingCount = p.RatingCount,
+				})
+				.ToList();
+
+			foreach (var pub in publications)
+			{
+				pub.AverageRating = (await PublicationRating(pub.Id)).Overall ?? 0;
+			}
 
 			var averageRatings = await AverageNumberOfRatingsPerPublication();
 
-			// TODO: do we want to round here?
-			playerPoints = (int)Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings));
+			playerPoints = Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings), 1);
 
 			_cache.Set(cacheKey, playerPoints);
-
 			return playerPoints;
 		}
 
