@@ -26,6 +26,44 @@ namespace TASVideos.Services
 			return points;
 		}
 
+		/// <summary>
+		/// Determines the player rank based on the given amount of player points
+		/// </summary>
+		public static string PlayerRank(decimal points)
+		{
+			if (points <= 0)
+			{
+				return null;
+			}
+
+			if (points < 1)
+			{
+				return PlayerRanks.FormerPlayer;
+			}
+
+			if (points < 250)
+			{
+				return PlayerRanks.Player;
+			}
+
+			if (points < 500)
+			{
+				return PlayerRanks.ActivePlayer;
+			}
+
+			if (points < 1000)
+			{
+				return PlayerRanks.ExperiencedPlayer;
+			}
+
+			if (points < 2000)
+			{
+				return PlayerRanks.SkilledPlayer;
+			}
+
+			return PlayerRanks.ExpertPlayer;
+		}
+
 		internal static double PlayerPointsForMovie(Publication publication, double averageRatingCount)
 		{
 			var exp = RatingExponent(publication.RatingCount, averageRatingCount);
@@ -61,41 +99,6 @@ namespace TASVideos.Services
 			}
 
 			return exponent;
-		}
-
-		public static string PlayerRank(decimal points)
-		{
-			if (points <= 0)
-			{
-				return null;
-			}
-
-			if (points < 1)
-			{
-				return PlayerRanks.FormerPlayer;
-			}
-
-			if (points < 250)
-			{
-				return PlayerRanks.Player;
-			}
-
-			if (points < 500)
-			{
-				return PlayerRanks.ActivePlayer;
-			}
-
-			if (points < 1000)
-			{
-				return PlayerRanks.ExperiencedPlayer;
-			}
-
-			if (points < 2000)
-			{
-				return PlayerRanks.SkilledPlayer;
-			}
-
-			return PlayerRanks.ExpertPlayer;
 		}
 
 		/// <summary>
