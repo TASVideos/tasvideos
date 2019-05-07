@@ -32,6 +32,10 @@ namespace TASVideos.WikiEngine.AST
 		/// debugging output of all of the data in this node
 		/// </summary>
 		void DumpContentDescriptive(TextWriter w, string padding);
+		/// <summary>
+		/// Clones this node for use in a TOC.  Some things like anchors are removed
+		/// </summary>
+		IEnumerable<INode> CloneForToc();
 	}
 
 	public interface IWriterHelper
@@ -117,6 +121,11 @@ namespace TASVideos.WikiEngine.AST
 					}
 				}
 			}
+		}
+
+		public IEnumerable<INode> CloneForToc()
+		{
+			return new[] { Clone() };
 		}
 	}
 	
@@ -264,6 +273,27 @@ namespace TASVideos.WikiEngine.AST
 			w.Write(Tag);
 			w.WriteLine();
 		}
+
+		private static readonly HashSet<string> TocTagBlacklist = new HashSet<string>
+		{
+			"a", "br"
+		};
+
+		public IEnumerable<INode> CloneForToc()
+		{
+			var children = Children.SelectMany(n => n.CloneForToc());
+			if (TocTagBlacklist.Contains(Tag))
+			{
+				return children;
+			}
+			else
+			{
+				var ret = (Element)MemberwiseClone();
+				ret.Children = children.ToList();
+				ret.Attributes = new Dictionary<string, string>(Attributes);
+				return new[] { ret };
+			}
+		}
 	}
 
 	public class IfModule : INodeWithChildren
@@ -327,6 +357,11 @@ namespace TASVideos.WikiEngine.AST
 			w.Write("?ENDIF ");
 			w.Write(Condition);
 			w.WriteLine();
+		}
+
+		public IEnumerable<INode> CloneForToc()
+		{
+			return new[] { Clone() };
 		}
 	}
 
@@ -418,6 +453,11 @@ namespace TASVideos.WikiEngine.AST
 			w.Write('(');
 			w.Write(Text);
 			w.WriteLine(')');
+		}
+
+		public IEnumerable<INode> CloneForToc()
+		{
+			return Enumerable.Empty<INode>();
 		}
 	}
 }

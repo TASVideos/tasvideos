@@ -382,7 +382,7 @@ namespace TASVideos.WikiEngine
 			{
 				var start = _index;
 				var content = EatToBracket();
-				AddNonChild(Builtins.MakeModule(start, _index, content));
+				AddNonChild(Builtins.MakeBracketed(start, _index, content));
 			}
 			else if (In("dt") && Eat(':'))
 			{
@@ -654,130 +654,16 @@ namespace TASVideos.WikiEngine
 
 		private static void ReplaceTabs(List<INode> n)
 		{
-			Replace(n,
+			NodeUtils.Replace(n,
 				e => e.Type == NodeType.Element && (((Element)e).Tag == "htabs" || ((Element)e).Tag == "vtabs"),
 				e => Builtins.MakeTabs((Element)e));
 		}
 
 		private static void ReplaceTocs(List<INode> n)
 		{
-			Replace(n,
+			NodeUtils.Replace(n,
 				e => e.Type == NodeType.Element && ((Element)e).Tag == "toc",
-				e => GenerateToc(n, e.CharStart));
-		}
-
-		private static void Replace(List<INode> input, Func<INode, bool> predicate, Func<INode, INode> transform)
-		{
-			for (var i = 0; i < input.Count; i++)
-			{
-				if (predicate(input[i]))
-				{
-					input[i] = transform(input[i]);
-				}
-				var cc = input[i] as INodeWithChildren;
-				if (cc != null)
-					Replace(cc.Children, predicate, transform);
-			}
-		}
-
-		private static IEnumerable<INode> Find(List<INode> input, Func<INode, bool> predicate)
-		{
-			foreach (var n in input)
-			{
-				if (predicate(n))
-					yield return n;
-				var cc = n as INodeWithChildren;
-				if (cc != null)
-				{
-					foreach (var c in Find(cc.Children, predicate))
-						yield return c;
-				}
-			}
-		}
-
-		private List<WikiLinkInfo> GetAllWikiLinks()
-		{
-			return Find(_output, e => e.Type == NodeType.Module && ((Module)e).Text.StartsWith("__wikiLink|"))
-				.Select(e =>
-				{
-					var text = ((Module)e).Text;
-					var link = text.Substring(11);
-					var si = Math.Max(e.CharStart - 20, 0);
-					var se = Math.Min(e.CharEnd + 20, _input.Length);
-					return new WikiLinkInfo
-					{
-						Link = link,
-						Excerpt = _input.Substring(si, se - si)
-					};
-				})
-				.ToList();
-		}
-
-		private static readonly HashSet<string> Headings = new HashSet<string>
-		{
-			// h1, h5, h6 are not involved in TOC generation
-			"h2", "h3", "h4"
-		};
-
-		private static Element GenerateToc(List<INode> document, int charStart)
-		{
-			var headings = Find(document, e => e.Type == NodeType.Element && Headings.Contains(((Element)e).Tag))
-				.Cast<Element>()
-				.ToList();
-
-			var ret = new Element(charStart, "div");
-			ret.Attributes["class"] = "toc";
-			var stack = new Stack<Element>();
-			{
-				var ul = new Element(charStart, "ul");
-				ret.Children.Add(ul);
-				stack.Push(ul);
-			}
-			var pos = 2;
-			foreach (var h in headings)
-			{
-				var i = h.Tag[1] - '0'; // 2, 3, or 4?
-				while (i > pos)
-				{
-					var next = new Element(charStart, "ul");
-					var li = new Element(charStart, "li", new[] { next });
-					stack.Peek().Children.Add(li);
-					stack.Push(next);
-					pos++;
-				}
-				while (i < pos)
-				{
-					stack.Pop();
-					pos--;
-				}
-				{
-					var id = "heading-" + h.CharStart;
-
-					var link = new Element(charStart, "a");
-					var li = new Element(charStart, "li", new[] { link });
-					link.Attributes["href"] = "#" + id;
-					link.Children.AddRange(h.Children.Select(c => c.Clone()));
-					stack.Peek().Children.Add(li);
-
-					var anchor = new Element(h.CharStart, "a");
-					anchor.Attributes["id"] = id;
-					h.Children.Add(anchor);
-				}
-			}
-			return ret;
-		}
-
-		public class WikiLinkInfo
-		{
-			public string Link { get; set; }
-			public string Excerpt { get; set; }
-		}
-
-		public static List<WikiLinkInfo> GetAllWikiLinks(string content)
-		{
-			var p = new NewParser { _input = content };
-			p.ParseLoop();
-			return p.GetAllWikiLinks();
+				e => Builtins.MakeToc(n, e.CharStart));
 		}
 
 		public static List<INode> Parse(string content)
@@ -787,26 +673,6 @@ namespace TASVideos.WikiEngine
 			ReplaceTabs(p._output);
 			ReplaceTocs(p._output);
 			return p._output;
-		}
-
-		public static List<INode> MakeErrorPage(string content, SyntaxException e)
-		{
-			var ret = new List<INode>();
-
-			var head = new Element(0, "h1", new[] { new Text(0, "Syntax Error") });
-			ret.Add(head);
-
-			var elt = new Element(0, "pre");
-			elt.Attributes["class"] = "error-code";
-			var i = e.TextLocation;
-			elt.Children.Add(new Text(0, content.Substring(0, i)));
-			var marker = new Element(i, "span", new[] { new Element(i, "span", new[] { new Text(i, e.Message) }) });
-			marker.Attributes["class"] = "error-marker";
-			elt.Children.Add(marker);
-			elt.Children.Add(new Text(i, content.Substring(i)));
-			ret.Add(elt);
-
-			return ret;
 		}
 	}
 }

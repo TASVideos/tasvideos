@@ -37,12 +37,23 @@ namespace TASVideos.WikiEngineTest
 
 			var wantUpdate = args.Any(s => s == "--update");
 			var force = args.Any(s => s == "--force");
+			string filter = null;
+			{
+				var index = Array.IndexOf(args, "--filter");
+				if (index >= 0 && index < args.Length - 1)
+					filter = args[index + 1];
+			}
 
 			using (var context = new ApplicationDbContext(contextOptions, null))
 			{
-				var toProcess = context.WikiPages
+				var query = context.WikiPages
 					.ThatAreNotDeleted()
-					.ThatAreCurrentRevisions()
+					.ThatAreCurrentRevisions();
+				if (filter != null)
+				{
+					query = query.Where(wp => wp.PageName.Contains(filter));
+				}
+				var toProcess = query
 					.Select(wp => new
 					{
 						wp.PageName,
@@ -88,7 +99,7 @@ namespace TASVideos.WikiEngineTest
 					}
 					catch (NewParser.SyntaxException e)
 					{
-						nodes = NewParser.MakeErrorPage(markup, e);
+						nodes = Builtins.MakeErrorPage(markup, e);
 					}
 
 					using (var tw = new StreamWriter(path))

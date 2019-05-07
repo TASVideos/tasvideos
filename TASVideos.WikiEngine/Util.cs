@@ -46,7 +46,7 @@ namespace TASVideos.WikiEngine
 			}
 			catch (NewParser.SyntaxException e)
 			{
-				results = NewParser.MakeErrorPage(content, e);
+				results = Builtins.MakeErrorPage(content, e);
 			}
 
 			foreach (var r in results)
@@ -55,15 +55,16 @@ namespace TASVideos.WikiEngine
 			}			
 		}
 
-		public static IEnumerable<NewParser.WikiLinkInfo> GetAllWikiLinks(string content)
+		public static IEnumerable<WikiLinkInfo> GetAllWikiLinks(string content)
 		{
 			try
 			{
-				return NewParser.GetAllWikiLinks(content).Where(l => !l.Link.Contains("user:"));
+				var results = NewParser.Parse(content);
+				return NodeUtils.GetAllWikiLinks(content, results).Where(l => !l.Link.Contains("user:"));
 			}
 			catch (NewParser.SyntaxException)
 			{
-				return Enumerable.Empty<NewParser.WikiLinkInfo>();
+				return Enumerable.Empty<WikiLinkInfo>();
 			}
 		}
 	}
