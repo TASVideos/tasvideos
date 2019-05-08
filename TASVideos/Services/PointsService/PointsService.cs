@@ -101,7 +101,6 @@ namespace TASVideos.Services
 		}
 
 		// TODO: user weights
-		// TODO: pass in authorId optionally, to exclude them
 		public async Task<RatingDto> PublicationRating(int id)
 		{
 			string cacheKey = MovieRatingKey + id;
@@ -114,8 +113,14 @@ namespace TASVideos.Services
 			// Specifically banned from rating.
 			var banned = new[] { 7194, 4805, 4485, 5243, 635, 3301 };
 
+			var authorIds = await _db.PublicationAuthors
+				.Where(pa => pa.PublicationId == id)
+				.Select(pa => pa.UserId)
+				.ToListAsync();
+
 			var ratings = await _db.PublicationRatings
 				.Where(pr => pr.PublicationId == id)
+				.Where(pr => !authorIds.Contains(pr.UserId)) // Do not count author ratings
 				.Where(pr => !banned.Contains(pr.UserId))
 				.ToListAsync();
 
