@@ -64,7 +64,7 @@ namespace TASVideos.Services
 				return 0;
 			}
 
-			var dtos = (await _db.Publications
+			var dtos = await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
 				.Select(p => new PointsCalculator.Publication
 				{
@@ -74,11 +74,12 @@ namespace TASVideos.Services
 					TierWeight = p.Tier.Weight,
 					RatingCount = p.PublicationRatings.Count,
 				})
-				.ToListAsync());
+				.ToListAsync();
 
 			var publications = dtos
 				.Select(p => new PointsCalculator.Publication
 				{
+					Id = p.Id,
 					AuthorCount = p.AuthorCount,
 					Obsolete = p.Obsolete,
 					TierWeight = p.TierWeight,

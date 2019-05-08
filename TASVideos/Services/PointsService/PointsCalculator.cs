@@ -10,9 +10,9 @@ namespace TASVideos.Services
 		/// Calculates the player points a player would receive for a movie
 		/// </summary>
 		/// <param name="publications">The rating data for a given movie</param>
-		/// <param name="averageRatingCount">The average number of ratings a movie receives, across the entire site</param>
+		/// <param name="averageRatingsPerMovie">The average number of ratings a movie receives, across the entire site</param>
 		/// <returns>The player points calculated</returns>
-		public static double PlayerPoints(ICollection<Publication> publications, double averageRatingCount)
+		public static double PlayerPoints(ICollection<Publication> publications, double averageRatingsPerMovie)
 		{
 			if (publications == null || !publications.Any())
 			{
@@ -20,7 +20,7 @@ namespace TASVideos.Services
 			}
 
 			var points = publications
-				.Select(p => PlayerPointsForMovie(p, averageRatingCount))
+				.Select(p => PlayerPointsForMovie(p, averageRatingsPerMovie))
 				.Sum();
 
 			return points;
