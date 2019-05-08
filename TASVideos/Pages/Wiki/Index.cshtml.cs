@@ -37,7 +37,7 @@ namespace TASVideos.Pages.Wiki
 					return Redirect("HomePages/" + url);
 				}
 
-				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiHelper.NormalizeWikiPageName(url) });
+				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiEngine.Util.NormalizeWikiPageName(url) });
 			}
 
 			WikiPage = _wikiPages.Page(url, revision);

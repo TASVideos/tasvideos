@@ -26,7 +26,7 @@ namespace TASVideos.ViewComponents
 
 			var model = new WikiLinkModel
 			{
-				Href = WikiHelper.NormalizeWikiPageName(split[0]),
+				Href = WikiEngine.Util.NormalizeWikiPageName(split[0]),
 				DisplayText = split.Length > 1 ? split[1] : split[0]
 			};
 

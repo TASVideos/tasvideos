@@ -145,9 +145,21 @@ namespace TASVideos.WikiEngine
 			// it could be an internal wiki link, but it could also be a lot of other not-allowed garbage
 			if (ImplicitWikiLink.Match(text).Success)
 			{
-				// wiki links needs to be in a module because the href, title, and possibly the text will be adjusted/normalized based
+				// wiki links needs to be in a module because the href, and possibly the text will be adjusted/normalized based
 				// on what other wiki pages exist and their content
-				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
+
+				// optimization:  but, the href adjustment is static, and the text adjustment only happens when no text is provided.
+				// so we can desugar [Foo|Bar] into [=FooAdjusted|Bar]
+				if (pp.Length >= 2)
+				{
+					// same as the IsLink(pp[0]) && pp.Length >= 2 case, except we NormalizeWikiPageName it and add the '='
+					return new[] { MakeLink(charStart, charEnd, "=" + Util.NormalizeWikiPageName(pp[0]), new Text(charStart, pp[1]) { CharEnd = charEnd }) };
+				}
+				else
+				{
+					// DB lookup will be required for links like [4022S], so use __wikiLink
+					return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
+				}	
 			}
 
 			// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough

@@ -210,29 +210,6 @@ namespace TASVideos.Extensions
 			return link;
 		}
 
-		public static string NormalizeWikiPageName(string link)
-		{
-			if (link.StartsWith("user:"))
-			{
-				link = "HomePages/" + link.Substring(5);
-			}
-			else
-			{
-				// Support links like [Judge Guidelines] linking to [JudgeGuidelines]
-				// We don't do this replacement if link is a user module in order to support users with spaces such as Walker Boh
-				link = link.Replace(" ", "");
-			}
-
-			if (link.EndsWith(".html", true, CultureInfo.InvariantCulture))
-			{
-				link = link.Substring(0, link.Length - 5);
-			}
-
-			link = link.Trim('/');
-			link = string.Join("/", link.Split('/').Select(s => char.ToUpperInvariant(s[0]) + s.Substring(1)));
-			return link;
-		}
-
 		private static bool IsInternalSubmissionLink(string link)
 		{
 			return link.StartsWith(LinkConstants.SubmissionWikiPage);
