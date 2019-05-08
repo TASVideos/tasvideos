@@ -1,0 +1,23 @@
+﻿@page "{handler?}"
+@model PlayerPointsModel
+@{
+	ViewData["Title"] = "Player points";
+}
+
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>User</th>
+		<th>Points</th>
+	</tr>
+	@foreach (var player in Model.Players.OrderByDescending(p => p.Points))
+	{
+		<tr>
+			<td>
+				<profile-link username="@player.UserName">@player.UserName</profile-link>
+			</td>
+			<td>
+				@Math.Round(player.Points)
+			</td>
+		</tr>
+	}
+</table>
