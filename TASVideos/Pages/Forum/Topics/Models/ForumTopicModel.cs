@@ -49,6 +49,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 			public string PosterAvatar { get; set; }
 			public string PosterLocation { get; set; }
 			public int PosterPostCount { get; set; }
+			public double PosterPlayerPoints { get; set; }
 			public DateTime PosterJoined { get; set; }
 			public IEnumerable<string> PosterRoles { get; set; }
 			public string Text { get; set; }

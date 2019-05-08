@@ -51,7 +51,7 @@
 				<div class="card-text text-right">
 					<small>
 						@string.Join(",", Model.PosterRoles)
-						(todo points)
+						<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
 					</small>
 					<br />
 					<img src="@Model.PosterAvatar" />
