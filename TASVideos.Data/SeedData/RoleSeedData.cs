@@ -95,12 +95,18 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditPublicationFiles
 		}).ToArray();
 
-		private static readonly PermissionTo[] ForumModeratorPermissions =
+		private static readonly PermissionTo[] ExperiencedForumUserPermissions =
+		{
+			PermissionTo.CreateForumTopics,
+			PermissionTo.VoteInPolls
+		};
+
+		private static readonly PermissionTo[] ForumModeratorPermissions = ExperiencedForumUserPermissions.Concat(new[]
 		{
 			PermissionTo.EditForumPosts,
 			PermissionTo.LockTopics,
 			PermissionTo.MoveTopics
-		};
+		}).ToArray();
 
 		private static readonly PermissionTo[] ForumAdminPermissions = ForumModeratorPermissions.Concat(new[]
 		{
@@ -166,19 +172,12 @@ namespace TASVideos.Data.SeedData
 			IsDefault = false,
 			Name = RoleSeedNames.ExperiencedForumUser,
 			Description = "Contains the CreateForumTopics and VoteInPolls permissions that allow users to create topics and participate in forum polls. This role is automatically applied to experienced users.",
-			RolePermission = new[]
-			{
-				new RolePermission
+			RolePermission = ExperiencedForumUserPermissions
+				.Select(p => new RolePermission
 				{
 					Role = ExperiencedForumUser,
-					PermissionId = PermissionTo.CreateForumTopics
-				},
-				new RolePermission
-				{
-					Role = ExperiencedForumUser,
-					PermissionId = PermissionTo.VoteInPolls
-				},
-			}
+					PermissionId = p
+				}).ToArray()
 		};
 
 		public static readonly Role Admin = new Role
