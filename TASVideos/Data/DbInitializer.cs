@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
@@ -220,6 +222,24 @@ namespace TASVideos.Data
 			context.Publications.Add(PublicationSampleData.MorimotoSmb3Pub);
 			context.PublicationFlags.AddRange(PublicationSampleData.MorimotoSmb3PublicationFlags);
 			await context.SaveChangesAsync();
+
+			var sql = EmbeddedSampleSqlFile();
+			var commands = sql.Split("GO");
+			foreach (var c in commands)
+			{
+				context.Database.ExecuteSqlCommand(c);
+			}
+		}
+
+		private static string EmbeddedSampleSqlFile()
+		{
+			var stream = Assembly.GetAssembly(typeof(PublicationSampleData))
+				.GetManifestResourceStream("TASVideos.Data.SampleData.SampleData.sql");
+
+			using (var tr = new StreamReader(stream))
+			{
+				return tr.ReadToEnd();
+			}
 		}
 	}
 }
