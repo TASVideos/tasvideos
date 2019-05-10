@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 
 namespace TASVideos.ForumEngine
 {
@@ -69,6 +70,22 @@ width=$$w$$ height=$$h$$ frameborder=0
 allow=""autoplay; fullscreen"" allowfullscreen></iframe>
 ";
 
+		private static string NicoVideoDocument =
+@"<!DOCTYPE html>
+<html><head><title>NicoVideo Player</title><style>
+html { overflow:hidden; }
+body, div { margin:0; padding:0; overflow:hidden; }
+</style></head><body>
+<div>
+<script src=""https://embed.nicovideo.jp/watch/$$id$$/script?w=$$w$$&h=$$h$$""></script>
+</div>
+</body></html>
+";
+		private static string NicoVideo =
+@"<iframe src=""data:text/html;base64,$$id$$""
+width=$$w$$ height=$$h$$ frameborder=0></iframe>
+";
+
 		public static void Write(TextWriter w, VideoParameters pp)
 		{
 			int width = pp.Width ?? 480;
@@ -112,6 +129,16 @@ allow=""autoplay; fullscreen"" allowfullscreen></iframe>
 					if (pp.Path.StartsWith("/video/") && pp.Path.Length > 7)
 					{
 						DoTemplate(w, DailyMotion, width, height, pp.Path.Substring(7).Split('_')[0]);
+						return;
+					}
+					break;
+				case "www.nicovideo.jp": // https://www.nicovideo.jp/watch/sm35061034
+					if (pp.Path.StartsWith("/watch/") && pp.Path.Length > 7)
+					{
+						var vid = pp.Path.Substring(7);
+						var sw = new StringWriter();
+						DoTemplate(sw, NicoVideoDocument, width, height, vid);
+						DoTemplate(w, NicoVideo, width, height, Convert.ToBase64String(Encoding.UTF8.GetBytes(sw.ToString())));
 						return;
 					}
 					break;

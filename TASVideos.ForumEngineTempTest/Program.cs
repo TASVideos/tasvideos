@@ -18,6 +18,7 @@ namespace TASVideos.ForumEngineTempTest
 			[video]http://www.youtube.com/view_play_list?p=76E50B82FA870C1D[/video]
 			[video]http://www.dailymotion.com/video/xf4u2m_snes-breath-of-fire-wip-by-janus_videogames[/video]
 			[video]http://vimeo.com/49142543[/video]
+			[video]https://www.nicovideo.jp/watch/sm35061034[/video]
 			";
 			var containsHtml = BbParser.ContainsHtml(content, true);
 			var parsed = PostParser.Parse(content, true, containsHtml);
