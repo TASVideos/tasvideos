@@ -19,7 +19,7 @@ namespace TASVideos.Legacy.Imports
 		private const int EmulatorCoder = 40; // The rank id in the ranks table
 
 		private static readonly string[] SiteDevelopers = { "natt", "Darkpsy", "Scepheo" };
-		
+		private static readonly int[] UserRatingBanList = { 7194, 4805, 4485, 5243, 635, 3301 }; // These users where explicitly banned from rating
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -102,7 +102,8 @@ namespace TASVideos.Legacy.Imports
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
 					TimeZoneId = timeZones.FirstOrDefault(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset)?.StandardName ?? utc,
-					SecurityStamp = Guid.NewGuid().ToString("D")
+					SecurityStamp = Guid.NewGuid().ToString("D"),
+					UseRatings = !u.IsBanned && !UserRatingBanList.Contains(u.Id)
 				})
 				.ToList();
 			
@@ -296,7 +297,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.PublicRatings),
 				nameof(User.LastLoggedInTimeStamp),
 				nameof(User.TimeZoneId),
-				nameof(User.SecurityStamp)
+				nameof(User.SecurityStamp),
+				nameof(User.UseRatings)
 			};
 
 			var userRoleColumns = new[]

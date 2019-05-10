@@ -109,10 +109,6 @@ namespace TASVideos.Services
 				return rating;
 			}
 
-			// TODO: do this in a non-hacky way, this logic was directly lifted from legacy system
-			// Specifically banned from rating.
-			var banned = new[] { 7194, 4805, 4485, 5243, 635, 3301 };
-
 			var authorIds = await _db.PublicationAuthors
 				.Where(pa => pa.PublicationId == id)
 				.Select(pa => pa.UserId)
@@ -121,7 +117,7 @@ namespace TASVideos.Services
 			var ratings = await _db.PublicationRatings
 				.Where(pr => pr.PublicationId == id)
 				.Where(pr => !authorIds.Contains(pr.UserId)) // Do not count author ratings
-				.Where(pr => !banned.Contains(pr.UserId))
+				.Where(pr => pr.User.UseRatings)
 				.ToListAsync();
 
 			var entRatings = ratings
