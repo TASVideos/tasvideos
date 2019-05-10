@@ -295,8 +295,33 @@ namespace TASVideos.ForumEngine
 					}
 					break;
 				case "video":
-					Helpers.WriteText(w, "TODO: SUPPORT THE VIDEO TAG");
-					break;
+					{
+						var href = GetChildText();
+						var pp = new VideoParameters { UrlRaw = href, QueryParams = new Dictionary<string, string>() };
+						if (TryParseSize(out var width, out var height))
+						{
+							pp.Width = width;
+							pp.Height = height;
+						}
+						if (Uri.IsWellFormedUriString(href, UriKind.Absolute))
+						{
+							var uri = new Uri(href, UriKind.Absolute);
+							pp.Host = uri.Host;
+							var qq = uri.PathAndQuery.Split('?');
+							pp.Path = qq[0];
+							if (qq.Length > 1)
+							{
+								var parsed = System.Web.HttpUtility.ParseQueryString(qq[1]);
+								for (var i = 0; i < parsed.Count; i++)
+									pp.QueryParams[parsed.Keys[i]] = parsed.GetValues(i)[0];
+							}
+							WriteVideo.Write(w, pp);
+						}			
+						w.Write("<a href=");
+						Helpers.WriteAttributeValue(w, href);
+						w.Write(">Link to video</a>");
+						break;
+					}
 				case "_root":
 					WriteComplexTag(w, "<div class=postbody>", "</div>");
 					break;

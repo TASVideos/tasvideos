@@ -12,7 +12,13 @@ namespace TASVideos.ForumEngineTempTest
 	{
 		public static void Main()
 		{
-			var content = @"Bonk bo<br/>ff <b>Bu[i]r<hr>[/i]p</b>";
+			var content = @"
+			[video]https://www.youtube.com/watch?v=yLORZbc-PZw[/video]
+			[video]https://youtu.be/yLORZbc-PZw[/video]
+			[video]http://www.youtube.com/view_play_list?p=76E50B82FA870C1D[/video]
+			[video]http://www.dailymotion.com/video/xf4u2m_snes-breath-of-fire-wip-by-janus_videogames[/video]
+			[video]http://vimeo.com/49142543[/video]
+			";
 			var containsHtml = BbParser.ContainsHtml(content, true);
 			var parsed = PostParser.Parse(content, true, containsHtml);
 
