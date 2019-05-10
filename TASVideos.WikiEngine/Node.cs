@@ -395,7 +395,8 @@ namespace TASVideos.WikiEngine.AST
 			["wikiorphans"] = "WikiOrphans",
 			["wikitextchangelog"] = "WikiTextChangeLog",
 			["youtube"] = "Youtube",
-			["listlanguages"] = "ListLanguages"
+			["listlanguages"] = "ListLanguages",
+			["wikiusers"] = "WikiUsers",
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
