@@ -19,8 +19,11 @@
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().RevisionMessage)</th>
 			<th>Actions</th>
 		</tr>
-		@foreach (var revision in Model.History.Revisions.OrderByDescending(r => r.Revision))
+		@{ var revisions = Model.History.Revisions.OrderByDescending(r => r.Revision).ToList(); }
+		@for (var i = 0; i < revisions.Count; i++)
 		{
+			var revision = revisions[i];
+			var previousId = i < revisions.Count - 1 ? revisions[i + 1].Revision : (int?)null;
 			<tr data-revision="@revision.Revision">
 				<td><a href="/@(Model.History.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
 				<td><timezone-convert asp-for="@revision.CreateTimeStamp" /></td>
@@ -28,7 +31,7 @@
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
 				<td style="min-width: 100px">
-					<button class="btn btn-primary btn-sm" onclick="GetDiff(@revision.Revision)">Diff</button>
+					<button disabled="@(!previousId.HasValue)" class="btn btn-primary btn-sm" onclick="GetDiff(@revision.Revision, @previousId)">Diff</button>
 					<delete-button
 						permission="DeleteWikiPages"
 						asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.History.PageName)&revision=@revision.Revision"
@@ -53,10 +56,11 @@
 <script>
 	var fromRevision, toRevision;
 
-	function GetDiff(revision) {
+	function GetDiff(revisionId, previousId) {
 		var baseUrl = '/Wiki/Diff?handler=DiffData';
 		var path = '@Model.History.PageName';
-		var ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + (revision - 1) + '&toRevision=' + revision;
+
+		var ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + previousId + '&toRevision=' + revisionId;
 
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
@@ -73,17 +77,17 @@
 							elem.classList.remove('table-info');
 						});
 
-					var cur = document.querySelector('tr[data-revision="' + revision + '"]');
+					var cur = document.querySelector('tr[data-revision="' + revisionId + '"]');
 					cur.classList.add('table-primary');
 
-					var prev = document.querySelector('tr[data-revision="' + (revision - 1) + '"]');
+					var prev = document.querySelector('tr[data-revision="' + previousId + '"]');
 					prev.classList.add('table-info');
 
 					var data = JSON.parse(xmlhttp.responseText);
 					document.getElementById("left-revision").value = data.leftMarkup;
 					document.getElementById("right-revision").value = data.rightMarkup;
-					fromRevision = revision - 1;
-					toRevision = revision;
+					fromRevision = previousId;
+					toRevision = revisionId;
 					generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
 				}
 			}
