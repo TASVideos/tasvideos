@@ -120,9 +120,11 @@ namespace TASVideos.WikiEngine
 		private string EatTabName()
 		{
 			var ret = new StringBuilder();
-			while (!EOF() && !EatEOL() && !Eat('%'))
+			var sawEndOfLine = false;
+			while (!EOF() && !(sawEndOfLine = EatEOL()) && !Eat('%'))
 				ret.Append(Eat());
-			DiscardLine();
+			if (!sawEndOfLine)
+				DiscardLine();
 			return ret.ToString();
 		}
 		private string EatSrcEmbedText()
