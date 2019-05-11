@@ -1,3 +1,39 @@
 ﻿@model IEnumerable<WikiUserEntry>
 
-<h4>TODO</h4>
+@foreach (var user in Model
+	.OrderByDescending(u => u.PublicationCount)
+	.ThenBy(u => u.SubmissionCount))
+{
+	<div class="user-card">
+		<div class="user-card-header">
+			<profile-link username="@user.UserName">
+				@user.UserName
+			</profile-link>
+		</div>
+		<div class="user-card-body">
+			Publications: @user.PublicationCount
+			<br />
+			Submissions: @user.SubmissionCount
+		</div>
+	</div>
+}
+
+<style>
+	.user-card {
+		font-size: .75rem;
+		display: inline-block;
+		border: solid 1px;
+		margin: 3px;
+		
+		border-radius: 3px;
+	}
+
+	.user-card-header {
+		background-color: #ccc;
+		padding: 3px;
+	}
+
+	.user-card-body {
+		padding: 3px;
+	}
+</style>
