@@ -5,11 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="SampleData\SampleData.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="SampleData\SampleData.sql" />
+    <EmbeddedResource Include="SampleData\SampleData.zip" />
   </ItemGroup>
 
   <ItemGroup>
