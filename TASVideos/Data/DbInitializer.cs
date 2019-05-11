@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -75,10 +78,11 @@ namespace TASVideos.Data
 			var context = services.GetRequiredService<ApplicationDbContext>();
 			var userManager = services.GetRequiredService<UserManager>();
 			Initialize(context);
-			PreMigrateSeedData(context);
-			PostMigrateSeedData(context);
-			GenerateDevTestUsers(context, userManager).Wait();
+
+			// Note: We specifically do not want to run seed data
+			// This data is already baked into the sample data file
 			GenerateDevSampleData(context).Wait();
+			GenerateDevTestUsers(context, userManager).Wait();
 		}
 
 		private static void ImportStrategy(IServiceProvider services)
@@ -207,6 +211,8 @@ namespace TASVideos.Data
 					context.UserRoles.Add(new UserRole { Role = defaultRole, User = savedUser });
 				}
 			}
+
+			context.SaveChanges();
 		}
 
 		/// <summary>
@@ -215,28 +221,34 @@ namespace TASVideos.Data
 		/// </summary>
 		private static async Task GenerateDevSampleData(ApplicationDbContext context)
 		{
-			context.WikiPages.Add(PublicationSampleData.FrontPage);
-			context.Games.Add(PublicationSampleData.Smb3);
-			context.Roms.Add(PublicationSampleData.Smb3Rom);
-			context.Submissions.Add(PublicationSampleData.MorimotoSubmission);
-			context.Publications.Add(PublicationSampleData.MorimotoSmb3Pub);
-			context.PublicationFlags.AddRange(PublicationSampleData.MorimotoSmb3PublicationFlags);
-			await context.SaveChangesAsync();
-
-			var sql = EmbeddedSampleSqlFile();
-			var commands = sql.Split("GO");
-			foreach (var c in commands)
+			using (await context.Database.BeginTransactionAsync())
 			{
-				context.Database.ExecuteSqlCommand(c);
+				var sql = EmbeddedSampleSqlFile();
+				var commands = sql.Split("\nGO");
+				foreach (var c in commands)
+				{
+					// EF needs this BS for some reason
+					var escaped = c
+						.Replace("{", "{{")
+						.Replace("}", "}}");
+
+					#pragma warning disable EF1000
+					await context.Database.ExecuteSqlCommandAsync(escaped);
+				}
+
+				context.Database.CommitTransaction();
 			}
 		}
 
 		private static string EmbeddedSampleSqlFile()
 		{
-			var stream = Assembly.GetAssembly(typeof(PublicationSampleData))
-				.GetManifestResourceStream("TASVideos.Data.SampleData.SampleData.sql");
+			var stream = Assembly.GetAssembly(typeof(UserSampleData))
+				.GetManifestResourceStream("TASVideos.Data.SampleData.SampleData.zip");
 
-			using (var tr = new StreamReader(stream))
+			var archive = new ZipArchive(stream);
+			var entry = archive.Entries.Single();
+
+			using (var tr = new StreamReader(entry.Open()))
 			{
 				return tr.ReadToEnd();
 			}
