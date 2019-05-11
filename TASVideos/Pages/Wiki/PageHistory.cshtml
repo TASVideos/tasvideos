@@ -10,15 +10,18 @@
 </div>
 <hr />
 <table class="table table-striped table-light">
-	<tbody>
+	<thead>
 		<tr>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().Revision)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().CreateTimeStamp)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().CreateUserName)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().MinorEdit)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().RevisionMessage)</th>
+			<th>Diff</th>
 			<th>Actions</th>
 		</tr>
+	</thead>
+	<tbody data-hasrevisions="true">
 		@{ var revisions = Model.History.Revisions.OrderByDescending(r => r.Revision).ToList(); }
 		@for (var i = 0; i < revisions.Count; i++)
 		{
@@ -31,7 +34,11 @@
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
 				<td style="min-width: 100px">
-					<button disabled="@(!previousId.HasValue)" class="btn btn-primary btn-sm" onclick="GetDiff(@revision.Revision, @previousId)">Diff</button>
+					<button disabled="@(!previousId.HasValue)" class="btn btn-secondary btn-sm" onclick="GetDiff(@previousId, @revision.Revision)">Prev</button>
+					<button class="btn btn-info btn-sm" data-from="true" onClick="GetDiff(@revision.Revision, null)">From</button>
+					<button class="btn btn-info btn-sm" data-to="true" onClick="GetDiff(null, @revision.Revision)">To</button>
+				</td>
+				<td>
 					<delete-button
 						permission="DeleteWikiPages"
 						asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.History.PageName)&revision=@revision.Revision"
@@ -56,11 +63,50 @@
 <script>
 	var fromRevision, toRevision;
 
-	function GetDiff(revisionId, previousId) {
+	function updateTableStyling() {
+		document
+			.querySelectorAll('tbody[data-hasrevisions] tr')
+			.toArray()
+			.forEach(function (elem) {
+				elem.classList.remove('table-primary');
+				elem.classList.remove('table-info');
+				elem.querySelector("button[data-from]").classList.remove("btn-primary");
+				elem.querySelector("button[data-from]").classList.add("btn-info");
+				elem.querySelector("button[data-to]").classList.remove("btn-primary");
+				elem.querySelector("button[data-to]").classList.add("btn-info");
+			});
+
+		var cur = document.querySelector('tr[data-revision="' + toRevision + '"]');
+		if (cur) {
+			cur.classList.add('table-primary');
+			cur.querySelector("button[data-to]").classList.remove("btn-info");
+			cur.querySelector("button[data-to]").classList.add("btn-primary");
+		}
+		
+		var prev = document.querySelector('tr[data-revision="' + fromRevision + '"]');
+		if (prev) {
+			prev.classList.add('table-info');	
+			prev.querySelector("button[data-from]").classList.remove("btn-info");
+			prev.querySelector("button[data-from]").classList.add("btn-primary");
+		}
+	}
+
+	function GetDiff(fromId, toId) {
 		var baseUrl = '/Wiki/Diff?handler=DiffData';
 		var path = '@Model.History.PageName';
+		if (fromId != null) {
+			fromRevision = fromId;
+		}
+		if (toId != null) {
+			toRevision = toId;
+		}
 
-		var ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + previousId + '&toRevision=' + revisionId;
+		if (fromRevision == null || toRevision == null) {
+			updateTableStyling();
+			return;
+		}
+
+		var ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
 
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
@@ -68,27 +114,11 @@
 				document.getElementById("diff-view").classList.remove("d-none");
 				document.getElementById("diff-options").classList.remove("d-none");
 				if (xmlhttp.status === 200) {
-
-					document
-						.querySelectorAll('tr')
-						.toArray()
-						.forEach(function (elem) {
-							elem.classList.remove('table-primary');
-							elem.classList.remove('table-info');
-						});
-
-					var cur = document.querySelector('tr[data-revision="' + revisionId + '"]');
-					cur.classList.add('table-primary');
-
-					var prev = document.querySelector('tr[data-revision="' + previousId + '"]');
-					prev.classList.add('table-info');
-
 					var data = JSON.parse(xmlhttp.responseText);
 					document.getElementById("left-revision").value = data.leftMarkup;
 					document.getElementById("right-revision").value = data.rightMarkup;
-					fromRevision = previousId;
-					toRevision = revisionId;
 					generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
+					updateTableStyling();
 				}
 			}
 		};

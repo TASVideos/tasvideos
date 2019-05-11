@@ -56,7 +56,7 @@ namespace TASVideos.Pages.Wiki
 					|| wp.Revision == toRevision)
 				.ToListAsync();
 
-			if (fromRevision > 0 && revisions.Count != 2)
+			if (revisions.Count != (fromRevision == toRevision ? 1 : 2))
 			{
 				throw new InvalidOperationException($"Page \"{pageName}\" or revisions {fromRevision}-{toRevision} could not be found");
 			}
@@ -66,7 +66,7 @@ namespace TASVideos.Pages.Wiki
 				PageName = pageName,
 				LeftRevision = fromRevision,
 				RightRevision = toRevision,
-				LeftMarkup = fromRevision > 0 ? revisions.Single(wp => wp.Revision == fromRevision).Markup : "",
+				LeftMarkup = revisions.Single(wp => wp.Revision == fromRevision).Markup,
 				RightMarkup = revisions.Single(wp => wp.Revision == toRevision).Markup
 			};
 		}
