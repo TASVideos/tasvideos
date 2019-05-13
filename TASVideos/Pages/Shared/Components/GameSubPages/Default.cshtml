@@ -2,54 +2,5 @@
 
 @foreach (var item in Model.OrderBy(m => m.SystemCode))
 {
-	<div class="card-link">
-		<a class="card-link-anchor" href="/@item.PageLink">
-			<h4 class="card-link-header">
-				@item.SystemCode
-			</h4>
-			<span class="card-link-body">
-				@item.SystemDescription
-			</span>
-			<span class="card-link-arrow">
-				<span class="fa fa-chevron-right"></span>
-			</span>
-		</a>
-	</div>
+	<card-link href="@item.PageLink" header="@item.SystemCode" body="@item.SystemDescription" />
 }
-
-<style>
-	.card-link {
-		padding: 1rem;
-		display: inline-block;
-		margin: 1rem;
-		width: 18rem;
-		margin-bottom: 2rem;
-		background-color: white;
-		text-align: left;
-		border-radius: 3px;
-	}
-
-	a.card-link-anchor {
-		text-decoration: none;
-	}
-
-	.card-link:hover {
-		box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.31) 0px 0px 1px;
-		transition: opacity 140ms ease-in-out 0s;
-		transform: translate3d(0px, -2px, 0px);
-	}
-
-	.card-link-header {
-		color: #531f86
-	}
-
-	.card-body {
-		cursor: pointer;
-	}
-
-	.card-link-arrow {
-		margin-left: .5rem;
-		float: right;
-	}
-
-</style>
