@@ -81,6 +81,14 @@ h4 {
 }
 
 /*** Bootstrap customizations **/
+
+/* Firefox fix for file inputs */
+@-moz-document url-prefix() {
+	input[type="file"].form-control {
+		height: auto;
+	}
+}
+
 .form-control-label {
 	font-weight: bold;
 }
