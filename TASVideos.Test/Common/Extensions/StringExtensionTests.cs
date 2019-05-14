@@ -33,5 +33,29 @@ namespace TASVideos.Test.Common.Extensions
 			var actual = str.CapAndEllipse(limit);
 			Assert.AreEqual(expected, actual);
 		}
+
+		[TestMethod]
+		[DataRow(null, null)]
+		[DataRow("", "")]
+		[DataRow("\r \n \t", "\r \n \t")]
+		[DataRow(" ", " ")]
+		[DataRow("onlylowercase", "onlylowercase")]
+		[DataRow(" trimspaces ", "trimspaces")]
+		[DataRow("If Spaces Do Not Add Extra Spaces", "If Spaces Do Not Add Extra Spaces")]
+		[DataRow("HelloWorld", "Hello World")]
+		[DataRow("ABTest", "AB Test")]
+		[DataRow("ABCTest", "ABC Test")]
+		[DataRow("ABCtest", "AB Ctest")]
+		[DataRow("TASVideos", "TAS Videos")]
+		[DataRow("Special.Characters.Get.Spaces", "Special . Characters . Get . Spaces")]
+		[DataRow("GameResources/NES/SuperMarioBros", "Game Resources / NES / Super Mario Bros")]
+		[DataRow("HomePages/adelikat", "Home Pages / adelikat")]
+		[DataRow("HomePages/Adelikat", "Home Pages / Adelikat")]
+		[DataRow("HomePages/[^_^]", "Home Pages / [^_^]")]
+		public void SplitCamelCase_Tests(string str, string expected)
+		{
+			var actual = str.SplitCamelCase();
+			Assert.AreEqual(expected, actual);
+		}
 	}
 }
