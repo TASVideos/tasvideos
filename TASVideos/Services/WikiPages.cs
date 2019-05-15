@@ -67,11 +67,6 @@ namespace TASVideos.Services
 		/// Clears the wiki cache
 		/// </summary>
 		Task FlushCache();
-
-		/// <summary>
-		/// This is a shim for now, cache should be managed internally
-		/// </summary>
-		Task PreLoadCache();
 	}
 
 	public class WikiPages : IWikiPages
@@ -85,11 +80,7 @@ namespace TASVideos.Services
 		{
 			_db = db;
 			_cache = cache;
-
-			if (!WikiCache.Any())
-			{
-				PreLoadCache().Wait();
-			}
+			FlushCache().Wait();
 		}
 
 		private List<WikiPage> WikiCache
