@@ -21,6 +21,7 @@ namespace TASVideos.Data.Entity.Game
 		public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 		public virtual ICollection<GameGenre> GameGenres { get; set; } = new HashSet<GameGenre>();
 		public virtual ICollection<UserFile> UserFiles { get; set; } = new HashSet<UserFile>();
+		public virtual ICollection<GameGameGroup> GameGroups { get; set; } = new HashSet<GameGameGroup>();
 
 		[Required]
 		[StringLength(250)]
