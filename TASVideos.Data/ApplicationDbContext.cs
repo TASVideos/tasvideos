@@ -55,6 +55,8 @@ namespace TASVideos.Data
 		public DbSet<GameSystem> GameSystems { get; set; }
 		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; }
 		public DbSet<GameRom> Roms { get; set; }
+		public DbSet<GameGroup> GameGroups { get; set; }
+		public DbSet<GameGameGroup> GameGameGroups { get; set; }
 
 		// Forum tables
 		public DbSet<ForumCategory> ForumCategories { get; set; }
@@ -323,6 +325,18 @@ namespace TASVideos.Data
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
 
 				entity.HasIndex(e => e.DisplayName).IsUnique();
+			});
+
+			builder.Entity<GameGameGroup>(entity =>
+			{
+				entity.HasKey(e => new { e.GameId, e.GameGroupId });
+				entity.HasIndex(e => e.GameId);
+			});
+
+			builder.Entity<GameGroup>(entity =>
+			{
+				entity.HasIndex(e => e.Name)
+					.IsUnique();
 			});
 		}
 
