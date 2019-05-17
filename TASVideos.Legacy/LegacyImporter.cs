@@ -34,6 +34,7 @@ namespace TASVideos.Legacy
 			Run("Tags", () => TagImporter.Import(connectionStr, context, legacySiteContext));
 			Run("Roms", () => RomImporter.Import(connectionStr, context, legacySiteContext));
 			Run("Games", () => GameImporter.Import(connectionStr, context, legacySiteContext));
+			Run("GameGroup", () => GameGroupImporter.Import(connectionStr, context, legacySiteContext));
 			Run("GameGenre", () => GameGenreImport.Import(connectionStr, context, legacySiteContext));
 			Run("Users", () => UserImporter.Import(connectionStr, context, legacySiteContext, legacyForumContext));
 			Run("Award", () => AwardImporter.Import(connectionStr, context, legacySiteContext));
