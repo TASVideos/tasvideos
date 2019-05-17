@@ -127,7 +127,7 @@ namespace TASVideos.Legacy.Imports
 		private static string PageNameShenanigans(SiteText st, string userName)
 		{
 			string pageName = st.PageName;
-			if (pageName.StartsWith("System"))
+			if (pageName.StartsWith("System") && pageName != "SystemPages")
 			{
 				pageName = pageName.Replace("System", "System/");
 			}
