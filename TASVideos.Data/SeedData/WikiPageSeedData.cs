@@ -13,6 +13,14 @@ namespace TASVideos.Data.SeedData
 		{
 			new WikiPage
 			{
+				PageName = "SystemPages",
+				RevisionMessage = Import,
+				Markup = @"This page is obsolete. Use [System] instead.
+
+[TODO]: Update referrer pages to link to System"
+			},
+			new WikiPage
+			{
 				PageName = "System/FilesEditingHelp",
 				RevisionMessage = Import,
 				Markup = @"! Screenshot guidelines
