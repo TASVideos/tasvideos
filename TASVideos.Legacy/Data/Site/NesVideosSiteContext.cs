@@ -22,6 +22,8 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<MovieFile> MovieFiles { get; set; }
 		public DbSet<MovieFileStorage> MovieFileStorage { get; set; }
 		public DbSet<GameName> GameNames { get; set; }
+		public DbSet<GameNameGroup> GameNameGroups { get; set; }
+		public DbSet<GameNameGroupName> GameNameGroupNames { get; set; }
 		public DbSet<Rom> Roms { get; set; }
 		// ReSharper disable once UnusedMember.Global
 		public DbSet<Player> Players { get; set; }
@@ -81,7 +83,14 @@ namespace TASVideos.Legacy.Data.Site
 			});
 			modelBuilder.Entity<UserFile>().ToTable("user_files");
 			modelBuilder.Entity<UserFileComment>().ToTable("user_files_comments");
-			modelBuilder.Entity<Entity.SubmissionRejections>().ToTable("rejections");
+			modelBuilder.Entity<SubmissionRejections>().ToTable("rejections");
+
+			modelBuilder.Entity<GameNameGroupName>().ToTable("gamename_groupname");
+			modelBuilder.Entity<GameNameGroup>(entity =>
+			{
+				entity.HasKey(e => new { e.GnId, e.GroupId });
+				entity.ToTable("gamename_group");
+			});
 		}
 	}
 }
