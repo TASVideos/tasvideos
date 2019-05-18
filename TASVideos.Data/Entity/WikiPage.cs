@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -40,7 +41,7 @@ namespace TASVideos.Data.Entity
 
 		public static IEnumerable<WikiPage> ForPage(this IEnumerable<WikiPage> list, string pageName)
 		{
-			return list.Where(w => w.PageName == pageName);
+			return list.Where(w => string.Equals(w.PageName, pageName, StringComparison.OrdinalIgnoreCase));
 		}
 
 		public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> list, string pageName)
@@ -55,7 +56,8 @@ namespace TASVideos.Data.Entity
 
 		public static IEnumerable<WikiPage> Revision(this IEnumerable<WikiPage> list, string pageName, int revision)
 		{
-			return list.Where(w => w.PageName == pageName && w.Revision == revision);
+			return list.Where(w => string.Equals(w.PageName, pageName, StringComparison.OrdinalIgnoreCase)
+				&& w.Revision == revision);
 		}
 
 		public static IQueryable<WikiPage> ExcludingMinorEdits(this IQueryable<WikiPage> list)
