@@ -23,8 +23,6 @@ namespace TASVideos.Pages.Wiki
 
 		public IActionResult OnGet(string url, int? revision = null)
 		{
-			url = url.Trim('/').Replace(".html", "");
-
 			if (url.ToLower() == "frontpage")
 			{
 				return Redirect("/");
@@ -37,7 +35,7 @@ namespace TASVideos.Pages.Wiki
 					return Redirect("HomePages/" + url);
 				}
 
-				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiEngine.Util.NormalizeWikiPageName(url) });
+				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiEngine.Builtins.NormalizeInternalLink(url) });
 			}
 
 			WikiPage = _wikiPages.Page(url, revision);

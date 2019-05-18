@@ -143,13 +143,13 @@ namespace TASVideos.Data
 				}
 
 				context.WikiPages.Add(wikiPage);
-				var referrals = Util.GetAllWikiLinks(wikiPage.Markup);
+				var referrals = Util.GetAllInternalLinks(wikiPage.Markup);
 				foreach (var referral in referrals)
 				{
 					context.WikiReferrals.Add(new WikiPageReferral
 					{
 						Referrer = wikiPage.PageName,
-						Referral = referral.Link?.Split('|').FirstOrDefault(),
+						Referral = referral.Link,
 						Excerpt = referral.Excerpt
 					});
 				}

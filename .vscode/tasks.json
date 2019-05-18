@@ -1,25 +1,35 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/TASVideos/TASVideos.csproj"
-            ],
-            "problemMatcher": "$msCompile"
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/TASVideos/TASVideos.csproj"
+			],
+			"problemMatcher": "$msCompile"
 		},
 		{
-            "label": "build_forumengine",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/TASVideos.ForumEngineTempTest/TASVideos.ForumEngineTempTest.csproj"
-            ],
-            "problemMatcher": "$msCompile"			
+			"label": "build_forumengine",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/TASVideos.ForumEngineTempTest/TASVideos.ForumEngineTempTest.csproj"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "build_wikiengine",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/TASVideos.WikiEngineTest/TASVideos.WikiEngineTest.csproj"
+			],
+			"problemMatcher": "$msCompile"
 		}
-    ]
+	]
 }
