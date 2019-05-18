@@ -80,7 +80,10 @@ namespace TASVideos.Services
 		{
 			_db = db;
 			_cache = cache;
-			FlushCache().Wait();
+			if (!WikiCache.Any())
+			{
+				// Do nothing, this is horribly written in a way that the cache is populate just by checking
+			}
 		}
 
 		private List<WikiPage> WikiCache
