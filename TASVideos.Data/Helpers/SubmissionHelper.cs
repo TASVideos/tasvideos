@@ -97,22 +97,27 @@ namespace TASVideos.Data.Helpers
 			return list;
 		}
 
+		private static int? IsNumberedLink(string link, char suffix)
+		{
+			if (link != null && link.EndsWith(suffix))
+			{
+				var rooted = link.StartsWith('/');
+				var numberText = link.AsSpan(rooted ? 1 : 0, link.Length - (rooted ? 2 : 1));
+				if (int.TryParse(numberText, out int id))
+				{
+					return id;
+				}
+			}
+			return null;
+		}
+
 		/// <summary>
 		/// Determines if the link is in the form of valid submission link ex: 100S
 		/// </summary>
 		/// <returns>The id of the submission if it is a valid link, else null</returns>
 		public static int? IsSubmissionLink(string link)
 		{
-			if (link?.EndsWith("S") ?? false)
-			{
-				var result = int.TryParse(link.Substring(0, link.Length - 1), out int id);
-				if (result)
-				{
-					return id;
-				}
-			}
-
-			return null;
+			return IsNumberedLink(link, 'S');
 		}
 
 		/// <summary>
@@ -121,16 +126,7 @@ namespace TASVideos.Data.Helpers
 		/// <returns>The id of the movie if it is a valid link, else null</returns>
 		public static int? IsPublicationLink(string link)
 		{
-			if (link?.EndsWith("M") ?? false)
-			{
-				var result = int.TryParse(link.Substring(0, link.Length - 1), out int id);
-				if (result)
-				{
-					return id;
-				}
-			}
-
-			return null;
+			return IsNumberedLink(link, 'M');
 		}
 
 		/// <summary>
@@ -139,16 +135,7 @@ namespace TASVideos.Data.Helpers
 		/// <returns>The id of the movie if it is a valid link, else null</returns>
 		public static int? IsGamePageLink(string link)
 		{
-			if (link?.EndsWith("G") ?? false)
-			{
-				var result = int.TryParse(link.Substring(0, link.Length - 1), out int id);
-				if (result)
-				{
-					return id;
-				}
-			}
-
-			return null;
+			return IsNumberedLink(link, 'G');
 		}
 
 		public static readonly SelectListItem[] GameVersionOptions = 

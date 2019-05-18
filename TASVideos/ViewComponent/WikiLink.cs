@@ -21,45 +21,35 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
-			pp = pp.Trim('/');
 			var split = pp.Split('|');
-
 			var model = new WikiLinkModel
 			{
-				Href = WikiEngine.Util.NormalizeWikiPageName(split[0]),
-				DisplayText = split.Length > 1 ? split[1] : split[0]
+				Href = split[0],
+				DisplayText = split.Length == 1
+					? split[0].Substring(1) // almost always want to chop off the leading '/'
+					: split[1]
 			};
 
-			if (split.Length == 1)
+			int? id;
+
+			if (model.DisplayText.StartsWith("user:"))
 			{
-				if (pp.StartsWith("user:"))
+				model.DisplayText = model.DisplayText.Substring(5);
+			}
+			else if ((id = SubmissionHelper.IsSubmissionLink(split[0])).HasValue)
+			{
+				var title = await GetSubmissionTitle(id.Value);
+				if (!string.IsNullOrWhiteSpace(title))
 				{
-					model.DisplayText = model.DisplayText.Substring(5);
-					model.Href = "Users/Profile/" + model.DisplayText;
+					model.DisplayText = title;
 				}
-				else
+			}
+			else if ((id = SubmissionHelper.IsPublicationLink(split[0])).HasValue)
+			{
+				var title = $"[{id.Value}]" + (await GetPublicationTitle(id.Value));
+				if (!string.IsNullOrWhiteSpace(title))
 				{
-					var id = SubmissionHelper.IsSubmissionLink(pp);
-					if (id.HasValue)
-					{
-						var title = await GetSubmissionTitle(id.Value);
-						if (!string.IsNullOrWhiteSpace(title))
-						{
-							model.DisplayText = title;
-						}
-					}
-					else
-					{
-						var mid = SubmissionHelper.IsPublicationLink(pp);
-						if (mid.HasValue)
-						{
-							var title = $"[{mid.Value}]" + (await GetPublicationTitle(mid.Value));
-							if (!string.IsNullOrWhiteSpace(title))
-							{
-								model.DisplayText = title;
-							}
-						}
-					}
+					model.DisplayText = title;
 				}
 			}
 

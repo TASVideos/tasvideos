@@ -335,7 +335,7 @@ namespace TASVideos.Services
 
 			_db.WikiReferrals.RemoveRange(existingReferrals);
 
-			var referrers = Util.GetAllWikiLinks(markup)
+			var referrers = Util.GetAllInternalLinks(markup)
 				.Select(wl => new WikiPageReferral
 				{
 					Referrer = pageName,

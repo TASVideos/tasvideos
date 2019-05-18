@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TASVideos.WikiEngine.AST;
@@ -34,10 +35,6 @@ namespace TASVideos.WikiEngine
 				return MakeFootnoteLink(charStart, charEnd, match.Groups[1].Value);
 			if ((match = RealModule.Match(text)).Success)
 				return MakeModuleInternal(charStart, charEnd, match.Groups[1].Value);
-			if (text.StartsWith("user:"))
-				// user homepages are the same __wikiLink module as other wiki links, but match them here so we can catch special characters in user names
-				// pass the `user:` part to the module as well so it can disambiguate between regular and user pages
-				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
 
 			return MakeLinkOrImage(charStart, charEnd, text);
 		}
@@ -82,7 +79,7 @@ namespace TASVideos.WikiEngine
 		}
 
 		private static readonly string[] ImageSuffixes = { ".svg", ".png", ".gif", ".jpg", ".jpeg" };
-		private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//", "irc://" };
+		private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//", "irc://", "user:" };
 
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
@@ -97,18 +94,56 @@ namespace TASVideos.WikiEngine
 			return IsLink(text) && ImageSuffixes.Any(text.EndsWith);
 		}
 
-		private static string UrlFromLinkText(string text)
+		private static string NormalizeUrl(string text)
 		{
 			if (text[0] == '=')
 			{
-				if (text.Length == 1) // Just a single equals, apparently people expect this to link to home
+				if (text == "=" || text == "=/")
 				{
 					return "/";
 				}
+				else
+				{
+					return NormalizeInternalLink("/" + text.Substring(text[1] == '/' ? 2 : 1));
+				}
+			}
+			else if (text.StartsWith("user:"))
+			{
+				return NormalizeInternalLink("/Users/Profile/" + text.Substring(5));
+			}
+			else
+			{
+				return text;
+			}
+		}
 
-				return "/" + text.Substring(text[1] == '/' ? 2 : 1);
+		public static string NormalizeInternalLink(string text)
+		{
+			if (!text.StartsWith("/Users/Profile/"))
+			{
+				// Support links like [Judge Guidelines] linking to [JudgeGuidelines]
+				// We don't do this replacement if link is a user module in order to support users with spaces such as Walker Boh
+				text = text.Replace(" ", "");
 			}
 
+			if (text.EndsWith(".html", true, CultureInfo.InvariantCulture))
+			{
+				text = text.Substring(0, text.Length - 5);
+			}
+
+			text = text.TrimEnd('/');
+			text = string.Join("/", text.Split('/').Select(s => s.Length > 0 ? char.ToUpperInvariant(s[0]) + s.Substring(1) : s));
+			return text;
+		}
+
+		private static string DisplayTextForUrl(string text)
+		{
+			// If users don't like this, they should use links with explicit display text
+			if (text.StartsWith("user:"))
+			{
+				text = text.Substring(5);
+			}
+			text = text.Trim('/').Trim('=');
 			return text;
 		}
 
@@ -133,10 +168,7 @@ namespace TASVideos.WikiEngine
 				}
 				else
 				{
-					// TODO: the existing forum code does this, but that can't possibly be intended??
-					// return new[] { MakeLink(pp[0], new Text(pp[0])) };
-
-					return new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, UrlFromLinkText(pp[0])) { CharEnd = charEnd }) };
+					return new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd }) };
 				}
 			}
 
@@ -145,21 +177,17 @@ namespace TASVideos.WikiEngine
 			// it could be an internal wiki link, but it could also be a lot of other not-allowed garbage
 			if (ImplicitWikiLink.Match(text).Success)
 			{
-				// wiki links needs to be in a module because the href, and possibly the text will be adjusted/normalized based
-				// on what other wiki pages exist and their content
-
-				// optimization:  but, the href adjustment is static, and the text adjustment only happens when no text is provided.
-				// so we can desugar [Foo|Bar] into [=FooAdjusted|Bar]
 				if (pp.Length >= 2)
 				{
-					// same as the IsLink(pp[0]) && pp.Length >= 2 case, except we NormalizeWikiPageName it and add the '='
-					return new[] { MakeLink(charStart, charEnd, "=" + Util.NormalizeWikiPageName(pp[0]), new Text(charStart, pp[1]) { CharEnd = charEnd }) };
+					// same as the IsLink(pp[0]) && pp.Length >= 2 case, except add the '=' because it was implicitly resolved to an internal link
+					return new[] { MakeLink(charStart, charEnd, NormalizeUrl("=" + pp[0]), new Text(charStart, pp[1]) { CharEnd = charEnd }) };
 				}
 				else
 				{
+					// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
 					// DB lookup will be required for links like [4022S], so use __wikiLink
-					return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + text);
-				}	
+					return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + NormalizeUrl("=" + pp[0]) + "|" + pp[0]);
+				}
 			}
 
 			// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
@@ -168,11 +196,17 @@ namespace TASVideos.WikiEngine
 
 		private static INode MakeLink(int charStart, int charEnd, string text, INode child)
 		{
+			var href = NormalizeUrl(text);
 			var attrs = new List<KeyValuePair<string, string>>
 			{
-				Attr("href", UrlFromLinkText(text))
+				Attr("href", href)
 			};
-			if (text[0] != '=') // external
+			if (href[0] == '/' && (href.Length == 1 || href[1] != '/'))
+			{
+				// internal
+				attrs.Add(Attr("class", "intlink"));
+			}
+			else
 			{
 				attrs.Add(Attr("rel", "nofollow"));
 				attrs.Add(Attr("class", "extlink"));
@@ -185,7 +219,7 @@ namespace TASVideos.WikiEngine
 		{
 			var attrs = new List<KeyValuePair<string, string>>();
 			var classSet = false;
-			attrs.Add(Attr("src", UrlFromLinkText(pp[index++])));
+			attrs.Add(Attr("src", NormalizeUrl(pp[index++])));
 			for (; index < pp.Length; index++)
 			{
 				var s = pp[index];

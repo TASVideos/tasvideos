@@ -1,58 +1,71 @@
 {
-   // Use IntelliSense to find out which attributes exist for C# debugging
-   // Use hover for the description of the existing attributes
-   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-   "version": "0.2.0",
-   "configurations": [
-	   {
-		   "name": "ForumEngineTempTest",
-		   "type": "coreclr",
-		   "request": "launch",
-		   "preLaunchTask": "build_forumengine",
-		   "program": "${workspaceRoot}/TASVideos.ForumEngineTempTest/bin/Debug/netcoreapp2.2/TASVideos.ForumEngineTempTest.dll",
-		   "args": [],
-		   "cwd": "${workspaceRoot}",
-		   "stopAtEntry": false,
-		   "console": "internalConsole"
-	   },
-        {
-            "name": "TASVideos",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/TASVideos/bin/Debug/netcoreapp2.2/TASVideos.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/TASVideos",
-            "stopAtEntry": false,
-            "internalConsoleOptions": "openOnSessionStart",
-            "launchBrowser": {
-                "enabled": true,
-                "args": "${auto-detect-url}",
-                "windows": {
-                    "command": "cmd.exe",
-                    "args": "/C start ${auto-detect-url}"
-                },
-                "osx": {
-                    "command": "open"
-                },
-                "linux": {
-                    "command": "xdg-open"
-                }
-            },
-            "env": {
+	// Use IntelliSense to find out which attributes exist for C# debugging
+	// Use hover for the description of the existing attributes
+	// For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "ForumEngineTempTest",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build_forumengine",
+			"program": "${workspaceRoot}/TASVideos.ForumEngineTempTest/bin/Debug/netcoreapp2.2/TASVideos.ForumEngineTempTest.dll",
+			"args": [],
+			"cwd": "${workspaceRoot}",
+			"stopAtEntry": false,
+			"console": "internalConsole"
+		},
+		{
+			"name": "WikiEngineTest",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build_wikiengine",
+			"program": "${workspaceRoot}/TASVideos.WikiEngineTest/bin/Debug/netcoreapp2.2/TASVideos.WikiEngineTest.dll",
+			"args": [
+				"--force"
+			],
+			"cwd": "${workspaceRoot}/TASVideos.WikiEngineTest",
+			"stopAtEntry": false,
+			"console": "internalConsole"
+		},
+		{
+			"name": "TASVideos",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build",
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/TASVideos/bin/Debug/netcoreapp2.2/TASVideos.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}/TASVideos",
+			"stopAtEntry": false,
+			"internalConsoleOptions": "openOnSessionStart",
+			"launchBrowser": {
+				"enabled": true,
+				"args": "${auto-detect-url}",
+				"windows": {
+					"command": "cmd.exe",
+					"args": "/C start ${auto-detect-url}"
+				},
+				"osx": {
+					"command": "open"
+				},
+				"linux": {
+					"command": "xdg-open"
+				}
+			},
+			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Development",
-				"StartupStrategy":  "Minimal"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
-        }
-    ]
+				"StartupStrategy": "Minimal"
+			},
+			"sourceFileMap": {
+				"/Views": "${workspaceFolder}/Views"
+			}
+		},
+		{
+			"name": ".NET Core Attach",
+			"type": "coreclr",
+			"request": "attach",
+			"processId": "${command:pickProcess}"
+		}
+	]
 }
