@@ -32,13 +32,13 @@ namespace TASVideos.Legacy.Imports
 			{
 				var legacyMovies = legacySiteContext.Movies
 					.Include(m => m.MovieFiles)
+					.ThenInclude(mf => mf.Storage)
 					.Include(m => m.MovieClasses)
 					.Include(m => m.Publisher)
 					.Include(m => m.Player)
 					.Where(m => m.Id > 0)
 					.ToList();
 
-				var legacyMovieFileStorage = legacySiteContext.MovieFileStorage.ToList();
 				var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
 
 				var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
@@ -81,7 +81,6 @@ namespace TASVideos.Legacy.Imports
 					join sys in systems on lm.SystemId equals sys.Id
 					join sysFr in systemFrameRates on s.SystemFrameRateId equals sysFr.Id
 					join g in games on s.GameId ?? -1 equals g.Id
-					join mfs in legacyMovieFileStorage on lm.MovieFiles.First(f => movieTypes.Contains(f.Type)).FileName equals mfs.FileName
 					select new
 					{
 						Movie = lm,
@@ -90,12 +89,13 @@ namespace TASVideos.Legacy.Imports
 						System = sys,
 						SystemFrameRates = sysFr,
 						Game = g,
-						MovieFileStorage = mfs
 					})
 					.ToList();
 
 				foreach (var pub in pubs)
 				{
+					var movieFiles = pub.Movie.MovieFiles.Where(f => movieTypes.Contains(f.Type));
+					var mainMovieFile = movieFiles.First(); // Pick the first one to be the official, we have no better way really
 					var screenshotUrl = pub.Movie.MovieFiles.First(f => f.Type == "H");
 					var torrentUrls = pub.Movie.MovieFiles.Where(f => torrentTypes.Contains(f.Type));
 					var mirror = pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "A")?.FileName;
@@ -135,8 +135,8 @@ namespace TASVideos.Legacy.Imports
 						RomId = -1, // Place holder
 						GameId = pub.Sub.GameId ?? -1,
 						Game = pub.Game,
-						MovieFile = pub.MovieFileStorage.FileData,
-						MovieFileName = pub.Movie.MovieFiles.First(f => movieTypes.Contains(f.Type)).FileName,
+						MovieFile = mainMovieFile.Storage.FileData,
+						MovieFileName = mainMovieFile.FileName,
 						SystemFrameRateId = pub.Sub.SystemFrameRateId ?? 0,
 						SystemFrameRate = pub.SystemFrameRates,
 						SystemId = pub.Movie.SystemId,
