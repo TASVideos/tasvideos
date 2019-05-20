@@ -8,11 +8,11 @@ using TASVideos.Services;
 namespace TASVideos.Pages.Wiki
 {
 	[AllowAnonymous]
-	public class IndexModel : BasePageModel
+	public class RenderModel : BasePageModel
 	{
 		private readonly IWikiPages _wikiPages;
 
-		public IndexModel(IWikiPages wikiPages)
+		public RenderModel(IWikiPages wikiPages)
 		{
 			_wikiPages = wikiPages;
 		}
