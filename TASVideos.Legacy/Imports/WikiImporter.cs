@@ -210,6 +210,35 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("=/css/bolt.png")) markup = markup.Replace("=/css/bolt.png", "=images/notable.png");
 			if (markup.Contains("=/css/verified.png")) markup = markup.Replace("=/css/verified.png", "=images/verified.png");
 
+			// These are automatic now
+			markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
+			markup = Regex.Replace(markup, "\\[module:gamefooter\\]", "", RegexOptions.IgnoreCase);
+
+			// Mitigate unnecessary ListParent module calls, if they are at the beginning, wipe them.
+			// We can't remove all instances because of pages like Interviews/Phil/GEE2005
+			// Where below the title there is Back To: %%%[module:ListParents]
+			if (markup.StartsWith("[module:listparents]", StringComparison.InvariantCultureIgnoreCase))
+			{
+				markup = Regex.Replace(markup, "\\[module:listparents\\]", "", RegexOptions.IgnoreCase);
+			}
+
+			// Ditto for pages that end with ListSubPages
+			if (markup.EndsWith("[module:listsubpages]", StringComparison.InvariantCultureIgnoreCase))
+			{
+				markup = Regex.Replace(markup, "\\[module:listsubpages\\]", "", RegexOptions.IgnoreCase);
+			}
+
+			// Common markup mistakes
+			if (markup.Contains(" [!]")) markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
+			if (markup.Contains(")[!]")) markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
+			if (markup.Contains("[''''!'''']")) markup = markup.Replace("[''''!'''']", "[[!]]");
+
+			// Any shenanigans after this aren't worth fixing on old revisions
+			if (st.ObsoletedBy.HasValue)
+			{
+				return markup;
+			}
+
 			// Fix known links that failed to use the user module
 			if (markup.Contains("[Acmlm]")) markup = markup.Replace("[Acmlm]", "[user:Acmlm]");
 			if (markup.Contains("[adelikat]")) markup = markup.Replace("[adelikat]", "[user:adelikat]");
@@ -349,29 +378,7 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("[Nach/")) markup = markup.Replace("[Nach/]", "[HomePages/Nach/");
 			if (markup.Contains("[PJBoy/")) markup = markup.Replace("[PJBoy/]", "[HomePages/P.JBoy/");
 
-			// These are automatic now
-			markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
-			markup = Regex.Replace(markup, "\\[module:gamefooter\\]", "", RegexOptions.IgnoreCase);
-
-			// Mitigate unnecessary ListParent module calls, if they are at the beginning, wipe them.
-			// We can't remove all instances because of pages like Interviews/Phil/GEE2005
-			// Where below the title there is Back To: %%%[module:ListParents]
-			if (markup.StartsWith("[module:listparents]", StringComparison.InvariantCultureIgnoreCase))
-			{
-				markup = Regex.Replace(markup, "\\[module:listparents\\]", "", RegexOptions.IgnoreCase);
-			}
-
-			// Ditto for pages that end with ListSubPages
-			if (markup.EndsWith("[module:listsubpages]", StringComparison.InvariantCultureIgnoreCase))
-			{
-				markup = Regex.Replace(markup, "\\[module:listsubpages\\]", "", RegexOptions.IgnoreCase);
-			}
-
-			// Common markup mistakes
-			if (markup.Contains(" [!]")) markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
-			if (markup.Contains(")[!]")) markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
-			if (markup.Contains("[''''!'''']")) markup = markup.Replace("[''''!'''']", "[[!]]");
-
+			
 			return markup;
 		}
 

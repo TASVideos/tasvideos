@@ -39,5 +39,8 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Required]
 		[Column("description")]
 		public string Description { get; set; }
+
+		[Column("obsoleted_by")]
+		public int? ObsoletedBy { get; set; }
 	}
 }
