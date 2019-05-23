@@ -39,14 +39,17 @@ namespace TASVideos.Legacy.Data.Forum
 				entity.HasOne(e => e.PostText).WithOne(e => e.Post);
 				entity.ToTable("posts");
 			});
-			
-			modelBuilder.Entity<Posts>().ToTable("posts");
 			modelBuilder.Entity<PostsText>().ToTable("posts_text");
 			
-			modelBuilder.Entity<PrivateMessage>().ToTable("privmsgs");
+			modelBuilder.Entity<PrivateMessage>(entity =>
+			{
+				entity.HasKey(e => e.Id);
+				entity.HasOne(e => e.PrivateMessageText).WithOne(e => e.PrivateMessage);
+				entity.ToTable("privmsgs");
+			});
 			modelBuilder.Entity<PrivateMessageText>().ToTable("privmsgs_text");
-			modelBuilder.Entity<VoteDescription>().ToTable("vote_desc");
 
+			modelBuilder.Entity<VoteDescription>().ToTable("vote_desc");
 			modelBuilder.Entity<VoteResult>(entity =>
 			{
 				entity.HasKey(e => new { e.Id, e.VoteOptionId });
