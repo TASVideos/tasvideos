@@ -200,6 +200,12 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("/images/awards/", "/awards/");
 			}
 
+			// Any shenanigans after this aren't worth fixing on old revisions
+			if (st.ObsoletedBy.HasValue)
+			{
+				return markup;
+			}
+
 			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
 			if (markup.Contains("=css/moontier.png")) markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
 			if (markup.Contains("=css/favourite.png")) markup = markup.Replace("=css/favourite.png", "=images/startier.png");
@@ -232,12 +238,6 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains(" [!]")) markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
 			if (markup.Contains(")[!]")) markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
 			if (markup.Contains("[''''!'''']")) markup = markup.Replace("[''''!'''']", "[[!]]");
-
-			// Any shenanigans after this aren't worth fixing on old revisions
-			if (st.ObsoletedBy.HasValue)
-			{
-				return markup;
-			}
 
 			// Fix known links that failed to use the user module
 			if (markup.Contains("[Acmlm]")) markup = markup.Replace("[Acmlm]", "[user:Acmlm]");

@@ -70,6 +70,8 @@ namespace TASVideos.Legacy.Imports
 					.ToList();
 
 				var publicationWikis = context.WikiPages
+					.ThatAreNotDeleted()
+					.ThatAreCurrentRevisions()
 					.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
 					.ToList()
 					.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimeStamp, gvalue.CreateUserName, gvalue.PageName })

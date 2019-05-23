@@ -21,6 +21,7 @@ namespace TASVideos.Legacy.Imports
 				join t in legacyForumContext.Topics on p.TopicId equals t.Id // The join is to filter out orphan polls
 				join u in legacyForumContext.Users on t.PosterId equals u.UserId into uu
 				from u in uu.DefaultIfEmpty()
+				where t.TopicMovedId == 0
 				select new { Poll = p, UserName = u != null ? u.UserName : null })
 				.ToList();
 
