@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
-
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.ForumEngine;
@@ -17,28 +17,23 @@ namespace TASVideos.Legacy.Imports
 			NesVideosForumContext legacyForumContext)
 		{
 			// TODO: posts without a corresponding post text
-			var posts = (from p in legacyForumContext.Posts
-					join pt in legacyForumContext.PostsText on p.Id equals pt.Id
-					join pu in legacyForumContext.Users on p.PosterId equals pu.UserId into ppu
-					from pu in ppu.DefaultIfEmpty()
-					join lu in legacyForumContext.Users on p.LastUpdateUserId equals lu.UserId into plu
-					from lu in plu.DefaultIfEmpty()
-					select new
-					{
-						p.Id,
+			var posts = legacyForumContext.Posts
+				.Select(p => new
+				{
+					p.Id,
 						p.TopicId,
 						p.IpAddress,
 						p.Timestamp,
-						pt.Subject,
-						pt.Text,
+						p.PostText.Subject,
+						p.PostText.Text,
 						p.EnableBbCode,
 						p.EnableHtml,
 						p.LastUpdateTimestamp,
-						LastUpdateUserName = lu.UserName,
-						pt.BbCodeUid,
+						LastUpdateUserName = p.LastUpdateUser.UserName,
+						p.PostText.BbCodeUid,
 						p.PosterId,
-						PosterName = pu.UserName
-					})
+						PosterName = p.Poster.UserName
+				})
 				.ToList()
 				.Select(p =>
 				{
