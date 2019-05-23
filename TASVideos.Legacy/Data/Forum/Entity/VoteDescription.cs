@@ -20,5 +20,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("vote_length")]
 		public int VoteLength { get; set; }
+
+		[ForeignKey("TopicId")]
+		public virtual Topics Topic { get; set; }
 	}
 }
