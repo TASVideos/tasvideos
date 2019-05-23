@@ -16,25 +16,21 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
-			// TODO: can we filter out message from a non-existent/inactive/banned user to another? neither will ever see it
-			var data =
-				(from p in legacyForumContext.PrivateMessages
-				join pt in legacyForumContext.PrivateMessageText on p.Id equals pt.Id
-				join fromUser in legacyForumContext.Users on p.FromUserId equals fromUser.UserId
-				where p.ToUserId > 0 && p.FromUserId > 0 // These include delete users, and delete messages, the legacy system puts a negative on user id to soft delete
-				select new
+			var data = legacyForumContext.PrivateMessages
+				.Where(p => p.ToUserId > 0 && p.FromUserId > 0) // These include delete users, and delete messages, the legacy system puts a negative on user id to soft delete
+				.Select(p => new
 				{
 					p.Type,
 					p.ToUserId,
 					p.FromUserId,
 					p.Timestamp,
 					p.Subject,
-					pt.Text,
+					p.PrivateMessageText.Text,
 					p.EnableBbCode,
 					p.EnableHtml,
 					p.IpAddress,
-					pt.BbCodeUid,
-					fromUser.UserName
+					p.PrivateMessageText.BbCodeUid,
+					p.FromUser.UserName
 				})
 				.ToList();
 

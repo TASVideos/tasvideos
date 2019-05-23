@@ -32,5 +32,11 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("privmsgs_enable_html")]
 		public bool EnableHtml { get; set; }
+
+		[ForeignKey("Id")]
+		public virtual PrivateMessageText PrivateMessageText { get; set; }
+
+		[ForeignKey("FromUserId")]
+		public virtual Users FromUser { get; set; }
 	}
 }

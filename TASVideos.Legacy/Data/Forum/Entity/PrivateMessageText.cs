@@ -14,5 +14,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("privmsgs_bbcode_uid")]
 		public string BbCodeUid { get; set; }
+
+		[ForeignKey("Id")]
+		public virtual PrivateMessage PrivateMessage { get; set; }
 	}
 }
