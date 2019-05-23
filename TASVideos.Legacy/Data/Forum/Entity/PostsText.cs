@@ -17,5 +17,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("post_text")]
 		public string Text { get; set; }
+
+		[ForeignKey("Id")]
+		public virtual Posts Post { get; set; }
 	}
 }

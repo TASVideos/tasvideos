@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TASVideos.Legacy.Data.Site.Entity;
 
 namespace TASVideos.Legacy.Data.Forum.Entity
 {
@@ -32,5 +33,14 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("enable_bbcode")]
 		public bool EnableBbCode { get; set; }
+
+		[ForeignKey("PosterId")]
+		public virtual Users Poster { get; set; }
+
+		[ForeignKey("LastUpdateUserId")]
+		public virtual Users LastUpdateUser { get; set; }
+
+		[ForeignKey("Id")]
+		public virtual PostsText PostText { get; set; }
 	}
 }
