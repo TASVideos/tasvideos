@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
-
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Legacy.Data.Forum;
@@ -17,26 +17,35 @@ namespace TASVideos.Legacy.Imports
 			NesVideosForumContext legacyForumContext)
 		{
 			/******** ForumPoll ********/
-			var legVoteDescriptions = (from p in legacyForumContext.VoteDescription
-				join t in legacyForumContext.Topics on p.TopicId equals t.Id // The join is to filter out orphan polls
-				join u in legacyForumContext.Users on t.PosterId equals u.UserId into uu
-				from u in uu.DefaultIfEmpty()
-				where t.TopicMovedId == 0
-				select new { Poll = p, UserName = u != null ? u.UserName : null })
+			var legVoteDescriptions = legacyForumContext.VoteDescription
+				.Include(v => v.Topic)
+				.ThenInclude(t => t.Poster)
+				.Where(v => v.Topic != null && v.Topic.TopicMovedId == 0)
+				.Select(v => new
+				{
+					v.Id,
+					TopicId = v.Topic.Id,
+					v.Text,
+					v.VoteStart,
+					v.VoteLength,
+					Poster = v.Topic.Poster != null
+						? v.Topic.Poster.UserName
+						: null
+				})
 				.ToList();
 
 			var forumPolls = legVoteDescriptions
 				.Select(v => new ForumPoll
 				{
-					Id = v.Poll.Id,
-					TopicId = v.Poll.TopicId,
-					Question = ImportHelper.ConvertLatin1String(v.Poll.Text),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.Poll.VoteStart),
-					CreateUserName = v.UserName ?? "Unknown",
-					LastUpdateUserName = v.UserName ?? "Unknown",
-					CloseDate = v.Poll.VoteLength == 0
+					Id = v.Id,
+					TopicId = v.TopicId,
+					Question = ImportHelper.ConvertLatin1String(v.Text),
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
+					CreateUserName = v.Poster ?? "Unknown",
+					LastUpdateUserName = v.Poster ?? "Unknown",
+					CloseDate = v.VoteLength == 0
 						? (DateTime?)null
-						: ImportHelper.UnixTimeStampToDateTime(v.Poll.VoteStart + v.Poll.VoteLength)
+						: ImportHelper.UnixTimeStampToDateTime(v.VoteStart + v.VoteLength)
 				})
 				.ToList();
 
