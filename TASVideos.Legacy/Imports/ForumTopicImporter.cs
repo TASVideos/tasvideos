@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Legacy.Imports;
@@ -13,11 +14,10 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
-			var legTopics = (from t in legacyForumContext.Topics
-				join p in legacyForumContext.VoteDescription on t.Id equals p.TopicId into poll
-				from p in poll.DefaultIfEmpty()
-				where t.TopicMovedId == 0  // Topic moved id indicates it is not a valid topic anymore, so simply filter them out
-				select new
+			var legTopics = legacyForumContext.Topics
+				.Include(t => t.Poll)
+				.Where(t => t.TopicMovedId == 0) // Topic moved id indicates it is not a valid topic anymore, so simply filter them out
+				.Select(t => new
 				{
 					t.Id,
 					t.ForumId,
@@ -28,7 +28,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					t.Type,
 					t.TopicStatus,
 					Author = t.PosterId > 0 ? t.Poster.UserName : "Unknown",
-					PollId = p != null ? p.Id : (int?)null,
+					PollId = t.Poll != null ? t.Poll.Id : (int?)null,
 					PageName = t.SubmissionId > 0 ? "InternalSystem/SubmissionContent/S" + t.SubmissionId : null
 				})
 				.ToList();
@@ -40,7 +40,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					ForumId = t.ForumId,
 					Title = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(t.Title)),
 					PosterId = t.PosterId > 0 // There's one record that is 0 we want to change to -1
-						? t.PosterId 
+						? t.PosterId.Value
 						: -1,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
 					CreateUserName = t.Author,

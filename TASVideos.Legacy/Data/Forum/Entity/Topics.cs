@@ -18,7 +18,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int Timestamp { get; set; }
 
 		[Column("topic_poster")]
-		public int PosterId { get; set; }
+		public int? PosterId { get; set; }
 		public virtual Users Poster { get; set; }
 
 		[Column("topic_views")]
@@ -39,5 +39,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("submissionid")]
 		public int SubmissionId { get; set; }
+
+		public virtual VoteDescription Poll { get; set; }
 	}
 }
