@@ -16,33 +16,23 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosForumContext legacyForumContext)
 		{
-			/******** ForumPoll ********/
-			var legVoteDescriptions = legacyForumContext.VoteDescription
+			var legacyVoteDescriptions = legacyForumContext.VoteDescription
 				.Include(v => v.Topic)
 				.ThenInclude(t => t.Poster)
+				.Include(v => v.Results)
 				.Where(v => v.Topic != null && v.Topic.TopicMovedId == 0)
-				.Select(v => new
-				{
-					v.Id,
-					TopicId = v.Topic.Id,
-					v.Text,
-					v.VoteStart,
-					v.VoteLength,
-					Poster = v.Topic.Poster != null
-						? v.Topic.Poster.UserName
-						: null
-				})
 				.ToList();
 
-			var forumPolls = legVoteDescriptions
+			/******** ForumPoll ********/
+			var forumPolls = legacyVoteDescriptions
 				.Select(v => new ForumPoll
 				{
 					Id = v.Id,
 					TopicId = v.TopicId,
 					Question = ImportHelper.ConvertLatin1String(v.Text),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
-					CreateUserName = v.Poster ?? "Unknown",
-					LastUpdateUserName = v.Poster ?? "Unknown",
+					CreateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
+					LastUpdateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					CloseDate = v.VoteLength == 0
 						? (DateTime?)null
 						: ImportHelper.UnixTimeStampToDateTime(v.VoteStart + v.VoteLength)
@@ -64,11 +54,8 @@ namespace TASVideos.Legacy.Imports
 			forumPolls.BulkInsert(connectionStr, pollColumns, nameof(ApplicationDbContext.ForumPolls));
 
 			/******** ForumPollOption ********/
-			var legForumPollOptions =
-				(from vr in legacyForumContext.VoteResult
-				join v in legacyForumContext.VoteDescription on vr.Id equals v.Id // The joins are to filter out orphan options
-				join t in legacyForumContext.Topics on v.TopicId equals t.Id
-				select vr)
+			var legForumPollOptions = legacyVoteDescriptions
+				.SelectMany(vd => vd.Results)
 				.ToList();
 
 			var forumPollOptions = legForumPollOptions

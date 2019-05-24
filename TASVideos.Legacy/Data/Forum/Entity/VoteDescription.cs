@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Forum.Entity
@@ -23,5 +24,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[ForeignKey("TopicId")]
 		public virtual Topics Topic { get; set; }
+
+		public virtual ICollection<VoteResult> Results { get; set; } = new HashSet<VoteResult>();
 	}
 }
