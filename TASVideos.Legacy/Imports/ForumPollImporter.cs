@@ -66,8 +66,8 @@ namespace TASVideos.Legacy.Imports
 					Ordinal = r.VoteOptionId,
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow,
-					CreateUserName = r?.VoteDescription?.Topic?.Poster.UserName ?? "Unknown",
-					LastUpdateUserName = r?.VoteDescription?.Topic?.Poster.UserName ?? "Unknown"
+					CreateUserName = r.VoteDescription?.Topic?.Poster.UserName ?? "Unknown",
+					LastUpdateUserName = r.VoteDescription?.Topic?.Poster.UserName ?? "Unknown"
 				})
 				.ToList();
 

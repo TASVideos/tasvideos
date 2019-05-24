@@ -20,18 +20,18 @@ namespace TASVideos.Legacy.Imports
 				.Select(p => new
 				{
 					p.Id,
-						p.TopicId,
-						p.IpAddress,
-						p.Timestamp,
-						p.PostText.Subject,
-						p.PostText.Text,
-						p.EnableBbCode,
-						p.EnableHtml,
-						p.LastUpdateTimestamp,
-						LastUpdateUserName = p.LastUpdateUser.UserName,
-						p.PostText.BbCodeUid,
-						p.PosterId,
-						PosterName = p.Poster.UserName
+					p.TopicId,
+					p.IpAddress,
+					p.Timestamp,
+					p.PostText.Subject,
+					p.PostText.Text,
+					p.EnableBbCode,
+					p.EnableHtml,
+					p.LastUpdateTimestamp,
+					LastUpdateUserName = p.LastUpdateUser.UserName,
+					p.PostText.BbCodeUid,
+					p.PosterId,
+					PosterName = p.Poster.UserName
 				})
 				.ToList()
 				.Select(p =>
@@ -50,7 +50,7 @@ namespace TASVideos.Legacy.Imports
 						EnableHtml = p.EnableHtml && BbParser.ContainsHtml(fixedText, p.EnableBbCode),
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
 						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
-								?? p.Timestamp),
+							?? p.Timestamp),
 						CreateUserName = !string.IsNullOrWhiteSpace(p.PosterName) ? p.PosterName : "Unknown",
 						LastUpdateUserName = !string.IsNullOrWhiteSpace(p.LastUpdateUserName)
 							? p.LastUpdateUserName
