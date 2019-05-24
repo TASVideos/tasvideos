@@ -66,8 +66,8 @@ namespace TASVideos.Legacy.Imports
 					Ordinal = r.VoteOptionId,
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow,
-					CreateUserName = "Unknown", // TODO: could use the topic creator
-					LastUpdateUserName = "Unknown"
+					CreateUserName = r?.VoteDescription?.Topic?.Poster.UserName ?? "Unknown",
+					LastUpdateUserName = r?.VoteDescription?.Topic?.Poster.UserName ?? "Unknown"
 				})
 				.ToList();
 
@@ -90,14 +90,14 @@ namespace TASVideos.Legacy.Imports
 
 			var forumPollOptionVotes =
 				(from v in legForumVoters
-				 join po in newForumOptions on new { PollId = v.Id, Ordinal = v.OptionId } equals new { po.PollId, po.Ordinal }
-				 select new ForumPollOptionVote
-				 {
-					 PollOptionId = po.Id,
-					 UserId = v.UserId,
-					 IpAddress = v.IpAddress,
-					 CreateTimestamp = DateTime.UtcNow, // Legacy system did not track this
-				 })
+				join po in newForumOptions on new { PollId = v.Id, Ordinal = v.OptionId } equals new { po.PollId, po.Ordinal }
+				select new ForumPollOptionVote
+				{
+					PollOptionId = po.Id,
+					UserId = v.UserId,
+					IpAddress = v.IpAddress,
+					CreateTimestamp = DateTime.UtcNow, // Legacy system did not track this
+				})
 				.ToList();
 
 			// Insert Unknown User votes for discrepancies between de-normalized vote count and actual vote records
