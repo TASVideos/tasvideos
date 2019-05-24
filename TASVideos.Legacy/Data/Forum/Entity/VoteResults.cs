@@ -4,6 +4,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 {
 	public class VoteResult
 	{
+		// TODO: rename to VoteId
 		[Column("vote_id")]
 		public int Id { get; set; }
 
@@ -15,5 +16,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("vote_result")]
 		public int ResultCount { get; set; }
+
+		[ForeignKey("Id")]
+		public virtual VoteDescription VoteDescription { get; set; }
 	}
 }
