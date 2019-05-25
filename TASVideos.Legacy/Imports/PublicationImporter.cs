@@ -190,9 +190,9 @@ namespace TASVideos.Legacy.Imports
 					{
 						PublicationId = pub.Movie.Id,
 						Type = FileType.MovieFile,
-						Path = null,
+						Path = m.FileName,
 						FileData = m.Storage.FileData,
-						Description = m.FileName,
+						Description = null, // TODO: Ideally we would put a whether it is console verified, or adapted for a specific emulator
 						CreateTimeStamp = DateTime.UtcNow,
 						LastUpdateTimeStamp = DateTime.UtcNow
 					}));
