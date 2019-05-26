@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 
@@ -17,7 +18,7 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public IViewComponentResult Invoke(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
 			// This was originally done to put the header with a link back to the english page
 			// Now we always put the parent module on the page which will handle this
@@ -31,8 +32,8 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-			var languagesMarkup = _wikiPages
-				.SystemPage("Languages")
+			var languagesMarkup = (await _wikiPages
+				.SystemPage("Languages"))
 				?.Markup;
 
 			if (string.IsNullOrWhiteSpace(languagesMarkup))

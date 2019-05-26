@@ -23,7 +23,7 @@ namespace TASVideos.Services
 		/// Else the latest revision is returned
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		WikiPage Page(string pageName, int? revisionId = null);
+		Task<WikiPage> Page(string pageName, int? revisionId = null);
 
 		/// <summary>
 		/// Creates a new revision of a wiki page
@@ -123,12 +123,26 @@ namespace TASVideos.Services
 				.Any(wp => wp.PageName == pageName);
 		}
 
-		public WikiPage Page(string pageName, int? revisionId = null)
+		public async Task<WikiPage> Page(string pageName, int? revisionId = null)
 		{
-			return WikiCache
+			var page = WikiCache
 				.ForPage(pageName)
 				.ThatAreNotDeleted()
-				.FirstOrDefault(w => (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
+				.FirstOrDefault(w => (revisionId != null
+					? w.Revision == revisionId
+					: w.ChildId == null));
+
+			if (page != null)
+			{
+				return page;
+			}
+
+			return await _db.WikiPages
+				.ForPage(pageName)
+				.ThatAreNotDeleted()
+				.FirstOrDefaultAsync(w => (revisionId != null
+					? w.Revision == revisionId
+					: w.ChildId == null));
 		}
 
 		public async Task<WikiPage> Revision(int dbId)
@@ -411,7 +425,7 @@ namespace TASVideos.Services
 		/// Returns a System page with the given page suffix
 		/// <example>SystemPage("Languages") will return the page System/Languages</example>
 		/// </summary>
-		public static WikiPage SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
+		public static Task<WikiPage> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
 		{
 			return pages.Page("System/" + pageName, revisionId);
 		}

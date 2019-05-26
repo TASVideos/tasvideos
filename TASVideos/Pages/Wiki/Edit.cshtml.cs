@@ -32,14 +32,14 @@ namespace TASVideos.Pages.Wiki
 
 		public int? Id { get; set; }
 
-		public IActionResult OnGet()
+		public async Task<IActionResult> OnGet()
 		{
 			Path = Path?.Trim('/');
 			if (!WikiHelper.IsValidWikiPageName(Path))
 			{
 				return Home();
 			}
-			var page = _wikiPages.Page(Path);
+			var page = await _wikiPages.Page(Path);
 
 			PageToEdit = new WikiEditModel
 			{

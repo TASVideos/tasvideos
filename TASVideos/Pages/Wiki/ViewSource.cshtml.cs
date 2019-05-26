@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
@@ -24,9 +25,9 @@ namespace TASVideos.Pages.Wiki
 
 		public WikiPage WikiPage { get; set; }
 
-		public IActionResult OnGet()
+		public async Task<IActionResult> OnGet()
 		{
-			WikiPage = _wikiPages.Page(Path, Revision);
+			WikiPage = await _wikiPages.Page(Path, Revision);
 
 			if (WikiPage != null)
 			{

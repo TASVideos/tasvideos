@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data.Entity;
@@ -21,7 +22,7 @@ namespace TASVideos.Pages.Wiki
 
 		public WikiPage WikiPage { get; set; }
 
-		public IActionResult OnGet(string url, int? revision = null)
+		public async Task<IActionResult> OnGet(string url, int? revision = null)
 		{
 			if (url.ToLower() == "frontpage")
 			{
@@ -38,7 +39,7 @@ namespace TASVideos.Pages.Wiki
 				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiEngine.Builtins.NormalizeInternalLink(url) });
 			}
 
-			WikiPage = _wikiPages.Page(url, revision);
+			WikiPage = await _wikiPages.Page(url, revision);
 
 			if (WikiPage != null)
 			{
