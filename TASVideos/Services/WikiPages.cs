@@ -80,10 +80,6 @@ namespace TASVideos.Services
 		{
 			_db = db;
 			_cache = cache;
-			if (!CurrentRevisionCache.Any())
-			{
-				// Do nothing, this is horribly written in a way that the cache is populate just by checking
-			}
 		}
 
 		private List<WikiPage> CurrentRevisionCache
@@ -98,7 +94,6 @@ namespace TASVideos.Services
 
 				pages = new List<WikiPage>();
 				_cache.Set(cacheKey, pages, Durations.OneYearInSeconds);
-				PreLoadCache().Wait();
 				return pages;
 			}
 		}
@@ -162,12 +157,19 @@ namespace TASVideos.Services
 				return page;
 			}
 
-			return await _db.WikiPages
+			page = await _db.WikiPages
 				.ForPage(pageName)
 				.ThatAreNotDeleted()
 				.FirstOrDefaultAsync(w => (revisionId != null
 					? w.Revision == revisionId
 					: w.ChildId == null));
+
+			if (page != null && page.IsCurrent())
+			{
+				CurrentRevisionCache.Add(page);
+			}
+
+			return page;
 		}
 
 		public async Task<WikiPage> Revision(int dbId)
@@ -368,11 +370,14 @@ namespace TASVideos.Services
 		// Loads all current wiki pages into the WikiCache
 		private async Task PreLoadCache()
 		{
-			var wikiPages = await _db.WikiPages
+			var currentPages = await _db.WikiPages
 				.ThatAreCurrentRevisions()
 				.ToListAsync();
 
-			CurrentRevisionCache.AddRange(wikiPages);
+			foreach (var page in currentPages)
+			{
+				CurrentRevisionCache.Add(page);
+			}
 		}
 
 		private async Task GenerateReferrals(string pageName, string markup)
