@@ -69,5 +69,20 @@ namespace TASVideos.Pages.Publications
 
 			return File(pub.MovieFile, MediaTypeNames.Application.Octet, $"{pub.MovieFileName}.zip");
 		}
+
+		public async Task<IActionResult> OnGetDownloadAdditional(int fileId)
+		{
+			var file = await _db.PublicationFiles
+				.Where(pf => pf.Id == fileId)
+				.Select(pf => new { pf.FileData, pf.Path })
+				.SingleOrDefaultAsync();
+
+			if (file == null)
+			{
+				return NotFound();
+			}
+
+			return File(file.FileData, MediaTypeNames.Application.Octet, $"{file.Path}.zip");
+		}
 	}
 }
