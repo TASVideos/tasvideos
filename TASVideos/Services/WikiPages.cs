@@ -87,6 +87,7 @@ namespace TASVideos.Services
 		IEnumerable<WikiPage> ThatAreParentsOf(string pageName);
 	}
 
+	// TODO: handle DbConcurrency exceptions
 	public class WikiPages : IWikiPages
 	{
 		private readonly ApplicationDbContext _db;
@@ -100,6 +101,7 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
+		// TODO: ensure there are no duplicates, HashSet plus override equals?
 		private List<WikiPage> CurrentRevisionCache
 		{
 			get
