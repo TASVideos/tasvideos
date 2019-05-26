@@ -97,7 +97,7 @@ namespace TASVideos.Services
 				}
 
 				pages = new List<WikiPage>();
-				_cache.Set(cacheKey, pages, Durations.OneWeekInSeconds);
+				_cache.Set(cacheKey, pages, Durations.OneYearInSeconds);
 				PreLoadCache().Wait();
 				return pages;
 			}
