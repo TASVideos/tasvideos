@@ -15,7 +15,7 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Returns whether or not any revision of the given page exists
 		/// </summary>
-		bool Exists(string pageName, bool includeDeleted = false);
+		Task<bool> Exists(string pageName, bool includeDeleted = false);
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given <see cref="pageName" />
@@ -113,8 +113,10 @@ namespace TASVideos.Services
 			return GetEnumerator();
 		}
 
-		public bool Exists(string pageName, bool includeDeleted = false)
+		public async Task<bool> Exists(string pageName, bool includeDeleted = false)
 		{
+			// TODO: fallback to db
+			await Task.CompletedTask;
 			var query = includeDeleted
 				? WikiCache
 				: WikiCache.ThatAreNotDeleted();
@@ -200,7 +202,7 @@ namespace TASVideos.Services
 
 			// TODO: support moving a page to a deleted page
 			// Revision ids would have to be adjusted but it could be done
-			if (Exists(destinationName, includeDeleted: true))
+			if (await Exists(destinationName, includeDeleted: true))
 			{
 				throw new InvalidOperationException($"Cannot move {originalName} to {destinationName} because {destinationName} already exists.");
 			}

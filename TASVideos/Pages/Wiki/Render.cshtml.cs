@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			// Account for garbage revision values
-			if (revision.HasValue && _wikiPages.Exists(url)) 
+			if (revision.HasValue && await _wikiPages.Exists(url)) 
 			{
 				return Redirect("/" + url);
 			}
