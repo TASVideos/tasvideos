@@ -41,7 +41,7 @@ namespace TASVideos.Services
 		/// Returns details about a Wiki page with the given id
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		WikiPage Revision(int dbId);
+		Task<WikiPage> Revision(int dbId);
 
 		/// <summary>
 		/// Performs a soft delete on all revisions of the given page name,
@@ -131,11 +131,20 @@ namespace TASVideos.Services
 				.FirstOrDefault(w => (revisionId != null ? w.Revision == revisionId : w.ChildId == null));
 		}
 
-		public WikiPage Revision(int dbId)
+		public async Task<WikiPage> Revision(int dbId)
 		{
-			return WikiCache
+			var page = WikiCache
 				.ThatAreNotDeleted()
 				.FirstOrDefault(w => w.Id == dbId);
+
+			if (page != null)
+			{
+				return page;
+			}
+
+			return await _db.WikiPages
+				.ThatAreNotDeleted()
+				.FirstOrDefaultAsync(w => w.Id == dbId);
 		}
 
 		public async Task Add(WikiPage revision)
