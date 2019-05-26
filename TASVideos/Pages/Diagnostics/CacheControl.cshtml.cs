@@ -21,6 +21,10 @@ namespace TASVideos.Pages.Diagnostics
 			_awards = awards;
 		}
 
+		public void OnGet()
+		{
+		}
+
 		public async Task<IActionResult> OnPostFlushWikiCache()
 		{
 			await _wikiPages.FlushCache();
