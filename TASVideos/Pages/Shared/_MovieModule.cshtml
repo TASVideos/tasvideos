@@ -79,7 +79,7 @@
 						<div condition="Model.MovieFileLinks.Any()" class="mt-2">
 							@foreach (var file in Model.MovieFileLinks)
 							{
-								<a href="/TODO/@file.Id">Additional: (@System.IO.Path.GetExtension(file.Path))</a>
+								<a title="@file.Path" href="/TODO/@file.Id">(@file.Description)</a>
 							}
 						</div>
 					</div>

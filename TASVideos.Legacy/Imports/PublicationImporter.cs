@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
@@ -191,7 +192,9 @@ namespace TASVideos.Legacy.Imports
 						Type = FileType.MovieFile,
 						Path = m.FileName,
 						FileData = m.Storage.FileData,
-						Description = null, // TODO: Ideally we would put a whether it is console verified, or adapted for a specific emulator
+						Description = m.FileName.ToLower().Contains("consoleverified")
+							? "Console Verication"
+							: "Converted to " + Path.GetExtension(m.FileName),
 						CreateTimeStamp = DateTime.UtcNow,
 						LastUpdateTimeStamp = DateTime.UtcNow
 					}));
