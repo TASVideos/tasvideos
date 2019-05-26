@@ -79,7 +79,7 @@
 						<div condition="Model.MovieFileLinks.Any()" class="mt-2">
 							@foreach (var file in Model.MovieFileLinks)
 							{
-								<a title="@file.Path" href="/TODO/@file.Id">(@file.Description)</a>
+								<a title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a>
 							}
 						</div>
 					</div>
