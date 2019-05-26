@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 using TASVideos.Extensions;
@@ -16,7 +17,7 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public IViewComponentResult Invoke(string url, int? revision = null)
+		public async Task<IViewComponentResult> InvokeAsync(string url, int? revision = null)
 		{
 			url = url.Trim('/');
 			if (!WikiHelper.IsValidWikiPageName(url))
@@ -24,7 +25,7 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-			var existingPage = _wikiPages.Page(url, revision);
+			var existingPage = await _wikiPages.Page(url, revision);
 
 			if (existingPage != null)
 			{

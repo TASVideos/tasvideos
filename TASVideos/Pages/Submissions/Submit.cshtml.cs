@@ -188,9 +188,9 @@ namespace TASVideos.Pages.Submissions
 			return Redirect($"/{submission.Id}S");
 		}
 
-		public IActionResult OnGetPrefillText()
+		public async Task<IActionResult> OnGetPrefillText()
 		{
-			var page = _wikiPages.Page("System/SubmissionDefaultMessage");
+			var page = await _wikiPages.Page("System/SubmissionDefaultMessage");
 			return new JsonResult(new { text = page.Markup });
 		}
 
