@@ -21,7 +21,6 @@ namespace TASVideos.Legacy.Imports
 			// TODO
 			// multiple streaming url links
 			// multiple archive links
-			// multiple movie files
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();
