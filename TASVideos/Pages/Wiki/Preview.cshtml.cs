@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Text;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
@@ -26,13 +26,13 @@ namespace TASVideos.Pages.Wiki
 
 		public WikiPage PageData { get; set; }
 
-		public IActionResult OnPost()
+		public async Task<IActionResult> OnPost()
 		{
 			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
 			Markup = input;
 			if (Id.HasValue)
 			{
-				PageData = _pages.Revision(Id.Value);
+				PageData = await _pages.Revision(Id.Value);
 			}
 
 			return Page();
