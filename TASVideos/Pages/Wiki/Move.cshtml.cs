@@ -29,12 +29,12 @@ namespace TASVideos.Pages.Wiki
 		[BindProperty]
 		public WikiMoveModel Move { get; set; }
 
-		public IActionResult OnGet()
+		public async Task<IActionResult> OnGet()
 		{
 			if (!string.IsNullOrWhiteSpace(Path))
 			{
 				Path = Path.Trim('/');
-				if (_wikiPages.Exists(Path))
+				if (await _wikiPages.Exists(Path))
 				{
 					Move = new WikiMoveModel
 					{
@@ -53,7 +53,7 @@ namespace TASVideos.Pages.Wiki
 			Move.OriginalPageName = Move?.OriginalPageName.Trim('/');
 			Move.DestinationPageName = Move?.DestinationPageName.Trim('/');
 
-			if (_wikiPages.Exists(Move.DestinationPageName, includeDeleted: true))
+			if (await _wikiPages.Exists(Move.DestinationPageName, includeDeleted: true))
 			{
 				ModelState.AddModelError("Move.DestinationPageName", "The destination page already exists.");
 			}
