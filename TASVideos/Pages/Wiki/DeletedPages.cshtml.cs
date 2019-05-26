@@ -50,11 +50,10 @@ namespace TASVideos.Pages.Wiki
 
 			// Workaround for EF Core 2.1 issue
 			// https://github.com/aspnet/EntityFrameworkCore/issues/3103
-			// Since we know the cache is up to date we can do the logic there and avoid n+1 trips to the db
-			await _wikiPages.FlushCache();
+			// We can use the cache to potentially avoid n+1 trips to the db
 			foreach (var result in DeletedPages)
 			{
-				result.HasExistingRevisions = _wikiPages.Any(wp => wp.PageName == result.PageName);
+				result.HasExistingRevisions = await _wikiPages.Exists(result.PageName);
 			}
 		}
 

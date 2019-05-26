@@ -7,20 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
 {
 	public class GameSubPages : ViewComponent
 	{
-		private readonly IWikiPages _wikiPages;
 		private readonly ApplicationDbContext _db;
 
-		public GameSubPages(
-			IWikiPages wikiPages,
-			ApplicationDbContext db)
+		public GameSubPages(ApplicationDbContext db)
 		{
-			_wikiPages = wikiPages;
 			_db = db;
 		}
 
@@ -32,12 +27,13 @@ namespace TASVideos.ViewComponents
 
 		private async Task<IEnumerable<GameSubpageModel>> GetGameResourcesSubPages()
 		{
+			// TODO: cache this, consider using IWikiPages
 			using (await _db.Database.BeginTransactionAsync())
 			{
 				var systems = await _db.GameSystems.ToListAsync();
 				var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
 
-				var pages = _wikiPages
+				var pages = _db.WikiPages
 					.ThatAreNotDeleted()
 					.ThatAreCurrentRevisions()
 					.Where(wp => gameResourceSystems.Contains(wp.PageName))
