@@ -31,6 +31,9 @@ namespace TASVideos.Pages.Publications.Models
 		public IEnumerable<FileModel> TorrentLinks => Files
 			.Where(f => f.Type == FileType.Torrent);
 
+		public IEnumerable<FileModel> MovieFileLinks => Files
+			.Where(f => f.Type == FileType.MovieFile);
+
 		public double RatingCount { get; set; }
 		public double? OverallRating { get; set; }
 
