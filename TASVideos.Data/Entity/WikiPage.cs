@@ -25,7 +25,7 @@ namespace TASVideos.Data.Entity
 		public virtual WikiPage Child { get; set; } // The latest revision of a page is one with Child = null
 
 		public bool IsDeleted { get; set; }
-	}
+	} 
 
 	public static class WikiQueryableExtensions
 	{
@@ -63,6 +63,11 @@ namespace TASVideos.Data.Entity
 		public static IQueryable<WikiPage> ExcludingMinorEdits(this IQueryable<WikiPage> list)
 		{
 			return list.Where(w => !w.MinorEdit);
+		}
+
+		public static bool IsCurrent(this WikiPage wikiPage)
+		{
+			return wikiPage.ChildId == null;
 		}
 	}
 }
