@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,6 @@ namespace TASVideos.Legacy.Imports
 			// TODO
 			// multiple streaming url links
 			// multiple archive links
-			// multiple movie files
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();
@@ -94,7 +94,7 @@ namespace TASVideos.Legacy.Imports
 
 				foreach (var pub in pubs)
 				{
-					var movieFiles = pub.Movie.MovieFiles.Where(f => movieTypes.Contains(f.Type));
+					var movieFiles = pub.Movie.MovieFiles.Where(f => movieTypes.Contains(f.Type)).ToList();
 					var mainMovieFile = movieFiles.First(); // Pick the first one to be the official, we have no better way really
 					var screenshotUrl = pub.Movie.MovieFiles.First(f => f.Type == "H");
 					var torrentUrls = pub.Movie.MovieFiles.Where(f => torrentTypes.Contains(f.Type));
@@ -186,6 +186,19 @@ namespace TASVideos.Legacy.Imports
 						LastUpdateTimeStamp = DateTime.UtcNow
 					}));
 
+					publicationFiles.AddRange(movieFiles.Skip(1).Select(m => new PublicationFile
+					{
+						PublicationId = pub.Movie.Id,
+						Type = FileType.MovieFile,
+						Path = m.FileName,
+						FileData = m.Storage.FileData,
+						Description = m.FileName.ToLower().Contains("consoleverified")
+							? "Console Verication"
+							: "Converted to " + Path.GetExtension(m.FileName),
+						CreateTimeStamp = DateTime.UtcNow,
+						LastUpdateTimeStamp = DateTime.UtcNow
+					}));
+
 					foreach (var mc in pub.Movie.MovieClasses)
 					{
 						var classType = mc.ClassId >= 1000
@@ -250,6 +263,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.Path),
 				nameof(PublicationFile.Type),
 				nameof(PublicationFile.Description),
+				nameof(PublicationFile.FileData),
 				nameof(PublicationFile.CreateUserName),
 				nameof(PublicationFile.LastUpdateUserName),
 				nameof(PublicationFile.CreateTimeStamp),

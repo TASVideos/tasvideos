@@ -74,13 +74,22 @@
 			</div>
 			<div class="col-md-5">
 				<row>
-					<a class="col-lg-4" asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
+					<div class="col-lg-4">
+						<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
+						<div condition="Model.MovieFileLinks.Any()" class="mt-2">
+							@foreach (var file in Model.MovieFileLinks)
+							{
+								<a title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a>
+							}
+						</div>
+					</div>
 					@foreach (var torrent in Model.TorrentLinks)
 					{
 						<a class="col-lg-4" href="@torrent.Path">A/V file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
 					}
 					<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
 				</row>
+				
 				<fullrow>
 					<div><small>@Model.CreateTimeStamp.Date.ToShortDateString()</small></div>
 					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
