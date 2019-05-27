@@ -177,6 +177,54 @@ namespace TASVideos.Test.Services
 
 		#endregion
 
+		#region Revision
+
+		[TestMethod]
+		public async Task Revision_Exists_ReturnsPage()
+		{
+			string existingPage = "Exists";
+			var page = new WikiPage { PageName = existingPage };
+			_db.WikiPages.Add(page);
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.Revision(page.Id);
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(1, _cache.PageCache.Count);
+		}
+
+		[TestMethod]
+		public async Task Revision_DoesNotExist_ReturnsNull()
+		{
+			var actual = await _wikiPages.Revision(int.MinValue);
+			Assert.IsNull(actual);
+		}
+
+		[TestMethod]
+		public async Task Revision_PullsFromCache_IfAvailable()
+		{
+			string existingPage = "InCache";
+			var page = new WikiPage { Id = 111, PageName = existingPage };
+			_cache.PageCache.Add(page);
+
+			var actual = await _wikiPages.Revision(111);
+			Assert.IsNotNull(actual);
+		}
+
+		public async Task Revision_OldRevision_DoesNotAddToCache()
+		{
+			string existingPage = "InCache";
+			var page1 = new WikiPage { Id = 1, PageName = existingPage, ChildId = 2 };
+			var page2 = new WikiPage { Id = 2, PageName = existingPage };
+			_cache.PageCache.Add(page1);
+			_cache.PageCache.Add(page2);
+
+			var actual = await _wikiPages.Revision(1);
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, _cache.PageCache.Count);
+		}
+
+		#endregion
+
 		private void AddPage(string name, bool isDeleted = false)
 		{
 			_db.Add(new WikiPage { PageName = name, IsDeleted = isDeleted });
@@ -199,7 +247,9 @@ namespace TASVideos.Test.Services
 					return list as List<WikiPage>;
 				}
 
-				return new List<WikiPage>();
+				list = new List<WikiPage>();
+				_cache.Add(CacheKeys.WikiCache, list);
+				return list as List<WikiPage>;
 			}
 		}
 

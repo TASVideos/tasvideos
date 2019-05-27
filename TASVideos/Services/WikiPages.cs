@@ -227,9 +227,16 @@ namespace TASVideos.Services
 				return page;
 			}
 
-			return await _db.WikiPages
+			page = await _db.WikiPages
 				.ThatAreNotDeleted()
 				.FirstOrDefaultAsync(w => w.Id == dbId);
+
+			if (page != null && page.ChildId == null)
+			{
+				CurrentRevisionCache.Add(page);
+			}
+
+			return page;
 		}
 
 		public async Task Add(WikiPage revision)
@@ -260,6 +267,10 @@ namespace TASVideos.Services
 			}
 
 			CurrentRevisionCache.Add(revision);
+			if (currentRevision != null)
+			{
+				CurrentRevisionCache.Remove(currentRevision);
+			}
 		}
 
 		public async Task Move(string originalName, string destinationName)
