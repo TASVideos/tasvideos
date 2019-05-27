@@ -210,13 +210,15 @@ namespace TASVideos.Test.Services
 			Assert.IsNotNull(actual);
 		}
 
+		[TestMethod]
 		public async Task Revision_OldRevision_DoesNotAddToCache()
 		{
 			string existingPage = "InCache";
 			var page1 = new WikiPage { Id = 1, PageName = existingPage, ChildId = 2 };
 			var page2 = new WikiPage { Id = 2, PageName = existingPage };
-			_cache.PageCache.Add(page1);
-			_cache.PageCache.Add(page2);
+			_db.WikiPages.Add(page1);
+			_db.WikiPages.Add(page2);
+			_db.SaveChanges();
 
 			var actual = await _wikiPages.Revision(1);
 			Assert.IsNotNull(actual);
