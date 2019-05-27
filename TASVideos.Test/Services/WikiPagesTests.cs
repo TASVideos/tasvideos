@@ -297,6 +297,60 @@ namespace TASVideos.Test.Services
 
 		#endregion
 
+		#region Delete Page
+
+		// Delete page that does not exist - nothing happens, nothing in cache, 0 is returned
+		// Delete existing page single revision - gone, nothing in cache, 1 is returned, referrers updated
+		// Delete existing page multiple revisions - all gone, nothing in cache, revision count returned, referrers updated
+
+		#endregion
+
+		#region Delete Revision
+
+		// Delete old revision - revision gone, current still current and in cache
+		// Delete revision that does not exist - nothing happens
+		// Delete latest revision - revision gone, previous is now latest, and in cache, referrers updated
+
+		#endregion
+
+		#region Undelete
+
+		// Undelete - page does not exist - nothing happens, cache not updated
+		// Undelete - page exists - 1 revision - not in cache - page now exists, is in cache, referrers updated
+		// Undelete - page exists - 2 revisions - not in cache - page now exists, latest is in cache, referrers updated to latest
+
+		#endregion
+
+		#region ThatAreSubpagesOf
+
+		// No page provided, returns all
+		// page exists, no subpages, none returned
+		// page exists, subpages exist, non-subpages also exist, subpages returned
+		// page exists, multiple levels of subpages, non-subpages also exist, subpages are returned
+		// trailing slashes are trimmed
+
+		#endregion
+
+		#region ThatAreParentsOf
+
+		// null page, does not crash, nothing is returned
+		// page does not exist, nothing is returned
+		// page exists, no parent exists, nothing is returned
+		// page exists, parent exists, siblings exist, parent returned
+		// page exists, multiple levels of parents exist, siblings exist, all parents are returned
+		// trailing slashes are trimmed
+
+		#endregion
+
+		#region SystemPage
+
+		// Null or whitespace checks
+		// Page is not system page - returns false
+		// Page is System itself - true is returned
+		// Page is a system page - true is returned
+
+		#endregion
+
 		private void AddPage(string name, bool isDeleted = false)
 		{
 			_db.Add(new WikiPage { PageName = name, IsDeleted = isDeleted });

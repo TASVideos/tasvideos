@@ -121,7 +121,7 @@ namespace TASVideos.Services
 		// TODO: consider caching these
 		public IEnumerable<WikiPage> ThatAreSubpagesOf(string pageName)
 		{
-			pageName = pageName.Trim('/');
+			pageName = (pageName ?? "").Trim('/');
 			var query = _db.WikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
