@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -223,6 +224,75 @@ namespace TASVideos.Test.Services
 			var actual = await _wikiPages.Revision(1);
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(0, _cache.PageCache.Count);
+		}
+
+		#endregion
+
+		#region Move
+
+		[TestMethod]
+		[DataRow(null)]
+		[DataRow("")]
+		[DataRow("\n \r \t")]
+		[ExpectedException(typeof(ArgumentException))]
+		public async Task Move_EmptyDestination_Throws(string destination)
+		{
+			await _wikiPages.Move("Test", destination);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(InvalidOperationException))]
+		public async Task Move_DestinationExists_Throws()
+		{
+			string existingPage = "InCache";
+			_db.WikiPages.Add(new WikiPage { PageName = existingPage });
+			_db.SaveChanges();
+			await _wikiPages.Move("Original Page", existingPage);
+		}
+
+		[TestMethod]
+		public async Task Move_OriginalDoesNotExist_NothingHappens()
+		{
+			await _wikiPages.Move("Does not exist", "Also does not exist");
+			Assert.AreEqual(0, _db.WikiPages.Count());
+			Assert.AreEqual(0, _cache.PageCache.Count);
+		}
+
+		[TestMethod]
+		public async Task Move_SingleRevision()
+		{
+			string existingPageName = "ExistingPage";
+			string newPageName = "NewPageName";
+			var existingPage = new WikiPage { PageName = existingPageName };
+			_db.WikiPages.Add(existingPage);
+			_cache.PageCache.Add(existingPage);
+			_db.SaveChanges();
+
+			await _wikiPages.Move(existingPageName, newPageName);
+			Assert.AreEqual(1, _db.WikiPages.Count());
+			Assert.AreEqual(newPageName, _db.WikiPages.Single().PageName);
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(newPageName, _cache.PageCache.Single().PageName);
+		}
+
+		[TestMethod]
+		public async Task Move_MultipleRevisions()
+		{
+			string existingPageName = "ExistingPage";
+			string newPageName = "NewPageName";
+			var previousRevision = new WikiPage { Id = 1, PageName = existingPageName, ChildId = 2 };
+			var existingPage = new WikiPage { Id = 2, PageName = existingPageName, ChildId = null };
+			_db.WikiPages.Add(previousRevision);
+			_db.WikiPages.Add(existingPage);
+			_cache.PageCache.Add(existingPage);
+			_db.SaveChanges();
+
+			await _wikiPages.Move(existingPageName, newPageName);
+			Assert.AreEqual(2, _db.WikiPages.Count());
+			Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
+
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(newPageName, _cache.PageCache.Single().PageName);
 		}
 
 		#endregion
