@@ -75,7 +75,7 @@ namespace TASVideos.Services
 		/// </summary>
 		/// <seealso cref="WikiPage"/>
 		/// <param name="pageName">the name of the page to get sub pages from</param>
-		IEnumerable<WikiPage> ThatAreSubpagesOf(string pageName);
+		IQueryable<WikiPage> ThatAreSubpagesOf(string pageName);
 
 		/// <summary>
 		/// Filters the list of wiki pages to only pages that are parents of the given page
@@ -84,7 +84,7 @@ namespace TASVideos.Services
 		/// </summary>
 		/// <seealso cref="WikiPage"/>
 		/// <param name="pageName">the name of the page to get parent pages from</param>
-		IEnumerable<WikiPage> ThatAreParentsOf(string pageName);
+		IQueryable<WikiPage> ThatAreParentsOf(string pageName);
 	}
 
 	// TODO: handle DbConcurrency exceptions
@@ -119,7 +119,7 @@ namespace TASVideos.Services
 		}
 
 		// TODO: consider caching these
-		public IEnumerable<WikiPage> ThatAreSubpagesOf(string pageName)
+		public IQueryable<WikiPage> ThatAreSubpagesOf(string pageName)
 		{
 			pageName = (pageName ?? "").Trim('/');
 			var query = _db.WikiPages
@@ -136,13 +136,13 @@ namespace TASVideos.Services
 		}
 
 		// TODO: consider caching these
-		public IEnumerable<WikiPage> ThatAreParentsOf(string pageName)
+		public IQueryable<WikiPage> ThatAreParentsOf(string pageName)
 		{
 			pageName = (pageName ?? "").Trim('/');
 			if (string.IsNullOrWhiteSpace(pageName)
 				|| !pageName.Contains('/')) // Easy optimization, pages without a / have no parents
 			{
-				return Enumerable.Empty<WikiPage>();
+				return Enumerable.Empty<WikiPage>().AsQueryable();
 			}
 
 			return _db.WikiPages
