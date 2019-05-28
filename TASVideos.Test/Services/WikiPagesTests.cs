@@ -307,8 +307,44 @@ namespace TASVideos.Test.Services
 
 		#region Delete Revision
 
-		// Delete old revision - revision gone, current still current and in cache
-		// Delete revision that does not exist - nothing happens
+		[TestMethod]
+		public async Task DeleteRevision_PreviousRevision_DeletesOnlyThatRevision()
+		{
+			string existingPageName = "Exists";
+			var currentRevision = new WikiPage { PageName = existingPageName, Revision = 2, ChildId = null };
+			var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision };
+			_db.WikiPages.Add(previousRevision);
+			_db.WikiPages.Add(currentRevision);
+			_db.SaveChanges();
+			_cache.PageCache.Add(currentRevision);
+			
+			await _wikiPages.Delete(existingPageName, 1);
+			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
+			Assert.AreEqual(existingPageName, _db.WikiPages.ThatAreNotDeleted().Single().PageName);
+			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Single().Revision);
+			Assert.AreEqual(2, _db.WikiPages.ThatAreNotDeleted().Single().Revision);
+
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(existingPageName, _cache.PageCache.Single().PageName);
+			Assert.AreEqual(2, _cache.PageCache.Single().Revision);
+		}
+
+		[TestMethod]
+		public async Task DeleteRevision_DoesNotExist_NothingHappens()
+		{
+			string existingPageName = "Exists";
+			var currentRevision = new WikiPage { PageName = existingPageName, Revision = 2, ChildId = null };
+			var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision };
+			_db.WikiPages.Add(previousRevision);
+			_db.WikiPages.Add(currentRevision);
+			_db.SaveChanges();
+			_cache.PageCache.Add(currentRevision);
+
+			await _wikiPages.Delete(existingPageName, int.MaxValue);
+			Assert.AreEqual(2, _db.WikiPages.ThatAreNotDeleted().Count());
+			Assert.AreEqual(1, _cache.PageCache.Count);
+		}
+
 		// Delete latest revision - revision gone, previous is now latest, and in cache, referrers updated
 
 		#endregion
