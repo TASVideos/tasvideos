@@ -572,7 +572,16 @@ namespace TASVideos.Test.Services
 
 		#region SystemPage
 
-		// Null or whitespace checks
+		[TestMethod]
+		[DataRow(null)]
+		[DataRow("")]
+		[DataRow("/")]
+		public async Task SystemPage_EmptyChecks(string pageName)
+		{
+			var actual = await _wikiPages.SystemPage(pageName);
+			Assert.IsNull(actual);
+		}
+
 		// Page is not system page - returns false
 		// Page is System itself - true is returned
 		// Page is a system page - true is returned
@@ -609,7 +618,7 @@ namespace TASVideos.Test.Services
 
 		public void Remove(string key)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public void Set(string key, object data, int? cacheTime = null)
