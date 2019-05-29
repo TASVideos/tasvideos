@@ -129,6 +129,18 @@ namespace TASVideos.Test.Services
 			Assert.IsNull(actual);
 		}
 
+		[TestMethod]
+		public async Task Page_TrimsTrailingSlashes()
+		{
+			string existingPage = "Exists";
+			AddPage(existingPage);
+
+			var actual = await _wikiPages.Page("/" + existingPage + "/");
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(existingPage, actual.PageName);
+
+		}
+
 		// TODO: Current has a later deleted revision, but still considered current
 
 		#endregion
@@ -186,13 +198,14 @@ namespace TASVideos.Test.Services
 		public async Task Revision_Exists_ReturnsPage()
 		{
 			string existingPage = "Exists";
-			var page = new WikiPage { PageName = existingPage };
-			_db.WikiPages.Add(page);
-			_db.SaveChanges();
+			AddPage(existingPage);
+			AddPage(existingPage);
+			var id = AddPage(existingPage);
 
-			var actual = await _wikiPages.Revision(page.Id);
+			var actual = await _wikiPages.Revision(id);
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(existingPage, actual.PageName);
 		}
 
 		[TestMethod]
@@ -247,8 +260,7 @@ namespace TASVideos.Test.Services
 		public async Task Move_DestinationExists_Throws()
 		{
 			string existingPage = "InCache";
-			_db.WikiPages.Add(new WikiPage { PageName = existingPage });
-			_db.SaveChanges();
+			AddPage(existingPage);
 			await _wikiPages.Move("Original Page", existingPage);
 		}
 
@@ -373,9 +385,43 @@ namespace TASVideos.Test.Services
 
 		#region Undelete
 
-		// Undelete - page does not exist - nothing happens, cache not updated
-		// Undelete - page exists - 1 revision - not in cache - page now exists, is in cache, referrers updated
+		[TestMethod]
+		public async Task Undelete_PageDoesNotExist_NothingHappens()
+		{
+			await _wikiPages.Undelete("Does not exist");
+			Assert.AreEqual(0, _db.WikiPages.Count());
+			Assert.AreEqual(0, _cache.PageCache.Count);
+		}
+
+		[TestMethod]
+		public async Task Undelete_ExistingPageThatIsNotDeleted_NothingHappens()
+		{
+			string pageName = "Exists";
+			AddPage(pageName, isDeleted: false, cache: true);
+
+			await _wikiPages.Undelete(pageName);
+			Assert.AreEqual(1, _db.WikiPages.Count());
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.IsFalse(_db.WikiPages.Single().IsDeleted);
+		}
+
+		[TestMethod]
+		public async Task Undelete_DeletedPage_UndeletesPage()
+		{
+			string pageName = "Deleted";
+			AddPage(pageName, isDeleted: true);
+			_cache.PageCache.Clear();
+
+			await _wikiPages.Undelete(pageName);
+
+			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
+			// TODO: Assert.AreEqual(1, _cache.PageCache.Count);
+			// TODO: check referrers are updated
+		}
+
+
 		// Undelete - page exists - 2 revisions - not in cache - page now exists, latest is in cache, referrers updated to latest
+		// Undelete - page exists - only 1 revision of 2 is deleted, undeletes the revision
 
 		#endregion
 
@@ -582,17 +628,59 @@ namespace TASVideos.Test.Services
 			Assert.IsNull(actual);
 		}
 
-		// Page is not system page - returns false
-		// Page is System itself - true is returned
-		// Page is a system page - true is returned
+		[TestMethod]
+		public async Task SystemPage_Exists_ReturnsPage()
+		{
+			var suffix = "Exists";
+			var systemPageName = "System/" + suffix;
+			var page = new WikiPage { PageName = systemPageName };
+			_db.WikiPages.Add(page);
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.SystemPage(suffix);
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(systemPageName, actual.PageName);
+		}
+
+		[TestMethod]
+		public async Task SystemPage_DoesNotExists_ReturnsNull()
+		{
+			var suffix = "Exists";
+			var systemPageName = "System/" + suffix;
+			var page = new WikiPage { PageName = systemPageName };
+			_db.WikiPages.Add(page);
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.SystemPage("Does not exist");
+			Assert.IsNull(actual);
+		}
+
+		[TestMethod]
+		public async Task SystemPage_Empty_ReturnsSystem()
+		{
+			var page = new WikiPage { PageName = "System" };
+			_db.WikiPages.Add(page);
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.SystemPage("");
+			Assert.IsNotNull(actual);
+		}
 
 		#endregion
 
-		private void AddPage(string name, bool isDeleted = false)
+		private int AddPage(string name, bool isDeleted = false, bool cache = false)
 		{
-			_db.Add(new WikiPage { PageName = name, IsDeleted = isDeleted });
+			var wp = new WikiPage { PageName = name, IsDeleted = isDeleted };
+			_db.Add(wp);
 			_db.SaveChanges();
 			_wikiPages.FlushCache();
+
+			if (cache)
+			{
+				_cache.PageCache.Add(wp);
+			}
+
+			return wp.Id;
 		}
 	}
 

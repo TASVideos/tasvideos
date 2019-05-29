@@ -189,6 +189,7 @@ namespace TASVideos.Services
 
 		public async Task<WikiPage> Page(string pageName, int? revisionId = null)
 		{
+			pageName = (pageName ?? "").Trim('/');
 			var page = CurrentRevisionCache
 				.ForPage(pageName)
 				.ThatAreNotDeleted()
