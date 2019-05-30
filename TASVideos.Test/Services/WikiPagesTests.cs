@@ -190,6 +190,18 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(current.Id, _cache.PageCache.Single().Id);
 		}
 
+		[TestMethod]
+		public async Task Add_RevisionToPageWithLatestRevisionDeleted()
+		{
+			// Revision 1 - ChildId null, IsDeleted false
+			// Revision 2 - ChildId null, IsDeleted true
+			// Adding a new revision should make Revision 3, childid null
+			//	Revision 1 should have childid of revision 3, Revision 2 should continue to have a null child id
+
+			// TODO
+			Assert.IsTrue(true);
+		}
+
 		#endregion
 
 		#region Revision
@@ -419,9 +431,8 @@ namespace TASVideos.Test.Services
 			// TODO: check referrers are updated
 		}
 
-
 		// Undelete - page exists - 2 revisions - not in cache - page now exists, latest is in cache, referrers updated to latest
-		// Undelete - page exists - only 1 revision of 2 is deleted, undeletes the revision
+		// Undelete - page exists - only 1 revision of 2 is deleted, undeletes revision 1, and restores child ids
 
 		#endregion
 
@@ -578,7 +589,7 @@ namespace TASVideos.Test.Services
 		}
 
 		[TestMethod]
-		public void ThatAreParentsOf_AnscestorsReturned()
+		public void ThatAreParentsOf_AncestorsReturned()
 		{
 			string testName = "Parent2/Child1/Descendant1";
 			var pages = new[]
