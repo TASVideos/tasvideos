@@ -67,7 +67,9 @@ namespace TASVideos.Data.Entity
 
 		public static bool IsCurrent(this WikiPage wikiPage)
 		{
-			return wikiPage.ChildId == null;
+			return wikiPage != null
+				&& wikiPage.ChildId == null
+				&& wikiPage.IsDeleted == false;
 		}
 	}
 }

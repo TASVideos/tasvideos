@@ -317,12 +317,12 @@ namespace TASVideos.Services
 			// Referrals can be safely updated since the new page still has the original content 
 			// and any links on them are still correctly referring to other pages
 			var existingReferrals = await _db.WikiReferrals
-				.Where(wr => wr.Referral == originalName)
+				.ForPage(originalName)
 				.ToListAsync();
 
 			foreach (var referral in existingReferrals)
 			{
-				referral.Referral = destinationName;
+				referral.Referrer = destinationName;
 			}
 
 			await _db.SaveChangesAsync();
@@ -348,17 +348,18 @@ namespace TASVideos.Services
 
 			var cachedRevisions = CurrentRevisionCache
 				.ForPage(pageName)
-				.ThatAreNotDeleted()
 				.ToList();
 
 			foreach (var cachedRevision in cachedRevisions)
 			{
-				cachedRevision.IsDeleted = true;
+				CurrentRevisionCache.Remove(cachedRevision);
 			}
 
-			// Remove referrers
+			// Remove referrals
+			// Note: Pages that refer to this page will not be removed
+			// It's important for them to remain and show as broken links
 			var referrers = await _db.WikiReferrals
-				.ThatReferTo(pageName)
+				.ForPage(pageName)
 				.ToListAsync();
 
 			_db.RemoveRange(referrers);
@@ -376,7 +377,7 @@ namespace TASVideos.Services
 
 			if (wikiPage != null)
 			{
-				wikiPage.IsDeleted = true;
+				var isCurrent = wikiPage.IsCurrent();
 
 				var cachedRevision = CurrentRevisionCache
 					.ThatAreNotDeleted()
@@ -385,20 +386,39 @@ namespace TASVideos.Services
 
 				if (cachedRevision != null)
 				{
-					cachedRevision.IsDeleted = true;
+					CurrentRevisionCache.Remove(cachedRevision);
 				}
+
+				wikiPage.IsDeleted = true;
 
 				// Update referrers if latest revision
 				if (wikiPage.Child == null)
 				{
 					var referrers = await _db.WikiReferrals
-						.ThatReferTo(pageName)
+						.ForPage(pageName)
 						.ToListAsync();
 
 					_db.RemoveRange(referrers);
 				}
 
 				await _db.SaveChangesAsync();
+
+				if (isCurrent)
+				{
+					// Set the previous page as current, if there is one
+					var newCurrent = _db.WikiPages
+						.ThatAreNotDeleted()
+						.ForPage(pageName)
+						.OrderByDescending(wp => wp.Revision)
+						.FirstOrDefault();
+
+					if (newCurrent != null)
+					{
+						newCurrent.ChildId = null;
+						CurrentRevisionCache.Add(newCurrent);
+						await GenerateReferrals(newCurrent.PageName, newCurrent.Markup);
+					}
+				}
 			}
 		}
 
@@ -447,7 +467,7 @@ namespace TASVideos.Services
 		private async Task GenerateReferrals(string pageName, string markup)
 		{
 			var existingReferrals = await _db.WikiReferrals
-				.ThatReferTo(pageName)
+				.ForPage(pageName)
 				.ToListAsync();
 
 			_db.WikiReferrals.RemoveRange(existingReferrals);
@@ -456,7 +476,7 @@ namespace TASVideos.Services
 				.Select(wl => new WikiPageReferral
 				{
 					Referrer = pageName,
-					Referral = wl.Link,
+					Referral = wl.Link?.Trim('/'), // TODO: is it correct for GetAllInternalLinks to have slashes on Referrals and not Referrers?
 					Excerpt = wl.Excerpt
 				});
 
