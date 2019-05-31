@@ -41,7 +41,7 @@ namespace TASVideos.Test.Services
 			string existingPage = "Exists";
 			AddPage(existingPage);
 
-			var actual = await _wikiPages.Exists(existingPage, false);
+			var actual = await _wikiPages.Exists(existingPage);
 			Assert.AreEqual(1, _cache.PageCache.Count, "Cache should have  1 record");
 			Assert.AreEqual(existingPage, _cache.PageCache.First().PageName, "Cache should match page checked");
 			Assert.IsTrue(actual);
@@ -142,7 +142,23 @@ namespace TASVideos.Test.Services
 
 		}
 
-		// TODO: Current has a later deleted revision, but still considered current
+		[TestMethod]
+		public async Task Page_LatestRevisionIsDeleted_PreviousConsideredCurrent()
+		{
+			string pageName = "Page";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null };
+			_db.WikiPages.Add(revision1);
+			_db.WikiPages.Add(revision2);
+			_db.SaveChanges();
+			_cache.PageCache.Add(revision1);
+
+			var actual = await _wikiPages.Page(pageName);
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(1, actual.Revision);
+			Assert.IsNull(actual.ChildId);
+			Assert.AreEqual(pageName, actual.PageName);
+		}
 
 		#endregion
 
@@ -152,7 +168,8 @@ namespace TASVideos.Test.Services
 		public async Task Add_NewPage()
 		{
 			string newPage = "New Page";
-			await _wikiPages.Add(new WikiPage { PageName = newPage });
+			string anotherPage = "AnotherPage";
+			await _wikiPages.Add(new WikiPage { PageName = newPage, Markup = $"[{anotherPage}]" });
 
 			Assert.AreEqual(1, _db.WikiPages.Count());
 			Assert.AreEqual(newPage, _db.WikiPages.Single().PageName);
@@ -163,19 +180,25 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(newPage, _cache.PageCache.Single().PageName);
 			Assert.AreEqual(1, _cache.PageCache.Single().Revision);
 			Assert.IsNull(_cache.PageCache.Single().ChildId);
-			// TODO: check referrers
+
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			Assert.AreEqual(anotherPage, _db.WikiReferrals.Single().Referral);
+			Assert.AreEqual(newPage, _db.WikiReferrals.Single().Referrer);
 		}
 
 		[TestMethod]
 		public async Task Add_RevisionToExistingPage()
 		{
+			string oldLink = "OldPage";
+			string newLink = "NewLink";
 			string existingPageName = "Existing Page";
-			var existingPage = new WikiPage { PageName = existingPageName };
+			_db.WikiReferrals.Add(new WikiPageReferral { Excerpt = $"[{oldLink}]", Referral = oldLink, Referrer = existingPageName });
+			var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{oldLink}]" };
 			_db.WikiPages.Add(existingPage);
 			_db.SaveChanges();
 			_cache.PageCache.Add(existingPage);
 
-			await _wikiPages.Add(new WikiPage { PageName = existingPageName });
+			await _wikiPages.Add(new WikiPage { PageName = existingPageName, Markup = $"[{newLink}]" });
 
 			Assert.AreEqual(2, _db.WikiPages.Count());
 			var previous = _db.WikiPages.SingleOrDefault(wp => wp.PageName == existingPageName && wp.ChildId != null);
@@ -190,7 +213,10 @@ namespace TASVideos.Test.Services
 
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.AreEqual(current.Id, _cache.PageCache.Single().Id);
-			// TODO: check referrers are updated
+
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			Assert.AreEqual(existingPageName, _db.WikiReferrals.Single().Referrer);
+			Assert.AreEqual(newLink, _db.WikiReferrals.Single().Referral);
 		}
 
 		[TestMethod]
@@ -199,29 +225,35 @@ namespace TASVideos.Test.Services
 			// Revision 1 - Not deleted, no child id
 			// Revision 2 - Deleted, no child id
 			string pageName = "Page";
-			var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null };
-			var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null };
+			string revision1Link = "Link1";
+			string revision2Link = "Link2";
+			string revision3Link = "Link3";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null, Markup = $"[{revision1Link}]" };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null, Markup = $"[{revision2Link}]" };
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = revision1Link });
 			_db.SaveChanges();
 			_cache.PageCache.Add(revision1);
 
-			await _wikiPages.Add(new WikiPage { PageName = pageName });
+			await _wikiPages.Add(new WikiPage { PageName = pageName, Markup = $"[{revision3Link}]" });
 
 			Assert.AreEqual(3, _db.WikiPages.Count());
 
 			var first = _db.WikiPages.OrderBy(wp => wp.Id).First();
-			Assert.AreEqual(1, first.Revision);
-			Assert.AreEqual(3, first.ChildId);
-
 			var latest = _db.WikiPages.OrderByDescending(wp => wp.Id).First();
+
+			Assert.AreEqual(1, first.Revision);
+			Assert.AreEqual(latest.Id, first.ChildId);
 			Assert.AreEqual(3, latest.Revision);
 			Assert.IsNull(latest.Child);
 
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.AreEqual(3, _cache.PageCache.Single().Revision);
-			// TODO: check referrers updated
-			
+
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
+			Assert.AreEqual(revision3Link, _db.WikiReferrals.Single().Referral);
 		}
 
 		#endregion
@@ -311,17 +343,22 @@ namespace TASVideos.Test.Services
 		{
 			string existingPageName = "ExistingPage";
 			string newPageName = "NewPageName";
-			var existingPage = new WikiPage { PageName = existingPageName };
+			string link = "AnotherPage";
+			var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{link}]" };
 			_db.WikiPages.Add(existingPage);
-			_cache.PageCache.Add(existingPage);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = existingPageName, Referral = link });
 			_db.SaveChanges();
+			_cache.PageCache.Add(existingPage);
 
 			await _wikiPages.Move(existingPageName, newPageName);
 			Assert.AreEqual(1, _db.WikiPages.Count());
 			Assert.AreEqual(newPageName, _db.WikiPages.Single().PageName);
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.AreEqual(newPageName, _cache.PageCache.Single().PageName);
-			// TODO: test that referrers are updated
+
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			Assert.AreEqual(newPageName, _db.WikiReferrals.Single().Referrer);
+			Assert.AreEqual(link, _db.WikiReferrals.Single().Referral);
 		}
 
 		[TestMethod]
@@ -342,16 +379,66 @@ namespace TASVideos.Test.Services
 
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.AreEqual(newPageName, _cache.PageCache.Single().PageName);
-			// TODO: test that referrers are updated
 		}
 
 		#endregion
 
 		#region Delete Page
 
-		// TODO: Delete page that does not exist - nothing happens, nothing in cache, 0 is returned
-		// TODO: Delete existing page single revision - gone, nothing in cache, 1 is returned, referrers updated
-		// TODO: Delete existing page multiple revisions - all gone, nothing in cache, revision count returned, referrers updated
+		[TestMethod]
+		public async Task DeletePage_PageDoesNotExist_NothingHappens()
+		{
+			string doesNotExist = "DoesNotExist";
+			await _wikiPages.Delete(doesNotExist);
+
+			Assert.AreEqual(0, _db.WikiPages.Count());
+			Assert.AreEqual(0, _cache.PageCache.Count);
+		}
+
+		[TestMethod]
+		public async Task DeletePage_1Revision_RevisionDeleted()
+		{
+			string pageName = "Exists";
+			string link = "AnotherPage";
+			var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]" };
+			_db.WikiPages.Add(existingPage);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
+			_db.SaveChanges();
+			_cache.PageCache.Add(existingPage);
+
+			var actual = await _wikiPages.Delete(pageName);
+
+			Assert.AreEqual(1, actual);
+			Assert.AreEqual(1, _db.WikiPages.Count());
+			Assert.IsTrue(_db.WikiPages.Single().IsDeleted);
+			Assert.AreEqual(0, _cache.PageCache.Count);
+			Assert.AreEqual(0, _db.WikiReferrals.Count());
+		}
+
+		[TestMethod]
+		public async Task DeletePage_2Revisions_AllRevisionsDeleted()
+		{
+			string pageName = "Exists";
+			string link = "AnotherPage";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1 };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link}]" };
+			
+			_db.WikiPages.Add(revision1);
+			_db.WikiPages.Add(revision2);
+			_db.SaveChanges();
+			revision1.ChildId = revision2.Id;
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
+			_db.SaveChanges();
+			_cache.PageCache.Add(revision2);
+
+			var actual = await _wikiPages.Delete(pageName);
+
+			Assert.AreEqual(2, actual);
+			Assert.AreEqual(2, _db.WikiPages.Count());
+			Assert.IsTrue(_db.WikiPages.All(wp => wp.IsDeleted));
+			Assert.AreEqual(0, _cache.PageCache.Count);
+			Assert.AreEqual(0, _db.WikiReferrals.Count());
+		}
 
 		#endregion
 
@@ -369,6 +456,7 @@ namespace TASVideos.Test.Services
 			_cache.PageCache.Add(currentRevision);
 			
 			await _wikiPages.Delete(existingPageName, 1);
+
 			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
 			Assert.AreEqual(existingPageName, _db.WikiPages.ThatAreNotDeleted().Single().PageName);
 			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Single().Revision);
@@ -382,25 +470,37 @@ namespace TASVideos.Test.Services
 		[TestMethod]
 		public async Task DeleteRevision_DoesNotExist_NothingHappens()
 		{
-			string existingPageName = "Exists";
-			var currentRevision = new WikiPage { PageName = existingPageName, Revision = 2, ChildId = null };
-			var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision };
-			_db.WikiPages.Add(previousRevision);
-			_db.WikiPages.Add(currentRevision);
-			_db.SaveChanges();
-			_cache.PageCache.Add(currentRevision);
+			string pageName = "Exists";
+			AddPage(pageName, cache: true);
 
-			await _wikiPages.Delete(existingPageName, int.MaxValue);
-			Assert.AreEqual(2, _db.WikiPages.ThatAreNotDeleted().Count());
+			await _wikiPages.Delete(pageName, int.MaxValue);
+
+			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
 			Assert.AreEqual(1, _cache.PageCache.Count);
+		}
+
+		[TestMethod]
+		public async Task DeleteRevision_AlreadyDeleted_NothingHappens()
+		{
+			string pageName = "Exists";
+			AddPage(pageName, isDeleted: true);
+
+			await _wikiPages.Delete(pageName, 1);
+
+			Assert.AreEqual(0, _db.WikiPages.ThatAreNotDeleted().Count());
+			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Count());
+			Assert.AreEqual(0, _cache.PageCache.Count);
+
 		}
 
 		[TestMethod]
 		public async Task DeleteRevision_DeletingCurrent_SetsPreviousToCurrent()
 		{
 			string existingPageName = "Exists";
-			var currentRevision = new WikiPage { PageName = existingPageName, Revision = 2, ChildId = null };
-			var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision };
+			string oldLink = "OldPage";
+			string newLink = "NewPage";
+			var currentRevision = new WikiPage { PageName = existingPageName, Revision = 2, ChildId = null, Markup = $"[{newLink}]" };
+			var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision, Markup = $"[{oldLink}]" };
 			_db.WikiPages.Add(previousRevision);
 			_db.WikiPages.Add(currentRevision);
 			_db.SaveChanges();
@@ -408,11 +508,33 @@ namespace TASVideos.Test.Services
 
 			await _wikiPages.Delete(existingPageName, 2);
 
-			// TODO:
-			// Latest revision shoudl be deleted. Previous should be "current"
-			// Cache should have "current"
-			// Referrers should be updated
+			// Revision 1 should be Current
 			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
+			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().ThatAreCurrentRevisions().Count());
+			var current = _db.WikiPages
+				.ThatAreNotDeleted()
+				.ThatAreCurrentRevisions()
+				.Single();
+
+			Assert.AreEqual(existingPageName, current.PageName);
+			Assert.AreEqual(1, current.Revision);
+			Assert.IsNull(current.ChildId);
+			Assert.IsFalse(current.IsDeleted);
+
+			// Revision 2 should be deleted
+			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Count());
+			var deleted = _db.WikiPages.ThatAreDeleted().Single();
+			Assert.AreEqual(2, deleted.Revision);
+			Assert.IsNull(deleted.ChildId);
+
+			// Revision 1 should be in cache
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(1, _cache.PageCache.Single().Revision);
+
+			// Referrers should be based on Revision 1
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			var referrer = _db.WikiReferrals.Single();
+			Assert.AreEqual(oldLink, referrer.Referral);
 		}
 
 		#endregion
@@ -733,7 +855,7 @@ namespace TASVideos.Test.Services
 
 				list = new List<WikiPage>();
 				_cache.Add(CacheKeys.WikiCache, list);
-				return list as List<WikiPage>;
+				return (List<WikiPage>) list;
 			}
 		}
 
