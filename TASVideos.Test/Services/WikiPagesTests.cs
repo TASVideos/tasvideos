@@ -15,8 +15,8 @@ namespace TASVideos.Test.Services
 {
 	// TODO: concurrency exceptions
 	// TODO: delete revision 2, when revision 3 is already deleted
-	// TODO: undelete result of above delete
-	// TODO: page - when last 2 revisions are deleted
+	// TODO: delete revision 3, when revision 2 is already deleted
+	// TODO: undelete result of above deletes
 	[TestClass]
 	public class WikiPagesTests
 	{
@@ -163,6 +163,26 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(pageName, actual.PageName);
 		}
 
+		[TestMethod]
+		public async Task Page_LatestTwoRevisionsDeleted_PreviousConsideredCurrent()
+		{
+			string pageName = "Page";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null };
+			var revision3 = new WikiPage { PageName = pageName, Revision = 3, IsDeleted = true, ChildId = null };
+			_db.WikiPages.Add(revision1);
+			_db.WikiPages.Add(revision2);
+			_db.WikiPages.Add(revision3);
+			_db.SaveChanges();
+			_cache.PageCache.Add(revision1);
+
+			var actual = await _wikiPages.Page(pageName);
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(1, actual.Revision);
+			Assert.IsNull(actual.ChildId);
+			Assert.AreEqual(pageName, actual.PageName);
+		}
+
 		#endregion
 
 		#region Add
@@ -249,7 +269,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, first.Revision);
 			Assert.AreEqual(latest.Id, first.ChildId);
 			Assert.AreEqual(3, latest.Revision);
-			Assert.IsNull(latest.Child);
+			Assert.IsNull(latest.ChildId);
 
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.AreEqual(3, _cache.PageCache.Single().Revision);
@@ -257,6 +277,46 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, _db.WikiReferrals.Count());
 			Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
 			Assert.AreEqual(revision3Link, _db.WikiReferrals.Single().Referral);
+		}
+
+		[TestMethod]
+		public async Task Add_RevisionToPageWithLatestTwoRevisionsDeleted()
+		{
+			// Revision 1 - Not deleted, no child id
+			// Revision 2 - Deleted, no child id
+			string pageName = "Page";
+			string revision1Link = "Link1";
+			string revision2Link = "Link2";
+			string revision3Link = "Link3";
+			string revision4Link = "Link4";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null, Markup = $"[{revision1Link}]" };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null, Markup = $"[{revision2Link}]" };
+			var revision3 = new WikiPage { PageName = pageName, Revision = 3, IsDeleted = true, ChildId = null, Markup = $"[{revision3Link}]" };
+			_db.WikiPages.Add(revision1);
+			_db.WikiPages.Add(revision2);
+			_db.WikiPages.Add(revision3);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = revision1Link });
+			_db.SaveChanges();
+			_cache.PageCache.Add(revision1);
+
+			await _wikiPages.Add(new WikiPage { PageName = pageName, Markup = $"[{revision4Link}]" });
+
+			Assert.AreEqual(4, _db.WikiPages.Count());
+
+			var first = _db.WikiPages.OrderBy(wp => wp.Id).First();
+			var latest = _db.WikiPages.OrderByDescending(wp => wp.Id).First();
+
+			Assert.AreEqual(1, first.Revision);
+			Assert.AreEqual(latest.Id, first.ChildId);
+			Assert.AreEqual(4, latest.Revision);
+			Assert.IsNull(latest.ChildId);
+
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(4, _cache.PageCache.Single().Revision);
+
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
+			Assert.AreEqual(revision4Link, _db.WikiReferrals.Single().Referral);
 		}
 
 		#endregion
@@ -627,6 +687,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(newLink, referral.Referral);
 		}
 
+		[TestMethod]
 		public async Task Undelete_2DeletedRevisions_BothUndeleted()
 		{
 			string pageName = "Deleted";
