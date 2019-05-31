@@ -13,6 +13,7 @@ using TASVideos.Services;
 // ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Services
 {
+	// TODO: concurrency exceptions
 	[TestClass]
 	public class WikiPagesTests
 	{
@@ -151,7 +152,7 @@ namespace TASVideos.Test.Services
 		public async Task Add_NewPage()
 		{
 			string newPage = "New Page";
-			await _wikiPages.Add(new WikiPage { PageName = newPage, Markup = "" });
+			await _wikiPages.Add(new WikiPage { PageName = newPage });
 
 			Assert.AreEqual(1, _db.WikiPages.Count());
 			Assert.AreEqual(newPage, _db.WikiPages.Single().PageName);
@@ -162,18 +163,19 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(newPage, _cache.PageCache.Single().PageName);
 			Assert.AreEqual(1, _cache.PageCache.Single().Revision);
 			Assert.IsNull(_cache.PageCache.Single().ChildId);
+			// TODO: check referrers
 		}
 
 		[TestMethod]
 		public async Task Add_RevisionToExistingPage()
 		{
 			string existingPageName = "Existing Page";
-			var existingPage = new WikiPage { PageName = existingPageName, Markup = "" };
+			var existingPage = new WikiPage { PageName = existingPageName };
 			_db.WikiPages.Add(existingPage);
 			_db.SaveChanges();
 			_cache.PageCache.Add(existingPage);
 
-			await _wikiPages.Add(new WikiPage { PageName = existingPageName, Markup = "" });
+			await _wikiPages.Add(new WikiPage { PageName = existingPageName });
 
 			Assert.AreEqual(2, _db.WikiPages.Count());
 			var previous = _db.WikiPages.SingleOrDefault(wp => wp.PageName == existingPageName && wp.ChildId != null);
@@ -188,18 +190,38 @@ namespace TASVideos.Test.Services
 
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.AreEqual(current.Id, _cache.PageCache.Single().Id);
+			// TODO: check referrers are updated
 		}
 
 		[TestMethod]
 		public async Task Add_RevisionToPageWithLatestRevisionDeleted()
 		{
-			// Revision 1 - ChildId null, IsDeleted false
-			// Revision 2 - ChildId null, IsDeleted true
-			// Adding a new revision should make Revision 3, childid null
-			//	Revision 1 should have childid of revision 3, Revision 2 should continue to have a null child id
+			// Revision 1 - Not deleted, no child id
+			// Revision 2 - Deleted, no child id
+			string pageName = "Page";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null };
+			_db.WikiPages.Add(revision1);
+			_db.WikiPages.Add(revision2);
+			_db.SaveChanges();
+			_cache.PageCache.Add(revision1);
 
-			// TODO
-			Assert.IsTrue(true);
+			await _wikiPages.Add(new WikiPage { PageName = pageName });
+
+			Assert.AreEqual(3, _db.WikiPages.Count());
+
+			var first = _db.WikiPages.OrderBy(wp => wp.Id).First();
+			Assert.AreEqual(1, first.Revision);
+			Assert.AreEqual(3, first.ChildId);
+
+			var latest = _db.WikiPages.OrderByDescending(wp => wp.Id).First();
+			Assert.AreEqual(3, latest.Revision);
+			Assert.IsNull(latest.Child);
+
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(3, _cache.PageCache.Single().Revision);
+			// TODO: check referrers updated
+			
 		}
 
 		#endregion

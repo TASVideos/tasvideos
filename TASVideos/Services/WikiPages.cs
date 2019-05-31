@@ -246,13 +246,21 @@ namespace TASVideos.Services
 
 			var currentRevision = await _db.WikiPages
 				.ForPage(revision.PageName)
+				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.SingleOrDefaultAsync();
 
 			if (currentRevision != null)
 			{
 				currentRevision.Child = revision;
-				revision.Revision = currentRevision.Revision + 1;
+
+				// We can assume the "current" revision is the latest
+				// We might have a deleted revision after it
+				var maxRevision = await _db.WikiPages
+					.ForPage(revision.PageName)
+					.MaxAsync(r => r.Revision);
+
+				revision.Revision = maxRevision + 1;
 			}
 
 			await GenerateReferrals(revision.PageName, revision.Markup);
@@ -444,7 +452,7 @@ namespace TASVideos.Services
 
 			_db.WikiReferrals.RemoveRange(existingReferrals);
 
-			var referrers = Util.GetAllInternalLinks(markup)
+			var referrers = Util.GetAllInternalLinks(markup ?? "")
 				.Select(wl => new WikiPageReferral
 				{
 					Referrer = pageName,
