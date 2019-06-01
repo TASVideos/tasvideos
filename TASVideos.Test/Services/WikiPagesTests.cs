@@ -53,7 +53,7 @@ namespace TASVideos.Test.Services
 			string existingPage = "Exists";
 			AddPage(existingPage);
 
-			var actual = await _wikiPages.Exists("DoesNotExist", false);
+			var actual = await _wikiPages.Exists("DoesNotExist");
 			Assert.IsFalse(actual);
 		}
 
@@ -75,7 +75,7 @@ namespace TASVideos.Test.Services
 			string existingPage = "Exists";
 			AddPage(existingPage, isDeleted: true);
 
-			var actual = await _wikiPages.Exists(existingPage, includeDeleted: false);
+			var actual = await _wikiPages.Exists(existingPage);
 			Assert.AreEqual(0, _cache.PageCache.Count, "Non-existent page was not cached.");
 			Assert.IsFalse(actual);
 		}
@@ -680,6 +680,9 @@ namespace TASVideos.Test.Services
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.Single();
+
+			Assert.AreEqual(pageName, current.PageName);
+			Assert.AreEqual(1, current.Revision);
 
 			// Revision 2 should be deleted
 			Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
