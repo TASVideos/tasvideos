@@ -73,6 +73,12 @@ namespace TASVideos.Services
 		Task FlushCache();
 
 		/// <summary>
+		/// Populates the cache with likely accessed latest revisions
+		/// of wiki pages, such as publications and commonly accessed pages
+		/// </summary>
+		void PrePopulateCache();
+
+		/// <summary>
 		/// Filters the list of wiki pages to only pages that are nest beneath the given page.
 		/// If no pageName is provided, then a master list of subpages is provided
 		/// ex: /Foo/Bar, /Foo/Bar2 and /Foo/Bar/Baz are all subpages of /Foo
@@ -423,11 +429,14 @@ namespace TASVideos.Services
 			{
 				ClearCache(page);
 			}
+		}
 
-			var currentPages = await _db.WikiPages
+		public void PrePopulateCache()
+		{
+			var currentPages = _db.WikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
-				.ToListAsync();
+				.ToList();
 
 			foreach (var page in currentPages)
 			{
