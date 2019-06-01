@@ -49,7 +49,7 @@ namespace TASVideos.Pages.Wiki
 				return Page();
 			}
 
-			var homePage = _wikiPages.Page("HomePages/" + url);
+			var homePage = await _wikiPages.Page("HomePages/" + url);
 			if (homePage != null)
 			{
 				// We redirected on invalid url homepages, now we have to do the same for valid ones
