@@ -63,7 +63,12 @@ namespace TASVideos.Pages.Wiki
 				return Page();
 			}
 
-			await _wikiPages.Move(Move.OriginalPageName, Move.DestinationPageName);
+			var result = await _wikiPages.Move(Move.OriginalPageName, Move.DestinationPageName);
+
+			if (!result)
+			{
+				ModelState.AddModelError("", "Unable to move page, the page may have been modified during the saving of this operation.");
+			}
 
 			_publisher.SendGeneralWiki(
 						$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Identity.Name}",

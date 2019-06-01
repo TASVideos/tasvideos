@@ -33,7 +33,9 @@ namespace TASVideos.Services
 		/// All revisions are renamed to the new page
 		/// and <seealso cref="WikiPageReferral" /> entries are updated
 		/// </summary>
-		Task Move(string originalName, string destinationName);
+		/// <returns>Whether or not the move was successful.
+		/// If false, a concurrency conflict was detected and no data was modified</returns>
+		Task<bool> Move(string originalName, string destinationName);
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given id
@@ -250,7 +252,7 @@ namespace TASVideos.Services
 			this[revision.PageName] = revision;
 		}
 
-		public async Task Move(string originalName, string destinationName)
+		public async Task<bool> Move(string originalName, string destinationName)
 		{
 			if (string.IsNullOrWhiteSpace(destinationName))
 			{
@@ -273,14 +275,6 @@ namespace TASVideos.Services
 				revision.PageName = destinationName;
 			}
 
-			await _db.SaveChangesAsync();
-
-			var cachedRevision = this[originalName];
-			if (cachedRevision != null)
-			{
-				cachedRevision.PageName = destinationName;
-			}
-
 			// Update all Referrals
 			// Referrals can be safely updated since the new page still has the original content 
 			// and any links on them are still correctly referring to other pages
@@ -293,13 +287,28 @@ namespace TASVideos.Services
 				referral.Referrer = destinationName;
 			}
 
-			await _db.SaveChangesAsync();
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return false;
+			}
 
 			// Note that we can not update Referrers since the wiki pages will still
 			// Physically refer to the original page. Those links are broken and it is
 			// Important to keep them listed as broken so they can show up in the Broken Links module
 			// for editors to see and fix. Anyone doing a move operation should know to check broken links
 			// afterwards
+
+			var cachedRevision = this[originalName];
+			if (cachedRevision != null)
+			{
+				cachedRevision.PageName = destinationName;
+			}
+
+			return true;
 		}
 
 		public async Task<int> Delete(string pageName)
