@@ -34,16 +34,6 @@ namespace TASVideos.Data.Entity
 			return list.Where(wp => wp.Child == null);
 		}
 
-		public static IEnumerable<WikiPage> ThatAreCurrentRevisions(this IEnumerable<WikiPage> list)
-		{
-			return list.Where(wp => wp.Child == null);
-		}
-
-		public static IEnumerable<WikiPage> ForPage(this IEnumerable<WikiPage> list, string pageName)
-		{
-			return list.Where(w => string.Equals(w.PageName, pageName, StringComparison.OrdinalIgnoreCase));
-		}
-
 		public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> list, string pageName)
 		{
 			return list.Where(w => w.PageName == pageName);
@@ -52,12 +42,6 @@ namespace TASVideos.Data.Entity
 		public static IQueryable<WikiPage> Revision(this IQueryable<WikiPage> list, string pageName, int revision)
 		{
 			return list.Where(w => w.PageName == pageName && w.Revision == revision);
-		}
-
-		public static IEnumerable<WikiPage> Revision(this IEnumerable<WikiPage> list, string pageName, int revision)
-		{
-			return list.Where(w => string.Equals(w.PageName, pageName, StringComparison.OrdinalIgnoreCase)
-				&& w.Revision == revision);
 		}
 
 		public static IQueryable<WikiPage> ExcludingMinorEdits(this IQueryable<WikiPage> list)
