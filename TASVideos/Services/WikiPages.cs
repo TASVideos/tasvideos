@@ -132,7 +132,7 @@ namespace TASVideos.Services
 			}
 
 			var query = _db.WikiPages
-				.ThatAreCurrentRevisions();
+				.WithNoChildren();
 
 			if (!includeDeleted)
 			{
@@ -202,7 +202,7 @@ namespace TASVideos.Services
 			var currentRevision = await _db.WikiPages
 				.ForPage(revision.PageName)
 				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.SingleOrDefaultAsync();
 
 			if (currentRevision != null)
@@ -435,7 +435,7 @@ namespace TASVideos.Services
 		{
 			var currentPages = _db.WikiPages
 				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.ToList();
 
 			foreach (var page in currentPages)
@@ -450,7 +450,7 @@ namespace TASVideos.Services
 			pageName = (pageName ?? "").Trim('/');
 			var query = _db.WikiPages
 				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.Where(wp => wp.PageName != pageName);
 
 			if (!string.IsNullOrWhiteSpace(pageName))
@@ -473,7 +473,7 @@ namespace TASVideos.Services
 
 			return _db.WikiPages
 				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.Where(wp => wp.PageName != pageName)
 				.Where(wp => pageName.StartsWith(wp.PageName));
 		}

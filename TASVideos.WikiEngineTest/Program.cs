@@ -48,7 +48,7 @@ namespace TASVideos.WikiEngineTest
 			{
 				var query = context.WikiPages
 					.ThatAreNotDeleted()
-					.ThatAreCurrentRevisions();
+					.WithNoChildren();
 				if (filter != null)
 				{
 					query = query.Where(wp => wp.PageName.Contains(filter));

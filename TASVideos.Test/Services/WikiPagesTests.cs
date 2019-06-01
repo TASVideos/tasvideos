@@ -649,7 +649,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Count());
 			var current = _db.WikiPages
 				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.Single();
 
 			Assert.AreEqual(existingPageName, current.PageName);
@@ -698,7 +698,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
 			var current = _db.WikiPages
 				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.Single();
 
 			Assert.AreEqual(pageName, current.PageName);
@@ -752,7 +752,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
 			var current = _db.WikiPages
 				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.Single();
 
 			Assert.AreEqual(pageName, current.PageName);

@@ -21,7 +21,7 @@ namespace TASVideos.ViewComponents
 		{
 			var orphans = await _db.WikiPages
 				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.Where(wp => wp.PageName != "MediaPosts") // Linked by the navbar
 				.Where(wp => !_db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
 				.Where(wp => !wp.PageName.StartsWith("System/")

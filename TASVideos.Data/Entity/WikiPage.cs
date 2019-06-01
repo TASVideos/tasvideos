@@ -29,7 +29,7 @@ namespace TASVideos.Data.Entity
 
 	public static class WikiQueryableExtensions
 	{
-		public static IQueryable<WikiPage> ThatAreCurrentRevisions(this IQueryable<WikiPage> list)
+		public static IQueryable<WikiPage> WithNoChildren(this IQueryable<WikiPage> list)
 		{
 			return list.Where(wp => wp.Child == null);
 		}

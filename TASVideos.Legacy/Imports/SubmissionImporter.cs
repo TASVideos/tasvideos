@@ -64,14 +64,14 @@ namespace TASVideos.Legacy.Imports
 
 				var submissionWikis = context.WikiPages
 					.ThatAreNotDeleted()
-					.ThatAreCurrentRevisions()
+					.WithNoChildren()
 					.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
 					.Select(s => new { s.Id, s.PageName, s.CreateTimeStamp })
 					.ToList();
 
 				var publicationWikis = context.WikiPages
 					.ThatAreNotDeleted()
-					.ThatAreCurrentRevisions()
+					.WithNoChildren()
 					.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
 					.ToList()
 					.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimeStamp, gvalue.CreateUserName, gvalue.PageName })
