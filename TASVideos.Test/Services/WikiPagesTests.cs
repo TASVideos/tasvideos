@@ -41,7 +41,7 @@ namespace TASVideos.Test.Services
 			AddPage(existingPage);
 
 			var actual = await _wikiPages.Exists(existingPage);
-			Assert.AreEqual(1, _cache.PageCache.Count, "Cache should have  1 record");
+			Assert.AreEqual(1, _cache.PageCache.Count, "Cache should have 1 record");
 			Assert.AreEqual(existingPage, _cache.PageCache.First().PageName, "Cache should match page checked");
 			Assert.IsTrue(actual);
 		}
@@ -1127,7 +1127,7 @@ namespace TASVideos.Test.Services
 
 			if (cache)
 			{
-				_cache.PageCache.Add(wp);
+				_cache.Set(wp.PageName, wp);
 			}
 
 			return wp.Id;
