@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -100,21 +99,20 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		// TODO: ensure there are no duplicates, HashSet plus override equals?
-		private List<WikiPage> CurrentRevisionCache
+		private WikiPage this[string pageName]
 		{
 			get
 			{
-				var cacheKey = CacheKeys.WikiCache;
-				if (_cache.TryGetValue(cacheKey, out List<WikiPage> pages))
-				{
-					return pages;
-				}
-
-				pages = new List<WikiPage>();
-				_cache.Set(cacheKey, pages, Durations.OneYearInSeconds);
-				return pages;
+				_cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName}", out WikiPage page);
+				return page;
 			}
+
+			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName}", value, Durations.OneYearInSeconds);
+		}
+
+		private void ClearCache(string pageName)
+		{
+			_cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName);
 		}
 
 		// TODO: consider caching these
@@ -153,19 +151,13 @@ namespace TASVideos.Services
 
 		public async Task<bool> Exists(string pageName, bool includeDeleted = false)
 		{
-			var filter = includeDeleted
-				? CurrentRevisionCache
-				: CurrentRevisionCache.ThatAreNotDeleted();
+			var existingPage = this[pageName];
 
-			var exists = filter
-				.Any(wp => wp.PageName == pageName);
-
-			if (exists)
+			if (existingPage != null)
 			{
 				return true;
 			}
 
-			
 			var query = _db.WikiPages
 				.ThatAreCurrentRevisions();
 
@@ -177,24 +169,23 @@ namespace TASVideos.Services
 			var page = await query
 				.SingleOrDefaultAsync(wp => wp.PageName == pageName);
 
-			if (page != null)
+			if (page.IsCurrent())
 			{
-				CurrentRevisionCache.Add(page);
-				return true;
+				this[pageName] = page;
 			}
 
-			return false;
+			return page != null;
 		}
 
 		public async Task<WikiPage> Page(string pageName, int? revisionId = null)
 		{
 			pageName = (pageName ?? "").Trim('/');
-			var page = CurrentRevisionCache
-				.ForPage(pageName)
-				.ThatAreNotDeleted()
-				.FirstOrDefault(w => (revisionId != null
-					? w.Revision == revisionId
-					: w.ChildId == null));
+
+			WikiPage page = null;
+			if (!revisionId.HasValue)
+			{
+				page = this[pageName];
+			}
 
 			if (page != null)
 			{
@@ -208,9 +199,9 @@ namespace TASVideos.Services
 					? w.Revision == revisionId
 					: w.ChildId == null));
 
-			if (page != null && page.IsCurrent())
+			if (page.IsCurrent())
 			{
-				CurrentRevisionCache.Add(page);
+				this[pageName] = page;
 			}
 
 			return page;
@@ -218,22 +209,13 @@ namespace TASVideos.Services
 
 		public async Task<WikiPage> Revision(int dbId)
 		{
-			var page = CurrentRevisionCache
-				.ThatAreNotDeleted()
-				.FirstOrDefault(w => w.Id == dbId);
-
-			if (page != null)
-			{
-				return page;
-			}
-
-			page = await _db.WikiPages
+			var page = await _db.WikiPages
 				.ThatAreNotDeleted()
 				.FirstOrDefaultAsync(w => w.Id == dbId);
 
 			if (page.IsCurrent())
 			{
-				CurrentRevisionCache.Add(page);
+				this[page.PageName] = page;
 			}
 
 			return page;
@@ -264,21 +246,8 @@ namespace TASVideos.Services
 
 			await GenerateReferrals(revision.PageName, revision.Markup);
 		
-			var cachedCurrentRevision = CurrentRevisionCache
-				.ForPage(revision.PageName)
-				.ThatAreCurrentRevisions()
-				.FirstOrDefault();
-			if (cachedCurrentRevision != null)
-			{
-				cachedCurrentRevision.Child = revision;
-				cachedCurrentRevision.ChildId = revision.Id;
-			}
-
-			CurrentRevisionCache.Add(revision);
-			if (currentRevision != null)
-			{
-				CurrentRevisionCache.Remove(currentRevision);
-			}
+			ClearCache(revision.PageName);
+			this[revision.PageName] = revision;
 		}
 
 		public async Task Move(string originalName, string destinationName)
@@ -302,15 +271,15 @@ namespace TASVideos.Services
 			foreach (var revision in existingRevisions)
 			{
 				revision.PageName = destinationName;
-
-				var cachedRevision = CurrentRevisionCache.FirstOrDefault(w => w.Id == revision.Id);
-				if (cachedRevision != null)
-				{
-					cachedRevision.PageName = destinationName;
-				}
 			}
 
 			await _db.SaveChangesAsync();
+
+			var cachedRevision = this[originalName];
+			if (cachedRevision != null)
+			{
+				cachedRevision.PageName = destinationName;
+			}
 
 			// Update all Referrals
 			// Referrals can be safely updated since the new page still has the original content 
@@ -346,14 +315,7 @@ namespace TASVideos.Services
 				revision.ChildId = null;
 			}
 
-			var cachedRevisions = CurrentRevisionCache
-				.ForPage(pageName)
-				.ToList();
-
-			foreach (var cachedRevision in cachedRevisions)
-			{
-				CurrentRevisionCache.Remove(cachedRevision);
-			}
+			ClearCache(pageName);
 
 			// Remove referrals
 			// Note: Pages that refer to this page will not be removed
@@ -379,14 +341,9 @@ namespace TASVideos.Services
 			{
 				var isCurrent = wikiPage.IsCurrent();
 
-				var cachedRevision = CurrentRevisionCache
-					.ThatAreNotDeleted()
-					.Revision(pageName, revision)
-					.SingleOrDefault();
-
-				if (cachedRevision != null)
+				if (isCurrent)
 				{
-					CurrentRevisionCache.Remove(cachedRevision);
+					_cache.Remove(pageName);
 				}
 
 				wikiPage.IsDeleted = true;
@@ -415,7 +372,7 @@ namespace TASVideos.Services
 					if (newCurrent != null)
 					{
 						newCurrent.ChildId = null;
-						CurrentRevisionCache.Add(newCurrent);
+						this[pageName] = newCurrent;
 						await GenerateReferrals(pageName, newCurrent.Markup);
 					}
 				}
@@ -434,14 +391,7 @@ namespace TASVideos.Services
 
 			if (revisions.Any())
 			{
-				var cachedRevisions = CurrentRevisionCache
-				.ForPage(pageName)
-				.ToList();
-
-				foreach (var revision in cachedRevisions)
-				{
-					CurrentRevisionCache.Remove(revision);
-				}
+				ClearCache(pageName);
 
 				foreach (var revision in revisions)
 				{
@@ -458,7 +408,7 @@ namespace TASVideos.Services
 					.OrderByDescending(r => r.Revision)
 					.First();
 
-				CurrentRevisionCache.Add(current);
+				this[pageName] = current;
 				await GenerateReferrals(pageName, current.Markup);
 
 				await _db.SaveChangesAsync();
@@ -467,15 +417,24 @@ namespace TASVideos.Services
 
 		public async Task FlushCache()
 		{
+			var allPages = await _db.WikiPages
+				.Select(wp => wp.PageName)
+				.Distinct()
+				.ToListAsync();
+
+			foreach (var page in allPages)
+			{
+				ClearCache(page);
+			}
+
 			var currentPages = await _db.WikiPages
+				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
 				.ToListAsync();
 
-			_cache.Remove(CacheKeys.WikiCache);
-
 			foreach (var page in currentPages)
 			{
-				CurrentRevisionCache.Add(page);
+				this[page.PageName] = page;
 			}
 		}
 
