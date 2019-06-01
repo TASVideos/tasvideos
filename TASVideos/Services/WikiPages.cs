@@ -116,11 +116,6 @@ namespace TASVideos.Services
 			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName}", value, Durations.OneYearInSeconds);
 		}
 
-		private void ClearCache(string pageName)
-		{
-			_cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName);
-		}
-
 		public async Task<bool> Exists(string pageName, bool includeDeleted = false)
 		{
 			var existingPage = this[pageName];
@@ -268,12 +263,11 @@ namespace TASVideos.Services
 				return false;
 			}
 
-			// Note that we can not update Referrers since the wiki pages will still
-			// Physically refer to the original page. Those links are broken and it is
-			// Important to keep them listed as broken so they can show up in the Broken Links module
-			// for editors to see and fix. Anyone doing a move operation should know to check broken links
-			// afterwards
-
+			// Note that we can not update Referrers since the wiki pages will
+			// still physically refer to the original page. Those links are
+			// broken and it is important to keep them listed as broken so they
+			// can show up in the Broken Links module for editors to see and fix.
+			// Anyone doing a move operation should know to check broken links afterwards
 			var cachedRevision = this[originalName];
 			if (cachedRevision != null)
 			{
@@ -472,6 +466,11 @@ namespace TASVideos.Services
 				.ThatAreCurrentRevisions()
 				.Where(wp => wp.PageName != pageName)
 				.Where(wp => pageName.StartsWith(wp.PageName));
+		}
+
+		private void ClearCache(string pageName)
+		{
+			_cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName);
 		}
 
 		private async Task GenerateReferrals(string pageName, string markup)
