@@ -9,8 +9,8 @@ using TASVideos.Services;
 // ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Services
 {
-	// TODO: concurrency exceptions on Add, Undelete
-	// TODO: update exception on add, undelete
+	// TODO: concurrency exceptions on Add
+	// TODO: update exception on add
 	[TestClass]
 	public class WikiPagesTests
 	{
@@ -776,7 +776,8 @@ namespace TASVideos.Test.Services
 		[TestMethod]
 		public async Task Undelete_PageDoesNotExist_NothingHappens()
 		{
-			await _wikiPages.Undelete("Does not exist");
+			var actual = await _wikiPages.Undelete("Does not exist");
+			Assert.IsTrue(actual, "Page does not exist is considered successful");
 			Assert.AreEqual(0, _db.WikiPages.Count());
 			Assert.AreEqual(0, _cache.PageCache.Count);
 		}
@@ -787,7 +788,8 @@ namespace TASVideos.Test.Services
 			string pageName = "Exists";
 			AddPage(pageName, isDeleted: false, cache: true);
 
-			await _wikiPages.Undelete(pageName);
+			var actual = await _wikiPages.Undelete(pageName);
+			Assert.IsTrue(actual, "Page already exists considered successful");
 			Assert.AreEqual(1, _db.WikiPages.Count());
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.IsFalse(_db.WikiPages.Single().IsDeleted);
@@ -803,8 +805,8 @@ namespace TASVideos.Test.Services
 			_db.SaveChanges();
 			_cache.PageCache.Clear();
 
-			await _wikiPages.Undelete(pageName);
-
+			var actual = await _wikiPages.Undelete(pageName);
+			Assert.IsTrue(actual);
 			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.AreEqual(1, _db.WikiReferrals.Count());
@@ -826,7 +828,8 @@ namespace TASVideos.Test.Services
 			_db.SaveChanges();
 			_cache.PageCache.Add(revision1);
 
-			await _wikiPages.Undelete(pageName);
+			var actual = await _wikiPages.Undelete(pageName);
+			Assert.IsTrue(actual);
 
 			// Both are not deleted
 			Assert.AreEqual(2, _db.WikiPages.ThatAreNotDeleted().Count());
@@ -873,7 +876,8 @@ namespace TASVideos.Test.Services
 			_db.SaveChanges();
 			_cache.PageCache.Add(revision1);
 
-			await _wikiPages.Undelete(pageName);
+			var actual = await _wikiPages.Undelete(pageName);
+			Assert.IsTrue(actual);
 
 			// All not deleted
 			Assert.AreEqual(3, _db.WikiPages.ThatAreNotDeleted().Count());
@@ -921,7 +925,8 @@ namespace TASVideos.Test.Services
 			_db.SaveChanges();
 			_cache.PageCache.Clear();
 
-			await _wikiPages.Undelete(pageName);
+			var actual = await _wikiPages.Undelete(pageName);
+			Assert.IsTrue(actual);
 
 			// Both are not deleted
 			Assert.AreEqual(2, _db.WikiPages.ThatAreNotDeleted().Count());
@@ -949,6 +954,25 @@ namespace TASVideos.Test.Services
 			var referral = _db.WikiReferrals.Single();
 			Assert.AreEqual(pageName, referral.Referrer);
 			Assert.AreEqual(link2, referral.Referral);
+		}
+
+		[TestMethod]
+		public async Task Undelete_ConcurrencyConflict_DoesNotUndelete()
+		{
+			string pageName = "Deleted";
+			string link = "AnotherPage";
+			var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true };
+			_db.WikiPages.Add(page);
+			_db.SaveChanges();
+			_cache.PageCache.Clear();
+			_db.CreateConcurrentUpdateConflict();
+
+			var actual = await _wikiPages.Undelete(pageName);
+
+			Assert.IsFalse(actual);
+			Assert.AreEqual(0, _db.WikiPages.ThatAreNotDeleted().Count());
+			Assert.AreEqual(0, _cache.PageCache.Count);
+			Assert.AreEqual(0, _db.WikiReferrals.Count());
 		}
 
 		#endregion

@@ -119,7 +119,12 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			path = path.Trim('/');
-			await _wikiPages.Undelete(path);
+			var result = await _wikiPages.Undelete(path);
+			if (!result)
+			{
+				ModelState.AddModelError("", "Unable to undelete, the page may have been modified during the saving of this operation.");
+				return Page();
+			}
 
 			_publisher.SendGeneralWiki(
 					$"Page {path} UNDELETED by {User.Identity.Name}",
