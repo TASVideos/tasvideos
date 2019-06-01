@@ -10,7 +10,7 @@ using TASVideos.Services;
 namespace TASVideos.Test.Services
 {
 	// TODO: concurrency exceptions on Add, Delete, Undelete
-	// TODO: move and add can cause a duplicate exception
+	// TODO: update exception on add, undelete
 	[TestClass]
 	public class WikiPagesTests
 	{
@@ -423,7 +423,7 @@ namespace TASVideos.Test.Services
 		}
 
 		[TestMethod]
-		public async Task Move_ConcurrencyException_DoesNotMove()
+		public async Task Move_UpdateException_DoesNotMove()
 		{
 			string origPageName = "Orig";
 			string origLink = "Link";
@@ -437,6 +437,35 @@ namespace TASVideos.Test.Services
 			string destPageName = "Dest";
 
 			_db.CreateUpdateConflict();
+
+			var actual = await _wikiPages.Move(origPageName, destPageName);
+			Assert.IsFalse(actual, "The move was unsuccessful");
+			
+			// Moved page does not exist
+			Assert.AreEqual(0, _db.WikiPages.Count(wp => wp.PageName == destPageName));
+
+			// Cache does not have the moved page
+			Assert.AreEqual(0, _cache.PageCache.Count(wp => wp.PageName == destPageName));
+
+			// Referrers not updated
+			Assert.AreEqual(0, _db.WikiReferrals.Count(wr => wr.Referrer == destPageName));
+		}
+
+		[TestMethod]
+		public async Task Move_ConcurrencyException_DoesNotMove()
+		{
+			string origPageName = "Orig";
+			string origLink = "Link";
+			var origPage = new WikiPage { PageName = origPageName, Markup = $"[{origLink}]" };
+			
+			_db.WikiPages.Add(origPage);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = origPageName, Referral = origLink });
+			_db.SaveChanges();
+			_cache.Set(origPageName, origPage);
+
+			string destPageName = "Dest";
+
+			_db.CreateConcurrentUpdateConflict();
 
 			var actual = await _wikiPages.Move(origPageName, destPageName);
 			Assert.IsFalse(actual, "The move was unsuccessful");
