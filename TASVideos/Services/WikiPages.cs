@@ -34,7 +34,7 @@ namespace TASVideos.Services
 		/// and <seealso cref="WikiPageReferral" /> entries are updated
 		/// </summary>
 		/// <returns>Whether or not the move was successful.
-		/// If false, a concurrency conflict was detected and no data was modified</returns>
+		/// If false, a conflict was detected and no data was modified</returns>
 		Task<bool> Move(string originalName, string destinationName);
 
 		/// <summary>
@@ -48,7 +48,8 @@ namespace TASVideos.Services
 		/// In addition <see cref="WikiPageReferral"/> entries are updated
 		/// to remove entries where the given page name is a referrer
 		/// </summary>
-		/// <returns>The number of revisions that were deleted</returns>
+		/// <returns>The number of revisions that were deleted
+		/// If -1, a conflict was detected and no data was modified</returns>
 		Task<int> Delete(string pageName);
 
 		/// <summary>
@@ -326,8 +327,6 @@ namespace TASVideos.Services
 				revision.ChildId = null;
 			}
 
-			ClearCache(pageName);
-
 			// Remove referrals
 			// Note: Pages that refer to this page will not be removed
 			// It's important for them to remain and show as broken links
@@ -337,7 +336,19 @@ namespace TASVideos.Services
 
 			_db.RemoveRange(referrers);
 
-			await _db.SaveChangesAsync();
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				// revisions were modified by another thread during this call
+				// Note that we aren't catching DbUpdateException
+				// As there are no anticipated scenarios that could cause this
+				return -1;
+			}
+
+			ClearCache(pageName);
 			return revisions.Count;
 		}
 

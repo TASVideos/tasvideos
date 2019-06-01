@@ -68,6 +68,7 @@ namespace TASVideos.Pages.Wiki
 			if (!result)
 			{
 				ModelState.AddModelError("", "Unable to move page, the page may have been modified during the saving of this operation.");
+				return Page();
 			}
 
 			_publisher.SendGeneralWiki(
