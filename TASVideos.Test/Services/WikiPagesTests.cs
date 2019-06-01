@@ -170,6 +170,20 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(pageName, actual.PageName);
 		}
 
+		[TestMethod]
+		public async Task Page_MultipleCurrent_PickMostRecent()
+		{
+			// This scenario should never happen, but if it does, we want to get the latest revision
+			string page = "Duplicate";
+			_db.WikiPages.Add(new WikiPage { PageName = page, Revision = 1, IsDeleted = false, ChildId = null });
+			_db.WikiPages.Add(new WikiPage { PageName = page, Revision = 2, IsDeleted = false, ChildId = null });
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.Page(page);
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(2, actual.Revision);
+		}
+
 		#endregion
 
 		#region Add

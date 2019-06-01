@@ -162,6 +162,7 @@ namespace TASVideos.Services
 			page = await _db.WikiPages
 				.ForPage(pageName)
 				.ThatAreNotDeleted()
+				.OrderByDescending(wp => wp.Revision)
 				.FirstOrDefaultAsync(w => (revisionId != null
 					? w.Revision == revisionId
 					: w.ChildId == null));
