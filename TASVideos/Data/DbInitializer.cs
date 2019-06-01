@@ -71,6 +71,8 @@ namespace TASVideos.Data
 		{
 			var context = services.GetRequiredService<ApplicationDbContext>();
 			context.Database.EnsureCreated();
+			var wikiPages = services.GetRequiredService<IWikiPages>();
+			wikiPages.FlushCache();
 		}
 
 		private static void SampleStrategy(IServiceProvider services)
