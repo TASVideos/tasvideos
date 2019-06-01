@@ -60,9 +60,12 @@ namespace TASVideos.Services
 		Task Delete(string pageName, int revision);
 
 		/// <summary>
-		/// Restores all revisions of the given page
+		/// Restores all revisions of the given page.
+		/// If a current revision is restored, <seealso cref="WikiPageReferral" /> entries are updated.
 		/// </summary>
-		Task Undelete(string pageName);
+		/// /// <returns>Whether or not the undelete was successful.
+		/// If false, a conflict was detected and no data was modified</returns>
+		Task<bool> Undelete(string pageName);
 
 		/// <summary>
 		/// Clears the wiki cache
@@ -401,7 +404,7 @@ namespace TASVideos.Services
 			}
 		}
 
-		public async Task Undelete(string pageName)
+		public async Task<bool> Undelete(string pageName)
 		{
 			var allRevisions = await _db.WikiPages
 				.ForPage(pageName)
@@ -413,8 +416,6 @@ namespace TASVideos.Services
 
 			if (revisions.Any())
 			{
-				ClearCache(pageName);
-
 				foreach (var revision in revisions)
 				{
 					revision.IsDeleted = false;
@@ -430,11 +431,24 @@ namespace TASVideos.Services
 					.OrderByDescending(r => r.Revision)
 					.First();
 
-				this[pageName] = current;
-				await GenerateReferrals(pageName, current.Markup);
+				try
+				{
+					// Calls SaveChanges()
+					await GenerateReferrals(pageName, current.Markup);
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					// revisions were modified by another thread during this call
+					// Note that we aren't catching DbUpdateException
+					// As there are no anticipated scenarios that could cause this
+					return false;
+				}
 
-				await _db.SaveChangesAsync();
+				ClearCache(pageName);
+				this[pageName] = current;
 			}
+
+			return true;
 		}
 
 		public async Task FlushCache()
