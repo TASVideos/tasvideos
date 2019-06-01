@@ -131,7 +131,6 @@ namespace TASVideos.Test.Services
 			var actual = await _wikiPages.Page("/" + existingPage + "/");
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(existingPage, actual.PageName);
-
 		}
 
 		[TestMethod]
@@ -544,7 +543,6 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(0, _db.WikiReferrals.Count());
 		}
 
-		
 		[TestMethod]
 		public async Task DeletePage_ConcurrencyConflict_DoesNotDelete()
 		{
@@ -616,7 +614,6 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(0, _db.WikiPages.ThatAreNotDeleted().Count());
 			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Count());
 			Assert.AreEqual(0, _cache.PageCache.Count);
-
 		}
 
 		[TestMethod]
