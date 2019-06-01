@@ -14,9 +14,6 @@ using TASVideos.Services;
 namespace TASVideos.Test.Services
 {
 	// TODO: concurrency exceptions
-	// TODO: delete revision 2, when revision 3 is already deleted
-	// TODO: delete revision 3, when revision 2 is already deleted
-	// TODO: undelete result of above deletes
 	[TestClass]
 	public class WikiPagesTests
 	{
@@ -474,6 +471,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, actual);
 			Assert.AreEqual(1, _db.WikiPages.Count());
 			Assert.IsTrue(_db.WikiPages.Single().IsDeleted);
+			Assert.IsNull(_db.WikiPages.Single().ChildId);
 			Assert.AreEqual(0, _cache.PageCache.Count);
 			Assert.AreEqual(0, _db.WikiReferrals.Count());
 		}
@@ -499,6 +497,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(2, actual);
 			Assert.AreEqual(2, _db.WikiPages.Count());
 			Assert.IsTrue(_db.WikiPages.All(wp => wp.IsDeleted));
+			Assert.IsTrue(_db.WikiPages.All(wp => wp.ChildId == null));
 			Assert.AreEqual(0, _cache.PageCache.Count);
 			Assert.AreEqual(0, _db.WikiReferrals.Count());
 		}
@@ -573,7 +572,7 @@ namespace TASVideos.Test.Services
 
 			// Revision 1 should be Current
 			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
-			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().ThatAreCurrentRevisions().Count());
+			Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Count());
 			var current = _db.WikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrentRevisions()
@@ -598,6 +597,109 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, _db.WikiReferrals.Count());
 			var referrer = _db.WikiReferrals.Single();
 			Assert.AreEqual(oldLink, referrer.Referral);
+		}
+
+		[TestMethod]
+		public async Task DeleteRevision_DeleteCurrentWhenAlreadyALaterDeletedRevision()
+		{
+			string pageName = "Exists";
+			string revision1Link = "Link1";
+			string revision2Link = "Link2";
+			string revision3Link = "Link3";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{revision1Link}]" };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{revision2Link}]" };
+			var revision3 = new WikiPage { PageName = pageName, Revision = 3, IsDeleted = true, Markup = $"[{revision3Link}]" };
+			_db.WikiPages.Add(revision1);
+			_db.WikiPages.Add(revision2);
+			_db.WikiPages.Add(revision3);
+			_db.SaveChanges();
+			revision1.ChildId = revision2.Id;
+			_db.SaveChanges();
+			_cache.PageCache.Add(revision2);
+
+			await _wikiPages.Delete(pageName, 2);
+
+			// Revision 1 should be Current
+			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
+			Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
+			var current = _db.WikiPages
+				.ThatAreNotDeleted()
+				.ThatAreCurrentRevisions()
+				.Single();
+
+			Assert.AreEqual(pageName, current.PageName);
+			Assert.AreEqual(1, current.Revision);
+			Assert.IsNull(current.ChildId);
+			Assert.IsFalse(current.IsDeleted);
+
+			// Revision 2 should be deleted
+			Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
+			var deleted2 = _db.WikiPages.Single(wp => wp.Revision == 2);
+			Assert.AreEqual(2, deleted2.Revision);
+			Assert.IsNull(deleted2.ChildId);
+
+			// Revision 3 should be deleted
+			var deleted3 = _db.WikiPages.Single(wp => wp.Revision == 3);
+			Assert.AreEqual(3, deleted3.Revision);
+			Assert.IsNull(deleted3.ChildId);
+
+			// Revision 1 should be in cache
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(1, _cache.PageCache.Single().Revision);
+
+			// Referrers should be based on Revision 1
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			var referrer = _db.WikiReferrals.Single();
+			Assert.AreEqual(revision1Link, referrer.Referral);
+		}
+
+		[TestMethod]
+		public async Task DeleteRevision_DeleteCurrentWhenPreviousRevisionAlreadyDeletedRevision()
+		{
+			string pageName = "Exists";
+			string revision1Link = "Link1";
+			string revision2Link = "Link2";
+			string revision3Link = "Link3";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{revision1Link}]" };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, Markup = $"[{revision2Link}]" };
+			var revision3 = new WikiPage { PageName = pageName, Revision = 3, Markup = $"[{revision3Link}]" };
+			_db.WikiPages.Add(revision1);
+			_db.WikiPages.Add(revision2);
+			_db.WikiPages.Add(revision3);
+			_db.SaveChanges();
+			revision1.ChildId = revision3.Id;
+			_db.SaveChanges();
+			_cache.PageCache.Add(revision3);
+
+			await _wikiPages.Delete(pageName, 3);
+
+			// Revision 1 should be Current
+			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
+			Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
+			var current = _db.WikiPages
+				.ThatAreNotDeleted()
+				.ThatAreCurrentRevisions()
+				.Single();
+
+			// Revision 2 should be deleted
+			Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
+			var deleted2 = _db.WikiPages.Single(wp => wp.Revision == 2);
+			Assert.AreEqual(2, deleted2.Revision);
+			Assert.IsNull(deleted2.ChildId);
+
+			// Revision 3 should be deleted
+			var deleted3 = _db.WikiPages.Single(wp => wp.Revision == 3);
+			Assert.AreEqual(3, deleted3.Revision);
+			Assert.IsNull(deleted3.ChildId);
+
+			// Revision 1 should be in cache
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(1, _cache.PageCache.Single().Revision);
+
+			// Referrers should be based on Revision 1
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			var referrer = _db.WikiReferrals.Single();
+			Assert.AreEqual(revision1Link, referrer.Referral);
 		}
 
 		#endregion
@@ -685,6 +787,58 @@ namespace TASVideos.Test.Services
 			var referral = _db.WikiReferrals.Single();
 			Assert.AreEqual(pageName, referral.Referrer);
 			Assert.AreEqual(newLink, referral.Referral);
+		}
+
+		[TestMethod]
+		public async Task Undelete_Last2Deleted_SetsLatestToCurrent()
+		{
+			string pageName = "Exists";
+			string link1 = "Link1";
+			string link2 = "Link2";
+			string link3 = "Link3";
+			var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{link1}]" };
+			var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link2}]", IsDeleted = true };
+			var revision3 = new WikiPage { PageName = pageName, Revision = 3, Markup = $"[{link3}]", IsDeleted = true };
+			_db.WikiPages.Add(revision1);
+			_db.WikiPages.Add(revision2);
+			_db.WikiPages.Add(revision3);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link1 });
+			_db.SaveChanges();
+			_cache.PageCache.Add(revision1);
+
+			await _wikiPages.Undelete(pageName);
+
+			// All not deleted
+			Assert.AreEqual(3, _db.WikiPages.ThatAreNotDeleted().Count());
+
+			var newRevision1 = _db.WikiPages.Single(wp => wp.Revision == 1);
+			var newRevision2 = _db.WikiPages.Single(wp => wp.Revision == 2);
+			var newRevision3 = _db.WikiPages.Single(wp => wp.Revision == 3);
+
+			// Revision 1 is no longer current
+			Assert.AreEqual(pageName, newRevision1.PageName);
+			Assert.AreEqual(newRevision2.Id, newRevision1.ChildId);
+
+			// Revision 2 is not current
+			Assert.AreEqual(pageName, newRevision2.PageName);
+			Assert.AreEqual(newRevision3.Id, newRevision2.ChildId);
+
+			// Revision 3 is current
+			Assert.AreEqual(pageName, newRevision3.PageName);
+			Assert.IsNull(newRevision3.ChildId);
+			
+			// Revision 3 is in cache
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			var cached = _cache.PageCache.Single();
+			Assert.AreEqual(pageName, cached.PageName);
+			Assert.AreEqual(3, cached.Revision);
+			Assert.IsFalse(cached.IsDeleted);
+
+			// Referrals are for revision 3
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
+			var referral = _db.WikiReferrals.Single();
+			Assert.AreEqual(pageName, referral.Referrer);
+			Assert.AreEqual(link3, referral.Referral);
 		}
 
 		[TestMethod]
