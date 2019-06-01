@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -468,16 +467,11 @@ namespace TASVideos.Services
 
 		public async Task FlushCache()
 		{
-			_cache.Remove(CacheKeys.WikiCache);
-			await PreLoadCache();
-		}
-
-		// Loads all current wiki pages into the WikiCache
-		private async Task PreLoadCache()
-		{
 			var currentPages = await _db.WikiPages
 				.ThatAreCurrentRevisions()
 				.ToListAsync();
+
+			_cache.Remove(CacheKeys.WikiCache);
 
 			foreach (var page in currentPages)
 			{
