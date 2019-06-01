@@ -344,6 +344,7 @@ namespace TASVideos.Services
 			foreach (var revision in revisions)
 			{
 				revision.IsDeleted = true;
+				revision.ChildId = null;
 			}
 
 			var cachedRevisions = CurrentRevisionCache
