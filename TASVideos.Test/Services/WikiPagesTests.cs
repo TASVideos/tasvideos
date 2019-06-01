@@ -9,8 +9,7 @@ using TASVideos.Services;
 // ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Services
 {
-	// TODO: concurrency exceptions on Add
-	// TODO: update exception on add
+	// TODO: update and concurrency exceptions on Add
 	[TestClass]
 	public class WikiPagesTests
 	{
