@@ -68,6 +68,12 @@ namespace TASVideos.Pages.Wiki
 			{
 				var result = await _wikiPages.Delete(path.Trim('/'));
 
+				if (result == -1)
+				{
+					ModelState.AddModelError("", "Unable to delete page, the page may have been modified during the saving of this operation.");
+					return Page();
+				}
+
 				_publisher.SendGeneralWiki(
 					$"Page {path} DELETED by {User.Identity.Name}",
 					$"({result} revisions)",

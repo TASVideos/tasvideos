@@ -9,7 +9,7 @@ using TASVideos.Services;
 // ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Services
 {
-	// TODO: concurrency exceptions on Add, Delete, Undelete
+	// TODO: concurrency exceptions on Add, Undelete
 	// TODO: update exception on add, undelete
 	[TestClass]
 	public class WikiPagesTests
@@ -542,6 +542,28 @@ namespace TASVideos.Test.Services
 			Assert.IsTrue(_db.WikiPages.All(wp => wp.ChildId == null));
 			Assert.AreEqual(0, _cache.PageCache.Count);
 			Assert.AreEqual(0, _db.WikiReferrals.Count());
+		}
+
+		
+		[TestMethod]
+		public async Task DeletePage_ConcurrencyConflict_DoesNotDelete()
+		{
+			string pageName = "Exists";
+			string link = "AnotherPage";
+			var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]" };
+			_db.WikiPages.Add(existingPage);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
+			_db.SaveChanges();
+			_cache.PageCache.Add(existingPage);
+
+			_db.CreateConcurrentUpdateConflict();
+
+			var actual = await _wikiPages.Delete(pageName);
+
+			Assert.AreEqual(-1, actual);
+			Assert.AreEqual(0, _db.WikiPages.ThatAreDeleted().Count());
+			Assert.AreEqual(1, _cache.PageCache.Count);
+			Assert.AreEqual(1, _db.WikiReferrals.Count());
 		}
 
 		#endregion
