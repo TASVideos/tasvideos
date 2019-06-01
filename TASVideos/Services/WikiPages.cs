@@ -24,6 +24,12 @@ namespace TASVideos.Services
 		Task<WikiPage> Page(string pageName, int? revisionId = null);
 
 		/// <summary>
+		/// Returns details about a Wiki page with the given id
+		/// </summary>
+		/// <returns>A model representing the Wiki page if it exists else null</returns>
+		Task<WikiPage> Revision(int dbId);
+
+		/// <summary>
 		/// Creates a new revision of a wiki page
 		/// </summary>
 		Task Add(WikiPage revision);
@@ -36,12 +42,6 @@ namespace TASVideos.Services
 		/// <returns>Whether or not the move was successful.
 		/// If false, a conflict was detected and no data was modified</returns>
 		Task<bool> Move(string originalName, string destinationName);
-
-		/// <summary>
-		/// Returns details about a Wiki page with the given id
-		/// </summary>
-		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		Task<WikiPage> Revision(int dbId);
 
 		/// <summary>
 		/// Performs a soft delete on all revisions of the given page name,
@@ -119,40 +119,6 @@ namespace TASVideos.Services
 		private void ClearCache(string pageName)
 		{
 			_cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName);
-		}
-
-		// TODO: consider caching these
-		public IQueryable<WikiPage> ThatAreSubpagesOf(string pageName)
-		{
-			pageName = (pageName ?? "").Trim('/');
-			var query = _db.WikiPages
-				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
-				.Where(wp => wp.PageName != pageName);
-
-			if (!string.IsNullOrWhiteSpace(pageName))
-			{
-				query = query.Where(wp => wp.PageName.StartsWith(pageName + "/"));
-			}
-
-			return query;
-		}
-
-		// TODO: consider caching these
-		public IQueryable<WikiPage> ThatAreParentsOf(string pageName)
-		{
-			pageName = (pageName ?? "").Trim('/');
-			if (string.IsNullOrWhiteSpace(pageName)
-				|| !pageName.Contains('/')) // Easy optimization, pages without a / have no parents
-			{
-				return Enumerable.Empty<WikiPage>().AsQueryable();
-			}
-
-			return _db.WikiPages
-				.ThatAreNotDeleted()
-				.ThatAreCurrentRevisions()
-				.Where(wp => wp.PageName != pageName)
-				.Where(wp => pageName.StartsWith(wp.PageName));
 		}
 
 		public async Task<bool> Exists(string pageName, bool includeDeleted = false)
@@ -472,6 +438,40 @@ namespace TASVideos.Services
 			{
 				this[page.PageName] = page;
 			}
+		}
+
+		// TODO: consider caching these
+		public IQueryable<WikiPage> ThatAreSubpagesOf(string pageName)
+		{
+			pageName = (pageName ?? "").Trim('/');
+			var query = _db.WikiPages
+				.ThatAreNotDeleted()
+				.ThatAreCurrentRevisions()
+				.Where(wp => wp.PageName != pageName);
+
+			if (!string.IsNullOrWhiteSpace(pageName))
+			{
+				query = query.Where(wp => wp.PageName.StartsWith(pageName + "/"));
+			}
+
+			return query;
+		}
+
+		// TODO: consider caching these
+		public IQueryable<WikiPage> ThatAreParentsOf(string pageName)
+		{
+			pageName = (pageName ?? "").Trim('/');
+			if (string.IsNullOrWhiteSpace(pageName)
+				|| !pageName.Contains('/')) // Easy optimization, pages without a / have no parents
+			{
+				return Enumerable.Empty<WikiPage>().AsQueryable();
+			}
+
+			return _db.WikiPages
+				.ThatAreNotDeleted()
+				.ThatAreCurrentRevisions()
+				.Where(wp => wp.PageName != pageName)
+				.Where(wp => pageName.StartsWith(wp.PageName));
 		}
 
 		private async Task GenerateReferrals(string pageName, string markup)
