@@ -23,7 +23,7 @@
 
 	public static class CacheKeys
 	{
-		public const string WikiCache = "WikiCache";
+		public const string CurrentWikiCache = "WikiCache";
 		public const string AwardsCache = "AwardsCache";
 		public const string UnreadMessageCount = "UnreadMessageCountCache-";
 		public const string MovieTokens = "MovieTokenData";

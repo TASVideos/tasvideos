@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,7 +18,7 @@ namespace TASVideos.Test.Services
 	{
 		private IWikiPages _wikiPages;
 		private ApplicationDbContext _db;
-		private StaticCache _cache;
+		private WikiTestCache _cache;
 
 		[TestInitialize]
 		public void Initialize()
@@ -29,7 +28,7 @@ namespace TASVideos.Test.Services
 				.Options;
 			_db = new ApplicationDbContext(options, null);
 			_db.Database.EnsureDeleted();
-			_cache = new StaticCache();
+			_cache = new WikiTestCache();
 			_wikiPages = new WikiPages(_db, _cache);
 		}
 
@@ -64,8 +63,7 @@ namespace TASVideos.Test.Services
 			AddPage(existingPage, isDeleted: true);
 
 			var actual = await _wikiPages.Exists(existingPage, includeDeleted: true);
-			Assert.AreEqual(1, _cache.PageCache.Count, "Cache should have  1 record");
-			Assert.AreEqual(existingPage, _cache.PageCache.First().PageName, "Cache should match page checked");
+			Assert.AreEqual(0, _cache.PageCache.Count, "Cache should have no records");
 			Assert.IsTrue(actual);
 		}
 
@@ -339,17 +337,6 @@ namespace TASVideos.Test.Services
 		{
 			var actual = await _wikiPages.Revision(int.MinValue);
 			Assert.IsNull(actual);
-		}
-
-		[TestMethod]
-		public async Task Revision_PullsFromCache_IfAvailable()
-		{
-			string existingPage = "InCache";
-			var page = new WikiPage { Id = 111, PageName = existingPage };
-			_cache.PageCache.Add(page);
-
-			var actual = await _wikiPages.Revision(111);
-			Assert.IsNotNull(actual);
 		}
 
 		[TestMethod]
@@ -1137,7 +1124,6 @@ namespace TASVideos.Test.Services
 			var wp = new WikiPage { PageName = name, IsDeleted = isDeleted };
 			_db.Add(wp);
 			_db.SaveChanges();
-			_wikiPages.FlushCache();
 
 			if (cache)
 			{
@@ -1148,33 +1134,30 @@ namespace TASVideos.Test.Services
 		}
 	}
 
-	internal class StaticCache : ICacheService
+	internal class WikiTestCache : ICacheService
 	{
 		private readonly Dictionary<string, object> _cache = new Dictionary<string, object>();
 
-		public List<WikiPage> PageCache
-		{
-			get
-			{
-				var result = _cache.TryGetValue(CacheKeys.WikiCache, out object list);
-				if (result)
-				{
-					return list as List<WikiPage>;
-				}
-
-				list = new List<WikiPage>();
-				_cache.Add(CacheKeys.WikiCache, list);
-				return (List<WikiPage>) list;
-			}
-		}
+		public List<WikiPage> PageCache { get; set; } = new List<WikiPage>();
 
 		public void Remove(string key)
 		{
-			throw new NotImplementedException();
+			var page = PageCache.SingleOrDefault(p => p.PageName == key.Split('-').Last());
+			if (page != null)
+			{
+				PageCache.Remove(page);
+			}
+
+			_cache.Remove(key);
 		}
 
 		public void Set(string key, object data, int? cacheTime = null)
 		{
+			if (data is WikiPage page)
+			{
+				PageCache.Add(page);
+			}
+
 			_cache[key] = data;
 		}
 
