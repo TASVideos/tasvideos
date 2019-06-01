@@ -374,7 +374,8 @@ namespace TASVideos.Test.Services
 		[TestMethod]
 		public async Task Move_OriginalDoesNotExist_NothingHappens()
 		{
-			await _wikiPages.Move("Does not exist", "Also does not exist");
+			var actual = await _wikiPages.Move("Does not exist", "Also does not exist");
+			Assert.IsTrue(actual, "Page not found is considered successful");
 			Assert.AreEqual(0, _db.WikiPages.Count());
 			Assert.AreEqual(0, _cache.PageCache.Count);
 		}
@@ -391,7 +392,8 @@ namespace TASVideos.Test.Services
 			_db.SaveChanges();
 			_cache.PageCache.Add(existingPage);
 
-			await _wikiPages.Move(existingPageName, newPageName);
+			var actual = await _wikiPages.Move(existingPageName, newPageName);
+			Assert.IsTrue(actual);
 			Assert.AreEqual(1, _db.WikiPages.Count());
 			Assert.AreEqual(newPageName, _db.WikiPages.Single().PageName);
 			Assert.AreEqual(1, _cache.PageCache.Count);
@@ -414,7 +416,8 @@ namespace TASVideos.Test.Services
 			_cache.PageCache.Add(existingPage);
 			_db.SaveChanges();
 
-			await _wikiPages.Move(existingPageName, newPageName);
+			var actual = await _wikiPages.Move(existingPageName, newPageName);
+			Assert.IsTrue(actual);
 			Assert.AreEqual(2, _db.WikiPages.Count());
 			Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
 
