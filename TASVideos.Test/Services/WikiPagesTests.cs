@@ -2,32 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
 
 // ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Services
 {
-	// TODO: concurrency exceptions
+	// TODO: concurrency exceptions on Add, Delete, Undelete
+	// TODO: move and add can cause a duplicate exception
 	[TestClass]
 	public class WikiPagesTests
 	{
 		private IWikiPages _wikiPages;
-		private ApplicationDbContext _db;
+		private TestDbContext _db;
 		private WikiTestCache _cache;
 
 		[TestInitialize]
 		public void Initialize()
 		{
-			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseInMemoryDatabase("TestDb")
-				.Options;
-			_db = new ApplicationDbContext(options, null);
-			_db.Database.EnsureDeleted();
+			_db = TestDbContext.Create();
 			_cache = new WikiTestCache();
 			_wikiPages = new WikiPages(_db, _cache);
 		}
@@ -426,6 +420,35 @@ namespace TASVideos.Test.Services
 
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			Assert.AreEqual(newPageName, _cache.PageCache.Single().PageName);
+		}
+
+		[TestMethod]
+		public async Task Move_ConcurrencyException_DoesNotMove()
+		{
+			string origPageName = "Orig";
+			string origLink = "Link";
+			var origPage = new WikiPage { PageName = origPageName, Markup = $"[{origLink}]" };
+			
+			_db.WikiPages.Add(origPage);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = origPageName, Referral = origLink });
+			_db.SaveChanges();
+			_cache.Set(origPageName, origPage);
+
+			string destPageName = "Dest";
+
+			_db.CreateUpdateConflict();
+
+			var actual = await _wikiPages.Move(origPageName, destPageName);
+			Assert.IsFalse(actual, "The move was unsuccessful");
+			
+			// Moved page does not exist
+			Assert.AreEqual(0, _db.WikiPages.Count(wp => wp.PageName == destPageName));
+
+			// Cache does not have the moved page
+			Assert.AreEqual(0, _cache.PageCache.Count(wp => wp.PageName == destPageName));
+
+			// Referrers not updated
+			Assert.AreEqual(0, _db.WikiReferrals.Count(wr => wr.Referrer == destPageName));
 		}
 
 		#endregion
@@ -1155,7 +1178,21 @@ namespace TASVideos.Test.Services
 		{
 			if (data is WikiPage page)
 			{
-				PageCache.Add(page);
+				// This is to ensure that reference equality fails
+				// In a real world scenario, we would not expect the cached version
+				// to be the same copy as those returned by EF queries
+				PageCache.Add(new WikiPage
+				{
+					Id = page.Id,
+					PageName = page.PageName,
+					Markup = page.Markup,
+					Revision = page.Revision,
+					MinorEdit = page.MinorEdit,
+					RevisionMessage = page.RevisionMessage,
+					ChildId = page.ChildId,
+					Child = page.Child,
+					IsDeleted = page.IsDeleted
+				});
 			}
 
 			_cache[key] = data;
