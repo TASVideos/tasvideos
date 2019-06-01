@@ -291,8 +291,10 @@ namespace TASVideos.Services
 			{
 				await _db.SaveChangesAsync();
 			}
-			catch (DbUpdateConcurrencyException)
+			catch (DbUpdateException)
 			{
+				// Either the original pages were modified or the destination page
+				// was created during this call from another thread
 				return false;
 			}
 

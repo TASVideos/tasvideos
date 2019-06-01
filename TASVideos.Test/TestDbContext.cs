@@ -17,6 +17,7 @@ namespace TASVideos.Test
 	/// </summary>
 	internal class TestDbContext : ApplicationDbContext
 	{
+		private bool _dbConcurrentUpdateConflict;
 		private bool _dbUpdateConflict;
 
 		private TestDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
@@ -39,15 +40,33 @@ namespace TASVideos.Test
 		{
 			if (_dbUpdateConflict)
 			{
+				throw new DbUpdateException("Mock update conflict scenario", new Exception());
+			}
+
+			if (_dbConcurrentUpdateConflict)
+			{
 				throw new DbUpdateConcurrencyException("Mock concurrency conflict scenario", new IUpdateEntry[] { new TestUpdateEntry() });
 			}
 
 			return base.SaveChangesAsync(cancellationToken);
 		}
 
+		/// <summary>
+		/// Simulates a scenario that will throw a <seealso cref="DbUpdateException"/>
+		/// These scenarios include constraint violations and model validation errors
+		/// </summary>
 		public void CreateUpdateConflict()
 		{
 			_dbUpdateConflict = true;
+		}
+
+		/// <summary>
+		/// Simulates a scenario that will throw a <seealso cref="DbUpdateConcurrencyException"/>
+		/// This happens when an optimistic concurrency check fails
+		/// </summary>
+		public void CreateConcurrentUpdateConflict()
+		{
+			_dbConcurrentUpdateConflict = true;
 		}
 	}
 
@@ -55,51 +74,55 @@ namespace TASVideos.Test
 	{
 		public bool IsModified(IProperty property)
 		{
-			throw new NotImplementedException();
+			return false;
 		}
 
 		public bool HasTemporaryValue(IProperty property)
 		{
-			throw new NotImplementedException();
+			return false;
 		}
 
 		public bool IsStoreGenerated(IProperty property)
 		{
-			throw new NotImplementedException();
+			return false;
 		}
 
 		public object GetCurrentValue(IPropertyBase propertyBase)
 		{
-			throw new NotImplementedException();
+			return new object();
 		}
 
 		public object GetOriginalValue(IPropertyBase propertyBase)
 		{
-			throw new NotImplementedException();
+			return new object();
 		}
 
 		public TProperty GetCurrentValue<TProperty>(IPropertyBase propertyBase)
 		{
-			throw new NotImplementedException();
+			return default(TProperty);
 		}
 
 		public TProperty GetOriginalValue<TProperty>(IProperty property)
 		{
-			throw new NotImplementedException();
+			return default(TProperty);
 		}
 
 		public void SetCurrentValue(IPropertyBase propertyBase, object value)
 		{
-			throw new NotImplementedException();
 		}
 
 		public EntityEntry ToEntityEntry()
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
+		// ReSharper disable once UnassignedGetOnlyAutoProperty
 		public IEntityType EntityType { get; }
+
+		// ReSharper disable once UnassignedGetOnlyAutoProperty
 		public EntityState EntityState { get; }
+
+		// ReSharper disable once UnassignedGetOnlyAutoProperty
 		public IUpdateEntry SharedIdentityEntry { get; }
 	}
 }
