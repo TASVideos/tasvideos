@@ -52,7 +52,7 @@ namespace TASVideos.Pages.Diagnostics
 		public async Task<IActionResult> OnGet()
 		{
 			var pages = await _db.WikiPages
-				.ThatAreCurrentRevisions()
+				.WithNoChildren()
 				.ThatAreNotDeleted()
 				.Select(p => new
 				{

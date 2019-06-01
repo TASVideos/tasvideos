@@ -50,7 +50,7 @@ namespace TASVideos.Legacy.Imports
 
 				var publicationWikis = context.WikiPages
 					.ThatAreNotDeleted()
-					.ThatAreCurrentRevisions()
+					.WithNoChildren()
 					.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
 					.Select(s => new { s.Id, s.PageName })
 					.ToList();

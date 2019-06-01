@@ -35,7 +35,7 @@ namespace TASVideos.ViewComponents
 
 				var pages = _db.WikiPages
 					.ThatAreNotDeleted()
-					.ThatAreCurrentRevisions()
+					.WithNoChildren()
 					.Where(wp => gameResourceSystems.Contains(wp.PageName))
 					.Select(wp => wp.PageName)
 					.ToList();
