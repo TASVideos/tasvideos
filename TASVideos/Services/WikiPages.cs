@@ -231,7 +231,7 @@ namespace TASVideos.Services
 				.ThatAreNotDeleted()
 				.FirstOrDefaultAsync(w => w.Id == dbId);
 
-			if (page != null && page.ChildId == null)
+			if (page.IsCurrent())
 			{
 				CurrentRevisionCache.Add(page);
 			}
