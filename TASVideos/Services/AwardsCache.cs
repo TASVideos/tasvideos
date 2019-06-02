@@ -11,8 +11,21 @@ namespace TASVideos.Services
 {
 	public interface IAwards
 	{
+		/// <summary>
+		/// Gets all awards for the given user,
+		/// or any movie for which the user is an author of
+		/// </summary>
 		Task<IEnumerable<AwardEntryDto>> ForUser(int userId);
+
+		/// <summary>
+		/// Gets all awards assigned in the given year
+		/// </summary>
+		/// <param name="year">The year, ex: 2010</param>
 		Task<IEnumerable<AwardDto>> ForYear(int year);
+
+		/// <summary>
+		/// Clears the awards cache
+		/// </summary>
 		Task FlushCache();
 	}
 
@@ -29,13 +42,36 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
+		public async Task<IEnumerable<AwardEntryDto>> ForUser(int userId)
+		{
+			var allAwards = await AllAwards();
+
+			return allAwards
+				.Where(a => a.Users.Select(u => u.Id).Contains(userId))
+				.Select(ua => new AwardEntryDto
+				{
+					ShortName = ua.ShortName,
+					Description = ua.Description,
+					Year = ua.Year
+				})
+				.ToList();
+		}
+
+		public async Task<IEnumerable<AwardDto>> ForYear(int year)
+		{
+			var allAwards = await AllAwards();
+			return allAwards
+				.Where(a => a.Year + 2000 == year)
+				.ToList();
+		}
+
 		public async Task FlushCache()
 		{
 			_cache.Remove(CacheKeys.AwardsCache);
 			await AllAwards();
 		}
 
-		public async Task<IEnumerable<AwardDto>> AllAwards()
+		private async Task<IEnumerable<AwardDto>> AllAwards()
 		{
 			if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardDto> awards))
 			{
@@ -108,32 +144,6 @@ namespace TASVideos.Services
 
 				return allAwards;
 			}
-		}
-
-		/// <summary>
-		/// Gets all awards for the user, or any movie for which the user is an author of
-		/// </summary>
-		public async Task<IEnumerable<AwardEntryDto>> ForUser(int userId)
-		{
-			var allAwards = await AllAwards();
-
-			return allAwards
-				.Where(a => a.Users.Select(u => u.Id).Contains(userId))
-				.Select(ua => new AwardEntryDto
-				{
-					ShortName = ua.ShortName,
-					Description = ua.Description,
-					Year = ua.Year
-				})
-				.ToList();
-		}
-
-		public async Task<IEnumerable<AwardDto>> ForYear(int year)
-		{
-			var allAwards = await AllAwards();
-			return allAwards
-				.Where(a => a.Year + 2000 == year)
-				.ToList();
 		}
 	}
 }
