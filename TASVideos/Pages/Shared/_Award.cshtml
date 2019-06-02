@@ -1,4 +1,4 @@
 ﻿@model TASVideos.Services.AwardAssignmentSummary
-<a href="/Awards/@(Model.Year.ToString())#@(Model.ShortName)_@(Model.Year - 2000)" title="Award - @Model.Description">
-	<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{Model.ShortName}_{(Model.Year - 2000).ToString().PadLeft(2, '0')}.png")" alt="@Model.Description" />
+<a href="/Awards/@(Model.Year.ToString())#@(Model.ShortName)_@(Model.Year)" title="Award - @Model.Description">
+	<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{Model.ShortName}_{Model.Year.ToString()}.png")" alt="@Model.Description" />
 </a>
