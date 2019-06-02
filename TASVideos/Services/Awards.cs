@@ -61,7 +61,7 @@ namespace TASVideos.Services
 		{
 			var allAwards = await AllAwards();
 			return allAwards
-				.Where(a => a.Year + 2000 == year)
+				.Where(a => a.Year == year)
 				.ToList();
 		}
 
@@ -94,7 +94,7 @@ namespace TASVideos.Services
 					.Select(g => new AwardAssignment
 					{
 						ShortName = g.Key.ShortName,
-						Description = g.Key.Description + " of " + (g.Key.Year + 2000).ToString(),
+						Description = g.Key.Description + " of " + g.Key.Year.ToString(),
 						Year = g.Key.Year,
 						Type = AwardType.User,
 						Publications = Enumerable.Empty<AwardAssignment.PublicationDto>(),
@@ -130,7 +130,7 @@ namespace TASVideos.Services
 					.Select(g => new AwardAssignment
 					{
 						ShortName = g.Key.ShortName,
-						Description = g.Key.Description + " of " + (g.Key.Year + 2000).ToString(),
+						Description = g.Key.Description + " of " + g.Key.Year.ToString(),
 						Year = g.Key.Year,
 						Type = AwardType.Movie,
 						Publications = g.Select(gv => new AwardAssignment.PublicationDto { Id = gv.Publication.Id, Title  = gv.Publication.Title }).ToList(),
