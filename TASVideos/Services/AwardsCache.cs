@@ -9,11 +9,10 @@ using TASVideos.Data.Entity.Awards;
 
 namespace TASVideos.Services
 {
-	// TODO: can this be turned into a collection somehow?
 	public interface IAwards
 	{
-		Task<IEnumerable<AwardDto>> AllAwards();
 		Task<IEnumerable<AwardEntryDto>> ForUser(int userId);
+		Task<IEnumerable<AwardDto>> ForYear(int year);
 		Task FlushCache();
 	}
 
@@ -126,6 +125,14 @@ namespace TASVideos.Services
 					Description = ua.Description,
 					Year = ua.Year
 				})
+				.ToList();
+		}
+
+		public async Task<IEnumerable<AwardDto>> ForYear(int year)
+		{
+			var allAwards = await AllAwards();
+			return allAwards
+				.Where(a => a.Year + 2000 == year)
 				.ToList();
 		}
 	}
