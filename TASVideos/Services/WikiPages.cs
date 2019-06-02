@@ -436,6 +436,7 @@ namespace TASVideos.Services
 			var currentPages = _db.WikiPages
 				.ThatAreNotDeleted()
 				.WithNoChildren()
+				.Where(wp => wp.PageName.StartsWith("InternalSystem/PublicationContent") || !wp.PageName.Contains("/"))
 				.ToList();
 
 			foreach (var page in currentPages)
