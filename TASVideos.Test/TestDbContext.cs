@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Update;
 using TASVideos.Data;
@@ -29,6 +30,7 @@ namespace TASVideos.Test
 		{
 			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
 				.UseInMemoryDatabase("TestDb")
+				.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
 				.Options;
 
 			var db = new TestDbContext(options, null);

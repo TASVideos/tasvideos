@@ -20,13 +20,13 @@ namespace TASVideos.Pages.Forum.Topics
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
-		private readonly IAwardsCache _awards;
+		private readonly IAwards _awards;
 		private readonly IPointsService _pointsService;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			IAwardsCache awards,
+			IAwards awards,
 			IPointsService pointsService)
 			: base(db)
 		{
@@ -107,7 +107,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			foreach (var post in Topic.Posts)
 			{
-				post.Awards = await _awards.AwardsForUser(post.PosterId);
+				post.Awards = await _awards.ForUser(post.PosterId);
 				post.PosterPlayerPoints = await _pointsService.PlayerPoints(post.PosterId);
 			}
 

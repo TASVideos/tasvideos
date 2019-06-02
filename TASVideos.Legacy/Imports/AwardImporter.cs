@@ -34,7 +34,7 @@ namespace TASVideos.Legacy.Imports
 					{
 						a.AwardId,
 						a.User.Name,
-						a.Year
+						Year = 2000 + a.Year
 					})
 					.ToList();
 
@@ -65,7 +65,7 @@ namespace TASVideos.Legacy.Imports
 					{
 						AwardId = a.AwardId,
 						PublicationId = a.MovieId,
-						Year = a.Year
+						Year = 2000 + a.Year
 					})
 					.ToList();
 

@@ -3,7 +3,11 @@ using TASVideos.Data.Entity.Awards;
 
 namespace TASVideos.Services
 {
-	public class AwardDto
+	/// <summary>
+	/// Represents the assignment of an award to a user or movie
+	/// Ex: 2010 TASer of the Year
+	/// </summary>
+	public class AwardAssignment
 	{
 		public string ShortName { get; set; }
 		public string Description { get; set; }
@@ -25,7 +29,10 @@ namespace TASVideos.Services
 		}
 	}
 
-	public class AwardEntryDto
+	/// <summary>
+	/// Represents a short summary of an award assignment
+	/// </summary>
+	public class AwardAssignmentSummary
 	{
 		public string ShortName { get; set; }
 		public string Description { get; set; }

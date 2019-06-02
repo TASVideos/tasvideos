@@ -17,12 +17,12 @@ namespace TASVideos.Pages.Forum.Posts
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager _userManager;
-		private readonly IAwardsCache _awards;
+		private readonly IAwards _awards;
 		
 		public NewModel(
 			ApplicationDbContext db,
 			UserManager userManager,
-			IAwardsCache awards)
+			IAwards awards)
 		{
 			_db = db;
 			_userManager = userManager;
@@ -71,7 +71,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			foreach (var post in Posts)
 			{
-				post.Awards = await _awards.AwardsForUser(post.PosterId);
+				post.Awards = await _awards.ForUser(post.PosterId);
 				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
 				post.RenderedSignature = RenderSignature(post.Signature);
 			}

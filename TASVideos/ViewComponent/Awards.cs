@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
@@ -11,9 +10,9 @@ namespace TASVideos.ViewComponents
 {
 	public class Awards : ViewComponent
 	{
-		private readonly IAwardsCache _awards;
+		private readonly IAwards _awards;
 
-		public Awards(IAwardsCache awards)
+		public Awards(IAwards awards)
 		{
 			_awards = awards;
 		}
@@ -33,10 +32,7 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("Error: parameterless award module no longer supported");
 			}
 
-			var allAwards = await _awards.Awards();
-			var model = allAwards
-				.Where(a => a.Year + 2000 == year)
-				.ToList();
+			var model = await _awards.ForYear(year.Value);
 
 			return View(model);
 		}

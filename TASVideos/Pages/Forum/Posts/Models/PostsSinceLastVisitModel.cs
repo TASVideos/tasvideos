@@ -28,6 +28,6 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public string Signature { get; set; }
 		public string RenderedSignature { get; set; }
 
-		public IEnumerable<AwardEntryDto> Awards { get; set; } = new List<AwardEntryDto>();
+		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
 	}
 }
