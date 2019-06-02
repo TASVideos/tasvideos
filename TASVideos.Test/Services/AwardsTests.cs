@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -76,27 +75,14 @@ namespace TASVideos.Test.Services
 		}
 
 		[TestMethod]
-		public async Task ForUser_UserAwardForAnotherUser_ReturnsNoAward()
-		{
-			var award = CreateAuthorAward();
-			var userWithAward = CreateUser();
-			GiveUserAnAward(userWithAward, award);
-
-			var userWithNoAward = CreateUser();
-
-			var actual = await _awards.ForUser(userWithNoAward.Id);
-
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(0, actual.Count());
-		}
-
-		[TestMethod]
 		public async Task ForUser_PublicationAwardForAnotherAuthor_ReturnsNoAward()
 		{
-			var award = CreatePublicationAward();
+			var authorAward = CreateAuthorAward();
+			var publicationAward = CreatePublicationAward();
 			var author = CreateUser();
 			var pub = CreatePublication(author);
-			GivePublicationAnAward(pub, award);
+			GivePublicationAnAward(pub, publicationAward);
+			GiveUserAnAward(author, authorAward);
 
 			var authorWithNoAward = CreateUser();
 			CreatePublication(authorWithNoAward);
@@ -115,6 +101,69 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(0, actual.Count());
 		}
 
+		[TestMethod]
+		public async Task ForYear_UserAward_ReturnsAward()
+		{
+			var award = CreatePublicationAward();
+			var author = CreateUser();
+			var pub = CreatePublication(author);
+			GivePublicationAnAward(pub, award);
+
+			var actual = await _awards.ForYear(CurrentYear);
+
+			// Award should match
+			Assert.IsNotNull(actual);
+			var list = actual.ToList();
+			Assert.AreEqual(1, list.Count);
+			var actualAward = list.Single();
+			Assert.AreEqual(award.ShortName, actualAward.ShortName);
+
+			// Publication should match
+			Assert.IsNotNull(actualAward.Publications);
+			var actualPublications = actualAward.Publications.ToList();
+			Assert.AreEqual(1, actualPublications.Count);
+			Assert.AreEqual(pub.Id, actualPublications.Single().Id);
+		}
+
+		[TestMethod]
+		public async Task ForYear_PublicationAward_ReturnsAward()
+		{
+			var award = CreateAuthorAward();
+			var user = CreateUser();
+			GiveUserAnAward(user, award);
+
+			var actual = await _awards.ForYear(CurrentYear);
+
+			// Award should match
+			Assert.IsNotNull(actual);
+			var list = actual.ToList();
+			Assert.AreEqual(1, list.Count);
+			var actualAward = list.Single();
+			Assert.AreEqual(award.ShortName, actualAward.ShortName);
+
+			// User should match
+			Assert.IsNotNull(actualAward.Users);
+			var actualUsers = actualAward.Users.ToList();
+			Assert.AreEqual(1, actualUsers.Count);
+			Assert.AreEqual(user.Id, actualUsers.Single().Id);
+		}
+
+		[TestMethod]
+		public async Task ForYear_AwardsForAnotherYear_ReturnsNoAward()
+		{
+			var userAward = CreateAuthorAward();
+			var pubAward = CreatePublicationAward();
+			var author = CreateUser();
+			var pub = CreatePublication(author);
+			GiveUserAnAward(author, userAward);
+			GivePublicationAnAward(pub, pubAward);
+
+			var actual = await _awards.ForYear(CurrentYear - 1);
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
 		private User CreateUser()
 		{
 			var user = new User { UserName = "TestUser" + Guid.NewGuid() };
@@ -127,7 +176,9 @@ namespace TASVideos.Test.Services
 		{
 			var award = new Award
 			{
-				ShortName = "UserAward", Description = "User Award", Type = AwardType.User
+				ShortName = "UserAward",
+				Description = "User Award",
+				Type = AwardType.User
 			};
 
 			_db.Awards.Add(award);
@@ -137,7 +188,12 @@ namespace TASVideos.Test.Services
 
 		private void GiveUserAnAward(User user, Award award)
 		{
-			_db.UserAwards.Add(new UserAward { AwardId = award.Id, UserId = user.Id, Year = CurrentYear });
+			_db.UserAwards.Add(new UserAward
+			{
+				AwardId = award.Id,
+				UserId = user.Id,
+				Year = CurrentYear
+			});
 			_db.SaveChanges();
 		}
 
@@ -160,7 +216,9 @@ namespace TASVideos.Test.Services
 		{
 			var award = new Award
 			{
-				ShortName = "PublicationAward", Description = "Publication Award", Type = AwardType.Movie
+				ShortName = "PublicationAward",
+				Description = "Publication Award",
+				Type = AwardType.Movie
 			};
 
 			_db.Awards.Add(award);
@@ -172,7 +230,9 @@ namespace TASVideos.Test.Services
 		{
 			_db.PublicationAwards.Add(new PublicationAward
 			{
-				AwardId = award.Id, PublicationId = publication.Id, Year = CurrentYear
+				AwardId = award.Id,
+				PublicationId = publication.Id,
+				Year = CurrentYear
 			});
 			_db.SaveChanges();
 		}
