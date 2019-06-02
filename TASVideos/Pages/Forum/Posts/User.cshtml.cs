@@ -18,11 +18,11 @@ namespace TASVideos.Pages.Forum.Posts
 	public class UserModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IAwardsCache _awards;
+		private readonly IAwards _awards;
 
 		public UserModel(
 			ApplicationDbContext db,
-			IAwardsCache awards)
+			IAwards awards)
 		{
 			_db = db;
 			_awards = awards;
@@ -62,7 +62,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			Awards = await _awards.AwardsForUser(UserPosts.Id);
+			Awards = await _awards.ForUser(UserPosts.Id);
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			UserPosts.Posts = await _db.ForumPosts

@@ -11,9 +11,9 @@ namespace TASVideos.ViewComponents
 {
 	public class Awards : ViewComponent
 	{
-		private readonly IAwardsCache _awards;
+		private readonly IAwards _awards;
 
-		public Awards(IAwardsCache awards)
+		public Awards(IAwards awards)
 		{
 			_awards = awards;
 		}
@@ -33,7 +33,7 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("Error: parameterless award module no longer supported");
 			}
 
-			var allAwards = await _awards.Awards();
+			var allAwards = await _awards.AllAwards();
 			var model = allAwards
 				.Where(a => a.Year + 2000 == year)
 				.ToList();
