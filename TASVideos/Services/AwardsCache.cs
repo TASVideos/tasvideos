@@ -10,19 +10,19 @@ using TASVideos.Data.Entity.Awards;
 namespace TASVideos.Services
 {
 	// TODO: can this be turned into a collection somehow?
-	public interface IAwardsCache
+	public interface IAwards
 	{
-		Task<IEnumerable<AwardDto>> Awards();
-		Task<IEnumerable<AwardEntryDto>> AwardsForUser(int userId);
-		Task Flush();
+		Task<IEnumerable<AwardDto>> AllAwards();
+		Task<IEnumerable<AwardEntryDto>> ForUser(int userId);
+		Task FlushCache();
 	}
 
-	public class AwardsCache : IAwardsCache
+	public class Awards : IAwards
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 
-		public AwardsCache(
+		public Awards(
 			ApplicationDbContext db,
 			ICacheService cache)
 		{
@@ -30,13 +30,13 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public async Task Flush()
+		public async Task FlushCache()
 		{
 			_cache.Remove(CacheKeys.AwardsCache);
-			await Awards();
+			await AllAwards();
 		}
 
-		public async Task<IEnumerable<AwardDto>> Awards()
+		public async Task<IEnumerable<AwardDto>> AllAwards()
 		{
 			if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardDto> awards))
 			{
@@ -114,9 +114,9 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Gets all awards for the user, or any movie for which the user is an author of
 		/// </summary>
-		public async Task<IEnumerable<AwardEntryDto>> AwardsForUser(int userId)
+		public async Task<IEnumerable<AwardEntryDto>> ForUser(int userId)
 		{
-			var allAwards = await Awards();
+			var allAwards = await AllAwards();
 
 			return allAwards
 				.Where(a => a.Users.Select(u => u.Id).Contains(userId))
