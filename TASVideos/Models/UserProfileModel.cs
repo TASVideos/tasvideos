@@ -64,7 +64,7 @@ namespace TASVideos.Models
 		public WikiEditModel WikiEdits { get; set; } = new WikiEditModel();
 
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
-		public IEnumerable<AwardEntryDto> Awards { get; set; } = new List<AwardEntryDto>();
+		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
 		public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
 
 		public RatingModel Ratings { get; set; } = new RatingModel();

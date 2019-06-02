@@ -11,11 +11,11 @@ namespace TASVideos.Pages.Diagnostics
 	public class CacheControlModel : BasePageModel
 	{
 		private readonly IWikiPages _wikiPages;
-		private readonly IAwardsCache _awards;
+		private readonly IAwards _awards;
 
 		public CacheControlModel(
 			IWikiPages wikiPages,
-			IAwardsCache awards)
+			IAwards awards)
 		{
 			_wikiPages = wikiPages;
 			_awards = awards;
@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Diagnostics
 
 		public IActionResult OnPostClearAwardsCache()
 		{
-			_awards.Flush();
+			_awards.FlushCache();
 			return RedirectToPage("CacheControl");
 		}
 	}

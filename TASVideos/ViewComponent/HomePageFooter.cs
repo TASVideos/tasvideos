@@ -12,11 +12,11 @@ namespace TASVideos.ViewComponents
     public class HomePageFooter : ViewComponent
     {
 		private readonly ApplicationDbContext _db;
-		private readonly IAwardsCache _awards;
+		private readonly IAwards _awards;
 
 		public HomePageFooter(
 			ApplicationDbContext db,
-			IAwardsCache awards)
+			IAwards awards)
 		{
 			_db = db;
 			_awards = awards;
@@ -43,7 +43,7 @@ namespace TASVideos.ViewComponents
 				})
 				.SingleOrDefaultAsync();
 
-			model.AwardsWon = (await _awards.AwardsForUser(model.Id)).Count();
+			model.AwardsWon = (await _awards.ForUser(model.Id)).Count();
 
 			ViewData["pageData"] = pageData;
 			return View(model);

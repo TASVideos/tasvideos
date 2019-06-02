@@ -11,11 +11,11 @@ namespace TASVideos.Pages.Users
 	[AllowAnonymous]
 	public class ProfileModel : BasePageModel
 	{
-		private readonly IAwardsCache _awards;
+		private readonly IAwards _awards;
 		private readonly UserManager _userManager;
 
 		public ProfileModel(
-			IAwardsCache awards,
+			IAwards awards,
 			UserManager userManager)
 		{
 			_awards = awards;
@@ -54,7 +54,7 @@ namespace TASVideos.Pages.Users
 				Profile.Signature = RenderPost(Profile.Signature, true, false);
 			}
 
-			Profile.Awards = await _awards.AwardsForUser(Profile.Id);
+			Profile.Awards = await _awards.ForUser(Profile.Id);
 			return Page();
 		}
 	}
