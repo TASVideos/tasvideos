@@ -201,7 +201,7 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			// Any shenanigans after this aren't worth fixing on old revisions
-			if (st.ObsoletedBy.HasValue)
+			if (st.ObsoletedBy.HasValue && st.ObsoletedBy != -1)
 			{
 				return markup;
 			}
