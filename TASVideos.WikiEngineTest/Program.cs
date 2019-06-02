@@ -10,6 +10,19 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiEngineTest
 {
+	/*
+		1. Clone https://github.com/nattthebear/TASVideosWikiSnaps.git to somewhere
+		2. Create a `.params.json` file containing 2 keys:
+			ConnectionString - to connect to the database of the tasvideos dev server
+			OutDir - wherever you cloned https://github.com/nattthebear/TASVideosWikiSnaps.git to
+		3. Build and run the program.  Args:
+			--force:  Rerun parsing and output on a page even if the revision is the same as before.
+				This makes sense whenever you want to observe changes in the parsing or importing code
+			--update:  Process the latest revision of each page, instead of the one recorded in the snapshots.
+				This is good for examining user content diffs, but shouldn't be done in the same commit as parsing/import changes to minimize confusion.
+			--filter [string]:  Only process pages whose title contains [string].
+				Used to quickly observe changes to a single page during development.  Before committing to the snapshot repo, all other pages should be run.
+	 */
 	class Program
 	{
 		class Options
