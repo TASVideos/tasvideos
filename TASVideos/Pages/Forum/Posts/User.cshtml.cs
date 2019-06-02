@@ -36,7 +36,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public UserPostsModel UserPosts { get; set; }
 
-		public IEnumerable<AwardEntryDto> Awards { get; set; } = new List<AwardEntryDto>(); 
+		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>(); 
 
 		public async Task<IActionResult> OnGet()
 		{

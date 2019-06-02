@@ -15,13 +15,13 @@ namespace TASVideos.Services
 		/// Gets all awards for the given user,
 		/// or any movie for which the user is an author of
 		/// </summary>
-		Task<IEnumerable<AwardEntryDto>> ForUser(int userId);
+		Task<IEnumerable<AwardAssignmentSummary>> ForUser(int userId);
 
 		/// <summary>
 		/// Gets all awards assigned in the given year
 		/// </summary>
 		/// <param name="year">The year, ex: 2010</param>
-		Task<IEnumerable<AwardDto>> ForYear(int year);
+		Task<IEnumerable<AwardAssignment>> ForYear(int year);
 
 		/// <summary>
 		/// Clears the awards cache
@@ -42,13 +42,13 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public async Task<IEnumerable<AwardEntryDto>> ForUser(int userId)
+		public async Task<IEnumerable<AwardAssignmentSummary>> ForUser(int userId)
 		{
 			var allAwards = await AllAwards();
 
 			return allAwards
 				.Where(a => a.Users.Select(u => u.Id).Contains(userId))
-				.Select(ua => new AwardEntryDto
+				.Select(ua => new AwardAssignmentSummary
 				{
 					ShortName = ua.ShortName,
 					Description = ua.Description,
@@ -57,7 +57,7 @@ namespace TASVideos.Services
 				.ToList();
 		}
 
-		public async Task<IEnumerable<AwardDto>> ForYear(int year)
+		public async Task<IEnumerable<AwardAssignment>> ForYear(int year)
 		{
 			var allAwards = await AllAwards();
 			return allAwards
@@ -71,9 +71,9 @@ namespace TASVideos.Services
 			await AllAwards();
 		}
 
-		private async Task<IEnumerable<AwardDto>> AllAwards()
+		private async Task<IEnumerable<AwardAssignment>> AllAwards()
 		{
-			if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardDto> awards))
+			if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))
 			{
 				return awards;
 			}
@@ -87,17 +87,17 @@ namespace TASVideos.Services
 						{
 							gkey.Award.Description, gkey.Award.ShortName, gkey.Year
 						}, 
-						gvalue => new AwardDto.UserDto
+						gvalue => new AwardAssignment.UserDto
 						{
 							Id = gvalue.UserId, UserName = gvalue.User.UserName
 						})
-					.Select(g => new AwardDto
+					.Select(g => new AwardAssignment
 					{
 						ShortName = g.Key.ShortName,
 						Description = g.Key.Description + " of " + (g.Key.Year + 2000).ToString(),
 						Year = g.Key.Year,
 						Type = AwardType.User,
-						Publications = Enumerable.Empty<AwardDto.PublicationDto>(),
+						Publications = Enumerable.Empty<AwardAssignment.PublicationDto>(),
 						Users = g.ToList()
 					})
 					.ToListAsync();
@@ -127,14 +127,14 @@ namespace TASVideos.Services
 								a.UserId, a.Author.UserName
 							})
 						})
-					.Select(g => new AwardDto
+					.Select(g => new AwardAssignment
 					{
 						ShortName = g.Key.ShortName,
 						Description = g.Key.Description + " of " + (g.Key.Year + 2000).ToString(),
 						Year = g.Key.Year,
 						Type = AwardType.Movie,
-						Publications = g.Select(gv => new AwardDto.PublicationDto { Id = gv.Publication.Id, Title  = gv.Publication.Title }).ToList(),
-						Users = g.SelectMany(gv => gv.Users).Select(u => new AwardDto.UserDto { Id = u.UserId, UserName = u.UserName }).ToList()
+						Publications = g.Select(gv => new AwardAssignment.PublicationDto { Id = gv.Publication.Id, Title  = gv.Publication.Title }).ToList(),
+						Users = g.SelectMany(gv => gv.Users).Select(u => new AwardAssignment.UserDto { Id = u.UserId, UserName = u.UserName }).ToList()
 					})
 					.ToList();
 
