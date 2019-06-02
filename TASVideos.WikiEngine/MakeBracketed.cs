@@ -94,6 +94,18 @@ namespace TASVideos.WikiEngine
 			return IsLink(text) && ImageSuffixes.Any(text.EndsWith);
 		}
 
+		private static string NormalizeImageUrl(string text)
+		{
+			if (text[0] == '=')
+			{
+				return "/" + text.Substring(text[1] == '/' ? 2 : 1);
+			}
+			else
+			{
+				return text;
+			}			
+		}
+
 		private static string NormalizeUrl(string text)
 		{
 			if (text[0] == '=')
@@ -219,7 +231,7 @@ namespace TASVideos.WikiEngine
 		{
 			var attrs = new List<KeyValuePair<string, string>>();
 			var classSet = false;
-			attrs.Add(Attr("src", NormalizeUrl(pp[index++])));
+			attrs.Add(Attr("src", NormalizeImageUrl(pp[index++])));
 			for (; index < pp.Length; index++)
 			{
 				var s = pp[index];
