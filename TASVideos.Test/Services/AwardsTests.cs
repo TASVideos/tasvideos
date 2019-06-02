@@ -19,7 +19,7 @@ namespace TASVideos.Test.Services
 		private TestDbContext _db;
 		private ICacheService _cache;
 
-		private static readonly int TwoDigitCurrentYear = DateTime.UtcNow.Year - 2000;
+		private static readonly int CurrentYear = DateTime.UtcNow.Year;
 
 		[TestInitialize]
 		public void Initialize()
@@ -52,7 +52,8 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, list.Count);
 			var actualUserAward = list.Single();
 			Assert.AreEqual(award.ShortName, actualUserAward.ShortName);
-			Assert.AreEqual(TwoDigitCurrentYear, actualUserAward.Year);
+			Assert.AreEqual(CurrentYear, actualUserAward.Year);
+			Assert.IsTrue(actualUserAward.Description.Contains(CurrentYear.ToString()));
 		}
 
 		[TestMethod]
@@ -70,7 +71,8 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, list.Count);
 			var actualUserAward = list.Single();
 			Assert.AreEqual(award.ShortName, actualUserAward.ShortName);
-			Assert.AreEqual(TwoDigitCurrentYear, actualUserAward.Year);
+			Assert.AreEqual(CurrentYear, actualUserAward.Year);
+			Assert.IsTrue(actualUserAward.Description.Contains(CurrentYear.ToString()));
 		}
 
 		[TestMethod]
@@ -113,8 +115,6 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(0, actual.Count());
 		}
 
-		// For year
-
 		private User CreateUser()
 		{
 			var user = new User { UserName = "TestUser" + Guid.NewGuid() };
@@ -137,7 +137,7 @@ namespace TASVideos.Test.Services
 
 		private void GiveUserAnAward(User user, Award award)
 		{
-			_db.UserAwards.Add(new UserAward { AwardId = award.Id, UserId = user.Id, Year = TwoDigitCurrentYear });
+			_db.UserAwards.Add(new UserAward { AwardId = award.Id, UserId = user.Id, Year = CurrentYear });
 			_db.SaveChanges();
 		}
 
@@ -172,7 +172,7 @@ namespace TASVideos.Test.Services
 		{
 			_db.PublicationAwards.Add(new PublicationAward
 			{
-				AwardId = award.Id, PublicationId = publication.Id, Year = TwoDigitCurrentYear
+				AwardId = award.Id, PublicationId = publication.Id, Year = CurrentYear
 			});
 			_db.SaveChanges();
 		}
