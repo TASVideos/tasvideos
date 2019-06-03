@@ -79,22 +79,11 @@ namespace TASVideos.Services
 		void PrePopulateCache();
 
 		/// <summary>
-		/// Filters the list of wiki pages to only pages that are nest beneath the given page.
-		/// If no pageName is provided, then a master list of subpages is provided
-		/// ex: /Foo/Bar, /Foo/Bar2 and /Foo/Bar/Baz are all subpages of /Foo
+		/// Provides a queryable for doing dynamic select statements.
+		/// Note that this this should be avoided in favor of other methods
+		/// when posssible since this property does not take advantage of caching
 		/// </summary>
-		/// <seealso cref="WikiPage"/>
-		/// <param name="pageName">the name of the page to get sub pages from</param>
-		IQueryable<WikiPage> ThatAreSubpagesOf(string pageName);
-
-		/// <summary>
-		/// Filters the list of wiki pages to only pages that are parents of the given page
-		/// ex: /Foo is a parent of /Foo/Bar
-		/// ex: /Foo and /Foo/Bar are parents of /Foo/Bar/Baz
-		/// </summary>
-		/// <seealso cref="WikiPage"/>
-		/// <param name="pageName">the name of the page to get parent pages from</param>
-		IQueryable<WikiPage> ThatAreParentsOf(string pageName);
+		IQueryable<WikiPage> Query { get; }
 	}
 
 	// TODO: handle DbConcurrency exceptions
@@ -121,6 +110,8 @@ namespace TASVideos.Services
 
 			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName}", value, Durations.OneYearInSeconds);
 		}
+
+		public IQueryable<WikiPage> Query => _db.WikiPages.AsQueryable();
 
 		public async Task<bool> Exists(string pageName, bool includeDeleted = false)
 		{
@@ -443,16 +434,6 @@ namespace TASVideos.Services
 			{
 				this[page.PageName] = page;
 			}
-		}
-
-		public IQueryable<WikiPage> ThatAreSubpagesOf(string pageName)
-		{
-			return _db.WikiPages.ThatAreSubpagesOf(pageName);
-		}
-
-		public IQueryable<WikiPage> ThatAreParentsOf(string pageName)
-		{
-			return _db.WikiPages.ThatAreParentsOf(pageName);
 		}
 
 		private void ClearCache(string pageName)
