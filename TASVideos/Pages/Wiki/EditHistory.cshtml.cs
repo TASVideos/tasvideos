@@ -6,20 +6,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
 	[AllowAnonymous]
 	public class EditHistoryModel : BasePageModel
 	{
-		private readonly ApplicationDbContext _db;
+		private readonly IWikiPages _wikiPages;
 
-		public EditHistoryModel(ApplicationDbContext db)
+		public EditHistoryModel(IWikiPages wikiPages)
 		{
-			_db = db;
+			_wikiPages = wikiPages;
 		}
 
 		[FromRoute]
@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Wiki
 			History = new UserWikiEditHistoryModel
 			{
 				UserName = UserName,
-				Edits = await _db.WikiPages
+				Edits = await _wikiPages.Query
 					.ThatAreNotDeleted()
 					.CreatedBy(UserName)
 					.ByMostRecent()
