@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
 using TASVideos.Services;
@@ -16,16 +15,13 @@ namespace TASVideos.Pages.Wiki
 	[RequirePermission(PermissionTo.SeeDeletedWikiPages)]
 	public class DeletedPagesModel : BasePageModel
 	{
-		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IWikiPages _wikiPages;
 
 		public DeletedPagesModel(
-			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages)
 		{
-			_db = db;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 		}
@@ -34,7 +30,7 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task OnGet()
 		{
-			DeletedPages = await _db.WikiPages
+			DeletedPages = await _wikiPages.Query
 				.ThatAreDeleted()
 				.GroupBy(tkey => tkey.PageName)
 				.Select(record => new DeletedWikiPageDisplayModel
@@ -44,7 +40,7 @@ namespace TASVideos.Pages.Wiki
 
 					// https://github.com/aspnet/EntityFrameworkCore/issues/3103
 					// EF Core 2.1 bug, this no longer works, "Must be reducible node exception
-					// HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
+					// HasExistingRevisions = _wikiPages.Query.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
 				})
 				.ToListAsync();
 

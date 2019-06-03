@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Pages.Diagnostics
@@ -14,11 +14,11 @@ namespace TASVideos.Pages.Diagnostics
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class WikiSyntaxErrorsModel : PageModel
 	{
-		private readonly ApplicationDbContext _db;
+		private readonly IWikiPages _wikiPages;
 
-		public WikiSyntaxErrorsModel(ApplicationDbContext db)
+		public WikiSyntaxErrorsModel(IWikiPages wikiPages)
 		{
-			_db = db;
+			_wikiPages = wikiPages;
 		}
 
 		public class Row
@@ -51,16 +51,16 @@ namespace TASVideos.Pages.Diagnostics
 
 		public async Task<IActionResult> OnGet()
 		{
-			var pages = await _db.WikiPages
-				.WithNoChildren()
+			var pages = await _wikiPages.Query
 				.ThatAreNotDeleted()
+				.WithNoChildren()
 				.Select(p => new
 				{
-					PageName = p.PageName,
-					Markup = p.Markup
+					p.PageName,
+					p.Markup
 				})
 				.ToListAsync();
-			var rows = pages
+			Rows = pages
 				.Select(p => new
 				{
 					p,
@@ -76,7 +76,6 @@ namespace TASVideos.Pages.Diagnostics
 				})
 				.ToList();
 
-			Rows = rows;
 			return Page();
 		}
 	}

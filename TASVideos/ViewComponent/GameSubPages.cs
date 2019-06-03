@@ -7,16 +7,19 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
 {
 	public class GameSubPages : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IWikiPages _wikiPages;
 
-		public GameSubPages(ApplicationDbContext db)
+		public GameSubPages(ApplicationDbContext db, IWikiPages wikiPages)
 		{
 			_db = db;
+			_wikiPages = wikiPages;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
@@ -27,30 +30,27 @@ namespace TASVideos.ViewComponents
 
 		private async Task<IEnumerable<GameSubpageModel>> GetGameResourcesSubPages()
 		{
-			// TODO: cache this, consider using IWikiPages
-			using (await _db.Database.BeginTransactionAsync())
-			{
-				var systems = await _db.GameSystems.ToListAsync();
-				var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
+			// TODO: cache this
+			var systems = await _db.GameSystems.ToListAsync();
+			var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
 
-				var pages = _db.WikiPages
-					.ThatAreNotDeleted()
-					.WithNoChildren()
-					.Where(wp => gameResourceSystems.Contains(wp.PageName))
-					.Select(wp => wp.PageName)
-					.ToList();
+			var pages = _wikiPages.Query
+				.ThatAreNotDeleted()
+				.WithNoChildren()
+				.Where(wp => gameResourceSystems.Contains(wp.PageName))
+				.Select(wp => wp.PageName)
+				.ToList();
 
-				return
-					(from s in systems
-					join wp in pages on s.Code equals wp.Split('/').Last()
-					select new GameSubpageModel
-					{
-						SystemCode = s.Code,
-						SystemDescription = s.DisplayName,
-						PageLink = "GameResources/" + s.Code
-					})
-					.ToList();
-			}
+			return
+				(from s in systems
+				join wp in pages on s.Code equals wp.Split('/').Last()
+				select new GameSubpageModel
+				{
+					SystemCode = s.Code,
+					SystemDescription = s.DisplayName,
+					PageLink = "GameResources/" + s.Code
+				})
+				.ToList();
 		}
 	}
 }

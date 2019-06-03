@@ -5,20 +5,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
 	[AllowAnonymous]
 	public class PageHistoryModel : BasePageModel
 	{
-		private readonly ApplicationDbContext _db;
+		private readonly IWikiPages _wikiPages;
 
-		public PageHistoryModel(ApplicationDbContext db)
+		public PageHistoryModel(IWikiPages wikiPages)
 		{
-			_db = db;
+			_wikiPages = wikiPages;
 		}
 
 		[FromQuery]
@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Wiki
 			History = new WikiHistoryModel
 			{
 				PageName = Path,
-				Revisions = await _db.WikiPages
+				Revisions = await _wikiPages.Query
 					.ForPage(Path)
 					.ThatAreNotDeleted()
 					.OrderBy(wp => wp.Revision)

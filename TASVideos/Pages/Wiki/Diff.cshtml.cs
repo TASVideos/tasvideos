@@ -6,20 +6,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
 	[AllowAnonymous]
 	public class DiffModel : BasePageModel
 	{
-		private readonly ApplicationDbContext _db;
+		private readonly IWikiPages _wikiPages;
 
-		public DiffModel(ApplicationDbContext db)
+		public DiffModel(IWikiPages wikiPages)
 		{
-			_db = db;
+			_wikiPages = wikiPages;
 		}
 
 		[FromQuery]
@@ -50,7 +50,7 @@ namespace TASVideos.Pages.Wiki
 
 		private async Task<WikiDiffModel> GetPageDiff(string pageName, int fromRevision, int toRevision)
 		{
-			var revisions = await _db.WikiPages
+			var revisions = await _wikiPages.Query
 				.ForPage(pageName)
 				.Where(wp => wp.Revision == fromRevision
 					|| wp.Revision == toRevision)
@@ -73,7 +73,7 @@ namespace TASVideos.Pages.Wiki
 
 		private async Task<WikiDiffModel> GetLatestPageDiff(string pageName)
 		{
-			var revisions = await _db.WikiPages
+			var revisions = await _wikiPages.Query
 				.ForPage(pageName)
 				.ThatAreNotDeleted()
 				.OrderByDescending(wp => wp.Revision)
