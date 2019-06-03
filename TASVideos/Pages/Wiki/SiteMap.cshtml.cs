@@ -42,7 +42,7 @@ namespace TASVideos.Pages.Wiki
 		public void OnGet()
 		{
 			Map = CorePages.ToList();
-			var wikiPages = _wikiPages
+			var wikiPages = _wikiPages.Query
 				.ThatAreSubpagesOf("")
 				.Select(w => w.PageName)
 				.ToList();

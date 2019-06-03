@@ -21,7 +21,7 @@ namespace TASVideos.ViewComponents
 				return Content("");
 			}
 
-			var subpages = _wikiPages
+			var subpages = _wikiPages.Query
 				.ThatAreSubpagesOf(pageData.PageName)
 				.Select(w => w.PageName)
 				.ToList();

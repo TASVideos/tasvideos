@@ -16,7 +16,7 @@ namespace TASVideos.ViewComponents
 
 		public IViewComponentResult Invoke(WikiPage pageData, string pp)
 		{
-			var subpages = _wikiPages
+			var subpages = _wikiPages.Query
 					.ThatAreParentsOf(pageData?.PageName)
 					.ToList();
 
