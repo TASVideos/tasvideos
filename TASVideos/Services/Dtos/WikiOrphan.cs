@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.Services
 {
-	public class WikiOrphanModel
+	public class WikiOrphan
 	{
 		public string PageName { get; set; }
 		public DateTime LastUpdateTimeStamp { get; set; }
