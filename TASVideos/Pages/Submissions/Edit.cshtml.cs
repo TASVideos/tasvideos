@@ -301,7 +301,7 @@ namespace TASVideos.Pages.Submissions
 			};
 			await _wikiPages.Add(revision);
 
-			submission.WikiContent = await _db.WikiPages.SingleAsync(wp => wp.Id == revision.Id);
+			submission.WikiContent = revision;
 
 			submission.GenerateTitle();
 			await _db.SaveChangesAsync();
