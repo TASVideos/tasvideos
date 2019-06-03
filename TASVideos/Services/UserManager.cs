@@ -20,12 +20,14 @@ namespace TASVideos.Services
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 		private readonly IPointsService _pointsService;
+		private readonly IWikiPages _wikiPages;
 
 		// Holy dependencies, batman
 		public UserManager(
 			ApplicationDbContext db,
 			ICacheService cache,
 			IPointsService pointsService,
+			IWikiPages wikiPages,
 			IUserStore<User> store,
 			IOptions<IdentityOptions> optionsAccessor,
 			IPasswordHasher<User> passwordHasher,
@@ -49,6 +51,7 @@ namespace TASVideos.Services
 			_cache = cache;
 			_db = db;
 			_pointsService = pointsService;
+			_wikiPages = wikiPages;
 		}
 
 		// Adds a distinct list of user permissions to their claims so they can be stored
@@ -225,7 +228,7 @@ namespace TASVideos.Services
 				// TODO: round to 1 digit?
 				model.PlayerPoints = (int)Math.Round(await _pointsService.PlayerPoints(model.Id));
 
-				var wikiEdits = await _db.WikiPages
+				var wikiEdits = await _wikiPages.Query
 					.ThatAreNotDeleted()
 					.CreatedBy(model.UserName)
 					.Select(w => new { w.CreateTimeStamp })
