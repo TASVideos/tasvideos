@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Helpers;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Services
@@ -84,6 +86,12 @@ namespace TASVideos.Services
 		/// when posssible since this property does not take advantage of caching
 		/// </summary>
 		IQueryable<WikiPage> Query { get; }
+
+		// TODO: document
+		Task<IEnumerable<WikiOrphan>> Orphans();
+
+		// TODO: document
+		Task<IEnumerable<WikiPageReferral>> BrokenLinks();
 	}
 
 	// TODO: handle DbConcurrency exceptions
@@ -112,6 +120,37 @@ namespace TASVideos.Services
 		}
 
 		public IQueryable<WikiPage> Query => _db.WikiPages.AsQueryable();
+
+		public async Task<IEnumerable<WikiOrphan>> Orphans() => await _db.WikiPages
+				.ThatAreNotDeleted()
+				.WithNoChildren()
+				.Where(wp => wp.PageName != "MediaPosts") // Linked by the navbar
+				.Where(wp => !_db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
+				.Where(wp => !wp.PageName.StartsWith("System/")
+					&& !wp.PageName.StartsWith("InternalSystem")) // These by design aren't orphans they are directly used in the system
+				.Where(wp => !wp.PageName.Contains("/")) // Subpages are linked by default by the parents, so we know they are not orphans
+				.Select(wp => new WikiOrphan
+				{
+					PageName = wp.PageName,
+					LastUpdateTimeStamp = wp.LastUpdateTimeStamp,
+					LastUpdateUserName = wp.LastUpdateUserName ?? wp.CreateUserName
+				})
+				.ToListAsync();
+
+		public async Task<IEnumerable<WikiPageReferral>> BrokenLinks() => (await _db.WikiReferrals
+				.Where(wr => wr.Referrer != "SandBox")
+				.Where(wr => wr.Referral != "Players-List")
+				.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
+				.Where(wr => !wr.Referral.StartsWith("Subs-"))
+				.Where(wr => !wr.Referral.StartsWith("Movies-"))
+				.Where(wr => !wr.Referral.StartsWith("/forum"))
+				.Where(wr => !wr.Referral.StartsWith("/userfiles"))
+				.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
+				.Where(wr => wr.Referral != "FrontPage")
+				.ToListAsync())
+			.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue)
+			.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue)
+			.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral).HasValue);
 
 		public async Task<bool> Exists(string pageName, bool includeDeleted = false)
 		{
