@@ -445,38 +445,14 @@ namespace TASVideos.Services
 			}
 		}
 
-		// TODO: consider caching these
 		public IQueryable<WikiPage> ThatAreSubpagesOf(string pageName)
 		{
-			pageName = (pageName ?? "").Trim('/');
-			var query = _db.WikiPages
-				.ThatAreNotDeleted()
-				.WithNoChildren()
-				.Where(wp => wp.PageName != pageName);
-
-			if (!string.IsNullOrWhiteSpace(pageName))
-			{
-				query = query.Where(wp => wp.PageName.StartsWith(pageName + "/"));
-			}
-
-			return query;
+			return _db.WikiPages.ThatAreSubpagesOf(pageName);
 		}
 
-		// TODO: consider caching these
 		public IQueryable<WikiPage> ThatAreParentsOf(string pageName)
 		{
-			pageName = (pageName ?? "").Trim('/');
-			if (string.IsNullOrWhiteSpace(pageName)
-				|| !pageName.Contains('/')) // Easy optimization, pages without a / have no parents
-			{
-				return Enumerable.Empty<WikiPage>().AsQueryable();
-			}
-
-			return _db.WikiPages
-				.ThatAreNotDeleted()
-				.WithNoChildren()
-				.Where(wp => wp.PageName != pageName)
-				.Where(wp => pageName.StartsWith(wp.PageName));
+			return _db.WikiPages.ThatAreParentsOf(pageName);
 		}
 
 		private void ClearCache(string pageName)

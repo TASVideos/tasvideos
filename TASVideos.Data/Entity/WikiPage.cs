@@ -49,6 +49,38 @@ namespace TASVideos.Data.Entity
 			return list.Where(w => !w.MinorEdit);
 		}
 
+		public static IQueryable<WikiPage> ThatAreSubpagesOf(this IQueryable<WikiPage> query, string pageName)
+		{
+			pageName = (pageName ?? "").Trim('/');
+			query = query
+				.ThatAreNotDeleted()
+				.WithNoChildren()
+				.Where(wp => wp.PageName != pageName);
+
+			if (!string.IsNullOrWhiteSpace(pageName))
+			{
+				query = query.Where(wp => wp.PageName.StartsWith(pageName + "/"));
+			}
+
+			return query;
+		}
+
+		public static IQueryable<WikiPage> ThatAreParentsOf(this IQueryable<WikiPage> query, string pageName)
+		{
+			pageName = (pageName ?? "").Trim('/');
+			if (string.IsNullOrWhiteSpace(pageName)
+				|| !pageName.Contains('/')) // Easy optimization, pages without a / have no parents
+			{
+				return Enumerable.Empty<WikiPage>().AsQueryable();
+			}
+
+			return query
+				.ThatAreNotDeleted()
+				.WithNoChildren()
+				.Where(wp => wp.PageName != pageName)
+				.Where(wp => pageName.StartsWith(wp.PageName));
+		}
+
 		public static bool IsCurrent(this WikiPage wikiPage)
 		{
 			return wikiPage != null
