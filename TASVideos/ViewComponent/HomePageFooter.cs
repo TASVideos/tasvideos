@@ -13,13 +13,16 @@ namespace TASVideos.ViewComponents
     {
 		private readonly ApplicationDbContext _db;
 		private readonly IAwards _awards;
+		private readonly IWikiPages _wikiPages;
 
 		public HomePageFooter(
 			ApplicationDbContext db,
-			IAwards awards)
+			IAwards awards,
+			IWikiPages wikiPages)
 		{
 			_db = db;
 			_awards = awards;
+			_wikiPages = wikiPages;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData)
@@ -31,7 +34,7 @@ namespace TASVideos.ViewComponents
 				{
 					Id = user.Id,
 					UserName = user.UserName,
-					EditCount = _db.WikiPages.Count(wp => wp.CreateUserName == userName),
+					EditCount = _wikiPages.Query.Count(wp => wp.CreateUserName == userName),
 					MovieCount = _db.Publications
 						.Count(p => p.Authors
 							.Select(sa => sa.Author.UserName)
