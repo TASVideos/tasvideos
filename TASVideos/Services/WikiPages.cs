@@ -87,10 +87,17 @@ namespace TASVideos.Services
 		/// </summary>
 		IQueryable<WikiPage> Query { get; }
 
-		// TODO: document
+		/// <summary>
+		/// Returns a collection of wiki pages that are not not linked
+		/// by any other wiki page. These pages are effectively "orphans"
+		/// since they can navigated to
+		/// </summary>
 		Task<IEnumerable<WikiOrphan>> Orphans();
 
-		// TODO: document
+		/// <summary>
+		/// Returns a collection of wiki links that do not go to a page
+		/// that exists. These links are considered broken and in need of fixing
+		/// </summary>
 		Task<IEnumerable<WikiPageReferral>> BrokenLinks();
 	}
 
