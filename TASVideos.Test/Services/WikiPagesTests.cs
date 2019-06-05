@@ -1039,6 +1039,170 @@ namespace TASVideos.Test.Services
 
 		#endregion
 
+		#region Orphans
+
+		[TestMethod]
+		public async Task Orphans_NoPages_ReturnsEmptyList()
+		{
+			var actual = await _wikiPages.Orphans();
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		[TestMethod]
+		public async Task Orphans_DeletedPage_NotAnOrphan()
+		{
+			AddPage("Deleted", true);
+			var actual = await _wikiPages.Orphans();
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		[TestMethod]
+		public async Task Orphans_NoOrphans_ReturnsEmptyList()
+		{
+			// Two pages, that properly link each other
+			string parent = "Parent";
+			string child = "Child";
+			AddPage(parent);
+			AddPage(child);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = parent, Referral = child });
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = child, Referral = parent });
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.Orphans();
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		[TestMethod]
+		public async Task Orphans_PageWithNoReferrers_ReturnsAsOrphan()
+		{
+			string orphan = "Orphan";
+			AddPage(orphan);
+
+			var actual = await _wikiPages.Orphans();
+
+			Assert.IsNotNull(actual);
+			var orphans = actual.ToList();
+			Assert.AreEqual(1, orphans.Count);
+			Assert.AreEqual(orphan, orphans.Single().PageName);
+		}
+
+		[TestMethod]
+		public async Task Orphans_ReferrersExistButNotForPage_ReturnsAsOrphan()
+		{
+			string orphan = "Orphan";
+			AddPage(orphan);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = "Parent", Referral = "Not" + orphan });
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.Orphans();
+
+			Assert.IsNotNull(actual);
+			var orphans = actual.ToList();
+			Assert.AreEqual(1, orphans.Count);
+			Assert.AreEqual(orphan, orphans.Single().PageName);
+		}
+
+		[TestMethod]
+		public async Task Orphans_Subpages_NotConsideredOrphans()
+		{
+			string parent = "Parent";
+			AddPage(parent);
+			AddPage(parent  + "/Child");
+
+			var actual = await _wikiPages.Orphans();
+
+			// Parent should be an orphan but not child
+			Assert.IsNotNull(actual);
+			var orphans = actual.ToList();
+			Assert.AreEqual(1, orphans.Count);
+			Assert.AreEqual(parent, orphans.Single().PageName);
+		}
+
+		[TestMethod]
+		[DataRow("MediaPosts")]
+		[DataRow("System")]
+		[DataRow("InternalSystem")]
+		public async Task Orphans_CorePages_NotConsideredOrphans(string page)
+		{
+			AddPage(page);
+			var actual = await _wikiPages.Orphans();
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		#endregion
+
+		#region Broken Links
+
+		[TestMethod]
+		public async Task BrokenLinks_NoReferrers_ReturnsEmptyList()
+		{
+			var actual = await _wikiPages.BrokenLinks();
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		[TestMethod]
+		public async Task BrokenLinks_NoBrokenLinks_ReturnsEmptyList()
+		{
+			string page = "Parent";
+			AddPage(page);
+			_db.WikiReferrals.Add(new WikiPageReferral { Referral = "Parent", Referrer = "AnotherPage" });
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.BrokenLinks();
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		[TestMethod]
+		public async Task BrokenLinks_BrokenLink_ReturnsBrokenLink()
+		{
+			string page = "PageWithLink";
+			string doesNotExist = "DoesNotExist";
+			AddPage(page);
+			_db.WikiReferrals.Add(new WikiPageReferral
+			{
+				Referrer = page,
+				Referral = doesNotExist,
+			});
+			_db.SaveChanges();
+
+			var actual = await _wikiPages.BrokenLinks();
+
+			Assert.IsNotNull(actual);
+			var brokenLinks = actual.ToList();
+			Assert.AreEqual(1, brokenLinks.Count);
+			var brokenLink = brokenLinks.Single();
+			Assert.AreEqual(page, brokenLink.Referrer);
+			Assert.AreEqual(doesNotExist, brokenLink.Referral);
+		}
+
+		[TestMethod]
+		[DataRow("FrontPage")]
+		[DataRow("Players-List")]
+		[DataRow("Subs-")]
+		[DataRow("Movies-")]
+		[DataRow("/forum")]
+		[DataRow("/userfiles")]
+		public async Task BrokenLinks_CorePages_NotConsideredBrokenLinks(string referral)
+		{
+			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = "Page", Referral = referral });
+			var actual = await _wikiPages.BrokenLinks();
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		#endregion
+
 		private int AddPage(string name, bool isDeleted = false, bool cache = false)
 		{
 			var wp = new WikiPage { PageName = name, IsDeleted = isDeleted };
