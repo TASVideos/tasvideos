@@ -46,7 +46,10 @@ namespace TASVideos.ViewComponents
 				})
 				.SingleOrDefaultAsync();
 
-			model.AwardsWon = (await _awards.ForUser(model.Id)).Count();
+			if (model != null)
+			{
+				model.AwardsWon = (await _awards.ForUser(model.Id)).Count();
+			}
 
 			ViewData["pageData"] = pageData;
 			return View(model);
