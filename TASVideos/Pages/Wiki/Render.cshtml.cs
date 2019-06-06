@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnGet(string url, int? revision = null)
 		{
-			if (url.ToLower() == "frontpage")
+			if (url?.ToLower() == "frontpage")
 			{
 				return Redirect("/");
 			}
