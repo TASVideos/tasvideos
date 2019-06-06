@@ -13,6 +13,13 @@ namespace TASVideos.Services
 	public interface IWikiPages
 	{
 		/// <summary>
+		/// Gets a queryable for doing dynamic select statements.
+		/// Note that this this should be avoided in favor of other methods
+		/// when possible since this property does not take advantage of caching
+		/// </summary>
+		IQueryable<WikiPage> Query { get; }
+
+		/// <summary>
 		/// Returns whether or not any revision of the given page exists
 		/// </summary>
 		Task<bool> Exists(string pageName, bool includeDeleted = false);
@@ -81,13 +88,6 @@ namespace TASVideos.Services
 		void PrePopulateCache();
 
 		/// <summary>
-		/// Provides a queryable for doing dynamic select statements.
-		/// Note that this this should be avoided in favor of other methods
-		/// when posssible since this property does not take advantage of caching
-		/// </summary>
-		IQueryable<WikiPage> Query { get; }
-
-		/// <summary>
 		/// Returns a collection of wiki pages that are not not linked
 		/// by any other wiki page. These pages are effectively "orphans"
 		/// since they can navigated to
@@ -115,6 +115,8 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
+		public IQueryable<WikiPage> Query => _db.WikiPages.AsQueryable();
+
 		private WikiPage this[string pageName]
 		{
 			get
@@ -125,8 +127,6 @@ namespace TASVideos.Services
 
 			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName}", value, Durations.OneYearInSeconds);
 		}
-
-		public IQueryable<WikiPage> Query => _db.WikiPages.AsQueryable();
 
 		public async Task<IEnumerable<WikiOrphan>> Orphans() => await _db.WikiPages
 				.ThatAreNotDeleted()
