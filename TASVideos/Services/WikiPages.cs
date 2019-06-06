@@ -161,6 +161,13 @@ namespace TASVideos.Services
 
 		public async Task<bool> Exists(string pageName, bool includeDeleted = false)
 		{
+			if (string.IsNullOrWhiteSpace(pageName))
+			{
+				return false;
+			}
+
+			pageName = pageName.Trim('/');
+
 			var existingPage = this[pageName];
 
 			if (existingPage != null)
@@ -189,7 +196,12 @@ namespace TASVideos.Services
 
 		public async Task<WikiPage> Page(string pageName, int? revisionId = null)
 		{
-			pageName = (pageName ?? "").Trim('/');
+			if (string.IsNullOrWhiteSpace(pageName))
+			{
+				return null;
+			}
+
+			pageName = pageName.Trim('/');
 
 			WikiPage page = null;
 			if (!revisionId.HasValue)
@@ -234,6 +246,16 @@ namespace TASVideos.Services
 
 		public async Task Add(WikiPage revision)
 		{
+			if (revision == null)
+			{
+				throw new ArgumentNullException($"{nameof(revision)} cannot be null.");
+			}
+
+			if (string.IsNullOrWhiteSpace(revision.PageName))
+			{
+				throw new InvalidOperationException($"{nameof(revision.PageName)} must have a value.");
+			}
+
 			_db.WikiPages.Add(revision);
 
 			var currentRevision = await _db.WikiPages
