@@ -71,6 +71,30 @@ namespace TASVideos.Test.Services
 			Assert.IsFalse(actual);
 		}
 
+		[TestMethod]
+		[DataRow(null)]
+		[DataRow("")]
+		[DataRow("\r \n \t")]
+		public async Task Exists_NoPageName_ReturnsFalse(string pageName)
+		{
+			AddPage(pageName);
+
+			var actual = await _wikiPages.Exists(pageName);
+			Assert.IsFalse(actual);
+		}
+
+		[TestMethod]
+		public async Task Exists_TrailingSlash_StillReturnsTrue()
+		{
+			string existingPage = "Exists";
+			AddPage(existingPage);
+
+			var actual = await _wikiPages.Exists(existingPage + "/");
+			Assert.AreEqual(1, _cache.PageCache.Count, "Cache should have 1 record");
+			Assert.AreEqual(existingPage, _cache.PageCache.First().PageName, "Cache should match page checked");
+			Assert.IsTrue(actual);
+		}
+
 		#endregion
 
 		#region Page
@@ -182,6 +206,18 @@ namespace TASVideos.Test.Services
 			var actual = await _wikiPages.Page(page);
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(2, actual.Revision);
+		}
+
+		[TestMethod]
+		[DataRow(null)]
+		[DataRow("")]
+		[DataRow("\r \n \t")]
+		public async Task Page_NoPageName_ReturnsNull(string pageName)
+		{
+			AddPage(pageName);
+
+			var actual = await _wikiPages.Page(pageName);
+			Assert.IsNull(actual);
 		}
 
 		#endregion
@@ -318,6 +354,23 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, _db.WikiReferrals.Count());
 			Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
 			Assert.AreEqual(revision4Link, _db.WikiReferrals.Single().Referral);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public async Task Add_Null_Throws()
+		{
+			await _wikiPages.Add(null);
+		}
+
+		[TestMethod]
+		[DataRow(null)]
+		[DataRow("")]
+		[DataRow("\r \n \t")]
+		[ExpectedException(typeof(InvalidOperationException))]
+		public async Task Add_NoPageName_Throws(string pageName)
+		{
+			await _wikiPages.Add(new WikiPage { PageName = pageName });
 		}
 
 		#endregion
@@ -493,6 +546,12 @@ namespace TASVideos.Test.Services
 
 			// Referrers not updated
 			Assert.AreEqual(0, _db.WikiReferrals.Count(wr => wr.Referrer == destPageName));
+		}
+
+		[TestMethod]
+		public async Task Move_DestinationPage_TrimsSlashes()
+		{
+
 		}
 
 		#endregion
