@@ -290,6 +290,9 @@ namespace TASVideos.Services
 				throw new ArgumentException($"{destinationName} must have a value.");
 			}
 
+			originalName = originalName?.Trim('/');
+			destinationName = destinationName.Trim('/');
+
 			// TODO: support moving a page to a deleted page
 			// Revision ids would have to be adjusted but it could be done
 			if (await Exists(destinationName, includeDeleted: true))
@@ -345,6 +348,7 @@ namespace TASVideos.Services
 
 		public async Task<int> Delete(string pageName)
 		{
+			pageName = pageName?.Trim('/');
 			var revisions = await _db.WikiPages
 				.ForPage(pageName)
 				.ThatAreNotDeleted()
@@ -383,6 +387,7 @@ namespace TASVideos.Services
 
 		public async Task Delete(string pageName, int revision)
 		{
+			pageName = pageName?.Trim('/');
 			var wikiPage = await _db.WikiPages
 				.ThatAreNotDeleted()
 				.Revision(pageName, revision)
@@ -432,6 +437,7 @@ namespace TASVideos.Services
 
 		public async Task<bool> Undelete(string pageName)
 		{
+			pageName = pageName?.Trim('/');
 			var allRevisions = await _db.WikiPages
 				.ForPage(pageName)
 				.ToListAsync();
