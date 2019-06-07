@@ -523,11 +523,11 @@ namespace TASVideos.Services
 
 			_db.WikiReferrals.RemoveRange(existingReferrals);
 
-			var referrers = Util.GetAllInternalLinks(markup ?? "")
+			var referrers = Util.GetAllInternalLinks(markup)
 				.Select(wl => new WikiPageReferral
 				{
 					Referrer = pageName,
-					Referral = wl.Link?.Trim('/'), // TODO: is it correct for GetAllInternalLinks to have slashes on Referrals and not Referrers?
+					Referral = wl.Link,
 					Excerpt = wl.Excerpt
 				});
 
