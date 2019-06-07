@@ -54,6 +54,7 @@ namespace TASVideos.Data.Entity
 		/// If no pageName is provided, then a master list of subpages is provided
 		/// ex: /Foo/Bar, /Foo/Bar2 and /Foo/Bar/Baz are all subpages of /Foo
 		/// </summary>
+		/// <param name="query">This query to filter</param>
 		/// <seealso cref="WikiPage"/>
 		/// <param name="pageName">the name of the page to get sub pages from</param>
 		public static IQueryable<WikiPage> ThatAreSubpagesOf(this IQueryable<WikiPage> query, string pageName)
@@ -78,6 +79,7 @@ namespace TASVideos.Data.Entity
 		/// ex: /Foo and /Foo/Bar are parents of /Foo/Bar/Baz
 		/// </summary>
 		/// <seealso cref="WikiPage"/>
+		/// <param name="query">This query to filter</param>
 		/// <param name="pageName">the name of the page to get parent pages from</param>
 		public static IQueryable<WikiPage> ThatAreParentsOf(this IQueryable<WikiPage> query, string pageName)
 		{

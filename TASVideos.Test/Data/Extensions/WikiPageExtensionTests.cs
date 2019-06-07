@@ -206,5 +206,37 @@ namespace TASVideos.Test.Data.QueryableExtensions
 		}
 
 		#endregion
+
+		#region IsCurrent
+
+		[TestMethod]
+		public void IsCurrent_NullSafe()
+		{
+			var actual = ((WikiPage)null).IsCurrent();
+			Assert.IsFalse(actual);
+		}
+
+		[TestMethod]
+		public void IsCurrent_Current_ReturnsTrue()
+		{
+			var actual = new WikiPage { ChildId = null, IsDeleted = false }.IsCurrent();
+			Assert.IsTrue(actual);
+		}
+
+		[TestMethod]
+		public void IsCurrent_ChildId_ReturnsFalse()
+		{
+			var actual = new WikiPage { ChildId = 1, IsDeleted = false }.IsCurrent();
+			Assert.IsFalse(actual);
+		}
+
+		[TestMethod]
+		public void IsCurrent_Deleted_ReturnsFalse()
+		{
+			var actual = new WikiPage { ChildId = null, IsDeleted = true }.IsCurrent();
+			Assert.IsFalse(actual);
+		}
+
+		#endregion
 	}
 }
