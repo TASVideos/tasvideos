@@ -22,19 +22,20 @@ namespace TASVideos.Test.WikiEngine
 		}
 
 		[TestMethod]
-		[DataRow("RecentChanges")]
-		[DataRow("1S")]
-		// TODO:
-		////[DataRow("HomePages/adelikat")]
-		////[DataRow("HomePages/Ready Steady Yeti/Outgoing")]
-		////[DataRow("HomePages/[^_^]")]
-		public void GetAllInternalLinks_OneNormalizedLink_ReturnsLink(string link)
+		[DataRow("RecentChanges", "RecentChanges")]
+		[DataRow("1S", "1S")]
+		[DataRow("HomePages/adelikat", "HomePages/adelikat")]
+		[DataRow("HomePages/Ready Steady Yeti/Outgoing", "HomePages/Ready Steady Yeti/Outgoing")]
+		[DataRow("Recent Changes", "RecentChanges")]
+		[DataRow("recent Changes", "RecentChanges")]
+		//[DataRow("HomePages/£e Nécroyeur")]
+		public void GetAllInternalLinks_OneNormalizedLink_ReturnsLink(string link, string expected)
 		{
 			var actual = Util.GetAllInternalLinks($"[{link}]");
 			Assert.IsNotNull(actual);
 			var actualList = actual.ToList();
 			Assert.AreEqual(1, actualList.Count);
-			Assert.AreEqual(link, actualList.Single().Link);
+			Assert.AreEqual(expected, actualList.Single().Link);
 		}
 
 		[TestMethod]
