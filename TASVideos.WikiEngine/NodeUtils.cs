@@ -60,7 +60,10 @@ namespace TASVideos.WikiEngine.AST
 				var se = Math.Min(node.CharEnd + 20, content.Length);
 				ret.Add(new InternalLinkInfo
 				{
-					Link = link,
+					// for purposes of html markup, all <a class=intlink> have hrefs that start with a leading '/'
+					// this is how the wiki syntax expects them to work.
+					// But in the context of counting internal referrers, that leading slash is not needed or wanted, so strip it here
+					Link = link.TrimStart('/'),
 					Excerpt = content.Substring(si, se - si)
 				});
 			};
