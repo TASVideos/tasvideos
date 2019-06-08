@@ -103,7 +103,7 @@ namespace TASVideos.WikiEngine
 			else
 			{
 				return text;
-			}			
+			}
 		}
 
 		private static string NormalizeUrl(string text)
@@ -131,21 +131,35 @@ namespace TASVideos.WikiEngine
 
 		public static string NormalizeInternalLink(string text)
 		{
-			if (!text.StartsWith("/Users/Profile/"))
-			{
-				// Support links like [Judge Guidelines] linking to [JudgeGuidelines]
-				// We don't do this replacement if link is a user module in order to support users with spaces such as Walker Boh
-				text = text.Replace(" ", "");
-			}
-
-			if (text.EndsWith(".html", true, CultureInfo.InvariantCulture))
-			{
-				text = text.Substring(0, text.Length - 5);
-			}
-
 			text = text.TrimEnd('/');
-			text = string.Join("/", text.Split('/').Select(s => s.Length > 0 ? char.ToUpperInvariant(s[0]) + s.Substring(1) : s));
-			return text;
+			var ss = text.Split('/');
+
+			int skip = -1;
+			if (ss.Length >= 4 && ss[1].Equals("users", StringComparison.OrdinalIgnoreCase) && ss[2].Equals("profile", StringComparison.OrdinalIgnoreCase))
+			{
+				skip = 3; // "/Users/Profile/{user}"
+			}
+			else if (ss.Length >= 3 && ss[1].Equals("homepages", StringComparison.OrdinalIgnoreCase))
+			{
+				skip = 2; // "/HomePages/{user}"
+			}
+
+			for (var i = 0; i < ss.Length; i++)
+			{
+				var s = ss[i];
+				if (i != skip)
+				{
+					s = s.Replace(" ", "");
+					if (s.Length > 0)
+						s = char.ToUpperInvariant(s[0]) + s.Substring(1);
+				}
+				// TODO: What should be done if a username actually ends in .html?
+				if (i == ss.Length - 1 && s.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+					s = s.Substring(0, s.Length - 5);
+				ss[i] = s;
+			}
+
+			return string.Join("/", ss);
 		}
 
 		private static string DisplayTextForUrl(string text)
