@@ -65,15 +65,8 @@ namespace TASVideos.WikiEngine
 					return Enumerable.Empty<InternalLinkInfo>();
 				}
 
-				// TODO: let's not have trailing spaces come out of NodeUtils?
-				// Then the Select shenanigans go away
 				var results = NewParser.Parse(content);
-				return NodeUtils.GetAllInternalLinks(content, results)
-					.Select(l => new InternalLinkInfo
-					{
-						Link = l.Link?.Trim('/'),
-						Excerpt = l.Excerpt
-					});
+				return NodeUtils.GetAllInternalLinks(content, results);
 			}
 			catch (NewParser.SyntaxException)
 			{
