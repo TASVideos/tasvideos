@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Services;
@@ -12,10 +13,12 @@ namespace TASVideos.Pages.Wiki
 	public class RenderModel : BasePageModel
 	{
 		private readonly IWikiPages _wikiPages;
+		private readonly ApplicationDbContext _db;
 
-		public RenderModel(IWikiPages wikiPages)
+		public RenderModel(IWikiPages wikiPages, ApplicationDbContext db)
 		{
 			_wikiPages = wikiPages;
+			_db = db;
 		}
 
 		public string Markup { get; set; }
@@ -30,8 +33,17 @@ namespace TASVideos.Pages.Wiki
 				return Redirect("/");
 			}
 
+			if (WikiHelper.IsHomePage(url))
+			{
+				if (!await UserNameExists(url))
+				{
+					return RedirectToPage("/Wiki/HomePageDoesNotExist");
+				}
+			}
+
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
+				// Support legacy links like [adelikat] that should have been [user:adelikat]
 				if (await _wikiPages.Exists("HomePages/" + url))
 				{
 					return Redirect("HomePages/" + url);
@@ -64,6 +76,12 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			return RedirectToPage("/Wiki/PageDoesNotExist", new { url });
+		}
+
+		private async Task<bool> UserNameExists(string path)
+		{
+			var userName = WikiHelper.ToUserName(path);
+			return await _db.Users.Exists(userName);
 		}
 	}
 }

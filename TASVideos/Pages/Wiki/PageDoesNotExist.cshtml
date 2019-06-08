@@ -1,5 +1,6 @@
 @page
 @{
+	ViewData["Title"] = "DoesNotExist";
 	var url = PageContext.HttpContext.Request.Query["url"].ToString().Trim('/');
 	bool canEdit = WikiHelper.UserCanEditWikiPage(url, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
@@ -10,8 +11,9 @@ Want to create it?
 <ul>
 	@if (!User.Identity.IsAuthenticated)
 	{
-		<li>If you are an editor or have rights to edit this page, 
-			<a asp-page="/Account/Login" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()">log in</a> 
+		<li>
+			If you are an editor or have rights to edit this page,
+			<a asp-page="/Account/Login" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()">log in</a>
 			to edit the page.
 		</li>
 	}
@@ -22,7 +24,8 @@ Want to create it?
 
 	@if (User.Identity.IsAuthenticated && canEdit)
 	{
-		<li>Click here to 
+		<li>
+			Click here to
 			<a asp-page="/Wiki/Edit" asp-route-path="@url">
 				edit this page
 			</a>

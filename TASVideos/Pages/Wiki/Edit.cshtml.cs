@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Wiki.Models;
@@ -14,13 +16,16 @@ namespace TASVideos.Pages.Wiki
 	public class EditModel : BasePageModel
 	{
 		private readonly IWikiPages _wikiPages;
+		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
 			IWikiPages wikiPages,
+			ApplicationDbContext db,
 			ExternalMediaPublisher publisher)
 		{
 			_wikiPages = wikiPages;
+			_db = db;
 			_publisher = publisher;
 		}
 
@@ -39,6 +44,12 @@ namespace TASVideos.Pages.Wiki
 			{
 				return Home();
 			}
+
+			if (WikiHelper.IsHomePage(Path) && !await UserNameExists(Path))
+			{
+				return Home();
+			}
+
 			var page = await _wikiPages.Page(Path);
 
 			PageToEdit = new WikiEditModel
@@ -53,6 +64,11 @@ namespace TASVideos.Pages.Wiki
 		public async Task<IActionResult> OnPost()
 		{
 			if (!WikiHelper.IsValidWikiPageName(Path))
+			{
+				return Home();
+			}
+
+			if (WikiHelper.IsHomePage(Path) && !await UserNameExists(Path))
 			{
 				return Home();
 			}
@@ -80,6 +96,12 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			return Redirect("/" + page.PageName);
+		}
+
+		private async Task<bool> UserNameExists(string path)
+		{
+			var userName = WikiHelper.ToUserName(path);
+			return await _db.Users.Exists(userName);
 		}
 	}
 }
