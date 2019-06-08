@@ -24,7 +24,10 @@ namespace TASVideos.Test.WikiEngine
 		[TestMethod]
 		[DataRow("RecentChanges")]
 		[DataRow("1S")]
-		//[DataRow("HomePages/feos")] // TODO
+		// TODO:
+		////[DataRow("HomePages/adelikat")]
+		////[DataRow("HomePages/Ready Steady Yeti/Outgoing")]
+		////[DataRow("HomePages/[^_^]")]
 		public void GetAllInternalLinks_OneNormalizedLink_ReturnsLink(string link)
 		{
 			var actual = Util.GetAllInternalLinks($"[{link}]");
