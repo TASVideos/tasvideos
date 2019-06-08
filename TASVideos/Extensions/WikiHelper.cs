@@ -142,7 +142,26 @@ namespace TASVideos.Extensions
 
 		public static bool IsHomePage(string pageName)
 		{
+			if (string.IsNullOrWhiteSpace(pageName))
+			{
+				return false;
+			}
+
 			return pageName.StartsWith("HomePages/");
+		}
+
+		public static string ToUserName(string pageName)
+		{
+			if (!IsHomePage(pageName))
+			{
+				return "";
+			}
+
+			return pageName
+				.Trim('/')
+				.Split('/')
+				.Skip(1)
+				.First();
 		}
 
 		public static bool IsSystemPage(string pageName)
