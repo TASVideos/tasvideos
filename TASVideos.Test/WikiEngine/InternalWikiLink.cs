@@ -29,7 +29,7 @@ namespace TASVideos.Test.WikiEngine
 		[DataRow("Recent Changes", "RecentChanges")]
 		[DataRow("recent Changes", "RecentChanges")]
 		[DataRow("ArbitraryCodeExecutionHowTo|ACE How To", "ArbitraryCodeExecutionHowTo")]
-		// [DataRow("HomePages/£e Nécroyeur")]
+		[DataRow("=HomePages/£e Nécroyeur", "HomePages/£e Nécroyeur", DisplayName = "Special characters require =")]
 		public void GetAllInternalLinks_OneNormalizedLink_ReturnsLink(string link, string expected)
 		{
 			var actual = Util.GetAllInternalLinks($"[{link}]");
