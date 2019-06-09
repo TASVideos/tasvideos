@@ -51,7 +51,7 @@ namespace TASVideos.ViewComponents
 					return "Admin Assistant";
 				case "seniorjudge":
 					return "Senior Judge";
-				case "senior publisher":
+				case "seniorpublisher":
 					return "Senior Publisher";
 			}
 		}
