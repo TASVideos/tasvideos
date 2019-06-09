@@ -56,6 +56,17 @@ namespace TASVideos.WikiEngine.AST
 			var ret = new List<InternalLinkInfo>();
 			Action<string, INode> addLink = (string link, INode node) =>
 			{
+				if (link.StartsWith("/Users/Profile/", StringComparison.OrdinalIgnoreCase))
+				{
+					// [user:foo] from the wiki isn't supposed to be reported as a link for referrals.
+					// It's rendered as a link, which is fine.
+					// The fact that it's already turned into an <a href> before we get to this method is
+					// a slightly regrettable implementation detail of wiki parsing, and if they were reported,
+					// it'd be a leaky abstraction leaking.
+
+					// [=Users/Profile/foo] gets excluded from reporting because of this; minor casualty.
+					return;
+				}
 				var si = Math.Max(node.CharStart - 20, 0);
 				var se = Math.Min(node.CharEnd + 20, content.Length);
 				ret.Add(new InternalLinkInfo

@@ -40,6 +40,14 @@ namespace TASVideos.Test.WikiEngine
 		}
 
 		[TestMethod]
+		public void HeyBillyBobThatDangThingDoneGoneReturnedAUserLinkWhatInTarnation()
+		{
+			var actual = Util.GetAllInternalLinks("[user:foo]");
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		[TestMethod]
 		public void GetAllInternalLinks_MultipleLinks_ReturnsAllLinks()
 		{
 			string link1 = "Link1";
