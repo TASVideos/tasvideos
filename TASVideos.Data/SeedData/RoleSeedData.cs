@@ -56,7 +56,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditPublicationMetaData
 		}).ToArray();
 
-		private static readonly PermissionTo[] JudgePermissions =
+		private static readonly PermissionTo[] JudgePermissions = EditorPermissions.Concat(new[]
 		{
 			PermissionTo.EditSubmissions,
 			PermissionTo.JudgeSubmissions,
@@ -64,7 +64,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditPublicationMetaData,
 			PermissionTo.SeeRestrictedForums
-		};
+		}).ToArray();
 
 		private static readonly PermissionTo[] SeniorJudgePermissions = JudgePermissions.Concat(new[]
 		{
@@ -72,7 +72,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.OverrideSubmissionStatus
 		}).ToArray();
 
-		private static readonly PermissionTo[] PublisherPermissions =
+		private static readonly PermissionTo[] PublisherPermissions = EditorPermissions.Concat(new[]
 		{
 			PermissionTo.PublishMovies,
 			PermissionTo.CatalogMovies,
@@ -80,7 +80,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditPublicationMetaData,
 			PermissionTo.EditPublicationFiles,
 			PermissionTo.SeeRestrictedForums
-		};
+		}).ToArray();
 
 		private static readonly PermissionTo[] SeniorPublisherPermissions = PublisherPermissions.Concat(new[]
 		{
