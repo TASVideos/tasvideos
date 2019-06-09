@@ -154,6 +154,7 @@ namespace TASVideos.Services
 				.Where(wr => !wr.Referral.StartsWith("/userfiles"))
 				.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
 				.Where(wr => wr.Referral != "FrontPage")
+				.Where(wr => wr.Referral != "Activity")
 				.ToListAsync())
 			.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue)
 			.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue)

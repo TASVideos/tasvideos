@@ -1356,6 +1356,7 @@ namespace TASVideos.Test.Services
 		[DataRow("Movies-")]
 		[DataRow("/forum")]
 		[DataRow("/userfiles")]
+		[DataRow("Activity")]
 		public async Task BrokenLinks_CorePages_NotConsideredBrokenLinks(string referral)
 		{
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = "Page", Referral = referral });
