@@ -275,7 +275,6 @@ namespace TASVideos.Data.SeedData
 			{
 				new RoleLink { Link = "JudgeGuidelines" }
 			}).ToList(),
-			
 		};
 
 		public static readonly Role Publisher = new Role

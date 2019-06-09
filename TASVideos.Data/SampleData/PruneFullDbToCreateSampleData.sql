@@ -4,8 +4,9 @@
 -- In SMMS, run Tasks -> Generate scripts
 --		- Pick all table
 --		- Go to Advanced and pick Data
+--		- Save as SampleData.sql
 --		- Run
---		- zip the resulting file and replace SampleData.zip
+--		- zip SampleData.sql and replace SampleData.zip
 
 use [TASVideos]
 
