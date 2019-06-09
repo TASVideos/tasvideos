@@ -28,7 +28,8 @@ namespace TASVideos.Test.WikiEngine
 		[DataRow("HomePages/Ready Steady Yeti/Outgoing", "HomePages/Ready Steady Yeti/Outgoing")]
 		[DataRow("Recent Changes", "RecentChanges")]
 		[DataRow("recent Changes", "RecentChanges")]
-		//[DataRow("HomePages/£e Nécroyeur")]
+		////[DataRow("[ArbitraryCodeExecutionHowTo|ACE How To]", "ArbitraryCodeExecutionHowTo")]
+		////[DataRow("HomePages/£e Nécroyeur")]
 		public void GetAllInternalLinks_OneNormalizedLink_ReturnsLink(string link, string expected)
 		{
 			var actual = Util.GetAllInternalLinks($"[{link}]");
