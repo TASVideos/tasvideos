@@ -1354,8 +1354,8 @@ namespace TASVideos.Test.Services
 		[DataRow("Players-List")]
 		[DataRow("Subs-")]
 		[DataRow("Movies-")]
-		[DataRow("/forum")]
-		[DataRow("/userfiles")]
+		[DataRow("forum")]
+		[DataRow("userfiles")]
 		[DataRow("Activity")]
 		public async Task BrokenLinks_CorePages_NotConsideredBrokenLinks(string referral)
 		{
