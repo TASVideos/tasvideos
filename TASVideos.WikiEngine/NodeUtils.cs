@@ -79,7 +79,7 @@ namespace TASVideos.WikiEngine.AST
 				}
 				else if (node is Element e)
 				{
-					if (e.Tag == "a" && e.Attributes.ContainsKey("intlink"))
+					if (e.Tag == "a" && e.Attributes.TryGetValue("class", out var clazz) && clazz == "intlink")
 					{
 						var link = e.Attributes["href"];
 						addLink(link, node);
