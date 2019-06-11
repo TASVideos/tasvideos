@@ -668,11 +668,26 @@ namespace TASVideos.WikiEngine
 				e => Builtins.MakeToc(n, e.CharStart));
 		}
 
+		private static void AddIdsToHeadings(IEnumerable<INode> n)
+		{
+			var headings = NodeUtils.Find(n,
+				e => e.Type == NodeType.Element && Builtins.TocHeadings.Contains(((Element)e).Tag))
+				.Cast<Element>();
+			foreach (var h in headings)
+			{
+				var id = h.InnerText(NullWriterHelper.Instance).Replace(" ", "");
+				if (id.Length > 0)
+					id = char.ToUpperInvariant(id[0]) + id.Substring(1);
+				h.Attributes.Add("id", id);
+			}
+		}
+
 		public static List<INode> Parse(string content)
 		{
 			var p = new NewParser { _input = content };
 			p.ParseLoop();
 			ReplaceTabs(p._output);
+			AddIdsToHeadings(p._output);
 			ReplaceTocs(p._output);
 			return p._output;
 		}
