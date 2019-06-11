@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="283603c5-f28f-4ad8-a695-9f4c751a7fae" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TASVideos/Pages/Wiki/Render.cshtml.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="16">
+              <caret line="20" column="21" lean-forward="true" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+              <folding>
+                <marker date="1560255307398" expanded="false" signature="6:209" ph="..." />
+                <marker date="1560255307398" expanded="true" signature="241:2112" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="303:2110" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="462:510" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="666:1952" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="740:776" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="812:928" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="853:923" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="974:1293" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="1114:1168" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="1372:1511" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="1598:1738" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="1840:1882" ph="{...}" />
+                <marker date="1560255307398" expanded="true" signature="2008:2107" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/TASVideos/Pages/Submissions/View.cshtml.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-448">
+              <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+              <folding>
+                <marker date="1557149490544" expanded="false" signature="6:417" ph="..." />
+                <marker date="1557149490544" expanded="true" signature="456:5046" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="516:5044" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="771:846" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="1188:3320" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="1422:2690" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="2749:2782" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="3184:3297" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="3372:3668" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="3541:3574" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="3717:5041" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="3770:3807" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="3955:3982" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="4033:4099" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="4192:4400" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="4489:4822" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="4564:4815" ph="{...}" />
+                <marker date="1557149490544" expanded="true" signature="4862:4990" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/TASVideos/Pages/Wiki/Render.cshtml.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TASVideos/Pages/Submissions/View.cshtml.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/.idea/.idea.TASVideos/.idea/vcs.xml" />
+        <option value="$PROJECT_DIR$/.idea/.idea.TASVideos/.idea/indexLayout.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-1645" />
+    <option name="y" value="-18" />
+    <option name="width" value="1936" />
+    <option name="height" value="1066" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="FileSystemExplorer" />
+      <pane id="AssemblyExplorer" />
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Submissions" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Submissions" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="View.cshtml" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Wiki" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Wiki" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Render.cshtml" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-all-files" value="false" />
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected=".NET Launch Settings Profile.TASVideos: Dev (No recreate)">
+    <configuration name="TASVideos: Demo" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/TASVideos/TASVideos.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="Demo" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TASVideos: Dev (Import)" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/TASVideos/TASVideos.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="Dev (Import)" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TASVideos: Dev (No recreate)" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/TASVideos/TASVideos.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="Dev (No recreate)" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TASVideos: Dev (Sample Data)" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/TASVideos/TASVideos.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="Dev (Sample Data)" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="283603c5-f28f-4ad8-a695-9f4c751a7fae" name="Default Changelist" comment="" />
+      <created>1560255409528</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1560255409528</updated>
+      <workItem from="1560255412595" duration="290000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="290000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-1928" y="-4" width="1936" height="1066" extended-state="6" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24986681" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="NuGet" />
+      <window_info anchor="bottom" id="Docker" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Unit Tests" />
+      <window_info anchor="bottom" id="REST Client" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Build" weight="0.32946146" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32946146" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Errors In Solution" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Unit Tests Coverage" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TASVideos/Pages/Wiki/Render.cshtml.cs</url>
+          <line>30</line>
+          <properties documentPath="$PROJECT_DIR$/TASVideos/Pages/Wiki/Render.cshtml.cs" initialLine="30">
+            <startOffsets>
+              <option value="706" />
+            </startOffsets>
+            <endOffsets>
+              <option value="740" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TASVideos/Pages/Submissions/View.cshtml.cs</url>
+          <line>49</line>
+          <properties documentPath="$PROJECT_DIR$/TASVideos/Pages/Submissions/View.cshtml.cs" initialLine="49">
+            <startOffsets>
+              <option value="1196" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2721" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/TASVideos/Pages/Wiki/Render.cshtml.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="20" column="21" lean-forward="true" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+          <folding>
+            <marker date="1560255307398" expanded="false" signature="6:209" ph="..." />
+            <marker date="1560255307398" expanded="true" signature="241:2112" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="303:2110" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="462:510" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="666:1952" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="740:776" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="812:928" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="853:923" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="974:1293" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="1114:1168" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="1372:1511" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="1598:1738" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="1840:1882" ph="{...}" />
+            <marker date="1560255307398" expanded="true" signature="2008:2107" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TASVideos/Pages/Submissions/View.cshtml.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-448">
+          <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+          <folding>
+            <marker date="1557149490544" expanded="false" signature="6:417" ph="..." />
+            <marker date="1557149490544" expanded="true" signature="456:5046" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="516:5044" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="771:846" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="1188:3320" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="1422:2690" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="2749:2782" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="3184:3297" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="3372:3668" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="3541:3574" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="3717:5041" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="3770:3807" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="3955:3982" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="4033:4099" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="4192:4400" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="4489:4822" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="4564:4815" ph="{...}" />
+            <marker date="1557149490544" expanded="true" signature="4862:4990" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
