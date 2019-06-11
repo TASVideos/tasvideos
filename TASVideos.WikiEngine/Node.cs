@@ -46,6 +46,36 @@ namespace TASVideos.WikiEngine.AST
 		string RunTdStyleFilters(string text);
 	}
 
+	/// <summary>
+	/// A fake IWriterHelper which can give "good enough" results if a static context is needed
+	/// </summary>
+	public class NullWriterHelper : IWriterHelper
+	{
+		public bool AddTdStyleFilter(string pp)
+		{
+			return true;
+		}
+
+		public bool CheckCondition(string condition)
+		{
+			return false;
+		}
+
+		public string RunTdStyleFilters(string text)
+		{
+			return null;
+		}
+
+		public void RunViewComponent(TextWriter w, string name, string pp)
+		{
+		}
+
+		private NullWriterHelper()
+		{}
+
+		public static readonly NullWriterHelper Instance = new NullWriterHelper();
+	}
+
 	public interface INodeWithChildren : INode
 	{
 		List<INode> Children { get; }

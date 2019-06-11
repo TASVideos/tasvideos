@@ -6,7 +6,7 @@ namespace TASVideos.WikiEngine
 {
 	public static partial class Builtins
 	{
-		private static readonly HashSet<string> Headings = new HashSet<string>
+		internal static readonly HashSet<string> TocHeadings = new HashSet<string>
 		{
 			// h1, h5, h6 are not involved in TOC generation
 			"h2", "h3", "h4"
@@ -14,7 +14,7 @@ namespace TASVideos.WikiEngine
 
 		public static Element MakeToc(List<INode> document, int charStart)
 		{
-			var headings = NodeUtils.Find(document, e => e.Type == NodeType.Element && Headings.Contains(((Element)e).Tag))
+			var headings = NodeUtils.Find(document, e => e.Type == NodeType.Element && TocHeadings.Contains(((Element)e).Tag))
 				.Cast<Element>()
 				.ToList();
 
@@ -44,17 +44,12 @@ namespace TASVideos.WikiEngine
 					pos--;
 				}
 				{
-					var id = "heading-" + h.CharStart;
-
+					var id = h.Attributes["id"];
 					var link = new Element(charStart, "a");
 					var li = new Element(charStart, "li", new[] { link });
 					link.Attributes["href"] = "#" + id;
 					link.Children.AddRange(h.Children.SelectMany(c => c.CloneForToc()));
 					stack.Peek().Children.Add(li);
-
-					var anchor = new Element(h.CharStart, "a");
-					anchor.Attributes["id"] = id;
-					h.Children.Add(anchor);
 				}
 			}
 			return ret;
