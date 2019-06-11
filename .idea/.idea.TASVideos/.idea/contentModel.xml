@@ -1,0 +1,1452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\adelikat\TASVideos" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="TASVideos" t="IncludeRecursive">
+        <e p=".eslintignore" t="Include" />
+        <e p=".gitignore" t="Include" />
+        <e p=".gitversion.cs" t="Include" />
+        <e p="AppSettings.cs" t="Include" />
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Constants.cs" t="Include" />
+        <e p="Data" t="Include">
+          <e p="DbInitializer.cs" t="Include" />
+        </e>
+        <e p="ExceptionHandler.cs" t="Include" />
+        <e p="Extensions" t="Include">
+          <e p="ApplicationBuilderExtensions.cs" t="Include" />
+          <e p="ClaimsPrincipalExtensions.cs" t="Include" />
+          <e p="EntityExtensions.cs" t="Include" />
+          <e p="HostingEnvironmentExtensions.cs" t="Include" />
+          <e p="HtmlExtensions.cs" t="Include" />
+          <e p="HttpRequestExtensions.cs" t="Include" />
+          <e p="RazorHelpers.cs" t="Include" />
+          <e p="ReflectionExtensions.cs" t="Include" />
+          <e p="ServiceCollectionExtensions.cs" t="Include" />
+          <e p="UrlHelperExtensions.cs" t="Include" />
+          <e p="WikiHelper.cs" t="Include" />
+        </e>
+        <e p="libman.json" t="Include" />
+        <e p="MappingProfile.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="CommaSeparatedModelBinder.cs" t="Include" />
+          <e p="PrivateMessageModel.cs" t="Include" />
+          <e p="RoleBasicDisplay.cs" t="Include" />
+          <e p="UserFileModel.cs" t="Include" />
+          <e p="UserProfileModel.cs" t="Include" />
+          <e p="UserRatingsModel.cs" t="Include" />
+          <e p="ValidationAttributes" t="Include">
+            <e p="AtLeastOneAttribute.cs" t="Include" />
+            <e p="ValidWikiPageNameAttribute.cs" t="Include" />
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Pages" t="Include">
+          <e p="_ViewImports.cshtml" t="Include" />
+          <e p="_ViewStart.cshtml" t="Include" />
+          <e p="Account" t="Include">
+            <e p="AccessDenied.cshtml" t="Include" />
+            <e p="ConfirmEmail.cshtml" t="Include" />
+            <e p="ConfirmEmail.cshtml.cs" t="Include" />
+            <e p="EmailConfirmationSent.cshtml" t="Include" />
+            <e p="ForgotPassword.cshtml" t="Include" />
+            <e p="ForgotPassword.cshtml.cs" t="Include" />
+            <e p="ForgotPasswordConfirmation.cshtml" t="Include" />
+            <e p="Lockout.cshtml" t="Include" />
+            <e p="Login.cshtml" t="Include" />
+            <e p="Login.cshtml.cs" t="Include" />
+            <e p="Logout.cshtml" t="Include" />
+            <e p="Logout.cshtml.cs" t="Include" />
+            <e p="Register.cshtml" t="Include" />
+            <e p="Register.cshtml.cs" t="Include" />
+            <e p="ResetPassword.cshtml" t="Include" />
+            <e p="ResetPassword.cshtml.cs" t="Include" />
+            <e p="ResetPasswordConfirmation.cshtml" t="Include" />
+          </e>
+          <e p="Activity" t="Include">
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Judges.cshtml" t="Include" />
+            <e p="Judges.cshtml.cs" t="Include" />
+            <e p="Model" t="Include">
+              <e p="ActivitySummaryModel.cs" t="Include" />
+              <e p="MovieEntryModel.cs" t="Include" />
+              <e p="SubmissionEntryModel.cs" t="Include" />
+            </e>
+            <e p="Publishers.cshtml" t="Include" />
+            <e p="Publishers.cshtml.cs" t="Include" />
+          </e>
+          <e p="BasePageModel.cs" t="Include" />
+          <e p="Diagnostics" t="Include">
+            <e p="CacheControl.cshtml" t="Include" />
+            <e p="CacheControl.cshtml.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="PlayerPoints.cshtml" t="Include" />
+            <e p="PlayerPoints.cshtml.cs" t="Include" />
+            <e p="WikiSyntaxErrors.cshtml" t="Include" />
+            <e p="WikiSyntaxErrors.cshtml.cs" t="Include" />
+          </e>
+          <e p="Error.cshtml" t="Include" />
+          <e p="Error.cshtml.cs" t="Include" />
+          <e p="Forum" t="Include">
+            <e p="_Category.cshtml" t="Include" />
+            <e p="_CreatePostHelper.cshtml" t="Include" />
+            <e p="_ForumHeader.cshtml" t="Include" />
+            <e p="_ViewImports.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Edit.cshtml.cs" t="Include" />
+            <e p="ForumBaseModel.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Legacy" t="Include">
+              <e p="Forum.cshtml" t="Include" />
+              <e p="Forum.cshtml.cs" t="Include" />
+              <e p="Topic.cshtml" t="Include" />
+              <e p="Topic.cshtml.cs" t="Include" />
+            </e>
+            <e p="Models" t="Include">
+              <e p="CategoryEditModel.cs" t="Include" />
+              <e p="PostPositionModel.cs" t="Include" />
+            </e>
+            <e p="Posts" t="Include">
+              <e p="Create.cshtml" t="Include" />
+              <e p="Create.cshtml.cs" t="Include" />
+              <e p="Edit.cshtml" t="Include" />
+              <e p="Edit.cshtml.cs" t="Include" />
+              <e p="Index.cshtml" t="Include" />
+              <e p="Index.cshtml.cs" t="Include" />
+              <e p="Models" t="Include">
+                <e p="ForumPostCreateModel.cs" t="Include" />
+                <e p="ForumPostEditModel.cs" t="Include" />
+                <e p="PostsSinceLastVisitModel.cs" t="Include" />
+                <e p="UnansweredPostsModel.cs" t="Include" />
+                <e p="UserPostsModel.cs" t="Include" />
+                <e p="UserPostsRequest.cs" t="Include" />
+              </e>
+              <e p="New.cshtml" t="Include" />
+              <e p="New.cshtml.cs" t="Include" />
+              <e p="Unanswered.cshtml" t="Include" />
+              <e p="Unanswered.cshtml.cs" t="Include" />
+              <e p="User.cshtml" t="Include" />
+              <e p="User.cshtml.cs" t="Include" />
+            </e>
+            <e p="Preview.cshtml" t="Include" />
+            <e p="Preview.cshtml.cs" t="Include" />
+            <e p="Subforum" t="Include">
+              <e p="Edit.cshtml" t="Include" />
+              <e p="Edit.cshtml.cs" t="Include" />
+              <e p="Index.cshtml" t="Include" />
+              <e p="Index.cshtml.cs" t="Include" />
+              <e p="Models" t="Include">
+                <e p="ForumDisplayModel.cs" t="Include" />
+                <e p="ForumEditModel.cs" t="Include" />
+                <e p="ForumRequest.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Topics" t="Include">
+              <e p="_Poll.cshtml" t="Include" />
+              <e p="_PollCreate.cshtml" t="Include" />
+              <e p="_TopicActionBar.cshtml" t="Include" />
+              <e p="_TopicCrumbs.cshtml" t="Include" />
+              <e p="_TopicPost.cshtml" t="Include" />
+              <e p="_ViewImports.cshtml" t="Include" />
+              <e p="AddEditPoll.cshtml" t="Include" />
+              <e p="AddEditPoll.cshtml.cs" t="Include" />
+              <e p="Create.cshtml" t="Include" />
+              <e p="Create.cshtml.cs" t="Include" />
+              <e p="Index.cshtml" t="Include" />
+              <e p="Index.cshtml.cs" t="Include" />
+              <e p="Models" t="Include">
+                <e p="ForumTopicModel.cs" t="Include" />
+                <e p="MoveTopicModel.cs" t="Include" />
+                <e p="PollCreateModel.cs" t="Include" />
+                <e p="PollResultModel.cs" t="Include" />
+                <e p="SplitTopicModel.cs" t="Include" />
+                <e p="TopicCreateModel.cs" t="Include" />
+                <e p="TopicRequest.cs" t="Include" />
+              </e>
+              <e p="Move.cshtml" t="Include" />
+              <e p="Move.cshtml.cs" t="Include" />
+              <e p="PollResults.cshtml" t="Include" />
+              <e p="PollResults.cshtml.cs" t="Include" />
+              <e p="Split.cshtml" t="Include" />
+              <e p="Split.cshtml.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Games" t="Include">
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Edit.cshtml.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="List.cshtml" t="Include" />
+            <e p="List.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="GameDisplayModel.cs" t="Include" />
+              <e p="GameEditModel.cs" t="Include" />
+              <e p="GameListModel.cs" t="Include" />
+              <e p="GameListRequest.cs" t="Include" />
+              <e p="SystemPageOf.cs" t="Include" />
+            </e>
+            <e p="Roms" t="Include">
+              <e p="Edit.cshtml" t="Include" />
+              <e p="Edit.cshtml.cs" t="Include" />
+              <e p="List.cshtml" t="Include" />
+              <e p="List.cshtml.cs" t="Include" />
+              <e p="Models" t="Include">
+                <e p="RomEditModel.cs" t="Include" />
+                <e p="RomListModel.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Index.cshtml" t="Include" />
+          <e p="Messages" t="Include">
+            <e p="Create.cshtml" t="Include" />
+            <e p="Create.cshtml.cs" t="Include" />
+            <e p="Inbox.cshtml" t="Include" />
+            <e p="Inbox.cshtml.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="InboxEntry.cs" t="Include" />
+              <e p="SaveboxEntry.cs" t="Include" />
+              <e p="SentboxEntry.cs" t="Include" />
+            </e>
+            <e p="Savebox.cshtml" t="Include" />
+            <e p="Savebox.cshtml.cs" t="Include" />
+            <e p="Sentbox.cshtml" t="Include" />
+            <e p="SentBox.cshtml.cs" t="Include" />
+          </e>
+          <e p="Permissions" t="Include">
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="PermissionDisplayModel.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Profile" t="Include">
+            <e p="_Layout.cshtml" t="Include" />
+            <e p="_ProfileNav.cshtml" t="Include" />
+            <e p="_StatusMessage.cshtml" t="Include" />
+            <e p="ChangePassword.cshtml" t="Include" />
+            <e p="ChangePassword.cshtml.cs" t="Include" />
+            <e p="HomePage.cshtml" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="ProfileSettingsModel.cs" t="Include" />
+              <e p="WatchedTopicEntry.cs" t="Include" />
+            </e>
+            <e p="ProfileNavPages.cs" t="Include" />
+            <e p="Ratings.cshtml" t="Include" />
+            <e p="Ratings.cshtml.cs" t="Include" />
+            <e p="SetPassword.cshtml" t="Include" />
+            <e p="SetPassword.cshtml.cs" t="Include" />
+            <e p="Settings.cshtml" t="Include" />
+            <e p="Settings.cshtml.cs" t="Include" />
+            <e p="UserFiles.cshtml" t="Include" />
+            <e p="UserFiles.cshtml.cs" t="Include" />
+            <e p="WatchedTopics.cshtml" t="Include" />
+            <e p="WatchedTopics.cshtml.cs" t="Include" />
+          </e>
+          <e p="Publications" t="Include">
+            <e p="Authors.cshtml" t="Include" />
+            <e p="Authors.cshtml.cs" t="Include" />
+            <e p="Catalog.cshtml" t="Include" />
+            <e p="Catalog.cshtml.cs" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Edit.cshtml.cs" t="Include" />
+            <e p="EditFile.cshtml" t="Include" />
+            <e p="EditFile.cshtml.cs" t="Include" />
+            <e p="EditTier.cshtml" t="Include" />
+            <e p="EditTier.cshtml.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="AuthorListEntry.cs" t="Include" />
+              <e p="PublicationCatalogModel.cs" t="Include" />
+              <e p="PublicationDisplayModel.cs" t="Include" />
+              <e p="PublicationEditModel.cs" t="Include" />
+              <e p="PublicationRateModel.cs" t="Include" />
+              <e p="PublicationSearchModel.cs" t="Include" />
+              <e p="PublicationTierEditModel.cs" t="Include" />
+            </e>
+            <e p="Rate.cshtml" t="Include" />
+            <e p="Rate.cshtml.cs" t="Include" />
+            <e p="View.cshtml" t="Include" />
+            <e p="View.cshtml.cs" t="Include" />
+          </e>
+          <e p="Ratings" t="Include">
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="PublicationRatingsModel.cs" t="Include" />
+            </e>
+          </e>
+          <e p="RequireBase.cs" t="Include" />
+          <e p="RequireEdit.cs" t="Include" />
+          <e p="RequirePermission.cs" t="Include" />
+          <e p="Roles" t="Include">
+            <e p="_Role.cshtml" t="Include" />
+            <e p="AddEdit.cshtml" t="Include" />
+            <e p="AddEdit.cshtml.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="List.cshtml" t="Include" />
+            <e p="List.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="RoleDisplayModel.cs" t="Include" />
+              <e p="RoleEditModel.cs" t="Include" />
+            </e>
+          </e>
+          <e p="SetViewBag.cs" t="Include" />
+          <e p="Shared" t="Include">
+            <e p="_Award.cshtml" t="Include" />
+            <e p="_DropdownItems.cshtml" t="Include" />
+            <e p="_Layout.cshtml" t="Include" />
+            <e p="_LoginPartial.cshtml" t="Include" />
+            <e p="_MovieModule.cshtml" t="Include" />
+            <e p="_NavBarPartial.cshtml" t="Include" />
+            <e p="_Pager.cshtml" t="Include" />
+            <e p="_PreviewWindow.cshtml" t="Include" />
+            <e p="_Profile.cshtml" t="Include" />
+            <e p="_Ratings.cshtml" t="Include" />
+            <e p="_UserFileInfo.cshtml" t="Include" />
+            <e p="_ValidationScriptsPartial.cshtml" t="Include" />
+            <e p="_ViewImports.cshtml" t="Include" />
+            <e p="_WikiLayout.cshtml" t="Include" />
+            <e p="_WikiLayoutFooter.cshtml" t="Include" />
+            <e p="_WikiLayoutHeader.cshtml" t="Include" />
+            <e p="Components" t="Include">
+              <e p="ActiveTab" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="Awards" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="BrokenLinks" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="CurrentEditLink" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="DisplayMiniMovie" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="FirstEditionTas" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="Frames" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="FrontpageSubmissionList" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="GameName" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="GameResourcesFooter" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="GameResourcesHeader" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="GameSubPages" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="HomePageFooter" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="HomePageHeader" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="ListLanguages" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="ListParents" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="ListSubPages" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="MediaPosts" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="PlatformFramerates" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="RejectedSubmissions" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="RenderWikiPage" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="SupportedMovieTypes" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="SystemPageFooter" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="SystemPageHeader" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="TabularMovieList" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="TopicFeed" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="UserGetWikiName" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="UserMovies" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="UserName" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="Welcome" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="WikiLink" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="WikiOrphans" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="WikiTextChangeLog" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="WikiUsers" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+              <e p="Youtube" t="Include">
+                <e p="Default.cshtml" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Submissions" t="Include">
+            <e p="Catalog.cshtml" t="Include" />
+            <e p="Catalog.cshtml.cs" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Edit.cshtml.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="SubmissionCatalogModel.cs" t="Include" />
+              <e p="SubmissionCreateModel.cs" t="Include" />
+              <e p="SubmissionDisplayModel.cs" t="Include" />
+              <e p="SubmissionEditModel.cs" t="Include" />
+              <e p="SubmissionListEntry.cs" t="Include" />
+              <e p="SubmissionPublishModel.cs" t="Include" />
+              <e p="SubmissionSearchRequest.cs" t="Include" />
+            </e>
+            <e p="Publish.cshtml" t="Include" />
+            <e p="Publish.cshtml.cs" t="Include" />
+            <e p="Submit.cshtml" t="Include" />
+            <e p="Submit.cshtml.cs" t="Include" />
+            <e p="View.cshtml" t="Include" />
+            <e p="View.cshtml.cs" t="Include" />
+          </e>
+          <e p="Tags" t="Include">
+            <e p="Create.cshtml" t="Include" />
+            <e p="Create.cshtml.cs" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Edit.cshtml.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+          </e>
+          <e p="UserFiles" t="Include">
+            <e p="ForUser.cshtml" t="Include" />
+            <e p="ForUser.cshtml.cs" t="Include" />
+            <e p="Game.cshtml" t="Include" />
+            <e p="Game.cshtml.cs" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Index.cshtml.cs" t="Include" />
+            <e p="Info.cshtml" t="Include" />
+            <e p="Info.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="GameFileModel.cs" t="Include" />
+              <e p="UserFileIndexModel.cs" t="Include" />
+              <e p="UserMovieListModel.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Users" t="Include">
+            <e p="_UserSearch.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Edit.cshtml.cs" t="Include" />
+            <e p="List.cshtml" t="Include" />
+            <e p="List.cshtml.cs" t="Include" />
+            <e p="Models" t="Include">
+              <e p="UserEditModel.cs" t="Include" />
+              <e p="UserListModel.cs" t="Include" />
+            </e>
+            <e p="Profile.cshtml" t="Include" />
+            <e p="Profile.cshtml.cs" t="Include" />
+            <e p="Ratings.cshtml" t="Include" />
+            <e p="Ratings.cshtml.cs" t="Include" />
+          </e>
+          <e p="Wiki" t="Include">
+            <e p="DeletedPages.cshtml" t="Include" />
+            <e p="DeletedPages.cshtml.cs" t="Include" />
+            <e p="Diff.cshtml" t="Include" />
+            <e p="Diff.cshtml.cs" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Edit.cshtml.cs" t="Include" />
+            <e p="EditHistory.cshtml" t="Include" />
+            <e p="EditHistory.cshtml.cs" t="Include" />
+            <e p="HomePageDoesNotExist.cshtml" t="Include" />
+            <e p="Models" t="Include">
+              <e p="DeletedWIkiPageDisplayModel.cs" t="Include" />
+              <e p="SiteMapEntry.cs" t="Include" />
+              <e p="UserWikiEditHistoryModel.cs" t="Include" />
+              <e p="WikiDiffModel.cs" t="Include" />
+              <e p="WikiEditModel.cs" t="Include" />
+              <e p="WikiHistoryModel.cs" t="Include" />
+              <e p="WikiMoveModel.cs" t="Include" />
+            </e>
+            <e p="Move.cshtml" t="Include" />
+            <e p="Move.cshtml.cs" t="Include" />
+            <e p="PageDoesNotExist.cshtml" t="Include" />
+            <e p="PageHistory.cshtml" t="Include" />
+            <e p="PageHistory.cshtml.cs" t="Include" />
+            <e p="PageNotFound.cshtml" t="Include" />
+            <e p="Preview.cshtml" t="Include" />
+            <e p="Preview.cshtml.cs" t="Include" />
+            <e p="Referrers.cshtml" t="Include" />
+            <e p="Referrers.cshtml.cs" t="Include" />
+            <e p="Render.cshtml" t="Include" />
+            <e p="Render.cshtml.cs" t="Include" />
+            <e p="SiteMap.cshtml" t="Include" />
+            <e p="SiteMap.cshtml.cs" t="Include" />
+            <e p="ViewSource.cshtml" t="Include" />
+            <e p="ViewSource.cshtml.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="RobotHandlingMiddleware.cs" t="Include" />
+        <e p="Services" t="Include">
+          <e p="Awards.cs" t="Include" />
+          <e p="CacheService.cs" t="Include" />
+          <e p="Dtos" t="Include">
+            <e p="AwardAssignment.cs" t="Include" />
+            <e p="FileDto.cs" t="Include" />
+            <e p="RatingDto.cs" t="Include" />
+            <e p="WikiOrphan.cs" t="Include" />
+          </e>
+          <e p="Email" t="Include">
+            <e p="Email.cs" t="Include" />
+            <e p="EmailSender.cs" t="Include" />
+            <e p="EmailService.cs" t="Include" />
+          </e>
+          <e p="ExternalMediaPublisher" t="Include">
+            <e p="Distributors" t="Include">
+              <e p="DebugDistributor.cs" t="Include" />
+              <e p="DistributorStorage.cs" t="Include" />
+              <e p="IrcDistributor.cs" t="Include" />
+            </e>
+            <e p="ExternalMediaPublisher.cs" t="Include" />
+            <e p="IPostDistributor.cs" t="Include" />
+            <e p="Post.cs" t="Include" />
+            <e p="PostType.cs" t="Include" />
+          </e>
+          <e p="FileService.cs" t="Include" />
+          <e p="MediaFileUploader.cs" t="Include" />
+          <e p="PointsService" t="Include">
+            <e p="PointsCalculator.cs" t="Include" />
+            <e p="PointsService.cs" t="Include" />
+          </e>
+          <e p="UserManager.cs" t="Include" />
+          <e p="WikiPages.cs" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="TagHelpers" t="Include">
+          <e p="BootstrapTagHelpers.cs" t="Include" />
+          <e p="CardLink.cs" t="Include" />
+          <e p="CollapsableTagHelper.cs" t="Include" />
+          <e p="ConditionTagHelper.cs" t="Include" />
+          <e p="DisableTagHelper.cs" t="Include" />
+          <e p="NavbarTagHelpers.cs" t="Include" />
+          <e p="PermissionTagHelper.cs" t="Include" />
+          <e p="SelectTagHelper.cs" t="Include" />
+          <e p="Show.cs" t="Include" />
+          <e p="SortableTableHeadTagHelper.cs" t="Include" />
+          <e p="StringListTagHelper.cs" t="Include" />
+          <e p="TagHelperExtensions.cs" t="Include" />
+          <e p="TimeZoneConvert.cs" t="Include" />
+          <e p="TimeZonePickerTagHelper.cs" t="Include" />
+          <e p="TwoColumnSelectTagHelper.cs" t="Include" />
+          <e p="WikiLinkTagHelpers.cs" t="Include" />
+          <e p="WikiMarkupTagHelper.cs" t="Include" />
+        </e>
+        <e p="TASVideos.csproj" t="IncludeRecursive" />
+        <e p="ViewComponent" t="Include">
+          <e p="ActiveTab.cs" t="Include" />
+          <e p="Awards.cs" t="Include" />
+          <e p="BrokenLinks.cs" t="Include" />
+          <e p="CurrentEditLink.cs" t="Include" />
+          <e p="DisplayMiniMovie.cs" t="Include" />
+          <e p="FirstEditionTas.cs" t="Include" />
+          <e p="Frames.cs" t="Include" />
+          <e p="FrontpageSubmissionList.cs" t="Include" />
+          <e p="GameName.cs" t="Include" />
+          <e p="GameResourcesFooter.cs" t="Include" />
+          <e p="GameResourcesHeader.cs" t="Include" />
+          <e p="GameSubPages.cs" t="Include" />
+          <e p="HomePageFooter.cs" t="Include" />
+          <e p="HomePageHeader.cs" t="Include" />
+          <e p="ListLanguages.cs" t="Include" />
+          <e p="ListParents.cs" t="Include" />
+          <e p="ListSubpages.cs" t="Include" />
+          <e p="MediaPosts.cs" t="Include" />
+          <e p="Models" t="Include">
+            <e p="FirstEditionModel.cs" t="Include" />
+            <e p="FramesModel.cs" t="Include" />
+            <e p="GameNameModel.cs" t="Include" />
+            <e p="GameSubpageModel.cs" t="Include" />
+            <e p="LanguageEntry.cs" t="Include" />
+            <e p="MiniMovieModel.cs" t="Include" />
+            <e p="PlatformFramerateModel.cs" t="Include" />
+            <e p="RejectedSubmission.cs" t="Include" />
+            <e p="RenderWikiPageModel.cs" t="Include" />
+            <e p="TabularMovieListModel.cs" t="Include" />
+            <e p="TopicFeedModel.cs" t="Include" />
+            <e p="UserSummaryModel.cs" t="Include" />
+            <e p="WikiLinkModel.cs" t="Include" />
+            <e p="WikiTextChangelogModel.cs" t="Include" />
+            <e p="WikiUserEntry.cs" t="Include" />
+            <e p="YoutubeModel.cs" t="Include" />
+          </e>
+          <e p="ParamHelper.cs" t="Include" />
+          <e p="PlatformFramerates.cs" t="Include" />
+          <e p="RejectedSubmssions.cs" t="Include" />
+          <e p="RenderWikiPage.cs" t="Include" />
+          <e p="SupportedMovieTypes.cs" t="Include" />
+          <e p="SystemPageFooter.cs" t="Include" />
+          <e p="SystemPageHeader.cs" t="Include" />
+          <e p="TabularMovieList.cs" t="Include" />
+          <e p="TopicFeed.cs" t="Include" />
+          <e p="UserGetWikiName.cs" t="Include" />
+          <e p="UserMovies.cs" t="Include" />
+          <e p="UserName.cs" t="Include" />
+          <e p="Welcome.cs" t="Include" />
+          <e p="WikiLink.cs" t="Include" />
+          <e p="WikiOrphans.cs" t="Include" />
+          <e p="WikiTextChangeLog.cs" t="Include" />
+          <e p="WikiUsers.cs" t="Include" />
+          <e p="Youtube.cs" t="Include" />
+        </e>
+        <e p="wwwroot" t="Include">
+          <e p="Awards" t="Include">
+            <e p="awards_2010.7z" t="Include" />
+            <e p="awards_2013.7z" t="Include" />
+            <e p="awards_2015.7z" t="Include" />
+            <e p="GBTemp.png" t="Include" />
+            <e p="rookie_year_2007.png" t="Include" />
+            <e p="rookie_year_2008.png" t="Include" />
+            <e p="rookie_year_2009.png" t="Include" />
+            <e p="rookie_year_2010.png" t="Include" />
+            <e p="rookie_year_2011.png" t="Include" />
+            <e p="rookie_year_2012.png" t="Include" />
+            <e p="rookie_year_2013.png" t="Include" />
+            <e p="rookie_year_2014.png" t="Include" />
+            <e p="rookie_year_2015.png" t="Include" />
+            <e p="rookie_year_2016.png" t="Include" />
+            <e p="rookie_year_2017.png" t="Include" />
+            <e p="rookie_year_2018.png" t="Include" />
+            <e p="rookie_year_xxxx.png" t="Include" />
+            <e p="tas_3d_2012.png" t="Include" />
+            <e p="tas_arcade_2010.png" t="Include" />
+            <e p="tas_arcade_2011.png" t="Include" />
+            <e p="tas_arcade_2016.png" t="Include" />
+            <e p="tas_arcade_2017.png" t="Include" />
+            <e p="tas_arcade_xxxx.png" t="Include" />
+            <e p="tas_computer_2011.png" t="Include" />
+            <e p="tas_computer_2012.png" t="Include" />
+            <e p="tas_computer_2013.png" t="Include" />
+            <e p="tas_computer_2014.png" t="Include" />
+            <e p="tas_computer_2015.png" t="Include" />
+            <e p="tas_computer_2016.png" t="Include" />
+            <e p="tas_computer_2017.png" t="Include" />
+            <e p="tas_dos_xxxx.png" t="Include" />
+            <e p="tas_ds_2010.png" t="Include" />
+            <e p="tas_ds_2011.png" t="Include" />
+            <e p="tas_ds_2012.png" t="Include" />
+            <e p="tas_ds_2015.png" t="Include" />
+            <e p="tas_ds_2017.png" t="Include" />
+            <e p="tas_ds_2018.png" t="Include" />
+            <e p="tas_ds_xxxx.png" t="Include" />
+            <e p="tas_exotic_2012.png" t="Include" />
+            <e p="tas_exotic_2013.png" t="Include" />
+            <e p="tas_exotic_2014.png" t="Include" />
+            <e p="tas_exotic_2015.png" t="Include" />
+            <e p="tas_exotic_2016.png" t="Include" />
+            <e p="tas_exotic_2017.png" t="Include" />
+            <e p="tas_exotic_2018.png" t="Include" />
+            <e p="tas_first_2010.png" t="Include" />
+            <e p="tas_first_2011.png" t="Include" />
+            <e p="tas_first_2012.png" t="Include" />
+            <e p="tas_first_2013.png" t="Include" />
+            <e p="tas_first_2014.png" t="Include" />
+            <e p="tas_first_2015.png" t="Include" />
+            <e p="tas_first_2016.png" t="Include" />
+            <e p="tas_first_2017.png" t="Include" />
+            <e p="tas_first_2018.png" t="Include" />
+            <e p="tas_first_xxxx.png" t="Include" />
+            <e p="tas_funny_2007.png" t="Include" />
+            <e p="tas_funny_2008.png" t="Include" />
+            <e p="tas_funny_2009.png" t="Include" />
+            <e p="tas_funny_2010.png" t="Include" />
+            <e p="tas_funny_2011.png" t="Include" />
+            <e p="tas_funny_2012.png" t="Include" />
+            <e p="tas_funny_2013.png" t="Include" />
+            <e p="tas_funny_2014.png" t="Include" />
+            <e p="tas_funny_2015.png" t="Include" />
+            <e p="tas_funny_2016.png" t="Include" />
+            <e p="tas_funny_xxxx.png" t="Include" />
+            <e p="tas_gameboy_2010.png" t="Include" />
+            <e p="tas_gameboy_2011.png" t="Include" />
+            <e p="tas_gameboy_2012.png" t="Include" />
+            <e p="tas_gameboy_2013.png" t="Include" />
+            <e p="tas_gameboy_2014.png" t="Include" />
+            <e p="tas_gameboy_2015.png" t="Include" />
+            <e p="tas_gameboy_2016.png" t="Include" />
+            <e p="tas_gameboy_2017.png" t="Include" />
+            <e p="tas_gameboy_2018.png" t="Include" />
+            <e p="tas_gba_2010.png" t="Include" />
+            <e p="tas_gba_2011.png" t="Include" />
+            <e p="tas_gba_2012.png" t="Include" />
+            <e p="tas_gba_2013.png" t="Include" />
+            <e p="tas_gba_2014.png" t="Include" />
+            <e p="tas_gba_2015.png" t="Include" />
+            <e p="tas_gba_2016.png" t="Include" />
+            <e p="tas_gba_2017.png" t="Include" />
+            <e p="tas_gba_2018.png" t="Include" />
+            <e p="tas_gba_xxxx.png" t="Include" />
+            <e p="tas_gbx_2007.png" t="Include" />
+            <e p="tas_gbx_2008.png" t="Include" />
+            <e p="tas_gbx_2009.png" t="Include" />
+            <e p="tas_gbx_2010.png" t="Include" />
+            <e p="tas_gbx_2011.png" t="Include" />
+            <e p="tas_gbx_2012.png" t="Include" />
+            <e p="tas_gbx_2013.png" t="Include" />
+            <e p="tas_gbx_xxxx.png" t="Include" />
+            <e p="tas_gcwii_2017.png" t="Include" />
+            <e p="tas_genesis_xxxx.png" t="Include" />
+            <e p="tas_glitchy_2007.png" t="Include" />
+            <e p="tas_glitchy_2008.png" t="Include" />
+            <e p="tas_glitchy_2009.png" t="Include" />
+            <e p="tas_glitchy_2010.png" t="Include" />
+            <e p="tas_glitchy_2011.png" t="Include" />
+            <e p="tas_glitchy_2012.png" t="Include" />
+            <e p="tas_glitchy_2013.png" t="Include" />
+            <e p="tas_glitchy_2014.png" t="Include" />
+            <e p="tas_glitchy_2015.png" t="Include" />
+            <e p="tas_glitchy_2016.png" t="Include" />
+            <e p="tas_glitchy_2017.png" t="Include" />
+            <e p="tas_glitchy_2018.png" t="Include" />
+            <e p="tas_glitchy_xxxx.png" t="Include" />
+            <e p="tas_innovative_2007.png" t="Include" />
+            <e p="tas_innovative_2008.png" t="Include" />
+            <e p="tas_innovative_2009.png" t="Include" />
+            <e p="tas_innovative_2010.png" t="Include" />
+            <e p="tas_innovative_xxxx.png" t="Include" />
+            <e p="tas_lucky_2007.png" t="Include" />
+            <e p="tas_lucky_2008.png" t="Include" />
+            <e p="tas_lucky_2009.png" t="Include" />
+            <e p="tas_lucky_2010.png" t="Include" />
+            <e p="tas_lucky_2011.png" t="Include" />
+            <e p="tas_lucky_2012.png" t="Include" />
+            <e p="tas_lucky_2013.png" t="Include" />
+            <e p="tas_lucky_2014.png" t="Include" />
+            <e p="tas_lucky_2015.png" t="Include" />
+            <e p="tas_lucky_2016.png" t="Include" />
+            <e p="tas_lucky_2017.png" t="Include" />
+            <e p="tas_lucky_2018.png" t="Include" />
+            <e p="tas_lucky_xxxx.png" t="Include" />
+            <e p="tas_modern3d_2016.png" t="Include" />
+            <e p="tas_msx_xxxx.png" t="Include" />
+            <e p="tas_n64_2007.png" t="Include" />
+            <e p="tas_n64_2008.png" t="Include" />
+            <e p="tas_n64_2010.png" t="Include" />
+            <e p="tas_n64_2016.png" t="Include" />
+            <e p="tas_n64_2017.png" t="Include" />
+            <e p="tas_n64_xxxx.png" t="Include" />
+            <e p="tas_n64wii_2011.png" t="Include" />
+            <e p="tas_nes_2007.png" t="Include" />
+            <e p="tas_nes_2008.png" t="Include" />
+            <e p="tas_nes_2009.png" t="Include" />
+            <e p="tas_nes_2010.png" t="Include" />
+            <e p="tas_nes_2011.png" t="Include" />
+            <e p="tas_nes_2012.png" t="Include" />
+            <e p="tas_nes_2013.png" t="Include" />
+            <e p="tas_nes_2014.png" t="Include" />
+            <e p="tas_nes_2015.png" t="Include" />
+            <e p="tas_nes_2016.png" t="Include" />
+            <e p="tas_nes_2017.png" t="Include" />
+            <e p="tas_nes_2018.png" t="Include" />
+            <e p="tas_nes_xxxx.png" t="Include" />
+            <e p="tas_new_2009.png" t="Include" />
+            <e p="tas_new_2010.png" t="Include" />
+            <e p="tas_newplat_2009.png" t="Include" />
+            <e p="tas_nintendo3d_2013.png" t="Include" />
+            <e p="tas_nintendo3d_2014.png" t="Include" />
+            <e p="tas_nintendo3d_2015.png" t="Include" />
+            <e p="tas_nintendo3d_2018.png" t="Include" />
+            <e p="tas_pc_2018.png" t="Include" />
+            <e p="tas_pce_2010.png" t="Include" />
+            <e p="tas_pce_xxxx.png" t="Include" />
+            <e p="tas_psx_2010.png" t="Include" />
+            <e p="tas_psx_2011.png" t="Include" />
+            <e p="tas_psx_2013.png" t="Include" />
+            <e p="tas_psx_2014.png" t="Include" />
+            <e p="tas_psx_2015.png" t="Include" />
+            <e p="tas_psx_2016.png" t="Include" />
+            <e p="tas_psx_2017.png" t="Include" />
+            <e p="tas_psx_2018.png" t="Include" />
+            <e p="tas_psx_xxxx.png" t="Include" />
+            <e p="tas_sega_2007.png" t="Include" />
+            <e p="tas_sega_2008.png" t="Include" />
+            <e p="tas_sega_2009.png" t="Include" />
+            <e p="tas_sega_2010.png" t="Include" />
+            <e p="tas_sega_2011.png" t="Include" />
+            <e p="tas_sega_2012.png" t="Include" />
+            <e p="tas_sega_2013.png" t="Include" />
+            <e p="tas_sega_2014.png" t="Include" />
+            <e p="tas_sega_2015.png" t="Include" />
+            <e p="tas_sega_2016.png" t="Include" />
+            <e p="tas_sega_2017.png" t="Include" />
+            <e p="tas_sega_2018.png" t="Include" />
+            <e p="tas_sega_xxxx.png" t="Include" />
+            <e p="tas_snes_2007.png" t="Include" />
+            <e p="tas_snes_2008.png" t="Include" />
+            <e p="tas_snes_2009.png" t="Include" />
+            <e p="tas_snes_2010.png" t="Include" />
+            <e p="tas_snes_2011.png" t="Include" />
+            <e p="tas_snes_2012.png" t="Include" />
+            <e p="tas_snes_2013.png" t="Include" />
+            <e p="tas_snes_2014.png" t="Include" />
+            <e p="tas_snes_2015.png" t="Include" />
+            <e p="tas_snes_2016.png" t="Include" />
+            <e p="tas_snes_2017.png" t="Include" />
+            <e p="tas_snes_2018.png" t="Include" />
+            <e p="tas_snes_xxxx.png" t="Include" />
+            <e p="tas_speedy_2007.png" t="Include" />
+            <e p="tas_speedy_2008.png" t="Include" />
+            <e p="tas_speedy_2009.png" t="Include" />
+            <e p="tas_speedy_2010.png" t="Include" />
+            <e p="tas_speedy_2011.png" t="Include" />
+            <e p="tas_speedy_2012.png" t="Include" />
+            <e p="tas_speedy_2013.png" t="Include" />
+            <e p="tas_speedy_2014.png" t="Include" />
+            <e p="tas_speedy_2015.png" t="Include" />
+            <e p="tas_speedy_2016.png" t="Include" />
+            <e p="tas_speedy_2017.png" t="Include" />
+            <e p="tas_speedy_2018.png" t="Include" />
+            <e p="tas_speedy_xxxx.png" t="Include" />
+            <e p="tas_vb_xxxx.png" t="Include" />
+            <e p="tas_year_2007.png" t="Include" />
+            <e p="tas_year_2008.png" t="Include" />
+            <e p="tas_year_2009.png" t="Include" />
+            <e p="tas_year_2010.png" t="Include" />
+            <e p="tas_year_2011.png" t="Include" />
+            <e p="tas_year_2012.png" t="Include" />
+            <e p="tas_year_2013.png" t="Include" />
+            <e p="tas_year_2014.png" t="Include" />
+            <e p="tas_year_2015.png" t="Include" />
+            <e p="tas_year_2016.png" t="Include" />
+            <e p="tas_year_2017.png" t="Include" />
+            <e p="tas_year_2018.png" t="Include" />
+            <e p="tas_year_xxxx.png" t="Include" />
+            <e p="taser_3d_2012.png" t="Include" />
+            <e p="taser_arcade_2010.png" t="Include" />
+            <e p="taser_arcade_2011.png" t="Include" />
+            <e p="taser_arcade_2016.png" t="Include" />
+            <e p="taser_arcade_2017.png" t="Include" />
+            <e p="taser_arcade_xxxx.png" t="Include" />
+            <e p="taser_computer_2011.png" t="Include" />
+            <e p="taser_computer_2012.png" t="Include" />
+            <e p="taser_computer_2013.png" t="Include" />
+            <e p="taser_computer_2014.png" t="Include" />
+            <e p="taser_computer_2015.png" t="Include" />
+            <e p="taser_computer_2016.png" t="Include" />
+            <e p="taser_computer_2017.png" t="Include" />
+            <e p="taser_dos_xxxx.png" t="Include" />
+            <e p="taser_ds_2010.png" t="Include" />
+            <e p="taser_ds_2011.png" t="Include" />
+            <e p="taser_ds_2012.png" t="Include" />
+            <e p="taser_ds_2015.png" t="Include" />
+            <e p="taser_ds_2017.png" t="Include" />
+            <e p="taser_ds_2018.png" t="Include" />
+            <e p="taser_ds_xxxx.png" t="Include" />
+            <e p="taser_exotic_2012.png" t="Include" />
+            <e p="taser_exotic_2013.png" t="Include" />
+            <e p="taser_exotic_2014.png" t="Include" />
+            <e p="taser_exotic_2015.png" t="Include" />
+            <e p="taser_exotic_2016.png" t="Include" />
+            <e p="taser_exotic_2017.png" t="Include" />
+            <e p="taser_exotic_2018.png" t="Include" />
+            <e p="taser_gameboy_2010.png" t="Include" />
+            <e p="taser_gameboy_2011.png" t="Include" />
+            <e p="taser_gameboy_2012.png" t="Include" />
+            <e p="taser_gameboy_2013.png" t="Include" />
+            <e p="taser_gameboy_2014.png" t="Include" />
+            <e p="taser_gameboy_2015.png" t="Include" />
+            <e p="taser_gameboy_2016.png" t="Include" />
+            <e p="taser_gameboy_2017.png" t="Include" />
+            <e p="taser_gameboy_2018.png" t="Include" />
+            <e p="taser_gba_2010.png" t="Include" />
+            <e p="taser_gba_2011.png" t="Include" />
+            <e p="taser_gba_2012.png" t="Include" />
+            <e p="taser_gba_2013.png" t="Include" />
+            <e p="taser_gba_2014.png" t="Include" />
+            <e p="taser_gba_2015.png" t="Include" />
+            <e p="taser_gba_2016.png" t="Include" />
+            <e p="taser_gba_2017.png" t="Include" />
+            <e p="taser_gba_2018.png" t="Include" />
+            <e p="taser_gba_xxxx.png" t="Include" />
+            <e p="taser_gbx_2007.png" t="Include" />
+            <e p="taser_gbx_2008.png" t="Include" />
+            <e p="taser_gbx_2009.png" t="Include" />
+            <e p="taser_gbx_2010.png" t="Include" />
+            <e p="taser_gbx_2011.png" t="Include" />
+            <e p="taser_gbx_2012.png" t="Include" />
+            <e p="taser_gbx_2013.png" t="Include" />
+            <e p="taser_gbx_xxxx.png" t="Include" />
+            <e p="taser_gcwii_2017.png" t="Include" />
+            <e p="taser_genesis_xxxx.png" t="Include" />
+            <e p="taser_modern3d_2016.png" t="Include" />
+            <e p="taser_msx_xxxx.png" t="Include" />
+            <e p="taser_n64_2007.png" t="Include" />
+            <e p="taser_n64_2010.png" t="Include" />
+            <e p="taser_n64_2016.png" t="Include" />
+            <e p="taser_n64_2017.png" t="Include" />
+            <e p="taser_n64_xxxx.png" t="Include" />
+            <e p="taser_n64wii_2011.png" t="Include" />
+            <e p="taser_nes_2007.png" t="Include" />
+            <e p="taser_nes_2008.png" t="Include" />
+            <e p="taser_nes_2009.png" t="Include" />
+            <e p="taser_nes_2010.png" t="Include" />
+            <e p="taser_nes_2011.png" t="Include" />
+            <e p="taser_nes_2012.png" t="Include" />
+            <e p="taser_nes_2013.png" t="Include" />
+            <e p="taser_nes_2014.png" t="Include" />
+            <e p="taser_nes_2015.png" t="Include" />
+            <e p="taser_nes_2016.png" t="Include" />
+            <e p="taser_nes_2017.png" t="Include" />
+            <e p="taser_nes_2018.png" t="Include" />
+            <e p="taser_nes_xxxx.png" t="Include" />
+            <e p="taser_new_2009.png" t="Include" />
+            <e p="taser_new_2010.png" t="Include" />
+            <e p="taser_newplat_2009.png" t="Include" />
+            <e p="taser_nintendo3d_2013.png" t="Include" />
+            <e p="taser_nintendo3d_2014.png" t="Include" />
+            <e p="taser_nintendo3d_2015.png" t="Include" />
+            <e p="taser_nintendo3d_2018.png" t="Include" />
+            <e p="taser_pc_2018.png" t="Include" />
+            <e p="taser_pce_2010.png" t="Include" />
+            <e p="taser_pce_xxxx.png" t="Include" />
+            <e p="taser_psx_2010.png" t="Include" />
+            <e p="taser_psx_2011.png" t="Include" />
+            <e p="taser_psx_2013.png" t="Include" />
+            <e p="taser_psx_2014.png" t="Include" />
+            <e p="taser_psx_2015.png" t="Include" />
+            <e p="taser_psx_2016.png" t="Include" />
+            <e p="taser_psx_2017.png" t="Include" />
+            <e p="taser_psx_2018.png" t="Include" />
+            <e p="taser_psx_xxxx.png" t="Include" />
+            <e p="taser_sega_2007.png" t="Include" />
+            <e p="taser_sega_2008.png" t="Include" />
+            <e p="taser_sega_2009.png" t="Include" />
+            <e p="taser_sega_2010.png" t="Include" />
+            <e p="taser_sega_2011.png" t="Include" />
+            <e p="taser_sega_2012.png" t="Include" />
+            <e p="taser_sega_2013.png" t="Include" />
+            <e p="taser_sega_2014.png" t="Include" />
+            <e p="taser_sega_2015.png" t="Include" />
+            <e p="taser_sega_2016.png" t="Include" />
+            <e p="taser_sega_2017.png" t="Include" />
+            <e p="taser_sega_2018.png" t="Include" />
+            <e p="taser_sega_xxxx.png" t="Include" />
+            <e p="taser_snes_2007.png" t="Include" />
+            <e p="taser_snes_2008.png" t="Include" />
+            <e p="taser_snes_2009.png" t="Include" />
+            <e p="taser_snes_2010.png" t="Include" />
+            <e p="taser_snes_2011.png" t="Include" />
+            <e p="taser_snes_2012.png" t="Include" />
+            <e p="taser_snes_2013.png" t="Include" />
+            <e p="taser_snes_2014.png" t="Include" />
+            <e p="taser_snes_2015.png" t="Include" />
+            <e p="taser_snes_2016.png" t="Include" />
+            <e p="taser_snes_2017.png" t="Include" />
+            <e p="taser_snes_2018.png" t="Include" />
+            <e p="taser_snes_xxxx.png" t="Include" />
+            <e p="taser_vb_xxxx.png" t="Include" />
+            <e p="taser_year_2007.png" t="Include" />
+            <e p="taser_year_2008.png" t="Include" />
+            <e p="taser_year_2009.png" t="Include" />
+            <e p="taser_year_2010.png" t="Include" />
+            <e p="taser_year_2011.png" t="Include" />
+            <e p="taser_year_2012.png" t="Include" />
+            <e p="taser_year_2013.png" t="Include" />
+            <e p="taser_year_2014.png" t="Include" />
+            <e p="taser_year_2015.png" t="Include" />
+            <e p="taser_year_2016.png" t="Include" />
+            <e p="taser_year_2017.png" t="Include" />
+            <e p="taser_year_2018.png" t="Include" />
+            <e p="taser_year_xxxx.png" t="Include" />
+            <e p="TGBTemp.png" t="Include" />
+          </e>
+          <e p="css" t="Include">
+            <e p="diffview.css" t="Include" />
+            <e p="prism.css" t="Include" />
+            <e p="site.css" t="Include" />
+          </e>
+          <e p="favicon.ico" t="Include" />
+          <e p="images" t="Include">
+            <e p="bombcrag.png" t="Include" />
+            <e p="commentary.png" t="Include" />
+            <e p="fastest-completion.png" t="Include" />
+            <e p="grue.png" t="Include" />
+            <e p="moontier.png" t="Include" />
+            <e p="newbierec.gif" t="Include" />
+            <e p="notable.png" t="Include" />
+            <e p="startier.png" t="Include" />
+            <e p="tasvideosbg.png" t="Include" />
+            <e p="vaulttier.png" t="Include" />
+            <e p="verified.png" t="Include" />
+          </e>
+          <e p="js" t="Include">
+            <e p="difflib.js" t="Include" />
+            <e p="diffview.js" t="Include" />
+            <e p="prism.js" t="Include" />
+            <e p="site.js" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="TASVideos.Api" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Constants.cs" t="Include" />
+        <e p="Controllers" t="Include">
+          <e p="GamesController.cs" t="Include" />
+          <e p="PublicationsController.cs" t="Include" />
+          <e p="SubmissionsController.cs" t="Include" />
+          <e p="SystemsController.cs" t="Include" />
+          <e p="TiersController.cs" t="Include" />
+        </e>
+        <e p="Extensions.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="TASVideos.Api.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Requests" t="Include">
+          <e p="ApiRequest.cs" t="Include" />
+          <e p="GamesRequest.cs" t="Include" />
+          <e p="PublicationsRequest.cs" t="Include" />
+          <e p="SubmissionsRequest.cs" t="Include" />
+        </e>
+        <e p="Responses" t="Include">
+          <e p="GamesResponse.cs" t="Include" />
+          <e p="PublicationsResponse.cs" t="Include" />
+          <e p="SubmissionsResponse.cs" t="Include" />
+          <e p="SystemsResponse.cs" t="Include" />
+        </e>
+        <e p="TASVideos.Api.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="TASVideos.Common" t="IncludeRecursive">
+        <e p="Attributes" t="Include">
+          <e p="GroupAttribute.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Constants.cs" t="Include" />
+        <e p="Extensions" t="Include">
+          <e p="EnumerableExtensions.cs" t="Include" />
+          <e p="NumberExtensions.cs" t="Include" />
+          <e p="ReflectionExtensions.cs" t="Include" />
+          <e p="StringExtensions.cs" t="Include" />
+          <e p="TimeExtensions.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="TASVideos.Common.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="TASVideos.Common.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="TASVideos.Data" t="IncludeRecursive">
+        <e p="ApplicationDbContext.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Entity" t="Include">
+          <e p="Awards" t="Include">
+            <e p="Award.cs" t="Include" />
+            <e p="PublicationAward.cs" t="Include" />
+            <e p="UserAward.cs" t="Include" />
+          </e>
+          <e p="BaseEntity.cs" t="Include" />
+          <e p="DatabaseFile.cs" t="Include" />
+          <e p="Flag.cs" t="Include" />
+          <e p="Forum" t="Include">
+            <e p="Forum.cs" t="Include" />
+            <e p="ForumCategory.cs" t="Include" />
+            <e p="ForumPoll.cs" t="Include" />
+            <e p="ForumPollOption.cs" t="Include" />
+            <e p="ForumPollOptionVote.cs" t="Include" />
+            <e p="ForumPost.cs" t="Include" />
+            <e p="ForumTopic.cs" t="Include" />
+            <e p="ForumTopicWatch.cs" t="Include" />
+          </e>
+          <e p="Game" t="Include">
+            <e p="Game.cs" t="Include" />
+            <e p="GameGameGroup.cs" t="Include" />
+            <e p="GameGenre.cs" t="Include" />
+            <e p="GameGroup.cs" t="Include" />
+            <e p="GameRom.cs" t="Include" />
+            <e p="GameSystem.cs" t="Include" />
+            <e p="GameSystemFrameRate.cs" t="Include" />
+            <e p="Genre.cs" t="Include" />
+          </e>
+          <e p="ISoftDeletable.cs" t="Include" />
+          <e p="ITimeable.cs" t="Include" />
+          <e p="MediaPosts.cs" t="Include" />
+          <e p="PermissionTo.cs" t="Include" />
+          <e p="PrivateMessage.cs" t="Include" />
+          <e p="Publication.cs" t="Include" />
+          <e p="PublicationAuthor.cs" t="Include" />
+          <e p="PublicationFile.cs" t="Include" />
+          <e p="PublicationFlag.cs" t="Include" />
+          <e p="PublicationRating.cs" t="Include" />
+          <e p="PublicationTag.cs" t="Include" />
+          <e p="Role.cs" t="Include" />
+          <e p="RoleClaim.cs" t="Include" />
+          <e p="RoleLinks.cs" t="Include" />
+          <e p="RolePermission.cs" t="Include" />
+          <e p="Submission.cs" t="Include" />
+          <e p="SubmissionAuthor.cs" t="Include" />
+          <e p="SubmissionRejectionReason.cs" t="Include" />
+          <e p="SubmissionStatusHistory.cs" t="Include" />
+          <e p="Tag.cs" t="Include" />
+          <e p="Tier.cs" t="Include" />
+          <e p="User.cs" t="Include" />
+          <e p="UserClaim.cs" t="Include" />
+          <e p="UserFile.cs" t="Include" />
+          <e p="UserFileComment.cs" t="Include" />
+          <e p="UserLogin.cs" t="Include" />
+          <e p="UserRole.cs" t="Include" />
+          <e p="UserToken.cs" t="Include" />
+          <e p="WikiPage.cs" t="Include" />
+          <e p="WikiPageReferral.cs" t="Include" />
+        </e>
+        <e p="Helpers" t="Include">
+          <e p="SubmissionHelper.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="TASVideos.Data.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Paging" t="Include">
+          <e p="ExpandoObjectComparer.cs" t="Include" />
+          <e p="IFieldSelectable.cs" t="Include" />
+          <e p="IPageable.cs" t="Include" />
+          <e p="IPaged.cs" t="Include" />
+          <e p="ISortable.cs" t="Include" />
+          <e p="PageOf.cs" t="Include" />
+          <e p="Paginator.cs" t="Include" />
+          <e p="PagingAttributes.cs" t="Include" />
+        </e>
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="SampleData" t="Include">
+          <e p="PruneFullDbToCreateSampleData.sql" t="Include" />
+          <e p="SampleData.zip" t="Include" />
+          <e p="UserSampleData.cs" t="Include" />
+        </e>
+        <e p="SeedData" t="Include">
+          <e p="FlagSeedData.cs" t="Include" />
+          <e p="GenreSeedData.cs" t="Include" />
+          <e p="RejectionReasonsSeedData.cs" t="Include" />
+          <e p="RoleSeedData.cs" t="Include" />
+          <e p="SystemSeedData.cs" t="Include" />
+          <e p="TierSeedData.cs" t="Include" />
+          <e p="WikiPageSeedData.cs" t="Include" />
+        </e>
+        <e p="ServiceCollectionExtensions.cs" t="Include" />
+        <e p="TASVideos.Data.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="TASVideos.ForumEngine" t="IncludeRecursive">
+        <e p="BbParser.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Node.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="TASVideos.ForumEngine.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="PostParser.cs" t="Include" />
+        <e p="TASVideos.ForumEngine.csproj" t="IncludeRecursive" />
+        <e p="TASVideos.ForumEngine.csproj.DotSettings" t="Include" />
+        <e p="Video" t="Include">
+          <e p="VideoParameters.cs" t="Include" />
+          <e p="WriteVideo.cs" t="Include" />
+        </e>
+      </e>
+      <e p="TASVideos.ForumEngineTempTest" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="TASVideos.ForumEngineTempTest.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="TASVideos.ForumEngineTempTest.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="TASVideos.Legacy" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Data" t="Include">
+          <e p="Forum" t="Include">
+            <e p="Entity" t="Include">
+              <e p="BanList.cs" t="Include" />
+              <e p="Categories.cs" t="Include" />
+              <e p="Forums.cs" t="Include" />
+              <e p="Posts.cs" t="Include" />
+              <e p="PostsText.cs" t="Include" />
+              <e p="PrivateMessage.cs" t="Include" />
+              <e p="PrivateMessageText.cs" t="Include" />
+              <e p="Topics.cs" t="Include" />
+              <e p="TopicWatch.cs" t="Include" />
+              <e p="UserGroup.cs" t="Include" />
+              <e p="UserRanks.cs" t="Include" />
+              <e p="Users.cs" t="Include" />
+              <e p="VoteDescription.cs" t="Include" />
+              <e p="VoteResults.cs" t="Include" />
+              <e p="Voters.cs" t="Include" />
+            </e>
+            <e p="NesVideosForumContext.cs" t="Include" />
+          </e>
+          <e p="Site" t="Include">
+            <e p="Entity" t="Include">
+              <e p="AwardClass.cs" t="Include" />
+              <e p="Awards.cs" t="Include" />
+              <e p="ClassType.cs" t="Include" />
+              <e p="GameName.cs" t="Include" />
+              <e p="GameNameGroup.cs" t="Include" />
+              <e p="GameNameGroupName.cs" t="Include" />
+              <e p="Movie.cs" t="Include" />
+              <e p="MovieClass.cs" t="Include" />
+              <e p="MovieFile.cs" t="Include" />
+              <e p="MovieFileStorage.cs" t="Include" />
+              <e p="MovieFlag.cs" t="Include" />
+              <e p="MovieRating.cs" t="Include" />
+              <e p="Player.cs" t="Include" />
+              <e p="Role.cs" t="Include" />
+              <e p="Rom.cs" t="Include" />
+              <e p="SiteText.cs" t="Include" />
+              <e p="Submission.cs" t="Include" />
+              <e p="SubmissionRejections.cs" t="Include" />
+              <e p="User.cs" t="Include" />
+              <e p="UserFile.cs" t="Include" />
+              <e p="UserFileComment.cs" t="Include" />
+              <e p="UserPlayer.cs" t="Include" />
+              <e p="UserRole.cs" t="Include" />
+            </e>
+            <e p="NesVideosSiteContext.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Imports" t="Include">
+          <e p="AwardImporter.cs" t="Include" />
+          <e p="ForumCategoriesImporter.cs" t="Include" />
+          <e p="ForumImporter.cs" t="Include" />
+          <e p="ForumPollImporter.cs" t="Include" />
+          <e p="ForumPostsImporter.cs" t="Include" />
+          <e p="ForumPrivateMessagesImporter.cs" t="Include" />
+          <e p="ForumTopicImporter.cs" t="Include" />
+          <e p="ForumTopicWatchImporter.cs" t="Include" />
+          <e p="GameGenreImport.cs" t="Include" />
+          <e p="GameGroupImporter.cs" t="Include" />
+          <e p="GameImporter.cs" t="Include" />
+          <e p="ImportHelpers.cs" t="Include" />
+          <e p="PublicationFlagImporter.cs" t="Include" />
+          <e p="PublicationImporter.cs" t="Include" />
+          <e p="PublicationRatingImporter.cs" t="Include" />
+          <e p="RomImporter.cs" t="Include" />
+          <e p="SubmissionImporter.cs" t="Include" />
+          <e p="TagImporter.cs" t="Include" />
+          <e p="UserFileImporter.cs" t="Include" />
+          <e p="UserImporter.cs" t="Include" />
+          <e p="WikiImporter.cs" t="Include" />
+        </e>
+        <e p="LegacyImporter.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="TASVideos.Legacy.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="ServiceCollectionExtensions.cs" t="Include" />
+        <e p="TASVideos.Legacy.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="TASVideos.Parsers" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Extensions" t="Include">
+          <e p="Extensions.cs" t="Include" />
+        </e>
+        <e p="MovieParser.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="TASVideos.MovieParsers.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Parsers" t="Include">
+          <e p="Bk2.cs" t="Include" />
+          <e p="FileExtensionAttribute.cs" t="Include" />
+          <e p="Fm2.cs" t="Include" />
+          <e p="IParser.cs" t="Include" />
+        </e>
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Result" t="Include">
+          <e p="Enums.cs" t="Include" />
+          <e p="ErrorResult.cs" t="Include" />
+          <e p="IParseResult.cs" t="Include" />
+          <e p="ParseResult.cs" t="Include" />
+        </e>
+        <e p="SystemCodes.cs" t="Include" />
+        <e p="TASVideos.MovieParsers.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="TASVideos.sln" t="IncludeFlat" />
+      <e p="TASVideos.Test" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Common" t="Include">
+          <e p="Extensions" t="Include">
+            <e p="EnumerableExtensionTests.cs" t="Include" />
+            <e p="NumberExtensions.cs" t="Include" />
+            <e p="StringExtensionTests.cs" t="Include" />
+            <e p="TimeExtensionTests.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Data" t="Include">
+          <e p="Extensions" t="Include">
+            <e p="WikiPageExtensionTests.cs" t="Include" />
+          </e>
+          <e p="Paging" t="Include">
+            <e p="FieldSelectableTests.cs" t="Include" />
+            <e p="PagedTests.cs" t="Include" />
+            <e p="PagingTests.cs" t="Include" />
+            <e p="SortableTests.cs" t="Include" />
+          </e>
+        </e>
+        <e p="MovieParsers" t="Include">
+          <e p="Bk2ParserTests.cs" t="Include" />
+          <e p="Bk2SampleFiles" t="Include">
+            <e p="0frames.bk2" t="Include" />
+            <e p="2frames.bk2" t="Include" />
+            <e p="Gbc.bk2" t="Include" />
+            <e p="MissingHeader.bk2" t="Include" />
+            <e p="MissingInputLog.bk2" t="Include" />
+            <e p="Nes.bk2" t="Include" />
+            <e p="NoFileExts.bk2" t="Include" />
+            <e p="Pal1.bk2" t="Include" />
+            <e p="RerecordCount1.bk2" t="Include" />
+            <e p="RerecordCountMissing.bk2" t="Include" />
+            <e p="savestate.bk2" t="Include" />
+            <e p="sram.bk2" t="Include" />
+          </e>
+          <e p="Fm2ParserTests.cs" t="Include" />
+          <e p="Fm2SampleFiles" t="Include">
+            <e p="fds.fm2" t="Include" />
+            <e p="ntsc.fm2" t="Include" />
+            <e p="pal.fm2" t="Include" />
+            <e p="savestate.fm2" t="Include" />
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="TASVideos.Test.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Services" t="Include">
+          <e p="AwardsTests.cs" t="Include" />
+          <e p="PointsCalculatorTests.cs" t="Include" />
+          <e p="PointsServiceTests.cs" t="Include" />
+          <e p="WikiPagesTests.cs" t="Include" />
+        </e>
+        <e p="TASVideos.Test.csproj" t="IncludeRecursive" />
+        <e p="TASVideos.Test.csproj.DotSettings" t="Include" />
+        <e p="TestDbContext.cs" t="Include" />
+        <e p="ViewComponents" t="Include">
+          <e p="ParamHelperTests.cs" t="Include" />
+        </e>
+        <e p="WikiEngine" t="Include">
+          <e p="InternalWikiLink.cs" t="Include" />
+        </e>
+      </e>
+      <e p="TASVideos.WikiEngine" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Builtins.cs" t="Include" />
+        <e p="MakeBracketed.cs" t="Include" />
+        <e p="MakeErrorPage.cs" t="Include" />
+        <e p="MakeTabs.cs" t="Include" />
+        <e p="MakeToc.cs" t="Include" />
+        <e p="NewParser.cs" t="Include" />
+        <e p="Node.cs" t="Include" />
+        <e p="NodeUtils.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="TASVideos.WikiEngine.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="TASVideos.WikiEngine.csproj" t="IncludeRecursive" />
+        <e p="TASVideos.WikiEngine.csproj.DotSettings" t="Include" />
+        <e p="Util.cs" t="Include" />
+      </e>
+      <e p="TASVideos.WikiEngineTest" t="IncludeRecursive">
+        <e p=".gitignore" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="TASVideos.WikiEngineTest.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="TASVideos.WikiEngineTest.csproj" t="IncludeRecursive" />
+      </e>
+    </e>
+    <e p="C:\Users\Andrew.Delikat\.nuget\packages\microsoft.net.test.sdk\16.0.1\build\netcoreapp1.0" t="Include">
+      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
+    </e>
+    <e p="C:\Users\Andrew.Delikat\.nuget\packages\mstest.testadapter\1.4.0\build\_common\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" t="Include" />
+    <e p="C:\Users\Andrew.Delikat\.nuget\packages\mstest.testadapter\1.4.0\build\_common\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll" t="Include" />
+    <e p="C:\Users\Andrew.Delikat\.nuget\packages\mstest.testadapter\1.4.0\build\netcoreapp1.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll" t="Include" />
+    <e p="C:\Users\Andrew.Delikat\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Andrew.Delikat\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_TASVideos.-1467816452.00" t="ExcludeRecursive" />
+  </component>
+</project>
