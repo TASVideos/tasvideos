@@ -79,7 +79,7 @@ namespace TASVideos.WikiEngine
 		}
 
 		private static readonly string[] ImageSuffixes = { ".svg", ".png", ".gif", ".jpg", ".jpeg" };
-		private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//", "irc://", "user:" };
+		private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//", "irc://", "user:", "#" };
 
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
@@ -129,9 +129,11 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
-		public static string NormalizeInternalLink(string text)
+		public static string NormalizeInternalLink(string input)
 		{
-			text = text.TrimEnd('/');
+			var hashparts = input.Split('#');
+
+			var text = hashparts[0].TrimEnd('/');
 			var ss = text.Split('/');
 
 			int skip = -1;
@@ -159,7 +161,9 @@ namespace TASVideos.WikiEngine
 				ss[i] = s;
 			}
 
-			return string.Join("/", ss);
+			var newText = string.Join("/", ss);
+			hashparts[0] = newText;
+			return string.Join("#", hashparts);
 		}
 
 		private static string DisplayTextForUrl(string text)
@@ -169,7 +173,7 @@ namespace TASVideos.WikiEngine
 			{
 				text = text.Substring(5);
 			}
-			text = text.Trim('/').Trim('=');
+			text = text.Trim('/').Trim('=').Trim('#');
 			return text;
 		}
 
@@ -227,7 +231,7 @@ namespace TASVideos.WikiEngine
 			{
 				Attr("href", href)
 			};
-			if (href[0] == '/' && (href.Length == 1 || href[1] != '/'))
+			if (href[0] == '#' || href[0] == '/' && (href.Length == 1 || href[1] != '/'))
 			{
 				// internal
 				attrs.Add(Attr("class", "intlink"));
