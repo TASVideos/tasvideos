@@ -53,10 +53,13 @@ namespace TASVideos.WikiEngine
 			foreach (var r in results)
 			{
 				r.WriteHtmlDynamic(w, h);
-			}			
+			}
 		}
 
-		public static IEnumerable<InternalLinkInfo> GetAllInternalLinks(string content)
+		/// <summary>
+		/// Returns all the referrals to other site pages that exist in the given wiki markup
+		/// </summary>
+		public static IEnumerable<InternalLinkInfo> GetReferrals(string content)
 		{
 			try
 			{
@@ -65,8 +68,16 @@ namespace TASVideos.WikiEngine
 					return Enumerable.Empty<InternalLinkInfo>();
 				}
 
-				var results = NewParser.Parse(content);
-				return NodeUtils.GetAllInternalLinks(content, results);
+				var parsed = NewParser.Parse(content);
+				var results = NodeUtils.GetAllInternalLinks(content, parsed);
+				return results
+					.Where(l => !string.IsNullOrWhiteSpace(l.Link.Split('#')[0]))
+					.Select(l => new InternalLinkInfo
+					{
+						Link = l.Link.Split('#')[0],
+						Excerpt = l.Excerpt
+					})
+					.ToList();
 			}
 			catch (NewParser.SyntaxException)
 			{
