@@ -145,7 +145,7 @@ namespace TASVideos.Data
 				}
 
 				context.WikiPages.Add(wikiPage);
-				var referrals = Util.GetAllInternalLinks(wikiPage.Markup);
+				var referrals = Util.GetReferrals(wikiPage.Markup);
 				foreach (var referral in referrals)
 				{
 					context.WikiReferrals.Add(new WikiPageReferral

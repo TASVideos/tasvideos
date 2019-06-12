@@ -88,7 +88,7 @@ namespace TASVideos.Legacy.Imports
 
 			// Referrals (only need latest revisions)
 			var referralList = pagesForReferral
-				.SelectMany(p => Util.GetAllInternalLinks(p.Markup).Select(referral => new WikiPageReferral
+				.SelectMany(p => Util.GetReferrals(p.Markup).Select(referral => new WikiPageReferral
 				{
 					Referrer = p.PageName,
 					Referral = referral.Link,
