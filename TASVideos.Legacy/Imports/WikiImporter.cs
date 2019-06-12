@@ -341,26 +341,8 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("[WalkerBoh]")) markup = markup.Replace("[WalkerBoh]", "[user:Walker Boh]");
 			if (markup.Contains("[WST]")) markup = markup.Replace("[WST]", "[user:WST]");
 			if (markup.Contains("[Zurreco]")) markup = markup.Replace("[Zurreco]", "[user:Zurreco]");
-			if (markup.Contains("[Zggzdydp]")) markup = markup.Replace("[Zggzdydp]", "[user:zggzdydp]");
-			if (markup.Contains("[zggzdydp]")) markup = markup.Replace("[zggzdydp]", "[user:zggzdydp]");
 
 			// Improperly done user modules
-			if (markup.Contains("[Alden|alden]")) markup = markup.Replace("[Alden|alden]", "[user:alden]");
-			if (markup.Contains("[Comicalflop|Comicalflop]")) markup = markup.Replace("[Comicalflop|Comicalflop]", "[user:Comicalflop]");
-			if (markup.Contains("[user:Dan]")) markup = markup.Replace("[user:Dan]", "[user:Dan_]");
-			if (markup.Contains("[DarkKobold|DarkKobold]")) markup = markup.Replace("[DarkKobold|DarkKobold]", "[user:DarkKobold]");
-			if (markup.Contains("[Deign|Deign]")) markup = markup.Replace("[Deign|Deign]", "[user:Deign]");
-			if (markup.Contains("[FractalFusion|FractalFusion]")) markup = markup.Replace("[FractalFusion|FractalFusion]", "[user:FractalFusion]");
-			if (markup.Contains("[Ilari|Ilari]")) markup = markup.Replace("[Ilari|Ilari]", "[user:Ilari]");
-			if (markup.Contains("[JXQ|JXQ]")) markup = markup.Replace("[JXQ|JXQ]", "[user:JXQ]");
-			if (markup.Contains("[Mmbossman|mmbossman]")) markup = markup.Replace("[Mmbossman|mmbossman]", "[user:mmbossman]");
-			if (markup.Contains("[Mugg|MUGG]")) markup = markup.Replace("[Mugg|MUGG]", "[user:MUGG]");
-			if (markup.Contains("[Mukki|Mukki]")) markup = markup.Replace("[Mukki|Mukki]", "[user:Mukki]");
-			if (markup.Contains("[nitsuja|nitsuja]")) markup = markup.Replace("[nitsuja|nitsuja]", "[user:nitsuja]");
-			if (markup.Contains("[Randil|Randil]")) markup = markup.Replace("[Randil|Randil]", "[user:Randil]");
-			if (markup.Contains("[upthorn|Upthorn]")) markup = markup.Replace("[upthorn|Upthorn]", "[user:upthorn]");
-			if (markup.Contains("[Zggzdydp|zggzdydp]")) markup = markup.Replace("[Zggzdydp|zggzdydp]", "[user:zggzdydp]");
-
 			if (markup.Contains("[Adelikat/AllPlatformsChallenge")) markup = markup.Replace("[Adelikat/AllPlatformsChallenge", "[HomePages/adelikat/AllPlatformsChallenge");
 			if (markup.Contains("[adelikat/AVGN")) markup = markup.Replace("[adelikat/AVGN", "[HomePages/adelikat/AVGN");
 			if (markup.Contains("[adelikat/EmptyQueue")) markup = markup.Replace("[adelikat/EmptyQueue", "[HomePages/adelikat/EmptyQueue");
