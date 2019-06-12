@@ -290,6 +290,7 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("[klmz]")) markup = markup.Replace("[klmz]", "[user:klmz]");
 			if (markup.Contains("[Klmz]")) markup = markup.Replace("[Klmz]", "[user:klmz]");
 			if (markup.Contains("[Maza]")) markup = markup.Replace("[Maza]", "[user:Maza]");
+			if (markup.Contains("[Memory]")) markup = markup.Replace("[Memory]", "[user:Memory]");
 			if (markup.Contains("[MESHUGGAH]")) markup = markup.Replace("[MESHUGGAH]", "[user:MESHUGGAH]");
 			if (markup.Contains("[Mitjitsu")) markup = markup.Replace("[Mitjitsu", "[user:Mitjitsu");
 			if (markup.Contains("[mmbossman]")) markup = markup.Replace("[mmbossman]", "[user:mmbossman]");
@@ -318,10 +319,15 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("[Scepheo]")) markup = markup.Replace("[Scepheo]", "[user:Scepheo]");
 			if (markup.Contains("[sgrunt]")) markup = markup.Replace("[sgrunt]", "[user:sgrunt]");
 			if (markup.Contains("[sheela901]")) markup = markup.Replace("[sheela901]", "[user:sheela901]");
+			if (markup.Contains("[slamo]")) markup = markup.Replace("[slamo]", "[user:slamo]");
 			if (markup.Contains("[Solarplex]")) markup = markup.Replace("[Solarplex]", "[user:Solarplex]");
 			if (markup.Contains("[Spikestuff]")) markup = markup.Replace("[Spikestuff]", "[user:Spikestuff]");
+			if (markup.Contains("[Spooky]")) markup = markup.Replace("[Spooky]", "[user:Spooky]");
+			if (markup.Contains("[Stovent]")) markup = markup.Replace("[Stovent]", "[user:Stovent]");
 			if (markup.Contains("[TASeditor]")) markup = markup.Replace("[TASeditor]", "[user:TASeditor]");
+			if (markup.Contains("[TASVideoAgent]")) markup = markup.Replace("[zggzdydp]", "[user:TASVideoAgent]");
 			if (markup.Contains("[thecoreyburton]")) markup = markup.Replace("[thecoreyburton]", "[user:thecoreyburton]");
+			if (markup.Contains("[TheCoreyBurton]")) markup = markup.Replace("[TheCoreyBurton]", "[user:TheCoreyBurton]");
 			if (markup.Contains("[theenglishman]")) markup = markup.Replace("[theenglishman]", "[user:theenglishman]");
 			if (markup.Contains("[ThunderAxe31]")) markup = markup.Replace("[ThunderAxe31]", "[user:ThunderAxe31]");
 			if (markup.Contains("[Toothache]")) markup = markup.Replace("[Toothache]", "[user:Toothache]");
@@ -378,7 +384,6 @@ namespace TASVideos.Legacy.Imports
 			if (markup.Contains("[Nach/")) markup = markup.Replace("[Nach/]", "[HomePages/Nach/");
 			if (markup.Contains("[PJBoy/")) markup = markup.Replace("[PJBoy/]", "[HomePages/P.JBoy/");
 
-			
 			return markup;
 		}
 
