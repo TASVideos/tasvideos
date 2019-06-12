@@ -97,9 +97,9 @@ namespace TASVideos.Data.Helpers
 			return list;
 		}
 
-		private static int? IsNumberedLink(string link, char suffix)
+		private static int? IsNumberedLink(string link, string suffix)
 		{
-			if (link != null && link.EndsWith(suffix))
+			if (link != null && link.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
 			{
 				var rooted = link.StartsWith('/');
 				var numberText = link.AsSpan(rooted ? 1 : 0, link.Length - (rooted ? 2 : 1));
@@ -117,7 +117,7 @@ namespace TASVideos.Data.Helpers
 		/// <returns>The id of the submission if it is a valid link, else null</returns>
 		public static int? IsSubmissionLink(string link)
 		{
-			return IsNumberedLink(link, 'S');
+			return IsNumberedLink(link, "S");
 		}
 
 		/// <summary>
@@ -126,7 +126,7 @@ namespace TASVideos.Data.Helpers
 		/// <returns>The id of the movie if it is a valid link, else null</returns>
 		public static int? IsPublicationLink(string link)
 		{
-			return IsNumberedLink(link, 'M');
+			return IsNumberedLink(link, "M");
 		}
 
 		/// <summary>
@@ -135,7 +135,7 @@ namespace TASVideos.Data.Helpers
 		/// <returns>The id of the movie if it is a valid link, else null</returns>
 		public static int? IsGamePageLink(string link)
 		{
-			return IsNumberedLink(link, 'G');
+			return IsNumberedLink(link, "G");
 		}
 
 		public static readonly SelectListItem[] GameVersionOptions = 
