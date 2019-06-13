@@ -252,6 +252,7 @@ namespace TASVideos.Legacy.Imports
 			var usersWithPages = users.Where(u => u.HomePage != "").ToList();
 			foreach (var user in usersWithPages)
 			{
+				// TODO: some regex would really help here
 				var bareLink = $"[{user.HomePage}]";
 				var trailingSlashLink = $"[{user.HomePage}/]";
 				var aliasedLink = $"[{user.HomePage}|";

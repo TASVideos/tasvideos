@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using FastMember;
 
@@ -43,6 +44,15 @@ namespace TASVideos.Legacy.Imports
 			var enc = Encoding.GetEncoding(1252);
 			var data = enc.GetBytes(input);
 			return Encoding.UTF8.GetString(data);
+		}
+
+		public static string ReplaceInsensitive(this string input, string search, string replacement)
+		{
+			return Regex.Replace(
+				input,
+				Regex.Escape(search),
+				replacement.Replace("$", "$$"),
+				RegexOptions.IgnoreCase);
 		}
 
 		public static void BulkInsert<T>(
