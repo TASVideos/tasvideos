@@ -2,10 +2,10 @@
 <card class="@(Model.Highlight ? "border-info" : "")">
 	<cardheader>
 		<row>
-			<div class="col-4 border-right">
+			<div class="col-lg 2 col-md-3 col-4 border-right">
 				<h5>@Model.PosterName</h5>
 			</div>
-			<div class="col-8 pt-0 pb-0">
+			<div class="col-lg 10 col-md-9 col-8 pt-0 pb-0">
 				<small style="display: inline-block">
 					<a
 						id="@Model.Id" 
@@ -47,7 +47,7 @@
 	</cardheader>
 	<cardbody>
 		<row>
-			<div class="col-4">
+			<div class="col-lg-2 col-md-3 col-4">
 				<div class="card-text text-right">
 					<small>
 						@string.Join(",", Model.PosterRoles)
@@ -63,7 +63,7 @@
 					</small>
 				</div>
 			</div>
-			<div class="col-8">
+			<div class="col-lg-10 col-md-9 col-8">
 				@Html.Raw(Model.RenderedText)
 			</div>
 		</row>
