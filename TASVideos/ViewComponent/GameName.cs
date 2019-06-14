@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,28 +25,29 @@ namespace TASVideos.ViewComponents
 		{
 			var path = HttpContext.Request.Path.ToString().Trim('/');
 
-			var model = new GameNameModel();
+			var gameList = new List<GameNameModel>();
 			if (path.IsSystemGameResourcePath())
 			{
 				var system = await _db.GameSystems
 					.SingleOrDefaultAsync(s => s.Code == path.SystemGameResourcePath());
 				if (system != null)
 				{
-					model.System = system.DisplayName;
+					gameList.Add(new GameNameModel { System = system.DisplayName });
 				}
 			}
 			else
 			{
-				var game = await _db.Games
-					.SingleOrDefaultAsync(g => g.GameResourcesPage == path);
-				if (game != null)
-				{
-					model.GameId = game.Id;
-					model.DisplayName = game.DisplayName;
-				}
+				gameList = await _db.Games
+					.Where(g => g.GameResourcesPage == path)
+					.Select(g => new GameNameModel
+					{
+						GameId = g.Id,
+						DisplayName = g.DisplayName
+					})
+					.ToListAsync();
 			}
 
-			return View(model);
+			return View(gameList);
 		}
 	}
 }
