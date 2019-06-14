@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ namespace TASVideos.ViewComponents
 			}
 
 			var languages = languagesMarkup
-				.Split(',')
+				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
 				.Select(l =>
 				{
 					var split = l.Split(":");
