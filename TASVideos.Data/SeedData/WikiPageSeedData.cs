@@ -76,7 +76,7 @@ Do not use images hosted at Angelfire, or Imageshack, because those images may s
 				RevisionMessage = Import,
 				Markup = @"The following file types are supported for site [Subs-List|submission]
 
-[module:supportedmovietypes]"
+[module:submittableformats]"
 			},
 			new WikiPage
 			{
