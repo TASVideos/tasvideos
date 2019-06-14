@@ -21,34 +21,33 @@ namespace TASVideos.WikiEngine
 			var ret = new Element(charStart, "div");
 			ret.Attributes["class"] = "toc";
 			var stack = new Stack<Element>();
-			{
-				var ul = new Element(charStart, "ul");
-				ret.Children.Add(ul);
-				stack.Push(ul);
-			}
-			var pos = 2;
+			stack.Push(ret);
+
+			var pos = 1;
 			foreach (var h in headings)
 			{
 				var i = h.Tag[1] - '0'; // 2, 3, or 4?
 				while (i > pos)
 				{
 					var next = new Element(charStart, "ul");
-					var li = new Element(charStart, "li", new[] { next });
-					stack.Peek().Children.Add(li);
+					stack.Peek().Children.Add(next);
 					stack.Push(next);
 					pos++;
 				}
 				while (i < pos)
 				{
-					stack.Pop();
-					pos--;
+					if (stack.Pop().Tag == "ul")
+						pos--;
 				}
 				{
-					var id = h.Attributes["id"];
-					var link = new Element(charStart, "a");
+					if (stack.Peek().Tag == "li")
+						stack.Pop();
+
+					var link = new Element(charStart, "a",
+						new[] { Attr("href", "#" + h.Attributes["id"]) },
+						h.Children.SelectMany(c => c.CloneForToc()));
+
 					var li = new Element(charStart, "li", new[] { link });
-					link.Attributes["href"] = "#" + id;
-					link.Children.AddRange(h.Children.SelectMany(c => c.CloneForToc()));
 					stack.Peek().Children.Add(li);
 				}
 			}
