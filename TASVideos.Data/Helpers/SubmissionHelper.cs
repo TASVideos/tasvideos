@@ -24,7 +24,7 @@ namespace TASVideos.Data.Helpers
 			// Published submissions can not be changed
 			if (currentStatus == SubmissionStatus.Published)
 			{
-				return new List<SubmissionStatus>(); 
+				return new List<SubmissionStatus> { SubmissionStatus.Published };
 			}
 
 			var perms = userPermissions.ToList();
