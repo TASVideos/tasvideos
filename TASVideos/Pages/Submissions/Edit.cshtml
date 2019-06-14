@@ -4,7 +4,7 @@
 @{
 	ViewData["Title"] = $"Edit Submission #{Model.Id}";
 }
-@Html.ValidationSummary();
+@Html.ValidationSummary()
 <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form method="post" enctype="multipart/form-data">
 	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
