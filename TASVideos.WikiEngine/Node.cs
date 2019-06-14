@@ -414,7 +414,7 @@ namespace TASVideos.WikiEngine.AST
 			["mediaposts"] = "MediaPosts",
 			["platformframerates"] = "PlatformFramerates",
 			["rejectedsubmissions"] = "RejectedSubmissions",
-			["supportedmovietypes"] = "SupportedMovieTypes",
+			["submittableformats"] = "SupportedMovieTypes",
 			["tabularmovielist"] = "TabularMovieList",
 			["topicfeed"] = "TopicFeed",
 			["user_name"] = "UserName",
