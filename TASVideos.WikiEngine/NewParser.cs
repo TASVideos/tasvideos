@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Text.RegularExpressions;
 using System.Threading;
 using TASVideos.WikiEngine.AST;
 
@@ -668,6 +668,8 @@ namespace TASVideos.WikiEngine
 				e => Builtins.MakeToc(n, e.CharStart));
 		}
 
+		private static readonly Regex Whitespace = new Regex("\\s+");
+
 		private static void AddIdsToHeadings(IEnumerable<INode> n)
 		{
 			var headings = NodeUtils.Find(n,
@@ -675,7 +677,7 @@ namespace TASVideos.WikiEngine
 				.Cast<Element>();
 			foreach (var h in headings)
 			{
-				var id = h.InnerText(NullWriterHelper.Instance).Replace(" ", "");
+				var id = Whitespace.Replace(h.InnerText(NullWriterHelper.Instance), "");
 				if (id.Length > 0)
 					id = char.ToUpperInvariant(id[0]) + id.Substring(1);
 				h.Attributes.Add("id", id);
