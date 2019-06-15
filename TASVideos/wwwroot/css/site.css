@@ -63,6 +63,11 @@ h1 {
 	margin-bottom: 1rem;
 }
 
+.wiki div.p {
+	margin-top: 0;
+	margin-bottom: 1rem;
+}
+
 h2 {
 	font-size: 2em;
 }
