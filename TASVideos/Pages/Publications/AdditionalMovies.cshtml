@@ -1,0 +1,48 @@
+﻿@page "{id}"
+@model AdditionalMoviesModel
+@{
+	ViewData["Title"] = $"Additional Movie files for {Model.PublicationTitle}";
+}
+
+<h4>Additional Movie Files:</h4>
+<row condition="Model.AvailableMovieFiles.Any()">
+	<div class="col-lg-4 col-sm-6">
+		<table class="table table-bordered">
+			<tr>
+				<td>Filename</td>
+				<td></td>
+			</tr>
+			@foreach (var file in Model.AvailableMovieFiles)
+			{
+				<tr>
+					<td>@file.FileName</td>
+					<td>
+						<delete-button
+							warning-message="Are you sure you want to remove this movie file?"
+							asp-href="/Publications/AdditionalMovies/Delete/@file.Id">
+							Delete
+						</delete-button>
+					</td>
+				</tr>
+			}
+		</table>
+		
+	</div>
+</row>
+<hr />
+<form method="post" enctype="multipart/form-data">
+	<form-group>
+		<label asp-for="AdditionalMovieFile"></label>
+		<input type="file" asp-for="AdditionalMovieFile" class="form-control" />
+		<div>@Html.DescriptionFor(m => m.AdditionalMovieFile)</div>
+		<span asp-validation-for="AdditionalMovieFile" class="text-danger"></span>
+	</form-group>
+	<div class="text-center mt-3">
+		<button type="submit" class="btn btn-primary">Update</button>
+		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
