@@ -1,7 +1,7 @@
-﻿@page "{id}"
+﻿@page "{id}/{handler?}/{publicationFileId?}"
 @model AdditionalMoviesModel
 @{
-	ViewData["Title"] = $"Additional Movie files for {Model.PublicationTitle}";
+	ViewData["Title"] = $"Additional Movie Files For {Model.PublicationTitle}";
 }
 
 <h4>Additional Movie Files:</h4>
@@ -10,16 +10,18 @@
 		<table class="table table-bordered">
 			<tr>
 				<td>Filename</td>
+				<td>Display Name</td>
 				<td></td>
 			</tr>
 			@foreach (var file in Model.AvailableMovieFiles)
 			{
 				<tr>
 					<td>@file.FileName</td>
+					<td>@file.Description</td>
 					<td>
 						<delete-button
 							warning-message="Are you sure you want to remove this movie file?"
-							asp-href="/Publications/AdditionalMovies/Delete/@file.Id">
+							asp-href="/Publications/AdditionalMovies/@Model.Id/Delete/@file.Id">
 							Delete
 						</delete-button>
 					</td>
@@ -31,16 +33,25 @@
 </row>
 <hr />
 <form method="post" enctype="multipart/form-data">
-	<form-group>
-		<label asp-for="AdditionalMovieFile"></label>
-		<input type="file" asp-for="AdditionalMovieFile" class="form-control" />
-		<div>@Html.DescriptionFor(m => m.AdditionalMovieFile)</div>
-		<span asp-validation-for="AdditionalMovieFile" class="text-danger"></span>
-	</form-group>
-	<div class="text-center mt-3">
-		<button type="submit" class="btn btn-primary">Update</button>
-		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
-	</div>
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="DisplayName"></label>
+				<input type="text" asp-for="DisplayName" maxlength="50" class="form-control" />
+				<span asp-validation-for="DisplayName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="AdditionalMovieFile"></label>
+				<input type="file" asp-for="AdditionalMovieFile" class="form-control"/>
+				<div>@Html.DescriptionFor(m => m.AdditionalMovieFile)</div>
+				<span asp-validation-for="AdditionalMovieFile" class="text-danger"></span>
+			</form-group>
+			<div class="text-center mt-3">
+				<button type="submit" class="btn btn-primary">Update</button>
+				<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary">Back To Movie</a>
+			</div>
+		</column>
+	</row>
 </form>
 
 @section Scripts {
