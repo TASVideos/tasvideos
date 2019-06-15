@@ -149,6 +149,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to add/remove publication files such as screenshots and torrents")]
 		EditPublicationFiles = 305,
 
+		[Display(Name = "Create Additional Movie Files")]
+		[Group("Publication Maintenance")]
+		[Description("The ability to add/remove additional movie files to an existing publication")]
+		CreateAdditionalMovieFiles = 306,
+
 		[Display(Name = "Tag Maintenance")]
 		[Group("Publication Maintenance")]
 		[Description("The ability to add, edit, and remove the tags used for publications")]

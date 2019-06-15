@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity
 {
@@ -22,5 +23,18 @@ namespace TASVideos.Data.Entity
 		public string Description { get; set; }
 
 		public byte[] FileData { get; set; }
+	}
+
+	public static class PublicationFileExtensions
+	{
+		public static IQueryable<PublicationFile> ForPublication(this IQueryable<PublicationFile> query, int publicationId)
+		{
+			return query.Where(pf => pf.PublicationId == publicationId);
+		}
+
+		public static IQueryable<PublicationFile> ThatAreMovieFiles(this IQueryable<PublicationFile> query)
+		{
+			return query.Where(pf => pf.FileData != null);
+		}
 	}
 }
