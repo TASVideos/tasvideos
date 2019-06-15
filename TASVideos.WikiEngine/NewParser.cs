@@ -684,6 +684,19 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
+		private static void ReplacePees(List<INode> n)
+		{
+			NodeUtils.Replace(n,
+				e => e.Type == NodeType.Element && ((Element)e).Tag == "p",
+				e =>
+				{
+					var p = (Element)e;
+					var ret = new Element(p.CharStart, "div", p.Children);
+					ret.Attributes["class"] = "p";
+					return ret;
+				});
+		}
+
 		public static List<INode> Parse(string content)
 		{
 			var p = new NewParser { _input = content };
@@ -691,6 +704,7 @@ namespace TASVideos.WikiEngine
 			ReplaceTabs(p._output);
 			AddIdsToHeadings(p._output);
 			ReplaceTocs(p._output);
+			ReplacePees(p._output);
 			return p._output;
 		}
 	}
