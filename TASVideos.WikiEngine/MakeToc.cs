@@ -29,6 +29,12 @@ namespace TASVideos.WikiEngine
 				var i = h.Tag[1] - '0'; // 2, 3, or 4?
 				while (i > pos)
 				{
+					if (stack.Peek().Tag == "ul")
+					{
+						var li = new Element(charStart, "li");
+						stack.Peek().Children.Add(li);
+						stack.Push(li);
+					}
 					var next = new Element(charStart, "ul");
 					stack.Peek().Children.Add(next);
 					stack.Push(next);
@@ -49,6 +55,7 @@ namespace TASVideos.WikiEngine
 
 					var li = new Element(charStart, "li", new[] { link });
 					stack.Peek().Children.Add(li);
+					stack.Push(li);
 				}
 			}
 			return ret;
