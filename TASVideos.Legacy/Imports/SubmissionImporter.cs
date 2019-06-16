@@ -212,6 +212,12 @@ namespace TASVideos.Legacy.Imports
 						})
 						.ToList();
 
+					var additionalAuthors = authorNames.Except(authors.Select(a => a.Author.UserName.ToLower())).ToList();
+					if (additionalAuthors.Any())
+					{
+						submission.AdditionalAuthors = string.Join(",", additionalAuthors);
+					}
+
 					foreach (var author in authors)
 					{
 						submission.SubmissionAuthors.Add(author);
@@ -275,7 +281,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.Branch),
 				nameof(Submission.PublisherId),
 				nameof(Submission.MovieExtension),
-				nameof(Submission.RejectionReasonId)
+				nameof(Submission.RejectionReasonId),
+				nameof(Submission.AdditionalAuthors)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
@@ -425,6 +432,10 @@ namespace TASVideos.Legacy.Imports
 				case "slash star dash":
 				case "androgony":
 					return "/*-";
+				case "anty-lemon":
+					return "antymew";
+				case "arukado's":
+					return "arukado";
 				case "catlynat":
 				case "angelaclaws11s2":
 					return "angelaclaws";
@@ -434,6 +445,8 @@ namespace TASVideos.Legacy.Imports
 					return "arne_the_great";
 				case "blj":
 					return "backwardlongjump";
+				case "bagofmagicfood":
+					return "bag of magic food";
 				case "brookman":
 					return "the brookman";
 				case "solon":
@@ -495,6 +508,8 @@ namespace TASVideos.Legacy.Imports
 					return "igoroliveira666";
 				case "lag.com":
 					return "lagdotcom";
+				case "vidar":
+					return "meepers";
 				case "toonlucas22":
 					return "limo";
 				case "p.dot":
@@ -547,6 +562,7 @@ namespace TASVideos.Legacy.Imports
 				case "jok-r":
 					return "nico30620";
 				case "phil.":
+				case "phil. côté":
 					return "phil";
 				case "mcw4v3-x":
 					return "pikachuman";
