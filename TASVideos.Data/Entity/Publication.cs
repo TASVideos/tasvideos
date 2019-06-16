@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -80,6 +81,12 @@ namespace TASVideos.Data.Entity
 		public int Frames { get; set; }
 		public int RerecordCount { get; set; }
 
+		/// <summary>
+		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here
+		/// </summary>
+		[StringLength(200)]
+		public string AdditionalAuthors { get; set; }
+
 		// De-normalized name for easy recreation
 		public string Title { get; set; }
 
@@ -87,10 +94,17 @@ namespace TASVideos.Data.Entity
 
 		public void GenerateTitle()
 		{
+			var authorList = Authors.Select(sa => sa.Author.UserName);
+
+			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
+			{
+				authorList = authorList.Concat(AdditionalAuthors.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries));
+			}
+
 			Title =
 				$"{System.Code} {Game.DisplayName}"
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-				+ $" by {string.Join(" & ", Authors.Select(sa => sa.Author.UserName))}"
+				+ $" by {string.Join(" & ", authorList)}"
 				+ $" in {this.Time():g}";
 		}
 	}

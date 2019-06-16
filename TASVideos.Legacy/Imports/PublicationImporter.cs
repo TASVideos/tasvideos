@@ -38,13 +38,6 @@ namespace TASVideos.Legacy.Imports
 
 			var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
 
-			var legacyUserPlayers = legacySiteContext.UserPlayers.ToList();
-			var legacyUsers = legacySiteContext.Users
-				.Select(u => new { u.Id, u.Name })
-				.ToList()
-				.Select(u => new { u.Id, Name = ImportHelper.ConvertUtf8(u.Name) })
-				.ToList();
-
 			var publicationWikis = context.WikiPages
 				.ThatAreNotDeleted()
 				.WithNoChildren()
@@ -59,7 +52,9 @@ namespace TASVideos.Legacy.Imports
 					s.SystemFrameRateId,
 					s.Frames,
 					s.RerecordCount,
-					s.GameId
+					s.GameId,
+					Authors = s.SubmissionAuthors.Select(sa => sa.Author),
+					s.AdditionalAuthors
 				})
 				.ToList();
 
@@ -99,24 +94,6 @@ namespace TASVideos.Legacy.Imports
 				var streaming = (pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "J" && f.FileName.Contains("youtube"))
 					?? pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "J"))?.FileName;
 
-				var siteUserIds = legacyUserPlayers
-					.Where(p => p.PlayerId == pub.Movie.Player.Id)
-					.Select(up => up.UserId)
-					.ToList();
-
-				List<string> potentialAuthors;
-				if (siteUserIds.Count == 0)
-				{
-					potentialAuthors = new List<string> { pub.Movie.Player.Name.ToLower() };
-				}
-				else
-				{
-					potentialAuthors = legacyUsers
-					.Where(u => siteUserIds.Contains(u.Id))
-					.Select(u => u.Name.ToLower())
-					.ToList();
-				}
-
 				var publication = new Publication
 				{
 					Id = pub.Movie.Id,
@@ -140,11 +117,11 @@ namespace TASVideos.Legacy.Imports
 					System = pub.System,
 					Branch = pub.Movie.Branch.NullIfWhiteSpace(),
 					MirrorSiteUrl = mirror,
-					OnlineWatchingUrl = streaming
+					OnlineWatchingUrl = streaming,
+					AdditionalAuthors = pub.Sub.AdditionalAuthors
 				};
 
-				var pubAuthors = users
-					.Where(u => potentialAuthors.Contains(u.UserName.ToLower()))
+				var pubAuthors = pub.Sub.Authors
 					.Select(u => new PublicationAuthor
 					{
 						UserId = u.Id,
@@ -240,7 +217,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.Title),
 				nameof(Publication.MirrorSiteUrl),
 				nameof(Publication.OnlineWatchingUrl),
-				nameof(Publication.ObsoletedById)
+				nameof(Publication.ObsoletedById),
+				nameof(Publication.AdditionalAuthors)
 			};
 
 			publications.BulkInsert(connectionStr, pubColumns, nameof(ApplicationDbContext.Publications), bulkCopyTimeout: 600);
