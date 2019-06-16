@@ -53,12 +53,12 @@ namespace TASVideos.Legacy.Imports
 					s.RerecordCount,
 					s.GameId,
 					Authors = s.SubmissionAuthors.Select(sa => sa.Author),
-					s.AdditionalAuthors
+					s.AdditionalAuthors,
+					s.System,
+					s.SystemFrameRate
 				})
 				.ToList();
 
-			var systems = context.GameSystems.ToList();
-			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var games = context.Games.ToList();
 			var tags = context.Tags.Select(t => new { t.Id, t.DisplayName }).ToList();
 
@@ -68,16 +68,12 @@ namespace TASVideos.Legacy.Imports
 			var pubs = (from lm in legacyMovies
 				join w in publicationWikis on LinkConstants.PublicationWikiPage + lm.Id equals w.PageName
 				join s in submissions on lm.SubmissionId equals s.Id
-				join sys in systems on lm.SystemId equals sys.Id
-				join sysFr in systemFrameRates on s.SystemFrameRateId equals sysFr.Id
 				join g in games on s.GameId ?? -1 equals g.Id
 				select new
 				{
 					Movie = lm,
 					Wiki = w,
 					Sub = s,
-					System = sys,
-					SystemFrameRates = sysFr,
 					Game = g,
 				})
 				.ToList();
@@ -110,9 +106,9 @@ namespace TASVideos.Legacy.Imports
 					MovieFile = mainMovieFile.Storage.FileData,
 					MovieFileName = mainMovieFile.FileName,
 					SystemFrameRateId = pub.Sub.SystemFrameRateId ?? 0,
-					SystemFrameRate = pub.SystemFrameRates,
+					SystemFrameRate = pub.Sub.SystemFrameRate,
 					SystemId = pub.Movie.SystemId,
-					System = pub.System,
+					System = pub.Sub.System,
 					Branch = pub.Movie.Branch.NullIfWhiteSpace(),
 					MirrorSiteUrl = mirror,
 					OnlineWatchingUrl = streaming,
