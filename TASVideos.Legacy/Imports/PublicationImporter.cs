@@ -32,7 +32,6 @@ namespace TASVideos.Legacy.Imports
 				.ThenInclude(mf => mf.Storage)
 				.Include(m => m.MovieClasses)
 				.Include(m => m.Publisher)
-				.Include(m => m.Player)
 				.Where(m => m.Id > 0)
 				.ToList();
 
@@ -58,7 +57,6 @@ namespace TASVideos.Legacy.Imports
 				})
 				.ToList();
 
-			var users = context.Users.ToList();
 			var systems = context.GameSystems.ToList();
 			var systemFrameRates = context.GameSystemFrameRates.ToList();
 			var games = context.Games.ToList();
