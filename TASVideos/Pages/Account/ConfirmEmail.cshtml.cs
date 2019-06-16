@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,7 @@ namespace TASVideos.Pages.Account
 				return Home();
 			}
 
-			var result = await _userManager.ConfirmEmailAsync(user, code);
+			var result = await _userManager.ConfirmEmailAsync(user, WebUtility.UrlDecode(code));
 			if (!result.Succeeded)
 			{
 				return RedirectToPage("/Error");
