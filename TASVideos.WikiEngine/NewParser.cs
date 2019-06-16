@@ -28,9 +28,9 @@ namespace TASVideos.WikiEngine
 		private bool _parsingInline = false;
 		private delegate void ActionType(NewParser p);
 
-		private void Abort(string msg)
+		private void Abort(string msg, int from)
 		{
-			throw new SyntaxException(msg, _index); 
+			throw new SyntaxException(msg, from); 
 		}
 
 		private bool Eat(char c)
@@ -91,13 +91,14 @@ namespace TASVideos.WikiEngine
 		}
 		private string EatToBracket()
 		{
+			var from = _index;
 			var ret = new StringBuilder();
 			for (var i = 1; i > 0;)
 			{
 				if (EOF())
-					Abort("Unexpected EOF parsing text in []");
+					Abort("Unexpected EOF parsing text in []", from);
 				if (EatEOL())
-					Abort("Unexpected EOL parsing text in []");
+					Abort("Unexpected EOL parsing text in []", from);
 				var c = Eat();
 				if (c == '[')
 					i++;
@@ -378,7 +379,7 @@ namespace TASVideos.WikiEngine
 			else if (Eat("[endif]"))
 			{
 				if (!TryPopIf())
-					Abort("[endif] missing corresponding [if:]");
+					Abort("[endif] missing corresponding [if:]", _index);
 			}
 			else if (Eat('['))
 			{
@@ -472,7 +473,7 @@ namespace TASVideos.WikiEngine
 			else if (Eat("%%QUOTE_END"))
 			{
 				if (!TryPop("quote"))
-					Abort("Mismatched %%QUOTE_END");
+					Abort("Mismatched %%QUOTE_END", _index);
 			}
 			else if (Eat("%%QUOTE"))
 			{
@@ -486,7 +487,7 @@ namespace TASVideos.WikiEngine
 			else if (Eat("%%DIV_END"))
 			{
 				if (!TryPop("div"))
-					Abort("Mismatched %%DIV_END");
+					Abort("Mismatched %%DIV_END", _index);
 			}
 			else if (Eat("%%DIV"))
 			{
@@ -525,7 +526,7 @@ namespace TASVideos.WikiEngine
 			{
 				DiscardLine();
 				if (!TryPopTabs())
-					Abort("Mismatched %%TAB_END%%");
+					Abort("Mismatched %%TAB_END%%", _index);
 			}
 			else if (Eat("[if:"))
 			{
@@ -535,7 +536,7 @@ namespace TASVideos.WikiEngine
 			else if (Eat("[endif]"))
 			{
 				if (!TryPopIf())
-					Abort("[endif] missing corresponding [if:]");
+					Abort("[endif] missing corresponding [if:]", _index);
 			}
 			else if (Eat("----"))
 			{
