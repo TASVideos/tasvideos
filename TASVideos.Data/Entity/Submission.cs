@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TASVideos.Data.Entity.Game;
@@ -114,6 +115,13 @@ namespace TASVideos.Data.Entity
 		public int? RejectionReasonId { get; set; }
 		public virtual SubmissionRejectionReason RejectionReason { get; set; }
 
+
+		/// <summary>
+		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here
+		/// </summary>
+		[StringLength(200)]
+		public string AdditionalAuthors { get; set; }
+
 		/// <summary>
 		/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
 		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01
@@ -124,10 +132,17 @@ namespace TASVideos.Data.Entity
 
 		public void GenerateTitle()
 		{
+			var authorList = SubmissionAuthors.Select(sa => sa.Author.UserName);
+
+			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
+			{
+				authorList = authorList.Concat(AdditionalAuthors.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries));
+			}
+
 			Title =
-				$"#{Id}: {string.Join(" & ", SubmissionAuthors.Select(sa => sa.Author.UserName))}'s {System.Code} {GameName}"
-					+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-					+ $" in {this.Time():g}";
+			$"#{Id}: {string.Join(" & ", authorList)}'s {System.Code} {GameName}"
+				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
+				+ $" in {this.Time():g}";
 		}
 	}
 
