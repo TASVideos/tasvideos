@@ -37,13 +37,23 @@ namespace TASVideos.Pages.Account
 		[FromQuery]
 		public string Code { get; set; }
 
-		public IActionResult OnGet()
+		[FromQuery]
+		public string UserId { get; set; }
+
+		public async Task<IActionResult> OnGet()
 		{
 			if (Code == null)
 			{
 				return Home();
 			}
 
+			var user = await _userManager.FindByIdAsync(UserId);
+			if (user == null)
+			{
+				return Home();
+			}
+
+			Email = user.Email;
 			return Page();
 		}
 
@@ -61,7 +71,8 @@ namespace TASVideos.Pages.Account
 				return RedirectToPage("ResetPasswordConfirmation");
 			}
 
-			var result = await _userManager.ResetPasswordAsync(user, Code, Password);
+			var code = Code;
+			var result = await _userManager.ResetPasswordAsync(user, code, Password);
 			if (result.Succeeded)
 			{
 				return RedirectToPage("ResetPasswordConfirmation");
