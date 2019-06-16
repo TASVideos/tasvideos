@@ -595,7 +595,7 @@ namespace TASVideos.Legacy.Imports
 				case "samhain-grim":
 					return "vandal";
 				case "samlaptop":
-					return "samtasic";
+					return "samtastic";
 				case "a jesus fan":
 					return "teh noj";
 				case "walkerboh":
