@@ -70,8 +70,6 @@ namespace TASVideos.Data
 
 		public DbSet<PrivateMessage> PrivateMessages { get; set; }
 
-		public DbSet<DatabaseFile> Files { get; set; }
-
 		// Userfiles
 		public DbSet<UserFile> UserFiles { get; set; }
 		public DbSet<UserFileComment> UserFileComments { get; set; }
