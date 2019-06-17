@@ -94,7 +94,6 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddServices(this IServiceCollection services, IHostingEnvironment env)
 		{
 			services.AddScoped<UserManager>();
-			services.AddScoped<IFileService, FileService>();
 			services.AddScoped<IPointsService, PointsService>();
 			services.AddScoped<IAwards, Awards>();
 			services.AddScoped<IMediaFileUploader, MediaFileUploader>();
