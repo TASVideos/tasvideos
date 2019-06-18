@@ -14,9 +14,11 @@ namespace TASVideos.ViewComponents
 	public class ListLanguages : ViewComponent
 	{
 		private readonly IWikiPages _wikiPages;
+		private readonly ILanguages _languages;
 
-		public ListLanguages(IWikiPages wikiPages)
+		public ListLanguages(ILanguages languages, IWikiPages wikiPages)
 		{
+			_languages = languages;
 			_wikiPages = wikiPages;
 		}
 
@@ -34,28 +36,20 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-			var languagesMarkup = (await _wikiPages
-				.SystemPage("Languages"))
-				?.Markup;
 
-			if (string.IsNullOrWhiteSpace(languagesMarkup))
+			var languages = (await _languages.AvailableLanguages())
+				.Select(l => new LanguageEntry
+				{
+					LanguageCode = l.Code,
+					LanguageDisplayName = l.DisplayName,
+					Path = l.Code + "/" + pageData.PageName
+				})
+				.ToList();
+
+			if (!languages.Any())
 			{
 				return new ContentViewComponentResult("");
 			}
-
-			var languages = languagesMarkup
-				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(l =>
-				{
-					var split = l.Split(":");
-					return new LanguageEntry
-					{
-						LanguageCode = split.FirstOrDefault(),
-						LanguageDisplayName = split.LastOrDefault(),
-						Path = split.FirstOrDefault() + "/" + pageData.PageName
-					};
-				})
-				.ToList();
 
 			var existingLanguages = new List<LanguageEntry>();
 			foreach (var lang in languages)
