@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace TASVideos.Services
 {
-	public interface ILanguage
+	public interface ILanguages
 	{
 		Task<IEnumerable<Language>> AvailableLanguages();
 
 		Task<bool> IsLanguagePage(string pageName);
 	}
 
-	public class Languages : ILanguage
+	public class Languages : ILanguages
 	{
 		private readonly IWikiPages _wikiPages;
 
