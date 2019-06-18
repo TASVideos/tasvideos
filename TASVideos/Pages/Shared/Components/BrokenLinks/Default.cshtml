@@ -1,6 +1,25 @@
-﻿@model IEnumerable<WikiPageReferral>
+﻿@using TASVideos.Services
+@model IEnumerable<WikiPageReferral>
+@inject ILanguages Languages
 
-<label class="float-right">Total: @Model.Count()</label>
+@{
+	var brokenLinks = new List<WikiPageReferral>();
+	var missingTranslations = new List<WikiPageReferral>();
+
+	foreach (var link in Model)
+	{
+		if (await Languages.IsLanguagePage(link.Referral))
+		{
+			missingTranslations.Add(link);
+		}
+		else
+		{
+			brokenLinks.Add(link);
+		}
+	}
+}
+
+<label class="float-right">Total: @brokenLinks.Count()</label>
 <table class="table table-striped">
 	<tbody>
 		<tr>
@@ -8,7 +27,26 @@
 			<th>Linked From</th>
 			<th>Excerpt</th>
 		</tr>
-		@foreach (var link in Model)
+		@foreach (var link in brokenLinks)
+		{
+			<tr>
+				<td style="max-width: 400px; overflow-x: auto"><a href="/@WikiHelper.ProcessLink(link.Referral)">@Html.Encode(WikiHelper.ProcessLink(link.Referral))</a></td>
+				<td><a href="/@WikiHelper.ProcessLink(link.Referrer)">@WikiHelper.ProcessLink(link.Referrer)</a></td>
+				<td><i>@link.Excerpt</i></td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<label class="float-right">Total: @missingTranslations.Count()</label>
+<table class="table table-striped">
+	<tbody>
+		<tr>
+			<th>Page</th>
+			<th>Linked From</th>
+			<th>Excerpt</th>
+		</tr>
+		@foreach (var link in missingTranslations)
 		{
 			<tr>
 				<td style="max-width: 400px; overflow-x: auto"><a href="/@WikiHelper.ProcessLink(link.Referral)">@Html.Encode(WikiHelper.ProcessLink(link.Referral))</a></td>

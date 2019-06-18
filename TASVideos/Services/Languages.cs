@@ -62,7 +62,7 @@ namespace TASVideos.Services
 
 			var languages = await AvailableLanguages();
 
-			return languages.Any(l => trimmed.StartsWith(l + "/"));
+			return languages.Any(l => trimmed.StartsWith(l.Code + "/"));
 		}
 	}
 }
