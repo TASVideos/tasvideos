@@ -32,18 +32,31 @@ namespace TASVideos.Services
 				return Enumerable.Empty<Language>();
 			}
 
-			return languagesMarkup
+			var languages = new List<Language>();
+
+			var rawEntries = languagesMarkup
 				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(l =>
+				.Where(s => !string.IsNullOrWhiteSpace(s));
+
+			foreach (var l in rawEntries)
+			{
+				var split = l
+						.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries)
+						.Where(s => !string.IsNullOrWhiteSpace(s))
+						.Select(s => s.Trim())
+						.ToList();
+
+				if (split.Any())
 				{
-					var split = l.Split(":");
-					return new Language
+					languages.Add(new Language
 					{
 						Code = split.FirstOrDefault(),
 						DisplayName = split.LastOrDefault()
-					};
-				})
-				.ToList();
+					});
+				}
+			}
+
+			return languages;
 		}
 
 		public async Task<bool> IsLanguagePage(string pageName)
@@ -62,7 +75,8 @@ namespace TASVideos.Services
 
 			var languages = await AvailableLanguages();
 
-			return languages.Any(l => trimmed.StartsWith(l.Code + "/"));
+			return languages.Any(l => trimmed.StartsWith(l.Code + "/")
+				|| l.Code == trimmed);
 		}
 	}
 }
