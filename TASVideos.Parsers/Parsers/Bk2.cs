@@ -30,6 +30,9 @@ namespace TASVideos.MovieParsers.Parsers
 				return Error($"Missing {HeaderFile}, can not parse");
 			}
 
+			int? vBlankCount;
+			string core;
+
 			using (var stream = headerEntry.Open())
 			{
 				using (var reader = new StreamReader(stream))
@@ -101,6 +104,9 @@ namespace TASVideos.MovieParsers.Parsers
 					{
 						result.StartType = MovieStartType.Sram;
 					}
+
+					vBlankCount = header.GetValueFor(Keys.VBlankCount).ToInt();
+					core = header.GetValueFor(Keys.Core);
 				}
 			}
 
@@ -119,6 +125,16 @@ namespace TASVideos.MovieParsers.Parsers
 						.LineSplit()
 						.Count(i => i.StartsWith("|"));
 				}
+			}
+
+			if (core?.ToLower() == "subneshawk")
+			{
+				if (!vBlankCount.HasValue)
+				{
+					return Error($"Missing {Keys.VBlankCount}, could not parse movie time");
+				}
+
+				result.Frames = vBlankCount.Value;
 			}
 
 			return result;
@@ -157,6 +173,8 @@ namespace TASVideos.MovieParsers.Parsers
 			public const string ModeSegaCd = "issegacdmode";
 			public const string ModeGg = "isggmode";
 			public const string ModeSg = "issgmode";
+			public const string VBlankCount = "vblankcount";
+			public const string Core = "core";
 		}
 	}
 }
