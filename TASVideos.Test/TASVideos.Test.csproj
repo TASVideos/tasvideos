@@ -19,6 +19,7 @@
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\savestate.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\sram.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubNes.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubNesMissingVBlank.bk2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\fds.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\ntsc.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\pal.fm2" />

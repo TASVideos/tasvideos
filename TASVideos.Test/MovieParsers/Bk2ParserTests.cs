@@ -117,6 +117,16 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(12, result.Frames);
 		}
 
+		[TestMethod]
+		public void SubNes_MissingVBlank_Error()
+		{
+			var result = _bk2Parser.Parse(Embedded("SubNesMissingVBlank.bk2"));
+
+			Assert.IsFalse(result.Success);
+			Assert.IsNotNull(result.Errors);
+			Assert.IsTrue(result.Errors.Any());
+		}
+
 		private Stream Embedded(string name)
 		{
 			return Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream(Bk2ResourcesPath + name);
