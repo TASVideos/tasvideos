@@ -114,7 +114,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual("nes", result.SystemCode);
 
 			// TODO: actual frame count
-			Assert.AreEqual(2, result.Frames, "Frame count should be 1");
+			Assert.AreEqual(12, result.Frames);
 		}
 
 		private Stream Embedded(string name)
