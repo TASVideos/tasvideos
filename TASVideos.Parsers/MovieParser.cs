@@ -27,6 +27,10 @@ namespace TASVideos.MovieParsers
 				.Where(t => t.GetCustomAttributes().OfType<FileExtensionAttribute>().Any())
 				.ToList();
 
+		public IEnumerable<string> SupportedMovieExtensions => ParserTypes
+			.Select(t => "." + (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
+					?.Extension);
+
 		public IParseResult Parse(Stream stream)
 		{
 			try
@@ -59,10 +63,6 @@ namespace TASVideos.MovieParsers
 				return Error("An general error occured while processing the movie file.");
 			}
 		}
-
-		public IEnumerable<string> SupportedMovieExtensions => ParserTypes
-			.Select(t => "." + (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
-					?.Extension);
 
 		private static IParser GetParser(string ext)
 		{
