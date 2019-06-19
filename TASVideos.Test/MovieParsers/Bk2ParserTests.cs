@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
+// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.MovieParsers
 {
 	[TestClass]
@@ -103,6 +104,17 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Success, "Result is successful");
 			Assert.AreEqual("nes", result.SystemCode, "System should be NES");
 			Assert.AreEqual(1, result.Frames, "Frame count should be 1");
+		}
+
+		[TestMethod]
+		public void SubNes_ReportsCorrectFrameCount()
+		{
+			var result = _bk2Parser.Parse(Embedded("SubNes.bk2"));
+			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.AreEqual("nes", result.SystemCode);
+
+			// TODO: actual frame count
+			Assert.AreEqual(2, result.Frames, "Frame count should be 1");
 		}
 
 		private Stream Embedded(string name)
