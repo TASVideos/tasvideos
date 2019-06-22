@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
@@ -10,10 +7,10 @@ namespace TASVideos.Test.MovieParsers
 {
 	[TestClass]
 	[TestCategory("BK2Parsers")]
-	public class Fm2ParserTests
+	public class Fm2ParserTests : BaseParserTests
 	{
-		private const string Fm2ResourcesPath = "TASVideos.Test.MovieParsers.Fm2SampleFiles.";
 		private Fm2 _fm2Parser;
+		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.Fm2SampleFiles.";
 
 		[TestInitialize]
 		public void Initialize()
@@ -67,11 +64,6 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
-		}
-
-		private Stream Embedded(string name)
-		{
-			return Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream(Fm2ResourcesPath + name);
 		}
 	}
 }

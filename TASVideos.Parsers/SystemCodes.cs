@@ -17,5 +17,6 @@
 		public const string Sg = "sg1000";
 		public const string ZxSpectrum = "zxs";
 		public const string UzeBox = "uzebox";
+		public const string Ds = "ds";
 	}
 }
