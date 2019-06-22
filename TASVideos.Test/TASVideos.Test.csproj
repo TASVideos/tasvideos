@@ -23,6 +23,8 @@
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\0frames.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\2frames.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\norerecords.dsm" />
+    <EmbeddedResource Include="MovieParsers\DsmSampleFiles\savestate.dsm" />
+    <EmbeddedResource Include="MovieParsers\DsmSampleFiles\sram.dsm" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\fds.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\ntsc.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\pal.fm2" />
