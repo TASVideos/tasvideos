@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TASVideos.MovieParsers.Extensions
@@ -8,8 +10,6 @@ namespace TASVideos.MovieParsers.Extensions
 		/// <summary>
 		/// Splits by line, Null safe, removes empty entries
 		/// </summary>
-		/// <param name="str"></param>
-		/// <returns></returns>
 		public static string[] LineSplit(this string str)
 		{
 			if (str == null)
@@ -83,6 +83,34 @@ namespace TASVideos.MovieParsers.Extensions
 			}
 
 			return string.Equals(val, "true", StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		/// <summary>
+		/// Returns the number of lines that start with a | which indicates
+		/// an input frame in many movie formats
+		/// </summary>
+		public static int PipeCount(this IEnumerable<string> lines)
+		{
+			if (lines == null)
+			{
+				return 0;
+			}
+
+			return lines.Count(i => i.StartsWith("|"));
+		}
+
+		/// <summary>
+		/// Returns lines that do not begin with a | which indicates
+		/// a header line in many movie formats;
+		/// </summary>
+		public static IEnumerable<string> WithoutPipes(this IEnumerable<string> lines)
+		{
+			if (lines == null)
+			{
+				return Enumerable.Empty<string>();
+			}
+
+			return lines.Where(i => !i.StartsWith("|"));
 		}
 	}
 }

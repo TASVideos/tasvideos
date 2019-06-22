@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers;
@@ -10,10 +9,10 @@ namespace TASVideos.Test.MovieParsers
 {
 	[TestClass]
 	[TestCategory("BK2Parsers")]
-	public class Fm2ParserTests
+	public class Fm2ParserTests : BaseParserTests
 	{
-		private const string Fm2ResourcesPath = "TASVideos.Test.MovieParsers.Fm2SampleFiles.";
 		private Fm2 _fm2Parser;
+		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.Fm2SampleFiles.";
 
 		[TestInitialize]
 		public void Initialize()
@@ -31,6 +30,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
@@ -43,6 +43,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
@@ -55,6 +56,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Fds, result.SystemCode, "System should be FDS");
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
@@ -67,11 +69,18 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
+			AssertNoWarningsOrErrors(result);
 		}
 
-		private Stream Embedded(string name)
+		[TestMethod]
+		public void NoRerecords()
 		{
-			return Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream(Fm2ResourcesPath + name);
+			var result = _fm2Parser.Parse(Embedded("norerecords.fm2"));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
+			Assert.IsNotNull(result.Warnings);
+			Assert.AreEqual(1, result.Warnings.Count());
+			AssertNoErrors(result);
 		}
 	}
 }
