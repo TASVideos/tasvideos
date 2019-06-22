@@ -39,6 +39,16 @@ namespace TASVideos.MovieParsers.Parsers
 					result.WarningList.Add(ParseWarnings.MissingRerecordCount);
 				}
 
+				if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
+				{
+					result.StartType = MovieStartType.Savestate;
+				}
+
+				if (header.GetValueFor(Keys.StartsFromSram).Length > 1)
+				{
+					result.StartType = MovieStartType.Sram;
+				}
+
 				return result;
 			}
 		}
@@ -46,6 +56,8 @@ namespace TASVideos.MovieParsers.Parsers
 		private static class Keys
 		{
 			public const string RerecordCount = "rerecordcount";
+			public const string StartsFromSavestate = "savestate";
+			public const string StartsFromSram = "sram";
 		}
 	}
 }
