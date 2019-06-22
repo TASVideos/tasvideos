@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers.Parsers;
@@ -29,42 +27,47 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _bk2Parser.Parse(Embedded(filename));
 			Assert.AreEqual(false, result.Success, "Result should not be successfull");
-			Assert.IsNotNull(result.Errors, "Errors should not be null");
-			Assert.IsTrue(result.Errors.Any(), "Must be at least one error");
+			AssertNoWarnings(result);
+			Assert.IsNotNull(result.Errors);
+			Assert.AreEqual(1, result.Errors.Count());
 		}
 
 		[TestMethod]
 		public void Frames_CorrectResult()
 		{
 			var result = _bk2Parser.Parse(Embedded("2Frames.bk2"));
-			Assert.AreEqual(true, result.Success, "Parsing must be successful");
-			Assert.AreEqual(2, result.Frames, "Result should have 2 frames");
+			Assert.AreEqual(true, result.Success);
+			Assert.AreEqual(2, result.Frames);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
 		public void Frames_NoInputFrames_Returns0()
 		{
 			var result = _bk2Parser.Parse(Embedded("0Frames.bk2"));
-			Assert.AreEqual(true, result.Success, "Parsing must be successful");
-			Assert.AreEqual(0, result.Frames, "Result should have 0 frames");
+			Assert.AreEqual(true, result.Success);
+			Assert.AreEqual(0, result.Frames);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
 		public void RerecordCount_CorrectResult()
 		{
 			var result = _bk2Parser.Parse(Embedded("RerecordCount1.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual(1, result.RerecordCount, "Rerecord count must be 1");
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(1, result.RerecordCount);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
 		public void RerecordCount_Missing_Returns0()
 		{
 			var result = _bk2Parser.Parse(Embedded("RerecordCountMissing.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.IsNotNull(result.Warnings, "Warnings should not be null");
-			Assert.IsTrue(result.Warnings.Any(), "Must be at least one warning");
+			Assert.IsTrue(result.Success);
+			Assert.IsNotNull(result.Warnings);
+			Assert.AreEqual(1, result.Warnings.Count());
 			Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
+			AssertNoErrors(result);
 		}
 
 		[TestMethod]
@@ -74,6 +77,7 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _bk2Parser.Parse(Embedded(fileName));
 			Assert.AreEqual(expected, result.Region);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
@@ -84,6 +88,7 @@ namespace TASVideos.Test.MovieParsers
 			var result = _bk2Parser.Parse(Embedded(filename));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(expectedSystem, result.SystemCode);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
@@ -101,20 +106,20 @@ namespace TASVideos.Test.MovieParsers
 		public void InnerFileExtensions_AreNotChecked()
 		{
 			var result = _bk2Parser.Parse(Embedded("NoFileExts.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
-			Assert.AreEqual("nes", result.SystemCode, "System should be NES");
-			Assert.AreEqual(1, result.Frames, "Frame count should be 1");
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual("nes", result.SystemCode);
+			Assert.AreEqual(1, result.Frames);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
 		public void SubNes_ReportsCorrectFrameCount()
 		{
 			var result = _bk2Parser.Parse(Embedded("SubNes.bk2"));
-			Assert.IsTrue(result.Success, "Result is successful");
+			Assert.IsTrue(result.Success);
 			Assert.AreEqual("nes", result.SystemCode);
-
-			// TODO: actual frame count
 			Assert.AreEqual(12, result.Frames);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]

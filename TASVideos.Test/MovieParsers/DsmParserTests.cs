@@ -61,7 +61,7 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _dsmParser.Parse(Embedded("norerecords.dsm"));
 			Assert.IsTrue(result.Success);
-			Assert.AreEqual(0, result.RerecordCount);
+			Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
 			Assert.IsNotNull(result.Warnings);
 			Assert.AreEqual(1, result.Warnings.Count());
 			AssertNoErrors(result);
