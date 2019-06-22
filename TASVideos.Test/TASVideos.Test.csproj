@@ -26,6 +26,7 @@
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\savestate.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\sram.dsm" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\fds.fm2" />
+    <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\norerecords.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\ntsc.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\pal.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\savestate.fm2" />

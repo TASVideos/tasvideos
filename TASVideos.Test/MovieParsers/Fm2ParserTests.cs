@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
@@ -28,6 +30,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
@@ -40,6 +43,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
@@ -52,6 +56,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Fds, result.SystemCode, "System should be FDS");
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
@@ -64,6 +69,18 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(21, result.RerecordCount);
 			Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
+			AssertNoWarningsOrErrors(result);
+		}
+
+		[TestMethod]
+		public void NoRerecords()
+		{
+			var result = _fm2Parser.Parse(Embedded("norerecords.fm2"));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(0, result.RerecordCount);
+			Assert.IsNotNull(result.Warnings);
+			Assert.AreEqual(1, result.Warnings.Count());
+			AssertNoErrors(result);
 		}
 	}
 }
