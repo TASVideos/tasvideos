@@ -23,7 +23,8 @@ namespace TASVideos.WikiEngine
 			var stack = new Stack<Element>();
 			stack.Push(ret);
 
-			var pos = 1;
+			var pos = (headings.Min(h => (int?)(h.Tag[1] - '0')) ?? 2) - 1; // if the biggest heading is h3 or h4, make that the top level
+
 			foreach (var h in headings)
 			{
 				var i = h.Tag[1] - '0'; // 2, 3, or 4?
