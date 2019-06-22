@@ -11,10 +11,10 @@ namespace TASVideos.Test.MovieParsers
 {
 	[TestClass]
 	[TestCategory("BK2Parsers")]
-	public class Bk2ParserTests
+	public class Bk2ParserTests : BaseParserTests
 	{
-		private const string Bk2ResourcesPath = "TASVideos.Test.MovieParsers.Bk2SampleFiles.";
 		private Bk2 _bk2Parser;
+		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.Bk2SampleFiles.";
 
 		[TestInitialize]
 		public void Initialize()
@@ -125,11 +125,6 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsFalse(result.Success);
 			Assert.IsNotNull(result.Errors);
 			Assert.IsTrue(result.Errors.Any());
-		}
-
-		private Stream Embedded(string name)
-		{
-			return Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream(Bk2ResourcesPath + name);
 		}
 	}
 }

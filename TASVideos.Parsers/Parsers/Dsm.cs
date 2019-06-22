@@ -1,14 +1,15 @@
 ﻿using System.IO;
 using System.Linq;
+
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
 {
-	[FileExtension("fm2")]
-	internal class Fm2 : IParser
+	[FileExtension("dsm")]
+	internal class Dsm : IParser
 	{
-		private const string FileExtension = "fm2";
+		private const string FileExtension = "dsm";
 
 		public IParseResult Parse(Stream file)
 		{
@@ -18,7 +19,7 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					Region = RegionType.Ntsc,
 					FileExtension = FileExtension,
-					SystemCode = SystemCodes.Nes
+					SystemCode = SystemCodes.Ds
 				};
 
 				var lines = reader.ReadToEnd().LineSplit();
@@ -26,10 +27,7 @@ namespace TASVideos.MovieParsers.Parsers
 					.WithoutPipes()
 					.ToArray();
 
-				if (header.GetValueFor(Keys.Fds).ToBool())
-				{
-					result.SystemCode = SystemCodes.Fds;
-				}
+				result.Frames = lines.PipeCount();
 
 				int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
 				if (rerecordVal.HasValue)
@@ -41,18 +39,6 @@ namespace TASVideos.MovieParsers.Parsers
 					result.WarningList.Add(ParseWarnings.MissingRerecordCount);
 				}
 
-				if (header.GetValueFor(Keys.Pal).ToBool())
-				{
-					result.Region = RegionType.Pal;
-				}
-
-				if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
-				{
-					result.StartType = MovieStartType.Savestate;
-				}
-
-				result.Frames = lines.PipeCount();
-
 				return result;
 			}
 		}
@@ -60,9 +46,6 @@ namespace TASVideos.MovieParsers.Parsers
 		private static class Keys
 		{
 			public const string RerecordCount = "rerecordcount";
-			public const string Pal = "palFlag";
-			public const string Fds = "fds";
-			public const string StartsFromSavestate = "savestate";
 		}
 	}
 }
