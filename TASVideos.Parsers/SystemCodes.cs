@@ -18,5 +18,7 @@
 		public const string ZxSpectrum = "zxs";
 		public const string UzeBox = "uzebox";
 		public const string Ds = "ds";
+		public const string Snes = "snes";
+		public const string Sgb = "sgb";
 	}
 }
