@@ -21,4 +21,12 @@ namespace TASVideos.MovieParsers.Result
 		internal List<ParseWarnings> WarningList { get; set; } = new List<ParseWarnings>();
 		internal List<string> ErrorList { get; set; } = new List<string>();
 	}
+
+	internal static class ParseResultExtensions
+	{
+		internal static void WarnNoRerecords(this ParseResult parseResult)
+		{
+			parseResult.WarningList.Add(ParseWarnings.MissingRerecordCount);
+		}
+	}
 }
