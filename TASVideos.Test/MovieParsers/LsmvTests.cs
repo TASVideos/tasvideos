@@ -33,6 +33,16 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
+		public void SavestateCheck_Error()
+		{
+			var result = _lsmvParser.Parse(Embedded("savestate.lsmv"));
+			Assert.IsFalse(result.Success);
+			AssertNoWarnings(result);
+			Assert.IsNotNull(result.Errors);
+			Assert.AreEqual(1, result.Errors.Count());
+		}
+
+		[TestMethod]
 		public void Frames_WithSubFrames()
 		{
 			var result = _lsmvParser.Parse(Embedded("2frameswithsub.lsmv"));
@@ -128,6 +138,18 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(expectedSystem, result.SystemCode);
 			Assert.AreEqual(expectedRegion, result.Region);
+			AssertNoWarningsOrErrors(result);
+		}
+
+		[TestMethod]
+		[DataRow("2frameswithsub.lsmv", MovieStartType.PowerOn)]
+		[DataRow("savestate.anchor.lsmv", MovieStartType.Savestate)]
+		[DataRow("moviesram.lsmv", MovieStartType.Sram)]
+		public void StartType(string file, MovieStartType expectedStartType)
+		{
+			var result = _lsmvParser.Parse(Embedded(file));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(expectedStartType, result.StartType);
 			AssertNoWarningsOrErrors(result);
 		}
 	}
