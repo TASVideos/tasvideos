@@ -54,6 +54,16 @@
 		/// <summary>
 		/// Indicates that the rerecord count was missing in the movie file. 
 		/// </summary>
-		MissingRerecordCount
+		MissingRerecordCount,
+
+		/// <summary>
+		/// Indicates that the system id could not be reliably determined, and a default was used
+		/// </summary>
+		SystemIdInferred,
+
+		/// <summary>
+		/// Indicates that the region could not be reliably determined, and a default was used.
+		/// </summary>
+		RegionInferred
 	}
 }

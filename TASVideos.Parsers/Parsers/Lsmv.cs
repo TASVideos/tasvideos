@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
@@ -12,6 +13,7 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		private const string InputFile = "input";
 		private const string RerecordFile = "rerecords";
+		private const string GameType = "gametype";
 
 		public override string FileExtension => "lsmv";
 
@@ -24,6 +26,65 @@ namespace TASVideos.MovieParsers.Parsers
 			};
 
 			var archive = new ZipArchive(file);
+
+			var gameTypeFile = archive.Entry(GameType);
+			if (gameTypeFile == null)
+			{
+				return Error("Could not determine the System Code");
+			}
+
+			using (var stream = gameTypeFile.Open())
+			{
+				using (var reader = new StreamReader(stream))
+				{
+					var line = reader
+						.ReadToEnd()
+						.LineSplit()
+						.FirstOrDefault();
+
+					if (line != null)
+					{
+						switch (line?.ToLower())
+						{
+							default:
+								DefaultGameType(result);
+								break;
+							case "snes_ntsc":
+							case "bsx":
+							case "bsxslotted":
+							case "sufamiturbo":
+								result.SystemCode = SystemCodes.Snes;
+								result.Region = RegionType.Ntsc;
+								break;
+							case "snes_pal":
+								result.SystemCode = SystemCodes.Snes;
+								result.Region = RegionType.Pal;
+								break;
+							case "sgb_ntsc":
+								result.SystemCode = SystemCodes.Sgb;
+								result.Region = RegionType.Ntsc;
+								break;
+							case "sgb_pal":
+								result.SystemCode = SystemCodes.Sgb;
+								result.Region = RegionType.Pal;
+								break;
+							case "gdmg":
+								result.SystemCode = SystemCodes.GameBoy;
+								result.Region = RegionType.Ntsc;
+								break;
+							case "ggbc":
+							case "ggbca":
+								result.SystemCode = SystemCodes.Gbc;
+								result.Region = RegionType.Ntsc;
+								break;
+						}
+					}
+					else
+					{
+						DefaultGameType(result);
+					}
+				}
+			}
 
 			var rerecordCountFile = archive.Entry(RerecordFile);
 			if (rerecordCountFile != null)
@@ -79,6 +140,14 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 
 			return result;
+		}
+
+		private void DefaultGameType(ParseResult result)
+		{
+			result.SystemCode = SystemCodes.Snes;
+			result.Region = RegionType.Ntsc;
+			result.WarningList.Add(ParseWarnings.SystemIdInferred);
+			result.WarningList.Add(ParseWarnings.RegionInferred);
 		}
 	}
 }
