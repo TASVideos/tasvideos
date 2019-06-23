@@ -17,7 +17,7 @@ namespace TASVideos.Test.MovieParsers
 
 		protected Stream Embedded(string name)
 		{
-			return Assembly.GetAssembly(typeof(Bk2ParserTests)).GetManifestResourceStream(ResourcesPath + name);
+			return Assembly.GetAssembly(typeof(BaseParserTests)).GetManifestResourceStream(ResourcesPath + name);
 		}
 
 		protected void AssertNoWarnings(IParseResult result)

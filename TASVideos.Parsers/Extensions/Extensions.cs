@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 
 namespace TASVideos.MovieParsers.Extensions
@@ -111,6 +112,15 @@ namespace TASVideos.MovieParsers.Extensions
 			}
 
 			return lines.Where(i => !i.StartsWith("|"));
+		}
+
+		/// <summary>
+		/// Gets a file that matches or starts with the given name
+		/// with a case insensitive match
+		/// </summary>
+		public static ZipArchiveEntry Entry(this ZipArchive archive, string name)
+		{
+			return archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(name));
 		}
 	}
 }

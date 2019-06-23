@@ -22,11 +22,11 @@ namespace TASVideos.Test.MovieParsers
 
 		[TestMethod]
 		[DataRow("MissingHeader.bk2", DisplayName = "Missing Header creates error")]
-		[DataRow("MissingInputLog.bk2", DisplayName = "Missing Header creates error")]
+		[DataRow("MissingInputLog.bk2", DisplayName = "Missing InputLog creates error")]
 		public void Errors(string filename)
 		{
 			var result = _bk2Parser.Parse(Embedded(filename));
-			Assert.AreEqual(false, result.Success, "Result should not be successfull");
+			Assert.AreEqual(false, result.Success);
 			AssertNoWarnings(result);
 			Assert.IsNotNull(result.Errors);
 			Assert.AreEqual(1, result.Errors.Count());

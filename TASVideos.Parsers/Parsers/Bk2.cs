@@ -8,11 +8,12 @@ using TASVideos.MovieParsers.Result;
 namespace TASVideos.MovieParsers.Parsers
 {
 	[FileExtension("bk2")]
-	internal class Bk2 : IParser
+	internal class Bk2 : ParserBase, IParser
 	{
-		private const string FileExtension = "bk2";
 		private const string HeaderFile = "header";
 		private const string InputFile = "input log";
+
+		public override string FileExtension => "bk2";
 
 		public IParseResult Parse(Stream file)
 		{
@@ -22,9 +23,9 @@ namespace TASVideos.MovieParsers.Parsers
 				FileExtension = FileExtension
 			};
 
-			var bk2Archive = new ZipArchive(file);
+			var archive = new ZipArchive(file);
 
-			var headerEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(HeaderFile));
+			var headerEntry = archive.Entry(HeaderFile);
 			if (headerEntry == null)
 			{
 				return Error($"Missing {HeaderFile}, can not parse");
@@ -54,7 +55,7 @@ namespace TASVideos.MovieParsers.Parsers
 					}
 					else
 					{
-						result.WarningList.Add(ParseWarnings.MissingRerecordCount);
+						result.WarnNoRerecords();
 					}
 
 					// Some biz system ids do not match tasvideos, convert if needed
@@ -110,20 +111,20 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 			}
 
-			var inputLogEntry = bk2Archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(InputFile));
-			if (inputLogEntry == null)
+			var inputLog = archive.Entry(InputFile);
+			if (inputLog == null)
 			{
 				return Error($"Missing {InputFile}, can not parse");
 			}
 
-			using (var stream = inputLogEntry.Open())
+			using (var stream = inputLog.Open())
 			{
 				using (var reader = new StreamReader(stream))
 				{
 					result.Frames = reader
 						.ReadToEnd()
 						.LineSplit()
-						.Count(i => i.StartsWith("|"));
+						.PipeCount();
 				}
 			}
 
@@ -151,14 +152,6 @@ namespace TASVideos.MovieParsers.Parsers
 			["vb"] = SystemCodes.VirtualBoy,
 			["zxspectrum"] = SystemCodes.ZxSpectrum
 		};
-
-		private static ErrorResult Error(string errorMsg)
-		{
-			return new ErrorResult(errorMsg)
-			{
-				FileExtension = FileExtension
-			};
-		}
 
 		private static class Keys
 		{

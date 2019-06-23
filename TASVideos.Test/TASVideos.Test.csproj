@@ -30,6 +30,12 @@
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\ntsc.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\pal.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\savestate.fm2" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\0frameswithsub.lsmv" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\2frameswithsub.lsmv" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\emptyrerecordentry.lsmv" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\invalidrerecordentry.lsmv" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\noinputlog.lsmv" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\norerecordentry.lsmv" />
   </ItemGroup>
 
   <ItemGroup>
