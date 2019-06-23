@@ -46,8 +46,11 @@
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\gametype-snespal.lsmv" />
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\gametype-sufamiturbo.lsmv" />
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\invalidrerecordentry.lsmv" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\moviesram.lsmv" />
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\noinputlog.lsmv" />
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\norerecordentry.lsmv" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\savestate.anchor.lsmv" />
+    <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\savestate.lsmv" />
   </ItemGroup>
 
   <ItemGroup>

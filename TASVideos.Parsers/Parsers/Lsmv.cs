@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
@@ -14,6 +13,9 @@ namespace TASVideos.MovieParsers.Parsers
 		private const string InputFile = "input";
 		private const string RerecordFile = "rerecords";
 		private const string GameType = "gametype";
+		private const string Savestate = "savestate";
+		private const string SavestateAnchor = "savestate.anchor";
+		private const string Sram = "moviesram";
 
 		public override string FileExtension => "lsmv";
 
@@ -26,6 +28,21 @@ namespace TASVideos.MovieParsers.Parsers
 			};
 
 			var archive = new ZipArchive(file);
+
+			// a .lsmv is actually a savestate if a savestate file is present
+			if (archive.Entries.Any(e => e.Name.ToLower() == Savestate))
+			{
+				return Error("This is a savestate file, not a movie file");
+			}
+
+			if (archive.Entry(SavestateAnchor) != null)
+			{
+				result.StartType = MovieStartType.Savestate;
+			}
+			else if (archive.Entry(Sram) != null)
+			{
+				result.StartType = MovieStartType.Sram;
+			}
 
 			var gameTypeFile = archive.Entry(GameType);
 			if (gameTypeFile == null)
