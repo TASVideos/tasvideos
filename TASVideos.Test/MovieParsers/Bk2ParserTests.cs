@@ -91,6 +91,9 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("System-Genesis.bk2", SystemCodes.Genesis)]
 		[DataRow("System-SegaCd.bk2", SystemCodes.SegaCd)]
 		[DataRow("System-32x.bk2", SystemCodes.X32)]
+		[DataRow("System-Sms.bk2", SystemCodes.Sms)]
+		[DataRow("System-Gg.bk2", SystemCodes.Gg)]
+		[DataRow("System-Sg.bk2", SystemCodes.Sg)]
 		public void Systems(string filename, string expectedSystem)
 		{
 			var result = _bk2Parser.Parse(Embedded(filename));
