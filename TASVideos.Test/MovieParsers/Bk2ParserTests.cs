@@ -83,9 +83,13 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
+		[DataRow("System-A2600.bk2", SystemCodes.Atari2600)]
+		[DataRow("System-A7800.bk2", SystemCodes.Atari7800)]
+		[DataRow("System-C64.bk2", SystemCodes.C64)]
 		[DataRow("System-Nes.bk2", SystemCodes.Nes)]
 		[DataRow("System-Fds.bk2",  SystemCodes.Fds)]
 		[DataRow("System-Gb.bk2", SystemCodes.GameBoy)]
+		[DataRow("System-Dgb.bk2", SystemCodes.GameBoy)]
 		[DataRow("System-Sgb.bk2", SystemCodes.Sgb)]
 		[DataRow("System-Gbc.bk2", SystemCodes.Gbc)]
 		[DataRow("System-Genesis.bk2", SystemCodes.Genesis)]
@@ -96,6 +100,12 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("System-Sg.bk2", SystemCodes.Sg)]
 		[DataRow("System-Pce.bk2", SystemCodes.Pce)]
 		[DataRow("System-PceCd.bk2", SystemCodes.PceCd)]
+		[DataRow("System-Sgx.bk2", SystemCodes.Sgx)]
+		[DataRow("System-Snes.bk2", SystemCodes.Snes)]
+		[DataRow("System-Saturn.bk2", SystemCodes.Saturn)]
+		[DataRow("System-Uze.bk2", SystemCodes.UzeBox)]
+		[DataRow("System-Vb.bk2", SystemCodes.VirtualBoy)]
+		[DataRow("System-Zxs.bk2", SystemCodes.ZxSpectrum)]
 		public void Systems(string filename, string expectedSystem)
 		{
 			var result = _bk2Parser.Parse(Embedded(filename));
