@@ -86,6 +86,7 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("System-Nes.bk2", SystemCodes.Nes)]
 		[DataRow("System-Fds.bk2",  SystemCodes.Fds)]
 		[DataRow("System-Gb.bk2", SystemCodes.GameBoy)]
+		[DataRow("System-Sgb.bk2", SystemCodes.Sgb)]
 		[DataRow("System-Gbc.bk2", SystemCodes.Gbc)]
 		[DataRow("System-Genesis.bk2", SystemCodes.Genesis)]
 		[DataRow("System-SegaCd.bk2", SystemCodes.SegaCd)]
