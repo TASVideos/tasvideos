@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
@@ -81,9 +83,13 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		[DataRow("System-Nes.bk2", "nes")]
-		[DataRow("System-Fds.bk2", "fds")]
-		[DataRow("System-Gbc.bk2", "gbc")]
+		[DataRow("System-Nes.bk2", SystemCodes.Nes)]
+		[DataRow("System-Fds.bk2",  SystemCodes.Fds)]
+		[DataRow("System-Gb.bk2", SystemCodes.GameBoy)]
+		[DataRow("System-Gbc.bk2", SystemCodes.Gbc)]
+		[DataRow("System-Genesis.bk2", SystemCodes.Genesis)]
+		[DataRow("System-SegaCd.bk2", SystemCodes.SegaCd)]
+		[DataRow("System-32x.bk2", SystemCodes.X32)]
 		public void Systems(string filename, string expectedSystem)
 		{
 			var result = _bk2Parser.Parse(Embedded(filename));

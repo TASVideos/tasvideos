@@ -24,9 +24,13 @@
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\sram.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubNes.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubNesMissingVBlank.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-32x.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Fds.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Gb.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Gbc.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Genesis.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Nes.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-SegaCd.bk2" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\0frames.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\2frames.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\norerecords.dsm" />
