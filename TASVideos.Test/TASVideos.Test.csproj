@@ -25,6 +25,8 @@
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Genesis.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Gg.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Nes.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Pce.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-PceCd.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-SegaCd.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Sg.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Sgb.bk2" />
