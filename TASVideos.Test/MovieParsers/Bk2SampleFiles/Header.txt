@@ -1,5 +1,5 @@
 rerecordCount 1
-Platform NES
-BoardName FDS
+Platform GB
+
 
 
