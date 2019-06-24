@@ -23,5 +23,7 @@
 		public const string Sms = "sms";
 		public const string Pce = "pce";
 		public const string PceCd = "pcecd";
+		public const string Sgx = "sgx";
+		public const string C64 = "c64";
 	}
 }
