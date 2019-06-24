@@ -1,2 +1,4 @@
 # tasvideos
-a useless experimental rewrite of tasvideos, nothing to see here
+an experimental rewrite of tasvideos
+https://tasvideos.quantium.tk/
+
