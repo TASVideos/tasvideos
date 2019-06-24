@@ -2,6 +2,7 @@
 {
 	internal class SystemCodes
 	{
+		public const string AppleII = "appleii";
 		public const string Atari2600 = "a2600";
 		public const string Atari7800 = "a7800";
 		public const string Nes = "nes";
@@ -25,5 +26,11 @@
 		public const string PceCd = "pcecd";
 		public const string Sgx = "sgx";
 		public const string C64 = "c64";
+		public const string Lynx = "lynx";
+		public const string Intellivision = "intv";
+		public const string Pcfx = "pcfx";
+		public const string Gba = "gba";
+		public const string Ngb = "ngb";
+		public const string WSwan = "wswan";
 	}
 }
