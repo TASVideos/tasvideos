@@ -6,12 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MovieParsers\Bk2SampleFiles\System-Fds.bk2" />
+    <None Remove="MovieParsers\Bk2SampleFiles\System-Gbc.bk2" />
+    <None Remove="MovieParsers\Bk2SampleFiles\System-Nes.bk2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\0Frames.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\2Frames.bk2" />
-    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Gbc.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\MissingHeader.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\MissingInputLog.bk2" />
-    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Nes.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\NoFileExts.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Pal1.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\RerecordCount1.bk2" />
@@ -20,6 +24,9 @@
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\sram.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubNes.bk2" />
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubNesMissingVBlank.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Fds.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Gbc.bk2" />
+    <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Nes.bk2" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\0frames.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\2frames.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\norerecords.dsm" />
