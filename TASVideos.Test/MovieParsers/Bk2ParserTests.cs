@@ -51,7 +51,7 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void RerecordCount_CorrectResult()
+		public void ValidRerecordCount()
 		{
 			var result = _bk2Parser.Parse(Embedded("RerecordCount1.bk2"));
 			Assert.IsTrue(result.Success);
@@ -60,7 +60,7 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void RerecordCount_Missing_Returns0()
+		public void InvalidRerecordCount_Warning()
 		{
 			var result = _bk2Parser.Parse(Embedded("RerecordCountMissing.bk2"));
 			Assert.IsTrue(result.Success);
@@ -81,8 +81,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		[DataRow("Nes.bk2", "nes")]
-		[DataRow("Gbc.bk2", "gbc")]
+		[DataRow("System-Nes.bk2", "nes")]
+		[DataRow("System-Fds.bk2", "fds")]
+		[DataRow("System-Gbc.bk2", "gbc")]
 		public void Systems(string filename, string expectedSystem)
 		{
 			var result = _bk2Parser.Parse(Embedded(filename));
@@ -92,10 +93,10 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		[DataRow("Nes.bk2", MovieStartType.PowerOn)]
+		[DataRow("System-Nes.bk2", MovieStartType.PowerOn)]
 		[DataRow("sram.bk2", MovieStartType.Sram)]
 		[DataRow("savestate.bk2", MovieStartType.Savestate)]
-		public void StartsFrom_PowerOn(string filename, MovieStartType expected)
+		public void StartType(string filename, MovieStartType expected)
 		{
 			var result = _bk2Parser.Parse(Embedded(filename));
 			Assert.IsTrue(result.Success);

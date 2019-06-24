@@ -91,7 +91,7 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void ValidRerecordEntry_Warning()
+		public void ValidRerecordEntry()
 		{
 			var result = _lsmvParser.Parse(Embedded("2frameswithsub.lsmv"));
 			Assert.IsTrue(result.Success);
