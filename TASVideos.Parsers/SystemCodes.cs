@@ -21,5 +21,7 @@
 		public const string Snes = "snes";
 		public const string Sgb = "sgb";
 		public const string Sms = "sms";
+		public const string Pce = "pce";
+		public const string PceCd = "pcecd";
 	}
 }
