@@ -169,14 +169,14 @@ namespace TASVideos.Services
 		/// for the <see cref="User"/> with the given <see cref="userName"/>
 		/// If no user is found, null is returned
 		/// </summary>
-		public async Task<UserProfileModel> GetUserProfile(string userName, bool includeHidden)
+		public async Task<UserProfileModel> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts)
 		{
 			var model = await _db.Users
 				.Select(u => new UserProfileModel
 				{
 					Id = u.Id,
 					UserName = u.UserName,
-					PostCount = u.Posts.Count,
+					PostCount = u.Posts.Count(p => seeRestrictedPosts || !p.Topic.Forum.Restricted),
 					JoinDate = u.CreateTimeStamp,
 					LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
 					Avatar = u.Avatar,
@@ -213,9 +213,9 @@ namespace TASVideos.Services
 						.ToList(),
 					UserFiles = new UserProfileModel.UserFilesModel
 					{
-						Total = u.UserFiles.Count(uf => includeHidden || !uf.Hidden),
+						Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
 						Systems = u.UserFiles
-							.Where(uf => includeHidden || !uf.Hidden)
+							.Where(uf => includeHiddenUserFiles || !uf.Hidden)
 							.Select(uf => uf.System.Code)
 							.Distinct()
 							.ToList()

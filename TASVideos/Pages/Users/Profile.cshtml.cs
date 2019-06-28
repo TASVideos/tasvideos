@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -43,7 +44,8 @@ namespace TASVideos.Pages.Users
 				UserName = Name;
 			}
 
-			Profile = await _userManager.GetUserProfile(UserName, includeHidden: false);
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
+			Profile = await _userManager.GetUserProfile(UserName, false, seeRestricted);
 			if (Profile == null)
 			{
 				return NotFound();
