@@ -17,11 +17,11 @@ namespace TASVideos.TagHelpers
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			output.TagMode = TagMode.StartTagAndEndTag;
-			output.TagName = "div";
+			output.TagName = "a";
 			output.AddCssClass("card-link");
+			output.Attributes.Add("href", Href);
 
 			output.Content.AppendHtml($@"
-<a class='card-link-anchor' href='{Href}'>
 	<h4 class='card-link-header'>
 		{Header}
 	</h4>
@@ -29,7 +29,6 @@ namespace TASVideos.TagHelpers
 		{Body}
 	</span>
 	<span class='card-link-arrow fa fa-chevron-right'></span>
-</a>
 ");
 		}
 	}

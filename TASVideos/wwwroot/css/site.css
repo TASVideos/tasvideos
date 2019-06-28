@@ -235,9 +235,6 @@ article.wiki table tbody + tbody {
 	background-color: white;
 	text-align: left;
 	border-radius: 3px;
-}
-
-a.card-link-anchor {
 	text-decoration: none;
 }
 
@@ -249,10 +246,6 @@ a.card-link-anchor {
 
 .card-link-header {
 	color: #531f86
-}
-
-.card-link-body {
-	cursor: pointer;
 }
 
 .card-link-arrow {
