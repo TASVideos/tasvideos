@@ -23,8 +23,7 @@
 					<br />
 					<label asp-for="PostCount"></label>
 					<label>
-						<a asp-page="/Forum/Posts/User"
-						   asp-route-id="@Model.UserName">
+						<a asp-page="/Forum/Posts/User" asp-route-username="@Model.UserName">
 							@Html.DisplayFor(m => m.PostCount)
 						</a>
 					</label>
