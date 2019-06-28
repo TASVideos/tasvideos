@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -26,7 +27,8 @@ namespace TASVideos.Pages.Profile
 
 		public async Task<IActionResult> OnGet()
 		{
-			Profile = await _userManager.GetUserProfile(User.Identity.Name, includeHidden: true);
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
+			Profile = await _userManager.GetUserProfile(User.Identity.Name, true, seeRestricted);
 			if (Profile == null)
 			{
 				return NotFound();
