@@ -9,27 +9,27 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TASVideos/Pages/Wiki/Render.cshtml.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16">
-              <caret line="20" column="21" lean-forward="true" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+            <state relative-caret-position="176">
+              <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
               <folding>
-                <marker date="1560255307398" expanded="false" signature="6:209" ph="..." />
-                <marker date="1560255307398" expanded="true" signature="241:2112" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="303:2110" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="462:510" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="666:1952" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="740:776" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="812:928" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="853:923" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="974:1293" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="1114:1168" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="1372:1511" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="1598:1738" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="1840:1882" ph="{...}" />
-                <marker date="1560255307398" expanded="true" signature="2008:2107" ph="{...}" />
+                <marker date="1561913182878" expanded="false" signature="6:209" ph="..." />
+                <marker date="1561913182878" expanded="true" signature="241:2112" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="303:2110" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="462:510" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="666:1952" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="740:776" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="812:928" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="853:923" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="974:1293" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="1114:1168" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="1372:1511" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="1598:1738" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="1840:1882" ph="{...}" />
+                <marker date="1561913182878" expanded="true" signature="2008:2107" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -38,27 +38,27 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TASVideos/Pages/Submissions/View.cshtml.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-448">
-              <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+            <state relative-caret-position="144">
+              <caret line="29" column="9" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
               <folding>
-                <marker date="1557149490544" expanded="false" signature="6:417" ph="..." />
-                <marker date="1557149490544" expanded="true" signature="456:5046" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="516:5044" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="771:846" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="1188:3320" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="1422:2690" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="2749:2782" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="3184:3297" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="3372:3668" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="3541:3574" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="3717:5041" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="3770:3807" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="3955:3982" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="4033:4099" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="4192:4400" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="4489:4822" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="4564:4815" ph="{...}" />
-                <marker date="1557149490544" expanded="true" signature="4862:4990" ph="{...}" />
+                <marker date="1561913182871" expanded="false" signature="6:417" ph="..." />
+                <marker date="1561913182871" expanded="true" signature="456:5046" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="516:5044" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="771:846" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="1188:3320" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="1422:2690" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="2749:2782" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="3184:3297" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="3372:3668" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="3541:3574" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="3717:5041" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="3770:3807" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="3955:3982" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="4033:4099" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="4192:4400" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="4489:4822" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="4564:4815" ph="{...}" />
+                <marker date="1561913182871" expanded="true" signature="4862:4990" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -82,10 +82,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1645" />
-    <option name="y" value="-18" />
-    <option name="width" value="1936" />
-    <option name="height" value="1066" />
+    <option name="x" value="210" />
+    <option name="y" value="146" />
+    <option name="width" value="1260" />
+    <option name="height" value="740" />
   </component>
   <component name="ProjectView">
     <navigator currentView="SolutionExplorer" proportions="" version="1">
@@ -93,7 +93,6 @@
     </navigator>
     <panes>
       <pane id="FileSystemExplorer" />
-      <pane id="AssemblyExplorer" />
       <pane id="SolutionExplorer">
         <subPane>
           <expand>
@@ -101,52 +100,12 @@
               <item name="" type="784c90a0:SolutionExplorerRootNode" />
               <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
             </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Submissions" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Submissions" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="View.cshtml" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Wiki" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="TASVideos" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Pages" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Wiki" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Render.cshtml" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
           </expand>
           <select />
         </subPane>
         <option name="show-all-files" value="false" />
       </pane>
+      <pane id="AssemblyExplorer" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -242,11 +201,12 @@
       <option name="presentableId" value="Default" />
       <updated>1560255409528</updated>
       <workItem from="1560255412595" duration="290000" />
+      <workItem from="1561915067049" duration="784000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="290000" />
+    <option name="totallyTimeSpent" value="1074000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -258,20 +218,13 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-4" width="1936" height="1066" extended-state="6" />
+    <frame x="0" y="23" width="1680" height="986" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24986681" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25274727" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="NuGet" />
-      <window_info anchor="bottom" id="Docker" />
-      <window_info anchor="bottom" id="Database Changes" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Unit Tests" />
-      <window_info anchor="bottom" id="REST Client" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Build" weight="0.32946146" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Performance Profiler" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32946146" />
@@ -279,12 +232,21 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Errors In Solution" />
-      <window_info anchor="right" id="Database" />
-      <window_info anchor="right" id="Unit Tests Coverage" />
+      <window_info anchor="bottom" id="NuGet" order="7" />
+      <window_info anchor="bottom" id="Docker" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Database Changes" order="10" />
+      <window_info anchor="bottom" id="Unit Tests" order="11" weight="0.32997763" />
+      <window_info anchor="bottom" id="REST Client" order="12" />
+      <window_info anchor="bottom" id="Terminal" order="13" />
+      <window_info anchor="bottom" id="Event Log" order="14" side_tool="true" />
+      <window_info active="true" anchor="bottom" id="Build" order="15" visible="true" weight="0.32885906" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Errors In Solution" order="3" />
+      <window_info anchor="right" id="Database" order="4" />
+      <window_info anchor="right" id="Unit Tests Coverage" order="5" visible="true" weight="0.32967034" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -331,50 +293,50 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/TASVideos/Pages/Wiki/Render.cshtml.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16">
-          <caret line="20" column="21" lean-forward="true" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+        <state relative-caret-position="176">
+          <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
           <folding>
-            <marker date="1560255307398" expanded="false" signature="6:209" ph="..." />
-            <marker date="1560255307398" expanded="true" signature="241:2112" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="303:2110" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="462:510" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="666:1952" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="740:776" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="812:928" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="853:923" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="974:1293" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="1114:1168" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="1372:1511" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="1598:1738" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="1840:1882" ph="{...}" />
-            <marker date="1560255307398" expanded="true" signature="2008:2107" ph="{...}" />
+            <marker date="1561913182878" expanded="false" signature="6:209" ph="..." />
+            <marker date="1561913182878" expanded="true" signature="241:2112" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="303:2110" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="462:510" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="666:1952" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="740:776" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="812:928" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="853:923" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="974:1293" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="1114:1168" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="1372:1511" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="1598:1738" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="1840:1882" ph="{...}" />
+            <marker date="1561913182878" expanded="true" signature="2008:2107" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TASVideos/Pages/Submissions/View.cshtml.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-448">
-          <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+        <state relative-caret-position="144">
+          <caret line="29" column="9" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
           <folding>
-            <marker date="1557149490544" expanded="false" signature="6:417" ph="..." />
-            <marker date="1557149490544" expanded="true" signature="456:5046" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="516:5044" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="771:846" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="1188:3320" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="1422:2690" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="2749:2782" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="3184:3297" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="3372:3668" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="3541:3574" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="3717:5041" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="3770:3807" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="3955:3982" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="4033:4099" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="4192:4400" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="4489:4822" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="4564:4815" ph="{...}" />
-            <marker date="1557149490544" expanded="true" signature="4862:4990" ph="{...}" />
+            <marker date="1561913182871" expanded="false" signature="6:417" ph="..." />
+            <marker date="1561913182871" expanded="true" signature="456:5046" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="516:5044" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="771:846" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="1188:3320" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="1422:2690" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="2749:2782" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="3184:3297" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="3372:3668" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="3541:3574" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="3717:5041" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="3770:3807" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="3955:3982" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="4033:4099" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="4192:4400" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="4489:4822" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="4564:4815" ph="{...}" />
+            <marker date="1561913182871" expanded="true" signature="4862:4990" ph="{...}" />
           </folding>
         </state>
       </provider>
