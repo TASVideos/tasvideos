@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\adelikat\TASVideos" t="IncludeFlat">
+    <e p="$PROJECT_DIR$/../.nuget/packages/microsoft.net.test.sdk/16.0.1/build/netcoreapp1.0" t="Include">
+      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
+    </e>
+    <e p="$PROJECT_DIR$/../.nuget/packages/mstest.testadapter/1.4.0/build/_common/Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" t="Include" />
+    <e p="$PROJECT_DIR$/../.nuget/packages/mstest.testadapter/1.4.0/build/_common/Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll" t="Include" />
+    <e p="$PROJECT_DIR$/../.nuget/packages/mstest.testadapter/1.4.0/build/netcoreapp1.0/Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll" t="Include" />
+    <e p="$PROJECT_DIR$/../Library/Caches/Rider2019.1/extResources" t="IncludeRecursive" />
+    <e p="$PROJECT_DIR$/../Library/Caches/Rider2019.1/resharper-host/local/Transient/ReSharperHost/v191/SolutionCaches/_TASVideos.-7436761.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
       <e p="TASVideos" t="IncludeRecursive">
         <e p=".eslintignore" t="Include" />
@@ -253,6 +261,8 @@
             <e p="WatchedTopics.cshtml.cs" t="Include" />
           </e>
           <e p="Publications" t="Include">
+            <e p="AdditionalMovies.cshtml" t="Include" />
+            <e p="AdditionalMovies.cshtml.cs" t="Include" />
             <e p="Authors.cshtml" t="Include" />
             <e p="Authors.cshtml.cs" t="Include" />
             <e p="Catalog.cshtml" t="Include" />
@@ -537,7 +547,7 @@
           <e p="CacheService.cs" t="Include" />
           <e p="Dtos" t="Include">
             <e p="AwardAssignment.cs" t="Include" />
-            <e p="FileDto.cs" t="Include" />
+            <e p="Language.cs" t="Include" />
             <e p="RatingDto.cs" t="Include" />
             <e p="WikiOrphan.cs" t="Include" />
           </e>
@@ -557,7 +567,7 @@
             <e p="Post.cs" t="Include" />
             <e p="PostType.cs" t="Include" />
           </e>
-          <e p="FileService.cs" t="Include" />
+          <e p="Languages.cs" t="Include" />
           <e p="MediaFileUploader.cs" t="Include" />
           <e p="PointsService" t="Include">
             <e p="PointsCalculator.cs" t="Include" />
@@ -1095,7 +1105,6 @@
             <e p="UserAward.cs" t="Include" />
           </e>
           <e p="BaseEntity.cs" t="Include" />
-          <e p="DatabaseFile.cs" t="Include" />
           <e p="Flag.cs" t="Include" />
           <e p="Forum" t="Include">
             <e p="Forum.cs" t="Include" />
@@ -1320,9 +1329,12 @@
         </e>
         <e p="Parsers" t="Include">
           <e p="Bk2.cs" t="Include" />
+          <e p="Dsm.cs" t="Include" />
           <e p="FileExtensionAttribute.cs" t="Include" />
           <e p="Fm2.cs" t="Include" />
           <e p="IParser.cs" t="Include" />
+          <e p="Lsmv.cs" t="Include" />
+          <e p="ParserBase.cs" t="Include" />
         </e>
         <e p="Properties" t="Include">
           <e p="AssemblyInfo.cs" t="Include" />
@@ -1359,28 +1371,95 @@
           </e>
         </e>
         <e p="MovieParsers" t="Include">
+          <e p="BaseParserTests.cs" t="Include" />
           <e p="Bk2ParserTests.cs" t="Include" />
           <e p="Bk2SampleFiles" t="Include">
             <e p="0frames.bk2" t="Include" />
             <e p="2frames.bk2" t="Include" />
-            <e p="Gbc.bk2" t="Include" />
             <e p="MissingHeader.bk2" t="Include" />
             <e p="MissingInputLog.bk2" t="Include" />
-            <e p="Nes.bk2" t="Include" />
             <e p="NoFileExts.bk2" t="Include" />
             <e p="Pal1.bk2" t="Include" />
             <e p="RerecordCount1.bk2" t="Include" />
             <e p="RerecordCountMissing.bk2" t="Include" />
             <e p="savestate.bk2" t="Include" />
             <e p="sram.bk2" t="Include" />
+            <e p="SubNes.bk2" t="Include" />
+            <e p="SubNesMissingVBlank.bk2" t="Include" />
+            <e p="System-32x.bk2" t="Include" />
+            <e p="System-A2600.bk2" t="Include" />
+            <e p="System-A7800.bk2" t="Include" />
+            <e p="System-AppleII.bk2" t="Include" />
+            <e p="System-C64.bk2" t="Include" />
+            <e p="System-Coleco.bk2" t="Include" />
+            <e p="System-Dgb.bk2" t="Include" />
+            <e p="System-Fds.bk2" t="Include" />
+            <e p="System-Gb.bk2" t="Include" />
+            <e p="System-Gba.bk2" t="Include" />
+            <e p="System-Gbc.bk2" t="Include" />
+            <e p="System-Genesis.bk2" t="Include" />
+            <e p="System-Gg.bk2" t="Include" />
+            <e p="System-Intellivision.bk2" t="Include" />
+            <e p="System-Lynx.bk2" t="Include" />
+            <e p="System-N64.bk2" t="Include" />
+            <e p="System-Nes.bk2" t="Include" />
+            <e p="System-Ngb.bk2" t="Include" />
+            <e p="System-Pce.bk2" t="Include" />
+            <e p="System-PceCd.bk2" t="Include" />
+            <e p="System-Pcfx.bk2" t="Include" />
+            <e p="System-Psx.bk2" t="Include" />
+            <e p="System-Saturn.bk2" t="Include" />
+            <e p="System-SegaCd.bk2" t="Include" />
+            <e p="System-Sg.bk2" t="Include" />
+            <e p="System-Sgb.bk2" t="Include" />
+            <e p="System-Sgx.bk2" t="Include" />
+            <e p="System-Sms.bk2" t="Include" />
+            <e p="System-Snes.bk2" t="Include" />
+            <e p="System-Uze.bk2" t="Include" />
+            <e p="System-Vb.bk2" t="Include" />
+            <e p="System-Wswan.bk2" t="Include" />
+            <e p="System-Zxs.bk2" t="Include" />
+          </e>
+          <e p="DsmParserTests.cs" t="Include" />
+          <e p="DsmSampleFiles" t="Include">
+            <e p="0frames.dsm" t="Include" />
+            <e p="2frames.dsm" t="Include" />
+            <e p="norerecords.dsm" t="Include" />
+            <e p="savestate.dsm" t="Include" />
+            <e p="sram.dsm" t="Include" />
           </e>
           <e p="Fm2ParserTests.cs" t="Include" />
           <e p="Fm2SampleFiles" t="Include">
             <e p="fds.fm2" t="Include" />
+            <e p="norerecords.fm2" t="Include" />
             <e p="ntsc.fm2" t="Include" />
             <e p="pal.fm2" t="Include" />
             <e p="savestate.fm2" t="Include" />
           </e>
+          <e p="LsmvSampleFiles" t="Include">
+            <e p="0frameswithsub.lsmv" t="Include" />
+            <e p="2frameswithsub.lsmv" t="Include" />
+            <e p="emptyrerecordentry.lsmv" t="Include" />
+            <e p="gametype-bsx.lsmv" t="Include" />
+            <e p="gametype-bsxslotted.lsmv" t="Include" />
+            <e p="gametype-empty.lsmv" t="Include" />
+            <e p="gametype-gdmg.lsmv" t="Include" />
+            <e p="gametype-ggbc.lsmv" t="Include" />
+            <e p="gametype-ggbca.lsmv" t="Include" />
+            <e p="gametype-missing.lsmv" t="Include" />
+            <e p="gametype-sgb_ntsc.lsmv" t="Include" />
+            <e p="gametype-sgb_pal.lsmv" t="Include" />
+            <e p="gametype-snesntsc.lsmv" t="Include" />
+            <e p="gametype-snespal.lsmv" t="Include" />
+            <e p="gametype-sufamiturbo.lsmv" t="Include" />
+            <e p="invalidrerecordentry.lsmv" t="Include" />
+            <e p="moviesram.lsmv" t="Include" />
+            <e p="noinputlog.lsmv" t="Include" />
+            <e p="norerecordentry.lsmv" t="Include" />
+            <e p="savestate.anchor.lsmv" t="Include" />
+            <e p="savestate.lsmv" t="Include" />
+          </e>
+          <e p="LsmvTests.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -1391,6 +1470,7 @@
         </e>
         <e p="Services" t="Include">
           <e p="AwardsTests.cs" t="Include" />
+          <e p="LanguagesTests.cs" t="Include" />
           <e p="PointsCalculatorTests.cs" t="Include" />
           <e p="PointsServiceTests.cs" t="Include" />
           <e p="WikiPagesTests.cs" t="Include" />
@@ -1440,13 +1520,5 @@
         <e p="TASVideos.WikiEngineTest.csproj" t="IncludeRecursive" />
       </e>
     </e>
-    <e p="C:\Users\Andrew.Delikat\.nuget\packages\microsoft.net.test.sdk\16.0.1\build\netcoreapp1.0" t="Include">
-      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
-    </e>
-    <e p="C:\Users\Andrew.Delikat\.nuget\packages\mstest.testadapter\1.4.0\build\_common\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" t="Include" />
-    <e p="C:\Users\Andrew.Delikat\.nuget\packages\mstest.testadapter\1.4.0\build\_common\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll" t="Include" />
-    <e p="C:\Users\Andrew.Delikat\.nuget\packages\mstest.testadapter\1.4.0\build\netcoreapp1.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll" t="Include" />
-    <e p="C:\Users\Andrew.Delikat\.Rider2019.1\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Andrew.Delikat\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_TASVideos.-1467816452.00" t="ExcludeRecursive" />
   </component>
 </project>
