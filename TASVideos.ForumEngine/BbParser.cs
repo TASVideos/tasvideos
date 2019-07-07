@@ -26,24 +26,24 @@ namespace TASVideos.ForumEngine
 			/// text and bbcode tags are legal
 			/// </summary>
 			/// <value></value>
-			ChildContent,
+			ChildTags,
 			/// <summary>
 			/// if the parent bbcode tag has a parameter, text and bbcode tags are legal.  otherwise, raw text only
 			/// </summary>
 			/// <value></value>
-			ChildContentIfParam,
+			ChildTagsIfParam,
 			/// <summary>
 			/// everything except a matching bbcode end tag is raw text
 			/// </summary>
 			/// <value></value>
-			NoChildContent,
+			NoChlidTags,
 			/// <summary>
-			/// like ChildContent, but including special handling for listitem tags which are not closed
+			/// like ChildTags, but including special handling for listitem tags which are not closed
 			/// </summary>
 			/// <value></value>
 			List,
 			/// <summary>
-			/// like ChildContent, but including special handling for listitem tags which are not closed
+			/// like ChildTags, but including special handling for listitem tags which are not closed
 			/// </summary>
 			/// <value></value>
 			ListItem
@@ -52,38 +52,38 @@ namespace TASVideos.ForumEngine
 		private static readonly Dictionary<string, ParseState> KnownTags = new Dictionary<string, ParseState>
 		{
 			// basic text formatting, no params, and body is content
-			{ "b", ParseState.ChildContent },
-			{ "i", ParseState.ChildContent },
-			{ "u", ParseState.ChildContent },
-			{ "s", ParseState.ChildContent },
-			{ "sub", ParseState.ChildContent },
-			{ "sup", ParseState.ChildContent },
-			{ "tt", ParseState.ChildContent },
-			{ "left", ParseState.ChildContent },
-			{ "right", ParseState.ChildContent },
-			{ "center", ParseState.ChildContent },
-			{ "spoiler", ParseState.ChildContent },
+			{ "b", ParseState.ChildTags },
+			{ "i", ParseState.ChildTags },
+			{ "u", ParseState.ChildTags },
+			{ "s", ParseState.ChildTags },
+			{ "sub", ParseState.ChildTags },
+			{ "sup", ParseState.ChildTags },
+			{ "tt", ParseState.ChildTags },
+			{ "left", ParseState.ChildTags },
+			{ "right", ParseState.ChildTags },
+			{ "center", ParseState.ChildTags },
+			{ "spoiler", ParseState.ChildTags },
 
 			// with optional params
-			{ "quote", ParseState.ChildContent }, // optional author
-			{ "code", ParseState.NoChildContent }, // optional language
-			{ "img", ParseState.NoChildContent }, // optional size
-			{ "url", ParseState.ChildContentIfParam }, // optional url.  if not given, url in body
-			{ "email", ParseState.ChildContentIfParam }, // like url
-			{ "video", ParseState.NoChildContent }, // like img
-			{ "google", ParseState.NoChildContent }, // search query in body.  optional param `images`
-			{ "thread", ParseState.ChildContentIfParam }, // like url, but the link is a number
-			{ "post", ParseState.ChildContentIfParam }, // like thread
-			{ "movie", ParseState.ChildContentIfParam }, // like thread
-			{ "submission", ParseState.ChildContentIfParam }, // like thread
-			{ "userfile", ParseState.ChildContentIfParam }, // like thread
-			{ "wiki", ParseState.ChildContentIfParam }, // like thread, but the link is a page name
+			{ "quote", ParseState.ChildTags }, // optional author
+			{ "code", ParseState.NoChlidTags }, // optional language
+			{ "img", ParseState.NoChlidTags }, // optional size
+			{ "url", ParseState.ChildTagsIfParam }, // optional url.  if not given, url in body
+			{ "email", ParseState.ChildTagsIfParam }, // like url
+			{ "video", ParseState.NoChlidTags }, // like img
+			{ "google", ParseState.NoChlidTags }, // search query in body.  optional param `images`
+			{ "thread", ParseState.ChildTagsIfParam }, // like url, but the link is a number
+			{ "post", ParseState.ChildTagsIfParam }, // like thread
+			{ "movie", ParseState.ChildTagsIfParam }, // like thread
+			{ "submission", ParseState.ChildTagsIfParam }, // like thread
+			{ "userfile", ParseState.ChildTagsIfParam }, // like thread
+			{ "wiki", ParseState.ChildTagsIfParam }, // like thread, but the link is a page name
 
 			// other stuff
-			{ "frames", ParseState.NoChildContent }, // no params.  body is something like `200` or `200@60.1`
-			{ "color", ParseState.ChildContent }, // param is a css (?) color
-			{ "size", ParseState.ChildContent }, // param is something relating to font size TODO: what are the values?
-			{ "noparse", ParseState.NoChildContent },
+			{ "frames", ParseState.NoChlidTags }, // no params.  body is something like `200` or `200@60.1`
+			{ "color", ParseState.ChildTags }, // param is a css (?) color
+			{ "size", ParseState.ChildTags }, // param is something relating to font size TODO: what are the values?
+			{ "noparse", ParseState.NoChlidTags },
 
 			// list related stuff
 			{ "list", ParseState.List }, // OLs have a param with value ??
@@ -166,14 +166,14 @@ namespace TASVideos.ForumEngine
 			{
 				switch (state)
 				{
-					case ParseState.NoChildContent:
+					case ParseState.NoChlidTags:
 						return false;
-					case ParseState.ChildContent:
+					case ParseState.ChildTags:
 					case ParseState.List:
 					case ParseState.ListItem:
 					default:
 						return true;
-					case ParseState.ChildContentIfParam:
+					case ParseState.ChildTagsIfParam:
 						return _stack.Peek().Options != "";
 				}
 			}
