@@ -157,8 +157,13 @@ namespace TASVideos.ForumEngine
 				case "sub":
 				case "sup":
 				case "tt":
-				case "li":
+				case "table":
+				case "tr":
+				case "td":
 					WriteSimpleTag(w, Name);
+					break;
+				case "*":
+					WriteSimpleTag(w, "li");
 					break;
 				case "html:b":
 				case "html:i":

@@ -38,15 +38,15 @@ namespace TASVideos.ForumEngine
 			/// <value></value>
 			NoChlidTags,
 			/// <summary>
-			/// like ChildTags, but including special handling for listitem tags which are not closed
+			/// Like ChildTags, but this element cannot nest itself
 			/// </summary>
 			/// <value></value>
-			List,
+			ChildTagsNoNest,
 			/// <summary>
-			/// like ChildTags, but including special handling for listitem tags which are not closed
+			/// Like ChildTags, but this element cannot nest directly in itself
 			/// </summary>
 			/// <value></value>
-			ListItem
+			ChildTagsNoImmediateNest
 		}
 
 		private static readonly Dictionary<string, ParseState> KnownTags = new Dictionary<string, ParseState>
@@ -87,10 +87,13 @@ namespace TASVideos.ForumEngine
 			{ "noparse", ParseState.NoChlidTags },
 
 			// list related stuff
-			{ "list", ParseState.List }, // OLs have a param with value ??
-			{ "*", ParseState.ListItem },
+			{ "list", ParseState.ChildTags }, // OLs have a param with value ??
+			{ "*", ParseState.ChildTagsNoImmediateNest },
 
-
+			// tables
+			{ "table", ParseState.ChildTagsNoNest },
+			{ "tr", ParseState.ChildTagsNoNest },
+			{ "td", ParseState.ChildTagsNoNest },
 		};
 
 		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new HashSet<string>
@@ -170,8 +173,8 @@ namespace TASVideos.ForumEngine
 					case ParseState.NoChlidTags:
 						return false;
 					case ParseState.ChildTags:
-					case ParseState.List:
-					case ParseState.ListItem:
+					case ParseState.ChildTagsNoNest:
+					case ParseState.ChildTagsNoImmediateNest:
 					default:
 						return true;
 					case ParseState.ChildTagsIfParam:
@@ -212,35 +215,31 @@ namespace TASVideos.ForumEngine
 						if (KnownTags.TryGetValue(name, out var state))
 						{
 							var e = new Element { Name = name, Options = options };
-							if (state == ParseState.List)
+							FlushText();
+							_index += m.Length;
+							if (state == ParseState.ChildTagsNoNest)
 							{
-								FlushText();
-								_index += m.Length;
-								Push(e);
-								Push(new Element { Name = "li" });
-							}
-							else if (state == ParseState.ListItem)
-							{
-								// try to pop a list item, then push a new one
-								if (_stack.Peek().Name == "li")
+								// try to pop a matching tag
+								foreach (var node in _stack)
 								{
-									FlushText();
-									_index += m.Length;
+									if (node.Name == name)
+									{
+										while (true)
+										{
+											if (_stack.Pop().Name == name)
+												break;
+										}
+										break;
+									}
+								}						
+							}
+							else if (state == ParseState.ChildTagsNoImmediateNest)
+							{
+								// try to pop a matching tag but only at this level
+								if (_stack.Peek().Name == name)
 									_stack.Pop();
-									Push(new Element { Name = "li" });
-								}
-								else
-								{
-									_currentText.Append(c);
-								}
 							}
-							else
-							{
-								FlushText();
-								_index += m.Length;
-								Push(e);
-							}
-
+							Push(e);
 							continue;
 						}
 						else
@@ -259,7 +258,7 @@ namespace TASVideos.ForumEngine
 							_stack.Pop();
 							continue;
 						}
-						else if (topName == "li" && name == "list")
+						else if (topName == "*" && name == "list")
 						{
 							// pop a list
 							FlushText();
