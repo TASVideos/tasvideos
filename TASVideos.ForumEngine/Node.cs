@@ -193,6 +193,15 @@ namespace TASVideos.ForumEngine
 				case "spoiler":
 					WriteComplexTag(w, "<span class=spoiler>", "</span>");
 					break;
+				case "warning":
+					WriteComplexTag(w, "<div class=warning>", "</div>");
+					break;
+				case "note":
+					WriteComplexTag(w, "<div class=forumline>", "</div>");
+					break;
+				case "highlight":
+					WriteComplexTag(w, "<span class=highlight>", "</span>");
+					break;
 				case "quote":
 					w.Write("<div class=quotecontainer>");
 					if (Options != "")
@@ -282,6 +291,14 @@ namespace TASVideos.ForumEngine
 					w.Write("<span style=");
 					// TODO: More fully featured anti-style injection
 					Helpers.WriteAttributeValue(w, "color: " + Options.Split(';')[0]);
+					w.Write('>');
+					WriteChildren(w);
+					w.Write("</span>");
+					break;
+				case "bgcolor":
+					w.Write("<span style=");
+					// TODO: More fully featured anti-style injection
+					Helpers.WriteAttributeValue(w, "background-color: " + Options.Split(';')[0]);
 					w.Write('>');
 					WriteChildren(w);
 					w.Write("</span>");
