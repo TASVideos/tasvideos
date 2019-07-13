@@ -132,6 +132,26 @@ h4 {
 .a-c { text-align: center; }
 .a-r { text-align: right; }
 
+.postbody .warning {
+	border: 2px solid #bd2130;
+	border-radius: 2px;
+	padding: 2px;
+}
+.postbody .warning::before {
+	content: "Warning: ";
+	color: #bd2130;
+	font-weight: bold;
+}
+
+.postbody .forumline {
+	border: 2px solid #0062cc;
+	border-radius: 2px;
+	padding: 2px;
+}
+.postbody .highlight {
+	background-color: #ffa;
+}
+
 .spoiler {
 	background-color: black;
 	color: black;

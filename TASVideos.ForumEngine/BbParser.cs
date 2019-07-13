@@ -63,6 +63,9 @@ namespace TASVideos.ForumEngine
 			{ "right", ParseState.ChildTags },
 			{ "center", ParseState.ChildTags },
 			{ "spoiler", ParseState.ChildTags },
+			{ "warning", ParseState.ChildTags },
+			{ "note", ParseState.ChildTags },
+			{ "highlight", ParseState.ChildTags },
 
 			// with optional params
 			{ "quote", ParseState.ChildTags }, // optional author
@@ -83,6 +86,7 @@ namespace TASVideos.ForumEngine
 			// other stuff
 			{ "frames", ParseState.NoChlidTags }, // no params.  body is something like `200` or `200@60.1`
 			{ "color", ParseState.ChildTags }, // param is a css (?) color
+			{ "bgcolor", ParseState.ChildTags }, // like color
 			{ "size", ParseState.ChildTags }, // param is something relating to font size TODO: what are the values?
 			{ "noparse", ParseState.NoChlidTags },
 
