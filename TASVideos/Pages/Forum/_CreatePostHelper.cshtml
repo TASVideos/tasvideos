@@ -1,81 +1,90 @@
 ﻿@model string
 @* ReSharper disable Html.Obsolete *@
 <div class="btn-group mt-1 mb-1">
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-bold"><strong>b</strong></button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-italics"><i>i</i></button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-strike"><s>s</s></button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-sub"><sub>sub</sub></button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-sup"><sup>sup</sup></button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[b],[/b]" data-key=b><strong>b</strong></button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[i],[/i]" data-key=i><i>i</i></button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[u],[/u]" data-key=u><u>u</u></button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[s],[/s]" data-key=k><s>s</s></button>
+	
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[sub],[/sub]" data-key="="><sub>sub</sub></button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[sup],[/sup]" data-skey="+"><sup>sup</sup></button>
 </div>
 
 <div class="btn-group mt-1 mb-1">
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-quote">quote</button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-url">url</button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-img">img</button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-code">code</button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-noparse">noparse</button>
-	<button type="button" class="btn btn-info btn-sm" tabindex="-1" id="helper-spoiler">spoiler</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[quote],[/quote]" data-akey=q>quote</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[url],[/url]" data-akey=w>url</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[email],[/email]" data-akey=e>email</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[img],[/img]" data-akey=p>img</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[code],[/code]" data-akey=c>code</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[noparse],[/noparse]">noparse</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[spoiler],[/spoiler]">spoiler</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[warning],[/warning]">warning</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[note],[/note]">note</button>
+	<button type="button" class="btn btn-info btn-sm" tabindex="-1" data-fmt="[highlight],[/highlight]">highlight</button>
 </div>
 
 <div class="btn-group mt-1 mb-1">
-	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" id="helper-tt">tt</button>
-	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" id="helper-list">list</button>
-	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" id="helper-olist">list=</button>
+	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" data-fmt="[tt],[/tt]">tt</button>
+	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" data-fmt="[list][*],[/list]" data-key=8>&#8226;</button>
+	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" data-fmt="[list=1][*],[/list]" data-key=3>1.</button>
 </div>
 
 <div class="btn-group mt-1 mb-1">
-	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" id="helper-left">left</button>
-	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" id="helper-right">right</button>
-	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" id="helper-center">center</button>
+	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" data-fmt="[left],[/left]" data-key=l>left</button>
+	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" data-fmt="[right],[/right]" data-key=r>right</button>
+	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" data-fmt="[center],[/center]" data-key=e>center</button>
+	<button type="button" class="btn btn-secondary btn-sm" tabindex="-1" data-fmt="[table][tr][td],[/td][/tr][/table]">table</button>
 </div>
 
 <div class="btn-group mt-1 mb-1">
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-frames">frames</button>
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-video">video</button>
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-google">google</button>
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-thread">thread</button>
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-post">post</button>
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-movie">movie</button>
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-submission">submission</button>
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-wiki">wiki</button>
-	<button type="button" class="btn btn-success btn-sm" tabindex="-1" id="helper-userfile">userfile</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[frames],[/frames]">frames</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[video],[/video]" data-akey=v>video</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[google],[/google]">google</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[thread],[/thread]">thread</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[post],[/post]">post</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[movie],[/movie]">movie</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[submission],[/submission]">submission</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[wiki],[/wiki]">wiki</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[userfile],[/userfile]">userfile</button>
+	<button type="button" class="btn btn-success btn-sm" tabindex="-1" data-fmt="[wip],[/wip]">wip</button>
 </div>
 <script>
-	(function () {
-		function textArea() {
-			return document.getElementById('@Model');
+	document.addEventListener("DOMContentLoaded", function installButtonEvents() {
+		var buttons = document.querySelectorAll("button[data-fmt]");
+		var textArea = document.getElementById('@Model');
+
+		function applyFormatting(s) {
+			var ss = s.split(",");
+			var val = textArea.value;
+			var i = textArea.selectionStart;
+			var j = textArea.selectionEnd;
+			val = val.slice(0, i) + ss[0] + val.slice(i, j) + ss[1] + val.slice(j);
+			textArea.value = val;
+			textArea.selectionStart = i + ss[0].length;
+			textArea.selectionEnd = j + ss[0].length;
 		}
 
-		document.getElementById('helper-bold').onclick = function () { textArea().value += '[b][/b]'; }
-		document.getElementById('helper-italics').onclick = function () { textArea().value += '[i][/i]'; }
-		document.getElementById('helper-strike').onclick = function () { textArea().value += '[s][/s]'; }
-		document.getElementById('helper-sub').onclick = function () { textArea().value += '[sub][/sub]'; }
-		document.getElementById('helper-sup').onclick = function () { textArea().value += '[sup][/sup]'; }
+		for (var i = 0; i < buttons.length; i++) {
+			buttons[i].addEventListener("click", function listener() {
+				applyFormatting(this.getAttribute("data-fmt"));
+				textArea.focus();
+			});
+		}
 
-		document.getElementById('helper-quote').onclick = function () { textArea().value += '[quote][/quote]'; }
-		document.getElementById('helper-url').onclick = function () { textArea().value += '[url][/url]'; }
-		document.getElementById('helper-img').onclick = function () { textArea().value += '[img][/img]'; }
-		document.getElementById('helper-code').onclick = function () { textArea().value += '[code][/code]'; }
-		document.getElementById('helper-code').onclick = function () { textArea().value += '[code][/code]'; }
-		document.getElementById('helper-noparse').onclick = function () { textArea().value += '[noparse][/noparse]'; }
-		document.getElementById('helper-spoiler').onclick = function () { textArea().value += '[spoiler][/spoiler]'; }
+		textArea.addEventListener("keydown", function listener(ev) {
+			var button;
+			if (ev.altKey) {
+				button = document.querySelector("button[data-fmt][data-akey='" + ev.key + "']");
+			} else if (ev.ctrlKey && ev.shiftKey) {
+				button = document.querySelector("button[data-fmt][data-skey='" + ev.key + "']");
+			} else if (ev.ctrlKey) {
+				button = document.querySelector("button[data-fmt][data-key='" + ev.key + "']");
+			}
 
-		document.getElementById('helper-tt').onclick = function () { textArea().value += '[tt][/tt]'; }
-		document.getElementById('helper-list').onclick = function () { textArea().value += '[list][/list]'; }
-		document.getElementById('helper-olist').onclick = function () { textArea().value += '[list=][/list]'; }
-
-		document.getElementById('helper-left').onclick = function () { textArea().value += '[left][/left]'; }
-		document.getElementById('helper-right').onclick = function () { textArea().value += '[right][/right]'; }
-		document.getElementById('helper-center').onclick = function () { textArea().value += '[center][/center]'; }
-
-		document.getElementById('helper-frames').onclick = function () { textArea().value += '[frames][/frames]'; }
-		document.getElementById('helper-video').onclick = function () { textArea().value += '[video][/video]'; }
-		document.getElementById('helper-google').onclick = function () { textArea().value += '[google][/google]'; }
-		document.getElementById('helper-thread').onclick = function () { textArea().value += '[thread][/thread]'; }
-		document.getElementById('helper-post').onclick = function () { textArea().value += '[post][/post]'; }
-		document.getElementById('helper-movie').onclick = function () { textArea().value += '[movie][/movie]'; }
-		document.getElementById('helper-submission').onclick = function () { textArea().value += '[submission][/submission]'; }
-		document.getElementById('helper-wiki').onclick = function () { textArea().value += '[wiki][/wiki]'; }
-		document.getElementById('helper-userfile').onclick = function () { textArea().value += '[userfile][/userfile]'; }
-	})();
+			if (button) {
+				ev.preventDefault();
+				applyFormatting(button.getAttribute("data-fmt"));
+			}
+		});
+	});
 </script>
