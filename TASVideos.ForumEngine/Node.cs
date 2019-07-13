@@ -127,13 +127,22 @@ namespace TASVideos.ForumEngine
 			return ret;
 		}
 
-		private void WriteHref(TextWriter w, Func<string, string> transformUrl)
+		private void WriteHref(TextWriter w, Func<string, string> transformUrl, Func<string, string> transformUrlText)
 		{
 			w.Write("<a href=");
 			var href = transformUrl(Options != "" ? Options : GetChildText());
 			Helpers.WriteAttributeValue(w, href);
 			w.Write('>');
-			WriteChildren(w);
+			if (Options != "")
+			{
+				WriteChildren(w);
+			}
+			else
+			{
+				// these were all parsed as ChildTagsIfParam, so we're guaranteed to have a single text child
+				var text = Children.Cast<Text>().Single();
+				Helpers.WriteText(w, transformUrlText(text.Content));
+			}
 			w.Write("</a>");
 		}
 
@@ -218,28 +227,35 @@ namespace TASVideos.ForumEngine
 					}
 					break;
 				case "url":
-					WriteHref(w, s => s);
+					WriteHref(w, s => s, s => s);
 					break;
 				case "email":
-					WriteHref(w, s => "mailto:" + s);
+					WriteHref(w, s => "mailto:" + s, s => s);
 					break;
 				case "thread":
-					WriteHref(w, s => "/forum/t/" + s);
+					WriteHref(w, s => "/forum/t/" + s, s => "Thread #" + s);
 					break;
 				case "post":
-					WriteHref(w, s => "/forum/p/" + s + "#" + s);
+					WriteHref(w, s => "/forum/p/" + s + "#" + s, s => "Post #" + s);
 					break;
 				case "movie":
-					WriteHref(w, s => "/" + s + "M.html");
+					// TODO: On the old site, this actually shows the movie title
+					// `[123] NES Guerrilla War (USA) in 14:39.18 by lithven`
+					WriteHref(w, s => "/" + s + "M.html", s => "Movie #" + s);
 					break;
 				case "submission":
-					WriteHref(w, s => "/" + s + "S.html");
+					// TODO: On the old site, this actually shows the submission title
+					// `#123: kopernical's NES Mega Man 5 in 36:29.94`
+					WriteHref(w, s => "/" + s + "S.html", s => "Submission #" + s);
 					break;
 				case "userfile":
-					WriteHref(w, s => "/userfiles/info/" + s);
+					WriteHref(w, s => "/userfiles/info/" + s, s => "User movie #" + s);
+					break;
+				case "wip":
+					WriteHref(w, s => "/userfiles/info/" + s, s => "WIP #" + s);
 					break;
 				case "wiki":
-					WriteHref(w, s => "/" + s + ".html");
+					WriteHref(w, s => "/" + s + ".html", s => "Wiki: " + s);
 					break;
 				case "frames":
 					{

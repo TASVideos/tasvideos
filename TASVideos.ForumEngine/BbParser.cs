@@ -77,6 +77,7 @@ namespace TASVideos.ForumEngine
 			{ "movie", ParseState.ChildTagsIfParam }, // like thread
 			{ "submission", ParseState.ChildTagsIfParam }, // like thread
 			{ "userfile", ParseState.ChildTagsIfParam }, // like thread
+			{ "wip", ParseState.ChildTagsIfParam }, // like thread (in fact, identical to userfile except for text output)
 			{ "wiki", ParseState.ChildTagsIfParam }, // like thread, but the link is a page name
 
 			// other stuff
