@@ -53,7 +53,7 @@
 		</row>
 	</form-group>
 	<form-group>
-		<partial name="_CreatePostHelper" model="nameof(Model.Topic.Post)" />
+		<partial name="_CreatePostHelper" model="@("Topic_Post")" />
 	</form-group>
 	<form-group>
 		<textarea asp-for="Topic.Post" class="form-control" rows="20"></textarea>
