@@ -255,12 +255,12 @@ namespace TASVideos.ForumEngine
 				case "movie":
 					// TODO: On the old site, this actually shows the movie title
 					// `[123] NES Guerrilla War (USA) in 14:39.18 by lithven`
-					WriteHref(w, s => "/" + s + "M.html", s => "Movie #" + s);
+					WriteHref(w, s => "/" + s + "M", s => "Movie #" + s);
 					break;
 				case "submission":
 					// TODO: On the old site, this actually shows the submission title
 					// `#123: kopernical's NES Mega Man 5 in 36:29.94`
-					WriteHref(w, s => "/" + s + "S.html", s => "Submission #" + s);
+					WriteHref(w, s => "/" + s + "S", s => "Submission #" + s);
 					break;
 				case "userfile":
 					WriteHref(w, s => "/userfiles/info/" + s, s => "User movie #" + s);
@@ -269,7 +269,7 @@ namespace TASVideos.ForumEngine
 					WriteHref(w, s => "/userfiles/info/" + s, s => "WIP #" + s);
 					break;
 				case "wiki":
-					WriteHref(w, s => "/" + s + ".html", s => "Wiki: " + s);
+					WriteHref(w, s => "/" + s, s => "Wiki: " + s);
 					break;
 				case "frames":
 					{
