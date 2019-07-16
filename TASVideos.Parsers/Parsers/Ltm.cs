@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 
 using SharpCompress.Archives.Tar;
@@ -16,6 +17,14 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		public override string FileExtension => "ltm";
 
+		private void DumpToConsole(TextReader r)
+		{
+			while (r.ReadLine() is string s)
+			{
+				Debug.WriteLine(s);
+			}
+		}
+
 		public IParseResult Parse(Stream file)
 		{
 			var result = new ParseResult
@@ -26,8 +35,34 @@ namespace TASVideos.MovieParsers.Parsers
 
 			using (var reader = ReaderFactory.Open(file))
 			{
-				var blah = reader.OpenEntryStream();
-				int zzz = 0;
+				while (reader.MoveToNextEntry())
+				{
+					if (reader.Entry.IsDirectory)
+					{
+						continue;
+					}
+
+					using (var entry = reader.OpenEntryStream())
+					using (var textReader = new StreamReader(entry))
+					{
+						switch (reader.Entry.Key)
+						{
+							case "config.ini":
+								// framerate and such are in here
+								Debug.WriteLine("##CONFIG##:");
+								DumpToConsole(textReader);
+								break;
+							case "inputs":
+								// also a text file, input roll stuff
+								Debug.WriteLine("##INPUTS##:");
+								DumpToConsole(textReader);
+								break;
+							default:
+								break;
+						}
+						entry.SkipEntry(); // seems to be required if the stream was not fully consumed
+					}
+				}
 			}
 
 			return result;
