@@ -24,6 +24,7 @@ namespace TASVideos.Test.MovieParsers
 
 			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
+			Assert.AreEqual(2, result.Frames);
 		}
 	}
 }
