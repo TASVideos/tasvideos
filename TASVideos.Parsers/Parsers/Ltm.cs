@@ -1,13 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-
-using SharpCompress.Archives.Tar;
-using SharpCompress.Common;
-using SharpCompress.Compressors.Deflate;
+using System.Linq;
 using SharpCompress.Readers;
-using SharpCompress.Readers.GZip;
-
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -48,24 +43,49 @@ namespace TASVideos.MovieParsers.Parsers
 						switch (reader.Entry.Key)
 						{
 							case "config.ini":
-								// framerate and such are in here
-								Debug.WriteLine("##CONFIG##:");
-								DumpToConsole(textReader);
+								while (textReader.ReadLine() is string s)
+								{
+									if (s.StartsWith("frame_count"))
+									{
+										result.Frames = ParseIntFromConfig(s);
+									}
+								}
 								break;
 							case "inputs":
 								// also a text file, input roll stuff
 								Debug.WriteLine("##INPUTS##:");
 								DumpToConsole(textReader);
 								break;
-							default:
-								break;
 						}
+
 						entry.SkipEntry(); // seems to be required if the stream was not fully consumed
 					}
 				}
 			}
 
 			return result;
+		}
+
+		private int ParseIntFromConfig(string str)
+		{
+			if (string.IsNullOrWhiteSpace(str))
+			{
+				return 0;
+			}
+
+			var split = str.Split(new []{ "="}, StringSplitOptions.RemoveEmptyEntries);
+
+			if (split.Length > 1)
+			{
+				var intStr = split.Skip(1).First();
+				var result = int.TryParse(intStr, out int val);
+				if (result)
+				{
+					return val;
+				}
+			}
+
+			return 0;
 		}
 	}
 }
