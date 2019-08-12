@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using SharpCompress.Readers;
@@ -10,15 +9,10 @@ namespace TASVideos.MovieParsers.Parsers
 	[FileExtension("ltm")]
 	internal class Ltm : ParserBase, IParser
 	{
-		public override string FileExtension => "ltm";
+		private const string FrameCountHeader = "frame_count";
+		private const string RerecordCountHeader = "rerecord_count";
 
-		private void DumpToConsole(TextReader r)
-		{
-			while (r.ReadLine() is string s)
-			{
-				Debug.WriteLine(s);
-			}
-		}
+		public override string FileExtension => "ltm";
 
 		public IParseResult Parse(Stream file)
 		{
@@ -45,16 +39,19 @@ namespace TASVideos.MovieParsers.Parsers
 							case "config.ini":
 								while (textReader.ReadLine() is string s)
 								{
-									if (s.StartsWith("frame_count"))
+									if (s.StartsWith(FrameCountHeader))
 									{
 										result.Frames = ParseIntFromConfig(s);
 									}
+									else if (s.StartsWith(RerecordCountHeader))
+									{
+										result.RerecordCount = ParseIntFromConfig(s);
+									}
 								}
+
 								break;
 							case "inputs":
 								// also a text file, input roll stuff
-								Debug.WriteLine("##INPUTS##:");
-								DumpToConsole(textReader);
 								break;
 						}
 
@@ -73,7 +70,7 @@ namespace TASVideos.MovieParsers.Parsers
 				return 0;
 			}
 
-			var split = str.Split(new []{ "="}, StringSplitOptions.RemoveEmptyEntries);
+			var split = str.Split(new [] { "=" }, StringSplitOptions.RemoveEmptyEntries);
 
 			if (split.Length > 1)
 			{
