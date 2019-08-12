@@ -18,13 +18,23 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void BasicTest()
+		public void FrameCount()
 		{
 			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
 
 			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(2, result.Frames);
+		}
+
+		[TestMethod]
+		public void RerecordCount()
+		{
+			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
+
+			Assert.IsNotNull(result);
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(7, result.RerecordCount);
 		}
 	}
 }
