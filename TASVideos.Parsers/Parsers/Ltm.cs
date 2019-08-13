@@ -20,7 +20,8 @@ namespace TASVideos.MovieParsers.Parsers
 			var result = new ParseResult
 			{
 				Region = RegionType.Ntsc,
-				FileExtension = FileExtension
+				FileExtension = FileExtension,
+				SystemCode = SystemCodes.Linux
 			};
 
 			using (var reader = ReaderFactory.Open(file))
