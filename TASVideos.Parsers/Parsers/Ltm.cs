@@ -11,6 +11,7 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		private const string FrameCountHeader = "frame_count";
 		private const string RerecordCountHeader = "rerecord_count";
+		private const string SaveStateCountHeader = "savestate_frame_count";
 
 		public override string FileExtension => "ltm";
 
@@ -47,11 +48,18 @@ namespace TASVideos.MovieParsers.Parsers
 									{
 										result.RerecordCount = ParseIntFromConfig(s);
 									}
+									else if (s.StartsWith(SaveStateCountHeader))
+									{
+										var savestateCount = ParseIntFromConfig(s);
+										
+										// Power-on movies seem to always have a savestate count equal to frames
+										if (savestateCount > 0 && savestateCount != result.Frames)
+										{
+											result.StartType = MovieStartType.Savestate;
+										}
+									}
 								}
 
-								break;
-							case "inputs":
-								// also a text file, input roll stuff
 								break;
 						}
 
@@ -70,7 +78,7 @@ namespace TASVideos.MovieParsers.Parsers
 				return 0;
 			}
 
-			var split = str.Split(new [] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+			var split = str.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
 
 			if (split.Length > 1)
 			{

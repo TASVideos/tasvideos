@@ -83,6 +83,7 @@
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\savestate.anchor.lsmv" />
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\savestate.lsmv" />
     <EmbeddedResource Include="MovieParsers\LtmSampleFiles\2frames.ltm" />
+    <EmbeddedResource Include="MovieParsers\LtmSampleFiles\savestate.ltm" />
   </ItemGroup>
 
   <ItemGroup>
