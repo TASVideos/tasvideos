@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
@@ -25,6 +27,7 @@ namespace TASVideos.Test.MovieParsers
 
 			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
+			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(2, result.Frames);
 		}
 
@@ -35,6 +38,7 @@ namespace TASVideos.Test.MovieParsers
 
 			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
+			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(7, result.RerecordCount);
 		}
 
@@ -45,6 +49,7 @@ namespace TASVideos.Test.MovieParsers
 
 			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
+			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 		}
 
@@ -55,6 +60,7 @@ namespace TASVideos.Test.MovieParsers
 
 			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
+			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		}
 	}
