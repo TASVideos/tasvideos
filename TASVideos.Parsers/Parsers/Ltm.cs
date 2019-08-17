@@ -9,6 +9,8 @@ namespace TASVideos.MovieParsers.Parsers
 	[FileExtension("ltm")]
 	internal class Ltm : ParserBase, IParser
 	{
+		public const double DefaultFrameRate = 60.0;
+
 		private const string FrameCountHeader = "frame_count=";
 		private const string RerecordCountHeader = "rerecord_count=";
 		private const string SaveStateCountHeader = "savestate_frame_count=";
@@ -72,6 +74,12 @@ namespace TASVideos.MovieParsers.Parsers
 						entry.SkipEntry(); // seems to be required if the stream was not fully consumed
 					}
 				}
+			}
+
+			if (result.FrameRateOverride == null)
+			{
+				result.WarnNoFrameRate();
+				result.FrameRateOverride = DefaultFrameRate;
 			}
 
 			return result;

@@ -29,5 +29,10 @@ namespace TASVideos.MovieParsers.Result
 		{
 			parseResult.WarningList.Add(ParseWarnings.MissingRerecordCount);
 		}
+
+		internal static void WarnNoFrameRate(this ParseResult parseResult)
+		{
+			parseResult.WarningList.Add(ParseWarnings.FrameRateInferred);
+		}
 	}
 }
