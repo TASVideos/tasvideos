@@ -9,9 +9,10 @@ namespace TASVideos.MovieParsers.Parsers
 	[FileExtension("ltm")]
 	internal class Ltm : ParserBase, IParser
 	{
-		private const string FrameCountHeader = "frame_count";
-		private const string RerecordCountHeader = "rerecord_count";
-		private const string SaveStateCountHeader = "savestate_frame_count";
+		private const string FrameCountHeader = "frame_count=";
+		private const string RerecordCountHeader = "rerecord_count=";
+		private const string SaveStateCountHeader = "savestate_frame_count=";
+		private const string FrameRateHeader = "framerate=";
 
 		public override string FileExtension => "ltm";
 
@@ -59,6 +60,10 @@ namespace TASVideos.MovieParsers.Parsers
 											result.StartType = MovieStartType.Savestate;
 										}
 									}
+									else if (s.StartsWith(FrameRateHeader))
+									{
+										result.FrameRateOverride = ParseDoubleFromConfig(s);
+									}
 								}
 
 								break;
@@ -85,6 +90,28 @@ namespace TASVideos.MovieParsers.Parsers
 			{
 				var intStr = split.Skip(1).First();
 				var result = int.TryParse(intStr, out int val);
+				if (result)
+				{
+					return val;
+				}
+			}
+
+			return 0;
+		}
+
+		private double ParseDoubleFromConfig(string str)
+		{
+			if (string.IsNullOrWhiteSpace(str))
+			{
+				return 0;
+			}
+
+			var split = str.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+
+			if (split.Length > 1)
+			{
+				var intStr = split.Skip(1).First();
+				var result = double.TryParse(intStr, out double val);
 				if (result)
 				{
 					return val;

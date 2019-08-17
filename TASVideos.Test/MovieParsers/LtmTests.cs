@@ -43,6 +43,17 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
+		public void FrameRate()
+		{
+			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
+
+			Assert.IsNotNull(result);
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
+			Assert.AreEqual(60.1, result.FrameRateOverride);
+		}
+
+		[TestMethod]
 		public void PowerOn()
 		{
 			var result = _ltmParser.Parse(Embedded("2frames.ltm"));

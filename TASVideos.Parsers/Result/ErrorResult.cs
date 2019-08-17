@@ -23,5 +23,6 @@ namespace TASVideos.MovieParsers.Result
 		public string SystemCode => "";
 		public int RerecordCount => -1;
 		public MovieStartType StartType => MovieStartType.PowerOn;
+		public double? FrameRateOverride => null;
 	}
 }
