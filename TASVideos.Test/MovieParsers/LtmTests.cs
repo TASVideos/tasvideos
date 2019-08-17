@@ -54,7 +54,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
-			Assert.AreEqual(60.1, result.FrameRateOverride);
+			Assert.AreEqual(120, result.FrameRateOverride);
 			AssertNoWarningsOrErrors(result);
 		}
 
