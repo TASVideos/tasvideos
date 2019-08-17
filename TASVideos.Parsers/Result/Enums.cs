@@ -64,6 +64,11 @@
 		/// <summary>
 		/// Indicates that the region could not be reliably determined, and a default was used.
 		/// </summary>
-		RegionInferred
+		RegionInferred,
+
+		/// <summary>
+		/// Indicates that a framerate override was needed but no value could be found, and a default was used
+		/// </summary>
+		FrameRateInferred
 	}
 }

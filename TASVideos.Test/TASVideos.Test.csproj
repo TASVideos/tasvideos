@@ -1,9 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="MovieParsers\LtmSampleFiles\noframerate.ltm" />
+  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="MovieParsers\Bk2SampleFiles\0Frames.bk2" />
@@ -83,6 +87,7 @@
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\savestate.anchor.lsmv" />
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\savestate.lsmv" />
     <EmbeddedResource Include="MovieParsers\LtmSampleFiles\2frames.ltm" />
+    <EmbeddedResource Include="MovieParsers\LtmSampleFiles\noframerate.ltm" />
     <EmbeddedResource Include="MovieParsers\LtmSampleFiles\savestate.ltm" />
   </ItemGroup>
 
