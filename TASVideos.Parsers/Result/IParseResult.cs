@@ -59,5 +59,12 @@ namespace TASVideos.MovieParsers.Result
 		/// ex: power-on, sram, savestate
 		/// </summary>
 		MovieStartType StartType { get; }
+
+		/// <summary>
+		/// Gets the framerate reported by the movie format. Formats for systems that have a high number
+		/// of framerates will report this value 
+		/// If null, the calling system should infer the frame rate based on system and region
+		/// </summary>
+		double? FrameRateOverride { get; }
 	}
 }
