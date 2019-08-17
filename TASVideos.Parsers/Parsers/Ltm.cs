@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
 using SharpCompress.Readers;
 using TASVideos.MovieParsers.Result;
 
@@ -14,7 +16,8 @@ namespace TASVideos.MovieParsers.Parsers
 		private const string FrameCountHeader = "frame_count=";
 		private const string RerecordCountHeader = "rerecord_count=";
 		private const string SaveStateCountHeader = "savestate_frame_count=";
-		private const string FrameRateHeader = "framerate=";
+		private const string FrameRateDenHeader = "framerate_den=";
+		private const string FrameRateNumHeader = "framerate_num";
 
 		public override string FileExtension => "ltm";
 
@@ -26,6 +29,9 @@ namespace TASVideos.MovieParsers.Parsers
 				FileExtension = FileExtension,
 				SystemCode = SystemCodes.Linux
 			};
+
+			double? frameRateDenominator = null;
+			double? frameRateNumerator = null;
 
 			using (var reader = ReaderFactory.Open(file))
 			{
@@ -62,9 +68,13 @@ namespace TASVideos.MovieParsers.Parsers
 											result.StartType = MovieStartType.Savestate;
 										}
 									}
-									else if (s.StartsWith(FrameRateHeader))
+									else if (s.StartsWith(FrameRateDenHeader))
 									{
-										result.FrameRateOverride = ParseDoubleFromConfig(s);
+										frameRateDenominator = ParseDoubleFromConfig(s);
+									}
+									else if (s.StartsWith(FrameRateNumHeader))
+									{
+										frameRateNumerator = ParseDoubleFromConfig(s);
 									}
 								}
 
@@ -76,7 +86,11 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 			}
 
-			if (result.FrameRateOverride == null)
+			if (frameRateDenominator > 0 && frameRateNumerator.HasValue)
+			{
+				result.FrameRateOverride = frameRateNumerator / frameRateDenominator;
+			}
+			else
 			{
 				result.WarnNoFrameRate();
 				result.FrameRateOverride = DefaultFrameRate;
