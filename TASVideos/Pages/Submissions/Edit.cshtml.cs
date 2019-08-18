@@ -20,9 +20,8 @@ using TASVideos.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Submissions
 {
 	[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
-	public class EditModel : BasePageModel
+	public class EditModel : SubmissionBasePageModel
 	{
-		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
@@ -32,8 +31,8 @@ namespace TASVideos.Pages.Submissions
 			MovieParser parser,
 			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher)
+			: base(db)
 		{
-			_db = db;
 			_parser = parser;
 			_wikiPages = wikiPages;
 			_publisher = publisher;
@@ -55,7 +54,7 @@ namespace TASVideos.Pages.Submissions
 		public async Task<IActionResult> OnGet()
 		{
 			// TODO: set up auto-mapper and use ProjectTo<>
-			Submission = await _db.Submissions
+			Submission = await Db.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 				{
@@ -87,7 +86,7 @@ namespace TASVideos.Pages.Submissions
 				return NotFound();
 			}
 
-			Submission.Authors = await _db.SubmissionAuthors
+			Submission.Authors = await Db.SubmissionAuthors
 				.Where(sa => sa.SubmissionId == Id)
 				.Select(sa => sa.Author.UserName)
 				.ToListAsync();
@@ -143,7 +142,7 @@ namespace TASVideos.Pages.Submissions
 				Submission.TierId = null;
 			}
 
-			var subInfo = await _db.Submissions
+			var subInfo = await Db.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new
 				{
@@ -194,7 +193,7 @@ namespace TASVideos.Pages.Submissions
 				}
 			}
 
-			var submission = await _db.Submissions
+			var submission = await Db.Submissions
 				.Include(s => s.Judge)
 				.Include(s => s.Publisher)
 				.Include(s => s.System)
@@ -203,36 +202,16 @@ namespace TASVideos.Pages.Submissions
 				.ThenInclude(sa => sa.Author)
 				.SingleAsync(s => s.Id == Id);
 
-			// Parse movie file if it exists
 			if (Submission.MovieFile != null)
 			{
 				// TODO: check warnings
 				var parseResult = _parser.Parse(Submission.MovieFile.OpenReadStream());
+				await MapParsedResult(parseResult, submission);
 
-				if (!parseResult.Success)
+				if (!ModelState.IsValid)
 				{
-					ModelState.AddParseErrors(parseResult);
 					return Page();
 				}
-
-				submission.MovieStartType = (int)parseResult.StartType;
-				submission.Frames = parseResult.Frames;
-				submission.RerecordCount = parseResult.RerecordCount;
-				submission.MovieExtension = parseResult.FileExtension;
-				submission.System = await _db.GameSystems
-					.ForCode(parseResult.SystemCode)
-					.SingleOrDefaultAsync();
-
-				if (submission.System == null)
-				{
-					ModelState.AddModelError("", $"Unknown system type of {parseResult.SystemCode}");
-					return Page();
-				}
-
-				submission.SystemFrameRate = await _db.GameSystemFrameRates
-					.ForSystem(submission.System.Id)
-					.ForRegion(parseResult.Region.ToString())
-					.SingleOrDefaultAsync();
 
 				submission.MovieFile = await FormFileToBytes(Submission.MovieFile);
 			}
@@ -241,7 +220,7 @@ namespace TASVideos.Pages.Submissions
 			if (Submission.Status == SubmissionStatus.JudgingUnderWay
 				&& submission.Status != SubmissionStatus.JudgingUnderWay)
 			{
-				submission.Judge = await _db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
+				submission.Judge = await Db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
 			}
 			else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
 				&& Submission.Status == SubmissionStatus.New
@@ -253,7 +232,7 @@ namespace TASVideos.Pages.Submissions
 			if (Submission.Status == SubmissionStatus.PublicationUnderway
 				&& submission.Status != SubmissionStatus.PublicationUnderway)
 			{
-				submission.Publisher = await _db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
+				submission.Publisher = await Db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
 			}
 			else if (submission.Status == SubmissionStatus.Accepted // If publisher is unclaiming, remove them
 				&& Submission.Status == SubmissionStatus.PublicationUnderway)
@@ -271,7 +250,7 @@ namespace TASVideos.Pages.Submissions
 					Status = Submission.Status
 				};
 				submission.History.Add(history);
-				_db.SubmissionStatusHistory.Add(history);
+				Db.SubmissionStatusHistory.Add(history);
 
 				submission.RejectionReasonId = Submission.Status == SubmissionStatus.Rejected
 					? Submission.RejectionReason
@@ -279,7 +258,7 @@ namespace TASVideos.Pages.Submissions
 			}
 
 			submission.IntendedTier = Submission.TierId.HasValue
-				? await _db.Tiers.SingleAsync(t => t.Id == Submission.TierId.Value)
+				? await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId.Value)
 				: null;
 
 			submission.GameVersion = Submission.GameVersion;
@@ -302,7 +281,7 @@ namespace TASVideos.Pages.Submissions
 			submission.WikiContent = revision;
 
 			submission.GenerateTitle();
-			await _db.SaveChangesAsync();
+			await Db.SaveChangesAsync();
 
 			if (!Submission.MinorEdit)
 			{
@@ -310,7 +289,7 @@ namespace TASVideos.Pages.Submissions
 				if (statusHasChanged)
 				{
 					var statusStr = Submission.Status == SubmissionStatus.Accepted
-						? $"{Submission.Status.ToString()} to {(await _db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
+						? $"{Submission.Status.ToString()} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
 						: Submission.Status.ToString();
 					title = $"Submission {submission.Title} {statusStr} by {User.Identity.Name}";
 				}
@@ -327,11 +306,11 @@ namespace TASVideos.Pages.Submissions
 
 		private async Task PopulateDropdowns()
 		{
-			AvailableTiers = await _db.Tiers
+			AvailableTiers = await Db.Tiers
 				.ToDropdown()
 				.ToListAsync();
 
-			AvailableRejectionReasons = await _db.SubmissionRejectionReasons
+			AvailableRejectionReasons = await Db.SubmissionRejectionReasons
 				.ToDropdown()
 				.ToListAsync();
 		}

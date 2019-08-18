@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,9 +18,8 @@ using TASVideos.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Submissions
 {
 	[RequirePermission(PermissionTo.SubmitMovies)]
-	public class SubmitModel : BasePageModel
+	public class SubmitModel : SubmissionBasePageModel
 	{
-		private readonly ApplicationDbContext _db;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly MovieParser _parser;
@@ -33,8 +31,8 @@ namespace TASVideos.Pages.Submissions
 			IWikiPages wikiPages,
 			MovieParser parser,
 			UserManager userManager)
+			: base(db)
 		{
-			_db = db;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_parser = parser;
@@ -72,41 +70,25 @@ namespace TASVideos.Pages.Submissions
 				EncodeEmbedLink = Create.EncodeEmbedLink
 			};
 
-			// Parse movie file
 			// TODO: check warnings
 			var parseResult = _parser.Parse(Create.MovieFile.OpenReadStream());
-
-			ModelState.AddParseErrors(parseResult);
-
-			submission.MovieStartType = (int)parseResult.StartType;
-			submission.Frames = parseResult.Frames;
-			submission.RerecordCount = parseResult.RerecordCount;
-			submission.MovieExtension = parseResult.FileExtension;
-			submission.System = await _db.GameSystems
-				.ForCode(parseResult.SystemCode)
-				.SingleOrDefaultAsync();
-
-			if (submission.System == null)
+			await MapParsedResult(parseResult, submission);
+			
+			if (!ModelState.IsValid)
 			{
-				ModelState.AddModelError("", $"Unknown system type of {parseResult.SystemCode}");
 				return Page();
 			}
-
-			submission.SystemFrameRate = await _db.GameSystemFrameRates
-				.ForSystem(submission.System.Id)
-				.ForRegion(parseResult.Region.ToString())
-				.SingleOrDefaultAsync();
 
 			submission.MovieFile = await FormFileToBytes(Create.MovieFile);
 
 			submission.Submitter = await _userManager.GetUserAsync(User);
 
-			_db.Submissions.Add(submission);
-			await _db.SaveChangesAsync();
+			Db.Submissions.Add(submission);
+			await Db.SaveChangesAsync();
 
 			await CreateSubmissionWikiPage(submission);
 
-			_db.SubmissionAuthors.AddRange(await _db.Users
+			Db.SubmissionAuthors.AddRange(await Db.Users
 				.Where(u => Create.Authors.Contains(u.UserName))
 				.Select(u => new SubmissionAuthor
 				{
@@ -155,7 +137,7 @@ namespace TASVideos.Pages.Submissions
 
 			foreach (var author in Create.Authors)
 			{
-				if (!await _db.Users.Exists(author))
+				if (!await Db.Users.Exists(author))
 				{
 					ModelState.AddModelError(nameof(SubmissionCreateModel.Authors), $"Could not find user: {author}");
 				}
@@ -215,13 +197,13 @@ namespace TASVideos.Pages.Submissions
 				EnableBbCode = false
 			};
 
-			_db.ForumPolls.Add(poll);
-			_db.ForumTopics.Add(topic);
-			_db.ForumPosts.Add(post);
-			await _db.SaveChangesAsync();
+			Db.ForumPolls.Add(poll);
+			Db.ForumTopics.Add(topic);
+			Db.ForumPosts.Add(post);
+			await Db.SaveChangesAsync();
 
 			poll.TopicId = topic.Id;
-			await _db.SaveChangesAsync();
+			await Db.SaveChangesAsync();
 		}
 	}
 }
