@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity.Game
 {
@@ -24,5 +25,13 @@ namespace TASVideos.Data.Entity.Game
 		[Required]
 		[StringLength(100)]
 		public string DisplayName { get; set; }
+	}
+
+	public static class GameSystemExtensions
+	{
+		public static IQueryable<GameSystem> ForCode(this IQueryable<GameSystem> query, string code)
+		{
+			return query.Where(s => s.Code == code);
+		}
 	}
 }

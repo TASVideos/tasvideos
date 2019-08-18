@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Data.Helpers;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers;
@@ -215,9 +215,14 @@ namespace TASVideos.Pages.Submissions
 					return Page();
 				}
 
+				submission.MovieStartType = (int)parseResult.StartType;
 				submission.Frames = parseResult.Frames;
 				submission.RerecordCount = parseResult.RerecordCount;
-				submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
+				submission.MovieExtension = parseResult.FileExtension;
+				submission.System = await _db.GameSystems
+					.ForCode(parseResult.SystemCode)
+					.SingleOrDefaultAsync();
+
 				if (submission.System == null)
 				{
 					ModelState.AddModelError("", $"Unknown system type of {parseResult.SystemCode}");
@@ -225,8 +230,9 @@ namespace TASVideos.Pages.Submissions
 				}
 
 				submission.SystemFrameRate = await _db.GameSystemFrameRates
-					.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
-						&& f.RegionCode == parseResult.Region.ToString());
+					.ForSystem(submission.System.Id)
+					.ForRegion(parseResult.Region.ToString())
+					.SingleOrDefaultAsync();
 
 				submission.MovieFile = await FormFileToBytes(Submission.MovieFile);
 			}

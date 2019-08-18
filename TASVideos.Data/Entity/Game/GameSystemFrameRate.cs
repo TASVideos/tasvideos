@@ -18,11 +18,16 @@ namespace TASVideos.Data.Entity.Game
 		public bool Preliminary { get; set; }
 	}
 
-	public static class GameSystemExtensions
+	public static class GameSystemFrameRateExtensions
 	{
 		public static IQueryable<GameSystemFrameRate> ForSystem(this IQueryable<GameSystemFrameRate> query, int systemId)
 		{
-			return query.Where(g => g.GameSystemId == systemId);
+			return query.Where(sf => sf.GameSystemId == systemId);
+		}
+
+		public static IQueryable<GameSystemFrameRate> ForRegion(this IQueryable<GameSystemFrameRate> query, string region)
+		{
+			return query.Where(sf => sf.RegionCode == region);
 		}
 	}
 }

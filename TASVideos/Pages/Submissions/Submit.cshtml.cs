@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
@@ -81,7 +82,9 @@ namespace TASVideos.Pages.Submissions
 			submission.Frames = parseResult.Frames;
 			submission.RerecordCount = parseResult.RerecordCount;
 			submission.MovieExtension = parseResult.FileExtension;
-			submission.System = await _db.GameSystems.SingleOrDefaultAsync(g => g.Code == parseResult.SystemCode);
+			submission.System = await _db.GameSystems
+				.ForCode(parseResult.SystemCode)
+				.SingleOrDefaultAsync();
 
 			if (submission.System == null)
 			{
@@ -89,12 +92,14 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
-			submission.Submitter = await _userManager.GetUserAsync(User);
 			submission.SystemFrameRate = await _db.GameSystemFrameRates
-				.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
-					&& f.RegionCode == parseResult.Region.ToString());
+				.ForSystem(submission.System.Id)
+				.ForRegion(parseResult.Region.ToString())
+				.SingleOrDefaultAsync();
 
 			submission.MovieFile = await FormFileToBytes(Create.MovieFile);
+
+			submission.Submitter = await _userManager.GetUserAsync(User);
 
 			_db.Submissions.Add(submission);
 			await _db.SaveChangesAsync();
