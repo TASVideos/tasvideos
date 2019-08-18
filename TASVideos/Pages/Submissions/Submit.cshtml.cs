@@ -124,55 +124,7 @@ namespace TASVideos.Pages.Submissions
 
 			submission.GenerateTitle();
 
-			var poll = new ForumPoll
-			{
-				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
-				Question = SiteGlobalConstants.PollQuestion,
-				PollOptions = new[]
-				{
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
-				}
-			};
-
-			_db.ForumPolls.Add(poll);
-
-			await _db.SaveChangesAsync();
-
-			// Create Topic in workbench
-			var topic = new ForumTopic
-			{
-				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
-				ForumId = ForumConstants.WorkBenchForumId,
-				Title = submission.Title,
-				PosterId = SiteGlobalConstants.TASVideoAgentId,
-				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
-				PollId = poll.Id,
-			};
-
-			// Create first post
-			var post = new ForumPost
-			{
-				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
-				Topic = topic,
-				PosterId = SiteGlobalConstants.TASVideoAgentId,
-				Subject = submission.Title,
-				Text = SiteGlobalConstants.NewSubmissionPost + $"<a href=\"/{submission.Id}S\">{submission.Title}</a>",
-				EnableHtml = true,
-				EnableBbCode = false
-			};
-
-			_db.ForumTopics.Add(topic);
-			_db.ForumPosts.Add(post);
-			await _db.SaveChangesAsync();
-
-			poll.TopicId = topic.Id;
-			await _db.SaveChangesAsync();
-
+			await CreateSubmissionTopic(submission.Id, submission.Title);
 			_publisher.AnnounceSubmission(submission.Title, $"{BaseUrl}/{submission.Id}S");
 
 			return Redirect($"/{submission.Id}S");
@@ -215,6 +167,55 @@ namespace TASVideos.Pages.Submissions
 					ModelState.AddModelError(nameof(SubmissionCreateModel.Authors), $"Could not find user: {author}");
 				}
 			}
+		}
+
+		private async Task CreateSubmissionTopic(int id, string title)
+		{
+			var poll = new ForumPoll
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				Question = SiteGlobalConstants.PollQuestion,
+				PollOptions = new[]
+				{
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
+					new ForumPollOption { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
+				}
+			};
+
+			// Create Topic in workbench
+			var topic = new ForumTopic
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				ForumId = ForumConstants.WorkBenchForumId,
+				Title = title,
+				PosterId = SiteGlobalConstants.TASVideoAgentId,
+				PageName = LinkConstants.SubmissionWikiPage + id,
+				Poll = poll
+			};
+
+			// Create first post
+			var post = new ForumPost
+			{
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				Topic = topic,
+				PosterId = SiteGlobalConstants.TASVideoAgentId,
+				Subject = title,
+				Text = SiteGlobalConstants.NewSubmissionPost + $"<a href=\"/{id}S\">{title}</a>",
+				EnableHtml = true,
+				EnableBbCode = false
+			};
+
+			_db.ForumPolls.Add(poll);
+			_db.ForumTopics.Add(topic);
+			_db.ForumPosts.Add(post);
+			await _db.SaveChangesAsync();
+
+			poll.TopicId = topic.Id;
+			await _db.SaveChangesAsync();
 		}
 	}
 }
