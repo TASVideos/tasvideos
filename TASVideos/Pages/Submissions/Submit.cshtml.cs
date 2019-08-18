@@ -104,16 +104,7 @@ namespace TASVideos.Pages.Submissions
 			_db.Submissions.Add(submission);
 			await _db.SaveChangesAsync();
 
-			// Create a wiki page corresponding to this submission
-			var revision = new WikiPage
-			{
-				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
-				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
-				Markup = Create.Markup,
-				MinorEdit = false
-			};
-			await _wikiPages.Add(revision);
-			submission.WikiContent = revision;
+			await CreateSubmissionWikiPage(submission);
 
 			_db.SubmissionAuthors.AddRange(await _db.Users
 				.Where(u => Create.Authors.Contains(u.UserName))
@@ -169,6 +160,19 @@ namespace TASVideos.Pages.Submissions
 					ModelState.AddModelError(nameof(SubmissionCreateModel.Authors), $"Could not find user: {author}");
 				}
 			}
+		}
+
+		private async Task CreateSubmissionWikiPage(Submission submission)
+		{
+			var revision = new WikiPage
+			{
+				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
+				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
+				Markup = Create.Markup,
+				MinorEdit = false
+			};
+			await _wikiPages.Add(revision);
+			submission.WikiContent = revision;
 		}
 
 		private async Task CreateSubmissionTopic(int id, string title)
