@@ -308,31 +308,27 @@ namespace TASVideos.Pages.Submissions
 
 			if (!Submission.MinorEdit)
 			{
+				string title;
 				if (statusHasChanged)
 				{
 					var statusStr = Submission.Status == SubmissionStatus.Accepted
 						? $"{Submission.Status.ToString()} to {(await _db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
 						: Submission.Status.ToString();
-					_publisher.Send(new Post
-					{
-						Type = PostType.General,
-						Group = PostGroups.Submission,
-						Body = "",
-						Title = $"Submission {submission.Title} {statusStr} by {User.Identity.Name}",
-						Link = $"{BaseUrl}/{Id}S"
-					});
+					title = $"Submission {submission.Title} {statusStr} by {User.Identity.Name}";
 				}
 				else
 				{
-					_publisher.Send(new Post
-					{
-						Type = PostType.General,
-						Group = PostGroups.Submission,
-						Title = $"Submission {submission.Title} edited by {User.Identity.Name}",
-						Body = "",
-						Link = $"{BaseUrl}/{Id}S"
-					});
+					title = $"Submission {submission.Title} edited by {User.Identity.Name}";
 				}
+
+				_publisher.Send(new Post
+				{
+					Type = PostType.General,
+					Group = PostGroups.Submission,
+					Body = "",
+					Title = title,
+					Link = $"{BaseUrl}/{Id}S"
+				});
 			}
 
 			return Redirect($"/{Id}S");
