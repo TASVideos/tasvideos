@@ -110,17 +110,14 @@ namespace TASVideos.Pages.Submissions
 			await _wikiPages.Add(revision);
 			submission.WikiContent = revision;
 
-			// Add authors
-			var users = await _db.Users
+			_db.SubmissionAuthors.AddRange(await _db.Users
 				.Where(u => Create.Authors.Contains(u.UserName))
-				.ToListAsync();
-
-			_db.SubmissionAuthors.AddRange(users
 				.Select(u => new SubmissionAuthor
 				{
 					SubmissionId = submission.Id,
 					UserId = u.Id
-				}));
+				})
+				.ToListAsync());
 
 			submission.GenerateTitle();
 
