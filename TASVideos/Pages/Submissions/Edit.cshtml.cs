@@ -211,11 +211,7 @@ namespace TASVideos.Pages.Submissions
 
 				if (!parseResult.Success)
 				{
-					foreach (var error in parseResult.Errors)
-					{
-						ModelState.AddModelError("", error);
-					}
-
+					ModelState.AddParseErrors(parseResult);
 					return Page();
 				}
 

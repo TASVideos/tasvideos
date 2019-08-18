@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Services;
@@ -74,13 +75,7 @@ namespace TASVideos.Pages.Submissions
 			// TODO: check warnings
 			var parseResult = _parser.Parse(Create.MovieFile.OpenReadStream());
 
-			if (!parseResult.Success)
-			{
-				foreach (var error in parseResult.Errors)
-				{
-					ModelState.AddModelError("", error);
-				}
-			}
+			ModelState.AddParseErrors(parseResult);
 
 			submission.MovieStartType = (int)parseResult.StartType;
 			submission.Frames = parseResult.Frames;
