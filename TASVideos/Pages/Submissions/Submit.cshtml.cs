@@ -94,11 +94,7 @@ namespace TASVideos.Pages.Submissions
 				.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
 					&& f.RegionCode == parseResult.Region.ToString());
 
-			using (var memoryStream = new MemoryStream())
-			{
-				await Create.MovieFile.CopyToAsync(memoryStream);
-				submission.MovieFile = memoryStream.ToArray();
-			}
+			submission.MovieFile = await FormFileToBytes(Create.MovieFile);
 
 			_db.Submissions.Add(submission);
 			await _db.SaveChangesAsync();

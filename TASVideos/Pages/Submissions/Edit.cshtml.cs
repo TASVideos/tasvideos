@@ -228,11 +228,7 @@ namespace TASVideos.Pages.Submissions
 					.SingleOrDefaultAsync(f => f.GameSystemId == submission.System.Id
 						&& f.RegionCode == parseResult.Region.ToString());
 
-				using (var memoryStream = new MemoryStream())
-				{
-					await Submission.MovieFile.CopyToAsync(memoryStream);
-					submission.MovieFile = memoryStream.ToArray();
-				}
+				submission.MovieFile = await FormFileToBytes(Submission.MovieFile);
 			}
 
 			// If a judge is claiming the submission
