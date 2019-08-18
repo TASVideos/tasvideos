@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
+using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Extensions
