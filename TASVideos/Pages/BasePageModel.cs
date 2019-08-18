@@ -1,5 +1,8 @@
 ﻿using System.IO;
 using System.Net;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -70,6 +73,15 @@ namespace TASVideos.Pages
 		protected string RenderSignature(string text)
 		{
 			return RenderBbcode(text); // Bbcode on, Html off hardcoded, do we want this to be configurable?
+		}
+
+		protected async Task<byte[]> FormFileToBytes(IFormFile formFile)
+		{
+			using (var memoryStream = new MemoryStream())
+			{
+				await formFile.CopyToAsync(memoryStream);
+				return memoryStream.ToArray();
+			}
 		}
 	}
 }
