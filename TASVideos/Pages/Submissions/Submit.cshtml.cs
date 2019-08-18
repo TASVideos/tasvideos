@@ -124,13 +124,12 @@ namespace TASVideos.Pages.Submissions
 				.Where(u => Create.Authors.Contains(u.UserName))
 				.ToListAsync();
 
-			var submissionAuthors = users.Select(u => new SubmissionAuthor
-			{
-				SubmissionId = submission.Id,
-				UserId = u.Id
-			});
-
-			_db.SubmissionAuthors.AddRange(submissionAuthors);
+			_db.SubmissionAuthors.AddRange(users
+				.Select(u => new SubmissionAuthor
+				{
+					SubmissionId = submission.Id,
+					UserId = u.Id
+				}));
 
 			submission.GenerateTitle();
 
