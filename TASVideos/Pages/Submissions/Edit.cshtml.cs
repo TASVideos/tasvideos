@@ -321,14 +321,7 @@ namespace TASVideos.Pages.Submissions
 					title = $"Submission {submission.Title} edited by {User.Identity.Name}";
 				}
 
-				_publisher.Send(new Post
-				{
-					Type = PostType.General,
-					Group = PostGroups.Submission,
-					Body = "",
-					Title = title,
-					Link = $"{BaseUrl}/{Id}S"
-				});
+				_publisher.SendSubmissionEdit(title, $"{BaseUrl}/{Id}S");
 			}
 
 			return Redirect($"/{Id}S");

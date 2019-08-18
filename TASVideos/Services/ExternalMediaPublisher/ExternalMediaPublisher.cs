@@ -49,6 +49,18 @@ namespace TASVideos.Services.ExternalMediaPublisher
 			});
 		}
 
+		public static void SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string link)
+		{
+			publisher.Send(new Post
+			{
+				Type = PostType.General,
+				Group = PostGroups.Submission,
+				Title = title,
+				Body = "",
+				Link = link
+			});
+		}
+
 		public static void AnnouncePublication(this ExternalMediaPublisher publisher, string title, string link)
 		{
 			publisher.Send(new Post
