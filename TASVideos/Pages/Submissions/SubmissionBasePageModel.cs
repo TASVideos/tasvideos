@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -44,10 +40,34 @@ namespace TASVideos.Pages.Submissions
 				return;
 			}
 
-			submission.SystemFrameRate = await Db.GameSystemFrameRates
-				.ForSystem(submission.System.Id)
-				.ForRegion(parseResult.Region.ToString())
-				.SingleOrDefaultAsync();
+			if (parseResult.FrameRateOverride.HasValue)
+			{
+				var frameRate = await Db.GameSystemFrameRates
+					// ReSharper disable once CompareOfFloatsByEqualityOperator
+					.FirstOrDefaultAsync(sf => sf.FrameRate == parseResult.FrameRateOverride.Value);
+
+				if (frameRate == null)
+				{
+					frameRate = new GameSystemFrameRate
+					{
+						System = submission.System,
+						FrameRate = parseResult.FrameRateOverride.Value,
+						RegionCode = parseResult.Region.ToString().ToUpper()
+					};
+					Db.GameSystemFrameRates.Add(frameRate);
+					await Db.SaveChangesAsync();
+					submission.SystemFrameRate = frameRate;
+				}
+			}
+			else
+			{
+				// SingleOrDefault should work here because the only time there could be more than one for a system and region are formats that return a framerate override
+				// Those systems should never hit this code block.  But just in case.
+				submission.SystemFrameRate = await Db.GameSystemFrameRates
+					.ForSystem(submission.System.Id)
+					.ForRegion(parseResult.Region.ToString())
+					.FirstOrDefaultAsync();
+			}
 		}
 	}
 }
