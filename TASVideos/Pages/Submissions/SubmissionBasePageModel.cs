@@ -56,8 +56,9 @@ namespace TASVideos.Pages.Submissions
 					};
 					Db.GameSystemFrameRates.Add(frameRate);
 					await Db.SaveChangesAsync();
-					submission.SystemFrameRate = frameRate;
 				}
+
+				submission.SystemFrameRate = frameRate;
 			}
 			else
 			{
