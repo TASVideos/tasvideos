@@ -68,7 +68,6 @@ namespace TASVideos.Data.Entity
 		public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
 		public virtual ICollection<SubmissionStatusHistory> History { get; set; } = new HashSet<SubmissionStatusHistory>();
 
-		// TODO: we eventually should want to move these to the file server instead
 		public byte[] MovieFile { get; set; }
 
 		public string MovieExtension { get; set; }
