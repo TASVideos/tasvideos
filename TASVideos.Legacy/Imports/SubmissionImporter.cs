@@ -58,204 +58,215 @@ namespace TASVideos.Legacy.Imports
 			var submissionAuthors = new List<SubmissionAuthor>();
 			var submissionHistory = new List<SubmissionStatusHistory>();
 
-			using (context.Database.BeginTransaction())
+			var users = context.Users.ToList();
+
+			var submissionWikis = context.WikiPages
+				.ThatAreNotDeleted()
+				.WithNoChildren()
+				.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
+				.Select(s => new { s.Id, s.PageName, s.CreateTimeStamp })
+				.ToList();
+
+			var publicationWikis = context.WikiPages
+				.ThatAreNotDeleted()
+				.WithNoChildren()
+				.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
+				.ToList()
+				.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimeStamp, gvalue.CreateUserName, gvalue.PageName })
+				.Select(p => p.First(g => g.CreateTimeStamp == p.Min(pp => pp.CreateTimeStamp)))
+				.ToList();
+
+			var systems = context.GameSystems.ToList();
+			var systemFrameRates = context.GameSystemFrameRates.ToList();
+
+			var lSubsWithSystem = (from ls in legacySubmissions
+				join s in systems on ls.SystemId equals s.Id
+				join w in submissionWikis on LinkConstants.SubmissionWikiPage + ls.Id equals w.PageName
+				join u in users on ImportHelper.ConvertLatin1String(ls.User.Name).ToLower() equals u.UserName.ToLower() into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+				from u in uu.DefaultIfEmpty()
+				join j in users on ImportHelper.ConvertLatin1String(ls.Judge.Name).ToLower() equals j.UserName.ToLower() into ju
+				from j in ju.DefaultIfEmpty()
+				join pub in publicationWikis on LinkConstants.PublicationWikiPage + (ls.Movie?.Id ?? -1) equals pub.PageName into pubs
+				from pub in pubs.DefaultIfEmpty()
+				join p in users on ImportHelper.ConvertLatin1String(pub?.CreateUserName) equals p.UserName into pp
+				from p in pp.DefaultIfEmpty()
+				join r in rejectionReasons on ls.Id equals r.Id into rr
+				from r in rr.DefaultIfEmpty()
+				select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimeStamp, Rejection = r })
+				.ToList();
+
+			foreach (var legacySubmission in lSubsWithSystem)
 			{
-				var users = context.Users.ToList();
-
-				var submissionWikis = context.WikiPages
-					.ThatAreNotDeleted()
-					.WithNoChildren()
-					.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
-					.Select(s => new { s.Id, s.PageName, s.CreateTimeStamp })
-					.ToList();
-
-				var publicationWikis = context.WikiPages
-					.ThatAreNotDeleted()
-					.WithNoChildren()
-					.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
-					.ToList()
-					.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimeStamp, gvalue.CreateUserName, gvalue.PageName })
-					.Select(p => p.First(g => g.CreateTimeStamp == p.Min(pp => pp.CreateTimeStamp)))
-					.ToList();
-
-				var systems = context.GameSystems.ToList();
-				var systemFrameRates = context.GameSystemFrameRates.ToList();
-
-				var lSubsWithSystem = (from ls in legacySubmissions
-					join s in systems on ls.SystemId equals s.Id
-					join w in submissionWikis on LinkConstants.SubmissionWikiPage + ls.Id equals w.PageName
-					join u in users on ImportHelper.ConvertLatin1String(ls.User.Name).ToLower() equals u.UserName.ToLower() into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
-					from u in uu.DefaultIfEmpty()
-					join j in users on ImportHelper.ConvertLatin1String(ls.Judge.Name).ToLower() equals j.UserName.ToLower() into ju
-					from j in ju.DefaultIfEmpty()
-					join pub in publicationWikis on LinkConstants.PublicationWikiPage + (ls.Movie?.Id ?? -1) equals pub.PageName into pubs
-					from pub in pubs.DefaultIfEmpty()
-					join p in users on ImportHelper.ConvertLatin1String(pub?.CreateUserName) equals p.UserName into pp
-					from p in pp.DefaultIfEmpty()
-					join r in rejectionReasons on ls.Id equals r.Id into rr
-					from r in rr.DefaultIfEmpty()
-					select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimeStamp, Rejection = r })
-					.ToList();
-
-				foreach (var legacySubmission in lSubsWithSystem)
+				if (legacySubmission.Sub.GameVersion == "PAL")
 				{
-					if (legacySubmission.Sub.GameVersion == "PAL")
-					{
-						legacySubmission.Sub.GameVersion = "Europe";
-					}
-
-					var extension = GetExtension(legacySubmission.Sub.Content);
-
-					GameSystemFrameRate systemFrameRate;
-
-					var movieExtension = GetExtension(legacySubmission.Sub.Content);
-					var timeAs50Fps = Math.Round(legacySubmission.Sub.Frames / 50.0, 2);
-					var timeAs60Fps = Math.Round(legacySubmission.Sub.Frames / 60.0, 2);
-					var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
-
-					if (LegacyNtscOverrides.Contains(legacySubmission.Sub.Id))
-					{
-						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
-					}
-					else if (LegacyPalOverrides.Contains(legacySubmission.Sub.Id))
-					{
-						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL");
-					}
-
-					// Legacy support hack. If we have a NTSC60 legacy framerate and the legacy time looks like it was calculated with 60fps
-					// Then use this system framerate instead of NTSC
-					else if ((Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset
-						&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 60))
-						|| Legacy60FpsOverrides.Contains(legacySubmission.Sub.Id)
-						|| extension == "jrsr") // All these movies were parsed as 60fps, but the database says that DOS is 70fps, weird
-					{
-						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 60);
-					}
-
-					// Legacy support hack. If we have a PAL50 legacy framerate and the legacy time looks like it was calculated with 50fps
-					// Then use this system framerate instead of PAL
-					else if ((Math.Abs(timeAs50Fps - legacyTime) < RoundingOffset
-							&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50))
-						|| Legacy50FpsOverrides.Contains(legacySubmission.Sub.Id))
-					{
-						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50);
-					}
-					else if ((legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
-							&& !legacySubmission.Sub.GameVersion.ToLower().Contains("usa")
-							&& legacySubmission.System.Id != 10) // SMS Europe games are still 60fps
-							|| C64Pal.Contains(legacySubmission.Sub.Id)
-							|| legacySubmission.System.Id == 44) // ZX Spectrum is PAL only
-					{
-						systemFrameRate = systemFrameRates
-							.SingleOrDefault(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL")
-							?? systemFrameRates.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
-					}
-					else
-					{
-						systemFrameRate = systemFrameRates
-							.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
-					}
-
-					var submission = new Submission
-					{
-						Id = legacySubmission.Sub.Id,
-						WikiContentId = legacySubmission.Wiki.Id,
-						SubmitterId = legacySubmission.Submitter?.Id,
-						Submitter = legacySubmission.Submitter,
-						SystemId = legacySubmission.System.Id,
-						System = legacySubmission.System,
-						SystemFrameRateId = systemFrameRate.Id,
-						SystemFrameRate = systemFrameRate,
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
-						CreateUserName = legacySubmission.Submitter?.UserName,
-						LastUpdateTimeStamp = legacySubmission.Wiki.CreateTimeStamp,
-						GameName = ImportHelper.ConvertLatin1String(legacySubmission.Sub.GameName),
-						GameVersion = legacySubmission.Sub.GameVersion,
-						Frames = legacySubmission.Sub.Frames,
-						Status = ConvertStatus(legacySubmission.Sub.Status),
-						RomName = legacySubmission.Sub.RomName,
-						RerecordCount = legacySubmission.Sub.Rerecord,
-						MovieFile = legacySubmission.Sub.Content,
-						IntendedTierId = legacySubmission.Sub.IntendedTier,
-						GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
-						RomId = -1, // Legacy system had no notion of Rom for submissions
-						EmulatorVersion = CleanAndGuessEmuVersion(legacySubmission.Sub.Id, legacySubmission.Sub.EmulatorVersion, extension),
-						JudgeId = legacySubmission.Judge?.Id,
-						PublisherId = legacySubmission.Publisher?.Id,
-						Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
-						MovieExtension = movieExtension,
-						RejectionReasonId = legacySubmission.Rejection?.Reason
-					};
-
-					submission.LegacyTime = legacySubmission.Sub.Length;
-					submission.ImportedTime = decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
-
-					if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
-					{
-						legacySubmission.Sub.Author = "DJ FozzBozz & RaverMeister";
-					}
-
-					var authorNames = legacySubmission.Sub.Author
-						.ParseUserNames()
-						.Select(a => NickCleanup(ImportHelper.ConvertLatin1String(a).ToLower().Trim()))
-						.ToList();
-
-					var authors = users
-						.Where(u => authorNames.Contains(u.UserName.ToLower()))
-						.Select(u => new SubmissionAuthor
-						{
-							SubmissionId = submission.Id,
-							Submission = submission,
-							UserId = u.Id,
-							Author = u
-						})
-						.ToList();
-
-					var additionalAuthors = authorNames.Except(authors.Select(a => a.Author.UserName.ToLower())).ToList();
-					if (additionalAuthors.Any())
-					{
-						submission.AdditionalAuthors = string.Join(",", additionalAuthors);
-					}
-
-					foreach (var author in authors)
-					{
-						submission.SubmissionAuthors.Add(author);
-						submissionAuthors.Add(author);
-					}
-
-					if (legacySubmission.Judge != null)
-					{
-						submissionHistory.Add(new SubmissionStatusHistory
-						{
-							CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
-							CreateUserName = legacySubmission.Judge.UserName,
-							LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
-							LastUpdateUserName = legacySubmission.Judge.UserName,
-							Status = ConvertJudgeStatus(submission.Status),
-							SubmissionId = submission.Id,
-						});
-					}
-
-					if (legacySubmission.Publisher != null && legacySubmission.PubDate.HasValue)
-					{
-						submissionHistory.Add(new SubmissionStatusHistory
-						{
-							CreateTimeStamp = legacySubmission.PubDate.Value,
-							CreateUserName = legacySubmission.Publisher.UserName,
-							LastUpdateTimeStamp = legacySubmission.PubDate.Value,
-							LastUpdateUserName = legacySubmission.Publisher.UserName,
-							Status = SubmissionStatus.Published,
-							SubmissionId = submission.Id,
-						});
-					}
-
-					submission.GenerateTitle();
-					submissions.Add(submission);
+					legacySubmission.Sub.GameVersion = "Europe";
 				}
+
+				var extension = GetExtension(legacySubmission.Sub.Content);
+
+				GameSystemFrameRate systemFrameRate;
+
+				var movieExtension = GetExtension(legacySubmission.Sub.Content);
+				var timeAs50Fps = Math.Round(legacySubmission.Sub.Frames / 50.0, 2);
+				var timeAs60Fps = Math.Round(legacySubmission.Sub.Frames / 60.0, 2);
+				var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
+				var legacyFrameRate = legacyTime / legacySubmission.Sub.Frames;
+				var is60fps = Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset;
+				var is50fps = Math.Abs(timeAs50Fps - legacyTime) < RoundingOffset;
+
+				if (legacySubmission.System.Id == 38 && legacyTime != timeAs60Fps && legacyTime != timeAs50Fps)
+				{
+					systemFrameRate = new GameSystemFrameRate
+					{
+						System = legacySubmission.System,
+						FrameRate = legacyFrameRate,
+						RegionCode = "NTSC"
+					};
+					context.GameSystemFrameRates.Add(systemFrameRate);
+					context.SaveChanges();
+				}
+				else if (LegacyNtscOverrides.Contains(legacySubmission.Sub.Id))
+				{
+					systemFrameRate = systemFrameRates
+						.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
+				}
+				else if (LegacyPalOverrides.Contains(legacySubmission.Sub.Id))
+				{
+					systemFrameRate = systemFrameRates
+						.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL");
+				}
+
+				// Legacy support hack. If we have a NTSC60 legacy framerate and the legacy time looks like it was calculated with 60fps
+				// Then use this system framerate instead of NTSC
+				else if ((is60fps
+					&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 60))
+					|| Legacy60FpsOverrides.Contains(legacySubmission.Sub.Id)
+					|| extension == "jrsr") // All these movies were parsed as 60fps, but the database says that DOS is 70fps, weird
+				{
+					systemFrameRate = systemFrameRates
+						.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 60);
+				}
+
+				// Legacy support hack. If we have a PAL50 legacy framerate and the legacy time looks like it was calculated with 50fps
+				// Then use this system framerate instead of PAL
+				else if ((is50fps
+						&& systemFrameRates.Any(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50))
+					|| Legacy50FpsOverrides.Contains(legacySubmission.Sub.Id))
+				{
+					systemFrameRate = systemFrameRates
+						.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.FrameRate == 50);
+				}
+				else if ((legacySubmission.Sub.GameVersion.ToLower().Contains("euro")
+						&& !legacySubmission.Sub.GameVersion.ToLower().Contains("usa")
+						&& legacySubmission.System.Id != 10) // SMS Europe games are still 60fps
+						|| C64Pal.Contains(legacySubmission.Sub.Id)
+						|| legacySubmission.System.Id == 44) // ZX Spectrum is PAL only
+				{
+					systemFrameRate = systemFrameRates
+						.SingleOrDefault(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "PAL")
+						?? systemFrameRates.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
+				}
+				else
+				{
+					systemFrameRate = systemFrameRates
+						.Single(sf => sf.GameSystemId == legacySubmission.System.Id && sf.RegionCode == "NTSC");
+				}
+
+				var submission = new Submission
+				{
+					Id = legacySubmission.Sub.Id,
+					WikiContentId = legacySubmission.Wiki.Id,
+					SubmitterId = legacySubmission.Submitter?.Id,
+					Submitter = legacySubmission.Submitter,
+					SystemId = legacySubmission.System.Id,
+					System = legacySubmission.System,
+					SystemFrameRateId = systemFrameRate.Id,
+					SystemFrameRate = systemFrameRate,
+					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
+					CreateUserName = legacySubmission.Submitter?.UserName,
+					LastUpdateTimeStamp = legacySubmission.Wiki.CreateTimeStamp,
+					GameName = ImportHelper.ConvertLatin1String(legacySubmission.Sub.GameName),
+					GameVersion = legacySubmission.Sub.GameVersion,
+					Frames = legacySubmission.Sub.Frames,
+					Status = ConvertStatus(legacySubmission.Sub.Status),
+					RomName = legacySubmission.Sub.RomName,
+					RerecordCount = legacySubmission.Sub.Rerecord,
+					MovieFile = legacySubmission.Sub.Content,
+					IntendedTierId = legacySubmission.Sub.IntendedTier,
+					GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
+					RomId = -1, // Legacy system had no notion of Rom for submissions
+					EmulatorVersion = CleanAndGuessEmuVersion(legacySubmission.Sub.Id, legacySubmission.Sub.EmulatorVersion, extension),
+					JudgeId = legacySubmission.Judge?.Id,
+					PublisherId = legacySubmission.Publisher?.Id,
+					Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
+					MovieExtension = movieExtension,
+					RejectionReasonId = legacySubmission.Rejection?.Reason
+				};
+
+				submission.LegacyTime = legacySubmission.Sub.Length;
+				submission.ImportedTime = decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
+
+				if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
+				{
+					legacySubmission.Sub.Author = "DJ FozzBozz & RaverMeister";
+				}
+
+				var authorNames = legacySubmission.Sub.Author
+					.ParseUserNames()
+					.Select(a => NickCleanup(ImportHelper.ConvertLatin1String(a).ToLower().Trim()))
+					.ToList();
+
+				var authors = users
+					.Where(u => authorNames.Contains(u.UserName.ToLower()))
+					.Select(u => new SubmissionAuthor
+					{
+						SubmissionId = submission.Id,
+						Submission = submission,
+						UserId = u.Id,
+						Author = u
+					})
+					.ToList();
+
+				var additionalAuthors = authorNames.Except(authors.Select(a => a.Author.UserName.ToLower())).ToList();
+				if (additionalAuthors.Any())
+				{
+					submission.AdditionalAuthors = string.Join(",", additionalAuthors);
+				}
+
+				foreach (var author in authors)
+				{
+					submission.SubmissionAuthors.Add(author);
+					submissionAuthors.Add(author);
+				}
+
+				if (legacySubmission.Judge != null)
+				{
+					submissionHistory.Add(new SubmissionStatusHistory
+					{
+						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
+						CreateUserName = legacySubmission.Judge.UserName,
+						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
+						LastUpdateUserName = legacySubmission.Judge.UserName,
+						Status = ConvertJudgeStatus(submission.Status),
+						SubmissionId = submission.Id,
+					});
+				}
+
+				if (legacySubmission.Publisher != null && legacySubmission.PubDate.HasValue)
+				{
+					submissionHistory.Add(new SubmissionStatusHistory
+					{
+						CreateTimeStamp = legacySubmission.PubDate.Value,
+						CreateUserName = legacySubmission.Publisher.UserName,
+						LastUpdateTimeStamp = legacySubmission.PubDate.Value,
+						LastUpdateUserName = legacySubmission.Publisher.UserName,
+						Status = SubmissionStatus.Published,
+						SubmissionId = submission.Id,
+					});
+				}
+
+				submission.GenerateTitle();
+				submissions.Add(submission);
 			}
 
 			var subColumns = new[]
