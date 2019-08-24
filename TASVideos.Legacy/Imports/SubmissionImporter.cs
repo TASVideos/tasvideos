@@ -110,20 +110,26 @@ namespace TASVideos.Legacy.Imports
 				var timeAs50Fps = Math.Round(legacySubmission.Sub.Frames / 50.0, 2);
 				var timeAs60Fps = Math.Round(legacySubmission.Sub.Frames / 60.0, 2);
 				var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
-				var legacyFrameRate = legacyTime / legacySubmission.Sub.Frames;
+				var legacyFrameRate = legacySubmission.Sub.Frames / legacyTime;
 				var is60fps = Math.Abs(timeAs60Fps - legacyTime) < RoundingOffset;
 				var is50fps = Math.Abs(timeAs50Fps - legacyTime) < RoundingOffset;
 
 				if (legacySubmission.System.Id == 38 && legacyTime != timeAs60Fps && legacyTime != timeAs50Fps)
 				{
-					systemFrameRate = new GameSystemFrameRate
-					{
-						System = legacySubmission.System,
-						FrameRate = legacyFrameRate,
-						RegionCode = "NTSC"
-					};
-					context.GameSystemFrameRates.Add(systemFrameRate);
-					context.SaveChanges();
+					systemFrameRate = context.GameSystemFrameRates.FirstOrDefault(sf => sf.FrameRate == legacyFrameRate && sf.GameSystemId == 38);
+
+					if (systemFrameRate == null)
+					{ 
+						systemFrameRate = new GameSystemFrameRate
+						{
+							System = legacySubmission.System,
+							FrameRate = legacyFrameRate,
+							RegionCode = "NTSC"
+
+						};
+						context.GameSystemFrameRates.Add(systemFrameRate);
+						context.SaveChanges();
+					}
 				}
 				else if (LegacyNtscOverrides.Contains(legacySubmission.Sub.Id))
 				{
