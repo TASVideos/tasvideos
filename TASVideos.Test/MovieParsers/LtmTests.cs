@@ -24,6 +24,16 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
+		public void Region()
+		{
+			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
+
+			Assert.IsNotNull(result);
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(RegionType.Ntsc, result.Region);
+		}
+
+		[TestMethod]
 		public void FrameCount()
 		{
 			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
