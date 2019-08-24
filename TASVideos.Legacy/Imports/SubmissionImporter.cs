@@ -191,6 +191,9 @@ namespace TASVideos.Legacy.Imports
 						RejectionReasonId = legacySubmission.Rejection?.Reason
 					};
 
+					submission.LegacyTime = legacySubmission.Sub.Length;
+					submission.ImportedTime = decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
+
 					if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
 					{
 						legacySubmission.Sub.Author = "DJ FozzBozz & RaverMeister";
@@ -282,7 +285,10 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.PublisherId),
 				nameof(Submission.MovieExtension),
 				nameof(Submission.RejectionReasonId),
-				nameof(Submission.AdditionalAuthors)
+				nameof(Submission.AdditionalAuthors),
+
+				nameof(Submission.LegacyTime),
+				nameof(Submission.ImportedTime)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);

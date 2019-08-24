@@ -143,6 +143,10 @@ namespace TASVideos.Data.Entity
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
 				+ $" in {this.Time():g}";
 		}
+
+		// Temporary for import debugging
+		public decimal LegacyTime { get; set; }
+		public decimal ImportedTime { get; set; }
 	}
 
 	public static class SubmissionExtensions
