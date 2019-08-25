@@ -282,13 +282,15 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 1,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
 				GameSystemId = 1,
 				RegionCode = Pal + "50",
-				FrameRate = 50
+				FrameRate = 50,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -306,13 +308,15 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 2,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
 				GameSystemId = 2,
 				RegionCode = Pal + "50",
-				FrameRate = 50
+				FrameRate = 50,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -330,13 +334,15 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 3,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
 				GameSystemId = 3,
 				RegionCode = Pal + "50",
-				FrameRate = 50
+				FrameRate = 50,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -348,7 +354,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 4,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -366,7 +373,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 5,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -378,7 +386,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 6,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -390,7 +399,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 7,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -416,7 +426,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 9,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -434,13 +445,15 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 10,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
 				GameSystemId = 10,
 				RegionCode = Pal + "50",
-				FrameRate = 50
+				FrameRate = 50,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -458,13 +471,15 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 11,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
 				GameSystemId = 11,
 				RegionCode = Pal + "50",
-				FrameRate = 50
+				FrameRate = 50,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -500,7 +515,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 16,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -512,7 +528,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 17,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -524,7 +541,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 18,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -570,7 +588,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 21,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -588,7 +607,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 22,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -600,7 +620,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 23,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -708,7 +729,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 34,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{
@@ -726,7 +748,8 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 35,
 				RegionCode = Ntsc + "60",
-				FrameRate = 60
+				FrameRate = 60,
+				Obsolete = true
 			},
 			new GameSystemFrameRate
 			{

@@ -16,6 +16,8 @@ namespace TASVideos.Data.Entity.Game
 		[StringLength(8)]
 		public string RegionCode { get; set; }
 		public bool Preliminary { get; set; }
+
+		public bool Obsolete { get; set; }
 	}
 
 	public static class GameSystemFrameRateExtensions
@@ -28,6 +30,11 @@ namespace TASVideos.Data.Entity.Game
 		public static IQueryable<GameSystemFrameRate> ForRegion(this IQueryable<GameSystemFrameRate> query, string region)
 		{
 			return query.Where(sf => sf.RegionCode == region);
+		}
+
+		public static IQueryable<GameSystemFrameRate> ThatAreCurrent(this IQueryable<GameSystemFrameRate> query)
+		{
+			return query.Where(sf => !sf.Obsolete);
 		}
 	}
 }
