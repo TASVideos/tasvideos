@@ -77,5 +77,14 @@ namespace TASVideos.Test.MovieParsers
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		}
+
+		[TestMethod]
+		public void RerecordCount()
+		{
+			var result = _dtmParser.Parse(Embedded("2frames-gc.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(347, result.RerecordCount);
+		}
 	}
 }
