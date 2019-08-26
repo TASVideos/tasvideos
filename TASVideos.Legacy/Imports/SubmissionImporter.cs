@@ -109,14 +109,7 @@ namespace TASVideos.Legacy.Imports
 					};
 					systemFrameRates.Add(systemFrameRate);
 					context.GameSystemFrameRates.Add(systemFrameRate);
-					try
-					{
-						context.SaveChanges();
-					}
-					catch (Exception ex)
-					{
-						Console.WriteLine(ex);
-					}
+					context.SaveChanges();
 				}
 
 				var submission = new Submission
