@@ -24,6 +24,13 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					return new ErrorResult("Invalid file format, does not seem to be a .dtm");
 				}
+
+				br.ReadChars(6); // Game Id, not used
+				var isWii = br.ReadByte() > 0;
+				if (isWii)
+				{
+					result.SystemCode = SystemCodes.Wii;
+				}
 			}
 
 
