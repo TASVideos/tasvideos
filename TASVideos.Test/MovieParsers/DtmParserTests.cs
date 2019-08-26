@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 
 namespace TASVideos.Test.MovieParsers
@@ -38,6 +39,24 @@ namespace TASVideos.Test.MovieParsers
 			var result = _dtmParser.Parse(Embedded("2frames-gc.dtm"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
+		}
+
+		[TestMethod]
+		public void SystemGc()
+		{
+			var result = _dtmParser.Parse(Embedded("2frames-gc.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(SystemCodes.GameCube, result.SystemCode);
+		}
+
+		[TestMethod]
+		public void SystemWii()
+		{
+			var result = _dtmParser.Parse(Embedded("2frames-wii.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(SystemCodes.Wii, result.SystemCode);
 		}
 	}
 }
