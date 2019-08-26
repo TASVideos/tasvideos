@@ -52,6 +52,19 @@ namespace TASVideos.Extensions
 				});
 		}
 
+		public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameSystemFrameRate> query)
+		{
+			return query
+				.OrderBy(fr => fr.Obsolete)
+				.ThenBy(fr => fr.RegionCode)
+				.ThenBy(fr => fr.FrameRate)
+				.Select(g => new SelectListItem
+				{
+					Value = g.Id.ToString(),
+					Text = g.RegionCode + " " + g.FrameRate + (g.Obsolete ? " (Obsolete)" : "")
+				});
+		}
+
 		public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
 		{
 			return query
