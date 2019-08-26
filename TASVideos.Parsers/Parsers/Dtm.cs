@@ -38,6 +38,12 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					result.StartType = MovieStartType.Savestate;
 				}
+
+				var viCount = br.ReadInt64();
+				var inputCount = br.ReadInt64();
+				br.ReadInt64(); // Lag count, not used
+				br.ReadInt64(); // Reserved, not used
+				result.RerecordCount = br.ReadInt32();
 			}
 
 
