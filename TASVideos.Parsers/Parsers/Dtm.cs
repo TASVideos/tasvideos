@@ -31,6 +31,13 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					result.SystemCode = SystemCodes.Wii;
 				}
+
+				br.ReadByte(); // Controller config, not used
+				var startsFromSavestate = br.ReadByte() > 0;
+				if (startsFromSavestate)
+				{
+					result.StartType = MovieStartType.Savestate;
+				}
 			}
 
 

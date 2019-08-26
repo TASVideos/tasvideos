@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Test.MovieParsers
 {
@@ -57,6 +58,24 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(SystemCodes.Wii, result.SystemCode);
+		}
+
+		[TestMethod]
+		public void PowerOn()
+		{
+			var result = _dtmParser.Parse(Embedded("2frames-gc.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+		}
+
+		[TestMethod]
+		public void Savestate()
+		{
+			var result = _dtmParser.Parse(Embedded("savestate.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		}
 	}
 }
