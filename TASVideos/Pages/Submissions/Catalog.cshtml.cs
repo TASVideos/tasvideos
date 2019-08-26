@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
+using TASVideos.Extensions;
 using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Pages.Submissions
@@ -115,13 +117,8 @@ namespace TASVideos.Pages.Submissions
 
 				AvailableSystemFrameRates = Catalog.SystemId.HasValue
 					? await _db.GameSystemFrameRates
-						.Where(sf => sf.GameSystemId == Catalog.SystemId)
-						.OrderBy(sf => sf.RegionCode)
-						.Select(sf => new SelectListItem
-						{
-							Value = sf.Id.ToString(),
-							Text = sf.RegionCode + " (" + sf.FrameRate + ")"
-						})
+						.ForSystem(Catalog.SystemId.Value)
+						.ToDropDown()
 						.ToListAsync()
 					: new List<SelectListItem>();
 			}

@@ -55,12 +55,7 @@ namespace TASVideos.Pages.Games
 		{
 			var items = await _db.GameSystemFrameRates
 				.ForSystem(systemId)
-				.OrderBy(fr => fr.RegionCode)
-				.Select(g => new SelectListItem
-				{
-					Value = g.Id.ToString(),
-					Text = g.RegionCode + " " + g.FrameRate
-				})
+				.ToDropDown()
 				.ToListAsync();
 
 			if (includeEmpty)
