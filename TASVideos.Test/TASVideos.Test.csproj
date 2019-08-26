@@ -60,6 +60,9 @@
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\norerecords.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\savestate.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\sram.dsm" />
+    <EmbeddedResource Include="MovieParsers\DtmSampleFiles\2frames-gc.dtm" />
+    <EmbeddedResource Include="MovieParsers\DtmSampleFiles\2frames-wii.dtm" />
+    <EmbeddedResource Include="MovieParsers\DtmSampleFiles\wrongheader.dtm" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\fds.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\norerecords.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\ntsc.fm2" />
