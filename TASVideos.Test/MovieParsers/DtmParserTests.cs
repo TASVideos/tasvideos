@@ -79,6 +79,15 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
+		public void Sram()
+		{
+			var result = _dtmParser.Parse(Embedded("sram.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.Sram, result.StartType);
+		}
+
+		[TestMethod]
 		public void RerecordCount()
 		{
 			var result = _dtmParser.Parse(Embedded("2frames-gc.dtm"));
