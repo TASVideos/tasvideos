@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
+// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.MovieParsers
 {
 	[TestClass]
@@ -94,6 +93,36 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(347, result.RerecordCount);
+		}
+
+		[TestMethod]
+		public void NoTicks_FallbackAndWarn()
+		{
+			var result = _dtmParser.Parse(Embedded("2frames-legacy.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoErrors(result);
+			Assert.IsNotNull(result.Warnings);
+			Assert.AreEqual(1, result.Warnings.Count());
+			Assert.AreEqual(ParseWarnings.LengthInferred, result.Warnings.Single());
+			Assert.AreEqual(2, result.Frames);
+		}
+
+		[TestMethod]
+		public void GcFrames()
+		{
+			var result = _dtmParser.Parse(Embedded("2frames-gc.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(240, result.Frames);
+		}
+
+		[TestMethod]
+		public void WiiFrames()
+		{
+			var result = _dtmParser.Parse(Embedded("2frames-wii.dtm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(180, result.Frames);
 		}
 	}
 }

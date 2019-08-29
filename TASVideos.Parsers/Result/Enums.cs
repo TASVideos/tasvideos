@@ -69,6 +69,11 @@
 		/// <summary>
 		/// Indicates that a framerate override was needed but no value could be found, and a default was used
 		/// </summary>
-		FrameRateInferred
+		FrameRateInferred,
+
+		/// <summary>
+		/// Indicates that the movie length could not be accurately determined, due to missing data or legacy format
+		/// </summary>
+		LengthInferred
 	}
 }

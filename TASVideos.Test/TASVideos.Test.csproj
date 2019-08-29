@@ -62,6 +62,7 @@
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\savestate.dsm" />
     <EmbeddedResource Include="MovieParsers\DsmSampleFiles\sram.dsm" />
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\2frames-gc.dtm" />
+    <EmbeddedResource Include="MovieParsers\DtmSampleFiles\2frames-legacy.dtm" />
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\2frames-wii.dtm" />
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\sram.dtm" />
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\wrongheader.dtm" />
