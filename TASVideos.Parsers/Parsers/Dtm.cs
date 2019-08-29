@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -72,7 +73,7 @@ namespace TASVideos.MovieParsers.Parsers
 				if (ticks != 0)
 				{
 					var hertz = isWii ? WiiHertz : GameCubeHertz;
-					result.Frames = (int)(ticks / hertz * 60);
+					result.Frames = (int)Math.Ceiling((decimal)(ticks / hertz * 60));
 				}
 				else
 				{
