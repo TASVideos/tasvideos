@@ -6,6 +6,8 @@ namespace TASVideos.MovieParsers.Parsers
 	[FileExtension("dtm")]
 	internal class Dtm : ParserBase, IParser
 	{
+		private const int GameCubeHertz = 486000000;
+		private const int WiiHertz = 729000000;
 		public override string FileExtension => "dtm";
 
 		public IParseResult Parse(Stream file)
@@ -39,8 +41,8 @@ namespace TASVideos.MovieParsers.Parsers
 					result.StartType = MovieStartType.Savestate;
 				}
 
-				var viCount = br.ReadInt64();
-				var inputCount = br.ReadInt64();
+				result.Frames = (int)br.ReadInt64(); // Legacy .dtm format did not have ticks, so we need to fallback to vi count
+				br.ReadInt64();
 				br.ReadInt64(); // Lag count
 				br.ReadInt64(); // Reserved
 				result.RerecordCount = br.ReadInt32();
@@ -55,6 +57,26 @@ namespace TASVideos.MovieParsers.Parsers
 				if (hasMemoryCards && !memoryCardBlank)
 				{
 					result.StartType = MovieStartType.Sram;
+				}
+
+				br.ReadByte(); // Bongos
+				br.ReadByte(); // Sync GPU
+				br.ReadByte(); // Net play
+				var isPal60 = br.ReadByte(); // SYSCONF PAL60 setting (this setting only applies to Wii games that support both 50 Hz and 60 Hz)
+				br.ReadBytes(12); // Reserved
+				br.ReadBytes(40); // Name of second disc iso
+				br.ReadBytes(20); // SHA-1 has of git revision
+				br.ReadBytes(4); // DSP IROM Hash
+				br.ReadBytes(4); // DSP COEF Hash
+				var ticks = br.ReadInt64(); // (486 MHz when a GameCube game is running, 729 MHz when a Wii game is running)
+				if (ticks != 0)
+				{
+					var hertz = isWii ? WiiHertz : GameCubeHertz;
+					result.Frames = (int)(ticks / hertz * 60);
+				}
+				else
+				{
+					result.WarnLengthInferred();
 				}
 			}
 

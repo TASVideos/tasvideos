@@ -34,5 +34,10 @@ namespace TASVideos.MovieParsers.Result
 		{
 			parseResult.WarningList.Add(ParseWarnings.FrameRateInferred);
 		}
+
+		internal static void WarnLengthInferred(this ParseResult parseResult)
+		{
+			parseResult.WarningList.Add(ParseWarnings.LengthInferred);
+		}
 	}
 }
