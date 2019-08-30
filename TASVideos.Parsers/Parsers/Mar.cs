@@ -1,8 +1,5 @@
 ﻿using System.IO;
-
-using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
-
 
 namespace TASVideos.MovieParsers.Parsers
 {
@@ -27,6 +24,17 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					return new ErrorResult("Invalid file format, does not seem to be a .mar");
 				}
+
+				br.ReadBytes(8);
+				br.ReadBytes(32);
+				var frameRate = br.ReadDouble();
+				if (frameRate > 0)
+				{
+					result.FrameRateOverride = frameRate;
+				}
+
+				result.Frames = br.ReadInt32();
+				result.RerecordCount = br.ReadInt32();
 			}
 
 			return result;
