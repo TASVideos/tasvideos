@@ -6,6 +6,7 @@ using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
+// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.MovieParsers
 {
 	[TestClass]
@@ -50,12 +51,49 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
+		public void Region()
+		{
+			var result = _marParser.Parse(Embedded("2frames.mar"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(RegionType.Ntsc, result.Region);
+		}
+
+		[TestMethod]
 		public void RerecordCount()
 		{
 			var result = _marParser.Parse(Embedded("2frames.mar"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
-			Assert.AreEqual(7, result.RerecordCount);
+			Assert.AreEqual(33686018, result.RerecordCount);
+		}
+
+		[TestMethod]
+		public void Length()
+		{
+			var result = _marParser.Parse(Embedded("2frames.mar"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(16843009, result.Frames);
+		}
+
+		[TestMethod]
+		public void FrameRate()
+		{
+			var result = _marParser.Parse(Embedded("2frames.mar"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.IsNotNull(result.FrameRateOverride);
+			Assert.IsTrue(FrameRatesAreEqual(60.606060606308169, result.FrameRateOverride.Value));
+		}
+
+		[TestMethod]
+		public void WhenFrameRateIsZero_NoOverride()
+		{
+			var result = _marParser.Parse(Embedded("noframerate.mar"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.IsNull(result.FrameRateOverride);
 		}
 	}
 }
