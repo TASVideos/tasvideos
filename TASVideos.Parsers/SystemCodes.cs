@@ -34,6 +34,7 @@
 		public const string Gba = "gba";
 		public const string Ngb = "ngb";
 		public const string Wii = "wii";
+		public const string Windows = "windows";
 		public const string WSwan = "wswan";
 		public const string Linux = "linux";
 	}
