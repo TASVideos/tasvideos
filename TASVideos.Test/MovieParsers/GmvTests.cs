@@ -75,5 +75,23 @@ namespace TASVideos.Test.MovieParsers
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(RegionType.Pal, result.Region);
 		}
+
+		[TestMethod]
+		public void PowerOn()
+		{
+			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+		}
+
+		[TestMethod]
+		public void Savestate()
+		{
+			var result = _gmvParser.Parse(Embedded("savestate.gmv"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
+		}
 	}
 }
