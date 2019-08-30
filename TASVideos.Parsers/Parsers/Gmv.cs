@@ -38,6 +38,11 @@ namespace TASVideos.MovieParsers.Parsers
 					result.Region = RegionType.Pal;
 				}
 
+				if (flags.Bit(7))
+				{
+					result.StartType = MovieStartType.Savestate;
+				}
+
 				br.ReadBytes(42); // movie name
 			}
 
