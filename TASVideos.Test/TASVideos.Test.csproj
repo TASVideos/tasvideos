@@ -95,6 +95,7 @@
     <EmbeddedResource Include="MovieParsers\LtmSampleFiles\noframerate.ltm" />
     <EmbeddedResource Include="MovieParsers\LtmSampleFiles\savestate.ltm" />
     <EmbeddedResource Include="MovieParsers\MarSampleFiles\2frames.mar" />
+    <EmbeddedResource Include="MovieParsers\MarSampleFiles\noframerate.mar" />
     <EmbeddedResource Include="MovieParsers\MarSampleFiles\wrongheader.mar" />
   </ItemGroup>
 

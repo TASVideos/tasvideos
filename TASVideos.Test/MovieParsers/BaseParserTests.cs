@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -38,6 +37,11 @@ namespace TASVideos.Test.MovieParsers
 		{
 			AssertNoWarnings(result);
 			AssertNoErrors(result);
+		}
+
+		protected bool FrameRatesAreEqual(double expected, double actual)
+		{
+			return Math.Abs(expected - actual) < 0.0001;
 		}
 	}
 }
