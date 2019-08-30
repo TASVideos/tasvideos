@@ -3,6 +3,7 @@
 	internal class SystemCodes
 	{
 		public const string AppleII = "appleii";
+		public const string Arcade = "arcade";
 		public const string Atari2600 = "a2600";
 		public const string Atari7800 = "a7800";
 		public const string Nes = "nes";
