@@ -26,6 +26,8 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					return new ErrorResult("Invalid file format, does not seem to be a .gmv");
 				}
+
+				result.RerecordCount = br.ReadInt32();
 			}
 
 			return result;
