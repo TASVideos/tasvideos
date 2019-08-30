@@ -97,6 +97,9 @@
     <EmbeddedResource Include="MovieParsers\MarSampleFiles\2frames.mar" />
     <EmbeddedResource Include="MovieParsers\MarSampleFiles\noframerate.mar" />
     <EmbeddedResource Include="MovieParsers\MarSampleFiles\wrongheader.mar" />
+    <EmbeddedResource Include="MovieParsers\WtfSampleFiles\2frames.wtf" />
+    <EmbeddedResource Include="MovieParsers\WtfSampleFiles\noframerate.wtf" />
+    <EmbeddedResource Include="MovieParsers\WtfSampleFiles\wrongheader.wtf" />
   </ItemGroup>
 
   <ItemGroup>
