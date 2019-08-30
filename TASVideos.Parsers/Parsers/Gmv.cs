@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 
+using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -28,6 +29,16 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 
 				result.RerecordCount = br.ReadInt32();
+				var controller1Config = br.ReadByte();
+				var controller2Config = br.ReadByte();
+				var flags = br.ReadByte();
+
+				if (flags.Bit(7))
+				{
+					result.Region = RegionType.Pal;
+				}
+
+				br.ReadBytes(42); // movie name
 			}
 
 			return result;
