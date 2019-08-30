@@ -39,5 +39,23 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 		}
+
+		[TestMethod]
+		public void System()
+		{
+			var result = _marParser.Parse(Embedded("2frames.mar"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(SystemCodes.Arcade, result.SystemCode);
+		}
+
+		[TestMethod]
+		public void RerecordCount()
+		{
+			var result = _marParser.Parse(Embedded("2frames.mar"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(7, result.RerecordCount);
+		}
 	}
 }
