@@ -72,6 +72,7 @@
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\pal.fm2" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\savestate.fm2" />
     <EmbeddedResource Include="MovieParsers\GmvSampleFiles\2frames.gmv" />
+    <EmbeddedResource Include="MovieParsers\GmvSampleFiles\pal.gmv" />
     <EmbeddedResource Include="MovieParsers\GmvSampleFiles\wrongheader.gmv" />
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\0frameswithsub.lsmv" />
     <EmbeddedResource Include="MovieParsers\LsmvSampleFiles\2frameswithsub.lsmv" />

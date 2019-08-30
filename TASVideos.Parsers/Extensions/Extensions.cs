@@ -122,5 +122,11 @@ namespace TASVideos.MovieParsers.Extensions
 		{
 			return archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(name));
 		}
+
+		// Returns a boolean indicating whether or not the given git is set in the given byte
+		public static bool Bit(this byte b, int index)
+		{
+			return (b & (1 << index)) != 0;
+		}
 	}
 }

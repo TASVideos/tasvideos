@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Test.MovieParsers
 {
@@ -55,6 +56,24 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(10319, result.RerecordCount);
+		}
+
+		[TestMethod]
+		public void Ntsc()
+		{
+			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(RegionType.Ntsc, result.Region);
+		}
+
+		[TestMethod]
+		public void Pal()
+		{
+			var result = _gmvParser.Parse(Embedded("pal.gmv"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(RegionType.Pal, result.Region);
 		}
 	}
 }
