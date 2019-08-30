@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
@@ -29,8 +28,7 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 
 				result.RerecordCount = br.ReadInt32();
-				var controller1Config = br.ReadByte();
-				var controller2Config = br.ReadByte();
+				br.ReadBytes(2); // Controller config
 				var flags = br.ReadByte();
 
 				if (flags.Bit(7))
@@ -38,12 +36,12 @@ namespace TASVideos.MovieParsers.Parsers
 					result.Region = RegionType.Pal;
 				}
 
-				if (flags.Bit(7))
+				if (flags.Bit(6))
 				{
 					result.StartType = MovieStartType.Savestate;
 				}
 
-				br.ReadBytes(42); // movie name
+				result.Frames = (int)(file.Length - 64) / 3;
 			}
 
 			return result;

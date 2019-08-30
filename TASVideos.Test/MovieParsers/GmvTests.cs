@@ -93,5 +93,14 @@ namespace TASVideos.Test.MovieParsers
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		}
+
+		[TestMethod]
+		public void Length()
+		{
+			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(2, result.Frames);
+		}
 	}
 }
