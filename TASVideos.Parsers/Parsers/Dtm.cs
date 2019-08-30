@@ -63,12 +63,12 @@ namespace TASVideos.MovieParsers.Parsers
 				br.ReadByte(); // Bongos
 				br.ReadByte(); // Sync GPU
 				br.ReadByte(); // Net play
-				var isPal60 = br.ReadByte(); // SYSCONF PAL60 setting (this setting only applies to Wii games that support both 50 Hz and 60 Hz)
+				br.ReadByte(); // PAL60 setting (this setting only applies to Wii games that support both 50 Hz and 60 Hz)
 				br.ReadBytes(12); // Reserved
 				br.ReadBytes(40); // Name of second disc iso
 				br.ReadBytes(20); // SHA-1 has of git revision
-				br.ReadBytes(4); // DSP IROM Hash
-				br.ReadBytes(4); // DSP COEF Hash
+				br.ReadBytes(4); // DSP
+				br.ReadBytes(4); // DSP
 				var ticks = br.ReadInt64(); // (486 MHz when a GameCube game is running, 729 MHz when a Wii game is running)
 				if (ticks != 0)
 				{
@@ -80,7 +80,6 @@ namespace TASVideos.MovieParsers.Parsers
 					result.WarnLengthInferred();
 				}
 			}
-
 
 			return result;
 		}
