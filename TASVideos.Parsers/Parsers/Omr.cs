@@ -23,7 +23,12 @@ namespace TASVideos.MovieParsers.Parsers
 
 			using (var reader = ReaderFactory.Open(file))
 			{
-				
+				reader.MoveToNextEntry();
+				using (var entry = reader.OpenEntryStream())
+				using (var textReader = new StreamReader(entry))
+				{
+					var xml = textReader.ReadToEnd();
+				}
 			}
 
 			return result;
