@@ -37,5 +37,6 @@
 		public const string Windows = "windows";
 		public const string WSwan = "wswan";
 		public const string Linux = "linux";
+		public const string Msx = "msx";
 	}
 }
