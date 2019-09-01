@@ -166,16 +166,31 @@ namespace TASVideos.Extensions
 
 		public static bool IsSystemPage(string pageName)
 		{
+			if (string.IsNullOrWhiteSpace(pageName))
+			{
+				return false;
+			}
+
 			return pageName.StartsWith("System/");
 		}
 
 		public static bool IsGameResourcesPage(string pageName)
 		{
+			if (string.IsNullOrWhiteSpace(pageName))
+			{
+				return false;
+			}
+
 			return pageName.StartsWith("GameResources/");
 		}
 
 		public static int? IsPublicationPage(string pageName)
 		{
+			if (string.IsNullOrWhiteSpace(pageName))
+			{
+				return null;
+			}
+
 			if (pageName.StartsWith("InternalSystem/PublicationContent/M"))
 			{
 				var result = int.TryParse(pageName
@@ -192,6 +207,11 @@ namespace TASVideos.Extensions
 
 		public static int? IsSubmissionPage(string pageName)
 		{
+			if (string.IsNullOrWhiteSpace(pageName))
+			{
+				return null;
+			}
+
 			if (pageName.StartsWith("InternalSystem/SubmissionContent/S"))
 			{
 				var result = int.TryParse(pageName
@@ -231,16 +251,31 @@ namespace TASVideos.Extensions
 
 		private static bool IsInternalSubmissionLink(string link)
 		{
+			if (string.IsNullOrWhiteSpace(link))
+			{
+				return false;
+			}
+
 			return link.StartsWith(LinkConstants.SubmissionWikiPage);
 		}
 
 		private static bool IsInternalPublicationLink(string link)
 		{
+			if (string.IsNullOrWhiteSpace(link))
+			{
+				return false;
+			}
+
 			return link.StartsWith(LinkConstants.PublicationWikiPage);
 		}
 
 		private static bool IsInternalGameLink(string link)
 		{
+			if (string.IsNullOrWhiteSpace(link))
+			{
+				return false;
+			}
+
 			return link.StartsWith(LinkConstants.GameWikiPage);
 		}
 
