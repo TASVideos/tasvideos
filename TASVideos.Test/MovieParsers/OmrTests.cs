@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Test.MovieParsers
 {
@@ -37,6 +38,24 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(140, result.RerecordCount);
+		}
+
+		[TestMethod]
+		public void PowerOn()
+		{
+			var result = _omrParser.Parse(Embedded("2frames.omr"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+		}
+
+		[TestMethod]
+		public void Savestate()
+		{
+			var result = _omrParser.Parse(Embedded("savestate.omr"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		}
 	}
 }
