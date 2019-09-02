@@ -29,5 +29,14 @@ namespace TASVideos.Test.MovieParsers
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(SystemCodes.Msx, result.SystemCode);
 		}
+
+		[TestMethod]
+		public void Rerecords()
+		{
+			var result = _omrParser.Parse(Embedded("2frames.omr"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(140, result.RerecordCount);
+		}
 	}
 }

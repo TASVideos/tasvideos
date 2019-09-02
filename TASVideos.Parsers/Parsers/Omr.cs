@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 using SharpCompress.Readers;
 
@@ -27,7 +29,9 @@ namespace TASVideos.MovieParsers.Parsers
 				using (var entry = reader.OpenEntryStream())
 				using (var textReader = new StreamReader(entry))
 				{
-					var xml = textReader.ReadToEnd();
+					var serial = XElement.Parse(textReader.ReadToEnd());
+					var replay = serial.Descendants().First(x => x.Name == "replay");
+					result.RerecordCount = int.Parse(replay.Descendants().First(x => x.Name == "reRecordCount").Value);
 				}
 			}
 
