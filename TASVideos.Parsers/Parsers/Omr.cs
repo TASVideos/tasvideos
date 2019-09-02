@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 using SharpCompress.Readers;
 
@@ -18,7 +20,7 @@ namespace TASVideos.MovieParsers.Parsers
 		{
 			var result = new ParseResult
 			{
-				Region = RegionType.Pal,
+				Region = RegionType.Ntsc,
 				FileExtension = FileExtension,
 				SystemCode = SystemCodes.Msx
 			};
@@ -44,6 +46,15 @@ namespace TASVideos.MovieParsers.Parsers
 					if (startsFromSavestate)
 					{
 						result.StartType = MovieStartType.Savestate;
+					}
+
+					var isPal = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/device/palTiming"))
+						.Cast<XElement>()
+						.Any(x => x.Value.ToString() == "true");
+
+					if (isPal)
+					{
+						result.Region = RegionType.Pal;
 					}
 				}
 			}

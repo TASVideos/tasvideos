@@ -57,5 +57,25 @@ namespace TASVideos.Test.MovieParsers
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		}
+
+		[TestMethod]
+		public void Ntsc()
+		{
+			var result = _omrParser.Parse(Embedded("2frames.omr"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(RegionType.Ntsc, result.Region);
+		}
+
+		[TestMethod]
+		public void Pal()
+		{
+			var result = _omrParser.Parse(Embedded("pal.omr"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(RegionType.Pal, result.Region);
+		}
+
+
 	}
 }
