@@ -12,6 +12,7 @@ using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
 {
+	[FileExtension("omr")]
 	internal class Omr : ParserBase, IParser
 	{
 		public override string FileExtension => "omr";
@@ -53,10 +54,30 @@ namespace TASVideos.MovieParsers.Parsers
 					{
 						result.Region = RegionType.Pal;
 					}
+
+					var lengthTimestamp = long.Parse(((IEnumerable)replay.XPathEvaluate("//events/item"))
+						.Cast<XElement>()
+						.Last(x => x.Attribute("type")?.Value != "EndLog")
+						.Descendants()
+						.First(x => x.Name == "StateChange")
+						.Descendants()
+						.First(x => x.Name == "time")
+						.Descendants()
+						.First(x => x.Name == "time")
+						.Value);
+
+					var seconds = ConvertTimestamp(lengthTimestamp);
+
+					result.Frames = (int)Math.Ceiling(seconds * (result.Region == RegionType.Pal ? 50.1589758045661 : 59.9227510135505));
 				}
 			}
 
 			return result;
+		}
+
+		private double ConvertTimestamp(long timestamp)
+		{
+			return timestamp / 3579545.0 / 960.0;
 		}
 	}
 }

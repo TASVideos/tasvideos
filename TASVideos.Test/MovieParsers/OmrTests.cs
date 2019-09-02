@@ -25,7 +25,7 @@ namespace TASVideos.Test.MovieParsers
 		[TestMethod]
 		public void System()
 		{
-			var result = _omrParser.Parse(Embedded("2frames.omr"));
+			var result = _omrParser.Parse(Embedded("2seconds.omr"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(SystemCodes.Msx, result.SystemCode);
@@ -34,7 +34,7 @@ namespace TASVideos.Test.MovieParsers
 		[TestMethod]
 		public void Rerecords()
 		{
-			var result = _omrParser.Parse(Embedded("2frames.omr"));
+			var result = _omrParser.Parse(Embedded("2seconds.omr"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(140, result.RerecordCount);
@@ -43,7 +43,7 @@ namespace TASVideos.Test.MovieParsers
 		[TestMethod]
 		public void PowerOn()
 		{
-			var result = _omrParser.Parse(Embedded("2frames.omr"));
+			var result = _omrParser.Parse(Embedded("2seconds.omr"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -61,7 +61,7 @@ namespace TASVideos.Test.MovieParsers
 		[TestMethod]
 		public void Ntsc()
 		{
-			var result = _omrParser.Parse(Embedded("2frames.omr"));
+			var result = _omrParser.Parse(Embedded("2seconds.omr"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -76,6 +76,13 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(RegionType.Pal, result.Region);
 		}
 
-
+		[TestMethod]
+		public void Frames()
+		{
+			var result = _omrParser.Parse(Embedded("2seconds.omr"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(120, result.Frames);
+		}
 	}
 }
