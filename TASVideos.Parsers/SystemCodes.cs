@@ -38,5 +38,7 @@
 		public const string WSwan = "wswan";
 		public const string Linux = "linux";
 		public const string Msx = "msx";
+		public const string Svi = "svi";
+		public const string Coleco = "coleco";
 	}
 }

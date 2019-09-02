@@ -69,6 +69,23 @@ namespace TASVideos.MovieParsers.Parsers
 					var seconds = ConvertTimestamp(lengthTimestamp);
 
 					result.Frames = (int)Math.Ceiling(seconds * (result.Region == RegionType.Pal ? 50.1589758045661 : 59.9227510135505));
+
+					var system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/children/item/children/item"))
+						.Cast<XElement>()
+						.First(x => x.Descendants().Any(d => d.Name == "name" && d.Value == "type"))
+						.Descendants()
+						.First(x => x.Name == "data")
+						.Value
+						.ToLower();
+
+					if (system.StartsWith("svi"))
+					{
+						result.SystemCode = SystemCodes.Svi;
+					}
+					else if (system.StartsWith("coleco"))
+					{
+						result.SystemCode = SystemCodes.Coleco;
+					}
 				}
 			}
 

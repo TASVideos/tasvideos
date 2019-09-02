@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
@@ -23,12 +21,30 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void System()
+		public void SystemMsx()
 		{
 			var result = _omrParser.Parse(Embedded("2seconds.omr"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(SystemCodes.Msx, result.SystemCode);
+		}
+
+		[TestMethod]
+		public void SystemSvi()
+		{
+			var result = _omrParser.Parse(Embedded("svi.omr"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(SystemCodes.Svi, result.SystemCode);
+		}
+
+		[TestMethod]
+		public void SystemColeco()
+		{
+			var result = _omrParser.Parse(Embedded("coleco.omr"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(SystemCodes.Coleco, result.SystemCode);
 		}
 
 		[TestMethod]
