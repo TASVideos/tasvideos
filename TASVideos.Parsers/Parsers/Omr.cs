@@ -31,19 +31,16 @@ namespace TASVideos.MovieParsers.Parsers
 				using (var entry = reader.OpenEntryStream())
 				using (var textReader = new StreamReader(entry))
 				{
-					var serial = XElement.Parse(textReader.ReadToEnd());
-					var replay = serial.Descendants().First(x => x.Name == "replay");
+					var replay = XElement.Parse(textReader.ReadToEnd())
+						.Descendants().First(x => x.Name == "replay");
+
 					result.RerecordCount = int.Parse(replay.Descendants().First(x => x.Name == "reRecordCount").Value);
 
-					var startsFromSavestate = replay
-						.Descendants().First(x => x.Name == "snapshots")
-						.Descendants().First(x => x.Name == "item" && x.Attributes().Any(a => a.Name == "id" && a.Value == "1"))
-						.Descendants().First(x => x.Name == "scheduler")
-						.Descendants().First(x => x.Name == "currentTime")
-						.Descendants().First(x => x.Name == "time")
-						.Value != "0";
+					var isPowerOn = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/scheduler/currentTime/time"))
+						.Cast<XElement>()
+						.Any(x => x.Value == "0");
 
-					if (startsFromSavestate)
+					if (!isPowerOn)
 					{
 						result.StartType = MovieStartType.Savestate;
 					}
