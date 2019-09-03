@@ -59,6 +59,7 @@
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\2frames-gc.dtm" />
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\2frames-legacy.dtm" />
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\2frames-wii.dtm" />
+	<EmbeddedResource Include="MovieParsers\DtmSampleFiles\savestate.dtm" />
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\sram.dtm" />
     <EmbeddedResource Include="MovieParsers\DtmSampleFiles\wrongheader.dtm" />
     <EmbeddedResource Include="MovieParsers\Fm2SampleFiles\fds.fm2" />
@@ -113,10 +114,6 @@
     <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="MovieParsers\DtmSampleFiles\savestate.dtm" />
   </ItemGroup>
 
   <ItemGroup>
