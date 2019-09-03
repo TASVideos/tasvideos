@@ -14,6 +14,9 @@
 <warning-alert dismissible="true" condition="notSupportedError">
 	@await Component.RenderWiki("System/SupportedMovieTypes")
 </warning-alert>
+<div asp-validation-summary="All" condition="!notSupportedError" class="alert alert-danger">
+	<span>Please correct the following errors</span>
+</div>
 <form method="post" enctype="multipart/form-data">
 	<row>
 		<column lg="6">
