@@ -118,26 +118,26 @@ namespace TASVideos.Pages.Submissions
 			if (!Create.Authors.Any())
 			{
 				ModelState.AddModelError(
-					nameof(SubmissionCreateModel.Authors),
+					$"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}",
 					"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
 			}
 
 			if (!Create.MovieFile.FileName.EndsWith(".zip")
 			|| Create.MovieFile.ContentType != "application/x-zip-compressed")
 			{
-				ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), "Not a valid .zip file");
+				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}", "Not a valid .zip file");
 			}
 
 			if (Create.MovieFile.Length > 150 * 1024)
 			{
-				ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), ".zip is too big, are you sure this is a valid movie file?");
+				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}", ".zip is too big, are you sure this is a valid movie file?");
 			}
 
 			foreach (var author in Create.Authors)
 			{
 				if (!await Db.Users.Exists(author))
 				{
-					ModelState.AddModelError(nameof(SubmissionCreateModel.Authors), $"Could not find user: {author}");
+					ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}", $"Could not find user: {author}");
 				}
 			}
 		}
