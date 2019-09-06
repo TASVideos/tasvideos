@@ -32,7 +32,7 @@
 		public const string Sgx = "sgx";
 		public const string Sms = "sms";
 		public const string Snes = "snes";
-		public const string Svi = "svi";
+		public const string Svi = "svi3x8";
 		public const string UzeBox = "uzebox";
 		public const string VirtualBoy = "vboy";
 		public const string Wii = "wii";
