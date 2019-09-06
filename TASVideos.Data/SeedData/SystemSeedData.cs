@@ -240,6 +240,12 @@ namespace TASVideos.Data.SeedData
 			},
 			new GameSystem
 			{
+				Id = 39,
+				Code = "SVI3x8",
+				DisplayName = "Spectravideo SVI-318/328"
+			},
+			new GameSystem
+			{
 				Id = 41,
 				Code = "AppleII",
 				DisplayName = "Apple II"
@@ -780,6 +786,18 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 38,
 				RegionCode = Ntsc,
 				FrameRate = 60
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 39,
+				RegionCode = Ntsc,
+				FrameRate = 59.9227510135505
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 39,
+				RegionCode = Pal,
+				FrameRate = 50.158975804566104
 			},
 			new GameSystemFrameRate
 			{
