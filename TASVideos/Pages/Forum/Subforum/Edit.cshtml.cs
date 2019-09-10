@@ -24,6 +24,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		[FromRoute]
 		public int Id { get; set; }
 
+		[BindProperty]
 		public ForumEditModel Forum { get; set; }
 
 		public async Task<IActionResult> OnGet()
@@ -61,6 +62,23 @@ namespace TASVideos.Pages.Forum.Subforum
 			if (forum == null)
 			{
 				return NotFound();
+			}
+
+			forum.Name = Forum.Name;
+			forum.ShortName = Forum.ShortName;
+			forum.Description = Forum.Description;
+
+			// TODO: ideally we would put this message in temp data and redirect back to another page
+			// This would keep them from re-posting the same data again instead of pressing back first
+			// Since this is a pretty rarely used page, by high level users, we didn't initially do this logic
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				ModelState.AddModelError("", "Unable to save, the page may have been modified, go back and try again.");
+				return Page();
 			}
 
 			return RedirectToPage("Index", new { id = Id });
