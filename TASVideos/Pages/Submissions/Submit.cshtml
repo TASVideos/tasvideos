@@ -74,7 +74,7 @@
 			<span>
 				@await Component.RenderWiki("System/SubmissionImportant")
 			</span>
-			<textarea asp-for="Create.Markup" rows="12" class="form-control"></textarea>
+			<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit"></textarea>
 			<span asp-validation-for="Create.Markup" class="text-danger"></span>
 			<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
 		</form-group>
