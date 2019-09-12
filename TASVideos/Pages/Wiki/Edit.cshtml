@@ -19,7 +19,7 @@
 		</row>
 	</form-group>
 	<form-group>
-		<textarea asp-for="PageToEdit.Markup" class="form-control" rows="20"></textarea>
+		<textarea asp-for="PageToEdit.Markup" class="form-control wiki-edit" rows="20"></textarea>
 		<span asp-validation-for="PageToEdit.Markup" class="text-danger"></span>
 		@await Component.RenderWiki("System/WikiEditHelp")
 	</form-group>

@@ -272,3 +272,7 @@ article.wiki table tbody + tbody {
 	margin-left: .5rem;
 	float: right;
 }
+
+.wiki-edit {
+	font-family: courier,"courier new",monospace;
+}
