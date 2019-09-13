@@ -50,5 +50,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_sig_bbcode_uid")]
 		public string BbcodeUid { get; set; }
+
+		[Column("user_mood_avatar")]
+		public string MoodAvatar { get; set; }
 	}
 }
