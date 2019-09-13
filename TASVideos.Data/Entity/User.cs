@@ -37,6 +37,8 @@ namespace TASVideos.Data.Entity
 
 		public bool PublicRatings { get; set; } = true;
 
+		public string MoodAvatarUrlBase { get; set; }
+
 		/// <summary>
 		/// Gets or sets a value indicating whether or not to use
 		/// the user's ratings when calculating a publication's average rating

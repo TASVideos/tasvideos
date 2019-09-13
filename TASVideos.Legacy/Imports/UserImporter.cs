@@ -71,7 +71,8 @@ namespace TASVideos.Legacy.Imports
 							IsBanned = b != null,
 							IsModerator = ug != null,
 							IsForumAdmin = u.UserLevel == 1,
-							IsEmuCoder = e != null
+							IsEmuCoder = e != null,
+							u.MoodAvatar
 						})
 						.ToList();
 
@@ -103,7 +104,8 @@ namespace TASVideos.Legacy.Imports
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
 					TimeZoneId = timeZones.FirstOrDefault(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset)?.StandardName ?? utc,
 					SecurityStamp = Guid.NewGuid().ToString("D"),
-					UseRatings = !u.IsBanned && !UserRatingBanList.Contains(u.Id)
+					UseRatings = !u.IsBanned && !UserRatingBanList.Contains(u.Id),
+					MoodAvatarUrlBase = u.MoodAvatar.NullIfWhiteSpace()
 				})
 				.ToList();
 			
@@ -298,7 +300,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.LastLoggedInTimeStamp),
 				nameof(User.TimeZoneId),
 				nameof(User.SecurityStamp),
-				nameof(User.UseRatings)
+				nameof(User.UseRatings),
+				nameof(User.MoodAvatarUrlBase)
 			};
 
 			var userRoleColumns = new[]
