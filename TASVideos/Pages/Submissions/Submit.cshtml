@@ -82,7 +82,7 @@
 	<hr />
 	<fullrow class="text-center">
 		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
-		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Create.Markup?.Length > 0 ? "" : "d-none")">Submit</button>
+		<submit-button id="submit-btn" class="btn btn-primary @(Model.Create.Markup?.Length > 0 ? "" : "d-none")">Submit</submit-button>
 		<br />
 		<br />
 		<div id="submit-blurb" class="text-center alert-info d-none" role="alert">
@@ -99,13 +99,6 @@
 
 <script>
 	(function () {
-		document.getElementById('submit-btn').onclick = function () {
-			// Prevent double-click submits
-			var btn = this;
-			setTimeout(function () { btn.disabled = true }, 0);
-			setTimeout(function () { btn.disabled = false }, 750);
-		};
-
 		document.getElementById('prefill-btn').onclick = function () {
 			var markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
 			if (markup) {
