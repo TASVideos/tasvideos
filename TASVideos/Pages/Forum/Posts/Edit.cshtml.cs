@@ -18,28 +18,15 @@ using TASVideos.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Forum.Posts
 {
 	[Authorize]
-	public class EditModel : BasePageModel
+	public class EditModel : BaseForumModel
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 
-		private static readonly SelectListGroup StandardGroup = new SelectListGroup { Name = "Standard" };
-		private static readonly SelectListGroup AltGroup = new SelectListGroup { Name = "Alternate" };
-
-		private static readonly IEnumerable<SelectListItem> MoodList = Enum
-			.GetValues(typeof(ForumPostMood))
-			.Cast<ForumPostMood>()
-			.Select(m => new SelectListItem
-			{
-				Value = ((int)m).ToString(),
-				Text = m.EnumDisplayName(),
-				Group = m >= ForumPostMood.AltNormal ? AltGroup : StandardGroup
-			})
-			.ToList();
-
 		public EditModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher)
+			: base(db)
 		{
 			_db = db;
 			_publisher = publisher;
