@@ -31,12 +31,17 @@ namespace TASVideos.Legacy.Imports
 					LastUpdateUserName = p.LastUpdateUser.UserName,
 					p.PostText.BbCodeUid,
 					p.PosterId,
-					PosterName = p.Poster.UserName
+					PosterName = p.Poster.UserName,
+					p.MoodAvatar
 				})
 				.ToList()
 				.Select(p =>
 				{
 					var fixedText = System.Web.HttpUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Text.Replace(":" + p.BbCodeUid, "")));
+
+					int moodAvatar = p.MoodAvatar == 255 || p.MoodAvatar == 1000 // These seem to just mean normal
+						? 1
+						: p.MoodAvatar;
 
 					return new ForumPost
 					{
@@ -56,7 +61,8 @@ namespace TASVideos.Legacy.Imports
 							? p.LastUpdateUserName
 							: !string.IsNullOrWhiteSpace(p.PosterName)
 								? p.PosterName
-								: "Unknown"
+								: "Unknown",
+						PosterMood = (ForumPostMood)moodAvatar
 					};
 				});
 
@@ -73,7 +79,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.LastUpdateTimeStamp),
 				nameof(ForumPost.LastUpdateUserName),
 				nameof(ForumPost.EnableHtml),
-				nameof(ForumPost.EnableBbCode)
+				nameof(ForumPost.EnableBbCode),
+				nameof(ForumPost.PosterMood)
 			};
 
 			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), SqlBulkCopyOptions.KeepIdentity, 20000, 600);
