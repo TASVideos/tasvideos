@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
@@ -80,7 +81,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			Topic.Posts = await _db.ForumPosts
 				.ForTopic(Id)
-				.Select(p => new ForumTopicModel.ForumPostEntry
+				.Select(p => new ForumPostEntry
 				{
 					Id = p.Id,
 					TopicId = Id,
