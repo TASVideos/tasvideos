@@ -54,6 +54,7 @@ namespace TASVideos.Pages.Forum
 				IpAddress = ipAddress,
 				Subject = model.Subject,
 				Text = model.Text,
+				PosterMood = model.Mood,
 
 				// TODO: check for bbcode and if none, set this to false?
 				// For now we are not giving the user choices
