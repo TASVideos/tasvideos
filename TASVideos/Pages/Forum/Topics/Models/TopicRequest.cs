@@ -1,4 +1,5 @@
 ﻿using TASVideos.Data;
+using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Topics.Models
 {
@@ -7,7 +8,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public TopicRequest()
 		{
 			PageSize = ForumConstants.PostsPerPage;
-			Sort = $"{nameof(ForumTopicModel.ForumPostEntry.CreateTimestamp)}";
+			Sort = $"{nameof(ForumPostEntry.CreateTimestamp)}";
 		}
 
 		public int? Highlight { get; set; }
