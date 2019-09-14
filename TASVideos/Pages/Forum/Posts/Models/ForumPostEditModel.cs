@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
+using TASVideos.Data.Entity.Forum;
+
 namespace TASVideos.Pages.Forum.Posts.Models
 {
 	public class ForumPostEditModel
@@ -24,5 +26,7 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public string RenderedText { get; set; }
 
 		public bool IsLastPost { get; set; }
+
+		public ForumPostMood Mood { get; set; } = ForumPostMood.Normal;
 	}
 }
