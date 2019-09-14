@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Models;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
@@ -14,7 +18,21 @@ namespace TASVideos.Pages.Forum
 {
 	public class BaseForumModel : BasePageModel
 	{
+		protected static readonly IEnumerable<SelectListItem> MoodList = Enum
+			.GetValues(typeof(ForumPostMood))
+			.Cast<ForumPostMood>()
+			.Select(m => new SelectListItem
+			{
+				Value = ((int)m).ToString(),
+				Text = m.EnumDisplayName(),
+				Group = m >= ForumPostMood.AltNormal ? AltGroup : StandardGroup
+			})
+			.ToList();
+
 		private readonly ApplicationDbContext _db;
+
+		private static readonly SelectListGroup StandardGroup = new SelectListGroup { Name = "Standard" };
+		private static readonly SelectListGroup AltGroup = new SelectListGroup { Name = "Alternate" };
 
 		public BaseForumModel(ApplicationDbContext db)
 		{
