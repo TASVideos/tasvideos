@@ -98,7 +98,8 @@ namespace TASVideos.Data.SeedData
 		private static readonly PermissionTo[] ExperiencedForumUserPermissions =
 		{
 			PermissionTo.CreateForumTopics,
-			PermissionTo.VoteInPolls
+			PermissionTo.VoteInPolls,
+			PermissionTo.UseMoodAvatars
 		};
 
 		private static readonly PermissionTo[] ForumModeratorPermissions = ExperiencedForumUserPermissions.Concat(new[]
