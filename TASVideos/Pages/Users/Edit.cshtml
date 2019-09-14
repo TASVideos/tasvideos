@@ -191,6 +191,12 @@
 			<img id="avatar-img" src="@Model.UserToEdit.Avatar" class="pull-left m-2"/>
 		</column>
 	</row>
+	<row>
+		<column md="5">
+			<label asp-for="UserToEdit.MoodAvatarUrlBase"></label>
+			<input type="text" asp-for="UserToEdit.MoodAvatarUrlBase" class="form-control" />
+		</column>
+	</row>
 	<hr />
 	<fullrow>
 		<label asp-for="UserToEdit.Signature" class="form-control-label"></label>
