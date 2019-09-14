@@ -47,6 +47,9 @@ namespace TASVideos.Data.Entity.Forum
 		Upset = 202,
 		Xmas = 254,
 
+		[Display(Name = "What?")]
+		What = 1000,
+
 		[Display(Name = "Alt. Normal")]
 		AltNormal = 1001,
 
@@ -86,7 +89,7 @@ namespace TASVideos.Data.Entity.Forum
 		[Display(Name = "Alt. Bleh")]
 		AltBleh = 1013,
 
-		[Display(Name = "What?")]
-		What = 1201
+		[Display(Name = "Alt. What?")]
+		AltWhat = 1201
 	}
 }
