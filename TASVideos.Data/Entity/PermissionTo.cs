@@ -42,6 +42,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to participate in forum polls. Experienced users have the ability ot do this, unless revoked.")]
 		VoteInPolls = 11,
 
+		[Display(Name = "Use Mood Avatars")]
+		[Group("User")]
+		[Description("The ability to use the mood avatar feature. Allows a user to specificy a mood avatar when creating a post in the forum.")]
+		UseMoodAvatars = 12,
+
 		#endregion
 
 		#region Wiki 100
