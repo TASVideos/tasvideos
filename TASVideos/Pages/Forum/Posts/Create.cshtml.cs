@@ -1,12 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Services;
 using TASVideos.Services.Email;
@@ -22,6 +26,16 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly ApplicationDbContext _db;
 		private readonly IEmailService _emailService;
 
+		private static readonly IEnumerable<SelectListItem> MoodList = Enum
+			.GetValues(typeof(ForumPostMood))
+			.Cast<ForumPostMood>()
+			.Select(m => new SelectListItem
+			{
+				Value = ((int)m).ToString(),
+				Text = m.EnumDisplayName()
+			})
+			.ToList();
+
 		public CreateModel(
 			UserManager userManager,
 			ExternalMediaPublisher publisher,
@@ -34,6 +48,8 @@ namespace TASVideos.Pages.Forum.Posts
 			_emailService = emailService;
 			_db = db;
 		}
+
+		public IEnumerable<SelectListItem> Moods => MoodList;
 
 		[FromRoute]
 		public int TopicId { get; set; }
@@ -101,7 +117,8 @@ namespace TASVideos.Pages.Forum.Posts
 					Text = Post.Text,
 					IsLocked = isLocked,
 					UserAvatar = user.Avatar,
-					UserSignature = user.Signature
+					UserSignature = user.Signature,
+					Mood = User.Has(PermissionTo.UseMoodAvatars) ? Post.Mood : ForumPostMood.Normal
 				};
 
 				return Page();
