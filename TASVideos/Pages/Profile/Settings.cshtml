@@ -121,6 +121,17 @@
 			})();
 		</script>
 	</row>
+	<row permission="UseMoodAvatars">
+		<column md="6">
+			<label asp-for="Settings.MoodAvatar"></label>
+			<input type="text" asp-for="Settings.MoodAvatar" class="form-control" />
+		</column>
+		<column md="6">
+			<small>
+				@await Component.RenderWiki("System/MoodAvatarRequirements")
+			</small>
+		</column>
+	</row>
 	<fullrow class="mt-3">
 		<label asp-for="Settings.Signature"></label>
 		<textarea asp-for="Settings.Signature" class="form-control" rows="5"></textarea>

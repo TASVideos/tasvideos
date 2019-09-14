@@ -72,6 +72,17 @@ Do not use images hosted at Angelfire, or Imageshack, because those images may s
 			},
 			new WikiPage
 			{
+				PageName = "System/MoodAvatarRequirements",
+				RevisionMessage = Import,
+				Markup = @"If you fill an URL here, this URL will be used instead of the regular avatar URL, and you will be given an option to select a ""mood"" for each of your posts. A $ character in the URL will be replaced by the mood index number for each post.
+					__Example: http://site.url/avatar$.png__
+					Note: If the URL does not contain ""$"", this setting has no effect.
+					Note2: This does not generate any new images; it only performs pattern substitution on the URL (replacing $ by a number). You need to provide the images yourself.
+
+					More information can be found in [=/forum/topics/3904|this thread]."
+			},
+			new WikiPage
+			{
 				PageName = "System/SupportedMovieTypes",
 				RevisionMessage = Import,
 				Markup = @"The following file types are supported for site [Subs-List|submission]

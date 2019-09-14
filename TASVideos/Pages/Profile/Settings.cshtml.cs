@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Pages.Profile.Models;
 using TASVideos.Services;
@@ -51,6 +52,7 @@ namespace TASVideos.Pages.Profile
 				From = user.From,
 				Signature = user.Signature,
 				Avatar = user.Avatar,
+				MoodAvatar = user.MoodAvatarUrlBase,
 				Roles = await _db.Users
 					.Where(u => u.Id == user.Id)
 					.SelectMany(u => u.UserRoles)
@@ -90,6 +92,7 @@ namespace TASVideos.Pages.Profile
 			user.From = Settings.From;
 			user.Signature = Settings.Signature;
 			user.Avatar = Settings.Avatar;
+			user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? Settings.MoodAvatar : null;
 			await _db.SaveChangesAsync();
 
 			StatusMessage = "Your profile has been updated";
