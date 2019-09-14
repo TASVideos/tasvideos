@@ -124,7 +124,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					// not having user means they are effectively banned
 					// limited = Limited User
-					if (user.SiteUser.UserRoles.Any(ur => ur.Role.Name == "user")
+					if ((user.SiteUser.UserRoles.Any(ur => ur.Role.Name == "user") || user.User.Id == 505) // 505 is TASVideoAgent, which needs some roles but is not a user
 						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding these roles to admins, they have these perms anyway
 					{
 						if (!user.User.IsBanned)
