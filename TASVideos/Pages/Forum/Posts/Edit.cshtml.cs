@@ -1,13 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Services.ExternalMediaPublisher;
 
@@ -19,6 +23,16 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 
+		private static readonly IEnumerable<SelectListItem> MoodList = Enum
+			.GetValues(typeof(ForumPostMood))
+			.Cast<ForumPostMood>()
+			.Select(m => new SelectListItem
+			{
+				Value = ((int)m).ToString(),
+				Text = m.EnumDisplayName()
+			})
+			.ToList();
+
 		public EditModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher)
@@ -26,6 +40,8 @@ namespace TASVideos.Pages.Forum.Posts
 			_db = db;
 			_publisher = publisher;
 		}
+
+		public IEnumerable<SelectListItem> Moods => MoodList;
 
 		[FromRoute]
 		public int Id { get; set; }
@@ -49,7 +65,8 @@ namespace TASVideos.Pages.Forum.Posts
 					TopicId = p.TopicId ?? 0,
 					TopicTitle = p.Topic.Title,
 					Subject = p.Subject,
-					Text = p.Text
+					Text = p.Text,
+					Mood = p.PosterMood
 				})
 				.SingleOrDefaultAsync();
 
@@ -110,6 +127,7 @@ namespace TASVideos.Pages.Forum.Posts
 			// TODO: catch DbConcurrencyException
 			forumPost.Subject = Post.Subject;
 			forumPost.Text = Post.Text;
+			forumPost.PosterMood = Post.Mood;
 			await _db.SaveChangesAsync();
 
 			_publisher.SendForum(
