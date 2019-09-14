@@ -42,5 +42,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[ForeignKey("Id")]
 		public virtual PostsText PostText { get; set; }
+
+		[Column("enable_avatar")]
+		public int MoodAvatar { get; set; }
 	}
 }
