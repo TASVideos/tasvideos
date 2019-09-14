@@ -54,7 +54,7 @@
 						<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
 					</small>
 					<br />
-					<img src="@Model.PosterAvatar" />
+					<avatar avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
 					<br />
 					<small>
 						Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />

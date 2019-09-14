@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Topics.Models
@@ -51,6 +52,8 @@ namespace TASVideos.Pages.Forum.Topics.Models
 			public int PosterPostCount { get; set; }
 			public double PosterPlayerPoints { get; set; }
 			public DateTime PosterJoined { get; set; }
+			public string PosterMoodUrlBase { get; set; }
+			public ForumPostMood PosterMood { get; set; }
 			public IEnumerable<string> PosterRoles { get; set; }
 			public string Text { get; set; }
 			public string RenderedText { get; set; }

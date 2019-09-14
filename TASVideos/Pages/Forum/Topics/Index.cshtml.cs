@@ -90,6 +90,7 @@ namespace TASVideos.Pages.Forum.Topics
 					CreateTimestamp = p.CreateTimeStamp,
 					PosterName = p.Poster.UserName,
 					PosterAvatar = p.Poster.Avatar,
+					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
 					PosterLocation = p.Poster.From,
 					PosterRoles = p.Poster.UserRoles
 						.Where(ur => !ur.Role.IsDefault)
@@ -97,10 +98,11 @@ namespace TASVideos.Pages.Forum.Topics
 						.ToList(),
 					PosterJoined = p.Poster.CreateTimeStamp,
 					PosterPostCount = p.Poster.Posts.Count,
+					PosterMood = p.PosterMood,
 					Text = p.Text,
 					Subject = p.Subject,
 					Signature = p.Poster.Signature,
-					IsLastPost = p.Id == lastPostId
+					IsLastPost = p.Id == lastPostId,
 				})
 				.OrderBy(p => p.CreateTimestamp)
 				.PageOf(_db, Search);
