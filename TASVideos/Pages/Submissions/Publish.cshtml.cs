@@ -197,7 +197,8 @@ namespace TASVideos.Pages.Submissions
 					EnableBbCode = false,
 					EnableHtml = true,
 					Subject = SiteGlobalConstants.NewPublicationPostSubject,
-					Text = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publication.Id.ToString())
+					Text = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publication.Id.ToString()),
+					PosterMood = ForumPostMood.Happy
 				});
 				await _db.SaveChangesAsync();
 			}

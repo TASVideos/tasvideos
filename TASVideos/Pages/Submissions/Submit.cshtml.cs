@@ -192,7 +192,8 @@ namespace TASVideos.Pages.Submissions
 				Subject = title,
 				Text = SiteGlobalConstants.NewSubmissionPost + $"<a href=\"/{id}S\">{title}</a>",
 				EnableHtml = true,
-				EnableBbCode = false
+				EnableBbCode = false,
+				PosterMood = ForumPostMood.Normal
 			};
 
 			Db.ForumPolls.Add(poll);
