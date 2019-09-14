@@ -40,6 +40,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public PageOf<ForumPostEntry> Posts { get; set; }
 		public PollModel Poll { get; set; }
 
+		// TODO: move this out of parent class since other models utilize it
 		public class ForumPostEntry
 		{
 			public int Id { get; set; }
