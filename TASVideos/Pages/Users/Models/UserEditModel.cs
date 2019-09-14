@@ -37,6 +37,9 @@ namespace TASVideos.Pages.Users.Models
 		public string Signature { get; set; }
 		public string Avatar { get; set; }
 
+		public string MoodAvatarUrlBase { get; set; }
+
+		[Display(Name = "Mood Avatar")]
 		public string OriginalUserName => UserName;
 	}
 }
