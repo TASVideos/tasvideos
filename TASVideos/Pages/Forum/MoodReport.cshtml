@@ -1,0 +1,39 @@
+﻿@page
+@model TASVideos.Pages.Forum.MoodReportModel
+
+<p>These are peoples mood avatars</p>
+@foreach (var user in Model.MoodyUsers)
+{
+	<card>
+		<cardheader>
+			<h4><profile-link username="@user.UserName">@user.UserName</profile-link></h4>
+		</cardheader>
+		<cardbody>
+			@foreach (var mood in MoodReportModel.Moods)
+			{
+				<div class="mood-box border p-2">
+					<strong>@mood.EnumDisplayName()</strong>
+					<br />
+					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="imgError(this)" />
+				</div>
+			}
+		</cardbody>
+	</card>
+	<hr />
+}
+
+<style>
+	.mood-box {
+		display: inline-block;
+		min-height: 139px;
+		min-width: 100px;
+	}
+</style>
+
+<script>
+	function imgError(image) {
+		image.onerror = "";
+		image.src = "/images/empty.png";
+		return true;
+	}
+</script>
