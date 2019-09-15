@@ -26,6 +26,10 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					return new ErrorResult("Invalid file format, does not seem to be a .vbm");
 				}
+
+				br.ReadBytes(8); // major version, movie uid
+				result.Frames = br.ReadInt32();
+				result.RerecordCount = br.ReadInt32();
 			}
 
 			return result;
