@@ -55,8 +55,9 @@
 	<i>0</i>
 </delete-button>
 <a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls) && !Model.AnyVotes"
-	asp-page="AddEditPoll",
+	asp-page="AddEditPoll"
 	asp-route-topicId="@Model.Id"
-	class="btn btn-warning btn-sm">
+	class="btn btn-warning btn-sm"
+	title= "Add a poll to this topic">
 	Poll
 </a>
