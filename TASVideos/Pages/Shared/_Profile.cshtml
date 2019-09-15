@@ -4,7 +4,7 @@
 	<div class="col-md-6">
 		<card>
 			<cardheader>
-				<h4>@Model.UserName <a permission="EditUsers" class="btn btn-primary btn-sm" asp-page="/Users/Edit" asp-route-id="@Model.Id">Edit</a></h4>
+				<h4>@Model.UserName <a permission="EditUsers" class="btn btn-primary btn-sm" asp-page="/Users/Edit" asp-route-returnUrl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Edit</a></h4>
 			</cardheader>
 			<cardbody>
 				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />

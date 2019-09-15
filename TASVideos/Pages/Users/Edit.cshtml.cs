@@ -34,6 +34,10 @@ namespace TASVideos.Pages.Users
 		[FromRoute]
 		public int Id { get; set; }
 
+
+		[FromQuery]
+		public string ReturnUrl { get; set; }
+
 		[BindProperty]
 		public UserEditModel UserToEdit { get; set; }
 
@@ -152,7 +156,9 @@ namespace TASVideos.Pages.Users
 				_publisher.SendUserManagement(message, "", $"{BaseUrl}/Users/Profile/{user.UserName}");
 			}
 
-			return RedirectToPage("List");
+			return string.IsNullOrWhiteSpace(ReturnUrl)
+				? RedirectToPage("List")
+				: RedirectToLocal(ReturnUrl);
 		}
 
 		public async Task<IActionResult> OnGetUnlock(string returnUrl)
