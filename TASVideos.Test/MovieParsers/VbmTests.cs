@@ -32,5 +32,22 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsNotNull(result.Errors);
 			Assert.AreEqual(1, result.Errors.Count());
 		}
+
+		[TestMethod]
+		public void ValidHeader()
+		{
+			var result = _vbmParser.Parse(Embedded("2frames.vbm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+		}
+
+		[TestMethod]
+		public void RerecordCount()
+		{
+			var result = _vbmParser.Parse(Embedded("2frames.vbm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(39098, result.RerecordCount);
+		}
 	}
 }

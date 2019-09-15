@@ -103,6 +103,7 @@
     <EmbeddedResource Include="MovieParsers\OmrSampleFiles\pal.omr" />
     <EmbeddedResource Include="MovieParsers\OmrSampleFiles\savestate.omr" />
     <EmbeddedResource Include="MovieParsers\OmrSampleFiles\svi.omr" />
+    <EmbeddedResource Include="MovieParsers\VbmSampleFiles\2frames.vbm" />
     <EmbeddedResource Include="MovieParsers\VbmSampleFiles\wrongheader.vbm" />
     <EmbeddedResource Include="MovieParsers\WtfSampleFiles\2frames.wtf" />
     <EmbeddedResource Include="MovieParsers\WtfSampleFiles\noframerate.wtf" />
