@@ -104,7 +104,10 @@
     <EmbeddedResource Include="MovieParsers\OmrSampleFiles\savestate.omr" />
     <EmbeddedResource Include="MovieParsers\OmrSampleFiles\svi.omr" />
     <EmbeddedResource Include="MovieParsers\VbmSampleFiles\2frames.vbm" />
+    <EmbeddedResource Include="MovieParsers\VbmSampleFiles\gb.vbm" />
+    <EmbeddedResource Include="MovieParsers\VbmSampleFiles\gbc.vbm" />
     <EmbeddedResource Include="MovieParsers\VbmSampleFiles\savestate.vbm" />
+    <EmbeddedResource Include="MovieParsers\VbmSampleFiles\sgb.vbm" />
     <EmbeddedResource Include="MovieParsers\VbmSampleFiles\sram.vbm" />
     <EmbeddedResource Include="MovieParsers\VbmSampleFiles\wrongheader.vbm" />
     <EmbeddedResource Include="MovieParsers\WtfSampleFiles\2frames.wtf" />

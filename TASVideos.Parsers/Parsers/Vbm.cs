@@ -40,6 +40,25 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					result.StartType = MovieStartType.Sram;
 				}
+
+				br.ReadByte(); // Controller config
+				var system = br.ReadByte();
+				if (system.Bit(0))
+				{
+					result.SystemCode = SystemCodes.Gba;
+				}
+				else if (system.Bit(1))
+				{
+					result.SystemCode = SystemCodes.Gbc;
+				}
+				else if (system.Bit(2))
+				{
+					result.SystemCode = SystemCodes.Sgb;
+				}
+				else
+				{
+					result.SystemCode = SystemCodes.GameBoy;
+				}
 			}
 
 			return result;
