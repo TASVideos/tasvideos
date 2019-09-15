@@ -106,7 +106,8 @@ namespace TASVideos.Data.SeedData
 		{
 			PermissionTo.EditForumPosts,
 			PermissionTo.LockTopics,
-			PermissionTo.MoveTopics
+			PermissionTo.MoveTopics,
+			PermissionTo.SetTopicType
 		}).ToArray();
 
 		private static readonly PermissionTo[] ForumAdminPermissions = ForumModeratorPermissions.Concat(new[]
