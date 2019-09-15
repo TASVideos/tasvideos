@@ -37,8 +37,6 @@ namespace TASVideos.Pages.Forum.Posts
 			_db = db;
 		}
 
-		public IEnumerable<SelectListItem> Moods => MoodList;
-
 		[FromRoute]
 		public int TopicId { get; set; }
 
