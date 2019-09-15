@@ -2,6 +2,7 @@
 using System.Linq;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Topics.Models
@@ -22,6 +23,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		bool IsLocked { get; }
 		int ForumId { get; }
 		string ForumName { get; }
+		ForumTopicType Type { get; }
 	}
 
 	public class ForumTopicModel : IForumTopicActionBar, IForumTopicBreadCrumb
@@ -32,6 +34,8 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public string Title { get; set; }
 		public int ForumId { get; set; }
 		public string ForumName { get; set; }
+
+		public ForumTopicType Type { get; set; }
 
 		public bool AnyVotes => Poll?.Options.SelectMany(o => o.Voters).Any() ?? false;
 
