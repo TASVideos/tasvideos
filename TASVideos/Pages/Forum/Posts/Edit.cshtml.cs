@@ -125,7 +125,7 @@ namespace TASVideos.Pages.Forum.Posts
 				"",
 				$"{BaseUrl}/p/{Id}#{Id}");
 
-			return RedirectToPage("/Forum/Topics/Index", new { Id = Post.TopicId });
+			return RedirectToLocal($"/forum/p/{Id}#{Id}");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
