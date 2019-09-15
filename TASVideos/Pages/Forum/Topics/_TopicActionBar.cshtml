@@ -8,12 +8,19 @@
 	<i class="fa fa-search-plus"></i>
 </a>
 <a condition="User.Identity.IsAuthenticated && Model.IsWatching"
-   asp-page="Index"
-   asp-page-handler="Unwatch"
-   asp-route-id="@Model.Id"
-   class="btn btn-warning btn-sm"
-   title="Stop watching this topic">
+	asp-page="Index"
+	asp-page-handler="Unwatch"
+	asp-route-id="@Model.Id"
+	class="btn btn-warning btn-sm"
+	title="Stop watching this topic">
 	<i class="fa fa-search-plus"></i>
+</a>
+<a permission="SetTopicType"
+	asp-page="SetType"
+	asp-route-topicId="@Model.Id"
+	class="btn btn-sm btn-warning"
+	title="Set the type of this topic (Normal/Sticky/Announcement)">
+	<i class="fa fa-bullhorn"></i>
 </a>
 <a permission="MoveTopics"
    asp-page="Move"
