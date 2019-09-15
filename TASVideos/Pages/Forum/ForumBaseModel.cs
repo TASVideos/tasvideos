@@ -18,6 +18,16 @@ namespace TASVideos.Pages.Forum
 {
 	public class BaseForumModel : BasePageModel
 	{
+		protected static readonly IEnumerable<SelectListItem> TopicTypeList = Enum
+			.GetValues(typeof(ForumTopicType))
+			.Cast<ForumTopicType>()
+			.Select(m => new SelectListItem
+			{
+				Value = ((int)m).ToString(),
+				Text = m.EnumDisplayName()
+			})
+			.ToList();
+
 		protected static readonly IEnumerable<SelectListItem> MoodList = Enum
 			.GetValues(typeof(ForumPostMood))
 			.Cast<ForumPostMood>()
@@ -38,6 +48,9 @@ namespace TASVideos.Pages.Forum
 		{
 			_db = db;
 		}
+
+		public IEnumerable<SelectListItem> Moods => MoodList;
+		public IEnumerable<SelectListItem> TopicTypes => TopicTypeList;
 
 		protected async Task<PostPositionModel> GetPostPosition(int postId, bool seeRestricted)
 		{

@@ -45,16 +45,21 @@
 	</div>
 
 	<input type="hidden" asp-for="Topic.ForumName" />
-	<form-group class="col-lg-6">
-		<row>
+	<row>
+		<column md="6">
 			<label asp-for="Topic.Title" class="form-control-label"></label>
 			<input type="text" asp-for="Topic.Title" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Topic.Title" class="text-danger"></span>
-		</row>
-	</form-group>
-	<form-group>
+		</column>
+		<column permission="SetTopicType" md="6">
+			<label asp-for="Topic.Type" class="form-control-label"></label>
+			<select asp-for="Topic.Type" asp-items="Model.TopicTypes" class="form-control"></select>
+			<span asp-validation-for="Topic.Type" class="text-danger"></span>
+		</column>
+	</row>
+	<fullrow class="mt-3">
 		<partial name="_CreatePostHelper" model="@("Topic_Post")" />
-	</form-group>
+	</fullrow>
 	<form-group>
 		<textarea asp-for="Topic.Post" class="form-control" rows="20"></textarea>
 		<span asp-validation-for="Topic.Post" class="text-danger"></span>

@@ -30,8 +30,6 @@ namespace TASVideos.Pages.Forum.Posts
 			_publisher = publisher;
 		}
 
-		public IEnumerable<SelectListItem> Moods => MoodList;
-
 		[FromRoute]
 		public int Id { get; set; }
 
