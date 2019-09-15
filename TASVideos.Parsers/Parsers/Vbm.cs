@@ -30,6 +30,16 @@ namespace TASVideos.MovieParsers.Parsers
 				br.ReadBytes(8); // major version, movie uid
 				result.Frames = br.ReadInt32();
 				result.RerecordCount = br.ReadInt32();
+
+				var type = br.ReadByte();
+				if (type.Bit(0))
+				{
+					result.StartType = MovieStartType.Savestate;
+				}
+				else if (type.Bit(1))
+				{
+					result.StartType = MovieStartType.Sram;
+				}
 			}
 
 			return result;
