@@ -23,15 +23,20 @@ namespace TASVideos.TagHelpers
 				return;
 			}
 
+			output.TagName = "img";
+			output.Attributes.Clear();
+
 			string avatarUrl = Avatar;
 
 			if (!string.IsNullOrWhiteSpace(MoodAvatarBase))
 			{
 				avatarUrl = MoodAvatarBase.Replace("$", ((int)Mood).ToString());
+				if (Mood != ForumPostMood.Normal && Mood != ForumPostMood.AltNormal)
+				{
+					output.Attributes.Add("title", $"Mood: {Mood}");
+				}
 			}
 
-			output.TagName = "img";
-			output.Attributes.Clear();
 			output.Attributes.Add("src", avatarUrl);
 		}
 	}
