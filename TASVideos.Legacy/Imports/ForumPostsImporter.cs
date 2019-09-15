@@ -37,7 +37,10 @@ namespace TASVideos.Legacy.Imports
 				.ToList()
 				.Select(p =>
 				{
-					var fixedText = System.Web.HttpUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Text.Replace(":" + p.BbCodeUid, "")));
+					var fixedText = System.Web.HttpUtility.HtmlDecode(
+						ImportHelper.ConvertLatin1String(p.Text
+							.Replace(":1:" + p.BbCodeUid, "")
+							.Replace(":" + p.BbCodeUid, "")));
 
 					int moodAvatar = p.MoodAvatar == 255 // This seems to just mean normal
 						? 1
