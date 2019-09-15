@@ -47,6 +47,8 @@
 		public const string PollOptionYes = "Yes";
 		public const string PollOptionNo = "No";
 		public const string PollOptionsMeh = "Meh";
+
+		public const string DefaultPublicationText = "''[TODO]: describe this movie here''";
 	}
 
 	public static class PlayerPointConstants

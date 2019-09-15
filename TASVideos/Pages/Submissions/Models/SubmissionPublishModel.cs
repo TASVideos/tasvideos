@@ -19,7 +19,7 @@ namespace TASVideos.Pages.Submissions.Models
 
 		[Required]
 		[Display(Name = "Movie description")]
-		public string MovieMarkup { get; set; } = "''[TODO]: describe this movie here''";
+		public string MovieMarkup { get; set; } = SiteGlobalConstants.DefaultPublicationText;
 
 		[Required]
 		[Display(Name = "Movie Filename", Description = "Please follow the convention: xxxv#-yyy where xxx is author name, # is version and yyy is game name. Special characters such as \"&\" and \"/\" and \".\" and spaces must not occur in the filename.")]
