@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics
@@ -33,10 +34,13 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnGet()
 		{
+			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
+
 			var topic = await _db.ForumTopics
 				.Include(t => t.Poll)
 				.ThenInclude(p => p.PollOptions)
 				.ThenInclude(o => o.Votes)
+				.ExcludeRestricted(seeRestricted)
 				.Where(t => t.Id == TopicId)
 				.SingleOrDefaultAsync();
 
