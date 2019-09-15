@@ -213,6 +213,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to participate in forum polls. Experienced users have the ability ot do this, unless revoked.")]
 		CreateForumPolls = 408,
 
+		[Display(Name = "Set Topic Type")]
+		[Group("Forum Administration")]
+		[Description("Ability to set whether or not a topic is an announcement or a sticky topic.")]
+		SetTopicType = 409,
+
 		[Display(Name = "See Restricted Froums")]
 		[Group("Forum Administration")]
 		[Description("The ability to see forums that are restricted from general access.")]
