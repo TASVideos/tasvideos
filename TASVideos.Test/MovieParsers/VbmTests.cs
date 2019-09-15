@@ -76,5 +76,14 @@ namespace TASVideos.Test.MovieParsers
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(MovieStartType.Sram, result.StartType);
 		}
+
+		[TestMethod]
+		public void Gba()
+		{
+			var result = _vbmParser.Parse(Embedded("2frames.vbm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(SystemCodes.Gba, result.SystemCode);
+		}
 	}
 }
