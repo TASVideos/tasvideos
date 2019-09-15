@@ -168,7 +168,7 @@ namespace TASVideos.Pages.Forum.Posts
 				await _db.SaveChangesAsync();
 			}
 
-			return RedirectToPage("/Forum/Topics/Index", new { Id = TopicId });
+			return RedirectToLocal($"/forum/p/{id}#{id}");
 		}
 	}
 }
