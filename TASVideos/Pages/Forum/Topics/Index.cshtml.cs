@@ -59,6 +59,7 @@ namespace TASVideos.Pages.Forum.Topics
 					Id = t.Id,
 					IsWatching = userId.HasValue && t.ForumTopicWatches.Any(ft => ft.UserId == userId.Value),
 					Title = t.Title,
+					Type = t.Type,
 					ForumId = t.ForumId,
 					ForumName = t.Forum.Name,
 					IsLocked = t.IsLocked,
