@@ -81,7 +81,6 @@ namespace TASVideos.Pages.Forum.Subforum
 				Sort = Search.Sort
 			};
 
-			Forum.Description = RenderHtml(Forum.Description);
 			return Page();
 		}
 	}
