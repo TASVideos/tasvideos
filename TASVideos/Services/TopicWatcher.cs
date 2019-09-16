@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Services.Email;
 
 namespace TASVideos.Services
@@ -17,6 +18,16 @@ namespace TASVideos.Services
 		/// </summary>
 		/// <param name="notification">The data necessary to create a topic notification</param>
 		Task NotifyNewPost(TopicNotification notification);
+
+		/// <summary>
+		/// Allows a user to watch a topic
+		/// </summary>
+		Task WatchTopic(int topicId, int userId, bool canSeeRestricted);
+
+		/// <summary>
+		/// Removes a topic from the user's watched topic list
+		/// </summary>
+		Task UnwatchTopic(int topicId, int userId, bool canSeeRestricted);
 	}
 
 	public class TopicWatcher : ITopicWatcher
@@ -64,6 +75,39 @@ namespace TASVideos.Services
 					watch.IsNotified = true;
 				}
 
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
+		{
+			var watch = await _db.ForumTopicWatches
+				.ExcludeRestricted(canSeeRestricted)
+				.SingleOrDefaultAsync(w => w.UserId == userId
+					&& w.ForumTopicId == topicId);
+
+			if (watch == null)
+			{
+				_db.ForumTopicWatches.Add(new ForumTopicWatch
+				{
+					UserId = userId,
+					ForumTopicId = topicId
+				});
+
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public async Task UnwatchTopic(int topicId, int userId, bool canSeeRestricted)
+		{
+			var watch = await _db.ForumTopicWatches
+				.ExcludeRestricted(canSeeRestricted)
+				.SingleOrDefaultAsync(w => w.UserId == userId
+					&& w.ForumTopicId == topicId);
+
+			if (watch != null)
+			{
+				_db.ForumTopicWatches.Remove(watch);
 				await _db.SaveChangesAsync();
 			}
 		}

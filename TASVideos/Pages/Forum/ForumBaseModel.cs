@@ -13,6 +13,7 @@ using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Models;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum
 {
@@ -40,13 +41,15 @@ namespace TASVideos.Pages.Forum
 			.ToList();
 
 		private readonly ApplicationDbContext _db;
+		private readonly ITopicWatcher _topicWatcher;
 
 		private static readonly SelectListGroup StandardGroup = new SelectListGroup { Name = "Standard" };
 		private static readonly SelectListGroup AltGroup = new SelectListGroup { Name = "Alternate" };
 
-		public BaseForumModel(ApplicationDbContext db)
+		public BaseForumModel(ApplicationDbContext db, ITopicWatcher topicWatcher)
 		{
 			_db = db;
+			_topicWatcher = topicWatcher;
 		}
 
 		public IEnumerable<SelectListItem> Moods => MoodList;
@@ -95,7 +98,7 @@ namespace TASVideos.Pages.Forum
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
-			await WatchTopic(topicId, userId, canSeeRestricted: true);
+			await _topicWatcher.WatchTopic(topicId, userId, canSeeRestricted: true);
 			return forumPost.Id;
 		}
 
@@ -119,39 +122,6 @@ namespace TASVideos.Pages.Forum
 			_db.ForumPolls.Add(poll);
 			topic.Poll = poll;
 			await _db.SaveChangesAsync();
-		}
-
-		protected async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
-		{
-			var watch = await _db.ForumTopicWatches
-				.ExcludeRestricted(canSeeRestricted)
-				.SingleOrDefaultAsync(w => w.UserId == userId
-				&& w.ForumTopicId == topicId);
-
-			if (watch == null)
-			{
-				_db.ForumTopicWatches.Add(new ForumTopicWatch
-				{
-					UserId = userId,
-					ForumTopicId = topicId
-				});
-
-				await _db.SaveChangesAsync();
-			}
-		}
-
-		protected async Task UnwatchTopic(int topicId, int userId, bool canSeeRestricted)
-		{
-			var watch = await _db.ForumTopicWatches
-				.ExcludeRestricted(canSeeRestricted)
-				.SingleOrDefaultAsync(w => w.UserId == userId
-				&& w.ForumTopicId == topicId);
-
-			if (watch != null)
-			{
-				_db.ForumTopicWatches.Remove(watch);
-				await _db.SaveChangesAsync();
-			}
 		}
 	}
 }

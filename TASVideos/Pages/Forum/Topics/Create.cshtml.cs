@@ -10,6 +10,7 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
+using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Topics
@@ -22,8 +23,9 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public CreateModel(
 			ApplicationDbContext db,
-			ExternalMediaPublisher publisher)
-			: base(db)
+			ExternalMediaPublisher publisher,
+			ITopicWatcher watcher)
+			: base(db, watcher)
 		{
 			_db = db;
 			_publisher = publisher;

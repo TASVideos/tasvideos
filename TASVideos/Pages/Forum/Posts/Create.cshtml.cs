@@ -26,7 +26,7 @@ namespace TASVideos.Pages.Forum.Posts
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
 			ITopicWatcher topicWatcher)
-			: base(db)
+			: base(db, topicWatcher)
 		{
 			_userManager = userManager;
 			_publisher = publisher;
