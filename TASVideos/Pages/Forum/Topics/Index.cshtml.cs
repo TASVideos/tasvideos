@@ -250,7 +250,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return AccessDenied();
 			}
 
-			await _topicWatcher.UnwatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
+			await _topicWatcher.UnwatchTopic(Id, User.GetUserId());
 			return RedirectToTopic();
 		}
 
