@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Legacy
 {
@@ -12,7 +13,8 @@ namespace TASVideos.Pages.Forum.Legacy
 	[AllowAnonymous]
 	public class TopicModel : BaseForumModel
 	{
-		public TopicModel(ApplicationDbContext db) : base (db)
+		public TopicModel(ApplicationDbContext db, ITopicWatcher watcher)
+			: base(db, watcher)
 		{
 		}
 

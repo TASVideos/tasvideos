@@ -8,6 +8,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -17,8 +18,9 @@ namespace TASVideos.Pages.Forum.Topics
 		private readonly ApplicationDbContext _db;
 
 		public SetTypeModel(
-			ApplicationDbContext db)
-			: base(db)
+			ApplicationDbContext db,
+			ITopicWatcher watcher)
+			: base(db, watcher)
 		{
 			_db = db;
 		}

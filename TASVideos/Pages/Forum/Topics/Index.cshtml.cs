@@ -23,18 +23,21 @@ namespace TASVideos.Pages.Forum.Topics
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IAwards _awards;
 		private readonly IPointsService _pointsService;
+		private readonly ITopicWatcher _topicWatcher;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IAwards awards,
-			IPointsService pointsService)
-			: base(db)
+			IPointsService pointsService,
+			ITopicWatcher topicWatcher)
+			: base(db, topicWatcher)
 		{
 			_db = db;
 			_publisher = publisher;
 			_awards = awards;
 			_pointsService = pointsService;
+			_topicWatcher = topicWatcher;
 		}
 
 		[FromRoute]
@@ -236,7 +239,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return AccessDenied();
 			}
 
-			await WatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
+			await _topicWatcher.WatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
 			return RedirectToTopic();
 		}
 
@@ -247,7 +250,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return AccessDenied();
 			}
 
-			await UnwatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
+			await _topicWatcher.UnwatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
 			return RedirectToTopic();
 		}
 

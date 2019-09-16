@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Posts
 {
@@ -10,7 +11,7 @@ namespace TASVideos.Pages.Forum.Posts
 	[AllowAnonymous]
 	public class IndexModel : BaseForumModel
 	{
-		public IndexModel(ApplicationDbContext db) : base(db)
+		public IndexModel(ApplicationDbContext db, ITopicWatcher watcher) : base(db, watcher)
 		{
 		}
 

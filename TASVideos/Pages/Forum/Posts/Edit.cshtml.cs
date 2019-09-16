@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
+using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Posts
@@ -23,8 +22,9 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public EditModel(
 			ApplicationDbContext db,
-			ExternalMediaPublisher publisher)
-			: base(db)
+			ExternalMediaPublisher publisher,
+			ITopicWatcher watcher)
+			: base(db, watcher)
 		{
 			_db = db;
 			_publisher = publisher;
