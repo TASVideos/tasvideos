@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,11 @@ namespace TASVideos.Services
 
 		public async Task NotifyNewPost(TopicNotification notification)
 		{
+			if (notification == null)
+			{
+				throw new ArgumentNullException($"{nameof(notification)} can not be null");
+			}
+
 			var watches = await _db.ForumTopicWatches
 				.Include(w => w.User)
 				.Where(w => w.ForumTopicId == notification.TopicId)
