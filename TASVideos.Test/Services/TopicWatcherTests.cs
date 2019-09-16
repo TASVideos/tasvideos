@@ -125,5 +125,55 @@ namespace TASVideos.Test.Services
 
 			Assert.IsTrue(_db.ForumTopicWatches.All(w => w.IsNotified));
 		}
+
+		[TestMethod]
+		public async Task WatchTopic_AddsWatch_IfNoneExist()
+		{
+			int userId = 1;
+			int topicId = 1;
+			_db.Users.Add(new User { Id = userId });
+			_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+			_db.SaveChanges();
+
+			await _topicWatcher.WatchTopic(topicId, userId, true);
+
+			Assert.AreEqual(1, _db.ForumTopicWatches.Count());
+			Assert.AreEqual(userId, _db.ForumTopicWatches.Single().UserId);
+			Assert.AreEqual(topicId, _db.ForumTopicWatches.Single().ForumTopicId);
+		}
+
+		[TestMethod]
+		public async Task WatchTopic_DoesNotAdd_IfAlreadyExists()
+		{
+			int userId = 1;
+			int topicId = 1;
+			_db.Users.Add(new User { Id = userId });
+			_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+			_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
+			_db.SaveChanges();
+
+			await _topicWatcher.WatchTopic(topicId, userId, true);
+			Assert.AreEqual(1, _db.ForumTopicWatches.Count());
+			Assert.AreEqual(userId, _db.ForumTopicWatches.Single().UserId);
+			Assert.AreEqual(topicId, _db.ForumTopicWatches.Single().ForumTopicId);
+		}
+		
+		[TestMethod]
+		public async Task WatchTopic_DoesNotAddRestricted_IfUserCanNotSeeRestricted()
+		{
+			int userId = 1;
+			int topicId = 1;
+			_db.Users.Add(new User { Id = userId });
+			var forum = new Forum { Id = 1, Restricted = true };
+			_db.Forums.Add(forum);
+			_db.ForumTopics.Add(new ForumTopic { Id = topicId, ForumId = forum.Id });
+			_db.SaveChanges();
+
+			await _topicWatcher.WatchTopic(topicId, userId, false);
+
+			Assert.AreEqual(0, _db.ForumTopicWatches.Count());
+		}
+
+		// Unwatch Topic - removes if already exists
 	}
 }
