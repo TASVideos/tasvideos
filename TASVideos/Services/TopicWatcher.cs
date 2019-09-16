@@ -81,6 +81,15 @@ namespace TASVideos.Services
 
 		public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
 		{
+			var topic = await _db.ForumTopics
+				.ExcludeRestricted(canSeeRestricted)
+				.SingleOrDefaultAsync(t => t.Id == topicId);
+
+			if (topic == null)
+			{
+				return;
+			}
+
 			var watch = await _db.ForumTopicWatches
 				.ExcludeRestricted(canSeeRestricted)
 				.SingleOrDefaultAsync(w => w.UserId == userId
