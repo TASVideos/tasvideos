@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -11,7 +9,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Services;
-using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Posts
@@ -22,18 +19,18 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly UserManager _userManager;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ApplicationDbContext _db;
-		private readonly IEmailService _emailService;
+		private readonly ITopicWatcher _topicWatcher;
 
 		public CreateModel(
 			UserManager userManager,
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
-			IEmailService emailService)
+			ITopicWatcher topicWatcher)
 			: base(db)
 		{
 			_userManager = userManager;
 			_publisher = publisher;
-			_emailService = emailService;
+			_topicWatcher = topicWatcher;
 			_db = db;
 		}
 
@@ -138,34 +135,14 @@ namespace TASVideos.Pages.Forum.Posts
 				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
 				$"{BaseUrl}/forum/p/{id}#{id}");
 
-			// Notify watched topic
-			var watches = await _db.ForumTopicWatches
-				.Include(w => w.User)
-				.Where(w => w.ForumTopicId == TopicId)
-				.Where(w => w.UserId != user.Id)
-				.Where(w => !w.IsNotified)
-				.ToListAsync();
-
-			if (watches.Any())
+			await _topicWatcher.NotifyNewPost(new TopicNotification
 			{
-				await _emailService
-					.TopicReplyNotification(
-						watches.Select(w => w.User.Email),
-						new TopicReplyNotificationTemplate
-						{
-							PostId = id,
-							TopicId = topic.Id,
-							TopicTitle = topic.Title,
-							BaseUrl = BaseUrl
-						});
-
-				foreach (var watch in watches)
-				{
-					watch.IsNotified = true;
-				}
-
-				await _db.SaveChangesAsync();
-			}
+				PostId = id,
+				TopicId = topic.Id,
+				TopicTitle = topic.Title,
+				PosterId = user.Id,
+				BaseUrl = BaseUrl
+			});
 
 			return RedirectToLocal($"/forum/p/{id}#{id}");
 		}
