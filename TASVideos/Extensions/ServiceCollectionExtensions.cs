@@ -98,6 +98,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<IAwards, Awards>();
 			services.AddScoped<IMediaFileUploader, MediaFileUploader>();
 			services.AddScoped<ILanguages, Languages>();
+			services.AddScoped<ITopicWatcher, TopicWatcher>();
 
 			if (env.IsDevelopment())
 			{
