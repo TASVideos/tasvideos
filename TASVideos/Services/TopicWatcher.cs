@@ -27,7 +27,7 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Removes a topic from the user's watched topic list
 		/// </summary>
-		Task UnwatchTopic(int topicId, int userId, bool canSeeRestricted);
+		Task UnwatchTopic(int topicId, int userId);
 	}
 
 	public class TopicWatcher : ITopicWatcher
@@ -98,10 +98,9 @@ namespace TASVideos.Services
 			}
 		}
 
-		public async Task UnwatchTopic(int topicId, int userId, bool canSeeRestricted)
+		public async Task UnwatchTopic(int topicId, int userId)
 		{
 			var watch = await _db.ForumTopicWatches
-				.ExcludeRestricted(canSeeRestricted)
 				.SingleOrDefaultAsync(w => w.UserId == userId
 					&& w.ForumTopicId == topicId);
 
