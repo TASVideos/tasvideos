@@ -20,6 +20,11 @@ namespace TASVideos.Services
 		Task NotifyNewPost(TopicNotification notification);
 
 		/// <summary>
+		/// Marks that a user has seen a topic with new posts
+		/// </summary>
+		Task MarkSeen(int topicId, int userId);
+
+		/// <summary>
 		/// Allows a user to watch a topic
 		/// </summary>
 		Task WatchTopic(int topicId, int userId, bool canSeeRestricted);
@@ -75,6 +80,18 @@ namespace TASVideos.Services
 					watch.IsNotified = true;
 				}
 
+				await _db.SaveChangesAsync();
+			}
+		}
+
+		public async Task MarkSeen(int topicId, int userId)
+		{
+			var watchedTopic = await _db.ForumTopicWatches
+				.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId);
+
+			if (watchedTopic != null && watchedTopic.IsNotified)
+			{
+				watchedTopic.IsNotified = false;
 				await _db.SaveChangesAsync();
 			}
 		}
