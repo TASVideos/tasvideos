@@ -127,6 +127,27 @@ namespace TASVideos.Test.Services
 		}
 
 		[TestMethod]
+		public async Task MarkSeen_IsNotifiedFalse()
+		{
+			int userId = 1;
+			int topicId = 1;
+			_db.Users.Add(new User { Id = userId });
+			_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+			_db.ForumTopicWatches.Add(new ForumTopicWatch
+			{
+				UserId = userId,
+				ForumTopicId = topicId,
+				IsNotified = true
+			});
+			_db.SaveChanges();
+
+			await _topicWatcher.MarkSeen(topicId, userId);
+
+			Assert.AreEqual(1, _db.ForumTopicWatches.Count());
+			Assert.IsFalse(_db.ForumTopicWatches.Single().IsNotified);
+		}
+
+		[TestMethod]
 		public async Task WatchTopic_AddsWatch_IfNoneExist()
 		{
 			int userId = 1;
