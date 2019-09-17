@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,11 @@ namespace TASVideos.Services
 {
 	public interface ITopicWatcher
 	{
+		/// <summary>
+		/// Returns all topics the user is currently watching
+		/// </summary>
+		Task<IEnumerable<WatchedTopic>> UserWatches(int userId);
+
 		/// <summary>
 		/// Notifies everyone watching a topic (other than the poster)
 		/// that a new post has been created
@@ -46,6 +52,23 @@ namespace TASVideos.Services
 		{
 			_emailService = emailService;
 			_db = db;
+		}
+
+		public async Task<IEnumerable<WatchedTopic>> UserWatches(int userId)
+		{
+			return await _db
+				.ForumTopicWatches
+				.ForUser(userId)
+				.Select(tw => new WatchedTopic
+				{
+					TopicCreateTimeStamp = tw.ForumTopic.CreateTimeStamp,
+					IsNotified = tw.IsNotified,
+					ForumId = tw.ForumTopic.ForumId,
+					ForumTitle = tw.ForumTopic.Forum.Name,
+					TopicId = tw.ForumTopicId,
+					TopicTitle = tw.ForumTopic.Title,
+				})
+				.ToListAsync();
 		}
 
 		public async Task NotifyNewPost(TopicNotification notification)

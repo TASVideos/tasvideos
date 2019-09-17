@@ -1,8 +1,11 @@
 ﻿using System;
 
-namespace TASVideos.Pages.Profile.Models
+namespace TASVideos.Services
 {
-	public class WatchedTopicEntry
+	/// <summary>
+	/// Represents a watched forum topic
+	/// </summary>
+	public class WatchedTopic
 	{
 		public DateTime TopicCreateTimeStamp { get; set; }
 		public bool IsNotified { get; set; }
