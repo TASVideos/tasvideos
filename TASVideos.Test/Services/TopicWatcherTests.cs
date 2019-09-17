@@ -174,6 +174,19 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(0, _db.ForumTopicWatches.Count());
 		}
 
-		// Unwatch Topic - removes if already exists
+		[TestMethod]
+		public async Task UnwatchTopic_RemovesTopic()
+		{
+			int userId = 1;
+			int topicId = 1;
+			_db.Users.Add(new User { Id = userId });
+			_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+			_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
+			_db.SaveChanges();
+
+			await _topicWatcher.UnwatchTopic(topicId, userId);
+
+			Assert.AreEqual(0, _db.ForumTopicWatches.Count());
+		}
 	}
 }
