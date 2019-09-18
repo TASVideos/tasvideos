@@ -65,7 +65,7 @@ namespace TASVideos.Test.MovieParsers
 			var result = _vbmParser.Parse(Embedded("2frames.vbm"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
-			Assert.AreEqual(2, result.Frames);
+			Assert.AreEqual(95490, result.Frames);
 		}
 
 		[TestMethod]
