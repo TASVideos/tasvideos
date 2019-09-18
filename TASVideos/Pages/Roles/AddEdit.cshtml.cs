@@ -67,6 +67,7 @@ namespace TASVideos.Pages.Roles
 						Name = r.Name,
 						IsDefault = r.IsDefault,
 						Description = r.Description,
+						AutoAssignPostCount = r.AutoAssignPostCount,
 						Links = r.RoleLinks
 							.Select(rl => rl.Link)
 							.ToList(),
@@ -181,6 +182,7 @@ namespace TASVideos.Pages.Roles
 			role.Name = model.Name;
 			role.IsDefault = model.IsDefault;
 			role.Description = model.Description;
+			role.AutoAssignPostCount = model.AutoAssignPostCount;
 
 			_db.RolePermission.AddRange(model.SelectedPermissions
 				.Select(p => new RolePermission
