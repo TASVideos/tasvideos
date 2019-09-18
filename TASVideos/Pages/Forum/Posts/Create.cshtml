@@ -14,7 +14,7 @@
 			<input type="text" asp-for="Post.Subject" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Post.Subject" class="text-danger"></span>
 		</column>
-		<column md="6">
+		<column md="6" permission="UseMoodAvatars">
 			<label asp-for="Post.Mood" class="form-control-label"></label>
 			<select asp-for="Post.Mood" asp-items="@Model.Moods" class="form-control"></select>
 			<span asp-validation-for="Post.Mood" class="text-danger"></span>
