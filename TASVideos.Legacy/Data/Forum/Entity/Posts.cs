@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TASVideos.Legacy.Data.Site.Entity;
 
 namespace TASVideos.Legacy.Data.Forum.Entity
 {

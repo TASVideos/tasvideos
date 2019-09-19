@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -193,8 +192,8 @@ namespace TASVideos.Extensions
 
 			if (pageName.StartsWith("InternalSystem/PublicationContent/M"))
 			{
-				var result = int.TryParse(pageName
-					.Replace("InternalSystem/PublicationContent/M", ""), out int id);
+				var result = int.TryParse(
+					pageName.Replace("InternalSystem/PublicationContent/M", ""), out int id);
 
 				if (result)
 				{
@@ -214,8 +213,8 @@ namespace TASVideos.Extensions
 
 			if (pageName.StartsWith("InternalSystem/SubmissionContent/S"))
 			{
-				var result = int.TryParse(pageName
-					.Replace("InternalSystem/SubmissionContent/S", ""), out int id);
+				var result = int.TryParse(
+					pageName.Replace("InternalSystem/SubmissionContent/S", ""), out int id);
 
 				if (result)
 				{

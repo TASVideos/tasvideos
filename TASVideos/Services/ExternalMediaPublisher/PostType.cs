@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Services.ExternalMediaPublisher
 {
-    public enum PostType
+	public enum PostType
 	{
 		/// <summary>
 		/// A highly time sensitive administrative alert
