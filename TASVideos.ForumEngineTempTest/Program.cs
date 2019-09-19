@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Linq;
-
-using Microsoft.EntityFrameworkCore;
-
-using TASVideos.Data;
 using TASVideos.ForumEngine;
 
 namespace TASVideos.ForumEngineTempTest

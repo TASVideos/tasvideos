@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TASVideos.WikiEngine.AST;
@@ -12,6 +11,7 @@ namespace TASVideos.WikiEngine
 		private static readonly Regex Footnote = new Regex(@"^(\d+)$");
 		private static readonly Regex FootnoteLink = new Regex(@"^#(\d+)$");
 		private static readonly Regex RealModule = new Regex("^module:(.*)$");
+
 		/// <summary>
 		/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:]
 		/// </summary>
