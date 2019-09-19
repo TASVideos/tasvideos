@@ -144,6 +144,8 @@ namespace TASVideos.Pages.Forum.Posts
 				BaseUrl = BaseUrl
 			});
 
+			await _userManager.AssignAutoAssignableRoles(user);
+
 			return RedirectToLocal($"/forum/p/{id}#{id}");
 		}
 	}

@@ -17,6 +17,13 @@ namespace TASVideos.Data.Entity
 		[StringLength(300)]
 		public string Description { get; set; }
 
+		/// <summary>
+		/// Gets or sets the number of forum posts a user needs
+		/// to be automatically assigned this role.
+		/// If null, no automatic behavior will occur
+		/// </summary>
+		public int? AutoAssignPostCount { get; set; }
+
 		public DateTime CreateTimeStamp { get; set; }
 		public string CreateUserName { get; set; }
 
