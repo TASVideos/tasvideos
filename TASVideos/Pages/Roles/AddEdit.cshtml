@@ -31,9 +31,18 @@
 			</form-group>
 		</column>
 		<column lg="5" class="offset-lg-2">
-			<label asp-for="Role.Description" class="form-control-label"></label>
-			<textarea asp-for="Role.Description" class="form-control" rows="4" maxlength="200"></textarea>
-			<span asp-validation-for="Role.Description" class="text-danger"></span>
+			<form-group>
+				<label asp-for="Role.Description" class="form-control-label"></label>
+				<textarea asp-for="Role.Description" class="form-control" rows="4" maxlength="200"></textarea>
+				<span asp-validation-for="Role.Description" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Role.AutoAssignPostCount" class="form-control-label"></label>
+				<div>
+					<small>(@Html.DescriptionFor(m => m.Role.AutoAssignPostCount))</small>
+				</div>
+				<input type="number" class="form-control" asp-for="Role.AutoAssignPostCount" />
+			</form-group>
 		</column>
 	</row>
 	<row>

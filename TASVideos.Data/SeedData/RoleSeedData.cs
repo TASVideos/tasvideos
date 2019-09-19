@@ -173,6 +173,7 @@ namespace TASVideos.Data.SeedData
 		{
 			IsDefault = false,
 			Name = RoleSeedNames.ExperiencedForumUser,
+			AutoAssignPostCount = SiteGlobalConstants.VestedPostCount,
 			Description = "Contains the CreateForumTopics and VoteInPolls permissions that allow users to create topics and participate in forum polls. This role is automatically applied to experienced users.",
 			RolePermission = ExperiencedForumUserPermissions
 				.Select(p => new RolePermission
