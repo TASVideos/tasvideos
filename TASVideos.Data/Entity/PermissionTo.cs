@@ -218,6 +218,11 @@ namespace TASVideos.Data.Entity
 		[Description("Ability to set whether or not a topic is an announcement or a sticky topic.")]
 		SetTopicType = 409,
 
+		[Display(Name = "Merge Topics")]
+		[Group("Forum Administration")]
+		[Description("Ability to set merge a topic into an existing topic.")]
+		MergeTopics = 410,
+
 		[Display(Name = "See Restricted Froums")]
 		[Group("Forum Administration")]
 		[Description("The ability to see forums that are restricted from general access.")]
