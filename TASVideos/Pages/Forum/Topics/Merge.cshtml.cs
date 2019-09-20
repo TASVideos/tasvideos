@@ -1,0 +1,72 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+
+using TASVideos.Data;
+using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
+using TASVideos.Pages.Forum.Topics.Models;
+using TASVideos.Services.ExternalMediaPublisher;
+
+namespace TASVideos.Pages.Forum.Topics
+{
+	[RequirePermission(PermissionTo.MergeTopics)]
+	public class MergeModel : BasePageModel
+	{
+		private readonly ApplicationDbContext _db;
+		private readonly ExternalMediaPublisher _publisher;
+
+		public MergeModel(
+			ApplicationDbContext db,
+			ExternalMediaPublisher publisher)
+		{
+			_db = db;
+			_publisher = publisher;
+		}
+
+		[FromRoute]
+		public int Id { get; set; }
+
+		[BindProperty]
+		public MergeTopicModel Topic { get; set; }
+
+		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
+
+		private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
+
+		public async Task<IActionResult> OnGet()
+		{
+			bool seeRestricted = CanSeeRestricted;
+			Topic = await _db.ForumTopics
+				.ExcludeRestricted(seeRestricted)
+				.Where(t => t.Id == Id)
+				.Select(t => new MergeTopicModel
+				{
+					TopicToMergeId = t.Id
+				})
+				.SingleOrDefaultAsync();
+
+			if (Topic == null)
+			{
+				return NotFound();
+			}
+
+			return Page();
+		}
+
+		public async Task<IActionResult> OnPost()
+		{
+			if (!ModelState.IsValid)
+			{
+				return Page();
+			}
+
+
+			return RedirectToPage("Index", new { id = /*newTopic.*/Id });
+		}
+	}
+}
