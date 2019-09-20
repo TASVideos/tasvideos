@@ -36,6 +36,8 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 
+		public IEnumerable<SelectListItem> AvailableTopics { get; set; } = new List<SelectListItem>();
+
 		private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
 
 		public async Task<IActionResult> OnGet()
@@ -46,7 +48,9 @@ namespace TASVideos.Pages.Forum.Topics
 				.Where(t => t.Id == Id)
 				.Select(t => new MergeTopicModel
 				{
-					TopicToMergeId = t.Id
+					Title = t.Title,
+					ForumId = t.Forum.Id,
+					ForumName = t.Forum.Name
 				})
 				.SingleOrDefaultAsync();
 
@@ -55,6 +59,9 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
+			Topic.DestinationForumId = Topic.ForumId;
+			await PopulateAvailableForums();
+
 			return Page();
 		}
 
@@ -62,11 +69,35 @@ namespace TASVideos.Pages.Forum.Topics
 		{
 			if (!ModelState.IsValid)
 			{
+				await PopulateAvailableForums();
 				return Page();
 			}
 
-
 			return RedirectToPage("Index", new { id = /*newTopic.*/Id });
+		}
+
+		private async Task PopulateAvailableForums()
+		{
+			var seeRestricted = CanSeeRestricted;
+			AvailableForums = await _db.Forums
+				.ExcludeRestricted(seeRestricted)
+				.Select(f => new SelectListItem
+				{
+					Text = f.Name,
+					Value = f.Id.ToString(),
+					Selected = f.Id == Topic.ForumId
+				})
+				.ToListAsync();
+
+			AvailableTopics = UiDefaults.DefaultEntry.Concat(await _db.ForumTopics
+				.ExcludeRestricted(seeRestricted)
+				.Where(t => t.ForumId == Topic.ForumId)
+				.Select(t => new SelectListItem
+				{
+					Text = t.Title,
+					Value = t.Id.ToString()
+				})
+				.ToListAsync());
 		}
 	}
 }
