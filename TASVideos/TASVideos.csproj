@@ -53,6 +53,9 @@
   </Target>
   
   <ItemGroup>
+    <Content Update="Pages\Forum\Topics\Merge.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\Forum\Topics\_PollCreate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
