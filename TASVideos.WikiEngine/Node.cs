@@ -24,14 +24,17 @@ namespace TASVideos.WikiEngine.AST
 		int CharEnd { get; set; }
 		INode Clone();
 		void WriteHtmlDynamic(TextWriter w, IWriterHelper h);
+
 		/// <summary>
 		/// Get the combined text content of this Node.  May not return useful values for foreign components (Modules)
 		/// </summary>
 		string InnerText(IWriterHelper h);
+
 		/// <summary>
 		/// debugging output of all of the data in this node
 		/// </summary>
 		void DumpContentDescriptive(TextWriter w, string padding);
+
 		/// <summary>
 		/// Clones this node for use in a TOC.  Some things like anchors are removed
 		/// </summary>
@@ -71,7 +74,8 @@ namespace TASVideos.WikiEngine.AST
 		}
 
 		private NullWriterHelper()
-		{}
+		{
+		}
 
 		public static readonly NullWriterHelper Instance = new NullWriterHelper();
 	}
@@ -143,6 +147,7 @@ namespace TASVideos.WikiEngine.AST
 						w.Write(padding);
 						w.WriteLine("$LF");
 					}
+
 					if (s.Length > 0)
 					{
 						w.Write(padding);
@@ -229,6 +234,7 @@ namespace TASVideos.WikiEngine.AST
 				{
 					throw new InvalidOperationException("Invalid attribute name");
 				}
+
 				w.Write(' ');
 				w.Write(a.Key);
 				w.Write("=\"");
@@ -295,6 +301,7 @@ namespace TASVideos.WikiEngine.AST
 				w.Write(kvp.Value);
 				w.Write(' ');
 			}
+
 			w.WriteLine();
 			foreach (var child in Children)
 				child.DumpContentDescriptive(w, padding + '\t');
@@ -350,7 +357,7 @@ namespace TASVideos.WikiEngine.AST
 			if (h.CheckCondition(Condition))
 			{
 				foreach (var c in Children)
-					c.WriteHtmlDynamic(w, h);				
+					c.WriteHtmlDynamic(w, h);
 			}
 		}
 
@@ -383,6 +390,7 @@ namespace TASVideos.WikiEngine.AST
 			{
 				child.DumpContentDescriptive(w, padding + '\t');
 			}
+
 			w.Write(padding);
 			w.Write("?ENDIF ");
 			w.Write(Condition);
@@ -444,17 +452,17 @@ namespace TASVideos.WikiEngine.AST
 			var pp = Text.Split(new[] { '|' }, 2);
 			var moduleName = pp[0];
 			var moduleParams = pp.Length > 1 ? pp[1] : "";
-			if (moduleName?.ToLower() == "settableattributes")
+			if (moduleName.ToLower() == "settableattributes")
 			{
 				if (!h.AddTdStyleFilter(moduleParams))
 				{
 					var div = new Element(CharStart, "div") { CharEnd = CharEnd };
 					div.Children.Add(new Text(CharStart, "Module Error for settableattributes: Couldn't parse parameter string " + moduleParams) { CharEnd = CharEnd });
 					div.Attributes["class"] = "module-error";
-					div.WriteHtmlDynamic(w, h);					
+					div.WriteHtmlDynamic(w, h);
 				}
 			}
-			else if (ModuleNameMaps.TryGetValue(moduleName?.ToLower(), out string realModuleName))
+			else if (ModuleNameMaps.TryGetValue(moduleName.ToLower(), out string realModuleName))
 			{
 				h.RunViewComponent(w, realModuleName, moduleParams);
 			}
