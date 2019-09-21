@@ -11,7 +11,7 @@ namespace TASVideos.Extensions
 			{
 				foreach (var error in parseResult.Errors)
 				{
-					modelState.AddModelError("", error);
+					modelState.AddModelError("Parser", error);
 				}
 			}
 		}

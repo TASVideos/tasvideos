@@ -5,6 +5,7 @@
 	ViewData["Title"] = "Submit Movie";
 	// ReSharper disable once UnusedVariable
 	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
+	var parseErrors = !notSupportedError && ViewData.ModelState.Keys.Any(e => e == "Parser");
 }
 <info-alert dismissible="true">
 	@await Component.RenderWiki("System/SubmitMovieHeader")
@@ -14,6 +15,9 @@
 <warning-alert dismissible="true" condition="notSupportedError">
 	@await Component.RenderWiki("System/SupportedMovieTypes")
 </warning-alert>
+<danger-alert dismissible="true" condition="parseErrors">
+	@await Component.RenderWiki("System/SubmissionZipFailure")
+</danger-alert>
 <form method="post" enctype="multipart/form-data">
 	<row>
 		<column lg="6">
