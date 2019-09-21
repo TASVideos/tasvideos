@@ -1,1 +1,20 @@
-﻿<p>TODO</p>
+﻿@model IEnumerable<UnmirroredMovieEntry>
+
+Total count: @Model.Count()
+<table class="table table-striped">
+	<thead>
+	<tr>
+		<th>Movie</th>
+		<th>Filename (if found)</th>
+	</tr>
+	</thead>
+	<tbody>
+		@foreach (var entry in Model)
+		{
+			<tr>
+				<td ><pub-link id="@entry.Id">@entry.Title</pub-link></td>
+				<td>@Html.Raw(string.Join("<br>", entry.EncodePaths))</td>
+			</tr>
+		}
+	</tbody>
+</table>
