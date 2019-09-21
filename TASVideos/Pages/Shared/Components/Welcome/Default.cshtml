@@ -1,3 +1,19 @@
-﻿<alert condition="!User.Identity.IsAuthenticated" type="dark" dismissible="true">
+﻿<alert id="welcome-header" class="d-none" condition="!User.Identity.IsAuthenticated" type="dark" dismissible="true">
+	<button id="welcome-header-dismiss" type="button" class="close" data-dismiss="alert" aria-label="close">
+		<span aria-hidden="true">&times;</span>
+	</button>
 	@await Component.RenderWiki("System/WelcomeText")
+	<script>
+		var welcomeHeader = document.getElementById("welcome-header");
+		var dismissBtn = document.getElementById("welcome-header-dismiss");
+		var dismiss = window.localStorage.getItem("DismissWelcomeHeader");
+		if (dismiss !== "true") {
+			welcomeHeader.classList.remove("d-none");
+		}
+
+		dismissBtn.onclick = function () {
+			window.localStorage.setItem("DismissWelcomeHeader", true);
+			welcomeHeader.classList.add("d-none");
+		}
+	</script>
 </alert>
