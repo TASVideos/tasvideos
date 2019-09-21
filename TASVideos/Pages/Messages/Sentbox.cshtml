@@ -1,16 +1,17 @@
-﻿@page
+﻿@page "{id?}/{handler?}"
 @model SentboxModel
 @{
 	ViewData["Title"] = $"Saved messages for {User.Identity.Name}";
 }
 
-<a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span>Inbox</a>
+<a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span> Inbox</a>
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.SentBox.First().Subject)</th>
 		<th>@Html.DisplayNameFor(m => m.SentBox.First().ToUser)</th>
 		<th>@Html.DisplayNameFor(m => m.SentBox.First().ToUser)</th>
 		<th>@Html.DisplayNameFor(m => m.SentBox.First().SendDate)</th>
+		<th>Actions</th>
 	</tr>
 	@foreach (var entry in Model.SentBox
 		.OrderBy(m => m.HasBeenRead)
@@ -24,6 +25,15 @@
 			<td>@entry.ToUser</td>
 			<td>@entry.ToUser</td>
 			<td>@entry.SendDate</td>
+			<td>
+				<delete-button
+					condition="!entry.HasBeenRead"
+					asp-href="/Messages/SentBox/@entry.Id/Delete"
+					warning-message="Are you sure you want to remove this message?"
+					class="btn-sm">
+						Delete
+				</delete-button>
+			</td>
 		</tr>
 	}
 </table>

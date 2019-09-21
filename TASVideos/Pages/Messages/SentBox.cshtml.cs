@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -21,6 +22,9 @@ namespace TASVideos.Pages.Messages
 			_db = db;
 		}
 
+		[FromRoute]
+		public int? Id { get; set; }
+
 		public IEnumerable<SentboxEntry> SentBox { get; set; } = new List<SentboxEntry>();
 
 		public async Task OnGet()
@@ -38,6 +42,34 @@ namespace TASVideos.Pages.Messages
 					HasBeenRead = pm.ReadOn.HasValue
 				})
 				.ToListAsync();
+		}
+
+		public async Task<IActionResult> OnPostDelete()
+		{
+			if (!Id.HasValue)
+			{
+				return NotFound();
+			}
+
+			var message = await _db.PrivateMessages
+				.FromUser(User.GetUserId())
+				.ThatAreNotToUserDeleted()
+				.SingleOrDefaultAsync(pm => pm.Id == Id);
+
+			if (message != null)
+			{
+				_db.PrivateMessages.Remove(message);
+				try
+				{
+					await _db.SaveChangesAsync();
+				}
+				catch(DbUpdateConcurrencyException)
+				{
+					// Do nothing, likely the user has read at the same time
+				}
+			}
+
+			return RedirectToPage("SentBox");
 		}
 	}
 }
