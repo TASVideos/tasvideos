@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -74,7 +75,47 @@ namespace TASVideos.Pages.Forum.Topics
 				return Page();
 			}
 
-			return RedirectToPage("Index", new { id = /*newTopic.*/Id });
+			var seeRestricted = CanSeeRestricted;
+			var originalTopic = await _db.ForumTopics
+				.ExcludeRestricted(seeRestricted)
+				.SingleOrDefaultAsync(t => t.Id == Id);
+
+			if (originalTopic == null)
+			{
+				return NotFound();
+			}
+
+			var destinationTopic = await _db.ForumTopics
+				.ExcludeRestricted(seeRestricted)
+				.SingleOrDefaultAsync(t => t.Id == Topic.DestinationForumId);
+
+			if (destinationTopic == null)
+			{
+				return NotFound();
+			}
+
+			var oldPosts = await _db.ForumPosts
+				.Where(p => p.TopicId == Id)
+				.ToListAsync();
+
+			foreach (var post in oldPosts)
+			{
+				post.TopicId = Topic.DestinationTopicId;
+			}
+
+			_db.ForumTopics.Remove(originalTopic);
+
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				ModelState.AddModelError("", "An error occurred. The topic may have changed since loading this page. Go back and try again.");
+				return Page();
+			}
+
+			return RedirectToPage("Index", new { id = Topic.DestinationTopicId });
 		}
 
 		public async Task<IActionResult> OnGetTopicsForForum(int forumId)
