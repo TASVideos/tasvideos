@@ -1,13 +1,44 @@
-﻿<info-alert>
+﻿<small>
+	<i id="forum-header-restore" class="fa fa-plus border border-info bg-info p-1 mb-1 text-white border-r d-none" style="cursor: pointer; border-radius: 5px"></i>
+</small>
+<info-alert id="forum-header" class="d-none">
+	<button id="forum-header-dismiss" type="button" class="close" aria-label="close">
+		<span aria-hidden="true">&times;</span>
+	</button>
 	Welcome, this is the discussion board of TASVideos.
 	Please do not fill the forums with movie requests. Enjoy your stay.
-	<br />
-	<br />
+	<br/>
+	<br/>
 	If you have a question, please read the <a href="/FAQ">Site FAQ</a> first to see if your question has already been answered.
-	<br />
+	<br/>
 	Be sure your posts conform to <a href="/SiteRules">Site Rules</a>
-	<br />
+	<br/>
 	<small>
 		We also have an IRC channel <a href="irc://irc.freenode.net/tasvideos">#tasvideos at irc.freenode.net...</a>
 	</small>
+	<script>
+		var forumHeader = document.getElementById('forum-header');
+		var forumHeaderRestore = document.getElementById('forum-header-restore');
+		var dismissBtn = document.getElementById('forum-header-dismiss');
+
+		var dismiss = window.localStorage.getItem('DismissForumHeader');
+		if (dismiss !== "true") {
+			forumHeader.classList.remove("d-none");
+			forumHeaderRestore.classList.add("d-none");
+		} else {
+			forumHeaderRestore.classList.remove("d-none");
+		}
+
+		dismissBtn.onclick = function () {
+			window.localStorage.setItem('DismissForumHeader', true);
+			forumHeader.classList.add("d-none");
+			forumHeaderRestore.classList.remove("d-none");
+		}
+
+		forumHeaderRestore.onclick = function () {
+			window.localStorage.clear('DismissForumHeader');
+			forumHeaderRestore.classList.add("d-none");
+			forumHeader.classList.remove("d-none");
+		}
+	</script>
 </info-alert>
