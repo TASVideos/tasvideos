@@ -4,16 +4,18 @@
 	</button>
 	@await Component.RenderWiki("System/WelcomeText")
 	<script>
-		var welcomeHeader = document.getElementById("welcome-header");
-		var dismissBtn = document.getElementById("welcome-header-dismiss");
-		var dismiss = window.localStorage.getItem("DismissWelcomeHeader");
-		if (dismiss !== "true") {
-			welcomeHeader.classList.remove("d-none");
-		}
+		(function () {
+			var welcomeHeader = document.getElementById("welcome-header");
+			var dismissBtn = document.getElementById("welcome-header-dismiss");
+			var dismiss = window.localStorage.getItem("DismissWelcomeHeader");
+			if (dismiss !== "true") {
+				welcomeHeader.classList.remove("d-none");
+			}
 
-		dismissBtn.onclick = function () {
-			window.localStorage.setItem("DismissWelcomeHeader", true);
-			welcomeHeader.classList.add("d-none");
-		}
+			dismissBtn.onclick = function () {
+				window.localStorage.setItem("DismissWelcomeHeader", true);
+				welcomeHeader.classList.add("d-none");
+			}
+		})();
 	</script>
 </alert>
