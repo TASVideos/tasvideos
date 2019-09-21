@@ -38,3 +38,25 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 }
+
+<script>
+	(function () {
+		var forumModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationForumId)');
+		var topicModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationTopicId)');
+
+		forumModel.onchange = function () {
+			console.log('forum changed');
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						topicModel.innerHTML = xmlhttp.responseText;
+					}
+				}
+			};
+
+			xmlhttp.open("GET", "/Forum/Topics/Merge/@(Model.Id)?handler=TopicsForForum&forumId=" + this.value, true);
+			xmlhttp.send();
+		}
+	})()
+</script>
