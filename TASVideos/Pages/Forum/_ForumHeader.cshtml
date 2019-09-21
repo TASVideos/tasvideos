@@ -17,11 +17,11 @@
 		We also have an IRC channel <a href="irc://irc.freenode.net/tasvideos">#tasvideos at irc.freenode.net...</a>
 	</small>
 	<script>
-		var forumHeader = document.getElementById('forum-header');
-		var forumHeaderRestore = document.getElementById('forum-header-restore');
-		var dismissBtn = document.getElementById('forum-header-dismiss');
+		var forumHeader = document.getElementById("forum-header");
+		var forumHeaderRestore = document.getElementById("forum-header-restore");
+		var dismissBtn = document.getElementById("forum-header-dismiss");
 
-		var dismiss = window.localStorage.getItem('DismissForumHeader');
+		var dismiss = window.localStorage.getItem("DismissForumHeader");
 		if (dismiss !== "true") {
 			forumHeader.classList.remove("d-none");
 			forumHeaderRestore.classList.add("d-none");
@@ -30,7 +30,7 @@
 		}
 
 		dismissBtn.onclick = function () {
-			window.localStorage.setItem('DismissForumHeader', true);
+			window.localStorage.setItem("DismissForumHeader", true);
 			forumHeader.classList.add("d-none");
 			forumHeaderRestore.classList.remove("d-none");
 		}
