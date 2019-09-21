@@ -425,6 +425,7 @@ namespace TASVideos.WikiEngine.AST
 			["submittableformats"] = "SupportedMovieTypes",
 			["tabularmovielist"] = "TabularMovieList",
 			["topicfeed"] = "TopicFeed",
+			["unmirroredmovies"] = "UnmirroredMovies",
 			["user_name"] = "UserName",
 			["usergetwikiname"] = "UserGetWikiName",
 			["usermovies"] = "UserMovies",
