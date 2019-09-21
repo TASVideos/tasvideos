@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -76,6 +77,17 @@ namespace TASVideos.Pages.Forum.Topics
 			return RedirectToPage("Index", new { id = /*newTopic.*/Id });
 		}
 
+		public async Task<IActionResult> OnGetTopicsForForum(int forumId)
+		{
+			var items = await GetTopicsForForum(forumId);
+			
+			return new PartialViewResult
+			{
+				ViewName = "_DropdownItems",
+				ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
+			};
+		}
+
 		private async Task PopulateAvailableForums()
 		{
 			var seeRestricted = CanSeeRestricted;
@@ -89,15 +101,21 @@ namespace TASVideos.Pages.Forum.Topics
 				})
 				.ToListAsync();
 
-			AvailableTopics = UiDefaults.DefaultEntry.Concat(await _db.ForumTopics
+			AvailableTopics = UiDefaults.DefaultEntry.Concat(await GetTopicsForForum(Topic.ForumId));
+		}
+
+		private async Task<IEnumerable<SelectListItem>> GetTopicsForForum(int forumId)
+		{
+			var seeRestricted = CanSeeRestricted;
+			return await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
-				.Where(t => t.ForumId == Topic.ForumId)
+				.Where(t => t.ForumId == forumId)
 				.Select(t => new SelectListItem
 				{
 					Text = t.Title,
 					Value = t.Id.ToString()
 				})
-				.ToListAsync());
+				.ToListAsync();
 		}
 	}
 }
