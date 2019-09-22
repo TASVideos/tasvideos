@@ -21,9 +21,9 @@ namespace TASVideos.Test.Services
 
 		#region Test Data
 
-		private static readonly Game Smb = new Game { Id = 1 };
-		private static readonly Game Smb2j = new Game { Id = 2 };
-		private static readonly Publication SmbWarps = new Publication
+		private Game Smb => new Game { Id = 1 };
+		private Game Smb2j => new Game { Id = 2 };
+		private Publication SmbWarps => new Publication
 		{
 			Id = 1,
 			GameId = Smb.Id,
@@ -31,7 +31,15 @@ namespace TASVideos.Test.Services
 			Branch = "Warps"
 		};
 
-		private static readonly Publication Smb2jWarps = new Publication
+		private Publication SmbWarpless => new Publication
+		{
+			Id = 2,
+			GameId = Smb.Id,
+			Title = "Smb in about 20 minutes",
+			Branch = "No Warps"
+		};
+
+		private Publication Smb2jWarps => new Publication
 		{
 			Id = 20,
 			GameId = Smb2j.Id,
@@ -72,10 +80,32 @@ namespace TASVideos.Test.Services
 			_db.Add(Smb);
 			_db.SaveChanges();
 
+
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
 			Assert.IsNotNull(actual.Branches);
 			Assert.AreEqual(0, actual.Branches.Count());
+		}
+
+		[TestMethod]
+		public async Task ForGame_FiltersByGame()
+		{
+			_db.Add(Smb);
+			_db.Add(SmbWarps);
+
+			_db.Add(Smb2j);
+			_db.Add(Smb2jWarps);
+
+			_db.SaveChanges();
+
+			var actual = await _publicationHistory.ForGame(Smb.Id);
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(Smb.Id, actual.GameId);
+			Assert.IsNotNull(actual.Branches);
+
+			var branchList = actual.Branches.ToList();
+			Assert.AreEqual(1, branchList.Count);
+			Assert.AreEqual(SmbWarps.Id, branchList.Single().Id);
 		}
 
 		[TestMethod]
@@ -99,24 +129,22 @@ namespace TASVideos.Test.Services
 		}
 
 		[TestMethod]
-		public async Task ForGame_FiltersByGame()
+		public async Task ForGame_MultiBranch_ResultMatches()
 		{
 			_db.Add(Smb);
 			_db.Add(SmbWarps);
-
-			_db.Add(Smb2j);
-			_db.Add(Smb2jWarps);
-
+			_db.Add(SmbWarpless);
 			_db.SaveChanges();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(Smb.Id, actual.GameId);
 			Assert.IsNotNull(actual.Branches);
-
+			
 			var branchList = actual.Branches.ToList();
-			Assert.AreEqual(1, branchList.Count);
-			Assert.AreEqual(SmbWarps.Id, branchList.Single().Id);
+			Assert.AreEqual(2, branchList.Count);
+			
+			Assert.AreEqual(1, branchList.Count(b => b.Branch == SmbWarps.Branch));
+			Assert.AreEqual(1, branchList.Count(b => b.Branch == SmbWarpless.Branch));
 		}
 	}
 }
