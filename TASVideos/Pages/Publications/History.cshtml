@@ -7,9 +7,22 @@
 	<h1>@ViewData["Title"]</h1>
 }
 
-<h4>@Model.Title</h4>
-<p><strong>Current publications:</strong></p>
-@foreach (var node in Model.History.Branches)
+<h4>
+	<a asp-page="/Game/Index" asp-route-id="@Model.GameId">
+		@Model.GameName
+	</a>
+</h4>
+@foreach (var node in Model.History.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
 {
-	<p><pub-link id="@node.Id">@node.Branch</pub-link></p>
+	<label>Current: <strong>@node.Branch:</strong></label><br />
+	<pub-link id="@node.Id">@node.Title</pub-link>
+	@foreach (var obsoletion in node.Obsoletes)
+	{
+		<ul>
+			<li style="text-decoration: line-through">
+				<partial name="_HistoryEntry" model="obsoletion" />
+			</li>
+		</ul>
+	}
+	<br /><br />
 }

@@ -1,0 +1,14 @@
+﻿@model TASVideos.Services.PublicationHistoryNode
+
+<pub-link id="@Model.Id">@Model.Title</pub-link>
+@if (Model.Obsoletes.Any())
+{
+	<ul style="text-decoration: line-through">
+		@foreach (var node in Model.Obsoletes)
+		{
+			<li>
+				<partial name="_HistoryEntry" model="node" />
+			</li>
+		}
+	</ul>
+}

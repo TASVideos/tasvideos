@@ -32,13 +32,20 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 
 		public string Title { get; set; }
-
+		public string GameName { get; set; }
+		public int GameId { get; set; }
 		public PublicationHistoryGroup History { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
 			var publication = await _db.Publications
-				.Select(p => new { p.Id, p.GameId, p.Title })
+				.Select(p => new // TODO: make a model
+				{
+					p.Id,
+					p.Title,
+					p.GameId,
+					GameName = p.Game.DisplayName
+				})
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
 			if (publication == null)
@@ -47,6 +54,8 @@ namespace TASVideos.Pages.Publications
 			}
 
 			Title = publication.Title;
+			GameName = publication.GameName;
+			GameId = publication.GameId;
 			History = await _history.ForGame(publication.GameId);
 
 			return Page();
