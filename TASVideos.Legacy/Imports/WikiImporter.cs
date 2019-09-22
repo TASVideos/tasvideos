@@ -213,7 +213,7 @@ namespace TASVideos.Legacy.Imports
 			{
 				return markup;
 			}
-
+			if (markup.Contains("=css/fastest-completion.png")) markup = markup.Replace("=css/fastest-completion.png", "=images/fastest-completion.png");
 			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
 			if (markup.Contains("=css/moontier.png")) markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
 			if (markup.Contains("=css/favourite.png")) markup = markup.Replace("=css/favourite.png", "=images/startier.png");
