@@ -44,33 +44,28 @@ namespace TASVideos.Services.PublicationChain
 
 			var publications = await _db.Publications
 				.Where(p => p.GameId == gameId)
-				.Select(p => new
+				.Select(p => new PublicationHistoryNode
 				{
-					p.Id,
-					p.Title,
-					p.Branch,
-					p.ObsoletedById
+					Id = p.Id,
+					Title = p.Title,
+					Branch = p.Branch,
+					ObsoletedById = p.ObsoletedById
 				})
 				.ToListAsync();
 
-			var parentNodes = publications
-				.Where(p => !p.ObsoletedById.HasValue)
-				.ToList();
-
-			foreach (var node in parentNodes)
+			// TODO: this is an n squared problem. Any way to avoid it?
+			// Realistically, no publication history is going to be large enough to cause a major problem
+			foreach (var pub in publications)
 			{
-				parents.Add(new PublicationHistoryNode
-				{
-					Id = node.Id,
-					Title = node.Title,
-					Branch = node.Branch
-				});
+				pub.ObsoleteList = publications.Where(p => p.ObsoletedById == pub.Id).ToList();
 			}
 
 			return new PublicationHistoryGroup
 			{
 				GameId = gameId,
-				Branches = parents
+				Branches = publications
+					.Where(p => !p.ObsoletedById.HasValue)
+					.ToList()
 			};
 		}
 	}
