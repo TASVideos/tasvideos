@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,6 +21,7 @@ namespace TASVideos.Test.Services
 
 		private Game Smb => new Game { Id = 1 };
 		private Game Smb2j => new Game { Id = 2 };
+
 		private Publication SmbWarps => new Publication
 		{
 			Id = 1,
@@ -31,9 +30,36 @@ namespace TASVideos.Test.Services
 			Branch = "Warps"
 		};
 
-		private Publication SmbWarpless => new Publication
+		private Publication SmbWarpsObsolete => new Publication
 		{
 			Id = 2,
+			GameId = Smb.Id,
+			Title = "Smb in 5 minutes",
+			Branch = "Warps",
+			ObsoletedById = SmbWarps.Id
+		};
+
+		private Publication SmbWarpsObsoleteObsolete => new Publication
+		{
+			Id = 3,
+			GameId = Smb.Id,
+			Title = "Smb in 5.5 minutes",
+			Branch = "Warps",
+			ObsoletedById = SmbWarpsObsolete.Id
+		};
+
+		private Publication SmbWarpsObsoleteBranch => new Publication
+		{
+			Id = 4,
+			GameId = Smb.Id,
+			Title = "Smb in 6 minutes without using glitches",
+			Branch = "Warps",
+			ObsoletedById = SmbWarps.Id
+		};
+
+		private Publication SmbWarpless => new Publication
+		{
+			Id = 10,
 			GameId = Smb.Id,
 			Title = "Smb in about 20 minutes",
 			Branch = "No Warps"
@@ -79,7 +105,6 @@ namespace TASVideos.Test.Services
 		{
 			_db.Add(Smb);
 			_db.SaveChanges();
-
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -129,6 +154,25 @@ namespace TASVideos.Test.Services
 		}
 
 		[TestMethod]
+		public async Task ForGame_SinglePublication_NoObsolete_EmptyList()
+		{
+			_db.Add(Smb);
+			_db.Add(SmbWarps);
+			_db.SaveChanges();
+
+			var actual = await _publicationHistory.ForGame(Smb.Id);
+			Assert.IsNotNull(actual);
+			Assert.IsNotNull(actual.Branches);
+			
+			var branchList = actual.Branches.ToList();
+			Assert.AreEqual(1, branchList.Count);
+			
+			var movie = branchList.Single();
+			Assert.IsNotNull(movie.Obsoletes);
+			Assert.AreEqual(0, movie.Obsoletes.Count());
+		}
+
+		[TestMethod]
 		public async Task ForGame_MultiBranch_ResultMatches()
 		{
 			_db.Add(Smb);
@@ -145,6 +189,105 @@ namespace TASVideos.Test.Services
 			
 			Assert.AreEqual(1, branchList.Count(b => b.Branch == SmbWarps.Branch));
 			Assert.AreEqual(1, branchList.Count(b => b.Branch == SmbWarpless.Branch));
+		}
+
+		[TestMethod]
+		public async Task ForGame_ObsoleteBranch_NotParentNode()
+		{
+			_db.Add(Smb);
+			_db.Add(SmbWarps);
+			_db.Add(SmbWarpsObsoleteBranch);
+			_db.SaveChanges();
+
+			var actual = await _publicationHistory.ForGame(Smb.Id);
+			Assert.IsNotNull(actual);
+			Assert.IsNotNull(actual.Branches);
+
+			var branchList = actual.Branches.ToList();
+			Assert.AreEqual(1, branchList.Count);
+			Assert.AreEqual(SmbWarps.Branch, branchList.Single().Branch);
+		}
+
+		[TestMethod]
+		public async Task ForGame_ReturnsObsolete()
+		{
+			_db.Add(Smb);
+			_db.Add(SmbWarps);
+			_db.Add(SmbWarpsObsolete);
+			_db.SaveChanges();
+
+			var actual = await _publicationHistory.ForGame(Smb.Id);
+			Assert.IsNotNull(actual);
+			Assert.IsNotNull(actual.Branches);
+
+			var branchList = actual.Branches.ToList();
+			Assert.AreEqual(1, branchList.Count);
+
+			var currentPub = branchList.Single();
+			Assert.AreEqual(SmbWarps.Id, currentPub.Id);
+
+			Assert.IsNotNull(currentPub.Obsoletes);
+			var obsolete = currentPub.Obsoletes.SingleOrDefault();
+			Assert.IsNotNull(obsolete);
+
+			Assert.AreEqual(SmbWarpsObsolete.Id, obsolete.Id);
+		}
+
+		[TestMethod]
+		public async Task ForGame_OnePubWithMultipleObsoletions()
+		{
+			_db.Add(Smb);
+			_db.Add(SmbWarps);
+			_db.Add(SmbWarpsObsolete);
+			_db.Add(SmbWarpsObsoleteBranch);
+			_db.SaveChanges();
+
+			var actual = await _publicationHistory.ForGame(Smb.Id);
+			Assert.IsNotNull(actual);
+			Assert.IsNotNull(actual.Branches);
+
+			var branchList = actual.Branches.ToList();
+			Assert.AreEqual(1, branchList.Count);
+
+			var currentPub = branchList.Single();
+			Assert.AreEqual(SmbWarps.Id, currentPub.Id);
+
+			Assert.IsNotNull(currentPub.Obsoletes);
+			var obsoletes = currentPub.Obsoletes.ToList();
+			Assert.AreEqual(2, obsoletes.Count);
+			Assert.AreEqual(1, obsoletes.Count(o => o.Id == SmbWarpsObsolete.Id));
+			Assert.AreEqual(1, obsoletes.Count(o => o.Id == SmbWarpsObsoleteBranch.Id));
+		}
+
+		[TestMethod]
+		public async Task ForGame_ObsoletionChain()
+		{
+			_db.Add(Smb);
+			_db.Add(SmbWarps);
+			_db.Add(SmbWarpsObsolete);
+			_db.Add(SmbWarpsObsoleteObsolete);
+			_db.SaveChanges();
+
+			var actual = await _publicationHistory.ForGame(Smb.Id);
+			Assert.IsNotNull(actual);
+			Assert.IsNotNull(actual.Branches);
+
+			var branchList = actual.Branches.ToList();
+			Assert.AreEqual(1, branchList.Count);
+
+			var currentPub = branchList.Single();
+			Assert.AreEqual(SmbWarps.Id, currentPub.Id);
+
+			Assert.IsNotNull(currentPub.Obsoletes);
+			var obsoletes = currentPub.Obsoletes.ToList();
+			Assert.AreEqual(1, obsoletes.Count);
+
+			var nestedObsoleteList = obsoletes.Single().Obsoletes.ToList();
+
+			Assert.IsNotNull(nestedObsoleteList);
+			Assert.AreEqual(1, nestedObsoleteList.Count);
+			var nestObsoletePub = nestedObsoleteList.Single();
+			Assert.AreEqual(SmbWarpsObsoleteObsolete.Id, nestObsoletePub.Id);
 		}
 	}
 }
