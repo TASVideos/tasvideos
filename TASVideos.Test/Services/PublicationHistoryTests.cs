@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Services;
 using TASVideos.Services.PublicationChain;
 
 // ReSharper disable InconsistentNaming
@@ -79,7 +78,7 @@ namespace TASVideos.Test.Services
 		public void Initialize()
 		{
 			_db = TestDbContext.Create();
-			_publicationHistory = new PublicationHistory(_db, new NoCacheService());
+			_publicationHistory = new PublicationHistory(_db);
 		}
 
 		[TestMethod]

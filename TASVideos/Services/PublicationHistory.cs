@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 
 namespace TASVideos.Services.PublicationChain
@@ -20,14 +17,10 @@ namespace TASVideos.Services.PublicationChain
 	public class PublicationHistory : IPublicationHistory
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly ICacheService _cache;
 
-		public PublicationHistory(
-			ApplicationDbContext db,
-			ICacheService cache)
+		public PublicationHistory(ApplicationDbContext db)
 		{
 			_db = db;
-			_cache = cache;
 		}
 
 		public async Task<PublicationHistoryGroup> ForGame(int gameId)
@@ -39,8 +32,6 @@ namespace TASVideos.Services.PublicationChain
 			{
 				return null;
 			}
-
-			var parents = new List<PublicationHistoryNode>();
 
 			var publications = await _db.Publications
 				.Where(p => p.GameId == gameId)
