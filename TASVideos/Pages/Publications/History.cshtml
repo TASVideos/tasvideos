@@ -4,7 +4,12 @@
 	ViewData["Title"] = $"History of Movie #{Model.Id}";
 }
 @section PageTitle {
-	<h1>TODO: title</h1>
+	<h1>@ViewData["Title"]</h1>
 }
 
-<p>TODO</p>
+<h4>@Model.Title</h4>
+<p><strong>Current publications:</strong></p>
+@foreach (var node in Model.History.Branches)
+{
+	<p><pub-link id="@node.Id">@node.Branch</pub-link></p>
+}
