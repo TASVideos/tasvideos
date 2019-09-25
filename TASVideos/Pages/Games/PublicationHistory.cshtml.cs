@@ -31,6 +31,9 @@ namespace TASVideos.Pages.Games
 		public PublicationHistoryGroup History { get; set; }
 		public Game Game { get; set; }
 
+		[FromQuery]
+		public int? Highlight { get; set; }
+
 		public async Task<IActionResult> OnGet()
 		{
 			Game = await _db.Games.SingleOrDefaultAsync(p => p.Id == Id);
