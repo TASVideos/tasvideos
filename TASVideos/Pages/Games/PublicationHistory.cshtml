@@ -13,7 +13,7 @@
 {
 	var highlight = node.Id == Model.Highlight ? ViewData["HighlightClass"] : "";
 
-	<label>Current: <strong>@node.Branch:</strong></label><br />
+	<label>Current: <strong>@node.Branch</strong></label><br />
 	<pub-link class="@highlight" id="@node.Id">@node.Title</pub-link>
 	@foreach (var obsoletion in node.Obsoletes)
 	{

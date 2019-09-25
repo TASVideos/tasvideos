@@ -66,10 +66,16 @@
 				   asp-route-id="@Model.Id"
 				   class="btn btn-secondary btn-sm mt-1">Catalog</a>
 				<a condition="@Model.TopicId > 0"
-				   asp-page="/Forum/Topics/Index"
-				   asp-route-id="@Model.TopicId"
-				   class="btn btn-secondary btn-sm mt-1">
+					asp-page="/Forum/Topics/Index"
+					asp-route-id="@Model.TopicId"
+					class="btn btn-secondary btn-sm mt-1">
 					Discuss
+				</a>
+				<a asp-page="/Games/PublicationHistory"
+					asp-route-id="@Model.GameId"
+					asp-route-highlight="@Model.Id"
+					class="btn btn-secondary btn-sm mt-1">
+					History
 				</a>
 			</div>
 			<div class="col-md-5">
