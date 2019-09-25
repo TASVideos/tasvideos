@@ -1,17 +1,16 @@
 ﻿@page "{id}"
-@model HistoryModel
+@model TASVideos.Pages.Games.PublicationHistoryModel
 @{
-	ViewData["Title"] = $"History of Movie #{Model.Id}";
+	ViewData["Title"] = $"Publication History of {Model.Game.DisplayName}";
 }
 @section PageTitle {
 	<h1>@ViewData["Title"]</h1>
 }
 
 <h4>
-	<a asp-page="/Game/Index" asp-route-id="@Model.GameId">
-		@Model.GameName
-	</a>
+	Publication History for <a asp-page="/Game/Index" asp-route-id="@Model.Id">@Model.Game.DisplayName</a>
 </h4>
+<br />
 @foreach (var node in Model.History.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
 {
 	<label>Current: <strong>@node.Branch:</strong></label><br />
