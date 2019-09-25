@@ -8,6 +8,7 @@ namespace TASVideos.Pages.Publications.Models
 	public class PublicationDisplayModel
 	{
 		public int Id { get; set; }
+		public int GameId { get; set; }
 		public DateTime CreateTimeStamp { get; set; }
 		public DateTime LastUpdateTimeStamp { get; set; }
 		public string LastUpdateUser { get; set; }
