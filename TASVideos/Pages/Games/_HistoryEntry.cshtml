@@ -1,6 +1,8 @@
 ﻿@model TASVideos.Services.PublicationHistoryNode
-
-<pub-link id="@Model.Id">@Model.Title</pub-link>
+@{
+	var highlight = Model.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
+}
+<pub-link class="@highlight" id="@Model.Id">@Model.Title</pub-link>
 @if (Model.Obsoletes.Any())
 {
 	<ul style="text-decoration: line-through">
