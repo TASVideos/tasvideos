@@ -18,18 +18,18 @@
 		{
 			return $"{byteCount / 1_000_000_000f:f2} GB";
 		}
-		else if (byteCount > 1_000_000)
+		
+		if (byteCount > 1_000_000)
 		{
 			return $"{byteCount / 1_000_000:f2} MB";
 		}
-		else if (byteCount > 1_000)
+		
+		if (byteCount > 1_000)
 		{
 			return $"{byteCount / 1_000f:f2} KB";
 		}
-		else
-		{
-			return $"{byteCount} bytes";
-		}
+
+		return $"{byteCount} bytes";
 	}
 }
 
@@ -66,6 +66,17 @@
 				@Model.Downloads download@(Model.Downloads == 1 ? "" : "s")
 			</p>
 		</div>
+		
+		@if  (Model.Comments.Any())
+		{
+			<hr />
+			<h2>COMMENTS:</h2>
+			@foreach (var comment in Model.Comments)
+			{
+				<profile-link username="@comment.UserName">@comment.UserName</profile-link>
+				<p class="ml-2">@comment.Text</p>
+			}
+		}
 
 		<hr />
 
