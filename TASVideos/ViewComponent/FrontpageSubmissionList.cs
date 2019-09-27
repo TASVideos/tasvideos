@@ -28,6 +28,7 @@ namespace TASVideos.ViewComponents
 			var request = new SubmissionSearchRequest();
 
 			var subs = await _db.Submissions
+				.ThatAreActive()
 				.FilterBy(request)
 				.ByMostRecent()
 				.Take(maxRecords ?? 5)
