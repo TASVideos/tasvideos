@@ -16,6 +16,8 @@ using TASVideos.Pages.Users.Models;
 using TASVideos.Pages.Wiki.Models;
 using TASVideos.ViewComponents;
 
+// ReSharper disable StyleCop.SA1115
+// ReSharper disable StyleCop.SA1116
 namespace TASVideos
 {
 	public class MappingProfile : Profile
@@ -73,7 +75,16 @@ namespace TASVideos
 				.ForMember(dest => dest.FileSize, opt => opt.MapFrom(src => src.LogicalLength))
 				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
-				.ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System != null ? src.System.DisplayName : ""));
+				.ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System != null ? src.System.DisplayName : ""))
+				.ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments
+					.Select(c => new UserFileModel.UserFileCommentModel
+					{
+						Text = c.Text,
+						CreationTimeStamp = c.CreationTimeStamp,
+						UserId = c.UserId,
+						UserName = c.User.UserName
+					})
+					.ToList()));
 
 			CreateMap<Publication, PublicationDisplayModel>()
 				.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count / 2.0))
