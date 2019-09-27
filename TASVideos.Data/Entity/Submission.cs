@@ -177,6 +177,13 @@ namespace TASVideos.Data.Entity
 			return query;
 		}
 
+		public static IQueryable<Submission> ThatAreActive(this IQueryable<Submission> query)
+		{
+			return query.Where(s => s.Status != SubmissionStatus.Published
+				&& s.Status != SubmissionStatus.Cancelled
+				&& s.Status != SubmissionStatus.Rejected);
+		}
+
 		public static IQueryable<Submission> ThatAreRejected(this IQueryable<Submission> query)
 		{
 			return query.Where(s => s.Status == SubmissionStatus.Rejected);
