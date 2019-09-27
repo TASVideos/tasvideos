@@ -74,7 +74,7 @@
 			@foreach (var comment in Model.Comments)
 			{
 				<profile-link username="@comment.UserName">@comment.UserName</profile-link>
-				<p class="ml-2">@comment.Text</p>
+				<wiki-markup markup="@comment.Text"></wiki-markup>
 			}
 		}
 
