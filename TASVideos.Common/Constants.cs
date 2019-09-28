@@ -81,6 +81,7 @@
 		public const string Wiki = "Wiki";
 		public const string Submission = "Submission";
 		public const string UserManagement = "UserManagement";
+		public const string UserFiles = "UserFiles";
 	}
 
 	// TODO: this is bootstrap specific, maybe it should go in the MVC project
