@@ -51,6 +51,7 @@
 		public const string DefaultPublicationText = "''[TODO]: describe this movie here''";
 
 		public const int MaximumMovieSize = 150 * 1024;
+		public const int UserFileStorageLimit = 1024 * 1024 * 50;
 	}
 
 	public static class PlayerPointConstants
