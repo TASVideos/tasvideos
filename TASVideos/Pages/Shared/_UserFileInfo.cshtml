@@ -1,5 +1,5 @@
 ﻿@model UserFileModel
-
+@using TASVideos.Extensions
 @functions
 {
 	string FormatTime(TimeSpan timeSpan)
@@ -10,26 +10,6 @@
 			@"mm\:ss\.ff";
 
 		return timeSpan.ToString(format);
-	}
-
-	string FormatSize(int byteCount)
-	{
-		if (byteCount > 1_000_000_000)
-		{
-			return $"{byteCount / 1_000_000_000f:f2} GB";
-		}
-		
-		if (byteCount > 1_000_000)
-		{
-			return $"{byteCount / 1_000_000:f2} MB";
-		}
-		
-		if (byteCount > 1_000)
-		{
-			return $"{byteCount / 1_000f:f2} KB";
-		}
-
-		return $"{byteCount} bytes";
 	}
 }
 
@@ -120,7 +100,7 @@
 			<hr />
 		</div>
 		<a asp-page="/UserFiles/Info" asp-page-handler="Download" asp-route-id="@Model.Id" class="card-link">
-			Download (@FormatSize(Model.FileSize))
+			Download (@Model.FileSize.ToSizeString())
 		</a>
 
 		<a asp-page="/UserFiles/Info" asp-route-id="@Model.Id" class="card-link">
