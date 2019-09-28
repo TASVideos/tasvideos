@@ -122,6 +122,8 @@ namespace TASVideos
 					})
 					.ToList()));
 
+			CreateMap<UserFileComment, UserFileModel.UserFileCommentModel>();
+
 			CreateMap<Game, GameDisplayModel>()
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
 				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre.DisplayName)))

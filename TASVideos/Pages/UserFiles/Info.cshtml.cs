@@ -36,6 +36,7 @@ namespace TASVideos.Pages.UserFiles
 		public async Task<IActionResult> OnGet()
 		{
 			var file = await _db.UserFiles
+				.Include(uf => uf.Comments)
 				.Include(uf => uf.Author)
 				.Include(uf => uf.Game)
 				.Include(uf => uf.System)
@@ -56,6 +57,11 @@ namespace TASVideos.Pages.UserFiles
 			}
 
 			UserFile = _mapper.Map<UserFileModel>(file);
+
+			// TODO: why is this necessary? The mapper configuration works with ProjectTo, why not here?
+			UserFile.Comments = file.Comments
+				.Select(_mapper.Map<UserFileModel.UserFileCommentModel>)
+				.ToList();
 
 			file.Views++;
 
