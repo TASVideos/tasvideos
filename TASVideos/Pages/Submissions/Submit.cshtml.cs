@@ -128,7 +128,7 @@ namespace TASVideos.Pages.Submissions
 				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}", "Not a valid .zip file");
 			}
 
-			if (Create.MovieFile.Length > 150 * 1024)
+			if (!Create.MovieFile.LessThanMovieSizeLimit())
 			{
 				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}", ".zip is too big, are you sure this is a valid movie file?");
 			}

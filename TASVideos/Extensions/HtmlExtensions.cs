@@ -110,5 +110,10 @@ namespace TASVideos.Extensions
 			return formFile.FileName.EndsWith(".zip")
 				&& acceptableContentTypes.Contains(formFile.ContentType);
 		}
+		
+		public static bool LessThanMovieSizeLimit(this IFormFile formFile)
+		{
+			return formFile.Length < SiteGlobalConstants.MaximumMovieSize;
+		}
 	}
 }
