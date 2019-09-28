@@ -102,5 +102,28 @@ namespace TASVideos.Pages.UserFiles
 
 			return RedirectToLocal(returnUrl);
 		}
+
+		public async Task<IActionResult> OnPostDeleteComment(long commentId, string returnUrl)
+		{
+			if (User.Has(PermissionTo.CreateForumPosts))
+			{
+				var fileComment = await _db.UserFileComments.SingleOrDefaultAsync(u => u.Id == commentId);
+				if (fileComment != null)
+				{
+					_db.UserFileComments.Remove(fileComment);
+
+					try
+					{
+						await _db.SaveChangesAsync();
+					}
+					catch (DbUpdateConcurrencyException)
+					{
+						// Do nothing
+					}
+				}
+			}
+
+			return RedirectToLocal(returnUrl);
+		}
 	}
 }
