@@ -49,6 +49,8 @@
 		public const string PollOptionsMeh = "Meh";
 
 		public const string DefaultPublicationText = "''[TODO]: describe this movie here''";
+
+		public const int MaximumMovieSize = 150 * 1024;
 	}
 
 	public static class PlayerPointConstants
