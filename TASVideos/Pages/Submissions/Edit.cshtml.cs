@@ -116,8 +116,7 @@ namespace TASVideos.Pages.Submissions
 		{
 			if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.MovieFile != null)
 			{
-				if (!Submission.MovieFile.FileName.EndsWith(".zip")
-					|| Submission.MovieFile.ContentType != "application/x-zip-compressed")
+				if (!Submission.MovieFile.IsZip())
 				{
 					ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), "Not a valid .zip file");
 				}

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Services;
@@ -122,8 +123,7 @@ namespace TASVideos.Pages.Submissions
 					"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
 			}
 
-			if (!Create.MovieFile.FileName.EndsWith(".zip")
-			|| Create.MovieFile.ContentType != "application/x-zip-compressed")
+			if (!Create.MovieFile.IsZip())
 			{
 				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}", "Not a valid .zip file");
 			}

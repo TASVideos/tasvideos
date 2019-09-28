@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using TASVideos.Data.Entity;
@@ -95,6 +97,18 @@ namespace TASVideos.Extensions
 		public static string ToYesNo(this bool val)
 		{
 			return val ? "Yes" : "No";
+		}
+
+		public static bool IsZip(this IFormFile formFile)
+		{
+			var acceptableContentTypes = new[]
+			{
+				"application/x-zip-compressed",
+				"application/zip"
+			};
+
+			return formFile.FileName.EndsWith(".zip")
+				&& acceptableContentTypes.Contains(formFile.ContentType);
 		}
 	}
 }
