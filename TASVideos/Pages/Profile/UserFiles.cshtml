@@ -1,4 +1,5 @@
 ﻿@page
+@using TASVideos.Extensions
 @model UserFilesModel
 
 @{
@@ -6,11 +7,49 @@
 	ViewData.AddActivePage(ProfileNavPages.UserFiles);
 }
 
-<fullrow class="mt-2 mb-2">
+@functions
+{
+	string ProgressColor(double percent)
+	{
+		if (percent > 80)
+		{
+			return "danger";
+		}
+
+		if (percent > 50)
+		{
+			return "warning";
+		}
+
+		if (percent > 10)
+		{
+			return "success";
+		}
+
+		return "info";
+	}
+
+}
+
+<fullrow class="mt-2 mb-3">
 	<div class="pull-right">
 		<a asp-page="/UserFiles/Index" class="btn btn-secondary">All User Files</a>
 	</div>
 </fullrow>
+
+@{
+	var used = Model.Files.Sum(f => f.FileSize);
+	var usedPercent = Math.Round(used / (double)SiteGlobalConstants.UserFileStorageLimit * 100, 1);
+}
+
+<span>Used: @used.ToSizeString()</span>
+<span class="pull-right">Limit @SiteGlobalConstants.UserFileStorageLimit.ToSizeString()</span>
+<div class="progress">
+	<div class="progress-bar progress-bar-striped bg-@ProgressColor(usedPercent)" role="progressbar" style="width: @(usedPercent)%;" aria-valuenow="@(usedPercent)" aria-valuemin="0" aria-valuemax="100">
+		@(usedPercent)%
+	</div>
+</div>
+<hr />
 
 @* ReSharper disable once UnusedVariable *@
 @foreach (var file in Model.Files.OrderByDescending(f => f.UploadTimestamp))
