@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 
 namespace TASVideos.Pages.Publications
 {
@@ -70,18 +71,17 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
-			if (!AdditionalMovieFile.FileName.EndsWith(".zip")
-					|| AdditionalMovieFile.ContentType != "application/x-zip-compressed")
-				{
-					ModelState.AddModelError(nameof(AdditionalMovieFile), "Not a valid .zip file");
-				}
+			if (!AdditionalMovieFile.IsZip())
+			{
+				ModelState.AddModelError(nameof(AdditionalMovieFile), "Not a valid .zip file");
+			}
 
-				if (AdditionalMovieFile.Length > 150 * 1024)
-				{
-					ModelState.AddModelError(
-						nameof(AdditionalMovieFile),
-						".zip is too big, are you sure this is a valid movie file?");
-				}
+			if (AdditionalMovieFile.Length > 150 * 1024)
+			{
+				ModelState.AddModelError(
+					nameof(AdditionalMovieFile),
+					".zip is too big, are you sure this is a valid movie file?");
+			}
 
 			if (!ModelState.IsValid)
 			{
