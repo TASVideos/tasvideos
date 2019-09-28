@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
@@ -52,6 +53,28 @@ namespace TASVideos.Pages.UserFiles
 					})
 					.ToListAsync()
 			};
+		}
+
+		public async Task<IActionResult> OnPostComment(long fileId, string comment, string returnUrl)
+		{
+			if (User.Has(PermissionTo.CreateForumPosts))
+			{
+				var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
+				if (userFile != null)
+				{
+					_db.UserFileComments.Add(new UserFileComment
+					{
+						UserFileId = fileId,
+						Text = comment,
+						UserId = User.GetUserId(),
+						Ip = IpAddress.ToString()
+					});
+
+					await _db.SaveChangesAsync();
+				}
+			}
+
+			return RedirectToLocal(returnUrl);
 		}
 	}
 }
