@@ -82,7 +82,7 @@
 				<strong>Comments</strong>
 			</collapsablecontent-header>
 			<collapsablecontent-body id="collapse-content-userfile-@Model.Id" start-shown="@true">
-				@foreach (var comment in Model.Comments)
+				@foreach (var comment in Model.Comments.OrderBy(c => c.CreationTimeStamp))
 				{
 					<profile-link username="@comment.UserName">@comment.UserName</profile-link>
 					<wiki-markup markup="@comment.Text"></wiki-markup>
