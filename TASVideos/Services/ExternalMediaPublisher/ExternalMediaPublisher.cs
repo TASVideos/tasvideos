@@ -37,6 +37,18 @@ namespace TASVideos.Services.ExternalMediaPublisher
 
 	public static class ExternalMediaPublisherExtensions
 	{
+		public static void SendUserFile(this ExternalMediaPublisher publisher, string title, string link)
+		{
+			publisher.Send(new Post
+			{
+				Type = PostType.General,
+				Group = PostGroups.UserFiles,
+				Title = title,
+				Body = "",
+				Link = link
+			});
+		}
+
 		public static void AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string link)
 		{
 			publisher.Send(new Post
