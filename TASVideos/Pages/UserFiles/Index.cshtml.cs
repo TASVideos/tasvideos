@@ -61,6 +61,30 @@ namespace TASVideos.Pages.UserFiles
 			};
 		}
 
+		public async Task<IActionResult> OnPostDelete(long fileId, string returnUrl)
+		{
+			var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
+			if (userFile != null)
+			{
+				if (User.GetUserId() == userFile.AuthorId
+					|| User.Has(PermissionTo.EditUserFiles))
+				{
+					_db.UserFiles.Remove(userFile);
+				
+					try
+					{
+						await _db.SaveChangesAsync();
+					}
+					catch (DbUpdateConcurrencyException)
+					{
+						// Do nothing
+					}
+				}
+			}
+
+			return RedirectToLocal(returnUrl);
+		}
+
 		public async Task<IActionResult> OnPostComment(long fileId, string comment, string returnUrl)
 		{
 			if (User.Has(PermissionTo.CreateForumPosts)
