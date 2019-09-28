@@ -97,6 +97,13 @@
 						</div>
 						
 						<button type="button" class="btn btn-secondary btn-sm mb-2" onclick="this.classList.add('d-none'); document.getElementById('edit-comment-@comment.Id').classList.remove('d-none'); document.getElementById('view-comment-@comment.Id').classList.add('d-none');">Edit</button>
+						<delete-button
+							class="btn-sm mb-2"
+							asp-href="/UserFiles/Index?handler=DeleteComment&commentId=@comment.Id&returnUrl=@Context.ReturnUrl()"
+							warning-message="Are you sure you want to delete this comment?"
+							condition="User.Has(PermissionTo.EditForumPosts) || User.GetUserId() == comment.UserId">
+							<i class="fa fa-remove"></i>
+						</delete-button>
 					</div>
 				}
 			</collapsablecontent-body>
