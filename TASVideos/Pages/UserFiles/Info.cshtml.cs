@@ -48,14 +48,6 @@ namespace TASVideos.Pages.UserFiles
 				return NotFound();
 			}
 
-			if (file.Hidden)
-			{
-				if (!User.Identity.IsAuthenticated || UserFile.Author != User.Identity.Name)
-				{
-					return NotFound();
-				}
-			}
-
 			UserFile = _mapper.Map<UserFileModel>(file);
 
 			// TODO: why is this necessary? The mapper configuration works with ProjectTo, why not here?
