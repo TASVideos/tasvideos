@@ -34,6 +34,7 @@ namespace TASVideos.Models
 
 		public class UserFileCommentModel
 		{
+			public int Id { get; set; }
 			public string Text { get; set; }
 			public DateTime CreationTimeStamp { get; set; }
 			public int UserId { get; set; }

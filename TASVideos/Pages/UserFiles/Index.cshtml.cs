@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper.QueryableExtensions;
@@ -57,7 +58,8 @@ namespace TASVideos.Pages.UserFiles
 
 		public async Task<IActionResult> OnPostComment(long fileId, string comment, string returnUrl)
 		{
-			if (User.Has(PermissionTo.CreateForumPosts))
+			if (User.Has(PermissionTo.CreateForumPosts)
+				&& !string.IsNullOrWhiteSpace(comment))
 			{
 				var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
 				if (userFile != null)
@@ -71,6 +73,30 @@ namespace TASVideos.Pages.UserFiles
 					});
 
 					await _db.SaveChangesAsync();
+				}
+			}
+
+			return RedirectToLocal(returnUrl);
+		}
+
+		public async Task<IActionResult> OnPostEditComment(long commentId, string comment, string returnUrl)
+		{
+			if (User.Has(PermissionTo.CreateForumPosts)
+				&& !string.IsNullOrWhiteSpace(comment))
+			{
+				var fileComment = await _db.UserFileComments.SingleOrDefaultAsync(u => u.Id == commentId);
+				if (fileComment != null)
+				{
+					fileComment.Text = comment;
+
+					try
+					{
+						await _db.SaveChangesAsync();
+					}
+					catch (DbUpdateConcurrencyException)
+					{
+						// Do nothing
+					}
 				}
 			}
 

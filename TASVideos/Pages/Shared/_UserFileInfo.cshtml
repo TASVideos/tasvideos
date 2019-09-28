@@ -86,7 +86,18 @@
 				@foreach (var comment in Model.Comments.OrderBy(c => c.CreationTimeStamp))
 				{
 					<profile-link username="@comment.UserName">@comment.UserName</profile-link>
-					<wiki-markup markup="@comment.Text"></wiki-markup>
+					<wiki-markup markup="@comment.Text" id="view-comment-@comment.Id"></wiki-markup>
+					<div condition="User.GetUserId() == comment.UserId">
+						<div class="d-none" id="edit-comment-@comment.Id">
+							<form method="POST" asp-page="/UserFiles/Index" asp-route-handler="EditComment" asp-route-returnUrl="@Context.ReturnUrl()">
+								<input type="hidden" name="commentId" value="@comment.Id" />
+								<textarea name="comment" class="form-control">@comment.Text</textarea>
+								<button type="submit" class="btn btn-secondary btn-sm mt-1">Post</button>
+							</form>
+						</div>
+						
+						<button type="button" class="btn btn-secondary btn-sm mb-2" onclick="this.classList.add('d-none'); document.getElementById('edit-comment-@comment.Id').classList.remove('d-none'); document.getElementById('view-comment-@comment.Id').classList.add('d-none');">Edit</button>
+					</div>
 				}
 			</collapsablecontent-body>
 			<hr />

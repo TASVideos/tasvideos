@@ -79,6 +79,7 @@ namespace TASVideos
 				.ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments
 					.Select(c => new UserFileModel.UserFileCommentModel
 					{
+						Id = c.Id,
 						Text = c.Text,
 						CreationTimeStamp = c.CreationTimeStamp,
 						UserId = c.UserId,
