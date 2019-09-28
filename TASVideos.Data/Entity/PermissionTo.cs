@@ -267,6 +267,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to assign Roles to any User with some restrictions. A role can only be assigned if all permissions within it are marked as assignable by a role the user has.")]
 		AssignRoles = 504,
 
+		[Display(Name = "Edit User Files")]
+		[Group("User Administration")]
+		[Description("The ability to edit/delete user files of another user.")]
+		EditUserFiles = 505,
+
 		#endregion
 
 		#region Admin 9001
