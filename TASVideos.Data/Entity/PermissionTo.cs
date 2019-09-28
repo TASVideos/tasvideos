@@ -47,6 +47,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to use the mood avatar feature. Allows a user to specificy a mood avatar when creating a post in the forum.")]
 		UseMoodAvatars = 12,
 
+		[Display(Name = "Upload User Files")]
+		[Group("User")]
+		[Description("The ability to upload movie and related files for personal storage.")]
+		UploadUserFiles,
+
 		#endregion
 
 		#region Wiki 100

@@ -1,0 +1,13 @@
+﻿@page
+@model UploadModel
+
+@{
+	ViewData["Title"] = "Upload a User file";
+}
+
+	<form method="post" enctype="multipart/form-data">
+		<fullrow class="text-center">
+			<submit-button class="btn btn-primary">Upload</submit-button>
+			<a href="/Profile/UserFiles" class="btn btn-secondary">Cancel</a>
+		</fullrow>
+	</form>
