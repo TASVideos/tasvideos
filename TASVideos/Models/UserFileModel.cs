@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Models
@@ -27,5 +29,16 @@ namespace TASVideos.Models
 		public decimal Length { get; set; }
 		public int Frames { get; set; }
 		public int Rerecords { get; set; }
+
+		public IEnumerable<UserFileCommentModel> Comments { get; set; } = new List<UserFileCommentModel>();
+
+		public class UserFileCommentModel
+		{
+			public int Id { get; set; }
+			public string Text { get; set; }
+			public DateTime CreationTimeStamp { get; set; }
+			public int UserId { get; set; }
+			public string UserName { get; set; }
+		}
 	}
 }
