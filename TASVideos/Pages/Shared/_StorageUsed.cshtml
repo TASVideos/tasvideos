@@ -28,8 +28,11 @@
 @{
 	var used = Model;
 	var usedPercent = Math.Round(used / (double)SiteGlobalConstants.UserFileStorageLimit * 100, 1);
-}<span>Used: @used.ToSizeString()</span>
+}
+
+<span>Used: @used.ToSizeString()</span>
 <span class="pull-right">Limit @SiteGlobalConstants.UserFileStorageLimit.ToSizeString()</span>
+
 <div class="progress">
 	<div class="progress-bar progress-bar-striped bg-@ProgressColor(usedPercent)" role="progressbar" style="width: @(usedPercent)%;" aria-valuenow="@(usedPercent)" aria-valuemin="0" aria-valuemax="100">
 		@(usedPercent)%
