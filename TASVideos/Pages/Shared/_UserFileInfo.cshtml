@@ -66,28 +66,31 @@
 				@Model.Downloads download@(Model.Downloads == 1 ? "" : "s")
 			</p>
 		</div>
-		
-		@if  (Model.Comments.Any())
-		{
-			<hr />
-			<h2>COMMENTS:</h2>
-			@foreach (var comment in Model.Comments)
-			{
-				<profile-link username="@comment.UserName">@comment.UserName</profile-link>
-				<wiki-markup markup="@comment.Text"></wiki-markup>
-			}
-		}
-
-		<hr />
 
 		@if (!string.IsNullOrEmpty(Model.Description))
 		{
+			<hr />
 			<div class="card-text">
 				<wiki-markup markup=@Model.Description></wiki-markup>
 			</div>
-			<hr />
 		}
 
+		@if (Model.Comments.Any())
+		{
+			<hr />
+			<collapsablecontent-header body-id="collapse-content-userfile-@Model.Id">
+				<strong>Comments</strong>
+			</collapsablecontent-header>
+			<collapsablecontent-body id="collapse-content-userfile-@Model.Id" start-shown="@true">
+				@foreach (var comment in Model.Comments)
+				{
+					<profile-link username="@comment.UserName">@comment.UserName</profile-link>
+					<wiki-markup markup="@comment.Text"></wiki-markup>
+				}
+			</collapsablecontent-body>
+		}
+		
+		<hr />
 		<a asp-page="/UserFiles/Info" asp-page-handler="Download" asp-route-id="@Model.Id" class="card-link">
 			Download (@FormatSize(Model.FileSize))
 		</a>
