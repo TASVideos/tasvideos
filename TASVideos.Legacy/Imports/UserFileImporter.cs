@@ -114,7 +114,7 @@ namespace TASVideos.Legacy.Imports
 					? UserFileClass.Movie
 					: UserFileClass.Support,
 				Content = Convert(legacyFile.Content),
-				Description = legacyFile.Description,
+				Description = legacyFile.Description.NullIfWhiteSpace(),
 				Downloads = legacyFile.Downloads,
 				FileName = legacyFile.Name,
 				Frames = legacyFile.Frames,
@@ -127,10 +127,10 @@ namespace TASVideos.Legacy.Imports
 				Rerecords = (int)legacyFile.Rerecords,
 				SystemId = legacyFile.SystemId,
 				Title = ImportHelper.ConvertLatin1String(legacyFile.Title),
-				Type = legacyFile.Type,
+				Type = legacyFile.Type.NullIfWhiteSpace(),
 				UploadTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyFile.Timestamp),
 				Views = legacyFile.Views,
-				Warnings = legacyFile.Warnings,
+				Warnings = legacyFile.Warnings.NullIfWhiteSpace(),
 				CompressionType = Compression.Gzip
 			};
 		}
