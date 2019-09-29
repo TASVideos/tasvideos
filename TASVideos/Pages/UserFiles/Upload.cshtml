@@ -52,6 +52,35 @@
 	</fullrow>
 </form>
 
+<script>
+	var systemModel = document.getElementById('@Html.IdFor(m => m.UserFile.SystemId)');
+	var gameModel = document.getElementById('@Html.IdFor(m => m.UserFile.GameId)');
+
+	systemModel.onchange = function() {
+		if (this.value) {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						gameModel.innerHTML = xmlhttp.responseText;
+					}
+				}
+			};
+
+			xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
+			xmlhttp.send();
+		} else {
+			document.querySelectorAll('#@Html.IdFor(m => m.UserFile.GameId) option')
+				.toArray()
+				.forEach(function (elem) {
+					if (elem.value) {
+						elem.remove();
+					}
+				});
+		}
+	}
+</script>
+
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 }

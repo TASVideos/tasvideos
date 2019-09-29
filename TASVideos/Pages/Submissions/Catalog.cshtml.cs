@@ -83,41 +83,38 @@ namespace TASVideos.Pages.Submissions
 
 		private async Task PopulateCatalogDropDowns()
 		{
-			using (_db.Database.BeginTransactionAsync())
-			{
-				AvailableRoms = await _db.Roms
-					.Where(r => !Catalog.SystemId.HasValue || r.Game.SystemId == Catalog.SystemId)
-					.Where(r => !Catalog.GameId.HasValue || r.GameId == Catalog.GameId)
-					.OrderBy(r => r.Name)
-					.Select(r => new SelectListItem
-					{
-						Value = r.Id.ToString(),
-						Text = r.Name
-					})
-					.ToListAsync();
+			AvailableRoms = await _db.Roms
+				.Where(r => !Catalog.SystemId.HasValue || r.Game.SystemId == Catalog.SystemId)
+				.Where(r => !Catalog.GameId.HasValue || r.GameId == Catalog.GameId)
+				.OrderBy(r => r.Name)
+				.Select(r => new SelectListItem
+				{
+					Value = r.Id.ToString(),
+					Text = r.Name
+				})
+				.ToListAsync();
 
-				AvailableGames = await _db.Games
-					.Where(g => !Catalog.SystemId.HasValue || g.SystemId == Catalog.SystemId)
-					.OrderBy(g => g.DisplayName)
+			AvailableGames = await _db.Games
+				.Where(g => !Catalog.SystemId.HasValue || g.SystemId == Catalog.SystemId)
+				.OrderBy(g => g.DisplayName)
+				.ToDropDown()
+				.ToListAsync();
+
+			AvailableSystems = await _db.GameSystems
+				.OrderBy(s => s.Code)
+				.Select(s => new SelectListItem
+				{
+					Value = s.Id.ToString(),
+					Text = s.Code
+				})
+				.ToListAsync();
+
+			AvailableSystemFrameRates = Catalog.SystemId.HasValue
+				? await _db.GameSystemFrameRates
+					.ForSystem(Catalog.SystemId.Value)
 					.ToDropDown()
-					.ToListAsync();
-
-				AvailableSystems = await _db.GameSystems
-					.OrderBy(s => s.Code)
-					.Select(s => new SelectListItem
-					{
-						Value = s.Id.ToString(),
-						Text = s.Code
-					})
-					.ToListAsync();
-
-				AvailableSystemFrameRates = Catalog.SystemId.HasValue
-					? await _db.GameSystemFrameRates
-						.ForSystem(Catalog.SystemId.Value)
-						.ToDropDown()
-						.ToListAsync()
-					: new List<SelectListItem>();
-			}
+					.ToListAsync()
+				: new List<SelectListItem>();
 		}
 	}
 }

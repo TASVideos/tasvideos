@@ -50,6 +50,7 @@ namespace TASVideos.Pages.UserFiles
 				Id = DateTime.UtcNow.Ticks,
 				Title = UserFile.Title,
 				Description = UserFile.Description,
+				SystemId = UserFile.SystemId,
 				GameId = UserFile.GameId,
 				AuthorId = User.GetUserId(),
 				LogicalLength = (int)UserFile.File.Length,
@@ -70,7 +71,11 @@ namespace TASVideos.Pages.UserFiles
 				.SumAsync(uf => uf.LogicalLength);
 
 			AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
-				.ToDropdown()
+				.Select(s => new SelectListItem
+				{
+					Value = s.Id.ToString(),
+					Text = s.Code
+				})
 				.ToListAsync());
 
 			AvailableGames = UiDefaults.DefaultEntry.Concat(await _db.Games
