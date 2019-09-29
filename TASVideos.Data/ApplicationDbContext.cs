@@ -301,6 +301,10 @@ namespace TASVideos.Data
 
 			builder.Entity<UserFile>(entity =>
 			{
+				entity.Property(e => e.Id)
+					.ValueGeneratedNever()
+					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+
 				entity.HasIndex(e => e.Hidden);
 				entity.Property(e => e.Length).HasColumnType("decimal(10, 3)");
 			});
