@@ -274,6 +274,13 @@ See the [System] page for details."
 				RevisionMessage = Import,
 				Markup = @"Editing System Pages requires permissions beyond a regular editor. Editors, make sure pages that utilize this page are tested when making edits"
 			},
+			new WikiPage
+			{
+				PageName = "System/UserFileUploadHeader",
+				RevisionMessage = Import,
+				Markup = @"Accepted formats: All submittable movie formats, .lua, .wch%%%
+Accepted compression: Uncompressed, .zip, .gz, .bz2, .lzma, .xz%%%"
+			}
 		};
 	}
 }
