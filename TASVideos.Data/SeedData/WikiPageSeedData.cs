@@ -278,8 +278,8 @@ See the [System] page for details."
 			{
 				PageName = "System/UserFileUploadHeader",
 				RevisionMessage = Import,
-				Markup = @"Accepted formats: All submittable movie formats, .lua, .wch%%%
-Accepted compression: Uncompressed, .zip, .gz, .bz2, .lzma, .xz%%%"
+				Markup = @"Accepted formats: All submittable movie formats, .lua, .wch, .gst%%%
+__Do not__ submit compressed files (.zip, .gz, .bz2, .lzma, .xz). The server does its own compression.%%%"
 			}
 		};
 	}

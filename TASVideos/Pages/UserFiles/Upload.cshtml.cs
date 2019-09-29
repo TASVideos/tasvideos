@@ -19,7 +19,6 @@ namespace TASVideos.Pages.UserFiles
 	[RequirePermission(PermissionTo.UploadUserFiles)]
 	public class UploadModel : BasePageModel
 	{
-		private static readonly string[] SupportedCompressionTypes = { ".zip" }; // TODO: remaining format types
 		private static readonly string[] SupportedSupplementalTypes = { ".lua", ".wch", ".gst" };
 
 		private readonly ApplicationDbContext _db;
@@ -58,30 +57,21 @@ namespace TASVideos.Pages.UserFiles
 				return Page();
 			}
 
+			if (UserFile.File.IsCompressed())
+			{
+				ModelState.AddModelError(
+					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
+					"Compressed files are not supported.");
+			}
+
 			var fileExt = Path.GetExtension(UserFile.File.FileName);
 
-
-			if (!SupportedCompressionTypes.Contains(fileExt)
-				&& !SupportedSupplementalTypes.Contains(fileExt)
+			if (!SupportedSupplementalTypes.Contains(fileExt)
 				&& !_parser.SupportedMovieExtensions.Contains(fileExt))
 			{
 				ModelState.AddModelError(
 					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
 					$"Unsupported file type: {fileExt}");
-				await Initialize();
-				return Page();
-			}
-
-			// TODO: decompress if zip type
-			var fileBytes = await FormFileToBytes(UserFile.File);
-			var fileName = UserFile.File.FileName;
-
-			if (SupportedCompressionTypes.Contains(fileExt))
-			{
-				// TODO
-				ModelState.AddModelError(
-					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
-					$"Compressed files not yet supported");
 				await Initialize();
 				return Page();
 			}
@@ -121,6 +111,7 @@ namespace TASVideos.Pages.UserFiles
 				// TODO: length
 			}
 
+			var fileBytes = await FormFileToBytes(UserFile.File);
 			var fileResult = await _fileService.Compress(fileBytes);
 
 			userFile.PhysicalLength = fileResult.CompressedSize;
