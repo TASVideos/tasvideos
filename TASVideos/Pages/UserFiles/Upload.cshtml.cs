@@ -19,6 +19,7 @@ namespace TASVideos.Pages.UserFiles
 	public class UploadModel : BasePageModel
 	{
 		private static readonly string[] SupportedCompressionTypes = { ".zip" }; // TODO: remaining format types
+		private static readonly string[] SupportedSupplementalTypes = { ".lua", ".wch", ".gst" };
 		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
 
@@ -54,7 +55,8 @@ namespace TASVideos.Pages.UserFiles
 
 
 			if (!SupportedCompressionTypes.Contains(fileExt)
-			&& !_parser.SupportedMovieExtensions.Contains(fileExt))
+				&& !SupportedCompressionTypes.Contains(fileExt)
+				&& !_parser.SupportedMovieExtensions.Contains(fileExt))
 			{
 				ModelState.AddModelError(
 					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
@@ -68,6 +70,11 @@ namespace TASVideos.Pages.UserFiles
 			if (SupportedCompressionTypes.Contains(fileExt))
 			{
 				// TODO
+				ModelState.AddModelError(
+					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
+					$"Compressed files not yet supported");
+				await Initialize();
+				return Page();
 			}
 
 			var supportedExtensions = _parser.SupportedMovieExtensions;
