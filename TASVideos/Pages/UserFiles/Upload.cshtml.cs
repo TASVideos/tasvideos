@@ -62,7 +62,7 @@ namespace TASVideos.Pages.UserFiles
 
 
 			if (!SupportedCompressionTypes.Contains(fileExt)
-				&& !SupportedCompressionTypes.Contains(fileExt)
+				&& !SupportedSupplementalTypes.Contains(fileExt)
 				&& !_parser.SupportedMovieExtensions.Contains(fileExt))
 			{
 				ModelState.AddModelError(
@@ -86,17 +86,7 @@ namespace TASVideos.Pages.UserFiles
 				return Page();
 			}
 
-			if (SupportedSupplementalTypes.Contains(fileExt))
-			{
-				// TODO
-				ModelState.AddModelError(
-					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
-					$"Supplamental files not yet supported");
-				await Initialize();
-				return Page();
-			}
-
-			UserFile userFile = new UserFile
+			var userFile = new UserFile
 			{
 				Id = DateTime.UtcNow.Ticks,
 				Title = UserFile.Title,
@@ -114,7 +104,6 @@ namespace TASVideos.Pages.UserFiles
 				FileName = UserFile.File.FileName
 			};
 
-			var supportedExtensions = _parser.SupportedMovieExtensions;
 			if (_parser.SupportedMovieExtensions.Contains(fileExt))
 			{
 				var parseResult = _parser.ParseFile(UserFile.File.FileName, UserFile.File.OpenReadStream());
