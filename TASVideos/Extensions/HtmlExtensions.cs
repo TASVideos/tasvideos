@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
@@ -114,6 +115,29 @@ namespace TASVideos.Extensions
 
 			return formFile.FileName.EndsWith(".zip")
 				&& acceptableContentTypes.Contains(formFile.ContentType);
+		}
+
+		public static bool IsCompressed(this IFormFile formFile)
+		{
+			if (formFile == null)
+			{
+				return false;
+			}
+
+			var compressedExtensions = new[]
+			{
+				".zip", ".gz", "bz2", ".lzma", ".xz"
+			};
+
+			var compressedContentTypes = new[]
+			{
+				"application/x-zip-compressed",
+				"application/zip",
+				"applicationx-gzip"
+			};
+
+			return compressedExtensions.Contains(Path.GetExtension(formFile.FileName))
+				|| compressedContentTypes.Contains(formFile.ContentType);
 		}
 		
 		public static bool LessThanMovieSizeLimit(this IFormFile formFile)
