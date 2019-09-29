@@ -52,9 +52,10 @@ namespace TASVideos.Pages.UserFiles
 
 		public async Task<IActionResult> OnPost()
 		{
+			await Initialize();
+
 			if (!ModelState.IsValid)
 			{
-				await Initialize();
 				return Page();
 			}
 
@@ -63,6 +64,7 @@ namespace TASVideos.Pages.UserFiles
 				ModelState.AddModelError(
 					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
 					"Compressed files are not supported.");
+				return Page();
 			}
 
 			var fileExt = Path.GetExtension(UserFile.File.FileName);
@@ -73,7 +75,17 @@ namespace TASVideos.Pages.UserFiles
 				ModelState.AddModelError(
 					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
 					$"Unsupported file type: {fileExt}");
-				await Initialize();
+				return Page();
+			}
+
+			// Note: we calculate storage used by compressed site, so technically we should compress then check
+			// but if they are cutting it this close, it's probably going to be a problem anyway
+			// and we don't want to waste time compressing the file if we do not need to
+			if (StorageUsed + UserFile.File.Length < SiteGlobalConstants.UserFileStorageLimit)
+			{
+				ModelState.AddModelError(
+					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
+					$"File exceeds your available storage space. Remove unecessary files and try again.");
 				return Page();
 			}
 
