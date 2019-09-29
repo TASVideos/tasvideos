@@ -51,6 +51,16 @@ namespace TASVideos.Extensions
 				});
 		}
 
+		public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Game> query)
+		{
+			return query
+				.Select(g => new SelectListItem
+				{
+					Value = g.Id.ToString(),
+					Text = g.DisplayName
+				});
+		}
+
 		public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameSystemFrameRate> query)
 		{
 			return query

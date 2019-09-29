@@ -101,6 +101,11 @@ namespace TASVideos.Extensions
 
 		public static bool IsZip(this IFormFile formFile)
 		{
+			if (formFile == null)
+			{
+				return false;
+			}
+
 			var acceptableContentTypes = new[]
 			{
 				"application/x-zip-compressed",
@@ -113,6 +118,11 @@ namespace TASVideos.Extensions
 		
 		public static bool LessThanMovieSizeLimit(this IFormFile formFile)
 		{
+			if (formFile == null)
+			{
+				return true;
+			}
+
 			return formFile.Length < SiteGlobalConstants.MaximumMovieSize;
 		}
 	}

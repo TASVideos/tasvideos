@@ -33,6 +33,11 @@
 				<input type="checkbox" class="form-check" asp-for="UserFile.Hidden" />
 				<label asp-for="UserFile.Hidden"></label>
 			</form-group>
+			<form-group>
+				<label asp-for="UserFile.GameId"></label>
+				<select asp-for="UserFile.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
+				<span asp-validation-for="UserFile.GameId" class="text-danger"></span>
+			</form-group>
 		</column>
 	</row>
 	<fullrow class="text-center">

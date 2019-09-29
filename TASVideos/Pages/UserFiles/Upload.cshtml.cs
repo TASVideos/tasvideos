@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles
@@ -25,16 +29,18 @@ namespace TASVideos.Pages.UserFiles
 
 		public int StorageUsed { get; set; } 
 
+		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
+
 		public async Task OnGet()
 		{
-			await CalculateStorageUsed();
+			await Initialize();
 		}
 
 		public async Task<IActionResult> OnPost()
 		{
 			if (!ModelState.IsValid)
 			{
-				await CalculateStorageUsed();
+				await Initialize();
 				return Page();
 			}
 
@@ -44,7 +50,9 @@ namespace TASVideos.Pages.UserFiles
 				Title = UserFile.Title,
 				Description = UserFile.Description,
 				GameId = UserFile.GameId,
-				AuthorId = User.GetUserId()
+				AuthorId = User.GetUserId(),
+				LogicalLength = (int)UserFile.File.Length,
+				UploadTimestamp = DateTime.UtcNow
 			};
 
 			_db.UserFiles.Add(userFile);
@@ -53,12 +61,18 @@ namespace TASVideos.Pages.UserFiles
 			return RedirectToPage("/Profile/UserFiles");
 		}
 
-		private async Task CalculateStorageUsed()
+		private async Task Initialize()
 		{
 			var userId = User.GetUserId();
 			StorageUsed = await _db.UserFiles
 				.Where(uf => uf.AuthorId == userId)
 				.SumAsync(uf => uf.LogicalLength);
+
+			AvailableGames = await _db.Games
+				.OrderBy(g => g.SystemId)
+				.ThenBy(g => g.DisplayName)
+				.ToDropDown()
+				.ToListAsync();
 		}
 	}
 }
