@@ -34,7 +34,12 @@
 				<label asp-for="UserFile.Hidden"></label>
 			</form-group>
 			<form-group>
-				<label asp-for="UserFile.GameId"></label>
+				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
+				<select asp-for="UserFile.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
+				<span asp-validation-for="UserFile.SystemId" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="UserFile.GameId" class="form-control-label"></label>
 				<select asp-for="UserFile.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
 				<span asp-validation-for="UserFile.GameId" class="text-danger"></span>
 			</form-group>
