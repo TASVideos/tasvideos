@@ -5,10 +5,15 @@
 	ViewData["Title"] = "Upload a User file";
 }
 
-@await Component.RenderWiki("System/UserFileUploadHeader")
+<info-alert dismissible="true">
+	@await Component.RenderWiki("System/UserFileUploadHeader")
+</info-alert>
+
+<partial name="Shared/_StorageUsed" model="Model.StorageUsed" />
+<hr />
 <form method="post" enctype="multipart/form-data">
 	<row>
-		<column md="8">
+		<column>
 			<form-group>
 				<label asp-for="UserFile.File" class="form-control-label"></label>
 				<input asp-for="UserFile.File" type="file" class="form-control" />
