@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace TASVideos.Pages.UserFiles
 			_db = db;
 		}
 
+		[BindProperty]
 		public UserFileUploadModel UserFile { get; set; }
 
 		public int StorageUsed { get; set; } 
@@ -35,6 +37,18 @@ namespace TASVideos.Pages.UserFiles
 				await CalculateStorageUsed();
 				return Page();
 			}
+
+			var userFile = new UserFile
+			{
+				Id = DateTime.UtcNow.Ticks,
+				Title = UserFile.Title,
+				Description = UserFile.Description,
+				GameId = UserFile.GameId,
+				AuthorId = User.GetUserId()
+			};
+
+			_db.UserFiles.Add(userFile);
+			await _db.SaveChangesAsync();
 
 			return RedirectToPage("/Profile/UserFiles");
 		}
