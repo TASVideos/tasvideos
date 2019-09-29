@@ -5,10 +5,42 @@
 	ViewData["Title"] = "Upload a User file";
 }
 
+Accepted formats: All submittable movie formats, .lua, .wch
+<br />
+Accepted compression: Uncompressed, .zip, .gz, .bz2, .lzma, .xz
+<br />
+
 <form method="post" enctype="multipart/form-data">
+	<row>
+		<column md="8">
+			<form-group>
+				<label asp-for="UserFile.File" class="form-control-label"></label>
+				<input asp-for="UserFile.File" type="file" class="form-control" />
+				<span asp-validation-for="UserFile.File" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="UserFile.Title" class="form-control-label"></label>
+				<input asp-for="UserFile.Title" type="text" class="form-control" />
+				<span asp-validation-for="UserFile.Title" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="UserFile.Description" class="form-control-label"></label>
+				<textarea asp-for="UserFile.Description" rows="6" class="form-control wiki-edit"></textarea>
+				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<input type="checkbox" class="form-check" asp-for="UserFile.Hidden" />
+				<label asp-for="UserFile.Hidden"></label>
+			</form-group>
+		</column>
+	</row>
 	<fullrow class="text-center">
 		@await Component.RenderWiki("System/WikiEditNote")
 		<submit-button class="btn btn-primary">Upload</submit-button>
 		<a href="/Profile/UserFiles" class="btn btn-secondary">Cancel</a>
 	</fullrow>
 </form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

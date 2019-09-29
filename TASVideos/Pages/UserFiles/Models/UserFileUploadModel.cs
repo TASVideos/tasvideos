@@ -14,5 +14,7 @@ namespace TASVideos.Pages.UserFiles.Models
 
 		[Required]
 		public string Description { get; set; }
+
+		public bool Hidden { get; set; }
 	}
 }
