@@ -15,6 +15,9 @@ namespace TASVideos.Pages.UserFiles.Models
 		[Required]
 		public string Description { get; set; }
 
+		[Display(Name = "System")]
+		public int? SystemId { get; set; }
+
 		[Display(Name = "Game")]
 		public int? GameId { get; set; }
 

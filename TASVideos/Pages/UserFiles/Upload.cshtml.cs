@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +27,8 @@ namespace TASVideos.Pages.UserFiles
 		public UserFileUploadModel UserFile { get; set; }
 
 		public int StorageUsed { get; set; } 
+
+		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 
 		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
 
@@ -68,11 +69,15 @@ namespace TASVideos.Pages.UserFiles
 				.Where(uf => uf.AuthorId == userId)
 				.SumAsync(uf => uf.LogicalLength);
 
-			AvailableGames = await _db.Games
+			AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
+				.ToDropdown()
+				.ToListAsync());
+
+			AvailableGames = UiDefaults.DefaultEntry.Concat(await _db.Games
 				.OrderBy(g => g.SystemId)
 				.ThenBy(g => g.DisplayName)
 				.ToDropDown()
-				.ToListAsync();
+				.ToListAsync());
 		}
 	}
 }
