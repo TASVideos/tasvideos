@@ -203,7 +203,7 @@ namespace TASVideos.Pages.Submissions
 			if (Submission.MovieFile != null)
 			{
 				// TODO: check warnings
-				var parseResult = _parser.Parse(Submission.MovieFile.OpenReadStream());
+				var parseResult = _parser.ParseZip(Submission.MovieFile.OpenReadStream());
 				await MapParsedResult(parseResult, submission);
 
 				if (!ModelState.IsValid)

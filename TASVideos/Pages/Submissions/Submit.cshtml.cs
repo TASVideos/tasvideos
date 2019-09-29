@@ -70,7 +70,7 @@ namespace TASVideos.Pages.Submissions
 			};
 
 			// TODO: check warnings
-			var parseResult = _parser.Parse(Create.MovieFile.OpenReadStream());
+			var parseResult = _parser.ParseZip(Create.MovieFile.OpenReadStream());
 			await MapParsedResult(parseResult, submission);
 			
 			if (!ModelState.IsValid)
