@@ -12,6 +12,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.UserFiles.Models;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.UserFiles
 {
@@ -20,13 +21,19 @@ namespace TASVideos.Pages.UserFiles
 	{
 		private static readonly string[] SupportedCompressionTypes = { ".zip" }; // TODO: remaining format types
 		private static readonly string[] SupportedSupplementalTypes = { ".lua", ".wch", ".gst" };
+
 		private readonly ApplicationDbContext _db;
 		private readonly MovieParser _parser;
+		private readonly IFileService _fileService;
 
-		public UploadModel(ApplicationDbContext db, MovieParser parser)
+		public UploadModel(
+			ApplicationDbContext db,
+			MovieParser parser,
+			IFileService fileService)
 		{
 			_db = db;
 			_parser = parser;
+			_fileService = fileService;
 		}
 
 		[BindProperty]
@@ -65,7 +72,9 @@ namespace TASVideos.Pages.UserFiles
 				return Page();
 			}
 
+			// TODO: decompress if zip type
 			var fileBytes = await FormFileToBytes(UserFile.File);
+			var fileName = UserFile.File.FileName;
 
 			if (SupportedCompressionTypes.Contains(fileExt))
 			{
@@ -77,13 +86,17 @@ namespace TASVideos.Pages.UserFiles
 				return Page();
 			}
 
-			var supportedExtensions = _parser.SupportedMovieExtensions;
-			if (_parser.SupportedMovieExtensions.Contains(fileExt))
+			if (SupportedSupplementalTypes.Contains(fileExt))
 			{
-				//_parser.Parse()
+				// TODO
+				ModelState.AddModelError(
+					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
+					$"Supplamental files not yet supported");
+				await Initialize();
+				return Page();
 			}
 
-			var userFile = new UserFile
+			UserFile userFile = new UserFile
 			{
 				Id = DateTime.UtcNow.Ticks,
 				Title = UserFile.Title,
@@ -92,8 +105,38 @@ namespace TASVideos.Pages.UserFiles
 				GameId = UserFile.GameId,
 				AuthorId = User.GetUserId(),
 				LogicalLength = (int)UserFile.File.Length,
-				UploadTimestamp = DateTime.UtcNow
+				UploadTimestamp = DateTime.UtcNow,
+				Class = SupportedSupplementalTypes.Contains(fileExt)
+					? UserFileClass.Support
+					: UserFileClass.Movie,
+				Type = fileExt.Replace(".", ""),
+				
+				FileName = UserFile.File.FileName
 			};
+
+			var supportedExtensions = _parser.SupportedMovieExtensions;
+			if (_parser.SupportedMovieExtensions.Contains(fileExt))
+			{
+				var parseResult = _parser.ParseFile(UserFile.File.FileName, UserFile.File.OpenReadStream());
+				if (!parseResult.Success)
+				{
+					ModelState.AddModelError(
+						$"{nameof(UserFile)}.{nameof(UserFile.File)}",
+						"Error parsing movie file");
+					await Initialize();
+					return Page();
+				}
+
+				userFile.Rerecords = parseResult.RerecordCount;
+				userFile.Frames = parseResult.Frames;
+				// TODO: length
+			}
+
+			var fileResult = await _fileService.Compress(fileBytes);
+
+			userFile.PhysicalLength = fileResult.CompressedSize;
+			userFile.CompressionType = fileResult.Type;
+			userFile.Content = fileResult.Data;
 
 			_db.UserFiles.Add(userFile);
 			await _db.SaveChangesAsync();

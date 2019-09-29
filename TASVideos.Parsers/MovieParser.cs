@@ -31,7 +31,7 @@ namespace TASVideos.MovieParsers
 			.Select(t => "." + (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
 					?.Extension);
 
-		public IParseResult Parse(Stream stream)
+		public IParseResult ParseZip(Stream stream)
 		{
 			try
 			{
@@ -56,6 +56,27 @@ namespace TASVideos.MovieParsers
 						return parser.Parse(movieFileStream);
 					}
 				}
+			}
+			catch (Exception)
+			{
+				// TODO: do we want to log here? or catch at a higher layer?
+				return Error("An general error occured while processing the movie file.");
+			}
+		}
+
+		public IParseResult ParseFile(string fileName, Stream stream)
+		{
+			try
+			{
+				var ext = Path.GetExtension(fileName)?.Trim('.').ToLower();
+
+				var parser = GetParser(ext);
+				if (parser == null)
+				{
+					return Error($".{ext} files are not currently supported.");
+				}
+
+				return parser.Parse(stream);
 			}
 			catch (Exception)
 			{

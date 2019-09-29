@@ -14,6 +14,12 @@ namespace TASVideos.Data.Entity
 		Support
 	}
 
+	public enum Compression
+	{
+		None,
+		Gzip
+	}
+
 	public class UserFile
 	{
 		public long Id { get; set; }
@@ -61,6 +67,8 @@ namespace TASVideos.Data.Entity
 		public int Views { get; set; }
 
 		public int Downloads { get; set; }
+
+		public Compression CompressionType { get; set; }
 
 		public virtual ICollection<UserFileComment> Comments { get; set; }
 	}

@@ -61,7 +61,8 @@ namespace TASVideos.Legacy.Imports
 					nameof(UserFile.Type),
 					nameof(UserFile.UploadTimestamp),
 					nameof(UserFile.Views),
-					nameof(UserFile.Warnings)
+					nameof(UserFile.Warnings),
+					nameof(UserFile.CompressionType)
 				};
 
 				var userFileCommentColumns = new[]
@@ -129,7 +130,8 @@ namespace TASVideos.Legacy.Imports
 				Type = legacyFile.Type,
 				UploadTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyFile.Timestamp),
 				Views = legacyFile.Views,
-				Warnings = legacyFile.Warnings
+				Warnings = legacyFile.Warnings,
+				CompressionType = Compression.Gzip
 			};
 		}
 
