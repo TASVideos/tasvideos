@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.UserFiles.Models;
@@ -99,16 +100,34 @@ namespace TASVideos.Pages.UserFiles
 				var parseResult = _parser.ParseFile(UserFile.File.FileName, UserFile.File.OpenReadStream());
 				if (!parseResult.Success)
 				{
-					ModelState.AddModelError(
-						$"{nameof(UserFile)}.{nameof(UserFile.File)}",
-						"Error parsing movie file");
+					ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");
 					await Initialize();
 					return Page();
 				}
 
 				userFile.Rerecords = parseResult.RerecordCount;
 				userFile.Frames = parseResult.Frames;
-				// TODO: length
+
+				decimal frameRate = 60.0M;
+				if (parseResult.FrameRateOverride.HasValue)
+				{
+					frameRate = (decimal)parseResult.FrameRateOverride.Value;
+				}
+				else
+				{
+					var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Code == parseResult.SystemCode);
+					var frameRateData = await _db.GameSystemFrameRates
+						.ForSystem(system.Id)
+						.ForRegion(parseResult.Region.ToString())
+						.FirstOrDefaultAsync();
+
+					if (frameRateData != null)
+					{
+						frameRate = (decimal)frameRateData.FrameRate;
+					}
+				}
+				
+				userFile.Length = Math.Round(userFile.Frames / frameRate);
 			}
 
 			var fileBytes = await FormFileToBytes(UserFile.File);
