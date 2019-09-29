@@ -30,9 +30,12 @@
 				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<input type="checkbox" class="form-check" asp-for="UserFile.Hidden" />
-				<label asp-for="UserFile.Hidden"></label>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" asp-for="UserFile.Hidden">
+					<label class="form-check-label form-control-label" asp-for="UserFile.Hidden"></label>
+				</div>
 			</form-group>
+			<hr />
 			<form-group>
 				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
 				<select asp-for="UserFile.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
