@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,7 +56,7 @@ namespace TASVideos.Pages.UserFiles
 						GameId = g.Id,
 						GameName = g.DisplayName,
 						SystemCode = g.System.Code,
-						Latest = g.UserFiles.Select(uf => uf.UploadTimestamp).Max()
+						Dates = g.UserFiles.Select(uf => uf.UploadTimestamp).ToList()
 					})
 					.ToListAsync()
 			};

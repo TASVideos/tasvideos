@@ -85,7 +85,7 @@ namespace TASVideos.Pages.UserFiles
 			{
 				ModelState.AddModelError(
 					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
-					$"File exceeds your available storage space. Remove unecessary files and try again.");
+					"File exceeds your available storage space. Remove unecessary files and try again.");
 				return Page();
 			}
 

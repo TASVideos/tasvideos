@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TASVideos.Pages.UserFiles.Models
 {
@@ -20,7 +21,9 @@ namespace TASVideos.Pages.UserFiles.Models
 			public int GameId { get; set; }
 			public string GameName { get; set; }
 			public string SystemCode { get; set; }
-			public DateTime Latest { get; set; }
+			public DateTime Latest => Dates.Max();
+
+			internal IEnumerable<DateTime> Dates { get; set; }
 		}
 	}
 }
