@@ -5,7 +5,6 @@ using AutoMapper.QueryableExtensions;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -23,6 +22,9 @@ namespace TASVideos.Pages.UserFiles
 			_db = db;
 		}
 
+		[FromQuery]
+		public PagingModel Search { get; set; }
+
 		[FromRoute]
 		public string UserName { get; set; }
 
@@ -34,7 +36,7 @@ namespace TASVideos.Pages.UserFiles
 				.ForAuthor(UserName)
 				.FilterByHidden(includeHidden: false)
 				.ProjectTo<UserFileModel>()
-				.ToListAsync();
+				.PageOf(_db, Search);
 		}
 	}
 }
