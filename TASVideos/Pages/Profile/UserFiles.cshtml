@@ -7,12 +7,11 @@
 	var used = Model.Files.Sum(f => f.FileSize);
 }
 
-<fullrow class="mt-2 mb-3">
-	<div class="pull-right">
-		<a asp-page="/UserFiles/Index" class="btn btn-secondary">All User Files</a>
-	</div>
+<fullrow>
+	<a asp-page="/UserFiles/Upload" class="btn btn-secondary">Upload</a>
+	<a asp-page="/UserFiles/Index" class="btn btn-secondary pull-right">All User Files</a>
 </fullrow>
-
+<hr />
 <partial name="_StorageUsed" model="used" />
 
 @* ReSharper disable once UnusedVariable *@
