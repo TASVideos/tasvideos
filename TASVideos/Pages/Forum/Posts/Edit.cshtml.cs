@@ -155,10 +155,27 @@ namespace TASVideos.Pages.Forum.Posts
 				}
 			}
 
+			var postCount = await _db.ForumPosts.CountAsync(t => t.TopicId == post.TopicId);
+
 			_db.ForumPosts.Remove(post);
 
-			// TODO: catch DbConcurrencyException
-			await _db.SaveChangesAsync();
+			bool topicDeleted = false;
+			if (postCount == 1)
+			{
+				var topic = await _db.ForumTopics.SingleAsync(t => t.Id == post.TopicId);
+				_db.ForumTopics.Remove(topic);
+				topicDeleted = true;
+			}
+
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				// TODO: nicer UI for this
+				return BadRequest("An error occured while attempting to delete the post, please try again.");
+			}
 
 			_publisher.SendForum(
 				post.Topic.Forum.Restricted,
@@ -166,7 +183,9 @@ namespace TASVideos.Pages.Forum.Posts
 				"",
 				$"{BaseUrl}/Forum/Topics/{post.Topic.Id}");
 
-			return RedirectToPage("/Forum/Topics/Index", new { id = post.TopicId });
+			return topicDeleted
+				? RedirectToPage("/Forum/Subforum/Index", new { id = post.Topic.ForumId })
+				: RedirectToPage("/Forum/Topics/Index", new { id = post.TopicId });
 		}
 
 		private async Task<bool> CanEdit(ForumPost post, int userId)
