@@ -362,7 +362,13 @@ namespace TASVideos.Data.SeedData
 		public static readonly Role EmulatorCoder = new Role
 		{
 			Name = RoleSeedNames.EmulatorCoder,
-			Description = "Emulator coders are people who have contributed code to site approved rerecording emulators.  This role is \"ceremonial\" and does not have any additional permissions."
+			Description = "Emulator coders are people who have contributed code to site approved rerecording emulators. This role is \"ceremonial\" and does not have any special permissions.",
+			RolePermission = ExperiencedForumUserPermissions.Select(p => new RolePermission
+			{
+				Role = EmulatorCoder,
+				PermissionId = p,
+				CanAssign = false
+			}).ToArray(),
 		};
 
 		public static IEnumerable<Role> AllRoles =>
