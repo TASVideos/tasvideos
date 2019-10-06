@@ -18,12 +18,6 @@ namespace TASVideos.Extensions
 
 		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			if (env.IsDevelopment())
-			{
-				// Core 3 TODO
-				////app.UseBrowserLink();
-			}
-
 			if (env.IsDevelopment() || env.IsDemo())
 			{
 				app.UseDeveloperExceptionPage();
