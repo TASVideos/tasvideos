@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
@@ -18,7 +19,7 @@ namespace TASVideos.Legacy
 		private static readonly Dictionary<string, long> ImportDurations = new Dictionary<string, long>();
 
 		public static void RunLegacyImport(
-			IHostingEnvironment env,
+			IWebHostEnvironment env,
 			ApplicationDbContext context,
 			string connectionStr,
 			NesVideosSiteContext legacySiteContext,

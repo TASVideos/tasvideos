@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -20,7 +21,7 @@ namespace TASVideos
 			_next = next;
 		}
 
-		public async Task Invoke(HttpContext context, IHostingEnvironment env, ILogger<ErrorHandlingMiddleware> logger)
+		public async Task Invoke(HttpContext context, IWebHostEnvironment env, ILogger<ErrorHandlingMiddleware> logger)
 		{
 			try
 			{
@@ -33,7 +34,7 @@ namespace TASVideos
 		}
 
 		// https://stackoverflow.com/questions/38630076/asp-net-core-web-api-exception-handling
-		private static Task HandleExceptionAsync(HttpContext context, Exception exception, IHostingEnvironment env, ILogger logger, RequestDelegate _next)
+		private static Task HandleExceptionAsync(HttpContext context, Exception exception, IWebHostEnvironment env, ILogger logger, RequestDelegate _next)
 		{
 			if (context.Request.Path.ToString().Contains("/api/"))
 			{

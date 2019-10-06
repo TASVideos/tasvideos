@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace TASVideos.Extensions
 {
@@ -15,7 +16,7 @@ namespace TASVideos.Extensions
 				});
 		}
 
-		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostingEnvironment env)
+		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
@@ -99,7 +100,7 @@ namespace TASVideos.Extensions
 
 		public static IApplicationBuilder UseSwaggerUi(
 			this IApplicationBuilder app,
-			IHostingEnvironment env)
+			IWebHostEnvironment env)
 		{
 			// Append environment to app name when in non-production environments
 			var appName = "TASVideos";

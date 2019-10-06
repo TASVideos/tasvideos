@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -25,10 +26,10 @@ namespace TASVideos.Services.Email
 	public class SendGridSender : IEmailSender
 	{
 		private readonly AppSettings _settings;
-		private readonly IHostingEnvironment _env;
+		private readonly IWebHostEnvironment _env;
 
 		public SendGridSender(
-			IHostingEnvironment environment,
+			IWebHostEnvironment environment,
 			IOptions<AppSettings> settings)
 		{
 			_settings = settings.Value;
@@ -76,7 +77,6 @@ namespace TASVideos.Services.Email
 			return client.SendEmailAsync(msg);
 		}
 	}
-
 
 	public class EmailLogger : IEmailSender
 	{

@@ -87,7 +87,7 @@ namespace TASVideos.Data
 
 		private static void ImportStrategy(IServiceProvider services)
 		{
-			var env = services.GetRequiredService<IHostingEnvironment>();
+			var env = services.GetRequiredService<IWebHostEnvironment>();
 			var context = services.GetRequiredService<ApplicationDbContext>();
 			var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
 			var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();

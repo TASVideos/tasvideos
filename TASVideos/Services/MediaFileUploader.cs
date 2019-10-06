@@ -18,9 +18,9 @@ namespace TASVideos.Services
 	public class MediaFileUploader : IMediaFileUploader
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IHostingEnvironment _env;
+		private readonly IWebHostEnvironment _env;
 
-		public MediaFileUploader(ApplicationDbContext db, IHostingEnvironment env)
+		public MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment env)
 		{
 			_db = db;
 			_env = env;
