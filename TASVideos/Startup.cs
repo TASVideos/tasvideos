@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using TASVideos.Data;
 using TASVideos.Extensions;
 using TASVideos.Legacy.Extensions;
@@ -10,14 +11,14 @@ namespace TASVideos
 {
 	public class Startup
 	{
-		public Startup(IConfiguration configuration, IHostingEnvironment env)
+		public Startup(IConfiguration configuration, IWebHostEnvironment env)
 		{
 			Configuration = configuration;
 			Environment = env;
 		}
 
 		public IConfiguration Configuration { get; }
-		public IHostingEnvironment Environment { get; }
+		public IWebHostEnvironment Environment { get; }
 
 		private AppSettings Settings => Configuration.Get<AppSettings>();
 
@@ -50,7 +51,7 @@ namespace TASVideos
 				.AddIdentity(Environment);
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			app
 				.UseRobots()

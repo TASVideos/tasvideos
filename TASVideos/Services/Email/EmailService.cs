@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace TASVideos.Services.Email
 {
@@ -16,10 +17,10 @@ namespace TASVideos.Services.Email
 
 	public class EmailService : IEmailService
 	{
-		private readonly IHostingEnvironment _env;
+		private readonly IWebHostEnvironment _env;
 		private readonly IEmailSender _emailSender;
 
-		public EmailService(IHostingEnvironment env, IEmailSender emailSender)
+		public EmailService(IWebHostEnvironment env, IEmailSender emailSender)
 		{
 			_env = env;
 			_emailSender = emailSender;

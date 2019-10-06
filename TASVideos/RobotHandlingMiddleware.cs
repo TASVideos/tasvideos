@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
 namespace TASVideos
 {
@@ -10,14 +11,14 @@ namespace TASVideos
 	{
 		private readonly RequestDelegate _request;
 
-		private IHostingEnvironment _env { get; }
+		private IWebHostEnvironment _env { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
 		/// </summary>
 		public RobotHandlingMiddleware(
 			RequestDelegate request,
-			IHostingEnvironment env)
+			IWebHostEnvironment env)
 		{
 			_request = request;
 			_env = env;

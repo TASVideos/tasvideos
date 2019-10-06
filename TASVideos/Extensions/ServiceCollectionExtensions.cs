@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -50,7 +51,7 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddCookieConfiguration(this IServiceCollection services, IHostingEnvironment env)
+		public static IServiceCollection AddCookieConfiguration(this IServiceCollection services, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
@@ -92,7 +93,7 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddServices(this IServiceCollection services, IHostingEnvironment env)
+		public static IServiceCollection AddServices(this IServiceCollection services, IWebHostEnvironment env)
 		{
 			services.AddScoped<UserManager>();
 			services.AddScoped<IPointsService, PointsService>();
@@ -153,7 +154,7 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddIdentity(this IServiceCollection services, IHostingEnvironment env)
+		public static IServiceCollection AddIdentity(this IServiceCollection services, IWebHostEnvironment env)
 		{
 			services.AddIdentity<User, Role>(config =>
 				{
@@ -215,7 +216,7 @@ namespace TASVideos.Extensions
 			});
 		}
 
-		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IHostingEnvironment env, AppSettings settings)
+		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IWebHostEnvironment env, AppSettings settings)
 		{
 			if (env.IsDevelopment())
 			{
