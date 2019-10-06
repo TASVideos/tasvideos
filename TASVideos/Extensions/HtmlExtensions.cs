@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-
+using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Extensions
@@ -86,7 +86,7 @@ namespace TASVideos.Extensions
 				throw new ArgumentNullException(nameof(expression));
 			}
 
-			var expressionProvider = (ModelExpressionProvider)html.ViewContext.HttpContext.RequestServices.GetService(typeof(ModelExpressionProvider));
+			var expressionProvider = html.ViewContext.HttpContext.RequestServices.GetRequiredService<ModelExpressionProvider>();
 			var modelExpression = expressionProvider.CreateModelExpression(html.ViewData, expression);
 
 			return new HtmlString(modelExpression.Metadata.Description);
