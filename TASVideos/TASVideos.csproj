@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UserSecretsId>aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152</UserSecretsId>
   </PropertyGroup>
 
@@ -26,8 +26,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" />
-    <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="1.0.172" />
     <PackageReference Include="RoslynCodeTaskFactory" Version="2.0.7" />
     <PackageReference Include="Sendgrid" Version="9.10.0" />
