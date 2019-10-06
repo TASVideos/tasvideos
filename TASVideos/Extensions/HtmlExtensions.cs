@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
 using TASVideos.Data.Entity;
-// Core 3 TODO
-//using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 
 namespace TASVideos.Extensions
 {
@@ -74,7 +74,6 @@ namespace TASVideos.Extensions
 			return WikiCondition(html.ViewContext, condition);
 		}
 
-		// https://stackoverflow.com/questions/6578495/how-do-i-display-the-displayattribute-description-attribute-value
 		public static IHtmlContent DescriptionFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
 		{
 			if (html == null)
@@ -87,15 +86,10 @@ namespace TASVideos.Extensions
 				throw new ArgumentNullException(nameof(expression));
 			}
 
-			// Core 3 TODO
-			//var modelExplorer = ExpressionMetadataProvider.FromLambdaExpression(expression, html.ViewData, html.MetadataProvider);
-			//if (modelExplorer == null)
-			//{
-			//	throw new InvalidOperationException($"Failed to get model explorer for {ExpressionHelper.GetExpressionText(expression)}");
-			//}
-			
-			//return new HtmlString(modelExplorer.Metadata.Description);
-			return new HtmlString("");
+			var expressionProvider = (ModelExpressionProvider)html.ViewContext.HttpContext.RequestServices.GetService(typeof(ModelExpressionProvider));
+			var modelExpression = expressionProvider.CreateModelExpression(html.ViewData, expression);
+
+			return new HtmlString(modelExpression.Metadata.Description);
 		}
 
 		public static string ToYesNo(this bool val)
