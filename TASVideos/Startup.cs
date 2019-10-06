@@ -60,6 +60,7 @@ namespace TASVideos
 				.UseHttpsRedirection()
 				.UseStaticFiles()
 				.UseAuthorization()
+				.UseAuthentication()
 				.UseSwaggerUi(Environment)
 				.UseMvcWithOptions();
 		}
