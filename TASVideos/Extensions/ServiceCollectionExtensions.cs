@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -16,8 +15,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 
 using TASVideos.Api.Controllers;
 using TASVideos.Data;
@@ -187,28 +185,12 @@ namespace TASVideos.Extensions
 			{
 				c.SwaggerDoc(
 					"v1",
-					new Info
+					new OpenApiInfo
 					{
 						Title = "TASVideos API",
 						Version = $"v{version.Major}.{version.Minor}.{version.Revision}",
 						Description = "API For tasvideos.org content",
 					});
-				c.AddSecurityDefinition(
-					"Bearer",
-					new ApiKeyScheme
-					{
-						In = "header",
-						Description = "Please insert Token into field",
-						Name = "API-Token",
-						Type = "apiKey"
-					});
-
-				// Must explicitly tell Swagger to add the header into the request as of Swagger 2.0.
-				// https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/603
-				c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>()
-				{
-					{ "Bearer", new string[] { } }
-				});
 
 				var basePath = AppContext.BaseDirectory;
 				var xmlPath = Path.Combine(basePath, "TASVideos.Api.xml");
