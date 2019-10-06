@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
+using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Services;
@@ -48,7 +48,7 @@ namespace TASVideos.Pages
 			// for the cookie expiration
 			if (context.HandlerMethod.HttpMethod == "Post")
 			{
-				var userManager = (UserManager)context.HttpContext.RequestServices.GetService(typeof(UserManager));
+				var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager>();
 				return await userManager.GetUserPermissionsById(context.HttpContext.User.GetUserId());
 			}
 
