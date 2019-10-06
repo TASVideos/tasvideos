@@ -128,8 +128,7 @@ namespace TASVideos.Extensions
 		{
 			services.AddResponseCaching();
 			services
-				.AddMvc()
-				.AddRazorPagesOptions(options =>
+				.AddRazorPages(options =>
 				{
 					options.Conventions.AddPageRoute("/Wiki/Render", "{*url}");
 					options.Conventions.AddFolderApplicationModelConvention(
