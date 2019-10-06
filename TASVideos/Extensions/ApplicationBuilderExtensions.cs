@@ -19,13 +19,16 @@ namespace TASVideos.Extensions
 		{
 			if (env.IsDevelopment())
 			{
-				app.UseBrowserLink();
+				// Core 3 TODO
+				////app.UseBrowserLink();
 			}
 
 			if (env.IsDevelopment() || env.IsDemo())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseDatabaseErrorPage();
+
+				// Core 3 TODO
+				////app.UseDatabaseErrorPage();
 			}
 			else
 			{
