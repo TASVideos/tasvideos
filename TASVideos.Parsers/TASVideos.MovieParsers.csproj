@@ -3,6 +3,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
    <ItemGroup>
-     <PackageReference Include="SharpCompress" Version="0.23.0" />
+     <PackageReference Include="SharpCompress" Version="0.24.0" />
    </ItemGroup>
 </Project>
