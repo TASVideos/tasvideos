@@ -88,7 +88,11 @@ namespace TASVideos.Extensions
 				await next();
 			});
 
-			app.UseMvc();
+			app.UseRouting();
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapRazorPages();
+			});
 
 			return app;
 		}

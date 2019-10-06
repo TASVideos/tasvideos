@@ -57,9 +57,10 @@ namespace TASVideos
 				.UseRequestLocalization()
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
+				.UseHttpsRedirection()
 				.UseStaticFiles()
-				.UseAuthentication()
-				.UseSwaggerUi(Environment)
+				.UseAuthorization()
+				//.UseSwaggerUi(Environment)
 				.UseMvcWithOptions();
 		}
 	}
