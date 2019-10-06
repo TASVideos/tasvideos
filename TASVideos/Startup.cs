@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using TASVideos.Data;
 using TASVideos.Extensions;
 using TASVideos.Legacy.Extensions;
@@ -61,7 +60,7 @@ namespace TASVideos
 				.UseHttpsRedirection()
 				.UseStaticFiles()
 				.UseAuthorization()
-				//.UseSwaggerUi(Environment)
+				.UseSwaggerUi(Environment)
 				.UseMvcWithOptions();
 		}
 	}
