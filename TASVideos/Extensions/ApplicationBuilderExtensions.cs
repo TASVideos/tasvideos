@@ -21,9 +21,7 @@ namespace TASVideos.Extensions
 			if (env.IsDevelopment() || env.IsDemo())
 			{
 				app.UseDeveloperExceptionPage();
-
-				// Core 3 TODO
-				////app.UseDatabaseErrorPage();
+				app.UseDatabaseErrorPage();
 			}
 			else
 			{
