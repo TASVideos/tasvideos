@@ -17,7 +17,7 @@ namespace TASVideos.MovieParsers.Result
 		public IEnumerable<string> Errors { get; internal set; }
 
 		public IEnumerable<ParseWarnings> Warnings => new List<ParseWarnings>();
-		public string FileExtension { get; internal set; }
+		public string FileExtension { get; internal set; } = "";
 		public RegionType Region => RegionType.Unknown;
 		public int Frames => 0;
 		public string SystemCode => "";
