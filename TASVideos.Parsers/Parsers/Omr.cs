@@ -27,8 +27,8 @@ namespace TASVideos.MovieParsers.Parsers
 			};
 
 			using (GZipStream gz = new GZipStream(file, CompressionMode.Decompress))
-			using (StreamReader unzip = new StreamReader(gz))
 			{
+				using StreamReader unzip = new StreamReader(gz);
 				var replay = XElement.Parse(unzip.ReadToEnd())
 					.Descendants().First(x => x.Name == "replay");
 

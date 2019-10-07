@@ -40,47 +40,45 @@ namespace TASVideos.MovieParsers.Parsers
 						continue;
 					}
 
-					using (var entry = reader.OpenEntryStream())
-					using (var textReader = new StreamReader(entry))
+					using var entry = reader.OpenEntryStream();
+					using var textReader = new StreamReader(entry);
+					switch (reader.Entry.Key)
 					{
-						switch (reader.Entry.Key)
-						{
-							case "config.ini":
-								while (textReader.ReadLine() is string s)
+						case "config.ini":
+							while (textReader.ReadLine() is string s)
+							{
+								if (s.StartsWith(FrameCountHeader))
 								{
-									if (s.StartsWith(FrameCountHeader))
-									{
-										result.Frames = ParseIntFromConfig(s);
-									}
-									else if (s.StartsWith(RerecordCountHeader))
-									{
-										result.RerecordCount = ParseIntFromConfig(s);
-									}
-									else if (s.StartsWith(SaveStateCountHeader))
-									{
-										var savestateCount = ParseIntFromConfig(s);
+									result.Frames = ParseIntFromConfig(s);
+								}
+								else if (s.StartsWith(RerecordCountHeader))
+								{
+									result.RerecordCount = ParseIntFromConfig(s);
+								}
+								else if (s.StartsWith(SaveStateCountHeader))
+								{
+									var savestateCount = ParseIntFromConfig(s);
 										
-										// Power-on movies seem to always have a savestate count equal to frames
-										if (savestateCount > 0 && savestateCount != result.Frames)
-										{
-											result.StartType = MovieStartType.Savestate;
-										}
-									}
-									else if (s.StartsWith(FrameRateDenHeader))
+									// Power-on movies seem to always have a savestate count equal to frames
+									if (savestateCount > 0 && savestateCount != result.Frames)
 									{
-										frameRateDenominator = ParseDoubleFromConfig(s);
-									}
-									else if (s.StartsWith(FrameRateNumHeader))
-									{
-										frameRateNumerator = ParseDoubleFromConfig(s);
+										result.StartType = MovieStartType.Savestate;
 									}
 								}
+								else if (s.StartsWith(FrameRateDenHeader))
+								{
+									frameRateDenominator = ParseDoubleFromConfig(s);
+								}
+								else if (s.StartsWith(FrameRateNumHeader))
+								{
+									frameRateNumerator = ParseDoubleFromConfig(s);
+								}
+							}
 
-								break;
-						}
-
-						entry.SkipEntry(); // seems to be required if the stream was not fully consumed
+							break;
 					}
+
+					entry.SkipEntry(); // seems to be required if the stream was not fully consumed
 				}
 			}
 

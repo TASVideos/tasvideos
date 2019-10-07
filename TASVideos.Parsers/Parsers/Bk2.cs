@@ -35,79 +35,77 @@ namespace TASVideos.MovieParsers.Parsers
 
 			using (var stream = headerEntry.Open())
 			{
-				using (var reader = new StreamReader(stream))
+				using var reader = new StreamReader(stream);
+				var header = reader
+					.ReadToEnd()
+					.LineSplit();
+
+				string platform = header.GetValueFor(Keys.Platform);
+				if (string.IsNullOrWhiteSpace(platform))
 				{
-					var header = reader
-						.ReadToEnd()
-						.LineSplit();
-
-					string platform = header.GetValueFor(Keys.Platform);
-					if (string.IsNullOrWhiteSpace(platform))
-					{
-						return Error("Could not determine the System Code");
-					}
-
-					int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
-					if (rerecordVal.HasValue)
-					{
-						result.RerecordCount = rerecordVal.Value;
-					}
-					else
-					{
-						result.WarnNoRerecords();
-					}
-
-					// Some biz system ids do not match tasvideos, convert if needed
-					if (BizToTasvideosSystemIds.ContainsKey(platform))
-					{
-						platform = BizToTasvideosSystemIds[platform];
-					}
-
-					// Check various subsystem flags
-					if (header.GetValueFor(Keys.Mode32X).ToBool())
-					{
-						platform = SystemCodes.X32;
-					}
-					else if (header.GetValueFor(Keys.ModeCgb).ToBool())
-					{
-						platform = SystemCodes.Gbc;
-					}
-					else if (header.GetValueFor(Keys.Board) == SystemCodes.Fds)
-					{
-						platform = SystemCodes.Fds;
-					}
-					else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
-					{
-						platform = SystemCodes.SegaCd;
-					}
-					else if (header.GetValueFor(Keys.ModeGg).ToBool())
-					{
-						platform = SystemCodes.Gg;
-					}
-					else if (header.GetValueFor(Keys.ModeSg).ToBool())
-					{
-						platform = SystemCodes.Sg;
-					}
-
-					result.SystemCode = platform;
-
-					if (header.GetValueFor(Keys.Pal).ToBool())
-					{
-						result.Region = RegionType.Pal;
-					}
-
-					if (header.GetValueFor(Keys.StartsFromSavestate).ToBool())
-					{
-						result.StartType = MovieStartType.Savestate;
-					}
-					else if (header.GetValueFor(Keys.StartsFromSram).ToBool())
-					{
-						result.StartType = MovieStartType.Sram;
-					}
-
-					vBlankCount = header.GetValueFor(Keys.VBlankCount).ToInt();
-					core = header.GetValueFor(Keys.Core);
+					return Error("Could not determine the System Code");
 				}
+
+				int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
+				if (rerecordVal.HasValue)
+				{
+					result.RerecordCount = rerecordVal.Value;
+				}
+				else
+				{
+					result.WarnNoRerecords();
+				}
+
+				// Some biz system ids do not match tasvideos, convert if needed
+				if (BizToTasvideosSystemIds.ContainsKey(platform))
+				{
+					platform = BizToTasvideosSystemIds[platform];
+				}
+
+				// Check various subsystem flags
+				if (header.GetValueFor(Keys.Mode32X).ToBool())
+				{
+					platform = SystemCodes.X32;
+				}
+				else if (header.GetValueFor(Keys.ModeCgb).ToBool())
+				{
+					platform = SystemCodes.Gbc;
+				}
+				else if (header.GetValueFor(Keys.Board) == SystemCodes.Fds)
+				{
+					platform = SystemCodes.Fds;
+				}
+				else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
+				{
+					platform = SystemCodes.SegaCd;
+				}
+				else if (header.GetValueFor(Keys.ModeGg).ToBool())
+				{
+					platform = SystemCodes.Gg;
+				}
+				else if (header.GetValueFor(Keys.ModeSg).ToBool())
+				{
+					platform = SystemCodes.Sg;
+				}
+
+				result.SystemCode = platform;
+
+				if (header.GetValueFor(Keys.Pal).ToBool())
+				{
+					result.Region = RegionType.Pal;
+				}
+
+				if (header.GetValueFor(Keys.StartsFromSavestate).ToBool())
+				{
+					result.StartType = MovieStartType.Savestate;
+				}
+				else if (header.GetValueFor(Keys.StartsFromSram).ToBool())
+				{
+					result.StartType = MovieStartType.Sram;
+				}
+
+				vBlankCount = header.GetValueFor(Keys.VBlankCount).ToInt();
+				core = header.GetValueFor(Keys.Core);
 			}
 
 			var inputLog = archive.Entry(InputFile);
@@ -118,13 +116,11 @@ namespace TASVideos.MovieParsers.Parsers
 
 			using (var stream = inputLog.Open())
 			{
-				using (var reader = new StreamReader(stream))
-				{
-					result.Frames = reader
-						.ReadToEnd()
-						.LineSplit()
-						.PipeCount();
-				}
+				using var reader = new StreamReader(stream);
+				result.Frames = reader
+					.ReadToEnd()
+					.LineSplit()
+					.PipeCount();
 			}
 
 			if (core?.ToLower() == "subneshawk")
