@@ -12,49 +12,47 @@ namespace TASVideos.MovieParsers.Parsers
 
 		public IParseResult Parse(Stream file)
 		{
-			using (var reader = new StreamReader(file))
+			using var reader = new StreamReader(file);
+			var result = new ParseResult
 			{
-				var result = new ParseResult
-				{
-					Region = RegionType.Ntsc,
-					FileExtension = FileExtension,
-					SystemCode = SystemCodes.Nes
-				};
+				Region = RegionType.Ntsc,
+				FileExtension = FileExtension,
+				SystemCode = SystemCodes.Nes
+			};
 
-				var lines = reader.ReadToEnd().LineSplit();
-				var header = lines
-					.WithoutPipes()
-					.ToArray();
+			var lines = reader.ReadToEnd().LineSplit();
+			var header = lines
+				.WithoutPipes()
+				.ToArray();
 
-				if (header.GetValueFor(Keys.Fds).ToBool())
-				{
-					result.SystemCode = SystemCodes.Fds;
-				}
-
-				int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
-				if (rerecordVal.HasValue)
-				{
-					result.RerecordCount = rerecordVal.Value;
-				}
-				else
-				{
-					result.WarnNoRerecords();
-				}
-
-				if (header.GetValueFor(Keys.Pal).ToBool())
-				{
-					result.Region = RegionType.Pal;
-				}
-
-				if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
-				{
-					result.StartType = MovieStartType.Savestate;
-				}
-
-				result.Frames = lines.PipeCount();
-
-				return result;
+			if (header.GetValueFor(Keys.Fds).ToBool())
+			{
+				result.SystemCode = SystemCodes.Fds;
 			}
+
+			int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
+			if (rerecordVal.HasValue)
+			{
+				result.RerecordCount = rerecordVal.Value;
+			}
+			else
+			{
+				result.WarnNoRerecords();
+			}
+
+			if (header.GetValueFor(Keys.Pal).ToBool())
+			{
+				result.Region = RegionType.Pal;
+			}
+
+			if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
+			{
+				result.StartType = MovieStartType.Savestate;
+			}
+
+			result.Frames = lines.PipeCount();
+
+			return result;
 		}
 
 		private static class Keys

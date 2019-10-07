@@ -13,44 +13,42 @@ namespace TASVideos.MovieParsers.Parsers
 
 		public IParseResult Parse(Stream file)
 		{
-			using (var reader = new StreamReader(file))
+			using var reader = new StreamReader(file);
+			var result = new ParseResult
 			{
-				var result = new ParseResult
-				{
-					Region = RegionType.Ntsc,
-					FileExtension = FileExtension,
-					SystemCode = SystemCodes.Ds
-				};
+				Region = RegionType.Ntsc,
+				FileExtension = FileExtension,
+				SystemCode = SystemCodes.Ds
+			};
 
-				var lines = reader.ReadToEnd().LineSplit();
-				var header = lines
-					.WithoutPipes()
-					.ToArray();
+			var lines = reader.ReadToEnd().LineSplit();
+			var header = lines
+				.WithoutPipes()
+				.ToArray();
 
-				result.Frames = lines.PipeCount();
+			result.Frames = lines.PipeCount();
 
-				int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
-				if (rerecordVal.HasValue)
-				{
-					result.RerecordCount = rerecordVal.Value;
-				}
-				else
-				{
-					result.WarningList.Add(ParseWarnings.MissingRerecordCount);
-				}
-
-				if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
-				{
-					result.StartType = MovieStartType.Savestate;
-				}
-
-				if (header.GetValueFor(Keys.StartsFromSram).Length > 1)
-				{
-					result.StartType = MovieStartType.Sram;
-				}
-
-				return result;
+			int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
+			if (rerecordVal.HasValue)
+			{
+				result.RerecordCount = rerecordVal.Value;
 			}
+			else
+			{
+				result.WarningList.Add(ParseWarnings.MissingRerecordCount);
+			}
+
+			if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
+			{
+				result.StartType = MovieStartType.Savestate;
+			}
+
+			if (header.GetValueFor(Keys.StartsFromSram).Length > 1)
+			{
+				result.StartType = MovieStartType.Sram;
+			}
+
+			return result;
 		}
 
 		private static class Keys

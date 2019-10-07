@@ -35,27 +35,23 @@ namespace TASVideos.MovieParsers
 		{
 			try
 			{
-				using (var zip = new ZipArchive(stream))
+				using var zip = new ZipArchive(stream);
+				if (zip.Entries.Count > 1)
 				{
-					if (zip.Entries.Count > 1)
-					{
-						return Error("Multiple files detected in the .zip, only one file is allowed");
-					}
-
-					var movieFile = zip.Entries[0];
-					var ext = Path.GetExtension(movieFile.Name).Trim('.').ToLower();
-
-					var parser = GetParser(ext);
-					if (parser == null)
-					{
-						return Error($".{ext} files are not currently supported.");
-					}
-
-					using (var movieFileStream = movieFile.Open())
-					{
-						return parser.Parse(movieFileStream);
-					}
+					return Error("Multiple files detected in the .zip, only one file is allowed");
 				}
+
+				var movieFile = zip.Entries[0];
+				var ext = Path.GetExtension(movieFile.Name).Trim('.').ToLower();
+
+				var parser = GetParser(ext);
+				if (parser == null)
+				{
+					return Error($".{ext} files are not currently supported.");
+				}
+
+				using var movieFileStream = movieFile.Open();
+				return parser.Parse(movieFileStream);
 			}
 			catch (Exception)
 			{

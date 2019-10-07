@@ -52,85 +52,79 @@ namespace TASVideos.MovieParsers.Parsers
 
 			using (var stream = gameTypeFile.Open())
 			{
-				using (var reader = new StreamReader(stream))
-				{
-					var line = reader
-						.ReadToEnd()
-						.LineSplit()
-						.FirstOrDefault();
+				using var reader = new StreamReader(stream);
+				var line = reader
+					.ReadToEnd()
+					.LineSplit()
+					.FirstOrDefault();
 
-					if (line != null)
+				if (line != null)
+				{
+					switch (line.ToLower())
 					{
-						switch (line?.ToLower())
-						{
-							default:
-								DefaultGameType(result);
-								break;
-							case "snes_ntsc":
-							case "bsx":
-							case "bsxslotted":
-							case "sufamiturbo":
-								result.SystemCode = SystemCodes.Snes;
-								result.Region = RegionType.Ntsc;
-								break;
-							case "snes_pal":
-								result.SystemCode = SystemCodes.Snes;
-								result.Region = RegionType.Pal;
-								break;
-							case "sgb_ntsc":
-								result.SystemCode = SystemCodes.Sgb;
-								result.Region = RegionType.Ntsc;
-								break;
-							case "sgb_pal":
-								result.SystemCode = SystemCodes.Sgb;
-								result.Region = RegionType.Pal;
-								break;
-							case "gdmg":
-								result.SystemCode = SystemCodes.GameBoy;
-								result.Region = RegionType.Ntsc;
-								break;
-							case "ggbc":
-							case "ggbca":
-								result.SystemCode = SystemCodes.Gbc;
-								result.Region = RegionType.Ntsc;
-								break;
-						}
+						default:
+							DefaultGameType(result);
+							break;
+						case "snes_ntsc":
+						case "bsx":
+						case "bsxslotted":
+						case "sufamiturbo":
+							result.SystemCode = SystemCodes.Snes;
+							result.Region = RegionType.Ntsc;
+							break;
+						case "snes_pal":
+							result.SystemCode = SystemCodes.Snes;
+							result.Region = RegionType.Pal;
+							break;
+						case "sgb_ntsc":
+							result.SystemCode = SystemCodes.Sgb;
+							result.Region = RegionType.Ntsc;
+							break;
+						case "sgb_pal":
+							result.SystemCode = SystemCodes.Sgb;
+							result.Region = RegionType.Pal;
+							break;
+						case "gdmg":
+							result.SystemCode = SystemCodes.GameBoy;
+							result.Region = RegionType.Ntsc;
+							break;
+						case "ggbc":
+						case "ggbca":
+							result.SystemCode = SystemCodes.Gbc;
+							result.Region = RegionType.Ntsc;
+							break;
 					}
-					else
-					{
-						DefaultGameType(result);
-					}
+				}
+				else
+				{
+					DefaultGameType(result);
 				}
 			}
 
 			var rerecordCountFile = archive.Entry(RerecordFile);
 			if (rerecordCountFile != null)
 			{
-				using (var stream = rerecordCountFile.Open())
-				{
-					using (var reader = new StreamReader(stream))
-					{
-						var line = reader
-							.ReadToEnd()
-							.LineSplit()
-							.FirstOrDefault();
+				using var stream = rerecordCountFile.Open();
+				using var reader = new StreamReader(stream);
+				var line = reader
+					.ReadToEnd()
+					.LineSplit()
+					.FirstOrDefault();
 
-						if (line == null)
-						{
-							result.WarnNoRerecords();
-						}
-						else
-						{
-							var parseResult = int.TryParse(line, out int rerecords);
-							if (parseResult)
-							{
-								result.RerecordCount = rerecords;
-							}
-							else
-							{
-								result.WarnNoRerecords();
-							}
-						}
+				if (line == null)
+				{
+					result.WarnNoRerecords();
+				}
+				else
+				{
+					var parseResult = int.TryParse(line, out int rerecords);
+					if (parseResult)
+					{
+						result.RerecordCount = rerecords;
+					}
+					else
+					{
+						result.WarnNoRerecords();
 					}
 				}
 			}
@@ -147,13 +141,11 @@ namespace TASVideos.MovieParsers.Parsers
 
 			using (var stream = inputLog.Open())
 			{
-				using (var reader = new StreamReader(stream))
-				{
-					result.Frames = reader
-						.ReadToEnd()
-						.LineSplit()
-						.Count(i => i.StartsWith("F"));
-				}
+				using var reader = new StreamReader(stream);
+				result.Frames = reader
+					.ReadToEnd()
+					.LineSplit()
+					.Count(i => i.StartsWith("F"));
 			}
 
 			return result;
