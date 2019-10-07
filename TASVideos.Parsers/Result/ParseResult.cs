@@ -11,10 +11,10 @@ namespace TASVideos.MovieParsers.Result
 		public IEnumerable<string> Errors => ErrorList;
 		public IEnumerable<ParseWarnings> Warnings => WarningList;
 
-		public string FileExtension { get; internal set; }
+		public string FileExtension { get; internal set; } = "";
 		public RegionType Region { get; internal set; }
 		public int Frames { get; internal set; }
-		public string SystemCode { get; internal set; }
+		public string SystemCode { get; internal set; } = "";
 		public int RerecordCount { get; internal set; }
 		public MovieStartType StartType { get; internal set; }
 		public double? FrameRateOverride { get; internal set; }
