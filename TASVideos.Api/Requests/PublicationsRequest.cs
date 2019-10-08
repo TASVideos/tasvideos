@@ -11,12 +11,12 @@ namespace TASVideos.Api.Requests
 		/// <summary>
 		/// Gets or sets the system codes to filter by
 		/// </summary>
-		public string Systems { get; set; }
+		public string? Systems { get; set; }
 
 		/// <summary>
 		/// Gets or sets the publication tier codes to filter by
 		/// </summary>
-		public string TierNames { get; set; }
+		public string? TierNames { get; set; }
 
 		/// <summary>
 		/// Gets or sets the start year to filter by
@@ -31,22 +31,22 @@ namespace TASVideos.Api.Requests
 		/// <summary>
 		/// Gets or sets the game genres to filter by
 		/// </summary>
-		public string GenreNames { get; set; }
+		public string? GenreNames { get; set; }
 
 		/// <summary>
 		/// Gets or sets the publication flags names to filter by
 		/// </summary>
-		public string TagNames { get; set; }
+		public string? TagNames { get; set; }
 
 		/// <summary>
 		/// Gets or sets the publication flags names to filter by
 		/// </summary>
-		public string FlagNames { get; set; }
+		public string? FlagNames { get; set; }
 
 		/// <summary>
 		/// Gets or sets the author ids filter by
 		/// </summary>
-		public string AuthorIds { get; set; }
+		public string? AuthorIds { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether or not to show obsoleted movies
