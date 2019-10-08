@@ -86,9 +86,9 @@ namespace TASVideos.Data
 
 		private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string column, bool thenBy)
 		{
-			bool desc = column.StartsWith("-");
+			bool desc = column?.StartsWith("-") ?? false;
 
-			column = column.Trim('-').Trim('+')?.ToLower();
+			column = column?.Trim('-').Trim('+')?.ToLower() ?? "";
 
 			var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
 			
@@ -119,13 +119,18 @@ namespace TASVideos.Data
 			// https://stackoverflow.com/questions/34899933/sorting-using-property-name-as-string
 			// LAMBDA: x => x.[PropertyName]
 			var parameter = Expression.Parameter(typeof(T), "x");
-			Expression property = Expression.Property(parameter, column ?? "");
+			Expression property = Expression.Property(parameter, column);
 			var lambda = Expression.Lambda(property, parameter);
 
 			// REFLECTION: source.OrderBy(x => x.Property)
 			var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == orderBy && x.GetParameters().Length == 2);
 			var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(T), property.Type);
 			var result = orderByGeneric.Invoke(null, new object[] { query, lambda });
+
+			if (result == null)
+			{
+				return Enumerable.Empty<T>().AsQueryable();
+			}
 
 			return (IQueryable<T>)result;
 		}

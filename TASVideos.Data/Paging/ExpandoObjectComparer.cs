@@ -42,17 +42,17 @@ namespace TASVideos.Data
 				var xValueItem = keyValue.Value;
 				var yValueItem = yKeyValues[key];
 
-				if (xValueItem == null & yValueItem != null)
+				if (xValueItem == null && yValueItem != null)
 				{
 					return false;
 				}
 
-				if (xValueItem != null & yValueItem == null)
+				if (xValueItem != null && yValueItem == null)
 				{
 					return false;
 				}
 
-				if (xValueItem != null & yValueItem != null)
+				if (xValueItem != null)
 				{
 					if (!xValueItem.Equals(yValueItem))
 					{
@@ -70,12 +70,9 @@ namespace TASVideos.Data
 
 			int GetHash(object item)
 			{
-				if (item == null)
-				{
-					return 0;
-				}
-
-				return item.GetHashCode();
+				return item == null
+					? 0
+					: item.GetHashCode();
 			}
 
 			var fieldValues = new Dictionary<string, object>(obj);

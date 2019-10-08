@@ -33,7 +33,7 @@ namespace TASVideos.Data
 			}
 
 			return source
-				.Select(s => s.FieldSelect(fields?.Fields))
+				.Select(s => s.FieldSelect(fields.Fields))
 				.Distinct(ExpandoObjectComparer.Default());
 		}
 
@@ -62,7 +62,7 @@ namespace TASVideos.Data
 			{
 				var property = typeof(T)
 					.GetProperties()
-					.FirstOrDefault(p => p.Name.ToLower() == column?.ToLower());
+					.FirstOrDefault(p => p.Name.ToLower() == column.ToLower());
 				if (property != null)
 				{
 					dict[property.Name] = property.GetValue(obj);

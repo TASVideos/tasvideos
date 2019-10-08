@@ -90,7 +90,7 @@ namespace TASVideos.Data.Entity
 		// De-normalized name for easy recreation
 		public string Title { get; set; }
 
-		double ITimeable.FrameRate => SystemFrameRate.FrameRate; 
+		double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!"); 
 
 		public void GenerateTitle()
 		{
@@ -99,6 +99,16 @@ namespace TASVideos.Data.Entity
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
 			{
 				authorList = authorList.Concat(AdditionalAuthors.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries));
+			}
+
+			if (System == null)
+			{
+				throw new InvalidOperationException($"{nameof(System)} must not be lazy loaded!");
+			}
+
+			if (Game == null)
+			{
+				throw new InvalidOperationException($"{nameof(Game)} must not be lazy loaded!");
 			}
 
 			Title =
