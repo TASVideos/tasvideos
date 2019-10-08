@@ -32,7 +32,7 @@ namespace TASVideos.Api.Requests
 		/// If not specified then a default sort will be used.
 		/// </summary>
 		[StringLength(200)]
-		public string Sort { get; set; }
+		public string? Sort { get; set; }
 
 		/// <summary>
 		/// Gets or sets the fields to return.
@@ -40,7 +40,7 @@ namespace TASVideos.Api.Requests
 		/// If not specified, then all fields will be returned.
 		/// </summary>
 		[StringLength(200)]
-		public string Fields { get; set; }
+		public string? Fields { get; set; }
 	}
 
 	/// <summary>

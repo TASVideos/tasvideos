@@ -12,7 +12,7 @@ namespace TASVideos.Api
 		/// <summary>
 		/// Takes a comma separated string and returns a list of values
 		/// </summary>
-		public static IEnumerable<string> CsvToStrings(this string param)
+		public static IEnumerable<string> CsvToStrings(this string? param)
 		{
 			if (string.IsNullOrWhiteSpace(param))
 			{
@@ -25,7 +25,7 @@ namespace TASVideos.Api
 		/// <summary>
 		/// Takes a comma separated string and returns a list of values
 		/// </summary>
-		public static IEnumerable<int> CsvToInts(this string param)
+		public static IEnumerable<int> CsvToInts(this string? param)
 		{
 			if (string.IsNullOrWhiteSpace(param))
 			{

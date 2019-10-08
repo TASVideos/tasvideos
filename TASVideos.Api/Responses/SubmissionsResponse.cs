@@ -11,22 +11,22 @@ namespace TASVideos.Api.Responses
 		public int Id { get; set; }
 
 		[Sortable]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		[Sortable]
-		public string Tier { get; set; }
+		public string Tier { get; set; } = "";
 
 		[Sortable]
-		public string Judge { get; set; }
+		public string Judge { get; set; } = "";
 
 		[Sortable]
-		public string Publisher { get; set; }
+		public string Publisher { get; set; } = "";
 
 		[Sortable]
-		public string Status { get; set; }
+		public string Status { get; set; } = "";
 
 		[Sortable]
-		public string MovieExtension { get; set; }
+		public string MovieExtension { get; set; } = "";
 
 		[Sortable]
 		public int? GameId { get; set; }
@@ -35,7 +35,7 @@ namespace TASVideos.Api.Responses
 		public int? RomId { get; set; }
 
 		[Sortable]
-		public string SystemCode { get; set; }
+		public string SystemCode { get; set; } = "";
 
 		[Sortable]
 		public double? SystemFrameRate { get; set; }
@@ -47,22 +47,22 @@ namespace TASVideos.Api.Responses
 		public int RerecordCount { get; set; }
 
 		[Sortable]
-		public string EncodeEmbedLink { get; set; }
+		public string EncodeEmbedLink { get; set; } = "";
 
 		[Sortable]
-		public string GameVersion { get; set; }
+		public string GameVersion { get; set; } = "";
 
 		[Sortable]
-		public string GameName { get; set; }
+		public string GameName { get; set; } = "";
 
 		[Sortable]
-		public string Branch { get; set; }
+		public string Branch { get; set; } = "";
 
 		[Sortable]
-		public string RomName { get; set; }
+		public string RomName { get; set; } = "";
 		
 		[Sortable]
-		public string EmulatorVersion { get; set; }
+		public string EmulatorVersion { get; set; } = "";
 
 		[Sortable]
 		public int? MovieStartType { get; set; }

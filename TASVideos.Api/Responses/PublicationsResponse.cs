@@ -14,19 +14,19 @@ namespace TASVideos.Api.Responses
 		public int Id { get; set; }
 
 		[Sortable]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		[Sortable]
-		public string Branch { get; set; }
+		public string Branch { get; set; } = "";
 
 		[Sortable]
-		public string EmulatorVersion { get; set; }
+		public string EmulatorVersion { get; set; } = "";
 
 		[Sortable]
-		public string Tier { get; set; }
+		public string Tier { get; set; } = "";
 
 		[Sortable]
-		public string SystemCode { get; set; }
+		public string SystemCode { get; set; } = "";
 
 		[Sortable]
 		public int SubmissionId { get; set; }
@@ -50,7 +50,7 @@ namespace TASVideos.Api.Responses
 		public double SystemFrameRate { get; set; }
 
 		[Sortable]
-		public string MovieFileName { get; set; }
+		public string MovieFileName { get; set; } = "";
 
 		public IEnumerable<string> Authors { get; set; } = new string[0];
 		public IEnumerable<string> Tags { get; set; } = new string[0];
