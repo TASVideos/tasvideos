@@ -110,7 +110,7 @@ namespace TASVideos.Pages.Forum.Topics
 					IsLastPost = p.Id == lastPostId,
 				})
 				.OrderBy(p => p.CreateTimestamp)
-				.PageOf(_db, Search);
+				.PageOf(Search);
 
 			foreach (var post in Topic.Posts)
 			{

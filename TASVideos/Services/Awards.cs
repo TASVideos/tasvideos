@@ -79,71 +79,68 @@ namespace TASVideos.Services
 			}
 
 			// TODO: optimize these with EF 2.1, 2.0 is so bad with GroupBy that it is hopeless
-			using (await _db.Database.BeginTransactionAsync())
-			{
-				var userAwards = await _db.UserAwards
-					.GroupBy(
-						gkey => new
-						{
-							gkey.Award.Description, gkey.Award.ShortName, gkey.Year
-						}, 
-						gvalue => new AwardAssignment.UserDto
-						{
-							Id = gvalue.UserId, UserName = gvalue.User.UserName
-						})
-					.Select(g => new AwardAssignment
+			var userAwards = await _db.UserAwards
+				.GroupBy(
+					gkey => new
 					{
-						ShortName = g.Key.ShortName,
-						Description = g.Key.Description + " of " + g.Key.Year.ToString(),
-						Year = g.Key.Year,
-						Type = AwardType.User,
-						Publications = Enumerable.Empty<AwardAssignment.PublicationDto>(),
-						Users = g.ToList()
+						gkey.Award.Description, gkey.Award.ShortName, gkey.Year
+					}, 
+					gvalue => new AwardAssignment.UserDto
+					{
+						Id = gvalue.UserId, UserName = gvalue.User.UserName
 					})
-					.ToListAsync();
+				.Select(g => new AwardAssignment
+				{
+					ShortName = g.Key.ShortName,
+					Description = g.Key.Description + " of " + g.Key.Year.ToString(),
+					Year = g.Key.Year,
+					Type = AwardType.User,
+					Publications = Enumerable.Empty<AwardAssignment.PublicationDto>(),
+					Users = g.ToList()
+				})
+				.ToListAsync();
 
-				var pubLists = await _db.PublicationAwards
-					.Include(pa => pa.Award)
-					.Include(pa => pa.Publication)
-					.ThenInclude(pa => pa.Authors)
-					.ThenInclude(a => a.Author)
-					.ToListAsync();
+			var pubLists = await _db.PublicationAwards
+				.Include(pa => pa.Award)
+				.Include(pa => pa.Publication)
+				.ThenInclude(pa => pa.Authors)
+				.ThenInclude(a => a.Author)
+				.ToListAsync();
 
-				var publicationAwards = pubLists
-					.GroupBy(
-						gkey => new
+			var publicationAwards = pubLists
+				.GroupBy(
+					gkey => new
+					{
+						gkey.Award.Description, gkey.Award.ShortName, gkey.Year
+					},
+					gvalue => new
+					{
+						Publication = new
 						{
-							gkey.Award.Description, gkey.Award.ShortName, gkey.Year
+							Id = gvalue.PublicationId,
+							gvalue.Publication.Title
 						},
-						gvalue => new
+						Users = gvalue.Publication.Authors.Select(a => new
 						{
-							Publication = new
-							{
-								Id = gvalue.PublicationId,
-								gvalue.Publication.Title
-							},
-							Users = gvalue.Publication.Authors.Select(a => new
-							{
-								a.UserId, a.Author.UserName
-							})
+							a.UserId, a.Author.UserName
 						})
-					.Select(g => new AwardAssignment
-					{
-						ShortName = g.Key.ShortName,
-						Description = g.Key.Description + " of " + g.Key.Year.ToString(),
-						Year = g.Key.Year,
-						Type = AwardType.Movie,
-						Publications = g.Select(gv => new AwardAssignment.PublicationDto { Id = gv.Publication.Id, Title  = gv.Publication.Title }).ToList(),
-						Users = g.SelectMany(gv => gv.Users).Select(u => new AwardAssignment.UserDto { Id = u.UserId, UserName = u.UserName }).ToList()
 					})
-					.ToList();
+				.Select(g => new AwardAssignment
+				{
+					ShortName = g.Key.ShortName,
+					Description = g.Key.Description + " of " + g.Key.Year.ToString(),
+					Year = g.Key.Year,
+					Type = AwardType.Movie,
+					Publications = g.Select(gv => new AwardAssignment.PublicationDto { Id = gv.Publication.Id, Title  = gv.Publication.Title }).ToList(),
+					Users = g.SelectMany(gv => gv.Users).Select(u => new AwardAssignment.UserDto { Id = u.UserId, UserName = u.UserName }).ToList()
+				})
+				.ToList();
 
-				var allAwards = userAwards.Concat(publicationAwards);
+			var allAwards = userAwards.Concat(publicationAwards);
 
-				_cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
+			_cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
 
-				return allAwards;
-			}
+			return allAwards;
 		}
 	}
 }

@@ -63,7 +63,7 @@ namespace TASVideos.Pages.Submissions
 			var entries = await _db.Submissions
 				.FilterBy(Search)
 				.ToSubListEntry()
-				.SortedPageOf(_db, Search);
+				.SortedPageOf(Search);
 
 			Submissions = new SubmissionPageOf<SubmissionListEntry>(entries)
 			{

@@ -103,21 +103,18 @@ namespace TASVideos.Pages.Publications
 				return cachedResult;
 			}
 
-			using (await _db.Database.BeginTransactionAsync())
+			var result = new PublicationSearchModel
 			{
-				var result = new PublicationSearchModel
-				{
-					Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
-					SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
-					Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(),
-					Genres = await _db.Genres.Select(g => g.DisplayName.ToLower()).ToListAsync(),
-					Flags = await _db.Flags.Select(f => f.Token.ToLower()).ToListAsync()
-				};
+				Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
+				SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
+				Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(),
+				Genres = await _db.Genres.Select(g => g.DisplayName.ToLower()).ToListAsync(),
+				Flags = await _db.Flags.Select(f => f.Token.ToLower()).ToListAsync()
+			};
 
-				_cache.Set(CacheKeys.MovieTokens, result);
+			_cache.Set(CacheKeys.MovieTokens, result);
 
-				return result;
-			}
+			return result;
 		}
 	}
 }

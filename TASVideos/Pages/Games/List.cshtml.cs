@@ -131,7 +131,7 @@ namespace TASVideos.Pages.Games
 					DisplayName = g.DisplayName,
 					SystemCode = g.System.Code
 				})
-				.SortedPageOf(_db, paging);
+				.SortedPageOf(paging);
 
 			return new SystemPageOf<GameListModel>(data)
 			{

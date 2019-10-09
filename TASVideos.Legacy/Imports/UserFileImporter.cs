@@ -22,64 +22,61 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			using (legacySiteContext.Database.BeginTransaction())
+			var userIdsByName = context.Users.ToDictionary(
+				user => user.UserName,
+				user => user.Id,
+				StringComparer.OrdinalIgnoreCase);
+
+			var userFiles = legacySiteContext.UserFiles
+				.Include(userFile => userFile.User)
+				.ToList()
+				.Select(userFile => Convert(userFile, userIdsByName))
+				.ToList();
+
+			var userFileComments = legacySiteContext.UserFileComments
+				.Include(comment => comment.User)
+				.Select(comment => Convert(comment, userIdsByName))
+				.ToList();
+
+			var userFileColumns = new[]
 			{
-				var userIdsByName = context.Users.ToDictionary(
-					user => user.UserName,
-					user => user.Id,
-					StringComparer.OrdinalIgnoreCase);
+				nameof(UserFile.AuthorId),
+				nameof(UserFile.Class),
+				nameof(UserFile.Content),
+				nameof(UserFile.Description),
+				nameof(UserFile.Downloads),
+				nameof(UserFile.FileName),
+				nameof(UserFile.Frames),
+				nameof(UserFile.GameId),
+				nameof(UserFile.Hidden),
+				nameof(UserFile.Id),
+				nameof(UserFile.Length),
+				nameof(UserFile.LogicalLength),
+				nameof(UserFile.PhysicalLength),
+				nameof(UserFile.Rerecords),
+				nameof(UserFile.SystemId),
+				nameof(UserFile.Title),
+				nameof(UserFile.Type),
+				nameof(UserFile.UploadTimestamp),
+				nameof(UserFile.Views),
+				nameof(UserFile.Warnings),
+				nameof(UserFile.CompressionType)
+			};
 
-				var userFiles = legacySiteContext.UserFiles
-					.Include(userFile => userFile.User)
-					.ToList()
-					.Select(userFile => Convert(userFile, userIdsByName))
-					.ToList();
+			var userFileCommentColumns = new[]
+			{
+				nameof(UserFileComment.CreationTimeStamp),
+				nameof(UserFileComment.Id),
+				nameof(UserFileComment.Ip),
+				nameof(UserFileComment.ParentId),
+				nameof(UserFileComment.Text),
+				nameof(UserFileComment.Title),
+				nameof(UserFileComment.UserId),
+				nameof(UserFileComment.UserFileId)
+			};
 
-				var userFileComments = legacySiteContext.UserFileComments
-					.Include(comment => comment.User)
-					.Select(comment => Convert(comment, userIdsByName))
-					.ToList();
-
-				var userFileColumns = new[]
-				{
-					nameof(UserFile.AuthorId),
-					nameof(UserFile.Class),
-					nameof(UserFile.Content),
-					nameof(UserFile.Description),
-					nameof(UserFile.Downloads),
-					nameof(UserFile.FileName),
-					nameof(UserFile.Frames),
-					nameof(UserFile.GameId),
-					nameof(UserFile.Hidden),
-					nameof(UserFile.Id),
-					nameof(UserFile.Length),
-					nameof(UserFile.LogicalLength),
-					nameof(UserFile.PhysicalLength),
-					nameof(UserFile.Rerecords),
-					nameof(UserFile.SystemId),
-					nameof(UserFile.Title),
-					nameof(UserFile.Type),
-					nameof(UserFile.UploadTimestamp),
-					nameof(UserFile.Views),
-					nameof(UserFile.Warnings),
-					nameof(UserFile.CompressionType)
-				};
-
-				var userFileCommentColumns = new[]
-				{
-					nameof(UserFileComment.CreationTimeStamp),
-					nameof(UserFileComment.Id),
-					nameof(UserFileComment.Ip),
-					nameof(UserFileComment.ParentId),
-					nameof(UserFileComment.Text),
-					nameof(UserFileComment.Title),
-					nameof(UserFileComment.UserId),
-					nameof(UserFileComment.UserFileId)
-				};
-
-				userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles), SqlBulkCopyOptions.KeepIdentity, 10000, 600);
-				userFileComments.BulkInsert(connectionStr, userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
-			}
+			userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles), SqlBulkCopyOptions.KeepIdentity, 10000, 600);
+			userFileComments.BulkInsert(connectionStr, userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
 		}
 
 		private static UserFileComment Convert(

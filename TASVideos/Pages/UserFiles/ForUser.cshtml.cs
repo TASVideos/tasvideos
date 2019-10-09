@@ -36,7 +36,7 @@ namespace TASVideos.Pages.UserFiles
 				.ForAuthor(UserName)
 				.FilterByHidden(includeHidden: false)
 				.ProjectTo<UserFileModel>()
-				.PageOf(_db, Search);
+				.PageOf(Search);
 		}
 	}
 }
