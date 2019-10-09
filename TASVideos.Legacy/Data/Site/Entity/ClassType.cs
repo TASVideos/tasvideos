@@ -10,13 +10,13 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Id { get; set; }
 		
 		[Column("abbr")]
-		public string Abbreviation { get; set; }
+		public string Abbreviation { get; set; } = "";
 
 		[Column("positivetext")]
-	    public string PositiveText { get; set; }
+	    public string PositiveText { get; set; } = "";
 
 		[Column("negativetext")]
-		public string NegativeText { get; set; }
+		public string NegativeText { get; set; } = "";
 
 		[Column("old_id")]
 		public int OldId { get; set; }

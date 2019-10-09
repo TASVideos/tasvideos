@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Site.Entity
 {
-    public class Movie
-    {
+	public class Movie
+	{
 		[Key]
 		[Column("id")]
 		public int Id { get; set; }
@@ -17,10 +17,10 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int GameId { get; set; } = 0;
 
 		[Column("nickname")]
-		public string Branch { get; set; }
+		public string Branch { get; set; } = "";
 
 		[Column("gameversion")]
-		public string GameVersion { get; set; }
+		public string GameVersion { get; set; } = "";
 
 		[Column("systemid")]
 		public int SystemId { get; set; }

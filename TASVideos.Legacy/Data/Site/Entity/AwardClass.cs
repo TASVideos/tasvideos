@@ -10,12 +10,12 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Id { get; set; }
 
 		[Column("awardclass")]
-		public string Class { get; set; }
+		public string Class { get; set; } = "";
 
 		[Column("shortname")]
-		public string ShortName { get; set; }
+		public string ShortName { get; set; } = "";
 
 		[Column("description")]
-		public string Description { get; set; }
+		public string Description { get; set; } = "";
     }
 }

@@ -20,19 +20,19 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int SystemId { get; set; }
 
 		[Column("gamename")]
-		public string GameName { get; set; }
+		public string GameName { get; set; } = "";
 
 		[Column("gameversion")]
-		public string GameVersion { get; set; }
+		public string GameVersion { get; set; } = "";
 
 		[Column("romname")]
-		public string RomName { get; set; }
+		public string RomName { get; set; } = "";
 
 		[Column("authornick")]
-		public string Author { get; set; }
+		public string Author { get; set; } = "";
 
 		[Column("authorname")]
-		public string RealName { get; set; }
+		public string RealName { get; set; } = "";
 
 		[Column("frames")]
 		public int Frames { get; set; }
@@ -44,16 +44,16 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Rerecord { get; set; }
 
 		[Column("alerts")]
-		public string Alerts { get; set; }
+		public string? Alerts { get; set; }
 
 		[Column("status")]
-		public string Status { get; set; }
+		public string Status { get; set; } = "";
 
 		[Column("statusby")]
-		public string StatusBy { get; set; }
+		public string StatusBy { get; set; } = "";
 
 		[Column("content")]
-		public byte[] Content { get; set; }
+		public byte[]? Content { get; set; }
 
 		[Column("subdate")]
 		public int SubmissionDate { get; set; }
@@ -70,7 +70,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int? GameNameId { get; set; }
 
 		[Column("emuversion")]
-		public string EmulatorVersion { get; set; }
+		public string? EmulatorVersion { get; set; }
 
 		[Column("intended_tier")]
 		public int? IntendedTier { get; set; }

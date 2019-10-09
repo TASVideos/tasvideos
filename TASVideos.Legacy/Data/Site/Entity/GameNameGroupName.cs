@@ -8,9 +8,9 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Id { get; set; }
 
 		[Column("name")]
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 
 		[Column("searchKey")]
-		public string SearchKey { get; set; }
+		public string SearchKey { get; set; } = "";
 	}
 }

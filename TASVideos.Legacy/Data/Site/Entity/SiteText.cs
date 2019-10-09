@@ -16,7 +16,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Required]
 		[Column("pagename")]
-		public string PageName { get; set; }
+		public string PageName { get; set; } = "";
 
 		[Column("minoredit")]
 		[StringLength(1)]
@@ -24,7 +24,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Required]
 		[Column("whyedit")]
-		public string WhyEdit { get; set; }
+		public string WhyEdit { get; set; } = "";
 
 		[Column("revision")]
 		public int Revision { get; set; } = 1;
@@ -38,7 +38,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Required]
 		[Column("description")]
-		public string Description { get; set; }
+		public string Description { get; set; } = "";
 
 		[Column("obsoleted_by")]
 		public int? ObsoletedBy { get; set; }
