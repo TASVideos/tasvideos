@@ -22,9 +22,9 @@ namespace TASVideos.Data.Entity
 		public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
 		public DateTime CreateTimeStamp { get; set; } = DateTime.UtcNow;
-		public string CreateUserName { get; set; }
+		public string? CreateUserName { get; set; }
 		public DateTime LastUpdateTimeStamp { get; set; } = DateTime.UtcNow;
-		public string LastUpdateUserName { get; set; }
+		public string? LastUpdateUserName { get; set; }
 
 		[StringLength(250)]
 		public string Avatar { get; set; }
