@@ -16,8 +16,8 @@ namespace TASVideos.Test.Services
 	{
 		private const string SystemLanguageMarkup = "EN:English,ES:Español";
 
-		private Mock<IWikiPages> _wikiPages;
-		private Languages _languages;
+		private Mock<IWikiPages> _wikiPages = null!;
+		private Languages _languages = null!;
 
 		[TestInitialize]
 		public void Initialize()

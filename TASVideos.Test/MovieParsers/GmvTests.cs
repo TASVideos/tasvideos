@@ -12,7 +12,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("GmvParsers")]
 	public class GmvTests : BaseParserTests
 	{
-		private Gmv _gmvParser;
+		private Gmv _gmvParser = null!;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.GmvSampleFiles.";
 

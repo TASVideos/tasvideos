@@ -12,7 +12,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("LsmvParsers")]
 	public class LsmvTests : BaseParserTests
 	{
-		private Lsmv _lsmvParser;
+		private Lsmv _lsmvParser = null!;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.LsmvSampleFiles.";
 

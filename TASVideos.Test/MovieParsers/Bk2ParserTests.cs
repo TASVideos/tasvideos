@@ -13,7 +13,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("BK2Parsers")]
 	public class Bk2ParserTests : BaseParserTests
 	{
-		private Bk2 _bk2Parser;
+		private Bk2 _bk2Parser = null!;
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.Bk2SampleFiles.";
 
 		[TestInitialize]

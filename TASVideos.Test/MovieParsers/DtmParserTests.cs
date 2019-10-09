@@ -13,7 +13,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("DtmParsers")]
 	public class DtmParserTests : BaseParserTests
 	{
-		private Dtm _dtmParser;
+		private Dtm _dtmParser = null!;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.DtmSampleFiles.";
 

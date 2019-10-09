@@ -13,7 +13,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("VbmParsers")]
 	public class VbmTests : BaseParserTests
 	{
-		private Vbm _vbmParser;
+		private Vbm _vbmParser = null!;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.VbmSampleFiles.";
 

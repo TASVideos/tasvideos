@@ -13,9 +13,9 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class WikiPagesTests
 	{
-		private IWikiPages _wikiPages;
-		private TestDbContext _db;
-		private WikiTestCache _cache;
+		private IWikiPages _wikiPages = null!;
+		private TestDbContext _db = null!;
+		private WikiTestCache _cache = null!;
 
 		[TestInitialize]
 		public void Initialize()

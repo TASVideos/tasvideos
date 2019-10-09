@@ -13,8 +13,8 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class PublicationHistoryTests
 	{
-		private IPublicationHistory _publicationHistory;
-		private TestDbContext _db;
+		private IPublicationHistory _publicationHistory = null!;
+		private TestDbContext _db = null!;
 
 		#region Test Data
 

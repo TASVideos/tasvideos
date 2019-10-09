@@ -10,7 +10,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("OmrParsers")]
 	public class OmrTests : BaseParserTests
 	{
-		private Omr _omrParser;
+		private Omr _omrParser = null!;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.OmrSampleFiles.";
 

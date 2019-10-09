@@ -14,9 +14,9 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class AwardsTests
 	{
-		private IAwards _awards;
-		private TestDbContext _db;
-		private ICacheService _cache;
+		private IAwards _awards = null!;
+		private TestDbContext _db = null!;
+		private ICacheService _cache = null!;
 
 		private static readonly int CurrentYear = DateTime.UtcNow.Year;
 
