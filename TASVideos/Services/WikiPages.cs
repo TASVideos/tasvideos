@@ -30,7 +30,7 @@ namespace TASVideos.Services
 		/// Else the latest revision is returned
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		Task<WikiPage> Page(string pageName, int? revisionId = null);
+		Task<WikiPage?> Page(string pageName, int? revisionId = null);
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given id
@@ -195,7 +195,7 @@ namespace TASVideos.Services
 			return page != null;
 		}
 
-		public async Task<WikiPage> Page(string pageName, int? revisionId = null)
+		public async Task<WikiPage?> Page(string pageName, int? revisionId = null)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{
@@ -204,7 +204,7 @@ namespace TASVideos.Services
 
 			pageName = pageName.Trim('/');
 
-			WikiPage page = null;
+			WikiPage? page = null;
 			if (!revisionId.HasValue)
 			{
 				page = this[pageName];
@@ -247,11 +247,6 @@ namespace TASVideos.Services
 
 		public async Task Add(WikiPage revision)
 		{
-			if (revision == null)
-			{
-				throw new ArgumentNullException($"{nameof(revision)} cannot be null.");
-			}
-
 			if (string.IsNullOrWhiteSpace(revision.PageName))
 			{
 				throw new InvalidOperationException($"{nameof(revision.PageName)} must have a value.");
@@ -291,7 +286,7 @@ namespace TASVideos.Services
 				throw new ArgumentException($"{destinationName} must have a value.");
 			}
 
-			originalName = originalName?.Trim('/');
+			originalName = originalName.Trim('/');
 			destinationName = destinationName.Trim('/');
 
 			// TODO: support moving a page to a deleted page
@@ -349,7 +344,7 @@ namespace TASVideos.Services
 
 		public async Task<int> Delete(string pageName)
 		{
-			pageName = pageName?.Trim('/');
+			pageName = pageName.Trim('/');
 			var revisions = await _db.WikiPages
 				.ForPage(pageName)
 				.ThatAreNotDeleted()
@@ -388,7 +383,7 @@ namespace TASVideos.Services
 
 		public async Task Delete(string pageName, int revision)
 		{
-			pageName = pageName?.Trim('/');
+			pageName = pageName.Trim('/');
 			var wikiPage = await _db.WikiPages
 				.ThatAreNotDeleted()
 				.Revision(pageName, revision)
@@ -438,7 +433,7 @@ namespace TASVideos.Services
 
 		public async Task<bool> Undelete(string pageName)
 		{
-			pageName = pageName?.Trim('/');
+			pageName = pageName.Trim('/');
 			var allRevisions = await _db.WikiPages
 				.ForPage(pageName)
 				.ToListAsync();
@@ -543,7 +538,7 @@ namespace TASVideos.Services
 		/// Returns a System page with the given page suffix
 		/// <example>SystemPage("Languages") will return the page System/Languages</example>
 		/// </summary>
-		public static Task<WikiPage> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
+		public static Task<WikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
 		{
 			return pages.Page("System/" + pageName, revisionId);
 		}

@@ -48,7 +48,7 @@ namespace TASVideos.Test.Services
 		{
 			_wikiPages
 				.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-				.ReturnsAsync((WikiPage)null);
+				.ReturnsAsync((WikiPage?)null);
 
 			var actual = await _languages.AvailableLanguages();
 
