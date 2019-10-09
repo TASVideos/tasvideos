@@ -26,10 +26,10 @@ namespace TASVideos.Pages.Games.Roms
 		public RomListModel Roms { get; set; }
 
 		[TempData]
-		public string Message { get; set; }
+		public string? Message { get; set; }
 
 		[TempData]
-		public string MessageType { get; set; }
+		public string? MessageType { get; set; }
 
 		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
 
