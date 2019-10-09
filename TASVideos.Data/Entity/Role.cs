@@ -25,10 +25,10 @@ namespace TASVideos.Data.Entity
 		public int? AutoAssignPostCount { get; set; }
 
 		public DateTime CreateTimeStamp { get; set; }
-		public string CreateUserName { get; set; }
+		public string? CreateUserName { get; set; }
 
 		public DateTime LastUpdateTimeStamp { get; set; }
-		public string LastUpdateUserName { get; set; }
+		public string? LastUpdateUserName { get; set; }
 
 		public virtual ICollection<RolePermission> RolePermission { get; set; } = new HashSet<RolePermission>();
 		public virtual ICollection<UserRole> UserRole { get; set; } = new HashSet<UserRole>();
