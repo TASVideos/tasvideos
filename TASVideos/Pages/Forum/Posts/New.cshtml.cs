@@ -69,7 +69,7 @@ namespace TASVideos.Pages.Forum.Posts
 					PosterMood = p.PosterMood
 				})
 				.OrderBy(p => p.CreateTimestamp)
-				.PageOf(_db, Search);
+				.PageOf(Search);
 
 			foreach (var post in Posts)
 			{

@@ -49,7 +49,7 @@ namespace TASVideos.Pages.Users
 						.Select(ur => ur.Role.Name)
 						.ToList()
 				})
-				.SortedPageOf(_db, Search);
+				.SortedPageOf(Search);
 		}
 
 		public async Task<IActionResult> OnGetSearch(string partial)

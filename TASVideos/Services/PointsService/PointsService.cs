@@ -165,21 +165,18 @@ namespace TASVideos.Services
 			var ratings = new Dictionary<int, RatingDto>();
 
 			// TODO: select them all at once then calculate
-			using (await _db.Database.BeginTransactionAsync())
+			foreach (var id in publicationIds)
 			{
-				foreach (var id in publicationIds)
+				var cacheKey = MovieRatingKey + id;
+				if (_cache.TryGetValue(cacheKey, out RatingDto rating))
 				{
-					var cacheKey = MovieRatingKey + id;
-					if (_cache.TryGetValue(cacheKey, out RatingDto rating))
-					{
-						ratings.Add(id, rating);
-					}
-					else
-					{
-						rating = await PublicationRating(id);
-						_cache.Set(cacheKey, rating);
-						ratings.Add(id, rating);
-					}
+					ratings.Add(id, rating);
+				}
+				else
+				{
+					rating = await PublicationRating(id);
+					_cache.Set(cacheKey, rating);
+					ratings.Add(id, rating);
 				}
 			}
 

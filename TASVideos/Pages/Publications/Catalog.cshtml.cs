@@ -86,43 +86,40 @@ namespace TASVideos.Pages.Publications
 
 		private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 		{
-			using (_db.Database.BeginTransactionAsync())
-			{
-				AvailableRoms = await _db.Roms
-					.ForGame(gameId)
-					.ForSystem(systemId)
-					.OrderBy(r => r.Name)
-					.Select(r => new SelectListItem
-					{
-						Value = r.Id.ToString(),
-						Text = r.Name
-					})
-					.ToListAsync();
+			AvailableRoms = await _db.Roms
+				.ForGame(gameId)
+				.ForSystem(systemId)
+				.OrderBy(r => r.Name)
+				.Select(r => new SelectListItem
+				{
+					Value = r.Id.ToString(),
+					Text = r.Name
+				})
+				.ToListAsync();
 
-				AvailableGames = await _db.Games
-					.ForSystem(systemId)
-					.OrderBy(g => g.DisplayName)
-					.Select(g => new SelectListItem
-					{
-						Value = g.Id.ToString(),
-						Text = g.DisplayName
-					})
-					.ToListAsync();
+			AvailableGames = await _db.Games
+				.ForSystem(systemId)
+				.OrderBy(g => g.DisplayName)
+				.Select(g => new SelectListItem
+				{
+					Value = g.Id.ToString(),
+					Text = g.DisplayName
+				})
+				.ToListAsync();
 
-				AvailableSystems = await _db.GameSystems
-					.OrderBy(s => s.Code)
-					.Select(s => new SelectListItem
-					{
-						Value = s.Id.ToString(),
-						Text = s.Code
-					})
-					.ToListAsync();
+			AvailableSystems = await _db.GameSystems
+				.OrderBy(s => s.Code)
+				.Select(s => new SelectListItem
+				{
+					Value = s.Id.ToString(),
+					Text = s.Code
+				})
+				.ToListAsync();
 
-				AvailableSystemFrameRates = await _db.GameSystemFrameRates
-					.ForSystem(systemId)
-					.ToDropDown()
-					.ToListAsync();
-			}
+			AvailableSystemFrameRates = await _db.GameSystemFrameRates
+				.ForSystem(systemId)
+				.ToDropDown()
+				.ToListAsync();
 		}
 	}
 }
