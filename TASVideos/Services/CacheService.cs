@@ -34,11 +34,9 @@ namespace TASVideos.Services
 
 		public void Set(string key, object data, int? cacheTime)
 		{
-			using (var entry = _cache.CreateEntry(key))
-			{
-				entry.Value = data;
-				_cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? _settings.Value.CacheSettings.CacheDurationInSeconds));
-			}
+			using var entry = _cache.CreateEntry(key);
+			entry.Value = data;
+			_cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? _settings.Value.CacheSettings.CacheDurationInSeconds));
 		}
 	}
 
@@ -46,7 +44,7 @@ namespace TASVideos.Services
 	{
 		public bool TryGetValue<T>(string key, out T value)
 		{
-			value = default(T);
+			value = default;
 			return false;
 		}
 

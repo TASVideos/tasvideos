@@ -11,7 +11,7 @@ namespace TASVideos.Services.PublicationChain
 		/// Returns the publication history for a game,
 		/// grouped by non-obsolete publications as the parent node
 		/// </summary>
-		Task<PublicationHistoryGroup> ForGame(int gameId);
+		Task<PublicationHistoryGroup?> ForGame(int gameId);
 	}
 
 	public class PublicationHistory : IPublicationHistory
@@ -23,7 +23,7 @@ namespace TASVideos.Services.PublicationChain
 			_db = db;
 		}
 
-		public async Task<PublicationHistoryGroup> ForGame(int gameId)
+		public async Task<PublicationHistoryGroup?> ForGame(int gameId)
 		{
 			var game = await _db.Games
 				.SingleOrDefaultAsync(g => g.Id == gameId);
