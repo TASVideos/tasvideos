@@ -109,7 +109,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, _cache.PageCache.Count, "Cache should have  1 record");
 			Assert.AreEqual(existingPage, _cache.PageCache.First().PageName, "Cache should match page checked");
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(existingPage, actual.PageName);
+			Assert.AreEqual(existingPage, actual!.PageName);
 		}
 
 		[TestMethod]
@@ -153,7 +153,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _wikiPages.Page("/" + existingPage + "/");
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(existingPage, actual.PageName);
+			Assert.AreEqual(existingPage, actual!.PageName);
 		}
 
 		[TestMethod]
@@ -169,7 +169,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _wikiPages.Page(pageName);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(1, actual.Revision);
+			Assert.AreEqual(1, actual!.Revision);
 			Assert.IsNull(actual.ChildId);
 			Assert.AreEqual(pageName, actual.PageName);
 		}
@@ -189,7 +189,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _wikiPages.Page(pageName);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(1, actual.Revision);
+			Assert.AreEqual(1, actual!.Revision);
 			Assert.IsNull(actual.ChildId);
 			Assert.AreEqual(pageName, actual.PageName);
 		}
@@ -205,7 +205,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _wikiPages.Page(page);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(2, actual.Revision);
+			Assert.AreEqual(2, actual!.Revision);
 		}
 
 		[TestMethod]
@@ -354,13 +354,6 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(1, _db.WikiReferrals.Count());
 			Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
 			Assert.AreEqual(revision4Link, _db.WikiReferrals.Single().Referral);
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public async Task Add_Null_Throws()
-		{
-			await _wikiPages.Add(null);
 		}
 
 		[TestMethod]
@@ -1174,7 +1167,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _wikiPages.SystemPage(suffix);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(systemPageName, actual.PageName);
+			Assert.AreEqual(systemPageName, actual!.PageName);
 		}
 
 		[TestMethod]
@@ -1385,7 +1378,7 @@ namespace TASVideos.Test.Services
 
 	internal class WikiTestCache : ICacheService
 	{
-		private readonly Dictionary<string, object> _cache = new Dictionary<string, object>();
+		private readonly Dictionary<string, object?> _cache = new Dictionary<string, object?>();
 
 		public List<WikiPage> PageCache { get; set; } = new List<WikiPage>();
 
@@ -1426,8 +1419,8 @@ namespace TASVideos.Test.Services
 
 		public bool TryGetValue<T>(string key, out T value)
 		{
-			var result = _cache.TryGetValue(key, out object cached);
-			value = (T)cached;
+			var result = _cache.TryGetValue(key, out object? cached);
+			value = (T)cached!;
 			return result;
 		}
 	}
