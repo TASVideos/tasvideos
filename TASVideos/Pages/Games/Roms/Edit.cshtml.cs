@@ -62,10 +62,10 @@ namespace TASVideos.Pages.Games.Roms
 		public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
 
 		[TempData]
-		public string Message { get; set; }
+		public string? Message { get; set; }
 
 		[TempData]
-		public string MessageType { get; set; }
+		public string? MessageType { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{

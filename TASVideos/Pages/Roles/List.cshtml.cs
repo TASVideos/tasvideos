@@ -22,14 +22,14 @@ namespace TASVideos.Pages.Roles
 		}
 
 		[TempData]
-		public string Message { get; set; }
+		public string? Message { get; set; }
 
 		[TempData]
-		public string MessageType { get; set; }
+		public string? MessageType { get; set; }
 
 		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
 
-		public IEnumerable<RoleDisplayModel> Roles { get; set; }
+		public IEnumerable<RoleDisplayModel> Roles { get; set; } = new List<RoleDisplayModel>();
 
 		public async Task OnGet(string role)
 		{

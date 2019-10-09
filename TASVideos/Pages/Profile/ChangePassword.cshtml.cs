@@ -25,7 +25,7 @@ namespace TASVideos.Pages.Profile
 		}
 
 		[TempData]
-		public string StatusMessage { get; set; }
+		public string? StatusMessage { get; set; }
 
 		[BindProperty]
 		[Required]
