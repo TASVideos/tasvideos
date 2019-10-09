@@ -248,10 +248,8 @@ namespace TASVideos.Data
 			var archive = new ZipArchive(stream);
 			var entry = archive.Entries.Single();
 
-			using (var tr = new StreamReader(entry.Open()))
-			{
-				return tr.ReadToEnd();
-			}
+			using var tr = new StreamReader(entry.Open());
+			return tr.ReadToEnd();
 		}
 	}
 }
