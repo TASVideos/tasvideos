@@ -10,10 +10,10 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int Id { get; set; }
 
 		[Column("privmsgs_text")]
-		public string Text { get; set; }
+		public string? Text { get; set; }
 
 		[Column("privmsgs_bbcode_uid")]
-		public string BbCodeUid { get; set; }
+		public string BbCodeUid { get; set; } = "";
 
 		[ForeignKey("Id")]
 		public virtual PrivateMessage PrivateMessage { get; set; }

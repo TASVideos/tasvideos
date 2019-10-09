@@ -12,7 +12,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int ForumId { get; set; }
 
 		[Column("topic_title")]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		[Column("topic_time")]
 		public int Timestamp { get; set; }

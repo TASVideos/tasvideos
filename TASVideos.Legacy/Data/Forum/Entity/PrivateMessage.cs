@@ -13,7 +13,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int Type { get; set; }
 
 		[Column("privmsgs_subject")]
-		public string Subject { get; set; }
+		public string Subject { get; set; } = "";
 
 		[Column("privmsgs_from_userid")]
 		public int FromUserId { get; set; }
@@ -25,7 +25,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int Timestamp { get; set; }
 
 		[Column("privmsgs_ip")]
-		public string IpAddress { get; set; }
+		public string IpAddress { get; set; } = "";
 
 		[Column("privmsgs_enable_bbcode")]
 		public bool EnableBbCode { get; set; }

@@ -13,16 +13,16 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int CategoryId { get; set; }
 
 		[Column("forum_name")]
-		public string Name { get; set; }
+		public string? Name { get; set; }
 
 		[Column("forum_desc")]
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
 		[Column("forum_order")]
 		public int Order { get; set; }
 
 		[Column("forum_shortname")]
-		public string ShortName { get; set; }
+		public string ShortName { get; set; } = "";
 
 		[Column("auth_view")]
 		public int AuthView { get; set; }

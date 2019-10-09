@@ -11,7 +11,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int UserId { get; set; }
 
 		[Column("vote_user_ip")]
-		public string IpAddress { get; set; }
+		public string IpAddress { get; set; } = "";
 
 		[Column("vote_opt_id")]
 		public int OptionId { get; set; }
