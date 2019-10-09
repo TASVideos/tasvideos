@@ -13,7 +13,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("WtfParsers")]
 	public class WtfTests : BaseParserTests
 	{
-		private Wtf _wtfParser;
+		private Wtf _wtfParser = null!;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.WtfSampleFiles.";
 

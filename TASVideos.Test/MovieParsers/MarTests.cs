@@ -13,7 +13,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("MarParsers")]
 	public class MarTests : BaseParserTests
 	{
-		private Mar _marParser;
+		private Mar _marParser = null!;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.MarSampleFiles.";
 

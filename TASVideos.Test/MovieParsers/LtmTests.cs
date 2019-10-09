@@ -13,7 +13,7 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("LtmParsers")]
 	public class LtmTests : BaseParserTests
 	{
-		private Ltm _ltmParser;
+		private Ltm _ltmParser = null!;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.LtmSampleFiles.";
 

@@ -18,10 +18,10 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class TopicWatcherTests
 	{
-		private Mock<IEmailService> _mockEmailService;
-		private TestDbContext _db;
+		private Mock<IEmailService> _mockEmailService = null!;
+		private TestDbContext _db = null!;
 
-		private ITopicWatcher _topicWatcher;
+		private ITopicWatcher _topicWatcher = null!;
 
 		[TestInitialize]
 		public void Initialize()
