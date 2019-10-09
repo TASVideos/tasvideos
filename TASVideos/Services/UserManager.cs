@@ -109,7 +109,7 @@ namespace TASVideos.Services
 		/// If user is not found, null is returned
 		/// If user has PublicRatings false, then the ratings will be an empty list
 		/// </summary>
-		public async Task<UserRatingsModel> GetUserRatings(string userName, bool includeHidden = false)
+		public async Task<UserRatingsModel?> GetUserRatings(string userName, bool includeHidden = false)
 		{
 			var model = await _db.Users
 				.Where(u => u.UserName == userName)
@@ -169,7 +169,7 @@ namespace TASVideos.Services
 		/// for the <see cref="User"/> with the given <see cref="userName"/>
 		/// If no user is found, null is returned
 		/// </summary>
-		public async Task<UserProfileModel> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts)
+		public async Task<UserProfileModel?> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts)
 		{
 			var model = await _db.Users
 				.Select(u => new UserProfileModel

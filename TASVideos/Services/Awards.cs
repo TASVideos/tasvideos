@@ -92,7 +92,7 @@ namespace TASVideos.Services
 				.Select(g => new AwardAssignment
 				{
 					ShortName = g.Key.ShortName,
-					Description = g.Key.Description + " of " + g.Key.Year.ToString(),
+					Description = g.Key.Description + " of " + g.Key.Year,
 					Year = g.Key.Year,
 					Type = AwardType.User,
 					Publications = Enumerable.Empty<AwardAssignment.PublicationDto>(),
@@ -128,7 +128,7 @@ namespace TASVideos.Services
 				.Select(g => new AwardAssignment
 				{
 					ShortName = g.Key.ShortName,
-					Description = g.Key.Description + " of " + g.Key.Year.ToString(),
+					Description = g.Key.Description + " of " + g.Key.Year,
 					Year = g.Key.Year,
 					Type = AwardType.Movie,
 					Publications = g.Select(gv => new AwardAssignment.PublicationDto { Id = gv.Publication.Id, Title  = gv.Publication.Title }).ToList(),

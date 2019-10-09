@@ -59,7 +59,7 @@ namespace TASVideos.Services
 			return languages;
 		}
 
-		public async Task<bool> IsLanguagePage(string pageName)
+		public async Task<bool> IsLanguagePage(string? pageName)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{

@@ -28,48 +28,44 @@ namespace TASVideos.Services
 
 		public async Task UploadScreenshot(int publicationId, IFormFile screenshot, string description)
 		{
-			using (var memoryStream = new MemoryStream())
+			await using var memoryStream = new MemoryStream();
+			await screenshot.CopyToAsync(memoryStream);
+			var screenshotBytes = memoryStream.ToArray();
+
+			string screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
+			string screenshotPath = Path.Combine(_env.WebRootPath, "media", screenshotFileName);
+			File.WriteAllBytes(screenshotPath, screenshotBytes);
+
+			var pubFile = new PublicationFile
 			{
-				await screenshot.CopyToAsync(memoryStream);
-				var screenshotBytes = memoryStream.ToArray();
+				PublicationId = publicationId,
+				Path = screenshotFileName,
+				Type = FileType.Screenshot,
+				Description = description
+			};
 
-				string screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
-				string screenshotPath = Path.Combine(_env.WebRootPath, "media", screenshotFileName);
-				File.WriteAllBytes(screenshotPath, screenshotBytes);
-
-				var pubFile = new PublicationFile
-				{
-					PublicationId = publicationId,
-					Path = screenshotFileName,
-					Type = FileType.Screenshot,
-					Description = description
-				};
-
-				_db.PublicationFiles.Add(pubFile);
-				await _db.SaveChangesAsync();
-			}
+			_db.PublicationFiles.Add(pubFile);
+			await _db.SaveChangesAsync();
 		}
 
 		public async Task UploadTorrent(int publicationId, IFormFile torrent)
 		{
-			using (var memoryStream = new MemoryStream())
+			await using var memoryStream = new MemoryStream();
+			await torrent.CopyToAsync(memoryStream);
+			var torrentBytes = memoryStream.ToArray();
+
+			string torrentFileName = $"{publicationId}M.torrent";
+			string torrentPath = Path.Combine(_env.WebRootPath, "media", torrentFileName);
+			File.WriteAllBytes(torrentPath, torrentBytes);
+
+			var torrentFile = new PublicationFile
 			{
-				await torrent.CopyToAsync(memoryStream);
-				var torrentBytes = memoryStream.ToArray();
-
-				string torrentFileName = $"{publicationId}M.torrent";
-				string torrentPath = Path.Combine(_env.WebRootPath, "media", torrentFileName);
-				File.WriteAllBytes(torrentPath, torrentBytes);
-
-				var torrentFile = new PublicationFile
-				{
-					PublicationId = publicationId,
-					Path = torrentFileName,
-					Type = FileType.Torrent
-				};
-				_db.PublicationFiles.Add(torrentFile);
-				await _db.SaveChangesAsync();
-			}
+				PublicationId = publicationId,
+				Path = torrentFileName,
+				Type = FileType.Torrent
+			};
+			_db.PublicationFiles.Add(torrentFile);
+			await _db.SaveChangesAsync();
 		}
 	}
 }
