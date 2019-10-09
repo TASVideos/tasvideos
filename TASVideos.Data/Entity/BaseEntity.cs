@@ -3,8 +3,8 @@ using System.Linq;
 
 namespace TASVideos.Data.Entity
 {
-    public interface ITrackable
-    {
+	public interface ITrackable
+	{
 		DateTime CreateTimeStamp { get; set; }
 		string CreateUserName { get; set; }
 
@@ -23,7 +23,7 @@ namespace TASVideos.Data.Entity
 
 	public static class TrackableQueryableExtensions
 	{
-		public static IQueryable<T> CreatedBy<T>(this IQueryable<T> list, string userName) 
+		public static IQueryable<T> CreatedBy<T>(this IQueryable<T> list, string userName)
 			where T : ITrackable
 		{
 			return list.Where(t => t.CreateUserName == userName);
@@ -42,7 +42,7 @@ namespace TASVideos.Data.Entity
 		}
 
 		public static IQueryable<T> Since<T>(this IQueryable<T> list, DateTime target)
-			where T: ITrackable
+			where T : ITrackable
 		{
 			return list.Where(t => t.CreateTimeStamp >= target);
 		}

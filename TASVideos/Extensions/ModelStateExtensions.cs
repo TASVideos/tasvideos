@@ -5,7 +5,7 @@ namespace TASVideos.Extensions
 {
 	public static class ModelStateExtensions
 	{
-		public static void AddParseErrors(this ModelStateDictionary modelState, IParseResult parseResult, string modelPropertyName = null)
+		public static void AddParseErrors(this ModelStateDictionary modelState, IParseResult parseResult, string? modelPropertyName = null)
 		{
 			if (!parseResult.Success)
 			{

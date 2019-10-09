@@ -34,7 +34,7 @@ namespace TASVideos.Legacy.Imports
 			return Encoding.UTF8.GetString(b);
 		}
 
-		public static string ConvertLatin1String(string input)
+		public static string? ConvertLatin1String(string? input)
 		{
 			if (input == null)
 			{
@@ -64,28 +64,26 @@ namespace TASVideos.Legacy.Imports
 			int batchSize = 10000,
 			int? bulkCopyTimeout = null)
 		{
-			using (var sqlCopy = new SqlBulkCopy(connectionString, options))
+			using var sqlCopy = new SqlBulkCopy(connectionString, options)
 			{
-				sqlCopy.DestinationTableName = tableName;
-				sqlCopy.BatchSize = batchSize;
-				if (bulkCopyTimeout.HasValue)
-				{
-					sqlCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
-				}
-
-				foreach (var param in columnsToCopy)
-				{
-					sqlCopy.ColumnMappings.Add(param, param);
-				}
-
-				using (var reader = ObjectReader.Create(data, columnsToCopy))
-				{
-					sqlCopy.WriteToServer(reader);
-				}
+				DestinationTableName = tableName,
+				BatchSize = batchSize
+			};
+			if (bulkCopyTimeout.HasValue)
+			{
+				sqlCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
 			}
+
+			foreach (var param in columnsToCopy)
+			{
+				sqlCopy.ColumnMappings.Add(param, param);
+			}
+
+			using var reader = ObjectReader.Create(data, columnsToCopy);
+			sqlCopy.WriteToServer(reader);
 		}
 
-		public static string Cap(this string str, int limit)
+		public static string? Cap(this string? str, int limit)
 		{
 			if (str == null)
 			{
@@ -117,7 +115,7 @@ namespace TASVideos.Legacy.Imports
 			return names;
 		}
 
-		public static string NullIfWhiteSpace(this string str)
+		public static string? NullIfWhiteSpace(this string? str)
 		{
 			return string.IsNullOrWhiteSpace(str)
 				? null

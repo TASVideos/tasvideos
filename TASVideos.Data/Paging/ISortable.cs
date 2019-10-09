@@ -14,7 +14,7 @@ namespace TASVideos.Data
 		/// -/+ can be used to denote descending/ascending sort
 		/// The default is ascending sort
 		/// </summary>
-		string Sort { get; }
+		string? Sort { get; }
 	}
 
 	public static class SortableExtensions
