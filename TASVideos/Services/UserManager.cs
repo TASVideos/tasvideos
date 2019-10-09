@@ -258,7 +258,7 @@ namespace TASVideos.Services
 		/// record with the given <see cref="id"/> if the user has access to the message
 		/// A user has access if they are the sender or the receiver of the message
 		/// </summary>
-		public async Task<PrivateMessageModel> GetMessage(int userId, int id)
+		public async Task<PrivateMessageModel?> GetMessage(int userId, int id)
 		{
 			var pm = await _db.PrivateMessages
 				.Include(p => p.FromUser)

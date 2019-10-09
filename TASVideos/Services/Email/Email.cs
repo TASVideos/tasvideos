@@ -25,16 +25,16 @@ namespace TASVideos.Services.Email
 
 	public class SingleEmail : IEmail
 	{
-		public string Recipient { get; set; }
+		public string Recipient { get; set; } = "";
 		public IEnumerable<string> Recipients => new[] { Recipient };
-		public string Subject { get; set; }
-		public string Message { get; set; }
+		public string Subject { get; set; } = "";
+		public string Message { get; set; } = "";
 	}
 
 	public class StandardEmail : IEmail
 	{
 		public IEnumerable<string> Recipients { get; set; } = new string[0];
-		public string Subject { get; set; }
-		public string Message { get; set; }
+		public string Subject { get; set; } = "";
+		public string Message { get; set; } = "";
 	}
 }
