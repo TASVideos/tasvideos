@@ -15,10 +15,10 @@ namespace TASVideos.Data.Entity.Awards
 
 		[Required]
 		[StringLength(25)]
-		public string ShortName { get; set; }
+		public string ShortName { get; set; } = "";
 
 		[Required]
 		[StringLength(50)]
-		public string Description { get; set; }
+		public string Description { get; set; } = "";
 	}
 }

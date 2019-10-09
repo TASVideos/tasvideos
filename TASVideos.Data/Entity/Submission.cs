@@ -68,9 +68,10 @@ namespace TASVideos.Data.Entity
 		public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
 		public virtual ICollection<SubmissionStatusHistory> History { get; set; } = new HashSet<SubmissionStatusHistory>();
 
-		public byte[] MovieFile { get; set; }
+		[Required]
+		public byte[] MovieFile { get; set; } = new byte[0];
 
-		public string MovieExtension { get; set; }
+		public string? MovieExtension { get; set; }
 
 		public int? GameId { get; set; }
 		public virtual Game.Game Game { get; set; }
@@ -92,22 +93,22 @@ namespace TASVideos.Data.Entity
 
 		// Metadata, user entered
 		[StringLength(100)]
-		public string EncodeEmbedLink { get; set; }
+		public string? EncodeEmbedLink { get; set; }
 
 		[StringLength(100)]
-		public string GameVersion { get; set; }
+		public string? GameVersion { get; set; }
 
 		[StringLength(100)]
-		public string GameName { get; set; }
+		public string? GameName { get; set; }
 
 		[StringLength(50)]
-		public string Branch { get; set; }
+		public string? Branch { get; set; }
 
 		[StringLength(250)]
-		public string RomName { get; set; }
+		public string? RomName { get; set; }
 		
 		[StringLength(50)]
-		public string EmulatorVersion { get; set; }
+		public string? EmulatorVersion { get; set; }
 
 		public int? MovieStartType { get; set; }
 
@@ -125,7 +126,7 @@ namespace TASVideos.Data.Entity
 		/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
 		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01
 		/// </summary>
-		public string Title { get; set; }
+		public string? Title { get; set; }
 
 		double ITimeable.FrameRate => SystemFrameRate.FrameRate; 
 

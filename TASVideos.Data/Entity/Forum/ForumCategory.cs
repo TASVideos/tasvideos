@@ -10,11 +10,11 @@ namespace TASVideos.Data.Entity.Forum
 
 		[Required]
 		[StringLength(30)]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		public int Ordinal { get; set; }
 
 		[StringLength(1000)]
-		public string Description { get; set; }
+		public string? Description { get; set; }
 	}
 }

@@ -28,14 +28,16 @@ namespace TASVideos.Data.Entity
 		public virtual User Author { get; set; }
 
 		[StringLength(255)]
-		public string FileName { get; set; }
+		public string FileName { get; set; } = "";
 
-		public byte[] Content { get; set; }
+		[Required]
+		public byte[] Content { get; set; } = new byte[0];
 
 		public UserFileClass Class { get; set; }
 
+		[Required]
 		[StringLength(16)]
-		public string Type { get; set; }
+		public string Type { get; set; } = "";
 
 		public DateTime UploadTimestamp { get; set; }
 
@@ -45,10 +47,11 @@ namespace TASVideos.Data.Entity
 
 		public int Rerecords { get; set; }
 
+		[Required]
 		[StringLength(255)]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
 		public int LogicalLength { get; set; }
 
@@ -62,7 +65,7 @@ namespace TASVideos.Data.Entity
 
 		public bool Hidden { get; set; }
 
-		public string Warnings { get; set; }
+		public string? Warnings { get; set; }
 
 		public int Views { get; set; }
 
@@ -70,7 +73,7 @@ namespace TASVideos.Data.Entity
 
 		public Compression CompressionType { get; set; }
 
-		public virtual ICollection<UserFileComment> Comments { get; set; }
+		public virtual ICollection<UserFileComment> Comments { get; set; } = new List<UserFileComment>();
 	}
 
 	public static class UserFileExtensions

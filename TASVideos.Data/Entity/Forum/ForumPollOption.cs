@@ -10,7 +10,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		[Required]
 		[StringLength(250)]
-		public string Text { get; set; }
+		public string Text { get; set; } = "";
 
 		[Required]
 		public int Ordinal { get; set; }

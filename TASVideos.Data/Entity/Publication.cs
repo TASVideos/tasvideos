@@ -64,19 +64,22 @@ namespace TASVideos.Data.Entity
 
 		// TODO: we eventually should want to move these to the file server instead
 		[Required]
-		public byte[] MovieFile { get; set; }
+		public byte[] MovieFile { get; set; } = new byte[0];
 
 		[Required]
-		public string MovieFileName { get; set; }
+		public string MovieFileName { get; set; } = "";
 
 		[StringLength(50)]
-		public string Branch { get; set; }
+		public string? Branch { get; set; }
 
 		[StringLength(50)]
-		public string EmulatorVersion { get; set; }
+		public string? EmulatorVersion { get; set; }
 
-		public string OnlineWatchingUrl { get; set; }
-		public string MirrorSiteUrl { get; set; }
+		// TODO: set a string length
+		public string? OnlineWatchingUrl { get; set; }
+
+		// TODO: set a string length
+		public string? MirrorSiteUrl { get; set; }
 
 		public int Frames { get; set; }
 		public int RerecordCount { get; set; }
@@ -85,10 +88,10 @@ namespace TASVideos.Data.Entity
 		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here
 		/// </summary>
 		[StringLength(200)]
-		public string AdditionalAuthors { get; set; }
+		public string? AdditionalAuthors { get; set; }
 
 		// De-normalized name for easy recreation
-		public string Title { get; set; }
+		public string? Title { get; set; }
 
 		double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!"); 
 

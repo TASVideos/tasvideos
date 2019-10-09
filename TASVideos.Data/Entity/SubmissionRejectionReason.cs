@@ -1,8 +1,13 @@
-﻿namespace TASVideos.Data.Entity
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TASVideos.Data.Entity
 {
 	public class SubmissionRejectionReason
 	{
 		public int Id { get; set; }
-		public string DisplayName { get; set; }
+
+		[Required]
+		[StringLength(100)]
+		public string DisplayName { get; set; } = "";
 	}
 }

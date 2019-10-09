@@ -10,11 +10,11 @@ namespace TASVideos.Data.Entity.Game
 		// todo unique constraint
 		[Required]
 		[StringLength(255)]
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 
 		[Required]
 		[StringLength(255)]
-		public string SearchKey { get; set; }
+		public string SearchKey { get; set; } = "";
 
 		public ICollection<GameGameGroup> Games { get; set; } = new HashSet<GameGameGroup>();
 	}

@@ -2,21 +2,21 @@
 
 namespace TASVideos.Data.Entity
 {
-    public class Tier
-    {
+	public class Tier
+	{
 		public int Id { get; set; }
 
 		[Required]
 		[StringLength(20)]
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 		public double Weight { get; set; }
 
 		[Required]
 		[StringLength(100)]
-		public string IconPath { get; set; }
+		public string IconPath { get; set; } = "";
 
 		[Required]
 		[StringLength(100)]
-		public string Link { get; set; }
+		public string Link { get; set; } = "";
 	}
 }

@@ -24,23 +24,23 @@ namespace TASVideos.Data.Entity.Game
 
 		[Required]
 		[StringLength(32)]
-		public string Md5 { get; set; }
+		public string Md5 { get; set; } = "";
 
 		[Required]
 		[StringLength(40)]
-		public string Sha1 { get; set; }
+		public string Sha1 { get; set; } = "";
 
 		[Required]
 		[StringLength(255)]
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 
 		public RomTypes Type { get; set; }
 
 		[StringLength(50)]
-		public string Region { get; set; }
+		public string? Region { get; set; }
 
 		[StringLength(50)]
-		public string Version { get; set; }
+		public string? Version { get; set; }
 	}
 
 	public static class RomExtensions

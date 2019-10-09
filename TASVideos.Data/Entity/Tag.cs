@@ -9,11 +9,11 @@ namespace TASVideos.Data.Entity
 
 		[Required]
 		[StringLength(25)]
-		public string Code { get; set; }
+		public string Code { get; set; } = "";
 
 		[Required]
 		[StringLength(50)]
-		public string DisplayName { get; set; }
+		public string DisplayName { get; set; } = "";
 
 		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new List<PublicationTag>();
 	}
