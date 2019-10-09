@@ -6,13 +6,13 @@ namespace TASVideos.Legacy.Data.Site.Entity
     {
 		[Key]
 		[Column("filename")]
-		public string FileName { get; set; }
+		public string FileName { get; set; } = "";
 
 		[Column("filedata")]
-		public byte[] FileData { get; set; }
+		public byte[] FileData { get; set; } = new byte[0];
 
 		[Column("filetime")]
-		public string FileTime { get; set; }
+		public string FileTime { get; set; } = "";
 
 		[Column("zipped")]
 		public string Zipped { get; set; } = "Y";

@@ -13,16 +13,16 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public virtual User User { get; set; }
 
 		[Column("file_name"), StringLength(255), Required]
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 
 		[Column("file_content"), Required]
-		public byte[] Content { get; set; }
+		public byte[] Content { get; set; } = new byte[0];
 
 		[Column("file_class"), StringLength(1), Required]
-		public string Class { get; set; }
+		public string Class { get; set; } = "";
 
 		[Column("file_type"), StringLength(16), Required]
-		public string Type { get; set; }
+		public string Type { get; set; } = "";
 
 		[Column("file_ts")]
 		public long Timestamp { get; set; }
@@ -40,10 +40,10 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public long Rerecords { get; set; }
 
 		[Column("file_title"), StringLength(255), Required]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		[Column("file_description"), Required]
-		public string Description { get; set; }
+		public string Description { get; set; } = "";
 
 		[Column("file_log_len")]
 		public int LogicalLength { get; set; }
@@ -59,7 +59,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public sbyte Hidden { get; set; }
 
 		[Column("file_warnings"), Required]
-		public string Warnings { get; set; }
+		public string Warnings { get; set; } = "";
 
 		[Column("file_views")]
 		public int Views { get; set; }

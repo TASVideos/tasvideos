@@ -12,7 +12,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int MovieId { get; set; }
 
 		[Column("ratingname")]
-		public string RatingName { get; set; }
+		public string RatingName { get; set; } = "";
 
 		[Column("value")]
 		public decimal Value { get; set; }
