@@ -27,17 +27,18 @@ namespace TASVideos.Data.Entity
 		public string? LastUpdateUserName { get; set; }
 
 		[StringLength(250)]
-		public string Avatar { get; set; }
+		public string? Avatar { get; set; }
 
 		[StringLength(100)]
-		public string From { get; set; }
+		public string? From { get; set; }
 
 		[StringLength(1000)]
-		public string Signature { get; set; }
+		public string? Signature { get; set; }
 
 		public bool PublicRatings { get; set; } = true;
 
-		public string MoodAvatarUrlBase { get; set; }
+		[StringLength(250)]
+		public string? MoodAvatarUrlBase { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether or not to use
@@ -45,7 +46,8 @@ namespace TASVideos.Data.Entity
 		/// </summary>
 		public bool UseRatings { get; set; } = true;
 
-		public string LegacyPassword { get; set; }
+		[StringLength(32)]
+		public string? LegacyPassword { get; set; }
 
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 		public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();

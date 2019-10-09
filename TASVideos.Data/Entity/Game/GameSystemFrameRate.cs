@@ -14,7 +14,7 @@ namespace TASVideos.Data.Entity.Game
 
 		[Required]
 		[StringLength(8)]
-		public string RegionCode { get; set; }
+		public string RegionCode { get; set; } = "";
 		public bool Preliminary { get; set; }
 
 		public bool Obsolete { get; set; }

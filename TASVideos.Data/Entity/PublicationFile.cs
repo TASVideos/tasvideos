@@ -16,13 +16,13 @@ namespace TASVideos.Data.Entity
 		public virtual Publication Publication { get; set; }
 
 		[StringLength(250)]
-		public string Path { get; set; }
+		public string? Path { get; set; }
 		public FileType Type { get; set; }
 
 		[StringLength(250)]
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
-		public byte[] FileData { get; set; }
+		public byte[]? FileData { get; set; } = new byte[0];
 	}
 
 	public static class PublicationFileExtensions

@@ -15,13 +15,13 @@ namespace TASVideos.Data.Entity
 		public virtual User ToUser { get; set; }
 
 		[StringLength(50)]
-		public string IpAddress { get; set; }
+		public string? IpAddress { get; set; }
 
 		[StringLength(500)]
-		public string Subject { get; set; }
+		public string? Subject { get; set; }
 
 		[Required]
-		public string Text { get; set; }
+		public string? Text { get; set; }
 
 		public bool EnableHtml { get; set; }
 		public bool EnableBbCode { get; set; }

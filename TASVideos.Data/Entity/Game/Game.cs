@@ -26,27 +26,27 @@ namespace TASVideos.Data.Entity.Game
 		[Required]
 		[StringLength(250)]
 		[Description("Good Set or some other official naming convention")]
-		public string GoodName { get; set; }
+		public string GoodName { get; set; } = "";
 
 		[Required]
 		[StringLength(100)]
-		public string DisplayName { get; set; }
+		public string DisplayName { get; set; } = "";
 
 		[StringLength(8)]
-		public string Abbreviation { get; set; }
+		public string? Abbreviation { get; set; }
 
 		[StringLength(64)]
-		public string SearchKey { get; set; }
+		public string? SearchKey { get; set; }
 
 		[Required]
 		[StringLength(250)]
-		public string YoutubeTags { get; set; }
+		public string YoutubeTags { get; set; } = "";
 
 		[StringLength(250)]
-		public string ScreenshotUrl { get; set; }
+		public string? ScreenshotUrl { get; set; }
 
 		[StringLength(300)]
-		public string GameResourcesPage { get; set; }
+		public string? GameResourcesPage { get; set; }
 	}
 
 	public static class GameExtensions

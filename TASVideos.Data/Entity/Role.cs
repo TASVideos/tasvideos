@@ -14,8 +14,9 @@ namespace TASVideos.Data.Entity
 		/// </summary>
 		public bool IsDefault { get; set; }
 
+		[Required]
 		[StringLength(300)]
-		public string Description { get; set; }
+		public string Description { get; set; } = "";
 
 		/// <summary>
 		/// Gets or sets the number of forum posts a user needs

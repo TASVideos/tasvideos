@@ -22,7 +22,7 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = new HashSet<ForumTopicWatch>();
 
 		[StringLength(500)]
-		public string Title { get; set; }
+		public string? Title { get; set; }
 
 		public int PosterId { get; set; }
 		public virtual User Poster { get; set; }
@@ -36,7 +36,7 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual ForumPoll Poll { get; set; }
 
 		[StringLength(200)]
-		public string PageName { get; set; }
+		public string? PageName { get; set; }
 	}
 
 	public static class ForumTopicQueryableExtensions

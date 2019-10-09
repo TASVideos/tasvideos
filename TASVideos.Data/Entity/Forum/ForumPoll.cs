@@ -13,7 +13,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		[Required]
 		[StringLength(500)]
-		public string Question { get; set; }
+		public string Question { get; set; } = "";
 
 		public DateTime? CloseDate { get; set; }
 

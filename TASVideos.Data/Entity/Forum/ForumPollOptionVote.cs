@@ -16,6 +16,6 @@ namespace TASVideos.Data.Entity.Forum
 		public DateTime CreateTimestamp { get; set; }
 
 		[StringLength(50)]
-		public string IpAddress { get; set; }
+		public string IpAddress { get; set; } = "";
 	}
 }
