@@ -12,7 +12,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int VoteOptionId { get; set; }
 
 		[Column("vote_option_text")]
-		public string VoteOptionText { get; set; }
+		public string VoteOptionText { get; set; } = "";
 
 		[Column("vote_result")]
 		public int ResultCount { get; set; }

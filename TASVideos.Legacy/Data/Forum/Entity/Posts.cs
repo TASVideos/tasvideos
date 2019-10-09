@@ -19,7 +19,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int Timestamp { get; set; }
 
 		[Column("poster_ip")]
-		public string IpAddress { get; set; }
+		public string IpAddress { get; set; } = "";
 
 		[Column("post_edit_time")]
 		public int? LastUpdateTimestamp { get; set; }

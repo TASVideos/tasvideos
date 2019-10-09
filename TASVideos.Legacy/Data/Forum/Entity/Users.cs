@@ -10,10 +10,10 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int UserId { get; set; }
 
 		[Column("username")]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		[Column("user_password")]
-		public string Password { get; set; }
+		public string Password { get; set; } = "";
 
 		[Column("user_regdate")]
 		public int RegDate { get; set; }
@@ -22,19 +22,19 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int? EmailTime { get; set; }
 
 		[Column("user_email")]
-		public string Email { get; set; }
+		public string? Email { get; set; }
 
 		[Column("user_posts")]
 		public int PostCount { get; set; }
 
 		[Column("user_avatar")]
-		public string Avatar { get; set; }
+		public string? Avatar { get; set; }
 
 		[Column("user_from")]
-		public string From { get; set; }
+		public string? From { get; set; }
 
 		[Column("user_sig")]
-		public string Signature { get; set; }
+		public string? Signature { get; set; }
 
 		[Column("user_permit_ratingshow")]
 		public bool PublicRatings { get; set; }
@@ -49,9 +49,9 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int UserLevel { get; set; }
 
 		[Column("user_sig_bbcode_uid")]
-		public string BbcodeUid { get; set; }
+		public string? BbcodeUid { get; set; }
 
 		[Column("user_mood_avatar")]
-		public string MoodAvatar { get; set; }
+		public string? MoodAvatar { get; set; }
 	}
 }

@@ -10,13 +10,13 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int Id { get; set; }
 
 		[Column("bbcode_uid")]
-		public string BbCodeUid { get; set; }
+		public string BbCodeUid { get; set; } = "";
 
 		[Column("post_subject")]
-		public string Subject { get; set; }
+		public string Subject { get; set; } = "";
 
 		[Column("post_text")]
-		public string Text { get; set; }
+		public string? Text { get; set; }
 
 		[ForeignKey("Id")]
 		public virtual Posts Post { get; set; }
