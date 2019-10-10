@@ -23,7 +23,7 @@ namespace TASVideos.Data.Entity
 		public string RevisionMessage { get; set; } = "";
 
 		public int? ChildId { get; set; }
-		public virtual WikiPage Child { get; set; } // The latest revision of a page is one with Child = null
+		public virtual WikiPage? Child { get; set; } // The latest revision of a page is one with Child = null
 
 		public bool IsDeleted { get; set; }
 	} 
@@ -32,7 +32,7 @@ namespace TASVideos.Data.Entity
 	{
 		public static IQueryable<WikiPage> WithNoChildren(this IQueryable<WikiPage> list)
 		{
-			return list.Where(wp => wp.Child == null);
+			return list.Where(wp => wp.ChildId == null);
 		}
 
 		public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> list, string pageName)
@@ -58,7 +58,7 @@ namespace TASVideos.Data.Entity
 		/// <param name="query">This query to filter</param>
 		/// <seealso cref="WikiPage"/>
 		/// <param name="pageName">the name of the page to get sub pages from</param>
-		public static IQueryable<WikiPage> ThatAreSubpagesOf(this IQueryable<WikiPage> query, string pageName)
+		public static IQueryable<WikiPage> ThatAreSubpagesOf(this IQueryable<WikiPage> query, string? pageName)
 		{
 			pageName = (pageName ?? "").Trim('/');
 			query = query
@@ -82,7 +82,7 @@ namespace TASVideos.Data.Entity
 		/// <seealso cref="WikiPage"/>
 		/// <param name="query">This query to filter</param>
 		/// <param name="pageName">the name of the page to get parent pages from</param>
-		public static IQueryable<WikiPage> ThatAreParentsOf(this IQueryable<WikiPage> query, string pageName)
+		public static IQueryable<WikiPage> ThatAreParentsOf(this IQueryable<WikiPage> query, string? pageName)
 		{
 			pageName = (pageName ?? "").Trim('/');
 			if (string.IsNullOrWhiteSpace(pageName)
@@ -98,7 +98,7 @@ namespace TASVideos.Data.Entity
 				.Where(wp => pageName.StartsWith(wp.PageName));
 		}
 
-		public static bool IsCurrent(this WikiPage wikiPage)
+		public static bool IsCurrent(this WikiPage? wikiPage)
 		{
 			return wikiPage != null
 				&& wikiPage.ChildId == null
