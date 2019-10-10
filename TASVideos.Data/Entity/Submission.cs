@@ -113,20 +113,21 @@ namespace TASVideos.Data.Entity
 		public int? MovieStartType { get; set; }
 
 		public int? RejectionReasonId { get; set; }
-		public virtual SubmissionRejectionReason RejectionReason { get; set; }
+		public virtual SubmissionRejectionReason? RejectionReason { get; set; }
 
 
 		/// <summary>
 		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here
 		/// </summary>
 		[StringLength(200)]
-		public string AdditionalAuthors { get; set; }
+		public string? AdditionalAuthors { get; set; }
 
 		/// <summary>
 		/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
 		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01
 		/// </summary>
-		public string? Title { get; set; }
+		[Required]
+		public string Title { get; set; } = "";
 
 		double ITimeable.FrameRate => SystemFrameRate.FrameRate; 
 
