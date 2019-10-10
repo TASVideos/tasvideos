@@ -11,11 +11,11 @@ namespace TASVideos.Pages.Submissions.Models
 
 		[StringLength(50)]
 		[Display(Name = "Branch", Description = "(e.g. \"100%\" or \"princess only\"; \"any%\" can usually be omitted)")]
-		public string Branch { get; set; }
+		public string? Branch { get; set; }
 
 		[StringLength(50)]
 		[Display(Name = "Emulator Version")]
-		public string EmulatorVersion { get; set; }
+		public string? EmulatorVersion { get; set; }
 
 		[Required]
 		[Display(Name = "Movie description")]
@@ -23,56 +23,56 @@ namespace TASVideos.Pages.Submissions.Models
 
 		[Required]
 		[Display(Name = "Movie Filename", Description = "Please follow the convention: xxxv#-yyy where xxx is author name, # is version and yyy is game name. Special characters such as \"&\" and \"/\" and \".\" and spaces must not occur in the filename.")]
-		public string MovieFileName { get; set; }
+		public string MovieFileName { get; set; } = "";
 
 		[Url]
 		[Required]
 		[Display(Name = "Online-watching URL")]
 		[StringLength(100)]
-		public string OnlineWatchingUrl { get; set; }
+		public string OnlineWatchingUrl { get; set; } = "";
 
 		[Url]
 		[Required]
 		[Display(Name = "Mirror site URL")]
 		[StringLength(100)]
-		public string MirrorSiteUrl { get; set; }
+		public string MirrorSiteUrl { get; set; } = "";
 
 		[Required]
 		[Display(Name = "Screenshot", Description = "Your movie packed in a ZIP file (max size: 150k)")]
-		public IFormFile Screenshot { get; set; }
+		public IFormFile? Screenshot { get; set; }
 
 		[Required]
 		[Display(Name = "Description", Description = "Caption, describe what happens in the screenshot")]
-		public string ScreenshotDescription { get; set; }
+		public string ScreenshotDescription { get; set; } = "";
 
 		[Required]
 		[Display(Name = "Torrent file", Description = "(The tracker URL must be http://tracker.tasvideos.org:6969/announce.)")]
-		public IFormFile TorrentFile { get; set; }
+		public IFormFile? TorrentFile { get; set; }
 
 		[Display(Name = "Submisison description (for quoting, reference, etc)")]
-		public string Markup { get; set; }
+		public string? Markup { get; set; }
 
 		[Display(Name = "System")]
-		public string SystemCode { get; set; }
+		public string? SystemCode { get; set; }
 
 		[Display(Name = "Region")]
-		public string SystemRegion { get; set; }
+		public string? SystemRegion { get; set; }
 
 		[Display(Name = "Game")]
-		public string Game { get; set; }
+		public string? Game { get; set; }
 		public int GameId { get; set; }
 
 		[Display(Name = "Rom")]
-		public string Rom { get; set; }
+		public string? Rom { get; set; }
 		public int RomId { get; set; }
 
 		[Display(Name = "Tier")]
-		public string Tier { get; set; }
+		public string? Tier { get; set; }
 
-		public string MovieExtension { get; set; }
+		public string? MovieExtension { get; set; }
 
 		// Not used for edit fields
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 		public int SystemId { get; set; }
 		public int? SystemFrameRateId { get; set; }
 		public SubmissionStatus Status { get; set; }

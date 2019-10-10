@@ -51,7 +51,7 @@ namespace TASVideos.Pages.Submissions
 					.Where(s => s.Id == Id)
 					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
 					{
-						StartType = (MovieStartType)s.MovieStartType,
+						StartType = (MovieStartType?)s.MovieStartType,
 						SystemDisplayName = s.System.DisplayName,
 						SystemCode = s.System.Code,
 						GameName = s.GameName,

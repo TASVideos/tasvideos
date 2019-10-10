@@ -29,9 +29,9 @@ namespace TASVideos.Pages.Submissions.Models
 				Value = n.ToString()
 			});
 
-		public string System { get; set; }
+		public string? System { get; set; }
 
-		public string User { get; set; }
+		public string? User { get; set; }
 
 		[Display(Name = "Status Filter")]
 		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
