@@ -8,13 +8,13 @@ namespace TASVideos.Pages.Users.Models
 	public class UserEditModel
 	{
 		[DisplayName("User Name")]
-		public string UserName { get; set; }
+		public string? UserName { get; set; }
 
 		[DisplayName("Time Zone")]
-		public string TimezoneId { get; set; }
+		public string? TimezoneId { get; set; }
 
 		[Display(Name = "Location")]
-		public string From { get; set; }
+		public string? From { get; set; }
 
 		[DisplayName("Selected Roles")]
 		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
@@ -27,19 +27,19 @@ namespace TASVideos.Pages.Users.Models
 		public DateTime? LastLoggedInTimeStamp { get; set; }
 
 		[EmailAddress]
-		public string Email { get; set; }
+		public string? Email { get; set; }
 
 		public bool EmailConfirmed { get; set; }
 
 		[Display(Name = "Locked Status")]
 		public bool IsLockedOut { get; set; }
 
-		public string Signature { get; set; }
-		public string Avatar { get; set; }
-
-		public string MoodAvatarUrlBase { get; set; }
+		public string? Signature { get; set; }
+		public string? Avatar { get; set; }
 
 		[Display(Name = "Mood Avatar")]
-		public string OriginalUserName => UserName;
+		public string? MoodAvatarUrlBase { get; set; }
+
+		public string? OriginalUserName => UserName;
 	}
 }
