@@ -14,32 +14,32 @@ namespace TASVideos
 
 		public IrcConnection Irc { get; set; } = new IrcConnection();
 
-		public string StartupStrategy { get; set; }
+		public string StartupStrategy { get; set; } = "";
 
-		public string SendGridKey { get; set; }
-		public string SendGridFrom { get; set; }
+		public string SendGridKey { get; set; } = "";
+		public string SendGridFrom { get; set; } = "";
 
 		public class IrcConnection
 		{
-			public string Server { get; set; }
-			public string Channel { get; set; }
-			public string SecureChannel { get; set; }
+			public string Server { get; set; } = "";
+			public string Channel { get; set; } = "";
+			public string SecureChannel { get; set; } = "";
 			public int Port { get; set; }
-			public string Nick { get; set; }
-			public string Password { get; set; }
+			public string Nick { get; set; } = "";
+			public string Password { get; set; } = "";
 		}
 
 		public class CacheSetting
 		{
-			public string CacheType { get; set; }
+			public string CacheType { get; set; } = "NoCache";
 			public int CacheDurationInSeconds { get; set; }
 		}
 
 		public class Connections
 		{
-			public string DefaultConnection { get; set; }
-			public string LegacySiteConnection { get; set; }
-			public string LegacyForumConnection { get; set; }
+			public string DefaultConnection { get; set; } = "";
+			public string LegacySiteConnection { get; set; } = "";
+			public string LegacyForumConnection { get; set; } = "";
 		}
 	}
 
@@ -50,11 +50,11 @@ namespace TASVideos
 			var strategy = settings.StartupStrategy;
 			if (!string.IsNullOrWhiteSpace(settings.StartupStrategy))
 			{
-				var result = Enum.TryParse(typeof(DbInitializer.StartupStrategy), strategy, true, out object strategyObj);
+				var result = Enum.TryParse(typeof(DbInitializer.StartupStrategy), strategy, true, out object? strategyObj);
 			
 				if (result)
 				{
-					return (DbInitializer.StartupStrategy)strategyObj;
+					return (DbInitializer.StartupStrategy)(strategyObj ?? DbInitializer.StartupStrategy.Minimal);
 				}
 			}
 

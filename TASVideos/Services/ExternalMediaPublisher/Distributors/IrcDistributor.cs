@@ -94,7 +94,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 					{
 						if (stream.DataAvailable)
 						{
-							var inputLine = await reader.ReadLineAsync();
+							var inputLine = await reader.ReadLineAsync() ?? "";
 							Console.WriteLine("<- " + inputLine);
 
 							// split the lines sent from the server by spaces (seems to be the easiest way to parse them)
