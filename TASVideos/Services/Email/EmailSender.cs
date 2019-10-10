@@ -44,7 +44,7 @@ namespace TASVideos.Services.Email
 		private Task Execute(IEmail email)
 		{
 			string apiKey = _settings.SendGridKey;
-			if (string.IsNullOrWhiteSpace(_settings.SendGridKey))
+			if (string.IsNullOrWhiteSpace(_settings.SendGridKey) || string.IsNullOrWhiteSpace(_settings.SendGridFrom))
 			{
 				return Task.CompletedTask;
 			}
