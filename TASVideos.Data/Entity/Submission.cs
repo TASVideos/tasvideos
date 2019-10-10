@@ -41,7 +41,7 @@ namespace TASVideos.Data.Entity
 		IEnumerable<SubmissionStatus> StatusFilter { get; }
 		IEnumerable<int> Years { get; }
 		IEnumerable<string> Systems { get; }
-		string User { get; }
+		string? User { get; }
 	}
 
 	public class Submission : BaseEntity, ITimeable
@@ -49,21 +49,22 @@ namespace TASVideos.Data.Entity
 		public int Id { get; set; }
 
 		public int? WikiContentId { get; set; }
-		public virtual WikiPage WikiContent { get; set; }
+		public virtual WikiPage? WikiContent { get; set; }
 
+		// TODO: don't make this nullable! Need to fix the importer for this to work
 		public int? SubmitterId { get; set; }
-		public virtual User Submitter { get; set; }
+		public virtual User? Submitter { get; set; }
 
 		public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
 
 		public int? IntendedTierId { get; set; }
-		public virtual Tier IntendedTier { get; set; }
+		public virtual Tier? IntendedTier { get; set; }
 
 		public int? JudgeId { get; set; }
-		public virtual User Judge { get; set; }
+		public virtual User? Judge { get; set; }
 
 		public int? PublisherId { get; set; }
-		public virtual User Publisher { get; set; }
+		public virtual User? Publisher { get; set; }
 
 		public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
 		public virtual ICollection<SubmissionStatusHistory> History { get; set; } = new HashSet<SubmissionStatusHistory>();
@@ -74,19 +75,19 @@ namespace TASVideos.Data.Entity
 		public string? MovieExtension { get; set; }
 
 		public int? GameId { get; set; }
-		public virtual Game.Game Game { get; set; }
+		public virtual Game.Game? Game { get; set; }
 
 		public int? RomId { get; set; }
-		public virtual GameRom Rom { get; set; }
+		public virtual GameRom? Rom { get; set; }
 
 		// Metadata parsed from movie file
 		public int? SystemId { get; set; }
-		public virtual GameSystem System { get; set; }
+		public virtual GameSystem? System { get; set; }
 
 		public int? SystemFrameRateId { get; set; }
-		public virtual GameSystemFrameRate SystemFrameRate { get; set; }
+		public virtual GameSystemFrameRate? SystemFrameRate { get; set; }
 
-		public virtual Publication Publication { get; set; }
+		public virtual Publication? Publication { get; set; }
 
 		public int Frames { get; set; }
 		public int RerecordCount { get; set; }
@@ -129,10 +130,20 @@ namespace TASVideos.Data.Entity
 		[Required]
 		public string Title { get; set; } = "";
 
-		double ITimeable.FrameRate => SystemFrameRate.FrameRate; 
+		double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? 0;
 
 		public void GenerateTitle()
 		{
+			if (System == null)
+			{
+				throw new ArgumentNullException($"{nameof(System)} can not be null.");
+			}
+
+			if (SystemFrameRate == null)
+			{
+				throw new ArgumentNullException($"{nameof(SystemFrameRate)} can not be null.");
+			}
+
 			var authorList = SubmissionAuthors.Select(sa => sa.Author.UserName);
 
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
@@ -158,7 +169,7 @@ namespace TASVideos.Data.Entity
 			if (!string.IsNullOrWhiteSpace(criteria.User))
 			{
 				query = query.Where(s => s.SubmissionAuthors.Any(sa => sa.Author.UserName == criteria.User)
-					|| s.Submitter.UserName == criteria.User);
+					|| s.Submitter != null && s.Submitter.UserName == criteria.User);
 			}
 
 			if (criteria.Years.Any())
@@ -173,7 +184,7 @@ namespace TASVideos.Data.Entity
 
 			if (criteria.Systems.Any())
 			{
-				query = query.Where(s => criteria.Systems.Contains(s.System.Code));
+				query = query.Where(s => s.System != null && criteria.Systems.Contains(s.System.Code));
 			}
 
 			return query;

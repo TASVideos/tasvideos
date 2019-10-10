@@ -4,7 +4,7 @@ namespace TASVideos.Pages.Submissions.Models
 {
 	public class SubmissionCatalogModel
 	{
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		[Display(Name = "Rom")]
 		public int? RomId { get; set; }

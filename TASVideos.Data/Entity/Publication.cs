@@ -38,7 +38,7 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new List<PublicationRating>();
 
 		public int? ObsoletedById { get; set; }
-		public virtual Publication ObsoletedBy { get; set; }
+		public virtual Publication? ObsoletedBy { get; set; }
 
 		public int GameId { get; set; }
 		public virtual Game.Game Game { get; set; }
