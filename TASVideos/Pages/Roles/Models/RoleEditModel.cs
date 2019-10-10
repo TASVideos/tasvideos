@@ -13,14 +13,14 @@ namespace TASVideos.Pages.Roles.Models
 		[Required]
 		[StringLength(50)]
 		[Display(Name = "Name")]
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 
 		[Display(Name = "Default", Description = "Default roles are given to all new users when they register")]
 		public bool IsDefault { get; set; }
 
 		[Required]
 		[StringLength(200)]
-		public string Description { get; set; }
+		public string Description { get; set; } = "";
 
 		[Display(Name = "Auto-assign on Post Count", Description = "If set, the user will automatically be assigned this role when they reach this post count.")]
 		public int? AutoAssignPostCount { get; set; }

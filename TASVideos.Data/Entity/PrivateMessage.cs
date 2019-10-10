@@ -21,7 +21,7 @@ namespace TASVideos.Data.Entity
 		public string? Subject { get; set; }
 
 		[Required]
-		public string? Text { get; set; }
+		public string Text { get; set; } = "";
 
 		public bool EnableHtml { get; set; }
 		public bool EnableBbCode { get; set; }
