@@ -11,7 +11,9 @@ namespace TASVideos.Data.Entity
 		[StringLength(250)]
 		public string PageName { get; set; } = "";
 
-		public string? Markup { get; set; }
+		[Required]
+		public string Markup { get; set; } = "";
+
 		public int Revision { get; set; } = 1;
 
 		public bool MinorEdit { get; set; }
