@@ -32,14 +32,12 @@ namespace TASVideos.Pages
 			return new RedirectToPageResult("Login");
 		}
 
-		protected IActionResult RedirectToLocal(string returnUrl)
+		protected IActionResult RedirectToLocal(string? returnUrl)
 		{
-			if (Url.IsLocalUrl(returnUrl))
-			{
-				return LocalRedirect(returnUrl);
-			}
-
-			return Home();
+			returnUrl ??= "";
+			return Url.IsLocalUrl(returnUrl)
+				? LocalRedirect(returnUrl)
+				: Home();
 		}
 
 		protected void AddErrors(IdentityResult result)
@@ -53,11 +51,9 @@ namespace TASVideos.Pages
 		protected string RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);
-			using (var writer = new StringWriter())
-			{
-				parsed.WriteHtml(writer);
-				return writer.ToString();
-			}
+			using var writer = new StringWriter();
+			parsed.WriteHtml(writer);
+			return writer.ToString();
 		}
 
 		protected string RenderHtml(string text)
@@ -77,11 +73,9 @@ namespace TASVideos.Pages
 
 		protected async Task<byte[]> FormFileToBytes(IFormFile formFile)
 		{
-			using (var memoryStream = new MemoryStream())
-			{
-				await formFile.CopyToAsync(memoryStream);
-				return memoryStream.ToArray();
-			}
+			await using var memoryStream = new MemoryStream();
+			await formFile.CopyToAsync(memoryStream);
+			return memoryStream.ToArray();
 		}
 	}
 }

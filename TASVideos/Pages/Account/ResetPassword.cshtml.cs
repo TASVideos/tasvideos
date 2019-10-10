@@ -20,34 +20,34 @@ namespace TASVideos.Pages.Account
 		[BindProperty]
 		[Required]
 		[EmailAddress]
-		public string Email { get; set; }
+		public string Email { get; set; } = "";
 
 		[BindProperty]
 		[Required]
 		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 		[DataType(DataType.Password)]
-		public string Password { get; set; }
+		public string Password { get; set; } = "";
 
 		[BindProperty]
 		[DataType(DataType.Password)]
 		[Display(Name = "Confirm password")]
 		[Compare(nameof(Password), ErrorMessage = "The password and confirmation password do not match.")]
-		public string ConfirmPassword { get; set; }
+		public string ConfirmPassword { get; set; } = "";
 
 		[FromQuery]
-		public string Code { get; set; }
+		public string? Code { get; set; }
 
 		[FromQuery]
-		public string UserId { get; set; }
+		public string? UserId { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
-			if (Code == null)
+			if (string.IsNullOrWhiteSpace(Code))
 			{
 				return Home();
 			}
 
-			var user = await _userManager.FindByIdAsync(UserId);
+			var user = await _userManager.FindByIdAsync(UserId ?? "");
 			if (user == null)
 			{
 				return Home();
@@ -71,7 +71,7 @@ namespace TASVideos.Pages.Account
 				return RedirectToPage("ResetPasswordConfirmation");
 			}
 
-			var code = Code;
+			var code = Code ?? "";
 			var result = await _userManager.ResetPasswordAsync(user, code, Password);
 			if (result.Succeeded)
 			{
