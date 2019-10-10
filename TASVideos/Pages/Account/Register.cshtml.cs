@@ -38,41 +38,41 @@ namespace TASVideos.Pages.Account
 		}
 
 		[FromQuery]
-		public string ReturnUrl { get; set; }
+		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
 		[Display(Name = "Time Zone")]
-		public string SelectedTimeZone { get; set; }
+		public string? SelectedTimeZone { get; set; }
 
 		[BindProperty]
 		[Required]
 		[StringLength(256)]
 		[Display(Name = "User Name")]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		[BindProperty]
 		[Required]
 		[EmailAddress]
 		[Display(Name = "Email")]
-		public string Email { get; set; }
+		public string Email { get; set; } = "";
 
 		[BindProperty]
 		[Required]
 		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 		[DataType(DataType.Password)]
 		[Display(Name = "Password")]
-		public string Password { get; set; }
+		public string Password { get; set; } = "";
 
 		[BindProperty]
 		[DataType(DataType.Password)]
 		[Display(Name = "Confirm password")]
 		[Compare(nameof(Password), ErrorMessage = "The password and confirmation password do not match.")]
-		public string ConfirmPassword { get; set; }
+		public string ConfirmPassword { get; set; } = "";
 
 		[BindProperty]
 		[Display(Name = "Location")]
 		[StringLength(256)]
-		public string From { get; set; }
+		public string? From { get; set; }
 
 		public async Task<IActionResult> OnPost()
 		{

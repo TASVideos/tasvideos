@@ -35,17 +35,17 @@ namespace TASVideos.Pages.Account
 		}
 
 		[FromQuery]
-		public string ReturnUrl { get; set; }
+		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
 		[Required]
 		[Display(Name = "User Name")]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		[BindProperty]
 		[Required]
 		[DataType(DataType.Password)]
-		public string Password { get; set; }
+		public string Password { get; set; } = "";
 
 		[BindProperty]
 		[Display(Name = "Remember me?")]
@@ -96,20 +96,18 @@ namespace TASVideos.Pages.Account
 			// If no password, then try to log in with legacy method
 			if (!string.IsNullOrWhiteSpace(user.LegacyPassword))
 			{
-				using (var md5 = MD5.Create())
-				{
-					var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(Password));
-					string encrypted = BitConverter.ToString(md5Result)
-						.Replace("-", "")
-						.ToLower();
+				using var md5 = MD5.Create();
+				var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(Password));
+				string encrypted = BitConverter.ToString(md5Result)
+					.Replace("-", "")
+					.ToLower();
 
-					if (encrypted == user.LegacyPassword)
-					{
-						user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, Password);
-						await _userManager.UpdateSecurityStampAsync(user);
-						user.LegacyPassword = null;
-						await _db.SaveChangesAsync();
-					}
+				if (encrypted == user.LegacyPassword)
+				{
+					user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, Password);
+					await _userManager.UpdateSecurityStampAsync(user);
+					user.LegacyPassword = null;
+					await _db.SaveChangesAsync();
 				}
 			}
 

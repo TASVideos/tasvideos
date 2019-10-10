@@ -12,7 +12,7 @@ namespace TASVideos.Pages.Users.Models
 
 		[DisplayName("User Name")]
 		[Sortable]
-		public string UserName { get; set; }
+		public string? UserName { get; set; }
 
 		[DisplayName("Role")]
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
@@ -22,6 +22,6 @@ namespace TASVideos.Pages.Users.Models
 		public DateTime CreateTimeStamp { get; set; }
 
 		// Dummy to generate column header
-		public object Actions { get; set; }
+		public object? Actions { get; set; }
 	}
 }
