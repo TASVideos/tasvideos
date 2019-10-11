@@ -17,7 +17,7 @@ namespace TASVideos.ViewComponents
 		/// <param name="parameterStr">The full parameter string</param>
 		/// <param name="parameterName">the parameter for which to return a value from</param>
 		/// <returns>true if the parameter is specified, else false</returns>
-		public static bool HasParam(string parameterStr, string parameterName)
+		public static bool HasParam(string? parameterStr, string? parameterName)
 		{
 			if (string.IsNullOrWhiteSpace(parameterStr))
 			{
@@ -46,7 +46,7 @@ namespace TASVideos.ViewComponents
 		/// <param name="parameterStr">The full parameter string</param>
 		/// <param name="paramName">the parameter for which to return a value from</param>
 		/// <returns>The value of the given parameter if it is exists, else empty string</returns>
-		public static string GetValueFor(string parameterStr, string paramName)
+		public static string GetValueFor(string? parameterStr, string? paramName)
 		{
 			if (string.IsNullOrWhiteSpace(parameterStr))
 			{
@@ -69,12 +69,9 @@ namespace TASVideos.ViewComponents
 					.ToList();
 				if (pair.Count > 1 && string.Equals(pair[0], paramName, StringComparison.OrdinalIgnoreCase))
 				{
-					if (string.IsNullOrWhiteSpace(pair[1]))
-					{
-						return "";
-					}
-
-					return pair[1];
+					return string.IsNullOrWhiteSpace(pair[1])
+						? ""
+						: pair[1];
 				}
 			}
 
@@ -87,31 +84,29 @@ namespace TASVideos.ViewComponents
 		/// Possible values (case insensitive): true/false, yes/no, y/n
 		/// if a string is null, empty, or whitespace, null is returned
 		/// </summary>
-		public static bool? GetBool(string parameterStr, string param)
+		public static bool? GetBool(string? parameterStr, string? param)
 		{
 			if (string.IsNullOrWhiteSpace(param))
 			{
 				return null;
 			}
 
-			string val = GetValueFor(parameterStr, param)?.ToLower();
-			if (val == "true"
-				|| val == "yes"
-				|| val == "y"
-				|| val == "1")
+			string? val = GetValueFor(parameterStr, param)?.ToLower();
+			switch (val)
 			{
-				return true;
+				case "true":
+				case "yes":
+				case "y":
+				case "1":
+					return true;
+				case "false":
+				case "no":
+				case "n":
+				case "0":
+					return false;
+				default:
+					return null;
 			}
-
-			if (val == "false"
-				|| val == "no"
-				|| val == "n"
-				|| val == "0")
-			{
-				return false;
-			}
-
-			return null;
 		}
 
 		/// <summary>
@@ -140,7 +135,7 @@ namespace TASVideos.ViewComponents
 		/// Takes the given string and parses it to an int if possible
 		/// But also accepts Y prefixed values such as Y2014
 		/// </summary>
-		public static int? GetYear(string parameterStr, string param)
+		public static int? GetYear(string? parameterStr, string? param)
 		{
 			if (string.IsNullOrWhiteSpace(param))
 			{

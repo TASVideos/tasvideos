@@ -137,7 +137,7 @@ namespace TASVideos.Extensions
 				|| compressedContentTypes.Contains(formFile.ContentType);
 		}
 		
-		public static bool LessThanMovieSizeLimit(this IFormFile formFile)
+		public static bool LessThanMovieSizeLimit(this IFormFile? formFile)
 		{
 			if (formFile == null)
 			{

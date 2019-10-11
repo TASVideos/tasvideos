@@ -45,7 +45,7 @@ namespace TASVideos.Pages.Submissions
 		{
 			Create = new SubmissionCreateModel
 			{
-				Authors = new List<string> { User.Identity.Name }
+				Authors = new List<string> { User.Identity.Name! }
 			};
 		}
 
