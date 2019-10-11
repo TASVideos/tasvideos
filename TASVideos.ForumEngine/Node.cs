@@ -335,23 +335,21 @@ namespace TASVideos.ForumEngine
 				case "video":
 					{
 						var href = GetChildText();
-						var pp = new VideoParameters { UrlRaw = href, QueryParams = new Dictionary<string, string>() };
-						if (TryParseSize(out var width, out var height))
-						{
-							pp.Width = width;
-							pp.Height = height;
-						}
 						if (Uri.IsWellFormedUriString(href, UriKind.Absolute))
 						{
 							var uri = new Uri(href, UriKind.Absolute);
-							pp.Host = uri.Host;
 							var qq = uri.PathAndQuery.Split('?');
-							pp.Path = qq[0];
+							var pp = new VideoParameters(uri.Host, qq[0]);
 							if (qq.Length > 1)
 							{
-								var parsed = System.Web.HttpUtility.ParseQueryString(qq[1]);
-								for (var i = 0; i < parsed.Count; i++)
-									pp.QueryParams[parsed.Keys[i]] = parsed.GetValues(i)[0];
+								var parsedQuery = System.Web.HttpUtility.ParseQueryString(qq[1]);
+								for (var i = 0; i < parsedQuery.Count; i++)
+									pp.QueryParams[parsedQuery.Keys[i]] = parsedQuery.GetValues(i)[0];
+							}
+							if (TryParseSize(out var width, out var height))
+							{
+								pp.Width = width;
+								pp.Height = height;
 							}
 							WriteVideo.Write(w, pp);
 						}			
