@@ -18,7 +18,7 @@
 
 	public static class PageableExtensions
 	{
-		public static int Offset(this IPageable pageable)
+		public static int Offset(this IPageable? pageable)
 		{
 			var current = pageable?.CurrentPage ?? 0;
 			var size = pageable?.PageSize ?? 0;

@@ -212,7 +212,7 @@ namespace TASVideos.Test.Data.QueryableExtensions
 		[TestMethod]
 		public void IsCurrent_NullSafe()
 		{
-			var actual = ((WikiPage)null).IsCurrent();
+			var actual = ((WikiPage?)null).IsCurrent();
 			Assert.IsFalse(actual);
 		}
 

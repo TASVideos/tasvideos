@@ -25,7 +25,7 @@ namespace TASVideos.Data
 		/// properties are specified, all the properties are returned
 		/// </summary>
 		/// <typeparam name="T">The type of the elements of source.</typeparam>
-		public static IEnumerable<ExpandoObject> FieldSelect<T>(this IEnumerable<T> source, IFieldSelectable fields)
+		public static IEnumerable<ExpandoObject> FieldSelect<T>(this IEnumerable<T> source, IFieldSelectable? fields)
 		{
 			if (string.IsNullOrWhiteSpace(fields?.Fields))
 			{
@@ -42,7 +42,7 @@ namespace TASVideos.Data
 		/// with the given fields
 		/// </summary>
 		/// <typeparam name="T">The type of the elements of source.</typeparam>
-		public static ExpandoObject FieldSelect<T>(this T obj, string fields)
+		public static ExpandoObject FieldSelect<T>(this T obj, string? fields)
 		{
 			if (string.IsNullOrWhiteSpace(fields))
 			{

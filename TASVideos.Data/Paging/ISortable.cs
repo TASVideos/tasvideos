@@ -22,7 +22,7 @@ namespace TASVideos.Data
 		/// <summary>
 		/// Returns whether or not the given parameter is specified
 		/// </summary>
-		public static bool IsSortingParam(this ISortable sortable, string param)
+		public static bool IsSortingParam(this ISortable? sortable, string? param)
 		{
 			if (string.IsNullOrWhiteSpace(sortable?.Sort))
 			{
@@ -46,7 +46,7 @@ namespace TASVideos.Data
 		/// Returns whether or not the given parameter is specified and
 		/// is specified as a descending sort
 		/// </summary>
-		public static bool IsDescending(this ISortable sortable, string param)
+		public static bool IsDescending(this ISortable? sortable, string? param)
 		{
 			if (string.IsNullOrWhiteSpace(sortable?.Sort))
 			{
@@ -72,7 +72,7 @@ namespace TASVideos.Data
 		/// The sorting is valid if all parameters match properties in the response, and that
 		/// those properties are declared as sortable
 		/// </summary>
-		public static bool IsValidSort(this ISortable request, Type response)
+		public static bool IsValidSort(this ISortable? request, Type? response)
 		{
 			if (response == null)
 			{

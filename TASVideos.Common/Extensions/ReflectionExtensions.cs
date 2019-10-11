@@ -14,11 +14,11 @@ namespace TASVideos.Extensions
 		/// Returns the value of the given property, in a UI consumable way
 		/// For example, collections will be turned into a pipe separated list
 		/// </summary>
-		public static string? ToValue(this PropertyInfo property, object? obj)
+		public static string ToValue(this PropertyInfo property, object? obj)
 		{
 			if (obj == null)
 			{
-				return null;
+				return "";
 			}
 
 			if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType)
@@ -29,7 +29,7 @@ namespace TASVideos.Extensions
 				return val;
 			}
 
-			return property.GetValue(obj)?.ToString();
+			return property.GetValue(obj)?.ToString() ?? "";
 		}
 
 		/// <summary>
