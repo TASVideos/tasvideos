@@ -15,66 +15,66 @@ namespace TASVideos.Data
 {
 	public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
 	{
-		private readonly IHttpContextAccessor _httpContext;
+		private readonly IHttpContextAccessor? _httpContext;
 
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor? httpContextAccessor)
 			: base(options)
 		{
 			_httpContext = httpContextAccessor;
 		}
 
-		public DbSet<RolePermission> RolePermission { get; set; }
-		public DbSet<WikiPage> WikiPages { get; set; }
-		public DbSet<WikiPageReferral> WikiReferrals { get; set; }
-		public DbSet<RoleLink> RoleLinks { get; set; }
-		public DbSet<Submission> Submissions { get; set; }
-		public DbSet<SubmissionAuthor> SubmissionAuthors { get; set; }
-		public DbSet<SubmissionStatusHistory> SubmissionStatusHistory { get; set; }
-		public DbSet<SubmissionRejectionReason> SubmissionRejectionReasons { get; set; }
+		public DbSet<RolePermission> RolePermission { get; set; } = null!;
+		public DbSet<WikiPage> WikiPages { get; set; } = null!;
+		public DbSet<WikiPageReferral> WikiReferrals { get; set; } = null!;
+		public DbSet<RoleLink> RoleLinks { get; set; } = null!;
+		public DbSet<Submission> Submissions { get; set; } = null!;
+		public DbSet<SubmissionAuthor> SubmissionAuthors { get; set; } = null!;
+		public DbSet<SubmissionStatusHistory> SubmissionStatusHistory { get; set; } = null!;
+		public DbSet<SubmissionRejectionReason> SubmissionRejectionReasons { get; set; } = null!;
 
-		public DbSet<Tier> Tiers { get; set; }
+		public DbSet<Tier> Tiers { get; set; } = null!;
 
-		public DbSet<Publication> Publications { get; set; }
-		public DbSet<PublicationAuthor> PublicationAuthors { get; set; }
-		public DbSet<PublicationFile> PublicationFiles { get; set; }
-		public DbSet<PublicationTag> PublicationTags { get; set; }
-		public DbSet<PublicationRating> PublicationRatings { get; set; }
-		public DbSet<PublicationFlag> PublicationFlags { get; set; }
+		public DbSet<Publication> Publications { get; set; } = null!;
+		public DbSet<PublicationAuthor> PublicationAuthors { get; set; } = null!;
+		public DbSet<PublicationFile> PublicationFiles { get; set; } = null!;
+		public DbSet<PublicationTag> PublicationTags { get; set; } = null!;
+		public DbSet<PublicationRating> PublicationRatings { get; set; } = null!;
+		public DbSet<PublicationFlag> PublicationFlags { get; set; } = null!;
 
-		public DbSet<Tag> Tags { get; set; }
-		public DbSet<Flag> Flags { get; set; }
+		public DbSet<Tag> Tags { get; set; } = null!;
+		public DbSet<Flag> Flags { get; set; } = null!;
 
-		public DbSet<Award> Awards { get; set; }
-		public DbSet<PublicationAward> PublicationAwards { get; set; }
-		public DbSet<UserAward> UserAwards { get; set; }
+		public DbSet<Award> Awards { get; set; } = null!;
+		public DbSet<PublicationAward> PublicationAwards { get; set; } = null!;
+		public DbSet<UserAward> UserAwards { get; set; } = null!;
 
 		// Game tables
-		public DbSet<Game> Games { get; set; }
-		public DbSet<GameGenre> GameGenres { get; set; }
-		public DbSet<Genre> Genres { get; set; }
-		public DbSet<GameSystem> GameSystems { get; set; }
-		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; }
-		public DbSet<GameRom> Roms { get; set; }
-		public DbSet<GameGroup> GameGroups { get; set; }
-		public DbSet<GameGameGroup> GameGameGroups { get; set; }
+		public DbSet<Game> Games { get; set; } = null!;
+		public DbSet<GameGenre> GameGenres { get; set; } = null!;
+		public DbSet<Genre> Genres { get; set; } = null!;
+		public DbSet<GameSystem> GameSystems { get; set; } = null!;
+		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; } = null!;
+		public DbSet<GameRom> Roms { get; set; } = null!;
+		public DbSet<GameGroup> GameGroups { get; set; } = null!;
+		public DbSet<GameGameGroup> GameGameGroups { get; set; } = null!;
 
 		// Forum tables
-		public DbSet<ForumCategory> ForumCategories { get; set; }
-		public DbSet<Forum> Forums { get; set; }
-		public DbSet<ForumTopic> ForumTopics { get; set; }
-		public DbSet<ForumPost> ForumPosts { get; set; }
-		public DbSet<ForumPoll> ForumPolls { get; set; }
-		public DbSet<ForumPollOption> ForumPollOptions { get; set; }
-		public DbSet<ForumPollOptionVote> ForumPollOptionVotes { get; set; }
-		public DbSet<ForumTopicWatch> ForumTopicWatches { get; set; }
+		public DbSet<ForumCategory> ForumCategories { get; set; } = null!;
+		public DbSet<Forum> Forums { get; set; } = null!;
+		public DbSet<ForumTopic> ForumTopics { get; set; } = null!;
+		public DbSet<ForumPost> ForumPosts { get; set; } = null!;
+		public DbSet<ForumPoll> ForumPolls { get; set; } = null!;
+		public DbSet<ForumPollOption> ForumPollOptions { get; set; } = null!;
+		public DbSet<ForumPollOptionVote> ForumPollOptionVotes { get; set; } = null!;
+		public DbSet<ForumTopicWatch> ForumTopicWatches { get; set; } = null!;
 
-		public DbSet<PrivateMessage> PrivateMessages { get; set; }
+		public DbSet<PrivateMessage> PrivateMessages { get; set; } = null!;
 
 		// Userfiles
-		public DbSet<UserFile> UserFiles { get; set; }
-		public DbSet<UserFileComment> UserFileComments { get; set; }
+		public DbSet<UserFile> UserFiles { get; set; } = null!;
+		public DbSet<UserFileComment> UserFileComments { get; set; } = null!;
 
-		public DbSet<MediaPost> MediaPosts { get; set; }
+		public DbSet<MediaPost> MediaPosts { get; set; } = null!;
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{

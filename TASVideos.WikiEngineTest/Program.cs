@@ -50,7 +50,7 @@ namespace TASVideos.WikiEngineTest
 
 			var wantUpdate = args.Any(s => s == "--update");
 			var force = args.Any(s => s == "--force");
-			string filter = null;
+			string? filter = null;
 			{
 				var index = Array.IndexOf(args, "--filter");
 				if (index >= 0 && index < args.Length - 1)
