@@ -13,7 +13,7 @@ namespace TASVideos.Test.Data.Paging
 		[TestMethod]
 		public void Paged_LastPage_NullSafe()
 		{
-			var paged = (IPaged)null;
+			var paged = (IPaged?)null;
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = paged.LastPage();
 			Assert.AreEqual(0, actual);
@@ -40,7 +40,7 @@ namespace TASVideos.Test.Data.Paging
 		[TestMethod]
 		public void Paged_LastRow_NullSafe()
 		{
-			var paged = (IPaged)null;
+			var paged = (IPaged?)null;
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = paged.LastRow();
 			Assert.AreEqual(0, actual);
@@ -68,10 +68,9 @@ namespace TASVideos.Test.Data.Paging
 		[TestMethod]
 		public void Paged_AdditionalProperties_NullSafe()
 		{
-			var paged = (IPaged)null;
+			var paged = (IPaged?)null;
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = paged.AdditionalProperties();
-			Assert.IsNotNull(actual);
 			Assert.AreEqual(0, actual.Count);
 		}
 
@@ -80,7 +79,6 @@ namespace TASVideos.Test.Data.Paging
 		{
 			var paged = new Paged(1, 1, 1);
 			var actual = paged.AdditionalProperties();
-			Assert.IsNotNull(actual);
 			Assert.AreEqual(0, actual.Count);
 		}
 
@@ -94,7 +92,6 @@ namespace TASVideos.Test.Data.Paging
 			};
 
 			var actual = paged.AdditionalProperties();
-			Assert.IsNotNull(actual);
 			Assert.AreEqual(1, actual.Count);
 			Assert.AreEqual(filterVal, actual[nameof(TestPagedModel.StringFilter)]);
 		}
@@ -108,7 +105,6 @@ namespace TASVideos.Test.Data.Paging
 			};
 
 			var actual = paged.AdditionalProperties();
-			Assert.IsNotNull(actual);
 			Assert.AreEqual(1, actual.Count);
 			Assert.AreEqual("1|2|3", actual[nameof(EnumerablePagedModel.IdList)]);
 		}
@@ -136,7 +132,7 @@ namespace TASVideos.Test.Data.Paging
 			}
 
 			// ReSharper disable once UnusedAutoPropertyAccessor.Local
-			public string StringFilter { get; set; }
+			public string StringFilter { get; set; } = "";
 		}
 
 		private class EnumerablePagedModel : Paged
@@ -147,7 +143,7 @@ namespace TASVideos.Test.Data.Paging
 			}
 
 			// ReSharper disable once UnusedAutoPropertyAccessor.Local
-			public IEnumerable<int> IdList { get; set; }
+			public IEnumerable<int> IdList { get; set; } = new List<int>();
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace TASVideos.Test.Data.Paging
 		[TestMethod]
 		public void Pageable_Offset_NullSafe()
 		{
-			var pageable = (IPageable)null;
+			var pageable = (IPageable?)null;
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = pageable.Offset();
 			Assert.AreEqual(0, actual);
@@ -33,27 +33,6 @@ namespace TASVideos.Test.Data.Paging
 			var actual = pageable.Offset();
 			Assert.AreEqual(expected, actual);
 		}
-
-		//[TestMethod]
-		//public void Pageable_StartRow_NullSafe()
-		//{
-		//	var pageable = (IPageable)null;
-		//	// ReSharper disable once ExpressionIsAlwaysNull
-		//	var actual = pageable.StartRow();
-		//	Assert.AreEqual(1, actual);
-		//}
-
-		//[TestMethod]
-		//[DataRow(null, null, 1)]
-		//[DataRow(0, null, 1)]
-		//[DataRow(null, 0, 1)]
-		//[DataRow(1, 1, 1)]
-		//public void Pageable_StartRow_Tests(int? size, int? current, int expected)
-		//{
-		//	var pageable = new Pageable(size, current);
-		//	var actual = pageable.StartRow();
-		//	Assert.AreEqual(expected, actual);
-		//}
 
 		private class Pageable : IPageable
 		{

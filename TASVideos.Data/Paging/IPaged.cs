@@ -14,7 +14,7 @@ namespace TASVideos.Data
 
 	public static class PagedExtensions
 	{
-		public static int LastPage(this IPaged paged)
+		public static int LastPage(this IPaged? paged)
 		{
 			var size = paged?.PageSize ?? 0;
 			var count = paged?.RowCount ?? 0;
@@ -26,14 +26,14 @@ namespace TASVideos.Data
 			return (int)Math.Ceiling(count / (double)size);
 		}
 
-		public static int LastRow(this IPaged paged)
+		public static int LastRow(this IPaged? paged)
 		{
 			var size = paged?.PageSize ?? 0;
 			var rowCount = paged?.RowCount ?? 0;
 			return Math.Min(rowCount, paged.Offset() + size);
 		} 
 
-		public static IDictionary<string, string> AdditionalProperties(this IPaged paged)
+		public static IDictionary<string, string> AdditionalProperties(this IPaged? paged)
 		{
 			if (paged == null)
 			{

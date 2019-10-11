@@ -20,11 +20,10 @@ namespace TASVideos.Test.Data.Paging
 		[DataRow("")]
 		[DataRow("\r \n \t")]
 		[DataRow(",,,")]
-		public void FieldSelectable_Single_EmptySelect_ReturnsObj(string fields)
+		public void FieldSelectable_Single_EmptySelect_ReturnsObj(string? fields)
 		{
 			var testClass = new TestClass();
 			var actual = testClass.FieldSelect(fields);
-			Assert.IsNotNull(actual);
 			var dic = (IDictionary<string, object>)actual;
 			Assert.AreEqual(3, dic.Count);
 			Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
@@ -37,7 +36,6 @@ namespace TASVideos.Test.Data.Paging
 		{
 			var testClass = new TestClass();
 			var actual = testClass.FieldSelect(nameof(TestClass.String));
-			Assert.IsNotNull(actual);
 			var dic = (IDictionary<string, object>)actual;
 			Assert.AreEqual(1, dic.Count);
 			Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
@@ -52,7 +50,6 @@ namespace TASVideos.Test.Data.Paging
 			string fields = $"{nameof(TestClass.String)},{nameof(TestClass.Int)}";
 			var testClass = new TestClass();
 			var actual = testClass.FieldSelect(fields);
-			Assert.IsNotNull(actual);
 			var dic = (IDictionary<string, object>)actual;
 			Assert.AreEqual(2, dic.Count);
 			Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
@@ -76,7 +73,6 @@ namespace TASVideos.Test.Data.Paging
 			};
 
 			var actual = testList.FieldSelect(fields).ToList();
-			Assert.IsNotNull(actual);
 			Assert.AreEqual(2, actual.Count);
 		}
 
@@ -95,7 +91,6 @@ namespace TASVideos.Test.Data.Paging
 			};
 
 			var actual = testList.FieldSelect(fields).ToList();
-			Assert.IsNotNull(actual);
 			Assert.AreEqual(3, actual.Count);
 		}
 

@@ -13,7 +13,7 @@ namespace TASVideos.Test.Data.Paging
 		[TestMethod]
 		public void SortableIsSortingParam_NullSafe()
 		{
-			var sortable = (ISortable)null;
+			var sortable = (ISortable?)null;
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = sortable.IsSortingParam("Param");
 			Assert.IsFalse(actual);
@@ -35,7 +35,7 @@ namespace TASVideos.Test.Data.Paging
 		[DataRow("-Param", "param", true, DisplayName = "Case insensitive")]
 		[DataRow("-param", "param", true, DisplayName = "Case insensitive")]
 		[DataRow("-parAm", "paRam", true, DisplayName = "Case insensitive")]
-		public void Sortable_IsSortingParamTests(string sortStr, string param, bool expected)
+		public void Sortable_IsSortingParamTests(string? sortStr, string? param, bool expected)
 		{
 			var sortable = new Sortable(sortStr);
 			var actual = sortable.IsSortingParam(param);
@@ -45,7 +45,7 @@ namespace TASVideos.Test.Data.Paging
 		[TestMethod]
 		public void SortableIsDescending_NullSafe()
 		{
-			var sortable = (ISortable)null;
+			var sortable = (ISortable?)null;
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = sortable.IsDescending("Param");
 			Assert.IsFalse(actual);
@@ -67,7 +67,7 @@ namespace TASVideos.Test.Data.Paging
 		[DataRow("-Param", "param", true, DisplayName = "Case insensitive")]
 		[DataRow("-param", "param", true, DisplayName = "Case insensitive")]
 		[DataRow("-parAm", "paRam", true, DisplayName = "Case insensitive")]
-		public void Sortable_IsDescendingTests(string sortStr, string param, bool expected)
+		public void Sortable_IsDescendingTests(string? sortStr, string? param, bool expected)
 		{
 			var sortable = new Sortable(sortStr);
 			var actual = sortable.IsDescending(param);
@@ -77,7 +77,7 @@ namespace TASVideos.Test.Data.Paging
 		[TestMethod]
 		public void Sortable_IsValidSort_NullSafe()
 		{
-			var sortable = (ISortable)null;
+			var sortable = (ISortable?)null;
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = sortable.IsValidSort(typeof(string));
 			Assert.IsTrue(actual);
@@ -97,7 +97,7 @@ namespace TASVideos.Test.Data.Paging
 		[DataRow("DoesNotExist", typeof(TestResponse), false)]
 		[DataRow("Foo,Baz", typeof(TestResponse), true)]
 		[DataRow("Foo,Bar,Baz", typeof(TestResponse), false)]
-		public void Sortable_IsValidSort_Tests(string sortStr, Type type, bool expected)
+		public void Sortable_IsValidSort_Tests(string? sortStr, Type? type, bool expected)
 		{
 			var sortable = new Sortable(sortStr);
 			var actual = sortable.IsValidSort(type);
@@ -106,12 +106,12 @@ namespace TASVideos.Test.Data.Paging
 
 		private class Sortable : ISortable
 		{
-			public Sortable(string sort)
+			public Sortable(string? sort)
 			{
 				Sort = sort;
 			}
 
-			public string Sort { get; }
+			public string? Sort { get; }
 		}
 
 		private class TestResponse
@@ -119,7 +119,7 @@ namespace TASVideos.Test.Data.Paging
 			[Sortable]
 			// ReSharper disable once UnusedMember.Global
 			// ReSharper disable once UnusedMember.Local
-			public string Foo { get; set; }
+			public string Foo { get; set; } = "";
 
 			// ReSharper disable once UnusedMember.Global
 			// ReSharper disable once UnusedMember.Local
