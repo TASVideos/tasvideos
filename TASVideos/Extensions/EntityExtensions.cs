@@ -80,10 +80,10 @@ namespace TASVideos.Extensions
 				.Select(s => new SubmissionListEntry
 				{
 					Id = s.Id,
-					System = s.System.Code,
+					System = s.System!.Code,
 					GameName = s.GameName,
 					Frames = s.Frames,
-					FrameRate = s.SystemFrameRate.FrameRate,
+					FrameRate = s.SystemFrameRate!.FrameRate,
 					Branch = s.Branch,
 					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author.UserName).ToList()),
 					Submitted = s.CreateTimeStamp,
