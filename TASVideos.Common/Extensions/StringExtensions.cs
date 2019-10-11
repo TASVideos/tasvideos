@@ -11,11 +11,11 @@ namespace TASVideos.Extensions
 		/// strength exceeds this limit, else the string itself is returned.
 		/// If length exceeds limit, ellipses will be added to the result
 		/// </summary>
-		public static string? CapAndEllipse(this string? str, int limit)
+		public static string CapAndEllipse(this string? str, int limit)
 		{
 			if (str == null)
 			{
-				return null;
+				return "";
 			}
 
 			if (limit < 0)
@@ -46,8 +46,13 @@ namespace TASVideos.Extensions
 		/// As well as forward slashes
 		/// Also accounts for acronyms
 		/// </summary>
-		public static string? SplitCamelCase(this string? str)
+		public static string SplitCamelCase(this string? str)
 		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return "";
+			}
+
 			if (string.IsNullOrWhiteSpace(str))
 			{
 				return str;
@@ -69,7 +74,7 @@ namespace TASVideos.Extensions
 			return string.Join(" / ", strings);
 		}
 
-		private static string? SplitCamelCaseInternal(this string? str)
+		private static string SplitCamelCaseInternal(this string? str)
 		{
 			return Regex.Replace(
 				Regex.Replace(

@@ -16,8 +16,8 @@ namespace TASVideos.Test.Common.Extensions
 		}
 
 		[TestMethod]
-		[DataRow(null, 0, null)]
-		[DataRow(null, 1, null)]
+		[DataRow(null, 0, "")]
+		[DataRow(null, 1, "")]
 		[DataRow("", 0, "")]
 		[DataRow("", 1, "")]
 		[DataRow("1234", 1, ".")]
@@ -35,7 +35,7 @@ namespace TASVideos.Test.Common.Extensions
 		}
 
 		[TestMethod]
-		[DataRow(null, null)]
+		[DataRow(null, "")]
 		[DataRow("", "")]
 		[DataRow("\r \n \t", "\r \n \t")]
 		[DataRow(" ", " ")]
