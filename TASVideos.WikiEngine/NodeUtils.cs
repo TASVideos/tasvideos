@@ -7,6 +7,11 @@ namespace TASVideos.WikiEngine.AST
 	{
 		public string Link { get; set; }
 		public string Excerpt { get; set; }
+		public InternalLinkInfo(string link, string excerpt)
+		{
+			Link = link;
+			Excerpt = excerpt;
+		}
 	}
 
 	public static class NodeUtils
@@ -68,14 +73,12 @@ namespace TASVideos.WikiEngine.AST
 				}
 				var si = Math.Max(node.CharStart - 20, 0);
 				var se = Math.Min(node.CharEnd + 20, content.Length);
-				ret.Add(new InternalLinkInfo
-				{
-					// for purposes of html markup, all <a class=intlink> have hrefs that start with a leading '/'
-					// this is how the wiki syntax expects them to work.
-					// But in the context of counting internal referrers, that leading slash is not needed or wanted, so strip it here
-					Link = link.TrimStart('/'),
-					Excerpt = content.Substring(si, se - si)
-				});
+				var excerpt = content.Substring(si, se - si);
+				// for purposes of html markup, all <a class=intlink> have hrefs that start with a leading '/'
+				// this is how the wiki syntax expects them to work.
+				// But in the context of counting internal referrers, that leading slash is not needed or wanted, so strip it here
+				link = link.TrimStart('/');
+				ret.Add(new InternalLinkInfo(link, excerpt));
 			};
 			NodeUtils.ForEach(input, node =>
 			{

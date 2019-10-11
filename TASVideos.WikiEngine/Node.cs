@@ -46,7 +46,7 @@ namespace TASVideos.WikiEngine.AST
 		bool CheckCondition(string condition);
 		void RunViewComponent(TextWriter w, string name, string pp);
 		bool AddTdStyleFilter(string pp);
-		string RunTdStyleFilters(string text);
+		string? RunTdStyleFilters(string text);
 	}
 
 	/// <summary>
@@ -64,7 +64,7 @@ namespace TASVideos.WikiEngine.AST
 			return false;
 		}
 
-		public string RunTdStyleFilters(string text)
+		public string? RunTdStyleFilters(string text)
 		{
 			return null;
 		}
