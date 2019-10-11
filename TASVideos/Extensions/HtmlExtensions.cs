@@ -97,7 +97,7 @@ namespace TASVideos.Extensions
 			return val ? "Yes" : "No";
 		}
 
-		public static bool IsZip(this IFormFile formFile)
+		public static bool IsZip(this IFormFile? formFile)
 		{
 			if (formFile == null)
 			{
@@ -114,7 +114,7 @@ namespace TASVideos.Extensions
 				&& acceptableContentTypes.Contains(formFile.ContentType);
 		}
 
-		public static bool IsCompressed(this IFormFile formFile)
+		public static bool IsCompressed(this IFormFile? formFile)
 		{
 			if (formFile == null)
 			{
