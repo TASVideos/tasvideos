@@ -71,11 +71,7 @@ namespace TASVideos.WikiEngine
 				var results = NodeUtils.GetAllInternalLinks(content, parsed);
 				return results
 					.Where(l => !string.IsNullOrWhiteSpace(l.Link.Split('#')[0]))
-					.Select(l => new InternalLinkInfo
-					{
-						Link = l.Link.Split('#')[0],
-						Excerpt = l.Excerpt
-					})
+					.Select(l => new InternalLinkInfo(l.Link.Split('#')[0], l.Excerpt))
 					.ToList();
 			}
 			catch (NewParser.SyntaxException)

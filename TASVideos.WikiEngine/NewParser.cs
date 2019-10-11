@@ -27,6 +27,11 @@ namespace TASVideos.WikiEngine
 		private bool _parsingInline = false;
 		private delegate void ActionType(NewParser p);
 
+		private NewParser(string input)
+		{
+			_input = input;
+		}
+
 		private void Abort(string msg, int from)
 		{
 			throw new SyntaxException(msg, from); 
@@ -699,7 +704,7 @@ namespace TASVideos.WikiEngine
 
 		public static List<INode> Parse(string content)
 		{
-			var p = new NewParser { _input = content };
+			var p = new NewParser(content);
 			p.ParseLoop();
 			ReplaceTabs(p._output);
 			AddIdsToHeadings(p._output);

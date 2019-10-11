@@ -71,7 +71,7 @@ namespace TASVideos.TagHelpers
 			return HtmlExtensions.WikiCondition(ViewContext, condition);
 		}
 
-		string IWriterHelper.RunTdStyleFilters(string text)
+		string? IWriterHelper.RunTdStyleFilters(string text)
 		{
 			foreach (var kvp in _tableAttributeRunners)
 			{
