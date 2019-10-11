@@ -84,7 +84,7 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.IsNotNull(result.FrameRateOverride);
-			Assert.IsTrue(FrameRatesAreEqual(60.606060606308169, result.FrameRateOverride.Value));
+			Assert.IsTrue(FrameRatesAreEqual(60.606060606308169, result.FrameRateOverride!.Value));
 		}
 
 		[TestMethod]

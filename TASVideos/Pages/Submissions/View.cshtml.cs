@@ -52,7 +52,7 @@ namespace TASVideos.Pages.Submissions
 					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
 					{
 						StartType = (MovieStartType?)s.MovieStartType,
-						SystemDisplayName = s.System.DisplayName,
+						SystemDisplayName = s.System!.DisplayName,
 						SystemCode = s.System.Code,
 						GameName = s.GameName,
 						GameVersion = s.GameVersion,
@@ -60,11 +60,11 @@ namespace TASVideos.Pages.Submissions
 						Branch = s.Branch,
 						Emulator = s.EmulatorVersion,
 						FrameCount = s.Frames,
-						FrameRate = s.SystemFrameRate.FrameRate,
+						FrameRate = s.SystemFrameRate!.FrameRate,
 						RerecordCount = s.RerecordCount,
 						CreateTimestamp = s.CreateTimeStamp,
-						Submitter = s.Submitter.UserName,
-						LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
+						Submitter = s.Submitter!.UserName,
+						LastUpdateTimeStamp = s.WikiContent!.LastUpdateTimeStamp,
 						LastUpdateUser = s.WikiContent.LastUpdateUserName,
 						Status = s.Status,
 						EncodeEmbedLink = s.EncodeEmbedLink,
@@ -77,7 +77,7 @@ namespace TASVideos.Pages.Submissions
 						GameId = s.GameId,
 						RomId = s.RomId,
 						RejectionReasonDisplay = s.RejectionReasonId.HasValue
-							? s.RejectionReason.DisplayName
+							? s.RejectionReason!.DisplayName
 							: null,
 						Authors = s.SubmissionAuthors
 							.Where(sa => sa.SubmissionId == Id)
@@ -134,7 +134,7 @@ namespace TASVideos.Pages.Submissions
 
 			if (submission == null)
 			{
-				return null;
+				return NotFound();
 			}
 
 			if (submission.Status != SubmissionStatus.New)
@@ -145,7 +145,7 @@ namespace TASVideos.Pages.Submissions
 			submission.Status = SubmissionStatus.JudgingUnderWay;
 			var wikiPage = new WikiPage
 			{
-				PageName = submission.WikiContent.PageName,
+				PageName = submission.WikiContent!.PageName,
 				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Identity.Name}]: Claiming for judging.",
 				RevisionMessage = "Claiming for judging"
 			};
