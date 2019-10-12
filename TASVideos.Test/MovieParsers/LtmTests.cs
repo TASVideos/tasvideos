@@ -28,7 +28,6 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
 
-			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
 		}
@@ -38,7 +37,6 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
 
-			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(2, result.Frames);
@@ -49,7 +47,6 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
 
-			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(7, result.RerecordCount);
@@ -61,7 +58,6 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
 
-			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(120, result.FrameRateOverride);
@@ -73,7 +69,6 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _ltmParser.Parse(Embedded("noframerate.ltm"));
 
-			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(Ltm.DefaultFrameRate, result.FrameRateOverride);
 			AssertNoErrors(result);
@@ -86,7 +81,6 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
 
-			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -98,7 +92,6 @@ namespace TASVideos.Test.MovieParsers
 		{
 			var result = _ltmParser.Parse(Embedded("savestate.ltm"));
 
-			Assert.IsNotNull(result);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
