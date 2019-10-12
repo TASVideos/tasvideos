@@ -21,7 +21,7 @@ namespace TASVideos.Test
 		private bool _dbConcurrentUpdateConflict;
 		private bool _dbUpdateConflict;
 
-		private TestDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
+		private TestDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor? httpContextAccessor)
 			: base(options, httpContextAccessor)
 		{
 		}
