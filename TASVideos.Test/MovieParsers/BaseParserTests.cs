@@ -15,19 +15,23 @@ namespace TASVideos.Test.MovieParsers
 
 		protected Stream Embedded(string name)
 		{
-			return Assembly.GetAssembly(typeof(BaseParserTests)).GetManifestResourceStream(ResourcesPath + name);
+			var stream = Assembly.GetAssembly(typeof(BaseParserTests))?.GetManifestResourceStream(ResourcesPath + name);
+			if (stream == null)
+			{
+				throw new InvalidOperationException($"Unable to find embedded resource {name}");
+			}
+
+			return stream;
 		}
 
 		protected void AssertNoWarnings(IParseResult result)
 		{
-			Assert.IsNotNull(result);
 			Assert.IsNotNull(result.Warnings);
 			Assert.AreEqual(0, result.Warnings.Count());
 		}
 
 		protected void AssertNoErrors(IParseResult result)
 		{
-			Assert.IsNotNull(result);
 			Assert.IsNotNull(result.Errors);
 			Assert.AreEqual(0, result.Errors.Count());
 		}
