@@ -15,7 +15,7 @@ namespace TASVideos.Data.Entity.Game
 		public virtual ICollection<GameRom> Roms { get; set; } = new HashSet<GameRom>();
 
 		public int SystemId { get; set; }
-		public virtual GameSystem System { get; set; }
+		public virtual GameSystem? System { get; set; }
 
 		public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 		public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();

@@ -9,7 +9,7 @@ namespace TASVideos.Data.Entity.Forum
 		public int Id { get; set; }
 
 		public int CategoryId { get; set; }
-		public virtual ForumCategory Category { get; set; }
+		public virtual ForumCategory? Category { get; set; }
 
 		public virtual ICollection<ForumTopic> ForumTopics { get; set; } = new HashSet<ForumTopic>();
 

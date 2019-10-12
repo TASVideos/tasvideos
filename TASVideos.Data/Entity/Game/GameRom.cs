@@ -17,7 +17,7 @@ namespace TASVideos.Data.Entity.Game
 		public int Id { get; set; }
 
 		public int GameId { get; set; }
-		public virtual Game Game { get; set; }
+		public virtual Game? Game { get; set; }
 
 		public ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 		public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();

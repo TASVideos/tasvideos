@@ -16,7 +16,7 @@ namespace TASVideos.Data.Entity.Forum
 		public int Id { get; set; }
 
 		public int ForumId { get; set; }
-		public virtual Forum Forum { get; set; }
+		public virtual Forum? Forum { get; set; }
 
 		public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
 		public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = new HashSet<ForumTopicWatch>();
@@ -25,7 +25,7 @@ namespace TASVideos.Data.Entity.Forum
 		public string? Title { get; set; }
 
 		public int PosterId { get; set; }
-		public virtual User Poster { get; set; }
+		public virtual User? Poster { get; set; }
 
 		public int Views { get; set; }
 		public ForumTopicType Type { get; set; }
@@ -43,7 +43,7 @@ namespace TASVideos.Data.Entity.Forum
 	{
 		public static IQueryable<ForumTopic> ExcludeRestricted(this IQueryable<ForumTopic> list, bool seeRestricted)
 		{
-			return list.Where(f => seeRestricted || !f.Forum.Restricted);
+			return list.Where(f => seeRestricted || !f.Forum!.Restricted);
 		}
 
 		public static IQueryable<ForumTopic> ForForum(this IQueryable<ForumTopic> list, int forumId)

@@ -16,7 +16,7 @@ namespace TASVideos.Data.Entity.Forum
 		public int Ordinal { get; set; }
 
 		public int PollId { get; set; }
-		public virtual ForumPoll Poll { get; set; }
+		public virtual ForumPoll? Poll { get; set; }
 
 		public virtual ICollection<ForumPollOptionVote> Votes { get; set; } = new HashSet<ForumPollOptionVote>();
 	}
