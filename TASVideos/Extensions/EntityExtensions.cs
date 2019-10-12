@@ -85,7 +85,7 @@ namespace TASVideos.Extensions
 					Frames = s.Frames,
 					FrameRate = s.SystemFrameRate!.FrameRate,
 					Branch = s.Branch,
-					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author.UserName).ToList()),
+					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author!.UserName).ToList()),
 					Submitted = s.CreateTimeStamp,
 					Status = s.Status
 				});

@@ -114,15 +114,15 @@ namespace TASVideos.Data
 					.HasFilter($"([{nameof(User.NormalizedUserName)}] IS NOT NULL)");
 
 				entity.HasMany(e => e.SentPrivateMessages)
-					.WithOne(e => e.FromUser)
+					.WithOne(e => e.FromUser!)
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasMany(e => e.ReceivedPrivateMessages)
-					.WithOne(e => e.ToUser)
+					.WithOne(e => e.ToUser!)
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasMany(e => e.UserFiles)
-					.WithOne(e => e.Author)
+					.WithOne(e => e.Author!)
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasMany(e => e.UserFileComments)
@@ -130,7 +130,7 @@ namespace TASVideos.Data
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasMany(e => e.ForumTopicWatches)
-					.WithOne(e => e.User)
+					.WithOne(e => e.User!)
 					.OnDelete(DeleteBehavior.Restrict);
 			});
 

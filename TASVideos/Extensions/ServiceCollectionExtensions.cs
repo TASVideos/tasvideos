@@ -179,7 +179,7 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddSwagger(this IServiceCollection services)
 		{
-			var version = Assembly.GetExecutingAssembly().GetName().Version;
+			var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
 
 			return services.AddSwaggerGen(c =>
 			{

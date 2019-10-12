@@ -242,8 +242,14 @@ namespace TASVideos.Data
 
 		private static string EmbeddedSampleSqlFile()
 		{
+			const string sampleDataFile = "TASVideos.Data.SampleData.SampleData.zip";
 			var stream = Assembly.GetAssembly(typeof(UserSampleData))
-				.GetManifestResourceStream("TASVideos.Data.SampleData.SampleData.zip");
+				?.GetManifestResourceStream(sampleDataFile);
+
+			if (stream == null)
+			{
+				throw new InvalidOperationException($"Can not find resource: {sampleDataFile}");
+			}
 
 			var archive = new ZipArchive(stream);
 			var entry = archive.Entries.Single();
