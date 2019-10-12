@@ -10,13 +10,13 @@ namespace TASVideos.Data.Entity
 		public int Id { get; set; }
 
 		public long UserFileId { get; set; }
-		public virtual UserFile UserFile { get; set; }
+		public virtual UserFile? UserFile { get; set; }
 
 		[StringLength(255)]
 		public string? Ip { get; set; }
 
 		public int? ParentId { get; set; }
-		public virtual UserFileComment Parent { get; set; }
+		public virtual UserFileComment? Parent { get; set; }
 
 		[StringLength(255)]
 		public string? Title { get; set; }

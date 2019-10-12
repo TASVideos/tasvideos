@@ -25,7 +25,7 @@ namespace TASVideos.Data.Entity
 		public long Id { get; set; }
 
 		public int AuthorId { get; set; }
-		public virtual User Author { get; set; }
+		public virtual User? Author { get; set; }
 
 		[StringLength(255)]
 		public string FileName { get; set; } = "";
@@ -58,10 +58,10 @@ namespace TASVideos.Data.Entity
 		public int PhysicalLength { get; set; }
 
 		public int? GameId { get; set; }
-		public virtual Game.Game Game { get; set; }
+		public virtual Game.Game? Game { get; set; }
 
 		public int? SystemId { get; set; }
-		public virtual Game.GameSystem System { get; set; }
+		public virtual Game.GameSystem? System { get; set; }
 
 		public bool Hidden { get; set; }
 
@@ -105,7 +105,7 @@ namespace TASVideos.Data.Entity
 
 		public static IQueryable<UserFile> ForAuthor(this IQueryable<UserFile> query, string userName)
 		{
-			return query.Where(q => q.Author.UserName == userName);
+			return query.Where(q => q.Author!.UserName == userName);
 		}
 	}
 }

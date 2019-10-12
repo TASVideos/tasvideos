@@ -9,10 +9,10 @@ namespace TASVideos.Data.Entity
 		public int Id { get; set; }
 
 		public int FromUserId { get; set; }
-		public virtual User FromUser { get; set; }
+		public virtual User? FromUser { get; set; }
 
 		public int ToUserId { get; set; }
-		public virtual User ToUser { get; set; }
+		public virtual User? ToUser { get; set; }
 
 		[StringLength(50)]
 		public string? IpAddress { get; set; }

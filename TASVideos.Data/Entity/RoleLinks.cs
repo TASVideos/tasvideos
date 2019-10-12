@@ -10,6 +10,6 @@ namespace TASVideos.Data.Entity
 		[StringLength(300)]
 		public string Link { get; set; } = "";
 
-		public virtual Role Role { get; set; }
+		public virtual Role? Role { get; set; }
 	}
 }

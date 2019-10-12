@@ -41,22 +41,22 @@ namespace TASVideos.Data.Entity
 		public virtual Publication? ObsoletedBy { get; set; }
 
 		public int GameId { get; set; }
-		public virtual Game.Game Game { get; set; }
+		public virtual Game.Game? Game { get; set; }
 
 		public int SystemId { get; set; }
-		public virtual GameSystem System { get; set; }
+		public virtual GameSystem? System { get; set; }
 
 		public int SystemFrameRateId { get; set; }
-		public virtual GameSystemFrameRate SystemFrameRate { get; set; }
+		public virtual GameSystemFrameRate? SystemFrameRate { get; set; }
 
 		public int RomId { get; set; }
-		public virtual GameRom Rom { get; set; }
+		public virtual GameRom? Rom { get; set; }
 
 		public int TierId { get; set; }
-		public virtual Tier Tier { get; set; }
+		public virtual Tier? Tier { get; set; }
 
 		public int SubmissionId { get; set; }
-		public virtual Submission Submission { get; set; }
+		public virtual Submission? Submission { get; set; }
 		public virtual ICollection<PublicationAuthor> Authors { get; set; } = new List<PublicationAuthor>();
 
 		public int? WikiContentId { get; set; } // making this non-nullable is a catch-22 when creating a publication, the wiki needs a publication id and the publication needs a wiki id
@@ -149,12 +149,12 @@ namespace TASVideos.Data.Entity
 			var query = publications;
 			if (tokens.SystemCodes.Any())
 			{
-				query = query.Where(p => tokens.SystemCodes.Contains(p.System.Code));
+				query = query.Where(p => tokens.SystemCodes.Contains(p.System!.Code));
 			}
 
 			if (tokens.Tiers.Any())
 			{
-				query = query.Where(p => tokens.Tiers.Contains(p.Tier.Name));
+				query = query.Where(p => tokens.Tiers.Contains(p.Tier!.Name));
 			}
 
 			if (!tokens.ShowObsoleted)
@@ -174,7 +174,7 @@ namespace TASVideos.Data.Entity
 
 			if (tokens.Genres.Any())
 			{
-				query = query.Where(p => p.Game.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre.DisplayName)));
+				query = query.Where(p => p.Game.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre!.DisplayName)));
 			}
 
 			if (tokens.Flags.Any())
