@@ -29,7 +29,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = v.Id,
 					TopicId = v.TopicId,
-					Question = ImportHelper.ConvertLatin1String(v.Text),
+					Question = ImportHelper.ConvertNotNullLatin1String(v.Text),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
 					CreateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					LastUpdateUserName = v.Topic?.Poster?.UserName ?? "Unknown",

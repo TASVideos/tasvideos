@@ -90,8 +90,8 @@ namespace TASVideos.Legacy.Imports
 				Ip = legacyComment.Ip,
 				ParentId = legacyComment.ParentId,
 				Text = legacyComment.Text,
-				Title = ImportHelper.ConvertLatin1String(legacyComment.Title),
-				UserId = userIdsByName.TryGetValue(legacyComment.User.Name, out var userId)
+				Title = ImportHelper.ConvertNotNullLatin1String(legacyComment.Title),
+				UserId = userIdsByName.TryGetValue(legacyComment.User!.Name, out var userId)
 				? userId
 				: -1,
 				UserFileId = legacyComment.FileId
@@ -123,8 +123,8 @@ namespace TASVideos.Legacy.Imports
 				PhysicalLength = legacyFile.PhysicalLength,
 				Rerecords = (int)legacyFile.Rerecords,
 				SystemId = legacyFile.SystemId,
-				Title = ImportHelper.ConvertLatin1String(legacyFile.Title),
-				Type = legacyFile.Type.NullIfWhiteSpace(),
+				Title = ImportHelper.ConvertNotNullLatin1String(legacyFile.Title),
+				Type = legacyFile.Type,
 				UploadTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyFile.Timestamp),
 				Views = legacyFile.Views,
 				Warnings = legacyFile.Warnings.NullIfWhiteSpace(),
@@ -137,7 +137,7 @@ namespace TASVideos.Legacy.Imports
 		/// </summary>
 		private static byte[] Convert(byte[] content)
 		{
-			if (content == null || content.Length == 0)
+			if (content.Length == 0)
 			{
 				return content;
 			}

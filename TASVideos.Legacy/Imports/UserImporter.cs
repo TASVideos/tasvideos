@@ -82,7 +82,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(u => new User
 				{
 					Id = u.Id,
-					UserName = ImportHelper.ConvertLatin1String(u.UserName).Trim(),
+					UserName = ImportHelper.ConvertNotNullLatin1String(u.UserName).Trim(),
 					//NormalizedUserName = ImportHelper.ConvertLatin1String(u.UserName).ToUpper(), // TODO: this creates a unique constraint violation, two users must have the same normalized name??
 					NormalizedUserName = u.UserName.ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
@@ -124,12 +124,12 @@ namespace TASVideos.Legacy.Imports
 				{
 					// not having user means they are effectively banned
 					// limited = Limited User
-					if ((user.SiteUser.UserRoles.Any(ur => ur.Role.Name == "user") || user.User.Id == 505) // 505 is TASVideoAgent, which needs some roles but is not a user
-						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding these roles to admins, they have these perms anyway
+					if ((user.SiteUser.UserRoles.Any(ur => ur.Role!.Name == "user") || user.User.Id == 505) // 505 is TASVideoAgent, which needs some roles but is not a user
+						&& user.SiteUser.UserRoles.All(ur => ur.Role!.Name != "admin")) // There's no point in adding these roles to admins, they have these perms anyway
 					{
 						if (!user.User.IsBanned)
 						{
-							if (user.SiteUser.UserRoles.Any(ur => ur.Role.Name == "limited"))
+							if (user.SiteUser.UserRoles.Any(ur => ur!.Role!.Name == "limited"))
 							{
 								userRoles.Add(new UserRole
 								{
@@ -158,7 +158,7 @@ namespace TASVideos.Legacy.Imports
 					}
 
 					if (user.User.IsForumAdmin
-						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
+						&& user.SiteUser.UserRoles.All(ur => ur.Role!.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
 					{
 						userRoles.Add(new UserRole
 						{
@@ -167,7 +167,7 @@ namespace TASVideos.Legacy.Imports
 						});
 					}
 					else if (user.User.IsModerator
-						&& user.SiteUser.UserRoles.All(ur => ur.Role.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
+						&& user.SiteUser.UserRoles.All(ur => ur.Role!.Name != "admin")) // There's no point in adding roles to admins, they have these perms anyway
 					{
 						userRoles.Add(new UserRole
 						{
@@ -204,9 +204,9 @@ namespace TASVideos.Legacy.Imports
 					}
 
 					foreach (var userRole in user.SiteUser.UserRoles.Select(ur => ur.Role)
-						.Where(r => r.Name != "user" && r.Name != "limited"))
+						.Where(r => r!.Name != "user" && r.Name != "limited"))
 					{
-						var role = GetRoleFromLegacy(userRole.Name, roles);
+						var role = GetRoleFromLegacy(userRole!.Name, roles);
 						if (role != null)
 						{
 							userRoles.Add(new UserRole
@@ -317,7 +317,7 @@ namespace TASVideos.Legacy.Imports
 			portedPlayers.BulkInsert(connectionStr, playerColumns, "[User]");
 		}
 
-		private static Role GetRoleFromLegacy(string role, IEnumerable<Role> roles)
+		private static Role? GetRoleFromLegacy(string role, IEnumerable<Role> roles)
 		{
 			switch (role.ToLower())
 			{

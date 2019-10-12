@@ -21,8 +21,8 @@ namespace TASVideos.Legacy.Imports
 	{
 		private class UserDto
 		{
-			public string Name { get; set; }
-			public string HomePage { get; set; }
+			public string Name { get; set; } = "";
+			public string HomePage { get; set; } = "";
 		}
 
 		public static void Import(string connectionStr, ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
@@ -75,11 +75,11 @@ namespace TASVideos.Legacy.Imports
 			// Set child references
 			foreach (var wikiPage in pages)
 			{
-				var result = dic.TryGetValue($"{wikiPage.PageName}__ImportKey__{wikiPage.Revision + 1}", out WikiPage nextWiki);
+				var result = dic.TryGetValue($"{wikiPage.PageName}__ImportKey__{wikiPage.Revision + 1}", out WikiPage? nextWiki);
 
 				if (result)
 				{
-					wikiPage.ChildId = nextWiki.Id;
+					wikiPage.ChildId = nextWiki!.Id;
 				}
 			}
 
@@ -132,7 +132,7 @@ namespace TASVideos.Legacy.Imports
 			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000, 300);
 		}
 
-		private static string PageNameShenanigans(SiteText st, string userName)
+		private static string PageNameShenanigans(SiteText st, string? userName)
 		{
 			string pageName = st.PageName;
 			if (pageName.StartsWith("System") && pageName != "SystemPages")
@@ -188,7 +188,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static string MarkupShenanigans(SiteText st, IEnumerable<UserDto> users)
 		{
-			string markup = ImportHelper.ConvertLatin1String(st.Description);
+			string? markup = ImportHelper.ConvertLatin1String(st.Description) ?? "";
 
 			// TODO: this page has a listparents that needs to be removed
 			// However, we need better shenanigans to handle escaped module text

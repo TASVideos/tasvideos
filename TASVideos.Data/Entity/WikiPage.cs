@@ -19,8 +19,7 @@ namespace TASVideos.Data.Entity
 		public bool MinorEdit { get; set; }
 
 		[StringLength(1000)]
-		[Required]
-		public string RevisionMessage { get; set; } = "";
+		public string? RevisionMessage { get; set; }
 
 		public int? ChildId { get; set; }
 		public virtual WikiPage? Child { get; set; } // The latest revision of a page is one with Child = null

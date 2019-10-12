@@ -61,23 +61,18 @@ namespace TASVideos.Services
 				.ForUser(userId)
 				.Select(tw => new WatchedTopic
 				{
-					TopicCreateTimeStamp = tw.ForumTopic.CreateTimeStamp,
+					TopicCreateTimeStamp = tw.ForumTopic!.CreateTimeStamp,
 					IsNotified = tw.IsNotified,
 					ForumId = tw.ForumTopic.ForumId,
-					ForumTitle = tw.ForumTopic.Forum.Name,
+					ForumTitle = tw.ForumTopic!.Forum!.Name,
 					TopicId = tw.ForumTopicId,
-					TopicTitle = tw.ForumTopic.Title,
+					TopicTitle = tw.ForumTopic!.Title,
 				})
 				.ToListAsync();
 		}
 
 		public async Task NotifyNewPost(TopicNotification notification)
 		{
-			if (notification == null)
-			{
-				throw new ArgumentNullException($"{nameof(notification)} can not be null");
-			}
-
 			var watches = await _db.ForumTopicWatches
 				.Include(w => w.User)
 				.Where(w => w.ForumTopicId == notification.TopicId)
@@ -89,7 +84,7 @@ namespace TASVideos.Services
 			{
 				await _emailService
 					.TopicReplyNotification(
-						watches.Select(w => w.User.Email),
+						watches.Select(w => w.User!.Email),
 						new TopicReplyNotificationTemplate
 						{
 							PostId = notification.PostId,
