@@ -70,13 +70,6 @@ namespace TASVideos.Test.Services
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public async Task NotifyNewPost_ThrowArgumentNull()
-		{
-			await _topicWatcher.NotifyNewPost(null);
-		}
-
-		[TestMethod]
 		public async Task NotifyNewPost_DoesNotNotifyPoster()
 		{
 			_db.Users.Add(new User { Id = 1 });

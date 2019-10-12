@@ -34,6 +34,11 @@ namespace TASVideos.Legacy.Imports
 			return Encoding.UTF8.GetString(b);
 		}
 
+		public static string ConvertNotNullLatin1String(string input)
+		{
+			return ConvertLatin1String(input) ?? "";
+		}
+
 		public static string? ConvertLatin1String(string? input)
 		{
 			if (input == null)

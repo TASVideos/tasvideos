@@ -21,8 +21,9 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
 		public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = new HashSet<ForumTopicWatch>();
 
+		[Required]
 		[StringLength(500)]
-		public string? Title { get; set; }
+		public string Title { get; set; }
 
 		public int PosterId { get; set; }
 		public virtual User? Poster { get; set; }

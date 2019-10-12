@@ -17,7 +17,7 @@ namespace TASVideos.Legacy.Imports
 			var ratingsDto = legacySiteContext.MovieRating
 				.Select(mr => new
 				{
-					UserName = mr.User.Name,
+					UserName = mr.User!.Name,
 					PublicationId = mr.MovieId,
 					Type = mr.RatingName == "Entertainment"
 						? PublicationRatingType.Entertainment
