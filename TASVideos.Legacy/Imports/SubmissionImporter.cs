@@ -61,7 +61,9 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var systems = context.GameSystems.ToList();
-			var systemFrameRates = context.GameSystemFrameRates.ToList();
+			var systemFrameRates = context.GameSystemFrameRates
+				.Include(sf => sf.System)
+				.ToList();
 
 			var lSubsWithSystem = (from ls in legacySubmissions
 				join s in systems on ls.SystemId equals s.Id
@@ -94,7 +96,7 @@ namespace TASVideos.Legacy.Imports
 					: 60;
 
 				var systemFrameRate = systemFrameRates
-					.Where(sf => sf.System.Id == legacySubmission.System.Id)
+					.Where(sf => sf.System!.Id == legacySubmission.System.Id)
 					.FirstOrDefault(sf => Math.Abs(sf.FrameRate - legacyFrameRate) < RoundingOffset);
 
 				if (systemFrameRate == null)
@@ -319,33 +321,31 @@ namespace TASVideos.Legacy.Imports
 			}
 		}
 
-		private static string GetExtension(byte[] content)
+		private static string? GetExtension(byte[]? content)
 		{
 			if (content == null || content.Length == 0)
 			{
 				return null;
 			}
 
-			using (var submissionFileStream = new MemoryStream(content))
-			using (var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read))
+			using var submissionFileStream = new MemoryStream(content);
+			using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
+			var entries = submissionZipArchive.Entries.ToList();
+			if (entries.Count != 1)
 			{
-				var entries = submissionZipArchive.Entries.ToList();
-				if (entries.Count != 1)
-				{
-					// TODO: cleanup multiple entries while we are at it
-					return entries
-						.Select(e => Path.GetExtension(e.FullName))
-						.Where(s => ValidSubmissionFileExtensions.Contains(s))
-						.Distinct()
-						.FirstOrDefault()
-						?.TrimStart('.');
-				}
-
-				return Path.GetExtension(entries[0].FullName).TrimStart('.');
+				// TODO: cleanup multiple entries while we are at it
+				return entries
+					.Select(e => Path.GetExtension(e.FullName))
+					.Where(s => ValidSubmissionFileExtensions.Contains(s))
+					.Distinct()
+					.FirstOrDefault()
+					?.TrimStart('.');
 			}
+
+			return Path.GetExtension(entries[0].FullName).TrimStart('.');
 		}
 
-		private static string CleanAndGuessEmuVersion(int id, string emulatorVersion, string movieExtension)
+		private static string? CleanAndGuessEmuVersion(int id, string? emulatorVersion, string? movieExtension)
 		{
 			emulatorVersion = string.IsNullOrWhiteSpace(emulatorVersion)
 				? null

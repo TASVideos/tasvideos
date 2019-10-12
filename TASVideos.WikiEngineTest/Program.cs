@@ -27,8 +27,8 @@ namespace TASVideos.WikiEngineTest
 	{
 		class Options
 		{
-			public string ConnectionString { get; set; }
-			public string OutDir { get; set; }
+			public string? ConnectionString { get; set; }
+			public string? OutDir { get; set; }
 		}
 		static int Main(string[] args)
 		{
@@ -90,8 +90,8 @@ namespace TASVideos.WikiEngineTest
 					var existingRevision = -1;
 					if (File.Exists(path))
 					{
-						using (var tr = new StreamReader(path))
-							existingRevision = int.Parse(tr.ReadLine());
+						using var tr = new StreamReader(path);
+						existingRevision = int.Parse(tr.ReadLine());
 					}
 
 					var revision = wantUpdate ? wp.Revision : existingRevision != -1 ? existingRevision : wp.Revision;
@@ -115,13 +115,11 @@ namespace TASVideos.WikiEngineTest
 						nodes = Builtins.MakeErrorPage(markup, e);
 					}
 
-					using (var tw = new StreamWriter(path))
+					using var tw = new StreamWriter(path);
+					tw.WriteLine(revision);
+					foreach (var node in nodes)
 					{
-						tw.WriteLine(revision);
-						foreach (var node in nodes)
-						{
-							node.DumpContentDescriptive(tw, "");
-						}
+						node.DumpContentDescriptive(tw, "");
 					}
 				}
 				Console.Write(new string('\b', 8));
