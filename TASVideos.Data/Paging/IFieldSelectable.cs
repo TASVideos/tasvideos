@@ -14,7 +14,7 @@ namespace TASVideos.Data
 		/// <summary>
 		/// Gets a comma separated string that specifies which fields to return in the result set
 		/// </summary>
-		string Fields { get; }
+		string? Fields { get; }
 	}
 
 	public static class FieldSelectionExtensions
@@ -77,9 +77,12 @@ namespace TASVideos.Data
 			var expando = new ExpandoObject();
 			var dictionary = (IDictionary<string, object>)expando;
 
-			foreach (var property in obj.GetType().GetProperties())
+			if (obj != null)
 			{
-				dictionary.Add(property.Name, property.GetValue(obj));
+				foreach (var property in obj.GetType().GetProperties())
+				{
+					dictionary.Add(property.Name, property.GetValue(obj));
+				}
 			}
 
 			return expando;

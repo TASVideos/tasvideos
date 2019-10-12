@@ -6,7 +6,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
     {
 		[Column("UserID")]
 		public int UserId { get; set; }
-		public virtual User User { get; set; }
+		public virtual User? User { get; set; }
 
 		[Column("MovieId")]
 		public int MovieId { get; set; }

@@ -46,7 +46,7 @@ namespace TASVideos.Pages.Submissions
 		[Display(Name = "Status")]
 		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
 
-		public IEnumerable<SelectListItem> AvailableTiers { get; set; }
+		public IEnumerable<SelectListItem> AvailableTiers { get; set; } = new List<SelectListItem>();
 
 		public IEnumerable<SelectListItem> AvailableRejectionReasons { get; set; } = new List<SelectListItem>();
 
@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 				{
-					SystemDisplayName = s.System.DisplayName,
+					SystemDisplayName = s.System!.DisplayName,
 					SystemCode = s.System.Code,
 					GameName = s.GameName,
 					GameVersion = s.GameVersion,
@@ -65,11 +65,11 @@ namespace TASVideos.Pages.Submissions
 					Branch = s.Branch,
 					Emulator = s.EmulatorVersion,
 					FrameCount = s.Frames,
-					FrameRate = s.SystemFrameRate.FrameRate,
+					FrameRate = s.SystemFrameRate!.FrameRate,
 					RerecordCount = s.RerecordCount,
 					CreateTimestamp = s.CreateTimeStamp,
-					Submitter = s.Submitter.UserName,
-					LastUpdateTimeStamp = s.WikiContent.LastUpdateTimeStamp,
+					Submitter = s.Submitter!.UserName,
+					LastUpdateTimeStamp = s.WikiContent!.LastUpdateTimeStamp,
 					LastUpdateUser = s.WikiContent.LastUpdateUserName,
 					Status = s.Status,
 					EncodeEmbedLink = s.EncodeEmbedLink,
@@ -87,7 +87,7 @@ namespace TASVideos.Pages.Submissions
 
 			Submission.Authors = await Db.SubmissionAuthors
 				.Where(sa => sa.SubmissionId == Id)
-				.Select(sa => sa.Author.UserName)
+				.Select(sa => sa.Author!.UserName)
 				.ToListAsync();
 
 			// If user can not edit submissions then they must be an author or the original submitter
@@ -145,7 +145,7 @@ namespace TASVideos.Pages.Submissions
 				.Select(s => new
 				{
 					UserIsJudge = s.Judge != null && s.Judge.UserName == User.Identity.Name,
-					UserIsAuthorOrSubmitter = s.Submitter.UserName == User.Identity.Name || s.SubmissionAuthors.Any(sa => sa.Author.UserName == User.Identity.Name),
+					UserIsAuthorOrSubmitter = s.Submitter!.UserName == User.Identity.Name || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == User.Identity.Name),
 					CurrentStatus = s.Status,
 					CreateDate = s.CreateTimeStamp
 				})

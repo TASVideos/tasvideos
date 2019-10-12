@@ -10,13 +10,13 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Id { get; set; }
 
 		[Column("movieid")]
-		public virtual Movie Movie { get; set; }
+		public virtual Movie? Movie { get; set; }
 
 		[Column("filename")]
 		public string FileName { get; set; } = "";
 
 		[ForeignKey("FileName")]
-		public virtual MovieFileStorage Storage { get; set; }
+		public virtual MovieFileStorage? Storage { get; set; }
 
 		[Column("typech")]
 		public string Type { get; set; } = "";

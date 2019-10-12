@@ -33,7 +33,7 @@ namespace TASVideos.TagHelpers
 
 	public class NavDropdownTagHelper : NavItemBase
 	{
-		public string Name { get; set; } = "";
+		public string? Name { get; set; }
 
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{

@@ -10,13 +10,8 @@ namespace TASVideos.Extensions
 	// ReSharper disable PossibleMultipleEnumeration
 	public static class WikiHelper
 	{
-		public static bool UserCanEditWikiPage(string pageName, string userName, IEnumerable<PermissionTo> userPermissions)
+		public static bool UserCanEditWikiPage(string? pageName, string? userName, IEnumerable<PermissionTo> userPermissions)
 		{
-			if (userPermissions == null)
-			{
-				throw new ArgumentNullException($"{nameof(userPermissions)} can not be null");
-			}
-
 			if (string.IsNullOrWhiteSpace(pageName) || string.IsNullOrWhiteSpace(userName))
 			{
 				return false;
@@ -126,7 +121,7 @@ namespace TASVideos.Extensions
 
 		public static bool IsHomePage(this WikiPage page)
 		{
-			return IsHomePage(page.PageName);
+			return IsHomePage(page?.PageName);
 		}
 
 		public static bool IsSystemPage(this WikiPage page)
@@ -139,7 +134,7 @@ namespace TASVideos.Extensions
 			return IsGameResourcesPage(page.PageName);
 		}
 
-		public static bool IsHomePage(string pageName)
+		public static bool IsHomePage(string? pageName)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{
@@ -163,7 +158,7 @@ namespace TASVideos.Extensions
 				.First();
 		}
 
-		public static bool IsSystemPage(string pageName)
+		public static bool IsSystemPage(string? pageName)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{
@@ -173,7 +168,7 @@ namespace TASVideos.Extensions
 			return pageName.StartsWith("System/");
 		}
 
-		public static bool IsGameResourcesPage(string pageName)
+		public static bool IsGameResourcesPage(string? pageName)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{
@@ -183,7 +178,7 @@ namespace TASVideos.Extensions
 			return pageName.StartsWith("GameResources/");
 		}
 
-		public static int? IsPublicationPage(string pageName)
+		public static int? IsPublicationPage(string? pageName)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{
@@ -204,7 +199,7 @@ namespace TASVideos.Extensions
 			return null;
 		}
 
-		public static int? IsSubmissionPage(string pageName)
+		public static int? IsSubmissionPage(string? pageName)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{

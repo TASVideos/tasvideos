@@ -33,7 +33,7 @@ namespace TASVideos.Data.Entity.Forum
 		public bool IsLocked { get; set; }
 
 		public int? PollId { get; set; }
-		public virtual ForumPoll Poll { get; set; }
+		public virtual ForumPoll? Poll { get; set; }
 
 		[StringLength(200)]
 		public string? PageName { get; set; }

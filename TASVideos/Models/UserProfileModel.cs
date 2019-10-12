@@ -16,7 +16,7 @@ namespace TASVideos.Models
 	public class UserProfileModel
 	{
 		public int Id { get; set; }
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		[Display(Name = "Player Points:")]
 		public int PlayerPoints { get; set; }
@@ -32,23 +32,23 @@ namespace TASVideos.Models
 		public int PostCount { get; set; }
 
 		[Display(Name = "Avatar")]
-		public string Avatar { get; set; }
+		public string? Avatar { get; set; }
 
 		[Display(Name = "Location:")]
-		public string Location { get; set; }
+		public string? Location { get; set; }
 
 		[Display(Name = "Signature")]
-		public string Signature { get; set; }
+		public string? Signature { get; set; }
 
 		[Display(Name = "Ratings Public?")]
 		public bool PublicRatings { get; set; }
 
 		[Display(Name = "TimeZone:")]
-		public string TimeZone { get; set; }
+		public string? TimeZone { get; set; }
 
 		// Private info
 		[Display(Name = "Email:")]
-		public string Email { get; set; }
+		public string? Email { get; set; }
 
 		[DisplayName("Email Confirmed")]
 		public bool EmailConfirmed { get; set; }

@@ -11,7 +11,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int Id { get; set; }
 
 		[Column("playerid")]
-		public virtual Player Player { get; set; }
+		public virtual Player? Player { get; set; }
 
 		[Column("gameid")]
 		public int GameId { get; set; } = 0;
@@ -30,14 +30,14 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("submissionid")]
 		public int SubmissionId { get; set; } = -1;
-		public virtual Submission Submission { get; set; }
+		public virtual Submission? Submission { get; set; }
 
 		[Column("obsoleted_by")]
 		public int? ObsoletedBy { get; set; }
 
 		[Column("published_by")]
 		public int PublisherId { get; set; }
-		public virtual User Publisher { get; set; }
+		public virtual User? Publisher { get; set; }
 
 		[Column("pubdate")]
 		public int PublishedDate { get; set; }

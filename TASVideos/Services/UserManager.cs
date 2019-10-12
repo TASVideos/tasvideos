@@ -77,7 +77,7 @@ namespace TASVideos.Services
 			return await _db.Users
 				.Where(u => u.Id == userId)
 				.SelectMany(u => u.UserRoles)
-				.SelectMany(ur => ur.Role.RolePermission)
+				.SelectMany(ur => ur.Role!.RolePermission)
 				.Select(rp => rp.PermissionId)
 				.Distinct()
 				.ToListAsync();
@@ -137,7 +137,7 @@ namespace TASVideos.Services
 					gkey => new
 					{
 						gkey.PublicationId,
-						gkey.Publication.Title,
+						gkey.Publication!.Title,
 						gkey.Publication.ObsoletedById
 					}, 
 					gvalue => new
@@ -176,7 +176,7 @@ namespace TASVideos.Services
 				{
 					Id = u.Id,
 					UserName = u.UserName,
-					PostCount = u.Posts.Count(p => seeRestrictedPosts || !p.Topic.Forum.Restricted),
+					PostCount = u.Posts.Count(p => seeRestrictedPosts || !p.Topic!.Forum!.Restricted),
 					JoinDate = u.CreateTimeStamp,
 					LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
 					Avatar = u.Avatar,
@@ -186,11 +186,11 @@ namespace TASVideos.Services
 					TimeZone = u.TimeZoneId,
 					IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
 					PublicationActiveCount = u.Publications
-						.Count(p => !p.Publication.ObsoletedById.HasValue),
+						.Count(p => !p.Publication!.ObsoletedById.HasValue),
 					PublicationObsoleteCount = u.Publications
-						.Count(p => p.Publication.ObsoletedById.HasValue),
+						.Count(p => p.Publication!.ObsoletedById.HasValue),
 					PublishedSystems = u.Publications
-						.Select(p => p.Publication.System.Code)
+						.Select(p => p.Publication!.System!.Code)
 						.Distinct()
 						.ToList(),
 					Email = u.Email,
@@ -199,12 +199,12 @@ namespace TASVideos.Services
 						.Select(ur => new RoleBasicDisplay
 						{
 							Id = ur.RoleId,
-							Name = ur.Role.Name,
+							Name = ur.Role!.Name,
 							Description = ur.Role.Description
 						})
 						.ToList(),
 					Submissions = u.Submissions
-						.GroupBy(s => s.Submission.Status)
+						.GroupBy(s => s.Submission!.Status)
 						.Select(g => new UserProfileModel.SubmissionEntry
 						{
 							Status = g.Key,
@@ -216,7 +216,7 @@ namespace TASVideos.Services
 						Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
 						Systems = u.UserFiles
 							.Where(uf => includeHiddenUserFiles || !uf.Hidden)
-							.Select(uf => uf.System.Code)
+							.Select(uf => uf.System!.Code)
 							.Distinct()
 							.ToList()
 					}
@@ -286,9 +286,9 @@ namespace TASVideos.Services
 				SentOn = pm.CreateTimeStamp,
 				Text = pm.Text,
 				FromUserId = pm.FromUserId,
-				FromUserName = pm.FromUser.UserName,
+				FromUserName = pm.FromUser!.UserName,
 				ToUserId = pm.ToUserId,
-				ToUserName = pm.ToUser.UserName,
+				ToUserName = pm.ToUser!.UserName,
 				CanReply = pm.ToUserId == userId,
 				EnableBbCode = pm.EnableBbCode,
 				EnableHtml = pm.EnableHtml
