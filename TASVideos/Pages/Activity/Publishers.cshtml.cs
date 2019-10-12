@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.Activity.Model;
 
 namespace TASVideos.Pages.Activity
@@ -25,12 +26,12 @@ namespace TASVideos.Pages.Activity
 		public IEnumerable<MovieEntryModel> Publications { get; set; } = new List<MovieEntryModel>();
 
 		[FromRoute]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		public async Task OnGet()
 		{
 			Publications = await _db.Publications
-				.Where(s => s.CreateUserName == UserName)
+				.CreatedBy(UserName)
 				.Select(s => new MovieEntryModel
 				{
 					Id = s.Id,

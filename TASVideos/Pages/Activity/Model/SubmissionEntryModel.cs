@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Activity.Model
 	{
 		public int Id { get; set; }
 		public DateTime CreateTimeStamp { get; set; }
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 		public SubmissionStatus Status { get; set; }
 	}
 }
