@@ -34,7 +34,7 @@ namespace TASVideos
 			CreateMap<WikiPage, UserWikiEditHistoryModel>();
 
 			CreateMap<Game, GameEditModel>()
-				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.GenreId)));
 			CreateMap<GameEditModel, Game>();
 
@@ -60,18 +60,18 @@ namespace TASVideos
 							.Select(ur => new RoleDisplayModel.UserWithRole
 							{
 								Id = ur.UserId,
-								UserName = ur.User.UserName
+								UserName = ur.User!.UserName
 							})
 							.ToList()));
 
 			CreateMap<ForumPost, TopicFeedModel.TopicPost>()
-				.ForMember(dest => dest.PosterName, opt => opt.MapFrom(src => src.Poster.UserName));
+				.ForMember(dest => dest.PosterName, opt => opt.MapFrom(src => src.Poster!.UserName));
 
 			CreateMap<UserFile, UserMovieListModel>()
-				.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.UserName));
+				.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author!.UserName));
 
 			CreateMap<UserFile, UserFileModel>()
-				.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.UserName))
+				.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author!.UserName))
 				.ForMember(dest => dest.FileSize, opt => opt.MapFrom(src => src.LogicalLength))
 				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
@@ -83,13 +83,13 @@ namespace TASVideos
 						Text = c.Text,
 						CreationTimeStamp = c.CreationTimeStamp,
 						UserId = c.UserId,
-						UserName = c.User.UserName
+						UserName = c.User!.UserName
 					})
 					.ToList()));
 
 			CreateMap<Publication, PublicationDisplayModel>()
 				.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count / 2.0))
-				.ForMember(dest => dest.TierIconPath, opt => opt.MapFrom(src => src.Tier.IconPath))
+				.ForMember(dest => dest.TierIconPath, opt => opt.MapFrom(src => src.Tier!.IconPath))
 				.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files
 					.Select(f => new PublicationDisplayModel.FileModel
 					{
@@ -102,22 +102,22 @@ namespace TASVideos
 				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags
 					.Select(pt => new PublicationDisplayModel.TagModel
 					{
-						DisplayName = pt.Tag.DisplayName,
+						DisplayName = pt.Tag!.DisplayName,
 						Code = pt.Tag.Code
 					})
 					.ToList()))
-				.ForMember(dest => dest.GenreTags, opt => opt.MapFrom(src => src.Game.GameGenres
+				.ForMember(dest => dest.GenreTags, opt => opt.MapFrom(src => src.Game!.GameGenres
 					.Select(gg => new PublicationDisplayModel.TagModel
 					{
-						DisplayName = gg.Genre.DisplayName,
+						DisplayName = gg.Genre!.DisplayName,
 						Code = gg.Genre.DisplayName // TODO
 					})
 					.ToList()))
 				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
 					.Select(pf => new PublicationDisplayModel.FlagModel
 					{
-						IconPath = pf.Flag.IconPath,
-						LinkPath = pf.Flag.LinkPath,
+						IconPath = pf.Flag!.IconPath,
+						LinkPath = pf.Flag!.LinkPath,
 						Name = pf.Flag.Name
 					})
 					.ToList()));
@@ -125,40 +125,40 @@ namespace TASVideos
 			CreateMap<UserFileComment, UserFileModel.UserFileCommentModel>();
 
 			CreateMap<Game, GameDisplayModel>()
-				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
-				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre.DisplayName)))
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
+				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre!.DisplayName)))
 				.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.Roms));
 
 			CreateMap<GameRom, GameDisplayModel.Rom>();
 			CreateMap<PublicationFile, PublicationFileDisplayModel>();
 
 			CreateMap<Submission, SubmissionPublishModel>()
-				.ForMember(dest => dest.Markup, opt => opt.MapFrom(src => src.WikiContent.Markup))
-				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
+				.ForMember(dest => dest.Markup, opt => opt.MapFrom(src => src.WikiContent!.Markup))
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 				.ForMember(dest => dest.SystemId, opt => opt.MapFrom(src => src.SystemId ?? 0))
-				.ForMember(dest => dest.SystemRegion, opt => opt.MapFrom(src => src.SystemFrameRate.RegionCode + " " + src.SystemFrameRate.FrameRate))
-				.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game.GoodName))
+				.ForMember(dest => dest.SystemRegion, opt => opt.MapFrom(src => src.SystemFrameRate!.RegionCode + " " + src.SystemFrameRate.FrameRate))
+				.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game!.GoodName))
 				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.GameId ?? 0))
 				.ForMember(dest => dest.RomId, opt => opt.MapFrom(src => src.RomId ?? 0))
 				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.IntendedTier != null ? src.IntendedTier.Name : ""));
 
 			// API
 			CreateMap<Publication, PublicationsResponse>()
-				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.Tier.Name))
-				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System.Code))
-				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate.FrameRate))
-				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.Author.UserName).ToList()))
-				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags.Select(a => a.Tag.Code).ToList()))
+				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.Tier!.Name))
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
+				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate!.FrameRate))
+				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.Author!.UserName).ToList()))
+				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags.Select(a => a.Tag!.Code).ToList()))
 				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
-					.Select(a => a.Flag.Token)
+					.Select(a => a.Flag!.Token)
 					.ToList()));
 
 			CreateMap<Submission, SubmissionsResponse>()
-				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.SubmissionAuthors.Select(a => a.Author.UserName).ToList()))
+				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.SubmissionAuthors.Select(a => a.Author!.UserName).ToList()))
 				.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
 				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.IntendedTier != null ? src.IntendedTier.Name : null))
 				.ForMember(dest => dest.Judge, opt => opt.MapFrom(src => src.Judge != null ? src.Judge.UserName : null))
-				.ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Judge != null ? src.Publisher.UserName : null))
+				.ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher != null ? src.Publisher!.UserName : null))
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System != null ? src.System.Code : null))
 				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate != null ? src.SystemFrameRate.FrameRate : (double?)null));
 
