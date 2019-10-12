@@ -9,32 +9,32 @@ namespace TASVideos.Legacy.Data.Site
 		{
 		}
 
-		public DbSet<AwardClass> AwardClasses { get; set; }
-		public DbSet<Awards> Awards { get; set; }
-		public DbSet<SiteText> SiteText { get; set; }
-		public DbSet<User> Users { get; set; }
+		public DbSet<AwardClass> AwardClasses { get; set; } = null!;
+		public DbSet<Awards> Awards { get; set; } = null!;
+		public DbSet<SiteText> SiteText { get; set; } = null!;
+		public DbSet<User> Users { get; set; } = null!;
 		// ReSharper disable once UnusedMember.Global
-		public DbSet<UserRole> UserRoles { get; set; }
-		public DbSet<Role> Roles { get; set; }
-		public DbSet<Submission> Submissions { get; set; }
-		public DbSet<Movie> Movies { get; set; }
+		public DbSet<UserRole> UserRoles { get; set; } = null!;
+		public DbSet<Role> Roles { get; set; } = null!;
+		public DbSet<Submission> Submissions { get; set; } = null!;
+		public DbSet<Movie> Movies { get; set; } = null!;
 		// ReSharper disable once UnusedMember.Global
-		public DbSet<MovieFile> MovieFiles { get; set; }
-		public DbSet<MovieFileStorage> MovieFileStorage { get; set; }
-		public DbSet<GameName> GameNames { get; set; }
-		public DbSet<GameNameGroup> GameNameGroups { get; set; }
-		public DbSet<GameNameGroupName> GameNameGroupNames { get; set; }
-		public DbSet<Rom> Roms { get; set; }
+		public DbSet<MovieFile> MovieFiles { get; set; } = null!;
+		public DbSet<MovieFileStorage> MovieFileStorage { get; set; } = null!;
+		public DbSet<GameName> GameNames { get; set; } = null!;
+		public DbSet<GameNameGroup> GameNameGroups { get; set; } = null!;
+		public DbSet<GameNameGroupName> GameNameGroupNames { get; set; } = null!;
+		public DbSet<Rom> Roms { get; set; } = null!;
 		// ReSharper disable once UnusedMember.Global
-		public DbSet<Player> Players { get; set; }
-		public DbSet<UserPlayer> UserPlayers { get; set; }
-		public DbSet<ClassType> ClassTypes { get; set; }
-		public DbSet<MovieClass> MovieClass { get; set; }
-		public DbSet<MovieRating> MovieRating { get; set; }
-		public DbSet<MovieFlag> MovieFlags { get; set; }
-		public DbSet<UserFile> UserFiles { get; set; }
-		public DbSet<UserFileComment> UserFileComments { get; set; }
-		public DbSet<SubmissionRejections> SubmissionRejections { get; set; }
+		public DbSet<Player> Players { get; set; } = null!;
+		public DbSet<UserPlayer> UserPlayers { get; set; } = null!;
+		public DbSet<ClassType> ClassTypes { get; set; } = null!;
+		public DbSet<MovieClass> MovieClass { get; set; } = null!;
+		public DbSet<MovieRating> MovieRating { get; set; } = null!;
+		public DbSet<MovieFlag> MovieFlags { get; set; } = null!;
+		public DbSet<UserFile> UserFiles { get; set; } = null!;
+		public DbSet<UserFileComment> UserFileComments { get; set; } = null!;
+		public DbSet<SubmissionRejections> SubmissionRejections { get; set; } = null!;
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

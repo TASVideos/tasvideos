@@ -34,9 +34,9 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public bool EnableHtml { get; set; }
 
 		[ForeignKey("Id")]
-		public virtual PrivateMessageText PrivateMessageText { get; set; }
+		public virtual PrivateMessageText? PrivateMessageText { get; set; }
 
 		[ForeignKey("FromUserId")]
-		public virtual Users FromUser { get; set; }
+		public virtual Users? FromUser { get; set; }
 	}
 }

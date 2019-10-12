@@ -34,13 +34,13 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public bool EnableBbCode { get; set; }
 
 		[ForeignKey("PosterId")]
-		public virtual Users Poster { get; set; }
+		public virtual Users? Poster { get; set; }
 
 		[ForeignKey("LastUpdateUserId")]
-		public virtual Users LastUpdateUser { get; set; }
+		public virtual Users? LastUpdateUser { get; set; }
 
 		[ForeignKey("Id")]
-		public virtual PostsText PostText { get; set; }
+		public virtual PostsText? PostText { get; set; }
 
 		[Column("enable_avatar")]
 		public int MoodAvatar { get; set; }

@@ -18,6 +18,6 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int ResultCount { get; set; }
 
 		[ForeignKey("Id")]
-		public virtual VoteDescription VoteDescription { get; set; }
+		public virtual VoteDescription? VoteDescription { get; set; }
 	}
 }

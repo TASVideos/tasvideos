@@ -19,7 +19,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("topic_poster")]
 		public int? PosterId { get; set; }
-		public virtual Users Poster { get; set; }
+		public virtual Users? Poster { get; set; }
 
 		[Column("topic_views")]
 		public int Views { get; set; }
@@ -40,6 +40,6 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		[Column("submissionid")]
 		public int SubmissionId { get; set; }
 
-		public virtual VoteDescription Poll { get; set; }
+		public virtual VoteDescription? Poll { get; set; }
 	}
 }
