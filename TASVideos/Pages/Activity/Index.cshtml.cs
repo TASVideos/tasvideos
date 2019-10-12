@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Activity
 		{
 			Judges = await _db.Submissions
 				.Where(s => s.JudgeId.HasValue)
-				.GroupBy(s => s.Judge.UserName)
+				.GroupBy(s => s.Judge!.UserName)
 				.Select(s => new ActivitySummaryModel
 				{
 					UserName = s.Key,

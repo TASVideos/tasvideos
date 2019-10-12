@@ -144,7 +144,9 @@ namespace TASVideos.Data.Entity
 				throw new ArgumentNullException($"{nameof(SystemFrameRate)} can not be null.");
 			}
 
-			var authorList = SubmissionAuthors.Select(sa => sa.Author.UserName);
+			var authorList = SubmissionAuthors
+				.Select(sa => sa.Author?.UserName)
+				.Where(sa => !string.IsNullOrWhiteSpace(sa));
 
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
 			{
@@ -168,7 +170,7 @@ namespace TASVideos.Data.Entity
 		{
 			if (!string.IsNullOrWhiteSpace(criteria.User))
 			{
-				query = query.Where(s => s.SubmissionAuthors.Any(sa => sa.Author.UserName == criteria.User)
+				query = query.Where(s => s.SubmissionAuthors.Any(sa => sa.Author!.UserName == criteria.User)
 					|| s.Submitter != null && s.Submitter.UserName == criteria.User);
 			}
 

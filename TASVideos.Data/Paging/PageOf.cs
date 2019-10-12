@@ -13,7 +13,7 @@ namespace TASVideos.Data
 		}
 
 		public int RowCount { get; set; }
-		public string Sort { get; set; }
+		public string? Sort { get; set; }
 		public int? PageSize { get; set; }
 		public int? CurrentPage { get; set; }
 

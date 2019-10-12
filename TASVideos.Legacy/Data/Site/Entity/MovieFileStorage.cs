@@ -18,6 +18,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public string Zipped { get; set; } = "Y";
 
 		[ForeignKey("FileName")]
-		public virtual MovieFile MovieFile { get; set; }
+		public virtual MovieFile? MovieFile { get; set; }
     }
 }

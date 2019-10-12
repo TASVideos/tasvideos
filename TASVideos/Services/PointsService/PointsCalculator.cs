@@ -14,7 +14,7 @@ namespace TASVideos.Services
 		/// <returns>The player points calculated</returns>
 		public static double PlayerPoints(ICollection<Publication> publications, double averageRatingsPerMovie)
 		{
-			if (publications == null || !publications.Any())
+			if (!publications.Any())
 			{
 				return 0;
 			}
@@ -33,7 +33,7 @@ namespace TASVideos.Services
 		{
 			if (points <= 0)
 			{
-				return null;
+				return "";
 			}
 
 			if (points < 1)

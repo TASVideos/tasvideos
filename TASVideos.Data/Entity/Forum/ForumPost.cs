@@ -32,7 +32,7 @@ namespace TASVideos.Data.Entity.Forum
 	{
 		public static IQueryable<ForumPost> ExcludeRestricted(this IQueryable<ForumPost> list, bool seeRestricted)
 		{
-			return list.Where(f => seeRestricted || !f.Topic.Forum.Restricted);
+			return list.Where(f => seeRestricted || !f.Topic!.Forum!.Restricted);
 		}
 
 		public static IQueryable<ForumPost> ForTopic(this IQueryable<ForumPost> list, int topicId)

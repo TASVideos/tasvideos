@@ -18,7 +18,7 @@ namespace TASVideos.Legacy.Imports
 		{
 			var legacyVoteDescriptions = legacyForumContext.VoteDescription
 				.Include(v => v.Topic)
-				.ThenInclude(t => t.Poster)
+				.ThenInclude(t => t!.Poster)
 				.Include(v => v.Results)
 				.Where(v => v.Topic != null && v.Topic.TopicMovedId == 0)
 				.ToList();
@@ -66,8 +66,8 @@ namespace TASVideos.Legacy.Imports
 					Ordinal = r.VoteOptionId,
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow,
-					CreateUserName = r.VoteDescription?.Topic?.Poster.UserName ?? "Unknown",
-					LastUpdateUserName = r.VoteDescription?.Topic?.Poster.UserName ?? "Unknown"
+					CreateUserName = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown",
+					LastUpdateUserName = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown"
 				})
 				.ToList();
 

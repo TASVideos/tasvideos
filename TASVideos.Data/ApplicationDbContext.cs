@@ -290,7 +290,7 @@ namespace TASVideos.Data
 			builder.Entity<ForumPoll>(entity =>
 			{
 				entity.HasOne(p => p.Topic)
-					.WithOne(t => t!.Poll)
+					.WithOne(t => t!.Poll!)
 					.HasForeignKey<ForumTopic>(t => t.PollId);
 			});
 

@@ -96,7 +96,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(Smb.Id, actual.GameId);
+			Assert.AreEqual(Smb.Id, actual!.GameId);
 		}
 
 		[TestMethod]
@@ -107,7 +107,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.Branches);
+			Assert.IsNotNull(actual!.Branches);
 			Assert.AreEqual(0, actual.Branches.Count());
 		}
 
@@ -124,7 +124,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(Smb.Id, actual.GameId);
+			Assert.AreEqual(Smb.Id, actual!.GameId);
 			Assert.IsNotNull(actual.Branches);
 
 			var branchList = actual.Branches.ToList();
@@ -141,7 +141,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.Branches);
+			Assert.IsNotNull(actual!.Branches);
 			
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(1, branchList.Count);
@@ -161,7 +161,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.Branches);
+			Assert.IsNotNull(actual!.Branches);
 			
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(1, branchList.Count);
@@ -181,7 +181,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.Branches);
+			Assert.IsNotNull(actual!.Branches);
 			
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(2, branchList.Count);
@@ -200,7 +200,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.Branches);
+			Assert.IsNotNull(actual!.Branches);
 
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(1, branchList.Count);
@@ -217,7 +217,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.Branches);
+			Assert.IsNotNull(actual!.Branches);
 
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(1, branchList.Count);
@@ -243,7 +243,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.Branches);
+			Assert.IsNotNull(actual!.Branches);
 
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(1, branchList.Count);
@@ -269,7 +269,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.Branches);
+			Assert.IsNotNull(actual!.Branches);
 
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(1, branchList.Count);

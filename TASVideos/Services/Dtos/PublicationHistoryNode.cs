@@ -12,8 +12,8 @@ namespace TASVideos.Services
 	public class PublicationHistoryNode
 	{
 		public int Id { get; set; }
-		public string Title { get; set; }
-		public string Branch { get; set; }
+		public string Title { get; set; } = "";
+		public string? Branch { get; set; }
 		
 		public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 

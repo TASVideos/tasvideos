@@ -13,13 +13,6 @@ namespace TASVideos.Test.Services
 		private const double AverageRatingsPerMovie = 13.866;
 
 		[TestMethod]
-		public void PlayerPoints_Null()
-		{
-			var actual = PointsCalculator.PlayerPoints(null, 1);
-			Assert.AreEqual(0, actual);
-		}
-
-		[TestMethod]
 		public void PlayerPoints_NoPublications()
 		{
 			var actual = PointsCalculator.PlayerPoints(new List<PointsCalculator.Publication>(), 1);
@@ -68,8 +61,8 @@ namespace TASVideos.Test.Services
 		}
 
 		[TestMethod]
-		[DataRow(-1, null)]
-		[DataRow(0, null)]
+		[DataRow(-1, "")]
+		[DataRow(0, "")]
 		[DataRow(0.0001, PlayerRanks.FormerPlayer)]
 		[DataRow(0.9, PlayerRanks.FormerPlayer)]
 		[DataRow(1, PlayerRanks.Player)]

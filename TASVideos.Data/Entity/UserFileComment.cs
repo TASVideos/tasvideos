@@ -28,7 +28,7 @@ namespace TASVideos.Data.Entity
 		public DateTime CreationTimeStamp { get; set; }
 
 		public int UserId { get; set; }
-		public virtual User User { get; set; }
+		public virtual User? User { get; set; }
 
 		public virtual ICollection<UserFileComment> Children { get; set; } = new HashSet<UserFileComment>();
 	}

@@ -71,7 +71,7 @@ namespace TASVideos.Services
 					Id = p.Id,
 					AuthorCount = p.Authors.Count,
 					Obsolete = p.ObsoletedById.HasValue,
-					TierWeight = p.Tier.Weight,
+					TierWeight = p.Tier!.Weight,
 					RatingCount = p.PublicationRatings.Count,
 				})
 				.ToListAsync();
@@ -117,7 +117,7 @@ namespace TASVideos.Services
 			var ratings = await _db.PublicationRatings
 				.Where(pr => pr.PublicationId == id)
 				.Where(pr => !authorIds.Contains(pr.UserId)) // Do not count author ratings
-				.Where(pr => pr.User.UseRatings)
+				.Where(pr => pr.User!.UseRatings)
 				.ToListAsync();
 
 			var entRatings = ratings

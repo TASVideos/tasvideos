@@ -97,7 +97,9 @@ namespace TASVideos.Data.Entity
 
 		public void GenerateTitle()
 		{
-			var authorList = Authors.Select(sa => sa.Author.UserName);
+			var authorList = Authors
+				.Select(sa => sa.Author?.UserName)
+				.Where(sa => !string.IsNullOrWhiteSpace(sa));
 
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
 			{
@@ -169,17 +171,17 @@ namespace TASVideos.Data.Entity
 
 			if (tokens.Tags.Any())
 			{
-				query = query.Where(p => p.PublicationTags.Any(t => tokens.Tags.Contains(t.Tag.Code)));
+				query = query.Where(p => p.PublicationTags.Any(t => tokens.Tags.Contains(t.Tag!.Code)));
 			}
 
 			if (tokens.Genres.Any())
 			{
-				query = query.Where(p => p.Game.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre!.DisplayName)));
+				query = query.Where(p => p.Game!.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre!.DisplayName)));
 			}
 
 			if (tokens.Flags.Any())
 			{
-				query = query.Where(p => p.PublicationFlags.Any(f => tokens.Flags.Contains(f.Flag.Token)));
+				query = query.Where(p => p.PublicationFlags.Any(f => tokens.Flags.Contains(f.Flag!.Token)));
 			}
 
 			if (tokens.Authors.Any())
