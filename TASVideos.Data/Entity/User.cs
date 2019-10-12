@@ -88,5 +88,10 @@ namespace TASVideos.Data.Entity
 			var upper = partial?.ToUpper() ?? "";
 			return query.Where(u => u.NormalizedUserName.Contains(upper));
 		}
+
+		public static IQueryable<User> ThatArePublishedAuthors(this IQueryable<User> query)
+		{
+			return query.Where(u => u.Publications.Any());
+		}
 	}
 }

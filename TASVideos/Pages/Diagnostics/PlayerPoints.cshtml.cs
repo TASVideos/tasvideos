@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Diagnostics
 		public async Task OnGet()
 		{
 			Players = await _db.Users
-				.Where(u => u.Publications.Any())
+				.ThatArePublishedAuthors()
 				.Select(u => new PlayerEntry
 				{
 					Id = u.Id,
@@ -46,7 +46,7 @@ namespace TASVideos.Pages.Diagnostics
 		public class PlayerEntry
 		{
 			public int Id { get; set; }
-			public string UserName { get; set; }
+			public string UserName { get; set; } = "";
 			public double Points { get; set; }
 		}
 	}

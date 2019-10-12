@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications
@@ -25,13 +26,13 @@ namespace TASVideos.Pages.Publications
 		public async Task OnGet()
 		{
 			Authors = await _db.Users
-				.Where(u => u.Publications.Any())
+				.ThatArePublishedAuthors()
 				.Select(u => new AuthorListEntry
 				{
 					Id = u.Id,
 					UserName = u.UserName,
-					ActivePublicationCount = u.Publications.Count(pa => !pa.Publication.ObsoletedById.HasValue),
-					ObsoletePublicationCount = u.Publications.Count(pa => pa.Publication.ObsoletedById.HasValue)
+					ActivePublicationCount = u.Publications.Count(pa => !pa.Publication!.ObsoletedById.HasValue),
+					ObsoletePublicationCount = u.Publications.Count(pa => pa.Publication!.ObsoletedById.HasValue)
 				})
 				.ToListAsync();
 		}
