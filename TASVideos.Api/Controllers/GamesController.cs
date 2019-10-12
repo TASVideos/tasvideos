@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Data;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Api.Controllers
 {
@@ -50,14 +51,8 @@ namespace TASVideos.Api.Controllers
 				return BadRequest(ModelState);
 			}
 
-			var query = _db.Games.AsQueryable();
-
-			if (request.SystemCodes.Any())
-			{
-				query = query.Where(g => request.SystemCodes.Contains(g.System.Code));
-			}
-
-			var games = (await query
+			var games = (await _db.Games
+				.ForSystemCodes(request.SystemCodes)
 				.ProjectTo<GamesResponse>()
 				.SortBy(request)
 				.Paginate(request)

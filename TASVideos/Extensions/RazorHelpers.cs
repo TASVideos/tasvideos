@@ -38,7 +38,7 @@ namespace TASVideos.Extensions
 		{
 			return viewContext.ActionDescriptor.DisplayName
 				?.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
-				.FirstOrDefault();
+				.FirstOrDefault() ?? "";
 		}
 
 		public static async Task<IHtmlContent> RenderWiki(this IViewComponentHelper component, string pageName)
@@ -51,7 +51,7 @@ namespace TASVideos.Extensions
 			return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
 		}
 
-		public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData, string pp = null)
+		public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData, string? pp = null)
 		{
 			return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData, pp });
 		}
