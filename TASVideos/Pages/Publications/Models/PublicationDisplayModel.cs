@@ -40,8 +40,8 @@ namespace TASVideos.Pages.Publications.Models
 
 		public class TagModel
 		{
-			public string DisplayName { get; set; }
-			public string Code { get; set; }
+			public string DisplayName { get; set; } = "";
+			public string Code { get; set; } = "";
 		}
 
 		public class FileModel
@@ -54,9 +54,9 @@ namespace TASVideos.Pages.Publications.Models
 
 		public class FlagModel
 		{
-			public string IconPath { get; set; }
-			public string LinkPath { get; set; }
-			public string Name { get; set; }
+			public string? IconPath { get; set; }
+			public string? LinkPath { get; set; }
+			public string Name { get; set; } = "";
 		}
 	}
 }
