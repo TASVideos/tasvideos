@@ -14,7 +14,7 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public IViewComponentResult Invoke(WikiPage pageData, string pp = null)
+		public IViewComponentResult Invoke(WikiPage pageData, string pp = "")
 		{
 			if (pageData == null)
 			{

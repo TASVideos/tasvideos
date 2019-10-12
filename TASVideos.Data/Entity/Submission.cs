@@ -203,5 +203,10 @@ namespace TASVideos.Data.Entity
 		{
 			return query.Where(s => s.Status == SubmissionStatus.Rejected);
 		}
+
+		public static IQueryable<Submission> ThatHaveBeenJudgedBy(this IQueryable<Submission> query, string userName)
+		{
+			return query.Where(s => s.JudgeId.HasValue && s.Judge!.UserName == userName);
+		}
 	}
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.Activity.Model;
 
 namespace TASVideos.Pages.Activity
@@ -23,15 +24,14 @@ namespace TASVideos.Pages.Activity
 		}
 
 		[FromRoute]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		public ICollection<SubmissionEntryModel> Submissions { get; set; } = new List<SubmissionEntryModel>();
 
 		public async Task OnGet()
 		{
 			Submissions = await _db.Submissions
-				.Where(s => s.JudgeId.HasValue)
-				.Where(s => s.Judge.UserName == UserName)
+				.ThatHaveBeenJudgedBy(UserName)
 				.Select(s => new SubmissionEntryModel
 				{
 					Id = s.Id,
