@@ -177,7 +177,7 @@ namespace TASVideos.Data
 
 			builder.Entity<RolePermission>()
 				.HasOne(pt => pt.Role)
-				.WithMany(p => p.RolePermission)
+				.WithMany(p => p!.RolePermission)
 				.HasForeignKey(pt => pt.RoleId);
 
 			builder.Entity<WikiPage>(entity =>
@@ -202,7 +202,7 @@ namespace TASVideos.Data
 			builder.Entity<GameSystemFrameRate>(entity =>
 			{
 				entity.HasOne(sf => sf.System)
-					.WithMany(s => s.SystemFrameRates)
+					.WithMany(s => s!.SystemFrameRates)
 					.OnDelete(DeleteBehavior.Restrict);
 			});
 
@@ -232,11 +232,11 @@ namespace TASVideos.Data
 			builder.Entity<Publication>(entity =>
 			{
 				entity.HasOne(p => p.System)
-					.WithMany(s => s.Publications)
+					.WithMany(s => s!.Publications)
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasOne(p => p.Rom)
-					.WithMany(r => r.Publications)
+					.WithMany(r => r!.Publications)
 					.OnDelete(DeleteBehavior.Restrict);
 			});
 
@@ -290,7 +290,7 @@ namespace TASVideos.Data
 			builder.Entity<ForumPoll>(entity =>
 			{
 				entity.HasOne(p => p.Topic)
-					.WithOne(t => t.Poll)
+					.WithOne(t => t!.Poll)
 					.HasForeignKey<ForumTopic>(t => t.PollId);
 			});
 

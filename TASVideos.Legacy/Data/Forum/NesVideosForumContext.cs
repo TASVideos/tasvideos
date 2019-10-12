@@ -9,21 +9,21 @@ namespace TASVideos.Legacy.Data.Forum
 		{
 		}
 
-		public DbSet<Users> Users { get; set; }
-		public DbSet<UserGroup> UserGroups { get; set; }
-		public DbSet<UserRanks> UserRanks { get; set; }
-		public DbSet<BanList> BanList { get; set; }
-		public DbSet<Categories> Categories { get; set; }
-		public DbSet<Forums> Forums { get; set; }
-		public DbSet<Topics> Topics { get; set; }
-		public DbSet<Posts> Posts { get; set; }
-		public DbSet<PostsText> PostsText { get; set; }
-		public DbSet<TopicWatch> TopicWatch { get; set; }
-		public DbSet<PrivateMessage> PrivateMessages { get; set; }
-		public DbSet<PrivateMessageText> PrivateMessageText { get; set; }
-		public DbSet<VoteDescription> VoteDescription { get; set; }
-		public DbSet<VoteResult> VoteResult { get; set; }
-		public DbSet<Voter> Voter { get; set; }
+		public DbSet<Users> Users { get; set; } = null!;
+		public DbSet<UserGroup> UserGroups { get; set; } = null!;
+		public DbSet<UserRanks> UserRanks { get; set; } = null!;
+		public DbSet<BanList> BanList { get; set; } = null!;
+		public DbSet<Categories> Categories { get; set; } = null!;
+		public DbSet<Forums> Forums { get; set; } = null!;
+		public DbSet<Topics> Topics { get; set; } = null!;
+		public DbSet<Posts> Posts { get; set; } = null!;
+		public DbSet<PostsText> PostsText { get; set; } = null!;
+		public DbSet<TopicWatch> TopicWatch { get; set; } = null!;
+		public DbSet<PrivateMessage> PrivateMessages { get; set; } = null!;
+		public DbSet<PrivateMessageText> PrivateMessageText { get; set; } = null!;
+		public DbSet<VoteDescription> VoteDescription { get; set; } = null!;
+		public DbSet<VoteResult> VoteResult { get; set; } = null!;
+		public DbSet<Voter> Voter { get; set; } = null!;
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -36,7 +36,7 @@ namespace TASVideos.Legacy.Data.Forum
 			modelBuilder.Entity<Posts>(entity =>
 			{
 				entity.HasKey(e => e.Id);
-				entity.HasOne(e => e.PostText).WithOne(e => e.Post);
+				entity.HasOne(e => e.PostText).WithOne(e => e!.Post!);
 				entity.ToTable("posts");
 			});
 			modelBuilder.Entity<PostsText>().ToTable("posts_text");
@@ -44,7 +44,7 @@ namespace TASVideos.Legacy.Data.Forum
 			modelBuilder.Entity<PrivateMessage>(entity =>
 			{
 				entity.HasKey(e => e.Id);
-				entity.HasOne(e => e.PrivateMessageText).WithOne(e => e.PrivateMessage);
+				entity.HasOne(e => e.PrivateMessageText).WithOne(e => e!.PrivateMessage!);
 				entity.ToTable("privmsgs");
 			});
 			modelBuilder.Entity<PrivateMessageText>().ToTable("privmsgs_text");

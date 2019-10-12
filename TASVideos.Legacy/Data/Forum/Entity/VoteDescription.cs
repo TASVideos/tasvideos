@@ -14,7 +14,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int TopicId { get; set; }
 
 		[Column("vote_text")]
-		public string Text { get; set; }
+		public string Text { get; set; } = "";
 
 		[Column("vote_start")]
 		public int VoteStart { get; set; }
@@ -23,7 +23,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int VoteLength { get; set; }
 
 		[ForeignKey("TopicId")]
-		public virtual Topics Topic { get; set; }
+		public virtual Topics? Topic { get; set; }
 
 		public virtual ICollection<VoteResult> Results { get; set; } = new HashSet<VoteResult>();
 	}
