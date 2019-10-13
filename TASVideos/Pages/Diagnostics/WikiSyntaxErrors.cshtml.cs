@@ -71,7 +71,7 @@ namespace TASVideos.Pages.Diagnostics
 				{
 					PageName = a.p.PageName,
 					Markup = a.p.Markup,
-					ErrorLocation = a.err.TextLocation,
+					ErrorLocation = a.err!.TextLocation,
 					ErrorMessage = a.err.Message
 				})
 				.ToList();

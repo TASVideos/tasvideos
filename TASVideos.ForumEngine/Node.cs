@@ -60,7 +60,7 @@ namespace TASVideos.ForumEngine
 
 	public class Text : Node
 	{
-		public string Content { get; set; }
+		public string Content { get; set; } = "";
 		public void WriteHtml(TextWriter w)
 		{
 			Helpers.WriteText(w, Content);
@@ -69,7 +69,7 @@ namespace TASVideos.ForumEngine
 
 	public class Element : Node
 	{
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 		public string Options { get; set; } = "";
 		public List<Node> Children { get; set; } = new List<Node>();
 		private string GetChildText()
