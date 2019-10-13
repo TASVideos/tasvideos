@@ -22,7 +22,7 @@ namespace TASVideos.Pages.Users
 		[FromRoute]
 		public string UserName { get; set; } = "";
 
-		public UserRatingsModel Ratings { get; set; } = new UserRatingsModel();
+		public UserRatingsModel? Ratings { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{

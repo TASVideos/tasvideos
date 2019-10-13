@@ -23,12 +23,12 @@ namespace TASVideos.Pages.Wiki
 
 		public string Markup { get; set; } = "";
 
-		public WikiPage WikiPage { get; set; }
+		public WikiPage WikiPage { get; set; } = new WikiPage();
 
 		public async Task<IActionResult> OnGet(string url, int? revision = null)
 		{
-			url = (url ?? "").Trim('/');
-			if (url?.ToLower() == "frontpage")
+			url = url?.Trim('/') ?? "";
+			if (url.ToLower() == "frontpage")
 			{
 				return Redirect("/");
 			}
@@ -52,10 +52,11 @@ namespace TASVideos.Pages.Wiki
 				return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiEngine.Builtins.NormalizeInternalLink(url) });
 			}
 
-			WikiPage = await _wikiPages.Page(url, revision);
+			var wikiPage = await _wikiPages.Page(url, revision);
 
-			if (WikiPage != null)
+			if (wikiPage != null)
 			{
+				WikiPage = wikiPage;
 				ViewData["WikiPage"] = WikiPage;
 				ViewData["Title"] = WikiPage.PageName;
 				Markup = WikiPage.Markup;
