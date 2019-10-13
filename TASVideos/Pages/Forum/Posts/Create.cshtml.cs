@@ -116,7 +116,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			if (topic.Forum.Restricted && !User.Has(PermissionTo.SeeRestrictedForums))
+			if (topic.Forum!.Restricted && !User.Has(PermissionTo.SeeRestrictedForums))
 			{
 				return NotFound();
 			}

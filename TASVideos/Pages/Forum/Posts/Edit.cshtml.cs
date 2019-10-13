@@ -118,7 +118,7 @@ namespace TASVideos.Pages.Forum.Posts
 			await _db.SaveChangesAsync();
 
 			_publisher.SendForum(
-				forumPost.Topic!.Forum.Restricted,
+				forumPost.Topic!.Forum!.Restricted,
 				$"Post edited by {User.Identity.Name} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
 				"",
 				$"{BaseUrl}/p/{Id}#{Id}");
