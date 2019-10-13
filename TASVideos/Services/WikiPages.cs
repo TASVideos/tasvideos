@@ -22,7 +22,7 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Returns whether or not any revision of the given page exists
 		/// </summary>
-		Task<bool> Exists(string pageName, bool includeDeleted = false);
+		Task<bool> Exists(string? pageName, bool includeDeleted = false);
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given <see cref="pageName" />
@@ -160,7 +160,7 @@ namespace TASVideos.Services
 			.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue)
 			.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral).HasValue);
 
-		public async Task<bool> Exists(string pageName, bool includeDeleted = false)
+		public async Task<bool> Exists(string? pageName, bool includeDeleted = false)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{

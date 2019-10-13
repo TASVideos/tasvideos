@@ -10,6 +10,6 @@ namespace TASVideos.Pages.Wiki.Models
 		[Required]
 		[ValidWikiPageName]
 		[Display(Name = "Destination Page Name")]
-		public string DestinationPageName { get; set; }
+		public string DestinationPageName { get; set; } = "";
 	}
 }

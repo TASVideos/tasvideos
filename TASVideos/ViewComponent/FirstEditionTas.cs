@@ -80,7 +80,7 @@ namespace TASVideos.ViewComponents
 			else
 			{
 				var firstEditionNames = firstEditions.Select(f => f.GameName).ToList();
-				query = query.Where(p => firstEditionNames.Contains(p.Game.DisplayName));
+				query = query.Where(p => firstEditionNames.Contains(p.Game!.DisplayName));
 			}
 
 			// TODO: first edition logic

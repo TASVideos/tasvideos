@@ -45,24 +45,24 @@ namespace TASVideos.ViewComponents
 			}
 			else if ((id = SubmissionHelper.IsPublicationLink(split[0])).HasValue)
 			{
-				var title = $"[{id.Value}]" + (await GetPublicationTitle(id.Value));
+				var title = await GetPublicationTitle(id.Value);
 				if (!string.IsNullOrWhiteSpace(title))
 				{
-					model.DisplayText = title;
+					model.DisplayText = $"[{id.Value}]" + title;
 				}
 			}
 
 			return View(model);
 		}
 
-		private async Task<string> GetPublicationTitle(int id)
+		private async Task<string?> GetPublicationTitle(int id)
 		{
 			return (await _db.Publications
 				.Select(s => new { s.Id, s.Title })
 				.SingleOrDefaultAsync(s => s.Id == id))?.Title;
 		}
 
-		private async Task<string> GetSubmissionTitle(int id)
+		private async Task<string?> GetSubmissionTitle(int id)
 		{
 			return (await _db.Submissions
 				.Select(s => new { s.Id, s.Title })

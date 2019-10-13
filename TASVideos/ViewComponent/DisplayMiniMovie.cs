@@ -40,13 +40,13 @@ namespace TASVideos.ViewComponents
 
 			if (!string.IsNullOrWhiteSpace(tier))
 			{
-				query = query.Where(p => p.Tier.Name == tier);
+				query = query.Where(p => p.Tier!.Name == tier);
 			}
 
 			if (!string.IsNullOrWhiteSpace(flags))
 			{
 				var flagsArr = flags.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-				query = query.Where(p => p.PublicationFlags.Any(pf => flagsArr.Contains(pf.Flag.Token)));
+				query = query.Where(p => p.PublicationFlags.Any(pf => flagsArr.Contains(pf.Flag!.Token)));
 			}
 
 			return await query

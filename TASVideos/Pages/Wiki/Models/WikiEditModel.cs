@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Wiki.Models
 	public class WikiEditModel
 	{
 		[Required]
-		public string Markup { get; set; }
+		public string Markup { get; set; } = "";
 
 		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; set; }
@@ -13,6 +13,6 @@ namespace TASVideos.Pages.Wiki.Models
 		[Required] // Yeah, I did that
 		[Display(Name = "Edit Comments")]
 		[MaxLength(100)]
-		public string RevisionMessage { get; set; }
+		public string RevisionMessage { get; set; } = "";
 	}
 }

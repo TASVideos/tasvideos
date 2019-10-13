@@ -83,11 +83,11 @@ namespace TASVideos.Services
 				.GroupBy(
 					gkey => new
 					{
-						gkey.Award.Description, gkey.Award.ShortName, gkey.Year
+						gkey.Award!.Description, gkey.Award.ShortName, gkey.Year
 					}, 
 					gvalue => new AwardAssignment.UserDto
 					{
-						Id = gvalue.UserId, UserName = gvalue.User.UserName
+						Id = gvalue.UserId, UserName = gvalue.User!.UserName
 					})
 				.Select(g => new AwardAssignment
 				{
@@ -103,7 +103,7 @@ namespace TASVideos.Services
 			var pubLists = await _db.PublicationAwards
 				.Include(pa => pa.Award)
 				.Include(pa => pa.Publication)
-				.ThenInclude(pa => pa.Authors)
+				.ThenInclude(pa => pa!.Authors)
 				.ThenInclude(a => a.Author)
 				.ToListAsync();
 
@@ -111,18 +111,18 @@ namespace TASVideos.Services
 				.GroupBy(
 					gkey => new
 					{
-						gkey.Award.Description, gkey.Award.ShortName, gkey.Year
+						gkey.Award!.Description, gkey.Award.ShortName, gkey.Year
 					},
 					gvalue => new
 					{
 						Publication = new
 						{
 							Id = gvalue.PublicationId,
-							gvalue.Publication.Title
+							gvalue.Publication!.Title
 						},
 						Users = gvalue.Publication.Authors.Select(a => new
 						{
-							a.UserId, a.Author.UserName
+							a.UserId, a.Author!.UserName
 						})
 					})
 				.Select(g => new AwardAssignment

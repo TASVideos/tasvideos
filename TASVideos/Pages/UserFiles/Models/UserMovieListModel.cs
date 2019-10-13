@@ -8,15 +8,15 @@ namespace TASVideos.Pages.UserFiles.Models
 		public long Id { get; set; }
 
 		[Display(Name = "By")]
-		public string Author { get; set; }
+		public string Author { get; set; } = "";
 
 		[Display(Name = "Uploaded")]
 		public DateTime UploadTimestamp { get; set; }
 
 		[Display(Name = "Filename")]
-		public string FileName { get; set; }
+		public string FileName { get; set; } = "";
 
 		[Display(Name = "Title")]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 	}
 }

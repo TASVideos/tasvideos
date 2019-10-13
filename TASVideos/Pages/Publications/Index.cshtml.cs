@@ -68,7 +68,7 @@ namespace TASVideos.Pages.Publications
 					.Select(t => t.ToLower().Replace("author", ""))
 					.Select(t => int.TryParse(t, out var temp) ? temp : (int?)null)
 					.Where(t => t.HasValue)
-					.Select(t => t.Value)
+					.Select(t => t!.Value)
 					.ToList()
 			};
 

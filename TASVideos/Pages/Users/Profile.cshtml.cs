@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Users
 		public string Name { get; set; }
 
 		[FromRoute]
-		public string UserName { get; set; }
+		public string? UserName { get; set; }
 
 		public UserProfileModel Profile { get; set; } = new UserProfileModel();
 

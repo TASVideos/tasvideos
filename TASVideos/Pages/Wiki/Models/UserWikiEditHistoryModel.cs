@@ -6,7 +6,7 @@ namespace TASVideos.Pages.Wiki.Models
 {
 	public class UserWikiEditHistoryModel
 	{
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		public IEnumerable<EditEntry> Edits { get; set; } = new List<EditEntry>();
 
@@ -19,13 +19,13 @@ namespace TASVideos.Pages.Wiki.Models
 			public DateTime CreateTimeStamp { get; set; }
 
 			[Display(Name = "Page")]
-			public string PageName { get; set; }
+			public string PageName { get; set; } = "";
 
 			[Display(Name = "Minor Edit")]
 			public bool MinorEdit { get; set; }
 
 			[Display(Name = "Revision Message")]
-			public string RevisionMessage { get; set; }
+			public string? RevisionMessage { get; set; }
 		}
 	}
 }

@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Wiki.Models
 	public class DeletedWikiPageDisplayModel
 	{
 		[Display(Name = "Page Name")]
-		public string PageName { get; set; }
+		public string PageName { get; set; } = "";
 
 		[Display(Name = "Revision Count")]
 		public int RevisionCount { get; set; }

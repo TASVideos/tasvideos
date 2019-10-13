@@ -27,6 +27,7 @@ namespace TASVideos.Data.Entity
 		public int AuthorId { get; set; }
 		public virtual User? Author { get; set; }
 
+		[Required]
 		[StringLength(255)]
 		public string FileName { get; set; } = "";
 

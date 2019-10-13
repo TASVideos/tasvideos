@@ -19,17 +19,16 @@ namespace TASVideos.Pages.Wiki
 			_pages = pages;
 		}
 
-		public string Markup { get; set; }
+		public string Markup { get; set; } = "";
 
 		[FromQuery]
 		public int? Id { get; set; }
 
-		public WikiPage PageData { get; set; }
+		public WikiPage PageData { get; set; } = new WikiPage();
 
 		public async Task<IActionResult> OnPost()
 		{
-			var input = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
-			Markup = input;
+			Markup = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
 			if (Id.HasValue)
 			{
 				PageData = await _pages.Revision(Id.Value);

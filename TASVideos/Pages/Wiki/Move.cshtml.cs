@@ -24,10 +24,10 @@ namespace TASVideos.Pages.Wiki
 		}
 
 		[FromQuery]
-		public string Path { get; set; }
+		public string? Path { get; set; }
 
 		[BindProperty]
-		public WikiMoveModel Move { get; set; }
+		public WikiMoveModel Move { get; set; } = new WikiMoveModel();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -50,8 +50,13 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnPost()
 		{
-			Move.OriginalPageName = Move?.OriginalPageName.Trim('/');
-			Move.DestinationPageName = Move?.DestinationPageName.Trim('/');
+			if (!ModelState.IsValid)
+			{
+				return Page();
+			}
+
+			Move.OriginalPageName = Move?.OriginalPageName.Trim('/') ?? "";
+			Move.DestinationPageName = Move?.DestinationPageName.Trim('/') ?? "";
 
 			if (await _wikiPages.Exists(Move.DestinationPageName, includeDeleted: true))
 			{
@@ -72,9 +77,9 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			_publisher.SendGeneralWiki(
-						$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Identity.Name}",
-						"",
-						$"{BaseUrl}/{Move.DestinationPageName}");
+				$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Identity.Name}",
+				"",
+				$"{BaseUrl}/{Move.DestinationPageName}");
 
 			return Redirect("/" + Move.DestinationPageName);
 		}

@@ -9,8 +9,8 @@ namespace TASVideos.Services
 	/// </summary>
 	public class AwardAssignment
 	{
-		public string ShortName { get; set; }
-		public string Description { get; set; }
+		public string ShortName { get; set; } = "";
+		public string Description { get; set; } = "";
 		public int Year { get; set; }
 		public AwardType Type { get; set; }
 		public IEnumerable<PublicationDto> Publications { get; set; } = new HashSet<PublicationDto>();
@@ -19,13 +19,13 @@ namespace TASVideos.Services
 		public class UserDto
 		{
 			public int Id { get; set; }
-			public string UserName { get; set; }
+			public string UserName { get; set; } = "";
 		}
 
 		public class PublicationDto
 		{
 			public int Id { get; set; }
-			public string Title { get; set; }
+			public string Title { get; set; } = "";
 		}
 	}
 
@@ -34,8 +34,8 @@ namespace TASVideos.Services
 	/// </summary>
 	public class AwardAssignmentSummary
 	{
-		public string ShortName { get; set; }
-		public string Description { get; set; }
+		public string ShortName { get; set; } = "";
+		public string Description { get; set; } = "";
 		public int Year { get; set; }
 	}
 }
