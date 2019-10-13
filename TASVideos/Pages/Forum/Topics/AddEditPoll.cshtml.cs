@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var topic = await _db.ForumTopics
 				.Include(t => t.Poll)
-				.ThenInclude(p => p.PollOptions)
+				.ThenInclude(p => p!.PollOptions)
 				.ThenInclude(o => o.Votes)
 				.ExcludeRestricted(seeRestricted)
 				.Where(t => t.Id == TopicId)

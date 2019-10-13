@@ -21,17 +21,18 @@ namespace TASVideos.Pages.Messages
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PrivateMessageModel? Message { get; set; }
+		public PrivateMessageModel Message { get; set; } = new PrivateMessageModel();
 
 		public async Task<IActionResult> OnGet()
 		{
-			Message = await _userManager.GetMessage(User.GetUserId(), Id);
+			var message = await _userManager.GetMessage(User.GetUserId(), Id);
 
-			if (Message == null)
+			if (message == null)
 			{
 				return NotFound();
 			}
 
+			Message = message;
 			Message.RenderedText = RenderPost(Message.Text, Message.EnableBbCode, Message.EnableHtml);
 			return Page();
 		}

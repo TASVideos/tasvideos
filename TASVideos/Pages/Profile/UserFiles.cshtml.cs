@@ -22,13 +22,13 @@ namespace TASVideos.Pages.Profile
 			_db = db;
 		}
 
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		public IEnumerable<UserFileModel> Files { get; set; } = new List<UserFileModel>();
 
 		public async Task OnGet()
 		{
-			UserName = User.Identity.Name;
+			UserName = User!.Identity!.Name!;
 			Files = await _db.UserFiles
 				.ForAuthor(UserName)
 				.FilterByHidden(includeHidden: true)

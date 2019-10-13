@@ -7,7 +7,7 @@
 <div condition="Model.IsReply" class="card bg-light mb-3">
 	<div class="card-header">
 		<button type="button" id="quote-btn" class="pull-right btn btn-sm btn-secondary">Quote</button>
-		@Model.ReplyingTo.Subject
+		@Model.ReplyingTo!.Subject
 	</div>
 	<div class="card-body">
 		<div class="card-title">

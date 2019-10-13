@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Publications.Models
 {
 	public class PublicationEditModel
 	{
-		public string SystemCode { get; set; }
+		public string SystemCode { get; set; } = "";
 
 		public string Title { get; set; }
 
@@ -23,17 +23,17 @@ namespace TASVideos.Pages.Publications.Models
 
 		[Url]
 		[Display(Name = "Online-watching URL")]
-		public string OnlineWatchingUrl { get; set; }
+		public string? OnlineWatchingUrl { get; set; }
 
 		[Url]
 		[Display(Name = "Mirror site URL")]
-		public string MirrorSiteUrl { get; set; }
+		public string? MirrorSiteUrl { get; set; }
 
 		[StringLength(50)]
 		[Display(Name = "Emulator Version")]
-		public string EmulatorVersion { get; set; }
+		public string? EmulatorVersion { get; set; }
 
-		public string Branch { get; set; }
+		public string? Branch { get; set; }
 
 		[Display(Name = "Selected Flags")]
 		public IEnumerable<int> SelectedFlags { get; set; } = new List<int>();

@@ -56,7 +56,7 @@ namespace TASVideos.Data.Entity.Game
 			return query.Where(g => g.SystemId == systemId);
 		}
 
-		public static IQueryable<Game> ForSystemCode(this IQueryable<Game> query, string code)
+		public static IQueryable<Game> ForSystemCode(this IQueryable<Game> query, string? code)
 		{
 			return string.IsNullOrWhiteSpace(code)
 				? query.Where(g => g.System!.Code == code)

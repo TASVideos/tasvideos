@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 
 		[BindProperty]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		[BindProperty]
 		public PublicationFilesEditModel Files { get; set; } = new PublicationFilesEditModel();
@@ -110,11 +110,11 @@ namespace TASVideos.Pages.Publications
 		public class PublicationFilesEditModel
 		{
 			[StringLength(250)]
-			public string ScreenshotDescription { get; set; }
+			public string? ScreenshotDescription { get; set; }
 
 			public bool UseNewScreenshot { get; set; }
-			public IFormFile NewScreenshot { get; set; }
-			public string ExistingScreenshotName { get; set; }
+			public IFormFile? NewScreenshot { get; set; }
+			public string ExistingScreenshotName { get; set; } = "";
 		}
 	}
 }

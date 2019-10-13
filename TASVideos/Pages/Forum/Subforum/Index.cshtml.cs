@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		[FromRoute]
 		public int Id { get; set; }
 
-		public ForumDisplayModel Forum { get; set; }
+		public ForumDisplayModel Forum { get; set; } = new ForumDisplayModel();
 
 		public async Task<IActionResult> OnGet()
 		{

@@ -39,10 +39,10 @@
 	/// </summary>
 	public class Post : IPostable
 	{
-		public string Title { get; set; }
-		public string Link { get; set; }
-		public string Body { get; set; }
-		public string Group { get; set; }
+		public string Title { get; set; } = "";
+		public string Link { get; set; } = "";
+		public string Body { get; set; } = "";
+		public string Group { get; set; } = "";
 		public PostType Type { get; set; }
 	}
 }

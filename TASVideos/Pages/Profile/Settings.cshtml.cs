@@ -36,7 +36,7 @@ namespace TASVideos.Pages.Profile
 		public string? StatusMessage { get; set; }
 
 		[BindProperty]
-		public ProfileSettingsModel Settings { get; set; }
+		public ProfileSettingsModel Settings { get; set; } = new ProfileSettingsModel();
 
 		public async Task OnGet()
 		{
@@ -56,7 +56,7 @@ namespace TASVideos.Pages.Profile
 				Roles = await _db.Users
 					.Where(u => u.Id == user.Id)
 					.SelectMany(u => u.UserRoles)
-					.Select(ur => ur.Role)
+					.Select(ur => ur.Role!)
 					.Select(r => new RoleBasicDisplay
 					{
 						Id = r.Id,

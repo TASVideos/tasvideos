@@ -46,7 +46,7 @@ namespace TASVideos.Pages.Forum.Topics
 		[FromQuery]
 		public TopicRequest Search { get; set; } = new TopicRequest();
 
-		public ForumTopicModel Topic { get; set; }
+		public ForumTopicModel Topic { get; set; } = new ForumTopicModel();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -67,7 +67,7 @@ namespace TASVideos.Pages.Forum.Topics
 					ForumName = t.Forum!.Name,
 					IsLocked = t.IsLocked,
 					Poll = t.PollId.HasValue
-						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll.Question }
+						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll!.Question }
 						: null
 				})
 				.SingleOrDefaultAsync(t => t.Id == Id);
@@ -93,13 +93,13 @@ namespace TASVideos.Pages.Forum.Topics
 					EnableBbCode = p.EnableBbCode,
 					PosterId = p.PosterId,
 					CreateTimestamp = p.CreateTimeStamp,
-					PosterName = p.Poster.UserName,
+					PosterName = p.Poster!.UserName,
 					PosterAvatar = p.Poster.Avatar,
 					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
 					PosterLocation = p.Poster.From,
 					PosterRoles = p.Poster.UserRoles
-						.Where(ur => !ur.Role.IsDefault)
-						.Select(ur => ur.Role.Name)
+						.Where(ur => !ur.Role!.IsDefault)
+						.Select(ur => ur.Role!.Name)
 						.ToList(),
 					PosterJoined = p.Poster.CreateTimeStamp,
 					PosterPostCount = p.Poster.Posts.Count,
@@ -217,7 +217,7 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			_publisher.SendForum(
-				topic.Forum.Restricted,
+				topic.Forum!.Restricted,
 				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
 				"",
 				$"{BaseUrl}/Forum/Topics/{Id}");
@@ -251,7 +251,7 @@ namespace TASVideos.Pages.Forum.Topics
 		{
 			var topic = await _db.ForumTopics
 				.Include(t => t.Poll)
-				.ThenInclude(p => p.PollOptions)
+				.ThenInclude(p => p!.PollOptions)
 				.ThenInclude(o => o.Votes)
 				.Where(t => t.Id == Id)
 				.SingleOrDefaultAsync();

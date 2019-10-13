@@ -11,7 +11,7 @@ namespace TASVideos.Services
 {
 	public interface IMediaFileUploader
 	{
-		Task UploadScreenshot(int publicationId, IFormFile screenshot, string description);
+		Task UploadScreenshot(int publicationId, IFormFile screenshot, string? description);
 		Task UploadTorrent(int publicationId, IFormFile torrent);
 	}
 
@@ -26,7 +26,7 @@ namespace TASVideos.Services
 			_env = env;
 		}
 
-		public async Task UploadScreenshot(int publicationId, IFormFile screenshot, string description)
+		public async Task UploadScreenshot(int publicationId, IFormFile screenshot, string? description)
 		{
 			await using var memoryStream = new MemoryStream();
 			await screenshot.CopyToAsync(memoryStream);

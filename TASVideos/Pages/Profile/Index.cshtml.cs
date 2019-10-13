@@ -28,12 +28,13 @@ namespace TASVideos.Pages.Profile
 		public async Task<IActionResult> OnGet()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			Profile = await _userManager.GetUserProfile(User.Identity.Name, true, seeRestricted);
-			if (Profile == null)
+			var profile = await _userManager.GetUserProfile(User!.Identity!.Name!, true, seeRestricted);
+			if (profile == null)
 			{
 				return NotFound();
 			}
 
+			Profile = profile;
 			if (!string.IsNullOrWhiteSpace(Profile.Signature))
 			{
 				Profile.Signature = RenderPost(Profile.Signature, true, false);

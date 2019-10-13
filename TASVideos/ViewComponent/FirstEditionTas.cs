@@ -41,7 +41,7 @@ namespace TASVideos.ViewComponents
 				firstEditions = await _db.Publications
 					.GroupBy(
 						gkey => new { gkey.GameId },
-						gvalue => new { gvalue.Id, gvalue.Submission.CreateTimeStamp })
+						gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimeStamp })
 					.Select(g => new FirstEditionGames
 					{
 						GameId = g.Key.GameId,
@@ -55,8 +55,8 @@ namespace TASVideos.ViewComponents
 			{
 				firstEditions = await _db.Publications
 					.GroupBy(
-						gkey => new { gkey.Game.DisplayName },
-						gvalue => new { gvalue.Id, gvalue.Submission.CreateTimeStamp })
+						gkey => new { gkey.Game!.DisplayName },
+						gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimeStamp })
 					.Select(g => new FirstEditionGames
 					{
 						GameName = g.Key.DisplayName,
@@ -68,7 +68,7 @@ namespace TASVideos.ViewComponents
 			}
 
 			var query = _db.Publications
-				.Where(p => p.Tier.Weight >= 1) // Exclude Vault
+				.Where(p => p.Tier!.Weight >= 1) // Exclude Vault
 				.Where(p => p.CreateTimeStamp >= afterYear)
 				.Where(p => p.CreateTimeStamp < beforeYear);
 
@@ -91,7 +91,7 @@ namespace TASVideos.ViewComponents
 					Title = p.Title,
 					GameId = p.GameId,
 					TierId = p.TierId,
-					TierIconPath = p.Tier.IconPath,
+					TierIconPath = p.Tier!.IconPath,
 					TierName = p.Tier.Name,
 					PublicationDate = p.CreateTimeStamp
 				})
@@ -109,7 +109,7 @@ namespace TASVideos.ViewComponents
 		private class FirstEditionGames
 		{
 			public int GameId { get; set; }
-			public string GameName { get; set; }
+			public string GameName { get; set; } = "";
 			public DateTime? PublicationDate { get; set; }
 		}
 	}

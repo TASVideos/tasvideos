@@ -39,14 +39,14 @@ namespace TASVideos.ViewComponents
 			return View(model);
 		}
 
-		private async Task<double> GuessFps(string pageName)
+		private async Task<double> GuessFps(string? pageName)
 		{
 			var submissionId = WikiHelper.IsSubmissionPage(pageName);
 			if (submissionId.HasValue)
 			{
 				var sub = await _db.Submissions
 					.Where(s => s.Id == submissionId.Value)
-					.Select(s => new { s.Id, s.SystemFrameRate.FrameRate })
+					.Select(s => new { s.Id, s.SystemFrameRate!.FrameRate })
 					.SingleOrDefaultAsync(s => s.Id == submissionId.Value);
 
 				if (sub?.FrameRate != null)
@@ -62,7 +62,7 @@ namespace TASVideos.ViewComponents
 			{
 				var pub = await _db.Publications
 					.Where(p => p.Id == publicationId.Value)
-					.Select(p => new { p.Id, p.SystemFrameRate.FrameRate })
+					.Select(p => new { p.Id, p.SystemFrameRate!.FrameRate })
 					.SingleOrDefaultAsync();
 
 				if (pub?.FrameRate != null)
