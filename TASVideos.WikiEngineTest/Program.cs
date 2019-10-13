@@ -91,7 +91,11 @@ namespace TASVideos.WikiEngineTest
 					if (File.Exists(path))
 					{
 						using var tr = new StreamReader(path);
-						existingRevision = int.Parse(tr.ReadLine());
+						var result = int.TryParse(tr.ReadLine(), out int parsedRevision);
+						if (result)
+						{
+							existingRevision = parsedRevision;
+						}
 					}
 
 					var revision = wantUpdate ? wp.Revision : existingRevision != -1 ? existingRevision : wp.Revision;
