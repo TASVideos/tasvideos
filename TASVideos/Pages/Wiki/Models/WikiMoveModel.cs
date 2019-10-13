@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Wiki.Models
 {
 	public class WikiMoveModel
 	{
-		public string OriginalPageName { get; set; }
+		public string OriginalPageName { get; set; } = "";
 
 		[Required]
 		[ValidWikiPageName]
