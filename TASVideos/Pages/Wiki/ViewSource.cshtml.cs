@@ -28,10 +28,11 @@ namespace TASVideos.Pages.Wiki
 		public async Task<IActionResult> OnGet()
 		{
 			Path = Path?.Trim('/') ?? "";
-			WikiPage = await _wikiPages.Page(Path, Revision);
+			var wikiPage = await _wikiPages.Page(Path, Revision);
 
-			if (WikiPage != null)
+			if (wikiPage != null)
 			{
+				WikiPage = wikiPage;
 				return Page();
 			}
 

@@ -25,7 +25,7 @@ namespace TASVideos.Pages.Users
 
 		// Allows for a query based call to this page for Users/List
 		[FromQuery]
-		public string Name { get; set; }
+		public string? Name { get; set; }
 
 		[FromRoute]
 		public string? UserName { get; set; }
@@ -41,16 +41,17 @@ namespace TASVideos.Pages.Users
 
 			if (string.IsNullOrWhiteSpace(UserName))
 			{
-				UserName = Name;
+				UserName = Name ?? "";
 			}
 
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			Profile = await _userManager.GetUserProfile(UserName, false, seeRestricted);
-			if (Profile == null)
+			var profile = await _userManager.GetUserProfile(UserName, false, seeRestricted);
+			if (profile == null)
 			{
 				return NotFound();
 			}
 
+			Profile = profile;
 			if (!string.IsNullOrWhiteSpace(Profile.Signature))
 			{
 				Profile.Signature = RenderPost(Profile.Signature, true, false);
