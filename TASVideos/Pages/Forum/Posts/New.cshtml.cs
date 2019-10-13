@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Forum.Posts
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; }
+		public PagingModel Search { get; set; } = new PagingModel();
 
 		public PageOf<PostsSinceLastVisitModel> Posts { get; set; }
 
@@ -51,14 +51,14 @@ namespace TASVideos.Pages.Forum.Posts
 					Text = p.Text,
 					Subject = p.Subject,
 					TopicId = p.TopicId ?? 0,
-					TopicTitle = p.Topic.Title,
+					TopicTitle = p.Topic!.Title,
 					ForumId = p.Topic.ForumId,
-					ForumName = p.Topic.Forum.Name,
+					ForumName = p.Topic!.Forum!.Name,
 					PosterId = p.PosterId,
-					PosterName = p.Poster.UserName,
+					PosterName = p.Poster!.UserName,
 					PosterRoles = p.Poster.UserRoles
-						.Where(ur => !ur.Role.IsDefault)
-						.Select(ur => ur.Role.Name)
+						.Where(ur => !ur.Role!.IsDefault)
+						.Select(ur => ur.Role!.Name)
 						.ToList(),
 					PosterLocation = p.Poster.From,
 					Signature = p.Poster.Signature,

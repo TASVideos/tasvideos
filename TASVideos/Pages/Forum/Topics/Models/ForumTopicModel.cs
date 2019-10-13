@@ -31,27 +31,27 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public int Id { get; set; }
 		public bool IsWatching { get; set; }
 		public bool IsLocked { get; set; }
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 		public int ForumId { get; set; }
-		public string ForumName { get; set; }
+		public string ForumName { get; set; } = "";
 
 		public ForumTopicType Type { get; set; }
 
 		public bool AnyVotes => Poll?.Options.SelectMany(o => o.Voters).Any() ?? false;
 
 		public PageOf<ForumPostEntry> Posts { get; set; }
-		public PollModel Poll { get; set; }
+		public PollModel? Poll { get; set; }
 
 		public class PollModel
 		{
 			public int PollId { get; set; }
-			public string Question { get; set; }
+			public string Question { get; set; } = "";
 
 			public IEnumerable<PollOptionModel> Options { get; set; } = new List<PollOptionModel>();
 
 			public class PollOptionModel
 			{
-				public string Text { get; set; }
+				public string Text { get; set; } = "";
 				public int Ordinal { get; set; }
 				public ICollection<int> Voters { get; set; } = new List<int>();
 			}

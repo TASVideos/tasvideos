@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[BindProperty]
-		public MergeTopicModel Topic { get; set; }
+		public MergeTopicModel Topic { get; set; } = new MergeTopicModel();
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 
@@ -51,7 +51,7 @@ namespace TASVideos.Pages.Forum.Topics
 				.Select(t => new MergeTopicModel
 				{
 					Title = t.Title,
-					ForumId = t.Forum.Id,
+					ForumId = t.Forum!.Id,
 					ForumName = t.Forum.Name
 				})
 				.SingleOrDefaultAsync();

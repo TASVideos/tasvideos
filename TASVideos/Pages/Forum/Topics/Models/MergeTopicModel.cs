@@ -5,8 +5,8 @@ namespace TASVideos.Pages.Forum.Topics.Models
 	public class MergeTopicModel
 	{
 		public int ForumId { get; set; }
-		public string ForumName { get; set; }
-		public string Title { get; set; }
+		public string ForumName { get; set; } = "";
+		public string Title { get; set; } = "";
 
 		public string NewTopicTitle { get; set; }
 

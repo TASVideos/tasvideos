@@ -93,5 +93,16 @@ namespace TASVideos.Data.Entity
 		{
 			return query.Where(u => u.Publications.Any());
 		}
+
+		public static IQueryable<User> ThatHavePermission(this IQueryable<User> query, PermissionTo permission)
+		{
+			return query.Where(u => u.UserRoles
+				.Any(r => r.Role!.RolePermission.Any(rp => rp.PermissionId ==permission)));
+		}
+
+		public static IQueryable<User> ThatHaveRole(this IQueryable<User> query, string role)
+		{
+			return query.Where(u => u.UserRoles.Any(ur => ur.Role!.Name == role));
+		}
 	}
 }

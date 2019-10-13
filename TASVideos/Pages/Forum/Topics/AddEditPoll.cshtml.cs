@@ -26,7 +26,7 @@ namespace TASVideos.Pages.Forum.Topics
 		[FromRoute]
 		public int TopicId { get; set; }
 
-		public string TopicTitle { get; set; }
+		public string TopicTitle { get; set; } = "";
 
 		public int? PollId { get; set; }
 
@@ -94,7 +94,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var topic = await _db.ForumTopics
 				.Include(t => t.Poll)
-				.ThenInclude(p => p.PollOptions)
+				.ThenInclude(p => p!.PollOptions)
 				.ThenInclude(o => o.Votes)
 				.ExcludeRestricted(seeRestricted)
 				.Where(t => t.Id == TopicId)

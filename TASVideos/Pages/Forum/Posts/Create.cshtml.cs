@@ -41,7 +41,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public int? QuoteId { get; set; }
 
 		[BindProperty]
-		public ForumPostCreateModel Post { get; set; }
+		public ForumPostCreateModel Post { get; set; } = new ForumPostCreateModel();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -73,7 +73,7 @@ namespace TASVideos.Pages.Forum.Posts
 					.Where(p => p.Id == QuoteId)
 					.SingleOrDefaultAsync();
 
-				Post.Text = $"[quote=\"{post.Poster.UserName}\"]{post.Text}[/quote]";
+				Post.Text = $"[quote=\"{post.Poster!.UserName}\"]{post.Text}[/quote]";
 			}
 
 			return Page();

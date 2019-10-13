@@ -126,7 +126,7 @@ namespace TASVideos.Data
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasMany(e => e.UserFileComments)
-					.WithOne(e => e.User)
+					.WithOne(e => e.User!)
 					.OnDelete(DeleteBehavior.Restrict);
 
 				entity.HasMany(e => e.ForumTopicWatches)
