@@ -31,7 +31,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(a => new
 				{
 					a.AwardId,
-					a.User.Name,
+					a.User!.Name,
 					Year = 2000 + a.Year
 				})
 				.ToList();

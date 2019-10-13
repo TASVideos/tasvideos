@@ -94,7 +94,7 @@ namespace TASVideos.Legacy.Imports
 					WikiContentId = pub.Wiki.Id,
 					SubmissionId = pub.Movie.SubmissionId,
 					TierId = pub.Movie.Tier,
-					CreateUserName = pub.Movie.Publisher.Name ?? "Unknown",
+					CreateUserName = pub.Movie.Publisher!.Name ?? "Unknown",
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate),
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.LastChange),
 					ObsoletedById = pub.Movie.ObsoletedBy == -1 ? null : pub.Movie.ObsoletedBy,
@@ -103,7 +103,7 @@ namespace TASVideos.Legacy.Imports
 					RomId = -1, // Place holder
 					GameId = pub.Sub.GameId ?? -1,
 					Game = pub.Game,
-					MovieFile = mainMovieFile.Storage.FileData,
+					MovieFile = mainMovieFile.Storage!.FileData,
 					MovieFileName = mainMovieFile.FileName,
 					SystemFrameRateId = pub.Sub.SystemFrameRateId ?? 0,
 					SystemFrameRate = pub.Sub.SystemFrameRate,
@@ -159,7 +159,7 @@ namespace TASVideos.Legacy.Imports
 					PublicationId = pub.Movie.Id,
 					Type = FileType.MovieFile,
 					Path = m.FileName,
-					FileData = m.Storage.FileData,
+					FileData = m.Storage!.FileData,
 					Description = m.FileName.ToLower().Contains("consoleverified")
 						? "Console Verication"
 						: "Converted to " + Path.GetExtension(m.FileName),

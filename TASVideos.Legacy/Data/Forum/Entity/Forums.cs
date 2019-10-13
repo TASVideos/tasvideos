@@ -12,8 +12,9 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		[Column("cat_id")]
 		public int CategoryId { get; set; }
 
+		// Note: this column is nullable in the database, but will never actually be null
 		[Column("forum_name")]
-		public string? Name { get; set; }
+		public string Name { get; set; } = "";
 
 		[Column("forum_desc")]
 		public string? Description { get; set; }
