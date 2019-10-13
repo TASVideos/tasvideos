@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -54,5 +54,10 @@ namespace TASVideos.Pages.Submissions.Models
 		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
 		public string? System { get; set; }
 		public string? User { get; set; }
+
+		public new static SubmissionPageOf<T> Empty()
+		{
+			return new SubmissionPageOf<T>(Enumerable.Empty<T>());
+		}
 	}
 }

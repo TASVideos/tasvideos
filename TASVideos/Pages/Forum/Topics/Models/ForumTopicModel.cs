@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 
 		public bool AnyVotes => Poll?.Options.SelectMany(o => o.Voters).Any() ?? false;
 
-		public PageOf<ForumPostEntry> Posts { get; set; }
+		public PageOf<ForumPostEntry> Posts { get; set; } = PageOf<ForumPostEntry>.Empty();
 		public PollModel? Poll { get; set; }
 
 		public class PollModel
