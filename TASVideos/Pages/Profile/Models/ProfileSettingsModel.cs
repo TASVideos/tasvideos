@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TASVideos.Models;
 
@@ -15,7 +16,7 @@ namespace TASVideos.Pages.Profile.Models
 		public string Email { get; set; } = "";
 
 		[Display(Name = "Time Zone")]
-		public string? TimeZoneId { get; set; }
+		public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
 		public string? StatusMessage { get; set; }
 

@@ -10,8 +10,9 @@ namespace TASVideos.Pages.Users.Models
 		[DisplayName("User Name")]
 		public string? UserName { get; set; }
 
+		[Required]
 		[DisplayName("Time Zone")]
-		public string? TimezoneId { get; set; }
+		public string TimezoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
 		[Display(Name = "Location")]
 		public string? From { get; set; }

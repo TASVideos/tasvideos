@@ -44,7 +44,7 @@ namespace TASVideos.TagHelpers
 		{
 		}
 
-		public string Username { get; set; }
+		public string Username { get; set; } = "";
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
