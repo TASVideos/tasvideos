@@ -23,10 +23,10 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 		
 		[FromQuery]
-		public string ReturnUrl { get; set; }
+		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public PublicationRateModel Rating { get; set; }
+		public PublicationRateModel Rating { get; set; } = new PublicationRateModel();
 
 		public async Task<IActionResult> OnGet()
 		{

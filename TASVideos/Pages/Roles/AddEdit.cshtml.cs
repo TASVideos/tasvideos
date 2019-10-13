@@ -167,7 +167,7 @@ namespace TASVideos.Pages.Roles
 			{
 				role = await _db.Roles.SingleAsync(r => r.Id == Id);
 				_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == Id));
-				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role.Id == Id));
+				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role!.Id == Id));
 				await _db.SaveChangesAsync();
 
 				_publisher.SendUserManagement($"Role {model.Name} updated by {User.Identity.Name}", "", $"{BaseUrl}/Roles/Index?role={model.Name}");

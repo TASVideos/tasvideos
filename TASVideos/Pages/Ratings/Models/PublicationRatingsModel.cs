@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Ratings.Models
 {
 	public class PublicationRatingsModel
 	{
-		public string PublicationTitle { get; set; }
+		public string PublicationTitle { get; set; } = "";
 
 		public IEnumerable<RatingEntry> Ratings { get; set; } = new List<RatingEntry>();
 
@@ -18,7 +18,7 @@ namespace TASVideos.Pages.Ratings.Models
 		public class RatingEntry
 		{
 			[Display(Name = "UserName")]
-			public string UserName { get; set; }
+			public string UserName { get; set; } = "";
 			
 			[Display(Name = "Entertainment")]
 			public double? Entertainment { get; set; }

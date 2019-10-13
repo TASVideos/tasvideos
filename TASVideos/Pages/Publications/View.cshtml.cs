@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Publications
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationDisplayModel Publication { get; set; }
+		public PublicationDisplayModel Publication { get; set; } = new PublicationDisplayModel();
 
 		public async Task<IActionResult> OnGet()
 		{

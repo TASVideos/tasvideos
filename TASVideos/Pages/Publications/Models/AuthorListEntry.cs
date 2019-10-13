@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Publications.Models
 		public int Id { get; set; }
 
 		[Display(Name = "Author")]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		[Display(Name = "Active Movies")]
 		public int ActivePublicationCount { get; set; }

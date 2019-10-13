@@ -4,7 +4,7 @@ namespace TASVideos.Pages.Publications.Models
 {
 	public class PublicationCatalogModel
 	{
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		[Display(Name = "Rom")]
 		public int RomId { get; set; }

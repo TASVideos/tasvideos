@@ -35,7 +35,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int ForumId { get; set; }
 
 		[BindProperty]
-		public TopicCreateModel Topic { get; set; }
+		public TopicCreateModel Topic { get; set; } = new TopicCreateModel();
 
 		public async Task<IActionResult> OnGet()
 		{
