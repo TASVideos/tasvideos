@@ -10,7 +10,7 @@ using TASVideos.Services;
 
 namespace TASVideos.TagHelpers
 {
-	[HtmlTargetElement("timezone-convert", TagStructure = TagStructure.WithoutEndTag)]
+	[HtmlTargetElement("timezone-convert", TagStructure = TagStructure.WithoutEndTag, Attributes = "asp-for")]
 	public class TimeZoneConvert : TagHelper
 	{
 		private readonly ClaimsPrincipal _claimsPrincipal;
@@ -24,7 +24,7 @@ namespace TASVideos.TagHelpers
 			_userManager = userManager;
 		}
 
-		public ModelExpression AspFor { get; set; }
+		public ModelExpression AspFor { get; set; } = null!;
 
 		public bool DateOnly { get; set; }
 

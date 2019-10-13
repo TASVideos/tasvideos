@@ -13,7 +13,7 @@ using TASVideos.Extensions;
 
 namespace TASVideos.TagHelpers
 {
-	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.WithoutEndTag)]
+	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.WithoutEndTag, Attributes="sorting,model-type")]
 	public class SortableTableHeadTagHelper : TagHelper
 	{
 		private static readonly List<string> SortingProperties = typeof(ISortable)
@@ -25,8 +25,8 @@ namespace TASVideos.TagHelpers
 		[ViewContext]
 		public ViewContext ViewContext { get; set; } = new ViewContext();
 
-		public ISortable Sorting { get; set; }
-		public Type ModelType { get; set; }
+		public ISortable Sorting { get; set; } = null!;
+		public Type ModelType { get; set; } = null!;
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
