@@ -48,7 +48,8 @@ namespace TASVideos.Services.Email
 
 		public async Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template)
 		{
-			if (recipients == null || !recipients.Any())
+			var recipientsList = recipients.ToList();
+			if (!recipientsList.Any())
 			{
 				return;
 			}
@@ -76,7 +77,7 @@ on behalf of TASVideos staff";
 
 			await _emailSender.SendEmail(new StandardEmail
 			{
-				Recipients = recipients,
+				Recipients = recipientsList,
 				Subject = subject,
 				Message = message
 			});
@@ -87,7 +88,7 @@ on behalf of TASVideos staff";
 	{
 		public int PostId { get; set; }
 		public int TopicId { get; set; }
-		public string TopicTitle { get; set; }
-		public string BaseUrl { get; set; }
+		public string TopicTitle { get; set; } = "";
+		public string BaseUrl { get; set; } = "";
 	}
 }
