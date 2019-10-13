@@ -13,7 +13,7 @@ namespace TASVideos.TagHelpers
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; }
+		public ViewContext ViewContext { get; set; } = new ViewContext();
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
@@ -27,11 +27,11 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement(Attributes = nameof(Permissions))]
 	public class PermissionsTagHelper : TagHelper
 	{
-		public PermissionTo[] Permissions { get; set; }
+		public PermissionTo[] Permissions { get; set; } = new PermissionTo[0];
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; }
+		public ViewContext ViewContext { get; set; } = new ViewContext();
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{

@@ -194,9 +194,9 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; }
+		public ViewContext ViewContext { get; set; } = new ViewContext();
 
-		public string AspHref { get; set; }
+		public string AspHref { get; set; } = "";
 
 		public string WarningMessage { get; set; } = "Are you sure you want to delete this record?";
 

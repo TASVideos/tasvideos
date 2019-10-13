@@ -18,13 +18,13 @@ namespace TASVideos.Pages.Wiki
 
 		private static readonly List<SiteMapEntry> CorePages = Assembly
 			.GetAssembly(typeof(SiteMapModel))
-			.GetTypes()
+			!.GetTypes()
 			.Where(type => typeof(BasePageModel).IsAssignableFrom(type))
 			.Where(type => type != typeof(BasePageModel))
 			.Select(t => new SiteMapEntry
 			{
 				PageName = t.Namespace
-					.Replace("TASVideos.Pages.", "")
+					?.Replace("TASVideos.Pages.", "")
 					.Replace(".", "/") + "/"
 					+ t.Name.Replace("Model", ""),
 				IsWiki = false,
