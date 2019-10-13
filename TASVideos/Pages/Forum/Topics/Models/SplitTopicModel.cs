@@ -15,12 +15,12 @@ namespace TASVideos.Pages.Forum.Topics.Models
 
 		[Required]
 		[Display(Name = "New Topic Name")]
-		public string SplitTopicName { get; set; }
+		public string SplitTopicName { get; set; } = "";
 
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		public int ForumId { get; set; }
-		public string ForumName { get; set; }
+		public string ForumName { get; set; } = "";
 
 		public IEnumerable<Post> Posts { get; set; } = new List<Post>();
 
@@ -30,11 +30,11 @@ namespace TASVideos.Pages.Forum.Topics.Models
 			public DateTime PostCreateTimeStamp { get; set; }
 			public bool EnableHtml { get; set; }
 			public bool EnableBbCode { get; set; }
-			public string Subject { get; set; }
-			public string Text { get; set; }
+			public string? Subject { get; set; }
+			public string Text { get; set; } = "";
 			public int PosterId { get; set; }
-			public string PosterName { get; set; }
-			public string PosterAvatar { get; set; }
+			public string PosterName { get; set; } = "";
+			public string? PosterAvatar { get; set; }
 		}
 	}
 }

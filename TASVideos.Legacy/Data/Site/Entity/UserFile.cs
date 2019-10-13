@@ -10,7 +10,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("file_uid")]
 		public int UserId { get; set; }
-		public virtual User User { get; set; }
+		public virtual User? User { get; set; }
 
 		[Column("file_name"), StringLength(255), Required]
 		public string Name { get; set; } = "";
@@ -53,7 +53,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("file_gn_id")]
 		public int? GameNameId { get; set; }
-		public virtual GameName GameName { get; set; }
+		public virtual GameName? GameName { get; set; }
 
 		[Column("file_hidden")]
 		public sbyte Hidden { get; set; }

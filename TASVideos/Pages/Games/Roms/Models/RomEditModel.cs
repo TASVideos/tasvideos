@@ -8,26 +8,26 @@ namespace TASVideos.Pages.Games.Roms.Models
 		[Required]
 		[StringLength(255)]
 		[Display(Name = "Name")]
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 
 		[Required]
 		[StringLength(32)]
 		[Display(Name = "Md5")]
-		public string Md5 { get; set; }
+		public string Md5 { get; set; } = "";
 
 		[Required]
 		[StringLength(40)]
 		[Display(Name = "Sha1")]
-		public string Sha1 { get; set; }
+		public string Sha1 { get; set; } = "";
 
 		[StringLength(50)]
 		[Display(Name = "Version")]
-		public string Version { get; set; }
+		public string? Version { get; set; }
 
 		[Required]
 		[StringLength(50)]
 		[Display(Name = "Region")]
-		public string Region { get; set; }
+		public string? Region { get; set; }
 
 		[Required]
 		[Display(Name = "Type")]

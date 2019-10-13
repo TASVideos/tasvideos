@@ -6,10 +6,10 @@ namespace TASVideos.Pages.Forum.Topics.Models
 {
 	public class PollResultModel
 	{
-		public string TopicTitle { get; set; }
+		public string TopicTitle { get; set; } = "";
 		public int TopicId { get; set; }
 
-		public string Question { get; set; }
+		public string Question { get; set; } = "";
 
 		public IEnumerable<VoteResult> Votes { get; set; } = new List<VoteResult>();
 
@@ -18,18 +18,18 @@ namespace TASVideos.Pages.Forum.Topics.Models
 			public int UserId { get; set; }
 
 			[Display(Name = "User")]
-			public string UserName { get; set; }
+			public string UserName { get; set; } = "";
 
 			public int Ordinal { get; set; }
 
 			[Display(Name = "Option")]
-			public string OptionText { get; set; }
+			public string OptionText { get; set; } = "";
 
 			[Display(Name = "Vote On")]
 			public DateTime CreateTimestamp { get; set; }
 
 			[Display(Name = "IP Address")]
-			public string IpAddress { get; set; }
+			public string? IpAddress { get; set; }
 		}
 	}
 }

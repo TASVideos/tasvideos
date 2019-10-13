@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Publications
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationCatalogModel Catalog { get; set; }
+		public PublicationCatalogModel Catalog { get; set; } = new PublicationCatalogModel();
 
 		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
 		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();

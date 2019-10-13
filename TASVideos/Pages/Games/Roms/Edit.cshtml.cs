@@ -47,16 +47,16 @@ namespace TASVideos.Pages.Games.Roms
 		public int? Id { get; set; }
 
 		[FromQuery]
-		public string ReturnUrl { get; set; }
+		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
 		public RomEditModel Rom { get; set; } = new RomEditModel();
 
 		[BindProperty]
-		public string SystemCode { get; set; }
+		public string SystemCode { get; set; } = "";
 
 		[BindProperty]
-		public string GameName { get; set; }
+		public string GameName { get; set; } = "";
 
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
@@ -84,7 +84,7 @@ namespace TASVideos.Pages.Games.Roms
 			}
 
 			Rom = await _db.Roms
-				.Where(r => r.Id == Id.Value && r.Game.Id == GameId)
+				.Where(r => r.Id == Id.Value && r.Game!.Id == GameId)
 				.ProjectTo<RomEditModel>()
 				.SingleAsync();
 
@@ -94,7 +94,7 @@ namespace TASVideos.Pages.Games.Roms
 			}
 
 			GameName = game.DisplayName;
-			SystemCode = game.System.Code;
+			SystemCode = game.System!.Code;
 
 			CanDelete = await CanBeDeleted();
 
@@ -171,8 +171,8 @@ namespace TASVideos.Pages.Games.Roms
 
 		private async Task<bool> CanBeDeleted()
 		{
-			return !await _db.Submissions.AnyAsync(s => s.Rom.Id == Id)
-					&& !await _db.Publications.AnyAsync(p => p.Rom.Id == Id);
+			return !await _db.Submissions.AnyAsync(s => s.Rom!.Id == Id)
+					&& !await _db.Publications.AnyAsync(p => p.Rom!.Id == Id);
 		}
 	}
 }

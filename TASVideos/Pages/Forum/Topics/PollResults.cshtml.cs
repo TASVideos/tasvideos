@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Forum.Topics
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PollResultModel Poll { get; set; }
+		public PollResultModel Poll { get; set; } = new PollResultModel();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Forum.Topics
 				.Where(p => p.Id == Id)
 				.Select(p => new PollResultModel
 				{
-					TopicTitle = p.Topic.Title,
+					TopicTitle = p.Topic!.Title,
 					TopicId = p.TopicId,
 					Question = p.Question,
 					Votes = p.PollOptions
@@ -39,8 +39,8 @@ namespace TASVideos.Pages.Forum.Topics
 						.Select(v => new PollResultModel.VoteResult
 						{
 							UserId = v.UserId,
-							UserName = v.User.UserName,
-							Ordinal = v.PollOption.Ordinal,
+							UserName = v.User!.UserName,
+							Ordinal = v.PollOption!.Ordinal,
 							OptionText = v.PollOption.Text,
 							CreateTimestamp = v.CreateTimestamp,
 							IpAddress = v.IpAddress

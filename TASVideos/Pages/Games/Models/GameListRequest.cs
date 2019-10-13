@@ -9,6 +9,6 @@ namespace TASVideos.Pages.Games.Models
 			PageSize = 25;
 		}
 
-		public string SystemCode { get; set; }
+		public string? SystemCode { get; set; }
 	}
 }

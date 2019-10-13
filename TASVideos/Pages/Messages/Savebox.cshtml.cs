@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.Messages.Models;
 
 namespace TASVideos.Pages.Messages
@@ -26,14 +27,13 @@ namespace TASVideos.Pages.Messages
 		{
 			var userId = User.GetUserId();
 			SaveBox = await _db.PrivateMessages
-				.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == userId)
-					|| (pm.SavedForToUser && !pm.DeletedForToUser && pm.ToUserId == userId))
+				.ThatAreSavedByUser(userId)
 				.Select(pm => new SaveboxEntry
 				{
 					Id = pm.Id,
 					Subject = pm.Subject,
-					FromUser = pm.FromUser.UserName,
-					ToUser = pm.ToUser.UserName,
+					FromUser = pm.FromUser!.UserName,
+					ToUser = pm.ToUser!.UserName,
 					SendDate = pm.CreateTimeStamp
 				})
 				.ToListAsync();
