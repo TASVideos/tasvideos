@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Roles
 			_db = db;
 		}
 
-		public RoleDisplayModel Role { get; set; }
+		public RoleDisplayModel Role { get; set; } = new RoleDisplayModel();
 
 		public async Task<IActionResult> OnGet(string role)
 		{

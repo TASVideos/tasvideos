@@ -8,8 +8,6 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public string ForumName { get; set; } = "";
 		public string Title { get; set; } = "";
 
-		public string NewTopicTitle { get; set; }
-
 		[Display(Name = "Forum To Merge In to")]
 		public int DestinationForumId { get; set; }
 

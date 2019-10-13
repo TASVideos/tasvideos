@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Submissions
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SubmissionCatalogModel Catalog { get; set; }
+		public SubmissionCatalogModel Catalog { get; set; } = new SubmissionCatalogModel();
 
 		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
 		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
@@ -84,7 +84,7 @@ namespace TASVideos.Pages.Submissions
 		private async Task PopulateCatalogDropDowns()
 		{
 			AvailableRoms = await _db.Roms
-				.Where(r => !Catalog.SystemId.HasValue || r.Game.SystemId == Catalog.SystemId)
+				.Where(r => !Catalog.SystemId.HasValue || r.Game!.SystemId == Catalog.SystemId)
 				.Where(r => !Catalog.GameId.HasValue || r.GameId == Catalog.GameId)
 				.OrderBy(r => r.Name)
 				.Select(r => new SelectListItem

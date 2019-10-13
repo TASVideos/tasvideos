@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Ratings
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationRatingsModel Publication { get; set; }
+		public PublicationRatingsModel Publication { get; set; } = new PublicationRatingsModel();
 
 		public IEnumerable<PublicationRatingsModel.RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
 			? Publication.Ratings
@@ -61,7 +61,7 @@ namespace TASVideos.Pages.Ratings
 				PublicationTitle = publication.Title,
 				Ratings = publication.PublicationRatings
 					.GroupBy(
-						key => new { key.PublicationId, key.User.UserName, key.User.PublicRatings },
+						key => new { key.PublicationId, key.User!.UserName, key.User.PublicRatings },
 						grp => new { grp.Type, grp.Value })
 					.Select(g => new PublicationRatingsModel.RatingEntry
 					{
@@ -75,12 +75,12 @@ namespace TASVideos.Pages.Ratings
 
 			var entertainmentRatings = Publication.Ratings
 				.Where(r => r.Entertainment.HasValue)
-				.Select(r => r.Entertainment.Value)
+				.Select(r => r.Entertainment!.Value)
 				.ToList();
 
 			var techRatings = Publication.Ratings
 				.Where(r => r.TechQuality.HasValue)
-				.Select(r => r.TechQuality.Value)
+				.Select(r => r.TechQuality!.Value)
 				.ToList();
 
 			var overallRatings = entertainmentRatings

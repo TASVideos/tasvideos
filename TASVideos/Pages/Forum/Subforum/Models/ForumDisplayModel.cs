@@ -12,7 +12,7 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 		public string Name { get; set; } = "";
 		public string? Description { get; set; }
 
-		public PageOf<ForumTopicEntry> Topics { get; set; }
+		public PageOf<ForumTopicEntry> Topics { get; set; } = PageOf<ForumTopicEntry>.Empty();
 
 		public class ForumTopicEntry
 		{

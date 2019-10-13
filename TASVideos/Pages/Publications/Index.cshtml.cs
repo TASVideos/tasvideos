@@ -35,7 +35,7 @@ namespace TASVideos.Pages.Publications
 		}
 
 		[FromRoute]
-		public string Query { get; set; }
+		public string Query { get; set; } = "";
 
 		public IEnumerable<PublicationDisplayModel> Movies { get; set; } = new List<PublicationDisplayModel>();
 
@@ -79,8 +79,8 @@ namespace TASVideos.Pages.Publications
 			}
 
 			Movies = await _db.Publications
-				.OrderBy(p => p.System.Code)
-				.ThenBy(p => p.Game.DisplayName)
+				.OrderBy(p => p.System!.Code)
+				.ThenBy(p => p.Game!.DisplayName)
 				.FilterByTokens(searchModel)
 				.ProjectTo<PublicationDisplayModel>()
 				.ToListAsync();

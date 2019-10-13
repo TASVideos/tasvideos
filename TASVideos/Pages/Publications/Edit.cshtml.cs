@@ -68,7 +68,7 @@ namespace TASVideos.Pages.Publications
 						SelectedTags = p.PublicationTags
 							.Select(pt => pt.TagId)
 							.ToList(),
-						Markup = p.WikiContent.Markup
+						Markup = p.WikiContent != null ? p.WikiContent.Markup : ""
 					})
 					.SingleOrDefaultAsync();
 
