@@ -2,7 +2,7 @@
 {
 	public class YoutubeModel
 	{
-		public string Code { get; set; }
+		public string Code { get; set; } = "";
 		public int Width { get; set; } = 425;
 		public int Height { get; set; } = 370;
 		public string Align { get; set; } = "";
