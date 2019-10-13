@@ -12,7 +12,7 @@ using TASVideos.Extensions;
 
 namespace TASVideos.TagHelpers
 {
-	[HtmlTargetElement("two-column-select", TagStructure = TagStructure.WithoutEndTag)]
+	[HtmlTargetElement("two-column-select", TagStructure = TagStructure.WithoutEndTag, Attributes = "id-list,available-list")]
 	public class TwoColumnSelectTagHelper : TagHelper
 	{
 		private readonly IHtmlGenerator _htmlGenerator;
@@ -21,9 +21,9 @@ namespace TASVideos.TagHelpers
 			_htmlGenerator = htmlGenerator;
 		}
 
-		public ModelExpression IdList { get; set; }
+		public ModelExpression IdList { get; set; } = null!;
 
-		public ModelExpression AvailableList { get; set; }
+		public ModelExpression AvailableList { get; set; } = null!;
 
 		/// <summary>
 		/// Gets or sets an override for the number of rows the select lists display

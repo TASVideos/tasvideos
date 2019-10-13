@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers
 {
-	[HtmlTargetElement("timezone-picker", TagStructure = TagStructure.WithoutEndTag)]
+	[HtmlTargetElement("timezone-picker", TagStructure = TagStructure.WithoutEndTag, Attributes = "asp-for")]
 	public class TimeZonePickerTagHelper : TagHelper
 	{
 		[HtmlAttributeName("asp-for")]
-		public ModelExpression For { get; set; }
+		public ModelExpression For { get; set; } = null!;
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{

@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers
 {
-	[HtmlTargetElement("string-list", TagStructure = TagStructure.WithoutEndTag)]
+	[HtmlTargetElement("string-list", TagStructure = TagStructure.WithoutEndTag, Attributes = "asp-for")]
 	public class StringListTagHelper : TagHelper
 	{
-		public ModelExpression AspFor { get; set; }
+		public ModelExpression AspFor { get; set; } = null!;
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
