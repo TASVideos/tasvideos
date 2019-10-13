@@ -44,7 +44,7 @@ namespace TASVideos.Services
 	{
 		public bool TryGetValue<T>(string key, out T value)
 		{
-			value = default;
+			value = default!;
 			return false;
 		}
 
