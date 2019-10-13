@@ -101,12 +101,12 @@ namespace TASVideos.Test
 
 		public TProperty GetCurrentValue<TProperty>(IPropertyBase propertyBase)
 		{
-			return default(TProperty);
+			return default(TProperty)!;
 		}
 
 		public TProperty GetOriginalValue<TProperty>(IProperty property)
 		{
-			return default(TProperty);
+			return default(TProperty)!;
 		}
 
 		public void SetCurrentValue(IPropertyBase propertyBase, object value)
@@ -115,16 +115,16 @@ namespace TASVideos.Test
 
 		public EntityEntry ToEntityEntry()
 		{
-			return null;
+			return null!;
 		}
 
 		// ReSharper disable once UnassignedGetOnlyAutoProperty
-		public IEntityType EntityType { get; }
+		public IEntityType EntityType { get; } = null!;
 
 		// ReSharper disable once UnassignedGetOnlyAutoProperty
 		public EntityState EntityState { get; }
 
 		// ReSharper disable once UnassignedGetOnlyAutoProperty
-		public IUpdateEntry SharedIdentityEntry { get; }
+		public IUpdateEntry SharedIdentityEntry { get; } = null!;
 	}
 }
