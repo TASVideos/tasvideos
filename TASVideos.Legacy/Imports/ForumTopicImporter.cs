@@ -27,7 +27,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					t.Views,
 					t.Type,
 					t.TopicStatus,
-					Author = t.PosterId > 0 ? t.Poster.UserName : "Unknown",
+					Author = t.PosterId > 0 ? t.Poster!.UserName : "Unknown",
 					PollId = t.Poll != null ? t.Poll.Id : (int?)null,
 					PageName = t.SubmissionId > 0 ? "InternalSystem/SubmissionContent/S" + t.SubmissionId : null
 				})
@@ -38,7 +38,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				{
 					Id = t.Id,
 					ForumId = t.ForumId,
-					Title = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(t.Title)),
+					Title = WebUtility.HtmlDecode(ImportHelper.ConvertNotNullLatin1String(t.Title)),
 					PosterId = t.PosterId > 0 // There's one record that is 0 we want to change to -1
 						? t.PosterId.Value
 						: -1,

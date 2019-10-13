@@ -23,7 +23,7 @@ namespace TASVideos.TagHelpers
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; }
+		public ViewContext ViewContext { get; set; } = new ViewContext();
 
 		public ISortable Sorting { get; set; }
 		public Type ModelType { get; set; }

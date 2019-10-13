@@ -68,9 +68,9 @@ namespace TASVideos.Legacy.Imports
 			var lSubsWithSystem = (from ls in legacySubmissions
 				join s in systems on ls.SystemId equals s.Id
 				join w in submissionWikis on LinkConstants.SubmissionWikiPage + ls.Id equals w.PageName
-				join u in users on ImportHelper.ConvertLatin1String(ls.User.Name).ToLower() equals u.UserName.ToLower() into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+				join u in users on ImportHelper.ConvertNotNullLatin1String(ls.User!.Name).ToLower() equals u.UserName.ToLower() into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
 				from u in uu.DefaultIfEmpty()
-				join j in users on ImportHelper.ConvertLatin1String(ls.Judge.Name).ToLower() equals j.UserName.ToLower() into ju
+				join j in users on ImportHelper.ConvertNotNullLatin1String(ls.Judge!.Name).ToLower() equals j.UserName.ToLower() into ju
 				from j in ju.DefaultIfEmpty()
 				join pub in publicationWikis on LinkConstants.PublicationWikiPage + (ls.Movie?.Id ?? -1) equals pub.PageName into pubs
 				from pub in pubs.DefaultIfEmpty()
@@ -133,7 +133,7 @@ namespace TASVideos.Legacy.Imports
 					Status = ConvertStatus(legacySubmission.Sub.Status),
 					RomName = legacySubmission.Sub.RomName,
 					RerecordCount = legacySubmission.Sub.Rerecord,
-					MovieFile = legacySubmission.Sub.Content,
+					MovieFile = legacySubmission.Sub.Content ?? new byte[0],
 					IntendedTierId = legacySubmission.Sub.IntendedTier,
 					GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
 					RomId = -1, // Legacy system had no notion of Rom for submissions
@@ -155,7 +155,7 @@ namespace TASVideos.Legacy.Imports
 
 				var authorNames = legacySubmission.Sub.Author
 					.ParseUserNames()
-					.Select(a => NickCleanup(ImportHelper.ConvertLatin1String(a).ToLower().Trim()))
+					.Select(a => NickCleanup(ImportHelper.ConvertNotNullLatin1String(a).ToLower().Trim()))
 					.ToList();
 
 				var authors = users
@@ -169,7 +169,7 @@ namespace TASVideos.Legacy.Imports
 					})
 					.ToList();
 
-				var additionalAuthors = authorNames.Except(authors.Select(a => a.Author.UserName.ToLower())).ToList();
+				var additionalAuthors = authorNames.Except(authors.Select(a => a.Author!.UserName.ToLower())).ToList();
 				if (additionalAuthors.Any())
 				{
 					submission.AdditionalAuthors = string.Join(",", additionalAuthors);

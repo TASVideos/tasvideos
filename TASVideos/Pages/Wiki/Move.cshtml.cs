@@ -55,8 +55,8 @@ namespace TASVideos.Pages.Wiki
 				return Page();
 			}
 
-			Move.OriginalPageName = Move?.OriginalPageName.Trim('/') ?? "";
-			Move.DestinationPageName = Move?.DestinationPageName.Trim('/') ?? "";
+			Move.OriginalPageName = Move.OriginalPageName.Trim('/');
+			Move.DestinationPageName = Move.DestinationPageName.Trim('/');
 
 			if (await _wikiPages.Exists(Move.DestinationPageName, includeDeleted: true))
 			{

@@ -25,12 +25,12 @@ namespace TASVideos.Legacy.Imports
 					p.FromUserId,
 					p.Timestamp,
 					p.Subject,
-					p.PrivateMessageText.Text,
+					p.PrivateMessageText!.Text,
 					p.EnableBbCode,
 					p.EnableHtml,
 					p.IpAddress,
 					p.PrivateMessageText.BbCodeUid,
-					p.FromUser.UserName
+					p.FromUser!.UserName
 				})
 				.ToList();
 
@@ -41,7 +41,7 @@ namespace TASVideos.Legacy.Imports
 					tkey.FromUserId,
 					tkey.Timestamp,
 					tkey.Subject,
-					tkey.Text,
+					Text = tkey.Text ?? "",
 					tkey.BbCodeUid,
 					tkey.EnableBbCode,
 					tkey.EnableHtml,

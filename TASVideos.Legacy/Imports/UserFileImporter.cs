@@ -104,7 +104,7 @@ namespace TASVideos.Legacy.Imports
 		{
 			return new UserFile
 			{
-				AuthorId = userIdsByName.TryGetValue(legacyFile.User.Name, out var userId)
+				AuthorId = userIdsByName.TryGetValue(legacyFile.User!.Name, out var userId)
 					? userId
 					: -1,
 				Class = string.Equals(legacyFile.Class, "m", StringComparison.OrdinalIgnoreCase)
