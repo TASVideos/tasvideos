@@ -23,7 +23,7 @@ namespace TASVideos.ViewComponents
 			var model = await _db.GameSystemFrameRates
 				.Select(sf => new PlatformFramerateModel
 				{
-					SystemCode = sf.System.Code,
+					SystemCode = sf.System!.Code,
 					FrameRate = sf.FrameRate,
 					RegionCode = sf.RegionCode,
 					Preliminary = sf.Preliminary

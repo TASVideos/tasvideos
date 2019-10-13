@@ -27,7 +27,7 @@ namespace TASVideos.ViewComponents
 					Id = s.Id,
 					Title = s.Title,
 					Reason = s.RejectionReasonId.HasValue
-						? s.RejectionReason.DisplayName
+						? s.RejectionReason!.DisplayName
 						: "N/A"
 				})
 				.ToListAsync();

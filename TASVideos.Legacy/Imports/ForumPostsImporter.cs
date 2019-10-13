@@ -23,7 +23,7 @@ namespace TASVideos.Legacy.Imports
 					p.TopicId,
 					p.IpAddress,
 					p.Timestamp,
-					p.PostText.Subject,
+					p.PostText!.Subject,
 					p.PostText.Text,
 					p.EnableBbCode,
 					p.EnableHtml,

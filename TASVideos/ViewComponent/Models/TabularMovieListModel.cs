@@ -19,15 +19,15 @@ namespace TASVideos.ViewComponents
 		public TimeSpan? PreviousTime { get; set; }
 		public int PreviousId { get; set; }
 
-		public string Game { get; set; }
-		public string Authors { get; set; }
+		public string Game { get; set; } = "";
+		public string Authors { get; set; } = "";
 
 		public ScreenshotFile Screenshot { get; set; } = new ScreenshotFile();
 
 		public class ScreenshotFile
 		{
-			public string Path { get; set; }
-			public string Description { get; set; }
+			public string Path { get; set; } = "";
+			public string? Description { get; set; }
 		}
 	}
 }

@@ -6,33 +6,33 @@ namespace TASVideos.Pages.Profile.Models
 {
 	public class ProfileSettingsModel
 	{
-		public string Username { get; set; }
+		public string Username { get; set; } = "";
 
 		public bool IsEmailConfirmed { get; set; }
 
 		[Required]
 		[EmailAddress]
-		public string Email { get; set; }
+		public string Email { get; set; } = "";
 
 		[Display(Name = "Time Zone")]
-		public string TimeZoneId { get; set; }
+		public string? TimeZoneId { get; set; }
 
-		public string StatusMessage { get; set; }
+		public string? StatusMessage { get; set; }
 
 		[Display(Name = "Allow Movie Ratings to be public?")]
 		public bool PublicRatings { get; set; }
 
 		[Display(Name = "Location")]
-		public string From { get; set; }
+		public string? From { get; set; }
 
-		public string Signature { get; set; }
+		public string? Signature { get; set; }
 
 		[Url]
-		public string Avatar { get; set; }
+		public string? Avatar { get; set; }
 
 		[Url]
 		[Display(Name = "Mood-variant avatar URL")]
-		public string MoodAvatar { get; set; }
+		public string? MoodAvatar { get; set; }
 
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 	}

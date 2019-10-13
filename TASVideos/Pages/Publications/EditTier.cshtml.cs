@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 
 		[BindProperty]
-		public PublicationTierEditModel Publication { get; set; }
+		public PublicationTierEditModel Publication { get; set; } = new PublicationTierEditModel();
 
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; } = new List<SelectListItem>();
 

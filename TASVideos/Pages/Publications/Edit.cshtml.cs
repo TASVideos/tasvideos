@@ -51,11 +51,11 @@ namespace TASVideos.Pages.Publications
 					.Where(p => p.Id == Id)
 					.Select(p => new PublicationEditModel
 					{
-						Tier = p.Tier.Name,
+						Tier = p.Tier!.Name,
 						MovieFileName = p.MovieFileName,
 						TierIconPath = p.Tier.IconPath,
 						TierLink = p.Tier.Link,
-						SystemCode = p.System.Code,
+						SystemCode = p.System!.Code,
 						Title = p.Title,
 						ObsoletedBy = p.ObsoletedById,
 						Branch = p.Branch,
@@ -116,7 +116,7 @@ namespace TASVideos.Pages.Publications
 
 			AvailableMoviesForObsoletedBy = await _db.Publications
 				.ThatAreCurrent()
-				.Where(p => p.System.Code == systemCode)
+				.Where(p => p.System!.Code == systemCode)
 				.Where(p => p.Id != Id)
 				.Select(p => new SelectListItem
 				{

@@ -42,8 +42,8 @@ namespace TASVideos.Pages.Forum
 
 		public class MoodReportEntry
 		{
-			public string UserName { get; set; }
-			public string MoodAvatarUrl { get; set; }
+			public string UserName { get; set; } = "";
+			public string MoodAvatarUrl { get; set; } = "";
 		}
 	}
 }

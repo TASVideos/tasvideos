@@ -15,7 +15,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 	public class IrcDistributor : IPostDistributor
 	{
 		private static readonly object Sync = new object();
-		private static IrcBot _bot;
+		private static IrcBot _bot = null!;
 		private readonly AppSettings.IrcConnection _settings;
 
 		public IrcDistributor(

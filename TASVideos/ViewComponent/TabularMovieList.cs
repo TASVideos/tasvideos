@@ -56,7 +56,7 @@ namespace TASVideos.ViewComponents
 				.Include(p => p.Files)
 				.Include(p => p.Authors)
 				.ThenInclude(pa => pa.Author)
-				.Where(p => searchCriteria.Tiers.Contains(p.Tier.Name))
+				.Where(p => searchCriteria.Tiers.Contains(p.Tier!.Name))
 				.ByMostRecent()
 				.Take(searchCriteria.Limit)
 				.ToListAsync();
@@ -67,7 +67,7 @@ namespace TASVideos.ViewComponents
 					Id = m.Id,
 					CreateTimeStamp = m.CreateTimeStamp,
 					Time = m.Time(),
-					Game = m.Game.DisplayName,
+					Game = m.Game!.DisplayName,
 					Authors = string.Join(", ", m.Authors.Select(pa => pa.Author)),
 					ObsoletedBy = null, // TODO: previous logic
 					Screenshot = m.Files
