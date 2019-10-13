@@ -31,7 +31,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("userid")]
 		public int UserId { get; set; }
-		public virtual User User { get; set; }
+		public virtual User? User { get; set; }
 
 		[Column("timestamp")]
 		public int CreateTimeStamp { get; set; }

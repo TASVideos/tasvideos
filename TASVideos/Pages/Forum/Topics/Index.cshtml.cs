@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[FromQuery]
-		public TopicRequest Search { get; set; }
+		public TopicRequest Search { get; set; } = new TopicRequest();
 
 		public ForumTopicModel Topic { get; set; }
 
@@ -64,7 +64,7 @@ namespace TASVideos.Pages.Forum.Topics
 					Title = t.Title,
 					Type = t.Type,
 					ForumId = t.ForumId,
-					ForumName = t.Forum.Name,
+					ForumName = t.Forum!.Name,
 					IsLocked = t.IsLocked,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll.Question }

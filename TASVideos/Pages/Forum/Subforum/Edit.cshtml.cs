@@ -25,7 +25,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		public int Id { get; set; }
 
 		[BindProperty]
-		public ForumEditModel Forum { get; set; }
+		public ForumEditModel Forum { get; set; } = new ForumEditModel();
 
 		public async Task<IActionResult> OnGet()
 		{

@@ -23,7 +23,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		[Required]
 		[StringLength(500)]
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
 		public int PosterId { get; set; }
 		public virtual User? Poster { get; set; }

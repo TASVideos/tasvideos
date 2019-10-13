@@ -66,9 +66,9 @@ namespace TASVideos.Pages
 			return RenderPost(text, true, false);
 		}
 
-		protected string RenderSignature(string text)
+		protected string RenderSignature(string? text)
 		{
-			return RenderBbcode(text); // Bbcode on, Html off hardcoded, do we want this to be configurable?
+			return RenderBbcode(text ?? ""); // Bbcode on, Html off hardcoded, do we want this to be configurable?
 		}
 
 		protected async Task<byte[]> FormFileToBytes(IFormFile formFile)

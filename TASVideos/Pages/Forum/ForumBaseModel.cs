@@ -55,7 +55,7 @@ namespace TASVideos.Pages.Forum
 		public IEnumerable<SelectListItem> Moods => MoodList;
 		public IEnumerable<SelectListItem> TopicTypes => TopicTypeList;
 
-		protected async Task<PostPositionModel> GetPostPosition(int postId, bool seeRestricted)
+		protected async Task<PostPositionModel?> GetPostPosition(int postId, bool seeRestricted)
 		{
 			var post = await _db.ForumPosts
 				.ExcludeRestricted(seeRestricted)

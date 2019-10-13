@@ -29,12 +29,12 @@ namespace TASVideos.Pages.Forum.Posts
 		}
 
 		[FromRoute]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		[FromQuery]
-		public UserPostsRequest Search { get; set; }
+		public UserPostsRequest Search { get; set; } = new UserPostsRequest();
 
-		public UserPostsModel UserPosts { get; set; }
+		public UserPostsModel UserPosts { get; set; } = new UserPostsModel();
 
 		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>(); 
 
@@ -51,8 +51,8 @@ namespace TASVideos.Pages.Forum.Posts
 					Avatar = u.Avatar,
 					Signature = u.Signature,
 					Roles = u.UserRoles
-						.Where(ur => !ur.Role.IsDefault)
-						.Select(ur => ur.Role.Name)
+						.Where(ur => !ur.Role!.IsDefault)
+						.Select(ur => ur.Role!.Name)
 						.ToList()
 				})
 				.SingleOrDefaultAsync();
@@ -77,9 +77,9 @@ namespace TASVideos.Pages.Forum.Posts
 					Text = p.Text,
 					Subject = p.Subject,
 					TopicId = p.TopicId ?? 0,
-					TopicTitle = p.Topic.Title,
+					TopicTitle = p.Topic!.Title,
 					ForumId = p.Topic.ForumId,
-					ForumName = p.Topic.Forum.Name
+					ForumName = p.Topic!.Forum!.Name
 				})
 				.SortedPageOf(Search);
 

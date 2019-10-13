@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		}
 
 		[FromQuery]
-		public ForumRequest Search { get; set; }
+		public ForumRequest Search { get; set; } = new ForumRequest();
 
 		[FromRoute]
 		public int Id { get; set; }

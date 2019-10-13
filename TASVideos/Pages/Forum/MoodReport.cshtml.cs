@@ -25,17 +25,17 @@ namespace TASVideos.Pages.Forum
 			_db = db;
 		}
 
-		public IEnumerable<MoodReportEntry> MoodyUsers { get; set; }
+		public IEnumerable<MoodReportEntry> MoodyUsers { get; set; } = new List<MoodReportEntry>();
 
 		public async Task OnGet()
 		{
 			MoodyUsers = await _db.Users
-				.Where(u => u.UserRoles.Any(r => r.Role.RolePermission.Any(rp => rp.PermissionId == PermissionTo.UseMoodAvatars)))
+				.ThatHavePermission(PermissionTo.UseMoodAvatars)
 				.Where(u => u.MoodAvatarUrlBase != null)
 				.Select(u => new MoodReportEntry
 				{
 					UserName = u.UserName,
-					MoodAvatarUrl = u.MoodAvatarUrlBase
+					MoodAvatarUrl = u.MoodAvatarUrlBase!
 				})
 				.ToListAsync();
 		}

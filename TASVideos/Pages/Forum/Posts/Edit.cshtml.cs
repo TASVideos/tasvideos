@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public int Id { get; set; }
 
 		[BindProperty]
-		public ForumPostEditModel Post { get; set; }
+		public ForumPostEditModel Post { get; set; } = new ForumPostEditModel();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -46,11 +46,11 @@ namespace TASVideos.Pages.Forum.Posts
 				{
 					CreateTimestamp = p.CreateTimeStamp,
 					PosterId = p.PosterId,
-					PosterName = p.Poster.UserName,
+					PosterName = p.Poster!.UserName,
 					EnableBbCode = p.EnableBbCode,
 					EnableHtml = p.EnableHtml,
 					TopicId = p.TopicId ?? 0,
-					TopicTitle = p.Topic.Title,
+					TopicTitle = p.Topic!.Title,
 					Subject = p.Subject,
 					Text = p.Text,
 					Mood = p.PosterMood
@@ -93,7 +93,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			var forumPost = await _db.ForumPosts
 				.Include(p => p.Topic)
-				.Include(p => p.Topic.Forum)
+				.Include(p => p.Topic!.Forum)
 				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
@@ -118,7 +118,7 @@ namespace TASVideos.Pages.Forum.Posts
 			await _db.SaveChangesAsync();
 
 			_publisher.SendForum(
-				forumPost.Topic.Forum.Restricted,
+				forumPost.Topic!.Forum.Restricted,
 				$"Post edited by {User.Identity.Name} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
 				"",
 				$"{BaseUrl}/p/{Id}#{Id}");
@@ -131,7 +131,7 @@ namespace TASVideos.Pages.Forum.Posts
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			var post = await _db.ForumPosts
 				.Include(p => p.Topic)
-				.Include(p => p.Topic.Forum)
+				.Include(p => p.Topic!.Forum)
 				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
@@ -178,7 +178,7 @@ namespace TASVideos.Pages.Forum.Posts
 			}
 
 			_publisher.SendForum(
-				post.Topic.Forum.Restricted,
+				post.Topic!.Forum!.Restricted,
 				$"Post DELETED by {User.Identity.Name} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
 				"",
 				$"{BaseUrl}/Forum/Topics/{post.Topic.Id}");

@@ -24,7 +24,7 @@ namespace TASVideos.ViewComponents
 				ParamHelper.GetValueFor(pp, "roles"));
 
 			var model = await _db.Users
-				.Where(u => u.UserRoles.Any(ur => ur.Role.Name == role))
+				.ThatHaveRole(role)
 				.Select(u => new WikiUserEntry
 				{
 					UserName = u.UserName,

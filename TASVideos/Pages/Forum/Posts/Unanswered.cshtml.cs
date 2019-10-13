@@ -22,7 +22,7 @@ namespace TASVideos.Pages.Forum.Posts
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; }
+		public PagingModel Search { get; set; } = new PagingModel();
 
 		public PageOf<UnansweredPostsModel> Posts { get; set; }
 
@@ -34,11 +34,11 @@ namespace TASVideos.Pages.Forum.Posts
 				.Select(t => new UnansweredPostsModel
 				{
 					ForumId = t.ForumId,
-					ForumName = t.Forum.Name,
+					ForumName = t.Forum!.Name,
 					TopicId = t.Id,
 					TopicName = t.Title,
 					AuthorId = t.PosterId,
-					AuthorName = t.Poster.UserName,
+					AuthorName = t.Poster!.UserName,
 					PostDate = t.CreateTimeStamp
 				})
 				.OrderByDescending(t => t.PostDate)

@@ -23,10 +23,10 @@ namespace TASVideos.Pages.Diagnostics
 
 		public class Row
 		{
-			public string PageName { get; set; }
-			public string Markup { get; set; }
+			public string PageName { get; set; } = "";
+			public string Markup { get; set; } = "";
 			public int ErrorLocation { get; set; }
-			public string ErrorMessage { get; set; }
+			public string? ErrorMessage { get; set; }
 			public string ExcerptBefore
 			{
 				get
@@ -47,7 +47,7 @@ namespace TASVideos.Pages.Diagnostics
 			}
 		}
 
-		public List<Row> Rows { get; set; }
+		public ICollection<Row> Rows { get; set; } = new List<Row>();
 
 		public async Task<IActionResult> OnGet()
 		{
