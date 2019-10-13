@@ -28,17 +28,17 @@ namespace TASVideos.Legacy.Imports
 					p.EnableBbCode,
 					p.EnableHtml,
 					p.LastUpdateTimestamp,
-					LastUpdateUserName = p.LastUpdateUser.UserName,
+					LastUpdateUserName = p.LastUpdateUser!.UserName,
 					p.PostText.BbCodeUid,
 					p.PosterId,
-					PosterName = p.Poster.UserName,
+					PosterName = p.Poster!.UserName,
 					p.MoodAvatar
 				})
 				.ToList()
 				.Select(p =>
 				{
 					var fixedText = System.Web.HttpUtility.HtmlDecode(
-						ImportHelper.ConvertLatin1String(p.Text
+						ImportHelper.ConvertLatin1String(p.Text!
 							.Replace(":1:" + p.BbCodeUid, "")
 							.Replace(":" + p.BbCodeUid, "")));
 
