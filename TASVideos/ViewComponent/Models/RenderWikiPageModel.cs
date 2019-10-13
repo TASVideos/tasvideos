@@ -6,6 +6,6 @@ namespace TASVideos.ViewComponents
 	{
 		public string Markup { get; set; } = "";
 
-		public WikiPage PageData { get; set; } = new WikiPage();
+		public WikiPage? PageData { get; set; }
 	}
 }
