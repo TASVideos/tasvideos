@@ -35,7 +35,7 @@ namespace TASVideos.Pages.Games
 		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
 
 		[FromQuery]
-		public GameListRequest Search { get; set; }
+		public GameListRequest Search { get; set; } = new GameListRequest();
 
 		public SystemPageOf<GameListModel> Games { get; set; }
 
@@ -120,16 +120,13 @@ namespace TASVideos.Pages.Games
 
 		private async Task<SystemPageOf<GameListModel>> GetPageOfGames(GameListRequest paging)
 		{
-			var query = !string.IsNullOrWhiteSpace(paging.SystemCode)
-				? _db.Games.Where(g => g.System.Code == paging.SystemCode)
-				: _db.Games;
-
-			var data = await query
+			var data = await _db.Games
+				.ForSystemCode(paging.SystemCode)
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
-					SystemCode = g.System.Code
+					SystemCode = g.System!.Code
 				})
 				.SortedPageOf(paging);
 

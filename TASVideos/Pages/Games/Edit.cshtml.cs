@@ -45,7 +45,7 @@ namespace TASVideos.Pages.Games
 		public int? Id { get; set; }
 
 		[FromQuery]
-		public string ReturnUrl { get; set; }
+		public string? ReturnUrl { get; set; }
 
 		[FromQuery]
 		public int? SystemId { get; set; }
@@ -211,8 +211,8 @@ namespace TASVideos.Pages.Games
 		private async Task<bool> CanBeDeleted()
 		{
 			return Id > 0
-				&& !await _db.Submissions.AnyAsync(s => s.Game.Id == Id)
-				&& !await _db.Publications.AnyAsync(p => p.Game.Id == Id);
+				&& !await _db.Submissions.AnyAsync(s => s.Game!.Id == Id)
+				&& !await _db.Publications.AnyAsync(p => p.Game!.Id == Id);
 		}
 	}
 }

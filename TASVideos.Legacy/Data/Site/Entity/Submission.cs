@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Site.Entity
 {
-    public class Submission
-    {
+	public class Submission
+	{
 		[Key]
 		[Column("id")]
 		public int Id { get; set; }
 
 		[Column("userid")]
 		public int UserId { get; set; }
-		public virtual User User { get; set; }
+		public virtual User? User { get; set; }
 
 		[Column("timestamp")]
 		public int TimeStamp { get; set; }
@@ -61,7 +61,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("judged_by")]
 		// ReSharper disable once UnusedMember.Global
 		public int JudgeId { get; set; }
-		public virtual User Judge { get; set; }
+		public virtual User? Judge { get; set; }
 
 		[Column("judgedate")]
 		public int JudgeDate { get; set; }
@@ -76,8 +76,8 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int? IntendedTier { get; set; }
 
 		[Column("nickname")]
-		public string Branch { get; set; }
+		public string Branch { get; set; } = "";
 
-		public virtual Movie Movie { get; set; }
+		public virtual Movie? Movie { get; set; }
 	}
 }

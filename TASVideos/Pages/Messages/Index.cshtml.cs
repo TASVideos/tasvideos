@@ -21,8 +21,7 @@ namespace TASVideos.Pages.Messages
 		[FromRoute]
 		public int Id { get; set; }
 
-		[BindProperty]
-		public PrivateMessageModel Message { get; set; }
+		public PrivateMessageModel? Message { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{

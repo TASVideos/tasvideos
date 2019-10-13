@@ -19,7 +19,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(c => new ForumCategory
 				{
 					Id = c.Id,
-					Title = c.Title,
+					Title = c.Title ?? "",
 					Ordinal =  c.Title == "Other"
 						? 30
 						: c.Title == "Completed movies"

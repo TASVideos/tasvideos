@@ -7,40 +7,40 @@ namespace TASVideos.Pages.Games.Models
 	{
 		[Required]
 		[Display(Name = "System")]
-		public string SystemCode { get; set; }
+		public string SystemCode { get; set; } = "";
 
 		[Required]
 		[Display(Name = "Good Name")]
 		[StringLength(250)]
-		public string GoodName { get; set; }
+		public string GoodName { get; set; } = "";
 
 		[Required]
 		[StringLength(100)]
 		[Display(Name = "Display Name")]
-		public string DisplayName { get; set; }
+		public string DisplayName { get; set; } = "";
 
 		[Required]
 		[StringLength(8)]
 		[Display(Name = "Abbreviation")]
-		public string Abbreviation { get; set; }
+		public string Abbreviation { get; set; } = "";
 
 		[Required]
 		[StringLength(64)]
 		[Display(Name = "Search Key")]
-		public string SearchKey { get; set; }
+		public string SearchKey { get; set; } = "";
 
 		[Required]
 		[StringLength(250)]
 		[Display(Name = "Youtube Tags")]
-		public string YoutubeTags { get; set; }
+		public string YoutubeTags { get; set; } = "";
 
 		[StringLength(250)]
 		[Display(Name = "Screenshot Url")]
-		public string ScreenshotUrl { get; set; }
+		public string? ScreenshotUrl { get; set; }
 
 		[StringLength(300)]
 		[Display(Name = "Game Resources Page")]
-		public string GameResourcesPage { get; set; }
+		public string? GameResourcesPage { get; set; }
 
 		[Display(Name = "Genres")]
 		public IEnumerable<int> Genres { get; set; } = new List<int>();

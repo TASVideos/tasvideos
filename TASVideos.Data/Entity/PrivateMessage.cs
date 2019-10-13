@@ -55,5 +55,11 @@ namespace TASVideos.Data.Entity
 		{
 			return query.Where(m => !m.DeletedForToUser);
 		}
+
+		public static IQueryable<PrivateMessage> ThatAreSavedByUser(this IQueryable<PrivateMessage> query, int userId)
+		{
+			return query.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == userId)
+				|| (pm.SavedForToUser && !pm.DeletedForToUser && pm.ToUserId == userId));
+		}
 	}
 }

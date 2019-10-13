@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Games.Roms
 				.Select(g => new RomListModel
 				{
 					GameDisplayName = g.DisplayName,
-					SystemCode = g.System.Code,
+					SystemCode = g.System!.Code,
 					Roms = g.Roms
 					.Select(r => new RomListModel.RomEntry
 					{

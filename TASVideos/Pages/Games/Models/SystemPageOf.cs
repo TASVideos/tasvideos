@@ -13,6 +13,6 @@ namespace TASVideos.Pages.Games.Models
 		}
 
 		[Display(Name = "System")]
-		public string SystemCode { get; set; }
+		public string? SystemCode { get; set; }
 	}
 }

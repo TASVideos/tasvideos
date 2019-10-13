@@ -7,10 +7,10 @@ namespace TASVideos.Pages.Games.Roms.Models
 	public class RomListModel
 	{
 		[Display(Name = "Game")]
-		public string GameDisplayName { get; set; }
+		public string GameDisplayName { get; set; } = "";
 
 		[Display(Name = "System")]
-		public string SystemCode { get; set; }
+		public string SystemCode { get; set; } = "";
 
 		public IEnumerable<RomEntry> Roms { get; set; } = new List<RomEntry>();
 
@@ -20,19 +20,19 @@ namespace TASVideos.Pages.Games.Roms.Models
 			public int Id { get; set; }
 
 			[Display(Name = "Name")]
-			public string DisplayName { get; set; }
+			public string DisplayName { get; set; } = "";
 
 			[Display(Name = "Md5")]
-			public string Md5 { get; set; }
+			public string Md5 { get; set; } = "";
 
 			[Display(Name = "Sha1")]
-			public string Sha1 { get; set; }
+			public string Sha1 { get; set; } = "";
 
 			[Display(Name = "Version")]
-			public string Version { get; set; }
+			public string? Version { get; set; }
 
 			[Display(Name = "Region")]
-			public string Region { get; set; }
+			public string? Region { get; set; }
 
 			[Display(Name = "Type")]
 			public RomTypes RomType { get; set; }

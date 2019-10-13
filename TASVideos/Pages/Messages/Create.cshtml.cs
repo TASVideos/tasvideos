@@ -31,26 +31,26 @@ namespace TASVideos.Pages.Messages
 		public int? ReplyTo { get; set; }
 
 		[FromQuery]
-		public string DefaultToUser { get; set; } = "";
+		public string? DefaultToUser { get; set; }
 
 		[BindProperty]
 		[Required]
 		[Display(Name = "Subject")]
 		[StringLength(100, MinimumLength = 3)]
-		public string Subject { get; set; }
+		public string Subject { get; set; } = "";
 
 		[BindProperty]
 		[Required]
 		[Display(Name = "Message Body")]
 		[StringLength(1000, MinimumLength = 5)]
-		public string Text { get; set; }
+		public string Text { get; set; } = "";
 
 		[BindProperty]
 		[Required]
 		[Display(Name = "Username", Description = "Enter a UserName")]
-		public string ToUser { get; set; }
+		public string ToUser { get; set; } = "";
 
-		public PrivateMessageModel ReplyingTo { get; set; }
+		public PrivateMessageModel? ReplyingTo { get; set; }
 
 		public bool IsReply => ReplyingTo != null;
 
@@ -58,11 +58,11 @@ namespace TASVideos.Pages.Messages
 		{
 			await SetReplyingTo();
 
-			ToUser = DefaultToUser;
+			ToUser = DefaultToUser ?? "";
 			if (IsReply)
 			{
-				Subject = "Re: " + ReplyingTo.Subject;
-				ToUser = DefaultToUser;
+				Subject = "Re: " + ReplyingTo!.Subject;
+				ToUser = DefaultToUser ?? "";
 			}
 		}
 

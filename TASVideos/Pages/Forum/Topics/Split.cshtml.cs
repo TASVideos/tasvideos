@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SplitTopicModel Topic { get; set; }
+		public SplitTopicModel Topic { get; set; } = new SplitTopicModel();
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 
@@ -48,7 +48,7 @@ namespace TASVideos.Pages.Forum.Topics
 				{
 					Title = t.Title,
 					SplitTopicName = "(Split from " + t.Title + ")",
-					SplitToForumId = t.Forum.Id,
+					SplitToForumId = t.Forum!.Id,
 					ForumId = t.Forum.Id,
 					ForumName = t.Forum.Name,
 					Posts = t.ForumPosts
@@ -61,7 +61,7 @@ namespace TASVideos.Pages.Forum.Topics
 							Subject = p.Subject,
 							Text = p.Text,
 							PosterId = p.PosterId,
-							PosterName = p.Poster.UserName,
+							PosterName = p.Poster!.UserName,
 							PosterAvatar = p.Poster.Avatar
 						})
 						.ToList()
@@ -145,7 +145,7 @@ namespace TASVideos.Pages.Forum.Topics
 			var newForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == topic.ForumId);
 
 			_publisher.SendForum(
-				topic.Forum.Restricted,
+				topic.Forum!.Restricted,
 				$"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Identity.Name} from {Topic.ForumName}: {Topic.Title}",
 				"",
 				$"{BaseUrl}/Forum/Topics/{newTopic.Id}");

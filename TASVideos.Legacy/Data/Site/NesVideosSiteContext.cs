@@ -63,7 +63,7 @@ namespace TASVideos.Legacy.Data.Site
 
 			modelBuilder.Entity<MovieFile>(entity =>
 			{
-				entity.HasOne(e => e.Storage).WithOne(ee => ee.MovieFile).IsRequired(false);
+				entity.HasOne(e => e.Storage).WithOne(ee => ee!.MovieFile!).IsRequired(false);
 				entity.ToTable("movie_file");
 			});
 

@@ -32,13 +32,13 @@ namespace TASVideos.Pages.Forum.Topics
 		public ForumTopicType Type { get; set; }
 
 		[BindProperty]
-		public string TopicTitle { get; set; }
+		public string TopicTitle { get; set; } = "";
 
 		[BindProperty]
 		public int ForumId { get; set; }
 
 		[BindProperty]
-		public string ForumName { get; set; }
+		public string ForumName { get; set; } = "";
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -58,7 +58,7 @@ namespace TASVideos.Pages.Forum.Topics
 			TopicTitle = topic.Title;
 			Type = topic.Type;
 			ForumId = topic.ForumId;
-			ForumName = topic.Forum.Name;
+			ForumName = topic.Forum!.Name;
 			return Page();
 		}
 

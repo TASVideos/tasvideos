@@ -32,12 +32,12 @@ namespace TASVideos.Pages.Messages
 			var userId = User.GetUserId();
 			SentBox = await _db.PrivateMessages
 				.ThatAreNotToUserDeleted()
-				.Where(pm => pm.FromUserId == userId)
+				.FromUser(userId)
 				.Select(pm => new SentboxEntry
 				{
 					Id = pm.Id,
 					Subject = pm.Subject,
-					ToUser = pm.ToUser.UserName,
+					ToUser = pm.ToUser!.UserName,
 					SendDate = pm.CreateTimeStamp,
 					HasBeenRead = pm.ReadOn.HasValue
 				})

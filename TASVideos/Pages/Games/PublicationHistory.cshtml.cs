@@ -28,8 +28,8 @@ namespace TASVideos.Pages.Games
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationHistoryGroup History { get; set; }
-		public Game Game { get; set; }
+		public PublicationHistoryGroup History { get; set; } = new PublicationHistoryGroup();
+		public Game Game { get; set; } = new Game();
 
 		[FromQuery]
 		public int? Highlight { get; set; }
@@ -43,7 +43,7 @@ namespace TASVideos.Pages.Games
 				return NotFound();
 			}
 
-			History = await _history.ForGame(Id);
+			History = await _history.ForGame(Id) ?? new PublicationHistoryGroup();
 
 			return Page();
 		}
