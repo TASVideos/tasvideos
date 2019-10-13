@@ -17,9 +17,9 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string url, int? revision = null)
+		public async Task<IViewComponentResult> InvokeAsync(string? url, int? revision = null)
 		{
-			url = url.Trim('/');
+			url = url?.Trim('/') ?? "";
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
 				return new ContentViewComponentResult("");
