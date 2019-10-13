@@ -56,7 +56,7 @@ namespace TASVideos.Pages.Tags
 			}
 			catch (DbUpdateException ex)
 			{
-				if (ex.InnerException.Message.Contains("Cannot insert duplicate"))
+				if (ex.InnerException?.Message.Contains("Cannot insert duplicate") ?? false)
 				{
 					ModelState.AddModelError($"{nameof(Tag)}.{nameof(Tag.Code)}", $"{nameof(Tag.Code)} {Tag.Code} already exists");
 					MessageType = null;

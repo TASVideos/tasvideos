@@ -56,11 +56,9 @@ namespace TASVideos.ViewComponents
 		private string RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);
-			using (var writer = new StringWriter())
-			{
-				parsed.WriteHtml(writer);
-				return writer.ToString();
-			}
+			using var writer = new StringWriter();
+			parsed.WriteHtml(writer);
+			return writer.ToString();
 		}
 	}
 }

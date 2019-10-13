@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
@@ -45,7 +46,7 @@ namespace TASVideos.Pages.Submissions
 		[BindProperty]
 		public SubmissionPublishModel Submission { get; set; } = new SubmissionPublishModel();
 
-		public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; }
+		public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; } = new List<SelectListItem>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -71,13 +72,12 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (Submission.Screenshot.ContentType != "image/png"
-				&& Submission.Screenshot.ContentType != "image/jpeg")
+			if (!Submission.Screenshot.IsValidImage())
 			{
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Screenshot)}", "Invalid file type. Must be .png or .jpg");
 			}
 
-			if (!Submission.TorrentFile.FileName.EndsWith(".torrent"))
+			if (!Submission.TorrentFile.IsValidTorrent())
 			{
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TorrentFile)}", "Invalid file type. Must be a .torrent file");
 			}
@@ -88,6 +88,10 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
+			// TODO: I think this is producing joins, if the submission isn't properly cataloged then 
+			// this will throw an exception, if so, use OrDefault and return NotFound()
+			// if it is doing left joins or sub-queries, then we need to null check the usages of nullable 
+			// tables such as game, rom, etc and throw if those are null
 			var submission = await _db.Submissions
 				.Include(s => s.IntendedTier)
 				.Include(s => s.System)
@@ -100,11 +104,11 @@ namespace TASVideos.Pages.Submissions
 
 			var publication = new Publication
 			{
-				TierId = submission.IntendedTier.Id,
-				SystemId = submission.System.Id,
-				SystemFrameRateId = submission.SystemFrameRate.Id,
-				GameId = submission.Game.Id,
-				RomId = submission.Rom.Id,
+				TierId = submission.IntendedTier!.Id,
+				SystemId = submission.System!.Id,
+				SystemFrameRateId = submission.SystemFrameRate!.Id,
+				GameId = submission.Game!.Id,
+				RomId = submission.Rom!.Id,
 				Branch = submission.Branch,
 				EmulatorVersion = Submission.EmulatorVersion,
 				OnlineWatchingUrl = Submission.OnlineWatchingUrl,
@@ -114,21 +118,20 @@ namespace TASVideos.Pages.Submissions
 				MovieFileName = Submission.MovieFileName + "." + Submission.MovieExtension
 			};
 
+			// TODO: use IFileService for this
 			// Unzip the submission file, and re-zip it while renaming the contained file
-			using (var publicationFileStream = new MemoryStream())
+			await using (var publicationFileStream = new MemoryStream())
 			{
 				using (var publicationZipArchive = new ZipArchive(publicationFileStream, ZipArchiveMode.Create))
-				using (var submissionFileStream = new MemoryStream(submission.MovieFile))
-				using (var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read))
 				{
+					await using var submissionFileStream = new MemoryStream(submission.MovieFile);
+					using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
 					var publicationZipEntry = publicationZipArchive.CreateEntry(Submission.MovieFileName + "." + Submission.MovieExtension);
 					var submissionZipEntry = submissionZipArchive.Entries.Single();
 
-					using (var publicationZipEntryStream = publicationZipEntry.Open())
-					using (var submissionZipEntryStream = submissionZipEntry.Open())
-					{
-						await submissionZipEntryStream.CopyToAsync(publicationZipEntryStream);
-					}
+					await using var publicationZipEntryStream = publicationZipEntry.Open();
+					await using var submissionZipEntryStream = submissionZipEntry.Open();
+					await submissionZipEntryStream.CopyToAsync(publicationZipEntryStream);
 				}
 
 				publication.MovieFile = publicationFileStream.ToArray();
@@ -152,8 +155,8 @@ namespace TASVideos.Pages.Submissions
 			await _db.SaveChangesAsync(); // Need an Id for the Title
 			publication.GenerateTitle();
 
-			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot, Submission.ScreenshotDescription);
-			await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile);
+			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
+			await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile!);
 
 			// Create a wiki page corresponding to this submission
 			var wikiPage = new WikiPage

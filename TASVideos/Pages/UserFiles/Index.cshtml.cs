@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper.QueryableExtensions;
@@ -30,7 +28,7 @@ namespace TASVideos.Pages.UserFiles
 			_publisher = publisher;
 		}
 
-		public UserFileIndexModel Data { get; set; }
+		public UserFileIndexModel Data { get; set; } = new UserFileIndexModel();
 
 		public async Task OnGet()
 		{
@@ -38,7 +36,7 @@ namespace TASVideos.Pages.UserFiles
 			{
 				UsersWithMovies = await _db.UserFiles
 					.Where(uf => !uf.Hidden)
-					.GroupBy(gkey => gkey.Author.UserName, gvalue => gvalue.UploadTimestamp).Select(
+					.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp).Select(
 						uf => new UserFileIndexModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 					.ToListAsync(),
 				LatestMovies = await _db.UserFiles
@@ -49,13 +47,13 @@ namespace TASVideos.Pages.UserFiles
 					.ToListAsync(),
 				GamesWithMovies = await _db.Games
 					.Where(g => g.UserFiles.Any())
-					.OrderBy(g => g.System.Code)
+					.OrderBy(g => g.System!.Code)
 					.ThenBy(g => g.DisplayName)
 					.Select(g => new UserFileIndexModel.GameWithMovie
 					{
 						GameId = g.Id,
 						GameName = g.DisplayName,
-						SystemCode = g.System.Code,
+						SystemCode = g.System!.Code,
 						Dates = g.UserFiles.Select(uf => uf.UploadTimestamp).ToList()
 					})
 					.ToListAsync()
@@ -129,7 +127,7 @@ namespace TASVideos.Pages.UserFiles
 					{
 						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
-							$"Comment edited by {User.Identity.Name} on ({fileComment.UserFile.Title} (WIP))",
+							$"Comment edited by {User.Identity.Name} on ({fileComment.UserFile!.Title} (WIP))",
 							$"{BaseUrl}/UserFiles/Info/{fileComment.UserFile.Id}");
 					}
 					catch (DbUpdateConcurrencyException)
@@ -159,7 +157,7 @@ namespace TASVideos.Pages.UserFiles
 					{
 						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
-							$"Comment by {fileComment.User.UserName} on ({fileComment.UserFile.Title} (WIP)) deleted by {User.Identity.Name}", 
+							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Identity.Name}", 
 							$"{BaseUrl}/UserFiles/Info/{fileComment.UserFile.Id}");
 					}
 					catch (DbUpdateConcurrencyException)

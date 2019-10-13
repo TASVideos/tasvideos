@@ -5,7 +5,7 @@ namespace TASVideos.ViewComponents
 {
 	public class TopicFeedModel
 	{
-		public string Heading { get; set; }
+		public string? Heading { get; set; }
 		public bool RightAlign { get; set; }
 		public bool HideContent { get; set; }
 
@@ -16,10 +16,10 @@ namespace TASVideos.ViewComponents
 			public int Id { get; set; }
 			public bool EnableBbCode { get; set; }
 			public bool EnableHtml { get; set; }
-			public string Text { get; set; }
-			public string RenderedText { get; set; }
-			public string Subject { get; set; }
-			public string PosterName { get; set; }
+			public string Text { get; set; } = "";
+			public string RenderedText { get; set; } = "";
+			public string? Subject { get; set; }
+			public string PosterName { get; set; } = "";
 			public DateTime CreateTimeStamp { get; set; }
 		}
 	}

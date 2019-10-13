@@ -81,7 +81,7 @@ namespace TASVideos.Pages.Submissions
 							: null,
 						Authors = s.SubmissionAuthors
 							.Where(sa => sa.SubmissionId == Id)
-							.Select(sa => sa.Author.UserName)
+							.Select(sa => sa.Author!.UserName)
 							.ToList()
 					})
 					.SingleOrDefaultAsync();

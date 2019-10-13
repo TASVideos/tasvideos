@@ -146,5 +146,20 @@ namespace TASVideos.Extensions
 
 			return formFile.Length < SiteGlobalConstants.MaximumMovieSize;
 		}
+
+		public static bool IsValidImage(this IFormFile? formFile)
+		{
+			var validImageTypes = new[]
+			{
+				"image/png", "image/jpeg"
+			};
+
+			return validImageTypes.Contains(formFile?.ContentType);
+		}
+
+		public static bool IsValidTorrent(this IFormFile? formFile)
+		{
+			return formFile != null && formFile.FileName.EndsWith(".torrent");
+		}
 	}
 }

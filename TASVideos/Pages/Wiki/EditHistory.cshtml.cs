@@ -23,9 +23,9 @@ namespace TASVideos.Pages.Wiki
 		}
 
 		[FromRoute]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
-		public UserWikiEditHistoryModel History { get; set; }
+		public UserWikiEditHistoryModel History { get; set; } = new UserWikiEditHistoryModel();
 
 		public async Task OnGet()
 		{

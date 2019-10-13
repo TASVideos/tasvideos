@@ -27,7 +27,7 @@ namespace TASVideos.Pages.UserFiles
 			_mapper = mapper;
 		}
 
-		public GameFileModel Game { get; set; }
+		public GameFileModel Game { get; set; } = new GameFileModel();
 
 		[FromRoute]
 		public int Id { get; set; }
@@ -48,7 +48,7 @@ namespace TASVideos.Pages.UserFiles
 			Game = new GameFileModel
 			{
 				GameId = game.Id,
-				SystemCode = game.System.Code,
+				SystemCode = game.System!.Code,
 				GameName = game.DisplayName,
 				Files = game.UserFiles
 					.Where(uf => !uf.Hidden)

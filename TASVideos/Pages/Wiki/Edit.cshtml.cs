@@ -29,24 +29,29 @@ namespace TASVideos.Pages.Wiki
 		}
 
 		[FromQuery]
-		public string Path { get; set; }
+		public string? Path { get; set; }
 
 		[BindProperty]
-		public WikiEditModel PageToEdit { get; set; }
+		public WikiEditModel PageToEdit { get; set; } = new WikiEditModel();
 
 		public int? Id { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
 			Path = Path?.Trim('/');
+			if (string.IsNullOrWhiteSpace(Path))
+			{
+				return NotFound();
+			}
+
 			if (!WikiHelper.IsValidWikiPageName(Path))
 			{
-				return Home();
+				return NotFound();
 			}
 
 			if (WikiHelper.IsHomePage(Path) && !await UserNameExists(Path))
 			{
-				return Home();
+				return NotFound();
 			}
 
 			var page = await _wikiPages.Page(Path);
@@ -62,6 +67,12 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnPost()
 		{
+			Path = Path?.Trim('/');
+			if (string.IsNullOrWhiteSpace(Path))
+			{
+				return NotFound();
+			}
+
 			if (!WikiHelper.IsValidWikiPageName(Path))
 			{
 				return Home();

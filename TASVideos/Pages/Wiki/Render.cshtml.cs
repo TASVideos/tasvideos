@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Wiki
 			_db = db;
 		}
 
-		public string Markup { get; set; }
+		public string Markup { get; set; } = "";
 
 		public WikiPage WikiPage { get; set; }
 

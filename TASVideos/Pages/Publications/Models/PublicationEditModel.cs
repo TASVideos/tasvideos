@@ -9,14 +9,14 @@ namespace TASVideos.Pages.Publications.Models
 	{
 		public string SystemCode { get; set; } = "";
 
-		public string Title { get; set; }
+		public string Title { get; set; } = "";
 
-		public string MovieFileName { get; set; }
+		public string MovieFileName { get; set; } = "";
 
 		[Display(Name = "Tier")]
-		public string Tier { get; set; }
-		public string TierIconPath { get; set; }
-		public string TierLink { get; set; }
+		public string Tier { get; set; } = "";
+		public string TierIconPath { get; set; } = "";
+		public string TierLink { get; set; } = "";
 
 		[Display(Name = "Obsoleted By")]
 		public int? ObsoletedBy { get; set; }
@@ -42,19 +42,19 @@ namespace TASVideos.Pages.Publications.Models
 		public IEnumerable<int> SelectedTags { get; set; } = new List<int>();
 
 		[Display(Name = "Revision Message")]
-		public string RevisionMessage { get; set; }
+		public string? RevisionMessage { get; set; }
 
 		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; set; }
 
-		public string Markup { get; set; }
+		public string Markup { get; set; } = "";
 	}
 
 	public class PublicationFileDisplayModel
 	{
 		public int Id { get; set; }
-		public string Path { get; set; }
+		public string Path { get; set; } = "";
 		public FileType Type { get; set; }
-		public string Description { get; set; }
+		public string? Description { get; set; }
 	}
 }

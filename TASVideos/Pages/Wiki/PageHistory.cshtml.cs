@@ -22,13 +22,13 @@ namespace TASVideos.Pages.Wiki
 		}
 
 		[FromQuery]
-		public string Path { get; set; }
+		public string? Path { get; set; }
 
-		public WikiHistoryModel History { get; set; }
+		public WikiHistoryModel History { get; set; } = new WikiHistoryModel();
 
 		public async Task OnGet()
 		{
-			Path = Path?.Trim('/');
+			Path = Path?.Trim('/') ?? "";
 			History = new WikiHistoryModel
 			{
 				PageName = Path,

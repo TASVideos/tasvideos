@@ -20,7 +20,7 @@ namespace TASVideos.Pages.Users
 		}
 
 		[FromRoute]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		public UserRatingsModel Ratings { get; set; } = new UserRatingsModel();
 

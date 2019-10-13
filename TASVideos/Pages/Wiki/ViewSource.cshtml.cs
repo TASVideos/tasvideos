@@ -18,15 +18,16 @@ namespace TASVideos.Pages.Wiki
 		}
 
 		[FromQuery]
-		public string Path { get; set; }
+		public string? Path { get; set; }
 
 		[FromQuery]
 		public int? Revision { get; set; }
 
-		public WikiPage WikiPage { get; set; }
+		public WikiPage WikiPage { get; set; } = new WikiPage();
 
 		public async Task<IActionResult> OnGet()
 		{
+			Path = Path?.Trim('/') ?? "";
 			WikiPage = await _wikiPages.Page(Path, Revision);
 
 			if (WikiPage != null)

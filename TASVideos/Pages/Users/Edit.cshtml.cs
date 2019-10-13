@@ -36,10 +36,10 @@ namespace TASVideos.Pages.Users
 
 
 		[FromQuery]
-		public string ReturnUrl { get; set; }
+		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public UserEditModel UserToEdit { get; set; }
+		public UserEditModel UserToEdit { get; set; } = new UserEditModel();
 
 		[DisplayName("Available Roles")]
 		public IEnumerable<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
@@ -182,7 +182,7 @@ namespace TASVideos.Pages.Users
 			var assignablePermissions = await _db.Users
 				.Where(u => u.Id == userId)
 				.SelectMany(u => u.UserRoles)
-				.SelectMany(ur => ur.Role.RolePermission)
+				.SelectMany(ur => ur.Role!.RolePermission)
 				.Where(rp => rp.CanAssign)
 				.Select(rp => rp.PermissionId)
 				.ToListAsync();
@@ -213,7 +213,7 @@ namespace TASVideos.Pages.Users
 			var assignablePermissions = await _db.Users
 				.Where(u => u.Id == userId)
 				.SelectMany(u => u.UserRoles)
-				.SelectMany(ur => ur.Role.RolePermission)
+				.SelectMany(ur => ur.Role!.RolePermission)
 				.Where(rp => rp.CanAssign)
 				.Select(rp => rp.PermissionId)
 				.ToListAsync();

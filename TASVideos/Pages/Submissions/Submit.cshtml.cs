@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Submissions
 		}
 
 		[BindProperty]
-		public SubmissionCreateModel Create { get; set; }
+		public SubmissionCreateModel Create { get; set; } = new SubmissionCreateModel();
 
 		public void OnGet()
 		{
@@ -70,7 +70,7 @@ namespace TASVideos.Pages.Submissions
 			};
 
 			// TODO: check warnings
-			var parseResult = _parser.ParseZip(Create.MovieFile.OpenReadStream());
+			var parseResult = _parser.ParseZip(Create.MovieFile!.OpenReadStream());
 			await MapParsedResult(parseResult, submission);
 			
 			if (!ModelState.IsValid)
@@ -107,7 +107,7 @@ namespace TASVideos.Pages.Submissions
 		public async Task<IActionResult> OnGetPrefillText()
 		{
 			var page = await _wikiPages.Page("System/SubmissionDefaultMessage");
-			return new JsonResult(new { text = page.Markup });
+			return new JsonResult(new { text = page?.Markup });
 		}
 
 		private async Task ValidateModel()

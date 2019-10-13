@@ -11,15 +11,15 @@ namespace TASVideos.Pages.Publications.Models
 		public int GameId { get; set; }
 		public DateTime CreateTimeStamp { get; set; }
 		public DateTime LastUpdateTimeStamp { get; set; }
-		public string LastUpdateUser { get; set; }
+		public string? LastUpdateUser { get; set; }
 
 		public int? ObsoletedById { get; set; }
-		public string Title { get; set; }
-		public string TierIconPath { get; set; }
-		public string MovieFileName { get; set; }
+		public string Title { get; set; } = "";
+		public string TierIconPath { get; set; } = "";
+		public string MovieFileName { get; set; } = "";
 		public int SubmissionId { get; set; }
-		public string OnlineWatchingUrl { get; set; }
-		public string MirrorSiteUrl { get; set; }
+		public string? OnlineWatchingUrl { get; set; }
+		public string? MirrorSiteUrl { get; set; }
 		public int TopicId { get; set; }
 
 		public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();

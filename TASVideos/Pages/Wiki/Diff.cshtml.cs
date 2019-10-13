@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Wiki
 		}
 
 		[FromQuery]
-		public string Path { get; set; }
+		public string? Path { get; set; }
 
 		[FromQuery]
 		public int? FromRevision { get; set; }
@@ -31,15 +31,22 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public int? ToRevision { get; set; }
 
-		public WikiDiffModel Diff { get; set; }
+		public WikiDiffModel Diff { get; set; } = new WikiDiffModel();
 
-		public async Task OnGet()
+		public async Task<IActionResult> OnGet()
 		{
 			Path = Path?.Trim('/');
+
+			if (string.IsNullOrWhiteSpace(Path))
+			{
+				return NotFound();
+			}
 
 			Diff = FromRevision.HasValue && ToRevision.HasValue
 				? await GetPageDiff(Path, FromRevision.Value, ToRevision.Value)
 				: await GetLatestPageDiff(Path);
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnGetDiffData(string path, int fromRevision, int toRevision)

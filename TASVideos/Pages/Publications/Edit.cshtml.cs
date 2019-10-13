@@ -180,7 +180,7 @@ namespace TASVideos.Pages.Publications
 
 				await _db.SaveChangesAsync();
 
-				if (model.Markup != publication.WikiContent.Markup)
+				if (model.Markup != publication.WikiContent!.Markup)
 				{
 					var revision = new WikiPage
 					{
