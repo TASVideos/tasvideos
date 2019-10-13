@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Submissions
 		[FromQuery]
 		public SubmissionSearchRequest Search { get; set; } = new SubmissionSearchRequest();
 
-		public SubmissionPageOf<SubmissionListEntry> Submissions { get; set; }
+		public SubmissionPageOf<SubmissionListEntry> Submissions { get; set; } = SubmissionPageOf<SubmissionListEntry>.Empty();
 
 		[Display(Name = "Statuses")]
 		public IEnumerable<SelectListItem> AvailableStatuses => Statuses;

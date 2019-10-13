@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Forum.Posts
 		[FromQuery]
 		public PagingModel Search { get; set; } = new PagingModel();
 
-		public PageOf<PostsSinceLastVisitModel> Posts { get; set; }
+		public PageOf<PostsSinceLastVisitModel> Posts { get; set; } = PageOf<PostsSinceLastVisitModel>.Empty();
 
 		public async Task OnGet()
 		{

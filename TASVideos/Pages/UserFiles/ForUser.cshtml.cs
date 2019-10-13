@@ -23,10 +23,10 @@ namespace TASVideos.Pages.UserFiles
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; }
+		public PagingModel Search { get; set; } = new PagingModel();
 
 		[FromRoute]
-		public string UserName { get; set; }
+		public string UserName { get; set; } = "";
 
 		public IEnumerable<UserFileModel> Files { get; set; } = new List<UserFileModel>();
 

@@ -28,9 +28,9 @@ namespace TASVideos.Pages.Users
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; }
+		public PagingModel Search { get; set; } = new PagingModel();
 
-		public PageOf<UserListModel> Users { get; set; }
+		public PageOf<UserListModel> Users { get; set; } = PageOf<UserListModel>.Empty();
 
 		public async Task OnGet()
 		{
@@ -46,7 +46,7 @@ namespace TASVideos.Pages.Users
 					UserName = u.UserName,
 					CreateTimeStamp = u.CreateTimeStamp,
 					Roles = u.UserRoles
-						.Select(ur => ur.Role.Name)
+						.Select(ur => ur.Role!.Name)
 						.ToList()
 				})
 				.SortedPageOf(Search);

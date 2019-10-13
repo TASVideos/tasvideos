@@ -37,7 +37,7 @@ namespace TASVideos.Pages.Games
 		[FromQuery]
 		public GameListRequest Search { get; set; } = new GameListRequest();
 
-		public SystemPageOf<GameListModel> Games { get; set; }
+		public SystemPageOf<GameListModel> Games { get; set; } = SystemPageOf<GameListModel>.Empty();
 
 		public List<SelectListItem> SystemList { get; set; } = new List<SelectListItem>();
 

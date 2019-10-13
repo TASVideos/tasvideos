@@ -16,7 +16,7 @@ namespace TASVideos.Pages.Forum.Posts.Models
 
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 
-		public PageOf<Post> Posts { get; set; } = null!;
+		public PageOf<Post> Posts { get; set; } = PageOf<Post>.Empty();
 
 		public class Post
 		{

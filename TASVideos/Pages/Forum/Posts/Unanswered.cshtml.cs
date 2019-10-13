@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Forum.Posts
 		[FromQuery]
 		public PagingModel Search { get; set; } = new PagingModel();
 
-		public PageOf<UnansweredPostsModel> Posts { get; set; }
+		public PageOf<UnansweredPostsModel> Posts { get; set; } = PageOf<UnansweredPostsModel>.Empty();
 
 		public async Task OnGet()
 		{
