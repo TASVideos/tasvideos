@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -82,7 +83,7 @@ namespace TASVideos.Pages.Account
 				{
 					UserName = UserName,
 					Email = Email,
-					TimeZoneId = SelectedTimeZone,
+					TimeZoneId = SelectedTimeZone ?? TimeZoneInfo.Utc.Id,
 					From = From
 				};
 				var result = await _userManager.CreateAsync(user, Password);
