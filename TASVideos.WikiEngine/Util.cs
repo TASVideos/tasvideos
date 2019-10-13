@@ -24,7 +24,7 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
-		public static NewParser.SyntaxException ParsePageForErrors(string content)
+		public static NewParser.SyntaxException? ParsePageForErrors(string content)
 		{
 			try
 			{

@@ -56,7 +56,7 @@ namespace TASVideos.Data
 			}
 
 			var expando = new ExpandoObject();
-			var dict = (IDictionary<string, object>)expando;
+			var dict = (IDictionary<string, object?>)expando;
 
 			foreach (var column in columns)
 			{
@@ -75,7 +75,7 @@ namespace TASVideos.Data
 		private static ExpandoObject ToExpando<T>(this T obj)
 		{
 			var expando = new ExpandoObject();
-			var dictionary = (IDictionary<string, object>)expando;
+			var dictionary = (IDictionary<string, object?>)expando;
 
 			if (obj != null)
 			{
