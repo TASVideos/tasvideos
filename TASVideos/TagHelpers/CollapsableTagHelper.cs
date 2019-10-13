@@ -9,7 +9,7 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement("collapsablecontent-header")]
 	public class CollapsableHeaderTagHelper : TagHelper
 	{
-		public string BodyId { get; set; }
+		public string BodyId { get; set; } = "";
 
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{

@@ -7,8 +7,8 @@ namespace TASVideos.TagHelpers
 	public class AvatarTagHelper : TagHelper
 	{
 		public ForumPostMood Mood { get; set; }
-		public string Avatar { get; set; }
-		public string MoodAvatarBase { get; set; }
+		public string Avatar { get; set; } = "";
+		public string MoodAvatarBase { get; set; } = "";
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{

@@ -5,11 +5,11 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement("card-link", TagStructure = TagStructure.WithoutEndTag)]
 	public class CardLinkTagHelper : TagHelper
 	{
-		public string Href { get; set; }
+		public string Href { get; set; } = "";
 
-		public string Header { get; set; }
+		public string Header { get; set; } = "";
 
-		public string Body { get; set; }
+		public string Body { get; set; } = "";
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
