@@ -11,7 +11,7 @@ namespace TASVideos.ViewComponents
 			// Support legacy markup: tab=b6 with a list of hardcoded translations
 			// These are the names of the tabs in the legacy system so assume those names are the intent here
 			// Whether we have those menus or not
-			pp = pp ?? "";
+			pp ??= "";
 			if (pp.StartsWith("tab=b"))
 			{
 				var val = pp.Split(new[] { "tab=b" }, StringSplitOptions.RemoveEmptyEntries);

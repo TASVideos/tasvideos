@@ -76,65 +76,63 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			private async Task ConnectToServer()
 			{
-				using (var irc = new TcpClient(_settings.Server, _settings.Port))
-				using (var stream = irc.GetStream())
-				using (var reader = new StreamReader(stream))
-				using (var writer = new StreamWriter(stream))
+				using var irc = new TcpClient(_settings.Server, _settings.Port);
+				await using var stream = irc.GetStream();
+				using var reader = new StreamReader(stream);
+				await using var writer = new StreamWriter(stream);
+				await writer.WriteLineAsync($"NICK {_settings.Nick}");
+				await writer.FlushAsync();
+
+				await writer.WriteLineAsync($"USER {_settings.Nick} 0 * :This is TASVideos bot in development");
+				await writer.FlushAsync();
+
+				await writer.WriteLineAsync($"PRIVMSG NickServ :identify {_settings.Nick} {_settings.Password}");
+				await writer.FlushAsync();
+
+				while (true)
 				{
-					await writer.WriteLineAsync($"NICK {_settings.Nick}");
-					await writer.FlushAsync();
-
-					await writer.WriteLineAsync($"USER {_settings.Nick} 0 * :This is TASVideos bot in development");
-					await writer.FlushAsync();
-
-					await writer.WriteLineAsync($"PRIVMSG NickServ :identify {_settings.Nick} {_settings.Password}");
-					await writer.FlushAsync();
-
-					while (true)
+					if (stream.DataAvailable)
 					{
-						if (stream.DataAvailable)
+						var inputLine = await reader.ReadLineAsync() ?? "";
+						Console.WriteLine("<- " + inputLine);
+
+						// split the lines sent from the server by spaces (seems to be the easiest way to parse them)
+						string[] splitInput = inputLine.Split(new[] { ' ' });
+
+						if (splitInput[0] == "PING")
 						{
-							var inputLine = await reader.ReadLineAsync() ?? "";
-							Console.WriteLine("<- " + inputLine);
-
-							// split the lines sent from the server by spaces (seems to be the easiest way to parse them)
-							string[] splitInput = inputLine.Split(new[] { ' ' });
-
-							if (splitInput[0] == "PING")
-							{
-								string pongReply = splitInput[1];
-								writer.WriteLine("PONG " + pongReply);
-								writer.Flush();
-							}
-
-							switch (splitInput[1])
-							{
-								case "001":
-									var channels = $"{_settings.Channel},{_settings.SecureChannel}";
-									await writer.WriteLineAsync("JOIN " + channels);
-									await writer.FlushAsync();
-									break;
-							}
+							string pongReply = splitInput[1];
+							writer.WriteLine("PONG " + pongReply);
+							writer.Flush();
 						}
-						else if (_work.TryDequeue(out var workItem))
+
+						switch (splitInput[1])
 						{
-							try
-							{
-								await writer.WriteLineAsync(workItem);
+							case "001":
+								var channels = $"{_settings.Channel},{_settings.SecureChannel}";
+								await writer.WriteLineAsync("JOIN " + channels);
 								await writer.FlushAsync();
-							}
-							catch
-							{
-								_work.Enqueue(workItem);
-								throw;
-							}
-
-							await Task.Delay(10000);
+								break;
 						}
-						else
+					}
+					else if (_work.TryDequeue(out var workItem))
+					{
+						try
 						{
-							await Task.Delay(1000);
+							await writer.WriteLineAsync(workItem);
+							await writer.FlushAsync();
 						}
+						catch
+						{
+							_work.Enqueue(workItem);
+							throw;
+						}
+
+						await Task.Delay(10000);
+					}
+					else
+					{
+						await Task.Delay(1000);
 					}
 				}
 			}

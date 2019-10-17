@@ -184,7 +184,7 @@ namespace TASVideos.WikiEngine
 				var t = new Text(_currentTextStart, _currentText.ToString()) { CharEnd = _index };
 				_currentText.Clear();
 				if (_stack.Count > 0)
-					_stack[_stack.Count - 1].Children.Add(t);
+					_stack[^1].Children.Add(t);
 				else
 					_output.Add(t);
 			}
@@ -287,7 +287,7 @@ namespace TASVideos.WikiEngine
 		{
 			FinishText();
 			if (_stack.Count > 0)
-				_stack[_stack.Count - 1].Children.Add(n);
+				_stack[^1].Children.Add(n);
 			else
 				_output.Add(n);
 		}
@@ -295,7 +295,7 @@ namespace TASVideos.WikiEngine
 		{
 			FinishText();
 			if (_stack.Count > 0)
-				_stack[_stack.Count - 1].Children.AddRange(n);
+				_stack[^1].Children.AddRange(n);
 			else
 				_output.AddRange(n);			
 		}
