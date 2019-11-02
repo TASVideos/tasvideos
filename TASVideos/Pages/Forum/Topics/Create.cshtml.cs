@@ -18,15 +18,18 @@ namespace TASVideos.Pages.Forum.Topics
 	[RequirePermission(PermissionTo.CreateForumTopics)]
 	public class CreateModel : BaseForumModel
 	{
+		private readonly UserManager _userManager;
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public CreateModel(
+			UserManager userManager,
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			ITopicWatcher watcher)
 			: base(db, watcher)
 		{
+			_userManager = userManager;
 			_db = db;
 			_publisher = publisher;
 		}
@@ -103,13 +106,14 @@ namespace TASVideos.Pages.Forum.Topics
 				await CreatePoll(topic, poll);
 			}
 
-			//// TODO: auto-add topic permission based on post count, also ability to vote
-			
 			_publisher.SendForum(
 				forum.Restricted,
 				$"New Topic by {User.Identity.Name} ({forum.ShortName}: {Topic.Title})",
 				Topic.Post.CapAndEllipse(50),
 				$"{BaseUrl}/Forum/Topics/{topic.Id}");
+
+			var user = await _userManager.GetUserAsync(User);
+			await _userManager.AssignAutoAssignableRoles(user);
 
 			return RedirectToPage("Index", new { topic.Id });
 		}
