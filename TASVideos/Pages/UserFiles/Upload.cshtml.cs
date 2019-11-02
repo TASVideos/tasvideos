@@ -81,7 +81,7 @@ namespace TASVideos.Pages.UserFiles
 			// Note: we calculate storage used by compressed site, so technically we should compress then check
 			// but if they are cutting it this close, it's probably going to be a problem anyway
 			// and we don't want to waste time compressing the file if we do not need to
-			if (StorageUsed + UserFile.File!.Length < SiteGlobalConstants.UserFileStorageLimit)
+			if (StorageUsed + UserFile.File!.Length > SiteGlobalConstants.UserFileStorageLimit)
 			{
 				ModelState.AddModelError(
 					$"{nameof(UserFile)}.{nameof(UserFile.File)}",
