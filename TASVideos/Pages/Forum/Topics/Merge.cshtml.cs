@@ -85,6 +85,7 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			var destinationTopic = await _db.ForumTopics
+				.Include(t => t.Forum)
 				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(t => t.Id == Topic.DestinationForumId);
 
@@ -113,6 +114,12 @@ namespace TASVideos.Pages.Forum.Topics
 				ModelState.AddModelError("", "An error occurred. The topic may have changed since loading this page. Go back and try again.");
 				return Page();
 			}
+
+			_publisher.SendForum(
+				destinationTopic.Forum!.Restricted,
+				$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Identity.Name}",
+				"",
+				$"{BaseUrl}/Forum/Topics/{destinationTopic.Id}");
 
 			return RedirectToPage("Index", new { id = Topic.DestinationTopicId });
 		}
