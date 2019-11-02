@@ -101,11 +101,7 @@
 					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 				</fullrow>
 				<fullrow>
-					<div condition="Model.RatingCount <= 2">
-						@Model.RatingCount votes (too few to display)
-						<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Rate</a>
-					</div>
-					<div condition="Model.RatingCount > 2">
+					<div>
 						<span permission="RateMovies">
 							<a asp-page="/Publications/Rate"
 							   asp-route-id="@Model.Id"
@@ -114,7 +110,9 @@
 							</a>: &nbsp;
 						</span>
 						<span condition="!ViewData.UserHas(PermissionTo.RateMovies)">Rating:</span>
-						@Math.Round(Model.OverallRating ?? 0, 2) (<a asp-page="/Ratings/Index" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)
+						<span condition="Model.RatingCount > 2">@Math.Round(Model.OverallRating ?? 0, 2)</span>
+						<span condition="Model.RatingCount <= 2">(Too few votes to display rating)</span>
+						<span>(<a asp-page="/Ratings/Index" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)</span>
 					</div>
 				</fullrow>
 			</div>
