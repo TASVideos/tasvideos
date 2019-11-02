@@ -15,6 +15,6 @@ namespace TASVideos.Data.Entity
 		[StringLength(50)]
 		public string DisplayName { get; set; } = "";
 
-		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new List<PublicationTag>();
+		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new HashSet<PublicationTag>();
 	}
 }
