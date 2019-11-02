@@ -85,6 +85,7 @@ namespace TASVideos.Extensions
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();
+				endpoints.MapControllers();
 			});
 
 			return app;

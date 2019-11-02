@@ -126,6 +126,7 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services)
 		{
 			services.AddResponseCaching();
+			services.AddControllers();
 			services
 				.AddRazorPages(options =>
 				{
