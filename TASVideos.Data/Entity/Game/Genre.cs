@@ -11,6 +11,6 @@ namespace TASVideos.Data.Entity.Game
 		[StringLength(20)]
 		public string DisplayName { get; set; } = "";
 
-		public virtual ICollection<GameGenre> GameGenres { get; set; } = new List<GameGenre>();
+		public virtual ICollection<GameGenre> GameGenres { get; set; } = new HashSet<GameGenre>();
 	}
 }

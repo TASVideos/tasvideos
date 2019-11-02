@@ -29,13 +29,13 @@ namespace TASVideos.Data.Entity
 	{
 		public int Id { get; set; }
 
-		public virtual ICollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
-		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new List<PublicationTag>();
-		public virtual ICollection<PublicationFlag> PublicationFlags { get; set; } = new List<PublicationFlag>();
-		public virtual ICollection<PublicationAward> PublicationAwards { get; set; } = new List<PublicationAward>();
+		public virtual ICollection<PublicationFile> Files { get; set; } = new HashSet<PublicationFile>();
+		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new HashSet<PublicationTag>();
+		public virtual ICollection<PublicationFlag> PublicationFlags { get; set; } = new HashSet<PublicationFlag>();
+		public virtual ICollection<PublicationAward> PublicationAwards { get; set; } = new HashSet<PublicationAward>();
 
 		[ForeignKey(nameof(PublicationRating.PublicationId))]
-		public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new List<PublicationRating>();
+		public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new HashSet<PublicationRating>();
 
 		public int? ObsoletedById { get; set; }
 		public virtual Publication? ObsoletedBy { get; set; }
@@ -57,7 +57,7 @@ namespace TASVideos.Data.Entity
 
 		public int SubmissionId { get; set; }
 		public virtual Submission? Submission { get; set; }
-		public virtual ICollection<PublicationAuthor> Authors { get; set; } = new List<PublicationAuthor>();
+		public virtual ICollection<PublicationAuthor> Authors { get; set; } = new HashSet<PublicationAuthor>();
 
 		public int? WikiContentId { get; set; } // making this non-nullable is a catch-22 when creating a publication, the wiki needs a publication id and the publication needs a wiki id
 		public virtual WikiPage? WikiContent { get; set; }
