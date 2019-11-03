@@ -126,7 +126,9 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services)
 		{
 			services.AddResponseCaching();
-			services.AddControllers();
+			services
+				.AddControllers()
+				.AddNewtonsoftJson();
 			services
 				.AddRazorPages(options =>
 				{
@@ -174,7 +176,7 @@ namespace TASVideos.Extensions
 		{
 			Mapper.Initialize(cfg => cfg.AddProfile(new MappingProfile()));
 			services.AddAutoMapper();
-			  
+
 			return services;
 		}
 

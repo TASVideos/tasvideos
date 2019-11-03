@@ -89,7 +89,7 @@ namespace TASVideos.Api.Controllers
 				.SortBy(request)
 				.Paginate(request)
 				.ToListAsync())
-				/*.FieldSelect(request)*/; // TODO: re-enable when .net core 3 supports expando object serialization: https://github.com/dotnet/corefx/issues/38007
+				.FieldSelect(request);
 
 			return Ok(pubs);
 		}
