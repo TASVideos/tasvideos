@@ -107,7 +107,7 @@ namespace TASVideos.Pages.Forum
 			var poll = new ForumPoll
 			{
 				TopicId = topic.Id,
-				Question = model.Question,
+				Question = model.Question ?? "",
 				CloseDate = model.DaysOpen.HasValue
 					? DateTime.UtcNow.AddDays(model.DaysOpen.Value)
 					: (DateTime?)null,

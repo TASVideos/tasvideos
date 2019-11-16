@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Publications.Models
 		public string? OnlineWatchingUrl { get; set; }
 		public string? MirrorSiteUrl { get; set; }
 		public int TopicId { get; set; }
-		public string EmulatorVersion { get; set; }
+		public string? EmulatorVersion { get; set; }
 		
 		public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();
 		public IEnumerable<TagModel> GenreTags { get; set; } = new List<TagModel>();

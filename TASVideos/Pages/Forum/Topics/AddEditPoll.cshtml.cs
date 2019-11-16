@@ -112,7 +112,7 @@ namespace TASVideos.Pages.Forum.Topics
 					return BadRequest("A poll with existing votes can not be modified");
 				}
 				
-				topic.Poll.Question = Poll.Question;
+				topic.Poll.Question = Poll.Question ?? "";
 				topic.Poll.CloseDate = Poll.DaysOpen.HasValue
 					? DateTime.UtcNow.AddDays(Poll.DaysOpen.Value)
 					: (DateTime?)null;
