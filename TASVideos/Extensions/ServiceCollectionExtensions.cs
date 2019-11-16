@@ -148,6 +148,7 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Submissions/Submit", "SubmitMovie");
 					options.Conventions.AddPageRoute("/Forum/MoodReport", "forum/moodreport.php");
 				})
+				.AddRazorRuntimeCompilation()
 				.AddApplicationPart(typeof(PublicationsController).Assembly);
 
 			services.AddHttpContext();
