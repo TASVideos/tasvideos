@@ -55,7 +55,8 @@ namespace TASVideos.Legacy.Imports
 					Authors = s.SubmissionAuthors.Select(sa => sa.Author),
 					s.AdditionalAuthors,
 					s.System,
-					s.SystemFrameRate
+					s.SystemFrameRate,
+					s.EmulatorVersion
 				})
 				.ToList();
 
@@ -112,7 +113,8 @@ namespace TASVideos.Legacy.Imports
 					Branch = pub.Movie.Branch.NullIfWhiteSpace(),
 					MirrorSiteUrl = mirror,
 					OnlineWatchingUrl = streaming,
-					AdditionalAuthors = pub.Sub.AdditionalAuthors
+					AdditionalAuthors = pub.Sub.AdditionalAuthors,
+					EmulatorVersion = pub.Sub.EmulatorVersion
 				};
 
 				var pubAuthors = pub.Sub.Authors
@@ -212,7 +214,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.MirrorSiteUrl),
 				nameof(Publication.OnlineWatchingUrl),
 				nameof(Publication.ObsoletedById),
-				nameof(Publication.AdditionalAuthors)
+				nameof(Publication.AdditionalAuthors),
+				nameof(Publication.EmulatorVersion)
 			};
 
 			publications.BulkInsert(connectionStr, pubColumns, nameof(ApplicationDbContext.Publications), bulkCopyTimeout: 600);

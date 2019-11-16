@@ -132,6 +132,9 @@
 						<a href="/Movies-@tag.Code">@tag.DisplayName</a><br />
 					}
 				</small>
+				<small condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
+					Emulator Version:<br />@Model.EmulatorVersion
+				</small>
 			</div>
 		</row>
 	</cardbody>
