@@ -108,6 +108,10 @@ namespace TASVideos.Legacy.Imports
 					MoodAvatarUrlBase = u.MoodAvatar.NullIfWhiteSpace()
 				})
 				.ToList();
+
+			// Hacks
+			var grue = userEntities.First(u => u.UserName == "TASVideos Grue");
+			grue.UserName = "TASVideosGrue";
 			
 			var roles = context.Roles.ToList();
 
