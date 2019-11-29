@@ -55,6 +55,7 @@ namespace TASVideos.Legacy.Imports
 						select new
 						{
 							Id = u.UserId,
+							u.IsActive,
 							u.UserName,
 							u.RegDate,
 							u.Password,
@@ -88,7 +89,7 @@ namespace TASVideos.Legacy.Imports
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate), // TODO
 					LegacyPassword = u.Password,
-					EmailConfirmed = u.EmailTime != null || u.PostCount > 0,
+					EmailConfirmed = u.IsActive || u.EmailTime != null || u.PostCount > 0,
 					Email = u.Email,
 					NormalizedEmail = u.Email.ToUpper(),
 					CreateUserName = "Automatic Migration",
