@@ -11,10 +11,9 @@ namespace TASVideos.Pages.Submissions.Models
 	{
 		public string Markup { get; set; } = "";
 
-		[Required]
 		[StringLength(1000)]
 		[Display(Name = "Revision Message")]
-		public string RevisionMessage { get; set; } = "";
+		public string? RevisionMessage { get; set; }
 
 		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; set; }
