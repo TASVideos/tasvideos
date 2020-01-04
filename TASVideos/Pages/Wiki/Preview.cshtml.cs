@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnPost()
 		{
-			Markup = new StreamReader(Request.Body, Encoding.UTF8).ReadToEnd();
+			Markup = await new StreamReader(Request.Body, Encoding.UTF8).ReadToEndAsync();
 			if (Id.HasValue)
 			{
 				PageData = await _pages.Revision(Id.Value);
