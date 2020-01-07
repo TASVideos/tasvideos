@@ -221,7 +221,7 @@ namespace TASVideos.Data
 		/// </summary>
 		private static async Task GenerateDevSampleData(ApplicationDbContext context)
 		{
-			using (await context.Database.BeginTransactionAsync())
+			await using (await context.Database.BeginTransactionAsync())
 			{
 				var sql = EmbeddedSampleSqlFile();
 				var commands = sql.Split("\nGO");
@@ -232,8 +232,7 @@ namespace TASVideos.Data
 						.Replace("{", "{{")
 						.Replace("}", "}}");
 
-					#pragma warning disable EF1000
-					await context.Database.ExecuteSqlCommandAsync(escaped);
+					await context.Database.ExecuteSqlRawAsync(escaped);
 				}
 
 				context.Database.CommitTransaction();
