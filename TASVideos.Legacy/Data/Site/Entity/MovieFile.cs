@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Site.Entity
 {
-    public class MovieFile
-    {
+	public class MovieFile
+	{
 		[Key]
 		[Column("id")]
 		public int Id { get; set; }
@@ -12,10 +12,10 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("movieid")]
 		public virtual Movie? Movie { get; set; }
 
+		[ForeignKey("Storage")]
 		[Column("filename")]
 		public string FileName { get; set; } = "";
 
-		[ForeignKey("FileName")]
 		public virtual MovieFileStorage? Storage { get; set; }
 
 		[Column("typech")]

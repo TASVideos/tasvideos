@@ -1,14 +1,13 @@
-﻿using System.Data.SqlClient;
-using System.Linq;
-
+﻿using System.Linq;
+using Microsoft.Data.SqlClient;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-    public static class AwardImporter
-    {
+	public static class AwardImporter
+	{
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,

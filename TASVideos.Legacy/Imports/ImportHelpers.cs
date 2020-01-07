@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 using FastMember;
+using Microsoft.Data.SqlClient;
 
 namespace TASVideos.Legacy.Imports
 {
