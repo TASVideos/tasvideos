@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -78,71 +79,80 @@ namespace TASVideos.Services
 				return awards;
 			}
 
-			// TODO: optimize these with EF 2.1, 2.0 is so bad with GroupBy that it is hopeless
-			// TODO: now this doesn't work at all in 3.0, fix
-			return new List<AwardAssignment>();
-			//var userAwards = await _db.UserAwards
-			//	.GroupBy(
-			//		gkey => new
-			//		{
-			//			gkey.Award!.Description, gkey.Award.ShortName, gkey.Year
-			//		}, 
-			//		gvalue => new AwardAssignment.UserDto
-			//		{
-			//			Id = gvalue.UserId, UserName = gvalue.User!.UserName
-			//		})
-			//	.Select(g => new AwardAssignment
-			//	{
-			//		ShortName = g.Key.ShortName,
-			//		Description = g.Key.Description + " of " + g.Key.Year,
-			//		Year = g.Key.Year,
-			//		Type = AwardType.User,
-			//		Publications = Enumerable.Empty<AwardAssignment.PublicationDto>(),
-			//		Users = g.ToList()
-			//	})
-			//	.ToListAsync();
+			// TODO: figure out how to use GroupBy to optimize this.  EF 3.1 is unhappy with all the attempts I did
+			var userLists = await _db.UserAwards
+				.Include(u => u.Award)
+				.Include(u => u.User)
+				.ToListAsync();
 
-			//var pubLists = await _db.PublicationAwards
-			//	.Include(pa => pa.Award)
-			//	.Include(pa => pa.Publication)
-			//	.ThenInclude(pa => pa!.Authors)
-			//	.ThenInclude(a => a.Author)
-			//	.ToListAsync();
+			var userAwards = userLists
+				.GroupBy(
+					gkey => new
+					{
+						gkey.Award!.Description,
+						gkey.Award.ShortName,
+						gkey.Year
+					},
+					gvalue => new AwardAssignment.UserDto
+					{
+						Id = gvalue.UserId,
+						UserName = gvalue.User!.UserName
+					})
+				.Select(g => new AwardAssignment
+				{
+					ShortName = g.Key.ShortName,
+					Description = g.Key.Description + " of " + g.Key.Year,
+					Year = g.Key.Year,
+					Type = AwardType.User,
+					Publications = Enumerable.Empty<AwardAssignment.PublicationDto>(),
+					Users = g.ToList()
+				})
+				.ToList();
 
-			//var publicationAwards = pubLists
-			//	.GroupBy(
-			//		gkey => new
-			//		{
-			//			gkey.Award!.Description, gkey.Award.ShortName, gkey.Year
-			//		},
-			//		gvalue => new
-			//		{
-			//			Publication = new
-			//			{
-			//				Id = gvalue.PublicationId,
-			//				gvalue.Publication!.Title
-			//			},
-			//			Users = gvalue.Publication.Authors.Select(a => new
-			//			{
-			//				a.UserId, a.Author!.UserName
-			//			})
-			//		})
-			//	.Select(g => new AwardAssignment
-			//	{
-			//		ShortName = g.Key.ShortName,
-			//		Description = g.Key.Description + " of " + g.Key.Year,
-			//		Year = g.Key.Year,
-			//		Type = AwardType.Movie,
-			//		Publications = g.Select(gv => new AwardAssignment.PublicationDto { Id = gv.Publication.Id, Title  = gv.Publication.Title }).ToList(),
-			//		Users = g.SelectMany(gv => gv.Users).Select(u => new AwardAssignment.UserDto { Id = u.UserId, UserName = u.UserName }).ToList()
-			//	})
-			//	.ToList();
+			var pubLists = await _db.PublicationAwards
+				.Include(pa => pa.Award)
+				.Include(pa => pa.Publication)
+				.ThenInclude(pa => pa!.Authors)
+				.ThenInclude(a => a.Author)
+				.ToListAsync();
 
-			//var allAwards = userAwards.Concat(publicationAwards);
+			var publicationAwards = pubLists
+				.GroupBy(
+					gkey => new
+					{
+						gkey.Award!.Description,
+						gkey.Award.ShortName,
+						gkey.Year
+					},
+					gvalue => new
+					{
+						Publication = new
+						{
+							Id = gvalue.PublicationId,
+							gvalue.Publication!.Title
+						},
+						Users = gvalue.Publication.Authors.Select(a => new
+						{
+							a.UserId,
+							a.Author!.UserName
+						})
+					})
+				.Select(g => new AwardAssignment
+				{
+					ShortName = g.Key.ShortName,
+					Description = g.Key.Description + " of " + g.Key.Year,
+					Year = g.Key.Year,
+					Type = AwardType.Movie,
+					Publications = g.Select(gv => new AwardAssignment.PublicationDto { Id = gv.Publication.Id, Title = gv.Publication.Title }).ToList(),
+					Users = g.SelectMany(gv => gv.Users).Select(u => new AwardAssignment.UserDto { Id = u.UserId, UserName = u.UserName }).ToList()
+				})
+				.ToList();
 
-			//_cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
+			var allAwards = userAwards.Concat(publicationAwards);
 
-			//return allAwards;
+			_cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
+
+			return allAwards;
 		}
 	}
 }
