@@ -22,7 +22,7 @@ namespace TASVideos.WikiEngine
 		private readonly List<INodeWithChildren> _stack = new List<INodeWithChildren>();
 		private readonly StringBuilder _currentText = new StringBuilder();
 		private int _currentTextStart = -1;
-		private string _input;
+		private readonly string _input;
 		private int _index = 0;
 		private bool _parsingInline = false;
 		private delegate void ActionType(NewParser p);
