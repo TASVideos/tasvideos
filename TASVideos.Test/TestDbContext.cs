@@ -126,8 +126,11 @@ namespace TASVideos.Test
 			return null!;
 		}
 
-		public IEntityType EntityType { get; }
+		// ReSharper disable once UnassignedGetOnlyAutoProperty
+		public IEntityType? EntityType { get; }
 		public EntityState EntityState { get; set; }
-		public IUpdateEntry SharedIdentityEntry { get; }
+
+		// ReSharper disable once UnassignedGetOnlyAutoProperty
+		public IUpdateEntry? SharedIdentityEntry { get; }
 	}
 }
