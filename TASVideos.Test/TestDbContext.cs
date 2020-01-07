@@ -38,7 +38,7 @@ namespace TASVideos.Test
 			return db;
 		}
 
-		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
 			if (_dbUpdateConflict)
 			{
