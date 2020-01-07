@@ -34,6 +34,7 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var rejectionReasons = legacySiteContext.SubmissionRejections
+				.ToList() // TODO: optimize me, EF 3 doesn't like .First() in there
 				.GroupBy(r => r.Id)
 				.Select(r => new { Id = r.Key, r.First().Reason })
 				.ToList();

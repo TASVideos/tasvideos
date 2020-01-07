@@ -74,6 +74,14 @@ namespace TASVideos.Test
 
 	internal class TestUpdateEntry : IUpdateEntry
 	{
+		public void SetOriginalValue(IProperty property, object value)
+		{
+		}
+
+		public void SetPropertyModified(IProperty property)
+		{
+		}
+
 		public bool IsModified(IProperty property)
 		{
 			return false;
@@ -91,25 +99,25 @@ namespace TASVideos.Test
 
 		public object GetCurrentValue(IPropertyBase propertyBase)
 		{
-			return new object();
+			throw new NotImplementedException();
 		}
 
 		public object GetOriginalValue(IPropertyBase propertyBase)
 		{
-			return new object();
+			throw new NotImplementedException();
 		}
 
 		public TProperty GetCurrentValue<TProperty>(IPropertyBase propertyBase)
 		{
-			return default(TProperty)!;
+			throw new NotImplementedException();
 		}
 
 		public TProperty GetOriginalValue<TProperty>(IProperty property)
 		{
-			return default(TProperty)!;
+			throw new NotImplementedException();
 		}
 
-		public void SetCurrentValue(IPropertyBase propertyBase, object value)
+		public void SetStoreGeneratedValue(IProperty property, object value)
 		{
 		}
 
@@ -118,13 +126,8 @@ namespace TASVideos.Test
 			return null!;
 		}
 
-		// ReSharper disable once UnassignedGetOnlyAutoProperty
-		public IEntityType EntityType { get; } = null!;
-
-		// ReSharper disable once UnassignedGetOnlyAutoProperty
-		public EntityState EntityState { get; }
-
-		// ReSharper disable once UnassignedGetOnlyAutoProperty
-		public IUpdateEntry SharedIdentityEntry { get; } = null!;
+		public IEntityType EntityType { get; }
+		public EntityState EntityState { get; set; }
+		public IUpdateEntry SharedIdentityEntry { get; }
 	}
 }

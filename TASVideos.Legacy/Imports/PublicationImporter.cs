@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
