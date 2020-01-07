@@ -24,9 +24,11 @@ namespace TASVideos.WikiEngine.AST
 				{
 					input[i] = transform(input[i]);
 				}
-				var cc = input[i] as INodeWithChildren;
-				if (cc != null)
+
+				if (input[i] is INodeWithChildren cc)
+				{
 					Replace(cc.Children, predicate, transform);
+				}
 			}
 		}
 
@@ -35,12 +37,16 @@ namespace TASVideos.WikiEngine.AST
 			foreach (var n in input)
 			{
 				if (predicate(n))
+				{
 					yield return n;
-				var cc = n as INodeWithChildren;
-				if (cc != null)
+				}
+
+				if (n is INodeWithChildren cc)
 				{
 					foreach (var c in Find(cc.Children, predicate))
+					{
 						yield return c;
+					}
 				}
 			}
 		}
@@ -51,8 +57,10 @@ namespace TASVideos.WikiEngine.AST
 			{
 				callback(n);
 				if (n is INodeWithChildren cc)
+				{
 					ForEach(cc.Children, callback);
-			}			
+				}
+			}
 		}
 
 		public static List<InternalLinkInfo> GetAllInternalLinks(string content, IEnumerable<INode> input)
@@ -74,13 +82,15 @@ namespace TASVideos.WikiEngine.AST
 				var si = Math.Max(node.CharStart - 20, 0);
 				var se = Math.Min(node.CharEnd + 20, content.Length);
 				var excerpt = content.Substring(si, se - si);
+
 				// for purposes of html markup, all <a class=intlink> have hrefs that start with a leading '/'
 				// this is how the wiki syntax expects them to work.
 				// But in the context of counting internal referrers, that leading slash is not needed or wanted, so strip it here
 				link = link.TrimStart('/');
 				ret.Add(new InternalLinkInfo(link, excerpt));
 			};
-			NodeUtils.ForEach(input, node =>
+
+			ForEach(input, node =>
 			{
 				if (node is Module m)
 				{

@@ -374,10 +374,8 @@ namespace TASVideos.WikiEngine.AST
 			{
 				return string.Join("", Children.Select(c => c.InnerText(h)));
 			}
-			else
-			{
-				return "";
-			}
+
+			return "";
 		}
 
 		public void DumpContentDescriptive(TextWriter w, string padding)

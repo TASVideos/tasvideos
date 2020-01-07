@@ -8,6 +8,7 @@ namespace TASVideos.WikiEngine
 {
 	public static class Util
 	{
+		// ReSharper disable once UnusedMember.Global
 		public static string DebugParseWikiPage(string content)
 		{
 			try
