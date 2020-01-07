@@ -23,9 +23,8 @@ namespace TASVideos.WikiEngine
 		private readonly StringBuilder _currentText = new StringBuilder();
 		private int _currentTextStart = -1;
 		private readonly string _input;
-		private int _index = 0;
-		private bool _parsingInline = false;
-		private delegate void ActionType(NewParser p);
+		private int _index;
+		private bool _parsingInline;
 
 		private NewParser(string input)
 		{
@@ -39,31 +38,41 @@ namespace TASVideos.WikiEngine
 
 		private bool Eat(char c)
 		{
-			if (EOF() || c != _input[_index])
+			if (Eof() || c != _input[_index])
+			{
 				return false;
+			}
+
 			_index++;
 			return true;
 		}
+
 		private bool Eat(string s)
 		{
 			int j;
 			for (j = 0; j < s.Length; j++)
 			{
 				if (_index + j >= _input.Length || s[j] != _input[_index + j])
+				{
 					return false;
+				}
 			}
+
 			_index += j;
 			return true;
 		}
+
 		private char Eat()
 		{
 			return _input[_index++];
 		}
-		private bool EatEOL()
+
+		private bool EatEol()
 		{
 			return Eat("\r\n") || Eat('\r') || Eat('\n');
 		}
-		private bool EatWhitespaceOnlyToEOLEOF()
+
+		private bool EatWhitespaceOnlyToEolEof()
 		{
 			// TODO: parser combinators
 			int j;
@@ -89,19 +98,21 @@ namespace TASVideos.WikiEngine
 			_index += j;
 			return true;
 		}
-		private bool EOF()
+
+		private bool Eof()
 		{
 			return _index == _input.Length;
 		}
+
 		private string EatToBracket()
 		{
 			var from = _index;
 			var ret = new StringBuilder();
 			for (var i = 1; i > 0;)
 			{
-				if (EOF())
+				if (Eof())
 					Abort("Unexpected EOF parsing text in []", from);
-				if (EatEOL())
+				if (EatEol())
 					Abort("Unexpected EOL parsing text in []", from);
 				var c = Eat();
 				if (c == '[')
@@ -116,34 +127,37 @@ namespace TASVideos.WikiEngine
 		private string EatClassText()
 		{
 			var ret = new StringBuilder();
-			if (!EOF())
+			if (!Eof())
 				Eat(' '); // OK if this fails?
-			while (!EOF() && !EatEOL())
+			while (!Eof() && !EatEol())
 				ret.Append(Eat());
 			return ret.ToString();
 		}
+
 		private string EatTabName()
 		{
 			var ret = new StringBuilder();
 			var sawEndOfLine = false;
-			while (!EOF() && !(sawEndOfLine = EatEOL()) && !Eat('%'))
+			while (!Eof() && !(sawEndOfLine = EatEol()) && !Eat('%'))
 				ret.Append(Eat());
 			if (!sawEndOfLine)
 				DiscardLine();
 			return ret.ToString();
 		}
+
 		private string EatSrcEmbedText()
 		{
 			var ret = new StringBuilder();
-			while (!EOF() && !Eat("%%END_EMBED"))
+			while (!Eof() && !Eat("%%END_EMBED"))
 				ret.Append(Eat());
 			DiscardLine();
 			return ret.ToString();
 		}
+
 		private string EatBullets()
 		{
 			var ret = new StringBuilder();
-			while (!EOF())
+			while (!Eof())
 			{
 				if (Eat('*'))
 					ret.Append('*');
@@ -152,31 +166,45 @@ namespace TASVideos.WikiEngine
 				else
 					break;
 			}
+
 			return ret.ToString();
 		}
+
 		private int EatPipes()
 		{
 			var start = _index;
-			while (!EOF() && Eat('|')) { }
+			while (!Eof() && Eat('|')) { }
 			return _index - start;
 		}
+
 		private void DiscardLine()
 		{
-			while (!EOF() && !EatEOL())
+			while (!Eof() && !EatEol())
+			{
 				Eat();
+			}
 		}
+
 		private void AddText(char c)
 		{
 			if (_currentText.Length == 0)
+			{
 				_currentTextStart = _index;
+			}
+
 			_currentText.Append(c);
 		}
+
 		private void AddText(string s)
 		{
 			if (_currentText.Length == 0)
+			{
 				_currentTextStart = _index;
+			}
+
 			_currentText.Append(s);
 		}
+
 		private void FinishText()
 		{
 			if (_currentText.Length > 0)
@@ -189,6 +217,7 @@ namespace TASVideos.WikiEngine
 					_output.Add(t);
 			}
 		}
+
 		private bool TryPop(string tag)
 		{
 			for (var i = _stack.Count - 1; i >= 0; i--)
@@ -203,8 +232,10 @@ namespace TASVideos.WikiEngine
 					return true;
 				}
 			}
+
 			return false;
 		}
+
 		private bool TryPopTab()
 		{
 			// when popping an individual tab, we don't want to pop through a tabset.  only TAB_END does that
@@ -226,8 +257,10 @@ namespace TASVideos.WikiEngine
 					}
 				}
 			}
-			return false;			
+
+			return false;
 		}
+
 		private bool TryPopTabs()
 		{
 			for (var i = _stack.Count - 1; i >= 0; i--)
@@ -248,25 +281,34 @@ namespace TASVideos.WikiEngine
 			}
 			return false;
 		}
+
 		private void Pop(string tag)
 		{
 			if (!TryPop(tag))
+			{
 				throw new InvalidOperationException("Internal parser error: Pop " + tag);
+			}
 		}
+
 		private void PopOrPush(string tag)
 		{
 			if (!TryPop(tag))
+			{
 				Push(tag);
+			}
 		}
+
 		private void Push(INodeWithChildren n)
 		{
 			AddNonChild(n);
 			_stack.Add(n);
 		}
+
 		private void Push(string tag)
 		{
 			Push(new Element(_index, tag));
 		}
+
 		private bool TryPopIf()
 		{
 			for (var i = _stack.Count - 1; i >= 0; i--)
@@ -283,6 +325,7 @@ namespace TASVideos.WikiEngine
 			}
 			return false;
 		}
+
 		private void AddNonChild(INode n)
 		{
 			FinishText();
@@ -291,13 +334,14 @@ namespace TASVideos.WikiEngine
 			else
 				_output.Add(n);
 		}
+
 		private void AddNonChild(IEnumerable<INode> n)
 		{
 			FinishText();
 			if (_stack.Count > 0)
 				_stack[^1].Children.AddRange(n);
 			else
-				_output.AddRange(n);			
+				_output.AddRange(n);
 		}
 		private void ClearBlockTags()
 		{
@@ -400,12 +444,12 @@ namespace TASVideos.WikiEngine
 			{
 				TryPop("td");
 				TryPop("th");
-				if (EatWhitespaceOnlyToEOLEOF())
+				if (EatWhitespaceOnlyToEolEof())
 					SwitchToLine();
 				else
 					Push(tmp == 1 ? "td" : "th");
 			}
-			else if (EatEOL())
+			else if (EatEol())
 			{
 				AddText('\n');
 				SwitchToLine();
@@ -417,9 +461,8 @@ namespace TASVideos.WikiEngine
 		private string ComputeExistingBullets()
 		{
 			var ret = new StringBuilder();
-			for (var i = 0; i < _stack.Count; i++)
+			foreach (var e in _stack)
 			{
-				var e = _stack[i];
 				if (e.Type == NodeType.Element)
 				{
 					switch (((Element)e).Tag)
@@ -632,7 +675,7 @@ namespace TASVideos.WikiEngine
 				}
 				SwitchToInline();
 			}
-			else if (EatEOL())
+			else if (EatEol())
 			{
 				ClearBlockTags();
 			}
@@ -649,7 +692,7 @@ namespace TASVideos.WikiEngine
 
 		private void ParseLoop()
 		{
-			while (!EOF())
+			while (!Eof())
 			{
 				if (_parsingInline)
 					ParseInlineText();
@@ -696,8 +739,10 @@ namespace TASVideos.WikiEngine
 				e =>
 				{
 					var p = (Element)e;
-					var ret = new Element(p.CharStart, "div", p.Children);
-					ret.Attributes["class"] = "p";
+					var ret = new Element(p.CharStart, "div", p.Children)
+					{
+						Attributes = {["class"] = "p"}
+					};
 					return ret;
 				});
 		}

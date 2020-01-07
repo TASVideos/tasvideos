@@ -23,20 +23,22 @@ namespace TASVideos.WikiEngineTest
 			--filter [string]:  Only process pages whose title contains [string].
 				Used to quickly observe changes to a single page during development.  Before committing to the snapshot repo, all other pages should be run.
 	 */
-	class Program
+	public class Program
 	{
-		class Options
+		internal class Options
 		{
 			public string? ConnectionString { get; set; }
 			public string? OutDir { get; set; }
 		}
-		static int Main(string[] args)
+
+		public static int Main(string[] args)
 		{
 			if (!File.Exists(".params.json"))
 			{
 				Console.WriteLine(".params.json not found");
 				return -1;
 			}
+
 			var settings = JsonConvert.DeserializeObject<Options>(File.ReadAllText(".params.json"));
 			if (string.IsNullOrWhiteSpace(settings.ConnectionString) || string.IsNullOrWhiteSpace(settings.OutDir))
 			{
@@ -54,7 +56,9 @@ namespace TASVideos.WikiEngineTest
 			{
 				var index = Array.IndexOf(args, "--filter");
 				if (index >= 0 && index < args.Length - 1)
+				{
 					filter = args[index + 1];
+				}
 			}
 
 			using (var context = new ApplicationDbContext(contextOptions, null))
@@ -66,6 +70,7 @@ namespace TASVideos.WikiEngineTest
 				{
 					query = query.Where(wp => wp.PageName.Contains(filter));
 				}
+
 				var toProcess = query
 					.Select(wp => new
 					{
@@ -129,8 +134,8 @@ namespace TASVideos.WikiEngineTest
 				Console.Write(new string('\b', 8));
 				Console.Write("{0,8}", progress++);
 			}
-			Console.WriteLine();
 
+			Console.WriteLine();
 			return 0;
 		}
 	}

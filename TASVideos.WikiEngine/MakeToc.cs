@@ -18,8 +18,7 @@ namespace TASVideos.WikiEngine
 				.Cast<Element>()
 				.ToList();
 
-			var ret = new Element(charStart, "div");
-			ret.Attributes["class"] = "toc";
+			var ret = new Element(charStart, "div") { Attributes = { ["class"] = "toc"} };
 			var stack = new Stack<Element>();
 			stack.Push(ret);
 

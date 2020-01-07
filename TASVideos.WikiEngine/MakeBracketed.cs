@@ -131,9 +131,9 @@ namespace TASVideos.WikiEngine
 
 		public static string NormalizeInternalLink(string input)
 		{
-			var hashparts = input.Split('#');
+			var hashParts = input.Split('#');
 
-			var text = hashparts[0].TrimEnd('/');
+			var text = hashParts[0].TrimEnd('/');
 			var ss = text.Split('/');
 
 			int skip = -1;
@@ -162,8 +162,8 @@ namespace TASVideos.WikiEngine
 			}
 
 			var newText = string.Join("/", ss);
-			hashparts[0] = newText;
-			return string.Join("#", hashparts);
+			hashParts[0] = newText;
+			return string.Join("#", hashParts);
 		}
 
 		private static string DisplayTextForUrl(string text)

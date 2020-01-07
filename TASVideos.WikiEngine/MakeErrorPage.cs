@@ -18,12 +18,16 @@ namespace TASVideos.WikiEngine
 			var head = new Element(0, "h1", new[] { new Text(0, "Syntax Error") });
 			ret.Add(head);
 
-			var elt = new Element(0, "pre");
-			elt.Attributes["class"] = "error-code";
+			var elt = new Element(0, "pre")
+			{
+				Attributes = {["class"] = "error-code"}
+			};
 			var i = e.TextLocation;
 			elt.Children.Add(new Text(0, content.Substring(0, i)));
-			var marker = new Element(i, "span", new[] { new Element(i, "span", new[] { new Text(i, e.Message) }) });
-			marker.Attributes["class"] = "error-marker";
+			var marker = new Element(i, "span", new[] { new Element(i, "span", new[] {new Text(i, e.Message) })})
+			{
+				Attributes = {["class"] = "error-marker"}
+			};
 			elt.Children.Add(marker);
 			elt.Children.Add(new Text(i, content.Substring(i)));
 			ret.Add(elt);
