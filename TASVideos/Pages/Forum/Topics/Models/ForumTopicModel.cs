@@ -29,6 +29,8 @@ namespace TASVideos.Pages.Forum.Topics.Models
 	public class ForumTopicModel : IForumTopicActionBar, IForumTopicBreadCrumb
 	{
 		public int Id { get; set; }
+		public int LastPostId { get; set; }
+
 		public bool IsWatching { get; set; }
 		public bool IsLocked { get; set; }
 		public string Title { get; set; } = "";
