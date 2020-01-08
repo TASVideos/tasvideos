@@ -10,8 +10,7 @@ namespace TASVideos
 	public class RobotHandlingMiddleware
 	{
 		private readonly RequestDelegate _request;
-
-		private IWebHostEnvironment _env { get; }
+		private readonly IWebHostEnvironment _env;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
