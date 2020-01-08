@@ -66,6 +66,7 @@ namespace TASVideos.Pages.Forum.Topics
 					ForumId = t.ForumId,
 					ForumName = t.Forum!.Name,
 					IsLocked = t.IsLocked,
+					LastPostId = t.ForumPosts.OrderByDescending(p => p.CreateTimeStamp).First().Id,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll!.Question }
 						: null
@@ -76,12 +77,6 @@ namespace TASVideos.Pages.Forum.Topics
 			{
 				return NotFound();
 			}
-
-			var lastPostId = (await _db.ForumPosts
-				.Where(p => p.TopicId == Id)
-				.ByMostRecent()
-				.FirstAsync())
-				.Id;
 
 			Topic.Posts = await _db.ForumPosts
 				.ForTopic(Id)
@@ -107,7 +102,7 @@ namespace TASVideos.Pages.Forum.Topics
 					Text = p.Text,
 					Subject = p.Subject,
 					Signature = p.Poster.Signature,
-					IsLastPost = p.Id == lastPostId,
+					IsLastPost = p.Id == Topic.LastPostId,
 				})
 				.OrderBy(p => p.CreateTimestamp)
 				.PageOf(Search);
