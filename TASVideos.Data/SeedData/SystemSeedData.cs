@@ -268,6 +268,12 @@ namespace TASVideos.Data.SeedData
 				Code = "ZXS",
 				DisplayName = "ZX Spectrum"
 			},
+			new GameSystem
+			{
+				Id = 45,
+				Code = "VEC",
+				DisplayName = "General Computer Vectrex"
+			},
 		};
 
 		public static GameSystemFrameRate[] SystemFrameRates =
@@ -830,6 +836,12 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 44,
 				RegionCode = Pal,
 				FrameRate = 50.080128205
+			},
+			new GameSystemFrameRate
+			{
+				GameSystemId = 45,
+				RegionCode = Ntsc,
+				FrameRate = 60
 			},
 		};
 	}
