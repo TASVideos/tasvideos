@@ -53,6 +53,7 @@
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Snes.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Uze.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Vb.bk2" />
+		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Vectrex.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Wswan.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Zxs.bk2" />
 		<EmbeddedResource Include="MovieParsers\DsmSampleFiles\0frames.dsm" />

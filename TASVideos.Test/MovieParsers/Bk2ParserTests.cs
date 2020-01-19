@@ -112,6 +112,7 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("System-Uze.bk2", SystemCodes.UzeBox)]
 		[DataRow("System-Vb.bk2", SystemCodes.VirtualBoy)]
 		[DataRow("System-Wswan.bk2", SystemCodes.WSwan)]
+		[DataRow("System-Vectrex.bk2", SystemCodes.Vectrex)]
 		[DataRow("System-Zxs.bk2", SystemCodes.ZxSpectrum)]
 		public void Systems(string filename, string expectedSystem)
 		{
