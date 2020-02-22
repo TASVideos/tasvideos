@@ -56,12 +56,9 @@ namespace TASVideos.Extensions
 				.Single()
 				.GetCustomAttribute<DisplayAttribute>();
 
-			if (displayName != null)
-			{
-				return displayName.GetName();
-			}
-
-			return enumValue.ToString();
+			return displayName != null
+				? displayName.GetName()
+				: enumValue.ToString();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Models
 {
@@ -14,10 +15,7 @@ namespace TASVideos.Models
 		{
 			if (value is IEnumerable list)
 			{
-				foreach (var unused in list)
-				{
-					return true;
-				}
+				return list.Cast<object?>().Any();
 			}
 
 			return false;

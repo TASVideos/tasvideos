@@ -65,7 +65,7 @@ namespace TASVideos.Services
 					ForumId = tw.ForumTopic.ForumId,
 					ForumTitle = tw.ForumTopic!.Forum!.Name,
 					TopicId = tw.ForumTopicId,
-					TopicTitle = tw.ForumTopic!.Title,
+					TopicTitle = tw.ForumTopic!.Title
 				})
 				.ToListAsync();
 		}

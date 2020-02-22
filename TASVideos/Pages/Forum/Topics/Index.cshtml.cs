@@ -102,7 +102,7 @@ namespace TASVideos.Pages.Forum.Topics
 					Text = p.Text,
 					Subject = p.Subject,
 					Signature = p.Poster.Signature,
-					IsLastPost = p.Id == Topic.LastPostId,
+					IsLastPost = p.Id == Topic.LastPostId
 				})
 				.OrderBy(p => p.CreateTimestamp)
 				.PageOf(Search);

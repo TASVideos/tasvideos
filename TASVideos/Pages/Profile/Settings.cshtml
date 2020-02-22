@@ -36,8 +36,8 @@
 				<label asp-for="Settings.PublicRatings"></label>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 					@{
-						var trueId = nameof(Model.Settings.PublicRatings) + "-true";
-						var falseId = nameof(Model.Settings.PublicRatings) + "-false";
+						const string trueId = nameof(Model.Settings.PublicRatings) + "-true";
+						const string falseId = nameof(Model.Settings.PublicRatings) + "-false";
 					}
 					<label for="@trueId" class="btn btn-secondary @(Model.Settings.PublicRatings ? "active" : "")">
 						<input id="@trueId" type="radio" value="True" asp-for="Settings.PublicRatings" /> Yes

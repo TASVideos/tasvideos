@@ -51,7 +51,7 @@ namespace TASVideos.Pages.Submissions
 					RomId = s.RomId,
 					GameId = s.GameId,
 					SystemId = s.SystemId,
-					SystemFrameRateId = s.SystemFrameRateId,
+					SystemFrameRateId = s.SystemFrameRateId
 				})
 				.SingleOrDefaultAsync();
 

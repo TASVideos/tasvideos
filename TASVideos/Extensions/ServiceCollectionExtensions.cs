@@ -193,7 +193,7 @@ namespace TASVideos.Extensions
 					{
 						Title = "TASVideos API",
 						Version = $"v{version.Major}.{version.Minor}.{version.Revision}",
-						Description = "API For tasvideos.org content",
+						Description = "API For tasvideos.org content"
 					});
 
 				var basePath = AppContext.BaseDirectory;

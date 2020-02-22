@@ -97,12 +97,7 @@ namespace TASVideos.Extensions
 				.Trim('/')
 				.Replace("GameResources", "");
 
-			if (path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Length == 1)
-			{
-				return true;
-			}
-
-			return false;
+			return path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Length == 1;
 		}
 
 		public static string SystemGameResourcePath(this string path)
@@ -136,12 +131,8 @@ namespace TASVideos.Extensions
 
 		public static bool IsHomePage(string? pageName)
 		{
-			if (string.IsNullOrWhiteSpace(pageName))
-			{
-				return false;
-			}
-
-			return pageName.StartsWith("HomePages/");
+			return !string.IsNullOrWhiteSpace(pageName)
+				&& pageName.StartsWith("HomePages/");
 		}
 
 		public static string ToUserName(string pageName)
@@ -237,12 +228,8 @@ namespace TASVideos.Extensions
 
 		private static bool IsInternalSubmissionLink(string link)
 		{
-			if (string.IsNullOrWhiteSpace(link))
-			{
-				return false;
-			}
-
-			return link.StartsWith(LinkConstants.SubmissionWikiPage);
+			return !string.IsNullOrWhiteSpace(link)
+				&& link.StartsWith(LinkConstants.SubmissionWikiPage);
 		}
 
 		private static bool IsInternalPublicationLink(string link)

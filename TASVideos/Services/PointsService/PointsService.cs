@@ -72,7 +72,7 @@ namespace TASVideos.Services
 					AuthorCount = p.Authors.Count,
 					Obsolete = p.ObsoletedById.HasValue,
 					TierWeight = p.Tier!.Weight,
-					RatingCount = p.PublicationRatings.Count,
+					RatingCount = p.PublicationRatings.Count
 				})
 				.ToListAsync();
 
@@ -83,7 +83,7 @@ namespace TASVideos.Services
 					AuthorCount = p.AuthorCount,
 					Obsolete = p.Obsolete,
 					TierWeight = p.TierWeight,
-					RatingCount = p.RatingCount,
+					RatingCount = p.RatingCount
 				})
 				.ToList();
 

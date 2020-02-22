@@ -241,7 +241,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 ");
 		}
 
-		private string UniqueId()
+		private static string UniqueId()
 		{
 			return Guid.NewGuid().ToString().Replace("-", "");
 		}

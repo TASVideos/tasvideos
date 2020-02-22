@@ -53,7 +53,7 @@ namespace TASVideos.ViewComponents
 		}
 
 		// TODO: this is the same code in BaseController
-		private string RenderPost(string text, bool useBbCode, bool useHtml)
+		private static string RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);
 			using var writer = new StringWriter();

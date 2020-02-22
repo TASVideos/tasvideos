@@ -72,7 +72,7 @@ namespace TASVideos.ViewComponents
 								Description = f.Description
 							})
 							.First(),
-						OnlineWatchingUrl = p.OnlineWatchingUrl,
+						OnlineWatchingUrl = p.OnlineWatchingUrl
 					})
 					.SingleOrDefaultAsync(p => p.Id == id);
 			}
