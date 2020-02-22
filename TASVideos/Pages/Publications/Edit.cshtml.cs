@@ -110,7 +110,7 @@ namespace TASVideos.Pages.Publications
 				.Select(f => new SelectListItem
 				{
 					Text = f.DisplayName,
-					Value = f.Id.ToString(),
+					Value = f.Id.ToString()
 				})
 				.ToListAsync();
 
@@ -187,7 +187,7 @@ namespace TASVideos.Pages.Publications
 						PageName = $"{LinkConstants.PublicationWikiPage}{id}",
 						Markup = model.Markup,
 						MinorEdit = model.MinorEdit,
-						RevisionMessage = model.RevisionMessage,
+						RevisionMessage = model.RevisionMessage
 					};
 					await _wikiPages.Add(revision);
 

@@ -29,14 +29,14 @@ namespace TASVideos.ViewComponents
 				{
 					UserName = u.UserName,
 					PublicationCount = u.Publications.Count,
-					SubmissionCount = u.Submissions.Count,
+					SubmissionCount = u.Submissions.Count
 				})
 				.ToListAsync();
 
 			return View(model);
 		}
 
-		private string TranslateLegacyName(string role)
+		private static string TranslateLegacyName(string role)
 		{
 			// Translate legacy names for roles into modern ones
 			switch (role)

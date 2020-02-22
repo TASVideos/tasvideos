@@ -36,7 +36,7 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Status Filter")]
 		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
 
-		public static IEnumerable<SubmissionStatus> Default => new List<SubmissionStatus>()
+		public static IEnumerable<SubmissionStatus> Default => new List<SubmissionStatus>
 		{
 			SubmissionStatus.New,
 			SubmissionStatus.JudgingUnderWay,
