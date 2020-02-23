@@ -9,9 +9,11 @@ namespace TASVideos.WikiEngine
 		public static INode MakeTabs(Element tabset)
 		{
 			// TODO: Fix up CharEnds
-			var navClass = tabset.Tag == "htabs" ? "nav nav-pills nav-stacked col-md-3" : "nav nav-tabs";
-			var liClass = tabset.Tag == "htabs" ? "" : "nav-item";
-			var aClass = tabset.Tag == "htabs" ? "" : "nav-link";
+			var parentDivClass = tabset.Tag == "htabs" ? "row" : "";
+			var navDivClass = tabset.Tag == "htabs" ? "col-md-3" : "";
+			var navClass = tabset.Tag == "htabs" ? "nav nav-pills nav-stacked" : "nav nav-tabs";
+			var liClass = "nav-item";
+			var aClass = "nav-link";
 			var tabClass = tabset.Tag == "htabs" ? "tab-content col-md-9" : "tab-content";
 			var nav = new List<INode>();
 			var content = new List<INode>();
@@ -43,9 +45,12 @@ namespace TASVideos.WikiEngine
 				first = false;
 			}
 
-			return new Element(tabset.CharStart, "div", new[] { Attr("class", "") }, new[]
+			return new Element(tabset.CharStart, "div", new[] { Attr("class", parentDivClass) }, new[]
 			{
-				new Element(tabset.CharStart, "ul", new[] { Attr("class", navClass), Attr("role", "tablist") }, nav),
+				new Element(tabset.CharStart, "div", new [] { Attr("class", navDivClass) } , new[]
+				{
+					new Element(tabset.CharStart, "ul", new[] { Attr("class", navClass), Attr("role", "tablist") }, nav)
+				}),
 				new Element(tabset.CharStart, "div", new[] { Attr("class", tabClass) }, content)
 			});
 		}
