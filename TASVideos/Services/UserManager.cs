@@ -131,14 +131,27 @@ namespace TASVideos.Services
 				return model;
 			}
 
-			model.Ratings = await _db.PublicationRatings
+			// TODO: if EF every gets not bad at GroupBy, make this all one query
+			var hack = await _db.PublicationRatings
 				.ForUser(model.Id)
+				.Select(p => new
+				{
+					p.Type,
+					p.Value,
+					p.PublicationId,
+					p.Publication!.Title,
+					p.Publication.ObsoletedById
+				})
+				
+				.ToListAsync();
+
+			model.Ratings = hack
 				.GroupBy(
 					gkey => new
 					{
 						gkey.PublicationId,
-						gkey.Publication!.Title,
-						gkey.Publication.ObsoletedById
+						gkey.Title,
+						gkey.ObsoletedById
 					}, 
 					gvalue => new
 					{
@@ -159,7 +172,7 @@ namespace TASVideos.Services
 						.Select(a => a.Value)
 						.Sum()
 				})
-				.ToListAsync();
+				.ToList();
 
 			return model;
 		}
