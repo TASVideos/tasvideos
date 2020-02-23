@@ -203,14 +203,6 @@ namespace TASVideos.Services
 							Description = ur.Role.Description
 						})
 						.ToList(),
-					Submissions = u.Submissions
-						.GroupBy(s => s.Submission!.Status)
-						.Select(g => new UserProfileModel.SubmissionEntry
-						{
-							Status = g.Key,
-							Count = g.Count()
-						})
-						.ToList(),
 					UserFiles = new UserProfileModel.UserFilesModel
 					{
 						Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
@@ -225,6 +217,16 @@ namespace TASVideos.Services
 
 			if (model != null)
 			{
+				model.Submissions = await _db.Submissions
+					.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id))
+					.GroupBy(s => s.Status)
+					.Select(g => new UserProfileModel.SubmissionEntry
+					{
+						Status = g.Key,
+						Count = g.Count()
+					})
+					.ToListAsync();
+
 				// TODO: round to 1 digit?
 				model.PlayerPoints = (int)Math.Round(await _pointsService.PlayerPoints(model.Id));
 
