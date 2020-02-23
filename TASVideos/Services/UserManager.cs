@@ -202,10 +202,11 @@ namespace TASVideos.Services
 						.Count(p => !p.Publication!.ObsoletedById.HasValue),
 					PublicationObsoleteCount = u.Publications
 						.Count(p => p.Publication!.ObsoletedById.HasValue),
-					PublishedSystems = u.Publications
-						.Select(p => p.Publication!.System!.Code)
-						.Distinct()
-						.ToList(),
+					//PublishedSystems = u.Publications
+					//	.Select(p => p.Publication!.System!.Code)
+					//	.Distinct()
+					//	.ToList(),
+					// TODO: When EF isn't bad at this, use this and not the below code
 					Email = u.Email,
 					EmailConfirmed = u.EmailConfirmed,
 					Roles = u.UserRoles
@@ -242,6 +243,12 @@ namespace TASVideos.Services
 
 				// TODO: round to 1 digit?
 				model.PlayerPoints = (int)Math.Round(await _pointsService.PlayerPoints(model.Id));
+
+				model.PublishedSystems = await _db.Publications
+					.Where(p => p.Authors.Any(a => a.UserId == model.Id))
+					.Select(p => p.System!.Code)
+					.Distinct()
+					.ToListAsync();
 
 				var wikiEdits = await _wikiPages.Query
 					.ThatAreNotDeleted()
