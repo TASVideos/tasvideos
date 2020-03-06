@@ -107,21 +107,18 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 					if (pp.Path == "/view_play_list" && pp.QueryParams.ContainsKey("p")) // http://www.youtube.com/view_play_list?p=76E50B82FA870C1D
 					{
 						DoTemplate(w, YouTubePlaylist, width, height, pp.QueryParams["p"]);
-						return;
 					}
 					break;
 				case "youtu.be":
 					if (pp.Path.Length > 1) // https://youtu.be/yLORZbc-PZw
 					{
 						DoTemplate(w, YouTube, width, height, pp.Path.Substring(1));
-						return;
 					}
 					break;
 				case "vimeo.com":
 					if (pp.Path.Length > 1) // http://vimeo.com/49142543
 					{
 						DoTemplate(w, Vimeo, width, height, pp.Path.Substring(1));
-						return;
 					}
 					break;
 				case "dailymotion.com":
@@ -129,7 +126,6 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 					if (pp.Path.StartsWith("/video/") && pp.Path.Length > 7)
 					{
 						DoTemplate(w, DailyMotion, width, height, pp.Path.Substring(7).Split('_')[0]);
-						return;
 					}
 					break;
 				case "www.nicovideo.jp": // https://www.nicovideo.jp/watch/sm35061034
@@ -139,10 +135,7 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 						var sw = new StringWriter();
 						DoTemplate(sw, NicoVideoDocument, width, height, vid);
 						DoTemplate(w, NicoVideo, width, height, Convert.ToBase64String(Encoding.UTF8.GetBytes(sw.ToString())));
-						return;
 					}
-					break;
-				default:
 					break;
 			}
 		}

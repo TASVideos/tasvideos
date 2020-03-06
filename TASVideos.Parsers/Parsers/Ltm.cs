@@ -95,7 +95,7 @@ namespace TASVideos.MovieParsers.Parsers
 			return result;
 		}
 
-		private int ParseIntFromConfig(string str)
+		private static int ParseIntFromConfig(string str)
 		{
 			if (string.IsNullOrWhiteSpace(str))
 			{
@@ -117,7 +117,7 @@ namespace TASVideos.MovieParsers.Parsers
 			return 0;
 		}
 
-		private double ParseDoubleFromConfig(string str)
+		private static double ParseDoubleFromConfig(string str)
 		{
 			if (string.IsNullOrWhiteSpace(str))
 			{

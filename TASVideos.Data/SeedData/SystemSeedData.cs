@@ -273,7 +273,7 @@ namespace TASVideos.Data.SeedData
 				Id = 45,
 				Code = "VEC",
 				DisplayName = "General Computer Vectrex"
-			},
+			}
 		};
 
 		public static GameSystemFrameRate[] SystemFrameRates =
@@ -842,7 +842,7 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 45,
 				RegionCode = Ntsc,
 				FrameRate = 60
-			},
+			}
 		};
 	}
 }

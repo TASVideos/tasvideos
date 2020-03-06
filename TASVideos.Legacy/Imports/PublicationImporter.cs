@@ -74,7 +74,7 @@ namespace TASVideos.Legacy.Imports
 					Movie = lm,
 					Wiki = w,
 					Sub = s,
-					Game = g,
+					Game = g
 				})
 				.ToList();
 
@@ -122,7 +122,7 @@ namespace TASVideos.Legacy.Imports
 						UserId = u.Id,
 						Author = u,
 						PublicationId = pub.Movie.Id,
-						Publication = publication,
+						Publication = publication
 					})
 					.ToList();
 

@@ -38,9 +38,9 @@ namespace TASVideos.Data.Helpers
 
 			var list = new List<SubmissionStatus>();
 
-			if ((currentStatus == SubmissionStatus.JudgingUnderWay && isJudge) // The judge can set back to new if they claimed the submission and are now opting out
-				|| (currentStatus == SubmissionStatus.Rejected && perms.Contains(PermissionTo.JudgeSubmissions)) // A judge can revive a rejected submission by setting it to new
-				|| (currentStatus == SubmissionStatus.Accepted && isJudge))  // A judge can undo their judgment
+			if (currentStatus == SubmissionStatus.JudgingUnderWay && isJudge // The judge can set back to new if they claimed the submission and are now opting out
+				|| currentStatus == SubmissionStatus.Rejected && perms.Contains(PermissionTo.JudgeSubmissions) // A judge can revive a rejected submission by setting it to new
+				|| currentStatus == SubmissionStatus.Accepted && isJudge)  // A judge can undo their judgment
 			{
 				list.Add(SubmissionStatus.New);
 			}
@@ -211,7 +211,7 @@ namespace TASVideos.Data.Helpers
 			new SelectListItem { Text = "USA/Europe,r2", Value = "USA/Europe,r2" },
 			new SelectListItem { Text = "USA/Europe PRG0", Value = "USA/Europe PRG0" },
 			new SelectListItem { Text = "USA/Europe PRG1", Value = "USA/Europe PRG1" },
-			new SelectListItem { Text = "USA/Europe PRG2", Value = "USA/Europe PRG2" },
+			new SelectListItem { Text = "USA/Europe PRG2", Value = "USA/Europe PRG2" }
 		};
 	}
 }

@@ -151,7 +151,7 @@ namespace TASVideos.MovieParsers.Parsers
 			return result;
 		}
 
-		private void DefaultGameType(ParseResult result)
+		private static void DefaultGameType(ParseResult result)
 		{
 			result.SystemCode = SystemCodes.Snes;
 			result.Region = RegionType.Ntsc;

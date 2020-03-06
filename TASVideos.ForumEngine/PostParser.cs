@@ -8,12 +8,10 @@ namespace TASVideos.ForumEngine
 			{
 				return BbParser.Parse(text, enableHtml, enableBbCode);
 			}
-			else
-			{
-				var ret = new Element { Name = "_root" };
-				ret.Children.Add(new Text { Content = text });
-				return ret;
-			}
+
+			var ret = new Element { Name = "_root" };
+			ret.Children.Add(new Text { Content = text });
+			return ret;
 		}
 	}
 }

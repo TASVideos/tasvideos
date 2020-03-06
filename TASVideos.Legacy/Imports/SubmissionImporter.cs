@@ -191,7 +191,7 @@ namespace TASVideos.Legacy.Imports
 						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
 						LastUpdateUserName = legacySubmission.Judge.UserName,
 						Status = ConvertJudgeStatus(submission.Status),
-						SubmissionId = submission.Id,
+						SubmissionId = submission.Id
 					});
 				}
 
@@ -204,7 +204,7 @@ namespace TASVideos.Legacy.Imports
 						LastUpdateTimeStamp = legacySubmission.PubDate.Value,
 						LastUpdateUserName = legacySubmission.Publisher.UserName,
 						Status = SubmissionStatus.Published,
-						SubmissionId = submission.Id,
+						SubmissionId = submission.Id
 					});
 				}
 
@@ -270,56 +270,36 @@ namespace TASVideos.Legacy.Imports
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)
 		{
-			switch (legacyStatus)
+			return legacyStatus switch
 			{
-				default:
-					throw new NotImplementedException($"unknown status {legacyStatus}");
-				case "N":
-					return SubmissionStatus.New;
-				case "P":
-					return SubmissionStatus.PublicationUnderway;
-				case "R":
-					return SubmissionStatus.Rejected;
-				case "K":
-					return SubmissionStatus.Accepted;
-				case "C":
-					return SubmissionStatus.Cancelled;
-				case "Q":
-					return SubmissionStatus.NeedsMoreInfo;
-				case "O":
-					return SubmissionStatus.Delayed;
-				case "J":
-					return SubmissionStatus.JudgingUnderWay;
-				case "Y":
-					return SubmissionStatus.Published;
-			}
+				"N" => SubmissionStatus.New,
+				"P" => SubmissionStatus.PublicationUnderway,
+				"R" => SubmissionStatus.Rejected,
+				"K" => SubmissionStatus.Accepted,
+				"C" => SubmissionStatus.Cancelled,
+				"Q" => SubmissionStatus.NeedsMoreInfo,
+				"O" => SubmissionStatus.Delayed,
+				"J" => SubmissionStatus.JudgingUnderWay,
+				"Y" => SubmissionStatus.Published,
+				_ => throw new NotImplementedException($"unknown status {legacyStatus}")
+			};
 		}
 
 		private static SubmissionStatus ConvertJudgeStatus(SubmissionStatus currentStatus)
 		{
-			switch (currentStatus)
+			return currentStatus switch
 			{
-				default:
-					throw new NotImplementedException($"Submission Import: Have not consideredunknown status {currentStatus}");
-				case SubmissionStatus.New:
-					throw new NotImplementedException($"Submission Import: Have not handled scenario: Has judge is in {currentStatus} status");
-				case SubmissionStatus.PublicationUnderway:
-					return SubmissionStatus.Accepted;
-				case SubmissionStatus.Rejected:
-					return SubmissionStatus.Rejected;
-				case SubmissionStatus.Accepted:
-					return SubmissionStatus.Accepted;
-				case SubmissionStatus.Cancelled:
-					return SubmissionStatus.Cancelled; // Judges cancel submissions on behalf of the author from time to time
-				case SubmissionStatus.NeedsMoreInfo:
-					throw new NotImplementedException($"Submission Import: Have not handled scenario: Has judge is in {currentStatus} status");
-				case SubmissionStatus.Delayed:
-					return SubmissionStatus.Delayed;
-				case SubmissionStatus.JudgingUnderWay:
-					return SubmissionStatus.JudgingUnderWay;
-				case SubmissionStatus.Published:
-					return SubmissionStatus.Accepted;
-			}
+				SubmissionStatus.New => throw new NotImplementedException($"Submission Import: Have not handled scenario: Has judge is in {currentStatus} status"),
+				SubmissionStatus.PublicationUnderway => SubmissionStatus.Accepted,
+				SubmissionStatus.Rejected => SubmissionStatus.Rejected,
+				SubmissionStatus.Accepted => SubmissionStatus.Accepted,
+				SubmissionStatus.Cancelled => SubmissionStatus.Cancelled, // Judges cancel submissions on behalf of the author from time to time
+				SubmissionStatus.NeedsMoreInfo => throw new NotImplementedException($"Submission Import: Have not handled scenario: Has judge is in {currentStatus} status"),
+				SubmissionStatus.Delayed => SubmissionStatus.Delayed,
+				SubmissionStatus.JudgingUnderWay => SubmissionStatus.JudgingUnderWay,
+				SubmissionStatus.Published => SubmissionStatus.Accepted,
+				_ => throw new NotImplementedException($"Submission Import: Have not considered unknown status {currentStatus}")
+			};
 		}
 
 		private static string? GetExtension(byte[]? content)
@@ -358,25 +338,18 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			// If still null, guess based on movie extension
-			switch (movieExtension)
+			return movieExtension switch
 			{
-				default:
-					return null;
-				case "vbm":
-					return "VBA";
-				case "fmv":
-					return "Famtasia";
-				case "gmv":
-					return "GENS";
-				case "fcm":
-					return "FCEU0.98";
-				case "m64":
-					return "mupen64 0.5 re-recording v8";
-				case "smv":
-					return id < 1532 // The first known Snes9x 1.51 submission
-						? "Snes9x 1.43"
-						: "Snes9x";
-			}
+				"vbm" => "VBA",
+				"fmv" => "Famtasia",
+				"gmv" => "GENS",
+				"fcm" => "FCEU0.98",
+				"m64" => "mupen64 0.5 re-recording v8",
+				"smv" => (id < 1532 // The first known Snes9x 1.51 submission
+					? "Snes9x 1.43"
+					: "Snes9x"),
+				_ => null
+			};
 		}
 
 		// These users have a variation in their nickname vs their actual username, or liked to have different nicknames for who knows why

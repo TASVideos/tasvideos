@@ -1328,7 +1328,7 @@ namespace TASVideos.Test.Services
 			_db.WikiReferrals.Add(new WikiPageReferral
 			{
 				Referrer = page,
-				Referral = doesNotExist,
+				Referral = doesNotExist
 			});
 			_db.SaveChanges();
 

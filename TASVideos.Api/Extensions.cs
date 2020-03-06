@@ -14,12 +14,9 @@ namespace TASVideos.Api
 		/// </summary>
 		public static IEnumerable<string> CsvToStrings(this string? param)
 		{
-			if (string.IsNullOrWhiteSpace(param))
-			{
-				return Enumerable.Empty<string>();
-			}
-
-			return param.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+			return string.IsNullOrWhiteSpace(param)
+				? Enumerable.Empty<string>()
+				: param.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		/// <summary>
