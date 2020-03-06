@@ -100,10 +100,8 @@ namespace TASVideos.WikiEngine
 			{
 				return "/" + text.Substring(text[1] == '/' ? 2 : 1);
 			}
-			else
-			{
-				return text;
-			}
+
+			return text;
 		}
 
 		private static string NormalizeUrl(string text)
@@ -114,19 +112,16 @@ namespace TASVideos.WikiEngine
 				{
 					return "/";
 				}
-				else
-				{
-					return NormalizeInternalLink("/" + text.Substring(text[1] == '/' ? 2 : 1));
-				}
+
+				return NormalizeInternalLink("/" + text.Substring(text[1] == '/' ? 2 : 1));
 			}
-			else if (text.StartsWith("user:"))
+
+			if (text.StartsWith("user:"))
 			{
 				return NormalizeInternalLink("/Users/Profile/" + text.Substring(5));
 			}
-			else
-			{
-				return text;
-			}
+
+			return text;
 		}
 
 		public static string NormalizeInternalLink(string input)
@@ -192,14 +187,9 @@ namespace TASVideos.WikiEngine
 
 			if (IsLink(pp[0]))
 			{
-				if (pp.Length > 1)
-				{
-					return new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, pp[1]) { CharEnd = charEnd }) };
-				}
-				else
-				{
-					return new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd }) };
-				}
+				return pp.Length > 1
+					? new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, pp[1]) { CharEnd = charEnd }) }
+					: new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd }) };
 			}
 
 			// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
@@ -212,12 +202,10 @@ namespace TASVideos.WikiEngine
 					// same as the IsLink(pp[0]) && pp.Length >= 2 case, except add the '=' because it was implicitly resolved to an internal link
 					return new[] { MakeLink(charStart, charEnd, NormalizeUrl("=" + pp[0]), new Text(charStart, pp[1]) { CharEnd = charEnd }) };
 				}
-				else
-				{
-					// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
-					// DB lookup will be required for links like [4022S], so use __wikiLink
-					return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + NormalizeUrl("=" + pp[0]) + "|" + pp[0]);
-				}
+
+				// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
+				// DB lookup will be required for links like [4022S], so use __wikiLink
+				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + NormalizeUrl("=" + pp[0]) + "|" + pp[0]);
 			}
 
 			// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough

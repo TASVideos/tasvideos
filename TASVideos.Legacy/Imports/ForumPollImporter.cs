@@ -96,7 +96,7 @@ namespace TASVideos.Legacy.Imports
 					PollOptionId = po.Id,
 					UserId = v.UserId,
 					IpAddress = v.IpAddress,
-					CreateTimestamp = DateTime.UtcNow, // Legacy system did not track this
+					CreateTimestamp = DateTime.UtcNow // Legacy system did not track this
 				})
 				.ToList();
 

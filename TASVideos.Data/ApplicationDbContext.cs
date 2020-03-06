@@ -87,7 +87,7 @@ namespace TASVideos.Data
 			return result;
 		}
 
-		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
 			PerformTrackingUpdates();
 			return base.SaveChangesAsync(cancellationToken);

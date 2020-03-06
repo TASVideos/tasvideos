@@ -142,19 +142,12 @@ namespace TASVideos.Legacy.Imports
 				return content;
 			}
 
-			byte[] result;
-
-			using (var targetStream = new MemoryStream())
-			{
-				using (var gzipStream = new GZipStream(targetStream, CompressionLevel.Optimal))
-				{
-					using var sourceStream = new MemoryStream(content);
-					using var xzStream = new XZStream(sourceStream);
-					xzStream.CopyTo(gzipStream);
-				}
-
-				result = targetStream.ToArray();
-			}
+			using var targetStream = new MemoryStream();
+			using var gzipStream = new GZipStream(targetStream, CompressionLevel.Optimal);
+			using var sourceStream = new MemoryStream(content);
+			using var xzStream = new XZStream(sourceStream);
+			xzStream.CopyTo(gzipStream);
+			var result = targetStream.ToArray();
 
 			return result;
 		}

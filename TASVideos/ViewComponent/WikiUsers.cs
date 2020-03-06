@@ -39,19 +39,14 @@ namespace TASVideos.ViewComponents
 		private static string TranslateLegacyName(string role)
 		{
 			// Translate legacy names for roles into modern ones
-			switch (role)
+			return role switch
 			{
-				default:
-					return role;
-				case "admin":
-					return "Site Admin";
-				case "adminassistant":
-					return "Admin Assistant";
-				case "seniorjudge":
-					return "Senior Judge";
-				case "seniorpublisher":
-					return "Senior Publisher";
-			}
+				"admin" => "Site Admin",
+				"adminassistant" => "Admin Assistant",
+				"seniorjudge" => "Senior Judge",
+				"seniorpublisher" => "Senior Publisher",
+				_ => role
+			};
 		}
 	}
 }

@@ -91,12 +91,7 @@ namespace TASVideos.MovieParsers.Extensions
 		/// </summary>
 		public static int PipeCount(this IEnumerable<string> lines)
 		{
-			if (lines == null)
-			{
-				return 0;
-			}
-
-			return lines.Count(i => i.StartsWith("|"));
+			return lines?.Count(i => i.StartsWith("|")) ?? 0;
 		}
 
 		/// <summary>
@@ -105,12 +100,9 @@ namespace TASVideos.MovieParsers.Extensions
 		/// </summary>
 		public static IEnumerable<string> WithoutPipes(this IEnumerable<string> lines)
 		{
-			if (lines == null)
-			{
-				return Enumerable.Empty<string>();
-			}
-
-			return lines.Where(i => !i.StartsWith("|"));
+			return lines == null
+				? Enumerable.Empty<string>()
+				: lines.Where(i => !i.StartsWith("|"));
 		}
 
 		/// <summary>

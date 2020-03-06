@@ -553,8 +553,7 @@ namespace TASVideos.WikiEngine
 					Push("vtabs");
 				else
 					TryPopTab();
-				var e = new Element(_index, "tab");
-				e.Attributes["data-name"] = name;
+				var e = new Element(_index, "tab") { Attributes = { ["data-name"] = name } };
 				Push(e);
 			}
 			else if (Eat("%%TAB_START"))

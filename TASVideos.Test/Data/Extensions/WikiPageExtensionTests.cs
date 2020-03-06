@@ -49,7 +49,7 @@ namespace TASVideos.Test.Data.QueryableExtensions
 				new WikiPage { PageName = testPage + "/Child/Descendant" },
 				new WikiPage { PageName = anotherPage },
 				new WikiPage { PageName = anotherPage + "/Child" },
-				new WikiPage { PageName = anotherPage + "/Child/Descendant" },
+				new WikiPage { PageName = anotherPage + "/Child/Descendant" }
 			};
 			_db.WikiPages.AddRange(pages);
 			_db.SaveChanges();
@@ -68,7 +68,7 @@ namespace TASVideos.Test.Data.QueryableExtensions
 				new WikiPage { PageName = testPage },
 				new WikiPage { PageName = anotherPage },
 				new WikiPage { PageName = anotherPage + "/Child" },
-				new WikiPage { PageName = anotherPage + "/Child/Descendant" },
+				new WikiPage { PageName = anotherPage + "/Child/Descendant" }
 			};
 			_db.WikiPages.AddRange(pages);
 			_db.SaveChanges();
@@ -88,7 +88,7 @@ namespace TASVideos.Test.Data.QueryableExtensions
 				new WikiPage { PageName = testPage + "/Child/Descendant" },
 				new WikiPage { PageName = anotherPage },
 				new WikiPage { PageName = anotherPage + "/Child" },
-				new WikiPage { PageName = anotherPage + "/Child/Descendant" },
+				new WikiPage { PageName = anotherPage + "/Child/Descendant" }
 			};
 			_db.WikiPages.AddRange(pages);
 			_db.SaveChanges();
@@ -106,7 +106,7 @@ namespace TASVideos.Test.Data.QueryableExtensions
 			{
 				new WikiPage { PageName = testPage },
 				new WikiPage { PageName = testPage + "/Child" },
-				new WikiPage { PageName = testPage + "/Child/Descendant" },
+				new WikiPage { PageName = testPage + "/Child/Descendant" }
 			};
 			_db.WikiPages.AddRange(pages);
 			_db.SaveChanges();
@@ -196,7 +196,7 @@ namespace TASVideos.Test.Data.QueryableExtensions
 			var pages = new[]
 			{
 				new WikiPage { PageName = testPage },
-				new WikiPage { PageName = childPage },
+				new WikiPage { PageName = childPage }
 			};
 			_db.WikiPages.AddRange(pages);
 			_db.SaveChanges();

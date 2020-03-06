@@ -4,15 +4,12 @@
 @functions {
 	string ToTitle(string title, ForumTopicType type)
 	{
-		switch (type)
+		return type switch
 		{
-			default:
-				return title;
-			case ForumTopicType.Sticky:
-				return "<b>(Sticky) </b> " + title;
-			case ForumTopicType.Announcement:
-				return "<b>(Announcement) </b> " + title;
-		}
+			ForumTopicType.Sticky => ("<b>(Sticky) </b> " + title),
+			ForumTopicType.Announcement => ("<b>(Announcement) </b> " + title),
+			_ => title
+		};
 	}
 }
 

@@ -95,12 +95,9 @@ namespace TASVideos.Legacy.Imports
 				return null;
 			}
 
-			if (str.Length < limit)
-			{
-				return str;
-			}
-
-			return str.Substring(0, limit);
+			return str.Length < limit
+				? str
+				: str.Substring(0, limit);
 		}
 
 		public static IEnumerable<string> ParseUserNames(this string authors)

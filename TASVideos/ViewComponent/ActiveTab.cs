@@ -16,47 +16,26 @@ namespace TASVideos.ViewComponents
 			{
 				var val = pp.Split(new[] { "tab=b" }, StringSplitOptions.RemoveEmptyEntries);
 
-				if (val != null && val.Length > 0 && !string.IsNullOrWhiteSpace(val[0]))
+				if (val.Length > 0 && !string.IsNullOrWhiteSpace(val[0]))
 				{
 					var result = int.TryParse(val[0], out int tabIndex);
 					if (result)
 					{
-						switch (tabIndex)
+						pp = tabIndex switch
 						{
-							case 0:
-								pp = "Home";
-								break;
-							case 1:
-								pp = "Movies";
-								break;
-							case 2:
-								pp = "Game Resources";
-								break;
-							case 3:
-								pp = "Articles";
-								break;
-							case 4:
-								pp = "Emulators";
-								break;
-							case 5:
-								pp = "Submissions";
-								break;
-							case 6:
-								pp = "News";
-								break;
-							case 7:
-								pp = "Forums";
-								break;
-							case 8:
-								pp = "Chat";
-								break;
-							case 9:
-								pp = "Staff";
-								break;
-							case 10:
-								pp = "About";
-								break;
-						}
+							0 => "Home",
+							1 => "Movies",
+							2 => "Game Resources",
+							3 => "Articles",
+							4 => "Emulators",
+							5 => "Submissions",
+							6 => "News",
+							7 => "Forums",
+							8 => "Chat",
+							9 => "Staff",
+							10 => "About",
+							_ => pp
+						};
 					}
 				}
 			}

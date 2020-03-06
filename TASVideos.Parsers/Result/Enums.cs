@@ -41,7 +41,7 @@
 		/// <summary>
 		/// The movie starts from a savestate
 		/// </summary>
-		Savestate,
+		Savestate
 	}
 
 	/// <summary>

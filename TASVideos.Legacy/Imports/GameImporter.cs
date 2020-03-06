@@ -66,7 +66,7 @@ namespace TASVideos.Legacy.Imports
 			CreateUserName = "adelikat",
 			LastUpdateUserName = "adelikat",
 			CreateTimeStamp = DateTime.UtcNow,
-			LastUpdateTimeStamp = DateTime.UtcNow,
+			LastUpdateTimeStamp = DateTime.UtcNow
 		};
 	}
 }

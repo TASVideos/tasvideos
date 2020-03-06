@@ -323,13 +323,11 @@ namespace TASVideos.WikiEngine.AST
 			{
 				return children;
 			}
-			else
-			{
-				var ret = (Element)MemberwiseClone();
-				ret.Children = children.ToList();
-				ret.Attributes = new Dictionary<string, string>(Attributes);
-				return new[] { ret };
-			}
+
+			var ret = (Element)MemberwiseClone();
+			ret.Children = children.ToList();
+			ret.Attributes = new Dictionary<string, string>(Attributes);
+			return new[] { ret };
 		}
 	}
 
@@ -433,7 +431,7 @@ namespace TASVideos.WikiEngine.AST
 			["wikitextchangelog"] = "WikiTextChangeLog",
 			["youtube"] = "Youtube",
 			["listlanguages"] = "ListLanguages",
-			["wikiusers"] = "WikiUsers",
+			["wikiusers"] = "WikiUsers"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }

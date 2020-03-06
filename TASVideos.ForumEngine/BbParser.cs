@@ -10,7 +10,7 @@ namespace TASVideos.ForumEngine
 		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
 		private static readonly Regex Url = new Regex(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
 
-		// The old system does suport attributes in html tags, but only a few that we probably don't want,
+		// The old system does support attributes in html tags, but only a few that we probably don't want,
 		// and it doesn't even support the full html syntax for them.  So forget attributes for now
 		private static readonly Regex HtmlOpening = new Regex(@"\G\s*([a-zA-Z]+)\s*>");
 		private static readonly Regex HtmlClosing = new Regex(@"\G\s*\/\s*([a-zA-Z]+)\s*>");
@@ -36,7 +36,7 @@ namespace TASVideos.ForumEngine
 			/// everything except a matching bbcode end tag is raw text
 			/// </summary>
 			/// <value></value>
-			NoChlidTags,
+			NoChildTags,
 			/// <summary>
 			/// Like ChildTags, but this element cannot nest itself
 			/// </summary>
@@ -69,12 +69,12 @@ namespace TASVideos.ForumEngine
 
 			// with optional params
 			{ "quote", ParseState.ChildTags }, // optional author
-			{ "code", ParseState.NoChlidTags }, // optional language
-			{ "img", ParseState.NoChlidTags }, // optional size
+			{ "code", ParseState.NoChildTags }, // optional language
+			{ "img", ParseState.NoChildTags }, // optional size
 			{ "url", ParseState.ChildTagsIfParam }, // optional url.  if not given, url in body
 			{ "email", ParseState.ChildTagsIfParam }, // like url
-			{ "video", ParseState.NoChlidTags }, // like img
-			{ "google", ParseState.NoChlidTags }, // search query in body.  optional param `images`
+			{ "video", ParseState.NoChildTags }, // like img
+			{ "google", ParseState.NoChildTags }, // search query in body.  optional param `images`
 			{ "thread", ParseState.ChildTagsIfParam }, // like url, but the link is a number
 			{ "post", ParseState.ChildTagsIfParam }, // like thread
 			{ "movie", ParseState.ChildTagsIfParam }, // like thread
@@ -84,11 +84,11 @@ namespace TASVideos.ForumEngine
 			{ "wiki", ParseState.ChildTagsIfParam }, // like thread, but the link is a page name
 
 			// other stuff
-			{ "frames", ParseState.NoChlidTags }, // no params.  body is something like `200` or `200@60.1`
+			{ "frames", ParseState.NoChildTags }, // no params.  body is something like `200` or `200@60.1`
 			{ "color", ParseState.ChildTags }, // param is a css (?) color
 			{ "bgcolor", ParseState.ChildTags }, // like color
 			{ "size", ParseState.ChildTags }, // param is something relating to font size TODO: what are the values?
-			{ "noparse", ParseState.NoChlidTags },
+			{ "noparse", ParseState.NoChildTags },
 
 			// list related stuff
 			{ "list", ParseState.ChildTags }, // OLs have a param with value ??
@@ -97,7 +97,7 @@ namespace TASVideos.ForumEngine
 			// tables
 			{ "table", ParseState.ChildTagsNoNest },
 			{ "tr", ParseState.ChildTagsNoNest },
-			{ "td", ParseState.ChildTagsNoNest },
+			{ "td", ParseState.ChildTagsNoNest }
 		};
 
 		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new HashSet<string>
@@ -117,7 +117,7 @@ namespace TASVideos.ForumEngine
 			"sup",
 			"sub",
 			"div",
-			"small",
+			"small"
 		};
 
 		public static Element Parse(string text, bool allowHtml, bool allowBb)
@@ -174,7 +174,7 @@ namespace TASVideos.ForumEngine
 			{
 				switch (state)
 				{
-					case ParseState.NoChlidTags:
+					case ParseState.NoChildTags:
 						return false;
 					case ParseState.ChildTags:
 					case ParseState.ChildTagsNoNest:
@@ -262,7 +262,8 @@ namespace TASVideos.ForumEngine
 							_stack.Pop();
 							continue;
 						}
-						else if (topName == "*" && name == "list")
+
+						if (topName == "*" && name == "list")
 						{
 							// pop a list
 							FlushText();

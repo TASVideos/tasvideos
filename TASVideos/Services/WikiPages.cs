@@ -219,9 +219,9 @@ namespace TASVideos.Services
 				.ForPage(pageName)
 				.ThatAreNotDeleted()
 				.OrderByDescending(wp => wp.Revision)
-				.FirstOrDefaultAsync(w => (revisionId != null
+				.FirstOrDefaultAsync(w => revisionId != null
 					? w.Revision == revisionId
-					: w.ChildId == null));
+					: w.ChildId == null);
 
 			if (page.IsCurrent())
 			{

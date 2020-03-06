@@ -44,12 +44,9 @@ namespace TASVideos.Extensions
 				.Single()
 				.GetCustomAttribute<GroupAttribute>();
 
-			if (descriptionAttribute != null)
-			{
-				return descriptionAttribute.Name;
-			}
-
-			return string.Empty;
+			return descriptionAttribute != null
+				? descriptionAttribute.Name
+				: string.Empty;
 		}
 
 		public static string DisplayName(this PropertyInfo propertyInfo)

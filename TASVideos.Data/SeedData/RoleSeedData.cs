@@ -216,7 +216,7 @@ namespace TASVideos.Data.SeedData
 			{
 				new RoleLink { Link = "EditorGuidelines" },
 				new RoleLink { Link = "TextFormattingRules" }
-			}).ToList(),
+			}).ToList()
 		};
 
 		public static readonly Role Editor = new Role
@@ -280,7 +280,7 @@ namespace TASVideos.Data.SeedData
 			RoleLinks = AdminRoleLinks.Concat(new[]
 			{
 				new RoleLink { Link = "JudgeGuidelines" }
-			}).ToList(),
+			}).ToList()
 		};
 
 		public static readonly Role Publisher = new Role
@@ -368,7 +368,7 @@ namespace TASVideos.Data.SeedData
 				Role = EmulatorCoder,
 				PermissionId = p,
 				CanAssign = false
-			}).ToArray(),
+			}).ToArray()
 		};
 
 		public static IEnumerable<Role> AllRoles =>

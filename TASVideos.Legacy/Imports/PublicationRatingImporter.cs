@@ -51,7 +51,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationRating.UserId),
 				nameof(PublicationRating.PublicationId),
 				nameof(PublicationRating.Type),
-				nameof(PublicationRating.Value),
+				nameof(PublicationRating.Value)
 			};
 
 			ratings.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationRatings), SqlBulkCopyOptions.Default, 20000);

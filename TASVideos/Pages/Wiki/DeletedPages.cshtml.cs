@@ -36,7 +36,7 @@ namespace TASVideos.Pages.Wiki
 				.Select(record => new DeletedWikiPageDisplayModel
 				{
 					PageName = record.Key,
-					RevisionCount = record.Count(),
+					RevisionCount = record.Count()
 
 					// https://github.com/aspnet/EntityFrameworkCore/issues/3103
 					// EF Core 2.1 bug, this no longer works, "Must be reducible node exception
