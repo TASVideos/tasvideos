@@ -22,6 +22,7 @@ namespace TASVideos.Pages.Roles.Models
 		[StringLength(200)]
 		public string Description { get; set; } = "";
 
+		[Range(1, 9999)]
 		[Display(Name = "Auto-assign on Post Count", Description = "If set, the user will automatically be assigned this role when they reach this post count.")]
 		public int? AutoAssignPostCount { get; set; }
 

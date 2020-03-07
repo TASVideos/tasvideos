@@ -81,17 +81,18 @@ namespace TASVideos.Pages.Roles
 					})
 					.SingleOrDefaultAsync();
 
-				AvailableAssignablePermissions = Role.SelectedPermissions
-					.Select(sp => new SelectListItem
-					{
-						Text = ((PermissionTo)sp).ToString(),
-						Value = sp.ToString()
-					});
+				SetAvailableAssignablePermissions();
 			}
 		}
 
 		public async Task<IActionResult> OnPost()
 		{
+			if (!ModelState.IsValid)
+			{
+				SetAvailableAssignablePermissions();
+				return Page();
+			}
+
 			Role.Links = Role.Links.Where(l => !string.IsNullOrWhiteSpace(l));
 			if (!ModelState.IsValid)
 			{
@@ -160,6 +161,16 @@ namespace TASVideos.Pages.Roles
 			return new JsonResult(result);
 		}
 
+		private void SetAvailableAssignablePermissions()
+		{
+			AvailableAssignablePermissions = Role.SelectedPermissions
+				.Select(sp => new SelectListItem
+				{
+					Text = ((PermissionTo)sp).ToString(),
+					Value = sp.ToString()
+				});
+		}
+
 		private async Task AddUpdateRole(RoleEditModel model)
 		{
 			Role role;
@@ -184,7 +195,7 @@ namespace TASVideos.Pages.Roles
 			role.Description = model.Description;
 			role.AutoAssignPostCount = model.AutoAssignPostCount;
 
-			_db.RolePermission.AddRange(model.SelectedPermissions
+			await _db.RolePermission.AddRangeAsync(model.SelectedPermissions
 				.Select(p => new RolePermission
 				{
 					RoleId = role.Id,
@@ -192,7 +203,7 @@ namespace TASVideos.Pages.Roles
 					CanAssign = model.SelectedAssignablePermissions.Contains(p)
 				}));
 
-			_db.RoleLinks.AddRange(model.Links.Select(rl => new RoleLink
+			await _db.RoleLinks.AddRangeAsync(model.Links.Select(rl => new RoleLink
 			{
 				Link = rl,
 				Role = role
