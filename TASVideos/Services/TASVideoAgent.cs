@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 
@@ -7,6 +8,7 @@ namespace TASVideos.Services
 	public interface ITASVideoAgent
 	{
 		Task PostSubmissionTopic(int submissionId, string postTitle);
+		Task PostSubmissionPublished(int submissionId, int publicationId);
 	}
 
 	public class TASVideoAgent : ITASVideoAgent
@@ -59,13 +61,38 @@ namespace TASVideos.Services
 				PosterMood = ForumPostMood.Normal
 			};
 
-			await _db.ForumPolls.AddAsync(poll);
-			await _db.ForumTopics.AddAsync(topic);
-			await _db.ForumPosts.AddAsync(post);
+			_db.ForumPolls.Add(poll);
+			_db.ForumTopics.Add(topic);
+			_db.ForumPosts.Add(post);
 			await _db.SaveChangesAsync();
 
 			poll.TopicId = topic.Id;
 			await _db.SaveChangesAsync();
+		}
+
+		public async Task PostSubmissionPublished(int submissionId, int publicationId)
+		{
+			var topic = await _db.ForumTopics.SingleOrDefaultAsync(f => f.PageName == LinkConstants.SubmissionWikiPage + submissionId);
+
+			// We intentionally silently fail here.
+			// Otherwise we would leave publication in a partial state
+			// which would be worse than a missing forum post
+			if (topic != null)
+			{
+				_db.ForumPosts.Add(new ForumPost
+				{
+					TopicId = topic.Id,
+					CreateUserName = SiteGlobalConstants.TASVideoAgent,
+					LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+					PosterId = SiteGlobalConstants.TASVideoAgentId,
+					EnableBbCode = false,
+					EnableHtml = true,
+					Subject = SiteGlobalConstants.NewPublicationPostSubject,
+					Text = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publicationId.ToString()),
+					PosterMood = ForumPostMood.Happy
+				});
+				await _db.SaveChangesAsync();
+			}
 		}
 	}
 }

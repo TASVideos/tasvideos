@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Data;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Services;
 
 namespace TASVideos.Test.Services
@@ -15,6 +12,7 @@ namespace TASVideos.Test.Services
 	{
 		private const int SubmissionId = 1;
 		private const string SubmissionTitle = "Test Title";
+		private const int PublicationId = 1;
 
 		private ITASVideoAgent _tasVideoAgent = null!;
 		private TestDbContext _db = null!;
@@ -96,6 +94,35 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(topic.Id, post.TopicId);
 			Assert.AreEqual(topic.Id, poll.TopicId);
 			Assert.IsTrue(options.All(o => o.PollId == poll.Id));
+		}
+
+		[TestMethod]
+		public async Task PostSubmissionPublished_NoTopic_DoesNotPost()
+		{
+			await _tasVideoAgent.PostSubmissionPublished(SubmissionId, PublicationId);
+			var actual = await _db.ForumPosts.LastOrDefaultAsync();
+			Assert.IsNull(actual);
+		}
+
+		[TestMethod]
+		public async Task PostSubmissionPublished_TopicCreated()
+		{
+			_db.ForumTopics.Add(new ForumTopic
+			{
+				Title = "Title",
+				PageName = LinkConstants.SubmissionWikiPage + SubmissionId
+			});
+			await _db.SaveChangesAsync();
+
+			await _tasVideoAgent.PostSubmissionPublished(SubmissionId, PublicationId);
+			var actual = await _db.ForumPosts.LastOrDefaultAsync();
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
+			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
+			Assert.IsTrue(actual.EnableHtml);
+			Assert.IsFalse(actual.EnableBbCode);
+			Assert.IsTrue(actual.Text.Contains(PublicationId.ToString()));
 		}
 	}
 }
