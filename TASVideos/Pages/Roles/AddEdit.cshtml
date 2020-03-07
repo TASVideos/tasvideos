@@ -41,7 +41,8 @@
 				<div>
 					<small>(@Html.DescriptionFor(m => m.Role.AutoAssignPostCount))</small>
 				</div>
-				<input type="number" class="form-control" asp-for="Role.AutoAssignPostCount" />
+				<span asp-validation-for="Role.AutoAssignPostCount" class="text-danger"></span>
+				<input type="number" class="form-control" asp-for="Role.AutoAssignPostCount" min="1" />
 			</form-group>
 		</column>
 	</row>
