@@ -69,18 +69,21 @@ namespace TASVideos.Pages.Games.Roms
 
 		public async Task<IActionResult> OnGet()
 		{
-			if (!Id.HasValue)
-			{
-				return Page();
-			}
-
 			var game = await _db.Games
 				.Include(g => g.System)
-				.SingleOrDefaultAsync(g => g.Id == Id.Value);
+				.SingleOrDefaultAsync(g => g.Id == GameId);
 
 			if (game == null)
 			{
 				return NotFound();
+			}
+
+			GameName = game.DisplayName;
+			SystemCode = game.System!.Code;
+
+			if (!Id.HasValue)
+			{
+				return Page();
 			}
 
 			Rom = await _db.Roms
@@ -92,9 +95,6 @@ namespace TASVideos.Pages.Games.Roms
 			{
 				return NotFound();
 			}
-
-			GameName = game.DisplayName;
-			SystemCode = game.System!.Code;
 
 			CanDelete = await CanBeDeleted();
 

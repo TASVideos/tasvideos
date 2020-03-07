@@ -3,7 +3,7 @@
 @{
 	ViewData["Title"] = Model.Id.HasValue
 		? $"Editing Rom #{Model.Id} {Model.Rom.Name}"
-		: "Create a new Rom entry";
+		: "Create A New Rom Entry";
 	var deleteLink = $"/Games/{Model.GameId}/Roms/Edit/{Model.Id ?? 0}/Delete";
 }
 
