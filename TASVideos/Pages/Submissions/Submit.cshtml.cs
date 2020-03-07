@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
@@ -23,19 +22,22 @@ namespace TASVideos.Pages.Submissions
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly MovieParser _parser;
 		private readonly UserManager _userManager;
+		private readonly ITASVideoAgent _tasVideoAgent;
 
 		public SubmitModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
 			MovieParser parser,
-			UserManager userManager)
+			UserManager userManager,
+			ITASVideoAgent tasVideoAgent)
 			: base(db)
 		{
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_parser = parser;
 			_userManager = userManager;
+			_tasVideoAgent = tasVideoAgent;
 		}
 
 		[BindProperty]
@@ -98,7 +100,7 @@ namespace TASVideos.Pages.Submissions
 
 			submission.GenerateTitle();
 
-			await CreateSubmissionTopic(submission.Id, submission.Title);
+			await _tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
 			_publisher.AnnounceSubmission(submission.Title, $"{BaseUrl}/{submission.Id}S");
 
 			return Redirect($"/{submission.Id}S");
@@ -153,56 +155,6 @@ namespace TASVideos.Pages.Submissions
 			};
 			await _wikiPages.Add(revision);
 			submission.WikiContent = revision;
-		}
-
-		private async Task CreateSubmissionTopic(int id, string title)
-		{
-			var poll = new ForumPoll
-			{
-				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
-				Question = SiteGlobalConstants.PollQuestion,
-				PollOptions = new[]
-				{
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
-				}
-			};
-
-			// Create Topic in workbench
-			var topic = new ForumTopic
-			{
-				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
-				ForumId = ForumConstants.WorkBenchForumId,
-				Title = title,
-				PosterId = SiteGlobalConstants.TASVideoAgentId,
-				PageName = LinkConstants.SubmissionWikiPage + id,
-				Poll = poll
-			};
-
-			// Create first post
-			var post = new ForumPost
-			{
-				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
-				Topic = topic,
-				PosterId = SiteGlobalConstants.TASVideoAgentId,
-				Subject = title,
-				Text = SiteGlobalConstants.NewSubmissionPost + $"<a href=\"/{id}S\">{title}</a>",
-				EnableHtml = true,
-				EnableBbCode = false,
-				PosterMood = ForumPostMood.Normal
-			};
-
-			Db.ForumPolls.Add(poll);
-			Db.ForumTopics.Add(topic);
-			Db.ForumPosts.Add(post);
-			await Db.SaveChangesAsync();
-
-			poll.TopicId = topic.Id;
-			await Db.SaveChangesAsync();
 		}
 	}
 }
