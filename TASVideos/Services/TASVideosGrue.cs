@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 
 namespace TASVideos.Services
 {
@@ -13,6 +15,20 @@ namespace TASVideos.Services
 	public class TASVideosGrue : ITASVideosGrue
 	{
 		private readonly ApplicationDbContext _db;
+
+		private static readonly string[] RandomMessages =
+		{
+			"... minty!",
+			"... blech, salty!",
+			"... blech, bitter!",
+			"... juicy!",
+			"... crunchy!",
+			"... sweet!",
+			"... want more!",
+			"... *burp*!",
+			"... om, nom, nom... nom nom",
+			"... 'twas dry"
+		};
 
 		public TASVideosGrue(ApplicationDbContext db)
 		{
@@ -34,12 +50,21 @@ namespace TASVideos.Services
 					CreateUserName = SiteGlobalConstants.TASVideosGrue,
 					LastUpdateUserName = SiteGlobalConstants.TASVideosGrue,
 					PosterId = SiteGlobalConstants.TASVideosGrueId,
-					// TODO: different moods
-					Text = "om, nom, nom... crunchy!",
+					Text = RejectionMessage(topic.CreateTimeStamp),
 					PosterMood = ForumPostMood.Normal
 				});
 				await _db.SaveChangesAsync();
 			}
+		}
+
+		private string RejectionMessage(DateTime createTimeStamp)
+		{
+			string message = "om, nom, nom";
+			message += (DateTime.Now - createTimeStamp).TotalDays >= 365
+				? "... blech, stale!"
+				: RandomMessages.AtRandom();
+
+			return message;
 		}
 	}
 }
