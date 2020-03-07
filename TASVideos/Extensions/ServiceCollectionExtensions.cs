@@ -114,6 +114,8 @@ namespace TASVideos.Extensions
 			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IWikiPages, WikiPages>();
 
+			services.AddScoped<ITASVideoAgent, TASVideoAgent>();
+
 			return services;
 		}
 
