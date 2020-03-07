@@ -39,6 +39,9 @@
 		public const string TASVideoAgent = "TASVideoAgent";
 		public const int TASVideoAgentId = 505;
 
+		public const string TASVideosGrue = "TASVideosGrue";
+		public const int TASVideosGrueId = 3788;
+
 		public const string NewPublicationPostSubject = "Movie published";
 		public const string NewPublicationPost = @"<hr/><b>This movie has been published.</b><br/>The posts before this message apply to the submission, and posts after this message apply to the published movie.<hr/>See the <a href=""/{PublicationId}M"">publication</a><br/><hr/>";
 

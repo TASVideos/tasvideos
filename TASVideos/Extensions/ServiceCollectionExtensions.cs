@@ -115,6 +115,7 @@ namespace TASVideos.Extensions
 			services.AddTransient<IWikiPages, WikiPages>();
 
 			services.AddScoped<ITASVideoAgent, TASVideoAgent>();
+			services.AddScoped<ITASVideosGrue, TASVideosGrue>();
 
 			return services;
 		}

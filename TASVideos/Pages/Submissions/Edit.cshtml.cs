@@ -24,17 +24,20 @@ namespace TASVideos.Pages.Submissions
 		private readonly MovieParser _parser;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly ITASVideosGrue _tasvideosGrue;
 
 		public EditModel(
 			ApplicationDbContext db,
 			MovieParser parser,
 			IWikiPages wikiPages,
-			ExternalMediaPublisher publisher)
+			ExternalMediaPublisher publisher,
+			ITASVideosGrue tasvideosGrue)
 			: base(db)
 		{
 			_parser = parser;
 			_wikiPages = wikiPages;
 			_publisher = publisher;
+			_tasvideosGrue = tasvideosGrue;
 		}
 
 		[FromRoute]
@@ -280,6 +283,11 @@ namespace TASVideos.Pages.Submissions
 
 			submission.GenerateTitle();
 			await Db.SaveChangesAsync();
+
+			if (submission.Status == SubmissionStatus.Rejected)
+			{
+				await _tasvideosGrue.PostSubmissionRejection(submission.Id);
+			}
 
 			if (!Submission.MinorEdit)
 			{

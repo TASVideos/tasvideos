@@ -120,6 +120,7 @@ namespace TASVideos.Test.Services
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
+			Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
 			Assert.IsTrue(actual.EnableHtml);
 			Assert.IsFalse(actual.EnableBbCode);
 			Assert.IsTrue(actual.Text.Contains(PublicationId.ToString()));
