@@ -27,17 +27,20 @@ namespace TASVideos.Pages.Submissions
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IWikiPages _wikiPages;
 		private readonly IMediaFileUploader _uploader;
+		private readonly ITASVideoAgent _tasVideosAgent;
 
 		public PublishModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
-			IMediaFileUploader uploader)
+			IMediaFileUploader uploader,
+			ITASVideoAgent tasVideoAgent)
 		{
 			_db = db;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_uploader = uploader;
+			_tasVideosAgent = tasVideoAgent;
 		}
 
 		[FromRoute]
@@ -187,25 +190,7 @@ namespace TASVideos.Pages.Submissions
 
 			await _db.SaveChangesAsync();
 
-			// Create post
-			var topic = await _db.ForumTopics.SingleOrDefaultAsync(f => f.PageName == LinkConstants.SubmissionWikiPage + submission.Id);
-			if (topic != null)
-			{
-				_db.ForumPosts.Add(new ForumPost
-				{
-					TopicId = topic.Id,
-					CreateUserName = SiteGlobalConstants.TASVideoAgent,
-					LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
-					PosterId = SiteGlobalConstants.TASVideoAgentId,
-					EnableBbCode = false,
-					EnableHtml = true,
-					Subject = SiteGlobalConstants.NewPublicationPostSubject,
-					Text = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publication.Id.ToString()),
-					PosterMood = ForumPostMood.Happy
-				});
-				await _db.SaveChangesAsync();
-			}
-
+			await _tasVideosAgent.PostSubmissionPublished(submission.Id, publication.Id);
 			_publisher.AnnouncePublication(publication.Title, $"{BaseUrl}/{publication.Id}M");
 
 			return Redirect($"/{publication.Id}M");
