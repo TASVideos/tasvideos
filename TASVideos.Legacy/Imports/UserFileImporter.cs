@@ -110,7 +110,7 @@ namespace TASVideos.Legacy.Imports
 				Class = string.Equals(legacyFile.Class, "m", StringComparison.OrdinalIgnoreCase)
 					? UserFileClass.Movie
 					: UserFileClass.Support,
-				Content = Convert(legacyFile.Content),
+				Content = legacyFile.Content.ConvertXz(),
 				Description = legacyFile.Description.NullIfWhiteSpace(),
 				Downloads = legacyFile.Downloads,
 				FileName = legacyFile.Name,
@@ -132,24 +132,6 @@ namespace TASVideos.Legacy.Imports
 			};
 		}
 
-		/// <summary>
-		/// Converts an XZ compressed file to a GZIP compressed file
-		/// </summary>
-		private static byte[] Convert(byte[] content)
-		{
-			if (content.Length == 0)
-			{
-				return content;
-			}
-
-			using var targetStream = new MemoryStream();
-			using var gzipStream = new GZipStream(targetStream, CompressionLevel.Optimal);
-			using var sourceStream = new MemoryStream(content);
-			using var xzStream = new XZStream(sourceStream);
-			xzStream.CopyTo(gzipStream);
-			var result = targetStream.ToArray();
-
-			return result;
-		}
+		
 	}
 }

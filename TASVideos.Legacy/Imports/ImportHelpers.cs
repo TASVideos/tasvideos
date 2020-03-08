@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 using FastMember;
 using Microsoft.Data.SqlClient;
+using SharpCompress.Compressors.Xz;
+using System.IO.Compression;
 
 namespace TASVideos.Legacy.Imports
 {
@@ -122,6 +125,26 @@ namespace TASVideos.Legacy.Imports
 			return string.IsNullOrWhiteSpace(str)
 				? null
 				: str;
+		}
+
+		/// <summary>
+		/// Converts an XZ compressed file to a GZIP compressed file
+		/// </summary>
+		public static byte[] ConvertXz(this byte[] content)
+		{
+			if (content.Length == 0)
+			{
+				return content;
+			}
+
+			using var targetStream = new MemoryStream();
+			using var gzipStream = new GZipStream(targetStream, CompressionLevel.Optimal);
+			using var sourceStream = new MemoryStream(content);
+			using var xzStream = new XZStream(sourceStream);
+			xzStream.CopyTo(gzipStream);
+			var result = targetStream.ToArray();
+
+			return result;
 		}
 	}
 }
