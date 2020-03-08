@@ -7,6 +7,7 @@ namespace TASVideos.Pages.Games.Models
 		public GameListRequest()
 		{
 			PageSize = 25;
+			Sort = "DisplayName";
 		}
 
 		public string? SystemCode { get; set; }
