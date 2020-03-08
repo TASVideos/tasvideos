@@ -49,7 +49,7 @@
 			</form-group>
 			<form-group>
 				<label asp-for="Rom.Region"></label>
-				<input type="text" asp-for="Rom.Region" class="form-control" autocomplete="off" spellcheck="false" />
+				<select asp-for="Rom.Region" asp-items="@Model.AvailableRegionTypes" class="form-control"></select>
 				<span asp-validation-for="Rom.Region" class="text-danger"></span>
 			</form-group>
 		</div>
