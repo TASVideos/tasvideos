@@ -297,11 +297,11 @@ namespace TASVideos.Pages.Submissions
 					var statusStr = Submission.Status == SubmissionStatus.Accepted
 						? $"{Submission.Status.ToString()} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
 						: Submission.Status.ToString();
-					title = $"Submission {submission.Title} {statusStr} by {User.Identity.Name}";
+					title = $"{User.Identity.Name} set Submission {statusStr} on {submission.Title}";
 				}
 				else
 				{
-					title = $"Submission {submission.Title} edited by {User.Identity.Name}";
+					title = $"{User.Identity.Name} edited Submission {submission.Title}";
 				}
 
 				_publisher.SendSubmissionEdit(title, $"{BaseUrl}/{Id}S");
