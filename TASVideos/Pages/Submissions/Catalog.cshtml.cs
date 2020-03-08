@@ -83,7 +83,7 @@ namespace TASVideos.Pages.Submissions
 
 		private async Task PopulateCatalogDropDowns()
 		{
-			AvailableRoms = await _db.Roms
+			AvailableRoms = await _db.GameRoms
 				.Where(r => !Catalog.SystemId.HasValue || r.Game!.SystemId == Catalog.SystemId)
 				.Where(r => !Catalog.GameId.HasValue || r.GameId == Catalog.GameId)
 				.OrderBy(r => r.Name)

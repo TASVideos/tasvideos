@@ -54,7 +54,7 @@ namespace TASVideos.Data
 		public DbSet<Genre> Genres { get; set; } = null!;
 		public DbSet<GameSystem> GameSystems { get; set; } = null!;
 		public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; } = null!;
-		public DbSet<GameRom> Roms { get; set; } = null!;
+		public DbSet<GameRom> GameRoms { get; set; } = null!;
 		public DbSet<GameGroup> GameGroups { get; set; } = null!;
 		public DbSet<GameGameGroup> GameGameGroups { get; set; } = null!;
 

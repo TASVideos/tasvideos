@@ -86,7 +86,7 @@ namespace TASVideos.Pages.Publications
 
 		private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 		{
-			AvailableRoms = await _db.Roms
+			AvailableRoms = await _db.GameRoms
 				.ForGame(gameId)
 				.ForSystem(systemId)
 				.OrderBy(r => r.Name)
