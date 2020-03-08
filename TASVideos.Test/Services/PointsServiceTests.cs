@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.Data;
@@ -21,11 +20,7 @@ namespace TASVideos.Test.Services
 		[TestInitialize]
 		public void Initialize()
 		{
-			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseInMemoryDatabase("TestDb")
-				.Options;
-			_db = new ApplicationDbContext(options, null);
-			_db.Database.EnsureDeleted();
+			_db = TestDbContext.Create();
 			_pointsService = new PointsService(_db, new NoCacheService());
 		}
 
