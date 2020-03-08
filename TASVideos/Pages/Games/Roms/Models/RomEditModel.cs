@@ -11,12 +11,14 @@ namespace TASVideos.Pages.Games.Roms.Models
 		public string Name { get; set; } = "";
 
 		[Required]
-		[StringLength(32)]
+		[RegularExpression("^[A-Fa-f0-9]*$")]
+		[StringLength(32, MinimumLength = 32)]
 		[Display(Name = "Md5")]
 		public string Md5 { get; set; } = "";
 
 		[Required]
-		[StringLength(40)]
+		[RegularExpression("^[A-Fa-f0-9]*$")]
+		[StringLength(40, MinimumLength = 40)]
 		[Display(Name = "Sha1")]
 		public string Sha1 { get; set; } = "";
 
