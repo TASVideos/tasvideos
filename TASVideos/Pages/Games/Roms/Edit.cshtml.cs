@@ -61,6 +61,17 @@ namespace TASVideos.Pages.Games.Roms
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
 
+		public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new[]
+		{
+			new SelectListItem { Text = "U", Value = "U" },
+			new SelectListItem { Text = "J", Value = "J" },
+			new SelectListItem { Text = "E", Value = "E" },
+			new SelectListItem { Text = "JU", Value = "JU" },
+			new SelectListItem { Text = "EU", Value = "UE" },
+			new SelectListItem { Text = "W", Value = "W" },
+			new SelectListItem { Text = "Other", Value = "Other" },
+		};
+
 		[TempData]
 		public string? Message { get; set; }
 
