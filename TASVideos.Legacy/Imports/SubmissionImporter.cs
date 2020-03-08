@@ -89,7 +89,6 @@ namespace TASVideos.Legacy.Imports
 					legacySubmission.Sub.GameVersion = "Europe";
 				}
 
-				var extension = GetExtension(legacySubmission.Sub.Content);
 				var movieExtension = GetExtension(legacySubmission.Sub.Content);
 				var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
 				var legacyFrameRate = legacyTime > 0 // Art Alive
@@ -138,7 +137,7 @@ namespace TASVideos.Legacy.Imports
 					IntendedTierId = legacySubmission.Sub.IntendedTier,
 					GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
 					RomId = -1, // Legacy system had no notion of Rom for submissions
-					EmulatorVersion = CleanAndGuessEmuVersion(legacySubmission.Sub.Id, legacySubmission.Sub.EmulatorVersion, extension),
+					EmulatorVersion = CleanAndGuessEmuVersion(legacySubmission.Sub.Id, legacySubmission.Sub.EmulatorVersion, movieExtension),
 					JudgeId = legacySubmission.Judge?.Id,
 					PublisherId = legacySubmission.Publisher?.Id,
 					Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
