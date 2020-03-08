@@ -16,7 +16,7 @@ namespace TASVideos.Legacy.Imports
 	public static class SubmissionImporter
 	{
 		private const double RoundingOffset = 0.01;
-		private static readonly string[] ValidSubmissionFileExtensions = { ".dtm", ".mcm", ".gmv", ".dof", ".dsm", ".bkm", ".mcm", ".fm2", ".vbm" };
+		private static readonly string[] ValidSubmissionFileExtensions = { "fmv", "vmv", "fcm", "smv", "dtm", "mcm", "gmv", "dof", "dsm", "bkm", "mcm", "fm2", "vbm", "m64", "mmv", "zmv", "pxm", "fbm", "mc2", "ymv", "jrsr", "gz", "omr", "pjm", "wtf", "tas", "lsmv", "fm3", "bk2", "lmp", "mcm", "mar", "ltm" };
 
 		public static void Import(
 			string connectionStr,
@@ -89,7 +89,7 @@ namespace TASVideos.Legacy.Imports
 					legacySubmission.Sub.GameVersion = "Europe";
 				}
 
-				var movieExtension = GetExtension(legacySubmission.Sub.Content);
+				var (movieExtension, fileData) = CleanupZip(legacySubmission.Sub.Content);
 				var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
 				var legacyFrameRate = legacyTime > 0 // Art Alive
 					? legacySubmission.Sub.Frames / legacyTime
@@ -133,7 +133,7 @@ namespace TASVideos.Legacy.Imports
 					Status = ConvertStatus(legacySubmission.Sub.Status),
 					RomName = legacySubmission.Sub.RomName,
 					RerecordCount = legacySubmission.Sub.Rerecord,
-					MovieFile = legacySubmission.Sub.Content ?? new byte[0],
+					MovieFile = fileData,
 					IntendedTierId = legacySubmission.Sub.IntendedTier,
 					GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
 					RomId = -1, // Legacy system had no notion of Rom for submissions
@@ -301,28 +301,61 @@ namespace TASVideos.Legacy.Imports
 			};
 		}
 
-		private static string? GetExtension(byte[]? content)
+		private static (string?, byte[]) CleanupZip(byte[]? content)
 		{
-			if (content == null || content.Length == 0)
+			try
 			{
-				return null;
-			}
+				if (content == null || content.Length == 0)
+				{
+					return (null, new byte[0]);
+				}
 
-			using var submissionFileStream = new MemoryStream(content);
-			using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
-			var entries = submissionZipArchive.Entries.ToList();
-			if (entries.Count != 1)
-			{
-				// TODO: cleanup multiple entries while we are at it
-				return entries
-					.Select(e => Path.GetExtension(e.FullName))
-					.Where(s => ValidSubmissionFileExtensions.Contains(s))
+				using var submissionFileStream = new MemoryStream(content);
+				using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
+				var entries = submissionZipArchive.Entries.ToList();
+
+				var single = entries
+					.Where(e => !string.IsNullOrWhiteSpace(Path.GetExtension(e.FullName)))
+					.Where(e => (ValidSubmissionFileExtensions).Contains(Path.GetExtension(e.FullName).Replace(".", "")))
 					.Distinct()
-					.FirstOrDefault()
-					?.TrimStart('.');
-			}
+					.OrderBy(e => e.FullName.Contains("/"))
+					.ThenBy(e => e.FullName)
+					.First();
 
-			return Path.GetExtension(entries[0].FullName).TrimStart('.');
+				//using var targetStream = new MemoryStream();
+				//using var zipStream = new ZipArchive(targetStream, ZipArchiveMode.Create, true);
+				//var entry = zipStream.CreateEntry(single.FullName);
+				//using var entryStream = entry.Open();
+				//using var singleStream = single.Open();
+				//singleStream.CopyTo(entryStream);
+				var fileBytes = new byte[0];
+				using var singleStream = new MemoryStream();
+				using var stream = single.Open();
+				stream.CopyTo(singleStream);
+				fileBytes = singleStream.ToArray();
+				
+				byte[] compressedBytes;
+				using (var outStream = new MemoryStream())
+				{
+					using (var archive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
+					{
+						var fileInArchive = archive.CreateEntry(single.FullName, CompressionLevel.Optimal);
+						using var entryStream = fileInArchive.Open();
+						using var fileToCompressStream = new MemoryStream(fileBytes);
+						fileToCompressStream.CopyTo(entryStream);
+					}
+					compressedBytes = outStream.ToArray();
+				}
+
+				var ext = Path.GetExtension(single.FullName).TrimStart('.');
+				return (ext, compressedBytes);
+			}
+			catch (Exception)
+			{
+				// Some submissions are .bz2 4551, 6551
+				// Some have corrupt headers, 5111
+				return (null, content ?? new byte[0]);
+			}
 		}
 
 		private static string? CleanAndGuessEmuVersion(int id, string? emulatorVersion, string? movieExtension)
