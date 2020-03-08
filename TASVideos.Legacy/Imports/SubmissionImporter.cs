@@ -322,17 +322,10 @@ namespace TASVideos.Legacy.Imports
 					.ThenBy(e => e.FullName)
 					.First();
 
-				//using var targetStream = new MemoryStream();
-				//using var zipStream = new ZipArchive(targetStream, ZipArchiveMode.Create, true);
-				//var entry = zipStream.CreateEntry(single.FullName);
-				//using var entryStream = entry.Open();
-				//using var singleStream = single.Open();
-				//singleStream.CopyTo(entryStream);
-				var fileBytes = new byte[0];
 				using var singleStream = new MemoryStream();
 				using var stream = single.Open();
 				stream.CopyTo(singleStream);
-				fileBytes = singleStream.ToArray();
+				var fileBytes = singleStream.ToArray();
 				
 				byte[] compressedBytes;
 				using (var outStream = new MemoryStream())
@@ -387,229 +380,125 @@ namespace TASVideos.Legacy.Imports
 		// These users have a variation in their nickname vs their actual username, or liked to have different nicknames for who knows why
 		private static string NickCleanup(string nickName)
 		{
-			switch (nickName)
+			return nickName switch
 			{
-				default:
-					return nickName;
-				case "slash_star_dash":
-				case "slash star dash":
-				case "androgony":
-					return "/*-";
-				case "anty-lemon":
-					return "antymew";
-				case "arukado's":
-					return "arukado";
-				case "catlynat":
-				case "angelaclaws11s2":
-					return "angelaclaws";
-				case "iiro2":
-					return "anonymous6327";
-				case "arne the great":
-					return "arne_the_great";
-				case "blj":
-					return "backwardlongjump";
-				case "bagofmagicfood":
-					return "bag of magic food";
-				case "brookman":
-					return "the brookman";
-				case "solon":
-					return "boct1584";
-				case "msteinfield":
-					return "aroduc";
-				case "lightblueyoshi":
-					return "bbkaizo";
-				case "bobwhoops":
-					return "bob whoops";
-				case "brandon evans":
-					return "brandon";
-				case "sonic tas team":
-					return "carretero";
-				case "cherrymay":
-					return "cherry";
-				case "curseschris a.k.a. alen":
-					return "curseschris";
-				case "david wilson tiziu":
-					return "david wilson";
-				case "devin":
-				case "devin dot com":
-					return "devindotcom";
-				case "pokedroidtas":
-					return "diego montoya";
-				case "error1":
-					return "errror1";
-				case "egxhb":
-				case "nidoqueenofpain":
-					return "egixbacon";
-				case "usta2877":
-					return "bihan";
-				case "fisker":
-				case "fisker n.":
-					return "fiskern";
-				case "pocoryu":
-					return "hellfire";
-				case "srb2espyo":
-					return "espyo";
-				case "mister epic":
-					return "gabcm";
-				case "gaming-jok":
-					return "nico30620";
-				case "god hand":
-					return "god-hand";
-				case "funkdoc":
-					return "josh the funkdoc";
-				case "hys111111":
-					return "gemini-man";
-				case "gleisonfodão":
-					return "gleison";
-				case "ggheysjr":
-					return "ggg";
-				case "krabe":
-					return "bobypoula";
-				case "ocean prince":
-					return "hegyak";
-				case "igorsantos777":
-					return "igoroliveira666";
-				case "lag.com":
-					return "lagdotcom";
-				case "vidar":
-					return "meepers";
-				case "toonlucas22":
-					return "limo";
-				case "p.dot":
-					return "dashiznawz";
-				case "undo":
-					return "jonathangm";
-				case "superhappy":
-					return "josh l.";
-				case "legendofmart":
-					return "mart";
-				case "mat1er/sblurb":
-					return "mat1er";
-				case "mickey/vis":
-					return "mickey_vis11189";
-				case "madhatter":
-					return "mr. kelly r. flewin";
-				case "superninja":
-					return "luke";
-				case "mazzic kiegel":
-					return "mazzic";
-				case "michael f":
-				case "エジソン電":
-					return "michael fried";
-				case "tehseven":
-					return "negative seven";
-				case "foda":
-					return "nesrocks";
-				case "mr_eeh":
-					return "mbm";
-				case "david z":
-					return "mclaud2000";
-				case "dmtm":
-				case "laecktoer":
-					return "mr_sweed";
-				case "nif_boy":
-					return "nifboy";
-				case "aka":
-					return "mitjitsu";
-				case "程嘉军":
-				case "j.y":
-					return "mzscla";
-				case "parrot14green":
-					return "parrot14gree";
-				case "p3run4":
-					return "p3r";
-				case "promise":
-					return "ouendan";
-				case "nicfer":
-					return "perfect death";
-				case "jok-r":
-					return "nico30620";
-				case "phil.":
-				case "phil. côté":
-					return "phil";
-				case "mcw4v3-x":
-					return "pikachuman";
-				case "shakespeare":
-					return "radz";
-				case "snc":
-					return "snc76976";
-				case "mattias b.":
-					return "tarzan";
-				case "m-eighty":
-					return "mike89";
-				case "jossepi":
-					return "totoro";
-				case "symbolic x":
-					return "p0rtal_0f_rain";
-				case "primo":
-					return "primorial#soup";
-				case "saegotomin":
-					return "megaman";
-				case "romaji":
-					return "sack_bot";
-				case "toxicparrot":
-					return "sam";
-				case "soulcal umbreon":
-					return "soulcal";
-				case "superflorian12":
-					return "supermario12";
-				case "terrotim":
-					return "trt";
-				case "samhain-grim":
-					return "vandal";
-				case "samlaptop":
-					return "samtastic";
-				case "a jesus fan":
-					return "teh noj";
-				case "walkerboh":
-					return "walker boh";
-				case "西坡":
-				case "西坡 (xipo)":
-					return "xipo";
-				case "n?k":
-					return "xxnkxx";
-				case "mechakoopa_dttvb":
-				case "mechakoopa revolution":
-					return "yagz";
-				case "lorenzo_the_comic":
-					return "yoni arousement";
-				case "lazy_zefiris":
-					return "zefiris";
-				case "ziplock":
-					return "-ziplock-";
-				case "zakky the goatragon":
-					return "zakkydraggy";
-				case "the packle":
-					return "thepackle";
-				case "kowka":
-					return "goddessmaria";
-				case "lars":
-					return "lars_hendrick";
-				case "lazerlemongaming":
-					return "lazerlemon";
-				case "akagitsuneyuki":
-					return "akagitsune yukimura";
-				case "dekutary":
-					return "dekutony";
-				case "wasapi_fi":
-					return "wasapi";
-				case "daniel_1rd":
-					return "dbxv";
-				case "no0bplayer":
-					return "playerone";
-				case "mario3264":
-					return "mario128";
-				case "01garland01":
-					return "garland";
-				case "tapioca2k":
-					return "tapioca";
-				case "smbbot":
-					return "happylee";
-				case "fusionvaria":
-					return "itspersonnal";
-				case "duault":
-					return "zekann";
-			}
+				"slash_star_dash" => "/*-",
+				"slash star dash" => "/*-",
+				"androgony" => "/*-",
+				"anty-lemon" => "antymew",
+				"arukado's" => "arukado",
+				"catlynat" => "angelaclaws",
+				"angelaclaws11s2" => "angelaclaws",
+				"iiro2" => "anonymous6327",
+				"arne the great" => "arne_the_great",
+				"blj" => "backwardlongjump",
+				"bagofmagicfood" => "bag of magic food",
+				"brookman" => "the brookman",
+				"solon" => "boct1584",
+				"msteinfield" => "aroduc",
+				"lightblueyoshi" => "bbkaizo",
+				"bobwhoops" => "bob whoops",
+				"brandon evans" => "brandon",
+				"sonic tas team" => "carretero",
+				"cherrymay" => "cherry",
+				"curseschris a.k.a. alen" => "curseschris",
+				"david wilson tiziu" => "david wilson",
+				"devin" => "devindotcom",
+				"devin dot com" => "devindotcom",
+				"pokedroidtas" => "diego montoya",
+				"error1" => "errror1",
+				"egxhb" => "egixbacon",
+				"nidoqueenofpain" => "egixbacon",
+				"usta2877" => "bihan",
+				"fisker" => "fiskern",
+				"fisker n." => "fiskern",
+				"pocoryu" => "hellfire",
+				"srb2espyo" => "espyo",
+				"mister epic" => "gabcm",
+				"gaming-jok" => "nico30620",
+				"god hand" => "god-hand",
+				"funkdoc" => "josh the funkdoc",
+				"hys111111" => "gemini-man",
+				"gleisonfodão" => "gleison",
+				"ggheysjr" => "ggg",
+				"krabe" => "bobypoula",
+				"ocean prince" => "hegyak",
+				"igorsantos777" => "igoroliveira666",
+				"lag.com" => "lagdotcom",
+				"vidar" => "meepers",
+				"toonlucas22" => "limo",
+				"p.dot" => "dashiznawz",
+				"undo" => "jonathangm",
+				"superhappy" => "josh l.",
+				"legendofmart" => "mart",
+				"mat1er/sblurb" => "mat1er",
+				"mickey/vis" => "mickey_vis11189",
+				"madhatter" => "mr. kelly r. flewin",
+				"superninja" => "luke",
+				"mazzic kiegel" => "mazzic",
+				"michael f" => "michael fried",
+				"エジソン電" => "michael fried",
+				"tehseven" => "negative seven",
+				"foda" => "nesrocks",
+				"mr_eeh" => "mbm",
+				"david z" => "mclaud2000",
+				"dmtm" => "mr_sweed",
+				"laecktoer" => "mr_sweed",
+				"nif_boy" => "nifboy",
+				"aka" => "mitjitsu",
+				"程嘉军" => "mzscla",
+				"j.y" => "mzscla",
+				"parrot14green" => "parrot14gree",
+				"p3run4" => "p3r",
+				"promise" => "ouendan",
+				"nicfer" => "perfect death",
+				"jok-r" => "nico30620",
+				"phil." => "phil",
+				"phil. côté" => "phil",
+				"mcw4v3-x" => "pikachuman",
+				"shakespeare" => "radz",
+				"snc" => "snc76976",
+				"mattias b." => "tarzan",
+				"m-eighty" => "mike89",
+				"jossepi" => "totoro",
+				"symbolic x" => "p0rtal_0f_rain",
+				"primo" => "primorial#soup",
+				"saegotomin" => "megaman",
+				"romaji" => "sack_bot",
+				"toxicparrot" => "sam",
+				"soulcal umbreon" => "soulcal",
+				"superflorian12" => "supermario12",
+				"terrotim" => "trt",
+				"samhain-grim" => "vandal",
+				"samlaptop" => "samtastic",
+				"a jesus fan" => "teh noj",
+				"walkerboh" => "walker boh",
+				"西坡" => "xipo",
+				"西坡 (xipo)" => "xipo",
+				"n?k" => "xxnkxx",
+				"mechakoopa_dttvb" => "yagz",
+				"mechakoopa revolution" => "yagz",
+				"lorenzo_the_comic" => "yoni arousement",
+				"lazy_zefiris" => "zefiris",
+				"ziplock" => "-ziplock-",
+				"zakky the goatragon" => "zakkydraggy",
+				"the packle" => "thepackle",
+				"kowka" => "goddessmaria",
+				"lars" => "lars_hendrick",
+				"lazerlemongaming" => "lazerlemon",
+				"akagitsuneyuki" => "akagitsune yukimura",
+				"dekutary" => "dekutony",
+				"wasapi_fi" => "wasapi",
+				"daniel_1rd" => "dbxv",
+				"no0bplayer" => "playerone",
+				"mario3264" => "mario128",
+				"01garland01" => "garland",
+				"tapioca2k" => "tapioca",
+				"smbbot" => "happylee",
+				"fusionvaria" => "itspersonnal",
+				"duault" => "zekann",
+				_ => nickName
+			};
 		}
 	}
 }
