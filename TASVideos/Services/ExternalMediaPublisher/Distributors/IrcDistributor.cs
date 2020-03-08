@@ -52,7 +52,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				? _settings.SecureChannel
 				: _settings.Channel;
 
-			var s = $"{post.Title.CapAndEllipse(100)} {post.Body.CapAndEllipse(100)} {post.Link}";
+			var s = $"{post.Title.CapAndEllipse(150)} {post.Body.CapAndEllipse(75)} {post.Link}";
 			_bot.AddMessage(channel, s);
 		}
 
