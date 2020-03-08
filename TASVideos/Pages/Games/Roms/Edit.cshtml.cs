@@ -86,7 +86,7 @@ namespace TASVideos.Pages.Games.Roms
 				return Page();
 			}
 
-			Rom = await _db.Roms
+			Rom = await _db.GameRoms
 				.Where(r => r.Id == Id.Value && r.Game!.Id == GameId)
 				.ProjectTo<RomEditModel>()
 				.SingleAsync();
@@ -112,14 +112,14 @@ namespace TASVideos.Pages.Games.Roms
 			GameRom rom;
 			if (Id.HasValue)
 			{
-				rom = await _db.Roms.SingleAsync(r => r.Id == Id.Value);
+				rom = await _db.GameRoms.SingleAsync(r => r.Id == Id.Value);
 				_mapper.Map(Rom, rom);
 			}
 			else
 			{
 				rom = _mapper.Map<GameRom>(Rom);
 				rom.Game = await _db.Games.SingleAsync(g => g.Id == GameId);
-				_db.Roms.Add(rom);
+				_db.GameRoms.Add(rom);
 			}
 
 			try
@@ -155,7 +155,7 @@ namespace TASVideos.Pages.Games.Roms
 
 			try
 			{
-				_db.Roms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
+				_db.GameRoms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
 				MessageType = Styles.Success;
 				Message = $"Rom {Id}, deleted successfully.";
 				await _db.SaveChangesAsync();

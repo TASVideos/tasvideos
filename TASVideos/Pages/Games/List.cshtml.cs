@@ -96,7 +96,7 @@ namespace TASVideos.Pages.Games
 
 		public async Task<IActionResult> OnGetRomDropDownForGame(int gameId, bool includeEmpty)
 		{
-			var items = await _db.Roms
+			var items = await _db.GameRoms
 				.Where(r => r.GameId == gameId)
 				.OrderBy(r => r.Name)
 				.Select(r => new SelectListItem

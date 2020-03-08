@@ -43,7 +43,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameRom.LastUpdateTimeStamp)
 			};
 
-			roms.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Roms));
+			roms.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.GameRoms));
 		}
 
 		// The legacy system barely used roms and they were never enforced, but the new system demands
