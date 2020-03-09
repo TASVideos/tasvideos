@@ -1,8 +1,5 @@
 ﻿@model IEnumerable<SelectListItem>
 
-
-<option value="">@UiDefaults.DefaultDropdownText</option>
-
 @foreach (var item in Model)
 {
 	<option value="@item.Value" select="@item.Selected">@item.Text</option>
