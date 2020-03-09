@@ -126,8 +126,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnGetTopicsForForum(int forumId)
 		{
-			var items = await GetTopicsForForum(forumId);
-			
+			var items = UiDefaults.DefaultEntry.Concat(await GetTopicsForForum(forumId));
 			return new PartialViewResult
 			{
 				ViewName = "_DropdownItems",
