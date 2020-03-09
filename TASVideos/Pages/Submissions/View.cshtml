@@ -41,7 +41,9 @@
 
 <row>
 	<div class="col-lg-6" condition="hasEncode">
-		<iframe type="text/html" style="width:450px;height:370px;margin:0;" src="@Model.Submission.EncodeEmbedLink" allowfullscreen="true"></iframe>
+		<iframe type="text/html" style="width:450px;height:370px;margin:0;" src="@Model.Submission!.EncodeEmbedLink" allowfullscreen="true"></iframe>
+		<br />
+		<a href="@Model.Submission!.EncodeEmbedLink">(Link to video)</a>
 	</div>
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
 		<div class="alert alert-@(statusColor)" role="alert">
