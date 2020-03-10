@@ -29,7 +29,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = v.Id,
 					TopicId = v.TopicId,
-					Question = ImportHelper.ConvertNotNullLatin1String(v.Text),
+					Question = SwapSubmissionPoll(ImportHelper.ConvertNotNullLatin1String(v.Text), v.Topic?.Poster?.UserName),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
 					CreateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					LastUpdateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
@@ -136,6 +136,28 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			forumPollOptionVotes.BulkInsert(connectionStr, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes), SqlBulkCopyOptions.Default);
+		}
+
+		// Removes html silliness from the poll questions
+		private static string SwapSubmissionPoll(string pollText, string? user)
+		{
+			// the latter user was an April Fool's gag
+			if ((user == SiteGlobalConstants.TASVideoAgent || user == "poozilla") && pollText.StartsWith("Vote: "))
+			{
+				if (pollText.StartsWith("Vote: Did you like watching this movie?"))
+				{
+					return "Vote: Did you like watching this movie? (Vote after watching!)";
+				}
+
+				if (pollText.StartsWith("Vote: Should this movie be published?"))
+				{
+					return "Vote: Should this movie be published? (Vote after watching!)";
+				}
+
+				return "Vote: Did you find this movie entertaining? (Vote after watching!)";
+			}
+
+			return pollText;
 		}
 	}
 }
