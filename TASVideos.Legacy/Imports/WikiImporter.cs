@@ -331,6 +331,7 @@ namespace TASVideos.Legacy.Imports
 			"SystemPageNotFound",
 			"SystemPages",
 			"SystemRestrictedPage",
+			"SystemSmvVersionTooOld",
 			"SystemSubmissionComplete",
 			"SystemSubmissionEditingFailure",
 			"SystemSubmissionViewingFailur",
