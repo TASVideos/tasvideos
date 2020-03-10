@@ -115,6 +115,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (Topic.Poll != null)
 			{
+				Topic.Poll.Question = RenderBbcode(Topic.Poll.Question);
 				Topic.Poll.Options = await _db.ForumPollOptions
 					.ForPoll(Topic.Poll.PollId)
 					.Select(o => new ForumTopicModel.PollModel.PollOptionModel
@@ -147,11 +148,6 @@ namespace TASVideos.Pages.Forum.Topics
 					|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
 				post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts)
 					|| (userId.HasValue && post.PosterId == userId && post.IsLastPost);
-			}
-
-			if (Topic.Poll != null)
-			{
-				Topic.Poll.Question = RenderPost(Topic.Poll.Question, false, true);
 			}
 
 			if (userId.HasValue)
