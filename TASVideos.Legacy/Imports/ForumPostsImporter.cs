@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -37,10 +38,35 @@ namespace TASVideos.Legacy.Imports
 				.ToList()
 				.Select(p =>
 				{
-					var fixedText = System.Web.HttpUtility.HtmlDecode(
-						ImportHelper.ConvertLatin1String(p.Text!
-							.Replace(":1:" + p.BbCodeUid, "")
-							.Replace(":" + p.BbCodeUid, "")));
+					bool enableBbCode = p.EnableBbCode;
+					bool enableHtml = p.EnableHtml;
+
+					string fixedText;
+					if (p.PosterId == SiteGlobalConstants.TASVideoAgentId && p.Subject == SiteGlobalConstants.NewPublicationPostSubject)
+					{
+						enableBbCode = true;
+						enableHtml = false;
+						var pText = p.Text ?? "";
+
+						// Have to handle old and new style posts
+						var temp = pText.Contains("movies.cgi")
+							? pText.Split(".cgi")[1]
+							: pText.Split(".html")[0];
+
+						var digitsOnly = new Regex(@"[^\d]");
+						var publicationId = int.Parse(digitsOnly.Replace(temp, ""));
+
+						fixedText = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publicationId.ToString());
+					}
+					else
+					{
+						fixedText = System.Web.HttpUtility.HtmlDecode(
+							ImportHelper.ConvertLatin1String(p.Text!
+								.Replace(":1:" + p.BbCodeUid, "")
+								.Replace(":" + p.BbCodeUid, "")));
+
+						enableHtml = p.EnableHtml && BbParser.ContainsHtml(fixedText, p.EnableBbCode);
+					}
 
 					int moodAvatar = p.MoodAvatar == 255 // This seems to just mean normal
 						? 1
@@ -54,8 +80,8 @@ namespace TASVideos.Legacy.Imports
 						IpAddress = p.IpAddress,
 						Subject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject)),
 						Text = fixedText,
-						EnableBbCode = p.EnableBbCode,
-						EnableHtml = p.EnableHtml && BbParser.ContainsHtml(fixedText, p.EnableBbCode),
+						EnableBbCode = enableBbCode,
+						EnableHtml = enableHtml,
 						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
 						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
 							?? p.Timestamp),
