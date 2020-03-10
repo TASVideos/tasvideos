@@ -85,8 +85,8 @@ namespace TASVideos.Services
 					CreateUserName = SiteGlobalConstants.TASVideoAgent,
 					LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 					PosterId = SiteGlobalConstants.TASVideoAgentId,
-					EnableBbCode = false,
-					EnableHtml = true,
+					EnableBbCode = true,
+					EnableHtml = false,
 					Subject = SiteGlobalConstants.NewPublicationPostSubject,
 					Text = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publicationId.ToString()),
 					PosterMood = ForumPostMood.Happy
