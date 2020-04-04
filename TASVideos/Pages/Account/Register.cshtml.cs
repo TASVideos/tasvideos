@@ -67,7 +67,6 @@ namespace TASVideos.Pages.Account
 		[BindProperty]
 		[DataType(DataType.Password)]
 		[Display(Name = "Confirm password")]
-		[Compare(nameof(Password), ErrorMessage = "The password and confirmation password do not match.")]
 		public string ConfirmPassword { get; set; } = "";
 
 		[BindProperty]
@@ -77,6 +76,11 @@ namespace TASVideos.Pages.Account
 
 		public async Task<IActionResult> OnPost()
 		{
+			if (Password != ConfirmPassword)
+			{
+				ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
+			}
+
 			if (ModelState.IsValid)
 			{
 				var user = new User
