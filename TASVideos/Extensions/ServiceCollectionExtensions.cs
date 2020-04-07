@@ -150,6 +150,7 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
 					options.Conventions.AddPageRoute("/Submissions/Submit", "SubmitMovie");
 					options.Conventions.AddPageRoute("/Forum/MoodReport", "forum/moodreport.php");
+					options.Conventions.AddPageRoute("/Permissions/Index", "/Privileges");
 				})
 				.AddRazorRuntimeCompilation()
 				.AddApplicationPart(typeof(PublicationsController).Assembly);

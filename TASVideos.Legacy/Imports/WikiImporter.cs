@@ -311,6 +311,7 @@ namespace TASVideos.Legacy.Imports
 			"SiteTechnology/API",
 			"SandBox", // History for this page isn't important
 			"SubmitMovie",
+			"Privileges",
 
 			"SystemDiffLineLengthNote",
 			"SystemUserEditRank",
