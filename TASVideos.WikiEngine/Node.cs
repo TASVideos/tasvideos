@@ -408,6 +408,7 @@ namespace TASVideos.WikiEngine.AST
 			["brokenlinks"] = "BrokenLinks",
 			["activetab"] = "ActiveTab",
 			["displayminimovie"] = "DisplayMiniMovie",
+			["editoractivity"] = "EditorActivity",
 			["firsteditiontas"] = "FirstEditionTas",
 			["frames"] = "Frames",
 			["frontpagesubmissionlist"] = "FrontpageSubmissionList",

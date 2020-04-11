@@ -1,0 +1,18 @@
+﻿@model IEnumerable<EditorActivityModel>
+<table class="table table-striped table-bordered table-sm">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.First().UserName)</th>
+		<th>@Html.DisplayNameFor(m => m.First().WikiEdits)</th>
+	</tr>
+	@foreach (var entry in Model)
+	{
+		<tr>
+			<td>
+				<profile-link username="@entry.UserName">@entry.UserName</profile-link>
+			</td>
+			<td>
+				<a asp-page="/Wiki/EditHistory" asp-route-username="@entry.UserName">@entry.WikiEdits</a>
+			</td>
+		</tr>
+	}
+</table>
