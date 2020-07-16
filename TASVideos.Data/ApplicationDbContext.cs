@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
@@ -16,6 +17,10 @@ namespace TASVideos.Data
 	public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
 	{
 		private readonly IHttpContextAccessor? _httpContext;
+
+		// TODO: internal
+
+		public const string SystemUser = "admin@tasvideos.org";
 
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor? httpContextAccessor)
 			: base(options)
@@ -351,9 +356,15 @@ namespace TASVideos.Data
 			{
 				if (entry.Entity is ITrackable trackable)
 				{
-					if (trackable.CreateTimeStamp.Year == 1) // Don't set if already set
+					// Don't set if already set
+					if (trackable.CreateTimeStamp.Year == 1)
 					{
 						trackable.CreateTimeStamp = DateTime.UtcNow;
+					}
+
+					if (string.IsNullOrWhiteSpace(trackable.CreateUserName))
+					{
+						trackable.CreateUserName = GetUser();
 					}
 
 					if (trackable.LastUpdateTimeStamp.Year == 1)
@@ -363,12 +374,7 @@ namespace TASVideos.Data
 
 					if (string.IsNullOrWhiteSpace(trackable.LastUpdateUserName))
 					{
-						trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
-					}
-
-					if (string.IsNullOrWhiteSpace(trackable.CreateUserName))
-					{
-						trackable.CreateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+						trackable.LastUpdateUserName = GetUser();
 					}
 				}
 			}
@@ -378,17 +384,23 @@ namespace TASVideos.Data
 			{
 				if (entry.Entity is ITrackable trackable)
 				{
-					if (trackable.LastUpdateTimeStamp.Year == 1) // Don't set if already set
+					if (!IsModified(entry, nameof(ITrackable.LastUpdateTimeStamp)))
 					{
 						trackable.LastUpdateTimeStamp = DateTime.UtcNow;
 					}
 
-					if (string.IsNullOrWhiteSpace(trackable.LastUpdateUserName))
+					if (!IsModified(entry, nameof(ITrackable.LastUpdateUserName)))
 					{
-						trackable.LastUpdateUserName = _httpContext?.HttpContext?.User?.Identity?.Name;
+						trackable.LastUpdateUserName = GetUser();
 					}
 				}
 			}
 		}
+
+		private string GetUser() => _httpContext?.HttpContext?.User?.Identity?.Name ?? SystemUser;
+
+		private bool IsModified(EntityEntry entry, string propertyName)
+			=> entry.Properties
+				.Any(prop => prop.Metadata.Name == propertyName && prop.IsModified);
 	}
 }
