@@ -2,7 +2,7 @@
 
 namespace TASVideos.Data.Entity
 {
-	public class Flag
+	public class Flag : BaseEntity
 	{
 		public int Id { get; set; }
 

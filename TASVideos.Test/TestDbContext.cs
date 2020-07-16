@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -21,9 +22,12 @@ namespace TASVideos.Test
 		private bool _dbConcurrentUpdateConflict;
 		private bool _dbUpdateConflict;
 
-		private TestDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor? httpContextAccessor)
+		private IHttpContextAccessor _testHttpContext = new TestHttpContextAccessor();
+
+		private TestDbContext(DbContextOptions<ApplicationDbContext> options, TestHttpContextAccessor httpContextAccessor)
 			: base(options, httpContextAccessor)
 		{
+			_testHttpContext = httpContextAccessor;
 		}
 
 		public static TestDbContext Create()
@@ -33,9 +37,29 @@ namespace TASVideos.Test
 				.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
 				.Options;
 
-			var db = new TestDbContext(options, null);
+			var testHttpContext = new TestHttpContextAccessor();
+			var db = new TestDbContext(options, testHttpContext);
 			db.Database.EnsureDeleted();
 			return db;
+		}
+
+		/// <summary>
+		/// Simulates that there is no user currently logged in
+		/// </summary>
+		public void LogOutUser()
+		{
+			_testHttpContext.HttpContext.User = null;
+		}
+
+		/// <summary>
+		/// Simulates a user having logged in
+		/// </summary>
+		public void LogInUser(string userName)
+		{
+			var identity = new GenericIdentity(userName);
+			string[] roles = { "TestRole" };
+			var principal = new GenericPrincipal(identity, roles);
+			_testHttpContext.HttpContext.User = principal;
 		}
 
 		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -69,6 +93,11 @@ namespace TASVideos.Test
 		public void CreateConcurrentUpdateConflict()
 		{
 			_dbConcurrentUpdateConflict = true;
+		}
+
+		private class TestHttpContextAccessor : IHttpContextAccessor
+		{
+			public HttpContext HttpContext { get; set; } = new DefaultHttpContext();
 		}
 	}
 
