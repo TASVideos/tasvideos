@@ -15,7 +15,6 @@ namespace TASVideos.Test.Data.Context
 		public void Initialize()
 		{
 			_db = TestDbContext.Create();
-			_db.LogOutUser();
 		}
 
 		#region CreateTimeStamp
@@ -261,7 +260,6 @@ namespace TASVideos.Test.Data.Context
 			{
 				LastUpdateUserName = originalUser
 			};
-			_db.LogOutUser();
 			_db.Flags.Add(flag);
 			_db.SaveChanges();
 			flag.Name = "NewName";
