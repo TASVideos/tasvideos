@@ -44,14 +44,6 @@ namespace TASVideos.Test
 		}
 
 		/// <summary>
-		/// Simulates that there is no user currently logged in
-		/// </summary>
-		public void LogOutUser()
-		{
-			_testHttpContext.HttpContext.User = null;
-		}
-
-		/// <summary>
 		/// Simulates a user having logged in
 		/// </summary>
 		public void LogInUser(string userName)
