@@ -25,7 +25,6 @@ namespace TASVideos.Services
 			var poll = new ForumPoll
 			{
 				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 				Question = SiteGlobalConstants.PollQuestion,
 				PollOptions = new[]
 				{
@@ -67,6 +66,7 @@ namespace TASVideos.Services
 			await _db.SaveChangesAsync();
 
 			poll.TopicId = topic.Id;
+			poll.LastUpdateUserName = SiteGlobalConstants.TASVideoAgent; // Necessary for LastUpdatedUser to not change
 			await _db.SaveChangesAsync();
 		}
 
