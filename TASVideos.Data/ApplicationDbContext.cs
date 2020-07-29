@@ -304,6 +304,8 @@ namespace TASVideos.Data
 			builder.Entity<Submission>(entity =>
 			{
 				entity.HasIndex(e => e.Status);
+				entity.Property(e => e.ImportedTime).HasDefaultValue(0);
+				entity.Property(e => e.LegacyTime).HasDefaultValue(0);
 			});
 
 			builder.Entity<UserFile>(entity =>
@@ -346,6 +348,11 @@ namespace TASVideos.Data
 			{
 				entity.HasIndex(e => e.Name)
 					.IsUnique();
+			});
+
+			builder.Entity<ForumPost>(entity =>
+			{
+				entity.Property(e => e.PosterMood).HasDefaultValue(ForumPostMood.None); // TODO: this is only here for sample data, we need to regenerate the file and have the original moods of the posts
 			});
 		}
 
