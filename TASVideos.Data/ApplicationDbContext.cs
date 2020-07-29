@@ -209,6 +209,8 @@ namespace TASVideos.Data
 				entity.HasOne(sf => sf.System)
 					.WithMany(s => s!.SystemFrameRates)
 					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.Property(e => e.Obsolete).HasDefaultValue(false);
 			});
 
 			builder.Entity<GameRom>(entity =>
