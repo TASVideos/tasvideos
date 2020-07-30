@@ -33,7 +33,7 @@
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
 		<PackageReference Include="RoslynCodeTaskFactory" Version="2.0.7" />
 		<PackageReference Include="Sendgrid" Version="9.12.7" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
 	</ItemGroup>
 
 	<ItemGroup>
