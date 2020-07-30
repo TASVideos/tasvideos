@@ -408,7 +408,7 @@ namespace TASVideos.Data
 
 		private string GetUser() => _httpContext?.HttpContext?.User?.Identity?.Name ?? SystemUser;
 
-		private bool IsModified(EntityEntry entry, string propertyName)
+		private static bool IsModified(EntityEntry entry, string propertyName)
 			=> entry.Properties
 				.Any(prop => prop.Metadata.Name == propertyName && prop.IsModified);
 	}
