@@ -13,8 +13,8 @@ namespace TASVideos.Legacy.Extensions
 
 		public static IServiceCollection AddTasVideosLegacy(
 			this IServiceCollection services,
-			string mySqlSiteConnection,
-			string mySqlForumConnection,
+			string? mySqlSiteConnection,
+			string? mySqlForumConnection,
 			bool enable)
 		{
 			if (enable)
