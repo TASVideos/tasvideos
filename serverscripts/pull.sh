@@ -1,3 +1,5 @@
 #!/bin/bash
-cd /home/tasvideos/tasvideos
+source ~/homedir
+
+cd $HOME_DIR
 git pull
