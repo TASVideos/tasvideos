@@ -306,6 +306,8 @@ namespace TASVideos.Data
 				entity.HasIndex(e => e.Status);
 				entity.Property(e => e.ImportedTime).HasDefaultValue(0);
 				entity.Property(e => e.LegacyTime).HasDefaultValue(0);
+				entity.Property(e => e.ImportedTime).HasColumnType("decimal(10, 3)");
+				entity.Property(e => e.LegacyTime).HasColumnType("decimal(10, 3)");
 			});
 
 			builder.Entity<UserFile>(entity =>
