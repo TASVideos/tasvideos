@@ -52,6 +52,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to upload movie and related files for personal storage.")]
 		UploadUserFiles,
 
+		[Display(Name = "Send Private Messages")]
+		[Group("User")]
+		[Description("The ability to send private messages.")]
+		SendPrivMsgs = 13,
+
 		#endregion
 
 		#region Wiki 100
