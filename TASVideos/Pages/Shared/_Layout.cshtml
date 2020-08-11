@@ -40,13 +40,21 @@
 			</div>
 		</div>
 	</nav>
+
+	@{
+		var title = ViewData["Title"]?.ToString();
+		if (ViewData["WikiPage"] != null)
+		{
+			title = title.SplitCamelCase();
+		}
+	}
 	@if (IsSectionDefined("PageTitle"))
 	{
 		@RenderSection("PageTitle")
 	}
 	else
 	{
-		<h1 class="mb-2">@ViewData["Title"]?.ToString().SplitCamelCase()</h1>
+		<h1 class="mb-2">@title</h1>
 	}
 
 	<div class="container">
