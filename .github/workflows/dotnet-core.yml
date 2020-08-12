@@ -19,6 +19,8 @@ jobs:
         dotnet-version: 3.1.102
     - name: Install dependencies
       run: dotnet restore
+    - name: Unshallow Commits
+      run: git fetch --unshallow
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
