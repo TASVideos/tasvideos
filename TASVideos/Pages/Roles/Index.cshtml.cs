@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Roles
 		{
 			if (string.IsNullOrWhiteSpace(role))
 			{
-				return RedirectToAction("List");
+				return RedirectToPage("/Roles/List");
 			}
 
 			Role = await _db.Roles
