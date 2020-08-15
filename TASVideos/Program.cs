@@ -47,7 +47,7 @@ namespace TASVideos
 				{
 					if (hostContext.HostingEnvironment.IsDevelopment() || hostContext.HostingEnvironment.IsDemo())
 					{
-						builder.AddUserSecrets<Program>();
+						builder.AddUserSecrets<Startup>();
 					}
 				})
 				.Build();
