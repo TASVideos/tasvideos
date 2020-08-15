@@ -147,6 +147,10 @@ namespace TASVideos.Legacy.Imports
 			{
 				pageName = pageName.Replace("DeletedPages/", "");
 			}
+			else if (pageName == "NoGamename")
+			{
+				pageName = "NoGameName";
+			}
 			else if (!string.IsNullOrEmpty(userName))
 			{
 				// Use the user's name for the page name instead of the actual page,
@@ -322,11 +326,13 @@ namespace TASVideos.Legacy.Imports
 			"SystemLayoutTinyMenu",
 			"SystemMovieBittorrentNag",
 			"SystemMovieEditingFailure",
+			"SystemMovieMoreMovies",
 			"SystemMovieNoMovies",
 			"SystemMovieRatingAccessDenied",
 			"SystemMovieRatingViewAccessDenied",
 			"SystemMovieWhyHowReference",
 			"SystemNewPageTemplate",
+			"SystemNotice10Bit444",
 			"SystemNotPageEditor",
 			"SystemRestrictedPage",
 			"SystemPageNotFound",
