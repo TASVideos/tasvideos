@@ -186,15 +186,6 @@ namespace TASVideos.Legacy.Imports
 						});
 					}
 
-					if (user.User.UserName == "dwangoAC")
-					{
-						userRoles.Add(new UserRole
-						{
-							RoleId = roles.Single(r => r.Name == RoleSeedNames.Ambassador).Id,
-							UserId = user.User.Id
-						});
-					}
-
 					if (SiteDevelopers.Contains(user.User.UserName))
 					{
 						userRoles.Add(new UserRole
@@ -347,6 +338,10 @@ namespace TASVideos.Legacy.Imports
 					return roles.Single(r => r.Name == RoleSeedNames.SeniorJudge);
 				case "adminassistant":
 					return roles.Single(r => r.Name == RoleSeedNames.AdminAssistant);
+				case "ambassador":
+					return roles.Single(r => r.Name == RoleSeedNames.Ambassador);
+				case "senior ambassador":
+					return roles.Single(r => r.Name == RoleSeedNames.SeniorAmbassador);
 				case "admin":
 					return roles.Single(r => r.Name == RoleSeedNames.Admin);
 			}

@@ -25,6 +25,7 @@ namespace TASVideos.Data.SeedData
 		public const string ForumModerator = "Forum Moderator";
 		public const string ForumAdmin = "Forum Admin";
 		public const string Ambassador = "Ambassador";
+		public const string SeniorAmbassador = "Senior Ambassador";
 		public const string SiteDeveloper = "Site Developer";
 		public const string EmulatorCoder = "Emulator Coder";
 	}
@@ -129,6 +130,11 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditWikiPages,
 			PermissionTo.EditSystemPages
 		};
+
+		private static readonly PermissionTo[] SeniorAmbassadorPermissions = AmbassadorPermissions.Concat(new[]
+		{
+			PermissionTo.AssignRoles
+		}).ToArray();
 
 		private static readonly PermissionTo[] SiteDeveloperPermissions =
 		{
@@ -343,6 +349,18 @@ namespace TASVideos.Data.SeedData
 				Role = Ambassador,
 				PermissionId = p,
 				CanAssign = false
+			}).ToArray()
+		};
+
+		public static readonly Role SeniorAmbassador = new Role
+		{
+			Name = RoleSeedNames.SeniorAmbassador,
+			Description = "A senior ambassador coordinates and assigns Ambassadors to the site.  In addition they have all the responsibilities of an Ambassador.",
+			RolePermission = SeniorAmbassadorPermissions.Select(p => new RolePermission
+			{
+				Role = Ambassador,
+				PermissionId = p,
+				CanAssign = AmbassadorPermissions.Contains(p)
 			}).ToArray()
 		};
 
