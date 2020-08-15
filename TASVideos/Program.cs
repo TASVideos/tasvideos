@@ -3,8 +3,10 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TASVideos.Data;
+using TASVideos.Extensions;
 
 namespace TASVideos
 {
@@ -41,6 +43,13 @@ namespace TASVideos
 			return WebHost.CreateDefaultBuilder(args)
 				.UseConfiguration(config)
 				.UseStartup<Startup>()
+				.ConfigureAppConfiguration((hostContext, builder) =>
+				{
+					if (hostContext.HostingEnvironment.IsDevelopment() || hostContext.HostingEnvironment.IsDemo())
+					{
+						builder.AddUserSecrets<Program>();
+					}
+				})
 				.Build();
 		}
 	}
