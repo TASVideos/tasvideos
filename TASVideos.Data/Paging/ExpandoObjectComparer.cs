@@ -15,11 +15,16 @@ namespace TASVideos.Data
 			return new ExpandoObjectComparer();
 		}
 
-		public bool Equals(ExpandoObject x, ExpandoObject y)
+		public bool Equals(ExpandoObject? x, ExpandoObject? y)
 		{
 			if (ReferenceEquals(x, y))
 			{
 				return true;
+			}
+
+			if (x == null || y == null) // ReferenceEquals checks the scenario of both being null
+			{
+				return false;
 			}
 
 			var xKeyValues = (IDictionary<string, object>)x;
@@ -42,22 +47,14 @@ namespace TASVideos.Data
 				var xValueItem = keyValue.Value;
 				var yValueItem = yKeyValues[key];
 
-				if (xValueItem == null && yValueItem != null)
+				if (yValueItem == null)
 				{
 					return false;
 				}
 
-				if (xValueItem != null && yValueItem == null)
+				if (!xValueItem.Equals(yValueItem))
 				{
 					return false;
-				}
-
-				if (xValueItem != null)
-				{
-					if (!xValueItem.Equals(yValueItem))
-					{
-						return false;
-					}
 				}
 			}
 
@@ -70,9 +67,7 @@ namespace TASVideos.Data
 
 			int GetHash(object item)
 			{
-				return item == null
-					? 0
-					: item.GetHashCode();
+				return item.GetHashCode();
 			}
 
 			var fieldValues = new Dictionary<string, object>(obj);
