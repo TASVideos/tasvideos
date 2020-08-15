@@ -8,8 +8,8 @@ namespace TASVideos.Legacy.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{
-		private const string DefaultMySqlSiteConnection = "server=localhost;user=root;password='TASDevt3s7';port=3306;database=nesvideos_site;sslmode=none;";
-		private const string DefaultMySqlForumConnection = "server=localhost;user=root;password='TASDevt3s7';port=3306;database=nesvideos_forum;sslmode=none;";
+		private const string DefaultMySqlSiteConnection = "server=localhost;userid=root;pwd=;port=3306;database=nesvideos_site;sslmode=none;";
+		private const string DefaultMySqlForumConnection = "server=localhost;userid=root;pwd=;port=3306;database=nesvideos_forum;sslmode=none;";
 
 		public static IServiceCollection AddTasVideosLegacy(
 			this IServiceCollection services,
