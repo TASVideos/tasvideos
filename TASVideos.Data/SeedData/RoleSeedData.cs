@@ -358,7 +358,7 @@ namespace TASVideos.Data.SeedData
 			Description = "A senior ambassador coordinates and assigns Ambassadors to the site.  In addition they have all the responsibilities of an Ambassador.",
 			RolePermission = SeniorAmbassadorPermissions.Select(p => new RolePermission
 			{
-				Role = Ambassador,
+				Role = SeniorAmbassador,
 				PermissionId = p,
 				CanAssign = AmbassadorPermissions.Contains(p)
 			}).ToArray()
@@ -406,6 +406,7 @@ namespace TASVideos.Data.SeedData
 				ForumModerator,
 				ForumAdmin,
 				Ambassador,
+				SeniorAmbassador,
 				SiteDeveloper,
 				EmulatorCoder
 			};
