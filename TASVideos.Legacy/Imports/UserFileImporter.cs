@@ -113,7 +113,7 @@ namespace TASVideos.Legacy.Imports
 				Content = legacyFile.Content.ConvertXz(),
 				Description = legacyFile.Description.NullIfWhiteSpace(),
 				Downloads = legacyFile.Downloads,
-				FileName = legacyFile.Name,
+				FileName = ImportHelper.ConvertNotNullLatin1String(legacyFile.Name),
 				Frames = legacyFile.Frames,
 				GameId = legacyFile.GameNameId,
 				Hidden = legacyFile.Hidden != 0,
