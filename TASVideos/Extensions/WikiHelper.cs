@@ -117,7 +117,7 @@ namespace TASVideos.Extensions
 
 		public static bool IsHomePage(this WikiPage page)
 		{
-			return IsHomePage(page?.PageName);
+			return IsHomePage(page.PageName);
 		}
 
 		public static bool IsSystemPage(this WikiPage page)
