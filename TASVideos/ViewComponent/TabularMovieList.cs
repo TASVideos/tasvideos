@@ -36,7 +36,14 @@ namespace TASVideos.ViewComponents
 			}
 			
 			ViewData["flink"] = ParamHelper.GetValueFor(pp, "flink");
-			ViewData["footer"] = ParamHelper.GetValueFor(pp, "footer") ?? "More...";
+
+			var footer = ParamHelper.GetValueFor(pp, "footer");
+			if (!string.IsNullOrWhiteSpace(footer))
+			{
+				footer = "More...";
+			}
+
+			ViewData["footer"] = footer;
 
 			var model = await MovieList(search);
 
