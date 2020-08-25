@@ -220,11 +220,12 @@ namespace TASVideos.Services
 					UserFiles = new UserProfileModel.UserFilesModel
 					{
 						Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
-						Systems = u.UserFiles
-							.Where(uf => includeHiddenUserFiles || !uf.Hidden)
-							.Select(uf => uf.System!.Code)
-							.Distinct()
-							.ToList()
+						// TODO: When EF isn't bad at this, use this and not the below code
+						//Systems = u.UserFiles
+						//	.Where(uf => includeHiddenUserFiles || !uf.Hidden)
+						//	.Select(uf => uf.System!.Code)
+						//	.Distinct()
+						//	.ToList()
 					}
 				})
 				.SingleOrDefaultAsync(u => u.UserName == userName);
@@ -244,11 +245,20 @@ namespace TASVideos.Services
 				// TODO: round to 1 digit?
 				model.PlayerPoints = (int)Math.Round(await _pointsService.PlayerPoints(model.Id));
 
+				// TODO: When EF isn't bad do the above logic instead
 				model.PublishedSystems = await _db.Publications
 					.Where(p => p.Authors.Any(a => a.UserId == model.Id))
 					.Select(p => p.System!.Code)
 					.Distinct()
 					.ToListAsync();
+
+				// TODO: When EF isn't bad do the above logic instead
+				model.UserFiles.Systems = _db.UserFiles
+					.Where(uf => uf.AuthorId == model.Id)
+					.Where(uf => includeHiddenUserFiles || !uf.Hidden)
+					.Select(uf => uf.System!.Code)
+					.Distinct()
+					.ToList();
 
 				var wikiEdits = await _wikiPages.Query
 					.ThatAreNotDeleted()
