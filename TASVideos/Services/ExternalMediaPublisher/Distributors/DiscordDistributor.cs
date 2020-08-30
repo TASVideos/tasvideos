@@ -42,9 +42,8 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			HttpRequestMessage apiRequest = new HttpRequestMessage();
 			apiRequest.Method = HttpMethod.Post;
-			apiRequest.Headers.Add("Content-Type", "application/json");
 			apiRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _settings.AccessToken);
-			apiRequest.Content = new StringContent(discordMessage.Serialize(), Encoding.UTF8);
+			apiRequest.Content = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
 			apiRequest.RequestUri = new Uri($"{_settings.ApiBase}/channels/{_settings.ChannelId}/messages");
 
 			var response = await _httpClient!.SendAsync(apiRequest).ConfigureAwait(false);
