@@ -38,6 +38,8 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				return;
 			}
 
+			_logger.LogInformation($"Access token: {_settings.AccessToken}, API Base: {_settings.ApiBase}, Channel ID: {_settings.ChannelId}");
+
 			DiscordMessage discordMessage = new DiscordMessage(post.Title, post.Body, post.Link);
 
 			HttpRequestMessage apiRequest = new HttpRequestMessage();
