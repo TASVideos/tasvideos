@@ -28,6 +28,10 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private readonly AppSettings.DiscordConnection _settings;
 
+		private bool _initialized = false;
+
+		// TODO: register with HttpClient factor and DI
+		// https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
 		static readonly HttpClient _httpClient = new HttpClient();
 
 		internal static ClientWebSocket? _gateway;
@@ -51,6 +55,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				return;
 			}
 
+			_initialized = true;
 			ConnectWebsocket();
 		}
 
@@ -177,7 +182,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public async void Post (IPostable post)
 		{
-			if (_httpClient == null)
+			if (!_initialized)
 			{
 				return;
 			}
