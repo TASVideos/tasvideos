@@ -45,6 +45,12 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			_logger = logger;
 			_settings = appSettings.Value.Discord;
 
+			if (string.IsNullOrWhiteSpace(appSettings.Value.Discord.AccessToken))
+			{
+				logger.Log(LogLevel.Warning, "Discord bot access key not provided. Bot initialization skipped");
+				return;
+			}
+
 			ConnectWebsocket();
 		}
 
