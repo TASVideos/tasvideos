@@ -78,6 +78,8 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			JObject messageObject = JObject.Parse(message);
 
+			_logger.LogInformation($"Received message from Discord: {message}");
+
 			if (messageObject.ContainsKey("op"))
 			{
 				switch (messageObject["op"].Value<int>())
@@ -87,6 +89,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 						break;
 					case 10:    // Hello
 						ParseHello(messageObject);
+						Identify();
 						break;
 					case 11:    // Heartbeat Acknowledge
 						this._heartbeatAcknowledged = true;
