@@ -21,6 +21,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 	public class DiscordDistributor : IPostDistributor
 	{
 		const int BUFFER_SIZE = 65535;
+		byte[] receiveBytes = new byte[BUFFER_SIZE];
 
 		ILogger _logger;
 
@@ -48,7 +49,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void ConnectWebsocket ()
 		{
-			byte[] receiveBytes = new byte[BUFFER_SIZE];
 			ArraySegment<byte> receiveBuffer = new ArraySegment<byte>(receiveBytes);
 			string message;
 
@@ -76,9 +76,9 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void HandleMessage (string message)
 		{
-			JObject messageObject = JObject.Parse(message);
-
 			_logger.LogInformation($"Received message from Discord: {message}");
+
+			JObject messageObject = JObject.Parse(message);
 
 			if (messageObject.ContainsKey("op"))
 			{
@@ -170,8 +170,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			{
 				return;
 			}
-
-			_logger.LogInformation($"Access token: {_settings.AccessToken}, API Base: {_settings.ApiBase}, Channel ID: {_settings.ChannelId}");
 
 			DiscordMessage discordMessage = new DiscordMessage(post.Title, post.Body, post.Link);
 
