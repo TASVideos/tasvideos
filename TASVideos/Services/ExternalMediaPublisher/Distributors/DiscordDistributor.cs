@@ -52,7 +52,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			ArraySegment<byte> receiveBuffer = new ArraySegment<byte>(receiveBytes);
 			string message;
 
-			Uri gatewayUri = new Uri("wss://gateway.discord.com/?v=6&encoding=json");
+			Uri gatewayUri = new Uri("wss://gateway.discord.gg/?v=6&encoding=json");
 			_gateway = new ClientWebSocket();
 			CancellationToken cancellationToken = cancellationTokenSource.Token;
 
