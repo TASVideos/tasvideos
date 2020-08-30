@@ -76,7 +76,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void HandleMessage (string message)
 		{
-			_logger.LogInformation($"Received message from Discord: {message}");
+			Console.WriteLine($"-> Discord: {message}");
 
 			JObject messageObject = JObject.Parse(message);
 
