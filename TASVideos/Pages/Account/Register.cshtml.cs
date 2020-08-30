@@ -74,6 +74,12 @@ namespace TASVideos.Pages.Account
 		[StringLength(256)]
 		public string? From { get; set; }
 
+		[BindProperty]
+		[Required]
+		[StringLength(100, ErrorMessage = "You have not indicated if you are 13 years of age or older.")]
+		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
+		public bool COPPA { get; set; }
+
 		public async Task<IActionResult> OnPost()
 		{
 			if (Password != ConfirmPassword)
