@@ -184,7 +184,7 @@
 				}
 
 				getStr = getStr.slice(0, -1);
-				getStr = "/Roles/AddEdit/" + "@(Model.Id)" + "/RolesThatCanBeAssignedBy?" + getStr;
+				getStr = "/Roles/AddEdit/" + "@(Model.Id)" + "?handler=RolesThatCanBeAssignedBy&" + getStr;
 				xmlhttp.open("GET", getStr, true);
 				xmlhttp.send();
 			} else {

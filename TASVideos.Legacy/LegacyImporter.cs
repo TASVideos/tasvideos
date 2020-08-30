@@ -74,9 +74,28 @@ namespace TASVideos.Legacy
 		private static void Run(string name, Action import)
 		{
 			var stopwatch = Stopwatch.StartNew();
-			import();
+			try
+			{
+				import();
+			}
+			catch (Exception ex)
+			{
+				throw new ImportException(name, ex);
+			}
+
 			ImportDurations.Add($"{name} import", stopwatch.ElapsedMilliseconds);
 			stopwatch.Stop();
+		}
+
+		public class ImportException : Exception
+		{
+			public ImportException(string importStep, Exception innerException)
+				: base($"Exception at import step: {importStep}", innerException)
+			{
+				ImportStep = importStep;
+			}
+
+			public string ImportStep { get; }
 		}
 	}
 }
