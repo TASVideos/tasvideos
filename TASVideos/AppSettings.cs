@@ -13,6 +13,7 @@ namespace TASVideos
 		public Connections ConnectionStrings { get; set; } = new Connections();
 
 		public IrcConnection Irc { get; set; } = new IrcConnection();
+		public DiscordConnection Discord { get; set; } = new DiscordConnection();
 
 		public string StartupStrategy { get; set; } = "";
 
@@ -27,6 +28,15 @@ namespace TASVideos
 			public int Port { get; set; }
 			public string Nick { get; set; } = "";
 			public string Password { get; set; } = "";
+		}
+
+		public class DiscordConnection
+		{
+			public string AccessToken { get; set; } = "";
+			public string ApiBase { get; set; } = "";
+			public string AuthEndpoint { get; set; } = "";
+			public string ChannelId { get; set; } = "";
+			public string Scopes { get; set; } = "bot";
 		}
 
 		public class CacheSetting
