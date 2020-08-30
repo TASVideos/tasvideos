@@ -50,7 +50,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void ConnectWebsocket ()
 		{
-			var receiveBuffer = WebSocket.CreateClientBuffer(BUFFER_SIZE, 0);
+			var receiveBuffer = WebSocket.CreateClientBuffer(BUFFER_SIZE, 4096);
 			string message;
 
 			Uri gatewayUri = new Uri("wss://gateway.discord.gg/?v=6&encoding=json");
