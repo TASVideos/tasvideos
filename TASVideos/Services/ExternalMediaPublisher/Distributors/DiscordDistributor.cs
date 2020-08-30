@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore.SqlServer.ValueGeneration.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 	public class DiscordDistributor : IPostDistributor
 	{
 		const int BUFFER_SIZE = 65535;
-		byte[] receiveBytes = new byte[BUFFER_SIZE];
 
 		ILogger _logger;
 
@@ -49,7 +50,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void ConnectWebsocket ()
 		{
-			ArraySegment<byte> receiveBuffer = new ArraySegment<byte>(receiveBytes);
+			var receiveBuffer = WebSocket.CreateClientBuffer(BUFFER_SIZE, 0);
 			string message;
 
 			Uri gatewayUri = new Uri("wss://gateway.discord.gg/?v=6&encoding=json");
@@ -60,14 +61,14 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			while (_gateway.State == WebSocketState.Open || _gateway.State == WebSocketState.Connecting)
 			{
-				WebSocketReceiveResult result = await _gateway.ReceiveAsync(receiveBuffer, cancellationToken) ;
+				WebSocketReceiveResult result = await _gateway.ReceiveAsync(receiveBuffer, cancellationToken);
 
-				message = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, receiveBuffer.Count);
+				message = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
 
 				while (!result.EndOfMessage)
 				{
 					result = await _gateway.ReceiveAsync(receiveBuffer, cancellationToken);
-					message += Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, receiveBuffer.Count);
+					message += Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
 				}
 
 				HandleMessage(message);
@@ -207,7 +208,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			JObject serializedMessage = new JObject();
 			JObject embedObject = new JObject();
 
-			serializedMessage.Add("content", $"New post from {PostUser}");
+			serializedMessage.Add("content", $"New post{(String.IsNullOrEmpty(PostUser) ? "." : $" from {PostUser}.")}");
 
 			embedObject.Add("title", PostTitle);
 			embedObject.Add("description", PostBody);
