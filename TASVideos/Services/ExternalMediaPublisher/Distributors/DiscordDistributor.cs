@@ -80,7 +80,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			if (messageObject.ContainsKey("op"))
 			{
-				switch (messageObject["ob"].Value<int>())
+				switch (messageObject["op"].Value<int>())
 				{
 					case 1:     // Heartbeat
 						ParseHeartbeat(messageObject);
