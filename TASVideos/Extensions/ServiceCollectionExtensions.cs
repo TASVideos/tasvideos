@@ -215,7 +215,7 @@ namespace TASVideos.Extensions
 
 			services.AddSingleton<IPostDistributor, IrcDistributor>();
 			services.AddSingleton<IPostDistributor, DiscordDistributor>();
-			services.AddScoped<IPostDistributor, DistributorStorage>();
+			//services.AddScoped<IPostDistributor, DistributorStorage>();
 
 			services.AddTransient<ExternalMediaPublisher>();
 			
