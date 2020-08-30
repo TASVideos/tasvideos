@@ -114,7 +114,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			d.Add("properties", properties);
 
 			identifyObject.Add("d", d);
-			identifyObject.Add("intents", 1 << 9);
 
 			await _gateway.SendAsync(Encoding.ASCII.GetBytes(identifyObject.ToString()), WebSocketMessageType.Text, true, cancellationTokenSource.Token);
 		}
