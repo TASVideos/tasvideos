@@ -77,24 +77,27 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private void HandleMessage (string message)
 		{
-			Console.WriteLine($"-> Discord: {message}");
-
-			JObject messageObject = JObject.Parse(message);
-
-			if (messageObject.ContainsKey("op"))
+			if (!String.IsNullOrEmpty(message))
 			{
-				switch (messageObject["op"]!.Value<int>())
+				Console.WriteLine($"-> Discord: {message}");
+
+				JObject messageObject = JObject.Parse(message);
+
+				if (messageObject.ContainsKey("op"))
 				{
-					case 1:     // Heartbeat
-						ParseHeartbeat(messageObject);
-						break;
-					case 10:    // Hello
-						ParseHello(messageObject);
-						Identify();
-						break;
-					case 11:    // Heartbeat Acknowledge
-						this._heartbeatAcknowledged = true;
-						break;
+					switch (messageObject["op"]!.Value<int>())
+					{
+						case 1:     // Heartbeat
+							ParseHeartbeat(messageObject);
+							break;
+						case 10:    // Hello
+							ParseHello(messageObject);
+							Identify();
+							break;
+						case 11:    // Heartbeat Acknowledge
+							this._heartbeatAcknowledged = true;
+							break;
+					}
 				}
 			}
 		}
