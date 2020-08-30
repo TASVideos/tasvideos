@@ -30,7 +30,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		static readonly HttpClient _httpClient = new HttpClient();
 
-		internal static ClientWebSocket _gateway;
+		internal static ClientWebSocket? _gateway;
 		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
 		private int _sequenceNumber = -1;
@@ -63,19 +63,19 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			{
 				WebSocketReceiveResult result = await _gateway.ReceiveAsync(receiveBuffer, cancellationToken);
 
-				message = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
+				message = Encoding.ASCII.GetString(receiveBuffer.Array!, receiveBuffer.Offset, result.Count);
 
 				while (!result.EndOfMessage)
 				{
 					result = await _gateway.ReceiveAsync(receiveBuffer, cancellationToken);
-					message += Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
+					message += Encoding.ASCII.GetString(receiveBuffer.Array!, receiveBuffer.Offset, result.Count);
 				}
 
 				HandleMessage(message);
 			}
 		}
 
-		private async void HandleMessage (string message)
+		private void HandleMessage (string message)
 		{
 			Console.WriteLine($"-> Discord: {message}");
 
@@ -83,7 +83,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			if (messageObject.ContainsKey("op"))
 			{
-				switch (messageObject["op"].Value<int>())
+				switch (messageObject["op"]!.Value<int>())
 				{
 					case 1:     // Heartbeat
 						ParseHeartbeat(messageObject);
@@ -116,19 +116,21 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			identifyObject.Add("d", d);
 
-			await _gateway.SendAsync(Encoding.ASCII.GetBytes(identifyObject.ToString()), WebSocketMessageType.Text, true, cancellationTokenSource.Token);
+			await _gateway!.SendAsync(Encoding.ASCII.GetBytes(identifyObject.ToString()), WebSocketMessageType.Text, true, cancellationTokenSource.Token);
 		}
 
-		private void ParseHello (JObject helloObject)
+		private void ParseHello(JObject helloObject)
 		{
-			int heartbeatTime = helloObject["d"]["heartbeat_interval"].Value<int>();
+#pragma warning disable 8604
+			int heartbeatTime = helloObject["d"]!["heartbeat_interval"]!.Value<int>();
+#pragma warning restore 8604
 
 			_heartbeatTimer = new Timer(callback => SendHeartbeat(), null, heartbeatTime, heartbeatTime);
 		}
 
 		private void ParseHeartbeat (JObject heartbeatObject)
 		{
-			_sequenceNumber = heartbeatObject["d"].Value<int>();
+			_sequenceNumber = heartbeatObject["d"]!.Value<int>();
 		}
 
 		private async void SendHeartbeat()
@@ -156,12 +158,12 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				heartbeatObject.Add("d", _sequenceNumber);
 			}
 
-			await _gateway.SendAsync(Encoding.ASCII.GetBytes(heartbeatObject.ToString()), WebSocketMessageType.Text, true, cancellationTokenSource.Token);
+			await _gateway!.SendAsync(Encoding.ASCII.GetBytes(heartbeatObject.ToString()), WebSocketMessageType.Text, true, cancellationTokenSource.Token);
 		}
 
 		public async Task ShutDown (WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure, string closureMessage = "Shutting down.")
 		{
-			await _gateway.CloseAsync(closeStatus, closureMessage, cancellationTokenSource.Token);
+			await _gateway!.CloseAsync(closeStatus, closureMessage, cancellationTokenSource.Token);
 		}
 
 		public async void Post (IPostable post)
