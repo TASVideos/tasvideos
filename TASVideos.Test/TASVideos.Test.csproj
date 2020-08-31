@@ -4,6 +4,12 @@
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="MovieParsers\Bk2SampleFiles\Gambatte-CycleCount.bk2" />
+	  <None Remove="MovieParsers\Bk2SampleFiles\Gambatte-InvalidCycleCount.bk2" />
+	  <None Remove="MovieParsers\Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
+	  <None Remove="MovieParsers\Bk2SampleFiles\SubGbHawk-CycleCount.bk2" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -12,6 +18,9 @@
 	<ItemGroup>
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\0Frames.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\2Frames.bk2" />
+		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Gambatte-CycleCount.bk2" />
+		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Gambatte-InvalidCycleCount.bk2" />
+		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\MissingHeader.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\MissingInputLog.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\NoFileExts.bk2" />
@@ -20,6 +29,7 @@
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\RerecordCountMissing.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\savestate.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\sram.bk2" />
+		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubGbHawk-CycleCount.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubNes.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\SubNesMissingVBlank.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-32x.bk2" />

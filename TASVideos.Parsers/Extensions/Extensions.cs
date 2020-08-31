@@ -67,6 +67,21 @@ namespace TASVideos.MovieParsers.Extensions
 		}
 
 		/// <summary>
+		/// Parses the given string as a long.
+		/// If value can not be parsed, null is returned
+		/// </summary>
+		public static long? ToLong(this string val)
+		{
+			var result = long.TryParse(val, out var parsedVal);
+			if (result)
+			{
+				return parsedVal;
+			}
+
+			return null;
+		}
+
+		/// <summary>
 		/// Parses the given string as a boolean.
 		/// </summary>
 		/// <returns>True if value is a case insensitive true, or a 1</returns>

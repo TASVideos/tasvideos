@@ -162,5 +162,50 @@ namespace TASVideos.Test.MovieParsers
 			Assert.IsNotNull(result.Errors);
 			Assert.IsTrue(result.Errors.Any());
 		}
+
+		[TestMethod]
+		public void Gambatte_UsesCycleCount()
+		{
+			var result = _bk2Parser.Parse(Embedded("Gambatte-CycleCount.bk2"));
+
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(30, result.Frames);
+			Assert.AreEqual(60, result.FrameRateOverride);
+		}
+
+
+		[TestMethod]
+		public void Gamebatte_MissingCycleCount_FallsbackToInputLog()
+		{
+			var result = _bk2Parser.Parse(Embedded("Gambatte-NoCycleCount.bk2"));
+
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(30, result.Frames);
+			Assert.IsNull(result.FrameRateOverride);
+		}
+
+		[TestMethod]
+		public void Gamebatte_InvalidCycleCountFormat_FallsbackToInputLog()
+		{
+			var result = _bk2Parser.Parse(Embedded("Gambatte-InvalidCycleCount.bk2"));
+
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(30, result.Frames);
+			Assert.IsNull(result.FrameRateOverride);
+		}
+
+		[TestMethod]
+		public void SubGbHawk_UsesCycleCount()
+		{
+			var result = _bk2Parser.Parse(Embedded("SubGbHawk-CycleCount.bk2"));
+
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(30, result.Frames);
+			Assert.AreEqual(60, result.FrameRateOverride);
+		}
 	}
 }

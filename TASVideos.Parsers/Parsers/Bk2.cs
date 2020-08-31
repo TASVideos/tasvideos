@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using TASVideos.MovieParsers.Extensions;
@@ -31,6 +32,7 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 
 			int? vBlankCount;
+			long? cycleCount;
 			string core;
 
 			using (var stream = headerEntry.Open())
@@ -105,7 +107,8 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 
 				vBlankCount = header.GetValueFor(Keys.VBlankCount).ToInt();
-				core = header.GetValueFor(Keys.Core);
+				cycleCount = header.GetValueFor(Keys.CycleCount).ToLong();
+				core = header.GetValueFor(Keys.Core)?.ToLower() ?? "";
 			}
 
 			var inputLog = archive.Entry(InputFile);
@@ -114,16 +117,20 @@ namespace TASVideos.MovieParsers.Parsers
 				return Error($"Missing {InputFile}, can not parse");
 			}
 
-			using (var stream = inputLog.Open())
+			using var inputStream = inputLog.Open();
+			using var inputReader = new StreamReader(inputStream);
+			result.Frames = inputReader
+				.ReadToEnd()
+				.LineSplit()
+				.PipeCount();
+
+			if (cycleCount.HasValue && CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
 			{
-				using var reader = new StreamReader(stream);
-				result.Frames = reader
-					.ReadToEnd()
-					.LineSplit()
-					.PipeCount();
+				var seconds = cycleCount.Value / (double)cyclesPerFrame;
+				result.FrameRateOverride = result.Frames / seconds;
 			}
 
-			if (core?.ToLower() == "subneshawk")
+			if (core == "subneshawk")
 			{
 				if (!vBlankCount.HasValue)
 				{
@@ -135,6 +142,12 @@ namespace TASVideos.MovieParsers.Parsers
 
 			return result;
 		}
+
+		private static readonly Dictionary<string, int> CycleBasedCores = new Dictionary<string, int>
+		{
+			["subgbhawk"] = 4194304,
+			["gambatte"] = 2097152
+		};
 
 		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
 		{
@@ -162,6 +175,7 @@ namespace TASVideos.MovieParsers.Parsers
 			public const string ModeGg = "isggmode";
 			public const string ModeSg = "issgmode";
 			public const string VBlankCount = "vblankcount";
+			public const string CycleCount = "cyclecount";
 			public const string Core = "core";
 		}
 	}
