@@ -84,7 +84,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private void HandleMessage (string message)
 		{
-			if (!String.IsNullOrEmpty(message))
+			if (!string.IsNullOrEmpty(message))
 			{
 				Console.WriteLine($"-> Discord: {message}");
 
@@ -187,7 +187,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			HttpClient httpClient = _httpClientFactory.CreateClient("Discord");
 			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bot", _settings.AccessToken);
 
-			var response = await httpClient!.PostAsync($"channels/{_settings.ChannelId}/messages", messageContent, cancellationTokenSource.Token);
+			var response = await httpClient!.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, cancellationTokenSource.Token);
 
 			if (!response.IsSuccessStatusCode)
 			{
@@ -217,7 +217,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			JObject serializedMessage = new JObject();
 			JObject embedObject = new JObject();
 
-			serializedMessage.Add("content", $"New post{(String.IsNullOrEmpty(PostUser) ? "." : $" from {PostUser}.")}");
+			serializedMessage.Add("content", $"New post{(string.IsNullOrEmpty(PostUser) ? "." : $" from {PostUser}.")}");
 
 			embedObject.Add("title", PostTitle);
 			embedObject.Add("description", PostBody);
