@@ -48,6 +48,13 @@ namespace TASVideos
 			services
 				.AddMvcWithOptions()
 				.AddIdentity(Environment);
+
+			// HTTP Client
+			services
+				.AddHttpClient("Discord", client =>
+				{
+					client.BaseAddress = new System.Uri("https://discord.com/api/v6/");
+				});
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
