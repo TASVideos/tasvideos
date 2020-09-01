@@ -188,15 +188,13 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			DiscordMessage discordMessage = new DiscordMessage(post.Title, post.Body, post.Link);
 
-			HttpRequestMessage apiRequest = new HttpRequestMessage();
-			apiRequest.Method = HttpMethod.Post;
-			apiRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bot", _settings.AccessToken);
-			apiRequest.Content = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
-			apiRequest.RequestUri = new Uri($"channels/{_settings.ChannelId}/messages");
+			HttpContent messageContent = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
 
 			HttpClient httpClient = _httpClientFactory.CreateClient("Discord");
+			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bot", _settings.AccessToken);
 
-			var response = await httpClient!.SendAsync(apiRequest).ConfigureAwait(false);
+			var response = await httpClient!.PostAsync($"channels/{_settings.ChannelId}/messages", messageContent, cancellationTokenSource.Token);
+
 			if (!response.IsSuccessStatusCode)
 			{
 				_logger.LogError($"[{DateTime.Now}] An error occurred sending a message to Discord.");
