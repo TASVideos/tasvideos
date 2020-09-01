@@ -30,9 +30,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private bool _initialized = false;
 
-		// TODO: register with HttpClient factor and DI
-		// https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
-		static readonly HttpClient _httpClient = new HttpClient();
+		private readonly IHttpClientFactory _httpClientFactory;
 
 		internal static ClientWebSocket? _gateway;
 		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -44,10 +42,11 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
 
-		public DiscordDistributor (IOptions<AppSettings> appSettings, ILogger<DiscordDistributor> logger)
+		public DiscordDistributor (IOptions<AppSettings> appSettings, ILogger<DiscordDistributor> logger, IHttpClientFactory httpClientFactory)
 		{
 			_logger = logger;
 			_settings = appSettings.Value.Discord;
+			_httpClientFactory = httpClientFactory;
 
 			if (string.IsNullOrWhiteSpace(appSettings.Value.Discord.AccessToken))
 			{
@@ -193,9 +192,11 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			apiRequest.Method = HttpMethod.Post;
 			apiRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bot", _settings.AccessToken);
 			apiRequest.Content = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
-			apiRequest.RequestUri = new Uri($"{_settings.ApiBase}/channels/{_settings.ChannelId}/messages");
+			apiRequest.RequestUri = new Uri($"channels/{_settings.ChannelId}/messages");
 
-			var response = await _httpClient!.SendAsync(apiRequest).ConfigureAwait(false);
+			HttpClient httpClient = _httpClientFactory.CreateClient("Discord");
+
+			var response = await httpClient!.SendAsync(apiRequest).ConfigureAwait(false);
 			if (!response.IsSuccessStatusCode)
 			{
 				_logger.LogError($"[{DateTime.Now}] An error occurred sending a message to Discord.");
