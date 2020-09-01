@@ -27,12 +27,9 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		ILogger _logger;
 
 		private readonly AppSettings.DiscordConnection _settings;
-
-		private bool _initialized = false;
-
 		private readonly IHttpClientFactory _httpClientFactory;
+		private readonly ClientWebSocket _gateway;
 
-		internal static ClientWebSocket? _gateway;
 		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
 		private int _sequenceNumber = -1;
@@ -48,13 +45,14 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			_settings = appSettings.Value.Discord;
 			_httpClientFactory = httpClientFactory;
 
+			_gateway = new ClientWebSocket();
+
 			if (string.IsNullOrWhiteSpace(appSettings.Value.Discord.AccessToken))
 			{
 				logger.Log(LogLevel.Warning, "Discord bot access key not provided. Bot initialization skipped");
 				return;
 			}
 
-			_initialized = true;
 			ConnectWebsocket();
 		}
 
@@ -64,7 +62,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			string message;
 
 			Uri gatewayUri = new Uri("wss://gateway.discord.gg/?v=6&encoding=json");
-			_gateway = new ClientWebSocket();
 			CancellationToken cancellationToken = cancellationTokenSource.Token;
 
 			await _gateway.ConnectAsync(gatewayUri, cancellationToken);
@@ -128,6 +125,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			d.Add("properties", properties);
 
 			identifyObject.Add("d", d);
+			identifyObject.Add("intents", 0);
 
 			await _gateway!.SendAsync(Encoding.ASCII.GetBytes(identifyObject.ToString()), WebSocketMessageType.Text, true, cancellationTokenSource.Token);
 		}
@@ -139,6 +137,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 #pragma warning restore 8604
 
 			_heartbeatTimer = new Timer(callback => SendHeartbeat(), null, heartbeatTime, heartbeatTime);
+			_heartbeatAcknowledged = true;
 		}
 
 		private void ParseHeartbeat (JObject heartbeatObject)
@@ -181,11 +180,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public async void Post (IPostable post)
 		{
-			if (!_initialized)
-			{
-				return;
-			}
-
 			DiscordMessage discordMessage = new DiscordMessage(post.Title, post.Body, post.Link);
 
 			HttpContent messageContent = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
