@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -122,6 +122,11 @@ namespace TASVideos.Pages.Forum
 			_db.ForumPolls.Add(poll);
 			topic.Poll = poll;
 			await _db.SaveChangesAsync();
+		}
+
+		public new IActionResult NotFound()
+		{
+			return RedirectToPage("/Forum/NotFound");
 		}
 	}
 }
