@@ -22,7 +22,7 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function () {
-		generateDiff(1);
+		generateDiff(1, false);
 	});
 
 	document.querySelectorAll('[name="diff-type"]')
@@ -44,7 +44,6 @@
 		var base = difflib.stringAsLines(leftMarkup);
 		var newTxt = difflib.stringAsLines(rightMarkup);
 		var opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes();
-
 		diffElem.innerHTML = "";
 
 		diffElem.appendChild(diffview.buildView({
@@ -53,7 +52,7 @@
 			opcodes: opcodes,
 			baseTextName:  "r@(Model.Diff.LeftRevision)",
 			newTextName: "r@(Model.Diff.RightRevision)",
-			contextSize: null,
+			contextSize: 5,
 			viewType: viewType
 		}));
 	}
