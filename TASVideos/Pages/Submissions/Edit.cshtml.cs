@@ -142,6 +142,10 @@ namespace TASVideos.Pages.Submissions
 			{
 				Submission.TierId = null;
 			}
+			else if (Submission.Status == SubmissionStatus.Accepted || Submission.Status == SubmissionStatus.PublicationUnderway)
+			{
+				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TierId)}", "A submission can not be accepted without a Tier");
+			}
 
 			var subInfo = await Db.Submissions
 				.Where(s => s.Id == Id)
@@ -167,11 +171,7 @@ namespace TASVideos.Pages.Submissions
 				subInfo.UserIsJudge)
 				.ToList();
 
-			if (!Submission.TierId.HasValue
-				&& (Submission.Status == SubmissionStatus.Accepted || Submission.Status == SubmissionStatus.PublicationUnderway))
-			{
-				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TierId)}", "A submission can not be accepted without a Tier");
-			}
+			
 
 			if (!availableStatus.Contains(Submission.Status))
 			{
