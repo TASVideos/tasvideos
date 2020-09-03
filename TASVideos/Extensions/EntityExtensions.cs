@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -70,7 +71,7 @@ namespace TASVideos.Extensions
 				.Select(g => new SelectListItem
 				{
 					Value = g.Id.ToString(),
-					Text = g.RegionCode + " " + g.FrameRate + (g.Obsolete ? " (Obsolete)" : "")
+					Text = g.RegionCode + " " + Math.Round(g.FrameRate, 4) + (g.Obsolete ? " (Obsolete)" : "")
 				});
 		}
 
