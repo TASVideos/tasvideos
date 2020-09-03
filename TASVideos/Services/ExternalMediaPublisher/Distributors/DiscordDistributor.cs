@@ -1,41 +1,32 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.EntityFrameworkCore.SqlServer.ValueGeneration.Internal;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using TASVideos.Api.Requests;
-using TASVideos.Pages.Profile;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
 	public class DiscordDistributor : IPostDistributor
 	{
-		const int BUFFER_SIZE = 65535;
+		private const int BufferSize = 65535;
 
-		ILogger _logger;
-
+		private readonly ILogger _logger;
 		private readonly AppSettings.DiscordConnection _settings;
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ClientWebSocket _gateway;
 
-		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+		private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
 		private int _sequenceNumber = -1;
-		private bool _heartbeatAcknowledged = false;
+		private bool _heartbeatAcknowledged;
 
-		Timer? _heartbeatTimer;
+		// ReSharper disable once NotAccessedField.Local
+		private Timer? _heartbeatTimer;
 
 		public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
 
@@ -58,11 +49,10 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void ConnectWebsocket ()
 		{
-			var receiveBuffer = WebSocket.CreateClientBuffer(BUFFER_SIZE, 4096);
-			string message;
+			var receiveBuffer = WebSocket.CreateClientBuffer(BufferSize, 4096);
 
 			Uri gatewayUri = new Uri("wss://gateway.discord.gg/?v=6&encoding=json");
-			CancellationToken cancellationToken = cancellationTokenSource.Token;
+			CancellationToken cancellationToken = _cancellationTokenSource.Token;
 
 			await _gateway.ConnectAsync(gatewayUri, cancellationToken);
 
@@ -70,7 +60,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			{
 				WebSocketReceiveResult result = await _gateway.ReceiveAsync(receiveBuffer, cancellationToken);
 
-				message = Encoding.ASCII.GetString(receiveBuffer.Array!, receiveBuffer.Offset, result.Count);
+				string message = Encoding.ASCII.GetString(receiveBuffer.Array!, receiveBuffer.Offset, result.Count);
 
 				while (!result.EndOfMessage)
 				{
@@ -102,7 +92,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 							Identify();
 							break;
 						case 11:    // Heartbeat Acknowledge
-							this._heartbeatAcknowledged = true;
+							_heartbeatAcknowledged = true;
 							break;
 					}
 				}
@@ -111,23 +101,23 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void Identify()
 		{
-			JObject identifyObject = new JObject();
-			identifyObject.Add("op", 2);
+			
+			JObject properties = new JObject
+			{
+				{"$os", "linux"}, {"$browser", "none"}, {"$device", "none"}
+			};
 
-			JObject d = new JObject();
-			d.Add("token", _settings.AccessToken);
+			JObject d = new JObject
+			{
+				{"token", _settings.AccessToken}, {"properties", properties}
+			};
 
-			JObject properties = new JObject();
-			properties.Add("$os", "linux");
-			properties.Add("$browser", "none");
-			properties.Add("$device", "none");
+			JObject identifyObject = new JObject
+			{
+				{"op", 2}, {"d", d}, {"intents", 0}
+			};
 
-			d.Add("properties", properties);
-
-			identifyObject.Add("d", d);
-			identifyObject.Add("intents", 0);
-
-			await _gateway!.SendAsync(Encoding.ASCII.GetBytes(identifyObject.ToString()), WebSocketMessageType.Text, true, cancellationTokenSource.Token);
+			await _gateway.SendAsync(Encoding.ASCII.GetBytes(identifyObject.ToString()), WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
 		}
 
 		private void ParseHello(JObject helloObject)
@@ -140,7 +130,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			_heartbeatAcknowledged = true;
 		}
 
-		private void ParseHeartbeat (JObject heartbeatObject)
+		private void ParseHeartbeat(JObject heartbeatObject)
 		{
 			_sequenceNumber = heartbeatObject["d"]!.Value<int>();
 		}
@@ -158,8 +148,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			_heartbeatAcknowledged = false;
 
-			JObject heartbeatObject = new JObject();
-			heartbeatObject.Add("op", 1);
+			JObject heartbeatObject = new JObject { {"op", 1} };
 
 			if (_sequenceNumber == -1)
 			{
@@ -170,12 +159,12 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				heartbeatObject.Add("d", _sequenceNumber);
 			}
 
-			await _gateway!.SendAsync(Encoding.ASCII.GetBytes(heartbeatObject.ToString()), WebSocketMessageType.Text, true, cancellationTokenSource.Token);
+			await _gateway!.SendAsync(Encoding.ASCII.GetBytes(heartbeatObject.ToString()), WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
 		}
 
 		public async Task ShutDown (WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure, string closureMessage = "Shutting down.")
 		{
-			await _gateway!.CloseAsync(closeStatus, closureMessage, cancellationTokenSource.Token);
+			await _gateway!.CloseAsync(closeStatus, closureMessage, _cancellationTokenSource.Token);
 		}
 
 		public async void Post (IPostable post)
@@ -187,7 +176,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			HttpClient httpClient = _httpClientFactory.CreateClient("Discord");
 			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bot", _settings.AccessToken);
 
-			var response = await httpClient!.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, cancellationTokenSource.Token);
+			var response = await httpClient!.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, _cancellationTokenSource.Token);
 
 			if (!response.IsSuccessStatusCode)
 			{
@@ -199,29 +188,30 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 	internal class DiscordMessage
 	{
-		string PostTitle { get; set; }
-		string PostBody { get; set; }
-		string PostUrl { get; set; }
-		string PostUser { get; set; } = "";
+		public string PostTitle { get; set; }
+		public string PostBody { get; set; }
+		public string PostUrl { get; set; }
+		public string PostUser { get; set; } = "";
 
 
-		public DiscordMessage (string postTitle, string postBody, string postUrl)
+		public DiscordMessage(string postTitle, string postBody, string postUrl)
 		{
-			this.PostTitle = postTitle;
-			this.PostBody = postBody;
-			this.PostUrl = postUrl;
+			PostTitle = postTitle;
+			PostBody = postBody;
+			PostUrl = postUrl;
 		}
 
-		public string Serialize ()
+		public string Serialize()
 		{
-			JObject serializedMessage = new JObject();
-			JObject embedObject = new JObject();
+			JObject serializedMessage = new JObject
+			{
+				{ "content", $"New post{(string.IsNullOrEmpty(PostUser) ? "." : $" from {PostUser}.")}" }
+			};
 
-			serializedMessage.Add("content", $"New post{(string.IsNullOrEmpty(PostUser) ? "." : $" from {PostUser}.")}");
-
-			embedObject.Add("title", PostTitle);
-			embedObject.Add("description", PostBody);
-			embedObject.Add("url", PostUrl);
+			JObject embedObject = new JObject
+			{
+				{"title", PostTitle}, {"description", PostBody}, {"url", PostUrl}
+			};
 
 			serializedMessage.Add("embed", embedObject);
 
