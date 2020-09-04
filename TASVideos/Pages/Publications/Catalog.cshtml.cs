@@ -31,6 +31,13 @@ namespace TASVideos.Pages.Publications
 		[FromRoute]
 		public int Id { get; set; }
 
+		[FromQuery]
+		public int? GameId { get; set;}
+
+		[FromQuery]
+		public int? RomId { get; set; }
+
+		[BindProperty]
 		public PublicationCatalogModel Catalog { get; set; } = new PublicationCatalogModel();
 
 		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
@@ -55,6 +62,25 @@ namespace TASVideos.Pages.Publications
 			if (Catalog == null)
 			{
 				return NotFound();
+			}
+
+			if (GameId.HasValue)
+			{
+				var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId && g.SystemId == Catalog.SystemId);
+				if (game != null)
+				{
+					Catalog.GameId = game.Id;
+
+					// We only want to pre-populate the Rom if a valid Game was provided
+					if (RomId.HasValue)
+					{
+						var rom = await _db.GameRoms.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId);
+						if (rom != null)
+						{
+							Catalog.RomId = rom.Id;
+						}
+					}
+				}
 			}
 
 			await PopulateCatalogDropDowns(Catalog.GameId, Catalog.SystemId);
