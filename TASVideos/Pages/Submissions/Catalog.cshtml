@@ -150,7 +150,7 @@
 
 		document.getElementById('create-rom').onclick = function () {
 			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
-			document.location = '/Games/' + gameId + '/Roms/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()';
+			document.location = '/Games/' + gameId + '/Roms/Edit?returnUrl=@PageContext.HttpContext.Request.Path';
 		}
 
 		document.getElementById('create-game').onclick = function () {

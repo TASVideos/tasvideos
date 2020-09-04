@@ -147,7 +147,7 @@ namespace TASVideos.Pages.Games.Roms
 
 			return string.IsNullOrWhiteSpace(ReturnUrl)
 				? RedirectToPage("List", new { gameId = GameId })
-				: RedirectToLocal(ReturnUrl);
+				: RedirectToLocal(ReturnUrl + $"?GameId={GameId}&RomId={rom.Id}");
 		}
 
 		public async Task<ActionResult> OnPostDelete()
