@@ -121,7 +121,7 @@ namespace TASVideos.Pages.Submissions
 			return File(submissionFile, MediaTypeNames.Application.Octet, $"submission{Id}.zip");
 		}
 
-		public async Task<IActionResult> OnGetClaim()
+		public async Task<IActionResult> OnGetClaimForJudging()
 		{
 			if (!User.Has(PermissionTo.JudgeSubmissions))
 			{
@@ -147,7 +147,7 @@ namespace TASVideos.Pages.Submissions
 			{
 				PageName = submission.WikiContent!.PageName,
 				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Identity.Name}]: Claiming for judging.",
-				RevisionMessage = "Claiming for judging"
+				RevisionMessage = "Claimed for judging"
 			};
 			submission.WikiContent = wikiPage;
 			submission.JudgeId = User.GetUserId();
@@ -161,6 +161,58 @@ namespace TASVideos.Pages.Submissions
 					Group = PostGroups.Submission,
 					Body = "",
 					Title = $"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Identity.Name}",
+					Link = $"{BaseUrl}/{Id}S"
+				});
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				// Assume the status changed and can no longer be claimed
+				return BadRequest("Submission can not be claimed");
+			}
+
+			return RedirectToPage("View", new { Id });
+		}
+
+		public async Task<IActionResult> OnGetClaimForPublishing()
+		{
+			if (!User.Has(PermissionTo.PublishMovies))
+			{
+				return AccessDenied();
+			}
+
+			var submission = await _db.Submissions
+				.Include(s => s.WikiContent)
+				.SingleOrDefaultAsync(s => s.Id == Id);
+
+			if (submission == null)
+			{
+				return NotFound();
+			}
+
+			if (submission.Status != SubmissionStatus.Accepted)
+			{
+				return BadRequest("Submission can not be claimed");
+			}
+
+			submission.Status = SubmissionStatus.PublicationUnderway;
+			var wikiPage = new WikiPage
+			{
+				PageName = submission.WikiContent!.PageName,
+				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Identity.Name}]: Processing...",
+				RevisionMessage = "Claimed for publication"
+			};
+			submission.WikiContent = wikiPage;
+			submission.PublisherId = User.GetUserId();
+
+			try
+			{
+				await _wikiPages.Add(wikiPage);
+				_publisher.Send(new Post
+				{
+					Type = PostType.General,
+					Group = PostGroups.Submission,
+					Body = "",
+					Title = $"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Identity.Name}",
 					Link = $"{BaseUrl}/{Id}S"
 				});
 			}

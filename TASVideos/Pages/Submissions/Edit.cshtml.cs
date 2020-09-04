@@ -296,7 +296,7 @@ namespace TASVideos.Pages.Submissions
 				if (statusHasChanged)
 				{
 					var statusStr = Submission.Status == SubmissionStatus.Accepted
-						? $"{Submission.Status.ToString()} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
+						? $"{Submission.Status} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
 						: Submission.Status.ToString();
 					title = $"{User.Identity.Name} set Submission {statusStr} on {submission.Title}";
 				}
