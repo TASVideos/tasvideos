@@ -7,7 +7,7 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models
 {
-	public class SubmissionListEntry : ITimeable
+	public class SubmissionListEntry : ITimeable, ISubmissionDisplay
 	{
 		[Sortable]
 		public string? System { get; set; }
