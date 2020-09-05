@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Microsoft.AspNetCore.Mvc.Rendering;
-
 using TASVideos.Data.Entity;
+using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.Data.Helpers
 {
@@ -22,82 +21,86 @@ namespace TASVideos.Data.Helpers
 			bool isJudge)
 		{
 			// Published submissions can not be changed
-			if (currentStatus == SubmissionStatus.Published)
+			if (currentStatus == Published)
 			{
-				return new List<SubmissionStatus> { SubmissionStatus.Published };
+				return new List<SubmissionStatus> { Published };
 			}
 
 			var perms = userPermissions.ToList();
 			if (perms.Contains(PermissionTo.OverrideSubmissionStatus)
-				&& currentStatus != SubmissionStatus.Published)
+				&& currentStatus != Published)
 			{
 				return Enum.GetValues(typeof(SubmissionStatus))
 					.Cast<SubmissionStatus>()
-					.Except(new[] { SubmissionStatus.Published }); // Published status must only be set when being published
+					.Except(new[] { Published }); // Published status must only be set when being published
 			}
 
-			var list = new List<SubmissionStatus>();
+			var list = new HashSet<SubmissionStatus>();
+			list.Add(currentStatus); // The current status must always be in the list
 
-			if (currentStatus == SubmissionStatus.JudgingUnderWay && isJudge // The judge can set back to new if they claimed the submission and are now opting out
-				|| currentStatus == SubmissionStatus.Rejected && perms.Contains(PermissionTo.JudgeSubmissions) // A judge can revive a rejected submission by setting it to new
-				|| currentStatus == SubmissionStatus.Accepted && isJudge)  // A judge can undo their judgment
+			if (isJudge && currentStatus == JudgingUnderWay // The judge can set back to new if they claimed the submission and are now opting out
+				|| currentStatus == Rejected && perms.Contains(PermissionTo.JudgeSubmissions) // A judge can revive a rejected submission by setting it to new
+				|| currentStatus == Accepted && isJudge // A judge can undo their judgment
+				|| isJudge && currentStatus == Delayed // Judges can set delayed -> new
+				|| isJudge && currentStatus == NeedsMoreInfo // Judges can set info -> new
+				|| (isJudge || isAuthorOrSubmitter) && currentStatus == Cancelled)
 			{
-				list.Add(SubmissionStatus.New);
+				list.Add(New);
 			}
 
-			if (currentStatus == SubmissionStatus.New
+			if (currentStatus == New
 				&& perms.Contains(PermissionTo.JudgeSubmissions)
 				&& !isAuthorOrSubmitter) // A judge can claim a new run, unless they are an author or the submitter
 			{
-				list.Add(SubmissionStatus.JudgingUnderWay);
+				list.Add(JudgingUnderWay);
 			}
 
-			if ((currentStatus == SubmissionStatus.New || currentStatus == SubmissionStatus.JudgingUnderWay) // An author or a judge can set a submission to delayed so long as it does not have a judgment
-				&& (perms.Contains(PermissionTo.JudgeSubmissions) || isAuthorOrSubmitter))
+			if ((currentStatus == New || currentStatus == JudgingUnderWay) // An author or a judge can set a submission to delayed so long as it does not have a judgment
+				&& (perms.Contains(PermissionTo.JudgeSubmissions)))
 			{
-				list.Add(SubmissionStatus.Delayed);
+				list.Add(Delayed);
 			}
 
-			if ((currentStatus == SubmissionStatus.New || currentStatus == SubmissionStatus.JudgingUnderWay) // A judge can set a submission to needs more info so long as it does not have a judgment
+			if ((currentStatus == New || currentStatus == JudgingUnderWay) // A judge can set a submission to needs more info so long as it does not have a judgment
 				&& perms.Contains(PermissionTo.JudgeSubmissions))
 			{
-				list.Add(SubmissionStatus.NeedsMoreInfo);
+				list.Add(NeedsMoreInfo);
 			}
 
-			if ((currentStatus == SubmissionStatus.New
-				|| currentStatus == SubmissionStatus.JudgingUnderWay
-				|| currentStatus == SubmissionStatus.Delayed
-				|| currentStatus == SubmissionStatus.NeedsMoreInfo)
+			if ((currentStatus == New
+				|| currentStatus == JudgingUnderWay
+				|| currentStatus == Delayed
+				|| currentStatus == NeedsMoreInfo)
 				&& isJudge && !isAuthorOrSubmitter
 				&& submitDate < DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgment)) // A judge can claim a new run, unless they are an author or the submitter
 			{
-				list.Add(SubmissionStatus.Accepted);
-				list.Add(SubmissionStatus.Rejected);
+				list.Add(Accepted);
+				list.Add(Rejected);
 			}
 
-			if (currentStatus == SubmissionStatus.Accepted && perms.Contains(PermissionTo.PublishMovies)) // A publisher can set it to publication underway if it has been accepted
+			if (currentStatus == Accepted && perms.Contains(PermissionTo.PublishMovies)) // A publisher can set it to publication underway if it has been accepted
 			{
-				list.Add(SubmissionStatus.PublicationUnderway);
+				list.Add(PublicationUnderway);
 			}
 
 			if ((perms.Contains(PermissionTo.JudgeSubmissions) || isAuthorOrSubmitter) // An author or a judge can cancel a submission if it is not had a verdict
-				&& (currentStatus == SubmissionStatus.New
-					|| currentStatus == SubmissionStatus.JudgingUnderWay
-					|| currentStatus == SubmissionStatus.Delayed
-					|| currentStatus == SubmissionStatus.NeedsMoreInfo))
+				&& (currentStatus == New
+					|| currentStatus == JudgingUnderWay
+					|| currentStatus == Delayed
+					|| currentStatus == NeedsMoreInfo
+					|| currentStatus == Accepted)) // Still not too late for judge or submitter to cancel
 			{
-				list.Add(SubmissionStatus.Cancelled);
+				list.Add(Cancelled);
 			}
-
-			if (!list.Contains(currentStatus))
+			else if (isAuthorOrSubmitter && currentStatus == PublicationUnderway)
 			{
-				list.Add(currentStatus);
+				list.Add(Cancelled); // Still not too late for the submitter to cancel
 			}
 
 			return list;
 		}
 
-		private static int? IsNumberedLink(string link, string suffix)
+		private static int? IsNumberedLink(string? link, string suffix)
 		{
 			if (link != null && link.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
 			{
