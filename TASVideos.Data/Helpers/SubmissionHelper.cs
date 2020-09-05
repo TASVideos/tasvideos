@@ -18,7 +18,8 @@ namespace TASVideos.Data.Helpers
 			IEnumerable<PermissionTo> userPermissions,
 			DateTime submitDate,
 			bool isAuthorOrSubmitter,
-			bool isJudge)
+			bool isJudge,
+			bool isPublisher)
 		{
 			// Published submissions can not be changed
 			if (currentStatus == Published)
@@ -38,9 +39,14 @@ namespace TASVideos.Data.Helpers
 			var list = new HashSet<SubmissionStatus>();
 			list.Add(currentStatus); // The current status must always be in the list
 
+			var canJudge = perms.Contains(PermissionTo.JudgeSubmissions);
+			var canPublish = perms.Contains(PermissionTo.PublishMovies);
+			var isAfterJudgementWindow = submitDate < DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgment);
+
 			if (isJudge && currentStatus == JudgingUnderWay // The judge can set back to new if they claimed the submission and are now opting out
-				|| currentStatus == Rejected && perms.Contains(PermissionTo.JudgeSubmissions) // A judge can revive a rejected submission by setting it to new
+				|| currentStatus == Rejected && isJudge // A judge can revive a rejected submission by setting it to new
 				|| currentStatus == Accepted && isJudge // A judge can undo their judgment
+				|| currentStatus == PublicationUnderway && isJudge // A judge can undo even if publication underway
 				|| isJudge && currentStatus == Delayed // Judges can set delayed -> new
 				|| isJudge && currentStatus == NeedsMoreInfo // Judges can set info -> new
 				|| (isJudge || isAuthorOrSubmitter) && currentStatus == Cancelled)
@@ -48,53 +54,57 @@ namespace TASVideos.Data.Helpers
 				list.Add(New);
 			}
 
-			if (currentStatus == New
-				&& perms.Contains(PermissionTo.JudgeSubmissions)
-				&& !isAuthorOrSubmitter) // A judge can claim a new run, unless they are an author or the submitter
+
+			 // A judge can claim a new run, unless they are not author or the submitter
+			if ((new[] { New, JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, Rejected, PublicationUnderway, Cancelled }.Contains(currentStatus))
+				&& canJudge
+				&& !isAuthorOrSubmitter)
 			{
 				list.Add(JudgingUnderWay);
 			}
 
-			if ((currentStatus == New || currentStatus == JudgingUnderWay) // An author or a judge can set a submission to delayed so long as it does not have a judgment
-				&& (perms.Contains(PermissionTo.JudgeSubmissions)))
+			 // A judge can set a submission to delayed or needs more info so long as they have claimed it
+			if ((new[] { JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, PublicationUnderway }.Contains(currentStatus))
+				&& isJudge
+				&& isAfterJudgementWindow)
 			{
+				list.Add(JudgingUnderWay);
 				list.Add(Delayed);
-			}
-
-			if ((currentStatus == New || currentStatus == JudgingUnderWay) // A judge can set a submission to needs more info so long as it does not have a judgment
-				&& perms.Contains(PermissionTo.JudgeSubmissions))
-			{
 				list.Add(NeedsMoreInfo);
 			}
 
-			if ((currentStatus == New
-				|| currentStatus == JudgingUnderWay
-				|| currentStatus == Delayed
-				|| currentStatus == NeedsMoreInfo)
-				&& isJudge && !isAuthorOrSubmitter
-				&& submitDate < DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgment)) // A judge can claim a new run, unless they are an author or the submitter
+			 // A judge can deliver a verdict if they have claimed the submission
+			if ((new[] { JudgingUnderWay, Delayed, NeedsMoreInfo, PublicationUnderway }.Contains(currentStatus))
+				&& isJudge
+				&& isAfterJudgementWindow)
 			{
 				list.Add(Accepted);
 				list.Add(Rejected);
 			}
+			else if ((currentStatus == Accepted || currentStatus == PublicationUnderway)
+				&& isJudge
+				&& isAfterJudgementWindow)
+			{
+				list.Add(Rejected); // A judge can overrule themselves and reject an accepted movie
+			}
 
-			if (currentStatus == Accepted && perms.Contains(PermissionTo.PublishMovies)) // A publisher can set it to publication underway if it has been accepted
+			// A publisher can set it to publication underway if it has been accepted
+			if (currentStatus == Accepted && canPublish)
 			{
 				list.Add(PublicationUnderway);
 			}
 
-			if ((perms.Contains(PermissionTo.JudgeSubmissions) || isAuthorOrSubmitter) // An author or a judge can cancel a submission if it is not had a verdict
-				&& (currentStatus == New
-					|| currentStatus == JudgingUnderWay
-					|| currentStatus == Delayed
-					|| currentStatus == NeedsMoreInfo
-					|| currentStatus == Accepted)) // Still not too late for judge or submitter to cancel
+			 // A publisher needs to be able to retract their publishing claim
+			if (currentStatus == PublicationUnderway && isPublisher)
+			{
+				list.Add(Accepted);
+			}
+
+			 // An author or a judge can cancel as long as the submission has not been published
+			if ((isJudge || isAuthorOrSubmitter)
+				&& new[] { New, JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, PublicationUnderway }.Contains(currentStatus))
 			{
 				list.Add(Cancelled);
-			}
-			else if (isAuthorOrSubmitter && currentStatus == PublicationUnderway)
-			{
-				list.Add(Cancelled); // Still not too late for the submitter to cancel
 			}
 
 			return list;

@@ -17,7 +17,8 @@ namespace TASVideos.Test.Data.Helpers
 		private static DateTime TooNewToJudge => DateTime.UtcNow;
 
 		private static IEnumerable<PermissionTo> BasicUserPerms = new[] { PermissionTo.SubmitMovies };
-
+		private static IEnumerable<PermissionTo> JudgePerms = new[] { PermissionTo.SubmitMovies, PermissionTo.JudgeSubmissions };
+		private static IEnumerable<PermissionTo> PublisherPerms = new[] { PermissionTo.SubmitMovies, PermissionTo.PublishMovies };
 		private static IEnumerable<PermissionTo> Override = new[] { PermissionTo.OverrideSubmissionStatus };
 
 		[TestMethod]
@@ -27,6 +28,7 @@ namespace TASVideos.Test.Data.Helpers
 				Published,
 				Override,
 				OldEnoughToBeJudged,
+				true,
 				true,
 				true);
 
@@ -51,7 +53,36 @@ namespace TASVideos.Test.Data.Helpers
 				current,
 				BasicUserPerms,
 				OldEnoughToBeJudged,
+				isAuthorOrSubmitter: true,
+				isJudge: false,
+				isPublisher: false);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(expected.Count(), result.Count());
+			foreach (var status in expected)
+			{
+				Assert.IsTrue(result.Contains(status));
+			}
+		}
+
+		[DataRow(New, new[] { Cancelled })]
+		[DataRow(Delayed, new[] { Cancelled })]
+		[DataRow(NeedsMoreInfo, new[] { Cancelled })]
+		[DataRow(JudgingUnderWay, new[] { Cancelled })]
+		[DataRow(Accepted, new[] { Cancelled })]
+		[DataRow(PublicationUnderway, new[] { Cancelled })]
+		[DataRow(Rejected, new SubmissionStatus[0])]
+		[DataRow(Cancelled, new[] { New })]
+		[TestMethod]
+		public void Submitter_IsJudge(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		{
+			var expected = new[] { current }.Concat(canChangeTo);
+			var result = SubmissionHelper.AvailableStatuses(
+				current,
+				JudgePerms,
+				OldEnoughToBeJudged,
 				true,
+				false,
 				false);
 
 			Assert.IsNotNull(result);
@@ -62,9 +93,148 @@ namespace TASVideos.Test.Data.Helpers
 			}
 		}
 
-		
+		[DataRow(New, new[] { Cancelled })]
+		[DataRow(Delayed, new[] { Cancelled })]
+		[DataRow(NeedsMoreInfo, new[] { Cancelled })]
+		[DataRow(JudgingUnderWay, new[] { Cancelled })]
+		[DataRow(Accepted, new[] { PublicationUnderway, Cancelled })]
+		[DataRow(PublicationUnderway, new[] { Cancelled })]
+		[DataRow(Rejected, new SubmissionStatus[0])]
+		[DataRow(Cancelled, new[] { New })]
 		[TestMethod]
-		public void OverrideSubmissions_AnyStatucButPublished()
+		public void Submitter_IsPublisher(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		{
+			var expected = new[] { current }.Concat(canChangeTo);
+			var result = SubmissionHelper.AvailableStatuses(
+				current,
+				PublisherPerms,
+				OldEnoughToBeJudged,
+				true,
+				false,
+				false);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(expected.Count(), result.Count());
+			foreach (var status in expected)
+			{
+				Assert.IsTrue(result.Contains(status));
+			}
+		}
+
+		[DataRow(New, new[] { JudgingUnderWay, Cancelled })]
+		[DataRow(Delayed, new[] { New, JudgingUnderWay, Cancelled })]
+		[DataRow(NeedsMoreInfo, new[] { New, JudgingUnderWay, Cancelled })]
+		[DataRow(JudgingUnderWay, new[] { New, Cancelled })]
+		[DataRow(Accepted, new[] { New, JudgingUnderWay, Cancelled })]
+		[DataRow(PublicationUnderway, new[] { New, JudgingUnderWay, Cancelled })]
+		[DataRow(Rejected, new[] { New, JudgingUnderWay })]
+		[DataRow(Cancelled, new[] { New, JudgingUnderWay })]
+		[TestMethod]
+		public void Judge_ButNotSubmitter_BeforeAllowedJudgementWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		{
+			var expected = new[] { current }.Concat(canChangeTo);
+			var result = SubmissionHelper.AvailableStatuses(
+				current,
+				JudgePerms,
+				TooNewToJudge,
+				isAuthorOrSubmitter: false,
+				isJudge: true,
+				isPublisher: false);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(expected.Count(), result.Count());
+			foreach (var status in expected)
+			{
+				Assert.IsTrue(result.Contains(status));
+			}
+		}
+
+		[DataRow(New, new[] { JudgingUnderWay, Cancelled })]
+		[DataRow(Delayed, new[] { New, NeedsMoreInfo, JudgingUnderWay, Accepted, Rejected, Cancelled })]
+		[DataRow(NeedsMoreInfo, new[] { New, Delayed, JudgingUnderWay, Accepted, Rejected, Cancelled })]
+		[DataRow(JudgingUnderWay, new[] { New, Delayed, NeedsMoreInfo, Accepted, Rejected, Cancelled })]
+		[DataRow(Accepted, new[] { New, Delayed, NeedsMoreInfo, JudgingUnderWay, Rejected, Cancelled })]
+		[DataRow(PublicationUnderway, new[] { New, Delayed, NeedsMoreInfo, JudgingUnderWay, Accepted, Rejected, Cancelled })]
+		[DataRow(Rejected, new[] { New, JudgingUnderWay })]
+		[DataRow(Cancelled, new[] { New, JudgingUnderWay })]
+		[TestMethod]
+		public void Judge_ButNotSubmitter_AfterAllowedJudgementWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		{
+			var expected = new[] { current }.Concat(canChangeTo);
+			var result = SubmissionHelper.AvailableStatuses(
+				current,
+				JudgePerms,
+				OldEnoughToBeJudged,
+				isAuthorOrSubmitter: false,
+				isJudge: true,
+				isPublisher: false);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(expected.Count(), result.Count());
+			foreach (var status in expected)
+			{
+				Assert.IsTrue(result.Contains(status));
+			}
+		}
+
+		[DataRow(New, new SubmissionStatus[0])]
+		[DataRow(Delayed, new SubmissionStatus[0])]
+		[DataRow(NeedsMoreInfo, new SubmissionStatus[0])]
+		[DataRow(JudgingUnderWay, new SubmissionStatus[0])]
+		[DataRow(Accepted, new[] { PublicationUnderway })]
+		[DataRow(PublicationUnderway, new[] { Accepted })]
+		[DataRow(Rejected, new SubmissionStatus[0])]
+		[DataRow(Cancelled, new SubmissionStatus[0])]
+		[TestMethod]
+		public void Publisher_ButNotSubmitter_BeforeAllowedJudgementWindow_CanNotChangeStatus(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		{
+			var expected = new[] { current }.Concat(canChangeTo);
+			var result = SubmissionHelper.AvailableStatuses(
+				current,
+				PublisherPerms,
+				TooNewToJudge,
+				isAuthorOrSubmitter: false,
+				isJudge: false,
+				isPublisher: true);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(expected.Count(), result.Count());
+			foreach (var status in expected)
+			{
+				Assert.IsTrue(result.Contains(status));
+			}
+		}
+
+		[DataRow(New, new SubmissionStatus[0])]
+		[DataRow(Delayed, new SubmissionStatus[0])]
+		[DataRow(NeedsMoreInfo, new SubmissionStatus[0])]
+		[DataRow(JudgingUnderWay, new SubmissionStatus[0])]
+		[DataRow(Accepted, new[] { PublicationUnderway })]
+		[DataRow(PublicationUnderway, new[] { Accepted })]
+		[DataRow(Rejected, new SubmissionStatus[0])]
+		[DataRow(Cancelled, new SubmissionStatus[0])]
+		[TestMethod]
+		public void Publisher_ButNotSubmitter_AfterAllowedJudgementWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		{
+			var expected = new[] { current }.Concat(canChangeTo);
+			var result = SubmissionHelper.AvailableStatuses(
+				current,
+				PublisherPerms,
+				OldEnoughToBeJudged,
+				isAuthorOrSubmitter: false,
+				isJudge: false,
+				isPublisher: true);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(expected.Count(), result.Count());
+			foreach (var status in expected)
+			{
+				Assert.IsTrue(result.Contains(status));
+			}
+		}
+
+		[TestMethod]
+		public void OverrideSubmissions_AnyStatusButPublished()
 		{
 			var exceptPublished = Enum.GetValues(typeof(SubmissionStatus))
 				.Cast<SubmissionStatus>()
@@ -77,6 +247,7 @@ namespace TASVideos.Test.Data.Helpers
 					current,
 					Override,
 					TooNewToJudge,
+					false,
 					false,
 					false);
 

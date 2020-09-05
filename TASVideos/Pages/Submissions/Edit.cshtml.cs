@@ -110,7 +110,8 @@ namespace TASVideos.Pages.Submissions
 				User.Permissions(),
 				Submission.CreateTimestamp,
 				Submission.Submitter == User.Identity.Name || Submission.Authors.Contains(User.Identity.Name),
-				Submission.Judge == User.Identity.Name);
+				Submission.Judge == User.Identity.Name,
+				Submission.Publisher == User.Identity.Name);
 
 			return Page();
 		}
@@ -153,6 +154,7 @@ namespace TASVideos.Pages.Submissions
 				.Select(s => new
 				{
 					UserIsJudge = s.Judge != null && s.Judge.UserName == User.Identity.Name,
+					UserIsPublisher = s.Publisher != null && s.Publisher.UserName == User.Identity.Name,
 					UserIsAuthorOrSubmitter = s.Submitter!.UserName == User.Identity.Name || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == User.Identity.Name),
 					CurrentStatus = s.Status,
 					CreateDate = s.CreateTimeStamp
@@ -169,10 +171,9 @@ namespace TASVideos.Pages.Submissions
 				User.Permissions(),
 				subInfo.CreateDate,
 				subInfo.UserIsAuthorOrSubmitter,
-				subInfo.UserIsJudge)
+				subInfo.UserIsJudge,
+				subInfo.UserIsPublisher)
 				.ToList();
-
-			
 
 			if (!availableStatus.Contains(Submission.Status))
 			{
