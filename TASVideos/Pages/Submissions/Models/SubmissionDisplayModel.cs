@@ -84,5 +84,16 @@ namespace TASVideos.Pages.Submissions.Models
 		internal int? SystemFrameRateId { get; set; }
 		internal int? GameId { get; set; }
 		internal int? RomId { get; set; }
+
+		public int HoursRemainingForJudging()
+		{
+			if (Status.CanBeJudged())
+			{
+				var diff = (DateTime.UtcNow - CreateTimestamp).TotalHours;
+				return SiteGlobalConstants.MinimumHoursBeforeJudgment - (int)diff;
+			}
+
+			return 0;
+		}
 	}
 }
