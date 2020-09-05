@@ -1,4 +1,5 @@
 ﻿@page "{id}"
+@using TASVideos.Pages.Submissions.Models
 @model ViewModel
 @{
 	ViewData["Title"] = $"Submission #{Model.Id}";
@@ -109,7 +110,7 @@
 			</tr>
 		</table>
 		<small>
-			Submitted edited by @Model.Submission.Submitter on @Model.Submission.CreateTimestamp
+			Submitted edited by @Model.Submission.Submitter on @Model.Submission.Submitted
 		</small>
 		<div class="btn-toolbar">
 			<a condition="@ViewData.UserHas(PermissionTo.JudgeSubmissions) && Model.Submission.Status == SubmissionStatus.New" asp-page="View" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success mt-2 mr-1">Claim</a>

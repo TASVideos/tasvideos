@@ -6,7 +6,7 @@ using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions.Models
 {
-	public class SubmissionDisplayModel
+	public class SubmissionDisplayModel : ISubmissionDisplay
 	{
 		public bool IsCataloged => SystemId.HasValue
 			&& SystemFrameRateId.HasValue
@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? Submitter { get; set; }
 
 		[Display(Name = "Submit Date")]
-		public DateTime CreateTimestamp { get; set; }
+		public DateTime Submitted { get; set; }
 
 		[Display(Name = "Last Edited")]
 		public DateTime LastUpdateTimeStamp { get; set; }
@@ -84,16 +84,5 @@ namespace TASVideos.Pages.Submissions.Models
 		internal int? SystemFrameRateId { get; set; }
 		internal int? GameId { get; set; }
 		internal int? RomId { get; set; }
-
-		public int HoursRemainingForJudging()
-		{
-			if (Status.CanBeJudged())
-			{
-				var diff = (DateTime.UtcNow - CreateTimestamp).TotalHours;
-				return SiteGlobalConstants.MinimumHoursBeforeJudgment - (int)diff;
-			}
-
-			return 0;
-		}
 	}
 }

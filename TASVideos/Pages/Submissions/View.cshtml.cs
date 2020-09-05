@@ -62,7 +62,7 @@ namespace TASVideos.Pages.Submissions
 						FrameCount = s.Frames,
 						FrameRate = s.SystemFrameRate!.FrameRate,
 						RerecordCount = s.RerecordCount,
-						CreateTimestamp = s.CreateTimeStamp,
+						Submitted = s.CreateTimeStamp,
 						Submitter = s.Submitter!.UserName,
 						LastUpdateTimeStamp = s.WikiContent!.LastUpdateTimeStamp,
 						LastUpdateUser = s.WikiContent.LastUpdateUserName,
