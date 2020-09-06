@@ -11,5 +11,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("ban_userid")]
 		public int UserId { get; set; }
+
+		[Column("ban_email")]
+		public string? Email { get; set; }
 	}
 }

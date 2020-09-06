@@ -50,9 +50,16 @@ namespace TASVideos.Legacy.Imports
 
 			var banList = legacyForumContext.BanList.ToList();
 
+			// These were dug up from user_exceptions, which only has a few entries and complicated to parse, simpler to have a hardcoded list
+			var userExceptions = new[] {150, 590, 905, 1210, 2659, 2758, 3254 };
+
 			var users = (from u in legacyForumUsers
 						join b in banList on u.UserId equals b.UserId into bb
 						from b in bb.DefaultIfEmpty()
+						join be in banList on u.Email equals be.Email into bbe
+						from be in bbe.DefaultIfEmpty()
+						join bex in userExceptions on u.UserId equals bex into bbex
+						from bex in bbe.DefaultIfEmpty()
 						join e in emuCoders on u.UserId equals e.UserId into ee
 						from e in ee.DefaultIfEmpty()
 						join ug in legacyForumContext.UserGroups on new { u.UserId, GroupId = ModeratorGroupId } equals new { ug.UserId, ug.GroupId } into ugg
@@ -74,7 +81,7 @@ namespace TASVideos.Legacy.Imports
 							u.LastVisitDate,
 							u.TimeZoneOffset,
 							u.BbcodeUid,
-							IsBanned = b != null,
+							IsBanned = b != null || be != null || bex != null,
 							IsModerator = ug != null,
 							IsForumAdmin = u.UserLevel == 1,
 							IsEmuCoder = e != null,
