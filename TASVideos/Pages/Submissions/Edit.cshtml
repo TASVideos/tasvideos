@@ -32,7 +32,7 @@
 			</form-group>
 		</div>
 	</row>
-	<row permission="JudgeSubmissions">
+	<row permission="JudgeSubmissions" condition="Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted)">
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.TierId" class="form-control-label"></label>
