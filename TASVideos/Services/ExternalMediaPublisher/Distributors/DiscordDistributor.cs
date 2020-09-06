@@ -76,7 +76,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			if (!string.IsNullOrEmpty(message))
 			{
-				Console.WriteLine($"-> Discord: {message}");
+				_logger.LogDebug($"-> Discord: {message}");
 
 				JObject messageObject = JObject.Parse(message);
 
