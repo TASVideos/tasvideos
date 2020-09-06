@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Options;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Services.Email;
@@ -44,13 +44,16 @@ namespace TASVideos.Services
 	{
 		private readonly IEmailService _emailService;
 		private readonly ApplicationDbContext _db;
+		private readonly string _baseUrl;
 
 		public TopicWatcher(
 			IEmailService emailService,
-			ApplicationDbContext db)
+			ApplicationDbContext db,
+			IOptions<AppSettings> appSettings)
 		{
 			_emailService = emailService;
 			_db = db;
+			_baseUrl = appSettings.Value.BaseUrl;
 		}
 
 		public async Task<IEnumerable<WatchedTopic>> UserWatches(int userId)
@@ -89,7 +92,7 @@ namespace TASVideos.Services
 							PostId = notification.PostId,
 							TopicId = notification.TopicId,
 							TopicTitle = notification.TopicTitle,
-							BaseUrl = notification.BaseUrl
+							BaseUrl = _baseUrl
 						});
 
 				foreach (var watch in watches)
