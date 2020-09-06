@@ -144,6 +144,11 @@ namespace TASVideos.Pages.Games.Roms
 				MessageType = Styles.Danger;
 				Message = $"Unable to update Rom {Id}, the rom may have already been updated, or the game no longer exists.";
 			}
+			catch (DbUpdateException ex)
+			{
+				ModelState.AddModelError("", ex.InnerException?.Message ?? ex.Message);
+				return Page();
+			}
 
 			return string.IsNullOrWhiteSpace(ReturnUrl)
 				? RedirectToPage("List", new { gameId = GameId })
