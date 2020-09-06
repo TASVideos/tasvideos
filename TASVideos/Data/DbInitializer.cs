@@ -94,10 +94,6 @@ namespace TASVideos.Data
 			var userManager = services.GetRequiredService<UserManager>();
 			var settings = services.GetRequiredService<IOptions<AppSettings>>().Value;
 
-			Console.WriteLine($"Using {settings.ConnectionStrings.DefaultConnection} for new data.");
-			Console.WriteLine($"Using {settings.ConnectionStrings.LegacyForumConnection} for forum data.");
-			Console.WriteLine($"Using {settings.ConnectionStrings.LegacySiteConnection} for site data.");
-
 			Initialize(context);
 			PreMigrateSeedData(context);
 			LegacyImporter.RunLegacyImport(env, context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);

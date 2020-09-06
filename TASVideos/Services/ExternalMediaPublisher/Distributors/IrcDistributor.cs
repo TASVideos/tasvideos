@@ -20,9 +20,10 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public IrcDistributor(
 			IOptions<AppSettings> settings,
-			ILogger<IrcDistributor> logger)
+			ILogger logger)
 		{
 			_settings = settings.Value.Irc;
+
 			if (string.IsNullOrWhiteSpace(settings.Value.Irc.Password))
 			{
 				logger.Log(LogLevel.Warning, "Irc bot password not provided. Bot initialization skipped");
@@ -33,7 +34,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			{
 				if (_bot == null)
 				{
-					_bot = new IrcBot(_settings);
+					_bot = new IrcBot(_settings, logger);
 				}
 			}
 		}
@@ -59,11 +60,13 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		private class IrcBot
 		{
 			private readonly AppSettings.IrcConnection _settings;
+			private readonly ILogger _logger;
 			private readonly ConcurrentQueue<string> _work = new ConcurrentQueue<string>();
 
-			public IrcBot(AppSettings.IrcConnection settings)
+			public IrcBot(AppSettings.IrcConnection settings, ILogger logger)
 			{
 				_settings = settings;
+				_logger = logger;
 				#pragma warning disable CS4014
 				Loop();
 				#pragma warning restore CS4014
@@ -94,7 +97,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 					if (stream.DataAvailable)
 					{
 						var inputLine = await reader.ReadLineAsync() ?? "";
-						Console.WriteLine("<- " + inputLine);
+						_logger.LogDebug("<- " + inputLine);
 
 						// split the lines sent from the server by spaces (seems to be the easiest way to parse them)
 						string[] splitInput = inputLine.Split(new[] { ' ' });
@@ -148,7 +151,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 					catch (Exception e)
 					{
 						// shows the exception, sleeps for a little while and then tries to establish a new connection to the IRC server
-						Console.WriteLine(e.ToString());
+						_logger.LogWarning(e.ToString());
 						await Task.Delay(30000);
 					}
 				}
