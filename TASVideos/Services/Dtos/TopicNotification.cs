@@ -9,6 +9,5 @@
 		public int TopicId { get; set; }
 		public string TopicTitle { get; set; } = "";
 		public int PosterId { get; set; }
-		public string BaseUrl { get; set; } = "";
 	}
 }

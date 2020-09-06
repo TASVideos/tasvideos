@@ -140,8 +140,7 @@ namespace TASVideos.Pages.Forum.Posts
 				PostId = id,
 				TopicId = topic.Id,
 				TopicTitle = topic.Title,
-				PosterId = user.Id,
-				BaseUrl = BaseUrl
+				PosterId = user.Id
 			});
 
 			await _userManager.AssignAutoAssignableRoles(user);
