@@ -10,7 +10,7 @@
 
 <form method="post" enctype="multipart/form-data">
 	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
-	<row condition="@Model.AvailableStatuses.Count() > 1">
+	<row>
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.Status" class="form-control-label"></label>
