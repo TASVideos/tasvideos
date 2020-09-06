@@ -150,7 +150,7 @@ namespace TASVideos.Pages.Users
 					message += " removed: " + string.Join(",", removedRoles);
 				}
 				
-				_publisher.SendUserManagement(message, "", $"{BaseUrl}/Users/Profile/{user.UserName}");
+				_publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}");
 			}
 
 			return string.IsNullOrWhiteSpace(ReturnUrl)

@@ -102,7 +102,7 @@ namespace TASVideos.Pages.Wiki
 				_publisher.SendGeneralWiki(
 					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
 					$"({PageToEdit.RevisionMessage}): ",
-					$"{BaseUrl}/{Path}");
+					Path);
 			}
 
 			return Redirect("/" + page.PageName);

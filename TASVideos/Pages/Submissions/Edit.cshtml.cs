@@ -306,7 +306,7 @@ namespace TASVideos.Pages.Submissions
 					title = $"{User.Identity.Name} edited Submission {submission.Title}";
 				}
 
-				_publisher.SendSubmissionEdit(title, $"{BaseUrl}/{Id}S");
+				_publisher.SendSubmissionEdit(title, $"{Id}S");
 			}
 
 			return Redirect($"/{Id}S");

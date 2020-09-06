@@ -211,7 +211,7 @@ namespace TASVideos.Pages.Forum.Topics
 				topic.Forum!.Restricted,
 				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
 				"",
-				$"{BaseUrl}/Forum/Topics/{Id}");
+				$"Forum/Topics/{Id}");
 
 			return RedirectToTopic();
 		}

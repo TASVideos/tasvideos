@@ -110,7 +110,7 @@ namespace TASVideos.Pages.Forum.Topics
 				forum.Restricted,
 				$"New Topic by {User.Identity.Name} ({forum.ShortName}: {Topic.Title})",
 				Topic.Post.CapAndEllipse(50),
-				$"{BaseUrl}/Forum/Topics/{topic.Id}");
+				$"Forum/Topics/{topic.Id}");
 
 			var user = await _userManager.GetUserAsync(User);
 			await _userManager.AssignAutoAssignableRoles(user);
