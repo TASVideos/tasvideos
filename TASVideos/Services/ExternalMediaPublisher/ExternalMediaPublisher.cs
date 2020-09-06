@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace TASVideos.Services.ExternalMediaPublisher
 {
@@ -12,8 +14,11 @@ namespace TASVideos.Services.ExternalMediaPublisher
 	/// </summary>
 	public class ExternalMediaPublisher // DI as a singleton, pass in a hardcoded list of IMessagingProvider implementations, config drive which implementations to use
 	{
-		public ExternalMediaPublisher(IEnumerable<IPostDistributor> providers)
+		private readonly string _baseUrl; // The site base url, will be combined to relative links to provide absolute links to distributors
+
+		public ExternalMediaPublisher(IOptions<AppSettings> appSettings, IEnumerable<IPostDistributor> providers)
 		{
+			_baseUrl = appSettings.Value.BaseUrl.TrimEnd('/');
 			Providers = providers.ToList();
 		}
 
@@ -33,11 +38,18 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				provider.Post(message);
 			}
 		}
+
+		public string ToAbsolute(string relativeLink)
+		{
+			return !string.IsNullOrWhiteSpace(relativeLink)
+				? Path.Combine(_baseUrl, relativeLink.TrimStart('/'))
+				: "";
+		}
 	}
 
 	public static class ExternalMediaPublisherExtensions
 	{
-		public static void SendUserFile(this ExternalMediaPublisher publisher, string title, string link)
+		public static void SendUserFile(this ExternalMediaPublisher publisher, string title, string relativeLink)
 		{
 			publisher.Send(new Post
 			{
@@ -45,11 +57,11 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.UserFiles,
 				Title = title,
 				Body = "",
-				Link = link
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static void AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string link)
+		public static void AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string relativeLink)
 		{
 			publisher.Send(new Post
 			{
@@ -57,11 +69,11 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Submission,
 				Title = $"New Submission! Go and see {title}",
 				Body = "",
-				Link = link
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static void SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string link)
+		public static void SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string relativeLink)
 		{
 			publisher.Send(new Post
 			{
@@ -69,11 +81,11 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Submission,
 				Title = title,
 				Body = "",
-				Link = link
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static void AnnouncePublication(this ExternalMediaPublisher publisher, string title, string link)
+		public static void AnnouncePublication(this ExternalMediaPublisher publisher, string title, string relativeLink)
 		{
 			publisher.Send(new Post
 			{
@@ -81,11 +93,11 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Submission,
 				Title = $"New movie published! Go and see {title}",
 				Body = "",
-				Link = link
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static void SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string link)
+		public static void SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink)
 		{
 			publisher.Send(new Post
 			{
@@ -95,11 +107,11 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Forum,
 				Title = title,
 				Body = body,
-				Link = link
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string link)
+		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
 		{
 			publisher.Send(new Post
 			{
@@ -107,11 +119,11 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Wiki,
 				Title = title,
 				Body = body,
-				Link = link
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static void SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string link)
+		public static void SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
 		{
 			publisher.Send(new Post
 			{
@@ -119,7 +131,7 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.UserManagement,
 				Title = title,
 				Body = body,
-				Link = link
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 	}

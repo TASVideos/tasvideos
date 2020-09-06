@@ -125,7 +125,7 @@ namespace TASVideos.Pages.Wiki
 			_publisher.SendGeneralWiki(
 					$"Page {path} UNDELETED by {User.Identity.Name}",
 					"",
-					$"{BaseUrl}/{path}");
+					path);
 
 			return Redirect("/" + path);
 		}

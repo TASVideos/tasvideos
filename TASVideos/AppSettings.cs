@@ -6,6 +6,7 @@ namespace TASVideos
 {
 	public class AppSettings
 	{
+		public string BaseUrl { get; set; } = "";
 		public bool EnableGzipCompression { get; set; }
 
 		public CacheSetting CacheSettings { get; set; } = new CacheSetting();

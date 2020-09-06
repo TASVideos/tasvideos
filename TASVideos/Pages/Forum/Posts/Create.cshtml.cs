@@ -133,7 +133,7 @@ namespace TASVideos.Pages.Forum.Posts
 				topic.Forum.Restricted,
 				$"New reply by {user.UserName}{mood}",
 				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
-				$"{BaseUrl}/forum/p/{id}#{id}");
+				$"forum/p/{id}#{id}");
 
 			await _topicWatcher.NotifyNewPost(new TopicNotification
 			{

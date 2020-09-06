@@ -155,14 +155,9 @@ namespace TASVideos.Pages.Submissions
 			try
 			{
 				await _wikiPages.Add(wikiPage);
-				_publisher.Send(new Post
-				{
-					Type = PostType.General,
-					Group = PostGroups.Submission,
-					Body = "",
-					Title = $"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Identity.Name}",
-					Link = $"{BaseUrl}/{Id}S"
-				});
+				_publisher.SendSubmissionEdit(
+					$"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Identity.Name}",
+					$"{Id}S");
 			}
 			catch (DbUpdateConcurrencyException)
 			{
@@ -207,14 +202,9 @@ namespace TASVideos.Pages.Submissions
 			try
 			{
 				await _wikiPages.Add(wikiPage);
-				_publisher.Send(new Post
-				{
-					Type = PostType.General,
-					Group = PostGroups.Submission,
-					Body = "",
-					Title = $"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Identity.Name}",
-					Link = $"{BaseUrl}/{Id}S"
-				});
+				_publisher.SendSubmissionEdit(
+					$"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Identity.Name}",
+					$"{Id}S");
 			}
 			catch (DbUpdateConcurrencyException)
 			{
