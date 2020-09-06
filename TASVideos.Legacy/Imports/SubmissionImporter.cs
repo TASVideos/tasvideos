@@ -272,7 +272,7 @@ namespace TASVideos.Legacy.Imports
 			return legacyStatus switch
 			{
 				"N" => SubmissionStatus.New,
-				"P" => SubmissionStatus.PublicationUnderway,
+				"P" => SubmissionStatus.Accepted, // TODO: should be SubmissionStatus.PublicationUnderway, but then publishers have no way to handle the submission due to the legacy site not tracking the publisher, this allows for ease of testing
 				"R" => SubmissionStatus.Rejected,
 				"K" => SubmissionStatus.Accepted,
 				"C" => SubmissionStatus.Cancelled,
