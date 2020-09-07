@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
 	public static class SubmissionImporter
 	{
-		private const double RoundingOffset = 0.01;
 		private static readonly string[] ValidSubmissionFileExtensions = { "fmv", "vmv", "fcm", "smv", "dtm", "mcm", "gmv", "dof", "dsm", "bkm", "mcm", "fm2", "vbm", "m64", "mmv", "zmv", "pxm", "fbm", "mc2", "ymv", "jrsr", "gz", "omr", "pjm", "wtf", "tas", "lsmv", "fm3", "bk2", "lmp", "mcm", "mar", "ltm" };
 
 		public static void Import(
@@ -62,9 +58,6 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var systems = context.GameSystems.ToList();
-			var systemFrameRates = context.GameSystemFrameRates
-				.Include(sf => sf.System)
-				.ToList();
 
 			var lSubsWithSystem = (from ls in legacySubmissions
 				join s in systems on ls.SystemId equals s.Id
@@ -91,28 +84,6 @@ namespace TASVideos.Legacy.Imports
 
 				var (movieExtension, fileData) = CleanupZip(legacySubmission.Sub.Content);
 				var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
-				var legacyFrameRate = legacyTime > 0 // Art Alive
-					? legacySubmission.Sub.Frames / legacyTime
-					: 60;
-
-				var systemFrameRate = systemFrameRates
-					.Where(sf => sf.System!.Id == legacySubmission.System.Id)
-					.FirstOrDefault(sf => Math.Abs(sf.FrameRate - legacyFrameRate) < RoundingOffset);
-
-				if (systemFrameRate == null)
-				{ 
-					systemFrameRate = new GameSystemFrameRate
-					{
-						System = legacySubmission.System,
-						FrameRate = legacyFrameRate,
-						RegionCode = "NTSC",
-						Obsolete = legacySubmission.System.Id != 38 // We want Linux framerates by design, so they should not be flagged
-
-					};
-					systemFrameRates.Add(systemFrameRate);
-					context.GameSystemFrameRates.Add(systemFrameRate);
-					context.SaveChanges();
-				}
 
 				var submission = new Submission
 				{
@@ -122,8 +93,6 @@ namespace TASVideos.Legacy.Imports
 					Submitter = legacySubmission.Submitter,
 					SystemId = legacySubmission.System.Id,
 					System = legacySubmission.System,
-					SystemFrameRateId = systemFrameRate.Id,
-					SystemFrameRate = systemFrameRate,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
 					CreateUserName = legacySubmission.Submitter?.UserName,
 					LastUpdateTimeStamp = legacySubmission.Wiki.CreateTimeStamp,
@@ -146,7 +115,7 @@ namespace TASVideos.Legacy.Imports
 				};
 
 				submission.LegacyTime = legacySubmission.Sub.Length;
-				submission.ImportedTime = decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
+				submission.ImportedTime = 0.0M; // decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
 
 				if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
 				{
@@ -207,7 +176,7 @@ namespace TASVideos.Legacy.Imports
 					});
 				}
 
-				submission.GenerateTitle();
+				submission.Title = "";
 				submissions.Add(submission);
 			}
 
@@ -217,7 +186,6 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.WikiContentId),
 				nameof(Submission.SubmitterId),
 				nameof(Submission.SystemId),
-				nameof(Submission.SystemFrameRateId),
 				nameof(Submission.CreateTimeStamp),
 				nameof(Submission.CreateUserName),
 				nameof(Submission.LastUpdateTimeStamp),
