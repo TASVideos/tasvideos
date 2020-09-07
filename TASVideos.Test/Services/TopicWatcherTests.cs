@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -18,6 +18,7 @@ namespace TASVideos.Test.Services
 	public class TopicWatcherTests
 	{
 		private Mock<IEmailService> _mockEmailService = null!;
+		private Mock<IOptions<AppSettings>> _mockAppSettings = null!;
 		private TestDbContext _db = null!;
 
 		private ITopicWatcher _topicWatcher = null!;
@@ -27,7 +28,12 @@ namespace TASVideos.Test.Services
 		{
 			_db = TestDbContext.Create();
 			_mockEmailService = new Mock<IEmailService>();
-			_topicWatcher = new TopicWatcher(_mockEmailService.Object, _db);
+			_mockAppSettings = new Mock<IOptions<AppSettings>>();
+			_mockAppSettings.Setup(m => m.Value).Returns(new AppSettings
+			{
+				BaseUrl = "http://example.com"
+			});
+			_topicWatcher = new TopicWatcher(_mockEmailService.Object, _db, _mockAppSettings.Object);
 		}
 
 		[TestMethod]
