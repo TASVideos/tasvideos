@@ -20,7 +20,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public IrcDistributor(
 			IOptions<AppSettings> settings,
-			ILogger logger)
+			ILogger<IrcDistributor> logger)
 		{
 			_settings = settings.Value.Irc;
 
