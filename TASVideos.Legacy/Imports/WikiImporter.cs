@@ -49,14 +49,13 @@ namespace TASVideos.Legacy.Imports
 			foreach (var legacyPage in siteTextWithUser)
 			{
 				string pageName = PageNameShenanigans(legacyPage.Site, legacyPage.User?.Name);
-				string markup = MarkupShenanigans(legacyPage.Site, legUsers);
 				int revision = RevisionShenanigans(legacyPage.Site);
 
 				pages.Add(new WikiPage
 				{
 					Id = legacyPage.Site.Id,
 					PageName = pageName,
-					Markup = markup,
+					Markup = ImportHelper.ConvertLatin1String(legacyPage.Site.Description) ?? "",
 					Revision = revision,
 					MinorEdit = legacyPage.Site.MinorEdit == "Y",
 					RevisionMessage = legacyPage.Site.WhyEdit.Cap(1000),
@@ -188,103 +187,6 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			return pageName;
-		}
-
-		private static string MarkupShenanigans(SiteText st, IEnumerable<UserDto> users)
-		{
-			string? markup = ImportHelper.ConvertLatin1String(st.Description) ?? "";
-
-			// TODO: this page has a listparents that needs to be removed
-			// However, we need better shenanigans to handle escaped module text
-			// Ex: [[module:listparents]] since this page is full of these, obviously
-			if (st.PageName == "TextFormattingRules/ListOfModules")
-			{
-				return markup;
-			}
-
-			if (st.PageName == "FrontPage")
-			{
-				markup = markup.Replace("!! Featured Movie", "");
-			}
-			else if (st.PageName == "Awards")
-			{
-				markup = markup.Replace("[module:listsubpages]", "");
-				markup = markup.Replace("/images/awards/", "/awards/");
-			}
-
-			// Any shenanigans after this aren't worth fixing on old revisions
-			if (st.ObsoletedBy.HasValue && st.ObsoletedBy != -1)
-			{
-				return markup;
-			}
-			if (markup.Contains("=css/fastest-completion.png")) markup = markup.Replace("=css/fastest-completion.png", "=images/fastest-completion.png");
-			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
-			if (markup.Contains("=css/moontier.png")) markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
-			if (markup.Contains("=css/favourite.png")) markup = markup.Replace("=css/favourite.png", "=images/startier.png");
-			if (markup.Contains("=/css/vaulttier.png")) markup = markup.Replace("=/css/vaulttier.png", "=images/vaulttier.png");
-			if (markup.Contains("=/css/moontier.png")) markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
-			if (markup.Contains("=/css/favourite.png")) markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
-			if (markup.Contains("=/css/newbierec.gif")) markup = markup.Replace("=/css/newbierec.gif", "=images/newbierec.gif");
-			if (markup.Contains("=/css/bolt.png")) markup = markup.Replace("=/css/bolt.png", "=images/notable.png");
-			if (markup.Contains("=/css/verified.png")) markup = markup.Replace("=/css/verified.png", "=images/verified.png");
-
-			// These are automatic now
-			markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
-			markup = Regex.Replace(markup, "\\[module:gamefooter\\]", "", RegexOptions.IgnoreCase);
-
-			// Mitigate unnecessary ListParent module calls, if they are at the beginning, wipe them.
-			// We can't remove all instances because of pages like Interviews/Phil/GEE2005
-			// Where below the title there is Back To: %%%[module:ListParents]
-			if (markup.StartsWith("[module:listparents]", StringComparison.InvariantCultureIgnoreCase))
-			{
-				markup = Regex.Replace(markup, "\\[module:listparents\\]", "", RegexOptions.IgnoreCase);
-			}
-
-			// Ditto for pages that end with ListSubPages
-			if (markup.EndsWith("[module:listsubpages]", StringComparison.InvariantCultureIgnoreCase))
-			{
-				markup = Regex.Replace(markup, "\\[module:listsubpages\\]", "", RegexOptions.IgnoreCase);
-			}
-
-			// Common markup mistakes
-			if (markup.Contains(" [!]")) markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
-			if (markup.Contains(")[!]")) markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
-			if (markup.Contains("[''''!'''']")) markup = markup.Replace("[''''!'''']", "[[!]]");
-
-			// Fix improperly linked homepages
-			var usersWithPages = users.Where(u => u.HomePage != "").ToList();
-			foreach (var user in usersWithPages)
-			{
-				// TODO: some regex would really help here
-				var bareLink = $"[{user.HomePage}]";
-				var trailingSlashLink = $"[{user.HomePage}/]";
-				var aliasedLink = $"[{user.HomePage}|";
-
-				// Note: it is important to do the trailing slash replace first
-				var subPage = $"[{user.HomePage}/";
-
-				if (markup.Contains(bareLink, StringComparison.OrdinalIgnoreCase))
-				{
-					markup = markup.ReplaceInsensitive(bareLink, $"[user:{user.Name}]");
-				}
-
-				if (markup.Contains(trailingSlashLink, StringComparison.OrdinalIgnoreCase))
-				{
-					markup = markup.ReplaceInsensitive(trailingSlashLink, $"[user:{user.Name}]");
-				}
-
-				if (markup.Contains(aliasedLink, StringComparison.OrdinalIgnoreCase))
-				{
-					markup = markup.ReplaceInsensitive(aliasedLink, $"[user:{user.Name}|");
-				}
-
-				if (markup.Contains(subPage, StringComparison.OrdinalIgnoreCase))
-				{
-					markup = markup.ReplaceInsensitive(subPage, $"[/HomePages/{user.Name}/");
-				}
-			}
-
-			return markup;
 		}
 
 		private static int RevisionShenanigans(SiteText st)
