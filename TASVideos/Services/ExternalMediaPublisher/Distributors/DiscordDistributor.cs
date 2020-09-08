@@ -45,6 +45,8 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			}
 
 			ConnectWebsocket();
+
+			Console.CancelKeyPress += new ConsoleCancelEventHandler(CloseWebsocket);
 		}
 
 		private async void ConnectWebsocket ()
@@ -70,6 +72,11 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 				HandleMessage(message);
 			}
+		}
+
+		private async void CloseWebsocket (object sender, ConsoleCancelEventArgs args)
+		{
+			await ShutDown(WebSocketCloseStatus.NormalClosure, "Server shutting down.");
 		}
 
 		private void HandleMessage (string message)
@@ -164,7 +171,21 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public async Task ShutDown (WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure, string closureMessage = "Shutting down.")
 		{
-			await _gateway!.CloseAsync(closeStatus, closureMessage, _cancellationTokenSource.Token);
+			if (_gateway.State != WebSocketState.Closed && _gateway.State != WebSocketState.CloseReceived && _gateway.State != WebSocketState.CloseSent)
+			{
+				Console.WriteLine("Shutdown signal received, closing gateway.");
+				await _gateway!.CloseAsync(closeStatus, closureMessage, _cancellationTokenSource.Token);
+
+				System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
+				stopwatch.Start();
+
+				// Give it a few seconds.
+				while (_gateway.State != WebSocketState.Closed && stopwatch.ElapsedMilliseconds < 10000)
+				{ }
+
+				stopwatch.Stop();
+			}
 		}
 
 		public async void Post (IPostable post)
@@ -173,7 +194,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			HttpContent messageContent = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
 
-			HttpClient httpClient = _httpClientFactory.CreateClient("Discord");
+			using HttpClient httpClient = _httpClientFactory.CreateClient("Discord");
 			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bot", _settings.AccessToken);
 
 			var response = await httpClient!.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, _cancellationTokenSource.Token);
