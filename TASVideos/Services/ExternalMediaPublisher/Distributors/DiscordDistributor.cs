@@ -260,7 +260,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 					break;
 			}
 
-			if (post.GetType().GetProperty("User") != null)
+			if (post.GetType().GetProperty("User") != null && !string.IsNullOrWhiteSpace(post.User))
 			{
 				contentMessageBuilder.Append(" from {post.User}");
 			}
