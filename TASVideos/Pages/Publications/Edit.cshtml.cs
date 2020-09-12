@@ -12,6 +12,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Services;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -20,13 +21,16 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IWikiPages _wikiPages;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
 			ApplicationDbContext db,
+			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages)
 		{
 			_db = db;
 			_wikiPages = wikiPages;
+			_publisher = publisher;
 		}
 
 		[FromRoute]
@@ -192,6 +196,8 @@ namespace TASVideos.Pages.Publications
 					await _wikiPages.Add(revision);
 
 					publication.WikiContentId = revision.Id;
+
+					_publisher.SendPublicationEdit($"Publication {Id} Updated", $"{Id}M", User.Identity.Name ?? "");
 				}
 			}
 		}

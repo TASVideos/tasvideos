@@ -49,14 +49,14 @@ namespace TASVideos.Services.ExternalMediaPublisher
 
 	public static class ExternalMediaPublisherExtensions
 	{
-		public static void SendUserFile(this ExternalMediaPublisher publisher, string title, string relativeLink)
+		public static void SendUserFile(this ExternalMediaPublisher publisher, string title, string relativeLink, string body = "")
 		{
 			publisher.Send(new Post
 			{
 				Type = PostType.General,
 				Group = PostGroups.UserFiles,
 				Title = title,
-				Body = "",
+				Body = body,
 				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
@@ -94,6 +94,18 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Title = $"New movie published! Go and see {title}",
 				Body = "",
 				Link = publisher.ToAbsolute(relativeLink)
+			});
+		}
+		public static void SendPublicationEdit (this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		{
+			publisher.Send(new Post
+			{
+				Type = PostType.General,
+				Group = PostGroups.Submission,
+				Title = title,
+				Body = "",
+				Link = publisher.ToAbsolute(relativeLink),
+				User = user
 			});
 		}
 
