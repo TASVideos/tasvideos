@@ -262,7 +262,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			if (post.GetType().GetProperty("User") != null && !string.IsNullOrWhiteSpace(post.User))
 			{
-				contentMessageBuilder.Append(" from {post.User}");
+				contentMessageBuilder.Append($" from {post.User}");
 			}
 
 			return contentMessageBuilder.ToString();
