@@ -153,6 +153,11 @@ namespace TASVideos.WikiEngine
 				// TODO: What should be done if a username actually ends in .html?
 				if (i == ss.Length - 1 && s.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
 					s = s.Substring(0, s.Length - 5);
+
+				// Ditto TODO
+				if (i == ss.Length - 1 && s.EndsWith(".cgi", StringComparison.OrdinalIgnoreCase))
+					s = s.Substring(0, s.Length - 4);
+
 				ss[i] = s;
 			}
 
