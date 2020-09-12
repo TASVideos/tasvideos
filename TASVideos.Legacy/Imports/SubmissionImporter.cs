@@ -111,11 +111,14 @@ namespace TASVideos.Legacy.Imports
 					PublisherId = legacySubmission.Publisher?.Id,
 					Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
 					MovieExtension = movieExtension,
-					RejectionReasonId = legacySubmission.Rejection?.Reason
+					RejectionReasonId = legacySubmission.Rejection?.Reason,
+					MovieStartType = ParseAlertsToStartType(legacySubmission.Sub.Alerts),
+
 				};
 
 				submission.LegacyTime = legacySubmission.Sub.Length;
 				submission.ImportedTime = 0.0M; // decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
+				submission.LegacyAlerts = ImportHelper.NullIfWhiteSpace(ImportHelper.ConvertLatin1String(legacySubmission.Sub.Alerts));
 
 				if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
 				{
@@ -207,9 +210,10 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.MovieExtension),
 				nameof(Submission.RejectionReasonId),
 				nameof(Submission.AdditionalAuthors),
-
+				nameof(Submission.MovieStartType),
 				nameof(Submission.LegacyTime),
-				nameof(Submission.ImportedTime)
+				nameof(Submission.ImportedTime),
+				nameof(Submission.LegacyAlerts)
 			};
 
 			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
@@ -343,6 +347,37 @@ namespace TASVideos.Legacy.Imports
 					: "Snes9x"),
 				_ => null
 			};
+		}
+
+		private static int? ParseAlertsToStartType(string? alerts)
+		{
+			if (!string.IsNullOrWhiteSpace(alerts))
+			{
+				if (alerts.ToLower().Contains("from dirty SRAM")
+				|| alerts.ToLower().Contains("from SRAM"))
+				{
+					return 1;
+				}
+
+				if (alerts.ToLower().Contains("preinitialized memory card"))
+				{
+					return 1;
+				}
+
+				if (alerts.ToLower().Contains("from savestate")
+					|| alerts.ToLower().Contains("from a savestate")
+					|| alerts.ToLower().Contains("begins from a snapshot"))
+				{
+					return 2;
+				}
+
+				if (alerts.ToLower().Contains("M64 file does not being from power-on"))
+				{
+					return 2; // Must be savestate, Mupen does not support SRAM backed movies
+				}
+			}
+
+			return null;
 		}
 
 		// These users have a variation in their nickname vs their actual username, or liked to have different nicknames for who knows why
