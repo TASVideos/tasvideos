@@ -32,6 +32,11 @@
 		/// A <see cref="IPostDistributor"/> may or may not respond to it
 		/// </summary>
 		PostType Type { get; }
+
+		/// <summary>
+		/// Gets the person that posted the message.
+		/// </summary>
+		string User { get; }
 	}
 
 	/// <summary>
@@ -43,6 +48,7 @@
 		public string Link { get; set; } = "";
 		public string Body { get; set; } = "";
 		public string Group { get; set; } = "";
+		public string User { get; set; } = "";
 		public PostType Type { get; set; }
 	}
 }
