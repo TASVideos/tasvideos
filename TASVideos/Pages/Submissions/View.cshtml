@@ -7,7 +7,7 @@
 	bool canEdit = ViewData.UserHas(PermissionTo.EditSubmissions)
 		|| (Model.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
 	bool hasJudgeOrPublisher = !string.IsNullOrWhiteSpace(Model.Submission.Judge) || !string.IsNullOrWhiteSpace(Model.Submission.Publisher);
-	bool showTier = !string.IsNullOrWhiteSpace(Model.Submission.TierName);
+	bool showTier = !string.IsNullOrWhiteSpace(Model.Submission.TierName) && Model.Submission.Status != SubmissionStatus.Rejected;
 	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
 		&& Model.Submission.IsCataloged
