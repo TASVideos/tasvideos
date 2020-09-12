@@ -30,7 +30,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
 
-		public DiscordDistributor (IOptions<AppSettings> appSettings, ILogger<DiscordDistributor> logger, IHttpClientFactory httpClientFactory)
+		public DiscordDistributor(IOptions<AppSettings> appSettings, ILogger<DiscordDistributor> logger, IHttpClientFactory httpClientFactory)
 		{
 			_logger = logger;
 			_settings = appSettings.Value.Discord;
@@ -49,7 +49,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			Console.CancelKeyPress += new ConsoleCancelEventHandler(CloseWebsocket);
 		}
 
-		private async void ConnectWebsocket ()
+		private async void ConnectWebsocket()
 		{
 			var receiveBuffer = WebSocket.CreateClientBuffer(BufferSize, 4096);
 
@@ -74,12 +74,12 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			}
 		}
 
-		private async void CloseWebsocket (object sender, ConsoleCancelEventArgs args)
+		private async void CloseWebsocket(object sender, ConsoleCancelEventArgs args)
 		{
 			await ShutDown(WebSocketCloseStatus.NormalClosure, "Server shutting down.");
 		}
 
-		private void HandleMessage (string message)
+		private void HandleMessage(string message)
 		{
 			if (!string.IsNullOrEmpty(message))
 			{
@@ -108,7 +108,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void Identify()
 		{
-			
+
 			JObject properties = new JObject
 			{
 				{"$os", "linux"}, {"$browser", "none"}, {"$device", "none"}
@@ -155,7 +155,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			_heartbeatAcknowledged = false;
 
-			JObject heartbeatObject = new JObject { {"op", 1} };
+			JObject heartbeatObject = new JObject { { "op", 1 } };
 
 			if (_sequenceNumber == -1)
 			{
@@ -169,7 +169,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			await _gateway!.SendAsync(Encoding.ASCII.GetBytes(heartbeatObject.ToString()), WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
 		}
 
-		public async Task ShutDown (WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure, string closureMessage = "Shutting down.")
+		public async Task ShutDown(WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure, string closureMessage = "Shutting down.")
 		{
 			if (_gateway.State != WebSocketState.Closed && _gateway.State != WebSocketState.CloseReceived && _gateway.State != WebSocketState.CloseSent)
 			{
@@ -188,9 +188,9 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			}
 		}
 
-		public async void Post (IPostable post)
+		public async void Post(IPostable post)
 		{
-			DiscordMessage discordMessage = new DiscordMessage(post.Title, post.Body, post.Link);
+			DiscordMessage discordMessage = new DiscordMessage(post);
 
 			HttpContent messageContent = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
 
@@ -209,34 +209,63 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 	internal class DiscordMessage
 	{
-		public string PostTitle { get; set; }
-		public string PostBody { get; set; }
-		public string PostUrl { get; set; }
-		public string PostUser { get; set; } = "";
+		private IPostable Post { get; }
 
 
-		public DiscordMessage(string postTitle, string postBody, string postUrl)
+		public DiscordMessage(IPostable post)
 		{
-			PostTitle = postTitle;
-			PostBody = postBody;
-			PostUrl = postUrl;
+			Post = post;
 		}
 
 		public string Serialize()
 		{
 			JObject serializedMessage = new JObject
 			{
-				{ "content", $"New post{(string.IsNullOrEmpty(PostUser) ? "." : $" from {PostUser}.")}" }
+				{ "content", GenerateContentMessage (this.Post) }
 			};
 
 			JObject embedObject = new JObject
 			{
-				{"title", PostTitle}, {"description", PostBody}, {"url", PostUrl}
+				{ "title", this.Post.Title }, { "description", this.Post.Body }, { "url", this.Post.Link }
 			};
 
 			serializedMessage.Add("embed", embedObject);
 
 			return serializedMessage.ToString();
+		}
+
+		private static string GenerateContentMessage(IPostable post)
+		{
+			StringBuilder contentMessageBuilder = new StringBuilder();
+
+			switch (post.Group)
+			{
+				case PostGroups.Forum:
+					contentMessageBuilder.Append("Forum Update");
+					break;
+				case PostGroups.Submission:
+					contentMessageBuilder.Append("Submission Update");
+					break;
+				case PostGroups.UserFiles:
+					contentMessageBuilder.Append("Userfile Update");
+					break;
+				case PostGroups.UserManagement:
+					contentMessageBuilder.Append("User Update");
+					break;
+				case PostGroups.Wiki:
+					contentMessageBuilder.Append("Wiki Update");
+					break;
+				default:
+					contentMessageBuilder.Append("Update");
+					break;
+			}
+
+			if (post.GetType().GetProperty("User") != null)
+			{
+				contentMessageBuilder.Append(" from {post.User}");
+			}
+
+			return contentMessageBuilder.ToString();
 		}
 	}
 }
