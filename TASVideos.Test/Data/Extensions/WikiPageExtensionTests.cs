@@ -205,6 +205,27 @@ namespace TASVideos.Test.Data.QueryableExtensions
 			Assert.AreEqual(1, result.Count);
 		}
 
+		[TestMethod]
+		public void ThatAreParentsOf_DoesNotReturnSiblingsThatBeginWithPageName()
+		{
+			string parentPage = "Parent";
+			string childPage = parentPage + "/HugzForAll";
+			string siblingPage = parentPage + "/Hugz";
+
+			var pages = new[]
+			{
+				new WikiPage { PageName = parentPage },
+				new WikiPage { PageName = childPage },
+				new WikiPage { PageName = siblingPage }
+			};
+			_db.WikiPages.AddRange(pages);
+			_db.SaveChanges();
+
+			var result = _db.WikiPages.ThatAreParentsOf(childPage).ToList();
+			Assert.AreEqual(1, result.Count);
+			Assert.AreEqual(parentPage, result.Single().PageName);
+		}
+
 		#endregion
 
 		#region IsCurrent
