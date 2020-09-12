@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
-using TASVideos.Data.SeedData;
 using TASVideos.Legacy.Data.Site;
 using TASVideos.Legacy.Data.Site.Entity;
-using TASVideos.WikiEngine;
 
 // ReSharper disable StyleCop.SA1201
 // ReSharper disable StyleCop.SA1503
@@ -82,27 +78,6 @@ namespace TASVideos.Legacy.Imports
 				}
 			}
 
-			// Don't generate referrals for these, since they will be wiped and replaced after import anyway
-			var overrides = WikiPageSeedData.NewRevisions
-				.Select(wp => wp.PageName)
-				.ToList();
-
-			var pagesForReferral = pages
-				.Where(p => p.ChildId == null)
-				.ThatAreNotDeleted()
-				.Where(wp => !overrides.Contains(wp.PageName))
-				.ToList();
-
-			// Referrals (only need latest revisions)
-			var referralList = pagesForReferral
-				.SelectMany(p => Util.GetReferrals(p.Markup).Select(referral => new WikiPageReferral
-				{
-					Referrer = p.PageName,
-					Referral = referral.Link,
-					Excerpt = referral.Excerpt
-				}))
-				.ToList();
-
 			var wikiColumns = new[]
 			{
 				nameof(WikiPage.Id),
@@ -120,15 +95,6 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			pages.BulkInsert(connectionStr, wikiColumns, nameof(ApplicationDbContext.WikiPages), bulkCopyTimeout: 1200);
-
-			var referralColumns = new[]
-			{
-				nameof(WikiPageReferral.Excerpt),
-				nameof(WikiPageReferral.Referral),
-				nameof(WikiPageReferral.Referrer)
-			};
-
-			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000, 300);
 		}
 
 		private static string PageNameShenanigans(SiteText st, string? userName)
