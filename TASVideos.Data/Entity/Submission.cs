@@ -132,6 +132,9 @@ namespace TASVideos.Data.Entity
 		// Temporary for import debugging
 		public decimal LegacyTime { get; set; }
 		public decimal ImportedTime { get; set; }
+
+		[StringLength(4096)]
+		public string? LegacyAlerts { get; set; }
 	}
 
 	public static class SubmissionExtensions
