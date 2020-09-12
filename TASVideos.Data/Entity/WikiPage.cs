@@ -94,7 +94,7 @@ namespace TASVideos.Data.Entity
 				.ThatAreNotDeleted()
 				.WithNoChildren()
 				.Where(wp => wp.PageName != pageName)
-				.Where(wp => pageName.StartsWith(wp.PageName));
+				.Where(wp => pageName.StartsWith(wp.PageName + "/"));
 		}
 
 		public static bool IsCurrent(this WikiPage? wikiPage)
