@@ -104,7 +104,8 @@ namespace TASVideos.Pages.UserFiles
 					_publisher.SendUserFile(
 						$"New comment by {User.Identity.Name} on ({userFile.Title} (WIP))", 
 						$"UserFiles/Info/{fileId}",
-						comment);
+						comment,
+						$"{User.Identity.Name}");
 				}
 			}
 
@@ -130,7 +131,8 @@ namespace TASVideos.Pages.UserFiles
 						_publisher.SendUserFile(
 							$"Comment edited by {User.Identity.Name} on ({fileComment.UserFile!.Title} (WIP))",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
-							comment);
+							comment,
+							$"{User.Identity.Name}");
 					}
 					catch (DbUpdateConcurrencyException)
 					{
@@ -160,7 +162,9 @@ namespace TASVideos.Pages.UserFiles
 						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
 							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Identity.Name}", 
-							$"UserFiles/Info/{fileComment.UserFile.Id}");
+							$"UserFiles/Info/{fileComment.UserFile.Id}",
+							"",
+							$"{User.Identity.Name}");
 					}
 					catch (DbUpdateConcurrencyException)
 					{

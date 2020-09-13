@@ -148,7 +148,8 @@ namespace TASVideos.Pages.Forum.Topics
 				topic.Forum!.Restricted,
 				$"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Identity.Name} from {Topic.ForumName}: {Topic.Title}",
 				"",
-				$"Forum/Topics/{newTopic.Id}");
+				$"Forum/Topics/{newTopic.Id}",
+				$"{User.Identity.Name}");
 
 			return RedirectToPage("Index", new { id = newTopic.Id });
 		}

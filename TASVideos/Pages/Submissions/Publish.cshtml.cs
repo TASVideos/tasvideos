@@ -190,7 +190,7 @@ namespace TASVideos.Pages.Submissions
 			await _db.SaveChangesAsync();
 
 			await _tasVideosAgent.PostSubmissionPublished(submission.Id, publication.Id);
-			_publisher.AnnouncePublication(publication.Title, $"{publication.Id}M");
+			_publisher.AnnouncePublication(publication.Title, $"{publication.Id}M", $"{User.Identity.Name}");
 
 			return Redirect($"/{publication.Id}M");
 		}
