@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using TASVideos.Data.Entity.Game;
 
@@ -134,7 +133,6 @@ namespace TASVideos.Data.Entity
 		public decimal LegacyTime { get; set; }
 		public decimal ImportedTime { get; set; }
 
-		[NotMapped]
 		[StringLength(4096)]
 		public string? LegacyAlerts { get; set; }
 	}
