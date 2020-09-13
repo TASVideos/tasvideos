@@ -43,11 +43,7 @@ namespace TASVideos.Pages.Publications
 		{
 			var tokenLookup = await GetMovieTokenData();
 
-			var tokens = Query
-				.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(s => s.Trim(' '))
-				.Select(s => s.ToLower())
-				.ToList();
+			var tokens = Query.ToTokens();
 
 			var searchModel = new PublicationSearchModel
 			{
