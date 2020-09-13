@@ -140,6 +140,7 @@ namespace TASVideos.Extensions
 						"/",
 						model => model.Filters.Add(new SetPageViewBagAttribute()));
 					options.Conventions.AddPageRoute("/Games/Index", "{id:int}G");
+					options.Conventions.AddPageRoute("/Submissions/Index", "Subs-{query}");
 					options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");
 					options.Conventions.AddPageRoute("/Submissions/View", "{id:int}S");
 					options.Conventions.AddPageRoute("/Publications/Index", "Movies-{query}");
