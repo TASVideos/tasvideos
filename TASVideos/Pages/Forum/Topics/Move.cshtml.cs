@@ -90,7 +90,8 @@ namespace TASVideos.Pages.Forum.Topics
 				forum.Restricted,
 				$"Topic {Topic.TopicTitle} moved by {User.Identity.Name} from {Topic.ForumName} to {forum.Name}",
 				"",
-				$"Forum/Topics/{Id}");
+				$"Forum/Topics/{Id}",
+				$"{User.Identity.Name}");
 
 			return RedirectToPage("Index", new { Id });
 		}

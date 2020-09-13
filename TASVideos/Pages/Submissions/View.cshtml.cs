@@ -157,7 +157,8 @@ namespace TASVideos.Pages.Submissions
 				await _wikiPages.Add(wikiPage);
 				_publisher.SendSubmissionEdit(
 					$"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Identity.Name}",
-					$"{Id}S");
+					$"{Id}S",
+					$"{User.Identity.Name}");
 			}
 			catch (DbUpdateConcurrencyException)
 			{
@@ -204,7 +205,8 @@ namespace TASVideos.Pages.Submissions
 				await _wikiPages.Add(wikiPage);
 				_publisher.SendSubmissionEdit(
 					$"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Identity.Name}",
-					$"{Id}S");
+					$"{Id}S",
+					$"{User.Identity.Name}");
 			}
 			catch (DbUpdateConcurrencyException)
 			{

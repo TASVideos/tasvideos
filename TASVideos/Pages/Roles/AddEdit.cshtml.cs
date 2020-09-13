@@ -139,7 +139,7 @@ namespace TASVideos.Pages.Roles
 				MessageType = Styles.Success;
 				Message = $"Role {Id}, deleted successfully.";
 				_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
-				_publisher.SendUserManagement($"Role {Id} deleted by {User.Identity.Name}", "", $"Roles/List");
+				_publisher.SendUserManagement($"Role {Id} deleted by {User.Identity.Name}", "", $"Roles/List", $"{User.Identity.Name}");
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
@@ -181,13 +181,13 @@ namespace TASVideos.Pages.Roles
 				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role!.Id == Id));
 				await _db.SaveChangesAsync();
 
-				_publisher.SendUserManagement($"Role {model.Name} updated by {User.Identity.Name}", "", $"Roles/Index?role={model.Name}");
+				_publisher.SendUserManagement($"Role {model.Name} updated by {User.Identity.Name}", "", $"Roles/Index?role={model.Name}", $"{User.Identity.Name}");
 			}
 			else
 			{
 				role = new Role();
 				_db.Roles.Attach(role);
-				_publisher.SendUserManagement($"New Role added: {model.Name} by {User.Identity.Name}", "", $"Roles/Index?role={model.Name}");
+				_publisher.SendUserManagement($"New Role added: {model.Name} by {User.Identity.Name}", "", $"Roles/Index?role={model.Name}", $"{User.Identity.Name}");
 			}
 
 			role.Name = model.Name;

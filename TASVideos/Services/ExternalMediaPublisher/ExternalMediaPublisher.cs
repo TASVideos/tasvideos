@@ -49,7 +49,7 @@ namespace TASVideos.Services.ExternalMediaPublisher
 
 	public static class ExternalMediaPublisherExtensions
 	{
-		public static void SendUserFile(this ExternalMediaPublisher publisher, string title, string relativeLink, string body = "")
+		public static void SendUserFile(this ExternalMediaPublisher publisher, string title, string relativeLink, string body = "", string user = "")
 		{
 			publisher.Send(new Post
 			{
@@ -57,11 +57,12 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.UserFiles,
 				Title = title,
 				Body = body,
-				Link = publisher.ToAbsolute(relativeLink)
+				Link = publisher.ToAbsolute(relativeLink),
+				User = user
 			});
 		}
 
-		public static void AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string relativeLink)
+		public static void AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
 			publisher.Send(new Post
 			{
@@ -69,11 +70,12 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Submission,
 				Title = $"New Submission! Go and see {title}",
 				Body = "",
-				Link = publisher.ToAbsolute(relativeLink)
+				Link = publisher.ToAbsolute(relativeLink),
+				User = user
 			});
 		}
 
-		public static void SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string relativeLink)
+		public static void SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
 			publisher.Send(new Post
 			{
@@ -81,11 +83,12 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Submission,
 				Title = title,
 				Body = "",
-				Link = publisher.ToAbsolute(relativeLink)
+				Link = publisher.ToAbsolute(relativeLink),
+				User = user
 			});
 		}
 
-		public static void AnnouncePublication(this ExternalMediaPublisher publisher, string title, string relativeLink)
+		public static void AnnouncePublication(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
 			publisher.Send(new Post
 			{
@@ -93,7 +96,8 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Submission,
 				Title = $"New movie published! Go and see {title}",
 				Body = "",
-				Link = publisher.ToAbsolute(relativeLink)
+				Link = publisher.ToAbsolute(relativeLink),
+				User = user
 			});
 		}
 		public static void SendPublicationEdit (this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
@@ -109,7 +113,7 @@ namespace TASVideos.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink)
+		public static void SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink, string user = "")
 		{
 			publisher.Send(new Post
 			{
@@ -119,11 +123,12 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Forum,
 				Title = title,
 				Body = body,
-				Link = publisher.ToAbsolute(relativeLink)
+				Link = publisher.ToAbsolute(relativeLink),
+				User = user
 			});
 		}
 
-		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user = "")
 		{
 			publisher.Send(new Post
 			{
@@ -131,11 +136,12 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.Wiki,
 				Title = title,
 				Body = body,
-				Link = publisher.ToAbsolute(relativeLink)
+				Link = publisher.ToAbsolute(relativeLink),
+				User = user
 			});
 		}
 
-		public static void SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+		public static void SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user = "")
 		{
 			publisher.Send(new Post
 			{
@@ -143,7 +149,8 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				Group = PostGroups.UserManagement,
 				Title = title,
 				Body = body,
-				Link = publisher.ToAbsolute(relativeLink)
+				Link = publisher.ToAbsolute(relativeLink),
+				User = user
 			});
 		}
 	}

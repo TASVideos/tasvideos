@@ -79,7 +79,8 @@ namespace TASVideos.Pages.Wiki
 			_publisher.SendGeneralWiki(
 				$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Identity.Name}",
 				"",
-				Move.DestinationPageName);
+				Move.DestinationPageName,
+				$"{User.Identity.Name}");
 
 			return Redirect("/" + Move.DestinationPageName);
 		}
