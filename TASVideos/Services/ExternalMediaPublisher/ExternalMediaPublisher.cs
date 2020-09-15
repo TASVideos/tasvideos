@@ -100,6 +100,7 @@ namespace TASVideos.Services.ExternalMediaPublisher
 				User = user
 			});
 		}
+
 		public static void SendPublicationEdit (this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
 			publisher.Send(new Post

@@ -212,7 +212,7 @@ namespace TASVideos.Pages.Forum.Topics
 				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
 				"",
 				$"Forum/Topics/{Id}",
-				$"{User.Identity.Name}");
+				User.Identity.Name!);
 
 			return RedirectToTopic();
 		}

@@ -103,7 +103,7 @@ namespace TASVideos.Pages.Wiki
 					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
 					$"({PageToEdit.RevisionMessage}): ",
 					Path,
-					$"{User.Identity.Name}");
+					User.Identity.Name!);
 			}
 
 			return Redirect("/" + page.PageName);

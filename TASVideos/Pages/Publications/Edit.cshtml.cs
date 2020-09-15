@@ -197,7 +197,7 @@ namespace TASVideos.Pages.Publications
 
 					publication.WikiContentId = revision.Id;
 
-					_publisher.SendPublicationEdit($"Publication {Id} Updated", $"{Id}M", User.Identity.Name ?? "");
+					_publisher.SendPublicationEdit($"Publication {Id} Updated", $"{Id}M", User.Identity.Name!);
 				}
 			}
 		}

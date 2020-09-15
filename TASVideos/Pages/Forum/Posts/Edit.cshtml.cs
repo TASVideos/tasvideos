@@ -122,7 +122,7 @@ namespace TASVideos.Pages.Forum.Posts
 				$"Post edited by {User.Identity.Name} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
 				"",
 				$"p/{Id}#{Id}",
-				$"{User.Identity.Name}");
+				User.Identity.Name!);
 
 			return RedirectToLocal($"/forum/p/{Id}#{Id}");
 		}
@@ -183,7 +183,7 @@ namespace TASVideos.Pages.Forum.Posts
 				$"Post DELETED by {User.Identity.Name} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
 				"",
 				$"Forum/Topics/{post.Topic.Id}",
-				$"{User.Identity.Name}");
+				User.Identity.Name!);
 
 			return topicDeleted
 				? RedirectToPage("/Forum/Subforum/Index", new { id = post.Topic.ForumId })

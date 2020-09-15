@@ -91,7 +91,7 @@ namespace TASVideos.Pages.Forum.Topics
 				$"Topic {Topic.TopicTitle} moved by {User.Identity.Name} from {Topic.ForumName} to {forum.Name}",
 				"",
 				$"Forum/Topics/{Id}",
-				$"{User.Identity.Name}");
+				User.Identity.Name!);
 
 			return RedirectToPage("Index", new { Id });
 		}

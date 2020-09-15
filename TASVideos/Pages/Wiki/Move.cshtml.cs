@@ -80,7 +80,7 @@ namespace TASVideos.Pages.Wiki
 				$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Identity.Name}",
 				"",
 				Move.DestinationPageName,
-				$"{User.Identity.Name}");
+				User.Identity.Name!);
 
 			return Redirect("/" + Move.DestinationPageName);
 		}
