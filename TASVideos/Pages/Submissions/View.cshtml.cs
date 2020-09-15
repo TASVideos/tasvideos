@@ -158,7 +158,7 @@ namespace TASVideos.Pages.Submissions
 				_publisher.SendSubmissionEdit(
 					$"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Identity.Name}",
 					$"{Id}S",
-					$"{User.Identity.Name}");
+					User.Identity.Name!);
 			}
 			catch (DbUpdateConcurrencyException)
 			{
@@ -206,7 +206,7 @@ namespace TASVideos.Pages.Submissions
 				_publisher.SendSubmissionEdit(
 					$"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Identity.Name}",
 					$"{Id}S",
-					$"{User.Identity.Name}");
+					User.Identity.Name!);
 			}
 			catch (DbUpdateConcurrencyException)
 			{

@@ -120,7 +120,7 @@ namespace TASVideos.Pages.Forum.Topics
 				$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Identity.Name}",
 				"",
 				$"Forum/Topics/{destinationTopic.Id}",
-				$"{User.Identity.Name}");
+				User.Identity.Name!);
 
 			return RedirectToPage("Index", new { id = Topic.DestinationTopicId });
 		}

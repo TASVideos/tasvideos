@@ -105,7 +105,7 @@ namespace TASVideos.Pages.UserFiles
 						$"New comment by {User.Identity.Name} on ({userFile.Title} (WIP))", 
 						$"UserFiles/Info/{fileId}",
 						comment,
-						$"{User.Identity.Name}");
+						User.Identity.Name!);
 				}
 			}
 
@@ -132,7 +132,7 @@ namespace TASVideos.Pages.UserFiles
 							$"Comment edited by {User.Identity.Name} on ({fileComment.UserFile!.Title} (WIP))",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							comment,
-							$"{User.Identity.Name}");
+							User.Identity.Name!);
 					}
 					catch (DbUpdateConcurrencyException)
 					{
@@ -164,7 +164,7 @@ namespace TASVideos.Pages.UserFiles
 							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Identity.Name}", 
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							"",
-							$"{User.Identity.Name}");
+							User.Identity.Name!);
 					}
 					catch (DbUpdateConcurrencyException)
 					{
