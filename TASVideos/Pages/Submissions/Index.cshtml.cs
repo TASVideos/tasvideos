@@ -141,9 +141,7 @@ namespace TASVideos.Pages.Submissions
 			return request;
 		}
 
-		
-
-		private static Dictionary<string, SubmissionStatus> StatusTokenMapping = new Dictionary<string, SubmissionStatus>
+		private static readonly Dictionary<string, SubmissionStatus> StatusTokenMapping = new Dictionary<string, SubmissionStatus>
 		{
 			["new"] = SubmissionStatus.New,
 			["can"] = SubmissionStatus.Cancelled,
