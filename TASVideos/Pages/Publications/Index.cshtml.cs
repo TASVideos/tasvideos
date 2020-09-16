@@ -56,8 +56,8 @@ namespace TASVideos.Pages.Publications
 				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f)),
 				MovieIds = tokens
 					.Where(t => t.EndsWith('m'))
-					.Where(t => int.TryParse(t.Substring(0, t.Length - 1), out int unused))
-					.Select(t => int.Parse(t.Substring(0, t.Length - 1)))
+					.Where(t => int.TryParse(t[0..^1], out int unused))
+					.Select(t => int.Parse(t[0..^1]))
 					.ToList(),
 				Authors = tokens
 					.Where(t => t.ToLower().Contains("author"))

@@ -36,8 +36,10 @@ namespace TASVideos.Data.Helpers
 					.Except(new[] { Published }); // Published status must only be set when being published
 			}
 
-			var list = new HashSet<SubmissionStatus>();
-			list.Add(currentStatus); // The current status must always be in the list
+			var list = new HashSet<SubmissionStatus>
+			{
+				currentStatus // The current status must always be in the list
+			};
 
 			var canJudge = perms.Contains(PermissionTo.JudgeSubmissions);
 			var canPublish = perms.Contains(PermissionTo.PublishMovies);

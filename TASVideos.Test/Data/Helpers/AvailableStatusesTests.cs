@@ -16,10 +16,10 @@ namespace TASVideos.Test.Data.Helpers
 
 		private static DateTime TooNewToJudge => DateTime.UtcNow;
 
-		private static IEnumerable<PermissionTo> BasicUserPerms = new[] { PermissionTo.SubmitMovies };
-		private static IEnumerable<PermissionTo> JudgePerms = new[] { PermissionTo.SubmitMovies, PermissionTo.JudgeSubmissions };
-		private static IEnumerable<PermissionTo> PublisherPerms = new[] { PermissionTo.SubmitMovies, PermissionTo.PublishMovies };
-		private static IEnumerable<PermissionTo> Override = new[] { PermissionTo.OverrideSubmissionStatus };
+		private static readonly IEnumerable<PermissionTo> BasicUserPerms = new[] { PermissionTo.SubmitMovies };
+		private static readonly IEnumerable<PermissionTo> JudgePerms = new[] { PermissionTo.SubmitMovies, PermissionTo.JudgeSubmissions };
+		private static readonly IEnumerable<PermissionTo> PublisherPerms = new[] { PermissionTo.SubmitMovies, PermissionTo.PublishMovies };
+		private static readonly IEnumerable<PermissionTo> Override = new[] { PermissionTo.OverrideSubmissionStatus };
 
 		[TestMethod]
 		public void Published_CanNotChange()
