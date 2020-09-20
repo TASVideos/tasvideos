@@ -20,6 +20,8 @@ namespace TASVideos.Pages.Publications.Models
 
 		public IEnumerable<int> MovieIds { get; set; } = new List<int>();
 
+		public IEnumerable<int> Games { get; set; } = new List<int>();
+
 		public bool IsEmpty => (SystemCodes == null || !SystemCodes.Any())
 			&& (Tiers == null || !Tiers.Any())
 			&& (Years == null || !Years.Any())
@@ -27,7 +29,8 @@ namespace TASVideos.Pages.Publications.Models
 			&& (Tags == null || !Tags.Any())
 			&& (Genres == null || !Genres.Any())
 			&& (Authors == null || !Authors.Any())
-			&& (MovieIds == null || !MovieIds.Any());
+			&& (MovieIds == null || !MovieIds.Any())
+			&& (Games == null || !Games.Any());
 	}
 
 }

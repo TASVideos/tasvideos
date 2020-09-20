@@ -53,6 +53,11 @@ namespace TASVideos.Api.Requests
 		/// </summary>
 		public bool ShowObsoleted { get; set; }
 
+		/// <summary>
+		/// Gets or sets the list of Game Ids to filter by
+		/// </summary>
+		public string? GameIds { get; set; }
+
 		IEnumerable<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
 		IEnumerable<string> IPublicationTokens.Tiers => TierNames.CsvToStrings();
 		IEnumerable<int> IPublicationTokens.Years => StartYear.YearRange(EndYear);
@@ -61,5 +66,6 @@ namespace TASVideos.Api.Requests
 		IEnumerable<string> IPublicationTokens.Flags => FlagNames.CsvToStrings();
 		IEnumerable<int> IPublicationTokens.Authors => AuthorIds.CsvToInts();
 		IEnumerable<int> IPublicationTokens.MovieIds => new int[0];
+		IEnumerable<int> IPublicationTokens.Games => GameIds.CsvToInts();
 	}
 }
