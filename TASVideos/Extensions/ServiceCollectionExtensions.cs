@@ -155,6 +155,7 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
 					options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
 					options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
+					options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
 				})
 				.AddRazorRuntimeCompilation()
 				.AddApplicationPart(typeof(PublicationsController).Assembly);

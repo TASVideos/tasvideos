@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace TASVideos.Api
@@ -9,40 +8,6 @@ namespace TASVideos.Api
 	/// </summary>
 	public static class Extensions
 	{
-		/// <summary>
-		/// Takes a comma separated string and returns a list of values
-		/// </summary>
-		public static IEnumerable<string> CsvToStrings(this string? param)
-		{
-			return string.IsNullOrWhiteSpace(param)
-				? Enumerable.Empty<string>()
-				: param.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-		}
-
-		/// <summary>
-		/// Takes a comma separated string and returns a list of values
-		/// </summary>
-		public static IEnumerable<int> CsvToInts(this string? param)
-		{
-			if (string.IsNullOrWhiteSpace(param))
-			{
-				return Enumerable.Empty<int>();
-			}
-
-			var candidates = param.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
-			var ids = new List<int>();
-			foreach (var candidate in candidates)
-			{
-				if (int.TryParse(candidate, out int parsed))
-				{
-					ids.Add(parsed);
-				}
-			}
-
-			return ids;
-		}
-
 		/// <summary>
 		/// Converts a start and end year into a list of years
 		/// </summary>

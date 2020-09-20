@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 
 namespace TASVideos.Api.Requests
 {

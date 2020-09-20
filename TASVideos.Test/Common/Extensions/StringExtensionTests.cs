@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Extensions;
 
@@ -56,6 +56,58 @@ namespace TASVideos.Test.Common.Extensions
 		{
 			var actual = str.SplitCamelCase();
 			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
+		[DataRow(null)]
+		[DataRow("")]
+		[DataRow(" ")]
+		[DataRow(",")]
+		[DataRow(" , ")]
+		[DataRow(",,,")]
+		public void CsvToString_NullReturnsEmpty(string str)
+		{
+			var actual = str.CsvToStrings();
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		[TestMethod]
+		[DataRow("A", "A")]
+		[DataRow("A,B", "A", "B")]
+		[DataRow("A ,B ", "A", "B")]
+		public void CsvToStrings(string str, params string[] expected)
+		{
+			var actual = str.CsvToStrings();
+			Assert.IsNotNull(actual);
+			Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
+		}
+
+		[TestMethod]
+		[DataRow(null)]
+		[DataRow("")]
+		[DataRow(" ")]
+		[DataRow(",")]
+		[DataRow(" , ")]
+		[DataRow(",,,")]
+		public void CsvToInts_NullReturnsEmpty(string str)
+		{
+			var actual = str.CsvToInts();
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(0, actual.Count());
+		}
+
+		[TestMethod]
+		[DataRow("1", new[] { 1 })]
+		[DataRow("1,2", new[] { 1, 2 })]
+		[DataRow("1 ,2 ", new[] { 1, 2 })]
+		[DataRow("-1,1", new[] { -1, 1 })]
+		[DataRow("1,2,NotANumber", new[] { 1, 2 })]
+		public void CsvToInts(string str, int[] expected)
+		{
+			var actual = str.CsvToInts();
+			Assert.IsNotNull(actual);
+			Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
 		}
 	}
 }
