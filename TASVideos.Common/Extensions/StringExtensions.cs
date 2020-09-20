@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -72,6 +73,43 @@ namespace TASVideos.Extensions
 				.Select(s => s.SplitCamelCaseInternal());
 
 			return string.Join(" / ", strings);
+		}
+
+		/// <summary>
+		/// Takes a comma separated string and returns a list of values
+		/// </summary>
+		public static IEnumerable<string> CsvToStrings(this string? param)
+		{
+			return string.IsNullOrWhiteSpace(param)
+				? Enumerable.Empty<string>()
+				: param
+					.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+					.Where(p => !string.IsNullOrWhiteSpace(p))
+					.Select(p => p.Trim());
+		}
+
+		/// <summary>
+		/// Takes a comma separated string and returns a list of values
+		/// </summary>
+		public static IEnumerable<int> CsvToInts(this string? param)
+		{
+			if (string.IsNullOrWhiteSpace(param))
+			{
+				return Enumerable.Empty<int>();
+			}
+
+			var candidates = param.CsvToStrings();
+
+			var ids = new List<int>();
+			foreach (var candidate in candidates)
+			{
+				if (int.TryParse(candidate, out int parsed))
+				{
+					ids.Add(parsed);
+				}
+			}
+
+			return ids;
 		}
 
 		private static string SplitCamelCaseInternal(this string? str)
