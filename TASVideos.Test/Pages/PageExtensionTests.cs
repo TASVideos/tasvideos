@@ -37,5 +37,19 @@ namespace TASVideos.Test.Pages
 			Assert.AreEqual(expected.Length, actual.Count);
 			Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
 		}
+
+		[TestMethod]
+		[DataRow(new[] { "1M", "2M" }, 'M', new[] { 1, 2 })]
+		[DataRow(new[] { "1M", "2M" }, 'm', new[] { 1, 2 })]
+		[DataRow(new[] { "1G", "2g" }, 'g', new[] { 1, 2 })]
+		[DataRow(new[] { "1M", "2M", "NotANumberM" }, 'm', new[] { 1, 2 })]
+		public void ToIdList(string[] source, char suffix, int[] expected)
+		{
+			var result = source.ToIdList(suffix);
+			Assert.IsNotNull(result);
+			var actual = result.ToList();
+			Assert.AreEqual(expected.Length, actual.Count);
+			Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
+		}
 	}
 }
