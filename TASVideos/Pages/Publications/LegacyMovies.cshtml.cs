@@ -28,28 +28,44 @@ namespace TASVideos.Pages.Publications
 		[FromQuery]
 		public string? Id { get; set; }
 
+		[FromQuery]
+		public string Rec { get; set; }
+
 		public async Task<IActionResult> OnGet()
 		{
 			IEnumerable<int> ids = Id.CsvToInts();
-			
+			string query = "";
+			// Id filtering supercedes any other filters, so we can short circuit here
 			if (ids.Any())
 			{
-				var query = string.Join("-", ids.Select(i => i + "M"));
+				query = string.Join("-", ids.Select(i => i + "M"));
 				return RedirectToPage("/Publications/Index", new { query });
 			}
 
+			List<string> tokens = new List<string>();
 			if (!string.IsNullOrWhiteSpace(Name))
 			{
 				// Movies.cgi only supported a single game name
 				var game = await _db.Games.FirstOrDefaultAsync(g => g.DisplayName == Name || g.GoodName == Name);
 				if (game != null)
 				{
-					var query = game.Id + "G";
-					return RedirectToPage("/Publications/Index", new { query });
+					tokens.Add(game.Id + "G");
 				}
 			}
 
-			return NotFound();
+			// rec=N is the same as rec=Y, it simply checks for existence of the param
+			if (!string.IsNullOrWhiteSpace(Rec))
+			{
+				tokens.Add("NewcomerRec");
+			}
+
+			if (tokens.Any())
+			{
+				query = string.Join("-", tokens);
+				return RedirectToPage("/Publications/Index", new { query });
+			}
+
+			return Redirect("Movies");
 		}
 	}
 }
