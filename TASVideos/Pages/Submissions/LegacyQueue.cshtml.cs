@@ -15,6 +15,9 @@ namespace TASVideos.Pages.Submissions
 		[FromQuery]
 		public string? Type { get; set; }
 
+		[FromQuery]
+		public int? Id { get; set; }
+
 		public IActionResult OnGet()
 		{
 			if (string.Equals(Mode, "submit", StringComparison.CurrentCultureIgnoreCase))
@@ -33,7 +36,22 @@ namespace TASVideos.Pages.Submissions
 				return RedirectToPage("/Submissions/Index", new { User = user });
 			}
 
-			return NotFound();
+			if (string.Equals(Mode, "edit", StringComparison.CurrentCultureIgnoreCase)
+				&& Id.HasValue)
+			{
+				return RedirectToPage("/Submissions/Edit", new { Id = Id.Value });
+			}
+
+			// mode=view is optional
+			// http://tasvideos.org/queue.cgi?id=1
+			// http://tasvideos.org/queue.cgi?mode=view&id=1
+			if ((string.Equals(Mode, "view", StringComparison.CurrentCultureIgnoreCase) || string.IsNullOrWhiteSpace(Mode))
+				&& Id.HasValue)
+			{
+				return RedirectToPage("/Submissions/View", new { Id = Id.Value });
+			}
+
+			return RedirectToPage("/Submissions/Index");
 		}
 	}
 }
