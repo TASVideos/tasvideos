@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos", "TASVideos\TASVideos.csproj", "{B386F775-4453-4ADB-906F-F081FE8459EF}"
 EndProject
@@ -21,9 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.ForumEngineTempTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Api", "TASVideos.Api\TASVideos.Api.csproj", "{3CA1C217-1A70-4325-84F0-591ABC2AB1CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Common", "TASVideos.Common\TASVideos.Common.csproj", "{EADBD726-2EC5-4405-9D85-8668BEA7B816}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Common", "TASVideos.Common\TASVideos.Common.csproj", "{EADBD726-2EC5-4405-9D85-8668BEA7B816}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.WikiEngineTest", "TASVideos.WikiEngineTest\TASVideos.WikiEngineTest.csproj", "{FAD1278D-EFAC-46EC-8D1C-5B2A22B363EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngineTest", "TASVideos.WikiEngineTest\TASVideos.WikiEngineTest.csproj", "{FAD1278D-EFAC-46EC-8D1C-5B2A22B363EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
