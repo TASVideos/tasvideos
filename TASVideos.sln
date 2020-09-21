@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Common", "TASVide
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngineTest", "TASVideos.WikiEngineTest\TASVideos.WikiEngineTest.csproj", "{FAD1278D-EFAC-46EC-8D1C-5B2A22B363EA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wiki", "Wiki", "{22D20E37-7340-444F-BDCC-6AD69C30B766}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Forum", "Forum", "{5FF0825D-C689-46B4-8689-B93412865C33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +82,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C2DE4347-54F6-4842-9EFF-8B663C412136} = {22D20E37-7340-444F-BDCC-6AD69C30B766}
+		{22B7D9F3-AD80-40CD-BA5B-07F16D7C3759} = {5FF0825D-C689-46B4-8689-B93412865C33}
+		{A73AD96F-54AD-4A9A-9F27-D303C633C1E0} = {5FF0825D-C689-46B4-8689-B93412865C33}
+		{FAD1278D-EFAC-46EC-8D1C-5B2A22B363EA} = {22D20E37-7340-444F-BDCC-6AD69C30B766}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67B2E8BD-92C7-442F-9560-C36E143E8E4C}
