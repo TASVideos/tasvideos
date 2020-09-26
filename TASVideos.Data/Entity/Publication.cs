@@ -38,6 +38,8 @@ namespace TASVideos.Data.Entity
 		[ForeignKey(nameof(PublicationRating.PublicationId))]
 		public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new HashSet<PublicationRating>();
 
+		public virtual ICollection<PublicationUrl> PublicationUrls { get; set; } = new HashSet<PublicationUrl>();
+
 		public int? ObsoletedById { get; set; }
 		public virtual Publication? ObsoletedBy { get; set; }
 
@@ -74,12 +76,6 @@ namespace TASVideos.Data.Entity
 
 		[StringLength(50)]
 		public string? EmulatorVersion { get; set; }
-
-		// TODO: set a string length
-		public string? OnlineWatchingUrl { get; set; }
-
-		// TODO: set a string length
-		public string? MirrorSiteUrl { get; set; }
 
 		public int Frames { get; set; }
 		public int RerecordCount { get; set; }

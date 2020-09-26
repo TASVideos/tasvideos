@@ -45,6 +45,7 @@ namespace TASVideos.Data
 		public DbSet<PublicationTag> PublicationTags { get; set; } = null!;
 		public DbSet<PublicationRating> PublicationRatings { get; set; } = null!;
 		public DbSet<PublicationFlag> PublicationFlags { get; set; } = null!;
+		public DbSet<PublicationUrl> PublicationUrls { get; set; } = null!;
 
 		public DbSet<Tag> Tags { get; set; } = null!;
 		public DbSet<Flag> Flags { get; set; } = null!;
@@ -357,6 +358,11 @@ namespace TASVideos.Data
 			builder.Entity<ForumPost>(entity =>
 			{
 				entity.Property(e => e.PosterMood).HasDefaultValue(ForumPostMood.None); // TODO: this is only here for sample data, we need to regenerate the file and have the original moods of the posts
+			});
+
+			builder.Entity<PublicationUrl>(entity =>
+			{
+				entity.HasIndex(e => e.Type);
 			});
 		}
 

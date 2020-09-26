@@ -72,7 +72,7 @@ namespace TASVideos.ViewComponents
 								Description = f.Description
 							})
 							.First(),
-						OnlineWatchingUrl = p.OnlineWatchingUrl
+						OnlineWatchingUrl = p.PublicationUrls.First(p => p.Type == PublicationUrlType.Streaming).Url
 					})
 					.SingleOrDefaultAsync(p => p.Id == id);
 			}
@@ -82,7 +82,7 @@ namespace TASVideos.ViewComponents
 				{
 					Id = 0,
 					Title = "Error",
-					OnlineWatchingUrl = p.OnlineWatchingUrl
+					OnlineWatchingUrl = ""
 				})
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}

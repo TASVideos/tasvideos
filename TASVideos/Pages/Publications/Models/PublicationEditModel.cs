@@ -21,14 +21,6 @@ namespace TASVideos.Pages.Publications.Models
 		[Display(Name = "Obsoleted By")]
 		public int? ObsoletedBy { get; set; }
 
-		[Url]
-		[Display(Name = "Online-watching URL")]
-		public string? OnlineWatchingUrl { get; set; }
-
-		[Url]
-		[Display(Name = "Mirror site URL")]
-		public string? MirrorSiteUrl { get; set; }
-
 		[StringLength(50)]
 		[Display(Name = "Emulator Version")]
 		public string? EmulatorVersion { get; set; }
@@ -48,6 +40,8 @@ namespace TASVideos.Pages.Publications.Models
 		public bool MinorEdit { get; set; }
 
 		public string Markup { get; set; } = "";
+
+		public IEnumerable<PublicationUrlDisplayModel> Urls { get; set; } = new List<PublicationUrlDisplayModel>();
 	}
 
 	public class PublicationFileDisplayModel
@@ -56,5 +50,12 @@ namespace TASVideos.Pages.Publications.Models
 		public string Path { get; set; } = "";
 		public FileType Type { get; set; }
 		public string? Description { get; set; }
+	}
+
+	public class PublicationUrlDisplayModel
+	{
+		public int Id { get; set; }
+		public string Url { get; set; } = "";
+		public PublicationUrlType Type { get; set; }
 	}
 }
