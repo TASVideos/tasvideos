@@ -1,0 +1,55 @@
+﻿@page "{id}/{handler?}/{publicationUrlId?}"
+@model EditUrlsModel
+@{
+	ViewData["Title"] = $"Edit Urls for {Model.Title}";
+}
+
+<h4>Urls</h4>
+<row condition="Model.CurrentUrls.Any()">
+	<table class="table table-bordered">
+		<tr>
+			<td>Url</td>
+			<td>Type</td>
+			<td></td>
+		</tr>
+		@foreach (var url in Model.CurrentUrls.OrderBy(u => u.Type))
+		{
+			<tr>
+				<td>@url.Url</td>
+				<td>@url.Type</td>
+				<td>
+					<delete-button warning-message="Are you sure you want to remove this url?"
+								   asp-href="/Publications/EditUrls/@Model.Id/Delete/@url.Id">
+						Delete
+					</delete-button>
+				</td>
+			</tr>
+		}
+	</table>
+</row>
+<hr />
+<form method="post">
+	<input type="hidden" asp-for="Title" />
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="PublicationUrl"></label>
+				<input type="text" asp-for="PublicationUrl" class="form-control" />
+				<span asp-validation-for="PublicationUrl" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="UrlType"></label>
+				<select asp-for="UrlType" asp-items="Model.AvailableTypes" class="form-control"></select>
+				<span asp-validation-for="UrlType" class="text-danger"></span>
+			</form-group>
+			<div class="text-center mt-3">
+				<button type="submit" class="btn btn-primary">Add</button>
+				<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Back To Edit</a>
+			</div>
+		</column>
+	</row>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

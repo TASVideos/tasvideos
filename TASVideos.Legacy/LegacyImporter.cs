@@ -61,6 +61,7 @@ namespace TASVideos.Legacy
 			Run("Submissions", () => SubmissionImporter.Import(connectionStr, context, legacySiteContext));
 			Run("Submissions Framerate", () => SubmissionFrameRateImporter.Import(context));
 			Run("Publications", () => PublicationImporter.Import(connectionStr, context, legacySiteContext));
+			Run("PublicationUrls", () => PublicationUrlImporter.Import(connectionStr, legacySiteContext));
 			Run("Publication Ratings", () => PublicationRatingImporter.Import(connectionStr, context, legacySiteContext));
 			Run("Publication Flags", () => PublicationFlagImporter.Import(connectionStr, context, legacySiteContext));
 

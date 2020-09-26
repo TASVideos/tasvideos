@@ -113,12 +113,22 @@ namespace TASVideos.Pages.Submissions
 				RomId = submission.Rom!.Id,
 				Branch = submission.Branch,
 				EmulatorVersion = Submission.EmulatorVersion,
-				OnlineWatchingUrl = Submission.OnlineWatchingUrl,
-				MirrorSiteUrl = Submission.MirrorSiteUrl,
 				Frames = submission.Frames,
 				RerecordCount = submission.RerecordCount,
 				MovieFileName = Submission.MovieFileName + "." + Submission.MovieExtension
 			};
+
+			publication.PublicationUrls.Add(new PublicationUrl
+			{
+				Url = Submission.OnlineWatchingUrl,
+				Type = PublicationUrlType.Streaming
+			});
+
+			publication.PublicationUrls.Add(new PublicationUrl
+			{
+				Url = Submission.MirrorSiteUrl,
+				Type = PublicationUrlType.Mirror
+			});
 
 			// TODO: use IFileService for this
 			// Unzip the submission file, and re-zip it while renaming the contained file

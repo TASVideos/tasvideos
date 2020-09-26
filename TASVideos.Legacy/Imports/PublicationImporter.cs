@@ -84,9 +84,6 @@ namespace TASVideos.Legacy.Imports
 				var mainMovieFile = movieFiles.First(); // Pick the first one to be the official, we have no better way really
 				var screenshotUrl = pub.Movie.MovieFiles.First(f => f.Type == "H");
 				var torrentUrls = pub.Movie.MovieFiles.Where(f => torrentTypes.Contains(f.Type));
-				var mirror = pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "A")?.FileName;
-				var streaming = (pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "J" && f.FileName.Contains("youtube"))
-					?? pub.Movie.MovieFiles.FirstOrDefault(f => f.Type == "J"))?.FileName;
 
 				var publication = new Publication
 				{
@@ -110,8 +107,6 @@ namespace TASVideos.Legacy.Imports
 					SystemId = pub.Movie.SystemId,
 					System = pub.Sub.System,
 					Branch = pub.Movie.Branch.NullIfWhiteSpace(),
-					MirrorSiteUrl = mirror,
-					OnlineWatchingUrl = streaming,
 					AdditionalAuthors = pub.Sub.AdditionalAuthors,
 					EmulatorVersion = pub.Sub.EmulatorVersion
 				};
@@ -210,8 +205,6 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.SystemFrameRateId),
 				nameof(Publication.SystemId),
 				nameof(Publication.Title),
-				nameof(Publication.MirrorSiteUrl),
-				nameof(Publication.OnlineWatchingUrl),
 				nameof(Publication.ObsoletedById),
 				nameof(Publication.AdditionalAuthors),
 				nameof(Publication.EmulatorVersion)

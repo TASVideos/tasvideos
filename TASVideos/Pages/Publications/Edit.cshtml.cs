@@ -64,8 +64,14 @@ namespace TASVideos.Pages.Publications
 						ObsoletedBy = p.ObsoletedById,
 						Branch = p.Branch,
 						EmulatorVersion = p.EmulatorVersion,
-						OnlineWatchingUrl = p.OnlineWatchingUrl,
-						MirrorSiteUrl = p.MirrorSiteUrl,
+						Urls = p.PublicationUrls
+							.Select(u => new PublicationUrlDisplayModel
+							{
+								Id = u.Id,
+								Url = u.Url!,
+								Type = u.Type
+							})
+							.ToList(),
 						SelectedFlags = p.PublicationFlags
 							.Select(pf => pf.FlagId)
 							.ToList(),
@@ -151,8 +157,8 @@ namespace TASVideos.Pages.Publications
 				publication.Branch = model.Branch;
 				publication.ObsoletedById = model.ObsoletedBy;
 				publication.EmulatorVersion = model.EmulatorVersion;
-				publication.OnlineWatchingUrl = model.OnlineWatchingUrl;
-				publication.MirrorSiteUrl = model.MirrorSiteUrl;
+				//publication.OnlineWatchingUrl = model.OnlineWatchingUrl; // Streaming TODO
+				//publication.MirrorSiteUrl = model.MirrorSiteUrl; // Streaming TODO
 
 				publication.GenerateTitle();
 

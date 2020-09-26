@@ -56,7 +56,6 @@ namespace TASVideos.Pages.Publications
 				Files.ScreenshotDescription = screenshot.Description;
 				Files.ExistingScreenshotName = screenshot.Path;
 			}
-			
 
 			return Page();
 		}
