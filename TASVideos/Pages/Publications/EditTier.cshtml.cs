@@ -10,6 +10,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Publications.Models;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -17,10 +18,12 @@ namespace TASVideos.Pages.Publications
 	public class EditTierModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ExternalMediaPublisher _publisher;
 
-		public EditTierModel(ApplicationDbContext db)
+		public EditTierModel(ApplicationDbContext db, ExternalMediaPublisher publisher)
 		{
 			_db = db;
+			_publisher = publisher;
 		}
 
 		[FromRoute]
@@ -75,10 +78,19 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
-			publication.TierId = Publication.TierId;
+			if (publication.TierId != Publication.TierId)
+			{
+				var originalTier = publication.TierId;
+				publication.TierId = Publication.TierId;
 
-			// TODO: catch DbConcurrencyException
-			await _db.SaveChangesAsync();
+				_publisher.SendPublicationEdit(
+					$"Publication {Id} Tier changed to {tier.Name}",
+					$"{Id}M",
+					User.Identity.Name!);
+
+				// TODO: catch DbConcurrencyException
+				await _db.SaveChangesAsync();
+			}
 
 			return RedirectToPage("View", new { Id });
 		}
