@@ -78,6 +78,7 @@ namespace TASVideos.Pages.Submissions
 					EncodeEmbedLink = s.EncodeEmbedLink,
 					Markup = s.WikiContent.Markup,
 					Judge = s.Judge != null ? s.Judge.UserName : "",
+					Publisher = s.Publisher != null ? s.Publisher.UserName : "",
 					TierId = s.IntendedTierId,
 					RejectionReason = s.RejectionReasonId
 				})
