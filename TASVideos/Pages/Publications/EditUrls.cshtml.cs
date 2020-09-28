@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -15,15 +16,17 @@ namespace TASVideos.Pages.Publications
 	public class EditUrlsModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ExternalMediaPublisher _publisher;
 
 		private static List<PublicationUrlType> PublicaitonUrlTypes = Enum
 			.GetValues(typeof(PublicationUrlType))
 			.Cast<PublicationUrlType>()
 			.ToList();
 
-		public EditUrlsModel(ApplicationDbContext db)
+		public EditUrlsModel(ApplicationDbContext db, ExternalMediaPublisher publisher)
 		{
 			_db = db;
+			_publisher = publisher;
 		}
 
 		public IEnumerable<SelectListItem> AvailableTypes =
@@ -92,6 +95,11 @@ namespace TASVideos.Pages.Publications
 
 			await _db.SaveChangesAsync();
 
+			_publisher.SendPublicationEdit(
+				$"Publication {Id} {Title} added {UrlType} url {PublicationUrl}",
+					$"{Id}M",
+					User.Identity.Name!);
+
 			return RedirectToPage("EditUrls", new { Id });
 		}
 
@@ -101,6 +109,11 @@ namespace TASVideos.Pages.Publications
 				.SingleOrDefaultAsync(pf => pf.Id == publicationUrlId);
 
 			_db.PublicationUrls.Remove(url);
+
+			_publisher.SendPublicationEdit(
+				$"Publication {Id} deleted {UrlType} url {PublicationUrl}",
+					$"{Id}M",
+					User.Identity.Name!);
 
 			// TODO: catch update exceptions
 			await _db.SaveChangesAsync();
