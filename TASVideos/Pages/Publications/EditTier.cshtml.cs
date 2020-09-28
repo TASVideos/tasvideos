@@ -32,6 +32,9 @@ namespace TASVideos.Pages.Publications
 		[BindProperty]
 		public PublicationTierEditModel Publication { get; set; } = new PublicationTierEditModel();
 
+		[BindProperty]
+		public string Title { get; set; } = "";
+
 		public IEnumerable<SelectListItem> AvailableTiers { get; set; } = new List<SelectListItem>();
 
 		public async Task<IActionResult> OnGet()
@@ -50,6 +53,7 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
+			Title = Publication.Title;
 			await PopulateAvailableTiers();
 			return Page();
 		}
@@ -84,7 +88,7 @@ namespace TASVideos.Pages.Publications
 				publication.TierId = Publication.TierId;
 
 				_publisher.SendPublicationEdit(
-					$"Publication {Id} Tier changed to {tier.Name}",
+					$"Publication {Id} {Title} Tier changed to {tier.Name}",
 					$"{Id}M",
 					User.Identity.Name!);
 
