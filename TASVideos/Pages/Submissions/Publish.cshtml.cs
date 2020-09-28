@@ -215,6 +215,7 @@ namespace TASVideos.Pages.Submissions
 					Value = p.Id.ToString(),
 					Text = p.Title
 				})
+				.OrderBy(p => p.Text)
 				.ToListAsync();
 		}
 	}
