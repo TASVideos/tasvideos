@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -16,10 +17,15 @@ namespace TASVideos.Pages.Publications
 	public class EditFileModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ExternalMediaPublisher _publisher;
 		private readonly IMediaFileUploader _uploader;
-		public EditFileModel(ApplicationDbContext db, IMediaFileUploader uploader)
+		public EditFileModel(
+			ApplicationDbContext db,
+			ExternalMediaPublisher publisher,
+			IMediaFileUploader uploader)
 		{
 			_db = db;
+			_publisher = publisher;
 			_uploader = uploader;
 		}
 
@@ -83,6 +89,7 @@ namespace TASVideos.Pages.Publications
 			// Screenshot
 			var screenshot = files.FirstOrDefault(f => f.Type == FileType.Screenshot);
 
+			string? publisherMessage = null;
 			if (Files.UseNewScreenshot && Files.NewScreenshot != null)
 			{
 				if (screenshot != null)
@@ -91,13 +98,20 @@ namespace TASVideos.Pages.Publications
 				}
 
 				await _uploader.UploadScreenshot(Id, Files.NewScreenshot, Files.ScreenshotDescription);
+				publisherMessage = $"Publication {Id} {Title} Added screenshot ({Files.NewScreenshot.Length} bytes)";
 			}
 			else
 			{
 				if (screenshot != null)
 				{
 					screenshot.Description = Files.ScreenshotDescription;
+					publisherMessage = $"Publication {Id} {Title} Updated screenshot description: {screenshot.Description}";
 				}
+			}
+
+			if (publisherMessage != null)
+			{
+				_publisher.SendPublicationEdit(publisherMessage, $"{Id}M", User.Identity.Name!);
 			}
 
 			// TODO: catch DbConcurrencyException
