@@ -157,8 +157,6 @@ namespace TASVideos.Pages.Publications
 				publication.Branch = model.Branch;
 				publication.ObsoletedById = model.ObsoletedBy;
 				publication.EmulatorVersion = model.EmulatorVersion;
-				//publication.OnlineWatchingUrl = model.OnlineWatchingUrl; // Streaming TODO
-				//publication.MirrorSiteUrl = model.MirrorSiteUrl; // Streaming TODO
 
 				publication.GenerateTitle();
 
