@@ -5,6 +5,7 @@
 }
 
 <h4>Additional Movie Files:</h4>
+<label condition="!Model.AvailableMovieFiles.Any()"><i>No additonal movie files</i></label>
 <row condition="Model.AvailableMovieFiles.Any()">
 	<div class="col-lg-4 col-sm-6">
 		<table class="table table-bordered">
@@ -31,6 +32,8 @@
 		
 	</div>
 </row>
+<hr />
+<h4>Add a movie file</h4>
 <hr />
 <form method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="PublicationTitle" />
