@@ -23,7 +23,7 @@ namespace TASVideos.Data.Entity
 		[StringLength(250)]
 		public string? Description { get; set; }
 
-		public byte[]? FileData { get; set; } = new byte[0];
+		public byte[]? FileData { get; set; }
 	}
 
 	public static class PublicationFileExtensions
