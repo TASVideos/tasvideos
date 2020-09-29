@@ -28,7 +28,7 @@
 		<td><strong>@Model.Publication.MovieFileName</strong></td>
 		<td>Primary Movie File</td>
 	</tr>
-	@foreach (var file in Model.Files.OrderBy(f => f.Type))
+	@foreach (var file in Model.Files.OrderBy(f => f.Type.ToString()))
 	{
 		<tr>
 			<td>@file.Path</td>

@@ -117,7 +117,7 @@ namespace TASVideos.Pages.Publications
 			// TODO: catch DbConcurrencyException
 			await _db.SaveChangesAsync();
 
-			return RedirectToPage("View", new { Id });
+			return RedirectToPage("Edit", new { Id });
 		}
 
 		public class PublicationFilesEditModel
