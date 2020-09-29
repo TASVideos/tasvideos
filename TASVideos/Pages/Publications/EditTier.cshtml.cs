@@ -96,7 +96,7 @@ namespace TASVideos.Pages.Publications
 				await _db.SaveChangesAsync();
 			}
 
-			return RedirectToPage("View", new { Id });
+			return RedirectToPage("Edit", new { Id });
 		}
 
 		private async Task PopulateAvailableTiers()
