@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -18,15 +19,18 @@ namespace TASVideos.Pages.Publications
 	public class AdditionalMoviesModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ExternalMediaPublisher _publisher;
 
-		public AdditionalMoviesModel(ApplicationDbContext db)
+		public AdditionalMoviesModel(ApplicationDbContext db, ExternalMediaPublisher publisher)
 		{
 			_db = db;
+			_publisher = publisher;
 		}
 
 		[FromRoute]
 		public int Id { get; set; }
 
+		[BindProperty]
 		public string PublicationTitle { get; set; } = "";
 
 		public ICollection<PublicationFileModel> AvailableMovieFiles { get; set; } = new List<PublicationFileModel>();
@@ -106,6 +110,11 @@ namespace TASVideos.Pages.Publications
 			_db.PublicationFiles.Add(publicationFile);
 			await _db.SaveChangesAsync();
 
+			_publisher.SendPublicationEdit(
+				$"Publication {Id} {PublicationTitle} added new movie file: {DisplayName}",
+					$"{Id}M",
+					User.Identity.Name!);
+
 			return RedirectToPage("AdditionalMovies", new { Id });
 		}
 
@@ -118,6 +127,11 @@ namespace TASVideos.Pages.Publications
 
 			// TODO: catch update exceptions, this is so unlikely though it isn't worth it
 			await _db.SaveChangesAsync();
+
+			_publisher.SendPublicationEdit(
+				$"Publication {Id} {PublicationTitle} removed movie file {file.Path}",
+					$"{Id}M",
+					User.Identity.Name!);
 
 			return RedirectToPage("AdditionalMovies", new { Id });
 		}
