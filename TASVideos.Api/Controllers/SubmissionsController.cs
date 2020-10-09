@@ -38,14 +38,10 @@ namespace TASVideos.Api.Controllers
 		/// <response code="400">The request parameters are invalid</response>
 		/// <response code="404">A submission with the given id was not found</response>
 		[HttpGet("{id}")]
+		[Validate]
 		[ProducesResponseType(typeof(SubmissionsResponse), 200)]
 		public async Task<IActionResult> Get(int id)
 		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
 			var sub = await _db.Submissions
 				.ProjectTo<SubmissionsResponse>()
 				.SingleOrDefaultAsync(p => p.Id == id);
@@ -64,19 +60,10 @@ namespace TASVideos.Api.Controllers
 		/// <response code="200">Returns the list of publications</response>
 		/// <response code="400">The request parameters are invalid</response>
 		[HttpGet]
+		[Validate]
 		[ProducesResponseType(typeof(IEnumerable<SubmissionsResponse>), 200)]
 		public async Task<IActionResult> GetAll(SubmissionsRequest request)
 		{
-			if (!request.IsValidSort(typeof(SubmissionsResponse)))
-			{
-				ModelState.AddModelError(nameof(request.Sort), "Invalid Sort parameter");
-			}
-
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
 			var subs = (await _db.Submissions
 				.FilterBy(request)
 				.ProjectTo<SubmissionsResponse>()
