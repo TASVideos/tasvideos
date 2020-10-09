@@ -47,11 +47,6 @@ namespace TASVideos.Api.Controllers
 		[ProducesResponseType(typeof(PublicationsResponse), 200)]
 		public async Task<IActionResult> Get(int id)
 		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
 			var pub = await _db.Publications
 				.ProjectTo<PublicationsResponse>()
 				.SingleOrDefaultAsync(p => p.Id == id);
@@ -70,19 +65,10 @@ namespace TASVideos.Api.Controllers
 		/// <response code="200">Returns the list of publications</response>
 		/// <response code="400">The request parameters are invalid</response>
 		[HttpGet]
+		[Validate]
 		[ProducesResponseType(typeof(IEnumerable<PublicationsResponse>), 200)]
 		public async Task<IActionResult> GetAll(PublicationsRequest request)
 		{
-			if (!request.IsValidSort(typeof(PublicationsResponse)))
-			{
-				ModelState.AddModelError(nameof(request.Sort), "Invalid Sort parameter");
-			}
-
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
 			var pubs = (await _db.Publications
 				.FilterByTokens(request)
 				.ProjectTo<PublicationsResponse>()

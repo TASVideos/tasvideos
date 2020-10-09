@@ -6,7 +6,6 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Data;
@@ -32,24 +31,37 @@ namespace TASVideos.Api.Controllers
 		}
 
 		/// <summary>
+		/// Returns a game with the given id
+		/// </summary>
+		/// <response code="200">Returns a game</response>
+		/// <response code="400">The request parameters are invalid</response>
+		/// <response code="404">A publication with the given id was not found</response>
+		[HttpGet("{id}")]
+		[ProducesResponseType(typeof(GamesResponse), 200)]
+		public async Task<IActionResult> Get(int id)
+		{
+			var pub = await _db.Games
+				.ProjectTo<GamesResponse>()
+				.SingleOrDefaultAsync(p => p.Id == id);
+
+			if (pub == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(pub);
+		}
+
+		/// <summary>
 		/// Returns a list of available games
 		/// </summary>
 		/// <response code="200">Returns the list of games</response>
 		/// /// <response code="400">The request parameters are invalid</response>
+		[Validate]
 		[HttpGet]
-		[ProducesResponseType(typeof(IEnumerable<SystemsResponse>), 200)]
+		[ProducesResponseType(typeof(IEnumerable<GamesResponse>), 200)]
 		public async Task<IActionResult> GetAll(GamesRequest request)
 		{
-			if (!request.IsValidSort(typeof(GamesResponse)))
-			{
-				ModelState.AddModelError(nameof(request.Sort), "Invalid Sort parameter");
-			}
-
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
 			var games = (await _db.Games
 				.ForSystemCodes(request.SystemCodes)
 				.ProjectTo<GamesResponse>()

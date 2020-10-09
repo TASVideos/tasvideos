@@ -33,11 +33,6 @@ namespace TASVideos.Api.Controllers
 		[ProducesResponseType(typeof(IEnumerable<Tier>), 200)]
 		public async Task<IActionResult> GetAll()
 		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
 			var tiers = await _db.Tiers.ToListAsync();
 			return Ok(tiers);
 		}

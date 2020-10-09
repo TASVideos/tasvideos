@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using TASVideos.Data;
 using TASVideos.Extensions;
 
 namespace TASVideos.Api.Requests
@@ -11,6 +13,7 @@ namespace TASVideos.Api.Requests
 		/// <summary>
 		/// Gets or sets the system codes to filter by
 		/// </summary>
+		[StringLength(10)]
 		public string? Systems { get; set; }
 
 		internal IEnumerable<string> SystemCodes => Systems.CsvToStrings();

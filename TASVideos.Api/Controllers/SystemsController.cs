@@ -39,11 +39,6 @@ namespace TASVideos.Api.Controllers
 		[ProducesResponseType(typeof(SystemsResponse), 200)]
 		public async Task<IActionResult> Get(int id)
 		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
 			var system = await _db.GameSystems
 				.ProjectTo<SystemsResponse>()
 				.SingleOrDefaultAsync(p => p.Id == id);
@@ -61,6 +56,7 @@ namespace TASVideos.Api.Controllers
 		/// </summary>
 		/// <response code="200">Returns the list of systems</response>
 		[HttpGet]
+		[Validate]
 		[ProducesResponseType(typeof(IEnumerable<SystemsResponse>), 200)]
 		public async Task<IActionResult> GetAll()
 		{
