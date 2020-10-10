@@ -51,5 +51,16 @@ namespace TASVideos.Test.Pages
 			Assert.AreEqual(expected.Length, actual.Count);
 			Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
 		}
+
+		[TestMethod]
+		[DataRow(new[] { "Group1", "Group2" }, "Group", new[] { 1, 2 })]
+		public void ToIdListPrefix(string[] source, string prefix, int[] expected)
+		{
+			var result = source.ToIdListPrefix(prefix);
+			Assert.IsNotNull(result);
+			var actual = result.ToList();
+			Assert.AreEqual(expected.Length, actual.Count);
+			Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
+		}
 	}
 }

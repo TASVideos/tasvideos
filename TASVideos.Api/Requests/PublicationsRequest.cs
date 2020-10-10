@@ -59,6 +59,12 @@ namespace TASVideos.Api.Requests
 		/// </summary>
 		public string? GameIds { get; set; }
 
+		/// <summary>
+		///  Gets or sets the list of Game Group Ids to filter by
+		/// </summary>
+		public string? GameGroupIds { get; set; }
+
+
 		IEnumerable<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
 		IEnumerable<string> IPublicationTokens.Tiers => TierNames.CsvToStrings();
 		IEnumerable<int> IPublicationTokens.Years => StartYear.YearRange(EndYear);
@@ -68,5 +74,6 @@ namespace TASVideos.Api.Requests
 		IEnumerable<int> IPublicationTokens.Authors => AuthorIds.CsvToInts();
 		IEnumerable<int> IPublicationTokens.MovieIds => new int[0];
 		IEnumerable<int> IPublicationTokens.Games => GameIds.CsvToInts();
+		IEnumerable<int> IPublicationTokens.GameGroups => GameGroupIds.CsvToInts();
 	}
 }

@@ -23,6 +23,7 @@ namespace TASVideos.Data.Entity
 		IEnumerable<int> Authors { get; }
 		IEnumerable<int> MovieIds { get; }
 		IEnumerable<int> Games { get; }
+		IEnumerable<int> GameGroups { get; }
 		bool ShowObsoleted { get; set; }
 	}
 
@@ -154,6 +155,11 @@ namespace TASVideos.Data.Entity
 			if (tokens.Games.Any())
 			{
 				query = query.Where(p => tokens.Games.Contains(p.GameId));
+			}
+
+			if (tokens.GameGroups.Any())
+			{
+				query = query.Where(p => p.Game!.GameGroups.Any(gg => tokens.GameGroups.Contains(gg.GameGroupId)));
 			}
 
 			if (tokens.Tiers.Any())
