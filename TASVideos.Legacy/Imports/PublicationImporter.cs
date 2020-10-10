@@ -24,17 +24,13 @@ namespace TASVideos.Legacy.Imports
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();
-			var publicationTags = new List<PublicationTag>();
 
 			var legacyMovies = legacySiteContext.Movies
 				.Include(m => m.MovieFiles)
 				.ThenInclude(mf => mf.Storage)
-				.Include(m => m.MovieClasses)
 				.Include(m => m.Publisher)
 				.Where(m => m.Id > 0)
 				.ToList();
-
-			var legacyClassTypes = legacySiteContext.ClassTypes.ToList();
 
 			var publicationWikis = context.WikiPages
 				.ThatAreNotDeleted()
@@ -60,7 +56,6 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var games = context.Games.ToList();
-			var tags = context.Tags.Select(t => new { t.Id, t.DisplayName }).ToList();
 
 			var movieTypes = new[] { "B2", "BK", "C", "6", "2", "S", "B", "L", "W", "3", "Y", "G", "#", "F", "Q", "E", "Z", "X", "U", "I", "R", "8", "4", "9", "7", "F3", "MA", "LT" };
 			var torrentTypes = new[] { "M", "N", "O", "P", "T" };
@@ -164,28 +159,6 @@ namespace TASVideos.Legacy.Imports
 					CreateTimeStamp = DateTime.UtcNow,
 					LastUpdateTimeStamp = DateTime.UtcNow
 				}));
-
-				foreach (var mc in pub.Movie.MovieClasses)
-				{
-					var classType = mc.ClassId >= 1000
-						? legacyClassTypes.Single(c => c.Id == mc.ClassId)
-						: legacyClassTypes.Single(c => c.OldId == mc.ClassId);
-
-					if (classType.PositiveText.Contains("Genre"))
-					{
-						continue;
-					}
-
-					var tag = mc.Value == 1
-						? tags.Single(t => t.DisplayName == classType.PositiveText)
-						: tags.Single(t => t.DisplayName == classType.NegativeText);
-
-					publicationTags.Add(new PublicationTag
-					{
-						PublicationId = pub.Movie.Id,
-						TagId = tag.Id
-					});
-				}
 			}
 
 			var pubColumns = new[]
@@ -236,14 +209,6 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default, bulkCopyTimeout: 600);
-
-			var pubTagColumns = new[]
-			{
-				nameof(PublicationTag.PublicationId),
-				nameof(PublicationTag.TagId)
-			};
-
-			publicationTags.BulkInsert(connectionStr, pubTagColumns, nameof(ApplicationDbContext.PublicationTags), SqlBulkCopyOptions.Default);
 		}
 	}
 }
