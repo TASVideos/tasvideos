@@ -32,7 +32,7 @@
 					<label class="col-sm-3" asp-for="Submission.Rom"></label>
 					<span class="col-sm-9">
 						<a asp-page="/Games/Roms/Edit" asp-route-gameId="@Model.Submission.GameId" asp-route-romId="@Model.Submission.RomId">
-							@Html.DisplayFor(m => m.Submission.Rom)
+							<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.Rom)</span>
 						</a>
 					</span>
 				</row>
@@ -91,7 +91,7 @@
 				<span>
 					Must be JPEG or PNG
 					<br />
-					(Please read <a href="PublisherGuidelines.html">Publisher guidelines</a> for guidelines regarding screenshot selection.)
+					(Please read <a href="/PublisherGuidelines">Publisher guidelines</a> for guidelines regarding screenshot selection.)
 				</span>
 				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
 			</form-group>
