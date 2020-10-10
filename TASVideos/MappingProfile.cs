@@ -140,6 +140,7 @@ namespace TASVideos
 				.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game!.GoodName))
 				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.GameId ?? 0))
 				.ForMember(dest => dest.RomId, opt => opt.MapFrom(src => src.RomId ?? 0))
+				.ForMember(dest => dest.Rom, opt => opt.MapFrom(src => src.Rom!.Name))
 				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.IntendedTier != null ? src.IntendedTier.Name : ""));
 
 			// API
