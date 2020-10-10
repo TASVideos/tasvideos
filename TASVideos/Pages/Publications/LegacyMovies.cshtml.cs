@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Publications
 		public string? Id { get; set; }
 
 		[FromQuery]
-		public string Rec { get; set; }
+		public string? Rec { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{

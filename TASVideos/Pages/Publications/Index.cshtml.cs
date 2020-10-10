@@ -55,6 +55,7 @@ namespace TASVideos.Pages.Publications
 				Flags = tokenLookup.Flags.Where(f => tokens.Contains(f)),
 				MovieIds = tokens.ToIdList('m'),
 				Games = tokens.ToIdList('g'),
+				GameGroups = tokens.ToIdListPrefix("group"),
 				Authors = tokens
 					.Where(t => t.ToLower().Contains("author"))
 					.Select(t => t.ToLower().Replace("author", ""))

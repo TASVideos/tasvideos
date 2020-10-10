@@ -21,16 +21,17 @@ namespace TASVideos.Pages.Publications.Models
 		public IEnumerable<int> MovieIds { get; set; } = new List<int>();
 
 		public IEnumerable<int> Games { get; set; } = new List<int>();
+		public IEnumerable<int> GameGroups { get; set; } = new List<int>();
 
-		public bool IsEmpty => (SystemCodes == null || !SystemCodes.Any())
-			&& (Tiers == null || !Tiers.Any())
-			&& (Years == null || !Years.Any())
-			&& (Flags == null || !Flags.Any())
-			&& (Tags == null || !Tags.Any())
-			&& (Genres == null || !Genres.Any())
-			&& (Authors == null || !Authors.Any())
-			&& (MovieIds == null || !MovieIds.Any())
-			&& (Games == null || !Games.Any());
+		public bool IsEmpty => !SystemCodes.Any()
+			&& !Tiers.Any()
+			&& !Years.Any()
+			&& !Flags.Any()
+			&& !Tags.Any()
+			&& !Genres.Any()
+			&& !Authors.Any()
+			&& !MovieIds.Any()
+			&& !Games.Any()
+			&& !GameGroups.Any();
 	}
-
 }
