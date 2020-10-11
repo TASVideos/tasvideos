@@ -55,7 +55,7 @@ namespace TASVideos.Services
 			var torrentBytes = memoryStream.ToArray();
 
 			string torrentFileName = $"{publicationId}M.torrent";
-			string torrentPath = Path.Combine(_env.WebRootPath, "media", torrentFileName);
+			string torrentPath = Path.Combine(_env.WebRootPath, "torrent", torrentFileName);
 			File.WriteAllBytes(torrentPath, torrentBytes);
 
 			var torrentFile = new PublicationFile
