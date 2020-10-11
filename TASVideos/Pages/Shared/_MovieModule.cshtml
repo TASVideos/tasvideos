@@ -51,20 +51,21 @@
 	<cardbody>
 		<row>
 			<div class="col-md-4">
+				<div>Image link: <a href="~/media/@Model.Screenshot.Path">asdf</a></div>
 				<div>
-					<img src="~/media/@Model.Screenshot.Path" alt="@Model.Screenshot.Description" loading="lazy" style="max-width: 100%" />
+					<img src="~/media/@Model.Screenshot.Path" alt="@Model.Screenshot.Description" loading="lazy" style="max-width: 100%"/>
 				</div>
 				<a href="@Model.OnlineWatchingUrl" class="btn btn-primary btn-sm mt-1">Watch</a>
 				<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1">Publication</a>
 				<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
 				<a permission="EditPublicationMetaData"
-				   asp-page="Edit"
-				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm mt-1">Edit</a>
+					asp-page="Edit"
+					asp-route-id="@Model.Id"
+					class="btn btn-secondary btn-sm mt-1">Edit</a>
 				<a permission="CatalogMovies"
-				   asp-page="/Publications/Catalog"
-				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm mt-1">Catalog</a>
+					asp-page="/Publications/Catalog"
+					asp-route-id="@Model.Id"
+					class="btn btn-secondary btn-sm mt-1">Catalog</a>
 				<a condition="@Model.TopicId > 0"
 					asp-page="/Forum/Topics/Index"
 					asp-route-id="@Model.TopicId"
@@ -91,7 +92,7 @@
 					</div>
 					@foreach (var torrent in Model.TorrentLinks)
 					{
-						<a class="col-lg-4" href="@torrent.Path">A/V file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
+						<a class="col-lg-4" href="~/torrent/@torrent.Path">A/V file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
 					}
 					<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
 				</row>
