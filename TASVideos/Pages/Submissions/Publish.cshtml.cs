@@ -170,6 +170,11 @@ namespace TASVideos.Pages.Submissions
 			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
 			await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile!);
 
+			if (Submission.TorrentFile2 != null)
+			{
+				await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile2);
+			}
+
 			// Create a wiki page corresponding to this submission
 			var wikiPage = new WikiPage
 			{
