@@ -56,12 +56,13 @@ namespace TASVideos
 						Errors = "An error occurred."
 					});
 				}
-				
+
 				context.Response.ContentType = "application/json";
 				context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 				return context.Response.WriteAsync(result);
 			}
-			
+
+			logger.LogError(exception, "An unhandled exception occurred.");
 			return next(context);
 		}
 	}
