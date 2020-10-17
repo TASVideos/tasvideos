@@ -18,7 +18,7 @@ namespace TASVideos.Pages.Publications
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 
-		private static List<PublicationUrlType> PublicaitonUrlTypes = Enum
+		private static readonly List<PublicationUrlType> PublicationUrlTypes = Enum
 			.GetValues(typeof(PublicationUrlType))
 			.Cast<PublicationUrlType>()
 			.ToList();
@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Publications
 		}
 
 		public IEnumerable<SelectListItem> AvailableTypes =
-			PublicaitonUrlTypes
+			PublicationUrlTypes
 				.Select(t => new SelectListItem
 				{
 					Text = t.ToString(),
