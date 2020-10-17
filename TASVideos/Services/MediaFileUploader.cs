@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -11,8 +11,9 @@ namespace TASVideos.Services
 {
 	public interface IMediaFileUploader
 	{
-		Task UploadScreenshot(int publicationId, IFormFile screenshot, string? description);
-		Task UploadTorrent(int publicationId, IFormFile torrent);
+		Task<string> UploadScreenshot(int publicationId, IFormFile screenshot, string? description);
+		Task<string> UploadTorrent(int publicationId, IFormFile torrent);
+		Task<PublicationFile?> DeleteFile(int publicationFileId);
 	}
 
 	public class MediaFileUploader : IMediaFileUploader
@@ -26,7 +27,7 @@ namespace TASVideos.Services
 			_env = env;
 		}
 
-		public async Task UploadScreenshot(int publicationId, IFormFile screenshot, string? description)
+		public async Task<string> UploadScreenshot(int publicationId, IFormFile screenshot, string? description)
 		{
 			await using var memoryStream = new MemoryStream();
 			await screenshot.CopyToAsync(memoryStream);
@@ -46,15 +47,16 @@ namespace TASVideos.Services
 
 			_db.PublicationFiles.Add(pubFile);
 			await _db.SaveChangesAsync();
+			return screenshotFileName;
 		}
 
-		public async Task UploadTorrent(int publicationId, IFormFile torrent)
+		public async Task<string> UploadTorrent(int publicationId, IFormFile torrent)
 		{
 			await using var memoryStream = new MemoryStream();
 			await torrent.CopyToAsync(memoryStream);
 			var torrentBytes = memoryStream.ToArray();
 
-			string torrentFileName = $"{publicationId}M.torrent";
+			string torrentFileName = torrent.FileName;
 			string torrentPath = Path.Combine(_env.WebRootPath, "torrent", torrentFileName);
 			File.WriteAllBytes(torrentPath, torrentBytes);
 
@@ -66,6 +68,24 @@ namespace TASVideos.Services
 			};
 			_db.PublicationFiles.Add(torrentFile);
 			await _db.SaveChangesAsync();
+			return torrentFileName;
+		}
+
+		public async Task<PublicationFile?> DeleteFile(int publicationFileId)
+		{
+			var file = await _db.PublicationFiles
+				.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
+
+			if (file != null)
+			{
+				string path = Path.Combine(_env.WebRootPath, "torrent", file.Path);
+				File.Delete(path);
+
+				_db.PublicationFiles.Remove(file);
+				await _db.SaveChangesAsync();
+			}
+
+			return file;
 		}
 	}
 }
