@@ -1,0 +1,62 @@
+﻿@page "{id}/{handler?}/{publicationFileId?}"
+@model EditFilesModel
+@{
+	ViewData["Title"] = $"Edit Files for {Model.Title}";
+}
+
+<h4>Files</h4>
+<row condition="Model.Files.Any()">
+	<table class="table table-bordered">
+		<tr>
+			<td>Url</td>
+			<td>Type</td>
+			<td>Description</td>
+			<td></td>
+		</tr>
+		@foreach (var file in Model.Files.OrderBy(u => u.Type))
+		{
+			<tr>
+				<td>@file.Path</td>
+				<td>@file.Type</td>
+				<td>@file.Description</td>
+				<td>
+					<delete-button warning-message="Are you sure you want to remove this file?"
+								   asp-href="/Publications/EditFiles/@Model.Id/Delete/@file.Id">
+						Delete
+					</delete-button>
+				</td>
+			</tr>
+		}
+	</table>
+</row>
+<hr />
+<form method="post" enctype="multipart/form-data">
+	<input type="hidden" asp-for="Title" />
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="NewFile"></label>
+				<input type="file" asp-for="NewFile" class="form-control" />
+				<span asp-validation-for="NewFile" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Type"></label>
+				<select asp-for="Type" asp-items="Model.AvailableTypes" class="form-control"></select>
+				<span asp-validation-for="Type" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Description"></label>
+				<input type="text" asp-for="Description" class="form-control" />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</form-group>
+			<div class="text-center mt-3">
+				<button type="submit" class="btn btn-primary">Add</button>
+				<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Back To Edit</a>
+			</div>
+		</column>
+	</row>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

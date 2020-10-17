@@ -111,15 +111,13 @@ namespace TASVideos.Pages.Publications
 			_db.PublicationUrls.Remove(url);
 
 			_publisher.SendPublicationEdit(
-				$"Publication {Id} deleted {UrlType} url {PublicationUrl}",
+				$"Publication {Id} deleted {url.Type} url {url.Url}",
 					$"{Id}M",
 					User.Identity.Name!);
 
-			// TODO: catch update exceptions
 			await _db.SaveChangesAsync();
 
 			return RedirectToPage("EditUrls", new { Id });
 		}
-
 	}
 }
