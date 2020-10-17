@@ -60,20 +60,22 @@ namespace TASVideos
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
+			var provider = new FileExtensionContentTypeProvider();
+			provider.Mappings[".torrent"] = "application/x-bittorrent";
+
 			app
 				.UseRobots()
 				.UseRequestLocalization()
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
 				.UseHttpsRedirection()
-				.UseStaticFiles()
+				.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider })
 				.UseAuthorization()
 				.UseAuthentication()
 				.UseSwaggerUi(Environment)
 				.UseMvcWithOptions();
 
-			var provider = new FileExtensionContentTypeProvider();
-			provider.Mappings[".torrent"] = "application/x-bittorrent";
+			
 		}
 	}
 }
