@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data;
@@ -60,22 +59,17 @@ namespace TASVideos
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			var provider = new FileExtensionContentTypeProvider();
-			provider.Mappings[".torrent"] = "application/x-bittorrent";
-
 			app
 				.UseRobots()
 				.UseRequestLocalization()
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
 				.UseHttpsRedirection()
-				.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider })
+				.UseStaticFilesWithTorrents()
 				.UseAuthorization()
 				.UseAuthentication()
 				.UseSwaggerUi(Environment)
 				.UseMvcWithOptions();
-
-			
 		}
 	}
 }

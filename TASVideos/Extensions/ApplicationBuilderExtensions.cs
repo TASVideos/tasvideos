@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
 
 namespace TASVideos.Extensions
@@ -38,6 +39,15 @@ namespace TASVideos.Extensions
 			{
 				app.UseResponseCompression();
 			}
+
+			return app;
+		}
+
+		public static IApplicationBuilder UseStaticFilesWithTorrents(this IApplicationBuilder app)
+		{
+			var provider = new FileExtensionContentTypeProvider();
+			provider.Mappings[".torrent"] = "application/x-bittorrent";
+			app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
 
 			return app;
 		}
