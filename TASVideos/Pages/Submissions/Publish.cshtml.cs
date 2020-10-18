@@ -27,19 +27,22 @@ namespace TASVideos.Pages.Submissions
 		private readonly IWikiPages _wikiPages;
 		private readonly IMediaFileUploader _uploader;
 		private readonly ITASVideoAgent _tasVideosAgent;
+		private readonly UserManager _userManager;
 
 		public PublishModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
 			IMediaFileUploader uploader,
-			ITASVideoAgent tasVideoAgent)
+			ITASVideoAgent tasVideoAgent,
+			UserManager userManager)
 		{
 			_db = db;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_uploader = uploader;
 			_tasVideosAgent = tasVideoAgent;
+			_userManager = userManager;
 		}
 
 		[FromRoute]
@@ -203,6 +206,9 @@ namespace TASVideos.Pages.Submissions
 			}
 
 			await _db.SaveChangesAsync();
+
+			var user = await _userManager.GetUserAsync(User);
+			await _userManager.AssignAutoAssignableRolesByPublication(user);
 
 			await _tasVideosAgent.PostSubmissionPublished(submission.Id, publication.Id);
 			_publisher.AnnouncePublication(publication.Title, $"{publication.Id}M", User.Identity.Name!);

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Security.Cryptography;
 using TASVideos.Models;
 
 namespace TASVideos.Pages.Roles.Models
@@ -25,6 +25,9 @@ namespace TASVideos.Pages.Roles.Models
 		[Range(1, 9999)]
 		[Display(Name = "Auto-assign on Post Count", Description = "If set, the user will automatically be assigned this role when they reach this post count.")]
 		public int? AutoAssignPostCount { get; set; }
+
+		[Display(Name = "Auto-assign on Publication", Description = "If set, the user will automatically be assigned this role when they have a movie published.")]
+		public bool AutoAssignPublications { get; set; }
 
 		[AtLeastOne(ErrorMessage = "At least one permission is required.")]
 		[Display(Name = "Selected Permissions")]

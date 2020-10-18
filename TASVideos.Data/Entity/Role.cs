@@ -25,6 +25,12 @@ namespace TASVideos.Data.Entity
 		/// </summary>
 		public int? AutoAssignPostCount { get; set; }
 
+		/// <summary>
+		/// Gets or sets whether or not the role should be auto-assigned
+		/// when an author gets a publication
+		/// </summary>
+		public bool AutoAssignPublications { get; set; }
+
 		public DateTime CreateTimeStamp { get; set; }
 		public string? CreateUserName { get; set; }
 

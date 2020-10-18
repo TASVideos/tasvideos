@@ -28,6 +28,7 @@ namespace TASVideos.Data.SeedData
 		public const string SeniorAmbassador = "Senior Ambassador";
 		public const string SiteDeveloper = "Site Developer";
 		public const string EmulatorCoder = "Emulator Coder";
+		public const string PublishedAuthor = "Published Author";
 	}
 
 	public class RoleSeedData
@@ -142,14 +143,9 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.SeeRestrictedForums
 		};
 
-		private static readonly List<RoleLink> SiteDeveloperLinks = new List<RoleLink>
+		public static readonly PermissionTo[] PublishedAuthorPermissions =
 		{
-			new RoleLink { Link = "SiteCodingStandards" }
-		};
-
-		private static readonly List<RoleLink> AdminRoleLinks = new List<RoleLink>
-		{
-			new RoleLink { Link = "AdminGuidelines" }
+			PermissionTo.EditGameResources
 		};
 
 		public static readonly Role DefaultUser = new Role
@@ -205,7 +201,7 @@ namespace TASVideos.Data.SeedData
 					CanAssign = true
 				})
 				.ToArray(),
-			RoleLinks = AdminRoleLinks
+			RoleLinks = new List<RoleLink> { new RoleLink { Link = "AdminGuidelines" } }
 		};
 
 		public static readonly Role AdminAssistant = new Role
@@ -218,11 +214,12 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = VestedEditorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = AdminRoleLinks.Concat(new[]
+			RoleLinks = new List<RoleLink>
 			{
+				new RoleLink { Link = "AdminGuidelines" },
 				new RoleLink { Link = "EditorGuidelines" },
 				new RoleLink { Link = "TextFormattingRules" }
-			}).ToList()
+			}
 		};
 
 		public static readonly Role Editor = new Role
@@ -234,7 +231,7 @@ namespace TASVideos.Data.SeedData
 				Role = Editor,
 				PermissionId = p
 			}).ToArray(),
-			RoleLinks = new[]
+			RoleLinks = new List<RoleLink>
 			{
 				new RoleLink { Link = "EditorGuidelines" },
 				new RoleLink { Link = "TextFormattingRules" }
@@ -251,7 +248,7 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = EditorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = new[]
+			RoleLinks = new List<RoleLink>
 			{
 				new RoleLink { Link = "EditorGuidelines" },
 				new RoleLink { Link = "TextFormattingRules" }
@@ -283,10 +280,11 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = EditorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = AdminRoleLinks.Concat(new[]
+			RoleLinks = new List<RoleLink>
 			{
+				new RoleLink { Link = "AdminGuidelines" },
 				new RoleLink { Link = "JudgeGuidelines" }
-			}).ToList()
+			}
 		};
 
 		public static readonly Role Publisher = new Role
@@ -311,7 +309,11 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = EditorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = AdminRoleLinks.Concat(new[] { new RoleLink { Link = "PublisherGuidelines" } }).ToList()
+			RoleLinks =new List<RoleLink>
+			{
+				new RoleLink { Link = "AdminGuidelines" },
+				new RoleLink { Link = "PublisherGuidelines" }
+			}
 		};
 
 		public static readonly Role ForumModerator = new Role
@@ -337,7 +339,7 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = ForumModeratorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = AdminRoleLinks
+			RoleLinks = new List<RoleLink> { new RoleLink { Link = "AdminGuidelines" } }
 		};
 
 		public static readonly Role Ambassador = new Role
@@ -374,7 +376,7 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = false
 			}).ToArray(),
-			RoleLinks = SiteDeveloperLinks
+			RoleLinks = new List<RoleLink> { new RoleLink { Link = "SiteCodingStandards" } }
 		};
 
 		public static readonly Role EmulatorCoder = new Role
@@ -387,6 +389,25 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = false
 			}).ToArray()
+		};
+
+		public static readonly Role PublishedAuthor = new Role
+		{
+			Name = RoleSeedNames.PublishedAuthor,
+			Description = "This role is automatically granted to anyone who has had a movie published. This role gives them the ability to edit game resource pages",
+			RolePermission = PublishedAuthorPermissions.Select(p => new RolePermission
+			{
+				Role = PublishedAuthor,
+				PermissionId = p,
+				CanAssign = false
+			}).ToArray(),
+			AutoAssignPublications = true,
+			RoleLinks = new List<RoleLink>
+			{
+				new RoleLink { Link = "EditorGuidelines" },
+				new RoleLink { Link = "TextFormattingRules" },
+				new RoleLink { Link = "GameResources" }
+			}
 		};
 
 		public static IEnumerable<Role> AllRoles =>
@@ -408,7 +429,8 @@ namespace TASVideos.Data.SeedData
 				Ambassador,
 				SeniorAmbassador,
 				SiteDeveloper,
-				EmulatorCoder
+				EmulatorCoder,
+				PublishedAuthor
 			};
 	}
 }
