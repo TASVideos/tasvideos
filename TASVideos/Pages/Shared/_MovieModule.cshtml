@@ -1,5 +1,10 @@
 ﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
 
+@inject TASVideos.Services.IAwards Awards 
+@{
+	var PublicationAwards = await Awards.ForPublication(Model.Id);
+}
+
 @functions {	
 	string TorrentRemark(string link, int id)
 	{
@@ -140,6 +145,10 @@
 					Emulator Version:<br />@Model.EmulatorVersion
 				</small>
 			</div>
+			@foreach (var award in PublicationAwards.OrderByDescending(a => a.Year))
+			{
+				<partial name="_Award" model="award" />
+			}
 		</row>
 	</cardbody>
 </card>
