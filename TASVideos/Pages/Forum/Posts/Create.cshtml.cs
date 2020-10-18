@@ -144,7 +144,7 @@ namespace TASVideos.Pages.Forum.Posts
 				PosterId = user.Id
 			});
 
-			await _userManager.AssignAutoAssignableRoles(user);
+			await _userManager.AssignAutoAssignableRolesByPost(user);
 
 			return RedirectToLocal($"/forum/p/{id}#{id}");
 		}

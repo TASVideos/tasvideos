@@ -44,6 +44,15 @@
 				<span asp-validation-for="Role.AutoAssignPostCount" class="text-danger"></span>
 				<input type="number" class="form-control" asp-for="Role.AutoAssignPostCount" min="1" />
 			</form-group>
+			<form-group>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" asp-for="Role.AutoAssignPublications" />
+					<label asp-for="Role.AutoAssignPublications" class="form-check-label"></label>
+					<div>
+						<small>(@Html.DescriptionFor(m => m.Role.AutoAssignPublications))</small>
+					</div>
+				</div>
+			</form-group>
 		</column>
 	</row>
 	<row>

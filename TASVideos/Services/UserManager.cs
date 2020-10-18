@@ -334,7 +334,7 @@ namespace TASVideos.Services
 		/// property, that the user does not already have. Note that the role
 		/// won't assigned if the user already has all permissions assigned to that role
 		/// </summary>
-		public async Task AssignAutoAssignableRoles(User user)
+		public async Task AssignAutoAssignableRolesByPost(User user)
 		{
 			var postCount = await _db.ForumPosts.CountAsync(p => p.PosterId == user.Id);
 
@@ -348,6 +348,55 @@ namespace TASVideos.Services
 			var assignableRoles = await _db.Roles
 				.Include(r => r.RolePermission)
 				.Where(r => r.AutoAssignPostCount <= postCount)
+				.ToListAsync();
+
+			foreach (var role in assignableRoles)
+			{
+				var newRolePermissions = role.RolePermission
+					.Select(rp => rp.PermissionId)
+					.ToList();
+
+				// If the new role has any permission the user does not have
+				// then assign the role. Indirectly this also ensures that
+				// the user will not already have the role
+				if (newRolePermissions.Any(p => !userPermissions.Contains(p)))
+				{
+					_db.UserRoles.Add(new UserRole
+					{
+						UserId = user.Id,
+						RoleId = role.Id
+					});
+
+					try
+					{
+						await _db.SaveChangesAsync();
+					}
+					catch (DbUpdateConcurrencyException)
+					{
+						// Do nothing for now, this can be added manually, in the unlikely situation, that this fails
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Assigns any roles to the user that have auto-assign publication set to true,
+		/// that the user does not already have. Note that the role won't assigned
+		/// if the user already has all permissions assigned to that role
+		/// </summary>
+		public async Task AssignAutoAssignableRolesByPublication(User user)
+		{
+			var hasPublication = await _db.PublicationAuthors.AnyAsync(pa => pa.UserId == user.Id);
+			if (!hasPublication)
+			{
+				return;
+			}
+
+			var userPermissions = (await GetUserPermissionsById(user.Id)).ToList();
+
+			var assignableRoles = await _db.Roles
+				.Include(r => r.RolePermission)
+				.Where(r => r.AutoAssignPublications)
 				.ToListAsync();
 
 			foreach (var role in assignableRoles)
