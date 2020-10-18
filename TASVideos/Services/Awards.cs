@@ -18,6 +18,11 @@ namespace TASVideos.Services
 		Task<IEnumerable<AwardAssignmentSummary>> ForUser(int userId);
 
 		/// <summary>
+		/// Gets all awards for the given publication
+		/// </summary>
+		Task<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId);
+
+		/// <summary>
 		/// Gets all awards assigned in the given year
 		/// </summary>
 		/// <param name="year">The year, ex: 2010</param>
@@ -53,6 +58,21 @@ namespace TASVideos.Services
 					ShortName = ua.ShortName,
 					Description = ua.Description,
 					Year = ua.Year
+				})
+				.ToList();
+		}
+
+		public async Task<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId)
+		{
+			var allAwards = await AllAwards();
+
+			return allAwards
+				.Where(a => a.Publications.Select(p => p.Id).Contains(publicationId))
+				.Select(pa => new AwardAssignmentSummary
+				{
+					ShortName = pa.ShortName,
+					Description = pa.Description,
+					Year = pa.Year
 				})
 				.ToList();
 		}
