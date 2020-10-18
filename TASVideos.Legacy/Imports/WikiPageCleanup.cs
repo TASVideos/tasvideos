@@ -64,6 +64,10 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("[module:listsubpages]", "");
 				markup = markup.Replace("/images/awards/", "/awards/");
 			}
+			else if (page.PageName == "Links")
+			{
+				markup = markup.Replace("[module:GoogleFlavor]", "");
+			}
 
 			if (markup.Contains("=css/fastest-completion.png")) markup = markup.Replace("=css/fastest-completion.png", "=images/fastest-completion.png");
 			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
