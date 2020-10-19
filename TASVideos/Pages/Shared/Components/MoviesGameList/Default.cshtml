@@ -1,0 +1,31 @@
+﻿@model MoviesGameListModel
+
+<warning-alert condition="!Model.SystemId.HasValue">
+	No System provided.
+</warning-alert>
+
+<warning-alert condition="Model.SystemId.HasValue && string.IsNullOrWhiteSpace(Model.SystemCode)">
+	No system matching id @Model.SystemId
+</warning-alert>
+
+<table>
+	<tr>
+		<th>Game</th>
+		<th>Publications</th>
+	</tr>
+	@foreach (var game in Model.Games.OrderBy(g => g.Name))
+	{
+		<tr>
+			<td>
+				<a href="@(game.Id)G">
+					@game.Name (@Model.SystemCode)
+				</a>
+			</td>
+			<td>
+				<a href="/Movies-@string.Join(",", game.PublicationIds.Select(p => p + "M"))">
+					@game.PublicationIds.Count Publication(s)
+				</a>
+			</td>
+		</tr>
+	}
+</table>
