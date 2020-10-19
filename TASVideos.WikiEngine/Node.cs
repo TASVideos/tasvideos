@@ -432,7 +432,8 @@ namespace TASVideos.WikiEngine.AST
 			["wikitextchangelog"] = "WikiTextChangeLog",
 			["youtube"] = "Youtube",
 			["listlanguages"] = "ListLanguages",
-			["wikiusers"] = "WikiUsers"
+			["wikiusers"] = "WikiUsers",
+			["movieslist"] = "MoviesList"
 		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
