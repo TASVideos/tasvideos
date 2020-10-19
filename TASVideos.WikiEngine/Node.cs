@@ -433,9 +433,10 @@ namespace TASVideos.WikiEngine.AST
 			["youtube"] = "Youtube",
 			["listlanguages"] = "ListLanguages",
 			["wikiusers"] = "WikiUsers",
-			["movieslist"] = "MoviesList"
+			["movieslist"] = "MoviesList",
+			["moviesgamelist"] = "MoviesGameList"
 		};
-		public NodeType Type => NodeType.Module;
+		public NodeType Type => NodeType.Module; 
 		public string Text { get; }
 		public int CharStart { get; }
 		public int CharEnd { get; set; }
