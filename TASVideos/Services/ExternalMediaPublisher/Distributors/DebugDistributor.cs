@@ -27,7 +27,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public void Post(IPostable post)
 		{
-			_logger.LogInformation($"New {post.Type} message recieved\n{post.Title}\n{post.Body}\nLink:{post.Link}\nGroup:{post.Group}");
+			_logger.LogInformation($"New {post.Type} message recieved\n{post.Title}\n{post.Body}\nLink:{post.Link}\nGroup:{post.Group}\n{post.User}");
 		}
 	}
 }
