@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Legacy.Imports;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
@@ -26,11 +27,12 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			_db.MediaPosts.Add(new MediaPost
 			{
-				Title = post.Title,
-				Link = post.Link,
-				Body = post.Body,
-				Group = post.Group,
-				Type = post.Type.ToString()
+				Title = post.Title.Cap(512)!,
+				Link = post.Link.Cap(255)!,
+				Body = post.Body.Cap(1024)!,
+				Group = post.Group.Cap(255)!,
+				Type = post.Type.ToString().Cap(100)!,
+				User = post.User.Cap(100)!
 			});
 			_db.SaveChanges();
 		}
