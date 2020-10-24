@@ -44,6 +44,8 @@ namespace TASVideos.Data.Entity
 		public int? ObsoletedById { get; set; }
 		public virtual Publication? ObsoletedBy { get; set; }
 
+		public virtual ICollection<Publication> ObsoletedMovies { get; set; } = new HashSet<Publication>();
+
 		public int GameId { get; set; }
 		public virtual Game.Game? Game { get; set; }
 

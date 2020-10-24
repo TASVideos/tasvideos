@@ -28,6 +28,8 @@ namespace TASVideos.Pages.Publications.Models
 		public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();
 		public IEnumerable<FlagModel> Flags { get; set; } = new List<FlagModel>();
 
+		public IEnumerable<ObsoletesModel> ObsoletedMovies { get; set; } = new List<ObsoletesModel>();
+
 		public FileModel Screenshot => Files.First(f => f.Type == FileType.Screenshot);
 
 		public IEnumerable<FileModel> TorrentLinks => Files
@@ -58,6 +60,12 @@ namespace TASVideos.Pages.Publications.Models
 			public string? IconPath { get; set; }
 			public string? LinkPath { get; set; }
 			public string Name { get; set; } = "";
+		}
+
+		public class ObsoletesModel
+		{
+			public int Id { get; set; }
+			public string Title { get; set; } = "";
 		}
 	}
 }
