@@ -108,7 +108,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void Identify()
 		{
-
 			JObject properties = new JObject
 			{
 				{"$os", "linux"}, {"$browser", "none"}, {"$device", "none"}
@@ -211,7 +210,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 	{
 		private IPostable Post { get; }
 
-
 		public DiscordMessage(IPostable post)
 		{
 			Post = post;
@@ -219,14 +217,14 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public string Serialize()
 		{
-			JObject serializedMessage = new JObject
+			var serializedMessage = new JObject
 			{
-				{ "content", GenerateContentMessage (this.Post) }
+				{ "content", GenerateContentMessage(Post) }
 			};
 
-			JObject embedObject = new JObject
+			var embedObject = new JObject
 			{
-				{ "title", this.Post.Title }, { "description", this.Post.Body }, { "url", this.Post.Link }
+				{ "title", Post.Title }, { "description", Post.Body }, { "url", Post.Link }
 			};
 
 			serializedMessage.Add("embed", embedObject);
@@ -236,7 +234,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private static string GenerateContentMessage(IPostable post)
 		{
-			StringBuilder contentMessageBuilder = new StringBuilder();
+			var contentMessageBuilder = new StringBuilder();
 
 			switch (post.Group)
 			{
@@ -260,7 +258,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 					break;
 			}
 
-			if (post.GetType().GetProperty("User") != null && !string.IsNullOrWhiteSpace(post.User))
+			if (!string.IsNullOrWhiteSpace(post.User))
 			{
 				contentMessageBuilder.Append($" from {post.User}");
 			}
