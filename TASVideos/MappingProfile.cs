@@ -120,6 +120,13 @@ namespace TASVideos
 						LinkPath = pf.Flag!.LinkPath,
 						Name = pf.Flag.Name
 					})
+					.ToList()))
+				.ForMember(dest => dest.ObsoletedMovies, opt => opt.MapFrom(src => src.ObsoletedMovies
+					.Select(p => new PublicationDisplayModel.ObsoletesModel
+					{
+						Id = p.Id,
+						Title = p.Title
+					})
 					.ToList()));
 
 			CreateMap<UserFileComment, UserFileModel.UserFileCommentModel>();

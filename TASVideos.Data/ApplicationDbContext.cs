@@ -248,6 +248,10 @@ namespace TASVideos.Data
 				entity.HasOne(p => p.Rom)
 					.WithMany(r => r!.Publications)
 					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasMany(p => p.ObsoletedMovies)
+					.WithOne(p => p.ObsoletedBy!)
+					.OnDelete(DeleteBehavior.Restrict);
 			});
 
 			builder.Entity<GameGenre>(entity =>

@@ -104,7 +104,15 @@
 					}
 					<a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
 				</row>
-				
+				<row condition="Model.ObsoletedMovies.Any()">
+					@foreach (var obsoletedMovie in Model.ObsoletedMovies)
+					{
+						<column class="mt-2 mb-2">
+							Obsoletes:<br />
+							<pub-link id="obsoletedMovie.Id">@obsoletedMovie.Title</pub-link>
+						</column>
+					}
+				</row>
 				<fullrow>
 					<div><small>@Model.CreateTimeStamp.Date.ToShortDateString()</small></div>
 					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
