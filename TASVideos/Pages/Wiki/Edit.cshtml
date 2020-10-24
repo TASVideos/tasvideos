@@ -15,6 +15,7 @@
 		<row>
 			<label asp-for="PageToEdit.RevisionMessage" class="form-control-label"></label>
 			<input type="text" asp-for="PageToEdit.RevisionMessage" class="form-control" autocomplete="off" />
+			<span>@Html.DescriptionFor(m => m.PageToEdit.RevisionMessage)</span>
 			<span asp-validation-for="PageToEdit.RevisionMessage" class="text-danger"></span>
 		</row>
 	</form-group>
