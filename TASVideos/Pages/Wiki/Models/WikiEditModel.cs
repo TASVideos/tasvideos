@@ -10,9 +10,8 @@ namespace TASVideos.Pages.Wiki.Models
 		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; set; }
 
-		[Required] // Yeah, I did that
-		[Display(Name = "Edit Comments")]
+		[Display(Name = "Edit Comments", Description = "Please enter a descriptive summary of your change. Leaving this blank is discouraged.")]
 		[MaxLength(100)]
-		public string RevisionMessage { get; set; } = "";
+		public string? RevisionMessage { get; set; }
 	}
 }
