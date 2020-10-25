@@ -4,27 +4,32 @@
 	string? footer = ViewData["footer"]?.ToString();
 	var first = Model.FirstOrDefault();
 }
-	<hr />
-	<row>
-		<div class="col-lg-9 col-md-8">
-			<table class="table table-striped table-sm hidden-lg-down">
-				@if (!string.IsNullOrWhiteSpace(flink))
+<hr />
+<row>
+	<div class="col-lg-9 col-md-8">
+		<table class="table table-striped table-sm hidden-lg-down">
+			@if (!string.IsNullOrWhiteSpace(flink))
+			{
+				<caption><a href="/@flink">@footer</a></caption>
+			}
+			<tbody>
+				<tr>
+					<th>Date</th>
+					<th>Game</th>
+					<th>Time</th>
+					<th>By</th>
+				</tr>
+				@foreach (var pub in Model)
 				{
-					<caption><a href="/@flink">@footer</a></caption>
-				}
-				<tbody>
-					<tr>
-						<th>Date</th>
-						<th>Game</th>
-						<th>Time</th>
-						<th>By</th>
-					</tr>
-					@foreach (var pub in Model)
-					{
 					<tr>
 						<td><timezone-convert asp-for="@pub.CreateTimeStamp" date-only="true"/></td>
 						<td>@pub.Game</td>
-						<td><pub-link id="pub.Id">@($"{pub.Time:g}")</pub-link></td>
+						<td>
+							<pub-link id="pub.Id">@($"{pub.Time():g}")</pub-link>
+							<span condition="pub.ObsoletedMovie != null">
+								(Was <pub-link id="pub.ObsoletedMovie!.Id">@($"{pub.ObsoletedMovie!.Time():g}")</pub-link>)
+							</span>
+						</td>
 						<td>@pub.Authors</td>
 					</tr>
 				}
