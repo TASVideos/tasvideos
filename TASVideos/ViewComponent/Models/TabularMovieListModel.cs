@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.ViewComponents
 {
@@ -9,15 +10,13 @@ namespace TASVideos.ViewComponents
 		public IEnumerable<string> Tiers { get; set; } = new List<string>();
 	}
 
-	public class TabularMovieListResultModel
+	public class TabularMovieListResultModel : ITimeable
 	{
 		public int Id { get; set; }
 		public DateTime CreateTimeStamp { get; set; }
-		public TimeSpan Time { get; set; }
 
-		public int? ObsoletedBy { get; set; }
 		public TimeSpan? PreviousTime { get; set; }
-		public int PreviousId { get; set; }
+		public int? PreviousId { get; set; }
 
 		public string Game { get; set; } = "";
 		public string Authors { get; set; } = "";
@@ -28,6 +27,18 @@ namespace TASVideos.ViewComponents
 		{
 			public string Path { get; set; } = "";
 			public string? Description { get; set; }
+		}
+
+		public int Frames { get; set; }
+		public double FrameRate { get; set; }
+
+		public ObsoletedPublication? ObsoletedMovie { get; set; }
+
+		public class ObsoletedPublication : ITimeable
+		{
+			public int Id { get; set; }
+			public int Frames { get; set; }
+			public double FrameRate { get; set; }
 		}
 	}
 }

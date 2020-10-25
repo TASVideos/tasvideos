@@ -52,41 +52,36 @@ namespace TASVideos.ViewComponents
 
 		private async Task<IEnumerable<TabularMovieListResultModel>> MovieList(TabularMovieListSearchModel searchCriteria)
 		{
-			// It is important to actually query for an Entity object here instead of a ViewModel
-			// Because we need the title property which is a derived property that can't be done in Linq to Sql
-			// And needs a variety of information from sub-tables, hence all the includes
-			var movies = await _db.Publications
-				.Include(p => p.Tier)
-				.Include(p => p.Game)
-				.Include(p => p.System)
-				.Include(p => p.SystemFrameRate)
-				.Include(p => p.Files)
-				.Include(p => p.Authors)
-				.ThenInclude(pa => pa.Author)
+			var results = await _db.Publications
 				.Where(p => searchCriteria.Tiers.Contains(p.Tier!.Name))
 				.ByMostRecent()
 				.Take(searchCriteria.Limit)
-				.ToListAsync();
-
-			var results = movies
-				.Select(m => new TabularMovieListResultModel
+				.Select(p => new TabularMovieListResultModel
 				{
-					Id = m.Id,
-					CreateTimeStamp = m.CreateTimeStamp,
-					Time = m.Time(),
-					Game = m.Game!.DisplayName,
-					Authors = string.Join(", ", m.Authors.Select(pa => pa.Author)),
-					ObsoletedBy = null, // TODO: previous logic
-					Screenshot = m.Files
+					Id = p.Id,
+					CreateTimeStamp = p.CreateTimeStamp,
+					Frames = p.Frames,
+					FrameRate = p.SystemFrameRate!.FrameRate,
+					Game = p.Game!.DisplayName,
+					Authors = string.Join(",", p.Authors.Select(pa => pa.Author!.UserName)),
+					Screenshot = p.Files
 						.Where(f => f.Type == FileType.Screenshot)
 						.Select(f => new TabularMovieListResultModel.ScreenshotFile
 						{
 							Path = f.Path,
 							Description = f.Description
 						})
+						.First(),
+					ObsoletedMovie = p.ObsoletedMovies
+						.Select(o => new TabularMovieListResultModel.ObsoletedPublication
+						{
+							Id = o.Id,
+							Frames = o.Frames,
+							FrameRate = o.SystemFrameRate!.FrameRate
+						})
 						.First()
 				})
-				.ToList();
+				.ToListAsync();
 
 			return results;
 		}
