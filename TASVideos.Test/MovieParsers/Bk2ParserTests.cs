@@ -176,7 +176,7 @@ namespace TASVideos.Test.MovieParsers
 
 
 		[TestMethod]
-		public void Gamebatte_MissingCycleCount_FallsbackToInputLog()
+		public void Gambatte_MissingCycleCount_FallsBackToInputLog()
 		{
 			var result = _bk2Parser.Parse(Embedded("Gambatte-NoCycleCount.bk2"));
 
@@ -187,7 +187,7 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Gamebatte_InvalidCycleCountFormat_FallsbackToInputLog()
+		public void Gambatte_InvalidCycleCountFormat_FallsBackToInputLog()
 		{
 			var result = _bk2Parser.Parse(Embedded("Gambatte-InvalidCycleCount.bk2"));
 

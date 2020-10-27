@@ -16,14 +16,14 @@ namespace TASVideos.MovieParsers.Result
 		bool Success { get; }
 
 		/// <summary>
-		/// Gets a list of errors that occured during the parsing attempt. If there are any errors
+		/// Gets a list of errors that occurred during the parsing attempt. If there are any errors
 		/// the result is considered not successful and values are incorrect or not available
 		/// </summary>
 		/// <seealso cref="Success"/>
 		IEnumerable<string> Errors { get; } // If success is false, errors should exist
 
 		/// <summary>
-		/// Gets a list of warnings that occured during the parsing attempt. Warnings are issues
+		/// Gets a list of warnings that occurred during the parsing attempt. Warnings are issues
 		/// that are not serious enough to consider the result a failure but are otherwise not
 		/// ideal; for example, a missing rerecord count.
 		/// </summary>

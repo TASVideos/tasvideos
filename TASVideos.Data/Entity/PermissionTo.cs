@@ -55,7 +55,7 @@ namespace TASVideos.Data.Entity
 		[Display(Name = "Send Private Messages")]
 		[Group("User")]
 		[Description("The ability to send private messages.")]
-		SendPrivMsgs = 20,
+		SendPrivateMessages = 20,
 
 		#endregion
 

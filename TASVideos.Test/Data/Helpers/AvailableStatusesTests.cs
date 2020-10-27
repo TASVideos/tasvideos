@@ -130,7 +130,7 @@ namespace TASVideos.Test.Data.Helpers
 		[DataRow(Rejected, new[] { New, JudgingUnderWay })]
 		[DataRow(Cancelled, new[] { New, JudgingUnderWay })]
 		[TestMethod]
-		public void Judge_ButNotSubmitter_BeforeAllowedJudgementWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		public void Judge_ButNotSubmitter_BeforeAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo);
 			var result = SubmissionHelper.AvailableStatuses(
@@ -158,7 +158,7 @@ namespace TASVideos.Test.Data.Helpers
 		[DataRow(Rejected, new[] { New, JudgingUnderWay })]
 		[DataRow(Cancelled, new[] { New, JudgingUnderWay })]
 		[TestMethod]
-		public void Judge_ButNotSubmitter_AfterAllowedJudgementWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		public void Judge_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo);
 			var result = SubmissionHelper.AvailableStatuses(
@@ -186,7 +186,7 @@ namespace TASVideos.Test.Data.Helpers
 		[DataRow(Rejected, new SubmissionStatus[0])]
 		[DataRow(Cancelled, new SubmissionStatus[0])]
 		[TestMethod]
-		public void Publisher_ButNotSubmitter_BeforeAllowedJudgementWindow_CanNotChangeStatus(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		public void Publisher_ButNotSubmitter_BeforeAllowedJudgmentWindow_CanNotChangeStatus(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo);
 			var result = SubmissionHelper.AvailableStatuses(
@@ -214,7 +214,7 @@ namespace TASVideos.Test.Data.Helpers
 		[DataRow(Rejected, new SubmissionStatus[0])]
 		[DataRow(Cancelled, new SubmissionStatus[0])]
 		[TestMethod]
-		public void Publisher_ButNotSubmitter_AfterAllowedJudgementWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+		public void Publisher_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo);
 			var result = SubmissionHelper.AvailableStatuses(
