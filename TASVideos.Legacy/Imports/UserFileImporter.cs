@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using SharpCompress.Compressors.Xz;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;

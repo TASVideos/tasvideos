@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TASVideos.Data;
 using TASVideos.Extensions;
 
 namespace TASVideos.Api.Requests

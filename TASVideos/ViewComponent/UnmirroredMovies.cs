@@ -34,7 +34,7 @@ namespace TASVideos.ViewComponents
 
 			if (ParamHelper.HasParam(pp, "allunstreamed"))
 			{
-				query = query.Where(p => !p.PublicationUrls.Any(u => u.Type == Streaming));
+				query = query.Where(p => p.PublicationUrls.All(u => u.Type != Streaming));
 			}
 			else if (ParamHelper.HasParam(pp, "unstreamed"))
 			{
@@ -45,7 +45,7 @@ namespace TASVideos.ViewComponents
 			{
 				query = query.Where(p =>
 					p.PublicationUrls.Any(u => u.Type == Streaming)
-					&& !p.PublicationUrls.Any(u => u.Type == Mirror));
+					&& p.PublicationUrls.All(u => u.Type != Mirror));
 			}
 			else if (ParamHelper.HasParam(pp, "noyoutube"))
 			{
@@ -59,7 +59,7 @@ namespace TASVideos.ViewComponents
 			}
 			else
 			{
-				query = query.Where(p => !p.PublicationUrls.Any(u => u.Type == Mirror));
+				query = query.Where(p => p.PublicationUrls.All(u => u.Type != Mirror));
 			}
 
 			var model = await query
