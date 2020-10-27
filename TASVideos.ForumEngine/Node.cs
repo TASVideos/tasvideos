@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TASVideos.ForumEngine
 {
-	public interface Node
+	public interface INode
 	{
 		void WriteHtml(TextWriter w);
 	}
@@ -58,7 +58,7 @@ namespace TASVideos.ForumEngine
 		}
 	}
 
-	public class Text : Node
+	public class Text : INode
 	{
 		public string Content { get; set; } = "";
 		public void WriteHtml(TextWriter w)
@@ -67,11 +67,11 @@ namespace TASVideos.ForumEngine
 		}
 	}
 
-	public class Element : Node
+	public class Element : INode
 	{
 		public string Name { get; set; } = "";
 		public string Options { get; set; } = "";
-		public List<Node> Children { get; set; } = new List<Node>();
+		public List<INode> Children { get; set; } = new List<INode>();
 		private string GetChildText()
 		{
 			var sb = new StringBuilder();

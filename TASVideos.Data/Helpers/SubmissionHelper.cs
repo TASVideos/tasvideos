@@ -43,7 +43,7 @@ namespace TASVideos.Data.Helpers
 
 			var canJudge = perms.Contains(PermissionTo.JudgeSubmissions);
 			var canPublish = perms.Contains(PermissionTo.PublishMovies);
-			var isAfterJudgementWindow = submitDate < DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgment);
+			var isAfterJudgmentWindow = submitDate < DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgment);
 
 			if (isJudge && currentStatus == JudgingUnderWay // The judge can set back to new if they claimed the submission and are now opting out
 				|| currentStatus == Rejected && isJudge // A judge can revive a rejected submission by setting it to new
@@ -68,7 +68,7 @@ namespace TASVideos.Data.Helpers
 			 // A judge can set a submission to delayed or needs more info so long as they have claimed it
 			if ((new[] { JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, PublicationUnderway }.Contains(currentStatus))
 				&& isJudge
-				&& isAfterJudgementWindow)
+				&& isAfterJudgmentWindow)
 			{
 				list.Add(JudgingUnderWay);
 				list.Add(Delayed);
@@ -78,14 +78,14 @@ namespace TASVideos.Data.Helpers
 			 // A judge can deliver a verdict if they have claimed the submission
 			if ((new[] { JudgingUnderWay, Delayed, NeedsMoreInfo, PublicationUnderway }.Contains(currentStatus))
 				&& isJudge
-				&& isAfterJudgementWindow)
+				&& isAfterJudgmentWindow)
 			{
 				list.Add(Accepted);
 				list.Add(Rejected);
 			}
 			else if ((currentStatus == Accepted || currentStatus == PublicationUnderway)
 				&& isJudge
-				&& isAfterJudgementWindow)
+				&& isAfterJudgmentWindow)
 			{
 				list.Add(Rejected); // A judge can overrule themselves and reject an accepted movie
 			}
