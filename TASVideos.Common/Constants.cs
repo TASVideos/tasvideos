@@ -1,10 +1,5 @@
 ﻿namespace TASVideos
 {
-	public static class EnvironmentVariables
-	{
-		public const string StartupStrategy = "StartupStrategy";
-	}
-
 	public static class LinkConstants
 	{
 		public const string SubmissionWikiPage = "InternalSystem/SubmissionContent/S";

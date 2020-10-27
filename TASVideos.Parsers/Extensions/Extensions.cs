@@ -10,7 +10,7 @@ namespace TASVideos.MovieParsers.Extensions
 		/// <summary>
 		/// Splits by line, Null safe, removes empty entries
 		/// </summary>
-		public static string[] LineSplit(this string str)
+		public static string[] LineSplit(this string? str)
 		{
 			if (str == null)
 			{
@@ -29,7 +29,7 @@ namespace TASVideos.MovieParsers.Extensions
 		/// <param name="lines">The key/value pairs to search</param>
 		/// <param name="key">The key to search for</param>
 		/// <returns>The value if found, else an empty string</returns>
-		public static string GetValueFor(this string[] lines, string key)
+		public static string GetValueFor(this string[]? lines, string key)
 		{
 			if (lines == null || !lines.Any() || string.IsNullOrWhiteSpace(key))
 			{
@@ -104,7 +104,7 @@ namespace TASVideos.MovieParsers.Extensions
 		/// Returns the number of lines that start with a | which indicates
 		/// an input frame in many movie formats
 		/// </summary>
-		public static int PipeCount(this IEnumerable<string> lines)
+		public static int PipeCount(this IEnumerable<string>? lines)
 		{
 			return lines?.Count(i => i.StartsWith("|")) ?? 0;
 		}
@@ -113,7 +113,7 @@ namespace TASVideos.MovieParsers.Extensions
 		/// Returns lines that do not begin with a | which indicates
 		/// a header line in many movie formats;
 		/// </summary>
-		public static IEnumerable<string> WithoutPipes(this IEnumerable<string> lines)
+		public static IEnumerable<string> WithoutPipes(this IEnumerable<string>? lines)
 		{
 			return lines == null
 				? Enumerable.Empty<string>()

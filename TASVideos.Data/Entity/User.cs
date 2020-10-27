@@ -84,7 +84,7 @@ namespace TASVideos.Data.Entity
 			return query.Where(u => u.Submissions.Any());
 		}
 
-		public static IQueryable<User> ThatPartiallyMatch(this IQueryable<User> query, string partial)
+		public static IQueryable<User> ThatPartiallyMatch(this IQueryable<User> query, string? partial)
 		{
 			var upper = partial?.ToUpper() ?? "";
 			return query.Where(u => u.NormalizedUserName.Contains(upper));

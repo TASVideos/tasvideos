@@ -116,7 +116,7 @@ namespace TASVideos.Extensions
 		{
 			return Regex.Replace(
 				Regex.Replace(
-					str,
+					str ?? "",
 					@"(\P{Ll})(\P{Ll}\p{Ll})",
 					"$1 $2"
 				),

@@ -17,25 +17,23 @@ namespace TASVideos.MovieParsers.Parsers
 				SystemCode = SystemCodes.Arcade
 			};
 
-			using (var br = new BinaryReader(file))
+			using var br = new BinaryReader(file);
+			var header = new string(br.ReadChars(8));
+			if (!header.StartsWith("MAMETAS\0"))
 			{
-				var header = new string(br.ReadChars(8));
-				if (!header.StartsWith("MAMETAS\0"))
-				{
-					return new ErrorResult("Invalid file format, does not seem to be a .mar");
-				}
-
-				br.ReadBytes(8);
-				br.ReadBytes(32);
-				var frameRate = br.ReadDouble();
-				if (frameRate > 0)
-				{
-					result.FrameRateOverride = frameRate;
-				}
-
-				result.Frames = br.ReadInt32();
-				result.RerecordCount = br.ReadInt32();
+				return new ErrorResult("Invalid file format, does not seem to be a .mar");
 			}
+
+			br.ReadBytes(8);
+			br.ReadBytes(32);
+			var frameRate = br.ReadDouble();
+			if (frameRate > 0)
+			{
+				result.FrameRateOverride = frameRate;
+			}
+
+			result.Frames = br.ReadInt32();
+			result.RerecordCount = br.ReadInt32();
 
 			return result;
 		}

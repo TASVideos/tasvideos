@@ -62,7 +62,7 @@ namespace TASVideos.Data
 			{
 				var property = typeof(T)
 					.GetProperties()
-					.FirstOrDefault(p => p.Name.ToLower() == column.ToLower());
+					.FirstOrDefault(p => string.Equals(p.Name, column, StringComparison.CurrentCultureIgnoreCase));
 				if (property != null)
 				{
 					dict[property.Name] = property.GetValue(obj);
