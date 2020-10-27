@@ -55,7 +55,7 @@ namespace TASVideos.Legacy
 				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(connectionStr, context, legacyForumContext));
 			}
 
-			Run("Wiki", () => WikiImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Wiki", () => WikiImporter.Import(connectionStr, legacySiteContext));
 			Run("WikiCleanup", () => WikiPageCleanup.Fix(context, legacySiteContext));
 			Run("WikiReferral", () => WikiReferralGenerator.Generate(connectionStr, context));
 			Run("Submissions", () => SubmissionImporter.Import(connectionStr, context, legacySiteContext));

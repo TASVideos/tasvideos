@@ -22,7 +22,7 @@ namespace TASVideos.Test
 		private bool _dbConcurrentUpdateConflict;
 		private bool _dbUpdateConflict;
 
-		private IHttpContextAccessor _testHttpContext = new TestHttpContextAccessor();
+		private readonly IHttpContextAccessor _testHttpContext;
 
 		private TestDbContext(DbContextOptions<ApplicationDbContext> options, TestHttpContextAccessor httpContextAccessor)
 			: base(options, httpContextAccessor)

@@ -20,7 +20,7 @@ namespace TASVideos.Legacy.Imports
 			public string HomePage { get; set; } = "";
 		}
 
-		public static void Import(string connectionStr, ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
+		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
 		{
 			var blacklist = ObsoletePages.Concat(ObsoletePages.Select(p => "DeletedPages/" + p));
 
@@ -122,7 +122,7 @@ namespace TASVideos.Legacy.Imports
 				var slashIndex = pageName.IndexOf("/");
 				if (slashIndex > 0)
 				{
-					pageName = userName + pageName.Substring(slashIndex, pageName.Length - slashIndex);
+					pageName = userName + pageName[slashIndex..];
 				}
 				else
 				{
