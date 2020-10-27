@@ -46,7 +46,7 @@ namespace TASVideos.Api.Requests
 					{
 						","
 					}, StringSplitOptions.RemoveEmptyEntries)
-				.Where(s => Enum.TryParse(s, out SubmissionStatus x))
+				.Where(s => Enum.TryParse(s, out SubmissionStatus _))
 				.Select(s =>
 					{
 						Enum.TryParse(s, out SubmissionStatus x);

@@ -30,10 +30,10 @@ namespace TASVideos.Test.Data.Helpers
 				OldEnoughToBeJudged,
 				true,
 				true,
-				true);
+				true).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Count());
+			Assert.AreEqual(1, result.Count);
 			Assert.AreEqual(Published, result.Single());
 		}
 
@@ -48,17 +48,17 @@ namespace TASVideos.Test.Data.Helpers
 		[TestMethod]
 		public void Submitter_BasicPerms(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
-			var expected = new[] { current }.Concat(canChangeTo);
+			var expected = new[] { current }.Concat(canChangeTo).ToList();
 			var result = SubmissionHelper.AvailableStatuses(
 				current,
 				BasicUserPerms,
 				OldEnoughToBeJudged,
 				isAuthorOrSubmitter: true,
 				isJudge: false,
-				isPublisher: false);
+				isPublisher: false).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(expected.Count(), result.Count());
+			Assert.AreEqual(expected.Count, result.Count);
 			foreach (var status in expected)
 			{
 				Assert.IsTrue(result.Contains(status));
@@ -76,17 +76,17 @@ namespace TASVideos.Test.Data.Helpers
 		[TestMethod]
 		public void Submitter_IsJudge(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
-			var expected = new[] { current }.Concat(canChangeTo);
+			var expected = new[] { current }.Concat(canChangeTo).ToList();
 			var result = SubmissionHelper.AvailableStatuses(
 				current,
 				JudgePerms,
 				OldEnoughToBeJudged,
 				true,
 				false,
-				false);
+				false).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(expected.Count(), result.Count());
+			Assert.AreEqual(expected.Count, result.Count);
 			foreach (var status in expected)
 			{
 				Assert.IsTrue(result.Contains(status));
@@ -104,17 +104,17 @@ namespace TASVideos.Test.Data.Helpers
 		[TestMethod]
 		public void Submitter_IsPublisher(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
-			var expected = new[] { current }.Concat(canChangeTo);
+			var expected = new[] { current }.Concat(canChangeTo).ToList();
 			var result = SubmissionHelper.AvailableStatuses(
 				current,
 				PublisherPerms,
 				OldEnoughToBeJudged,
 				true,
 				false,
-				false);
+				false).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(expected.Count(), result.Count());
+			Assert.AreEqual(expected.Count, result.Count);
 			foreach (var status in expected)
 			{
 				Assert.IsTrue(result.Contains(status));
@@ -132,17 +132,17 @@ namespace TASVideos.Test.Data.Helpers
 		[TestMethod]
 		public void Judge_ButNotSubmitter_BeforeAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
-			var expected = new[] { current }.Concat(canChangeTo);
+			var expected = new[] { current }.Concat(canChangeTo).ToList();
 			var result = SubmissionHelper.AvailableStatuses(
 				current,
 				JudgePerms,
 				TooNewToJudge,
 				isAuthorOrSubmitter: false,
 				isJudge: true,
-				isPublisher: false);
+				isPublisher: false).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(expected.Count(), result.Count());
+			Assert.AreEqual(expected.Count, result.Count);
 			foreach (var status in expected)
 			{
 				Assert.IsTrue(result.Contains(status));
@@ -160,17 +160,17 @@ namespace TASVideos.Test.Data.Helpers
 		[TestMethod]
 		public void Judge_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
-			var expected = new[] { current }.Concat(canChangeTo);
+			var expected = new[] { current }.Concat(canChangeTo).ToList();
 			var result = SubmissionHelper.AvailableStatuses(
 				current,
 				JudgePerms,
 				OldEnoughToBeJudged,
 				isAuthorOrSubmitter: false,
 				isJudge: true,
-				isPublisher: false);
+				isPublisher: false).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(expected.Count(), result.Count());
+			Assert.AreEqual(expected.Count, result.Count);
 			foreach (var status in expected)
 			{
 				Assert.IsTrue(result.Contains(status));
@@ -188,17 +188,17 @@ namespace TASVideos.Test.Data.Helpers
 		[TestMethod]
 		public void Publisher_ButNotSubmitter_BeforeAllowedJudgmentWindow_CanNotChangeStatus(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
-			var expected = new[] { current }.Concat(canChangeTo);
+			var expected = new[] { current }.Concat(canChangeTo).ToList();
 			var result = SubmissionHelper.AvailableStatuses(
 				current,
 				PublisherPerms,
 				TooNewToJudge,
 				isAuthorOrSubmitter: false,
 				isJudge: false,
-				isPublisher: true);
+				isPublisher: true).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(expected.Count(), result.Count());
+			Assert.AreEqual(expected.Count, result.Count);
 			foreach (var status in expected)
 			{
 				Assert.IsTrue(result.Contains(status));
@@ -216,17 +216,17 @@ namespace TASVideos.Test.Data.Helpers
 		[TestMethod]
 		public void Publisher_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
-			var expected = new[] { current }.Concat(canChangeTo);
+			var expected = new[] { current }.Concat(canChangeTo).ToList();
 			var result = SubmissionHelper.AvailableStatuses(
 				current,
 				PublisherPerms,
 				OldEnoughToBeJudged,
 				isAuthorOrSubmitter: false,
 				isJudge: false,
-				isPublisher: true);
+				isPublisher: true).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(expected.Count(), result.Count());
+			Assert.AreEqual(expected.Count, result.Count);
 			foreach (var status in expected)
 			{
 				Assert.IsTrue(result.Contains(status));
@@ -239,7 +239,8 @@ namespace TASVideos.Test.Data.Helpers
 			var exceptPublished = Enum.GetValues(typeof(SubmissionStatus))
 				.Cast<SubmissionStatus>()
 				.Except(new[] { Published })
-				.OrderBy(s => s);
+				.OrderBy(s => s)
+				.ToList();
 
 			foreach (var current in exceptPublished)
 			{
@@ -249,10 +250,10 @@ namespace TASVideos.Test.Data.Helpers
 					TooNewToJudge,
 					false,
 					false,
-					false);
+					false).ToList();
 
 				Assert.IsNotNull(result);
-				Assert.AreEqual(exceptPublished.Count(), result.Count());
+				Assert.AreEqual(exceptPublished.Count, result.Count);
 				Assert.IsTrue(result.SequenceEqual(exceptPublished));
 			}
 		}

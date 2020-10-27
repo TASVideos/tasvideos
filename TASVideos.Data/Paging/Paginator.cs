@@ -60,7 +60,7 @@ namespace TASVideos.Data
 		/// Orders the given collection based on the <see cref="ISortable.Sort"/> property
 		/// </summary>
 		/// <typeparam name="T">The type of the elements of source.</typeparam>
-		public static IQueryable<T> SortBy<T>(this IQueryable<T> source, ISortable request)
+		public static IQueryable<T> SortBy<T>(this IQueryable<T> source, ISortable? request)
 		{
 			if (string.IsNullOrWhiteSpace(request?.Sort))
 			{
@@ -79,11 +79,11 @@ namespace TASVideos.Data
 			return source;
 		}
 
-		private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string column, bool thenBy)
+		private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy)
 		{
 			bool desc = column?.StartsWith("-") ?? false;
 
-			column = column?.Trim('-').Trim('+')?.ToLower() ?? "";
+			column = column?.Trim('-').Trim('+').ToLower() ?? "";
 
 			var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
 			

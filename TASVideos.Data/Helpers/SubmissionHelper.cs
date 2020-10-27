@@ -28,8 +28,7 @@ namespace TASVideos.Data.Helpers
 			}
 
 			var perms = userPermissions.ToList();
-			if (perms.Contains(PermissionTo.OverrideSubmissionStatus)
-				&& currentStatus != Published)
+			if (perms.Contains(PermissionTo.OverrideSubmissionStatus))
 			{
 				return Enum.GetValues(typeof(SubmissionStatus))
 					.Cast<SubmissionStatus>()
@@ -56,8 +55,7 @@ namespace TASVideos.Data.Helpers
 				list.Add(New);
 			}
 
-
-			 // A judge can claim a new run, unless they are not author or the submitter
+			// A judge can claim a new run, unless they are not author or the submitter
 			if ((new[] { New, JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, Rejected, PublicationUnderway, Cancelled }.Contains(currentStatus))
 				&& canJudge
 				&& !isAuthorOrSubmitter)
@@ -65,7 +63,7 @@ namespace TASVideos.Data.Helpers
 				list.Add(JudgingUnderWay);
 			}
 
-			 // A judge can set a submission to delayed or needs more info so long as they have claimed it
+			// A judge can set a submission to delayed or needs more info so long as they have claimed it
 			if ((new[] { JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, PublicationUnderway }.Contains(currentStatus))
 				&& isJudge
 				&& isAfterJudgmentWindow)
@@ -75,7 +73,7 @@ namespace TASVideos.Data.Helpers
 				list.Add(NeedsMoreInfo);
 			}
 
-			 // A judge can deliver a verdict if they have claimed the submission
+			// A judge can deliver a verdict if they have claimed the submission
 			if ((new[] { JudgingUnderWay, Delayed, NeedsMoreInfo, PublicationUnderway }.Contains(currentStatus))
 				&& isJudge
 				&& isAfterJudgmentWindow)
@@ -96,13 +94,13 @@ namespace TASVideos.Data.Helpers
 				list.Add(PublicationUnderway);
 			}
 
-			 // A publisher needs to be able to retract their publishing claim
+			// A publisher needs to be able to retract their publishing claim
 			if (currentStatus == PublicationUnderway && isPublisher)
 			{
 				list.Add(Accepted);
 			}
 
-			 // An author or a judge can cancel as long as the submission has not been published
+			// An author or a judge can cancel as long as the submission has not been published
 			if ((isJudge || isAuthorOrSubmitter)
 				&& new[] { New, JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, PublicationUnderway }.Contains(currentStatus))
 			{
