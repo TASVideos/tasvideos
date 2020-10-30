@@ -22,15 +22,18 @@ namespace TASVideos.Pages.Publications
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;
 		private readonly IPointsService _points;
+		private readonly IMovieSearchTokens _movieTokens;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ICacheService cache,
-			IPointsService points)
+			IPointsService points,
+			IMovieSearchTokens movieTokens)
 		{
 			_db = db;
 			_cache = cache;
 			_points = points;
+			_movieTokens = movieTokens;
 		}
 
 		[FromRoute]
@@ -40,7 +43,7 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			var tokenLookup = await GetMovieTokenData();
+			var tokenLookup = await _movieTokens.GetTokens();
 
 			var tokens = Query.ToTokens();
 
@@ -87,27 +90,6 @@ namespace TASVideos.Pages.Publications
 			}
 
 			return Page();
-		}
-
-		private async Task<PublicationSearchModel> GetMovieTokenData()
-		{
-			if (_cache.TryGetValue(CacheKeys.MovieTokens, out PublicationSearchModel cachedResult))
-			{
-				return cachedResult;
-			}
-
-			var result = new PublicationSearchModel
-			{
-				Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
-				SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
-				Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(),
-				Genres = await _db.Genres.Select(g => g.DisplayName.ToLower()).ToListAsync(),
-				Flags = await _db.Flags.Select(f => f.Token.ToLower()).ToListAsync()
-			};
-
-			_cache.Set(CacheKeys.MovieTokens, result);
-
-			return result;
 		}
 	}
 }
