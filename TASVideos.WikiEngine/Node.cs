@@ -434,7 +434,8 @@ namespace TASVideos.WikiEngine.AST
 			["listlanguages"] = "ListLanguages",
 			["wikiusers"] = "WikiUsers",
 			["movieslist"] = "MoviesList",
-			["moviesgamelist"] = "MoviesGameList"
+			["moviesgamelist"] = "MoviesGameList",
+			["displaymovie"] = "DisplayMovies"
 		};
 		public NodeType Type => NodeType.Module; 
 		public string Text { get; }

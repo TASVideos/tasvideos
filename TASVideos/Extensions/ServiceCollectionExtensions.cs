@@ -101,6 +101,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<ITopicWatcher, TopicWatcher>();
 			services.AddScoped<IPublicationHistory, PublicationHistory>();
 			services.AddScoped<IFileService, FileService>();
+			services.AddScoped<IMovieSearchTokens, MovieSearchTokens>();
 
 			if (env.IsDevelopment())
 			{
