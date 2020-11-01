@@ -29,12 +29,22 @@ namespace TASVideos
 
 			if (_env.IsProduction())
 			{
-				// TODO: delete me
-				sb
-					.AppendLine("User-agent: *")
-					.AppendLine("Disallow: / ");
+				sb.AppendLine(@"
+User-agent: *
+Disallow: /forum/
+Disallow: /movies/
+Disallow: /submissions/
+Disallow: /media/
+Disallow: /MovieMaintenanceLog
+Disallow: /UserMaintenanceLog
 
-				// TODO: append various things here
+User-agent: Mediapartners-Google
+Allow: /forum/
+
+User-agent: Fasterfox
+Disallow: /
+
+Sitemap: http://tasvideos.org/sitemap.xml");
 			}
 			else
 			{
