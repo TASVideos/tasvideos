@@ -40,6 +40,7 @@ namespace TASVideos.Legacy
 			Run("RamAddresses", () => RamAddressImporter.Import(connectionStr, context, legacySiteContext));
 
 			Run("Users", () => UserImporter.Import(connectionStr, context, legacySiteContext, legacyForumContext));
+			Run("UserDisallows", () => DisallowImporter.Import(connectionStr, legacyForumContext));
 			Run("Award", () => AwardImporter.Import(connectionStr, context, legacySiteContext));
 
 			Run("Forum Categories", () => ForumCategoriesImporter.Import(connectionStr, context, legacyForumContext));

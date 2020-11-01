@@ -128,7 +128,5 @@ namespace TASVideos.Legacy.Imports
 				CompressionType = Compression.Gzip
 			};
 		}
-
-		
 	}
 }

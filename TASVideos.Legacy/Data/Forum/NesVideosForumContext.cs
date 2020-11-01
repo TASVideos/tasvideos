@@ -13,6 +13,7 @@ namespace TASVideos.Legacy.Data.Forum
 		public DbSet<UserGroup> UserGroups { get; set; } = null!;
 		public DbSet<UserRanks> UserRanks { get; set; } = null!;
 		public DbSet<BanList> BanList { get; set; } = null!;
+		public DbSet<Disallow> Disallows { get; set; } = null!;
 		public DbSet<Categories> Categories { get; set; } = null!;
 		public DbSet<Forums> Forums { get; set; } = null!;
 		public DbSet<Topics> Topics { get; set; } = null!;
@@ -32,7 +33,8 @@ namespace TASVideos.Legacy.Data.Forum
 			modelBuilder.Entity<Categories>().ToTable("categories");
 			modelBuilder.Entity<Forums>().ToTable("forums");
 			modelBuilder.Entity<Topics>().ToTable("topics");
-			
+			modelBuilder.Entity<Disallow>().ToTable("disallow");
+
 			modelBuilder.Entity<Posts>(entity =>
 			{
 				entity.HasKey(e => e.Id);
