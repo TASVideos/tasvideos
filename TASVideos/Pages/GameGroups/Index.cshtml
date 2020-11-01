@@ -1,0 +1,42 @@
+﻿@page "{id}"
+@model TASVideos.Pages.GamesGroups.IndexModel
+
+<h4>
+	Games for Group: @Model.Name
+</h4>
+
+<warning-alert condition="!Model.Games.Any()">
+	No Games Listed for this Game Group
+</warning-alert>
+
+<table condition="Model.Games.Any()" class="table table-bordered table-striped">
+	<tr>
+		<th>Game</th>
+		<th>Publications</th>
+		<th>Submissions</th>
+		<th>Resource Page</th>
+	</tr>
+	@foreach (var game in Model.Games)
+	{
+		<tr>
+			<td>
+				<game-link id="game.Id">
+					@game.SystemCode @game.Name
+				</game-link>
+			</td>
+			<td>
+				<a href="/Movies-@(game.Id)G">
+					@game.PublicationCount
+				</a>
+			</td>
+			<td>
+				@game.SubmissionsCount
+			</td>
+			<td>
+				<a href="/@game.GameResourcesPage">
+					@game.GameResourcesPage
+				</a>
+			</td>
+		</tr>
+	}
+</table>
