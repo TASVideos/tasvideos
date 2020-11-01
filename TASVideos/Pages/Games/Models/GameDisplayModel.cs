@@ -12,6 +12,7 @@ namespace TASVideos.Pages.Games.Models
 		public string? SystemCode { get; set; }
 		public string GoodName { get; set; } = "";
 		public string? GameResourcesPage { get; set; }
+
 		public IEnumerable<string> Genres { get; set; } = new List<string>();
 
 		public ICollection<Rom> Roms { get; set; } = new List<Rom>();
@@ -24,6 +25,14 @@ namespace TASVideos.Pages.Games.Models
 			public string Name { get; set; } = "";
 			public string? Region { get; set; }
 			public string? Version { get; set; }
+		}
+
+		public ICollection<GameGroup> GameGroups { get; set; } = new List<GameGroup>();
+
+		public class GameGroup
+		{
+			public int Id { get; set; }
+			public string Name { get; set; } = "";
 		}
 	}
 }
