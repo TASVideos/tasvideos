@@ -81,6 +81,7 @@ namespace TASVideos.Data
 		// Userfiles
 		public DbSet<UserFile> UserFiles { get; set; } = null!;
 		public DbSet<UserFileComment> UserFileComments { get; set; } = null!;
+		public DbSet<UserDisallow> UserDisallows { get; set; } = null!;
 
 		public DbSet<MediaPost> MediaPosts { get; set; } = null!;
 
@@ -367,6 +368,14 @@ namespace TASVideos.Data
 			builder.Entity<PublicationUrl>(entity =>
 			{
 				entity.HasIndex(e => e.Type);
+			});
+
+			builder.Entity<UserDisallow>(entity =>
+			{
+				entity.HasIndex(e => e.RegexPattern)
+					.HasName("UserDisallowRegexPatternIndex")
+					.IsUnique()
+					.HasFilter($"([{nameof(UserDisallow.RegexPattern)}] IS NOT NULL)");
 			});
 		}
 

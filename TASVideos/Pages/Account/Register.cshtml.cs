@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -76,7 +77,7 @@ namespace TASVideos.Pages.Account
 
 		[BindProperty]
 		[Required]
-		[StringLength(100, ErrorMessage = "You have not indicated if you are 13 years of age or older.")]
+		[Range(typeof(bool), "true", "true", ErrorMessage = "You have not indicated if you are 13 years of age or older.")]
 		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 		public bool COPPA { get; set; }
 
@@ -85,6 +86,22 @@ namespace TASVideos.Pages.Account
 			if (Password != ConfirmPassword)
 			{
 				ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				return Page();
+			}
+
+			var disallows = await _db.UserDisallows.ToListAsync();
+			foreach (var disallow in disallows)
+			{
+				var regex = new Regex(disallow.RegexPattern);
+				if (regex.IsMatch(UserName))
+				{
+					ModelState.AddModelError(nameof(UserName), "The username is not allowed.");
+					break;
+				}
 			}
 
 			if (ModelState.IsValid)

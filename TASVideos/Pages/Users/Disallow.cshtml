@@ -1,0 +1,43 @@
+﻿@page "{handler?}/{disallowId?}"
+@model DisallowModel
+
+<h4>Disallows</h4>
+<label>This page manages username patterns that are not allowed during user registration</label>
+<hr />
+<form method="POST">
+	<row>
+		<column lg="6">
+			<label asp-for="RegexPattern"></label>
+			<input asp-for="RegexPattern" class="form-control" />
+			<span asp-validation-for="RegexPattern" class="text-danger"></span>
+			<button class="mt-2 btn btn-primary">Add</button>
+		</column>
+	</row>
+</form>
+<hr />
+<table class="table table-bordered table-striped table-sm">
+	<tr>
+		<th>Id</th>
+		<th>Regex Pattern</th>
+		<th></th>
+	</tr>
+	@foreach (var disallow in Model.Disallows)
+	{
+		<tr>
+			<td>
+				@disallow.Id
+			</td>
+			<td>
+				@disallow.RegexPattern
+			</td>
+			<td>
+				<delete-button
+					warning-message="Are you sure you want to delete this pattern?"
+					asp-href="/Users/Disallow/Delete?disallowId=@disallow.Id"
+					class="btn-sm">
+					<i class="fa fa-remove"></i>
+				</delete-button>
+			</td>
+		</tr>
+	}
+</table>
