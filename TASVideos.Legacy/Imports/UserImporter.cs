@@ -94,10 +94,9 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = u.Id,
 					UserName = ImportHelper.ConvertNotNullLatin1String(u.UserName).Trim(),
-					//NormalizedUserName = ImportHelper.ConvertLatin1String(u.UserName).ToUpper(), // TODO: this creates a unique constraint violation, two users must have the same normalized name??
-					NormalizedUserName = u.UserName.ToUpper(),
+					NormalizedUserName = ImportHelper.ConvertNotNullLatin1String(u.UserName).ToUpper(),
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate), // TODO
+					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
 					LegacyPassword = u.Password,
 					EmailConfirmed = u.IsActive || u.EmailTime != null || u.PostCount > 0,
 					Email = u.Email,
