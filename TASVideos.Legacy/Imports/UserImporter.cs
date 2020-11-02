@@ -28,8 +28,6 @@ namespace TASVideos.Legacy.Imports
 		{
 			// TODO:
 			// gender?
-			// user_avatar_type ?
-			// mood avatars
 			// TODO: what to do about these??
 			//var wikiNoForum = legacyUsers
 			//	.Select(u => u.Name)
@@ -51,7 +49,7 @@ namespace TASVideos.Legacy.Imports
 			var banList = legacyForumContext.BanList.ToList();
 
 			// These were dug up from user_exceptions, which only has a few entries and complicated to parse, simpler to have a hardcoded list
-			var userExceptions = new[] {150, 590, 905, 1210, 2659, 2758, 3254 };
+			var userExceptions = new[] { 150, 590, 905, 1210, 2659, 2758, 3254 };
 
 			var users = (from u in legacyForumUsers
 						join b in banList on u.UserId equals b.UserId into bb
