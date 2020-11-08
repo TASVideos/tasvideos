@@ -28,6 +28,7 @@ using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Services.PublicationChain;
+using TASVideos.Services.RssFeedParsers;
 
 namespace TASVideos.Extensions
 {
@@ -102,6 +103,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<IPublicationHistory, PublicationHistory>();
 			services.AddScoped<IFileService, FileService>();
 			services.AddScoped<IMovieSearchTokens, MovieSearchTokens>();
+			services.AddScoped<IVcsRssParser, VcsRssParser>();
 
 			if (env.IsDevelopment())
 			{
