@@ -1,22 +1,9 @@
-﻿@using TASVideos.Data.Entity.Forum
-@model IForumTopicBreadCrumb
-
-@functions {
-	string ToTitle(string title, ForumTopicType type)
-	{
-		return type switch
-		{
-			ForumTopicType.Sticky => ("<b>(Sticky) </b> " + title),
-			ForumTopicType.Announcement => ("<b>(Announcement) </b> " + title),
-			_ => title
-		};
-	}
-}
+﻿@model IForumTopicBreadCrumb
 
 <small class="@(Model.IsLocked ? "alert alert-danger" : "") pt-1 pb-2">
 	<a asp-page="/Forum/Index">Forum</a>
 	->
 	<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a>
-	-> @Html.Raw(ToTitle(Model.Title, Model.Type))
+	-> @Html.Raw(Model.Type.ToTitleHtml(Model.Title))
 	<span condition="Model.IsLocked"> (Locked)</span>
 </small>
