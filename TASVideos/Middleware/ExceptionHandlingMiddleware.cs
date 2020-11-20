@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 using TASVideos.Extensions;
 
-namespace TASVideos
+namespace TASVideos.Middleware
 {
 	public class ErrorHandlingMiddleware
 	{

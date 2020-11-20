@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 
-namespace TASVideos
+namespace TASVideos.Middleware
 {
 	public class RobotHandlingMiddleware
 	{
