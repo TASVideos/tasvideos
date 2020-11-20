@@ -20,18 +20,15 @@ namespace TASVideos.Pages.Publications
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly ICacheService _cache;
 		private readonly IPointsService _points;
 		private readonly IMovieSearchTokens _movieTokens;
 
 		public IndexModel(
 			ApplicationDbContext db,
-			ICacheService cache,
 			IPointsService points,
 			IMovieSearchTokens movieTokens)
 		{
 			_db = db;
-			_cache = cache;
 			_points = points;
 			_movieTokens = movieTokens;
 		}

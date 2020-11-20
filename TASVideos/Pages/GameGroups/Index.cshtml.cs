@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Groups.Models;
 
 namespace TASVideos.Pages.GamesGroups
@@ -45,8 +43,8 @@ namespace TASVideos.Pages.GamesGroups
 					Id = g.Id,
 					Name = g.DisplayName,
 					SystemCode = g.System!.Code,
-					PublicationCount = g.Publications.Count(),
-					SubmissionsCount = g.Submissions.Count(),
+					PublicationCount = g.Publications.Count,
+					SubmissionsCount = g.Submissions.Count,
 					GameResourcesPage = g.GameResourcesPage
 				})
 				.ToListAsync();

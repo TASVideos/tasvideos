@@ -91,7 +91,7 @@ namespace TASVideos.ViewComponents
 				return null;
 			}
 
-			string? val = GetValueFor(parameterStr, param)?.ToLower();
+			string val = GetValueFor(parameterStr, param).ToLower();
 			switch (val)
 			{
 				case "true":
@@ -120,7 +120,7 @@ namespace TASVideos.ViewComponents
 				return null;
 			}
 
-			var val = GetValueFor(parameterStr, param)?.ToLower();
+			var val = GetValueFor(parameterStr, param).ToLower();
 
 			var result = int.TryParse(val, out int parsedVal);
 			if (result)
@@ -142,7 +142,7 @@ namespace TASVideos.ViewComponents
 				return null;
 			}
 
-			var val = GetValueFor(parameterStr, param)?.ToLower();
+			var val = GetValueFor(parameterStr, param).ToLower();
 
 			if (string.IsNullOrWhiteSpace(val))
 			{

@@ -9,17 +9,17 @@ namespace TASVideos
 {
 	public class RobotHandlingMiddleware
 	{
-		private readonly RequestDelegate _request;
+		// ReSharper disable once NotAccessedField.Local
 		private readonly IWebHostEnvironment _env;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
 		/// </summary>
 		public RobotHandlingMiddleware(
+			// ReSharper disable once UnusedParameter.Local
 			RequestDelegate request,
 			IWebHostEnvironment env)
 		{
-			_request = request;
 			_env = env;
 		}
 

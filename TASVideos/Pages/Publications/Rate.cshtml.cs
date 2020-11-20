@@ -53,11 +53,6 @@ namespace TASVideos.Pages.Publications
 					?.Value
 			};
 
-			if (Rating == null)
-			{
-				return NotFound();
-			}
-
 			return Page();
 		}
 
@@ -99,7 +94,7 @@ namespace TASVideos.Pages.Publications
 			return RedirectToPage("/Profile/Ratings");
 		}
 
-		private void UpdateRating(PublicationRating rating, int id, int userId, PublicationRatingType type, double? value)
+		private void UpdateRating(PublicationRating? rating, int id, int userId, PublicationRatingType type, double? value)
 		{
 			if (rating != null)
 			{

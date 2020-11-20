@@ -9,7 +9,7 @@ namespace TASVideos
 {
 	public static class ClaimsPrincipalExtensions
 	{
-		public static int GetUserId(this ClaimsPrincipal user)
+		public static int GetUserId(this ClaimsPrincipal? user)
 		{
 			if (user == null || !user.Identity.IsAuthenticated)
 			{
@@ -20,7 +20,7 @@ namespace TASVideos
 				.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
 		}
 
-		public static IEnumerable<PermissionTo> Permissions(this ClaimsPrincipal user)
+		public static IEnumerable<PermissionTo> Permissions(this ClaimsPrincipal? user)
 		{
 			if (user == null || !user.Identity.IsAuthenticated)
 			{

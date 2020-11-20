@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Account
 			_publisher = publisher;
 		}
 
-		public async Task<IActionResult> OnGet(string userId, string code)
+		public async Task<IActionResult> OnGet(string? userId, string? code)
 		{
 			if (userId == null || code == null)
 			{

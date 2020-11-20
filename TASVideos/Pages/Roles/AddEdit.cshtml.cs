@@ -140,7 +140,7 @@ namespace TASVideos.Pages.Roles
 				MessageType = Styles.Success;
 				Message = $"Role {Id}, deleted successfully.";
 				_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
-				_publisher.SendUserManagement($"Role {Id} deleted by {User.Identity.Name}", "", $"Roles/List", User.Identity.Name!);
+				_publisher.SendUserManagement($"Role {Id} deleted by {User.Identity.Name}", "", "Roles/List", User.Identity.Name!);
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)

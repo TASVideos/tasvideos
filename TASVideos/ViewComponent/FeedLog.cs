@@ -26,7 +26,7 @@ namespace TASVideos.ViewComponents
 
 			if (string.IsNullOrWhiteSpace(url))
 			{
-				return new ContentViewComponentResult($"url parameter is required.");
+				return new ContentViewComponentResult("url parameter is required.");
 			}
 
 			if (!_parser.IsSupportedType(type))

@@ -105,7 +105,7 @@ namespace TASVideos.Data
 		/// Creates the database and seeds it with necessary seed data
 		/// Seed data is necessary data for a production release
 		/// </summary>
-		private static void Initialize(ApplicationDbContext context)
+		private static void Initialize(DbContext context)
 		{
 			// For now, always delete then recreate the database
 			// When the database is more mature we will move towards the Migrations process
@@ -219,7 +219,7 @@ namespace TASVideos.Data
 		/// Adds optional sample data
 		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
 		/// </summary>
-		private static async Task GenerateDevSampleData(ApplicationDbContext context)
+		private static async Task GenerateDevSampleData(DbContext context)
 		{
 			await using (await context.Database.BeginTransactionAsync())
 			{

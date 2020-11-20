@@ -157,10 +157,7 @@ namespace TASVideos.Services
 
 		public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)
 		{
-			if (publicationIds == null)
-			{
-				publicationIds = new int[0];
-			}
+			publicationIds ??= new int[0];
 
 			var ratings = new Dictionary<int, RatingDto>();
 

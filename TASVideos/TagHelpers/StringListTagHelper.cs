@@ -24,7 +24,7 @@ namespace TASVideos.TagHelpers
 			output.Attributes.Add("id", parentContainerName);
 			output.Content.AppendHtml("<div class='string-list-container'>");
 
-			List<string> stringList = ((IEnumerable<string>)AspFor.Model)?.ToList() ?? new List<string>();
+			List<string> stringList = (AspFor.Model as IEnumerable<string>)?.ToList() ?? new List<string>();
 
 			// We need at least an add button, todo: refactor so this doesn't force the server side to strip out empty strings
 			if (stringList.Count == 0) 
