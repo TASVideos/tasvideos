@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,7 +54,7 @@ namespace TASVideos
 			services
 				.AddHttpClient("Discord", client =>
 				{
-					client.BaseAddress = new System.Uri("https://discord.com/api/v6/");
+					client.BaseAddress = new Uri("https://discord.com/api/v6/");
 				});
 		}
 
