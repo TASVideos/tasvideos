@@ -52,12 +52,9 @@ namespace TASVideos.Pages.Forum.Topics
 				})
 				.SingleOrDefaultAsync();
 
-			if (Topic == null)
-			{
-				return NotFound();
-			}
-
-			return Page();
+			return Topic == null
+				? NotFound()
+				: Page();
 		}
 
 		public async Task<IActionResult> OnPost(PollCreateModel poll)

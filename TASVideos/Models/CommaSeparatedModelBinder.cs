@@ -72,14 +72,9 @@ namespace TASVideos.Models
 
 		public DelimitedQueryStringValueProviderFactory(params char[] delimiters)
 		{
-			if (delimiters == null || delimiters.Length == 0)
-			{
-				_delimiters = DefaultDelimiters;
-			}
-			else
-			{
-				_delimiters = delimiters;
-			}
+			_delimiters = delimiters.Length == 0
+				? DefaultDelimiters
+				: delimiters;
 		}
 
 		/// <inheritdoc />

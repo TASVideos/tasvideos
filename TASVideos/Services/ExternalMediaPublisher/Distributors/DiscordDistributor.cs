@@ -46,7 +46,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			ConnectWebsocket();
 
-			Console.CancelKeyPress += new ConsoleCancelEventHandler(CloseWebsocket);
+			Console.CancelKeyPress += CloseWebsocket;
 		}
 
 		private async void ConnectWebsocket()

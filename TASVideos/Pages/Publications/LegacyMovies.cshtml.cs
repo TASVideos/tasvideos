@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,8 +32,9 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			IEnumerable<int> ids = Id.CsvToInts();
-			string query = "";
+			var ids = Id.CsvToInts().ToList();
+			string query;
+
 			// Id filtering supercedes any other filters, so we can short circuit here
 			if (ids.Any())
 			{

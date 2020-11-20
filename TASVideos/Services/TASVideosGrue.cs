@@ -57,7 +57,7 @@ namespace TASVideos.Services
 			}
 		}
 
-		private string RejectionMessage(DateTime createTimeStamp)
+		private static string RejectionMessage(DateTime createTimeStamp)
 		{
 			string message = "om, nom, nom";
 			message += (DateTime.Now - createTimeStamp).TotalDays >= 365
