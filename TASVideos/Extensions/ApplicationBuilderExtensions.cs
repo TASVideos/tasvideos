@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
+using TASVideos.Middleware;
 
 namespace TASVideos.Extensions
 {
