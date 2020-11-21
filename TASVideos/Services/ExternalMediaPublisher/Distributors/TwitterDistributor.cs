@@ -71,6 +71,11 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				if (!response.IsSuccessStatusCode)
 				{
 					_logger.LogError($"[{DateTime.Now}] An error occurred sending a message to Twitter.");
+
+					_logger.LogError($"Signature Base String: {signatureBaseString}");
+					_logger.LogError($"Signature: {signature}");
+					_logger.LogError(httpClient.DefaultRequestHeaders.Authorization.ToString());
+
 					_logger.LogError(await response.Content.ReadAsStringAsync());
 				}
 			}
