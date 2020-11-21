@@ -15,6 +15,7 @@ namespace TASVideos
 
 		public IrcConnection Irc { get; set; } = new IrcConnection();
 		public DiscordConnection Discord { get; set; } = new DiscordConnection();
+		public TwitterConnection Twitter { get; set; } = new TwitterConnection();
 
 		public string StartupStrategy { get; set; } = "";
 
@@ -39,6 +40,15 @@ namespace TASVideos
 			public string PublicChannelId { get; set; } = "";
 			public string PrivateChannelId { get; set; } = "";
 			public string Scopes { get; set; } = "bot";
+		}
+
+		public class TwitterConnection
+		{
+			public string ApiBase { get; set; } = "";
+			public string ConsumerKey { get; set; } = "";
+			public string ConsumerSecret { get; set; } = "";
+			public string AccessToken { get; set; } = "";
+			public string TokenSecret { get; set; } = "";
 		}
 
 		public class CacheSetting
