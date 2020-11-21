@@ -56,6 +56,12 @@ namespace TASVideos
 				{
 					client.BaseAddress = new Uri("https://discord.com/api/v6/");
 				});
+
+			services
+				.AddHttpClient("Twitter", client =>
+				{
+					client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
+				});
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
