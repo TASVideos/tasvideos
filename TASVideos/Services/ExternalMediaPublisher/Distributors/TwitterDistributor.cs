@@ -134,7 +134,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private string KVPair (string left, string right, bool final)
 		{
-			return $"{left}=\"{right}\"{(final ? "" : ",")}";
+			return $"{Uri.EscapeDataString(left)}=\"{Uri.EscapeDataString(right)}\"{(final ? "" : ",")}";
 		}
 
 		private string GenerateNonce()
