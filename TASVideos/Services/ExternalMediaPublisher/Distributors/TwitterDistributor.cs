@@ -85,7 +85,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			string baseString = $"{method.ToUpper()}&{Uri.EscapeDataString(url)}";
 
-			string entities = UrlEncode("include_entities", "true");
 			string consumerKey = UrlEncode("oauth_consumer_key", _settings.ConsumerKey);
 			string nonce = UrlEncode("oauth_nonce", nonceString);
 			string signatureMethod = UrlEncode("oauth_signature_method", "HMAC-SHA1");
@@ -94,7 +93,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			string oauthVersion = UrlEncode("oauth_version", "1.0");
 			string status = UrlEncode("status", statusMessage);
 
-			string parameterString = $"{entities}&{consumerKey}&{nonce}&{signatureMethod}&{oauthTimestamp}&{oauthToken}&{oauthVersion}&{status}";
+			string parameterString = $"{consumerKey}&{nonce}&{signatureMethod}&{oauthTimestamp}&{oauthToken}&{oauthVersion}&{status}";
 
 			baseString = $"{baseString}&{Uri.EscapeDataString(parameterString)}";
 
@@ -134,7 +133,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private string KVPair (string left, string right, bool final)
 		{
-			return $"{Uri.EscapeDataString(left)}=\"{Uri.EscapeDataString(right)}\"{(final ? "" : ",")}";
+			return $"{Uri.EscapeDataString(left)}=\"{Uri.EscapeDataString(right)}\"{(final ? "" : ", ")}";
 		}
 
 		private string GenerateNonce()
