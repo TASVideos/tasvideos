@@ -50,7 +50,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			if (_configured)
 			{
 				// Generate the Twitter message.  This can easily be configured later to better represent the way we want posts to look.
-				string twitterMessage = $"{post.Body}{Environment.NewLine}{post.Link}";
+				string twitterMessage = GenerateTwitterMessage(post);
 
 				string nonce = GenerateNonce();
 				string timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
@@ -79,6 +79,22 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 					_logger.LogError(await response.Content.ReadAsStringAsync());
 				}
 			}
+		}
+
+		private string GenerateTwitterMessage(IPostable post)
+		{
+			string twitterMessage = "";
+
+			switch (post.Group)
+			{
+				case PostGroups.Submission:
+					twitterMessage = $"{post.Title} - {post.Link}";
+					break;
+				default:
+					break;
+			}
+
+			return twitterMessage;
 		}
 
 		private string CalculateSignatureBaseString(string method, string url, string nonceString, string timestamp, string statusMessage)
