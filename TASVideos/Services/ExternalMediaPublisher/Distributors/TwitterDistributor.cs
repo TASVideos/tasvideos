@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -21,7 +19,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private readonly bool _configured = false;
 
-		private Random _rng = new Random();
+		private readonly Random _rng = new Random();
 
 		public IEnumerable<PostType> Types => new[] { PostType.Announcement };
 
@@ -63,10 +61,12 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				using HttpClient httpClient = _httpClientFactory.CreateClient("Twitter");
 				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("OAuth", authorizationHeaderValue);
 
-				List<KeyValuePair<string, string>> formFields = new List<KeyValuePair<string, string>>();
-				formFields.Add(new KeyValuePair<string, string>("status", twitterMessage));
+				var formFields = new List<KeyValuePair<string, string>>
+				{
+					new KeyValuePair<string, string>("status", twitterMessage)
+				};
 
-				var response = await httpClient.PostAsync($"statuses/update.json", new FormUrlEncodedContent(formFields));
+				var response = await httpClient.PostAsync("statuses/update.json", new FormUrlEncodedContent(formFields));
 
 				if (!response.IsSuccessStatusCode)
 				{
@@ -89,8 +89,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			{
 				case PostGroups.Submission:
 					twitterMessage = $"{post.Title} - {post.Link}";
-					break;
-				default:
 					break;
 			}
 
@@ -118,11 +116,10 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private string CalculateSignature(string baseString)
 		{
-			byte[] hashedBytes;
 			string signingKey = $"{Uri.EscapeDataString(_settings.ConsumerSecret)}&{Uri.EscapeDataString(_settings.TokenSecret)}";
 
-			using HMACSHA1 hmac = new HMACSHA1(System.Text.Encoding.UTF8.GetBytes(signingKey));
-			hashedBytes = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(baseString));
+			using HMACSHA1 hmac = new HMACSHA1(Encoding.UTF8.GetBytes(signingKey));
+			byte[] hashedBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(baseString));
 
 			return Convert.ToBase64String(hashedBytes);
 		}
@@ -154,13 +151,13 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private string GenerateNonce()
 		{
-			string NonceCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+			string nonceCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
 			StringBuilder outputString = new StringBuilder();
 
 			for (int i = 0; i < 32; ++i)
 			{
-				outputString.Append(NonceCharacters.Substring(_rng.Next(0, NonceCharacters.Length), 1));
+				outputString.Append(nonceCharacters.Substring(_rng.Next(0, nonceCharacters.Length), 1));
 			}
 
 			return outputString.ToString();
