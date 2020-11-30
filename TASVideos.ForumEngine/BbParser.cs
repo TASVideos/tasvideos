@@ -172,18 +172,12 @@ namespace TASVideos.ForumEngine
 		{
 			if (KnownTags.TryGetValue(_stack.Peek().Name, out var state))
 			{
-				switch (state)
+				return state switch
 				{
-					case ParseState.NoChildTags:
-						return false;
-					case ParseState.ChildTags:
-					case ParseState.ChildTagsNoNest:
-					case ParseState.ChildTagsNoImmediateNest:
-					default:
-						return true;
-					case ParseState.ChildTagsIfParam:
-						return _stack.Peek().Options != "";
-				}
+					ParseState.NoChildTags => false,
+					ParseState.ChildTagsIfParam => _stack.Peek().Options != "",
+					_ => true,
+				};
 			}
 
 			// "li" or "_root" or any of the html tags
