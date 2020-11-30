@@ -214,7 +214,7 @@ namespace TASVideos.Extensions
 			});
 		}
 
-		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IWebHostEnvironment env, AppSettings settings)
+		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{

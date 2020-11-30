@@ -324,31 +324,20 @@ namespace TASVideos.Legacy.Imports
 
 		private static Role? GetRoleFromLegacy(string role, IEnumerable<Role> roles)
 		{
-			switch (role.ToLower())
+			return role.ToLower() switch
 			{
-				default:
-					return null;
-				case "editor":
-					return roles.Single(r => r.Name == RoleSeedNames.Editor);
-				case "vestededitor":
-					return roles.Single(r => r.Name == RoleSeedNames.VestedEditor);
-				case "publisher":
-					return roles.Single(r => r.Name == RoleSeedNames.Publisher);
-				case "seniorpublisher":
-					return roles.Single(r => r.Name == RoleSeedNames.SeniorPublisher);
-				case "judge":
-					return roles.Single(r => r.Name == RoleSeedNames.Judge);
-				case "seniorjudge":
-					return roles.Single(r => r.Name == RoleSeedNames.SeniorJudge);
-				case "adminassistant":
-					return roles.Single(r => r.Name == RoleSeedNames.AdminAssistant);
-				case "ambassador":
-					return roles.Single(r => r.Name == RoleSeedNames.Ambassador);
-				case "senior ambassador":
-					return roles.Single(r => r.Name == RoleSeedNames.SeniorAmbassador);
-				case "admin":
-					return roles.Single(r => r.Name == RoleSeedNames.Admin);
-			}
+				"editor" => roles.Single(r => r.Name == RoleSeedNames.Editor),
+				"vestededitor" => roles.Single(r => r.Name == RoleSeedNames.VestedEditor),
+				"publisher" => roles.Single(r => r.Name == RoleSeedNames.Publisher),
+				"seniorpublisher" => roles.Single(r => r.Name == RoleSeedNames.SeniorPublisher),
+				"judge" => roles.Single(r => r.Name == RoleSeedNames.Judge),
+				"seniorjudge" => roles.Single(r => r.Name == RoleSeedNames.SeniorJudge),
+				"adminassistant" => roles.Single(r => r.Name == RoleSeedNames.AdminAssistant),
+				"ambassador" => roles.Single(r => r.Name == RoleSeedNames.Ambassador),
+				"senior ambassador" => roles.Single(r => r.Name == RoleSeedNames.SeniorAmbassador),
+				"admin" => roles.Single(r => r.Name == RoleSeedNames.Admin),
+				_ => null
+			};
 		}
 	}
 }

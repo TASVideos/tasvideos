@@ -32,7 +32,7 @@ namespace TASVideos
 				.AddGzipCompression(Settings)
 				.AddCacheService(Settings.CacheSettings)
 				.AddServices(Environment)
-				.AddExternalMediaPublishing(Environment, Settings)
+				.AddExternalMediaPublishing(Environment)
 				.AddAutoMapperWithProjections()
 				.AddSwagger();
 
