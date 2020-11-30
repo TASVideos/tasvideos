@@ -19,11 +19,14 @@ namespace TASVideos.Legacy.Extensions
 		{
 			if (enable)
 			{
-				services.AddDbContext<NesVideosSiteContext>(options =>
-					options.UseMySql(mySqlSiteConnection ?? DefaultMySqlSiteConnection));
+				string siteConnectionString = mySqlSiteConnection ?? DefaultMySqlSiteConnection;
+				string forumConnectionString = mySqlForumConnection ?? DefaultMySqlForumConnection;
 
+				services.AddDbContext<NesVideosSiteContext>(options =>
+					options.UseMySql(siteConnectionString, ServerVersion.AutoDetect(siteConnectionString)));
+				
 				services.AddDbContext<NesVideosForumContext>(options =>
-					options.UseMySql(mySqlForumConnection ?? DefaultMySqlForumConnection));
+					options.UseMySql(forumConnectionString, ServerVersion.AutoDetect(forumConnectionString)));
 			}
 
 			return services;

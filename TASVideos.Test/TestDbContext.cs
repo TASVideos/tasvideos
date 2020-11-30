@@ -147,6 +147,21 @@ namespace TASVideos.Test
 			return null!;
 		}
 
+		public object GetRelationshipSnapshotValue(IPropertyBase propertyBase)
+		{
+			throw new NotImplementedException();
+		}
+
+		public object GetPreStoreGeneratedCurrentValue(IPropertyBase propertyBase)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool IsConceptualNull(IProperty property)
+		{
+			throw new NotImplementedException();
+		}
+
 		// ReSharper disable once UnassignedGetOnlyAutoProperty
 		public IEntityType? EntityType { get; }
 		public EntityState EntityState { get; set; }
