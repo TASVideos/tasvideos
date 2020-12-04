@@ -13,7 +13,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
-		<PackageReference Include="SharpCompress" Version="0.24.0" />
+		<PackageReference Include="SharpCompress" Version="0.26.0" />
 	</ItemGroup>
 
 	<ItemGroup>
