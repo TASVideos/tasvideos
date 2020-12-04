@@ -79,7 +79,7 @@ namespace TASVideos.ViewComponents
 							Frames = o.Frames,
 							FrameRate = o.SystemFrameRate!.FrameRate
 						})
-						.First()
+						.FirstOrDefault()
 				})
 				.ToListAsync();
 
