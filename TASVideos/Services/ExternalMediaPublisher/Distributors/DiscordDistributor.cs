@@ -20,7 +20,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ClientWebSocket _gateway;
 
-		private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+		private readonly CancellationTokenSource _cancellationTokenSource = new();
 
 		private int _sequenceNumber = -1;
 		private bool _heartbeatAcknowledged;
@@ -108,17 +108,17 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void Identify()
 		{
-			JObject properties = new JObject
+			JObject properties = new()
 			{
 				{"$os", "linux"}, {"$browser", "none"}, {"$device", "none"}
 			};
 
-			JObject d = new JObject
+			JObject d = new()
 			{
 				{"token", _settings.AccessToken}, {"properties", properties}
 			};
 
-			JObject identifyObject = new JObject
+			JObject identifyObject = new()
 			{
 				{"op", 2}, {"d", d}, {"intents", 0}
 			};
@@ -128,11 +128,9 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private void ParseHello(JObject helloObject)
 		{
-#pragma warning disable 8604
 			int heartbeatTime = helloObject["d"]!["heartbeat_interval"]!.Value<int>();
-#pragma warning restore 8604
 
-			_heartbeatTimer = new Timer(callback => SendHeartbeat(), null, heartbeatTime, heartbeatTime);
+			_heartbeatTimer = new Timer(_ => SendHeartbeat(), null, heartbeatTime, heartbeatTime);
 			_heartbeatAcknowledged = true;
 		}
 

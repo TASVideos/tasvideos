@@ -99,7 +99,7 @@ namespace TASVideos.ForumEngine
 		private void WriteSimpleHtmlTag(TextWriter w, string t)
 		{
 			// t looks like `html:b`
-			WriteSimpleTag(w, t.Substring(5));
+			WriteSimpleTag(w, t[5..]);
 		}
 
 		private void WriteComplexTag(TextWriter w, string open, string close)

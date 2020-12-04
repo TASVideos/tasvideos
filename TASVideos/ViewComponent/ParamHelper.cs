@@ -92,21 +92,12 @@ namespace TASVideos.ViewComponents
 			}
 
 			string val = GetValueFor(parameterStr, param).ToLower();
-			switch (val)
+			return val switch
 			{
-				case "true":
-				case "yes":
-				case "y":
-				case "1":
-					return true;
-				case "false":
-				case "no":
-				case "n":
-				case "0":
-					return false;
-				default:
-					return null;
-			}
+				"true" or "yes" or "y" or "1" => true,
+				"false" or "no" or "n" or "0" => false,
+				_ => null,
+			};
 		}
 
 		/// <summary>
