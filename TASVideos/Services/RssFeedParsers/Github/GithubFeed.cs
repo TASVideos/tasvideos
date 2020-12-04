@@ -12,7 +12,7 @@ namespace TASVideos.Services.RssFeedParsers.Github
 		{
 			using var textReader = new StringReader(xml);
 			var serializer = new XmlSerializer(typeof(GithubFeedResult));
-			var result =  (GithubFeedResult)serializer.Deserialize(textReader);
+			var result = (GithubFeedResult)serializer.Deserialize(textReader)!;
 			return result.Entry
 				.Select(e => new CommitEntry
 				{

@@ -37,7 +37,7 @@ namespace TASVideos.Extensions
 				case "CanSubmitMovies": // Legacy system: same as UserIsLoggedIn
 				case "CanRateMovies": // Legacy system: same as UserIsLoggedIn
 				case "UserIsLoggedIn":
-					result ^= viewContext.HttpContext.User.Identity.IsAuthenticated;
+					result ^= viewContext.HttpContext.User.IsLoggedIn();
 					break;
 				case "1":
 					result ^= true;
@@ -51,8 +51,7 @@ namespace TASVideos.Extensions
 					result ^= viewData.UserHas(PermissionTo.EditWikiPages);
 					break;
 				case "UserHasHomepage":
-					result ^= viewContext.HttpContext.User.Identity
-						.IsAuthenticated; // Let's assume every user can have a homepage automatically
+					result ^= viewContext.HttpContext.User.IsLoggedIn(); // Let's assume every user can have a homepage automatically
 					break;
 				case "CanViewSubmissions":
 					result ^= true; // Legacy system always returned true

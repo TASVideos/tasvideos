@@ -109,7 +109,7 @@ namespace TASVideos.Pages.Publications
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} {Title} added {Type} file {path}",
 				$"{Id}M",
-				User.Identity.Name!);
+				User.Name());
 
 			return RedirectToPage("EditFiles", new { Id });
 		}
@@ -123,7 +123,7 @@ namespace TASVideos.Pages.Publications
 				_publisher.SendPublicationEdit(
 					$"Publication {Id} deleted {file.Type} file {file.Path}",
 					$"{Id}M",
-					User.Identity.Name!);
+					User.Name());
 			}
 
 			return RedirectToPage("EditFiles", new { Id });

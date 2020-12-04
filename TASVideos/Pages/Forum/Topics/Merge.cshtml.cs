@@ -117,10 +117,10 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_publisher.SendForum(
 				destinationTopic.Forum!.Restricted,
-				$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Identity.Name}",
+				$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Name()}",
 				"",
 				$"Forum/Topics/{destinationTopic.Id}",
-				User.Identity.Name!);
+				User.Name());
 
 			return RedirectToPage("Index", new { id = Topic.DestinationTopicId });
 		}

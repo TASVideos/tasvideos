@@ -28,7 +28,7 @@ namespace TASVideos.Pages.UserFiles
 			_publisher = publisher;
 		}
 
-		public UserFileIndexModel Data { get; set; } = new UserFileIndexModel();
+		public UserFileIndexModel Data { get; set; } = new();
 
 		public async Task OnGet()
 		{
@@ -97,15 +97,15 @@ namespace TASVideos.Pages.UserFiles
 						UserFileId = fileId,
 						Text = comment,
 						UserId = User.GetUserId(),
-						Ip = IpAddress.ToString()
+						Ip = IpAddress
 					});
 
 					await _db.SaveChangesAsync();
 					_publisher.SendUserFile(
-						$"New comment by {User.Identity.Name} on ({userFile.Title} (WIP))", 
+						$"New comment by {User.Name()} on ({userFile.Title} (WIP))", 
 						$"UserFiles/Info/{fileId}",
 						comment,
-						User.Identity.Name!);
+						User.Name());
 				}
 			}
 
@@ -129,10 +129,10 @@ namespace TASVideos.Pages.UserFiles
 					{
 						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
-							$"Comment edited by {User.Identity.Name} on ({fileComment.UserFile!.Title} (WIP))",
+							$"Comment edited by {User.Name()} on ({fileComment.UserFile!.Title} (WIP))",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							comment,
-							User.Identity.Name!);
+							User.Name());
 					}
 					catch (DbUpdateConcurrencyException)
 					{
@@ -161,10 +161,10 @@ namespace TASVideos.Pages.UserFiles
 					{
 						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
-							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Identity.Name}", 
+							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Name()}", 
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							"",
-							User.Identity.Name!);
+							User.Name());
 					}
 					catch (DbUpdateConcurrencyException)
 					{

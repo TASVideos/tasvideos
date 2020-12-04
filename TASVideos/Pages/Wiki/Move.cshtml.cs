@@ -77,10 +77,10 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			_publisher.SendGeneralWiki(
-				$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Identity.Name}",
+				$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Name()}",
 				"",
 				Move.DestinationPageName,
-				User.Identity.Name!);
+				User.Name());
 
 			return Redirect("/" + Move.DestinationPageName);
 		}

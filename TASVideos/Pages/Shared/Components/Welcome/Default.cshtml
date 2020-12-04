@@ -1,4 +1,4 @@
-﻿<alert id="welcome-header" class="d-none" condition="!User.Identity.IsAuthenticated" type="dark" dismissible="true">
+﻿<alert id="welcome-header" class="d-none" condition="!User.IsLoggedIn()" type="dark" dismissible="true">
 	<button id="welcome-header-dismiss" type="button" class="close" data-dismiss="alert" aria-label="close">
 		<span aria-hidden="true">&times;</span>
 	</button>

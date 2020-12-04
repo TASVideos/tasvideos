@@ -2,14 +2,14 @@
 @{
 	ViewData["Title"] = "DoesNotExist";
 	var url = PageContext.HttpContext.Request.Query["url"].ToString().Trim('/');
-	bool canEdit = WikiHelper.UserCanEditWikiPage(url, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+	bool canEdit = WikiHelper.UserCanEditWikiPage(url, User.Name(), (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
 <h2>This page does not yet exist.</h2>
 <br />
 Want to create it?
 <br />
 <ul>
-	@if (!User.Identity.IsAuthenticated)
+	@if (!User.IsLoggedIn())
 	{
 		<li>
 			If you are an editor or have rights to edit this page,
@@ -22,7 +22,7 @@ Want to create it?
 		<li>You do not currently have permissions to create this page. If you are not an editor, become an <a asp-page="/Roles/Index" asp-route-role="Editor">editor!</a></li>
 	}
 
-	@if (User.Identity.IsAuthenticated && canEdit)
+	@if (User.IsLoggedIn() && canEdit)
 	{
 		<li>
 			Click here to

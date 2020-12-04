@@ -10,7 +10,7 @@
 		<a asp-page="Submit" class="btn btn-primary">Submit a Movie</a>
 	</div>
 	<div>
-		<a asp-page="Index" asp-route-user="@User.Identity.Name" class="btn btn-secondary">
+		<a asp-page="Index" asp-route-user="@User.Name()" class="btn btn-secondary">
 			My Submissions
 		</a>
 	</div>

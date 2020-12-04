@@ -31,7 +31,7 @@ namespace TASVideos.Extensions
 
 		public static string Page(this ViewContext viewContext)
 		{
-			return viewContext.ActionDescriptor.DisplayName;
+			return viewContext.ActionDescriptor.DisplayName ?? "";
 		}
 
 		public static string PageGroup(this ViewContext viewContext)

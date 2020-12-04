@@ -68,7 +68,7 @@ namespace TASVideos.Pages.Messages
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (User.Identity.Name == ToUser)
+			if (User.Name() == ToUser)
 			{
 				ModelState.AddModelError(nameof(ToUser), "Can not send a message to yourself!");
 			}
@@ -127,7 +127,7 @@ namespace TASVideos.Pages.Messages
 				ToUserId = toUserId,
 				Subject = Subject,
 				Text = Text,
-				IpAddress = IpAddress.ToString()
+				IpAddress = IpAddress
 			};
 
 			_db.PrivateMessages.Add(message);

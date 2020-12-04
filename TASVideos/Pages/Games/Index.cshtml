@@ -3,7 +3,7 @@
 @{
 	ViewData["Title"] = $"{Model.Game.SystemCode} - {Model.Game.DisplayName}";
 	string wiki = LinkConstants.GameWikiPage + Model.Id;
-	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Identity.Name, (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
 
 <card>

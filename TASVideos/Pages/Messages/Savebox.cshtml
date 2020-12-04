@@ -1,7 +1,7 @@
 ﻿@page
 @model SaveboxModel
 @{
-	ViewData["Title"] = $"Saved messages for {User.Identity.Name}";
+	ViewData["Title"] = $"Saved messages for {User.Name()}";
 }
 
 <a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span>Inbox</a>
@@ -14,7 +14,7 @@
 		<th>Actions</th>
 	</tr>
 	@foreach (var entry in Model.SaveBox
-		.OrderBy(m => m.ToUser == User.Identity.Name)
+		.OrderBy(m => m.ToUser == User.Name())
 		.ThenByDescending(m => m.SendDate))
 	{
 		<tr>

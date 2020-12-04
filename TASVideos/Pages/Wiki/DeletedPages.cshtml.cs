@@ -71,10 +71,10 @@ namespace TASVideos.Pages.Wiki
 				}
 
 				_publisher.SendGeneralWiki(
-					$"Page {path} DELETED by {User.Identity.Name}",
+					$"Page {path} DELETED by {User.Name()}",
 					$"({result} revisions)",
 					"",
-					User.Identity.Name!);
+					User.Name());
 			}
 
 			return RedirectToPage("DeletedPages");
@@ -96,10 +96,10 @@ namespace TASVideos.Pages.Wiki
 			await _wikiPages.Delete(path, revision);
 
 			_publisher.SendGeneralWiki(
-					$"Revision {revision} of Page {path} DELETED by {User.Identity.Name}",
+					$"Revision {revision} of Page {path} DELETED by {User.Name()}",
 					"",
 					"",
-					User.Identity.Name!);
+					User.Name());
 
 			return Redirect("/" + path);
 		}
@@ -125,10 +125,10 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			_publisher.SendGeneralWiki(
-					$"Page {path} UNDELETED by {User.Identity.Name}",
+					$"Page {path} UNDELETED by {User.Name()}",
 					"",
 					path,
-					User.Identity.Name!);
+					User.Name());
 
 			return Redirect("/" + path);
 		}

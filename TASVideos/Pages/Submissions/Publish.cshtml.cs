@@ -211,7 +211,7 @@ namespace TASVideos.Pages.Submissions
 			await _userManager.AssignAutoAssignableRolesByPublication(user);
 
 			await _tasVideosAgent.PostSubmissionPublished(submission.Id, publication.Id);
-			_publisher.AnnouncePublication(publication.Title, $"{publication.Id}M", User.Identity.Name!);
+			_publisher.AnnouncePublication(publication.Title, $"{publication.Id}M", User.Name());
 
 			return Redirect($"/{publication.Id}M");
 		}

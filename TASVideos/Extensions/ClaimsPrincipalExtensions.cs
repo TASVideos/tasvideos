@@ -9,9 +9,19 @@ namespace TASVideos
 {
 	public static class ClaimsPrincipalExtensions
 	{
+		public static bool IsLoggedIn(this ClaimsPrincipal? user)
+		{
+			return user?.Identity?.IsAuthenticated ?? false;
+		}
+		
+		public static string Name(this ClaimsPrincipal? user)
+		{
+			return user?.Identity?.Name ?? "";
+		}
+		
 		public static int GetUserId(this ClaimsPrincipal? user)
 		{
-			if (user == null || !user.Identity.IsAuthenticated)
+			if (user == null || !user.IsLoggedIn())
 			{
 				return -1;
 			}
@@ -22,7 +32,7 @@ namespace TASVideos
 
 		public static IEnumerable<PermissionTo> Permissions(this ClaimsPrincipal? user)
 		{
-			if (user == null || !user.Identity.IsAuthenticated)
+			if (user == null || !user.IsLoggedIn())
 			{
 				return Enumerable.Empty<PermissionTo>();
 			}

@@ -235,7 +235,7 @@ namespace TASVideos.Extensions
 		{
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
-				provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext.User);
+				provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext!.User);
 
 			return services;
 		}

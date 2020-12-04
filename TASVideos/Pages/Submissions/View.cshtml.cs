@@ -43,7 +43,7 @@ namespace TASVideos.Pages.Submissions
 
 		public bool CanEdit { get; set; }
 
-		public SubmissionDisplayModel Submission { get; set; } = new SubmissionDisplayModel();
+		public SubmissionDisplayModel Submission { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -91,10 +91,9 @@ namespace TASVideos.Pages.Submissions
 				return NotFound();
 			}
 
-			CanEdit = !string.IsNullOrWhiteSpace(User.Identity.Name)
-				&& (User.Identity.Name == Submission.Submitter
-					|| Submission.Authors.Contains(User.Identity.Name));
-
+			CanEdit = !string.IsNullOrWhiteSpace(User.Name())
+				&& (User.Name() == Submission.Submitter
+					|| Submission.Authors.Contains(User.Name()));
 			var submissionPageName = LinkConstants.SubmissionWikiPage + Id;
 			TopicId = (await _db.ForumTopics.SingleOrDefaultAsync(t => t.PageName == submissionPageName))?.Id ?? 0;
 
@@ -146,7 +145,7 @@ namespace TASVideos.Pages.Submissions
 			var wikiPage = new WikiPage
 			{
 				PageName = submission.WikiContent!.PageName,
-				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Identity.Name}]: Claiming for judging.",
+				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: Claiming for judging.",
 				RevisionMessage = "Claimed for judging"
 			};
 			submission.WikiContent = wikiPage;
@@ -156,9 +155,9 @@ namespace TASVideos.Pages.Submissions
 			{
 				await _wikiPages.Add(wikiPage);
 				_publisher.SendSubmissionEdit(
-					$"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Identity.Name}",
+					$"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Name()}",
 					$"{Id}S",
-					User.Identity.Name!);
+					User.Name());
 			}
 			catch (DbUpdateConcurrencyException)
 			{
@@ -194,7 +193,7 @@ namespace TASVideos.Pages.Submissions
 			var wikiPage = new WikiPage
 			{
 				PageName = submission.WikiContent!.PageName,
-				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Identity.Name}]: Processing...",
+				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: Processing...",
 				RevisionMessage = "Claimed for publication"
 			};
 			submission.WikiContent = wikiPage;
@@ -204,9 +203,9 @@ namespace TASVideos.Pages.Submissions
 			{
 				await _wikiPages.Add(wikiPage);
 				_publisher.SendSubmissionEdit(
-					$"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Identity.Name}",
+					$"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Name()}",
 					$"{Id}S",
-					User.Identity.Name!);
+					User.Name());
 			}
 			catch (DbUpdateConcurrencyException)
 			{
