@@ -18,7 +18,7 @@ namespace TASVideos.TagHelpers
 	public class WikiMarkup : TagHelper, IWriterHelper
 	{
 		private readonly IViewComponentHelper _viewComponentHelper;
-		private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new List<KeyValuePair<Regex, string>>();
+		private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new();
 
 		public WikiMarkup(IViewComponentHelper viewComponentHelper)
 		{
@@ -27,7 +27,7 @@ namespace TASVideos.TagHelpers
 
 		[ViewContext]
 		[HtmlAttributeNotBound]
-		public ViewContext ViewContext { get; set; } = new ViewContext();
+		public ViewContext ViewContext { get; set; } = new();
 
 		public string Markup { get; set; } = "";
 		public WikiPage? PageData { get; set; }
@@ -57,12 +57,12 @@ namespace TASVideos.TagHelpers
 				// TODO: What's actually going on with these @s?
 				if (regex[0] == '@')
 				{
-					regex = regex.Substring(1);
+					regex = regex[1..];
 				}
 
 				if (regex[^1] == '@')
 				{
-					regex = regex.Substring(0, regex.Length - 1);
+					regex = regex[..^1];
 				}
 
 				var r = new Regex(regex, RegexOptions.None, TimeSpan.FromSeconds(1));

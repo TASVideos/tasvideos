@@ -229,7 +229,7 @@ namespace TASVideos.Test.Services
 			var obsolete = currentPub.Obsoletes.SingleOrDefault();
 			
 			Assert.IsNotNull(obsolete);
-			Assert.AreEqual(SmbWarpsObsolete.Id, obsolete.Id);
+			Assert.AreEqual(SmbWarpsObsolete.Id, obsolete!.Id);
 		}
 
 		[TestMethod]

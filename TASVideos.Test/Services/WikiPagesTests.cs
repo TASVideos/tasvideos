@@ -266,13 +266,13 @@ namespace TASVideos.Test.Services
 
 			Assert.IsNotNull(previous);
 			Assert.IsNotNull(current);
-			Assert.AreEqual(1, previous.Revision);
-			Assert.AreEqual(current.Id, previous.ChildId);
-			Assert.AreEqual(2, current.Revision);
-			Assert.IsNull(current.ChildId);
+			Assert.AreEqual(1, previous!.Revision);
+			Assert.AreEqual(current!.Id, previous!.ChildId);
+			Assert.AreEqual(2, current!.Revision);
+			Assert.IsNull(current!.ChildId);
 
 			Assert.AreEqual(1, _cache.PageCache.Count);
-			Assert.AreEqual(current.Id, _cache.PageCache.Single().Id);
+			Assert.AreEqual(current!.Id, _cache.PageCache.Single().Id);
 
 			Assert.AreEqual(1, _db.WikiReferrals.Count());
 			Assert.AreEqual(existingPageName, _db.WikiReferrals.Single().Referrer);

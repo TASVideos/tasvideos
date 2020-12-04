@@ -44,13 +44,13 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[FromQuery]
-		public TopicRequest Search { get; set; } = new TopicRequest();
+		public TopicRequest Search { get; set; } = new();
 
-		public ForumTopicModel Topic { get; set; } = new ForumTopicModel();
+		public ForumTopicModel Topic { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{
-			int? userId = User.Identity.IsAuthenticated
+			int? userId = User.IsLoggedIn()
 				? User.GetUserId()
 				: (int?)null;
 
@@ -181,7 +181,7 @@ namespace TASVideos.Pages.Forum.Topics
 				pollOption.Votes.Add(new ForumPollOptionVote
 				{
 					UserId = User.GetUserId(),
-					IpAddress = IpAddress.ToString()
+					IpAddress = IpAddress
 				});
 				await _db.SaveChangesAsync();
 			}
@@ -209,17 +209,17 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_publisher.SendForum(
 				topic.Forum!.Restricted,
-				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
+				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Name()}",
 				"",
 				$"Forum/Topics/{Id}",
-				User.Identity.Name!);
+				User.Name());
 
 			return RedirectToTopic();
 		}
 
 		public async Task<IActionResult> OnGetWatch()
 		{
-			if (!User.Identity.IsAuthenticated)
+			if (!User.IsLoggedIn())
 			{
 				return AccessDenied();
 			}
@@ -230,7 +230,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnGetUnwatch()
 		{
-			if (!User.Identity.IsAuthenticated)
+			if (!User.IsLoggedIn())
 			{
 				return AccessDenied();
 			}

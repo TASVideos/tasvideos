@@ -34,7 +34,7 @@ namespace TASVideos.ViewComponents
 				.Select(s => s.Trim())
 				.Select(s => s.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault())
 				.Where(s => !string.IsNullOrWhiteSpace(s))
-				.Select(s => s.Trim())
+				.Select(s => s!.Trim())
 				.Where(s => !string.IsNullOrWhiteSpace(s));
 
 			return parameters.Any(s => string.Equals(s, parameterName, StringComparison.OrdinalIgnoreCase));

@@ -24,7 +24,7 @@
 				</nav-item>
 				<nav-item activate="Profile">
 					<a class="nav-link" asp-page="/Profile/Index" title="Manage">
-						@User.Identity.Name
+						@User.Name()
 					</a>
 				</nav-item>
 				<nav-item>

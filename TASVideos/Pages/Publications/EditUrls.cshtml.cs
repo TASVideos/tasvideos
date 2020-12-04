@@ -98,7 +98,7 @@ namespace TASVideos.Pages.Publications
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} {Title} added {UrlType} url {PublicationUrl}",
 					$"{Id}M",
-					User.Identity.Name!);
+					User.Name());
 
 			return RedirectToPage("EditUrls", new { Id });
 		}
@@ -113,7 +113,7 @@ namespace TASVideos.Pages.Publications
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} deleted {url.Type} url {url.Url}",
 					$"{Id}M",
-					User.Identity.Name!);
+				User.Name());
 
 			await _db.SaveChangesAsync();
 

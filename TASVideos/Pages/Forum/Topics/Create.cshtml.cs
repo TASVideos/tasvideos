@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int ForumId { get; set; }
 
 		[BindProperty]
-		public TopicCreateModel Topic { get; set; } = new TopicCreateModel();
+		public TopicCreateModel Topic { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -96,7 +96,7 @@ namespace TASVideos.Pages.Forum.Topics
 				Text = Topic.Post
 			};
 
-			await CreatePost(topic.Id, forumPostModel, userId, IpAddress.ToString());
+			await CreatePost(topic.Id, forumPostModel, userId, IpAddress);
 
 			if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
 			{
@@ -105,10 +105,10 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_publisher.SendForum(
 				forum.Restricted,
-				$"New Topic by {User.Identity.Name} ({forum.ShortName}: {Topic.Title})",
+				$"New Topic by {User.Name()} ({forum.ShortName}: {Topic.Title})",
 				Topic.Post.CapAndEllipse(50),
 				$"Forum/Topics/{topic.Id}",
-				User.Identity.Name!);
+				User.Name());
 
 			var user = await _userManager.GetUserAsync(User);
 			await _userManager.AssignAutoAssignableRolesByPost(user);

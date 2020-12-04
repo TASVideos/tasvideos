@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Users
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public UserEditModel UserToEdit { get; set; } = new UserEditModel();
+		public UserEditModel UserToEdit { get; set; } = new();
 
 		[DisplayName("Available Roles")]
 		public IEnumerable<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
@@ -139,7 +139,7 @@ namespace TASVideos.Pages.Users
 				.ToList();
 			if (addedRoles.Any() || removedRoles.Any())
 			{
-				var message = $"user {user.UserName} roles modified by {User.Identity.Name},";
+				var message = $"user {user.UserName} roles modified by {User.Name()},";
 				if (addedRoles.Any())
 				{
 					message += " added: " + string.Join(",", addedRoles);

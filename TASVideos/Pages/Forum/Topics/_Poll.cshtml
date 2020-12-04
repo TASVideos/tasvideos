@@ -3,7 +3,7 @@
 	int totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
 	bool canVote = false;
 	int userId = - 1;
-	if (User.Identity.IsAuthenticated)
+	if (User.IsLoggedIn())
 	{
 		userId = User.GetUserId();
 		canVote = !Model.Options.Any(o => o.Voters.Any(v => v == userId)) && ViewData.UserHas(PermissionTo.VoteInPolls);

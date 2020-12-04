@@ -11,7 +11,7 @@
 	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
 		&& Model.Submission.IsCataloged
-		&& Model.Submission.Publisher == User.Identity.Name;
+		&& Model.Submission.Publisher == User.Name();
 	string statusColor = StatusColor(Model.Submission.Status);
 	string authors = string.Join(", ", Model.Submission.Authors);
 }

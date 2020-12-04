@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Submissions
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SubmissionEditModel Submission { get; set; } = new SubmissionEditModel();
+		public SubmissionEditModel Submission { get; set; } = new();
 
 		[Display(Name = "Status")]
 		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
@@ -94,11 +94,13 @@ namespace TASVideos.Pages.Submissions
 				.Select(sa => sa.Author!.UserName)
 				.ToListAsync();
 
+			var userName = User.Name();
+
 			// If user can not edit submissions then they must be an author or the original submitter
 			if (!User.Has(PermissionTo.EditSubmissions))
 			{
-				if (Submission.Submitter != User.Identity.Name
-					&& !Submission.Authors.Contains(User.Identity.Name))
+				if (Submission.Submitter != userName
+					&& !Submission.Authors.Contains(userName))
 				{
 					return AccessDenied();
 				}
@@ -110,9 +112,9 @@ namespace TASVideos.Pages.Submissions
 				Submission.Status,
 				User.Permissions(),
 				Submission.CreateTimestamp,
-				Submission.Submitter == User.Identity.Name || Submission.Authors.Contains(User.Identity.Name),
-				Submission.Judge == User.Identity.Name,
-				Submission.Publisher == User.Identity.Name);
+				Submission.Submitter == userName || Submission.Authors.Contains(userName),
+				Submission.Judge == userName,
+				Submission.Publisher == userName);
 
 			return Page();
 		}
@@ -138,6 +140,8 @@ namespace TASVideos.Pages.Submissions
 				Submission.MovieFile = null;
 			}
 
+			var userName = User.Name();
+
 			// TODO: this is bad, an author can null out these values,
 			// but if we treat null as no choice, then we have no way to unset these values
 			if (!User.Has(PermissionTo.JudgeSubmissions))
@@ -154,9 +158,9 @@ namespace TASVideos.Pages.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new
 				{
-					UserIsJudge = s.Judge != null && s.Judge.UserName == User.Identity.Name,
-					UserIsPublisher = s.Publisher != null && s.Publisher.UserName == User.Identity.Name,
-					UserIsAuthorOrSubmitter = s.Submitter!.UserName == User.Identity.Name || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == User.Identity.Name),
+					UserIsJudge = s.Judge != null && s.Judge.UserName == userName,
+					UserIsPublisher = s.Publisher != null && s.Publisher.UserName == userName,
+					UserIsAuthorOrSubmitter = s.Submitter!.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == userName),
 					CurrentStatus = s.Status,
 					CreateDate = s.CreateTimeStamp
 				})
@@ -224,7 +228,7 @@ namespace TASVideos.Pages.Submissions
 			if (Submission.Status == SubmissionStatus.JudgingUnderWay
 				&& submission.Status != SubmissionStatus.JudgingUnderWay)
 			{
-				submission.Judge = await Db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
+				submission.Judge = await Db.Users.SingleAsync(u => u.UserName == userName);
 			}
 			else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
 				&& Submission.Status == SubmissionStatus.New
@@ -236,7 +240,7 @@ namespace TASVideos.Pages.Submissions
 			if (Submission.Status == SubmissionStatus.PublicationUnderway
 				&& submission.Status != SubmissionStatus.PublicationUnderway)
 			{
-				submission.Publisher = await Db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
+				submission.Publisher = await Db.Users.SingleAsync(u => u.UserName == userName);
 			}
 			else if (submission.Status == SubmissionStatus.Accepted // If publisher is unclaiming, remove them
 				&& Submission.Status == SubmissionStatus.PublicationUnderway)
@@ -300,14 +304,14 @@ namespace TASVideos.Pages.Submissions
 					var statusStr = Submission.Status == SubmissionStatus.Accepted
 						? $"{Submission.Status} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
 						: Submission.Status.ToString();
-					title = $"{User.Identity.Name} set Submission {statusStr} on {submission.Title}";
+					title = $"{userName} set Submission {statusStr} on {submission.Title}";
 				}
 				else
 				{
-					title = $"{User.Identity.Name} edited Submission {submission.Title}";
+					title = $"{userName} edited Submission {submission.Title}";
 				}
 
-				_publisher.SendSubmissionEdit(title, $"{Id}S", User.Identity.Name!);
+				_publisher.SendSubmissionEdit(title, $"{Id}S", userName);
 			}
 
 			return Redirect($"/{Id}S");

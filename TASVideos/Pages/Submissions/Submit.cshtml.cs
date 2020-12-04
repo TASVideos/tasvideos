@@ -41,13 +41,13 @@ namespace TASVideos.Pages.Submissions
 		}
 
 		[BindProperty]
-		public SubmissionCreateModel Create { get; set; } = new SubmissionCreateModel();
+		public SubmissionCreateModel Create { get; set; } = new();
 
 		public void OnGet()
 		{
 			Create = new SubmissionCreateModel
 			{
-				Authors = new List<string> { User.Identity.Name! }
+				Authors = new List<string> { User.Name() }
 			};
 		}
 
@@ -101,7 +101,7 @@ namespace TASVideos.Pages.Submissions
 			submission.GenerateTitle();
 
 			await _tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
-			_publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S", User.Identity.Name!);
+			_publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S", User.Name());
 
 			return Redirect($"/{submission.Id}S");
 		}

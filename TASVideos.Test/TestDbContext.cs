@@ -51,7 +51,7 @@ namespace TASVideos.Test
 			var identity = new GenericIdentity(userName);
 			string[] roles = { "TestRole" };
 			var principal = new GenericPrincipal(identity, roles);
-			_testHttpContext.HttpContext.User = principal;
+			_testHttpContext.HttpContext!.User = principal;
 		}
 
 		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

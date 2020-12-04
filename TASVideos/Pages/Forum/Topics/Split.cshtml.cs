@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SplitTopicModel Topic { get; set; } = new SplitTopicModel();
+		public SplitTopicModel Topic { get; set; } = new();
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 
@@ -146,10 +146,10 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_publisher.SendForum(
 				topic.Forum!.Restricted,
-				$"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Identity.Name} from {Topic.ForumName}: {Topic.Title}",
+				$"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Name()} from {Topic.ForumName}: {Topic.Title}",
 				"",
 				$"Forum/Topics/{newTopic.Id}",
-				User.Identity.Name!);
+				User.Name());
 
 			return RedirectToPage("Index", new { id = newTopic.Id });
 		}

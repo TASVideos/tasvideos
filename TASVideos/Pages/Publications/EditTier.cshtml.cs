@@ -90,7 +90,7 @@ namespace TASVideos.Pages.Publications
 				_publisher.SendPublicationEdit(
 					$"Publication {Id} {Title} Tier changed to {tier.Name}",
 					$"{Id}M",
-					User.Identity.Name!);
+					User.Name());
 
 				// TODO: catch DbConcurrencyException
 				await _db.SaveChangesAsync();

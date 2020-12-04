@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Roles
 		public int? Id { get; set; }
 
 		[BindProperty]
-		public RoleEditModel Role { get; set; } = new RoleEditModel();
+		public RoleEditModel Role { get; set; } = new();
 
 		[Display(Name = "Available Permissions")]
 		public IEnumerable<SelectListItem> AvailablePermissions => PermissionsSelectList;
@@ -140,7 +140,7 @@ namespace TASVideos.Pages.Roles
 				MessageType = Styles.Success;
 				Message = $"Role {Id}, deleted successfully.";
 				_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
-				_publisher.SendUserManagement($"Role {Id} deleted by {User.Identity.Name}", "", "Roles/List", User.Identity.Name!);
+				_publisher.SendUserManagement($"Role {Id} deleted by {User.Name()}", "", "Roles/List", User.Name());
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
@@ -182,13 +182,13 @@ namespace TASVideos.Pages.Roles
 				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role!.Id == Id));
 				await _db.SaveChangesAsync();
 
-				_publisher.SendUserManagement($"Role {model.Name} updated by {User.Identity.Name}", "", $"Roles/Index?role={model.Name}", User.Identity.Name!);
+				_publisher.SendUserManagement($"Role {model.Name} updated by {User.Name()}", "", $"Roles/Index?role={model.Name}", User.Name());
 			}
 			else
 			{
 				role = new Role();
 				_db.Roles.Attach(role);
-				_publisher.SendUserManagement($"New Role added: {model.Name} by {User.Identity.Name}", "", $"Roles/Index?role={model.Name}", User.Identity.Name!);
+				_publisher.SendUserManagement($"New Role added: {model.Name} by {User.Name()}", "", $"Roles/Index?role={model.Name}", User.Name());
 			}
 
 			role.Name = model.Name;

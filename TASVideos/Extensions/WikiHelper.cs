@@ -45,7 +45,7 @@ namespace TASVideos.Extensions
 				// If a user can exploit this fact to create an exploit
 				// then we should first reconsider rules about allowed patterns of usernames and what defines a valid wiki page
 				// before deciding to nuke this feature
-				var homepage = pageName.Substring(HomePagesPrefix.Length).Split('/')[0];
+				var homepage = pageName[HomePagesPrefix.Length..].Split('/')[0];
 				if (string.Equals(homepage, userName, StringComparison.OrdinalIgnoreCase)
 					&& userPermissions.Contains(PermissionTo.EditHomePage))
 				{
@@ -75,7 +75,7 @@ namespace TASVideos.Extensions
 					return true; // Just HomePage/[username] so it is automatically valid
 				}
 
-				test = test.Substring(slashIndex, test.Length - slashIndex);
+				test = test[slashIndex..];
 			}
 
 			return !string.IsNullOrWhiteSpace(test)

@@ -13,7 +13,7 @@ namespace TASVideos.Pages
 {
 	public class BasePageModel : PageModel
 	{
-		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
+		protected string IpAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
 
 		protected IActionResult Home()
 		{

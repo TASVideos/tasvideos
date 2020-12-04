@@ -126,9 +126,9 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			var id = await CreatePost(TopicId, Post, user.Id, IpAddress.ToString());
+			var id = await CreatePost(TopicId, Post, user.Id, IpAddress);
 
-			var mood = Post.Mood != ForumPostMood.Normal ? $" Mood: ({Post.Mood.ToString()})" : "";
+			var mood = Post.Mood != ForumPostMood.Normal ? $" Mood: ({Post.Mood})" : "";
 			_publisher.SendForum(
 				topic.Forum.Restricted,
 				$"New reply by {user.UserName}{mood}",

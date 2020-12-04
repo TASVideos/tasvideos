@@ -1,7 +1,7 @@
 ﻿@page "{id?}/{handler?}"
 @model InboxModel
 @{
-	ViewData["Title"] = $"Private messages for {User.Identity.Name}";
+	ViewData["Title"] = $"Private messages for {User.Name()}";
 }
 
 <div class="mb-1">

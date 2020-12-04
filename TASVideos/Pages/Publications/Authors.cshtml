@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Published Authors";
 }
 
-<cache enabled="@(!User.Identity.IsAuthenticated)" expires-after="@TimeSpan.FromSeconds(60)">
+<cache enabled="@(!User.IsLoggedIn())" expires-after="@TimeSpan.FromSeconds(60)">
 	@await Component.RenderWiki("System/PlayersHeader")
 </cache>
 
