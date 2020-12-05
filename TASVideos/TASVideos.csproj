@@ -56,7 +56,7 @@
 	</ItemGroup>
 
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-		<!--<Exec Command="dotnet ../GitVersion.CommandLine/gitversion.dll /updateassemblyinfo .gitversion.cs /ensureassemblyinfo" />-->
+		<Exec Command="dotnet ../GitVersion.CommandLine/gitversion.dll /updateassemblyinfo .gitversion.cs /ensureassemblyinfo" />
 	</Target>
 
 	<ItemGroup>
