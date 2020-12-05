@@ -118,7 +118,7 @@ namespace TASVideos.Pages.Publications
 		{
 			var file = await _uploader.DeleteFile(publicationFileId);
 
-			if (file != null)
+			if (file is not null)
 			{
 				_publisher.SendPublicationEdit(
 					$"Publication {Id} deleted {file.Type} file {file.Path}",

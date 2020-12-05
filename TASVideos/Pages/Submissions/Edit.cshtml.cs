@@ -121,7 +121,7 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.MovieFile != null)
+			if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.MovieFile is not null)
 			{
 				if (!Submission.MovieFile.IsZip())
 				{
@@ -210,7 +210,7 @@ namespace TASVideos.Pages.Submissions
 				.ThenInclude(sa => sa.Author)
 				.SingleAsync(s => s.Id == Id);
 
-			if (Submission.MovieFile != null)
+			if (Submission.MovieFile is not null)
 			{
 				// TODO: check warnings
 				var parseResult = _parser.ParseZip(Submission.MovieFile.OpenReadStream());
@@ -232,7 +232,7 @@ namespace TASVideos.Pages.Submissions
 			}
 			else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
 				&& Submission.Status == SubmissionStatus.New
-				&& submission.Judge != null)
+				&& submission.Judge is not null)
 			{
 				submission.Judge = null;
 			}

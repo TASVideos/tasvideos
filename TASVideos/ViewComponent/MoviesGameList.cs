@@ -30,7 +30,7 @@ namespace TASVideos.ViewComponents
 			{
 				var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == model.SystemId);
 
-				if (system != null)
+				if (system is not null)
 				{
 					model.SystemCode = system.Code;
 					model.Games = await _db.Games

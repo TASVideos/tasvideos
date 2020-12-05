@@ -49,7 +49,7 @@ namespace TASVideos.Extensions
 				.Single()
 				.GetCustomAttribute<GroupAttribute>();
 
-			return descriptionAttribute != null
+			return descriptionAttribute is not null
 				? descriptionAttribute.Name
 				: string.Empty;
 		}
@@ -57,7 +57,7 @@ namespace TASVideos.Extensions
 		public static string DisplayName(this PropertyInfo propertyInfo)
 		{
 			var displayAttr = propertyInfo.GetCustomAttribute<DisplayNameAttribute>();
-			return displayAttr != null
+			return displayAttr is not null
 				? displayAttr.DisplayName
 				: propertyInfo.Name;
 		}

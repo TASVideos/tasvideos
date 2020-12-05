@@ -52,7 +52,7 @@ namespace TASVideos.Pages.Messages
 
 		public PrivateMessageModel? ReplyingTo { get; set; }
 
-		public bool IsReply => ReplyingTo != null;
+		public bool IsReply => ReplyingTo is not null;
 
 		public async Task OnGet()
 		{

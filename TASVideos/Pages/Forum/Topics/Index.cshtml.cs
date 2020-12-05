@@ -113,7 +113,7 @@ namespace TASVideos.Pages.Forum.Topics
 				post.PosterPlayerPoints = await _pointsService.PlayerPoints(post.PosterId);
 			}
 
-			if (Topic.Poll != null)
+			if (Topic.Poll is not null)
 			{
 				Topic.Poll.Question = RenderBbcode(Topic.Poll.Question);
 				Topic.Poll.Options = await _db.ForumPollOptions
@@ -132,7 +132,7 @@ namespace TASVideos.Pages.Forum.Topics
 			if (Search.Highlight.HasValue)
 			{
 				var post = Topic.Posts.SingleOrDefault(p => p.Id == Search.Highlight);
-				if (post != null)
+				if (post is not null)
 				{
 					post.Highlight = true;
 				}

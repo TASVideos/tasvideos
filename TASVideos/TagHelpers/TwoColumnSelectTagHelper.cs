@@ -64,7 +64,7 @@ namespace TASVideos.TagHelpers
 			output.TagName = "div";
 
 			var idAttr = output.Attributes.FirstOrDefault(a => a.Name == "id");
-			if (idAttr != null)
+			if (idAttr is not null)
 			{
 				output.Attributes.Remove(idAttr);
 			}

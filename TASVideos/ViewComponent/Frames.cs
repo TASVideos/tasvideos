@@ -49,7 +49,7 @@ namespace TASVideos.ViewComponents
 					.Select(s => new { s.Id, s.SystemFrameRate!.FrameRate })
 					.SingleOrDefaultAsync(s => s.Id == submissionId.Value);
 
-				if (sub?.FrameRate != null)
+				if (sub?.FrameRate is not null)
 				{
 					return sub.FrameRate;
 				}
@@ -65,7 +65,7 @@ namespace TASVideos.ViewComponents
 					.Select(p => new { p.Id, p.SystemFrameRate!.FrameRate })
 					.SingleOrDefaultAsync();
 
-				if (pub?.FrameRate != null)
+				if (pub?.FrameRate is not null)
 				{
 					return pub.FrameRate;
 				}

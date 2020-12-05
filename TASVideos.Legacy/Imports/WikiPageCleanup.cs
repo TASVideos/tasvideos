@@ -33,7 +33,7 @@ namespace TASVideos.Legacy.Imports
 			foreach (var page in currentPages)
 			{
 				var newRevision = MarkupShenanigans(page, legUsers);
-				if (newRevision != null)
+				if (newRevision is not null)
 				{
 					page.Child = newRevision;
 					context.WikiPages.Add(newRevision); 

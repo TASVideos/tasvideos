@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Submissions
 				.ToListAsync());
 
 			var search = LegacySubListConverter.ToSearchRequest(Query);
-			if (search != null)
+			if (search is not null)
 			{
 				Search = search;
 			}

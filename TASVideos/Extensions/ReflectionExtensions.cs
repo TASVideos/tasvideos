@@ -13,14 +13,14 @@ namespace TASVideos.Extensions
 		/// Else it will return and empty string
 		/// If the value is null, an empty string will be returned
 		/// </summary>
-		public static string Description(this Enum enumValue)
+		public static string Description(this Enum? enumValue)
 		{
 			var descriptionAttribute = enumValue?.GetType()
 				.GetMember(enumValue.ToString())
 				.Single()
 				.GetCustomAttribute<DescriptionAttribute>();
 
-			if (descriptionAttribute != null)
+			if (descriptionAttribute is not null)
 			{
 				return descriptionAttribute.Description;
 			}
@@ -30,7 +30,7 @@ namespace TASVideos.Extensions
 				.Single()
 				.GetCustomAttribute<DisplayAttribute>();
 
-			if (displayAttribute != null)
+			if (displayAttribute is not null)
 			{
 				return displayAttribute.Description ?? string.Empty;
 			}
@@ -56,7 +56,7 @@ namespace TASVideos.Extensions
 				.Single()
 				.GetCustomAttribute<DisplayAttribute>();
 
-			return displayName != null
+			return displayName is not null
 				? displayName.GetName() ?? ""
 				: enumValue.ToString();
 		}

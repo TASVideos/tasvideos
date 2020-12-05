@@ -79,7 +79,7 @@ namespace TASVideos.Pages.Games
 					.Where(s => s.Id == SystemId)
 					.Select(s => s.Code)
 					.SingleOrDefaultAsync();
-				if (systemCode != null)
+				if (systemCode is not null)
 				{
 					Game.SystemCode = systemCode;
 				}
@@ -99,7 +99,7 @@ namespace TASVideos.Pages.Games
 
 			if (!string.IsNullOrEmpty(Game.GameResourcesPage))
 			{
-				var page = _wikiPages.Page(Game.GameResourcesPage);
+				var page = await _wikiPages.Page(Game.GameResourcesPage);
 				if (page == null)
 				{
 					ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.GameResourcesPage)}", $"Page {Game.GameResourcesPage} not found");

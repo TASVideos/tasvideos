@@ -204,7 +204,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 		{
 			var existingClassAttr = output.Attributes.FirstOrDefault(a => a.Name == "class");
 			var existingCssClass = existingClassAttr?.Value.ToString() ?? "";
-			if (existingClassAttr != null)
+			if (existingClassAttr is not null)
 			{
 				output.Attributes.Remove(existingClassAttr);
 			}

@@ -56,7 +56,7 @@ namespace TASVideos.Pages.Messages
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == Id);
 
-			if (message != null)
+			if (message is not null)
 			{
 				_db.PrivateMessages.Remove(message);
 				try

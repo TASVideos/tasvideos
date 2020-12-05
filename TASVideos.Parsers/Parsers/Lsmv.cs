@@ -35,11 +35,11 @@ namespace TASVideos.MovieParsers.Parsers
 				return Error("This is a savestate file, not a movie file");
 			}
 
-			if (archive.Entry(SavestateAnchor) != null)
+			if (archive.Entry(SavestateAnchor) is not null)
 			{
 				result.StartType = MovieStartType.Savestate;
 			}
-			else if (archive.Entry(Sram) != null)
+			else if (archive.Entry(Sram) is not null)
 			{
 				result.StartType = MovieStartType.Sram;
 			}
@@ -58,7 +58,7 @@ namespace TASVideos.MovieParsers.Parsers
 					.LineSplit()
 					.FirstOrDefault();
 
-				if (line != null)
+				if (line is not null)
 				{
 					switch (line.ToLower())
 					{
@@ -102,7 +102,7 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 
 			var rerecordCountFile = archive.Entry(RerecordFile);
-			if (rerecordCountFile != null)
+			if (rerecordCountFile is not null)
 			{
 				using var stream = rerecordCountFile.Open();
 				using var reader = new StreamReader(stream);

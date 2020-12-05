@@ -15,15 +15,10 @@ namespace TASVideos.Extensions
 				throw new ArgumentNullException(nameof(request));
 			}
 
-			if (request.Headers != null)
-			{
-				return request.Headers[RequestedWithHeader] == XmlHttpRequest;
-			}
-
-			return false;
+			return request.Headers[RequestedWithHeader] == XmlHttpRequest;
 		}
 
-		public static bool IsRobotsTxt(this HttpRequest request)
+		public static bool IsRobotsTxt(this HttpRequest? request)
 		{
 			return request?.Path.Value?.EndsWith("robots.txt") ?? false;
 		}

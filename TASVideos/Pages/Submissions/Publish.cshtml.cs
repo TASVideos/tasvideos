@@ -173,7 +173,7 @@ namespace TASVideos.Pages.Submissions
 			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
 			await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile!);
 
-			if (Submission.TorrentFile2 != null)
+			if (Submission.TorrentFile2 is not null)
 			{
 				await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile2);
 			}

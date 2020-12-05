@@ -158,7 +158,7 @@ namespace TASVideos.Extensions
 
 		public static bool IsValidTorrent(this IFormFile? formFile)
 		{
-			return formFile != null && formFile.FileName.EndsWith(".torrent");
+			return formFile is not null && formFile.FileName.EndsWith(".torrent");
 		}
 	}
 }

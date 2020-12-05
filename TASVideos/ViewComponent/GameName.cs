@@ -30,7 +30,7 @@ namespace TASVideos.ViewComponents
 			{
 				var system = await _db.GameSystems
 					.SingleOrDefaultAsync(s => s.Code == path.SystemGameResourcePath());
-				if (system != null)
+				if (system is not null)
 				{
 					gameList.Add(new GameNameModel { System = system.DisplayName });
 				}

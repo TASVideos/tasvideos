@@ -63,7 +63,7 @@ namespace TASVideos.Data
 				var property = typeof(T)
 					.GetProperties()
 					.FirstOrDefault(p => string.Equals(p.Name, column, StringComparison.CurrentCultureIgnoreCase));
-				if (property != null)
+				if (property is not null)
 				{
 					dict[property.Name] = property.GetValue(obj);
 				}
@@ -77,7 +77,7 @@ namespace TASVideos.Data
 			var expando = new ExpandoObject();
 			var dictionary = (IDictionary<string, object?>)expando;
 
-			if (obj != null)
+			if (obj is not null)
 			{
 				foreach (var property in obj.GetType().GetProperties())
 				{
