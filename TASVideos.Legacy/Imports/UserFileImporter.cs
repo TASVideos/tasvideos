@@ -78,7 +78,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static UserFileComment Convert(
 			LegacyComment legacyComment,
-			Dictionary<string, int> userIdsByName)
+			IReadOnlyDictionary<string, int> userIdsByName)
 		{
 			return new()
 			{
@@ -97,7 +97,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static UserFile Convert(
 			LegacyUserFile legacyFile,
-			Dictionary<string, int> userIdsByName)
+			IReadOnlyDictionary<string, int> userIdsByName)
 		{
 			return new()
 			{

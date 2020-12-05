@@ -64,15 +64,12 @@ namespace TASVideos.MovieParsers
 		{
 			try
 			{
-				var ext = Path.GetExtension(fileName)?.Trim('.').ToLower();
+				var ext = Path.GetExtension(fileName).Trim('.').ToLower();
 
 				var parser = GetParser(ext);
-				if (parser == null)
-				{
-					return Error($".{ext} files are not currently supported.");
-				}
-
-				return parser.Parse(stream);
+				return parser == null
+					? Error($".{ext} files are not currently supported.")
+					: parser.Parse(stream);
 			}
 			catch (Exception)
 			{

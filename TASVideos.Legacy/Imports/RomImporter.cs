@@ -9,10 +9,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class RomImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
 		{
 			var roms = legacySiteContext.Roms
 				.Where(r => r.Type == "G")

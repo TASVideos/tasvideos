@@ -43,7 +43,7 @@ namespace TASVideos.Legacy.Imports
 			context.SaveChanges();
 		}
 
-		private static WikiPage? MarkupShenanigans(WikiPage page, List<UserDto> users)
+		private static WikiPage? MarkupShenanigans(WikiPage page, IEnumerable<UserDto> users)
 		{
 			string markup = page.Markup;
 

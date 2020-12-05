@@ -86,7 +86,7 @@ namespace TASVideos.Legacy.Imports
 					WikiContentId = pub.Wiki.Id,
 					SubmissionId = pub.Movie.SubmissionId,
 					TierId = pub.Movie.Tier,
-					CreateUserName = pub.Movie.Publisher!.Name ?? "Unknown",
+					CreateUserName = pub.Movie.Publisher!.Name,
 					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate),
 					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.LastChange),
 					ObsoletedById = pub.Movie.ObsoletedBy == -1 ? null : pub.Movie.ObsoletedBy,

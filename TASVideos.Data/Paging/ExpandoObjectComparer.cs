@@ -41,10 +41,9 @@ namespace TASVideos.Data
 				return false;
 			}
 
-			foreach (var keyValue in xKeyValues)
+			foreach ((var key, object? value) in xKeyValues)
 			{
-				var key = keyValue.Key;
-				var xValueItem = keyValue.Value ?? new object();
+				var xValueItem = value ?? new object();
 				var yValueItem = yKeyValues[key];
 
 				if (yValueItem == null)

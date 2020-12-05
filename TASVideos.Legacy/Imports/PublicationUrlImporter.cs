@@ -12,17 +12,17 @@ namespace TASVideos.Legacy.Imports
 			string connectionStr,
 			NesVideosSiteContext legacySiteContext)
 		{ 
-			const string MirrorType = "A";
-			const string Streaming = "J";
+			const string mirrorType = "A";
+			const string streaming = "J";
 
 			var urls = legacySiteContext.MovieFiles
-				.Where(f => f.Type == MirrorType || f.Type == Streaming)
+				.Where(f => f.Type == mirrorType || f.Type == streaming)
 				.Where(f => f.Movie != null)
 				.Select(f => new PublicationUrl
 				{
 					PublicationId = f.Movie!.Id,
 					Url = f.FileName,
-					Type = f.Type == MirrorType ? PublicationUrlType.Mirror : PublicationUrlType.Streaming,
+					Type = f.Type == mirrorType ? PublicationUrlType.Mirror : PublicationUrlType.Streaming,
 					CreateTimeStamp = DateTime.Now,
 					LastUpdateTimeStamp = DateTime.Now
 				})

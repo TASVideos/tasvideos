@@ -83,7 +83,6 @@ namespace TASVideos.Legacy.Imports
 				}
 
 				var (movieExtension, fileData) = CleanupZip(legacySubmission.Sub.Content);
-				var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
 
 				var submission = new Submission
 				{
@@ -109,16 +108,16 @@ namespace TASVideos.Legacy.Imports
 					EmulatorVersion = CleanAndGuessEmuVersion(legacySubmission.Sub.Id, legacySubmission.Sub.EmulatorVersion, movieExtension),
 					JudgeId = legacySubmission.Judge?.Id,
 					PublisherId = legacySubmission.Publisher?.Id,
-					Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
+					Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch)
+							? null
+							: ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
 					MovieExtension = movieExtension,
 					RejectionReasonId = legacySubmission.Rejection?.Reason,
 					MovieStartType = ParseAlertsToStartType(legacySubmission.Sub.Alerts),
-
+					LegacyTime = legacySubmission.Sub.Length,
+					ImportedTime = 0.0M,
+					LegacyAlerts = ImportHelper.ConvertLatin1String(legacySubmission.Sub.Alerts).NullIfWhiteSpace(),
 				};
-
-				submission.LegacyTime = legacySubmission.Sub.Length;
-				submission.ImportedTime = 0.0M; // decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
-				submission.LegacyAlerts = ImportHelper.ConvertLatin1String(legacySubmission.Sub.Alerts).NullIfWhiteSpace();
 
 				if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
 				{
