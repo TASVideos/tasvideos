@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
@@ -14,7 +15,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 		public override string FileExtension => "bk2";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -34,11 +35,11 @@ namespace TASVideos.MovieParsers.Parsers
 			long? cycleCount;
 			string core;
 
-			using (var stream = headerEntry.Open())
+			await using (var stream = headerEntry.Open())
 			{
 				using var reader = new StreamReader(stream);
-				var header = reader
-					.ReadToEnd()
+				var header = (await reader
+					.ReadToEndAsync())
 					.LineSplit();
 
 				string platform = header.GetValueFor(Keys.Platform);
@@ -116,7 +117,7 @@ namespace TASVideos.MovieParsers.Parsers
 				return Error($"Missing {InputFile}, can not parse");
 			}
 
-			using var inputStream = inputLog.Open();
+			await using var inputStream = inputLog.Open();
 			using var inputReader = new StreamReader(inputStream);
 			result.Frames = inputReader
 				.ReadToEnd()

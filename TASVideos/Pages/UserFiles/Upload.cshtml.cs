@@ -109,7 +109,7 @@ namespace TASVideos.Pages.UserFiles
 
 			if (_parser.SupportedMovieExtensions.Contains(fileExt))
 			{
-				var parseResult = _parser.ParseFile(UserFile.File.FileName, UserFile.File.OpenReadStream());
+				var parseResult = await _parser.ParseFile(UserFile.File.FileName, UserFile.File.OpenReadStream());
 				if (!parseResult.Success)
 				{
 					ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");

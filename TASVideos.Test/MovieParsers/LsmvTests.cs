@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
@@ -23,9 +23,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Errors()
+		public async Task Errors()
 		{
-			var result = _lsmvParser.Parse(Embedded("noinputlog.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("noinputlog.lsmv"));
 			Assert.IsFalse(result.Success);
 			AssertNoWarnings(result);
 			Assert.IsNotNull(result.Errors);
@@ -33,9 +33,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void SavestateCheck_Error()
+		public async Task SavestateCheck_Error()
 		{
-			var result = _lsmvParser.Parse(Embedded("savestate.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("savestate.lsmv"));
 			Assert.IsFalse(result.Success);
 			AssertNoWarnings(result);
 			Assert.IsNotNull(result.Errors);
@@ -43,27 +43,27 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Frames_WithSubFrames()
+		public async Task Frames_WithSubFrames()
 		{
-			var result = _lsmvParser.Parse(Embedded("2frameswithsub.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("2frameswithsub.lsmv"));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(2, result.Frames);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void Frames_NoInputFrames_Returns0()
+		public async Task Frames_NoInputFrames_Returns0()
 		{
-			var result = _lsmvParser.Parse(Embedded("0frameswithsub.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("0frameswithsub.lsmv"));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(0, result.Frames);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void NoRerecordEntry_Warning()
+		public async Task NoRerecordEntry_Warning()
 		{
-			var result = _lsmvParser.Parse(Embedded("norerecordentry.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("norerecordentry.lsmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoErrors(result);
 			Assert.IsNotNull(result.Warnings);
@@ -71,9 +71,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void EmptyRerecordEntry_Warning()
+		public async Task EmptyRerecordEntry_Warning()
 		{
-			var result = _lsmvParser.Parse(Embedded("emptyrerecordentry.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("emptyrerecordentry.lsmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoErrors(result);
 			Assert.IsNotNull(result.Warnings);
@@ -81,9 +81,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void InvalidRerecordEntry_Warning()
+		public async Task InvalidRerecordEntry_Warning()
 		{
-			var result = _lsmvParser.Parse(Embedded("invalidrerecordentry.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("invalidrerecordentry.lsmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoErrors(result);
 			Assert.IsNotNull(result.Warnings);
@@ -91,18 +91,18 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void ValidRerecordEntry()
+		public async Task ValidRerecordEntry()
 		{
-			var result = _lsmvParser.Parse(Embedded("2frameswithsub.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("2frameswithsub.lsmv"));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(1, result.RerecordCount);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void MissingGameType_Error()
+		public async Task MissingGameType_Error()
 		{
-			var result = _lsmvParser.Parse(Embedded("gametype-missing.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("gametype-missing.lsmv"));
 			Assert.IsFalse(result.Success);
 			AssertNoWarnings(result);
 			Assert.IsNotNull(result.Errors);
@@ -110,9 +110,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void InvalidGameType_DefaultsSnesNtsc()
+		public async Task InvalidGameType_DefaultsSnesNtsc()
 		{
-			var result = _lsmvParser.Parse(Embedded("gametype-empty.lsmv"));
+			var result = await _lsmvParser.Parse(Embedded("gametype-empty.lsmv"));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Snes, result.SystemCode);
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -132,9 +132,9 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("gametype-gdmg.lsmv", SystemCodes.GameBoy, RegionType.Ntsc)]
 		[DataRow("gametype-ggbc.lsmv", SystemCodes.Gbc, RegionType.Ntsc)]
 		[DataRow("gametype-ggbca.lsmv", SystemCodes.Gbc, RegionType.Ntsc)]
-		public void SystemAndRegion(string file, string expectedSystem, RegionType expectedRegion)
+		public async Task SystemAndRegion(string file, string expectedSystem, RegionType expectedRegion)
 		{
-			var result = _lsmvParser.Parse(Embedded(file));
+			var result = await _lsmvParser.Parse(Embedded(file));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(expectedSystem, result.SystemCode);
 			Assert.AreEqual(expectedRegion, result.Region);
@@ -145,9 +145,9 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("2frameswithsub.lsmv", MovieStartType.PowerOn)]
 		[DataRow("savestate.anchor.lsmv", MovieStartType.Savestate)]
 		[DataRow("moviesram.lsmv", MovieStartType.Sram)]
-		public void StartType(string file, MovieStartType expectedStartType)
+		public async Task StartType(string file, MovieStartType expectedStartType)
 		{
-			var result = _lsmvParser.Parse(Embedded(file));
+			var result = await _lsmvParser.Parse(Embedded(file));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(expectedStartType, result.StartType);
 			AssertNoWarningsOrErrors(result);

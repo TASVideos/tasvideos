@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.MovieParsers;
@@ -25,9 +25,9 @@ namespace TASVideos.Test.MovieParsers
 		[TestMethod]
 		[DataRow("MissingHeader.bk2", DisplayName = "Missing Header creates error")]
 		[DataRow("MissingInputLog.bk2", DisplayName = "Missing InputLog creates error")]
-		public void Errors(string filename)
+		public async Task Errors(string filename)
 		{
-			var result = _bk2Parser.Parse(Embedded(filename));
+			var result = await _bk2Parser.Parse(Embedded(filename));
 			Assert.AreEqual(false, result.Success);
 			AssertNoWarnings(result);
 			Assert.IsNotNull(result.Errors);
@@ -35,36 +35,36 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Frames_CorrectResult()
+		public async Task Frames_CorrectResult()
 		{
-			var result = _bk2Parser.Parse(Embedded("2Frames.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("2Frames.bk2"));
 			Assert.AreEqual(true, result.Success);
 			Assert.AreEqual(2, result.Frames);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void Frames_NoInputFrames_Returns0()
+		public async Task Frames_NoInputFrames_Returns0()
 		{
-			var result = _bk2Parser.Parse(Embedded("0Frames.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("0Frames.bk2"));
 			Assert.AreEqual(true, result.Success);
 			Assert.AreEqual(0, result.Frames);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void ValidRerecordCount()
+		public async Task ValidRerecordCount()
 		{
-			var result = _bk2Parser.Parse(Embedded("RerecordCount1.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("RerecordCount1.bk2"));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(1, result.RerecordCount);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void InvalidRerecordCount_Warning()
+		public async Task InvalidRerecordCount_Warning()
 		{
-			var result = _bk2Parser.Parse(Embedded("RerecordCountMissing.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("RerecordCountMissing.bk2"));
 			Assert.IsTrue(result.Success);
 			Assert.IsNotNull(result.Warnings);
 			Assert.AreEqual(1, result.Warnings.Count());
@@ -75,9 +75,9 @@ namespace TASVideos.Test.MovieParsers
 		[TestMethod]
 		[DataRow("Pal1.bk2", RegionType.Pal)]
 		[DataRow("0Frames.bk2", RegionType.Ntsc, DisplayName = "Missing flag defaults to Ntsc")]
-		public void PalFlag_True(string fileName, RegionType expected)
+		public async Task PalFlag_True(string fileName, RegionType expected)
 		{
-			var result = _bk2Parser.Parse(Embedded(fileName));
+			var result = await _bk2Parser.Parse(Embedded(fileName));
 			Assert.AreEqual(expected, result.Region);
 			AssertNoWarningsOrErrors(result);
 		}
@@ -114,9 +114,9 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("System-Wswan.bk2", SystemCodes.WSwan)]
 		[DataRow("System-Vectrex.bk2", SystemCodes.Vectrex)]
 		[DataRow("System-Zxs.bk2", SystemCodes.ZxSpectrum)]
-		public void Systems(string filename, string expectedSystem)
+		public async Task Systems(string filename, string expectedSystem)
 		{
-			var result = _bk2Parser.Parse(Embedded(filename));
+			var result = await _bk2Parser.Parse(Embedded(filename));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(expectedSystem, result.SystemCode);
 			AssertNoWarningsOrErrors(result);
@@ -126,17 +126,17 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("System-Nes.bk2", MovieStartType.PowerOn)]
 		[DataRow("sram.bk2", MovieStartType.Sram)]
 		[DataRow("savestate.bk2", MovieStartType.Savestate)]
-		public void StartType(string filename, MovieStartType expected)
+		public async Task StartType(string filename, MovieStartType expected)
 		{
-			var result = _bk2Parser.Parse(Embedded(filename));
+			var result = await _bk2Parser.Parse(Embedded(filename));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(expected, result.StartType);
 		}
 
 		[TestMethod]
-		public void InnerFileExtensions_AreNotChecked()
+		public async Task InnerFileExtensions_AreNotChecked()
 		{
-			var result = _bk2Parser.Parse(Embedded("NoFileExts.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("NoFileExts.bk2"));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual("nes", result.SystemCode);
 			Assert.AreEqual(1, result.Frames);
@@ -144,9 +144,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void SubNes_ReportsCorrectFrameCount()
+		public async Task SubNes_ReportsCorrectFrameCount()
 		{
-			var result = _bk2Parser.Parse(Embedded("SubNes.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("SubNes.bk2"));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual("nes", result.SystemCode);
 			Assert.AreEqual(12, result.Frames);
@@ -154,9 +154,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void SubNes_MissingVBlank_Error()
+		public async Task SubNes_MissingVBlank_Error()
 		{
-			var result = _bk2Parser.Parse(Embedded("SubNesMissingVBlank.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("SubNesMissingVBlank.bk2"));
 
 			Assert.IsFalse(result.Success);
 			Assert.IsNotNull(result.Errors);
@@ -164,9 +164,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Gambatte_UsesCycleCount()
+		public async Task Gambatte_UsesCycleCount()
 		{
-			var result = _bk2Parser.Parse(Embedded("Gambatte-CycleCount.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("Gambatte-CycleCount.bk2"));
 
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
@@ -176,9 +176,9 @@ namespace TASVideos.Test.MovieParsers
 
 
 		[TestMethod]
-		public void Gambatte_MissingCycleCount_FallsBackToInputLog()
+		public async Task Gambatte_MissingCycleCount_FallsBackToInputLog()
 		{
-			var result = _bk2Parser.Parse(Embedded("Gambatte-NoCycleCount.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("Gambatte-NoCycleCount.bk2"));
 
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
@@ -187,9 +187,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Gambatte_InvalidCycleCountFormat_FallsBackToInputLog()
+		public async Task Gambatte_InvalidCycleCountFormat_FallsBackToInputLog()
 		{
-			var result = _bk2Parser.Parse(Embedded("Gambatte-InvalidCycleCount.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("Gambatte-InvalidCycleCount.bk2"));
 
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
@@ -198,9 +198,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void SubGbHawk_UsesCycleCount()
+		public async Task SubGbHawk_UsesCycleCount()
 		{
-			var result = _bk2Parser.Parse(Embedded("SubGbHawk-CycleCount.bk2"));
+			var result = await _bk2Parser.Parse(Embedded("SubGbHawk-CycleCount.bk2"));
 
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);

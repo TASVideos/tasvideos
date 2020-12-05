@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.MovieParsers;
@@ -24,9 +24,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void InvalidHeader()
+		public async Task InvalidHeader()
 		{
-			var result = _marParser.Parse(Embedded("wrongheader.mar"));
+			var result = await _marParser.Parse(Embedded("wrongheader.mar"));
 			Assert.IsFalse(result.Success);
 			AssertNoWarnings(result);
 			Assert.IsNotNull(result.Errors);
@@ -34,53 +34,53 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void ValidHeader()
+		public async Task ValidHeader()
 		{
-			var result = _marParser.Parse(Embedded("2frames.mar"));
+			var result = await _marParser.Parse(Embedded("2frames.mar"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void System()
+		public async Task System()
 		{
-			var result = _marParser.Parse(Embedded("2frames.mar"));
+			var result = await _marParser.Parse(Embedded("2frames.mar"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(SystemCodes.Arcade, result.SystemCode);
 		}
 
 		[TestMethod]
-		public void Region()
+		public async Task Region()
 		{
-			var result = _marParser.Parse(Embedded("2frames.mar"));
+			var result = await _marParser.Parse(Embedded("2frames.mar"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
 		}
 
 		[TestMethod]
-		public void RerecordCount()
+		public async Task RerecordCount()
 		{
-			var result = _marParser.Parse(Embedded("2frames.mar"));
+			var result = await _marParser.Parse(Embedded("2frames.mar"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(33686018, result.RerecordCount);
 		}
 
 		[TestMethod]
-		public void Length()
+		public async Task Length()
 		{
-			var result = _marParser.Parse(Embedded("2frames.mar"));
+			var result = await _marParser.Parse(Embedded("2frames.mar"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(16843009, result.Frames);
 		}
 
 		[TestMethod]
-		public void FrameRate()
+		public async Task FrameRate()
 		{
-			var result = _marParser.Parse(Embedded("2frames.mar"));
+			var result = await _marParser.Parse(Embedded("2frames.mar"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.IsNotNull(result.FrameRateOverride);
@@ -88,9 +88,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void WhenFrameRateIsZero_NoOverride()
+		public async Task WhenFrameRateIsZero_NoOverride()
 		{
-			var result = _marParser.Parse(Embedded("noframerate.mar"));
+			var result = await _marParser.Parse(Embedded("noframerate.mar"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.IsNull(result.FrameRateOverride);
