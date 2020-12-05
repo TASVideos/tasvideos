@@ -157,8 +157,6 @@ namespace TASVideos.Services
 
 		public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)
 		{
-			publicationIds ??= new int[0];
-
 			var ratings = new Dictionary<int, RatingDto>();
 
 			// TODO: select them all at once then calculate

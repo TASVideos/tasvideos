@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
-using TASVideos.Data.Entity;
 using TASVideos.Services;
 
 namespace TASVideos.ViewComponents

@@ -81,9 +81,9 @@ namespace TASVideos.Pages.Publications
 			var ratings = (await _points.PublicationRatings(Movies.Select(m => m.Id)))
 				.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Value.Overall);
 
-			foreach (var rating in ratings)
+			foreach ((int key, double? value) in ratings)
 			{
-				Movies.First(m => m.Id == rating.Key).OverallRating = rating.Value;
+				Movies.First(m => m.Id == key).OverallRating = value;
 			}
 
 			return Page();
