@@ -17,7 +17,14 @@ namespace TASVideos.MovieParsers
 	/// is returned
 	/// </summary>
 	/// <seealso cref="IParseResult"/>
-	public sealed class MovieParser
+	public interface IMovieParser
+	{
+		IEnumerable<string> SupportedMovieExtensions { get; }
+		IParseResult ParseZip(Stream stream);
+		IParseResult ParseFile(string fileName, Stream stream);
+	}
+	
+	public sealed class MovieParser : IMovieParser
 	{
 		private static readonly ICollection<Type> ParserTypes =
 			typeof(IParser).Assembly
@@ -92,9 +99,6 @@ namespace TASVideos.MovieParsers
 			return Activator.CreateInstance(type) as IParser;
 		}
 
-		private static IParseResult Error(string errorMsg)
-		{
-			return new ErrorResult(errorMsg);
-		}
+		private static IParseResult Error(string errorMsg) => new ErrorResult(errorMsg);
 	}
 }

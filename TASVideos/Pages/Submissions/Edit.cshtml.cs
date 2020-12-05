@@ -21,14 +21,14 @@ namespace TASVideos.Pages.Submissions
 	[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 	public class EditModel : SubmissionBasePageModel
 	{
-		private readonly MovieParser _parser;
+		private readonly IMovieParser _parser;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ITASVideosGrue _tasvideosGrue;
 
 		public EditModel(
 			ApplicationDbContext db,
-			MovieParser parser,
+			IMovieParser parser,
 			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher,
 			ITASVideosGrue tasvideosGrue)

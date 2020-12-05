@@ -5,9 +5,9 @@ namespace TASVideos.ViewComponents
 {
 	public class SupportedMovieTypes : ViewComponent
 	{
-		private readonly MovieParser _movieParser;
+		private readonly IMovieParser _movieParser;
 
-		public SupportedMovieTypes(MovieParser movieParser)
+		public SupportedMovieTypes(IMovieParser movieParser)
 		{
 			_movieParser = movieParser;
 		}
