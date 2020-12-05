@@ -20,7 +20,7 @@ namespace TASVideos.Pages.Submissions
 	{
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
-		private readonly MovieParser _parser;
+		private readonly IMovieParser _parser;
 		private readonly UserManager _userManager;
 		private readonly ITASVideoAgent _tasVideoAgent;
 
@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Submissions
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
-			MovieParser parser,
+			IMovieParser parser,
 			UserManager userManager,
 			ITASVideoAgent tasVideoAgent)
 			: base(db)

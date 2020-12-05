@@ -23,12 +23,12 @@ namespace TASVideos.Pages.UserFiles
 		private static readonly string[] SupportedSupplementalTypes = { ".lua", ".wch", ".gst" };
 
 		private readonly ApplicationDbContext _db;
-		private readonly MovieParser _parser;
+		private readonly IMovieParser _parser;
 		private readonly IFileService _fileService;
 
 		public UploadModel(
 			ApplicationDbContext db,
-			MovieParser parser,
+			IMovieParser parser,
 			IFileService fileService)
 		{
 			_db = db;

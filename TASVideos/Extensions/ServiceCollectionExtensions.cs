@@ -125,7 +125,7 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddMovieParser(this IServiceCollection services)
 		{
-			services.AddSingleton<MovieParser>();
+			services.AddSingleton<IMovieParser, MovieParser>();
 			return services;
 		}
 
