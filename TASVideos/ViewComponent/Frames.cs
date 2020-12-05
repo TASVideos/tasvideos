@@ -33,7 +33,7 @@ namespace TASVideos.ViewComponents
 			}
 			else
 			{
-				model.Fps = await GuessFps(pageData?.PageName);
+				model.Fps = await GuessFps(pageData.PageName);
 			}
 
 			return View(model);

@@ -1,9 +1,6 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-
-using TASVideos.Data.Entity;
 using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
@@ -17,7 +14,7 @@ namespace TASVideos.ViewComponents
 			_awards = awards;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			var cache = ParamHelper.GetValueFor(pp, "clear");
 			if (!string.IsNullOrWhiteSpace(cache))

@@ -14,10 +14,10 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public IViewComponentResult Invoke(WikiPage pageData, string pp)
+		public IViewComponentResult Invoke(WikiPage pageData)
 		{
 			var subpages = _wikiPages.Query
-					.ThatAreParentsOf(pageData?.PageName)
+					.ThatAreParentsOf(pageData.PageName)
 					.ToList();
 
 			return View(subpages);

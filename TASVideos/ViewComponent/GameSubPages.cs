@@ -22,7 +22,7 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync()
 		{
 			var model = await GetGameResourcesSubPages();
 			return View(model);

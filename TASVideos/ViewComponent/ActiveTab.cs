@@ -1,17 +1,15 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.ViewComponents
 {
 	public class ActiveTab : ViewComponent
 	{
-		public IViewComponentResult Invoke(WikiPage pageData, string pp)
+		public IViewComponentResult Invoke(string pp)
 		{
 			// Support legacy markup: tab=b6 with a list of hardcoded translations
 			// These are the names of the tabs in the legacy system so assume those names are the intent here
 			// Whether we have those menus or not
-			pp ??= "";
 			if (pp.StartsWith("tab=b"))
 			{
 				var val = pp.Split(new[] { "tab=b" }, StringSplitOptions.RemoveEmptyEntries);

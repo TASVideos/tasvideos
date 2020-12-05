@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.ViewComponents
@@ -19,7 +18,7 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			var systemCode = ParamHelper.GetValueFor(pp, "platform");
 

@@ -24,7 +24,7 @@ namespace TASVideos.ViewComponents
 			_tokens = tokens;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			var tokenLookup = await _tokens.GetTokens();
 

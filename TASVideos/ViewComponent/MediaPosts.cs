@@ -20,7 +20,7 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			int days = ParamHelper.GetInt(pp, "days") ?? 7;
 			var startDate = DateTime.Now.AddDays(-days);

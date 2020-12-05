@@ -24,7 +24,7 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			int limit = ParamHelper.GetInt(pp, "l") ?? 5;
 			int topicId = ParamHelper.GetInt(pp, "t")

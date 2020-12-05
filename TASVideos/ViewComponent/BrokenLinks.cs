@@ -15,7 +15,7 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync()
 		{
 			var brokenLinks = await _wikiPages.BrokenLinks();
 			return View(brokenLinks);

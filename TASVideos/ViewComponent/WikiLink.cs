@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 
 namespace TASVideos.ViewComponents
@@ -18,7 +17,7 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			var split = pp.Split('|');
 			var model = new WikiLinkModel
