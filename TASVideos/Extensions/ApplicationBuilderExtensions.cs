@@ -23,7 +23,6 @@ namespace TASVideos.Extensions
 			if (env.IsDevelopment() || env.IsDemo())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseDatabaseErrorPage();
 			}
 			else
 			{
