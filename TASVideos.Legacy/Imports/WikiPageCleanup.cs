@@ -13,8 +13,8 @@ namespace TASVideos.Legacy.Imports
 	{
 		private class UserDto
 		{
-			public string Name { get; set; } = "";
-			public string HomePage { get; set; } = "";
+			public string Name { get; init; } = "";
+			public string HomePage { get; init; } = "";
 		}
 
 		public static void Fix(

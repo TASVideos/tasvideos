@@ -108,9 +108,9 @@ namespace TASVideos.ViewComponents
 
 		private class FirstEditionGames
 		{
-			public int GameId { get; set; }
-			public string GameName { get; set; } = "";
-			public DateTime? PublicationDate { get; set; }
+			public int GameId { get; init; }
+			public string GameName { get; init; } = "";
+			public DateTime? PublicationDate { get; init; }
 		}
 	}
 }

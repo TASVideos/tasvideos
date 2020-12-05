@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -107,9 +106,9 @@ namespace TASVideos.Test.Data.Paging
 
 		private class TestClass
 		{
-			public string String { get; set; } = TestString;
-			public int Int { get; set; } = TestInt;
-			public bool Bool { get; set; } = TestBool;
+			public string String { get; init; } = TestString;
+			public int Int { get; init; } = TestInt;
+			public bool Bool { get; init; } = TestBool;
 		}
 	}
 }

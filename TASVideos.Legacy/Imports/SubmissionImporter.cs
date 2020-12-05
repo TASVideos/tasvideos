@@ -118,7 +118,7 @@ namespace TASVideos.Legacy.Imports
 
 				submission.LegacyTime = legacySubmission.Sub.Length;
 				submission.ImportedTime = 0.0M; // decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
-				submission.LegacyAlerts = ImportHelper.NullIfWhiteSpace(ImportHelper.ConvertLatin1String(legacySubmission.Sub.Alerts));
+				submission.LegacyAlerts = ImportHelper.ConvertLatin1String(legacySubmission.Sub.Alerts).NullIfWhiteSpace();
 
 				if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
 				{
