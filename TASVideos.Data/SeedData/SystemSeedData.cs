@@ -8,7 +8,7 @@ namespace TASVideos.Data.SeedData
 		public const string Ntsc = "NTSC";
 		public const string Pal = "PAL";
 
-		public static GameSystem[] Systems =
+		public static readonly GameSystem[] Systems =
 		{
 			new()
 			{
@@ -276,7 +276,7 @@ namespace TASVideos.Data.SeedData
 			}
 		};
 
-		public static GameSystemFrameRate[] SystemFrameRates =
+		public static readonly GameSystemFrameRate[] SystemFrameRates =
 		{
 			new()
 			{

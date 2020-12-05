@@ -5,7 +5,7 @@ namespace TASVideos.Data.SeedData
 {
 	public static class TierSeedData
 	{
-		public static Tier[] Tiers =
+		public static readonly Tier[] Tiers =
 		{
 			new()
 			{
