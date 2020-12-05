@@ -83,11 +83,11 @@ namespace TASVideos.TagHelpers
 
 		string? IWriterHelper.RunTdStyleFilters(string text)
 		{
-			foreach (var kvp in _tableAttributeRunners)
+			foreach (var (key, value) in _tableAttributeRunners)
 			{
-				if (kvp.Key.Match(text).Success)
+				if (key.Match(text).Success)
 				{
-					return kvp.Value;
+					return value;
 				}
 			}
 

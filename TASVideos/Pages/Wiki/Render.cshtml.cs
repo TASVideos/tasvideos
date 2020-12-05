@@ -25,7 +25,7 @@ namespace TASVideos.Pages.Wiki
 
 		public WikiPage WikiPage { get; set; } = new();
 
-		public async Task<IActionResult> OnGet(string url, int? revision = null)
+		public async Task<IActionResult> OnGet(string? url, int? revision = null)
 		{
 			url = url?.Trim('/') ?? "";
 			if (url.ToLower() == "frontpage")

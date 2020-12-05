@@ -1,4 +1,4 @@
-﻿namespace TASVideos.ViewComponents.Models
+﻿namespace TASVideos.ViewComponents
 {
 	public class GameNameModel
 	{
