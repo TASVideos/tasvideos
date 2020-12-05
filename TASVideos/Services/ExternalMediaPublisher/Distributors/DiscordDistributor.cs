@@ -46,14 +46,14 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			ConnectWebsocket();
 
-			Console.CancelKeyPress += CloseWebsocket;
+			Console.CancelKeyPress += CloseWebsocket!;
 		}
 
 		private async void ConnectWebsocket()
 		{
 			var receiveBuffer = WebSocket.CreateClientBuffer(BufferSize, 4096);
 
-			Uri gatewayUri = new Uri("wss://gateway.discord.gg/?v=6&encoding=json");
+			Uri gatewayUri = new("wss://gateway.discord.gg/?v=6&encoding=json");
 			CancellationToken cancellationToken = _cancellationTokenSource.Token;
 
 			await _gateway.ConnectAsync(gatewayUri, cancellationToken);
@@ -152,7 +152,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			_heartbeatAcknowledged = false;
 
-			JObject heartbeatObject = new JObject { { "op", 1 } };
+			JObject heartbeatObject = new() { { "op", 1 } };
 
 			if (_sequenceNumber == -1)
 			{
@@ -173,7 +173,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				Console.WriteLine("Shutdown signal received, closing gateway.");
 				await _gateway!.CloseAsync(closeStatus, closureMessage, _cancellationTokenSource.Token);
 
-				System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+				System.Diagnostics.Stopwatch stopwatch = new();
 
 				stopwatch.Start();
 
@@ -187,7 +187,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public async void Post(IPostable post)
 		{
-			DiscordMessage discordMessage = new DiscordMessage(post);
+			DiscordMessage discordMessage = new(post);
 
 			HttpContent messageContent = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
 

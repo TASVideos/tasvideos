@@ -89,7 +89,7 @@ namespace TASVideos.Test
 
 		private class TestHttpContextAccessor : IHttpContextAccessor
 		{
-			public HttpContext HttpContext { get; set; } = new DefaultHttpContext();
+			public HttpContext? HttpContext { get; set; } = new DefaultHttpContext();
 		}
 	}
 

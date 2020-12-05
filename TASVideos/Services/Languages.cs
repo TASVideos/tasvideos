@@ -50,8 +50,8 @@ namespace TASVideos.Services
 				{
 					languages.Add(new Language
 					{
-						Code = split.FirstOrDefault(),
-						DisplayName = split.LastOrDefault()
+						Code = split.FirstOrDefault() ?? "",
+						DisplayName = split.LastOrDefault() ?? ""
 					});
 				}
 			}

@@ -76,7 +76,7 @@ namespace TASVideos.Pages.UserFiles
 
 			if (file.Hidden)
 			{
-				if (!User.Identity.IsAuthenticated || file.AuthorId != User.GetUserId())
+				if (!User.IsLoggedIn() || file.AuthorId != User.GetUserId())
 				{
 					return NotFound();
 				}

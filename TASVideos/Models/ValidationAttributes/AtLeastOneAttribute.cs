@@ -11,7 +11,7 @@ namespace TASVideos.Models
 			ErrorMessage = "At least one selection is required.";
 		}
 
-		public override bool IsValid(object value)
+		public override bool IsValid(object? value)
 		{
 			if (value is IEnumerable list)
 			{

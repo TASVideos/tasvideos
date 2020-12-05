@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,7 +25,7 @@ namespace TASVideos.Test.Data.Paging
 		{
 			var testClass = new TestClass();
 			var actual = testClass.FieldSelect(fields);
-			var dic = (IDictionary<string, object>)actual;
+			var dic = (IDictionary<string, object?>)actual;
 			Assert.AreEqual(3, dic.Count);
 			Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
 			Assert.AreEqual(dic[nameof(TestClass.Int)], TestInt);
@@ -36,7 +37,7 @@ namespace TASVideos.Test.Data.Paging
 		{
 			var testClass = new TestClass();
 			var actual = testClass.FieldSelect(nameof(TestClass.String));
-			var dic = (IDictionary<string, object>)actual;
+			var dic = (IDictionary<string, object?>)actual;
 			Assert.AreEqual(1, dic.Count);
 			Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
 
@@ -50,7 +51,7 @@ namespace TASVideos.Test.Data.Paging
 			string fields = $"{nameof(TestClass.String)},{nameof(TestClass.Int)}";
 			var testClass = new TestClass();
 			var actual = testClass.FieldSelect(fields);
-			var dic = (IDictionary<string, object>)actual;
+			var dic = (IDictionary<string, object?>)actual;
 			Assert.AreEqual(2, dic.Count);
 			Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
 			Assert.AreEqual(dic[nameof(TestClass.Int)], TestInt);

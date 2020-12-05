@@ -46,8 +46,8 @@ namespace TASVideos.Legacy
 			Run("Forum Categories", () => ForumCategoriesImporter.Import(connectionStr, context, legacyForumContext));
 			Run("Forums", () => ForumImporter.Import(connectionStr, context, legacyForumContext));
 			Run("Forum Topics", () => ForumTopicImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, legacyForumContext));
+			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(connectionStr, legacyForumContext));
 			Run("Forum Polls", () => ForumPollImporter.Import(connectionStr, context, legacyForumContext));
 
 			// We don't want to copy these to other environments, as they can cause users to get unwanted emails

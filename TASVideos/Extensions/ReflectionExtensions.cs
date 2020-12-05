@@ -43,7 +43,7 @@ namespace TASVideos.Extensions
 		/// Else it will return the name of the enum
 		/// If the value is null, an empty string will be returned
 		/// </summary>
-		public static string EnumDisplayName(this Enum enumValue)
+		public static string EnumDisplayName(this Enum? enumValue)
 		{
 			if (enumValue == null)
 			{
@@ -57,7 +57,7 @@ namespace TASVideos.Extensions
 				.GetCustomAttribute<DisplayAttribute>();
 
 			return displayName != null
-				? displayName.GetName()
+				? displayName.GetName() ?? ""
 				: enumValue.ToString();
 		}
 	}

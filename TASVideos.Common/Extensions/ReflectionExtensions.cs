@@ -24,9 +24,14 @@ namespace TASVideos.Extensions
 			if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType)
 				&& property.PropertyType.IsGenericType)
 			{
-				var values = ((IEnumerable)property.GetValue(obj)).Cast<object>();
-				var val = string.Join("|", values);
-				return val;
+				var val = property.GetValue(obj);
+				if (val == null)
+				{
+					return "";
+				}
+
+				var values = ((IEnumerable)val).Cast<object>();
+				return string.Join("|", values);
 			}
 
 			return property.GetValue(obj)?.ToString() ?? "";

@@ -39,7 +39,7 @@ namespace TASVideos.Extensions
 			}
 
 			var randomIndex = new Random(DateTime.Now.Millisecond).Next(0, collection.Count);
-			return collection.ElementAtOrDefault(randomIndex);
+			return collection.ElementAt(randomIndex);
 		}
 	}
 }

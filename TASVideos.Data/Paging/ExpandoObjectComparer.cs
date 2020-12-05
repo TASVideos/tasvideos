@@ -12,7 +12,7 @@ namespace TASVideos.Data
 
 		public static ExpandoObjectComparer Default()
 		{
-			return new ExpandoObjectComparer();
+			return new();
 		}
 
 		public bool Equals(ExpandoObject? x, ExpandoObject? y)
@@ -27,8 +27,8 @@ namespace TASVideos.Data
 				return false;
 			}
 
-			var xKeyValues = (IDictionary<string, object>)x;
-			var yKeyValues = (IDictionary<string, object>)y;
+			var xKeyValues = (IDictionary<string, object?>)x;
+			var yKeyValues = (IDictionary<string, object?>)y;
 
 			if (xKeyValues.Count != yKeyValues.Count)
 			{
@@ -44,7 +44,7 @@ namespace TASVideos.Data
 			foreach (var keyValue in xKeyValues)
 			{
 				var key = keyValue.Key;
-				var xValueItem = keyValue.Value;
+				var xValueItem = keyValue.Value ?? new object();
 				var yValueItem = yKeyValues[key];
 
 				if (yValueItem == null)
@@ -65,13 +65,13 @@ namespace TASVideos.Data
 		{
 			int hashCode = 0;
 
-			int GetHash(object item)
+			static int GetHash(object item)
 			{
 				return item.GetHashCode();
 			}
 
-			var fieldValues = new Dictionary<string, object>(obj);
-			fieldValues.Values.ToList().ForEach(v => hashCode ^= GetHash(v));
+			var fieldValues = new Dictionary<string, object?>(obj);
+			fieldValues.Values.ToList().ForEach(v => hashCode ^= GetHash(v ?? new object()));
 			return hashCode;
 		}
 	}
