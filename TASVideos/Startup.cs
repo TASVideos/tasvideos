@@ -47,7 +47,7 @@ namespace TASVideos
 
 			// 3rd Party
 			services
-				.AddMvcWithOptions()
+				.AddMvcWithOptions(Environment)
 				.AddIdentity(Environment);
 
 			// HTTP Client

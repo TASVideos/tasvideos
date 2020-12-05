@@ -129,8 +129,13 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services)
+		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services, IWebHostEnvironment env)
 		{
+			if (env.IsDevelopment())
+			{
+				services.AddDatabaseDeveloperPageExceptionFilter();
+			}
+			
 			services.AddResponseCaching();
 			services
 				.AddControllers()
