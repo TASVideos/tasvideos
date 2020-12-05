@@ -131,8 +131,7 @@ namespace TASVideos.Test.Data.Paging
 			{
 			}
 
-			// ReSharper disable once UnusedAutoPropertyAccessor.Local
-			public string StringFilter { get; set; } = "";
+			public string StringFilter { get; init; } = "";
 		}
 
 		private class EnumerablePagedModel : Paged
@@ -143,7 +142,7 @@ namespace TASVideos.Test.Data.Paging
 			}
 
 			// ReSharper disable once UnusedAutoPropertyAccessor.Local
-			public IEnumerable<int> IdList { get; set; } = new List<int>();
+			public IEnumerable<int> IdList { get; init; } = new List<int>();
 		}
 	}
 }
