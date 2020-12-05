@@ -7,12 +7,9 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-    public static class ForumCategoriesImporter
-    {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+	public static class ForumCategoriesImporter
+	{
+		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
 		{
 			var categories = legacyForumContext
 				.Categories
@@ -20,7 +17,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = c.Id,
 					Title = c.Title ?? "",
-					Ordinal =  c.Title == "Other"
+					Ordinal = c.Title == "Other"
 						? 30
 						: c.Title == "Completed movies"
 							? 40
@@ -49,5 +46,5 @@ namespace TASVideos.Legacy.Imports
 
 			categories.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumCategories));
 		}
-    }
+	}
 }

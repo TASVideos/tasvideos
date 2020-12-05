@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+// ReSharper disable InconsistentNaming
 namespace TASVideos.Data.Entity.Game
 {
 	public enum RamAddressType

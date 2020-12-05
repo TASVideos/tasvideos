@@ -52,7 +52,7 @@ namespace TASVideos.Legacy.Imports
 					Description = l.address.Description ?? "",
 					GameRamAddressDomainId = l.address.Domain,
 					GameId = l.game != null && l.game.Any() ? l.game.First().Id : (int?)null,
-					SystemId = l?.address?.AddressSet?.SystemId ?? 0,
+					SystemId = l.address?.AddressSet?.SystemId ?? 0,
 					LegacyGameName = l?.game == null || !l.game.Any() ? l?.address?.AddressSet?.Name : null
 				})
 				.ToList();

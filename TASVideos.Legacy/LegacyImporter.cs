@@ -33,8 +33,8 @@ namespace TASVideos.Legacy
 			var stopwatch = Stopwatch.StartNew();
 
 			Run("Tags", () => TagImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Roms", () => RomImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Games", () => GameImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Roms", () => RomImporter.Import(connectionStr, legacySiteContext));
+			Run("Games", () => GameImporter.Import(connectionStr, legacySiteContext));
 			Run("GameGroup", () => GameGroupImporter.Import(connectionStr, context, legacySiteContext));
 			Run("GameGenre", () => GameGenreImport.Import(connectionStr, context, legacySiteContext));
 			Run("RamAddresses", () => RamAddressImporter.Import(connectionStr, context, legacySiteContext));
@@ -43,7 +43,7 @@ namespace TASVideos.Legacy
 			Run("UserDisallows", () => DisallowImporter.Import(connectionStr, legacyForumContext));
 			Run("Award", () => AwardImporter.Import(connectionStr, context, legacySiteContext));
 
-			Run("Forum Categories", () => ForumCategoriesImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Categories", () => ForumCategoriesImporter.Import(connectionStr, legacyForumContext));
 			Run("Forums", () => ForumImporter.Import(connectionStr, context, legacyForumContext));
 			Run("Forum Topics", () => ForumTopicImporter.Import(connectionStr, context, legacyForumContext));
 			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, legacyForumContext));
@@ -74,9 +74,9 @@ namespace TASVideos.Legacy
 			stopwatch.Stop();
 			Console.WriteLine($"Import finished. Total time: {elapsedMilliseconds / 1000.0} seconds");
 			Console.WriteLine("Import breakdown:");
-			foreach (var entry in ImportDurations)
+			foreach ((var key, long value) in ImportDurations)
 			{
-				Console.WriteLine($"{entry.Key}: {entry.Value}");
+				Console.WriteLine($"{key}: {value}");
 			}
 		}
 

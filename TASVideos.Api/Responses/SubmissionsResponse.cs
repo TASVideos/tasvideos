@@ -67,6 +67,6 @@ namespace TASVideos.Api.Responses
 		[Sortable]
 		public int? MovieStartType { get; set; }
 
-		public IEnumerable<string> Authors { get; set; } = new string[0];
+		public IEnumerable<string> Authors { get; set; } = new List<string>();
 	}
 }
