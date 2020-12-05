@@ -1,5 +1,5 @@
 ﻿using System.IO;
-
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
@@ -10,7 +10,7 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		public override string FileExtension => "gmv";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -42,7 +42,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 			result.Frames = (int)(file.Length - 64) / 3;
 
-			return result;
+			return await Task.FromResult(result);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.MovieParsers;
@@ -23,9 +23,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void InvalidHeader()
+		public async Task InvalidHeader()
 		{
-			var result = _gmvParser.Parse(Embedded("wrongheader.gmv"));
+			var result = await _gmvParser.Parse(Embedded("wrongheader.gmv"));
 			Assert.IsFalse(result.Success);
 			AssertNoWarnings(result);
 			Assert.IsNotNull(result.Errors);
@@ -33,71 +33,71 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void ValidHeader()
+		public async Task ValidHeader()
 		{
-			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void System()
+		public async Task System()
 		{
-			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(SystemCodes.Genesis, result.SystemCode);
 		}
 
 		[TestMethod]
-		public void RerecordCount()
+		public async Task RerecordCount()
 		{
-			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(10319, result.RerecordCount);
 		}
 
 		[TestMethod]
-		public void Ntsc()
+		public async Task Ntsc()
 		{
-			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
 		}
 
 		[TestMethod]
-		public void Pal()
+		public async Task Pal()
 		{
-			var result = _gmvParser.Parse(Embedded("pal.gmv"));
+			var result = await _gmvParser.Parse(Embedded("pal.gmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(RegionType.Pal, result.Region);
 		}
 
 		[TestMethod]
-		public void PowerOn()
+		public async Task PowerOn()
 		{
-			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 		}
 
 		[TestMethod]
-		public void Savestate()
+		public async Task Savestate()
 		{
-			var result = _gmvParser.Parse(Embedded("savestate.gmv"));
+			var result = await _gmvParser.Parse(Embedded("savestate.gmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		}
 
 		[TestMethod]
-		public void Length()
+		public async Task Length()
 		{
-			var result = _gmvParser.Parse(Embedded("2frames.gmv"));
+			var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(2, result.Frames);

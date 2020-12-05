@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.MovieParsers;
@@ -24,9 +24,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void InvalidHeader()
+		public async Task InvalidHeader()
 		{
-			var result = _wtfParser.Parse(Embedded("wrongheader.wtf"));
+			var result = await _wtfParser.Parse(Embedded("wrongheader.wtf"));
 			Assert.IsFalse(result.Success);
 			AssertNoWarnings(result);
 			Assert.IsNotNull(result.Errors);
@@ -34,53 +34,53 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void ValidHeader()
+		public async Task ValidHeader()
 		{
-			var result = _wtfParser.Parse(Embedded("2frames.wtf"));
+			var result = await _wtfParser.Parse(Embedded("2frames.wtf"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 		}
 
 		[TestMethod]
-		public void System()
+		public async Task System()
 		{
-			var result = _wtfParser.Parse(Embedded("2frames.wtf"));
+			var result = await _wtfParser.Parse(Embedded("2frames.wtf"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(SystemCodes.Windows, result.SystemCode);
 		}
 
 		[TestMethod]
-		public void RerecordCount()
+		public async Task RerecordCount()
 		{
-			var result = _wtfParser.Parse(Embedded("2frames.wtf"));
+			var result = await _wtfParser.Parse(Embedded("2frames.wtf"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(984, result.RerecordCount);
 		}
 
 		[TestMethod]
-		public void Ntsc()
+		public async Task Ntsc()
 		{
-			var result = _wtfParser.Parse(Embedded("2frames.wtf"));
+			var result = await _wtfParser.Parse(Embedded("2frames.wtf"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
 		}
 
 		[TestMethod]
-		public void PowerOn()
+		public async Task PowerOn()
 		{
-			var result = _wtfParser.Parse(Embedded("2frames.wtf"));
+			var result = await _wtfParser.Parse(Embedded("2frames.wtf"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 		}
 
 		[TestMethod]
-		public void FrameRate()
+		public async Task FrameRate()
 		{
-			var result = _wtfParser.Parse(Embedded("2frames.wtf"));
+			var result = await _wtfParser.Parse(Embedded("2frames.wtf"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.IsNotNull(result.FrameRateOverride);
@@ -88,18 +88,18 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void WhenFrameRateIsZero_NoOverride()
+		public async Task WhenFrameRateIsZero_NoOverride()
 		{
-			var result = _wtfParser.Parse(Embedded("noframerate.wtf"));
+			var result = await _wtfParser.Parse(Embedded("noframerate.wtf"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.IsNull(result.FrameRateOverride);
 		}
 
 		[TestMethod]
-		public void Length()
+		public async Task Length()
 		{
-			var result = _wtfParser.Parse(Embedded("2frames.wtf"));
+			var result = await _wtfParser.Parse(Embedded("2frames.wtf"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(2, result.Frames);

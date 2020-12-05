@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Linq;
-
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
@@ -19,7 +19,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 		public override string FileExtension => "lsmv";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -50,11 +50,11 @@ namespace TASVideos.MovieParsers.Parsers
 				return Error("Could not determine the System Code");
 			}
 
-			using (var stream = gameTypeFile.Open())
+			await using (var stream = gameTypeFile.Open())
 			{
 				using var reader = new StreamReader(stream);
-				var line = reader
-					.ReadToEnd()
+				var line = (await reader
+					.ReadToEndAsync())
 					.LineSplit()
 					.FirstOrDefault();
 
@@ -104,10 +104,10 @@ namespace TASVideos.MovieParsers.Parsers
 			var rerecordCountFile = archive.Entry(RerecordFile);
 			if (rerecordCountFile is not null)
 			{
-				using var stream = rerecordCountFile.Open();
+				await using var stream = rerecordCountFile.Open();
 				using var reader = new StreamReader(stream);
-				var line = reader
-					.ReadToEnd()
+				var line = (await reader
+					.ReadToEndAsync())
 					.LineSplit()
 					.FirstOrDefault();
 
@@ -139,11 +139,11 @@ namespace TASVideos.MovieParsers.Parsers
 				return Error($"Missing {InputFile}, can not parse");
 			}
 
-			using (var stream = inputLog.Open())
+			await using (var stream = inputLog.Open())
 			{
 				using var reader = new StreamReader(stream);
-				result.Frames = reader
-					.ReadToEnd()
+				result.Frames = (await reader
+					.ReadToEndAsync())
 					.LineSplit()
 					.Count(i => i.StartsWith("F"));
 			}

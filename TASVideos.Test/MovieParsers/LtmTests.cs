@@ -1,5 +1,5 @@
 using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using TASVideos.MovieParsers;
@@ -24,18 +24,18 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Region()
+		public async Task Region()
 		{
-			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
+			var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
 
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
 		}
 
 		[TestMethod]
-		public void FrameCount()
+		public async Task FrameCount()
 		{
-			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
+			var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
 
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -43,9 +43,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void RerecordCount()
+		public async Task RerecordCount()
 		{
-			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
+			var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
 
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -54,9 +54,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void FrameRate()
+		public async Task FrameRate()
 		{
-			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
+			var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
 
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -65,9 +65,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void MissingFrameRate_Defaults()
+		public async Task MissingFrameRate_Defaults()
 		{
-			var result = _ltmParser.Parse(Embedded("noframerate.ltm"));
+			var result = await _ltmParser.Parse(Embedded("noframerate.ltm"));
 
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(Ltm.DefaultFrameRate, result.FrameRateOverride);
@@ -77,9 +77,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void PowerOn()
+		public async Task PowerOn()
 		{
-			var result = _ltmParser.Parse(Embedded("2frames.ltm"));
+			var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
 
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -88,9 +88,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Savestate()
+		public async Task Savestate()
 		{
-			var result = _ltmParser.Parse(Embedded("savestate.ltm"));
+			var result = await _ltmParser.Parse(Embedded("savestate.ltm"));
 
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(SystemCodes.Linux, result.SystemCode);

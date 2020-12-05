@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using SharpCompress.Readers;
 using TASVideos.MovieParsers.Result;
 
@@ -19,7 +20,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 		public override string FileExtension => "ltm";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -40,12 +41,13 @@ namespace TASVideos.MovieParsers.Parsers
 						continue;
 					}
 
-					using var entry = reader.OpenEntryStream();
+					await using var entry = reader.OpenEntryStream();
 					using var textReader = new StreamReader(entry);
 					switch (reader.Entry.Key)
 					{
 						case "config.ini":
-							while (textReader.ReadLine() is string s)
+							string? s;
+							while ((s = await textReader.ReadLineAsync()) != null)
 							{
 								if (s.StartsWith(FrameCountHeader))
 								{
@@ -58,7 +60,7 @@ namespace TASVideos.MovieParsers.Parsers
 								else if (s.StartsWith(SaveStateCountHeader))
 								{
 									var savestateCount = ParseIntFromConfig(s);
-										
+
 									// Power-on movies seem to always have a savestate count equal to frames
 									if (savestateCount > 0 && savestateCount != result.Frames)
 									{

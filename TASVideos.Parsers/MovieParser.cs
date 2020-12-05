@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
@@ -20,8 +21,8 @@ namespace TASVideos.MovieParsers
 	public interface IMovieParser
 	{
 		IEnumerable<string> SupportedMovieExtensions { get; }
-		IParseResult ParseZip(Stream stream);
-		IParseResult ParseFile(string fileName, Stream stream);
+		Task<IParseResult> ParseZip(Stream stream);
+		Task<IParseResult> ParseFile(string fileName, Stream stream);
 	}
 	
 	public sealed class MovieParser : IMovieParser
@@ -38,7 +39,7 @@ namespace TASVideos.MovieParsers
 			.Select(t => "." + (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
 					?.Extension);
 
-		public IParseResult ParseZip(Stream stream)
+		public async Task<IParseResult> ParseZip(Stream stream)
 		{
 			try
 			{
@@ -57,8 +58,8 @@ namespace TASVideos.MovieParsers
 					return Error($".{ext} files are not currently supported.");
 				}
 
-				using var movieFileStream = movieFile.Open();
-				return parser.Parse(movieFileStream);
+				await using var movieFileStream = movieFile.Open();
+				return await parser.Parse(movieFileStream);
 			}
 			catch (Exception)
 			{
@@ -67,7 +68,7 @@ namespace TASVideos.MovieParsers
 			}
 		}
 
-		public IParseResult ParseFile(string fileName, Stream stream)
+		public async Task<IParseResult> ParseFile(string fileName, Stream stream)
 		{
 			try
 			{
@@ -76,7 +77,7 @@ namespace TASVideos.MovieParsers
 				var parser = GetParser(ext);
 				return parser == null
 					? Error($".{ext} files are not currently supported.")
-					: parser.Parse(stream);
+					: await parser.Parse(stream);
 			}
 			catch (Exception)
 			{

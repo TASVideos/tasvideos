@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -7,7 +8,7 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		public override string FileExtension => "wtf";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -33,7 +34,7 @@ namespace TASVideos.MovieParsers.Parsers
 				result.FrameRateOverride = fps;
 			}
 
-			return result;
+			return await Task.FromResult(result);
 		}
 	}
 }

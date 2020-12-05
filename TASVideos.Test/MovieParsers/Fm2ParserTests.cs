@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
@@ -21,9 +21,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Ntsc()
+		public async Task Ntsc()
 		{
-			var result = _fm2Parser.Parse(Embedded("ntsc.fm2"));
+			var result = await _fm2Parser.Parse(Embedded("ntsc.fm2"));
 			Assert.IsTrue(result.Success, "Result is successful");
 			Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -34,9 +34,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Pal()
+		public async Task Pal()
 		{
-			var result = _fm2Parser.Parse(Embedded("pal.fm2"));
+			var result = await _fm2Parser.Parse(Embedded("pal.fm2"));
 			Assert.IsTrue(result.Success, "Result is successful");
 			Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 			Assert.AreEqual(RegionType.Pal, result.Region);
@@ -47,9 +47,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Fds()
+		public async Task Fds()
 		{
-			var result = _fm2Parser.Parse(Embedded("fds.fm2"));
+			var result = await _fm2Parser.Parse(Embedded("fds.fm2"));
 			Assert.IsTrue(result.Success, "Result is successful");
 			Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -60,9 +60,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void Savestate()
+		public async Task Savestate()
 		{
-			var result = _fm2Parser.Parse(Embedded("savestate.fm2"));
+			var result = await _fm2Parser.Parse(Embedded("savestate.fm2"));
 			Assert.IsTrue(result.Success, "Result is successful");
 			Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 			Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -73,9 +73,9 @@ namespace TASVideos.Test.MovieParsers
 		}
 
 		[TestMethod]
-		public void NoRerecords()
+		public async Task NoRerecords()
 		{
-			var result = _fm2Parser.Parse(Embedded("norerecords.fm2"));
+			var result = await _fm2Parser.Parse(Embedded("norerecords.fm2"));
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
 			Assert.IsNotNull(result.Warnings);
