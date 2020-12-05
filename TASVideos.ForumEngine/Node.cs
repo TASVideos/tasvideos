@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace TASVideos.ForumEngine
 {
@@ -342,17 +344,22 @@ namespace TASVideos.ForumEngine
 							var pp = new VideoParameters(uri.Host, qq[0]);
 							if (qq.Length > 1)
 							{
-								var parsedQuery = System.Web.HttpUtility.ParseQueryString(qq[1]);
+								var parsedQuery = HttpUtility.ParseQueryString(qq[1]);
+
 								for (var i = 0; i < parsedQuery.Count; i++)
-									pp.QueryParams[parsedQuery.Keys[i]] = parsedQuery.GetValues(i)[0];
+								{
+									pp.QueryParams[parsedQuery.Keys[i]!] = parsedQuery.GetValues(i)![0];
+								}
 							}
+							
 							if (TryParseSize(out var width, out var height))
 							{
 								pp.Width = width;
 								pp.Height = height;
 							}
 							WriteVideo.Write(w, pp);
-						}			
+						}
+						
 						w.Write("<a href=");
 						Helpers.WriteAttributeValue(w, href);
 						w.Write(">Link to video</a>");

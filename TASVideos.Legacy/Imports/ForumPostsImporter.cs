@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Web;
 using Microsoft.Data.SqlClient;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -11,10 +12,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class ForumPostsImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
 		{
 			// TODO: posts without a corresponding post text
 			var posts = legacyForumContext.Posts
@@ -39,7 +37,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(p =>
 				{
 					bool enableBbCode = p.EnableBbCode;
-					bool enableHtml = p.EnableHtml;
+					bool enableHtml;
 
 					string fixedText;
 					if (p.PosterId == SiteGlobalConstants.TASVideoAgentId && p.Subject == SiteGlobalConstants.NewPublicationPostSubject)
@@ -60,10 +58,10 @@ namespace TASVideos.Legacy.Imports
 					}
 					else
 					{
-						fixedText = System.Web.HttpUtility.HtmlDecode(
+						fixedText = HttpUtility.HtmlDecode(
 							ImportHelper.ConvertLatin1String(p.Text!
 								.Replace(":1:" + p.BbCodeUid, "")
-								.Replace(":" + p.BbCodeUid, "")));
+								.Replace(":" + p.BbCodeUid, "")) ?? "");
 
 						enableHtml = p.EnableHtml && BbParser.ContainsHtml(fixedText, p.EnableBbCode);
 					}

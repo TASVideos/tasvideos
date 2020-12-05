@@ -100,10 +100,10 @@ namespace TASVideos.Pages.Wiki
 			if (page.Revision == 1 || !PageToEdit.MinorEdit)
 			{
 				_publisher.SendGeneralWiki(
-					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
+					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 					$"({PageToEdit.RevisionMessage}): ",
 					Path,
-					User.Identity.Name!);
+					User.Name());
 			}
 
 			return Redirect("/" + page.PageName);

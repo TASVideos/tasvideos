@@ -14,7 +14,7 @@ namespace TASVideos.MovieParsers.Extensions
 		{
 			if (str == null)
 			{
-				return new string[0];
+				return Array.Empty<string>();
 			}
 
 			return str.Split(
@@ -124,7 +124,7 @@ namespace TASVideos.MovieParsers.Extensions
 		/// Gets a file that matches or starts with the given name
 		/// with a case insensitive match
 		/// </summary>
-		public static ZipArchiveEntry Entry(this ZipArchive archive, string name)
+		public static ZipArchiveEntry? Entry(this ZipArchive archive, string name)
 		{
 			return archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(name));
 		}
