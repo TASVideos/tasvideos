@@ -31,7 +31,7 @@ namespace TASVideos.WikiEngine
 			_input = input;
 		}
 
-		private void Abort(string msg, int from)
+		private static void Abort(string msg, int from)
 		{
 			throw new SyntaxException(msg, from); 
 		}
@@ -726,12 +726,12 @@ namespace TASVideos.WikiEngine
 			{
 				var id = Whitespace.Replace(h.InnerText(NullWriterHelper.Instance), "");
 				if (id.Length > 0)
-					id = char.ToUpperInvariant(id[0]) + id.Substring(1);
+					id = char.ToUpperInvariant(id[0]) + id[1..];
 				h.Attributes.Add("id", id);
 			}
 		}
 
-		private static void ReplacePees(List<INode> n)
+		private static void ReplacePees(IList<INode> n)
 		{
 			NodeUtils.Replace(n,
 				e => e.Type == NodeType.Element && ((Element)e).Tag == "p",
