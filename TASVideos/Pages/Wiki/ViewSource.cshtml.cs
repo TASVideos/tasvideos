@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Wiki
 			Path = Path?.Trim('/') ?? "";
 			var wikiPage = await _wikiPages.Page(Path, Revision);
 
-			if (wikiPage != null)
+			if (wikiPage is not null)
 			{
 				WikiPage = wikiPage;
 				return Page();

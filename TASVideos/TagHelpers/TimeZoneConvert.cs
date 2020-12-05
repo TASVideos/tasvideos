@@ -42,7 +42,7 @@ namespace TASVideos.TagHelpers
 				dateTime = dateTime.Date;
 			}
 
-			if (user != null)
+			if (user is not null)
 			{
 				try
 				{

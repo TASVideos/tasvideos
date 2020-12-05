@@ -22,8 +22,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 			&& OptionsAreValid;
 
 		public bool OptionsAreValid => 
-			PollOptions != null
-			&& PollOptions.Count(o => !string.IsNullOrWhiteSpace(o)) > 1
-			&& PollOptions.All(o => o != null && o.Length <= 250);
+			PollOptions.Count(o => !string.IsNullOrWhiteSpace(o)) > 1
+			&& PollOptions.All(o => o.Length <= 250);
 	}
 }

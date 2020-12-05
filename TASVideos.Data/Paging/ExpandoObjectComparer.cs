@@ -36,7 +36,7 @@ namespace TASVideos.Data
 			}
 
 			var missingKey = xKeyValues.Keys.FirstOrDefault(k => !yKeyValues.ContainsKey(k));
-			if (missingKey != null)
+			if (missingKey is not null)
 			{
 				return false;
 			}

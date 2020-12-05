@@ -60,23 +60,23 @@ namespace TASVideos.Pages.Wiki
 		private static string AccessRestriction(Type type)
 		{
 			// This logic is far from robust and full of assumptions, the idea is to tweak as necessary
-			if (type.GetCustomAttribute<AllowAnonymousAttribute>() != null)
+			if (type.GetCustomAttribute<AllowAnonymousAttribute>() is not null)
 			{
 				return "Anonymous";
 			}
 
-			if (type.GetCustomAttribute<AuthorizeAttribute>() != null)
+			if (type.GetCustomAttribute<AuthorizeAttribute>() is not null)
 			{
 				return "Logged In";
 			}
 
-			if (type.GetCustomAttribute<RequireEdit>() != null)
+			if (type.GetCustomAttribute<RequireEdit>() is not null)
 			{
 				return "Any Wiki Editing";
 			}
 
 			var requiredPermAttr = type.GetCustomAttribute<RequirePermissionAttribute>();
-			if (requiredPermAttr != null)
+			if (requiredPermAttr is not null)
 			{
 				return requiredPermAttr.MatchAny
 					? string.Join(" or ", requiredPermAttr.RequiredPermissions)

@@ -134,7 +134,7 @@ namespace TASVideos.Legacy.Imports
 
 			foreach (var user in joinedUsers)
 			{
-				if (user.SiteUser != null)
+				if (user.SiteUser is not null)
 				{
 					// not having user means they are effectively banned
 					// limited = Limited User
@@ -212,7 +212,7 @@ namespace TASVideos.Legacy.Imports
 						.Where(r => r!.Name != "user" && r.Name != "limited"))
 					{
 						var role = GetRoleFromLegacy(userRole!.Name, roles);
-						if (role != null)
+						if (role is not null)
 						{
 							userRoles.Add(new UserRole
 							{

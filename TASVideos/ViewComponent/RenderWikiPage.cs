@@ -27,7 +27,7 @@ namespace TASVideos.ViewComponents
 
 			var existingPage = await _wikiPages.Page(url, revision);
 
-			if (existingPage != null)
+			if (existingPage is not null)
 			{
 				var model = new RenderWikiPageModel
 				{

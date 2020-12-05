@@ -58,7 +58,7 @@ namespace TASVideos.Pages.Messages
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == Id);
 
-			if (message != null)
+			if (message is not null)
 			{
 				message.SavedForToUser = true;
 				await _db.SaveChangesAsync();
@@ -79,7 +79,7 @@ namespace TASVideos.Pages.Messages
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == Id);
 
-			if (message != null)
+			if (message is not null)
 			{
 				message.DeletedForToUser = true;
 				await _db.SaveChangesAsync();

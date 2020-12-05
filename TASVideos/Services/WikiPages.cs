@@ -171,7 +171,7 @@ namespace TASVideos.Services
 
 			var existingPage = this[pageName];
 
-			if (existingPage != null)
+			if (existingPage is not null)
 			{
 				return true;
 			}
@@ -192,7 +192,7 @@ namespace TASVideos.Services
 				this[pageName] = page;
 			}
 
-			return page != null;
+			return page is not null;
 		}
 
 		public async Task<WikiPage?> Page(string pageName, int? revisionId = null)
@@ -210,7 +210,7 @@ namespace TASVideos.Services
 				page = this[pageName];
 			}
 
-			if (page != null)
+			if (page is not null)
 			{
 				return page;
 			}
@@ -260,7 +260,7 @@ namespace TASVideos.Services
 				.WithNoChildren()
 				.SingleOrDefaultAsync();
 
-			if (currentRevision != null)
+			if (currentRevision is not null)
 			{
 				currentRevision.Child = revision;
 
@@ -334,7 +334,7 @@ namespace TASVideos.Services
 			// can show up in the Broken Links module for editors to see and fix.
 			// Anyone doing a move operation should know to check broken links afterwards
 			var cachedRevision = this[originalName];
-			if (cachedRevision != null)
+			if (cachedRevision is not null)
 			{
 				cachedRevision.PageName = destinationName;
 			}
@@ -389,7 +389,7 @@ namespace TASVideos.Services
 				.Revision(pageName, revision)
 				.SingleOrDefaultAsync();
 
-			if (wikiPage != null)
+			if (wikiPage is not null)
 			{
 				var isCurrent = wikiPage.IsCurrent();
 
@@ -421,7 +421,7 @@ namespace TASVideos.Services
 						.OrderByDescending(wp => wp.Revision)
 						.FirstOrDefault();
 
-					if (newCurrent != null)
+					if (newCurrent is not null)
 					{
 						newCurrent.ChildId = null;
 						this[pageName] = newCurrent;
@@ -449,7 +449,7 @@ namespace TASVideos.Services
 					revision.IsDeleted = false;
 					var previous = allRevisions
 						.FirstOrDefault(r => r.Revision == revision.Revision - 1);
-					if (previous != null)
+					if (previous is not null)
 					{
 						previous.ChildId = revision.Id;
 					}

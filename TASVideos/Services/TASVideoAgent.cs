@@ -77,7 +77,7 @@ namespace TASVideos.Services
 			// We intentionally silently fail here.
 			// Otherwise we would leave publication in a partial state
 			// which would be worse than a missing forum post
-			if (topic != null)
+			if (topic is not null)
 			{
 				_db.ForumPosts.Add(new ForumPost
 				{

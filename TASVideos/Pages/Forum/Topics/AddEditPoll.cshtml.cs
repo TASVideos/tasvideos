@@ -52,7 +52,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			TopicTitle = topic.Title;
 
-			if (topic.Poll != null)
+			if (topic.Poll is not null)
 			{
 				if (topic.Poll.PollOptions.SelectMany(o => o.Votes).Any())
 				{
@@ -105,7 +105,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			if (topic.Poll != null)
+			if (topic.Poll is not null)
 			{
 				if (topic.Poll.PollOptions.SelectMany(o => o.Votes).Any())
 				{

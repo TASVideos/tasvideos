@@ -46,7 +46,7 @@ namespace TASVideos.ViewComponents
 				})
 				.SingleOrDefaultAsync();
 
-			if (model != null)
+			if (model is not null)
 			{
 				model.AwardsWon = (await _awards.ForUser(model.Id)).Count();
 			}

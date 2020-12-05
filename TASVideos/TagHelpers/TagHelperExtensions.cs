@@ -15,7 +15,7 @@ namespace TASVideos.TagHelpers
 			var cssClass = existingClass?.Value.ToString() ?? "";
 			cssClass += $" {className}";
 			var ta = new TagHelperAttribute("class", cssClass);
-			if (existingClass != null)
+			if (existingClass is not null)
 			{
 				output.Attributes.Remove(existingClass);
 			}

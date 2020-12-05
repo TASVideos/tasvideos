@@ -46,13 +46,13 @@ namespace TASVideos.TagHelpers
 		    output.TagMode = TagMode.StartTagAndEndTag;
 			foreach (PropertyInfo property in ModelType.UnderlyingSystemType.GetProperties())
 			{
-				if (property.GetCustomAttribute<TableIgnoreAttribute>() != null)
+				if (property.GetCustomAttribute<TableIgnoreAttribute>() is not null)
 				{
 					continue;
 				}
 
 				output.Content.AppendHtml("<th>");
-				var isSortable = property.GetCustomAttribute<SortableAttribute>() != null;
+				var isSortable = property.GetCustomAttribute<SortableAttribute>() is not null;
 				var displayName = property.DisplayName();
 				var propertyName = property.Name;
 

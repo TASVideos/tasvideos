@@ -47,7 +47,7 @@ namespace TASVideos.Pages.Publications
 			{
 				// Movies.cgi only supported a single game name
 				var game = await _db.Games.FirstOrDefaultAsync(g => g.DisplayName == Name || g.GoodName == Name);
-				if (game != null)
+				if (game is not null)
 				{
 					tokens.Add(game.Id + "G");
 				}

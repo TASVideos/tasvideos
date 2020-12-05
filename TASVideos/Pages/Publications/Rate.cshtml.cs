@@ -96,7 +96,7 @@ namespace TASVideos.Pages.Publications
 
 		private void UpdateRating(PublicationRating? rating, int id, int userId, PublicationRatingType type, double? value)
 		{
-			if (rating != null)
+			if (rating is not null)
 			{
 				if (value.HasValue)
 				{

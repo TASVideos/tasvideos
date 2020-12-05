@@ -153,7 +153,7 @@ namespace TASVideos.Legacy.Imports
 					submissionAuthors.Add(author);
 				}
 
-				if (legacySubmission.Judge != null)
+				if (legacySubmission.Judge is not null)
 				{
 					submissionHistory.Add(new SubmissionStatusHistory
 					{

@@ -63,7 +63,7 @@ namespace TASVideos.Pages.UserFiles
 		public async Task<IActionResult> OnPostDelete(long fileId, string returnUrl)
 		{
 			var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
-			if (userFile != null)
+			if (userFile is not null)
 			{
 				if (User.GetUserId() == userFile.AuthorId
 					|| User.Has(PermissionTo.EditUserFiles))
@@ -90,7 +90,7 @@ namespace TASVideos.Pages.UserFiles
 				&& !string.IsNullOrWhiteSpace(comment))
 			{
 				var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
-				if (userFile != null)
+				if (userFile is not null)
 				{
 					_db.UserFileComments.Add(new UserFileComment
 					{
@@ -121,7 +121,7 @@ namespace TASVideos.Pages.UserFiles
 					.Include(c => c.UserFile)
 					.SingleOrDefaultAsync(u => u.Id == commentId);
 
-				if (fileComment != null)
+				if (fileComment is not null)
 				{
 					fileComment.Text = comment;
 
@@ -153,7 +153,7 @@ namespace TASVideos.Pages.UserFiles
 					.Include(c => c.User)
 					.SingleOrDefaultAsync(u => u.Id == commentId);
 
-				if (fileComment != null)
+				if (fileComment is not null)
 				{
 					_db.UserFileComments.Remove(fileComment);
 

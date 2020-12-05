@@ -136,7 +136,7 @@ namespace TASVideos.Data
 					.Where(wp => wp.PageName == wikiPage.PageName)
 					.SingleOrDefault(wp => wp.Child == null);
 
-				if (currentRevision != null)
+				if (currentRevision is not null)
 				{
 					wikiPage.Revision = currentRevision.Revision + 1;
 					currentRevision.Child = wikiPage;

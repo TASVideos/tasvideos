@@ -152,7 +152,7 @@ namespace TASVideos.Pages.Publications
 				.ThenInclude(pa => pa.Author)
 				.SingleOrDefaultAsync(p => p.Id == id);
 
-			if (publication != null)
+			if (publication is not null)
 			{
 				publication.Branch = model.Branch;
 				publication.ObsoletedById = model.ObsoletedBy;

@@ -66,7 +66,7 @@ namespace TASVideos.Pages.Diagnostics
 					p,
 					err = Util.ParsePageForErrors(p.Markup)
 				})
-				.Where(a => a.err != null)
+				.Where(a => a.err is not null)
 				.Select(a => new Row
 				{
 					PageName = a.p.PageName,

@@ -16,7 +16,7 @@ namespace TASVideos.Api
 			if (context.Filters.FirstOrDefault(f => f is ProducesResponseTypeAttribute) is ProducesResponseTypeAttribute responseTypeFilter)
 			{
 				var responseType = responseTypeFilter.Type.GetGenericArguments().FirstOrDefault();
-				if (responseType != null)
+				if (responseType is not null)
 				{
 					var apiRequest = context.ActionArguments.Values.FirstOrDefault(v => v is ApiRequest);
 			

@@ -109,7 +109,7 @@ namespace TASVideos.Services
 			var watchedTopic = await _db.ForumTopicWatches
 				.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId);
 
-			if (watchedTopic != null && watchedTopic.IsNotified)
+			if (watchedTopic is not null && watchedTopic.IsNotified)
 			{
 				watchedTopic.IsNotified = false;
 				await _db.SaveChangesAsync();
@@ -150,7 +150,7 @@ namespace TASVideos.Services
 				.SingleOrDefaultAsync(w => w.UserId == userId
 					&& w.ForumTopicId == topicId);
 
-			if (watch != null)
+			if (watch is not null)
 			{
 				_db.ForumTopicWatches.Remove(watch);
 

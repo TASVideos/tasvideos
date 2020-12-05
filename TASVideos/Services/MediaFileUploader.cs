@@ -76,7 +76,7 @@ namespace TASVideos.Services
 			var file = await _db.PublicationFiles
 				.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
 
-			if (file != null)
+			if (file is not null)
 			{
 				string path = Path.Combine(_env.WebRootPath, "torrent", file.Path);
 				File.Delete(path);

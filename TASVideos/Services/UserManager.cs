@@ -230,7 +230,7 @@ namespace TASVideos.Services
 				})
 				.SingleOrDefaultAsync(u => u.UserName == userName);
 
-			if (model != null)
+			if (model is not null)
 			{
 				model.Submissions = await _db.Submissions
 					.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id))

@@ -133,7 +133,7 @@ namespace TASVideos.Pages.UserFiles
 						.ForRegion(parseResult.Region.ToString())
 						.FirstOrDefaultAsync();
 
-					if (frameRateData != null)
+					if (frameRateData is not null)
 					{
 						frameRate = (decimal)frameRateData.FrameRate;
 					}
