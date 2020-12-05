@@ -1393,7 +1393,7 @@ namespace TASVideos.Test.Services
 			_cache.Remove(key);
 		}
 
-		public void Set(string key, object data, int? cacheTime = null)
+		public void Set(string key, object? data, int? cacheTime = null)
 		{
 			if (data is WikiPage page)
 			{

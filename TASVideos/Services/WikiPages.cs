@@ -30,7 +30,7 @@ namespace TASVideos.Services
 		/// Else the latest revision is returned
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		Task<WikiPage?> Page(string pageName, int? revisionId = null);
+		Task<WikiPage?> Page(string? pageName, int? revisionId = null);
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given id
@@ -117,7 +117,7 @@ namespace TASVideos.Services
 
 		public IQueryable<WikiPage> Query => _db.WikiPages.AsQueryable();
 
-		private WikiPage this[string pageName]
+		private WikiPage? this[string pageName]
 		{
 			get
 			{
@@ -195,7 +195,7 @@ namespace TASVideos.Services
 			return page is not null;
 		}
 
-		public async Task<WikiPage?> Page(string pageName, int? revisionId = null)
+		public async Task<WikiPage?> Page(string? pageName, int? revisionId = null)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{
