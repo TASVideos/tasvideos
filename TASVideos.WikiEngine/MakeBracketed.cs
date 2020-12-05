@@ -118,7 +118,7 @@ namespace TASVideos.WikiEngine
 
 			if (text.StartsWith("user:"))
 			{
-				return NormalizeInternalLink("/Users/Profile/" + text.Substring(5));
+				return NormalizeInternalLink("/Users/Profile/" + text[5..]);
 			}
 
 			return text;
@@ -148,7 +148,7 @@ namespace TASVideos.WikiEngine
 				{
 					s = s.Replace(" ", "");
 					if (s.Length > 0)
-						s = char.ToUpperInvariant(s[0]) + s.Substring(1);
+						s = char.ToUpperInvariant(s[0]) + s[1..];
 				}
 				// TODO: What should be done if a username actually ends in .html?
 				if (i == ss.Length - 1 && s.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
@@ -171,8 +171,9 @@ namespace TASVideos.WikiEngine
 			// If users don't like this, they should use links with explicit display text
 			if (text.StartsWith("user:"))
 			{
-				text = text.Substring(5);
+				text = text[5..];
 			}
+
 			text = text.Trim('/').Trim('=').Trim('#');
 			return text;
 		}
@@ -258,11 +259,11 @@ namespace TASVideos.WikiEngine
 				}
 				else if (s.StartsWith("title="))
 				{
-					attrs.Add(Attr("title", s.Substring(6)));
+					attrs.Add(Attr("title", s[6..]));
 				}
 				else if (s.StartsWith("alt="))
 				{
-					attrs.Add(Attr("alt", s.Substring(4)));
+					attrs.Add(Attr("alt", s[4..]));
 				}
 			}
 
