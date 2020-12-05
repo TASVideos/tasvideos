@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.Data.Entity;
 using TASVideos.Services.RssFeedParsers;
 
 namespace TASVideos.ViewComponents
@@ -19,7 +18,7 @@ namespace TASVideos.ViewComponents
 			_parser = parser;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			var url = ParamHelper.GetValueFor(pp, "url");
 			var type = ParamHelper.GetValueFor(pp, "type");

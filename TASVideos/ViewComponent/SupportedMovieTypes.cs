@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 
 namespace TASVideos.ViewComponents
@@ -13,7 +12,7 @@ namespace TASVideos.ViewComponents
 			_movieParser = movieParser;
 		}
 
-		public IViewComponentResult Invoke(WikiPage pageData, string pp)
+		public IViewComponentResult Invoke()
 		{
 			return View(_movieParser.SupportedMovieExtensions);
 		}

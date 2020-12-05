@@ -30,7 +30,7 @@ namespace TASVideos.TagHelpers
 		public ViewContext ViewContext { get; set; } = new();
 
 		public string Markup { get; set; } = "";
-		public WikiPage? PageData { get; set; }
+		public WikiPage PageData { get; set; } = new();
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{

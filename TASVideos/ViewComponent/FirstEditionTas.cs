@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.ViewComponents.Models;
 
 namespace TASVideos.ViewComponents
@@ -21,7 +20,7 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			// TODO: add tier argument, default to moon,stars,
 			// we want to avoid baking in "business logic" like which tiers are award eligible

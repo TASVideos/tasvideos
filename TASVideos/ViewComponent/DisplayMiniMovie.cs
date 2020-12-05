@@ -22,7 +22,7 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			var tier = ParamHelper.GetValueFor(pp, "tier");
 			var flags = ParamHelper.GetValueFor(pp, "flags");

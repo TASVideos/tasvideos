@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
-using TASVideos.Data.Entity;
 using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
@@ -15,7 +13,7 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync()
 		{
 			var orphans = await _wikiPages.Orphans();
 			return View(orphans);

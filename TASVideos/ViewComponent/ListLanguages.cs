@@ -30,7 +30,7 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-			if (string.IsNullOrWhiteSpace(pageData?.PageName))
+			if (string.IsNullOrWhiteSpace(pageData.PageName))
 			{
 				return new ContentViewComponentResult("");
 			}
