@@ -31,7 +31,7 @@ namespace TASVideos.Pages.UserFiles
 		[FromRoute]
 		public long Id { get; set; }
 
-		public UserFileModel UserFile { get; set; } = new UserFileModel();
+		public UserFileModel UserFile { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{

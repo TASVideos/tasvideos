@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public int Id { get; set; }
 
 		[BindProperty]
-		public ForumPostEditModel Post { get; set; } = new ForumPostEditModel();
+		public ForumPostEditModel Post { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{

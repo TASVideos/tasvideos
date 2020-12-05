@@ -15,7 +15,7 @@ namespace TASVideos.Test.Services
 	{
 		private IPointsService _pointsService = null!;
 		private ApplicationDbContext _db = null!;
-		private User Player => new User { UserName = "Player" };
+		private static User Player => new() { UserName = "Player" };
 
 		[TestInitialize]
 		public void Initialize()

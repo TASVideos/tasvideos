@@ -11,7 +11,7 @@ namespace TASVideos.Services.RssFeedParsers.Github
 		public string? Id { get; set; }
 
 		[XmlElement(ElementName="link", Namespace="http://www.w3.org/2005/Atom")]
-		public List<Link> Link { get; set; } = new List<Link>();
+		public List<Link> Link { get; set; } = new();
 
 		[XmlElement(ElementName="title", Namespace="http://www.w3.org/2005/Atom")]
 		public string? Title { get; set; }
@@ -20,7 +20,7 @@ namespace TASVideos.Services.RssFeedParsers.Github
 		public string? Updated { get; set; }
 
 		[XmlElement(ElementName="entry", Namespace="http://www.w3.org/2005/Atom")]
-		public List<Entry> Entry { get; set; } = new List<Entry>();
+		public List<Entry> Entry { get; set; } = new();
 
 		[XmlAttribute(AttributeName="xmlns")]
 		public string? Xmlns { get; set; }

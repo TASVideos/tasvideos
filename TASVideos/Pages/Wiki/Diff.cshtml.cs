@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public int? ToRevision { get; set; }
 
-		public WikiDiffModel Diff { get; set; } = new WikiDiffModel();
+		public WikiDiffModel Diff { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{

@@ -10,265 +10,265 @@ namespace TASVideos.Data.SeedData
 
 		public static GameSystem[] Systems =
 		{
-			new GameSystem
+			new()
 			{
 				Id = 1,
 				Code = "NES",
 				DisplayName = "Nintendo Entertainment System"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 2,
 				Code = "SNES",
 				DisplayName = "Super NES"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 3,
 				Code = "Genesis",
 				DisplayName = "Sega Genesis"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 4,
 				Code = "GB",
 				DisplayName = "Game Boy"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 5,
 				Code = "SGB",
 				DisplayName = "Super Game Boy"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 6,
 				Code = "GBC",
 				DisplayName = "Game Boy Color"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 7,
 				Code = "GBA",
 				DisplayName = "Game Boy Advance"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 8,
 				Code = "N64",
 				DisplayName = "Nintendo 64"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 9,
 				Code = "DOS",
 				DisplayName = "DOS"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 10,
 				Code = "SMS",
 				DisplayName = "Sega MasterSystem"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 11,
 				Code = "PSX",
 				DisplayName = "Sony PlayStation"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 12,
 				Code = "PCE",
 				DisplayName = "TurboGrafx 16"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 13,
 				Code = "WSWAN",
 				DisplayName = "WonderSwan"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 14,
 				Code = "PCFX",
 				DisplayName = "PC-FX"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 15,
 				Code = "NGP",
 				DisplayName = "Neo Geo Pocket"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 16,
 				Code = "Lynx",
 				DisplayName = "Atari Lynx"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 17,
 				Code = "DS",
 				DisplayName = "Nintendo DS"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 18,
 				Code = "GG",
 				DisplayName = "Game Gear"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 19,
 				Code = "Arcade",
 				DisplayName = "Arcade"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 20,
 				Code = "Saturn",
 				DisplayName = "Sega Saturn"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 21,
 				Code = "32X",
 				DisplayName = "Sega 32X"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 22,
 				Code = "SegaCD",
 				DisplayName = "Sega CD"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 23,
 				Code = "FDS",
 				DisplayName = "Famicom Disk System"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 24,
 				Code = "PCECD",
 				DisplayName = "TurboGrafx 16 CD"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 25,
 				Code = "Vboy",
 				DisplayName = "Virtual Boy"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 26,
 				Code = "MSX",
 				DisplayName = "MSX Home Computer System"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 27,
 				Code = "GC",
 				DisplayName = "Nintendo GameCube"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 28,
 				Code = "Wii",
 				DisplayName = "Nintendo Wii"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 29,
 				Code = "Windows",
 				DisplayName = "Windows"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 30,
 				Code = "SG1000",
 				DisplayName = "Sega SG-1000"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 31,
 				Code = "TI83",
 				DisplayName = "Texas Instruments TI-83 Series"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 32,
 				Code = "SGX",
 				DisplayName = "SuperGrafx"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 33,
 				Code = "DOOM",
 				DisplayName = "DooM"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 34,
 				Code = "A2600",
 				DisplayName = "Atari 2600"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 35,
 				Code = "Coleco",
 				DisplayName = "ColecoVision"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 36,
 				Code = "A7800",
 				DisplayName = "Atari 7800"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 37,
 				Code = "C64",
 				DisplayName = "Commodore 64"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 38,
 				Code = "Linux",
 				DisplayName = "Linux"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 39,
 				Code = "SVI3x8",
 				DisplayName = "Spectravideo SVI-318/328"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 41,
 				Code = "AppleII",
 				DisplayName = "Apple II"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 42,
 				Code = "INTV",
 				DisplayName = "Intellivision"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 43,
 				Code = "Uzebox",
 				DisplayName = "Uzebox"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 44,
 				Code = "ZXS",
 				DisplayName = "ZX Spectrum"
 			},
-			new GameSystem
+			new()
 			{
 				Id = 45,
 				Code = "VEC",
@@ -278,566 +278,566 @@ namespace TASVideos.Data.SeedData
 
 		public static GameSystemFrameRate[] SystemFrameRates =
 		{
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 1,
 				RegionCode = Ntsc,
 				FrameRate = 60.0988138974405
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 1,
 				RegionCode = Pal,
 				FrameRate = 50.0069789081886
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 1,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 1,
 				RegionCode = Pal + "50",
 				FrameRate = 50,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 2,
 				RegionCode = Ntsc,
 				FrameRate = 60.0988138974405
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 2,
 				RegionCode = Pal,
 				FrameRate = 50.0069789081886
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 2,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 2,
 				RegionCode = Pal + "50",
 				FrameRate = 50,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 3,
 				RegionCode = Ntsc,
 				FrameRate = 59.922751013550524
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 3,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994842
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 3,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 3,
 				RegionCode = Pal + "50",
 				FrameRate = 50,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 4,
 				RegionCode = Ntsc,
 				FrameRate = 59.7275005696058
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 4,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 5,
 				RegionCode = Ntsc,
 				FrameRate = 60.0988138974405
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 5,
 				RegionCode = Pal,
 				FrameRate = 50.0069789081886
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 5,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 6,
 				RegionCode = Ntsc,
 				FrameRate = 59.7275005696058
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 6,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 7,
 				RegionCode = Ntsc,
 				FrameRate = 59.7275005696058
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 7,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 8,
 				RegionCode = Ntsc,
 				FrameRate = 60,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 8,
 				RegionCode = Pal,
 				FrameRate = 50,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 9,
 				RegionCode = Ntsc,
 				FrameRate = 70.0863028953229
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 9,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 10,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 10,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994839
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 10,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 10,
 				RegionCode = Pal + "50",
 				FrameRate = 50,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 11,
 				RegionCode = Ntsc,
 				FrameRate = 59.29286256195557
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 11,
 				RegionCode = Pal,
 				FrameRate = 49.764559357596745
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 11,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 11,
 				RegionCode = Pal + "50",
 				FrameRate = 50,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 12,
 				RegionCode = Ntsc,
 				FrameRate = 59.8261054534819
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 13,
 				RegionCode = Ntsc,
 				FrameRate = 75.4716981132075
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 14,
 				RegionCode = Ntsc,
 				FrameRate = 59.8261054534819
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 15,
 				RegionCode = Ntsc,
 				FrameRate = 60.2530155928214
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 16,
 				RegionCode = Ntsc,
 				FrameRate = 59.89817311
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 16,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 17,
 				RegionCode = Ntsc,
 				FrameRate = 59.82609828808082
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 17,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 18,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 18,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 19,
 				RegionCode = Ntsc,
 				FrameRate = 60,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 19,
 				RegionCode = Pal,
 				FrameRate = 50,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 20,
 				RegionCode = Ntsc,
 				FrameRate = 60,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 20,
 				RegionCode = Pal,
 				FrameRate = 50,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 21,
 				RegionCode = Ntsc,
 				FrameRate = 59.922751013550524
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 21,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994842
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 21,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 22,
 				RegionCode = Ntsc,
 				FrameRate = 59.922751013550524
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 22,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994842
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 22,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 23,
 				RegionCode = Ntsc,
 				FrameRate = 60.0988138974405
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 23,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 24,
 				RegionCode = Ntsc,
 				FrameRate = 59.8261054534819
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 25,
 				RegionCode = Ntsc,
 				FrameRate = 50.2734877734878
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 26,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 26,
 				RegionCode = Pal,
 				FrameRate = 50.158975804566104
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 27,
 				RegionCode = Ntsc,
 				FrameRate = 60,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 27,
 				RegionCode = Pal,
 				FrameRate = 50,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 28,
 				RegionCode = Ntsc,
 				FrameRate = 60,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 28,
 				RegionCode = Pal,
 				FrameRate = 50,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 29,
 				RegionCode = Ntsc,
 				FrameRate = 60,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 30,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 30,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994839
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 31,
 				RegionCode = Ntsc,
 				FrameRate = 60,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 32,
 				RegionCode = Ntsc,
 				FrameRate = 59.8261054534819
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 33,
 				RegionCode = Ntsc,
 				FrameRate = 35.0029869215506
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 34,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 34,
 				RegionCode = Pal,
 				FrameRate = 49.8607596716149
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 34,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 35,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 35,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994839
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 35,
 				RegionCode = Ntsc + "60",
 				FrameRate = 60,
 				Obsolete = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 36,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 36,
 				RegionCode = Pal,
 				FrameRate = 49.70146011994839
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 37,
 				RegionCode = Ntsc,
 				FrameRate = 59.826089499853765
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 37,
 				RegionCode = Pal,
 				FrameRate = 50.1245421245421
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 38,
 				RegionCode = Ntsc,
 				FrameRate = 60
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 39,
 				RegionCode = Ntsc,
 				FrameRate = 59.9227510135505
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 39,
 				RegionCode = Pal,
 				FrameRate = 50.158975804566104
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 41,
 				RegionCode = Ntsc,
 				FrameRate = 60,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 41,
 				RegionCode = Pal,
 				FrameRate = 50,
 				Preliminary = true
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 42,
 				RegionCode = Ntsc,
 				FrameRate = 59.92
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 43,
 				RegionCode = Ntsc,
 				FrameRate = 60.01631993960238
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 44,
 				RegionCode = Pal,
 				FrameRate = 50.080128205
 			},
-			new GameSystemFrameRate
+			new()
 			{
 				GameSystemId = 45,
 				RegionCode = Ntsc,

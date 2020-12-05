@@ -37,7 +37,7 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 
 		[BindProperty]
-		public PublicationEditModel Publication { get; set; } = new PublicationEditModel();
+		public PublicationEditModel Publication { get; set; } = new();
 
 		[Display(Name = "Available Flags")]
 		public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();

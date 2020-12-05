@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Ratings
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationRatingsModel Publication { get; set; } = new PublicationRatingsModel();
+		public PublicationRatingsModel Publication { get; set; } = new();
 
 		public IEnumerable<PublicationRatingsModel.RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
 			? Publication.Ratings

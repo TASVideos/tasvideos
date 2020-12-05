@@ -118,7 +118,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			string signingKey = $"{Uri.EscapeDataString(_settings.ConsumerSecret)}&{Uri.EscapeDataString(_settings.TokenSecret)}";
 
-			using HMACSHA1 hmac = new HMACSHA1(Encoding.UTF8.GetBytes(signingKey));
+			using HMACSHA1 hmac = new(Encoding.UTF8.GetBytes(signingKey));
 			byte[] hashedBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(baseString));
 
 			return Convert.ToBase64String(hashedBytes);

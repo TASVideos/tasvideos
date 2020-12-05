@@ -77,7 +77,7 @@ namespace TASVideos.WikiEngine.AST
 		{
 		}
 
-		public static readonly NullWriterHelper Instance = new NullWriterHelper();
+		public static readonly NullWriterHelper Instance = new();
 	}
 
 	public interface INodeWithChildren : INode
@@ -166,15 +166,15 @@ namespace TASVideos.WikiEngine.AST
 	
 	public class Element : INodeWithChildren
 	{
-		private static readonly Regex AllowedTagNames = new Regex("^[a-z0-9]+$");
-		private static readonly Regex AllowedAttributeNames = new Regex("^[a-z\\-]+$");
-		private static readonly HashSet<string> VoidTags = new HashSet<string>
+		private static readonly Regex AllowedTagNames = new("^[a-z0-9]+$");
+		private static readonly Regex AllowedAttributeNames = new("^[a-z\\-]+$");
+		private static readonly HashSet<string> VoidTags = new()
 		{
 			"area", "base", "br", "col", "embed", "hr", "img", "input",
 			"keygen", "link", "meta", "param", "source", "track", "wbr"
 		};
 		public NodeType Type => NodeType.Element;
-		public List<INode> Children { get; private set; } = new List<INode>();
+		public List<INode> Children { get; private set; } = new();
 		public IDictionary<string, string> Attributes { get; private set; } = new Dictionary<string, string>();
 		public string Tag { get; }
 		public int CharStart { get; }
@@ -311,7 +311,7 @@ namespace TASVideos.WikiEngine.AST
 			w.WriteLine();
 		}
 
-		private static readonly HashSet<string> TocTagBlacklist = new HashSet<string>
+		private static readonly HashSet<string> TocTagBlacklist = new()
 		{
 			"a", "br"
 		};
@@ -334,7 +334,7 @@ namespace TASVideos.WikiEngine.AST
 	public class IfModule : INodeWithChildren
 	{
 		public NodeType Type => NodeType.IfModule;
-		public List<INode> Children { get; private set; } = new List<INode>();
+		public List<INode> Children { get; private set; } = new();
 		public string Condition { get; }
 		public int CharStart { get; }
 		public int CharEnd { get; set; }
@@ -401,7 +401,7 @@ namespace TASVideos.WikiEngine.AST
 
 	public class Module : INode
 	{
-		private static readonly Dictionary<string, string> ModuleNameMaps = new Dictionary<string, string>
+		private static readonly Dictionary<string, string> ModuleNameMaps = new()
 		{
 			["__wikilink"] = "WikiLink",
 			["awards"] = "Awards",

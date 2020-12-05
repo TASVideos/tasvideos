@@ -4,7 +4,7 @@
 	{
 		public int Id { get; set; }
 		public string Title { get; set; } = "";
-		public ScreenshotFile Screenshot { get; set; } = new ScreenshotFile();
+		public ScreenshotFile Screenshot { get; set; } = new();
 		public string? OnlineWatchingUrl { get; set; }
 
 		public class ScreenshotFile

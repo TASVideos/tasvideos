@@ -26,7 +26,7 @@ namespace TASVideos.Pages.Publications
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public PublicationRateModel Rating { get; set; } = new PublicationRateModel();
+		public PublicationRateModel Rating { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{

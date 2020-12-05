@@ -32,7 +32,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[BindProperty]
-		public MoveTopicModel Topic { get; set; } = new MoveTopicModel();
+		public MoveTopicModel Topic { get; set; } = new();
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 

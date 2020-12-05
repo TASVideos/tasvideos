@@ -1378,9 +1378,9 @@ namespace TASVideos.Test.Services
 
 	internal class WikiTestCache : ICacheService
 	{
-		private readonly Dictionary<string, object?> _cache = new Dictionary<string, object?>();
+		private readonly Dictionary<string, object?> _cache = new();
 
-		public List<WikiPage> PageCache { get; set; } = new List<WikiPage>();
+		public List<WikiPage> PageCache { get; set; } = new();
 
 		public void Remove(string key)
 		{

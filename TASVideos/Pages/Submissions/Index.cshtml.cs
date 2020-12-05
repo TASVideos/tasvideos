@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Submissions
 		public string? Query { get; set; }
 
 		[FromQuery]
-		public SubmissionSearchRequest Search { get; set; } = new SubmissionSearchRequest();
+		public SubmissionSearchRequest Search { get; set; } = new();
 
 		public SubmissionPageOf<SubmissionListEntry> Submissions { get; set; } = SubmissionPageOf<SubmissionListEntry>.Empty();
 

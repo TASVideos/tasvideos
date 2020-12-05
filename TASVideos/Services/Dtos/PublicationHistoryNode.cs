@@ -19,6 +19,6 @@ namespace TASVideos.Services
 
 		internal int? ObsoletedById { get; set; }
 
-		internal List<PublicationHistoryNode> ObsoleteList { get; set; } = new List<PublicationHistoryNode>();
+		internal List<PublicationHistoryNode> ObsoleteList { get; set; } = new();
 	}
 }

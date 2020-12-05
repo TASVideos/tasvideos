@@ -9,7 +9,7 @@ namespace TASVideos
 		// ReSharper disable once StyleCop.SA1401
 		public static SelectListItem[] DefaultEntry =
 		{
-			new SelectListItem { Text = DefaultDropdownText, Value = "" }
+			new() { Text = DefaultDropdownText, Value = "" }
 		};
 	}
 }

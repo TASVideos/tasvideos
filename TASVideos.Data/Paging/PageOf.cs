@@ -21,10 +21,7 @@ namespace TASVideos.Data
 		public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 
-		public static PageOf<T> Empty()
-		{
-			return new PageOf<T>(Enumerable.Empty<T>());
-		}
+		public static PageOf<T> Empty() => new(Enumerable.Empty<T>());
 	}
 
 	/// <summary>

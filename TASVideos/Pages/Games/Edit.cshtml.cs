@@ -51,7 +51,7 @@ namespace TASVideos.Pages.Games
 		public int? SystemId { get; set; }
 
 		[BindProperty]
-		public GameEditModel Game { get; set; } = new GameEditModel();
+		public GameEditModel Game { get; set; } = new();
 
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();

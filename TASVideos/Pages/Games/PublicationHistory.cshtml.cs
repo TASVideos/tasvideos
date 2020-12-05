@@ -28,8 +28,8 @@ namespace TASVideos.Pages.Games
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationHistoryGroup History { get; set; } = new PublicationHistoryGroup();
-		public Game Game { get; set; } = new Game();
+		public PublicationHistoryGroup History { get; set; } = new();
+		public Game Game { get; set; } = new();
 
 		[FromQuery]
 		public int? Highlight { get; set; }

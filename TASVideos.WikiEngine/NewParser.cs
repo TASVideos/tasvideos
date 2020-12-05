@@ -18,9 +18,9 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
-		private readonly List<INode> _output = new List<INode>();
-		private readonly List<INodeWithChildren> _stack = new List<INodeWithChildren>();
-		private readonly StringBuilder _currentText = new StringBuilder();
+		private readonly List<INode> _output = new();
+		private readonly List<INodeWithChildren> _stack = new();
+		private readonly StringBuilder _currentText = new();
 		private int _currentTextStart = -1;
 		private readonly string _input;
 		private int _index;
@@ -715,7 +715,7 @@ namespace TASVideos.WikiEngine
 				e => Builtins.MakeToc(n, e.CharStart));
 		}
 
-		private static readonly Regex Whitespace = new Regex("\\s+");
+		private static readonly Regex Whitespace = new("\\s+");
 
 		private static void AddIdsToHeadings(IEnumerable<INode> n)
 		{

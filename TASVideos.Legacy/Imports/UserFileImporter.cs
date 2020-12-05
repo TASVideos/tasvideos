@@ -80,7 +80,7 @@ namespace TASVideos.Legacy.Imports
 			LegacyComment legacyComment,
 			Dictionary<string, int> userIdsByName)
 		{
-			return new UserFileComment
+			return new()
 			{
 				CreationTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyComment.Timestamp),
 				Id = legacyComment.Id,
@@ -99,7 +99,7 @@ namespace TASVideos.Legacy.Imports
 			LegacyUserFile legacyFile,
 			Dictionary<string, int> userIdsByName)
 		{
-			return new UserFile
+			return new()
 			{
 				AuthorId = userIdsByName.TryGetValue(legacyFile.User!.Name, out var userId)
 					? userId

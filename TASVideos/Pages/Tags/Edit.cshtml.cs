@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Tags
 		public int Id { get; set; }
 
 		[BindProperty]
-		public Tag Tag { get; set; } = new Tag();
+		public Tag Tag { get; set; } = new();
 
 		public bool InUse { get; set; } = true;
 

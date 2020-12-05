@@ -32,9 +32,9 @@ namespace TASVideos.Pages.Forum.Posts
 		public string UserName { get; set; } = "";
 
 		[FromQuery]
-		public UserPostsRequest Search { get; set; } = new UserPostsRequest();
+		public UserPostsRequest Search { get; set; } = new();
 
-		public UserPostsModel UserPosts { get; set; } = new UserPostsModel();
+		public UserPostsModel UserPosts { get; set; } = new();
 
 		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>(); 
 

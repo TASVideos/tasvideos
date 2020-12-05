@@ -8,9 +8,9 @@ namespace TASVideos.WikiEngine
 {
 	public static partial class Builtins
 	{
-		private static readonly Regex Footnote = new Regex(@"^(\d+)$");
-		private static readonly Regex FootnoteLink = new Regex(@"^#(\d+)$");
-		private static readonly Regex RealModule = new Regex("^module:(.*)$");
+		private static readonly Regex Footnote = new(@"^(\d+)$");
+		private static readonly Regex FootnoteLink = new(@"^#(\d+)$");
+		private static readonly Regex RealModule = new("^module:(.*)$");
 
 		/// <summary>
 		/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:]
@@ -83,7 +83,7 @@ namespace TASVideos.WikiEngine
 
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
-		private static readonly Regex ImplicitWikiLink = new Regex(@"^[A-Za-z0-9._/#\- ]+(\|.+)?$");
+		private static readonly Regex ImplicitWikiLink = new(@"^[A-Za-z0-9._/#\- ]+(\|.+)?$");
 		private static bool IsLink(string text)
 		{
 			return LinkPrefixes.Any(text.StartsWith);

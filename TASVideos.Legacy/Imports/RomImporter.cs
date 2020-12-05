@@ -49,7 +49,7 @@ namespace TASVideos.Legacy.Imports
 		// The legacy system barely used roms and they were never enforced, but the new system demands
 		// fully cataloged publications, so let's create a placeholder ROM with the intent of filling in
 		// this info eventually
-		private static readonly GameRom UnknownRom = new GameRom
+		private static readonly GameRom UnknownRom = new()
 		{
 			Id = -1,
 			Md5 = "00000000000000000000000000000000",

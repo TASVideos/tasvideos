@@ -14,8 +14,8 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
 	public class IrcDistributor : IPostDistributor
 	{
-		private static readonly object Sync = new object();
-		private static IrcBot _bot = null!;
+		private static readonly object Sync = new();
+		private static IrcBot Bot = null!;
 		private readonly AppSettings.IrcConnection _settings;
 
 		public IrcDistributor(
@@ -32,9 +32,9 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			lock (Sync)
 			{
-				if (_bot == null)
+				if (Bot == null)
 				{
-					_bot = new IrcBot(_settings, logger);
+					Bot = new IrcBot(_settings, logger);
 				}
 			}
 		}
@@ -44,7 +44,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		public void Post(IPostable post)
 		{
 			// If proper credentials were not provided, the bot was never initialized
-			if (_bot == null)
+			if (Bot == null)
 			{
 				return;
 			}
@@ -54,14 +54,14 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				: _settings.Channel;
 
 			var s = $"{post.Title.CapAndEllipse(150)} {post.Body.CapAndEllipse(75)} {post.Link}";
-			_bot.AddMessage(channel, s);
+			Bot.AddMessage(channel, s);
 		}
 
 		private class IrcBot
 		{
 			private readonly AppSettings.IrcConnection _settings;
 			private readonly ILogger _logger;
-			private readonly ConcurrentQueue<string> _work = new ConcurrentQueue<string>();
+			private readonly ConcurrentQueue<string> _work = new();
 
 			public IrcBot(AppSettings.IrcConnection settings, ILogger logger)
 			{

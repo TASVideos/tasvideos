@@ -6,16 +6,16 @@ namespace TASVideos.ForumEngine
 {
 	public class BbParser
 	{
-		private static readonly Regex OpeningTag = new Regex(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]]+))?\]");
-		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
-		private static readonly Regex Url = new Regex(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
+		private static readonly Regex OpeningTag = new(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]]+))?\]");
+		private static readonly Regex ClosingTag = new(@"\G\/([^\p{C}\[\]=\/]+)\]");
+		private static readonly Regex Url = new(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
 
 		// The old system does support attributes in html tags, but only a few that we probably don't want,
 		// and it doesn't even support the full html syntax for them.  So forget attributes for now
-		private static readonly Regex HtmlOpening = new Regex(@"\G\s*([a-zA-Z]+)\s*>");
-		private static readonly Regex HtmlClosing = new Regex(@"\G\s*\/\s*([a-zA-Z]+)\s*>");
+		private static readonly Regex HtmlOpening = new(@"\G\s*([a-zA-Z]+)\s*>");
+		private static readonly Regex HtmlClosing = new(@"\G\s*\/\s*([a-zA-Z]+)\s*>");
 
-		private static readonly Regex HtmlVoid = new Regex(@"\G\s*([a-zA-Z]+)\s*\/?\s*>");
+		private static readonly Regex HtmlVoid = new(@"\G\s*([a-zA-Z]+)\s*\/?\s*>");
 
 		/// <summary>
 		/// what content is legal at this time
@@ -49,7 +49,7 @@ namespace TASVideos.ForumEngine
 			ChildTagsNoImmediateNest
 		}
 
-		private static readonly Dictionary<string, ParseState> KnownTags = new Dictionary<string, ParseState>
+		private static readonly Dictionary<string, ParseState> KnownTags = new()
 		{
 			// basic text formatting, no params, and body is content
 			{ "b", ParseState.ChildTags },
@@ -100,7 +100,7 @@ namespace TASVideos.ForumEngine
 			{ "td", ParseState.ChildTagsNoNest }
 		};
 
-		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new HashSet<string>
+		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new()
 		{
 			// html parsing, except the empty tags <br> and <hr>, as they immediately close
 			// so their parse state is not needed
@@ -133,8 +133,8 @@ namespace TASVideos.ForumEngine
 			return p._didHtml;
 		}
 
-		private readonly Element _root = new Element { Name = "_root" };
-		private readonly Stack<Element> _stack = new Stack<Element>();
+		private readonly Element _root = new() { Name = "_root" };
+		private readonly Stack<Element> _stack = new();
 
 		private readonly string _input;
 		private int _index = 0;
@@ -143,7 +143,7 @@ namespace TASVideos.ForumEngine
 		private readonly bool _allowBb;
 		private bool _didHtml;
 
-		private readonly StringBuilder _currentText = new StringBuilder();
+		private readonly StringBuilder _currentText = new();
 
 		private BbParser(string input, bool allowHtml, bool allowBb)
 		{
@@ -229,7 +229,7 @@ namespace TASVideos.ForumEngine
 										}
 										break;
 									}
-								}						
+								}
 							}
 							else if (state == ParseState.ChildTagsNoImmediateNest)
 							{

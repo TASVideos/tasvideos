@@ -15,9 +15,6 @@ namespace TASVideos.Pages.Games.Models
 		[Display(Name = "System")]
 		public string? SystemCode { get; set; }
 
-		public new static SystemPageOf<T> Empty()
-		{
-			return new SystemPageOf<T>(Enumerable.Empty<T>());
-		}
+		public new static SystemPageOf<T> Empty() => new(Enumerable.Empty<T>());
 	}
 }

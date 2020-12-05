@@ -49,7 +49,7 @@ namespace TASVideos.Pages.Submissions
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SubmissionPublishModel Submission { get; set; } = new SubmissionPublishModel();
+		public SubmissionPublishModel Submission { get; set; } = new();
 
 		public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; } = new List<SelectListItem>();
 
