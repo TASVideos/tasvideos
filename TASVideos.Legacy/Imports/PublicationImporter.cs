@@ -109,7 +109,7 @@ namespace TASVideos.Legacy.Imports
 				var pubAuthors = pub.Sub.Authors
 					.Select(u => new PublicationAuthor
 					{
-						UserId = u.Id,
+						UserId = u!.Id,
 						Author = u,
 						PublicationId = pub.Movie.Id,
 						Publication = publication

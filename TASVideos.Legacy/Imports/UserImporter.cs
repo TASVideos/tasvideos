@@ -100,14 +100,14 @@ namespace TASVideos.Legacy.Imports
 					LegacyPassword = u.Password,
 					EmailConfirmed = u.IsActive || u.EmailTime != null || u.PostCount > 0,
 					Email = u.Email,
-					NormalizedEmail = u.Email.ToUpper(),
+					NormalizedEmail = u.Email?.ToUpper(),
 					CreateUserName = "Automatic Migration",
 					PasswordHash = "",
 					Avatar = u.Avatar,
 					From = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(u.From)),
 					Signature = WebUtility
 						.HtmlDecode(
-							ImportHelper.ConvertLatin1String(u.Signature.Replace(":" + u.BbcodeUid, "")))
+							ImportHelper.ConvertLatin1String(u.Signature?.Replace(":" + u.BbcodeUid, "")))
 						.Cap(1000),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
