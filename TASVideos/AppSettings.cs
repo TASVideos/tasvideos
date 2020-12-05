@@ -9,13 +9,13 @@ namespace TASVideos
 		public string BaseUrl { get; set; } = "";
 		public bool EnableGzipCompression { get; set; }
 
-		public CacheSetting CacheSettings { get; set; } = new CacheSetting();
+		public CacheSetting CacheSettings { get; set; } = new();
 
-		public Connections ConnectionStrings { get; set; } = new Connections();
+		public Connections ConnectionStrings { get; set; } = new();
 
-		public IrcConnection Irc { get; set; } = new IrcConnection();
-		public DiscordConnection Discord { get; set; } = new DiscordConnection();
-		public TwitterConnection Twitter { get; set; } = new TwitterConnection();
+		public IrcConnection Irc { get; set; } = new();
+		public DiscordConnection Discord { get; set; } = new();
+		public TwitterConnection Twitter { get; set; } = new();
 
 		public string StartupStrategy { get; set; } = "";
 

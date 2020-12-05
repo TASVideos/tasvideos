@@ -43,8 +43,8 @@ namespace TASVideos.Pages.Forum
 		private readonly ApplicationDbContext _db;
 		private readonly ITopicWatcher _topicWatcher;
 
-		private static readonly SelectListGroup StandardGroup = new SelectListGroup { Name = "Standard" };
-		private static readonly SelectListGroup AltGroup = new SelectListGroup { Name = "Alternate" };
+		private static readonly SelectListGroup StandardGroup = new() { Name = "Standard" };
+		private static readonly SelectListGroup AltGroup = new() { Name = "Alternate" };
 
 		public BaseForumModel(ApplicationDbContext db, ITopicWatcher topicWatcher)
 		{

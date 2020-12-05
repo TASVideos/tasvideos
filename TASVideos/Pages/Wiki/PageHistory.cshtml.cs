@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public string? Path { get; set; }
 
-		public WikiHistoryModel History { get; set; } = new WikiHistoryModel();
+		public WikiHistoryModel History { get; set; } = new();
 
 		public async Task OnGet()
 		{

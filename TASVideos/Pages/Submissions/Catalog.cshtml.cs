@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Submissions
 		public int? RomId { get; set; }
 
 		[BindProperty]
-		public SubmissionCatalogModel Catalog { get; set; } = new SubmissionCatalogModel();
+		public SubmissionCatalogModel Catalog { get; set; } = new();
 
 		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
 		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();

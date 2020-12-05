@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public int? Id { get; set; }
 
-		public WikiPage PageData { get; set; } = new WikiPage();
+		public WikiPage PageData { get; set; } = new();
 
 		public async Task<IActionResult> OnPost()
 		{

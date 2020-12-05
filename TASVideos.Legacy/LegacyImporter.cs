@@ -16,7 +16,7 @@ namespace TASVideos.Legacy
 {
 	public static class LegacyImporter
 	{
-		private static readonly Dictionary<string, long> ImportDurations = new Dictionary<string, long>();
+		private static readonly Dictionary<string, long> ImportDurations = new();
 
 		public static void RunLegacyImport(
 			IWebHostEnvironment env,

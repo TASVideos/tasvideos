@@ -194,7 +194,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new ViewContext();
+		public ViewContext ViewContext { get; set; } = new();
 
 		public string AspHref { get; set; } = "";
 

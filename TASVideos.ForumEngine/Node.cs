@@ -72,7 +72,7 @@ namespace TASVideos.ForumEngine
 	{
 		public string Name { get; set; } = "";
 		public string Options { get; set; } = "";
-		public List<INode> Children { get; set; } = new List<INode>();
+		public List<INode> Children { get; set; } = new();
 		private string GetChildText()
 		{
 			var sb = new StringBuilder();

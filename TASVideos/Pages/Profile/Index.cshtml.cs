@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Profile
 			_userManager = userManager;
 		}
 
-		public UserProfileModel Profile { get; set; } = new UserProfileModel();
+		public UserProfileModel Profile { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{

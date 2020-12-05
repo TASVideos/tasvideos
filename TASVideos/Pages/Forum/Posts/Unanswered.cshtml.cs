@@ -22,7 +22,7 @@ namespace TASVideos.Pages.Forum.Posts
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; } = new PagingModel();
+		public PagingModel Search { get; set; } = new();
 
 		public PageOf<UnansweredPostsModel> Posts { get; set; } = PageOf<UnansweredPostsModel>.Empty();
 

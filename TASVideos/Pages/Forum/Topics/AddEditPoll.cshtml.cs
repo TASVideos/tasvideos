@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int? PollId { get; set; }
 
 		[BindProperty]
-		public PollCreateModel Poll { get; set; } = new PollCreateModel();
+		public PollCreateModel Poll { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{

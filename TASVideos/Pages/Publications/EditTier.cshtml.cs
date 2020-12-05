@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 
 		[BindProperty]
-		public PublicationTierEditModel Publication { get; set; } = new PublicationTierEditModel();
+		public PublicationTierEditModel Publication { get; set; } = new();
 
 		[BindProperty]
 		public string Title { get; set; } = "";

@@ -37,7 +37,7 @@ namespace TASVideos.Pages.Wiki
 			_wikiPages = wikiPages;
 		}
 
-		public List<SiteMapEntry> Map { get; set; } = new List<SiteMapEntry>();
+		public List<SiteMapEntry> Map { get; set; } = new();
 
 		public void OnGet()
 		{

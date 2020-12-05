@@ -107,7 +107,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 				vBlankCount = header.GetValueFor(Keys.VBlankCount).ToInt();
 				cycleCount = header.GetValueFor(Keys.CycleCount).ToLong();
-				core = header.GetValueFor(Keys.Core)?.ToLower() ?? "";
+				core = header.GetValueFor(Keys.Core).ToLower();
 			}
 
 			var inputLog = archive.Entry(InputFile);
@@ -142,13 +142,13 @@ namespace TASVideos.MovieParsers.Parsers
 			return result;
 		}
 
-		private static readonly Dictionary<string, int> CycleBasedCores = new Dictionary<string, int>
+		private static readonly Dictionary<string, int> CycleBasedCores = new()
 		{
 			["subgbhawk"] = 4194304,
 			["gambatte"] = 2097152
 		};
 
-		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
+		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new()
 		{
 			["gen"] = SystemCodes.Genesis,
 			["sat"] = SystemCodes.Saturn,

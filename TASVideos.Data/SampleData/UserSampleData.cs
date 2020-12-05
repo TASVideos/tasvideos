@@ -9,7 +9,7 @@ namespace TASVideos.Data.SampleData
 
 		public static readonly User[] Users =
 		{
-			new User
+			new()
 			{
 				UserName = "Dara.Marks",
 				NormalizedUserName = "DARA.MARKS",

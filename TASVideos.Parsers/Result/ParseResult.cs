@@ -19,8 +19,8 @@ namespace TASVideos.MovieParsers.Result
 		public MovieStartType StartType { get; internal set; }
 		public double? FrameRateOverride { get; internal set; }
 
-		internal List<ParseWarnings> WarningList { get; set; } = new List<ParseWarnings>();
-		internal List<string> ErrorList { get; set; } = new List<string>();
+		internal List<ParseWarnings> WarningList { get; set; } = new();
+		internal List<string> ErrorList { get; set; } = new();
 	}
 
 	internal static class ParseResultExtensions

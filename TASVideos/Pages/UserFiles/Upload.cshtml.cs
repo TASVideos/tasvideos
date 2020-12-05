@@ -37,7 +37,7 @@ namespace TASVideos.Pages.UserFiles
 		}
 
 		[BindProperty]
-		public UserFileUploadModel UserFile { get; set; } = new UserFileUploadModel();
+		public UserFileUploadModel UserFile { get; set; } = new();
 
 		public int StorageUsed { get; set; } 
 

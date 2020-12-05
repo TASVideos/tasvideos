@@ -42,7 +42,7 @@ namespace TASVideos.Pages.Publications
 				return RedirectToPage("/Publications/Index", new { query });
 			}
 
-			List<string> tokens = new List<string>();
+			List<string> tokens = new();
 			if (!string.IsNullOrWhiteSpace(Name))
 			{
 				// Movies.cgi only supported a single game name

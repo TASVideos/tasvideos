@@ -50,7 +50,7 @@ namespace TASVideos.Pages.Games.Roms
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public RomEditModel Rom { get; set; } = new RomEditModel();
+		public RomEditModel Rom { get; set; } = new();
 
 		[BindProperty]
 		public string SystemCode { get; set; } = "";

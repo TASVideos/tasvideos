@@ -21,7 +21,7 @@ namespace TASVideos.ViewComponents
 		public string Game { get; set; } = "";
 		public string Authors { get; set; } = "";
 
-		public ScreenshotFile Screenshot { get; set; } = new ScreenshotFile();
+		public ScreenshotFile Screenshot { get; set; } = new();
 
 		public class ScreenshotFile
 		{

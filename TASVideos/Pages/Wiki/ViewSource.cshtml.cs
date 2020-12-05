@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public int? Revision { get; set; }
 
-		public WikiPage WikiPage { get; set; } = new WikiPage();
+		public WikiPage WikiPage { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{

@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Users
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; } = new PagingModel();
+		public PagingModel Search { get; set; } = new();
 
 		public PageOf<UserListModel> Users { get; set; } = PageOf<UserListModel>.Empty();
 

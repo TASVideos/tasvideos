@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Forum
 		public int Id { get; set; }
 
 		[BindProperty]
-		public CategoryEditModel Category { get; set; } = new CategoryEditModel();
+		public CategoryEditModel Category { get; set; } = new();
 
 		public async Task<IActionResult> OnGet()
 		{

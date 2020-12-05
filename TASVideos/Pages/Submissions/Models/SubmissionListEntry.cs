@@ -55,9 +55,6 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? System { get; set; }
 		public string? User { get; set; }
 
-		public new static SubmissionPageOf<T> Empty()
-		{
-			return new SubmissionPageOf<T>(Enumerable.Empty<T>());
-		}
+		public new static SubmissionPageOf<T> Empty() => new(Enumerable.Empty<T>());
 	}
 }
