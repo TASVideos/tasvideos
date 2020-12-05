@@ -107,7 +107,7 @@ namespace TASVideos.Data
 			builder.Entity<ForumTopic>(entity =>
 			{
 				entity.HasIndex(e => e.PageName)
-					.HasName($"{nameof(ForumTopic.PageName)}Index")
+					.HasDatabaseName($"{nameof(ForumTopic.PageName)}Index")
 					.IsUnique()
 					.HasFilter($"([{nameof(ForumTopic.PageName)}] IS NOT NULL)");
 			});
@@ -115,10 +115,10 @@ namespace TASVideos.Data
 			builder.Entity<User>(entity =>
 			{
 				entity.HasIndex(e => e.NormalizedEmail)
-					.HasName("EmailIndex");
+					.HasDatabaseName("EmailIndex");
 
 				entity.HasIndex(e => e.NormalizedUserName)
-					.HasName("UserNameIndex")
+					.HasDatabaseName("UserNameIndex")
 					.IsUnique()
 					.HasFilter($"([{nameof(User.NormalizedUserName)}] IS NOT NULL)");
 
@@ -192,7 +192,7 @@ namespace TASVideos.Data
 			builder.Entity<WikiPage>(entity =>
 			{
 				entity.HasIndex(e => new { e.PageName, e.Revision })
-					.HasName("PageNameIndex")
+					.HasDatabaseName("PageNameIndex")
 					.IsUnique()
 					.HasFilter($"([{nameof(WikiPage.PageName)}] IS NOT NULL)");
 			});
@@ -373,7 +373,7 @@ namespace TASVideos.Data
 			builder.Entity<UserDisallow>(entity =>
 			{
 				entity.HasIndex(e => e.RegexPattern)
-					.HasName("UserDisallowRegexPatternIndex")
+					.HasDatabaseName("UserDisallowRegexPatternIndex")
 					.IsUnique()
 					.HasFilter($"([{nameof(UserDisallow.RegexPattern)}] IS NOT NULL)");
 			});
@@ -429,7 +429,7 @@ namespace TASVideos.Data
 			}
 		}
 
-		private string GetUser() => _httpContext?.HttpContext?.User?.Identity?.Name ?? SystemUser;
+		private string GetUser() => _httpContext?.HttpContext?.User.Identity?.Name ?? SystemUser;
 
 		private static bool IsModified(EntityEntry entry, string propertyName)
 			=> entry.Properties
