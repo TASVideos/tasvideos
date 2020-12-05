@@ -7,7 +7,7 @@ namespace TASVideos.Services
 	public interface ICacheService
 	{
 		bool TryGetValue<T>(string key, out T value);
-		void Set(string key, object data, int? cacheTime = null);
+		void Set(string key, object? data, int? cacheTime = null);
 		void Remove(string key);
 	}
 
@@ -32,7 +32,7 @@ namespace TASVideos.Services
 			_cache.Remove(key);
 		}
 
-		public void Set(string key, object data, int? cacheTime)
+		public void Set(string key, object? data, int? cacheTime)
 		{
 			using var entry = _cache.CreateEntry(key);
 			entry.Value = data;
@@ -48,7 +48,7 @@ namespace TASVideos.Services
 			return false;
 		}
 
-		public void Set(string key, object data, int? cacheTime)
+		public void Set(string key, object? data, int? cacheTime)
 		{
 		}
 
