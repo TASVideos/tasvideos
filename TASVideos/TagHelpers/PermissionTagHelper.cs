@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Data.Entity;
@@ -27,7 +28,7 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement(Attributes = nameof(Permissions))]
 	public class PermissionsTagHelper : TagHelper
 	{
-		public PermissionTo[] Permissions { get; set; } = new PermissionTo[0];
+		public PermissionTo[] Permissions { get; set; } = Array.Empty<PermissionTo>();
 
 		[HtmlAttributeNotBound]
 		[ViewContext]

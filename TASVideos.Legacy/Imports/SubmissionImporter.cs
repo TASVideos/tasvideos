@@ -279,7 +279,7 @@ namespace TASVideos.Legacy.Imports
 			{
 				if (content == null || content.Length == 0)
 				{
-					return (null, new byte[0]);
+					return (null, Array.Empty<byte>());
 				}
 
 				using var submissionFileStream = new MemoryStream(content);
@@ -319,7 +319,7 @@ namespace TASVideos.Legacy.Imports
 			{
 				// Some submissions are .bz2 4551, 6551
 				// Some have corrupt headers, 5111
-				return (null, content ?? new byte[0]);
+				return (null, content ?? Array.Empty<byte>());
 			}
 		}
 

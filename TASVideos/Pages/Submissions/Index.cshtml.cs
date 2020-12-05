@@ -92,7 +92,7 @@ namespace TASVideos.Pages.Submissions
 		{
 			if (string.IsNullOrWhiteSpace(partial) || partial.Length < 3)
 			{
-				return new JsonResult(new string[0]);
+				return new JsonResult(Array.Empty<string>());
 			}
 
 			var upper = partial.ToUpper();

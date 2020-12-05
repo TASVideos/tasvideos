@@ -52,7 +52,7 @@ namespace TASVideos.WikiEngine
 			return new INode[]
 			{
 				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", new[] { Attr("id", n) }, new INode[0]) { CharEnd = charStart },
+				new Element(charStart, "a", new[] { Attr("id", n) }, Array.Empty<INode>()) { CharEnd = charStart },
 				new Element(charStart, "a", new[] { Attr("href", "#r" + n) }, new[]
 				{
 					new Text(charStart, n) { CharEnd = charEnd }
@@ -65,7 +65,7 @@ namespace TASVideos.WikiEngine
 		{
 			return new[]
 			{
-				new Element(charStart, "a", new[] { Attr("id", "r" + n) }, new INode[0]) { CharEnd = charStart },
+				new Element(charStart, "a", new[] { Attr("id", "r" + n) }, Array.Empty<INode>()) { CharEnd = charStart },
 				new Element(charStart, "sup", new INode[]
 				{
 					new Text(charStart, "[") { CharEnd = charStart },
@@ -271,7 +271,7 @@ namespace TASVideos.WikiEngine
 				attrs.Add(Attr("class", "embed"));
 			}
 
-			return new Element(charStart, "img", attrs, new INode[0]) { CharEnd = charEnd };
+			return new Element(charStart, "img", attrs, Array.Empty<INode>()) { CharEnd = charEnd };
 		}
 	}
 }
