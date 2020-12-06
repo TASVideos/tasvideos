@@ -31,37 +31,16 @@ namespace TASVideos.Services
 		/// </summary>
 		public static string PlayerRank(decimal points)
 		{
-			if (points <= 0)
+			return points switch
 			{
-				return "";
-			}
-
-			if (points < 1)
-			{
-				return PlayerRanks.FormerPlayer;
-			}
-
-			if (points < 250)
-			{
-				return PlayerRanks.Player;
-			}
-
-			if (points < 500)
-			{
-				return PlayerRanks.ActivePlayer;
-			}
-
-			if (points < 1000)
-			{
-				return PlayerRanks.ExperiencedPlayer;
-			}
-
-			if (points < 2000)
-			{
-				return PlayerRanks.SkilledPlayer;
-			}
-
-			return PlayerRanks.ExpertPlayer;
+				<= 0 => "",
+				< 1 => PlayerRanks.FormerPlayer,
+				< 250 => PlayerRanks.Player,
+				< 500 => PlayerRanks.ActivePlayer,
+				< 1000 => PlayerRanks.ExperiencedPlayer,
+				< 2000 => PlayerRanks.SkilledPlayer,
+				_ => PlayerRanks.ExpertPlayer
+			};
 		}
 
 		internal static double PlayerPointsForMovie(Publication publication, double averageRatingCount)

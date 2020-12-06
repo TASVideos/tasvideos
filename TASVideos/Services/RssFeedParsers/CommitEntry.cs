@@ -10,9 +10,9 @@
 
 	internal class CommitEntry : ICommitEntry
 	{
-		public string Author { get; set; } = "";
-		public string At { get; set; } = "";
-		public string Message { get; set; } = "";
-		public string Link { get; set; } = "";
+		public string Author { get; init; } = "";
+		public string At { get; init; } = "";
+		public string Message { get; init; } = "";
+		public string Link { get; init; } = "";
 	}
 }

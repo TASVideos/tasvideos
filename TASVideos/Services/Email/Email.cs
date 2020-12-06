@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TASVideos.Services.Email
 {
@@ -33,7 +34,7 @@ namespace TASVideos.Services.Email
 
 	public class StandardEmail : IEmail
 	{
-		public IEnumerable<string> Recipients { get; set; } = new string[0];
+		public IEnumerable<string> Recipients { get; set; } = Array.Empty<string>();
 		public string Subject { get; set; } = "";
 		public string Message { get; set; } = "";
 	}
