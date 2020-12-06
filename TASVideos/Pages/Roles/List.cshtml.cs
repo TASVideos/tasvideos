@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Roles
 
 		public IEnumerable<RoleDisplayModel> Roles { get; set; } = new List<RoleDisplayModel>();
 
-		public async Task OnGet(string role)
+		public async Task OnGet()
 		{
 			Roles = await _db.Roles
 				.ProjectTo<RoleDisplayModel>()
