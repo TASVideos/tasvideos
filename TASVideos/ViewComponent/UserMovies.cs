@@ -33,8 +33,6 @@ namespace TASVideos.ViewComponents
 				.Take(count)
 				.ToListAsync();
 
-			// TODO
-			var tier = ParamHelper.GetValueFor(pp, "tier");
 			return View(userMovies);
 		}
 	}
