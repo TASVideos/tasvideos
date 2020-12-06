@@ -100,7 +100,6 @@ namespace TASVideos.Services
 			return playerPoints;
 		}
 
-		// TODO: user weights
 		public async Task<RatingDto> PublicationRating(int id)
 		{
 			string cacheKey = MovieRatingKey + id;

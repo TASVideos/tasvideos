@@ -44,11 +44,11 @@
 	/// </summary>
 	public class Post : IPostable
 	{
-		public string Title { get; set; } = "";
-		public string Link { get; set; } = "";
-		public string Body { get; set; } = "";
-		public string Group { get; set; } = "";
-		public string User { get; set; } = "";
-		public PostType Type { get; set; }
+		public string Title { get; init; } = "";
+		public string Link { get; init; } = "";
+		public string Body { get; init; } = "";
+		public string Group { get; init; } = "";
+		public string User { get; init; } = "";
+		public PostType Type { get; init; }
 	}
 }

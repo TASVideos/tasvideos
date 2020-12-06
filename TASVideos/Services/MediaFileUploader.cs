@@ -35,7 +35,7 @@ namespace TASVideos.Services
 
 			string screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
 			string screenshotPath = Path.Combine(_env.WebRootPath, "media", screenshotFileName);
-			File.WriteAllBytes(screenshotPath, screenshotBytes);
+			await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
 
 			var pubFile = new PublicationFile
 			{
@@ -58,7 +58,7 @@ namespace TASVideos.Services
 
 			string torrentFileName = torrent.FileName;
 			string torrentPath = Path.Combine(_env.WebRootPath, "torrent", torrentFileName);
-			File.WriteAllBytes(torrentPath, torrentBytes);
+			await File.WriteAllBytesAsync(torrentPath, torrentBytes);
 
 			var torrentFile = new PublicationFile
 			{

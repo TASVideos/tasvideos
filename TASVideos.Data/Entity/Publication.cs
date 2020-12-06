@@ -69,7 +69,7 @@ namespace TASVideos.Data.Entity
 		public virtual WikiPage? WikiContent { get; set; }
 
 		[Required]
-		public byte[] MovieFile { get; set; } = new byte[0];
+		public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 
 		[Required]
 		public string MovieFileName { get; set; } = "";

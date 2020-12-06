@@ -26,11 +26,11 @@ namespace TASVideos.Services
 			{
 				CreateUserName = SiteGlobalConstants.TASVideoAgent,
 				Question = SiteGlobalConstants.PollQuestion,
-				PollOptions = new[]
+				PollOptions = new ForumPollOption[]
 				{
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
-					new ForumPollOption { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
+					new() { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
+					new() { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
+					new() { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
 				}
 			};
 
