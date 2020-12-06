@@ -3,9 +3,9 @@
 	public class RatingDto
 	{
 		public double? Overall { get; set; }
-		public double? Entertainment { get; set; }
-		public double? TechQuality { get; set; }
-		public int TotalEntertainmentVotes { get; set; }
-		public int TotalTechQualityVotes { get; set; }
+		public double? Entertainment { get; init; }
+		public double? TechQuality { get; init; }
+		public int TotalEntertainmentVotes { get; init; }
+		public int TotalTechQualityVotes { get; init; }
 	}
 }
