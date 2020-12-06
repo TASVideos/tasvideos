@@ -4,20 +4,20 @@ namespace TASVideos.Services
 {
 	public class PublicationHistoryGroup
 	{
-		public int GameId { get; set; }
+		public int GameId { get; init; }
 
-		public IEnumerable<PublicationHistoryNode> Branches { get; set; } = new List<PublicationHistoryNode>();
+		public IEnumerable<PublicationHistoryNode> Branches { get; init; } = new List<PublicationHistoryNode>();
 	}
 
 	public class PublicationHistoryNode
 	{
-		public int Id { get; set; }
-		public string Title { get; set; } = "";
-		public string? Branch { get; set; }
+		public int Id { get; init; }
+		public string Title { get; init; } = "";
+		public string? Branch { get; init; }
 		
 		public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 
-		internal int? ObsoletedById { get; set; }
+		internal int? ObsoletedById { get; init; }
 
 		internal List<PublicationHistoryNode> ObsoleteList { get; set; } = new();
 	}

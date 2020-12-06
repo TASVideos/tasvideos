@@ -7,11 +7,11 @@ namespace TASVideos.Services
 	/// </summary>
 	public class WatchedTopic
 	{
-		public DateTime TopicCreateTimeStamp { get; set; }
-		public bool IsNotified { get; set; }
-		public int ForumId { get; set; }
-		public string ForumTitle { get; set; } = "";
-		public int TopicId { get; set; }
-		public string TopicTitle { get; set; } = "";
+		public DateTime TopicCreateTimeStamp { get; init; }
+		public bool IsNotified { get; init; }
+		public int ForumId { get; init; }
+		public string ForumTitle { get; init; } = "";
+		public int TopicId { get; init; }
+		public string TopicTitle { get; init; } = "";
 	}
 }
