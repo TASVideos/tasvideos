@@ -24,7 +24,7 @@ namespace TASVideos.ViewComponents
 			{
 				Href = split[0],
 				DisplayText = split.Length == 1
-					? split[0].Substring(1) // almost always want to chop off the leading '/'
+					? split[0][1..] // almost always want to chop off the leading '/'
 					: split[1]
 			};
 
