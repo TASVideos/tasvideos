@@ -368,12 +368,9 @@ namespace TASVideos.WikiEngine.AST
 
 		public string InnerText(IWriterHelper h)
 		{
-			if (h.CheckCondition(Condition))
-			{
-				return string.Join("", Children.Select(c => c.InnerText(h)));
-			}
-
-			return "";
+			return h.CheckCondition(Condition)
+				? string.Join("", Children.Select(c => c.InnerText(h)))
+				: "";
 		}
 
 		public void DumpContentDescriptive(TextWriter w, string padding)

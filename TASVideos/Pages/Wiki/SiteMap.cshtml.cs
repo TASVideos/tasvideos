@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Wiki
 				}));
 		}
 
-		private static string AccessRestriction(Type type)
+		private static string AccessRestriction(MemberInfo type)
 		{
 			// This logic is far from robust and full of assumptions, the idea is to tweak as necessary
 			if (type.GetCustomAttribute<AllowAnonymousAttribute>() is not null)

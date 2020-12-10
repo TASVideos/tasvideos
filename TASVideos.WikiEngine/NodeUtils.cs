@@ -66,7 +66,8 @@ namespace TASVideos.WikiEngine.AST
 		public static List<InternalLinkInfo> GetAllInternalLinks(string content, IEnumerable<INode> input)
 		{
 			var ret = new List<InternalLinkInfo>();
-			Action<string, INode> addLink = (string link, INode node) =>
+
+			void AddLink(string link, INode node)
 			{
 				if (link.StartsWith("/Users/Profile/", StringComparison.OrdinalIgnoreCase))
 				{
@@ -79,6 +80,7 @@ namespace TASVideos.WikiEngine.AST
 					// [=Users/Profile/foo] gets excluded from reporting because of this; minor casualty.
 					return;
 				}
+
 				var si = Math.Max(node.CharStart - 20, 0);
 				var se = Math.Min(node.CharEnd + 20, content.Length);
 				var excerpt = content.Substring(si, se - si);
@@ -88,7 +90,7 @@ namespace TASVideos.WikiEngine.AST
 				// But in the context of counting internal referrers, that leading slash is not needed or wanted, so strip it here
 				link = link.TrimStart('/');
 				ret.Add(new InternalLinkInfo(link, excerpt));
-			};
+			}
 
 			ForEach(input, node =>
 			{
@@ -97,7 +99,7 @@ namespace TASVideos.WikiEngine.AST
 					if (m.Text.StartsWith("__wikiLink|"))
 					{
 						var link = m.Text.Split('|')[1];
-						addLink(link, node);
+						AddLink(link, node);
 					}
 				}
 				else if (node is Element e)
@@ -105,7 +107,7 @@ namespace TASVideos.WikiEngine.AST
 					if (e.Tag == "a" && e.Attributes.TryGetValue("class", out var clazz) && clazz == "intlink")
 					{
 						var link = e.Attributes["href"];
-						addLink(link, node);
+						AddLink(link, node);
 					}
 				}
 			});
