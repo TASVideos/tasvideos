@@ -50,7 +50,7 @@
 	}
 	@if (IsSectionDefined("PageTitle"))
 	{
-		@RenderSection("PageTitle")
+		@await RenderSectionAsync("PageTitle")
 	}
 	else
 	{

@@ -102,8 +102,8 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 						if (splitInput[0] == "PING")
 						{
 							string pongReply = splitInput[1];
-							writer.WriteLine("PONG " + pongReply);
-							writer.Flush();
+							await writer.WriteLineAsync("PONG " + pongReply);
+							await writer.FlushAsync();
 						}
 
 						switch (splitInput[1])
