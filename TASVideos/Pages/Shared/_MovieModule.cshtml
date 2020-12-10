@@ -2,7 +2,7 @@
 
 @inject TASVideos.Services.IAwards Awards 
 @{
-	var PublicationAwards = await Awards.ForPublication(Model.Id);
+	var publicationAwards = await Awards.ForPublication(Model.Id);
 }
 
 @functions {
@@ -153,7 +153,7 @@
 					Emulator Version:<br />@Model.EmulatorVersion
 				</small>
 			</div>
-			@foreach (var award in PublicationAwards.OrderByDescending(a => a.Year))
+			@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
 			{
 				<partial name="_Award" model="award" />
 			}

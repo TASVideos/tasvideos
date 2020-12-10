@@ -137,7 +137,7 @@ namespace TASVideos.ForumEngine
 		private readonly Stack<Element> _stack = new();
 
 		private readonly string _input;
-		private int _index = 0;
+		private int _index;
 
 		private readonly bool _allowHtml;
 		private readonly bool _allowBb;

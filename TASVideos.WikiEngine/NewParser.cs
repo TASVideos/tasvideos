@@ -701,7 +701,7 @@ namespace TASVideos.WikiEngine
 			FinishText();
 		}
 
-		private static void ReplaceTabs(List<INode> n)
+		private static void ReplaceTabs(IList<INode> n)
 		{
 			NodeUtils.Replace(n,
 				e => e.Type == NodeType.Element && (((Element)e).Tag == "htabs" || ((Element)e).Tag == "vtabs"),
