@@ -212,7 +212,7 @@ namespace TASVideos.Data
 				}
 			}
 
-			context.SaveChanges();
+			await context.SaveChangesAsync();
 		}
 
 		/// <summary>
@@ -235,7 +235,7 @@ namespace TASVideos.Data
 					await context.Database.ExecuteSqlRawAsync(escaped);
 				}
 
-				context.Database.CommitTransaction();
+				await context.Database.CommitTransactionAsync();
 			}
 		}
 
