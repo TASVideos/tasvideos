@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 
@@ -72,7 +73,7 @@ namespace TASVideos.Api.Requests
 		IEnumerable<string> IPublicationTokens.Tags => TagNames.CsvToStrings();
 		IEnumerable<string> IPublicationTokens.Flags => FlagNames.CsvToStrings();
 		IEnumerable<int> IPublicationTokens.Authors => AuthorIds.CsvToInts();
-		IEnumerable<int> IPublicationTokens.MovieIds => new int[0];
+		IEnumerable<int> IPublicationTokens.MovieIds => Array.Empty<int>();
 		IEnumerable<int> IPublicationTokens.Games => GameIds.CsvToInts();
 		IEnumerable<int> IPublicationTokens.GameGroups => GameGroupIds.CsvToInts();
 	}
