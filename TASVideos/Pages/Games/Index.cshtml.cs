@@ -25,7 +25,6 @@ namespace TASVideos.Pages.Games
 		[FromRoute]
 		public int Id { get; set; }
 
-		[BindProperty]
 		public GameDisplayModel Game { get; set; } = new();
 
 		public async Task OnGet()
