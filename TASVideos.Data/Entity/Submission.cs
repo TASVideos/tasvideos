@@ -12,6 +12,7 @@ namespace TASVideos.Data.Entity
 		IEnumerable<int> Years { get; }
 		IEnumerable<string> Systems { get; }
 		string? User { get; }
+		IEnumerable<int> GameIds { get; }
 	}
 
 	public class Submission : BaseEntity, ITimeable
@@ -40,7 +41,7 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<SubmissionStatusHistory> History { get; set; } = new HashSet<SubmissionStatusHistory>();
 
 		[Required]
-		public byte[] MovieFile { get; set; } = new byte[0];
+		public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 
 		public string? MovieExtension { get; set; }
 
@@ -160,6 +161,11 @@ namespace TASVideos.Data.Entity
 			if (criteria.Systems.Any())
 			{
 				query = query.Where(s => s.System != null && criteria.Systems.Contains(s.System.Code));
+			}
+			
+			if (criteria.GameIds.Any())
+			{
+				query = query.Where(s => criteria.GameIds.Contains(s.GameId ?? 0));
 			}
 
 			return query;

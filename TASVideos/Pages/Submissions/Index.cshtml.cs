@@ -63,7 +63,8 @@ namespace TASVideos.Pages.Submissions
 			}
 
 			// Defaults
-			if (!Search.StatusFilter.Any())
+			// Note that we do not provide these for GameId, the assumption is that we want to see all submissions of a given game, not just active ones
+			if (!Search.StatusFilter.Any() && string.IsNullOrWhiteSpace(Search.GameId))
 			{
 				Search.StatusFilter = !string.IsNullOrWhiteSpace(Search.User) || Search.Years.Any()
 					? SubmissionSearchRequest.All
