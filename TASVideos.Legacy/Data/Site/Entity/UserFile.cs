@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Site.Entity
@@ -16,7 +17,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public string Name { get; set; } = "";
 
 		[Column("file_content"), Required]
-		public byte[] Content { get; set; } = new byte[0];
+		public byte[] Content { get; set; } = Array.Empty<byte>();
 
 		[Column("file_class"), StringLength(1), Required]
 		public string Class { get; set; } = "";

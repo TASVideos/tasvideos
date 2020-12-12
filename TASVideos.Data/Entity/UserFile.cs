@@ -32,7 +32,7 @@ namespace TASVideos.Data.Entity
 		public string FileName { get; set; } = "";
 
 		[Required]
-		public byte[] Content { get; set; } = new byte[0];
+		public byte[] Content { get; set; } = Array.Empty<byte>();
 
 		public UserFileClass Class { get; set; }
 
