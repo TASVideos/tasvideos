@@ -32,6 +32,8 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? System { get; set; }
 
 		public string? User { get; set; }
+		
+		public string? GameId { get; set; }
 
 		[Display(Name = "Status Filter")]
 		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
@@ -55,5 +57,9 @@ namespace TASVideos.Pages.Submissions.Models
 			? new List<string>()
 			// ReSharper disable once StyleCop.SA1500
 			: new List<string> { System };
+		
+		IEnumerable<int> ISubmissionFilter.GameIds => !string.IsNullOrWhiteSpace(GameId) && int.TryParse(GameId, out int _)
+			? new List<int> { int.Parse(GameId) }
+			: new List<int>();
 	}
 }

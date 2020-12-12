@@ -36,6 +36,11 @@ namespace TASVideos.Api.Requests
 		/// Gets or sets the system codes to filter by
 		/// </summary>
 		public string? Systems { get; set; }
+		
+		/// <summary>
+		/// Gets or sets teh Game Id's to filter by
+		/// </summary>
+		public string? Games { get; set; }
 
 		IEnumerable<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear);
 
@@ -55,5 +60,6 @@ namespace TASVideos.Api.Requests
 			: Enumerable.Empty<SubmissionStatus>();
 
 		IEnumerable<string> ISubmissionFilter.Systems => Systems.CsvToStrings();
+		IEnumerable<int> ISubmissionFilter.GameIds => Games.CsvToInts();
 	}
 }
