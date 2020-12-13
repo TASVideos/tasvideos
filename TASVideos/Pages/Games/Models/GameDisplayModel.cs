@@ -34,5 +34,10 @@ namespace TASVideos.Pages.Games.Models
 			public int Id { get; set; }
 			public string Name { get; set; } = "";
 		}
+		
+		public int PublicationCount { get; set; }
+		public int ObsoletePublicationCount { get; set; }
+		public int SubmissionCount { get; set; }
+		public int UserFilesCount { get; set; }
 	}
 }
