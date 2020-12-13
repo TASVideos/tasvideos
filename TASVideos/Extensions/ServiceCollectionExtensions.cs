@@ -183,7 +183,6 @@ namespace TASVideos.Extensions
 					config.Password.RequireLowercase = false;
 					config.Password.RequireNonAlphanumeric = false;
 					config.Password.RequiredUniqueChars = 4;
-					config.User.RequireUniqueEmail = true;
 				})
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
