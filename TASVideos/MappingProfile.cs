@@ -135,7 +135,11 @@ namespace TASVideos
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre!.DisplayName)))
 				.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.Roms))
-				.ForMember(dest => dest.GameGroups, opt => opt.MapFrom(src => src.GameGroups.Select(gg => gg.GameGroup)));
+				.ForMember(dest => dest.GameGroups, opt => opt.MapFrom(src => src.GameGroups.Select(gg => gg.GameGroup)))
+				.ForMember(dest => dest.PublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById == null)))
+				.ForMember(dest => dest.ObsoletePublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById != null)))
+				.ForMember(dest => dest.SubmissionCount, opt => opt.MapFrom(src => src.Submissions.Count))
+				.ForMember(dest => dest.UserFilesCount, opt => opt.MapFrom(src => src.UserFiles.Count(uf => !uf.Hidden)));
 
 			CreateMap<GameRom, GameDisplayModel.Rom>();
 			CreateMap<GameGroup, GameDisplayModel.GameGroup>();

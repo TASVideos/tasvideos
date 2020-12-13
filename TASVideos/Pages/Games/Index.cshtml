@@ -43,7 +43,6 @@
 				</ul>
 			</li>
 		</ul>
-
 	</column>
 	<column md="6">
 		<label>Genre:</label>
@@ -52,6 +51,31 @@
 			{
 				<li>@genre</li>
 			}
+		</ul>
+	</column>
+</row>
+<hr />
+<row>
+	<column md="6">
+		<ul>
+			<li>
+				<a href="/Movies-List-@(Model.Game.Id)G">
+					@Model.Game.PublicationCount Publications
+				</a>
+				(<a href="/Movies-List-@(Model.Game.Id)G-Obs">
+					@Model.Game.ObsoletePublicationCount Obsolete
+				</a>)
+			</li>
+			<li>
+				<a href="/Subs-List?GameId=@(Model.Game.Id)">
+					@Model.Game.SubmissionCount Submissions
+				</a>
+			</li>
+			<li>
+				<a href="/UserFiles/Game/@(Model.Game.Id)">
+					@Model.Game.UserFilesCount User Files
+				</a>
+			</li>
 		</ul>
 	</column>
 </row>
