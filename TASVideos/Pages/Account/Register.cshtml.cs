@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Models.ValidationAttributes;
 using TASVideos.Services;
 using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
@@ -77,7 +78,7 @@ namespace TASVideos.Pages.Account
 
 		[BindProperty]
 		[Required]
-		[Range(typeof(bool), "true", "true", ErrorMessage = "You have not indicated if you are 13 years of age or older.")]
+		[MustBeTrue]
 		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 		public bool COPPA { get; set; }
 
