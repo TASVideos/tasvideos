@@ -48,11 +48,9 @@ namespace TASVideos.Services
 
 				if (split.Any())
 				{
-					languages.Add(new Language
-					{
-						Code = split.FirstOrDefault() ?? "",
-						DisplayName = split.LastOrDefault() ?? ""
-					});
+					languages.Add(new Language(
+						split.FirstOrDefault() ?? "",
+						split.LastOrDefault() ?? ""));
 				}
 			}
 
@@ -79,4 +77,6 @@ namespace TASVideos.Services
 				|| l.Code == trimmed);
 		}
 	}
+	
+	public record Language(string Code, string DisplayName);
 }
