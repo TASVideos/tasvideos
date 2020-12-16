@@ -22,16 +22,5 @@ namespace TASVideos.Services.Dtos
 
 		public IEnumerable<int> Games { get; init; } = new List<int>();
 		public IEnumerable<int> GameGroups { get; init; } = new List<int>();
-
-		public bool IsEmpty => !SystemCodes.Any()
-			&& !Tiers.Any()
-			&& !Years.Any()
-			&& !Flags.Any()
-			&& !Tags.Any()
-			&& !Genres.Any()
-			&& !Authors.Any()
-			&& !MovieIds.Any()
-			&& !Games.Any()
-			&& !GameGroups.Any();
 	}
 }
