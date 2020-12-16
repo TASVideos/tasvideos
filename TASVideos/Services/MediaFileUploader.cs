@@ -13,7 +13,7 @@ namespace TASVideos.Services
 	{
 		Task<string> UploadScreenshot(int publicationId, IFormFile screenshot, string? description);
 		Task<string> UploadTorrent(int publicationId, IFormFile torrent);
-		Task<PublicationFile?> DeleteFile(int publicationFileId);
+		Task<DeletedFile?> DeleteFile(int publicationFileId);
 	}
 
 	public class MediaFileUploader : IMediaFileUploader
@@ -71,7 +71,7 @@ namespace TASVideos.Services
 			return torrentFileName;
 		}
 
-		public async Task<PublicationFile?> DeleteFile(int publicationFileId)
+		public async Task<DeletedFile?> DeleteFile(int publicationFileId)
 		{
 			var file = await _db.PublicationFiles
 				.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
@@ -83,9 +83,12 @@ namespace TASVideos.Services
 
 				_db.PublicationFiles.Remove(file);
 				await _db.SaveChangesAsync();
+				return new DeletedFile(file.Id, file.Type, file.Path);
 			}
 
-			return file;
+			return null;
 		}
 	}
+	
+	public record DeletedFile(int Id, FileType Type, string Path);
 }
