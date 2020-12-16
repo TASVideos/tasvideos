@@ -32,10 +32,5 @@ namespace TASVideos.Services
 	/// <summary>
 	/// Represents a short summary of an award assignment
 	/// </summary>
-	public class AwardAssignmentSummary
-	{
-		public string ShortName { get; set; } = "";
-		public string Description { get; set; } = "";
-		public int Year { get; set; }
-	}
+	public record AwardAssignmentSummary(string ShortName, string Description, int Year);
 }

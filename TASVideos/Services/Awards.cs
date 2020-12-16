@@ -53,12 +53,7 @@ namespace TASVideos.Services
 
 			return allAwards
 				.Where(a => a.Users.Select(u => u.Id).Contains(userId))
-				.Select(ua => new AwardAssignmentSummary
-				{
-					ShortName = ua.ShortName,
-					Description = ua.Description,
-					Year = ua.Year
-				})
+				.Select(ua => new AwardAssignmentSummary(ua.ShortName, ua.Description, ua.Year))
 				.ToList();
 		}
 
@@ -68,12 +63,7 @@ namespace TASVideos.Services
 
 			return allAwards
 				.Where(a => a.Publications.Select(p => p.Id).Contains(publicationId))
-				.Select(pa => new AwardAssignmentSummary
-				{
-					ShortName = pa.ShortName,
-					Description = pa.Description,
-					Year = pa.Year
-				})
+				.Select(pa => new AwardAssignmentSummary(pa.ShortName, pa.Description, pa.Year))
 				.ToList();
 		}
 
