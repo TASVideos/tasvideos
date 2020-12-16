@@ -13,20 +13,11 @@ namespace TASVideos.Services
 		public string Description { get; set; } = "";
 		public int Year { get; set; }
 		public AwardType Type { get; set; }
-		public IEnumerable<PublicationDto> Publications { get; set; } = new HashSet<PublicationDto>();
-		public IEnumerable<UserDto> Users { get; set; } = new HashSet<UserDto>();
+		public IEnumerable<Publication> Publications { get; set; } = new HashSet<Publication>();
+		public IEnumerable<User> Users { get; set; } = new HashSet<User>();
 
-		public class UserDto
-		{
-			public int Id { get; set; }
-			public string UserName { get; set; } = "";
-		}
-
-		public class PublicationDto
-		{
-			public int Id { get; set; }
-			public string Title { get; set; } = "";
-		}
+		public record User(int Id, string UserName);
+		public record Publication (int Id, string Title);
 	}
 
 	/// <summary>
