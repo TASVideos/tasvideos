@@ -14,42 +14,30 @@ namespace TASVideos.Services
 	{
 		public async Task<CompressedFile> Compress(byte[] contents)
 		{
-			byte[] gzipContents;
+			await using var compressedStream = new MemoryStream();
+			await using var gzipStream = new GZipStream(compressedStream, CompressionLevel.Optimal);
+			await using var originalStream = new MemoryStream(contents);
 
-			await using (var compressedStream = new MemoryStream())
-			{
-				await using (var gzipStream = new GZipStream(compressedStream, CompressionLevel.Optimal))
-				{
-					await using var originalStream = new MemoryStream(contents);
+			// This is the default buffer size used by CopyTo
+			const int bufferSize = 81920;
+			await originalStream.CopyToAsync(gzipStream, bufferSize);
 
-					// This is the default buffer size used by CopyTo
-					const int bufferSize = 81920;
-					await originalStream.CopyToAsync(gzipStream, bufferSize);
-				}
-
-				gzipContents = compressedStream.ToArray();
-			}
-
-			var result = new CompressedFile
-			{
-				OriginalSize = contents.Length
-			};
-
+			byte[] gzipContents = compressedStream.ToArray();
 
 			if (gzipContents.Length < contents.Length)
 			{
-				result.CompressedSize = gzipContents.Length;
-				result.Type = Compression.Gzip;
-				result.Data = gzipContents;
+				return new CompressedFile(
+					contents.Length,
+					gzipContents.Length,
+					Compression.Gzip,
+					gzipContents);
 			}
-			else
-			{
-				result.CompressedSize = contents.Length;
-				result.Type = Compression.None;
-				result.Data = contents;
-			}
-
-			return result;
+			
+			return new CompressedFile(
+				contents.Length,
+				contents.Length,
+				Compression.None,
+				contents);
 		}
 	}
 }
