@@ -18,15 +18,23 @@ namespace TASVideos.WikiEngine
 		public static IEnumerable<INode> MakeBracketed(int charStart, int charEnd, string text)
 		{
 			if (text.StartsWith("if:"))
+			{
 				throw new InvalidOperationException("Internal parser error!  `if:` should not come to MakeBracketed");
-			if (text == "|") // literal | escape
-				return new[] { new Text(charStart, "|") { CharEnd = charEnd } };
-			if (text == ":") // literal : escape (for inside dd/dt)
-				return new[] { new Text(charStart, ":") { CharEnd = charEnd } };
-			if (text == "expr:UserGetWikiName")
-				return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
-			if (text == "expr:WikiGetCurrentEditLink")
-				return MakeModuleInternal(charStart, charEnd, "WikiGetCurrentEditLink");
+			}
+			
+			switch (text)
+			{
+				// literal | escape
+				case "|":
+					return new[] { new Text(charStart, "|") { CharEnd = charEnd } };
+				// literal : escape (for inside dd/dt)
+				case ":":
+					return new[] { new Text(charStart, ":") { CharEnd = charEnd } };
+				case "expr:UserGetWikiName":
+					return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
+				case "expr:WikiGetCurrentEditLink":
+					return MakeModuleInternal(charStart, charEnd, "WikiGetCurrentEditLink");
+			}
 
 			Match match;
 			if ((match = Footnote.Match(text)).Success)
