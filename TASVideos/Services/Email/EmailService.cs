@@ -84,11 +84,9 @@ on behalf of TASVideos staff";
 		}
 	}
 
-	public class TopicReplyNotificationTemplate
-	{
-		public int PostId { get; init; }
-		public int TopicId { get; init; }
-		public string TopicTitle { get; init; } = "";
-		public string BaseUrl { get; init; } = "";
-	}
+	public record TopicReplyNotificationTemplate(
+		int PostId,
+		int TopicId,
+		string TopicTitle,
+		string BaseUrl);
 }
