@@ -28,7 +28,7 @@ namespace TASVideos.Services.PublicationChain
 			var game = await _db.Games
 				.SingleOrDefaultAsync(g => g.Id == gameId);
 
-			if (game == null)
+			if (game is null)
 			{
 				return null;
 			}
