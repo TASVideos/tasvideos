@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper.QueryableExtensions;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +25,7 @@ namespace TASVideos.Pages.Submissions
 		private readonly IMediaFileUploader _uploader;
 		private readonly ITASVideoAgent _tasVideosAgent;
 		private readonly UserManager _userManager;
+		private readonly IFileService _fileService;
 
 		public PublishModel(
 			ApplicationDbContext db,
@@ -35,7 +33,8 @@ namespace TASVideos.Pages.Submissions
 			IWikiPages wikiPages,
 			IMediaFileUploader uploader,
 			ITASVideoAgent tasVideoAgent,
-			UserManager userManager)
+			UserManager userManager,
+			IFileService fileService)
 		{
 			_db = db;
 			_publisher = publisher;
@@ -43,6 +42,7 @@ namespace TASVideos.Pages.Submissions
 			_uploader = uploader;
 			_tasVideosAgent = tasVideoAgent;
 			_userManager = userManager;
+			_fileService = fileService;
 		}
 
 		[FromRoute]
@@ -133,24 +133,10 @@ namespace TASVideos.Pages.Submissions
 				Type = PublicationUrlType.Mirror
 			});
 
-			// TODO: use IFileService for this
-			// Unzip the submission file, and re-zip it while renaming the contained file
-			await using (var publicationFileStream = new MemoryStream())
-			{
-				using (var publicationZipArchive = new ZipArchive(publicationFileStream, ZipArchiveMode.Create))
-				{
-					await using var submissionFileStream = new MemoryStream(submission.MovieFile);
-					using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
-					var publicationZipEntry = publicationZipArchive.CreateEntry(Submission.MovieFileName + "." + Submission.MovieExtension);
-					var submissionZipEntry = submissionZipArchive.Entries.Single();
-
-					await using var publicationZipEntryStream = publicationZipEntry.Open();
-					await using var submissionZipEntryStream = submissionZipEntry.Open();
-					await submissionZipEntryStream.CopyToAsync(publicationZipEntryStream);
-				}
-
-				publication.MovieFile = publicationFileStream.ToArray();
-			}
+			
+			publication.MovieFile = await _fileService.CopyZip(
+				submission.MovieFile,
+				Submission.MovieFileName + "." + Submission.MovieExtension);
 
 			var publicationAuthors = submission.SubmissionAuthors
 				.Select(sa => new PublicationAuthor

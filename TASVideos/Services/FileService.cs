@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 using TASVideos.Data.Entity;
 
@@ -8,6 +9,11 @@ namespace TASVideos.Services
 	public interface IFileService
 	{
 		Task<CompressedFile> Compress(byte[] contents);
+		
+		/// <summary>
+		/// Unzips the file, and re-zips it while renaming the contained file
+		/// </summary>
+		Task<byte[]> CopyZip(byte[] zipBytes, string fileName);
 	}
 
 	public class FileService : IFileService
@@ -38,6 +44,23 @@ namespace TASVideos.Services
 				contents.Length,
 				Compression.None,
 				contents);
+		}
+		
+		public async Task<byte[]> CopyZip(byte[] zipBytes, string fileName)
+		{
+			await using var newFileStream = new MemoryStream();
+			using var publicationZipArchive = new ZipArchive(newFileStream, ZipArchiveMode.Create);
+			await using var submissionFileStream = new MemoryStream(zipBytes);
+			using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
+			
+			var publicationZipEntry = publicationZipArchive.CreateEntry(fileName);
+			var submissionZipEntry = submissionZipArchive.Entries.Single();
+
+			await using var publicationZipEntryStream = publicationZipEntry.Open();
+			await using var submissionZipEntryStream = submissionZipEntry.Open();
+			await submissionZipEntryStream.CopyToAsync(publicationZipEntryStream);
+
+			return newFileStream.ToArray();
 		}
 	}
 	
