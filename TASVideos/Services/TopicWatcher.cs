@@ -85,13 +85,11 @@ namespace TASVideos.Services
 				await _emailService
 					.TopicReplyNotification(
 						watches.Select(w => w.User!.Email),
-						new TopicReplyNotificationTemplate
-						{
-							PostId = notification.PostId,
-							TopicId = notification.TopicId,
-							TopicTitle = notification.TopicTitle,
-							BaseUrl = _baseUrl
-						});
+						new TopicReplyNotificationTemplate(
+							notification.PostId,
+							notification.TopicId,
+							notification.TopicTitle,
+							_baseUrl));
 
 				foreach (var watch in watches)
 				{

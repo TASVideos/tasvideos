@@ -112,7 +112,7 @@ namespace TASVideos.Test.Services
 			_db.SaveChanges();
 
 			var recipients = new List<string> { posterEmail }.AsEnumerable();
-			var template = new TopicReplyNotificationTemplate();
+			var template = new TopicReplyNotificationTemplate(0, 0, "", "");
 			_mockEmailService
 				.Setup(m => m.TopicReplyNotification(recipients, template));
 
@@ -140,7 +140,7 @@ namespace TASVideos.Test.Services
 			_db.SaveChanges();
 
 			var recipients = new List<string> { posterEmail }.AsEnumerable();
-			var template = new TopicReplyNotificationTemplate();
+			var template = new TopicReplyNotificationTemplate(0, 0, "", "");
 			_mockEmailService
 				.Setup(m => m.TopicReplyNotification(recipients, template));
 
