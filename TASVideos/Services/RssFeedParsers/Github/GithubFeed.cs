@@ -8,19 +8,17 @@ namespace TASVideos.Services.RssFeedParsers.Github
 {
 	public static class GithubFeed
 	{
-		public static IEnumerable<ICommitEntry> Parse(string xml, int max)
+		public static IEnumerable<CommitEntry> Parse(string xml, int max)
 		{
 			using var textReader = new StringReader(xml);
 			var serializer = new XmlSerializer(typeof(GithubFeedResult));
 			var result = (GithubFeedResult)serializer.Deserialize(textReader)!;
 			return result.Entry
-				.Select(e => new CommitEntry
-				{
-					Author = e.Author?.Name ?? "",
-					At = e.Updated ?? "",
-					Message = Regex.Replace( e.Content?.Text ?? "", "<.*?>", ""),
-					Link = e.Link?.Href?.ToString() ?? ""
-				})
+				.Select(e => new CommitEntry(
+					e.Author?.Name ?? "",
+					e.Updated ?? "",
+					Regex.Replace( e.Content?.Text ?? "", "<.*?>", ""),
+					e.Link?.Href?.ToString() ?? ""))
 				.Take(max);
 		}
 	}

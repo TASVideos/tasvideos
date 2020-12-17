@@ -8,7 +8,7 @@ namespace TASVideos.Services.RssFeedParsers
 	public interface IVcsRssParser
 	{
 		bool IsSupportedType(string type);
-		IEnumerable<ICommitEntry> Parse(string type, string xml);
+		IEnumerable<CommitEntry> Parse(string type, string xml);
 	}
 
 	public class VcsRssParser : IVcsRssParser
@@ -21,14 +21,14 @@ namespace TASVideos.Services.RssFeedParsers
 			_cache = cache;
 		}
 
-		public IEnumerable<ICommitEntry> Parse(string type, string xml)
+		public IEnumerable<CommitEntry> Parse(string type, string xml)
 		{
 			if (!IsSupportedType(type))
 			{
 				throw new InvalidOperationException($" is not a valid {nameof(type)}");
 			}
 
-			if (_cache.TryGetValue(xml, out IEnumerable<ICommitEntry> entries))
+			if (_cache.TryGetValue(xml, out IEnumerable<CommitEntry> entries))
 			{
 				return entries;
 			}
@@ -46,4 +46,10 @@ namespace TASVideos.Services.RssFeedParsers
 		public bool IsSupportedType(string type)
 			=> new[] { "atom" }.Contains(type);
 	}
+	
+	public record CommitEntry(
+		string Author,
+		string At,
+		string Message,
+		string Link);
 }

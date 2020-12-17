@@ -85,15 +85,15 @@ namespace TASVideos.Services
 		/// </summary>
 		public class Publication
 		{
-			public int Id { get; set; }
+			public int Id { get; init; }
 
 			// We still factor in obsolete movies but only at a number less than zero
 			// for the purpose of determining "former player" rank
-			public bool Obsolete { get; set; } 
+			public bool Obsolete { get; init; } 
 			public double AverageRating { get; set; }
-			public int RatingCount { get; set; }
-			public double TierWeight { get; set; }
-			public int AuthorCount { get; set; }
+			public int RatingCount { get; init; }
+			public double TierWeight { get; init; }
+			public int AuthorCount { get; init; }
 		}
 	}
 }
