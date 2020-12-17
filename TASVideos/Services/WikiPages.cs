@@ -136,12 +136,10 @@ namespace TASVideos.Services
 				.Where(wp => !wp.PageName.StartsWith("System")
 					&& !wp.PageName.StartsWith("InternalSystem")) // These by design aren't orphans they are directly used in the system
 				.Where(wp => !wp.PageName.Contains("/")) // Subpages are linked by default by the parents, so we know they are not orphans
-				.Select(wp => new WikiOrphan
-				{
-					PageName = wp.PageName,
-					LastUpdateTimeStamp = wp.LastUpdateTimeStamp,
-					LastUpdateUserName = wp.LastUpdateUserName ?? wp.CreateUserName
-				})
+				.Select(wp => new WikiOrphan(
+					wp.PageName,
+					wp.LastUpdateTimeStamp,
+					wp.LastUpdateUserName ?? wp.CreateUserName))
 				.ToListAsync();
 
 		public async Task<IEnumerable<WikiPageReferral>> BrokenLinks() => (await _db.WikiReferrals
