@@ -136,13 +136,8 @@ namespace TASVideos.Pages.Forum.Posts
 				$"forum/p/{id}#{id}",
 				$"{user.UserName}{mood}");
 
-			await _topicWatcher.NotifyNewPost(new TopicNotification
-			{
-				PostId = id,
-				TopicId = topic.Id,
-				TopicTitle = topic.Title,
-				PosterId = user.Id
-			});
+			await _topicWatcher.NotifyNewPost(new TopicNotification(
+				id, topic.Id, topic.Title, user.Id));
 
 			await _userManager.AssignAutoAssignableRolesByPost(user);
 
