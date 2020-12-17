@@ -286,7 +286,7 @@ namespace TASVideos.Services
 				_cache.Remove(CacheKeys.UnreadMessageCount + userId); // Message count possibly no longer valid
 			}
 
-			var model = new PrivateMessageModel
+			return new PrivateMessageModel
 			{
 				Subject = pm.Subject,
 				SentOn = pm.CreateTimeStamp,
@@ -299,8 +299,6 @@ namespace TASVideos.Services
 				EnableBbCode = pm.EnableBbCode,
 				EnableHtml = pm.EnableHtml
 			};
-
-			return model;
 		}
 
 		/// <summary>
