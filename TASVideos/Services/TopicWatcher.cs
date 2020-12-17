@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -58,18 +59,15 @@ namespace TASVideos.Services
 
 		public async Task<IEnumerable<WatchedTopic>> UserWatches(int userId)
 		{
-			return await _db
-				.ForumTopicWatches
+			return await _db.ForumTopicWatches
 				.ForUser(userId)
-				.Select(tw => new WatchedTopic
-				{
-					TopicCreateTimeStamp = tw.ForumTopic!.CreateTimeStamp,
-					IsNotified = tw.IsNotified,
-					ForumId = tw.ForumTopic.ForumId,
-					ForumTitle = tw.ForumTopic!.Forum!.Name,
-					TopicId = tw.ForumTopicId,
-					TopicTitle = tw.ForumTopic!.Title
-				})
+				.Select(tw => new WatchedTopic(
+					tw.ForumTopic!.CreateTimeStamp,
+					tw.IsNotified,
+					tw.ForumTopic.ForumId,
+					tw.ForumTopic!.Forum!.Name,
+					tw.ForumTopicId,
+					tw.ForumTopic!.Title))
 				.ToListAsync();
 		}
 
@@ -122,7 +120,7 @@ namespace TASVideos.Services
 				.ExcludeRestricted(canSeeRestricted)
 				.SingleOrDefaultAsync(t => t.Id == topicId);
 
-			if (topic == null)
+			if (topic is null)
 			{
 				return;
 			}
@@ -132,7 +130,7 @@ namespace TASVideos.Services
 				.SingleOrDefaultAsync(w => w.UserId == userId
 					&& w.ForumTopicId == topicId);
 
-			if (watch == null)
+			if (watch is null)
 			{
 				_db.ForumTopicWatches.Add(new ForumTopicWatch
 				{
@@ -170,4 +168,15 @@ namespace TASVideos.Services
 			}
 		}
 	}
+	
+	/// <summary>
+	/// Represents a watched forum topic
+	/// </summary>
+	public record WatchedTopic(
+		DateTime TopicCreateTimeStamp,
+		bool IsNotified,
+		int ForumId,
+		string ForumTitle,
+		int TopicId,
+		string TopicTitle);
 }
