@@ -127,45 +127,7 @@ namespace TASVideos.Pages.Submissions
 				return AccessDenied();
 			}
 
-			var submission = await _db.Submissions
-				.Include(s => s.WikiContent)
-				.SingleOrDefaultAsync(s => s.Id == Id);
-
-			if (submission == null)
-			{
-				return NotFound();
-			}
-
-			if (submission.Status != SubmissionStatus.New)
-			{
-				return BadRequest("Submission can not be claimed");
-			}
-
-			submission.Status = SubmissionStatus.JudgingUnderWay;
-			var wikiPage = new WikiPage
-			{
-				PageName = submission.WikiContent!.PageName,
-				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: Claiming for judging.",
-				RevisionMessage = "Claimed for judging"
-			};
-			submission.WikiContent = wikiPage;
-			submission.JudgeId = User.GetUserId();
-
-			try
-			{
-				await _wikiPages.Add(wikiPage);
-				_publisher.SendSubmissionEdit(
-					$"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Name()}",
-					$"{Id}S",
-					User.Name());
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// Assume the status changed and can no longer be claimed
-				return BadRequest("Submission can not be claimed");
-			}
-
-			return RedirectToPage("View", new { Id });
+			return await Claim(SubmissionStatus.New, SubmissionStatus.JudgingUnderWay, "judging", "Claiming for judging.");
 		}
 
 		public async Task<IActionResult> OnGetClaimForPublishing()
@@ -175,6 +137,11 @@ namespace TASVideos.Pages.Submissions
 				return AccessDenied();
 			}
 
+			return await Claim(SubmissionStatus.Accepted, SubmissionStatus.PublicationUnderway, "publication", "Processing...");
+		}
+		
+		private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message)
+		{
 			var submission = await _db.Submissions
 				.Include(s => s.WikiContent)
 				.SingleOrDefaultAsync(s => s.Id == Id);
@@ -184,17 +151,17 @@ namespace TASVideos.Pages.Submissions
 				return NotFound();
 			}
 
-			if (submission.Status != SubmissionStatus.Accepted)
+			if (submission.Status != requiredStatus)
 			{
 				return BadRequest("Submission can not be claimed");
 			}
-
-			submission.Status = SubmissionStatus.PublicationUnderway;
+			
+			submission.Status = newStatus;
 			var wikiPage = new WikiPage
 			{
 				PageName = submission.WikiContent!.PageName,
-				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: Processing...",
-				RevisionMessage = "Claimed for publication"
+				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: {message}",
+				RevisionMessage = $"Claimed for {action}"
 			};
 			submission.WikiContent = wikiPage;
 			submission.PublisherId = User.GetUserId();
@@ -203,7 +170,7 @@ namespace TASVideos.Pages.Submissions
 			{
 				await _wikiPages.Add(wikiPage);
 				_publisher.SendSubmissionEdit(
-					$"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Name()}",
+					$"Submission {submission.Title} set to {newStatus.EnumDisplayName()} by {User.Name()}",
 					$"{Id}S",
 					User.Name());
 			}
