@@ -71,7 +71,6 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(2, list.Count);
 			Assert.AreEqual(1, list.Count(l => l.TopicId == topic1Id));
 			Assert.AreEqual(1, list.Count(l => l.TopicId == topic2Id));
-
 		}
 
 		[TestMethod]
@@ -89,11 +88,7 @@ namespace TASVideos.Test.Services
 			_mockEmailService
 				.Setup(m => m.TopicReplyNotification(It.IsAny<IEnumerable<string>>(), It.IsAny<TopicReplyNotificationTemplate>()));
 
-			await _topicWatcher.NotifyNewPost(new TopicNotification
-			{
-				TopicId = 1,
-				PosterId = 1
-			});
+			await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", 1));
 
 			_mockEmailService.Verify(
 				v => v.TopicReplyNotification(It.IsAny<IEnumerable<string>>(), It.IsAny<TopicReplyNotificationTemplate>()),
@@ -121,11 +116,7 @@ namespace TASVideos.Test.Services
 			_mockEmailService
 				.Setup(m => m.TopicReplyNotification(recipients, template));
 
-			await _topicWatcher.NotifyNewPost(new TopicNotification
-			{
-				TopicId = 1,
-				PosterId = poster
-			});
+			await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", poster));
 
 			_mockEmailService.Verify(
 				v => v.TopicReplyNotification(It.IsAny<IEnumerable<string>>(), It.IsAny<TopicReplyNotificationTemplate>()),
@@ -153,11 +144,7 @@ namespace TASVideos.Test.Services
 			_mockEmailService
 				.Setup(m => m.TopicReplyNotification(recipients, template));
 
-			await _topicWatcher.NotifyNewPost(new TopicNotification
-			{
-				TopicId = 1,
-				PosterId = poster
-			});
+			await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", poster));
 
 			Assert.IsTrue(_db.ForumTopicWatches.All(w => w.IsNotified));
 		}

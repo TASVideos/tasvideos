@@ -179,4 +179,13 @@ namespace TASVideos.Services
 		string ForumTitle,
 		int TopicId,
 		string TopicTitle);
+	
+	/// <summary>
+	/// Represents a notification that a new post has been added to a topic
+	/// </summary>
+	public record TopicNotification(
+		int PostId,
+		int TopicId,
+		string TopicTitle,
+		int PosterId);
 }
