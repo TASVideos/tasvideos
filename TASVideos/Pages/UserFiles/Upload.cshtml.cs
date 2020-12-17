@@ -142,7 +142,7 @@ namespace TASVideos.Pages.UserFiles
 				userFile.Length = Math.Round(userFile.Frames / frameRate);
 			}
 
-			var fileBytes = await FormFileToBytes(UserFile.File);
+			var fileBytes = await UserFile.File.ToBytes();
 			var fileResult = await _fileService.Compress(fileBytes);
 
 			userFile.PhysicalLength = fileResult.CompressedSize;

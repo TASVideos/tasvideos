@@ -221,7 +221,7 @@ namespace TASVideos.Pages.Submissions
 					return Page();
 				}
 
-				submission.MovieFile = await FormFileToBytes(Submission.MovieFile);
+				submission.MovieFile = await Submission.MovieFile.ToBytes();
 			}
 
 			// If a judge is claiming the submission
