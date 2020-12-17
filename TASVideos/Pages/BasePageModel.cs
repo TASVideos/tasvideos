@@ -1,7 +1,4 @@
 ﻿using System.IO;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,20 +11,11 @@ namespace TASVideos.Pages
 	{
 		protected string IpAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
 
-		protected IActionResult Home()
-		{
-			return RedirectToPage("/Index");
-		}
+		protected IActionResult Home() => RedirectToPage("/Index");
 
-		protected IActionResult AccessDenied()
-		{
-			return RedirectToPage("/Account/AccessDenied");
-		}
+		protected IActionResult AccessDenied() => RedirectToPage("/Account/AccessDenied");
 
-		protected IActionResult Login()
-		{
-			return new RedirectToPageResult("Login");
-		}
+		protected IActionResult Login() => new RedirectToPageResult("Login");
 
 		protected IActionResult RedirectToLocal(string? returnUrl)
 		{
@@ -53,26 +41,13 @@ namespace TASVideos.Pages
 			return writer.ToString();
 		}
 
-		protected string RenderHtml(string text)
-		{
-			return RenderPost(text, false, true);
-		}
-
 		protected string RenderBbcode(string text)
-		{
-			return RenderPost(text, true, false);
-		}
+			=> RenderPost(text, true, false);
 
 		protected string RenderSignature(string? text)
 		{
-			return RenderBbcode(text ?? ""); // Bbcode on, Html off hardcoded, do we want this to be configurable?
-		}
-
-		protected async Task<byte[]> FormFileToBytes(IFormFile formFile)
-		{
-			await using var memoryStream = new MemoryStream();
-			await formFile.CopyToAsync(memoryStream);
-			return memoryStream.ToArray();
+			// Bbcode on, Html off hardcoded, do we want this to be configurable?
+			return RenderBbcode(text ?? "");
 		}
 	}
 }

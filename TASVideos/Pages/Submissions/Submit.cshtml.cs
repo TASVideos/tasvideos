@@ -80,8 +80,7 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
-			submission.MovieFile = await FormFileToBytes(Create.MovieFile);
-
+			submission.MovieFile = await Create.MovieFile.ToBytes();
 			submission.Submitter = await _userManager.GetUserAsync(User);
 
 			Db.Submissions.Add(submission);
