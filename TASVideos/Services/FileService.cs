@@ -48,19 +48,26 @@ namespace TASVideos.Services
 		
 		public async Task<byte[]> CopyZip(byte[] zipBytes, string fileName)
 		{
-			await using var newFileStream = new MemoryStream();
-			using var publicationZipArchive = new ZipArchive(newFileStream, ZipArchiveMode.Create);
 			await using var submissionFileStream = new MemoryStream(zipBytes);
 			using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
+			var entries = submissionZipArchive.Entries.ToList();
+			var single = entries.First();
+
+			await using var singleStream = new MemoryStream();
+			await using var stream = single.Open();
+			await stream.CopyToAsync(singleStream);
+			var fileBytes = singleStream.ToArray();
+
+			await using var outStream = new MemoryStream();
+			using (var archive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
+			{
+				var fileInArchive = archive.CreateEntry(fileName, CompressionLevel.Optimal);
+				await using var entryStream = fileInArchive.Open();
+				await using var fileToCompressStream = new MemoryStream(fileBytes);
+				await fileToCompressStream.CopyToAsync(entryStream);
+			}
 			
-			var publicationZipEntry = publicationZipArchive.CreateEntry(fileName);
-			var submissionZipEntry = submissionZipArchive.Entries.Single();
-
-			await using var publicationZipEntryStream = publicationZipEntry.Open();
-			await using var submissionZipEntryStream = submissionZipEntry.Open();
-			await submissionZipEntryStream.CopyToAsync(publicationZipEntryStream);
-
-			return newFileStream.ToArray();
+			return outStream.ToArray();
 		}
 	}
 	
