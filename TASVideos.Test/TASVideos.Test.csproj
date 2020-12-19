@@ -18,6 +18,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\0Frames.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\2Frames.bk2" />
+		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\2Frames.zip" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Gambatte-CycleCount.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Gambatte-InvalidCycleCount.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
