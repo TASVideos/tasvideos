@@ -98,14 +98,9 @@ namespace TASVideos.Pages.Publications
 				Path = AdditionalMovieFile!.FileName,
 				PublicationId = Id,
 				Description = DisplayName,
-				Type = FileType.MovieFile
+				Type = FileType.MovieFile,
+				FileData = await AdditionalMovieFile.ToBytes()
 			};
-
-			await using (var memoryStream = new MemoryStream())
-			{
-				await AdditionalMovieFile.CopyToAsync(memoryStream);
-				publicationFile.FileData = memoryStream.ToArray();
-			}
 
 			_db.PublicationFiles.Add(publicationFile);
 			await _db.SaveChangesAsync();
