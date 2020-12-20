@@ -57,8 +57,7 @@ namespace TASVideos.Pages.UserFiles
 
 			file.Views++;
 
-			// TODO: handle DbConcurrencyException
-			await _db.SaveChangesAsync();
+			await _db.TrySaveChangesAsync();
 
 			return Page();
 		}
@@ -84,8 +83,7 @@ namespace TASVideos.Pages.UserFiles
 
 			file.Downloads++;
 
-			// TODO: handle DbConcurrencyException
-			await _db.SaveChangesAsync();
+			await _db.TrySaveChangesAsync();
 
 			var stream = new GZipStream(
 				new MemoryStream(file.Content),
