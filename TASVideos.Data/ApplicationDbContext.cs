@@ -101,6 +101,25 @@ namespace TASVideos.Data
 			PerformTrackingUpdates();
 			return base.SaveChangesAsync(cancellationToken);
 		}
+		
+		/// <summary>
+		/// Attempts to save changes, but if a <see cref="DbUpdateConcurrencyException"/> occurs,
+		/// it will be caught no changes will be saved.  Only to be used if discarding the data is
+		/// an acceptable handling 
+		/// </summary>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		public async Task<int> TrySaveChangesAsync(CancellationToken cancellationToken = default)
+		{
+			try
+			{
+				return await SaveChangesAsync(cancellationToken);
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return 0;
+			}
+		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
