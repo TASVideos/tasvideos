@@ -11,6 +11,7 @@ using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Pages.Users
 {
+	[RequirePermission(PermissionTo.EditDisallows)]
 	public class DisallowModel : PageModel
 	{
 		private readonly ApplicationDbContext _db;

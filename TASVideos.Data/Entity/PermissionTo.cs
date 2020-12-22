@@ -233,6 +233,11 @@ namespace TASVideos.Data.Entity
 		[Description("Ability to set merge a topic into an existing topic.")]
 		MergeTopics = 410,
 
+		[Display(Name = "Edit Disallows")]
+		[Group("Forum Administration")]
+		[Description("Ability to edit username patterns that are disallowed for registration.")]
+		EditDisallows = 411,
+
 		[Display(Name = "See Restricted Froums")]
 		[Group("Forum Administration")]
 		[Description("The ability to see forums that are restricted from general access.")]
