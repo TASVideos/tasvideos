@@ -133,7 +133,6 @@ namespace TASVideos.Pages.Submissions
 				Type = PublicationUrlType.Mirror
 			});
 
-			
 			publication.MovieFile = await _fileService.CopyZip(
 				submission.MovieFile,
 				Submission.MovieFileName + "." + Submission.MovieExtension);

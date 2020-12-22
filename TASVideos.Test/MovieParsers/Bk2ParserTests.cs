@@ -103,6 +103,7 @@ namespace TASVideos.Test.MovieParsers
 		[DataRow("System-Sms.bk2", SystemCodes.Sms)]
 		[DataRow("System-Gg.bk2", SystemCodes.Gg)]
 		[DataRow("System-Sg.bk2", SystemCodes.Sg)]
+		[DataRow("System-O2.bk2", SystemCodes.Odyssey2)]
 		[DataRow("System-Pce.bk2", SystemCodes.Pce)]
 		[DataRow("System-PceCd.bk2", SystemCodes.PceCd)]
 		[DataRow("System-Pcfx.bk2", SystemCodes.Pcfx)]

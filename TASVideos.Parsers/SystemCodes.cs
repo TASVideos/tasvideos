@@ -22,6 +22,7 @@
 		public const string Msx = "msx";
 		public const string Ngb = "ngb";
 		public const string Nes = "nes";
+		public const string Odyssey2 = "o2";
 		public const string Pce = "pce";
 		public const string PceCd = "pcecd";
 		public const string Pcfx = "pcfx";

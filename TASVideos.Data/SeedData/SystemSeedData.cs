@@ -273,6 +273,12 @@ namespace TASVideos.Data.SeedData
 				Id = 45,
 				Code = "VEC",
 				DisplayName = "General Computer Vectrex"
+			},
+			new()
+			{
+				Id = 46,
+				Code = "O2",
+				DisplayName = "Odyssey 2"
 			}
 		};
 
@@ -842,6 +848,18 @@ namespace TASVideos.Data.SeedData
 				GameSystemId = 45,
 				RegionCode = Ntsc,
 				FrameRate = 60
+			},
+			new()
+			{
+				GameSystemId = 46,
+				RegionCode = Ntsc,
+				FrameRate = 60.056453065881932
+			},
+			new()
+			{
+				GameSystemId = 46,
+				RegionCode = Pal,
+				FrameRate = 49.970017989206475
 			}
 		};
 	}

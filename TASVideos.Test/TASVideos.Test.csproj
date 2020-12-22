@@ -4,12 +4,6 @@
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
-	<ItemGroup>
-	  <None Remove="MovieParsers\Bk2SampleFiles\Gambatte-CycleCount.bk2" />
-	  <None Remove="MovieParsers\Bk2SampleFiles\Gambatte-InvalidCycleCount.bk2" />
-	  <None Remove="MovieParsers\Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
-	  <None Remove="MovieParsers\Bk2SampleFiles\SubGbHawk-CycleCount.bk2" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -51,6 +45,7 @@
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-N64.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Nes.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Ngb.bk2" />
+		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-O2.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Pce.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-PceCd.bk2" />
 		<EmbeddedResource Include="MovieParsers\Bk2SampleFiles\System-Pcfx.bk2" />
