@@ -173,7 +173,7 @@
 				<h4>User Files</h4>
 			</cardheader>
 			<cardbody>
-				<a href="/UserFiles/User/@Model.UserName">@Model.UserFiles.Total</a> files
+				<a href="/UserFiles/ForUser/@Model.UserName">@Model.UserFiles.Total</a> files
 				<br /><br />
 				<span>Systems:</span><br />
 				@string.Join(", ", Model.UserFiles.Systems.Where(s => !string.IsNullOrWhiteSpace(s)))
