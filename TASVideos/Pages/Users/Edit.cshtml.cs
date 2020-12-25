@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Users.Models;
@@ -21,19 +18,21 @@ namespace TASVideos.Pages.Users
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			ExternalMediaPublisher publisher)
 		{
 			_db = db;
+			_mapper = mapper;
 			_publisher = publisher;
 		}
 
 		[FromRoute]
 		public int Id { get; set; }
-
 
 		[FromQuery]
 		public string? ReturnUrl { get; set; }
@@ -51,9 +50,8 @@ namespace TASVideos.Pages.Users
 				return RedirectToPage("/Profile/Settings");
 			}
 
-			UserToEdit = await _db.Users
-				.Where(u => u.Id == Id)
-				.ProjectTo<UserEditModel>()
+			UserToEdit = await _mapper.ProjectTo<UserEditModel>(
+					_db.Users.Where(u => u.Id == Id))
 				.SingleOrDefaultAsync();
 
 			if (UserToEdit == null)
@@ -62,7 +60,6 @@ namespace TASVideos.Pages.Users
 			}
 
 			AvailableRoles = await GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
-
 			return Page();
 		}
 

@@ -2,9 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,15 +18,18 @@ namespace TASVideos.Pages.Publications
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages)
 		{
 			_db = db;
+			_mapper = mapper;
 			_wikiPages = wikiPages;
 			_publisher = publisher;
 		}
@@ -115,7 +116,6 @@ namespace TASVideos.Pages.Publications
 						&& !userPermissions.Contains(f.PermissionRestriction.Value)
 				})
 				.ToListAsync();
-
 			AvailableTags = await _db.Tags
 				.Select(f => new SelectListItem
 				{
@@ -123,7 +123,6 @@ namespace TASVideos.Pages.Publications
 					Value = f.Id.ToString()
 				})
 				.ToListAsync();
-
 			AvailableMoviesForObsoletedBy = await _db.Publications
 				.ThatAreCurrent()
 				.Where(p => p.System!.Code == systemCode)
@@ -134,10 +133,8 @@ namespace TASVideos.Pages.Publications
 					Value = p.Id.ToString()
 				})
 				.ToListAsync();
-
-			Files = await _db.PublicationFiles
-				.Where(f => f.PublicationId == Id)
-				.ProjectTo<PublicationFileDisplayModel>()
+			Files = await _mapper.ProjectTo<PublicationFileDisplayModel>(
+					_db.PublicationFiles.Where(f => f.PublicationId == Id))
 				.ToListAsync();
 		}
 

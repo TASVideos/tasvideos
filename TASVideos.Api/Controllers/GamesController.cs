@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,13 +19,15 @@ namespace TASVideos.Api.Controllers
 	public class GamesController : Controller
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GamesController"/> class. 
 		/// </summary>
-		public GamesController(ApplicationDbContext db)
+		public GamesController(ApplicationDbContext db, IMapper mapper)
 		{
 			_db = db;
+			_mapper = mapper;
 		}
 
 		/// <summary>
@@ -40,10 +40,8 @@ namespace TASVideos.Api.Controllers
 		[ProducesResponseType(typeof(GamesResponse), 200)]
 		public async Task<IActionResult> Get(int id)
 		{
-			var pub = await _db.Games
-				.ProjectTo<GamesResponse>()
+			var pub = await _mapper.ProjectTo<GamesResponse>(_db.Games)
 				.SingleOrDefaultAsync(p => p.Id == id);
-
 			if (pub == null)
 			{
 				return NotFound();
@@ -62,9 +60,8 @@ namespace TASVideos.Api.Controllers
 		[ProducesResponseType(typeof(IEnumerable<GamesResponse>), 200)]
 		public async Task<IActionResult> GetAll(GamesRequest request)
 		{
-			var games = (await _db.Games
-				.ForSystemCodes(request.SystemCodes)
-				.ProjectTo<GamesResponse>()
+			var games = (await _mapper.ProjectTo<GamesResponse>(
+				_db.Games.ForSystemCodes(request.SystemCodes))
 				.SortBy(request)
 				.Paginate(request)
 				.ToListAsync())

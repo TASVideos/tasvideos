@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -61,15 +57,15 @@ namespace TASVideos.Pages.Games.Roms
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
 
-		public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new[]
+		public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new SelectListItem[]
 		{
-			new SelectListItem { Text = "U", Value = "U" },
-			new SelectListItem { Text = "J", Value = "J" },
-			new SelectListItem { Text = "E", Value = "E" },
-			new SelectListItem { Text = "JU", Value = "JU" },
-			new SelectListItem { Text = "EU", Value = "UE" },
-			new SelectListItem { Text = "W", Value = "W" },
-			new SelectListItem { Text = "Other", Value = "Other" },
+			new() { Text = "U", Value = "U" },
+			new() { Text = "J", Value = "J" },
+			new() { Text = "E", Value = "E" },
+			new() { Text = "JU", Value = "JU" },
+			new() { Text = "EU", Value = "UE" },
+			new() { Text = "W", Value = "W" },
+			new() { Text = "Other", Value = "Other" },
 		};
 
 		[TempData]
@@ -97,9 +93,8 @@ namespace TASVideos.Pages.Games.Roms
 				return Page();
 			}
 
-			Rom = await _db.GameRoms
-				.Where(r => r.Id == Id.Value && r.Game!.Id == GameId)
-				.ProjectTo<RomEditModel>()
+			Rom = await _mapper.ProjectTo<RomEditModel>(
+				_db.GameRoms.Where(r => r.Id == Id.Value && r.Game!.Id == GameId))
 				.SingleAsync();
 
 			if (Rom == null)

@@ -192,9 +192,7 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddAutoMapperWithProjections(this IServiceCollection services)
 		{
-			Mapper.Initialize(cfg => cfg.AddProfile(new MappingProfile()));
-			services.AddAutoMapper();
-
+			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 			return services;
 		}
 

@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Api.Responses;
 using TASVideos.Data;
 
@@ -20,13 +17,15 @@ namespace TASVideos.Api.Controllers
 	public class SystemsController : Controller
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SystemsController"/> class. 
 		/// </summary>
-		public SystemsController(ApplicationDbContext db)
+		public SystemsController(ApplicationDbContext db, IMapper mapper)
 		{
 			_db = db;
+			_mapper = mapper;
 		}
 
 		/// <summary>
@@ -39,8 +38,8 @@ namespace TASVideos.Api.Controllers
 		[ProducesResponseType(typeof(SystemsResponse), 200)]
 		public async Task<IActionResult> Get(int id)
 		{
-			var system = await _db.GameSystems
-				.ProjectTo<SystemsResponse>()
+			var system = await _mapper
+				.ProjectTo<SystemsResponse>(_db.GameSystems)
 				.SingleOrDefaultAsync(p => p.Id == id);
 
 			if (system == null)
@@ -65,8 +64,8 @@ namespace TASVideos.Api.Controllers
 				return BadRequest(ModelState);
 			}
 
-			var systems = await _db.GameSystems
-				.ProjectTo<SystemsResponse>()
+			var systems = await _mapper
+				.ProjectTo<SystemsResponse>(_db.GameSystems)
 				.ToListAsync();
 
 			return Ok(systems);

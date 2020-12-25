@@ -1,13 +1,10 @@
 ﻿using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Services;
@@ -18,13 +15,16 @@ namespace TASVideos.Pages.Publications
 	public class ViewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly IPointsService _pointsService;
 
 		public ViewModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			IPointsService pointsService)
 		{
 			_db = db;
+			_mapper = mapper;
 			_pointsService = pointsService;
 		}
 
@@ -35,8 +35,8 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			Publication = await _db.Publications
-				.ProjectTo<PublicationDisplayModel>()
+			Publication = await _mapper
+				.ProjectTo<PublicationDisplayModel>(_db.Publications)
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
 			if (Publication == null)

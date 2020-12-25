@@ -2,13 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -63,9 +60,8 @@ namespace TASVideos.Pages.Games
 		{
 			if (Id.HasValue)
 			{
-				Game = await _db.Games
-					.Where(g => g.Id == Id)
-					.ProjectTo<GameEditModel>()
+				Game = await _mapper.ProjectTo<GameEditModel>(
+					_db.Games.Where(g => g.Id == Id))
 					.SingleOrDefaultAsync();
 
 				if (Game == null)

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -16,11 +15,16 @@ namespace TASVideos.ViewComponents
 	public class DisplayMovies : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly IMovieSearchTokens _tokens;
 
-		public DisplayMovies(ApplicationDbContext db, IMovieSearchTokens tokens)
+		public DisplayMovies(
+			ApplicationDbContext db,
+			IMapper mapper,
+			IMovieSearchTokens tokens)
 		{
 			_db = db;
+			_mapper = mapper;
 			_tokens = tokens;
 		}
 
@@ -59,13 +63,12 @@ namespace TASVideos.ViewComponents
 				return View(new List<PublicationDisplayModel>());
 			}
 
-			var results = await _db.Publications
-				.OrderBy(p => p.System!.Code)
-				.ThenBy(p => p.Game!.DisplayName)
-				.FilterByTokens(searchModel)
-				.ProjectTo<PublicationDisplayModel>()
+			var results = await _mapper.ProjectTo<PublicationDisplayModel>(
+				_db.Publications
+					.OrderBy(p => p.System!.Code)
+					.ThenBy(p => p.Game!.DisplayName)
+					.FilterByTokens(searchModel))
 				.ToListAsync();
-
 			return View(results);
 		}
 	}
