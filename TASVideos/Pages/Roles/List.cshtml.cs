@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +13,12 @@ namespace TASVideos.Pages.Roles
 	public class ListModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
-		public ListModel(ApplicationDbContext db)
+		public ListModel(ApplicationDbContext db, IMapper mapper)
 		{
 			_db = db;
+			_mapper = mapper;
 		}
 
 		[TempData]
@@ -33,8 +33,8 @@ namespace TASVideos.Pages.Roles
 
 		public async Task OnGet()
 		{
-			Roles = await _db.Roles
-				.ProjectTo<RoleDisplayModel>()
+			Roles = await _mapper
+				.ProjectTo<RoleDisplayModel>(_db.Roles)
 				.ToListAsync();
 		}
 	}

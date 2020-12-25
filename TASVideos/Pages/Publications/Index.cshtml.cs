@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Models;
@@ -20,15 +17,18 @@ namespace TASVideos.Pages.Publications
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly IPointsService _points;
 		private readonly IMovieSearchTokens _movieTokens;
 
 		public IndexModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			IPointsService points,
 			IMovieSearchTokens movieTokens)
 		{
 			_db = db;
+			_mapper = mapper;
 			_points = points;
 			_movieTokens = movieTokens;
 		}
@@ -71,11 +71,11 @@ namespace TASVideos.Pages.Publications
 				return Redirect("Movies");
 			}
 
-			Movies = await _db.Publications
-				.OrderBy(p => p.System!.Code)
-				.ThenBy(p => p.Game!.DisplayName)
-				.FilterByTokens(searchModel)
-				.ProjectTo<PublicationDisplayModel>()
+			Movies = await _mapper.ProjectTo<PublicationDisplayModel>(
+				_db.Publications
+					.OrderBy(p => p.System!.Code)
+					.ThenBy(p => p.Game!.DisplayName)
+					.FilterByTokens(searchModel))
 				.ToListAsync();
 
 			var ratings = (await _points.PublicationRatings(Movies.Select(m => m.Id)))

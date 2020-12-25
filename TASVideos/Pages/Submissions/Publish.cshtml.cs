@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -20,6 +18,7 @@ namespace TASVideos.Pages.Submissions
 	public class PublishModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IWikiPages _wikiPages;
 		private readonly IMediaFileUploader _uploader;
@@ -29,6 +28,7 @@ namespace TASVideos.Pages.Submissions
 
 		public PublishModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
 			IMediaFileUploader uploader,
@@ -37,6 +37,7 @@ namespace TASVideos.Pages.Submissions
 			IFileService fileService)
 		{
 			_db = db;
+			_mapper = mapper;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_uploader = uploader;
@@ -55,9 +56,9 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnGet()
 		{
-			Submission = await _db.Submissions
-				.Where(s => s.Id == Id)
-				.ProjectTo<SubmissionPublishModel>()
+			Submission = await _mapper
+				.ProjectTo<SubmissionPublishModel>(
+					_db.Submissions.Where(s => s.Id == Id))
 				.SingleOrDefaultAsync();
 
 			if (Submission == null)
@@ -71,7 +72,6 @@ namespace TASVideos.Pages.Submissions
 			}
 
 			await PopulateAvailableMoviesToObsolete(Submission.SystemId);
-
 			return Page();
 		}
 

@@ -2,12 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -18,10 +15,12 @@ namespace TASVideos.ViewComponents
     public class TopicFeed : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
-		public TopicFeed(ApplicationDbContext db)
+		public TopicFeed(ApplicationDbContext db, IMapper mapper)
 		{
 			_db = db;
+			_mapper = mapper;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(string pp)
@@ -35,11 +34,11 @@ namespace TASVideos.ViewComponents
 				RightAlign = ParamHelper.HasParam(pp, "right"),
 				Heading = ParamHelper.GetValueFor(pp, "heading"),
 				HideContent = ParamHelper.HasParam(pp, "hidecontent"),
-				Posts = await _db.ForumPosts
-					.ForTopic(topicId)
-					.ExcludeRestricted(false) // By design, let's not allow restricted topics as wiki feeds
-					.ByMostRecent()
-					.ProjectTo<TopicFeedModel.TopicPost>()
+				Posts = await _mapper.ProjectTo<TopicFeedModel.TopicPost>(
+						_db.ForumPosts
+						.ForTopic(topicId)
+						.ExcludeRestricted(false) // By design, let's not allow restricted topics as wiki feeds
+						.ByMostRecent())
 					.Take(limit)
 					.ToListAsync()
 			};
