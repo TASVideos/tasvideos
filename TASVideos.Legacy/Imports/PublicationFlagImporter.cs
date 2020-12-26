@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
@@ -8,10 +7,7 @@ namespace TASVideos.Legacy.Imports
 {
     public static class PublicationFlagImporter
     {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
 		{
 			var publicationFlags = legacySiteContext.MovieFlags
 				.Where(mf => mf.FlagId != 3) // A.V.G.N

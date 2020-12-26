@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Forum.Entity;
@@ -32,11 +30,11 @@ namespace TASVideos.Legacy
 
 			var stopwatch = Stopwatch.StartNew();
 
-			Run("Tags", () => TagImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Tags", () => TagImporter.Import(connectionStr, legacySiteContext));
 			Run("Roms", () => RomImporter.Import(connectionStr, legacySiteContext));
 			Run("Games", () => GameImporter.Import(connectionStr, legacySiteContext));
-			Run("GameGroup", () => GameGroupImporter.Import(connectionStr, context, legacySiteContext));
-			Run("GameGenre", () => GameGenreImport.Import(connectionStr, context, legacySiteContext));
+			Run("GameGroup", () => GameGroupImporter.Import(connectionStr, legacySiteContext));
+			Run("GameGenre", () => GameGenreImport.Import(connectionStr, legacySiteContext));
 			Run("RamAddresses", () => RamAddressImporter.Import(connectionStr, context, legacySiteContext));
 
 			Run("Users", () => UserImporter.Import(connectionStr, context, legacySiteContext, legacyForumContext));
@@ -44,8 +42,8 @@ namespace TASVideos.Legacy
 			Run("Award", () => AwardImporter.Import(connectionStr, context, legacySiteContext));
 
 			Run("Forum Categories", () => ForumCategoriesImporter.Import(connectionStr, legacyForumContext));
-			Run("Forums", () => ForumImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Topics", () => ForumTopicImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forums", () => ForumImporter.Import(connectionStr, legacyForumContext));
+			Run("Forum Topics", () => ForumTopicImporter.Import(connectionStr, legacyForumContext));
 			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, legacyForumContext));
 			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(connectionStr, legacyForumContext));
 			Run("Forum Polls", () => ForumPollImporter.Import(connectionStr, context, legacyForumContext));
@@ -64,7 +62,7 @@ namespace TASVideos.Legacy
 			Run("Publications", () => PublicationImporter.Import(connectionStr, context, legacySiteContext));
 			Run("PublicationUrls", () => PublicationUrlImporter.Import(connectionStr, legacySiteContext));
 			Run("Publication Ratings", () => PublicationRatingImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Publication Flags", () => PublicationFlagImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Publication Flags", () => PublicationFlagImporter.Import(connectionStr, legacySiteContext));
 			Run("Publication Tags", () => PublicationTagImporter.Import(connectionStr, context, legacySiteContext));
 			Run("Published Author Generator", () => PublishedAuthorGenerator.Generate(connectionStr, context));
 
