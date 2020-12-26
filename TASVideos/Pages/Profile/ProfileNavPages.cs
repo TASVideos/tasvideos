@@ -28,6 +28,9 @@ namespace TASVideos.Pages.Profile
 		public static string Ratings => "Ratings";
 		public static string RatingsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Ratings);
 
+		public static string Unrated => "Unrated";
+		public static string UnratedNavClass(ViewContext viewContext) => PageNavClass(viewContext, Unrated);
+
 		public static string Topics => "Topics";
 		public static string TopicsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Topics);
 
