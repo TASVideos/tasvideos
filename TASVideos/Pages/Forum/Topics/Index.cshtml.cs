@@ -24,13 +24,15 @@ namespace TASVideos.Pages.Forum.Topics
 		private readonly IAwards _awards;
 		private readonly IPointsService _pointsService;
 		private readonly ITopicWatcher _topicWatcher;
+		private readonly IWikiPages _wikiPages;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IAwards awards,
 			IPointsService pointsService,
-			ITopicWatcher topicWatcher)
+			ITopicWatcher topicWatcher,
+			IWikiPages wikiPages)
 			: base(db, topicWatcher)
 		{
 			_db = db;
@@ -38,6 +40,7 @@ namespace TASVideos.Pages.Forum.Topics
 			_awards = awards;
 			_pointsService = pointsService;
 			_topicWatcher = topicWatcher;
+			_wikiPages = wikiPages;
 		}
 
 		[FromRoute]
@@ -47,6 +50,8 @@ namespace TASVideos.Pages.Forum.Topics
 		public TopicRequest Search { get; set; } = new();
 
 		public ForumTopicModel Topic { get; set; } = new();
+
+		public WikiPage? WikiPage { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -67,6 +72,7 @@ namespace TASVideos.Pages.Forum.Topics
 					ForumName = t.Forum!.Name,
 					IsLocked = t.IsLocked,
 					LastPostId = t.ForumPosts.OrderByDescending(p => p.CreateTimeStamp).First().Id,
+					PageName = t.PageName,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll!.Question }
 						: null
@@ -76,6 +82,11 @@ namespace TASVideos.Pages.Forum.Topics
 			if (Topic == null)
 			{
 				return NotFound();
+			}
+
+			if (!string.IsNullOrWhiteSpace(Topic.PageName))
+			{
+				WikiPage = await _wikiPages.Page(Topic.PageName);
 			}
 
 			Topic.Posts = await _db.ForumPosts
