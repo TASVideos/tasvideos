@@ -39,6 +39,8 @@ namespace TASVideos.Pages.Forum.Topics.Models
 
 		public ForumTopicType Type { get; set; }
 
+		public string? PageName { get; set; }
+
 		public bool AnyVotes => Poll?.Options.SelectMany(o => o.Voters).Any() ?? false;
 
 		public PageOf<ForumPostEntry> Posts { get; set; } = PageOf<ForumPostEntry>.Empty();
