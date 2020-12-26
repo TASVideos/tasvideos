@@ -7,10 +7,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class GameGroupImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
 		{
 			var gameGroups = legacySiteContext.GameNameGroupNames
 				.Select(g => new GameGroup

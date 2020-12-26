@@ -10,10 +10,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class GameGenreImport
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
 		{
 			var gameGenres = new HashSet<GameGenre>();
 

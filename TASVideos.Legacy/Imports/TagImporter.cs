@@ -9,10 +9,7 @@ namespace TASVideos.Legacy.Imports
 {
     public static class TagImporter
     {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
 		{
 			var legacyClassTypes = legacySiteContext.ClassTypes
 				.Where(t => !t.PositiveText.Contains("Genre"))

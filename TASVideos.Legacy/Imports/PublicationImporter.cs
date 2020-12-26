@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
@@ -18,9 +17,6 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			// TODO
-			// multiple streaming url links
-			// multiple archive links
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();

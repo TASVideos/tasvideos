@@ -7,12 +7,9 @@ using TASVideos.Legacy.Imports;
 
 namespace TASVideos.Legacy.Data.Forum.Entity
 {
-    public static class ForumTopicImporter
-    {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+	public static class ForumTopicImporter
+	{
+		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
 		{
 			var legTopics = legacyForumContext.Topics
 				.Include(t => t.Poll)
@@ -33,7 +30,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				})
 				.ToList();
 
-			 var topics = legTopics
+			var topics = legTopics
 				.Select(t => new ForumTopic
 				{
 					Id = t.Id,

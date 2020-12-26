@@ -9,10 +9,7 @@ namespace TASVideos.Legacy.Imports
 {
     public static class ForumImporter
     {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
 		{
 			var forums = legacyForumContext
 				.Forums
