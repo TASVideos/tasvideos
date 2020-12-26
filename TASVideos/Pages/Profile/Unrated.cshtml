@@ -1,0 +1,22 @@
+﻿@page
+@model UnratedModel
+@{
+	ViewData["Title"] = "My Unrated Movies";
+	ViewData.AddActivePage(ProfileNavPages.Unrated);
+}
+
+<h4>Unrated Movies</h4>
+<table class="table table-striped">
+
+	@foreach (var pub in Model.UnratedMovies.OrderBy(p => p.Title))
+	{
+		<tr>
+			<td>
+				<a asp-page="/Publications/Rate" asp-route-id="@pub.Id" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()" class="btn btn-primary btn-sm">Rate</a>
+			</td>
+			<td>
+				<a href="/@(pub.Id)M">@pub.Title</a>
+			</td>
+		</tr>
+	}
+</table>
