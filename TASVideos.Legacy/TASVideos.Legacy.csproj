@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 		<Nullable>enable</Nullable>
+		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -14,11 +15,19 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
 		<PackageReference Include="SharpCompress" Version="0.26.0" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
 		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
 		<ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="$(ProjectDir)../.stylecop.json" />
 	</ItemGroup>
 </Project>
