@@ -12,7 +12,7 @@ namespace TASVideos.Data
 
 		public static ExpandoObjectComparer Default()
 		{
-			return new();
+			return new ();
 		}
 
 		public bool Equals(ExpandoObject? x, ExpandoObject? y)
@@ -22,7 +22,8 @@ namespace TASVideos.Data
 				return true;
 			}
 
-			if (x == null || y == null) // ReferenceEquals checks the scenario of both being null
+			// ReferenceEquals checks the scenario of both being null
+			if (x == null || y == null)
 			{
 				return false;
 			}

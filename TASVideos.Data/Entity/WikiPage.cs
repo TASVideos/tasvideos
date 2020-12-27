@@ -25,7 +25,7 @@ namespace TASVideos.Data.Entity
 		public virtual WikiPage? Child { get; set; } // The latest revision of a page is one with Child = null
 
 		public bool IsDeleted { get; set; }
-	} 
+	}
 
 	public static class WikiQueryableExtensions
 	{
@@ -52,11 +52,11 @@ namespace TASVideos.Data.Entity
 		/// <summary>
 		/// Filters the list of wiki pages to only pages that are nest beneath the given page.
 		/// If no pageName is provided, then a master list of subpages is provided
-		/// ex: /Foo/Bar, /Foo/Bar2 and /Foo/Bar/Baz are all subpages of /Foo
+		/// ex: /Foo/Bar, /Foo/Bar2 and /Foo/Bar/Baz are all subpages of /Foo.
 		/// </summary>
-		/// <param name="query">This query to filter</param>
+		/// <param name="query">The query to filter.</param>
 		/// <seealso cref="WikiPage"/>
-		/// <param name="pageName">the name of the page to get sub pages from</param>
+		/// <param name="pageName">The name of the page to get sub pages from.</param>
 		public static IQueryable<WikiPage> ThatAreSubpagesOf(this IQueryable<WikiPage> query, string? pageName)
 		{
 			pageName = (pageName ?? "").Trim('/');
@@ -76,11 +76,11 @@ namespace TASVideos.Data.Entity
 		/// <summary>
 		/// Filters the list of wiki pages to only pages that are parents of the given page
 		/// ex: /Foo is a parent of /Foo/Bar
-		/// ex: /Foo and /Foo/Bar are parents of /Foo/Bar/Baz
+		/// ex: /Foo and /Foo/Bar are parents of /Foo/Bar/Baz.
 		/// </summary>
 		/// <seealso cref="WikiPage"/>
-		/// <param name="query">This query to filter</param>
-		/// <param name="pageName">the name of the page to get parent pages from</param>
+		/// <param name="query">The query to filter.</param>
+		/// <param name="pageName">The name of the page to get parent pages from.</param>
 		public static IQueryable<WikiPage> ThatAreParentsOf(this IQueryable<WikiPage> query, string? pageName)
 		{
 			pageName = (pageName ?? "").Trim('/');

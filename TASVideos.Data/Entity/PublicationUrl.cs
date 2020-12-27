@@ -3,7 +3,7 @@
 namespace TASVideos.Data.Entity
 {
 	public enum PublicationUrlType { Streaming, Mirror }
-	
+
 	public class PublicationUrl : BaseEntity
 	{
 		public int Id { get; set; }

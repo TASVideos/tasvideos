@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading;
@@ -19,7 +19,6 @@ namespace TASVideos.Data
 		private readonly IHttpContextAccessor? _httpContext;
 
 		// TODO: internal
-
 		public const string SystemUser = "admin@tasvideos.org";
 
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor? httpContextAccessor)
@@ -101,14 +100,12 @@ namespace TASVideos.Data
 			PerformTrackingUpdates();
 			return base.SaveChangesAsync(cancellationToken);
 		}
-		
+
 		/// <summary>
 		/// Attempts to save changes, but if a <see cref="DbUpdateConcurrencyException"/> occurs,
 		/// it will be caught no changes will be saved.  Only to be used if discarding the data is
-		/// an acceptable handling 
+		/// an acceptable handling.
 		/// </summary>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
 		public async Task<int> TrySaveChangesAsync(CancellationToken cancellationToken = default)
 		{
 			try
@@ -130,7 +127,7 @@ namespace TASVideos.Data
 					.IsUnique()
 					.HasFilter($"([{nameof(ForumTopic.PageName)}] IS NOT NULL)");
 			});
-			
+
 			builder.Entity<User>(entity =>
 			{
 				entity.HasIndex(e => e.NormalizedEmail)

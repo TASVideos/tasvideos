@@ -6,7 +6,7 @@ namespace TASVideos.Data.Entity
 {
 	/// <summary>
 	/// Represents the most granular level permissions possible in the site. All site code is based on these permissions
-	/// The <see cref="Role" /> table represents a group of permissions that can be assigned to a <seealso cref="User"/>
+	/// The <see cref="Role" /> table represents a group of permissions that can be assigned to a <seealso cref="User"/>.
 	/// </summary>
 	public enum PermissionTo
 	{
@@ -247,7 +247,7 @@ namespace TASVideos.Data.Entity
 		[Group("Forum Administration")]
 		[Description("The ability to see which users voted on which poll option.")]
 		SeePollResults = 491,
-		
+
 		[Display(Name = "Reset Poll Results")]
 		[Group("Forum Administration")]
 		[Description("The ability to reset a poll result to empty.")]

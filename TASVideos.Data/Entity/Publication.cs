@@ -10,7 +10,7 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Data.Entity
 {
 	/// <summary>
-	/// Represents filter criteria for filtering publications
+	/// Represents filter criteria for filtering publications.
 	/// </summary>
 	public interface IPublicationTokens
 	{
@@ -84,7 +84,7 @@ namespace TASVideos.Data.Entity
 		public int RerecordCount { get; set; }
 
 		/// <summary>
-		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here
+		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here.
 		/// </summary>
 		[StringLength(200)]
 		public string? AdditionalAuthors { get; set; }
@@ -93,7 +93,7 @@ namespace TASVideos.Data.Entity
 		[Required]
 		public string Title { get; set; } = "";
 
-		double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!"); 
+		double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!");
 
 		public void GenerateTitle()
 		{
@@ -103,7 +103,7 @@ namespace TASVideos.Data.Entity
 
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
 			{
-				authorList = authorList.Concat(AdditionalAuthors.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries));
+				authorList = authorList.Concat(AdditionalAuthors.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries));
 			}
 
 			if (System == null)

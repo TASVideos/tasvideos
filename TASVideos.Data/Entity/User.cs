@@ -43,7 +43,7 @@ namespace TASVideos.Data.Entity
 
 		/// <summary>
 		/// Gets or sets a value indicating whether or not to use
-		/// the user's ratings when calculating a publication's average rating
+		/// the user's ratings when calculating a publication's average rating.
 		/// </summary>
 		public bool UseRatings { get; set; } = true;
 
@@ -98,7 +98,7 @@ namespace TASVideos.Data.Entity
 		public static IQueryable<User> ThatHavePermission(this IQueryable<User> query, PermissionTo permission)
 		{
 			return query.Where(u => u.UserRoles
-				.Any(r => r.Role!.RolePermission.Any(rp => rp.PermissionId ==permission)));
+				.Any(r => r.Role!.RolePermission.Any(rp => rp.PermissionId == permission)));
 		}
 
 		public static IQueryable<User> ThatHaveRole(this IQueryable<User> query, string role)
