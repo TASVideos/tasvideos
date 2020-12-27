@@ -8,7 +8,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 		protected ErrorResult Error(string errorMsg)
 		{
-			return new(errorMsg) { FileExtension = FileExtension };
+			return new (errorMsg) { FileExtension = FileExtension };
 		}
 	}
 }

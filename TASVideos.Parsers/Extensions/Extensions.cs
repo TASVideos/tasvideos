@@ -8,7 +8,7 @@ namespace TASVideos.MovieParsers.Extensions
 	public static class Extensions
 	{
 		/// <summary>
-		/// Splits by line, Null safe, removes empty entries
+		/// Splits by line, Null safe, removes empty entries.
 		/// </summary>
 		public static string[] LineSplit(this string? str)
 		{
@@ -24,11 +24,11 @@ namespace TASVideos.MovieParsers.Extensions
 
 		/// <summary>
 		/// Searches through a list of strings that represents a space separated
-		/// key/value pair, for the given key (case insensitive and returns the value
+		/// key/value pair, for the given key (case insensitive and returns the value.
 		/// </summary>
-		/// <param name="lines">The key/value pairs to search</param>
-		/// <param name="key">The key to search for</param>
-		/// <returns>The value if found, else an empty string</returns>
+		/// <param name="lines">The key/value pairs to search.</param>
+		/// <param name="key">The key to search for.</param>
+		/// <returns>The value if found, else an empty string.</returns>
 		public static string GetValueFor(this string[]? lines, string key)
 		{
 			if (lines == null || !lines.Any() || string.IsNullOrWhiteSpace(key))
@@ -44,7 +44,7 @@ namespace TASVideos.MovieParsers.Extensions
 					.Trim()
 					.Replace("\r", "")
 					.Replace("\n", "");
-				
+
 				return valStr;
 			}
 
@@ -53,7 +53,7 @@ namespace TASVideos.MovieParsers.Extensions
 
 		/// <summary>
 		/// Parses the given string as an integer.
-		/// If value can not be parsed, null is returned
+		/// If value can not be parsed, null is returned.
 		/// </summary>
 		public static int? ToInt(this string val)
 		{
@@ -68,7 +68,7 @@ namespace TASVideos.MovieParsers.Extensions
 
 		/// <summary>
 		/// Parses the given string as a long.
-		/// If value can not be parsed, null is returned
+		/// If value can not be parsed, null is returned.
 		/// </summary>
 		public static long? ToLong(this string val)
 		{
@@ -84,7 +84,7 @@ namespace TASVideos.MovieParsers.Extensions
 		/// <summary>
 		/// Parses the given string as a boolean.
 		/// </summary>
-		/// <returns>True if value is a case insensitive true, or a 1</returns>
+		/// <returns>True if value is a case insensitive true, or a 1.</returns>
 		public static bool ToBool(this string val)
 		{
 			if (string.IsNullOrWhiteSpace(val))
@@ -102,7 +102,7 @@ namespace TASVideos.MovieParsers.Extensions
 
 		/// <summary>
 		/// Returns the number of lines that start with a | which indicates
-		/// an input frame in many movie formats
+		/// an input frame in many movie formats.
 		/// </summary>
 		public static int PipeCount(this IEnumerable<string>? lines)
 		{
@@ -111,7 +111,7 @@ namespace TASVideos.MovieParsers.Extensions
 
 		/// <summary>
 		/// Returns lines that do not begin with a | which indicates
-		/// a header line in many movie formats;
+		/// a header line in many movie formats.
 		/// </summary>
 		public static IEnumerable<string> WithoutPipes(this IEnumerable<string>? lines)
 		{
@@ -122,7 +122,7 @@ namespace TASVideos.MovieParsers.Extensions
 
 		/// <summary>
 		/// Gets a file that matches or starts with the given name
-		/// with a case insensitive match
+		/// with a case insensitive match.
 		/// </summary>
 		public static ZipArchiveEntry? Entry(this ZipArchive archive, string name)
 		{
