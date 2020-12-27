@@ -14,8 +14,8 @@ namespace TASVideos.Legacy.Imports
 	{
 		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
 		{
-			const int tvaId = 505;
 			// TODO: posts without a corresponding post text
+			const int tvaId = 505;
 			var posts = legacyForumContext.Posts
 				.Where(p => p.PosterId != tvaId || !p.PostText!.Text!.StartsWith("This is an automatically posted message for discussing submission:"))
 				.Select(p => new

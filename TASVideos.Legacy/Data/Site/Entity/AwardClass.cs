@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TASVideos.Legacy.Data.Site.Entity
 {
-    public class AwardClass
-    {
+	public class AwardClass
+	{
 		[Key]
 		[Column("award")]
 		public int Id { get; set; }
@@ -17,5 +17,5 @@ namespace TASVideos.Legacy.Data.Site.Entity
 
 		[Column("description")]
 		public string Description { get; set; } = "";
-    }
+	}
 }

@@ -26,20 +26,20 @@ namespace TASVideos.Legacy.Imports
 						? legacyClassTypes.Single(c => c.Id == mc.ClassId)
 						: legacyClassTypes.Single(c => c.OldId == mc.ClassId);
 
-					if (classType.PositiveText.Contains("Genre"))
-					{
-						continue;
-					}
+				if (classType.PositiveText.Contains("Genre"))
+				{
+					continue;
+				}
 
-					var tag = mc.Value == 1
-						? tags.Single(t => t.DisplayName == classType.PositiveText)
-						: tags.Single(t => t.DisplayName == classType.NegativeText);
+				var tag = mc.Value == 1
+					? tags.Single(t => t.DisplayName == classType.PositiveText)
+					: tags.Single(t => t.DisplayName == classType.NegativeText);
 
-					publicationTags.Add(new PublicationTag
-					{
-						PublicationId = mc.MovieId,
-						TagId = tag.Id
-					});
+				publicationTags.Add(new PublicationTag
+				{
+					PublicationId = mc.MovieId,
+					TagId = tag.Id
+				});
 			}
 
 			var pubTagColumns = new[]

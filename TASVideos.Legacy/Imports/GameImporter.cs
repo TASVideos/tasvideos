@@ -51,7 +51,7 @@ namespace TASVideos.Legacy.Imports
 		// we want a placeholder game entry for publications that lack a game entry
 		// And also for the placeholder rom because roms are also strictly enforced
 		// to have a game
-		private static readonly Game UnknownGame = new()
+		private static readonly Game UnknownGame = new ()
 		{
 			Id = -1,
 			SystemId = 1, // Arbitrary, I'd rather not have a placeholder system because it could clutter a lot of parts of the code

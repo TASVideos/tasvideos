@@ -59,6 +59,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int SubmissionDate { get; set; }
 
 		[Column("judged_by")]
+
 		// ReSharper disable once UnusedMember.Global
 		public int JudgeId { get; set; }
 		public virtual User? Judge { get; set; }

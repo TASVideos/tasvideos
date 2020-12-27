@@ -77,7 +77,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static RamAddressType ToType(string? type)
 		{
-			return (type?.ToLower()) switch
+			return type?.ToLower() switch
 			{
 				"byte" => RamAddressType.Byte,
 				"word" => RamAddressType.Word,
@@ -98,7 +98,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static RamAddressSigned ToSigned(string? signed)
 		{
-			return (signed?.ToLower()) switch
+			return signed?.ToLower() switch
 			{
 				"signed" => RamAddressSigned.Signed,
 				"unsigned" => RamAddressSigned.Unsigned,
@@ -109,7 +109,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static RamAddressEndian ToEndian(string? endian)
 		{
-			return (endian?.ToLower()) switch
+			return endian?.ToLower() switch
 			{
 				"big" => RamAddressEndian.Big,
 				"little" => RamAddressEndian.Little,

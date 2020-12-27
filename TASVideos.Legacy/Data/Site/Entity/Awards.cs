@@ -2,8 +2,8 @@
 
 namespace TASVideos.Legacy.Data.Site.Entity
 {
-    public class Awards
-    {
+	public class Awards
+	{
 		[Column("UserID")]
 		public int UserId { get; set; }
 		public virtual User? User { get; set; }

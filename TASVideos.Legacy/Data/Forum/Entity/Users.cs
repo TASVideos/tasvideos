@@ -10,7 +10,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 		public int UserId { get; set; }
 
 		[Column("user_active")]
-		public bool IsActive { get; set;}
+		public bool IsActive { get; set; }
 
 		[Column("username")]
 		public string UserName { get; set; } = "";

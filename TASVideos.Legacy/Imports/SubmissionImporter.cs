@@ -20,7 +20,7 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext)
 		{
 			// TODO:
-			// submitters not in forum 
+			// submitters not in forum
 			// Cleanup archives by removing multiple entries and other junk
 			var legacySubmissions = legacySiteContext.Submissions
 				.Include(s => s.User)
@@ -287,7 +287,7 @@ namespace TASVideos.Legacy.Imports
 
 				var single = entries
 					.Where(e => !string.IsNullOrWhiteSpace(Path.GetExtension(e.FullName)))
-					.Where(e => (ValidSubmissionFileExtensions).Contains(Path.GetExtension(e.FullName).Replace(".", "")))
+					.Where(e => ValidSubmissionFileExtensions.Contains(Path.GetExtension(e.FullName).Replace(".", "")))
 					.Distinct()
 					.OrderBy(e => e.FullName.Contains("/"))
 					.ThenBy(e => e.FullName)
@@ -297,7 +297,7 @@ namespace TASVideos.Legacy.Imports
 				using var stream = single.Open();
 				stream.CopyTo(singleStream);
 				var fileBytes = singleStream.ToArray();
-				
+
 				byte[] compressedBytes;
 				using (var outStream = new MemoryStream())
 				{
@@ -308,6 +308,7 @@ namespace TASVideos.Legacy.Imports
 						using var fileToCompressStream = new MemoryStream(fileBytes);
 						fileToCompressStream.CopyTo(entryStream);
 					}
+
 					compressedBytes = outStream.ToArray();
 				}
 
@@ -341,9 +342,9 @@ namespace TASVideos.Legacy.Imports
 				"gmv" => "GENS",
 				"fcm" => "FCEU0.98",
 				"m64" => "mupen64 0.5 re-recording v8",
-				"smv" => (id < 1532 // The first known Snes9x 1.51 submission
+				"smv" => id < 1532 // The first known Snes9x 1.51 submission
 					? "Snes9x 1.43"
-					: "Snes9x"),
+					: "Snes9x",
 				_ => null
 			};
 		}

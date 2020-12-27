@@ -168,7 +168,7 @@ namespace TASVideos.Legacy.Imports
 		}
 
 		// ReSharper disable once StyleCop.SA1201
-		private static readonly string[] ObsoletePages = 
+		private static readonly string[] ObsoletePages =
 		{
 			"AccessBlocked",
 			"CacheControl",

@@ -7,14 +7,14 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-    public static class TagImporter
-    {
+	public static class TagImporter
+	{
 		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
 		{
 			var legacyClassTypes = legacySiteContext.ClassTypes
 				.Where(t => !t.PositiveText.Contains("Genre"))
 				.ToList();
-			
+
 			var tags = new List<Tag>();
 			foreach (var classType in legacyClassTypes)
 			{
