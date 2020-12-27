@@ -6,7 +6,7 @@ namespace TASVideos.MovieParsers.Result
 	/// <summary>
 	/// Represents the result of parsing a movie file.
 	/// </summary>
-	/// <seealso cref="MovieParser"/>
+	/// <seealso cref="IMovieParser"/>
 	public interface IParseResult
 	{
 		/// <summary>
