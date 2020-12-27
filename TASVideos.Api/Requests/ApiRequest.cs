@@ -6,14 +6,14 @@ using TASVideos.Data;
 namespace TASVideos.Api.Requests
 {
 	/// <summary>
-	/// Represents a standard api request
-	/// Supports sorting, paging, and field selection parameters
+	/// Represents a standard api request.
+	/// Supports sorting, paging, and field selection parameters.
 	/// </summary>
 	public class ApiRequest : IFieldSelectable, ISortable, IPageable
 	{
 		/// <summary>
-		/// Gets or sets the total number of records to return
-		/// If not specified then a default number of records will be returned
+		/// Gets or sets the total number of records to return.
+		/// If not specified then a default number of records will be returned.
 		/// </summary>
 		[Range(1, ApiConstants.MaxPageSize)]
 		public int? PageSize { get; set; } = 100;
@@ -45,13 +45,13 @@ namespace TASVideos.Api.Requests
 
 	/// <summary>
 	/// Extension methods to perform sorting, paging, and field selection operations
-	/// off the <see cref="ApiRequest"/> class
+	/// off the <see cref="ApiRequest"/> class.
 	/// </summary>
 	public static class RequestableExtensions
 	{
 		/// <summary>
 		/// Returns a page of data based on the <see cref="IPageable.CurrentPage"/>
-		/// and <see cref="IPageable.PageSize"/> properties
+		/// and <see cref="IPageable.PageSize"/> properties.
 		/// </summary>
 		/// <typeparam name="T">The type of the elements of source.</typeparam>
 		public static IQueryable<T> Paginate<T>(this IQueryable<T> source, ApiRequest paging)

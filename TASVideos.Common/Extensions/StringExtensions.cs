@@ -8,9 +8,9 @@ namespace TASVideos.Extensions
 	public static class StringExtensions
 	{
 		/// <summary>
-		/// Truncates the end of a string to the given character <see cref="limit"/> if the 
+		/// Truncates the end of a string to the given character <see cref="limit"/> if the
 		/// strength exceeds this limit, else the string itself is returned.
-		/// If length exceeds limit, ellipses will be added to the result
+		/// If length exceeds limit, ellipses will be added to the result.
 		/// </summary>
 		public static string CapAndEllipse(this string? str, int limit)
 		{
@@ -45,7 +45,7 @@ namespace TASVideos.Extensions
 		/// <summary>
 		/// Takes a string and adds spaces between words,
 		/// As well as forward slashes
-		/// Also accounts for acronyms
+		/// Also accounts for acronyms.
 		/// </summary>
 		public static string SplitCamelCase(this string? str)
 		{
@@ -76,7 +76,7 @@ namespace TASVideos.Extensions
 		}
 
 		/// <summary>
-		/// Takes a comma separated string and returns a list of values
+		/// Takes a comma separated string and returns a list of values.
 		/// </summary>
 		public static IEnumerable<string> CsvToStrings(this string? param)
 		{
@@ -89,7 +89,7 @@ namespace TASVideos.Extensions
 		}
 
 		/// <summary>
-		/// Takes a comma separated string and returns a list of values
+		/// Takes a comma separated string and returns a list of values.
 		/// </summary>
 		public static IEnumerable<int> CsvToInts(this string? param)
 		{
@@ -118,11 +118,9 @@ namespace TASVideos.Extensions
 				Regex.Replace(
 					str ?? "",
 					@"(\P{Ll})(\P{Ll}\p{Ll})",
-					"$1 $2"
-				),
+					"$1 $2"),
 				@"(\p{Ll})(\P{Ll})",
-				"$1 $2"
-			);
+				"$1 $2");
 		}
 	}
 }

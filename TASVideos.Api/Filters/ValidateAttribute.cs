@@ -19,7 +19,7 @@ namespace TASVideos.Api
 				if (responseType is not null)
 				{
 					var apiRequest = context.ActionArguments.Values.FirstOrDefault(v => v is ApiRequest);
-			
+
 					if (apiRequest != null)
 					{
 						var sort = (apiRequest as ApiRequest)?.Sort;

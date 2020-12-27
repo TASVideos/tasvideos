@@ -9,7 +9,7 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Api.Controllers
 {
 	/// <summary>
-	/// The publication tiers of TASVideos
+	/// The publication tiers of TASVideos.
 	/// </summary>
 	[AllowAnonymous]
 	[Route("api/avi/[controller]")]
@@ -18,7 +18,7 @@ namespace TASVideos.Api.Controllers
 		private readonly ApplicationDbContext _db;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="TiersController"/> class. 
+		/// Initializes a new instance of the <see cref="TiersController"/> class.
 		/// </summary>
 		public TiersController(ApplicationDbContext db)
 		{
@@ -26,9 +26,9 @@ namespace TASVideos.Api.Controllers
 		}
 
 		/// <summary>
-		/// Returns a list of available publication tiers
+		/// Returns a list of available publication tiers.
 		/// </summary>
-		/// <response code="200">Returns the list of tiers</response>
+		/// <response code="200">Returns the list of tiers.</response>
 		[HttpGet]
 		[ProducesResponseType(typeof(IEnumerable<Tier>), 200)]
 		public async Task<IActionResult> GetAll()

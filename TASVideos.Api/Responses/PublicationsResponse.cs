@@ -6,7 +6,7 @@ using TASVideos.Data;
 namespace TASVideos.Api.Responses
 {
 	/// <summary>
-	/// Represents a publication returned by the publications endpoint
+	/// Represents a publication returned by the publications endpoint.
 	/// </summary>
 	public class PublicationsResponse
 	{

@@ -10,7 +10,7 @@ using TASVideos.Data;
 namespace TASVideos.Api.Controllers
 {
 	/// <summary>
-	/// The game systems supported by TASVideos
+	/// The game systems supported by TASVideos.
 	/// </summary>
 	[AllowAnonymous]
 	[Route("api/v1/[controller]")]
@@ -20,7 +20,7 @@ namespace TASVideos.Api.Controllers
 		private readonly IMapper _mapper;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SystemsController"/> class. 
+		/// Initializes a new instance of the <see cref="SystemsController"/> class.
 		/// </summary>
 		public SystemsController(ApplicationDbContext db, IMapper mapper)
 		{
@@ -29,11 +29,11 @@ namespace TASVideos.Api.Controllers
 		}
 
 		/// <summary>
-		/// Returns a game system with the given id
+		/// Returns a game system with the given id.
 		/// </summary>
-		/// <response code="200">Returns the list of publications</response>
-		/// <response code="400">The request parameters are invalid</response>
-		/// <response code="404">A system with the given id was not found</response>
+		/// <response code="200">Returns the list of publications.</response>
+		/// <response code="400">The request parameters are invalid.</response>
+		/// <response code="404">A system with the given id was not found.</response>
 		[HttpGet("{id}")]
 		[ProducesResponseType(typeof(SystemsResponse), 200)]
 		public async Task<IActionResult> Get(int id)
@@ -51,9 +51,9 @@ namespace TASVideos.Api.Controllers
 		}
 
 		/// <summary>
-		/// Returns a list of available game systems, including supported framerates
+		/// Returns a list of available game systems, including supported framerates.
 		/// </summary>
-		/// <response code="200">Returns the list of systems</response>
+		/// <response code="200">Returns the list of systems.</response>
 		[HttpGet]
 		[Validate]
 		[ProducesResponseType(typeof(IEnumerable<SystemsResponse>), 200)]
