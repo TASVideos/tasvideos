@@ -100,12 +100,12 @@
     <Rule Id="SA1629" Action="Warning" />
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1642" Action="Warning" />
-    <Rule Id="SA1649" Action="Warning" />
+    <Rule Id="SA1649" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.LayoutRules">
     <Rule Id="SA1500" Action="Warning" />
     <Rule Id="SA1501" Action="Warning" />
-    <Rule Id="SA1502" Action="Warning" />
+    <Rule Id="SA1502" Action="None" />
     <Rule Id="SA1503" Action="Warning" />
     <Rule Id="SA1505" Action="Warning" />
     <Rule Id="SA1506" Action="Warning" />
@@ -130,7 +130,7 @@
     <Rule Id="SA1402" Action="None" />
     <Rule Id="SA1405" Action="Warning" />
     <Rule Id="SA1407" Action="Warning" />
-    <Rule Id="SA1408" Action="Warning" />
+    <Rule Id="SA1408" Action="None" />
     <Rule Id="SA1413" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.NamingRules">
@@ -161,7 +161,7 @@
     <Rule Id="SA1100" Action="Warning" />
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1107" Action="Warning" />
-    <Rule Id="SA1108" Action="Warning" />
+    <Rule Id="SA1108" Action="None" />
     <Rule Id="SA1110" Action="Warning" />
     <Rule Id="SA1111" Action="Warning" />
     <Rule Id="SA1114" Action="Warning" />
@@ -177,21 +177,26 @@
     <Rule Id="SA1132" Action="Warning" />
     <Rule Id="SA1133" Action="Warning" />
     <Rule Id="SA1134" Action="Warning" />
-    <Rule Id="SA1136" Action="Warning" />
+    <Rule Id="SA1136" Action="None" />
     <Rule Id="SA1137" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" />
     <Rule Id="SA1011" Action="None" />
     <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1108" Action="None" />
     <Rule Id="SA1122" Action="None" />
+    <Rule Id="SA1124" Action="None" />
+    <Rule Id="SA1136" Action="None" />
     <Rule Id="SA1201" Action="None" />
     <Rule Id="SA1202" Action="None" />
     <Rule Id="SA1204" Action="None" />
     <Rule Id="SA1309" Action="None" />
     <Rule Id="SA1402" Action="None" />
+    <Rule Id="SA1408" Action="None" />
     <Rule Id="SA1412" Action="Warning" />
     <Rule Id="SA1413" Action="None" />
+    <Rule Id="SA1502" Action="None" />
     <Rule Id="SA1516" Action="None" />
     <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="None" />
@@ -200,6 +205,7 @@
     <Rule Id="SA1615" Action="None" />
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1639" Action="Warning" />
+    <Rule Id="SA1649" Action="None" />
     <Rule Id="SX1101" Action="Warning" />
     <Rule Id="SX1309" Action="Warning" />
     <Rule Id="SX1309S" Action="Warning" />
