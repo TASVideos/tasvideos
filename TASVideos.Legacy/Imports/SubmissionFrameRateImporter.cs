@@ -11,7 +11,7 @@ namespace TASVideos.Legacy.Imports
 		private const decimal RoundingOffset = 0.01M;
 
 		public static void Import(ApplicationDbContext context)
-		{ 
+		{
 			var systemFrameRates = context.GameSystemFrameRates
 				.Include(sf => sf.System)
 				.ToList();
@@ -51,11 +51,11 @@ namespace TASVideos.Legacy.Imports
 					g.Key.SystemFrameRateId = g.First().Id;
 					g.Key.SystemFrameRate = g.First();
 				}
-				
+
 				g.Key.ImportedTime = decimal.Round((decimal)(g.Key.Frames / systemFrameRate.FrameRate), 3);
 				g.Key.GenerateTitle();
 			}
-			
+
 			context.SaveChanges();
 		}
 	}

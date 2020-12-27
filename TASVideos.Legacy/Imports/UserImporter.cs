@@ -29,10 +29,10 @@ namespace TASVideos.Legacy.Imports
 			// TODO:
 			// gender?
 			// TODO: what to do about these??
-			//var wikiNoForum = legacyUsers
-			//	.Select(u => u.Name)
-			//	.Except(legacyForumUsers.Select(u => u.UserName))
-			//	.ToList();
+			// var wikiNoForum = legacyUsers
+			// .Select(u => u.Name)
+			// .Except(legacyForumUsers.Select(u => u.UserName))
+			// .ToList();
 			var legacyUsers = legacySiteContext.Users
 				.Include(u => u.UserRoles)
 				.ThenInclude(ur => ur.Role)
@@ -111,6 +111,7 @@ namespace TASVideos.Legacy.Imports
 						.Cap(1000),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
+
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
 					TimeZoneId = timeZones.FirstOrDefault(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset)?.StandardName ?? utc,
 					SecurityStamp = Guid.NewGuid().ToString("D"),
@@ -122,7 +123,7 @@ namespace TASVideos.Legacy.Imports
 			// Hacks
 			var grue = userEntities.First(u => u.UserName == "TASVideos Grue");
 			grue.UserName = "TASVideosGrue";
-			
+
 			var roles = context.Roles.ToList();
 
 			var userRoles = new List<UserRole>();

@@ -7,8 +7,8 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-    public static class ForumImporter
-    {
+	public static class ForumImporter
+	{
 		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
 		{
 			var forums = legacyForumContext

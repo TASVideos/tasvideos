@@ -5,7 +5,8 @@ namespace TASVideos.Legacy.Data.Forum
 {
 	public class NesVideosForumContext : DbContext
 	{
-		public NesVideosForumContext(DbContextOptions<NesVideosForumContext> options) : base(options)
+		public NesVideosForumContext(DbContextOptions<NesVideosForumContext> options)
+			: base(options)
 		{
 		}
 
@@ -42,7 +43,7 @@ namespace TASVideos.Legacy.Data.Forum
 				entity.ToTable("posts");
 			});
 			modelBuilder.Entity<PostsText>().ToTable("posts_text");
-			
+
 			modelBuilder.Entity<PrivateMessage>(entity =>
 			{
 				entity.HasKey(e => e.Id);
@@ -71,7 +72,7 @@ namespace TASVideos.Legacy.Data.Forum
 			});
 
 			modelBuilder.Entity<TopicWatch>(entity =>
-			{ 
+			{
 				entity.HasKey(e => new { e.TopicId, e.UserId });
 				entity.ToTable("topics_watch");
 			});

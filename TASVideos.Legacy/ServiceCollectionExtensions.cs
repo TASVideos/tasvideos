@@ -24,7 +24,7 @@ namespace TASVideos.Legacy.Extensions
 
 				services.AddDbContext<NesVideosSiteContext>(options =>
 					options.UseMySql(siteConnectionString, ServerVersion.AutoDetect(siteConnectionString)));
-				
+
 				services.AddDbContext<NesVideosForumContext>(options =>
 					options.UseMySql(forumConnectionString, ServerVersion.AutoDetect(forumConnectionString)));
 			}

@@ -11,7 +11,7 @@ namespace TASVideos.Legacy.Imports
 		public static void Import(
 			string connectionStr,
 			NesVideosSiteContext legacySiteContext)
-		{ 
+		{
 			const string mirrorType = "A";
 			const string streaming = "J";
 

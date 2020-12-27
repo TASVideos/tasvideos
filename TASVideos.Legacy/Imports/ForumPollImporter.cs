@@ -10,7 +10,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class ForumPollImporter
 	{
-		public static void 
+		public static void
 			Import(
 			string connectionStr,
 			ApplicationDbContext context,

@@ -5,8 +5,8 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-    public static class PublicationFlagImporter
-    {
+	public static class PublicationFlagImporter
+	{
 		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
 		{
 			var publicationFlags = legacySiteContext.MovieFlags

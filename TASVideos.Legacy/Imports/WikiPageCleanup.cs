@@ -36,7 +36,7 @@ namespace TASVideos.Legacy.Imports
 				if (newRevision is not null)
 				{
 					page.Child = newRevision;
-					context.WikiPages.Add(newRevision); 
+					context.WikiPages.Add(newRevision);
 				}
 			}
 
@@ -146,7 +146,7 @@ namespace TASVideos.Legacy.Imports
 					Revision = page.Revision + 1,
 					RevisionMessage = WikiPageSeedData.Import,
 					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp =  DateTime.UtcNow,
+					LastUpdateTimeStamp = DateTime.UtcNow,
 					ChildId = null
 				};
 

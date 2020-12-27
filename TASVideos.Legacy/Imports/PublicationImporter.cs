@@ -10,8 +10,8 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-    public class PublicationImporter
-    {
+	public class PublicationImporter
+	{
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -57,16 +57,16 @@ namespace TASVideos.Legacy.Imports
 			var torrentTypes = new[] { "M", "N", "O", "P", "T" };
 
 			var pubs = (from lm in legacyMovies
-				join w in publicationWikis on LinkConstants.PublicationWikiPage + lm.Id equals w.PageName
-				join s in submissions on lm.SubmissionId equals s.Id
-				join g in games on s.GameId ?? -1 equals g.Id
-				select new
-				{
-					Movie = lm,
-					Wiki = w,
-					Sub = s,
-					Game = g
-				})
+						join w in publicationWikis on LinkConstants.PublicationWikiPage + lm.Id equals w.PageName
+						join s in submissions on lm.SubmissionId equals s.Id
+						join g in games on s.GameId ?? -1 equals g.Id
+						select new
+						{
+							Movie = lm,
+							Wiki = w,
+							Sub = s,
+							Game = g
+						})
 				.ToList();
 
 			foreach (var pub in pubs)

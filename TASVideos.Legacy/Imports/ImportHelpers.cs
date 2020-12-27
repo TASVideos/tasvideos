@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using FastMember;
 using Microsoft.Data.SqlClient;
 using SharpCompress.Compressors.Xz;
-using System.IO.Compression;
 
 namespace TASVideos.Legacy.Imports
 {
 	public static class ImportHelper
 	{
-		private static readonly DateTime UnixStart = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+		private static readonly DateTime UnixStart = new (1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
 		public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
 		{
@@ -128,7 +127,7 @@ namespace TASVideos.Legacy.Imports
 		}
 
 		/// <summary>
-		/// Converts an XZ compressed file to a GZIP compressed file
+		/// Converts an XZ compressed file to a GZIP compressed file.
 		/// </summary>
 		public static byte[] ConvertXz(this byte[] content)
 		{
