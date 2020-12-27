@@ -7,7 +7,7 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Api.Responses
 {
 	/// <summary>
-	/// Represents a game returned by the games endpoint
+	/// Represents a game returned by the games endpoint.
 	/// </summary>
 	public class GamesResponse
 	{

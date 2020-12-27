@@ -4,7 +4,7 @@
 namespace TASVideos.Api.Responses
 {
 	/// <summary>
-	/// Represents game systems returns by the systems endpoint
+	/// Represents game systems returns by the systems endpoint.
 	/// </summary>
 	public class SystemsResponse
 	{

@@ -8,37 +8,37 @@ using TASVideos.Extensions;
 namespace TASVideos.Api.Requests
 {
 	/// <summary>
-	/// Represents the filtering criteria for the submissions endpoint
+	/// Represents the filtering criteria for the submissions endpoint.
 	/// </summary>
 	public class SubmissionsRequest : ApiRequest, ISubmissionFilter
 	{
 		/// <summary>
-		/// Gets or sets the statuses to filter by
+		/// Gets or sets the statuses to filter by.
 		/// </summary>
 		public string? Statuses { get; set; }
 
 		/// <summary>
-		/// Gets or sets user's name to filter by
+		/// Gets or sets user's name to filter by.
 		/// </summary>
 		public string? User { get; set; }
 
 		/// <summary>
-		/// Gets or sets the start year to filter by
+		/// Gets or sets the start year to filter by.
 		/// </summary>
 		public int? StartYear { get; set; }
 
 		/// <summary>
-		/// Gets or sets the end year to filter by
+		/// Gets or sets the end year to filter by.
 		/// </summary>
 		public int? EndYear { get; set; }
 
 		/// <summary>
-		/// Gets or sets the system codes to filter by
+		/// Gets or sets the system codes to filter by.
 		/// </summary>
 		public string? Systems { get; set; }
-		
+
 		/// <summary>
-		/// Gets or sets teh Game Id's to filter by
+		/// Gets or sets teh Game Id's to filter by.
 		/// </summary>
 		public string? Games { get; set; }
 

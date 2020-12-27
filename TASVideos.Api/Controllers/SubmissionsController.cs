@@ -12,7 +12,7 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Api.Controllers
 {
 	/// <summary>
-	/// The submissions of TASVideos
+	/// The submissions of TASVideos.
 	/// </summary>
 	[AllowAnonymous]
 	[Route("api/v1/[controller]")]
@@ -22,7 +22,7 @@ namespace TASVideos.Api.Controllers
 		private readonly IMapper _mapper;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SubmissionsController"/> class. 
+		/// Initializes a new instance of the <see cref="SubmissionsController"/> class.
 		/// </summary>
 		public SubmissionsController(ApplicationDbContext db, IMapper mapper)
 		{
@@ -31,11 +31,11 @@ namespace TASVideos.Api.Controllers
 		}
 
 		/// <summary>
-		/// Returns a submission with the given id
+		/// Returns a submission with the given id.
 		/// </summary>
-		/// <response code="200">Returns the list of publications</response>
-		/// <response code="400">The request parameters are invalid</response>
-		/// <response code="404">A submission with the given id was not found</response>
+		/// <response code="200">Returns the list of publications.</response>
+		/// <response code="400">The request parameters are invalid.</response>
+		/// <response code="404">A submission with the given id was not found.</response>
 		[HttpGet("{id}")]
 		[Validate]
 		[ProducesResponseType(typeof(SubmissionsResponse), 200)]
@@ -54,10 +54,10 @@ namespace TASVideos.Api.Controllers
 		}
 
 		/// <summary>
-		/// Returns a list of publications, filtered by the given criteria
+		/// Returns a list of publications, filtered by the given criteria.
 		/// </summary>
-		/// <response code="200">Returns the list of publications</response>
-		/// <response code="400">The request parameters are invalid</response>
+		/// <response code="200">Returns the list of publications.</response>
+		/// <response code="400">The request parameters are invalid.</response>
 		[HttpGet]
 		[Validate]
 		[ProducesResponseType(typeof(IEnumerable<SubmissionsResponse>), 200)]

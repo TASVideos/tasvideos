@@ -38,7 +38,7 @@ namespace TASVideos.Extensions
 
 		/// <summary>
 		/// Returns the number of bytes as a format file size string
-		/// such as 1 KB, 1 MB, 1GB
+		/// such as 1 KB, 1 MB, 1GB.
 		/// </summary>
 		public static string ToSizeString(this int byteCount)
 		{
@@ -46,12 +46,12 @@ namespace TASVideos.Extensions
 			{
 				return $"{byteCount / 1_000_000_000f:f2} GB";
 			}
-		
+
 			if (byteCount > 1_000_000)
 			{
 				return $"{byteCount / 1_000_000:f2} MB";
 			}
-		
+
 			if (byteCount > 1_000)
 			{
 				return $"{byteCount / 1_000f:f2} KB";

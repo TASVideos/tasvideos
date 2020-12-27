@@ -42,7 +42,7 @@ namespace TASVideos.Api.Responses
 
 		[Sortable]
 		public int Frames { get; set; }
-		
+
 		[Sortable]
 		public int RerecordCount { get; set; }
 
@@ -60,7 +60,7 @@ namespace TASVideos.Api.Responses
 
 		[Sortable]
 		public string RomName { get; set; } = "";
-		
+
 		[Sortable]
 		public string EmulatorVersion { get; set; } = "";
 

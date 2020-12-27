@@ -12,7 +12,7 @@ namespace TASVideos.Extensions
 	{
 		/// <summary>
 		/// Returns the value of the given property, in a UI consumable way
-		/// For example, collections will be turned into a pipe separated list
+		/// For example, collections will be turned into a pipe separated list.
 		/// </summary>
 		public static string ToValue(this PropertyInfo property, object? obj)
 		{
@@ -40,7 +40,7 @@ namespace TASVideos.Extensions
 		/// <summary>
 		/// Returns the <seealso cref="GroupAttribute"/> of an Enum if it exists
 		/// Else it will return and empty string
-		/// If the value is null, an empty string will be returned
+		/// If the value is null, an empty string will be returned.
 		/// </summary>
 		public static string Group(this Enum? enumValue)
 		{
