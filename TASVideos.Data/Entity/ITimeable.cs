@@ -5,7 +5,7 @@ namespace TASVideos.Data.Entity
 	public interface ITimeable
 	{
 		double FrameRate { get; }
-		int Frames { get; } 
+		int Frames { get; }
 	}
 
 	public static class TimeableExtensions

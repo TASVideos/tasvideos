@@ -5,14 +5,14 @@ using System.Reflection;
 namespace TASVideos.Data
 {
 	/// <summary>
-	/// Represents a request for a data collection that can be sorted
+	/// Represents a request for a data collection that can be sorted.
 	/// </summary>
 	public interface ISortable
 	{
 		/// <summary>
 		/// Gets a comma separated list of fields to order by
 		/// -/+ can be used to denote descending/ascending sort
-		/// The default is ascending sort
+		/// The default is ascending sort.
 		/// </summary>
 		string? Sort { get; }
 	}
@@ -20,7 +20,7 @@ namespace TASVideos.Data
 	public static class SortableExtensions
 	{
 		/// <summary>
-		/// Returns whether or not the given parameter is specified
+		/// Returns whether or not the given parameter is specified.
 		/// </summary>
 		public static bool IsSortingParam(this ISortable? sortable, string? param)
 		{
@@ -36,15 +36,15 @@ namespace TASVideos.Data
 
 			return sortable.Sort
 				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-				// ReSharper disable once StyleCop.SA1117
-				.Any(str => string.Equals(str
-					.Replace("-", "")
-					.Replace("+", ""), param, StringComparison.OrdinalIgnoreCase));
+				.Any(str => string.Equals(
+					str.Replace("-", "").Replace("+", ""),
+					param,
+					StringComparison.OrdinalIgnoreCase));
 		}
 
 		/// <summary>
 		/// Returns whether or not the given parameter is specified and
-		/// is specified as a descending sort
+		/// is specified as a descending sort.
 		/// </summary>
 		public static bool IsDescending(this ISortable? sortable, string? param)
 		{
@@ -60,17 +60,17 @@ namespace TASVideos.Data
 
 			return sortable.Sort
 				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-				// ReSharper disable once StyleCop.SA1117
-				.Any(str => string.Equals(str
-					.Replace("-", "")
-					.Replace("+", ""),  param, StringComparison.OrdinalIgnoreCase)
+				.Any(str => string.Equals(
+						str.Replace("-", "").Replace("+", ""),
+						param,
+						StringComparison.OrdinalIgnoreCase)
 					&& str.StartsWith("-"));
 		}
 
 		/// <summary>
 		/// Returns whether or not the requested sort is valid based on the destination response
 		/// The sorting is valid if all parameters match properties in the response, and that
-		/// those properties are declared as sortable
+		/// those properties are declared as sortable.
 		/// </summary>
 		public static bool IsValidSort(this ISortable? request, Type? response)
 		{

@@ -15,9 +15,9 @@ namespace TASVideos.Data
 		/// Takes an ordered query and returns a paged result set and a result count that has been executed.
 		/// The <see cref="DbContext" /> is used to create a single transaction scope for both the query and count and execute those queries.
 		/// </summary>
-		/// <param name="query">The query to paginate and run</param>
-		/// <param name="paging">The paging data to use</param>
-		/// <typeparam name="T">The result type of the query</typeparam>
+		/// <param name="query">The query to paginate and run.</param>
+		/// <param name="paging">The paging data to use.</param>
+		/// <typeparam name="T">The result type of the query.</typeparam>
 		public static async Task<PageOf<T>> SortedPageOf<T>(this IQueryable<T> query, PagingModel paging)
 			where T : class
 		{
@@ -57,7 +57,7 @@ namespace TASVideos.Data
 		}
 
 		/// <summary>
-		/// Orders the given collection based on the <see cref="ISortable.Sort"/> property
+		/// Orders the given collection based on the <see cref="ISortable.Sort"/> property.
 		/// </summary>
 		/// <typeparam name="T">The type of the elements of source.</typeparam>
 		public static IQueryable<T> SortBy<T>(this IQueryable<T> source, ISortable? request)
@@ -86,7 +86,7 @@ namespace TASVideos.Data
 			column = column?.Trim('-').Trim('+').ToLower() ?? "";
 
 			var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
-			
+
 			if (prop == null)
 			{
 				return query;

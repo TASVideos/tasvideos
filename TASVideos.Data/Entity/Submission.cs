@@ -78,7 +78,7 @@ namespace TASVideos.Data.Entity
 
 		[StringLength(250)]
 		public string? RomName { get; set; }
-		
+
 		[StringLength(50)]
 		public string? EmulatorVersion { get; set; }
 
@@ -87,16 +87,15 @@ namespace TASVideos.Data.Entity
 		public int? RejectionReasonId { get; set; }
 		public virtual SubmissionRejectionReason? RejectionReason { get; set; }
 
-
 		/// <summary>
-		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here
+		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here.
 		/// </summary>
 		[StringLength(200)]
 		public string? AdditionalAuthors { get; set; }
 
 		/// <summary>
 		/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
-		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01
+		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01.
 		/// </summary>
 		[Required]
 		public string Title { get; set; } = "";
@@ -121,7 +120,7 @@ namespace TASVideos.Data.Entity
 
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
 			{
-				authorList = authorList.Concat(AdditionalAuthors.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries));
+				authorList = authorList.Concat(AdditionalAuthors.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries));
 			}
 
 			Title =
@@ -162,7 +161,7 @@ namespace TASVideos.Data.Entity
 			{
 				query = query.Where(s => s.System != null && criteria.Systems.Contains(s.System.Code));
 			}
-			
+
 			if (criteria.GameIds.Any())
 			{
 				query = query.Where(s => criteria.GameIds.Contains(s.GameId ?? 0));

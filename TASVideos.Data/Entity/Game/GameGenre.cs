@@ -1,4 +1,4 @@
-namespace TASVideos.Data.Entity.Game
+﻿namespace TASVideos.Data.Entity.Game
 {
 	public class GameGenre
 	{

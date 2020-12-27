@@ -3,7 +3,7 @@
 namespace TASVideos.Data.Entity
 {
 	/// <summary>
-	/// Data storage for an external media post (such as Irc, Discord)
+	/// Data storage for an external media post (such as Irc, Discord).
 	/// </summary>
 	public class MediaPost : BaseEntity
 	{

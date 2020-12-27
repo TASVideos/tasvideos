@@ -31,7 +31,7 @@ namespace TASVideos.Data
 			var size = paged?.PageSize ?? 0;
 			var rowCount = paged?.RowCount ?? 0;
 			return Math.Min(rowCount, paged.Offset() + size);
-		} 
+		}
 
 		public static IDictionary<string, string> AdditionalProperties(this IPaged? paged)
 		{
