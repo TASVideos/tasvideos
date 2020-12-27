@@ -143,13 +143,13 @@ namespace TASVideos.MovieParsers.Parsers
 			return result;
 		}
 
-		private static readonly Dictionary<string, int> CycleBasedCores = new()
+		private static readonly Dictionary<string, int> CycleBasedCores = new ()
 		{
 			["subgbhawk"] = 4194304,
 			["gambatte"] = 2097152
 		};
 
-		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new()
+		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new ()
 		{
 			["gen"] = SystemCodes.Genesis,
 			["sat"] = SystemCodes.Saturn,

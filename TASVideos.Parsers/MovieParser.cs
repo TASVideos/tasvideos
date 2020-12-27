@@ -15,7 +15,7 @@ namespace TASVideos.MovieParsers
 	/// Takes a stream of the zip file containing a movie file
 	/// The file must have precisely one file
 	/// The file is processed and a <see cref="IParseResult"/>
-	/// is returned
+	/// is returned.
 	/// </summary>
 	/// <seealso cref="IParseResult"/>
 	public interface IMovieParser
@@ -24,7 +24,7 @@ namespace TASVideos.MovieParsers
 		Task<IParseResult> ParseZip(Stream stream);
 		Task<IParseResult> ParseFile(string fileName, Stream stream);
 	}
-	
+
 	public sealed class MovieParser : IMovieParser
 	{
 		private static readonly ICollection<Type> ParserTypes =
@@ -91,7 +91,7 @@ namespace TASVideos.MovieParsers
 			var type = ParserTypes
 				.SingleOrDefault(t => (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
 					?.Extension == ext);
-			
+
 			if (type == null)
 			{
 				return null;
