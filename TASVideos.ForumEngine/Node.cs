@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -72,19 +72,24 @@ namespace TASVideos.ForumEngine
 	{
 		public string Name { get; set; } = "";
 		public string Options { get; set; } = "";
-		public List<INode> Children { get; set; } = new();
+		public List<INode> Children { get; set; } = new ();
 		private string GetChildText()
 		{
 			var sb = new StringBuilder();
 			foreach (var c in Children.Cast<Text>())
+			{
 				sb.Append(c.Content);
+			}
+
 			return sb.ToString();
 		}
 
 		private void WriteChildren(TextWriter w)
 		{
 			foreach (var c in Children)
+			{
 				c.WriteHtml(w);
+			}
 		}
 
 		private void WriteSimpleTag(TextWriter w, string t)
@@ -97,6 +102,7 @@ namespace TASVideos.ForumEngine
 			w.Write(t);
 			w.Write('>');
 		}
+
 		private void WriteSimpleHtmlTag(TextWriter w, string t)
 		{
 			// t looks like `html:b`
@@ -119,12 +125,14 @@ namespace TASVideos.ForumEngine
 			{
 				return false;
 			}
+
 			var ret = int.TryParse(ss[0], out w) && int.TryParse(ss[1], out h);
 			if (!ret)
 			{
 				w = 0;
 				h = 0;
 			}
+
 			return ret;
 		}
 
@@ -144,6 +152,7 @@ namespace TASVideos.ForumEngine
 				var text = Children.Cast<Text>().Single();
 				Helpers.WriteText(w, transformUrlText(text.Content));
 			}
+
 			w.Write("</a>");
 		}
 
@@ -211,6 +220,7 @@ namespace TASVideos.ForumEngine
 						Helpers.WriteText(w, Options);
 						w.Write(" wrote:</cite>");
 					}
+
 					w.Write("<blockquote>");
 					WriteChildren(w);
 					w.Write("</blockquote></div>");
@@ -222,6 +232,7 @@ namespace TASVideos.ForumEngine
 						w.Write(" class=");
 						Helpers.WriteAttributeValue(w, "language-" + Options);
 					}
+
 					w.Write("><pre>");
 					WriteChildren(w);
 					w.Write("</pre></code>");
@@ -236,10 +247,12 @@ namespace TASVideos.ForumEngine
 							w.Write(" height=");
 							Helpers.WriteAttributeValue(w, height.ToString());
 						}
+
 						w.Write(" src=");
 						Helpers.WriteAttributeValue(w, GetChildText());
 						w.Write('>');
 					}
+
 					break;
 				case "url":
 					WriteHref(w, s => s, s => s);
@@ -278,9 +291,15 @@ namespace TASVideos.ForumEngine
 						int.TryParse(ss[0], out var n);
 						var fps = 60.0;
 						if (ss.Length > 1)
+						{
 							double.TryParse(ss[1], out fps);
+						}
+
 						if (fps <= 0)
+						{
 							fps = 60.0;
+						}
+
 						w.Write("<abbr title=");
 						Helpers.WriteAttributeValue(w, $"{n} Frames @${fps} FPS");
 						w.Write('>');
@@ -288,8 +307,10 @@ namespace TASVideos.ForumEngine
 						w.Write("</abbr>");
 						break;
 					}
+
 				case "color":
 					w.Write("<span style=");
+
 					// TODO: More fully featured anti-style injection
 					Helpers.WriteAttributeValue(w, "color: " + Options.Split(';')[0]);
 					w.Write('>');
@@ -298,6 +319,7 @@ namespace TASVideos.ForumEngine
 					break;
 				case "bgcolor":
 					w.Write("<span style=");
+
 					// TODO: More fully featured anti-style injection
 					Helpers.WriteAttributeValue(w, "background-color: " + Options.Split(';')[0]);
 					w.Write('>');
@@ -306,6 +328,7 @@ namespace TASVideos.ForumEngine
 					break;
 				case "size":
 					w.Write("<span style=");
+
 					// TODO: More fully featured anti-style injection
 					Helpers.WriteAttributeValue(w, "font-size: " + Options.Split(';')[0]);
 					w.Write('>');
@@ -332,6 +355,7 @@ namespace TASVideos.ForumEngine
 						Helpers.WriteText(w, "Google Search: " + GetChildText());
 						w.Write("</a>");
 					}
+
 					break;
 				case "video":
 					{
@@ -350,20 +374,22 @@ namespace TASVideos.ForumEngine
 									pp.QueryParams[parsedQuery.Keys[i]!] = parsedQuery.GetValues(i)![0];
 								}
 							}
-							
+
 							if (TryParseSize(out var width, out var height))
 							{
 								pp.Width = width;
 								pp.Height = height;
 							}
+
 							WriteVideo.Write(w, pp);
 						}
-						
+
 						w.Write("<a href=");
 						Helpers.WriteAttributeValue(w, href);
 						w.Write(">Link to video</a>");
 						break;
 					}
+
 				case "_root":
 					WriteComplexTag(w, "<div class=postbody>", "</div>");
 					break;
