@@ -6,12 +6,17 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UserSecretsId>aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152</UserSecretsId>
+		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<VersionPrefix>2.0.0</VersionPrefix>
 		<VersionSuffix>alpha</VersionSuffix>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="$(ProjectDir)../.stylecop.json" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Remove="wwwroot\lib\**" />
@@ -38,6 +43,10 @@
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
 		<PackageReference Include="RoslynCodeTaskFactory" Version="2.0.7" />
 		<PackageReference Include="Sendgrid" Version="9.21.2" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	</ItemGroup>
 
