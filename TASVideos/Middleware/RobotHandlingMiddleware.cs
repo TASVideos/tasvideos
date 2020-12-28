@@ -15,10 +15,7 @@ namespace TASVideos.Middleware
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
 		/// </summary>
-		public RobotHandlingMiddleware(
-			// ReSharper disable once UnusedParameter.Local
-			RequestDelegate request,
-			IWebHostEnvironment env)
+		public RobotHandlingMiddleware(RequestDelegate request, IWebHostEnvironment env)
 		{
 			_env = env;
 		}

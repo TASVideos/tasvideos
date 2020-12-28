@@ -27,7 +27,7 @@ namespace TASVideos.Pages.UserFiles
 			_mapper = mapper;
 		}
 
-		public GameFileModel Game { get; set; } = new();
+		public GameFileModel Game { get; set; } = new ();
 
 		[FromRoute]
 		public int Id { get; set; }

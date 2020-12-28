@@ -48,8 +48,8 @@ namespace TASVideos
 							.Select(rp => rp.PermissionId)
 							.ToList()))
 				.ForMember(
-					dest => dest.Links, 
-					opt => opt.MapFrom(src => 
+					dest => dest.Links,
+					opt => opt.MapFrom(src =>
 						src.RoleLinks
 							.Select(rl => rl.Link)
 							.ToList()))

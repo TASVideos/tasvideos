@@ -45,7 +45,7 @@ namespace TASVideos.Pages.Profile
 		[Display(Name = "Confirm new password")]
 		[Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
 		public string ConfirmPassword { get; set; } = "";
-		
+
 		public async Task<IActionResult> OnGet()
 		{
 			var user = await _userManager.GetUserAsync(User);

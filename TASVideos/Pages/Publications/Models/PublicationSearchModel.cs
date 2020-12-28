@@ -13,7 +13,7 @@ namespace TASVideos.Pages.Publications.Models
 		public IEnumerable<string> Tags { get; set; } = new List<string>();
 		public IEnumerable<string> Genres { get; set; } = new List<string>();
 		public IEnumerable<string> Flags { get; set; } = new List<string>();
-		
+
 		public bool ShowObsoleted { get; set; }
 
 		public IEnumerable<int> Authors { get; set; } = new List<int>();

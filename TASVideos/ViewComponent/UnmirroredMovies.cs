@@ -21,7 +21,6 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			var query = _db.Publications.AsQueryable();
-				
 
 			if (ParamHelper.HasParam(pp, "obs"))
 			{
@@ -40,7 +39,6 @@ namespace TASVideos.ViewComponents
 			{
 				query = query.Where(p => !p.PublicationUrls.Any(u => u.Type == Streaming || u.Type == Mirror));
 			}
-			
 			else if (ParamHelper.HasParam(pp, "streamed"))
 			{
 				query = query.Where(p =>
@@ -74,7 +72,6 @@ namespace TASVideos.ViewComponents
 						.ToList()
 				})
 				.ToListAsync();
-				
 
 			return View(model);
 		}

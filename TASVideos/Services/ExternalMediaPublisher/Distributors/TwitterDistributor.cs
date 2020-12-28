@@ -15,11 +15,11 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		private readonly AppSettings.TwitterConnection _settings;
 		private readonly IHttpClientFactory _httpClientFactory;
 
-		private readonly CancellationTokenSource _cancellationTokenSource = new();
+		private readonly CancellationTokenSource _cancellationTokenSource = new ();
 
 		private readonly bool _configured;
 
-		private readonly Random _rng = new();
+		private readonly Random _rng = new ();
 
 		public IEnumerable<PostType> Types => new[] { PostType.Announcement };
 
@@ -63,7 +63,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 				var formFields = new List<KeyValuePair<string?, string?>>
 				{
-					new("status", twitterMessage)
+					new ("status", twitterMessage)
 				};
 
 				var response = await httpClient.PostAsync("statuses/update.json", new FormUrlEncodedContent(formFields));
@@ -118,15 +118,15 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			string signingKey = $"{Uri.EscapeDataString(_settings.ConsumerSecret)}&{Uri.EscapeDataString(_settings.TokenSecret)}";
 
-			using HMACSHA1 hmac = new(Encoding.UTF8.GetBytes(signingKey));
+			using HMACSHA1 hmac = new (Encoding.UTF8.GetBytes(signingKey));
 			byte[] hashedBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(baseString));
 
 			return Convert.ToBase64String(hashedBytes);
 		}
 
-		private string CalculateOAuthAuthorizationString (string nonce, string timestamp, string signature)
+		private string CalculateOAuthAuthorizationString(string nonce, string timestamp, string signature)
 		{
-			StringBuilder authorizationString = new();
+			StringBuilder authorizationString = new ();
 
 			authorizationString.Append(KVPair("oauth_consumer_key", _settings.ConsumerKey, false));
 			authorizationString.Append(KVPair("oauth_token", _settings.AccessToken, false));
@@ -139,12 +139,12 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			return authorizationString.ToString();
 		}
 
-		private static string UrlEncode (string left, string right)
+		private static string UrlEncode(string left, string right)
 		{
 			return $"{Uri.EscapeDataString(left)}={Uri.EscapeDataString(right)}";
 		}
 
-		private static string KVPair (string left, string right, bool final)
+		private static string KVPair(string left, string right, bool final)
 		{
 			return $"{Uri.EscapeDataString(left)}=\"{Uri.EscapeDataString(right)}\"{(final ? "" : ", ")}";
 		}
@@ -153,7 +153,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			string nonceCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-			StringBuilder outputString = new();
+			StringBuilder outputString = new ();
 
 			for (int i = 0; i < 32; ++i)
 			{

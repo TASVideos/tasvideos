@@ -62,7 +62,7 @@ namespace TASVideos.TagHelpers
 	{
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new();
+		public ViewContext ViewContext { get; set; } = new ();
 
 		public string? Activate { get; set; }
 

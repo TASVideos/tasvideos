@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Encodings.Web;
@@ -18,7 +18,7 @@ namespace TASVideos.TagHelpers
 	public class WikiMarkup : TagHelper, IWriterHelper
 	{
 		private readonly IViewComponentHelper _viewComponentHelper;
-		private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new();
+		private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new ();
 
 		public WikiMarkup(IViewComponentHelper viewComponentHelper)
 		{
@@ -27,10 +27,10 @@ namespace TASVideos.TagHelpers
 
 		[ViewContext]
 		[HtmlAttributeNotBound]
-		public ViewContext ViewContext { get; set; } = new();
+		public ViewContext ViewContext { get; set; } = new ();
 
 		public string Markup { get; set; } = "";
-		public WikiPage PageData { get; set; } = new();
+		public WikiPage PageData { get; set; } = new ();
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{

@@ -139,7 +139,7 @@ namespace TASVideos.Services
 						gkey.PublicationId,
 						gkey.Publication!.Title,
 						gkey.Publication.ObsoletedById
-					}, 
+					},
 					gvalue => new
 					{
 						gvalue.Type,

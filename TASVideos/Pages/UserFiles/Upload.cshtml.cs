@@ -37,9 +37,9 @@ namespace TASVideos.Pages.UserFiles
 		}
 
 		[BindProperty]
-		public UserFileUploadModel UserFile { get; set; } = new();
+		public UserFileUploadModel UserFile { get; set; } = new ();
 
-		public int StorageUsed { get; set; } 
+		public int StorageUsed { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 
@@ -103,7 +103,6 @@ namespace TASVideos.Pages.UserFiles
 					? UserFileClass.Support
 					: UserFileClass.Movie,
 				Type = fileExt.Replace(".", ""),
-				
 				FileName = UserFile.File.FileName
 			};
 
@@ -138,7 +137,7 @@ namespace TASVideos.Pages.UserFiles
 						frameRate = (decimal)frameRateData.FrameRate;
 					}
 				}
-				
+
 				userFile.Length = Math.Round(userFile.Frames / frameRate);
 			}
 

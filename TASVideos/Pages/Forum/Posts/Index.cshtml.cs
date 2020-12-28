@@ -11,7 +11,8 @@ namespace TASVideos.Pages.Forum.Posts
 	[AllowAnonymous]
 	public class IndexModel : BaseForumModel
 	{
-		public IndexModel(ApplicationDbContext db, ITopicWatcher watcher) : base(db, watcher)
+		public IndexModel(ApplicationDbContext db, ITopicWatcher watcher)
+			: base(db, watcher)
 		{
 		}
 
@@ -27,11 +28,11 @@ namespace TASVideos.Pages.Forum.Posts
 			}
 
 			return RedirectToPage(
-				"/Forum/Topics/Index", 
+				"/Forum/Topics/Index",
 				new
 				{
-					Id = model.TopicId, 
-					Highlight = Id, 
+					Id = model.TopicId,
+					Highlight = Id,
 					CurrentPage = model.Page
 				});
 		}

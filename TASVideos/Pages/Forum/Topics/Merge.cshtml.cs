@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[BindProperty]
-		public MergeTopicModel Topic { get; set; } = new();
+		public MergeTopicModel Topic { get; set; } = new ();
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 

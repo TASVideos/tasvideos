@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Games.Roms
 		[FromRoute]
 		public int GameId { get; set; }
 
-		public RomListModel Roms { get; set; } = new();
+		public RomListModel Roms { get; set; } = new ();
 
 		[TempData]
 		public string? Message { get; set; }

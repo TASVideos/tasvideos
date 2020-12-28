@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
@@ -20,7 +20,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ClientWebSocket _gateway;
 
-		private readonly CancellationTokenSource _cancellationTokenSource = new();
+		private readonly CancellationTokenSource _cancellationTokenSource = new ();
 
 		private int _sequenceNumber = -1;
 		private bool _heartbeatAcknowledged;
@@ -53,7 +53,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			var receiveBuffer = WebSocket.CreateClientBuffer(BufferSize, 4096);
 
-			Uri gatewayUri = new("wss://gateway.discord.gg/?v=6&encoding=json");
+			Uri gatewayUri = new ("wss://gateway.discord.gg/?v=6&encoding=json");
 			CancellationToken cancellationToken = _cancellationTokenSource.Token;
 
 			await _gateway.ConnectAsync(gatewayUri, cancellationToken);
@@ -91,14 +91,14 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				{
 					switch (messageObject["op"]!.Value<int>())
 					{
-						case 1:     // Heartbeat
+						case 1: // Heartbeat
 							ParseHeartbeat(messageObject);
 							break;
-						case 10:    // Hello
+						case 10: // Hello
 							ParseHello(messageObject);
 							Identify();
 							break;
-						case 11:    // Heartbeat Acknowledge
+						case 11: // Heartbeat Acknowledge
 							_heartbeatAcknowledged = true;
 							break;
 					}
@@ -108,19 +108,19 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		private async void Identify()
 		{
-			JObject properties = new()
+			JObject properties = new ()
 			{
-				{"$os", "linux"}, {"$browser", "none"}, {"$device", "none"}
+				{ "$os", "linux" }, { "$browser", "none" }, { "$device", "none" }
 			};
 
-			JObject d = new()
+			JObject d = new ()
 			{
-				{"token", _settings.AccessToken}, {"properties", properties}
+				{ "token", _settings.AccessToken }, { "properties", properties }
 			};
 
-			JObject identifyObject = new()
+			JObject identifyObject = new ()
 			{
-				{"op", 2}, {"d", d}, {"intents", 0}
+				{ "op", 2 }, { "d", d }, { "intents", 0 }
 			};
 
 			await _gateway.SendAsync(Encoding.ASCII.GetBytes(identifyObject.ToString()), WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
@@ -152,7 +152,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 			_heartbeatAcknowledged = false;
 
-			JObject heartbeatObject = new() { { "op", 1 } };
+			JObject heartbeatObject = new () { { "op", 1 } };
 
 			if (_sequenceNumber == -1)
 			{
@@ -173,13 +173,14 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				Console.WriteLine("Shutdown signal received, closing gateway.");
 				await _gateway!.CloseAsync(closeStatus, closureMessage, _cancellationTokenSource.Token);
 
-				System.Diagnostics.Stopwatch stopwatch = new();
+				System.Diagnostics.Stopwatch stopwatch = new ();
 
 				stopwatch.Start();
 
 				// Give it a few seconds.
 				while (_gateway.State != WebSocketState.Closed && stopwatch.ElapsedMilliseconds < 10000)
-				{ }
+				{
+				}
 
 				stopwatch.Stop();
 			}
@@ -187,7 +188,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 
 		public async void Post(IPostable post)
 		{
-			DiscordMessage discordMessage = new(post);
+			DiscordMessage discordMessage = new (post);
 
 			HttpContent messageContent = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
 

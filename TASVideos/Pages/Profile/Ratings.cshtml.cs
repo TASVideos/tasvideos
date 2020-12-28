@@ -17,7 +17,7 @@ namespace TASVideos.Pages.Profile
 			_userManager = userManager;
 		}
 
-		public UserRatingsModel Ratings { get; set; } = new();
+		public UserRatingsModel Ratings { get; set; } = new ();
 
 		public async Task OnGet()
 		{

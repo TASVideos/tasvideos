@@ -25,7 +25,7 @@
 		/// Gets an arbitrary identifier for grouping types of post,
 		/// this may or may not be used by a service provider
 		/// </summary>
-		string Group { get; } 
+		string Group { get; }
 
 		/// <summary>
 		/// Gets the type of the message, depending on the message

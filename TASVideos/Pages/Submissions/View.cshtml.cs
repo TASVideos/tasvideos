@@ -43,7 +43,7 @@ namespace TASVideos.Pages.Submissions
 
 		public bool CanEdit { get; set; }
 
-		public SubmissionDisplayModel Submission { get; set; } = new();
+		public SubmissionDisplayModel Submission { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -139,7 +139,7 @@ namespace TASVideos.Pages.Submissions
 
 			return await Claim(SubmissionStatus.Accepted, SubmissionStatus.PublicationUnderway, "publication", "Processing...");
 		}
-		
+
 		private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message)
 		{
 			var submission = await _db.Submissions
@@ -155,7 +155,7 @@ namespace TASVideos.Pages.Submissions
 			{
 				return BadRequest("Submission can not be claimed");
 			}
-			
+
 			submission.Status = newStatus;
 			var wikiPage = new WikiPage
 			{

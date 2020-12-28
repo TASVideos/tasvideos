@@ -66,7 +66,7 @@ namespace TASVideos.Extensions
 
 			return result;
 		}
-	
+
 		// ReSharper disable once UnusedMember.Global (Used in Node.cs with string building)
 		public static bool WikiCondition(this IHtmlHelper html, string condition)
 		{
@@ -135,7 +135,7 @@ namespace TASVideos.Extensions
 			return compressedExtensions.Contains(Path.GetExtension(formFile.FileName))
 				|| compressedContentTypes.Contains(formFile.ContentType);
 		}
-		
+
 		public static bool LessThanMovieSizeLimit(this IFormFile? formFile)
 		{
 			if (formFile == null)

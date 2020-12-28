@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 
 		[BindProperty]
-		public PublicationTierEditModel Publication { get; set; } = new();
+		public PublicationTierEditModel Publication { get; set; } = new ();
 
 		[BindProperty]
 		public string Title { get; set; } = "";
@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Publications
 				.Select(p => new PublicationTierEditModel
 				{
 					Title = p.Title,
-					TierId = p.TierId 
+					TierId = p.TierId
 				})
 				.SingleOrDefaultAsync();
 

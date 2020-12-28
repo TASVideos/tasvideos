@@ -46,7 +46,7 @@ namespace TASVideos.Pages.Games.Roms
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public RomEditModel Rom { get; set; } = new();
+		public RomEditModel Rom { get; set; } = new ();
 
 		[BindProperty]
 		public string SystemCode { get; set; } = "";
@@ -59,13 +59,13 @@ namespace TASVideos.Pages.Games.Roms
 
 		public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new SelectListItem[]
 		{
-			new() { Text = "U", Value = "U" },
-			new() { Text = "J", Value = "J" },
-			new() { Text = "E", Value = "E" },
-			new() { Text = "JU", Value = "JU" },
-			new() { Text = "EU", Value = "UE" },
-			new() { Text = "W", Value = "W" },
-			new() { Text = "Other", Value = "Other" },
+			new () { Text = "U", Value = "U" },
+			new () { Text = "J", Value = "J" },
+			new () { Text = "E", Value = "E" },
+			new () { Text = "JU", Value = "JU" },
+			new () { Text = "EU", Value = "UE" },
+			new () { Text = "W", Value = "W" },
+			new () { Text = "Other", Value = "Other" },
 		};
 
 		[TempData]

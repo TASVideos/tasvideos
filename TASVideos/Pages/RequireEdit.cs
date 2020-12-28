@@ -37,7 +37,7 @@ namespace TASVideos.Pages
 			{
 				await next.Invoke();
 			}
-			else 
+			else
 			{
 				Denied(context);
 			}

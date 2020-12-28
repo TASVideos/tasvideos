@@ -1,4 +1,4 @@
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 
 namespace TASVideos.ViewComponents
 {
@@ -6,6 +6,6 @@ namespace TASVideos.ViewComponents
 	{
 		public string Markup { get; set; } = "";
 
-		public WikiPage PageData { get; set; } = new();
+		public WikiPage PageData { get; set; } = new ();
 	}
 }

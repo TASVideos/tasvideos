@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-
 using Microsoft.AspNetCore.Mvc.Rendering;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -32,7 +30,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? System { get; set; }
 
 		public string? User { get; set; }
-		
+
 		public string? GameId { get; set; }
 
 		[Display(Name = "Status Filter")]
@@ -55,9 +53,8 @@ namespace TASVideos.Pages.Submissions.Models
 
 		IEnumerable<string> ISubmissionFilter.Systems => string.IsNullOrWhiteSpace(System)
 			? new List<string>()
-			// ReSharper disable once StyleCop.SA1500
 			: new List<string> { System };
-		
+
 		IEnumerable<int> ISubmissionFilter.GameIds => !string.IsNullOrWhiteSpace(GameId) && int.TryParse(GameId, out int _)
 			? new List<int> { int.Parse(GameId) }
 			: new List<int>();

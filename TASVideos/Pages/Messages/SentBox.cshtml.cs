@@ -63,7 +63,7 @@ namespace TASVideos.Pages.Messages
 				{
 					await _db.SaveChangesAsync();
 				}
-				catch(DbUpdateConcurrencyException)
+				catch (DbUpdateConcurrencyException)
 				{
 					// Do nothing, likely the user has read at the same time
 				}

@@ -9,8 +9,8 @@ using TASVideos.Services;
 
 namespace TASVideos.ViewComponents
 {
-    public class HomePageFooter : ViewComponent
-    {
+	public class HomePageFooter : ViewComponent
+	{
 		private readonly ApplicationDbContext _db;
 		private readonly IAwards _awards;
 		private readonly IWikiPages _wikiPages;

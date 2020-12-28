@@ -17,7 +17,7 @@ namespace TASVideos.Services.RssFeedParsers.Github
 				.Select(e => new CommitEntry(
 					e.Author?.Name ?? "",
 					e.Updated ?? "",
-					Regex.Replace( e.Content?.Text ?? "", "<.*?>", ""),
+					Regex.Replace(e.Content?.Text ?? "", "<.*?>", ""),
 					e.Link?.Href?.ToString() ?? ""))
 				.Take(max);
 		}

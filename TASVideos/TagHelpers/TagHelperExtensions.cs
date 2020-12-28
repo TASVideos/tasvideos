@@ -25,9 +25,9 @@ namespace TASVideos.TagHelpers
 
 		public static string GetString(this IHtmlContent content)
 		{
-		    var writer = new StringWriter();
-		    content.WriteTo(writer, HtmlEncoder.Default);
-		    return writer.ToString();
+			var writer = new StringWriter();
+			content.WriteTo(writer, HtmlEncoder.Default);
+			return writer.ToString();
 		}
 	}
 }

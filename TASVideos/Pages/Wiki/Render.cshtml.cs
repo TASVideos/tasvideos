@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Wiki
 
 		public string Markup { get; set; } = "";
 
-		public WikiPage WikiPage { get; set; } = new();
+		public WikiPage WikiPage { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet(string? url, int? revision = null)
 		{
@@ -71,7 +71,7 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			// Account for garbage revision values
-			if (revision.HasValue && await _wikiPages.Exists(url)) 
+			if (revision.HasValue && await _wikiPages.Exists(url))
 			{
 				return Redirect("/" + url);
 			}

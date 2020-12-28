@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Users
 		[FromRoute]
 		public string? UserName { get; set; }
 
-		public UserProfileModel Profile { get; set; } = new();
+		public UserProfileModel Profile { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

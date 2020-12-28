@@ -9,7 +9,7 @@ namespace TASVideos.Services
 	public interface IFileService
 	{
 		Task<CompressedFile> Compress(byte[] contents);
-		
+
 		/// <summary>
 		/// Unzips the file, and re-zips it while renaming the contained file
 		/// </summary>
@@ -38,14 +38,14 @@ namespace TASVideos.Services
 					Compression.Gzip,
 					gzipContents);
 			}
-			
+
 			return new CompressedFile(
 				contents.Length,
 				contents.Length,
 				Compression.None,
 				contents);
 		}
-		
+
 		public async Task<byte[]> CopyZip(byte[] zipBytes, string fileName)
 		{
 			await using var submissionFileStream = new MemoryStream(zipBytes);
@@ -66,11 +66,11 @@ namespace TASVideos.Services
 				await using var fileToCompressStream = new MemoryStream(fileBytes);
 				await fileToCompressStream.CopyToAsync(entryStream);
 			}
-			
+
 			return outStream.ToArray();
 		}
 	}
-	
+
 	public record CompressedFile(
 		int OriginalSize,
 		int CompressedSize,

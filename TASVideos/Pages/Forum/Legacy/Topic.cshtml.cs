@@ -40,11 +40,11 @@ namespace TASVideos.Pages.Forum.Legacy
 				}
 
 				return RedirectToPage(
-					"/Forum/Topics/Index", 
+					"/Forum/Topics/Index",
 					new
 					{
-						Id = model.TopicId, 
-						Highlight = P, 
+						Id = model.TopicId,
+						Highlight = P,
 						CurrentPage = model.Page
 					});
 			}

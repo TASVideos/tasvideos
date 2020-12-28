@@ -89,7 +89,7 @@ namespace TASVideos.Services
 
 			// We still factor in obsolete movies but only at a number less than zero
 			// for the purpose of determining "former player" rank
-			public bool Obsolete { get; init; } 
+			public bool Obsolete { get; init; }
 			public double AverageRating { get; set; }
 			public int RatingCount { get; init; }
 			public double TierWeight { get; init; }

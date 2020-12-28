@@ -13,7 +13,7 @@ namespace TASVideos.Services.Dtos
 		public IEnumerable<string> Tags { get; init; } = new List<string>();
 		public IEnumerable<string> Genres { get; init; } = new List<string>();
 		public IEnumerable<string> Flags { get; init; } = new List<string>();
-		
+
 		public bool ShowObsoleted { get; set; }
 
 		public IEnumerable<int> Authors { get; init; } = new List<int>();

@@ -21,12 +21,12 @@ namespace TASVideos.Pages.Publications
 
 		[FromRoute]
 		public int Id { get; set; }
-		
+
 		[FromQuery]
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public PublicationRateModel Rating { get; set; } = new();
+		public PublicationRateModel Rating { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

@@ -24,12 +24,12 @@ namespace TASVideos.Pages.Forum.Subforum
 		}
 
 		[FromQuery]
-		public ForumRequest Search { get; set; } = new();
+		public ForumRequest Search { get; set; } = new ();
 
 		[FromRoute]
 		public int Id { get; set; }
 
-		public ForumDisplayModel Forum { get; set; } = new();
+		public ForumDisplayModel Forum { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

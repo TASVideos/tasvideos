@@ -34,13 +34,13 @@ namespace TASVideos.Pages.Submissions
 		public int Id { get; set; }
 
 		[FromQuery]
-		public int? GameId { get; set;}
+		public int? GameId { get; set; }
 
 		[FromQuery]
 		public int? RomId { get; set; }
 
 		[BindProperty]
-		public SubmissionCatalogModel Catalog { get; set; } = new();
+		public SubmissionCatalogModel Catalog { get; set; } = new ();
 
 		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
 		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();

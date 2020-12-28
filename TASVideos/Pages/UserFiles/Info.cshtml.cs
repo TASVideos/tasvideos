@@ -19,7 +19,7 @@ namespace TASVideos.Pages.UserFiles
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IMapper _mapper;
-		
+
 		public InfoModel(
 			ApplicationDbContext db,
 			IMapper mapper)
@@ -31,7 +31,7 @@ namespace TASVideos.Pages.UserFiles
 		[FromRoute]
 		public long Id { get; set; }
 
-		public UserFileModel UserFile { get; set; } = new();
+		public UserFileModel UserFile { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

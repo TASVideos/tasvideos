@@ -27,7 +27,7 @@ namespace TASVideos.TagHelpers
 			List<string> stringList = (AspFor.Model as IEnumerable<string>)?.ToList() ?? new List<string>();
 
 			// We need at least an add button, todo: refactor so this doesn't force the server side to strip out empty strings
-			if (stringList.Count == 0) 
+			if (stringList.Count == 0)
 			{
 				stringList.Add("");
 			}
@@ -40,7 +40,7 @@ namespace TASVideos.TagHelpers
 		<input type='text' spellcheck='false' class='form-control' id='{modelId}_{i}_' name='{modelName}' value='{stringList[i]}' />
 	</div>
 	<div class='col-2'>
-		<button {(i == 0 ? "id='" + modelId + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none": "")}' type='button'><span class='fa fa-plus-square'></span></button>
+		<button {(i == 0 ? "id='" + modelId + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none" : "")}' type='button'><span class='fa fa-plus-square'></span></button>
 		<button onclick='this.parentElement.parentElement.remove()' class='string-list-remove-btn btn btn-danger {(i == 0 ? "d-none" : "")}' type='button'><span class='fa fa-remove'></span></button>
 	</div>
 </div>");

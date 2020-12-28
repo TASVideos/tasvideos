@@ -50,7 +50,7 @@ namespace TASVideos.Pages.Submissions
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SubmissionPublishModel Submission { get; set; } = new();
+		public SubmissionPublishModel Submission { get; set; } = new ();
 
 		public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; } = new List<SelectListItem>();
 
@@ -93,9 +93,9 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
-			// TODO: I think this is producing joins, if the submission isn't properly cataloged then 
+			// TODO: I think this is producing joins, if the submission isn't properly cataloged then
 			// this will throw an exception, if so, use OrDefault and return NotFound()
-			// if it is doing left joins or sub-queries, then we need to null check the usages of nullable 
+			// if it is doing left joins or sub-queries, then we need to null check the usages of nullable
 			// tables such as game, rom, etc and throw if those are null
 			var submission = await _db.Submissions
 				.Include(s => s.IntendedTier)

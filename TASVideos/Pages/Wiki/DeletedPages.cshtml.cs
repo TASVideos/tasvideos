@@ -110,7 +110,7 @@ namespace TASVideos.Pages.Wiki
 			{
 				return AccessDenied();
 			}
-			
+
 			if (string.IsNullOrWhiteSpace(path))
 			{
 				return Home();

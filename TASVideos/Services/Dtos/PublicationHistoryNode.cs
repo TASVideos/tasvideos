@@ -14,11 +14,11 @@ namespace TASVideos.Services
 		public int Id { get; init; }
 		public string Title { get; init; } = "";
 		public string? Branch { get; init; }
-		
+
 		public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 
 		internal int? ObsoletedById { get; init; }
 
-		internal List<PublicationHistoryNode> ObsoleteList { get; set; } = new();
+		internal List<PublicationHistoryNode> ObsoleteList { get; set; } = new ();
 	}
 }

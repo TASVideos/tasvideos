@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int ForumId { get; set; }
 
 		[BindProperty]
-		public TopicCreateModel Topic { get; set; } = new();
+		public TopicCreateModel Topic { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -86,7 +86,7 @@ namespace TASVideos.Pages.Forum.Topics
 			};
 
 			_db.ForumTopics.Add(topic);
-			
+
 			// TODO: catch DbConcurrencyException
 			await _db.SaveChangesAsync();
 

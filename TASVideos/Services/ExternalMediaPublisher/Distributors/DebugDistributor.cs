@@ -5,9 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
-    /// <summary>
-	/// A <see cref="IPostDistributor"/> implementation that simply logs
-	/// a post to the console
+	/// <summary>
+	/// A <see cref="IPostDistributor"/> implementation that simply logs a post to the console.
 	/// </summary>
 	public class ConsoleDistributor : IPostDistributor
 	{

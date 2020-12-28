@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Games
 		[FromRoute]
 		public int Id { get; set; }
 
-		public GameDisplayModel Game { get; set; } = new();
+		public GameDisplayModel Game { get; set; } = new ();
 
 		public async Task OnGet()
 		{

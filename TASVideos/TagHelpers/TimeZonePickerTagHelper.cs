@@ -56,7 +56,7 @@ namespace TASVideos.TagHelpers
 				output.Content.AppendHtml($"<optgroup label='{optgroup.ToString()}'>");
 
 				var options = availableTimezones.Where(t => t.BaseUtcOffset == optgroup);
-				
+
 				foreach (var option in options)
 				{
 					output.Content.AppendHtml($"<option {(option.Selected ? "selected" : "")} value='{option.Id}' data-offset='{option.BaseUtcOffset.TotalMinutes}'>{option.DisplayName}</option>");

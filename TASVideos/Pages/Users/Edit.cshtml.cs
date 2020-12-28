@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Users
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public UserEditModel UserToEdit { get; set; } = new();
+		public UserEditModel UserToEdit { get; set; } = new ();
 
 		[DisplayName("Available Roles")]
 		public IEnumerable<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
@@ -66,7 +66,7 @@ namespace TASVideos.Pages.Users
 		public async Task<IActionResult> OnPost()
 		{
 			if (!ModelState.IsValid)
-			{	
+			{
 				AvailableRoles = await GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
 				return Page();
 			}
@@ -83,14 +83,14 @@ namespace TASVideos.Pages.Users
 			{
 				return AccessDenied();
 			}
-			
+
 			user.UserName = UserToEdit.UserName;
 			user.TimeZoneId = UserToEdit.TimezoneId;
 			user.From = UserToEdit.From;
 			user.Signature = UserToEdit.Signature;
 			user.Avatar = UserToEdit.Avatar;
 			user.MoodAvatarUrlBase = UserToEdit.MoodAvatarUrlBase;
-			
+
 			var currentRoles = await _db.UserRoles
 				.Where(ur => ur.User == user)
 				.ToListAsync();
@@ -146,7 +146,7 @@ namespace TASVideos.Pages.Users
 				{
 					message += " removed: " + string.Join(",", removedRoles);
 				}
-				
+
 				_publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
 			}
 

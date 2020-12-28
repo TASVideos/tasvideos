@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -13,12 +13,12 @@ namespace TASVideos
 		{
 			return user?.Identity?.IsAuthenticated ?? false;
 		}
-		
+
 		public static string Name(this ClaimsPrincipal? user)
 		{
 			return user?.Identity?.Name ?? "";
 		}
-		
+
 		public static int GetUserId(this ClaimsPrincipal? user)
 		{
 			if (user == null || !user.IsLoggedIn())

@@ -10,11 +10,12 @@ using Microsoft.Extensions.Options;
 
 using TASVideos.Extensions;
 
+// ReSharper disable FunctionNeverReturns
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
 	public class IrcDistributor : IPostDistributor
 	{
-		private static readonly object Sync = new();
+		private static readonly object Sync = new ();
 		private static IrcBot? Bot;
 		private readonly AppSettings.IrcConnection _settings;
 
@@ -58,7 +59,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 		{
 			private readonly AppSettings.IrcConnection _settings;
 			private readonly ILogger _logger;
-			private readonly ConcurrentQueue<string> _work = new();
+			private readonly ConcurrentQueue<string> _work = new ();
 
 			public IrcBot(AppSettings.IrcConnection settings, ILogger logger)
 			{
@@ -152,7 +153,6 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 						await Task.Delay(30000);
 					}
 				}
-				// ReSharper disable once FunctionNeverReturns
 			}
 		}
 	}

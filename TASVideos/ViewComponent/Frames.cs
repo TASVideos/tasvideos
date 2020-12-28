@@ -25,7 +25,7 @@ namespace TASVideos.ViewComponents
 			{
 				Amount = ParamHelper.GetInt(pp, "amount") ?? 0
 			};
-			
+
 			string fpsParam = ParamHelper.GetValueFor(pp, "fps");
 			if (double.TryParse(fpsParam, out double fpsDouble))
 			{

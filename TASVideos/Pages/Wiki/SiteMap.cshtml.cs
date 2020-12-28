@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Wiki
 					+ t.Name.Replace("Model", ""),
 				IsWiki = false,
 				AccessRestriction = AccessRestriction(t)
-			}) 
+			})
 			.ToList();
 
 		public SiteMapModel(IWikiPages wikiPages)
@@ -37,7 +37,7 @@ namespace TASVideos.Pages.Wiki
 			_wikiPages = wikiPages;
 		}
 
-		public List<SiteMapEntry> Map { get; set; } = new();
+		public List<SiteMapEntry> Map { get; set; } = new ();
 
 		public void OnGet()
 		{
