@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -101,7 +101,7 @@ namespace TASVideos.Test.Data.Context
 			});
 
 			_db.SaveChanges();
-			
+
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
 			Assert.AreEqual(user, flag.CreateUserName);
@@ -171,7 +171,7 @@ namespace TASVideos.Test.Data.Context
 
 			Assert.AreEqual(1980, flag.LastUpdateTimeStamp.Year);
 		}
-		
+
 		#endregion
 
 		#region LastUpdateUserName
@@ -265,7 +265,6 @@ namespace TASVideos.Test.Data.Context
 			flag.Name = "NewName";
 
 			_db.SaveChanges();
-
 		}
 
 		#endregion

@@ -15,7 +15,7 @@ namespace TASVideos.Test.Services
 	{
 		private IPointsService _pointsService = null!;
 		private ApplicationDbContext _db = null!;
-		private static User Player => new() { UserName = "Player" };
+		private static User Player => new () { UserName = "Player" };
 
 		[TestInitialize]
 		public void Initialize()
@@ -53,7 +53,7 @@ namespace TASVideos.Test.Services
 			{
 				_db.Publications.Add(new Publication { Tier = tier });
 			}
-			
+
 			_db.SaveChanges();
 			var user = _db.Users.Single();
 			var pa = _db.Publications

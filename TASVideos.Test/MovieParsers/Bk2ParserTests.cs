@@ -175,7 +175,6 @@ namespace TASVideos.Test.MovieParsers
 			Assert.AreEqual(60, result.FrameRateOverride);
 		}
 
-
 		[TestMethod]
 		public async Task Gambatte_MissingCycleCount_FallsBackToInputLog()
 		{

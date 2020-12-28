@@ -13,7 +13,7 @@ namespace TASVideos.Test.Extensions
 			var actual = e.Description();
 			Assert.AreEqual("", actual);
 		}
-		
+
 		[TestMethod]
 		public void Description_ReturnsDescription()
 		{
@@ -21,7 +21,7 @@ namespace TASVideos.Test.Extensions
 			var actual = e.Description();
 			Assert.AreEqual("00", actual);
 		}
-		
+
 		[TestMethod]
 		public void Description_DisplayReturnsDisplayDescription()
 		{
@@ -29,7 +29,7 @@ namespace TASVideos.Test.Extensions
 			var actual = e.Description();
 			Assert.AreEqual("01", actual);
 		}
-		
+
 		[TestMethod]
 		public void Description_Display_NoAttributes_ReturnsName()
 		{
@@ -37,7 +37,7 @@ namespace TASVideos.Test.Extensions
 			var actual = e.Description();
 			Assert.AreEqual("", actual);
 		}
-		
+
 		[TestMethod]
 		public void EnumDisplayName_NullReturnsEmpty()
 		{
@@ -45,7 +45,7 @@ namespace TASVideos.Test.Extensions
 			var actual = e.EnumDisplayName();
 			Assert.AreEqual("", actual);
 		}
-		
+
 		[TestMethod]
 		public void EnumDisplayName_DisplayReturnDisplay()
 		{
@@ -53,7 +53,7 @@ namespace TASVideos.Test.Extensions
 			var actual = e.EnumDisplayName();
 			Assert.AreEqual("The One", actual);
 		}
-		
+
 		[TestMethod]
 		public void EnumDisplayName_NoAttribute_ReturnsToString()
 		{

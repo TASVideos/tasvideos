@@ -14,6 +14,7 @@ namespace TASVideos.Test.Data.Paging
 		public void Paged_LastPage_NullSafe()
 		{
 			var paged = (IPaged?)null;
+
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = paged.LastPage();
 			Assert.AreEqual(0, actual);
@@ -41,6 +42,7 @@ namespace TASVideos.Test.Data.Paging
 		public void Paged_LastRow_NullSafe()
 		{
 			var paged = (IPaged?)null;
+
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = paged.LastRow();
 			Assert.AreEqual(0, actual);
@@ -69,6 +71,7 @@ namespace TASVideos.Test.Data.Paging
 		public void Paged_AdditionalProperties_NullSafe()
 		{
 			var paged = (IPaged?)null;
+
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = paged.AdditionalProperties();
 			Assert.AreEqual(0, actual.Count);

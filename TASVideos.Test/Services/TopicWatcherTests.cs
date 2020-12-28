@@ -66,7 +66,7 @@ namespace TASVideos.Test.Services
 			var actual = await _topicWatcher.UserWatches(user1Id);
 
 			Assert.IsNotNull(actual);
-			
+
 			var list = actual.ToList();
 			Assert.AreEqual(2, list.Count);
 			Assert.AreEqual(1, list.Count(l => l.TopicId == topic1Id));
@@ -201,7 +201,7 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(userId, _db.ForumTopicWatches.Single().UserId);
 			Assert.AreEqual(topicId, _db.ForumTopicWatches.Single().ForumTopicId);
 		}
-		
+
 		[TestMethod]
 		public async Task WatchTopic_DoesNotAddRestricted_IfUserCanNotSeeRestricted()
 		{

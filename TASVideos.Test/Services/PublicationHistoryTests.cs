@@ -18,10 +18,10 @@ namespace TASVideos.Test.Services
 
 		#region Test Data
 
-		private static Game Smb => new() { Id = 1 };
-		private static Game Smb2j => new() { Id = 2 };
+		private static Game Smb => new () { Id = 1 };
+		private static Game Smb2j => new () { Id = 2 };
 
-		private static Publication SmbWarps => new()
+		private static Publication SmbWarps => new ()
 		{
 			Id = 1,
 			GameId = Smb.Id,
@@ -29,7 +29,7 @@ namespace TASVideos.Test.Services
 			Branch = "Warps"
 		};
 
-		private static Publication SmbWarpsObsolete => new()
+		private static Publication SmbWarpsObsolete => new ()
 		{
 			Id = 2,
 			GameId = Smb.Id,
@@ -38,7 +38,7 @@ namespace TASVideos.Test.Services
 			ObsoletedById = SmbWarps.Id
 		};
 
-		private static Publication SmbWarpsObsoleteObsolete => new()
+		private static Publication SmbWarpsObsoleteObsolete => new ()
 		{
 			Id = 3,
 			GameId = Smb.Id,
@@ -47,7 +47,7 @@ namespace TASVideos.Test.Services
 			ObsoletedById = SmbWarpsObsolete.Id
 		};
 
-		private static Publication SmbWarpsObsoleteBranch => new()
+		private static Publication SmbWarpsObsoleteBranch => new ()
 		{
 			Id = 4,
 			GameId = Smb.Id,
@@ -56,7 +56,7 @@ namespace TASVideos.Test.Services
 			ObsoletedById = SmbWarps.Id
 		};
 
-		private static Publication SmbWarpless => new()
+		private static Publication SmbWarpless => new ()
 		{
 			Id = 10,
 			GameId = Smb.Id,
@@ -64,7 +64,7 @@ namespace TASVideos.Test.Services
 			Branch = "No Warps"
 		};
 
-		private static Publication Smb2jWarps => new()
+		private static Publication Smb2jWarps => new ()
 		{
 			Id = 20,
 			GameId = Smb2j.Id,
@@ -142,10 +142,10 @@ namespace TASVideos.Test.Services
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
 			Assert.IsNotNull(actual!.Branches);
-			
+
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(1, branchList.Count);
-			
+
 			var movie = branchList.Single();
 			Assert.AreEqual(SmbWarps.Id, movie.Id);
 			Assert.AreEqual(SmbWarps.Title, movie.Title);
@@ -162,10 +162,10 @@ namespace TASVideos.Test.Services
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
 			Assert.IsNotNull(actual!.Branches);
-			
+
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(1, branchList.Count);
-			
+
 			var movie = branchList.Single();
 			Assert.IsNotNull(movie.Obsoletes);
 			Assert.AreEqual(0, movie.Obsoletes.Count());
@@ -182,10 +182,10 @@ namespace TASVideos.Test.Services
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
 			Assert.IsNotNull(actual!.Branches);
-			
+
 			var branchList = actual.Branches.ToList();
 			Assert.AreEqual(2, branchList.Count);
-			
+
 			Assert.AreEqual(1, branchList.Count(b => b.Branch == SmbWarps.Branch));
 			Assert.AreEqual(1, branchList.Count(b => b.Branch == SmbWarpless.Branch));
 		}
@@ -227,7 +227,7 @@ namespace TASVideos.Test.Services
 
 			Assert.IsNotNull(currentPub.Obsoletes);
 			var obsolete = currentPub.Obsoletes.SingleOrDefault();
-			
+
 			Assert.IsNotNull(obsolete);
 			Assert.AreEqual(SmbWarpsObsolete.Id, obsolete!.Id);
 		}
