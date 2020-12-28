@@ -1,4 +1,4 @@
-namespace TASVideos.ForumEngine
+﻿namespace TASVideos.ForumEngine
 {
 	public class PostParser
 	{
