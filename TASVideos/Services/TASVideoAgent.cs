@@ -28,9 +28,9 @@ namespace TASVideos.Services
 				Question = SiteGlobalConstants.PollQuestion,
 				PollOptions = new ForumPollOption[]
 				{
-					new() { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
-					new() { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
-					new() { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
+					new () { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
+					new () { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
+					new () { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
 				}
 			};
 

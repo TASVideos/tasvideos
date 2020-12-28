@@ -12,7 +12,7 @@ using TASVideos.ForumEngine;
 
 namespace TASVideos.ViewComponents
 {
-    public class TopicFeed : ViewComponent
+	public class TopicFeed : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IMapper _mapper;

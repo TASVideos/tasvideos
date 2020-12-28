@@ -47,9 +47,9 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[FromQuery]
-		public TopicRequest Search { get; set; } = new();
+		public TopicRequest Search { get; set; } = new ();
 
-		public ForumTopicModel Topic { get; set; } = new();
+		public ForumTopicModel Topic { get; set; } = new ();
 
 		public WikiPage? WikiPage { get; set; }
 

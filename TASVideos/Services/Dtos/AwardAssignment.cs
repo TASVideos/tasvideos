@@ -5,7 +5,7 @@ namespace TASVideos.Services
 {
 	/// <summary>
 	/// Represents the assignment of an award to a user or movie
-	/// Ex: 2010 TASer of the Year
+	/// Ex: 2010 TASer of the Year.
 	/// </summary>
 	public class AwardAssignment
 	{
@@ -17,7 +17,7 @@ namespace TASVideos.Services
 		public IEnumerable<User> Users { get; set; } = new HashSet<User>();
 
 		public record User(int Id, string UserName);
-		public record Publication (int Id, string Title);
+		public record Publication(int Id, string Title);
 	}
 
 	/// <summary>

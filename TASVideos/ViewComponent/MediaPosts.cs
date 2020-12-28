@@ -11,8 +11,8 @@ using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.ViewComponents
 {
-    public class MediaPosts : ViewComponent
-    {
+	public class MediaPosts : ViewComponent
+	{
 		private readonly ApplicationDbContext _db;
 
 		public MediaPosts(ApplicationDbContext db)

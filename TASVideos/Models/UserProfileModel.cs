@@ -11,7 +11,7 @@ namespace TASVideos.Models
 {
 	/// <summary>
 	/// Represents a user with publicly available information
-	/// Intended for the User/Profile page
+	/// Intended for the User/Profile page.
 	/// </summary>
 	public class UserProfileModel
 	{
@@ -61,14 +61,14 @@ namespace TASVideos.Models
 		public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;
 		public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
 
-		public WikiEditModel WikiEdits { get; set; } = new();
+		public WikiEditModel WikiEdits { get; set; } = new ();
 
 		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
 		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
 		public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
 
-		public RatingModel Ratings { get; set; } = new();
-		public UserFilesModel UserFiles { get; set; } = new();
+		public RatingModel Ratings { get; set; } = new ();
+		public UserFilesModel UserFiles { get; set; } = new ();
 
 		public int SubmissionCount => Submissions.Sum(s => s.Count);
 

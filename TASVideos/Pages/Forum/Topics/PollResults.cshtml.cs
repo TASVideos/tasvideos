@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Forum.Topics
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PollResultModel Poll { get; set; } = new();
+		public PollResultModel Poll { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

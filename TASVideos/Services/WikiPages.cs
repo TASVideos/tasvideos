@@ -272,7 +272,7 @@ namespace TASVideos.Services
 			}
 
 			await GenerateReferrals(revision.PageName, revision.Markup);
-		
+
 			ClearCache(revision.PageName);
 			this[revision.PageName] = revision;
 		}
@@ -304,7 +304,7 @@ namespace TASVideos.Services
 			}
 
 			// Update all Referrals
-			// Referrals can be safely updated since the new page still has the original content 
+			// Referrals can be safely updated since the new page still has the original content
 			// and any links on them are still correctly referring to other pages
 			var existingReferrals = await _db.WikiReferrals
 				.ForPage(originalName)

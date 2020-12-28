@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Ratings
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationRatingsModel Publication { get; set; } = new();
+		public PublicationRatingsModel Publication { get; set; } = new ();
 
 		public IEnumerable<PublicationRatingsModel.RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
 			? Publication.Ratings
@@ -87,7 +87,7 @@ namespace TASVideos.Pages.Ratings
 				.Concat(techRatings)
 				.ToList();
 
-			Publication.AverageEntertainmentRating = entertainmentRatings.Any() 
+			Publication.AverageEntertainmentRating = entertainmentRatings.Any()
 				? Math.Round(entertainmentRatings.Average(), 2)
 				: 0;
 

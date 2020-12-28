@@ -46,7 +46,7 @@ namespace TASVideos.Services.RssFeedParsers
 		public bool IsSupportedType(string type)
 			=> new[] { "atom" }.Contains(type);
 	}
-	
+
 	public record CommitEntry(
 		string Author,
 		string At,

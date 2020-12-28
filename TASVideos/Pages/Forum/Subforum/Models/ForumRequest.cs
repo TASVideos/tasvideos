@@ -10,5 +10,4 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 			Sort = $"-{nameof(ForumDisplayModel.ForumTopicEntry.CreateTimestamp)}";
 		}
 	}
-
 }

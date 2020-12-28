@@ -14,29 +14,29 @@ namespace TASVideos.Services
 	public interface ITopicWatcher
 	{
 		/// <summary>
-		/// Returns all topics the user is currently watching
+		/// Returns all topics the user is currently watching.
 		/// </summary>
 		Task<IEnumerable<WatchedTopic>> UserWatches(int userId);
 
 		/// <summary>
 		/// Notifies everyone watching a topic (other than the poster)
-		/// that a new post has been created
+		/// that a new post has been created.
 		/// </summary>
-		/// <param name="notification">The data necessary to create a topic notification</param>
+		/// <param name="notification">The data necessary to create a topic notification.</param>
 		Task NotifyNewPost(TopicNotification notification);
 
 		/// <summary>
-		/// Marks that a user has seen a topic with new posts
+		/// Marks that a user has seen a topic with new posts.
 		/// </summary>
 		Task MarkSeen(int topicId, int userId);
 
 		/// <summary>
-		/// Allows a user to watch a topic
+		/// Allows a user to watch a topic.
 		/// </summary>
 		Task WatchTopic(int topicId, int userId, bool canSeeRestricted);
 
 		/// <summary>
-		/// Removes a topic from the user's watched topic list
+		/// Removes a topic from the user's watched topic list.
 		/// </summary>
 		Task UnwatchTopic(int topicId, int userId);
 	}
@@ -159,14 +159,14 @@ namespace TASVideos.Services
 					// Do nothing
 					// 1) if a watch is already removed, we are done
 					// 2) if a watch was updated (for instance, someone posted in the topic),
-					//		there isn't much we can do other than reload the page anyway with an error
-					//		An error would only be modestly helpful anyway, and wouldn't save clicks
-					//		However, this would be an nice to have one day
+					//        there isn't much we can do other than reload the page anyway with an error
+					//        An error would only be modestly helpful anyway, and wouldn't save clicks
+					//        However, this would be an nice to have one day
 				}
 			}
 		}
 	}
-	
+
 	/// <summary>
 	/// Represents a watched forum topic
 	/// </summary>
@@ -177,7 +177,7 @@ namespace TASVideos.Services
 		string ForumTitle,
 		int TopicId,
 		string TopicTitle);
-	
+
 	/// <summary>
 	/// Represents a notification that a new post has been added to a topic
 	/// </summary>

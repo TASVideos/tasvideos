@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Messages
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PrivateMessageModel Message { get; set; } = new();
+		public PrivateMessageModel Message { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

@@ -193,7 +193,7 @@ namespace TASVideos.Services
 				var totalRatings = await _db.PublicationRatings.CountAsync();
 				avg = totalRatings / (double)(2 * totalPublications);
 			}
-			
+
 			_cache.Set(AverageNumberOfRatingsKey, avg);
 			return avg;
 		}

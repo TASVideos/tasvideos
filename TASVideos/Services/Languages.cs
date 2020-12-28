@@ -77,6 +77,6 @@ namespace TASVideos.Services
 				|| l.Code == trimmed);
 		}
 	}
-	
+
 	public record Language(string Code, string DisplayName);
 }

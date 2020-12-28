@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Submissions
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SubmissionEditModel Submission { get; set; } = new();
+		public SubmissionEditModel Submission { get; set; } = new ();
 
 		[Display(Name = "Status")]
 		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
@@ -148,7 +148,7 @@ namespace TASVideos.Pages.Submissions
 			{
 				Submission.TierId = null;
 			}
-			else if (Submission.TierId == null && 
+			else if (Submission.TierId == null &&
 				(Submission.Status == SubmissionStatus.Accepted || Submission.Status == SubmissionStatus.PublicationUnderway))
 			{
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TierId)}", "A submission can not be accepted without a Tier");
@@ -302,7 +302,7 @@ namespace TASVideos.Pages.Submissions
 				if (statusHasChanged)
 				{
 					var statusStr = Submission.Status == SubmissionStatus.Accepted
-						? $"{Submission.Status} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
+						? $"{Submission.Status} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}"
 						: Submission.Status.ToString();
 					title = $"{userName} set Submission {statusStr} on {submission.Title}";
 				}

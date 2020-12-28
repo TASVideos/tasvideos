@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -76,13 +76,13 @@ namespace TASVideos.Pages.Publications
 		}
 
 		public async Task<IActionResult> OnPost()
-		{ 
+		{
 			if (!ModelState.IsValid)
 			{
 				CurrentUrls = await _db.PublicationUrls
 					.Where(u => u.PublicationId == Id)
 					.ToListAsync();
-			
+
 				return Page();
 			}
 
@@ -97,8 +97,8 @@ namespace TASVideos.Pages.Publications
 
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} {Title} added {UrlType} url {PublicationUrl}",
-					$"{Id}M",
-					User.Name());
+				$"{Id}M",
+				User.Name());
 
 			return RedirectToPage("EditUrls", new { Id });
 		}
@@ -112,7 +112,7 @@ namespace TASVideos.Pages.Publications
 
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} deleted {url.Type} url {url.Url}",
-					$"{Id}M",
+				$"{Id}M",
 				User.Name());
 
 			await _db.SaveChangesAsync();

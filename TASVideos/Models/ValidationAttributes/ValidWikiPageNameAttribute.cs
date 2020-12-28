@@ -3,7 +3,7 @@ using TASVideos.Extensions;
 
 namespace TASVideos.Models
 {
-    public class ValidWikiPageNameAttribute : ValidationAttribute
+	public class ValidWikiPageNameAttribute : ValidationAttribute
 	{
 		public ValidWikiPageNameAttribute()
 		{

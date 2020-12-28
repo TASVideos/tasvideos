@@ -41,7 +41,7 @@ namespace TASVideos.Pages.Submissions
 		}
 
 		[BindProperty]
-		public SubmissionCreateModel Create { get; set; } = new();
+		public SubmissionCreateModel Create { get; set; } = new ();
 
 		public void OnGet()
 		{
@@ -74,7 +74,7 @@ namespace TASVideos.Pages.Submissions
 			// TODO: check warnings
 			var parseResult = await _parser.ParseZip(Create.MovieFile!.OpenReadStream());
 			await MapParsedResult(parseResult, submission);
-			
+
 			if (!ModelState.IsValid)
 			{
 				return Page();

@@ -40,7 +40,8 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement("profile-link")]
 	public class ProfileLinkTagHelper : AnchorTagHelper
 	{
-		public ProfileLinkTagHelper(IHtmlGenerator htmlGenerator) : base(htmlGenerator)
+		public ProfileLinkTagHelper(IHtmlGenerator htmlGenerator)
+			: base(htmlGenerator)
 		{
 		}
 

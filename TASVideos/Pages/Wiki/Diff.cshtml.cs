@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public int? ToRevision { get; set; }
 
-		public WikiDiffModel Diff { get; set; } = new();
+		public WikiDiffModel Diff { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -102,7 +102,7 @@ namespace TASVideos.Pages.Wiki
 					RightMarkup = revisions.First().Markup
 				};
 			}
-			
+
 			return new WikiDiffModel
 			{
 				PageName = pageName,

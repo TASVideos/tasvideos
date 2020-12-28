@@ -19,7 +19,7 @@ namespace TASVideos.Pages.Ratings.Models
 		{
 			[Display(Name = "UserName")]
 			public string UserName { get; set; } = "";
-			
+
 			[Display(Name = "Entertainment")]
 			public double? Entertainment { get; set; }
 

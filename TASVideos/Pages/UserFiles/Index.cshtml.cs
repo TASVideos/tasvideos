@@ -28,7 +28,7 @@ namespace TASVideos.Pages.UserFiles
 			_publisher = publisher;
 		}
 
-		public UserFileIndexModel Data { get; set; } = new();
+		public UserFileIndexModel Data { get; set; } = new ();
 
 		public async Task OnGet()
 		{
@@ -69,7 +69,7 @@ namespace TASVideos.Pages.UserFiles
 					|| User.Has(PermissionTo.EditUserFiles))
 				{
 					_db.UserFiles.Remove(userFile);
-				
+
 					try
 					{
 						await _db.SaveChangesAsync();
@@ -102,7 +102,7 @@ namespace TASVideos.Pages.UserFiles
 
 					await _db.SaveChangesAsync();
 					_publisher.SendUserFile(
-						$"New comment by {User.Name()} on ({userFile.Title} (WIP))", 
+						$"New comment by {User.Name()} on ({userFile.Title} (WIP))",
 						$"UserFiles/Info/{fileId}",
 						comment,
 						User.Name());
@@ -161,7 +161,7 @@ namespace TASVideos.Pages.UserFiles
 					{
 						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
-							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Name()}", 
+							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Name()}",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							"",
 							User.Name());

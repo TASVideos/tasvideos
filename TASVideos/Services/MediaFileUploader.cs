@@ -89,6 +89,6 @@ namespace TASVideos.Services
 			return null;
 		}
 	}
-	
+
 	public record DeletedFile(int Id, FileType Type, string Path);
 }

@@ -41,7 +41,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public int? QuoteId { get; set; }
 
 		[BindProperty]
-		public ForumPostCreateModel Post { get; set; } = new();
+		public ForumPostCreateModel Post { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

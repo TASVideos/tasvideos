@@ -8,9 +8,8 @@ namespace TASVideos.Services.ExternalMediaPublisher
 {
 	/// <summary>
 	/// Provides a mechanism for sending posts to a variety of external resources
-	/// Such as IRC, Discord, Twitter, etc via a collection of 
-	/// <see cref="IPostDistributor"/> instances that will deliver posts to
-	/// specific resources
+	/// Such as IRC, Discord, Twitter, etc via a collection of
+	/// <see cref="IPostDistributor"/> instances that will deliver posts to specific resources.
 	/// </summary>
 	public class ExternalMediaPublisher // DI as a singleton, pass in a hardcoded list of IMessagingProvider implementations, config drive which implementations to use
 	{
@@ -101,7 +100,7 @@ namespace TASVideos.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void SendPublicationEdit (this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static void SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
 			publisher.Send(new Post
 			{

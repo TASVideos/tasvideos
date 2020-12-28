@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Wiki
 		public string? Path { get; set; }
 
 		[BindProperty]
-		public WikiMoveModel Move { get; set; } = new();
+		public WikiMoveModel Move { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

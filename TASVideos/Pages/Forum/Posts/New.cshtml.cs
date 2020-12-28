@@ -18,7 +18,7 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager _userManager;
 		private readonly IAwards _awards;
-		
+
 		public NewModel(
 			ApplicationDbContext db,
 			UserManager userManager,
@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Forum.Posts
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; } = new();
+		public PagingModel Search { get; set; } = new ();
 
 		public PageOf<PostsSinceLastVisitModel> Posts { get; set; } = PageOf<PostsSinceLastVisitModel>.Empty();
 

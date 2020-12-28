@@ -9,13 +9,13 @@ namespace TASVideos
 		public string BaseUrl { get; set; } = "";
 		public bool EnableGzipCompression { get; set; }
 
-		public CacheSetting CacheSettings { get; set; } = new();
+		public CacheSetting CacheSettings { get; set; } = new ();
 
-		public Connections ConnectionStrings { get; set; } = new();
+		public Connections ConnectionStrings { get; set; } = new ();
 
-		public IrcConnection Irc { get; set; } = new();
-		public DiscordConnection Discord { get; set; } = new();
-		public TwitterConnection Twitter { get; set; } = new();
+		public IrcConnection Irc { get; set; } = new ();
+		public DiscordConnection Discord { get; set; } = new ();
+		public TwitterConnection Twitter { get; set; } = new ();
 
 		public string StartupStrategy { get; set; } = "";
 
@@ -73,7 +73,7 @@ namespace TASVideos
 			if (!string.IsNullOrWhiteSpace(settings.StartupStrategy))
 			{
 				var result = Enum.TryParse(typeof(DbInitializer.StartupStrategy), strategy, true, out object? strategyObj);
-			
+
 				if (result)
 				{
 					return (DbInitializer.StartupStrategy)(strategyObj ?? DbInitializer.StartupStrategy.Minimal);

@@ -14,7 +14,7 @@ namespace TASVideos.TagHelpers
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new();
+		public ViewContext ViewContext { get; set; } = new ();
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
@@ -32,7 +32,7 @@ namespace TASVideos.TagHelpers
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new();
+		public ViewContext ViewContext { get; set; } = new ();
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{

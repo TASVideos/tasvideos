@@ -107,8 +107,8 @@ namespace TASVideos.Pages.Publications
 
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} {PublicationTitle} added new movie file: {DisplayName}",
-					$"{Id}M",
-					User.Name());
+				$"{Id}M",
+				User.Name());
 
 			return RedirectToPage("AdditionalMovies", new { Id });
 		}
@@ -125,8 +125,8 @@ namespace TASVideos.Pages.Publications
 
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} {PublicationTitle} removed movie file {file.Path}",
-					$"{Id}M",
-					User.Name());
+				$"{Id}M",
+				User.Name());
 
 			return RedirectToPage("AdditionalMovies", new { Id });
 		}

@@ -22,7 +22,7 @@ namespace TASVideos.Services
 			_db = db;
 			_cache = cache;
 		}
-		
+
 		public async Task<IPublicationTokens> GetTokens()
 		{
 			if (_cache.TryGetValue(CacheKeys.MovieTokens, out MovieTokens cachedResult))

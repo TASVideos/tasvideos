@@ -135,7 +135,7 @@ namespace TASVideos.Extensions
 			{
 				services.AddDatabaseDeveloperPageExceptionFilter();
 			}
-			
+
 			services.AddResponseCaching();
 			services
 				.AddControllers()
@@ -230,7 +230,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<IPostDistributor, DistributorStorage>();
 
 			services.AddTransient<ExternalMediaPublisher>();
-			
+
 			return services;
 		}
 

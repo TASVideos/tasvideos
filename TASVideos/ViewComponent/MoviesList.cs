@@ -1,15 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.ViewComponents
 {
-	public class MoviesList: ViewComponent
+	public class MoviesList : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
 

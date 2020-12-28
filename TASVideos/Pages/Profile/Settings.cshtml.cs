@@ -36,7 +36,7 @@ namespace TASVideos.Pages.Profile
 		public string? StatusMessage { get; set; }
 
 		[BindProperty]
-		public ProfileSettingsModel Settings { get; set; } = new();
+		public ProfileSettingsModel Settings { get; set; } = new ();
 
 		public async Task OnGet()
 		{

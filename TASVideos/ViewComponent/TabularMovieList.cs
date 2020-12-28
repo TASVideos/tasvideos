@@ -34,7 +34,7 @@ namespace TASVideos.ViewComponents
 			{
 				search.Tiers = tiersStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 			}
-			
+
 			ViewData["flink"] = ParamHelper.GetValueFor(pp, "flink");
 
 			var footer = ParamHelper.GetValueFor(pp, "footer");

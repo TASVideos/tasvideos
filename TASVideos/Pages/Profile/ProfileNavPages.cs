@@ -18,7 +18,7 @@ namespace TASVideos.Pages.Profile
 
 		public static string ChangePassword => "ChangePassword";
 		public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
-		
+
 		public static string HomePage => "HomePage";
 		public static string HomePageNavClass(ViewContext viewContext) => PageNavClass(viewContext, HomePage);
 

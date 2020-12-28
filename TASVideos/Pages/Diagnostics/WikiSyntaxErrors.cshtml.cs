@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +36,7 @@ namespace TASVideos.Pages.Diagnostics
 					return Markup.Substring(from, to - from);
 				}
 			}
+
 			public string ExcerptAfter
 			{
 				get

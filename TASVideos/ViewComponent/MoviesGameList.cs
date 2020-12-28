@@ -24,7 +24,6 @@ namespace TASVideos.ViewComponents
 				SystemId = ParamHelper.GetInt(pp, "system")
 			};
 
-
 			if (model.SystemId.HasValue)
 			{
 				var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == model.SystemId);

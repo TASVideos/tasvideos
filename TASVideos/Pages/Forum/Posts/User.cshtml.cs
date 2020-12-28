@@ -32,11 +32,11 @@ namespace TASVideos.Pages.Forum.Posts
 		public string UserName { get; set; } = "";
 
 		[FromQuery]
-		public UserPostsRequest Search { get; set; } = new();
+		public UserPostsRequest Search { get; set; } = new ();
 
-		public UserPostsModel UserPosts { get; set; } = new();
+		public UserPostsModel UserPosts { get; set; } = new ();
 
-		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>(); 
+		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -83,7 +83,7 @@ namespace TASVideos.Pages.Forum.Posts
 				})
 				.SortedPageOf(Search);
 
-			UserPosts.RenderedSignature = RenderSignature(UserPosts.Signature); 
+			UserPosts.RenderedSignature = RenderSignature(UserPosts.Signature);
 			foreach (var post in UserPosts.Posts)
 			{
 				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);

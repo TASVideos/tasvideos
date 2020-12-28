@@ -34,10 +34,10 @@ namespace TASVideos.TagHelpers
 	public class ColumnTagHelper : TagHelper
 	{
 		public int? Xs { get; set; }
-		public int? Sm { get; set; } 
-		public int? Md { get; set; } 
-		public int? Lg { get; set; } 
-		
+		public int? Sm { get; set; }
+		public int? Md { get; set; }
+		public int? Lg { get; set; }
+
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			Validate();
@@ -194,7 +194,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new();
+		public ViewContext ViewContext { get; set; } = new ();
 
 		public string AspHref { get; set; } = "";
 

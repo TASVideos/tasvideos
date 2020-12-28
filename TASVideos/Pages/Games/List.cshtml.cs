@@ -35,11 +35,11 @@ namespace TASVideos.Pages.Games
 		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
 
 		[FromQuery]
-		public GameListRequest Search { get; set; } = new();
+		public GameListRequest Search { get; set; } = new ();
 
 		public SystemPageOf<GameListModel> Games { get; set; } = SystemPageOf<GameListModel>.Empty();
 
-		public List<SelectListItem> SystemList { get; set; } = new();
+		public List<SelectListItem> SystemList { get; set; } = new ();
 
 		public async Task OnGet()
 		{

@@ -28,7 +28,7 @@ namespace TASVideos.ViewComponents
 			{
 				return false;
 			}
-			
+
 			var parameters = parameterStr
 				.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
 				.Select(s => s.Trim())

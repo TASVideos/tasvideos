@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Roles
 		public int? Id { get; set; }
 
 		[BindProperty]
-		public RoleEditModel Role { get; set; } = new();
+		public RoleEditModel Role { get; set; } = new ();
 
 		[Display(Name = "Available Permissions")]
 		public IEnumerable<SelectListItem> AvailablePermissions => PermissionsSelectList;

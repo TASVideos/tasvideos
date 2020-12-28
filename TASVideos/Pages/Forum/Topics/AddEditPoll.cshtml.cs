@@ -18,7 +18,8 @@ namespace TASVideos.Pages.Forum.Topics
 	{
 		private readonly ApplicationDbContext _db;
 
-		public AddEditPollModel(ApplicationDbContext db, ITopicWatcher watcher) : base(db, watcher)
+		public AddEditPollModel(ApplicationDbContext db, ITopicWatcher watcher)
+			: base(db, watcher)
 		{
 			_db = db;
 		}
@@ -31,7 +32,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int? PollId { get; set; }
 
 		[BindProperty]
-		public PollCreateModel Poll { get; set; } = new();
+		public PollCreateModel Poll { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -111,7 +112,7 @@ namespace TASVideos.Pages.Forum.Topics
 				{
 					return BadRequest("A poll with existing votes can not be modified");
 				}
-				
+
 				topic.Poll.Question = Poll.Question ?? "";
 				topic.Poll.CloseDate = Poll.DaysOpen.HasValue
 					? DateTime.UtcNow.AddDays(Poll.DaysOpen.Value)

@@ -22,7 +22,7 @@ namespace TASVideos.Pages.UserFiles
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; } = new();
+		public PagingModel Search { get; set; } = new ();
 
 		[FromRoute]
 		public string UserName { get; set; } = "";

@@ -27,7 +27,7 @@ namespace TASVideos.ViewComponents
 				.ToList();
 
 			ViewData["Parent"] = pageData.PageName;
-			
+
 			if (pp.Contains("show"))
 			{
 				ViewData["show"] = true;

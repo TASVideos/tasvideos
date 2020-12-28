@@ -32,7 +32,6 @@ namespace TASVideos.ViewComponents
 				{
 					UserName = w.Key ?? "",
 					WikiEdits = w.Count()
-
 				})
 				.OrderByDescending(m => m.WikiEdits)
 				.Take(30)

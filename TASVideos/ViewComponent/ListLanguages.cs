@@ -35,7 +35,6 @@ namespace TASVideos.ViewComponents
 				return new ContentViewComponentResult("");
 			}
 
-
 			var languages = (await _languages.AvailableLanguages())
 				.Select(l => new LanguageEntry
 				{

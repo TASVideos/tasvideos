@@ -42,7 +42,7 @@ namespace TASVideos.ViewComponents
 			var ids = ParamHelper.GetValueFor(pp, "id").CsvToInts();
 			var games = ParamHelper.GetValueFor(pp, "game").CsvToInts();
 			var authors = ParamHelper.GetValueFor(pp, "author").CsvToInts();
-			
+
 			var searchModel = new PublicationSearchModel
 			{
 				Tiers = tokenLookup.Tiers.Where(t => tiers.Contains(t)),

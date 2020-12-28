@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Tags
 		public int Id { get; set; }
 
 		[BindProperty]
-		public Tag Tag { get; set; } = new();
+		public Tag Tag { get; set; } = new ();
 
 		public async Task<IActionResult> OnPost()
 		{
@@ -63,7 +63,7 @@ namespace TASVideos.Pages.Tags
 					Message = null;
 					return Page();
 				}
-				
+
 				MessageType = Styles.Danger;
 				Message = "Unable to edit tag due to an unknown error";
 			}
