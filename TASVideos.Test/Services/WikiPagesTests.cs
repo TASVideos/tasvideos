@@ -489,7 +489,7 @@ namespace TASVideos.Test.Services
 			string origPageName = "Orig";
 			string origLink = "Link";
 			var origPage = new WikiPage { PageName = origPageName, Markup = $"[{origLink}]" };
-			
+
 			_db.WikiPages.Add(origPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = origPageName, Referral = origLink });
 			_db.SaveChanges();
@@ -501,7 +501,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _wikiPages.Move(origPageName, destPageName);
 			Assert.IsFalse(actual, "The move was unsuccessful");
-			
+
 			// Moved page does not exist
 			Assert.AreEqual(0, _db.WikiPages.Count(wp => wp.PageName == destPageName));
 
@@ -518,7 +518,7 @@ namespace TASVideos.Test.Services
 			string origPageName = "Orig";
 			string origLink = "Link";
 			var origPage = new WikiPage { PageName = origPageName, Markup = $"[{origLink}]" };
-			
+
 			_db.WikiPages.Add(origPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = origPageName, Referral = origLink });
 			_db.SaveChanges();
@@ -530,7 +530,7 @@ namespace TASVideos.Test.Services
 
 			var actual = await _wikiPages.Move(origPageName, destPageName);
 			Assert.IsFalse(actual, "The move was unsuccessful");
-			
+
 			// Moved page does not exist
 			Assert.AreEqual(0, _db.WikiPages.Count(wp => wp.PageName == destPageName));
 
@@ -631,7 +631,7 @@ namespace TASVideos.Test.Services
 			string link = "AnotherPage";
 			var revision1 = new WikiPage { PageName = pageName, Revision = 1 };
 			var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link}]" };
-			
+
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
 			_db.SaveChanges();
@@ -706,7 +706,7 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(currentRevision);
 			_db.SaveChanges();
 			_cache.PageCache.Add(currentRevision);
-			
+
 			await _wikiPages.Delete(existingPageName, 1);
 
 			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
@@ -904,7 +904,7 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(currentRevision);
 			_db.SaveChanges();
 			_cache.PageCache.Add(currentRevision);
-			
+
 			await _wikiPages.Delete("/" + existingPageName + "/", 1);
 
 			Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
@@ -992,7 +992,7 @@ namespace TASVideos.Test.Services
 			// Revision 2 is current
 			Assert.AreEqual(pageName, newRevision2.PageName);
 			Assert.IsNull(newRevision2.ChildId);
-			
+
 			// Revision 2 is in cache
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			var cached = _cache.PageCache.Single();
@@ -1045,7 +1045,7 @@ namespace TASVideos.Test.Services
 			// Revision 3 is current
 			Assert.AreEqual(pageName, newRevision3.PageName);
 			Assert.IsNull(newRevision3.ChildId);
-			
+
 			// Revision 3 is in cache
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			var cached = _cache.PageCache.Single();
@@ -1089,7 +1089,7 @@ namespace TASVideos.Test.Services
 			// Revision 2 is current
 			Assert.AreEqual(pageName, newRevision2.PageName);
 			Assert.IsNull(newRevision2.ChildId);
-			
+
 			// Revision 2 is in cache
 			Assert.AreEqual(1, _cache.PageCache.Count);
 			var cached = _cache.PageCache.Single();
@@ -1269,7 +1269,7 @@ namespace TASVideos.Test.Services
 		{
 			string parent = "Parent";
 			AddPage(parent);
-			AddPage(parent  + "/Child");
+			AddPage(parent + "/Child");
 
 			var actual = await _wikiPages.Orphans();
 
@@ -1378,9 +1378,9 @@ namespace TASVideos.Test.Services
 
 	internal class WikiTestCache : ICacheService
 	{
-		private readonly Dictionary<string, object?> _cache = new();
+		private readonly Dictionary<string, object?> _cache = new ();
 
-		public List<WikiPage> PageCache { get; set; } = new();
+		public List<WikiPage> PageCache { get; set; } = new ();
 
 		public void Remove(string key)
 		{

@@ -81,7 +81,6 @@ namespace TASVideos.Test.Services
 			Assert.AreEqual(expected, actual);
 		}
 
-
 		[TestMethod]
 		[DataRow(0, 0, 0)]
 		[DataRow(0, 1, 0)]

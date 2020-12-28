@@ -90,7 +90,7 @@ namespace TASVideos.Test.Services
 		public async Task AvailableLanguages_ValidMarkup_ReturnsLanguages()
 		{
 			MockStandardMarkup();
-			
+
 			var actual = await _languages.AvailableLanguages();
 
 			Assert.IsNotNull(actual);

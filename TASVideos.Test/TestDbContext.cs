@@ -13,16 +13,15 @@ using TASVideos.Data;
 namespace TASVideos.Test
 {
 	/// <summary>
-	/// Creates a context optimized for unit testing
-	/// Database is in memory, and provides mechanisms for mocking
-	/// database conflicts
+	/// Creates a context optimized for unit testing.
+	/// Database is in memory, and provides mechanisms for mocking database conflicts.
 	/// </summary>
 	internal class TestDbContext : ApplicationDbContext
 	{
+		private readonly IHttpContextAccessor _testHttpContext;
+
 		private bool _dbConcurrentUpdateConflict;
 		private bool _dbUpdateConflict;
-
-		private readonly IHttpContextAccessor _testHttpContext;
 
 		private TestDbContext(DbContextOptions<ApplicationDbContext> options, TestHttpContextAccessor httpContextAccessor)
 			: base(options, httpContextAccessor)
@@ -44,7 +43,7 @@ namespace TASVideos.Test
 		}
 
 		/// <summary>
-		/// Simulates a user having logged in
+		/// Simulates a user having logged in.
 		/// </summary>
 		public void LogInUser(string userName)
 		{
@@ -70,8 +69,8 @@ namespace TASVideos.Test
 		}
 
 		/// <summary>
-		/// Simulates a scenario that will throw a <seealso cref="DbUpdateException"/>
-		/// These scenarios include constraint violations and model validation errors
+		/// Simulates a scenario that will throw a <seealso cref="DbUpdateException"/>.
+		/// These scenarios include constraint violations and model validation errors.
 		/// </summary>
 		public void CreateUpdateConflict()
 		{
@@ -79,8 +78,8 @@ namespace TASVideos.Test
 		}
 
 		/// <summary>
-		/// Simulates a scenario that will throw a <seealso cref="DbUpdateConcurrencyException"/>
-		/// This happens when an optimistic concurrency check fails
+		/// Simulates a scenario that will throw a <seealso cref="DbUpdateConcurrencyException"/>.
+		/// This happens when an optimistic concurrency check fails.
 		/// </summary>
 		public void CreateConcurrentUpdateConflict()
 		{

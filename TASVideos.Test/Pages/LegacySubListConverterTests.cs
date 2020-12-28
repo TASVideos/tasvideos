@@ -20,7 +20,6 @@ namespace TASVideos.Test.Pages
 			Assert.IsNull(actual);
 		}
 
-
 		[TestMethod]
 		[DataRow("Acc", new[] { Accepted })]
 		[DataRow("acc", new[] { Accepted })]

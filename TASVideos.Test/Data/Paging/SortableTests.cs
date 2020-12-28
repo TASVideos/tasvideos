@@ -14,6 +14,7 @@ namespace TASVideos.Test.Data.Paging
 		public void SortableIsSortingParam_NullSafe()
 		{
 			var sortable = (ISortable?)null;
+
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = sortable.IsSortingParam("Param");
 			Assert.IsFalse(actual);
@@ -46,6 +47,7 @@ namespace TASVideos.Test.Data.Paging
 		public void SortableIsDescending_NullSafe()
 		{
 			var sortable = (ISortable?)null;
+
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = sortable.IsDescending("Param");
 			Assert.IsFalse(actual);
@@ -78,6 +80,7 @@ namespace TASVideos.Test.Data.Paging
 		public void Sortable_IsValidSort_NullSafe()
 		{
 			var sortable = (ISortable?)null;
+
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = sortable.IsValidSort(typeof(string));
 			Assert.IsTrue(actual);
@@ -117,6 +120,7 @@ namespace TASVideos.Test.Data.Paging
 		private class TestResponse
 		{
 			[Sortable]
+
 			// ReSharper disable once UnusedMember.Global
 			// ReSharper disable once UnusedMember.Local
 			public string Foo { get; set; } = "";
@@ -126,6 +130,7 @@ namespace TASVideos.Test.Data.Paging
 			public int Bar { get; set; }
 
 			[Sortable]
+
 			// ReSharper disable once UnusedMember.Global
 			// ReSharper disable once UnusedMember.Local
 			public bool Baz { get; set; }

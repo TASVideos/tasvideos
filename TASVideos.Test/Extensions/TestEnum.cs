@@ -10,7 +10,7 @@ namespace TASVideos.Test.Extensions
 
 		[Display(Name = "The One", Description = "01")]
 		One,
-		
+
 		Two
 	}
 }

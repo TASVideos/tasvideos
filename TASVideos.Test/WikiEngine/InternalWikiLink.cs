@@ -77,7 +77,7 @@ namespace TASVideos.Test.WikiEngine
 		{
 			string link1 = "Link1";
 			string link2 = "Link2";
-			
+
 			var actual = Util.GetReferrals($"[{link1}] [{link2}]");
 
 			Assert.IsNotNull(actual);

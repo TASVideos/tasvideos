@@ -12,6 +12,7 @@ namespace TASVideos.Test.Data.Paging
 		public void Pageable_Offset_NullSafe()
 		{
 			var pageable = (IPageable?)null;
+
 			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = pageable.Offset();
 			Assert.AreEqual(0, actual);
