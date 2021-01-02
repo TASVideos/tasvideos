@@ -35,8 +35,7 @@ namespace TASVideos.ViewComponents
 				MarkNewbies = newbieFlag == "show",
 				ShowTiers = ParamHelper.HasParam(pp, "showtiers"),
 				Publications = await _db.Publications
-					.Where(p => p.CreateTimeStamp.Year < before.Value)
-					.Where(p => p.CreateTimeStamp.Year >= after.Value)
+					.ForYearRange(before.Value, after.Value)
 					.Select(p => new MoviesByAuthorModel.PublicationEntry
 					{
 						Id = p.Id,

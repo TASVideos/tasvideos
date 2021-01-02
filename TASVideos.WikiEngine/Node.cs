@@ -435,7 +435,8 @@ namespace TASVideos.WikiEngine.AST
 			["displaymovie"] = "DisplayMovies",
 			["moviesbyplayer"] = "MoviesByAuthor",
 			["feedlog"] = "FeedLog",
-			["timesincedate"] = "TimeSinceDate"
+			["timesincedate"] = "TimeSinceDate",
+			["platformtaserlists"] = "PlatformAuthorLists"
 		};
 		public NodeType Type => NodeType.Module; 
 		public string Text { get; }
