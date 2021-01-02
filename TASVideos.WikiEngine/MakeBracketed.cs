@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,12 +8,12 @@ namespace TASVideos.WikiEngine
 {
 	public static partial class Builtins
 	{
-		private static readonly Regex Footnote = new(@"^(\d+)$");
-		private static readonly Regex FootnoteLink = new(@"^#(\d+)$");
-		private static readonly Regex RealModule = new("^module:(.*)$");
+		private static readonly Regex Footnote = new (@"^(\d+)$");
+		private static readonly Regex FootnoteLink = new (@"^#(\d+)$");
+		private static readonly Regex RealModule = new ("^module:(.*)$");
 
 		/// <summary>
-		/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:]
+		/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:].
 		/// </summary>
 		public static IEnumerable<INode> MakeBracketed(int charStart, int charEnd, string text)
 		{
@@ -21,12 +21,13 @@ namespace TASVideos.WikiEngine
 			{
 				throw new InvalidOperationException("Internal parser error!  `if:` should not come to MakeBracketed");
 			}
-			
+
 			switch (text)
 			{
 				// literal | escape
 				case "|":
 					return new[] { new Text(charStart, "|") { CharEnd = charEnd } };
+
 				// literal : escape (for inside dd/dt)
 				case ":":
 					return new[] { new Text(charStart, ":") { CharEnd = charEnd } };
@@ -38,11 +39,19 @@ namespace TASVideos.WikiEngine
 
 			Match match;
 			if ((match = Footnote.Match(text)).Success)
+			{
 				return MakeFootnote(charStart, charEnd, match.Groups[1].Value);
+			}
+
 			if ((match = FootnoteLink.Match(text)).Success)
+			{
 				return MakeFootnoteLink(charStart, charEnd, match.Groups[1].Value);
+			}
+
 			if ((match = RealModule.Match(text)).Success)
+			{
 				return MakeModuleInternal(charStart, charEnd, match.Groups[1].Value);
+			}
 
 			return MakeLinkOrImage(charStart, charEnd, text);
 		}
@@ -77,7 +86,7 @@ namespace TASVideos.WikiEngine
 				new Element(charStart, "sup", new INode[]
 				{
 					new Text(charStart, "[") { CharEnd = charStart },
-					new Element(charStart, "a", new[] { Attr("href", "#" + n) }, new []
+					new Element(charStart, "a", new[] { Attr("href", "#" + n) }, new[]
 					{
 						new Text(charStart, n) { CharEnd = charEnd }
 					}) { CharEnd = charEnd },
@@ -91,7 +100,7 @@ namespace TASVideos.WikiEngine
 
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
-		private static readonly Regex ImplicitWikiLink = new(@"^[A-Za-z0-9._/#\- ]+(\|.+)?$");
+		private static readonly Regex ImplicitWikiLink = new (@"^[A-Za-z0-9._/#\- ]+(\|.+)?$");
 		private static bool IsLink(string text)
 		{
 			return LinkPrefixes.Any(text.StartsWith);
@@ -156,15 +165,22 @@ namespace TASVideos.WikiEngine
 				{
 					s = s.Replace(" ", "");
 					if (s.Length > 0)
+					{
 						s = char.ToUpperInvariant(s[0]) + s[1..];
+					}
 				}
+
 				// TODO: What should be done if a username actually ends in .html?
 				if (i == ss.Length - 1 && s.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+				{
 					s = s.Substring(0, s.Length - 5);
+				}
 
 				// Ditto TODO
 				if (i == ss.Length - 1 && s.EndsWith(".cgi", StringComparison.OrdinalIgnoreCase))
+				{
 					s = s.Substring(0, s.Length - 4);
+				}
 
 				ss[i] = s;
 			}

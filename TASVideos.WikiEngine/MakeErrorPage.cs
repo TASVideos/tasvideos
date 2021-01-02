@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine
@@ -6,11 +6,11 @@ namespace TASVideos.WikiEngine
 	public static partial class Builtins
 	{
 		/// <summary>
-		/// Make an error page from wiki content
+		/// Make an error page from wiki content.
 		/// </summary>
-		/// <param name="content">The full unparsed document</param>
-		/// <param name="e">The syntax exception that came from parsing</param>
-		/// <returns>Human-readable document showing the markup and the error</returns>
+		/// <param name="content">The full unparsed document.</param>
+		/// <param name="e">The syntax exception that came from parsing.</param>
+		/// <returns>Human-readable document showing the markup and the error.</returns>
 		public static List<INode> MakeErrorPage(string content, NewParser.SyntaxException e)
 		{
 			var ret = new List<INode>();
@@ -20,13 +20,13 @@ namespace TASVideos.WikiEngine
 
 			var elt = new Element(0, "pre")
 			{
-				Attributes = {["class"] = "error-code"}
+				Attributes = { ["class"] = "error-code" }
 			};
 			var i = e.TextLocation;
 			elt.Children.Add(new Text(0, content.Substring(0, i)));
-			var marker = new Element(i, "span", new[] { new Element(i, "span", new[] {new Text(i, e.Message) })})
+			var marker = new Element(i, "span", new[] { new Element(i, "span", new[] { new Text(i, e.Message) }) })
 			{
-				Attributes = {["class"] = "error-marker"}
+				Attributes = { ["class"] = "error-marker" }
 			};
 			elt.Children.Add(marker);
 			elt.Children.Add(new Text(i, content.Substring(i)));
