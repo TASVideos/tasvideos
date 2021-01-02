@@ -3,8 +3,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data;
 
-// TODO: fix project level settings
-// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Data.Paging
 {
 	[TestClass]

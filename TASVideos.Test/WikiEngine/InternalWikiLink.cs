@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.WikiEngine;
 
-// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.WikiEngine
 {
 	[TestClass]

@@ -3,8 +3,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data;
 
-// TODO: fix project level settings
-// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Data.Paging
 {
 	[TestClass]
@@ -81,7 +79,6 @@ namespace TASVideos.Test.Data.Paging
 		{
 			var sortable = (ISortable?)null;
 
-			// ReSharper disable once ExpressionIsAlwaysNull
 			var actual = sortable.IsValidSort(typeof(string));
 			Assert.IsTrue(actual);
 		}
