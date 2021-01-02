@@ -22,11 +22,11 @@ namespace TASVideos.Pages
 		}
 
 		/// <summary>
-		/// Converts string lists such as [1S, 2S, 3S] to [1, 2, 3]
+		/// Converts string lists such as [1S, 2S, 3S] to [1, 2, 3].
 		/// </summary>
-		/// <param name="source">The list to search</param>
-		/// <param name="suffix">The suffix (case in-sensitive) to parse</param>
-		/// <returns>A list of ints that were able to be parsed from the list</returns>
+		/// <param name="source">The list to search.</param>
+		/// <param name="suffix">The suffix (case in-sensitive) to parse.</param>
+		/// <returns>A list of ints that were able to be parsed from the list.</returns>
 		public static ICollection<int> ToIdList(this IEnumerable<string> source, char suffix)
 		{
 			return source
@@ -37,11 +37,11 @@ namespace TASVideos.Pages
 		}
 
 		/// <summary>
-		/// Converts string lists such as [Group1, Group2] to [1, 2]
+		/// Converts string lists such as [Group1, Group2] to [1, 2].
 		/// </summary>
-		/// <param name="source">The list to search</param>
-		/// <param name="prefix">The suffix (case in-sensitive) to parse</param>
-		/// <returns>A list of ints that were able to be parsed from the list</returns>
+		/// <param name="source">The list to search.</param>
+		/// <param name="prefix">The suffix (case in-sensitive) to parse.</param>
+		/// <returns>A list of ints that were able to be parsed from the list.</returns>
 		public static ICollection<int> ToIdListPrefix(this IEnumerable<string> source, string prefix)
 		{
 			return source
