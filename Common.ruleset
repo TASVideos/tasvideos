@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="BizHawk Rules" Description="Applies to all projects in the solution -- or, it will eventually." ToolsVersion="16.0">
+<RuleSet Name="TASVideos Rules" Description="Applies to all projects in the solution" ToolsVersion="16.0">
   <Rules AnalyzerId="Menees.Analyzers" RuleNamespace="Menees.Analyzers">
     <Rule Id="MEN002" Action="Hidden" />
     <Rule Id="MEN003" Action="Hidden" />
