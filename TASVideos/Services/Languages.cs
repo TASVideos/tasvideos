@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TASVideos.Extensions;
 
 namespace TASVideos.Services
 {
@@ -35,13 +35,13 @@ namespace TASVideos.Services
 			var languages = new List<Language>();
 
 			var rawEntries = languagesMarkup
-				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty(",")
 				.Where(s => !string.IsNullOrWhiteSpace(s));
 
 			foreach (var l in rawEntries)
 			{
 				var split = l
-						.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries)
+						.SplitWithEmpty(":")
 						.Where(s => !string.IsNullOrWhiteSpace(s))
 						.Select(s => s.Trim())
 						.ToList();

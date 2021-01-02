@@ -69,7 +69,7 @@ namespace TASVideos.Extensions
 			}
 
 			var strings = str
-				.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty("/")
 				.Select(s => s.SplitCamelCaseInternal());
 
 			return string.Join(" / ", strings);
@@ -83,7 +83,7 @@ namespace TASVideos.Extensions
 			return string.IsNullOrWhiteSpace(param)
 				? Enumerable.Empty<string>()
 				: param
-					.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+					.SplitWithEmpty(",")
 					.Where(p => !string.IsNullOrWhiteSpace(p))
 					.Select(p => p.Trim());
 		}
@@ -110,6 +110,11 @@ namespace TASVideos.Extensions
 			}
 
 			return ids;
+		}
+
+		public static string[] SplitWithEmpty(this string str, string separator)
+		{
+			return str.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		private static string SplitCamelCaseInternal(this string? str)

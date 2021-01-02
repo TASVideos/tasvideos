@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using FastMember;
 using Microsoft.Data.SqlClient;
 using SharpCompress.Compressors.Xz;
+using TASVideos.Extensions;
 
 namespace TASVideos.Legacy.Imports
 {
@@ -110,9 +111,9 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			var names = authors
-				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-				.SelectMany(s => s.Split(new[] { "&" }, StringSplitOptions.RemoveEmptyEntries))
-				.SelectMany(s => s.Split(new[] { " and " }, StringSplitOptions.RemoveEmptyEntries))
+				.SplitWithEmpty(",")
+				.SelectMany(s => s.SplitWithEmpty("&"))
+				.SelectMany(s => s.SplitWithEmpty(" and "))
 				.Select(s => s.Trim())
 				.Where(s => !string.IsNullOrWhiteSpace(s));
 

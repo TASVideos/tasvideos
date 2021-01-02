@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Extensions;
@@ -33,9 +32,9 @@ namespace TASVideos.ViewComponents
 			}
 
 			var parameters = parameterStr
-				.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty("|")
 				.Select(s => s.Trim())
-				.Select(s => s.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault())
+				.Select(s => s.SplitWithEmpty("=").FirstOrDefault())
 				.Where(s => !string.IsNullOrWhiteSpace(s))
 				.Select(s => s!.Trim())
 				.Where(s => !string.IsNullOrWhiteSpace(s));
@@ -62,12 +61,12 @@ namespace TASVideos.ViewComponents
 			}
 
 			var args = parameterStr
-				.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty("|")
 				.Select(s => s.Trim());
 			foreach (var arg in args)
 			{
 				var pair = arg
-					.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries)
+					.SplitWithEmpty("=")
 					.Select(s => s.Trim())
 					.ToList();
 				if (pair.Count > 1 && string.Equals(pair[0], paramName, StringComparison.OrdinalIgnoreCase))

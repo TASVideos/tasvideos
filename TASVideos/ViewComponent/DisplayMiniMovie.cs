@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,7 +44,7 @@ namespace TASVideos.ViewComponents
 
 			if (!string.IsNullOrWhiteSpace(flags))
 			{
-				var flagsArr = flags.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+				var flagsArr = flags.SplitWithEmpty(",");
 				query = query.Where(p => p.PublicationFlags.Any(pf => flagsArr.Contains(pf.Flag!.Token)));
 			}
 

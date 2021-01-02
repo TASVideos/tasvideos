@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TASVideos.Extensions;
 
 namespace TASVideos.ViewComponents
 {
@@ -12,7 +12,7 @@ namespace TASVideos.ViewComponents
 			// Whether we have those menus or not
 			if (pp.StartsWith("tab=b"))
 			{
-				var val = pp.Split(new[] { "tab=b" }, StringSplitOptions.RemoveEmptyEntries);
+				var val = pp.SplitWithEmpty("tab=b");
 
 				if (val.Length > 0 && !string.IsNullOrWhiteSpace(val[0]))
 				{

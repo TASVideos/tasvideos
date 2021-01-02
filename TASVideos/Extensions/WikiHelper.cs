@@ -98,7 +98,7 @@ namespace TASVideos.Extensions
 				.Trim('/')
 				.Replace("GameResources", "");
 
-			return path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Length == 1;
+			return path.SplitWithEmpty("/").Length == 1;
 		}
 
 		public static string SystemGameResourcePath(this string path)
@@ -111,7 +111,7 @@ namespace TASVideos.Extensions
 			return path
 				.Trim('/')
 				.Replace("GameResources", "")
-				.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty("/")
 				.First();
 		}
 
@@ -278,7 +278,7 @@ namespace TASVideos.Extensions
 				return false;
 			}
 
-			var paths = pageName.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+			var paths = pageName.SplitWithEmpty("/");
 
 			// Must begin with a capital letter, with one exception, if the path is a year. But only years between 2000-2099 for now. This is to support awards pages: Awards/2007, Awards/2008 etc
 			return paths.All(p => char.IsUpper(p[0]) || (p.Length == 4 && p.StartsWith("20")));

@@ -6,6 +6,7 @@ using System.Linq;
 
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
+using TASVideos.Extensions;
 
 namespace TASVideos.Data.Entity
 {
@@ -103,7 +104,7 @@ namespace TASVideos.Data.Entity
 
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
 			{
-				authorList = authorList.Concat(AdditionalAuthors.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+				authorList = authorList.Concat(AdditionalAuthors.SplitWithEmpty(","));
 			}
 
 			if (System == null)
