@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using TASVideos.Extensions;
 
 namespace TASVideos.Data
 {
@@ -35,7 +36,7 @@ namespace TASVideos.Data
 			}
 
 			return sortable.Sort
-				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty(",")
 				.Any(str => string.Equals(
 					str.Replace("-", "").Replace("+", ""),
 					param,
@@ -59,7 +60,7 @@ namespace TASVideos.Data
 			}
 
 			return sortable.Sort
-				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty(",")
 				.Any(str => string.Equals(
 						str.Replace("-", "").Replace("+", ""),
 						param,
@@ -85,7 +86,7 @@ namespace TASVideos.Data
 			}
 
 			var requestedSorts = request.Sort
-				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty(",")
 				.Select(s => s.Replace("-", ""))
 				.Select(s => s.Replace("+", ""))
 				.Select(s => s.ToLower());

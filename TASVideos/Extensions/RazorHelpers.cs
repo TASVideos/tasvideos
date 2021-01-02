@@ -37,7 +37,7 @@ namespace TASVideos.Extensions
 		public static string PageGroup(this ViewContext viewContext)
 		{
 			return viewContext.ActionDescriptor.DisplayName
-				?.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+				?.SplitWithEmpty("/")
 				.FirstOrDefault() ?? "";
 		}
 

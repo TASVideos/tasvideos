@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.Data.Helpers
@@ -141,7 +142,7 @@ namespace TASVideos.Data.Helpers
 		{
 			if (IsSubmissionLink(link) is null)
 			{
-				return int.Parse(link.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last().Replace("S", ""));
+				return int.Parse(link.SplitWithEmpty("/").Last().Replace("S", ""));
 			}
 
 			return 0;

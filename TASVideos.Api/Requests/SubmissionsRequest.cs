@@ -46,11 +46,7 @@ namespace TASVideos.Api.Requests
 
 		IEnumerable<SubmissionStatus> ISubmissionFilter.StatusFilter => !string.IsNullOrWhiteSpace(Statuses)
 			? Statuses
-				.Split(
-					new[]
-					{
-						","
-					}, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty(",")
 				.Where(s => Enum.TryParse(s, out SubmissionStatus _))
 				.Select(s =>
 					{

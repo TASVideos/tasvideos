@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using TASVideos.Extensions;
 
 namespace TASVideos.Data
 {
@@ -48,7 +49,7 @@ namespace TASVideos.Data
 				return ToExpando(obj);
 			}
 
-			var columns = fields.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+			var columns = fields.SplitWithEmpty(",");
 			if (columns.All(string.IsNullOrWhiteSpace))
 			{
 				return ToExpando(obj);

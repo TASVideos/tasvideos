@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Extensions;
 
 namespace TASVideos.Data
 {
@@ -67,7 +67,7 @@ namespace TASVideos.Data
 				return source;
 			}
 
-			var columns = request.Sort.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+			var columns = request.Sort.SplitWithEmpty(",");
 
 			bool thenBy = false;
 			foreach (var column in columns)

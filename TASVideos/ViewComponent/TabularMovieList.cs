@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 
 namespace TASVideos.ViewComponents
 {
@@ -32,7 +32,7 @@ namespace TASVideos.ViewComponents
 			var tiersStr = ParamHelper.GetValueFor(pp, "tier");
 			if (!string.IsNullOrWhiteSpace(tiersStr))
 			{
-				search.Tiers = tiersStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+				search.Tiers = tiersStr.SplitWithEmpty(",");
 			}
 
 			ViewData["flink"] = ParamHelper.GetValueFor(pp, "flink");

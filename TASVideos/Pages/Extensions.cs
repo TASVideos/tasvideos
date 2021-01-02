@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using TASVideos.Extensions;
 
 namespace TASVideos.Pages
 {
@@ -14,7 +14,7 @@ namespace TASVideos.Pages
 			}
 
 			return routeQuery
-				.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty("-")
 				.Select(s => s.Trim(' '))
 				.Where(s => !string.IsNullOrWhiteSpace(s))
 				.Select(s => s.ToLower())
