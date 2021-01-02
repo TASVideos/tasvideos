@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,17 +26,17 @@ namespace TASVideos.WikiEngine.AST
 		void WriteHtmlDynamic(TextWriter w, IWriterHelper h);
 
 		/// <summary>
-		/// Get the combined text content of this Node.  May not return useful values for foreign components (Modules)
+		/// Get the combined text content of this Node.  May not return useful values for foreign components (Modules).
 		/// </summary>
 		string InnerText(IWriterHelper h);
 
 		/// <summary>
-		/// debugging output of all of the data in this node
+		/// Debugging output of all of the data in this node.
 		/// </summary>
 		void DumpContentDescriptive(TextWriter w, string padding);
 
 		/// <summary>
-		/// Clones this node for use in a TOC.  Some things like anchors are removed
+		/// Clones this node for use in a TOC.  Some things like anchors are removed.
 		/// </summary>
 		IEnumerable<INode> CloneForToc();
 	}
@@ -50,7 +50,7 @@ namespace TASVideos.WikiEngine.AST
 	}
 
 	/// <summary>
-	/// A fake IWriterHelper which can give "good enough" results if a static context is needed
+	/// A fake IWriterHelper which can give "good enough" results if a static context is needed.
 	/// </summary>
 	public class NullWriterHelper : IWriterHelper
 	{
@@ -77,7 +77,7 @@ namespace TASVideos.WikiEngine.AST
 		{
 		}
 
-		public static readonly NullWriterHelper Instance = new();
+		public static readonly NullWriterHelper Instance = new ();
 	}
 
 	public interface INodeWithChildren : INode
@@ -113,7 +113,7 @@ namespace TASVideos.WikiEngine.AST
 						w.Write(c);
 						break;
 				}
-			}			
+			}
 		}
 
 		public INode Clone()
@@ -163,18 +163,18 @@ namespace TASVideos.WikiEngine.AST
 			return new[] { Clone() };
 		}
 	}
-	
+
 	public class Element : INodeWithChildren
 	{
-		private static readonly Regex AllowedTagNames = new("^[a-z0-9]+$");
-		private static readonly Regex AllowedAttributeNames = new("^[a-z\\-]+$");
-		private static readonly HashSet<string> VoidTags = new()
+		private static readonly Regex AllowedTagNames = new ("^[a-z0-9]+$");
+		private static readonly Regex AllowedAttributeNames = new ("^[a-z\\-]+$");
+		private static readonly HashSet<string> VoidTags = new ()
 		{
 			"area", "base", "br", "col", "embed", "hr", "img", "input",
 			"keygen", "link", "meta", "param", "source", "track", "wbr"
 		};
 		public NodeType Type => NodeType.Element;
-		public List<INode> Children { get; private set; } = new();
+		public List<INode> Children { get; private set; } = new ();
 		public IDictionary<string, string> Attributes { get; private set; } = new Dictionary<string, string>();
 		public string Tag { get; }
 		public int CharStart { get; }
@@ -206,7 +206,9 @@ namespace TASVideos.WikiEngine.AST
 			: this(charStart, tag, children)
 		{
 			foreach (var kvp in attributes)
+			{
 				Attributes.Add(kvp.Key, kvp.Value);
+			}
 		}
 
 		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
@@ -268,11 +270,14 @@ namespace TASVideos.WikiEngine.AST
 			{
 				w.Write('>');
 				foreach (var c in Children)
+				{
 					c.WriteHtmlDynamic(w, h);
+				}
+
 				w.Write("</");
 				w.Write(Tag);
 				w.Write('>');
-			}			
+			}
 		}
 
 		public INode Clone()
@@ -304,14 +309,17 @@ namespace TASVideos.WikiEngine.AST
 
 			w.WriteLine();
 			foreach (var child in Children)
+			{
 				child.DumpContentDescriptive(w, padding + '\t');
+			}
+
 			w.Write(padding);
 			w.Write(']');
 			w.Write(Tag);
 			w.WriteLine();
 		}
 
-		private static readonly HashSet<string> TocTagBlacklist = new()
+		private static readonly HashSet<string> TocTagBlacklist = new ()
 		{
 			"a", "br"
 		};
@@ -334,7 +342,7 @@ namespace TASVideos.WikiEngine.AST
 	public class IfModule : INodeWithChildren
 	{
 		public NodeType Type => NodeType.IfModule;
-		public List<INode> Children { get; private set; } = new();
+		public List<INode> Children { get; private set; } = new ();
 		public string Condition { get; }
 		public int CharStart { get; }
 		public int CharEnd { get; set; }
@@ -355,7 +363,9 @@ namespace TASVideos.WikiEngine.AST
 			if (h.CheckCondition(Condition))
 			{
 				foreach (var c in Children)
+				{
 					c.WriteHtmlDynamic(w, h);
+				}
 			}
 		}
 
@@ -398,7 +408,7 @@ namespace TASVideos.WikiEngine.AST
 
 	public class Module : INode
 	{
-		private static readonly Dictionary<string, string> ModuleNameMaps = new()
+		private static readonly Dictionary<string, string> ModuleNameMaps = new ()
 		{
 			["__wikilink"] = "WikiLink",
 			["awards"] = "Awards",
@@ -438,7 +448,7 @@ namespace TASVideos.WikiEngine.AST
 			["timesincedate"] = "TimeSinceDate",
 			["platformtaserlists"] = "PlatformAuthorLists"
 		};
-		public NodeType Type => NodeType.Module; 
+		public NodeType Type => NodeType.Module;
 		public string Text { get; }
 		public int CharStart { get; }
 		public int CharEnd { get; set; }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -18,10 +18,11 @@ namespace TASVideos.WikiEngine
 			}
 			catch (NewParser.SyntaxException e)
 			{
-				return JsonConvert.SerializeObject(new
-				{
-					Error = e.Message
-				}, Formatting.Indented);
+				return JsonConvert.SerializeObject(
+					new
+					{
+						Error = e.Message
+					}, Formatting.Indented);
 			}
 		}
 
@@ -57,7 +58,7 @@ namespace TASVideos.WikiEngine
 		}
 
 		/// <summary>
-		/// Returns all the referrals to other site pages that exist in the given wiki markup
+		/// Returns all the referrals to other site pages that exist in the given wiki markup.
 		/// </summary>
 		public static IEnumerable<InternalLinkInfo> GetReferrals(string content)
 		{

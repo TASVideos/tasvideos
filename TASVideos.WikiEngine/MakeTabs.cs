@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TASVideos.WikiEngine.AST;
 
@@ -47,7 +47,7 @@ namespace TASVideos.WikiEngine
 
 			return new Element(tabset.CharStart, "div", new[] { Attr("class", parentDivClass) }, new[]
 			{
-				new Element(tabset.CharStart, "div", new [] { Attr("class", navDivClass) } , new[]
+				new Element(tabset.CharStart, "div", new[] { Attr("class", navDivClass) }, new[]
 				{
 					new Element(tabset.CharStart, "ul", new[] { Attr("class", navClass), Attr("role", "tablist") }, nav)
 				}),
