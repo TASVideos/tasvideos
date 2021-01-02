@@ -37,6 +37,7 @@ namespace TASVideos.ForumEngine
 									break;
 							}
 						}
+
 						break;
 					default:
 						w.Write(ss);
@@ -99,27 +100,32 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 						DoTemplate(w, YouTube, width, height, pp.QueryParams["v"]);
 						return;
 					}
+
 					if (pp.Path.StartsWith("/embed/") && pp.Path.Length > 7) // if they paste an embed link
 					{
 						DoTemplate(w, YouTube, width, height, pp.Path.Substring(7));
 						return;
 					}
+
 					if (pp.Path == "/view_play_list" && pp.QueryParams.ContainsKey("p")) // http://www.youtube.com/view_play_list?p=76E50B82FA870C1D
 					{
 						DoTemplate(w, YouTubePlaylist, width, height, pp.QueryParams["p"]);
 					}
+
 					break;
 				case "youtu.be":
 					if (pp.Path.Length > 1) // https://youtu.be/yLORZbc-PZw
 					{
 						DoTemplate(w, YouTube, width, height, pp.Path.Substring(1));
 					}
+
 					break;
 				case "vimeo.com":
 					if (pp.Path.Length > 1) // http://vimeo.com/49142543
 					{
 						DoTemplate(w, Vimeo, width, height, pp.Path.Substring(1));
 					}
+
 					break;
 				case "dailymotion.com":
 				case "www.dailymotion.com": // http://www.dailymotion.com/video/xf4u2m_snes-breath-of-fire-wip-by-janus_videogames
@@ -127,6 +133,7 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 					{
 						DoTemplate(w, DailyMotion, width, height, pp.Path.Substring(7).Split('_')[0]);
 					}
+
 					break;
 				case "www.nicovideo.jp": // https://www.nicovideo.jp/watch/sm35061034
 					if (pp.Path.StartsWith("/watch/") && pp.Path.Length > 7)
@@ -136,6 +143,7 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 						DoTemplate(sw, NicoVideoDocument, width, height, vid);
 						DoTemplate(w, NicoVideo, width, height, Convert.ToBase64String(Encoding.UTF8.GetBytes(sw.ToString())));
 					}
+
 					break;
 			}
 		}
