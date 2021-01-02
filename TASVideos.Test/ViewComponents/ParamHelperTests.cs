@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Test.ViewComponents
@@ -122,6 +124,33 @@ namespace TASVideos.Test.ViewComponents
 		{
 			var actual = ParamHelper.GetYear(parameterStr, param);
 			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
+		[DataRow(null, null, new int[0])]
+		[DataRow("", null, new int[0])]
+		[DataRow("\r \n \t", null, new int[0])]
+		[DataRow(null, "", new int[0])]
+		[DataRow(null, "\r \n \t", new int[0])]
+		[DataRow("csv", "csv", new int[0])]
+		[DataRow("csv=", "csv", new int[0])]
+		[DataRow("csv=notnumber", "csv", new int[0])]
+		[DataRow("csv=1.1", "csv", new int[0])]
+		[DataRow("csv=0", "csv", new[] { 0 })]
+		[DataRow("csv=-1", "csv", new[] { -1 })]
+		[DataRow("csv=1,2", "csv", new[] { 1, 2 })]
+		[DataRow("csv=1, 2", "csv", new[] { 1, 2 })]
+		[DataRow("csv=1,2,notnumber", "csv", new[] { 1, 2 })]
+		public void GetInts(string parameterStr, string param, int[] expected)
+		{
+			var actual = ParamHelper.GetInts(parameterStr, param);
+
+			Assert.IsNotNull(actual);
+			var actualList = actual.ToList();
+			foreach (var expectedVal in expected)
+			{
+				Assert.IsTrue(actualList.Contains(expectedVal));
+			}
 		}
 	}
 }

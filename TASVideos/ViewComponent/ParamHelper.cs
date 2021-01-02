@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using TASVideos.Extensions;
 
 namespace TASVideos.ViewComponents
 {
@@ -149,6 +152,16 @@ namespace TASVideos.ViewComponents
 			}
 
 			return null;
+		}
+
+		public static IEnumerable<int> GetInts(string? parameterStr, string? param)
+		{
+			if (string.IsNullOrWhiteSpace(parameterStr) || string.IsNullOrWhiteSpace(param))
+			{
+				return Enumerable.Empty<int>();
+			}
+
+			return GetValueFor(parameterStr, param).CsvToInts();
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿@model TASVideos.ViewComponents.Models.MoviesByAuthorModel
-
+﻿@model PlatformAuthorListModel
 @{
 	var authors = Model.Publications.SelectMany(p => p.Authors).Distinct().ToList();
 
@@ -21,7 +20,6 @@
 			<cardheader>
 				<profile-link username="@author.Name">@author.Name</profile-link>
 				<span>(@author.Pubs.Count)</span>
-				<span condition="Model.MarkNewbies && Model.NewbieAuthors.Any(a => a == author.Name)" class="badge badge-success">New Author</span>
 			</cardheader>
 			<cardbody>
 				<ul style="list-style-type: none;">
@@ -35,6 +33,6 @@
 				</ul>
 			</cardbody>
 		</card>
-		
+
 	}
 </div>
