@@ -8,7 +8,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Services;
 
-// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Services
 {
 	[TestClass]

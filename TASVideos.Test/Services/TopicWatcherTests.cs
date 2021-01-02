@@ -11,7 +11,6 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Services;
 using TASVideos.Services.Email;
 
-// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Services
 {
 	[TestClass]

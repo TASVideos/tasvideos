@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Services;
 
-// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Services
 {
 	[TestClass]

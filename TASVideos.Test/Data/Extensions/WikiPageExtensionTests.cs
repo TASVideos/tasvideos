@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data.Entity;
 
-// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.Data.QueryableExtensions
 {
 	[TestClass]

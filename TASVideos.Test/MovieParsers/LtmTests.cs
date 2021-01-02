@@ -6,7 +6,6 @@ using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
-// ReSharper disable InconsistentNaming
 namespace TASVideos.Test.MovieParsers
 {
 	[TestClass]
