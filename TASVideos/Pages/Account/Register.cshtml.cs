@@ -20,7 +20,6 @@ using TASVideos.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Account
 {
 	[AllowAnonymous]
-	[ValidateReCaptcha]
 	public class RegisterModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
@@ -29,6 +28,7 @@ namespace TASVideos.Pages.Account
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IHttpClientFactory _httpClientFactory;
+		private readonly IReCaptchaService _reCaptchaService;
 		private readonly IConfigurationSection _reCaptchaConfig;
 
 		public RegisterModel(
@@ -38,7 +38,8 @@ namespace TASVideos.Pages.Account
 			IEmailService emailService,
 			ExternalMediaPublisher publisher,
 			IHttpClientFactory factory,
-			IConfiguration configuration)
+			IConfiguration configuration,
+			IReCaptchaService reCaptchaService)
 		{
 			_db = db;
 			_userManager = userManager;
@@ -46,6 +47,7 @@ namespace TASVideos.Pages.Account
 			_emailService = emailService;
 			_publisher = publisher;
 			_httpClientFactory = factory;
+			_reCaptchaService = reCaptchaService;
 			_reCaptchaConfig = configuration.GetSection("ReCaptcha");
 		}
 
@@ -120,7 +122,7 @@ namespace TASVideos.Pages.Account
 			}
 
 			string encodedResponse = Request.Form["g-Recaptcha-Response"];
-			bool isCaptchaValid = 
+			bool isCaptchaValid = await _reCaptchaService.Verify(encodedResponse);
 
 			if (!ModelState.IsValid)
 			{

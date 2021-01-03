@@ -1,16 +1,19 @@
-﻿@using AspNetCore.ReCaptcha
+﻿@page
+
+@using AspNetCore.ReCaptcha
+
 @addTagHelper *, AspNetCore.ReCaptcha
 
-@page
+
 @model RegisterModel
 @{
-    // ReSharper disable CoercedEqualsUsing
-    ViewData["Title"] = "Register";
+	// ReSharper disable CoercedEqualsUsing
+	ViewData["Title"] = "Register";
 }
-@section("Header")
+@section Header
 {
-    <!-- For manual implementation of Google's ReCaptcha scripts, will require embedding site's public key. -->
-    <script src="https://www.google.com/recaptcha/api.js"></script>
+<!-- For manual implementation of Google's ReCaptcha scripts, will require embedding site's public key. -->
+<script src="https://www.google.com/recaptcha/api.js"></script>
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -18,52 +21,52 @@
 <hr />
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
-    <row>
-        <column md="6">
-            <form-group>
-                <label asp-for="UserName"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </form-group>
-            <form-group>
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </form-group>
-            <form-group>
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </form-group>
-            <form-group>
-                <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </form-group>
-        </column>
-        <column md="6">
-            <form-group>
-                <label asp-for="SelectedTimeZone"></label>
-                <timezone-picker asp-for="SelectedTimeZone" class="form-control" />
-            </form-group>
-            <form-group>
-                <label asp-for="From"></label>
-                <input asp-for="From" type="text" class="form-control" />
-                <span asp-validation-for="From" class="text-danger"></span>
-            </form-group>
-            <form-group>
-                <label asp-for="COPPA"></label>
-                <input asp-for="COPPA" type="checkbox" class="form-control" />
-                <span asp-validation-for="COPPA" class="text-danger"></span>
-            </form-group>
-            <form-group>
-                <recaptcha />
-            </form-group>
-        </column>
-    </row>
-    <div class="text-center">
-        <button type="submit" class="btn btn-secondary">Register</button>
-    </div>
+	<row>
+		<column md="6">
+			<form-group>
+				<label asp-for="UserName"></label>
+				<input asp-for="UserName" class="form-control" />
+				<span asp-validation-for="UserName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Email"></label>
+				<input asp-for="Email" class="form-control" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Password"></label>
+				<input asp-for="Password" class="form-control" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="ConfirmPassword"></label>
+				<input asp-for="ConfirmPassword" class="form-control" />
+				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+			</form-group>
+		</column>
+		<column md="6">
+			<form-group>
+				<label asp-for="SelectedTimeZone"></label>
+				<timezone-picker asp-for="SelectedTimeZone" class="form-control" />
+			</form-group>
+			<form-group>
+				<label asp-for="From"></label>
+				<input asp-for="From" type="text" class="form-control" />
+				<span asp-validation-for="From" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="COPPA"></label>
+				<input asp-for="COPPA" type="checkbox" class="form-control" />
+				<span asp-validation-for="COPPA" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<recaptcha />
+			</form-group>
+		</column>
+	</row>
+	<div class="text-center">
+		<button type="submit" class="btn btn-secondary">Register</button>
+	</div>
 </form>
 <script>
 	(function () {
@@ -83,5 +86,5 @@
 	})();
 </script>
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+	<partial name="_ValidationScriptsPartial" />
 }
