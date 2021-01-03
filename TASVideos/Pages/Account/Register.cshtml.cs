@@ -1,13 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
@@ -25,19 +28,28 @@ namespace TASVideos.Pages.Account
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IHttpClientFactory _httpClientFactory;
+		private readonly IReCaptchaService _reCaptchaService;
+		private readonly IConfigurationSection _reCaptchaConfig;
 
 		public RegisterModel(
 			ApplicationDbContext db,
 			UserManager userManager,
 			SignInManager<User> signInManager,
 			IEmailService emailService,
-			ExternalMediaPublisher publisher)
+			ExternalMediaPublisher publisher,
+			IHttpClientFactory factory,
+			IConfiguration configuration,
+			IReCaptchaService reCaptchaService)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailService = emailService;
 			_publisher = publisher;
+			_httpClientFactory = factory;
+			_reCaptchaService = reCaptchaService;
+			_reCaptchaConfig = configuration.GetSection("ReCaptcha");
 		}
 
 		[FromQuery]
@@ -82,11 +94,20 @@ namespace TASVideos.Pages.Account
 		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 		public bool COPPA { get; set; }
 
+
 		public async Task<IActionResult> OnPost()
 		{
 			if (Password != ConfirmPassword)
 			{
 				ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
+			}
+
+			string encodedResponse = Request.Form["g-recaptcha-response"];
+			bool isCaptchaValid = await _reCaptchaService.Verify(encodedResponse);
+
+			if (!isCaptchaValid)
+			{
+				ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org")
 			}
 
 			if (!ModelState.IsValid)

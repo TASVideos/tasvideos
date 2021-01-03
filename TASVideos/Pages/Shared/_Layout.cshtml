@@ -16,6 +16,11 @@
 	<script src="~/lib/jquery/jquery.min.js"></script>
 	<script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js"></script>
+
+	@if (IsSectionDefined("Header"))
+    {
+		@await RenderSectionAsync("Header")
+    }
 </head>
 <body>
 	<nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
