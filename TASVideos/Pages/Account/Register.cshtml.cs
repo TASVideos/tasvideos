@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
@@ -30,6 +31,7 @@ namespace TASVideos.Pages.Account
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IReCaptchaService _reCaptchaService;
 		private readonly IConfigurationSection _reCaptchaConfig;
+		private readonly ILogger _logger;
 
 		public RegisterModel(
 			ApplicationDbContext db,
@@ -38,6 +40,7 @@ namespace TASVideos.Pages.Account
 			IEmailService emailService,
 			ExternalMediaPublisher publisher,
 			IHttpClientFactory factory,
+			ILogger logger,
 			IConfiguration configuration,
 			IReCaptchaService reCaptchaService)
 		{
@@ -47,6 +50,7 @@ namespace TASVideos.Pages.Account
 			_emailService = emailService;
 			_publisher = publisher;
 			_httpClientFactory = factory;
+			_logger = logger;
 			_reCaptchaService = reCaptchaService;
 			_reCaptchaConfig = configuration.GetSection("ReCaptcha");
 		}
@@ -123,6 +127,8 @@ namespace TASVideos.Pages.Account
 
 			string encodedResponse = Request.Form["g-recaptcha-response"];
 			bool isCaptchaValid = await _reCaptchaService.Verify(encodedResponse);
+
+			_logger.LogInformation($"EncodedResponse: {encodedResponse}{Environment.NewLine}IsCaptchaValid: {isCaptchaValid}");
 
 			if (!ModelState.IsValid)
 			{
