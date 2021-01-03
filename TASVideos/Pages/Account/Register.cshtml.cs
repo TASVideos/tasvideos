@@ -94,26 +94,6 @@ namespace TASVideos.Pages.Account
 		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 		public bool COPPA { get; set; }
 
-		// Method for if we manually send the captcha response.  Needs to check the resultant value, not just success.
-		private async Task<bool> ReCaptchaPassed(string gRecaptchaResponse)
-		{
-			bool returnValue = false;
-			HttpClient httpClient = _httpClientFactory.CreateClient("ReCaptcha");
-
-			string secretKey = _reCaptchaConfig.GetValue<string>("SecretKey");
-
-			var response = await httpClient.GetAsync($"siteverify?secret={secretKey}&response={gRecaptchaResponse}");
-
-
-			if (response.StatusCode == HttpStatusCode.OK)
-			{
-				dynamic jsonData = Newtonsoft.Json.Linq.JObject.Parse(response.Content.ReadAsStringAsync().Result);
-
-				returnValue = jsonData.success == "true";
-			}
-
-			return returnValue;
-		}
 
 		public async Task<IActionResult> OnPost()
 		{
@@ -125,7 +105,10 @@ namespace TASVideos.Pages.Account
 			string encodedResponse = Request.Form["g-recaptcha-response"];
 			bool isCaptchaValid = await _reCaptchaService.Verify(encodedResponse);
 
-			Console.WriteLine ($"CAPTCHA INFORMATION:  EncodedResponse: {encodedResponse}{Environment.NewLine}IsCaptchaValid: {isCaptchaValid}");
+			if (!isCaptchaValid)
+			{
+				ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org")
+			}
 
 			if (!ModelState.IsValid)
 			{
