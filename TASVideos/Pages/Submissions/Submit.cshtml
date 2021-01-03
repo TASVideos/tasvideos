@@ -70,6 +70,12 @@
 				<input asp-for="Create.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.EncodeEmbedLink)" />
 				<span asp-validation-for="Create.EncodeEmbedLink" class="text-danger"></span>
 			</form-group>
+			<form-group>
+				<label asp-for="Create.AdditionalAuthors" class="form-control-label"></label>
+				<input asp-for="Create.AdditionalAuthors" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Create.AdditionalAuthors)</div>
+				<span asp-validation-for="Create.AdditionalAuthors" class="text-danger"></span>
+			</form-group>
 		</column>
 	</row>
 	<fullrow>
