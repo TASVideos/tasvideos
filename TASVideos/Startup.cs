@@ -1,4 +1,5 @@
 ﻿using System;
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -62,6 +63,15 @@ namespace TASVideos
 				{
 					client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
 				});
+
+			services
+				.AddHttpClient("ReCaptcha", client =>
+				{
+					client.BaseAddress = new Uri("https://www.google.com/recaptcha/api/");
+				});
+
+			// ReCaptcha
+			services.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
