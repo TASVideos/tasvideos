@@ -1,13 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Configuration;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
@@ -18,6 +20,7 @@ using TASVideos.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Account
 {
 	[AllowAnonymous]
+	[ValidateReCaptcha]
 	public class RegisterModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
@@ -25,19 +28,25 @@ namespace TASVideos.Pages.Account
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IHttpClientFactory _httpClientFactory;
+		private readonly IConfigurationSection _reCaptchaConfig;
 
 		public RegisterModel(
 			ApplicationDbContext db,
 			UserManager userManager,
 			SignInManager<User> signInManager,
 			IEmailService emailService,
-			ExternalMediaPublisher publisher)
+			ExternalMediaPublisher publisher,
+			IHttpClientFactory factory,
+			IConfiguration configuration)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailService = emailService;
 			_publisher = publisher;
+			_httpClientFactory = factory;
+			_reCaptchaConfig = configuration.GetSection("ReCaptcha");
 		}
 
 		[FromQuery]
@@ -82,12 +91,36 @@ namespace TASVideos.Pages.Account
 		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 		public bool COPPA { get; set; }
 
+		// Method for if we manually send the captcha response.  Needs to check the resultant value, not just success.
+		private async Task<bool> ReCaptchaPassed(string gRecaptchaResponse)
+		{
+			bool returnValue = false;
+			HttpClient httpClient = _httpClientFactory.CreateClient("ReCaptcha");
+
+			string secretKey = _reCaptchaConfig.GetValue<string>("SecretKey");
+
+			var response = await httpClient.GetAsync($"siteverify?secret={secretKey}&response={gRecaptchaResponse}");
+
+
+			if (response.StatusCode == HttpStatusCode.OK)
+			{
+				dynamic jsonData = Newtonsoft.Json.Linq.JObject.Parse(response.Content.ReadAsStringAsync().Result);
+
+				returnValue = jsonData.success == "true";
+			}
+
+			return returnValue;
+		}
+
 		public async Task<IActionResult> OnPost()
 		{
 			if (Password != ConfirmPassword)
 			{
 				ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
 			}
+
+			string encodedResponse = Request.Form["g-Recaptcha-Response"];
+			bool isCaptchaValid = 
 
 			if (!ModelState.IsValid)
 			{
