@@ -48,43 +48,44 @@ namespace TASVideos.Pages.Submissions
 		public async Task<IActionResult> OnGet()
 		{
 			Submission = await _db.Submissions
-					.Where(s => s.Id == Id)
-					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
-					{
-						StartType = (MovieStartType?)s.MovieStartType,
-						SystemDisplayName = s.System!.DisplayName,
-						SystemCode = s.System.Code,
-						GameName = s.GameName,
-						GameVersion = s.GameVersion,
-						RomName = s.RomName,
-						Branch = s.Branch,
-						Emulator = s.EmulatorVersion,
-						FrameCount = s.Frames,
-						FrameRate = s.SystemFrameRate!.FrameRate,
-						RerecordCount = s.RerecordCount,
-						Submitted = s.CreateTimeStamp,
-						Submitter = s.Submitter!.UserName,
-						LastUpdateTimeStamp = s.WikiContent!.LastUpdateTimeStamp,
-						LastUpdateUser = s.WikiContent.LastUpdateUserName,
-						Status = s.Status,
-						EncodeEmbedLink = s.EncodeEmbedLink,
-						Judge = s.Judge != null ? s.Judge.UserName : "",
-						Title = s.Title,
-						TierName = s.IntendedTier != null ? s.IntendedTier.Name : "",
-						Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-						SystemId = s.SystemId,
-						SystemFrameRateId = s.SystemFrameRateId,
-						GameId = s.GameId,
-						RomId = s.RomId,
-						RejectionReasonDisplay = s.RejectionReasonId.HasValue
-							? s.RejectionReason!.DisplayName
-							: null,
-						Authors = s.SubmissionAuthors
-							.Where(sa => sa.SubmissionId == Id)
-							.Select(sa => sa.Author!.UserName)
-							.ToList()
-					})
-					.SingleOrDefaultAsync();
+				.Where(s => s.Id == Id)
+				.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
+				{
+					StartType = (MovieStartType?)s.MovieStartType,
+					SystemDisplayName = s.System!.DisplayName,
+					SystemCode = s.System.Code,
+					GameName = s.GameName,
+					GameVersion = s.GameVersion,
+					RomName = s.RomName,
+					Branch = s.Branch,
+					Emulator = s.EmulatorVersion,
+					FrameCount = s.Frames,
+					FrameRate = s.SystemFrameRate!.FrameRate,
+					RerecordCount = s.RerecordCount,
+					Submitted = s.CreateTimeStamp,
+					Submitter = s.Submitter!.UserName,
+					LastUpdateTimeStamp = s.WikiContent!.LastUpdateTimeStamp,
+					LastUpdateUser = s.WikiContent.LastUpdateUserName,
+					Status = s.Status,
+					EncodeEmbedLink = s.EncodeEmbedLink,
+					Judge = s.Judge != null ? s.Judge.UserName : "",
+					Title = s.Title,
+					TierName = s.IntendedTier != null ? s.IntendedTier.Name : "",
+					Publisher = s.Publisher != null ? s.Publisher.UserName : "",
+					SystemId = s.SystemId,
+					SystemFrameRateId = s.SystemFrameRateId,
+					GameId = s.GameId,
+					RomId = s.RomId,
+					RejectionReasonDisplay = s.RejectionReasonId.HasValue
+						? s.RejectionReason!.DisplayName
+						: null,
+					Authors = s.SubmissionAuthors
+						.Where(sa => sa.SubmissionId == Id)
+						.Select(sa => sa.Author!.UserName)
+						.ToList(),
+					AdditionalAuthors = s.AdditionalAuthors
+				})
+				.SingleOrDefaultAsync();
 
 			if (Submission == null)
 			{

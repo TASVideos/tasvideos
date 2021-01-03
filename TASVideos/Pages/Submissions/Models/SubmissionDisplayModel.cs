@@ -78,6 +78,8 @@ namespace TASVideos.Pages.Submissions.Models
 
 		public string Title { get; set; } = "";
 
+		public string? AdditionalAuthors { get; set; }
+
 		public bool WarnStartType => StartType.HasValue && StartType != MovieStartType.PowerOn;
 
 		internal int? SystemId { get; set; }

@@ -95,6 +95,9 @@ namespace TASVideos.Pages.Submissions.Models
 
 		public string? RejectionReasonDisplay { get; set; }
 
+		[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+		public string? AdditionalAuthors { get; set; }
+
 		public string Title { get; set; } = "";
 
 		public bool WarnStartType => StartType.HasValue && StartType != MovieStartType.PowerOn;

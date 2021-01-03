@@ -39,6 +39,9 @@ namespace TASVideos.Pages.Submissions.Models
 		[AtLeastOne(ErrorMessage = "A submission must have at least one author")]
 		public IList<string> Authors { get; set; } = new List<string>();
 
+		[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+		public string? AdditionalAuthors { get; set; }
+
 		[Required]
 		[Display(Name = "Comments and explanations")]
 		public string Markup { get; set; } = "";

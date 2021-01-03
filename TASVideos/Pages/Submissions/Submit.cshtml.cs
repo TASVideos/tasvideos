@@ -68,7 +68,8 @@ namespace TASVideos.Pages.Submissions
 				Branch = Create.Branch,
 				RomName = Create.RomName,
 				EmulatorVersion = Create.Emulator,
-				EncodeEmbedLink = Create.EncodeEmbedLink
+				EncodeEmbedLink = Create.EncodeEmbedLink,
+				AdditionalAuthors = Create.AdditionalAuthors
 			};
 
 			// TODO: check warnings

@@ -95,6 +95,12 @@
 				<input asp-for="Submission.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.EncodeEmbedLink)" />
 				<span asp-validation-for="Submission.EncodeEmbedLink" class="text-danger"></span>
 			</form-group>
+			<form-group>
+				<label asp-for="Submission.AdditionalAuthors" class="form-control-label"></label>
+				<input asp-for="Submission.AdditionalAuthors" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Submission.AdditionalAuthors)</div>
+				<span asp-validation-for="Submission.AdditionalAuthors" class="text-danger"></span>
+			</form-group>
 		</div>
 	</row>
 	<fullrow>
@@ -113,7 +119,6 @@
 </form>
 
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
-
 
 <script>
 	(function () {

@@ -80,7 +80,8 @@ namespace TASVideos.Pages.Submissions
 					Judge = s.Judge != null ? s.Judge.UserName : "",
 					Publisher = s.Publisher != null ? s.Publisher.UserName : "",
 					TierId = s.IntendedTierId,
-					RejectionReason = s.RejectionReasonId
+					RejectionReason = s.RejectionReasonId,
+					AdditionalAuthors = s.AdditionalAuthors
 				})
 				.SingleOrDefaultAsync();
 
@@ -276,6 +277,7 @@ namespace TASVideos.Pages.Submissions
 			submission.RomName = Submission.RomName;
 			submission.EncodeEmbedLink = Submission.EncodeEmbedLink;
 			submission.Status = Submission.Status;
+			submission.AdditionalAuthors = Submission.AdditionalAuthors;
 
 			var revision = new WikiPage
 			{
