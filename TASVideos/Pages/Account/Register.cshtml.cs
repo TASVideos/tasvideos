@@ -94,7 +94,6 @@ namespace TASVideos.Pages.Account
 		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 		public bool COPPA { get; set; }
 
-
 		public async Task<IActionResult> OnPost()
 		{
 			if (Password != ConfirmPassword)
@@ -107,7 +106,7 @@ namespace TASVideos.Pages.Account
 
 			if (!isCaptchaValid)
 			{
-				ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org")
+				ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
 			}
 
 			if (!ModelState.IsValid)
