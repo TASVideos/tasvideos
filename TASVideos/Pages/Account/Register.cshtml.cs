@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AspNetCore.ReCaptcha;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
@@ -34,8 +32,6 @@ namespace TASVideos.Pages.Account
 			SignInManager<User> signInManager,
 			IEmailService emailService,
 			ExternalMediaPublisher publisher,
-			IHttpClientFactory factory,
-			IConfiguration configuration,
 			IReCaptchaService reCaptchaService)
 		{
 			_db = db;
