@@ -1,6 +1,6 @@
 ﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
 
-@inject TASVideos.Services.IAwards Awards 
+@inject IAwards Awards 
 @{
 	var publicationAwards = await Awards.ForPublication(Model.Id);
 }
