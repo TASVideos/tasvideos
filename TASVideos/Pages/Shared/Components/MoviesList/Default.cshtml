@@ -3,7 +3,7 @@
 	var pubGroups = Model.Movies.GroupBy(gkey => gkey.GameName, gvalue => new
 	{
 		gvalue.Id, gvalue.IsObsolete
-	});
+	}).ToList();
 }
 <warning-alert condition="string.IsNullOrWhiteSpace(Model.SystemName)">
 	Unknown System Code: @Model.SystemCode

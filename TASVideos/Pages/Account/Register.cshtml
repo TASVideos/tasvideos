@@ -1,20 +1,13 @@
 ﻿@page
-
-@using AspNetCore.ReCaptcha
-
 @addTagHelper *, AspNetCore.ReCaptcha
-
-
 @model RegisterModel
 @{
 	// ReSharper disable CoercedEqualsUsing
 	ViewData["Title"] = "Register";
 }
-@section Header
-{
+
 <!-- For manual implementation of Google's ReCaptcha scripts, will require embedding site's public key. -->
 <script src="https://www.google.com/recaptcha/api.js"></script>
-}
 
 <h2>@ViewData["Title"]</h2>
 <h4>Create a new account.</h4>
