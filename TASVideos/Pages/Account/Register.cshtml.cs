@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
@@ -28,9 +26,7 @@ namespace TASVideos.Pages.Account
 		private readonly SignInManager<User> _signInManager;
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
-		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IReCaptchaService _reCaptchaService;
-		private readonly IConfigurationSection _reCaptchaConfig;
 
 		public RegisterModel(
 			ApplicationDbContext db,
@@ -47,9 +43,7 @@ namespace TASVideos.Pages.Account
 			_signInManager = signInManager;
 			_emailService = emailService;
 			_publisher = publisher;
-			_httpClientFactory = factory;
 			_reCaptchaService = reCaptchaService;
-			_reCaptchaConfig = configuration.GetSection("ReCaptcha");
 		}
 
 		[FromQuery]
