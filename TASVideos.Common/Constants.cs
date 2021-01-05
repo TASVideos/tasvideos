@@ -1,8 +1,6 @@
 ﻿namespace TASVideos
 {
-#pragma warning disable SA1649 // File name should match first type name
 	public static class LinkConstants
-#pragma warning restore SA1649 // File name should match first type name
 	{
 		public const string SubmissionWikiPage = "InternalSystem/SubmissionContent/S";
 		public const string PublicationWikiPage = "InternalSystem/PublicationContent/M";
