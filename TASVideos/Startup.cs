@@ -49,7 +49,8 @@ namespace TASVideos
 			// 3rd Party
 			services
 				.AddMvcWithOptions(Environment)
-				.AddIdentity(Environment);
+				.AddIdentity(Environment)
+				.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
 
 			// HTTP Client
 			services
@@ -63,15 +64,6 @@ namespace TASVideos
 				{
 					client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
 				});
-
-			services
-				.AddHttpClient("ReCaptcha", client =>
-				{
-					client.BaseAddress = new Uri("https://www.google.com/recaptcha/api/");
-				});
-
-			// ReCaptcha
-			services.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
