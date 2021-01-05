@@ -2,8 +2,8 @@
 {
 	public class LanguageEntry
 	{
-		public string Path { get; set; } = "";
-		public string LanguageCode { get; set; } = "";
-		public string LanguageDisplayName { get; set; } = "";
+		public string Path { get; init; } = "";
+		public string LanguageCode { get; init; } = "";
+		public string LanguageDisplayName { get; init; } = "";
 	}
 }

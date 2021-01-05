@@ -21,20 +21,15 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
 		{
+			string fpsParam = ParamHelper.GetValueFor(pp, "fps");
+
 			var model = new FramesModel
 			{
-				Amount = ParamHelper.GetInt(pp, "amount") ?? 0
+				Amount = ParamHelper.GetInt(pp, "amount") ?? 0,
+				Fps = double.TryParse(fpsParam, out double fpsDouble)
+					? fpsDouble
+					: await GuessFps(pageData.PageName)
 			};
-
-			string fpsParam = ParamHelper.GetValueFor(pp, "fps");
-			if (double.TryParse(fpsParam, out double fpsDouble))
-			{
-				model.Fps = fpsDouble;
-			}
-			else
-			{
-				model.Fps = await GuessFps(pageData.PageName);
-			}
 
 			return View(model);
 		}

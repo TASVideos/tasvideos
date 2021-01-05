@@ -2,7 +2,7 @@
 {
 	public class EditorActivityModel
 	{
-		public string UserName { get; set; } = "";
-		public int WikiEdits { get; set; }
+		public string UserName { get; init; } = "";
+		public int WikiEdits { get; init; }
 	}
 }

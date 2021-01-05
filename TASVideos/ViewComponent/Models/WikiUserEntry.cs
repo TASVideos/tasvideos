@@ -2,8 +2,8 @@
 {
 	public class WikiUserEntry
 	{
-		public string UserName { get; set; } = "";
-		public int SubmissionCount { get; set; }
-		public int PublicationCount { get; set; }
+		public string UserName { get; init; } = "";
+		public int SubmissionCount { get; init; }
+		public int PublicationCount { get; init; }
 	}
 }

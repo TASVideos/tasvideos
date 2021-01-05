@@ -4,8 +4,8 @@ namespace TASVideos.ViewComponents
 {
 	public class UnmirroredMovieEntry
 	{
-		public int Id { get; set; }
-		public string Title { get; set; } = "";
-		public IEnumerable<string> EncodePaths { get; set; } = new List<string>();
+		public int Id { get; init; }
+		public string Title { get; init; } = "";
+		public IEnumerable<string> EncodePaths { get; init; } = new List<string>();
 	}
 }

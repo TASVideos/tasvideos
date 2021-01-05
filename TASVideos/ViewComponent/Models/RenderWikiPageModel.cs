@@ -4,8 +4,8 @@ namespace TASVideos.ViewComponents
 {
 	public class RenderWikiPageModel
 	{
-		public string Markup { get; set; } = "";
+		public string Markup { get; init; } = "";
 
-		public WikiPage PageData { get; set; } = new ();
+		public WikiPage PageData { get; init; } = new ();
 	}
 }

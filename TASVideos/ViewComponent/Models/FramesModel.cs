@@ -4,8 +4,8 @@ namespace TASVideos.ViewComponents
 {
 	public class FramesModel
 	{
-		public double Fps { get; set; }
-		public int Amount { get; set; }
+		public double Fps { get; init; }
+		public int Amount { get; init; }
 
 		public TimeSpan TimeSpan => TimeSpan.FromSeconds(Amount / Fps);
 	}
