@@ -4,9 +4,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
@@ -25,6 +27,7 @@ namespace TASVideos.Pages.Account
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IReCaptchaService _reCaptchaService;
+		private readonly IWebHostEnvironment _env;
 
 		public RegisterModel(
 			ApplicationDbContext db,
@@ -32,7 +35,8 @@ namespace TASVideos.Pages.Account
 			SignInManager<User> signInManager,
 			IEmailService emailService,
 			ExternalMediaPublisher publisher,
-			IReCaptchaService reCaptchaService)
+			IReCaptchaService reCaptchaService,
+			IWebHostEnvironment env)
 		{
 			_db = db;
 			_userManager = userManager;
@@ -40,6 +44,7 @@ namespace TASVideos.Pages.Account
 			_emailService = emailService;
 			_publisher = publisher;
 			_reCaptchaService = reCaptchaService;
+			_env = env;
 		}
 
 		[FromQuery]
@@ -94,7 +99,7 @@ namespace TASVideos.Pages.Account
 			string encodedResponse = Request.Form["g-recaptcha-response"];
 			bool isCaptchaValid = await _reCaptchaService.Verify(encodedResponse);
 
-			if (!isCaptchaValid)
+			if (!_env.IsDevelopment() && !isCaptchaValid)
 			{
 				ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
 			}

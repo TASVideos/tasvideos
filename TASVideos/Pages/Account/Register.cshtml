@@ -2,7 +2,6 @@
 @addTagHelper *, AspNetCore.ReCaptcha
 @model RegisterModel
 @{
-	// ReSharper disable CoercedEqualsUsing
 	ViewData["Title"] = "Register";
 }
 
@@ -52,9 +51,11 @@
 				<input asp-for="COPPA" type="checkbox" class="form-control" />
 				<span asp-validation-for="COPPA" class="text-danger"></span>
 			</form-group>
-			<form-group>
-				<recaptcha />
-			</form-group>
+			<environment exclude="Development">
+				<form-group>
+					<recaptcha />
+				</form-group>
+			</environment>
 		</column>
 	</row>
 	<div class="text-center">
