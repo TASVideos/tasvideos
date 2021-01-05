@@ -2,10 +2,10 @@
 {
 	public class GameNameModel
 	{
-		public int GameId { get; set; }
-		public string DisplayName { get; set; } = "";
+		public int GameId { get; init; }
+		public string DisplayName { get; init; } = "";
 
-		public string? System { get; set; }
+		public string? System { get; init; }
 
 		public bool IsSystem => !string.IsNullOrWhiteSpace(System);
 	}

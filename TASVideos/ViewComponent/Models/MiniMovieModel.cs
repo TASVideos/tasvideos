@@ -2,15 +2,15 @@
 {
 	public class MiniMovieModel
 	{
-		public int Id { get; set; }
-		public string Title { get; set; } = "";
-		public ScreenshotFile Screenshot { get; set; } = new ();
-		public string? OnlineWatchingUrl { get; set; }
+		public int Id { get; init; }
+		public string Title { get; init; } = "";
+		public ScreenshotFile Screenshot { get; init; } = new ();
+		public string? OnlineWatchingUrl { get; init; }
 
 		public class ScreenshotFile
 		{
-			public string Path { get; set; } = "";
-			public string? Description { get; set; }
+			public string Path { get; init; } = "";
+			public string? Description { get; init; }
 		}
 	}
 }

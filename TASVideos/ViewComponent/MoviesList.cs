@@ -21,7 +21,6 @@ namespace TASVideos.ViewComponents
 			var systemCode = ParamHelper.GetValueFor(pp, "platform");
 
 			bool isAll = string.IsNullOrWhiteSpace(systemCode);
-			var model = new MoviesListModel { SystemCode = systemCode };
 			GameSystem? system = null;
 
 			if (!isAll)
@@ -29,20 +28,24 @@ namespace TASVideos.ViewComponents
 				system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Code == systemCode);
 				if (system == null)
 				{
-					return View(model);
+					return View(new MoviesListModel { SystemCode = systemCode });
 				}
 			}
 
-			model.SystemName = system?.DisplayName ?? "ALL";
-			model.Movies = await _db.Publications
-				.Where(p => isAll || p.System!.Code == systemCode)
-				.Select(p => new MoviesListModel.MovieEntry
-				{
-					Id = p.Id,
-					IsObsolete = p.ObsoletedById.HasValue,
-					GameName = p.Game!.DisplayName
-				})
-				.ToListAsync();
+			var model = new MoviesListModel
+			{
+				SystemCode = systemCode,
+				SystemName = system?.DisplayName ?? "ALL",
+				Movies = await _db.Publications
+					.Where(p => isAll || p.System!.Code == systemCode)
+					.Select(p => new MoviesListModel.MovieEntry
+					{
+						Id = p.Id,
+						IsObsolete = p.ObsoletedById.HasValue,
+						GameName = p.Game!.DisplayName
+					})
+					.ToListAsync()
+			};
 
 			return View(model);
 		}

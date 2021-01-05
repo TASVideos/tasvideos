@@ -4,15 +4,15 @@ namespace TASVideos.ViewComponents
 {
 	public class MoviesGameListModel
 	{
-		public int? SystemId { get; set; }
-		public string? SystemCode { get; set; }
+		public int? SystemId { get; init; }
+		public string? SystemCode { get; init; }
 
-		public ICollection<GameEntry> Games { get; set; } = new List<GameEntry>();
+		public ICollection<GameEntry> Games { get; init; } = new List<GameEntry>();
 		public class GameEntry
 		{
-			public int Id { get; set; }
-			public string Name { get; set; } = "";
-			public ICollection<int> PublicationIds { get; set; } = new List<int>();
+			public int Id { get; init; }
+			public string Name { get; init; } = "";
+			public ICollection<int> PublicationIds { get; init; } = new List<int>();
 		}
 	}
 }
