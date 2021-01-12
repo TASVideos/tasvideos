@@ -20,6 +20,10 @@ namespace TASVideos.Legacy.Imports
 
 		private static readonly string[] SiteDevelopers = { "natt", "Darkpsy", "Scepheo", "Invariel" };
 		private static readonly int[] UserRatingBanList = { 7194, 4805, 4485, 5243, 635, 3301 }; // These users where explicitly banned from rating
+
+		// Dup accounts we do not want to migrate over
+		private static readonly int[] BlackList = { 4079, 4854, 6177 };
+
 		public static void Import(
 			string connectionStr,
 			ApplicationDbContext context,
@@ -44,6 +48,8 @@ namespace TASVideos.Legacy.Imports
 
 			var legacyForumUsers = legacyForumContext.Users
 				.Where(u => u.UserName != "Anonymous")
+				.Where(u => !BlackList.Contains(u.UserId))
+				.Where(u => u.Email != "")
 				.ToList();
 
 			var banList = legacyForumContext.BanList.ToList();
@@ -230,7 +236,7 @@ namespace TASVideos.Legacy.Imports
 				Id = -1,
 				UserName = "Unknown User",
 				NormalizedUserName = "UNKNOWN USER",
-				Email = "",
+				Email = "unknown@example.com",
 				EmailConfirmed = true,
 				LegacyPassword = ""
 			});
