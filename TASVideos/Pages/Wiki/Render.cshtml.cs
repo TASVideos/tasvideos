@@ -28,6 +28,7 @@ namespace TASVideos.Pages.Wiki
 		public async Task<IActionResult> OnGet(string? url, int? revision = null)
 		{
 			url = url?.Trim('/') ?? "";
+			url = url.Replace(".html", "");
 			if (url.ToLower() == "frontpage")
 			{
 				return Redirect("/");
