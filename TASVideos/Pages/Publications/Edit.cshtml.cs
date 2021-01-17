@@ -140,6 +140,8 @@ namespace TASVideos.Pages.Publications
 
 		private async Task UpdatePublication(int id, PublicationEditModel model)
 		{
+			var externalMessages = new List<string>();
+
 			var publication = await _db.Publications
 				.Include(p => p.WikiContent)
 				.Include(p => p.System)
@@ -154,7 +156,18 @@ namespace TASVideos.Pages.Publications
 				return;
 			}
 
+			if (publication.Branch != model.Branch)
+			{
+				externalMessages.Add($"Changed branch from \"{publication.Branch}\" to \"{model.Branch}\"");
+			}
+
 			publication.Branch = model.Branch;
+
+			if (publication.ObsoletedById != model.ObsoletedBy)
+			{
+				externalMessages.Add($"Changed obsoleting movie from \"{publication.ObsoletedById}\" to \"{model.ObsoletedBy}\"");
+			}
+
 			publication.ObsoletedById = model.ObsoletedBy;
 			publication.EmulatorVersion = model.EmulatorVersion;
 
@@ -197,11 +210,15 @@ namespace TASVideos.Pages.Publications
 					MinorEdit = model.MinorEdit,
 					RevisionMessage = model.RevisionMessage
 				};
+
 				await _wikiPages.Add(revision);
-
 				publication.WikiContentId = revision.Id;
+				externalMessages.Add("Description updated");
+			}
 
-				_publisher.SendPublicationEdit($"Description updated for {publication.Title}", $"{Id}M", User.Name());
+			foreach (var message in externalMessages)
+			{
+				_publisher.SendPublicationEdit($"{publication.Title} edited: " + message, $"{Id}M", User.Name());
 			}
 		}
 	}
