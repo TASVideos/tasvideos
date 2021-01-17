@@ -105,7 +105,7 @@ namespace TASVideos.Services.ExternalMediaPublisher
 			publisher.Send(new Post
 			{
 				Type = PostType.General,
-				Group = PostGroups.Submission,
+				Group = PostGroups.Publication,
 				Title = title,
 				Body = "",
 				Link = publisher.ToAbsolute(relativeLink),
