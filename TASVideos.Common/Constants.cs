@@ -89,6 +89,7 @@ The posts before this message apply to the submission, and posts after this mess
 		public const string Submission = "Submission";
 		public const string UserManagement = "UserManagement";
 		public const string UserFiles = "UserFiles";
+		public const string Publication = "Publication";
 	}
 
 	// TODO: this is bootstrap specific, maybe it should go in the MVC project

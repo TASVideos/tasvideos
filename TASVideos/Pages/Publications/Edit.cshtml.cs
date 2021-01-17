@@ -149,57 +149,59 @@ namespace TASVideos.Pages.Publications
 				.ThenInclude(pa => pa.Author)
 				.SingleOrDefaultAsync(p => p.Id == id);
 
-			if (publication is not null)
+			if (publication is null)
 			{
-				publication.Branch = model.Branch;
-				publication.ObsoletedById = model.ObsoletedBy;
-				publication.EmulatorVersion = model.EmulatorVersion;
+				return;
+			}
 
-				publication.GenerateTitle();
+			publication.Branch = model.Branch;
+			publication.ObsoletedById = model.ObsoletedBy;
+			publication.EmulatorVersion = model.EmulatorVersion;
 
-				publication.PublicationFlags.Clear();
-				_db.PublicationFlags.RemoveRange(
-					_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
+			publication.GenerateTitle();
 
-				foreach (var flag in model.SelectedFlags)
+			publication.PublicationFlags.Clear();
+			_db.PublicationFlags.RemoveRange(
+				_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
+
+			foreach (var flag in model.SelectedFlags)
+			{
+				publication.PublicationFlags.Add(new PublicationFlag
 				{
-					publication.PublicationFlags.Add(new PublicationFlag
-					{
-						PublicationId = publication.Id,
-						FlagId = flag
-					});
-				}
+					PublicationId = publication.Id,
+					FlagId = flag
+				});
+			}
 
-				publication.PublicationTags.Clear();
-				_db.PublicationTags.RemoveRange(
-					_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
+			publication.PublicationTags.Clear();
+			_db.PublicationTags.RemoveRange(
+				_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
 
-				foreach (var tag in model.SelectedTags)
+			foreach (var tag in model.SelectedTags)
+			{
+				publication.PublicationTags.Add(new PublicationTag
 				{
-					publication.PublicationTags.Add(new PublicationTag
-					{
-						PublicationId = publication.Id,
-						TagId = tag
-					});
-				}
+					PublicationId = publication.Id,
+					TagId = tag
+				});
+			}
 
-				await _db.SaveChangesAsync();
+			await _db.SaveChangesAsync();
 
-				if (model.Markup != publication.WikiContent!.Markup)
+			if (model.Markup != publication.WikiContent!.Markup)
+			{
+				var revision = new WikiPage
 				{
-					var revision = new WikiPage
-					{
-						PageName = $"{LinkConstants.PublicationWikiPage}{id}",
-						Markup = model.Markup,
-						MinorEdit = model.MinorEdit,
-						RevisionMessage = model.RevisionMessage
-					};
-					await _wikiPages.Add(revision);
+					PageName = $"{LinkConstants.PublicationWikiPage}{id}",
+					Markup = model.Markup,
+					MinorEdit = model.MinorEdit,
+					RevisionMessage = model.RevisionMessage
+				};
+				await _wikiPages.Add(revision);
 
-					publication.WikiContentId = revision.Id;
+				publication.WikiContentId = revision.Id;
 
-					_publisher.SendPublicationEdit($"Publication {Id} Updated", $"{Id}M", User.Name());
-				}
+				_publisher.SendPublicationEdit($"Description updated for {publication.Title}", $"{Id}M", User.Name());
 			}
 		}
 	}
