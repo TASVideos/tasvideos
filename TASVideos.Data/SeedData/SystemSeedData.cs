@@ -847,7 +847,7 @@ namespace TASVideos.Data.SeedData
 			{
 				GameSystemId = 45,
 				RegionCode = Ntsc,
-				FrameRate = 60
+				FrameRate = 50
 			},
 			new ()
 			{
