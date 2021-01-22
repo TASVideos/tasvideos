@@ -8,7 +8,7 @@ namespace TASVideos.Extensions
 	{
 		/// <summary>
 		/// Returns the first half of the given collection,
-		/// in the case of odd numbers, the odd item is considered in the first half
+		/// in the case of odd numbers, the odd item is considered in the first half.
 		/// </summary>
 		public static IEnumerable<T> FirstHalf<T>(this IEnumerable<T> source)
 		{
@@ -19,7 +19,7 @@ namespace TASVideos.Extensions
 
 		/// <summary>
 		/// Returns the second half of the given collection,
-		/// in the case of odd numbers, the odd item is considered in the first half
+		/// in the case of odd numbers, the odd item is considered in the first half.
 		/// </summary>
 		public static IEnumerable<T> SecondHalf<T>(this IEnumerable<T> source)
 		{
@@ -29,7 +29,7 @@ namespace TASVideos.Extensions
 		}
 
 		/// <summary>
-		/// Returns a random entry from the given collection
+		/// Returns a random entry from the given collection.
 		/// </summary>
 		public static T AtRandom<T>(this ICollection<T> collection)
 		{
