@@ -18,7 +18,7 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			var role = TranslateLegacyName(
 				ParamHelper.GetValueFor(pp, "roles"));

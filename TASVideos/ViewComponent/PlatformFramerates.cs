@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.ViewComponents
 {
@@ -12,13 +10,12 @@ namespace TASVideos.ViewComponents
 	{
 		private readonly ApplicationDbContext _db;
 
-		public PlatformFramerates(
-			ApplicationDbContext db)
+		public PlatformFramerates(ApplicationDbContext db)
 		{
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync()
 		{
 			var model = await _db.GameSystemFrameRates
 				.Select(sf => new PlatformFramerateModel
