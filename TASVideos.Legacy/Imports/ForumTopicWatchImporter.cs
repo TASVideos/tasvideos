@@ -7,10 +7,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class ForumTopicWatchImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
 		{
 			var watches = legacyForumContext.TopicWatch
 				.Select(t => new ForumTopicWatch

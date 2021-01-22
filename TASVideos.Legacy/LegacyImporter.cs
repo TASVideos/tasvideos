@@ -51,7 +51,7 @@ namespace TASVideos.Legacy
 			// We don't want to copy these to other environments, as they can cause users to get unwanted emails
 			if (env.IsProduction())
 			{
-				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(connectionStr, context, legacyForumContext));
+				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(connectionStr, legacyForumContext));
 			}
 
 			Run("Wiki", () => WikiImporter.Import(connectionStr, legacySiteContext));

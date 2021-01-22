@@ -53,7 +53,7 @@ namespace TASVideos.TagHelpers
 
 			foreach (var optgroup in groups)
 			{
-				output.Content.AppendHtml($"<optgroup label='{optgroup.ToString()}'>");
+				output.Content.AppendHtml($"<optgroup label='{optgroup}'>");
 
 				var options = availableTimezones.Where(t => t.BaseUtcOffset == optgroup);
 

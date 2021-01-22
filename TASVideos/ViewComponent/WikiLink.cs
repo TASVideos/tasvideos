@@ -32,7 +32,7 @@ namespace TASVideos.ViewComponents
 
 			if (model.DisplayText.StartsWith("user:"))
 			{
-				model.DisplayText = model.DisplayText.Substring(5);
+				model.DisplayText = model.DisplayText[5..];
 			}
 			else if ((id = SubmissionHelper.IsSubmissionLink(split[0])).HasValue)
 			{
