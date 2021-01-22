@@ -10,8 +10,11 @@
     <Rule Id="MEN012" Action="Hidden" />
     <Rule Id="MEN013" Action="Hidden" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.CSharp.NetAnalyzers">
+    <Rule Id="CA1001" Action="None" />
+  </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.FxCopAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.FxCopAnalyzers">
-    <Rule Id="CA1001" Action="Hidden" />
+    <Rule Id="CA1001" Action="None" />
     <Rule Id="CA1016" Action="Hidden" />
     <Rule Id="CA1028" Action="Hidden" />
     <Rule Id="CA1030" Action="Hidden" />
@@ -82,7 +85,7 @@
     <Rule Id="CA2234" Action="Hidden" />
     <Rule Id="CA2237" Action="Hidden" />
     <Rule Id="CA2241" Action="Hidden" />
-    <Rule Id="CA2243" Action="Hidden" />
+    <Rule Id="CA2243" Action="Warning" />
     <Rule Id="CA3075" Action="Hidden" />
     <Rule Id="CA5350" Action="Hidden" />
     <Rule Id="CA5351" Action="Hidden" />
@@ -100,6 +103,61 @@
     <Rule Id="CA2119" Action="Warning" />
     <Rule Id="CA2153" Action="Warning" />
     <Rule Id="CA2226" Action="Warning" />
+    <Rule Id="CA2243" Action="Warning" />
+    <Rule Id="CA2301" Action="Warning" />
+    <Rule Id="CA2302" Action="Warning" />
+    <Rule Id="CA2305" Action="Warning" />
+    <Rule Id="CA2310" Action="Warning" />
+    <Rule Id="CA2311" Action="Warning" />
+    <Rule Id="CA2312" Action="Warning" />
+    <Rule Id="CA2315" Action="Warning" />
+    <Rule Id="CA2321" Action="Warning" />
+    <Rule Id="CA2322" Action="Warning" />
+    <Rule Id="CA2326" Action="Warning" />
+    <Rule Id="CA2327" Action="Warning" />
+    <Rule Id="CA2328" Action="Warning" />
+    <Rule Id="CA2329" Action="Warning" />
+    <Rule Id="CA2330" Action="Warning" />
+    <Rule Id="CA2350" Action="Warning" />
+    <Rule Id="CA2351" Action="Warning" />
+    <Rule Id="CA2352" Action="Warning" />
+    <Rule Id="CA2353" Action="Warning" />
+    <Rule Id="CA2354" Action="Warning" />
+    <Rule Id="CA2355" Action="Warning" />
+    <Rule Id="CA2356" Action="Warning" />
+    <Rule Id="CA2361" Action="Warning" />
+    <Rule Id="CA2362" Action="Warning" />
+    <Rule Id="CA3001" Action="Warning" />
+    <Rule Id="CA3002" Action="Warning" />
+    <Rule Id="CA3003" Action="Warning" />
+    <Rule Id="CA3004" Action="Warning" />
+    <Rule Id="CA3005" Action="Warning" />
+    <Rule Id="CA3006" Action="Warning" />
+    <Rule Id="CA3007" Action="Warning" />
+    <Rule Id="CA3008" Action="Warning" />
+    <Rule Id="CA3009" Action="Warning" />
+    <Rule Id="CA3010" Action="Warning" />
+    <Rule Id="CA3011" Action="Warning" />
+    <Rule Id="CA3012" Action="Warning" />
+    <Rule Id="CA5361" Action="Warning" />
+    <Rule Id="CA5362" Action="Warning" />
+    <Rule Id="CA5367" Action="Warning" />
+    <Rule Id="CA5375" Action="Warning" />
+    <Rule Id="CA5376" Action="Warning" />
+    <Rule Id="CA5377" Action="Warning" />
+    <Rule Id="CA5378" Action="Warning" />
+    <Rule Id="CA5380" Action="Warning" />
+    <Rule Id="CA5381" Action="Warning" />
+    <Rule Id="CA5382" Action="Warning" />
+    <Rule Id="CA5383" Action="Warning" />
+    <Rule Id="CA5386" Action="Warning" />
+    <Rule Id="CA5387" Action="Warning" />
+    <Rule Id="CA5388" Action="Warning" />
+    <Rule Id="CA5389" Action="Warning" />
+    <Rule Id="CA5390" Action="Warning" />
+    <Rule Id="CA5391" Action="Warning" />
+    <Rule Id="CA5392" Action="Warning" />
+    <Rule Id="CA5393" Action="Warning" />
     <Rule Id="CA5395" Action="Warning" />
     <Rule Id="CA5396" Action="Warning" />
     <Rule Id="CA5398" Action="Warning" />
