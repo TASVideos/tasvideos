@@ -103,7 +103,7 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 
 					if (pp.Path.StartsWith("/embed/") && pp.Path.Length > 7) // if they paste an embed link
 					{
-						DoTemplate(w, YouTube, width, height, pp.Path.Substring(7));
+						DoTemplate(w, YouTube, width, height, pp.Path[7..]);
 						return;
 					}
 
@@ -116,14 +116,14 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 				case "youtu.be":
 					if (pp.Path.Length > 1) // https://youtu.be/yLORZbc-PZw
 					{
-						DoTemplate(w, YouTube, width, height, pp.Path.Substring(1));
+						DoTemplate(w, YouTube, width, height, pp.Path[1..]);
 					}
 
 					break;
 				case "vimeo.com":
 					if (pp.Path.Length > 1) // http://vimeo.com/49142543
 					{
-						DoTemplate(w, Vimeo, width, height, pp.Path.Substring(1));
+						DoTemplate(w, Vimeo, width, height, pp.Path[1..]);
 					}
 
 					break;
@@ -131,14 +131,14 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 				case "www.dailymotion.com": // http://www.dailymotion.com/video/xf4u2m_snes-breath-of-fire-wip-by-janus_videogames
 					if (pp.Path.StartsWith("/video/") && pp.Path.Length > 7)
 					{
-						DoTemplate(w, DailyMotion, width, height, pp.Path.Substring(7).Split('_')[0]);
+						DoTemplate(w, DailyMotion, width, height, pp.Path[7..].Split('_')[0]);
 					}
 
 					break;
 				case "www.nicovideo.jp": // https://www.nicovideo.jp/watch/sm35061034
 					if (pp.Path.StartsWith("/watch/") && pp.Path.Length > 7)
 					{
-						var vid = pp.Path.Substring(7);
+						var vid = pp.Path[7..];
 						var sw = new StringWriter();
 						DoTemplate(sw, NicoVideoDocument, width, height, vid);
 						DoTemplate(w, NicoVideo, width, height, Convert.ToBase64String(Encoding.UTF8.GetBytes(sw.ToString())));
