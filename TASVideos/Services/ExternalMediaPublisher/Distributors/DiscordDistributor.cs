@@ -195,7 +195,8 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 			using HttpClient httpClient = _httpClientFactory.CreateClient("Discord");
 			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bot", _settings.AccessToken);
 
-			var response = await httpClient!.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, _cancellationTokenSource.Token);
+			var uri = new Uri($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages");
+			var response = await httpClient!.PostAsync(uri, messageContent, _cancellationTokenSource.Token);
 
 			if (!response.IsSuccessStatusCode)
 			{
