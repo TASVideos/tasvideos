@@ -12,6 +12,7 @@
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.CSharp.NetAnalyzers">
     <Rule Id="CA1001" Action="Warning" />
+    <Rule Id="CA1065" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.FxCopAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.FxCopAnalyzers">
     <Rule Id="CA1001" Action="Warning" />
@@ -33,7 +34,7 @@
     <Rule Id="CA1062" Action="Hidden" />
     <Rule Id="CA1063" Action="Warning" />
     <Rule Id="CA1064" Action="Warning" />
-    <Rule Id="CA1065" Action="Hidden" />
+    <Rule Id="CA1065" Action="Warning" />
     <Rule Id="CA1066" Action="Hidden" />
     <Rule Id="CA1069" Action="Hidden" />
     <Rule Id="CA1303" Action="Hidden" />
