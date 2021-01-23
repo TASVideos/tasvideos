@@ -18,6 +18,7 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync()
 		{
 			var model = await _db.GameSystemFrameRates
+				.Where(sf => !sf.Obsolete)
 				.Select(sf => new PlatformFramerateModel
 				{
 					SystemCode = sf.System!.Code,
