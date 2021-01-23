@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {
-	public class DiscordDistributor : IPostDistributor
+	public sealed class DiscordDistributor : IPostDistributor, IDisposable
 	{
 		private const int BufferSize = 65535;
 
@@ -202,6 +202,13 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 				_logger.LogError($"[{DateTime.Now}] An error occurred sending a message to Discord.");
 				_logger.LogError(await response.Content.ReadAsStringAsync());
 			}
+		}
+
+		public void Dispose()
+		{
+			_gateway.Dispose();
+			_cancellationTokenSource.Dispose();
+			_heartbeatTimer?.Dispose();
 		}
 	}
 
