@@ -66,7 +66,7 @@ namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 					new ("status", twitterMessage)
 				};
 
-				var response = await httpClient.PostAsync(new Uri("statuses/update.json"), new FormUrlEncodedContent(formFields));
+				var response = await httpClient.PostAsync("statuses/update.json", new FormUrlEncodedContent(formFields));
 
 				if (!response.IsSuccessStatusCode)
 				{
