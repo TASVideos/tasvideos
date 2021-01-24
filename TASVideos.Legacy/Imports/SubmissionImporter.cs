@@ -19,9 +19,6 @@ namespace TASVideos.Legacy.Imports
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext)
 		{
-			// TODO:
-			// submitters not in forum
-			// Cleanup archives by removing multiple entries and other junk
 			var legacySubmissions = legacySiteContext.Submissions
 				.Include(s => s.User)
 				.Include(s => s.Judge)
