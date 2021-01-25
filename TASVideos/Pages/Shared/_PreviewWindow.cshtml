@@ -20,6 +20,7 @@
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {
 						$(document.getElementById('preview-contents')).empty().append($(xmlhttp.responseText));
+						Prism.highlightAll();
 					} else {
 						alert("Could not generate preview");
 					}

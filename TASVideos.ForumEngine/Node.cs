@@ -226,16 +226,33 @@ namespace TASVideos.ForumEngine
 					w.Write("</blockquote></div>");
 					break;
 				case "code":
-					w.Write("<code");
-					if (Options != "")
 					{
-						w.Write(" class=");
-						Helpers.WriteAttributeValue(w, "language-" + Options);
+						// If Options is "foo" then that's a language tag.
+						// If Options is "foo.bar" then "foo.bar" is a downloadable filename and "bar" is a language tag.
+						var osplit = Options.Split('.', StringSplitOptions.RemoveEmptyEntries);
+						if (osplit.Length == 2)
+						{
+							w.Write("<a class='btn btn-info code-download' href=");
+							Helpers.WriteAttributeValue(w, "data:text/plain," + Uri.EscapeDataString(GetChildText().TrimStart()));
+							w.Write(" download=");
+							Helpers.WriteAttributeValue(w, Options);
+							w.Write(">Download ");
+							Helpers.WriteText(w, Options);
+							w.Write("</a>");
+						}
+
+						w.Write("<pre><code");
+						if (osplit.Length > 0)
+						{
+							w.Write(" class=");
+							Helpers.WriteAttributeValue(w, $"language-{osplit[osplit.Length - 1]}");
+						}
+
+						w.Write('>');
+						WriteChildren(w);
+						w.Write("</code></pre>");
 					}
 
-					w.Write("><pre>");
-					WriteChildren(w);
-					w.Write("</pre></code>");
 					break;
 				case "img":
 					{
