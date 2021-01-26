@@ -58,12 +58,16 @@ namespace TASVideos
 				{
 					client.BaseAddress = new Uri("https://discord.com/api/v6/");
 				});
-
 			services
 				.AddHttpClient("Twitter", client =>
 				{
 					client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
 				});
+
+			services.AddWebOptimizer(pipeline =>
+			{
+				pipeline.CompileScssFiles();
+			});
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -74,6 +78,7 @@ namespace TASVideos
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
 				.UseHttpsRedirection()
+				.UseWebOptimizer()
 				.UseStaticFilesWithTorrents()
 				.UseAuthorization()
 				.UseAuthentication()
