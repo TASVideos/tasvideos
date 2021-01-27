@@ -70,7 +70,7 @@
 	</div>
 </form>
 
-<partial name="_PreviewWindow" model="@(("Topic_Post", "/Forum/Preview"))" />
+<partial name="_PreviewWindow" model="@(new MarkupPreviewModel("Topic_Post", "/Forum/Preview"))" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

@@ -118,7 +118,7 @@
 	</fullrow>
 </form>
 
-<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
+<partial name="_PreviewWindow" model="@(new MarkupPreviewModel(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview"))" />
 
 <script>
 	(function () {

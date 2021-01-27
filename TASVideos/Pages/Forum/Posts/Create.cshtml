@@ -34,7 +34,7 @@
 	</div>
 </form>
 
-<partial name="_PreviewWindow" model="@(("Post_Text", "/Forum/Preview"))" />
+<partial name="_PreviewWindow" model="@(new MarkupPreviewModel("Post_Text", "/Forum/Preview"))" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

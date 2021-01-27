@@ -1,4 +1,4 @@
-﻿@model (string, string)
+﻿@model MarkupPreviewModel
 
 <div id="preview-container" class="d-none">
 	<hr />
@@ -13,7 +13,7 @@
 <script>
 	(function () {
 		document.getElementById('preview-button').onclick = function () {
-			var markup = document.getElementById('@Model.Item1').value;
+			var markup = document.getElementById('@Model.MarkupEditorId').value;
 			document.getElementById('preview-container').classList.remove('d-none');
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
@@ -27,7 +27,7 @@
 				}
 			};
 
-			xmlhttp.open("POST", "@Model.Item2");
+			xmlhttp.open("POST", "@Model.AjaxPath");
 			xmlhttp.send(markup);
 		}
 	})();
