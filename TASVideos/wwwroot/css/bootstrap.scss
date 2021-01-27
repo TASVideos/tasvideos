@@ -5,10 +5,14 @@
 @import "../lib/twitter-bootstrap/scss/mixins";
 
 // Add variable customizations here
-// ...
-// ...
-// ...
-// ...
+$theme-colors: (
+	"primary": #531f86, // #007bff
+	"secondary": #6c757d, // #6c757d
+	"success": #28a745, // #28a745
+	"danger": #dc3545, // #dc3545
+	"warning": #ffc107, // #ffc107
+	"info": #9f76c0 // #17a2b8
+);
 
 @import "../lib/twitter-bootstrap/scss/root";
 @import "../lib/twitter-bootstrap/scss/reboot";
