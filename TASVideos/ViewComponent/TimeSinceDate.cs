@@ -2,9 +2,11 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.TimeSinceDate)]
 	public class TimeSinceDate : ViewComponent
 	{
 		public IViewComponentResult Invoke(string pp)

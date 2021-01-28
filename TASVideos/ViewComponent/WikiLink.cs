@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Helpers;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.WikiLink)]
 	public class WikiLink : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

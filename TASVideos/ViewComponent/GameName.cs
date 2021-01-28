@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Extensions;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.GameName)]
 	public class GameName : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

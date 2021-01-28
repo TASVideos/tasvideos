@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
@@ -94,10 +96,22 @@ namespace TASVideos.TagHelpers
 			return null;
 		}
 
+		private static readonly IDictionary<string, Type> ViewComponents = Assembly
+			.GetAssembly(typeof(WikiModuleAttribute))
+			!.GetTypes()
+			.Where(t => t.GetCustomAttribute(typeof(WikiModuleAttribute)) != null)
+			.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue);
+
 		void IWriterHelper.RunViewComponent(TextWriter w, string name, string pp)
 		{
 			// TODO: Do we want to asyncify this entire thingy?
-			var content = _viewComponentHelper.InvokeAsync(name, new { pageData = PageData, pp }).Result;
+			var result = ViewComponents.TryGetValue(name, out Type? viewComponent);
+			if (!result)
+			{
+				throw new InvalidOperationException($"Unknown ViewComponent: {name}");
+			}
+
+			var content = _viewComponentHelper.InvokeAsync(viewComponent, new { pageData = PageData, pp }).Result;
 			content.WriteTo(w, HtmlEncoder.Default);
 		}
 	}

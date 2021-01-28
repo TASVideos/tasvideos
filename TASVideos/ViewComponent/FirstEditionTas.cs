@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.ViewComponents.Models;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.FirstEditionTas)]
 	public class FirstEditionTas : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

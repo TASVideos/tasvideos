@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.EditorActivity)]
 	public class EditorActivity : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

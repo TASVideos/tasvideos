@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.GameSubPages)]
 	public class GameSubPages : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

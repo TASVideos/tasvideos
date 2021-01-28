@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Services;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.BrokenLinks)]
 	public class BrokenLinks : ViewComponent
 	{
 		private readonly IWikiPages _wikiPages;

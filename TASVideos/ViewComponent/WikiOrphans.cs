@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Services;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.WikiOrphans)]
 	public class WikiOrphans : ViewComponent
 	{
 		private readonly IWikiPages _wikiPages;
