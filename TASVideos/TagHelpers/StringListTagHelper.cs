@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -37,7 +38,7 @@ namespace TASVideos.TagHelpers
 				output.Content.AppendHtml($@"
 <div class='author-row row mb-1' data-index='{i}'>
 	<div class='col-10'>
-		<input type='text' spellcheck='false' class='form-control' id='{modelId}_{i}_' name='{modelName}' value='{stringList[i]}' />
+		<input type='text' spellcheck='false' class='form-control' {Attr("id", $"{modelId}_{i}_")} {Attr("name", modelName)} {Attr("value", stringList[i])} />
 	</div>
 	<div class='col-2'>
 		<button {(i == 0 ? "id='" + modelId + "-add-btn'" : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none" : "")}' type='button'><span class='fa fa-plus-square'></span></button>
