@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -72,10 +73,10 @@ namespace TASVideos.TagHelpers
 			output.Attributes.Add("id", parentContainerName);
 
 			// Generate hidden form element that will contain the selected ids
-			output.Content.AppendHtml($"<span id='{modelContainer}'>");
+			output.Content.AppendHtml($"<span {Attr("id", modelContainer)}>");
 			foreach (var id in selectedIdList)
 			{
-				output.Content.AppendHtml($"<input type='hidden' v='{id}' name='{IdList.Name}' value='{id}' />");
+				output.Content.AppendHtml($"<input type='hidden' v='{id}' {Attr("name", IdList.Name)} value='{id}' />");
 			}
 
 			output.Content.AppendHtml("</span>");
@@ -90,8 +91,16 @@ namespace TASVideos.TagHelpers
 				AvailableList.ModelExplorer.Metadata.DisplayName,
 				new { @class = "form-control-label" }));
 
-			output.Content.AppendHtml(
-				$"<select class='form-control' id='{availableListName}' multiple='multiple' name='{availableListName}' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
+			output.Content.AppendHtml($@"
+				<select
+					class='form-control'
+					{Attr("id", availableListName)}
+					multiple='multiple'
+					{Attr("name", availableListName)}
+					size='{rowSize}'
+					style='overflow-y: auto; padding-top: 7px;'
+				>
+			");
 			output.Content.AppendHtml(
 				_htmlGenerator.GenerateGroupsAndOptions(null, remainingItems));
 			output.Content.AppendHtml("</select>");
@@ -99,36 +108,36 @@ namespace TASVideos.TagHelpers
 
 			// Middle Column Div
 			output.Content.AppendHtml($@"
-<div class='col-2'>
-	<div class='row'>
-		<div class='offset-md-3 col-md-6'>
-			<label class='form-control-label'> </label>
-			<div class='row mb-1'>
-				<button type='button' id='{addBtnName}' class='btn btn-primary btn-sm col-12' aria-label='Add' title='Add'>
-					<i class='fa fa-chevron-right' aria-hidden='true'></i>
-				</button>
-			</div>
-			<div class='row mb-4'>
-				<button type='button' id='{addAllBtnName}' class='btn btn-primary btn-sm col-12' aria-label='Add All' title='Add All'>
-					<i class='fa fa-chevron-right' aria-hidden='true'></i>
-					<i class='fa fa-chevron-right' aria-hidden='true'></i>
-				</button>
-			</div>
-			<div class='row mb-1'>
-				<button type='button' id='{removeBtnName}' class='btn btn-primary btn-sm col-12' aria-label='Remove' title='Remove'>
-					<i class='fa fa-chevron-left' aria-hidden='true'></i>
-				</button>
-			</div>
-			<div class='row'>
-				<button type='button' id='{removeAllBtnName}' class='btn btn-primary btn-sm col-12' aria-label='Remove All' title='Remove All'>
-					<i class='fa fa-chevron-left' aria-hidden='true'></i>
-					<i class='fa fa-chevron-left' aria-hidden='true'></i>
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
-");
+				<div class='col-2'>
+					<div class='row'>
+						<div class='offset-md-3 col-md-6'>
+							<label class='form-control-label'> </label>
+							<div class='row mb-1'>
+								<button type='button' {Attr("id", addBtnName)} class='btn btn-primary btn-sm col-12' aria-label='Add' title='Add'>
+									<i class='fa fa-chevron-right' aria-hidden='true'></i>
+								</button>
+							</div>
+							<div class='row mb-4'>
+								<button type='button' {Attr("id", addAllBtnName)} class='btn btn-primary btn-sm col-12' aria-label='Add All' title='Add All'>
+									<i class='fa fa-chevron-right' aria-hidden='true'></i>
+									<i class='fa fa-chevron-right' aria-hidden='true'></i>
+								</button>
+							</div>
+							<div class='row mb-1'>
+								<button type='button' {Attr("id", removeBtnName)} class='btn btn-primary btn-sm col-12' aria-label='Remove' title='Remove'>
+									<i class='fa fa-chevron-left' aria-hidden='true'></i>
+								</button>
+							</div>
+							<div class='row'>
+								<button type='button' {Attr("id", removeAllBtnName)} class='btn btn-primary btn-sm col-12' aria-label='Remove All' title='Remove All'>
+									<i class='fa fa-chevron-left' aria-hidden='true'></i>
+									<i class='fa fa-chevron-left' aria-hidden='true'></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			");
 
 			// Right Column Div
 			output.Content.AppendHtml("<div class='col-5'>");
@@ -141,7 +150,7 @@ namespace TASVideos.TagHelpers
 				new { @class = "form-control-label", @for = selectedListName }));
 
 			output.Content.AppendHtml(
-				$"<select class='form-control' id='{selectedListName}' multiple='multiple' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
+				$"<select class='form-control' {Attr("id", selectedListName)} multiple='multiple' size='{rowSize}' style='overflow-y: auto; padding-top: 7px;'>");
 			output.Content.AppendHtml(
 				_htmlGenerator.GenerateGroupsAndOptions(null, selectedItems));
 			output.Content.AppendHtml("</select>");
@@ -150,87 +159,86 @@ namespace TASVideos.TagHelpers
 				_htmlGenerator.GenerateValidationMessage(ViewContext, IdList.ModelExplorer, IdList.Name, null, null, new { @class = "text-danger" }));
 
 			output.Content.AppendHtml("</div>");
-
 			// Script Tag
 			var uniqueFuncName = "twoColumnPicker" + context.UniqueId;
-			string script = $@"<script>function {uniqueFuncName}() {{
-				var twoColumnChangeEvent = new CustomEvent('{modelName}Changed', {{ bubbles: true }});
+			string script = $@"<script>function {JsIdentifier(uniqueFuncName)}() {{
+				var twoColumnChangeEvent = new CustomEvent({JsValue(modelName + "Change")}, {{ bubbles: true }});
 
-				document.getElementById('{parentContainerName}').listChangedCallback = null;
+				document.getElementById({JsValue(parentContainerName)}).listChangedCallback = null;
 
-				document.getElementById('{availableListName}').addEventListener('dblclick', function() {{
-					document.getElementById('{addBtnName}').click()
+				document.getElementById({JsValue(availableListName)}).addEventListener('dblclick', function() {{
+					document.getElementById({JsValue(addBtnName)}).click()
 				}});
 
-				document.getElementById('{selectedListName}').addEventListener('dblclick', function() {{
-					document.getElementById('{removeBtnName}').click()
+				document.getElementById({JsValue(selectedListName)}).addEventListener('dblclick', function() {{
+					document.getElementById({JsValue(removeBtnName)}).click()
 				}});
 
-				document.getElementById('{addBtnName}').addEventListener('click', function () {{
-					var aopts = document.querySelectorAll('#{availableListName} option:checked');
+				document.getElementById({JsValue(addBtnName)}).addEventListener('click', function () {{
+					var aopts = document.querySelectorAll({JsValue($"#{availableListName} option:checked")});
 					aopts.forEach(function (elem) {{
 						var newInp = document.createElement('input')
-						newInp.name = '{modelName}';
+						newInp.name = {JsValue(modelName)};
 						newInp.type = 'hidden';
 						newInp.value = elem.value;
 						newInp.setAttribute('v', elem.value);
-						document.getElementById('{modelContainer}').appendChild(newInp);
-						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
-						document.getElementById('{availableListName}').removeChild(elem);
+						document.getElementById({JsValue(modelContainer)}).appendChild(newInp);
+						document.getElementById({JsValue(selectedListName)}).appendChild(elem.cloneNode(true));
+						document.getElementById({JsValue(availableListName)}).removeChild(elem);
 					}});
 
 					sortLists();
 
 					if (aopts.length) {{
-						document.getElementById('{parentContainerName}').dispatchEvent(twoColumnChangeEvent);
+						document.getElementById({JsValue(parentContainerName)}).dispatchEvent(twoColumnChangeEvent);
 					}}
 				}});
 
-				document.getElementById('{addAllBtnName}').addEventListener('click', function () {{
-					var aopts = document.querySelectorAll('#{availableListName} option:not(:disabled)');
+				document.getElementById({JsValue(addAllBtnName)}).addEventListener('click', function () {{
+					var aopts = document.querySelectorAll({JsValue($"#{availableListName} option:not(:disabled)")});
 					aopts.forEach(function (elem) {{
 						var newInp = document.createElement('input')
-						newInp.name = '{modelName}';
+						newInp.name = {JsValue(modelName)};
 						newInp.type = 'hidden';
 						newInp.value = elem.value;
 						newInp.setAttribute('v', elem.value);
-						document.getElementById('{modelContainer}').appendChild(newInp);
-						document.getElementById('{selectedListName}').appendChild(elem.cloneNode(true));
-						document.getElementById('{availableListName}').removeChild(elem);
+						document.getElementById({JsValue(modelContainer)}).appendChild(newInp);
+						document.getElementById({JsValue(selectedListName)}).appendChild(elem.cloneNode(true));
+						document.getElementById({JsValue(availableListName)}).removeChild(elem);
 					}});
 
 					sortLists();
 
 					if (aopts.length) {{
-						document.getElementById('{parentContainerName}').dispatchEvent(twoColumnChangeEvent);
+						document.getElementById({JsValue(parentContainerName)}).dispatchEvent(twoColumnChangeEvent);
 					}}
 				}});
 
-				document.getElementById('{removeBtnName}').addEventListener('click', function () {{
-					var sopts = document.querySelectorAll('#{selectedListName} option:checked');
+				document.getElementById({JsValue(removeBtnName)}).addEventListener('click', function () {{
+					var sopts = document.querySelectorAll({JsValue($"#{selectedListName} option:checked")});
 					sopts.forEach(function (elem) {{
-						document.getElementById('{availableListName}').appendChild(elem.cloneNode(true));
-						document.getElementById('{selectedListName}').removeChild(elem);
+						document.getElementById({JsValue(availableListName)}).appendChild(elem.cloneNode(true));
+						document.getElementById({JsValue(selectedListName)}).removeChild(elem);
 
-						document.querySelector('[name=""{modelName}""][v=""' + elem.value + '""]').remove();
+						document.querySelector({JsValue($@"[name=""{modelName}""][v=""'")} + elem.value + '""]').remove();
 					}});
 
 					sortLists();
 
 					if (sopts.length) {{
-						document.getElementById('{parentContainerName}').dispatchEvent(twoColumnChangeEvent);
+						document.getElementById({JsValue(parentContainerName)}).dispatchEvent(twoColumnChangeEvent);
 					}}
 				}});
 
-				document.getElementById('{removeAllBtnName}').addEventListener('click', function () {{
-					var sopts = document.querySelectorAll('#{selectedListName} option:not(:disabled)');
+				document.getElementById({JsValue(removeAllBtnName)}).addEventListener('click', function () {{
+					var sopts = document.querySelectorAll({JsValue($"#{selectedListName} option:not(:disabled)")});
 					sopts.forEach(function (elem) {{
-						document.getElementById('{availableListName}').appendChild(elem.cloneNode(true));
-						document.getElementById('{selectedListName}').removeChild(elem);
+						document.getElementById({JsValue(availableListName)}).appendChild(elem.cloneNode(true));
+						document.getElementById({JsValue(selectedListName)}).removeChild(elem);
 						
 					}});
 
-					var container = document.getElementById('{modelContainer}');
+					var container = document.getElementById({JsValue(modelContainer)});
 					while (container.lastChild) {{
 						container.removeChild(container.lastChild);
 					}}
@@ -238,13 +246,13 @@ namespace TASVideos.TagHelpers
 					sortLists();
 
 					if (sopts.length) {{
-						document.getElementById('{parentContainerName}').dispatchEvent(twoColumnChangeEvent);
+						document.getElementById({JsValue(parentContainerName)}).dispatchEvent(twoColumnChangeEvent);
 					}}
 				}});
 
 				function sortLists() {{
-					sortSelect(document.getElementById('{availableListName}'));
-					sortSelect(document.getElementById('{selectedListName}'));
+					sortSelect(document.getElementById({JsValue(availableListName)}));
+					sortSelect(document.getElementById({JsValue(selectedListName)}));
 				}}
 
 				function sortSelect(elem) {{
@@ -260,7 +268,7 @@ namespace TASVideos.TagHelpers
 					return;
 				}}
 			}};
-			{uniqueFuncName}();
+			{JsIdentifier(uniqueFuncName)}();
 			</script>";
 
 			output.Content.AppendHtml(script);

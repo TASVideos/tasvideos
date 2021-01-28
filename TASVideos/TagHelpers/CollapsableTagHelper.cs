@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -19,14 +20,21 @@ namespace TASVideos.TagHelpers
 
 			// TODO: sr and aria tags could use something more informative than BodyId
 			output.Content.AppendHtml($@"
-<a class='collapsed' data-toggle='collapse' href='#{BodyId}' aria-expanded='false' aria-controls='collapse1' role='button'>
-	{content}
-</a>
-<a data-toggle='collapse' class='collapsed btn btn-default btn-xs text-right' href='#{BodyId}' aria-label='Expand/Collapse {BodyId}' aria-expanded='false' role='button'>
-	<i class='fa' aria-hidden='true'></i>
-	<span class='sr-only'>Expand/Collapse {BodyId}</span>
-</a>
-");
+				<a class='collapsed' data-toggle='collapse' {Attr("href", "#" + BodyId)} aria-expanded='false' aria-controls='collapse1' role='button'>
+					{content}
+				</a>
+				<a
+					data-toggle='collapse'
+					class='collapsed btn btn-default btn-xs text-right'
+					{Attr("href", "#" + BodyId)}
+					{Attr("aria-label", $"Expand/Collapse {BodyId}")}
+					aria-expanded='false'
+					role='button'
+				>
+					<i class='fa' aria-hidden='true'></i>
+					<span class='sr-only'>Expand/Collapse {Text(BodyId)}</span>
+				</a>
+			");
 		}
 	}
 

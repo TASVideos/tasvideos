@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -20,10 +21,10 @@ namespace TASVideos.TagHelpers
 
 			output.Content.AppendHtml($@"
 	<h4 class='card-link-header'>
-		{Header}
+		{Text(Header)}
 	</h4>
 	<span class='card-link-body'>
-		{Body}
+		{Text(Body)}
 	</span>
 	<span class='card-link-arrow fa fa-chevron-right'></span>
 ");
