@@ -408,46 +408,6 @@ namespace TASVideos.WikiEngine.AST
 
 	public class Module : INode
 	{
-		private static readonly Dictionary<string, string> ModuleNameMaps = new ()
-		{
-			["__wikilink"] = "WikiLink",
-			["awards"] = "Awards",
-			["brokenlinks"] = "BrokenLinks",
-			["activetab"] = "ActiveTab",
-			["displayminimovie"] = "DisplayMiniMovie",
-			["editoractivity"] = "EditorActivity",
-			["firsteditiontas"] = "FirstEditionTas",
-			["frames"] = "Frames",
-			["frontpagesubmissionlist"] = "FrontpageSubmissionList",
-			["gamename"] = "GameName",
-			["gamesubpages"] = "GameSubPages",
-			["listparents"] = "ListParents",
-			["listsubpages"] = "ListSubPages",
-			["mediaposts"] = "MediaPosts",
-			["platformframerates"] = "PlatformFramerates",
-			["rejectedsubmissions"] = "RejectedSubmissions",
-			["submittableformats"] = "SupportedMovieTypes",
-			["tabularmovielist"] = "TabularMovieList",
-			["topicfeed"] = "TopicFeed",
-			["unmirroredmovies"] = "UnmirroredMovies",
-			["user_name"] = "UserName",
-			["usergetwikiname"] = "UserGetWikiName",
-			["usermovies"] = "UserMovies",
-			["welcome"] = "Welcome",
-			["wikigetcurrenteditlink"] = "CurrentEditLink",
-			["wikiorphans"] = "WikiOrphans",
-			["wikitextchangelog"] = "WikiTextChangeLog",
-			["youtube"] = "Youtube",
-			["listlanguages"] = "ListLanguages",
-			["wikiusers"] = "WikiUsers",
-			["movieslist"] = "MoviesList",
-			["moviesgamelist"] = "MoviesGameList",
-			["displaymovie"] = "DisplayMovies",
-			["moviesbyplayer"] = "MoviesByAuthor",
-			["feedlog"] = "FeedLog",
-			["timesincedate"] = "TimeSinceDate",
-			["platformtaserlists"] = "PlatformAuthorLists"
-		};
 		public NodeType Type => NodeType.Module;
 		public string Text { get; }
 		public int CharStart { get; }
@@ -474,9 +434,9 @@ namespace TASVideos.WikiEngine.AST
 					div.WriteHtmlDynamic(w, h);
 				}
 			}
-			else if (ModuleNameMaps.TryGetValue(moduleName.ToLower(), out string? realModuleName))
+			else if (WikiModules.IsModule(moduleName))
 			{
-				h.RunViewComponent(w, realModuleName, moduleParams);
+				h.RunViewComponent(w, moduleName, moduleParams);
 			}
 			else
 			{

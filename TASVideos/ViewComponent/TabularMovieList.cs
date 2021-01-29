@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.TabularMovieList)]
 	public class TabularMovieList : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

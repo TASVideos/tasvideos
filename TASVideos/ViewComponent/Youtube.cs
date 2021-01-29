@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.Youtube)]
 	public class Youtube : ViewComponent
 	{
 		public IViewComponentResult Invoke(string pp)

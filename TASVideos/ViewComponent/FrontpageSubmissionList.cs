@@ -7,9 +7,11 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.FrontpageSubmissionList)]
 	public class FrontpageSubmissionList : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

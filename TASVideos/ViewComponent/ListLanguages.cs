@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
 using TASVideos.ViewComponents.Models;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.ListLanguages)]
 	public class ListLanguages : ViewComponent
 	{
 		private readonly IWikiPages _wikiPages;

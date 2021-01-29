@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.RejectedSubmissions)]
 	public class RejectedSubmissions : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
