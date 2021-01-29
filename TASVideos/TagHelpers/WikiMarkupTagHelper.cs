@@ -100,12 +100,12 @@ namespace TASVideos.TagHelpers
 			.GetAssembly(typeof(WikiModuleAttribute))
 			!.GetTypes()
 			.Where(t => t.GetCustomAttribute(typeof(WikiModuleAttribute)) != null)
-			.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name.ToLower(), tvalue => tvalue);
+			.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue, StringComparer.InvariantCultureIgnoreCase);
 
 		void IWriterHelper.RunViewComponent(TextWriter w, string name, string pp)
 		{
 			// TODO: Do we want to asyncify this entire thingy?
-			var result = ViewComponents.TryGetValue(name.ToLower(), out Type? viewComponent);
+			var result = ViewComponents.TryGetValue(name, out Type? viewComponent);
 			if (!result)
 			{
 				throw new InvalidOperationException($"Unknown ViewComponent: {name}");
