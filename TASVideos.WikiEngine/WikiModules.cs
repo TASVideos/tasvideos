@@ -45,15 +45,15 @@ namespace TASVideos.WikiEngine
 		public const string WikiUsers = "wikiusers";
 		public const string Youtube = "youtube";
 
-		private static readonly IList<string> Modules = typeof(WikiModules)
+		private static readonly HashSet<string> Modules = typeof(WikiModules)
 			.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
 			.Where(fi => fi.IsLiteral && !fi.IsInitOnly)
 			.Select(fi => fi.GetRawConstantValue()?.ToString() ?? "")
-			.ToList();
+			.ToHashSet(StringComparer.InvariantCultureIgnoreCase);
 
 		public static bool IsModule(string name)
 		{
-			return Modules.Any(s => string.Equals(s, name, StringComparison.CurrentCultureIgnoreCase));
+			return Modules.Contains(name);
 		}
 	}
 }
