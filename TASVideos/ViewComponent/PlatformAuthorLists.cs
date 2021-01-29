@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.PlatformAuthorList)]
 	public class PlatformAuthorLists : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

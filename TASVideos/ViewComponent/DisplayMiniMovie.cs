@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
 	// TODO: a better name for this is FrontPageMovie or something like that
+	[WikiModule(WikiModules.DisplayMiniMovie)]
 	public class DisplayMiniMovie : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

@@ -9,9 +9,11 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.ForumEngine;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.TopicFeed)]
 	public class TopicFeed : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

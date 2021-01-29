@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.MovieParsers;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.SupportedMovieTypes)]
 	public class SupportedMovieTypes : ViewComponent
 	{
 		private readonly IMovieParser _movieParser;

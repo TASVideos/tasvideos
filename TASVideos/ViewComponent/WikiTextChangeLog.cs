@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data.Entity;
 using TASVideos.Services;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.WikiTextChangeLog)]
 	public class WikiTextChangeLog : ViewComponent
 	{
 		private readonly IWikiPages _wikiPages;

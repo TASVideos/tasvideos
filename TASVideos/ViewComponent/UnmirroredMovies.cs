@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.WikiEngine;
 using static TASVideos.Data.Entity.PublicationUrlType;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.UnmirroredMovies)]
 	public class UnmirroredMovies : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;

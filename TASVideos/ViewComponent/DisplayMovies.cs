@@ -9,9 +9,11 @@ using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Services;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
 {
+	[WikiModule(WikiModules.DisplayMovies)]
 	public class DisplayMovies : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
