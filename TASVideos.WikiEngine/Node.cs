@@ -434,9 +434,9 @@ namespace TASVideos.WikiEngine.AST
 					div.WriteHtmlDynamic(w, h);
 				}
 			}
-			else if (WikiModules.TryGetModule(moduleName.ToLower(), out string realModuleName))
+			else if (WikiModules.IsModule(moduleName))
 			{
-				h.RunViewComponent(w, realModuleName, moduleParams);
+				h.RunViewComponent(w, moduleName, moduleParams);
 			}
 			else
 			{

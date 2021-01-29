@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -50,17 +51,9 @@ namespace TASVideos.WikiEngine
 			.Select(fi => fi.GetRawConstantValue()?.ToString() ?? "")
 			.ToList();
 
-		public static bool TryGetModule(string name, out string moduleName)
+		public static bool IsModule(string name)
 		{
-			var result = Modules.FirstOrDefault(s => s == name);
-			if (result == null)
-			{
-				moduleName = "";
-				return false;
-			}
-
-			moduleName = result;
-			return true;
+			return Modules.Any(s => string.Equals(s, name, StringComparison.CurrentCultureIgnoreCase));
 		}
 	}
 }
