@@ -8,7 +8,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class SubmissionFrameRateImporter
 	{
-		private const decimal RoundingOffset = 0.01M;
+		private const decimal RoundingOffset = 0.001M;
 
 		public static void Import(ApplicationDbContext context)
 		{
