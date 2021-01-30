@@ -14,8 +14,11 @@ namespace TASVideos.Data
 
 		internal static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+			services.AddDbContext<ApplicationDbContext>(
+				options =>
+					options.UseSqlServer(
+						configuration.GetConnectionString("DefaultConnection"),
+						b => b.MigrationsAssembly("TASVideos.Data")));
 
 			return services;
 		}
