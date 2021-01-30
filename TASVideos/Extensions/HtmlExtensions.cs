@@ -67,12 +67,6 @@ namespace TASVideos.Extensions
 			return result;
 		}
 
-		// ReSharper disable once UnusedMember.Global (Used in Node.cs with string building)
-		public static bool WikiCondition(this IHtmlHelper html, string condition)
-		{
-			return WikiCondition(html.ViewContext, condition);
-		}
-
 		public static IHtmlContent DescriptionFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
 		{
 			if (html == null)
