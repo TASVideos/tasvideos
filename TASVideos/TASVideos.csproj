@@ -21,16 +21,16 @@
 	<ItemGroup>
 		<Compile Remove="wwwroot\lib\**" />
 		<Compile Remove="wwwroot\media\**" />
-    <Compile Remove="wwwroot\torrent\**" />
+		<Compile Remove="wwwroot\torrent\**" />
 		<Content Remove="wwwroot\lib\**" />
 		<Content Remove="wwwroot\media\**" />
-    <Content Remove="wwwroot\torrent\**" />
+		<Content Remove="wwwroot\torrent\**" />
 		<EmbeddedResource Remove="wwwroot\lib\**" />
 		<EmbeddedResource Remove="wwwroot\media\**" />
-    <EmbeddedResource Remove="wwwroot\torrent\**" />
+		<EmbeddedResource Remove="wwwroot\torrent\**" />
 		<None Remove="wwwroot\lib\**" />
 		<None Remove="wwwroot\media\**" />
-    <None Remove="wwwroot\torrent\**" />
+		<None Remove="wwwroot\torrent\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -46,8 +46,8 @@
 		<PackageReference Include="RoslynCodeTaskFactory" Version="2.0.7" />
 		<PackageReference Include="Sendgrid" Version="9.21.2" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	</ItemGroup>
