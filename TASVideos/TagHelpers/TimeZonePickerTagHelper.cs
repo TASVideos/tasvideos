@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -53,13 +54,17 @@ namespace TASVideos.TagHelpers
 
 			foreach (var optgroup in groups)
 			{
-				output.Content.AppendHtml($"<optgroup label='{optgroup}'>");
+				output.Content.AppendHtml($"<optgroup {Attr("label", optgroup.ToString())}>");
 
 				var options = availableTimezones.Where(t => t.BaseUtcOffset == optgroup);
 
 				foreach (var option in options)
 				{
-					output.Content.AppendHtml($"<option {(option.Selected ? "selected" : "")} value='{option.Id}' data-offset='{option.BaseUtcOffset.TotalMinutes}'>{option.DisplayName}</option>");
+					output.Content.AppendHtml($@"
+						<option {(option.Selected ? "selected" : "")} {Attr("value", option.Id)} {Attr("data-offset", option.BaseUtcOffset.TotalMinutes.ToString())}>
+							{Text(option.DisplayName)}
+						</option>
+					");
 				}
 
 				output.Content.AppendHtml("</optgroup>");

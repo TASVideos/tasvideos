@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -226,7 +227,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 				<button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span></button>
 			</div>
 			<div class='modal-body'>
-				<p>{WarningMessage}</p>
+				<p>{Text(WarningMessage)}</p>
 			</div>
 			<div class='modal-footer'>
 				<form action='{WebUtility.UrlDecode(AspHref)}' method='post'>

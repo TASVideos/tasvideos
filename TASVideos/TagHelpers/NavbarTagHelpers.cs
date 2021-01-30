@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 using TASVideos.Extensions;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -52,7 +53,7 @@ namespace TASVideos.TagHelpers
 			}
 
 			output.Content.SetHtmlContent(
-				$"<a href='#' class='nav-link dropdown-toggle' data-toggle='dropdown'>{Name}<span class='caret'></span></a>");
+				$"<a href='#' class='nav-link dropdown-toggle' data-toggle='dropdown'>{Text(Name ?? "")}<span class='caret'></span></a>");
 
 			output.Content.AppendHtml($"<div class='dropdown-menu'>{content}</div>");
 		}

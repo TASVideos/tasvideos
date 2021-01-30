@@ -51,7 +51,7 @@ namespace TASVideos.TagHelpers
 				}
 				catch
 				{
-					// TImeZoneInfo throws an exception if it can not find the timezone
+					// TimeZoneInfo throws an exception if it can not find the timezone
 					// Eat the exception and simply don't convert
 				}
 			}
@@ -61,7 +61,7 @@ namespace TASVideos.TagHelpers
 				: dateTime.ToString(CultureInfo.CurrentCulture);
 			output.TagName = "span";
 			output.TagMode = TagMode.StartTagAndEndTag;
-			output.Content.AppendHtml(dateStr);
+			output.Content.AppendHtml(TagHelperExtensions.Text(dateStr));
 		}
 
 		private void ValidateExpression()
