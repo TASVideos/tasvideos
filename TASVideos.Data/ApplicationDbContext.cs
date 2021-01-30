@@ -21,6 +21,11 @@ namespace TASVideos.Data
 		// TODO: internal
 		public const string SystemUser = "admin@tasvideos.org";
 
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+			: base(options)
+		{
+		}
+
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor? httpContextAccessor)
 			: base(options)
 		{
