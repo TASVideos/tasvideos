@@ -53,7 +53,7 @@ namespace TASVideos.WikiEngine
 
 			foreach (var r in results)
 			{
-				r.WriteHtmlDynamic(w, h);
+				r.WriteHtmlDynamic(w, new WriterContext(h));
 			}
 		}
 

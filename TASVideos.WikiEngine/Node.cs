@@ -23,7 +23,7 @@ namespace TASVideos.WikiEngine.AST
 		int CharStart { get; }
 		int CharEnd { get; set; }
 		INode Clone();
-		void WriteHtmlDynamic(TextWriter w, IWriterHelper h);
+		void WriteHtmlDynamic(TextWriter w, WriterContext h);
 
 		/// <summary>
 		/// Get the combined text content of this Node.  May not return useful values for foreign components (Modules).
@@ -42,7 +42,7 @@ namespace TASVideos.WikiEngine.AST
 	}
 
 	/// <summary>
-	/// Provides context that the wiki engine needs to render page results
+	/// Provides helpers that the wiki engine needs to render page results
 	/// </summary>
 	public interface IWriterHelper
 	{
@@ -60,20 +60,6 @@ namespace TASVideos.WikiEngine.AST
 		/// <param name="name">The name of the module.</param>
 		/// <param name="pp">The module's parameter text, direct from the markup.</param>
 		void RunViewComponent(TextWriter w, string name, string pp);
-
-		/// <summary>
-		/// Adds a table style filter expression for later use in table cells.
-		/// </summary>
-		/// <param name="pp">The raw parameter text from the markup.</param>
-		/// <returns></returns>
-		bool AddTdStyleFilter(string pp);
-
-		/// <summary>
-		/// Run all existing td style filters.
-		/// </summary>
-		/// <param name="text">The raw text to evalute against the style filters.</param>
-		/// <returns>A style attribute value, or null if no filters matched.</returns>
-		string? RunTdStyleFilters(string text);
 	}
 
 	/// <summary>
@@ -81,19 +67,9 @@ namespace TASVideos.WikiEngine.AST
 	/// </summary>
 	public class NullWriterHelper : IWriterHelper
 	{
-		public bool AddTdStyleFilter(string pp)
-		{
-			return true;
-		}
-
 		public bool CheckCondition(string condition)
 		{
 			return false;
-		}
-
-		public string? RunTdStyleFilters(string text)
-		{
-			return null;
 		}
 
 		public void RunViewComponent(TextWriter w, string name, string pp)
@@ -112,390 +88,73 @@ namespace TASVideos.WikiEngine.AST
 		List<INode> Children { get; }
 	}
 
-	public class Text : INode
+	/// <summary>
+	/// Used internally by nodes to assist them in writing output.
+	/// </summary>
+	public class WriterContext
 	{
-		public NodeType Type => NodeType.Text;
-		public string Content { get; }
-		public int CharStart { get; }
-		public int CharEnd { get; set; }
-		public Text(int charStart, string content)
+		private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new ();
+
+		public IWriterHelper Helper { get; }
+		public WriterContext(IWriterHelper helper)
 		{
-			CharStart = charStart;
-			Content = content;
+			Helper = helper;
 		}
 
-		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
+		/// <summary>
+		/// Adds a table style filter expression for later use in table cells.
+		/// </summary>
+		/// <param name="pp">The raw parameter text from the markup.</param>
+		/// <returns></returns>
+		public bool AddTdStyleFilter(string pp)
 		{
-			foreach (var c in Content)
+			var regex = ParamHelper.GetValueFor(pp, "pattern");
+			var style = ParamHelper.GetValueFor(pp, "style");
+			if (string.IsNullOrWhiteSpace(regex) || string.IsNullOrWhiteSpace(style))
 			{
-				switch (c)
+				return false;
+			}
+
+			try
+			{
+				// TODO: What's actually going on with these @s?
+				if (regex[0] == '@')
 				{
-					case '<':
-						w.Write("&lt;");
-						break;
-					case '&':
-						w.Write("&amp;");
-						break;
-					default:
-						w.Write(c);
-						break;
+					regex = regex[1..];
 				}
-			}
-		}
 
-		public INode Clone()
-		{
-			return (Text)MemberwiseClone();
-		}
-
-		public string InnerText(IWriterHelper h)
-		{
-			return Content;
-		}
-
-		public void DumpContentDescriptive(TextWriter w, string padding)
-		{
-			if (Content.Any(c => c < 0x20 && c != '\n' && c != '\t'))
-			{
-				w.Write(padding);
-				w.WriteLine("$UNPRINTABLE TEXT!!!");
-			}
-			else
-			{
-				var first = true;
-				foreach (var s in Content.Split('\n'))
+				if (regex[^1] == '@')
 				{
-					if (first)
-					{
-						first = false;
-					}
-					else
-					{
-						w.Write(padding);
-						w.WriteLine("$LF");
-					}
-
-					if (s.Length > 0)
-					{
-						w.Write(padding);
-						w.Write('"');
-						w.WriteLine(s);
-					}
+					regex = regex[..^1];
 				}
+
+				var r = new Regex(regex, RegexOptions.None, TimeSpan.FromSeconds(1));
+				_tableAttributeRunners.Add(new KeyValuePair<Regex, string>(r, style));
 			}
-		}
-
-		public IEnumerable<INode> CloneForToc()
-		{
-			return new[] { Clone() };
-		}
-	}
-
-	public class Element : INodeWithChildren
-	{
-		private static readonly Regex AllowedTagNames = new ("^[a-z0-9]+$");
-		private static readonly Regex AllowedAttributeNames = new ("^[a-z\\-]+$");
-		private static readonly HashSet<string> VoidTags = new ()
-		{
-			"area", "base", "br", "col", "embed", "hr", "img", "input",
-			"keygen", "link", "meta", "param", "source", "track", "wbr"
-		};
-		public NodeType Type => NodeType.Element;
-		public List<INode> Children { get; private set; } = new ();
-		public IDictionary<string, string> Attributes { get; private set; } = new Dictionary<string, string>();
-		public string Tag { get; }
-		public int CharStart { get; }
-		public int CharEnd { get; set; }
-		public Element(int charStart, string tag)
-		{
-			if (!AllowedTagNames.IsMatch(tag))
+			catch
 			{
-				throw new InvalidOperationException("Invalid tag name");
+				return false;
 			}
 
-			if (tag == "script" || tag == "style")
-			{
-				// we don't escape for these
-				throw new InvalidOperationException("Unsupported tag!");
-			}
-
-			CharStart = charStart;
-			Tag = tag;
+			return true;
 		}
 
-		public Element(int charStart, string tag, IEnumerable<INode> children)
-			: this(charStart, tag)
+		/// <summary>
+		/// Run all existing td style filters.
+		/// </summary>
+		/// <param name="text">The raw text to evalute against the style filters.</param>
+		/// <returns>A style attribute value, or null if no filters matched.</returns>
+		public string? RunTdStyleFilters(string text)
 		{
-			Children.AddRange(children);
-		}
-
-		public Element(int charStart, string tag, IEnumerable<KeyValuePair<string, string>> attributes, IEnumerable<INode> children)
-			: this(charStart, tag, children)
-		{
-			foreach (var kvp in attributes)
+			foreach (var (key, value) in _tableAttributeRunners)
 			{
-				Attributes.Add(kvp.Key, kvp.Value);
-			}
-		}
-
-		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
-		{
-			if (VoidTags.Contains(Tag) && Children.Count > 0)
-			{
-				throw new InvalidOperationException("Void tag with child content!");
-			}
-
-			IEnumerable<KeyValuePair<string, string>> attrs = Attributes;
-			if (Tag == "td")
-			{
-				var style = h.RunTdStyleFilters(InnerText(h));
-				if (style != null)
+				if (key.Match(text).Success)
 				{
-					attrs = attrs.Concat(new[] { new KeyValuePair<string, string>("style", style) });
+					return value;
 				}
 			}
 
-			w.Write('<');
-			w.Write(Tag);
-			foreach (var a in attrs)
-			{
-				if (!AllowedAttributeNames.IsMatch(a.Key))
-				{
-					throw new InvalidOperationException("Invalid attribute name");
-				}
-
-				w.Write(' ');
-				w.Write(a.Key);
-				w.Write("=\"");
-				foreach (var c in a.Value)
-				{
-					switch (c)
-					{
-						case '<':
-							w.Write("&lt;");
-							break;
-						case '&':
-							w.Write("&amp;");
-							break;
-						case '"':
-							w.Write("&quot;");
-							break;
-						default:
-							w.Write(c);
-							break;
-					}
-				}
-
-				w.Write('"');
-			}
-
-			if (VoidTags.Contains(Tag))
-			{
-				w.Write(" />");
-			}
-			else
-			{
-				w.Write('>');
-				foreach (var c in Children)
-				{
-					c.WriteHtmlDynamic(w, h);
-				}
-
-				w.Write("</");
-				w.Write(Tag);
-				w.Write('>');
-			}
-		}
-
-		public INode Clone()
-		{
-			var ret = (Element)MemberwiseClone();
-			ret.Children = Children.Select(c => c.Clone()).ToList();
-			ret.Attributes = new Dictionary<string, string>(Attributes);
-			return ret;
-		}
-
-		public string InnerText(IWriterHelper h)
-		{
-			return string.Join("", Children.Select(c => c.InnerText(h)));
-		}
-
-		public void DumpContentDescriptive(TextWriter w, string padding)
-		{
-			w.Write(padding);
-			w.Write('[');
-			w.Write(Tag);
-			w.Write(' ');
-			foreach (var kvp in Attributes.OrderBy(z => z.Key))
-			{
-				w.Write(kvp.Key);
-				w.Write('=');
-				w.Write(kvp.Value);
-				w.Write(' ');
-			}
-
-			w.WriteLine();
-			foreach (var child in Children)
-			{
-				child.DumpContentDescriptive(w, padding + '\t');
-			}
-
-			w.Write(padding);
-			w.Write(']');
-			w.Write(Tag);
-			w.WriteLine();
-		}
-
-		private static readonly HashSet<string> TocTagBlacklist = new ()
-		{
-			"a", "br"
-		};
-
-		public IEnumerable<INode> CloneForToc()
-		{
-			var children = Children.SelectMany(n => n.CloneForToc());
-			if (TocTagBlacklist.Contains(Tag))
-			{
-				return children;
-			}
-
-			var ret = (Element)MemberwiseClone();
-			ret.Children = children.ToList();
-			ret.Attributes = new Dictionary<string, string>(Attributes);
-			return new[] { ret };
-		}
-	}
-
-	public class IfModule : INodeWithChildren
-	{
-		public NodeType Type => NodeType.IfModule;
-		public List<INode> Children { get; private set; } = new ();
-		public string Condition { get; }
-		public int CharStart { get; }
-		public int CharEnd { get; set; }
-		public IfModule(int charStart, string condition)
-		{
-			CharStart = charStart;
-			Condition = condition;
-		}
-
-		public IfModule(int charStart, string condition, IEnumerable<INode> children)
-			: this(charStart, condition)
-		{
-			Children.AddRange(children);
-		}
-
-		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
-		{
-			if (h.CheckCondition(Condition))
-			{
-				foreach (var c in Children)
-				{
-					c.WriteHtmlDynamic(w, h);
-				}
-			}
-		}
-
-		public INode Clone()
-		{
-			var ret = (IfModule)MemberwiseClone();
-			ret.Children = Children.Select(c => c.Clone()).ToList();
-			return ret;
-		}
-
-		public string InnerText(IWriterHelper h)
-		{
-			return h.CheckCondition(Condition)
-				? string.Join("", Children.Select(c => c.InnerText(h)))
-				: "";
-		}
-
-		public void DumpContentDescriptive(TextWriter w, string padding)
-		{
-			w.Write(padding);
-			w.Write("?IF ");
-			w.Write(Condition);
-			w.WriteLine();
-			foreach (var child in Children)
-			{
-				child.DumpContentDescriptive(w, padding + '\t');
-			}
-
-			w.Write(padding);
-			w.Write("?ENDIF ");
-			w.Write(Condition);
-			w.WriteLine();
-		}
-
-		public IEnumerable<INode> CloneForToc()
-		{
-			return new[] { Clone() };
-		}
-	}
-
-	public class Module : INode
-	{
-		public NodeType Type => NodeType.Module;
-		public string Text { get; }
-		public int CharStart { get; }
-		public int CharEnd { get; set; }
-		public Module(int charStart, int charEnd, string text)
-		{
-			CharStart = charStart;
-			CharEnd = charEnd;
-			Text = text;
-		}
-
-		public void WriteHtmlDynamic(TextWriter w, IWriterHelper h)
-		{
-			var pp = Text.Split(new[] { '|' }, 2);
-			var moduleName = pp[0];
-			var moduleParams = pp.Length > 1 ? pp[1] : "";
-			if (moduleName.ToLower() == "settableattributes")
-			{
-				if (!h.AddTdStyleFilter(moduleParams))
-				{
-					var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-					div.Children.Add(new Text(CharStart, "Module Error for settableattributes: Couldn't parse parameter string " + moduleParams) { CharEnd = CharEnd });
-					div.Attributes["class"] = "module-error";
-					div.WriteHtmlDynamic(w, h);
-				}
-			}
-			else if (WikiModules.IsModule(moduleName))
-			{
-				h.RunViewComponent(w, moduleName, moduleParams);
-			}
-			else
-			{
-				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-				div.Children.Add(new Text(CharStart, "Unknown module " + moduleName) { CharEnd = CharEnd });
-				div.Attributes["class"] = "module-error";
-				div.WriteHtmlDynamic(w, h);
-			}
-		}
-
-		public INode Clone()
-		{
-			return (Module)MemberwiseClone();
-		}
-
-		public string InnerText(IWriterHelper h)
-		{
-			// could actually run the module here... but no.
-			return "";
-		}
-
-		public void DumpContentDescriptive(TextWriter w, string padding)
-		{
-			w.Write(padding);
-			w.Write('(');
-			w.Write(Text);
-			w.WriteLine(')');
-		}
-
-		public IEnumerable<INode> CloneForToc()
-		{
-			return Enumerable.Empty<INode>();
+			return null;
 		}
 	}
 }
