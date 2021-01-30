@@ -1,9 +1,10 @@
 -- Instructions
 -- Run a full Import
 -- Run this script
--- In SMMS, run Tasks -> Generate scripts
+-- In SMMS, Pick TASVideos database in object explorer
+--      - run Tasks -> Generate scripts
 --		- Pick all table
---		- Go to Advanced and pick Data
+--		- Go to Advanced -> Types of data to script, and change from Schema only to Data only
 --		- Save as SampleData.sql
 --		- Run
 --		- zip SampleData.sql and replace SampleData.zip
@@ -102,6 +103,11 @@ DELETE pr
 	LEFT JOIN @Publications ipu on pr.PublicationId = ipu.Id
 	WHERE ipu.Id IS NULL
 
+DELETE pu
+	FROM PublicationUrls pu	
+	LEFT JOIN @Publications ipu on pu.PublicationId = ipu.Id
+	WHERE ipu.Id IS NULL
+
 DECLARE @Submissions as TABLE (Id int primary key, WikiContentId int)
 INSERT INTO @Submissions
 	SELECT Id = s.Id, WikiContentId = s.WikiContentId
@@ -131,6 +137,10 @@ DELETE ssh
 
 UPDATE Publications SET MovieFile = 0x0
 UPDATE Submissions SET MovieFile = 0x0
+
+-- Delete Ram Addresses
+DELETE FROM GameRamAddressDomains
+DELETE FROM GameRamAddresses
 
 --Delete unncessary Games
 DECLARE @Games as Table (Id int primary key)
@@ -228,12 +238,13 @@ INSERT INTO @ActiveUsers
 	OR EXISTS (SELECT 1 FROM UserFiles uf where uf.AuthorId = u.Id)
 	OR EXISTS (SELECT 1 FROM Submissions s WHERE s.PublisherId = u.Id)
 	OR EXISTS (SELECT 1 FROM Submissions s WHERE s.JudgeId = u.Id)
+	OR EXISTS (SELECT 1 FROM Submissions s WHERE s.SubmitterId = u.Id)
 	OR EXISTS (SELECT 1 FROM SubmissionAuthors sa where sa.UserId = u.Id)
 	OR EXISTS (SELECT 1 FROM PublicationAuthors pa where pa.UserId = u.Id)
 	OR EXISTS (SELECT 1 FROM PublicationRatings pr WHERE pr.UserId = u.id)
 	OR EXISTS (SELECT 1 FROM ForumPosts fp WHERE fp.PosterId = u.Id)
 	OR EXISTS (SELECT 1 FROM ForumTopics ft WHERE ft.PosterId = u.Id)
-
+	
 DELETE ur
 	FROM UserRoles ur
 	LEFT JOIN @ActiveUsers iu on ur.UserId = iu.Id
@@ -247,5 +258,5 @@ DELETE u
 UPDATE [User] 
 	SET Signature = NULL,
 		LegacyPassword = NULL, -- We don't want to make these public
-		Email = null -- We dont' want to amek these public either
+		Email = null -- We dont' want to make these public either
 
