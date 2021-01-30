@@ -52,7 +52,9 @@ namespace TASVideos.Legacy.Imports
 				.Where(u => u.Email != "")
 				.ToList();
 
-			var banList = legacyForumContext.BanList.ToList();
+			var banList = legacyForumContext.BanList
+				.Where(b => b.UserId > 0)
+				.ToList();
 
 			// These were dug up from user_exceptions, which only has a few entries and complicated to parse, simpler to have a hardcoded list
 			var userExceptions = new[] { 150, 590, 905, 1210, 2659, 2758, 3254 };
