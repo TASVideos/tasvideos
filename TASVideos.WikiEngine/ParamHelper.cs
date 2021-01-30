@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TASVideos.Extensions;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.WikiEngine
 {
-	// ***************
-	// Parameter helpers
-	// These helpers assist with parsing wiki markup parameters from the user
-	// By design they need to gracefully handle all sorts of nonsense input from the user
-	// ***************
+	/// <summary>
+	/// Helpers for parsing parameters in wiki markup.
+	/// By design they need to gracefully handle all sorts of nonsense input from the user.
+	/// </summary>
 	public static class ParamHelper
 	{
 		/// <summary>
@@ -161,6 +159,52 @@ namespace TASVideos.ViewComponents
 			}
 
 			return GetValueFor(parameterStr, param).CsvToInts();
+		}
+	}
+
+	internal static class ExtensionsToJunkLater
+	{
+		/// <summary>
+		/// Takes a comma separated string and returns a list of values.
+		/// </summary>
+		public static IEnumerable<int> CsvToInts(this string? param)
+		{
+			if (string.IsNullOrWhiteSpace(param))
+			{
+				return Enumerable.Empty<int>();
+			}
+
+			var candidates = param.CsvToStrings();
+
+			var ids = new List<int>();
+			foreach (var candidate in candidates)
+			{
+				if (int.TryParse(candidate, out int parsed))
+				{
+					ids.Add(parsed);
+				}
+			}
+
+			return ids;
+		}
+
+		public static string[] SplitWithEmpty(this string str, string separator)
+		{
+			return str.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+		}
+
+		/// <summary>
+		/// Takes a comma separated string and returns a list of values.
+		/// </summary>
+		public static IEnumerable<string> CsvToStrings(this string? param)
+		{
+			// TODO: Rename this; this isn't "CSV".
+			return string.IsNullOrWhiteSpace(param)
+				? Enumerable.Empty<string>()
+				: param
+					.SplitWithEmpty(",")
+					.Where(p => !string.IsNullOrWhiteSpace(p))
+					.Select(p => p.Trim());
 		}
 	}
 }
