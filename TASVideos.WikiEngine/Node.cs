@@ -41,11 +41,38 @@ namespace TASVideos.WikiEngine.AST
 		IEnumerable<INode> CloneForToc();
 	}
 
+	/// <summary>
+	/// Provides context that the wiki engine needs to render page results
+	/// </summary>
 	public interface IWriterHelper
 	{
+		/// <summary>
+		/// Check the condition for one of the wiki language's conditional markups
+		/// </summary>
+		/// <param name="condition">The condition; eg `CanEditPages` or `!CanJudgeMovies`</param>
+		/// <returns>The value of the condition for the current user context.</returns>
 		bool CheckCondition(string condition);
+
+		/// <summary>
+		/// Run a ViewComponent ("module" in wiki lingo)
+		/// </summary>
+		/// <param name="w">The stream that the module should output its markup results to.</param>
+		/// <param name="name">The name of the module.</param>
+		/// <param name="pp">The module's parameter text, direct from the markup.</param>
 		void RunViewComponent(TextWriter w, string name, string pp);
+
+		/// <summary>
+		/// Adds a table style filter expression for later use in table cells.
+		/// </summary>
+		/// <param name="pp">The raw parameter text from the markup.</param>
+		/// <returns></returns>
 		bool AddTdStyleFilter(string pp);
+
+		/// <summary>
+		/// Run all existing td style filters.
+		/// </summary>
+		/// <param name="text">The raw text to evalute against the style filters.</param>
+		/// <returns>A style attribute value, or null if no filters matched.</returns>
 		string? RunTdStyleFilters(string text);
 	}
 
