@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.ViewComponents;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.Test.ViewComponents
 {

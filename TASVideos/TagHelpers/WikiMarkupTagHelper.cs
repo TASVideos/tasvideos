@@ -20,7 +20,6 @@ namespace TASVideos.TagHelpers
 	public class WikiMarkup : TagHelper, IWriterHelper
 	{
 		private readonly IViewComponentHelper _viewComponentHelper;
-		private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new ();
 
 		public WikiMarkup(IViewComponentHelper viewComponentHelper)
 		{
@@ -45,55 +44,9 @@ namespace TASVideos.TagHelpers
 			output.Content.SetHtmlContent(sw.ToString());
 		}
 
-		bool IWriterHelper.AddTdStyleFilter(string pp)
-		{
-			var regex = ParamHelper.GetValueFor(pp, "pattern");
-			var style = ParamHelper.GetValueFor(pp, "style");
-			if (string.IsNullOrWhiteSpace(regex) || string.IsNullOrWhiteSpace(style))
-			{
-				return false;
-			}
-
-			try
-			{
-				// TODO: What's actually going on with these @s?
-				if (regex[0] == '@')
-				{
-					regex = regex[1..];
-				}
-
-				if (regex[^1] == '@')
-				{
-					regex = regex[..^1];
-				}
-
-				var r = new Regex(regex, RegexOptions.None, TimeSpan.FromSeconds(1));
-				_tableAttributeRunners.Add(new KeyValuePair<Regex, string>(r, style));
-			}
-			catch
-			{
-				return false;
-			}
-
-			return true;
-		}
-
 		bool IWriterHelper.CheckCondition(string condition)
 		{
 			return HtmlExtensions.WikiCondition(ViewContext, condition);
-		}
-
-		string? IWriterHelper.RunTdStyleFilters(string text)
-		{
-			foreach (var (key, value) in _tableAttributeRunners)
-			{
-				if (key.Match(text).Success)
-				{
-					return value;
-				}
-			}
-
-			return null;
 		}
 
 		private static readonly IDictionary<string, Type> ViewComponents = Assembly
