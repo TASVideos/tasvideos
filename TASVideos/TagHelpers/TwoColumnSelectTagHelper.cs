@@ -159,6 +159,7 @@ namespace TASVideos.TagHelpers
 				_htmlGenerator.GenerateValidationMessage(ViewContext, IdList.ModelExplorer, IdList.Name, null, null, new { @class = "text-danger" }));
 
 			output.Content.AppendHtml("</div>");
+
 			// Script Tag
 			var uniqueFuncName = "twoColumnPicker" + context.UniqueId;
 			string script = $@"<script>function {JsIdentifier(uniqueFuncName)}() {{

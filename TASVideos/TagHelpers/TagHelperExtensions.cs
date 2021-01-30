@@ -40,13 +40,16 @@ namespace TASVideos.TagHelpers
 		public static string Attr(string name, string value)
 		{
 			if (!ValidAttributeName.IsMatch(name))
+			{
 				throw new ArgumentException($"Attribute name `{name}` contains invalid characters", nameof(name));
+			}
+
 			var sb = new StringBuilder(name.Length + value.Length + 3);
 			sb.Append(name);
 			sb.Append("=\"");
 			foreach (var c in name)
 			{
-				switch(c)
+				switch (c)
 				{
 					case '<':
 						sb.Append("&lt;");
@@ -62,6 +65,7 @@ namespace TASVideos.TagHelpers
 						break;
 				}
 			}
+
 			sb.Append('"');
 			return sb.ToString();
 		}
@@ -76,7 +80,7 @@ namespace TASVideos.TagHelpers
 			var sb = new StringBuilder(text.Length);
 			foreach (var c in text)
 			{
-				switch(c)
+				switch (c)
 				{
 					case '<':
 						sb.Append("&lt;");
@@ -89,6 +93,7 @@ namespace TASVideos.TagHelpers
 						break;
 				}
 			}
+
 			return sb.ToString();
 		}
 
@@ -101,7 +106,10 @@ namespace TASVideos.TagHelpers
 		public static string JsIdentifier(string identifier)
 		{
 			if (!ValidJsIdentifier.IsMatch(identifier))
+			{
 				throw new ArgumentException($"Identifier `{identifier}` contains invalid characters", nameof(identifier));
+			}
+
 			return identifier;
 		}
 
