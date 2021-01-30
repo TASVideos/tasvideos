@@ -1,13 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Topics.Models;
 using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Topics
@@ -62,7 +59,7 @@ namespace TASVideos.Pages.Forum.Topics
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPost(PollCreateModel poll)
+		public async Task<IActionResult> OnPost()
 		{
 			if (!ModelState.IsValid)
 			{
