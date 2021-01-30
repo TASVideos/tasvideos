@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 using TASVideos.Data;
 using TASVideos.Extensions;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -69,7 +70,7 @@ namespace TASVideos.TagHelpers
 					}
 
 					output.Content.AppendHtml(
-						$"<a href='{page}?Sort={sortStr}{AdditionalParams()}'>");
+						$"<a {Attr("href", ComputeHref(sortStr))}>");
 					output.Content.AppendHtml(displayName);
 
 					if (isSort)
@@ -90,6 +91,13 @@ namespace TASVideos.TagHelpers
 
 				output.Content.AppendHtml("</th>");
 			}
+		}
+
+		private string ComputeHref(string sortStr)
+		{
+			// TODO: Probably need some URL escaping in here
+			var page = ViewContext.ActionDescriptor.DisplayName;
+			return $"{page}?Sort={sortStr}{AdditionalParams()}";
 		}
 
 		private string AdditionalParams()
