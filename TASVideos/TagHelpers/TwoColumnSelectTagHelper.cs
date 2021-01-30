@@ -163,7 +163,7 @@ namespace TASVideos.TagHelpers
 			// Script Tag
 			var uniqueFuncName = "twoColumnPicker" + context.UniqueId;
 			string script = $@"<script>function {JsIdentifier(uniqueFuncName)}() {{
-				var twoColumnChangeEvent = new CustomEvent({JsValue(modelName + "Change")}, {{ bubbles: true }});
+				var twoColumnChangeEvent = new CustomEvent({JsValue(modelName + "Changed")}, {{ bubbles: true }});
 
 				document.getElementById({JsValue(parentContainerName)}).listChangedCallback = null;
 
