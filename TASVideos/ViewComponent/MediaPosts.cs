@@ -32,11 +32,13 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IEnumerable<MediaPost>> GetPosts(DateTime startDate, int limit)
 		{
+			var canSeeRestricted = UserClaimsPrincipal.Has(PermissionTo.SeeRestrictedForums);
+
 			return await _db.MediaPosts
 				.Since(startDate)
-				.Where(m => m.Type != PostType.Critical.ToString()) // TODO: Permission check to see these
-				.Where(m => m.Type != PostType.Administrative.ToString()) // TODO: Permission check to see these
-				.Where(m => m.Type != PostType.Log.ToString()) // TODO: Permission check to see these (and/or a parameter)
+				.Where(m => canSeeRestricted || m.Type != PostType.Critical.ToString())
+				.Where(m => canSeeRestricted || m.Type != PostType.Administrative.ToString())
+				.Where(m => canSeeRestricted || m.Type != PostType.Log.ToString())
 				.ByMostRecent()
 				.Take(limit)
 				.ToListAsync();

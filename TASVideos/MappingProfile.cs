@@ -16,8 +16,6 @@ using TASVideos.Pages.Users.Models;
 using TASVideos.Pages.Wiki.Models;
 using TASVideos.ViewComponents;
 
-// ReSharper disable StyleCop.SA1115
-// ReSharper disable StyleCop.SA1116
 namespace TASVideos
 {
 	public class MappingProfile : Profile

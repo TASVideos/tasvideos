@@ -8,8 +8,6 @@ using TASVideos.Data.Helpers;
 using TASVideos.Legacy.Data.Site;
 using TASVideos.Legacy.Data.Site.Entity;
 
-// ReSharper disable StyleCop.SA1201
-// ReSharper disable StyleCop.SA1503
 namespace TASVideos.Legacy.Imports
 {
 	public static class WikiImporter
