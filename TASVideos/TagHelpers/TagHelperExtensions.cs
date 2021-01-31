@@ -98,7 +98,7 @@ namespace TASVideos.TagHelpers
 		}
 
 		// This is overly restrictive.  If you want to name your js identifiers fÖÖbar, feel free to change it.
-		private static readonly Regex ValidJsIdentifier = new Regex("^[a-zA-Z_$][^[a-zA-Z_$0-9]+$");
+		private static readonly Regex ValidJsIdentifier = new Regex("^[a-zA-Z_\\-$][a-zA-Z_\\-$0-9]+$");
 
 		/// <summary>
 		/// Returns a JS identifier suitable for use inside a script tag, after verifying that all characters in it are sane
