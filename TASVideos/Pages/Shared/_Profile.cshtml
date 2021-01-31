@@ -4,7 +4,22 @@
 	<div class="col-md-6">
 		<card>
 			<cardheader>
-				<h4>@Model.UserName <a permission="EditUsers" class="btn btn-primary btn-sm" asp-page="/Users/Edit" asp-route-returnUrl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Edit</a></h4>
+				<h4>
+					<a condition="User.IsLoggedIn()"
+					   asp-page="/Messages/Create"
+					   asp-route-defaultToUser="@Model.UserName"
+					   class="btn btn-secondary btn-sm">
+						PM
+					</a>
+					<a permission="EditUsers"
+					   asp-page="/Users/Edit"
+					   asp-route-returnUrl="@Context.ReturnUrl()"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-primary btn-sm">
+						Edit
+					</a>
+					@Model.UserName
+				</h4>
 			</cardheader>
 			<cardbody>
 				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
