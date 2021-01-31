@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data.Entity;
 
-// ReSharper disable StyleCop.SA1202
 // ReSharper disable StaticMemberInitializerReferesToMemberBelow
 namespace TASVideos.Data.SeedData
 {
