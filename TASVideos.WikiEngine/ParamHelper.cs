@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace TASVideos.WikiEngine
 {
@@ -10,6 +11,15 @@ namespace TASVideos.WikiEngine
 	/// </summary>
 	public static class ParamHelper
 	{
+		private static readonly Regex ValidParameterNameRegex = new Regex("^[a-zA-Z]+$");
+
+		private static string NormalizeParameterName(string parameterName)
+		{
+			if (!ValidParameterNameRegex.IsMatch(parameterName))
+				throw new ArgumentException($"Parameter name `{parameterName}` is invalid", nameof(parameterName));
+			return parameterName.ToLowerInvariant();
+		}
+
 		/// <summary>
 		/// Returns whether or not a parameter is specified in the list
 		/// Returns true as long as the parameter is specified, it does not have to have a corresponding value.
@@ -17,14 +27,11 @@ namespace TASVideos.WikiEngine
 		/// <param name="parameterStr">The full parameter string.</param>
 		/// <param name="parameterName">the parameter for which to return a value from.</param>
 		/// <returns>true if the parameter is specified, else false.</returns>
-		public static bool HasParam(string? parameterStr, string? parameterName)
+		public static bool HasParam(string? parameterStr, string parameterName)
 		{
-			if (string.IsNullOrWhiteSpace(parameterStr))
-			{
-				return false;
-			}
+			parameterName = NormalizeParameterName(parameterName);
 
-			if (string.IsNullOrWhiteSpace(parameterName))
+			if (string.IsNullOrWhiteSpace(parameterStr))
 			{
 				return false;
 			}
@@ -46,14 +53,11 @@ namespace TASVideos.WikiEngine
 		/// <param name="parameterStr">The full parameter string.</param>
 		/// <param name="paramName">the parameter for which to return a value from.</param>
 		/// <returns>The value of the given parameter if it is exists, else empty string.</returns>
-		public static string GetValueFor(string? parameterStr, string? paramName)
+		public static string GetValueFor(string? parameterStr, string parameterName)
 		{
-			if (string.IsNullOrWhiteSpace(parameterStr))
-			{
-				return "";
-			}
+			parameterName = NormalizeParameterName(parameterName);
 
-			if (string.IsNullOrWhiteSpace(paramName))
+			if (string.IsNullOrWhiteSpace(parameterStr))
 			{
 				return "";
 			}
@@ -67,7 +71,7 @@ namespace TASVideos.WikiEngine
 					.SplitWithEmpty("=")
 					.Select(s => s.Trim())
 					.ToList();
-				if (pair.Count > 1 && string.Equals(pair[0], paramName, StringComparison.OrdinalIgnoreCase))
+				if (pair.Count > 1 && string.Equals(pair[0], parameterName, StringComparison.OrdinalIgnoreCase))
 				{
 					return string.IsNullOrWhiteSpace(pair[1])
 						? ""
@@ -82,14 +86,9 @@ namespace TASVideos.WikiEngine
 		/// Takes the given string and parses it to an int if possible.
 		/// If an integer can not ber parsed from the given value, null is returned.
 		/// </summary>
-		public static int? GetInt(string parameterStr, string param)
+		public static int? GetInt(string parameterStr, string parameterName)
 		{
-			if (string.IsNullOrWhiteSpace(param))
-			{
-				return null;
-			}
-
-			var val = GetValueFor(parameterStr, param).ToLower();
+			var val = GetValueFor(parameterStr, parameterName).ToLower();
 
 			var result = int.TryParse(val, out int parsedVal);
 			if (result)
@@ -104,14 +103,9 @@ namespace TASVideos.WikiEngine
 		/// Takes the given string and parses it to an int if possible.
 		/// But also accepts Y prefixed values such as Y2014.
 		/// </summary>
-		public static int? GetYear(string? parameterStr, string? param)
+		public static int? GetYear(string? parameterStr, string parameterName)
 		{
-			if (string.IsNullOrWhiteSpace(param))
-			{
-				return null;
-			}
-
-			var val = GetValueFor(parameterStr, param).ToLower();
+			var val = GetValueFor(parameterStr, parameterName).ToLower();
 
 			if (string.IsNullOrWhiteSpace(val))
 			{
@@ -129,14 +123,14 @@ namespace TASVideos.WikiEngine
 			return null;
 		}
 
-		public static IEnumerable<int> GetInts(string? parameterStr, string? param)
+		public static IEnumerable<int> GetInts(string? parameterStr, string parameterName)
 		{
-			if (string.IsNullOrWhiteSpace(parameterStr) || string.IsNullOrWhiteSpace(param))
+			if (string.IsNullOrWhiteSpace(parameterStr))
 			{
 				return Enumerable.Empty<int>();
 			}
 
-			return GetValueFor(parameterStr, param).CsvToInts();
+			return GetValueFor(parameterStr, parameterName).CsvToInts();
 		}
 	}
 
