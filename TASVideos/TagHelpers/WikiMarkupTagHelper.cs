@@ -175,7 +175,7 @@ namespace TASVideos.TagHelpers
 
 	public class StringArrayConverter : IModuleParameterTypeAdapter<IList<string>>
 	{
-		public IList<string>Convert(string? input)
+		public IList<string> Convert(string? input)
 		{
 			return (input ?? "")
 				.Split(",")
@@ -197,7 +197,7 @@ namespace TASVideos.TagHelpers
 	{
 		public DateTime? Convert(string? input)
 		{
-			if (input != null && (input[0] == 'Y' || input[0] == 'y'))
+			if (input?.Length >= 1 && (input[0] == 'Y' || input[0] == 'y'))
 			{
 				var tmp = int.TryParse(input[1..], out var year);
 				if (tmp)
@@ -205,6 +205,7 @@ namespace TASVideos.TagHelpers
 					return new DateTime(year, 1, 1);
 				}
 			}
+
 			return null;
 		}
 	}
