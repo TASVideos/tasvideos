@@ -103,7 +103,7 @@ namespace TASVideos.Data
 
 		/// <summary>
 		/// Creates the database and seeds it with necessary seed data
-		/// Seed data is necessary data for a production release
+		/// Seed data is necessary data for a production release.
 		/// </summary>
 		private static void Initialize(DbContext context)
 		{
@@ -114,7 +114,7 @@ namespace TASVideos.Data
 		}
 
 		/// <summary>
-		/// Adds data necessary for production, should be run before legacy migration processes
+		/// Adds data necessary for production, should be run before legacy migration processes.
 		/// </summary>
 		private static void PreMigrateSeedData(ApplicationDbContext context)
 		{
@@ -161,7 +161,7 @@ namespace TASVideos.Data
 		/// <summary>
 		/// Adds optional sample users for each role in the system for testing purposes
 		/// Roles must already exist before running this
-		/// DO NOT run this on production environments! This generates users with high level access and a default and public password
+		/// DO NOT run this on production environments! This generates users with high level access and a default and public password.
 		/// </summary>
 		private static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager userManager)
 		{
@@ -171,7 +171,6 @@ namespace TASVideos.Data
 
 			foreach (var role in roles.Where(r => !r.IsDefault))
 			{
-				// TODO: make 2 of them
 				var user = new User
 				{
 					UserName = role.Name.Replace(" ", ""),
@@ -217,7 +216,7 @@ namespace TASVideos.Data
 
 		/// <summary>
 		/// Adds optional sample data
-		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release
+		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release.
 		/// </summary>
 		private static async Task GenerateDevSampleData(DbContext context)
 		{
