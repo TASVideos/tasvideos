@@ -68,7 +68,7 @@ namespace TASVideos.TagHelpers
 
 			var invokeMethod = viewComponent!.GetMethod("InvokeAsync")
 				?? viewComponent.GetMethod("Invoke");
-			
+
 			if (invokeMethod == null)
 				throw new InvalidOperationException($"Could not find an Invoke method on ViewComponent {viewComponent}");
 
