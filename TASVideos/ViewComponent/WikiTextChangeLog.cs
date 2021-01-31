@@ -23,13 +23,7 @@ namespace TASVideos.ViewComponents
 		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
 			int limit = 50;
-			bool includeMinorEdits = true;
-
-			bool? paramIncludeMinorEdits = ParamHelper.GetBool(pp, "includeminors");
-			if (paramIncludeMinorEdits.HasValue)
-			{
-				includeMinorEdits = paramIncludeMinorEdits.Value;
-			}
+			bool includeMinorEdits = ParamHelper.HasParam(pp, "includeminors");
 
 			int? paramLimit = ParamHelper.GetInt(pp, "limit");
 			if (paramLimit.HasValue)

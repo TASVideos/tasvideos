@@ -79,28 +79,6 @@ namespace TASVideos.WikiEngine
 		}
 
 		/// <summary>
-		/// Takes the given string value and parses it to a bool if possible.
-		/// If a true/false value can not be determined, null is returned.
-		/// Possible values (case insensitive): true/false, yes/no, y/n
-		/// if a string is null, empty, or whitespace, null is returned.
-		/// </summary>
-		public static bool? GetBool(string? parameterStr, string? param)
-		{
-			if (string.IsNullOrWhiteSpace(param))
-			{
-				return null;
-			}
-
-			string val = GetValueFor(parameterStr, param).ToLower();
-			return val switch
-			{
-				"true" or "yes" or "y" or "1" => true,
-				"false" or "no" or "n" or "0" => false,
-				_ => null,
-			};
-		}
-
-		/// <summary>
 		/// Takes the given string and parses it to an int if possible.
 		/// If an integer can not ber parsed from the given value, null is returned.
 		/// </summary>
