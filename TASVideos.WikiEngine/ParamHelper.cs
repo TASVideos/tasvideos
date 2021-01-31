@@ -11,12 +11,15 @@ namespace TASVideos.WikiEngine
 	/// </summary>
 	public static class ParamHelper
 	{
-		private static readonly Regex ValidParameterNameRegex = new Regex("^[a-zA-Z]+$");
+		private static readonly Regex ValidParameterNameRegex = new ("^[a-zA-Z]+$");
 
 		private static string NormalizeParameterName(string parameterName)
 		{
 			if (!ValidParameterNameRegex.IsMatch(parameterName))
+			{
 				throw new ArgumentException($"Parameter name `{parameterName}` is invalid", nameof(parameterName));
+			}
+
 			return parameterName.ToLowerInvariant();
 		}
 
@@ -51,7 +54,7 @@ namespace TASVideos.WikiEngine
 		/// Returns the value of the given parameter from the parameter list in string form.
 		/// </summary>
 		/// <param name="parameterStr">The full parameter string.</param>
-		/// <param name="paramName">the parameter for which to return a value from.</param>
+		/// <param name="parameterName">the parameter for which to return a value from.</param>
 		/// <returns>The value of the given parameter if it is exists, else empty string.</returns>
 		public static string GetValueFor(string parameterStr, string parameterName)
 		{
