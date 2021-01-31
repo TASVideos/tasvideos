@@ -11,11 +11,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class WikiPageCleanup
 	{
-		private class UserDto
-		{
-			public string Name { get; init; } = "";
-			public string HomePage { get; init; } = "";
-		}
+		private record UserDto(string Name, string HomePage);
 
 		public static void Fix(
 			ApplicationDbContext context,
@@ -27,7 +23,7 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var legUsers = legacySiteContext.Users
-				.Select(u => new UserDto { Name = u.Name, HomePage = u.HomePage })
+				.Select(u => new UserDto(u.Name, u.HomePage))
 				.ToList();
 
 			foreach (var page in currentPages)
