@@ -113,6 +113,10 @@ namespace TASVideos.Legacy.Imports
 			{
 				pageName = "NoGameName";
 			}
+			else if (pageName == "Roles")
+			{
+				pageName = "Roles/Details";
+			}
 			else if (!string.IsNullOrEmpty(userName))
 			{
 				// Use the user's name for the page name instead of the actual page,
