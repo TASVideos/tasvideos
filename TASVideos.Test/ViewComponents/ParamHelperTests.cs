@@ -24,6 +24,8 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("name=|id=1", "ID", true)]
 		[DataRow("name=|iD=1", "id", true)]
 		[DataRow(" name = | iD =1", "id", true)]
+		[DataRow("a", "a", true)]
+		[DataRow("   ab    |  c    ", "c", true)]
 		public void HasParam(string parameterStr, string param, bool expected)
 		{
 			var actual = ParamHelper.HasParam(parameterStr, param);
