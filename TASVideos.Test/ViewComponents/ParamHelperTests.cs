@@ -18,8 +18,6 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("id =", "id", true)]
 		[DataRow("name=test|id=1", "id", true)]
 		[DataRow("name=|id=1", "id", true)]
-		[DataRow("id=1", null, false)]
-		[DataRow("|=", "=", false)]
 		[DataRow("|||", "id", false)]
 		[DataRow("name=|id=1", "ID", true)]
 		[DataRow("name=|iD=1", "id", true)]
@@ -33,14 +31,8 @@ namespace TASVideos.Test.ViewComponents
 		}
 
 		[TestMethod]
-		[DataRow(null, null, "")]
-		[DataRow("", null, "")]
-		[DataRow("\r \n \t", null, "")]
 		[DataRow("\r \n \t", "anyParam", "")]
 		[DataRow("|||", "anyParam", "")]
-		[DataRow("name=test|id=1", null, "")]
-		[DataRow("name=test|id=1", "", "")]
-		[DataRow("name=test|id=1", "\r \n \t", "")]
 		[DataRow("id=", "id", "")]
 		[DataRow("id= ", "id", "")]
 		[DataRow("id=1", "id", "1")]
@@ -54,11 +46,6 @@ namespace TASVideos.Test.ViewComponents
 		}
 
 		[TestMethod]
-		[DataRow(null, null, null)]
-		[DataRow("", null, null)]
-		[DataRow("\r \n \t", null, null)]
-		[DataRow(null, "", null)]
-		[DataRow(null, "\r \n \t", null)]
 		[DataRow("num", "num", null)]
 		[DataRow("num=", "num", null)]
 		[DataRow("num=notnumber", "num", null)]
@@ -76,11 +63,6 @@ namespace TASVideos.Test.ViewComponents
 		}
 
 		[TestMethod]
-		[DataRow(null, null, null)]
-		[DataRow("", null, null)]
-		[DataRow("\r \n \t", null, null)]
-		[DataRow(null, "", null)]
-		[DataRow(null, "\r \n \t", null)]
 		[DataRow("num", "num", null)]
 		[DataRow("num=", "num", null)]
 		[DataRow("num=notnumber", "num", null)]
@@ -100,11 +82,6 @@ namespace TASVideos.Test.ViewComponents
 		}
 
 		[TestMethod]
-		[DataRow(null, null, new int[0])]
-		[DataRow("", null, new int[0])]
-		[DataRow("\r \n \t", null, new int[0])]
-		[DataRow(null, "", new int[0])]
-		[DataRow(null, "\r \n \t", new int[0])]
 		[DataRow("csv", "csv", new int[0])]
 		[DataRow("csv=", "csv", new int[0])]
 		[DataRow("csv=notnumber", "csv", new int[0])]
