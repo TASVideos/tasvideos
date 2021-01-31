@@ -27,7 +27,7 @@ namespace TASVideos.WikiEngine
 		/// <param name="parameterStr">The full parameter string.</param>
 		/// <param name="parameterName">the parameter for which to return a value from.</param>
 		/// <returns>true if the parameter is specified, else false.</returns>
-		public static bool HasParam(string? parameterStr, string parameterName)
+		public static bool HasParam(string parameterStr, string parameterName)
 		{
 			parameterName = NormalizeParameterName(parameterName);
 
@@ -53,7 +53,7 @@ namespace TASVideos.WikiEngine
 		/// <param name="parameterStr">The full parameter string.</param>
 		/// <param name="paramName">the parameter for which to return a value from.</param>
 		/// <returns>The value of the given parameter if it is exists, else empty string.</returns>
-		public static string GetValueFor(string? parameterStr, string parameterName)
+		public static string GetValueFor(string parameterStr, string parameterName)
 		{
 			parameterName = NormalizeParameterName(parameterName);
 
@@ -103,7 +103,7 @@ namespace TASVideos.WikiEngine
 		/// Takes the given string and parses it to an int if possible.
 		/// But also accepts Y prefixed values such as Y2014.
 		/// </summary>
-		public static int? GetYear(string? parameterStr, string parameterName)
+		public static int? GetYear(string parameterStr, string parameterName)
 		{
 			var val = GetValueFor(parameterStr, parameterName).ToLower();
 
@@ -123,7 +123,7 @@ namespace TASVideos.WikiEngine
 			return null;
 		}
 
-		public static IEnumerable<int> GetInts(string? parameterStr, string parameterName)
+		public static IEnumerable<int> GetInts(string parameterStr, string parameterName)
 		{
 			if (string.IsNullOrWhiteSpace(parameterStr))
 			{

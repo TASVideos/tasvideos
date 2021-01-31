@@ -9,7 +9,6 @@ namespace TASVideos.Test.ViewComponents
 	public class ParamHelperTests
 	{
 		[TestMethod]
-		[DataRow(null, "anyParam", false)]
 		[DataRow("", "anyParam", false)]
 		[DataRow("\n \r \t", "anyParam", false)]
 		[DataRow("id=1", "id", true)]
