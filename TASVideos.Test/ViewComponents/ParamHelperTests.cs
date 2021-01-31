@@ -59,35 +59,6 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("\r \n \t", null, null)]
 		[DataRow(null, "", null)]
 		[DataRow(null, "\r \n \t", null)]
-		[DataRow("isFoo", "isFoo", null)]
-		[DataRow("isFoo=", "isFoo", null)]
-		[DataRow("isFoo=false", "isFoo", false)]
-		[DataRow("isFoo=False", "isFoo", false)]
-		[DataRow("isFoo=no", "isFoo", false)]
-		[DataRow("isFoo=No", "isFoo", false)]
-		[DataRow("isFoo=n", "isFoo", false)]
-		[DataRow("isFoo=N", "isFoo", false)]
-		[DataRow("isFoo=0", "isFoo", false)]
-		[DataRow("isFoo=True", "isFoo", true)]
-		[DataRow("isFoo=true", "isFoo", true)]
-		[DataRow("isFoo=yes", "isFoo", true)]
-		[DataRow("isFoo=Yes", "isFoo", true)]
-		[DataRow("isFoo=Y", "isFoo", true)]
-		[DataRow("isFoo=y", "isFoo", true)]
-		[DataRow("isFoo=1", "isFoo", true)]
-		[DataRow(" ISFoo = y ", "isfoo", true)]
-		public void GetBool(string parameterStr, string param, bool? expected)
-		{
-			var actual = ParamHelper.GetBool(parameterStr, param);
-			Assert.AreEqual(expected, actual);
-		}
-
-		[TestMethod]
-		[DataRow(null, null, null)]
-		[DataRow("", null, null)]
-		[DataRow("\r \n \t", null, null)]
-		[DataRow(null, "", null)]
-		[DataRow(null, "\r \n \t", null)]
 		[DataRow("num", "num", null)]
 		[DataRow("num=", "num", null)]
 		[DataRow("num=notnumber", "num", null)]

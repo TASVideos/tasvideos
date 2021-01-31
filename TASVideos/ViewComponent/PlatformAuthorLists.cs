@@ -21,7 +21,7 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(string pp)
 		{
-			var showTiers = ParamHelper.GetBool(pp, "showtiers");
+			var showTiers = ParamHelper.HasParam(pp, "showtiers");
 			var before = ParamHelper.GetYear(pp, "before");
 			var after = ParamHelper.GetYear(pp, "after");
 			var platforms = ParamHelper.GetInts(pp, "platforms").ToList();
@@ -33,7 +33,7 @@ namespace TASVideos.ViewComponents
 
 			var model = new PlatformAuthorListModel
 			{
-				ShowTiers = showTiers ?? false,
+				ShowTiers = showTiers,
 				Publications = await _db.Publications
 					.ForYearRange(before.Value, after.Value)
 					.Where(p => platforms.Contains(p.SystemId))
