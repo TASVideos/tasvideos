@@ -332,39 +332,47 @@ namespace TASVideos.WikiEngine.AST
 	public class Module : INode
 	{
 		public NodeType Type => NodeType.Module;
-		public string Text { get; }
+		public string Name { get; }
+		public IReadOnlyDictionary<string, string> Parameters { get; }
 		public int CharStart { get; }
 		public int CharEnd { get; set; }
 		public Module(int charStart, int charEnd, string text)
 		{
 			CharStart = charStart;
 			CharEnd = charEnd;
-			Text = text;
+
+			var pp = text.Split('|');
+			Name = pp[0];
+			Parameters = pp.Skip(1)
+				.Select(p => p.Split(new[] { '=' }, 2))
+				.Where(p => !string.IsNullOrWhiteSpace(p[0]))
+				.ToDictionary(
+					p => p[0].Trim().ToLowerInvariant(),
+					p => p.Length > 1 ? p[1].Trim() : "",
+					StringComparer.InvariantCultureIgnoreCase
+				);
 		}
 
 		public void WriteHtmlDynamic(TextWriter w, WriterContext ctx)
 		{
-			var pp = Text.Split(new[] { '|' }, 2);
-			var moduleName = pp[0];
-			var moduleParams = pp.Length > 1 ? pp[1] : "";
-			if (moduleName.ToLower() == "settableattributes")
+			if (Name.ToLowerInvariant() == "settableattributes")
 			{
-				if (!ctx.AddTdStyleFilter(moduleParams))
+				if (!ctx.AddTdStyleFilter(Parameters))
 				{
 					var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-					div.Children.Add(new Text(CharStart, "Module Error for settableattributes: Couldn't parse parameter string " + moduleParams) { CharEnd = CharEnd });
+					div.Children.Add(new Text(CharStart, "Module Error for settableattributes: Couldn't parse parameter string.") { CharEnd = CharEnd });
 					div.Attributes["class"] = "module-error";
 					div.WriteHtmlDynamic(w, ctx);
 				}
 			}
-			else if (WikiModules.IsModule(moduleName))
+			else if (WikiModules.IsModule(Name))
 			{
-				ctx.Helper.RunViewComponent(w, moduleName, moduleParams);
+				ctx.Helper.RunViewComponent(w, Name, Parameters);
 			}
 			else
 			{
 				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-				div.Children.Add(new Text(CharStart, "Unknown module " + moduleName) { CharEnd = CharEnd });
+				div.Children.Add(new Text(CharStart, "Unknown module " + Name) { CharEnd = CharEnd });
 				div.Attributes["class"] = "module-error";
 				div.WriteHtmlDynamic(w, ctx);
 			}
@@ -385,7 +393,14 @@ namespace TASVideos.WikiEngine.AST
 		{
 			w.Write(padding);
 			w.Write('(');
-			w.Write(Text);
+			w.Write(Name);
+			foreach (var (k, v) in Parameters.OrderBy(kvp => kvp.Key))
+			{
+				w.Write('|');
+				w.Write(k);
+				w.Write('=');
+				w.Write(v);
+			}
 			w.WriteLine(')');
 		}
 

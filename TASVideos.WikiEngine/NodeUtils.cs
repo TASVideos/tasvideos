@@ -96,9 +96,9 @@ namespace TASVideos.WikiEngine.AST
 			{
 				if (node is Module m)
 				{
-					if (m.Text.StartsWith("__wikiLink|"))
+					if (m.Name == "__wikiLink")
 					{
-						var link = m.Text.Split('|')[1];
+						var link = m.Parameters["href"];
 						AddLink(link, node);
 					}
 				}

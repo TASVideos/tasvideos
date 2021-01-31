@@ -17,7 +17,7 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public IViewComponentResult Invoke(WikiPage pageData, string pp)
+		public IViewComponentResult Invoke(WikiPage pageData, bool show)
 		{
 			if (string.IsNullOrWhiteSpace(pageData.PageName))
 			{
@@ -31,7 +31,7 @@ namespace TASVideos.ViewComponents
 
 			ViewData["Parent"] = pageData.PageName;
 
-			if (pp.Contains("show"))
+			if (show)
 			{
 				ViewData["show"] = true;
 			}

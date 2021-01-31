@@ -9,25 +9,12 @@ namespace TASVideos.ViewComponents
 	[WikiModule(WikiModules.TimeSinceDate)]
 	public class TimeSinceDate : ViewComponent
 	{
-		public IViewComponentResult Invoke(string pp)
+		public IViewComponentResult Invoke(int d, int m, int y, string @out)
 		{
-			var day = ParamHelper.GetInt(pp, "d");
-			var month = ParamHelper.GetInt(pp, "m");
-			var year = ParamHelper.GetInt(pp, "y");
-			var outType = ParamHelper.GetValueFor(pp, "out");
-
-			if (!day.HasValue
-				|| !month.HasValue
-				|| !year.HasValue
-				|| string.IsNullOrWhiteSpace(outType))
-			{
-				return new ContentViewComponentResult("Error: missing parameters!");
-			}
-
-			var previousDate = new DateTime(year.Value, month.Value, day.Value);
+			var previousDate = new DateTime(y, m, d);
 			var nowDate = DateTime.UtcNow;
 
-			string output = outType.ToLower() switch
+			string output = @out.ToLowerInvariant() switch
 			{
 				"days" => ((int)(nowDate - previousDate).TotalDays).ToString(CultureInfo.CurrentCulture),
 				"years" => GetDifferenceInYears(previousDate, nowDate).ToString(CultureInfo.CurrentCulture),

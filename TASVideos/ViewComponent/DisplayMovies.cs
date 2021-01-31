@@ -30,34 +30,34 @@ namespace TASVideos.ViewComponents
 			_tokens = tokens;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(
+			IList<string> tier,
+			IList<string> systemCode,
+			bool obs,
+			IList<int> year,
+			IList<string> tag,
+			IList<string> flag,
+			IList<int> group,
+			IList<int> id,
+			IList<int> game,
+			IList<int> author
+		)
 		{
 			var tokenLookup = await _tokens.GetTokens();
 
-			var tiers = ParamHelper.GetValueFor(pp, "tier").CsvToStrings();
-			var systemCodes = ParamHelper.GetValueFor(pp, "systemCode").CsvToStrings();
-			var obs = ParamHelper.HasParam(pp, "obs");
-			var years = ParamHelper.GetValueFor(pp, "year").CsvToInts().ToList();
-			var tags = ParamHelper.GetValueFor(pp, "tag").CsvToStrings();
-			var flags = ParamHelper.GetValueFor(pp, "flag").CsvToStrings();
-			var groups = ParamHelper.GetValueFor(pp, "group").CsvToInts();
-			var ids = ParamHelper.GetValueFor(pp, "id").CsvToInts();
-			var games = ParamHelper.GetValueFor(pp, "game").CsvToInts();
-			var authors = ParamHelper.GetValueFor(pp, "author").CsvToInts();
-
 			var searchModel = new PublicationSearchModel
 			{
-				Tiers = tokenLookup.Tiers.Where(t => tiers.Contains(t)),
-				SystemCodes = tokenLookup.SystemCodes.Where(s => systemCodes.Contains(s)),
+				Tiers = tokenLookup.Tiers.Where(t => tier.Contains(t)),
+				SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Contains(s)),
 				ShowObsoleted = obs,
-				Years = tokenLookup.Years.Where(y => years.Contains(y)),
-				Tags = tokenLookup.Tags.Where(t => tags.Contains(t)),
-				Genres = tokenLookup.Genres.Where(g => tags.Contains(g)),
-				Flags = tokenLookup.Flags.Where(f => flags.Contains(f)),
-				MovieIds = ids,
-				Games = games,
-				GameGroups = groups,
-				Authors = authors
+				Years = tokenLookup.Years.Where(y => year.Contains(y)),
+				Tags = tokenLookup.Tags.Where(t => tag.Contains(t)),
+				Genres = tokenLookup.Genres.Where(g => tag.Contains(g)),
+				Flags = tokenLookup.Flags.Where(f => flag.Contains(f)),
+				MovieIds = id,
+				Games = game,
+				GameGroups = group,
+				Authors = author
 			};
 
 			if (searchModel.IsEmpty)

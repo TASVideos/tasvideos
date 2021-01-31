@@ -6,39 +6,35 @@ namespace TASVideos.ViewComponents
 	[WikiModule(WikiModules.Youtube)]
 	public class Youtube : ViewComponent
 	{
-		public IViewComponentResult Invoke(string pp)
+		public IViewComponentResult Invoke(string v, int? loop, bool hidelink, bool flashblock, int? width, int? height, string? align, int? start)
 		{
 			var model = new YoutubeModel
 			{
-				Code = ParamHelper.GetValueFor(pp, "v"),
-				Loop = ParamHelper.GetInt(pp, "loop"),
-				HideLink = ParamHelper.HasParam(pp, "hidelink"),
-				FlashBlock = ParamHelper.HasParam(pp, "flashblock")
+				Code = v,
+				Loop = loop,
+				HideLink = hidelink,
+				FlashBlock = flashblock,
 			};
 
-			int? paramWidth = ParamHelper.GetInt(pp, "width");
-			if (paramWidth.HasValue)
+			if (width.HasValue)
 			{
-				model.Width = paramWidth.Value;
+				model.Width = width.Value;
 			}
 
-			int? paramHeight = ParamHelper.GetInt(pp, "height");
-			if (paramHeight.HasValue)
+			if (height.HasValue)
 			{
-				model.Height = paramHeight.Value;
+				model.Height = height.Value;
 			}
 
-			string paramAlign = ParamHelper.GetValueFor(pp, "align");
-			if (!string.IsNullOrWhiteSpace(paramAlign)
-				&& (paramAlign.ToLower() == "left" || paramAlign.ToLower() == "right"))
+			if (!string.IsNullOrWhiteSpace(align)
+				&& (align.ToLower() == "left" || align.ToLower() == "right"))
 			{
-				model.Align = paramAlign.ToLower();
+				model.Align = align.ToLower();
 			}
 
-			int? startParam = ParamHelper.GetInt(pp, "start");
-			if (startParam.HasValue)
+			if (start.HasValue)
 			{
-				model.Start = startParam.Value;
+				model.Start = start.Value;
 			}
 
 			return View(model);

@@ -20,40 +20,48 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(
+			bool obs,
+			bool current,
+			bool allUnstreamed,
+			bool unstreamed,
+			bool streamed,
+			bool noYoutube,
+			bool playlist
+		)
 		{
 			var query = _db.Publications.AsQueryable();
 
-			if (ParamHelper.HasParam(pp, "obs"))
+			if (obs)
 			{
 				query = query.Where(p => p.ObsoletedById.HasValue);
 			}
-			else if (ParamHelper.HasParam(pp, "current"))
+			else if (current)
 			{
 				query = query.Where(p => !p.ObsoletedById.HasValue);
 			}
 
-			if (ParamHelper.HasParam(pp, "allunstreamed"))
+			if (allUnstreamed)
 			{
 				query = query.Where(p => p.PublicationUrls.All(u => u.Type != Streaming));
 			}
-			else if (ParamHelper.HasParam(pp, "unstreamed"))
+			else if (unstreamed)
 			{
 				query = query.Where(p => !p.PublicationUrls.Any(u => u.Type == Streaming || u.Type == Mirror));
 			}
-			else if (ParamHelper.HasParam(pp, "streamed"))
+			else if (streamed)
 			{
 				query = query.Where(p =>
 					p.PublicationUrls.Any(u => u.Type == Streaming)
 					&& p.PublicationUrls.All(u => u.Type != Mirror));
 			}
-			else if (ParamHelper.HasParam(pp, "noyoutube"))
+			else if (noYoutube)
 			{
 				query = query.Where(p =>
 					p.PublicationUrls.Any(u => u.Type == Streaming)
 					&& !p.PublicationUrls.Any(u => u.Type == Streaming && u.Url!.Contains("youtube")));
 			}
-			else if (ParamHelper.HasParam(pp, "playlist"))
+			else if (playlist)
 			{
 				query = query.Where(p => p.PublicationUrls.Any(u => u.Type == Streaming && u.Url!.Contains("view_play_list")));
 			}

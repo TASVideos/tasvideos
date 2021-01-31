@@ -16,22 +16,14 @@ namespace TASVideos.ViewComponents
 			_awards = awards;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string? clear, int year)
 		{
-			var cache = ParamHelper.GetValueFor(pp, "clear");
-			if (!string.IsNullOrWhiteSpace(cache))
+			if (!string.IsNullOrWhiteSpace(clear))
 			{
 				return new ContentViewComponentResult("Error: clear parameter no longer supported");
 			}
 
-			int? year = ParamHelper.GetInt(pp, "year");
-
-			if (!year.HasValue)
-			{
-				return new ContentViewComponentResult("Error: parameterless award module no longer supported");
-			}
-
-			var model = await _awards.ForYear(year.Value);
+			var model = await _awards.ForYear(year);
 
 			return View(model);
 		}

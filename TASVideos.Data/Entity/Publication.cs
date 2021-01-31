@@ -149,6 +149,13 @@ namespace TASVideos.Data.Entity
 				.Where(p => p.CreateTimeStamp.Year >= after);
 		}
 
+		public static IQueryable<Publication> ForDateRange(this IQueryable<Publication> publications, DateTime before, DateTime after)
+		{
+			return publications
+				.Where(p => p.CreateTimeStamp < before)
+				.Where(p => p.CreateTimeStamp >= after);
+		}
+
 		public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
 		{
 			if (tokens.MovieIds.Any())

@@ -20,18 +20,9 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(bool includeMinors, int? limit)
 		{
-			int limit = 50;
-			bool includeMinorEdits = ParamHelper.HasParam(pp, "includeminors");
-
-			int? paramLimit = ParamHelper.GetInt(pp, "limit");
-			if (paramLimit.HasValue)
-			{
-				limit = paramLimit.Value;
-			}
-
-			var results = await GetWikiChangeLog(limit, includeMinorEdits);
+			var results = await GetWikiChangeLog(limit ?? 50, includeMinors);
 			return View(results);
 		}
 

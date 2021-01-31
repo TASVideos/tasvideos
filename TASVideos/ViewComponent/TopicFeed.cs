@@ -25,17 +25,16 @@ namespace TASVideos.ViewComponents
 			_mapper = mapper;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(int? l, int t, bool right, string? heading, bool hideContent)
 		{
-			int limit = ParamHelper.GetInt(pp, "l") ?? 5;
-			int topicId = ParamHelper.GetInt(pp, "t")
-				?? throw new ArgumentException("the parameter t can not be null");
+			int limit = l ?? 5;
+			int topicId = t;
 
 			var model = new TopicFeedModel
 			{
-				RightAlign = ParamHelper.HasParam(pp, "right"),
-				Heading = ParamHelper.GetValueFor(pp, "heading"),
-				HideContent = ParamHelper.HasParam(pp, "hidecontent"),
+				RightAlign = right,
+				Heading = heading,
+				HideContent = hideContent,
 				Posts = await _mapper.ProjectTo<TopicFeedModel.TopicPost>(
 						_db.ForumPosts
 						.ForTopic(topicId)
