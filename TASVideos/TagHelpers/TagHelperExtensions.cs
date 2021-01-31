@@ -32,7 +32,7 @@ namespace TASVideos.TagHelpers
 			return writer.ToString();
 		}
 
-		private static readonly Regex ValidAttributeName = new Regex("^[^\t\n\f \\/>\"'=]+$");
+		private static readonly Regex ValidAttributeName = new ("^[^\t\n\f \\/>\"'=]+$");
 
 		/// <summary>
 		/// Return an HTML attribute <code>name=&quot;value&quot;</code> pair with appropriate escaping.
@@ -73,8 +73,6 @@ namespace TASVideos.TagHelpers
 		/// <summary>
 		/// Returns raw text HTML escaped suitable for use in a regular element body
 		/// </summary>
-		/// <param name="text"></param>
-		/// <returns></returns>
 		public static string Text(string text)
 		{
 			var sb = new StringBuilder(text.Length);
@@ -98,7 +96,7 @@ namespace TASVideos.TagHelpers
 		}
 
 		// This is overly restrictive.  If you want to name your js identifiers fÖÖbar, feel free to change it.
-		private static readonly Regex ValidJsIdentifier = new Regex("^[a-zA-Z_$][a-zA-Z_$0-9]+$");
+		private static readonly Regex ValidJsIdentifier = new ("^[a-zA-Z_$][a-zA-Z_$0-9]+$");
 
 		/// <summary>
 		/// Returns a JS identifier suitable for use inside a script tag, after verifying that all characters in it are sane
@@ -116,8 +114,6 @@ namespace TASVideos.TagHelpers
 		/// <summary>
 		/// Returns a value serialized to javascript, suitable for inclusion in a script tag.
 		/// </summary>
-		/// <param name="value"></param>
-		/// <returns></returns>
 		public static string JsValue(object? value)
 		{
 			// Newtonsoft by default never escapes `/`; we always escape it to avoid stray </script>s.
