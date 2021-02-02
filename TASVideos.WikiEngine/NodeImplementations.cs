@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -20,7 +21,7 @@ namespace TASVideos.WikiEngine.AST
 			Content = content;
 		}
 
-		public void WriteHtmlDynamic(TextWriter w, WriterContext ctx)
+		public Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 		{
 			foreach (var c in Content)
 			{
@@ -37,6 +38,8 @@ namespace TASVideos.WikiEngine.AST
 						break;
 				}
 			}
+
+			return Task.CompletedTask;
 		}
 
 		public INode Clone()
@@ -134,7 +137,7 @@ namespace TASVideos.WikiEngine.AST
 			}
 		}
 
-		public void WriteHtmlDynamic(TextWriter w, WriterContext ctx)
+		public async Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 		{
 			if (VoidTags.Contains(Tag) && Children.Count > 0)
 			{
@@ -194,7 +197,7 @@ namespace TASVideos.WikiEngine.AST
 				w.Write('>');
 				foreach (var c in Children)
 				{
-					c.WriteHtmlDynamic(w, ctx);
+					await c.WriteHtmlAsync(w, ctx);
 				}
 
 				w.Write("</");
@@ -281,13 +284,13 @@ namespace TASVideos.WikiEngine.AST
 			Children.AddRange(children);
 		}
 
-		public void WriteHtmlDynamic(TextWriter w, WriterContext ctx)
+		public async Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 		{
 			if (ctx.Helper.CheckCondition(Condition))
 			{
 				foreach (var c in Children)
 				{
-					c.WriteHtmlDynamic(w, ctx);
+					await c.WriteHtmlAsync(w, ctx);
 				}
 			}
 		}
@@ -353,7 +356,7 @@ namespace TASVideos.WikiEngine.AST
 				);
 		}
 
-		public void WriteHtmlDynamic(TextWriter w, WriterContext ctx)
+		public async Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 		{
 			if (Name.ToLowerInvariant() == "settableattributes")
 			{
@@ -362,19 +365,19 @@ namespace TASVideos.WikiEngine.AST
 					var div = new Element(CharStart, "div") { CharEnd = CharEnd };
 					div.Children.Add(new Text(CharStart, "Module Error for settableattributes: Couldn't parse parameter string.") { CharEnd = CharEnd });
 					div.Attributes["class"] = "module-error";
-					div.WriteHtmlDynamic(w, ctx);
+					await div.WriteHtmlAsync(w, ctx);
 				}
 			}
 			else if (WikiModules.IsModule(Name))
 			{
-				ctx.Helper.RunViewComponent(w, Name, Parameters);
+				await ctx.Helper.RunViewComponentAsync(w, Name, Parameters);
 			}
 			else
 			{
 				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
 				div.Children.Add(new Text(CharStart, "Unknown module " + Name) { CharEnd = CharEnd });
 				div.Attributes["class"] = "module-error";
-				div.WriteHtmlDynamic(w, ctx);
+				await div.WriteHtmlAsync(w, ctx);
 			}
 		}
 

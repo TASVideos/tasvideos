@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -33,14 +34,14 @@ namespace TASVideos.TagHelpers
 		public string Markup { get; set; } = "";
 		public WikiPage PageData { get; set; } = new ();
 
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			((IViewContextAware)_viewComponentHelper).Contextualize(ViewContext);
 			output.TagName = "article";
 			output.AddCssClass("wiki");
 
 			var sw = new StringWriter();
-			Util.RenderHtmlDynamic(Markup, sw, this);
+			await Util.RenderHtmlAsync(Markup, sw, this);
 			output.Content.SetHtmlContent(sw.ToString());
 		}
 
@@ -55,7 +56,7 @@ namespace TASVideos.TagHelpers
 			.Where(t => t.GetCustomAttribute(typeof(WikiModuleAttribute)) != null)
 			.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue, StringComparer.InvariantCultureIgnoreCase);
 
-		void IWriterHelper.RunViewComponent(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
+		async Task IWriterHelper.RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 		{
 			var componentExists = ViewComponents.TryGetValue(name, out Type? viewComponent);
 			if (!componentExists)
@@ -117,8 +118,7 @@ namespace TASVideos.TagHelpers
 				paramObject[paramCandidate.Name!] = result;
 			}
 
-			var content = _viewComponentHelper.InvokeAsync(viewComponent, paramObject)
-				.Result; // TODO: Do we want to asyncify this entire thingy?
+			var content = await _viewComponentHelper.InvokeAsync(viewComponent, paramObject);
 
 			content.WriteTo(w, HtmlEncoder.Default);
 		}

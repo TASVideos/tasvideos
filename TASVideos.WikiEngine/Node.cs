@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -23,7 +24,7 @@ namespace TASVideos.WikiEngine.AST
 		int CharStart { get; }
 		int CharEnd { get; set; }
 		INode Clone();
-		void WriteHtmlDynamic(TextWriter w, WriterContext h);
+		Task WriteHtmlAsync(TextWriter w, WriterContext h);
 
 		/// <summary>
 		/// Get the combined text content of this Node.  May not return useful values for foreign components (Modules).
@@ -59,7 +60,7 @@ namespace TASVideos.WikiEngine.AST
 		/// <param name="w">The stream that the module should output its markup results to.</param>
 		/// <param name="name">The name of the module.</param>
 		/// <param name="pp">The module's parsed parameters.</param>
-		void RunViewComponent(TextWriter w, string name, IReadOnlyDictionary<string, string> pp);
+		Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp);
 	}
 
 	/// <summary>
@@ -72,8 +73,9 @@ namespace TASVideos.WikiEngine.AST
 			return false;
 		}
 
-		public void RunViewComponent(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
+		public Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 		{
+			return Task.CompletedTask;
 		}
 
 		private NullWriterHelper()
