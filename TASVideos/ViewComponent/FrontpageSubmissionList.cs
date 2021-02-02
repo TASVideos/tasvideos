@@ -21,19 +21,18 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(int? maxrels)
 		{
 			// Legacy system supported a max days value, which isn't easily translated to the current filtering
 			// However, we currently have it set to 365 which greatly exceeds any max number
 			// And submissions are frequent enough to not worry about too stale submissions showing up on the front page
-			var maxRecords = ParamHelper.GetInt(pp, "maxrels");
 			var request = new SubmissionSearchRequest();
 
 			var subs = await _db.Submissions
 				.ThatAreActive()
 				.FilterBy(request)
 				.ByMostRecent()
-				.Take(maxRecords ?? 5)
+				.Take(maxrels ?? 5)
 				.ToSubListEntry()
 				.ToListAsync();
 

@@ -58,8 +58,8 @@ namespace TASVideos.WikiEngine.AST
 		/// </summary>
 		/// <param name="w">The stream that the module should output its markup results to.</param>
 		/// <param name="name">The name of the module.</param>
-		/// <param name="pp">The module's parameter text, direct from the markup.</param>
-		void RunViewComponent(TextWriter w, string name, string pp);
+		/// <param name="pp">The module's parsed parameters.</param>
+		void RunViewComponent(TextWriter w, string name, IReadOnlyDictionary<string, string> pp);
 	}
 
 	/// <summary>
@@ -72,7 +72,7 @@ namespace TASVideos.WikiEngine.AST
 			return false;
 		}
 
-		public void RunViewComponent(TextWriter w, string name, string pp)
+		public void RunViewComponent(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 		{
 		}
 
@@ -106,10 +106,10 @@ namespace TASVideos.WikiEngine.AST
 		/// </summary>
 		/// <param name="pp">The raw parameter text from the markup.</param>
 		/// <returns></returns>
-		public bool AddTdStyleFilter(string pp)
+		public bool AddTdStyleFilter(IReadOnlyDictionary<string, string> pp)
 		{
-			var regex = ParamHelper.GetValueFor(pp, "pattern");
-			var style = ParamHelper.GetValueFor(pp, "style");
+			var regex = pp.GetValueOrDefault("pattern");
+			var style = pp.GetValueOrDefault("style");
 			if (string.IsNullOrWhiteSpace(regex) || string.IsNullOrWhiteSpace(style))
 			{
 				return false;

@@ -18,10 +18,9 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string? platform)
 		{
-			var systemCode = ParamHelper.GetValueFor(pp, "platform");
-
+			var systemCode = platform;
 			bool isAll = string.IsNullOrWhiteSpace(systemCode);
 			GameSystem? system = null;
 

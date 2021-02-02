@@ -22,22 +22,16 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, bool splitbyplatform)
 		{
 			// TODO: add tier argument, default to moon,stars,
 			// we want to avoid baking in "business logic" like which tiers are award eligible
-			int before = ParamHelper.GetYear(pp, "before")
-				?? DateTime.UtcNow.Year;
-			int after = ParamHelper.GetYear(pp, "after")
-				?? DateTime.UtcNow.AddYears(1).Year;
-			bool byPlatform = ParamHelper.HasParam(pp, "splitbyplatform");
-
-			var beforeYear = new DateTime(before, 1, 1);
-			var afterYear = new DateTime(after, 1, 1);
+			var beforeYear = before ?? new DateTime(DateTime.UtcNow.Year, 1, 1);
+			var afterYear = after ?? new DateTime(DateTime.UtcNow.AddYears(1).Year, 1, 1);
 
 			List<FirstEditionGames> firstEditions;
 
-			if (byPlatform)
+			if (splitbyplatform)
 			{
 				firstEditions = await _db.Publications
 					.GroupBy(
@@ -73,7 +67,7 @@ namespace TASVideos.ViewComponents
 				.Where(p => p.CreateTimeStamp >= afterYear)
 				.Where(p => p.CreateTimeStamp < beforeYear);
 
-			if (byPlatform)
+			if (splitbyplatform)
 			{
 				var firstEditionIds = firstEditions.Select(f => f.GameId).ToList();
 				query = query.Where(p => firstEditionIds.Contains(p.GameId));

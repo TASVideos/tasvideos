@@ -20,10 +20,9 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string? roles)
 		{
-			var role = TranslateLegacyName(
-				ParamHelper.GetValueFor(pp, "roles"));
+			var role = TranslateLegacyName(roles ?? "");
 
 			var model = await _db.Users
 				.ThatHaveRole(role)

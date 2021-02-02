@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
@@ -19,14 +21,9 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(bool showTiers, DateTime? before, DateTime? after, IList<int> platforms)
 		{
-			var showTiers = ParamHelper.HasParam(pp, "showtiers");
-			var before = ParamHelper.GetYear(pp, "before");
-			var after = ParamHelper.GetYear(pp, "after");
-			var platforms = ParamHelper.GetInts(pp, "platforms").ToList();
-
-			if (!before.HasValue || !after.HasValue || !platforms.Any())
+			if (!before.HasValue || !after.HasValue || platforms.Count == 0)
 			{
 				return new ContentViewComponentResult("Invalid paramters.");
 			}
@@ -35,7 +32,7 @@ namespace TASVideos.ViewComponents
 			{
 				ShowTiers = showTiers,
 				Publications = await _db.Publications
-					.ForYearRange(before.Value, after.Value)
+					.ForDateRange(before.Value, after.Value)
 					.Where(p => platforms.Contains(p.SystemId))
 					.Select(p => new PlatformAuthorListModel.PublicationEntry
 					{

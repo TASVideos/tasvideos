@@ -22,9 +22,9 @@ namespace TASVideos.ViewComponents
 			_mapper = mapper;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(int? limit)
 		{
-			var count = ParamHelper.GetInt(pp, "limit").GetValueOrDefault(5);
+			var count = limit ?? 5;
 
 			var userMovies = await _mapper.ProjectTo<UserMovieListModel>(
 				_db.UserFiles

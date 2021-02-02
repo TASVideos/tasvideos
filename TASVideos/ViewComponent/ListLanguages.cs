@@ -23,11 +23,11 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, string pp)
+		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, bool isTranslation)
 		{
 			// This was originally done to put the header with a link back to the english page
 			// Now we always put the parent module on the page which will handle this
-			if (ParamHelper.HasParam(pp, "istranslation"))
+			if (isTranslation)
 			{
 				return new ContentViewComponentResult("");
 			}

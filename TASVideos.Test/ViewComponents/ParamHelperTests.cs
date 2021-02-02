@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TASVideos.TagHelpers;
 using TASVideos.WikiEngine;
+using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.Test.ViewComponents
 {
@@ -25,13 +28,16 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("   ab    |  c    ", "c", true)]
 		public void HasParam(string parameterStr, string param, bool expected)
 		{
-			var actual = ParamHelper.HasParam(parameterStr, param);
+			var moduleString = "foo|" + parameterStr;
+			var module = new Module(0, moduleString.Length, moduleString);
+			var actual = WikiMarkup.ConvertParameter<bool?>(module.Parameters.GetValueOrDefault(param));
+
 			Assert.AreEqual(expected, actual);
 		}
 
 		[TestMethod]
-		[DataRow("\r \n \t", "anyParam", "")]
-		[DataRow("|||", "anyParam", "")]
+		[DataRow("\r \n \t", "anyParam", null)]
+		[DataRow("|||", "anyParam", null)]
 		[DataRow("id=", "id", "")]
 		[DataRow("id= ", "id", "")]
 		[DataRow("id=1", "id", "1")]
@@ -40,7 +46,10 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("| Id = 1 |", "iD", "1")]
 		public void GetValueFor(string parameterStr, string param, string expected)
 		{
-			var actual = ParamHelper.GetValueFor(parameterStr, param);
+			var moduleString = "foo|" + parameterStr;
+			var module = new Module(0, moduleString.Length, moduleString);
+			var actual = WikiMarkup.ConvertParameter<string?>(module.Parameters.GetValueOrDefault(param));
+
 			Assert.AreEqual(expected, actual);
 		}
 
@@ -55,9 +64,13 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("num=999999", "num", 999999)]
 		[DataRow("| num = 1 |", "num", 1)]
 		[DataRow("num=1 1", "num", null)]
+		[DataRow("num =       5  ", "NUM", 5)]
 		public void GetInt(string parameterStr, string param, int? expected)
 		{
-			var actual = ParamHelper.GetInt(parameterStr, param);
+			var moduleString = "foo|" + parameterStr;
+			var module = new Module(0, moduleString.Length, moduleString);
+			var actual = WikiMarkup.ConvertParameter<int?>(module.Parameters.GetValueOrDefault(param));
+
 			Assert.AreEqual(expected, actual);
 		}
 
@@ -66,17 +79,21 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("num=", "num", null)]
 		[DataRow("num=notnumber", "num", null)]
 		[DataRow("num=1.1", "num", null)]
-		[DataRow("num=0", "num", 0)]
-		[DataRow("num=-1", "num", -1)]
-		[DataRow("num=1", "num", 1)]
-		[DataRow("num=999999", "num", 999999)]
-		[DataRow("| num = 1 |", "num", 1)]
+		[DataRow("num=0", "num", null)]
+		[DataRow("num=-1", "num", null)]
+		[DataRow("num=1", "num", null)]
+		[DataRow("num=999999", "num", null)]
+		[DataRow("| num = 1 |", "num", null)]
 		[DataRow("num=1 1", "num", null)]
 		[DataRow("num=Y", "num", null)]
-		[DataRow("num=Y2014", "num", 2014)]
-		public void GetYear(string parameterStr, string param, int? expected)
+		[DataRow("num=Y2014", "num", "2014-01-01")]
+		public void GetYear(string parameterStr, string param, string? expectedDT)
 		{
-			var actual = ParamHelper.GetYear(parameterStr, param);
+			var moduleString = "foo|" + parameterStr;
+			var module = new Module(0, moduleString.Length, moduleString);
+			var actual = WikiMarkup.ConvertParameter<DateTime?>(module.Parameters.GetValueOrDefault(param));
+			DateTime? expected = expectedDT != null ? DateTime.Parse(expectedDT) : null;
+
 			Assert.AreEqual(expected, actual);
 		}
 
@@ -92,14 +109,12 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("csv=1,2,notnumber", "csv", new[] { 1, 2 })]
 		public void GetInts(string parameterStr, string param, int[] expected)
 		{
-			var actual = ParamHelper.GetInts(parameterStr, param);
+			var moduleString = "foo|" + parameterStr;
+			var module = new Module(0, moduleString.Length, moduleString);
+			var actual = WikiMarkup.ConvertParameter<IList<int>>(module.Parameters.GetValueOrDefault(param));
 
 			Assert.IsNotNull(actual);
-			var actualList = actual.ToList();
-			foreach (var expectedVal in expected)
-			{
-				Assert.IsTrue(actualList.Contains(expectedVal));
-			}
+			Assert.IsTrue(actual.SequenceEqual(expected));
 		}
 	}
 }

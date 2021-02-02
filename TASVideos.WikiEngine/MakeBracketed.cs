@@ -235,7 +235,8 @@ namespace TASVideos.WikiEngine
 
 				// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
 				// DB lookup will be required for links like [4022S], so use __wikiLink
-				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + NormalizeUrl("=" + pp[0]) + "|" + pp[0]);
+				// TODO:  __wikilink should probably be its own AST type??
+				return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|displaytext=" + pp[0]);
 			}
 
 			// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
