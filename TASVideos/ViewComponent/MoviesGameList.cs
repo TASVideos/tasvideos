@@ -19,24 +19,23 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(int? system)
 		{
-			var systemId = ParamHelper.GetInt(pp, "system");
-			var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == systemId);
-			if (systemId is null || system is null)
+			var systemObj = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == system);
+			if (system is null || systemObj is null)
 			{
 				return View(new MoviesGameListModel
 				{
-					SystemId = ParamHelper.GetInt(pp, "system")
+					SystemId = system,
 				});
 			}
 
 			var model = new MoviesGameListModel
 			{
-				SystemId = ParamHelper.GetInt(pp, "system"),
-				SystemCode = system.Code,
+				SystemId = system,
+				SystemCode = systemObj.Code,
 				Games = await _db.Games
-					.ForSystem(systemId.Value)
+					.ForSystem(system.Value)
 					.Select(g => new MoviesGameListModel.GameEntry
 					{
 						Id = g.Id,

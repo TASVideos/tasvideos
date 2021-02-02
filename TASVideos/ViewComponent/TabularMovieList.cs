@@ -22,24 +22,21 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(int? limit, IList<string> tier, string? flink, string? footer)
 		{
 			var search = new TabularMovieListSearchModel();
-			var limit = ParamHelper.GetInt(pp, "limit");
 			if (limit.HasValue)
 			{
 				search.Limit = limit.Value;
 			}
 
-			var tiersStr = ParamHelper.GetValueFor(pp, "tier");
-			if (!string.IsNullOrWhiteSpace(tiersStr))
+			if (tier.Count > 0)
 			{
-				search.Tiers = tiersStr.SplitWithEmpty(",");
+				search.Tiers = tier;
 			}
 
-			ViewData["flink"] = ParamHelper.GetValueFor(pp, "flink");
+			ViewData["flink"] = flink;
 
-			var footer = ParamHelper.GetValueFor(pp, "footer");
 			if (!string.IsNullOrWhiteSpace(footer))
 			{
 				footer = "More...";

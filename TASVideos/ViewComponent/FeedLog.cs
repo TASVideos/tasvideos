@@ -20,11 +20,8 @@ namespace TASVideos.ViewComponents
 			_parser = parser;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string url, string type)
 		{
-			var url = ParamHelper.GetValueFor(pp, "url");
-			var type = ParamHelper.GetValueFor(pp, "type");
-
 			if (string.IsNullOrWhiteSpace(url))
 			{
 				return new ContentViewComponentResult("url parameter is required.");

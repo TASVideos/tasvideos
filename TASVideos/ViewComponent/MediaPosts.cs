@@ -22,12 +22,10 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(int? days, int? limit)
 		{
-			int days = ParamHelper.GetInt(pp, "days") ?? 7;
-			var startDate = DateTime.Now.AddDays(-days);
-			var limit = ParamHelper.GetInt(pp, "limit") ?? 50;
-			var model = await GetPosts(startDate, limit);
+			var startDate = DateTime.Now.AddDays(-(days ?? 7));
+			var model = await GetPosts(startDate, limit ?? 50);
 
 			return View(model);
 		}

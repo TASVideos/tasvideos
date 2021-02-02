@@ -19,15 +19,14 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string href, string? displayText)
 		{
-			var split = pp.Split('|');
 			var model = new WikiLinkModel
 			{
-				Href = split[0],
-				DisplayText = split.Length == 1
-					? split[0][1..] // almost always want to chop off the leading '/'
-					: split[1]
+				Href = href,
+				DisplayText = string.IsNullOrWhiteSpace(displayText)
+					? href[1..] // almost always want to chop off the leading '/'
+					: displayText
 			};
 
 			int? id;
@@ -36,7 +35,7 @@ namespace TASVideos.ViewComponents
 			{
 				model.DisplayText = model.DisplayText[5..];
 			}
-			else if ((id = SubmissionHelper.IsSubmissionLink(split[0])).HasValue)
+			else if ((id = SubmissionHelper.IsSubmissionLink(href)).HasValue)
 			{
 				var title = await GetSubmissionTitle(id.Value);
 				if (!string.IsNullOrWhiteSpace(title))
@@ -44,7 +43,7 @@ namespace TASVideos.ViewComponents
 					model.DisplayText = title;
 				}
 			}
-			else if ((id = SubmissionHelper.IsPublicationLink(split[0])).HasValue)
+			else if ((id = SubmissionHelper.IsPublicationLink(href)).HasValue)
 			{
 				var title = await GetPublicationTitle(id.Value);
 				if (!string.IsNullOrWhiteSpace(title))

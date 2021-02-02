@@ -47,6 +47,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
+		<PackageReference Include="Namotion.Reflection" Version="1.0.16" />
 		<PackageReference Include="RoslynCodeTaskFactory" Version="2.0.7" />
 		<PackageReference Include="Sendgrid" Version="9.21.2" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">

@@ -23,17 +23,15 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(string? tier, IList<string> flags)
 		{
-			var tier = ParamHelper.GetValueFor(pp, "tier");
-			var flags = ParamHelper.GetValueFor(pp, "flags");
 			var candidateIds = await FrontPageMovieCandidates(tier, flags);
 			var id = candidateIds.ToList().AtRandom();
 			var movie = await GetPublicationMiniMovie(id);
 			return View(movie);
 		}
 
-		private async Task<IEnumerable<int>> FrontPageMovieCandidates(string tier, string flags)
+		private async Task<IEnumerable<int>> FrontPageMovieCandidates(string? tier, IList<string> flagsArr)
 		{
 			var query = _db.Publications
 				.ThatAreCurrent()
@@ -44,9 +42,8 @@ namespace TASVideos.ViewComponents
 				query = query.Where(p => p.Tier!.Name == tier);
 			}
 
-			if (!string.IsNullOrWhiteSpace(flags))
+			if (flagsArr.Count > 0)
 			{
-				var flagsArr = flags.SplitWithEmpty(",");
 				query = query.Where(p => p.PublicationFlags.Any(pf => flagsArr.Contains(pf.Flag!.Token)));
 			}
 

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,25 +20,22 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string pp)
+		public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, string? newbies, bool showtiers)
 		{
-			var before = ParamHelper.GetYear(pp, "before");
-			var after = ParamHelper.GetYear(pp, "after");
-
 			if (!before.HasValue || !after.HasValue)
 			{
 				return View(new MoviesByAuthorModel());
 			}
 
-			var newbieFlag = ParamHelper.GetValueFor(pp, "newbies").ToLower();
+			var newbieFlag = newbies?.ToLower();
 			var newbiesOnly = newbieFlag == "only";
 
 			var model = new MoviesByAuthorModel
 			{
 				MarkNewbies = newbieFlag == "show",
-				ShowTiers = ParamHelper.HasParam(pp, "showtiers"),
+				ShowTiers = showtiers,
 				Publications = await _db.Publications
-					.ForYearRange(before.Value, after.Value)
+					.ForDateRange(before.Value, after.Value)
 					.Select(p => new MoviesByAuthorModel.PublicationEntry
 					{
 						Id = p.Id,
@@ -54,7 +52,7 @@ namespace TASVideos.ViewComponents
 					.ThatArePublishedAuthors()
 					.Where(u => u.Publications
 						.OrderBy(p => p.Publication!.CreateTimeStamp)
-						.First().Publication!.CreateTimeStamp.Year == after)
+						.First().Publication!.CreateTimeStamp.Year == after.Value.Year)
 					.Select(u => u.UserName)
 					.ToListAsync();
 			}
