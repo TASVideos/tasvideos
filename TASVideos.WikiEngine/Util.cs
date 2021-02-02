@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TASVideos.WikiEngine.AST;
 
@@ -39,7 +40,7 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
-		public static void RenderHtmlDynamic(string content, TextWriter w, IWriterHelper h)
+		public static async Task RenderHtmlAsync(string content, TextWriter w, IWriterHelper h)
 		{
 			List<INode> results;
 			try
@@ -51,9 +52,10 @@ namespace TASVideos.WikiEngine
 				results = Builtins.MakeErrorPage(content, e);
 			}
 
+			var ctx = new WriterContext(h);
 			foreach (var r in results)
 			{
-				r.WriteHtmlDynamic(w, new WriterContext(h));
+				await r.WriteHtmlAsync(w, ctx);
 			}
 		}
 
