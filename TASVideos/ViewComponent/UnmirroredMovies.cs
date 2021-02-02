@@ -27,8 +27,7 @@ namespace TASVideos.ViewComponents
 			bool unstreamed,
 			bool streamed,
 			bool noYoutube,
-			bool playlist
-		)
+			bool playlist)
 		{
 			var query = _db.Publications.AsQueryable();
 

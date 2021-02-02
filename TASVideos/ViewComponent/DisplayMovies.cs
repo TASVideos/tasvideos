@@ -40,8 +40,7 @@ namespace TASVideos.ViewComponents
 			IList<int> group,
 			IList<int> id,
 			IList<int> game,
-			IList<int> author
-		)
+			IList<int> author)
 		{
 			var tokenLookup = await _tokens.GetTokens();
 

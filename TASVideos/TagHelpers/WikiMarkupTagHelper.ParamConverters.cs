@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace TASVideos.TagHelpers
 {
-	partial class WikiMarkup
+	public partial class WikiMarkup
 	{
 		/// <summary>
 		/// For supporting tests only
@@ -19,19 +19,17 @@ namespace TASVideos.TagHelpers
 			.GetTypes()
 			.Where(t => t.BaseType != null
 				&& t.BaseType.IsGenericType
-				&& t.BaseType.GetGenericTypeDefinition() == typeof(ModuleParameterTypeAdapter<>)
-			)
+				&& t.BaseType.GetGenericTypeDefinition() == typeof(ModuleParameterTypeAdapter<>))
 			.ToDictionary(
 				t => t.BaseType!.GetGenericArguments()[0],
-				t => (IModuleParameterTypeAdapter)Activator.CreateInstance(t)!
-			);
+				t => (IModuleParameterTypeAdapter)Activator.CreateInstance(t)!);
 
-		interface IModuleParameterTypeAdapter
+		private interface IModuleParameterTypeAdapter
 		{
 			object? Convert(string? input);
 		}
 
-		abstract class ModuleParameterTypeAdapter<T> : IModuleParameterTypeAdapter
+		private abstract class ModuleParameterTypeAdapter<T> : IModuleParameterTypeAdapter
 		{
 			public abstract T Convert(string? input);
 			object? IModuleParameterTypeAdapter.Convert(string? input)
@@ -40,12 +38,12 @@ namespace TASVideos.TagHelpers
 			}
 		}
 
-		class StringConverter : ModuleParameterTypeAdapter<string?>
+		private class StringConverter : ModuleParameterTypeAdapter<string?>
 		{
 			public override string? Convert(string? input) => input;
 		}
 
-		class IntConverter : ModuleParameterTypeAdapter<int?>
+		private class IntConverter : ModuleParameterTypeAdapter<int?>
 		{
 			public override int? Convert(string? input)
 			{
@@ -53,7 +51,7 @@ namespace TASVideos.TagHelpers
 			}
 		}
 
-		class IntArrayConverter : ModuleParameterTypeAdapter<IList<int>>
+		private class IntArrayConverter : ModuleParameterTypeAdapter<IList<int>>
 		{
 			public override IList<int> Convert(string? input)
 			{
@@ -70,7 +68,7 @@ namespace TASVideos.TagHelpers
 			}
 		}
 
-		class DoubleConverter : ModuleParameterTypeAdapter<double?>
+		private class DoubleConverter : ModuleParameterTypeAdapter<double?>
 		{
 			public override double? Convert(string? input)
 			{
@@ -78,7 +76,7 @@ namespace TASVideos.TagHelpers
 			}
 		}
 
-		class StringArrayConverter : ModuleParameterTypeAdapter<IList<string>>
+		private class StringArrayConverter : ModuleParameterTypeAdapter<IList<string>>
 		{
 			public override IList<string> Convert(string? input)
 			{
@@ -90,7 +88,7 @@ namespace TASVideos.TagHelpers
 			}
 		}
 
-		class BoolConverter : ModuleParameterTypeAdapter<bool?>
+		private class BoolConverter : ModuleParameterTypeAdapter<bool?>
 		{
 			public override bool? Convert(string? input)
 			{
@@ -98,7 +96,7 @@ namespace TASVideos.TagHelpers
 			}
 		}
 
-		class DateTimeConverter : ModuleParameterTypeAdapter<DateTime?>
+		private class DateTimeConverter : ModuleParameterTypeAdapter<DateTime?>
 		{
 			public override DateTime? Convert(string? input)
 			{

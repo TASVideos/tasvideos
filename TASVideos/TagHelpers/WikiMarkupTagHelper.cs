@@ -59,7 +59,9 @@ namespace TASVideos.TagHelpers
 		{
 			var componentExists = ViewComponents.TryGetValue(name, out Type? viewComponent);
 			if (!componentExists)
+			{
 				throw new InvalidOperationException($"Unknown ViewComponent: {name}");
+			}
 
 			var paramObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
 			{
@@ -70,7 +72,9 @@ namespace TASVideos.TagHelpers
 				?? viewComponent.GetMethod("Invoke");
 
 			if (invokeMethod == null)
+			{
 				throw new InvalidOperationException($"Could not find an Invoke method on ViewComponent {viewComponent}");
+			}
 
 			var paramCandidates = invokeMethod
 				.GetParameters()
@@ -84,7 +88,9 @@ namespace TASVideos.TagHelpers
 					&& (!paramType.IsGenericType || paramType.GetGenericTypeDefinition() != typeof(Nullable<>));
 
 				if (doNullableWrap)
+				{
 					adapterKeyType = typeof(Nullable<>).MakeGenericType(adapterKeyType);
+				}
 
 				if (!ParamTypeAdapters.TryGetValue(adapterKeyType, out var adapter))
 				{
@@ -116,6 +122,5 @@ namespace TASVideos.TagHelpers
 
 			content.WriteTo(w, HtmlEncoder.Default);
 		}
-
 	}
 }
