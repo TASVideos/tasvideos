@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -34,15 +37,44 @@ namespace TASVideos.TagHelpers
 		public string Markup { get; set; } = "";
 		public WikiPage PageData { get; set; } = new ();
 
+		private class MyTextWriter : TextWriter
+		{
+			private readonly TagHelperContent _content;
+
+			public MyTextWriter(TagHelperContent content)
+			{
+				_content = content;
+			}
+
+			public override Encoding Encoding => Encoding.Unicode;
+
+			public override void Write(char value)
+			{
+				_content.AppendHtml(new string(value, 1));
+			}
+
+			public override void Write(string? value)
+			{
+				_content.AppendHtml(value);
+			}
+
+			public override void Write(char[] buffer, int index, int count)
+			{
+				_content.AppendHtml(new string(buffer, index, count));
+			}
+
+			public override void Write(ReadOnlySpan<char> buffer)
+			{
+				_content.AppendHtml(new string(buffer));
+			}
+		}
+
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			((IViewContextAware)_viewComponentHelper).Contextualize(ViewContext);
 			output.TagName = "article";
 			output.AddCssClass("wiki");
-
-			var sw = new StringWriter();
-			await Util.RenderHtmlAsync(Markup, sw, this);
-			output.Content.SetHtmlContent(sw.ToString());
+			await Util.RenderHtmlAsync(Markup, new MyTextWriter(output.Content), this);
 		}
 
 		bool IWriterHelper.CheckCondition(string condition)
