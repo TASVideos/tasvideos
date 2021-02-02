@@ -30,7 +30,7 @@ namespace TASVideos.Test.ViewComponents
 		{
 			var moduleString = "foo|" + parameterStr;
 			var module = new Module(0, moduleString.Length, moduleString);
-			var actual = new BoolConverter().Convert(module.Parameters.GetValueOrDefault(param));
+			var actual = WikiMarkup.ConvertParameter<bool?>(module.Parameters.GetValueOrDefault(param));
 
 			Assert.AreEqual(expected, actual);
 		}
@@ -48,7 +48,7 @@ namespace TASVideos.Test.ViewComponents
 		{
 			var moduleString = "foo|" + parameterStr;
 			var module = new Module(0, moduleString.Length, moduleString);
-			var actual = new StringConverter().Convert(module.Parameters.GetValueOrDefault(param));
+			var actual = WikiMarkup.ConvertParameter<string?>(module.Parameters.GetValueOrDefault(param));
 
 			Assert.AreEqual(expected, actual);
 		}
@@ -69,7 +69,7 @@ namespace TASVideos.Test.ViewComponents
 		{
 			var moduleString = "foo|" + parameterStr;
 			var module = new Module(0, moduleString.Length, moduleString);
-			var actual = new IntConverter().Convert(module.Parameters.GetValueOrDefault(param));
+			var actual = WikiMarkup.ConvertParameter<int?>(module.Parameters.GetValueOrDefault(param));
 
 			Assert.AreEqual(expected, actual);
 		}
@@ -91,7 +91,7 @@ namespace TASVideos.Test.ViewComponents
 		{
 			var moduleString = "foo|" + parameterStr;
 			var module = new Module(0, moduleString.Length, moduleString);
-			var actual = new DateTimeConverter().Convert(module.Parameters.GetValueOrDefault(param));
+			var actual = WikiMarkup.ConvertParameter<DateTime?>(module.Parameters.GetValueOrDefault(param));
 			DateTime? expected = expectedDT != null ? DateTime.Parse(expectedDT) : null;
 
 			Assert.AreEqual(expected, actual);
@@ -111,7 +111,7 @@ namespace TASVideos.Test.ViewComponents
 		{
 			var moduleString = "foo|" + parameterStr;
 			var module = new Module(0, moduleString.Length, moduleString);
-			var actual = new IntArrayConverter().Convert(module.Parameters.GetValueOrDefault(param));
+			var actual = WikiMarkup.ConvertParameter<IList<int>>(module.Parameters.GetValueOrDefault(param));
 
 			Assert.IsNotNull(actual);
 			Assert.IsTrue(actual.SequenceEqual(expected));

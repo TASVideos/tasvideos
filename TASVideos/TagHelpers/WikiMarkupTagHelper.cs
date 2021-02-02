@@ -17,7 +17,7 @@ using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.TagHelpers
 {
-	public class WikiMarkup : TagHelper, IWriterHelper
+	public partial class WikiMarkup : TagHelper, IWriterHelper
 	{
 		private readonly IViewComponentHelper _viewComponentHelper;
 
@@ -93,7 +93,7 @@ namespace TASVideos.TagHelpers
 				}
 
 				pp.TryGetValue(paramCandidate.Name!, out var ppvalue);
-				var result = (object?)((dynamic)adapter).Convert(ppvalue);
+				var result = adapter.Convert(ppvalue);
 
 				if (result == null)
 				{
@@ -117,96 +117,5 @@ namespace TASVideos.TagHelpers
 			content.WriteTo(w, HtmlEncoder.Default);
 		}
 
-		private static readonly Dictionary<Type, object> ParamTypeAdapters = typeof(WikiMarkup)
-			.Assembly
-			.GetTypes()
-			.Select(t => new
-			{
-				Type = t,
-				Interface = t.GetInterfaces()
-					.FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IModuleParameterTypeAdapter<>))
-			})
-			.Where(a => a.Interface != null)
-			.ToDictionary(a => a.Interface.GetGenericArguments()[0], a => Activator.CreateInstance(a.Type)!);
-	}
-
-	public interface IModuleParameterTypeAdapter<T>
-	{
-		T Convert(string? input);
-	}
-
-	public class StringConverter : IModuleParameterTypeAdapter<string?>
-	{
-		public string? Convert(string? input) => input;
-	}
-
-	public class IntConverter : IModuleParameterTypeAdapter<int?>
-	{
-		public int? Convert(string? input)
-		{
-			return int.TryParse(input, out var tmp) ? tmp : null;
-		}
-	}
-
-	public class IntArrayConverter : IModuleParameterTypeAdapter<IList<int>>
-	{
-		public IList<int> Convert(string? input)
-		{
-			input ??= "";
-			return input.Split(',')
-				.Select(s =>
-				{
-					var b = int.TryParse(s, out var i);
-					return new { b, i };
-				})
-				.Where(a => a.b)
-				.Select(a => a.i)
-				.ToList();
-		}
-	}
-
-	public class DoubleConverter : IModuleParameterTypeAdapter<double?>
-	{
-		public double? Convert(string? input)
-		{
-			return double.TryParse(input, out var tmp) ? tmp : null;
-		}
-	}
-
-	public class StringArrayConverter : IModuleParameterTypeAdapter<IList<string>>
-	{
-		public IList<string> Convert(string? input)
-		{
-			return (input ?? "")
-				.Split(",")
-				.Where(s => !string.IsNullOrWhiteSpace(s))
-				.Select(s => s.Trim())
-				.ToList();
-		}
-	}
-
-	public class BoolConverter : IModuleParameterTypeAdapter<bool?>
-	{
-		public bool? Convert(string? input)
-		{
-			return input != null;
-		}
-	}
-
-	public class DateTimeConverter : IModuleParameterTypeAdapter<DateTime?>
-	{
-		public DateTime? Convert(string? input)
-		{
-			if (input?.Length >= 1 && (input[0] == 'Y' || input[0] == 'y'))
-			{
-				var tmp = int.TryParse(input[1..], out var year);
-				if (tmp)
-				{
-					return new DateTime(year, 1, 1);
-				}
-			}
-
-			return null;
-		}
 	}
 }
