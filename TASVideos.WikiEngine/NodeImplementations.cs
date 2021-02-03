@@ -349,11 +349,10 @@ namespace TASVideos.WikiEngine.AST
 			Parameters = pp.Skip(1)
 				.Select(p => p.Split(new[] { '=' }, 2))
 				.Where(p => !string.IsNullOrWhiteSpace(p[0]))
-				.ToDictionary(
-					p => p[0].Trim().ToLowerInvariant(),
-					p => p.Length > 1 ? p[1].Trim() : "",
-					StringComparer.InvariantCultureIgnoreCase
-				);
+				.Select(p => new KeyValuePair<string, string>(p[0].Trim().ToLowerInvariant(), p.Length > 1 ? p[1].Trim() : ""))
+				.GroupBy(kvp => kvp.Key, StringComparer.InvariantCultureIgnoreCase)
+				.Select(g => g.Last()) // When an attribute appears more than once, choose the last value to match the old parser
+				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value, StringComparer.InvariantCultureIgnoreCase);
 		}
 
 		public async Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
