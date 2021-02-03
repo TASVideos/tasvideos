@@ -57,7 +57,9 @@ namespace TASVideos.ViewComponents
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);
 			using var writer = new StringWriter();
+			writer.Write("<div class=postbody>");
 			parsed.WriteHtml(writer);
+			writer.Write("</div>");
 			return writer.ToString();
 		}
 	}

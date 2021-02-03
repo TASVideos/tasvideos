@@ -82,11 +82,14 @@
 				</div>
 			</div>
 			<div class="col-lg-10 col-md-9 col-8">
-				@Html.Raw(Model.RenderedText)
+				<forum-markup markup=@Model.Text enable-html=@Model.EnableHtml enable-bb-code=@Model.EnableBbCode>
+				</forum-markup>
 				<div condition="!string.IsNullOrWhiteSpace(Model.RenderedSignature)">
-					
 					<div class="forum-signature mt-2">
-						<small>@Html.Raw(Model.RenderedSignature)</small>
+						<small>
+							<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true>
+							</forum-markup>
+						</small>
 					</div>
 				</div>
 			</div>

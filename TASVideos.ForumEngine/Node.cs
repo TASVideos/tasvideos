@@ -408,7 +408,8 @@ namespace TASVideos.ForumEngine
 					}
 
 				case "_root":
-					WriteComplexTag(w, "<div class=postbody>", "</div>");
+					// We want to do <div class=postbody> but that part is handled externally now.
+					WriteChildren(w);
 					break;
 				case "list":
 					WriteSimpleTag(w, Options == "1" ? "ol" : "ul");

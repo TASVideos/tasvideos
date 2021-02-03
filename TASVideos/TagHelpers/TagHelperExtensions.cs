@@ -14,15 +14,15 @@ namespace TASVideos.TagHelpers
 		public static void AddCssClass(this TagHelperOutput output, string className)
 		{
 			var existingClass = output.Attributes.FirstOrDefault(a => a.Name == "class");
-			var cssClass = existingClass?.Value.ToString() ?? "";
-			cssClass += $" {className}";
-			var ta = new TagHelperAttribute("class", cssClass);
-			if (existingClass is not null)
+			if (existingClass != null)
 			{
 				output.Attributes.Remove(existingClass);
+				output.Attributes.Add(new TagHelperAttribute("class", existingClass.Value.ToString() + " " + className));
 			}
-
-			output.Attributes.Add(ta);
+			else
+			{
+				output.Attributes.Add(new TagHelperAttribute("class", className));
+			}
 		}
 
 		public static string GetString(this IHtmlContent content)
