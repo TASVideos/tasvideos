@@ -26,6 +26,8 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow(" name = | iD =1", "id", true)]
 		[DataRow("a", "a", true)]
 		[DataRow("   ab    |  c    ", "c", true)]
+		[DataRow("a|a", "a", true)]
+		[DataRow("a|b|b|", "c", false)]
 		public void HasParam(string parameterStr, string param, bool expected)
 		{
 			var moduleString = "foo|" + parameterStr;
@@ -44,6 +46,7 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("name=test|id=1", "id", "1")]
 		[DataRow("name=test|id=1", "iD", "1")]
 		[DataRow("| Id = 1 |", "iD", "1")]
+		[DataRow("a=3|a=65", "a", "65")]
 		public void GetValueFor(string parameterStr, string param, string expected)
 		{
 			var moduleString = "foo|" + parameterStr;
@@ -65,6 +68,7 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("| num = 1 |", "num", 1)]
 		[DataRow("num=1 1", "num", null)]
 		[DataRow("num =       5  ", "NUM", 5)]
+		[DataRow("a=3|a=65", "a", 65)]
 		public void GetInt(string parameterStr, string param, int? expected)
 		{
 			var moduleString = "foo|" + parameterStr;
@@ -87,6 +91,7 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("num=1 1", "num", null)]
 		[DataRow("num=Y", "num", null)]
 		[DataRow("num=Y2014", "num", "2014-01-01")]
+		[DataRow("num=foo    | num =     y2099", "num", "2099-01-01")]
 		public void GetYear(string parameterStr, string param, string? expectedDT)
 		{
 			var moduleString = "foo|" + parameterStr;
@@ -107,6 +112,7 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("csv=1,2", "csv", new[] { 1, 2 })]
 		[DataRow("csv=1, 2", "csv", new[] { 1, 2 })]
 		[DataRow("csv=1,2,notnumber", "csv", new[] { 1, 2 })]
+		[DataRow("a=3,4|a=5,6", "a", new[] { 5, 6 })]
 		public void GetInts(string parameterStr, string param, int[] expected)
 		{
 			var moduleString = "foo|" + parameterStr;
