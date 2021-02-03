@@ -286,7 +286,10 @@ article.wiki table {
 .forum-signature {
 	font-style: italic;
 	background-color: #eaeaea;
-	border: solid 1px #ccc;
-	border-radius: 5px;
+	border-top: solid 1px #ccc;
 	padding: .5rem;
+}
+
+.forum-profile-section {
+	border-right: solid 1px #eaeaea;
 }
