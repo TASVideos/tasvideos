@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Services;
 using TASVideos.WikiEngine;
@@ -46,13 +45,13 @@ namespace TASVideos.ViewComponents
 
 			var searchModel = new PublicationSearchModel
 			{
-				Tiers = tokenLookup.Tiers.Where(t => tier.Contains(t)),
-				SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Contains(s)),
+				Tiers = tokenLookup.Tiers.Where(tier.Contains),
+				SystemCodes = tokenLookup.SystemCodes.Where(systemCode.Contains),
 				ShowObsoleted = obs,
-				Years = tokenLookup.Years.Where(y => year.Contains(y)),
-				Tags = tokenLookup.Tags.Where(t => tag.Contains(t)),
-				Genres = tokenLookup.Genres.Where(g => tag.Contains(g)),
-				Flags = tokenLookup.Flags.Where(f => flag.Contains(f)),
+				Years = tokenLookup.Years.Where(year.Contains),
+				Tags = tokenLookup.Tags.Where(tag.Contains),
+				Genres = tokenLookup.Genres.Where(tag.Contains),
+				Flags = tokenLookup.Flags.Where(flag.Contains),
 				MovieIds = id,
 				Games = game,
 				GameGroups = group,
