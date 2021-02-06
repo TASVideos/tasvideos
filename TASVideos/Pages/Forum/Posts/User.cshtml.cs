@@ -83,11 +83,6 @@ namespace TASVideos.Pages.Forum.Posts
 				})
 				.SortedPageOf(Search);
 
-			foreach (var post in UserPosts.Posts)
-			{
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-			}
-
 			return Page();
 		}
 	}

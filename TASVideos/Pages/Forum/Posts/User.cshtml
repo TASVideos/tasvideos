@@ -50,7 +50,7 @@
 					</div>
 				</div>
 				<div class="col-8">
-					@Html.Raw(post.RenderedText)
+					<forum-markup markup=@post.Text enable-html=@post.EnableHtml enable-bb-code=@post.EnableBbCode></forum-markup>
 				</div>
 			</row>
 		</cardbody>

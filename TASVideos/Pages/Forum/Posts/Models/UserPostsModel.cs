@@ -26,7 +26,6 @@ namespace TASVideos.Pages.Forum.Posts.Models
 			public bool EnableBbCode { get; set; }
 			public bool EnableHtml { get; set; }
 			public string Text { get; set; } = "";
-			public string RenderedText { get; set; } = "";
 			public string? Subject { get; set; }
 			public int TopicId { get; set; }
 			public string TopicTitle { get; set; } = "";
