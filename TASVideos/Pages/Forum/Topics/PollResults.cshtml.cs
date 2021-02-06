@@ -54,8 +54,6 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			Poll.Question = RenderPost(Poll.Question, true, false); // TODO: flags
-
 			return Page();
 		}
 

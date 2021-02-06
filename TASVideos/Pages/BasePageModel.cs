@@ -1,9 +1,6 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-using TASVideos.ForumEngine;
 
 namespace TASVideos.Pages
 {
@@ -31,16 +28,6 @@ namespace TASVideos.Pages
 			{
 				ModelState.AddModelError(string.Empty, error.Description);
 			}
-		}
-
-		protected string RenderPost(string text, bool useBbCode, bool useHtml)
-		{
-			var parsed = PostParser.Parse(text, useBbCode, useHtml);
-			using var writer = new StringWriter();
-			writer.Write("<div class=postbody>");
-			parsed.WriteHtml(writer);
-			writer.Write("</div>");
-			return writer.ToString();
 		}
 	}
 }
