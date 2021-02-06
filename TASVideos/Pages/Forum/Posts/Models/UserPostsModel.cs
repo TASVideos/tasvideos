@@ -12,7 +12,6 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public string? Location { get; set; }
 		public string? Avatar { get; set; }
 		public string? Signature { get; set; }
-		public string? RenderedSignature { get; set; }
 
 		public IEnumerable<string> Roles { get; set; } = new List<string>();
 

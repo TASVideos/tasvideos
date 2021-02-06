@@ -45,11 +45,5 @@ namespace TASVideos.Pages
 
 		protected string RenderBbcode(string text)
 			=> RenderPost(text, true, false);
-
-		protected string RenderSignature(string? text)
-		{
-			// Bbcode on, Html off hardcoded, do we want this to be configurable?
-			return RenderBbcode(text ?? "");
-		}
 	}
 }

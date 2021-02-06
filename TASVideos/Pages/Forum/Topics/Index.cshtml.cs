@@ -152,9 +152,6 @@ namespace TASVideos.Pages.Forum.Topics
 			foreach (var post in Topic.Posts)
 			{
 				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-				post.RenderedSignature = !string.IsNullOrWhiteSpace(post.Signature)
-					? RenderSignature(post.Signature)
-					: "";
 				post.IsEditable = User.Has(PermissionTo.EditForumPosts)
 					|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
 				post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts)
