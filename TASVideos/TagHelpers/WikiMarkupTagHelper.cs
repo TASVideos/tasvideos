@@ -37,44 +37,12 @@ namespace TASVideos.TagHelpers
 		public string Markup { get; set; } = "";
 		public WikiPage PageData { get; set; } = new ();
 
-		private class MyTextWriter : TextWriter
-		{
-			private readonly TagHelperContent _content;
-
-			public MyTextWriter(TagHelperContent content)
-			{
-				_content = content;
-			}
-
-			public override Encoding Encoding => Encoding.Unicode;
-
-			public override void Write(char value)
-			{
-				_content.AppendHtml(new string(value, 1));
-			}
-
-			public override void Write(string? value)
-			{
-				_content.AppendHtml(value);
-			}
-
-			public override void Write(char[] buffer, int index, int count)
-			{
-				_content.AppendHtml(new string(buffer, index, count));
-			}
-
-			public override void Write(ReadOnlySpan<char> buffer)
-			{
-				_content.AppendHtml(new string(buffer));
-			}
-		}
-
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			((IViewContextAware)_viewComponentHelper).Contextualize(ViewContext);
 			output.TagName = "article";
 			output.AddCssClass("wiki");
-			await Util.RenderHtmlAsync(Markup, new MyTextWriter(output.Content), this);
+			await Util.RenderHtmlAsync(Markup, new TagHelperTextWriter(output.Content), this);
 		}
 
 		bool IWriterHelper.CheckCondition(string condition)

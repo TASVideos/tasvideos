@@ -74,12 +74,6 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			await PopulateAvailableForums();
-
-			foreach (var post in Topic.Posts)
-			{
-				post.Text = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-			}
-
 			return Page();
 		}
 

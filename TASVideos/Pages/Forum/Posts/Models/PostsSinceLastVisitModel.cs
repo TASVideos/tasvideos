@@ -23,10 +23,8 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public ForumPostMood PosterMood { get; set; }
 		public IEnumerable<string> PosterRoles { get; set; } = new List<string>();
 		public string Text { get; set; } = "";
-		public string RenderedText { get; set; } = "";
 		public string? Subject { get; set; }
 		public string? Signature { get; set; }
-		public string? RenderedSignature { get; set; }
 
 		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
 

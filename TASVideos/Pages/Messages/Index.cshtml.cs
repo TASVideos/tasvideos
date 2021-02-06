@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using TASVideos.Models;
 using TASVideos.Services;
 
@@ -33,7 +31,6 @@ namespace TASVideos.Pages.Messages
 			}
 
 			Message = message;
-			Message.RenderedText = RenderPost(Message.Text, Message.EnableBbCode, Message.EnableHtml);
 			return Page();
 		}
 	}
