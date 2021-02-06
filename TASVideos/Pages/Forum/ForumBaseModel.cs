@@ -90,8 +90,7 @@ namespace TASVideos.Pages.Forum
 				Text = model.Text,
 				PosterMood = model.Mood,
 
-				// TODO: check for bbcode and if none, set this to false?
-				// For now we are not giving the user choices
+				// New posts are always bbcode = true, html = false
 				EnableHtml = false,
 				EnableBbCode = true
 			};
