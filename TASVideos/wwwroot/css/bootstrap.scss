@@ -11,7 +11,11 @@ $theme-colors: (
 	"success": #28a745, // #28a745
 	"danger": #dc3545, // #dc3545
 	"warning": #ffc107, // #ffc107
-	"info": #9f76c0 // #17a2b8
+	"info": #9f76c0, // #17a2b8
+	"dark": #343a40, // ##343a40
+	"light": #f8f9fa, // #f8f9fa
+	"muted": #6c757d, // #6c757d
+	"white": #fff
 );
 
 @import "../lib/twitter-bootstrap/scss/root";
