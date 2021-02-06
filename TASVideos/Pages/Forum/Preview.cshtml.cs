@@ -14,7 +14,7 @@ namespace TASVideos.Pages.Forum
 		public async Task<IActionResult> OnPost()
 		{
 			var text = await new StreamReader(Request.Body, Encoding.UTF8).ReadToEndAsync();
-			var renderedText = RenderPost(text, true, false); // TODO: pass in bbcode flag
+			var renderedText = RenderPost(text, true, false); // New posts are always bbcode = true, html = false
 			return new ContentResult { Content = renderedText };
 		}
 
