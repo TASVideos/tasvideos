@@ -23,8 +23,6 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		[Required]
 		public string Text { get; set; } = "";
 
-		public string RenderedText { get; set; } = "";
-
 		public bool IsLastPost { get; set; }
 
 		public ForumPostMood Mood { get; set; } = ForumPostMood.Normal;

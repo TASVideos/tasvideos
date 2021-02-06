@@ -76,8 +76,6 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			Post.RenderedText = RenderPost(Post.Text, Post.EnableBbCode, Post.EnableHtml);
-
 			return Page();
 		}
 
@@ -85,7 +83,6 @@ namespace TASVideos.Pages.Forum.Posts
 		{
 			if (!ModelState.IsValid)
 			{
-				Post.RenderedText = RenderPost(Post.Text, Post.EnableBbCode, Post.EnableHtml);
 				return Page();
 			}
 
