@@ -126,7 +126,6 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (Topic.Poll is not null)
 			{
-				Topic.Poll.Question = RenderBbcode(Topic.Poll.Question);
 				Topic.Poll.Options = await _db.ForumPollOptions
 					.ForPoll(Topic.Poll.PollId)
 					.Select(o => new ForumTopicModel.PollModel.PollOptionModel

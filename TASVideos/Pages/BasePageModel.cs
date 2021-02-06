@@ -42,8 +42,5 @@ namespace TASVideos.Pages
 			writer.Write("</div>");
 			return writer.ToString();
 		}
-
-		protected string RenderBbcode(string text)
-			=> RenderPost(text, true, false);
 	}
 }
