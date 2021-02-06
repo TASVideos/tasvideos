@@ -83,12 +83,6 @@ namespace TASVideos.Pages.Forum.Posts
 				})
 				.SortedPageOf(Search);
 
-			UserPosts.RenderedSignature = RenderSignature(UserPosts.Signature);
-			foreach (var post in UserPosts.Posts)
-			{
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-			}
-
 			return Page();
 		}
 	}

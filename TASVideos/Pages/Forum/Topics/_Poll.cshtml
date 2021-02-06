@@ -18,7 +18,7 @@
 		class="btn btn-info pull-right">
 		See Votes
 	</a>
-	@Html.Raw(Model.Question)
+	<forum-markup markup=@Model.Question enable-bb-code=true></forum-markup>
 	<form asp-page="Index" asp-page-handler="Vote">
 		<input type="hidden" asp-for="@Model.PollId" />
 		@foreach (var option in Model.Options.OrderBy(o => o.Ordinal))

@@ -35,11 +35,6 @@ namespace TASVideos.Pages.Profile
 			}
 
 			Profile = profile;
-			if (!string.IsNullOrWhiteSpace(Profile.Signature))
-			{
-				Profile.Signature = RenderPost(Profile.Signature, true, false);
-			}
-
 			Profile.Awards = await _awards.ForUser(Profile.Id);
 
 			return Page();

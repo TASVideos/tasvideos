@@ -19,6 +19,6 @@
 		<h4>@Model.Message.Subject</h4>
 	</div>
 	<div class="card-body">
-		@Html.Raw(Model.Message.RenderedText)
+		<forum-markup markup=@Model.Message.Text enable-html=@Model.Message.EnableHtml enable-bb-code=@Model.Message.EnableBbCode></forum-markup>
 	</div>
 </div>

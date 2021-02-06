@@ -21,7 +21,7 @@
 			</row>
 		</cardheader>
 		<cardbody>
-			@Html.Raw(Model.Post.RenderedText)
+			<forum-markup markup=@Model.Post.Text enable-bb-code=@Model.Post.EnableBbCode enable-html=@Model.Post.EnableHtml></forum-markup>
 		</cardbody>
 	</card>
 </div>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.ForumEngine;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
@@ -44,21 +41,7 @@ namespace TASVideos.ViewComponents
 					.ToListAsync()
 			};
 
-			foreach (var post in model.Posts)
-			{
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-			}
-
 			return View(model);
-		}
-
-		// TODO: this is the same code in BaseController
-		private static string RenderPost(string text, bool useBbCode, bool useHtml)
-		{
-			var parsed = PostParser.Parse(text, useBbCode, useHtml);
-			using var writer = new StringWriter();
-			parsed.WriteHtml(writer);
-			return writer.ToString();
 		}
 	}
 }

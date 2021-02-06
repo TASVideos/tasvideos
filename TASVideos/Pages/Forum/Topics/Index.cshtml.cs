@@ -126,7 +126,6 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (Topic.Poll is not null)
 			{
-				Topic.Poll.Question = RenderBbcode(Topic.Poll.Question);
 				Topic.Poll.Options = await _db.ForumPollOptions
 					.ForPoll(Topic.Poll.PollId)
 					.Select(o => new ForumTopicModel.PollModel.PollOptionModel
@@ -151,10 +150,6 @@ namespace TASVideos.Pages.Forum.Topics
 
 			foreach (var post in Topic.Posts)
 			{
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-				post.RenderedSignature = !string.IsNullOrWhiteSpace(post.Signature)
-					? RenderSignature(post.Signature)
-					: "";
 				post.IsEditable = User.Has(PermissionTo.EditForumPosts)
 					|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
 				post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts)

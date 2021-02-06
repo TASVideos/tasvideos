@@ -74,8 +74,6 @@ namespace TASVideos.Pages.Forum.Posts
 			foreach (var post in Posts)
 			{
 				post.Awards = await _awards.ForUser(post.PosterId);
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-				post.RenderedSignature = RenderSignature(post.Signature);
 			}
 		}
 	}
