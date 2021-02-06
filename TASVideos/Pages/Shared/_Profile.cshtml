@@ -80,7 +80,7 @@
 				</div>
 			</cardbody>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="card-footer">
-				@Html.Raw(Model.Signature)
+				<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
 			</div>
 		</card>
 		<card>
