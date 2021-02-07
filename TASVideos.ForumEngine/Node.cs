@@ -398,7 +398,7 @@ namespace TASVideos.ForumEngine
 					await WriteChildren(w, h);
 					break;
 				case "list":
-					WriteSimpleTag(w, h, Options == "1" ? "ol" : "ul");
+					await WriteSimpleTag(w, h, Options == "1" ? "ol" : "ul");
 					break;
 				case "html:br":
 					w.Write("<br>");
