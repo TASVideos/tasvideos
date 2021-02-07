@@ -18,6 +18,8 @@ namespace TASVideos.Legacy.Imports
 
 			var submissions = context.Submissions
 				.Include(s => s.System)
+				.Include(s => s.SubmissionAuthors)
+				.ThenInclude(s => s.Author)
 				.ToList();
 
 			var groups = from s in submissions
