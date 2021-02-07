@@ -274,8 +274,6 @@ namespace TASVideos.ForumEngine
 						async s => (int.TryParse(s, out var id) ? await h.GetMovieTitle(id) : null) ?? "Movie #" + s);
 					break;
 				case "submission":
-					// TODO: On the old site, this actually shows the submission title
-					// `#123: kopernical's NES Mega Man 5 in 36:29.94`
 					await WriteHref(w, h, s => "/" + s + "S",
 						async s => (int.TryParse(s, out var id) ? await h.GetSubmissionTitle(id) : null) ?? "Submission #" + s);
 					break;
