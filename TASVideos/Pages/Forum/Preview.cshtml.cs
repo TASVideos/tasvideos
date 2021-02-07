@@ -11,19 +11,26 @@ namespace TASVideos.Pages.Forum
 	[IgnoreAntiforgeryToken]
 	public class PreviewModel : BasePageModel
 	{
+		private readonly IWriterHelper _helper;
+
+		public PreviewModel(IWriterHelper helper)
+		{
+			_helper = helper;
+		}
+
 		public async Task<IActionResult> OnPost()
 		{
 			var text = await new StreamReader(Request.Body, Encoding.UTF8).ReadToEndAsync();
-			var renderedText = RenderPost(text, true, false); // New posts are always bbcode = true, html = false
+			var renderedText = await RenderPost(text, true, false); // New posts are always bbcode = true, html = false
 			return new ContentResult { Content = renderedText };
 		}
 
-		private string RenderPost(string text, bool useBbCode, bool useHtml)
+		private async Task<string> RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);
 			using var writer = new StringWriter();
 			writer.Write("<div class=postbody>");
-			parsed.WriteHtml(writer);
+			await parsed.WriteHtml(writer, _helper);
 			writer.Write("</div>");
 			return writer.ToString();
 		}

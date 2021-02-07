@@ -120,6 +120,8 @@ namespace TASVideos.Extensions
 			services.AddScoped<ITASVideoAgent, TASVideoAgent>();
 			services.AddScoped<ITASVideosGrue, TASVideosGrue>();
 
+			services.AddScoped<ForumEngine.IWriterHelper, ForumWriterHelper>();
+
 			return services;
 		}
 
