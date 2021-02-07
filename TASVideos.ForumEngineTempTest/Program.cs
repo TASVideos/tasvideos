@@ -19,7 +19,7 @@ namespace TASVideos.ForumEngineTempTest
 			var parsed = PostParser.Parse(content, true, containsHtml);
 
 			Console.WriteLine(containsHtml);
-			parsed.WriteHtml(Console.Out);
+			parsed.WriteHtml(Console.Out, NullWriterHelper.Instance).RunSynchronously();
 		}
 
 		public static void MainDa(string[] args)
