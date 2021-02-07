@@ -60,6 +60,7 @@ namespace TASVideos.Pages.Account
 		[Display(Name = "User Name")]
 		public string UserName { get; set; } = "";
 
+		[RegularExpression(@"[^+]+", ErrorMessage = "Email pattern not allowed.")]
 		[BindProperty]
 		[Required]
 		[EmailAddress]
