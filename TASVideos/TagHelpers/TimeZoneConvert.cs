@@ -58,7 +58,7 @@ namespace TASVideos.TagHelpers
 
 			var dateStr = DateOnly
 				? dateTime.ToShortDateString()
-				: dateTime.ToString(CultureInfo.CurrentCulture);
+				: dateTime.ToString("g", CultureInfo.CurrentCulture);
 			output.TagName = "span";
 			output.TagMode = TagMode.StartTagAndEndTag;
 			output.Content.AppendHtml(TagHelperExtensions.Text(dateStr));

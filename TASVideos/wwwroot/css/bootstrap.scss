@@ -1,21 +1,23 @@
 // Import point and customizations for bootstrap
 
+@import "variables.scss";
+
 @import "../lib/twitter-bootstrap/scss/functions";
 @import "../lib/twitter-bootstrap/scss/variables";
 @import "../lib/twitter-bootstrap/scss/mixins";
 
 // Add variable customizations here
 $theme-colors: (
-	"primary": #531f86, // #007bff
-	"secondary": #6c757d, // #6c757d
-	"success": #28a745, // #28a745
-	"danger": #dc3545, // #dc3545
-	"warning": #ffc107, // #ffc107
-	"info": #9f76c0, // #17a2b8
-	"dark": #343a40, // ##343a40
-	"light": #f8f9fa, // #f8f9fa
-	"muted": #6c757d, // #6c757d
-	"white": #fff
+	"primary": 		$primary,
+	"secondary": 	$secondary,
+	"success": 		$success,
+	"danger": 		$danger,
+	"warning": 		$warning,
+	"info": 		$info,
+	"dark": 		$dark,
+	"light": 		$light,
+	"muted": 		$muted,
+	"white": 		$white,
 );
 
 @import "../lib/twitter-bootstrap/scss/root";
