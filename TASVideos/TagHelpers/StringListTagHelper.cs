@@ -50,7 +50,7 @@ namespace TASVideos.TagHelpers
 			var uniqueFuncName = "selectList" + context.UniqueId;
 			output.Content.AppendHtml(
 $@"<script>
-	function {JsValue(uniqueFuncName)}() {{
+	function {JsIdentifier(uniqueFuncName)}() {{
 		var addBtn = document.getElementById({JsValue($"{modelId}-add-btn")});
 		addBtn.onclick = function() {{
 			var lastIndex = Math.max.apply(null, document.querySelectorAll({JsValue($"#{parentContainerName} .author-row")})
@@ -77,7 +77,7 @@ $@"<script>
 			document.querySelector({JsValue($@"#{parentContainerName} div[class=""string-list-container""]")}).appendChild(newElem);
 		}}
 	}}
-	{JsValue(uniqueFuncName)}();
+	{JsIdentifier(uniqueFuncName)}();
 </script>
 ");
 			output.Content.AppendHtml("</div>");
