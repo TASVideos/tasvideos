@@ -1,11 +1,13 @@
-﻿a[disabled] {
+﻿@import "variables.scss";
+
+a[disabled] {
 	pointer-events: none;
 }
 
 body {
-	font-family: georgia,"times new roman",serif;
+	font-family: helvetica, sans-serif;
 	font-size: 14px;
-	background: #EEE linear-gradient(#c2d4fc 0,#eeeeee 250px) repeat-x;
+	background: #EEE linear-gradient($info 0, #eee 250px) repeat-x;
 }
 
 #banner {
@@ -18,13 +20,13 @@ body {
 		font-family: Verdana;
 
 		#brand {
-			color: #FFF;
+			color: $white;
 			font-size: 17px;
 			font-family: helvetica,arial,sans-serif
 		}
 
 		#mantra1 {
-			color: #FFF;
+			color: $white;
 			font-size: 10px;
 		}
 
@@ -33,6 +35,10 @@ body {
 			font-size: 9px;
 		}
 	}
+}
+
+.alert-info {
+	box-shadow:0 0 1px $secondary;
 }
 
 .form-control {
@@ -53,9 +59,13 @@ h1 {
 	border-radius: 5px;
 	font-size: 1.25em;
 	line-height: 1.5;
-	background: #531f86;
-	color: #FFF;
+	background: $primary;
+	color: $white;
 	width: 95%;
+
+	// box-shadow: inset 0px 0px 2px 0px #430f76;
+    // background-color: $primary;
+    // border: 1px solid #430f76;
 }
 
 .wiki h1 {
@@ -112,7 +122,7 @@ h4 {
 }
 
 .tab-content {
-	background-color: #FFF;
+	background-color: $white;
 }
 
 .tab-pane {
@@ -135,13 +145,13 @@ h4 {
 	.a-r { text-align: right; }
 
 	.warning {
-		border: 2px solid #bd2130;
+		border: 2px solid $danger;
 		border-radius: 2px;
 		padding: 2px;
 
 		&::before {
 			content: "Warning: ";
-			color: #bd2130;
+			color: $danger;
 			font-weight: bold;
 		}
 	}
@@ -163,7 +173,7 @@ h4 {
 	color: black;
 
 	&:hover {
-		color: white;
+		color: $white;
 	}
 	
 }
@@ -181,21 +191,21 @@ h4 {
 }
 
 .error-code {
-	border: 2px solid #c00;
-	background-color: white;
+	border: 2px solid $danger;
+	background-color: $white;
 	padding: 20px;
 }
 
 .error-marker {
 	position: relative;
-	border: 2px solid #c00;
+	border: 2px solid $danger;
 
 	span {
 		position: absolute;
-		background-color: white;
+		background-color: $white;
 		padding: 4px;
-		border: 1px solid #c00;
-		color: #c00;
+		border: 1px solid $danger;
+		color: $danger;
 		bottom: 13px;
 		opacity: 0.2;
 
@@ -243,8 +253,8 @@ article.wiki table {
 }
 
 .module-error {
-	color: #dc3545;
-	border: 1px solid #dc3545;
+	color: $danger;
+	border: 1px solid $danger;
 	border-radius: 5px;
 	background-color: #f8d7da;
 	padding: .75rem 1.25rem;
@@ -258,7 +268,7 @@ article.wiki table {
 	margin: 1rem;
 	width: 18rem;
 	margin-bottom: 2rem;
-	background-color: white;
+	background-color: $white;
 	text-align: left;
 	border-radius: 3px;
 	text-decoration: none;

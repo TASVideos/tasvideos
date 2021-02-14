@@ -2,7 +2,7 @@
 <card class="@(Model.Highlight ? "border-info" : "")">
 	<cardheader class="pt-1 pb-1">
 		<row>
-			<div class="col-lg 10 col-md-9 col-8 pt-0 pb-0">
+			<div class="col-lg-2 col-md-3 col-4 p-0">
 				<small style="display: inline-block">
 					<a
 						id="@Model.Id" 
@@ -13,6 +13,8 @@
 					</a>
 					Posted: <timezone-convert asp-for="@Model.CreateTimestamp" /> 
 				</small>
+			</div>
+			<div class="col-lg-10 col-md-9 col-8 pr-0" >
 				<small condition="!string.IsNullOrWhiteSpace(Model.Subject)" class="text-center">
 					Post subject: @Model.Subject
 				</small>
@@ -28,7 +30,7 @@
 						asp-page="/Forum/Posts/Create"
 						asp-route-topicId="@Model.TopicId"
 						asp-route-quoteId="@Model.Id"
-						class="btn btn-info btn-sm">
+						class="btn btn-secondary btn-sm">
 						Quote
 					</a>
 					<a
