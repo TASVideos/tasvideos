@@ -47,7 +47,7 @@ namespace TASVideos.TagHelpers
 			var sb = new StringBuilder(name.Length + value.Length + 3);
 			sb.Append(name);
 			sb.Append("=\"");
-			foreach (var c in name)
+			foreach (var c in value)
 			{
 				switch (c)
 				{
