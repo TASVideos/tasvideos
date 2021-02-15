@@ -221,7 +221,7 @@ namespace TASVideos.TagHelpers
 						document.getElementById({JsValue(availableListName)}).appendChild(elem.cloneNode(true));
 						document.getElementById({JsValue(selectedListName)}).removeChild(elem);
 
-						document.querySelector({JsValue($@"[name=""{modelName}""][v=""'")} + elem.value + '""]').remove();
+						document.querySelector({JsValue($@"[name=""{modelName}""][v=""")} + elem.value + '""]').remove();
 					}});
 
 					sortLists();
