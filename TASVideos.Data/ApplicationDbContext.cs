@@ -89,6 +89,8 @@ namespace TASVideos.Data
 
 		public DbSet<MediaPost> MediaPosts { get; set; } = null!;
 
+		public DbSet<IpBan> IpBans { get; set; } = null!;
+
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
 			PerformTrackingUpdates();
@@ -397,6 +399,11 @@ namespace TASVideos.Data
 					.HasDatabaseName("UserDisallowRegexPatternIndex")
 					.IsUnique()
 					.HasFilter($"([{nameof(UserDisallow.RegexPattern)}] IS NOT NULL)");
+			});
+
+			builder.Entity<IpBan>(entity =>
+			{
+				entity.HasIndex(e => e.Mask).IsUnique();
 			});
 		}
 

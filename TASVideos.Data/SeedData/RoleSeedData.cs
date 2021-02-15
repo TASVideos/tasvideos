@@ -95,7 +95,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditRoles,
 			PermissionTo.SeeRestrictedForums,
 			PermissionTo.EditPublicationFiles,
-			PermissionTo.EditUserFiles
+			PermissionTo.EditUserFiles,
+			PermissionTo.BanIpAddresses
 		}).ToArray();
 
 		private static readonly PermissionTo[] ExperiencedForumUserPermissions =
@@ -111,7 +112,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.LockTopics,
 			PermissionTo.MoveTopics,
 			PermissionTo.SetTopicType,
-			PermissionTo.MergeTopics
+			PermissionTo.MergeTopics,
+			PermissionTo.BanIpAddresses
 		}).ToArray();
 
 		private static readonly PermissionTo[] ForumAdminPermissions = ForumModeratorPermissions.Concat(new[]
@@ -139,7 +141,8 @@ namespace TASVideos.Data.SeedData
 		private static readonly PermissionTo[] SiteDeveloperPermissions =
 		{
 			PermissionTo.SeeDiagnostics,
-			PermissionTo.SeeRestrictedForums
+			PermissionTo.SeeRestrictedForums,
+			PermissionTo.BanIpAddresses
 		};
 
 		public static readonly PermissionTo[] PublishedAuthorPermissions =
