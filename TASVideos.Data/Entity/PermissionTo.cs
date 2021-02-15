@@ -287,6 +287,11 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to edit/delete user files of another user.")]
 		EditUserFiles = 505,
 
+		[Display(Name = "Ban Ip Addresses")]
+		[Group("User Administration")]
+		[Description("The to ban/unban ip addresses that a user can register or log in from.")]
+		BanIpAddresses = 506,
+
 		#endregion
 
 		#region Admin 9001

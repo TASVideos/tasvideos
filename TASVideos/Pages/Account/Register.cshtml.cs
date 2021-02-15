@@ -19,6 +19,7 @@ using TASVideos.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Account
 {
 	[AllowAnonymous]
+	[IpBanCheck]
 	public class RegisterModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;

@@ -125,6 +125,7 @@ namespace TASVideos.Data
 			context.Genres.AddRange(GenreSeedData.Genres);
 			context.Flags.AddRange(FlagSeedData.Flags);
 			context.SubmissionRejectionReasons.AddRange(RejectionReasonsSeedData.RejectionReasons);
+			context.IpBans.AddRange(IpBanSeedData.IpBans);
 			context.SaveChanges();
 		}
 

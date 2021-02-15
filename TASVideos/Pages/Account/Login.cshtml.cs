@@ -17,6 +17,7 @@ using TASVideos.Services;
 namespace TASVideos.Pages.Account
 {
 	[AllowAnonymous]
+	[IpBanCheck]
 	public class LoginModel : BasePageModel
 	{
 		private readonly UserManager _userManager;
