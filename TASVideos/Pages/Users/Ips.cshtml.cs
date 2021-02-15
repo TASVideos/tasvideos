@@ -22,7 +22,7 @@ namespace TASVideos.Pages.Users
 		[FromRoute]
 		public string UserName { get; set; } = "";
 
-		public IEnumerable<string> Ips { get; set; } = new List<string>();
+		public ICollection<string> Ips { get; set; } = new List<string>();
 
 		public async Task<IActionResult> OnGet()
 		{
