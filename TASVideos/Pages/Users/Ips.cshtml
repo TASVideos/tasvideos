@@ -6,7 +6,7 @@
 
 <table class="table table-sm table-bordered table-striped">
 	<tr>
-		<th>IP Address</th>
+		<th>IP Address (total: @Model.Ips.Count)</th>
 		<th></th>
 	</tr>
 	@foreach (var ip in Model.Ips.OrderBy(i => i))
