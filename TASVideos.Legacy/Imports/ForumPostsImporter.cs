@@ -77,7 +77,7 @@ namespace TASVideos.Legacy.Imports
 						Id = p.Id,
 						TopicId = p.TopicId,
 						PosterId = p.PosterId,
-						IpAddress = p.IpAddress,
+						IpAddress = p.IpAddress.IpFromHex(),
 						Subject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject)),
 						Text = fixedText,
 						EnableBbCode = enableBbCode,
