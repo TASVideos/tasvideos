@@ -96,6 +96,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.SeeRestrictedForums,
 			PermissionTo.EditPublicationFiles,
 			PermissionTo.EditUserFiles,
+			PermissionTo.ViewPrivateUserData,
 			PermissionTo.BanIpAddresses
 		}).ToArray();
 
@@ -113,6 +114,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.MoveTopics,
 			PermissionTo.SetTopicType,
 			PermissionTo.MergeTopics,
+			PermissionTo.ViewPrivateUserData,
 			PermissionTo.BanIpAddresses
 		}).ToArray();
 
@@ -142,6 +144,7 @@ namespace TASVideos.Data.SeedData
 		{
 			PermissionTo.SeeDiagnostics,
 			PermissionTo.SeeRestrictedForums,
+			PermissionTo.ViewPrivateUserData,
 			PermissionTo.BanIpAddresses
 		};
 
