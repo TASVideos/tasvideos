@@ -32,7 +32,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserDisallow.LastUpdateTimeStamp)
 			};
 
-			disallow.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserDisallows), Microsoft.Data.SqlClient.SqlBulkCopyOptions.Default);
+			disallow.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserDisallows), keepIdentity: false);
 		}
 	}
 }
