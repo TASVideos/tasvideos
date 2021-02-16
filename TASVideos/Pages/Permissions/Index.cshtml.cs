@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Permissions
 			.Select(p => new PermissionDisplayModel
 			{
 				Id = p,
-				Name = p.EnumDisplayName(),
+				Name = p.ToString().SplitCamelCase(),
 				Group = p.Group(),
 				Description = p.Description()
 			})
