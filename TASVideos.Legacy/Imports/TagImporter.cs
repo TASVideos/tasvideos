@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Data.SqlClient;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
@@ -40,7 +40,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Tag.DisplayName)
 			};
 
-			tags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Tags), SqlBulkCopyOptions.Default);
+			tags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Tags), keepIdentity: false);
 		}
 	}
 }

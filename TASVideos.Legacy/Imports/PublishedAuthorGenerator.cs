@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Microsoft.Data.SqlClient;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
@@ -27,7 +27,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			userRoles.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserRoles), SqlBulkCopyOptions.Default);
+			userRoles.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserRoles), keepIdentity: false);
 		}
 	}
 }

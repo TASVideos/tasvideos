@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Data.SqlClient;
+
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -82,7 +82,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOption.LastUpdateUserName)
 			};
 
-			forumPollOptions.BulkInsert(connectionStr, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions), SqlBulkCopyOptions.Default);
+			forumPollOptions.BulkInsert(connectionStr, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions), keepIdentity: false);
 
 			/******** ForumPollOptionVote ********/
 			var legForumVoters = legacyForumContext.Voter.ToList();
@@ -135,7 +135,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOptionVote.IpAddress)
 			};
 
-			forumPollOptionVotes.BulkInsert(connectionStr, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes), SqlBulkCopyOptions.Default);
+			forumPollOptionVotes.BulkInsert(connectionStr, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes), keepIdentity: false);
 		}
 
 		// Removes html silliness from the poll questions

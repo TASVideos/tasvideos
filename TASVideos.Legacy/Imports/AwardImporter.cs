@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Microsoft.Data.SqlClient;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Legacy.Data.Site;
@@ -89,8 +89,8 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			awards.BulkInsert(connectionStr, awardColumns, nameof(ApplicationDbContext.Awards));
-			userAwards.BulkInsert(connectionStr, userAwardColumns, nameof(ApplicationDbContext.UserAwards), SqlBulkCopyOptions.Default);
-			publicationAwards.BulkInsert(connectionStr, pubAwardColumns, nameof(ApplicationDbContext.PublicationAwards), SqlBulkCopyOptions.Default);
+			userAwards.BulkInsert(connectionStr, userAwardColumns, nameof(ApplicationDbContext.UserAwards), keepIdentity: false);
+			publicationAwards.BulkInsert(connectionStr, pubAwardColumns, nameof(ApplicationDbContext.PublicationAwards), keepIdentity: false);
 		}
 	}
 }

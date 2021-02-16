@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
-using Microsoft.Data.SqlClient;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.ForumEngine;
@@ -112,7 +112,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.PosterMood)
 			};
 
-			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), SqlBulkCopyOptions.KeepIdentity, 20000, 600);
+			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), keepIdentity: true, 20000, 600);
 		}
 	}
 }
