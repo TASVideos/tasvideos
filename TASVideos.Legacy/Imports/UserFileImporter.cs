@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Data.SqlClient;
+
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -72,7 +72,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserFileComment.UserFileId)
 			};
 
-			userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles), SqlBulkCopyOptions.KeepIdentity, 10000, 600);
+			userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles), keepIdentity: true, 10000, 600);
 			userFileComments.BulkInsert(connectionStr, userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
 		}
 

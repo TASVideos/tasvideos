@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using Microsoft.Data.SqlClient;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.ForumEngine;
@@ -90,7 +90,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PrivateMessage.DeletedForFromUser)
 			};
 
-			privMessages.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PrivateMessages), SqlBulkCopyOptions.Default, 20000, 600);
+			privMessages.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PrivateMessages), keepIdentity: false, 20000, 600);
 		}
 	}
 }

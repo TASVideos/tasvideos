@@ -70,10 +70,11 @@ namespace TASVideos.Legacy.Imports
 			string connectionString,
 			string[] columnsToCopy,
 			string tableName,
-			SqlBulkCopyOptions options = SqlBulkCopyOptions.KeepIdentity,
+			bool keepIdentity = true,
 			int batchSize = 10000,
 			int? bulkCopyTimeout = null)
 		{
+			var options = keepIdentity ? SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
 			using var sqlCopy = new SqlBulkCopy(connectionString, options)
 			{
 				DestinationTableName = tableName,

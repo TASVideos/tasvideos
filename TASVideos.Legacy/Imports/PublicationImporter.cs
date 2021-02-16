@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Data.SqlClient;
+
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -189,7 +189,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationAuthor.PublicationId)
 			};
 
-			publicationAuthors.BulkInsert(connectionStr, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors), SqlBulkCopyOptions.Default);
+			publicationAuthors.BulkInsert(connectionStr, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors), keepIdentity: false);
 
 			var pubFileColumns = new[]
 			{
@@ -204,7 +204,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.LastUpdateTimeStamp)
 			};
 
-			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default, bulkCopyTimeout: 600);
+			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), keepIdentity: false, bulkCopyTimeout: 600);
 		}
 	}
 }
