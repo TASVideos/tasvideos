@@ -32,12 +32,32 @@ namespace TASVideos.Pages.Users
 				return NotFound();
 			}
 
-			Ips = await _db.ForumPosts
+			var postIps = await _db.ForumPosts
 				.Where(p => p.PosterId == user.Id)
 				.Where(p => p.IpAddress != null)
 				.Select(p => p.IpAddress ?? "")
 				.Distinct()
 				.ToListAsync();
+
+			var pmIps = await _db.PrivateMessages
+				.Where(p => p.FromUserId == user.Id)
+				.Where(p => p.IpAddress != null)
+				.Select(p => p.IpAddress ?? "")
+				.Distinct()
+				.ToListAsync();
+
+			var voteIps = await _db.ForumPollOptionVotes
+				.Where(v => v.UserId == user.Id)
+				.Where(p => p.IpAddress != null)
+				.Select(p => p.IpAddress ?? "")
+				.Distinct()
+				.ToListAsync();
+
+			Ips = postIps
+				.Concat(pmIps)
+				.Concat(voteIps)
+				.Distinct()
+				.ToList();
 
 			return Page();
 		}
