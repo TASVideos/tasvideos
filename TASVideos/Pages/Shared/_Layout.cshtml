@@ -69,7 +69,7 @@
 			<p>&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/adelikat/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a></p>
 		</footer>
 	</div>
-	@RenderSection("Scripts", required: false)
+	@await RenderSectionAsync("Scripts", required: false)
 	<script src="~/js/prism.js"></script>
 </body>
 </html>
