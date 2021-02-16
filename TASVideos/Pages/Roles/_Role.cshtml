@@ -15,7 +15,12 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-6">
-				<strong>@Html.DisplayNameFor(m => m.Permissions):</strong><br />
+				<strong>
+					<a asp-page="/Permissions/Index">
+						@Html.DisplayNameFor(m => m.Permissions):
+					</a>
+				</strong>
+				<br />
 				@foreach (var permission in Model.Permissions)
 				{
 					<div class="ml-md-0 ml-sm-4">@permission</div>
