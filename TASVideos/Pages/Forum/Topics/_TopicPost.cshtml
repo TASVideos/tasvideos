@@ -85,12 +85,10 @@
 			</div>
 			<div class="col-lg-10 col-md-9 col-8">
 				<forum-markup markup=@Model.Text enable-html=@Model.EnableHtml enable-bb-code=@Model.EnableBbCode></forum-markup>
-				<div condition="!string.IsNullOrWhiteSpace(Model.Signature)">
-					<div class="forum-signature mt-2">
-						<small>
-							<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
-						</small>
-					</div>
+				<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="forum-signature mt-2">
+					<small>
+						<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
+					</small>
 				</div>
 			</div>
 		</row>
