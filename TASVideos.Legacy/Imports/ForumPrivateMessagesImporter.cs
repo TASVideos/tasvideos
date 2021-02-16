@@ -56,14 +56,14 @@ namespace TASVideos.Legacy.Imports
 						LastUpdateUserName = g.Key.UserName,
 						FromUserId = g.Key.FromUserId,
 						ToUserId = g.Key.ToUserId,
-						IpAddress = g.Key.IpAddress,
+						IpAddress = g.Key.IpAddress.IpFromHex(),
 						Subject = ImportHelper.ConvertLatin1String(g.Key.Subject),
 						Text = fixedText,
 						EnableHtml = g.Key.EnableHtml && BbParser.ContainsHtml(fixedText, g.Key.EnableBbCode),
 						EnableBbCode = g.Key.EnableBbCode,
 						ReadOn = g.All(gg => gg.Type != 1)
 							? DateTime.UtcNow // Legacy system didn't track date so we will simply use the import date
-							: (DateTime?)null,
+							: null,
 						SavedForFromUser = g.Any(gg => gg.Type == 4),
 						SavedForToUser = g.Any(gg => gg.Type == 3)
 					};

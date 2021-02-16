@@ -34,7 +34,7 @@ namespace TASVideos.Legacy.Imports
 					CreateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					LastUpdateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					CloseDate = v.VoteLength == 0
-						? (DateTime?)null
+						? null
 						: ImportHelper.UnixTimeStampToDateTime(v.VoteStart + v.VoteLength)
 				})
 				.ToList();
@@ -95,7 +95,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					PollOptionId = po.Id,
 					UserId = v.UserId,
-					IpAddress = v.IpAddress,
+					IpAddress = v.IpAddress.IpFromHex(),
 					CreateTimestamp = DateTime.UtcNow // Legacy system did not track this
 				})
 				.ToList();
