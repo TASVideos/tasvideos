@@ -119,8 +119,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 			await using var inputStream = inputLog.Open();
 			using var inputReader = new StreamReader(inputStream);
-			result.Frames = inputReader
-				.ReadToEnd()
+			result.Frames = (await inputReader.ReadToEndAsync())
 				.LineSplit()
 				.PipeCount();
 
