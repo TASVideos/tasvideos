@@ -403,6 +403,7 @@ namespace TASVideos.WikiEngine.AST
 				w.Write('=');
 				w.Write(v);
 			}
+
 			w.WriteLine(')');
 		}
 

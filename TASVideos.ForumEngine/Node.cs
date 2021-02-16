@@ -16,16 +16,13 @@ namespace TASVideos.ForumEngine
 		/// <summary>
 		/// Get the title of a movie.
 		/// </summary>
-		/// <param name="id"></param>
 		/// <returns>`null` if not found</returns>
 		Task<string?> GetMovieTitle(int id);
 
 		/// <summary>
 		/// Get the title of a submission.
 		/// </summary>
-		/// <param name="id"></param>
 		/// <returns>`null` if not found</returns>
-
 		Task<string?> GetSubmissionTitle(int id);
 	}
 
@@ -34,9 +31,11 @@ namespace TASVideos.ForumEngine
 		public Task<string?> GetMovieTitle(int id) => Task.FromResult<string?>(null);
 		public Task<string?> GetSubmissionTitle(int id) => Task.FromResult<string?>(null);
 
-		private NullWriterHelper() {}
+		private NullWriterHelper()
+		{
+		}
 
-		public static readonly NullWriterHelper Instance = new();
+		public static readonly NullWriterHelper Instance = new ();
 	}
 
 	public interface INode
@@ -270,11 +269,17 @@ namespace TASVideos.ForumEngine
 					await WriteHref(w, h, s => "/forum/p/" + s + "#" + s, async s => "Post #" + s);
 					break;
 				case "movie":
-					await WriteHref(w, h, s => "/" + s + "M",
+					await WriteHref(
+						w,
+						h,
+						s => "/" + s + "M",
 						async s => (int.TryParse(s, out var id) ? await h.GetMovieTitle(id) : null) ?? "Movie #" + s);
 					break;
 				case "submission":
-					await WriteHref(w, h, s => "/" + s + "S",
+					await WriteHref(
+						w,
+						h,
+						s => "/" + s + "S",
 						async s => (int.TryParse(s, out var id) ? await h.GetSubmissionTitle(id) : null) ?? "Submission #" + s);
 					break;
 				case "userfile":
