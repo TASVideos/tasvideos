@@ -69,11 +69,11 @@ namespace TASVideos.MovieParsers.Parsers
 			br.ReadBytes(20); // SHA-1 has of git revision
 			br.ReadBytes(4); // DSP
 			br.ReadBytes(4); // DSP
-			var ticks = br.ReadInt64(); // (486 MHz when a GameCube game is running, 729 MHz when a Wii game is running)
-			if (ticks != 0)
+			result.CycleCount = br.ReadInt64(); // (486 MHz when a GameCube game is running, 729 MHz when a Wii game is running)
+			if (result.CycleCount != 0)
 			{
 				var hertz = isWii ? WiiHertz : GameCubeHertz;
-				result.Frames = (int)Math.Ceiling((decimal)(ticks / hertz * 60));
+				result.Frames = (int)Math.Ceiling((decimal)(result.CycleCount / hertz * 60));
 			}
 			else
 			{

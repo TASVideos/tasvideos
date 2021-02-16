@@ -32,7 +32,6 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 
 			int? vBlankCount;
-			long? cycleCount;
 			string core;
 
 			await using (var stream = headerEntry.Open())
@@ -107,7 +106,7 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 
 				vBlankCount = header.GetValueFor(Keys.VBlankCount).ToInt();
-				cycleCount = header.GetValueFor(Keys.CycleCount).ToLong();
+				result.CycleCount = header.GetValueFor(Keys.CycleCount).ToLong();
 				core = header.GetValueFor(Keys.Core).ToLower();
 			}
 
@@ -123,9 +122,9 @@ namespace TASVideos.MovieParsers.Parsers
 				.LineSplit()
 				.PipeCount();
 
-			if (cycleCount.HasValue && CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
+			if (result.CycleCount.HasValue && CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
 			{
-				var seconds = cycleCount.Value / (double)cyclesPerFrame;
+				var seconds = result.CycleCount.Value / (double)cyclesPerFrame;
 				result.FrameRateOverride = result.Frames / seconds;
 			}
 
