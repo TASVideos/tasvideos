@@ -39,7 +39,7 @@ namespace TASVideos.Extensions
 				return new string('.', limit);
 			}
 
-			return str.Substring(0, limit - 3) + "...";
+			return str[..(limit - 3)] + "...";
 		}
 
 		/// <summary>
