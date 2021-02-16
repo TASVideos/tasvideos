@@ -66,5 +66,10 @@ namespace TASVideos.MovieParsers.Result
 		/// If null, the calling system should infer the frame rate based on system and region.
 		/// </summary>
 		double? FrameRateOverride { get; }
+
+		/// <summary>
+		/// Gets the cycle count provided in the movie file, if available. Only certain formats store this information.
+		/// </summary>
+		long? CycleCount { get; }
 	}
 }

@@ -18,6 +18,7 @@ namespace TASVideos.MovieParsers.Result
 		public int RerecordCount { get; internal set; }
 		public MovieStartType StartType { get; internal set; }
 		public double? FrameRateOverride { get; internal set; }
+		public long? CycleCount { get; internal set; }
 
 		internal List<ParseWarnings> WarningList { get; set; } = new ();
 		internal List<string> ErrorList { get; set; } = new ();
