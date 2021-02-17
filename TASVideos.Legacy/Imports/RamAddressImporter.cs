@@ -51,9 +51,9 @@ namespace TASVideos.Legacy.Imports
 					Endian = ToEndian(l.address.Endian),
 					Description = l.address.Description ?? "",
 					GameRamAddressDomainId = l.address.Domain,
-					GameId = l.game != null && l.game.Any() ? l.game.First().Id : (int?)null,
+					GameId = l.game.Any() ? l.game.First().Id : null,
 					SystemId = l.address?.AddressSet?.SystemId ?? 0,
-					LegacyGameName = l?.game == null || !l.game.Any() ? l?.address?.AddressSet?.Name : null
+					LegacyGameName = !l.game.Any() ? l.address?.AddressSet?.Name : null
 				})
 				.ToList();
 
