@@ -53,7 +53,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationRating.Value)
 			};
 
-			ratings.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationRatings), keepIdentity: false, 20000);
+			ratings.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationRatings), 20000);
 		}
 	}
 }

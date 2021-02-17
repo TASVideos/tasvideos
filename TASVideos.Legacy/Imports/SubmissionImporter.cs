@@ -232,7 +232,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(SubmissionStatusHistory.SubmissionId)
 			};
 
-			submissionHistory.BulkInsert(connectionStr, statusHistoryColumns, nameof(ApplicationDbContext.SubmissionStatusHistory), keepIdentity: false);
+			submissionHistory.BulkInsert(connectionStr, statusHistoryColumns, nameof(ApplicationDbContext.SubmissionStatusHistory));
 		}
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)

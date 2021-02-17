@@ -26,7 +26,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumTopicWatch.IsNotified)
 			};
 
-			watches.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumTopicWatches), keepIdentity: false);
+			watches.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumTopicWatches));
 		}
 	}
 }

@@ -72,7 +72,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserFileComment.UserFileId)
 			};
 
-			userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles), keepIdentity: true, 10000, 600);
+			userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles), 10000, 600);
 			userFileComments.BulkInsert(connectionStr, userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
 		}
 

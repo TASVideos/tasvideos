@@ -39,7 +39,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPageReferral.Referrer)
 			};
 
-			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), keepIdentity: false, 100000, 300);
+			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), 100000, 300);
 		}
 	}
 }

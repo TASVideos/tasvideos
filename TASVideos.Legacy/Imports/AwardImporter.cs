@@ -89,8 +89,8 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			awards.BulkInsert(connectionStr, awardColumns, nameof(ApplicationDbContext.Awards));
-			userAwards.BulkInsert(connectionStr, userAwardColumns, nameof(ApplicationDbContext.UserAwards), keepIdentity: false);
-			publicationAwards.BulkInsert(connectionStr, pubAwardColumns, nameof(ApplicationDbContext.PublicationAwards), keepIdentity: false);
+			userAwards.BulkInsert(connectionStr, userAwardColumns, nameof(ApplicationDbContext.UserAwards));
+			publicationAwards.BulkInsert(connectionStr, pubAwardColumns, nameof(ApplicationDbContext.PublicationAwards));
 		}
 	}
 }
