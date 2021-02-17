@@ -189,7 +189,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationAuthor.PublicationId)
 			};
 
-			publicationAuthors.BulkInsert(connectionStr, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors), keepIdentity: false);
+			publicationAuthors.BulkInsert(connectionStr, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors));
 
 			var pubFileColumns = new[]
 			{
@@ -204,7 +204,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.LastUpdateTimeStamp)
 			};
 
-			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), keepIdentity: false, bulkCopyTimeout: 600);
+			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), bulkCopyTimeout: 600);
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationUrl.LastUpdateTimeStamp)
 			};
 
-			urls.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationUrls), keepIdentity: false);
+			urls.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationUrls));
 		}
 	}
 }

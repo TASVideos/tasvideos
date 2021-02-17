@@ -27,7 +27,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			userRoles.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserRoles), keepIdentity: false);
+			userRoles.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserRoles));
 		}
 	}
 }

@@ -81,7 +81,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOption.LastUpdateUserName)
 			};
 
-			forumPollOptions.BulkInsert(connectionStr, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions), keepIdentity: false);
+			forumPollOptions.BulkInsert(connectionStr, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions));
 
 			/******** ForumPollOptionVote ********/
 			var legForumVoters = legacyForumContext.Voter.ToList();
@@ -134,7 +134,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOptionVote.IpAddress)
 			};
 
-			forumPollOptionVotes.BulkInsert(connectionStr, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes), keepIdentity: false);
+			forumPollOptionVotes.BulkInsert(connectionStr, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes));
 		}
 
 		// Removes html silliness from the poll questions

@@ -112,7 +112,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.PosterMood)
 			};
 
-			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), keepIdentity: true, 20000, 600);
+			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), 20000, 600);
 		}
 	}
 }

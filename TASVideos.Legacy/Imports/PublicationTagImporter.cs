@@ -48,7 +48,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationTag.TagId)
 			};
 
-			publicationTags.BulkInsert(connectionStr, pubTagColumns, nameof(ApplicationDbContext.PublicationTags), keepIdentity: false);
+			publicationTags.BulkInsert(connectionStr, pubTagColumns, nameof(ApplicationDbContext.PublicationTags));
 		}
 	}
 }

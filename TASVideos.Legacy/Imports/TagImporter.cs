@@ -40,7 +40,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Tag.DisplayName)
 			};
 
-			tags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Tags), keepIdentity: false);
+			tags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Tags));
 		}
 	}
 }
