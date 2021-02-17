@@ -24,7 +24,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFlag.FlagId)
 			};
 
-			publicationFlags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationFlags));
+			publicationFlags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationFlags), keepIdentity: false);
 		}
 	}
 }

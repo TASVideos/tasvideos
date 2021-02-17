@@ -26,7 +26,6 @@ namespace TASVideos.Legacy.Imports
 
 			var columns = new[]
 			{
-				nameof(UserDisallow.Id),
 				nameof(UserDisallow.RegexPattern),
 				nameof(UserDisallow.CreateTimeStamp),
 				nameof(UserDisallow.LastUpdateTimeStamp)
