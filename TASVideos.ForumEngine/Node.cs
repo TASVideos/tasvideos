@@ -227,11 +227,11 @@ namespace TASVideos.ForumEngine
 						}
 
 						w.Write("<pre><code");
-						if (osplit.Length > 0)
-						{
-							w.Write(" class=");
-							Helpers.WriteAttributeValue(w, $"language-{osplit[osplit.Length - 1]}");
-						}
+						// "text" is not a supported language for prism,
+						// so it will just get the same text formatting as languages, but no syntax highlighting.
+						var lang = osplit.Length > 0 ? osplit[osplit.Length - 1] : "text";
+						w.Write(" class=");
+						Helpers.WriteAttributeValue(w, $"language-{lang}");
 
 						w.Write('>');
 						await WriteChildren(w, h);
