@@ -347,7 +347,7 @@ namespace TASVideos.ForumEngine
 				case "google":
 					if (Options == "images")
 					{
-						w.Write("a href=");
+						w.Write("<a href=");
 						Helpers.WriteAttributeValue(w, "//www.google.com/images?q=" + GetChildText());
 						w.Write('>');
 						Helpers.WriteText(w, "Google Images Search: " + GetChildText());
@@ -355,7 +355,7 @@ namespace TASVideos.ForumEngine
 					}
 					else
 					{
-						w.Write("a href=");
+						w.Write("<a href=");
 						Helpers.WriteAttributeValue(w, "//www.google.com/search?q=" + GetChildText());
 						w.Write('>');
 						Helpers.WriteText(w, "Google Search: " + GetChildText());
