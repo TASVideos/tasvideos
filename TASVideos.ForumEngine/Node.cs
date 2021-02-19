@@ -348,7 +348,7 @@ namespace TASVideos.ForumEngine
 					if (Options == "images")
 					{
 						w.Write("<a href=");
-						Helpers.WriteAttributeValue(w, "//www.google.com/images?q=" + GetChildText());
+						Helpers.WriteAttributeValue(w, "//www.google.com/images?q=" + Uri.EscapeDataString(GetChildText()));
 						w.Write('>');
 						Helpers.WriteText(w, "Google Images Search: " + GetChildText());
 						w.Write("</a>");
@@ -356,7 +356,7 @@ namespace TASVideos.ForumEngine
 					else
 					{
 						w.Write("<a href=");
-						Helpers.WriteAttributeValue(w, "//www.google.com/search?q=" + GetChildText());
+						Helpers.WriteAttributeValue(w, "//www.google.com/search?q=" + Uri.EscapeDataString(GetChildText()));
 						w.Write('>');
 						Helpers.WriteText(w, "Google Search: " + GetChildText());
 						w.Write("</a>");
