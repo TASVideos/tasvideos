@@ -93,7 +93,8 @@ namespace TASVideos.Pages.Forum.Topics
 			var forumPostModel = new ForumPostModel
 			{
 				Subject = null,
-				Text = Topic.Post
+				Text = Topic.Post,
+				Mood = Topic.Mood
 			};
 
 			await CreatePost(topic.Id, forumPostModel, userId, IpAddress);
