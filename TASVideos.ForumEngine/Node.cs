@@ -325,7 +325,7 @@ namespace TASVideos.ForumEngine
 						var time = timeable.Time().ToString("g");
 
 						w.Write("<abbr title=");
-						Helpers.WriteAttributeValue(w, $"{n} Frames @${fps} FPS");
+						Helpers.WriteAttributeValue(w, $"{n} Frames @{fps} FPS");
 						w.Write('>');
 						w.Write(time);
 						w.Write("</abbr>");
