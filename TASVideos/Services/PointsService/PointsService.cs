@@ -87,7 +87,7 @@ namespace TASVideos.Services
 
 		public async Task<RatingDto> PublicationRating(int id)
 		{
-			string cacheKey = CacheKey(id);
+			string cacheKey = MovieCacheKey(id);
 			if (_cache.TryGetValue(cacheKey, out RatingDto rating))
 			{
 				return rating;
@@ -109,7 +109,7 @@ namespace TASVideos.Services
 		{
 			var ids = publicationIds.ToList();
 			var ratings = _cache
-				.GetAll<RatingDto>(ids.Select(CacheKey))
+				.GetAll<RatingDto>(ids.Select(MovieCacheKey))
 				.ToDictionary(
 					tkey => int.Parse(tkey.Key.Replace(MovieRatingKey, "")),
 					tvalue => tvalue.Value);
@@ -125,7 +125,7 @@ namespace TASVideos.Services
 
 			foreach (var pub in ratingsByPub)
 			{
-				var cacheKey = CacheKey(pub.Key);
+				var cacheKey = MovieCacheKey(pub.Key);
 				var pubRatings = pub.ToList();
 				var rating = Rate(pubRatings);
 				_cache.Set(cacheKey, rating);
@@ -135,7 +135,7 @@ namespace TASVideos.Services
 			return ratings;
 		}
 
-		private static string CacheKey(int id) => MovieRatingKey + id;
+		private static string MovieCacheKey(int id) => MovieRatingKey + id;
 
 		private static RatingDto Rate(ICollection<PublicationRating> ratings)
 		{
