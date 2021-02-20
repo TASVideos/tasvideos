@@ -274,10 +274,10 @@ namespace TASVideos.ForumEngine
 					await WriteHref(w, h, s => "mailto:" + s, async s => s);
 					break;
 				case "thread":
-					await WriteHref(w, h, s => "/forum/t/" + s, async s => "Thread #" + s);
+					await WriteHref(w, h, s => "/Forum/Topics/" + s, async s => "Thread #" + s);
 					break;
 				case "post":
-					await WriteHref(w, h, s => "/forum/p/" + s + "#" + s, async s => "Post #" + s);
+					await WriteHref(w, h, s => "/Forum/Posts/" + s + "#" + s, async s => "Post #" + s);
 					break;
 				case "movie":
 					await WriteHref(
