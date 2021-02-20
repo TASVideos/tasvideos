@@ -57,15 +57,8 @@ namespace TASVideos.Services
 				return playerPoints;
 			}
 
-			var user = await _db.Users
-				.SingleOrDefaultAsync(u => u.Id == userId);
-			if (user == null)
-			{
-				return 0;
-			}
-
 			var dtos = await _db.Publications
-				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(user.Id))
+				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId))
 				.Select(p => new PointsCalculator.Publication
 				{
 					Id = p.Id,
