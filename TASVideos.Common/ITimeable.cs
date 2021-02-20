@@ -1,11 +1,17 @@
 ﻿using System;
 
-namespace TASVideos.Data.Entity
+namespace TASVideos.Common
 {
 	public interface ITimeable
 	{
 		double FrameRate { get; }
 		int Frames { get; }
+	}
+
+	public class Timeable : ITimeable
+	{
+		public double FrameRate { get; init; }
+		public int Frames { get; init; }
 	}
 
 	public static class TimeableExtensions

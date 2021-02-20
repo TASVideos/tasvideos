@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using TASVideos.Data.Entity;
+using TASVideos.Common;
 
 namespace TASVideos.ViewComponents
 {
