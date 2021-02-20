@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using TASVideos.Common;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using TASVideos.Common;
 
 namespace TASVideos.ForumEngine
 {
@@ -316,10 +317,17 @@ namespace TASVideos.ForumEngine
 							fps = 60.0;
 						}
 
+						var timeable = new Timeable
+						{
+							FrameRate = fps,
+							Frames = n
+						};
+						var time = timeable.Time().ToString("g");
+
 						w.Write("<abbr title=");
 						Helpers.WriteAttributeValue(w, $"{n} Frames @${fps} FPS");
 						w.Write('>');
-						w.Write(n / fps);
+						w.Write(time);
 						w.Write("</abbr>");
 						break;
 					}

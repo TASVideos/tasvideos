@@ -13,4 +13,7 @@
 	<ItemGroup>
 		<AdditionalFiles Include="$(ProjectDir)../.stylecop.json" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
+	</ItemGroup>
 </Project>
