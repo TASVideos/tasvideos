@@ -101,14 +101,9 @@ namespace TASVideos.Services
 				return rating;
 			}
 
-			var authorIds = await _db.PublicationAuthors
-				.Where(pa => pa.PublicationId == id)
-				.Select(pa => pa.UserId)
-				.ToListAsync();
-
 			var ratings = await _db.PublicationRatings
 				.Where(pr => pr.PublicationId == id)
-				.Where(pr => !authorIds.Contains(pr.UserId)) // Do not count author ratings
+				.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId)) // Do not count author ratings
 				.Where(pr => pr.User!.UseRatings)
 				.ToListAsync();
 
