@@ -20,6 +20,7 @@ namespace TASVideos.TagHelpers
 
 			output.TagName = "img";
 			output.Attributes.Clear();
+			output.Attributes.Add("loading", "lazy");
 
 			string avatarUrl = Avatar;
 
