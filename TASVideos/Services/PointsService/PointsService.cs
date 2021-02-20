@@ -126,10 +126,10 @@ namespace TASVideos.Services
 			{
 				Entertainment = entRatings.Any()
 					? entRatings.Average()
-					: (double?)null,
+					: null,
 				TechQuality = techRatings.Any()
 					? techRatings.Average()
-					: (double?)null,
+					: null,
 				TotalEntertainmentVotes = entRatings.Count,
 				TotalTechQualityVotes = techRatings.Count
 			};

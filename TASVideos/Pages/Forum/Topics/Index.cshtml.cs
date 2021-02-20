@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Forum.Topics
 		{
 			int? userId = User.IsLoggedIn()
 				? User.GetUserId()
-				: (int?)null;
+				: null;
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			Topic = await _db.ForumTopics

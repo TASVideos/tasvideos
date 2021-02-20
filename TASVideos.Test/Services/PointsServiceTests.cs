@@ -34,7 +34,7 @@ namespace TASVideos.Test.Services
 		public async Task PlayerPoints_UserWithNoMovies_Returns0()
 		{
 			_db.Users.Add(Player);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			var user = _db.Users.Single();
 			var actual = await _pointsService.PlayerPoints(user.Id);
 			Assert.AreEqual(0, actual);
@@ -53,7 +53,7 @@ namespace TASVideos.Test.Services
 				_db.Publications.Add(new Publication { Tier = tier });
 			}
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			var user = _db.Users.Single();
 			var pa = _db.Publications
 				.ToList()
@@ -65,7 +65,7 @@ namespace TASVideos.Test.Services
 				.ToList();
 
 			_db.PublicationAuthors.AddRange(pa);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _pointsService.PlayerPoints(user.Id);
 			int expected = numMovies * PlayerPointConstants.MinimumPlayerPointsForPublication;
