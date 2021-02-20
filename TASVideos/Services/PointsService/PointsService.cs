@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Services.Dtos;
@@ -57,37 +56,30 @@ namespace TASVideos.Services
 				return playerPoints;
 			}
 
-			var dtos = await _db.Publications
+			var publications = await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId))
-				.Select(p => new PointsCalculator.Publication
+				.Select(p => new
 				{
-					Id = p.Id,
-					AuthorCount = p.Authors.Count,
-					Obsolete = p.ObsoletedById.HasValue,
-					TierWeight = p.Tier!.Weight,
-					RatingCount = p.PublicationRatings.Count
+					Publication = new PointsCalculator.Publication
+					{
+						Id = p.Id,
+						AuthorCount = p.Authors.Count,
+						Obsolete = p.ObsoletedById.HasValue,
+						TierWeight = p.Tier!.Weight,
+						RatingCount = p.PublicationRatings.Count
+					},
+					PublicationRatings = p.PublicationRatings
 				})
 				.ToListAsync();
 
-			var publications = dtos
-				.Select(p => new PointsCalculator.Publication
-				{
-					Id = p.Id,
-					AuthorCount = p.AuthorCount,
-					Obsolete = p.Obsolete,
-					TierWeight = p.TierWeight,
-					RatingCount = p.RatingCount
-				})
-				.ToList();
-
 			foreach (var pub in publications)
 			{
-				pub.AverageRating = (await PublicationRating(pub.Id)).Overall ?? 0;
+				pub.Publication.AverageRating = Rate(pub.PublicationRatings).Overall ?? 0;
 			}
 
 			var averageRatings = await AverageNumberOfRatingsPerPublication();
-
-			playerPoints = Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings), 1);
+			var pubsForCalculations = publications.Select(p => p.Publication).ToList();
+			playerPoints = Math.Round(PointsCalculator.PlayerPoints(pubsForCalculations, averageRatings), 1);
 
 			_cache.Set(cacheKey, playerPoints);
 			return playerPoints;
@@ -95,18 +87,58 @@ namespace TASVideos.Services
 
 		public async Task<RatingDto> PublicationRating(int id)
 		{
-			string cacheKey = MovieRatingKey + id;
+			string cacheKey = CacheKey(id);
 			if (_cache.TryGetValue(cacheKey, out RatingDto rating))
 			{
 				return rating;
 			}
 
 			var ratings = await _db.PublicationRatings
-				.Where(pr => pr.PublicationId == id)
-				.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId)) // Do not count author ratings
-				.Where(pr => pr.User!.UseRatings)
+				.ForPublication(id)
+				.ThatAreNotFromAnAuthor()
+				.ThatCanBeUsedToRate()
 				.ToListAsync();
 
+			rating = Rate(ratings);
+
+			_cache.Set(cacheKey, rating);
+			return rating;
+		}
+
+		public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)
+		{
+			var ids = publicationIds.ToList();
+			var ratings = _cache
+				.GetAll<RatingDto>(ids.Select(CacheKey))
+				.ToDictionary(
+					tkey => int.Parse(tkey.Key.Replace(MovieRatingKey, "")),
+					tvalue => tvalue.Value);
+
+			var publicationsToRate = ids.Where(i => !ratings.ContainsKey(i));
+
+			var ratingsByPub = (await _db.PublicationRatings
+				.Where(p => publicationsToRate.Contains(p.PublicationId))
+				.ThatAreNotFromAnAuthor()
+				.ThatCanBeUsedToRate()
+				.ToListAsync())
+				.GroupBy(gkey => gkey.PublicationId);
+
+			foreach (var pub in ratingsByPub)
+			{
+				var cacheKey = CacheKey(pub.Key);
+				var pubRatings = pub.ToList();
+				var rating = Rate(pubRatings);
+				_cache.Set(cacheKey, rating);
+				ratings.Add(pub.Key, rating);
+			}
+
+			return ratings;
+		}
+
+		private static string CacheKey(int id) => MovieRatingKey + id;
+
+		private static RatingDto Rate(ICollection<PublicationRating> ratings)
+		{
 			var entRatings = ratings
 				.Where(r => r.Type == PublicationRatingType.Entertainment)
 				.Select(r => r.Value)
@@ -117,7 +149,7 @@ namespace TASVideos.Services
 				.Select(r => r.Value)
 				.ToList();
 
-			rating = new RatingDto
+			var rating = new RatingDto
 			{
 				Entertainment = entRatings.Any()
 					? entRatings.Average()
@@ -138,31 +170,7 @@ namespace TASVideos.Services
 					.Average();
 			}
 
-			_cache.Set(cacheKey, rating);
 			return rating;
-		}
-
-		public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)
-		{
-			var ratings = new Dictionary<int, RatingDto>();
-
-			// TODO: select them all at once then calculate
-			foreach (var id in publicationIds)
-			{
-				var cacheKey = MovieRatingKey + id;
-				if (_cache.TryGetValue(cacheKey, out RatingDto rating))
-				{
-					ratings.Add(id, rating);
-				}
-				else
-				{
-					rating = await PublicationRating(id);
-					_cache.Set(cacheKey, rating);
-					ratings.Add(id, rating);
-				}
-			}
-
-			return ratings;
 		}
 
 		// total ratings / (2 * total publications)
