@@ -129,21 +129,12 @@ namespace TASVideos.Data
 		{
 			builder.Entity<ForumTopic>(entity =>
 			{
-				entity.HasIndex(e => e.PageName)
-					.HasDatabaseName($"{nameof(ForumTopic.PageName)}Index")
-					.IsUnique()
-					.HasFilter($"([{nameof(ForumTopic.PageName)}] IS NOT NULL)");
+				entity.HasIndex(e => e.PageName).IsUnique();
 			});
 
 			builder.Entity<User>(entity =>
 			{
-				entity.HasIndex(e => e.NormalizedEmail)
-					.HasDatabaseName("EmailIndex");
-
-				entity.HasIndex(e => e.NormalizedUserName)
-					.HasDatabaseName("UserNameIndex")
-					.IsUnique()
-					.HasFilter($"([{nameof(User.NormalizedUserName)}] IS NOT NULL)");
+				entity.HasIndex(e => e.NormalizedUserName).IsUnique();
 
 				entity.HasMany(e => e.SentPrivateMessages)
 					.WithOne(e => e.FromUser!)
@@ -172,9 +163,7 @@ namespace TASVideos.Data
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
 
-				entity.HasIndex(e => e.Name)
-					.IsUnique()
-					.HasFilter($"([{nameof(Tier.Name)}] IS NOT NULL)");
+				entity.HasIndex(e => e.Name).IsUnique();
 			});
 
 			builder.Entity<UserLogin>(entity =>
@@ -215,9 +204,7 @@ namespace TASVideos.Data
 			builder.Entity<WikiPage>(entity =>
 			{
 				entity.HasIndex(e => new { e.PageName, e.Revision })
-					.HasDatabaseName("PageNameIndex")
-					.IsUnique()
-					.HasFilter($"([{nameof(WikiPage.PageName)}] IS NOT NULL)");
+					.IsUnique();
 			});
 
 			builder.Entity<GameSystem>(entity =>
@@ -226,9 +213,7 @@ namespace TASVideos.Data
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
 
-				entity.HasIndex(e => e.Code)
-					.IsUnique()
-					.HasFilter($"([{nameof(GameSystem.Code)}] IS NOT NULL)");
+				entity.HasIndex(e => e.Code).IsUnique();
 			});
 
 			builder.Entity<GameSystemFrameRate>(entity =>
@@ -242,13 +227,8 @@ namespace TASVideos.Data
 
 			builder.Entity<GameRom>(entity =>
 			{
-				entity.HasIndex(e => e.Md5)
-					.IsUnique()
-					.HasFilter($"([{nameof(GameRom.Sha1)}] IS NOT NULL)");
-
-				entity.HasIndex(e => e.Sha1)
-					.IsUnique()
-					.HasFilter($"([{nameof(GameRom.Sha1)}] IS NOT NULL)");
+				entity.HasIndex(e => e.Md5).IsUnique();
+				entity.HasIndex(e => e.Sha1).IsUnique();
 			});
 
 			builder.Entity<SubmissionAuthor>(entity =>
@@ -320,9 +300,7 @@ namespace TASVideos.Data
 
 			builder.Entity<Tag>(entity =>
 			{
-				entity.HasIndex(e => e.Code)
-					.IsUnique()
-					.HasFilter($"([{nameof(Tag.Code)}] IS NOT NULL)");
+				entity.HasIndex(e => e.Code).IsUnique();
 			});
 
 			builder.Entity<ForumPoll>(entity =>
@@ -395,10 +373,7 @@ namespace TASVideos.Data
 
 			builder.Entity<UserDisallow>(entity =>
 			{
-				entity.HasIndex(e => e.RegexPattern)
-					.HasDatabaseName("UserDisallowRegexPatternIndex")
-					.IsUnique()
-					.HasFilter($"([{nameof(UserDisallow.RegexPattern)}] IS NOT NULL)");
+				entity.HasIndex(e => e.RegexPattern).IsUnique();
 			});
 
 			builder.Entity<IpBan>(entity =>
