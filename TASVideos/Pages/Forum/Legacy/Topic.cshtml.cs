@@ -24,9 +24,12 @@ namespace TASVideos.Pages.Forum.Legacy
 		[FromQuery]
 		public int? T { get; set; }
 
+		[FromRoute]
+		public int? Id { get; set; }
+
 		public async Task<IActionResult> OnGet()
 		{
-			if (!P.HasValue && !T.HasValue)
+			if (!P.HasValue && !T.HasValue && !Id.HasValue)
 			{
 				return NotFound();
 			}
@@ -49,7 +52,7 @@ namespace TASVideos.Pages.Forum.Legacy
 					});
 			}
 
-			return RedirectToPage("/Forum/Topics/Index", new { Id = T });
+			return RedirectToPage("/Forum/Topics/Index", new { Id = T ?? Id });
 		}
 	}
 }
