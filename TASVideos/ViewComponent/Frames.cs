@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.Services;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
@@ -14,11 +15,14 @@ namespace TASVideos.ViewComponents
 	[WikiModule(WikiModules.Frames)]
 	public class Frames : ViewComponent
 	{
+		private const string CacheKey = "FramesModule";
 		private readonly ApplicationDbContext _db;
+		private readonly ICacheService _cache;
 
-		public Frames(ApplicationDbContext db)
+		public Frames(ApplicationDbContext db, ICacheService cache)
 		{
 			_db = db;
+			_cache = cache;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, double? fps, int amount)
@@ -53,6 +57,12 @@ namespace TASVideos.ViewComponents
 			var publicationId = WikiHelper.IsPublicationPage(pageName);
 			if (publicationId.HasValue)
 			{
+				var key = CacheKey + publicationId.Value;
+				if (_cache.TryGetValue(key, out double frameRate))
+				{
+					return frameRate;
+				}
+
 				var pub = await _db.Publications
 					.Where(p => p.Id == publicationId.Value)
 					.Select(p => new { p.Id, p.SystemFrameRate!.FrameRate })
@@ -60,6 +70,7 @@ namespace TASVideos.ViewComponents
 
 				if (pub?.FrameRate is not null)
 				{
+					_cache.Set(key, pub.FrameRate);
 					return pub.FrameRate;
 				}
 			}
