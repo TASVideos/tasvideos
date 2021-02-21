@@ -164,6 +164,7 @@ namespace TASVideos.Extensions
 
 					// Backwards compatibility with legacy links
 					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
+					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/t/{id:int}");
 					options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
 					options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
 					options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
