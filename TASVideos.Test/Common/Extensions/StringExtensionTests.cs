@@ -28,6 +28,7 @@ namespace TASVideos.Test.Common.Extensions
 		[DataRow("123456789", 8, "12345...")]
 		[DataRow("123456789", 9, "123456789")]
 		[DataRow("123456789", 15, "123456789")]
+		[DataRow("🤣🤣🤣🤣🤣🤣", 8, "🤣🤣🤣...")]
 		public void CapAndEllipse_Tests(string str, int limit, string expected)
 		{
 			var actual = str.CapAndEllipse(limit);
@@ -109,5 +110,70 @@ namespace TASVideos.Test.Common.Extensions
 			Assert.IsNotNull(actual);
 			Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
 		}
+
+
+		[DataRow("abcd", 2, "cd")]
+		[DataRow("abcd", 4, "")]
+		[DataRow("abcd", 0, "abcd")]
+		[DataRow("", 0, "")]
+		[DataRow("abc", -1, null)]
+		[DataRow("abc", 10, null)]
+		[DataRow("ROFFAL 🤣🤣🤣", 7, "🤣🤣🤣")]
+		[DataRow("ROFFAL 🤣🤣🤣", 8, "🤣🤣🤣")]
+		[TestMethod]
+		public void UnicodeAwareSubstring1(string s, int i, string? expected)
+		{
+			if (expected == null)
+			{
+				var threw = false;
+				try
+				{
+					s.UnicodeAwareSubstring(i);
+				}
+				catch
+				{
+					threw = true;
+				}
+				Assert.IsTrue(threw);
+			}
+			else
+			{
+				var actual = s.UnicodeAwareSubstring(i);
+				Assert.AreEqual(expected, actual);
+			}
+		}
+
+		[DataRow("abcd", 2, 1, "c")]
+		[DataRow("abcd", 4, 0, "")]
+		[DataRow("abcd", 0, 2, "ab")]
+		[DataRow("", 0, 0, "")]
+		[DataRow("abc", -1, 0, null)]
+		[DataRow("abc", 10, 0, null)]
+		[DataRow("abcd", 0, 5, null)]
+		[DataRow("ROFFAL 🤣🤣🤣", 7, 4, "🤣🤣")]
+		[DataRow("ROFFAL 🤣🤣🤣", 8, 2, "🤣🤣")]
+		[TestMethod]
+		public void UnicodeAwareSubstring2(string s, int i, int j, string? expected)
+		{
+			if (expected == null)
+			{
+				var threw = false;
+				try
+				{
+					s.UnicodeAwareSubstring(i, j);
+				}
+				catch
+				{
+					threw = true;
+				}
+				Assert.IsTrue(threw);
+			}
+			else
+			{
+				var actual = s.UnicodeAwareSubstring(i, j);
+				Assert.AreEqual(expected, actual);
+			}
+		}
+
 	}
 }

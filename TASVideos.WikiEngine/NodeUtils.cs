@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TASVideos.Extensions;
 
 namespace TASVideos.WikiEngine.AST
 {
@@ -83,7 +84,7 @@ namespace TASVideos.WikiEngine.AST
 
 				var si = Math.Max(node.CharStart - 20, 0);
 				var se = Math.Min(node.CharEnd + 20, content.Length);
-				var excerpt = content[si..se];
+				var excerpt = content.UnicodeAwareSubstring(si, se - si);
 
 				// for purposes of html markup, all <a class=intlink> have hrefs that start with a leading '/'
 				// this is how the wiki syntax expects them to work.
