@@ -8,7 +8,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using FastMember;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using SharpCompress.Compressors.Xz;
 using TASVideos.Extensions;
 
@@ -73,9 +73,30 @@ namespace TASVideos.Legacy.Imports
 			int batchSize = 10000,
 			int? bulkCopyTimeout = null)
 		{
+			// TODO: pass in context.Database.ProviderName instead of this dubious check
+			if (connectionString.Contains("mssql"))
+			{
+				data.BulkInsertMssql(connectionString, columnsToCopy, tableName, batchSize, bulkCopyTimeout);
+			}
+			else
+			{
+				data.BulkInsertPostgres(connectionString, columnsToCopy, tableName);
+			}
+		}
+
+		private static void BulkInsertMssql<T>(
+			this IEnumerable<T> data,
+			string connectionString,
+			string[] columnsToCopy,
+			string tableName,
+			int batchSize = 10000,
+			int? bulkCopyTimeout = null)
+		{
 			var keepIdentity = columnsToCopy.Contains("Id");
-			var options = keepIdentity ? SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
-			using var sqlCopy = new SqlBulkCopy(connectionString, options)
+			var options = keepIdentity
+				? Microsoft.Data.SqlClient.SqlBulkCopyOptions.KeepIdentity
+				: Microsoft.Data.SqlClient.SqlBulkCopyOptions.Default;
+			using var sqlCopy = new Microsoft.Data.SqlClient.SqlBulkCopy(connectionString, options)
 			{
 				DestinationTableName = tableName,
 				BatchSize = batchSize
@@ -92,6 +113,96 @@ namespace TASVideos.Legacy.Imports
 
 			using var reader = ObjectReader.Create(data, columnsToCopy);
 			sqlCopy.WriteToServer(reader);
+		}
+
+		private static void BulkInsertPostgres<T>(
+			this IEnumerable<T> data,
+			string connectionString,
+			string[] columnsToCopy,
+			string tableName)
+		{
+			// TODO: Make this not so godawful slow
+			using var connection = new NpgsqlConnection(connectionString);
+			connection.Open();
+
+			DisableConstraints(tableName, connection);
+
+			var copyCommand = $"COPY public.\"{tableName}\" ({string.Join(", ", columnsToCopy.Select(c => $"\"{c}\""))}) FROM STDIN (FORMAT BINARY)";
+			using (var writer = connection.BeginBinaryImport(copyCommand))
+			{
+				foreach (var row in data)
+				{
+					writer.StartRow();
+					foreach (var column in columnsToCopy)
+					{
+						var prop = typeof(T).GetProperty(column);
+						var value = prop!.GetValue(row);
+						if (value == null)
+						{
+							writer.WriteNull();
+						}
+						else if (prop!.PropertyType.IsEnum)
+						{
+							writer.Write(Convert.ToInt32(value));
+						}
+						else
+						{
+							var type = prop!.PropertyType;
+							if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+							{
+								type = type.GetGenericArguments()[0];
+							}
+
+							writer
+								.GetType()
+								.GetMethods()
+								.Single(m => m.Name == "Write" && m.GetParameters().Length == 1)
+								.MakeGenericMethod(type)
+								.Invoke(writer, new[] { value });
+						}
+					}
+				}
+
+				writer.Complete();
+			}
+
+			EnableConstraints(tableName, connection);
+
+			// Ideally we would determine if the Id column is actually an identity column
+			// However, only user files has this situation, so shenanigans are good enough
+			if (columnsToCopy.Contains("Id") && tableName != "UserFiles")
+			{
+				SetIdSeed(tableName, connection);
+			}
+		}
+
+		private static void DisableConstraints(string tableName, NpgsqlConnection connection)
+		{
+			var sql = $"alter table public.\"{tableName}\" disable trigger all ";
+			using var cmd = new NpgsqlCommand(sql, connection);
+			cmd.ExecuteScalar();
+		}
+
+		private static void EnableConstraints(string tableName, NpgsqlConnection connection)
+		{
+			var sql = $"alter table public.\"{tableName}\" enable trigger all ";
+			using var cmd = new NpgsqlCommand(sql, connection);
+			cmd.ExecuteScalar();
+		}
+
+		private static void SetIdSeed(string tableName, NpgsqlConnection connection)
+		{
+			int identitySeed;
+
+			using (var cmd = new NpgsqlCommand($"select \"Id\" from public.\"{tableName}\" order by \"Id\" desc limit 1", connection))
+			{
+				identitySeed = (int)cmd.ExecuteScalar();
+			}
+
+			using (var cmd2 = new NpgsqlCommand($"ALTER TABLE public.\"{tableName}\" ALTER COLUMN \"Id\" RESTART WITH {identitySeed + 1}", connection))
+			{
+				cmd2.ExecuteScalar();
+			}
 		}
 
 		public static string? Cap(this string? str, int limit)

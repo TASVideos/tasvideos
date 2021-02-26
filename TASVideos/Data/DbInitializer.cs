@@ -96,7 +96,10 @@ namespace TASVideos.Data
 
 			Initialize(context);
 			PreMigrateSeedData(context);
-			LegacyImporter.RunLegacyImport(env, context, settings.ConnectionStrings.DefaultConnection, legacySiteContext, legacyForumContext);
+			var connectionString = settings.UsePostgres
+				? settings.ConnectionStrings.PostgresConnection
+				: settings.ConnectionStrings.DefaultConnection;
+			LegacyImporter.RunLegacyImport(env, context, connectionString, legacySiteContext, legacyForumContext);
 			PostMigrateSeedData(context);
 			GenerateDevTestUsers(context, userManager).Wait();
 		}

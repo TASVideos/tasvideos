@@ -39,7 +39,7 @@ namespace TASVideos
 
 			// Internal Libraries
 			services
-				.AddTasvideosData(Configuration)
+				.AddTasvideosData(Configuration, Settings.UsePostgres)
 				.AddTasVideosLegacy(
 					Settings.ConnectionStrings.LegacySiteConnection,
 					Settings.ConnectionStrings.LegacyForumConnection,

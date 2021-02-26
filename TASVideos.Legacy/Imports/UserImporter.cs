@@ -324,11 +324,11 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			userEntities.BulkInsert(connectionStr, userColumns, "[User]");
-			userRoles.BulkInsert(connectionStr, userRoleColumns, "[UserRoles]");
+			userEntities.BulkInsert(connectionStr, userColumns, "User");
+			userRoles.BulkInsert(connectionStr, userRoleColumns, "UserRoles");
 
 			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
-			portedPlayers.BulkInsert(connectionStr, playerColumns, "[User]");
+			portedPlayers.BulkInsert(connectionStr, playerColumns, "User");
 		}
 
 		private static Role? GetRoleFromLegacy(string role, IEnumerable<Role> roles)

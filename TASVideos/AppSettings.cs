@@ -21,6 +21,7 @@ namespace TASVideos
 
 		public string SendGridKey { get; set; } = "";
 		public string SendGridFrom { get; set; } = "";
+		public bool UsePostgres { get; set; } = true;
 
 		public class IrcConnection
 		{
@@ -60,6 +61,7 @@ namespace TASVideos
 		public class Connections
 		{
 			public string DefaultConnection { get; set; } = "";
+			public string PostgresConnection { get; set; } = "";
 			public string? LegacySiteConnection { get; set; }
 			public string? LegacyForumConnection { get; set; }
 		}

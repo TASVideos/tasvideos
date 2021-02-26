@@ -6,19 +6,30 @@ namespace TASVideos.Data
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static IServiceCollection AddTasvideosData(this IServiceCollection services, IConfiguration configuration)
+		public static IServiceCollection AddTasvideosData(this IServiceCollection services, IConfiguration configuration, bool usePostgres)
 		{
-			services.AddDbContext(configuration);
+			services.AddDbContext(configuration, usePostgres);
 			return services;
 		}
 
-		internal static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
+		internal static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration, bool usePostgres)
 		{
-			services.AddDbContext<ApplicationDbContext>(
-				options =>
-					options.UseSqlServer(
-						configuration.GetConnectionString("DefaultConnection"),
-						b => b.MigrationsAssembly("TASVideos.Data")));
+			if (usePostgres)
+			{
+				services.AddDbContext<ApplicationDbContext>(
+					options =>
+						options.UseNpgsql(
+							configuration.GetConnectionString("PostgresConnection"),
+							b => b.MigrationsAssembly("TASVideos.Data")));
+			}
+			else
+			{
+				services.AddDbContext<ApplicationDbContext>(
+					options =>
+						options.UseSqlServer(
+							configuration.GetConnectionString("DefaultConnection"),
+							b => b.MigrationsAssembly("TASVideos.Data")));
+			}
 
 			return services;
 		}
