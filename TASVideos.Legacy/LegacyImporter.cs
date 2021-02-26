@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,8 @@ namespace TASVideos.Legacy
 			NesVideosSiteContext legacySiteContext,
 			NesVideosForumContext legacyForumContext)
 		{
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
 			// Since we are using this database in a read-only way, set no tracking globally
 			// To speed up query executions
 			legacySiteContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
