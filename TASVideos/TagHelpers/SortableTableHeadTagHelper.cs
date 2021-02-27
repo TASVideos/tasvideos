@@ -41,8 +41,6 @@ namespace TASVideos.TagHelpers
 				throw new ArgumentException($"{nameof(ModelType)} can not be null");
 			}
 
-			var page = ViewContext.ActionDescriptor.DisplayName;
-
 			output.TagName = "tr";
 			output.TagMode = TagMode.StartTagAndEndTag;
 			foreach (PropertyInfo property in ModelType.UnderlyingSystemType.GetProperties())
