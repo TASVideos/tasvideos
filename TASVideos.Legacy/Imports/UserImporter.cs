@@ -322,7 +322,7 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			userEntities.BulkInsert(userColumns, "User");
-			userRoles.BulkInsert(userRoleColumns, "UserRoles");
+			userRoles.BulkInsert(userRoleColumns, nameof(ApplicationDbContext.UserRoles));
 
 			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
 			portedPlayers.BulkInsert(playerColumns, "User");
