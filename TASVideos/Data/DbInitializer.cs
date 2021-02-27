@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using TASVideos.Data.Entity;
-using TASVideos.Data.SampleData;
 using TASVideos.Data.SeedData;
 using TASVideos.Legacy;
 using TASVideos.Legacy.Data.Forum;
@@ -172,6 +171,7 @@ namespace TASVideos.Data
 			// Add users for each Role for testing purposes
 			var roles = await context.Roles.ToListAsync();
 			var defaultRoles = roles.Where(r => r.IsDefault).ToList();
+			const string samplePassword = "Password1234!@#$"; // Obviously no one should use this in production
 
 			foreach (var role in roles.Where(r => !r.IsDefault))
 			{
@@ -182,7 +182,7 @@ namespace TASVideos.Data
 					Email = role.Name + "@example.com",
 					TimeZoneId = "Eastern Standard Time"
 				};
-				var result = await userManager.CreateAsync(user, UserSampleData.SamplePassword);
+				var result = await userManager.CreateAsync(user, samplePassword);
 				if (!result.Succeeded)
 				{
 					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
@@ -192,23 +192,6 @@ namespace TASVideos.Data
 				savedUser.EmailConfirmed = true;
 				savedUser.LockoutEnabled = false;
 				context.UserRoles.Add(new UserRole { Role = role, User = savedUser });
-				foreach (var defaultRole in defaultRoles)
-				{
-					context.UserRoles.Add(new UserRole { Role = defaultRole, User = savedUser });
-				}
-			}
-
-			foreach (var user in UserSampleData.Users)
-			{
-				var result = await userManager.CreateAsync(user, UserSampleData.SamplePassword);
-				if (!result.Succeeded)
-				{
-					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
-				}
-
-				var savedUser = context.Users.Single(u => u.UserName == user.UserName);
-				savedUser.EmailConfirmed = true;
-				savedUser.LockoutEnabled = false;
 				foreach (var defaultRole in defaultRoles)
 				{
 					context.UserRoles.Add(new UserRole { Role = defaultRole, User = savedUser });
@@ -245,7 +228,7 @@ namespace TASVideos.Data
 		private static string EmbeddedSampleSqlFile()
 		{
 			const string sampleDataFile = "TASVideos.Data.SampleData.SampleData.zip";
-			var stream = Assembly.GetAssembly(typeof(UserSampleData))
+			var stream = Assembly.GetAssembly(typeof(ApplicationDbContext))
 				?.GetManifestResourceStream(sampleDataFile);
 
 			if (stream == null)
