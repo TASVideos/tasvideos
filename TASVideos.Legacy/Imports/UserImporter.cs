@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
@@ -25,7 +23,6 @@ namespace TASVideos.Legacy.Imports
 		private static readonly int[] BlackList = { 4079, 4854, 6177 };
 
 		public static void Import(
-			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext,
 			NesVideosForumContext legacyForumContext)
@@ -324,11 +321,11 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			userEntities.BulkInsert(connectionStr, userColumns, "User");
-			userRoles.BulkInsert(connectionStr, userRoleColumns, "UserRoles");
+			userEntities.BulkInsert(userColumns, "User");
+			userRoles.BulkInsert(userRoleColumns, "UserRoles");
 
 			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
-			portedPlayers.BulkInsert(connectionStr, playerColumns, "User");
+			portedPlayers.BulkInsert(playerColumns, "User");
 		}
 
 		private static Role? GetRoleFromLegacy(string role, IEnumerable<Role> roles)

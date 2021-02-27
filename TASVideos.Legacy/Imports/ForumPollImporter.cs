@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -10,10 +9,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class ForumPollImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(ApplicationDbContext context, NesVideosForumContext legacyForumContext)
 		{
 			var legacyVoteDescriptions = legacyForumContext.VoteDescription
 				.Include(v => v.Topic)
@@ -50,7 +46,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPoll.LastUpdateUserName)
 			};
 
-			forumPolls.BulkInsert(connectionStr, pollColumns, nameof(ApplicationDbContext.ForumPolls));
+			forumPolls.BulkInsert(pollColumns, nameof(ApplicationDbContext.ForumPolls));
 
 			/******** ForumPollOption ********/
 			var legForumPollOptions = legacyVoteDescriptions
@@ -81,7 +77,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOption.LastUpdateUserName)
 			};
 
-			forumPollOptions.BulkInsert(connectionStr, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions));
+			forumPollOptions.BulkInsert(pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions));
 
 			/******** ForumPollOptionVote ********/
 			var legForumVoters = legacyForumContext.Voter.ToList();
@@ -134,7 +130,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOptionVote.IpAddress)
 			};
 
-			forumPollOptionVotes.BulkInsert(connectionStr, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes));
+			forumPollOptionVotes.BulkInsert(pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes));
 		}
 
 		// Removes html silliness from the poll questions

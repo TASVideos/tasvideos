@@ -9,7 +9,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 {
 	public static class ForumTopicImporter
 	{
-		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var legTopics = legacyForumContext.Topics
 				.Include(t => t.Poll)
@@ -68,7 +68,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.PageName)
 			};
 
-			topics.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumTopics));
+			topics.BulkInsert(columns, nameof(ApplicationDbContext.ForumTopics));
 		}
 	}
 }

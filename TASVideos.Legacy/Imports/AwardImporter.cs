@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Legacy.Data.Site;
@@ -8,10 +7,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class AwardImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			var awards = legacySiteContext.AwardClasses
 				.Select(ac => new Award
@@ -88,9 +84,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationAward.Year)
 			};
 
-			awards.BulkInsert(connectionStr, awardColumns, nameof(ApplicationDbContext.Awards));
-			userAwards.BulkInsert(connectionStr, userAwardColumns, nameof(ApplicationDbContext.UserAwards));
-			publicationAwards.BulkInsert(connectionStr, pubAwardColumns, nameof(ApplicationDbContext.PublicationAwards));
+			awards.BulkInsert(awardColumns, nameof(ApplicationDbContext.Awards));
+			userAwards.BulkInsert(userAwardColumns, nameof(ApplicationDbContext.UserAwards));
+			publicationAwards.BulkInsert(pubAwardColumns, nameof(ApplicationDbContext.PublicationAwards));
 		}
 	}
 }

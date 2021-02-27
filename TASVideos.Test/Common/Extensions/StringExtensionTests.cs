@@ -111,7 +111,6 @@ namespace TASVideos.Test.Common.Extensions
 			Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
 		}
 
-
 		[DataRow("abcd", 2, "cd")]
 		[DataRow("abcd", 4, "")]
 		[DataRow("abcd", 0, "abcd")]
@@ -134,6 +133,7 @@ namespace TASVideos.Test.Common.Extensions
 				{
 					threw = true;
 				}
+
 				Assert.IsTrue(threw);
 			}
 			else
@@ -166,6 +166,7 @@ namespace TASVideos.Test.Common.Extensions
 				{
 					threw = true;
 				}
+
 				Assert.IsTrue(threw);
 			}
 			else
@@ -174,6 +175,5 @@ namespace TASVideos.Test.Common.Extensions
 				Assert.AreEqual(expected, actual);
 			}
 		}
-
 	}
 }

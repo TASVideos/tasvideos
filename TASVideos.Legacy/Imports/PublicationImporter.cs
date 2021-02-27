@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -12,10 +11,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public class PublicationImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
@@ -181,7 +177,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.EmulatorVersion)
 			};
 
-			publications.BulkInsert(connectionStr, pubColumns, nameof(ApplicationDbContext.Publications), bulkCopyTimeout: 600);
+			publications.BulkInsert(pubColumns, nameof(ApplicationDbContext.Publications));
 
 			var pubAuthorColumns = new[]
 			{
@@ -189,7 +185,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationAuthor.PublicationId)
 			};
 
-			publicationAuthors.BulkInsert(connectionStr, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors));
+			publicationAuthors.BulkInsert(pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors));
 
 			var pubFileColumns = new[]
 			{
@@ -204,7 +200,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.LastUpdateTimeStamp)
 			};
 
-			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), bulkCopyTimeout: 600);
+			publicationFiles.BulkInsert(pubFileColumns, nameof(ApplicationDbContext.PublicationFiles));
 		}
 	}
 }

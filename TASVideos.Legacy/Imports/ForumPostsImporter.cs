@@ -2,7 +2,6 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.ForumEngine;
@@ -12,7 +11,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class ForumPostsImporter
 	{
-		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			// TODO: posts without a corresponding post text
 			const int tvaId = 505;
@@ -113,7 +112,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.PosterMood)
 			};
 
-			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), 20000, 600);
+			posts.BulkInsert(columns, nameof(ApplicationDbContext.ForumPosts));
 		}
 	}
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Legacy.Data.Forum;
@@ -9,7 +8,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class ForumImporter
 	{
-		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var forums = legacyForumContext
 				.Forums
@@ -44,7 +43,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Forum.Restricted)
 			};
 
-			forums.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Forums));
+			forums.BulkInsert(columns, nameof(ApplicationDbContext.Forums));
 		}
 	}
 }

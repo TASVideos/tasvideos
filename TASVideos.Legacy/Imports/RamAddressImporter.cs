@@ -9,10 +9,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class RamAddressImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			var domains = legacySiteContext.RamAddressDomains
 				.Select(rd => new GameRamAddressDomain
@@ -71,8 +68,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameRamAddress.SystemId)
 			};
 
-			domains.BulkInsert(connectionStr, domainColumns, nameof(ApplicationDbContext.GameRamAddressDomains));
-			ramAddresses.BulkInsert(connectionStr, addressColumns, nameof(ApplicationDbContext.GameRamAddresses));
+			domains.BulkInsert(domainColumns, nameof(ApplicationDbContext.GameRamAddressDomains));
+			ramAddresses.BulkInsert(addressColumns, nameof(ApplicationDbContext.GameRamAddresses));
 		}
 
 		private static RamAddressType ToType(string? type)
