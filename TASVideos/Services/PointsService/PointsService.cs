@@ -68,7 +68,7 @@ namespace TASVideos.Services
 						TierWeight = p.Tier!.Weight,
 						RatingCount = p.PublicationRatings.Count
 					},
-					PublicationRatings = p.PublicationRatings
+					p.PublicationRatings
 				})
 				.ToListAsync();
 
