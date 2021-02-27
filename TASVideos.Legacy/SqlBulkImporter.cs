@@ -104,6 +104,7 @@ namespace TASVideos.Legacy
 			}
 		}
 
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
 		private static void DisableConstraints(string tableName, NpgsqlConnection connection)
 		{
 			var sql = $"alter table public.\"{tableName}\" disable trigger all ";
@@ -124,13 +125,12 @@ namespace TASVideos.Legacy
 
 			using (var cmd = new NpgsqlCommand($"select \"Id\" from public.\"{tableName}\" order by \"Id\" desc limit 1", connection))
 			{
-				identitySeed = (int)cmd.ExecuteScalar();
+				identitySeed = (int?)cmd.ExecuteScalar() ?? 0;
 			}
 
-			using (var cmd2 = new NpgsqlCommand($"ALTER TABLE public.\"{tableName}\" ALTER COLUMN \"Id\" RESTART WITH {identitySeed + 1}", connection))
-			{
-				cmd2.ExecuteScalar();
-			}
+			using var cmd2 = new NpgsqlCommand($"ALTER TABLE public.\"{tableName}\" ALTER COLUMN \"Id\" RESTART WITH {identitySeed + 1}", connection);
+			cmd2.ExecuteScalar();
 		}
+#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
 	}
 }
