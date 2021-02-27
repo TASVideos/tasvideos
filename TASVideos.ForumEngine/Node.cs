@@ -142,6 +142,7 @@ namespace TASVideos.ForumEngine
 			w.Write("</a>");
 		}
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 		public async Task WriteHtml(TextWriter w, IWriterHelper h)
 		{
 			switch (Name)
@@ -432,5 +433,6 @@ namespace TASVideos.ForumEngine
 					throw new InvalidOperationException("Internal error on tag " + Name);
 			}
 		}
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 	}
 }

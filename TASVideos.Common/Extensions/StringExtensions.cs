@@ -136,26 +136,38 @@ namespace TASVideos.Extensions
 		public static string UnicodeAwareSubstring(this string s, int startIndex, int length)
 		{
 			if ((uint)startIndex > s.Length)
+			{
 				throw new ArgumentOutOfRangeException(nameof(startIndex));
+			}
+
 			var endIndex = startIndex + length;
 			if (endIndex < startIndex || endIndex > s.Length)
+			{
 				throw new ArgumentOutOfRangeException(nameof(length));
+			}
 
 			if (startIndex == s.Length || endIndex == 0)
+			{
 				return "";
+			}
 
 			if (char.IsLowSurrogate(s[startIndex]))
 			{
 				if (--startIndex < 0 || !char.IsHighSurrogate(s[startIndex]))
+				{
 					throw new InvalidOperationException("Unpaired Low Surrogate");
+				}
 			}
+
 			if (char.IsHighSurrogate(s[endIndex - 1]))
 			{
 				if (++endIndex >= s.Length || !char.IsLowSurrogate(s[endIndex - 1]))
+				{
 					throw new InvalidOperationException("Unpaired High Surrogate");
+				}
 			}
 
-			return s.Substring(startIndex, endIndex - startIndex);
+			return s[startIndex..endIndex];
 		}
 	}
 }
