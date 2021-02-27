@@ -14,10 +14,7 @@ namespace TASVideos.Legacy.Imports
 	{
 		private static readonly string[] ValidSubmissionFileExtensions = { "fmv", "vmv", "fcm", "smv", "dtm", "mcm", "gmv", "dof", "dsm", "bkm", "mcm", "fm2", "vbm", "m64", "mmv", "zmv", "pxm", "fbm", "mc2", "ymv", "jrsr", "gz", "omr", "pjm", "wtf", "tas", "lsmv", "fm3", "bk2", "lmp", "mcm", "mar", "ltm" };
 
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			var legacySubmissions = legacySiteContext.Submissions
 				.Include(s => s.User)
@@ -212,7 +209,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.LegacyAlerts)
 			};
 
-			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
+			submissions.BulkInsert(subColumns, nameof(ApplicationDbContext.Submissions));
 
 			var subAuthorColumns = new[]
 			{
@@ -220,7 +217,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(SubmissionAuthor.SubmissionId)
 			};
 
-			submissionAuthors.BulkInsert(connectionStr, subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));
+			submissionAuthors.BulkInsert(subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));
 
 			var statusHistoryColumns = new[]
 			{
@@ -232,7 +229,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(SubmissionStatusHistory.SubmissionId)
 			};
 
-			submissionHistory.BulkInsert(connectionStr, statusHistoryColumns, nameof(ApplicationDbContext.SubmissionStatusHistory));
+			submissionHistory.BulkInsert(statusHistoryColumns, nameof(ApplicationDbContext.SubmissionStatusHistory));
 		}
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)

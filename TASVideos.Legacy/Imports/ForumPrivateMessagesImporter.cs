@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.ForumEngine;
@@ -11,7 +10,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class ForumPrivateMessagesImporter
 	{
-		public static void Import(string connectionStr, NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var data = legacyForumContext.PrivateMessages
 				.Where(p => p.ToUserId > 0 && p.FromUserId > 0) // These include delete users, and delete messages, the legacy system puts a negative on user id to soft delete
@@ -90,7 +89,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PrivateMessage.DeletedForFromUser)
 			};
 
-			privMessages.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PrivateMessages), 20000, 600);
+			privMessages.BulkInsert(columns, nameof(ApplicationDbContext.PrivateMessages));
 		}
 	}
 }

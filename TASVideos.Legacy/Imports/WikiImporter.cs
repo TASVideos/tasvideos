@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
@@ -18,7 +17,7 @@ namespace TASVideos.Legacy.Imports
 			public string HomePage { get; init; } = "";
 		}
 
-		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			var blacklist = ObsoletePages.Concat(ObsoletePages.Select(p => "DeletedPages/" + p));
 
@@ -91,7 +90,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPage.RevisionMessage)
 			};
 
-			pages.BulkInsert(connectionStr, wikiColumns, nameof(ApplicationDbContext.WikiPages), bulkCopyTimeout: 1200);
+			pages.BulkInsert(wikiColumns, nameof(ApplicationDbContext.WikiPages));
 		}
 
 		private static string PageNameShenanigans(SiteText st, string? userName)

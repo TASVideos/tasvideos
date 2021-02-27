@@ -8,9 +8,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class DisallowImporter
 	{
-		public static void Import(
-			string connectionStr,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var disallow = legacyForumContext.Disallows
 				.ToList()
@@ -31,7 +29,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserDisallow.LastUpdateTimeStamp)
 			};
 
-			disallow.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserDisallows));
+			disallow.BulkInsert(columns, nameof(ApplicationDbContext.UserDisallows));
 		}
 	}
 }

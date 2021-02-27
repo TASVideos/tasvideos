@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
@@ -9,7 +8,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class RomImporter
 	{
-		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			var roms = legacySiteContext.Roms
 				.Where(r => r.Type == "G")
@@ -40,7 +39,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameRom.LastUpdateTimeStamp)
 			};
 
-			roms.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.GameRoms));
+			roms.BulkInsert(columns, nameof(ApplicationDbContext.GameRoms));
 		}
 
 		// The legacy system barely used roms and they were never enforced, but the new system demands

@@ -32,44 +32,44 @@ namespace TASVideos.Legacy
 			legacyForumContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
 			var stopwatch = Stopwatch.StartNew();
+			SqlBulkImporter.BeginImport(connectionStr, context.Database.ProviderName);
+			Run("Tags", () => TagImporter.Import(legacySiteContext));
+			Run("Roms", () => RomImporter.Import(legacySiteContext));
+			Run("Games", () => GameImporter.Import(legacySiteContext));
+			Run("GameGroup", () => GameGroupImporter.Import(legacySiteContext));
+			Run("GameGenre", () => GameGenreImport.Import(legacySiteContext));
+			Run("RamAddresses", () => RamAddressImporter.Import(context, legacySiteContext));
 
-			Run("Tags", () => TagImporter.Import(connectionStr, legacySiteContext));
-			Run("Roms", () => RomImporter.Import(connectionStr, legacySiteContext));
-			Run("Games", () => GameImporter.Import(connectionStr, legacySiteContext));
-			Run("GameGroup", () => GameGroupImporter.Import(connectionStr, legacySiteContext));
-			Run("GameGenre", () => GameGenreImport.Import(connectionStr, legacySiteContext));
-			Run("RamAddresses", () => RamAddressImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Users", () => UserImporter.Import(context, legacySiteContext, legacyForumContext));
+			Run("UserDisallows", () => DisallowImporter.Import(legacyForumContext));
+			Run("Award", () => AwardImporter.Import(context, legacySiteContext));
 
-			Run("Users", () => UserImporter.Import(connectionStr, context, legacySiteContext, legacyForumContext));
-			Run("UserDisallows", () => DisallowImporter.Import(connectionStr, legacyForumContext));
-			Run("Award", () => AwardImporter.Import(connectionStr, context, legacySiteContext));
-
-			Run("Forum Categories", () => ForumCategoriesImporter.Import(connectionStr, legacyForumContext));
-			Run("Forums", () => ForumImporter.Import(connectionStr, legacyForumContext));
-			Run("Forum Topics", () => ForumTopicImporter.Import(connectionStr, legacyForumContext));
-			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, legacyForumContext));
-			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(connectionStr, legacyForumContext));
-			Run("Forum Polls", () => ForumPollImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Categories", () => ForumCategoriesImporter.Import(legacyForumContext));
+			Run("Forums", () => ForumImporter.Import(legacyForumContext));
+			Run("Forum Topics", () => ForumTopicImporter.Import(legacyForumContext));
+			Run("Forum Posts", () => ForumPostsImporter.Import(legacyForumContext));
+			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(legacyForumContext));
+			Run("Forum Polls", () => ForumPollImporter.Import(context, legacyForumContext));
 
 			// We don't want to copy these to other environments, as they can cause users to get unwanted emails
 			if (env.IsProduction())
 			{
-				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(connectionStr, legacyForumContext));
+				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(legacyForumContext));
 			}
 
-			Run("Wiki", () => WikiImporter.Import(connectionStr, legacySiteContext));
+			Run("Wiki", () => WikiImporter.Import(legacySiteContext));
 			Run("WikiCleanup", () => WikiPageCleanup.Fix(context, legacySiteContext));
-			Run("WikiReferral", () => WikiReferralGenerator.Generate(connectionStr, context));
-			Run("Submissions", () => SubmissionImporter.Import(connectionStr, context, legacySiteContext));
+			Run("WikiReferral", () => WikiReferralGenerator.Generate(context));
+			Run("Submissions", () => SubmissionImporter.Import(context, legacySiteContext));
 			Run("Submissions Framerate", () => SubmissionFrameRateImporter.Import(context));
-			Run("Publications", () => PublicationImporter.Import(connectionStr, context, legacySiteContext));
-			Run("PublicationUrls", () => PublicationUrlImporter.Import(connectionStr, legacySiteContext));
-			Run("Publication Ratings", () => PublicationRatingImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Publication Flags", () => PublicationFlagImporter.Import(connectionStr, legacySiteContext));
-			Run("Publication Tags", () => PublicationTagImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Published Author Generator", () => PublishedAuthorGenerator.Generate(connectionStr, context));
+			Run("Publications", () => PublicationImporter.Import(context, legacySiteContext));
+			Run("PublicationUrls", () => PublicationUrlImporter.Import(legacySiteContext));
+			Run("Publication Ratings", () => PublicationRatingImporter.Import(context, legacySiteContext));
+			Run("Publication Flags", () => PublicationFlagImporter.Import(legacySiteContext));
+			Run("Publication Tags", () => PublicationTagImporter.Import(context, legacySiteContext));
+			Run("Published Author Generator", () => PublishedAuthorGenerator.Generate(context));
 
-			Run("User files", () => UserFileImporter.Import(connectionStr, context, legacySiteContext));
+			Run("User files", () => UserFileImporter.Import(context, legacySiteContext));
 
 			var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
 			stopwatch.Stop();

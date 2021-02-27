@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
@@ -9,7 +8,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class GameImporter
 	{
-		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			var games = legacySiteContext.GameNames
 				.Select(g => new Game
@@ -43,7 +42,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Game.GameResourcesPage)
 			};
 
-			games.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Games));
+			games.BulkInsert(columns, nameof(ApplicationDbContext.Games));
 		}
 
 		// The legacy system did not strictly enforce a game for publications

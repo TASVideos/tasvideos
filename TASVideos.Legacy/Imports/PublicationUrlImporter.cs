@@ -8,9 +8,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class PublicationUrlImporter
 	{
-		public static void Import(
-			string connectionStr,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			const string mirrorType = "A";
 			const string streaming = "J";
@@ -37,7 +35,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationUrl.LastUpdateTimeStamp)
 			};
 
-			urls.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationUrls));
+			urls.BulkInsert(columns, nameof(ApplicationDbContext.PublicationUrls));
 		}
 	}
 }

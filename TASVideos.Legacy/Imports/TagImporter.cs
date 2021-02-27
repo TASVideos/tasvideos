@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
@@ -9,7 +8,7 @@ namespace TASVideos.Legacy.Imports
 {
 	public static class TagImporter
 	{
-		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			var legacyClassTypes = legacySiteContext.ClassTypes
 				.Where(t => !t.PositiveText.Contains("Genre"))
@@ -40,7 +39,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Tag.DisplayName)
 			};
 
-			tags.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Tags));
+			tags.BulkInsert(columns, nameof(ApplicationDbContext.Tags));
 		}
 	}
 }
