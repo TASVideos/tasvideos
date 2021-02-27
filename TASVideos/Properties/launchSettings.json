@@ -53,7 +53,7 @@
 				"StartupStrategy": "Minimal",
 				"ASPNETCORE_preventHostingStartup": "True",
 				"ASPNETCORE_ENVIRONMENT": "Development",
-				"UsePostgres": "False"
+				"UsePostgres": "True"
 			},
 			"launchBrowser": true,
 			"launchUrl": "https://localhost:44385/"
