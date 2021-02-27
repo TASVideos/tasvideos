@@ -2,6 +2,7 @@
 @{ ViewData["Title"] = "System Information"; }
 @model IndexModel
 @using System.Diagnostics
+@inject ApplicationDbContext db
 @functions {
 	private string GetProcessInfo()
 	{
@@ -25,4 +26,5 @@
 	<tr><td>Processor Count</td><td>@Environment.ProcessorCount</td></tr>
 	<tr><td>ASPNETCORE_ENVIRONMENT</td><td>@Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")</td></tr>
 	<tr><td>Total Memory Usage</td><td>@GetProcessInfo()</td></tr>
+	<tr><td>Database Provider</td><td>@db.Database.ProviderName</td></tr>
 </table>
