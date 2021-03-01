@@ -127,6 +127,19 @@ namespace TASVideos.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+			if (Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+			{
+				foreach (var entity in builder.Model.GetEntityTypes())
+				{
+					foreach (var prop in entity.GetDeclaredProperties().Where(p => p.ClrType == typeof(string)))
+					{
+						prop.AddAnnotation("Relational:ColumnType", "citext");
+					}
+				}
+
+				builder.HasPostgresExtension("citext");
+			}
+
 			builder.Entity<ForumTopic>(entity =>
 			{
 				entity.HasIndex(e => e.PageName).IsUnique();
