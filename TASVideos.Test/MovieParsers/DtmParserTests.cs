@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
@@ -12,12 +11,11 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("DtmParsers")]
 	public class DtmParserTests : BaseParserTests
 	{
-		private Dtm _dtmParser = null!;
+		private readonly Dtm _dtmParser;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.DtmSampleFiles.";
 
-		[TestInitialize]
-		public void Initialize()
+		public DtmParserTests()
 		{
 			_dtmParser = new Dtm();
 		}

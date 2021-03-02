@@ -14,11 +14,10 @@ namespace TASVideos.Test.Services
 		private const string SubmissionTitle = "Test Title";
 		private const int PublicationId = 1;
 
-		private ITASVideoAgent _tasVideoAgent = null!;
-		private TestDbContext _db = null!;
+		private readonly ITASVideoAgent _tasVideoAgent;
+		private readonly TestDbContext _db;
 
-		[TestInitialize]
-		public void Initialize()
+		public TASVideoAgentTests()
 		{
 			_db = TestDbContext.Create();
 			_tasVideoAgent = new TASVideoAgent(_db);

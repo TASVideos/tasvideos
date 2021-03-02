@@ -12,12 +12,11 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class WikiPagesTests
 	{
-		private IWikiPages _wikiPages = null!;
-		private TestDbContext _db = null!;
-		private WikiTestCache _cache = null!;
+		private readonly IWikiPages _wikiPages;
+		private readonly TestDbContext _db;
+		private readonly WikiTestCache _cache;
 
-		[TestInitialize]
-		public void Initialize()
+		public WikiPagesTests()
 		{
 			_db = TestDbContext.Create();
 			_cache = new WikiTestCache();

@@ -11,12 +11,11 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class IpBanServiceTests
 	{
-		private TestDbContext _db = null!;
-		private TestCache _cache = null!;
-		private IpBanService _banService = null!;
+		private readonly TestDbContext _db;
+		private readonly TestCache _cache;
+		private readonly IpBanService _banService;
 
-		[TestInitialize]
-		public void Init()
+		public IpBanServiceTests()
 		{
 			_db = TestDbContext.Create();
 			_cache = new TestCache();

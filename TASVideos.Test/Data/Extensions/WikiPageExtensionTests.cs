@@ -7,10 +7,9 @@ namespace TASVideos.Test.Data.QueryableExtensions
 	[TestClass]
 	public class WikiPageExtensionTests
 	{
-		private TestDbContext _db = null!;
+		private readonly TestDbContext _db;
 
-		[TestInitialize]
-		public void Initialize()
+		public WikiPageExtensionTests()
 		{
 			_db = TestDbContext.Create();
 		}

@@ -13,12 +13,11 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class PointsServiceTests
 	{
-		private IPointsService _pointsService = null!;
-		private ApplicationDbContext _db = null!;
+		private readonly IPointsService _pointsService;
+		private readonly ApplicationDbContext _db;
 		private static User Player => new () { UserName = "Player" };
 
-		[TestInitialize]
-		public void Initialize()
+		public PointsServiceTests()
 		{
 			_db = TestDbContext.Create();
 			_pointsService = new PointsService(_db, new NoCacheService());

@@ -9,10 +9,9 @@ namespace TASVideos.Test.Data.Context
 	[TestClass]
 	public class ApplicationDbContextTests
 	{
-		private TestDbContext _db = null!;
+		private readonly TestDbContext _db;
 
-		[TestInitialize]
-		public void Initialize()
+		public ApplicationDbContextTests()
 		{
 			_db = TestDbContext.Create();
 		}

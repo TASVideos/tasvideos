@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Moq;
-
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Services;
@@ -16,23 +14,21 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class TopicWatcherTests
 	{
-		private Mock<IEmailService> _mockEmailService = null!;
-		private Mock<IOptions<AppSettings>> _mockAppSettings = null!;
-		private TestDbContext _db = null!;
+		private readonly Mock<IEmailService> _mockEmailService;
+		private readonly TestDbContext _db;
 
-		private ITopicWatcher _topicWatcher = null!;
+		private readonly ITopicWatcher _topicWatcher;
 
-		[TestInitialize]
-		public void Initialize()
+		public TopicWatcherTests()
 		{
 			_db = TestDbContext.Create();
 			_mockEmailService = new Mock<IEmailService>();
-			_mockAppSettings = new Mock<IOptions<AppSettings>>();
-			_mockAppSettings.Setup(m => m.Value).Returns(new AppSettings
+			Mock<IOptions<AppSettings>> mockAppSettings = new ();
+			mockAppSettings.Setup(m => m.Value).Returns(new AppSettings
 			{
 				BaseUrl = "http://example.com"
 			});
-			_topicWatcher = new TopicWatcher(_mockEmailService.Object, _db, _mockAppSettings.Object);
+			_topicWatcher = new TopicWatcher(_mockEmailService.Object, _db, mockAppSettings.Object);
 		}
 
 		[TestMethod]
