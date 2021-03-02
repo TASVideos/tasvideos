@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Services;
@@ -13,18 +11,15 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class AwardsTests
 	{
-		private IAwards _awards = null!;
-		private TestDbContext _db = null!;
-		private ICacheService _cache = null!;
+		private readonly IAwards _awards;
+		private readonly TestDbContext _db;
 
 		private static readonly int CurrentYear = DateTime.UtcNow.Year;
 
-		[TestInitialize]
-		public void Initialize()
+		public AwardsTests()
 		{
 			_db = TestDbContext.Create();
-			_cache = new NoCacheService();
-			_awards = new Awards(_db, _cache);
+			_awards = new Awards(_db, new NoCacheService());
 		}
 
 		[TestMethod]

@@ -12,11 +12,10 @@ namespace TASVideos.Test.Services
 	{
 		private const int SubmissionId = 1;
 
-		private ITASVideosGrue _tasVideosGrue = null!;
-		private TestDbContext _db = null!;
+		private readonly ITASVideosGrue _tasVideosGrue;
+		private readonly TestDbContext _db;
 
-		[TestInitialize]
-		public void Initialize()
+		public TASVideosGrueTests()
 		{
 			_db = TestDbContext.Create();
 			_tasVideosGrue = new TASVideosGrue(_db);

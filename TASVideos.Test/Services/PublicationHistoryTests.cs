@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Services.PublicationChain;
@@ -12,8 +10,8 @@ namespace TASVideos.Test.Services
 	[TestClass]
 	public class PublicationHistoryTests
 	{
-		private IPublicationHistory _publicationHistory = null!;
-		private TestDbContext _db = null!;
+		private readonly IPublicationHistory _publicationHistory;
+		private readonly TestDbContext _db;
 
 		#region Test Data
 
@@ -73,8 +71,7 @@ namespace TASVideos.Test.Services
 
 		#endregion
 
-		[TestInitialize]
-		public void Initialize()
+		public PublicationHistoryTests()
 		{
 			_db = TestDbContext.Create();
 			_publicationHistory = new PublicationHistory(_db);

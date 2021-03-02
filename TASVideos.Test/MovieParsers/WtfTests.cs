@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
@@ -12,12 +11,11 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("WtfParsers")]
 	public class WtfTests : BaseParserTests
 	{
-		private Wtf _wtfParser = null!;
+		private readonly Wtf _wtfParser;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.WtfSampleFiles.";
 
-		[TestInitialize]
-		public void Initialize()
+		public WtfTests()
 		{
 			_wtfParser = new Wtf();
 		}

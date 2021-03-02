@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
@@ -12,11 +11,10 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("BK2Parsers")]
 	public class Bk2ParserTests : BaseParserTests
 	{
-		private Bk2 _bk2Parser = null!;
+		private readonly Bk2 _bk2Parser;
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.Bk2SampleFiles.";
 
-		[TestInitialize]
-		public void Initialize()
+		public Bk2ParserTests()
 		{
 			_bk2Parser = new Bk2();
 		}

@@ -11,11 +11,10 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("BK2Parsers")]
 	public class Fm2ParserTests : BaseParserTests
 	{
-		private Fm2 _fm2Parser = null!;
+		private readonly Fm2 _fm2Parser;
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.Fm2SampleFiles.";
 
-		[TestInitialize]
-		public void Initialize()
+		public Fm2ParserTests()
 		{
 			_fm2Parser = new Fm2();
 		}

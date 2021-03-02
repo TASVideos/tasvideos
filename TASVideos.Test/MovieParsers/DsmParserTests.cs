@@ -11,11 +11,10 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("DsmParsers")]
 	public class DsmParserTests : BaseParserTests
 	{
-		private Dsm _dsmParser = null!;
+		private readonly Dsm _dsmParser;
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.DsmSampleFiles.";
 
-		[TestInitialize]
-		public void Initialize()
+		public DsmParserTests()
 		{
 			_dsmParser = new Dsm();
 		}

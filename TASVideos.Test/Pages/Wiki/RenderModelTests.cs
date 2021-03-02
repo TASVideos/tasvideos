@@ -12,12 +12,11 @@ namespace TASVideos.Test.Pages.Wiki
 	[TestClass]
 	public class RenderModelTests : BasePageModelTests
 	{
-		private Mock<IWikiPages> _mockWikiPages = null!;
-		private TestDbContext _db = null!;
-		private RenderModel _model = null!;
+		private readonly Mock<IWikiPages> _mockWikiPages;
+		private readonly TestDbContext _db;
+		private readonly RenderModel _model;
 
-		[TestInitialize]
-		public void Initialize()
+		public RenderModelTests()
 		{
 			_mockWikiPages = new Mock<IWikiPages>();
 			_db = TestDbContext.Create();

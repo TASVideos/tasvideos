@@ -1,10 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Moq;
-
 using TASVideos.Data.Entity;
 using TASVideos.Services;
 
@@ -15,11 +12,10 @@ namespace TASVideos.Test.Services
 	{
 		private const string SystemLanguageMarkup = "EN:English,ES:Español";
 
-		private Mock<IWikiPages> _wikiPages = null!;
-		private Languages _languages = null!;
+		private readonly Mock<IWikiPages> _wikiPages;
+		private readonly Languages _languages;
 
-		[TestInitialize]
-		public void Initialize()
+		public LanguagesTests()
 		{
 			_wikiPages = new Mock<IWikiPages>(MockBehavior.Strict);
 			_languages = new Languages(_wikiPages.Object);

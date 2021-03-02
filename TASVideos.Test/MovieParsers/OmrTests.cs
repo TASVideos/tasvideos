@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
@@ -11,12 +10,11 @@ namespace TASVideos.Test.MovieParsers
 	[TestCategory("OmrParsers")]
 	public class OmrTests : BaseParserTests
 	{
-		private Omr _omrParser = null!;
+		private readonly Omr _omrParser;
 
 		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.OmrSampleFiles.";
 
-		[TestInitialize]
-		public void Initialize()
+		public OmrTests()
 		{
 			_omrParser = new Omr();
 		}
