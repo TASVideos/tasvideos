@@ -65,7 +65,7 @@ namespace TASVideos.Pages.Forum.Topics
 					Question = topic.Poll.Question,
 					DaysOpen = topic.Poll.CloseDate.HasValue
 						? (int)(topic.Poll.CloseDate.Value - DateTime.Now).TotalDays
-						: (int?)null,
+						: null,
 					PollOptions = topic.Poll.PollOptions
 						.OrderBy(o => o.Ordinal)
 						.Select(o => o.Text)
@@ -116,7 +116,7 @@ namespace TASVideos.Pages.Forum.Topics
 				topic.Poll.Question = Poll.Question ?? "";
 				topic.Poll.CloseDate = Poll.DaysOpen.HasValue
 					? DateTime.UtcNow.AddDays(Poll.DaysOpen.Value)
-					: (DateTime?)null;
+					: null;
 
 				topic.Poll.PollOptions.Clear();
 				topic.Poll = null;
