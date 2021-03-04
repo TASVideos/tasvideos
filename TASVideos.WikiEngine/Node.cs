@@ -107,7 +107,6 @@ namespace TASVideos.WikiEngine.AST
 		/// Adds a table style filter expression for later use in table cells.
 		/// </summary>
 		/// <param name="pp">The raw parameter text from the markup.</param>
-		/// <returns></returns>
 		public bool AddTdStyleFilter(IReadOnlyDictionary<string, string> pp)
 		{
 			var regex = pp.GetValueOrDefault("pattern");
