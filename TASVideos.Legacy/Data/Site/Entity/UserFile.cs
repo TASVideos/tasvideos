@@ -6,23 +6,31 @@ namespace TASVideos.Legacy.Data.Site.Entity
 {
 	public class UserFile
 	{
-		[Key, Column("file_id")]
+		[Key]
+		[Column("file_id")]
 		public long Id { get; set; }
 
 		[Column("file_uid")]
 		public int UserId { get; set; }
 		public virtual User? User { get; set; }
 
-		[Column("file_name"), StringLength(255), Required]
+		[Column("file_name")]
+		[StringLength(255)]
+		[Required]
 		public string Name { get; set; } = "";
 
-		[Column("file_content"), Required]
+		[Column("file_content")]
+		[Required]
 		public byte[] Content { get; set; } = Array.Empty<byte>();
 
-		[Column("file_class"), StringLength(1), Required]
+		[Column("file_class")]
+		[StringLength(1)]
+		[Required]
 		public string Class { get; set; } = "";
 
-		[Column("file_type"), StringLength(16), Required]
+		[Column("file_type")]
+		[StringLength(16)]
+		[Required]
 		public string Type { get; set; } = "";
 
 		[Column("file_ts")]
@@ -40,10 +48,13 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("file_rerecords")]
 		public long Rerecords { get; set; }
 
-		[Column("file_title"), StringLength(255), Required]
+		[Column("file_title")]
+		[StringLength(255)]
+		[Required]
 		public string Title { get; set; } = "";
 
-		[Column("file_description"), Required]
+		[Column("file_description")]
+		[Required]
 		public string Description { get; set; } = "";
 
 		[Column("file_log_len")]
@@ -59,7 +70,8 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		[Column("file_hidden")]
 		public sbyte Hidden { get; set; }
 
-		[Column("file_warnings"), Required]
+		[Column("file_warnings")]
+		[Required]
 		public string Warnings { get; set; } = "";
 
 		[Column("file_views")]

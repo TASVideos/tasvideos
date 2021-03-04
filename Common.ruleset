@@ -256,7 +256,7 @@
     <Rule Id="SA1129" Action="Warning" />
     <Rule Id="SA1131" Action="Warning" />
     <Rule Id="SA1132" Action="Warning" />
-    <Rule Id="SA1133" Action="None" />
+    <Rule Id="SA1133" Action="Warning" />
     <Rule Id="SA1134" Action="Warning" />
     <Rule Id="SA1136" Action="None" />
     <Rule Id="SA1137" Action="Warning" />
@@ -270,7 +270,6 @@
     <Rule Id="SA1118" Action="None" />
     <Rule Id="SA1122" Action="None" />
     <Rule Id="SA1124" Action="None" />
-    <Rule Id="SA1133" Action="None" />
     <Rule Id="SA1136" Action="None" />
     <Rule Id="SA1201" Action="None" />
     <Rule Id="SA1202" Action="None" />
