@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -143,7 +142,7 @@ namespace TASVideos.WikiEngine.AST
 		/// <summary>
 		/// Run all existing td style filters.
 		/// </summary>
-		/// <param name="text">The raw text to evalute against the style filters.</param>
+		/// <param name="text">The raw text to evaluate against the style filters.</param>
 		/// <returns>A style attribute value, or null if no filters matched.</returns>
 		public string? RunTdStyleFilters(string text)
 		{

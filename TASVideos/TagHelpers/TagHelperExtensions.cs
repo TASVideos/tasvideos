@@ -17,7 +17,7 @@ namespace TASVideos.TagHelpers
 			if (existingClass != null)
 			{
 				output.Attributes.Remove(existingClass);
-				output.Attributes.Add(new TagHelperAttribute("class", existingClass.Value.ToString() + " " + className));
+				output.Attributes.Add(new TagHelperAttribute("class", existingClass.Value + " " + className));
 			}
 			else
 			{

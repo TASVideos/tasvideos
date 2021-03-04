@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.TagHelpers;
-using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.Test.ViewComponents
@@ -92,12 +91,12 @@ namespace TASVideos.Test.ViewComponents
 		[DataRow("num=Y", "num", null)]
 		[DataRow("num=Y2014", "num", "2014-01-01")]
 		[DataRow("num=foo    | num =     y2099", "num", "2099-01-01")]
-		public void GetYear(string parameterStr, string param, string? expectedDT)
+		public void GetYear(string parameterStr, string param, string? expectedDt)
 		{
 			var moduleString = "foo|" + parameterStr;
 			var module = new Module(0, moduleString.Length, moduleString);
 			var actual = WikiMarkup.ConvertParameter<DateTime?>(module.Parameters.GetValueOrDefault(param));
-			DateTime? expected = expectedDT != null ? DateTime.Parse(expectedDT) : null;
+			DateTime? expected = expectedDt != null ? DateTime.Parse(expectedDt) : null;
 
 			Assert.AreEqual(expected, actual);
 		}

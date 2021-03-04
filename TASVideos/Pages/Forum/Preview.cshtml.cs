@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Forum
 		private async Task<string> RenderPost(string text, bool useBbCode, bool useHtml)
 		{
 			var parsed = PostParser.Parse(text, useBbCode, useHtml);
-			using var writer = new StringWriter();
+			await using var writer = new StringWriter();
 			writer.Write("<div class=postbody>");
 			await parsed.WriteHtml(writer, _helper);
 			writer.Write("</div>");
