@@ -88,7 +88,7 @@ namespace TASVideos.Pages.Publications
 				publication.TierId = Publication.TierId;
 
 				_publisher.SendPublicationEdit(
-					$"Publication {Id} {Title} Tier changed to {tier.Name}",
+					$"Publication {Id} {Title} Tier changed from {originalTier} to {tier.Name}",
 					$"{Id}M",
 					User.Name());
 
