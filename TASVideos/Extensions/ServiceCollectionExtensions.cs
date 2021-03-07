@@ -101,6 +101,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<IMovieSearchTokens, MovieSearchTokens>();
 			services.AddScoped<IVcsRssParser, VcsRssParser>();
 			services.AddScoped<IIpBanService, IpBanService>();
+			services.AddScoped<ITagService, TagService>();
 
 			if (env.IsDevelopment())
 			{

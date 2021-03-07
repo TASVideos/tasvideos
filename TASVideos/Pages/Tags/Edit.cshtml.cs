@@ -1,21 +1,18 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Tags
 {
 	[RequirePermission(PermissionTo.TagMaintenance)]
 	public class EditModel : BasePageModel
 	{
-		private readonly ApplicationDbContext _db;
+		private readonly ITagService _tagService;
 
-		public EditModel(ApplicationDbContext db)
+		public EditModel(ITagService tagService)
 		{
-			_db = db;
+			_tagService = tagService;
 		}
 
 		[TempData]
@@ -34,15 +31,15 @@ namespace TASVideos.Pages.Tags
 
 		public async Task<IActionResult> OnGet()
 		{
-			Tag = await _db.Tags.SingleOrDefaultAsync(t => t.Id == Id);
+			var tag = await _tagService.GetById(Id);
 
-			if (Tag == null)
+			if (tag == null)
 			{
 				return NotFound();
 			}
 
-			InUse = await TagInUse();
-
+			Tag = tag;
+			InUse = await _tagService.InUse(Id);
 			return Page();
 		}
 
@@ -53,68 +50,52 @@ namespace TASVideos.Pages.Tags
 				return Page();
 			}
 
-			var tag = await _db.Tags.SingleOrDefaultAsync(t => t.Id == Id);
-
-			if (tag == null)
+			var result = await _tagService.Edit(Id, Tag.Code, Tag.DisplayName);
+			switch (result)
 			{
-				return NotFound();
-			}
-
-			tag.Code = Tag.Code;
-			tag.DisplayName = Tag.DisplayName;
-
-			try
-			{
-				MessageType = Styles.Success;
-				Message = "Tag successfully updated.";
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
-			}
-			catch (DbUpdateException ex)
-			{
-				if (ex.InnerException?.Message.Contains("Cannot insert duplicate") ?? false)
-				{
+				default:
+				case TagEditResult.Success:
+					MessageType = Styles.Success;
+					Message = "Tag successfully updated.";
+					return RedirectToPage("Index");
+				case TagEditResult.NotFound:
+					return NotFound();
+				case TagEditResult.DuplicateCode:
 					ModelState.AddModelError($"{nameof(Tag)}.{nameof(Tag.Code)}", $"{nameof(Tag.Code)} {Tag.Code} already exists");
 					MessageType = null;
 					Message = null;
 					return Page();
-				}
-
-				MessageType = Styles.Danger;
-				Message = "Unable to edit tag due to an unknown error";
+				case TagEditResult.Fail:
+					MessageType = Styles.Danger;
+					Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
+					return Page();
 			}
-
-			return RedirectToPage("Index");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
 		{
-			if (!await TagInUse())
+			var result = await _tagService.Delete(Id);
+			switch (result)
 			{
-				try
-				{
+				case TagDeleteResult.InUse:
+					MessageType = Styles.Danger;
+					Message = $"Unable to delete Tag {Id}, the tag is in use by at least 1 publication.";
+					break;
+				case TagDeleteResult.Success:
 					MessageType = Styles.Success;
 					Message = $"Tag {Id}, deleted successfully.";
-					_db.Tags.Attach(new Tag { Id = Id }).State = EntityState.Deleted;
-					await _db.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
+					break;
+				case TagDeleteResult.NotFound:
+					MessageType = Styles.Danger;
+					Message = $"Tag {Id}, not found.";
+					break;
+				case TagDeleteResult.Fail:
 					MessageType = Styles.Danger;
 					Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
-				}
+					break;
 			}
 
 			return RedirectToPage("Index");
-		}
-
-		private async Task<bool> TagInUse()
-		{
-			return await _db.PublicationTags.AnyAsync(pt => pt.TagId == Id);
 		}
 	}
 }

@@ -46,7 +46,7 @@ namespace TASVideos.Pages
 			// on the user cookie, in case the user's permissions have recently changed, such as from being "banned"
 			// We are assuming we don't have malicious GET calls, and that for GETs we can afford to wait f
 			// for the cookie expiration
-			if (context.HandlerMethod.HttpMethod == "Post")
+			if (context.HandlerMethod?.HttpMethod == "Post")
 			{
 				var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager>();
 				return await userManager.GetUserPermissionsById(context.HttpContext.User.GetUserId());
