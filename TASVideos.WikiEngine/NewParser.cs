@@ -516,6 +516,28 @@ namespace TASVideos.WikiEngine
 					AddText("»»");
 				}
 			}
+			else if (Eat("⸢⸢"))
+			{
+				Push("sup");
+			}
+			else if (Eat("⸣⸣"))
+			{
+				if (!TryPop("sup"))
+				{
+					AddText("⸣⸣");
+				}
+			}
+			else if (Eat("⸤⸤"))
+			{
+				Push("sub");
+			}
+			else if (Eat("⸥⸥"))
+			{
+				if (!TryPop("sub"))
+				{
+					AddText("⸥⸥");
+				}
+			}
 			else if (Eat("%%%"))
 			{
 				while (Eat('%'))
