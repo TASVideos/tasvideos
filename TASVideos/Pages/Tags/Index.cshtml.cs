@@ -1,23 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Services;
 
 namespace TASVideos.Pages.Tags
 {
 	[RequirePermission(PermissionTo.TagMaintenance)]
 	public class IndexModel : BasePageModel
 	{
-		private readonly ApplicationDbContext _db;
+		private readonly ITagService _tagService;
 
-		public IndexModel(ApplicationDbContext db)
+		public IndexModel(ITagService tagService)
 		{
-			_db = db;
+			_tagService = tagService;
 		}
 
 		[TempData]
@@ -32,9 +29,9 @@ namespace TASVideos.Pages.Tags
 
 		public async Task OnGet()
 		{
-			Tags = await _db.Tags
+			Tags = (await _tagService.GetAll())
 				.OrderBy(t => t.Code)
-				.ToListAsync();
+				.ToList();
 		}
 	}
 }

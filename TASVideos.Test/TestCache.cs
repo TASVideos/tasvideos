@@ -25,5 +25,7 @@ namespace TASVideos.Test
 		public void Remove(string key) => _cache.Remove(key);
 
 		public int Count() => _cache.Count;
+
+		public bool ContainsKey(string key) => _cache.ContainsKey(key);
 	}
 }

@@ -21,17 +21,20 @@ namespace TASVideos.Pages.Publications
 		private readonly IMapper _mapper;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly ITagService _tagsService;
 
 		public EditModel(
 			ApplicationDbContext db,
 			IMapper mapper,
 			ExternalMediaPublisher publisher,
-			IWikiPages wikiPages)
+			IWikiPages wikiPages,
+			ITagService tagsService)
 		{
 			_db = db;
 			_mapper = mapper;
 			_wikiPages = wikiPages;
 			_publisher = publisher;
+			_tagsService = tagsService;
 		}
 
 		[FromRoute]
@@ -143,6 +146,7 @@ namespace TASVideos.Pages.Publications
 			var externalMessages = new List<string>();
 
 			var publication = await _db.Publications
+				.Include(p => p.PublicationTags)
 				.Include(p => p.WikiContent)
 				.Include(p => p.System)
 				.Include(p => p.SystemFrameRate)
@@ -184,6 +188,17 @@ namespace TASVideos.Pages.Publications
 					PublicationId = publication.Id,
 					FlagId = flag
 				});
+			}
+
+			var diff = await _tagsService.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags);
+			if (diff.Added.Any())
+			{
+				externalMessages.Add($"Added tags: {string.Join(", ", diff.Added.OrderBy(s => s))}");
+			}
+
+			if (diff.Removed.Any())
+			{
+				externalMessages.Add($"Removed tags: {string.Join(", ", diff.Removed.OrderBy(s => s))}");
 			}
 
 			publication.PublicationTags.Clear();

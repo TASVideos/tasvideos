@@ -57,7 +57,8 @@ namespace TASVideos.Test
 		{
 			if (_dbUpdateConflict)
 			{
-				throw new DbUpdateException("Mock update conflict scenario", new Exception());
+				// If we need to test other types of conflicts, we can have more flags, with different exception messages
+				throw new DbUpdateException("Mock update conflict scenario", new Exception("Cannot insert duplicate"));
 			}
 
 			if (_dbConcurrentUpdateConflict)
