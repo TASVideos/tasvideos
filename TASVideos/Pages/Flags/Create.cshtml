@@ -1,0 +1,47 @@
+﻿@page
+@model CreateModel
+@{
+	ViewData["Title"] = $"Creating a new Flag";
+}
+
+<form method="post">
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="Flag.Name"></label>
+				<input type="text" asp-for="Flag.Name" class="form-control" />
+				<span asp-validation-for="Flag.Name" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Flag.IconPath"></label>
+				<input type="text" asp-for="Flag.IconPath" class="form-control" />
+				<span asp-validation-for="Flag.IconPath" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Flag.LinkPath"></label>
+				<input type="text" asp-for="Flag.LinkPath" class="form-control" />
+				<span asp-validation-for="Flag.LinkPath" class="text-danger"></span>
+			</form-group>
+		</column>
+		<column lg="6" class="mt-lg-0 mt-3">
+			<form-group>
+				<label asp-for="Flag.Token"></label>
+				<input type="text" asp-for="Flag.Token" class="form-control" />
+				<span asp-validation-for="Flag.Token" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Flag.PermissionRestriction"></label>
+				<select asp-for="Flag.PermissionRestriction" asp-items="Model.AvailablePermissions" class="form-control"></select>
+				<span asp-validation-for="Flag.PermissionRestriction" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a asp-page="Index" class="btn btn-secondary">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

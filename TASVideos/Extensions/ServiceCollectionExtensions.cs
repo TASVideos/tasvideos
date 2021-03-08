@@ -102,6 +102,7 @@ namespace TASVideos.Extensions
 			services.AddScoped<IVcsRssParser, VcsRssParser>();
 			services.AddScoped<IIpBanService, IpBanService>();
 			services.AddScoped<ITagService, TagService>();
+			services.AddScoped<IFlagService, FlagService>();
 
 			if (env.IsDevelopment())
 			{

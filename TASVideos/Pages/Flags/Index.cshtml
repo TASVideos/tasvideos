@@ -1,0 +1,37 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Flag List";
+}
+
+<alert type="@Model.MessageType" condition="Model.ShowMessage" dismissible="true">
+	@Model.Message
+</alert>
+
+<a class="btn btn-primary pull-right mb-3" asp-page="Create">Create</a>
+
+<table class="table table-bordered table-striped table-sm">
+	<tr>
+		<th>Name</th>
+		<th>Icon Path</th>
+		<th>Link Path</th>
+		<th>Token</th>
+		<th>Permission Restriction</th>
+		<th></th>
+	</tr>
+	@foreach (var flag in Model.Flags)
+	{
+		<tr>
+			<td>@flag.Name</td>
+			<td>@flag.IconPath</td>
+			<td>@flag.LinkPath</td>
+			<td>@flag.Token</td>
+			<td>@flag.PermissionRestriction</td>
+			<td>
+				<a class="btn btn-primary" asp-page="Edit" asp-route-id="@flag.Id">
+					Edit
+				</a>
+			</td>
+		</tr>
+	}
+</table>

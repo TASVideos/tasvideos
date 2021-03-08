@@ -22,19 +22,22 @@ namespace TASVideos.Pages.Publications
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ITagService _tagsService;
+		private readonly IFlagService _flagsService;
 
 		public EditModel(
 			ApplicationDbContext db,
 			IMapper mapper,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
-			ITagService tagsService)
+			ITagService tagsService,
+			IFlagService flagsService)
 		{
 			_db = db;
 			_mapper = mapper;
 			_wikiPages = wikiPages;
 			_publisher = publisher;
 			_tagsService = tagsService;
+			_flagsService = flagsService;
 		}
 
 		[FromRoute]
@@ -147,6 +150,7 @@ namespace TASVideos.Pages.Publications
 
 			var publication = await _db.Publications
 				.Include(p => p.PublicationTags)
+				.Include(p => p.PublicationFlags)
 				.Include(p => p.WikiContent)
 				.Include(p => p.System)
 				.Include(p => p.SystemFrameRate)
@@ -177,6 +181,10 @@ namespace TASVideos.Pages.Publications
 
 			publication.GenerateTitle();
 
+			externalMessages.AddRange((await _flagsService
+				.GetDiff(publication.PublicationFlags.Select(p => p.FlagId), model.SelectedFlags))
+				.ToMessages("flags"));
+
 			publication.PublicationFlags.Clear();
 			_db.PublicationFlags.RemoveRange(
 				_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
@@ -190,16 +198,9 @@ namespace TASVideos.Pages.Publications
 				});
 			}
 
-			var diff = await _tagsService.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags);
-			if (diff.Added.Any())
-			{
-				externalMessages.Add($"Added tags: {string.Join(", ", diff.Added.OrderBy(s => s))}");
-			}
-
-			if (diff.Removed.Any())
-			{
-				externalMessages.Add($"Removed tags: {string.Join(", ", diff.Removed.OrderBy(s => s))}");
-			}
+			externalMessages.AddRange((await _tagsService
+				.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags))
+				.ToMessages("tags"));
 
 			publication.PublicationTags.Clear();
 			_db.PublicationTags.RemoveRange(
