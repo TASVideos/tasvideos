@@ -163,16 +163,16 @@ namespace TASVideos.Test.Services
 		public async Task Edit_Success_FlushesCaches()
 		{
 			const int id = 1;
-			const string newtoken = "Test";
+			const string newToken = "Test";
 			_db.Flags.Add(new Flag { Id = id });
 			await _db.SaveChangesAsync();
 
-			var result = await _flagService.Edit(id, new Flag { Token = newtoken });
+			var result = await _flagService.Edit(id, new Flag { Token = newToken });
 
 			Assert.AreEqual(FlagEditResult.Success, result);
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
-			Assert.AreEqual(newtoken, flag.Token);
+			Assert.AreEqual(newToken, flag.Token);
 			Assert.IsFalse(_cache.ContainsKey(FlagService.FlagsKey));
 		}
 

@@ -56,7 +56,7 @@ namespace TASVideos.Test.Services
 			_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = topic2Id, UserId = user1Id });
 			_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = 1, UserId = user2Id });
 			_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = 1 + 1, UserId = user2Id });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _topicWatcher.UserWatches(user1Id);
 
@@ -79,7 +79,7 @@ namespace TASVideos.Test.Services
 				UserId = 1,
 				IsNotified = false
 			});
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_mockEmailService
 				.Setup(m => m.TopicReplyNotification(It.IsAny<IEnumerable<string>>(), It.IsAny<TopicReplyNotificationTemplate>()));
 
@@ -104,7 +104,7 @@ namespace TASVideos.Test.Services
 				UserId = watcher,
 				IsNotified = false
 			});
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var recipients = new List<string> { posterEmail }.AsEnumerable();
 			var template = new TopicReplyNotificationTemplate(0, 0, "", "");
@@ -132,7 +132,7 @@ namespace TASVideos.Test.Services
 				UserId = watcher,
 				IsNotified = false
 			});
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var recipients = new List<string> { posterEmail }.AsEnumerable();
 			var template = new TopicReplyNotificationTemplate(0, 0, "", "");
@@ -157,7 +157,7 @@ namespace TASVideos.Test.Services
 				ForumTopicId = topicId,
 				IsNotified = true
 			});
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			await _topicWatcher.MarkSeen(topicId, userId);
 
@@ -172,7 +172,7 @@ namespace TASVideos.Test.Services
 			int topicId = 1;
 			_db.Users.Add(new User { Id = userId });
 			_db.ForumTopics.Add(new ForumTopic { Id = topicId });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			await _topicWatcher.WatchTopic(topicId, userId, true);
 
@@ -189,7 +189,7 @@ namespace TASVideos.Test.Services
 			_db.Users.Add(new User { Id = userId });
 			_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 			_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			await _topicWatcher.WatchTopic(topicId, userId, true);
 			Assert.AreEqual(1, _db.ForumTopicWatches.Count());
@@ -206,7 +206,7 @@ namespace TASVideos.Test.Services
 			var forum = new Forum { Id = 1, Restricted = true };
 			_db.Forums.Add(forum);
 			_db.ForumTopics.Add(new ForumTopic { Id = topicId, ForumId = forum.Id });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			await _topicWatcher.WatchTopic(topicId, userId, false);
 
@@ -221,7 +221,7 @@ namespace TASVideos.Test.Services
 			_db.Users.Add(new User { Id = userId });
 			_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 			_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			await _topicWatcher.UnwatchTopic(topicId, userId);
 

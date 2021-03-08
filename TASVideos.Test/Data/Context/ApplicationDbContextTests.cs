@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -19,11 +20,11 @@ namespace TASVideos.Test.Data.Context
 		#region CreateTimeStamp
 
 		[TestMethod]
-		public void CreateTimeStamp_SetToNow_IfNotProvided()
+		public async Task CreateTimeStamp_SetToNow_IfNotProvided()
 		{
 			_db.Flags.Add(new Flag());
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -31,13 +32,13 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void CreateTimeStamp_DoesNotOverride_IfProvided()
+		public async Task CreateTimeStamp_DoesNotOverride_IfProvided()
 		{
 			_db.Flags.Add(new Flag
 			{
 				CreateTimeStamp = DateTime.Parse("01/01/1970")
 			});
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 
@@ -46,17 +47,17 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void CreateTimeStamp_OnUpdate_DoesNotChange()
+		public async Task CreateTimeStamp_OnUpdate_DoesNotChange()
 		{
 			var flag = new Flag
 			{
 				CreateTimeStamp = DateTime.Parse("01/01/1970")
 			};
 			_db.Flags.Add(flag);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			flag.Name = "NewName";
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1970, flag.CreateTimeStamp.Year);
 		}
@@ -65,11 +66,11 @@ namespace TASVideos.Test.Data.Context
 
 		#region CreateUserName
 		[TestMethod]
-		public void CreateUserName_SetToSystemUser_IfNotProvidedAndUserIsNull()
+		public async Task CreateUserName_SetToSystemUser_IfNotProvidedAndUserIsNull()
 		{
 			_db.Flags.Add(new Flag { CreateUserName = null });
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -77,13 +78,13 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void CreateUserName_SetToCurrentUser_IfNotProvided()
+		public async Task CreateUserName_SetToCurrentUser_IfNotProvided()
 		{
 			var userName = "Batman";
 			_db.LogInUser(userName);
 			_db.Flags.Add(new Flag { CreateUserName = null });
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -91,7 +92,7 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void CreateUserName_DoesNotOverride_IfProvided()
+		public async Task CreateUserName_DoesNotOverride_IfProvided()
 		{
 			var user = "Batman";
 			_db.Flags.Add(new Flag
@@ -99,7 +100,7 @@ namespace TASVideos.Test.Data.Context
 				CreateUserName = user
 			});
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -111,11 +112,11 @@ namespace TASVideos.Test.Data.Context
 		#region LastUpdateTimeStamp
 
 		[TestMethod]
-		public void LastUpdateTimeStamp_OnCreate_SetToNow_IfNotProvided()
+		public async Task LastUpdateTimeStamp_OnCreate_SetToNow_IfNotProvided()
 		{
 			_db.Flags.Add(new Flag());
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -123,14 +124,14 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void LastUpdateTimeStamp_OnCreate_DoesNotOverride_IfProvided()
+		public async Task LastUpdateTimeStamp_OnCreate_DoesNotOverride_IfProvided()
 		{
 			_db.Flags.Add(new Flag
 			{
 				LastUpdateTimeStamp = DateTime.Parse("01/01/1970")
 			});
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -138,35 +139,35 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void LastUpdateTimeStamp_OnUpdate_SetToNow_IfNotProvided()
+		public async Task LastUpdateTimeStamp_OnUpdate_SetToNow_IfNotProvided()
 		{
 			_db.Flags.Add(new Flag
 			{
 				LastUpdateTimeStamp = DateTime.Parse("01/01/1970")
 			});
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			var flag = _db.Flags.Single();
 			flag.Name = "NewName";
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(DateTime.Now.Year, flag.LastUpdateTimeStamp.Year);
 		}
 
 		[TestMethod]
-		public void LastUpdateTimeStamp_OnUpdate_DoesNotOverride_IfProvided()
+		public async Task LastUpdateTimeStamp_OnUpdate_DoesNotOverride_IfProvided()
 		{
 			_db.Flags.Add(new Flag
 			{
 				LastUpdateTimeStamp = DateTime.Parse("01/01/1970")
 			});
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			var flag = _db.Flags.Single();
 			flag.LastUpdateTimeStamp = DateTime.Parse("01/01/1980");
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1980, flag.LastUpdateTimeStamp.Year);
 		}
@@ -176,11 +177,11 @@ namespace TASVideos.Test.Data.Context
 		#region LastUpdateUserName
 
 		[TestMethod]
-		public void LastUpdateUserName_OnCreate_SetToSystemUser_IfNotProvidedAndUserIsNull()
+		public async Task LastUpdateUserName_OnCreate_SetToSystemUser_IfNotProvidedAndUserIsNull()
 		{
 			_db.Flags.Add(new Flag { LastUpdateUserName = null });
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -188,13 +189,13 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void LastUpdateUserName_OnCreate_SetToCurrentUser_IfNotProvided()
+		public async Task LastUpdateUserName_OnCreate_SetToCurrentUser_IfNotProvided()
 		{
 			var userName = "Batman";
 			_db.Flags.Add(new Flag { LastUpdateUserName = null });
 			_db.LogInUser(userName);
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -202,7 +203,7 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void LastUpdateUserName_OnCreate_DoesNotOverride_IfProvided()
+		public async Task LastUpdateUserName_OnCreate_DoesNotOverride_IfProvided()
 		{
 			var user = "Batman";
 			_db.Flags.Add(new Flag
@@ -210,7 +211,7 @@ namespace TASVideos.Test.Data.Context
 				LastUpdateUserName = user
 			});
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
@@ -218,7 +219,7 @@ namespace TASVideos.Test.Data.Context
 		}
 
 		[TestMethod]
-		public void LastUpdateUserName_OnUpdate_DoesNotOverride_IfProvider()
+		public async Task LastUpdateUserName_OnUpdate_DoesNotOverride_IfProvider()
 		{
 			var originalUser = "Batman";
 			var newUser = "Joker";
@@ -228,14 +229,14 @@ namespace TASVideos.Test.Data.Context
 			};
 
 			_db.Flags.Add(flag);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			flag.LastUpdateUserName = newUser;
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 		}
 
 		[TestMethod]
-		public void LastUpdateUserName_OnUpdate_SetToCurrentUser_IfNotProvided()
+		public async Task LastUpdateUserName_OnUpdate_SetToCurrentUser_IfNotProvided()
 		{
 			var originalUser = "Batman";
 			var flag = new Flag
@@ -243,16 +244,16 @@ namespace TASVideos.Test.Data.Context
 				LastUpdateUserName = originalUser
 			};
 			_db.Flags.Add(flag);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			flag.Name = "NewName";
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, 1);
 		}
 
 		[TestMethod]
-		public void LastUpdateUserName_OnUpdate_SetToSystemUser_IfNotProvided()
+		public async Task LastUpdateUserName_OnUpdate_SetToSystemUser_IfNotProvided()
 		{
 			var originalUser = "Batman";
 			var flag = new Flag
@@ -260,10 +261,10 @@ namespace TASVideos.Test.Data.Context
 				LastUpdateUserName = originalUser
 			};
 			_db.Flags.Add(flag);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			flag.Name = "NewName";
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 		}
 
 		#endregion

@@ -126,7 +126,7 @@ namespace TASVideos.Test.Services
 			string existingPage = "Exists";
 			_db.WikiPages.Add(new WikiPage { PageName = existingPage, Markup = "", Revision = 1, ChildId = 2 });
 			_db.WikiPages.Add(new WikiPage { PageName = existingPage, Markup = "", Revision = 2, ChildId = null });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.Page(existingPage, 1);
 			Assert.IsNotNull(actual);
@@ -162,7 +162,7 @@ namespace TASVideos.Test.Services
 			var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null };
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision1);
 
 			var actual = await _wikiPages.Page(pageName);
@@ -182,7 +182,7 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
 			_db.WikiPages.Add(revision3);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision1);
 
 			var actual = await _wikiPages.Page(pageName);
@@ -199,7 +199,7 @@ namespace TASVideos.Test.Services
 			string page = "Duplicate";
 			_db.WikiPages.Add(new WikiPage { PageName = page, Revision = 1, IsDeleted = false, ChildId = null });
 			_db.WikiPages.Add(new WikiPage { PageName = page, Revision = 2, IsDeleted = false, ChildId = null });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.Page(page);
 			Assert.IsNotNull(actual);
@@ -253,7 +253,7 @@ namespace TASVideos.Test.Services
 			_db.WikiReferrals.Add(new WikiPageReferral { Excerpt = $"[{oldLink}]", Referral = oldLink, Referrer = existingPageName });
 			var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{oldLink}]" };
 			_db.WikiPages.Add(existingPage);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(existingPage);
 
 			await _wikiPages.Add(new WikiPage { PageName = existingPageName, Markup = $"[{newLink}]" });
@@ -291,7 +291,7 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = revision1Link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision1);
 
 			await _wikiPages.Add(new WikiPage { PageName = pageName, Markup = $"[{revision3Link}]" });
@@ -331,7 +331,7 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(revision2);
 			_db.WikiPages.Add(revision3);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = revision1Link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision1);
 
 			await _wikiPages.Add(new WikiPage { PageName = pageName, Markup = $"[{revision4Link}]" });
@@ -397,7 +397,7 @@ namespace TASVideos.Test.Services
 			var page2 = new WikiPage { Id = 2, PageName = existingPage };
 			_db.WikiPages.Add(page1);
 			_db.WikiPages.Add(page2);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.Revision(1);
 			Assert.IsNotNull(actual);
@@ -445,7 +445,7 @@ namespace TASVideos.Test.Services
 			var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{link}]" };
 			_db.WikiPages.Add(existingPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = existingPageName, Referral = link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(existingPage);
 
 			var actual = await _wikiPages.Move(existingPageName, newPageName);
@@ -470,7 +470,7 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(previousRevision);
 			_db.WikiPages.Add(existingPage);
 			_cache.PageCache.Add(existingPage);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.Move(existingPageName, newPageName);
 			Assert.IsTrue(actual);
@@ -490,7 +490,7 @@ namespace TASVideos.Test.Services
 
 			_db.WikiPages.Add(origPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = origPageName, Referral = origLink });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.Set(origPageName, origPage);
 
 			string destPageName = "Dest";
@@ -519,7 +519,7 @@ namespace TASVideos.Test.Services
 
 			_db.WikiPages.Add(origPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = origPageName, Referral = origLink });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.Set(origPageName, origPage);
 
 			string destPageName = "Dest";
@@ -548,7 +548,7 @@ namespace TASVideos.Test.Services
 			var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{link}]" };
 			_db.WikiPages.Add(existingPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = existingPageName, Referral = link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(existingPage);
 
 			var actual = await _wikiPages.Move(existingPageName, "/" + newPageName + "/");
@@ -572,7 +572,7 @@ namespace TASVideos.Test.Services
 			var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{link}]" };
 			_db.WikiPages.Add(existingPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = existingPageName, Referral = link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(existingPage);
 
 			var actual = await _wikiPages.Move("/" + existingPageName + "/", newPageName);
@@ -609,7 +609,7 @@ namespace TASVideos.Test.Services
 			var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]" };
 			_db.WikiPages.Add(existingPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(existingPage);
 
 			var actual = await _wikiPages.Delete(pageName);
@@ -632,10 +632,10 @@ namespace TASVideos.Test.Services
 
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			revision1.ChildId = revision2.Id;
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision2);
 
 			var actual = await _wikiPages.Delete(pageName);
@@ -656,7 +656,7 @@ namespace TASVideos.Test.Services
 			var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]" };
 			_db.WikiPages.Add(existingPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(existingPage);
 
 			_db.CreateConcurrentUpdateConflict();
@@ -677,7 +677,7 @@ namespace TASVideos.Test.Services
 			var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]" };
 			_db.WikiPages.Add(existingPage);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(existingPage);
 
 			var actual = await _wikiPages.Delete("/" + pageName + "/");
@@ -702,7 +702,7 @@ namespace TASVideos.Test.Services
 			var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision };
 			_db.WikiPages.Add(previousRevision);
 			_db.WikiPages.Add(currentRevision);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(currentRevision);
 
 			await _wikiPages.Delete(existingPageName, 1);
@@ -752,7 +752,7 @@ namespace TASVideos.Test.Services
 			var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision, Markup = $"[{oldLink}]" };
 			_db.WikiPages.Add(previousRevision);
 			_db.WikiPages.Add(currentRevision);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(currentRevision);
 
 			await _wikiPages.Delete(existingPageName, 2);
@@ -799,9 +799,9 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
 			_db.WikiPages.Add(revision3);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			revision1.ChildId = revision2.Id;
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision2);
 
 			await _wikiPages.Delete(pageName, 2);
@@ -853,9 +853,9 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
 			_db.WikiPages.Add(revision3);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			revision1.ChildId = revision3.Id;
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision3);
 
 			await _wikiPages.Delete(pageName, 3);
@@ -900,7 +900,7 @@ namespace TASVideos.Test.Services
 			var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision };
 			_db.WikiPages.Add(previousRevision);
 			_db.WikiPages.Add(currentRevision);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(currentRevision);
 
 			await _wikiPages.Delete("/" + existingPageName + "/", 1);
@@ -948,7 +948,7 @@ namespace TASVideos.Test.Services
 			string link = "AnotherPage";
 			var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true };
 			_db.WikiPages.Add(page);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Clear();
 
 			var actual = await _wikiPages.Undelete(pageName);
@@ -971,7 +971,7 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = oldLink });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision1);
 
 			var actual = await _wikiPages.Undelete(pageName);
@@ -1019,7 +1019,7 @@ namespace TASVideos.Test.Services
 			_db.WikiPages.Add(revision2);
 			_db.WikiPages.Add(revision3);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link1 });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision1);
 
 			var actual = await _wikiPages.Undelete(pageName);
@@ -1068,7 +1068,7 @@ namespace TASVideos.Test.Services
 			var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link2}]", IsDeleted = true };
 			_db.WikiPages.Add(revision1);
 			_db.WikiPages.Add(revision2);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Clear();
 
 			var actual = await _wikiPages.Undelete(pageName);
@@ -1109,7 +1109,7 @@ namespace TASVideos.Test.Services
 			string link = "AnotherPage";
 			var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true };
 			_db.WikiPages.Add(page);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Clear();
 			_db.CreateConcurrentUpdateConflict();
 
@@ -1128,7 +1128,7 @@ namespace TASVideos.Test.Services
 			string link = "AnotherPage";
 			var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true };
 			_db.WikiPages.Add(page);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 			_cache.PageCache.Clear();
 
 			var actual = await _wikiPages.Undelete("/" + pageName + "/");
@@ -1161,7 +1161,7 @@ namespace TASVideos.Test.Services
 			var systemPageName = "System/" + suffix;
 			var page = new WikiPage { PageName = systemPageName };
 			_db.WikiPages.Add(page);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.SystemPage(suffix);
 			Assert.IsNotNull(actual);
@@ -1175,7 +1175,7 @@ namespace TASVideos.Test.Services
 			var systemPageName = "System/" + suffix;
 			var page = new WikiPage { PageName = systemPageName };
 			_db.WikiPages.Add(page);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.SystemPage("Does not exist");
 			Assert.IsNull(actual);
@@ -1186,7 +1186,7 @@ namespace TASVideos.Test.Services
 		{
 			var page = new WikiPage { PageName = "System" };
 			_db.WikiPages.Add(page);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.SystemPage("");
 			Assert.IsNotNull(actual);
@@ -1224,7 +1224,7 @@ namespace TASVideos.Test.Services
 			AddPage(child);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = parent, Referral = child });
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = child, Referral = parent });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.Orphans();
 
@@ -1252,7 +1252,7 @@ namespace TASVideos.Test.Services
 			string orphan = "Orphan";
 			AddPage(orphan);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referrer = "Parent", Referral = "Not" + orphan });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.Orphans();
 
@@ -1309,7 +1309,7 @@ namespace TASVideos.Test.Services
 			string page = "Parent";
 			AddPage(page);
 			_db.WikiReferrals.Add(new WikiPageReferral { Referral = "Parent", Referrer = "AnotherPage" });
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.BrokenLinks();
 
@@ -1328,7 +1328,7 @@ namespace TASVideos.Test.Services
 				Referrer = page,
 				Referral = doesNotExist
 			});
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _wikiPages.BrokenLinks();
 

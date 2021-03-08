@@ -88,7 +88,7 @@ namespace TASVideos.Test.Services
 		public async Task ForGame_GameIdMatches()
 		{
 			_db.Add(Smb);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -99,7 +99,7 @@ namespace TASVideos.Test.Services
 		public async Task ForGame_NoPublications_BranchesEmpty()
 		{
 			_db.Add(Smb);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -116,7 +116,7 @@ namespace TASVideos.Test.Services
 			_db.Add(Smb2j);
 			_db.Add(Smb2jWarps);
 
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -133,7 +133,7 @@ namespace TASVideos.Test.Services
 		{
 			_db.Add(Smb);
 			_db.Add(SmbWarps);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -153,7 +153,7 @@ namespace TASVideos.Test.Services
 		{
 			_db.Add(Smb);
 			_db.Add(SmbWarps);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -173,7 +173,7 @@ namespace TASVideos.Test.Services
 			_db.Add(Smb);
 			_db.Add(SmbWarps);
 			_db.Add(SmbWarpless);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -192,7 +192,7 @@ namespace TASVideos.Test.Services
 			_db.Add(Smb);
 			_db.Add(SmbWarps);
 			_db.Add(SmbWarpsObsoleteBranch);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -209,7 +209,7 @@ namespace TASVideos.Test.Services
 			_db.Add(Smb);
 			_db.Add(SmbWarps);
 			_db.Add(SmbWarpsObsolete);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -235,7 +235,7 @@ namespace TASVideos.Test.Services
 			_db.Add(SmbWarps);
 			_db.Add(SmbWarpsObsolete);
 			_db.Add(SmbWarpsObsoleteBranch);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
@@ -261,7 +261,7 @@ namespace TASVideos.Test.Services
 			_db.Add(SmbWarps);
 			_db.Add(SmbWarpsObsolete);
 			_db.Add(SmbWarpsObsoleteObsolete);
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 
 			var actual = await _publicationHistory.ForGame(Smb.Id);
 			Assert.IsNotNull(actual);
