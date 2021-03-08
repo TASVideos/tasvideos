@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using TASVideos.Attributes;
 
 namespace TASVideos.Data.Entity
@@ -143,6 +146,10 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to add, edit, and remove the tags used for publications")]
 		TagMaintenance = 390,
 
+		[Group("Publication Maintenance")]
+		[Description("The ability to add, edit, and remove the flags used for publications")]
+		FlagMaintenance = 391,
+
 		#endregion
 
 		#region Forum Moderation 400
@@ -248,5 +255,13 @@ namespace TASVideos.Data.Entity
 		SeeDiagnostics = 9001
 
 		#endregion
+	}
+
+	public static class PermissionUtil
+	{
+		public static IEnumerable<PermissionTo> AllPermissions() => Enum
+			.GetValues(typeof(PermissionTo))
+			.Cast<PermissionTo>()
+			.ToList();
 	}
 }

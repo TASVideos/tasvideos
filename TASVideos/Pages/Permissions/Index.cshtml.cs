@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -17,9 +15,13 @@ namespace TASVideos.Pages.Permissions
 	{
 		private readonly ApplicationDbContext _db;
 
-		private static readonly List<PermissionDisplayModel> PermissionData = Enum
-			.GetValues(typeof(PermissionTo))
-			.Cast<PermissionTo>()
+		public IndexModel(ApplicationDbContext db)
+		{
+			_db = db;
+		}
+
+		public IEnumerable<PermissionDisplayModel> Permissions { get; } = PermissionUtil
+			.AllPermissions()
 			.Select(p => new PermissionDisplayModel
 			{
 				Id = p,
@@ -28,13 +30,6 @@ namespace TASVideos.Pages.Permissions
 				Description = p.Description()
 			})
 			.ToList();
-
-		public IndexModel(ApplicationDbContext db)
-		{
-			_db = db;
-		}
-
-		public IEnumerable<PermissionDisplayModel> Permissions => PermissionData;
 
 		public async Task OnGet()
 		{
@@ -48,7 +43,7 @@ namespace TASVideos.Pages.Permissions
 				})
 				.ToListAsync();
 
-			foreach (var permission in PermissionData)
+			foreach (var permission in Permissions)
 			{
 				permission.Roles = allRoles
 					.Where(r => r.RolePermissionId.Any(p => p == permission.Id))

@@ -93,7 +93,7 @@ namespace TASVideos.Test.Services
 			const int tagId = 1;
 			const int publicationId = 1;
 			_db.Tags.Add(new Tag { Id = tagId });
-			_db.Publications.Add(new Publication{ Id = publicationId });
+			_db.Publications.Add(new Publication { Id = publicationId });
 			_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = tagId });
 			await _db.SaveChangesAsync();
 
@@ -239,7 +239,7 @@ namespace TASVideos.Test.Services
 			var tag = new Tag { Id = tagId };
 			_db.Tags.Add(tag);
 			_cache.Set(TagService.TagsKey, new object());
-			_db.Publications.Add(new Publication{ Id = publicationId });
+			_db.Publications.Add(new Publication { Id = publicationId });
 			_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = tagId });
 			await _db.SaveChangesAsync();
 
