@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="EFCore.NamingConventions" Version="5.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
 		  <PrivateAssets>all</PrivateAssets>
