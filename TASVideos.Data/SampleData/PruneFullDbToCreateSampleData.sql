@@ -12,6 +12,8 @@
 use [TASVideos]
 
 DELETE FROM MediaPosts
+DELETE FROM GameRamAddressDomains
+DELETE FROM GameRamAddresses
 
 -- Trim user files
 DELETE FROM UserFileComments
@@ -41,15 +43,14 @@ INSERT INTO @WikiPagesToDelete
 
 DELETE FROM WikiPages WHERE ID IN (SELECT Id FROM @WikiPagesToDelete)
 
-
 UPDATE WikiPages SET Markup = '[TODO]: Wiped as sample data' WHERE len(Markup) > 1500 AND PageName <> 'Movies'
 
 DELETE FROM WikiReferrals --TODO: maybe only delete referrals for deleted wiki pages and preserve existing
 
 --Clear User data
 DELETE FROM ForumTopicWatches
-UPDATE [USER] SET Signature = NULL
-UPDATE [USER] SET LegacyPassword = NULL --We don't want this data public
+UPDATE Users SET Signature = NULL
+UPDATE Users SET LegacyPassword = NULL --We don't want this data public
 DELETE FROM PrivateMessages
 
  --Trim Publications and Submissions
@@ -233,7 +234,7 @@ WHERE it.Id IS NULL
 DECLARE @ActiveUsers As Table (Id int primary key)
 INSERT INTO @ActiveUsers
 	SELECT u.Id
-	FROM [User] u
+	FROM Users u
 	WHERE EXISTS (SELECT 1 FROM UserAwards ua WHERE ua.UserId = u.Id)
 	OR EXISTS (SELECT 1 FROM UserFiles uf where uf.AuthorId = u.Id)
 	OR EXISTS (SELECT 1 FROM Submissions s WHERE s.PublisherId = u.Id)
@@ -251,11 +252,11 @@ DELETE ur
 	WHERE iu.Id IS NULL
 
 DELETE u
-	FROM [User] u
+	FROM Users u
 	LEFT JOIN @ActiveUsers au on u.Id = au.Id
 	WHERE au.Id IS NULL
 
-UPDATE [User] 
+UPDATE Users 
 	SET Signature = NULL,
 		LegacyPassword = NULL, -- We don't want to make these public
 		Email = null -- We dont' want to make these public either
