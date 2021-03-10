@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FastMember;
 using Npgsql;
+using TASVideos.Extensions;
 
 namespace TASVideos.Legacy
 {
@@ -45,12 +46,15 @@ namespace TASVideos.Legacy
 			string[] columnsToCopy,
 			string tableName)
 		{
+			tableName = tableName.ToSnakeCase();
+			var snakeCaseColumns = columnsToCopy.Select(c => c.ToSnakeCase()).ToArray();
+
 			using var connection = new NpgsqlConnection(ConnectionString);
 			connection.Open();
 
 			DisableConstraints(tableName, connection);
 
-			var copyCommand = $"COPY public.\"{tableName}\" ({string.Join(", ", columnsToCopy.Select(c => $"\"{c}\""))}) FROM STDIN (FORMAT BINARY)";
+			var copyCommand = $"COPY public.\"{tableName}\" ({string.Join(", ", snakeCaseColumns.Select(c => $"\"{c}\""))}) FROM STDIN (FORMAT BINARY)";
 			using (var writer = connection.BeginBinaryImport(copyCommand))
 			{
 				var writeMethod = writer
@@ -98,7 +102,7 @@ namespace TASVideos.Legacy
 
 			// Ideally we would determine if the Id column is actually an identity column
 			// However, only user files has this situation, so shenanigans are good enough
-			if (columnsToCopy.Contains("Id") && tableName != "UserFiles")
+			if (columnsToCopy.Contains("Id") && tableName != "UserFiles".ToSnakeCase())
 			{
 				SetIdSeed(tableName, connection);
 			}
@@ -123,12 +127,12 @@ namespace TASVideos.Legacy
 		{
 			int identitySeed;
 
-			using (var cmd = new NpgsqlCommand($"select \"Id\" from public.\"{tableName}\" order by \"Id\" desc limit 1", connection))
+			using (var cmd = new NpgsqlCommand($"select \"id\" from public.\"{tableName}\" order by \"id\" desc limit 1", connection))
 			{
 				identitySeed = (int?)cmd.ExecuteScalar() ?? 0;
 			}
 
-			using var cmd2 = new NpgsqlCommand($"ALTER TABLE public.\"{tableName}\" ALTER COLUMN \"Id\" RESTART WITH {identitySeed + 1}", connection);
+			using var cmd2 = new NpgsqlCommand($"ALTER TABLE public.\"{tableName}\" ALTER COLUMN \"id\" RESTART WITH {identitySeed + 1}", connection);
 			cmd2.ExecuteScalar();
 		}
 #pragma warning restore CA2100 // Review SQL queries for security vulnerabilities

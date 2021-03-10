@@ -169,5 +169,12 @@ namespace TASVideos.Extensions
 
 			return s[startIndex..endIndex];
 		}
+
+		public static string ToSnakeCase(this string str)
+		{
+			return string
+				.Concat(str.Select((s, i) => i > 0 && char.IsUpper(s) ? "_" + s : s.ToString()))
+				.ToLower();
+		}
 	}
 }

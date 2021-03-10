@@ -20,7 +20,8 @@ namespace TASVideos.Data
 					options =>
 						options.UseNpgsql(
 							configuration.GetConnectionString("PostgresConnection"),
-							b => b.MigrationsAssembly("TASVideos.Data")));
+							b => b.MigrationsAssembly("TASVideos.Data"))
+							.UseSnakeCaseNamingConvention());
 			}
 			else
 			{
