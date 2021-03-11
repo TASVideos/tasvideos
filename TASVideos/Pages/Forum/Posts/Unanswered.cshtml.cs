@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Forum.Posts
 					TopicName = t.Title,
 					AuthorId = t.PosterId,
 					AuthorName = t.Poster!.UserName,
-					PostDate = t.CreateTimeStamp
+					PostDate = t.CreateTimestamp
 				})
 				.OrderByDescending(t => t.PostDate)
 				.PageOf(Search);

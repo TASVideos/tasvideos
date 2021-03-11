@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public class Post
 		{
 			public int Id { get; set; }
-			public DateTime PostCreateTimeStamp { get; set; }
+			public DateTime PostCreateTimestamp { get; set; }
 			public bool EnableHtml { get; set; }
 			public bool EnableBbCode { get; set; }
 			public string? Subject { get; set; }

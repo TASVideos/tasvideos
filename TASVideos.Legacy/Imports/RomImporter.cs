@@ -20,8 +20,8 @@ namespace TASVideos.Legacy.Imports
 					Name = r.Description,
 					Type = RomTypes.Good,
 					GameId = r.GameId,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow
 				})
 				.ToList();
 
@@ -35,8 +35,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameRom.Name),
 				nameof(GameRom.Type),
 				nameof(GameRom.GameId),
-				nameof(GameRom.CreateTimeStamp),
-				nameof(GameRom.LastUpdateTimeStamp)
+				nameof(GameRom.CreateTimestamp),
+				nameof(GameRom.LastUpdateTimestamp)
 			};
 
 			roms.BulkInsert(columns, nameof(ApplicationDbContext.GameRoms));
@@ -54,8 +54,8 @@ namespace TASVideos.Legacy.Imports
 			Type = RomTypes.Unknown,
 			CreateUserName = "adelikat",
 			LastUpdateUserName = "adelikat",
-			CreateTimeStamp = DateTime.UtcNow,
-			LastUpdateTimeStamp = DateTime.UtcNow,
+			CreateTimestamp = DateTime.UtcNow,
+			LastUpdateTimestamp = DateTime.UtcNow,
 			GameId = -1 // Placeholder game
 		};
 	}

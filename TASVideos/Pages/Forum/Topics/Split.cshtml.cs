@@ -55,7 +55,7 @@ namespace TASVideos.Pages.Forum.Topics
 						.Select(p => new SplitTopicModel.Post
 						{
 							Id = p.Id,
-							PostCreateTimeStamp = p.CreateTimeStamp,
+							PostCreateTimestamp = p.CreateTimestamp,
 							EnableBbCode = p.EnableBbCode,
 							EnableHtml = p.EnableHtml,
 							Subject = p.Subject,
@@ -127,7 +127,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var splitPosts = topic.ForumPosts
 				.Where(p => p.Id == splitOnPost.Id
-					|| p.CreateTimeStamp > splitOnPost.CreateTimeStamp);
+					|| p.CreateTimestamp > splitOnPost.CreateTimestamp);
 
 			foreach (var post in splitPosts)
 			{

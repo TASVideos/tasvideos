@@ -36,7 +36,7 @@ namespace TASVideos.Pages.Users
 		{
 			if (string.IsNullOrWhiteSpace(Search.Sort))
 			{
-				Search.Sort = $"-{nameof(UserListModel.CreateTimeStamp)}";
+				Search.Sort = $"-{nameof(UserListModel.CreateTimestamp)}";
 			}
 
 			Users = await _db.Users
@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Users
 				{
 					Id = u.Id,
 					UserName = u.UserName,
-					CreateTimeStamp = u.CreateTimeStamp,
+					CreateTimestamp = u.CreateTimestamp,
 					Roles = u.UserRoles
 						.Select(ur => ur.Role!.Name)
 						.ToList()

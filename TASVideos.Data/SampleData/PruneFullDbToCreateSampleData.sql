@@ -175,7 +175,7 @@ INSERT INTO @Topics
 		TOP 4 *
 		FROM ForumTopics t
 		WHERE t.ForumId = f.Id
-		ORDER BY t.CreateTimeStamp DESC
+		ORDER BY t.CreateTimestamp DESC
 	) topic
 
 
@@ -188,7 +188,7 @@ INSERT INTO @Posts
 		TOP 4 *
 		FROM ForumPosts p
 		WHERE t.Id = p.TopicId
-		ORDER BY p.CreateTimeStamp -- First posts instead of last because we need the post that started the topic
+		ORDER BY p.CreateTimestamp -- First posts instead of last because we need the post that started the topic
 	) post
 
 DECLARE @Polls as TABLE (Id int primary key)

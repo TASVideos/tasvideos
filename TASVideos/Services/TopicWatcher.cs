@@ -62,7 +62,7 @@ namespace TASVideos.Services
 			return await _db.ForumTopicWatches
 				.ForUser(userId)
 				.Select(tw => new WatchedTopic(
-					tw.ForumTopic!.CreateTimeStamp,
+					tw.ForumTopic!.CreateTimestamp,
 					tw.IsNotified,
 					tw.ForumTopic.ForumId,
 					tw.ForumTopic!.Forum!.Name,
@@ -171,7 +171,7 @@ namespace TASVideos.Services
 	/// Represents a watched forum topic
 	/// </summary>
 	public record WatchedTopic(
-		DateTime TopicCreateTimeStamp,
+		DateTime TopicCreateTimestamp,
 		bool IsNotified,
 		int ForumId,
 		string ForumTitle,

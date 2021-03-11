@@ -52,9 +52,9 @@ namespace TASVideos.Legacy.Imports
 					MinorEdit = legacyPage.Site.MinorEdit == "Y",
 					RevisionMessage = legacyPage.Site.WhyEdit.Cap(1000),
 					IsDeleted = legacyPage.Site.PageName.StartsWith("DeletedPages/"),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimestamp),
 					CreateUserName = legacyPage.Site.User?.Name,
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
+					LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimestamp),
 					LastUpdateUserName = legacyPage.Site.User?.Name
 				});
 			}
@@ -78,10 +78,10 @@ namespace TASVideos.Legacy.Imports
 			{
 				nameof(WikiPage.Id),
 				nameof(WikiPage.ChildId),
-				nameof(WikiPage.CreateTimeStamp),
+				nameof(WikiPage.CreateTimestamp),
 				nameof(WikiPage.CreateUserName),
 				nameof(WikiPage.IsDeleted),
-				nameof(WikiPage.LastUpdateTimeStamp),
+				nameof(WikiPage.LastUpdateTimestamp),
 				nameof(WikiPage.LastUpdateUserName),
 				nameof(WikiPage.Markup),
 				nameof(WikiPage.MinorEdit),

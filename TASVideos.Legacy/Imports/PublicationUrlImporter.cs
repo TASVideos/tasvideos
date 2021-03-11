@@ -21,8 +21,8 @@ namespace TASVideos.Legacy.Imports
 					PublicationId = f.Movie!.Id,
 					Url = f.FileName,
 					Type = f.Type == mirrorType ? PublicationUrlType.Mirror : PublicationUrlType.Streaming,
-					CreateTimeStamp = DateTime.Now,
-					LastUpdateTimeStamp = DateTime.Now
+					CreateTimestamp = DateTime.Now,
+					LastUpdateTimestamp = DateTime.Now
 				})
 				.ToList();
 
@@ -31,8 +31,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationUrl.PublicationId),
 				nameof(PublicationUrl.Url),
 				nameof(PublicationUrl.Type),
-				nameof(PublicationUrl.CreateTimeStamp),
-				nameof(PublicationUrl.LastUpdateTimeStamp)
+				nameof(PublicationUrl.CreateTimestamp),
+				nameof(PublicationUrl.LastUpdateTimestamp)
 			};
 
 			urls.BulkInsert(columns, nameof(ApplicationDbContext.PublicationUrls));

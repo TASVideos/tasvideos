@@ -4,6 +4,6 @@ namespace TASVideos.Services
 {
 	public record WikiOrphan(
 		string PageName,
-		DateTime LastUpdateTimeStamp,
+		DateTime LastUpdateTimestamp,
 		string? LastUpdateUserName);
 }

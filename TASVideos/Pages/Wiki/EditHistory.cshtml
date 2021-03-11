@@ -10,7 +10,7 @@
 	<tbody>
 		<tr>
 			<th>@Html.DisplayNameFor(m => m.History.Edits.First().PageName)</th>
-			<th>@Html.DisplayNameFor(m => m.History.Edits.First().CreateTimeStamp)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Edits.First().CreateTimestamp)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Edits.First().MinorEdit)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Edits.First().RevisionMessage)</th>
 			<th>Actions</th>
@@ -19,7 +19,7 @@
 		{
 			<tr>
 				<td><a href="/@(revision.PageName)?revision=@revision.Revision">@revision.PageName r@(revision.Revision)</a></td>
-				<td>@revision.CreateTimeStamp</td>
+				<td>@revision.CreateTimestamp</td>
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
 				<td>

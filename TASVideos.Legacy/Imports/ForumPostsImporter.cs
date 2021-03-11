@@ -82,8 +82,8 @@ namespace TASVideos.Legacy.Imports
 						Text = fixedText,
 						EnableBbCode = enableBbCode,
 						EnableHtml = enableHtml,
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
-						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
+						CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
+						LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
 							?? p.Timestamp),
 						CreateUserName = !string.IsNullOrWhiteSpace(p.PosterName) ? p.PosterName : "Unknown",
 						LastUpdateUserName = !string.IsNullOrWhiteSpace(p.LastUpdateUserName)
@@ -103,9 +103,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.IpAddress),
 				nameof(ForumPost.Subject),
 				nameof(ForumPost.Text),
-				nameof(ForumPost.CreateTimeStamp),
+				nameof(ForumPost.CreateTimestamp),
 				nameof(ForumPost.CreateUserName),
-				nameof(ForumPost.LastUpdateTimeStamp),
+				nameof(ForumPost.LastUpdateTimestamp),
 				nameof(ForumPost.LastUpdateUserName),
 				nameof(ForumPost.EnableHtml),
 				nameof(ForumPost.EnableBbCode),

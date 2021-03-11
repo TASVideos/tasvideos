@@ -55,7 +55,7 @@ namespace TASVideos.ViewComponents
 				.Select(p => new TabularMovieListResultModel
 				{
 					Id = p.Id,
-					CreateTimeStamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					Frames = p.Frames,
 					FrameRate = p.SystemFrameRate!.FrameRate,
 					Game = p.Game!.DisplayName,

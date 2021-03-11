@@ -37,7 +37,7 @@ namespace TASVideos.Pages.Messages
 				{
 					Id = pm.Id,
 					Subject = pm.Subject,
-					SendDate = pm.CreateTimeStamp,
+					SendDate = pm.CreateTimestamp,
 					FromUser = pm.FromUser!.UserName,
 					IsRead = pm.ReadOn.HasValue
 				})

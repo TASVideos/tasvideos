@@ -32,9 +32,9 @@ namespace TASVideos.Data.Migrations
 					LinkPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
 					Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
 					PermissionRestriction = table.Column<int>(type: "int", nullable: true),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -51,9 +51,9 @@ namespace TASVideos.Data.Migrations
 					Title = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
 					Ordinal = table.Column<int>(type: "int", nullable: false),
 					Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -70,9 +70,9 @@ namespace TASVideos.Data.Migrations
 					TopicId = table.Column<int>(type: "int", nullable: false),
 					Question = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
 					CloseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -101,9 +101,9 @@ namespace TASVideos.Data.Migrations
 					Id = table.Column<int>(type: "int", nullable: false),
 					Code = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
 					DisplayName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -135,9 +135,9 @@ namespace TASVideos.Data.Migrations
 					Group = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
 					Type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
 					User = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -170,9 +170,9 @@ namespace TASVideos.Data.Migrations
 					Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
 					AutoAssignPostCount = table.Column<int>(type: "int", nullable: true),
 					AutoAssignPublications = table.Column<bool>(type: "bit", nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
 					Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
 					NormalizedName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -232,9 +232,9 @@ namespace TASVideos.Data.Migrations
 						.Annotation("SqlServer:Identity", "1, 1"),
 					LastLoggedInTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
 					TimeZoneId = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
 					Avatar = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
 					From = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -285,9 +285,9 @@ namespace TASVideos.Data.Migrations
 					Id = table.Column<int>(type: "int", nullable: false)
 						.Annotation("SqlServer:Identity", "1, 1"),
 					RegexPattern = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -336,9 +336,9 @@ namespace TASVideos.Data.Migrations
 					RevisionMessage = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
 					ChildId = table.Column<int>(type: "int", nullable: true),
 					IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -379,9 +379,9 @@ namespace TASVideos.Data.Migrations
 					Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
 					Ordinal = table.Column<int>(type: "int", nullable: false),
 					Restricted = table.Column<bool>(type: "bit", nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -404,9 +404,9 @@ namespace TASVideos.Data.Migrations
 					Text = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
 					Ordinal = table.Column<int>(type: "int", nullable: false),
 					PollId = table.Column<int>(type: "int", nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -454,9 +454,9 @@ namespace TASVideos.Data.Migrations
 					YoutubeTags = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
 					ScreenshotUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
 					GameResourcesPage = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -481,9 +481,9 @@ namespace TASVideos.Data.Migrations
 					RegionCode = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
 					Preliminary = table.Column<bool>(type: "bit", nullable: false),
 					Obsolete = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -554,9 +554,9 @@ namespace TASVideos.Data.Migrations
 					SavedForToUser = table.Column<bool>(type: "bit", nullable: false),
 					DeletedForFromUser = table.Column<bool>(type: "bit", nullable: false),
 					DeletedForToUser = table.Column<bool>(type: "bit", nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -641,9 +641,9 @@ namespace TASVideos.Data.Migrations
 					IsLocked = table.Column<bool>(type: "bit", nullable: false),
 					PollId = table.Column<int>(type: "int", nullable: true),
 					PageName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -797,9 +797,9 @@ namespace TASVideos.Data.Migrations
 					Type = table.Column<int>(type: "int", nullable: false),
 					Region = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
 					Version = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -876,9 +876,9 @@ namespace TASVideos.Data.Migrations
 					EnableHtml = table.Column<bool>(type: "bit", nullable: false),
 					EnableBbCode = table.Column<bool>(type: "bit", nullable: false),
 					PosterMood = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -956,9 +956,9 @@ namespace TASVideos.Data.Migrations
 					LegacyTime = table.Column<decimal>(type: "decimal(16,4)", nullable: false, defaultValue: 0m),
 					ImportedTime = table.Column<decimal>(type: "decimal(16,4)", nullable: false, defaultValue: 0m),
 					LegacyAlerts = table.Column<string>(type: "nvarchar(max)", maxLength: 4096, nullable: true),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -1085,9 +1085,9 @@ namespace TASVideos.Data.Migrations
 					RerecordCount = table.Column<int>(type: "int", nullable: false),
 					AdditionalAuthors = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
 					Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -1175,9 +1175,9 @@ namespace TASVideos.Data.Migrations
 						.Annotation("SqlServer:Identity", "1, 1"),
 					SubmissionId = table.Column<int>(type: "int", nullable: false),
 					Status = table.Column<int>(type: "int", nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -1253,9 +1253,9 @@ namespace TASVideos.Data.Migrations
 					Type = table.Column<int>(type: "int", nullable: false),
 					Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
 					FileData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
@@ -1352,9 +1352,9 @@ namespace TASVideos.Data.Migrations
 					PublicationId = table.Column<int>(type: "int", nullable: false),
 					Url = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
 					Type = table.Column<int>(type: "int", nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>

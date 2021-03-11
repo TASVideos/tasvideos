@@ -67,7 +67,7 @@ namespace TASVideos.Services
 		public async Task<IEnumerable<IpBanEntry>> GetAll()
 		{
 			return await _db.IpBans
-				.Select(b => new IpBanEntry(b.Mask, b.CreateUserName, b.CreateTimeStamp))
+				.Select(b => new IpBanEntry(b.Mask, b.CreateUserName, b.CreateTimestamp))
 				.ToListAsync();
 		}
 

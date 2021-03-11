@@ -71,7 +71,7 @@ namespace TASVideos.Pages.Forum.Topics
 					ForumId = t.ForumId,
 					ForumName = t.Forum!.Name,
 					IsLocked = t.IsLocked,
-					LastPostId = t.ForumPosts.OrderByDescending(p => p.CreateTimeStamp).First().Id,
+					LastPostId = t.ForumPosts.OrderByDescending(p => p.CreateTimestamp).First().Id,
 					PageName = t.PageName,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll!.Question }
@@ -98,7 +98,7 @@ namespace TASVideos.Pages.Forum.Topics
 					EnableHtml = p.EnableHtml,
 					EnableBbCode = p.EnableBbCode,
 					PosterId = p.PosterId,
-					CreateTimestamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					PosterName = p.Poster!.UserName,
 					PosterAvatar = p.Poster.Avatar,
 					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
@@ -107,7 +107,7 @@ namespace TASVideos.Pages.Forum.Topics
 						.Where(ur => !ur.Role!.IsDefault)
 						.Select(ur => ur.Role!.Name)
 						.ToList(),
-					PosterJoined = p.Poster.CreateTimeStamp,
+					PosterJoined = p.Poster.CreateTimestamp,
 					PosterPostCount = p.Poster.Posts.Count,
 					PosterMood = p.PosterMood,
 					Text = p.Text,

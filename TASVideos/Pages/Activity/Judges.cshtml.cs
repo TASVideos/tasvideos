@@ -35,7 +35,7 @@ namespace TASVideos.Pages.Activity
 				.Select(s => new SubmissionEntryModel
 				{
 					Id = s.Id,
-					CreateTimeStamp = s.CreateTimeStamp,
+					CreateTimestamp = s.CreateTimestamp,
 					Title = s.Title,
 					Status = s.Status
 				})

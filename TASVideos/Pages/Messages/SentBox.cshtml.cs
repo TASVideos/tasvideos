@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Messages
 					Id = pm.Id,
 					Subject = pm.Subject,
 					ToUser = pm.ToUser!.UserName,
-					SendDate = pm.CreateTimeStamp,
+					SendDate = pm.CreateTimestamp,
 					HasBeenRead = pm.ReadOn.HasValue
 				})
 				.ToListAsync();

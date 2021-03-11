@@ -39,9 +39,9 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					PosterId = t.PosterId > 0 // There's one record that is 0 we want to change to -1
 						? t.PosterId.Value
 						: -1,
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
 					CreateUserName = t.Author,
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
+					LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
 					LastUpdateUserName = "LegacyImport",
 					Views = t.Views,
 					Type = (ForumTopicType)t.Type,
@@ -57,8 +57,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.ForumId),
 				nameof(ForumTopic.Title),
 				nameof(ForumTopic.PosterId),
-				nameof(ForumTopic.CreateTimeStamp),
-				nameof(ForumTopic.LastUpdateTimeStamp),
+				nameof(ForumTopic.CreateTimestamp),
+				nameof(ForumTopic.LastUpdateTimestamp),
 				nameof(ForumTopic.CreateUserName),
 				nameof(ForumTopic.LastUpdateUserName),
 				nameof(ForumTopic.Views),

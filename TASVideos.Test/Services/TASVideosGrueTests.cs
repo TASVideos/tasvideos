@@ -57,7 +57,7 @@ namespace TASVideos.Test.Services
 		{
 			_db.ForumTopics.Add(new ForumTopic
 			{
-				CreateTimeStamp = DateTime.Now.AddYears(-1),
+				CreateTimestamp = DateTime.Now.AddYears(-1),
 				Title = "Title",
 				PageName = LinkConstants.SubmissionWikiPage + SubmissionId
 			});

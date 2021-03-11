@@ -20,8 +20,8 @@ namespace TASVideos.Legacy.Imports
 					Description = ImportHelper.ConvertLatin1String(f.Description),
 					Ordinal = f.Order,
 					ShortName = f.ShortName,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					CreateUserName = "LegacyImport",
 					LastUpdateUserName = "LegacyImport",
 					Restricted = f.AuthView == 2
@@ -36,8 +36,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Forum.ShortName),
 				nameof(Forum.Ordinal),
 				nameof(Forum.Description),
-				nameof(Forum.CreateTimeStamp),
-				nameof(Forum.LastUpdateTimeStamp),
+				nameof(Forum.CreateTimestamp),
+				nameof(Forum.LastUpdateTimestamp),
 				nameof(Forum.CreateUserName),
 				nameof(Forum.LastUpdateUserName),
 				nameof(Forum.Restricted)

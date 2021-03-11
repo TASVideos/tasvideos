@@ -407,9 +407,9 @@ namespace TASVideos.Data
 				if (entry.Entity is ITrackable trackable)
 				{
 					// Don't set if already set
-					if (trackable.CreateTimeStamp.Year == 1)
+					if (trackable.CreateTimestamp.Year == 1)
 					{
-						trackable.CreateTimeStamp = DateTime.UtcNow;
+						trackable.CreateTimestamp = DateTime.UtcNow;
 					}
 
 					if (string.IsNullOrWhiteSpace(trackable.CreateUserName))
@@ -417,9 +417,9 @@ namespace TASVideos.Data
 						trackable.CreateUserName = GetUser();
 					}
 
-					if (trackable.LastUpdateTimeStamp.Year == 1)
+					if (trackable.LastUpdateTimestamp.Year == 1)
 					{
-						trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+						trackable.LastUpdateTimestamp = DateTime.UtcNow;
 					}
 
 					if (string.IsNullOrWhiteSpace(trackable.LastUpdateUserName))
@@ -434,9 +434,9 @@ namespace TASVideos.Data
 			{
 				if (entry.Entity is ITrackable trackable)
 				{
-					if (!IsModified(entry, nameof(ITrackable.LastUpdateTimeStamp)))
+					if (!IsModified(entry, nameof(ITrackable.LastUpdateTimestamp)))
 					{
-						trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+						trackable.LastUpdateTimestamp = DateTime.UtcNow;
 					}
 
 					if (!IsModified(entry, nameof(ITrackable.LastUpdateUserName)))

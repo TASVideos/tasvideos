@@ -50,7 +50,7 @@ namespace TASVideos.Services
 					CreateUserName = SiteGlobalConstants.TASVideosGrue,
 					LastUpdateUserName = SiteGlobalConstants.TASVideosGrue,
 					PosterId = SiteGlobalConstants.TASVideosGrueId,
-					Text = RejectionMessage(topic.CreateTimeStamp),
+					Text = RejectionMessage(topic.CreateTimestamp),
 					PosterMood = ForumPostMood.Normal
 				});
 				await _db.SaveChangesAsync();

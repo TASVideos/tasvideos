@@ -13,7 +13,7 @@ namespace TASVideos.ViewComponents
 	public class TabularMovieListResultModel : ITimeable
 	{
 		public int Id { get; set; }
-		public DateTime CreateTimeStamp { get; set; }
+		public DateTime CreateTimestamp { get; set; }
 
 		public TimeSpan? PreviousTime { get; set; }
 		public int? PreviousId { get; set; }

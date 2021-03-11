@@ -151,7 +151,7 @@ namespace TASVideos.Data.Entity
 
 			if (criteria.Years.Any())
 			{
-				query = query.Where(p => criteria.Years.Contains(p.CreateTimeStamp.Year));
+				query = query.Where(p => criteria.Years.Contains(p.CreateTimestamp.Year));
 			}
 
 			if (criteria.StatusFilter.Any())

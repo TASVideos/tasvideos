@@ -14,9 +14,9 @@ namespace TASVideos.Data.Migrations
 					Id = table.Column<int>(type: "int", nullable: false)
 						.Annotation("SqlServer:Identity", "1, 1"),
 					Mask = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-					CreateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					CreateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					CreateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-					LastUpdateTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+					LastUpdateTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
 					LastUpdateUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>

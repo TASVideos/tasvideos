@@ -20,8 +20,8 @@ namespace TASVideos.Legacy.Imports
 					Abbreviation = ImportHelper.ConvertLatin1String(g.Abbreviation).NullIfWhiteSpace(),
 					SearchKey = ImportHelper.ConvertLatin1String(g.SearchKey).NullIfWhiteSpace(),
 					YoutubeTags = g.YoutubeTags,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					GameResourcesPage = ImportHelper.ConvertLatin1String(g.ResourceName).NullIfWhiteSpace()
 				})
 				.ToList();
@@ -37,8 +37,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Game.Abbreviation),
 				nameof(Game.SearchKey),
 				nameof(Game.YoutubeTags),
-				nameof(Game.CreateTimeStamp),
-				nameof(Game.LastUpdateTimeStamp),
+				nameof(Game.CreateTimestamp),
+				nameof(Game.LastUpdateTimestamp),
 				nameof(Game.GameResourcesPage)
 			};
 
@@ -61,8 +61,8 @@ namespace TASVideos.Legacy.Imports
 			YoutubeTags = "Unknown",
 			CreateUserName = "adelikat",
 			LastUpdateUserName = "adelikat",
-			CreateTimeStamp = DateTime.UtcNow,
-			LastUpdateTimeStamp = DateTime.UtcNow
+			CreateTimestamp = DateTime.UtcNow,
+			LastUpdateTimestamp = DateTime.UtcNow
 		};
 	}
 }

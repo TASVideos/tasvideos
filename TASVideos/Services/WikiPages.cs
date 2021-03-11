@@ -138,7 +138,7 @@ namespace TASVideos.Services
 				.Where(wp => !wp.PageName.Contains("/")) // Subpages are linked by default by the parents, so we know they are not orphans
 				.Select(wp => new WikiOrphan(
 					wp.PageName,
-					wp.LastUpdateTimeStamp,
+					wp.LastUpdateTimestamp,
 					wp.LastUpdateUserName ?? wp.CreateUserName))
 				.ToListAsync();
 

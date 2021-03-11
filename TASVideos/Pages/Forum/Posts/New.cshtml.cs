@@ -45,7 +45,7 @@ namespace TASVideos.Pages.Forum.Posts
 				.Select(p => new PostsSinceLastVisitModel
 				{
 					Id = p.Id,
-					CreateTimestamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					EnableBbCode = p.EnableBbCode,
 					EnableHtml = p.EnableHtml,
 					Text = p.Text,
@@ -63,7 +63,7 @@ namespace TASVideos.Pages.Forum.Posts
 					PosterLocation = p.Poster.From,
 					Signature = p.Poster.Signature,
 					PosterAvatar = p.Poster.Avatar,
-					PosterJoined = p.Poster.CreateTimeStamp,
+					PosterJoined = p.Poster.CreateTimestamp,
 					PosterPostCount = p.Poster.Posts.Count,
 					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
 					PosterMood = p.PosterMood

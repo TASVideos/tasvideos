@@ -16,7 +16,7 @@ namespace TASVideos.Pages.Wiki.Models
 			public int Revision { get; set; }
 
 			[Display(Name = "Date")]
-			public DateTime CreateTimeStamp { get; set; }
+			public DateTime CreateTimestamp { get; set; }
 
 			[Display(Name = "Page")]
 			public string PageName { get; set; } = "";
