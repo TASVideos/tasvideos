@@ -44,7 +44,7 @@ namespace TASVideos.ViewComponents
 					PageName = wp.PageName,
 					Revision = wp.Revision,
 					Author = wp.CreateUserName,
-					CreateTimestamp = wp.CreateTimeStamp,
+					CreateTimestamp = wp.CreateTimestamp,
 					MinorEdit = wp.MinorEdit,
 					RevisionMessage = wp.RevisionMessage
 				})

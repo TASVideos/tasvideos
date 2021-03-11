@@ -79,8 +79,8 @@ namespace TASVideos.Legacy.Imports
 					SubmissionId = pub.Movie.SubmissionId,
 					TierId = pub.Movie.Tier,
 					CreateUserName = pub.Movie.Publisher!.Name,
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate),
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.LastChange),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate),
+					LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.LastChange),
 					ObsoletedById = pub.Movie.ObsoletedBy == -1 ? null : pub.Movie.ObsoletedBy,
 					Frames = pub.Sub.Frames,
 					RerecordCount = pub.Sub.RerecordCount,
@@ -123,8 +123,8 @@ namespace TASVideos.Legacy.Imports
 					PublicationId = pub.Movie.Id,
 					Type = FileType.Screenshot,
 					Path = screenshotUrl.FileName,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					Description = screenshotUrl.Description.NullIfWhiteSpace(),
 					FileData = null
 				});
@@ -134,8 +134,8 @@ namespace TASVideos.Legacy.Imports
 					PublicationId = pub.Movie.Id,
 					Type = FileType.Torrent,
 					Path = t.FileName,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					FileData = null
 				}));
 
@@ -148,8 +148,8 @@ namespace TASVideos.Legacy.Imports
 					Description = m.FileName.ToLower().Contains("consoleverified")
 						? "Console Verication"
 						: "Converted to " + Path.GetExtension(m.FileName),
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow
 				}));
 			}
 
@@ -161,8 +161,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.SubmissionId),
 				nameof(Publication.TierId),
 				nameof(Publication.CreateUserName),
-				nameof(Publication.CreateTimeStamp),
-				nameof(Publication.LastUpdateTimeStamp),
+				nameof(Publication.CreateTimestamp),
+				nameof(Publication.LastUpdateTimestamp),
 				nameof(Publication.Frames),
 				nameof(Publication.RerecordCount),
 				nameof(Publication.GameId),
@@ -196,8 +196,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.FileData),
 				nameof(PublicationFile.CreateUserName),
 				nameof(PublicationFile.LastUpdateUserName),
-				nameof(PublicationFile.CreateTimeStamp),
-				nameof(PublicationFile.LastUpdateTimeStamp)
+				nameof(PublicationFile.CreateTimestamp),
+				nameof(PublicationFile.LastUpdateTimestamp)
 			};
 
 			publicationFiles.BulkInsert(pubFileColumns, nameof(ApplicationDbContext.PublicationFiles));

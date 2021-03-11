@@ -19,7 +19,7 @@ namespace TASVideos.ViewComponents
 			public string Text { get; set; } = "";
 			public string? Subject { get; set; }
 			public string PosterName { get; set; } = "";
-			public DateTime CreateTimeStamp { get; set; }
+			public DateTime CreateTimestamp { get; set; }
 		}
 	}
 }

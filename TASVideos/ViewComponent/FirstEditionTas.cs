@@ -36,11 +36,11 @@ namespace TASVideos.ViewComponents
 				firstEditions = await _db.Publications
 					.GroupBy(
 						gkey => new { gkey.GameId },
-						gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimeStamp })
+						gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimestamp })
 					.Select(g => new FirstEditionGames
 					{
 						GameId = g.Key.GameId,
-						PublicationDate = g.Min(gg => gg.CreateTimeStamp)
+						PublicationDate = g.Min(gg => gg.CreateTimestamp)
 					})
 					.Where(g => g.PublicationDate >= afterYear)
 					.Where(g => g.PublicationDate < beforeYear)
@@ -51,11 +51,11 @@ namespace TASVideos.ViewComponents
 				firstEditions = await _db.Publications
 					.GroupBy(
 						gkey => new { gkey.Game!.DisplayName },
-						gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimeStamp })
+						gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimestamp })
 					.Select(g => new FirstEditionGames
 					{
 						GameName = g.Key.DisplayName,
-						PublicationDate = g.Min(gg => gg.CreateTimeStamp)
+						PublicationDate = g.Min(gg => gg.CreateTimestamp)
 					})
 					.Where(g => g.PublicationDate >= afterYear)
 					.Where(g => g.PublicationDate < beforeYear)
@@ -64,8 +64,8 @@ namespace TASVideos.ViewComponents
 
 			var query = _db.Publications
 				.Where(p => p.Tier!.Weight >= 1) // Exclude Vault
-				.Where(p => p.CreateTimeStamp >= afterYear)
-				.Where(p => p.CreateTimeStamp < beforeYear);
+				.Where(p => p.CreateTimestamp >= afterYear)
+				.Where(p => p.CreateTimestamp < beforeYear);
 
 			if (splitbyplatform)
 			{
@@ -88,7 +88,7 @@ namespace TASVideos.ViewComponents
 					TierId = p.TierId,
 					TierIconPath = p.Tier!.IconPath,
 					TierName = p.Tier.Name,
-					PublicationDate = p.CreateTimeStamp
+					PublicationDate = p.CreateTimestamp
 				})
 				.ToListAsync();
 

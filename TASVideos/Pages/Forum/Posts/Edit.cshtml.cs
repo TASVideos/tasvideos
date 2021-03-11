@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Forum.Posts
 				.Where(p => p.Id == Id)
 				.Select(p => new ForumPostEditModel
 				{
-					CreateTimestamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					PosterId = p.PosterId,
 					PosterName = p.Poster!.UserName,
 					EnableBbCode = p.EnableBbCode,

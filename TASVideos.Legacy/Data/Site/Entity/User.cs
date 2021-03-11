@@ -23,7 +23,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int LastChange { get; set; }
 
 		[Column("createtime")]
-		public int CreateTimeStamp { get; set; }
+		public int CreateTimestamp { get; set; }
 
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 	}

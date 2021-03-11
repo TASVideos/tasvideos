@@ -31,10 +31,10 @@ namespace TASVideos.Data.Entity
 		/// </summary>
 		public bool AutoAssignPublications { get; set; }
 
-		public DateTime CreateTimeStamp { get; set; }
+		public DateTime CreateTimestamp { get; set; }
 		public string? CreateUserName { get; set; }
 
-		public DateTime LastUpdateTimeStamp { get; set; }
+		public DateTime LastUpdateTimestamp { get; set; }
 		public string? LastUpdateUserName { get; set; }
 
 		public virtual ICollection<RolePermission> RolePermission { get; set; } = new HashSet<RolePermission>();

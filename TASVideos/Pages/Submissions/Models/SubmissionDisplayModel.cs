@@ -60,7 +60,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public DateTime Submitted { get; set; }
 
 		[Display(Name = "Last Edited")]
-		public DateTime LastUpdateTimeStamp { get; set; }
+		public DateTime LastUpdateTimestamp { get; set; }
 
 		[Display(Name = "Last Edited by")]
 		public string? LastUpdateUser { get; set; }

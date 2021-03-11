@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Messages
 					Subject = pm.Subject,
 					FromUser = pm.FromUser!.UserName,
 					ToUser = pm.ToUser!.UserName,
-					SendDate = pm.CreateTimeStamp
+					SendDate = pm.CreateTimestamp
 				})
 				.ToListAsync();
 		}

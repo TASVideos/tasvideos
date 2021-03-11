@@ -51,8 +51,8 @@ namespace TASVideos.ViewComponents
 				model.NewbieAuthors = await _db.Users
 					.ThatArePublishedAuthors()
 					.Where(u => u.Publications
-						.OrderBy(p => p.Publication!.CreateTimeStamp)
-						.First().Publication!.CreateTimeStamp.Year == after.Value.Year)
+						.OrderBy(p => p.Publication!.CreateTimestamp)
+						.First().Publication!.CreateTimestamp.Year == after.Value.Year)
 					.Select(u => u.UserName)
 					.ToListAsync();
 			}

@@ -21,9 +21,9 @@ namespace TASVideos.Data.Entity
 		[StringLength(250)]
 		public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
-		public DateTime CreateTimeStamp { get; set; } = DateTime.UtcNow;
+		public DateTime CreateTimestamp { get; set; } = DateTime.UtcNow;
 		public string? CreateUserName { get; set; }
-		public DateTime LastUpdateTimeStamp { get; set; } = DateTime.UtcNow;
+		public DateTime LastUpdateTimestamp { get; set; } = DateTime.UtcNow;
 		public string? LastUpdateUserName { get; set; }
 
 		[StringLength(250)]

@@ -101,7 +101,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -110,7 +110,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<string>("IconPath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -145,7 +145,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -155,7 +155,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -191,7 +191,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -201,7 +201,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -230,13 +230,13 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime?>("CloseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -262,13 +262,13 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -328,7 +328,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -344,7 +344,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -385,7 +385,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -397,7 +397,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -470,7 +470,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -490,7 +490,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -655,7 +655,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -664,7 +664,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -720,7 +720,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -731,7 +731,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -752,7 +752,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -764,7 +764,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<int>("GameSystemId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -813,13 +813,13 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -850,7 +850,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -861,7 +861,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -899,7 +899,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -924,7 +924,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -974,7 +974,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -990,7 +990,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -1076,7 +1076,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -1089,7 +1089,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<byte[]>("FileData")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -1178,13 +1178,13 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -1226,7 +1226,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -1240,7 +1240,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -1333,7 +1333,7 @@ namespace TASVideos.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -1372,7 +1372,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<int?>("JudgeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -1500,13 +1500,13 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -1599,7 +1599,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -1618,7 +1618,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime?>("LastLoggedInTimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -1716,13 +1716,13 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")
@@ -1934,7 +1934,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<int?>("ChildId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateTimeStamp")
+                    b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateUserName")
@@ -1943,7 +1943,7 @@ namespace TASVideos.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastUpdateTimeStamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdateUserName")

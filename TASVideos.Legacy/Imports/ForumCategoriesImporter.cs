@@ -24,8 +24,8 @@ namespace TASVideos.Legacy.Imports
 								? 50
 								: c.Order,
 					Description = c.Description,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					CreateUserName = "LegacyImport",
 					LastUpdateUserName = "LegacyImport"
 				})
@@ -37,8 +37,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumCategory.Title),
 				nameof(ForumCategory.Ordinal),
 				nameof(ForumCategory.Description),
-				nameof(ForumCategory.CreateTimeStamp),
-				nameof(ForumCategory.LastUpdateTimeStamp),
+				nameof(ForumCategory.CreateTimestamp),
+				nameof(ForumCategory.LastUpdateTimestamp),
 				nameof(ForumCategory.CreateUserName),
 				nameof(ForumCategory.LastUpdateUserName)
 			};

@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Activity
 				{
 					UserName = s.Key,
 					Count = s.Count(),
-					LastActivity = s.Max(ss => ss.CreateTimeStamp)
+					LastActivity = s.Max(ss => ss.CreateTimestamp)
 				})
 				.ToListAsync();
 
@@ -43,7 +43,7 @@ namespace TASVideos.Pages.Activity
 				{
 					UserName = p.Key,
 					Count = p.Count(),
-					LastActivity = p.Max(pp => pp.CreateTimeStamp)
+					LastActivity = p.Max(pp => pp.CreateTimestamp)
 				})
 				.ToListAsync();
 		}

@@ -164,8 +164,8 @@ namespace TASVideos.Legacy.Imports
 					Markup = markup,
 					Revision = page.Revision + 1,
 					RevisionMessage = WikiPageSeedData.Import,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					ChildId = null
 				};
 

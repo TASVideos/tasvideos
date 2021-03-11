@@ -70,9 +70,9 @@ namespace TASVideos.Pages.Submissions
 					FrameCount = s.Frames,
 					FrameRate = s.SystemFrameRate!.FrameRate,
 					RerecordCount = s.RerecordCount,
-					CreateTimestamp = s.CreateTimeStamp,
+					CreateTimestamp = s.CreateTimestamp,
 					Submitter = s.Submitter!.UserName,
-					LastUpdateTimeStamp = s.WikiContent!.LastUpdateTimeStamp,
+					LastUpdateTimestamp = s.WikiContent!.LastUpdateTimestamp,
 					LastUpdateUser = s.WikiContent.LastUpdateUserName,
 					Status = s.Status,
 					EncodeEmbedLink = s.EncodeEmbedLink,
@@ -163,7 +163,7 @@ namespace TASVideos.Pages.Submissions
 					UserIsPublisher = s.Publisher != null && s.Publisher.UserName == userName,
 					UserIsAuthorOrSubmitter = s.Submitter!.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == userName),
 					CurrentStatus = s.Status,
-					CreateDate = s.CreateTimeStamp
+					CreateDate = s.CreateTimestamp
 				})
 				.SingleOrDefaultAsync();
 

@@ -177,7 +177,7 @@ namespace TASVideos.Services
 					Id = u.Id,
 					UserName = u.UserName,
 					PostCount = u.Posts.Count(p => seeRestrictedPosts || !p.Topic!.Forum!.Restricted),
-					JoinDate = u.CreateTimeStamp,
+					JoinDate = u.CreateTimestamp,
 					LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
 					Avatar = u.Avatar,
 					Location = u.From,
@@ -237,14 +237,14 @@ namespace TASVideos.Services
 				var wikiEdits = await _wikiPages.Query
 					.ThatAreNotDeleted()
 					.CreatedBy(model.UserName)
-					.Select(w => new { w.CreateTimeStamp })
+					.Select(w => new { w.CreateTimestamp })
 					.ToListAsync();
 
 				if (wikiEdits.Any())
 				{
 					model.WikiEdits.TotalEdits = wikiEdits.Count;
-					model.WikiEdits.FirstEdit = wikiEdits.Min(w => w.CreateTimeStamp);
-					model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimeStamp);
+					model.WikiEdits.FirstEdit = wikiEdits.Min(w => w.CreateTimestamp);
+					model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimestamp);
 				}
 
 				if (model.PublicRatings)
@@ -289,7 +289,7 @@ namespace TASVideos.Services
 			return new PrivateMessageModel
 			{
 				Subject = pm.Subject,
-				SentOn = pm.CreateTimeStamp,
+				SentOn = pm.CreateTimestamp,
 				Text = pm.Text,
 				FromUserId = pm.FromUserId,
 				FromUserName = pm.FromUser!.UserName,

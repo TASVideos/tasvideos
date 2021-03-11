@@ -49,9 +49,9 @@ namespace TASVideos.Legacy.Imports
 					var fixedText = HttpUtility.HtmlDecode(ImportHelper.ConvertLatin1String(g.Key.Text.Replace(":" + g.Key.BbCodeUid, ""))) ?? "";
 					return new PrivateMessage
 					{
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
+						CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
 						CreateUserName = g.Key.UserName,
-						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
+						LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
 						LastUpdateUserName = g.Key.UserName,
 						FromUserId = g.Key.FromUserId,
 						ToUserId = g.Key.ToUserId,
@@ -71,9 +71,9 @@ namespace TASVideos.Legacy.Imports
 
 			var columns = new[]
 			{
-				nameof(PrivateMessage.CreateTimeStamp),
+				nameof(PrivateMessage.CreateTimestamp),
 				nameof(PrivateMessage.CreateUserName),
-				nameof(PrivateMessage.LastUpdateTimeStamp),
+				nameof(PrivateMessage.LastUpdateTimestamp),
 				nameof(PrivateMessage.LastUpdateUserName),
 				nameof(PrivateMessage.FromUserId),
 				nameof(PrivateMessage.ToUserId),

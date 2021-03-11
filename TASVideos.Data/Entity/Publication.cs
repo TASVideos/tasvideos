@@ -145,15 +145,15 @@ namespace TASVideos.Data.Entity
 		public static IQueryable<Publication> ForYearRange(this IQueryable<Publication> publications, int before, int after)
 		{
 			return publications
-				.Where(p => p.CreateTimeStamp.Year < before)
-				.Where(p => p.CreateTimeStamp.Year >= after);
+				.Where(p => p.CreateTimestamp.Year < before)
+				.Where(p => p.CreateTimestamp.Year >= after);
 		}
 
 		public static IQueryable<Publication> ForDateRange(this IQueryable<Publication> publications, DateTime before, DateTime after)
 		{
 			return publications
-				.Where(p => p.CreateTimeStamp < before)
-				.Where(p => p.CreateTimeStamp >= after);
+				.Where(p => p.CreateTimestamp < before)
+				.Where(p => p.CreateTimestamp >= after);
 		}
 
 		public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
@@ -191,7 +191,7 @@ namespace TASVideos.Data.Entity
 
 			if (tokens.Years.Any())
 			{
-				query = query.Where(p => tokens.Years.Contains(p.CreateTimeStamp.Year));
+				query = query.Where(p => tokens.Years.Contains(p.CreateTimestamp.Year));
 			}
 
 			if (tokens.Tags.Any())

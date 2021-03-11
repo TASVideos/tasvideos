@@ -17,10 +17,10 @@ namespace TASVideos.Test.Data.Context
 			_db = TestDbContext.Create();
 		}
 
-		#region CreateTimeStamp
+		#region CreateTimestamp
 
 		[TestMethod]
-		public async Task CreateTimeStamp_SetToNow_IfNotProvided()
+		public async Task CreateTimestamp_SetToNow_IfNotProvided()
 		{
 			_db.Flags.Add(new Flag());
 
@@ -28,30 +28,30 @@ namespace TASVideos.Test.Data.Context
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
-			Assert.IsTrue(flag.CreateTimeStamp.Year > 1);
+			Assert.IsTrue(flag.CreateTimestamp.Year > 1);
 		}
 
 		[TestMethod]
-		public async Task CreateTimeStamp_DoesNotOverride_IfProvided()
+		public async Task CreateTimestamp_DoesNotOverride_IfProvided()
 		{
 			_db.Flags.Add(new Flag
 			{
-				CreateTimeStamp = DateTime.Parse("01/01/1970")
+				CreateTimestamp = DateTime.Parse("01/01/1970")
 			});
 			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 
 			var flag = _db.Flags.Single();
-			Assert.AreEqual(1970, flag.CreateTimeStamp.Year);
+			Assert.AreEqual(1970, flag.CreateTimestamp.Year);
 		}
 
 		[TestMethod]
-		public async Task CreateTimeStamp_OnUpdate_DoesNotChange()
+		public async Task CreateTimestamp_OnUpdate_DoesNotChange()
 		{
 			var flag = new Flag
 			{
-				CreateTimeStamp = DateTime.Parse("01/01/1970")
+				CreateTimestamp = DateTime.Parse("01/01/1970")
 			};
 			_db.Flags.Add(flag);
 			await _db.SaveChangesAsync();
@@ -59,7 +59,7 @@ namespace TASVideos.Test.Data.Context
 
 			await _db.SaveChangesAsync();
 
-			Assert.AreEqual(1970, flag.CreateTimeStamp.Year);
+			Assert.AreEqual(1970, flag.CreateTimestamp.Year);
 		}
 
 		#endregion
@@ -109,10 +109,10 @@ namespace TASVideos.Test.Data.Context
 
 		#endregion
 
-		#region LastUpdateTimeStamp
+		#region LastUpdateTimestamp
 
 		[TestMethod]
-		public async Task LastUpdateTimeStamp_OnCreate_SetToNow_IfNotProvided()
+		public async Task LastUpdateTimestamp_OnCreate_SetToNow_IfNotProvided()
 		{
 			_db.Flags.Add(new Flag());
 
@@ -120,30 +120,30 @@ namespace TASVideos.Test.Data.Context
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
-			Assert.IsTrue(flag.LastUpdateTimeStamp.Year > 1);
+			Assert.IsTrue(flag.LastUpdateTimestamp.Year > 1);
 		}
 
 		[TestMethod]
-		public async Task LastUpdateTimeStamp_OnCreate_DoesNotOverride_IfProvided()
+		public async Task LastUpdateTimestamp_OnCreate_DoesNotOverride_IfProvided()
 		{
 			_db.Flags.Add(new Flag
 			{
-				LastUpdateTimeStamp = DateTime.Parse("01/01/1970")
+				LastUpdateTimestamp = DateTime.Parse("01/01/1970")
 			});
 
 			await _db.SaveChangesAsync();
 
 			Assert.AreEqual(1, _db.Flags.Count());
 			var flag = _db.Flags.Single();
-			Assert.AreEqual(1970, flag.LastUpdateTimeStamp.Year);
+			Assert.AreEqual(1970, flag.LastUpdateTimestamp.Year);
 		}
 
 		[TestMethod]
-		public async Task LastUpdateTimeStamp_OnUpdate_SetToNow_IfNotProvided()
+		public async Task LastUpdateTimestamp_OnUpdate_SetToNow_IfNotProvided()
 		{
 			_db.Flags.Add(new Flag
 			{
-				LastUpdateTimeStamp = DateTime.Parse("01/01/1970")
+				LastUpdateTimestamp = DateTime.Parse("01/01/1970")
 			});
 
 			await _db.SaveChangesAsync();
@@ -152,24 +152,24 @@ namespace TASVideos.Test.Data.Context
 
 			await _db.SaveChangesAsync();
 
-			Assert.AreEqual(DateTime.Now.Year, flag.LastUpdateTimeStamp.Year);
+			Assert.AreEqual(DateTime.Now.Year, flag.LastUpdateTimestamp.Year);
 		}
 
 		[TestMethod]
-		public async Task LastUpdateTimeStamp_OnUpdate_DoesNotOverride_IfProvided()
+		public async Task LastUpdateTimestamp_OnUpdate_DoesNotOverride_IfProvided()
 		{
 			_db.Flags.Add(new Flag
 			{
-				LastUpdateTimeStamp = DateTime.Parse("01/01/1970")
+				LastUpdateTimestamp = DateTime.Parse("01/01/1970")
 			});
 
 			await _db.SaveChangesAsync();
 			var flag = _db.Flags.Single();
-			flag.LastUpdateTimeStamp = DateTime.Parse("01/01/1980");
+			flag.LastUpdateTimestamp = DateTime.Parse("01/01/1980");
 
 			await _db.SaveChangesAsync();
 
-			Assert.AreEqual(1980, flag.LastUpdateTimeStamp.Year);
+			Assert.AreEqual(1980, flag.LastUpdateTimestamp.Year);
 		}
 
 		#endregion

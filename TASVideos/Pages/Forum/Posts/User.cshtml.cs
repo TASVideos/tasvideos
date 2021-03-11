@@ -46,7 +46,7 @@ namespace TASVideos.Pages.Forum.Posts
 				{
 					Id = u.Id,
 					UserName = u.UserName,
-					Joined = u.CreateTimeStamp,
+					Joined = u.CreateTimestamp,
 					Location = u.From,
 					Avatar = u.Avatar,
 					Signature = u.Signature,
@@ -71,7 +71,7 @@ namespace TASVideos.Pages.Forum.Posts
 				.Select(p => new UserPostsModel.Post
 				{
 					Id = p.Id,
-					CreateTimestamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					EnableHtml = p.EnableHtml,
 					EnableBbCode = p.EnableBbCode,
 					Text = p.Text,

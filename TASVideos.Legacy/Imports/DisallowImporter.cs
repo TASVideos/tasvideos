@@ -17,16 +17,16 @@ namespace TASVideos.Legacy.Imports
 				.Select(d => new UserDisallow
 				{
 					RegexPattern = d,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow
 				})
 				.ToList();
 
 			var columns = new[]
 			{
 				nameof(UserDisallow.RegexPattern),
-				nameof(UserDisallow.CreateTimeStamp),
-				nameof(UserDisallow.LastUpdateTimeStamp)
+				nameof(UserDisallow.CreateTimestamp),
+				nameof(UserDisallow.LastUpdateTimestamp)
 			};
 
 			disallow.BulkInsert(columns, nameof(ApplicationDbContext.UserDisallows));

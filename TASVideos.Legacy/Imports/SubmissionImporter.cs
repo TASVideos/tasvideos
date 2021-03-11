@@ -39,7 +39,7 @@ namespace TASVideos.Legacy.Imports
 				.ThatAreNotDeleted()
 				.WithNoChildren()
 				.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
-				.Select(s => new { s.Id, s.PageName, s.CreateTimeStamp })
+				.Select(s => new { s.Id, s.PageName, s.CreateTimestamp })
 				.ToList();
 
 			var publicationWikis = context.WikiPages
@@ -47,8 +47,8 @@ namespace TASVideos.Legacy.Imports
 				.WithNoChildren()
 				.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
 				.ToList()
-				.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimeStamp, gvalue.CreateUserName, gvalue.PageName })
-				.Select(p => p.First(g => g.CreateTimeStamp == p.Min(pp => pp.CreateTimeStamp)))
+				.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimestamp, gvalue.CreateUserName, gvalue.PageName })
+				.Select(p => p.First(g => g.CreateTimestamp == p.Min(pp => pp.CreateTimestamp)))
 				.ToList();
 
 			var systems = context.GameSystems.ToList();
@@ -66,7 +66,7 @@ namespace TASVideos.Legacy.Imports
 				from p in pp.DefaultIfEmpty()
 				join r in rejectionReasons on ls.Id equals r.Id into rr
 				from r in rr.DefaultIfEmpty()
-				select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimeStamp, Rejection = r })
+				select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimestamp, Rejection = r })
 				.ToList();
 
 			foreach (var legacySubmission in lSubsWithSystem)
@@ -86,9 +86,9 @@ namespace TASVideos.Legacy.Imports
 					Submitter = legacySubmission.Submitter,
 					SystemId = legacySubmission.System.Id,
 					System = legacySubmission.System,
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
 					CreateUserName = legacySubmission.Submitter?.UserName,
-					LastUpdateTimeStamp = legacySubmission.Wiki.CreateTimeStamp,
+					LastUpdateTimestamp = legacySubmission.Wiki.CreateTimestamp,
 					GameName = ImportHelper.ConvertLatin1String(legacySubmission.Sub.GameName),
 					GameVersion = legacySubmission.Sub.GameVersion,
 					Frames = legacySubmission.Sub.Frames,
@@ -150,9 +150,9 @@ namespace TASVideos.Legacy.Imports
 				{
 					submissionHistory.Add(new SubmissionStatusHistory
 					{
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
+						CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
 						CreateUserName = legacySubmission.Judge.UserName,
-						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
+						LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
 						LastUpdateUserName = legacySubmission.Judge.UserName,
 						Status = ConvertJudgeStatus(submission.Status),
 						SubmissionId = submission.Id
@@ -163,9 +163,9 @@ namespace TASVideos.Legacy.Imports
 				{
 					submissionHistory.Add(new SubmissionStatusHistory
 					{
-						CreateTimeStamp = legacySubmission.PubDate.Value,
+						CreateTimestamp = legacySubmission.PubDate.Value,
 						CreateUserName = legacySubmission.Publisher.UserName,
-						LastUpdateTimeStamp = legacySubmission.PubDate.Value,
+						LastUpdateTimestamp = legacySubmission.PubDate.Value,
 						LastUpdateUserName = legacySubmission.Publisher.UserName,
 						Status = SubmissionStatus.Published,
 						SubmissionId = submission.Id
@@ -182,9 +182,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.WikiContentId),
 				nameof(Submission.SubmitterId),
 				nameof(Submission.SystemId),
-				nameof(Submission.CreateTimeStamp),
+				nameof(Submission.CreateTimestamp),
 				nameof(Submission.CreateUserName),
-				nameof(Submission.LastUpdateTimeStamp),
+				nameof(Submission.LastUpdateTimestamp),
 				nameof(Submission.GameName),
 				nameof(Submission.GameVersion),
 				nameof(Submission.Frames),
@@ -221,9 +221,9 @@ namespace TASVideos.Legacy.Imports
 
 			var statusHistoryColumns = new[]
 			{
-				nameof(SubmissionStatusHistory.CreateTimeStamp),
+				nameof(SubmissionStatusHistory.CreateTimestamp),
 				nameof(SubmissionStatusHistory.CreateUserName),
-				nameof(SubmissionStatusHistory.LastUpdateTimeStamp),
+				nameof(SubmissionStatusHistory.LastUpdateTimestamp),
 				nameof(SubmissionStatusHistory.LastUpdateUserName),
 				nameof(SubmissionStatusHistory.Status),
 				nameof(SubmissionStatusHistory.SubmissionId)

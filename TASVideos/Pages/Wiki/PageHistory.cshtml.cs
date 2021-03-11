@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Wiki
 					.Select(wp => new WikiHistoryModel.WikiRevisionModel
 					{
 						Revision = wp.Revision,
-						CreateTimeStamp = wp.CreateTimeStamp,
+						CreateTimestamp = wp.CreateTimestamp,
 						CreateUserName = wp.CreateUserName,
 						MinorEdit = wp.MinorEdit,
 						RevisionMessage = wp.RevisionMessage

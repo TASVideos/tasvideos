@@ -25,7 +25,7 @@ namespace TASVideos.Legacy.Imports
 					Id = v.Id,
 					TopicId = v.TopicId,
 					Question = SwapSubmissionPoll(ImportHelper.ConvertNotNullLatin1String(v.Text), v.Topic?.Poster?.UserName),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
 					CreateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					LastUpdateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					CloseDate = v.VoteLength == 0
@@ -40,9 +40,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPoll.TopicId),
 				nameof(ForumPoll.Question),
 				nameof(ForumPoll.CloseDate),
-				nameof(ForumPoll.CreateTimeStamp),
+				nameof(ForumPoll.CreateTimestamp),
 				nameof(ForumPoll.CreateUserName),
-				nameof(ForumPoll.LastUpdateTimeStamp),
+				nameof(ForumPoll.LastUpdateTimestamp),
 				nameof(ForumPoll.LastUpdateUserName)
 			};
 
@@ -59,8 +59,8 @@ namespace TASVideos.Legacy.Imports
 					Text = r.VoteOptionText,
 					PollId = r.Id,
 					Ordinal = r.VoteOptionId,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					CreateUserName = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown",
 					LastUpdateUserName = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown"
 				})
@@ -71,9 +71,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOption.Text),
 				nameof(ForumPollOption.Ordinal),
 				nameof(ForumPollOption.PollId),
-				nameof(ForumPollOption.CreateTimeStamp),
+				nameof(ForumPollOption.CreateTimestamp),
 				nameof(ForumPollOption.CreateUserName),
-				nameof(ForumPollOption.LastUpdateTimeStamp),
+				nameof(ForumPollOption.LastUpdateTimestamp),
 				nameof(ForumPollOption.LastUpdateUserName)
 			};
 

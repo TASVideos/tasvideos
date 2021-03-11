@@ -34,7 +34,7 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public virtual User? User { get; set; }
 
 		[Column("timestamp")]
-		public int CreateTimeStamp { get; set; }
+		public int CreateTimestamp { get; set; }
 
 		[Required]
 		[Column("description")]
