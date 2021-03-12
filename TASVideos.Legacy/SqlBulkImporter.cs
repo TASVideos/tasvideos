@@ -22,6 +22,7 @@ namespace TASVideos.Legacy
 		public static void BulkInsertMssql<T>(IEnumerable<T> data, string[] columnsToCopy, string tableName)
 		{
 			var keepIdentity = columnsToCopy.Contains("Id");
+			tableName = tableName.ToSnakeCase();
 			var options = keepIdentity
 				? Microsoft.Data.SqlClient.SqlBulkCopyOptions.KeepIdentity
 				: Microsoft.Data.SqlClient.SqlBulkCopyOptions.Default;
@@ -34,7 +35,7 @@ namespace TASVideos.Legacy
 
 			foreach (var param in columnsToCopy)
 			{
-				sqlCopy.ColumnMappings.Add(param, param);
+				sqlCopy.ColumnMappings.Add(param, param.ToSnakeCase());
 			}
 
 			using var reader = ObjectReader.Create(data, columnsToCopy);
