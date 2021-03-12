@@ -58,6 +58,8 @@ DELETE FROM public.wiki_referrals; --TODO: maybe only delete referrals for delet
 
 --Clear User data
 DELETE FROM public.forum_topic_watches;
+UPDATE public.users SET signature = NULL;
+UPDATE public.users SET legacy_password = NULL; --We don't want this data public
 DELETE FROM public.private_messages;
 
  --Trim Publications and Submissions

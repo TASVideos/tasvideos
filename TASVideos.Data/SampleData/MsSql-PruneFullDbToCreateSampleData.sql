@@ -11,252 +11,258 @@
 
 use [TASVideos]
 
-DELETE FROM game_ram_address_domains
-DELETE FROM game_ram_addresses
-DELETE FROM ip_bans
-DELETE FROM media_posts
-DELETE FROM user_disallows
+DELETE FROM GameRamAddressDomains
+DELETE FROM GameRamAddresses
+DELETE FROM IpBans
+DELETE FROM MediaPosts
+DELETE FROM UserDisallows
 
 -- Trim user files
-DELETE FROM user_file_comments
+DELETE FROM UserFileComments
 
-DECLARE @UserFiles as Table (id bigint primary key)
+DECLARE @UserFiles as Table (Id bigint primary key)
 INSERT INTO @UserFiles
-	SELECT TOP 6 uf.id
-	FROM user_files uf
-	WHERE uf.hidden = 0
-	ORDER BY len(uf.content)
+	SELECT TOP 6 uf.Id
+	FROM UserFiles uf
+	WHERE uf.Hidden = 0
+	ORDER BY len(uf.Content)
 	
 DELETE uf
-FROM user_files uf
-LEFT JOIN @UserFiles iuf on uf.id = iuf.id
-WHERE iuf.id IS NULL
+FROM UserFiles uf
+LEFT JOIN @UserFiles iuf on uf.Id = iuf.Id
+WHERE iuf.Id IS NULL
 
-UPDATE user_files SET content = 0x0
+UPDATE UserFiles SET Content = 0x0
 
 --Trim Wiki
-DELETE FROM wiki_pages WHERE child_id is not null
-DECLARE @WikiPagesToDelete as Table (id int primary key)
+DELETE FROM WikiPages WHERE ChildId is not null
+DECLARE @WikiPagesToDelete as Table (Id int primary key)
 INSERT INTO @WikiPagesToDelete
-	SELECT id
-	FROM wiki_pages
-	WHERE is_deleted = 1
-	OR (page_name NOT LIKE 'InternalSystem%' AND len(markup) < 18)
+	SELECT ID
+	FROM WikiPages
+	WHERE IsDeleted = 1
+	OR (PageName NOT LIKE 'InternalSystem%' AND len(Markup) < 18)
 
-DELETE FROM wiki_pages WHERE id IN (SELECT id FROM @WikiPagesToDelete)
+DELETE FROM WikiPages WHERE ID IN (SELECT Id FROM @WikiPagesToDelete)
 
-UPDATE wiki_pages SET markup = '[TODO]: Wiped as sample data' WHERE len(markup) > 1500 AND page_name <> 'Movies'
+UPDATE WikiPages SET Markup = '[TODO]: Wiped as sample data' WHERE len(Markup) > 1500 AND PageName <> 'Movies'
 
-DELETE FROM wiki_referrals --TODO: maybe only delete referrals for deleted wiki pages and preserve existing
+DELETE FROM WikiReferrals --TODO: maybe only delete referrals for deleted wiki pages and preserve existing
 
---Trim Publications and Submissions
-DECLARE @Publications as TABLE (id int primary key, submission_id int, wiki_content_id int)
+--Clear User data
+DELETE FROM ForumTopicWatches
+UPDATE Users SET Signature = NULL
+UPDATE Users SET LegacyPassword = NULL --We don't want this data public
+DELETE FROM PrivateMessages
+
+ --Trim Publications and Submissions
+ DECLARE @Publications as TABLE (Id int primary key, SubmissionId int, WikiContentId int)
 INSERT INTO @Publications
-	SELECT id = p.id, submission_id = p.submission_id, wiki_content_id = p.wiki_content_id
-	FROM publications p
-	WHERE p.obsoleted_by_id IS NULL
-	AND id > 3600
+	SELECT Id = p.Id, SubmissionId = p.SubmissionId, WikiContentId = p.WikiContentId
+	FROM Publications p
+	WHERE p.ObsoletedById IS NULL
+	AND ID > 3600
 
-DECLARE @PublicationWikis as TABLE (id int primary key)
+DECLARE @PublicationWikis as TABLE (Id int primary key)
 INSERT INTO @PublicatioNWikis
-	SELECT wp.id
-	FROM wiki_pages wp
-	LEFT JOIN @Publications p on wp.id = p.wiki_content_id
-	WHERE p.id IS NULL
+	SELECT wp.Id
+	FROM WikiPages wp
+	LEFT JOIN @Publications p on wp.Id = p.WikiContentId
+	WHERE p.Id IS NULL
 	
 DELETE p
-	FROM publications p
-	LEFT JOIN @Publications ipu on p.id = ipu.id
-	WHERE ipu.id IS NULL
+	FROM Publications p
+	LEFT JOIN @Publications ipu on p.Id = ipu.Id
+	WHERE ipu.Id IS NULL
 
 DELETE wp
-	FROM wiki_pages wp
-	LEFT JOIN @Publications p on wp.id = p.wiki_content_id
-	WHERE wp.page_name LIKE 'InternalSystem/PublicationContent/M%'
-	AND p.id IS NULL
+	FROM WikiPages wp
+	LEFT JOIN @Publications p on wp.Id = p.WikiContentId
+	WHERE wp.PageName LIKE 'InternalSystem/PublicationContent/M%'
+	AND p.Id IS NULL
 
 DELETE pa
-	FROM publication_authors pa
-	LEFT JOIN @Publications ipu on pa.publication_id = ipu.id
-	WHERE ipu.id IS NULL
+	FROM PublicationAuthors pa
+	LEFT JOIN @Publications ipu on pa.PublicationId = ipu.Id
+	WHERE ipu.Id IS NULL
 	
 DELETE pa
-	FROM publication_awards pa
-	LEFT JOIN @Publications ipu on pa.publication_id = ipu.id
-	WHERE ipu.id IS NULL
+	FROM PublicationAwards pa
+	LEFT JOIN @Publications ipu on pa.PublicationId = ipu.Id
+	WHERE ipu.Id IS NULL
 
 DELETE pf
-	FROM publication_files pf
-	LEFT JOIN @Publications ipu on pf.publication_id = ipu.id
-	WHERE ipu.id IS NULL
+	FROM PublicationFiles pf
+	LEFT JOIN @Publications ipu on pf.PublicationId = ipu.Id
+	WHERE ipu.Id IS NULL
 
 DELETE pf
-	FROM publication_flags pf
-	LEFT JOIN @Publications ipu on pf.publication_id = ipu.id
-	WHERE ipu.id IS NULL
+	FROM PublicationFlags pf
+	LEFT JOIN @Publications ipu on pf.PublicationId = ipu.Id
+	WHERE ipu.Id IS NULL
 
 DELETE pr
-	FROM publication_ratings pr
-	LEFT JOIN @Publications ipu on pr.publication_id = ipu.id
-	WHERE ipu.id IS NULL
+	FROM PublicationRatings pr
+	LEFT JOIN @Publications ipu on pr.PublicationId = ipu.Id
+	WHERE ipu.Id IS NULL
 
 DELETE pu
-	FROM publication_urls pu	
-	LEFT JOIN @Publications ipu on pu.publication_id = ipu.id
-	WHERE ipu.id IS NULL
+	FROM PublicationUrls pu	
+	LEFT JOIN @Publications ipu on pu.PublicationId = ipu.Id
+	WHERE ipu.Id IS NULL
 
-DECLARE @Submissions as TABLE (id int primary key, wiki_content_id int)
+DECLARE @Submissions as TABLE (Id int primary key, WikiContentId int)
 INSERT INTO @Submissions
-	SELECT id = s.id, wiki_content_id = s.wiki_content_id
-	FROM submissions s
-	JOIN @Publications p on s.id = p.submission_id
+	SELECT Id = s.Id, WikiContentId = s.WikiContentId
+	FROM Submissions s
+	JOIN @Publications p on s.Id = p.SubmissionId
 
 DELETE s
-	FROM submissions s
-	LEFT JOIN @Submissions isu ON s.id = isu.id
-	WHERE isu.id IS NULL
+	FROM Submissions s
+	LEFT JOIN @Submissions isu ON s.Id = isu.Id
+	WHERE isu.Id IS NULL
 
 DELETE wp
-	FROM wiki_pages wp
-	LEFT JOIN @Submissions s on wp.id = s.wiki_content_id
-	WHERE wp.page_name LIKE 'InternalSystem/SubmissionContent/S%'
-	AND s.id IS NULL
+	FROM WikiPages wp
+	LEFT JOIN @Submissions s on wp.Id = s.WikiContentId
+	WHERE wp.PageName LIKE 'InternalSystem/SubmissionContent/S%'
+	AND s.Id IS NULL
 
 DELETE sa
-	FROM submission_authors sa
-	LEFT JOIN @Submissions isu on sa.submission_id = isu.id
-	WHERE isu.id IS NULL
+	FROM SubmissionAuthors sa
+	LEFT JOIN @Submissions isu on sa.SubmissionId = isu.Id
+	WHERE isu.Id IS NULL
 
 DELETE ssh
-	FROM submission_status_history ssh
-	LEFT JOIN @Submissions isu on ssh.submission_id = isu.id
-	WHERE isu.id IS NULL
+	FROM SubmissionStatusHistory ssh
+	LEFT JOIN @Submissions isu on ssh.SubmissionId = isu.Id
+	WHERE isu.Id IS NULL
 
-UPDATE publications SET movie_file = 0x0
-UPDATE submissions SET movie_file = 0x0
+UPDATE Publications SET MovieFile = 0x0
+UPDATE Submissions SET MovieFile = 0x0
+
+-- Delete Ram Addresses
+DELETE FROM GameRamAddressDomains
+DELETE FROM GameRamAddresses
 
 --Delete unncessary Games
-DECLARE @Games as Table (id int primary key)
+DECLARE @Games as Table (Id int primary key)
 INSERT INTO @Games
-	SELECT DISTINCT id = g.id
+	SELECT DISTINCT Id = g.Id
 	FROM Games g
-	LEFT JOIN publications p on g.id = p.game_id
-	LEFT JOIN submissions s ON g.id =  s.game_id
-	LEFT JOIN user_files uf on g.id = uf.game_id
-	WHERE p.id IS NULL
-	AND s.id IS NULL
-	AND uf.id IS NULL
-	AND g.id > 0
+	LEFT JOIN Publications p on g.Id = p.GameId
+	LEFT JOIN Submissions s ON g.Id =  s.GameId
+	LEFT JOIN UserFiles uf on g.Id = uf.GameId
+	WHERE p.Id IS NULL
+	AND s.Id IS NULL
+	AND uf.ID IS NULL
+	AND g.Id > 0
 
 DELETE gg
-	FROM game_genres gg
-	LEFT JOIN @Games g on gg.game_id = g.id
-	WHERE g.id IS NULL
+	FROM GameGenres gg
+	LEFT JOIN @Games g on gg.GameId = g.Id
+	WHERE g.Id IS NULL
 		
 DELETE FROM g
 	FROM Games g
-	JOIN @Games ig on g.id = ig.id
+	JOIN @Games ig on g.Id = ig.Id
 
 --Trim down forum data
-DECLARE @Topics as Table (id int primary key)
+DECLARE @Topics as Table (Id int primary key)
 INSERT INTO @Topics 
-	SELECT topic.id
-	FROM forums f
+	SELECT topic.Id
+	FROM Forums f
 	CROSS APPLY (
 		SELECT
 		TOP 4 *
-		FROM forum_topics t
-		WHERE t.forum_id = f.id
-		ORDER BY t.create_timestamp DESC
+		FROM ForumTopics t
+		WHERE t.ForumId = f.Id
+		ORDER BY t.CreateTimestamp DESC
 	) topic
 
 
-DECLARE @Posts as Table (id int primary key)
+DECLARE @Posts as Table (Id int primary key)
 INSERT INTO @Posts
-	SELECT post.id
+	SELECT post.Id
 	FROM @Topics t
 	CROSS APPLY (
 		SELECT
 		TOP 4 *
-		FROM forum_posts p
-		WHERE t.id = p.topic_id
-		ORDER BY p.create_timestamp -- First posts instead of last because we need the post that started the topic
+		FROM ForumPosts p
+		WHERE t.Id = p.TopicId
+		ORDER BY p.CreateTimestamp -- First posts instead of last because we need the post that started the topic
 	) post
 
-DECLARE @Polls as TABLE (id int primary key)
+DECLARE @Polls as TABLE (Id int primary key)
 INSERT INTO @Polls
-	SELECT p.id
-	FROM forum_polls p
-	JOIN @Topics t ON p.topic_id = t.id
+	SELECT p.Id
+	FROM ForumPolls p
+	JOIN @Topics t ON p.TopicId = t.Id
 
-DECLARE @PollOptions as TABLE (id int primary key)
+DECLARE @PollOptions as TABLE (Id int primary key)
 INSERT INTO @PollOptions
-	SELECT po.id
-	FROM forum_poll_options po
-	JOIN @Polls p on po.poll_id = p.id
+	SELECT po.Id
+	FROM ForumPollOptions po
+	JOIN @Polls p on po.PollId = p.Id
 
-DECLARE @PollOptionVotes as TABLE (id int primary key)
+DECLARE @PollOptionVotes as TABLE (Id int primary key)
 INSERT INTO @PollOptionVotes
-	SELECT pov.id
-	FROM forum_poll_option_votes pov
-	JOIN @PollOptions po on pov.poll_option_id = po.id
+	SELECT pov.Id
+	FROM ForumPollOptionVotes pov
+	JOIN @PollOptions po on pov.PollOptionId = po.Id
 
 DELETE pov
-FROM forum_poll_option_votes pov
-LEFT JOIN @PollOptionVotes ipov on pov.id = ipov.id
-WHERE ipov.id IS NULL
+FROM ForumPollOptionVotes pov
+LEFT JOIN @PollOptionVotes ipov on pov.Id = ipov.Id
+WHERE ipov.Id IS NULL
 
 DELETE po
-FROM forum_poll_options po
-LEFT JOIN @PollOptions ipo on po.id = ipo.id
-WHERE ipo.id IS NULL
+FROM ForumPollOptions po
+LEFT JOIN @PollOptions ipo on po.Id = ipo.Id
+WHERE ipo.Id IS NULL
 
 DELETE p
-FROM forum_posts p
-LEFT JOIN @Posts iposts on p.id = iposts.id
-WHERE iposts.id IS NULL
+FROM ForumPosts p
+LEFT JOIN @Posts iposts on p.Id = iposts.Id
+WHERE iposts.Id IS NULL
 
 DELETE t
-FROM forum_topics t
-LEFT JOIN @Topics it ON t.id = it.id
-WHERE it.id IS NULL
+FROM ForumTopics t
+LEFT JOIN @Topics it ON t.Id = it.Id
+WHERE it.Id IS NULL
 
 DELETE p
-FROM forum_polls p
-LEFT JOIN @Polls ip on p.id = ip.id
-WHERE ip.id IS NULL
-
---Clear User data
-DELETE FROM forum_topic_watches
-DELETE FROM private_messages
+FROM ForumPolls p
+LEFT JOIN @Polls ip on p.Id = ip.Id
+WHERE ip.ID IS NULL
 
 -- Delete Users who have not contributed to any current data, and have no roles
-DECLARE @ActiveUsers As Table (id int primary key)
+DECLARE @ActiveUsers As Table (Id int primary key)
 INSERT INTO @ActiveUsers
-	SELECT u.id
-	FROM users u
-	WHERE EXISTS (SELECT 1 FROM user_awards ua WHERE ua.user_id = u.id)
-	OR EXISTS (SELECT 1 FROM user_files uf where uf.author_id = u.id)
-	OR EXISTS (SELECT 1 FROM submissions s WHERE s.publisher_id = u.id)
-	OR EXISTS (SELECT 1 FROM submissions s WHERE s.judge_id = u.id)
-	OR EXISTS (SELECT 1 FROM submissions s WHERE s.submitter_id = u.id)
-	OR EXISTS (SELECT 1 FROM submission_authors sa where sa.user_id = u.id)
-	OR EXISTS (SELECT 1 FROM publication_authors pa where pa.user_id = u.id)
-	OR EXISTS (SELECT 1 FROM publication_ratings pr WHERE pr.user_id = u.id)
-	OR EXISTS (SELECT 1 FROM forum_posts fp WHERE fp.poster_id = u.id)
-	OR EXISTS (SELECT 1 FROM forum_topics ft WHERE ft.poster_id = u.id)
+	SELECT u.Id
+	FROM Users u
+	WHERE EXISTS (SELECT 1 FROM UserAwards ua WHERE ua.UserId = u.Id)
+	OR EXISTS (SELECT 1 FROM UserFiles uf where uf.AuthorId = u.Id)
+	OR EXISTS (SELECT 1 FROM Submissions s WHERE s.PublisherId = u.Id)
+	OR EXISTS (SELECT 1 FROM Submissions s WHERE s.JudgeId = u.Id)
+	OR EXISTS (SELECT 1 FROM Submissions s WHERE s.SubmitterId = u.Id)
+	OR EXISTS (SELECT 1 FROM SubmissionAuthors sa where sa.UserId = u.Id)
+	OR EXISTS (SELECT 1 FROM PublicationAuthors pa where pa.UserId = u.Id)
+	OR EXISTS (SELECT 1 FROM PublicationRatings pr WHERE pr.UserId = u.id)
+	OR EXISTS (SELECT 1 FROM ForumPosts fp WHERE fp.PosterId = u.Id)
+	OR EXISTS (SELECT 1 FROM ForumTopics ft WHERE ft.PosterId = u.Id)
 	
 DELETE ur
-	FROM user_roles ur
-	LEFT JOIN @ActiveUsers iu on ur.user_id = iu.id
-	WHERE iu.id IS NULL
+	FROM UserRoles ur
+	LEFT JOIN @ActiveUsers iu on ur.UserId = iu.Id
+	WHERE iu.Id IS NULL
 
 DELETE u
-	FROM users u
-	LEFT JOIN @ActiveUsers au on u.id = au.id
-	WHERE au.id IS NULL
+	FROM Users u
+	LEFT JOIN @ActiveUsers au on u.Id = au.Id
+	WHERE au.Id IS NULL
 
-UPDATE users 
+UPDATE Users 
 	SET Signature = NULL,
-		legacy_password = 'caecb26de1c989826750c7c478a9401d', -- We don't want to make these public
-		email = null -- We dont' want to make these public either
+		LegacyPassword = 'caecb26de1c989826750c7c478a9401d', -- We don't want to make these public
+		Email = null -- We dont' want to make these public either
