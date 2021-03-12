@@ -7,7 +7,7 @@
 --		- Go to Advanced -> Types of data to script, and change from Schema only to Data only
 --		- Save as SampleData.sql
 --		- Run
---		- zip SampleData.sql and replace SampleData.zip
+--		- zip SampleData-MsSql.sql and replace SampleData-MsSql.zip
 
 use [TASVideos]
 
