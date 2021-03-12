@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -76,7 +75,6 @@ namespace TASVideos.Data
 		private static void SampleStrategy(IServiceProvider services)
 		{
 			var context = services.GetRequiredService<ApplicationDbContext>();
-			var userManager = services.GetRequiredService<UserManager>();
 			Initialize(context);
 
 			// Note: We specifically do not want to run seed data
