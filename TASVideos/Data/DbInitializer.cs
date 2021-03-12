@@ -211,7 +211,7 @@ namespace TASVideos.Data
 			{
 				var isMsSql = context.Database.ProviderName.EndsWith("SqlServer");
 				var embeddedFile = isMsSql
-					? "TASVideos.Data.SampleData.SampleData.zip"
+					? "TASVideos.Data.SampleData.SampleData-MsSql.zip"
 					: "TASVideos.Data.SampleData.SampleData-Postgres.zip";
 
 				var sql = EmbeddedSampleSqlFile(embeddedFile);

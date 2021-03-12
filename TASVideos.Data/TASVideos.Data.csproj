@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="SampleData\SampleData-Postgres.zip" />
-		<EmbeddedResource Include="SampleData\SampleData.zip" />
+		<EmbeddedResource Include="SampleData\SampleData-MsSql.zip" />
 	</ItemGroup>
 
 	<ItemGroup>
