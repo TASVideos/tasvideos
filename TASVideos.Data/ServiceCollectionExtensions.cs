@@ -29,8 +29,7 @@ namespace TASVideos.Data
 					options =>
 						options.UseSqlServer(
 							configuration.GetConnectionString("DefaultConnection"),
-							b => b.MigrationsAssembly("TASVideos.Data"))
-							.UseSnakeCaseNamingConvention());
+							b => b.MigrationsAssembly("TASVideos.Data")));
 			}
 
 			return services;
