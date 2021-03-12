@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -81,7 +82,6 @@ namespace TASVideos.Data
 			// Note: We specifically do not want to run seed data
 			// This data is already baked into the sample data file
 			GenerateDevSampleData(context).Wait();
-			GenerateDevTestUsers(context, userManager).Wait();
 		}
 
 		private static void ImportStrategy(IServiceProvider services)
@@ -209,8 +209,16 @@ namespace TASVideos.Data
 		{
 			await using (await context.Database.BeginTransactionAsync())
 			{
-				var sql = EmbeddedSampleSqlFile();
-				var commands = sql.Split("\nGO");
+				var isMsSql = context.Database.ProviderName.EndsWith("SqlServer");
+				var embeddedFile = isMsSql
+					? "TASVideos.Data.SampleData.SampleData.zip"
+					: "TASVideos.Data.SampleData.SampleData-Postgres.zip";
+
+				var sql = EmbeddedSampleSqlFile(embeddedFile);
+				var commands = isMsSql
+					? sql.Split("\nGO")
+					: new[] { sql };
+
 				foreach (var c in commands)
 				{
 					// EF needs this BS for some reason
@@ -225,9 +233,8 @@ namespace TASVideos.Data
 			}
 		}
 
-		private static string EmbeddedSampleSqlFile()
+		private static string EmbeddedSampleSqlFile(string sampleDataFile)
 		{
-			const string sampleDataFile = "TASVideos.Data.SampleData.SampleData.zip";
 			var stream = Assembly.GetAssembly(typeof(ApplicationDbContext))
 				?.GetManifestResourceStream(sampleDataFile);
 

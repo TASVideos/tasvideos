@@ -11,9 +11,11 @@
 
 use [TASVideos]
 
-DELETE FROM MediaPosts
 DELETE FROM GameRamAddressDomains
 DELETE FROM GameRamAddresses
+DELETE FROM IpBans
+DELETE FROM MediaPosts
+DELETE FROM UserDisallows
 
 -- Trim user files
 DELETE FROM UserFileComments
@@ -229,6 +231,10 @@ FROM ForumTopics t
 LEFT JOIN @Topics it ON t.Id = it.Id
 WHERE it.Id IS NULL
 
+DELETE p
+FROM ForumPolls p
+LEFT JOIN @Polls ip on p.Id = ip.Id
+WHERE ip.ID IS NULL
 
 -- Delete Users who have not contributed to any current data, and have no roles
 DECLARE @ActiveUsers As Table (Id int primary key)
@@ -258,6 +264,5 @@ DELETE u
 
 UPDATE Users 
 	SET Signature = NULL,
-		LegacyPassword = NULL, -- We don't want to make these public
+		LegacyPassword = 'caecb26de1c989826750c7c478a9401d', -- We don't want to make these public
 		Email = null -- We dont' want to make these public either
-
