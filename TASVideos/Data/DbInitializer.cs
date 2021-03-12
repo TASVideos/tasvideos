@@ -44,7 +44,15 @@ namespace TASVideos.Data
 			/// (this options requires a connection to
 			/// a mysql database of the legacy system)
 			/// </summary>
-			Import
+			Import,
+
+			/// <summary>
+			/// Runs database migrations.  If no database exists,
+			/// it will be created, and schema updated to latest migrations.
+			/// No Seed data will be generated, no import will be run, nor
+			/// any sample data.
+			/// </summary>
+			Migrate
 		}
 
 		public static void InitializeDatabase(IServiceProvider services)
@@ -60,6 +68,9 @@ namespace TASVideos.Data
 					break;
 				case StartupStrategy.Import:
 					ImportStrategy(services);
+					break;
+				case StartupStrategy.Migrate:
+					MigrationStrategy(services);
 					break;
 			}
 		}
@@ -99,6 +110,12 @@ namespace TASVideos.Data
 			LegacyImporter.RunLegacyImport(env, context, connectionString, legacySiteContext, legacyForumContext);
 			PostMigrateSeedData(context);
 			GenerateDevTestUsers(context, userManager).Wait();
+		}
+
+		private static void MigrationStrategy(IServiceProvider services)
+		{
+			var context = services.GetRequiredService<ApplicationDbContext>();
+			context.Database.Migrate();
 		}
 
 		/// <summary>

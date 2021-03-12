@@ -79,6 +79,17 @@
 			},
 			"launchBrowser": true,
 			"launchUrl": "https://localhost:44385/"
+		},
+		"Dev Postgres (Migrate)": {
+			"commandName": "IISExpress",
+			"environmentVariables": {
+				"StartupStrategy": "Migrate",
+				"ASPNETCORE_preventHostingStartup": "True",
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"UsePostgres": "True"
+			},
+			"launchBrowser": true,
+			"launchUrl": "https://localhost:44385/"
 		}
 	}
 }
