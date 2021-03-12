@@ -58,6 +58,17 @@
 			"launchBrowser": true,
 			"launchUrl": "https://localhost:44385/"
 		},
+		"Dev Postgres (Sample Data)": {
+			"commandName": "IISExpress",
+			"environmentVariables": {
+				"StartupStrategy": "Sample",
+				"ASPNETCORE_preventHostingStartup": "True",
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"UsePostgres": "True"
+			},
+			"launchBrowser": true,
+			"launchUrl": "https://localhost:44385/"
+		},
 		"Dev Postgres (Import)": {
 			"commandName": "IISExpress",
 			"environmentVariables": {
