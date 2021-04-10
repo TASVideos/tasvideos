@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -6,9 +7,38 @@ namespace TASVideos.ForumEngine
 {
 	public class BbParser
 	{
-		private static readonly Regex OpeningTag = new (@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]]+))?\]");
-		private static readonly Regex ClosingTag = new (@"\G\/([^\p{C}\[\]=\/]+)\]");
-		private static readonly Regex Url = new (@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
+		private static readonly Regex OpeningTag = new(@"\G
+			# Tag mame
+			(
+				[^\p{C}\[\]=\/]+
+			)
+			# Optional attribute value
+			(=
+				(
+					[^\p{C}\[\]]+
+				)
+			)?
+			# Closing `]`
+			\]
+		", RegexOptions.IgnorePatternWhitespace);
+		private static readonly Regex ClosingTag = new (@"\G
+			# Slash before tag name
+			\/
+			# Tag name
+			(
+				[^\p{C}\[\]=\/]+
+			)
+			# Closing `]`
+			\]
+		", RegexOptions.IgnorePatternWhitespace);
+		private static readonly Regex Url = new (@"\G
+			https?:\/\/
+			(
+				[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
+				|
+				%[A-Fa-f0-9]{2}
+			)+
+		", RegexOptions.IgnorePatternWhitespace);
 
 		// The old system does support attributes in html tags, but only a few that we probably don't want,
 		// and it doesn't even support the full html syntax for them.  So forget attributes for now
