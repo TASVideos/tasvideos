@@ -204,7 +204,7 @@ namespace TASVideos.ForumEngine
 					if (Options != "")
 					{
 						w.Write("<cite>");
-						Helpers.WriteText(w, Options);
+						await BbParser.Parse(Options, false, true).WriteHtml(w, h);
 						w.Write(" wrote:</cite>");
 					}
 
