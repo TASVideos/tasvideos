@@ -7,7 +7,7 @@ namespace TASVideos.ForumEngine
 {
 	public class BbParser
 	{
-		private static readonly Regex OpeningTag = new(@"\G
+		private static readonly Regex OpeningTag = new (@"\G
 			# Tag mame
 			(
 				[^\p{C}\[\]=\/]+
@@ -15,8 +15,13 @@ namespace TASVideos.ForumEngine
 			# Optional attribute value
 			(=
 				(
-					[^\p{C}\[\]]+
+					(
+						(?'open'\[)
+							| [^\p{C}\[\]]
+							| (?'close-open'\])
+					)+
 				)
+				(?(open)(?!))
 			)?
 			# Closing `]`
 			\]
@@ -240,6 +245,8 @@ namespace TASVideos.ForumEngine
 					{
 						var name = m.Groups[1].Value;
 						var options = m.Groups[3].Value;
+						if (options.Length >= 2 && options[0] == '"' && options[^1] == '"')
+							options = options[1..^1];
 						if (KnownTags.TryGetValue(name, out var state))
 						{
 							var e = new Element { Name = name, Options = options };
