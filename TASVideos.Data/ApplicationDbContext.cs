@@ -127,7 +127,7 @@ namespace TASVideos.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			if (Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+			if (this.IsPostgres())
 			{
 				foreach (var entity in builder.Model.GetEntityTypes())
 				{
@@ -138,6 +138,7 @@ namespace TASVideos.Data
 				}
 
 				builder.HasPostgresExtension("citext");
+				builder.HasPostgresExtension("pg_trgm");
 			}
 
 			builder.Entity<ForumTopic>(entity =>
@@ -218,6 +219,20 @@ namespace TASVideos.Data
 			{
 				entity.HasIndex(e => new { e.PageName, e.Revision })
 					.IsUnique();
+
+				if (this.IsPostgres())
+				{
+					entity.HasIndex(e => e.Markup)
+						.HasMethod("gin")
+						.HasOperators("gin_trgm_ops");
+					entity
+						.HasGeneratedTsVectorColumn(
+							p => p.SearchVector,
+							"english",  // Text search config
+							p => new { p.PageName, p.Markup })
+						.HasIndex(p => p.SearchVector)
+						.HasMethod("GIN");
+				}
 			});
 
 			builder.Entity<GameSystem>(entity =>
@@ -379,6 +394,20 @@ namespace TASVideos.Data
 			builder.Entity<ForumPost>(entity =>
 			{
 				entity.Property(e => e.PosterMood).HasDefaultValue(ForumPostMood.None); // TODO: this is only here for sample data, we need to regenerate the file and have the original moods of the posts
+
+				if (this.IsPostgres())
+				{
+					entity.HasIndex(e => e.Text)
+						.HasMethod("gin")
+						.HasOperators("gin_trgm_ops");
+					entity
+						.HasGeneratedTsVectorColumn(
+							p => p.SearchVector,
+							"english",  // Text search config
+							p => p.Text)
+						.HasIndex(p => p.SearchVector)
+						.HasMethod("GIN");
+				}
 			});
 
 			builder.Entity<PublicationUrl>(entity =>
@@ -452,5 +481,18 @@ namespace TASVideos.Data
 		private static bool IsModified(EntityEntry entry, string propertyName)
 			=> entry.Properties
 				.Any(prop => prop.Metadata.Name == propertyName && prop.IsModified);
+	}
+
+	public static class DbContextExtensions
+	{
+		public static bool IsMsSql(this DbContext context)
+		{
+			return context.Database.ProviderName.EndsWith("SqlServer");
+		}
+
+		public static bool IsPostgres(this DbContext context)
+		{
+			return context.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL";
+		}
 	}
 }

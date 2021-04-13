@@ -29,6 +29,9 @@
 				<nav-item>
 					<button type="submit" class="btn btn-link navbar-btn nav-link">Log out</button>
 				</nav-item>
+				<nav-item activate="Search">
+					<a class="nav-link" asp-page="/Search/Index">Search</a>
+				</nav-item>
 			</navbar>
 		</form>
 	}
@@ -40,6 +43,9 @@
 			</nav-item>
 			<nav-item activate="Login">
 				<a class="nav-link" asp-page="/Account/Login" asp-route-returnUrl="@Context.ReturnUrl()">Log in</a>
+			</nav-item>
+			<nav-item activate="Search">
+				<a class="nav-link" asp-page="/Search/Index">Search</a>
 			</nav-item>
 		</navbar>
 	}

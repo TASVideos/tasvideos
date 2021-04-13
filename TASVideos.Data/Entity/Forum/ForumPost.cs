@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity.Forum
 {
@@ -26,6 +27,8 @@ namespace TASVideos.Data.Entity.Forum
 		public bool EnableBbCode { get; set; }
 
 		public ForumPostMood PosterMood { get; set; }
+
+		public NpgsqlTsVector SearchVector { get; set; } = null!;
 	}
 
 	public static class ForumPostQueryableExtensions

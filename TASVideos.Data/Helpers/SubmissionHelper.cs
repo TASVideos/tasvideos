@@ -126,6 +126,21 @@ namespace TASVideos.Data.Helpers
 			return null;
 		}
 
+		private static int? IsRawNumberedLink(string? link, string prefix)
+		{
+			link = link?.Trim('/');
+			if (link != null && link.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+			{
+				var numberText = link.Replace(prefix, "");
+				if (int.TryParse(numberText, out int id))
+				{
+					return id;
+				}
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Determines if the link is in the form of valid submission link ex: 100S.
 		/// </summary>
@@ -153,6 +168,15 @@ namespace TASVideos.Data.Helpers
 		/// </summary>
 		/// <returns>The id of the movie if it is a valid link, else null.</returns>
 		public static int? IsGamePageLink(string link) => IsNumberedLink(link, "G");
+
+		public static int? IsRawSubmissionLink(string link)
+			=> IsRawNumberedLink(link, "InternalSystem/SubmissionContent/S");
+
+		public static int? IsRawPublicationLink(string link)
+			=> IsRawNumberedLink(link, "InternalSystem/PublicationContent/M");
+
+		public static int? IsRawGamePageLink(string link)
+			=> IsRawNumberedLink(link, "InternalSystem/GameContent/G");
 
 		public static readonly SelectListItem[] GameVersionOptions =
 		{
