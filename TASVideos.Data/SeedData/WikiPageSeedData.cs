@@ -279,6 +279,13 @@ See the [System] page for details."
 				RevisionMessage = Import,
 				Markup = @"Accepted formats: All submittable movie formats, .lua, .wch, .gst%%%
 __Do not__ submit compressed files (.zip, .gz, .bz2, .lzma, .xz). The server does its own compression.%%%"
+			},
+			new ()
+			{
+				PageName = "System/SearchTerms",
+				RevisionMessage = Import,
+				Markup = @"Supports similar syntax used by web search engines.%%%
+					For more information, see the [https://www.postgresql.org/docs/current/textsearch-controls.html#TEXTSEARCH-PARSING-QUERIES|postgres text parsing documentation]."
 			}
 		};
 	}
