@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Search
 
 		public List<PageSearchModel> PageResults { get; set; } = new ();
 		public List<PostSearchModel> PostResults { get; set; } = new ();
-		public List<GameSearchModel> GameResults { get; set; } = new();
+		public List<GameSearchModel> GameResults { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
