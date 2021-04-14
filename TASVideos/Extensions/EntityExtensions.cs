@@ -89,7 +89,9 @@ namespace TASVideos.Extensions
 					Branch = s.Branch,
 					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author!.UserName).ToList()),
 					Submitted = s.CreateTimestamp,
-					Status = s.Status
+					Status = s.Status,
+					Judge = s.Judge != null ? s.Judge.UserName : null,
+					Publisher = s.Publisher != null ? s.Publisher.UserName : null
 				});
 		}
 
