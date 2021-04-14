@@ -393,8 +393,6 @@ namespace TASVideos.Data
 
 			builder.Entity<ForumPost>(entity =>
 			{
-				entity.Property(e => e.PosterMood).HasDefaultValue(ForumPostMood.None); // TODO: this is only here for sample data, we need to regenerate the file and have the original moods of the posts
-
 				if (this.IsPostgres())
 				{
 					entity.HasIndex(e => e.Text)
