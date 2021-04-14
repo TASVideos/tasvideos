@@ -42,6 +42,12 @@ namespace TASVideos.Pages.Submissions.Models
 
 		[TableIgnore]
 		public double FrameRate { get; set; }
+
+		[TableIgnore]
+		public string? Judge { get; set; }
+
+		[TableIgnore]
+		public string? Publisher { get; set; }
 	}
 
 	public class SubmissionPageOf<T> : PageOf<T>
