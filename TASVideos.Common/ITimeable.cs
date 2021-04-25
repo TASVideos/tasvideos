@@ -18,7 +18,11 @@ namespace TASVideos.Common
 	{
 		public static TimeSpan Time(this ITimeable timeable)
 		{
-			return TimeSpan.FromSeconds(Math.Round(timeable.Frames / timeable.FrameRate, 2));
+			int seconds = (int)(timeable.Frames / timeable.FrameRate);
+			double fractionalSeconds = (timeable.Frames / timeable.FrameRate) - seconds;
+			int milliseconds = (int)(Math.Round(fractionalSeconds, 2) * 1000);
+			var timespan = new TimeSpan(0, 0, 0, seconds, milliseconds);
+			return timespan;
 		}
 	}
 }
