@@ -50,8 +50,8 @@ namespace TASVideos.Legacy.Imports
 				}
 				else
 				{
-					g.Key.SystemFrameRateId = g.First().Id;
-					g.Key.SystemFrameRate = g.First();
+					g.Key.SystemFrameRateId = systemFrameRate.Id;
+					g.Key.SystemFrameRate = systemFrameRate;
 				}
 
 				g.Key.ImportedTime = decimal.Round((decimal)(g.Key.Frames / systemFrameRate.FrameRate), 3);
