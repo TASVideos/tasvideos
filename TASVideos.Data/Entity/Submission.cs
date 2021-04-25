@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using TASVideos.Common;
 using TASVideos.Data.Entity.Game;
@@ -128,7 +129,7 @@ namespace TASVideos.Data.Entity
 			Title =
 			$"#{Id}: {string.Join(" & ", authorList)}'s {System.Code} {GameName}"
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-				+ $" in {this.Time():g}";
+				+ $" in {this.Time().ToString(":g", CultureInfo.InvariantCulture)}";
 		}
 
 		// Temporary for import debugging
