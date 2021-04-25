@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 using TASVideos.Common;
 using TASVideos.Data.Entity.Awards;
@@ -121,7 +122,7 @@ namespace TASVideos.Data.Entity
 				$"{System.Code} {Game.DisplayName}"
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
 				+ $" by {string.Join(" & ", authorList)}"
-				+ $" in {this.Time():g}";
+				+ $" in {this.Time().ToString(":g", CultureInfo.InvariantCulture)}";
 		}
 	}
 
