@@ -32,7 +32,7 @@ namespace TASVideos.Legacy
 			legacyForumContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
 			var stopwatch = Stopwatch.StartNew();
-			SqlBulkImporter.BeginImport(connectionStr, context.Database.ProviderName);
+			SqlBulkImporter.BeginImport(connectionStr, context.Database.IsSqlServer());
 			Run("Tags", () => TagImporter.Import(legacySiteContext));
 			Run("Roms", () => RomImporter.Import(legacySiteContext));
 			Run("Games", () => GameImporter.Import(legacySiteContext));

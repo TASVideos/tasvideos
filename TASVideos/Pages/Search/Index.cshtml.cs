@@ -37,7 +37,7 @@ namespace TASVideos.Pages.Search
 
 		public async Task<IActionResult> OnGet()
 		{
-			if (!_db.IsPostgres())
+			if (!_db.Database.IsNpgsql())
 			{
 				ModelState.AddModelError("", "This feature is not currently available.");
 				return BadRequest(ModelState);

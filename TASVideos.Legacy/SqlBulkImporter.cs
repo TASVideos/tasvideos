@@ -9,10 +9,10 @@ namespace TASVideos.Legacy
 {
 	public static class SqlBulkImporter
 	{
-		public static void BeginImport(string connectionString, string providerName)
+		public static void BeginImport(string connectionString, bool isMsSql)
 		{
 			ConnectionString = connectionString;
-			IsMsSql = providerName.EndsWith("SqlServer");
+			IsMsSql = isMsSql;
 		}
 
 		private static string ConnectionString { get; set; } = "";

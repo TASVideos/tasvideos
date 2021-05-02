@@ -224,7 +224,7 @@ namespace TASVideos.Data
 		{
 			await using (await context.Database.BeginTransactionAsync())
 			{
-				var isMsSql = context.IsMsSql();
+				var isMsSql = context.Database.IsSqlServer();
 				var embeddedFile = isMsSql
 					? "TASVideos.Data.SampleData.SampleData-MsSql.zip"
 					: "TASVideos.Data.SampleData.SampleData-Postgres.zip";
