@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Awards;
 
@@ -15,18 +13,18 @@ namespace TASVideos.Services
 		/// Gets all awards for the given user,
 		/// or any movie for which the user is an author of
 		/// </summary>
-		Task<IEnumerable<AwardAssignmentSummary>> ForUser(int userId);
+		ValueTask<IEnumerable<AwardAssignmentSummary>> ForUser(int userId);
 
 		/// <summary>
 		/// Gets all awards for the given publication
 		/// </summary>
-		Task<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId);
+		ValueTask<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId);
 
 		/// <summary>
 		/// Gets all awards assigned in the given year
 		/// </summary>
 		/// <param name="year">The year, ex: 2010</param>
-		Task<IEnumerable<AwardAssignment>> ForYear(int year);
+		ValueTask<IEnumerable<AwardAssignment>> ForYear(int year);
 
 		/// <summary>
 		/// Clears the awards cache
@@ -47,7 +45,7 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public async Task<IEnumerable<AwardAssignmentSummary>> ForUser(int userId)
+		public async ValueTask<IEnumerable<AwardAssignmentSummary>> ForUser(int userId)
 		{
 			var allAwards = await AllAwards();
 
@@ -57,7 +55,7 @@ namespace TASVideos.Services
 				.ToList();
 		}
 
-		public async Task<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId)
+		public async ValueTask<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId)
 		{
 			var allAwards = await AllAwards();
 
@@ -67,7 +65,7 @@ namespace TASVideos.Services
 				.ToList();
 		}
 
-		public async Task<IEnumerable<AwardAssignment>> ForYear(int year)
+		public async ValueTask<IEnumerable<AwardAssignment>> ForYear(int year)
 		{
 			var allAwards = await AllAwards();
 			return allAwards
@@ -81,7 +79,7 @@ namespace TASVideos.Services
 			await AllAwards();
 		}
 
-		private async Task<IEnumerable<AwardAssignment>> AllAwards()
+		private async ValueTask<IEnumerable<AwardAssignment>> AllAwards()
 		{
 			if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))
 			{

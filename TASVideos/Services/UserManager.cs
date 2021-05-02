@@ -87,7 +87,7 @@ namespace TASVideos.Services
 		/// Returns the the number of unread <see cref="PrivateMessage"/>
 		/// for the given <see cref="User" />
 		/// </summary>
-		public async Task<int> GetUnreadMessageCount(int userId)
+		public async ValueTask<int> GetUnreadMessageCount(int userId)
 		{
 			var cacheKey = CacheKeys.UnreadMessageCount + userId;
 			if (_cache.TryGetValue(cacheKey, out int unreadMessageCount))

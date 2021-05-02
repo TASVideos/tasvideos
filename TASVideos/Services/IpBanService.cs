@@ -16,7 +16,7 @@ namespace TASVideos.Services
 		/// <summary>
 		/// Returns a value indicating whether or not the ip address is currently banned.
 		/// </summary>
-		Task<bool> IsBanned(IPAddress? ipAddress);
+		ValueTask<bool> IsBanned(IPAddress? ipAddress);
 
 		/// <summary>
 		/// Returns a list of all banned IP Address/Ranges
@@ -53,7 +53,7 @@ namespace TASVideos.Services
 			_logger = logger;
 		}
 
-		public async Task<bool> IsBanned(IPAddress? ipAddress)
+		public async ValueTask<bool> IsBanned(IPAddress? ipAddress)
 		{
 			if (ipAddress is null)
 			{
@@ -71,7 +71,7 @@ namespace TASVideos.Services
 				.ToListAsync();
 		}
 
-		private async Task<IEnumerable<IPAddressRange>> BannedIps()
+		private async ValueTask<IEnumerable<IPAddressRange>> BannedIps()
 		{
 			if (_cache.TryGetValue(IpBanList, out IEnumerable<IPAddressRange> list))
 			{

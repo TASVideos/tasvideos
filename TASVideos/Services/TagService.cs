@@ -12,9 +12,9 @@ namespace TASVideos.Services
 
 	public interface ITagService
 	{
-		Task<ICollection<Tag>> GetAll();
-		Task<Tag?> GetById(int id);
-		Task<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
+		ValueTask<ICollection<Tag>> GetAll();
+		ValueTask<Tag?> GetById(int id);
+		ValueTask<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 		Task<bool> InUse(int id);
 		Task<TagEditResult> Add(string code, string displayName);
 		Task<TagEditResult> Edit(int id, string code, string displayName);
@@ -33,7 +33,7 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public async Task<ICollection<Tag>> GetAll()
+		public async ValueTask<ICollection<Tag>> GetAll()
 		{
 			if (_cache.TryGetValue(TagsKey, out List<Tag> tags))
 			{
@@ -45,13 +45,13 @@ namespace TASVideos.Services
 			return tags;
 		}
 
-		public async Task<Tag?> GetById(int id)
+		public async ValueTask<Tag?> GetById(int id)
 		{
 			var tags = await GetAll();
 			return tags.SingleOrDefault(t => t.Id == id);
 		}
 
-		public async Task<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds)
+		public async ValueTask<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds)
 		{
 			var tags = await GetAll();
 
