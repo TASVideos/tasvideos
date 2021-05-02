@@ -127,7 +127,7 @@ namespace TASVideos.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			if (this.IsPostgres())
+			if (Database.IsNpgsql())
 			{
 				foreach (var entity in builder.Model.GetEntityTypes())
 				{
@@ -220,7 +220,7 @@ namespace TASVideos.Data
 				entity.HasIndex(e => new { e.PageName, e.Revision })
 					.IsUnique();
 
-				if (this.IsPostgres())
+				if (Database.IsNpgsql())
 				{
 					entity.HasIndex(e => e.Markup)
 						.HasMethod("gin")
@@ -393,7 +393,7 @@ namespace TASVideos.Data
 
 			builder.Entity<ForumPost>(entity =>
 			{
-				if (this.IsPostgres())
+				if (Database.IsNpgsql())
 				{
 					entity.HasIndex(e => e.Text)
 						.HasMethod("gin")
@@ -479,18 +479,5 @@ namespace TASVideos.Data
 		private static bool IsModified(EntityEntry entry, string propertyName)
 			=> entry.Properties
 				.Any(prop => prop.Metadata.Name == propertyName && prop.IsModified);
-	}
-
-	public static class DbContextExtensions
-	{
-		public static bool IsMsSql(this DbContext context)
-		{
-			return context.Database.ProviderName.EndsWith("SqlServer");
-		}
-
-		public static bool IsPostgres(this DbContext context)
-		{
-			return context.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL";
-		}
 	}
 }
