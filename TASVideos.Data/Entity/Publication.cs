@@ -122,7 +122,7 @@ namespace TASVideos.Data.Entity
 				$"{System.Code} {Game.DisplayName}"
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
 				+ $" by {string.Join(" & ", authorList)}"
-				+ $" in {this.Time().ToString(":g", CultureInfo.InvariantCulture)}";
+				+ $" in {this.Time().ToString("g", CultureInfo.InvariantCulture)}";
 		}
 	}
 
