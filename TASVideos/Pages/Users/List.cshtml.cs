@@ -74,7 +74,7 @@ namespace TASVideos.Pages.Users
 			return new JsonResult(exists);
 		}
 
-		private async Task<IEnumerable<string>> GetUsersByPartial(string partialUserName)
+		private async ValueTask<IEnumerable<string>> GetUsersByPartial(string partialUserName)
 		{
 			var upper = partialUserName.ToUpper();
 			var cacheKey = nameof(GetUsersByPartial) + upper;

@@ -15,13 +15,13 @@ namespace TASVideos.Services
 		/// Calculates the player points for the user with the given id.
 		/// If a user with the given <see cref="userId"/> does not exist, 0 is returned
 		/// </summary>
-		Task<double> PlayerPoints(int userId);
+		ValueTask<double> PlayerPoints(int userId);
 
 		/// <summary>
 		/// Returns the averaged overall, tech, and entertainment ratings for a publication
 		/// with the given id.
 		/// </summary>
-		Task<RatingDto> PublicationRating(int id);
+		ValueTask<RatingDto> PublicationRating(int id);
 
 		/// <summary>
 		/// Returns the averaged overall, tech, and entertainment ratings for a publication
@@ -48,7 +48,7 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public async Task<double> PlayerPoints(int userId)
+		public async ValueTask<double> PlayerPoints(int userId)
 		{
 			string cacheKey = PlayerPointKey + userId;
 			if (_cache.TryGetValue(cacheKey, out double playerPoints))
@@ -85,7 +85,7 @@ namespace TASVideos.Services
 			return playerPoints;
 		}
 
-		public async Task<RatingDto> PublicationRating(int id)
+		public async ValueTask<RatingDto> PublicationRating(int id)
 		{
 			string cacheKey = MovieCacheKey(id);
 			if (_cache.TryGetValue(cacheKey, out RatingDto rating))
@@ -174,7 +174,7 @@ namespace TASVideos.Services
 		}
 
 		// total ratings / (2 * total publications)
-		private async Task<double> AverageNumberOfRatingsPerPublication()
+		private async ValueTask<double> AverageNumberOfRatingsPerPublication()
 		{
 			if (_cache.TryGetValue(AverageNumberOfRatingsKey, out int playerPoints))
 			{

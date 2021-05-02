@@ -36,7 +36,7 @@ namespace TASVideos.ViewComponents
 			return View(model);
 		}
 
-		private async Task<double> GuessFps(string? pageName)
+		private async ValueTask<double> GuessFps(string? pageName)
 		{
 			var submissionId = WikiHelper.IsSubmissionPage(pageName);
 			if (submissionId.HasValue)

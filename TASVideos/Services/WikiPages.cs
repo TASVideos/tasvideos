@@ -30,7 +30,7 @@ namespace TASVideos.Services
 		/// Else the latest revision is returned
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		Task<WikiPage?> Page(string? pageName, int? revisionId = null);
+		ValueTask<WikiPage?> Page(string? pageName, int? revisionId = null);
 
 		/// <summary>
 		/// Returns details about a Wiki page with the given id
@@ -193,7 +193,7 @@ namespace TASVideos.Services
 			return page is not null;
 		}
 
-		public async Task<WikiPage?> Page(string? pageName, int? revisionId = null)
+		public async ValueTask<WikiPage?> Page(string? pageName, int? revisionId = null)
 		{
 			if (string.IsNullOrWhiteSpace(pageName))
 			{
@@ -536,7 +536,7 @@ namespace TASVideos.Services
 		/// Returns a System page with the given page suffix
 		/// <example>SystemPage("Languages") will return the page System/Languages</example>
 		/// </summary>
-		public static Task<WikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
+		public static ValueTask<WikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
 		{
 			return pages.Page("System/" + pageName, revisionId);
 		}

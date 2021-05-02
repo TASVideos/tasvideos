@@ -9,7 +9,7 @@ namespace TASVideos.Services
 {
 	public interface IMovieSearchTokens
 	{
-		Task<IPublicationTokens> GetTokens();
+		ValueTask<IPublicationTokens> GetTokens();
 	}
 
 	public class MovieSearchTokens : IMovieSearchTokens
@@ -23,7 +23,7 @@ namespace TASVideos.Services
 			_cache = cache;
 		}
 
-		public async Task<IPublicationTokens> GetTokens()
+		public async ValueTask<IPublicationTokens> GetTokens()
 		{
 			if (_cache.TryGetValue(CacheKeys.MovieTokens, out MovieTokens cachedResult))
 			{
