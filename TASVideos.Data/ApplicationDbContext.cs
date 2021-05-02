@@ -233,6 +233,10 @@ namespace TASVideos.Data
 						.HasIndex(p => p.SearchVector)
 						.HasMethod("GIN");
 				}
+				else
+				{
+					entity.Ignore(e => e.SearchVector);
+				}
 			});
 
 			builder.Entity<GameSystem>(entity =>
@@ -405,6 +409,10 @@ namespace TASVideos.Data
 							p => p.Text)
 						.HasIndex(p => p.SearchVector)
 						.HasMethod("GIN");
+				}
+				else
+				{
+					entity.Ignore(e => e.SearchVector);
 				}
 			});
 
