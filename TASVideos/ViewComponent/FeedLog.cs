@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.Services.RssFeedParsers;
+using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents

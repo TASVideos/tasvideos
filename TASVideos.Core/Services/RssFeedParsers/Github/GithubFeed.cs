@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
-namespace TASVideos.Services.RssFeedParsers.Github
+namespace TASVideos.Core.Services.RssFeedParsers.Github
 {
-	public static class GithubFeed
+	internal static class GithubFeed
 	{
 		public static IEnumerable<CommitEntry> Parse(string xml, int max)
 		{

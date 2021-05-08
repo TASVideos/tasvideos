@@ -2,10 +2,10 @@
 using System.Xml.Serialization;
 
 // https://xmltocsharp.azurewebsites.net/
-namespace TASVideos.Services.RssFeedParsers.Github
+namespace TASVideos.Core.Services.RssFeedParsers.Github
 {
 	[XmlRoot(ElementName="feed", Namespace="http://www.w3.org/2005/Atom")]
-	public class GithubFeedResult
+	internal class GithubFeedResult
 	{
 		[XmlElement(ElementName="id", Namespace="http://www.w3.org/2005/Atom")]
 		public string? Id { get; set; }
