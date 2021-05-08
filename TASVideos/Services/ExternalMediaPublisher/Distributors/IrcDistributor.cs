@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
+using TASVideos.Core.Settings;
 using TASVideos.Extensions;
 
 // ReSharper disable FunctionNeverReturns

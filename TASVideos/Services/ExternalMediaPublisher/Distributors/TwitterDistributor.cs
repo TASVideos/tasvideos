@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TASVideos.Core.Settings;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {

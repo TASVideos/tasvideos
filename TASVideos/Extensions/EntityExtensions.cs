@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
@@ -103,6 +104,26 @@ namespace TASVideos.Extensions
 				ForumTopicType.Announcement => "<b>Announcement: </b> " + title,
 				_ => title
 			};
+		}
+	}
+
+	// TODO: move me
+	public static class AppSettingsExtensions
+	{
+		public static DbInitializer.StartupStrategy StartupStrategy(this Core.Settings.AppSettings settings)
+		{
+			var strategy = settings.StartupStrategy;
+			if (!string.IsNullOrWhiteSpace(settings.StartupStrategy))
+			{
+				var result = Enum.TryParse(typeof(DbInitializer.StartupStrategy), strategy, true, out object? strategyObj);
+
+				if (result)
+				{
+					return (DbInitializer.StartupStrategy)(strategyObj ?? DbInitializer.StartupStrategy.Minimal);
+				}
+			}
+
+			return DbInitializer.StartupStrategy.Minimal;
 		}
 	}
 }

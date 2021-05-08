@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
+	</ItemGroup>
+</Project>

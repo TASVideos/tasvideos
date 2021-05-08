@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
+using TASVideos.Core.Settings;
 
 namespace TASVideos.Services.ExternalMediaPublisher.Distributors
 {

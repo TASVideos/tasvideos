@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Options;
+using TASVideos.Core.Settings;
 
 namespace TASVideos.Services.ExternalMediaPublisher
 {
