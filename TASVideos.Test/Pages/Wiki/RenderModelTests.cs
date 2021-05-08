@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki;
-using TASVideos.Services;
 
 namespace TASVideos.Test.Pages.Wiki
 {

@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
+using TASVideos.Core.Services.Email;
 using TASVideos.Services;
-using TASVideos.Services.Email;
 
 namespace TASVideos.Pages.Account
 {

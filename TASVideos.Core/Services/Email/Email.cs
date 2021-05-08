@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TASVideos.Services.Email
+namespace TASVideos.Core.Services.Email
 {
 	/// <summary>
 	/// Represents an email that can be send to an <see cref="IEmailSender"/>

@@ -7,7 +7,7 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using TASVideos.Core.Settings;
 
-namespace TASVideos.Services.Email
+namespace TASVideos.Core.Services.Email
 {
 	public interface IEmailSender
 	{

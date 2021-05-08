@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using TASVideos.Core.Services;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;

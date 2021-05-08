@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 
-namespace TASVideos.Services.PublicationChain
+namespace TASVideos.Core.Services.PublicationChain
 {
 	public interface IPublicationHistory
 	{

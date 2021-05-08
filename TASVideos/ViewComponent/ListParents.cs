@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents

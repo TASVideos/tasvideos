@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
 using Microsoft.AspNetCore.Authorization;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {

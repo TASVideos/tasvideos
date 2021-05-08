@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public record WikiOrphan(
 		string PageName,

@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Models;
-using TASVideos.Services;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents

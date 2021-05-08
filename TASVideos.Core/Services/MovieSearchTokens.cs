@@ -1,12 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Services.Dtos;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public interface IMovieSearchTokens
 	{

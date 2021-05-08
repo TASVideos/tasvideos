@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace TASVideos.Services.Email
+namespace TASVideos.Core.Services.Email
 {
 	public interface IEmailService
 	{

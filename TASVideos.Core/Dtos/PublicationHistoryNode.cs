@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public class PublicationHistoryGroup
 	{

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Posts.Models
 {
