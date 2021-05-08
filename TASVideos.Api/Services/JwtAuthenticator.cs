@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using TASVideos.Core.Services;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -24,13 +23,12 @@ namespace TASVideos.Api.Services
 	{
 		private readonly AppSettings.JwtSettings _settings;
 		private readonly ApplicationDbContext _db;
-		private readonly UserManager<User> _userManager;
+		private readonly UserManager _userManager;
 		private readonly SignInManager<User> _signInManager;
 
-		// TODO: put user manager in a common library that both api and mvc can use, also move sign in logic  in Login.cshtml to a service
 		public JwtAuthenticator(
 			ApplicationDbContext db,
-			UserManager<User> userManager,
+			UserManager userManager,
 			SignInManager<User> signInManager,
 			AppSettings.JwtSettings settings)
 		{
@@ -48,12 +46,13 @@ namespace TASVideos.Api.Services
 				return "";
 			}
 
-			await AddUserPermissionsToClaims(user);
 			var result = await _signInManager.PasswordSignInAsync(user, password, false, true);
 			if (!result.Succeeded)
 			{
 				return "";
 			}
+
+			await _userManager.AddUserPermissionsToClaims(user);
 
 			var claims = await _userManager.GetClaimsAsync(user);
 			var tokenHandler = new JwtSecurityTokenHandler();
@@ -70,34 +69,6 @@ namespace TASVideos.Api.Services
 			var token = tokenHandler.CreateToken(tokenDescriptor);
 			var jwtToken = tokenHandler.WriteToken(token);
 			return jwtToken;
-		}
-
-		// TODO: copy pasta from UserManager
-		private async Task AddUserPermissionsToClaims(User user)
-		{
-			var existingClaims = await _userManager.GetClaimsAsync(user);
-			if (existingClaims.Any(c => c.Type == CustomClaimTypes.Permission))
-			{
-				return;
-			}
-
-			var permissions = await GetUserPermissionsById(user.Id);
-			await _userManager.AddClaimsAsync(user, permissions
-				.Select(p => new Claim(CustomClaimTypes.Permission, ((int)p).ToString())));
-		}
-
-		/// <summary>
-		/// Returns a list of all permissions of the <seea cref="User"/> with the given id
-		/// </summary>
-		private async Task<IEnumerable<PermissionTo>> GetUserPermissionsById(int userId)
-		{
-			return await _db.Users
-				.Where(u => u.Id == userId)
-				.SelectMany(u => u.UserRoles)
-				.SelectMany(ur => ur.Role!.RolePermission)
-				.Select(rp => rp.PermissionId)
-				.Distinct()
-				.ToListAsync();
 		}
 	}
 }
