@@ -34,14 +34,13 @@ namespace TASVideos
 				.AddCookieConfiguration(Environment)
 				.AddGzipCompression(Settings)
 				.AddCacheService(Settings.CacheSettings)
-				.AddServices(Environment)
+				.AddServices(Environment, Settings)
 				.AddExternalMediaPublishing(Environment)
 				.AddAutoMapperWithProjections()
 				.AddSwagger(Settings);
 
 			// Internal Libraries
 			services
-				.AddTasvideosApi(Settings.Jwt)
 				.AddTasvideosData(Configuration, Settings.UsePostgres)
 				.AddTasVideosLegacy(
 					Settings.ConnectionStrings.LegacySiteConnection,

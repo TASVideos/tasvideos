@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Api.Requests;
-using TASVideos.Api.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Api.Controllers
 {

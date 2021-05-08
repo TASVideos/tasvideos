@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using TASVideos.Core.Services;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-#pragma warning disable 1591
-namespace TASVideos.Api.Services
+namespace TASVideos.Core.Services
 {
 	public interface IJwtAuthenticator
 	{
