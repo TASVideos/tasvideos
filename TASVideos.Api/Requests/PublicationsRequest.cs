@@ -11,59 +11,59 @@ namespace TASVideos.Api.Requests
 	public class PublicationsRequest : ApiRequest, IPublicationTokens
 	{
 		/// <summary>
-		/// Gets or sets the system codes to filter by.
+		/// Gets the system codes to filter by.
 		/// </summary>
-		public string? Systems { get; set; }
+		public string? Systems { get; init; }
 
 		/// <summary>
-		/// Gets or sets the publication tier codes to filter by.
+		/// Gets the publication tier codes to filter by.
 		/// </summary>
-		public string? TierNames { get; set; }
+		public string? TierNames { get; init; }
 
 		/// <summary>
-		/// Gets or sets the start year to filter by.
+		/// Gets the start year to filter by.
 		/// </summary>
-		public int? StartYear { get; set; }
+		public int? StartYear { get; init; }
 
 		/// <summary>
-		/// Gets or sets the end year to filter by.
+		/// Gets the end year to filter by.
 		/// </summary>
-		public int? EndYear { get; set; }
+		public int? EndYear { get; init; }
 
 		/// <summary>
-		/// Gets or sets the game genres to filter by.
+		/// Gets the game genres to filter by.
 		/// </summary>
-		public string? GenreNames { get; set; }
+		public string? GenreNames { get; init; }
 
 		/// <summary>
-		/// Gets or sets the publication flags names to filter by.
+		/// Gets the publication flags names to filter by.
 		/// </summary>
-		public string? TagNames { get; set; }
+		public string? TagNames { get; init; }
 
 		/// <summary>
-		/// Gets or sets the publication flags names to filter by.
+		/// Gets the publication flags names to filter by.
 		/// </summary>
-		public string? FlagNames { get; set; }
+		public string? FlagNames { get; init; }
 
 		/// <summary>
-		/// Gets or sets the author ids filter by.
+		/// Gets the author ids filter by.
 		/// </summary>
-		public string? AuthorIds { get; set; }
+		public string? AuthorIds { get; init; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether or not to show obsoleted movies.
+		/// Gets a value indicating whether or not to show obsoleted movies.
 		/// </summary>
-		public bool ShowObsoleted { get; set; }
+		public bool ShowObsoleted { get; init; }
 
 		/// <summary>
-		/// Gets or sets the list of Game Ids to filter by.
+		/// Gets the list of Game Ids to filter by.
 		/// </summary>
-		public string? GameIds { get; set; }
+		public string? GameIds { get; init; }
 
 		/// <summary>
-		///  Gets or sets the list of Game Group Ids to filter by.
+		///  Gets the list of Game Group Ids to filter by.
 		/// </summary>
-		public string? GameGroupIds { get; set; }
+		public string? GameGroupIds { get; init; }
 
 		IEnumerable<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
 		IEnumerable<string> IPublicationTokens.Tiers => TierNames.CsvToStrings();

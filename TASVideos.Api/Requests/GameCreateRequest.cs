@@ -12,42 +12,42 @@ namespace TASVideos.Api.Requests
 	{
 		[Required]
 		[Display(Name = "System")]
-		public string SystemCode { get; set; } = "";
+		public string SystemCode { get; init; } = "";
 
 		[Required]
 		[Display(Name = "Good Name")]
 		[StringLength(250)]
-		public string GoodName { get; set; } = "";
+		public string GoodName { get; init; } = "";
 
 		[Required]
 		[StringLength(100)]
 		[Display(Name = "Display Name")]
-		public string DisplayName { get; set; } = "";
+		public string DisplayName { get; init; } = "";
 
 		[Required]
 		[StringLength(8)]
 		[Display(Name = "Abbreviation")]
-		public string Abbreviation { get; set; } = "";
+		public string Abbreviation { get; init; } = "";
 
 		[Required]
 		[StringLength(64)]
 		[Display(Name = "Search Key")]
-		public string SearchKey { get; set; } = "";
+		public string SearchKey { get; init; } = "";
 
 		[Required]
 		[StringLength(250)]
 		[Display(Name = "Youtube Tags")]
-		public string YoutubeTags { get; set; } = "";
+		public string YoutubeTags { get; init; } = "";
 
 		[StringLength(250)]
 		[Display(Name = "Screenshot Url")]
-		public string? ScreenshotUrl { get; set; }
+		public string? ScreenshotUrl { get; init; }
 
 		[StringLength(300)]
 		[Display(Name = "Game Resources Page")]
-		public string? GameResourcesPage { get; set; }
+		public string? GameResourcesPage { get; init; }
 
 		[Display(Name = "Genres")]
-		public IEnumerable<int> Genres { get; set; } = new List<int>();
+		public IEnumerable<int> Genres { get; init; } = new List<int>();
 	}
 }

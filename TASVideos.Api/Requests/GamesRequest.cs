@@ -13,7 +13,7 @@ namespace TASVideos.Api.Requests
 		/// Gets or sets the system codes to filter by.
 		/// </summary>
 		[StringLength(10)]
-		public string? Systems { get; set; }
+		public string? Systems { get; init; }
 
 		internal IEnumerable<string> SystemCodes => Systems.CsvToStrings();
 	}

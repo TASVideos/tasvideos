@@ -11,12 +11,12 @@ namespace TASVideos.Api.Requests
 		/// Gets or sets the username of the user to sign in as
 		/// </summary>
 		[Required(AllowEmptyStrings = false)]
-		public string Username { get; set; } = "";
+		public string Username { get; init; } = "";
 
 		/// <summary>
 		/// Gets or sets the password of the user to sign in as
 		/// </summary>
 		[Required(AllowEmptyStrings = false)]
-		public string Password { get; set; } = "";
+		public string Password { get; init; } = "";
 	}
 }
