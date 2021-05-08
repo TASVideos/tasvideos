@@ -37,7 +37,6 @@ namespace TASVideos.Api.Controllers
 		/// <response code="400">The request parameters are invalid.</response>
 		/// <response code="404">A submission with the given id was not found.</response>
 		[HttpGet("{id}")]
-		[Validate]
 		[ProducesResponseType(typeof(SubmissionsResponse), 200)]
 		public async Task<IActionResult> Get(int id)
 		{
@@ -59,9 +58,8 @@ namespace TASVideos.Api.Controllers
 		/// <response code="200">Returns the list of publications.</response>
 		/// <response code="400">The request parameters are invalid.</response>
 		[HttpGet]
-		[Validate]
 		[ProducesResponseType(typeof(IEnumerable<SubmissionsResponse>), 200)]
-		public async Task<IActionResult> GetAll(SubmissionsRequest request)
+		public async Task<IActionResult> GetAll([FromQuery]SubmissionsRequest request)
 		{
 			var subs = (await _mapper.ProjectTo<SubmissionsResponse>(
 				_db.Submissions
