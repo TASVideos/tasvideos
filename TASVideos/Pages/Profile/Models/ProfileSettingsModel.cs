@@ -35,6 +35,6 @@ namespace TASVideos.Pages.Profile.Models
 		[Display(Name = "Mood-variant avatar URL")]
 		public string? MoodAvatar { get; set; }
 
-		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
+		public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 	}
 }

@@ -10,7 +10,6 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Topics
 {

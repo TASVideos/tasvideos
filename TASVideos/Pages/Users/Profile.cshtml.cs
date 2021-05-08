@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Users
 {
@@ -29,7 +28,7 @@ namespace TASVideos.Pages.Users
 		[FromRoute]
 		public string? UserName { get; set; }
 
-		public UserProfileModel Profile { get; set; } = new ();
+		public UserProfile Profile { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
-
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Account
 {

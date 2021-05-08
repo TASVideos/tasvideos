@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 
 namespace TASVideos.Test.Services
 {

@@ -1,9 +1,9 @@
 ﻿namespace TASVideos.Models
 {
 	/// <summary>
-	/// Represents a concise view of aRole for the User profile screen.
+	/// Represents a concise view of a Role
 	/// </summary>
-	public class RoleBasicDisplay
+	public class RoleDto
 	{
 		public int Id { get; set; }
 		public string? Name { get; set; }

@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.Pages.Profile.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Profile
 {
@@ -56,7 +55,7 @@ namespace TASVideos.Pages.Profile
 					.Where(u => u.Id == user.Id)
 					.SelectMany(u => u.UserRoles)
 					.Select(ur => ur.Role!)
-					.Select(r => new RoleBasicDisplay
+					.Select(r => new RoleDto
 					{
 						Id = r.Id,
 						Name = r.Name,
