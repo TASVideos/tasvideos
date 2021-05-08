@@ -8,17 +8,17 @@ namespace TASVideos.Api.Responses
 	/// </summary>
 	public class SystemsResponse
 	{
-		public int Id { get; set; }
-		public string Code { get; set; } = "";
-		public string DisplayName { get; set; } = "";
+		public int Id { get; init; }
+		public string Code { get; init; } = "";
+		public string DisplayName { get; init; } = "";
 
-		public IEnumerable<FrameRates> SystemFrameRates { get; set; } = new List<FrameRates>();
+		public IEnumerable<FrameRates> SystemFrameRates { get; init; } = new List<FrameRates>();
 
 		public class FrameRates
 		{
-			public double FrameRate { get; set; }
-			public string RegionCode { get; set; } = "";
-			public bool Preliminary { get; set; }
+			public double FrameRate { get; init; }
+			public string RegionCode { get; init; } = "";
+			public bool Preliminary { get; init; }
 		}
 	}
 }

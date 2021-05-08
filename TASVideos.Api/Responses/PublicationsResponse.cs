@@ -11,49 +11,49 @@ namespace TASVideos.Api.Responses
 	public class PublicationsResponse
 	{
 		[Sortable]
-		public int Id { get; set; }
+		public int Id { get; init; }
 
 		[Sortable]
-		public string Title { get; set; } = "";
+		public string Title { get; init; } = "";
 
 		[Sortable]
-		public string Branch { get; set; } = "";
+		public string Branch { get; init; } = "";
 
 		[Sortable]
-		public string EmulatorVersion { get; set; } = "";
+		public string EmulatorVersion { get; init; } = "";
 
 		[Sortable]
-		public string Tier { get; set; } = "";
+		public string Tier { get; init; } = "";
 
 		[Sortable]
-		public string SystemCode { get; set; } = "";
+		public string SystemCode { get; init; } = "";
 
 		[Sortable]
-		public int SubmissionId { get; set; }
+		public int SubmissionId { get; init; }
 
 		[Sortable]
-		public int GameId { get; set; }
+		public int GameId { get; init; }
 
 		[Sortable]
-		public int RomId { get; set; }
+		public int RomId { get; init; }
 
 		[Sortable]
-		public int ObsoletedById { get; set; }
+		public int ObsoletedById { get; init; }
 
 		[Sortable]
-		public int Frames { get; set; }
+		public int Frames { get; init; }
 
 		[Sortable]
-		public int RerecordCount { get; set; }
+		public int RerecordCount { get; init; }
 
 		[Sortable]
-		public double SystemFrameRate { get; set; }
+		public double SystemFrameRate { get; init; }
 
 		[Sortable]
-		public string MovieFileName { get; set; } = "";
+		public string MovieFileName { get; init; } = "";
 
-		public IEnumerable<string> Authors { get; set; } = Array.Empty<string>();
-		public IEnumerable<string> Tags { get; set; } = Array.Empty<string>();
-		public IEnumerable<string> Flags { get; set; } = Array.Empty<string>();
+		public IEnumerable<string> Authors { get; init; } = Array.Empty<string>();
+		public IEnumerable<string> Tags { get; init; } = Array.Empty<string>();
+		public IEnumerable<string> Flags { get; init; } = Array.Empty<string>();
 	}
 }
