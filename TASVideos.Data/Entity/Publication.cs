@@ -26,7 +26,7 @@ namespace TASVideos.Data.Entity
 		IEnumerable<int> MovieIds { get; }
 		IEnumerable<int> Games { get; }
 		IEnumerable<int> GameGroups { get; }
-		bool ShowObsoleted { get; set; }
+		bool ShowObsoleted { get; }
 	}
 
 	public class Publication : BaseEntity, ITimeable
