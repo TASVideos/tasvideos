@@ -92,7 +92,7 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddServices(this IServiceCollection services, IWebHostEnvironment env)
+		public static IServiceCollection AddServices(this IServiceCollection services, IWebHostEnvironment env, AppSettings settings)
 		{
 			services.AddScoped<UserManager>();
 			services.AddScoped<IPointsService, PointsService>();
@@ -107,6 +107,9 @@ namespace TASVideos.Extensions
 			services.AddScoped<IIpBanService, IpBanService>();
 			services.AddScoped<ITagService, TagService>();
 			services.AddScoped<IFlagService, FlagService>();
+
+			services.AddSingleton(settings.Jwt);
+			services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 
 			if (env.IsDevelopment())
 			{
