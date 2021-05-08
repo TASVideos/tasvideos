@@ -40,7 +40,6 @@
 		<PackageReference Include="LigerShark.WebOptimizer.Sass" Version="3.0.40-beta" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
 		  <PrivateAssets>all</PrivateAssets>
