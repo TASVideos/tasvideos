@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TASVideos.Core.Services;
-using TASVideos.Services.RssFeedParsers.Github;
+using TASVideos.Core.Services.RssFeedParsers.Github;
 
-namespace TASVideos.Services.RssFeedParsers
+namespace TASVideos.Core.Services.RssFeedParsers
 {
 	public interface IVcsRssParser
 	{

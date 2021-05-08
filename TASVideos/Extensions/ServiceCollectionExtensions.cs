@@ -20,6 +20,7 @@ using TASVideos.Api.Controllers;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.PublicationChain;
+using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -29,7 +30,6 @@ using TASVideos.Pages;
 using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Services.RssFeedParsers;
 
 namespace TASVideos.Extensions
 {
