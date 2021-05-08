@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Services;
 
 namespace TASVideos.Test.Services
 {

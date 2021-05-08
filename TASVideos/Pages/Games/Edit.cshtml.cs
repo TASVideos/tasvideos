@@ -6,12 +6,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Games.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Games
 {

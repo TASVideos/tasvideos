@@ -18,6 +18,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TASVideos.Api.Controllers;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.Email;
+using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -25,10 +27,8 @@ using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
 using TASVideos.Services;
-using TASVideos.Services.Email;
 using TASVideos.Services.ExternalMediaPublisher;
 using TASVideos.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Services.PublicationChain;
 using TASVideos.Services.RssFeedParsers;
 
 namespace TASVideos.Extensions

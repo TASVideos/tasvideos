@@ -5,7 +5,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public interface ITASVideosGrue
 	{

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.ForumEngine;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public class ForumWriterHelper : IWriterHelper
 	{

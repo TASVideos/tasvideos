@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TASVideos.Data.Entity.Awards;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	/// <summary>
 	/// Represents the assignment of an award to a user or movie

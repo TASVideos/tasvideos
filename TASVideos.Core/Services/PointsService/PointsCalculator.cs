@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
-	public static class PointsCalculator
+	internal static class PointsCalculator
 	{
 		/// <summary>
 		/// Calculates the player points a player would receive for a movie

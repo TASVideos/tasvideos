@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Services;
-using TASVideos.Services.Email;
 
 namespace TASVideos.Test.Services
 {

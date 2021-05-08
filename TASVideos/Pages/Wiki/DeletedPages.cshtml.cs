@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
-using TASVideos.Services;
 using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Wiki

@@ -6,7 +6,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Awards;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public interface IAwards
 	{

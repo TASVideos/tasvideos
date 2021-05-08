@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Services.Dtos
+﻿namespace TASVideos.Core.Services
 {
 	public class RatingDto
 	{

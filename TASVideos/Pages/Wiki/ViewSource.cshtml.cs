@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {

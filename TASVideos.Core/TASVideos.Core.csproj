@@ -5,9 +5,13 @@
 		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="IPAddressRange" Version="4.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
+		<PackageReference Include="SendGrid" Version="9.23.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
+		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
+		<ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
 	</ItemGroup>
 </Project>

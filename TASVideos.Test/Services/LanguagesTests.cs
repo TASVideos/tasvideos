@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
 
