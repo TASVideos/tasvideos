@@ -4,7 +4,6 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Core.Services.RssFeedParsers;
-using TASVideos.Core.Settings;
 
 namespace TASVideos.Core
 {
