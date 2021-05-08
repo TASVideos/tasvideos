@@ -70,12 +70,12 @@ namespace TASVideos.Extensions
 			});
 
 			app.UseRouting();
+			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();
 				endpoints.MapControllers();
 			});
-
 			return app;
 		}
 

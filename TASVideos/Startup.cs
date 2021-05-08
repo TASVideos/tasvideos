@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TASVideos.Api;
 using TASVideos.Data;
 using TASVideos.Extensions;
 using TASVideos.Legacy.Extensions;
@@ -35,10 +36,11 @@ namespace TASVideos
 				.AddServices(Environment)
 				.AddExternalMediaPublishing(Environment)
 				.AddAutoMapperWithProjections()
-				.AddSwagger();
+				.AddSwagger(Settings);
 
 			// Internal Libraries
 			services
+				.AddTasvideosApi(Settings.Jwt)
 				.AddTasvideosData(Configuration, Settings.UsePostgres)
 				.AddTasVideosLegacy(
 					Settings.ConnectionStrings.LegacySiteConnection,

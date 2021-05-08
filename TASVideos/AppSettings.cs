@@ -1,5 +1,5 @@
 ﻿using System;
-
+using TASVideos.Api.Settings;
 using TASVideos.Data;
 
 namespace TASVideos
@@ -16,6 +16,7 @@ namespace TASVideos
 		public IrcConnection Irc { get; set; } = new ();
 		public DiscordConnection Discord { get; set; } = new ();
 		public TwitterConnection Twitter { get; set; } = new ();
+		public JwtSettings Jwt { get; set; } = new ();
 
 		public string StartupStrategy { get; set; } = "";
 
