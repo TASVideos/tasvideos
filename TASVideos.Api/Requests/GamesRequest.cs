@@ -10,7 +10,7 @@ namespace TASVideos.Api.Requests
 	public class GamesRequest : ApiRequest
 	{
 		/// <summary>
-		/// Gets or sets the system codes to filter by.
+		/// Gets the system codes to filter by.
 		/// </summary>
 		[StringLength(10)]
 		public string? Systems { get; init; }

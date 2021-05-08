@@ -8,65 +8,65 @@ namespace TASVideos.Api.Responses
 	public class SubmissionsResponse
 	{
 		[Sortable]
-		public int Id { get; set; }
+		public int Id { get; init; }
 
 		[Sortable]
-		public string Title { get; set; } = "";
+		public string Title { get; init; } = "";
 
 		[Sortable]
-		public string Tier { get; set; } = "";
+		public string Tier { get; init; } = "";
 
 		[Sortable]
-		public string Judge { get; set; } = "";
+		public string Judge { get; init; } = "";
 
 		[Sortable]
-		public string Publisher { get; set; } = "";
+		public string Publisher { get; init; } = "";
 
 		[Sortable]
-		public string Status { get; set; } = "";
+		public string Status { get; init; } = "";
 
 		[Sortable]
-		public string MovieExtension { get; set; } = "";
+		public string MovieExtension { get; init; } = "";
 
 		[Sortable]
-		public int? GameId { get; set; }
+		public int? GameId { get; init; }
 
 		[Sortable]
-		public int? RomId { get; set; }
+		public int? RomId { get; init; }
 
 		[Sortable]
-		public string SystemCode { get; set; } = "";
+		public string SystemCode { get; init; } = "";
 
 		[Sortable]
-		public double? SystemFrameRate { get; set; }
+		public double? SystemFrameRate { get; init; }
 
 		[Sortable]
-		public int Frames { get; set; }
+		public int Frames { get; init; }
 
 		[Sortable]
-		public int RerecordCount { get; set; }
+		public int RerecordCount { get; init; }
 
 		[Sortable]
-		public string EncodeEmbedLink { get; set; } = "";
+		public string EncodeEmbedLink { get; init; } = "";
 
 		[Sortable]
-		public string GameVersion { get; set; } = "";
+		public string GameVersion { get; init; } = "";
 
 		[Sortable]
-		public string GameName { get; set; } = "";
+		public string GameName { get; init; } = "";
 
 		[Sortable]
-		public string Branch { get; set; } = "";
+		public string Branch { get; init; } = "";
 
 		[Sortable]
-		public string RomName { get; set; } = "";
+		public string RomName { get; init; } = "";
 
 		[Sortable]
-		public string EmulatorVersion { get; set; } = "";
+		public string EmulatorVersion { get; init; } = "";
 
 		[Sortable]
-		public int? MovieStartType { get; set; }
+		public int? MovieStartType { get; init; }
 
-		public IEnumerable<string> Authors { get; set; } = new List<string>();
+		public IEnumerable<string> Authors { get; init; } = new List<string>();
 	}
 }

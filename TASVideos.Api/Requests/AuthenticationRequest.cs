@@ -8,13 +8,13 @@ namespace TASVideos.Api.Requests
 	public class AuthenticationRequest
 	{
 		/// <summary>
-		/// Gets or sets the username of the user to sign in as
+		/// Gets the username of the user to sign in as
 		/// </summary>
 		[Required(AllowEmptyStrings = false)]
 		public string Username { get; init; } = "";
 
 		/// <summary>
-		/// Gets or sets the password of the user to sign in as
+		/// Gets the password of the user to sign in as
 		/// </summary>
 		[Required(AllowEmptyStrings = false)]
 		public string Password { get; init; } = "";
