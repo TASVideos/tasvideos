@@ -147,6 +147,7 @@ namespace TASVideos.Extensions
 			services.AddResponseCaching();
 			services
 				.AddControllers()
+				.AddApplicationPart(typeof(PublicationsController).Assembly)
 				.AddNewtonsoftJson();
 			services
 				.AddRazorPages(options =>
@@ -174,8 +175,7 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
 					options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
 				})
-				.AddRazorRuntimeCompilation()
-				.AddApplicationPart(typeof(PublicationsController).Assembly);
+				.AddRazorRuntimeCompilation();
 
 			services.AddHttpContext();
 			services.AddMvc(options => options.ValueProviderFactories.AddDelimitedValueProviderFactory('|'));

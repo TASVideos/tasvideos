@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TASVideos.Api;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Extensions;

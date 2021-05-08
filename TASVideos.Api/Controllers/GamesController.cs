@@ -59,6 +59,7 @@ namespace TASVideos.Api.Controllers
 		/// <response code="200">Returns the list of games.</response>
 		/// /// <response code="400">The request parameters are invalid.</response>
 		[HttpGet]
+		[Validate]
 		[ProducesResponseType(typeof(IEnumerable<GamesResponse>), 200)]
 		public async Task<IActionResult> GetAll([FromQuery]GamesRequest request)
 		{
