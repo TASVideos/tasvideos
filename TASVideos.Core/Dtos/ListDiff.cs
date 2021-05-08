@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public class ListDiff
 	{

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Test
 {

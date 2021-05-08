@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Test.Services
 {

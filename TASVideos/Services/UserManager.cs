@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;

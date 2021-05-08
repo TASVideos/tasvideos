@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public enum FlagEditResult { Success, Fail, NotFound, DuplicateCode }
 	public enum FlagDeleteResult { Success, Fail, NotFound, InUse }
