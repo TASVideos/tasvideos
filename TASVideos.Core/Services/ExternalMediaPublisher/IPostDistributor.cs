@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TASVideos.Services.ExternalMediaPublisher
+namespace TASVideos.Core.Services.ExternalMediaPublisher
 {
 	/// <summary>
 	/// Receives an <see cref="IPostable"/> and distributes it

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Legacy.Imports;
+using TASVideos.Extensions;
 
-namespace TASVideos.Services.ExternalMediaPublisher.Distributors
+namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 {
 	public class DistributorStorage : IPostDistributor
 	{

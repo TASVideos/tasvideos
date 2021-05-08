@@ -19,6 +19,8 @@ using Microsoft.OpenApi.Models;
 using TASVideos.Api.Controllers;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
+using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.Core.Settings;
@@ -28,8 +30,6 @@ using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
 using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Services.ExternalMediaPublisher.Distributors;
 
 namespace TASVideos.Extensions
 {

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Services.ExternalMediaPublisher
+﻿namespace TASVideos.Core.Services.ExternalMediaPublisher
 {
 	public enum PostType
 	{

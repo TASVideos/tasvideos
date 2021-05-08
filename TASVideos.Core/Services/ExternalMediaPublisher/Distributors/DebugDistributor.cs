@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 
-namespace TASVideos.Services.ExternalMediaPublisher.Distributors
+namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 {
 	/// <summary>
 	/// A <see cref="IPostDistributor"/> implementation that simply logs a post to the console.

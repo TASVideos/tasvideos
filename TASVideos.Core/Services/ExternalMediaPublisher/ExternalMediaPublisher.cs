@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Extensions.Options;
 using TASVideos.Core.Settings;
 
-namespace TASVideos.Services.ExternalMediaPublisher
+namespace TASVideos.Core.Services.ExternalMediaPublisher
 {
 	/// <summary>
 	/// Provides a mechanism for sending posts to a variety of external resources

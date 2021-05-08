@@ -42,6 +42,18 @@ namespace TASVideos.Extensions
 			return str.UnicodeAwareSubstring(0, limit - 3) + "...";
 		}
 
+		public static string? Cap(this string? str, int limit)
+		{
+			if (str == null)
+			{
+				return null;
+			}
+
+			return str.Length < limit
+				? str
+				: str[..limit];
+		}
+
 		/// <summary>
 		/// Takes a string and adds spaces between words,
 		/// As well as forward slashes

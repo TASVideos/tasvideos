@@ -7,10 +7,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Users.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Users
 {

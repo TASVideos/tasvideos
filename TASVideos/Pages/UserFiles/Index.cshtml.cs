@@ -4,10 +4,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.UserFiles.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.UserFiles
 {

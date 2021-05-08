@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
+using TASVideos.Extensions;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
 

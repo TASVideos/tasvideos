@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using TASVideos.Core.Settings;
 
-namespace TASVideos.Services.ExternalMediaPublisher.Distributors
+namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 {
 	public sealed class DiscordDistributor : IPostDistributor, IDisposable
 	{
