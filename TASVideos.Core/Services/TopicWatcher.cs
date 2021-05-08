@@ -9,7 +9,7 @@ using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public interface ITopicWatcher
 	{
