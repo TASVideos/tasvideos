@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using TASVideos.Core.Settings;
 
@@ -31,15 +30,18 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
 
-		public DiscordDistributor(IOptions<AppSettings> appSettings, ILogger<DiscordDistributor> logger, IHttpClientFactory httpClientFactory)
+		public DiscordDistributor(
+			AppSettings appSettings,
+			ILogger<DiscordDistributor> logger,
+			IHttpClientFactory httpClientFactory)
 		{
 			_logger = logger;
-			_settings = appSettings.Value.Discord;
+			_settings = appSettings.Discord;
 			_httpClientFactory = httpClientFactory;
 
 			_gateway = new ClientWebSocket();
 
-			if (string.IsNullOrWhiteSpace(appSettings.Value.Discord.AccessToken))
+			if (string.IsNullOrWhiteSpace(appSettings.Discord.AccessToken))
 			{
 				logger.Log(LogLevel.Warning, "Discord bot access key not provided. Bot initialization skipped");
 				return;

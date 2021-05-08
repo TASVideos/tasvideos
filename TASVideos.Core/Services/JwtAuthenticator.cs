@@ -28,12 +28,12 @@ namespace TASVideos.Core.Services
 			ApplicationDbContext db,
 			UserManager userManager,
 			SignInManager<User> signInManager,
-			AppSettings.JwtSettings settings)
+			AppSettings settings)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
-			_settings = settings;
+			_settings = settings.Jwt;
 		}
 
 		public async Task<string> Authenticate(string username, string password)

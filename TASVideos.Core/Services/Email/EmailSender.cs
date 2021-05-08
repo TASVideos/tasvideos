@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using TASVideos.Core.Settings;
@@ -29,9 +28,9 @@ namespace TASVideos.Core.Services.Email
 
 		public SendGridSender(
 			IWebHostEnvironment environment,
-			IOptions<AppSettings> settings)
+			AppSettings settings)
 		{
-			_settings = settings.Value;
+			_settings = settings;
 			_env = environment;
 		}
 

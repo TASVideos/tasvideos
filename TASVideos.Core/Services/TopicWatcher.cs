@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
@@ -50,11 +49,11 @@ namespace TASVideos.Core.Services
 		public TopicWatcher(
 			IEmailService emailService,
 			ApplicationDbContext db,
-			IOptions<AppSettings> appSettings)
+			AppSettings appSettings)
 		{
 			_emailService = emailService;
 			_db = db;
-			_baseUrl = appSettings.Value.BaseUrl;
+			_baseUrl = appSettings.BaseUrl;
 		}
 
 		public async Task<IEnumerable<WatchedTopic>> UserWatches(int userId)
