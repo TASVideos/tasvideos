@@ -40,7 +40,7 @@ namespace TASVideos.WikiEngineTest
 			}
 
 			var settings = JsonConvert.DeserializeObject<Options>(File.ReadAllText(".params.json"));
-			if (string.IsNullOrWhiteSpace(settings.ConnectionString) || string.IsNullOrWhiteSpace(settings.OutDir))
+			if (string.IsNullOrWhiteSpace(settings?.ConnectionString) || string.IsNullOrWhiteSpace(settings.OutDir))
 			{
 				Console.WriteLine("Need to set values in .params.json");
 				return -1;

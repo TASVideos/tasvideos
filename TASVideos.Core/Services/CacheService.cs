@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using TASVideos.Core.Settings;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public interface ICacheService
 	{

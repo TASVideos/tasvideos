@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NetTools;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 

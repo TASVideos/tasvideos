@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	public interface IFileService
 	{

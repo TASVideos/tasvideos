@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TASVideos.Core.Services;
 using TASVideos.Services.RssFeedParsers.Github;
 
 namespace TASVideos.Services.RssFeedParsers
