@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core.Services;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Messages
 {
@@ -19,7 +19,7 @@ namespace TASVideos.Pages.Messages
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PrivateMessageModel Message { get; set; } = new ();
+		public PrivateMessageDto Message { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

@@ -7,12 +7,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 
-namespace TASVideos.Services
+namespace TASVideos.Core.Services
 {
 	// TODO: consider not using view models as a return type, these methods should return a lower level abstraction, not a presentation layer object
 	public class UserManager : UserManager<User>
@@ -109,11 +108,11 @@ namespace TASVideos.Services
 		/// If user is not found, null is returned
 		/// If user has PublicRatings false, then the ratings will be an empty list
 		/// </summary>
-		public async Task<UserRatingsModel?> GetUserRatings(string userName, bool includeHidden = false)
+		public async Task<UserRatings?> GetUserRatings(string userName, bool includeHidden = false)
 		{
 			var model = await _db.Users
 				.Where(u => u.UserName == userName)
-				.Select(u => new UserRatingsModel
+				.Select(u => new UserRatings
 				{
 					Id = u.Id,
 					UserName = u.UserName,
@@ -145,7 +144,7 @@ namespace TASVideos.Services
 						gvalue.Type,
 						gvalue.Value
 					})
-				.Select(pr => new UserRatingsModel.Rating
+				.Select(pr => new UserRatings.Rating
 				{
 					PublicationId = pr.Key.PublicationId,
 					PublicationTitle = pr.Key.Title,
@@ -169,10 +168,10 @@ namespace TASVideos.Services
 		/// for the <see cref="User"/> with the given <see cref="userName"/>
 		/// If no user is found, null is returned
 		/// </summary>
-		public async Task<UserProfileModel?> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts)
+		public async Task<UserProfile?> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts)
 		{
 			var model = await _db.Users
-				.Select(u => new UserProfileModel
+				.Select(u => new UserProfile
 				{
 					Id = u.Id,
 					UserName = u.UserName,
@@ -192,14 +191,14 @@ namespace TASVideos.Services
 					Email = u.Email,
 					EmailConfirmed = u.EmailConfirmed,
 					Roles = u.UserRoles
-						.Select(ur => new RoleBasicDisplay
+						.Select(ur => new RoleDto
 						{
 							Id = ur.RoleId,
 							Name = ur.Role!.Name,
 							Description = ur.Role.Description
 						})
 						.ToList(),
-					UserFiles = new UserProfileModel.UserFilesModel
+					UserFiles = new UserProfile.UserFilesModel
 					{
 						Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
 					}
@@ -211,7 +210,7 @@ namespace TASVideos.Services
 				model.Submissions = await _db.Submissions
 					.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id))
 					.GroupBy(s => s.Status)
-					.Select(g => new UserProfileModel.SubmissionEntry
+					.Select(g => new UserProfile.SubmissionEntry
 					{
 						Status = g.Key,
 						Count = g.Count()
@@ -264,7 +263,7 @@ namespace TASVideos.Services
 		/// record with the given <see cref="id"/> if the user has access to the message
 		/// A user has access if they are the sender or the receiver of the message
 		/// </summary>
-		public async Task<PrivateMessageModel?> GetMessage(int userId, int id)
+		public async Task<PrivateMessageDto?> GetMessage(int userId, int id)
 		{
 			var pm = await _db.PrivateMessages
 				.Include(p => p.FromUser)
@@ -286,7 +285,7 @@ namespace TASVideos.Services
 				_cache.Remove(CacheKeys.UnreadMessageCount + userId); // Message count possibly no longer valid
 			}
 
-			return new PrivateMessageModel
+			return new PrivateMessageDto
 			{
 				Subject = pm.Subject,
 				SentOn = pm.CreateTimestamp,

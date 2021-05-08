@@ -12,7 +12,7 @@ namespace TASVideos.Models
 	/// Represents a user with publicly available information
 	/// Intended for the User/Profile page.
 	/// </summary>
-	public class UserProfileModel
+	public class UserProfile
 	{
 		public int Id { get; set; }
 		public string UserName { get; set; } = "";
@@ -62,7 +62,7 @@ namespace TASVideos.Models
 
 		public WikiEditModel WikiEdits { get; set; } = new ();
 
-		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
+		public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
 		public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
 

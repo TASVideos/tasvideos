@@ -2,11 +2,9 @@
 using System.Globalization;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.TagHelpers
 {

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace TASVideos.Models
+namespace TASVideos.Core.Services
 {
 	/// <summary>
 	/// Represents a user's ratings
 	/// </summary>
-	public class UserRatingsModel
+	public class UserRatings
 	{
 		public int Id { get; init; }
 		public string UserName { get; init; } = "";
