@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using TASVideos.Core.Services.Email;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
 using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account
 {

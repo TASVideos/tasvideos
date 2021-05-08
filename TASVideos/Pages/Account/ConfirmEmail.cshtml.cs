@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;
 using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account
 {

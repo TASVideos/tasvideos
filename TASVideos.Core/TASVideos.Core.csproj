@@ -10,6 +10,7 @@
 		<PackageReference Include="SendGrid" Version="9.23.0" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
 		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
 		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
 		<ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />

@@ -75,18 +75,6 @@ namespace TASVideos.Legacy.Imports
 			}
 		}
 
-		public static string? Cap(this string? str, int limit)
-		{
-			if (str == null)
-			{
-				return null;
-			}
-
-			return str.Length < limit
-				? str
-				: str[..limit];
-		}
-
 		public static IEnumerable<string> ParseUserNames(this string authors)
 		{
 			if (string.IsNullOrWhiteSpace(authors))

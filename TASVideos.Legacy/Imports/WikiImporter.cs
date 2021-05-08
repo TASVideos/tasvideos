@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
+using TASVideos.Extensions;
 using TASVideos.Legacy.Data.Site;
 using TASVideos.Legacy.Data.Site.Entity;
 

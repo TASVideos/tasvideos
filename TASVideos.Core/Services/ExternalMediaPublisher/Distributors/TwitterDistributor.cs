@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TASVideos.Core.Settings;
 
-namespace TASVideos.Services.ExternalMediaPublisher.Distributors
+namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 {
 	public class TwitterDistributor : IPostDistributor
 	{

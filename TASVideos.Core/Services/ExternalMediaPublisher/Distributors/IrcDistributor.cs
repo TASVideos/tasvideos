@@ -10,7 +10,7 @@ using TASVideos.Core.Settings;
 using TASVideos.Extensions;
 
 // ReSharper disable FunctionNeverReturns
-namespace TASVideos.Services.ExternalMediaPublisher.Distributors
+namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 {
 	public class IrcDistributor : IPostDistributor
 	{

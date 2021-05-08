@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Services.ExternalMediaPublisher
+﻿namespace TASVideos.Core.Services.ExternalMediaPublisher
 {
 	/// <summary>
 	/// Represents a post to be sent to the <see cref="ExternalMediaPublisher"/>
