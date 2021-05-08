@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Profile
 {
