@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
@@ -24,17 +23,17 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		public IEnumerable<PostType> Types => new[] { PostType.Announcement };
 
-		public TwitterDistributor(IOptions<AppSettings> appSettings, ILogger<TwitterDistributor> logger, IHttpClientFactory httpClientFactory)
+		public TwitterDistributor(AppSettings appSettings, ILogger<TwitterDistributor> logger, IHttpClientFactory httpClientFactory)
 		{
 			_logger = logger;
-			_settings = appSettings.Value.Twitter;
+			_settings = appSettings.Twitter;
 			_httpClientFactory = httpClientFactory;
 
-			if (string.IsNullOrWhiteSpace(appSettings.Value.Twitter.ApiBase) ||
-				string.IsNullOrWhiteSpace(appSettings.Value.Twitter.ConsumerKey) ||
-				string.IsNullOrWhiteSpace(appSettings.Value.Twitter.ConsumerSecret) ||
-				string.IsNullOrWhiteSpace(appSettings.Value.Twitter.AccessToken) ||
-				string.IsNullOrWhiteSpace(appSettings.Value.Twitter.TokenSecret))
+			if (string.IsNullOrWhiteSpace(appSettings.Twitter.ApiBase) ||
+				string.IsNullOrWhiteSpace(appSettings.Twitter.ConsumerKey) ||
+				string.IsNullOrWhiteSpace(appSettings.Twitter.ConsumerSecret) ||
+				string.IsNullOrWhiteSpace(appSettings.Twitter.AccessToken) ||
+				string.IsNullOrWhiteSpace(appSettings.Twitter.TokenSecret))
 			{
 				logger.Log(LogLevel.Warning, "Twitter access tokens were not provided.  The Twitter post distributor will not function.");
 				return;

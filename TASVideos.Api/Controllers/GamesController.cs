@@ -72,6 +72,9 @@ namespace TASVideos.Api.Controllers
 			return Ok(games);
 		}
 
+		/// <summary>
+		/// Creates a new game entry
+		/// </summary>
 		[Authorize]
 		[HttpPost]
 		[RequirePermission(PermissionTo.CatalogMovies)]

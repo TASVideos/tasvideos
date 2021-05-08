@@ -10,7 +10,7 @@ namespace TASVideos.Core
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static IServiceCollection AddTasvideosCore(this IServiceCollection services, AppSettings settings, bool isDevelopment)
+		public static IServiceCollection AddTasvideosCore(this IServiceCollection services, bool isDevelopment)
 		{
 			services
 				.AddControllers()
@@ -28,11 +28,10 @@ namespace TASVideos.Core
 					client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
 				});
 
-			services.AddServices(settings, isDevelopment);
-			return services;
+			return services.AddServices(isDevelopment);
 		}
 
-		private static IServiceCollection AddServices(this IServiceCollection services, AppSettings settings, bool isDevelopment)
+		private static IServiceCollection AddServices(this IServiceCollection services, bool isDevelopment)
 		{
 			services.AddScoped<UserManager>();
 			services.AddScoped<IPointsService, PointsService>();
@@ -48,7 +47,6 @@ namespace TASVideos.Core
 			services.AddScoped<ITagService, TagService>();
 			services.AddScoped<IFlagService, FlagService>();
 
-			services.AddSingleton(settings.Jwt); // TODO: just register settings in mvc project
 			services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 
 			if (isDevelopment)

@@ -5,7 +5,6 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using TASVideos.Core.Settings;
 using TASVideos.Extensions;
 
@@ -19,12 +18,12 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 		private readonly AppSettings.IrcConnection _settings;
 
 		public IrcDistributor(
-			IOptions<AppSettings> settings,
+			AppSettings settings,
 			ILogger<IrcDistributor> logger)
 		{
-			_settings = settings.Value.Irc;
+			_settings = settings.Irc;
 
-			if (string.IsNullOrWhiteSpace(settings.Value.Irc.Password))
+			if (string.IsNullOrWhiteSpace(settings.Irc.Password))
 			{
 				logger.Log(LogLevel.Warning, "Irc bot password not provided. Bot initialization skipped");
 				return;

@@ -33,6 +33,8 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<AppSettings>(configuration);
+			var settings = configuration.Get<AppSettings>();
+			services.AddSingleton(settings);
 			return services;
 		}
 

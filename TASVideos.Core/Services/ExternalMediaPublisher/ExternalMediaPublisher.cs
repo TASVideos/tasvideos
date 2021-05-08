@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Options;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher
@@ -16,9 +15,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 	{
 		private readonly string _baseUrl; // The site base url, will be combined to relative links to provide absolute links to distributors
 
-		public ExternalMediaPublisher(IOptions<AppSettings> appSettings, IEnumerable<IPostDistributor> providers)
+		public ExternalMediaPublisher(AppSettings appSettings, IEnumerable<IPostDistributor> providers)
 		{
-			_baseUrl = appSettings.Value.BaseUrl.TrimEnd('/');
+			_baseUrl = appSettings.BaseUrl.TrimEnd('/');
 			Providers = providers.ToList();
 		}
 
