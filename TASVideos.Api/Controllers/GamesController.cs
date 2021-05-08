@@ -58,10 +58,9 @@ namespace TASVideos.Api.Controllers
 		/// </summary>
 		/// <response code="200">Returns the list of games.</response>
 		/// /// <response code="400">The request parameters are invalid.</response>
-		[Validate]
 		[HttpGet]
 		[ProducesResponseType(typeof(IEnumerable<GamesResponse>), 200)]
-		public async Task<IActionResult> GetAll(GamesRequest request)
+		public async Task<IActionResult> GetAll([FromQuery]GamesRequest request)
 		{
 			var games = (await _mapper.ProjectTo<GamesResponse>(
 				_db.Games.ForSystemCodes(request.SystemCodes))

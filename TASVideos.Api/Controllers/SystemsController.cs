@@ -55,7 +55,6 @@ namespace TASVideos.Api.Controllers
 		/// </summary>
 		/// <response code="200">Returns the list of systems.</response>
 		[HttpGet]
-		[Validate]
 		[ProducesResponseType(typeof(IEnumerable<SystemsResponse>), 200)]
 		public async Task<IActionResult> GetAll()
 		{
