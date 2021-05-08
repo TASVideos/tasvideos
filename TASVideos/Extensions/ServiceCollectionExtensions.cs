@@ -147,8 +147,7 @@ namespace TASVideos.Extensions
 			services.AddResponseCaching();
 			services
 				.AddControllers()
-				.AddApplicationPart(typeof(PublicationsController).Assembly)
-				.AddNewtonsoftJson();
+				.AddApplicationPart(typeof(PublicationsController).Assembly);
 			services
 				.AddRazorPages(options =>
 				{
