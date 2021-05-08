@@ -1,9 +1,10 @@
-﻿using System;
-using AspNetCore.ReCaptcha;
+﻿using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using TASVideos.Core;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Extensions;
@@ -33,7 +34,6 @@ namespace TASVideos
 				.AddCookieConfiguration(Environment)
 				.AddGzipCompression(Settings)
 				.AddCacheService(Settings.CacheSettings)
-				.AddServices(Environment, Settings)
 				.AddExternalMediaPublishing(Environment)
 				.AddAutoMapperWithProjections()
 				.AddSwagger(Settings);
@@ -41,6 +41,7 @@ namespace TASVideos
 			// Internal Libraries
 			services
 				.AddTasvideosData(Configuration, Settings.UsePostgres)
+				.AddTasvideosCore(Settings, Environment.IsDevelopment())
 				.AddTasVideosLegacy(
 					Settings.ConnectionStrings.LegacySiteConnection,
 					Settings.ConnectionStrings.LegacyForumConnection,
@@ -52,18 +53,6 @@ namespace TASVideos
 				.AddMvcWithOptions(Environment)
 				.AddIdentity(Environment)
 				.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
-
-			// HTTP Client
-			services
-				.AddHttpClient("Discord", client =>
-				{
-					client.BaseAddress = new Uri("https://discord.com/api/v6/");
-				});
-			services
-				.AddHttpClient("Twitter", client =>
-				{
-					client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
-				});
 
 			services.AddWebOptimizer(pipeline =>
 			{

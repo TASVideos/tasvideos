@@ -16,13 +16,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using TASVideos.Api.Controllers;
 using TASVideos.Core.Services;
-using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Core.Services.PublicationChain;
-using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -92,45 +88,6 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddServices(this IServiceCollection services, IWebHostEnvironment env, AppSettings settings)
-		{
-			services.AddScoped<UserManager>();
-			services.AddScoped<IPointsService, PointsService>();
-			services.AddScoped<IAwards, Awards>();
-			services.AddScoped<IMediaFileUploader, MediaFileUploader>();
-			services.AddScoped<ILanguages, Languages>();
-			services.AddScoped<ITopicWatcher, TopicWatcher>();
-			services.AddScoped<IPublicationHistory, PublicationHistory>();
-			services.AddScoped<IFileService, FileService>();
-			services.AddScoped<IMovieSearchTokens, MovieSearchTokens>();
-			services.AddScoped<IVcsRssParser, VcsRssParser>();
-			services.AddScoped<IIpBanService, IpBanService>();
-			services.AddScoped<ITagService, TagService>();
-			services.AddScoped<IFlagService, FlagService>();
-
-			services.AddSingleton(settings.Jwt);
-			services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
-
-			if (env.IsDevelopment())
-			{
-				services.AddTransient<IEmailSender, EmailLogger>();
-			}
-			else
-			{
-				services.AddTransient<IEmailSender, SendGridSender>();
-			}
-
-			services.AddTransient<IEmailService, EmailService>();
-			services.AddTransient<IWikiPages, WikiPages>();
-
-			services.AddScoped<ITASVideoAgent, TASVideoAgent>();
-			services.AddScoped<ITASVideosGrue, TASVideosGrue>();
-
-			services.AddScoped<ForumEngine.IWriterHelper, ForumWriterHelper>();
-
-			return services;
-		}
-
 		public static IServiceCollection AddMovieParser(this IServiceCollection services)
 		{
 			services.AddSingleton<IMovieParser, MovieParser>();
@@ -145,9 +102,6 @@ namespace TASVideos.Extensions
 			}
 
 			services.AddResponseCaching();
-			services
-				.AddControllers()
-				.AddApplicationPart(typeof(PublicationsController).Assembly);
 			services
 				.AddRazorPages(options =>
 				{
