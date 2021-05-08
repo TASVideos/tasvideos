@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TASVideos.Api.Controllers;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;

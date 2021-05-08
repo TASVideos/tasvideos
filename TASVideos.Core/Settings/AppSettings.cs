@@ -1,8 +1,4 @@
-﻿using System;
-using TASVideos.Api.Settings;
-using TASVideos.Data;
-
-namespace TASVideos
+﻿namespace TASVideos.Core.Settings
 {
 	public class AppSettings
 	{
@@ -66,24 +62,11 @@ namespace TASVideos
 			public string? LegacySiteConnection { get; set; }
 			public string? LegacyForumConnection { get; set; }
 		}
-	}
 
-	public static class AppSettingsExtensions
-	{
-		public static DbInitializer.StartupStrategy StartupStrategy(this AppSettings settings)
+		public class JwtSettings
 		{
-			var strategy = settings.StartupStrategy;
-			if (!string.IsNullOrWhiteSpace(settings.StartupStrategy))
-			{
-				var result = Enum.TryParse(typeof(DbInitializer.StartupStrategy), strategy, true, out object? strategyObj);
-
-				if (result)
-				{
-					return (DbInitializer.StartupStrategy)(strategyObj ?? DbInitializer.StartupStrategy.Minimal);
-				}
-			}
-
-			return DbInitializer.StartupStrategy.Minimal;
+			public string SecretKey { get; set; } = "";
+			public int ExpiresInMinutes { get; set; }
 		}
 	}
 }

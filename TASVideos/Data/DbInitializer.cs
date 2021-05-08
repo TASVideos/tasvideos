@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-
+using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
+using TASVideos.Extensions;
 using TASVideos.Legacy;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;

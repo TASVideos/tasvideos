@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Services.Email;

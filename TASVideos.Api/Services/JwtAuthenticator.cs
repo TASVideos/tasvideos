@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using TASVideos.Api.Settings;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -22,7 +22,7 @@ namespace TASVideos.Api.Services
 
 	public class JwtAuthenticator : IJwtAuthenticator
 	{
-		private readonly JwtSettings _settings;
+		private readonly AppSettings.JwtSettings _settings;
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
@@ -32,7 +32,7 @@ namespace TASVideos.Api.Services
 			ApplicationDbContext db,
 			UserManager<User> userManager,
 			SignInManager<User> signInManager,
-			JwtSettings settings)
+			AppSettings.JwtSettings settings)
 		{
 			_db = db;
 			_userManager = userManager;
