@@ -49,7 +49,7 @@ namespace TASVideos.Data
 				return ToExpando(obj);
 			}
 
-			var columns = fields.SplitWithEmpty(",");
+			var columns = fields.SplitWithEmpty(",").Select(f => f.Trim());
 			if (columns.All(string.IsNullOrWhiteSpace))
 			{
 				return ToExpando(obj);
