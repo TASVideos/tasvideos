@@ -37,6 +37,7 @@ namespace TASVideos.Data
 
 			return sortable.Sort
 				.SplitWithEmpty(",")
+				.Select(str => str.Trim())
 				.Any(str => string.Equals(
 					str.Replace("-", "").Replace("+", ""),
 					param,
@@ -61,6 +62,7 @@ namespace TASVideos.Data
 
 			return sortable.Sort
 				.SplitWithEmpty(",")
+				.Select(str => str.Trim())
 				.Any(str => string.Equals(
 						str.Replace("-", "").Replace("+", ""),
 						param,
@@ -87,6 +89,7 @@ namespace TASVideos.Data
 
 			var requestedSorts = request.Sort
 				.SplitWithEmpty(",")
+				.Select(str => str.Trim())
 				.Select(s => s.Replace("-", ""))
 				.Select(s => s.Replace("+", ""))
 				.Select(s => s.ToLower());
