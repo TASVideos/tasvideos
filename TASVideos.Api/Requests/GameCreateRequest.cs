@@ -11,40 +11,33 @@ namespace TASVideos.Api.Requests
 	public class GameCreateRequest
 	{
 		[Required]
-		[Display(Name = "System")]
+		[StringLength(8)]
 		public string SystemCode { get; init; } = "";
 
 		[Required]
-		[Display(Name = "Good Name")]
 		[StringLength(250)]
 		public string GoodName { get; init; } = "";
 
 		[Required]
 		[StringLength(100)]
-		[Display(Name = "Display Name")]
 		public string DisplayName { get; init; } = "";
 
 		[Required]
 		[StringLength(8)]
-		[Display(Name = "Abbreviation")]
 		public string Abbreviation { get; init; } = "";
 
 		[Required]
 		[StringLength(64)]
-		[Display(Name = "Search Key")]
 		public string SearchKey { get; init; } = "";
 
 		[Required]
 		[StringLength(250)]
-		[Display(Name = "Youtube Tags")]
 		public string YoutubeTags { get; init; } = "";
 
 		[StringLength(250)]
-		[Display(Name = "Screenshot Url")]
 		public string? ScreenshotUrl { get; init; }
 
 		[StringLength(300)]
-		[Display(Name = "Game Resources Page")]
 		public string? GameResourcesPage { get; init; }
 
 		[Display(Name = "Genres")]
