@@ -7,6 +7,7 @@ namespace TASVideos.Pages.Games.Models
 	{
 		[Required]
 		[Display(Name = "System")]
+		[StringLength(8)]
 		public string SystemCode { get; set; } = "";
 
 		[Required]
