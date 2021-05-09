@@ -57,6 +57,20 @@ namespace TASVideos.Test.Data.Paging
 		}
 
 		[TestMethod]
+		public void FieldSelectable_Single_DoubleSelect_CanHaveSpaces_ReturnsDouble()
+		{
+			string fields = $" {nameof(TestClass.String)} , {nameof(TestClass.Int)} ";
+			var testClass = new TestClass();
+			var actual = testClass.FieldSelect(fields);
+			var dic = (IDictionary<string, object?>)actual;
+			Assert.AreEqual(2, dic.Count);
+			Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
+			Assert.AreEqual(dic[nameof(TestClass.Int)], TestInt);
+
+			Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool)));
+		}
+
+		[TestMethod]
 		public void FieldSelectable_Multi_Distinct()
 		{
 			var fields = new FieldSelectable($"{nameof(TestClass.String)},{nameof(TestClass.Bool)}");
