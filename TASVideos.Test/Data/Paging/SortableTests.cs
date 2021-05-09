@@ -34,6 +34,7 @@ namespace TASVideos.Test.Data.Paging
 		[DataRow("-Param", "param", true, DisplayName = "Case insensitive")]
 		[DataRow("-param", "param", true, DisplayName = "Case insensitive")]
 		[DataRow("-parAm", "paRam", true, DisplayName = "Case insensitive")]
+		[DataRow(" param ", "param", true, DisplayName = "Spaces")]
 		public void Sortable_IsSortingParamTests(string? sortStr, string? param, bool expected)
 		{
 			var sortable = new Sortable(sortStr);
@@ -67,6 +68,7 @@ namespace TASVideos.Test.Data.Paging
 		[DataRow("-Param", "param", true, DisplayName = "Case insensitive")]
 		[DataRow("-param", "param", true, DisplayName = "Case insensitive")]
 		[DataRow("-parAm", "paRam", true, DisplayName = "Case insensitive")]
+		[DataRow("+Param", "Param", false, DisplayName = "Spaces")]
 		public void Sortable_IsDescendingTests(string? sortStr, string? param, bool expected)
 		{
 			var sortable = new Sortable(sortStr);
@@ -96,6 +98,7 @@ namespace TASVideos.Test.Data.Paging
 		[DataRow("Bar", typeof(TestResponse), false)]
 		[DataRow("DoesNotExist", typeof(TestResponse), false)]
 		[DataRow("Foo,Baz", typeof(TestResponse), true)]
+		[DataRow(" Foo , Baz ", typeof(TestResponse), true)]
 		[DataRow("Foo,Bar,Baz", typeof(TestResponse), false)]
 		public void Sortable_IsValidSort_Tests(string? sortStr, Type? type, bool expected)
 		{

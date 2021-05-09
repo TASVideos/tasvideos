@@ -67,7 +67,7 @@ namespace TASVideos.Data
 				return source;
 			}
 
-			var columns = request.Sort.SplitWithEmpty(",");
+			var columns = request.Sort.SplitWithEmpty(",").Select(s => s.Trim());
 
 			bool thenBy = false;
 			foreach (var column in columns)
