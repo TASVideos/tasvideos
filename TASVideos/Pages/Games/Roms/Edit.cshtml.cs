@@ -68,12 +68,6 @@ namespace TASVideos.Pages.Games.Roms
 			new () { Text = "Other", Value = "Other" },
 		};
 
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
-
 		public async Task<IActionResult> OnGet()
 		{
 			var game = await _db.Games

@@ -6,6 +6,12 @@ namespace TASVideos.Pages
 {
 	public class BasePageModel : PageModel
 	{
+		[TempData]
+		public string? Message { get; set; }
+
+		[TempData]
+		public string? MessageType { get; set; }
+
 		protected string IpAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
 
 		protected IActionResult Home() => RedirectToPage("/Index");

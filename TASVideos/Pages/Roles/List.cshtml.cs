@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Pages.Roles.Models;
@@ -20,14 +19,6 @@ namespace TASVideos.Pages.Roles
 			_db = db;
 			_mapper = mapper;
 		}
-
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
-
-		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
 
 		public IEnumerable<RoleDisplayModel> Roles { get; set; } = new List<RoleDisplayModel>();
 

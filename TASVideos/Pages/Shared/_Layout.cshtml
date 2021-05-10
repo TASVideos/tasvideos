@@ -62,13 +62,16 @@
 		<h1 class="mb-2 container">@title</h1>
 	}
 
-	<div class="container">
-		@RenderBody()
-		<hr/>
-		<footer>
-			<p>&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/adelikat/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a></p>
-		</footer>
-	</div>
+<div class="container">
+	<alert type="@TempData["MessageType"]" condition="@(!string.IsNullOrWhiteSpace(TempData["MessageType"]?.ToString()))" dismissible="true">
+		@TempData["Message"]
+	</alert>
+	@RenderBody()
+	<hr/>
+	<footer>
+		<p>&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/adelikat/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a></p>
+	</footer>
+</div>
 	@await RenderSectionAsync("Scripts", required: false)
 	<script src="~/js/prism.js"></script>
 </body>
