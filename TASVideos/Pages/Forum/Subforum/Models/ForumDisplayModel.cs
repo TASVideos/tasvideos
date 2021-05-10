@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-
-using TASVideos.Data;
+using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Subforum.Models

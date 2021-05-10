@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TASVideos.Common;
-using TASVideos.Data;
+using TASVideos.Core;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models

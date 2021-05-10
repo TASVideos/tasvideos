@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Extensions;
 
-namespace TASVideos.Data
+namespace TASVideos.Core
 {
 	public static class Paginator
 	{

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-
-using TASVideos.Data;
+using TASVideos.Core;
 using TASVideos.Extensions;
 using static TASVideos.TagHelpers.TagHelperExtensions;
 

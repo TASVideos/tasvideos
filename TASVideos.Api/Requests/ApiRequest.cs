@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TASVideos.Data;
+using TASVideos.Core;
 
 namespace TASVideos.Api.Requests
 {

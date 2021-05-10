@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;

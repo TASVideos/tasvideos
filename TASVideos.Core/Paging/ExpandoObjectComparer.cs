@@ -2,7 +2,7 @@
 using System.Dynamic;
 using System.Linq;
 
-namespace TASVideos.Data
+namespace TASVideos.Core
 {
 	internal class ExpandoObjectComparer : IEqualityComparer<ExpandoObject>
 	{

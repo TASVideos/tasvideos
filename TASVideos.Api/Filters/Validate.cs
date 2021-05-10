@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using TASVideos.Api.Requests;
-using TASVideos.Data;
+using TASVideos.Core;
 
 namespace TASVideos.Api
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Data;
+using TASVideos.Core;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models

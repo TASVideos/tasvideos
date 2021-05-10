@@ -4,7 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using TASVideos.Extensions;
 
-namespace TASVideos.Data
+namespace TASVideos.Core
 {
 	/// <summary>
 	/// Represents a request object that can have field selection.

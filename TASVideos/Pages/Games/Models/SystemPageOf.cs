@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TASVideos.Data;
+using TASVideos.Core;
 
 namespace TASVideos.Pages.Games.Models
 {
