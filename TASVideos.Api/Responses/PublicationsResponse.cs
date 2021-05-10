@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using TASVideos.Data;
+using TASVideos.Core;
 
 #pragma warning disable 1591
 namespace TASVideos.Api.Responses

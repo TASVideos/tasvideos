@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Data;
+using TASVideos.Core;
 
 namespace TASVideos.Test.Data.Paging
 {

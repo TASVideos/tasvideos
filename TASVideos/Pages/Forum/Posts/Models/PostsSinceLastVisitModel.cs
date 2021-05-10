@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using TASVideos.Core;
 using TASVideos.Core.Services;
-using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Posts.Models

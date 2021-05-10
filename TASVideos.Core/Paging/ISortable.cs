@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using TASVideos.Extensions;
 
-namespace TASVideos.Data
+namespace TASVideos.Core
 {
 	/// <summary>
 	/// Represents a request for a data collection that can be sorted.

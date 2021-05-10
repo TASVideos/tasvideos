@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using TASVideos.Data;
+using TASVideos.Core;
 
 namespace TASVideos.Pages.Users.Models
 {

@@ -5,7 +5,7 @@ using System.Reflection;
 
 using TASVideos.Extensions;
 
-namespace TASVideos.Data
+namespace TASVideos.Core
 {
 	public interface IPaged : IPageable, ISortable
 	{

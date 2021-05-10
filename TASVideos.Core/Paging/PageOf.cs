@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TASVideos.Data
+namespace TASVideos.Core
 {
 	public class PageOf<T> : IPaged, IEnumerable<T>
 	{
