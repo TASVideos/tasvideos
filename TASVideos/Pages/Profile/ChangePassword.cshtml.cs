@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Profile
 {
@@ -12,10 +10,10 @@ namespace TASVideos.Pages.Profile
 	public class ChangePasswordModel : BasePageModel
 	{
 		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 
 		public ChangePasswordModel(
-			SignInManager<User> signInManager,
+			SignInManager signInManager,
 			UserManager userManager)
 		{
 			_userManager = userManager;

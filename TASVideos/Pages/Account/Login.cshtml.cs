@@ -1,16 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Account
 {
@@ -18,19 +11,11 @@ namespace TASVideos.Pages.Account
 	[IpBanCheck]
 	public class LoginModel : BasePageModel
 	{
-		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 
-		private readonly ApplicationDbContext _db;
-
-		public LoginModel(
-			UserManager userManager,
-			SignInManager<User> signInManager,
-			ApplicationDbContext db)
+		public LoginModel(SignInManager signInManager)
 		{
-			_userManager = userManager;
 			_signInManager = signInManager;
-			_db = db;
 		}
 
 		[FromQuery]
@@ -62,14 +47,10 @@ namespace TASVideos.Pages.Account
 				return Page();
 			}
 
-			var result = await PasswordSignIn();
+			var result = await _signInManager.SignInWithLegacySupport(UserName, Password, RememberMe);
 
 			if (result.Succeeded)
 			{
-				var user = await _db.Users.SingleAsync(u => u.UserName == UserName);
-				user.LastLoggedInTimeStamp = DateTime.UtcNow;
-				await _db.SaveChangesAsync();
-
 				return RedirectToLocal(ReturnUrl);
 			}
 
@@ -79,43 +60,7 @@ namespace TASVideos.Pages.Account
 			}
 
 			ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-
-			// If we got this far, something failed, redisplay form
 			return Page();
-		}
-
-		private async Task<Microsoft.AspNetCore.Identity.SignInResult> PasswordSignIn() // Using the razor page model, eww?
-		{
-			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
-			if (user == null)
-			{
-				return Microsoft.AspNetCore.Identity.SignInResult.Failed;
-			}
-
-			// If no password, then try to log in with legacy method
-			if (!string.IsNullOrWhiteSpace(user.LegacyPassword))
-			{
-				using var md5 = MD5.Create();
-				var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(Password));
-				string encrypted = BitConverter.ToString(md5Result)
-					.Replace("-", "")
-					.ToLower();
-
-				if (encrypted == user.LegacyPassword)
-				{
-					user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, Password);
-					await _userManager.UpdateSecurityStampAsync(user);
-					user.LegacyPassword = null;
-					await _db.SaveChangesAsync();
-				}
-			}
-
-			await _userManager.AddUserPermissionsToClaims(user);
-			return await _signInManager.PasswordSignInAsync(
-				UserName,
-				Password,
-				RememberMe,
-				lockoutOnFailure: true);
 		}
 	}
 }

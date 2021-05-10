@@ -3,12 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services
 {
@@ -22,12 +20,12 @@ namespace TASVideos.Core.Services
 		private readonly AppSettings.JwtSettings _settings;
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 
 		public JwtAuthenticator(
 			ApplicationDbContext db,
 			UserManager userManager,
-			SignInManager<User> signInManager,
+			SignInManager signInManager,
 			AppSettings settings)
 		{
 			_db = db;
@@ -36,22 +34,15 @@ namespace TASVideos.Core.Services
 			_settings = settings.Jwt;
 		}
 
-		public async Task<string> Authenticate(string username, string password)
+		public async Task<string> Authenticate(string userName, string password)
 		{
-			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == username);
-			if (user == null)
-			{
-				return "";
-			}
-
-			var result = await _signInManager.PasswordSignInAsync(user, password, false, true);
+			var result = await _signInManager.SignInWithLegacySupport(userName, password);
 			if (!result.Succeeded)
 			{
 				return "";
 			}
 
-			await _userManager.AddUserPermissionsToClaims(user);
-
+			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
 			var claims = await _userManager.GetClaimsAsync(user);
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var tokenKey = Encoding.ASCII.GetBytes(_settings.SecretKey);

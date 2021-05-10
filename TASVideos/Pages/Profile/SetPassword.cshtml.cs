@@ -2,10 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Profile
 {
@@ -13,11 +11,11 @@ namespace TASVideos.Pages.Profile
 	public class SetPasswordModel : BasePageModel
 	{
 		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 
 		public SetPasswordModel(
 			UserManager userManager,
-			SignInManager<User> signInManager)
+			SignInManager signInManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;

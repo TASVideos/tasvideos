@@ -33,6 +33,7 @@ namespace TASVideos.Core
 		private static IServiceCollection AddServices(this IServiceCollection services, bool isDevelopment)
 		{
 			services.AddScoped<UserManager>();
+			services.AddScoped<SignInManager>();
 			services.AddScoped<IPointsService, PointsService>();
 			services.AddScoped<IAwards, Awards>();
 			services.AddScoped<IMediaFileUploader, MediaFileUploader>();
