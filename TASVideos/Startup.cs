@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TASVideos.Core;
-using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Extensions;
@@ -46,7 +45,7 @@ namespace TASVideos
 				.AddTasVideosLegacy(
 					Settings.ConnectionStrings.LegacySiteConnection,
 					Settings.ConnectionStrings.LegacyForumConnection,
-					Settings.StartupStrategy() == DbInitializer.StartupStrategy.Import)
+					Settings.UsesImportStartStrategy())
 				.AddMovieParser();
 
 			// 3rd Party

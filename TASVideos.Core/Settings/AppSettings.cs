@@ -75,20 +75,23 @@ namespace TASVideos.Core.Settings
 
 	public static class AppSettingsExtensions
 	{
-		public static DbInitializer.StartupStrategy StartupStrategy(this AppSettings settings)
+		public static StartupStrategy GetStartupStrategy(this AppSettings settings)
 		{
 			var strategy = settings.StartupStrategy;
 			if (!string.IsNullOrWhiteSpace(settings.StartupStrategy))
 			{
-				var result = Enum.TryParse(typeof(DbInitializer.StartupStrategy), strategy, true, out object? strategyObj);
+				var result = Enum.TryParse(typeof(StartupStrategy), strategy, true, out object? strategyObj);
 
 				if (result)
 				{
-					return (DbInitializer.StartupStrategy)(strategyObj ?? DbInitializer.StartupStrategy.Minimal);
+					return (StartupStrategy)(strategyObj ?? StartupStrategy.Minimal);
 				}
 			}
 
-			return DbInitializer.StartupStrategy.Minimal;
+			return StartupStrategy.Minimal;
 		}
+
+		public static bool UsesImportStartStrategy(this AppSettings settings)
+			=> settings.GetStartupStrategy() == StartupStrategy.Import;
 	}
 }
