@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TASVideos.Core;
+using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Extensions;

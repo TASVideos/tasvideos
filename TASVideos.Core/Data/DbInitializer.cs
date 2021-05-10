@@ -9,13 +9,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TASVideos.Core.Services;
 using TASVideos.Core.Settings;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
-using TASVideos.Extensions;
 using TASVideos.Legacy;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.Data
+namespace TASVideos.Core.Data
 {
 	public static class DbInitializer
 	{
