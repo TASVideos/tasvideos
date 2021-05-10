@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Models
+﻿namespace TASVideos.Core.Services
 {
 	/// <summary>
 	/// Represents a concise view of a Role

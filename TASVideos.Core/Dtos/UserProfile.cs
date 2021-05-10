@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Models
+// TODO: Create a view model to separate presentation concerns (Display attributes)
+namespace TASVideos.Core.Services
 {
 	/// <summary>
 	/// Represents a user with publicly available information
@@ -60,14 +60,14 @@ namespace TASVideos.Models
 		public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;
 		public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
 
-		public WikiEditModel WikiEdits { get; set; } = new ();
+		public WikiEdit WikiEdits { get; set; } = new ();
 
 		public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
 		public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
 
-		public RatingModel Ratings { get; set; } = new ();
-		public UserFilesModel UserFiles { get; set; } = new ();
+		public RatingSummary Ratings { get; set; } = new ();
+		public UserFileSummary UserFiles { get; set; } = new ();
 
 		public int SubmissionCount => Submissions.Sum(s => s.Count);
 
@@ -77,7 +77,7 @@ namespace TASVideos.Models
 			public int Count { get; set; }
 		}
 
-		public class WikiEditModel
+		public class WikiEdit
 		{
 			public int TotalEdits { get; set; }
 			public DateTime? FirstEdit { get; set; }
@@ -87,14 +87,14 @@ namespace TASVideos.Models
 			public DateTime LastEditDateTime => LastEdit ?? DateTime.UtcNow;
 		}
 
-		public class RatingModel
+		public class RatingSummary
 		{
 			// TODO: obsolete vs non-obsolete
 			// TODO: percentage of total non-obsolete
 			public int TotalMoviesRated { get; set; }
 		}
 
-		public class UserFilesModel
+		public class UserFileSummary
 		{
 			public int Total { get; set; }
 			public IEnumerable<string> Systems { get; set; } = new List<string>();
