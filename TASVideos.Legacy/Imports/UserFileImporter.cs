@@ -11,7 +11,7 @@ using LegacyUserFile = TASVideos.Legacy.Data.Site.Entity.UserFile;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class UserFileImporter
+	internal static class UserFileImporter
 	{
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{

@@ -9,7 +9,7 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public class PublicationImporter
+	internal class PublicationImporter
 	{
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{

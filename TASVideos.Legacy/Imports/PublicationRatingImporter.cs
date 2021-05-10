@@ -5,7 +5,7 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class PublicationRatingImporter
+	internal static class PublicationRatingImporter
 	{
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{

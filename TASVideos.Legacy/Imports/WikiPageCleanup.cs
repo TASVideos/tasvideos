@@ -9,7 +9,7 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class WikiPageCleanup
+	internal static class WikiPageCleanup
 	{
 		private record UserDto(string Name, string HomePage);
 

@@ -11,7 +11,7 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class SubmissionImporter
+	internal static class SubmissionImporter
 	{
 		private static readonly string[] ValidSubmissionFileExtensions = { "fmv", "vmv", "fcm", "smv", "dtm", "mcm", "gmv", "dof", "dsm", "bkm", "mcm", "fm2", "vbm", "m64", "mmv", "zmv", "pxm", "fbm", "mc2", "ymv", "jrsr", "gz", "omr", "pjm", "wtf", "tas", "lsmv", "fm3", "bk2", "lmp", "mcm", "mar", "ltm" };
 

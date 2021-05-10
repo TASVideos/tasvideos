@@ -5,7 +5,7 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class GameGroupImporter
+	internal static class GameGroupImporter
 	{
 		public static void Import(NesVideosSiteContext legacySiteContext)
 		{

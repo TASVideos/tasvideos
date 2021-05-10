@@ -7,7 +7,7 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class ForumPollImporter
+	internal static class ForumPollImporter
 	{
 		public static void Import(ApplicationDbContext context, NesVideosForumContext legacyForumContext)
 		{

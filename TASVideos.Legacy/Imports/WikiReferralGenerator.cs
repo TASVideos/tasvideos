@@ -6,7 +6,7 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class WikiReferralGenerator
+	internal static class WikiReferralGenerator
 	{
 		public static void Generate(ApplicationDbContext context)
 		{

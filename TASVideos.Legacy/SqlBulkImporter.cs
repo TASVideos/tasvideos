@@ -7,7 +7,7 @@ using TASVideos.Extensions;
 
 namespace TASVideos.Legacy
 {
-	public static class SqlBulkImporter
+	internal static class SqlBulkImporter
 	{
 		public static void BeginImport(string connectionString, bool isMsSql)
 		{
