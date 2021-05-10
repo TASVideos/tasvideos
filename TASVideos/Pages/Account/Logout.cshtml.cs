@@ -1,20 +1,18 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Account
 {
 	[Authorize]
 	public class LogoutModel : BasePageModel
 	{
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 		private readonly UserManager _userManager;
 
 		public LogoutModel(
-			SignInManager<User> signInManager,
+			SignInManager signInManager,
 			UserManager userManager)
 		{
 			_signInManager = signInManager;

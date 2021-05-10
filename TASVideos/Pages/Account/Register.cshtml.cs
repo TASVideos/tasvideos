@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -24,7 +23,7 @@ namespace TASVideos.Pages.Account
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IReCaptchaService _reCaptchaService;
@@ -33,7 +32,7 @@ namespace TASVideos.Pages.Account
 		public RegisterModel(
 			ApplicationDbContext db,
 			UserManager userManager,
-			SignInManager<User> signInManager,
+			SignInManager signInManager,
 			IEmailService emailService,
 			ExternalMediaPublisher publisher,
 			IReCaptchaService reCaptchaService,

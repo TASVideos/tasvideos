@@ -1,5 +1,5 @@
 @inject UserManager UserManager
-@inject SignInManager<User> SignInManager
+@inject SignInManager SignInManager
 @{ 
 	bool isSignedIn = SignInManager.IsSignedIn(User);
 	int notificationCount = 0;
