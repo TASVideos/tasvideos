@@ -104,14 +104,12 @@ namespace TASVideos.Pages.Roles
 
 			try
 			{
-				MessageType = Styles.Success;
-				Message = "Role successfully updated.";
+				SuccessStatusMessage("Role successfully updated.");
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to update Role {Id}, the role may have already been updated, or the game no longer exists.";
+				ErrorStatusMessage($"Unable to update Role {Id}, the role may have already been updated, or the game no longer exists.");
 			}
 
 			return RedirectToPage("List");
@@ -131,16 +129,14 @@ namespace TASVideos.Pages.Roles
 
 			try
 			{
-				MessageType = Styles.Success;
-				Message = $"Role {Id}, deleted successfully.";
+				SuccessStatusMessage($"Role {Id}, deleted successfully.");
 				_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
 				_publisher.SendUserManagement($"Role {Id} deleted by {User.Name()}", "", "Roles/List", User.Name());
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to delete Role {Id}, the role may have already been deleted or updated.";
+				ErrorStatusMessage($"Unable to delete Role {Id}, the role may have already been deleted or updated.");
 			}
 
 			return RedirectToPage("List");

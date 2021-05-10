@@ -124,14 +124,12 @@ namespace TASVideos.Pages.Games.Roms
 
 			try
 			{
-				MessageType = Styles.Success;
-				Message = "Rom successfully updated.";
+				SuccessStatusMessage("Rom successfully updated.");
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to update Rom {Id}, the rom may have already been updated, or the game no longer exists.";
+				ErrorStatusMessage($"Unable to update Rom {Id}, the rom may have already been updated, or the game no longer exists.");
 			}
 			catch (DbUpdateException ex)
 			{
@@ -153,22 +151,19 @@ namespace TASVideos.Pages.Games.Roms
 
 			if (!await CanBeDeleted())
 			{
-				Message = $"Unable to delete Rom {Id}, rom is used by a publication or submission.";
-				MessageType = Styles.Danger;
+				ErrorStatusMessage($"Unable to delete Rom {Id}, rom is used by a publication or submission.");
 				return RedirectToPage("List");
 			}
 
 			try
 			{
 				_db.GameRoms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
-				MessageType = Styles.Success;
-				Message = $"Rom {Id}, deleted successfully.";
+				SuccessStatusMessage($"Rom {Id}, deleted successfully.");
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to delete Rom {Id}, the rom may have already been deleted or updated.";
+				ErrorStatusMessage($"Unable to delete Rom {Id}, the rom may have already been deleted or updated.");
 			}
 
 			return RedirectToPage("List");

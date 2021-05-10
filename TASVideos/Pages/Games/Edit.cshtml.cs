@@ -138,14 +138,12 @@ namespace TASVideos.Pages.Games
 
 			try
 			{
-				MessageType = Styles.Success;
-				Message = "Game successfully updated.";
+				SuccessStatusMessage("Game successfully updated.");
 				await _db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.";
+				ErrorStatusMessage($"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.");
 			}
 
 			await _db.SaveChangesAsync();
@@ -164,22 +162,19 @@ namespace TASVideos.Pages.Games
 
 			if (!await CanBeDeleted())
 			{
-				Message = $"Unable to delete Game {Id}, game is used by a publication or submission.";
-				MessageType = Styles.Danger;
+				ErrorStatusMessage($"Unable to delete Game {Id}, game is used by a publication or submission.");
 				return RedirectToPage("List");
 			}
 
 			try
 			{
 				_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
-				MessageType = Styles.Success;
-				Message = $"Game {Id}, deleted successfully.";
 				await _db.SaveChangesAsync();
+				SuccessStatusMessage($"Game {Id}, deleted successfully.");
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to delete Game {Id}, the game may have already been deleted or updated.";
+				ErrorStatusMessage($"Unable to delete Game {Id}, the game may have already been deleted or updated.");
 			}
 
 			return RedirectToPage("List");

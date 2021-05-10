@@ -20,9 +20,6 @@ namespace TASVideos.Pages.Profile
 			_signInManager = signInManager;
 		}
 
-		[TempData]
-		public string? StatusMessage { get; set; }
-
 		[BindProperty]
 		[Required]
 		[DataType(DataType.Password)]
@@ -72,8 +69,7 @@ namespace TASVideos.Pages.Profile
 			}
 
 			await _signInManager.SignInAsync(user, isPersistent: false);
-			StatusMessage = "Your password has been changed.";
-
+			SuccessStatusMessage("Your password has been changed.");
 			return RedirectToPage("ChangePassword");
 		}
 	}

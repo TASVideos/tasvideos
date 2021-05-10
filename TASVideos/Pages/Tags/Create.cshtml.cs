@@ -33,17 +33,14 @@ namespace TASVideos.Pages.Tags
 			{
 				default:
 				case TagEditResult.Success:
-					MessageType = Styles.Success;
-					Message = "Tag successfully created.";
+					SuccessStatusMessage("Tag successfully created.");
 					return RedirectToPage("Index");
 				case TagEditResult.DuplicateCode:
 					ModelState.AddModelError($"{nameof(Tag)}.{nameof(Tag.Code)}", $"{nameof(Tag.Code)} {Tag.Code} already exists");
-					MessageType = null;
-					Message = null;
+					ClearStatusMessage();
 					return Page();
 				case TagEditResult.Fail:
-					MessageType = Styles.Danger;
-					Message = "Unable to edit tag due to an unknown error";
+					ErrorStatusMessage("Unable to edit tag due to an unknown error");
 					return Page();
 			}
 		}

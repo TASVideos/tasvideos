@@ -51,17 +51,14 @@ namespace TASVideos.Pages.Flags
 			{
 				default:
 				case FlagEditResult.Success:
-					MessageType = Styles.Success;
-					Message = "Tag successfully created.";
+					SuccessStatusMessage("Tag successfully created.");
 					return RedirectToPage("Index");
 				case FlagEditResult.DuplicateCode:
 					ModelState.AddModelError($"{nameof(Flag)}.{nameof(Flag.Token)}", $"{nameof(Flag.Token)} {Flag.Token} already exists");
-					MessageType = null;
-					Message = null;
+					ClearStatusMessage();
 					return Page();
 				case FlagEditResult.Fail:
-					MessageType = Styles.Danger;
-					Message = "Unable to edit tag due to an unknown error";
+					ErrorStatusMessage("Unable to edit tag due to an unknown error");
 					return Page();
 			}
 		}
