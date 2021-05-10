@@ -166,22 +166,20 @@ namespace TASVideos.Pages.Forum.Posts
 			try
 			{
 				await _db.SaveChangesAsync();
+				_publisher.SendForum(
+					post.Topic!.Forum!.Restricted,
+					$"Post DELETED by {User.Name()} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
+					"",
+					$"Forum/Topics/{post.Topic.Id}",
+					User.Name());
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				// TODO: nicer UI for this
-				return BadRequest("An error occured while attempting to delete the post, please try again.");
+				ErrorStatusMessage("An error occured while attempting to delete the post, please try again.");
 			}
 
-			_publisher.SendForum(
-				post.Topic!.Forum!.Restricted,
-				$"Post DELETED by {User.Name()} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
-				"",
-				$"Forum/Topics/{post.Topic.Id}",
-				User.Name());
-
 			return topicDeleted
-				? RedirectToPage("/Forum/Subforum/Index", new { id = post.Topic.ForumId })
+				? RedirectToPage("/Forum/Subforum/Index", new { id = post.Topic!.ForumId })
 				: RedirectToPage("/Forum/Topics/Index", new { id = post.TopicId });
 		}
 
