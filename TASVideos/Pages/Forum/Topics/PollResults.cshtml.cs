@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Forum.Topics.Models;
@@ -82,15 +80,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_db.ForumPollOptionVotes.RemoveRange(votes);
 
-			try
-			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// Assume vote was already removed
-			}
-
+			await ConcurrentSave(_db, "Poll reset", "Unable to reset poll");
 			return RedirectToPage("PollResults", new { Id });
 		}
 	}

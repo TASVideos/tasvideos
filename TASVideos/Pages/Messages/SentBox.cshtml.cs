@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Messages.Models;
@@ -59,14 +57,9 @@ namespace TASVideos.Pages.Messages
 			if (message is not null)
 			{
 				_db.PrivateMessages.Remove(message);
-				try
-				{
-					await _db.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					// Do nothing, likely the user has read at the same time
-				}
+
+				// Do nothing on failure, likely the user has read at the same time
+				await ConcurrentSave(_db, "", "");
 			}
 
 			return RedirectToPage("SentBox");

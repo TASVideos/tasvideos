@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using TASVideos.Data;
 
 namespace TASVideos.Pages
 {
@@ -51,6 +54,29 @@ namespace TASVideos.Pages
 			foreach (var error in result.Errors)
 			{
 				ModelState.AddModelError(string.Empty, error.Description);
+			}
+		}
+
+		protected async Task<bool> ConcurrentSave(ApplicationDbContext db, string successMessage, string errorMessage)
+		{
+			try
+			{
+				await db.SaveChangesAsync();
+				if (!string.IsNullOrWhiteSpace(successMessage))
+				{
+					SuccessStatusMessage(successMessage);
+				}
+
+				return true;
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!string.IsNullOrWhiteSpace(errorMessage))
+				{
+					ErrorStatusMessage(errorMessage + "\nThe resource may have already been deleted or updated");
+				}
+
+				return false;
 			}
 		}
 	}

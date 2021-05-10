@@ -97,13 +97,9 @@ namespace TASVideos.Pages.Users
 
 			_db.UserRoles.RemoveRange(currentRoles);
 
-			try
+			var result = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
+			if (!result)
 			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				ErrorStatusMessage($"Unable to modify user {user.UserName}. User data may have been modified since the page was opened.");
 				return ReturnToPreviousPage();
 			}
 
@@ -114,13 +110,9 @@ namespace TASVideos.Pages.Users
 					RoleId = r
 				}));
 
-			try
+			var saveResult2 = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
+			if (!saveResult2)
 			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				ErrorStatusMessage($"Unable to modify user {user.UserName}. User data may have been modified since the page was opened.");
 				return ReturnToPreviousPage();
 			}
 
@@ -152,8 +144,7 @@ namespace TASVideos.Pages.Users
 				_publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
 			}
 
-			SuccessStatusMessage($"User {user.UserName} successfully updated.");
-
+			SuccessStatusMessage($"User {user.UserName} updated");
 			return ReturnToPreviousPage();
 		}
 
@@ -170,9 +161,8 @@ namespace TASVideos.Pages.Users
 			}
 
 			user.LockoutEnd = null;
-			await _db.SaveChangesAsync();
+			await ConcurrentSave(_db, $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
 
-			SuccessStatusMessage($"User {user.UserName} successfully unlocked.");
 			return RedirectToLocal(returnUrl);
 		}
 

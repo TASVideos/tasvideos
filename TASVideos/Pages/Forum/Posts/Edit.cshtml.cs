@@ -106,18 +106,20 @@ namespace TASVideos.Pages.Forum.Posts
 				}
 			}
 
-			// TODO: catch DbConcurrencyException
 			forumPost.Subject = Post.Subject;
 			forumPost.Text = Post.Text;
 			forumPost.PosterMood = Post.Mood;
-			await _db.SaveChangesAsync();
 
-			_publisher.SendForum(
-				forumPost.Topic!.Forum!.Restricted,
-				$"Post edited by {User.Name()} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
-				"",
-				$"p/{Id}#{Id}",
-				User.Name());
+			var result = await ConcurrentSave(_db, $"Post {Id} edited", "Unable to edit post");
+			if (result)
+			{
+				_publisher.SendForum(
+					forumPost.Topic!.Forum!.Restricted,
+					$"Post edited by {User.Name()} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
+					"",
+					$"p/{Id}#{Id}",
+					User.Name());
+			}
 
 			return RedirectToLocal($"/forum/p/{Id}#{Id}");
 		}
@@ -163,19 +165,15 @@ namespace TASVideos.Pages.Forum.Posts
 				topicDeleted = true;
 			}
 
-			try
+			var result = await ConcurrentSave(_db, $"Post {Id} deleted", $"Unable to delete post {Id}");
+			if (result)
 			{
-				await _db.SaveChangesAsync();
 				_publisher.SendForum(
 					post.Topic!.Forum!.Restricted,
 					$"Post DELETED by {User.Name()} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
 					"",
 					$"Forum/Topics/{post.Topic.Id}",
 					User.Name());
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				ErrorStatusMessage("An error occured while attempting to delete the post, please try again.");
 			}
 
 			return topicDeleted

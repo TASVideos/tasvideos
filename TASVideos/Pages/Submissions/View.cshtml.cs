@@ -165,18 +165,13 @@ namespace TASVideos.Pages.Submissions
 			submission.WikiContent = wikiPage;
 			submission.PublisherId = User.GetUserId();
 
-			try
+			var result = await ConcurrentSave(_db, "", "Unable to claim");
+			if (result)
 			{
-				await _wikiPages.Add(wikiPage);
 				_publisher.SendSubmissionEdit(
 					$"Submission {submission.Title} set to {newStatus.EnumDisplayName()} by {User.Name()}",
 					$"{Id}S",
 					User.Name());
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// Assume the status changed and can no longer be claimed
-				return BadRequest("Submission can not be claimed");
 			}
 
 			return RedirectToPage("View", new { Id });

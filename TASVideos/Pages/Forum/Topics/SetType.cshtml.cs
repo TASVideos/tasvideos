@@ -80,16 +80,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			topic.Type = Type;
 
-			try
-			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// TODO: do this through temp data
-				return RedirectToPage("SetType", new { TopicId = topic.Id });
-			}
-
+			await ConcurrentSave(_db, $"Topic set to {Type}", "Unable to set the topic type");
 			return RedirectToPage("Index", new { topic.Id });
 		}
 	}

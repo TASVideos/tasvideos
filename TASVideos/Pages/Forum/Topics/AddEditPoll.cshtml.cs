@@ -118,18 +118,13 @@ namespace TASVideos.Pages.Forum.Topics
 
 				topic.Poll.PollOptions.Clear();
 				topic.Poll = null;
-
-				try
-				{
-					await _db.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					return BadRequest("Unable to clear existing poll");
-				}
 			}
 
-			await CreatePoll(topic, Poll);
+			var result = await ConcurrentSave(_db, "Poll edited", "Unable to clear existing poll");
+			if (result)
+			{
+				await CreatePoll(topic, Poll);
+			}
 
 			return RedirectToPage("Index", new { Id = TopicId });
 		}

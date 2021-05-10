@@ -136,18 +136,7 @@ namespace TASVideos.Pages.Games
 				});
 			}
 
-			try
-			{
-				SuccessStatusMessage("Game successfully updated.");
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				ErrorStatusMessage($"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.");
-			}
-
-			await _db.SaveChangesAsync();
-
+			await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
 			return string.IsNullOrWhiteSpace(ReturnUrl)
 				? RedirectToPage("List")
 				: RedirectToLocal(ReturnUrl);
@@ -166,16 +155,8 @@ namespace TASVideos.Pages.Games
 				return RedirectToPage("List");
 			}
 
-			try
-			{
-				_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
-				await _db.SaveChangesAsync();
-				SuccessStatusMessage($"Game {Id}, deleted successfully.");
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				ErrorStatusMessage($"Unable to delete Game {Id}, the game may have already been deleted or updated.");
-			}
+			_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
+			await ConcurrentSave(_db, $"Game {Id} deleted", $"Unable to delete Game {Id}");
 
 			return RedirectToPage("List");
 		}
