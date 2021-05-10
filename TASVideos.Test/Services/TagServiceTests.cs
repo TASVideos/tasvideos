@@ -107,7 +107,7 @@ namespace TASVideos.Test.Services
 			const string code = "Test";
 			const string displayName = "Display";
 
-			var result = await _tagService.Add(code, displayName);
+			var (_, result) = await _tagService.Add(code, displayName);
 
 			Assert.AreEqual(TagEditResult.Success, result);
 			Assert.AreEqual(1, _db.Tags.Count());
@@ -126,7 +126,7 @@ namespace TASVideos.Test.Services
 			await _db.SaveChangesAsync();
 			_db.CreateUpdateConflict();
 
-			var result = await _tagService.Add(code, "DisplayName");
+			var (_, result) = await _tagService.Add(code, "DisplayName");
 			Assert.AreEqual(TagEditResult.DuplicateCode, result);
 			Assert.IsTrue(_cache.ContainsKey(TagService.TagsKey));
 		}
@@ -140,7 +140,7 @@ namespace TASVideos.Test.Services
 			await _db.SaveChangesAsync();
 			_db.CreateConcurrentUpdateConflict();
 
-			var result = await _tagService.Add(code, "DisplayName");
+			var (_, result) = await _tagService.Add(code, "DisplayName");
 			Assert.AreEqual(TagEditResult.Fail, result);
 			Assert.IsTrue(_cache.ContainsKey(TagService.TagsKey));
 		}

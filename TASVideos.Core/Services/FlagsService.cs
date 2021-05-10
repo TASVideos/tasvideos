@@ -99,7 +99,7 @@ namespace TASVideos.Core.Services
 			}
 			catch (DbUpdateException ex)
 			{
-				if (ex.InnerException?.Message.Contains("Cannot insert duplicate") ?? false)
+				if (ex.InnerException?.Message.Contains("unique constraint") ?? false)
 				{
 					return FlagEditResult.DuplicateCode;
 				}
@@ -134,7 +134,7 @@ namespace TASVideos.Core.Services
 			}
 			catch (DbUpdateException ex)
 			{
-				if (ex.InnerException?.Message.Contains("Cannot insert duplicate") ?? false)
+				if (ex.InnerException?.Message.Contains("unique constraint") ?? false)
 				{
 					return FlagEditResult.DuplicateCode;
 				}

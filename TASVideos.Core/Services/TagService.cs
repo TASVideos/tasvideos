@@ -16,7 +16,7 @@ namespace TASVideos.Core.Services
 		ValueTask<Tag?> GetById(int id);
 		ValueTask<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 		Task<bool> InUse(int id);
-		Task<TagEditResult> Add(string code, string displayName);
+		Task<(int? id, TagEditResult result)> Add(string code, string displayName);
 		Task<TagEditResult> Edit(int id, string code, string displayName);
 		Task<TagDeleteResult> Delete(int id);
 	}
@@ -72,9 +72,9 @@ namespace TASVideos.Core.Services
 			return await _db.PublicationTags.AnyAsync(pt => pt.TagId == id);
 		}
 
-		public async Task<TagEditResult> Add(string code, string displayName)
+		public async Task<(int? id, TagEditResult result)> Add(string code, string displayName)
 		{
-			_db.Tags.Add(new Tag
+			var entry = _db.Tags.Add(new Tag
 			{
 				Code = code,
 				DisplayName = displayName
@@ -84,20 +84,20 @@ namespace TASVideos.Core.Services
 			{
 				await _db.SaveChangesAsync();
 				_cache.Remove(TagsKey);
-				return TagEditResult.Success;
+				return (entry.Entity.Id, TagEditResult.Success);
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				return TagEditResult.Fail;
+				return (null, TagEditResult.Fail);
 			}
 			catch (DbUpdateException ex)
 			{
-				if (ex.InnerException?.Message.Contains("Cannot insert duplicate") ?? false)
+				if (ex.InnerException?.Message.Contains("unique constraint") ?? false)
 				{
-					return TagEditResult.DuplicateCode;
+					return (null, TagEditResult.DuplicateCode);
 				}
 
-				return TagEditResult.Fail;
+				return (null, TagEditResult.Fail);
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace TASVideos.Core.Services
 			}
 			catch (DbUpdateException ex)
 			{
-				if (ex.InnerException?.Message.Contains("Cannot insert duplicate") ?? false)
+				if (ex.InnerException?.Message.Contains("unique constraint") ?? false)
 				{
 					return TagEditResult.DuplicateCode;
 				}

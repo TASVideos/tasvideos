@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Tags
 				return Page();
 			}
 
-			var result = await _tagService.Add(Tag.Code, Tag.DisplayName);
+			var (_, result) = await _tagService.Add(Tag.Code, Tag.DisplayName);
 			switch (result)
 			{
 				default:
