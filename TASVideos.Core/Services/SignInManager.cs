@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,6 +79,19 @@ namespace TASVideos.Core.Services
 				var loggedInUser = await _db.Users.SingleAsync(u => u.UserName == userName);
 				loggedInUser.LastLoggedInTimeStamp = DateTime.UtcNow;
 				await _db.SaveChangesAsync();
+			}
+
+			return result;
+		}
+
+		public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
+		{
+			var user = await UserManager.GetUserAsync(principal);
+			var result = await UserManager.AddPasswordAsync(user, newPassword);
+
+			if (result.Succeeded)
+			{
+				await SignInAsync(user, isPersistent: false);
 			}
 
 			return result;
