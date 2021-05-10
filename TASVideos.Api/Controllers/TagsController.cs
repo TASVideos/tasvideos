@@ -112,7 +112,7 @@ namespace TASVideos.Api.Controllers
 		/// <summary>
 		/// Deletes an existing tag
 		/// </summary>
-		/// <response code="201">The tag was created successfully.</response>
+		/// <response code="200">The tag was deleted successfully.</response>
 		/// <response code="400">The request parameters are invalid.</response>
 		/// <response code="404">A tag with the given id was not found.</response>
 		/// <response code="409">The tag is in use and cannot be deleted.</response>
