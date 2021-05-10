@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TASVideos.Models;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Profile.Models
 {

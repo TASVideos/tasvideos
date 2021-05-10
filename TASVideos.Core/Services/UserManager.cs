@@ -9,11 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
 
 namespace TASVideos.Core.Services
 {
-	// TODO: consider not using view models as a return type, these methods should return a lower level abstraction, not a presentation layer object
 	public class UserManager : UserManager<User>
 	{
 		private readonly ApplicationDbContext _db;
@@ -198,7 +196,7 @@ namespace TASVideos.Core.Services
 							Description = ur.Role.Description
 						})
 						.ToList(),
-					UserFiles = new UserProfile.UserFilesModel
+					UserFiles = new UserProfile.UserFileSummary
 					{
 						Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
 					}

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TASVideos.Models
+namespace TASVideos.Core.Services
 {
 	public class PrivateMessageDto
 	{
