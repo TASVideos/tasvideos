@@ -103,7 +103,9 @@ namespace TASVideos.Pages.Users
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				return BadRequest("Unable to modify user. User data may have been modified since the page was opened.");
+				MessageType = Styles.Danger;
+				Message = $"Unable to modify user {user.UserName}. User data may have been modified since the page was opened.";
+				return ReturnToPreviousPage();
 			}
 
 			_db.UserRoles.AddRange(UserToEdit.SelectedRoles
@@ -119,7 +121,9 @@ namespace TASVideos.Pages.Users
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				return BadRequest("Unable to modify user. User data may have been modified since the page was opened.");
+				MessageType = Styles.Danger;
+				Message = $"Unable to modify user {user.UserName}. User data may have been modified since the page was opened.";
+				return ReturnToPreviousPage();
 			}
 
 			// Announce Role change
@@ -150,10 +154,15 @@ namespace TASVideos.Pages.Users
 				_publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
 			}
 
-			return string.IsNullOrWhiteSpace(ReturnUrl)
-				? RedirectToPage("List")
-				: RedirectToLocal(ReturnUrl);
+			MessageType = Styles.Success;
+			Message = $"User {user.UserName} successfully updated.";
+
+			return ReturnToPreviousPage();
 		}
+
+		private IActionResult ReturnToPreviousPage() => string.IsNullOrWhiteSpace(ReturnUrl)
+			? RedirectToPage("List")
+			: RedirectToLocal(ReturnUrl);
 
 		public async Task<IActionResult> OnGetUnlock(string returnUrl)
 		{
@@ -165,6 +174,9 @@ namespace TASVideos.Pages.Users
 
 			user.LockoutEnd = null;
 			await _db.SaveChangesAsync();
+
+			MessageType = Styles.Success;
+			Message = $"User {user.UserName} successfully unlocked.";
 			return RedirectToLocal(returnUrl);
 		}
 
