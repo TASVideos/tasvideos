@@ -1,4 +1,7 @@
-﻿namespace TASVideos.Core.Settings
+﻿using System;
+using TASVideos.Core.Data;
+
+namespace TASVideos.Core.Settings
 {
 	public class AppSettings
 	{
@@ -67,6 +70,25 @@
 		{
 			public string SecretKey { get; set; } = "";
 			public int ExpiresInMinutes { get; set; }
+		}
+	}
+
+	public static class AppSettingsExtensions
+	{
+		public static DbInitializer.StartupStrategy StartupStrategy(this AppSettings settings)
+		{
+			var strategy = settings.StartupStrategy;
+			if (!string.IsNullOrWhiteSpace(settings.StartupStrategy))
+			{
+				var result = Enum.TryParse(typeof(DbInitializer.StartupStrategy), strategy, true, out object? strategyObj);
+
+				if (result)
+				{
+					return (DbInitializer.StartupStrategy)(strategyObj ?? DbInitializer.StartupStrategy.Minimal);
+				}
+			}
+
+			return DbInitializer.StartupStrategy.Minimal;
 		}
 	}
 }
