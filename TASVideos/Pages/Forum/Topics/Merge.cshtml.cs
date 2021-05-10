@@ -103,22 +103,16 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_db.ForumTopics.Remove(originalTopic);
 
-			try
+			var result = await ConcurrentSave(_db, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
+			if (result)
 			{
-				await _db.SaveChangesAsync();
+				_publisher.SendForum(
+					destinationTopic.Forum!.Restricted,
+					$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Name()}",
+					"",
+					$"Forum/Topics/{destinationTopic.Id}",
+					User.Name());
 			}
-			catch (DbUpdateConcurrencyException)
-			{
-				ModelState.AddModelError("", "An error occurred. The topic may have changed since loading this page. Go back and try again.");
-				return Page();
-			}
-
-			_publisher.SendForum(
-				destinationTopic.Forum!.Restricted,
-				$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Name()}",
-				"",
-				$"Forum/Topics/{destinationTopic.Id}",
-				User.Name());
 
 			return RedirectToPage("Index", new { id = Topic.DestinationTopicId });
 		}

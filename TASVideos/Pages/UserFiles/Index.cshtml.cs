@@ -70,14 +70,7 @@ namespace TASVideos.Pages.UserFiles
 				{
 					_db.UserFiles.Remove(userFile);
 
-					try
-					{
-						await _db.SaveChangesAsync();
-					}
-					catch (DbUpdateConcurrencyException)
-					{
-						// Do nothing
-					}
+					await ConcurrentSave(_db, $"{userFile.FileName} deleted", $"Unable to delete {userFile.FileName}");
 				}
 			}
 
@@ -125,18 +118,14 @@ namespace TASVideos.Pages.UserFiles
 				{
 					fileComment.Text = comment;
 
-					try
+					var result = await ConcurrentSave(_db, "Comment edited", "Unable to edit comment");
+					if (result)
 					{
-						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
 							$"Comment edited by {User.Name()} on ({fileComment.UserFile!.Title} (WIP))",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							comment,
 							User.Name());
-					}
-					catch (DbUpdateConcurrencyException)
-					{
-						// Do nothing
 					}
 				}
 			}
@@ -156,19 +145,14 @@ namespace TASVideos.Pages.UserFiles
 				if (fileComment is not null)
 				{
 					_db.UserFileComments.Remove(fileComment);
-
-					try
+					var result = await ConcurrentSave(_db, "Comment deleted", "Unable to delete comment");
+					if (result)
 					{
-						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
 							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Name()}",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							"",
 							User.Name());
-					}
-					catch (DbUpdateConcurrencyException)
-					{
-						// Do nothing
 					}
 				}
 			}

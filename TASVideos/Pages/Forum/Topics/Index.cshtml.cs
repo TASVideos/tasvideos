@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -209,15 +208,19 @@ namespace TASVideos.Pages.Forum.Topics
 			if (topic.IsLocked != locked)
 			{
 				topic.IsLocked = locked;
-				await _db.SaveChangesAsync();
-			}
 
-			_publisher.SendForum(
-				topic.Forum!.Restricted,
-				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Name()}",
-				"",
-				$"Forum/Topics/{Id}",
-				User.Name());
+				var lockedState = locked ? "LOCKED" : "UNLOCKED";
+				var result = await ConcurrentSave(_db, $"Topic set to locked {lockedState}", $"Unable to set status of {lockedState}");
+				if (result)
+				{
+					_publisher.SendForum(
+						topic.Forum!.Restricted,
+						$"Topic {topicTitle} {lockedState} by {User.Name()}",
+						"",
+						$"Forum/Topics/{Id}",
+						User.Name());
+				}
+			}
 
 			return RedirectToTopic();
 		}
@@ -263,15 +266,7 @@ namespace TASVideos.Pages.Forum.Topics
 				option.Votes.Clear();
 			}
 
-			try
-			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DBConcurrencyException)
-			{
-				return BadRequest("Unable to reset poll results");
-			}
-
+			await ConcurrentSave(_db, "Poll reset", "Unable to reset poll results");
 			return RedirectToTopic();
 		}
 
