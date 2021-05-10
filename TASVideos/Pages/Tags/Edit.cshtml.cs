@@ -49,19 +49,16 @@ namespace TASVideos.Pages.Tags
 			{
 				default:
 				case TagEditResult.Success:
-					MessageType = Styles.Success;
-					Message = "Tag successfully updated.";
+					SuccessStatusMessage("Tag successfully updated.");
 					return RedirectToPage("Index");
 				case TagEditResult.NotFound:
 					return NotFound();
 				case TagEditResult.DuplicateCode:
 					ModelState.AddModelError($"{nameof(Tag)}.{nameof(Tag.Code)}", $"{nameof(Tag.Code)} {Tag.Code} already exists");
-					MessageType = null;
-					Message = null;
+					ClearStatusMessage();
 					return Page();
 				case TagEditResult.Fail:
-					MessageType = Styles.Danger;
-					Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
+					ErrorStatusMessage($"Unable to delete Tag {Id}, the tag may have already been deleted or updated.");
 					return Page();
 			}
 		}
@@ -72,20 +69,16 @@ namespace TASVideos.Pages.Tags
 			switch (result)
 			{
 				case TagDeleteResult.InUse:
-					MessageType = Styles.Danger;
-					Message = $"Unable to delete Tag {Id}, the tag is in use by at least 1 publication.";
+					ErrorStatusMessage($"Unable to delete Tag {Id}, the tag is in use by at least 1 publication.");
 					break;
 				case TagDeleteResult.Success:
-					MessageType = Styles.Success;
-					Message = $"Tag {Id}, deleted successfully.";
+					SuccessStatusMessage($"Tag {Id}, deleted successfully.");
 					break;
 				case TagDeleteResult.NotFound:
-					MessageType = Styles.Danger;
-					Message = $"Tag {Id}, not found.";
+					ErrorStatusMessage($"Tag {Id}, not found.");
 					break;
 				case TagDeleteResult.Fail:
-					MessageType = Styles.Danger;
-					Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
+					ErrorStatusMessage($"Unable to delete Tag {Id}, the tag may have already been deleted or updated.");
 					break;
 			}
 

@@ -18,8 +18,6 @@ namespace TASVideos.Pages.Profile.Models
 		[Display(Name = "Time Zone")]
 		public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
-		public string? StatusMessage { get; set; }
-
 		[Display(Name = "Allow Movie Ratings to be public?")]
 		public bool PublicRatings { get; set; }
 

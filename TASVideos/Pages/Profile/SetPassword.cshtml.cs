@@ -61,8 +61,7 @@ namespace TASVideos.Pages.Profile
 				return Page();
 			}
 
-			Message = "Your password has been set.";
-			MessageType = Styles.Success;
+			SuccessStatusMessage("Your password has been set.");
 			return RedirectToPage("SetPassword");
 		}
 	}

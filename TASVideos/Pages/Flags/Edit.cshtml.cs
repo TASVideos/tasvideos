@@ -62,19 +62,16 @@ namespace TASVideos.Pages.Flags
 			{
 				default:
 				case FlagEditResult.Success:
-					MessageType = Styles.Success;
-					Message = "Tag successfully updated.";
+					SuccessStatusMessage("Tag successfully updated.");
 					return RedirectToPage("Index");
 				case FlagEditResult.NotFound:
 					return NotFound();
 				case FlagEditResult.DuplicateCode:
 					ModelState.AddModelError($"{nameof(Flag)}.{nameof(Flag.Token)}", $"{nameof(Flag.Token)} {Flag.Token} already exists");
-					MessageType = null;
-					Message = null;
+					ClearStatusMessage();
 					return Page();
 				case FlagEditResult.Fail:
-					MessageType = Styles.Danger;
-					Message = $"Unable to delete Tag {Id}, the tag may have already been deleted or updated.";
+					ErrorStatusMessage($"Unable to delete Tag {Id}, the tag may have already been deleted or updated.");
 					return Page();
 			}
 		}
@@ -85,20 +82,16 @@ namespace TASVideos.Pages.Flags
 			switch (result)
 			{
 				case FlagDeleteResult.InUse:
-					MessageType = Styles.Danger;
-					Message = $"Unable to delete Flag {Id}, the tag is in use by at least 1 publication.";
+					ErrorStatusMessage($"Unable to delete Flag {Id}, the tag is in use by at least 1 publication.");
 					break;
 				case FlagDeleteResult.Success:
-					MessageType = Styles.Success;
-					Message = $"Flag {Id}, deleted successfully.";
+					SuccessStatusMessage($"Flag {Id}, deleted successfully.");
 					break;
 				case FlagDeleteResult.NotFound:
-					MessageType = Styles.Danger;
-					Message = $"Flag {Id}, not found.";
+					ErrorStatusMessage($"Flag {Id}, not found.");
 					break;
 				case FlagDeleteResult.Fail:
-					MessageType = Styles.Danger;
-					Message = $"Unable to delete Flag {Id}, the tag may have already been deleted or updated.";
+					ErrorStatusMessage($"Unable to delete Flag {Id}, the tag may have already been deleted or updated.");
 					break;
 			}
 

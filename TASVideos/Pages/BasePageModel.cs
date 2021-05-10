@@ -12,6 +12,24 @@ namespace TASVideos.Pages
 		[TempData]
 		public string? MessageType { get; set; }
 
+		public void SuccessStatusMessage(string message)
+		{
+			Message = message;
+			MessageType = Styles.Success;
+		}
+
+		public void ErrorStatusMessage(string message)
+		{
+			Message = message;
+			MessageType = Styles.Danger;
+		}
+
+		public void ClearStatusMessage()
+		{
+			Message = null;
+			MessageType = null;
+		}
+
 		protected string IpAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
 
 		protected IActionResult Home() => RedirectToPage("/Index");

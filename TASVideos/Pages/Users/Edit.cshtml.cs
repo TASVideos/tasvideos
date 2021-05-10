@@ -103,8 +103,7 @@ namespace TASVideos.Pages.Users
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to modify user {user.UserName}. User data may have been modified since the page was opened.";
+				ErrorStatusMessage($"Unable to modify user {user.UserName}. User data may have been modified since the page was opened.");
 				return ReturnToPreviousPage();
 			}
 
@@ -121,8 +120,7 @@ namespace TASVideos.Pages.Users
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to modify user {user.UserName}. User data may have been modified since the page was opened.";
+				ErrorStatusMessage($"Unable to modify user {user.UserName}. User data may have been modified since the page was opened.");
 				return ReturnToPreviousPage();
 			}
 
@@ -154,8 +152,7 @@ namespace TASVideos.Pages.Users
 				_publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
 			}
 
-			MessageType = Styles.Success;
-			Message = $"User {user.UserName} successfully updated.";
+			SuccessStatusMessage($"User {user.UserName} successfully updated.");
 
 			return ReturnToPreviousPage();
 		}
@@ -175,8 +172,7 @@ namespace TASVideos.Pages.Users
 			user.LockoutEnd = null;
 			await _db.SaveChangesAsync();
 
-			MessageType = Styles.Success;
-			Message = $"User {user.UserName} successfully unlocked.";
+			SuccessStatusMessage($"User {user.UserName} successfully unlocked.");
 			return RedirectToLocal(returnUrl);
 		}
 
