@@ -4,8 +4,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -15,8 +13,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
 using TASVideos.Extensions;
 using TASVideos.Legacy;
-using TASVideos.Legacy.Data.Forum;
-using TASVideos.Legacy.Data.Site;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Data
@@ -96,19 +92,12 @@ namespace TASVideos.Data
 
 		private static void ImportStrategy(IServiceProvider services)
 		{
-			var env = services.GetRequiredService<IWebHostEnvironment>();
 			var context = services.GetRequiredService<ApplicationDbContext>();
-			var legacySiteContext = services.GetRequiredService<NesVideosSiteContext>();
-			var legacyForumContext = services.GetRequiredService<NesVideosForumContext>();
 			var userManager = services.GetRequiredService<UserManager>();
-			var settings = services.GetRequiredService<IOptions<AppSettings>>().Value;
-
+			var legacyImporter = services.GetRequiredService<ILegacyImporter>();
 			Initialize(context);
 			PreMigrateSeedData(context);
-			var connectionString = settings.UsePostgres
-				? settings.ConnectionStrings.PostgresConnection
-				: settings.ConnectionStrings.DefaultConnection;
-			LegacyImporter.RunLegacyImport(env, context, connectionString, legacySiteContext, legacyForumContext);
+			legacyImporter.RunLegacyImport();
 			PostMigrateSeedData(context);
 			GenerateDevTestUsers(context, userManager).Wait();
 		}

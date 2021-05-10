@@ -6,7 +6,7 @@ using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class SubmissionFrameRateImporter
+	internal static class SubmissionFrameRateImporter
 	{
 		private const decimal RoundingOffset = 0.001M;
 

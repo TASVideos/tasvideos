@@ -12,7 +12,7 @@ using TASVideos.Extensions;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class ImportHelper
+	internal static class ImportHelper
 	{
 		private static readonly DateTime UnixStart = new (1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 

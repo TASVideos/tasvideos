@@ -7,7 +7,7 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class RamAddressImporter
+	internal static class RamAddressImporter
 	{
 		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{

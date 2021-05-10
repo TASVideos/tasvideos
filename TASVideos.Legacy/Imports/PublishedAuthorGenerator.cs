@@ -5,7 +5,7 @@ using TASVideos.Data.SeedData;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class PublishedAuthorGenerator
+	internal static class PublishedAuthorGenerator
 	{
 		public static void Generate(ApplicationDbContext context)
 		{

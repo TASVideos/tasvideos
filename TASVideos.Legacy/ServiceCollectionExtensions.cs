@@ -19,6 +19,8 @@ namespace TASVideos.Legacy.Extensions
 		{
 			if (enable)
 			{
+				services.AddScoped<ILegacyImporter, LegacyImporter>();
+
 				string siteConnectionString = mySqlSiteConnection ?? DefaultMySqlSiteConnection;
 				string forumConnectionString = mySqlForumConnection ?? DefaultMySqlForumConnection;
 

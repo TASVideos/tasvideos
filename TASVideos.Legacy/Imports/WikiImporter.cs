@@ -10,7 +10,7 @@ using TASVideos.Legacy.Data.Site.Entity;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class WikiImporter
+	internal static class WikiImporter
 	{
 		private class UserDto
 		{

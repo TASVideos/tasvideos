@@ -12,7 +12,7 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class UserImporter
+	internal static class UserImporter
 	{
 		private const int ModeratorGroupId = 272; // This isn't going to change, so just hard code it
 		private const int EmulatorCoder = 40; // The rank id in the ranks table

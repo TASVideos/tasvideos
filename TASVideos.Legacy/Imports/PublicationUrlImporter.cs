@@ -6,7 +6,7 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class PublicationUrlImporter
+	internal static class PublicationUrlImporter
 	{
 		public static void Import(NesVideosSiteContext legacySiteContext)
 		{

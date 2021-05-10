@@ -9,7 +9,7 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class ForumPostsImporter
+	internal static class ForumPostsImporter
 	{
 		public static void Import(NesVideosForumContext legacyForumContext)
 		{
