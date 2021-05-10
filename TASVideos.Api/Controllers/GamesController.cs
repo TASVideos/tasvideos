@@ -4,11 +4,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Api.Filters;
 using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Api.Controllers

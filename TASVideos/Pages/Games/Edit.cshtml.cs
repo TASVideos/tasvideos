@@ -32,12 +32,6 @@ namespace TASVideos.Pages.Games
 			_mapper = mapper;
 		}
 
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
-
 		[FromRoute]
 		public int? Id { get; set; }
 

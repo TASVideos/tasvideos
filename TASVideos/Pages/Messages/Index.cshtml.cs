@@ -19,7 +19,7 @@ namespace TASVideos.Pages.Messages
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PrivateMessageDto Message { get; set; } = new ();
+		public PrivateMessageDto PrivateMessage { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Messages
 				return NotFound();
 			}
 
-			Message = message;
+			PrivateMessage = message;
 			return Page();
 		}
 	}
