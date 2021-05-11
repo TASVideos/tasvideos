@@ -69,7 +69,7 @@ namespace TASVideos.Pages.Forum.Topics
 					ForumId = t.ForumId,
 					ForumName = t.Forum!.Name,
 					IsLocked = t.IsLocked,
-					LastPostId = t.ForumPosts.OrderByDescending(p => p.CreateTimestamp).First().Id,
+					LastPostId = t.ForumPosts.Any() ? t.ForumPosts.OrderByDescending(p => p.CreateTimestamp).First().Id : -1,
 					PageName = t.PageName,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll!.Question }
