@@ -3,11 +3,11 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
-		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet>$(ProjectDir)../../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<AdditionalFiles Include="$(ProjectDir)../.stylecop.json" />
+		<AdditionalFiles Include="$(ProjectDir)../../.stylecop.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -146,10 +146,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
-		<ProjectReference Include="..\TASVideos.Core\TASVideos.Core.csproj" />
-		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
-		<ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
-		<ProjectReference Include="..\TASVideos\TASVideos.csproj" />
+		<ProjectReference Include="..\..\TASVideos.Common\TASVideos.Common.csproj" />
+		<ProjectReference Include="..\..\TASVideos.Core\TASVideos.Core.csproj" />
+		<ProjectReference Include="..\..\TASVideos.Data\TASVideos.Data.csproj" />
+		<ProjectReference Include="..\..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
+		<ProjectReference Include="..\..\TASVideos\TASVideos.csproj" />
 	</ItemGroup>
 </Project>

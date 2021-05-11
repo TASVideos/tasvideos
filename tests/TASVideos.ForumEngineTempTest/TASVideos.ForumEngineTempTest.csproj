@@ -4,8 +4,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
-		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
+		<ProjectReference Include="..\..\TASVideos.Data\TASVideos.Data.csproj" />
+		<ProjectReference Include="..\..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>
