@@ -14,7 +14,6 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Bk2SampleFiles\0Frames.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\2Frames.bk2" />
-		<EmbeddedResource Include="Bk2SampleFiles\2Frames.zip" />
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-CycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-InvalidCycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
