@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers.Result;
 
-namespace TASVideos.Pages.Submissions.Models
+namespace TASVideos.RazorPages.Pages.Submissions.Models
 {
 	public class SubmissionDisplayModel : ISubmissionDisplay
 	{

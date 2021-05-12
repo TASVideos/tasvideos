@@ -8,9 +8,9 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
+using TASVideos.RazorPages.Pages.Forum.Posts.Models;
 
-namespace TASVideos.Pages.Forum.Posts
+namespace TASVideos.RazorPages.Pages.Forum.Posts
 {
 	[Authorize]
 	public class EditModel : BaseForumModel

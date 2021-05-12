@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Users.Models;
+using TASVideos.RazorPages.Pages.Users.Models;
 
-namespace TASVideos.Pages.Users
+namespace TASVideos.RazorPages.Pages.Users
 {
 	[RequirePermission(PermissionTo.EditUsers)]
 	public class EditModel : BasePageModel

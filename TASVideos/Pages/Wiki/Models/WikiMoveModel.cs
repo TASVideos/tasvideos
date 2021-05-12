@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TASVideos.Models;
+using TASVideos.RazorPages.Models;
 
-namespace TASVideos.Pages.Wiki.Models
+namespace TASVideos.RazorPages.Pages.Wiki.Models
 {
 	public class WikiMoveModel
 	{

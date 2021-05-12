@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using static TASVideos.TagHelpers.TagHelperExtensions;
+using static TASVideos.RazorPages.TagHelpers.TagHelperExtensions;
 
-namespace TASVideos.TagHelpers
+namespace TASVideos.RazorPages.TagHelpers
 {
 	[HtmlTargetElement("string-list", TagStructure = TagStructure.WithoutEndTag, Attributes = "asp-for")]
 	public class StringListTagHelper : TagHelper

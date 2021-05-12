@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 
-namespace TASVideos.Pages.Profile
+namespace TASVideos.RazorPages.Pages.Profile
 {
 	[Authorize]
 	public class ChangePasswordModel : BasePageModel

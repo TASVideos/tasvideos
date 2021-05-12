@@ -4,7 +4,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	// TODO: remove instances of this module and retire it as a module (still a view component but no need to be in the wiki markup since it is automatic)
 	[WikiModule(WikiModules.ListSubPages)]

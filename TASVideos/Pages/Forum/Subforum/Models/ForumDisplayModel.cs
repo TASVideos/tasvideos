@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.Pages.Forum.Subforum.Models
+namespace TASVideos.RazorPages.Pages.Forum.Subforum.Models
 {
 	public class ForumDisplayModel
 	{

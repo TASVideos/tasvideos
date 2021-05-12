@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Users.Models
+namespace TASVideos.RazorPages.Pages.Users.Models
 {
 	public class DisallowEntry
 	{

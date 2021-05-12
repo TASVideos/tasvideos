@@ -1,7 +1,7 @@
 ﻿using System;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Submissions.Models
+namespace TASVideos.RazorPages.Pages.Submissions.Models
 {
 	public interface ISubmissionDisplay
 	{

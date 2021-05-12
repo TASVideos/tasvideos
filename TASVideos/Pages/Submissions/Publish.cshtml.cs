@@ -9,10 +9,10 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
-using TASVideos.Pages.Submissions.Models;
+using TASVideos.RazorPages.Extensions;
+using TASVideos.RazorPages.Pages.Submissions.Models;
 
-namespace TASVideos.Pages.Submissions
+namespace TASVideos.RazorPages.Pages.Submissions
 {
 	[RequirePermission(PermissionTo.PublishMovies)]
 	public class PublishModel : BasePageModel

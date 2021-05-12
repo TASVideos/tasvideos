@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 
-namespace TASVideos.Pages.Account
+namespace TASVideos.RazorPages.Pages.Account
 {
 	[Authorize]
 	public class LogoutModel : BasePageModel

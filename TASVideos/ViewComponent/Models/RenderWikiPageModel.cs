@@ -1,6 +1,6 @@
 ﻿using TASVideos.Data.Entity;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	public class RenderWikiPageModel
 	{

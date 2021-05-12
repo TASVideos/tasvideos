@@ -28,6 +28,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\TASVideos\TASVideos.csproj" />
+		<ProjectReference Include="..\..\TASVideos\TASVideos.RazorPages.csproj" />
 	</ItemGroup>
 </Project>

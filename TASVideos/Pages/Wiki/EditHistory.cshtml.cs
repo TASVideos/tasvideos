@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki.Models;
+using TASVideos.RazorPages.Pages.Wiki.Models;
 
-namespace TASVideos.Pages.Wiki
+namespace TASVideos.RazorPages.Pages.Wiki
 {
 	[AllowAnonymous]
 	public class EditHistoryModel : BasePageModel

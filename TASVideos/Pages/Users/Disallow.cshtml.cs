@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Users.Models;
+using TASVideos.RazorPages.Pages.Users.Models;
 
-namespace TASVideos.Pages.Users
+namespace TASVideos.RazorPages.Pages.Users
 {
 	[RequirePermission(PermissionTo.EditDisallows)]
 	public class DisallowModel : PageModel

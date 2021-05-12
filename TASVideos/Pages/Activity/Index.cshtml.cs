@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Pages.Activity.Model;
+using TASVideos.RazorPages.Pages.Activity.Model;
 
-namespace TASVideos.Pages.Activity
+namespace TASVideos.RazorPages.Pages.Activity
 {
 	[AllowAnonymous]
 	public class IndexModel : PageModel

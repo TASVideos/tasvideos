@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
-using TASVideos.Pages.Publications.Models;
+using TASVideos.RazorPages.Extensions;
+using TASVideos.RazorPages.Pages.Publications.Models;
 
-namespace TASVideos.Pages.Publications
+namespace TASVideos.RazorPages.Pages.Publications
 {
 	[RequirePermission(PermissionTo.SetTier)]
 	public class EditTierModel : BasePageModel

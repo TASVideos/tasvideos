@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace TASVideos
+namespace TASVideos.RazorPages
 {
 	public static class UiDefaults
 	{

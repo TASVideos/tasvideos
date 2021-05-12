@@ -6,7 +6,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Diagnostics
+namespace TASVideos.RazorPages.Pages.Diagnostics
 {
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class PlayerPointsModel : BasePageModel

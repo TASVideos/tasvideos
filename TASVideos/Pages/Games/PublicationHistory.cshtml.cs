@@ -7,7 +7,7 @@ using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Pages.Games
+namespace TASVideos.RazorPages.Pages.Games
 {
 	[AllowAnonymous]
 	public class PublicationHistoryModel : BasePageModel

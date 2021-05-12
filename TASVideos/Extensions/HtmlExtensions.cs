@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Extensions
+namespace TASVideos.RazorPages.Extensions
 {
 	public static class HtmlExtensions
 	{

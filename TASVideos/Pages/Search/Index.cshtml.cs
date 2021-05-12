@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Search
+namespace TASVideos.RazorPages.Pages.Search
 {
 	[AllowAnonymous]
 	public class IndexModel : PageModel

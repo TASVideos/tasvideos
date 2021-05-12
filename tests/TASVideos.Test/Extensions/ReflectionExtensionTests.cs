@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Extensions;
+using TASVideos.RazorPages.Extensions;
 
 namespace TASVideos.RazorPages.Tests.Extensions
 {

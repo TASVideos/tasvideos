@@ -8,9 +8,9 @@ using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Users.Models;
+using TASVideos.RazorPages.Pages.Users.Models;
 
-namespace TASVideos.Pages.Users
+namespace TASVideos.RazorPages.Pages.Users
 {
 	[AllowAnonymous]
 	public class ListModel : BasePageModel

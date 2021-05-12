@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Pages.Games.Groups.Models;
+using TASVideos.RazorPages.Pages.Games.Groups.Models;
 
-namespace TASVideos.Pages.GamesGroups
+namespace TASVideos.RazorPages.Pages.GamesGroups
 {
 	public class IndexModel : PageModel
 	{

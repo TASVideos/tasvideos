@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Profile.Models;
+using TASVideos.RazorPages.Pages.Profile.Models;
 
-namespace TASVideos.Pages.Profile
+namespace TASVideos.RazorPages.Pages.Profile
 {
 	[RequirePermission(PermissionTo.RateMovies)]
 	public class UnratedModel : PageModel

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 using TASVideos.ForumEngine;
 
-namespace TASVideos.Pages.Forum
+namespace TASVideos.RazorPages.Pages.Forum
 {
 	[RequirePermission(PermissionTo.CreateForumPosts)]
 	[IgnoreAntiforgeryToken]

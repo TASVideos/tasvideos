@@ -8,7 +8,7 @@ using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using static TASVideos.Data.Entity.PublicationUrlType;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	[WikiModule(WikiModules.UnmirroredMovies)]
 	public class UnmirroredMovies : ViewComponent

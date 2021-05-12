@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TASVideos.Core.Services;
 
-namespace TASVideos.Pages.Profile.Models
+namespace TASVideos.RazorPages.Pages.Profile.Models
 {
 	public class ProfileSettingsModel
 	{

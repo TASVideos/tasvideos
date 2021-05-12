@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
+using TASVideos.RazorPages.Models;
 
-namespace TASVideos.Pages.UserFiles
+namespace TASVideos.RazorPages.Pages.UserFiles
 {
 	[AllowAnonymous]
 	public class ForUserModel : BasePageModel

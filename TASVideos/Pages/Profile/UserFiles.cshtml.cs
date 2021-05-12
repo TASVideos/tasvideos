@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
+using TASVideos.RazorPages.Models;
 
-namespace TASVideos.Pages.Profile
+namespace TASVideos.RazorPages.Pages.Profile
 {
 	[Authorize]
 	public class UserFilesModel : BasePageModel

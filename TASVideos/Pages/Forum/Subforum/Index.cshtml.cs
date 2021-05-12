@@ -8,9 +8,9 @@ using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Subforum.Models;
+using TASVideos.RazorPages.Pages.Forum.Subforum.Models;
 
-namespace TASVideos.Pages.Forum.Subforum
+namespace TASVideos.RazorPages.Pages.Forum.Subforum
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel

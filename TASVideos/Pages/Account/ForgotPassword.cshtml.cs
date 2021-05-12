@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 
-namespace TASVideos.Pages.Account
+namespace TASVideos.RazorPages.Pages.Account
 {
 	[AllowAnonymous]
 	public class ForgotPasswordModel : PageModel

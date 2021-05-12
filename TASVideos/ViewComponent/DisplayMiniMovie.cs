@@ -10,7 +10,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	// TODO: a better name for this is FrontPageMovie or something like that
 	[WikiModule(WikiModules.DisplayMiniMovie)]

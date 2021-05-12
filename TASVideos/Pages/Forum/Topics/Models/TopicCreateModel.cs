@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.Pages.Forum.Topics.Models
+namespace TASVideos.RazorPages.Pages.Forum.Topics.Models
 {
 	public class TopicCreateModel
 	{

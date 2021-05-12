@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using TASVideos.RazorPages.Models;
 
-using TASVideos.Models;
-
-namespace TASVideos.Pages.Submissions.Models
+namespace TASVideos.RazorPages.Pages.Submissions.Models
 {
 	public class SubmissionCreateModel
 	{

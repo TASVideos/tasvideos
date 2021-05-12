@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Publications.Models
+namespace TASVideos.RazorPages.Pages.Publications.Models
 {
 	public class PublicationSearchModel : IPublicationTokens
 	{

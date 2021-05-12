@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TASVideos.ViewComponents.Models
+namespace TASVideos.RazorPages.ViewComponents.Models
 {
 	public class FirstEditionModel
 	{

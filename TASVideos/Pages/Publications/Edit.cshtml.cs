@@ -10,9 +10,9 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Publications.Models;
+using TASVideos.RazorPages.Pages.Publications.Models;
 
-namespace TASVideos.Pages.Publications
+namespace TASVideos.RazorPages.Pages.Publications
 {
 	[RequirePermission(PermissionTo.EditPublicationMetaData)]
 	public class EditModel : BasePageModel

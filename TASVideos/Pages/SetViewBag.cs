@@ -3,13 +3,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages
+namespace TASVideos.RazorPages.Pages
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
 	public class SetPageViewBagAttribute : ResultFilterAttribute

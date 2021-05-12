@@ -8,7 +8,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	[WikiModule(WikiModules.GameSubPages)]
 	public class GameSubPages : ViewComponent

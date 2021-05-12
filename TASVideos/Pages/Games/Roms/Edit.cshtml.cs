@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Games.Roms.Models;
+using TASVideos.RazorPages.Pages.Games.Roms.Models;
 
-namespace TASVideos.Pages.Games.Roms
+namespace TASVideos.RazorPages.Pages.Games.Roms
 {
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class EditModel : BasePageModel
