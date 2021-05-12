@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Core;
 
-namespace TASVideos.Test.Data.Paging
+namespace TASVideos.Data.Tests.Paging
 {
 	[TestClass]
 	public class SortableTests

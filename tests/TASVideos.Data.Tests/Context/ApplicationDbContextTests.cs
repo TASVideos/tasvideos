@@ -2,10 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Test.Data.Context
+namespace TASVideos.Data.Tests.Context
 {
 	[TestClass]
 	public class ApplicationDbContextTests
