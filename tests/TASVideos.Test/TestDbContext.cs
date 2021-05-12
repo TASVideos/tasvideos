@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Update;
 using TASVideos.Data;
 
-namespace TASVideos.Test
+namespace TASVideos.Tests
 {
 	/// <summary>
 	/// Creates a context optimized for unit testing.
