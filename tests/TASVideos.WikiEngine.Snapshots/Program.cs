@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.WikiEngine;
+using TASVideos.WikiEngine.AST;
 
-namespace TASVideos.WikiEngineTest
+namespace TASVideos.WikiEngine.Snapshots
 {
 	/*
 		1. Clone https://github.com/nattthebear/TASVideosWikiSnaps.git to somewhere
@@ -113,7 +113,7 @@ namespace TASVideos.WikiEngineTest
 						.Select(p => p.Markup)
 						.Single();
 
-					List<WikiEngine.AST.INode> nodes;
+					List<INode> nodes;
 
 					try
 					{

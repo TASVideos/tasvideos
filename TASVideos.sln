@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{90FD968F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.ForumEngineTempTest", "tests\TASVideos.ForumEngineTempTest\TASVideos.ForumEngineTempTest.csproj", "{CE043BFA-5B28-4535-8D16-C3D5CFB80721}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngineTest", "tests\TASVideos.WikiEngineTest\TASVideos.WikiEngineTest.csproj", "{B77697FC-2AF4-4313-8A04-5EFF7CBBDE4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngine.Snapshots", "tests\TASVideos.WikiEngine.Snapshots\TASVideos.WikiEngine.Snapshots.csproj", "{B77697FC-2AF4-4313-8A04-5EFF7CBBDE4A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engines", "Engines", "{22903760-DD4F-48F4-AA7C-031475AEE2C6}"
 EndProject
