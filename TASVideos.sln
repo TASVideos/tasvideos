@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Data.Tests", "tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Common.Tests", "tests\TASVideos.Common.Tests\TASVideos.Common.Tests.csproj", "{14DDF535-FEE9-4029-840E-8B8419ED613F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Core.Tests", "tests\TASVideos.Core.Tests\TASVideos.Core.Tests.csproj", "{0EAD8F8F-AFCF-4170-91DF-2413E1C35276}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{14DDF535-FEE9-4029-840E-8B8419ED613F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14DDF535-FEE9-4029-840E-8B8419ED613F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14DDF535-FEE9-4029-840E-8B8419ED613F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EAD8F8F-AFCF-4170-91DF-2413E1C35276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EAD8F8F-AFCF-4170-91DF-2413E1C35276}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EAD8F8F-AFCF-4170-91DF-2413E1C35276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EAD8F8F-AFCF-4170-91DF-2413E1C35276}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{B77697FC-2AF4-4313-8A04-5EFF7CBBDE4A} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{ACD8164A-D4DC-4549-BF6A-6B2763240D44} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{14DDF535-FEE9-4029-840E-8B8419ED613F} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
+		{0EAD8F8F-AFCF-4170-91DF-2413E1C35276} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67B2E8BD-92C7-442F-9560-C36E143E8E4C}
