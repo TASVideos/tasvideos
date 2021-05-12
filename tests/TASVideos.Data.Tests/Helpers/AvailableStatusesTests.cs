@@ -6,7 +6,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
-namespace TASVideos.Test.Data.Helpers
+namespace TASVideos.Data.Tests.Helpers
 {
 	[TestClass]
 	public class AvailableStatusesTests

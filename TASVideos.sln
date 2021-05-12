@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngineTest", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engines", "Engines", "{22903760-DD4F-48F4-AA7C-031475AEE2C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Data.Tests", "tests\TASVideos.Data.Tests\TASVideos.Data.Tests.csproj", "{ACD8164A-D4DC-4549-BF6A-6B2763240D44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{B77697FC-2AF4-4313-8A04-5EFF7CBBDE4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B77697FC-2AF4-4313-8A04-5EFF7CBBDE4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B77697FC-2AF4-4313-8A04-5EFF7CBBDE4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACD8164A-D4DC-4549-BF6A-6B2763240D44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACD8164A-D4DC-4549-BF6A-6B2763240D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACD8164A-D4DC-4549-BF6A-6B2763240D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACD8164A-D4DC-4549-BF6A-6B2763240D44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +107,7 @@ Global
 		{893A38DC-2450-41C2-A607-6F92310B67F0} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{CE043BFA-5B28-4535-8D16-C3D5CFB80721} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{B77697FC-2AF4-4313-8A04-5EFF7CBBDE4A} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
+		{ACD8164A-D4DC-4549-BF6A-6B2763240D44} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67B2E8BD-92C7-442F-9560-C36E143E8E4C}

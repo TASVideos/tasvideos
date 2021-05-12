@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Test.Data.QueryableExtensions
+namespace TASVideos.Data.Tests.QueryableExtensions
 {
 	[TestClass]
 	public class WikiPageExtensionTests
