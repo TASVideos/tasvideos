@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Test.Extensions
+namespace TASVideos.RazorPages.Tests.Extensions
 {
 	internal enum TestEnum
 	{

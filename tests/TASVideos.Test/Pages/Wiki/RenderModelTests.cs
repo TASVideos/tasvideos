@@ -7,7 +7,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki;
 
-namespace TASVideos.Tests.Pages.Wiki
+namespace TASVideos.RazorPages.Tests.Pages.Wiki
 {
 	[TestClass]
 	public class RenderModelTests : BasePageModelTests

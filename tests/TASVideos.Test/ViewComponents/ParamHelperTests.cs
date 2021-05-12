@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.TagHelpers;
 using TASVideos.WikiEngine.AST;
 
-namespace TASVideos.Tests.ViewComponents
+namespace TASVideos.RazorPages.Tests.ViewComponents
 {
 	[TestClass]
 	public class ParamHelperTests
