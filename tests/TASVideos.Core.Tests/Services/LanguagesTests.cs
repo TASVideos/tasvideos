@@ -5,7 +5,7 @@ using Moq;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Test.Services
+namespace TASVideos.Core.Tests.Services
 {
 	[TestClass]
 	public class LanguagesTests
