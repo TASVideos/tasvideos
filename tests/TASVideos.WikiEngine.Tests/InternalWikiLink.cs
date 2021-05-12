@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.WikiEngine;
 
-namespace TASVideos.Test.WikiEngine
+namespace TASVideos.WikiEngine.Tests
 {
 	[TestClass]
 	public class InternalWikiLink

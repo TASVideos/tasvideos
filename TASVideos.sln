@@ -39,13 +39,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engines", "Engines", "{2290
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Data.Tests", "tests\TASVideos.Data.Tests\TASVideos.Data.Tests.csproj", "{ACD8164A-D4DC-4549-BF6A-6B2763240D44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Common.Tests", "tests\TASVideos.Common.Tests\TASVideos.Common.Tests.csproj", "{14DDF535-FEE9-4029-840E-8B8419ED613F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Common.Tests", "tests\TASVideos.Common.Tests\TASVideos.Common.Tests.csproj", "{14DDF535-FEE9-4029-840E-8B8419ED613F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Core.Tests", "tests\TASVideos.Core.Tests\TASVideos.Core.Tests.csproj", "{0EAD8F8F-AFCF-4170-91DF-2413E1C35276}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Core.Tests", "tests\TASVideos.Core.Tests\TASVideos.Core.Tests.csproj", "{0EAD8F8F-AFCF-4170-91DF-2413E1C35276}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Legacy.Tests", "tests\TASVideos.Legacy.Tests\TASVideos.Legacy.Tests.csproj", "{4ECAB827-137D-477F-AB04-B753F5DF582F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Legacy.Tests", "tests\TASVideos.Legacy.Tests\TASVideos.Legacy.Tests.csproj", "{4ECAB827-137D-477F-AB04-B753F5DF582F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.MovieParsers.Tests", "tests\TASVideos.MovieParsers.Tests\TASVideos.MovieParsers.Tests.csproj", "{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.MovieParsers.Tests", "tests\TASVideos.MovieParsers.Tests\TASVideos.MovieParsers.Tests.csproj", "{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.WikiEngine.Tests", "tests\TASVideos.WikiEngine.Tests\TASVideos.WikiEngine.Tests.csproj", "{8F91456B-D4F5-4C76-B301-E25ED4DFA62C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +123,10 @@ Global
 		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F91456B-D4F5-4C76-B301-E25ED4DFA62C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F91456B-D4F5-4C76-B301-E25ED4DFA62C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F91456B-D4F5-4C76-B301-E25ED4DFA62C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F91456B-D4F5-4C76-B301-E25ED4DFA62C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,6 +142,7 @@ Global
 		{0EAD8F8F-AFCF-4170-91DF-2413E1C35276} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{4ECAB827-137D-477F-AB04-B753F5DF582F} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
+		{8F91456B-D4F5-4C76-B301-E25ED4DFA62C} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67B2E8BD-92C7-442F-9560-C36E143E8E4C}

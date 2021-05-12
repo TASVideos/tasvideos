@@ -144,6 +144,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
+		<ProjectReference Include="..\..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
 	</ItemGroup>
 </Project>
