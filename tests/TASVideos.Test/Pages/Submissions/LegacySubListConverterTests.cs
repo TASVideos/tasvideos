@@ -4,7 +4,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Pages.Submissions;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
-namespace TASVideos.Test.Pages
+namespace TASVideos.Tests.Pages.Submissions
 {
 	[TestClass]
 	public class LegacySubListConverterTests
