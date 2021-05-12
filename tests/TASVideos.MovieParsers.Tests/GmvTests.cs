@@ -1,11 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
-namespace TASVideos.Test.MovieParsers
+namespace TASVideos.MovieParsers.Tests
 {
 	[TestClass]
 	[TestCategory("GmvParsers")]
@@ -13,7 +12,7 @@ namespace TASVideos.Test.MovieParsers
 	{
 		private readonly Gmv _gmvParser;
 
-		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.GmvSampleFiles.";
+		public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.GmvSampleFiles.";
 
 		public GmvTests()
 		{

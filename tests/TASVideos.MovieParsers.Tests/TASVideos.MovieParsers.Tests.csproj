@@ -1,0 +1,149 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<CodeAnalysisRuleSet>$(ProjectDir)../../Common.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="$(ProjectDir)../../.stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Bk2SampleFiles\0Frames.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\2Frames.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\2Frames.zip" />
+		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-CycleCount.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-InvalidCycleCount.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\MissingHeader.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\MissingInputLog.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\NoFileExts.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\Pal1.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\RerecordCount1.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\RerecordCountMissing.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\savestate.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\sram.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubGbHawk-CycleCount.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNes.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesMissingVBlank.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-32x.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-A2600.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-A7800.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-AppleII.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-C64.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Coleco.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Dgb.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Fds.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Gb.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Gba.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Gbc.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Genesis.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Gg.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Intellivision.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Lynx.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-N64.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Nes.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Ngb.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-O2.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Pce.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-PceCd.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Pcfx.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Psx.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Saturn.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-SegaCd.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Sg.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Sgb.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Sgx.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Sms.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Snes.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Uze.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Vb.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Vectrex.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Wswan.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Zxs.bk2" />
+		<EmbeddedResource Include="DsmSampleFiles\0frames.dsm" />
+		<EmbeddedResource Include="DsmSampleFiles\2frames.dsm" />
+		<EmbeddedResource Include="DsmSampleFiles\norerecords.dsm" />
+		<EmbeddedResource Include="DsmSampleFiles\savestate.dsm" />
+		<EmbeddedResource Include="DsmSampleFiles\sram.dsm" />
+		<EmbeddedResource Include="DtmSampleFiles\2frames-gc.dtm" />
+		<EmbeddedResource Include="DtmSampleFiles\2frames-legacy.dtm" />
+		<EmbeddedResource Include="DtmSampleFiles\2frames-wii.dtm" />
+		<EmbeddedResource Include="DtmSampleFiles\savestate.dtm" />
+		<EmbeddedResource Include="DtmSampleFiles\sram.dtm" />
+		<EmbeddedResource Include="DtmSampleFiles\wrongheader.dtm" />
+		<EmbeddedResource Include="Fm2SampleFiles\fds.fm2" />
+		<EmbeddedResource Include="Fm2SampleFiles\norerecords.fm2" />
+		<EmbeddedResource Include="Fm2SampleFiles\ntsc.fm2" />
+		<EmbeddedResource Include="Fm2SampleFiles\pal.fm2" />
+		<EmbeddedResource Include="Fm2SampleFiles\savestate.fm2" />
+		<EmbeddedResource Include="GmvSampleFiles\2frames.gmv" />
+		<EmbeddedResource Include="GmvSampleFiles\pal.gmv" />
+		<EmbeddedResource Include="GmvSampleFiles\savestate.gmv" />
+		<EmbeddedResource Include="GmvSampleFiles\wrongheader.gmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\0frameswithsub.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\2frameswithsub.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\emptyrerecordentry.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-bsx.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-bsxslotted.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-empty.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-gdmg.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-ggbc.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-ggbca.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-missing.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-sgb_ntsc.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-sgb_pal.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-snesntsc.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-snespal.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\gametype-sufamiturbo.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\invalidrerecordentry.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\moviesram.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\noinputlog.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\norerecordentry.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\savestate.anchor.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\savestate.lsmv" />
+		<EmbeddedResource Include="LtmSampleFiles\2frames.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\noframerate.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\savestate.ltm" />
+		<EmbeddedResource Include="MarSampleFiles\2frames.mar" />
+		<EmbeddedResource Include="MarSampleFiles\noframerate.mar" />
+		<EmbeddedResource Include="MarSampleFiles\wrongheader.mar" />
+		<EmbeddedResource Include="OmrSampleFiles\2seconds.omr" />
+		<EmbeddedResource Include="OmrSampleFiles\coleco.omr" />
+		<EmbeddedResource Include="OmrSampleFiles\pal.omr" />
+		<EmbeddedResource Include="OmrSampleFiles\savestate.omr" />
+		<EmbeddedResource Include="OmrSampleFiles\svi.omr" />
+		<EmbeddedResource Include="VbmSampleFiles\2frames.vbm" />
+		<EmbeddedResource Include="VbmSampleFiles\gb.vbm" />
+		<EmbeddedResource Include="VbmSampleFiles\gbc.vbm" />
+		<EmbeddedResource Include="VbmSampleFiles\savestate.vbm" />
+		<EmbeddedResource Include="VbmSampleFiles\sgb.vbm" />
+		<EmbeddedResource Include="VbmSampleFiles\sram.vbm" />
+		<EmbeddedResource Include="VbmSampleFiles\wrongheader.vbm" />
+		<EmbeddedResource Include="WtfSampleFiles\2frames.wtf" />
+		<EmbeddedResource Include="WtfSampleFiles\noframerate.wtf" />
+		<EmbeddedResource Include="WtfSampleFiles\wrongheader.wtf" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+		<PackageReference Include="Moq" Version="4.16.1" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
+	</ItemGroup>
+</Project>
