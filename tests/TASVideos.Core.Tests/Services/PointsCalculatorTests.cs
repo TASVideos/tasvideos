@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Core.Services;
 
-namespace TASVideos.Test.Services
+namespace TASVideos.Core.Tests.Services
 {
 	[TestClass]
 	public class PointsCalculatorTests

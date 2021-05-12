@@ -9,7 +9,7 @@ using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.Test.Services
+namespace TASVideos.Core.Tests.Services
 {
 	[TestClass]
 	public class TopicWatcherTests
