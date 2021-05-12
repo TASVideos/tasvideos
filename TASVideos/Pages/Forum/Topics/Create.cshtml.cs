@@ -8,10 +8,10 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
-using TASVideos.Pages.Forum.Posts.Models;
-using TASVideos.Pages.Forum.Topics.Models;
+using TASVideos.RazorPages.Pages.Forum.Posts.Models;
+using TASVideos.RazorPages.Pages.Forum.Topics.Models;
 
-namespace TASVideos.Pages.Forum.Topics
+namespace TASVideos.RazorPages.Pages.Forum.Topics
 {
 	[RequirePermission(PermissionTo.CreateForumTopics)]
 	public class CreateModel : BaseForumModel

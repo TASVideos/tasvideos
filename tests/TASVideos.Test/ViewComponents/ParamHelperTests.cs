@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.TagHelpers;
+using TASVideos.RazorPages.TagHelpers;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.RazorPages.Tests.ViewComponents

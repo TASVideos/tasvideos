@@ -9,10 +9,10 @@ using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Extensions;
-using TASVideos.Pages.Games.Models;
+using TASVideos.RazorPages.Extensions;
+using TASVideos.RazorPages.Pages.Games.Models;
 
-namespace TASVideos.Pages.Games
+namespace TASVideos.RazorPages.Pages.Games
 {
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class ListModel : BasePageModel

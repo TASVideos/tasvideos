@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Forum.Models
+namespace TASVideos.RazorPages.Pages.Forum.Models
 {
 	public class CategoryEditModel
 	{

@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Models;
-using TASVideos.Pages.UserFiles.Models;
+using TASVideos.RazorPages.Models;
+using TASVideos.RazorPages.Pages.UserFiles.Models;
 
-namespace TASVideos.Pages.UserFiles
+namespace TASVideos.RazorPages.Pages.UserFiles
 {
 	[AllowAnonymous]
 	public class GameModel : BasePageModel

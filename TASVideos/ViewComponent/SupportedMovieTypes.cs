@@ -2,7 +2,7 @@
 using TASVideos.MovieParsers;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	[WikiModule(WikiModules.SupportedMovieTypes)]
 	public class SupportedMovieTypes : ViewComponent

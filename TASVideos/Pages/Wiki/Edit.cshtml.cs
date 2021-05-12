@@ -4,10 +4,10 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
-using TASVideos.Pages.Wiki.Models;
+using TASVideos.RazorPages.Extensions;
+using TASVideos.RazorPages.Pages.Wiki.Models;
 
-namespace TASVideos.Pages.Wiki
+namespace TASVideos.RazorPages.Pages.Wiki
 {
 	[RequireEdit]
 	public class EditModel : BasePageModel

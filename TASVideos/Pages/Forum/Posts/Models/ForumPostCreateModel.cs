@@ -1,6 +1,6 @@
 ﻿using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.Pages.Forum.Posts.Models
+namespace TASVideos.RazorPages.Pages.Forum.Posts.Models
 {
 	public class ForumPostModel
 	{

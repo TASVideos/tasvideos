@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Forum.Posts.Models
+namespace TASVideos.RazorPages.Pages.Forum.Posts.Models
 {
 	public class UnansweredPostsModel
 	{

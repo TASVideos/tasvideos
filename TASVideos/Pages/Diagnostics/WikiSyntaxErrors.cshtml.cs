@@ -9,7 +9,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.Pages.Diagnostics
+namespace TASVideos.RazorPages.Pages.Diagnostics
 {
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class WikiSyntaxErrorsModel : PageModel
@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Diagnostics
 				{
 					var from = Math.Max(ErrorLocation - 20, 0);
 					var to = ErrorLocation;
-					return Markup.Substring(from, to - from);
+					return Markup[from..to];
 				}
 			}
 
@@ -43,7 +43,7 @@ namespace TASVideos.Pages.Diagnostics
 				{
 					var from = ErrorLocation;
 					var to = Math.Min(ErrorLocation + 20, Markup.Length);
-					return Markup.Substring(from, to - from);
+					return Markup[from..to];
 				}
 			}
 		}

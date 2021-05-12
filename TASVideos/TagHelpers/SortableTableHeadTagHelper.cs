@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Core;
 using TASVideos.Extensions;
-using static TASVideos.TagHelpers.TagHelperExtensions;
+using static TASVideos.RazorPages.TagHelpers.TagHelperExtensions;
 
-namespace TASVideos.TagHelpers
+namespace TASVideos.RazorPages.TagHelpers
 {
 	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.WithoutEndTag, Attributes = "sorting,model-type")]
 	public class SortableTableHeadTagHelper : TagHelper

@@ -13,9 +13,9 @@ using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models.ValidationAttributes;
+using TASVideos.RazorPages.Models.ValidationAttributes;
 
-namespace TASVideos.Pages.Account
+namespace TASVideos.RazorPages.Pages.Account
 {
 	[AllowAnonymous]
 	[IpBanCheck]

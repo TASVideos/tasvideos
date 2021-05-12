@@ -7,7 +7,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	[WikiModule(WikiModules.WikiTextChangeLog)]
 	public class WikiTextChangeLog : ViewComponent

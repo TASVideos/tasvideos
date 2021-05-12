@@ -7,7 +7,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.Pages.Forum.Topics
+namespace TASVideos.RazorPages.Pages.Forum.Topics
 {
 	[RequirePermission(PermissionTo.SetTopicType)]
 	public class SetTypeModel : BaseForumModel

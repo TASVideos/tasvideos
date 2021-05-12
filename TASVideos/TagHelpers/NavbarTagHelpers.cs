@@ -1,14 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using TASVideos.RazorPages.Extensions;
+using static TASVideos.RazorPages.TagHelpers.TagHelperExtensions;
 
-using TASVideos.Extensions;
-using static TASVideos.TagHelpers.TagHelperExtensions;
-
-namespace TASVideos.TagHelpers
+namespace TASVideos.RazorPages.TagHelpers
 {
 	public class NavbarTagHelper : TagHelper
 	{

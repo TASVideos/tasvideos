@@ -4,30 +4,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.MovieParsers.Result;
-using TASVideos.Pages.Submissions.Models;
+using TASVideos.RazorPages.Extensions;
+using TASVideos.RazorPages.Pages.Submissions.Models;
 
-namespace TASVideos.Pages.Submissions
+namespace TASVideos.RazorPages.Pages.Submissions
 {
 	[AllowAnonymous]
 	public class ViewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public ViewModel(
 			ApplicationDbContext db,
-			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher)
 		{
 			_db = db;
-			_wikiPages = wikiPages;
 			_publisher = publisher;
 		}
 

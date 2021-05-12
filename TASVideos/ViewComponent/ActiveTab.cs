@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	[WikiModule(WikiModules.ActiveTab)]
 	public class ActiveTab : ViewComponent

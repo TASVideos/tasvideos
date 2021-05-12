@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Wiki
+namespace TASVideos.RazorPages.Pages.Wiki
 {
 	[AllowAnonymous]
 	public class ViewSourceModel : BasePageModel

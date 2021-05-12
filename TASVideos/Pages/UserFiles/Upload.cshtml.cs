@@ -10,11 +10,11 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Extensions;
 using TASVideos.MovieParsers;
-using TASVideos.Pages.UserFiles.Models;
+using TASVideos.RazorPages.Extensions;
+using TASVideos.RazorPages.Pages.UserFiles.Models;
 
-namespace TASVideos.Pages.UserFiles
+namespace TASVideos.RazorPages.Pages.UserFiles
 {
 	[RequirePermission(PermissionTo.UploadUserFiles)]
 	public class UploadModel : BasePageModel

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Ratings.Models
+namespace TASVideos.RazorPages.Pages.Ratings.Models
 {
 	public class PublicationRatingsModel
 	{

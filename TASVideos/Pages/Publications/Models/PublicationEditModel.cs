@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Publications.Models
+namespace TASVideos.RazorPages.Pages.Publications.Models
 {
 	public class PublicationEditModel
 	{

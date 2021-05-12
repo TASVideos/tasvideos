@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Wiki.Models
+namespace TASVideos.RazorPages.Pages.Wiki.Models
 {
 	public class UserWikiEditHistoryModel
 	{

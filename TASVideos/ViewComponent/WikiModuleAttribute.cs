@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	[AttributeUsage(AttributeTargets.Class)]
 	public class WikiModuleAttribute : Attribute

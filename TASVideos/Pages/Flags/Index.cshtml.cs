@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Flags
+namespace TASVideos.RazorPages.Pages.Flags
 {
 	[RequirePermission(PermissionTo.FlagMaintenance)]
 	public class IndexModel : PageModel

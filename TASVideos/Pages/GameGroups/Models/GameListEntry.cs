@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Games.Groups.Models
+﻿namespace TASVideos.RazorPages.Pages.Games.Groups.Models
 {
 	public class GameListEntry
 	{

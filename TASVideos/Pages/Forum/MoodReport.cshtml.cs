@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.Pages.Forum
+namespace TASVideos.RazorPages.Pages.Forum
 {
 	public class MoodReportModel : PageModel
 	{

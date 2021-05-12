@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
+using TASVideos.RazorPages.Extensions;
 
-namespace TASVideos.Pages.Wiki
+namespace TASVideos.RazorPages.Pages.Wiki
 {
 	[AllowAnonymous]
 	public class RenderModel : BasePageModel

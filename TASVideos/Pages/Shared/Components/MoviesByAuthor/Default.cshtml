@@ -1,4 +1,4 @@
-﻿@model TASVideos.ViewComponents.Models.MoviesByAuthorModel
+﻿@model TASVideos.RazorPages.ViewComponents.Models.MoviesByAuthorModel
 
 @{
 	var authors = Model.Publications.SelectMany(p => p.Authors).Distinct().ToList();

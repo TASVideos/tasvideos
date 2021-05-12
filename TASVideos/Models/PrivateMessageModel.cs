@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TASVideos.Models
+namespace TASVideos.RazorPages.Models
 {
 	public class PrivateMessageModel
 	{

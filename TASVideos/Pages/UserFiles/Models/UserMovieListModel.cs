@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.UserFiles.Models
+namespace TASVideos.RazorPages.Pages.UserFiles.Models
 {
 	public class UserMovieListModel
 	{

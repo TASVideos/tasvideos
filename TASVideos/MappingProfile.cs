@@ -1,22 +1,21 @@
 ﻿using System.Linq;
 using AutoMapper;
-
 using TASVideos.Api.Responses;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Models;
-using TASVideos.Pages.Games.Models;
-using TASVideos.Pages.Games.Roms.Models;
-using TASVideos.Pages.Publications.Models;
-using TASVideos.Pages.Roles.Models;
-using TASVideos.Pages.Submissions.Models;
-using TASVideos.Pages.UserFiles.Models;
-using TASVideos.Pages.Users.Models;
-using TASVideos.Pages.Wiki.Models;
-using TASVideos.ViewComponents;
+using TASVideos.RazorPages.Models;
+using TASVideos.RazorPages.Pages.Games.Models;
+using TASVideos.RazorPages.Pages.Games.Roms.Models;
+using TASVideos.RazorPages.Pages.Publications.Models;
+using TASVideos.RazorPages.Pages.Roles.Models;
+using TASVideos.RazorPages.Pages.Submissions.Models;
+using TASVideos.RazorPages.Pages.UserFiles.Models;
+using TASVideos.RazorPages.Pages.Users.Models;
+using TASVideos.RazorPages.Pages.Wiki.Models;
+using TASVideos.RazorPages.ViewComponents;
 
-namespace TASVideos
+namespace TASVideos.RazorPages
 {
 	public class MappingProfile : Profile
 	{

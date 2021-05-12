@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Users
+namespace TASVideos.RazorPages.Pages.Users
 {
 	[RequirePermission(PermissionTo.BanIpAddresses)]
 	public class IpBanModel : PageModel

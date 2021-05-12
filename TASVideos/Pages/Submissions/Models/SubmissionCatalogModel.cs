@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Submissions.Models
+namespace TASVideos.RazorPages.Pages.Submissions.Models
 {
 	public class SubmissionCatalogModel
 	{

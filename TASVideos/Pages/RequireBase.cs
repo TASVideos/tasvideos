@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
+using TASVideos.RazorPages.Extensions;
 
-namespace TASVideos.Pages
+namespace TASVideos.RazorPages.Pages
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
 	public class RequireBase : Attribute

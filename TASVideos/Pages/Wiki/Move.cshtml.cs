@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki.Models;
+using TASVideos.RazorPages.Pages.Wiki.Models;
 
-namespace TASVideos.Pages.Wiki
+namespace TASVideos.RazorPages.Pages.Wiki
 {
 	[RequirePermission(PermissionTo.MoveWikiPages)]
 	public class MoveModel : BasePageModel

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Pages.Games.Models
+namespace TASVideos.RazorPages.Pages.Games.Models
 {
 	public class GameDisplayModel
 	{

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
+using TASVideos.RazorPages.Extensions;
 using static TASVideos.Data.Entity.PermissionTo;
 
 namespace TASVideos.RazorPages.Tests.Extensions

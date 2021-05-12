@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
+using TASVideos.RazorPages.Extensions;
 
-namespace TASVideos.TagHelpers
+namespace TASVideos.RazorPages.TagHelpers
 {
 	[HtmlTargetElement(Attributes = nameof(Permission))]
 	public class PermissionTagHelper : TagHelper

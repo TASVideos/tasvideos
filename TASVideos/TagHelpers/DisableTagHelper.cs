@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace TASVideos.TagHelpers
+namespace TASVideos.RazorPages.TagHelpers
 {
 	[HtmlTargetElement(Attributes = nameof(Disable))]
 	public class DisableTagHelper : TagHelper

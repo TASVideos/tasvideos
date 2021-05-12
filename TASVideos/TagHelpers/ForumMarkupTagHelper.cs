@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.ForumEngine;
 
-namespace TASVideos.TagHelpers
+namespace TASVideos.RazorPages.TagHelpers
 {
 	public class ForumMarkupTagHelper : TagHelper
 	{

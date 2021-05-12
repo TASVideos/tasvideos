@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Users
+namespace TASVideos.RazorPages.Pages.Users
 {
 	[RequirePermission(PermissionTo.ViewPrivateUserData)]
 	public class IpsModel : PageModel

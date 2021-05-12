@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TASVideos.Models;
+using TASVideos.RazorPages.Models;
 
-namespace TASVideos.Pages.Roles.Models
+namespace TASVideos.RazorPages.Pages.Roles.Models
 {
 	/// <summary>
 	/// Represents a Role entry for the purpose of editing

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Publications.Models
+namespace TASVideos.RazorPages.Pages.Publications.Models
 {
 	public class PublicationTierEditModel
 	{

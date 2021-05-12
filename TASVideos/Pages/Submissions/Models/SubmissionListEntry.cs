@@ -6,7 +6,7 @@ using TASVideos.Common;
 using TASVideos.Core;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Submissions.Models
+namespace TASVideos.RazorPages.Pages.Submissions.Models
 {
 	public class SubmissionListEntry : ITimeable, ISubmissionDisplay
 	{

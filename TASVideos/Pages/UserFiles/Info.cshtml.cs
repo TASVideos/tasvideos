@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Models;
+using TASVideos.RazorPages.Models;
 
-namespace TASVideos.Pages.UserFiles
+namespace TASVideos.RazorPages.Pages.UserFiles
 {
 	[AllowAnonymous]
 	public class InfoModel : BasePageModel

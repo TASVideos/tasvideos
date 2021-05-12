@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TASVideos.ViewComponents.Models
+namespace TASVideos.RazorPages.ViewComponents.Models
 {
 	public class MoviesByAuthorModel
 	{

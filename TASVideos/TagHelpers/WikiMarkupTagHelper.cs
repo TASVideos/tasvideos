@@ -3,23 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Namotion.Reflection;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
-using TASVideos.ViewComponents;
+using TASVideos.RazorPages.Extensions;
+using TASVideos.RazorPages.ViewComponents;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
-namespace TASVideos.TagHelpers
+namespace TASVideos.RazorPages.TagHelpers
 {
 	public partial class WikiMarkup : TagHelper, IWriterHelper
 	{

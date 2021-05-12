@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data;
-using TASVideos.Pages.Publications.Models;
+using TASVideos.RazorPages.Pages.Publications.Models;
 
-namespace TASVideos.Pages.Publications
+namespace TASVideos.RazorPages.Pages.Publications
 {
 	[AllowAnonymous]
 	public class ViewModel : BasePageModel

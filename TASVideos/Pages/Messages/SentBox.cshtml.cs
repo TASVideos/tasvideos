@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Messages.Models;
+using TASVideos.RazorPages.Pages.Messages.Models;
 
-namespace TASVideos.Pages.Messages
+namespace TASVideos.RazorPages.Pages.Messages
 {
 	[Authorize]
 	public class SentboxModel : BasePageModel

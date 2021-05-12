@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.ViewComponents.Models;
+using TASVideos.RazorPages.ViewComponents.Models;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.RazorPages.ViewComponents
 {
 	[WikiModule(WikiModules.ListLanguages)]
 	public class ListLanguages : ViewComponent

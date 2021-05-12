@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Forum.Topics.Models
+namespace TASVideos.RazorPages.Pages.Forum.Topics.Models
 {
 	public class SplitTopicModel
 	{

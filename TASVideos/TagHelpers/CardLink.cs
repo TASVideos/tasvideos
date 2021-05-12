@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using static TASVideos.TagHelpers.TagHelperExtensions;
+using static TASVideos.RazorPages.TagHelpers.TagHelperExtensions;
 
-namespace TASVideos.TagHelpers
+namespace TASVideos.RazorPages.TagHelpers
 {
 	[HtmlTargetElement("card-link", TagStructure = TagStructure.WithoutEndTag)]
 	public class CardLinkTagHelper : TagHelper
