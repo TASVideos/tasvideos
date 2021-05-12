@@ -5,14 +5,14 @@ using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 
-namespace TASVideos.Test.MovieParsers
+namespace TASVideos.MovieParsers.Tests
 {
 	[TestClass]
 	[TestCategory("BK2Parsers")]
 	public class Fm2ParserTests : BaseParserTests
 	{
 		private readonly Fm2 _fm2Parser;
-		public override string ResourcesPath { get; } = "TASVideos.Test.MovieParsers.Fm2SampleFiles.";
+		public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.Fm2SampleFiles.";
 
 		public Fm2ParserTests()
 		{

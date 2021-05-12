@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Core.Tests", "tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Legacy.Tests", "tests\TASVideos.Legacy.Tests\TASVideos.Legacy.Tests.csproj", "{4ECAB827-137D-477F-AB04-B753F5DF582F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.MovieParsers.Tests", "tests\TASVideos.MovieParsers.Tests\TASVideos.MovieParsers.Tests.csproj", "{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,10 @@ Global
 		{4ECAB827-137D-477F-AB04-B753F5DF582F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ECAB827-137D-477F-AB04-B753F5DF582F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ECAB827-137D-477F-AB04-B753F5DF582F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +135,7 @@ Global
 		{14DDF535-FEE9-4029-840E-8B8419ED613F} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{0EAD8F8F-AFCF-4170-91DF-2413E1C35276} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{4ECAB827-137D-477F-AB04-B753F5DF582F} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
+		{302D8FC3-ACF0-4BBD-B4CB-D45E389C9AF2} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67B2E8BD-92C7-442F-9560-C36E143E8E4C}

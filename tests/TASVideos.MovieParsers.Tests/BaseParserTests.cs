@@ -2,12 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using TASVideos.MovieParsers.Result;
 
-namespace TASVideos.Test.MovieParsers
+namespace TASVideos.MovieParsers.Tests
 {
 	public abstract class BaseParserTests
 	{
