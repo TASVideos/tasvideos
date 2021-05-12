@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Core", "TASVideos.Core\TASVideos.Core.csproj", "{95CB10F9-AD46-4EE0-9606-E97FF993251F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Test", "tests\TASVideos.Test\TASVideos.Test.csproj", "{893A38DC-2450-41C2-A607-6F92310B67F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.RazorPages.Tests", "tests\TASVideos.Test\TASVideos.RazorPages.Tests.csproj", "{893A38DC-2450-41C2-A607-6F92310B67F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{90FD968F-E914-4E3E-8B68-9D58AE560E7B}"
 EndProject

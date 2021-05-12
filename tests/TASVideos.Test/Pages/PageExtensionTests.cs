@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Pages;
 
-namespace TASVideos.Tests.Pages
+namespace TASVideos.RazorPages.Tests.Pages
 {
 	[TestClass]
 	public class PageExtensionTests

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Extensions;
 
-namespace TASVideos.Test.Extensions
+namespace TASVideos.RazorPages.Tests.Extensions
 {
 	[TestClass]
 	public class ReflectionExtensionTests

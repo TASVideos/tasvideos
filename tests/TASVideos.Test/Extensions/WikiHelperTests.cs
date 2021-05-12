@@ -4,7 +4,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using static TASVideos.Data.Entity.PermissionTo;
 
-namespace TASVideos.Test.Extensions
+namespace TASVideos.RazorPages.Tests.Extensions
 {
 	[TestClass]
 	public class WikiHelperTests

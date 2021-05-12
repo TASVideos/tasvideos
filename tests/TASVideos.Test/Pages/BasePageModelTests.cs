@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 
-namespace TASVideos.Tests.Pages
+namespace TASVideos.RazorPages.Tests.Pages
 {
 	public class BasePageModelTests
 	{
