@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Extensions;
 
-namespace TASVideos.Test.Common.Extensions
+namespace TASVideos.Common.Tests.Extensions
 {
 	[TestClass]
 	public class TimeExtensionTests

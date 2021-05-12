@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Common;
 
-namespace TASVideos.Test.Common
+namespace TASVideos.Common.Tests
 {
 	[TestClass]
 	public class TimeableTests
