@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Legacy.Imports;
 
-namespace TASVideos.Test.Legacy
+namespace TASVideos.Legacy.Tests
 {
 	[TestClass]
 	public class ImportHelperTests
