@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data.Entity;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.Data.Tests.QueryableExtensions
 {

@@ -29,5 +29,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\TASVideos\TASVideos.RazorPages.csproj" />
+		<ProjectReference Include="..\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj" />
 	</ItemGroup>
 </Project>

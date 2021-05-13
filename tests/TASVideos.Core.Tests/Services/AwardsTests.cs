@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.Core.Tests.Services
 {
