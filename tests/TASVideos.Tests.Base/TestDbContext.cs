@@ -10,13 +10,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Update;
 using TASVideos.Data;
 
-namespace TASVideos.Core.Tests
+namespace TASVideos.Tests.Base
 {
 	/// <summary>
 	/// Creates a context optimized for unit testing.
 	/// Database is in memory, and provides mechanisms for mocking database conflicts.
 	/// </summary>
-	internal class TestDbContext : ApplicationDbContext
+	public class TestDbContext : ApplicationDbContext
 	{
 		private readonly IHttpContextAccessor _testHttpContext;
 

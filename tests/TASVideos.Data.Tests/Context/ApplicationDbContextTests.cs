@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Data.Entity;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.Data.Tests.Context
 {

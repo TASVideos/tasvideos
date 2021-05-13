@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TASVideos.Core.Services;
 
-namespace TASVideos.Core.Tests
+namespace TASVideos.Tests.Base
 {
 	/// <summary>
 	/// Provides a dummy cache service that has helpful methods for unit testing
