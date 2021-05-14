@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -27,8 +27,9 @@ namespace TASVideos.WikiEngine.Snapshots
 	{
 		internal class Options
 		{
-			public string? ConnectionString { get; set; }
-			public string? OutDir { get; set; }
+			public string? ConnectionString { get; init; }
+			public string? OutDir { get; init; }
+			public bool UsePostgres { get; init; } = true;
 		}
 
 		public static int Main(string[] args)
@@ -46,9 +47,12 @@ namespace TASVideos.WikiEngine.Snapshots
 				return -1;
 			}
 
-			var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseSqlServer(settings.ConnectionString)
-				.Options;
+			
+			var serviceProvider = new ServiceCollection()
+				.RegisterDbContext(settings.ConnectionString, settings.UsePostgres)
+				.BuildServiceProvider();
+
+			var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
 			var wantUpdate = args.Any(s => s == "--update");
 			var force = args.Any(s => s == "--force");
@@ -61,82 +65,89 @@ namespace TASVideos.WikiEngine.Snapshots
 				}
 			}
 
-			using (var context = new ApplicationDbContext(contextOptions, null))
+			var query = context.WikiPages
+				.ThatAreNotDeleted()
+				.WithNoChildren();
+			if (filter != null)
 			{
-				var query = context.WikiPages
-					.ThatAreNotDeleted()
-					.WithNoChildren();
-				if (filter != null)
-				{
-					query = query.Where(wp => wp.PageName.Contains(filter));
-				}
-
-				var toProcess = query
-					.Select(wp => new
-					{
-						wp.PageName,
-						wp.Revision
-					})
-					.ToList();
-				Console.WriteLine($"Found {toProcess.Count} current page revisions.");
-
-				var progress = 0;
-				Console.Write("{0,8}", progress);
-
-				foreach (var wp in toProcess)
-				{
-					Console.Write(new string('\b', 8));
-					Console.Write("{0,8}", progress++);
-
-					var directory = Path.Combine(settings.OutDir, wp.PageName);
-					new DirectoryInfo(directory).Create();
-					var path = Path.Combine(directory, "content");
-
-					var existingRevision = -1;
-					if (File.Exists(path))
-					{
-						using var tr = new StreamReader(path);
-						var result = int.TryParse(tr.ReadLine(), out int parsedRevision);
-						if (result)
-						{
-							existingRevision = parsedRevision;
-						}
-					}
-
-					var revision = wantUpdate ? wp.Revision : existingRevision != -1 ? existingRevision : wp.Revision;
-
-					if (existingRevision == revision && !force)
-						continue;
-
-					var markup = context.WikiPages
-						.Where(p => p.Revision == revision && p.PageName == wp.PageName)
-						.Select(p => p.Markup)
-						.Single();
-
-					List<INode> nodes;
-
-					try
-					{
-						nodes = NewParser.Parse(markup);
-					}
-					catch (NewParser.SyntaxException e)
-					{
-						nodes = Builtins.MakeErrorPage(markup, e);
-					}
-
-					using var tw = new StreamWriter(path);
-					tw.WriteLine(revision);
-					foreach (var node in nodes)
-					{
-						node.DumpContentDescriptive(tw, "");
-					}
-				}
-				Console.Write(new string('\b', 8));
-				Console.Write("{0,8}", progress++);
+				query = query.Where(wp => wp.PageName.Contains(filter));
 			}
 
+			var toProcess = query
+				.Select(wp => new
+				{
+					wp.PageName,
+					wp.Revision
+				})
+				.ToList();
+			Console.WriteLine($"Found {toProcess.Count} current page revisions.");
+
+			var progress = 0;
+			Console.Write("{0,8}", progress);
+
+			foreach (var wp in toProcess)
+			{
+				Console.Write(new string('\b', 8));
+				Console.Write("{0,8}", progress++);
+
+				var directory = Path.Combine(settings.OutDir, wp.PageName);
+				new DirectoryInfo(directory).Create();
+				var path = Path.Combine(directory, "content");
+
+				var existingRevision = -1;
+				if (File.Exists(path))
+				{
+					using var tr = new StreamReader(path);
+					var result = int.TryParse(tr.ReadLine(), out int parsedRevision);
+					if (result)
+					{
+						existingRevision = parsedRevision;
+					}
+				}
+
+				var revision = wantUpdate ? wp.Revision : existingRevision != -1 ? existingRevision : wp.Revision;
+
+				if (existingRevision == revision && !force)
+					continue;
+
+				var markup = context.WikiPages
+					.Where(p => p.Revision == revision && p.PageName == wp.PageName)
+					.Select(p => p.Markup)
+					.Single();
+
+				List<INode> nodes;
+
+				try
+				{
+					nodes = NewParser.Parse(markup);
+				}
+				catch (NewParser.SyntaxException e)
+				{
+					nodes = Builtins.MakeErrorPage(markup, e);
+				}
+
+				using var tw = new StreamWriter(path);
+				tw.WriteLine(revision);
+				foreach (var node in nodes)
+				{
+					node.DumpContentDescriptive(tw, "");
+				}
+			}
+
+			Console.Write(new string('\b', 8));
+			Console.Write("{0,8}", progress++);
 			Console.WriteLine();
 			return 0;
+		}
+	}
+
+	public static class ServiceCollectionExtensions
+	{
+		public static IServiceCollection RegisterDbContext(this IServiceCollection services, string connectionString, bool usePostgres)
+		{
+			return usePostgres
+				? services.AddPostgresServerDbContext(connectionString)
+				: services.AddSqlServerDbContext(connectionString);
 		}
 	}
 }

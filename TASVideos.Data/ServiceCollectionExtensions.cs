@@ -8,31 +8,24 @@ namespace TASVideos.Data
 	{
 		public static IServiceCollection AddTasvideosData(this IServiceCollection services, IConfiguration configuration, bool usePostgres)
 		{
-			services.AddDbContext(configuration, usePostgres);
-			return services;
+			return usePostgres
+				? services.AddPostgresServerDbContext(configuration.GetConnectionString("PostgresConnection"))
+				: services.AddSqlServerDbContext(configuration.GetConnectionString("DefaultConnection"));
 		}
 
-		internal static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration, bool usePostgres)
+		internal static IServiceCollection AddPostgresServerDbContext(this IServiceCollection services, string postgresConnectionStr)
 		{
-			if (usePostgres)
-			{
-				services.AddDbContext<ApplicationDbContext>(
-					options =>
-						options.UseNpgsql(
-							configuration.GetConnectionString("PostgresConnection"),
-							b => b.MigrationsAssembly("TASVideos.Data"))
-							.UseSnakeCaseNamingConvention());
-			}
-			else
-			{
-				services.AddDbContext<ApplicationDbContext>(
-					options =>
-						options.UseSqlServer(
-							configuration.GetConnectionString("DefaultConnection"),
-							b => b.MigrationsAssembly("TASVideos.Data")));
-			}
+			return services.AddDbContext<ApplicationDbContext>(
+				options =>
+					options.UseNpgsql(postgresConnectionStr, b => b.MigrationsAssembly("TASVideos.Data"))
+						.UseSnakeCaseNamingConvention());
+		}
 
-			return services;
+		internal static IServiceCollection AddSqlServerDbContext(this IServiceCollection services, string sqlServerConnectionStr)
+		{
+			return services.AddDbContext<ApplicationDbContext>(
+				options =>
+					options.UseSqlServer(sqlServerConnectionStr, b => b.MigrationsAssembly("TASVideos.Data")));
 		}
 	}
 }
