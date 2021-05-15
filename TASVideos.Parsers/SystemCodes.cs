@@ -8,8 +8,10 @@
 		public const string Atari7800 = "a7800";
 		public const string C64 = "c64";
 		public const string Coleco = "coleco";
+		public const string Dos = "dos";
 		public const string Ds = "ds";
 		public const string Fds = "fds";
+		public const string Flash = "flash";
 		public const string GameBoy = "gb";
 		public const string GameCube = "gc";
 		public const string Gba = "gba";

@@ -278,6 +278,12 @@ namespace TASVideos.Data.SeedData
 				Id = 46,
 				Code = "O2",
 				DisplayName = "Odyssey 2"
+			},
+			new ()
+			{
+				Id = 47,
+				Code = "Flash",
+				DisplayName = "Adobe Flash"
 			}
 		};
 

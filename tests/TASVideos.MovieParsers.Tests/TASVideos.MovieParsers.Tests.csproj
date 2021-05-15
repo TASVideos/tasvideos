@@ -8,6 +8,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="LtmSampleFiles\dos.ltm" />
+	  <None Remove="LtmSampleFiles\flash-extrachars-linuxfallback.ltm" />
+	  <None Remove="LtmSampleFiles\flash.ltm" />
+	  <None Remove="LtmSampleFiles\linux.ltm" />
+	  <None Remove="LtmSampleFiles\unknown-linuxfallback.ltm" />
+	  <None Remove="LtmSampleFiles\windows.ltm" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<AdditionalFiles Include="$(ProjectDir)../../.stylecop.json" />
 	</ItemGroup>
 
@@ -105,8 +114,14 @@
 		<EmbeddedResource Include="LsmvSampleFiles\savestate.anchor.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\savestate.lsmv" />
 		<EmbeddedResource Include="LtmSampleFiles\2frames.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\dos.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\flash-extrachars-linuxfallback.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\flash.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\linux.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\noframerate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\savestate.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\unknown-linuxfallback.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\windows.ltm" />
 		<EmbeddedResource Include="MarSampleFiles\2frames.mar" />
 		<EmbeddedResource Include="MarSampleFiles\noframerate.mar" />
 		<EmbeddedResource Include="MarSampleFiles\wrongheader.mar" />
