@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SharpCompress.Readers;
+using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -78,6 +79,17 @@ namespace TASVideos.MovieParsers.Parsers
 							}
 
 							break;
+						case "annotations.txt":
+							string? line;
+							while ((line = await textReader.ReadLineAsync()) != null)
+							{
+								if (line.ToLower().StartsWith("platform:"))
+								{
+									result.SystemCode = CalculatePlatform(GetPlatformValue(line));
+								}
+							}
+
+							break;
 					}
 
 					entry.SkipEntry(); // seems to be required if the stream was not fully consumed
@@ -139,6 +151,42 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 
 			return 0;
+		}
+
+		private static string GetPlatformValue(string str)
+		{
+			if (string.IsNullOrWhiteSpace(str))
+			{
+				return "";
+			}
+
+			var split = str.ToLower().Split(new[] { "platform:" }, StringSplitOptions.RemoveEmptyEntries);
+			if (split.Length != 1)
+			{
+				return "";
+			}
+
+			return split[0].Trim();
+		}
+
+		private static string CalculatePlatform(string str)
+		{
+			if (string.Equals(SystemCodes.Flash, str, StringComparison.InvariantCultureIgnoreCase))
+			{
+				return SystemCodes.Flash;
+			}
+
+			if (string.Equals(SystemCodes.Dos, str, StringComparison.InvariantCultureIgnoreCase))
+			{
+				return SystemCodes.Dos;
+			}
+
+			if (string.Equals(SystemCodes.Windows, str, StringComparison.InvariantCultureIgnoreCase))
+			{
+				return SystemCodes.Windows;
+			}
+
+			return SystemCodes.Linux;
 		}
 	}
 }

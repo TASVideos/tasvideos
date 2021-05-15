@@ -20,6 +20,20 @@ namespace TASVideos.MovieParsers.Tests
 		}
 
 		[TestMethod]
+		[DataRow("linux.ltm", SystemCodes.Linux)]
+		[DataRow("flash.ltm", SystemCodes.Flash)]
+		[DataRow("flash-extrachars-linuxfallback.ltm", SystemCodes.Linux)]
+		[DataRow("unknown-linuxfallback.ltm", SystemCodes.Linux)]
+		[DataRow("windows.ltm", SystemCodes.Windows)]
+		[DataRow("dos.ltm", SystemCodes.Dos)]
+		public async Task SystemId(string filename, string expectedSystemCode)
+		{
+			var actual = await _ltmParser.Parse(Embedded(filename));
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(expectedSystemCode, actual.SystemCode);
+		}
+
+		[TestMethod]
 		public async Task Region()
 		{
 			var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
