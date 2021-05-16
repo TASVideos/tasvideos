@@ -1,0 +1,19 @@
+﻿@model IReadOnlyCollection<SubmissionsWithNoGamesModel>
+<label>Total count: @Model.Count</label>
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>Id</th>
+		<th>Title</th>
+	</tr>
+	@foreach (var sub in Model)
+	{
+		<tr>
+			<td>
+				<a href="/@(sub.Id)S">@(sub.Id)S</a>
+			</td>
+			<td>
+				@sub.Title
+			</td>
+		</tr>
+	}
+</table>
