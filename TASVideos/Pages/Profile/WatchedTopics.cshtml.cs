@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 
-namespace TASVideos.RazorPages.Pages.Profile
+namespace TASVideos.Pages.Profile
 {
 	[Authorize]
 	public class WatchedTopicsModel : BasePageModel

@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
+using TASVideos.Models;
 
-namespace TASVideos.RazorPages.Pages.Messages
+namespace TASVideos.Pages.Messages
 {
 	[Authorize]
 	public class IndexModel : BasePageModel

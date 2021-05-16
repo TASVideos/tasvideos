@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Extensions;
+using TASVideos.Extensions;
 
-namespace TASVideos.RazorPages.Pages.Publications
+namespace TASVideos.Pages.Publications
 {
 	[RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
 	public class AdditionalMoviesModel : BasePageModel

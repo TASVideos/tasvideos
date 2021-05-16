@@ -22,11 +22,11 @@ using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 using TASVideos.MovieParsers;
-using TASVideos.RazorPages.Models;
-using TASVideos.RazorPages.Pages;
+using TASVideos.Pages;
 
-namespace TASVideos.RazorPages.Extensions
+namespace TASVideos.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{

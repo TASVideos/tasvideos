@@ -2,7 +2,7 @@
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.CurrentEditLink)]
 	public class CurrentEditLink : ViewComponent

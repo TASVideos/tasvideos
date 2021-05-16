@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.UserGetWikiName)]
 	public class UserGetWikiName : ViewComponent

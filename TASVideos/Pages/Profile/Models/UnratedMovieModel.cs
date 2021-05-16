@@ -1,4 +1,4 @@
-﻿namespace TASVideos.RazorPages.Pages.Profile.Models
+﻿namespace TASVideos.Pages.Profile.Models
 {
 	public class UnratedMovieModel
 	{

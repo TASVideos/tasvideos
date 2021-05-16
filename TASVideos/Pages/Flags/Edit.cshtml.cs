@@ -7,7 +7,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 
-namespace TASVideos.RazorPages.Pages.Flags
+namespace TASVideos.Pages.Flags
 {
 	[RequirePermission(PermissionTo.TagMaintenance)]
 	public class EditModel : BasePageModel

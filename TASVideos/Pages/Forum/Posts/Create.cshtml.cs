@@ -7,9 +7,9 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.RazorPages.Pages.Forum.Posts.Models;
+using TASVideos.Pages.Forum.Posts.Models;
 
-namespace TASVideos.RazorPages.Pages.Forum.Posts
+namespace TASVideos.Pages.Forum.Posts
 {
 	[RequirePermission(PermissionTo.CreateForumPosts)]
 	public class CreateModel : BaseForumModel

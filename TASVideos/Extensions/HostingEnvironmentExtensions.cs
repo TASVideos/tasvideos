@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace TASVideos.RazorPages.Extensions
+namespace TASVideos.Extensions
 {
 	public static class HostingEnvironmentExtensions
 	{

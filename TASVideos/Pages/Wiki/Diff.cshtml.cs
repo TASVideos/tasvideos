@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Wiki.Models;
+using TASVideos.Pages.Wiki.Models;
 
-namespace TASVideos.RazorPages.Pages.Wiki
+namespace TASVideos.Pages.Wiki
 {
 	[AllowAnonymous]
 	public class DiffModel : BasePageModel

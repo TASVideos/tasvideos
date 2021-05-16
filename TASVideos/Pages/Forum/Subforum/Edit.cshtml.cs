@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.RazorPages.Pages.Forum.Subforum.Models;
+using TASVideos.Pages.Forum.Subforum.Models;
 
-namespace TASVideos.RazorPages.Pages.Forum.Subforum
+namespace TASVideos.Pages.Forum.Subforum
 {
 	[RequirePermission(PermissionTo.EditForums)]
 	public class EditModel : BasePageModel

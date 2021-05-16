@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TASVideos.RazorPages.Extensions;
+using TASVideos.Extensions;
 
-namespace TASVideos.RazorPages.Models
+namespace TASVideos.Models
 {
 	public class ValidWikiPageNameAttribute : ValidationAttribute
 	{

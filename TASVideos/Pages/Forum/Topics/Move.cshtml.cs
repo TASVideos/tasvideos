@@ -8,9 +8,9 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.RazorPages.Pages.Forum.Topics.Models;
+using TASVideos.Pages.Forum.Topics.Models;
 
-namespace TASVideos.RazorPages.Pages.Forum.Topics
+namespace TASVideos.Pages.Forum.Topics
 {
 	[RequirePermission(PermissionTo.MoveTopics)]
 	public class MoveModel : BasePageModel

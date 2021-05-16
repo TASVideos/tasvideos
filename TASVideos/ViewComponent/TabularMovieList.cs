@@ -7,7 +7,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.TabularMovieList)]
 	public class TabularMovieList : ViewComponent

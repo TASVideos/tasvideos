@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using static TASVideos.RazorPages.TagHelpers.TagHelperExtensions;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
-namespace TASVideos.RazorPages.TagHelpers
+namespace TASVideos.TagHelpers
 {
 	[HtmlTargetElement("two-column-select", TagStructure = TagStructure.WithoutEndTag, Attributes = "id-list,available-list")]
 	public class TwoColumnSelectTagHelper : TagHelper

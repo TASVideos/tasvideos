@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages.Wiki
+namespace TASVideos.Pages.Wiki
 {
 	[AllowAnonymous]
 	public class ReferrersModel : BasePageModel

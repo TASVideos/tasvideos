@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.RazorPages.Pages.Forum
+namespace TASVideos.Pages.Forum
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel

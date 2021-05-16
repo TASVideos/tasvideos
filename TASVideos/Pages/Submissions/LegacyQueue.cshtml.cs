@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace TASVideos.RazorPages.Pages.Submissions
+namespace TASVideos.Pages.Submissions
 {
 	// Handles legacy queue.cgi links
 	[AllowAnonymous]

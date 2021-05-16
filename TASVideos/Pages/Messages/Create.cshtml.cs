@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Models;
+using TASVideos.Models;
 
-namespace TASVideos.RazorPages.Pages.Messages
+namespace TASVideos.Pages.Messages
 {
 	[Authorize]
 	public class CreateModel : BasePageModel

@@ -5,7 +5,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages.Forum.Legacy
+namespace TASVideos.Pages.Forum.Legacy
 {
 	// Handles legacy forum links to viewTopic.php
 	[AllowAnonymous]

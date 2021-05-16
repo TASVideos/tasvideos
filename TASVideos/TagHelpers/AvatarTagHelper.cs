@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.RazorPages.TagHelpers
+namespace TASVideos.TagHelpers
 {
 	public class AvatarTagHelper : TagHelper
 	{

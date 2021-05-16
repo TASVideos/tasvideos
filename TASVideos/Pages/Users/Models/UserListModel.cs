@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using TASVideos.Core;
 
-namespace TASVideos.RazorPages.Pages.Users.Models
+namespace TASVideos.Pages.Users.Models
 {
 	public class UserListModel
 	{

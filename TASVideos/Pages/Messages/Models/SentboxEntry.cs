@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.RazorPages.Pages.Messages.Models
+namespace TASVideos.Pages.Messages.Models
 {
 	public class SentboxEntry
 	{

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TASVideos.RazorPages.Pages.Forum.Legacy
+namespace TASVideos.Pages.Forum.Legacy
 {
 	// Handles legacy forum links to viewForum.php
 	[AllowAnonymous]

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace TASVideos.RazorPages.Extensions
+namespace TASVideos.Extensions
 {
 	public static class ReflectionExtensions
 	{

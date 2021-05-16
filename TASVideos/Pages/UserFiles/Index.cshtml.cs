@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.UserFiles.Models;
+using TASVideos.Pages.UserFiles.Models;
 
-namespace TASVideos.RazorPages.Pages.UserFiles
+namespace TASVideos.Pages.UserFiles
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel

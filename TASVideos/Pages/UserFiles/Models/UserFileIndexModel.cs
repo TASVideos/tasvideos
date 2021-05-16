@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TASVideos.RazorPages.Pages.UserFiles.Models
+namespace TASVideos.Pages.UserFiles.Models
 {
 	public class UserFileIndexModel
 	{

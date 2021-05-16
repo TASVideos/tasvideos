@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Extensions;
-using TASVideos.RazorPages.Pages.Submissions.Models;
+using TASVideos.Extensions;
+using TASVideos.Pages.Submissions.Models;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.FrontpageSubmissionList)]
 	public class FrontpageSubmissionList : ViewComponent

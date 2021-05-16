@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.TimeSinceDate)]
 	public class TimeSinceDate : ViewComponent

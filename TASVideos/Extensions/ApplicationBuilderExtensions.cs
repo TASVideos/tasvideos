@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
 using TASVideos.Core.Settings;
-using TASVideos.RazorPages.Middleware;
+using TASVideos.Middleware;
 
-namespace TASVideos.RazorPages.Extensions
+namespace TASVideos.Extensions
 {
 	public static class ApplicationBuilderExtensions
 	{

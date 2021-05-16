@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace TASVideos.RazorPages.Pages
+namespace TASVideos.Pages
 {
 	[AllowAnonymous]
 	public class ErrorModel : PageModel

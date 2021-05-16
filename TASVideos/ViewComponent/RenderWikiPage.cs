@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Core.Services;
-using TASVideos.RazorPages.Extensions;
+using TASVideos.Extensions;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	public class RenderWikiPage : ViewComponent
 	{

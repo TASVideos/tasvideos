@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Wiki;
+using TASVideos.Pages.Wiki;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki

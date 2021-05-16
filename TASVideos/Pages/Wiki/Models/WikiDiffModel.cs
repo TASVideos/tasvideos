@@ -1,4 +1,4 @@
-﻿namespace TASVideos.RazorPages.Pages.Wiki.Models
+﻿namespace TASVideos.Pages.Wiki.Models
 {
 	public class WikiDiffModel
 	{

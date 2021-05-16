@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TASVideos.RazorPages.Pages.Activity.Model
+namespace TASVideos.Pages.Activity.Model
 {
 	public class ActivitySummaryModel
 	{

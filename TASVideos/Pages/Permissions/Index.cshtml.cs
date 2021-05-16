@@ -6,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.RazorPages.Extensions;
-using TASVideos.RazorPages.Pages.Permissions.Models;
+using TASVideos.Pages.Permissions.Models;
 
-namespace TASVideos.RazorPages.Pages.Permissions
+namespace TASVideos.Pages.Permissions
 {
 	[Authorize]
 	public class IndexModel : BasePageModel

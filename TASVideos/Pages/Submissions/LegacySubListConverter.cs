@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Submissions.Models;
+using TASVideos.Pages.Submissions.Models;
 
-namespace TASVideos.RazorPages.Pages.Submissions
+namespace TASVideos.Pages.Submissions
 {
 	/// <summary>
 	/// Converts legacy query string parameters from Subs-List to a <see cref="SubmissionSearchRequest"/> model

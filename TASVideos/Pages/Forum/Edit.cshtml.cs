@@ -1,12 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Forum.Models;
+using TASVideos.Pages.Forum.Models;
 
-namespace TASVideos.RazorPages.Pages.Forum
+namespace TASVideos.Pages.Forum
 {
 	[RequirePermission(PermissionTo.EditCategories)]
 	public class EditModel : BasePageModel

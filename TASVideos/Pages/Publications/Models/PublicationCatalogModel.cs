@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.RazorPages.Pages.Publications.Models
+namespace TASVideos.Pages.Publications.Models
 {
 	public class PublicationCatalogModel
 	{

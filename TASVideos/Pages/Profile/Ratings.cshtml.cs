@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using TASVideos.Core.Services;
 
-namespace TASVideos.RazorPages.Pages.Profile
+namespace TASVideos.Pages.Profile
 {
 	[Authorize]
 	public class RatingsModel : BasePageModel

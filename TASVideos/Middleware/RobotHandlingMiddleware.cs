@@ -1,10 +1,11 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 
-namespace TASVideos.RazorPages.Middleware
+namespace TASVideos.Middleware
 {
 	public class RobotHandlingMiddleware
 	{

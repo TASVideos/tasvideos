@@ -1,4 +1,4 @@
-﻿namespace TASVideos.RazorPages.ViewComponents.Models
+﻿namespace TASVideos.ViewComponents.Models
 {
 	public class LanguageEntry
 	{

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.PlatformFramerates)]
 	public class PlatformFramerates : ViewComponent

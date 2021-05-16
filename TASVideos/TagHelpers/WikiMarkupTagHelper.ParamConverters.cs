@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TASVideos.RazorPages.TagHelpers
+namespace TASVideos.TagHelpers
 {
 	public partial class WikiMarkup
 	{

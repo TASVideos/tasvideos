@@ -7,7 +7,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.MoviesGameList)]
 	public class MoviesGameList : ViewComponent

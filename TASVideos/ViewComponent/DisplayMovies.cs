@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Publications.Models;
+using TASVideos.Pages.Publications.Models;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.DisplayMovies)]
 	public class DisplayMovies : ViewComponent

@@ -1,8 +1,9 @@
 ﻿using System;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace TASVideos.RazorPages.Pages.Profile
+namespace TASVideos.Pages.Profile
 {
 	public static class ProfileNavPages
 	{

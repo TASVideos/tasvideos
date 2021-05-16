@@ -8,7 +8,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.TopicFeed)]
 	public class TopicFeed : ViewComponent

@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.RazorPages.Pages.Roles.Models;
+using TASVideos.Pages.Roles.Models;
 
-namespace TASVideos.RazorPages.Pages.Roles
+namespace TASVideos.Pages.Roles
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel

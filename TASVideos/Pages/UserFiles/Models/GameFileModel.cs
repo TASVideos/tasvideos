@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using TASVideos.RazorPages.Models;
+using TASVideos.Models;
 
-namespace TASVideos.RazorPages.Pages.UserFiles.Models
+namespace TASVideos.Pages.UserFiles.Models
 {
 	public class GameFileModel
 	{

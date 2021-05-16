@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Publications.Models;
+using TASVideos.Pages.Publications.Models;
 
-namespace TASVideos.RazorPages.Pages.Publications
+namespace TASVideos.Pages.Publications
 {
 	[AllowAnonymous]
 	public class AuthorsModel : BasePageModel
