@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.RazorPages.Pages.Users.Models
+namespace TASVideos.Pages.Users.Models
 {
 	public class UserEditModel
 	{

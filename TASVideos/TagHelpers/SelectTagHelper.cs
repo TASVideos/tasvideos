@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace TASVideos.RazorPages.TagHelpers
+namespace TASVideos.TagHelpers
 {
 	[HtmlTargetElement(Attributes = nameof(Select))]
 	public class SelectTagHelper : TagHelper

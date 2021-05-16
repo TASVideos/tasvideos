@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace TASVideos.RazorPages.TagHelpers
+namespace TASVideos.TagHelpers
 {
 	public class SubmitButtonTagHelper : TagHelper
 	{

@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Extensions;
+using TASVideos.Extensions;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.Frames)]
 	public class Frames : ViewComponent

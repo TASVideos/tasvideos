@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.BrokenLinks)]
 	public class BrokenLinks : ViewComponent

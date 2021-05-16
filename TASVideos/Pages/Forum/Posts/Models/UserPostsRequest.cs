@@ -1,6 +1,6 @@
 ﻿using TASVideos.Core;
 
-namespace TASVideos.RazorPages.Pages.Forum.Posts.Models
+namespace TASVideos.Pages.Forum.Posts.Models
 {
 	public class UserPostsRequest : PagingModel
 	{

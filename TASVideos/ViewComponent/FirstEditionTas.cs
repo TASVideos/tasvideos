@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.RazorPages.ViewComponents.Models;
+using TASVideos.ViewComponents.Models;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.FirstEditionTas)]
 	public class FirstEditionTas : ViewComponent

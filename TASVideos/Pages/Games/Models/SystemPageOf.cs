@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TASVideos.Core;
 
-namespace TASVideos.RazorPages.Pages.Games.Models
+namespace TASVideos.Pages.Games.Models
 {
 	public class SystemPageOf<T> : PageOf<T>
 	{

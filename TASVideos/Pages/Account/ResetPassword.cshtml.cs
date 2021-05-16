@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 
-namespace TASVideos.RazorPages.Pages.Account
+namespace TASVideos.Pages.Account
 {
 	public class ResetPasswordModel : BasePageModel
 	{

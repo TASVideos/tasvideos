@@ -8,9 +8,9 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Profile.Models;
+using TASVideos.Pages.Profile.Models;
 
-namespace TASVideos.RazorPages.Pages.Profile
+namespace TASVideos.Pages.Profile
 {
 	[Authorize]
 	public class SettingsModel : BasePageModel

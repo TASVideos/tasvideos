@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 using Microsoft.AspNetCore.Http;
 
-namespace TASVideos.RazorPages.Pages.UserFiles.Models
+namespace TASVideos.Pages.UserFiles.Models
 {
 	public class UserFileUploadModel
 	{

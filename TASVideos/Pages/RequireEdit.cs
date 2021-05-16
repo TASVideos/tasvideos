@@ -1,9 +1,10 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
-using TASVideos.RazorPages.Extensions;
 
-namespace TASVideos.RazorPages.Pages
+using TASVideos.Extensions;
+
+namespace TASVideos.Pages
 {
 	public class RequireEdit : RequireBase, IAsyncPageFilter
 	{

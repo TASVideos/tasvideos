@@ -5,13 +5,14 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.RazorPages.Extensions;
-using TASVideos.RazorPages.Pages.Publications.Models;
+using TASVideos.Extensions;
+using TASVideos.Pages.Publications.Models;
 
-namespace TASVideos.RazorPages.Pages.Publications
+namespace TASVideos.Pages.Publications
 {
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class CatalogModel : BasePageModel

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.RazorPages.Pages.Wiki.Models
+namespace TASVideos.Pages.Wiki.Models
 {
 	public class WikiEditModel
 	{

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Core;
 
-namespace TASVideos.RazorPages.Pages.Games.Models
+namespace TASVideos.Pages.Games.Models
 {
 	public class GameListModel
 	{

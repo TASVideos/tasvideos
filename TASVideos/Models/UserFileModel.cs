@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Models
+namespace TASVideos.Models
 {
 	public class UserFileModel
 	{

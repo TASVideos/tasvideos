@@ -7,7 +7,7 @@ using TASVideos.Data;
 using TASVideos.Data.Helpers;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.WikiLink)]
 	public class WikiLink : ViewComponent

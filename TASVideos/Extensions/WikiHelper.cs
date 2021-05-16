@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 
-namespace TASVideos.RazorPages.Extensions
+using TASVideos.Data.Entity;
+
+namespace TASVideos.Extensions
 {
 	// ReSharper disable PossibleMultipleEnumeration
 	public static class WikiHelper

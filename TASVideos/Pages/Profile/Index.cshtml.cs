@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 
-namespace TASVideos.RazorPages.Pages.Profile
+namespace TASVideos.Pages.Profile
 {
 	[Authorize]
 	public class IndexModel : BasePageModel

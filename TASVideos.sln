@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.RazorPages", "TASVideos\TASVideos.RazorPages.csproj", "{B386F775-4453-4ADB-906F-F081FE8459EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos", "TASVideos\TASVideos.csproj", "{B386F775-4453-4ADB-906F-F081FE8459EF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngine", "TASVideos.WikiEngine\TASVideos.WikiEngine.csproj", "{C2DE4347-54F6-4842-9EFF-8B663C412136}"
 EndProject
@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.MovieParsers.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngine.Tests", "tests\TASVideos.WikiEngine.Tests\TASVideos.WikiEngine.Tests.csproj", "{8F91456B-D4F5-4C76-B301-E25ED4DFA62C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Api.Tests", "tests\TASVideos.Api.Tests\TASVideos.Api.Tests.csproj", "{20000519-BF96-4AA1-B117-4E5897A35054}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Api.Tests", "tests\TASVideos.Api.Tests\TASVideos.Api.Tests.csproj", "{20000519-BF96-4AA1-B117-4E5897A35054}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Tests.Base", "tests\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj", "{D4940FE4-3543-4BF1-B3F6-1B959A4DECC2}"
 EndProject

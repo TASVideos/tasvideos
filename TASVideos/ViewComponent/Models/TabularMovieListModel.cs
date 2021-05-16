@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TASVideos.Common;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	public class TabularMovieListSearchModel
 	{

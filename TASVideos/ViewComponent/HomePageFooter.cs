@@ -6,7 +6,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	public class HomePageFooter : ViewComponent
 	{

@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Wiki.Models;
+using TASVideos.Pages.Wiki.Models;
 
-namespace TASVideos.RazorPages.Pages.Wiki
+namespace TASVideos.Pages.Wiki
 {
 	[RequirePermission(PermissionTo.SeeDeletedWikiPages)]
 	public class DeletedPagesModel : BasePageModel

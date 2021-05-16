@@ -7,11 +7,11 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.MovieParsers;
-using TASVideos.RazorPages.Extensions;
-using TASVideos.RazorPages.Pages.Submissions.Models;
+using TASVideos.Pages.Submissions.Models;
 
-namespace TASVideos.RazorPages.Pages.Submissions
+namespace TASVideos.Pages.Submissions
 {
 	[RequirePermission(PermissionTo.SubmitMovies)]
 	public class SubmitModel : SubmissionBasePageModel

@@ -2,7 +2,7 @@
 using System.Linq;
 using TASVideos.Extensions;
 
-namespace TASVideos.RazorPages.Pages
+namespace TASVideos.Pages
 {
 	public static class Extensions
 	{

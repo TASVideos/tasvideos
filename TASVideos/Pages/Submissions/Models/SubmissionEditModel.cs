@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers.Result;
 
-namespace TASVideos.RazorPages.Pages.Submissions.Models
+namespace TASVideos.Pages.Submissions.Models
 {
 	public class SubmissionEditModel
 	{

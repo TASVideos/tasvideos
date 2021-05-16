@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 
-namespace TASVideos.RazorPages.Pages.Account
+namespace TASVideos.Pages.Account
 {
 	[AllowAnonymous]
 	public class ConfirmEmailModel : BasePageModel

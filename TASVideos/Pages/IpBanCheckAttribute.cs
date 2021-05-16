@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services;
-using TASVideos.RazorPages.Extensions;
+using TASVideos.Extensions;
 
-namespace TASVideos.RazorPages.Pages
+namespace TASVideos.Pages
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
 	public class IpBanCheckAttribute : Attribute, IAsyncPageFilter

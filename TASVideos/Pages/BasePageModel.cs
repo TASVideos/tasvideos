@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 
-namespace TASVideos.RazorPages.Pages
+namespace TASVideos.Pages
 {
 	public class BasePageModel : PageModel
 	{

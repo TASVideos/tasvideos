@@ -1,4 +1,4 @@
-﻿namespace TASVideos.RazorPages.ViewComponents
+﻿namespace TASVideos.ViewComponents
 {
 	public class EditorActivityModel
 	{

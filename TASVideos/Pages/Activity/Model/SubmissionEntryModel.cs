@@ -1,7 +1,8 @@
 ﻿using System;
+
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages.Activity.Model
+namespace TASVideos.Pages.Activity.Model
 {
 	public class SubmissionEntryModel
 	{

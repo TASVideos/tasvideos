@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
-using TASVideos.RazorPages.Pages.Submissions.Models;
+using TASVideos.Pages.Submissions.Models;
 
-namespace TASVideos.RazorPages.Extensions
+namespace TASVideos.Extensions
 {
 	/// <summary>
 	/// Web front-end specific extension methods for Entity Framework POCOs

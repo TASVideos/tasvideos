@@ -1,8 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.RazorPages.Pages.Forum.Posts.Models
+namespace TASVideos.Pages.Forum.Posts.Models
 {
 	public class ForumPostEditModel
 	{

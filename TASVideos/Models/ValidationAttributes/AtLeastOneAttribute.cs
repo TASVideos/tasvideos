@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace TASVideos.RazorPages.Models
+namespace TASVideos.Models
 {
 	public class AtLeastOneAttribute : ValidationAttribute
 	{

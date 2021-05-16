@@ -4,7 +4,7 @@ using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.RazorPages.Pages.Forum.Posts.Models
+namespace TASVideos.Pages.Forum.Posts.Models
 {
 	public class ForumPostEntry
 	{

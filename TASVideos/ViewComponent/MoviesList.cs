@@ -6,7 +6,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.MoviesList)]
 	public class MoviesList : ViewComponent

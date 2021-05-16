@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages.Tags
+namespace TASVideos.Pages.Tags
 {
 	[RequirePermission(PermissionTo.TagMaintenance)]
 	public class IndexModel : BasePageModel

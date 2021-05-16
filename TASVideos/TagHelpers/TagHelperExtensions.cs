@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace TASVideos.RazorPages.TagHelpers
+namespace TASVideos.TagHelpers
 {
 	public static class TagHelperExtensions
 	{

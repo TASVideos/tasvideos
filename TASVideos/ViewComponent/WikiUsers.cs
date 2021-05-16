@@ -8,7 +8,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.WikiUsers)]
 	public class WikiUsers : ViewComponent

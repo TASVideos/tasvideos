@@ -7,10 +7,10 @@ using Microsoft.Extensions.Hosting;
 using TASVideos.Core;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
+using TASVideos.Extensions;
 using TASVideos.Legacy.Extensions;
-using TASVideos.RazorPages.Extensions;
 
-namespace TASVideos.RazorPages
+namespace TASVideos
 {
 	public class Startup
 	{

@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.RazorPages.Pages.Games.Models;
+using TASVideos.Pages.Games.Models;
 
-namespace TASVideos.RazorPages.Pages.Games
+namespace TASVideos.Pages.Games
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel

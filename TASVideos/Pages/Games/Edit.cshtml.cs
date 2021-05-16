@@ -10,10 +10,10 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.RazorPages.Extensions;
-using TASVideos.RazorPages.Pages.Games.Models;
+using TASVideos.Extensions;
+using TASVideos.Pages.Games.Models;
 
-namespace TASVideos.RazorPages.Pages.Games
+namespace TASVideos.Pages.Games
 {
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class EditModel : BasePageModel

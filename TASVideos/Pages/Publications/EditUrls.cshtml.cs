@@ -10,7 +10,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages.Publications
+namespace TASVideos.Pages.Publications
 {
 	[RequirePermission(PermissionTo.EditPublicationFiles)]
 	public class EditUrlsModel : BasePageModel

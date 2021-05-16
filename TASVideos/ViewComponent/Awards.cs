@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Core.Services;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.Awards)]
 	public class Awards : ViewComponent

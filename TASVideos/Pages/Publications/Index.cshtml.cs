@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Publications.Models;
+using TASVideos.Pages.Publications.Models;
 
-namespace TASVideos.RazorPages.Pages.Publications
+namespace TASVideos.Pages.Publications
 {
 	// TODO: add paging
 	[AllowAnonymous]

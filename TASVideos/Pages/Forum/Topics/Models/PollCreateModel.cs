@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace TASVideos.RazorPages.Pages.Forum.Topics.Models
+namespace TASVideos.Pages.Forum.Topics.Models
 {
 	public class PollCreateModel
 	{

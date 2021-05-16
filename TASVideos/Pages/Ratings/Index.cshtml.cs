@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Ratings.Models;
+using TASVideos.Pages.Ratings.Models;
 
-namespace TASVideos.RazorPages.Pages.Ratings
+namespace TASVideos.Pages.Ratings
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel

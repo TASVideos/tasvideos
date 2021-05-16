@@ -8,10 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
-using TASVideos.RazorPages.ViewComponents;
+using TASVideos.ViewComponents;
 
-namespace TASVideos.RazorPages.Extensions
+namespace TASVideos.Extensions
 {
 	public static class RazorHelpers
 	{

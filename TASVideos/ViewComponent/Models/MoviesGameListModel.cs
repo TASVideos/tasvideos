@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	public class MoviesGameListModel
 	{

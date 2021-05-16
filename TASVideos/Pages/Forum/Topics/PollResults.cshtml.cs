@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Forum.Topics.Models;
+using TASVideos.Pages.Forum.Topics.Models;
 
-namespace TASVideos.RazorPages.Pages.Forum.Topics
+namespace TASVideos.Pages.Forum.Topics
 {
 	[RequirePermission(PermissionTo.SeePollResults)]
 	public class PollResultsModel : BasePageModel

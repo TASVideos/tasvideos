@@ -1,7 +1,7 @@
 ﻿using TASVideos.Core;
-using TASVideos.RazorPages.Pages.Forum.Posts.Models;
+using TASVideos.Pages.Forum.Posts.Models;
 
-namespace TASVideos.RazorPages.Pages.Forum.Topics.Models
+namespace TASVideos.Pages.Forum.Topics.Models
 {
 	public class TopicRequest : PagingModel
 	{

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages.Diagnostics
+namespace TASVideos.Pages.Diagnostics
 {
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class CacheControlModel : BasePageModel

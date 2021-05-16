@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages.Permissions.Models
+namespace TASVideos.Pages.Permissions.Models
 {
 	/// <summary>
 	/// Represents a Permission entry for the purpose of display.

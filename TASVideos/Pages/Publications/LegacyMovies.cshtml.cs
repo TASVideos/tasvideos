@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Extensions;
 
-namespace TASVideos.RazorPages.Pages.Publications
+namespace TASVideos.Pages.Publications
 {
 	// Handles legacy movies.cgi links
 	[AllowAnonymous]

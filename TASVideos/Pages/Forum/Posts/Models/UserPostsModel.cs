@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TASVideos.Core;
 
-namespace TASVideos.RazorPages.Pages.Forum.Posts.Models
+namespace TASVideos.Pages.Forum.Posts.Models
 {
 	public class UserPostsModel
 	{

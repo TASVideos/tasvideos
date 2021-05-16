@@ -2,9 +2,9 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using static TASVideos.RazorPages.TagHelpers.TagHelperExtensions;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
-namespace TASVideos.RazorPages.TagHelpers
+namespace TASVideos.TagHelpers
 {
 	[HtmlTargetElement("timezone-picker", TagStructure = TagStructure.WithoutEndTag, Attributes = "asp-for")]
 	public class TimeZonePickerTagHelper : TagHelper

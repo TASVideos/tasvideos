@@ -1,4 +1,4 @@
-﻿namespace TASVideos.RazorPages.Pages.Forum.Models
+﻿namespace TASVideos.Pages.Forum.Models
 {
 	public class PostPositionModel
 	{

@@ -4,9 +4,9 @@ using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Pages.Wiki.Models;
+using TASVideos.Pages.Wiki.Models;
 
-namespace TASVideos.RazorPages.Pages.Wiki
+namespace TASVideos.Pages.Wiki
 {
 	[RequirePermission(PermissionTo.SeeAdminPages)]
 	public class SiteMapModel : BasePageModel

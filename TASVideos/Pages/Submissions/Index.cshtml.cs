@@ -10,10 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.RazorPages.Extensions;
-using TASVideos.RazorPages.Pages.Submissions.Models;
+using TASVideos.Extensions;
+using TASVideos.Pages.Submissions.Models;
 
-namespace TASVideos.RazorPages.Pages.Submissions
+namespace TASVideos.Pages.Submissions
 {
 	[AllowAnonymous]
 	public class IndexModel : BasePageModel

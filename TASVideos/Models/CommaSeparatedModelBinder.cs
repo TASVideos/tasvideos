@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Primitives;
 
-namespace TASVideos.RazorPages.Models
+namespace TASVideos.Models
 {
 	// TODO: cleanup and break up
 	// https://github.com/aspnet/Mvc/issues/6215

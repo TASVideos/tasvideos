@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.RazorPages.ViewComponents
+namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.FeedLog)]
 	public class FeedLog : ViewComponent

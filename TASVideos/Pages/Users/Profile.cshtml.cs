@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 
-namespace TASVideos.RazorPages.Pages.Users
+namespace TASVideos.Pages.Users
 {
 	[AllowAnonymous]
 	public class ProfileModel : BasePageModel

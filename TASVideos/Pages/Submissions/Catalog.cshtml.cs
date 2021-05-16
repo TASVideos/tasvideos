@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using AutoMapper;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.RazorPages.Extensions;
-using TASVideos.RazorPages.Pages.Submissions.Models;
+using TASVideos.Extensions;
+using TASVideos.Pages.Submissions.Models;
 
-namespace TASVideos.RazorPages.Pages.Submissions
+namespace TASVideos.Pages.Submissions
 {
 	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class CatalogModel : BasePageModel

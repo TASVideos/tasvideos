@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace TASVideos.RazorPages.TagHelpers
+namespace TASVideos.TagHelpers
 {
 	/// <summary>
 	/// TextWriter that wraps a TagHelperContent

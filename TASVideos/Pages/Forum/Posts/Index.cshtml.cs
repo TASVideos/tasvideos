@@ -5,7 +5,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages.Forum.Posts
+namespace TASVideos.Pages.Forum.Posts
 {
 	// TODO: how to do this without a redirect
 	[AllowAnonymous]

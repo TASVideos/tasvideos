@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.RazorPages.Pages
+namespace TASVideos.Pages
 {
 	public class RequirePermissionAttribute : RequireBase, IAsyncPageFilter
 	{
