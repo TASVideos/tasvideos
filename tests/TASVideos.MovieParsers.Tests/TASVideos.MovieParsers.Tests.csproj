@@ -8,15 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="LtmSampleFiles\dos.ltm" />
-	  <None Remove="LtmSampleFiles\flash-extrachars-linuxfallback.ltm" />
-	  <None Remove="LtmSampleFiles\flash.ltm" />
-	  <None Remove="LtmSampleFiles\linux.ltm" />
-	  <None Remove="LtmSampleFiles\unknown-linuxfallback.ltm" />
-	  <None Remove="LtmSampleFiles\windows.ltm" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<AdditionalFiles Include="$(ProjectDir)../../.stylecop.json" />
 	</ItemGroup>
 
@@ -92,6 +83,14 @@
 		<EmbeddedResource Include="GmvSampleFiles\pal.gmv" />
 		<EmbeddedResource Include="GmvSampleFiles\savestate.gmv" />
 		<EmbeddedResource Include="GmvSampleFiles\wrongheader.gmv" />
+		<EmbeddedResource Include="JrsrSampleFiles\frames.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\containssavestate.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\correctmagic.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\emptyfile.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\nobeginheader.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\savestate.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\wronglinemagic.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\wrongmagic.jrsr" />
 		<EmbeddedResource Include="LsmvSampleFiles\0frameswithsub.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\2frameswithsub.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\emptyrerecordentry.lsmv" />
