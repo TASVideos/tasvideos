@@ -52,6 +52,25 @@ namespace TASVideos.MovieParsers.Extensions
 		}
 
 		/// <summary>
+		/// Receives a space separate key/value pair and returns the value as a string
+		/// </summary>
+		public static string GetValue(this string str)
+		{
+			if (string.IsNullOrWhiteSpace(str))
+			{
+				return "";
+			}
+
+			var split = str.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+			if (split.Length < 2)
+			{
+				return "";
+			}
+
+			return split[1].Trim();
+		}
+
+		/// <summary>
 		/// Parses the given string as an integer.
 		/// If value can not be parsed, null is returned.
 		/// </summary>
