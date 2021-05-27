@@ -78,6 +78,15 @@ namespace TASVideos.Pages
 
 				return false;
 			}
+			catch (DbUpdateException)
+			{
+				if (!string.IsNullOrWhiteSpace(errorMessage))
+				{
+					ErrorStatusMessage(errorMessage + "\nThe resource cannot be deleted or updated");
+				}
+
+				return false;
+			}
 		}
 	}
 }
