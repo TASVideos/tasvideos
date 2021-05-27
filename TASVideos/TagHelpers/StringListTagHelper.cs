@@ -60,7 +60,7 @@ $@"<script>
 					return parseInt(elem.getAttribute('data-index'));
 				}}));
 
-			var lastElem = document.querySelector('#{parentContainerName} [data-index=""' + lastIndex + '""]');
+			var lastElem = document.querySelector({JsValue($"#{parentContainerName} ")} + '[data-index=""' + lastIndex + '""]');
 
 			var newIndex = lastIndex + 1;
 			var newElem = lastElem.cloneNode(true);
