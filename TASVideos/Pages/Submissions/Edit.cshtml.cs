@@ -139,6 +139,11 @@ namespace TASVideos.Pages.Submissions
 				Submission.MovieFile = null;
 			}
 
+			// TODO: this has to be done anytime a string-list taghelper is used, can we make this automatic with model binders?
+			Submission.Authors = Submission.Authors
+				.Where(a => !string.IsNullOrWhiteSpace(a))
+				.ToList();
+
 			var userName = User.Name();
 
 			// TODO: this is bad, an author can null out these values,

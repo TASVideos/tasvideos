@@ -26,6 +26,7 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml("<div class='string-list-container'>");
 
 			List<string> stringList = (AspFor.Model as IEnumerable<string>)?.ToList() ?? new List<string>();
+			stringList = stringList.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
 
 			// We need at least an add button, todo: refactor so this doesn't force the server side to strip out empty strings
 			if (stringList.Count == 0)
