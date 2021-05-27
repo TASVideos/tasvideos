@@ -48,10 +48,9 @@ namespace TASVideos.TagHelpers
 </div>");
 			}
 
-			var uniqueFuncName = "selectList" + context.UniqueId;
 			output.Content.AppendHtml(
 $@"<script>
-	function {JsIdentifier(uniqueFuncName)}() {{
+	(function() {{
 		var addBtn = document.getElementById({JsValue($"{modelId}-add-btn")});
 		addBtn.onclick = function() {{
 			var lastIndex = Math.max.apply(null, document.querySelectorAll({JsValue($"#{parentContainerName} .author-row")})
@@ -77,8 +76,7 @@ $@"<script>
 
 			document.querySelector({JsValue($@"#{parentContainerName} div[class=""string-list-container""]")}).appendChild(newElem);
 		}}
-	}}
-	{JsIdentifier(uniqueFuncName)}();
+	}})();
 </script>
 ");
 			output.Content.AppendHtml("</div>");
