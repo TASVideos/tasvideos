@@ -75,8 +75,12 @@ namespace TASVideos.Pages.Roles
 							.ToList()
 					})
 					.SingleOrDefaultAsync();
-
+				ViewData["IsInUse"] = !await IsInUse(Id.Value);
 				SetAvailableAssignablePermissions();
+			}
+			else
+			{
+				ViewData["IsInUse"] = false;
 			}
 		}
 
@@ -116,6 +120,12 @@ namespace TASVideos.Pages.Roles
 			if (!User.Has(PermissionTo.DeleteRoles))
 			{
 				return AccessDenied();
+			}
+
+			if (await IsInUse(Id.Value))
+			{
+				ErrorStatusMessage($"Role {Id} cannot be deleted because it is in use by at least 1 user");
+				return RedirectToPage("List");
 			}
 
 			_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
@@ -187,6 +197,11 @@ namespace TASVideos.Pages.Roles
 				Link = rl,
 				Role = role
 			}));
+		}
+
+		private async Task<bool> IsInUse(int roleId)
+		{
+			return await _db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
 		}
 	}
 }
