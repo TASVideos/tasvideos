@@ -97,6 +97,9 @@
 			<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>
 			<td>
 				@item.Status.EnumDisplayName()
+				<small condition="!string.IsNullOrWhiteSpace(item.IntendedTier)">
+					(@item.IntendedTier)
+				</small>
 				<small condition="item.Judge != null && item.Publisher == null">
 					<br /><profile-link username="@item.Judge">@item.Judge</profile-link>
 				</small>
