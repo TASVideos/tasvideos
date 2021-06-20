@@ -10,6 +10,7 @@ namespace TASVideos.WikiEngine
 		public const string Awards = "awards";
 		public const string BrokenLinks = "brokenlinks";
 		public const string ActiveTab = "activetab";
+		public const string AviEncodes = "aviencodes";
 		public const string CurrentEditLink = "wikigetcurrenteditlink";
 		public const string DisplayGameName = "displaygamename";
 		public const string DisplayMiniMovie = "displayminimovie";
