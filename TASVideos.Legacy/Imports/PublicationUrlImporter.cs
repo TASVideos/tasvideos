@@ -6,25 +6,23 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class PublicationUrlImporter
+	internal static class PublicationUrlImporter
 	{
-		public static void Import(
-			string connectionStr,
-			NesVideosSiteContext legacySiteContext)
-		{ 
-			const string MirrorType = "A";
-			const string Streaming = "J";
+		public static void Import(NesVideosSiteContext legacySiteContext)
+		{
+			const string mirrorType = "A";
+			const string streaming = "J";
 
 			var urls = legacySiteContext.MovieFiles
-				.Where(f => f.Type == MirrorType || f.Type == Streaming)
+				.Where(f => f.Type == mirrorType || f.Type == streaming)
 				.Where(f => f.Movie != null)
 				.Select(f => new PublicationUrl
 				{
 					PublicationId = f.Movie!.Id,
 					Url = f.FileName,
-					Type = f.Type == MirrorType ? PublicationUrlType.Mirror : PublicationUrlType.Streaming,
-					CreateTimeStamp = DateTime.Now,
-					LastUpdateTimeStamp = DateTime.Now
+					Type = f.Type == mirrorType ? PublicationUrlType.Mirror : PublicationUrlType.Streaming,
+					CreateTimestamp = DateTime.Now,
+					LastUpdateTimestamp = DateTime.Now
 				})
 				.ToList();
 
@@ -33,11 +31,11 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationUrl.PublicationId),
 				nameof(PublicationUrl.Url),
 				nameof(PublicationUrl.Type),
-				nameof(PublicationUrl.CreateTimeStamp),
-				nameof(PublicationUrl.LastUpdateTimeStamp)
+				nameof(PublicationUrl.CreateTimestamp),
+				nameof(PublicationUrl.LastUpdateTimestamp)
 			};
 
-			urls.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationUrls));
+			urls.BulkInsert(columns, nameof(ApplicationDbContext.PublicationUrls));
 		}
 	}
 }

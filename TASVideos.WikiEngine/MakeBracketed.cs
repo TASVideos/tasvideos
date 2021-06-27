@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,33 +8,50 @@ namespace TASVideos.WikiEngine
 {
 	public static partial class Builtins
 	{
-		private static readonly Regex Footnote = new Regex(@"^(\d+)$");
-		private static readonly Regex FootnoteLink = new Regex(@"^#(\d+)$");
-		private static readonly Regex RealModule = new Regex("^module:(.*)$");
+		private static readonly Regex Footnote = new (@"^(\d+)$");
+		private static readonly Regex FootnoteLink = new (@"^#(\d+)$");
+		private static readonly Regex RealModule = new ("^module:(.*)$");
 
 		/// <summary>
-		/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:]
+		/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:].
 		/// </summary>
 		public static IEnumerable<INode> MakeBracketed(int charStart, int charEnd, string text)
 		{
 			if (text.StartsWith("if:"))
+			{
 				throw new InvalidOperationException("Internal parser error!  `if:` should not come to MakeBracketed");
-			if (text == "|") // literal | escape
-				return new[] { new Text(charStart, "|") { CharEnd = charEnd } };
-			if (text == ":") // literal : escape (for inside dd/dt)
-				return new[] { new Text(charStart, ":") { CharEnd = charEnd } };
-			if (text == "expr:UserGetWikiName")
-				return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
-			if (text == "expr:WikiGetCurrentEditLink")
-				return MakeModuleInternal(charStart, charEnd, "WikiGetCurrentEditLink");
+			}
+
+			switch (text)
+			{
+				// literal | escape
+				case "|":
+					return new[] { new Text(charStart, "|") { CharEnd = charEnd } };
+
+				// literal : escape (for inside dd/dt)
+				case ":":
+					return new[] { new Text(charStart, ":") { CharEnd = charEnd } };
+				case "expr:UserGetWikiName":
+					return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
+				case "expr:WikiGetCurrentEditLink":
+					return MakeModuleInternal(charStart, charEnd, "WikiGetCurrentEditLink");
+			}
 
 			Match match;
 			if ((match = Footnote.Match(text)).Success)
+			{
 				return MakeFootnote(charStart, charEnd, match.Groups[1].Value);
+			}
+
 			if ((match = FootnoteLink.Match(text)).Success)
+			{
 				return MakeFootnoteLink(charStart, charEnd, match.Groups[1].Value);
+			}
+
 			if ((match = RealModule.Match(text)).Success)
+			{
 				return MakeModuleInternal(charStart, charEnd, match.Groups[1].Value);
+			}
 
 			return MakeLinkOrImage(charStart, charEnd, text);
 		}
@@ -52,7 +69,7 @@ namespace TASVideos.WikiEngine
 			return new INode[]
 			{
 				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", new[] { Attr("id", n) }, new INode[0]) { CharEnd = charStart },
+				new Element(charStart, "a", new[] { Attr("id", n) }, Array.Empty<INode>()) { CharEnd = charStart },
 				new Element(charStart, "a", new[] { Attr("href", "#r" + n) }, new[]
 				{
 					new Text(charStart, n) { CharEnd = charEnd }
@@ -65,11 +82,11 @@ namespace TASVideos.WikiEngine
 		{
 			return new[]
 			{
-				new Element(charStart, "a", new[] { Attr("id", "r" + n) }, new INode[0]) { CharEnd = charStart },
+				new Element(charStart, "a", new[] { Attr("id", "r" + n) }, Array.Empty<INode>()) { CharEnd = charStart },
 				new Element(charStart, "sup", new INode[]
 				{
 					new Text(charStart, "[") { CharEnd = charStart },
-					new Element(charStart, "a", new[] { Attr("href", "#" + n) }, new []
+					new Element(charStart, "a", new[] { Attr("href", "#" + n) }, new[]
 					{
 						new Text(charStart, n) { CharEnd = charEnd }
 					}) { CharEnd = charEnd },
@@ -83,7 +100,7 @@ namespace TASVideos.WikiEngine
 
 		// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 		// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
-		private static readonly Regex ImplicitWikiLink = new Regex(@"^[A-Za-z0-9._/#\- ]+(\|.+)?$");
+		private static readonly Regex ImplicitWikiLink = new (@"^[A-Za-z0-9._/#\- ]+(\|.+)?$");
 		private static bool IsLink(string text)
 		{
 			return LinkPrefixes.Any(text.StartsWith);
@@ -118,7 +135,7 @@ namespace TASVideos.WikiEngine
 
 			if (text.StartsWith("user:"))
 			{
-				return NormalizeInternalLink("/Users/Profile/" + text.Substring(5));
+				return NormalizeInternalLink("/Users/Profile/" + text[5..]);
 			}
 
 			return text;
@@ -148,15 +165,22 @@ namespace TASVideos.WikiEngine
 				{
 					s = s.Replace(" ", "");
 					if (s.Length > 0)
-						s = char.ToUpperInvariant(s[0]) + s.Substring(1);
+					{
+						s = char.ToUpperInvariant(s[0]) + s[1..];
+					}
 				}
+
 				// TODO: What should be done if a username actually ends in .html?
 				if (i == ss.Length - 1 && s.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+				{
 					s = s.Substring(0, s.Length - 5);
+				}
 
 				// Ditto TODO
 				if (i == ss.Length - 1 && s.EndsWith(".cgi", StringComparison.OrdinalIgnoreCase))
+				{
 					s = s.Substring(0, s.Length - 4);
+				}
 
 				ss[i] = s;
 			}
@@ -171,8 +195,9 @@ namespace TASVideos.WikiEngine
 			// If users don't like this, they should use links with explicit display text
 			if (text.StartsWith("user:"))
 			{
-				text = text.Substring(5);
+				text = text[5..];
 			}
+
 			text = text.Trim('/').Trim('=').Trim('#');
 			return text;
 		}
@@ -210,7 +235,8 @@ namespace TASVideos.WikiEngine
 
 				// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
 				// DB lookup will be required for links like [4022S], so use __wikiLink
-				return MakeModuleInternal(charStart, charEnd, "__wikiLink|" + NormalizeUrl("=" + pp[0]) + "|" + pp[0]);
+				// TODO:  __wikilink should probably be its own AST type??
+				return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|displaytext=" + pp[0]);
 			}
 
 			// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
@@ -258,11 +284,11 @@ namespace TASVideos.WikiEngine
 				}
 				else if (s.StartsWith("title="))
 				{
-					attrs.Add(Attr("title", s.Substring(6)));
+					attrs.Add(Attr("title", s[6..]));
 				}
 				else if (s.StartsWith("alt="))
 				{
-					attrs.Add(Attr("alt", s.Substring(4)));
+					attrs.Add(Attr("alt", s[4..]));
 				}
 			}
 
@@ -271,7 +297,7 @@ namespace TASVideos.WikiEngine
 				attrs.Add(Attr("class", "embed"));
 			}
 
-			return new Element(charStart, "img", attrs, new INode[0]) { CharEnd = charEnd };
+			return new Element(charStart, "img", attrs, Array.Empty<INode>()) { CharEnd = charEnd };
 		}
 	}
 }

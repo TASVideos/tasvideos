@@ -3,8 +3,7 @@
 namespace TASVideos.MovieParsers.Result
 {
 	/// <summary>
-	/// An implementation of <seealso cref="IParseResult"/> that can be used
-	/// when an error occurs
+	/// An implementation of <seealso cref="IParseResult"/> that can be used when an error occurs.
 	/// </summary>
 	internal class ErrorResult : IParseResult
 	{
@@ -24,5 +23,6 @@ namespace TASVideos.MovieParsers.Result
 		public int RerecordCount => -1;
 		public MovieStartType StartType => MovieStartType.PowerOn;
 		public double? FrameRateOverride => null;
+		public long? CycleCount => null;
 	}
 }

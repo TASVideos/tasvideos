@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+// ReSharper disable InconsistentNaming
 namespace TASVideos.Data.Entity.Game
 {
 	public enum RamAddressType
@@ -59,7 +60,7 @@ namespace TASVideos.Data.Entity.Game
 		public long Address { get; set; }
 		public RamAddressType Type { get; set; }
 		public RamAddressSigned Signed { get; set; }
-		public RamAddressEndian Endian { get; set; } 
+		public RamAddressEndian Endian { get; set; }
 
 		[StringLength(255)]
 		public string Description { get; set; } = "";

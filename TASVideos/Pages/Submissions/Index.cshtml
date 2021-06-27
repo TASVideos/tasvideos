@@ -10,7 +10,7 @@
 		<a asp-page="Submit" class="btn btn-primary">Submit a Movie</a>
 	</div>
 	<div>
-		<a asp-page="Index" asp-route-user="@User.Identity.Name" class="btn btn-secondary">
+		<a asp-page="Index" asp-route-user="@User.Name()" class="btn btn-secondary">
 			My Submissions
 		</a>
 	</div>
@@ -97,6 +97,15 @@
 			<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>
 			<td>
 				@item.Status.EnumDisplayName()
+				<small condition="!string.IsNullOrWhiteSpace(item.IntendedTier)">
+					(@item.IntendedTier)
+				</small>
+				<small condition="item.Judge != null && item.Publisher == null">
+					<br /><profile-link username="@item.Judge">@item.Judge</profile-link>
+				</small>
+				<small condition="item.Publisher != null">
+					<br /><profile-link username="@item.Publisher">@item.Publisher</profile-link>
+				</small>
 				<small condition="item.HoursRemainingForJudging() > 0">
 					<br />(Available for judging in @item.HoursRemainingForJudging() hours)
 				</small>

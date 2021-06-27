@@ -5,7 +5,8 @@ namespace TASVideos.Legacy.Data.Site
 {
 	public class NesVideosSiteContext : DbContext
 	{
-		public NesVideosSiteContext(DbContextOptions<NesVideosSiteContext> options) : base(options)
+		public NesVideosSiteContext(DbContextOptions<NesVideosSiteContext> options)
+			: base(options)
 		{
 		}
 
@@ -13,11 +14,13 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<Awards> Awards { get; set; } = null!;
 		public DbSet<SiteText> SiteText { get; set; } = null!;
 		public DbSet<User> Users { get; set; } = null!;
+
 		// ReSharper disable once UnusedMember.Global
 		public DbSet<UserRole> UserRoles { get; set; } = null!;
 		public DbSet<Role> Roles { get; set; } = null!;
 		public DbSet<Submission> Submissions { get; set; } = null!;
 		public DbSet<Movie> Movies { get; set; } = null!;
+
 		// ReSharper disable once UnusedMember.Global
 		public DbSet<MovieFile> MovieFiles { get; set; } = null!;
 		public DbSet<MovieFileStorage> MovieFileStorage { get; set; } = null!;
@@ -25,6 +28,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<GameNameGroup> GameNameGroups { get; set; } = null!;
 		public DbSet<GameNameGroupName> GameNameGroupNames { get; set; } = null!;
 		public DbSet<Rom> Roms { get; set; } = null!;
+
 		// ReSharper disable once UnusedMember.Global
 		public DbSet<Player> Players { get; set; } = null!;
 		public DbSet<UserPlayer> UserPlayers { get; set; } = null!;

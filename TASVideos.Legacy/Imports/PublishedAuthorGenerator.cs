@@ -1,14 +1,13 @@
 ﻿using System.Linq;
-using Microsoft.Data.SqlClient;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class PublishedAuthorGenerator
+	internal static class PublishedAuthorGenerator
 	{
-		public static void Generate(string connectionStr, ApplicationDbContext context)
+		public static void Generate(ApplicationDbContext context)
 		{
 			var publishedAuthorRole = context.Roles.Single(r => r.Name == RoleSeedNames.PublishedAuthor);
 
@@ -27,7 +26,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			userRoles.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserRoles), SqlBulkCopyOptions.Default);
+			userRoles.BulkInsert(columns, nameof(ApplicationDbContext.UserRoles));
 		}
 	}
 }

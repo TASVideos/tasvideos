@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -17,7 +18,7 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		public override string FileExtension => "omr";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -26,9 +27,9 @@ namespace TASVideos.MovieParsers.Parsers
 				SystemCode = SystemCodes.Msx
 			};
 
-			using var gz = new GZipStream(file, CompressionMode.Decompress);
+			await using var gz = new GZipStream(file, CompressionMode.Decompress);
 			using var unzip = new StreamReader(gz);
-			var replay = XElement.Parse(unzip.ReadToEnd())
+			var replay = XElement.Parse(await unzip.ReadToEndAsync())
 				.Descendants().First(x => x.Name == "replay");
 
 			result.RerecordCount = int.Parse(replay.Descendants().First(x => x.Name == "reRecordCount").Value);

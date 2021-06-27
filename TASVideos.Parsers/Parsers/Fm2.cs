@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
@@ -10,7 +11,7 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		private const string FileExtension = "fm2";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			using var reader = new StreamReader(file);
 			var result = new ParseResult
@@ -20,7 +21,7 @@ namespace TASVideos.MovieParsers.Parsers
 				SystemCode = SystemCodes.Nes
 			};
 
-			var lines = reader.ReadToEnd().LineSplit();
+			var lines = (await reader.ReadToEndAsync()).LineSplit();
 			var header = lines
 				.WithoutPipes()
 				.ToArray();

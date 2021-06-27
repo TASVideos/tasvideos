@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -33,7 +31,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[BindProperty]
-		public MergeTopicModel Topic { get; set; } = new MergeTopicModel();
+		public MergeTopicModel Topic { get; set; } = new ();
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 
@@ -105,22 +103,16 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_db.ForumTopics.Remove(originalTopic);
 
-			try
+			var result = await ConcurrentSave(_db, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
+			if (result)
 			{
-				await _db.SaveChangesAsync();
+				_publisher.SendForum(
+					destinationTopic.Forum!.Restricted,
+					$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Name()}",
+					"",
+					$"Forum/Topics/{destinationTopic.Id}",
+					User.Name());
 			}
-			catch (DbUpdateConcurrencyException)
-			{
-				ModelState.AddModelError("", "An error occurred. The topic may have changed since loading this page. Go back and try again.");
-				return Page();
-			}
-
-			_publisher.SendForum(
-				destinationTopic.Forum!.Restricted,
-				$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Identity.Name}",
-				"",
-				$"Forum/Topics/{destinationTopic.Id}",
-				User.Identity.Name!);
 
 			return RedirectToPage("Index", new { id = Topic.DestinationTopicId });
 		}

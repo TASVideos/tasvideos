@@ -7,6 +7,7 @@ using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers.Result;
 
+// ReSharper disable file CompareOfFloatsByEqualityOperator
 namespace TASVideos.Pages.Submissions
 {
 	public class SubmissionBasePageModel : BasePageModel
@@ -43,7 +44,6 @@ namespace TASVideos.Pages.Submissions
 			if (parseResult.FrameRateOverride.HasValue)
 			{
 				var frameRate = await Db.GameSystemFrameRates
-					// ReSharper disable once CompareOfFloatsByEqualityOperator
 					.FirstOrDefaultAsync(sf => sf.FrameRate == parseResult.FrameRateOverride.Value);
 
 				if (frameRate == null)

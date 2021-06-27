@@ -1,16 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.UserFiles.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.UserFiles
 {
@@ -18,17 +15,20 @@ namespace TASVideos.Pages.UserFiles
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public IndexModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			ExternalMediaPublisher publisher)
 		{
 			_db = db;
+			_mapper = mapper;
 			_publisher = publisher;
 		}
 
-		public UserFileIndexModel Data { get; set; } = new UserFileIndexModel();
+		public UserFileIndexModel Data { get; set; } = new ();
 
 		public async Task OnGet()
 		{
@@ -39,11 +39,11 @@ namespace TASVideos.Pages.UserFiles
 					.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp).Select(
 						uf => new UserFileIndexModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 					.ToListAsync(),
-				LatestMovies = await _db.UserFiles
-					.ThatArePublic()
-					.ByRecentlyUploaded()
-					.ProjectTo<UserMovieListModel>()
-					.Take(10)
+				LatestMovies = await _mapper.ProjectTo<UserMovieListModel>(
+					_db.UserFiles
+						.ThatArePublic()
+						.ByRecentlyUploaded())
+						.Take(10)
 					.ToListAsync(),
 				GamesWithMovies = await _db.Games
 					.Where(g => g.UserFiles.Any())
@@ -63,21 +63,14 @@ namespace TASVideos.Pages.UserFiles
 		public async Task<IActionResult> OnPostDelete(long fileId, string returnUrl)
 		{
 			var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
-			if (userFile != null)
+			if (userFile is not null)
 			{
 				if (User.GetUserId() == userFile.AuthorId
 					|| User.Has(PermissionTo.EditUserFiles))
 				{
 					_db.UserFiles.Remove(userFile);
-				
-					try
-					{
-						await _db.SaveChangesAsync();
-					}
-					catch (DbUpdateConcurrencyException)
-					{
-						// Do nothing
-					}
+
+					await ConcurrentSave(_db, $"{userFile.FileName} deleted", $"Unable to delete {userFile.FileName}");
 				}
 			}
 
@@ -90,22 +83,22 @@ namespace TASVideos.Pages.UserFiles
 				&& !string.IsNullOrWhiteSpace(comment))
 			{
 				var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
-				if (userFile != null)
+				if (userFile is not null)
 				{
 					_db.UserFileComments.Add(new UserFileComment
 					{
 						UserFileId = fileId,
 						Text = comment,
 						UserId = User.GetUserId(),
-						Ip = IpAddress.ToString()
+						Ip = IpAddress
 					});
 
 					await _db.SaveChangesAsync();
 					_publisher.SendUserFile(
-						$"New comment by {User.Identity.Name} on ({userFile.Title} (WIP))", 
+						$"New comment by {User.Name()} on ({userFile.Title} (WIP))",
 						$"UserFiles/Info/{fileId}",
 						comment,
-						User.Identity.Name!);
+						User.Name());
 				}
 			}
 
@@ -121,22 +114,18 @@ namespace TASVideos.Pages.UserFiles
 					.Include(c => c.UserFile)
 					.SingleOrDefaultAsync(u => u.Id == commentId);
 
-				if (fileComment != null)
+				if (fileComment is not null)
 				{
 					fileComment.Text = comment;
 
-					try
+					var result = await ConcurrentSave(_db, "Comment edited", "Unable to edit comment");
+					if (result)
 					{
-						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
-							$"Comment edited by {User.Identity.Name} on ({fileComment.UserFile!.Title} (WIP))",
+							$"Comment edited by {User.Name()} on ({fileComment.UserFile!.Title} (WIP))",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							comment,
-							User.Identity.Name!);
-					}
-					catch (DbUpdateConcurrencyException)
-					{
-						// Do nothing
+							User.Name());
 					}
 				}
 			}
@@ -153,22 +142,17 @@ namespace TASVideos.Pages.UserFiles
 					.Include(c => c.User)
 					.SingleOrDefaultAsync(u => u.Id == commentId);
 
-				if (fileComment != null)
+				if (fileComment is not null)
 				{
 					_db.UserFileComments.Remove(fileComment);
-
-					try
+					var result = await ConcurrentSave(_db, "Comment deleted", "Unable to delete comment");
+					if (result)
 					{
-						await _db.SaveChangesAsync();
 						_publisher.SendUserFile(
-							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Identity.Name}", 
+							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Name()}",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							"",
-							User.Identity.Name!);
-					}
-					catch (DbUpdateConcurrencyException)
-					{
-						// Do nothing
+							User.Name());
 					}
 				}
 			}

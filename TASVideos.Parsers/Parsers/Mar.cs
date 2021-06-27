@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -8,7 +9,7 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		public override string FileExtension => "mar";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -35,7 +36,7 @@ namespace TASVideos.MovieParsers.Parsers
 			result.Frames = br.ReadInt32();
 			result.RerecordCount = br.ReadInt32();
 
-			return result;
+			return await Task.FromResult(result);
 		}
 	}
 }

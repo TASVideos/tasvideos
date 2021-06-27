@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-    public static class ForumImporter
-    {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+	internal static class ForumImporter
+	{
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var forums = legacyForumContext
 				.Forums
@@ -24,8 +20,8 @@ namespace TASVideos.Legacy.Imports
 					Description = ImportHelper.ConvertLatin1String(f.Description),
 					Ordinal = f.Order,
 					ShortName = f.ShortName,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					CreateUserName = "LegacyImport",
 					LastUpdateUserName = "LegacyImport",
 					Restricted = f.AuthView == 2
@@ -40,14 +36,14 @@ namespace TASVideos.Legacy.Imports
 				nameof(Forum.ShortName),
 				nameof(Forum.Ordinal),
 				nameof(Forum.Description),
-				nameof(Forum.CreateTimeStamp),
-				nameof(Forum.LastUpdateTimeStamp),
+				nameof(Forum.CreateTimestamp),
+				nameof(Forum.LastUpdateTimestamp),
 				nameof(Forum.CreateUserName),
 				nameof(Forum.LastUpdateUserName),
 				nameof(Forum.Restricted)
 			};
 
-			forums.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.Forums));
+			forums.BulkInsert(columns, nameof(ApplicationDbContext.Forums));
 		}
 	}
 }

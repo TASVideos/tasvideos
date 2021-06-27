@@ -2,26 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
+using TASVideos.Extensions;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class UserImporter
+	internal static class UserImporter
 	{
 		private const int ModeratorGroupId = 272; // This isn't going to change, so just hard code it
 		private const int EmulatorCoder = 40; // The rank id in the ranks table
 
 		private static readonly string[] SiteDevelopers = { "natt", "Darkpsy", "Scepheo", "Invariel" };
 		private static readonly int[] UserRatingBanList = { 7194, 4805, 4485, 5243, 635, 3301 }; // These users where explicitly banned from rating
+
+		// Dup accounts we do not want to migrate over
+		private static readonly int[] BlackList = { 4079, 4854, 6177 };
+
 		public static void Import(
-			string connectionStr,
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext,
 			NesVideosForumContext legacyForumContext)
@@ -29,10 +31,10 @@ namespace TASVideos.Legacy.Imports
 			// TODO:
 			// gender?
 			// TODO: what to do about these??
-			//var wikiNoForum = legacyUsers
-			//	.Select(u => u.Name)
-			//	.Except(legacyForumUsers.Select(u => u.UserName))
-			//	.ToList();
+			// var wikiNoForum = legacyUsers
+			// .Select(u => u.Name)
+			// .Except(legacyForumUsers.Select(u => u.UserName))
+			// .ToList();
 			var legacyUsers = legacySiteContext.Users
 				.Include(u => u.UserRoles)
 				.ThenInclude(ur => ur.Role)
@@ -44,9 +46,13 @@ namespace TASVideos.Legacy.Imports
 
 			var legacyForumUsers = legacyForumContext.Users
 				.Where(u => u.UserName != "Anonymous")
+				.Where(u => !BlackList.Contains(u.UserId))
+				.Where(u => u.Email != "")
 				.ToList();
 
-			var banList = legacyForumContext.BanList.ToList();
+			var banList = legacyForumContext.BanList
+				.Where(b => b.UserId > 0)
+				.ToList();
 
 			// These were dug up from user_exceptions, which only has a few entries and complicated to parse, simpler to have a hardcoded list
 			var userExceptions = new[] { 150, 590, 905, 1210, 2659, 2758, 3254 };
@@ -95,22 +101,23 @@ namespace TASVideos.Legacy.Imports
 					Id = u.Id,
 					UserName = ImportHelper.ConvertNotNullLatin1String(u.UserName).Trim(),
 					NormalizedUserName = ImportHelper.ConvertNotNullLatin1String(u.UserName).ToUpper(),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
+					LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(u.RegDate),
 					LegacyPassword = u.Password,
 					EmailConfirmed = u.IsActive || u.EmailTime != null || u.PostCount > 0,
 					Email = u.Email,
-					NormalizedEmail = u.Email.ToUpper(),
+					NormalizedEmail = u.Email?.ToUpper(),
 					CreateUserName = "Automatic Migration",
 					PasswordHash = "",
 					Avatar = u.Avatar,
 					From = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(u.From)),
 					Signature = WebUtility
 						.HtmlDecode(
-							ImportHelper.ConvertLatin1String(u.Signature.Replace(":" + u.BbcodeUid, "")))
+							ImportHelper.ConvertLatin1String(u.Signature?.Replace(":" + u.BbcodeUid, "")))
 						.Cap(1000),
 					PublicRatings = u.PublicRatings,
 					LastLoggedInTimeStamp = ImportHelper.UnixTimeStampToDateTime(u.LastVisitDate),
+
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
 					TimeZoneId = timeZones.FirstOrDefault(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset)?.StandardName ?? utc,
 					SecurityStamp = Guid.NewGuid().ToString("D"),
@@ -122,7 +129,7 @@ namespace TASVideos.Legacy.Imports
 			// Hacks
 			var grue = userEntities.First(u => u.UserName == "TASVideos Grue");
 			grue.UserName = "TASVideosGrue";
-			
+
 			var roles = context.Roles.ToList();
 
 			var userRoles = new List<UserRole>();
@@ -134,7 +141,7 @@ namespace TASVideos.Legacy.Imports
 
 			foreach (var user in joinedUsers)
 			{
-				if (user.SiteUser != null)
+				if (user.SiteUser is not null)
 				{
 					// not having user means they are effectively banned
 					// limited = Limited User
@@ -212,7 +219,7 @@ namespace TASVideos.Legacy.Imports
 						.Where(r => r!.Name != "user" && r.Name != "limited"))
 					{
 						var role = GetRoleFromLegacy(userRole!.Name, roles);
-						if (role != null)
+						if (role is not null)
 						{
 							userRoles.Add(new UserRole
 							{
@@ -229,7 +236,7 @@ namespace TASVideos.Legacy.Imports
 				Id = -1,
 				UserName = "Unknown User",
 				NormalizedUserName = "UNKNOWN USER",
-				Email = "",
+				Email = "unknown@example.com",
 				EmailConfirmed = true,
 				LegacyPassword = ""
 			});
@@ -276,8 +283,8 @@ namespace TASVideos.Legacy.Imports
 				NormalizedUserName = p.ToUpper(),
 				Email = $"imported{p}@tasvideos.org",
 				NormalizedEmail = $"imported{p}@tasvideos.org".ToUpper(),
-				CreateTimeStamp = DateTime.UtcNow,
-				LastUpdateTimeStamp = DateTime.UtcNow,
+				CreateTimestamp = DateTime.UtcNow,
+				LastUpdateTimestamp = DateTime.UtcNow,
 				SecurityStamp = Guid.NewGuid().ToString("D")
 			});
 
@@ -286,7 +293,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.Id),
 				nameof(User.UserName),
 				nameof(User.NormalizedUserName),
-				nameof(User.CreateTimeStamp),
+				nameof(User.CreateTimestamp),
 				nameof(User.LegacyPassword),
 				nameof(User.EmailConfirmed),
 				nameof(User.Email),
@@ -294,7 +301,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.CreateUserName),
 				nameof(User.PasswordHash),
 				nameof(User.AccessFailedCount),
-				nameof(User.LastUpdateTimeStamp),
+				nameof(User.LastUpdateTimestamp),
 				nameof(User.LockoutEnabled),
 				nameof(User.PhoneNumberConfirmed),
 				nameof(User.TwoFactorEnabled),
@@ -315,40 +322,29 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserRole.RoleId)
 			};
 
-			userEntities.BulkInsert(connectionStr, userColumns, "[User]");
-			userRoles.BulkInsert(connectionStr, userRoleColumns, "[UserRoles]");
+			userEntities.BulkInsert(userColumns, nameof(ApplicationDbContext.Users));
+			userRoles.BulkInsert(userRoleColumns, nameof(ApplicationDbContext.UserRoles));
 
 			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
-			portedPlayers.BulkInsert(connectionStr, playerColumns, "[User]");
+			portedPlayers.BulkInsert(playerColumns, nameof(ApplicationDbContext.Users));
 		}
 
 		private static Role? GetRoleFromLegacy(string role, IEnumerable<Role> roles)
 		{
-			switch (role.ToLower())
+			return role.ToLower() switch
 			{
-				default:
-					return null;
-				case "editor":
-					return roles.Single(r => r.Name == RoleSeedNames.Editor);
-				case "vestededitor":
-					return roles.Single(r => r.Name == RoleSeedNames.VestedEditor);
-				case "publisher":
-					return roles.Single(r => r.Name == RoleSeedNames.Publisher);
-				case "seniorpublisher":
-					return roles.Single(r => r.Name == RoleSeedNames.SeniorPublisher);
-				case "judge":
-					return roles.Single(r => r.Name == RoleSeedNames.Judge);
-				case "seniorjudge":
-					return roles.Single(r => r.Name == RoleSeedNames.SeniorJudge);
-				case "adminassistant":
-					return roles.Single(r => r.Name == RoleSeedNames.AdminAssistant);
-				case "ambassador":
-					return roles.Single(r => r.Name == RoleSeedNames.Ambassador);
-				case "senior ambassador":
-					return roles.Single(r => r.Name == RoleSeedNames.SeniorAmbassador);
-				case "admin":
-					return roles.Single(r => r.Name == RoleSeedNames.Admin);
-			}
+				"editor" => roles.Single(r => r.Name == RoleSeedNames.Editor),
+				"vestededitor" => roles.Single(r => r.Name == RoleSeedNames.VestedEditor),
+				"publisher" => roles.Single(r => r.Name == RoleSeedNames.Publisher),
+				"seniorpublisher" => roles.Single(r => r.Name == RoleSeedNames.SeniorPublisher),
+				"judge" => roles.Single(r => r.Name == RoleSeedNames.Judge),
+				"seniorjudge" => roles.Single(r => r.Name == RoleSeedNames.SeniorJudge),
+				"adminassistant" => roles.Single(r => r.Name == RoleSeedNames.AdminAssistant),
+				"ambassador" => roles.Single(r => r.Name == RoleSeedNames.Ambassador),
+				"senior ambassador" => roles.Single(r => r.Name == RoleSeedNames.SeniorAmbassador),
+				"admin" => roles.Single(r => r.Name == RoleSeedNames.Admin),
+				_ => null
+			};
 		}
 	}
 }

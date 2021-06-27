@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TASVideos.Services.WikiOrphan>
+﻿@model IEnumerable<TASVideos.Core.Services.WikiOrphan>
 
 <label class="float-right">Total: @Model.Count()</label>
 <table class="table table-striped">
@@ -11,8 +11,10 @@
 		@foreach (var orphan in Model)
 		{
 			<tr>
-				<td>@orphan.LastUpdateTimeStamp</td>
-				<td><a href="/@orphan.PageName">@orphan.PageName</a></td>
+				<td>@orphan.LastUpdateTimestamp</td>
+				<td>
+					<wiki-link page-name="@orphan.PageName"></wiki-link>
+				</td>
 				<td>@orphan.LastUpdateUserName</td>
 			</tr>
 		}

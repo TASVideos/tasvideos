@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Posts
 {
@@ -32,11 +31,11 @@ namespace TASVideos.Pages.Forum.Posts
 		public string UserName { get; set; } = "";
 
 		[FromQuery]
-		public UserPostsRequest Search { get; set; } = new UserPostsRequest();
+		public UserPostsRequest Search { get; set; } = new ();
 
-		public UserPostsModel UserPosts { get; set; } = new UserPostsModel();
+		public UserPostsModel UserPosts { get; set; } = new ();
 
-		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>(); 
+		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -46,7 +45,7 @@ namespace TASVideos.Pages.Forum.Posts
 				{
 					Id = u.Id,
 					UserName = u.UserName,
-					Joined = u.CreateTimeStamp,
+					Joined = u.CreateTimestamp,
 					Location = u.From,
 					Avatar = u.Avatar,
 					Signature = u.Signature,
@@ -71,7 +70,7 @@ namespace TASVideos.Pages.Forum.Posts
 				.Select(p => new UserPostsModel.Post
 				{
 					Id = p.Id,
-					CreateTimestamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					EnableHtml = p.EnableHtml,
 					EnableBbCode = p.EnableBbCode,
 					Text = p.Text,
@@ -82,12 +81,6 @@ namespace TASVideos.Pages.Forum.Posts
 					ForumName = p.Topic!.Forum!.Name
 				})
 				.SortedPageOf(Search);
-
-			UserPosts.RenderedSignature = RenderSignature(UserPosts.Signature); 
-			foreach (var post in UserPosts.Posts)
-			{
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-			}
 
 			return Page();
 		}

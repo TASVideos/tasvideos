@@ -1,17 +1,15 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -38,7 +36,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int ForumId { get; set; }
 
 		[BindProperty]
-		public TopicCreateModel Topic { get; set; } = new TopicCreateModel();
+		public TopicCreateModel Topic { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -86,17 +84,18 @@ namespace TASVideos.Pages.Forum.Topics
 			};
 
 			_db.ForumTopics.Add(topic);
-			
+
 			// TODO: catch DbConcurrencyException
 			await _db.SaveChangesAsync();
 
 			var forumPostModel = new ForumPostModel
 			{
 				Subject = null,
-				Text = Topic.Post
+				Text = Topic.Post,
+				Mood = Topic.Mood
 			};
 
-			await CreatePost(topic.Id, forumPostModel, userId, IpAddress.ToString());
+			await CreatePost(topic.Id, forumPostModel, userId, IpAddress);
 
 			if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
 			{
@@ -105,10 +104,10 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_publisher.SendForum(
 				forum.Restricted,
-				$"New Topic by {User.Identity.Name} ({forum.ShortName}: {Topic.Title})",
+				$"New Topic by {User.Name()} ({forum.ShortName}: {Topic.Title})",
 				Topic.Post.CapAndEllipse(50),
 				$"Forum/Topics/{topic.Id}",
-				User.Identity.Name!);
+				User.Name());
 
 			var user = await _userManager.GetUserAsync(User);
 			await _userManager.AssignAutoAssignableRolesByPost(user);

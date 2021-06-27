@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Games.Roms.Models;
@@ -23,15 +21,7 @@ namespace TASVideos.Pages.Games.Roms
 		[FromRoute]
 		public int GameId { get; set; }
 
-		public RomListModel Roms { get; set; } = new RomListModel();
-
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
-
-		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
+		public RomListModel Roms { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{

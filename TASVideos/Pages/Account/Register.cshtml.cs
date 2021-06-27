@@ -2,41 +2,49 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Hosting;
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.Email;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
-using TASVideos.Services.Email;
-using TASVideos.Services.ExternalMediaPublisher;
+using TASVideos.Models.ValidationAttributes;
 
 namespace TASVideos.Pages.Account
 {
 	[AllowAnonymous]
+	[IpBanCheck]
 	public class RegisterModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IReCaptchaService _reCaptchaService;
+		private readonly IWebHostEnvironment _env;
 
 		public RegisterModel(
 			ApplicationDbContext db,
 			UserManager userManager,
-			SignInManager<User> signInManager,
+			SignInManager signInManager,
 			IEmailService emailService,
-			ExternalMediaPublisher publisher)
+			ExternalMediaPublisher publisher,
+			IReCaptchaService reCaptchaService,
+			IWebHostEnvironment env)
 		{
 			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailService = emailService;
 			_publisher = publisher;
+			_reCaptchaService = reCaptchaService;
+			_env = env;
 		}
 
 		[FromQuery]
@@ -52,6 +60,7 @@ namespace TASVideos.Pages.Account
 		[Display(Name = "User Name")]
 		public string UserName { get; set; } = "";
 
+		[RegularExpression(@"[^+]+", ErrorMessage = "Email pattern not allowed.")]
 		[BindProperty]
 		[Required]
 		[EmailAddress]
@@ -77,7 +86,7 @@ namespace TASVideos.Pages.Account
 
 		[BindProperty]
 		[Required]
-		[Range(typeof(bool), "true", "true", ErrorMessage = "You have not indicated if you are 13 years of age or older.")]
+		[MustBeTrue]
 		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 		public bool COPPA { get; set; }
 
@@ -86,6 +95,14 @@ namespace TASVideos.Pages.Account
 			if (Password != ConfirmPassword)
 			{
 				ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
+			}
+
+			string encodedResponse = Request.Form["g-recaptcha-response"];
+			bool isCaptchaValid = await _reCaptchaService.Verify(encodedResponse);
+
+			if (!_env.IsDevelopment() && !isCaptchaValid)
+			{
+				ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
 			}
 
 			if (!ModelState.IsValid)

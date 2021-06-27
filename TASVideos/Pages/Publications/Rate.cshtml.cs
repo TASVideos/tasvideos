@@ -21,12 +21,12 @@ namespace TASVideos.Pages.Publications
 
 		[FromRoute]
 		public int Id { get; set; }
-		
+
 		[FromQuery]
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public PublicationRateModel Rating { get; set; } = new PublicationRateModel();
+		public PublicationRateModel Rating { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -96,7 +96,7 @@ namespace TASVideos.Pages.Publications
 
 		private void UpdateRating(PublicationRating? rating, int id, int userId, PublicationRatingType type, double? value)
 		{
-			if (rating != null)
+			if (rating is not null)
 			{
 				if (value.HasValue)
 				{

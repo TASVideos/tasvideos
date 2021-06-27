@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Users.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Users
 {
@@ -21,25 +18,27 @@ namespace TASVideos.Pages.Users
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public EditModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			ExternalMediaPublisher publisher)
 		{
 			_db = db;
+			_mapper = mapper;
 			_publisher = publisher;
 		}
 
 		[FromRoute]
 		public int Id { get; set; }
 
-
 		[FromQuery]
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public UserEditModel UserToEdit { get; set; } = new UserEditModel();
+		public UserEditModel UserToEdit { get; set; } = new ();
 
 		[DisplayName("Available Roles")]
 		public IEnumerable<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
@@ -51,9 +50,8 @@ namespace TASVideos.Pages.Users
 				return RedirectToPage("/Profile/Settings");
 			}
 
-			UserToEdit = await _db.Users
-				.Where(u => u.Id == Id)
-				.ProjectTo<UserEditModel>()
+			UserToEdit = await _mapper.ProjectTo<UserEditModel>(
+					_db.Users.Where(u => u.Id == Id))
 				.SingleOrDefaultAsync();
 
 			if (UserToEdit == null)
@@ -62,14 +60,13 @@ namespace TASVideos.Pages.Users
 			}
 
 			AvailableRoles = await GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
-
 			return Page();
 		}
 
 		public async Task<IActionResult> OnPost()
 		{
 			if (!ModelState.IsValid)
-			{	
+			{
 				AvailableRoles = await GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
 				return Page();
 			}
@@ -86,27 +83,24 @@ namespace TASVideos.Pages.Users
 			{
 				return AccessDenied();
 			}
-			
+
 			user.UserName = UserToEdit.UserName;
 			user.TimeZoneId = UserToEdit.TimezoneId;
 			user.From = UserToEdit.From;
 			user.Signature = UserToEdit.Signature;
 			user.Avatar = UserToEdit.Avatar;
 			user.MoodAvatarUrlBase = UserToEdit.MoodAvatarUrlBase;
-			
+
 			var currentRoles = await _db.UserRoles
 				.Where(ur => ur.User == user)
 				.ToListAsync();
 
 			_db.UserRoles.RemoveRange(currentRoles);
 
-			try
+			var result = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
+			if (!result)
 			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				return BadRequest("Unable to modify user. User data may have been modified since the page was opened.");
+				return ReturnToPreviousPage();
 			}
 
 			_db.UserRoles.AddRange(UserToEdit.SelectedRoles
@@ -116,13 +110,10 @@ namespace TASVideos.Pages.Users
 					RoleId = r
 				}));
 
-			try
+			var saveResult2 = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
+			if (!saveResult2)
 			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				return BadRequest("Unable to modify user. User data may have been modified since the page was opened.");
+				return ReturnToPreviousPage();
 			}
 
 			// Announce Role change
@@ -139,7 +130,7 @@ namespace TASVideos.Pages.Users
 				.ToList();
 			if (addedRoles.Any() || removedRoles.Any())
 			{
-				var message = $"user {user.UserName} roles modified by {User.Identity.Name},";
+				var message = $"user {user.UserName} roles modified by {User.Name()},";
 				if (addedRoles.Any())
 				{
 					message += " added: " + string.Join(",", addedRoles);
@@ -149,14 +140,17 @@ namespace TASVideos.Pages.Users
 				{
 					message += " removed: " + string.Join(",", removedRoles);
 				}
-				
+
 				_publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
 			}
 
-			return string.IsNullOrWhiteSpace(ReturnUrl)
-				? RedirectToPage("List")
-				: RedirectToLocal(ReturnUrl);
+			SuccessStatusMessage($"User {user.UserName} updated");
+			return ReturnToPreviousPage();
 		}
+
+		private IActionResult ReturnToPreviousPage() => string.IsNullOrWhiteSpace(ReturnUrl)
+			? RedirectToPage("List")
+			: RedirectToLocal(ReturnUrl);
 
 		public async Task<IActionResult> OnGetUnlock(string returnUrl)
 		{
@@ -167,7 +161,8 @@ namespace TASVideos.Pages.Users
 			}
 
 			user.LockoutEnd = null;
-			await _db.SaveChangesAsync();
+			await ConcurrentSave(_db, $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
+
 			return RedirectToLocal(returnUrl);
 		}
 

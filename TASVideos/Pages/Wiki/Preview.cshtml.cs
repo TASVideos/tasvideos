@@ -3,8 +3,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public int? Id { get; set; }
 
-		public WikiPage PageData { get; set; } = new WikiPage();
+		public WikiPage PageData { get; set; } = new ();
 
 		public async Task<IActionResult> OnPost()
 		{

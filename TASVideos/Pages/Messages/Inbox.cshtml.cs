@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Messages.Models;
@@ -39,7 +37,7 @@ namespace TASVideos.Pages.Messages
 				{
 					Id = pm.Id,
 					Subject = pm.Subject,
-					SendDate = pm.CreateTimeStamp,
+					SendDate = pm.CreateTimestamp,
 					FromUser = pm.FromUser!.UserName,
 					IsRead = pm.ReadOn.HasValue
 				})
@@ -58,7 +56,7 @@ namespace TASVideos.Pages.Messages
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == Id);
 
-			if (message != null)
+			if (message is not null)
 			{
 				message.SavedForToUser = true;
 				await _db.SaveChangesAsync();
@@ -79,7 +77,7 @@ namespace TASVideos.Pages.Messages
 				.ThatAreNotToUserDeleted()
 				.SingleOrDefaultAsync(pm => pm.Id == Id);
 
-			if (message != null)
+			if (message is not null)
 			{
 				message.DeletedForToUser = true;
 				await _db.SaveChangesAsync();

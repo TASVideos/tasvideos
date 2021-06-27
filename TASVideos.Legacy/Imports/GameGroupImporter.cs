@@ -5,12 +5,9 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class GameGroupImporter
+	internal static class GameGroupImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			var gameGroups = legacySiteContext.GameNameGroupNames
 				.Select(g => new GameGroup
@@ -28,7 +25,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameGroup.SearchKey)
 			};
 
-			gameGroups.BulkInsert(connectionStr, groupColumns, nameof(ApplicationDbContext.GameGroups));
+			gameGroups.BulkInsert(groupColumns, nameof(ApplicationDbContext.GameGroups));
 
 			var gameGameGroups = legacySiteContext.GameNameGroups
 				.Select(g => new GameGameGroup
@@ -44,7 +41,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameGameGroup.GameGroupId)
 			};
 
-			gameGameGroups.BulkInsert(connectionStr, gameGameGroupColumns, nameof(ApplicationDbContext.GameGameGroups));
+			gameGameGroups.BulkInsert(gameGameGroupColumns, nameof(ApplicationDbContext.GameGameGroups));
 		}
 	}
 }

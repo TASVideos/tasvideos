@@ -1,7 +1,7 @@
 ﻿@page "{id?}/{handler?}"
 @model InboxModel
 @{
-	ViewData["Title"] = $"Private messages for {User.Identity.Name}";
+	ViewData["Title"] = $"Private messages for {User.Name()}";
 }
 
 <div class="mb-1">
@@ -34,7 +34,9 @@
 					<span condition="entry.IsRead">@entry.Subject</span>
 				</a>
 			</td>
-			<td>@entry.FromUser</td>
+			<td>
+				<profile-link username="@entry.FromUser">@entry.FromUser</profile-link>
+			</td>
 			<td>@entry.SendDate</td>
 			<td>
 				<form method="post" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id" style="display: inline-block">

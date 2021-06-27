@@ -9,8 +9,8 @@ namespace TASVideos.Pages.Publications.Models
 	{
 		public int Id { get; set; }
 		public int GameId { get; set; }
-		public DateTime CreateTimeStamp { get; set; }
-		public DateTime LastUpdateTimeStamp { get; set; }
+		public DateTime CreateTimestamp { get; set; }
+		public DateTime LastUpdateTimestamp { get; set; }
 		public string? LastUpdateUser { get; set; }
 
 		public int? ObsoletedById { get; set; }
@@ -22,7 +22,7 @@ namespace TASVideos.Pages.Publications.Models
 		public string? MirrorSiteUrl { get; set; }
 		public int TopicId { get; set; }
 		public string? EmulatorVersion { get; set; }
-		
+
 		public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();
 		public IEnumerable<TagModel> GenreTags { get; set; } = new List<TagModel>();
 		public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();

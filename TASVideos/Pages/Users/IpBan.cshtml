@@ -1,0 +1,55 @@
+﻿@page "{handler?}"
+@model IpBanModel
+@{ ViewData["Title"] = "Banned Ip Addresses"; }
+
+<form method="POST">
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="IpAddress"></label>
+				<input asp-for="IpAddress" type="text" class="form-control" />
+				<span asp-validation-for="IpAddress" class="text-danger"></span>
+			</form-group>
+			<button type="submit" class="btn btn-primary">Add</button>
+		</column>
+		<column lg="6">
+			<p>Enter a valid IPv4 or IPv6 address or an address range</p>
+			<p>For IPv4 address ranges, use a * to wildcard a range.</p>
+			<p>For example: 192.168.0.* would ban all addresses between 192.168.0.0 and 192.168.0.255</p>
+			<p>For Ipv6 address ranges, use standard <a target="_blank" href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation">Standard CIDR notation</a></p>
+		</column>
+	</row>
+</form>
+<hr />
+<table class="table table-sm table-striped table-bordered">
+	<tr>
+		<th>Ip Address</th>
+		<td>Created By</td>
+		<td>Created At</td>
+		<td></td>
+	</tr>
+	@for (int i = 0; i < Model.BannedIps.Count; i++)
+	{
+		<tr>
+			<td>@Model.BannedIps[i].Mask</td>
+			<td>
+				<profile-link username="@Model.BannedIps[i].CreateUserName">
+					@Model.BannedIps[i].CreateUserName
+				</profile-link>
+			</td>
+			<td>
+				<timezone-convert asp-for="BannedIps[i].DateCreated" />
+			</td>
+			<td>
+				<delete-button asp-href="/Users/IpBan/Delete?mask=@Model.BannedIps[i].Mask"
+							   class="btn-sm">
+					<i class="fa fa-remove"></i>
+				</delete-button>
+			</td>
+		</tr>
+	}
+</table>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using TASVideos.Data;
+using TASVideos.Core;
 
 namespace TASVideos.Pages.Users.Models
 {
@@ -19,7 +19,7 @@ namespace TASVideos.Pages.Users.Models
 
 		[DisplayName("Created")]
 		[Sortable]
-		public DateTime CreateTimeStamp { get; set; }
+		public DateTime CreateTimestamp { get; set; }
 
 		// Dummy to generate column header
 		public object? Actions { get; set; }

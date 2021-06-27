@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TASVideos.Data;
+using TASVideos.Core;
 
 namespace TASVideos.Pages.Games.Models
 {
@@ -15,9 +15,6 @@ namespace TASVideos.Pages.Games.Models
 		[Display(Name = "System")]
 		public string? SystemCode { get; set; }
 
-		public new static SystemPageOf<T> Empty()
-		{
-			return new SystemPageOf<T>(Enumerable.Empty<T>());
-		}
+		public static new SystemPageOf<T> Empty() => new (Enumerable.Empty<T>());
 	}
 }

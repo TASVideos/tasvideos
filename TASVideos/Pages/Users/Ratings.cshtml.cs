@@ -1,11 +1,8 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Users
 {
@@ -22,7 +19,7 @@ namespace TASVideos.Pages.Users
 		[FromRoute]
 		public string UserName { get; set; } = "";
 
-		public UserRatingsModel? Ratings { get; set; }
+		public UserRatings? Ratings { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{

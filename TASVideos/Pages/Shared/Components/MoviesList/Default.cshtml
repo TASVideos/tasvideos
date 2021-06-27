@@ -3,7 +3,7 @@
 	var pubGroups = Model.Movies.GroupBy(gkey => gkey.GameName, gvalue => new
 	{
 		gvalue.Id, gvalue.IsObsolete
-	});
+	}).ToList();
 }
 <warning-alert condition="string.IsNullOrWhiteSpace(Model.SystemName)">
 	Unknown System Code: @Model.SystemCode
@@ -29,7 +29,6 @@
 						<a href="/Movies-@string.Join(",", pubGroup.Select(g => g.Id + "M"))">
 							All (@pubGroup.Count())
 						</a>
-						
 					</span>
 				</td>
 			</tr>
@@ -37,6 +36,6 @@
 	</table>
 	<div>
 			<p>@Model.Movies.Count(m => !m.IsObsolete) current publications in @pubGroups.Count(g => g.Any(gg => !gg.IsObsolete)) games</p>
-			<p>@Model.Movies.Count() runs in @pubGroups.Count() games</p>
+			<p>@Model.Movies.Count runs in @pubGroups.Count() games</p>
 	</div>
 </div>

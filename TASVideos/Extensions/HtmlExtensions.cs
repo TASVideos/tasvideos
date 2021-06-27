@@ -37,7 +37,7 @@ namespace TASVideos.Extensions
 				case "CanSubmitMovies": // Legacy system: same as UserIsLoggedIn
 				case "CanRateMovies": // Legacy system: same as UserIsLoggedIn
 				case "UserIsLoggedIn":
-					result ^= viewContext.HttpContext.User.Identity.IsAuthenticated;
+					result ^= viewContext.HttpContext.User.IsLoggedIn();
 					break;
 				case "1":
 					result ^= true;
@@ -51,8 +51,7 @@ namespace TASVideos.Extensions
 					result ^= viewData.UserHas(PermissionTo.EditWikiPages);
 					break;
 				case "UserHasHomepage":
-					result ^= viewContext.HttpContext.User.Identity
-						.IsAuthenticated; // Let's assume every user can have a homepage automatically
+					result ^= viewContext.HttpContext.User.IsLoggedIn(); // Let's assume every user can have a homepage automatically
 					break;
 				case "CanViewSubmissions":
 					result ^= true; // Legacy system always returned true
@@ -66,12 +65,6 @@ namespace TASVideos.Extensions
 			}
 
 			return result;
-		}
-	
-		// ReSharper disable once UnusedMember.Global (Used in Node.cs with string building)
-		public static bool WikiCondition(this IHtmlHelper html, string condition)
-		{
-			return WikiCondition(html.ViewContext, condition);
 		}
 
 		public static IHtmlContent DescriptionFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
@@ -136,7 +129,7 @@ namespace TASVideos.Extensions
 			return compressedExtensions.Contains(Path.GetExtension(formFile.FileName))
 				|| compressedContentTypes.Contains(formFile.ContentType);
 		}
-		
+
 		public static bool LessThanMovieSizeLimit(this IFormFile? formFile)
 		{
 			if (formFile == null)
@@ -159,7 +152,7 @@ namespace TASVideos.Extensions
 
 		public static bool IsValidTorrent(this IFormFile? formFile)
 		{
-			return formFile != null && formFile.FileName.EndsWith(".torrent");
+			return formFile is not null && formFile.FileName.EndsWith(".torrent");
 		}
 	}
 }

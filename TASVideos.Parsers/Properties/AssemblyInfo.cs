@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("TASVideos.Test")]
+[assembly: InternalsVisibleTo("TASVideos.MovieParsers.Tests")]

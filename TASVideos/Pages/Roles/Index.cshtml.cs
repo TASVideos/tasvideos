@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +13,15 @@ namespace TASVideos.Pages.Roles
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
-		public IndexModel(ApplicationDbContext db)
+		public IndexModel(ApplicationDbContext db, IMapper mapper)
 		{
 			_db = db;
+			_mapper = mapper;
 		}
 
-		public RoleDisplayModel Role { get; set; } = new RoleDisplayModel();
+		public RoleDisplayModel Role { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet(string role)
 		{
@@ -30,9 +30,9 @@ namespace TASVideos.Pages.Roles
 				return RedirectToPage("/Roles/List");
 			}
 
-			Role = await _db.Roles
-				.ProjectTo<RoleDisplayModel>()
-				.Where(r => r.Name == role)
+			Role = await _mapper
+				.ProjectTo<RoleDisplayModel>(
+					_db.Roles.Where(r => r.Name == role))
 				.SingleOrDefaultAsync();
 
 			if (Role == null)

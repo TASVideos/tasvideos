@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
-
+using TASVideos.Common;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
+using TASVideos.Extensions;
 
 namespace TASVideos.Data.Entity
 {
 	/// <summary>
-	/// Represents filter criteria for filtering publications
+	/// Represents filter criteria for filtering publications.
 	/// </summary>
 	public interface IPublicationTokens
 	{
@@ -24,7 +26,7 @@ namespace TASVideos.Data.Entity
 		IEnumerable<int> MovieIds { get; }
 		IEnumerable<int> Games { get; }
 		IEnumerable<int> GameGroups { get; }
-		bool ShowObsoleted { get; set; }
+		bool ShowObsoleted { get; }
 	}
 
 	public class Publication : BaseEntity, ITimeable
@@ -69,7 +71,7 @@ namespace TASVideos.Data.Entity
 		public virtual WikiPage? WikiContent { get; set; }
 
 		[Required]
-		public byte[] MovieFile { get; set; } = new byte[0];
+		public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 
 		[Required]
 		public string MovieFileName { get; set; } = "";
@@ -84,7 +86,7 @@ namespace TASVideos.Data.Entity
 		public int RerecordCount { get; set; }
 
 		/// <summary>
-		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here
+		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here.
 		/// </summary>
 		[StringLength(200)]
 		public string? AdditionalAuthors { get; set; }
@@ -93,7 +95,7 @@ namespace TASVideos.Data.Entity
 		[Required]
 		public string Title { get; set; } = "";
 
-		double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!"); 
+		double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!");
 
 		public void GenerateTitle()
 		{
@@ -103,7 +105,7 @@ namespace TASVideos.Data.Entity
 
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
 			{
-				authorList = authorList.Concat(AdditionalAuthors.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries));
+				authorList = authorList.Concat(AdditionalAuthors.SplitWithEmpty(","));
 			}
 
 			if (System == null)
@@ -119,8 +121,8 @@ namespace TASVideos.Data.Entity
 			Title =
 				$"{System.Code} {Game.DisplayName}"
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-				+ $" by {string.Join(" & ", authorList)}"
-				+ $" in {this.Time():g}";
+				+ $" by {string.Join(", ", authorList)}"
+				+ $" in {this.Time().ToString("g", CultureInfo.InvariantCulture)}";
 		}
 	}
 
@@ -139,6 +141,20 @@ namespace TASVideos.Data.Entity
 		public static IQueryable<Publication> ThatAreObsolete(this IQueryable<Publication> publications)
 		{
 			return publications.Where(p => p.ObsoletedById != null);
+		}
+
+		public static IQueryable<Publication> ForYearRange(this IQueryable<Publication> publications, int before, int after)
+		{
+			return publications
+				.Where(p => p.CreateTimestamp.Year < before)
+				.Where(p => p.CreateTimestamp.Year >= after);
+		}
+
+		public static IQueryable<Publication> ForDateRange(this IQueryable<Publication> publications, DateTime before, DateTime after)
+		{
+			return publications
+				.Where(p => p.CreateTimestamp < before)
+				.Where(p => p.CreateTimestamp >= after);
 		}
 
 		public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
@@ -176,7 +192,7 @@ namespace TASVideos.Data.Entity
 
 			if (tokens.Years.Any())
 			{
-				query = query.Where(p => tokens.Years.Contains(p.CreateTimeStamp.Year));
+				query = query.Where(p => tokens.Years.Contains(p.CreateTimestamp.Year));
 			}
 
 			if (tokens.Tags.Any())

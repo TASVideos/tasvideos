@@ -1,9 +1,13 @@
 ﻿@page
+@addTagHelper *, AspNetCore.ReCaptcha
 @model RegisterModel
 @{
-	// ReSharper disable CoercedEqualsUsing
 	ViewData["Title"] = "Register";
 }
+
+<!-- For manual implementation of Google's ReCaptcha scripts, will require embedding site's public key. -->
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
 <h2>@ViewData["Title"]</h2>
 <h4>Create a new account.</h4>
 <hr />
@@ -47,6 +51,11 @@
 				<input asp-for="COPPA" type="checkbox" class="form-control" />
 				<span asp-validation-for="COPPA" class="text-danger"></span>
 			</form-group>
+			<environment exclude="Development">
+				<form-group>
+					<recaptcha />
+				</form-group>
+			</environment>
 		</column>
 	</row>
 	<div class="text-center">

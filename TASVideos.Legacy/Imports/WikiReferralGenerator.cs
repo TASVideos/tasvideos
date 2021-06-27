@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.Data.SqlClient;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
@@ -7,9 +6,9 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class WikiReferralGenerator
+	internal static class WikiReferralGenerator
 	{
-		public static void Generate(string connectionStr, ApplicationDbContext context)
+		public static void Generate(ApplicationDbContext context)
 		{
 			// Don't generate referrals for these, since they will be wiped and replaced after import anyway
 			var overrides = WikiPageSeedData.NewRevisions
@@ -39,7 +38,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPageReferral.Referrer)
 			};
 
-			referralList.BulkInsert(connectionStr, referralColumns, nameof(ApplicationDbContext.WikiReferrals), SqlBulkCopyOptions.Default, 100000, 300);
+			referralList.BulkInsert(referralColumns, nameof(ApplicationDbContext.WikiReferrals));
 		}
 	}
 }

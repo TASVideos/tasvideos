@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.UserFiles.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.UserFiles
 {
@@ -23,12 +22,12 @@ namespace TASVideos.Pages.UserFiles
 		private static readonly string[] SupportedSupplementalTypes = { ".lua", ".wch", ".gst" };
 
 		private readonly ApplicationDbContext _db;
-		private readonly MovieParser _parser;
+		private readonly IMovieParser _parser;
 		private readonly IFileService _fileService;
 
 		public UploadModel(
 			ApplicationDbContext db,
-			MovieParser parser,
+			IMovieParser parser,
 			IFileService fileService)
 		{
 			_db = db;
@@ -37,9 +36,9 @@ namespace TASVideos.Pages.UserFiles
 		}
 
 		[BindProperty]
-		public UserFileUploadModel UserFile { get; set; } = new UserFileUploadModel();
+		public UserFileUploadModel UserFile { get; set; } = new ();
 
-		public int StorageUsed { get; set; } 
+		public int StorageUsed { get; set; }
 
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 
@@ -103,13 +102,12 @@ namespace TASVideos.Pages.UserFiles
 					? UserFileClass.Support
 					: UserFileClass.Movie,
 				Type = fileExt.Replace(".", ""),
-				
 				FileName = UserFile.File.FileName
 			};
 
 			if (_parser.SupportedMovieExtensions.Contains(fileExt))
 			{
-				var parseResult = _parser.ParseFile(UserFile.File.FileName, UserFile.File.OpenReadStream());
+				var parseResult = await _parser.ParseFile(UserFile.File.FileName, UserFile.File.OpenReadStream());
 				if (!parseResult.Success)
 				{
 					ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");
@@ -133,16 +131,16 @@ namespace TASVideos.Pages.UserFiles
 						.ForRegion(parseResult.Region.ToString())
 						.FirstOrDefaultAsync();
 
-					if (frameRateData != null)
+					if (frameRateData is not null)
 					{
 						frameRate = (decimal)frameRateData.FrameRate;
 					}
 				}
-				
+
 				userFile.Length = Math.Round(userFile.Frames / frameRate);
 			}
 
-			var fileBytes = await FormFileToBytes(UserFile.File);
+			var fileBytes = await UserFile.File.ToBytes();
 			var fileResult = await _fileService.Compress(fileBytes);
 
 			userFile.PhysicalLength = fileResult.CompressedSize;

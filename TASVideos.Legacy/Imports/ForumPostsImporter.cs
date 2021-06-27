@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using Microsoft.Data.SqlClient;
+using System.Web;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.ForumEngine;
@@ -9,15 +9,14 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class ForumPostsImporter
+	internal static class ForumPostsImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			// TODO: posts without a corresponding post text
+			const int tvaId = 505;
 			var posts = legacyForumContext.Posts
+				.Where(p => p.PosterId != tvaId || !p.PostText!.Text!.StartsWith("This is an automatically posted message for discussing submission:"))
 				.Select(p => new
 				{
 					p.Id,
@@ -39,7 +38,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(p =>
 				{
 					bool enableBbCode = p.EnableBbCode;
-					bool enableHtml = p.EnableHtml;
+					bool enableHtml;
 
 					string fixedText;
 					if (p.PosterId == SiteGlobalConstants.TASVideoAgentId && p.Subject == SiteGlobalConstants.NewPublicationPostSubject)
@@ -60,10 +59,11 @@ namespace TASVideos.Legacy.Imports
 					}
 					else
 					{
-						fixedText = System.Web.HttpUtility.HtmlDecode(
+						fixedText = HttpUtility.HtmlDecode(
 							ImportHelper.ConvertLatin1String(p.Text!
 								.Replace(":1:" + p.BbCodeUid, "")
-								.Replace(":" + p.BbCodeUid, "")));
+								.Replace(":" + p.BbCodeUid, "")
+								.Replace("[/list:u]", "[/list]")) ?? "");
 
 						enableHtml = p.EnableHtml && BbParser.ContainsHtml(fixedText, p.EnableBbCode);
 					}
@@ -77,13 +77,13 @@ namespace TASVideos.Legacy.Imports
 						Id = p.Id,
 						TopicId = p.TopicId,
 						PosterId = p.PosterId,
-						IpAddress = p.IpAddress,
+						IpAddress = p.IpAddress.IpFromHex(),
 						Subject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject)),
 						Text = fixedText,
 						EnableBbCode = enableBbCode,
 						EnableHtml = enableHtml,
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
-						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
+						CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(p.Timestamp),
+						LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(p.LastUpdateTimestamp
 							?? p.Timestamp),
 						CreateUserName = !string.IsNullOrWhiteSpace(p.PosterName) ? p.PosterName : "Unknown",
 						LastUpdateUserName = !string.IsNullOrWhiteSpace(p.LastUpdateUserName)
@@ -103,16 +103,16 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.IpAddress),
 				nameof(ForumPost.Subject),
 				nameof(ForumPost.Text),
-				nameof(ForumPost.CreateTimeStamp),
+				nameof(ForumPost.CreateTimestamp),
 				nameof(ForumPost.CreateUserName),
-				nameof(ForumPost.LastUpdateTimeStamp),
+				nameof(ForumPost.LastUpdateTimestamp),
 				nameof(ForumPost.LastUpdateUserName),
 				nameof(ForumPost.EnableHtml),
 				nameof(ForumPost.EnableBbCode),
 				nameof(ForumPost.PosterMood)
 			};
 
-			posts.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumPosts), SqlBulkCopyOptions.KeepIdentity, 20000, 600);
+			posts.BulkInsert(columns, nameof(ApplicationDbContext.ForumPosts));
 		}
 	}
 }

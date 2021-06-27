@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ namespace TASVideos.Pages.GamesGroups
 		public IEnumerable<GameListEntry> Games { get; set; } = new List<GameListEntry>();
 
 		public string Name { get; set; } = "";
-		
+
 		public IndexModel(ApplicationDbContext db)
 		{
 			_db = db;

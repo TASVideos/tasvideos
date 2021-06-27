@@ -45,7 +45,7 @@ namespace TASVideos.Extensions
 				// If a user can exploit this fact to create an exploit
 				// then we should first reconsider rules about allowed patterns of usernames and what defines a valid wiki page
 				// before deciding to nuke this feature
-				var homepage = pageName.Substring(HomePagesPrefix.Length).Split('/')[0];
+				var homepage = pageName[HomePagesPrefix.Length..].Split('/')[0];
 				if (string.Equals(homepage, userName, StringComparison.OrdinalIgnoreCase)
 					&& userPermissions.Contains(PermissionTo.EditHomePage))
 				{
@@ -75,7 +75,7 @@ namespace TASVideos.Extensions
 					return true; // Just HomePage/[username] so it is automatically valid
 				}
 
-				test = test.Substring(slashIndex, test.Length - slashIndex);
+				test = test[slashIndex..];
 			}
 
 			return !string.IsNullOrWhiteSpace(test)
@@ -98,7 +98,7 @@ namespace TASVideos.Extensions
 				.Trim('/')
 				.Replace("GameResources", "");
 
-			return path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Length == 1;
+			return path.SplitWithEmpty("/").Length == 1;
 		}
 
 		public static string SystemGameResourcePath(this string path)
@@ -111,7 +111,7 @@ namespace TASVideos.Extensions
 			return path
 				.Trim('/')
 				.Replace("GameResources", "")
-				.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty("/")
 				.First();
 		}
 
@@ -205,7 +205,7 @@ namespace TASVideos.Extensions
 		}
 
 		/// <summary>
-		/// Fixes Internal system page links to be their public counter parts ex: InternalSystem/SubmissionContent/S4084 to 4084S
+		/// Fixes Internal system page links to be their public counter parts ex: InternalSystem/SubmissionContent/S4084 to 4084S.
 		/// </summary>
 		public static string ProcessLink(string link)
 		{
@@ -278,7 +278,7 @@ namespace TASVideos.Extensions
 				return false;
 			}
 
-			var paths = pageName.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+			var paths = pageName.SplitWithEmpty("/");
 
 			// Must begin with a capital letter, with one exception, if the path is a year. But only years between 2000-2099 for now. This is to support awards pages: Awards/2007, Awards/2008 etc
 			return paths.All(p => char.IsUpper(p[0]) || (p.Length == 4 && p.StartsWith("20")));

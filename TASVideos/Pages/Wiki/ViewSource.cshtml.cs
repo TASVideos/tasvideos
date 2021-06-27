@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -23,14 +22,14 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public int? Revision { get; set; }
 
-		public WikiPage WikiPage { get; set; } = new WikiPage();
+		public WikiPage WikiPage { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
 			Path = Path?.Trim('/') ?? "";
 			var wikiPage = await _wikiPages.Page(Path, Revision);
 
-			if (wikiPage != null)
+			if (wikiPage is not null)
 			{
 				WikiPage = wikiPage;
 				return Page();

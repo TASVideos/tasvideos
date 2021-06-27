@@ -2,19 +2,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Games.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Games
 {
@@ -35,12 +32,6 @@ namespace TASVideos.Pages.Games
 			_mapper = mapper;
 		}
 
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
-
 		[FromRoute]
 		public int? Id { get; set; }
 
@@ -51,7 +42,7 @@ namespace TASVideos.Pages.Games
 		public int? SystemId { get; set; }
 
 		[BindProperty]
-		public GameEditModel Game { get; set; } = new GameEditModel();
+		public GameEditModel Game { get; set; } = new ();
 
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
@@ -63,9 +54,8 @@ namespace TASVideos.Pages.Games
 		{
 			if (Id.HasValue)
 			{
-				Game = await _db.Games
-					.Where(g => g.Id == Id)
-					.ProjectTo<GameEditModel>()
+				Game = await _mapper.ProjectTo<GameEditModel>(
+					_db.Games.Where(g => g.Id == Id))
 					.SingleOrDefaultAsync();
 
 				if (Game == null)
@@ -79,7 +69,7 @@ namespace TASVideos.Pages.Games
 					.Where(s => s.Id == SystemId)
 					.Select(s => s.Code)
 					.SingleOrDefaultAsync();
-				if (systemCode != null)
+				if (systemCode is not null)
 				{
 					Game.SystemCode = systemCode;
 				}
@@ -99,7 +89,7 @@ namespace TASVideos.Pages.Games
 
 			if (!string.IsNullOrEmpty(Game.GameResourcesPage))
 			{
-				var page = _wikiPages.Page(Game.GameResourcesPage);
+				var page = await _wikiPages.Page(Game.GameResourcesPage);
 				if (page == null)
 				{
 					ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.GameResourcesPage)}", $"Page {Game.GameResourcesPage} not found");
@@ -146,20 +136,7 @@ namespace TASVideos.Pages.Games
 				});
 			}
 
-			try
-			{
-				MessageType = Styles.Success;
-				Message = "Game successfully updated.";
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to update Game {Id}, the game may have already been updated, or the game no longer exists.";
-			}
-
-			await _db.SaveChangesAsync();
-			
+			await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
 			return string.IsNullOrWhiteSpace(ReturnUrl)
 				? RedirectToPage("List")
 				: RedirectToLocal(ReturnUrl);
@@ -174,23 +151,12 @@ namespace TASVideos.Pages.Games
 
 			if (!await CanBeDeleted())
 			{
-				Message = $"Unable to delete Game {Id}, game is used by a publication or submission.";
-				MessageType = Styles.Danger;
+				ErrorStatusMessage($"Unable to delete Game {Id}, game is used by a publication or submission.");
 				return RedirectToPage("List");
 			}
 
-			try
-			{
-				_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
-				MessageType = Styles.Success;
-				Message = $"Game {Id}, deleted successfully.";
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to delete Game {Id}, the game may have already been deleted or updated.";
-			}
+			_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
+			await ConcurrentSave(_db, $"Game {Id} deleted", $"Unable to delete Game {Id}");
 
 			return RedirectToPage("List");
 		}

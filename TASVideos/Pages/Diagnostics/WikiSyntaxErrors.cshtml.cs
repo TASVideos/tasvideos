@@ -1,12 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Pages.Diagnostics
@@ -36,6 +36,7 @@ namespace TASVideos.Pages.Diagnostics
 					return Markup.Substring(from, to - from);
 				}
 			}
+
 			public string ExcerptAfter
 			{
 				get
@@ -66,7 +67,7 @@ namespace TASVideos.Pages.Diagnostics
 					p,
 					err = Util.ParsePageForErrors(p.Markup)
 				})
-				.Where(a => a.err != null)
+				.Where(a => a.err is not null)
 				.Select(a => new Row
 				{
 					PageName = a.p.PageName,

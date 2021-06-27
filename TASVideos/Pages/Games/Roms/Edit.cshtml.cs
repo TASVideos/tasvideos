@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -50,7 +46,7 @@ namespace TASVideos.Pages.Games.Roms
 		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
-		public RomEditModel Rom { get; set; } = new RomEditModel();
+		public RomEditModel Rom { get; set; } = new ();
 
 		[BindProperty]
 		public string SystemCode { get; set; } = "";
@@ -61,22 +57,16 @@ namespace TASVideos.Pages.Games.Roms
 		public bool CanDelete { get; set; }
 		public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
 
-		public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new[]
+		public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new SelectListItem[]
 		{
-			new SelectListItem { Text = "U", Value = "U" },
-			new SelectListItem { Text = "J", Value = "J" },
-			new SelectListItem { Text = "E", Value = "E" },
-			new SelectListItem { Text = "JU", Value = "JU" },
-			new SelectListItem { Text = "EU", Value = "UE" },
-			new SelectListItem { Text = "W", Value = "W" },
-			new SelectListItem { Text = "Other", Value = "Other" },
+			new () { Text = "U", Value = "U" },
+			new () { Text = "J", Value = "J" },
+			new () { Text = "E", Value = "E" },
+			new () { Text = "JU", Value = "JU" },
+			new () { Text = "EU", Value = "UE" },
+			new () { Text = "W", Value = "W" },
+			new () { Text = "Other", Value = "Other" },
 		};
-
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -97,9 +87,8 @@ namespace TASVideos.Pages.Games.Roms
 				return Page();
 			}
 
-			Rom = await _db.GameRoms
-				.Where(r => r.Id == Id.Value && r.Game!.Id == GameId)
-				.ProjectTo<RomEditModel>()
+			Rom = await _mapper.ProjectTo<RomEditModel>(
+				_db.GameRoms.Where(r => r.Id == Id.Value && r.Game!.Id == GameId))
 				.SingleAsync();
 
 			if (Rom == null)
@@ -135,14 +124,7 @@ namespace TASVideos.Pages.Games.Roms
 
 			try
 			{
-				MessageType = Styles.Success;
-				Message = "Rom successfully updated.";
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to update Rom {Id}, the rom may have already been updated, or the game no longer exists.";
+				await ConcurrentSave(_db, $"Rom {Id} updated", $"Unable to update Rom {Id}");
 			}
 			catch (DbUpdateException ex)
 			{
@@ -164,24 +146,12 @@ namespace TASVideos.Pages.Games.Roms
 
 			if (!await CanBeDeleted())
 			{
-				Message = $"Unable to delete Rom {Id}, rom is used by a publication or submission.";
-				MessageType = Styles.Danger;
+				ErrorStatusMessage($"Unable to delete Rom {Id}, rom is used by a publication or submission.");
 				return RedirectToPage("List");
 			}
 
-			try
-			{
-				_db.GameRoms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
-				MessageType = Styles.Success;
-				Message = $"Rom {Id}, deleted successfully.";
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to delete Rom {Id}, the rom may have already been deleted or updated.";
-			}
-
+			_db.GameRoms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
+			await ConcurrentSave(_db, $"Rom {Id} deleted", $"Unable to delete Rom {Id}");
 			return RedirectToPage("List");
 		}
 

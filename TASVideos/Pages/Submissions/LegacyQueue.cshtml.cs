@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -28,9 +28,9 @@ namespace TASVideos.Pages.Submissions
 			if (string.Equals(Mode, "list", StringComparison.CurrentCultureIgnoreCase))
 			{
 				string? user = null;
-				if (Type == "own" && User.Identity.IsAuthenticated)
+				if (Type == "own" && User.IsLoggedIn())
 				{
-					user = User.Identity.Name;
+					user = User.Name();
 				}
 
 				return RedirectToPage("/Submissions/Index", new { User = user });

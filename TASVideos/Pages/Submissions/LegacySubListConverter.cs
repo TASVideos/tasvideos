@@ -24,11 +24,11 @@ namespace TASVideos.Pages.Submissions
 			var request = new SubmissionSearchRequest();
 
 			var statuses = new List<SubmissionStatus>();
-			foreach (var kvp in StatusTokenMapping)
+			foreach ((var key, SubmissionStatus value) in StatusTokenMapping)
 			{
-				if (tokens.Any(t => t == kvp.Key))
+				if (tokens.Any(t => t == key))
 				{
-					statuses.Add(kvp.Value);
+					statuses.Add(value);
 				}
 			}
 
@@ -43,7 +43,7 @@ namespace TASVideos.Pages.Submissions
 			return request;
 		}
 
-		private static readonly Dictionary<string, SubmissionStatus> StatusTokenMapping = new Dictionary<string, SubmissionStatus>
+		private static readonly Dictionary<string, SubmissionStatus> StatusTokenMapping = new ()
 		{
 			["new"] = SubmissionStatus.New,
 			["can"] = SubmissionStatus.Cancelled,

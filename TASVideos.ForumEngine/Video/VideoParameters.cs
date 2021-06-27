@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TASVideos.ForumEngine
 {
@@ -7,7 +7,7 @@ namespace TASVideos.ForumEngine
 		public int? Width { get; set; }
 		public int? Height { get; set; }
 		public string Host { get; set; }
-		public Dictionary<string, string> QueryParams { get; set; } = new Dictionary<string, string>();
+		public Dictionary<string, string> QueryParams { get; set; } = new ();
 		public string Path { get; set; }
 
 		public VideoParameters(string host, string path)

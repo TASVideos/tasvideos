@@ -1,21 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Submissions.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -23,41 +18,47 @@ namespace TASVideos.Pages.Submissions
 	public class PublishModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IWikiPages _wikiPages;
 		private readonly IMediaFileUploader _uploader;
 		private readonly ITASVideoAgent _tasVideosAgent;
 		private readonly UserManager _userManager;
+		private readonly IFileService _fileService;
 
 		public PublishModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
 			IMediaFileUploader uploader,
 			ITASVideoAgent tasVideoAgent,
-			UserManager userManager)
+			UserManager userManager,
+			IFileService fileService)
 		{
 			_db = db;
+			_mapper = mapper;
 			_publisher = publisher;
 			_wikiPages = wikiPages;
 			_uploader = uploader;
 			_tasVideosAgent = tasVideoAgent;
 			_userManager = userManager;
+			_fileService = fileService;
 		}
 
 		[FromRoute]
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SubmissionPublishModel Submission { get; set; } = new SubmissionPublishModel();
+		public SubmissionPublishModel Submission { get; set; } = new ();
 
 		public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; } = new List<SelectListItem>();
 
 		public async Task<IActionResult> OnGet()
 		{
-			Submission = await _db.Submissions
-				.Where(s => s.Id == Id)
-				.ProjectTo<SubmissionPublishModel>()
+			Submission = await _mapper
+				.ProjectTo<SubmissionPublishModel>(
+					_db.Submissions.Where(s => s.Id == Id))
 				.SingleOrDefaultAsync();
 
 			if (Submission == null)
@@ -71,7 +72,6 @@ namespace TASVideos.Pages.Submissions
 			}
 
 			await PopulateAvailableMoviesToObsolete(Submission.SystemId);
-
 			return Page();
 		}
 
@@ -93,9 +93,9 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
-			// TODO: I think this is producing joins, if the submission isn't properly cataloged then 
+			// TODO: I think this is producing joins, if the submission isn't properly cataloged then
 			// this will throw an exception, if so, use OrDefault and return NotFound()
-			// if it is doing left joins or sub-queries, then we need to null check the usages of nullable 
+			// if it is doing left joins or sub-queries, then we need to null check the usages of nullable
 			// tables such as game, rom, etc and throw if those are null
 			var submission = await _db.Submissions
 				.Include(s => s.IntendedTier)
@@ -133,24 +133,9 @@ namespace TASVideos.Pages.Submissions
 				Type = PublicationUrlType.Mirror
 			});
 
-			// TODO: use IFileService for this
-			// Unzip the submission file, and re-zip it while renaming the contained file
-			await using (var publicationFileStream = new MemoryStream())
-			{
-				using (var publicationZipArchive = new ZipArchive(publicationFileStream, ZipArchiveMode.Create))
-				{
-					await using var submissionFileStream = new MemoryStream(submission.MovieFile);
-					using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
-					var publicationZipEntry = publicationZipArchive.CreateEntry(Submission.MovieFileName + "." + Submission.MovieExtension);
-					var submissionZipEntry = submissionZipArchive.Entries.Single();
-
-					await using var publicationZipEntryStream = publicationZipEntry.Open();
-					await using var submissionZipEntryStream = submissionZipEntry.Open();
-					await submissionZipEntryStream.CopyToAsync(publicationZipEntryStream);
-				}
-
-				publication.MovieFile = publicationFileStream.ToArray();
-			}
+			publication.MovieFile = await _fileService.CopyZip(
+				submission.MovieFile,
+				Submission.MovieFileName + "." + Submission.MovieExtension);
 
 			var publicationAuthors = submission.SubmissionAuthors
 				.Select(sa => new PublicationAuthor
@@ -173,7 +158,7 @@ namespace TASVideos.Pages.Submissions
 			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
 			await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile!);
 
-			if (Submission.TorrentFile2 != null)
+			if (Submission.TorrentFile2 is not null)
 			{
 				await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile2);
 			}
@@ -211,7 +196,7 @@ namespace TASVideos.Pages.Submissions
 			await _userManager.AssignAutoAssignableRolesByPublication(user);
 
 			await _tasVideosAgent.PostSubmissionPublished(submission.Id, publication.Id);
-			_publisher.AnnouncePublication(publication.Title, $"{publication.Id}M", User.Identity.Name!);
+			_publisher.AnnouncePublication(publication.Title, $"{publication.Id}M", User.Name());
 
 			return Redirect($"/{publication.Id}M");
 		}

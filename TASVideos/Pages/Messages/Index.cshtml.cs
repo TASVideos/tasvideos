@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Messages
 {
@@ -21,7 +19,7 @@ namespace TASVideos.Pages.Messages
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PrivateMessageModel Message { get; set; } = new PrivateMessageModel();
+		public PrivateMessageDto PrivateMessage { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -32,8 +30,7 @@ namespace TASVideos.Pages.Messages
 				return NotFound();
 			}
 
-			Message = message;
-			Message.RenderedText = RenderPost(Message.Text, Message.EnableBbCode, Message.EnableHtml);
+			PrivateMessage = message;
 			return Page();
 		}
 	}

@@ -17,27 +17,27 @@ namespace TASVideos.Pages
 		{
 			var user = context.HttpContext.User;
 
-			if (!user.Identity.IsAuthenticated)
+			if (!user.IsLoggedIn())
 			{
 				context.Result = ReRouteToLogin(context);
 				return;
 			}
 
 			string pageToEdit = "";
-			if (context.HttpContext.Request.QueryString.Value.Contains("path="))
+			if (context.HttpContext.Request.QueryString.Value?.Contains("path=") ?? false)
 			{
 				pageToEdit = WebUtility.UrlDecode((context.HttpContext.Request.QueryString.Value ?? "path=").Split("path=")[1]);
 			}
 
 			var userPerms = await GetUserPermissions(context);
 			var canEdit = WikiHelper
-				.UserCanEditWikiPage(pageToEdit, user.Identity.Name, userPerms);
+				.UserCanEditWikiPage(pageToEdit, user.Name(), userPerms);
 
 			if (canEdit)
 			{
 				await next.Invoke();
 			}
-			else 
+			else
 			{
 				Denied(context);
 			}

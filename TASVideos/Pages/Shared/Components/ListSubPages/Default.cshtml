@@ -19,7 +19,7 @@
 			@foreach (var pageGroup in pageGrouping.OrderBy(g => g.Key))
 			{
 				<li>
-					<a href="/@($"{parent}/{pageGroup.Key}")">@pageGroup.Key.Replace($"{parent}/", "")</a>
+					<a href="/@($"{parent}/{pageGroup.Key}")">@pageGroup.Key?.Replace($"{parent}/", "")</a>
 					<ul condition="pageGroup.Count() > 1">
 						@foreach (var subpage in pageGroup.Where(pg => pg != $"{parent}/{pageGroup.Key}").OrderBy(pg => pg))
 						{

@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class RomImporter
+	internal static class RomImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			var roms = legacySiteContext.Roms
 				.Where(r => r.Type == "G")
@@ -24,8 +20,8 @@ namespace TASVideos.Legacy.Imports
 					Name = r.Description,
 					Type = RomTypes.Good,
 					GameId = r.GameId,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow
 				})
 				.ToList();
 
@@ -39,17 +35,17 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameRom.Name),
 				nameof(GameRom.Type),
 				nameof(GameRom.GameId),
-				nameof(GameRom.CreateTimeStamp),
-				nameof(GameRom.LastUpdateTimeStamp)
+				nameof(GameRom.CreateTimestamp),
+				nameof(GameRom.LastUpdateTimestamp)
 			};
 
-			roms.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.GameRoms));
+			roms.BulkInsert(columns, nameof(ApplicationDbContext.GameRoms));
 		}
 
 		// The legacy system barely used roms and they were never enforced, but the new system demands
 		// fully cataloged publications, so let's create a placeholder ROM with the intent of filling in
 		// this info eventually
-		private static readonly GameRom UnknownRom = new GameRom
+		private static readonly GameRom UnknownRom = new ()
 		{
 			Id = -1,
 			Md5 = "00000000000000000000000000000000",
@@ -58,8 +54,8 @@ namespace TASVideos.Legacy.Imports
 			Type = RomTypes.Unknown,
 			CreateUserName = "adelikat",
 			LastUpdateUserName = "adelikat",
-			CreateTimeStamp = DateTime.UtcNow,
-			LastUpdateTimeStamp = DateTime.UtcNow,
+			CreateTimestamp = DateTime.UtcNow,
+			LastUpdateTimestamp = DateTime.UtcNow,
 			GameId = -1 // Placeholder game
 		};
 	}

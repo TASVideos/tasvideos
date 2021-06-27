@@ -5,12 +5,9 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class ForumTopicWatchImporter
+	internal static class ForumTopicWatchImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var watches = legacyForumContext.TopicWatch
 				.Select(t => new ForumTopicWatch
@@ -29,7 +26,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumTopicWatch.IsNotified)
 			};
 
-			watches.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumTopicWatches));
+			watches.BulkInsert(columns, nameof(ApplicationDbContext.ForumTopicWatches));
 		}
 	}
 }

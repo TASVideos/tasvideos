@@ -7,12 +7,9 @@ using TASVideos.Legacy.Imports;
 
 namespace TASVideos.Legacy.Data.Forum.Entity
 {
-    public static class ForumTopicImporter
-    {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+	internal static class ForumTopicImporter
+	{
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var legTopics = legacyForumContext.Topics
 				.Include(t => t.Poll)
@@ -33,7 +30,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				})
 				.ToList();
 
-			 var topics = legTopics
+			var topics = legTopics
 				.Select(t => new ForumTopic
 				{
 					Id = t.Id,
@@ -42,9 +39,9 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					PosterId = t.PosterId > 0 // There's one record that is 0 we want to change to -1
 						? t.PosterId.Value
 						: -1,
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
 					CreateUserName = t.Author,
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
+					LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(t.Timestamp),
 					LastUpdateUserName = "LegacyImport",
 					Views = t.Views,
 					Type = (ForumTopicType)t.Type,
@@ -60,8 +57,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.ForumId),
 				nameof(ForumTopic.Title),
 				nameof(ForumTopic.PosterId),
-				nameof(ForumTopic.CreateTimeStamp),
-				nameof(ForumTopic.LastUpdateTimeStamp),
+				nameof(ForumTopic.CreateTimestamp),
+				nameof(ForumTopic.LastUpdateTimestamp),
 				nameof(ForumTopic.CreateUserName),
 				nameof(ForumTopic.LastUpdateUserName),
 				nameof(ForumTopic.Views),
@@ -71,7 +68,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.PageName)
 			};
 
-			topics.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumTopics));
+			topics.BulkInsert(columns, nameof(ApplicationDbContext.ForumTopics));
 		}
 	}
 }

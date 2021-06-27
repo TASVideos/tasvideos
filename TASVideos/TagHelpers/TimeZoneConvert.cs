@@ -2,11 +2,9 @@
 using System.Globalization;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.TagHelpers
 {
@@ -42,7 +40,7 @@ namespace TASVideos.TagHelpers
 				dateTime = dateTime.Date;
 			}
 
-			if (user != null)
+			if (user is not null)
 			{
 				try
 				{
@@ -51,17 +49,17 @@ namespace TASVideos.TagHelpers
 				}
 				catch
 				{
-					// TImeZoneInfo throws an exception if it can not find the timezone
+					// TimeZoneInfo throws an exception if it can not find the timezone
 					// Eat the exception and simply don't convert
 				}
 			}
 
 			var dateStr = DateOnly
 				? dateTime.ToShortDateString()
-				: dateTime.ToString(CultureInfo.CurrentCulture);
+				: dateTime.ToString("g", CultureInfo.CurrentCulture);
 			output.TagName = "span";
 			output.TagMode = TagMode.StartTagAndEndTag;
-			output.Content.AppendHtml(dateStr);
+			output.Content.AppendHtml(TagHelperExtensions.Text(dateStr));
 		}
 
 		private void ValidateExpression()

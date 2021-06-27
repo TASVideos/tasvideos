@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Roles.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Roles
 {
@@ -28,17 +28,11 @@ namespace TASVideos.Pages.Roles
 			_publisher = publisher;
 		}
 
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
-
 		[FromRoute]
 		public int? Id { get; set; }
 
 		[BindProperty]
-		public RoleEditModel Role { get; set; } = new RoleEditModel();
+		public RoleEditModel Role { get; set; } = new ();
 
 		[Display(Name = "Available Permissions")]
 		public IEnumerable<SelectListItem> AvailablePermissions => PermissionsSelectList;
@@ -81,8 +75,12 @@ namespace TASVideos.Pages.Roles
 							.ToList()
 					})
 					.SingleOrDefaultAsync();
-
+				ViewData["IsInUse"] = !await IsInUse(Id.Value);
 				SetAvailableAssignablePermissions();
+			}
+			else
+			{
+				ViewData["IsInUse"] = false;
 			}
 		}
 
@@ -107,18 +105,7 @@ namespace TASVideos.Pages.Roles
 			}
 
 			await AddUpdateRole(Role);
-
-			try
-			{
-				MessageType = Styles.Success;
-				Message = "Role successfully updated.";
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to update Role {Id}, the role may have already been updated, or the game no longer exists.";
-			}
+			await ConcurrentSave(_db, $"Role {Id} updated", $"Unable to update Role {Id}");
 
 			return RedirectToPage("List");
 		}
@@ -135,18 +122,18 @@ namespace TASVideos.Pages.Roles
 				return AccessDenied();
 			}
 
-			try
+			if (await IsInUse(Id.Value))
 			{
-				MessageType = Styles.Success;
-				Message = $"Role {Id}, deleted successfully.";
-				_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
-				_publisher.SendUserManagement($"Role {Id} deleted by {User.Identity.Name}", "", "Roles/List", User.Identity.Name!);
-				await _db.SaveChangesAsync();
+				ErrorStatusMessage($"Role {Id} cannot be deleted because it is in use by at least 1 user");
+				return RedirectToPage("List");
 			}
-			catch (DbUpdateConcurrencyException)
+
+			_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
+
+			var result = await ConcurrentSave(_db, $"Role {Id} deleted", $"Unable to delete Role {Id}");
+			if (result)
 			{
-				MessageType = Styles.Danger;
-				Message = $"Unable to delete Role {Id}, the role may have already been deleted or updated.";
+				_publisher.SendUserManagement($"Role {Id} deleted by {User.Name()}", "", "Roles/List", User.Name());
 			}
 
 			return RedirectToPage("List");
@@ -182,13 +169,13 @@ namespace TASVideos.Pages.Roles
 				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role!.Id == Id));
 				await _db.SaveChangesAsync();
 
-				_publisher.SendUserManagement($"Role {model.Name} updated by {User.Identity.Name}", "", $"Roles/Index?role={model.Name}", User.Identity.Name!);
+				_publisher.SendUserManagement($"Role {model.Name} updated by {User.Name()}", "", $"Roles/Index?role={model.Name}", User.Name());
 			}
 			else
 			{
 				role = new Role();
 				_db.Roles.Attach(role);
-				_publisher.SendUserManagement($"New Role added: {model.Name} by {User.Identity.Name}", "", $"Roles/Index?role={model.Name}", User.Identity.Name!);
+				_publisher.SendUserManagement($"New Role added: {model.Name} by {User.Name()}", "", $"Roles/Index?role={model.Name}", User.Name());
 			}
 
 			role.Name = model.Name;
@@ -210,6 +197,11 @@ namespace TASVideos.Pages.Roles
 				Link = rl,
 				Role = role
 			}));
+		}
+
+		private async Task<bool> IsInUse(int roleId)
+		{
+			return await _db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
 		}
 	}
 }

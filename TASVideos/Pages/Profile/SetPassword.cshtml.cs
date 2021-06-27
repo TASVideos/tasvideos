@@ -1,32 +1,21 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
-using TASVideos.Data.Entity;
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Profile
 {
 	[Authorize]
 	public class SetPasswordModel : BasePageModel
 	{
-		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 
-		public SetPasswordModel(
-			UserManager userManager,
-			SignInManager<User> signInManager)
+		public SetPasswordModel(SignInManager signInManager)
 		{
-			_userManager = userManager;
 			_signInManager = signInManager;
 		}
-
-		[TempData]
-		public string? StatusMessage { get; set; }
 
 		[Required]
 		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
@@ -41,13 +30,13 @@ namespace TASVideos.Pages.Profile
 
 		public async Task<IActionResult> OnGet()
 		{
-			var user = await _userManager.GetUserAsync(User);
+			var user = await _signInManager.UserManager.GetUserAsync(User);
 			if (user == null)
 			{
 				throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
 			}
 
-			var hasPassword = await _userManager.HasPasswordAsync(user);
+			var hasPassword = await _signInManager.UserManager.HasPasswordAsync(user);
 
 			if (hasPassword)
 			{
@@ -64,18 +53,15 @@ namespace TASVideos.Pages.Profile
 				return Page();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
+			var result = await _signInManager.AddPassword(User, NewPassword);
 
-			var addPasswordResult = await _userManager.AddPasswordAsync(user, NewPassword);
-			if (!addPasswordResult.Succeeded)
+			if (!result.Succeeded)
 			{
-				AddErrors(addPasswordResult);
+				AddErrors(result);
 				return Page();
 			}
 
-			await _signInManager.SignInAsync(user, isPersistent: false);
-			StatusMessage = "Your password has been set.";
-
+			SuccessStatusMessage("Your password has been set.");
 			return RedirectToPage("SetPassword");
 		}
 	}

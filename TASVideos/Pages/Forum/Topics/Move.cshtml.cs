@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -32,7 +30,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[BindProperty]
-		public MoveTopicModel Topic { get; set; } = new MoveTopicModel();
+		public MoveTopicModel Topic { get; set; } = new ();
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 
@@ -88,10 +86,10 @@ namespace TASVideos.Pages.Forum.Topics
 			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
 			_publisher.SendForum(
 				forum.Restricted,
-				$"Topic {Topic.TopicTitle} moved by {User.Identity.Name} from {Topic.ForumName} to {forum.Name}",
+				$"Topic {Topic.TopicTitle} moved by {User.Name()} from {Topic.ForumName} to {forum.Name}",
 				"",
 				$"Forum/Topics/{Id}",
-				User.Identity.Name!);
+				User.Name());
 
 			return RedirectToPage("Index", new { Id });
 		}

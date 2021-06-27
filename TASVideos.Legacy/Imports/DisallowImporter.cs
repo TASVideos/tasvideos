@@ -6,11 +6,9 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class DisallowImporter
+	internal static class DisallowImporter
 	{
-		public static void Import(
-			string connectionStr,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var disallow = legacyForumContext.Disallows
 				.ToList()
@@ -19,20 +17,19 @@ namespace TASVideos.Legacy.Imports
 				.Select(d => new UserDisallow
 				{
 					RegexPattern = d,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow
 				})
 				.ToList();
 
 			var columns = new[]
 			{
-				nameof(UserDisallow.Id),
 				nameof(UserDisallow.RegexPattern),
-				nameof(UserDisallow.CreateTimeStamp),
-				nameof(UserDisallow.LastUpdateTimeStamp)
+				nameof(UserDisallow.CreateTimestamp),
+				nameof(UserDisallow.LastUpdateTimestamp)
 			};
 
-			disallow.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.UserDisallows), Microsoft.Data.SqlClient.SqlBulkCopyOptions.Default);
+			disallow.BulkInsert(columns, nameof(ApplicationDbContext.UserDisallows));
 		}
 	}
 }

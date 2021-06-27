@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -31,7 +29,7 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public int? ToRevision { get; set; }
 
-		public WikiDiffModel Diff { get; set; } = new WikiDiffModel();
+		public WikiDiffModel Diff { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -104,7 +102,7 @@ namespace TASVideos.Pages.Wiki
 					RightMarkup = revisions.First().Markup
 				};
 			}
-			
+
 			return new WikiDiffModel
 			{
 				PageName = pageName,

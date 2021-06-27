@@ -1,6 +1,5 @@
-@using TASVideos.Services
 @inject UserManager UserManager
-@inject SignInManager<User> SignInManager
+@inject SignInManager SignInManager
 @{ 
 	bool isSignedIn = SignInManager.IsSignedIn(User);
 	int notificationCount = 0;
@@ -24,11 +23,14 @@
 				</nav-item>
 				<nav-item activate="Profile">
 					<a class="nav-link" asp-page="/Profile/Index" title="Manage">
-						@User.Identity.Name
+						@User.Name()
 					</a>
 				</nav-item>
 				<nav-item>
 					<button type="submit" class="btn btn-link navbar-btn nav-link">Log out</button>
+				</nav-item>
+				<nav-item activate="Search">
+					<a class="nav-link" asp-page="/Search/Index">Search</a>
 				</nav-item>
 			</navbar>
 		</form>
@@ -41,6 +43,9 @@
 			</nav-item>
 			<nav-item activate="Login">
 				<a class="nav-link" asp-page="/Account/Login" asp-route-returnUrl="@Context.ReturnUrl()">Log in</a>
+			</nav-item>
+			<nav-item activate="Search">
+				<a class="nav-link" asp-page="/Search/Index">Search</a>
 			</nav-item>
 		</navbar>
 	}

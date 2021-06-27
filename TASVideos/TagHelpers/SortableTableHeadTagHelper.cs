@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-
-using TASVideos.Data;
+using TASVideos.Core;
 using TASVideos.Extensions;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
-	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.WithoutEndTag, Attributes="sorting,model-type")]
+	[HtmlTargetElement("sortable-table-head", TagStructure = TagStructure.WithoutEndTag, Attributes = "sorting,model-type")]
 	public class SortableTableHeadTagHelper : TagHelper
 	{
 		private static readonly List<string> SortingProperties = typeof(ISortable)
@@ -23,7 +22,7 @@ namespace TASVideos.TagHelpers
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new ViewContext();
+		public ViewContext ViewContext { get; set; } = new ();
 
 		public ISortable Sorting { get; set; } = null!;
 		public Type ModelType { get; set; } = null!;
@@ -40,19 +39,17 @@ namespace TASVideos.TagHelpers
 				throw new ArgumentException($"{nameof(ModelType)} can not be null");
 			}
 
-			var page = ViewContext.ActionDescriptor.DisplayName;
-
 			output.TagName = "tr";
-		    output.TagMode = TagMode.StartTagAndEndTag;
+			output.TagMode = TagMode.StartTagAndEndTag;
 			foreach (PropertyInfo property in ModelType.UnderlyingSystemType.GetProperties())
 			{
-				if (property.GetCustomAttribute<TableIgnoreAttribute>() != null)
+				if (property.GetCustomAttribute<TableIgnoreAttribute>() is not null)
 				{
 					continue;
 				}
 
 				output.Content.AppendHtml("<th>");
-				var isSortable = property.GetCustomAttribute<SortableAttribute>() != null;
+				var isSortable = property.GetCustomAttribute<SortableAttribute>() is not null;
 				var displayName = property.DisplayName();
 				var propertyName = property.Name;
 
@@ -69,7 +66,7 @@ namespace TASVideos.TagHelpers
 					}
 
 					output.Content.AppendHtml(
-						$"<a href='{page}?Sort={sortStr}{AdditionalParams()}'>");
+						$"<a {Attr("href", ComputeHref(sortStr))}>");
 					output.Content.AppendHtml(displayName);
 
 					if (isSort)
@@ -90,6 +87,13 @@ namespace TASVideos.TagHelpers
 
 				output.Content.AppendHtml("</th>");
 			}
+		}
+
+		private string ComputeHref(string sortStr)
+		{
+			// TODO: Probably need some URL escaping in here
+			var page = ViewContext.ActionDescriptor.DisplayName;
+			return $"{page}?Sort={sortStr}{AdditionalParams()}";
 		}
 
 		private string AdditionalParams()

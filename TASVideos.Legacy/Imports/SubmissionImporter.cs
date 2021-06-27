@@ -6,22 +6,17 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class SubmissionImporter
+	internal static class SubmissionImporter
 	{
 		private static readonly string[] ValidSubmissionFileExtensions = { "fmv", "vmv", "fcm", "smv", "dtm", "mcm", "gmv", "dof", "dsm", "bkm", "mcm", "fm2", "vbm", "m64", "mmv", "zmv", "pxm", "fbm", "mc2", "ymv", "jrsr", "gz", "omr", "pjm", "wtf", "tas", "lsmv", "fm3", "bk2", "lmp", "mcm", "mar", "ltm" };
 
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
-			// TODO:
-			// submitters not in forum 
-			// Cleanup archives by removing multiple entries and other junk
 			var legacySubmissions = legacySiteContext.Submissions
 				.Include(s => s.User)
 				.Include(s => s.Judge)
@@ -45,7 +40,7 @@ namespace TASVideos.Legacy.Imports
 				.ThatAreNotDeleted()
 				.WithNoChildren()
 				.Where(w => w.PageName.StartsWith(LinkConstants.SubmissionWikiPage))
-				.Select(s => new { s.Id, s.PageName, s.CreateTimeStamp })
+				.Select(s => new { s.Id, s.PageName, s.CreateTimestamp })
 				.ToList();
 
 			var publicationWikis = context.WikiPages
@@ -53,8 +48,8 @@ namespace TASVideos.Legacy.Imports
 				.WithNoChildren()
 				.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
 				.ToList()
-				.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimeStamp, gvalue.CreateUserName, gvalue.PageName })
-				.Select(p => p.First(g => g.CreateTimeStamp == p.Min(pp => pp.CreateTimeStamp)))
+				.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimestamp, gvalue.CreateUserName, gvalue.PageName })
+				.Select(p => p.First(g => g.CreateTimestamp == p.Min(pp => pp.CreateTimestamp)))
 				.ToList();
 
 			var systems = context.GameSystems.ToList();
@@ -72,7 +67,7 @@ namespace TASVideos.Legacy.Imports
 				from p in pp.DefaultIfEmpty()
 				join r in rejectionReasons on ls.Id equals r.Id into rr
 				from r in rr.DefaultIfEmpty()
-				select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimeStamp, Rejection = r })
+				select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimestamp, Rejection = r })
 				.ToList();
 
 			foreach (var legacySubmission in lSubsWithSystem)
@@ -83,7 +78,6 @@ namespace TASVideos.Legacy.Imports
 				}
 
 				var (movieExtension, fileData) = CleanupZip(legacySubmission.Sub.Content);
-				var legacyTime = Math.Round((double)legacySubmission.Sub.Length, 2);
 
 				var submission = new Submission
 				{
@@ -93,9 +87,9 @@ namespace TASVideos.Legacy.Imports
 					Submitter = legacySubmission.Submitter,
 					SystemId = legacySubmission.System.Id,
 					System = legacySubmission.System,
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.SubmissionDate),
 					CreateUserName = legacySubmission.Submitter?.UserName,
-					LastUpdateTimeStamp = legacySubmission.Wiki.CreateTimeStamp,
+					LastUpdateTimestamp = legacySubmission.Wiki.CreateTimestamp,
 					GameName = ImportHelper.ConvertLatin1String(legacySubmission.Sub.GameName),
 					GameVersion = legacySubmission.Sub.GameVersion,
 					Frames = legacySubmission.Sub.Frames,
@@ -109,16 +103,16 @@ namespace TASVideos.Legacy.Imports
 					EmulatorVersion = CleanAndGuessEmuVersion(legacySubmission.Sub.Id, legacySubmission.Sub.EmulatorVersion, movieExtension),
 					JudgeId = legacySubmission.Judge?.Id,
 					PublisherId = legacySubmission.Publisher?.Id,
-					Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch) ? null : ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
+					Branch = string.IsNullOrWhiteSpace(legacySubmission.Sub.Branch)
+							? null
+							: ImportHelper.ConvertLatin1String(legacySubmission.Sub.Branch).Cap(50),
 					MovieExtension = movieExtension,
 					RejectionReasonId = legacySubmission.Rejection?.Reason,
 					MovieStartType = ParseAlertsToStartType(legacySubmission.Sub.Alerts),
-
+					LegacyTime = legacySubmission.Sub.Length,
+					ImportedTime = 0.0M,
+					LegacyAlerts = ImportHelper.ConvertLatin1String(legacySubmission.Sub.Alerts).NullIfWhiteSpace(),
 				};
-
-				submission.LegacyTime = legacySubmission.Sub.Length;
-				submission.ImportedTime = 0.0M; // decimal.Round((decimal)(submission.Frames / submission.SystemFrameRate.FrameRate), 3);
-				submission.LegacyAlerts = ImportHelper.NullIfWhiteSpace(ImportHelper.ConvertLatin1String(legacySubmission.Sub.Alerts));
 
 				if (legacySubmission.Sub.Id == 175) // Snow bros, inexplicably JP&JP on submission data
 				{
@@ -153,13 +147,13 @@ namespace TASVideos.Legacy.Imports
 					submissionAuthors.Add(author);
 				}
 
-				if (legacySubmission.Judge != null)
+				if (legacySubmission.Judge is not null)
 				{
 					submissionHistory.Add(new SubmissionStatusHistory
 					{
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
+						CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
 						CreateUserName = legacySubmission.Judge.UserName,
-						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
+						LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacySubmission.Sub.JudgeDate),
 						LastUpdateUserName = legacySubmission.Judge.UserName,
 						Status = ConvertJudgeStatus(submission.Status),
 						SubmissionId = submission.Id
@@ -170,9 +164,9 @@ namespace TASVideos.Legacy.Imports
 				{
 					submissionHistory.Add(new SubmissionStatusHistory
 					{
-						CreateTimeStamp = legacySubmission.PubDate.Value,
+						CreateTimestamp = legacySubmission.PubDate.Value,
 						CreateUserName = legacySubmission.Publisher.UserName,
-						LastUpdateTimeStamp = legacySubmission.PubDate.Value,
+						LastUpdateTimestamp = legacySubmission.PubDate.Value,
 						LastUpdateUserName = legacySubmission.Publisher.UserName,
 						Status = SubmissionStatus.Published,
 						SubmissionId = submission.Id
@@ -189,9 +183,9 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.WikiContentId),
 				nameof(Submission.SubmitterId),
 				nameof(Submission.SystemId),
-				nameof(Submission.CreateTimeStamp),
+				nameof(Submission.CreateTimestamp),
 				nameof(Submission.CreateUserName),
-				nameof(Submission.LastUpdateTimeStamp),
+				nameof(Submission.LastUpdateTimestamp),
 				nameof(Submission.GameName),
 				nameof(Submission.GameVersion),
 				nameof(Submission.Frames),
@@ -216,7 +210,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.LegacyAlerts)
 			};
 
-			submissions.BulkInsert(connectionStr, subColumns, nameof(ApplicationDbContext.Submissions), bulkCopyTimeout: 600);
+			submissions.BulkInsert(subColumns, nameof(ApplicationDbContext.Submissions));
 
 			var subAuthorColumns = new[]
 			{
@@ -224,19 +218,19 @@ namespace TASVideos.Legacy.Imports
 				nameof(SubmissionAuthor.SubmissionId)
 			};
 
-			submissionAuthors.BulkInsert(connectionStr, subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));
+			submissionAuthors.BulkInsert(subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));
 
 			var statusHistoryColumns = new[]
 			{
-				nameof(SubmissionStatusHistory.CreateTimeStamp),
+				nameof(SubmissionStatusHistory.CreateTimestamp),
 				nameof(SubmissionStatusHistory.CreateUserName),
-				nameof(SubmissionStatusHistory.LastUpdateTimeStamp),
+				nameof(SubmissionStatusHistory.LastUpdateTimestamp),
 				nameof(SubmissionStatusHistory.LastUpdateUserName),
 				nameof(SubmissionStatusHistory.Status),
 				nameof(SubmissionStatusHistory.SubmissionId)
 			};
 
-			submissionHistory.BulkInsert(connectionStr, statusHistoryColumns, nameof(ApplicationDbContext.SubmissionStatusHistory));
+			submissionHistory.BulkInsert(statusHistoryColumns, nameof(ApplicationDbContext.SubmissionStatusHistory));
 		}
 
 		private static SubmissionStatus ConvertStatus(string legacyStatus)
@@ -279,7 +273,7 @@ namespace TASVideos.Legacy.Imports
 			{
 				if (content == null || content.Length == 0)
 				{
-					return (null, new byte[0]);
+					return (null, Array.Empty<byte>());
 				}
 
 				using var submissionFileStream = new MemoryStream(content);
@@ -288,7 +282,7 @@ namespace TASVideos.Legacy.Imports
 
 				var single = entries
 					.Where(e => !string.IsNullOrWhiteSpace(Path.GetExtension(e.FullName)))
-					.Where(e => (ValidSubmissionFileExtensions).Contains(Path.GetExtension(e.FullName).Replace(".", "")))
+					.Where(e => ValidSubmissionFileExtensions.Contains(Path.GetExtension(e.FullName).Replace(".", "")))
 					.Distinct()
 					.OrderBy(e => e.FullName.Contains("/"))
 					.ThenBy(e => e.FullName)
@@ -298,7 +292,7 @@ namespace TASVideos.Legacy.Imports
 				using var stream = single.Open();
 				stream.CopyTo(singleStream);
 				var fileBytes = singleStream.ToArray();
-				
+
 				byte[] compressedBytes;
 				using (var outStream = new MemoryStream())
 				{
@@ -309,6 +303,7 @@ namespace TASVideos.Legacy.Imports
 						using var fileToCompressStream = new MemoryStream(fileBytes);
 						fileToCompressStream.CopyTo(entryStream);
 					}
+
 					compressedBytes = outStream.ToArray();
 				}
 
@@ -319,7 +314,7 @@ namespace TASVideos.Legacy.Imports
 			{
 				// Some submissions are .bz2 4551, 6551
 				// Some have corrupt headers, 5111
-				return (null, content ?? new byte[0]);
+				return (null, content ?? Array.Empty<byte>());
 			}
 		}
 
@@ -342,9 +337,9 @@ namespace TASVideos.Legacy.Imports
 				"gmv" => "GENS",
 				"fcm" => "FCEU0.98",
 				"m64" => "mupen64 0.5 re-recording v8",
-				"smv" => (id < 1532 // The first known Snes9x 1.51 submission
+				"smv" => id < 1532 // The first known Snes9x 1.51 submission
 					? "Snes9x 1.43"
-					: "Snes9x"),
+					: "Snes9x",
 				_ => null
 			};
 		}

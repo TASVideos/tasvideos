@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -11,7 +12,7 @@ namespace TASVideos.MovieParsers.Parsers
 		private const int WiiHertz = 729000000;
 		public override string FileExtension => "dtm";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -68,18 +69,18 @@ namespace TASVideos.MovieParsers.Parsers
 			br.ReadBytes(20); // SHA-1 has of git revision
 			br.ReadBytes(4); // DSP
 			br.ReadBytes(4); // DSP
-			var ticks = br.ReadInt64(); // (486 MHz when a GameCube game is running, 729 MHz when a Wii game is running)
-			if (ticks != 0)
+			result.CycleCount = br.ReadInt64(); // (486 MHz when a GameCube game is running, 729 MHz when a Wii game is running)
+			if (result.CycleCount != 0)
 			{
 				var hertz = isWii ? WiiHertz : GameCubeHertz;
-				result.Frames = (int)Math.Ceiling((decimal)(ticks / hertz * 60));
+				result.Frames = (int)Math.Ceiling((decimal)(result.CycleCount / hertz * 60));
 			}
 			else
 			{
 				result.WarnLengthInferred();
 			}
 
-			return result;
+			return await Task.FromResult(result);
 		}
 	}
 }

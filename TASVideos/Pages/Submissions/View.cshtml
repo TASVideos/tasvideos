@@ -11,9 +11,8 @@
 	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
 		&& Model.Submission.IsCataloged
-		&& Model.Submission.Publisher == User.Identity.Name;
+		&& Model.Submission.Publisher == User.Name();
 	string statusColor = StatusColor(Model.Submission.Status);
-	string authors = string.Join(", ", Model.Submission.Authors);
 }
 
 @functions{
@@ -106,7 +105,15 @@
 					@(Model.Submission.StartType?.ToString() ?? "Unknown")
 				</td>
 				<th>Authors</th>
-				<td>@authors</td>
+				<td>
+					@foreach (var author in Model.Submission.Authors)
+					{
+						<profile-link username="@author">@author</profile-link><span condition="author != Model.Submission.Authors.Last()">,</span>
+					}
+					<small condition="!string.IsNullOrWhiteSpace(Model.Submission.AdditionalAuthors)">
+						<br />(Additional: @Model.Submission.AdditionalAuthors)
+					</small>
+				</td>
 			</tr>
 		</table>
 		<small>
@@ -138,7 +145,7 @@
 </card>
 <hr />
 <small>
-	last edited by @Model.Submission.LastUpdateUser on @Model.Submission.LastUpdateTimeStamp
+	last edited by @Model.Submission.LastUpdateUser on @Model.Submission.LastUpdateTimestamp
 </small>
 <br />
 <a

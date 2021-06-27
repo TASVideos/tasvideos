@@ -3,9 +3,8 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
-
-using AutoMapper;
-
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,20 +14,17 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
-using TASVideos.Api.Controllers;
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
-using TASVideos.Services;
-using TASVideos.Services.Email;
-using TASVideos.Services.ExternalMediaPublisher;
-using TASVideos.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Services.PublicationChain;
-using TASVideos.Services.RssFeedParsers;
 
 namespace TASVideos.Extensions
 {
@@ -37,6 +33,8 @@ namespace TASVideos.Extensions
 		public static IServiceCollection AddAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<AppSettings>(configuration);
+			var settings = configuration.Get<AppSettings>();
+			services.AddSingleton(settings);
 			return services;
 		}
 
@@ -92,49 +90,20 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddServices(this IServiceCollection services, IWebHostEnvironment env)
-		{
-			services.AddScoped<UserManager>();
-			services.AddScoped<IPointsService, PointsService>();
-			services.AddScoped<IAwards, Awards>();
-			services.AddScoped<IMediaFileUploader, MediaFileUploader>();
-			services.AddScoped<ILanguages, Languages>();
-			services.AddScoped<ITopicWatcher, TopicWatcher>();
-			services.AddScoped<IPublicationHistory, PublicationHistory>();
-			services.AddScoped<IFileService, FileService>();
-			services.AddScoped<IMovieSearchTokens, MovieSearchTokens>();
-			services.AddScoped<IVcsRssParser, VcsRssParser>();
-
-			if (env.IsDevelopment())
-			{
-				services.AddTransient<IEmailSender, EmailLogger>();
-			}
-			else
-			{
-				services.AddTransient<IEmailSender, SendGridSender>();
-			}
-
-			services.AddTransient<IEmailService, EmailService>();
-			services.AddTransient<IWikiPages, WikiPages>();
-
-			services.AddScoped<ITASVideoAgent, TASVideoAgent>();
-			services.AddScoped<ITASVideosGrue, TASVideosGrue>();
-
-			return services;
-		}
-
 		public static IServiceCollection AddMovieParser(this IServiceCollection services)
 		{
-			services.AddSingleton<MovieParser>();
+			services.AddSingleton<IMovieParser, MovieParser>();
 			return services;
 		}
 
-		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services)
+		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services, IWebHostEnvironment env)
 		{
+			if (env.IsDevelopment())
+			{
+				services.AddDatabaseDeveloperPageExceptionFilter();
+			}
+
 			services.AddResponseCaching();
-			services
-				.AddControllers()
-				.AddNewtonsoftJson();
 			services
 				.AddRazorPages(options =>
 				{
@@ -156,12 +125,12 @@ namespace TASVideos.Extensions
 
 					// Backwards compatibility with legacy links
 					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
+					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/t/{id:int}");
 					options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
 					options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
 					options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
 				})
-				.AddRazorRuntimeCompilation()
-				.AddApplicationPart(typeof(PublicationsController).Assembly);
+				.AddRazorRuntimeCompilation();
 
 			services.AddHttpContext();
 			services.AddMvc(options => options.ValueProviderFactories.AddDelimitedValueProviderFactory('|'));
@@ -178,6 +147,7 @@ namespace TASVideos.Extensions
 					config.Password.RequireLowercase = false;
 					config.Password.RequireNonAlphanumeric = false;
 					config.Password.RequiredUniqueChars = 4;
+					config.User.RequireUniqueEmail = true;
 				})
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
@@ -187,14 +157,29 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddAutoMapperWithProjections(this IServiceCollection services)
 		{
-			Mapper.Initialize(cfg => cfg.AddProfile(new MappingProfile()));
-			services.AddAutoMapper();
-
+			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 			return services;
 		}
 
-		public static IServiceCollection AddSwagger(this IServiceCollection services)
+		public static IServiceCollection AddSwagger(this IServiceCollection services, AppSettings settings)
 		{
+			services.AddAuthentication(x =>
+			{
+				x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(x =>
+			{
+				x.RequireHttpsMetadata = true;
+				x.SaveToken = true;
+				x.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(settings.Jwt.SecretKey)),
+					ValidateIssuer = false,
+					ValidateAudience = false
+				};
+			});
+
 			var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
 
 			return services.AddSwaggerGen(c =>
@@ -207,14 +192,17 @@ namespace TASVideos.Extensions
 						Version = $"v{version.Major}.{version.Minor}.{version.Revision}",
 						Description = "API For tasvideos.org content"
 					});
-
+				c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+				{
+					Name = "Authorization"
+				});
 				var basePath = AppContext.BaseDirectory;
 				var xmlPath = Path.Combine(basePath, "TASVideos.Api.xml");
 				c.IncludeXmlComments(xmlPath);
 			});
 		}
 
-		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IWebHostEnvironment env, AppSettings settings)
+		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
@@ -223,10 +211,11 @@ namespace TASVideos.Extensions
 
 			services.AddSingleton<IPostDistributor, IrcDistributor>();
 			services.AddSingleton<IPostDistributor, DiscordDistributor>();
+			services.AddSingleton<IPostDistributor, TwitterDistributor>();
 			services.AddScoped<IPostDistributor, DistributorStorage>();
 
 			services.AddTransient<ExternalMediaPublisher>();
-			
+
 			return services;
 		}
 
@@ -234,7 +223,7 @@ namespace TASVideos.Extensions
 		{
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient(
-				provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext.User);
+				provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext!.User);
 
 			return services;
 		}

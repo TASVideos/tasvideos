@@ -3,7 +3,7 @@
 namespace TASVideos.MovieParsers.Result
 {
 	/// <summary>
-	/// The standard implementation of <seealso cref="IParseResult"/>
+	/// The standard implementation of <seealso cref="IParseResult"/>.
 	/// </summary>
 	internal class ParseResult : IParseResult
 	{
@@ -18,9 +18,10 @@ namespace TASVideos.MovieParsers.Result
 		public int RerecordCount { get; internal set; }
 		public MovieStartType StartType { get; internal set; }
 		public double? FrameRateOverride { get; internal set; }
+		public long? CycleCount { get; internal set; }
 
-		internal List<ParseWarnings> WarningList { get; set; } = new List<ParseWarnings>();
-		internal List<string> ErrorList { get; set; } = new List<string>();
+		internal List<ParseWarnings> WarningList { get; set; } = new ();
+		internal List<string> ErrorList { get; set; } = new ();
 	}
 
 	internal static class ParseResultExtensions

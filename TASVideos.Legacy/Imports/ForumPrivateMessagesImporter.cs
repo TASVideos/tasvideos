@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Data.SqlClient;
+using System.Web;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.ForumEngine;
@@ -8,12 +8,9 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class ForumPrivateMessagesImporter
+	internal static class ForumPrivateMessagesImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var data = legacyForumContext.PrivateMessages
 				.Where(p => p.ToUserId > 0 && p.FromUserId > 0) // These include delete users, and delete messages, the legacy system puts a negative on user id to soft delete
@@ -49,23 +46,23 @@ namespace TASVideos.Legacy.Imports
 				})
 				.Select(g =>
 				{
-					var fixedText = System.Web.HttpUtility.HtmlDecode(ImportHelper.ConvertLatin1String(g.Key.Text.Replace(":" + g.Key.BbCodeUid, "")));
+					var fixedText = HttpUtility.HtmlDecode(ImportHelper.ConvertLatin1String(g.Key.Text.Replace(":" + g.Key.BbCodeUid, ""))) ?? "";
 					return new PrivateMessage
 					{
-						CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
+						CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
 						CreateUserName = g.Key.UserName,
-						LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
+						LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(g.Key.Timestamp),
 						LastUpdateUserName = g.Key.UserName,
 						FromUserId = g.Key.FromUserId,
 						ToUserId = g.Key.ToUserId,
-						IpAddress = g.Key.IpAddress,
+						IpAddress = g.Key.IpAddress.IpFromHex(),
 						Subject = ImportHelper.ConvertLatin1String(g.Key.Subject),
 						Text = fixedText,
 						EnableHtml = g.Key.EnableHtml && BbParser.ContainsHtml(fixedText, g.Key.EnableBbCode),
 						EnableBbCode = g.Key.EnableBbCode,
 						ReadOn = g.All(gg => gg.Type != 1)
 							? DateTime.UtcNow // Legacy system didn't track date so we will simply use the import date
-							: (DateTime?)null,
+							: null,
 						SavedForFromUser = g.Any(gg => gg.Type == 4),
 						SavedForToUser = g.Any(gg => gg.Type == 3)
 					};
@@ -74,9 +71,9 @@ namespace TASVideos.Legacy.Imports
 
 			var columns = new[]
 			{
-				nameof(PrivateMessage.CreateTimeStamp),
+				nameof(PrivateMessage.CreateTimestamp),
 				nameof(PrivateMessage.CreateUserName),
-				nameof(PrivateMessage.LastUpdateTimeStamp),
+				nameof(PrivateMessage.LastUpdateTimestamp),
 				nameof(PrivateMessage.LastUpdateUserName),
 				nameof(PrivateMessage.FromUserId),
 				nameof(PrivateMessage.ToUserId),
@@ -92,7 +89,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PrivateMessage.DeletedForFromUser)
 			};
 
-			privMessages.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PrivateMessages), SqlBulkCopyOptions.Default, 20000, 600);
+			privMessages.BulkInsert(columns, nameof(ApplicationDbContext.PrivateMessages));
 		}
 	}
 }

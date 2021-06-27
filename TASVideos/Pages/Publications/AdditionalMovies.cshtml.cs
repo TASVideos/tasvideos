@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -98,22 +95,17 @@ namespace TASVideos.Pages.Publications
 				Path = AdditionalMovieFile!.FileName,
 				PublicationId = Id,
 				Description = DisplayName,
-				Type = FileType.MovieFile
+				Type = FileType.MovieFile,
+				FileData = await AdditionalMovieFile.ToBytes()
 			};
-
-			await using (var memoryStream = new MemoryStream())
-			{
-				await AdditionalMovieFile.CopyToAsync(memoryStream);
-				publicationFile.FileData = memoryStream.ToArray();
-			}
 
 			_db.PublicationFiles.Add(publicationFile);
 			await _db.SaveChangesAsync();
 
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} {PublicationTitle} added new movie file: {DisplayName}",
-					$"{Id}M",
-					User.Identity.Name!);
+				$"{Id}M",
+				User.Name());
 
 			return RedirectToPage("AdditionalMovies", new { Id });
 		}
@@ -130,8 +122,8 @@ namespace TASVideos.Pages.Publications
 
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} {PublicationTitle} removed movie file {file.Path}",
-					$"{Id}M",
-					User.Identity.Name!);
+				$"{Id}M",
+				User.Name());
 
 			return RedirectToPage("AdditionalMovies", new { Id });
 		}

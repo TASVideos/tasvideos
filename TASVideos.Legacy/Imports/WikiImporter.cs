@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
+using TASVideos.Extensions;
 using TASVideos.Legacy.Data.Site;
 using TASVideos.Legacy.Data.Site.Entity;
 
-// ReSharper disable StyleCop.SA1201
-// ReSharper disable StyleCop.SA1503
 namespace TASVideos.Legacy.Imports
 {
-	public static class WikiImporter
+	internal static class WikiImporter
 	{
 		private class UserDto
 		{
-			public string Name { get; set; } = "";
-			public string HomePage { get; set; } = "";
+			public string Name { get; init; } = "";
+			public string HomePage { get; init; } = "";
 		}
 
-		public static void Import(string connectionStr, NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			var blacklist = ObsoletePages.Concat(ObsoletePages.Select(p => "DeletedPages/" + p));
 
@@ -55,9 +53,9 @@ namespace TASVideos.Legacy.Imports
 					MinorEdit = legacyPage.Site.MinorEdit == "Y",
 					RevisionMessage = legacyPage.Site.WhyEdit.Cap(1000),
 					IsDeleted = legacyPage.Site.PageName.StartsWith("DeletedPages/"),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimestamp),
 					CreateUserName = legacyPage.Site.User?.Name,
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimeStamp),
+					LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimestamp),
 					LastUpdateUserName = legacyPage.Site.User?.Name
 				});
 			}
@@ -81,10 +79,10 @@ namespace TASVideos.Legacy.Imports
 			{
 				nameof(WikiPage.Id),
 				nameof(WikiPage.ChildId),
-				nameof(WikiPage.CreateTimeStamp),
+				nameof(WikiPage.CreateTimestamp),
 				nameof(WikiPage.CreateUserName),
 				nameof(WikiPage.IsDeleted),
-				nameof(WikiPage.LastUpdateTimeStamp),
+				nameof(WikiPage.LastUpdateTimestamp),
 				nameof(WikiPage.LastUpdateUserName),
 				nameof(WikiPage.Markup),
 				nameof(WikiPage.MinorEdit),
@@ -93,7 +91,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPage.RevisionMessage)
 			};
 
-			pages.BulkInsert(connectionStr, wikiColumns, nameof(ApplicationDbContext.WikiPages), bulkCopyTimeout: 1200);
+			pages.BulkInsert(wikiColumns, nameof(ApplicationDbContext.WikiPages));
 		}
 
 		private static string PageNameShenanigans(SiteText st, string? userName)
@@ -114,6 +112,10 @@ namespace TASVideos.Legacy.Imports
 			else if (pageName == "NoGamename")
 			{
 				pageName = "NoGameName";
+			}
+			else if (pageName == "Roles")
+			{
+				pageName = "Roles/Details";
 			}
 			else if (!string.IsNullOrEmpty(userName))
 			{
@@ -168,7 +170,7 @@ namespace TASVideos.Legacy.Imports
 		}
 
 		// ReSharper disable once StyleCop.SA1201
-		private static readonly string[] ObsoletePages = 
+		private static readonly string[] ObsoletePages =
 		{
 			"AccessBlocked",
 			"CacheControl",

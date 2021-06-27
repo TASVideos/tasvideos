@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Posts
 {
@@ -11,7 +11,8 @@ namespace TASVideos.Pages.Forum.Posts
 	[AllowAnonymous]
 	public class IndexModel : BaseForumModel
 	{
-		public IndexModel(ApplicationDbContext db, ITopicWatcher watcher) : base(db, watcher)
+		public IndexModel(ApplicationDbContext db, ITopicWatcher watcher)
+			: base(db, watcher)
 		{
 		}
 
@@ -27,11 +28,11 @@ namespace TASVideos.Pages.Forum.Posts
 			}
 
 			return RedirectToPage(
-				"/Forum/Topics/Index", 
+				"/Forum/Topics/Index",
 				new
 				{
-					Id = model.TopicId, 
-					Highlight = Id, 
+					Id = model.TopicId,
+					Highlight = Id,
 					CurrentPage = model.Page
 				});
 		}

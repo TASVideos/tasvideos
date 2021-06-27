@@ -1,13 +1,12 @@
 ﻿using TASVideos.Data.Entity;
 
-// ReSharper disable StyleCop.SA1401
 namespace TASVideos.Data.SeedData
 {
 	public static class TierSeedData
 	{
-		public static Tier[] Tiers =
+		public static readonly Tier[] Tiers =
 		{
-			new Tier
+			new ()
 			{
 				Id = 1,
 				Name = "Vault",
@@ -15,7 +14,7 @@ namespace TASVideos.Data.SeedData
 				IconPath = "images/vaulttier.png",
 				Link = "Vault"
 			},
-			new Tier
+			new ()
 			{
 				Id = 2,
 				Name = "Moons",
@@ -23,7 +22,7 @@ namespace TASVideos.Data.SeedData
 				IconPath = "images/moontier.png",
 				Link = "Moons"
 			},
-			new Tier
+			new ()
 			{
 				Id = 3,
 				Name = "Stars",

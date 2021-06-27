@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Messages
 {
@@ -52,7 +50,7 @@ namespace TASVideos.Pages.Messages
 
 		public PrivateMessageModel? ReplyingTo { get; set; }
 
-		public bool IsReply => ReplyingTo != null;
+		public bool IsReply => ReplyingTo is not null;
 
 		public async Task OnGet()
 		{
@@ -68,7 +66,7 @@ namespace TASVideos.Pages.Messages
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (User.Identity.Name == ToUser)
+			if (User.Name() == ToUser)
 			{
 				ModelState.AddModelError(nameof(ToUser), "Can not send a message to yourself!");
 			}
@@ -127,7 +125,7 @@ namespace TASVideos.Pages.Messages
 				ToUserId = toUserId,
 				Subject = Subject,
 				Text = Text,
-				IpAddress = IpAddress.ToString()
+				IpAddress = IpAddress
 			};
 
 			_db.PrivateMessages.Add(message);

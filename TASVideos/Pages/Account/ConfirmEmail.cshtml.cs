@@ -1,12 +1,9 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
-using TASVideos.Data.Entity;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account
 {
@@ -14,12 +11,12 @@ namespace TASVideos.Pages.Account
 	public class ConfirmEmailModel : BasePageModel
 	{
 		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public ConfirmEmailModel(
 			UserManager userManager,
-			SignInManager<User> signInManager,
+			SignInManager signInManager,
 			ExternalMediaPublisher publisher)
 		{
 			_userManager = userManager;

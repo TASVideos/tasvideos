@@ -1,4 +1,5 @@
 ﻿@page "{id}"
+@using TASVideos.Data.Helpers
 @model IndexModel
 @{
 	ViewData["Title"] = $"TASVideos Forum {Model.Topic.Title}";
@@ -9,17 +10,30 @@
 	<partial name="_TopicCrumbs" model="Model.Topic" />
 	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
 		|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
-		asp-page="/Forum/Posts/Create"
-		asp-route-topicId="@Model.Id"
-		class="btn btn-primary btn-sm pull-right">
+	   asp-page="/Forum/Posts/Create"
+	   asp-route-topicId="@Model.Id"
+	   class="btn btn-primary btn-sm pull-right">
 		<span class="fa fa-plus"></span> Post
 	</a>
 </fullrow>
 
-@if (Model.Topic.Poll != null)
+@if (Model.Topic.Poll is not null)
 {
 	<hr />
 	<partial name="_Poll" model="Model.Topic.Poll" />
+}
+
+@*TODO: WikiPage is generic but the html assumes it will be a submission*@
+@if (Model.WikiPage is not null)
+{
+	<card class="mt-2 mb-2">
+		<cardheader>
+			Submission Text <small>(<sub-link id="@SubmissionHelper.SubmissionId(Model.WikiPage.PageName)">See Actual Submission</sub-link>)</small>
+		</cardheader>
+		<cardbody style="max-height: 600px; overflow-y: scroll">
+			<wiki-markup markup="@Model.WikiPage.Markup" page-data="Model.WikiPage"></wiki-markup>
+		</cardbody>
+	</card>
 }
 
 <hr class="mt-1" />
@@ -38,9 +52,9 @@
 	<partial name="_TopicCrumbs" model="Model.Topic" />
 	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
 		|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
-		asp-page="/Forum/Posts/Create"
-		asp-route-topicId="@Model.Id"
-		class="btn btn-primary btn-sm pull-right">
+	   asp-page="/Forum/Posts/Create"
+	   asp-route-topicId="@Model.Id"
+	   class="btn btn-primary btn-sm pull-right">
 		<span class="fa fa-plus"></span> Post
 	</a>
 </fullrow>

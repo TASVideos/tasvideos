@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Users.Models
 		public IEnumerable<int> SelectedRoles { get; set; } = new List<int>();
 
 		[DisplayName("Account Created On")]
-		public DateTime CreateTimeStamp { get; set; }
+		public DateTime CreateTimestamp { get; set; }
 
 		[DisplayName("User Last Logged In")]
 		[DisplayFormat(NullDisplayText = "Never")]

@@ -4,10 +4,6 @@
 	ViewData["Title"] = "Game List" + (!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? "/" + Model.Games.SystemCode : string.Empty);
 }
 
-<alert type="@Model.MessageType" condition="Model.ShowMessage" dismissible="true">
-	@Model.Message
-</alert>
-
 <a asp-page="Edit" class="btn btn-primary mb-3 pull-right">Create</a>
 <form class="form-inline mb-3">
 	<label asp-for="@Model.Games.SystemCode" class="mr-2"></label>

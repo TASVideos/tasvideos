@@ -6,8 +6,10 @@
 **/Debug/**
 **/packages/**
 *.g.cs
-TASVideos/wwwroot/css/site.min.css
 TASVideos/CommonAssemblyInfo.cs
 packages-microsoft-prod.deb
 TASVideos/Properties/serviceDependencies.json
 TASVideos/Properties/serviceDependencies.local.json
+TASVideos.sln.personal.DotSettings
+TASVideos.Data/SampleData/SampleData-MsSql.sql
+TASVideos.Data/SampleData/SampleData-Postgres.sql

@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-    public static class ForumCategoriesImporter
-    {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+	internal static class ForumCategoriesImporter
+	{
+		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			var categories = legacyForumContext
 				.Categories
@@ -20,7 +16,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					Id = c.Id,
 					Title = c.Title ?? "",
-					Ordinal =  c.Title == "Other"
+					Ordinal = c.Title == "Other"
 						? 30
 						: c.Title == "Completed movies"
 							? 40
@@ -28,8 +24,8 @@ namespace TASVideos.Legacy.Imports
 								? 50
 								: c.Order,
 					Description = c.Description,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					CreateUserName = "LegacyImport",
 					LastUpdateUserName = "LegacyImport"
 				})
@@ -41,13 +37,13 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumCategory.Title),
 				nameof(ForumCategory.Ordinal),
 				nameof(ForumCategory.Description),
-				nameof(ForumCategory.CreateTimeStamp),
-				nameof(ForumCategory.LastUpdateTimeStamp),
+				nameof(ForumCategory.CreateTimestamp),
+				nameof(ForumCategory.LastUpdateTimestamp),
 				nameof(ForumCategory.CreateUserName),
 				nameof(ForumCategory.LastUpdateUserName)
 			};
 
-			categories.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.ForumCategories));
+			categories.BulkInsert(columns, nameof(ApplicationDbContext.ForumCategories));
 		}
-    }
+	}
 }

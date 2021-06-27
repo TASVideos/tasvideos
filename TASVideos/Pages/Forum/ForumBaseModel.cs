@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -13,7 +13,6 @@ using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Models;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum
 {
@@ -43,8 +42,8 @@ namespace TASVideos.Pages.Forum
 		private readonly ApplicationDbContext _db;
 		private readonly ITopicWatcher _topicWatcher;
 
-		private static readonly SelectListGroup StandardGroup = new SelectListGroup { Name = "Standard" };
-		private static readonly SelectListGroup AltGroup = new SelectListGroup { Name = "Alternate" };
+		private static readonly SelectListGroup StandardGroup = new () { Name = "Standard" };
+		private static readonly SelectListGroup AltGroup = new () { Name = "Alternate" };
 
 		public BaseForumModel(ApplicationDbContext db, ITopicWatcher topicWatcher)
 		{
@@ -90,8 +89,7 @@ namespace TASVideos.Pages.Forum
 				Text = model.Text,
 				PosterMood = model.Mood,
 
-				// TODO: check for bbcode and if none, set this to false?
-				// For now we are not giving the user choices
+				// New posts are always bbcode = true, html = false
 				EnableHtml = false,
 				EnableBbCode = true
 			};
@@ -110,7 +108,7 @@ namespace TASVideos.Pages.Forum
 				Question = model.Question ?? "",
 				CloseDate = model.DaysOpen.HasValue
 					? DateTime.UtcNow.AddDays(model.DaysOpen.Value)
-					: (DateTime?)null,
+					: null,
 				PollOptions = model.PollOptions.Select((po, i) => new ForumPollOption
 				{
 					Text = po,

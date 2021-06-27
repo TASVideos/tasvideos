@@ -19,7 +19,7 @@ namespace TASVideos.Pages.UserFiles
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IMapper _mapper;
-		
+
 		public InfoModel(
 			ApplicationDbContext db,
 			IMapper mapper)
@@ -31,7 +31,7 @@ namespace TASVideos.Pages.UserFiles
 		[FromRoute]
 		public long Id { get; set; }
 
-		public UserFileModel UserFile { get; set; } = new UserFileModel();
+		public UserFileModel UserFile { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -57,8 +57,7 @@ namespace TASVideos.Pages.UserFiles
 
 			file.Views++;
 
-			// TODO: handle DbConcurrencyException
-			await _db.SaveChangesAsync();
+			await _db.TrySaveChangesAsync();
 
 			return Page();
 		}
@@ -76,7 +75,7 @@ namespace TASVideos.Pages.UserFiles
 
 			if (file.Hidden)
 			{
-				if (!User.Identity.IsAuthenticated || file.AuthorId != User.GetUserId())
+				if (!User.IsLoggedIn() || file.AuthorId != User.GetUserId())
 				{
 					return NotFound();
 				}
@@ -84,8 +83,7 @@ namespace TASVideos.Pages.UserFiles
 
 			file.Downloads++;
 
-			// TODO: handle DbConcurrencyException
-			await _db.SaveChangesAsync();
+			await _db.TrySaveChangesAsync();
 
 			var stream = new GZipStream(
 				new MemoryStream(file.Content),

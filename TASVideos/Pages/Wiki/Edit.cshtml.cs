@@ -1,13 +1,11 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Wiki.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -32,7 +30,7 @@ namespace TASVideos.Pages.Wiki
 		public string? Path { get; set; }
 
 		[BindProperty]
-		public WikiEditModel PageToEdit { get; set; } = new WikiEditModel();
+		public WikiEditModel PageToEdit { get; set; } = new ();
 
 		public int? Id { get; set; }
 
@@ -100,10 +98,10 @@ namespace TASVideos.Pages.Wiki
 			if (page.Revision == 1 || !PageToEdit.MinorEdit)
 			{
 				_publisher.SendGeneralWiki(
-					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Identity.Name}",
+					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 					$"({PageToEdit.RevisionMessage}): ",
 					Path,
-					User.Identity.Name!);
+					User.Name());
 			}
 
 			return Redirect("/" + page.PageName);

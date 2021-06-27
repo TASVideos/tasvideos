@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -12,12 +11,9 @@ using LegacyUserFile = TASVideos.Legacy.Data.Site.Entity.UserFile;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class UserFileImporter
+	internal static class UserFileImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			var userIdsByName = context.Users.ToDictionary(
 				user => user.UserName,
@@ -72,15 +68,15 @@ namespace TASVideos.Legacy.Imports
 				nameof(UserFileComment.UserFileId)
 			};
 
-			userFiles.BulkInsert(connectionStr, userFileColumns, nameof(ApplicationDbContext.UserFiles), SqlBulkCopyOptions.KeepIdentity, 10000, 600);
-			userFileComments.BulkInsert(connectionStr, userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
+			userFiles.BulkInsert(userFileColumns, nameof(ApplicationDbContext.UserFiles));
+			userFileComments.BulkInsert(userFileCommentColumns, nameof(ApplicationDbContext.UserFileComments));
 		}
 
 		private static UserFileComment Convert(
 			LegacyComment legacyComment,
-			Dictionary<string, int> userIdsByName)
+			IReadOnlyDictionary<string, int> userIdsByName)
 		{
-			return new UserFileComment
+			return new ()
 			{
 				CreationTimeStamp = ImportHelper.UnixTimeStampToDateTime(legacyComment.Timestamp),
 				Id = legacyComment.Id,
@@ -97,9 +93,9 @@ namespace TASVideos.Legacy.Imports
 
 		private static UserFile Convert(
 			LegacyUserFile legacyFile,
-			Dictionary<string, int> userIdsByName)
+			IReadOnlyDictionary<string, int> userIdsByName)
 		{
-			return new UserFile
+			return new ()
 			{
 				AuthorId = userIdsByName.TryGetValue(legacyFile.User!.Name, out var userId)
 					? userId

@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Permissions.Models
 {
 	/// <summary>
-	/// Represents a Permission entry for the purpose of display
+	/// Represents a Permission entry for the purpose of display.
 	/// </summary>
 	public class PermissionDisplayModel
 	{

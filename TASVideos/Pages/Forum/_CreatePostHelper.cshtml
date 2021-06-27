@@ -58,10 +58,17 @@
 			var val = textArea.value;
 			var i = textArea.selectionStart;
 			var j = textArea.selectionEnd;
-			val = val.slice(0, i) + ss[0] + val.slice(i, j) + ss[1] + val.slice(j);
-			textArea.value = val;
-			textArea.selectionStart = i + ss[0].length;
-			textArea.selectionEnd = j + ss[0].length;
+			if (val.slice(i - ss[0].length, i) === ss[0] && val.slice(j, j + ss[1].length) === ss[1]) {
+				val = val.slice(0, i - ss[0].length) + val.slice(i, j) + val.slice(j + ss[1].length);
+				textArea.value = val;
+				textArea.selectionStart = i - ss[0].length;
+				textArea.selectionEnd = j - ss[0].length;
+			} else {
+				val = val.slice(0, i) + ss[0] + val.slice(i, j) + ss[1] + val.slice(j);
+				textArea.value = val;
+				textArea.selectionStart = i + ss[0].length;
+				textArea.selectionEnd = j + ss[0].length;
+			}
 		}
 
 		for (var i = 0; i < buttons.length; i++) {

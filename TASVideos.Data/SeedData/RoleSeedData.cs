@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Data.Entity;
 
-// ReSharper disable StyleCop.SA1202
 // ReSharper disable StaticMemberInitializerReferesToMemberBelow
 namespace TASVideos.Data.SeedData
 {
@@ -96,7 +95,9 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditRoles,
 			PermissionTo.SeeRestrictedForums,
 			PermissionTo.EditPublicationFiles,
-			PermissionTo.EditUserFiles
+			PermissionTo.EditUserFiles,
+			PermissionTo.ViewPrivateUserData,
+			PermissionTo.BanIpAddresses
 		}).ToArray();
 
 		private static readonly PermissionTo[] ExperiencedForumUserPermissions =
@@ -112,7 +113,9 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.LockTopics,
 			PermissionTo.MoveTopics,
 			PermissionTo.SetTopicType,
-			PermissionTo.MergeTopics
+			PermissionTo.MergeTopics,
+			PermissionTo.ViewPrivateUserData,
+			PermissionTo.BanIpAddresses
 		}).ToArray();
 
 		private static readonly PermissionTo[] ForumAdminPermissions = ForumModeratorPermissions.Concat(new[]
@@ -140,7 +143,9 @@ namespace TASVideos.Data.SeedData
 		private static readonly PermissionTo[] SiteDeveloperPermissions =
 		{
 			PermissionTo.SeeDiagnostics,
-			PermissionTo.SeeRestrictedForums
+			PermissionTo.SeeRestrictedForums,
+			PermissionTo.ViewPrivateUserData,
+			PermissionTo.BanIpAddresses
 		};
 
 		public static readonly PermissionTo[] PublishedAuthorPermissions =
@@ -148,7 +153,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditGameResources
 		};
 
-		public static readonly Role DefaultUser = new Role
+		public static readonly Role DefaultUser = new ()
 		{
 			IsDefault = true,
 			Name = RoleSeedNames.DefaultUser,
@@ -160,7 +165,7 @@ namespace TASVideos.Data.SeedData
 			}).ToArray()
 		};
 
-		public static readonly Role LimitedUser = new Role
+		public static readonly Role LimitedUser = new ()
 		{
 			IsDefault = false,
 			Name = RoleSeedNames.LimitedUser,
@@ -174,7 +179,7 @@ namespace TASVideos.Data.SeedData
 				}).ToArray()
 		};
 
-		public static readonly Role ExperiencedForumUser = new Role
+		public static readonly Role ExperiencedForumUser = new ()
 		{
 			IsDefault = false,
 			Name = RoleSeedNames.ExperiencedForumUser,
@@ -188,7 +193,7 @@ namespace TASVideos.Data.SeedData
 				}).ToArray()
 		};
 
-		public static readonly Role Admin = new Role
+		public static readonly Role Admin = new ()
 		{
 			Name = RoleSeedNames.Admin,
 			Description = "This is a site administrator that is responsible for maintaining TASVideos",
@@ -201,10 +206,10 @@ namespace TASVideos.Data.SeedData
 					CanAssign = true
 				})
 				.ToArray(),
-			RoleLinks = new List<RoleLink> { new RoleLink { Link = "AdminGuidelines" } }
+			RoleLinks = new List<RoleLink> { new () { Link = "AdminGuidelines" } }
 		};
 
-		public static readonly Role AdminAssistant = new Role
+		public static readonly Role AdminAssistant = new ()
 		{
 			Name = RoleSeedNames.AdminAssistant,
 			Description = "This is a wiki editor that maintain many aspects of the wiki site, including user and role maintenance, and they can assign editors as well as vested editors",
@@ -216,13 +221,13 @@ namespace TASVideos.Data.SeedData
 			}).ToArray(),
 			RoleLinks = new List<RoleLink>
 			{
-				new RoleLink { Link = "AdminGuidelines" },
-				new RoleLink { Link = "EditorGuidelines" },
-				new RoleLink { Link = "TextFormattingRules" }
+				new () { Link = "AdminGuidelines" },
+				new () { Link = "EditorGuidelines" },
+				new () { Link = "TextFormattingRules" }
 			}
 		};
 
-		public static readonly Role Editor = new Role
+		public static readonly Role Editor = new ()
 		{
 			Name = RoleSeedNames.Editor,
 			Description = "This is a wiki editor that can edit basic wiki pages",
@@ -233,12 +238,12 @@ namespace TASVideos.Data.SeedData
 			}).ToArray(),
 			RoleLinks = new List<RoleLink>
 			{
-				new RoleLink { Link = "EditorGuidelines" },
-				new RoleLink { Link = "TextFormattingRules" }
+				new () { Link = "EditorGuidelines" },
+				new () { Link = "TextFormattingRules" }
 			}
 		};
 
-		public static readonly Role VestedEditor = new Role
+		public static readonly Role VestedEditor = new ()
 		{
 			Name = RoleSeedNames.VestedEditor,
 			Description = "This is a wiki editor that can edit any wiki page, including system pages",
@@ -250,12 +255,12 @@ namespace TASVideos.Data.SeedData
 			}).ToArray(),
 			RoleLinks = new List<RoleLink>
 			{
-				new RoleLink { Link = "EditorGuidelines" },
-				new RoleLink { Link = "TextFormattingRules" }
+				new () { Link = "EditorGuidelines" },
+				new () { Link = "TextFormattingRules" }
 			}
 		};
 
-		public static readonly Role Judge = new Role
+		public static readonly Role Judge = new ()
 		{
 			Name = RoleSeedNames.Judge,
 			Description = "The judges decide which movies will be published and which movies are rejected. They can replace submission files.",
@@ -270,7 +275,7 @@ namespace TASVideos.Data.SeedData
 			}
 		};
 
-		public static readonly Role SeniorJudge = new Role
+		public static readonly Role SeniorJudge = new ()
 		{
 			Name = RoleSeedNames.SeniorJudge,
 			Description = "The senior judge, in addition to judging movies, can assign judges and settle disputes among judges.",
@@ -282,12 +287,12 @@ namespace TASVideos.Data.SeedData
 			}).ToArray(),
 			RoleLinks = new List<RoleLink>
 			{
-				new RoleLink { Link = "AdminGuidelines" },
-				new RoleLink { Link = "JudgeGuidelines" }
+				new () { Link = "AdminGuidelines" },
+				new () { Link = "JudgeGuidelines" }
 			}
 		};
 
-		public static readonly Role Publisher = new Role
+		public static readonly Role Publisher = new ()
 		{
 			Name = RoleSeedNames.Publisher,
 			Description = "Publishers take accepted submissions and turn them into publications.",
@@ -299,7 +304,7 @@ namespace TASVideos.Data.SeedData
 			RoleLinks = new[] { new RoleLink { Link = "PublisherGuidelines" } }
 		};
 
-		public static readonly Role SeniorPublisher = new Role
+		public static readonly Role SeniorPublisher = new ()
 		{
 			Name = RoleSeedNames.SeniorPublisher,
 			Description = "Senior Publishers, in addition to publishing movies, can assign publishers, set encoding standards, and settle disputes among publishers.",
@@ -309,14 +314,14 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = EditorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks =new List<RoleLink>
+			RoleLinks = new List<RoleLink>
 			{
-				new RoleLink { Link = "AdminGuidelines" },
-				new RoleLink { Link = "PublisherGuidelines" }
+				new () { Link = "AdminGuidelines" },
+				new () { Link = "PublisherGuidelines" }
 			}
 		};
 
-		public static readonly Role ForumModerator = new Role
+		public static readonly Role ForumModerator = new ()
 		{
 			Name = RoleSeedNames.ForumModerator,
 			Description = "Forum Moderators monitor forum content, modify posts and lock topics if needed. Moderators can also take limited action against users on a need basis",
@@ -329,7 +334,7 @@ namespace TASVideos.Data.SeedData
 			RoleLinks = new List<RoleLink>()
 		};
 
-		public static readonly Role ForumAdmin = new Role
+		public static readonly Role ForumAdmin = new ()
 		{
 			Name = RoleSeedNames.ForumAdmin,
 			Description = "Form Administrators manage forums and permissions. Administrators can also assign Moderators.",
@@ -339,10 +344,10 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = ForumModeratorPermissions.Contains(p)
 			}).ToArray(),
-			RoleLinks = new List<RoleLink> { new RoleLink { Link = "AdminGuidelines" } }
+			RoleLinks = new List<RoleLink> { new () { Link = "AdminGuidelines" } }
 		};
 
-		public static readonly Role Ambassador = new Role
+		public static readonly Role Ambassador = new ()
 		{
 			Name = RoleSeedNames.Ambassador,
 			Description = "Ambassadors take the burden on themselves to arrange various site related events and also visit game conferences and advertise the site. They handle various public relations issues and can edit most pages on the site.",
@@ -354,7 +359,7 @@ namespace TASVideos.Data.SeedData
 			}).ToArray()
 		};
 
-		public static readonly Role SeniorAmbassador = new Role
+		public static readonly Role SeniorAmbassador = new ()
 		{
 			Name = RoleSeedNames.SeniorAmbassador,
 			Description = "A senior ambassador coordinates and assigns Ambassadors to the site.  In addition they have all the responsibilities of an Ambassador.",
@@ -366,7 +371,7 @@ namespace TASVideos.Data.SeedData
 			}).ToArray()
 		};
 
-		public static readonly Role SiteDeveloper = new Role
+		public static readonly Role SiteDeveloper = new ()
 		{
 			Name = RoleSeedNames.SiteDeveloper,
 			Description = "Site developers have access to the site code and can make changes.",
@@ -376,10 +381,10 @@ namespace TASVideos.Data.SeedData
 				PermissionId = p,
 				CanAssign = false
 			}).ToArray(),
-			RoleLinks = new List<RoleLink> { new RoleLink { Link = "SiteCodingStandards" } }
+			RoleLinks = new List<RoleLink> { new () { Link = "SiteCodingStandards" } }
 		};
 
-		public static readonly Role EmulatorCoder = new Role
+		public static readonly Role EmulatorCoder = new ()
 		{
 			Name = RoleSeedNames.EmulatorCoder,
 			Description = "Emulator coders are people who have contributed code to site approved rerecording emulators. This role is \"ceremonial\" and does not have any special permissions.",
@@ -391,7 +396,7 @@ namespace TASVideos.Data.SeedData
 			}).ToArray()
 		};
 
-		public static readonly Role PublishedAuthor = new Role
+		public static readonly Role PublishedAuthor = new ()
 		{
 			Name = RoleSeedNames.PublishedAuthor,
 			Description = "This role is automatically granted to anyone who has had a movie published. This role gives them the ability to edit game resource pages",
@@ -404,9 +409,9 @@ namespace TASVideos.Data.SeedData
 			AutoAssignPublications = true,
 			RoleLinks = new List<RoleLink>
 			{
-				new RoleLink { Link = "EditorGuidelines" },
-				new RoleLink { Link = "TextFormattingRules" },
-				new RoleLink { Link = "GameResources" }
+				new () { Link = "EditorGuidelines" },
+				new () { Link = "TextFormattingRules" },
+				new () { Link = "GameResources" }
 			}
 		};
 

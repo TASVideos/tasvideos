@@ -2,17 +2,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -20,24 +18,33 @@ namespace TASVideos.Pages.Publications
 	public class EditModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly ITagService _tagsService;
+		private readonly IFlagService _flagsService;
 
 		public EditModel(
 			ApplicationDbContext db,
+			IMapper mapper,
 			ExternalMediaPublisher publisher,
-			IWikiPages wikiPages)
+			IWikiPages wikiPages,
+			ITagService tagsService,
+			IFlagService flagsService)
 		{
 			_db = db;
+			_mapper = mapper;
 			_wikiPages = wikiPages;
 			_publisher = publisher;
+			_tagsService = tagsService;
+			_flagsService = flagsService;
 		}
 
 		[FromRoute]
 		public int Id { get; set; }
 
 		[BindProperty]
-		public PublicationEditModel Publication { get; set; } = new PublicationEditModel();
+		public PublicationEditModel Publication { get; set; } = new ();
 
 		[Display(Name = "Available Flags")]
 		public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
@@ -115,7 +122,6 @@ namespace TASVideos.Pages.Publications
 						&& !userPermissions.Contains(f.PermissionRestriction.Value)
 				})
 				.ToListAsync();
-
 			AvailableTags = await _db.Tags
 				.Select(f => new SelectListItem
 				{
@@ -123,7 +129,6 @@ namespace TASVideos.Pages.Publications
 					Value = f.Id.ToString()
 				})
 				.ToListAsync();
-
 			AvailableMoviesForObsoletedBy = await _db.Publications
 				.ThatAreCurrent()
 				.Where(p => p.System!.Code == systemCode)
@@ -134,16 +139,18 @@ namespace TASVideos.Pages.Publications
 					Value = p.Id.ToString()
 				})
 				.ToListAsync();
-
-			Files = await _db.PublicationFiles
-				.Where(f => f.PublicationId == Id)
-				.ProjectTo<PublicationFileDisplayModel>()
+			Files = await _mapper.ProjectTo<PublicationFileDisplayModel>(
+					_db.PublicationFiles.Where(f => f.PublicationId == Id))
 				.ToListAsync();
 		}
 
 		private async Task UpdatePublication(int id, PublicationEditModel model)
 		{
+			var externalMessages = new List<string>();
+
 			var publication = await _db.Publications
+				.Include(p => p.PublicationTags)
+				.Include(p => p.PublicationFlags)
 				.Include(p => p.WikiContent)
 				.Include(p => p.System)
 				.Include(p => p.SystemFrameRate)
@@ -152,57 +159,82 @@ namespace TASVideos.Pages.Publications
 				.ThenInclude(pa => pa.Author)
 				.SingleOrDefaultAsync(p => p.Id == id);
 
-			if (publication != null)
+			if (publication is null)
 			{
-				publication.Branch = model.Branch;
-				publication.ObsoletedById = model.ObsoletedBy;
-				publication.EmulatorVersion = model.EmulatorVersion;
+				return;
+			}
 
-				publication.GenerateTitle();
+			if (publication.Branch != model.Branch)
+			{
+				externalMessages.Add($"Changed branch from \"{publication.Branch}\" to \"{model.Branch}\"");
+			}
 
-				publication.PublicationFlags.Clear();
-				_db.PublicationFlags.RemoveRange(
-					_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
+			publication.Branch = model.Branch;
 
-				foreach (var flag in model.SelectedFlags)
+			if (publication.ObsoletedById != model.ObsoletedBy)
+			{
+				externalMessages.Add($"Changed obsoleting movie from \"{publication.ObsoletedById}\" to \"{model.ObsoletedBy}\"");
+			}
+
+			publication.ObsoletedById = model.ObsoletedBy;
+			publication.EmulatorVersion = model.EmulatorVersion;
+
+			publication.GenerateTitle();
+
+			externalMessages.AddRange((await _flagsService
+				.GetDiff(publication.PublicationFlags.Select(p => p.FlagId), model.SelectedFlags))
+				.ToMessages("flags"));
+
+			publication.PublicationFlags.Clear();
+			_db.PublicationFlags.RemoveRange(
+				_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
+
+			foreach (var flag in model.SelectedFlags)
+			{
+				publication.PublicationFlags.Add(new PublicationFlag
 				{
-					publication.PublicationFlags.Add(new PublicationFlag
-					{
-						PublicationId = publication.Id,
-						FlagId = flag
-					});
-				}
+					PublicationId = publication.Id,
+					FlagId = flag
+				});
+			}
 
-				publication.PublicationTags.Clear();
-				_db.PublicationTags.RemoveRange(
-					_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
+			externalMessages.AddRange((await _tagsService
+				.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags))
+				.ToMessages("tags"));
 
-				foreach (var tag in model.SelectedTags)
+			publication.PublicationTags.Clear();
+			_db.PublicationTags.RemoveRange(
+				_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
+
+			foreach (var tag in model.SelectedTags)
+			{
+				publication.PublicationTags.Add(new PublicationTag
 				{
-					publication.PublicationTags.Add(new PublicationTag
-					{
-						PublicationId = publication.Id,
-						TagId = tag
-					});
-				}
+					PublicationId = publication.Id,
+					TagId = tag
+				});
+			}
 
-				await _db.SaveChangesAsync();
+			await _db.SaveChangesAsync();
 
-				if (model.Markup != publication.WikiContent!.Markup)
+			if (model.Markup != publication.WikiContent!.Markup)
+			{
+				var revision = new WikiPage
 				{
-					var revision = new WikiPage
-					{
-						PageName = $"{LinkConstants.PublicationWikiPage}{id}",
-						Markup = model.Markup,
-						MinorEdit = model.MinorEdit,
-						RevisionMessage = model.RevisionMessage
-					};
-					await _wikiPages.Add(revision);
+					PageName = $"{LinkConstants.PublicationWikiPage}{id}",
+					Markup = model.Markup,
+					MinorEdit = model.MinorEdit,
+					RevisionMessage = model.RevisionMessage
+				};
 
-					publication.WikiContentId = revision.Id;
+				await _wikiPages.Add(revision);
+				publication.WikiContentId = revision.Id;
+				externalMessages.Add("Description updated");
+			}
 
-					_publisher.SendPublicationEdit($"Publication {Id} Updated", $"{Id}M", User.Identity.Name!);
-				}
+			foreach (var message in externalMessages)
+			{
+				_publisher.SendPublicationEdit($"{publication.Title} edited: " + message, $"{Id}M", User.Name());
 			}
 		}
 	}

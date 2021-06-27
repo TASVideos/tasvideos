@@ -50,13 +50,15 @@
 					</div>
 				</div>
 				<div class="col-8">
-					@Html.Raw(post.RenderedText)
+					<forum-markup markup=@post.Text enable-html=@post.EnableHtml enable-bb-code=@post.EnableBbCode></forum-markup>
 				</div>
 			</row>
 		</cardbody>
 		<cardfooter>
 			<fullrow>
-				<small style="font-style: italic">@Html.Raw(Model.UserPosts.RenderedSignature)</small>
+				<small condition="!string.IsNullOrWhiteSpace(Model.UserPosts.Signature)" style="font-style: italic">
+					<forum-markup markup=@Model.UserPosts.Signature enable-bb-code="true"></forum-markup>
+				</small>
 				<br />
 				<profile-link class="btn btn-info btn-sm" username="@Model.UserName">Profile</profile-link>
 				<div class="pull-right">

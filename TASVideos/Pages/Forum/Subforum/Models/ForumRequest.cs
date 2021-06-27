@@ -1,4 +1,4 @@
-﻿using TASVideos.Data;
+﻿using TASVideos.Core;
 
 namespace TASVideos.Pages.Forum.Subforum.Models
 {
@@ -10,5 +10,4 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 			Sort = $"-{nameof(ForumDisplayModel.ForumTopicEntry.CreateTimestamp)}";
 		}
 	}
-
 }

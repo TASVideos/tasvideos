@@ -1,51 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 
 namespace TASVideos.Api.Requests
 {
 	/// <summary>
-	/// Represents the filtering criteria for the submissions endpoint
+	/// Represents the filtering criteria for the submissions endpoint.
 	/// </summary>
 	public class SubmissionsRequest : ApiRequest, ISubmissionFilter
 	{
 		/// <summary>
-		/// Gets or sets the statuses to filter by
+		/// Gets the statuses to filter by.
 		/// </summary>
-		public string? Statuses { get; set; }
+		public string? Statuses { get; init; }
 
 		/// <summary>
-		/// Gets or sets user's name to filter by
+		/// Gets user's name to filter by.
 		/// </summary>
-		public string? User { get; set; }
+		public string? User { get; init; }
 
 		/// <summary>
-		/// Gets or sets the start year to filter by
+		/// Gets the start year to filter by.
 		/// </summary>
-		public int? StartYear { get; set; }
+		public int? StartYear { get; init; }
 
 		/// <summary>
-		/// Gets or sets the end year to filter by
+		/// Gets the end year to filter by.
 		/// </summary>
-		public int? EndYear { get; set; }
+		public int? EndYear { get; init; }
 
 		/// <summary>
-		/// Gets or sets the system codes to filter by
+		/// Gets the system codes to filter by.
 		/// </summary>
-		public string? Systems { get; set; }
+		public string? Systems { get; init; }
+
+		/// <summary>
+		/// Gets the Game Id's to filter by.
+		/// </summary>
+		public string? Games { get; init; }
 
 		IEnumerable<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear);
 
 		IEnumerable<SubmissionStatus> ISubmissionFilter.StatusFilter => !string.IsNullOrWhiteSpace(Statuses)
 			? Statuses
-				.Split(
-					new[]
-					{
-						","
-					}, StringSplitOptions.RemoveEmptyEntries)
+				.SplitWithEmpty(",")
 				.Where(s => Enum.TryParse(s, out SubmissionStatus _))
 				.Select(s =>
 					{
@@ -55,5 +55,6 @@ namespace TASVideos.Api.Requests
 			: Enumerable.Empty<SubmissionStatus>();
 
 		IEnumerable<string> ISubmissionFilter.Systems => Systems.CsvToStrings();
+		IEnumerable<int> ISubmissionFilter.GameIds => Games.CsvToInts();
 	}
 }

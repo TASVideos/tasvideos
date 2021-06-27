@@ -4,12 +4,12 @@ using System.Linq;
 namespace TASVideos.Api
 {
 	/// <summary>
-	/// API specific extension methods
+	/// API specific extension methods.
 	/// </summary>
 	public static class Extensions
 	{
 		/// <summary>
-		/// Converts a start and end year into a list of years
+		/// Converts a start and end year into a list of years.
 		/// </summary>
 		public static IEnumerable<int> YearRange(this int? start, int? end)
 		{

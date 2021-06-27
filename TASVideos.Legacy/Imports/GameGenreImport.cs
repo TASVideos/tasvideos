@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Data.SeedData;
@@ -8,12 +7,9 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class GameGenreImport
+	internal static class GameGenreImport
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext)
 		{
 			var gameGenres = new HashSet<GameGenre>();
 
@@ -50,7 +46,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameGenre.GenreId)
 			};
 
-			gameGenres.BulkInsert(connectionStr, gameGenreColumns, nameof(ApplicationDbContext.GameGenres));
+			gameGenres.BulkInsert(gameGenreColumns, nameof(ApplicationDbContext.GameGenres));
 		}
 	}
 }

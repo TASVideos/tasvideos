@@ -9,13 +9,9 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class WikiPageCleanup
+	internal static class WikiPageCleanup
 	{
-		private class UserDto
-		{
-			public string Name { get; set; } = "";
-			public string HomePage { get; set; } = "";
-		}
+		private record UserDto(string Name, string HomePage);
 
 		public static void Fix(
 			ApplicationDbContext context,
@@ -27,23 +23,33 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var legUsers = legacySiteContext.Users
-				.Select(u => new UserDto { Name = u.Name, HomePage = u.HomePage })
+				.Select(u => new UserDto(u.Name, u.HomePage))
 				.ToList();
 
 			foreach (var page in currentPages)
 			{
 				var newRevision = MarkupShenanigans(page, legUsers);
-				if (newRevision != null)
+				if (newRevision is not null)
 				{
 					page.Child = newRevision;
-					context.WikiPages.Add(newRevision); 
+					context.WikiPages.Add(newRevision);
 				}
 			}
 
 			context.SaveChanges();
 		}
 
-		private static WikiPage? MarkupShenanigans(WikiPage page, List<UserDto> users)
+		private static string ReplaceCssWithImages(string markup, string cssPath, string imagesPath)
+		{
+			if (markup.Contains(cssPath))
+			{
+				return markup.Replace(cssPath, imagesPath);
+			}
+
+			return markup;
+		}
+
+		private static WikiPage? MarkupShenanigans(WikiPage page, IEnumerable<UserDto> users)
 		{
 			string markup = page.Markup;
 
@@ -69,16 +75,16 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("[module:GoogleFlavor]", "");
 			}
 
-			if (markup.Contains("=css/fastest-completion.png")) markup = markup.Replace("=css/fastest-completion.png", "=images/fastest-completion.png");
-			if (markup.Contains("=css/vaulttier.png")) markup = markup.Replace("=css/vaulttier.png", "=images/vaulttier.png");
-			if (markup.Contains("=css/moontier.png")) markup = markup.Replace("=css/moontier.png", "=images/moontier.png");
-			if (markup.Contains("=css/favourite.png")) markup = markup.Replace("=css/favourite.png", "=images/startier.png");
-			if (markup.Contains("=/css/vaulttier.png")) markup = markup.Replace("=/css/vaulttier.png", "=images/vaulttier.png");
-			if (markup.Contains("=/css/moontier.png")) markup = markup.Replace("=/css/moontier.png", "=images/moontier.png");
-			if (markup.Contains("=/css/favourite.png")) markup = markup.Replace("=/css/favourite.png", "=images/startier.png");
-			if (markup.Contains("=/css/newbierec.gif")) markup = markup.Replace("=/css/newbierec.gif", "=images/newbierec.gif");
-			if (markup.Contains("=/css/bolt.png")) markup = markup.Replace("=/css/bolt.png", "=images/notable.png");
-			if (markup.Contains("=/css/verified.png")) markup = markup.Replace("=/css/verified.png", "=images/verified.png");
+			markup = ReplaceCssWithImages(markup, "=css/fastest-completion.png", "=images/fastest-completion.png");
+			markup = ReplaceCssWithImages(markup, "=css/vaulttier.png", "=images/vaulttier.png");
+			markup = ReplaceCssWithImages(markup, "=css/moontier.png", "=images/moontier.png");
+			markup = ReplaceCssWithImages(markup, "=css/favourite.png", "=images/startier.png");
+			markup = ReplaceCssWithImages(markup, "=/css/vaulttier.png", "=images/vaulttier.png");
+			markup = ReplaceCssWithImages(markup, "=/css/moontier.png", "=images/moontier.png");
+			markup = ReplaceCssWithImages(markup, "=/css/favourite.png", "=images/startier.png");
+			markup = ReplaceCssWithImages(markup, "=/css/newbierec.gif", "=images/newbierec.gif");
+			markup = ReplaceCssWithImages(markup, "=/css/bolt.png", "=images/notable.png");
+			markup = ReplaceCssWithImages(markup, "=/css/verified.png", "=images/verified.png");
 
 			// These are automatic now
 			markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
@@ -99,9 +105,22 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			// Common markup mistakes
-			if (markup.Contains(" [!]")) markup = markup.Replace(" [!]", " [[!]]"); // Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
-			if (markup.Contains(")[!]")) markup = markup.Replace(")[!]", "[[!]]"); // Non-escaped Rom names
-			if (markup.Contains("[''''!'''']")) markup = markup.Replace("[''''!'''']", "[[!]]");
+			// Non-escaped Rom names, shenanigans to avoid turning proper markup: [[!]] into [[[!]]]
+			if (markup.Contains(" [!]"))
+			{
+				markup = markup.Replace(" [!]", " [[!]]");
+			}
+
+			// Non-escaped Rom names
+			if (markup.Contains(")[!]"))
+			{
+				markup = markup.Replace(")[!]", "[[!]]");
+			}
+
+			if (markup.Contains("[''''!'''']"))
+			{
+				markup = markup.Replace("[''''!'''']", "[[!]]");
+			}
 
 			// Fix improperly linked homepages
 			var usersWithPages = users.Where(u => u.HomePage != "").ToList();
@@ -145,8 +164,8 @@ namespace TASVideos.Legacy.Imports
 					Markup = markup,
 					Revision = page.Revision + 1,
 					RevisionMessage = WikiPageSeedData.Import,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp =  DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					ChildId = null
 				};
 

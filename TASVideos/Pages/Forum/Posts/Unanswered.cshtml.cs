@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -22,7 +21,7 @@ namespace TASVideos.Pages.Forum.Posts
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; } = new PagingModel();
+		public PagingModel Search { get; set; } = new ();
 
 		public PageOf<UnansweredPostsModel> Posts { get; set; } = PageOf<UnansweredPostsModel>.Empty();
 
@@ -39,7 +38,7 @@ namespace TASVideos.Pages.Forum.Posts
 					TopicName = t.Title,
 					AuthorId = t.PosterId,
 					AuthorName = t.Poster!.UserName,
-					PostDate = t.CreateTimeStamp
+					PostDate = t.CreateTimestamp
 				})
 				.OrderByDescending(t => t.PostDate)
 				.PageOf(Search);

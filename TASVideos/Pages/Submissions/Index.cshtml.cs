@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -40,7 +39,7 @@ namespace TASVideos.Pages.Submissions
 		public string? Query { get; set; }
 
 		[FromQuery]
-		public SubmissionSearchRequest Search { get; set; } = new SubmissionSearchRequest();
+		public SubmissionSearchRequest Search { get; set; } = new ();
 
 		public SubmissionPageOf<SubmissionListEntry> Submissions { get; set; } = SubmissionPageOf<SubmissionListEntry>.Empty();
 
@@ -57,13 +56,14 @@ namespace TASVideos.Pages.Submissions
 				.ToListAsync());
 
 			var search = LegacySubListConverter.ToSearchRequest(Query);
-			if (search != null)
+			if (search is not null)
 			{
 				Search = search;
 			}
 
 			// Defaults
-			if (!Search.StatusFilter.Any())
+			// Note that we do not provide these for GameId, the assumption is that we want to see all submissions of a given game, not just active ones
+			if (!Search.StatusFilter.Any() && string.IsNullOrWhiteSpace(Search.GameId))
 			{
 				Search.StatusFilter = !string.IsNullOrWhiteSpace(Search.User) || Search.Years.Any()
 					? SubmissionSearchRequest.All
@@ -92,7 +92,7 @@ namespace TASVideos.Pages.Submissions
 		{
 			if (string.IsNullOrWhiteSpace(partial) || partial.Length < 3)
 			{
-				return new JsonResult(new string[0]);
+				return new JsonResult(Array.Empty<string>());
 			}
 
 			var upper = partial.ToUpper();

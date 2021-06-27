@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -20,7 +18,7 @@ namespace TASVideos.Pages.Submissions
 	{
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
-		private readonly MovieParser _parser;
+		private readonly IMovieParser _parser;
 		private readonly UserManager _userManager;
 		private readonly ITASVideoAgent _tasVideoAgent;
 
@@ -28,7 +26,7 @@ namespace TASVideos.Pages.Submissions
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
-			MovieParser parser,
+			IMovieParser parser,
 			UserManager userManager,
 			ITASVideoAgent tasVideoAgent)
 			: base(db)
@@ -41,13 +39,13 @@ namespace TASVideos.Pages.Submissions
 		}
 
 		[BindProperty]
-		public SubmissionCreateModel Create { get; set; } = new SubmissionCreateModel();
+		public SubmissionCreateModel Create { get; set; } = new ();
 
 		public void OnGet()
 		{
 			Create = new SubmissionCreateModel
 			{
-				Authors = new List<string> { User.Identity.Name! }
+				Authors = new List<string> { User.Name() }
 			};
 		}
 
@@ -68,20 +66,20 @@ namespace TASVideos.Pages.Submissions
 				Branch = Create.Branch,
 				RomName = Create.RomName,
 				EmulatorVersion = Create.Emulator,
-				EncodeEmbedLink = Create.EncodeEmbedLink
+				EncodeEmbedLink = Create.EncodeEmbedLink,
+				AdditionalAuthors = Create.AdditionalAuthors
 			};
 
 			// TODO: check warnings
-			var parseResult = _parser.ParseZip(Create.MovieFile!.OpenReadStream());
+			var parseResult = await _parser.ParseZip(Create.MovieFile!.OpenReadStream());
 			await MapParsedResult(parseResult, submission);
-			
+
 			if (!ModelState.IsValid)
 			{
 				return Page();
 			}
 
-			submission.MovieFile = await FormFileToBytes(Create.MovieFile);
-
+			submission.MovieFile = await Create.MovieFile.ToBytes();
 			submission.Submitter = await _userManager.GetUserAsync(User);
 
 			Db.Submissions.Add(submission);
@@ -101,7 +99,7 @@ namespace TASVideos.Pages.Submissions
 			submission.GenerateTitle();
 
 			await _tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
-			_publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S", User.Identity.Name!);
+			_publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S", User.Name());
 
 			return Redirect($"/{submission.Id}S");
 		}

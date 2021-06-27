@@ -1,5 +1,5 @@
 ﻿using System.IO;
-
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
@@ -10,7 +10,7 @@ namespace TASVideos.MovieParsers.Parsers
 	{
 		public override string FileExtension => "vbm";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -59,7 +59,7 @@ namespace TASVideos.MovieParsers.Parsers
 				result.SystemCode = SystemCodes.GameBoy;
 			}
 
-			return result;
+			return await Task.FromResult(result);
 		}
 	}
 }

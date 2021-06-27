@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -6,50 +6,83 @@ namespace TASVideos.ForumEngine
 {
 	public class BbParser
 	{
-		private static readonly Regex OpeningTag = new Regex(@"\G([^\p{C}\[\]=\/]+)(=([^\p{C}\[\]]+))?\]");
-		private static readonly Regex ClosingTag = new Regex(@"\G\/([^\p{C}\[\]=\/]+)\]");
-		private static readonly Regex Url = new Regex(@"\Ghttps?:\/\/([A-Za-z0-9\-._~!$&'()*+,;=:@\/]|%[A-Fa-f0-9]{2})+");
+		private static readonly Regex OpeningTag = new (@"\G
+			# Tag mame
+			(
+				[^\p{C}\[\]=\/]+
+			)
+			# Optional attribute value
+			(=
+				(
+					(
+						(?'open'\[)
+							| [^\p{C}\[\]]
+							| (?'close-open'\])
+					)+
+				)
+				(?(open)(?!))
+			)?
+			# Closing `]`
+			\]
+		", RegexOptions.IgnorePatternWhitespace);
+		private static readonly Regex ClosingTag = new (@"\G
+			# Slash before tag name
+			\/
+			# Tag name
+			(
+				[^\p{C}\[\]=\/]+
+			)
+			# Closing `]`
+			\]
+		", RegexOptions.IgnorePatternWhitespace);
+		private static readonly Regex Url = new (@"\G
+			https?:\/\/
+			(
+				[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
+				|
+				%[A-Fa-f0-9]{2}
+			)+
+		", RegexOptions.IgnorePatternWhitespace);
 
 		// The old system does support attributes in html tags, but only a few that we probably don't want,
 		// and it doesn't even support the full html syntax for them.  So forget attributes for now
-		private static readonly Regex HtmlOpening = new Regex(@"\G\s*([a-zA-Z]+)\s*>");
-		private static readonly Regex HtmlClosing = new Regex(@"\G\s*\/\s*([a-zA-Z]+)\s*>");
+		private static readonly Regex HtmlOpening = new (@"\G\s*([a-zA-Z]+)\s*>");
+		private static readonly Regex HtmlClosing = new (@"\G\s*\/\s*([a-zA-Z]+)\s*>");
 
-		private static readonly Regex HtmlVoid = new Regex(@"\G\s*([a-zA-Z]+)\s*\/?\s*>");
+		private static readonly Regex HtmlVoid = new (@"\G\s*([a-zA-Z]+)\s*\/?\s*>");
 
 		/// <summary>
-		/// what content is legal at this time
+		/// What content is legal at this time.
 		/// </summary>
 		private enum ParseState
 		{
 			/// <summary>
 			/// text and bbcode tags are legal
 			/// </summary>
-			/// <value></value>
 			ChildTags,
+
 			/// <summary>
 			/// if the parent bbcode tag has a parameter, text and bbcode tags are legal.  otherwise, raw text only
 			/// </summary>
-			/// <value></value>
 			ChildTagsIfParam,
+
 			/// <summary>
 			/// everything except a matching bbcode end tag is raw text
 			/// </summary>
-			/// <value></value>
 			NoChildTags,
+
 			/// <summary>
 			/// Like ChildTags, but this element cannot nest itself
 			/// </summary>
-			/// <value></value>
 			ChildTagsNoNest,
+
 			/// <summary>
 			/// Like ChildTags, but this element cannot nest directly in itself
 			/// </summary>
-			/// <value></value>
 			ChildTagsNoImmediateNest
 		}
 
-		private static readonly Dictionary<string, ParseState> KnownTags = new Dictionary<string, ParseState>
+		private static readonly Dictionary<string, ParseState> KnownTags = new ()
 		{
 			// basic text formatting, no params, and body is content
 			{ "b", ParseState.ChildTags },
@@ -100,7 +133,7 @@ namespace TASVideos.ForumEngine
 			{ "td", ParseState.ChildTagsNoNest }
 		};
 
-		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new HashSet<string>
+		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new ()
 		{
 			// html parsing, except the empty tags <br> and <hr>, as they immediately close
 			// so their parse state is not needed
@@ -126,6 +159,7 @@ namespace TASVideos.ForumEngine
 			p.ParseLoop();
 			return p._root;
 		}
+
 		public static bool ContainsHtml(string text, bool allowBb)
 		{
 			var p = new BbParser(text, true, allowBb);
@@ -133,17 +167,17 @@ namespace TASVideos.ForumEngine
 			return p._didHtml;
 		}
 
-		private readonly Element _root = new Element { Name = "_root" };
-		private readonly Stack<Element> _stack = new Stack<Element>();
+		private readonly Element _root = new () { Name = "_root" };
+		private readonly Stack<Element> _stack = new ();
 
 		private readonly string _input;
-		private int _index = 0;
+		private int _index;
 
 		private readonly bool _allowHtml;
 		private readonly bool _allowBb;
 		private bool _didHtml;
 
-		private readonly StringBuilder _currentText = new StringBuilder();
+		private readonly StringBuilder _currentText = new ();
 
 		private BbParser(string input, bool allowHtml, bool allowBb)
 		{
@@ -172,18 +206,12 @@ namespace TASVideos.ForumEngine
 		{
 			if (KnownTags.TryGetValue(_stack.Peek().Name, out var state))
 			{
-				switch (state)
+				return state switch
 				{
-					case ParseState.NoChildTags:
-						return false;
-					case ParseState.ChildTags:
-					case ParseState.ChildTagsNoNest:
-					case ParseState.ChildTagsNoImmediateNest:
-					default:
-						return true;
-					case ParseState.ChildTagsIfParam:
-						return _stack.Peek().Options != "";
-				}
+					ParseState.NoChildTags => false,
+					ParseState.ChildTagsIfParam => _stack.Peek().Options != "",
+					_ => true,
+				};
 			}
 
 			// "li" or "_root" or any of the html tags
@@ -216,6 +244,11 @@ namespace TASVideos.ForumEngine
 					{
 						var name = m.Groups[1].Value;
 						var options = m.Groups[3].Value;
+						if (options.Length >= 2 && options[0] == '"' && options[^1] == '"')
+						{
+								options = options[1..^1];
+						}
+
 						if (KnownTags.TryGetValue(name, out var state))
 						{
 							var e = new Element { Name = name, Options = options };
@@ -231,18 +264,24 @@ namespace TASVideos.ForumEngine
 										while (true)
 										{
 											if (_stack.Pop().Name == name)
+											{
 												break;
+											}
 										}
+
 										break;
 									}
-								}						
+								}
 							}
 							else if (state == ParseState.ChildTagsNoImmediateNest)
 							{
 								// try to pop a matching tag but only at this level
 								if (_stack.Peek().Name == name)
+								{
 									_stack.Pop();
+								}
 							}
+
 							Push(e);
 							continue;
 						}
@@ -322,6 +361,7 @@ namespace TASVideos.ForumEngine
 								// tag not recognized?  Might be a void tag, or raw text
 							}
 						}
+
 						if ((m = HtmlVoid.Match(_input, _index)).Success)
 						{
 							var name = m.Groups[1].Value.ToLowerInvariant();

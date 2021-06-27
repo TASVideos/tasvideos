@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -27,7 +25,7 @@ namespace TASVideos.Pages.Wiki
 		public string? Path { get; set; }
 
 		[BindProperty]
-		public WikiMoveModel Move { get; set; } = new WikiMoveModel();
+		public WikiMoveModel Move { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -77,10 +75,10 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			_publisher.SendGeneralWiki(
-				$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Identity.Name}",
+				$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Name()}",
 				"",
 				Move.DestinationPageName,
-				User.Identity.Name!);
+				User.Name());
 
 			return Redirect("/" + Move.DestinationPageName);
 		}

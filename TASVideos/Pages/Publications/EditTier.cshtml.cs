@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Publications.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -30,7 +28,7 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 
 		[BindProperty]
-		public PublicationTierEditModel Publication { get; set; } = new PublicationTierEditModel();
+		public PublicationTierEditModel Publication { get; set; } = new ();
 
 		[BindProperty]
 		public string Title { get; set; } = "";
@@ -44,7 +42,7 @@ namespace TASVideos.Pages.Publications
 				.Select(p => new PublicationTierEditModel
 				{
 					Title = p.Title,
-					TierId = p.TierId 
+					TierId = p.TierId
 				})
 				.SingleOrDefaultAsync();
 
@@ -88,9 +86,9 @@ namespace TASVideos.Pages.Publications
 				publication.TierId = Publication.TierId;
 
 				_publisher.SendPublicationEdit(
-					$"Publication {Id} {Title} Tier changed to {tier.Name}",
+					$"Publication {Id} {Title} Tier changed from {originalTier} to {tier.Name}",
 					$"{Id}M",
-					User.Identity.Name!);
+					User.Name());
 
 				// TODO: catch DbConcurrencyException
 				await _db.SaveChangesAsync();

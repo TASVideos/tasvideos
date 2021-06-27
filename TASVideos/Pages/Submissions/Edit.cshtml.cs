@@ -2,33 +2,31 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Submissions
 {
 	[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 	public class EditModel : SubmissionBasePageModel
 	{
-		private readonly MovieParser _parser;
+		private readonly IMovieParser _parser;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ITASVideosGrue _tasvideosGrue;
 
 		public EditModel(
 			ApplicationDbContext db,
-			MovieParser parser,
+			IMovieParser parser,
 			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher,
 			ITASVideosGrue tasvideosGrue)
@@ -44,7 +42,7 @@ namespace TASVideos.Pages.Submissions
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SubmissionEditModel Submission { get; set; } = new SubmissionEditModel();
+		public SubmissionEditModel Submission { get; set; } = new ();
 
 		[Display(Name = "Status")]
 		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
@@ -70,9 +68,9 @@ namespace TASVideos.Pages.Submissions
 					FrameCount = s.Frames,
 					FrameRate = s.SystemFrameRate!.FrameRate,
 					RerecordCount = s.RerecordCount,
-					CreateTimestamp = s.CreateTimeStamp,
+					CreateTimestamp = s.CreateTimestamp,
 					Submitter = s.Submitter!.UserName,
-					LastUpdateTimeStamp = s.WikiContent!.LastUpdateTimeStamp,
+					LastUpdateTimestamp = s.WikiContent!.LastUpdateTimestamp,
 					LastUpdateUser = s.WikiContent.LastUpdateUserName,
 					Status = s.Status,
 					EncodeEmbedLink = s.EncodeEmbedLink,
@@ -80,7 +78,8 @@ namespace TASVideos.Pages.Submissions
 					Judge = s.Judge != null ? s.Judge.UserName : "",
 					Publisher = s.Publisher != null ? s.Publisher.UserName : "",
 					TierId = s.IntendedTierId,
-					RejectionReason = s.RejectionReasonId
+					RejectionReason = s.RejectionReasonId,
+					AdditionalAuthors = s.AdditionalAuthors
 				})
 				.SingleOrDefaultAsync();
 
@@ -94,11 +93,13 @@ namespace TASVideos.Pages.Submissions
 				.Select(sa => sa.Author!.UserName)
 				.ToListAsync();
 
+			var userName = User.Name();
+
 			// If user can not edit submissions then they must be an author or the original submitter
 			if (!User.Has(PermissionTo.EditSubmissions))
 			{
-				if (Submission.Submitter != User.Identity.Name
-					&& !Submission.Authors.Contains(User.Identity.Name))
+				if (Submission.Submitter != userName
+					&& !Submission.Authors.Contains(userName))
 				{
 					return AccessDenied();
 				}
@@ -110,16 +111,16 @@ namespace TASVideos.Pages.Submissions
 				Submission.Status,
 				User.Permissions(),
 				Submission.CreateTimestamp,
-				Submission.Submitter == User.Identity.Name || Submission.Authors.Contains(User.Identity.Name),
-				Submission.Judge == User.Identity.Name,
-				Submission.Publisher == User.Identity.Name);
+				Submission.Submitter == userName || Submission.Authors.Contains(userName),
+				Submission.Judge == userName,
+				Submission.Publisher == userName);
 
 			return Page();
 		}
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.MovieFile != null)
+			if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.MovieFile is not null)
 			{
 				if (!Submission.MovieFile.IsZip())
 				{
@@ -138,13 +139,20 @@ namespace TASVideos.Pages.Submissions
 				Submission.MovieFile = null;
 			}
 
+			// TODO: this has to be done anytime a string-list taghelper is used, can we make this automatic with model binders?
+			Submission.Authors = Submission.Authors
+				.Where(a => !string.IsNullOrWhiteSpace(a))
+				.ToList();
+
+			var userName = User.Name();
+
 			// TODO: this is bad, an author can null out these values,
 			// but if we treat null as no choice, then we have no way to unset these values
 			if (!User.Has(PermissionTo.JudgeSubmissions))
 			{
 				Submission.TierId = null;
 			}
-			else if (Submission.TierId == null && 
+			else if (Submission.TierId == null &&
 				(Submission.Status == SubmissionStatus.Accepted || Submission.Status == SubmissionStatus.PublicationUnderway))
 			{
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TierId)}", "A submission can not be accepted without a Tier");
@@ -154,11 +162,11 @@ namespace TASVideos.Pages.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new
 				{
-					UserIsJudge = s.Judge != null && s.Judge.UserName == User.Identity.Name,
-					UserIsPublisher = s.Publisher != null && s.Publisher.UserName == User.Identity.Name,
-					UserIsAuthorOrSubmitter = s.Submitter!.UserName == User.Identity.Name || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == User.Identity.Name),
+					UserIsJudge = s.Judge != null && s.Judge.UserName == userName,
+					UserIsPublisher = s.Publisher != null && s.Publisher.UserName == userName,
+					UserIsAuthorOrSubmitter = s.Submitter!.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == userName),
 					CurrentStatus = s.Status,
-					CreateDate = s.CreateTimeStamp
+					CreateDate = s.CreateTimestamp
 				})
 				.SingleOrDefaultAsync();
 
@@ -206,10 +214,10 @@ namespace TASVideos.Pages.Submissions
 				.ThenInclude(sa => sa.Author)
 				.SingleAsync(s => s.Id == Id);
 
-			if (Submission.MovieFile != null)
+			if (Submission.MovieFile is not null)
 			{
 				// TODO: check warnings
-				var parseResult = _parser.ParseZip(Submission.MovieFile.OpenReadStream());
+				var parseResult = await _parser.ParseZip(Submission.MovieFile.OpenReadStream());
 				await MapParsedResult(parseResult, submission);
 
 				if (!ModelState.IsValid)
@@ -217,18 +225,18 @@ namespace TASVideos.Pages.Submissions
 					return Page();
 				}
 
-				submission.MovieFile = await FormFileToBytes(Submission.MovieFile);
+				submission.MovieFile = await Submission.MovieFile.ToBytes();
 			}
 
 			// If a judge is claiming the submission
 			if (Submission.Status == SubmissionStatus.JudgingUnderWay
 				&& submission.Status != SubmissionStatus.JudgingUnderWay)
 			{
-				submission.Judge = await Db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
+				submission.Judge = await Db.Users.SingleAsync(u => u.UserName == userName);
 			}
 			else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
 				&& Submission.Status == SubmissionStatus.New
-				&& submission.Judge != null)
+				&& submission.Judge is not null)
 			{
 				submission.Judge = null;
 			}
@@ -236,7 +244,7 @@ namespace TASVideos.Pages.Submissions
 			if (Submission.Status == SubmissionStatus.PublicationUnderway
 				&& submission.Status != SubmissionStatus.PublicationUnderway)
 			{
-				submission.Publisher = await Db.Users.SingleAsync(u => u.UserName == User.Identity.Name);
+				submission.Publisher = await Db.Users.SingleAsync(u => u.UserName == userName);
 			}
 			else if (submission.Status == SubmissionStatus.Accepted // If publisher is unclaiming, remove them
 				&& Submission.Status == SubmissionStatus.PublicationUnderway)
@@ -272,6 +280,7 @@ namespace TASVideos.Pages.Submissions
 			submission.RomName = Submission.RomName;
 			submission.EncodeEmbedLink = Submission.EncodeEmbedLink;
 			submission.Status = Submission.Status;
+			submission.AdditionalAuthors = Submission.AdditionalAuthors;
 
 			var revision = new WikiPage
 			{
@@ -298,16 +307,16 @@ namespace TASVideos.Pages.Submissions
 				if (statusHasChanged)
 				{
 					var statusStr = Submission.Status == SubmissionStatus.Accepted
-						? $"{Submission.Status} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}" 
+						? $"{Submission.Status} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}"
 						: Submission.Status.ToString();
-					title = $"{User.Identity.Name} set Submission {statusStr} on {submission.Title}";
+					title = $"{userName} set Submission {statusStr} on {submission.Title}";
 				}
 				else
 				{
-					title = $"{User.Identity.Name} edited Submission {submission.Title}";
+					title = $"{userName} edited Submission {submission.Title}";
 				}
 
-				_publisher.SendSubmissionEdit(title, $"{Id}S", User.Identity.Name!);
+				_publisher.SendSubmissionEdit(title, $"{Id}S", userName);
 			}
 
 			return Redirect($"/{Id}S");

@@ -31,7 +31,7 @@ namespace TASVideos.Pages
 		{
 			var user = context.HttpContext.User;
 
-			if (!user.Identity.IsAuthenticated)
+			if (!user.IsLoggedIn())
 			{
 				context.Result = ReRouteToLogin(context);
 				return;

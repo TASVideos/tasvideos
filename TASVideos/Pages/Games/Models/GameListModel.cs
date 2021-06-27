@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TASVideos.Data;
+using TASVideos.Core;
 
 namespace TASVideos.Pages.Games.Models
 {

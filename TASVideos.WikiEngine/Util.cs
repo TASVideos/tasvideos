@@ -1,6 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TASVideos.WikiEngine.AST;
 
@@ -18,10 +19,11 @@ namespace TASVideos.WikiEngine
 			}
 			catch (NewParser.SyntaxException e)
 			{
-				return JsonConvert.SerializeObject(new
-				{
-					Error = e.Message
-				}, Formatting.Indented);
+				return JsonConvert.SerializeObject(
+					new
+					{
+						Error = e.Message
+					}, Formatting.Indented);
 			}
 		}
 
@@ -38,7 +40,7 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
-		public static void RenderHtmlDynamic(string content, TextWriter w, IWriterHelper h)
+		public static async Task RenderHtmlAsync(string content, TextWriter w, IWriterHelper h)
 		{
 			List<INode> results;
 			try
@@ -50,14 +52,15 @@ namespace TASVideos.WikiEngine
 				results = Builtins.MakeErrorPage(content, e);
 			}
 
+			var ctx = new WriterContext(h);
 			foreach (var r in results)
 			{
-				r.WriteHtmlDynamic(w, h);
+				await r.WriteHtmlAsync(w, ctx);
 			}
 		}
 
 		/// <summary>
-		/// Returns all the referrals to other site pages that exist in the given wiki markup
+		/// Returns all the referrals to other site pages that exist in the given wiki markup.
 		/// </summary>
 		public static IEnumerable<InternalLinkInfo> GetReferrals(string content)
 		{

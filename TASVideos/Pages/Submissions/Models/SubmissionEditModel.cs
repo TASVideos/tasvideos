@@ -79,7 +79,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public DateTime CreateTimestamp { get; set; }
 
 		[Display(Name = "Last Edited")]
-		public DateTime LastUpdateTimeStamp { get; set; }
+		public DateTime LastUpdateTimestamp { get; set; }
 
 		[Display(Name = "Last Edited by")]
 		public string? LastUpdateUser { get; set; }
@@ -94,6 +94,9 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? Publisher { get; set; }
 
 		public string? RejectionReasonDisplay { get; set; }
+
+		[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+		public string? AdditionalAuthors { get; set; }
 
 		public string Title { get; set; } = "";
 

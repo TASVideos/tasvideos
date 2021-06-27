@@ -1,16 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Posts
 {
@@ -34,7 +32,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public int Id { get; set; }
 
 		[BindProperty]
-		public ForumPostEditModel Post { get; set; } = new ForumPostEditModel();
+		public ForumPostEditModel Post { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -44,7 +42,7 @@ namespace TASVideos.Pages.Forum.Posts
 				.Where(p => p.Id == Id)
 				.Select(p => new ForumPostEditModel
 				{
-					CreateTimestamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					PosterId = p.PosterId,
 					PosterName = p.Poster!.UserName,
 					EnableBbCode = p.EnableBbCode,
@@ -76,8 +74,6 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			Post.RenderedText = RenderPost(Post.Text, Post.EnableBbCode, Post.EnableHtml);
-
 			return Page();
 		}
 
@@ -85,7 +81,6 @@ namespace TASVideos.Pages.Forum.Posts
 		{
 			if (!ModelState.IsValid)
 			{
-				Post.RenderedText = RenderPost(Post.Text, Post.EnableBbCode, Post.EnableHtml);
 				return Page();
 			}
 
@@ -111,18 +106,20 @@ namespace TASVideos.Pages.Forum.Posts
 				}
 			}
 
-			// TODO: catch DbConcurrencyException
 			forumPost.Subject = Post.Subject;
 			forumPost.Text = Post.Text;
 			forumPost.PosterMood = Post.Mood;
-			await _db.SaveChangesAsync();
 
-			_publisher.SendForum(
-				forumPost.Topic!.Forum!.Restricted,
-				$"Post edited by {User.Identity.Name} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
-				"",
-				$"p/{Id}#{Id}",
-				User.Identity.Name!);
+			var result = await ConcurrentSave(_db, $"Post {Id} edited", "Unable to edit post");
+			if (result)
+			{
+				_publisher.SendForum(
+					forumPost.Topic!.Forum!.Restricted,
+					$"Post edited by {User.Name()} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
+					"",
+					$"p/{Id}#{Id}",
+					User.Name());
+			}
 
 			return RedirectToLocal($"/forum/p/{Id}#{Id}");
 		}
@@ -168,25 +165,19 @@ namespace TASVideos.Pages.Forum.Posts
 				topicDeleted = true;
 			}
 
-			try
+			var result = await ConcurrentSave(_db, $"Post {Id} deleted", $"Unable to delete post {Id}");
+			if (result)
 			{
-				await _db.SaveChangesAsync();
+				_publisher.SendForum(
+					post.Topic!.Forum!.Restricted,
+					$"Post DELETED by {User.Name()} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
+					"",
+					$"Forum/Topics/{post.Topic.Id}",
+					User.Name());
 			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// TODO: nicer UI for this
-				return BadRequest("An error occured while attempting to delete the post, please try again.");
-			}
-
-			_publisher.SendForum(
-				post.Topic!.Forum!.Restricted,
-				$"Post DELETED by {User.Identity.Name} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
-				"",
-				$"Forum/Topics/{post.Topic.Id}",
-				User.Identity.Name!);
 
 			return topicDeleted
-				? RedirectToPage("/Forum/Subforum/Index", new { id = post.Topic.ForumId })
+				? RedirectToPage("/Forum/Subforum/Index", new { id = post.Topic!.ForumId })
 				: RedirectToPage("/Forum/Topics/Index", new { id = post.TopicId });
 		}
 

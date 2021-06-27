@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -20,27 +17,27 @@ namespace TASVideos.Pages.Submissions
 	public class CatalogModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly IMapper _mapper;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public CatalogModel(
 			ApplicationDbContext db,
-			IMapper mapper)
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
-			_mapper = mapper;
+			_publisher = publisher;
 		}
 
 		[FromRoute]
 		public int Id { get; set; }
 
 		[FromQuery]
-		public int? GameId { get; set;}
+		public int? GameId { get; set; }
 
 		[FromQuery]
 		public int? RomId { get; set; }
 
 		[BindProperty]
-		public SubmissionCatalogModel Catalog { get; set; } = new SubmissionCatalogModel();
+		public SubmissionCatalogModel Catalog { get; set; } = new ();
 
 		public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
 		public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
@@ -69,7 +66,7 @@ namespace TASVideos.Pages.Submissions
 			if (GameId.HasValue)
 			{
 				var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId && g.SystemId == Catalog.SystemId);
-				if (game != null)
+				if (game is not null)
 				{
 					Catalog.GameId = game.Id;
 
@@ -77,7 +74,7 @@ namespace TASVideos.Pages.Submissions
 					if (RomId.HasValue)
 					{
 						var rom = await _db.GameRoms.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId);
-						if (rom != null)
+						if (rom is not null)
 						{
 							Catalog.RomId = rom.Id;
 						}
@@ -97,11 +94,75 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
-			var submission = await _db.Submissions.SingleAsync(s => s.Id == Id);
-			_mapper.Map(Catalog, submission);
+			var submission = await _db.Submissions.SingleOrDefaultAsync(s => s.Id == Id);
+			if (submission == null)
+			{
+				return NotFound();
+			}
 
-			// TODO: catch DbConcurrencyException
-			await _db.SaveChangesAsync();
+			if (Catalog.SystemId.HasValue)
+			{
+				var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId.Value);
+				if (system == null)
+				{
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId.Value}");
+				}
+				else
+				{
+					submission.SystemId = Catalog.SystemId.Value;
+				}
+			}
+
+			if (Catalog.SystemFrameRateId.HasValue)
+			{
+				var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId.Value);
+				if (systemFramerate == null)
+				{
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Id: {Catalog.SystemFrameRateId.Value}");
+				}
+				else
+				{
+					submission.SystemFrameRateId = Catalog.SystemFrameRateId.Value;
+				}
+			}
+
+			if (Catalog.GameId.HasValue)
+			{
+				var game = await _db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId.Value);
+				if (game == null)
+				{
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameId)}", $"Unknown System Id: {Catalog.GameId.Value}");
+				}
+				else
+				{
+					submission.GameId = Catalog.GameId.Value;
+				}
+			}
+
+			if (Catalog.RomId.HasValue)
+			{
+				var rom = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId.Value);
+				if (rom == null)
+				{
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown System Id: {Catalog.RomId.Value}");
+				}
+				else
+				{
+					submission.RomId = Catalog.RomId.Value;
+				}
+			}
+
+			if (!ModelState.IsValid)
+			{
+				await PopulateCatalogDropDowns();
+				return Page();
+			}
+
+			var result = await ConcurrentSave(_db, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
+			if (result)
+			{
+				_publisher.SendSubmissionEdit($"{Id}S Catalogging Info Updated", $"{Id}S", User.Name());
+			}
 
 			return RedirectToPage("View", new { Id });
 		}

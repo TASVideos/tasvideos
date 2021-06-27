@@ -16,8 +16,6 @@ using TASVideos.Pages.Users.Models;
 using TASVideos.Pages.Wiki.Models;
 using TASVideos.ViewComponents;
 
-// ReSharper disable StyleCop.SA1115
-// ReSharper disable StyleCop.SA1116
 namespace TASVideos
 {
 	public class MappingProfile : Profile
@@ -48,8 +46,8 @@ namespace TASVideos
 							.Select(rp => rp.PermissionId)
 							.ToList()))
 				.ForMember(
-					dest => dest.Links, 
-					opt => opt.MapFrom(src => 
+					dest => dest.Links,
+					opt => opt.MapFrom(src =>
 						src.RoleLinks
 							.Select(rl => rl.Link)
 							.ToList()))
@@ -135,7 +133,11 @@ namespace TASVideos
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre!.DisplayName)))
 				.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.Roms))
-				.ForMember(dest => dest.GameGroups, opt => opt.MapFrom(src => src.GameGroups.Select(gg => gg.GameGroup)));
+				.ForMember(dest => dest.GameGroups, opt => opt.MapFrom(src => src.GameGroups.Select(gg => gg.GameGroup)))
+				.ForMember(dest => dest.PublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById == null)))
+				.ForMember(dest => dest.ObsoletePublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById != null)))
+				.ForMember(dest => dest.SubmissionCount, opt => opt.MapFrom(src => src.Submissions.Count))
+				.ForMember(dest => dest.UserFilesCount, opt => opt.MapFrom(src => src.UserFiles.Count(uf => !uf.Hidden)));
 
 			CreateMap<GameRom, GameDisplayModel.Rom>();
 			CreateMap<GameGroup, GameDisplayModel.GameGroup>();

@@ -1,18 +1,16 @@
-﻿using System.Data;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core;
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -24,13 +22,15 @@ namespace TASVideos.Pages.Forum.Topics
 		private readonly IAwards _awards;
 		private readonly IPointsService _pointsService;
 		private readonly ITopicWatcher _topicWatcher;
+		private readonly IWikiPages _wikiPages;
 
 		public IndexModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IAwards awards,
 			IPointsService pointsService,
-			ITopicWatcher topicWatcher)
+			ITopicWatcher topicWatcher,
+			IWikiPages wikiPages)
 			: base(db, topicWatcher)
 		{
 			_db = db;
@@ -38,21 +38,24 @@ namespace TASVideos.Pages.Forum.Topics
 			_awards = awards;
 			_pointsService = pointsService;
 			_topicWatcher = topicWatcher;
+			_wikiPages = wikiPages;
 		}
 
 		[FromRoute]
 		public int Id { get; set; }
 
 		[FromQuery]
-		public TopicRequest Search { get; set; } = new TopicRequest();
+		public TopicRequest Search { get; set; } = new ();
 
-		public ForumTopicModel Topic { get; set; } = new ForumTopicModel();
+		public ForumTopicModel Topic { get; set; } = new ();
+
+		public WikiPage? WikiPage { get; set; }
 
 		public async Task<IActionResult> OnGet()
 		{
-			int? userId = User.Identity.IsAuthenticated
+			int? userId = User.IsLoggedIn()
 				? User.GetUserId()
-				: (int?)null;
+				: null;
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			Topic = await _db.ForumTopics
@@ -66,7 +69,8 @@ namespace TASVideos.Pages.Forum.Topics
 					ForumId = t.ForumId,
 					ForumName = t.Forum!.Name,
 					IsLocked = t.IsLocked,
-					LastPostId = t.ForumPosts.OrderByDescending(p => p.CreateTimeStamp).First().Id,
+					LastPostId = t.ForumPosts.Any() ? t.ForumPosts.OrderByDescending(p => p.CreateTimestamp).First().Id : -1,
+					PageName = t.PageName,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll!.Question }
 						: null
@@ -78,6 +82,11 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
+			if (!string.IsNullOrWhiteSpace(Topic.PageName))
+			{
+				WikiPage = await _wikiPages.Page(Topic.PageName);
+			}
+
 			Topic.Posts = await _db.ForumPosts
 				.ForTopic(Id)
 				.Select(p => new ForumPostEntry
@@ -87,7 +96,7 @@ namespace TASVideos.Pages.Forum.Topics
 					EnableHtml = p.EnableHtml,
 					EnableBbCode = p.EnableBbCode,
 					PosterId = p.PosterId,
-					CreateTimestamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					PosterName = p.Poster!.UserName,
 					PosterAvatar = p.Poster.Avatar,
 					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
@@ -96,7 +105,7 @@ namespace TASVideos.Pages.Forum.Topics
 						.Where(ur => !ur.Role!.IsDefault)
 						.Select(ur => ur.Role!.Name)
 						.ToList(),
-					PosterJoined = p.Poster.CreateTimeStamp,
+					PosterJoined = p.Poster.CreateTimestamp,
 					PosterPostCount = p.Poster.Posts.Count,
 					PosterMood = p.PosterMood,
 					Text = p.Text,
@@ -113,9 +122,8 @@ namespace TASVideos.Pages.Forum.Topics
 				post.PosterPlayerPoints = await _pointsService.PlayerPoints(post.PosterId);
 			}
 
-			if (Topic.Poll != null)
+			if (Topic.Poll is not null)
 			{
-				Topic.Poll.Question = RenderBbcode(Topic.Poll.Question);
 				Topic.Poll.Options = await _db.ForumPollOptions
 					.ForPoll(Topic.Poll.PollId)
 					.Select(o => new ForumTopicModel.PollModel.PollOptionModel
@@ -132,7 +140,7 @@ namespace TASVideos.Pages.Forum.Topics
 			if (Search.Highlight.HasValue)
 			{
 				var post = Topic.Posts.SingleOrDefault(p => p.Id == Search.Highlight);
-				if (post != null)
+				if (post is not null)
 				{
 					post.Highlight = true;
 				}
@@ -140,10 +148,6 @@ namespace TASVideos.Pages.Forum.Topics
 
 			foreach (var post in Topic.Posts)
 			{
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-				post.RenderedSignature = !string.IsNullOrWhiteSpace(post.Signature)
-					? RenderSignature(post.Signature)
-					: "";
 				post.IsEditable = User.Has(PermissionTo.EditForumPosts)
 					|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
 				post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts)
@@ -181,7 +185,7 @@ namespace TASVideos.Pages.Forum.Topics
 				pollOption.Votes.Add(new ForumPollOptionVote
 				{
 					UserId = User.GetUserId(),
-					IpAddress = IpAddress.ToString()
+					IpAddress = IpAddress
 				});
 				await _db.SaveChangesAsync();
 			}
@@ -204,22 +208,26 @@ namespace TASVideos.Pages.Forum.Topics
 			if (topic.IsLocked != locked)
 			{
 				topic.IsLocked = locked;
-				await _db.SaveChangesAsync();
-			}
 
-			_publisher.SendForum(
-				topic.Forum!.Restricted,
-				$"Topic {topicTitle} {(locked ? "LOCKED" : "UNLOCKED")} by {User.Identity.Name}",
-				"",
-				$"Forum/Topics/{Id}",
-				User.Identity.Name!);
+				var lockedState = locked ? "LOCKED" : "UNLOCKED";
+				var result = await ConcurrentSave(_db, $"Topic set to locked {lockedState}", $"Unable to set status of {lockedState}");
+				if (result)
+				{
+					_publisher.SendForum(
+						topic.Forum!.Restricted,
+						$"Topic {topicTitle} {lockedState} by {User.Name()}",
+						"",
+						$"Forum/Topics/{Id}",
+						User.Name());
+				}
+			}
 
 			return RedirectToTopic();
 		}
 
 		public async Task<IActionResult> OnGetWatch()
 		{
-			if (!User.Identity.IsAuthenticated)
+			if (!User.IsLoggedIn())
 			{
 				return AccessDenied();
 			}
@@ -230,7 +238,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnGetUnwatch()
 		{
-			if (!User.Identity.IsAuthenticated)
+			if (!User.IsLoggedIn())
 			{
 				return AccessDenied();
 			}
@@ -258,15 +266,7 @@ namespace TASVideos.Pages.Forum.Topics
 				option.Votes.Clear();
 			}
 
-			try
-			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DBConcurrencyException)
-			{
-				return BadRequest("Unable to reset poll results");
-			}
-
+			await ConcurrentSave(_db, "Poll reset", "Unable to reset poll results");
 			return RedirectToTopic();
 		}
 

@@ -1,10 +1,25 @@
-﻿@model UserProfileModel
+﻿@model UserProfile
 @{ var lastLoggedIn = Model.LastLoggedInTimeStamp ?? DateTime.UtcNow; }
 <row>
 	<div class="col-md-6">
 		<card>
 			<cardheader>
-				<h4>@Model.UserName <a permission="EditUsers" class="btn btn-primary btn-sm" asp-page="/Users/Edit" asp-route-returnUrl="@Context.ReturnUrl()" asp-route-id="@Model.Id">Edit</a></h4>
+				<h4>
+					<a condition="User.IsLoggedIn()"
+					   asp-page="/Messages/Create"
+					   asp-route-defaultToUser="@Model.UserName"
+					   class="btn btn-secondary btn-sm">
+						PM
+					</a>
+					<a permission="EditUsers"
+					   asp-page="/Users/Edit"
+					   asp-route-returnUrl="@Context.ReturnUrl()"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-primary btn-sm">
+						Edit
+					</a>
+					@Model.UserName
+				</h4>
 			</cardheader>
 			<cardbody>
 				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
@@ -54,6 +69,9 @@
 						{
 							<span class="fa fa-check-square text-success"></span><span> Not locked</span>
 						}
+						<div>
+							<a asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning">IP Addresses used</a>
+						</div>
 					</div>
 					<div class="pull-right mt-2">
 						@* ReSharper disable once UnusedVariable *@
@@ -65,7 +83,7 @@
 				</div>
 			</cardbody>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="card-footer">
-				@Html.Raw(Model.Signature)
+				<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
 			</div>
 		</card>
 		<card>
@@ -173,7 +191,7 @@
 				<h4>User Files</h4>
 			</cardheader>
 			<cardbody>
-				<a href="/UserFiles/User/@Model.UserName">@Model.UserFiles.Total</a> files
+				<a href="/UserFiles/ForUser/@Model.UserName">@Model.UserFiles.Total</a> files
 				<br /><br />
 				<span>Systems:</span><br />
 				@string.Join(", ", Model.UserFiles.Systems.Where(s => !string.IsNullOrWhiteSpace(s)))

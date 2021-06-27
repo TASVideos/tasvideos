@@ -1,13 +1,11 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Services;
-using TASVideos.Services.PublicationChain;
 
 namespace TASVideos.Pages.Games
 {
@@ -28,8 +26,8 @@ namespace TASVideos.Pages.Games
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationHistoryGroup History { get; set; } = new PublicationHistoryGroup();
-		public Game Game { get; set; } = new Game();
+		public PublicationHistoryGroup History { get; set; } = new ();
+		public Game Game { get; set; } = new ();
 
 		[FromQuery]
 		public int? Highlight { get; set; }

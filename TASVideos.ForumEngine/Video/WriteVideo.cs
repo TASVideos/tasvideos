@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
@@ -37,6 +37,7 @@ namespace TASVideos.ForumEngine
 									break;
 							}
 						}
+
 						break;
 					default:
 						w.Write(ss);
@@ -45,32 +46,32 @@ namespace TASVideos.ForumEngine
 			}
 		}
 
-		private static string YouTube =
+		private static readonly string YouTube =
 @"<iframe width=$$w$$ height=$$h$$
 src=""https://www.youtube.com/embed/$$id$$""
 frameborder=0
 allow=""accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture""
 allowfullscreen></iframe>
 ";
-		private static string YouTubePlaylist =
+		private static readonly string YouTubePlaylist =
 @"<iframe width=$$w$$ height=$$h$$
 src=""https://www.youtube.com/embed/videoseries?list=$$id$$""
 frameborder=0
 allow=""accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture""
 allowfullscreen></iframe>
 ";
-		private static string DailyMotion =
+		private static readonly string DailyMotion =
 @"<iframe
 frameborder=0 width=$$w$$ height=$$h$$
 src=""https://www.dailymotion.com/embed/video/$$id$$"" allowfullscreen allow=autoplay></iframe>
 ";
-		private static string Vimeo =
+		private static readonly string Vimeo =
 @"<iframe src=""https://player.vimeo.com/video/49142543""
 width=$$w$$ height=$$h$$ frameborder=0
 allow=""autoplay; fullscreen"" allowfullscreen></iframe>
 ";
 
-		private static string NicoVideoDocument =
+		private static readonly string NicoVideoDocument =
 @"<!DOCTYPE html>
 <html><head><title>NicoVideo Player</title><style>
 html { overflow:hidden; }
@@ -81,7 +82,7 @@ body, div { margin:0; padding:0; overflow:hidden; }
 </div>
 </body></html>
 ";
-		private static string NicoVideo =
+		private static readonly string NicoVideo =
 @"<iframe src=""data:text/html;base64,$$id$$""
 width=$$w$$ height=$$h$$ frameborder=0></iframe>
 ";
@@ -99,43 +100,50 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 						DoTemplate(w, YouTube, width, height, pp.QueryParams["v"]);
 						return;
 					}
+
 					if (pp.Path.StartsWith("/embed/") && pp.Path.Length > 7) // if they paste an embed link
 					{
-						DoTemplate(w, YouTube, width, height, pp.Path.Substring(7));
+						DoTemplate(w, YouTube, width, height, pp.Path[7..]);
 						return;
 					}
+
 					if (pp.Path == "/view_play_list" && pp.QueryParams.ContainsKey("p")) // http://www.youtube.com/view_play_list?p=76E50B82FA870C1D
 					{
 						DoTemplate(w, YouTubePlaylist, width, height, pp.QueryParams["p"]);
 					}
+
 					break;
 				case "youtu.be":
 					if (pp.Path.Length > 1) // https://youtu.be/yLORZbc-PZw
 					{
-						DoTemplate(w, YouTube, width, height, pp.Path.Substring(1));
+						DoTemplate(w, YouTube, width, height, pp.Path[1..]);
 					}
+
 					break;
 				case "vimeo.com":
 					if (pp.Path.Length > 1) // http://vimeo.com/49142543
 					{
-						DoTemplate(w, Vimeo, width, height, pp.Path.Substring(1));
+						DoTemplate(w, Vimeo, width, height, pp.Path[1..]);
 					}
+
 					break;
 				case "dailymotion.com":
 				case "www.dailymotion.com": // http://www.dailymotion.com/video/xf4u2m_snes-breath-of-fire-wip-by-janus_videogames
 					if (pp.Path.StartsWith("/video/") && pp.Path.Length > 7)
 					{
-						DoTemplate(w, DailyMotion, width, height, pp.Path.Substring(7).Split('_')[0]);
+						DoTemplate(w, DailyMotion, width, height, pp.Path[7..].Split('_')[0]);
 					}
+
 					break;
 				case "www.nicovideo.jp": // https://www.nicovideo.jp/watch/sm35061034
 					if (pp.Path.StartsWith("/watch/") && pp.Path.Length > 7)
 					{
-						var vid = pp.Path.Substring(7);
+						var vid = pp.Path[7..];
 						var sw = new StringWriter();
 						DoTemplate(sw, NicoVideoDocument, width, height, vid);
 						DoTemplate(w, NicoVideo, width, height, Convert.ToBase64String(Encoding.UTF8.GetBytes(sw.ToString())));
 					}
+
 					break;
 			}
 		}

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -8,13 +7,9 @@ using TASVideos.Legacy.Data.Forum;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class ForumPollImporter
+	internal static class ForumPollImporter
 	{
-		public static void 
-			Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosForumContext legacyForumContext)
+		public static void Import(ApplicationDbContext context, NesVideosForumContext legacyForumContext)
 		{
 			var legacyVoteDescriptions = legacyForumContext.VoteDescription
 				.Include(v => v.Topic)
@@ -30,11 +25,11 @@ namespace TASVideos.Legacy.Imports
 					Id = v.Id,
 					TopicId = v.TopicId,
 					Question = SwapSubmissionPoll(ImportHelper.ConvertNotNullLatin1String(v.Text), v.Topic?.Poster?.UserName),
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(v.VoteStart),
 					CreateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					LastUpdateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					CloseDate = v.VoteLength == 0
-						? (DateTime?)null
+						? null
 						: ImportHelper.UnixTimeStampToDateTime(v.VoteStart + v.VoteLength)
 				})
 				.ToList();
@@ -45,13 +40,13 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPoll.TopicId),
 				nameof(ForumPoll.Question),
 				nameof(ForumPoll.CloseDate),
-				nameof(ForumPoll.CreateTimeStamp),
+				nameof(ForumPoll.CreateTimestamp),
 				nameof(ForumPoll.CreateUserName),
-				nameof(ForumPoll.LastUpdateTimeStamp),
+				nameof(ForumPoll.LastUpdateTimestamp),
 				nameof(ForumPoll.LastUpdateUserName)
 			};
 
-			forumPolls.BulkInsert(connectionStr, pollColumns, nameof(ApplicationDbContext.ForumPolls));
+			forumPolls.BulkInsert(pollColumns, nameof(ApplicationDbContext.ForumPolls));
 
 			/******** ForumPollOption ********/
 			var legForumPollOptions = legacyVoteDescriptions
@@ -64,8 +59,8 @@ namespace TASVideos.Legacy.Imports
 					Text = r.VoteOptionText,
 					PollId = r.Id,
 					Ordinal = r.VoteOptionId,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					CreateUserName = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown",
 					LastUpdateUserName = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown"
 				})
@@ -76,13 +71,13 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOption.Text),
 				nameof(ForumPollOption.Ordinal),
 				nameof(ForumPollOption.PollId),
-				nameof(ForumPollOption.CreateTimeStamp),
+				nameof(ForumPollOption.CreateTimestamp),
 				nameof(ForumPollOption.CreateUserName),
-				nameof(ForumPollOption.LastUpdateTimeStamp),
+				nameof(ForumPollOption.LastUpdateTimestamp),
 				nameof(ForumPollOption.LastUpdateUserName)
 			};
 
-			forumPollOptions.BulkInsert(connectionStr, pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions), SqlBulkCopyOptions.Default);
+			forumPollOptions.BulkInsert(pollOptionColumns, nameof(ApplicationDbContext.ForumPollOptions));
 
 			/******** ForumPollOptionVote ********/
 			var legForumVoters = legacyForumContext.Voter.ToList();
@@ -95,7 +90,7 @@ namespace TASVideos.Legacy.Imports
 				{
 					PollOptionId = po.Id,
 					UserId = v.UserId,
-					IpAddress = v.IpAddress,
+					IpAddress = v.IpAddress.IpFromHex(),
 					CreateTimestamp = DateTime.UtcNow // Legacy system did not track this
 				})
 				.ToList();
@@ -135,7 +130,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPollOptionVote.IpAddress)
 			};
 
-			forumPollOptionVotes.BulkInsert(connectionStr, pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes), SqlBulkCopyOptions.Default);
+			forumPollOptionVotes.BulkInsert(pollVoteColumns, nameof(ApplicationDbContext.ForumPollOptionVotes));
 		}
 
 		// Removes html silliness from the poll questions

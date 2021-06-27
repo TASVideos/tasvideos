@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-
-using FastMember;
-using Microsoft.Data.SqlClient;
 using SharpCompress.Compressors.Xz;
-using System.IO.Compression;
+using TASVideos.Extensions;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class ImportHelper
+	internal static class ImportHelper
 	{
-		private static readonly DateTime UnixStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+		private static readonly DateTime UnixStart = new (1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
 		public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
 		{
@@ -63,44 +63,16 @@ namespace TASVideos.Legacy.Imports
 				RegexOptions.IgnoreCase);
 		}
 
-		public static void BulkInsert<T>(
-			this IEnumerable<T> data,
-			string connectionString,
-			string[] columnsToCopy,
-			string tableName,
-			SqlBulkCopyOptions options = SqlBulkCopyOptions.KeepIdentity,
-			int batchSize = 10000,
-			int? bulkCopyTimeout = null)
+		public static void BulkInsert<T>(this IEnumerable<T> data, string[] columnsToCopy, string tableName)
 		{
-			using var sqlCopy = new SqlBulkCopy(connectionString, options)
+			if (SqlBulkImporter.IsMsSql)
 			{
-				DestinationTableName = tableName,
-				BatchSize = batchSize
-			};
-			if (bulkCopyTimeout.HasValue)
-			{
-				sqlCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+				SqlBulkImporter.BulkInsertMssql(data, columnsToCopy, tableName);
 			}
-
-			foreach (var param in columnsToCopy)
+			else
 			{
-				sqlCopy.ColumnMappings.Add(param, param);
+				SqlBulkImporter.BulkInsertPostgres(data, columnsToCopy, tableName);
 			}
-
-			using var reader = ObjectReader.Create(data, columnsToCopy);
-			sqlCopy.WriteToServer(reader);
-		}
-
-		public static string? Cap(this string? str, int limit)
-		{
-			if (str == null)
-			{
-				return null;
-			}
-
-			return str.Length < limit
-				? str
-				: str.Substring(0, limit);
 		}
 
 		public static IEnumerable<string> ParseUserNames(this string authors)
@@ -111,9 +83,9 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			var names = authors
-				.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-				.SelectMany(s => s.Split(new[] { "&" }, StringSplitOptions.RemoveEmptyEntries))
-				.SelectMany(s => s.Split(new[] { " and " }, StringSplitOptions.RemoveEmptyEntries))
+				.SplitWithEmpty(",")
+				.SelectMany(s => s.SplitWithEmpty("&"))
+				.SelectMany(s => s.SplitWithEmpty(" and "))
 				.Select(s => s.Trim())
 				.Where(s => !string.IsNullOrWhiteSpace(s));
 
@@ -128,7 +100,7 @@ namespace TASVideos.Legacy.Imports
 		}
 
 		/// <summary>
-		/// Converts an XZ compressed file to a GZIP compressed file
+		/// Converts an XZ compressed file to a GZIP compressed file.
 		/// </summary>
 		public static byte[] ConvertXz(this byte[] content)
 		{
@@ -145,6 +117,76 @@ namespace TASVideos.Legacy.Imports
 			var result = targetStream.ToArray();
 
 			return result;
+		}
+
+		public static string? IpFromHex(this string? hexIp)
+		{
+			if (string.IsNullOrWhiteSpace(hexIp) || hexIp == "?")
+			{
+				return null;
+			}
+
+			// IPv4
+			if (hexIp.Length == 8)
+			{
+				var ipv4 = new IPAddress(long.Parse(hexIp, NumberStyles.AllowHexSpecifier));
+				return ipv4.ToString();
+			}
+
+			// IPv6
+			var hex = ParseHex(hexIp);
+			var ipv6 = new IPAddress(hex);
+			return ipv6.ToString();
+		}
+
+		private static byte[] ParseHex(string hex)
+		{
+			int offset = hex.StartsWith("0x") ? 2 : 0;
+			if ((hex.Length % 2) != 0)
+			{
+				throw new ArgumentException("Invalid length: " + hex.Length);
+			}
+
+			byte[] ret = new byte[(hex.Length - offset) / 2];
+
+			for (int i = 0; i < ret.Length; i++)
+			{
+				ret[i] = (byte)((ParseNybble(hex[offset]) << 4)
+					| ParseNybble(hex[offset + 1]));
+				offset += 2;
+			}
+
+			return ret;
+		}
+
+		private static int ParseNybble(char c)
+		{
+			return c switch
+			{
+				'0' => c - '0',
+				'1' => c - '0',
+				'2' => c - '0',
+				'3' => c - '0',
+				'4' => c - '0',
+				'5' => c - '0',
+				'6' => c - '0',
+				'7' => c - '0',
+				'8' => c - '0',
+				'9' => c - '0',
+				'A' => c - 'A' + 10,
+				'B' => c - 'A' + 10,
+				'C' => c - 'A' + 10,
+				'D' => c - 'A' + 10,
+				'E' => c - 'A' + 10,
+				'F' => c - 'A' + 10,
+				'a' => c - 'a' + 10,
+				'b' => c - 'a' + 10,
+				'c' => c - 'a' + 10,
+				'd' => c - 'a' + 10,
+				'e' => c - 'a' + 10,
+				'f' => c - 'a' + 10,
+				_ => throw new ArgumentException("Invalid hex digit: " + c)
+			};
 		}
 	}
 }

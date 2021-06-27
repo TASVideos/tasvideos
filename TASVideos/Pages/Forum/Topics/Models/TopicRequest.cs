@@ -1,4 +1,4 @@
-﻿using TASVideos.Data;
+﻿using TASVideos.Core;
 using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Topics.Models

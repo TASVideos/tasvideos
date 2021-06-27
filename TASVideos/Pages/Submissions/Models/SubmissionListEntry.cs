@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TASVideos.Data;
+using TASVideos.Common;
+using TASVideos.Core;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models
@@ -41,6 +42,15 @@ namespace TASVideos.Pages.Submissions.Models
 
 		[TableIgnore]
 		public double FrameRate { get; set; }
+
+		[TableIgnore]
+		public string? Judge { get; set; }
+
+		[TableIgnore]
+		public string? Publisher { get; set; }
+
+		[TableIgnore]
+		public string? IntendedTier { get; set; }
 	}
 
 	public class SubmissionPageOf<T> : PageOf<T>
@@ -55,9 +65,6 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? System { get; set; }
 		public string? User { get; set; }
 
-		public new static SubmissionPageOf<T> Empty()
-		{
-			return new SubmissionPageOf<T>(Enumerable.Empty<T>());
-		}
+		public static new SubmissionPageOf<T> Empty() => new (Enumerable.Empty<T>());
 	}
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -42,12 +42,12 @@ namespace TASVideos.Pages.Publications
 				return RedirectToPage("/Publications/Index", new { query });
 			}
 
-			List<string> tokens = new List<string>();
+			List<string> tokens = new ();
 			if (!string.IsNullOrWhiteSpace(Name))
 			{
 				// Movies.cgi only supported a single game name
 				var game = await _db.Games.FirstOrDefaultAsync(g => g.DisplayName == Name || g.GoodName == Name);
-				if (game != null)
+				if (game is not null)
 				{
 					tokens.Add(game.Id + "G");
 				}

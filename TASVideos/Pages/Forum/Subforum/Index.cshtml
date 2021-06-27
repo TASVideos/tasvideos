@@ -38,7 +38,7 @@
 					@Html.Raw(topic.Type.ToTitleHtml(topic.Title))
 				</a>
 			</td>
-			<td>@(topic.PostCount - 1)</td>
+			<td>@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
 			<td>@topic.CreateUserName</td>
 			<td>@topic.Type</td>
 			<td><timezone-convert asp-for="@topic.LastPostDateTime" /></td>

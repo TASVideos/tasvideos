@@ -3,9 +3,10 @@
 
 	<PropertyGroup>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net5.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UserSecretsId>aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152</UserSecretsId>
+		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -14,32 +15,46 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="wwwroot\lib\**" />
-		<Compile Remove="wwwroot\media\**" />
-    <Compile Remove="wwwroot\torrent\**" />
-		<Content Remove="wwwroot\lib\**" />
-		<Content Remove="wwwroot\media\**" />
-    <Content Remove="wwwroot\torrent\**" />
-		<EmbeddedResource Remove="wwwroot\lib\**" />
-		<EmbeddedResource Remove="wwwroot\media\**" />
-    <EmbeddedResource Remove="wwwroot\torrent\**" />
-		<None Remove="wwwroot\lib\**" />
-		<None Remove="wwwroot\media\**" />
-    <None Remove="wwwroot\torrent\**" />
+		<AdditionalFiles Include="$(ProjectDir)../.stylecop.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="8.0.0" />
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.6" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.7" />
+		<Compile Remove="wwwroot\lib\**" />
+		<Compile Remove="wwwroot\media\**" />
+		<Compile Remove="wwwroot\torrent\**" />
+		<Content Remove="wwwroot\lib\**" />
+		<Content Remove="wwwroot\media\**" />
+		<Content Remove="wwwroot\torrent\**" />
+		<EmbeddedResource Remove="wwwroot\lib\**" />
+		<EmbeddedResource Remove="wwwroot\media\**" />
+		<EmbeddedResource Remove="wwwroot\torrent\**" />
+		<None Remove="wwwroot\lib\**" />
+		<None Remove="wwwroot\media\**" />
+		<None Remove="wwwroot\torrent\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AspNetCore.ReCaptcha" Version="1.1.0" />
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+		<PackageReference Include="LigerShark.WebOptimizer.Sass" Version="3.0.40-beta" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.3.5" />
-		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
+		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
+		<PackageReference Include="Namotion.Reflection" Version="1.0.19" />
 		<PackageReference Include="RoslynCodeTaskFactory" Version="2.0.7" />
-		<PackageReference Include="Sendgrid" Version="9.12.7" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.3" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -49,9 +64,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Api\TASVideos.Api.csproj" />
 		<ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
+		<ProjectReference Include="..\TASVideos.Core\TASVideos.Core.csproj" />
 		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
 		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
-		<ProjectReference Include="..\TASVideos.Legacy\TASVideos.Legacy.csproj" />
 		<ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
 		<ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
 	</ItemGroup>

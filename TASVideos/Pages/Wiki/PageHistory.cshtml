@@ -13,7 +13,7 @@
 	<thead>
 		<tr>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().Revision)</th>
-			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().CreateTimeStamp)</th>
+			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().CreateTimestamp)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().CreateUserName)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().MinorEdit)</th>
 			<th>@Html.DisplayNameFor(m => m.History.Revisions.First().RevisionMessage)</th>
@@ -29,7 +29,7 @@
 			var previousId = i < revisions.Count - 1 ? revisions[i + 1].Revision : (int?)null;
 			<tr data-revision="@revision.Revision">
 				<td><a href="/@(Model.History.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
-				<td><timezone-convert asp-for="@revision.CreateTimeStamp" /></td>
+				<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
 				<td>@revision.CreateUserName</td>
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>

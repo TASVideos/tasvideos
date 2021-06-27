@@ -1,18 +1,16 @@
 ﻿using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -43,58 +41,58 @@ namespace TASVideos.Pages.Submissions
 
 		public bool CanEdit { get; set; }
 
-		public SubmissionDisplayModel Submission { get; set; } = new SubmissionDisplayModel();
+		public SubmissionDisplayModel Submission { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
 			Submission = await _db.Submissions
-					.Where(s => s.Id == Id)
-					.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
-					{
-						StartType = (MovieStartType?)s.MovieStartType,
-						SystemDisplayName = s.System!.DisplayName,
-						SystemCode = s.System.Code,
-						GameName = s.GameName,
-						GameVersion = s.GameVersion,
-						RomName = s.RomName,
-						Branch = s.Branch,
-						Emulator = s.EmulatorVersion,
-						FrameCount = s.Frames,
-						FrameRate = s.SystemFrameRate!.FrameRate,
-						RerecordCount = s.RerecordCount,
-						Submitted = s.CreateTimeStamp,
-						Submitter = s.Submitter!.UserName,
-						LastUpdateTimeStamp = s.WikiContent!.LastUpdateTimeStamp,
-						LastUpdateUser = s.WikiContent.LastUpdateUserName,
-						Status = s.Status,
-						EncodeEmbedLink = s.EncodeEmbedLink,
-						Judge = s.Judge != null ? s.Judge.UserName : "",
-						Title = s.Title,
-						TierName = s.IntendedTier != null ? s.IntendedTier.Name : "",
-						Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-						SystemId = s.SystemId,
-						SystemFrameRateId = s.SystemFrameRateId,
-						GameId = s.GameId,
-						RomId = s.RomId,
-						RejectionReasonDisplay = s.RejectionReasonId.HasValue
-							? s.RejectionReason!.DisplayName
-							: null,
-						Authors = s.SubmissionAuthors
-							.Where(sa => sa.SubmissionId == Id)
-							.Select(sa => sa.Author!.UserName)
-							.ToList()
-					})
-					.SingleOrDefaultAsync();
+				.Where(s => s.Id == Id)
+				.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
+				{
+					StartType = (MovieStartType?)s.MovieStartType,
+					SystemDisplayName = s.System!.DisplayName,
+					SystemCode = s.System.Code,
+					GameName = s.GameName,
+					GameVersion = s.GameVersion,
+					RomName = s.RomName,
+					Branch = s.Branch,
+					Emulator = s.EmulatorVersion,
+					FrameCount = s.Frames,
+					FrameRate = s.SystemFrameRate!.FrameRate,
+					RerecordCount = s.RerecordCount,
+					Submitted = s.CreateTimestamp,
+					Submitter = s.Submitter!.UserName,
+					LastUpdateTimestamp = s.WikiContent!.LastUpdateTimestamp,
+					LastUpdateUser = s.WikiContent.LastUpdateUserName,
+					Status = s.Status,
+					EncodeEmbedLink = s.EncodeEmbedLink,
+					Judge = s.Judge != null ? s.Judge.UserName : "",
+					Title = s.Title,
+					TierName = s.IntendedTier != null ? s.IntendedTier.Name : "",
+					Publisher = s.Publisher != null ? s.Publisher.UserName : "",
+					SystemId = s.SystemId,
+					SystemFrameRateId = s.SystemFrameRateId,
+					GameId = s.GameId,
+					RomId = s.RomId,
+					RejectionReasonDisplay = s.RejectionReasonId.HasValue
+						? s.RejectionReason!.DisplayName
+						: null,
+					Authors = s.SubmissionAuthors
+						.Where(sa => sa.SubmissionId == Id)
+						.Select(sa => sa.Author!.UserName)
+						.ToList(),
+					AdditionalAuthors = s.AdditionalAuthors
+				})
+				.SingleOrDefaultAsync();
 
 			if (Submission == null)
 			{
 				return NotFound();
 			}
 
-			CanEdit = !string.IsNullOrWhiteSpace(User.Identity.Name)
-				&& (User.Identity.Name == Submission.Submitter
-					|| Submission.Authors.Contains(User.Identity.Name));
-
+			CanEdit = !string.IsNullOrWhiteSpace(User.Name())
+				&& (User.Name() == Submission.Submitter
+					|| Submission.Authors.Contains(User.Name()));
 			var submissionPageName = LinkConstants.SubmissionWikiPage + Id;
 			TopicId = (await _db.ForumTopics.SingleOrDefaultAsync(t => t.PageName == submissionPageName))?.Id ?? 0;
 
@@ -128,45 +126,7 @@ namespace TASVideos.Pages.Submissions
 				return AccessDenied();
 			}
 
-			var submission = await _db.Submissions
-				.Include(s => s.WikiContent)
-				.SingleOrDefaultAsync(s => s.Id == Id);
-
-			if (submission == null)
-			{
-				return NotFound();
-			}
-
-			if (submission.Status != SubmissionStatus.New)
-			{
-				return BadRequest("Submission can not be claimed");
-			}
-
-			submission.Status = SubmissionStatus.JudgingUnderWay;
-			var wikiPage = new WikiPage
-			{
-				PageName = submission.WikiContent!.PageName,
-				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Identity.Name}]: Claiming for judging.",
-				RevisionMessage = "Claimed for judging"
-			};
-			submission.WikiContent = wikiPage;
-			submission.JudgeId = User.GetUserId();
-
-			try
-			{
-				await _wikiPages.Add(wikiPage);
-				_publisher.SendSubmissionEdit(
-					$"Submission {submission.Title} set to {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Identity.Name}",
-					$"{Id}S",
-					User.Identity.Name!);
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// Assume the status changed and can no longer be claimed
-				return BadRequest("Submission can not be claimed");
-			}
-
-			return RedirectToPage("View", new { Id });
+			return await Claim(SubmissionStatus.New, SubmissionStatus.JudgingUnderWay, "judging", "Claiming for judging.");
 		}
 
 		public async Task<IActionResult> OnGetClaimForPublishing()
@@ -176,6 +136,11 @@ namespace TASVideos.Pages.Submissions
 				return AccessDenied();
 			}
 
+			return await Claim(SubmissionStatus.Accepted, SubmissionStatus.PublicationUnderway, "publication", "Processing...");
+		}
+
+		private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message)
+		{
 			var submission = await _db.Submissions
 				.Include(s => s.WikiContent)
 				.SingleOrDefaultAsync(s => s.Id == Id);
@@ -185,33 +150,28 @@ namespace TASVideos.Pages.Submissions
 				return NotFound();
 			}
 
-			if (submission.Status != SubmissionStatus.Accepted)
+			if (submission.Status != requiredStatus)
 			{
 				return BadRequest("Submission can not be claimed");
 			}
 
-			submission.Status = SubmissionStatus.PublicationUnderway;
+			submission.Status = newStatus;
 			var wikiPage = new WikiPage
 			{
 				PageName = submission.WikiContent!.PageName,
-				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Identity.Name}]: Processing...",
-				RevisionMessage = "Claimed for publication"
+				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: {message}",
+				RevisionMessage = $"Claimed for {action}"
 			};
 			submission.WikiContent = wikiPage;
 			submission.PublisherId = User.GetUserId();
 
-			try
+			var result = await ConcurrentSave(_db, "", "Unable to claim");
+			if (result)
 			{
-				await _wikiPages.Add(wikiPage);
 				_publisher.SendSubmissionEdit(
-					$"Submission {submission.Title} set to {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Identity.Name}",
+					$"Submission {submission.Title} set to {newStatus.EnumDisplayName()} by {User.Name()}",
 					$"{Id}S",
-					User.Identity.Name!);
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// Assume the status changed and can no longer be claimed
-				return BadRequest("Submission can not be claimed");
+					User.Name());
 			}
 
 			return RedirectToPage("View", new { Id });

@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -71,10 +69,10 @@ namespace TASVideos.Pages.Wiki
 				}
 
 				_publisher.SendGeneralWiki(
-					$"Page {path} DELETED by {User.Identity.Name}",
+					$"Page {path} DELETED by {User.Name()}",
 					$"({result} revisions)",
 					"",
-					User.Identity.Name!);
+					User.Name());
 			}
 
 			return RedirectToPage("DeletedPages");
@@ -96,10 +94,10 @@ namespace TASVideos.Pages.Wiki
 			await _wikiPages.Delete(path, revision);
 
 			_publisher.SendGeneralWiki(
-					$"Revision {revision} of Page {path} DELETED by {User.Identity.Name}",
+					$"Revision {revision} of Page {path} DELETED by {User.Name()}",
 					"",
 					"",
-					User.Identity.Name!);
+					User.Name());
 
 			return Redirect("/" + path);
 		}
@@ -110,7 +108,7 @@ namespace TASVideos.Pages.Wiki
 			{
 				return AccessDenied();
 			}
-			
+
 			if (string.IsNullOrWhiteSpace(path))
 			{
 				return Home();
@@ -125,10 +123,10 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			_publisher.SendGeneralWiki(
-					$"Page {path} UNDELETED by {User.Identity.Name}",
+					$"Page {path} UNDELETED by {User.Name()}",
 					"",
 					path,
-					User.Identity.Name!);
+					User.Name());
 
 			return Redirect("/" + path);
 		}

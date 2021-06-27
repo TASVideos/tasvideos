@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers
 {
@@ -34,10 +35,10 @@ namespace TASVideos.TagHelpers
 	public class ColumnTagHelper : TagHelper
 	{
 		public int? Xs { get; set; }
-		public int? Sm { get; set; } 
-		public int? Md { get; set; } 
-		public int? Lg { get; set; } 
-		
+		public int? Sm { get; set; }
+		public int? Md { get; set; }
+		public int? Lg { get; set; }
+
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			Validate();
@@ -194,7 +195,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new ViewContext();
+		public ViewContext ViewContext { get; set; } = new ();
 
 		public string AspHref { get; set; } = "";
 
@@ -204,7 +205,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 		{
 			var existingClassAttr = output.Attributes.FirstOrDefault(a => a.Name == "class");
 			var existingCssClass = existingClassAttr?.Value.ToString() ?? "";
-			if (existingClassAttr != null)
+			if (existingClassAttr is not null)
 			{
 				output.Attributes.Remove(existingClassAttr);
 			}
@@ -226,7 +227,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 				<button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span></button>
 			</div>
 			<div class='modal-body'>
-				<p>{WarningMessage}</p>
+				<p>{Text(WarningMessage)}</p>
 			</div>
 			<div class='modal-footer'>
 				<form action='{WebUtility.UrlDecode(AspHref)}' method='post'>

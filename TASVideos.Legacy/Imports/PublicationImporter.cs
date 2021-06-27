@@ -2,25 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-    public class PublicationImporter
-    {
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+	internal class PublicationImporter
+	{
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
-			// TODO
-			// multiple streaming url links
-			// multiple archive links
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();
@@ -61,16 +53,16 @@ namespace TASVideos.Legacy.Imports
 			var torrentTypes = new[] { "M", "N", "O", "P", "T" };
 
 			var pubs = (from lm in legacyMovies
-				join w in publicationWikis on LinkConstants.PublicationWikiPage + lm.Id equals w.PageName
-				join s in submissions on lm.SubmissionId equals s.Id
-				join g in games on s.GameId ?? -1 equals g.Id
-				select new
-				{
-					Movie = lm,
-					Wiki = w,
-					Sub = s,
-					Game = g
-				})
+						join w in publicationWikis on LinkConstants.PublicationWikiPage + lm.Id equals w.PageName
+						join s in submissions on lm.SubmissionId equals s.Id
+						join g in games on s.GameId ?? -1 equals g.Id
+						select new
+						{
+							Movie = lm,
+							Wiki = w,
+							Sub = s,
+							Game = g
+						})
 				.ToList();
 
 			foreach (var pub in pubs)
@@ -86,9 +78,9 @@ namespace TASVideos.Legacy.Imports
 					WikiContentId = pub.Wiki.Id,
 					SubmissionId = pub.Movie.SubmissionId,
 					TierId = pub.Movie.Tier,
-					CreateUserName = pub.Movie.Publisher!.Name ?? "Unknown",
-					CreateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate),
-					LastUpdateTimeStamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.LastChange),
+					CreateUserName = pub.Movie.Publisher!.Name,
+					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.PublishedDate),
+					LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(pub.Movie.LastChange),
 					ObsoletedById = pub.Movie.ObsoletedBy == -1 ? null : pub.Movie.ObsoletedBy,
 					Frames = pub.Sub.Frames,
 					RerecordCount = pub.Sub.RerecordCount,
@@ -109,7 +101,7 @@ namespace TASVideos.Legacy.Imports
 				var pubAuthors = pub.Sub.Authors
 					.Select(u => new PublicationAuthor
 					{
-						UserId = u.Id,
+						UserId = u!.Id,
 						Author = u,
 						PublicationId = pub.Movie.Id,
 						Publication = publication
@@ -131,8 +123,8 @@ namespace TASVideos.Legacy.Imports
 					PublicationId = pub.Movie.Id,
 					Type = FileType.Screenshot,
 					Path = screenshotUrl.FileName,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					Description = screenshotUrl.Description.NullIfWhiteSpace(),
 					FileData = null
 				});
@@ -142,8 +134,8 @@ namespace TASVideos.Legacy.Imports
 					PublicationId = pub.Movie.Id,
 					Type = FileType.Torrent,
 					Path = t.FileName,
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow,
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow,
 					FileData = null
 				}));
 
@@ -156,8 +148,8 @@ namespace TASVideos.Legacy.Imports
 					Description = m.FileName.ToLower().Contains("consoleverified")
 						? "Console Verication"
 						: "Converted to " + Path.GetExtension(m.FileName),
-					CreateTimeStamp = DateTime.UtcNow,
-					LastUpdateTimeStamp = DateTime.UtcNow
+					CreateTimestamp = DateTime.UtcNow,
+					LastUpdateTimestamp = DateTime.UtcNow
 				}));
 			}
 
@@ -169,8 +161,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.SubmissionId),
 				nameof(Publication.TierId),
 				nameof(Publication.CreateUserName),
-				nameof(Publication.CreateTimeStamp),
-				nameof(Publication.LastUpdateTimeStamp),
+				nameof(Publication.CreateTimestamp),
+				nameof(Publication.LastUpdateTimestamp),
 				nameof(Publication.Frames),
 				nameof(Publication.RerecordCount),
 				nameof(Publication.GameId),
@@ -185,7 +177,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Publication.EmulatorVersion)
 			};
 
-			publications.BulkInsert(connectionStr, pubColumns, nameof(ApplicationDbContext.Publications), bulkCopyTimeout: 600);
+			publications.BulkInsert(pubColumns, nameof(ApplicationDbContext.Publications));
 
 			var pubAuthorColumns = new[]
 			{
@@ -193,7 +185,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationAuthor.PublicationId)
 			};
 
-			publicationAuthors.BulkInsert(connectionStr, pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors), SqlBulkCopyOptions.Default);
+			publicationAuthors.BulkInsert(pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors));
 
 			var pubFileColumns = new[]
 			{
@@ -204,11 +196,11 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationFile.FileData),
 				nameof(PublicationFile.CreateUserName),
 				nameof(PublicationFile.LastUpdateUserName),
-				nameof(PublicationFile.CreateTimeStamp),
-				nameof(PublicationFile.LastUpdateTimeStamp)
+				nameof(PublicationFile.CreateTimestamp),
+				nameof(PublicationFile.LastUpdateTimestamp)
 			};
 
-			publicationFiles.BulkInsert(connectionStr, pubFileColumns, nameof(ApplicationDbContext.PublicationFiles), SqlBulkCopyOptions.Default, bulkCopyTimeout: 600);
+			publicationFiles.BulkInsert(pubFileColumns, nameof(ApplicationDbContext.PublicationFiles));
 		}
 	}
 }

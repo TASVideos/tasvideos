@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -25,7 +23,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		public int Id { get; set; }
 
 		[BindProperty]
-		public ForumEditModel Forum { get; set; } = new ForumEditModel();
+		public ForumEditModel Forum { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -40,7 +38,7 @@ namespace TASVideos.Pages.Forum.Subforum
 				})
 				.SingleOrDefaultAsync();
 
-			if (Forum == null)
+			if (Forum is null)
 			{
 				return NotFound();
 			}
@@ -68,19 +66,7 @@ namespace TASVideos.Pages.Forum.Subforum
 			forum.ShortName = Forum.ShortName;
 			forum.Description = Forum.Description;
 
-			// TODO: ideally we would put this message in temp data and redirect back to another page
-			// This would keep them from re-posting the same data again instead of pressing back first
-			// Since this is a pretty rarely used page, by high level users, we didn't initially do this logic
-			try
-			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				ModelState.AddModelError("", "Unable to save, the page may have been modified, go back and try again.");
-				return Page();
-			}
-
+			await ConcurrentSave(_db, $"Forum {forum.Name} updated.", $"Unable to edit {forum.Name}");
 			return RedirectToPage("Index", new { id = Id });
 		}
 	}

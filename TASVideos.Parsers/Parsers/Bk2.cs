@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
@@ -14,7 +15,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 		public override string FileExtension => "bk2";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -31,14 +32,13 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 
 			int? vBlankCount;
-			long? cycleCount;
 			string core;
 
-			using (var stream = headerEntry.Open())
+			await using (var stream = headerEntry.Open())
 			{
 				using var reader = new StreamReader(stream);
-				var header = reader
-					.ReadToEnd()
+				var header = (await reader
+					.ReadToEndAsync())
 					.LineSplit();
 
 				string platform = header.GetValueFor(Keys.Platform);
@@ -106,8 +106,8 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 
 				vBlankCount = header.GetValueFor(Keys.VBlankCount).ToInt();
-				cycleCount = header.GetValueFor(Keys.CycleCount).ToLong();
-				core = header.GetValueFor(Keys.Core)?.ToLower() ?? "";
+				result.CycleCount = header.GetValueFor(Keys.CycleCount).ToLong();
+				core = header.GetValueFor(Keys.Core).ToLower();
 			}
 
 			var inputLog = archive.Entry(InputFile);
@@ -116,16 +116,15 @@ namespace TASVideos.MovieParsers.Parsers
 				return Error($"Missing {InputFile}, can not parse");
 			}
 
-			using var inputStream = inputLog.Open();
+			await using var inputStream = inputLog.Open();
 			using var inputReader = new StreamReader(inputStream);
-			result.Frames = inputReader
-				.ReadToEnd()
+			result.Frames = (await inputReader.ReadToEndAsync())
 				.LineSplit()
 				.PipeCount();
 
-			if (cycleCount.HasValue && CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
+			if (result.CycleCount.HasValue && CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
 			{
-				var seconds = cycleCount.Value / (double)cyclesPerFrame;
+				var seconds = result.CycleCount.Value / (double)cyclesPerFrame;
 				result.FrameRateOverride = result.Frames / seconds;
 			}
 
@@ -142,13 +141,13 @@ namespace TASVideos.MovieParsers.Parsers
 			return result;
 		}
 
-		private static readonly Dictionary<string, int> CycleBasedCores = new Dictionary<string, int>
+		private static readonly Dictionary<string, int> CycleBasedCores = new ()
 		{
 			["subgbhawk"] = 4194304,
 			["gambatte"] = 2097152
 		};
 
-		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new Dictionary<string, string>
+		private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new ()
 		{
 			["gen"] = SystemCodes.Genesis,
 			["sat"] = SystemCodes.Saturn,

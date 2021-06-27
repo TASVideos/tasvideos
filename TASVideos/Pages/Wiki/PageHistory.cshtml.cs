@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -24,7 +23,7 @@ namespace TASVideos.Pages.Wiki
 		[FromQuery]
 		public string? Path { get; set; }
 
-		public WikiHistoryModel History { get; set; } = new WikiHistoryModel();
+		public WikiHistoryModel History { get; set; } = new ();
 
 		public async Task OnGet()
 		{
@@ -39,7 +38,7 @@ namespace TASVideos.Pages.Wiki
 					.Select(wp => new WikiHistoryModel.WikiRevisionModel
 					{
 						Revision = wp.Revision,
-						CreateTimeStamp = wp.CreateTimeStamp,
+						CreateTimestamp = wp.CreateTimestamp,
 						CreateUserName = wp.CreateUserName,
 						MinorEdit = wp.MinorEdit,
 						RevisionMessage = wp.RevisionMessage

@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Users.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Users
 {
@@ -28,7 +27,7 @@ namespace TASVideos.Pages.Users
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; } = new PagingModel();
+		public PagingModel Search { get; set; } = new ();
 
 		public PageOf<UserListModel> Users { get; set; } = PageOf<UserListModel>.Empty();
 
@@ -36,7 +35,7 @@ namespace TASVideos.Pages.Users
 		{
 			if (string.IsNullOrWhiteSpace(Search.Sort))
 			{
-				Search.Sort = $"-{nameof(UserListModel.CreateTimeStamp)}";
+				Search.Sort = $"-{nameof(UserListModel.CreateTimestamp)}";
 			}
 
 			Users = await _db.Users
@@ -44,7 +43,7 @@ namespace TASVideos.Pages.Users
 				{
 					Id = u.Id,
 					UserName = u.UserName,
-					CreateTimeStamp = u.CreateTimeStamp,
+					CreateTimestamp = u.CreateTimestamp,
 					Roles = u.UserRoles
 						.Select(ur => ur.Role!.Name)
 						.ToList()
@@ -74,7 +73,7 @@ namespace TASVideos.Pages.Users
 			return new JsonResult(exists);
 		}
 
-		private async Task<IEnumerable<string>> GetUsersByPartial(string partialUserName)
+		private async ValueTask<IEnumerable<string>> GetUsersByPartial(string partialUserName)
 		{
 			var upper = partialUserName.ToUpper();
 			var cacheKey = nameof(GetUsersByPartial) + upper;

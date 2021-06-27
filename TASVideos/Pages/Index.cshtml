@@ -2,6 +2,6 @@
 @section PageTitle {
 }
 
-<cache enabled="@(!User.Identity.IsAuthenticated)" expires-after="@TimeSpan.FromSeconds(Durations.FiveMinutesInSeconds)">
+<cache enabled="@(!User.IsLoggedIn())" expires-after="@TimeSpan.FromSeconds(Durations.FiveMinutesInSeconds)">
 	@await Component.RenderWiki("System/FrontPage")
 </cache>

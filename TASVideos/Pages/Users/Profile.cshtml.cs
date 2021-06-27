@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Users
 {
@@ -30,7 +28,7 @@ namespace TASVideos.Pages.Users
 		[FromRoute]
 		public string? UserName { get; set; }
 
-		public UserProfileModel Profile { get; set; } = new UserProfileModel();
+		public UserProfile Profile { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -52,11 +50,6 @@ namespace TASVideos.Pages.Users
 			}
 
 			Profile = profile;
-			if (!string.IsNullOrWhiteSpace(Profile.Signature))
-			{
-				Profile.Signature = RenderPost(Profile.Signature, true, false);
-			}
-
 			Profile.Awards = await _awards.ForUser(Profile.Id);
 			return Page();
 		}

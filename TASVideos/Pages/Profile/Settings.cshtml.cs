@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.Email;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
 using TASVideos.Pages.Profile.Models;
-using TASVideos.Services;
-using TASVideos.Services.Email;
 
 namespace TASVideos.Pages.Profile
 {
@@ -32,11 +29,8 @@ namespace TASVideos.Pages.Profile
 			_db = db;
 		}
 
-		[TempData]
-		public string? StatusMessage { get; set; }
-
 		[BindProperty]
-		public ProfileSettingsModel Settings { get; set; } = new ProfileSettingsModel();
+		public ProfileSettingsModel Settings { get; set; } = new ();
 
 		public async Task OnGet()
 		{
@@ -48,7 +42,6 @@ namespace TASVideos.Pages.Profile
 				TimeZoneId = user.TimeZoneId,
 				IsEmailConfirmed = user.EmailConfirmed,
 				PublicRatings = user.PublicRatings,
-				StatusMessage = StatusMessage,
 				From = user.From,
 				Signature = user.Signature,
 				Avatar = user.Avatar,
@@ -57,7 +50,7 @@ namespace TASVideos.Pages.Profile
 					.Where(u => u.Id == user.Id)
 					.SelectMany(u => u.UserRoles)
 					.Select(ur => ur.Role!)
-					.Select(r => new RoleBasicDisplay
+					.Select(r => new RoleDto
 					{
 						Id = r.Id,
 						Name = r.Name,
@@ -95,7 +88,7 @@ namespace TASVideos.Pages.Profile
 			user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? Settings.MoodAvatar : null;
 			await _db.SaveChangesAsync();
 
-			StatusMessage = "Your profile has been updated";
+			SuccessStatusMessage("Your profile has been updated");
 			return RedirectToPage("Settings");
 		}
 
@@ -112,7 +105,7 @@ namespace TASVideos.Pages.Profile
 			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
 			await _emailService.EmailConfirmation(user.Email, callbackUrl);
 
-			StatusMessage = "Verification email sent. Please check your email.";
+			SuccessStatusMessage("Verification email sent. Please check your email.");
 			return RedirectToPage("Settings");
 		}
 	}

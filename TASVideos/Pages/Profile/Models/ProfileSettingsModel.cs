@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TASVideos.Models;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Profile.Models
 {
@@ -18,8 +18,6 @@ namespace TASVideos.Pages.Profile.Models
 		[Display(Name = "Time Zone")]
 		public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
-		public string? StatusMessage { get; set; }
-
 		[Display(Name = "Allow Movie Ratings to be public?")]
 		public bool PublicRatings { get; set; }
 
@@ -35,6 +33,6 @@ namespace TASVideos.Pages.Profile.Models
 		[Display(Name = "Mood-variant avatar URL")]
 		public string? MoodAvatar { get; set; }
 
-		public IEnumerable<RoleBasicDisplay> Roles { get; set; } = new List<RoleBasicDisplay>();
+		public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 	}
 }

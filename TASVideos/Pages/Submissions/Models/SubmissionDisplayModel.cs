@@ -60,7 +60,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public DateTime Submitted { get; set; }
 
 		[Display(Name = "Last Edited")]
-		public DateTime LastUpdateTimeStamp { get; set; }
+		public DateTime LastUpdateTimestamp { get; set; }
 
 		[Display(Name = "Last Edited by")]
 		public string? LastUpdateUser { get; set; }
@@ -77,6 +77,8 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? RejectionReasonDisplay { get; set; }
 
 		public string Title { get; set; } = "";
+
+		public string? AdditionalAuthors { get; set; }
 
 		public bool WarnStartType => StartType.HasValue && StartType != MovieStartType.PowerOn;
 

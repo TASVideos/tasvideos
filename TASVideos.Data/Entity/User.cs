@@ -13,7 +13,6 @@ using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Data.Entity
 {
-	[Table(nameof(User))]
 	public class User : IdentityUser<int>, ITrackable
 	{
 		public DateTime? LastLoggedInTimeStamp { get; set; }
@@ -22,9 +21,9 @@ namespace TASVideos.Data.Entity
 		[StringLength(250)]
 		public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
-		public DateTime CreateTimeStamp { get; set; } = DateTime.UtcNow;
+		public DateTime CreateTimestamp { get; set; } = DateTime.UtcNow;
 		public string? CreateUserName { get; set; }
-		public DateTime LastUpdateTimeStamp { get; set; } = DateTime.UtcNow;
+		public DateTime LastUpdateTimestamp { get; set; } = DateTime.UtcNow;
 		public string? LastUpdateUserName { get; set; }
 
 		[StringLength(250)]
@@ -43,7 +42,7 @@ namespace TASVideos.Data.Entity
 
 		/// <summary>
 		/// Gets or sets a value indicating whether or not to use
-		/// the user's ratings when calculating a publication's average rating
+		/// the user's ratings when calculating a publication's average rating.
 		/// </summary>
 		public bool UseRatings { get; set; } = true;
 
@@ -98,7 +97,7 @@ namespace TASVideos.Data.Entity
 		public static IQueryable<User> ThatHavePermission(this IQueryable<User> query, PermissionTo permission)
 		{
 			return query.Where(u => u.UserRoles
-				.Any(r => r.Role!.RolePermission.Any(rp => rp.PermissionId ==permission)));
+				.Any(r => r.Role!.RolePermission.Any(rp => rp.PermissionId == permission)));
 		}
 
 		public static IQueryable<User> ThatHaveRole(this IQueryable<User> query, string role)

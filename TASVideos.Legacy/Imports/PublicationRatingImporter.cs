@@ -1,17 +1,13 @@
 ﻿using System.Linq;
-using Microsoft.Data.SqlClient;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class PublicationRatingImporter
+	internal static class PublicationRatingImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			var ratingsDto = legacySiteContext.MovieRating
 				.Select(mr => new
@@ -54,7 +50,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(PublicationRating.Value)
 			};
 
-			ratings.BulkInsert(connectionStr, columns, nameof(ApplicationDbContext.PublicationRatings), SqlBulkCopyOptions.Default, 20000);
+			ratings.BulkInsert(columns, nameof(ApplicationDbContext.PublicationRatings));
 		}
 	}
 }

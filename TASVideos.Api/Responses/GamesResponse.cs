@@ -1,51 +1,50 @@
 ﻿using System.Collections.Generic;
-
-using TASVideos.Data;
+using TASVideos.Core;
 using TASVideos.Data.Entity.Game;
 
 #pragma warning disable 1591
 namespace TASVideos.Api.Responses
 {
 	/// <summary>
-	/// Represents a game returned by the games endpoint
+	/// Represents a game returned by the games endpoint.
 	/// </summary>
 	public class GamesResponse
 	{
 		[Sortable]
-		public int Id { get; set; }
+		public int Id { get; init; }
 
-		public IEnumerable<GameRom> Roms { get; set; } = new List<GameRom>();
-
-		[Sortable]
-		public string SystemCode { get; set; } = "";
+		public IEnumerable<GameRom> Roms { get; init; } = new List<GameRom>();
 
 		[Sortable]
-		public string GoodName { get; set; } = "";
+		public string SystemCode { get; init; } = "";
 
 		[Sortable]
-		public string DisplayName { get; set; } = "";
+		public string GoodName { get; init; } = "";
 
 		[Sortable]
-		public string Abbreviation { get; set; } = "";
+		public string DisplayName { get; init; } = "";
 
 		[Sortable]
-		public string SearchKey { get; set; } = "";
+		public string Abbreviation { get; init; } = "";
 
 		[Sortable]
-		public string YoutubeTags { get; set; } = "";
+		public string SearchKey { get; init; } = "";
 
 		[Sortable]
-		public string ScreenshotUrl { get; set; } = "";
+		public string YoutubeTags { get; init; } = "";
+
+		[Sortable]
+		public string ScreenshotUrl { get; init; } = "";
 
 		public class GameRom
 		{
-			public int Id { get; set; }
-			public string Md5 { get; set; } = "";
-			public string Sha1 { get; set; } = "";
-			public string Name { get; set; } = "";
-			public RomTypes Type { get; set; }
-			public string Region { get; set; } = "";
-			public string Version { get; set; } = "";
+			public int Id { get; init; }
+			public string Md5 { get; init; } = "";
+			public string Sha1 { get; init; } = "";
+			public string Name { get; init; } = "";
+			public RomTypes Type { get; init; }
+			public string Region { get; init; } = "";
+			public string Version { get; init; } = "";
 		}
 	}
 }

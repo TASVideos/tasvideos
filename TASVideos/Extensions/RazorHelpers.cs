@@ -31,13 +31,13 @@ namespace TASVideos.Extensions
 
 		public static string Page(this ViewContext viewContext)
 		{
-			return viewContext.ActionDescriptor.DisplayName;
+			return viewContext.ActionDescriptor.DisplayName ?? "";
 		}
 
 		public static string PageGroup(this ViewContext viewContext)
 		{
 			return viewContext.ActionDescriptor.DisplayName
-				?.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+				?.SplitWithEmpty("/")
 				.FirstOrDefault() ?? "";
 		}
 
@@ -51,7 +51,7 @@ namespace TASVideos.Extensions
 			return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
 		}
 
-		public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData, string? pp = null)
+		public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData, string pp = "")
 		{
 			return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData, pp });
 		}

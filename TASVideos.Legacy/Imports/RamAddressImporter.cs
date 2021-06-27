@@ -7,12 +7,9 @@ using TASVideos.Legacy.Data.Site;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class RamAddressImporter
+	internal static class RamAddressImporter
 	{
-		public static void Import(
-			string connectionStr,
-			ApplicationDbContext context,
-			NesVideosSiteContext legacySiteContext)
+		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
 		{
 			var domains = legacySiteContext.RamAddressDomains
 				.Select(rd => new GameRamAddressDomain
@@ -51,9 +48,9 @@ namespace TASVideos.Legacy.Imports
 					Endian = ToEndian(l.address.Endian),
 					Description = l.address.Description ?? "",
 					GameRamAddressDomainId = l.address.Domain,
-					GameId = l.game != null && l.game.Any() ? l.game.First().Id : (int?)null,
-					SystemId = l?.address?.AddressSet?.SystemId ?? 0,
-					LegacyGameName = l?.game == null || !l.game.Any() ? l?.address?.AddressSet?.Name : null
+					GameId = l.game.Any() ? l.game.First().Id : null,
+					SystemId = l.address?.AddressSet?.SystemId ?? 0,
+					LegacyGameName = !l.game.Any() ? l.address?.AddressSet?.Name : null
 				})
 				.ToList();
 
@@ -71,13 +68,13 @@ namespace TASVideos.Legacy.Imports
 				nameof(GameRamAddress.SystemId)
 			};
 
-			domains.BulkInsert(connectionStr, domainColumns, nameof(ApplicationDbContext.GameRamAddressDomains));
-			ramAddresses.BulkInsert(connectionStr, addressColumns, nameof(ApplicationDbContext.GameRamAddresses));
+			domains.BulkInsert(domainColumns, nameof(ApplicationDbContext.GameRamAddressDomains));
+			ramAddresses.BulkInsert(addressColumns, nameof(ApplicationDbContext.GameRamAddresses));
 		}
 
 		private static RamAddressType ToType(string? type)
 		{
-			return (type?.ToLower()) switch
+			return type?.ToLower() switch
 			{
 				"byte" => RamAddressType.Byte,
 				"word" => RamAddressType.Word,
@@ -98,7 +95,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static RamAddressSigned ToSigned(string? signed)
 		{
-			return (signed?.ToLower()) switch
+			return signed?.ToLower() switch
 			{
 				"signed" => RamAddressSigned.Signed,
 				"unsigned" => RamAddressSigned.Unsigned,
@@ -109,7 +106,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static RamAddressEndian ToEndian(string? endian)
 		{
-			return (endian?.ToLower()) switch
+			return endian?.ToLower() switch
 			{
 				"big" => RamAddressEndian.Big,
 				"little" => RamAddressEndian.Little,

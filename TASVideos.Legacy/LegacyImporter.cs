@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Forum.Entity;
@@ -14,69 +13,89 @@ using TASVideos.Legacy.Imports;
 
 namespace TASVideos.Legacy
 {
-	public static class LegacyImporter
+	public interface ILegacyImporter
 	{
-		private static readonly Dictionary<string, long> ImportDurations = new Dictionary<string, long>();
+		void RunLegacyImport();
+	}
 
-		public static void RunLegacyImport(
+	public class LegacyImporter : ILegacyImporter
+	{
+		private readonly IWebHostEnvironment _env;
+		private readonly ApplicationDbContext _db;
+		private readonly NesVideosSiteContext _legacySiteDb;
+		private readonly NesVideosForumContext _legacyForumDb;
+
+		private static readonly Dictionary<string, long> ImportDurations = new ();
+
+		public LegacyImporter(
 			IWebHostEnvironment env,
-			ApplicationDbContext context,
-			string connectionStr,
-			NesVideosSiteContext legacySiteContext,
-			NesVideosForumContext legacyForumContext)
+			ApplicationDbContext db,
+			NesVideosSiteContext legacySiteDb,
+			NesVideosForumContext legacyForumDb)
 		{
+			_env = env;
+			_db = db;
+			_legacySiteDb = legacySiteDb;
+			_legacyForumDb = legacyForumDb;
+		}
+
+		public void RunLegacyImport()
+		{
+			string connectionStr = _db.Database.GetConnectionString();
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
 			// Since we are using this database in a read-only way, set no tracking globally
 			// To speed up query executions
-			legacySiteContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-			legacyForumContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+			_legacySiteDb.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+			_legacyForumDb.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
 			var stopwatch = Stopwatch.StartNew();
+			SqlBulkImporter.BeginImport(connectionStr, _db.Database.IsSqlServer());
+			Run("Tags", () => TagImporter.Import(_legacySiteDb));
+			Run("Roms", () => RomImporter.Import(_legacySiteDb));
+			Run("Games", () => GameImporter.Import(_legacySiteDb));
+			Run("GameGroup", () => GameGroupImporter.Import(_legacySiteDb));
+			Run("GameGenre", () => GameGenreImport.Import(_legacySiteDb));
+			Run("RamAddresses", () => RamAddressImporter.Import(_db, _legacySiteDb));
 
-			Run("Tags", () => TagImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Roms", () => RomImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Games", () => GameImporter.Import(connectionStr, context, legacySiteContext));
-			Run("GameGroup", () => GameGroupImporter.Import(connectionStr, context, legacySiteContext));
-			Run("GameGenre", () => GameGenreImport.Import(connectionStr, context, legacySiteContext));
-			Run("RamAddresses", () => RamAddressImporter.Import(connectionStr, context, legacySiteContext));
+			Run("Users", () => UserImporter.Import(_db, _legacySiteDb, _legacyForumDb));
+			Run("UserDisallows", () => DisallowImporter.Import(_legacyForumDb));
+			Run("Award", () => AwardImporter.Import(_db, _legacySiteDb));
 
-			Run("Users", () => UserImporter.Import(connectionStr, context, legacySiteContext, legacyForumContext));
-			Run("UserDisallows", () => DisallowImporter.Import(connectionStr, legacyForumContext));
-			Run("Award", () => AwardImporter.Import(connectionStr, context, legacySiteContext));
-
-			Run("Forum Categories", () => ForumCategoriesImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forums", () => ForumImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Topics", () => ForumTopicImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Posts", () => ForumPostsImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(connectionStr, context, legacyForumContext));
-			Run("Forum Polls", () => ForumPollImporter.Import(connectionStr, context, legacyForumContext));
+			Run("Forum Categories", () => ForumCategoriesImporter.Import(_legacyForumDb));
+			Run("Forums", () => ForumImporter.Import(_legacyForumDb));
+			Run("Forum Topics", () => ForumTopicImporter.Import(_legacyForumDb));
+			Run("Forum Posts", () => ForumPostsImporter.Import(_legacyForumDb));
+			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(_legacyForumDb));
+			Run("Forum Polls", () => ForumPollImporter.Import(_db, _legacyForumDb));
 
 			// We don't want to copy these to other environments, as they can cause users to get unwanted emails
-			if (env.IsProduction())
+			if (_env.IsProduction())
 			{
-				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(connectionStr, context, legacyForumContext));
+				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(_legacyForumDb));
 			}
 
-			Run("Wiki", () => WikiImporter.Import(connectionStr, legacySiteContext));
-			Run("WikiCleanup", () => WikiPageCleanup.Fix(context, legacySiteContext));
-			Run("WikiReferral", () => WikiReferralGenerator.Generate(connectionStr, context));
-			Run("Submissions", () => SubmissionImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Submissions Framerate", () => SubmissionFrameRateImporter.Import(context));
-			Run("Publications", () => PublicationImporter.Import(connectionStr, context, legacySiteContext));
-			Run("PublicationUrls", () => PublicationUrlImporter.Import(connectionStr, legacySiteContext));
-			Run("Publication Ratings", () => PublicationRatingImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Publication Flags", () => PublicationFlagImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Publication Tags", () => PublicationTagImporter.Import(connectionStr, context, legacySiteContext));
-			Run("Published Author Generator", () => PublishedAuthorGenerator.Generate(connectionStr, context));
+			Run("Wiki", () => WikiImporter.Import(_legacySiteDb));
+			Run("WikiCleanup", () => WikiPageCleanup.Fix(_db, _legacySiteDb));
+			Run("WikiReferral", () => WikiReferralGenerator.Generate(_db));
+			Run("Submissions", () => SubmissionImporter.Import(_db, _legacySiteDb));
+			Run("Submissions Framerate", () => SubmissionFrameRateImporter.Import(_db));
+			Run("Publications", () => PublicationImporter.Import(_db, _legacySiteDb));
+			Run("PublicationUrls", () => PublicationUrlImporter.Import(_legacySiteDb));
+			Run("Publication Ratings", () => PublicationRatingImporter.Import(_db, _legacySiteDb));
+			Run("Publication Flags", () => PublicationFlagImporter.Import(_legacySiteDb));
+			Run("Publication Tags", () => PublicationTagImporter.Import(_db, _legacySiteDb));
+			Run("Published Author Generator", () => PublishedAuthorGenerator.Generate(_db));
 
-			Run("User files", () => UserFileImporter.Import(connectionStr, context, legacySiteContext));
+			Run("User files", () => UserFileImporter.Import(_db, _legacySiteDb));
 
 			var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
 			stopwatch.Stop();
 			Console.WriteLine($"Import finished. Total time: {elapsedMilliseconds / 1000.0} seconds");
 			Console.WriteLine("Import breakdown:");
-			foreach (var entry in ImportDurations)
+			foreach ((var key, long value) in ImportDurations)
 			{
-				Console.WriteLine($"{entry.Key}: {entry.Value}");
+				Console.WriteLine($"{key}: {value}");
 			}
 		}
 

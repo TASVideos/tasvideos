@@ -1,34 +1,45 @@
-﻿using System.IO;
-using System.Net;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-using TASVideos.ForumEngine;
+using Microsoft.EntityFrameworkCore;
+using TASVideos.Data;
 
 namespace TASVideos.Pages
 {
 	public class BasePageModel : PageModel
 	{
-		protected IPAddress IpAddress => Request.HttpContext.Connection.RemoteIpAddress;
+		[TempData]
+		public string? Message { get; set; }
 
-		protected IActionResult Home()
+		[TempData]
+		public string? MessageType { get; set; }
+
+		public void SuccessStatusMessage(string message)
 		{
-			return RedirectToPage("/Index");
+			Message = message;
+			MessageType = Styles.Success;
 		}
 
-		protected IActionResult AccessDenied()
+		public void ErrorStatusMessage(string message)
 		{
-			return RedirectToPage("/Account/AccessDenied");
+			Message = message;
+			MessageType = Styles.Danger;
 		}
 
-		protected IActionResult Login()
+		public void ClearStatusMessage()
 		{
-			return new RedirectToPageResult("Login");
+			Message = null;
+			MessageType = null;
 		}
+
+		protected string IpAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+
+		protected IActionResult Home() => RedirectToPage("/Index");
+
+		protected IActionResult AccessDenied() => RedirectToPage("/Account/AccessDenied");
+
+		protected IActionResult Login() => new RedirectToPageResult("Login");
 
 		protected IActionResult RedirectToLocal(string? returnUrl)
 		{
@@ -46,34 +57,36 @@ namespace TASVideos.Pages
 			}
 		}
 
-		protected string RenderPost(string text, bool useBbCode, bool useHtml)
+		protected async Task<bool> ConcurrentSave(ApplicationDbContext db, string successMessage, string errorMessage)
 		{
-			var parsed = PostParser.Parse(text, useBbCode, useHtml);
-			using var writer = new StringWriter();
-			parsed.WriteHtml(writer);
-			return writer.ToString();
-		}
+			try
+			{
+				await db.SaveChangesAsync();
+				if (!string.IsNullOrWhiteSpace(successMessage))
+				{
+					SuccessStatusMessage(successMessage);
+				}
 
-		protected string RenderHtml(string text)
-		{
-			return RenderPost(text, false, true);
-		}
+				return true;
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!string.IsNullOrWhiteSpace(errorMessage))
+				{
+					ErrorStatusMessage(errorMessage + "\nThe resource may have already been deleted or updated");
+				}
 
-		protected string RenderBbcode(string text)
-		{
-			return RenderPost(text, true, false);
-		}
+				return false;
+			}
+			catch (DbUpdateException)
+			{
+				if (!string.IsNullOrWhiteSpace(errorMessage))
+				{
+					ErrorStatusMessage(errorMessage + "\nThe resource cannot be deleted or updated");
+				}
 
-		protected string RenderSignature(string? text)
-		{
-			return RenderBbcode(text ?? ""); // Bbcode on, Html off hardcoded, do we want this to be configurable?
-		}
-
-		protected async Task<byte[]> FormFileToBytes(IFormFile formFile)
-		{
-			await using var memoryStream = new MemoryStream();
-			await formFile.CopyToAsync(memoryStream);
-			return memoryStream.ToArray();
+				return false;
+			}
 		}
 	}
 }

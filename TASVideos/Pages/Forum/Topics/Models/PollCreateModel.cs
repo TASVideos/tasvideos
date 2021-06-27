@@ -16,14 +16,13 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		[Display(Name = "Options")]
 		public IEnumerable<string> PollOptions { get; set; } = new List<string> { "", "" };
 
-		public bool IsValid => 
+		public bool IsValid =>
 			!string.IsNullOrWhiteSpace(Question)
 			&& Question.Length <= 200
 			&& OptionsAreValid;
 
-		public bool OptionsAreValid => 
-			PollOptions != null
-			&& PollOptions.Count(o => !string.IsNullOrWhiteSpace(o)) > 1
-			&& PollOptions.All(o => o != null && o.Length <= 250);
+		public bool OptionsAreValid =>
+			PollOptions.Count(o => !string.IsNullOrWhiteSpace(o)) > 1
+			&& PollOptions.All(o => o.Length <= 250);
 	}
 }

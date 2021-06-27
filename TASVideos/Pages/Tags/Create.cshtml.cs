@@ -1,9 +1,6 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-using TASVideos.Data;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Tags
@@ -11,24 +8,18 @@ namespace TASVideos.Pages.Tags
 	[RequirePermission(PermissionTo.TagMaintenance)]
 	public class CreateModel : BasePageModel
 	{
-		private readonly ApplicationDbContext _db;
+		private readonly ITagService _tagService;
 
-		public CreateModel(ApplicationDbContext db)
+		public CreateModel(ITagService tagService)
 		{
-			_db = db;
+			_tagService = tagService;
 		}
-
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
 
 		[FromRoute]
 		public int Id { get; set; }
 
 		[BindProperty]
-		public Tag Tag { get; set; } = new Tag();
+		public Tag Tag { get; set; } = new ();
 
 		public async Task<IActionResult> OnPost()
 		{
@@ -37,38 +28,21 @@ namespace TASVideos.Pages.Tags
 				return Page();
 			}
 
-			_db.Tags.Add(new Tag
+			var (_, result) = await _tagService.Add(Tag.Code, Tag.DisplayName);
+			switch (result)
 			{
-				Code = Tag.Code,
-				DisplayName = Tag.DisplayName
-			});
-
-			try
-			{
-				MessageType = Styles.Success;
-				Message = "Tag successfully created.";
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				MessageType = Styles.Danger;
-				Message = "Unable to create Tag.";
-			}
-			catch (DbUpdateException ex)
-			{
-				if (ex.InnerException?.Message.Contains("Cannot insert duplicate") ?? false)
-				{
+				default:
+				case TagEditResult.Success:
+					SuccessStatusMessage("Tag successfully created.");
+					return RedirectToPage("Index");
+				case TagEditResult.DuplicateCode:
 					ModelState.AddModelError($"{nameof(Tag)}.{nameof(Tag.Code)}", $"{nameof(Tag.Code)} {Tag.Code} already exists");
-					MessageType = null;
-					Message = null;
+					ClearStatusMessage();
 					return Page();
-				}
-				
-				MessageType = Styles.Danger;
-				Message = "Unable to edit tag due to an unknown error";
+				case TagEditResult.Fail:
+					ErrorStatusMessage("Unable to edit tag due to an unknown error");
+					return Page();
 			}
-
-			return RedirectToPage("Index");
 		}
 	}
 }

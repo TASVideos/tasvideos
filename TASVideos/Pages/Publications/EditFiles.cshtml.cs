@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications
 {
@@ -109,7 +107,7 @@ namespace TASVideos.Pages.Publications
 			_publisher.SendPublicationEdit(
 				$"Publication {Id} {Title} added {Type} file {path}",
 				$"{Id}M",
-				User.Identity.Name!);
+				User.Name());
 
 			return RedirectToPage("EditFiles", new { Id });
 		}
@@ -118,12 +116,12 @@ namespace TASVideos.Pages.Publications
 		{
 			var file = await _uploader.DeleteFile(publicationFileId);
 
-			if (file != null)
+			if (file is not null)
 			{
 				_publisher.SendPublicationEdit(
 					$"Publication {Id} deleted {file.Type} file {file.Path}",
 					$"{Id}M",
-					User.Identity.Name!);
+					User.Name());
 			}
 
 			return RedirectToPage("EditFiles", new { Id });

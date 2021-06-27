@@ -18,7 +18,14 @@
 		<tr>
 			<td nowrap>@entry.Name</td>
 			<td nowrap>@entry.Group</td>
-			<td nowrap>@Html.Raw(string.Join(",<br>", entry.Roles.OrderBy(r => r)))</td>
+			<td nowrap>
+				<ul>
+					@foreach(var role in entry.Roles.OrderBy(r => r))
+					{
+					<li><a asp-page="/Roles/Index" asp-route-role="@role">@role</a></li>
+					}
+				</ul>
+			</td>
 			<td>@entry.Description</td>
 		</tr>
 	}

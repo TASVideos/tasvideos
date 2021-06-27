@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Posts
 {
@@ -18,7 +18,7 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager _userManager;
 		private readonly IAwards _awards;
-		
+
 		public NewModel(
 			ApplicationDbContext db,
 			UserManager userManager,
@@ -30,7 +30,7 @@ namespace TASVideos.Pages.Forum.Posts
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; } = new PagingModel();
+		public PagingModel Search { get; set; } = new ();
 
 		public PageOf<PostsSinceLastVisitModel> Posts { get; set; } = PageOf<PostsSinceLastVisitModel>.Empty();
 
@@ -45,7 +45,7 @@ namespace TASVideos.Pages.Forum.Posts
 				.Select(p => new PostsSinceLastVisitModel
 				{
 					Id = p.Id,
-					CreateTimestamp = p.CreateTimeStamp,
+					CreateTimestamp = p.CreateTimestamp,
 					EnableBbCode = p.EnableBbCode,
 					EnableHtml = p.EnableHtml,
 					Text = p.Text,
@@ -63,7 +63,7 @@ namespace TASVideos.Pages.Forum.Posts
 					PosterLocation = p.Poster.From,
 					Signature = p.Poster.Signature,
 					PosterAvatar = p.Poster.Avatar,
-					PosterJoined = p.Poster.CreateTimeStamp,
+					PosterJoined = p.Poster.CreateTimestamp,
 					PosterPostCount = p.Poster.Posts.Count,
 					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
 					PosterMood = p.PosterMood
@@ -74,8 +74,6 @@ namespace TASVideos.Pages.Forum.Posts
 			foreach (var post in Posts)
 			{
 				post.Awards = await _awards.ForUser(post.PosterId);
-				post.RenderedText = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-				post.RenderedSignature = RenderSignature(post.Signature);
 			}
 		}
 	}

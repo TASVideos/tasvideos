@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-// ReSharper disable StyleCop.SA1201
 namespace TASVideos.Pages.Profile
 {
 	public static class ProfileNavPages
@@ -18,7 +17,7 @@ namespace TASVideos.Pages.Profile
 
 		public static string ChangePassword => "ChangePassword";
 		public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
-		
+
 		public static string HomePage => "HomePage";
 		public static string HomePageNavClass(ViewContext viewContext) => PageNavClass(viewContext, HomePage);
 
@@ -27,6 +26,9 @@ namespace TASVideos.Pages.Profile
 
 		public static string Ratings => "Ratings";
 		public static string RatingsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Ratings);
+
+		public static string Unrated => "Unrated";
+		public static string UnratedNavClass(ViewContext viewContext) => PageNavClass(viewContext, Unrated);
 
 		public static string Topics => "Topics";
 		public static string TopicsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Topics);

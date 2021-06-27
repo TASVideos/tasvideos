@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Legacy
 {
@@ -24,9 +22,12 @@ namespace TASVideos.Pages.Forum.Legacy
 		[FromQuery]
 		public int? T { get; set; }
 
+		[FromRoute]
+		public int? Id { get; set; }
+
 		public async Task<IActionResult> OnGet()
 		{
-			if (!P.HasValue && !T.HasValue)
+			if (!P.HasValue && !T.HasValue && !Id.HasValue)
 			{
 				return NotFound();
 			}
@@ -40,16 +41,16 @@ namespace TASVideos.Pages.Forum.Legacy
 				}
 
 				return RedirectToPage(
-					"/Forum/Topics/Index", 
+					"/Forum/Topics/Index",
 					new
 					{
-						Id = model.TopicId, 
-						Highlight = P, 
+						Id = model.TopicId,
+						Highlight = P,
 						CurrentPage = model.Page
 					});
 			}
 
-			return RedirectToPage("/Forum/Topics/Index", new { Id = T });
+			return RedirectToPage("/Forum/Topics/Index", new { Id = T ?? Id });
 		}
 	}
 }

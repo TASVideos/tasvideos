@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Ratings.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Ratings
 {
@@ -31,7 +29,7 @@ namespace TASVideos.Pages.Ratings
 		[FromRoute]
 		public int Id { get; set; }
 
-		public PublicationRatingsModel Publication { get; set; } = new PublicationRatingsModel();
+		public PublicationRatingsModel Publication { get; set; } = new ();
 
 		public IEnumerable<PublicationRatingsModel.RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
 			? Publication.Ratings
@@ -87,7 +85,7 @@ namespace TASVideos.Pages.Ratings
 				.Concat(techRatings)
 				.ToList();
 
-			Publication.AverageEntertainmentRating = entertainmentRatings.Any() 
+			Publication.AverageEntertainmentRating = entertainmentRatings.Any()
 				? Math.Round(entertainmentRatings.Average(), 2)
 				: 0;
 

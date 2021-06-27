@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -18,7 +16,8 @@ namespace TASVideos.Pages.Forum.Topics
 	{
 		private readonly ApplicationDbContext _db;
 
-		public AddEditPollModel(ApplicationDbContext db, ITopicWatcher watcher) : base(db, watcher)
+		public AddEditPollModel(ApplicationDbContext db, ITopicWatcher watcher)
+			: base(db, watcher)
 		{
 			_db = db;
 		}
@@ -31,7 +30,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int? PollId { get; set; }
 
 		[BindProperty]
-		public PollCreateModel Poll { get; set; } = new PollCreateModel();
+		public PollCreateModel Poll { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -52,7 +51,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			TopicTitle = topic.Title;
 
-			if (topic.Poll != null)
+			if (topic.Poll is not null)
 			{
 				if (topic.Poll.PollOptions.SelectMany(o => o.Votes).Any())
 				{
@@ -64,7 +63,7 @@ namespace TASVideos.Pages.Forum.Topics
 					Question = topic.Poll.Question,
 					DaysOpen = topic.Poll.CloseDate.HasValue
 						? (int)(topic.Poll.CloseDate.Value - DateTime.Now).TotalDays
-						: (int?)null,
+						: null,
 					PollOptions = topic.Poll.PollOptions
 						.OrderBy(o => o.Ordinal)
 						.Select(o => o.Text)
@@ -105,32 +104,27 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			if (topic.Poll != null)
+			if (topic.Poll is not null)
 			{
 				if (topic.Poll.PollOptions.SelectMany(o => o.Votes).Any())
 				{
 					return BadRequest("A poll with existing votes can not be modified");
 				}
-				
+
 				topic.Poll.Question = Poll.Question ?? "";
 				topic.Poll.CloseDate = Poll.DaysOpen.HasValue
 					? DateTime.UtcNow.AddDays(Poll.DaysOpen.Value)
-					: (DateTime?)null;
+					: null;
 
 				topic.Poll.PollOptions.Clear();
 				topic.Poll = null;
-
-				try
-				{
-					await _db.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					return BadRequest("Unable to clear existing poll");
-				}
 			}
 
-			await CreatePoll(topic, Poll);
+			var result = await ConcurrentSave(_db, "Poll edited", "Unable to clear existing poll");
+			if (result)
+			{
+				await CreatePoll(topic, Poll);
+			}
 
 			return RedirectToPage("Index", new { Id = TopicId });
 		}

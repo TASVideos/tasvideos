@@ -14,7 +14,7 @@
 }
 
 @{
-	var canEdit = Model.Author == User.Identity.Name || User.Has(PermissionTo.EditUserFiles);
+	var canEdit = Model.Author == User.Name() || User.Has(PermissionTo.EditUserFiles);
 }
 
 <div class="card mb-3">
@@ -47,13 +47,13 @@
 					For
 					<a href="/Games/@Model.GameId">@Model.GameName</a>
 
-					@if (Model.System != null)
+					@if (Model.System is not null)
 					{
 						<text>(@Model.System)</text>
 					}
 				</p>
 			}
-			else if (Model.System != null)
+			else if (Model.System is not null)
 			{
 				<text>For @Model.System</text>
 			}

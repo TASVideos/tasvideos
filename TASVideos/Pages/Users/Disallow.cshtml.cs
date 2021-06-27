@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +11,7 @@ using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Pages.Users
 {
+	[RequirePermission(PermissionTo.EditDisallows)]
 	public class DisallowModel : PageModel
 	{
 		private readonly ApplicationDbContext _db;
@@ -56,7 +57,7 @@ namespace TASVideos.Pages.Users
 		public async Task<IActionResult> OnPostDelete(int disallowId)
 		{
 			var disallow = await _db.UserDisallows.SingleOrDefaultAsync(d => d.Id == disallowId);
-			if (disallow != null)
+			if (disallow is not null)
 			{
 				_db.UserDisallows.Remove(disallow);
 				await _db.SaveChangesAsync();

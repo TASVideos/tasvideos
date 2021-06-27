@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using SharpCompress.Readers;
+using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
@@ -19,7 +21,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 		public override string FileExtension => "ltm";
 
-		public IParseResult Parse(Stream file)
+		public async Task<IParseResult> Parse(Stream file)
 		{
 			var result = new ParseResult
 			{
@@ -40,12 +42,13 @@ namespace TASVideos.MovieParsers.Parsers
 						continue;
 					}
 
-					using var entry = reader.OpenEntryStream();
+					await using var entry = reader.OpenEntryStream();
 					using var textReader = new StreamReader(entry);
 					switch (reader.Entry.Key)
 					{
 						case "config.ini":
-							while (textReader.ReadLine() is string s)
+							string? s;
+							while ((s = await textReader.ReadLineAsync()) != null)
 							{
 								if (s.StartsWith(FrameCountHeader))
 								{
@@ -58,7 +61,7 @@ namespace TASVideos.MovieParsers.Parsers
 								else if (s.StartsWith(SaveStateCountHeader))
 								{
 									var savestateCount = ParseIntFromConfig(s);
-										
+
 									// Power-on movies seem to always have a savestate count equal to frames
 									if (savestateCount > 0 && savestateCount != result.Frames)
 									{
@@ -72,6 +75,17 @@ namespace TASVideos.MovieParsers.Parsers
 								else if (s.StartsWith(FrameRateNumHeader))
 								{
 									frameRateNumerator = ParseDoubleFromConfig(s);
+								}
+							}
+
+							break;
+						case "annotations.txt":
+							string? line;
+							while ((line = await textReader.ReadLineAsync()) != null)
+							{
+								if (line.ToLower().StartsWith("platform:"))
+								{
+									result.SystemCode = CalculatePlatform(GetPlatformValue(line));
 								}
 							}
 
@@ -137,6 +151,42 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 
 			return 0;
+		}
+
+		private static string GetPlatformValue(string str)
+		{
+			if (string.IsNullOrWhiteSpace(str))
+			{
+				return "";
+			}
+
+			var split = str.ToLower().Split(new[] { "platform:" }, StringSplitOptions.RemoveEmptyEntries);
+			if (split.Length != 1)
+			{
+				return "";
+			}
+
+			return split[0].Trim();
+		}
+
+		private static string CalculatePlatform(string str)
+		{
+			if (string.Equals(SystemCodes.Flash, str, StringComparison.InvariantCultureIgnoreCase))
+			{
+				return SystemCodes.Flash;
+			}
+
+			if (string.Equals(SystemCodes.Dos, str, StringComparison.InvariantCultureIgnoreCase))
+			{
+				return SystemCodes.Dos;
+			}
+
+			if (string.Equals(SystemCodes.Windows, str, StringComparison.InvariantCultureIgnoreCase))
+			{
+				return SystemCodes.Windows;
+			}
+
+			return SystemCodes.Linux;
 		}
 	}
 }

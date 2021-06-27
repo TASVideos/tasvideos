@@ -1,12 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
-using TASVideos.Data.Entity;
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Profile
 {
@@ -14,18 +10,15 @@ namespace TASVideos.Pages.Profile
 	public class ChangePasswordModel : BasePageModel
 	{
 		private readonly UserManager _userManager;
-		private readonly SignInManager<User> _signInManager;
+		private readonly SignInManager _signInManager;
 
 		public ChangePasswordModel(
-			SignInManager<User> signInManager,
+			SignInManager signInManager,
 			UserManager userManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 		}
-
-		[TempData]
-		public string? StatusMessage { get; set; }
 
 		[BindProperty]
 		[Required]
@@ -45,7 +38,7 @@ namespace TASVideos.Pages.Profile
 		[Display(Name = "Confirm new password")]
 		[Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
 		public string ConfirmPassword { get; set; } = "";
-		
+
 		public async Task<IActionResult> OnGet()
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -76,8 +69,7 @@ namespace TASVideos.Pages.Profile
 			}
 
 			await _signInManager.SignInAsync(user, isPersistent: false);
-			StatusMessage = "Your password has been changed.";
-
+			SuccessStatusMessage("Your password has been changed.");
 			return RedirectToPage("ChangePassword");
 		}
 	}

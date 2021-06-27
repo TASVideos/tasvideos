@@ -1,8 +1,11 @@
-﻿using System;
+﻿using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using TASVideos.Core;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Extensions;
 using TASVideos.Legacy.Extensions;
@@ -31,31 +34,30 @@ namespace TASVideos
 				.AddCookieConfiguration(Environment)
 				.AddGzipCompression(Settings)
 				.AddCacheService(Settings.CacheSettings)
-				.AddServices(Environment)
-				.AddExternalMediaPublishing(Environment, Settings)
+				.AddExternalMediaPublishing(Environment)
 				.AddAutoMapperWithProjections()
-				.AddSwagger();
+				.AddSwagger(Settings);
 
 			// Internal Libraries
 			services
-				.AddTasvideosData(Configuration)
+				.AddTasvideosData(Configuration, Settings.UsePostgres)
+				.AddTasvideosCore(Environment.IsDevelopment())
 				.AddTasVideosLegacy(
 					Settings.ConnectionStrings.LegacySiteConnection,
 					Settings.ConnectionStrings.LegacyForumConnection,
-					Settings.StartupStrategy() == DbInitializer.StartupStrategy.Import)
+					Settings.UsesImportStartStrategy())
 				.AddMovieParser();
 
 			// 3rd Party
 			services
-				.AddMvcWithOptions()
-				.AddIdentity(Environment);
+				.AddMvcWithOptions(Environment)
+				.AddIdentity(Environment)
+				.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
 
-			// HTTP Client
-			services
-				.AddHttpClient("Discord", client =>
-				{
-					client.BaseAddress = new Uri("https://discord.com/api/v6/");
-				});
+			services.AddWebOptimizer(pipeline =>
+			{
+				pipeline.CompileScssFiles();
+			});
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -67,6 +69,7 @@ namespace TASVideos
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
 				.UseHttpsRedirection()
+				.UseWebOptimizer()
 				.UseStaticFilesWithTorrents()
 				.UseAuthorization()
 				.UseAuthentication()

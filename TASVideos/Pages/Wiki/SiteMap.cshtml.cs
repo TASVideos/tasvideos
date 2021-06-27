@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
 using Microsoft.AspNetCore.Authorization;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -29,7 +26,7 @@ namespace TASVideos.Pages.Wiki
 					+ t.Name.Replace("Model", ""),
 				IsWiki = false,
 				AccessRestriction = AccessRestriction(t)
-			}) 
+			})
 			.ToList();
 
 		public SiteMapModel(IWikiPages wikiPages)
@@ -37,7 +34,7 @@ namespace TASVideos.Pages.Wiki
 			_wikiPages = wikiPages;
 		}
 
-		public List<SiteMapEntry> Map { get; set; } = new List<SiteMapEntry>();
+		public List<SiteMapEntry> Map { get; set; } = new ();
 
 		public void OnGet()
 		{
@@ -57,26 +54,26 @@ namespace TASVideos.Pages.Wiki
 				}));
 		}
 
-		private static string AccessRestriction(Type type)
+		private static string AccessRestriction(MemberInfo type)
 		{
 			// This logic is far from robust and full of assumptions, the idea is to tweak as necessary
-			if (type.GetCustomAttribute<AllowAnonymousAttribute>() != null)
+			if (type.GetCustomAttribute<AllowAnonymousAttribute>() is not null)
 			{
 				return "Anonymous";
 			}
 
-			if (type.GetCustomAttribute<AuthorizeAttribute>() != null)
+			if (type.GetCustomAttribute<AuthorizeAttribute>() is not null)
 			{
 				return "Logged In";
 			}
 
-			if (type.GetCustomAttribute<RequireEdit>() != null)
+			if (type.GetCustomAttribute<RequireEdit>() is not null)
 			{
 				return "Any Wiki Editing";
 			}
 
 			var requiredPermAttr = type.GetCustomAttribute<RequirePermissionAttribute>();
-			if (requiredPermAttr != null)
+			if (requiredPermAttr is not null)
 			{
 				return requiredPermAttr.MatchAny
 					? string.Join(" or ", requiredPermAttr.RequiredPermissions)

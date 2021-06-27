@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TASVideos.WikiEngine.AST;
 
@@ -6,7 +6,7 @@ namespace TASVideos.WikiEngine
 {
 	public static partial class Builtins
 	{
-		internal static readonly HashSet<string> TocHeadings = new HashSet<string>
+		internal static readonly HashSet<string> TocHeadings = new ()
 		{
 			// h1, h5, h6 are not involved in TOC generation
 			"h2", "h3", "h4"
@@ -18,7 +18,7 @@ namespace TASVideos.WikiEngine
 				.Cast<Element>()
 				.ToList();
 
-			var ret = new Element(charStart, "div") { Attributes = { ["class"] = "toc"} };
+			var ret = new Element(charStart, "div") { Attributes = { ["class"] = "toc" } };
 			var stack = new Stack<Element>();
 			stack.Push(ret);
 
@@ -35,21 +35,30 @@ namespace TASVideos.WikiEngine
 						stack.Peek().Children.Add(li);
 						stack.Push(li);
 					}
+
 					var next = new Element(charStart, "ul");
 					stack.Peek().Children.Add(next);
 					stack.Push(next);
 					pos++;
 				}
+
 				while (i < pos)
 				{
 					if (stack.Pop().Tag == "ul")
+					{
 						pos--;
+					}
 				}
+
 				{
 					if (stack.Peek().Tag == "li")
+					{
 						stack.Pop();
+					}
 
-					var link = new Element(charStart, "a",
+					var link = new Element(
+						charStart,
+						"a",
 						new[] { Attr("href", "#" + h.Attributes["id"]) },
 						h.Children.SelectMany(c => c.CloneForToc()));
 
@@ -58,6 +67,7 @@ namespace TASVideos.WikiEngine
 					stack.Push(li);
 				}
 			}
+
 			return ret;
 		}
 	}

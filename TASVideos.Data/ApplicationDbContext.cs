@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading;
@@ -19,8 +19,12 @@ namespace TASVideos.Data
 		private readonly IHttpContextAccessor? _httpContext;
 
 		// TODO: internal
-
 		public const string SystemUser = "admin@tasvideos.org";
+
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+			: base(options)
+		{
+		}
 
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor? httpContextAccessor)
 			: base(options)
@@ -85,6 +89,8 @@ namespace TASVideos.Data
 
 		public DbSet<MediaPost> MediaPosts { get; set; } = null!;
 
+		public DbSet<IpBan> IpBans { get; set; } = null!;
+
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
 			PerformTrackingUpdates();
@@ -102,25 +108,47 @@ namespace TASVideos.Data
 			return base.SaveChangesAsync(cancellationToken);
 		}
 
+		/// <summary>
+		/// Attempts to save changes, but if a <see cref="DbUpdateConcurrencyException"/> occurs,
+		/// it will be caught no changes will be saved.  Only to be used if discarding the data is
+		/// an acceptable handling.
+		/// </summary>
+		public async Task<int> TrySaveChangesAsync(CancellationToken cancellationToken = default)
+		{
+			try
+			{
+				return await SaveChangesAsync(cancellationToken);
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return 0;
+			}
+		}
+
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+			if (Database.IsNpgsql())
+			{
+				foreach (var entity in builder.Model.GetEntityTypes())
+				{
+					foreach (var prop in entity.GetDeclaredProperties().Where(p => p.ClrType == typeof(string)))
+					{
+						prop.AddAnnotation("Relational:ColumnType", "citext");
+					}
+				}
+
+				builder.HasPostgresExtension("citext");
+				builder.HasPostgresExtension("pg_trgm");
+			}
+
 			builder.Entity<ForumTopic>(entity =>
 			{
-				entity.HasIndex(e => e.PageName)
-					.HasName($"{nameof(ForumTopic.PageName)}Index")
-					.IsUnique()
-					.HasFilter($"([{nameof(ForumTopic.PageName)}] IS NOT NULL)");
+				entity.HasIndex(e => e.PageName).IsUnique();
 			});
-			
+
 			builder.Entity<User>(entity =>
 			{
-				entity.HasIndex(e => e.NormalizedEmail)
-					.HasName("EmailIndex");
-
-				entity.HasIndex(e => e.NormalizedUserName)
-					.HasName("UserNameIndex")
-					.IsUnique()
-					.HasFilter($"([{nameof(User.NormalizedUserName)}] IS NOT NULL)");
+				entity.HasIndex(e => e.NormalizedUserName).IsUnique();
 
 				entity.HasMany(e => e.SentPrivateMessages)
 					.WithOne(e => e.FromUser!)
@@ -149,9 +177,7 @@ namespace TASVideos.Data
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
 
-				entity.HasIndex(e => e.Name)
-					.IsUnique()
-					.HasFilter($"([{nameof(Tier.Name)}] IS NOT NULL)");
+				entity.HasIndex(e => e.Name).IsUnique();
 			});
 
 			builder.Entity<UserLogin>(entity =>
@@ -192,9 +218,25 @@ namespace TASVideos.Data
 			builder.Entity<WikiPage>(entity =>
 			{
 				entity.HasIndex(e => new { e.PageName, e.Revision })
-					.HasName("PageNameIndex")
-					.IsUnique()
-					.HasFilter($"([{nameof(WikiPage.PageName)}] IS NOT NULL)");
+					.IsUnique();
+
+				if (Database.IsNpgsql())
+				{
+					entity.HasIndex(e => e.Markup)
+						.HasMethod("gin")
+						.HasOperators("gin_trgm_ops");
+					entity
+						.HasGeneratedTsVectorColumn(
+							p => p.SearchVector,
+							"english",  // Text search config
+							p => new { p.PageName, p.Markup })
+						.HasIndex(p => p.SearchVector)
+						.HasMethod("GIN");
+				}
+				else
+				{
+					entity.Ignore(e => e.SearchVector);
+				}
 			});
 
 			builder.Entity<GameSystem>(entity =>
@@ -203,9 +245,7 @@ namespace TASVideos.Data
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
 
-				entity.HasIndex(e => e.Code)
-					.IsUnique()
-					.HasFilter($"([{nameof(GameSystem.Code)}] IS NOT NULL)");
+				entity.HasIndex(e => e.Code).IsUnique();
 			});
 
 			builder.Entity<GameSystemFrameRate>(entity =>
@@ -219,13 +259,8 @@ namespace TASVideos.Data
 
 			builder.Entity<GameRom>(entity =>
 			{
-				entity.HasIndex(e => e.Md5)
-					.IsUnique()
-					.HasFilter($"([{nameof(GameRom.Sha1)}] IS NOT NULL)");
-
-				entity.HasIndex(e => e.Sha1)
-					.IsUnique()
-					.HasFilter($"([{nameof(GameRom.Sha1)}] IS NOT NULL)");
+				entity.HasIndex(e => e.Md5).IsUnique();
+				entity.HasIndex(e => e.Sha1).IsUnique();
 			});
 
 			builder.Entity<SubmissionAuthor>(entity =>
@@ -273,6 +308,8 @@ namespace TASVideos.Data
 				entity.Property(e => e.Id)
 					.ValueGeneratedNever()
 					.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
+
+				entity.HasIndex(e => e.Token).IsUnique();
 			});
 
 			builder.Entity<PublicationTag>(entity =>
@@ -297,9 +334,7 @@ namespace TASVideos.Data
 
 			builder.Entity<Tag>(entity =>
 			{
-				entity.HasIndex(e => e.Code)
-					.IsUnique()
-					.HasFilter($"([{nameof(Tag.Code)}] IS NOT NULL)");
+				entity.HasIndex(e => e.Code).IsUnique();
 			});
 
 			builder.Entity<ForumPoll>(entity =>
@@ -362,7 +397,23 @@ namespace TASVideos.Data
 
 			builder.Entity<ForumPost>(entity =>
 			{
-				entity.Property(e => e.PosterMood).HasDefaultValue(ForumPostMood.None); // TODO: this is only here for sample data, we need to regenerate the file and have the original moods of the posts
+				if (Database.IsNpgsql())
+				{
+					entity.HasIndex(e => e.Text)
+						.HasMethod("gin")
+						.HasOperators("gin_trgm_ops");
+					entity
+						.HasGeneratedTsVectorColumn(
+							p => p.SearchVector,
+							"english",  // Text search config
+							p => p.Text)
+						.HasIndex(p => p.SearchVector)
+						.HasMethod("GIN");
+				}
+				else
+				{
+					entity.Ignore(e => e.SearchVector);
+				}
 			});
 
 			builder.Entity<PublicationUrl>(entity =>
@@ -372,10 +423,12 @@ namespace TASVideos.Data
 
 			builder.Entity<UserDisallow>(entity =>
 			{
-				entity.HasIndex(e => e.RegexPattern)
-					.HasName("UserDisallowRegexPatternIndex")
-					.IsUnique()
-					.HasFilter($"([{nameof(UserDisallow.RegexPattern)}] IS NOT NULL)");
+				entity.HasIndex(e => e.RegexPattern).IsUnique();
+			});
+
+			builder.Entity<IpBan>(entity =>
+			{
+				entity.HasIndex(e => e.Mask).IsUnique();
 			});
 		}
 
@@ -389,9 +442,9 @@ namespace TASVideos.Data
 				if (entry.Entity is ITrackable trackable)
 				{
 					// Don't set if already set
-					if (trackable.CreateTimeStamp.Year == 1)
+					if (trackable.CreateTimestamp.Year == 1)
 					{
-						trackable.CreateTimeStamp = DateTime.UtcNow;
+						trackable.CreateTimestamp = DateTime.UtcNow;
 					}
 
 					if (string.IsNullOrWhiteSpace(trackable.CreateUserName))
@@ -399,9 +452,9 @@ namespace TASVideos.Data
 						trackable.CreateUserName = GetUser();
 					}
 
-					if (trackable.LastUpdateTimeStamp.Year == 1)
+					if (trackable.LastUpdateTimestamp.Year == 1)
 					{
-						trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+						trackable.LastUpdateTimestamp = DateTime.UtcNow;
 					}
 
 					if (string.IsNullOrWhiteSpace(trackable.LastUpdateUserName))
@@ -416,9 +469,9 @@ namespace TASVideos.Data
 			{
 				if (entry.Entity is ITrackable trackable)
 				{
-					if (!IsModified(entry, nameof(ITrackable.LastUpdateTimeStamp)))
+					if (!IsModified(entry, nameof(ITrackable.LastUpdateTimestamp)))
 					{
-						trackable.LastUpdateTimeStamp = DateTime.UtcNow;
+						trackable.LastUpdateTimestamp = DateTime.UtcNow;
 					}
 
 					if (!IsModified(entry, nameof(ITrackable.LastUpdateUserName)))
@@ -429,7 +482,7 @@ namespace TASVideos.Data
 			}
 		}
 
-		private string GetUser() => _httpContext?.HttpContext?.User?.Identity?.Name ?? SystemUser;
+		private string GetUser() => _httpContext?.HttpContext?.User.Identity?.Name ?? SystemUser;
 
 		private static bool IsModified(EntityEntry entry, string propertyName)
 			=> entry.Properties

@@ -1,9 +1,6 @@
 ﻿using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
-
-using TASVideos.Models;
-using TASVideos.Services;
+using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Profile
 {
@@ -17,7 +14,7 @@ namespace TASVideos.Pages.Profile
 			_userManager = userManager;
 		}
 
-		public UserRatingsModel Ratings { get; set; } = new UserRatingsModel();
+		public UserRatings Ratings { get; set; } = new ();
 
 		public async Task OnGet()
 		{

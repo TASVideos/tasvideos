@@ -16,5 +16,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public string Post { get; set; } = "";
 
 		public ForumTopicType Type { get; set; } = ForumTopicType.Regular;
+
+		public ForumPostMood Mood { get; set; } = ForumPostMood.Normal;
 	}
 }

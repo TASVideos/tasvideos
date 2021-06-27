@@ -95,6 +95,12 @@
 				<input asp-for="Submission.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.EncodeEmbedLink)" />
 				<span asp-validation-for="Submission.EncodeEmbedLink" class="text-danger"></span>
 			</form-group>
+			<form-group>
+				<label asp-for="Submission.AdditionalAuthors" class="form-control-label"></label>
+				<input asp-for="Submission.AdditionalAuthors" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Submission.AdditionalAuthors)</div>
+				<span asp-validation-for="Submission.AdditionalAuthors" class="text-danger"></span>
+			</form-group>
 		</div>
 	</row>
 	<fullrow>
@@ -107,13 +113,12 @@
 	<hr />
 	<fullrow class="text-center">
 		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
-		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Submission.Markup?.Length > 0 ? "" : "hide")">Update</button>
+		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Submission.Markup.Length > 0 ? "" : "hide")">Update</button>
 		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
 	</fullrow>
 </form>
 
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
-
 
 <script>
 	(function () {

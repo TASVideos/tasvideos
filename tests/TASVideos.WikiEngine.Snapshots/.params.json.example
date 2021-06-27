@@ -1,0 +1,5 @@
+{
+	"ConnectionString": "Host=127.0.0.1;Port=5432;Database=TASVideos;User Id=postgres;Password=postgres;Include Error Detail=true",
+	"UsePostgres": true,
+	"OutDir": "C:\\Repos\\TASVideosWikiSnaps"
+}

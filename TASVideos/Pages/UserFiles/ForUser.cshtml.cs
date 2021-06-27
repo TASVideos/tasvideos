@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using AutoMapper.QueryableExtensions;
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -16,14 +14,16 @@ namespace TASVideos.Pages.UserFiles
 	public class ForUserModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IMapper _mapper;
 
-		public ForUserModel(ApplicationDbContext db)
+		public ForUserModel(ApplicationDbContext db, IMapper mapper)
 		{
 			_db = db;
+			_mapper = mapper;
 		}
 
 		[FromQuery]
-		public PagingModel Search { get; set; } = new PagingModel();
+		public PagingModel Search { get; set; } = new ();
 
 		[FromRoute]
 		public string UserName { get; set; } = "";
@@ -32,11 +32,11 @@ namespace TASVideos.Pages.UserFiles
 
 		public async Task OnGet()
 		{
-			Files = await _db.UserFiles
-				.ForAuthor(UserName)
-				.FilterByHidden(includeHidden: false)
-				.ProjectTo<UserFileModel>()
-				.PageOf(Search);
+			Files = await _mapper.ProjectTo<UserFileModel>(
+				_db.UserFiles
+					.ForAuthor(UserName)
+					.FilterByHidden(includeHidden: false))
+			.PageOf(Search);
 		}
 	}
 }

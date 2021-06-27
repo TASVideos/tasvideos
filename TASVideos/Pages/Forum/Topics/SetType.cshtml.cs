@@ -1,14 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -62,7 +59,7 @@ namespace TASVideos.Pages.Forum.Topics
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPost(PollCreateModel poll)
+		public async Task<IActionResult> OnPost()
 		{
 			if (!ModelState.IsValid)
 			{
@@ -83,16 +80,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			topic.Type = Type;
 
-			try
-			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// TODO: do this through temp data
-				return RedirectToPage("SetType", new { TopicId = topic.Id });
-			}
-
+			await ConcurrentSave(_db, $"Topic set to {Type}", "Unable to set the topic type");
 			return RedirectToPage("Index", new { topic.Id });
 		}
 	}

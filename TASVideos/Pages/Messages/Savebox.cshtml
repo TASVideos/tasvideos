@@ -1,10 +1,10 @@
 ﻿@page
 @model SaveboxModel
 @{
-	ViewData["Title"] = $"Saved messages for {User.Identity.Name}";
+	ViewData["Title"] = $"Saved messages for {User.Name()}";
 }
 
-<a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span>Inbox</a>
+<a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span> Inbox</a>
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.SaveBox.First().Subject)</th>
@@ -14,15 +14,15 @@
 		<th>Actions</th>
 	</tr>
 	@foreach (var entry in Model.SaveBox
-		.OrderBy(m => m.ToUser == User.Identity.Name)
+		.OrderBy(m => m.ToUser == User.Name())
 		.ThenByDescending(m => m.SendDate))
 	{
 		<tr>
 			<td>
 				<a asp-page="Index" asp-route-id="@entry.Id">@entry.Subject</a>
 			</td>
-			<td>@entry.FromUser</td>
-			<td>@entry.ToUser</td>
+			<td><profile-link username="@entry.FromUser">@entry.FromUser</profile-link></td>
+			<td><profile-link username="@entry.ToUser">@entry.ToUser</profile-link></td>
 			<td>@entry.SendDate</td>
 			<td>
 				<delete-button

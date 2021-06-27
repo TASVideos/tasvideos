@@ -88,8 +88,11 @@ namespace TASVideos.Extensions
 					FrameRate = s.SystemFrameRate!.FrameRate,
 					Branch = s.Branch,
 					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author!.UserName).ToList()),
-					Submitted = s.CreateTimeStamp,
-					Status = s.Status
+					Submitted = s.CreateTimestamp,
+					Status = s.Status,
+					Judge = s.Judge != null ? s.Judge.UserName : null,
+					Publisher = s.Publisher != null ? s.Publisher.UserName : null,
+					IntendedTier = s.IntendedTier != null ? s.IntendedTier.Name : null
 				});
 		}
 

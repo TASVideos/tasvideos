@@ -1,24 +1,24 @@
 ﻿@page "{id}"
 @model IndexModel
 @{
-	ViewData["Title"] = $"Message from {Model.Message.FromUserName}";
+	ViewData["Title"] = $"Message from {Model.PrivateMessage.FromUserName}";
 }
 
 <div class="mb-2">
 	<a asp-page="Inbox" class="btn btn-secondary"><span class="fa fa-arrow-left"></span>Inbox</a>
-	<a condition="Model.Message.CanReply" asp-page="Create" asp-route-replyTo="@Model.Id" class="btn btn-primary">Reply</a>
+	<a condition="Model.PrivateMessage.CanReply" asp-page="Create" asp-route-replyTo="@Model.Id" class="btn btn-primary">Reply</a>
 </div>
 <div>
-	@Model.Message.FromUserName <span class="fa fa-arrow-right"></span> @Model.Message.ToUserName
+	<profile-link username="@Model.PrivateMessage.FromUserName">@Model.PrivateMessage.FromUserName</profile-link> <span class="fa fa-arrow-right"></span> @Model.PrivateMessage.ToUserName
 	<small class="pull-right">
-		@Model.Message.SentOn
+		@Model.PrivateMessage.SentOn
 	</small>
 </div>
 <div class="card">
 	<div class="card-header">
-		<h4>@Model.Message.Subject</h4>
+		<h4>@Model.PrivateMessage.Subject</h4>
 	</div>
 	<div class="card-body">
-		@Html.Raw(Model.Message.RenderedText)
+		<forum-markup markup=@Model.PrivateMessage.Text enable-html=@Model.PrivateMessage.EnableHtml enable-bb-code=@Model.PrivateMessage.EnableBbCode></forum-markup>
 	</div>
 </div>

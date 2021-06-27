@@ -6,18 +6,20 @@ using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Legacy.Imports
 {
-	public static class SubmissionFrameRateImporter
+	internal static class SubmissionFrameRateImporter
 	{
-		private const decimal RoundingOffset = 0.01M;
+		private const decimal RoundingOffset = 0.001M;
 
 		public static void Import(ApplicationDbContext context)
-		{ 
+		{
 			var systemFrameRates = context.GameSystemFrameRates
 				.Include(sf => sf.System)
 				.ToList();
 
 			var submissions = context.Submissions
 				.Include(s => s.System)
+				.Include(s => s.SubmissionAuthors)
+				.ThenInclude(s => s.Author)
 				.ToList();
 
 			var groups = from s in submissions
@@ -48,14 +50,14 @@ namespace TASVideos.Legacy.Imports
 				}
 				else
 				{
-					g.Key.SystemFrameRateId = g.First().Id;
-					g.Key.SystemFrameRate = g.First();
+					g.Key.SystemFrameRateId = systemFrameRate.Id;
+					g.Key.SystemFrameRate = systemFrameRate;
 				}
-				
+
 				g.Key.ImportedTime = decimal.Round((decimal)(g.Key.Frames / systemFrameRate.FrameRate), 3);
 				g.Key.GenerateTitle();
 			}
-			
+
 			context.SaveChanges();
 		}
 	}

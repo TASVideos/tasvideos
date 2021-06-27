@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -26,20 +25,12 @@ namespace TASVideos.Pages.Games
 			_db = db;
 		}
 
-		[TempData]
-		public string? Message { get; set; }
-
-		[TempData]
-		public string? MessageType { get; set; }
-
-		public bool ShowMessage => !string.IsNullOrWhiteSpace(Message);
-
 		[FromQuery]
-		public GameListRequest Search { get; set; } = new GameListRequest();
+		public GameListRequest Search { get; set; } = new ();
 
 		public SystemPageOf<GameListModel> Games { get; set; } = SystemPageOf<GameListModel>.Empty();
 
-		public List<SelectListItem> SystemList { get; set; } = new List<SelectListItem>();
+		public List<SelectListItem> SystemList { get; set; } = new ();
 
 		public async Task OnGet()
 		{

@@ -6,7 +6,7 @@ namespace TASVideos.Data.SeedData
 	{
 		public static readonly Flag[] Flags =
 		{
-			new Flag
+			new ()
 			{
 				Id = 1,
 				Name = "Notable improvement",
@@ -15,7 +15,7 @@ namespace TASVideos.Data.SeedData
 				Token = "Improve",
 				PermissionRestriction = PermissionTo.PublishMovies
 			},
-			new Flag
+			new ()
 			{
 				Id = 2,
 				Name = "Console-verified",
@@ -23,20 +23,20 @@ namespace TASVideos.Data.SeedData
 				LinkPath = "ConsoleVerifiedMovies",
 				Token = "Verified"
 			},
-			new Flag
+			new ()
 			{
 				Id = 4,
 				Name = "First platform",
 				Token = "Firstplatform"
 			},
-			new Flag
+			new ()
 			{
 				Id = 5,
 				Name = "Known record",
 				LinkPath = "Movies-Knownrecords",
 				Token = "Knownrecords"
 			},
-			new Flag
+			new ()
 			{
 				Id = 6,
 				Name = "Has commentary",
@@ -44,14 +44,14 @@ namespace TASVideos.Data.SeedData
 				LinkPath = "Commentaries",
 				Token = "Commentaries"
 			},
-			new Flag
+			new ()
 			{
 				Id = 7,
 				Name = "Atlas Map Encode",
 				LinkPath = "Movies-Atlas",
 				Token = "Atlas"
 			},
-			new Flag
+			new ()
 			{
 				Id = 8,
 				Name = "Recommended for newcomers",
@@ -60,7 +60,7 @@ namespace TASVideos.Data.SeedData
 				Token = "NewcomerRec",
 				PermissionRestriction = PermissionTo.EditRecommendation
 			},
-			new Flag
+			new ()
 			{
 				Id = 9,
 				Name = "Fastest Completion",

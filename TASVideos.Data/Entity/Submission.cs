@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
+using TASVideos.Common;
 using TASVideos.Data.Entity.Game;
+using TASVideos.Extensions;
 
 namespace TASVideos.Data.Entity
 {
@@ -12,6 +15,7 @@ namespace TASVideos.Data.Entity
 		IEnumerable<int> Years { get; }
 		IEnumerable<string> Systems { get; }
 		string? User { get; }
+		IEnumerable<int> GameIds { get; }
 	}
 
 	public class Submission : BaseEntity, ITimeable
@@ -40,7 +44,7 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<SubmissionStatusHistory> History { get; set; } = new HashSet<SubmissionStatusHistory>();
 
 		[Required]
-		public byte[] MovieFile { get; set; } = new byte[0];
+		public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 
 		public string? MovieExtension { get; set; }
 
@@ -77,7 +81,7 @@ namespace TASVideos.Data.Entity
 
 		[StringLength(250)]
 		public string? RomName { get; set; }
-		
+
 		[StringLength(50)]
 		public string? EmulatorVersion { get; set; }
 
@@ -86,16 +90,15 @@ namespace TASVideos.Data.Entity
 		public int? RejectionReasonId { get; set; }
 		public virtual SubmissionRejectionReason? RejectionReason { get; set; }
 
-
 		/// <summary>
-		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here
+		/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here.
 		/// </summary>
 		[StringLength(200)]
 		public string? AdditionalAuthors { get; set; }
 
 		/// <summary>
 		/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
-		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01
+		/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01.
 		/// </summary>
 		[Required]
 		public string Title { get; set; } = "";
@@ -120,13 +123,13 @@ namespace TASVideos.Data.Entity
 
 			if (!string.IsNullOrWhiteSpace(AdditionalAuthors))
 			{
-				authorList = authorList.Concat(AdditionalAuthors.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries));
+				authorList = authorList.Concat(AdditionalAuthors.SplitWithEmpty(","));
 			}
 
 			Title =
-			$"#{Id}: {string.Join(" & ", authorList)}'s {System.Code} {GameName}"
+			$"#{Id}: {string.Join(", ", authorList)}'s {System.Code} {GameName}"
 				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
-				+ $" in {this.Time():g}";
+				+ $" in {this.Time().ToString("g", CultureInfo.InvariantCulture)}";
 		}
 
 		// Temporary for import debugging
@@ -149,7 +152,7 @@ namespace TASVideos.Data.Entity
 
 			if (criteria.Years.Any())
 			{
-				query = query.Where(p => criteria.Years.Contains(p.CreateTimeStamp.Year));
+				query = query.Where(p => criteria.Years.Contains(p.CreateTimestamp.Year));
 			}
 
 			if (criteria.StatusFilter.Any())
@@ -160,6 +163,11 @@ namespace TASVideos.Data.Entity
 			if (criteria.Systems.Any())
 			{
 				query = query.Where(s => s.System != null && criteria.Systems.Contains(s.System.Code));
+			}
+
+			if (criteria.GameIds.Any())
+			{
+				query = query.Where(s => criteria.GameIds.Contains(s.GameId ?? 0));
 			}
 
 			return query;

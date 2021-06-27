@@ -1,15 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
-using TASVideos.Services;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Posts
 {
@@ -41,7 +39,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public int? QuoteId { get; set; }
 
 		[BindProperty]
-		public ForumPostCreateModel Post { get; set; } = new ForumPostCreateModel();
+		public ForumPostCreateModel Post { get; set; } = new ();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -126,9 +124,9 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			var id = await CreatePost(TopicId, Post, user.Id, IpAddress.ToString());
+			var id = await CreatePost(TopicId, Post, user.Id, IpAddress);
 
-			var mood = Post.Mood != ForumPostMood.Normal ? $" Mood: ({Post.Mood.ToString()})" : "";
+			var mood = Post.Mood != ForumPostMood.Normal ? $" Mood: ({Post.Mood})" : "";
 			_publisher.SendForum(
 				topic.Forum.Restricted,
 				$"New reply by {user.UserName}{mood}",
@@ -136,13 +134,8 @@ namespace TASVideos.Pages.Forum.Posts
 				$"forum/p/{id}#{id}",
 				$"{user.UserName}{mood}");
 
-			await _topicWatcher.NotifyNewPost(new TopicNotification
-			{
-				PostId = id,
-				TopicId = topic.Id,
-				TopicTitle = topic.Title,
-				PosterId = user.Id
-			});
+			await _topicWatcher.NotifyNewPost(new TopicNotification(
+				id, topic.Id, topic.Title, user.Id));
 
 			await _userManager.AssignAutoAssignableRolesByPost(user);
 

@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics.Models;
-using TASVideos.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Forum.Topics
 {
@@ -32,7 +30,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public int Id { get; set; }
 
 		[BindProperty]
-		public SplitTopicModel Topic { get; set; } = new SplitTopicModel();
+		public SplitTopicModel Topic { get; set; } = new ();
 
 		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
 
@@ -55,7 +53,7 @@ namespace TASVideos.Pages.Forum.Topics
 						.Select(p => new SplitTopicModel.Post
 						{
 							Id = p.Id,
-							PostCreateTimeStamp = p.CreateTimeStamp,
+							PostCreateTimestamp = p.CreateTimestamp,
 							EnableBbCode = p.EnableBbCode,
 							EnableHtml = p.EnableHtml,
 							Subject = p.Subject,
@@ -74,12 +72,6 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			await PopulateAvailableForums();
-
-			foreach (var post in Topic.Posts)
-			{
-				post.Text = RenderPost(post.Text, post.EnableBbCode, post.EnableHtml);
-			}
-
 			return Page();
 		}
 
@@ -133,7 +125,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var splitPosts = topic.ForumPosts
 				.Where(p => p.Id == splitOnPost.Id
-					|| p.CreateTimeStamp > splitOnPost.CreateTimeStamp);
+					|| p.CreateTimestamp > splitOnPost.CreateTimestamp);
 
 			foreach (var post in splitPosts)
 			{
@@ -146,10 +138,10 @@ namespace TASVideos.Pages.Forum.Topics
 
 			_publisher.SendForum(
 				topic.Forum!.Restricted,
-				$"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Identity.Name} from {Topic.ForumName}: {Topic.Title}",
+				$"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Name()} from {Topic.ForumName}: {Topic.Title}",
 				"",
 				$"Forum/Topics/{newTopic.Id}",
-				User.Identity.Name!);
+				User.Name());
 
 			return RedirectToPage("Index", new { id = newTopic.Id });
 		}

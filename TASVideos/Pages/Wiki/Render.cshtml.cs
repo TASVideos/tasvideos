@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.Services;
 
 namespace TASVideos.Pages.Wiki
 {
@@ -23,11 +22,12 @@ namespace TASVideos.Pages.Wiki
 
 		public string Markup { get; set; } = "";
 
-		public WikiPage WikiPage { get; set; } = new WikiPage();
+		public WikiPage WikiPage { get; set; } = new ();
 
-		public async Task<IActionResult> OnGet(string url, int? revision = null)
+		public async Task<IActionResult> OnGet(string? url, int? revision = null)
 		{
 			url = url?.Trim('/') ?? "";
+			url = url.Replace(".html", "");
 			if (url.ToLower() == "frontpage")
 			{
 				return Redirect("/");
@@ -71,7 +71,7 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			// Account for garbage revision values
-			if (revision.HasValue && await _wikiPages.Exists(url)) 
+			if (revision.HasValue && await _wikiPages.Exists(url))
 			{
 				return Redirect("/" + url);
 			}

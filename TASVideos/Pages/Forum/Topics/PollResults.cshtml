@@ -4,11 +4,13 @@
 	ViewData["Title"] = $"Poll Results for {Model.Poll.TopicTitle}";
 }
 <partial Name="_ForumHeader" />
-<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Poll.TopicId" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back</a>
+<div>
+	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Poll.TopicId" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back</a>
+</div>
 <hr />
 
 <div>
-	@Html.Raw(Model.Poll.Question)
+	<forum-markup markup=@Model.Poll.Question enable-bb-code=true></forum-markup>
 </div>
 <hr />
 <table class="table table-bordered table-striped">
