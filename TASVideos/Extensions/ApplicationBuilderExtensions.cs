@@ -30,8 +30,7 @@ namespace TASVideos.Extensions
 				app.UseExceptionHandler("/Error");
 			}
 
-			app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-			return app;
+			return app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 		}
 
 		public static IApplicationBuilder UseGzipCompression(this IApplicationBuilder app, AppSettings settings)
@@ -48,9 +47,7 @@ namespace TASVideos.Extensions
 		{
 			var provider = new FileExtensionContentTypeProvider();
 			provider.Mappings[".torrent"] = "application/x-bittorrent";
-			app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
-
-			return app;
+			return app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
 		}
 
 		public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app)
@@ -72,12 +69,11 @@ namespace TASVideos.Extensions
 
 			app.UseRouting();
 			app.UseAuthorization();
-			app.UseEndpoints(endpoints =>
+			return app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();
 				endpoints.MapControllers();
 			});
-			return app;
 		}
 
 		public static IApplicationBuilder UseSwaggerUi(
@@ -95,19 +91,16 @@ namespace TASVideos.Extensions
 			app.UseSwagger();
 
 			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-			app.UseSwaggerUI(c =>
+			return app.UseSwaggerUI(c =>
 			{
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", appName);
 				c.RoutePrefix = "api";
 			});
-
-			return app;
 		}
 
 		public static IApplicationBuilder UseApiRequestLogging(this IApplicationBuilder app)
 		{
-			app.UseMiddleware<ApiRequestLoggingMiddleware>();
-			return app;
+			return app.UseMiddleware<ApiRequestLoggingMiddleware>();
 		}
 	}
 }

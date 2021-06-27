@@ -34,18 +34,16 @@ namespace TASVideos.Extensions
 		{
 			services.Configure<AppSettings>(configuration);
 			var settings = configuration.Get<AppSettings>();
-			services.AddSingleton(settings);
-			return services;
+			return services.AddSingleton(settings);
 		}
 
 		public static IServiceCollection AddRequestLocalization(this IServiceCollection services)
 		{
-			services.Configure<RequestLocalizationOptions>(options =>
+			return services.Configure<RequestLocalizationOptions>(options =>
 			{
 				options.DefaultRequestCulture = new RequestCulture("en-US");
 				options.SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 			});
-			return services;
 		}
 
 		public static IServiceCollection AddCookieConfiguration(this IServiceCollection services, IWebHostEnvironment env)
@@ -92,8 +90,7 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddMovieParser(this IServiceCollection services)
 		{
-			services.AddSingleton<IMovieParser, MovieParser>();
-			return services;
+			return services.AddSingleton<IMovieParser, MovieParser>();
 		}
 
 		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services, IWebHostEnvironment env)
@@ -157,8 +154,7 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddAutoMapperWithProjections(this IServiceCollection services)
 		{
-			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-			return services;
+			return services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 		}
 
 		public static IServiceCollection AddSwagger(this IServiceCollection services, AppSettings settings)
@@ -214,18 +210,14 @@ namespace TASVideos.Extensions
 			services.AddSingleton<IPostDistributor, TwitterDistributor>();
 			services.AddScoped<IPostDistributor, DistributorStorage>();
 
-			services.AddTransient<ExternalMediaPublisher>();
-
-			return services;
+			return services.AddTransient<ExternalMediaPublisher>();
 		}
 
 		private static IServiceCollection AddHttpContext(this IServiceCollection services)
 		{
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-			services.AddTransient(
+			return services.AddTransient(
 				provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext!.User);
-
-			return services;
 		}
 	}
 }
