@@ -64,6 +64,7 @@ namespace TASVideos
 		{
 			app
 				.UseRobots()
+				.UseApiRequestLogging()
 				.UseRequestLocalization()
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
