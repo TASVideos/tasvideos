@@ -103,5 +103,11 @@ namespace TASVideos.Extensions
 
 			return app;
 		}
+
+		public static IApplicationBuilder UseApiRequestLogging(this IApplicationBuilder app)
+		{
+			app.UseMiddleware<ApiRequestLoggingMiddleware>();
+			return app;
+		}
 	}
 }
