@@ -18,8 +18,7 @@ namespace TASVideos.Data
 	{
 		private readonly IHttpContextAccessor? _httpContext;
 
-		// TODO: internal
-		public const string SystemUser = "admin@tasvideos.org";
+		internal const string SystemUser = "admin@tasvideos.org";
 
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 			: base(options)

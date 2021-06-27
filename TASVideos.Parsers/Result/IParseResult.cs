@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-// TODO: start type power-on, sram, savestate
 namespace TASVideos.MovieParsers.Result
 {
 	/// <summary>

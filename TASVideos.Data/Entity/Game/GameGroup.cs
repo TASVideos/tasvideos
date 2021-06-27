@@ -7,7 +7,6 @@ namespace TASVideos.Data.Entity.Game
 	{
 		public int Id { get; set; }
 
-		// todo unique constraint
 		[Required]
 		[StringLength(255)]
 		public string Name { get; set; } = "";
