@@ -71,6 +71,7 @@ namespace TASVideos.Pages.Publications
 						ObsoletedBy = p.ObsoletedById,
 						Branch = p.Branch,
 						EmulatorVersion = p.EmulatorVersion,
+						AdditionalAuthors = p.AdditionalAuthors,
 						Urls = p.PublicationUrls
 							.Select(u => new PublicationUrlDisplayModel
 							{
@@ -176,8 +177,16 @@ namespace TASVideos.Pages.Publications
 				externalMessages.Add($"Changed obsoleting movie from \"{publication.ObsoletedById}\" to \"{model.ObsoletedBy}\"");
 			}
 
+			if (publication.AdditionalAuthors != model.AdditionalAuthors)
+			{
+				externalMessages.Add($"Changed additional authors from \"{publication.AdditionalAuthors}\" to \"{model.AdditionalAuthors}\"");
+			}
+
 			publication.ObsoletedById = model.ObsoletedBy;
 			publication.EmulatorVersion = model.EmulatorVersion;
+			publication.AdditionalAuthors = string.IsNullOrWhiteSpace(model.AdditionalAuthors)
+				? null
+				: model.AdditionalAuthors;
 
 			publication.GenerateTitle();
 
