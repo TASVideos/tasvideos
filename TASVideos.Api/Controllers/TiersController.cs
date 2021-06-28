@@ -12,7 +12,7 @@ namespace TASVideos.Api.Controllers
 	/// The publication tiers of TASVideos.
 	/// </summary>
 	[AllowAnonymous]
-	[Route("api/avi/[controller]")]
+	[Route("api/[controller]")]
 	public class TiersController : Controller
 	{
 		private readonly ApplicationDbContext _db;
