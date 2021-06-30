@@ -31,7 +31,7 @@ namespace TASVideos.Api.Controllers
 		/// <summary>
 		/// Returns a tag with the given id.
 		/// </summary>
-		/// <response code="200">Returns a game.</response>
+		/// <response code="200">Returns a tag.</response>
 		/// <response code="400">The request parameters are invalid.</response>
 		/// <response code="404">A tag with the given id was not found.</response>
 		[HttpGet("id")]

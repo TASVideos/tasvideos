@@ -150,6 +150,10 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to add, edit, and remove the flags used for publications")]
 		FlagMaintenance = 391,
 
+		[Group("Publication Maintenance")]
+		[Description("The ability to add, edit, and remove the publication tiers")]
+		TierMaintenance = 392,
+
 		#endregion
 
 		#region Forum Moderation 400
