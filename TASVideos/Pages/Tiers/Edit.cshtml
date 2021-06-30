@@ -1,0 +1,53 @@
+﻿@page "{id}/{handler?}"
+@model EditModel
+@{
+	ViewData["Title"] = $"Editing Tier: {Model.Tier.Name}";
+}
+
+<div class="text-right">
+	<delete-button condition="!Model.InUse"
+				   asp-href="/Tiers/Edit/@(Model.Tier.Id)/Delete"
+				   warning-message="Are you sure you want to remove this tier?">
+		Delete
+	</delete-button>
+	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.Tier.Name">
+		Tier in Use
+	</a>
+</div>
+
+<form method="POST">
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="Tier.Name"></label>
+				<input type="text" asp-for="Tier.Name" class="form-control" />
+				<span asp-validation-for="Tier.Name" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Tier.Link"></label>
+				<input type="text" asp-for="Tier.Link" class="form-control" />
+				<span asp-validation-for="Tier.Link" class="text-danger"></span>
+			</form-group>
+		</column>
+		<column lg="6">
+			<form-group>
+				<label asp-for="Tier.Weight"></label>
+				<input type="text" asp-for="Tier.Weight" class="form-control" />
+				<span asp-validation-for="Tier.Weight" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Tier.IconPath"></label>
+				<input type="text" asp-for="Tier.IconPath" class="form-control" />
+				<span asp-validation-for="Tier.IconPath" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a class="btn btn-secondary" asp-page="Index">Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

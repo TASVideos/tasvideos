@@ -49,9 +49,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.MovieParsers.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.WikiEngine.Tests", "tests\TASVideos.WikiEngine.Tests\TASVideos.WikiEngine.Tests.csproj", "{8F91456B-D4F5-4C76-B301-E25ED4DFA62C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Api.Tests", "tests\TASVideos.Api.Tests\TASVideos.Api.Tests.csproj", "{20000519-BF96-4AA1-B117-4E5897A35054}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Api.Tests", "tests\TASVideos.Api.Tests\TASVideos.Api.Tests.csproj", "{20000519-BF96-4AA1-B117-4E5897A35054}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Tests.Base", "tests\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj", "{D4940FE4-3543-4BF1-B3F6-1B959A4DECC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Tests.Base", "tests\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj", "{D4940FE4-3543-4BF1-B3F6-1B959A4DECC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
