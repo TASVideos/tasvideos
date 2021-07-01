@@ -128,13 +128,13 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user = "")
+		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user)
 		{
 			publisher.Send(new Post
 			{
 				Type = PostType.General,
 				Group = PostGroups.Wiki,
-				Title = title,
+				Title = $"{title} by {user}",
 				Body = body,
 				Link = publisher.ToAbsolute(relativeLink),
 				User = user
