@@ -35,7 +35,7 @@ namespace TASVideos.MovieParsers.Parsers
 			}
 			else
 			{
-				result.WarningList.Add(ParseWarnings.MissingRerecordCount);
+				result.WarnNoRerecords();
 			}
 
 			if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
