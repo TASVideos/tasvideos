@@ -91,14 +91,14 @@ namespace TASVideos.Core.Tests.Services
 		[TestMethod]
 		public async Task InUse_Exists_ReturnsFalse()
 		{
-			const int tagId = 1;
+			const int flagId = 1;
 			const int publicationId = 1;
-			_db.Flags.Add(new Flag { Id = tagId });
+			_db.Flags.Add(new Flag { Id = flagId });
 			_db.Publications.Add(new Publication { Id = publicationId });
-			_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = tagId });
+			_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = flagId });
 			await _db.SaveChangesAsync();
 
-			var result = await _flagService.InUse(tagId);
+			var result = await _flagService.InUse(flagId);
 			Assert.IsTrue(result);
 		}
 
