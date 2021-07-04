@@ -34,21 +34,10 @@ namespace TASVideos.Pages.Wiki
 				.Select(record => new DeletedWikiPageDisplayModel
 				{
 					PageName = record.Key,
-					RevisionCount = record.Count()
-
-					// https://github.com/aspnet/EntityFrameworkCore/issues/3103
-					// EF Core 2.1 bug, this no longer works, "Must be reducible node exception
-					// HasExistingRevisions = _wikiPages.Query.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
+					RevisionCount = record.Count(),
+					HasExistingRevisions = _wikiPages.Query.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
 				})
 				.ToListAsync();
-
-			// Workaround for EF Core 2.1 issue
-			// https://github.com/aspnet/EntityFrameworkCore/issues/3103
-			// We can use the cache to potentially avoid n+1 trips to the db
-			foreach (var result in DeletedPages)
-			{
-				result.HasExistingRevisions = await _wikiPages.Exists(result.PageName);
-			}
 		}
 
 		public async Task<IActionResult> OnPostDeletePage(string path)
