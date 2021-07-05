@@ -82,6 +82,10 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to see wiki pages/revisions that were deleted.")]
 		SeeDeletedWikiPages = 106,
 
+		[Group("Wiki")]
+		[Description("The ability to add/edit/remove ram addresses.")]
+		EditRamAddresses = 107,
+
 		[Group("Wiki Administration")]
 		[Description("The ability to see certain restricted pages that pertain to administration activities.")]
 		SeeAdminPages = 190,
