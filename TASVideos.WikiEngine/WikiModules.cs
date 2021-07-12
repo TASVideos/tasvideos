@@ -32,6 +32,7 @@ namespace TASVideos.WikiEngine
 		public const string NoGameName = "nogamename";
 		public const string PlatformAuthorList = "platformtaserlists";
 		public const string PlatformFramerates = "platformframerates";
+		public const string PlayerPointsTable = "playerpointstable";
 		public const string RejectedSubmissions = "rejectedsubmissions";
 		public const string SupportedMovieTypes = "submittableformats";
 		public const string TabularMovieList = "tabularmovielist";
