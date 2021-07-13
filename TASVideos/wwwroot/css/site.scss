@@ -46,11 +46,11 @@ body {
 }
 
 .btn {
-	font-size: .875rem
-}
+	font-size: .875rem;
 
-.btn-sm {
-	font-size: .750rem
+	&-sm {
+		font-size: .750rem;
+	}
 }
 
 h1 {
@@ -68,14 +68,16 @@ h1 {
     // border: 1px solid #430f76;
 }
 
-.wiki h1 {
-	margin-left: 0;
-	margin-bottom: 1rem;
-}
+.wiki {
+	h1 {
+		margin-left: 0;
+		margin-bottom: 1rem;
+	}
 
-.wiki div.p {
-	margin-top: 0;
-	margin-bottom: 1rem;
+	div.p {
+		margin-top: 0;
+		margin-bottom: 1rem;
+	}
 }
 
 h2 {
@@ -177,12 +179,14 @@ h4 {
 	
 }
 
-[data-toggle="collapse"] .fa::before {
-	content: "\f139";
-}
+[data-toggle="collapse"] {
+	.fa::before {
+		content: "\f139";
+	}
 
-[data-toggle="collapse"].collapsed .fa::before {
-	content: "\f13a";
+	&.collapsed .fa::before {
+		content: "\f13a";
+	}
 }
 
 .hiddenifmodule {
@@ -230,8 +234,11 @@ h4 {
 	float: right
 }
 
-/* Wiki Tables */
+.table-container {
+	overflow-x: auto;
+}
 
+/* Wiki Tables */
 article.wiki table {
 	width: 100%;
 	margin-bottom: 1rem;
