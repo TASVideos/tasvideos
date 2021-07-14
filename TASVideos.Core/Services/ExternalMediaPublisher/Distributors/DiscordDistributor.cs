@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
@@ -195,8 +196,8 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 			HttpContent messageContent = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
 
-			using HttpClient httpClient = _httpClientFactory.CreateClient("Discord");
-			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bot", _settings.AccessToken);
+			using HttpClient httpClient = _httpClientFactory.CreateClient(HttpClients.Discord);
+			httpClient.SetBotToken(_settings.AccessToken);
 
 			var response = await httpClient!.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, _cancellationTokenSource.Token);
 

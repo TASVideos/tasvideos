@@ -4,6 +4,7 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Core.Services.RssFeedParsers;
+using TASVideos.Core.Services.Youtube;
 
 namespace TASVideos.Core
 {
@@ -17,14 +18,24 @@ namespace TASVideos.Core
 
 			// HTTP Client
 			services
-				.AddHttpClient("Discord", client =>
+				.AddHttpClient(HttpClients.Discord, client =>
 				{
 					client.BaseAddress = new Uri("https://discord.com/api/v6/");
 				});
 			services
-				.AddHttpClient("Twitter", client =>
+				.AddHttpClient(HttpClients.Twitter, client =>
 				{
 					client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
+				});
+			services
+				.AddHttpClient(HttpClients.GoogleAuth, client =>
+				{
+					client.BaseAddress = new Uri("https://oauth2.googleapis.com/");
+				});
+			services
+				.AddHttpClient(HttpClients.Youtube, client =>
+				{
+					client.BaseAddress = new Uri("https://www.googleapis.com/youtube/v3/");
 				});
 
 			return services.AddServices(isDevelopment);
@@ -66,9 +77,11 @@ namespace TASVideos.Core
 			services.AddScoped<ITASVideosGrue, TASVideosGrue>();
 
 			services.AddScoped<ForumEngine.IWriterHelper, ForumWriterHelper>();
+			
+			services.AddScoped<IYoutubeSync, YouTubeSync>();
+			services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 
 			return services;
 		}
-
 	}
 }

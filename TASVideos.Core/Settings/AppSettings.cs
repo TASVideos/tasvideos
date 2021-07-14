@@ -16,6 +16,7 @@ namespace TASVideos.Core.Settings
 		public DiscordConnection Discord { get; set; } = new ();
 		public TwitterConnection Twitter { get; set; } = new ();
 		public JwtSettings Jwt { get; set; } = new ();
+		public YouTubeSyncSettings YouTube { get; set; } = new();
 
 		public string StartupStrategy { get; set; } = "";
 
@@ -70,6 +71,13 @@ namespace TASVideos.Core.Settings
 		{
 			public string SecretKey { get; set; } = "";
 			public int ExpiresInMinutes { get; set; }
+		}
+
+		public class YouTubeSyncSettings
+		{
+			public string ClientId { get; set; } = "";
+			public string ClientSecret { get; set; } = "";
+			public string RefreshToken { get; set; } = "";
 		}
 	}
 
