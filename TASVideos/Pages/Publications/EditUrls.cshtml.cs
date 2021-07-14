@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -17,16 +18,21 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IYoutubeSync _youtubeSync;
 
 		private static readonly List<PublicationUrlType> PublicationUrlTypes = Enum
 			.GetValues(typeof(PublicationUrlType))
 			.Cast<PublicationUrlType>()
 			.ToList();
 
-		public EditUrlsModel(ApplicationDbContext db, ExternalMediaPublisher publisher)
+		public EditUrlsModel(
+			ApplicationDbContext db,
+			ExternalMediaPublisher publisher,
+			IYoutubeSync youtubeSync)
 		{
 			_db = db;
 			_publisher = publisher;
+			_youtubeSync = youtubeSync;
 		}
 
 		public IEnumerable<SelectListItem> AvailableTypes =
@@ -86,12 +92,19 @@ namespace TASVideos.Pages.Publications
 				return Page();
 			}
 
-			_db.PublicationUrls.Add(new PublicationUrl
+			var publicationUrl = new PublicationUrl
 			{
 				PublicationId = Id,
 				Url = PublicationUrl,
 				Type = UrlType
-			});
+			};
+
+			_db.PublicationUrls.Add(publicationUrl);
+
+			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
+			{
+				await _youtubeSync.SyncYouTubeVideos(PublicationUrl);
+			}
 
 			await _db.SaveChangesAsync();
 
@@ -105,6 +118,7 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnPostDelete(int publicationUrlId)
 		{
+			// TODO: youtube sync logic
 			var url = await _db.PublicationUrls
 				.SingleOrDefaultAsync(pf => pf.Id == publicationUrlId);
 

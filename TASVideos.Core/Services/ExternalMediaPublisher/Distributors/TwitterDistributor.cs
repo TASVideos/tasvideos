@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
@@ -56,10 +57,10 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				string signatureBaseString = CalculateSignatureBaseString("POST", $"{_settings.ApiBase}statuses/update.json", nonce, timestamp, twitterMessage);
 				string signature = CalculateSignature(signatureBaseString);
 
-				string authorizationHeaderValue = CalculateOAuthAuthorizationString(nonce, timestamp, signature);
+				string oathToken = CalculateOAuthAuthorizationString(nonce, timestamp, signature);
 
-				using HttpClient httpClient = _httpClientFactory.CreateClient("Twitter");
-				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("OAuth", authorizationHeaderValue);
+				using HttpClient httpClient = _httpClientFactory.CreateClient(HttpClients.Twitter);
+				httpClient.SetOAuthToken(oathToken);
 
 				var formFields = new List<KeyValuePair<string?, string?>>
 				{
@@ -74,7 +75,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 					_logger.LogError($"Signature Base String: {signatureBaseString}");
 					_logger.LogError($"Signature: {signature}");
-					_logger.LogError(httpClient.DefaultRequestHeaders.Authorization.ToString());
+					_logger.LogError(httpClient.DefaultRequestHeaders.Authorization?.ToString());
 
 					_logger.LogError(await response.Content.ReadAsStringAsync());
 				}
