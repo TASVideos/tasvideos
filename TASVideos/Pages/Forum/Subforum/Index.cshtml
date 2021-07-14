@@ -17,33 +17,34 @@
 <hr />
 <partial name="_Pager" model="Model.Forum.Topics" />
 <div class="table-container">
-    <table class="table table-striped table-bordered">
-        <tr>
-            <th></th>
-            <th>Topics</th>
-            <th>Replies</th>
-            <th>Author</th>
-            <td>Views</td>
-            <td>Last Post</td>
-        </tr>
-        @foreach (var topic in Model.Forum.Topics) {
-            <tr>
-                <td>
-                    <span condition="@(topic.Type == ForumTopicType.Sticky)" class="fa fa-sticky-note"></span>
-                    <span condition="@(topic.Type == ForumTopicType.Announcement)" class="fa fa-bullhorn"></span>
-                </td>
-                <td>
-                    <a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id">
-                        @Html.Raw(topic.Type.ToTitleHtml(topic.Title))
-                    </a>
-                </td>
-                <td>@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
-                <td>@topic.CreateUserName</td>
-                <td>@topic.Type</td>
-                <td><timezone-convert asp-for="@topic.LastPostDateTime" /></td>
-            </tr>
-        }
-    </table>
+	<table class="table table-striped table-bordered">
+		<tr>
+			<th></th>
+			<th>Topics</th>
+			<th>Replies</th>
+			<th>Author</th>
+			<td>Views</td>
+			<td>Last Post</td>
+		</tr>
+		@foreach (var topic in Model.Forum.Topics)
+		{
+			<tr>
+				<td>
+					<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fa fa-sticky-note"></span>
+					<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fa fa-bullhorn"></span>
+				</td>
+				<td>
+					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id">
+						@Html.Raw(topic.Type.ToTitleHtml(topic.Title))
+					</a>
+				</td>
+				<td>@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
+				<td>@topic.CreateUserName</td>
+				<td>@topic.Type</td>
+				<td><timezone-convert asp-for="@topic.LastPostDateTime" /></td>
+			</tr>
+		}
+	</table>
 </div>
 
 <partial name="_Pager" model="Model.Forum.Topics" />
