@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TASVideos.ViewComponents
 {
@@ -8,7 +8,7 @@ namespace TASVideos.ViewComponents
 		public int Position { get; set; } = 0;
 
 		[Display(Name = "PlayerID")]
-		public int ID { get; init; } = 0;
+		public int Id { get; init; } = 0;
 
 		[Display(Name = "Player")]
 		public string Player { get; init; } = "";

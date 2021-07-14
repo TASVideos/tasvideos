@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,14 +29,14 @@ namespace TASVideos.ViewComponents
 				.ThatArePublishedAuthors()
 				.Select(u => new PlayerPointsModel
 				{
-					ID = u.Id,
+					Id = u.Id,
 					Player = u.UserName
 				})
 				.ToListAsync();
 
 			foreach (var user in players)
 			{
-				user.Points = await _pointsService.PlayerPoints(user.ID);
+				user.Points = await _pointsService.PlayerPoints(user.Id);
 			}
 
 			var sortedPlayers = players.OrderByDescending(u => u.Points).Take(showCount);
