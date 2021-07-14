@@ -162,7 +162,8 @@ namespace TASVideos.Pages.Submissions
 				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: {message}",
 				RevisionMessage = $"Claimed for {action}"
 			};
-			submission.WikiContent = wikiPage;
+			await _wikiPages.Add(wikiPage);
+			submission.WikiContentId = wikiPage.Id;
 			submission.PublisherId = User.GetUserId();
 
 			var result = await ConcurrentSave(_db, "", "Unable to claim");
