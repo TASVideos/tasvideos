@@ -54,9 +54,9 @@ namespace TASVideos.Core.Services
 				Topic = topic,
 				PosterId = SiteGlobalConstants.TASVideoAgentId,
 				Subject = title,
-				Text = SiteGlobalConstants.NewSubmissionPost + $"<a href=\"/{submissionId}S\">{title}</a>",
-				EnableHtml = true,
-				EnableBbCode = false,
+				Text = SiteGlobalConstants.NewSubmissionPost + $"[submission]{submissionId}[/submission]",
+				EnableHtml = false,
+				EnableBbCode = true,
 				PosterMood = ForumPostMood.Normal
 			};
 
