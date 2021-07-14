@@ -7,43 +7,45 @@
 <hr />
 <row>
 	<div class="col-lg-9 col-md-8">
-		<table class="table table-striped table-sm hidden-lg-down">
-			@if (!string.IsNullOrWhiteSpace(flink))
-			{
-				<caption><a href="/@flink">@footer</a></caption>
-			}
-			<tbody>
-				<tr>
-					<th>Date</th>
-					<th>Game</th>
-					<th>Time</th>
-					<th>By</th>
-				</tr>
-				@foreach (var pub in Model)
+		<div class="table-container">
+			<table class="table table-striped table-sm hidden-lg-down">
+				@if (!string.IsNullOrWhiteSpace(flink))
 				{
-					<tr>
-						<td><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true"/></td>
-						<td>@pub.Game</td>
-						<td>
-							<pub-link id="pub.Id">@($"{pub.Time():g}")</pub-link>
-							<span condition="pub.ObsoletedMovie != null">
-								(Was <pub-link id="pub.ObsoletedMovie!.Id">@($"{pub.ObsoletedMovie!.Time():g}")</pub-link>)
-							</span>
-						</td>
-						<td>@pub.Authors</td>
-					</tr>
+					<caption><a href="/@flink">@footer</a></caption>
 				}
-			</tbody>
-		</table>
+				<tbody>
+					<tr>
+						<th>Date</th>
+						<th>Game</th>
+						<th>Time</th>
+						<th>By</th>
+					</tr>
+					@foreach (var pub in Model)
+					{
+						<tr>
+							<td><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></td>
+							<td>@pub.Game</td>
+							<td>
+								<pub-link id="pub.Id">@($"{pub.Time():g}")</pub-link>
+								<span condition="pub.ObsoletedMovie != null">
+									(Was <pub-link id="pub.ObsoletedMovie!.Id">@($"{pub.ObsoletedMovie!.Time():g}")</pub-link>)
+								</span>
+							</td>
+							<td>@pub.Authors</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
 	</div>
 	<div class="col-lg-3 col-md-4 d-sm-none d-md-block">
 		<figure class="figure pull-right">
 			@if (first != null)
 			{
-			<pub-link id="first.Id">
-				<img src="~/media/@first.Screenshot.Path" alt="@first.Screenshot.Description" style="max-width: 100%">
-			</pub-link>
-			<figcaption class="figure-caption">@first.Game by @first.Authors</figcaption>
+				<pub-link id="first.Id">
+					<img src="~/media/@first.Screenshot.Path" alt="@first.Screenshot.Description" style="max-width: 100%">
+				</pub-link>
+				<figcaption class="figure-caption">@first.Game by @first.Authors</figcaption>
 			}
 		</figure>
 	</div>
