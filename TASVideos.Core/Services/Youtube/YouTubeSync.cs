@@ -10,6 +10,7 @@ namespace TASVideos.Core.Services.Youtube
 	{
 		bool IsYoutubeUrl(string url);
 		Task SyncYouTubeVideos(string url);
+		Task UnlistVideo(string url);
 	}
 
 	public class YouTubeSync : IYoutubeSync
@@ -46,6 +47,38 @@ namespace TASVideos.Core.Services.Youtube
 			var requestBody = new VideoUpdateRequest
 			{
 				VideoId = videoId
+			}.ToStringContent();
+
+			var response = await _client.PutAsync("videos?part=status", requestBody);
+			response.EnsureSuccessStatusCode();
+		}
+
+		public async Task UnlistVideo(string url)
+		{
+			if (!IsYoutubeUrl(url))
+			{
+				return;
+			}
+
+			if (!_googleAuthService.IsEnabled())
+			{
+				return;
+			}
+
+			var videoId = VideoId(url);
+			if (!await HasAccessToChannel(videoId))
+			{
+				return;
+			}
+
+			await SetAccessToken();
+			var requestBody = new VideoUpdateRequest
+			{
+				VideoId = videoId,
+				Status = new ()
+				{
+					PrivacyStatus = "unlisted"
+				}
 			}.ToStringContent();
 
 			var response = await _client.PutAsync("videos?part=status", requestBody);

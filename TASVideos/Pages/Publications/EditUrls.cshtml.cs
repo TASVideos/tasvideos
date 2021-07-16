@@ -123,18 +123,21 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnPostDelete(int publicationUrlId)
 		{
-			// TODO: youtube sync logic
 			var url = await _db.PublicationUrls
 				.SingleOrDefaultAsync(pf => pf.Id == publicationUrlId);
 
-			_db.PublicationUrls.Remove(url);
+			if (url != null)
+			{
+				_db.PublicationUrls.Remove(url);
+				await _db.SaveChangesAsync();
 
-			_publisher.SendPublicationEdit(
-				$"Publication {Id} deleted {url.Type} url {url.Url}",
-				$"{Id}M",
-				User.Name());
+				_publisher.SendPublicationEdit(
+					$"Publication {Id} deleted {url.Type} url {url.Url}",
+					$"{Id}M",
+					User.Name());
 
-			await _db.SaveChangesAsync();
+				await _youtubeSync.UnlistVideo(url.Url!);
+			}
 
 			return RedirectToPage("EditUrls", new { Id });
 		}
