@@ -34,8 +34,10 @@ namespace TASVideos.Core.Tests.Services
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
-			Assert.IsTrue(actual.EnableHtml);
-			Assert.IsFalse(actual.EnableBbCode);
+			Assert.AreEqual(SubmissionTitle, actual.Subject);
+			Assert.IsTrue(actual.Text.Contains(SubmissionId.ToString()));
+			Assert.IsFalse(actual.EnableHtml);
+			Assert.IsTrue(actual.EnableBbCode);
 		}
 
 		[TestMethod]
