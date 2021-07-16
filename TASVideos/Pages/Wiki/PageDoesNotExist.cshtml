@@ -2,7 +2,7 @@
 @{
 	ViewData["Title"] = "DoesNotExist";
 	var url = PageContext.HttpContext.Request.Query["url"].ToString().Trim('/');
-	bool canEdit = WikiHelper.UserCanEditWikiPage(url, User.Name(), (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+	bool canEdit = WikiHelper.UserCanEditWikiPage(url, User.Name(), User.Permissions());
 }
 <h2>This page does not yet exist.</h2>
 <br />

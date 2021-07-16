@@ -2,7 +2,7 @@
 @section PageTitle {
 }
 @{
-	bool canEdit = WikiHelper.UserCanEditWikiPage("System/FrontPage", User.Name(), (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+	bool canEdit = WikiHelper.UserCanEditWikiPage("System/FrontPage", User.Name(), User.Permissions());
 }
 
 <cache enabled="@(!User.IsLoggedIn())" expires-after="@TimeSpan.FromSeconds(Durations.FiveMinutesInSeconds)">
