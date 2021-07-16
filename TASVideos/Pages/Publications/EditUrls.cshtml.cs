@@ -83,12 +83,17 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnPost()
 		{
+			CurrentUrls = await _db.PublicationUrls
+				.Where(u => u.PublicationId == Id)
+				.ToListAsync();
+
+			if (CurrentUrls.Any(u => u.Type == UrlType && u.Url == PublicationUrl))
+			{
+				ModelState.AddModelError($"{nameof(PublicationUrl)}", $"The {UrlType} url: {PublicationUrl} already exists");
+			}
+
 			if (!ModelState.IsValid)
 			{
-				CurrentUrls = await _db.PublicationUrls
-					.Where(u => u.PublicationId == Id)
-					.ToListAsync();
-
 				return Page();
 			}
 
