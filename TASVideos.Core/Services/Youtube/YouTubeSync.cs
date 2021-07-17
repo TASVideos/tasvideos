@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Youtube.Dtos;
+using TASVideos.Extensions;
 
 namespace TASVideos.Core.Services.Youtube
 {
@@ -98,9 +99,20 @@ namespace TASVideos.Core.Services.Youtube
 			return !string.IsNullOrWhiteSpace(url) && url.Contains("youtube.com");
 		}
 
-		private static string VideoId(string youtubeUrl)
+		internal static string VideoId(string youtubeUrl)
 		{
-			return youtubeUrl[(youtubeUrl.IndexOf("v=") + 2)..];
+			var result = youtubeUrl[(youtubeUrl.IndexOf("v=") + 2)..];
+
+			if (!string.IsNullOrWhiteSpace(result))
+			{
+				// Account for anchors
+				result = result.SplitWithEmpty("#")[0];
+
+				// Account for additional query string params
+				result = result.SplitWithEmpty("&")[0].TrimEnd('?');
+			}
+
+			return result;
 		}
 
 		private async Task SetAccessToken()
