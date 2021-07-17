@@ -101,6 +101,11 @@ namespace TASVideos.Core.Services.Youtube
 
 		internal static string VideoId(string youtubeUrl)
 		{
+			if (string.IsNullOrWhiteSpace(youtubeUrl))
+			{
+				return "";
+			}
+
 			var result = youtubeUrl[(youtubeUrl.IndexOf("v=") + 2)..];
 
 			if (!string.IsNullOrWhiteSpace(result))
