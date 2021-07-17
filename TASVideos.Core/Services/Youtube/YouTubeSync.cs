@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TASVideos.Core.HttpClientExtensions;
@@ -9,7 +10,7 @@ namespace TASVideos.Core.Services.Youtube
 	public interface IYoutubeSync
 	{
 		bool IsYoutubeUrl(string url);
-		Task SyncYouTubeVideos(string url);
+		Task SyncYouTubeVideo(YoutubeVideo video);
 		Task UnlistVideo(string url);
 	}
 
@@ -25,9 +26,9 @@ namespace TASVideos.Core.Services.Youtube
 			_googleAuthService = googleAuthService;
 		}
 
-		public async Task SyncYouTubeVideos(string url)
+		public async Task SyncYouTubeVideo(YoutubeVideo video)
 		{
-			if (!IsYoutubeUrl(url))
+			if (!IsYoutubeUrl(video.Url))
 			{
 				return;
 			}
@@ -37,8 +38,9 @@ namespace TASVideos.Core.Services.Youtube
 				return;
 			}
 
-			var videoId = VideoId(url);
-			if (!await HasAccessToChannel(videoId))
+			var videoId = VideoId(video.Url);
+			var videoDetails = await HasAccessToChannel(videoId);
+			if (videoDetails is null)
 			{
 				return;
 			}
@@ -46,10 +48,16 @@ namespace TASVideos.Core.Services.Youtube
 			await SetAccessToken();
 			var requestBody = new VideoUpdateRequest
 			{
-				VideoId = videoId
+				VideoId = videoId,
+				Snippet = new ()
+				{
+					Title = video.Title,
+					Description = video.Description,
+					CategoryId = videoDetails.CategoryId
+				}
 			}.ToStringContent();
 
-			var response = await _client.PutAsync("videos?part=status", requestBody);
+			var response = await _client.PutAsync("videos?part=status,snippet", requestBody);
 			response.EnsureSuccessStatusCode();
 		}
 
@@ -66,7 +74,7 @@ namespace TASVideos.Core.Services.Youtube
 			}
 
 			var videoId = VideoId(url);
-			if (!await HasAccessToChannel(videoId))
+			if (await HasAccessToChannel(videoId) is null)
 			{
 				return;
 			}
@@ -101,14 +109,22 @@ namespace TASVideos.Core.Services.Youtube
 			_client.SetBearerToken(accessToken);
 		}
 
-		private async Task<bool> HasAccessToChannel(string videoId)
+		private async Task<YoutubeVideoSnippet?> HasAccessToChannel(string videoId)
 		{
 			await SetAccessToken();
 
 			// fileDetails require authorization to see, so this serves as a way to determine access
 			// there may be a more intended strategy to use
-			var result = await _client.GetAsync($"videos?id={videoId}&part=fileDetails");
-			return result.IsSuccessStatusCode;
+			var result = await _client.GetAsync($"videos?id={videoId}&part=snippet,fileDetails");
+			if (result.IsSuccessStatusCode)
+			{
+				var getResponse = await result.ReadAsync<YoutubeGetResponse>();
+				return getResponse.Items.First().Snippet;
+			}
+
+			return null;
 		}
 	}
+
+	public record YoutubeVideo(string Url, string Title, string Description);
 }

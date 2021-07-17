@@ -83,9 +83,20 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnPost()
 		{
-			CurrentUrls = await _db.PublicationUrls
+			var publication = await _db.Publications
+				.Include(p => p.PublicationUrls)
+				.Include(p => p.WikiContent)
+				.Where(p => p.Id == Id)
+				.SingleOrDefaultAsync();
+
+			if (publication == null)
+			{
+				return NotFound();
+			}
+
+			CurrentUrls = publication.PublicationUrls
 				.Where(u => u.PublicationId == Id)
-				.ToListAsync();
+				.ToList();
 
 			if (CurrentUrls.Any(u => u.Type == UrlType && u.Url == PublicationUrl))
 			{
@@ -108,7 +119,9 @@ namespace TASVideos.Pages.Publications
 
 			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
 			{
-				await _youtubeSync.SyncYouTubeVideos(PublicationUrl);
+				// TODO: render markup, in a youtube friendly way
+				YoutubeVideo video = new (PublicationUrl, publication.Title, publication.WikiContent!.Markup);
+				await _youtubeSync.SyncYouTubeVideo(video);
 			}
 
 			await _db.SaveChangesAsync();
