@@ -86,6 +86,7 @@ namespace TASVideos.Pages.Publications
 			var publication = await _db.Publications
 				.Include(p => p.PublicationUrls)
 				.Include(p => p.WikiContent)
+				.Include(p => p.System)
 				.Where(p => p.Id == Id)
 				.SingleOrDefaultAsync();
 
@@ -120,7 +121,9 @@ namespace TASVideos.Pages.Publications
 			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
 			{
 				// TODO: render markup, in a youtube friendly way
-				YoutubeVideo video = new (PublicationUrl, publication.Title, publication.WikiContent!.Markup);
+				// TODO: add authors, game search tags, publication categories
+				var tags = new[] { publication.System!.Code };
+				YoutubeVideo video = new (PublicationUrl, publication.Title, publication.WikiContent!.Markup, tags);
 				await _youtubeSync.SyncYouTubeVideo(video);
 			}
 

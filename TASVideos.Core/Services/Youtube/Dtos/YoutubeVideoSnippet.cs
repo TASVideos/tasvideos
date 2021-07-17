@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace TASVideos.Core.Services.Youtube.Dtos
 {
@@ -12,5 +13,8 @@ namespace TASVideos.Core.Services.Youtube.Dtos
 
 		[JsonProperty("categoryId")]
 		public string CategoryId { get; init; } = "";
+
+		[JsonProperty("tags")]
+		public ICollection<string> Tags { get; set; } = new List<string>();
 	}
 }
