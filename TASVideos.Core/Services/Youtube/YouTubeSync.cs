@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace TASVideos.Core.Services.Youtube
 
 	public class YouTubeSync : IYoutubeSync
 	{
+		private static readonly string[] BaseTags = { "TAS", "TASVideos", "Tool-Assisted", "Video Game" };
+
 		private readonly HttpClient _client;
 		private readonly IGoogleAuthService _googleAuthService;
 
@@ -54,7 +57,8 @@ namespace TASVideos.Core.Services.Youtube
 				{
 					Title = video.Title,
 					Description = video.Description,
-					CategoryId = videoDetails.CategoryId
+					CategoryId = videoDetails.CategoryId,
+					Tags = BaseTags.Concat(video.Tags).ToList()
 				}
 			}.ToStringContent();
 
@@ -143,5 +147,5 @@ namespace TASVideos.Core.Services.Youtube
 		}
 	}
 
-	public record YoutubeVideo(string Url, string Title, string Description);
+	public record YoutubeVideo(string Url, string Title, string Description, IEnumerable<string> Tags);
 }
