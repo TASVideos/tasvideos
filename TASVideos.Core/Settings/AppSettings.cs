@@ -24,6 +24,8 @@ namespace TASVideos.Core.Settings
 		public string SendGridFrom { get; set; } = "";
 		public bool UsePostgres { get; set; } = true;
 
+		public string SampleDataPassword { get; set; } = "Password1234!@#$";
+
 		public class IrcConnection
 		{
 			public string Server { get; set; } = "";
