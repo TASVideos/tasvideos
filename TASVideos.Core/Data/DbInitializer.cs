@@ -62,11 +62,12 @@ namespace TASVideos.Core.Data
 			var context = services.GetRequiredService<ApplicationDbContext>();
 			var userManager = services.GetRequiredService<UserManager>();
 			var legacyImporter = services.GetRequiredService<ILegacyImporter>();
+			var settings = services.GetRequiredService<AppSettings>();
 			Initialize(context);
 			PreMigrateSeedData(context);
 			legacyImporter.RunLegacyImport();
 			PostMigrateSeedData(context);
-			GenerateDevTestUsers(context, userManager).Wait();
+			GenerateDevTestUsers(context, userManager, settings).Wait();
 		}
 
 		private static void MigrationStrategy(IServiceProvider services)
@@ -138,12 +139,11 @@ namespace TASVideos.Core.Data
 		/// Roles must already exist before running this
 		/// DO NOT run this on production environments! This generates users with high level access and a default and public password.
 		/// </summary>
-		private static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager userManager)
+		private static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager userManager, AppSettings settings)
 		{
 			// Add users for each Role for testing purposes
 			var roles = await context.Roles.ToListAsync();
 			var defaultRoles = roles.Where(r => r.IsDefault).ToList();
-			const string samplePassword = "Password1234!@#$"; // Obviously no one should use this in production
 
 			foreach (var role in roles.Where(r => !r.IsDefault))
 			{
@@ -154,7 +154,7 @@ namespace TASVideos.Core.Data
 					Email = role.Name + "@example.com",
 					TimeZoneId = "Eastern Standard Time"
 				};
-				var result = await userManager.CreateAsync(user, samplePassword);
+				var result = await userManager.CreateAsync(user, settings.SampleDataPassword);
 				if (!result.Succeeded)
 				{
 					throw new Exception(string.Join(",", result.Errors.Select(e => e.ToString())));
