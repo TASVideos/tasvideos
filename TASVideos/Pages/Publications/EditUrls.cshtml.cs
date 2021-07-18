@@ -10,6 +10,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 
 namespace TASVideos.Pages.Publications
 {
@@ -84,10 +85,16 @@ namespace TASVideos.Pages.Publications
 		public async Task<IActionResult> OnPost()
 		{
 			var publication = await _db.Publications
-				.Include(p => p.PublicationUrls)
-				.Include(p => p.WikiContent)
-				.Include(p => p.System)
 				.Where(p => p.Id == Id)
+				.Select(p => new
+				{
+					Title,
+					p.PublicationUrls,
+					SystemCode = p.System!.Code,
+					p.WikiContent!.Markup,
+					Authors = p.Authors.Select(pa => pa.Author!.UserName),
+					p.Game!.SearchKey
+				})
 				.SingleOrDefaultAsync();
 
 			if (publication == null)
@@ -95,9 +102,7 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
-			CurrentUrls = publication.PublicationUrls
-				.Where(u => u.PublicationId == Id)
-				.ToList();
+			CurrentUrls = publication.PublicationUrls;
 
 			if (CurrentUrls.Any(u => u.Type == UrlType && u.Url == PublicationUrl))
 			{
@@ -121,9 +126,16 @@ namespace TASVideos.Pages.Publications
 			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
 			{
 				// TODO: render markup, in a youtube friendly way
-				// TODO: add authors, game search tags, publication categories
-				var tags = new[] { publication.System!.Code };
-				YoutubeVideo video = new (PublicationUrl, publication.Title, publication.WikiContent!.Markup, tags);
+				var tags = new[] { publication.SystemCode }
+					.Concat(publication.Authors);
+				if (!string.IsNullOrWhiteSpace(publication.SearchKey))
+				{
+					tags = tags.Concat(publication.SearchKey.SplitWithEmpty("-"));
+				}
+
+				tags = tags.Select(t => t.ToLower()).Distinct();
+
+				YoutubeVideo video = new (PublicationUrl, publication.Title, publication.Markup, tags);
 				await _youtubeSync.SyncYouTubeVideo(video);
 			}
 
