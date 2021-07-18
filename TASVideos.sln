@@ -21,6 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Common", "TASVide
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D018E134-6444-4AAF-B36F-CC3AECF2973F}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.stylecop.json = .stylecop.json
 		Common.ruleset = Common.ruleset
 	EndProjectSection
