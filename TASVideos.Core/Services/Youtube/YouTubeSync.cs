@@ -100,7 +100,7 @@ namespace TASVideos.Core.Services.Youtube
 
 		public bool IsYoutubeUrl(string url)
 		{
-			return !string.IsNullOrWhiteSpace(url) && url.Contains("youtube.com");
+			return !string.IsNullOrWhiteSpace(url) && (url.Contains("youtube.com") || url.Contains("youtu.be"));
 		}
 
 		internal static string VideoId(string youtubeUrl)
@@ -108,6 +108,11 @@ namespace TASVideos.Core.Services.Youtube
 			if (string.IsNullOrWhiteSpace(youtubeUrl))
 			{
 				return "";
+			}
+
+			if (youtubeUrl.Contains("https://youtu.be"))
+			{
+				return youtubeUrl.SplitWithEmpty("/").Last();
 			}
 
 			var result = youtubeUrl[(youtubeUrl.IndexOf("v=") + 2)..];

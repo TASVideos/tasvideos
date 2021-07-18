@@ -26,6 +26,7 @@ namespace TASVideos.Core.Tests.Services
 		[DataRow("https://www.youtube.com/watch?list=ABCDE&v=12345", "12345")]
 		[DataRow("https://www.youtube.com/watch?list=ABCDE&v=12345&index=2", "12345")]
 		[DataRow("v=12345?", "12345")]
+		[DataRow("https://youtu.be/12345", "12345")]
 		public void VideoId(string url, string expected)
 		{
 			var actual = YouTubeSync.VideoId(url);
@@ -36,6 +37,7 @@ namespace TASVideos.Core.Tests.Services
 		[DataRow("", false)]
 		[DataRow("https://www.youtube.com/watch?v=12345", true)]
 		[DataRow("https://youtube.com/watch?v=12345", true)]
+		[DataRow("https://youtu.be/12345", true)]
 		public void IsYoutubeUrl(string url, bool expected)
 		{
 			var actual = _youTubeSync.IsYoutubeUrl(url);
