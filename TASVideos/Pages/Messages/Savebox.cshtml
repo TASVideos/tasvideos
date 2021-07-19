@@ -21,8 +21,8 @@
 			<td>
 				<a asp-page="Index" asp-route-id="@entry.Id">@entry.Subject</a>
 			</td>
-			<td><profile-link username="@entry.FromUser">@entry.FromUser</profile-link></td>
-			<td><profile-link username="@entry.ToUser">@entry.ToUser</profile-link></td>
+			<td><profile-link username="@entry.FromUser"></profile-link></td>
+			<td><profile-link username="@entry.ToUser"></profile-link></td>
 			<td>@entry.SendDate</td>
 			<td>
 				<delete-button

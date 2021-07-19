@@ -9,7 +9,7 @@
 	<a condition="Model.PrivateMessage.CanReply" asp-page="Create" asp-route-replyTo="@Model.Id" class="btn btn-primary">Reply</a>
 </div>
 <div>
-	<profile-link username="@Model.PrivateMessage.FromUserName">@Model.PrivateMessage.FromUserName</profile-link> <span class="fa fa-arrow-right"></span> @Model.PrivateMessage.ToUserName
+	<profile-link username="@Model.PrivateMessage.FromUserName"></profile-link> <span class="fa fa-arrow-right"></span> @Model.PrivateMessage.ToUserName
 	<small class="pull-right">
 		@Model.PrivateMessage.SentOn
 	</small>
