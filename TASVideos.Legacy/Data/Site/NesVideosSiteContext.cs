@@ -36,6 +36,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<MovieClass> MovieClass { get; set; } = null!;
 		public DbSet<MovieRating> MovieRating { get; set; } = null!;
 		public DbSet<MovieFlag> MovieFlags { get; set; } = null!;
+		public DbSet<MovieMaintenanceLog> MovieMaintenanceLog { get; set; } = null!;
 		public DbSet<UserFile> UserFiles { get; set; } = null!;
 		public DbSet<UserFileComment> UserFileComments { get; set; } = null!;
 		public DbSet<SubmissionRejections> SubmissionRejections { get; set; } = null!;
@@ -96,6 +97,7 @@ namespace TASVideos.Legacy.Data.Site
 				entity.HasKey(e => new { e.MovieId, e.FlagId });
 				entity.ToTable("movie_flag");
 			});
+			modelBuilder.Entity<MovieMaintenanceLog>().ToTable("movie_maintenancelog");
 			modelBuilder.Entity<UserFile>().ToTable("user_files");
 			modelBuilder.Entity<UserFileComment>().ToTable("user_files_comments");
 			modelBuilder.Entity<SubmissionRejections>().ToTable("rejections");

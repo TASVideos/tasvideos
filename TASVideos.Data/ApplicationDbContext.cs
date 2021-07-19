@@ -49,6 +49,7 @@ namespace TASVideos.Data
 		public DbSet<PublicationRating> PublicationRatings { get; set; } = null!;
 		public DbSet<PublicationFlag> PublicationFlags { get; set; } = null!;
 		public DbSet<PublicationUrl> PublicationUrls { get; set; } = null!;
+		public DbSet<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = null!;
 
 		public DbSet<Tag> Tags { get; set; } = null!;
 		public DbSet<Flag> Flags { get; set; } = null!;

@@ -86,6 +86,7 @@ namespace TASVideos.Legacy
 			Run("Publication Flags", () => PublicationFlagImporter.Import(_legacySiteDb));
 			Run("Publication Tags", () => PublicationTagImporter.Import(_db, _legacySiteDb));
 			Run("Published Author Generator", () => PublishedAuthorGenerator.Generate(_db));
+			Run("Publication Maintenance Logs", () => PublicationMaintenanceLogImporter.Import(_db, _legacySiteDb));
 
 			Run("User files", () => UserFileImporter.Import(_db, _legacySiteDb));
 
