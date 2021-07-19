@@ -83,10 +83,16 @@
 					Discuss
 				</a>
 				<a asp-page="/Games/PublicationHistory"
-				   asp-route-id="@Model.GameId"
-				   asp-route-highlight="@Model.Id"
-				   class="btn btn-secondary btn-sm mt-1">
+					asp-route-id="@Model.GameId"
+					asp-route-highlight="@Model.Id"
+					class="btn btn-secondary btn-sm mt-1">
 					History
+				</a>
+				<a
+					permission="EditPublicationMetaData"
+					href="/MovieMaintenanceLog?id=@Model.Id"
+					class="btn btn-secondary btn-sm mt-1">
+					Logs
 				</a>
 			</div>
 			<div class="col-md-5">
