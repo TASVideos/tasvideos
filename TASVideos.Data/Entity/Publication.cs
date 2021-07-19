@@ -37,6 +37,7 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new HashSet<PublicationTag>();
 		public virtual ICollection<PublicationFlag> PublicationFlags { get; set; } = new HashSet<PublicationFlag>();
 		public virtual ICollection<PublicationAward> PublicationAwards { get; set; } = new HashSet<PublicationAward>();
+		public virtual ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = new HashSet<PublicationMaintenanceLog>();
 
 		[ForeignKey(nameof(PublicationRating.PublicationId))]
 		public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new HashSet<PublicationRating>();
