@@ -18,7 +18,7 @@ namespace TASVideos.Pages.Publications.Models
 		public string TierIconPath { get; set; } = "";
 		public string MovieFileName { get; set; } = "";
 		public int SubmissionId { get; set; }
-		public string? OnlineWatchingUrl { get; set; }
+		public IEnumerable<string> OnlineWatchingUrls { get; set; } = new List<string>();
 		public string? MirrorSiteUrl { get; set; }
 		public int TopicId { get; set; }
 		public string? EmulatorVersion { get; set; }

@@ -57,33 +57,35 @@
 		<row>
 			<div class="col-md-4">
 				<div>
-					<img
-						src="~/media/@Model.Screenshot.Path"
-						alt="@Model.Screenshot.Description"
-						loading="lazy"
-						style="max-width: 100%"/>
+					<img src="~/media/@Model.Screenshot.Path"
+						 alt="@Model.Screenshot.Description"
+						 loading="lazy"
+						 style="max-width: 100%" />
 				</div>
-				<a href="@Model.OnlineWatchingUrl" class="btn btn-primary btn-sm mt-1">Watch</a>
+				@foreach (var url in Model.OnlineWatchingUrls)
+				{
+					<a href="@url" class="btn btn-primary btn-sm mt-1">Watch</a>
+				}
 				<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1">Publication</a>
 				<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
 				<a permission="EditPublicationMetaData"
-					asp-page="Edit"
-					asp-route-id="@Model.Id"
-					class="btn btn-secondary btn-sm mt-1">Edit</a>
+				   asp-page="Edit"
+				   asp-route-id="@Model.Id"
+				   class="btn btn-secondary btn-sm mt-1">Edit</a>
 				<a permission="CatalogMovies"
-					asp-page="/Publications/Catalog"
-					asp-route-id="@Model.Id"
-					class="btn btn-secondary btn-sm mt-1">Catalog</a>
+				   asp-page="/Publications/Catalog"
+				   asp-route-id="@Model.Id"
+				   class="btn btn-secondary btn-sm mt-1">Catalog</a>
 				<a condition="@Model.TopicId > 0"
-					asp-page="/Forum/Topics/Index"
-					asp-route-id="@Model.TopicId"
-					class="btn btn-secondary btn-sm mt-1">
+				   asp-page="/Forum/Topics/Index"
+				   asp-route-id="@Model.TopicId"
+				   class="btn btn-secondary btn-sm mt-1">
 					Discuss
 				</a>
 				<a asp-page="/Games/PublicationHistory"
-					asp-route-id="@Model.GameId"
-					asp-route-highlight="@Model.Id"
-					class="btn btn-secondary btn-sm mt-1">
+				   asp-route-id="@Model.GameId"
+				   asp-route-highlight="@Model.Id"
+				   class="btn btn-secondary btn-sm mt-1">
 					History
 				</a>
 			</div>
