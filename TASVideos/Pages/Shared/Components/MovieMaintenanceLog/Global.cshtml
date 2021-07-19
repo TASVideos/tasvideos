@@ -1,0 +1,23 @@
+﻿@model IEnumerable<IGrouping<ParentPublicationMaintenanceEntry, PublicationMaintenanceLogEntry>>
+<br /><br />
+
+<a asp-page="" asp-route-begin="@ViewData["next"]" class="btn btn-primary pull-right mb-2">Next</a>
+@foreach (var pub in Model)
+{
+	<pub-link id="pub.Key.Id">@pub.Key.Title</pub-link>
+	<table class="table table-bordered table-striped">
+		<tr>
+			<th>Editor</th>
+			<th>Datetime</th>
+			<th>Log</th>
+		</tr>
+		@foreach (var log in pub)
+		{
+			<tr>
+				<td><profile-link username="@log.UserName"></profile-link></td>
+				<td><timezone-convert asp-for="@log.Timestamp" /></td>
+				<td>@log.Log</td>
+			</tr>
+		}
+	</table>
+}
