@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Data.Helpers;
@@ -80,12 +81,19 @@ namespace TASVideos.TagHelpers
 
 		public string Username { get; set; } = "";
 
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+		public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
+			var innerContent = await output.GetChildContentAsync();
+			if (innerContent.IsEmptyOrWhiteSpace)
+			{
+				output.Content.Clear();
+				output.Content.Append(Username);
+			}
+
 			output.TagName = "a";
 			Page = "/Users/Profile";
 			RouteValues.Add("UserName", Username);
-			base.Process(context, output);
+			await base.ProcessAsync(context, output);
 		}
 	}
 }

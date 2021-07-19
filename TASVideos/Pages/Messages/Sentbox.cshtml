@@ -21,7 +21,7 @@
 				<span Condition="@(!entry.HasBeenRead)" class="fa fa-send-o" title="User has not yet read"></span>
 				<a asp-page="Index" asp-route-id="@entry.Id">@entry.Subject</a>
 			</td>
-			<td><profile-link username="@entry.ToUser">@entry.ToUser</profile-link></td>
+			<td><profile-link username="@entry.ToUser"></profile-link></td>
 			<td>@entry.SendDate</td>
 			<td>
 				<delete-button

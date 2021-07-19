@@ -59,11 +59,11 @@
 			</div>
 			<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
 				<label asp-for="Submission.Judge"></label>:
-				<profile-link username="@Model.Submission.Judge">@Model.Submission.Judge</profile-link>
+				<profile-link username="@Model.Submission.Judge"></profile-link>
 			</span>
 			<span class="ml-3" condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
 				<label asp-for="Submission.Publisher"></label>:
-				<profile-link username="@Model.Submission.Publisher">@Model.Submission.Publisher</profile-link>
+				<profile-link username="@Model.Submission.Publisher"></profile-link>
 			</span>
 			<div condition="showTier">
 				<hr>
@@ -108,7 +108,7 @@
 				<td>
 					@foreach (var author in Model.Submission.Authors)
 					{
-						<profile-link username="@author">@author</profile-link><span condition="author != Model.Submission.Authors.Last()">,</span>
+						<profile-link username="@author"></profile-link><span condition="author != Model.Submission.Authors.Last()">,</span>
 					}
 					<small condition="!string.IsNullOrWhiteSpace(Model.Submission.AdditionalAuthors)">
 						<br />(Additional: @Model.Submission.AdditionalAuthors)

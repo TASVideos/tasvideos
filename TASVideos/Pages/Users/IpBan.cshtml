@@ -33,9 +33,7 @@
 		<tr>
 			<td>@Model.BannedIps[i].Mask</td>
 			<td>
-				<profile-link username="@Model.BannedIps[i].CreateUserName">
-					@Model.BannedIps[i].CreateUserName
-				</profile-link>
+				<profile-link username="@Model.BannedIps[i].CreateUserName"></profile-link>
 			</td>
 			<td>
 				<timezone-convert asp-for="BannedIps[i].DateCreated" />

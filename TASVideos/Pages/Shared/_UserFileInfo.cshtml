@@ -87,7 +87,7 @@
 			<collapsablecontent-body id="collapse-content-userfile-@Model.Id" start-shown="@true">
 				@foreach (var comment in Model.Comments.OrderBy(c => c.CreationTimeStamp))
 				{
-					<profile-link username="@comment.UserName">@comment.UserName</profile-link>
+					<profile-link username="@comment.UserName"></profile-link>
 					<wiki-markup markup="@comment.Text" id="view-comment-@comment.Id"></wiki-markup>
 					<div condition="User.GetUserId() == comment.UserId">
 						<div class="d-none" id="edit-comment-@comment.Id">
