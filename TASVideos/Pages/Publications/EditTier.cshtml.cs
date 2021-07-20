@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -17,11 +18,16 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
 
-		public EditTierModel(ApplicationDbContext db, ExternalMediaPublisher publisher)
+		public EditTierModel(
+			ApplicationDbContext db,
+			ExternalMediaPublisher publisher,
+			IPublicationMaintenanceLogger publicationMaintenanceLogger)
 		{
 			_db = db;
 			_publisher = publisher;
+			_publicationMaintenanceLogger = publicationMaintenanceLogger;
 		}
 
 		[FromRoute]
@@ -65,6 +71,7 @@ namespace TASVideos.Pages.Publications
 			}
 
 			var publication = await _db.Publications
+				.Include(p => p.Tier)
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
 			if (publication == null)
@@ -82,16 +89,17 @@ namespace TASVideos.Pages.Publications
 
 			if (publication.TierId != Publication.TierId)
 			{
-				var originalTier = publication.TierId;
+				var originalTier = publication.Tier!.Name;
 				publication.TierId = Publication.TierId;
 
+				var log = $"Tier changed from {originalTier} to {tier.Name}";
+				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 				_publisher.SendPublicationEdit(
-					$"Publication {Id} {Title} Tier changed from {originalTier} to {tier.Name}",
+					$"Publication {Id} {Title} {log}",
 					$"{Id}M",
 					User.Name());
 
-				// TODO: catch DbConcurrencyException
-				await _db.SaveChangesAsync();
+				await ConcurrentSave(_db, log, "Unable to update tier");
 			}
 
 			return RedirectToPage("Edit", new { Id });
