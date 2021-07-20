@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -17,11 +18,16 @@ namespace TASVideos.Pages.Publications
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
 
-		public AdditionalMoviesModel(ApplicationDbContext db, ExternalMediaPublisher publisher)
+		public AdditionalMoviesModel(
+			ApplicationDbContext db,
+			ExternalMediaPublisher publisher,
+			IPublicationMaintenanceLogger publicationMaintenanceLogger)
 		{
 			_db = db;
 			_publisher = publisher;
+			_publicationMaintenanceLogger = publicationMaintenanceLogger;
 		}
 
 		[FromRoute]
@@ -100,12 +106,17 @@ namespace TASVideos.Pages.Publications
 			};
 
 			_db.PublicationFiles.Add(publicationFile);
-			await _db.SaveChangesAsync();
 
-			_publisher.SendPublicationEdit(
-				$"Publication {Id} {PublicationTitle} added new movie file: {DisplayName}",
-				$"{Id}M",
-				User.Name());
+			string log = $"added new movie file: {DisplayName}";
+			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+			var result = await ConcurrentSave(_db, log, "Unable to add file");
+			if (result)
+			{
+				_publisher.SendPublicationEdit(
+					$"Publication {Id} {PublicationTitle} {log}",
+					$"{Id}M",
+					User.Name());
+			}
 
 			return RedirectToPage("AdditionalMovies", new { Id });
 		}
@@ -115,15 +126,22 @@ namespace TASVideos.Pages.Publications
 			var file = await _db.PublicationFiles
 				.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
 
-			_db.PublicationFiles.Remove(file);
+			if (file != null)
+			{
+				_db.PublicationFiles.Remove(file);
 
-			// TODO: catch update exceptions, this is so unlikely though it isn't worth it
-			await _db.SaveChangesAsync();
+				string log = $"removed movie file {file.Path}";
+				await _publicationMaintenanceLogger.Log(file.PublicationId, User.GetUserId(), log);
+				var result = await ConcurrentSave(_db, log, "Unable to delete file");
 
-			_publisher.SendPublicationEdit(
-				$"Publication {Id} {PublicationTitle} removed movie file {file.Path}",
-				$"{Id}M",
-				User.Name());
+				if (result)
+				{
+					_publisher.SendPublicationEdit(
+						$"Publication {Id} {PublicationTitle} {log}",
+						$"{Id}M",
+						User.Name());
+				}
+			}
 
 			return RedirectToPage("AdditionalMovies", new { Id });
 		}
