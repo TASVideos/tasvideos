@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
@@ -20,6 +21,7 @@ namespace TASVideos.Pages.Publications
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IYoutubeSync _youtubeSync;
+		private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
 
 		private static readonly List<PublicationUrlType> PublicationUrlTypes = Enum
 			.GetValues(typeof(PublicationUrlType))
@@ -29,11 +31,13 @@ namespace TASVideos.Pages.Publications
 		public EditUrlsModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			IYoutubeSync youtubeSync)
+			IYoutubeSync youtubeSync,
+			IPublicationMaintenanceLogger publicationMaintenanceLogger)
 		{
 			_db = db;
 			_publisher = publisher;
 			_youtubeSync = youtubeSync;
+			_publicationMaintenanceLogger = publicationMaintenanceLogger;
 		}
 
 		public IEnumerable<SelectListItem> AvailableTypes =
@@ -123,28 +127,32 @@ namespace TASVideos.Pages.Publications
 
 			_db.PublicationUrls.Add(publicationUrl);
 
-			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
+			string log = $"added {UrlType} url {PublicationUrl}";
+			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+			var result = await ConcurrentSave(_db, log, "Unable to add url.");
+			if (result)
 			{
-				// TODO: render markup, in a youtube friendly way
-				var tags = new[] { publication.SystemCode }
-					.Concat(publication.Authors);
-				if (!string.IsNullOrWhiteSpace(publication.SearchKey))
+				_publisher.SendPublicationEdit(
+					$"Publication {Id} {Title} added {UrlType} url {PublicationUrl}",
+					$"{Id}M",
+					User.Name());
+
+				if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
 				{
-					tags = tags.Concat(publication.SearchKey.SplitWithEmpty("-"));
+					// TODO: render markup, in a youtube friendly way
+					var tags = new[] { publication.SystemCode }
+						.Concat(publication.Authors);
+					if (!string.IsNullOrWhiteSpace(publication.SearchKey))
+					{
+						tags = tags.Concat(publication.SearchKey.SplitWithEmpty("-"));
+					}
+
+					tags = tags.Select(t => t.ToLower()).Distinct();
+
+					YoutubeVideo video = new (PublicationUrl, publication.Title, publication.Markup, tags);
+					await _youtubeSync.SyncYouTubeVideo(video);
 				}
-
-				tags = tags.Select(t => t.ToLower()).Distinct();
-
-				YoutubeVideo video = new (PublicationUrl, publication.Title, publication.Markup, tags);
-				await _youtubeSync.SyncYouTubeVideo(video);
 			}
-
-			await _db.SaveChangesAsync();
-
-			_publisher.SendPublicationEdit(
-				$"Publication {Id} {Title} added {UrlType} url {PublicationUrl}",
-				$"{Id}M",
-				User.Name());
 
 			return RedirectToPage("EditUrls", new { Id });
 		}
@@ -157,14 +165,18 @@ namespace TASVideos.Pages.Publications
 			if (url != null)
 			{
 				_db.PublicationUrls.Remove(url);
-				await _db.SaveChangesAsync();
+				string log = $"deleted {url.Type} url {url.Url}";
+				await _publicationMaintenanceLogger.Log(url.PublicationId, User.GetUserId(), log);
+				var result = await ConcurrentSave(_db, log, "Unable to remove url.");
+				if (result)
+				{
+					_publisher.SendPublicationEdit(
+						$"Publication {Id} {log}",
+						$"{Id}M",
+						User.Name());
 
-				_publisher.SendPublicationEdit(
-					$"Publication {Id} deleted {url.Type} url {url.Url}",
-					$"{Id}M",
-					User.Name());
-
-				await _youtubeSync.UnlistVideo(url.Url!);
+					await _youtubeSync.UnlistVideo(url.Url!);
+				}
 			}
 
 			return RedirectToPage("EditUrls", new { Id });
