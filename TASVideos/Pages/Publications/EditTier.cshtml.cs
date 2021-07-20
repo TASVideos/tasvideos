@@ -94,12 +94,15 @@ namespace TASVideos.Pages.Publications
 
 				var log = $"Tier changed from {originalTier} to {tier.Name}";
 				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-				_publisher.SendPublicationEdit(
-					$"Publication {Id} {Title} {log}",
-					$"{Id}M",
-					User.Name());
 
-				await ConcurrentSave(_db, log, "Unable to update tier");
+				var result= await ConcurrentSave(_db, log, "Unable to update tier");
+				if (result)
+				{
+					_publisher.SendPublicationEdit(
+						$"Publication {Id} {Title} {log}",
+						$"{Id}M",
+						User.Name());
+				}
 			}
 
 			return RedirectToPage("Edit", new { Id });
