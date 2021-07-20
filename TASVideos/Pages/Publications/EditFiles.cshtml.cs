@@ -25,14 +25,18 @@ namespace TASVideos.Pages.Publications
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IMediaFileUploader _uploader;
+		private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
+
 		public EditFilesModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			IMediaFileUploader uploader)
+			IMediaFileUploader uploader,
+			IPublicationMaintenanceLogger publicationMaintenanceLogger)
 		{
 			_db = db;
 			_publisher = publisher;
 			_uploader = uploader;
+			_publicationMaintenanceLogger = publicationMaintenanceLogger;
 		}
 
 		public IEnumerable<SelectListItem> AvailableTypes =
@@ -104,8 +108,11 @@ namespace TASVideos.Pages.Publications
 				path = await _uploader.UploadTorrent(Id, NewFile!);
 			}
 
+			string log = $"added {Type} file {path}";
+			SuccessStatusMessage(log);
+			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			_publisher.SendPublicationEdit(
-				$"Publication {Id} {Title} added {Type} file {path}",
+				$"Publication {Id} {Title} added {log}",
 				$"{Id}M",
 				User.Name());
 
@@ -118,8 +125,11 @@ namespace TASVideos.Pages.Publications
 
 			if (file is not null)
 			{
+				string log = $"deleted {file.Type} file {file.Path}";
+				SuccessStatusMessage(log);
+				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 				_publisher.SendPublicationEdit(
-					$"Publication {Id} deleted {file.Type} file {file.Path}",
+					$"Publication {Id} {log}",
 					$"{Id}M",
 					User.Name());
 			}
