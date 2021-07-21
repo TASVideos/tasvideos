@@ -32,7 +32,7 @@ namespace TASVideos.Core.Services
 		Task FlushCache();
 	}
 
-	public class Awards : IAwards
+	internal class Awards : IAwards
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;

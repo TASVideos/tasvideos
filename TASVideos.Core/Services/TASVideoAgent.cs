@@ -11,7 +11,7 @@ namespace TASVideos.Core.Services
 		Task PostSubmissionPublished(int submissionId, int publicationId);
 	}
 
-	public class TASVideoAgent : ITASVideoAgent
+	internal class TASVideoAgent : ITASVideoAgent
 	{
 		private readonly ApplicationDbContext _db;
 

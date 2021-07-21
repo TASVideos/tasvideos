@@ -12,7 +12,7 @@ namespace TASVideos.Core.Services
 		Task PostSubmissionRejection(int submissionId);
 	}
 
-	public class TASVideosGrue : ITASVideosGrue
+	internal class TASVideosGrue : ITASVideosGrue
 	{
 		private readonly ApplicationDbContext _db;
 

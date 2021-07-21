@@ -16,7 +16,7 @@ namespace TASVideos.Core.Services
 		Task<byte[]> CopyZip(byte[] zipBytes, string fileName);
 	}
 
-	public class FileService : IFileService
+	internal class FileService : IFileService
 	{
 		public async Task<CompressedFile> Compress(byte[] contents)
 		{

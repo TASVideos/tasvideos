@@ -11,7 +11,7 @@ namespace TASVideos.Core.Services.RssFeedParsers
 		IEnumerable<CommitEntry> Parse(string type, string xml);
 	}
 
-	public class VcsRssParser : IVcsRssParser
+	internal class VcsRssParser : IVcsRssParser
 	{
 		private const int MaxRecords = 10;
 		private readonly ICacheService _cache;

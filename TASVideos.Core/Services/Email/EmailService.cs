@@ -15,7 +15,7 @@ namespace TASVideos.Core.Services.Email
 		Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template);
 	}
 
-	public class EmailService : IEmailService
+	internal class EmailService : IEmailService
 	{
 		private readonly IWebHostEnvironment _env;
 		private readonly IEmailSender _emailSender;

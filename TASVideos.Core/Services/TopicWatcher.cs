@@ -40,7 +40,7 @@ namespace TASVideos.Core.Services
 		Task UnwatchTopic(int topicId, int userId);
 	}
 
-	public class TopicWatcher : ITopicWatcher
+	internal class TopicWatcher : ITopicWatcher
 	{
 		private readonly IEmailService _emailService;
 		private readonly ApplicationDbContext _db;

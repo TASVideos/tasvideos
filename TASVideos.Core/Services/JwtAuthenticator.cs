@@ -15,7 +15,7 @@ namespace TASVideos.Core.Services
 		Task<string> Authenticate(string username, string password);
 	}
 
-	public class JwtAuthenticator : IJwtAuthenticator
+	internal class JwtAuthenticator : IJwtAuthenticator
 	{
 		private readonly AppSettings.JwtSettings _settings;
 		private readonly ApplicationDbContext _db;

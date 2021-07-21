@@ -12,7 +12,7 @@ namespace TASVideos.Core.Services
 		Task<bool> IsLanguagePage(string pageName);
 	}
 
-	public class Languages : ILanguages
+	internal class Languages : ILanguages
 	{
 		private readonly IWikiPages _wikiPages;
 

@@ -20,7 +20,7 @@ namespace TASVideos.Core.Services
 		Task<TierDeleteResult> Delete(int id);
 	}
 
-	public class TierService : ITierService
+	internal class TierService : ITierService
 	{
 		internal const string TiersKey = "AllTiers";
 		private readonly ApplicationDbContext _db;
