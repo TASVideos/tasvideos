@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -8,6 +9,7 @@ namespace TASVideos.Core.Services
 	public interface IPublicationMaintenanceLogger
 	{
 		Task Log(int publicationId, int userId, string log);
+		Task Log(int publicationId, int userId, IEnumerable<string> logs);
 	}
 
 	internal class PublicationMaintenanceLogger : IPublicationMaintenanceLogger
@@ -21,6 +23,22 @@ namespace TASVideos.Core.Services
 
 		public async Task Log(int publicationId, int userId, string log)
 		{
+			Add(publicationId, userId, log);
+			await _db.SaveChangesAsync();
+		}
+
+		public async Task Log(int publicationId, int userId, IEnumerable<string> logs)
+		{
+			foreach (var log in logs)
+			{
+				Add(publicationId, userId, log);
+			}
+
+			await _db.SaveChangesAsync();
+		}
+
+		private void Add(int publicationId, int userId, string log)
+		{
 			_db.PublicationMaintenanceLogs.Add(new PublicationMaintenanceLog
 			{
 				TimeStamp = DateTime.UtcNow,
@@ -28,7 +46,6 @@ namespace TASVideos.Core.Services
 				UserId = userId,
 				Log = log
 			});
-			await _db.SaveChangesAsync();
 		}
 	}
 }

@@ -23,6 +23,7 @@ namespace TASVideos.Pages.Publications
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ITagService _tagsService;
 		private readonly IFlagService _flagsService;
+		private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
 
 		public EditModel(
 			ApplicationDbContext db,
@@ -30,7 +31,8 @@ namespace TASVideos.Pages.Publications
 			ExternalMediaPublisher publisher,
 			IWikiPages wikiPages,
 			ITagService tagsService,
-			IFlagService flagsService)
+			IFlagService flagsService,
+			IPublicationMaintenanceLogger publicationMaintenanceLogger)
 		{
 			_db = db;
 			_mapper = mapper;
@@ -38,6 +40,7 @@ namespace TASVideos.Pages.Publications
 			_publisher = publisher;
 			_tagsService = tagsService;
 			_flagsService = flagsService;
+			_publicationMaintenanceLogger = publicationMaintenanceLogger;
 		}
 
 		[FromRoute]
@@ -241,6 +244,7 @@ namespace TASVideos.Pages.Publications
 				externalMessages.Add("Description updated");
 			}
 
+			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), externalMessages);
 			foreach (var message in externalMessages)
 			{
 				_publisher.SendPublicationEdit($"{publication.Title} edited: " + message, $"{Id}M", User.Name());
