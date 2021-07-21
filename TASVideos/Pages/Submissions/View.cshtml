@@ -13,6 +13,10 @@
 		&& Model.Submission.IsCataloged
 		&& Model.Submission.Publisher == User.Name();
 	string statusColor = StatusColor(Model.Submission.Status);
+
+	bool canClaimAsJudge = ViewData.UserHas(PermissionTo.JudgeSubmissions)
+		&& Model.Submission.Status == SubmissionStatus.New
+		&& Model.Submission.Authors.All(a => a != User.Name());
 }
 
 @functions{
@@ -120,7 +124,7 @@
 			Submitted edited by @Model.Submission.Submitter on @Model.Submission.Submitted
 		</small>
 		<div class="btn-toolbar">
-			<a condition="@ViewData.UserHas(PermissionTo.JudgeSubmissions) && Model.Submission.Status == SubmissionStatus.New" asp-page="View" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success mt-2 mr-1">Claim</a>
+			<a condition="@canClaimAsJudge" asp-page="View" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success mt-2 mr-1">Claim</a>
 			<a condition="@ViewData.UserHas(PermissionTo.PublishMovies) && Model.Submission.Status == SubmissionStatus.Accepted" asp-page="View" asp-route-id="@Model.Id" asp-page-handler="ClaimForPublishing" class="btn btn-success mt-2 mr-1">Claim</a>
 			<a asp-page="View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary mt-2">Download</a>
 			<a condition="@Model.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId" class="btn btn-secondary ml-1 mt-2">Discuss and Vote</a>
