@@ -21,7 +21,7 @@ namespace TASVideos.Core.Services.Email
 	/// Standard implementation of <see cref="IEmailSender"/>
 	/// that uses SendGrid
 	/// </summary>
-	public class SendGridSender : IEmailSender
+	internal class SendGridSender : IEmailSender
 	{
 		private readonly AppSettings _settings;
 		private readonly IWebHostEnvironment _env;
@@ -76,7 +76,7 @@ namespace TASVideos.Core.Services.Email
 		}
 	}
 
-	public class EmailLogger : IEmailSender
+	internal class EmailLogger : IEmailSender
 	{
 		private readonly ILogger<EmailLogger> _logger;
 

@@ -21,7 +21,7 @@ namespace TASVideos.Core.Services
 		Task<FlagDeleteResult> Delete(int id);
 	}
 
-	public class FlagService : IFlagService
+	internal class FlagService : IFlagService
 	{
 		internal const string FlagsKey = "AllFlags";
 		private readonly ApplicationDbContext _db;

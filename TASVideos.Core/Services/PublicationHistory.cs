@@ -14,7 +14,7 @@ namespace TASVideos.Core.Services.PublicationChain
 		Task<PublicationHistoryGroup?> ForGame(int gameId);
 	}
 
-	public class PublicationHistory : IPublicationHistory
+	internal class PublicationHistory : IPublicationHistory
 	{
 		private readonly ApplicationDbContext _db;
 

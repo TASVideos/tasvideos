@@ -30,7 +30,7 @@ namespace TASVideos.Core.Services
 		Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds);
 	}
 
-	public class PointsService : IPointsService
+	internal class PointsService : IPointsService
 	{
 		private const string MovieRatingKey = "OverallRatingForMovie-";
 		private const string PlayerPointKey = "PlayerPoints-";

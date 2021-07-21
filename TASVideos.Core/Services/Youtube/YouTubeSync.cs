@@ -16,7 +16,7 @@ namespace TASVideos.Core.Services.Youtube
 		Task UnlistVideo(string url);
 	}
 
-	public class YouTubeSync : IYoutubeSync
+	internal class YouTubeSync : IYoutubeSync
 	{
 		private static readonly string[] BaseTags = { "TAS", "TASVideos", "Tool-Assisted", "Video Game" };
 

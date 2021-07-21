@@ -11,7 +11,7 @@ namespace TASVideos.Core.Services
 		ValueTask<IPublicationTokens> GetTokens();
 	}
 
-	public class MovieSearchTokens : IMovieSearchTokens
+	internal class MovieSearchTokens : IMovieSearchTokens
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;

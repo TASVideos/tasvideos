@@ -16,7 +16,7 @@ namespace TASVideos.Core.Services
 		Task<DeletedFile?> DeleteFile(int publicationFileId);
 	}
 
-	public class MediaFileUploader : IMediaFileUploader
+	internal class MediaFileUploader : IMediaFileUploader
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IWebHostEnvironment _env;

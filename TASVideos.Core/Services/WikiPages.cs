@@ -102,7 +102,7 @@ namespace TASVideos.Core.Services
 	}
 
 	// TODO: handle DbConcurrency exceptions
-	public class WikiPages : IWikiPages
+	internal class WikiPages : IWikiPages
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cache;

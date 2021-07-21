@@ -21,7 +21,7 @@ namespace TASVideos.Core.Services
 		Task<TagDeleteResult> Delete(int id);
 	}
 
-	public class TagService : ITagService
+	internal class TagService : ITagService
 	{
 		internal const string TagsKey = "AllTags";
 		private readonly ApplicationDbContext _db;

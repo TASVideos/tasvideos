@@ -36,7 +36,7 @@ namespace TASVideos.Core.Services
 		Task Remove(string ipMask);
 	}
 
-	public class IpBanService : IIpBanService
+	internal class IpBanService : IIpBanService
 	{
 		internal const string IpBanList = "IpBanList";
 		private readonly ApplicationDbContext _db;
