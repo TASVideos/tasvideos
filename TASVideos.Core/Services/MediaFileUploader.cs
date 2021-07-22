@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
@@ -35,17 +36,36 @@ namespace TASVideos.Core.Services
 
 			string screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
 			string screenshotPath = Path.Combine(_env.WebRootPath, "media", screenshotFileName);
+
+			var screenShotExists = File.Exists(screenshotPath);
 			await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
 
-			var pubFile = new PublicationFile
+			if (screenShotExists)
 			{
-				PublicationId = publicationId,
-				Path = screenshotFileName,
-				Type = FileType.Screenshot,
-				Description = description
-			};
+				// Should never be more than 1, but just in case
+				var files = await _db.PublicationFiles
+					.Where(pf => pf.PublicationId == publicationId && pf.Path == screenshotFileName)
+					.ToListAsync();
 
-			_db.PublicationFiles.Add(pubFile);
+				foreach (var file in files)
+				{
+					if (file.Description != description)
+					{
+						file.Description = description;
+					}
+				}
+			}
+			else
+			{
+				_db.PublicationFiles.Add(new PublicationFile
+				{
+					PublicationId = publicationId,
+					Path = screenshotFileName,
+					Type = FileType.Screenshot,
+					Description = description
+				});
+			}
+
 			await _db.SaveChangesAsync();
 			return screenshotFileName;
 		}
