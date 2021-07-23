@@ -1,0 +1,69 @@
+﻿@page
+@{ ViewData["Title"] = "External Dependencies"; }
+@model ExternalDependenciesModel
+
+@functions
+{
+	string ToIcon(bool? val)
+	{
+		return $"<i class=\"fa {ToIconClass(val)}\"></i>";
+	}
+
+	string ToIconClass(bool? val)
+	{
+		if (val == true)
+		{
+			return "text-success fa-check";
+		}
+
+		if (val == false)
+		{
+			return "text-danger fa-exclamation";
+		}
+
+		return "text-info fa-question";
+	}
+}
+
+<row>
+	<column lg="6">
+		<table class="table table-bordered table-striped">
+			<tr>
+				<th>Service</th>
+				<th>Status</th>
+			</tr>
+			<tr>
+				<td>Youtube Enabled</td>
+				<td>
+					@Html.Raw(ToIcon(Model.Statuses.YoutubeEnabled))
+				</td>
+			</tr>
+			<tr>
+				<td>Youtube Access Successful</td>
+				<td>
+					@Html.Raw(ToIcon(Model.Statuses.YoutubeAccessSuccessful))
+				</td>
+			</tr>
+			<tr>
+				<td>Irc</td>
+				<td>@Html.Raw(ToIcon(Model.Statuses.IrcEnabled))</td>
+			</tr>
+			<tr>
+				<td>Irc Secure Channel</td>
+				<td>@Html.Raw(ToIcon(Model.Statuses.SecureIrcEnabled))</td>
+			</tr>
+			<tr>
+				<td>Discord</td>
+				<td>@Html.Raw(ToIcon(Model.Statuses.DiscordEnabled))</td>
+			</tr>
+			<tr>
+				<td>Discord Private Channel</td>
+				<td>@Html.Raw(ToIcon(Model.Statuses.DiscordPrivateChannelEnabled))</td>
+			</tr>
+			<tr>
+				<td>Twitter Enabled</td>
+				<td>@Html.Raw(ToIcon(Model.Statuses.TwitterEnabled))</td>
+			</tr>
+		</table>
+	</column>
+</row>

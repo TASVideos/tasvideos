@@ -34,6 +34,14 @@ namespace TASVideos.Core.Settings
 			public int Port { get; set; }
 			public string Nick { get; set; } = "";
 			public string Password { get; set; } = "";
+
+			public bool IsEnabled() => !string.IsNullOrWhiteSpace(Server)
+				&& !string.IsNullOrWhiteSpace(Channel)
+				&& Port > 0
+				&& !string.IsNullOrWhiteSpace(Nick)
+				&& !string.IsNullOrWhiteSpace(Password);
+
+			public bool IsSecureChannelEnabled() => IsEnabled() && !string.IsNullOrWhiteSpace(SecureChannel);
 		}
 
 		public class DiscordConnection
@@ -44,6 +52,12 @@ namespace TASVideos.Core.Settings
 			public string PublicChannelId { get; set; } = "";
 			public string PrivateChannelId { get; set; } = "";
 			public string Scopes { get; set; } = "bot";
+
+			public bool IsEnabled() => !string.IsNullOrWhiteSpace(AccessToken)
+				&& !string.IsNullOrWhiteSpace(PublicChannelId);
+
+			public bool IsPrivateChannelEnabled() => IsEnabled()
+				&& !string.IsNullOrWhiteSpace(PrivateChannelId);
 		}
 
 		public class TwitterConnection
@@ -53,6 +67,12 @@ namespace TASVideos.Core.Settings
 			public string ConsumerSecret { get; set; } = "";
 			public string AccessToken { get; set; } = "";
 			public string TokenSecret { get; set; } = "";
+
+			public bool IsEnabled() => !string.IsNullOrWhiteSpace(ApiBase)
+				&& !string.IsNullOrWhiteSpace(ConsumerKey)
+				&& !string.IsNullOrWhiteSpace(ConsumerSecret)
+				&& !string.IsNullOrWhiteSpace(AccessToken)
+				&& !string.IsNullOrWhiteSpace(TokenSecret);
 		}
 
 		public class CacheSetting

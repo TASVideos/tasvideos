@@ -30,11 +30,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			_settings = appSettings.Twitter;
 			_httpClientFactory = httpClientFactory;
 
-			if (string.IsNullOrWhiteSpace(appSettings.Twitter.ApiBase) ||
-				string.IsNullOrWhiteSpace(appSettings.Twitter.ConsumerKey) ||
-				string.IsNullOrWhiteSpace(appSettings.Twitter.ConsumerSecret) ||
-				string.IsNullOrWhiteSpace(appSettings.Twitter.AccessToken) ||
-				string.IsNullOrWhiteSpace(appSettings.Twitter.TokenSecret))
+			if (!appSettings.Twitter.IsEnabled())
 			{
 				logger.Log(LogLevel.Warning, "Twitter access tokens were not provided.  The Twitter post distributor will not function.");
 				return;
