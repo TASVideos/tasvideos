@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Models;
@@ -24,6 +25,7 @@ namespace TASVideos.Pages.Publications
 		private readonly ITagService _tagsService;
 		private readonly IFlagService _flagsService;
 		private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
+		private readonly IYoutubeSync _youtubeSync;
 
 		public EditModel(
 			ApplicationDbContext db,
@@ -32,7 +34,8 @@ namespace TASVideos.Pages.Publications
 			IWikiPages wikiPages,
 			ITagService tagsService,
 			IFlagService flagsService,
-			IPublicationMaintenanceLogger publicationMaintenanceLogger)
+			IPublicationMaintenanceLogger publicationMaintenanceLogger,
+			IYoutubeSync youtubeSync)
 		{
 			_db = db;
 			_mapper = mapper;
@@ -41,6 +44,7 @@ namespace TASVideos.Pages.Publications
 			_tagsService = tagsService;
 			_flagsService = flagsService;
 			_publicationMaintenanceLogger = publicationMaintenanceLogger;
+			_youtubeSync = youtubeSync;
 		}
 
 		[FromRoute]
@@ -153,6 +157,7 @@ namespace TASVideos.Pages.Publications
 			var externalMessages = new List<string>();
 
 			var publication = await _db.Publications
+				.Include(p => p.PublicationUrls)
 				.Include(p => p.PublicationTags)
 				.Include(p => p.PublicationFlags)
 				.Include(p => p.WikiContent)
@@ -242,6 +247,20 @@ namespace TASVideos.Pages.Publications
 				await _wikiPages.Add(revision);
 				publication.WikiContentId = revision.Id;
 				externalMessages.Add("Description updated");
+			}
+
+			foreach (var url in publication.PublicationUrls)
+			{
+				if (url.Type == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(url.Url))
+				{
+					await _youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
+						url.Url!,
+						publication.Title,
+						publication.WikiContent.Markup,
+						publication.System!.Code,
+						publication.Authors.Select(a => a.Author.UserName),
+						publication.Game!.SearchKey));
+				}
 			}
 
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), externalMessages);

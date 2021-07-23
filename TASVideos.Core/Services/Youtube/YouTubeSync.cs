@@ -11,7 +11,7 @@ namespace TASVideos.Core.Services.Youtube
 {
 	public interface IYoutubeSync
 	{
-		bool IsYoutubeUrl(string url);
+		bool IsYoutubeUrl(string? url);
 		Task SyncYouTubeVideo(YoutubeVideo video);
 		Task UnlistVideo(string url);
 	}
@@ -98,7 +98,7 @@ namespace TASVideos.Core.Services.Youtube
 			response.EnsureSuccessStatusCode();
 		}
 
-		public bool IsYoutubeUrl(string url)
+		public bool IsYoutubeUrl(string? url)
 		{
 			return !string.IsNullOrWhiteSpace(url) && (url.Contains("youtube.com") || url.Contains("youtu.be"));
 		}
