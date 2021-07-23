@@ -152,5 +152,29 @@ namespace TASVideos.Core.Services.Youtube
 		}
 	}
 
-	public record YoutubeVideo(string Url, string Title, string Description, IEnumerable<string> Tags);
+	public record YoutubeVideo(
+		string Url,
+		string Title,
+		string Description,
+		string SystemCode,
+		IEnumerable<string> Authors,
+		string? SearchKey)
+	{
+		public IEnumerable<string> Tags
+		{
+			get
+			{
+				var tags = new[] { SystemCode }
+					.Concat(Authors);
+
+				if (!string.IsNullOrWhiteSpace(SearchKey))
+				{
+					tags = tags.Concat(SearchKey.SplitWithEmpty("-"));
+				}
+
+				tags = tags.Select(t => t.ToLower()).Distinct();
+				return tags;
+			}
+		} 
+	}
 }

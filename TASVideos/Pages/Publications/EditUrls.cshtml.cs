@@ -137,19 +137,16 @@ namespace TASVideos.Pages.Publications
 					$"{Id}M",
 					User.Name());
 
+				// TODO: render markup, in a youtube friendly way
 				if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
 				{
-					// TODO: render markup, in a youtube friendly way
-					var tags = new[] { publication.SystemCode }
-						.Concat(publication.Authors);
-					if (!string.IsNullOrWhiteSpace(publication.SearchKey))
-					{
-						tags = tags.Concat(publication.SearchKey.SplitWithEmpty("-"));
-					}
-
-					tags = tags.Select(t => t.ToLower()).Distinct();
-
-					YoutubeVideo video = new (PublicationUrl, publication.Title, publication.Markup, tags);
+					YoutubeVideo video = new (
+						PublicationUrl,
+						publication.Title,
+						publication.Markup,
+						publication.SystemCode,
+						publication.Authors,
+						publication.SearchKey);
 					await _youtubeSync.SyncYouTubeVideo(video);
 				}
 			}
