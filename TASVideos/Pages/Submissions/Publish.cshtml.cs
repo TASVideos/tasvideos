@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -25,6 +26,7 @@ namespace TASVideos.Pages.Submissions
 		private readonly ITASVideoAgent _tasVideosAgent;
 		private readonly UserManager _userManager;
 		private readonly IFileService _fileService;
+		private readonly IYoutubeSync _youtubeSync;
 
 		public PublishModel(
 			ApplicationDbContext db,
@@ -34,7 +36,8 @@ namespace TASVideos.Pages.Submissions
 			IMediaFileUploader uploader,
 			ITASVideoAgent tasVideoAgent,
 			UserManager userManager,
-			IFileService fileService)
+			IFileService fileService,
+			IYoutubeSync youtubeSync)
 		{
 			_db = db;
 			_mapper = mapper;
@@ -44,6 +47,7 @@ namespace TASVideos.Pages.Submissions
 			_tasVideosAgent = tasVideoAgent;
 			_userManager = userManager;
 			_fileService = fileService;
+			_youtubeSync = youtubeSync;
 		}
 
 		[FromRoute]
@@ -197,6 +201,18 @@ namespace TASVideos.Pages.Submissions
 
 			await _tasVideosAgent.PostSubmissionPublished(submission.Id, publication.Id);
 			_publisher.AnnouncePublication(publication.Title, $"{publication.Id}M", User.Name());
+
+			if (_youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
+			{
+				var video = new YoutubeVideo(
+					Submission.OnlineWatchingUrl,
+					publication.Title,
+					wikiPage.Markup,
+					submission.System.Code,
+					publication.Authors.Select(pa => pa.Author!.UserName),
+					submission.Game.SearchKey);
+				await _youtubeSync.SyncYouTubeVideo(video);
+			}
 
 			return Redirect($"/{publication.Id}M");
 		}
