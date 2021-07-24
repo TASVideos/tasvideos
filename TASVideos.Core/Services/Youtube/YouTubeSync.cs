@@ -55,7 +55,7 @@ namespace TASVideos.Core.Services.Youtube
 				VideoId = videoId,
 				Snippet = new ()
 				{
-					Title = video.Title,
+					Title = "[TAS] " + video.Title,
 					Description = video.Description,
 					CategoryId = videoDetails.CategoryId,
 					Tags = BaseTags.Concat(video.Tags).ToList()
