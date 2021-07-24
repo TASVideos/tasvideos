@@ -22,7 +22,6 @@ namespace TASVideos.Pages.Diagnostics
 
 		public async Task OnGet()
 		{
-
 			Statuses.YoutubeEnabled = _googleAuthService.IsEnabled();
 			if (Statuses.YoutubeEnabled)
 			{
