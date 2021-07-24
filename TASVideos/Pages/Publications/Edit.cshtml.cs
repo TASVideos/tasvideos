@@ -258,7 +258,7 @@ namespace TASVideos.Pages.Publications
 						publication.Title,
 						publication.WikiContent.Markup,
 						publication.System!.Code,
-						publication.Authors.Select(a => a.Author.UserName),
+						publication.Authors.Select(a => a.Author!.UserName),
 						publication.Game!.SearchKey));
 				}
 			}
