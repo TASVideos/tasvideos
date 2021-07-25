@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,14 +41,18 @@ namespace TASVideos.Core.Services
 			var screenShotExists = File.Exists(screenshotPath);
 			await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
 
+			List<PublicationFile> publicationFiles = new ();
 			if (screenShotExists)
 			{
 				// Should never be more than 1, but just in case
-				var files = await _db.PublicationFiles
+				publicationFiles = await _db.PublicationFiles
 					.Where(pf => pf.PublicationId == publicationId && pf.Path == screenshotFileName)
 					.ToListAsync();
+			}
 
-				foreach (var file in files)
+			if (screenShotExists && publicationFiles.Any())
+			{
+				foreach (var file in publicationFiles)
 				{
 					if (file.Description != description)
 					{
