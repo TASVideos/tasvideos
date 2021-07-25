@@ -96,7 +96,8 @@ namespace TASVideos.Pages.Publications
 					SystemCode = p.System!.Code,
 					p.WikiContent!.Markup,
 					Authors = p.Authors.Select(pa => pa.Author!.UserName),
-					p.Game!.SearchKey
+					p.Game!.SearchKey,
+					p.ObsoletedById
 				})
 				.SingleOrDefaultAsync();
 
@@ -140,12 +141,14 @@ namespace TASVideos.Pages.Publications
 				if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
 				{
 					YoutubeVideo video = new (
+						Id,
 						PublicationUrl,
 						publication.Title,
 						publication.Markup,
 						publication.SystemCode,
 						publication.Authors,
-						publication.SearchKey);
+						publication.SearchKey,
+						publication.ObsoletedById);
 					await _youtubeSync.SyncYouTubeVideo(video);
 				}
 			}

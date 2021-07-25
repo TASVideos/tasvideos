@@ -254,12 +254,14 @@ namespace TASVideos.Pages.Publications
 				if (url.Type == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(url.Url))
 				{
 					await _youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
+						Id,
 						url.Url!,
 						publication.Title,
 						publication.WikiContent.Markup,
 						publication.System!.Code,
 						publication.Authors.Select(a => a.Author!.UserName),
-						publication.Game!.SearchKey));
+						publication.Game!.SearchKey,
+						publication.ObsoletedById));
 				}
 			}
 

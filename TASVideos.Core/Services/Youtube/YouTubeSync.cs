@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Youtube.Dtos;
+using TASVideos.Core.Settings;
 using TASVideos.Extensions;
 
 namespace TASVideos.Core.Services.Youtube
@@ -19,15 +20,19 @@ namespace TASVideos.Core.Services.Youtube
 	internal class YouTubeSync : IYoutubeSync
 	{
 		private static readonly string[] BaseTags = { "TAS", "TASVideos", "Tool-Assisted", "Video Game" };
-
 		private readonly HttpClient _client;
 		private readonly IGoogleAuthService _googleAuthService;
+		private readonly AppSettings _settings;
 
-		public YouTubeSync(IHttpClientFactory httpClientFactory, IGoogleAuthService googleAuthService)
+		public YouTubeSync(
+			IHttpClientFactory httpClientFactory,
+			IGoogleAuthService googleAuthService,
+			AppSettings settings)
 		{
 			_client = httpClientFactory.CreateClient(HttpClients.Youtube)
 				?? throw new InvalidOperationException($"Unable to initalize {HttpClients.Youtube} client");
 			_googleAuthService = googleAuthService;
+			_settings = settings;
 		}
 
 		public async Task SyncYouTubeVideo(YoutubeVideo video)
@@ -50,13 +55,20 @@ namespace TASVideos.Core.Services.Youtube
 			}
 
 			await SetAccessToken();
+
+			var descriptionBase = $"This is a tool-assisted speedrun. For more information, see {_settings.BaseUrl}/{video.Id}M\n\n";
+			if (video.ObsoletedBy.HasValue)
+			{
+				descriptionBase += $"This movie has been obsoleted by {_settings.BaseUrl}/{video.ObsoletedBy.Value}M\n\n";
+			}
+
 			var requestBody = new VideoUpdateRequest
 			{
 				VideoId = videoId,
 				Snippet = new ()
 				{
-					Title = "[TAS] " + video.Title,
-					Description = video.Description,
+					Title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted]" : "")} {video.Title}",
+					Description = descriptionBase + video.Description,
 					CategoryId = videoDetails.CategoryId,
 					Tags = BaseTags.Concat(video.Tags).ToList()
 				}
@@ -153,12 +165,14 @@ namespace TASVideos.Core.Services.Youtube
 	}
 
 	public record YoutubeVideo(
+		int Id,
 		string Url,
 		string Title,
 		string Description,
 		string SystemCode,
 		IEnumerable<string> Authors,
-		string? SearchKey)
+		string? SearchKey,
+		int? ObsoletedBy)
 	{
 		public IEnumerable<string> Tags
 		{
