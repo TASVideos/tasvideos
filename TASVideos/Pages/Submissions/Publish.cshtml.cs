@@ -205,12 +205,14 @@ namespace TASVideos.Pages.Submissions
 			if (_youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
 			{
 				var video = new YoutubeVideo(
+					publication.Id,
 					Submission.OnlineWatchingUrl,
 					publication.Title,
 					wikiPage.Markup,
 					submission.System.Code,
 					publication.Authors.Select(pa => pa.Author!.UserName),
-					submission.Game.SearchKey);
+					submission.Game.SearchKey,
+					null);
 				await _youtubeSync.SyncYouTubeVideo(video);
 			}
 
