@@ -92,6 +92,7 @@ namespace TASVideos.Pages.Publications
 				.Select(p => new
 				{
 					Title,
+					p.CreateTimestamp,
 					p.PublicationUrls,
 					SystemCode = p.System!.Code,
 					p.WikiContent!.Markup,
@@ -142,6 +143,7 @@ namespace TASVideos.Pages.Publications
 				{
 					YoutubeVideo video = new (
 						Id,
+						publication.CreateTimestamp,
 						PublicationUrl,
 						publication.Title,
 						publication.Markup,
