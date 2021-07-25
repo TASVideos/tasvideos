@@ -188,9 +188,17 @@ namespace TASVideos.Pages.Submissions
 			submission.History.Add(history);
 			_db.SubmissionStatusHistory.Add(history);
 
+			Publication? toObsolete = null;
 			if (Submission.MovieToObsolete.HasValue)
 			{
-				var toObsolete = await _db.Publications.SingleAsync(p => p.Id == Submission.MovieToObsolete);
+				toObsolete = await _db.Publications
+					.Include(p => p.PublicationUrls)
+					.Include(p => p.WikiContent)
+					.Include(p => p.System)
+					.Include(p => p.Game)
+					.Include(p => p.Authors)
+					.ThenInclude(pa => pa.Author)
+					.SingleAsync(p => p.Id == Submission.MovieToObsolete);
 				toObsolete.ObsoletedById = publication.Id;
 			}
 
@@ -215,6 +223,27 @@ namespace TASVideos.Pages.Submissions
 					submission.Game.SearchKey,
 					null);
 				await _youtubeSync.SyncYouTubeVideo(video);
+			}
+
+			if (toObsolete != null)
+			{
+				foreach (var url in toObsolete.PublicationUrls
+					.Where(pu => pu.Type == PublicationUrlType.Streaming
+						&& _youtubeSync.IsYoutubeUrl(pu.Url)))
+				{
+					var obsoleteVideo = new YoutubeVideo(
+						toObsolete.Id,
+						toObsolete.CreateTimestamp,
+						url.Url ?? "",
+						toObsolete.Title,
+						toObsolete.WikiContent!.Markup,
+						toObsolete.System!.Code,
+						toObsolete.Authors.Select(pa => pa.Author!.UserName),
+						toObsolete.Game!.SearchKey,
+						publication.Id);
+
+					await _youtubeSync.SyncYouTubeVideo(obsoleteVideo);
+				}
 			}
 
 			return Redirect($"/{publication.Id}M");
