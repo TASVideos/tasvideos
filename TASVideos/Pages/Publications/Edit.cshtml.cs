@@ -255,6 +255,7 @@ namespace TASVideos.Pages.Publications
 				{
 					await _youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
 						Id,
+						publication.CreateTimestamp,
 						url.Url!,
 						publication.Title,
 						publication.WikiContent.Markup,

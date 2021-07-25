@@ -206,6 +206,7 @@ namespace TASVideos.Pages.Submissions
 			{
 				var video = new YoutubeVideo(
 					publication.Id,
+					publication.CreateTimestamp,
 					Submission.OnlineWatchingUrl,
 					publication.Title,
 					wikiPage.Markup,

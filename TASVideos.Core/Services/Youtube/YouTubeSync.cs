@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -56,11 +57,13 @@ namespace TASVideos.Core.Services.Youtube
 
 			await SetAccessToken();
 
-			var descriptionBase = $"This is a tool-assisted speedrun. For more information, see {_settings.BaseUrl}/{video.Id}M\n\n";
+			var descriptionBase = $"This is a tool-assisted speedrun. For more information, see {_settings.BaseUrl}/{video.Id}M";
 			if (video.ObsoletedBy.HasValue)
 			{
-				descriptionBase += $"This movie has been obsoleted by {_settings.BaseUrl}/{video.ObsoletedBy.Value}M\n\n";
+				descriptionBase += $"\n\nThis movie has been obsoleted by {_settings.BaseUrl}/{video.ObsoletedBy.Value}M";
 			}
+
+			descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
 
 			var requestBody = new VideoUpdateRequest
 			{
@@ -166,6 +169,7 @@ namespace TASVideos.Core.Services.Youtube
 
 	public record YoutubeVideo(
 		int Id,
+		DateTime PublicationDate,
 		string Url,
 		string Title,
 		string Description,
