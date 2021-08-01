@@ -139,7 +139,7 @@ namespace TASVideos.Pages.Submissions
 				Submission.MovieFile = null;
 			}
 
-			// TODO: this has to be done anytime a string-list taghelper is used, can we make this automatic with model binders?
+			// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
 			Submission.Authors = Submission.Authors
 				.Where(a => !string.IsNullOrWhiteSpace(a))
 				.ToList();
@@ -292,6 +292,17 @@ namespace TASVideos.Pages.Submissions
 			await _wikiPages.Add(revision);
 
 			submission.WikiContent = revision;
+
+			submission.SubmissionAuthors.Clear();
+			submission.SubmissionAuthors.AddRange(await Db.Users
+				.Where(u => Submission.Authors.Contains(u.UserName))
+				.Select(u => new SubmissionAuthor
+				{
+					SubmissionId = submission.Id,
+					UserId = u.Id,
+					Author = u
+				})
+				.ToListAsync());
 
 			submission.GenerateTitle();
 			await Db.SaveChangesAsync();

@@ -12,6 +12,7 @@ using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications
@@ -106,6 +107,11 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
+			Publication.Authors = await _db.PublicationAuthors
+				.Where(pa => pa.PublicationId == Id)
+				.Select(pa => pa.Author!.UserName)
+				.ToListAsync();
+
 			await PopulateDropdowns(Publication.SystemCode);
 			return Page();
 		}
@@ -177,6 +183,11 @@ namespace TASVideos.Pages.Publications
 				return;
 			}
 
+			// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
+			Publication.Authors = Publication.Authors
+				.Where(a => !string.IsNullOrWhiteSpace(a))
+				.ToList();
+
 			if (publication.Branch != model.Branch)
 			{
 				externalMessages.Add($"Changed branch from \"{publication.Branch}\" to \"{model.Branch}\"");
@@ -199,6 +210,17 @@ namespace TASVideos.Pages.Publications
 			publication.AdditionalAuthors = string.IsNullOrWhiteSpace(model.AdditionalAuthors)
 				? null
 				: model.AdditionalAuthors;
+
+			publication.Authors.Clear();
+			publication.Authors.AddRange(await _db.Users
+				.Where(u => Publication.Authors.Contains(u.UserName))
+				.Select(u => new PublicationAuthor
+				{
+					PublicationId = publication.Id,
+					UserId = u.Id,
+					Author = u
+				})
+				.ToListAsync());
 
 			publication.GenerateTitle();
 

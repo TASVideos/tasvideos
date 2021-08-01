@@ -16,6 +16,9 @@ namespace TASVideos.Pages.Publications.Models
 		[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 		public string? AdditionalAuthors { get; set; }
 
+		[Display(Name = "Author")]
+		public IEnumerable<string> Authors { get; set; } = new List<string>();
+
 		[Display(Name = "Tier")]
 		public string Tier { get; set; } = "";
 		public string TierIconPath { get; set; } = "";

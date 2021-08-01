@@ -41,5 +41,16 @@ namespace TASVideos.Extensions
 			var randomIndex = new Random(DateTime.Now.Millisecond).Next(0, collection.Count);
 			return collection.ElementAt(randomIndex);
 		}
+
+		/// <summary>
+		/// Adds the elements of the given collection
+		/// </summary>
+		public static void AddRange<T>(this ICollection<T> collection, ICollection<T> newValues)
+		{
+			foreach (var value in newValues)
+			{
+				collection.Add(value);
+			}
+		}
 	}
 }
