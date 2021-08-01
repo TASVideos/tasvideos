@@ -95,7 +95,7 @@ namespace TASVideos.Pages.Publications
 					p.CreateTimestamp,
 					p.PublicationUrls,
 					SystemCode = p.System!.Code,
-					p.WikiContent!.Markup,
+					p.WikiContent,
 					Authors = p.Authors.Select(pa => pa.Author!.UserName),
 					p.Game!.SearchKey,
 					p.ObsoletedById
@@ -146,7 +146,7 @@ namespace TASVideos.Pages.Publications
 						publication.CreateTimestamp,
 						PublicationUrl,
 						publication.Title,
-						publication.Markup,
+						publication.WikiContent!,
 						publication.SystemCode,
 						publication.Authors,
 						publication.SearchKey,

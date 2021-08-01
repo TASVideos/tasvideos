@@ -28,7 +28,6 @@ namespace TASVideos.Pages.Submissions
 		private readonly UserManager _userManager;
 		private readonly IFileService _fileService;
 		private readonly IYoutubeSync _youtubeSync;
-		private readonly AppSettings _settings;
 
 		public PublishModel(
 			ApplicationDbContext db,
@@ -39,8 +38,7 @@ namespace TASVideos.Pages.Submissions
 			ITASVideoAgent tasVideoAgent,
 			UserManager userManager,
 			IFileService fileService,
-			IYoutubeSync youtubeSync,
-			AppSettings settings)
+			IYoutubeSync youtubeSync)
 		{
 			_db = db;
 			_mapper = mapper;
@@ -51,7 +49,6 @@ namespace TASVideos.Pages.Submissions
 			_userManager = userManager;
 			_fileService = fileService;
 			_youtubeSync = youtubeSync;
-			_settings = settings;
 		}
 
 		[FromRoute]
@@ -221,7 +218,7 @@ namespace TASVideos.Pages.Submissions
 					publication.CreateTimestamp,
 					Submission.OnlineWatchingUrl,
 					publication.Title,
-					await YoutubeHelper.RenderWikiForYoutube(wikiPage, _settings.BaseUrl),
+					wikiPage,
 					submission.System.Code,
 					publication.Authors.Select(pa => pa.Author!.UserName),
 					submission.Game.SearchKey,
@@ -240,7 +237,7 @@ namespace TASVideos.Pages.Submissions
 						toObsolete.CreateTimestamp,
 						url.Url ?? "",
 						toObsolete.Title,
-						await YoutubeHelper.RenderWikiForYoutube(toObsolete.WikiContent!, _settings.BaseUrl),
+						toObsolete.WikiContent!,
 						toObsolete.System!.Code,
 						toObsolete.Authors.Select(pa => pa.Author!.UserName),
 						toObsolete.Game!.SearchKey,

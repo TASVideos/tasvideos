@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
+using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 
 namespace TASVideos.Core.Services.Youtube
@@ -64,6 +65,7 @@ namespace TASVideos.Core.Services.Youtube
 			}
 
 			descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
+			var renderedDescription = YoutubeHelper.RenderWikiForYoutube(video.WikiPage, _settings.BaseUrl);
 
 			var requestBody = new VideoUpdateRequest
 			{
@@ -71,7 +73,7 @@ namespace TASVideos.Core.Services.Youtube
 				Snippet = new ()
 				{
 					Title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted]" : "")} {video.Title}",
-					Description = descriptionBase + video.Description,
+					Description = descriptionBase + renderedDescription,
 					CategoryId = videoDetails.CategoryId,
 					Tags = BaseTags.Concat(video.Tags).ToList()
 				}
@@ -172,7 +174,7 @@ namespace TASVideos.Core.Services.Youtube
 		DateTime PublicationDate,
 		string Url,
 		string Title,
-		string Description,
+		WikiPage WikiPage,
 		string SystemCode,
 		IEnumerable<string> Authors,
 		string? SearchKey,

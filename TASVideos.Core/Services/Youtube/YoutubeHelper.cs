@@ -6,10 +6,9 @@ using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
-namespace TASVideos
+namespace TASVideos.Core.Services.Youtube
 {
-	// TODO: Move this somewhere better
-	public static class YoutubeHelper
+	internal static class YoutubeHelper
 	{
 		public static async Task<string> RenderWikiForYoutube(WikiPage page, string host)
 		{
