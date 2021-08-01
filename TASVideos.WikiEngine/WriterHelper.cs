@@ -23,6 +23,12 @@ namespace TASVideos.WikiEngine.AST
 		/// <param name="name">The name of the module.</param>
 		/// <param name="pp">The module's parsed parameters.</param>
 		Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp);
+
+		/// <summary>
+		/// Converts a relative URL into an absolute one.  Can leave the URL alone if relative links
+		/// are desired.
+		/// </summary>
+		string AbsoluteUrl(string url);
 	}
 
 	/// <summary>
@@ -38,6 +44,11 @@ namespace TASVideos.WikiEngine.AST
 		public Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 		{
 			return Task.CompletedTask;
+		}
+
+		public string AbsoluteUrl(string url)
+		{
+			return url;
 		}
 
 		private NullWriterHelper()

@@ -122,5 +122,8 @@ namespace TASVideos.TagHelpers
 
 			content.WriteTo(w, HtmlEncoder.Default);
 		}
+
+		// In the website proper, we don't need to absoluteify URLs.
+		string IWriterHelper.AbsoluteUrl(string url) => url;
 	}
 }
