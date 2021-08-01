@@ -59,6 +59,25 @@ namespace TASVideos.WikiEngine
 			}
 		}
 
+		public static async Task RenderTextAsync(string content, TextWriter w, IWriterHelper h)
+		{
+			List<INode> results;
+			try
+			{
+				results = NewParser.Parse(content);
+			}
+			catch (NewParser.SyntaxException e)
+			{
+				results = Builtins.MakeErrorPage(content, e);
+			}
+
+			var ctx = new WriterContext(h);
+			foreach (var r in results)
+			{
+				await r.WriteTextAsync(w, ctx);
+			}
+		}
+
 		/// <summary>
 		/// Returns all the referrals to other site pages that exist in the given wiki markup.
 		/// </summary>

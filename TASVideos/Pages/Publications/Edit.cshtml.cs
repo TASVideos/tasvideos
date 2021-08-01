@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Youtube;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Models;
@@ -26,6 +27,7 @@ namespace TASVideos.Pages.Publications
 		private readonly IFlagService _flagsService;
 		private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
 		private readonly IYoutubeSync _youtubeSync;
+		private readonly AppSettings _settings;
 
 		public EditModel(
 			ApplicationDbContext db,
@@ -35,7 +37,8 @@ namespace TASVideos.Pages.Publications
 			ITagService tagsService,
 			IFlagService flagsService,
 			IPublicationMaintenanceLogger publicationMaintenanceLogger,
-			IYoutubeSync youtubeSync)
+			IYoutubeSync youtubeSync,
+			AppSettings settings)
 		{
 			_db = db;
 			_mapper = mapper;
@@ -45,6 +48,7 @@ namespace TASVideos.Pages.Publications
 			_flagsService = flagsService;
 			_publicationMaintenanceLogger = publicationMaintenanceLogger;
 			_youtubeSync = youtubeSync;
+			_settings = settings;
 		}
 
 		[FromRoute]
@@ -258,7 +262,7 @@ namespace TASVideos.Pages.Publications
 						publication.CreateTimestamp,
 						url.Url!,
 						publication.Title,
-						publication.WikiContent.Markup,
+						await YoutubeHelper.RenderWikiForYoutube(publication.WikiContent, _settings.BaseUrl),
 						publication.System!.Code,
 						publication.Authors.Select(a => a.Author!.UserName),
 						publication.Game!.SearchKey,

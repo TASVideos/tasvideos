@@ -40,6 +40,11 @@ namespace TASVideos.WikiEngine.AST
 			return Task.CompletedTask;
 		}
 
+		public async Task WriteTextAsync(TextWriter writer, WriterContext ctx)
+		{
+			await writer.WriteAsync(Content);
+		}
+
 		public INode Clone()
 		{
 			return (Text)MemberwiseClone();
@@ -164,6 +169,12 @@ namespace TASVideos.WikiEngine.AST
 				w.Write(' ');
 				w.Write(a.Key);
 				w.Write("=\"");
+				var value = a.Value;
+				if (Tag == "a" && a.Key == "href")
+				{
+					value = ctx.Helper.AbsoluteUrl(value);
+				}
+
 				foreach (var c in a.Value)
 				{
 					switch (c)
@@ -201,6 +212,34 @@ namespace TASVideos.WikiEngine.AST
 				w.Write("</");
 				w.Write(Tag);
 				w.Write('>');
+			}
+		}
+
+		public async Task WriteTextAsync(TextWriter writer, WriterContext ctx)
+		{
+			foreach (var c in Children)
+			{
+				await c.WriteTextAsync(writer, ctx);
+			}
+
+			switch (Tag)
+			{
+				case "a":
+					if (Attributes.TryGetValue("href", out var href))
+					{
+						writer.Write(" (");
+						writer.Write(ctx.Helper.AbsoluteUrl(href));
+						writer.Write(')');
+					}
+
+					break;
+				case "div":
+				case "br":
+					writer.Write('\n');
+					break;
+				case "hr":
+					writer.Write("--------\n");
+					break;
 			}
 		}
 
@@ -293,6 +332,17 @@ namespace TASVideos.WikiEngine.AST
 			}
 		}
 
+		public async Task WriteTextAsync(TextWriter writer, WriterContext ctx)
+		{
+			if (ctx.Helper.CheckCondition(Condition))
+			{
+				foreach (var c in Children)
+				{
+					await c.WriteTextAsync(writer, ctx);
+				}
+			}
+		}
+
 		public INode Clone()
 		{
 			var ret = (IfModule)MemberwiseClone();
@@ -375,6 +425,22 @@ namespace TASVideos.WikiEngine.AST
 				div.Children.Add(new Text(CharStart, "Unknown module " + Name) { CharEnd = CharEnd });
 				div.Attributes["class"] = "module-error";
 				await div.WriteHtmlAsync(w, ctx);
+			}
+		}
+
+		public async Task WriteTextAsync(TextWriter writer, WriterContext ctx)
+		{
+			if (Name.ToLowerInvariant() == "settableattributes")
+			{
+				// Do nothing for this special module
+			}
+			else if (WikiModules.IsModule(Name))
+			{
+				// TODO: Modules in text.  We do need this
+			}
+			else
+			{
+				await writer.WriteAsync($"ERROR:  Unknown module {Name}");
 			}
 		}
 

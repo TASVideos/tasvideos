@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Youtube;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -27,6 +28,7 @@ namespace TASVideos.Pages.Submissions
 		private readonly UserManager _userManager;
 		private readonly IFileService _fileService;
 		private readonly IYoutubeSync _youtubeSync;
+		private readonly AppSettings _settings;
 
 		public PublishModel(
 			ApplicationDbContext db,
@@ -37,7 +39,8 @@ namespace TASVideos.Pages.Submissions
 			ITASVideoAgent tasVideoAgent,
 			UserManager userManager,
 			IFileService fileService,
-			IYoutubeSync youtubeSync)
+			IYoutubeSync youtubeSync,
+			AppSettings settings)
 		{
 			_db = db;
 			_mapper = mapper;
@@ -48,6 +51,7 @@ namespace TASVideos.Pages.Submissions
 			_userManager = userManager;
 			_fileService = fileService;
 			_youtubeSync = youtubeSync;
+			_settings = settings;
 		}
 
 		[FromRoute]
@@ -217,7 +221,7 @@ namespace TASVideos.Pages.Submissions
 					publication.CreateTimestamp,
 					Submission.OnlineWatchingUrl,
 					publication.Title,
-					wikiPage.Markup,
+					await YoutubeHelper.RenderWikiForYoutube(wikiPage, _settings.BaseUrl),
 					submission.System.Code,
 					publication.Authors.Select(pa => pa.Author!.UserName),
 					submission.Game.SearchKey,
@@ -236,7 +240,7 @@ namespace TASVideos.Pages.Submissions
 						toObsolete.CreateTimestamp,
 						url.Url ?? "",
 						toObsolete.Title,
-						toObsolete.WikiContent!.Markup,
+						await YoutubeHelper.RenderWikiForYoutube(toObsolete.WikiContent!, _settings.BaseUrl),
 						toObsolete.System!.Code,
 						toObsolete.Authors.Select(pa => pa.Author!.UserName),
 						toObsolete.Game!.SearchKey,
