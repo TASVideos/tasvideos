@@ -75,12 +75,17 @@
 				<select asp-for="Publication.ObsoletedBy" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesForObsoletedBy)" class="form-control"></select>
 				<span asp-validation-for="Publication.ObsoletedBy" class="text-danger"></span>
 			</form-group>
-            <form-group>
-                <label asp-for="Publication.AdditionalAuthors"></label>
-                <input type="text" asp-for="Publication.AdditionalAuthors" class="form-control" />
-                <div>@Html.DescriptionFor(m => m.Publication.AdditionalAuthors)</div>
-                <span asp-validation-for="Publication.AdditionalAuthors" class="text-danger"></span>
-            </form-group>
+			<form-group>
+				<label asp-for="Publication.Authors"></label>
+				<string-list asp-for="Publication.Authors" />
+				<span asp-validation-for="Publication.Authors" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Publication.AdditionalAuthors"></label>
+				<input type="text" asp-for="Publication.AdditionalAuthors" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Publication.AdditionalAuthors)</div>
+				<span asp-validation-for="Publication.AdditionalAuthors" class="text-danger"></span>
+			</form-group>
 		</div>
 	</row>
 	<two-column-select id-list="Publication.SelectedFlags" available-list="AvailableFlags" />
