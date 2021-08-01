@@ -22,6 +22,7 @@ namespace TASVideos.WikiEngine.AST
 		int CharEnd { get; set; }
 		INode Clone();
 		Task WriteHtmlAsync(TextWriter w, WriterContext h);
+
 		/// <summary>
 		/// Similar to WriteHtmlAsync, but writes plain text stripping formatting.
 		/// TODO: Modules do not run at all.
