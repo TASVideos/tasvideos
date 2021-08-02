@@ -138,7 +138,6 @@ namespace TASVideos.Pages.Publications
 					$"{Id}M",
 					User.Name());
 
-				// TODO: render markup, in a youtube friendly way
 				if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
 				{
 					YoutubeVideo video = new (

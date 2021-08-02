@@ -153,7 +153,7 @@ namespace TASVideos.Pages.Submissions
 				Submission.TierId = null;
 			}
 			else if (Submission.TierId == null &&
-				(Submission.Status == SubmissionStatus.Accepted || Submission.Status == SubmissionStatus.PublicationUnderway))
+				Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
 			{
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TierId)}", "A submission can not be accepted without a Tier");
 			}

@@ -142,17 +142,12 @@ namespace TASVideos.Pages.Submissions
 				submission.MovieFile,
 				Submission.MovieFileName + "." + Submission.MovieExtension);
 
-			var publicationAuthors = submission.SubmissionAuthors
+			publication.Authors.AddRange(submission.SubmissionAuthors
 				.Select(sa => new PublicationAuthor
 				{
 					Publication = publication,
 					Author = sa.Author
-				});
-
-			foreach (var author in publicationAuthors)
-			{
-				publication.Authors.Add(author);
-			}
+				}));
 
 			publication.Submission = submission;
 			_db.Publications.Add(publication);
@@ -229,8 +224,8 @@ namespace TASVideos.Pages.Submissions
 			if (toObsolete != null)
 			{
 				foreach (var url in toObsolete.PublicationUrls
-					.Where(pu => pu.Type == PublicationUrlType.Streaming
-						&& _youtubeSync.IsYoutubeUrl(pu.Url)))
+					.ThatAreStreaming()
+					.Where(pu => _youtubeSync.IsYoutubeUrl(pu.Url)))
 				{
 					var obsoleteVideo = new YoutubeVideo(
 						toObsolete.Id,
