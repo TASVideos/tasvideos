@@ -45,7 +45,7 @@ namespace TASVideos.Extensions
 		/// <summary>
 		/// Adds the elements of the given collection
 		/// </summary>
-		public static void AddRange<T>(this ICollection<T> collection, ICollection<T> newValues)
+		public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> newValues)
 		{
 			foreach (var value in newValues)
 			{

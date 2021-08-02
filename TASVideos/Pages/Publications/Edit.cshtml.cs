@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Youtube;
-using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -229,14 +228,12 @@ namespace TASVideos.Pages.Publications
 			_db.PublicationFlags.RemoveRange(
 				_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
 
-			foreach (var flag in model.SelectedFlags)
-			{
-				publication.PublicationFlags.Add(new PublicationFlag
+			publication.PublicationFlags.AddRange(model.SelectedFlags
+				.Select(f => new PublicationFlag
 				{
 					PublicationId = publication.Id,
-					FlagId = flag
-				});
-			}
+					FlagId = f
+				}));
 
 			externalMessages.AddRange((await _tagsService
 				.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags))
@@ -246,14 +243,12 @@ namespace TASVideos.Pages.Publications
 			_db.PublicationTags.RemoveRange(
 				_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
 
-			foreach (var tag in model.SelectedTags)
-			{
-				publication.PublicationTags.Add(new PublicationTag
+			publication.PublicationTags.AddRange(model.SelectedTags
+				.Select(t => new PublicationTag
 				{
 					PublicationId = publication.Id,
-					TagId = tag
-				});
-			}
+					TagId = t
+				}));
 
 			await _db.SaveChangesAsync();
 
@@ -272,9 +267,9 @@ namespace TASVideos.Pages.Publications
 				externalMessages.Add("Description updated");
 			}
 
-			foreach (var url in publication.PublicationUrls)
+			foreach (var url in publication.PublicationUrls.ThatAreStreaming())
 			{
-				if (url.Type == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(url.Url))
+				if (_youtubeSync.IsYoutubeUrl(url.Url))
 				{
 					await _youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
 						Id,

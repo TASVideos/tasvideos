@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TASVideos.Data.Entity
 {
@@ -15,5 +17,13 @@ namespace TASVideos.Data.Entity
 		public string? Url { get; set; }
 
 		public PublicationUrlType Type { get; set; } = PublicationUrlType.Streaming;
+	}
+
+	public static class PublicationUrlExtensions
+	{
+		public static IEnumerable<PublicationUrl> ThatAreStreaming(this IEnumerable<PublicationUrl> urls)
+		{
+			return urls.Where(u => u.Type == PublicationUrlType.Streaming);
+		}
 	}
 }
