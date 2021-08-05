@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
-using TASVideos.Models;
 
 namespace TASVideos.Pages.Messages
 {
