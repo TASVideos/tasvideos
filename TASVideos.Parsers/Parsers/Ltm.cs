@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SharpCompress.Readers;
-using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers
