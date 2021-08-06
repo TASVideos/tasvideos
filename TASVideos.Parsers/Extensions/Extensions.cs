@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace TASVideos.MovieParsers.Extensions
 {
-	public static class Extensions
+	internal static class Extensions
 	{
 		/// <summary>
 		/// Splits by line, Null safe, removes empty entries.
@@ -73,13 +73,18 @@ namespace TASVideos.MovieParsers.Extensions
 		/// <summary>
 		/// Parses the given string as an integer.
 		/// If value can not be parsed, null is returned.
+		/// If the value is negative or greater than the max
+		/// value of an int, null is returned.
 		/// </summary>
-		public static int? ToInt(this string val)
+		public static int? ToPositiveInt(this string val)
 		{
 			var result = int.TryParse(val, out var parsedVal);
 			if (result)
 			{
-				return parsedVal;
+				if (parsedVal >= 0)
+				{
+					return parsedVal;
+				}
 			}
 
 			return null;

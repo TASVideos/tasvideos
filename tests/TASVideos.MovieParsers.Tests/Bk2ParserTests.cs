@@ -69,6 +69,17 @@ namespace TASVideos.MovieParsers.Tests
 		}
 
 		[TestMethod]
+		public async Task InvalidRerecordNegative_Warning()
+		{
+			var result = await _bk2Parser.Parse(Embedded("RerecordCountNegative.bk2"));
+			Assert.IsTrue(result.Success);
+			Assert.IsNotNull(result.Warnings);
+			Assert.AreEqual(1, result.Warnings.Count());
+			Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
+			AssertNoErrors(result);
+		}
+
+		[TestMethod]
 		[DataRow("Pal1.bk2", RegionType.Pal)]
 		[DataRow("0Frames.bk2", RegionType.Ntsc, DisplayName = "Missing flag defaults to Ntsc")]
 		public async Task PalFlag_True(string fileName, RegionType expected)
@@ -154,6 +165,16 @@ namespace TASVideos.MovieParsers.Tests
 		public async Task SubNes_MissingVBlank_Error()
 		{
 			var result = await _bk2Parser.Parse(Embedded("SubNesMissingVBlank.bk2"));
+
+			Assert.IsFalse(result.Success);
+			Assert.IsNotNull(result.Errors);
+			Assert.IsTrue(result.Errors.Any());
+		}
+
+		[TestMethod]
+		public async Task SubNes_NegativeVBlank_Error()
+		{
+			var result = await _bk2Parser.Parse(Embedded("SubNesNegativeVBlank.bk2"));
 
 			Assert.IsFalse(result.Success);
 			Assert.IsNotNull(result.Errors);

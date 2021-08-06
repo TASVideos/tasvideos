@@ -31,7 +31,7 @@ namespace TASVideos.MovieParsers.Parsers
 				result.SystemCode = SystemCodes.Fds;
 			}
 
-			int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
+			int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToPositiveInt();
 			if (rerecordVal.HasValue)
 			{
 				result.RerecordCount = rerecordVal.Value;

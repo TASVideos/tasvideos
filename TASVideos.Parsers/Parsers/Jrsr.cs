@@ -35,7 +35,7 @@ namespace TASVideos.MovieParsers.Parsers
 			bool hasHeader = false;
 			bool beginHeader = false;
 			bool beginEvents = false;
-
+			bool missingRerecordCount = true;
 			string lastInputLine = "";
 
 			foreach (var line in lines)
@@ -63,7 +63,12 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					if (line.StartsWith(Keys.RerecordCount))
 					{
-						result.RerecordCount = line.GetValue().ToInt() ?? 0;
+						var rerecordValue = line.GetValue().ToPositiveInt();
+						if (rerecordValue.HasValue)
+						{
+							result.RerecordCount = rerecordValue.Value;
+							missingRerecordCount = false;
+						}
 					}
 					else if (line.StartsWith(Keys.StartsFromSavestate))
 					{
@@ -93,6 +98,11 @@ namespace TASVideos.MovieParsers.Parsers
 					result.Frames = (int)(nanoSeconds.Value / 16666667);
 					result.FrameRateOverride = result.Frames / (nanoSeconds / 1000000000L);
 				}
+			}
+
+			if (missingRerecordCount)
+			{
+				result.WarnNoRerecords();
 			}
 
 			return result;

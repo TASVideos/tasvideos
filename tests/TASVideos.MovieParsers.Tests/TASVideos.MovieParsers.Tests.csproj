@@ -23,11 +23,13 @@
 		<EmbeddedResource Include="Bk2SampleFiles\Pal1.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\RerecordCount1.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\RerecordCountMissing.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\RerecordCountNegative.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\savestate.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\sram.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\SubGbHawk-CycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\SubNes.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\SubNesMissingVBlank.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesNegativeVBlank.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-32x.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-A2600.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-A7800.bk2" />
@@ -65,6 +67,7 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-Zxs.bk2" />
 		<EmbeddedResource Include="DsmSampleFiles\0frames.dsm" />
 		<EmbeddedResource Include="DsmSampleFiles\2frames.dsm" />
+		<EmbeddedResource Include="DsmSampleFiles\negativererecords.dsm" />
 		<EmbeddedResource Include="DsmSampleFiles\norerecords.dsm" />
 		<EmbeddedResource Include="DsmSampleFiles\savestate.dsm" />
 		<EmbeddedResource Include="DsmSampleFiles\sram.dsm" />
@@ -75,6 +78,7 @@
 		<EmbeddedResource Include="DtmSampleFiles\sram.dtm" />
 		<EmbeddedResource Include="DtmSampleFiles\wrongheader.dtm" />
 		<EmbeddedResource Include="Fm2SampleFiles\fds.fm2" />
+		<EmbeddedResource Include="Fm2SampleFiles\negativererecords.fm2" />
 		<EmbeddedResource Include="Fm2SampleFiles\norerecords.fm2" />
 		<EmbeddedResource Include="Fm2SampleFiles\ntsc.fm2" />
 		<EmbeddedResource Include="Fm2SampleFiles\pal.fm2" />
@@ -87,6 +91,8 @@
 		<EmbeddedResource Include="JrsrSampleFiles\containssavestate.jrsr" />
 		<EmbeddedResource Include="JrsrSampleFiles\correctmagic.jrsr" />
 		<EmbeddedResource Include="JrsrSampleFiles\emptyfile.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\missingrerecords.jrsr" />
+		<EmbeddedResource Include="JrsrSampleFiles\negativererecords.jrsr" />
 		<EmbeddedResource Include="JrsrSampleFiles\nobeginheader.jrsr" />
 		<EmbeddedResource Include="JrsrSampleFiles\savestate.jrsr" />
 		<EmbeddedResource Include="JrsrSampleFiles\wronglinemagic.jrsr" />

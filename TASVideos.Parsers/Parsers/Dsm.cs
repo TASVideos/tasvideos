@@ -28,7 +28,7 @@ namespace TASVideos.MovieParsers.Parsers
 
 			result.Frames = lines.PipeCount();
 
-			int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
+			int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToPositiveInt();
 			if (rerecordVal.HasValue)
 			{
 				result.RerecordCount = rerecordVal.Value;

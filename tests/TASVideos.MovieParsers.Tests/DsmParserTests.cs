@@ -91,5 +91,15 @@ namespace TASVideos.MovieParsers.Tests
 			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 			AssertNoWarningsOrErrors(result);
 		}
+
+		[TestMethod]
+		public async Task NegativeRerecords()
+		{
+			var result = await _dsmParser.Parse(Embedded("negativererecords.dsm"));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(0, result.RerecordCount, "Rerecord count assumed to be 0");
+			AssertNoErrors(result);
+			Assert.AreEqual(1, result.Warnings.Count());
+		}
 	}
 }

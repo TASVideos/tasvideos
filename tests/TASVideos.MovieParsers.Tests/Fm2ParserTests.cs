@@ -80,5 +80,15 @@ namespace TASVideos.MovieParsers.Tests
 			Assert.AreEqual(1, result.Warnings.Count());
 			AssertNoErrors(result);
 		}
+
+		[TestMethod]
+		public async Task NegativeRerecords()
+		{
+			var result = await _fm2Parser.Parse(Embedded("negativererecords.fm2"));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(0, result.RerecordCount, "Rerecord count assumed to be 0");
+			AssertNoErrors(result);
+			Assert.AreEqual(1, result.Warnings.Count());
+		}
 	}
 }
