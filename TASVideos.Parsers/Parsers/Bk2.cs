@@ -106,7 +106,7 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 
 				vBlankCount = header.GetValueFor(Keys.VBlankCount).ToPositiveInt();
-				result.CycleCount = header.GetValueFor(Keys.CycleCount).ToLong();
+				result.CycleCount = header.GetValueFor(Keys.CycleCount).ToPositiveLong();
 				core = header.GetValueFor(Keys.Core).ToLower();
 			}
 

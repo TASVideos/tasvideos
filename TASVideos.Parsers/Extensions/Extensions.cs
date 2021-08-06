@@ -94,12 +94,15 @@ namespace TASVideos.MovieParsers.Extensions
 		/// Parses the given string as a long.
 		/// If value can not be parsed, null is returned.
 		/// </summary>
-		public static long? ToLong(this string val)
+		public static long? ToPositiveLong(this string val)
 		{
 			var result = long.TryParse(val, out var parsedVal);
 			if (result)
 			{
-				return parsedVal;
+				if (parsedVal >= 0)
+				{
+					return parsedVal;
+				}
 			}
 
 			return null;
