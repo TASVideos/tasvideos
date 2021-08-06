@@ -215,6 +215,17 @@ namespace TASVideos.MovieParsers.Tests
 		}
 
 		[TestMethod]
+		public async Task Gambatte_NegativeCycleCountFormat_FallsBackToInputLog()
+		{
+			var result = await _bk2Parser.Parse(Embedded("Gambatte-NegativeCycleCount.bk2"));
+
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(30, result.Frames);
+			Assert.IsNull(result.FrameRateOverride);
+		}
+
+		[TestMethod]
 		public async Task SubGbHawk_UsesCycleCount()
 		{
 			var result = await _bk2Parser.Parse(Embedded("SubGbHawk-CycleCount.bk2"));
