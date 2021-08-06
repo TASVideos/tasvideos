@@ -111,5 +111,25 @@ namespace TASVideos.MovieParsers.Tests
 			Assert.AreEqual(60, result.FrameRateOverride);
 			AssertNoWarningsOrErrors(result);
 		}
+
+		[TestMethod]
+		public async Task MissingRerecords()
+		{
+			var result = await _jrsrParser.Parse(Embedded("missingrerecords.jrsr"));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(0, result.RerecordCount, "Rerecord count assumed to be 0");
+			AssertNoErrors(result);
+			Assert.AreEqual(1, result.Warnings.Count());
+		}
+
+		[TestMethod]
+		public async Task NegativeRerecords()
+		{
+			var result = await _jrsrParser.Parse(Embedded("negativererecords.jrsr"));
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(0, result.RerecordCount, "Rerecord count assumed to be 0");
+			AssertNoErrors(result);
+			Assert.AreEqual(1, result.Warnings.Count());
+		}
 	}
 }

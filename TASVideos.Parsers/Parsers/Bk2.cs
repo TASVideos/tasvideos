@@ -47,7 +47,7 @@ namespace TASVideos.MovieParsers.Parsers
 					return Error("Could not determine the System Code");
 				}
 
-				int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToInt();
+				int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToPositiveInt();
 				if (rerecordVal.HasValue)
 				{
 					result.RerecordCount = rerecordVal.Value;
@@ -105,7 +105,7 @@ namespace TASVideos.MovieParsers.Parsers
 					result.StartType = MovieStartType.Sram;
 				}
 
-				vBlankCount = header.GetValueFor(Keys.VBlankCount).ToInt();
+				vBlankCount = header.GetValueFor(Keys.VBlankCount).ToPositiveInt();
 				result.CycleCount = header.GetValueFor(Keys.CycleCount).ToLong();
 				core = header.GetValueFor(Keys.Core).ToLower();
 			}
