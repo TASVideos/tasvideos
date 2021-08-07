@@ -10,8 +10,9 @@ namespace TASVideos.Core
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static IServiceCollection AddTasvideosCore(this IServiceCollection services, bool isDevelopment)
+		public static IServiceCollection AddTasvideosCore<T>(this IServiceCollection services, bool isDevelopment) where T : class, IWikiToTextRenderer
 		{
+			services.AddScoped<IWikiToTextRenderer, T>();
 			services
 				.AddControllers()
 				.AddApplicationPart(typeof(IJwtAuthenticator).Assembly);

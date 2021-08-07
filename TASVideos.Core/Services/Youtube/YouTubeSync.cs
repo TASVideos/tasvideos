@@ -24,16 +24,19 @@ namespace TASVideos.Core.Services.Youtube
 		private static readonly string[] BaseTags = { "TAS", "TASVideos", "Tool-Assisted", "Video Game" };
 		private readonly HttpClient _client;
 		private readonly IGoogleAuthService _googleAuthService;
+		private readonly IWikiToTextRenderer _textRenderer;
 		private readonly AppSettings _settings;
 
 		public YouTubeSync(
 			IHttpClientFactory httpClientFactory,
 			IGoogleAuthService googleAuthService,
+			IWikiToTextRenderer textRenderer,
 			AppSettings settings)
 		{
 			_client = httpClientFactory.CreateClient(HttpClients.Youtube)
 				?? throw new InvalidOperationException($"Unable to initalize {HttpClients.Youtube} client");
 			_googleAuthService = googleAuthService;
+			_textRenderer = textRenderer;
 			_settings = settings;
 		}
 
@@ -65,7 +68,7 @@ namespace TASVideos.Core.Services.Youtube
 			}
 
 			descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
-			var renderedDescription = YoutubeHelper.RenderWikiForYoutube(video.WikiPage, _settings.BaseUrl);
+			var renderedDescription = _textRenderer.RenderWikiForYoutube(video.WikiPage);
 
 			var requestBody = new VideoUpdateRequest
 			{

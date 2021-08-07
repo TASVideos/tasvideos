@@ -9,6 +9,7 @@ using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Extensions;
 using TASVideos.Legacy.Extensions;
+using TASVideos.Services;
 
 namespace TASVideos
 {
@@ -41,7 +42,7 @@ namespace TASVideos
 			// Internal Libraries
 			services
 				.AddTasvideosData(Configuration, Settings.UsePostgres)
-				.AddTasvideosCore(Environment.IsDevelopment())
+				.AddTasvideosCore<WikiToTextRenderer>(Environment.IsDevelopment())
 				.AddTasVideosLegacy(
 					Settings.ConnectionStrings.LegacySiteConnection,
 					Settings.ConnectionStrings.LegacyForumConnection,

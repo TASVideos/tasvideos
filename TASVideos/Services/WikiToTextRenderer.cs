@@ -2,18 +2,27 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using TASVideos.Core.Services.Youtube;
+using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
-namespace TASVideos.Core.Services.Youtube
+namespace TASVideos.Services
 {
-	internal static class YoutubeHelper
+	public class WikiToTextRenderer : IWikiToTextRenderer
 	{
-		public static async Task<string> RenderWikiForYoutube(WikiPage page, string host)
+		private readonly AppSettings _settings;
+
+		public WikiToTextRenderer(AppSettings settings)
+		{
+			_settings = settings;
+		}
+
+		public async Task<string> RenderWikiForYoutube(WikiPage page)
 		{
 			var sw = new StringWriter();
-			await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(host));
+			await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(_settings.BaseUrl));
 			return sw.ToString();
 		}
 
