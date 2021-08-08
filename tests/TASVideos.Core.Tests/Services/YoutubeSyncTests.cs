@@ -1,7 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
+using TASVideos.Data.Entity;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.Core.Tests.Services
@@ -15,7 +17,7 @@ namespace TASVideos.Core.Tests.Services
 		{
 			var clientFactoryMock = HttpClientFactoryMock.Create();
 			var mockAuth = new Mock<IGoogleAuthService>();
-			_youTubeSync = new (clientFactoryMock.Object, mockAuth.Object, new AppSettings());
+			_youTubeSync = new (clientFactoryMock.Object, mockAuth.Object, new TestWikiToTextRenderer(), new AppSettings());
 		}
 
 		[TestMethod]
@@ -43,6 +45,11 @@ namespace TASVideos.Core.Tests.Services
 		{
 			var actual = _youTubeSync.IsYoutubeUrl(url);
 			Assert.AreEqual(expected, actual);
+		}
+
+		private class TestWikiToTextRenderer : IWikiToTextRenderer
+		{
+			public async Task<string> RenderWikiForYoutube(WikiPage page) =>await Task.FromResult("");
 		}
 	}
 }
