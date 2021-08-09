@@ -49,7 +49,7 @@ namespace TASVideos.Core.Tests.Services
 
 		private class TestWikiToTextRenderer : IWikiToTextRenderer
 		{
-			public async Task<string> RenderWikiForYoutube(WikiPage page) =>await Task.FromResult("");
+			public async Task<string> RenderWikiForYoutube(WikiPage page) => await Task.FromResult("");
 		}
 	}
 }
