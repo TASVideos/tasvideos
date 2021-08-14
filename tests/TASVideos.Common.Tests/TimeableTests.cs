@@ -14,6 +14,8 @@ namespace TASVideos.Common.Tests
 		[DataRow(50, 6666, "0:02:13.32")]
 		[DataRow(60.09, 325523, "1:30:17.26")]
 		[DataRow(60, 16997, "0:04:43.28")]
+		[DataRow(60, 0, "0:00:00")]
+		[DataRow(0, 1, "10675199:2:48:05.4775807")]
 		public void TimeableTimespanTest(double frameRate, int frames, string expected)
 		{
 			var actual = new Timeable { FrameRate = frameRate, Frames = frames }
