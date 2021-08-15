@@ -32,9 +32,10 @@ namespace TASVideos.Data.SeedData
 			new ()
 			{
 				Id = 5,
-				Name = "Known record",
-				LinkPath = "Movies-Knownrecords",
-				Token = "Knownrecords"
+				Name = "Fastest Completion",
+				LinkPath = "FastestCompletion",
+				Token = "Knownrecords",
+				IconPath = "images/fastest-completion.png"
 			},
 			new ()
 			{
@@ -42,7 +43,7 @@ namespace TASVideos.Data.SeedData
 				Name = "Has commentary",
 				IconPath = "images/commentary.png",
 				LinkPath = "Commentaries",
-				Token = "Commentaries"
+				Token = "Commentary"
 			},
 			new ()
 			{
@@ -58,15 +59,6 @@ namespace TASVideos.Data.SeedData
 				IconPath = "images/newbierec.gif",
 				LinkPath = "NewcomerCorner",
 				Token = "NewcomerRec",
-				PermissionRestriction = PermissionTo.EditRecommendation
-			},
-			new ()
-			{
-				Id = 9,
-				Name = "Fastest Completion",
-				IconPath = "images/fastest-completion.png",
-				LinkPath = "FastestCompletion",
-				Token = "FastestCompletion",
 				PermissionRestriction = PermissionTo.EditRecommendation
 			}
 		};
