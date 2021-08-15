@@ -9,10 +9,9 @@ namespace TASVideos.Data.SeedData
 			new ()
 			{
 				Id = 1,
-				Name = "Vault",
-				Weight = 0.75,
-				IconPath = "images/vaulttier.png",
-				Link = "Vault"
+				Name = "Standard",
+				Weight = 1,
+				Link = "Standard"
 			},
 			new ()
 			{

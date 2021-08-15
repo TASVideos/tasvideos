@@ -11,9 +11,8 @@ namespace TASVideos.Data.Entity
 		public string Name { get; set; } = "";
 		public double Weight { get; set; }
 
-		[Required]
 		[StringLength(100)]
-		public string IconPath { get; set; } = "";
+		public string? IconPath { get; set; }
 
 		[Required]
 		[StringLength(100)]

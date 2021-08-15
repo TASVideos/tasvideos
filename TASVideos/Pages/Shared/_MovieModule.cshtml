@@ -43,7 +43,7 @@
 </div>
 <card>
 	<cardheader>
-		<img src="/@Model.TierIconPath" /> <span>@Model.Title</span>
+		<img condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@Model.TierIconPath" /> <span>@Model.Title</span>
 		<div class="pull-right">
 			@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
 			{
