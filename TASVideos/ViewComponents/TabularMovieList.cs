@@ -59,7 +59,7 @@ namespace TASVideos.ViewComponents
 					Frames = p.Frames,
 					FrameRate = p.SystemFrameRate!.FrameRate,
 					Game = p.Game!.DisplayName,
-					Authors = string.Join(",", p.Authors.Select(pa => pa.Author!.UserName)),
+					Authors = string.Join(", ", p.Authors.Select(pa => pa.Author!.UserName)),
 					Screenshot = p.Files
 						.Where(f => f.Type == FileType.Screenshot)
 						.Select(f => new TabularMovieListResultModel.ScreenshotFile
