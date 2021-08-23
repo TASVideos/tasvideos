@@ -317,9 +317,17 @@ namespace TASVideos.Pages.Submissions
 				string title;
 				if (statusHasChanged)
 				{
-					var statusStr = Submission.Status == SubmissionStatus.Accepted
-						? $"{Submission.Status} to {(await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name}"
-						: Submission.Status.ToString();
+					string statusStr = Submission.Status.ToString();
+					if (Submission.Status == SubmissionStatus.Accepted)
+					{
+						var tier = (await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name;
+
+						if (tier != "Standard")
+						{
+							statusStr += $" to {tier}";
+						}
+					}
+
 					title = $"{userName} set Submission {statusStr} on {submission.Title}";
 				}
 				else
