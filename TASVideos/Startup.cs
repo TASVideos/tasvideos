@@ -34,15 +34,13 @@ namespace TASVideos
 				.AddRequestLocalization()
 				.AddCookieConfiguration(Environment)
 				.AddGzipCompression(Settings)
-				.AddCacheService(Settings.CacheSettings)
-				.AddExternalMediaPublishing(Environment)
 				.AddAutoMapperWithProjections()
 				.AddSwagger(Settings);
 
 			// Internal Libraries
 			services
 				.AddTasvideosData(Configuration, Settings.UsePostgres)
-				.AddTasvideosCore<WikiToTextRenderer>(Environment.IsDevelopment())
+				.AddTasvideosCore<WikiToTextRenderer>(Environment.IsDevelopment(), Settings)
 				.AddTasVideosLegacy(
 					Settings.ConnectionStrings.LegacySiteConnection,
 					Settings.ConnectionStrings.LegacyForumConnection,

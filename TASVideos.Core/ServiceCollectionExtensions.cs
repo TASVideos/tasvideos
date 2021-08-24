@@ -2,20 +2,27 @@
 using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
+using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.Core.Services.Youtube;
+using TASVideos.Core.Settings;
 
 namespace TASVideos.Core
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static IServiceCollection AddTasvideosCore<T>(this IServiceCollection services, bool isDevelopment) where T : class, IWikiToTextRenderer
+		public static IServiceCollection AddTasvideosCore<T>(this IServiceCollection services, bool isDevelopment, AppSettings settings) where T : class, IWikiToTextRenderer
 		{
 			services.AddScoped<IWikiToTextRenderer, T>();
 			services
 				.AddControllers()
 				.AddApplicationPart(typeof(IJwtAuthenticator).Assembly);
+
+			services
+				.AddCacheService(settings.CacheSettings)
+				.AddExternalMediaPublishing(isDevelopment);
 
 			// HTTP Client
 			services
@@ -84,6 +91,36 @@ namespace TASVideos.Core
 			services.AddScoped<IPublicationMaintenanceLogger, PublicationMaintenanceLogger>();
 
 			return services;
+		}
+
+		private static IServiceCollection AddCacheService(this IServiceCollection services, AppSettings.CacheSetting cacheSettings)
+		{
+			if (cacheSettings.CacheType == "Memory")
+			{
+				services.AddMemoryCache();
+				services.AddSingleton<ICacheService, MemoryCacheService>();
+			}
+			else
+			{
+				services.AddSingleton<ICacheService, NoCacheService>();
+			}
+
+			return services;
+		}
+
+		private static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, bool isDevelopment)
+		{
+			if (isDevelopment)
+			{
+				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
+			}
+
+			services.AddSingleton<IPostDistributor, IrcDistributor>();
+			services.AddSingleton<IPostDistributor, DiscordDistributor>();
+			services.AddSingleton<IPostDistributor, TwitterDistributor>();
+			services.AddScoped<IPostDistributor, DistributorStorage>();
+
+			return services.AddTransient<ExternalMediaPublisher>();
 		}
 	}
 }
