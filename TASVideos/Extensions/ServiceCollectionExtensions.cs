@@ -16,9 +16,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using TASVideos.Core.Services;
-using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -68,21 +65,6 @@ namespace TASVideos.Extensions
 					options.Level = CompressionLevel.Fastest;
 				});
 				services.AddResponseCompression(options => options.EnableForHttps = true);
-			}
-
-			return services;
-		}
-
-		public static IServiceCollection AddCacheService(this IServiceCollection services, AppSettings.CacheSetting cacheSettings)
-		{
-			if (cacheSettings.CacheType == "Memory")
-			{
-				services.AddMemoryCache();
-				services.AddSingleton<ICacheService, MemoryCacheService>();
-			}
-			else
-			{
-				services.AddSingleton<ICacheService, NoCacheService>();
 			}
 
 			return services;
@@ -197,21 +179,6 @@ namespace TASVideos.Extensions
 				var xmlPath = Path.Combine(basePath, "TASVideos.Api.xml");
 				c.IncludeXmlComments(xmlPath);
 			});
-		}
-
-		internal static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, IWebHostEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
-			}
-
-			services.AddSingleton<IPostDistributor, IrcDistributor>();
-			services.AddSingleton<IPostDistributor, DiscordDistributor>();
-			services.AddSingleton<IPostDistributor, TwitterDistributor>();
-			services.AddScoped<IPostDistributor, DistributorStorage>();
-
-			return services.AddTransient<ExternalMediaPublisher>();
 		}
 
 		private static IServiceCollection AddHttpContext(this IServiceCollection services)
