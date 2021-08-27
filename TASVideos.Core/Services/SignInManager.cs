@@ -53,7 +53,7 @@ namespace TASVideos.Core.Services
 			if (!string.IsNullOrWhiteSpace(user.LegacyPassword))
 			{
 				using var md5 = MD5.Create();
-				var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(password));
+				var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(AddSlashes(password)));
 				string encrypted = BitConverter.ToString(md5Result)
 					.Replace("-", "")
 					.ToLower();
@@ -82,6 +82,16 @@ namespace TASVideos.Core.Services
 			}
 
 			return result;
+		}
+
+		// Attempts to recreate the addslashes() php method
+		// phpbb2 runs this before passing a database value into the md5() method
+		// https://www.php.net/manual/en/function.addslashes.php
+		internal string AddSlashes(string str)
+		{
+			return str
+				.Replace("\"", "\\\"")
+				.Replace("'", "\\'");
 		}
 
 		public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
