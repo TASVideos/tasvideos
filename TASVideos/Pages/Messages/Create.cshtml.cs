@@ -87,7 +87,7 @@ namespace TASVideos.Pages.Messages
 
 			await SendMessage();
 
-			return RedirectToPage("Inbox");
+			return BasePageRedirect("Inbox");
 		}
 
 		private async Task SetReplyingTo()

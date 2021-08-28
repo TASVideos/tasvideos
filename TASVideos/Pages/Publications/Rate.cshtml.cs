@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
@@ -21,9 +20,6 @@ namespace TASVideos.Pages.Publications
 
 		[FromRoute]
 		public int Id { get; set; }
-
-		[FromQuery]
-		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
 		public PublicationRateModel Rating { get; set; } = new ();
@@ -86,12 +82,7 @@ namespace TASVideos.Pages.Publications
 
 			await _db.SaveChangesAsync();
 
-			if (!string.IsNullOrWhiteSpace(ReturnUrl))
-			{
-				return RedirectToLocal(ReturnUrl);
-			}
-
-			return RedirectToPage("/Profile/Ratings");
+			return BasePageRedirect("/Profile/Ratings");
 		}
 
 		private void UpdateRating(PublicationRating? rating, int id, int userId, PublicationRatingType type, double? value)

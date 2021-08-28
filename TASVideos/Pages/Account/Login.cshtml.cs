@@ -18,9 +18,6 @@ namespace TASVideos.Pages.Account
 			_signInManager = signInManager;
 		}
 
-		[FromQuery]
-		public string? ReturnUrl { get; set; }
-
 		[BindProperty]
 		[Required]
 		[Display(Name = "User Name")]
@@ -51,7 +48,7 @@ namespace TASVideos.Pages.Account
 
 			if (result.Succeeded)
 			{
-				return RedirectToLocal(ReturnUrl);
+				return BaseReturnUrlRedirect();
 			}
 
 			if (result.IsLockedOut)

@@ -101,7 +101,7 @@ namespace TASVideos.Pages.Submissions
 			await _tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
 			_publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S", User.Name());
 
-			return Redirect($"/{submission.Id}S");
+			return BaseRedirect($"/{submission.Id}S");
 		}
 
 		public async Task<IActionResult> OnGetPrefillText()

@@ -107,7 +107,7 @@ namespace TASVideos.Pages.Roles
 			await AddUpdateRole(Role);
 			await ConcurrentSave(_db, $"Role {Id} updated", $"Unable to update Role {Id}");
 
-			return RedirectToPage("List");
+			return BasePageRedirect("List");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
@@ -125,7 +125,7 @@ namespace TASVideos.Pages.Roles
 			if (await IsInUse(Id.Value))
 			{
 				ErrorStatusMessage($"Role {Id} cannot be deleted because it is in use by at least 1 user");
-				return RedirectToPage("List");
+				return BasePageRedirect("List");
 			}
 
 			_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
@@ -136,7 +136,7 @@ namespace TASVideos.Pages.Roles
 				_publisher.SendUserManagement($"Role {Id} deleted by {User.Name()}", "", "Roles/List", User.Name());
 			}
 
-			return RedirectToPage("List");
+			return BasePageRedirect("List");
 		}
 
 		public async Task<IActionResult> OnGetRolesThatCanBeAssignedBy(int[] ids)

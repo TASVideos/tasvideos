@@ -151,12 +151,12 @@
 
 		document.getElementById('create-rom').onclick = function () {
 			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
-			document.location = '/Games/' + gameId + '/Roms/Edit?returnUrl=@PageContext.HttpContext.Request.Path';
+			document.location = '/Games/' + gameId + '/Roms/Edit?returnUrl=@HttpContext.Request.Path';
 		}
 
 		document.getElementById('create-game').onclick = function () {
 			var systemId = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)').value;
-			document.location = '/Games/Edit?returnUrl=@PageContext.HttpContext.ReturnUrl()&systemId=' + systemId;
+			document.location = '/Games/Edit?returnUrl=@HttpContext.ReturnUrl()&systemId=' + systemId;
 		}
 	})()
 </script>

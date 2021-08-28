@@ -338,7 +338,7 @@ namespace TASVideos.Pages.Submissions
 				_publisher.SendSubmissionEdit(title, $"{Id}S", userName);
 			}
 
-			return Redirect($"/{Id}S");
+			return BaseRedirect($"/{Id}S");
 		}
 
 		private async Task PopulateDropdowns()

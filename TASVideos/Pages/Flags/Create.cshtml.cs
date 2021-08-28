@@ -52,7 +52,7 @@ namespace TASVideos.Pages.Flags
 				default:
 				case FlagEditResult.Success:
 					SuccessStatusMessage("Tag successfully created.");
-					return RedirectToPage("Index");
+					return BasePageRedirect("Index");
 				case FlagEditResult.DuplicateCode:
 					ModelState.AddModelError($"{nameof(Flag)}.{nameof(Flag.Token)}", $"{nameof(Flag.Token)} {Flag.Token} already exists");
 					ClearStatusMessage();

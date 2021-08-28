@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Roles
 		{
 			if (string.IsNullOrWhiteSpace(role))
 			{
-				return RedirectToPage("/Roles/List");
+				return BasePageRedirect("/Roles/List");
 			}
 
 			Role = await _mapper

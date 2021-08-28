@@ -89,7 +89,7 @@ namespace TASVideos.Pages.Profile
 			await _db.SaveChangesAsync();
 
 			SuccessStatusMessage("Your profile has been updated");
-			return RedirectToPage("Settings");
+			return BasePageRedirect("Settings");
 		}
 
 		public async Task<IActionResult> OnPostSendVerificationEmail()
@@ -106,7 +106,7 @@ namespace TASVideos.Pages.Profile
 			await _emailService.EmailConfirmation(user.Email, callbackUrl);
 
 			SuccessStatusMessage("Verification email sent. Please check your email.");
-			return RedirectToPage("Settings");
+			return BasePageRedirect("Settings");
 		}
 	}
 }

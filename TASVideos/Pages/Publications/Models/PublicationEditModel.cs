@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Publications.Models
 
 		[Display(Name = "Tier")]
 		public string Tier { get; set; } = "";
-		public string TierIconPath { get; set; } = "";
+		public string? TierIconPath { get; set; } = "";
 		public string TierLink { get; set; } = "";
 
 		[Display(Name = "Obsoleted By")]

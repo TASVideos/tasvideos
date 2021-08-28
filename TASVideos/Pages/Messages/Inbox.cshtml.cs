@@ -62,7 +62,7 @@ namespace TASVideos.Pages.Messages
 				await _db.SaveChangesAsync();
 			}
 
-			return RedirectToPage("Savebox");
+			return BasePageRedirect("Savebox");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
@@ -83,7 +83,7 @@ namespace TASVideos.Pages.Messages
 				await _db.SaveChangesAsync();
 			}
 
-			return RedirectToPage("Inbox");
+			return BasePageRedirect("Inbox");
 		}
 	}
 }

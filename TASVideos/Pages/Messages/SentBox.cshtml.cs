@@ -62,7 +62,7 @@ namespace TASVideos.Pages.Messages
 				await ConcurrentSave(_db, "", "");
 			}
 
-			return RedirectToPage("SentBox");
+			return BasePageRedirect("SentBox");
 		}
 	}
 }

@@ -48,7 +48,7 @@ namespace TASVideos.Pages.Tiers
 				default:
 				case TierEditResult.Success:
 					SuccessStatusMessage("Tag successfully updated.");
-					return RedirectToPage("Index");
+					return BasePageRedirect("Index");
 				case TierEditResult.NotFound:
 					return NotFound();
 				case TierEditResult.DuplicateName:
@@ -80,7 +80,7 @@ namespace TASVideos.Pages.Tiers
 					break;
 			}
 
-			return RedirectToPage("Index");
+			return BasePageRedirect("Index");
 		}
 	}
 }

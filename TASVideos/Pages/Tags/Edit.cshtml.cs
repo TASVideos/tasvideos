@@ -50,7 +50,7 @@ namespace TASVideos.Pages.Tags
 				default:
 				case TagEditResult.Success:
 					SuccessStatusMessage("Tag successfully updated.");
-					return RedirectToPage("Index");
+					return BasePageRedirect("Index");
 				case TagEditResult.NotFound:
 					return NotFound();
 				case TagEditResult.DuplicateCode:
@@ -82,7 +82,7 @@ namespace TASVideos.Pages.Tags
 					break;
 			}
 
-			return RedirectToPage("Index");
+			return BasePageRedirect("Index");
 		}
 	}
 }

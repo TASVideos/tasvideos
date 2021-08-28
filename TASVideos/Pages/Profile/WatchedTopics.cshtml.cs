@@ -26,7 +26,7 @@ namespace TASVideos.Pages.Profile
 		public async Task<IActionResult> OnPostStopWatching(int topicId)
 		{
 			await _topicWatcher.UnwatchTopic(topicId, User.GetUserId());
-			return RedirectToPage("WatchedTopics");
+			return BasePageRedirect("WatchedTopics");
 		}
 	}
 }

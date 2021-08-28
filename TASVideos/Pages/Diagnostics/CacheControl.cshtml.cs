@@ -26,13 +26,13 @@ namespace TASVideos.Pages.Diagnostics
 		public async Task<IActionResult> OnPostFlushWikiCache()
 		{
 			await _wikiPages.FlushCache();
-			return RedirectToPage("CacheControl");
+			return BasePageRedirect("CacheControl");
 		}
 
 		public IActionResult OnPostClearAwardsCache()
 		{
 			_awards.FlushCache();
-			return RedirectToPage("CacheControl");
+			return BasePageRedirect("CacheControl");
 		}
 	}
 }
