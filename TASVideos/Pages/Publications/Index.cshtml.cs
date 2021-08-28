@@ -68,7 +68,7 @@ namespace TASVideos.Pages.Publications
 			// If no valid filter criteria, don't attempt to generate a list (else it would be all movies for what is most likely a malformed URL)
 			if (searchModel.IsEmpty)
 			{
-				return Redirect("Movies");
+				return BaseRedirect("Movies");
 			}
 
 			Movies = await _mapper.ProjectTo<PublicationDisplayModel>(

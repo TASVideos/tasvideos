@@ -31,7 +31,7 @@ namespace TASVideos.Pages.Tiers
 				default:
 				case TierEditResult.Success:
 					SuccessStatusMessage("Tier successfully created.");
-					return RedirectToPage("Index");
+					return BasePageRedirect("Index");
 				case TierEditResult.DuplicateName:
 					ModelState.AddModelError($"{nameof(Tier)}.{nameof(Tier.Name)}", $"{nameof(Tier.Name)} {Tier.Name} already exists");
 					ClearStatusMessage();

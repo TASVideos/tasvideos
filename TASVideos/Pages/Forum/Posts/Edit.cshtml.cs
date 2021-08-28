@@ -121,7 +121,7 @@ namespace TASVideos.Pages.Forum.Posts
 					User.Name());
 			}
 
-			return RedirectToLocal($"/forum/p/{Id}#{Id}");
+			return BasePageRedirect($"/forum/p/{Id}#{Id}");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
@@ -177,8 +177,8 @@ namespace TASVideos.Pages.Forum.Posts
 			}
 
 			return topicDeleted
-				? RedirectToPage("/Forum/Subforum/Index", new { id = post.Topic!.ForumId })
-				: RedirectToPage("/Forum/Topics/Index", new { id = post.TopicId });
+				? BasePageRedirect("/Forum/Subforum/Index", new { id = post.Topic!.ForumId })
+				: BasePageRedirect("/Forum/Topics/Index", new { id = post.TopicId });
 		}
 
 		private async Task<bool> CanEdit(ForumPost post, int userId)

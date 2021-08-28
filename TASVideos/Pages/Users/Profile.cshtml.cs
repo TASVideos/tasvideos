@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Users
 		{
 			if (string.IsNullOrWhiteSpace(UserName) && string.IsNullOrWhiteSpace(Name))
 			{
-				return RedirectToPage("/Users/List");
+				return BasePageRedirect("/Users/List");
 			}
 
 			if (string.IsNullOrWhiteSpace(UserName))

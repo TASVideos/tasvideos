@@ -60,7 +60,7 @@ namespace TASVideos.Pages.UserFiles
 			};
 		}
 
-		public async Task<IActionResult> OnPostDelete(long fileId, string returnUrl)
+		public async Task<IActionResult> OnPostDelete(long fileId)
 		{
 			var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
 			if (userFile is not null)
@@ -74,10 +74,10 @@ namespace TASVideos.Pages.UserFiles
 				}
 			}
 
-			return RedirectToLocal(returnUrl);
+			return BaseReturnUrlRedirect();
 		}
 
-		public async Task<IActionResult> OnPostComment(long fileId, string comment, string returnUrl)
+		public async Task<IActionResult> OnPostComment(long fileId, string comment)
 		{
 			if (User.Has(PermissionTo.CreateForumPosts)
 				&& !string.IsNullOrWhiteSpace(comment))
@@ -102,10 +102,10 @@ namespace TASVideos.Pages.UserFiles
 				}
 			}
 
-			return RedirectToLocal(returnUrl);
+			return BaseReturnUrlRedirect();
 		}
 
-		public async Task<IActionResult> OnPostEditComment(long commentId, string comment, string returnUrl)
+		public async Task<IActionResult> OnPostEditComment(long commentId, string comment)
 		{
 			if (User.Has(PermissionTo.CreateForumPosts)
 				&& !string.IsNullOrWhiteSpace(comment))
@@ -130,10 +130,10 @@ namespace TASVideos.Pages.UserFiles
 				}
 			}
 
-			return RedirectToLocal(returnUrl);
+			return BaseReturnUrlRedirect();
 		}
 
-		public async Task<IActionResult> OnPostDeleteComment(long commentId, string returnUrl)
+		public async Task<IActionResult> OnPostDeleteComment(long commentId)
 		{
 			if (User.Has(PermissionTo.CreateForumPosts))
 			{
@@ -157,7 +157,7 @@ namespace TASVideos.Pages.UserFiles
 				}
 			}
 
-			return RedirectToLocal(returnUrl);
+			return BaseReturnUrlRedirect();
 		}
 	}
 }

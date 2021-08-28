@@ -34,9 +34,6 @@ namespace TASVideos.Pages.Users
 		[FromRoute]
 		public int Id { get; set; }
 
-		[FromQuery]
-		public string? ReturnUrl { get; set; }
-
 		[BindProperty]
 		public UserEditModel UserToEdit { get; set; } = new ();
 
@@ -47,7 +44,7 @@ namespace TASVideos.Pages.Users
 		{
 			if (User.GetUserId() == Id)
 			{
-				return RedirectToPage("/Profile/Settings");
+				return BasePageRedirect("/Profile/Settings");
 			}
 
 			UserToEdit = await _mapper.ProjectTo<UserEditModel>(
@@ -100,7 +97,7 @@ namespace TASVideos.Pages.Users
 			var result = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
 			if (!result)
 			{
-				return ReturnToPreviousPage();
+				return BasePageRedirect("List");
 			}
 
 			_db.UserRoles.AddRange(UserToEdit.SelectedRoles
@@ -113,7 +110,7 @@ namespace TASVideos.Pages.Users
 			var saveResult2 = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
 			if (!saveResult2)
 			{
-				return ReturnToPreviousPage();
+				return BasePageRedirect("List");
 			}
 
 			// Announce Role change
@@ -145,14 +142,10 @@ namespace TASVideos.Pages.Users
 			}
 
 			SuccessStatusMessage($"User {user.UserName} updated");
-			return ReturnToPreviousPage();
+			return BasePageRedirect("List");
 		}
 
-		private IActionResult ReturnToPreviousPage() => string.IsNullOrWhiteSpace(ReturnUrl)
-			? RedirectToPage("List")
-			: RedirectToLocal(ReturnUrl);
-
-		public async Task<IActionResult> OnGetUnlock(string returnUrl)
+		public async Task<IActionResult> OnGetUnlock()
 		{
 			var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == Id);
 			if (user == null)
@@ -163,7 +156,7 @@ namespace TASVideos.Pages.Users
 			user.LockoutEnd = null;
 			await ConcurrentSave(_db, $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
 
-			return RedirectToLocal(returnUrl);
+			return BaseReturnUrlRedirect();
 		}
 
 		private async Task<IEnumerable<SelectListItem>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles)

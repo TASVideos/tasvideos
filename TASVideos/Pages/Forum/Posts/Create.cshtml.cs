@@ -139,7 +139,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			await _userManager.AssignAutoAssignableRolesByPost(user);
 
-			return RedirectToLocal($"/forum/p/{id}#{id}");
+			return BasePageRedirect($"/forum/p/{id}#{id}");
 		}
 	}
 }

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
+using TASVideos.Extensions;
 using TASVideos.Pages.Games.Roms.Models;
 
 namespace TASVideos.Pages.Games.Roms
@@ -41,9 +42,6 @@ namespace TASVideos.Pages.Games.Roms
 
 		[FromRoute]
 		public int? Id { get; set; }
-
-		[FromQuery]
-		public string? ReturnUrl { get; set; }
 
 		[BindProperty]
 		public RomEditModel Rom { get; set; } = new ();
@@ -132,12 +130,12 @@ namespace TASVideos.Pages.Games.Roms
 				return Page();
 			}
 
-			return string.IsNullOrWhiteSpace(ReturnUrl)
+			return string.IsNullOrWhiteSpace(HttpContext.ReturnUrl())
 				? RedirectToPage("List", new { gameId = GameId })
-				: RedirectToLocal(ReturnUrl + $"?GameId={GameId}&RomId={rom.Id}");
+				: BaseReturnUrlRedirect($"?GameId={GameId}&RomId={rom.Id}");
 		}
 
-		public async Task<ActionResult> OnPostDelete()
+		public async Task<IActionResult> OnPostDelete()
 		{
 			if (!Id.HasValue)
 			{
@@ -147,12 +145,12 @@ namespace TASVideos.Pages.Games.Roms
 			if (!await CanBeDeleted())
 			{
 				ErrorStatusMessage($"Unable to delete Rom {Id}, rom is used by a publication or submission.");
-				return RedirectToPage("List");
+				return BasePageRedirect("List");
 			}
 
 			_db.GameRoms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
 			await ConcurrentSave(_db, $"Rom {Id} deleted", $"Unable to delete Rom {Id}");
-			return RedirectToPage("List");
+			return BasePageRedirect("List");
 		}
 
 		private async Task<bool> CanBeDeleted()

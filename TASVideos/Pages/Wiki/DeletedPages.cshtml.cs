@@ -64,7 +64,7 @@ namespace TASVideos.Pages.Wiki
 					User.Name());
 			}
 
-			return RedirectToPage("DeletedPages");
+			return BasePageRedirect("DeletedPages");
 		}
 
 		public async Task<IActionResult> OnPostDeleteRevision(string path, int revision)
@@ -88,7 +88,7 @@ namespace TASVideos.Pages.Wiki
 					"",
 					User.Name());
 
-			return Redirect("/" + path);
+			return BaseRedirect("/" + path);
 		}
 
 		public async Task<IActionResult> OnPostUndelete(string path)
@@ -117,7 +117,7 @@ namespace TASVideos.Pages.Wiki
 					path,
 					User.Name());
 
-			return Redirect("/" + path);
+			return BaseRedirect("/" + path);
 		}
 	}
 }

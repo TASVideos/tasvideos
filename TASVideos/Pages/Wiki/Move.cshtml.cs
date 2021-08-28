@@ -80,7 +80,7 @@ namespace TASVideos.Pages.Wiki
 				Move.DestinationPageName,
 				User.Name());
 
-			return Redirect("/" + Move.DestinationPageName);
+			return BaseRedirect("/" + Move.DestinationPageName);
 		}
 	}
 }

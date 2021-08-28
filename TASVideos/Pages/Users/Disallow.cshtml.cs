@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -12,7 +11,7 @@ using TASVideos.Pages.Users.Models;
 namespace TASVideos.Pages.Users
 {
 	[RequirePermission(PermissionTo.EditDisallows)]
-	public class DisallowModel : PageModel
+	public class DisallowModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
 
@@ -51,7 +50,7 @@ namespace TASVideos.Pages.Users
 			_db.UserDisallows.Add(new UserDisallow { RegexPattern = RegexPattern! });
 			await _db.SaveChangesAsync();
 
-			return Redirect("/Users/Disallow");
+			return BasePageRedirect("/Users/Disallow");
 		}
 
 		public async Task<IActionResult> OnPostDelete(int disallowId)
@@ -63,7 +62,7 @@ namespace TASVideos.Pages.Users
 				await _db.SaveChangesAsync();
 			}
 
-			return Redirect("/Users/Disallow");
+			return BasePageRedirect("/Users/Disallow");
 		}
 
 		private async Task PopulateDisallows()

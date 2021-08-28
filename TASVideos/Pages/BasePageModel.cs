@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Extensions;
 
 namespace TASVideos.Pages
 {
@@ -41,12 +42,37 @@ namespace TASVideos.Pages
 
 		protected IActionResult Login() => new RedirectToPageResult("Login");
 
-		protected IActionResult RedirectToLocal(string? returnUrl)
+		protected IActionResult BasePageRedirect(string page, object? routeValues = null)
 		{
-			returnUrl ??= "";
-			return Url.IsLocalUrl(returnUrl)
-				? LocalRedirect(returnUrl)
-				: Home();
+			if (!string.IsNullOrWhiteSpace(Request.ReturnUrl()))
+			{
+				return BaseReturnUrlRedirect();
+			}
+
+			return RedirectToPage(page, routeValues);
+		}
+
+		protected IActionResult BaseRedirect(string page)
+		{
+			if (!string.IsNullOrWhiteSpace(Request.ReturnUrl()))
+			{
+				return BaseReturnUrlRedirect();
+			}
+
+			return Redirect(page);
+		}
+
+		protected IActionResult BaseReturnUrlRedirect(string? additionalParam = null)
+		{
+			var returnUrl = Request.ReturnUrl() + additionalParam;
+			if (!string.IsNullOrWhiteSpace(returnUrl))
+			{
+				return Url.IsLocalUrl(returnUrl)
+					? LocalRedirect(returnUrl)
+					: Home();
+			}
+
+			return Home();
 		}
 
 		protected void AddErrors(IdentityResult result)

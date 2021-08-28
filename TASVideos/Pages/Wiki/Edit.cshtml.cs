@@ -104,10 +104,7 @@ namespace TASVideos.Pages.Wiki
 					User.Name());
 			}
 
-			var returnUrl = HttpContext.Request.ReturnUrl();
-			return !string.IsNullOrWhiteSpace(returnUrl)
-				? RedirectToLocal(returnUrl)
-				: Redirect("/" + page.PageName);
+			return BaseRedirect("/" + page.PageName);
 		}
 
 		private async Task<bool> UserNameExists(string path)

@@ -70,7 +70,7 @@ namespace TASVideos.Pages.Profile
 
 			await _signInManager.SignInAsync(user, isPersistent: false);
 			SuccessStatusMessage("Your password has been changed.");
-			return RedirectToPage("ChangePassword");
+			return BasePageRedirect("ChangePassword");
 		}
 	}
 }

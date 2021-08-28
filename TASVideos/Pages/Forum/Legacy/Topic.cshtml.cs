@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Forum.Legacy
 					return NotFound();
 				}
 
-				return RedirectToPage(
+				return BasePageRedirect(
 					"/Forum/Topics/Index",
 					new
 					{
@@ -50,7 +50,7 @@ namespace TASVideos.Pages.Forum.Legacy
 					});
 			}
 
-			return RedirectToPage("/Forum/Topics/Index", new { Id = T ?? Id });
+			return BasePageRedirect("/Forum/Topics/Index", new { Id = T ?? Id });
 		}
 	}
 }

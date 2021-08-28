@@ -150,7 +150,7 @@ namespace TASVideos.Pages.UserFiles
 			_db.UserFiles.Add(userFile);
 			await _db.SaveChangesAsync();
 
-			return RedirectToPage("/Profile/UserFiles");
+			return BasePageRedirect("/Profile/UserFiles");
 		}
 
 		private async Task Initialize()

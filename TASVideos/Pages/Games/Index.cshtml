@@ -9,7 +9,7 @@
 <card>
 	<cardheader>
 		<span class="float-right">
-			<a condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()" class="btn btn-primary">Edit</a>
+			<a condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@HttpContext.ReturnUrl()" class="btn btn-primary">Edit</a>
 		</span>
 		<h4>Description</h4>
 	</cardheader>
@@ -20,7 +20,7 @@
 	</cardbody>
 </card>
 <hr />
-<a permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()" class="pull-right btn btn-primary">Edit</a>
+<a permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.ReturnUrl()" class="pull-right btn btn-primary">Edit</a>
 <row>
 	<column md="6">
 		<ul>
@@ -86,7 +86,7 @@
 		permission="CatalogMovies"
 		asp-page="/Games/Roms/List"
 		asp-route-gameId="@Model.Game.Id"
-		asp-route-returnUrl="@PageContext.HttpContext.ReturnUrl()"
+		asp-route-returnUrl="@HttpContext.ReturnUrl()"
 		class="pull-right btn btn-primary">Edit</a>
 </h4>
 

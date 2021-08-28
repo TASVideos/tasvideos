@@ -36,9 +36,6 @@ namespace TASVideos.Pages.Games
 		public int? Id { get; set; }
 
 		[FromQuery]
-		public string? ReturnUrl { get; set; }
-
-		[FromQuery]
 		public int? SystemId { get; set; }
 
 		[BindProperty]
@@ -137,9 +134,7 @@ namespace TASVideos.Pages.Games
 			}
 
 			await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
-			return string.IsNullOrWhiteSpace(ReturnUrl)
-				? RedirectToPage("List")
-				: RedirectToLocal(ReturnUrl);
+			return BasePageRedirect("List");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
@@ -152,13 +147,13 @@ namespace TASVideos.Pages.Games
 			if (!await CanBeDeleted())
 			{
 				ErrorStatusMessage($"Unable to delete Game {Id}, game is used by a publication or submission.");
-				return RedirectToPage("List");
+				return BasePageRedirect("List");
 			}
 
 			_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
 			await ConcurrentSave(_db, $"Game {Id} deleted", $"Unable to delete Game {Id}");
 
-			return RedirectToPage("List");
+			return BasePageRedirect("List");
 		}
 
 		private async Task Initialize()

@@ -63,7 +63,7 @@ namespace TASVideos.Pages.Flags
 				default:
 				case FlagEditResult.Success:
 					SuccessStatusMessage("Tag successfully updated.");
-					return RedirectToPage("Index");
+					return BasePageRedirect("Index");
 				case FlagEditResult.NotFound:
 					return NotFound();
 				case FlagEditResult.DuplicateCode:
@@ -95,7 +95,7 @@ namespace TASVideos.Pages.Flags
 					break;
 			}
 
-			return RedirectToPage("Index");
+			return BaseReturnUrlRedirect("Index");
 		}
 	}
 }

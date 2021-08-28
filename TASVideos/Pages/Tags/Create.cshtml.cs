@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Tags
 				default:
 				case TagEditResult.Success:
 					SuccessStatusMessage("Tag successfully created.");
-					return RedirectToPage("Index");
+					return BasePageRedirect("Index");
 				case TagEditResult.DuplicateCode:
 					ModelState.AddModelError($"{nameof(Tag)}.{nameof(Tag.Code)}", $"{nameof(Tag.Code)} {Tag.Code} already exists");
 					ClearStatusMessage();

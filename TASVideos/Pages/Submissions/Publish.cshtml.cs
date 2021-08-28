@@ -241,7 +241,7 @@ namespace TASVideos.Pages.Submissions
 				}
 			}
 
-			return Redirect($"/{publication.Id}M");
+			return BaseRedirect($"/{publication.Id}M");
 		}
 
 		private async Task PopulateAvailableMoviesToObsolete(int systemId)
