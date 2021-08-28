@@ -18,7 +18,8 @@ namespace TASVideos.Data.SeedData
 			new () { Id = 10, DisplayName = "Storybook" },
 			new () { Id = 11, DisplayName = "Strategy" },
 			new () { Id = 12, DisplayName = "Board" },
-			new () { Id = 13, DisplayName = "Gameshow" }
+			new () { Id = 13, DisplayName = "Gameshow" },
+			new () { Id = 14, DisplayName = "Unofficial game" }
 		};
 	}
 }

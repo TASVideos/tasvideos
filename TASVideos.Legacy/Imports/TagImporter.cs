@@ -12,6 +12,7 @@ namespace TASVideos.Legacy.Imports
 		{
 			var legacyClassTypes = legacySiteContext.ClassTypes
 				.Where(t => !t.PositiveText.Contains("Genre"))
+				.Where(t => t.PositiveText != "Unofficial game")
 				.ToList();
 
 			var tags = new List<Tag>();
