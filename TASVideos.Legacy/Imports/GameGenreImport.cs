@@ -22,7 +22,7 @@ namespace TASVideos.Legacy.Imports
 				join gn in legacySiteContext.GameNames on s.GameNameId equals gn.Id
 				join mc in legacySiteContext.MovieClass on m.Id equals mc.MovieId
 				join c in legacySiteContext.ClassTypes on mc.ClassId equals c.Id
-				where c.PositiveText.StartsWith("Genre")
+				where c.PositiveText.StartsWith("Genre") || c.PositiveText == "Unofficial game"
 				select new
 				{
 					GameId = gn.Id,
