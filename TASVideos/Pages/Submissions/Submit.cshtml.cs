@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -21,6 +22,7 @@ namespace TASVideos.Pages.Submissions
 		private readonly IMovieParser _parser;
 		private readonly UserManager _userManager;
 		private readonly ITASVideoAgent _tasVideoAgent;
+		private readonly IYoutubeSync _youtubeSync;
 
 		public SubmitModel(
 			ApplicationDbContext db,
@@ -28,7 +30,8 @@ namespace TASVideos.Pages.Submissions
 			IWikiPages wikiPages,
 			IMovieParser parser,
 			UserManager userManager,
-			ITASVideoAgent tasVideoAgent)
+			ITASVideoAgent tasVideoAgent,
+			IYoutubeSync youtubeSync)
 			: base(db)
 		{
 			_publisher = publisher;
@@ -36,6 +39,7 @@ namespace TASVideos.Pages.Submissions
 			_parser = parser;
 			_userManager = userManager;
 			_tasVideoAgent = tasVideoAgent;
+			_youtubeSync = youtubeSync;
 		}
 
 		[BindProperty]
@@ -58,7 +62,6 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
-			// TODO: set up auto-mapper, the v8 upgrade didn't like a default mapping
 			var submission = new Submission
 			{
 				GameVersion = Create.GameVersion,
@@ -66,7 +69,7 @@ namespace TASVideos.Pages.Submissions
 				Branch = Create.Branch,
 				RomName = Create.RomName,
 				EmulatorVersion = Create.Emulator,
-				EncodeEmbedLink = Create.EncodeEmbedLink,
+				EncodeEmbedLink = _youtubeSync.ConvertToEmbedLink(Create.EncodeEmbedLink),
 				AdditionalAuthors = Create.AdditionalAuthors
 			};
 
