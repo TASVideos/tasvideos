@@ -43,9 +43,42 @@
 	<h1>@($"Submission {Model.Submission.Title}")</h1>
 }
 
-<row>
+<row class="mt-2">
 	<div class="col-lg-6" condition="hasEncode">
-		<iframe type="text/html" style="width:450px;height:370px;margin:0;" src="@Model.Submission!.EncodeEmbedLink" allowfullscreen="true"></iframe>
+		@*Boilerplate boostrap stuff *@
+		<div class="embed-responsive embed-responsive-16by9">
+			<div class="embed-responsive-item">
+				<div id="ytplayer"></div>
+			</div>
+		</div>
+		<script>
+			const youtubeScriptId = 'youtube-api';
+			let youtubeScript = document.getElementById(youtubeScriptId);
+			let player;
+			@*Loads the scripts which run the Youtube Player API asynchronously*@
+			if (youtubeScript === null) {
+				let tag = document.createElement('script');
+				let firstScript = document.getElementsByTagName('script')[0];
+				
+				tag.src = 'https://www.youtube.com/iframe_api';
+				tag.id = youtubeScriptId;
+				firstScript.parentNode.insertBefore(tag, firstScript);
+			}
+			@*Populates the youtube player after the API script is ready*@
+			if (!player) {
+				@{
+				if (!String.IsNullOrEmpty(Model.Submission!.EncodeEmbedLink)){
+					<text>
+						window.onYouTubeIframeAPIReady = () => {
+							player = new YT.Player('ytplayer', {
+								videoId: "@Model.Submission!.EncodeEmbedLink.Split("/").Last()"
+							});
+						}
+					</text>
+				}
+				}
+			}
+		</script>
 		<br />
 		<a href="@Model.Submission!.EncodeEmbedLink">(Link to video)</a>
 	</div>
