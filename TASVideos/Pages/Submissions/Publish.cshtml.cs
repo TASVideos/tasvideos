@@ -122,7 +122,8 @@ namespace TASVideos.Pages.Submissions
 				EmulatorVersion = Submission.EmulatorVersion,
 				Frames = submission.Frames,
 				RerecordCount = submission.RerecordCount,
-				MovieFileName = Submission.MovieFileName + "." + Submission.MovieExtension
+				MovieFileName = Submission.MovieFileName + "." + Submission.MovieExtension,
+				AdditionalAuthors = submission.AdditionalAuthors
 			};
 
 			publication.PublicationUrls.Add(new PublicationUrl
