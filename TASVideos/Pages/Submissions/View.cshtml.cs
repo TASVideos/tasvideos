@@ -126,7 +126,7 @@ namespace TASVideos.Pages.Submissions
 				return AccessDenied();
 			}
 
-			return await Claim(SubmissionStatus.New, SubmissionStatus.JudgingUnderWay, "judging", "Claiming for judging.");
+			return await Claim(SubmissionStatus.New, SubmissionStatus.JudgingUnderWay, "judging", "Claiming for judging.", true);
 		}
 
 		public async Task<IActionResult> OnGetClaimForPublishing()
@@ -136,10 +136,10 @@ namespace TASVideos.Pages.Submissions
 				return AccessDenied();
 			}
 
-			return await Claim(SubmissionStatus.Accepted, SubmissionStatus.PublicationUnderway, "publication", "Processing...");
+			return await Claim(SubmissionStatus.Accepted, SubmissionStatus.PublicationUnderway, "publication", "Processing...", false);
 		}
 
-		private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message)
+		private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message, bool isJudge)
 		{
 			var submission = await _db.Submissions
 				.Include(s => s.WikiContent)
@@ -164,7 +164,15 @@ namespace TASVideos.Pages.Submissions
 			};
 			await _wikiPages.Add(wikiPage);
 			submission.WikiContentId = wikiPage.Id;
-			submission.PublisherId = User.GetUserId();
+
+			if (isJudge)
+			{
+				submission.JudgeId = User.GetUserId();
+			}
+			else
+			{
+				submission.PublisherId = User.GetUserId();
+			}
 
 			var result = await ConcurrentSave(_db, "", "Unable to claim");
 			if (result)
