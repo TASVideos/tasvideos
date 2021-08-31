@@ -22,7 +22,8 @@ namespace TASVideos.Legacy.Imports
 						? legacyClassTypes.Single(c => c.Id == mc.ClassId)
 						: legacyClassTypes.Single(c => c.OldId == mc.ClassId);
 
-				if (classType.PositiveText.Contains("Genre"))
+				if (classType.PositiveText.Contains("Genre")
+					|| classType.PositiveText == "Unofficial game")
 				{
 					continue;
 				}
