@@ -23,7 +23,6 @@
 			<th>Topics</th>
 			<th>Replies</th>
 			<th>Author</th>
-			<td>Views</td>
 			<td>Last Post</td>
 		</tr>
 		@foreach (var topic in Model.Forum.Topics)
@@ -40,7 +39,6 @@
 				</td>
 				<td>@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
 				<td>@topic.CreateUserName</td>
-				<td>@topic.Type</td>
 				<td><timezone-convert asp-for="@topic.LastPostDateTime" /></td>
 			</tr>
 		}

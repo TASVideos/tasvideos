@@ -28,7 +28,6 @@ namespace TASVideos.Data.Entity.Forum
 		public int PosterId { get; set; }
 		public virtual User? Poster { get; set; }
 
-		public int Views { get; set; }
 		public ForumTopicType Type { get; set; }
 
 		public bool IsLocked { get; set; }

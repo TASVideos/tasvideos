@@ -61,7 +61,6 @@ namespace TASVideos.Pages.Forum.Subforum
 					CreateUserName = ft.CreateUserName,
 					CreateTimestamp = ft.CreateTimestamp,
 					Type = ft.Type,
-					Views = ft.Views,
 					PostCount = ft.ForumPosts.Count,
 					LastPost = ft.ForumPosts.Max(fp => (DateTime?)fp.CreateTimestamp)
 				})
