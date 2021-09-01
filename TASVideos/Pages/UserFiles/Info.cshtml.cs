@@ -39,6 +39,7 @@ namespace TASVideos.Pages.UserFiles
 				.Include(uf => uf.Comments)
 				.Include(uf => uf.Author)
 				.Include(uf => uf.Game)
+				.ThenInclude(g => g!.System)
 				.Include(uf => uf.System)
 				.Where(userFile => userFile.Id == Id)
 				.SingleOrDefaultAsync();

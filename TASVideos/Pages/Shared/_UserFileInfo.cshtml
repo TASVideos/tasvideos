@@ -47,10 +47,9 @@
 					For
 					<a href="/Games/@Model.GameId">@Model.GameName</a>
 
-					@if (Model.System is not null)
-					{
-						<text>(@Model.System)</text>
-					}
+					<span condition="Model.GameSystem is not null">
+						(@(Model.GameSystem ?? Model.System))
+					</span>
 				</p>
 			}
 			else if (Model.System is not null)
