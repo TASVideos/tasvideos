@@ -15,7 +15,7 @@
 				Users with movies
 			</cardheader>
 			<cardbody>
-				@foreach (var user in Model.Data.UsersWithMovies)
+				@foreach (var user in Model.Data.UsersWithMovies.OrderBy(u => u.UserName))
 				{
 					<a asp-page="ForUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: <timezone-convert asp-for="@user.Latest"/>)</span><br />
 				}
