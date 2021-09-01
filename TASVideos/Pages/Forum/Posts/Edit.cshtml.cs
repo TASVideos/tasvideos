@@ -121,7 +121,7 @@ namespace TASVideos.Pages.Forum.Posts
 					User.Name());
 			}
 
-			return BasePageRedirect($"/forum/p/{Id}#{Id}");
+			return BaseRedirect($"/forum/p/{Id}#{Id}");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
