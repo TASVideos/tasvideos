@@ -20,6 +20,7 @@ namespace TASVideos.Models
 		public int FileSize { get; set; }
 		public int? GameId { get; set; }
 		public string? GameName { get; set; }
+		public string? GameSystem { get; set; }
 		public string? System { get; set; }
 
 		// Only relevant to Movies
