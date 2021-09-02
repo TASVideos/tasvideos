@@ -42,6 +42,22 @@ namespace TASVideos.ForumEngine
 				|
 				%[A-Fa-f0-9]{2}
 			)+
+			(
+				\?
+				(
+					[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
+					|
+					%[A-Fa-f0-9]{2}
+				)*				
+			)?
+			(
+				\#
+				(
+					[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
+					|
+					%[A-Fa-f0-9]{2}
+				)*				
+			)?
 		", RegexOptions.IgnorePatternWhitespace);
 
 		// The old system does support attributes in html tags, but only a few that we probably don't want,
