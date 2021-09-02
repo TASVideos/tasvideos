@@ -183,6 +183,8 @@ namespace TASVideos
 
 			CreateMap<Game, GamesResponse>();
 			CreateMap<GameRom, GamesResponse.GameRom>();
+
+			CreateMap<WikiPage, UserWikiEditHistoryModel.EditEntry>();
 		}
 	}
 }
