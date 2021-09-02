@@ -7,7 +7,7 @@
 --		- Go to Advanced -> Types of data to script, and change from Schema only to Data only
 --		- Save as SampleData.sql
 --		- Run
---		- zip SampleData-MsSql.sql and replace SampleData-MsSql.zip
+--		- zip SampleData.sql and replace SampleData-MsSql.zip
 
 use [TASVideos]
 
@@ -55,8 +55,9 @@ UPDATE Users SET Signature = NULL
 UPDATE Users SET LegacyPassword = NULL --We don't want this data public
 DELETE FROM PrivateMessages
 
- --Trim Publications and Submissions
- DECLARE @Publications as TABLE (Id int primary key, SubmissionId int, WikiContentId int)
+--Trim Publications and Submissions
+DELETE FROM PublicationMaintenanceLogs
+DECLARE @Publications as TABLE (Id int primary key, SubmissionId int, WikiContentId int)
 INSERT INTO @Publications
 	SELECT Id = p.Id, SubmissionId = p.SubmissionId, WikiContentId = p.WikiContentId
 	FROM Publications p
@@ -179,6 +180,7 @@ INSERT INTO @Topics
 		WHERE t.ForumId = f.Id
 		ORDER BY t.CreateTimestamp DESC
 	) topic
+	WHERE f.Restricted = 0
 
 
 DECLARE @Posts as Table (Id int primary key)
