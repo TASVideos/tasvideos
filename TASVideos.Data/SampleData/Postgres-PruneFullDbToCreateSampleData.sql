@@ -63,6 +63,7 @@ UPDATE public.users SET legacy_password = NULL; --We don't want this data public
 DELETE FROM public.private_messages;
 
  --Trim Publications and Submissions
+TRUNCATE TABLE publication_maintenance_logs;
 DROP TABLE IF EXISTS _publications;
 CREATE TEMPORARY TABLE _publications (id int primary key, submission_id int, wiki_content_id int);
 INSERT INTO _publications
@@ -174,7 +175,8 @@ INSERT INTO _topics
 		WHERE t.forum_id = f.id
 		ORDER BY t.create_timestamp DESC
 		LIMIT 4
-	) AS topic ON topic.forum_id = f.id;
+	) AS topic ON topic.forum_id = f.id
+	WHERE f.restricted = false;
 	
 DROP TABLE IF EXISTS _posts;
 CREATE TEMPORARY TABLE _posts (id int primary key);
