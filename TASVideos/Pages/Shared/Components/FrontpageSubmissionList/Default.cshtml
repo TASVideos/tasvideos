@@ -14,7 +14,7 @@
 		<tr>
 			<td><sub-link id="item.Id">@item.System @item.GameName @(!string.IsNullOrWhiteSpace(item.Branch) ? $"\"{item.Branch}\"" : "")</sub-link></td>
 			<td>@item.Branch</td>
-			<td>@($"{item.Time:g}")</td>
+			<td>@(item.Time.ToStringWithOptionalDaysAndHours())</td>
 			<td>@item.Author</td>
 			<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>
 			<td>@item.Status.EnumDisplayName()</td>
