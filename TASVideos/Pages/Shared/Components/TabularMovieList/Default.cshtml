@@ -26,9 +26,9 @@
 							<td><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></td>
 							<td>@pub.Game</td>
 							<td>
-								<pub-link id="pub.Id">@($"{pub.Time():g}")</pub-link>
+								<pub-link id="pub.Id">@(pub.Time().ToStringWithOptionalDaysAndHours())</pub-link>
 								<span condition="pub.ObsoletedMovie != null">
-									(Was <pub-link id="pub.ObsoletedMovie!.Id">@($"{pub.ObsoletedMovie!.Time():g}")</pub-link>)
+									(Was <pub-link id="pub.ObsoletedMovie!.Id">@(pub.ObsoletedMovie!.Time().ToStringWithOptionalDaysAndHours())</pub-link>)
 								</span>
 							</td>
 							<td>@pub.Authors</td>
