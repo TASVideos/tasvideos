@@ -323,7 +323,7 @@ namespace TASVideos.ForumEngine
 							FrameRate = fps,
 							Frames = n
 						};
-						var time = timeable.Time().ToString("g");
+						var time = timeable.Time().ToStringWithOptionalDaysAndHours();
 
 						w.Write("<abbr title=");
 						Helpers.WriteAttributeValue(w, $"{n} Frames @{fps} FPS");
