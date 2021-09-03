@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher
@@ -24,7 +25,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		// Calling code will likely not know or care the list, but doesn't hurt to expose it
 		public IEnumerable<IPostDistributor> Providers { get; }
 
-		public void Send(IPostable message)
+		public async Task Send(IPostable message)
 		{
 			if (message == null)
 			{
@@ -32,10 +33,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			}
 
 			var providers = Providers.Where(p => p.Types.Contains(message.Type));
-			foreach (var provider in providers)
-			{
-				provider.Post(message);
-			}
+			await Task.WhenAll(providers.Select(p => p.Post(message)));
 		}
 
 		public string ToAbsolute(string relativeLink)
@@ -48,9 +46,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 
 	public static class ExternalMediaPublisherExtensions
 	{
-		public static void SendUserFile(this ExternalMediaPublisher publisher, string title, string relativeLink, string body = "", string user = "")
+		public static async Task SendUserFile(this ExternalMediaPublisher publisher, string title, string relativeLink, string body = "", string user = "")
 		{
-			publisher.Send(new Post
+			await publisher.Send(new Post
 			{
 				Type = PostType.General,
 				Group = PostGroups.UserFiles,
@@ -61,9 +59,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static async Task AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
-			publisher.Send(new Post
+			await publisher.Send(new Post
 			{
 				Type = PostType.Announcement,
 				Group = PostGroups.Submission,
@@ -74,9 +72,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
-			publisher.Send(new Post
+			await publisher.Send(new Post
 			{
 				Type = PostType.General,
 				Group = PostGroups.Submission,
@@ -87,9 +85,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void AnnouncePublication(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static async Task AnnouncePublication(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
-			publisher.Send(new Post
+			await publisher.Send(new Post
 			{
 				Type = PostType.Announcement,
 				Group = PostGroups.Submission,
@@ -100,9 +98,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
 		{
-			publisher.Send(new Post
+			await publisher.Send(new Post
 			{
 				Type = PostType.General,
 				Group = PostGroups.Publication,
@@ -113,9 +111,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink, string user = "")
+		public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink, string user = "")
 		{
-			publisher.Send(new Post
+			await publisher.Send(new Post
 			{
 				Type = restricted
 					? PostType.Administrative
@@ -128,9 +126,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user)
+		public static async Task SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user)
 		{
-			publisher.Send(new Post
+			await publisher.Send(new Post
 			{
 				Type = PostType.General,
 				Group = PostGroups.Wiki,
@@ -141,9 +139,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static void SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user = "")
+		public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user = "")
 		{
-			publisher.Send(new Post
+			await publisher.Send(new Post
 			{
 				Type = PostType.Administrative,
 				Group = PostGroups.UserManagement,

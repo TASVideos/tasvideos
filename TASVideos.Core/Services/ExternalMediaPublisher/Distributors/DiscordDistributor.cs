@@ -49,7 +49,6 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			}
 
 			ConnectWebsocket();
-
 			Console.CancelKeyPress += CloseWebsocket!;
 		}
 
@@ -167,7 +166,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				heartbeatObject.Add("d", _sequenceNumber);
 			}
 
-			await _gateway!.SendAsync(Encoding.ASCII.GetBytes(heartbeatObject.ToString()), WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
+			await _gateway.SendAsync(Encoding.ASCII.GetBytes(heartbeatObject.ToString()), WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
 		}
 
 		public async Task ShutDown(WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure, string closureMessage = "Shutting down.")
@@ -175,7 +174,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			if (_gateway.State != WebSocketState.Closed && _gateway.State != WebSocketState.CloseReceived && _gateway.State != WebSocketState.CloseSent)
 			{
 				Console.WriteLine("Shutdown signal received, closing gateway.");
-				await _gateway!.CloseAsync(closeStatus, closureMessage, _cancellationTokenSource.Token);
+				await _gateway.CloseAsync(closeStatus, closureMessage, _cancellationTokenSource.Token);
 
 				System.Diagnostics.Stopwatch stopwatch = new ();
 
@@ -190,7 +189,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			}
 		}
 
-		public async void Post(IPostable post)
+		public async Task Post(IPostable post)
 		{
 			DiscordMessage discordMessage = new (post);
 
@@ -199,7 +198,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			using HttpClient httpClient = _httpClientFactory.CreateClient(HttpClients.Discord);
 			httpClient.SetBotToken(_settings.AccessToken);
 
-			var response = await httpClient!.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, _cancellationTokenSource.Token);
+			var response = await httpClient.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, _cancellationTokenSource.Token);
 
 			if (!response.IsSuccessStatusCode)
 			{

@@ -102,7 +102,7 @@ namespace TASVideos.Pages.Forum.Topics
 				await CreatePoll(topic, poll);
 			}
 
-			_publisher.SendForum(
+			await _publisher.SendForum(
 				forum.Restricted,
 				$"New Topic by {User.Name()} ({forum.ShortName}: {Topic.Title})",
 				Topic.Post.CapAndEllipse(50),

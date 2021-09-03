@@ -150,7 +150,7 @@ namespace TASVideos.Pages.Publications
 			var result = await ConcurrentSave(_db, $"{Id}M catalog updated", $"Unable to save {Id}M catalog");
 			if (result)
 			{
-				_publisher.SendPublicationEdit($"{Id}M Catalogging Info Updated", $"{Id}M", User.Name());
+				await _publisher.SendPublicationEdit($"{Id}M Catalogging Info Updated", $"{Id}M", User.Name());
 			}
 
 			return RedirectToPage("View", new { Id });

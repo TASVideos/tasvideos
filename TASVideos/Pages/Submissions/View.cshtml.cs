@@ -177,7 +177,7 @@ namespace TASVideos.Pages.Submissions
 			var result = await ConcurrentSave(_db, "", "Unable to claim");
 			if (result)
 			{
-				_publisher.SendSubmissionEdit(
+				await _publisher.SendSubmissionEdit(
 					$"Submission {submission.Title} set to {newStatus.EnumDisplayName()} by {User.Name()}",
 					$"{Id}S",
 					User.Name());

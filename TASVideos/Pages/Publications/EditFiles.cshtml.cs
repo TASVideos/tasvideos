@@ -111,7 +111,7 @@ namespace TASVideos.Pages.Publications
 			string log = $"added {Type} file {path}";
 			SuccessStatusMessage(log);
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-			_publisher.SendPublicationEdit(
+			await _publisher.SendPublicationEdit(
 				$"Publication {Id} {Title} added {log}",
 				$"{Id}M",
 				User.Name());
@@ -128,7 +128,7 @@ namespace TASVideos.Pages.Publications
 				string log = $"deleted {file.Type} file {file.Path}";
 				SuccessStatusMessage(log);
 				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-				_publisher.SendPublicationEdit(
+				await _publisher.SendPublicationEdit(
 					$"Publication {Id} {log}",
 					$"{Id}M",
 					User.Name());

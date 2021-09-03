@@ -138,7 +138,7 @@ namespace TASVideos.Pages.Users
 					message += " removed: " + string.Join(",", removedRoles);
 				}
 
-				_publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
+				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
 			}
 
 			SuccessStatusMessage($"User {user.UserName} updated");

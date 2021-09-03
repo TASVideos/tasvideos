@@ -97,7 +97,7 @@ namespace TASVideos.Pages.Wiki
 
 			if (page.Revision == 1 || !PageToEdit.MinorEdit)
 			{
-				_publisher.SendGeneralWiki(
+				await _publisher.SendGeneralWiki(
 					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")}",
 					$"({PageToEdit.RevisionMessage}): ",
 					Path,

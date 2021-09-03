@@ -94,7 +94,7 @@ namespace TASVideos.Pages.UserFiles
 					});
 
 					await _db.SaveChangesAsync();
-					_publisher.SendUserFile(
+					await _publisher.SendUserFile(
 						$"New comment by {User.Name()} on ({userFile.Title} (WIP))",
 						$"UserFiles/Info/{fileId}",
 						comment,
@@ -121,7 +121,7 @@ namespace TASVideos.Pages.UserFiles
 					var result = await ConcurrentSave(_db, "Comment edited", "Unable to edit comment");
 					if (result)
 					{
-						_publisher.SendUserFile(
+						await _publisher.SendUserFile(
 							$"Comment edited by {User.Name()} on ({fileComment.UserFile!.Title} (WIP))",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							comment,
@@ -148,7 +148,7 @@ namespace TASVideos.Pages.UserFiles
 					var result = await ConcurrentSave(_db, "Comment deleted", "Unable to delete comment");
 					if (result)
 					{
-						_publisher.SendUserFile(
+						await _publisher.SendUserFile(
 							$"Comment by {fileComment.User!.UserName} on ({fileComment.UserFile!.Title} (WIP)) deleted by {User.Name()}",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
 							"",

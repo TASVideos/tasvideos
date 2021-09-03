@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 {
 	/// <summary>
-	/// A <see cref="IPostDistributor"/> implementation that simply logs a post to the console.
+	/// A <see cref="IPostDistributor"/> implementation that simply logs a post.
 	/// </summary>
-	public class ConsoleDistributor : IPostDistributor
+	public class LogDistributor : IPostDistributor
 	{
 		private readonly ILogger _logger;
 
@@ -17,16 +18,16 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			.OfType<PostType>()
 			.ToList();
 
-		public ConsoleDistributor(ILogger<ConsoleDistributor> logger)
+		public LogDistributor(ILogger<LogDistributor> logger)
 		{
 			_logger = logger;
 		}
 
 		public IEnumerable<PostType> Types => PostTypes;
 
-		public void Post(IPostable post)
+		public async Task Post(IPostable post)
 		{
-			_logger.LogInformation($"New {post.Type} message recieved\n{post.Title}\n{post.Body}\nLink:{post.Link}\nGroup:{post.Group}\n{post.User}");
+			await Task.Run(() => _logger.LogInformation($"New {post.Type} message recieved\n{post.Title}\n{post.Body}\nLink:{post.Link}\nGroup:{post.Group}\n{post.User}"));
 		}
 	}
 }

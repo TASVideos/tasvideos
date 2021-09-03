@@ -112,7 +112,7 @@ namespace TASVideos.Core
 		{
 			if (isDevelopment)
 			{
-				services.AddSingleton<IPostDistributor, ConsoleDistributor>();
+				services.AddSingleton<IPostDistributor, LogDistributor>();
 			}
 
 			services.AddSingleton<IPostDistributor, IrcDistributor>();

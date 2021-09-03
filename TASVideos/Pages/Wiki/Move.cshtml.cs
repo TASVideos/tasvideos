@@ -74,7 +74,7 @@ namespace TASVideos.Pages.Wiki
 				return Page();
 			}
 
-			_publisher.SendGeneralWiki(
+			await _publisher.SendGeneralWiki(
 				$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName}",
 				"",
 				Move.DestinationPageName,

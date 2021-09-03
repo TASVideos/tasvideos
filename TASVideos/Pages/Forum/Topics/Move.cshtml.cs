@@ -84,7 +84,7 @@ namespace TASVideos.Pages.Forum.Topics
 			await _db.SaveChangesAsync();
 
 			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
-			_publisher.SendForum(
+			await _publisher.SendForum(
 				forum.Restricted,
 				$"Topic {Topic.TopicTitle} moved by {User.Name()} from {Topic.ForumName} to {forum.Name}",
 				"",

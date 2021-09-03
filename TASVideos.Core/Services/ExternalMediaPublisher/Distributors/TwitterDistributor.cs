@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Settings;
@@ -39,7 +40,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			_configured = true;
 		}
 
-		public async void Post(IPostable post)
+		public async Task Post(IPostable post)
 		{
 			// If the Twitter credentials were not configured correctly, just leave the function.
 			if (_configured)

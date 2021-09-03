@@ -161,7 +161,7 @@ namespace TASVideos.Pages.Submissions
 			var result = await ConcurrentSave(_db, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
 			if (result)
 			{
-				_publisher.SendSubmissionEdit($"{Id}S Catalogging Info Updated", $"{Id}S", User.Name());
+				await _publisher.SendSubmissionEdit($"{Id}S Catalogging Info Updated", $"{Id}S", User.Name());
 			}
 
 			return RedirectToPage("View", new { Id });

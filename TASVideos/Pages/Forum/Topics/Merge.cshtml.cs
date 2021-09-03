@@ -106,7 +106,7 @@ namespace TASVideos.Pages.Forum.Topics
 			var result = await ConcurrentSave(_db, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
 			if (result)
 			{
-				_publisher.SendForum(
+				await _publisher.SendForum(
 					destinationTopic.Forum!.Restricted,
 					$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Name()}",
 					"",
