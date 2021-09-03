@@ -6,7 +6,10 @@
 @section PageTitle { }
 
 <partial name="_MovieModule" model="Model.Publication" />
-@await Component.RenderWiki("System/MovieLinkInstruction")
+<hr />
+<div class="text-muted">
+	@await Component.RenderWiki("System/MovieLinkInstruction")
+</div>
 <small>
 	last edited by @Model.Publication.LastUpdateUser on @Model.Publication.LastUpdateTimestamp
 </small>
