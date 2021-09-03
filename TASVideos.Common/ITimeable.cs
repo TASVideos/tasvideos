@@ -29,7 +29,22 @@ namespace TASVideos.Common
 				return TimeSpan.MaxValue;
 			}
 
-			return TimeSpan.FromMilliseconds(Math.Round(timeable.Frames / timeable.FrameRate * 100) * 10);
+			return TimeSpan.FromMilliseconds(Math.Round(timeable.Frames / timeable.FrameRate * 100, MidpointRounding.AwayFromZero) * 10);
+		}
+
+		public static string ToStringWithOptionalDaysAndHours(this TimeSpan timeSpan)
+		{
+			if (timeSpan.Days >= 1)
+			{
+				return timeSpan.ToString(@"d\:hh\:mm\:ss\.ff");
+			}
+
+			if (timeSpan.Hours >= 1)
+			{
+				return timeSpan.ToString(@"h\:mm\:ss\.ff");
+			}
+
+			return timeSpan.ToString(@"mm\:ss\.ff");
 		}
 	}
 }
