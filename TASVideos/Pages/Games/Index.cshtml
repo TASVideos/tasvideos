@@ -67,6 +67,9 @@
 				</a>)
 			</li>
 			<li>
+				<a asp-page="PublicationHistory" asp-route-id="@Model.Game.Id">Publication History</a>
+			</li>
+			<li>
 				<a href="/Subs-List?GameId=@(Model.Game.Id)">
 					@Model.Game.SubmissionCount Submissions
 				</a>

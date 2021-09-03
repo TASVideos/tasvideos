@@ -1,5 +1,5 @@
 ﻿@page "{id}"
-@model TASVideos.Pages.Games.PublicationHistoryModel
+@model PublicationHistoryModel
 @{
 	ViewData["Title"] = $"Publication History of {Model.Game.DisplayName}";
 	ViewData["Highlight"] = Model.Highlight;
@@ -9,6 +9,7 @@
 	<h1>@ViewData["Title"]</h1>
 }
 
+<h4><a asp-page="Index" asp-route-id="@Model.Id">@Model.Game.DisplayName</a></h4>
 @foreach (var node in Model.History.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
 {
 	var highlight = node.Id == Model.Highlight ? ViewData["HighlightClass"] : "";

@@ -15,7 +15,7 @@ namespace TASVideos.Core.Tests.Services
 		private readonly TestDbContext _db;
 
 		#region Test Data
-
+		private static readonly Tier Tier = new () { Id = 1 };
 		private static Game Smb => new () { Id = 1 };
 		private static Game Smb2j => new () { Id = 2 };
 
@@ -24,7 +24,8 @@ namespace TASVideos.Core.Tests.Services
 			Id = 1,
 			GameId = Smb.Id,
 			Title = "Smb in less than 5 minutes",
-			Branch = "Warps"
+			Branch = "Warps",
+			Tier = Tier
 		};
 
 		private static Publication SmbWarpsObsolete => new ()
@@ -33,7 +34,8 @@ namespace TASVideos.Core.Tests.Services
 			GameId = Smb.Id,
 			Title = "Smb in 5 minutes",
 			Branch = "Warps",
-			ObsoletedById = SmbWarps.Id
+			ObsoletedById = SmbWarps.Id,
+			Tier = Tier
 		};
 
 		private static Publication SmbWarpsObsoleteObsolete => new ()
@@ -42,7 +44,8 @@ namespace TASVideos.Core.Tests.Services
 			GameId = Smb.Id,
 			Title = "Smb in 5.5 minutes",
 			Branch = "Warps",
-			ObsoletedById = SmbWarpsObsolete.Id
+			ObsoletedById = SmbWarpsObsolete.Id,
+			Tier = Tier
 		};
 
 		private static Publication SmbWarpsObsoleteBranch => new ()
@@ -51,7 +54,8 @@ namespace TASVideos.Core.Tests.Services
 			GameId = Smb.Id,
 			Title = "Smb in 6 minutes without using glitches",
 			Branch = "Warps",
-			ObsoletedById = SmbWarps.Id
+			ObsoletedById = SmbWarps.Id,
+			Tier = Tier
 		};
 
 		private static Publication SmbWarpless => new ()
@@ -59,7 +63,8 @@ namespace TASVideos.Core.Tests.Services
 			Id = 10,
 			GameId = Smb.Id,
 			Title = "Smb in about 20 minutes",
-			Branch = "No Warps"
+			Branch = "No Warps",
+			Tier = Tier
 		};
 
 		private static Publication Smb2jWarps => new ()
@@ -67,7 +72,8 @@ namespace TASVideos.Core.Tests.Services
 			Id = 20,
 			GameId = Smb2j.Id,
 			Title = "Smb2j in about 8 minutes",
-			Branch = "Warps"
+			Branch = "Warps",
+			Tier = Tier
 		};
 
 		#endregion
@@ -111,6 +117,7 @@ namespace TASVideos.Core.Tests.Services
 		[TestMethod]
 		public async Task ForGame_FiltersByGame()
 		{
+			_db.Add(Tier);
 			_db.Add(Smb);
 			_db.Add(SmbWarps);
 
