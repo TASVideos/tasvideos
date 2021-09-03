@@ -335,7 +335,7 @@ namespace TASVideos.Pages.Submissions
 					title = $"{userName} edited Submission {submission.Title}";
 				}
 
-				_publisher.SendSubmissionEdit(title, $"{Id}S", userName);
+				await _publisher.SendSubmissionEdit(title, $"{Id}S", userName);
 			}
 
 			return BaseRedirect($"/{Id}S");

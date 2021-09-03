@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher
 {
@@ -18,6 +19,6 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		/// Takes the given <see cref="post"/> and posts it to a
 		/// single specific media
 		/// </summary>
-		void Post(IPostable post);
+		Task Post(IPostable post);
 	}
 }

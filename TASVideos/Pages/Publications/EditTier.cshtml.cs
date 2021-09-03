@@ -98,7 +98,7 @@ namespace TASVideos.Pages.Publications
 				var result = await ConcurrentSave(_db, log, "Unable to update tier");
 				if (result)
 				{
-					_publisher.SendPublicationEdit(
+					await _publisher.SendPublicationEdit(
 						$"Publication {Id} {Title} {log}",
 						$"{Id}M",
 						User.Name());

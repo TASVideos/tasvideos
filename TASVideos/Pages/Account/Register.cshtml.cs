@@ -142,7 +142,7 @@ namespace TASVideos.Pages.Account
 					}
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
-					_publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName);
+					await _publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName);
 					return BaseReturnUrlRedirect();
 				}
 

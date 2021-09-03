@@ -113,7 +113,7 @@ namespace TASVideos.Pages.Forum.Posts
 			var result = await ConcurrentSave(_db, $"Post {Id} edited", "Unable to edit post");
 			if (result)
 			{
-				_publisher.SendForum(
+				await _publisher.SendForum(
 					forumPost.Topic!.Forum!.Restricted,
 					$"Post edited by {User.Name()} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
 					"",
@@ -168,7 +168,7 @@ namespace TASVideos.Pages.Forum.Posts
 			var result = await ConcurrentSave(_db, $"Post {Id} deleted", $"Unable to delete post {Id}");
 			if (result)
 			{
-				_publisher.SendForum(
+				await _publisher.SendForum(
 					post.Topic!.Forum!.Restricted,
 					$"Post DELETED by {User.Name()} ({post.Topic.Forum.ShortName}: {post.Topic.Title})",
 					"",

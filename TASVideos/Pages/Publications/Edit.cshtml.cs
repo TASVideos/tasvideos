@@ -287,7 +287,7 @@ namespace TASVideos.Pages.Publications
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), externalMessages);
 			foreach (var message in externalMessages)
 			{
-				_publisher.SendPublicationEdit($"{publication.Title} edited: " + message, $"{Id}M", User.Name());
+				await _publisher.SendPublicationEdit($"{publication.Title} edited: " + message, $"{Id}M", User.Name());
 			}
 		}
 	}

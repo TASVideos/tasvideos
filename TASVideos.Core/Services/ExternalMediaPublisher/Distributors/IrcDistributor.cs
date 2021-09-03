@@ -37,7 +37,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
 
-		public void Post(IPostable post)
+		public async Task Post(IPostable post)
 		{
 			// If proper credentials were not provided, the bot was never initialized
 			if (_bot == null)
@@ -50,7 +50,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				: _settings.Channel;
 
 			var s = $"{post.Title.CapAndEllipse(150)} {post.Body.CapAndEllipse(75)} {post.Link}";
-			_bot.AddMessage(channel, s);
+			await Task.Run(() => _bot.AddMessage(channel, s));
 		}
 
 		private class IrcBot

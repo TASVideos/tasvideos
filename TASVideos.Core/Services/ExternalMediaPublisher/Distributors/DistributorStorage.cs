@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -23,7 +24,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		public IEnumerable<PostType> Types => PostTypes;
 
-		public void Post(IPostable post)
+		public async Task Post(IPostable post)
 		{
 			_db.MediaPosts.Add(new MediaPost
 			{
@@ -34,7 +35,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				Type = post.Type.ToString().Cap(100)!,
 				User = post.User.Cap(100)!
 			});
-			_db.SaveChanges();
+			await _db.SaveChangesAsync();
 		}
 	}
 }

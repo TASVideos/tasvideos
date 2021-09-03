@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Wiki
 					return Page();
 				}
 
-				_publisher.SendGeneralWiki(
+				await _publisher.SendGeneralWiki(
 					$"Page {path} DELETED",
 					$"({result} revisions)",
 					"",
@@ -82,7 +82,7 @@ namespace TASVideos.Pages.Wiki
 			path = path.Trim('/');
 			await _wikiPages.Delete(path, revision);
 
-			_publisher.SendGeneralWiki(
+			await _publisher.SendGeneralWiki(
 					$"Revision {revision} of Page {path} DELETED",
 					"",
 					"",
@@ -111,7 +111,7 @@ namespace TASVideos.Pages.Wiki
 				return Page();
 			}
 
-			_publisher.SendGeneralWiki(
+			await _publisher.SendGeneralWiki(
 					$"Page {path} UNDELETED",
 					"",
 					path,

@@ -133,7 +133,7 @@ namespace TASVideos.Pages.Publications
 			var result = await ConcurrentSave(_db, log, "Unable to add url.");
 			if (result)
 			{
-				_publisher.SendPublicationEdit(
+				await _publisher.SendPublicationEdit(
 					$"Publication {Id} {Title} added {UrlType} url {PublicationUrl}",
 					$"{Id}M",
 					User.Name());
@@ -170,7 +170,7 @@ namespace TASVideos.Pages.Publications
 				var result = await ConcurrentSave(_db, log, "Unable to remove url.");
 				if (result)
 				{
-					_publisher.SendPublicationEdit(
+					await _publisher.SendPublicationEdit(
 						$"Publication {Id} {log}",
 						$"{Id}M",
 						User.Name());

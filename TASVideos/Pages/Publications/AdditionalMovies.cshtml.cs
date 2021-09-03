@@ -112,7 +112,7 @@ namespace TASVideos.Pages.Publications
 			var result = await ConcurrentSave(_db, log, "Unable to add file");
 			if (result)
 			{
-				_publisher.SendPublicationEdit(
+				await _publisher.SendPublicationEdit(
 					$"Publication {Id} {PublicationTitle} {log}",
 					$"{Id}M",
 					User.Name());
@@ -136,7 +136,7 @@ namespace TASVideos.Pages.Publications
 
 				if (result)
 				{
-					_publisher.SendPublicationEdit(
+					await _publisher.SendPublicationEdit(
 						$"Publication {Id} {PublicationTitle} {log}",
 						$"{Id}M",
 						User.Name());
