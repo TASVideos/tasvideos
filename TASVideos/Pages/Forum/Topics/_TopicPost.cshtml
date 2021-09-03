@@ -1,5 +1,5 @@
 ﻿@model TASVideos.Pages.Forum.Posts.Models.ForumPostEntry
-<card class="@(Model.Highlight ? "forum-post-highlight" : "")">
+<card class="@(Model.Highlight ? "forum-post-highlight" : "") border border-primary">
 	<cardheader class="pt-1 pb-1">
 		<row>
 			<div class="col-lg-2 col-md-3 col-4 p-0">
@@ -63,7 +63,8 @@
 					<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')))
 						<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
 					</small>
-					<div>
+					<br />
+					<div class="mt-3 mb-3 text-center">
 						<avatar avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
 					</div>
 					<small>
@@ -80,8 +81,10 @@
 					}
 				</div>
 			</div>
-			<div class="col-lg-10 col-md-9 col-8">
-				<forum-markup markup=@Model.Text enable-html=@Model.EnableHtml enable-bb-code=@Model.EnableBbCode></forum-markup>
+			<div class="col-lg-10 col-md-9 col-8 d-flex flex-column">
+                <div class="mb-auto">
+                    <forum-markup markup=@Model.Text enable-html=@Model.EnableHtml enable-bb-code=@Model.EnableBbCode></forum-markup>
+                </div>
 				<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="forum-signature mt-2">
 					<small>
 						<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
