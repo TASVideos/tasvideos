@@ -40,7 +40,8 @@ namespace TASVideos.Core.Services.PublicationChain
 					Id = p.Id,
 					Title = p.Title,
 					Branch = p.Branch,
-					ObsoletedById = p.ObsoletedById
+					ObsoletedById = p.ObsoletedById,
+					TierIconPath = p.Tier!.IconPath
 				})
 				.ToListAsync();
 

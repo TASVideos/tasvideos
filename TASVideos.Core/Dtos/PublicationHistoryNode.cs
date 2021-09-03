@@ -15,6 +15,8 @@ namespace TASVideos.Core.Services
 		public string Title { get; init; } = "";
 		public string? Branch { get; init; }
 
+		public string? TierIconPath { get; set; }
+
 		public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 
 		internal int? ObsoletedById { get; init; }
