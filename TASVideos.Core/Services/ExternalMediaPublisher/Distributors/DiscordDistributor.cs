@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Settings;
@@ -14,33 +15,15 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 {
 	public sealed class DiscordDistributor : IPostDistributor, IDisposable
 	{
-		private const int BufferSize = 65535;
-
-		private readonly ILogger _logger;
-		private readonly AppSettings.DiscordConnection _settings;
-		private readonly IHttpClientFactory _httpClientFactory;
-		private readonly ClientWebSocket _gateway;
-
-		private readonly CancellationTokenSource _cancellationTokenSource = new ();
-
-		private int _sequenceNumber = -1;
-		private bool _heartbeatAcknowledged;
-
-		// ReSharper disable once NotAccessedField.Local
-		private Timer? _heartbeatTimer;
-
-		public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
+		private static readonly object LockObject = new ();
+		private static DiscordBot? DiscordBot;
 
 		public DiscordDistributor(
 			AppSettings appSettings,
 			ILogger<DiscordDistributor> logger,
 			IHttpClientFactory httpClientFactory)
 		{
-			_logger = logger;
-			_settings = appSettings.Discord;
-			_httpClientFactory = httpClientFactory;
-
-			_gateway = new ClientWebSocket();
+			AppSettings.DiscordConnection settings = appSettings.Discord;
 
 			if (string.IsNullOrWhiteSpace(appSettings.Discord.AccessToken))
 			{
@@ -48,20 +31,129 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				return;
 			}
 
-			ConnectWebsocket();
-			Console.CancelKeyPress += CloseWebsocket!;
+			lock (LockObject)
+			{
+				DiscordBot ??= new DiscordBot(httpClientFactory, settings, logger);
+
+				if (!DiscordBot.Connected)
+				{
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+					DiscordBot.ConnectWebsocket();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+				}
+				Console.CancelKeyPress += DiscordBot.CloseWebsocket!;
+				
+				// TODO: Include code to close websocket on shutdown.
+			}
 		}
 
-		private async void ConnectWebsocket()
+		public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
+
+		public async Task Post(IPostable post)
+		{
+			if (DiscordBot != null)
+			{
+				await DiscordBot.Post(post);
+			}
+		}
+
+		public void Dispose()
+		{
+			DiscordBot?.ShutDown();
+			DiscordBot?.Dispose();
+		}
+	}
+
+	internal class DiscordMessage
+	{
+		public DiscordMessage(IPostable post)
+		{
+			Content = GenerateContentMessage(post.Group, post.User);
+			Embed = new()
+			{
+				Title = post.Title,
+				Url = post.Link,
+				Description = post.Body
+			};
+		}
+
+		[JsonProperty("content")]
+		public string Content { get; init; }
+
+		[JsonProperty("embed")]
+		public EmbedData Embed { get; init; }
+
+		public class EmbedData
+		{
+			[JsonProperty("title")]
+			public string Title { get; init; } = "";
+
+			[JsonProperty("description")]
+			public string Description { get; init; } = "";
+
+			[JsonProperty("url")]
+			public string Url { get; init; } = "";
+		}
+
+		private static string GenerateContentMessage(string? group, string? user)
+		{
+			string message = group switch
+			{
+				PostGroups.Forum => "Forum Update",
+				PostGroups.Submission => "Submission Update",
+				PostGroups.UserFiles => "Userfile Update",
+				PostGroups.UserManagement => "User Update",
+				PostGroups.Wiki => "Wiki Update",
+				_ => "Update"
+			};
+
+			return !string.IsNullOrWhiteSpace(user)
+				? message + $" from {user}"
+				: message;
+		}
+	}
+
+	internal class DiscordBot : IDisposable
+	{
+		private const int BufferSize = 65535;
+
+		private readonly CancellationTokenSource _cancellationTokenSource = new();
+		private readonly static object HeartbeatLock = new();
+
+		private int _sequenceNumber = -1;
+		private bool _heartbeatAcknowledged;
+
+		// ReSharper disable once NotAccessedField.Local
+		private readonly AppSettings.DiscordConnection _settings;
+		private readonly ClientWebSocket _gateway;
+		private readonly IHttpClientFactory _httpClientFactory;
+		private Timer? _heartbeatTimer;
+
+		private readonly ILogger _logger;
+
+		// public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
+
+		public bool Connected => _gateway.State == WebSocketState.Open;
+
+		public DiscordBot(IHttpClientFactory httpClientFactory, AppSettings.DiscordConnection settings, ILogger logger)
+		{
+			_gateway = new ClientWebSocket();
+
+			_httpClientFactory = httpClientFactory;
+			_logger = logger;
+			_settings = settings;
+		}
+
+		public async Task ConnectWebsocket()
 		{
 			var receiveBuffer = WebSocket.CreateClientBuffer(BufferSize, 4096);
 
-			Uri gatewayUri = new ("wss://gateway.discord.gg/?v=6&encoding=json");
+			Uri gatewayUri = new("wss://gateway.discord.gg/?v=6&encoding=json");
 			CancellationToken cancellationToken = _cancellationTokenSource.Token;
 
 			await _gateway.ConnectAsync(gatewayUri, cancellationToken);
 
-			while (_gateway.State == WebSocketState.Open || _gateway.State == WebSocketState.Connecting)
+			while (_gateway.State is WebSocketState.Open or WebSocketState.Connecting)
 			{
 				WebSocketReceiveResult result = await _gateway.ReceiveAsync(receiveBuffer, cancellationToken);
 
@@ -77,7 +169,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			}
 		}
 
-		private async void CloseWebsocket(object sender, ConsoleCancelEventArgs args)
+		public async void CloseWebsocket(object sender, ConsoleCancelEventArgs args)
 		{
 			await ShutDown(WebSocketCloseStatus.NormalClosure, "Server shutting down.");
 		}
@@ -90,20 +182,23 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 				JObject messageObject = JObject.Parse(message);
 
-				if (messageObject.ContainsKey("op"))
+				lock (HeartbeatLock)
 				{
-					switch (messageObject["op"]!.Value<int>())
+					if (messageObject.ContainsKey("op"))
 					{
-						case 1: // Heartbeat
-							ParseHeartbeat(messageObject);
-							break;
-						case 10: // Hello
-							ParseHello(messageObject);
-							Identify();
-							break;
-						case 11: // Heartbeat Acknowledge
-							_heartbeatAcknowledged = true;
-							break;
+						switch (messageObject["op"]!.Value<int>())
+						{
+							case 1: // Heartbeat
+								ParseHeartbeat(messageObject);
+								break;
+							case 10: // Hello
+								ParseHello(messageObject);
+								Identify();
+								break;
+							case 11: // Heartbeat Acknowledge
+								_heartbeatAcknowledged = true;
+								break;
+						}
 					}
 				}
 			}
@@ -111,19 +206,24 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		private async void Identify()
 		{
-			JObject properties = new ()
+			JObject properties = new()
 			{
-				{ "$os", "linux" }, { "$browser", "none" }, { "$device", "none" }
+				{ "$os", "linux" },
+				{ "$browser", "none" },
+				{ "$device", "none" }
 			};
 
-			JObject d = new ()
+			JObject d = new()
 			{
-				{ "token", _settings.AccessToken }, { "properties", properties }
+				{ "token", _settings.AccessToken },
+				{ "properties", properties }
 			};
 
-			JObject identifyObject = new ()
+			JObject identifyObject = new()
 			{
-				{ "op", 2 }, { "d", d }, { "intents", 0 }
+				{ "op", 2 },
+				{ "d", d },
+				{ "intents", 0 }
 			};
 
 			await _gateway.SendAsync(Encoding.ASCII.GetBytes(identifyObject.ToString()), WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
@@ -131,10 +231,13 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		private void ParseHello(JObject helloObject)
 		{
-			int heartbeatTime = helloObject["d"]!["heartbeat_interval"]!.Value<int>();
+			lock (HeartbeatLock)
+			{
+				int heartbeatTime = helloObject["d"]!["heartbeat_interval"]!.Value<int>();
 
-			_heartbeatTimer = new Timer(_ => SendHeartbeat(), null, heartbeatTime, heartbeatTime);
-			_heartbeatAcknowledged = true;
+				_heartbeatTimer = new Timer(_ => SendHeartbeat(), null, heartbeatTime, heartbeatTime);
+				_heartbeatAcknowledged = true;
+			}
 		}
 
 		private void ParseHeartbeat(JObject heartbeatObject)
@@ -144,18 +247,26 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		private async void SendHeartbeat()
 		{
-			if (!_heartbeatAcknowledged)
+			bool acknowledged;
+
+			lock (HeartbeatLock)
+			{
+				acknowledged = _heartbeatAcknowledged;
+			}
+
+			if (!acknowledged)
 			{
 				await ShutDown(WebSocketCloseStatus.ProtocolError, "Did not receive heartbeat acknowledgement from server.");
-
-				ConnectWebsocket();
-
+				await ConnectWebsocket();
 				return;
 			}
 
-			_heartbeatAcknowledged = false;
+			lock (HeartbeatLock)
+			{ 
+				_heartbeatAcknowledged = false;
+			}
 
-			JObject heartbeatObject = new () { { "op", 1 } };
+			JObject heartbeatObject = new() { { "op", 1 } };
 
 			if (_sequenceNumber == -1)
 			{
@@ -176,7 +287,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				Console.WriteLine("Shutdown signal received, closing gateway.");
 				await _gateway.CloseAsync(closeStatus, closureMessage, _cancellationTokenSource.Token);
 
-				System.Diagnostics.Stopwatch stopwatch = new ();
+				System.Diagnostics.Stopwatch stopwatch = new();
 
 				stopwatch.Start();
 
@@ -191,15 +302,17 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		public async Task Post(IPostable post)
 		{
-			DiscordMessage discordMessage = new (post);
+			var discordMessage = new DiscordMessage(post);
 
-			HttpContent messageContent = new StringContent(discordMessage.Serialize(), Encoding.UTF8, "application/json");
+			HttpContent messageContent = new StringContent(JsonConvert.SerializeObject(discordMessage), Encoding.UTF8, "application/json");
 
 			using HttpClient httpClient = _httpClientFactory.CreateClient(HttpClients.Discord);
 			httpClient.SetBotToken(_settings.AccessToken);
+			string channel = post.Type == PostType.Administrative
+				? _settings.PrivateChannelId
+				: _settings.PublicChannelId;
 
-			var response = await httpClient.PostAsync($"channels/{(post.Type == PostType.Administrative ? _settings.PrivateChannelId : _settings.PublicChannelId)}/messages", messageContent, _cancellationTokenSource.Token);
-
+			var response = await httpClient.PostAsync($"channels/{channel}/messages", messageContent, _cancellationTokenSource.Token);
 			if (!response.IsSuccessStatusCode)
 			{
 				_logger.LogError($"[{DateTime.Now}] An error occurred sending a message to Discord.");
@@ -212,67 +325,6 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			_gateway.Dispose();
 			_cancellationTokenSource.Dispose();
 			_heartbeatTimer?.Dispose();
-		}
-	}
-
-	internal class DiscordMessage
-	{
-		private IPostable Post { get; }
-
-		public DiscordMessage(IPostable post)
-		{
-			Post = post;
-		}
-
-		public string Serialize()
-		{
-			var serializedMessage = new JObject
-			{
-				{ "content", GenerateContentMessage(Post) }
-			};
-
-			var embedObject = new JObject
-			{
-				{ "title", Post.Title }, { "description", Post.Body }, { "url", Post.Link }
-			};
-
-			serializedMessage.Add("embed", embedObject);
-
-			return serializedMessage.ToString();
-		}
-
-		private static string GenerateContentMessage(IPostable post)
-		{
-			var contentMessageBuilder = new StringBuilder();
-
-			switch (post.Group)
-			{
-				case PostGroups.Forum:
-					contentMessageBuilder.Append("Forum Update");
-					break;
-				case PostGroups.Submission:
-					contentMessageBuilder.Append("Submission Update");
-					break;
-				case PostGroups.UserFiles:
-					contentMessageBuilder.Append("Userfile Update");
-					break;
-				case PostGroups.UserManagement:
-					contentMessageBuilder.Append("User Update");
-					break;
-				case PostGroups.Wiki:
-					contentMessageBuilder.Append("Wiki Update");
-					break;
-				default:
-					contentMessageBuilder.Append("Update");
-					break;
-			}
-
-			if (!string.IsNullOrWhiteSpace(post.User))
-			{
-				contentMessageBuilder.Append($" from {post.User}");
-			}
-
-			return contentMessageBuilder.ToString();
 		}
 	}
 }
