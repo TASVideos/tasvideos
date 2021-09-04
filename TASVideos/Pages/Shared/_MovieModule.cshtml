@@ -37,7 +37,7 @@
 	}
 }
 <card class="border border-primary">
-	<cardheader>
+	<cardheader class="bg-bgprimary">
 		<img class="pixelart-image" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@Model.TierIconPath" /> <h4 class="m-0"><a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></a></h4>
 		<div class="pull-right">
 			@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
@@ -48,17 +48,17 @@
 			}
 		</div>
 	</cardheader>
-	<cardbody>
-        <row>
-            <div condition="@Model.ObsoletedById.HasValue" class="col card-subtitle text-danger">
+    <cardbody class="px-3 py-0">
+        <div condition="@Model.ObsoletedById.HasValue" class="col card-subtitle text-danger my-2">
+            <row>
                 <b>This movie has been obsoleted!</b>
-				<br />
+            </row>
+            <row>
                 <pub-link id="Model.ObsoletedById!.Value" class="btn btn-danger btn-sm">Obsoleting Movie</pub-link>
-            </div>
-        </row>
-		<hr />
-		<row>
-            <div class="col-md-4 mb-4 mb-md-0 text-center">
+            </row>
+        </div>
+        <row class="bg-bgsecondary py-3">
+            <div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-left">
                 <div>
                     <img src="~/media/@Model.Screenshot.Path"
                          alt="@Model.Screenshot.Description"
@@ -99,84 +99,83 @@
                    class="btn btn-secondary btn-sm mt-1">
                     Logs
                 </a>
+                <br />
+                <div>
+                    <span permission="RateMovies">
+                        <a asp-page="/Publications/Rate"
+                           asp-route-id="@Model.Id"
+                           asp-route-returnUrl="@Context.ReturnUrl()">
+                            Rating
+                        </a>: &nbsp;
+                    </span>
+                    <span condition="!ViewData.UserHas(PermissionTo.RateMovies)">Rating:</span>
+                    <span condition="Model.RatingCount > 2">@Math.Round(Model.OverallRating ?? 0, 2)</span>
+                    <span condition="Model.RatingCount <= 2">(Too few votes to display rating)</span>
+                    <span>(<a asp-page="/Ratings/Index" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)</span>
+                </div>
+                @foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
+                {
+                    <partial name="_Award" model="award" />
+                }
             </div>
-			<div class="col-md-7">
-				<fullrow>
-					<div><small>@Model.CreateTimestamp.Date.ToShortDateString()</small></div>
-					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
-				</fullrow>
-				<fullrow>
-					<div>
-						<span permission="RateMovies">
-							<a asp-page="/Publications/Rate"
-							   asp-route-id="@Model.Id"
-							   asp-route-returnUrl="@Context.ReturnUrl()">
-								Rating
-							</a>: &nbsp;
-						</span>
-						<span condition="!ViewData.UserHas(PermissionTo.RateMovies)">Rating:</span>
-						<span condition="Model.RatingCount > 2">@Math.Round(Model.OverallRating ?? 0, 2)</span>
-						<span condition="Model.RatingCount <= 2">(Too few votes to display rating)</span>
-						<span>(<a asp-page="/Ratings/Index" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)</span>
-					</div>
-				</fullrow>
-			</div>
-			@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
-			{
-				<partial name="_Award" model="award" />
-			}
-		</row>
-		<hr />
-        <row>
-            <div class="col">
-                <row condition="Model.ObsoletedMovies.Any()">
-                    @foreach (var obsoletedMovie in Model.ObsoletedMovies)
-                    {
-                        <column class="mt-2 mb-2">
-                            Obsoletes:<br />
-                            <pub-link id="obsoletedMovie.Id">@obsoletedMovie.Title</pub-link>
-                        </column>
-                    }
-                </row>
-				<hr />
-                <row>
-                    <div class="col-lg-4">
-                        <div condition="Model.MovieFileLinks.Any()" class="mt-2">
-                            @foreach (var file in Model.MovieFileLinks)
-                            {
-                                <a title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a>
-                            }
-                        </div>
-                    </div>
-                    @foreach (var torrent in Model.TorrentLinks)
-                    {
-                        <a class="col-lg-4" href="~/torrent/@torrent.Path">A/V file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
-                    }
-                    <a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
-                </row>
-                <row>
-                    <div class="col-md-2">
-                        <small condition="Model.GenreTags.Any()">
-                            Genre:<br />
-                            @foreach (var genre in Model.GenreTags)
-                            {
-                                <a href="/Movies-@genre.Code">@genre.DisplayName</a>
-                            }
-                            <br />
-                        </small>
-                        <small condition="Model.Tags.Any()">
-                            Tags:<br />
-                            @foreach (var tag in Model.Tags)
-                            {
-                                <a href="/Movies-@tag.Code">@tag.DisplayName</a><br />
-                            }
-                        </small>
-                        <small condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
-                            Emulator Version:<br />@Model.EmulatorVersion
-                        </small>
-                    </div>
-                </row>
+            <div class="col-md">
+                <fullrow>
+                    <div><small>@Model.CreateTimestamp.Date.ToShortDateString()</small></div>
+                    @await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
+                </fullrow>
             </div>
         </row>
-	</cardbody>
+        <row condition="Model.ObsoletedMovies.Any()" class="border-bottom mb-2">
+            @foreach (var obsoletedMovie in Model.ObsoletedMovies)
+            {
+                <column class="mt-2 mb-2">
+                    Obsoletes:<br />
+                    <pub-link id="obsoletedMovie.Id">@obsoletedMovie.Title</pub-link>
+                </column>
+            }
+        </row>
+        <row class="mb-2">
+            <div class="col-auto">
+                <small condition="Model.GenreTags.Any()">
+                    Genre:<br />
+                    @foreach (var genre in Model.GenreTags)
+                    {
+                        <a href="/Movies-@genre.Code">@genre.DisplayName</a>
+                    }
+                    <br />
+                </small>
+                <small condition="Model.Tags.Any()">
+                    Tags:<br />
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <a href="/Movies-@tag.Code" class="ml-2">@tag.DisplayName</a><br />
+                    }
+                </small>
+            </div>
+            <a class="col-lg-4" condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl">A/V file via Mirror</a>
+            <div class="col-auto">
+                <div condition="Model.MovieFileLinks.Any()" class="col-lg-4">
+                    <div class="mt-2">
+                        @foreach (var file in Model.MovieFileLinks)
+                        {
+                            <a title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a>
+                        }
+                    </div>
+                </div>
+                <small condition="Model.TorrentLinks.Any()">
+                    Torrents:<br />
+                    @foreach (var torrent in Model.TorrentLinks)
+                    {
+                        <a href="~/torrent/@torrent.Path" class="ml-2">A/V file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
+                        <br />
+                    }
+                </small>
+            </div>
+            <div class="col-auto">
+                <small condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
+                    Emulator Version:<br /><span class="ml-2">@Model.EmulatorVersion</span>
+                </small>
+            </div>
+        </row>
+    </cardbody>
 </card>
