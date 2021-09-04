@@ -54,21 +54,18 @@
 	<cardbody class="p-2">
 		<row>
 			<div class="forum-profile-section col-lg-2 col-md-3 col-4">
-				<div class="text-center">
+				<div class="text-center" style="margin-left: -.5rem;">
 					<h6>
 						<profile-link username="@Model.PosterName"></profile-link>
 					</h6>
 				</div>
 				<div class="card-text text-left" style="line-height: 1">
-					<small>
-						@string.Join(", ", Model.PosterRoles)
+					<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')))
 						<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
 					</small>
-					<br />
-					<div class="mt-3 mb-3">
+					<div>
 						<avatar avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
 					</div>
-					<br />
 					<small>
 						Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
 						Posts: @Model.PosterPostCount<br />
