@@ -152,6 +152,7 @@ namespace TASVideos.Pages.Publications
 					Text = p.Title,
 					Value = p.Id.ToString()
 				})
+				.OrderBy(p => p.Text)
 				.ToListAsync();
 			Files = await _mapper.ProjectTo<PublicationFileDisplayModel>(
 					_db.PublicationFiles.Where(f => f.PublicationId == Id))
