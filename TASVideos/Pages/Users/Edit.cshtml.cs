@@ -81,6 +81,10 @@ namespace TASVideos.Pages.Users
 				return AccessDenied();
 			}
 
+			var userNameChange = UserToEdit.UserName != user.UserName
+				? user.UserName
+				: null;
+
 			user.UserName = UserToEdit.UserName;
 			user.TimeZoneId = UserToEdit.TimezoneId;
 			user.From = UserToEdit.From;
@@ -111,6 +115,11 @@ namespace TASVideos.Pages.Users
 			if (!saveResult2)
 			{
 				return BasePageRedirect("List");
+			}
+
+			if (userNameChange != null)
+			{
+				await _publisher.SendUserManagement($"User {userNameChange} name changed to {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName!);
 			}
 
 			// Announce Role change
