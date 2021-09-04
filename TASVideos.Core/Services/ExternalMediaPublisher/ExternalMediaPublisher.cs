@@ -39,7 +39,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		public string ToAbsolute(string relativeLink)
 		{
 			return !string.IsNullOrWhiteSpace(relativeLink)
-				? Path.Combine(_baseUrl, relativeLink.TrimStart('/'))
+				? $"{_baseUrl}/{relativeLink.TrimStart('/')}"
 				: "";
 		}
 	}
