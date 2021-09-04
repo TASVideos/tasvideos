@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers.Result;
 
@@ -16,7 +17,7 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Start Type")]
 		public MovieStartType? StartType { get; set; }
 
-		[Display(Name = "For tier")]
+		[Display(Name = "For Tier")]
 		public string? TierName { get; set; }
 
 		[Display(Name = "Console")]
@@ -24,13 +25,13 @@ namespace TASVideos.Pages.Submissions.Models
 
 		public string? SystemCode { get; set; }
 
-		[Display(Name = "Game name")]
+		[Display(Name = "Game Name")]
 		public string? GameName { get; set; }
 
 		[Display(Name = "Game Version")]
 		public string? GameVersion { get; set; }
 
-		[Display(Name = "ROM filename")]
+		[Display(Name = "ROM Filename")]
 		public string? RomName { get; set; }
 
 		[Display(Name = "Branch")]
@@ -43,11 +44,13 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Encode Embed Link")]
 		public string? EncodeEmbedLink { get; set; }
 
-		[Display(Name = "FrameCount")]
+		[Display(Name = "Frame Count")]
 		public int FrameCount { get; set; }
 
+		[Display(Name = "FrameRate")]
 		public double FrameRate { get; set; }
 
+		[Display(Name = "Rerecord Count")]
 		public int RerecordCount { get; set; }
 
 		[Display(Name = "Author")]
@@ -62,7 +65,7 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Last Edited")]
 		public DateTime LastUpdateTimestamp { get; set; }
 
-		[Display(Name = "Last Edited by")]
+		[Display(Name = "Last Edited By")]
 		public string? LastUpdateUser { get; set; }
 
 		[Display(Name = "Status")]
@@ -86,5 +89,20 @@ namespace TASVideos.Pages.Submissions.Models
 		internal int? SystemFrameRateId { get; set; }
 		internal int? GameId { get; set; }
 		internal int? RomId { get; set; }
+
+		public static string GetDisplayName(string propertyName)
+		{
+			MemberInfo? property = typeof(SubmissionDisplayModel).GetProperty(propertyName);
+			if (property != null)
+			{
+				var propertyDisplayAttribute = property.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+				if (propertyDisplayAttribute != null && propertyDisplayAttribute.Name != null)
+				{
+					return propertyDisplayAttribute.Name;
+				}
+			}
+
+			return "";
+		}
 	}
 }
