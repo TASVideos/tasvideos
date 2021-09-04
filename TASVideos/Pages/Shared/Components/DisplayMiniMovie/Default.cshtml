@@ -2,16 +2,19 @@
 
 <div condition="Model != null" style="max-height: 440px; overflow-y: auto">
 	<div class="card">
-		<div class="card-header">
+		<div class="card-header bg-bgprimary">
 			<h5><span class="pull-right badge badge-info m-1">Featured</span></h5>
-			<h4>@Model.Title</h4>
+            <h4><pub-link id="Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></pub-link></h4>
 		</div>
-		<div class="card-body">
+		<div class="card-body bg-bgsecondary">
 			<pub-link id="Model.Id">
-				<img src="~/media/@Model.Screenshot.Path" alt="@Model.Screenshot.Description" class="pull-left pr-3 pb-1" style="max-width: 80%" />
+                <div class="pull-left pr-3 pb-1" style="max-width: 80%">
+                    <img class="pb-1" src="~/media/@Model.Screenshot.Path" alt="@Model.Screenshot.Description" />
+                    <br />
+                    <a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
+                </div>
 			</pub-link>
 			@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
-			<a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
 		</div>
 	</div>
 </div>
