@@ -3,11 +3,7 @@
 @{
 	ViewData["Title"] = $"Movie #{Model.Id}";
 }
-@section PageTitle {
-	<div class="container">
-		<h1 class="m-0 w-100 publication-header">Publication @Model.Publication.Id</h1>
-	</div>
-}
+@section PageTitle { }
 
 <partial name="_MovieModule" model="Model.Publication" />
 @await Component.RenderWiki("System/MovieLinkInstruction")
