@@ -68,7 +68,7 @@
                 </div>
                 @foreach (var url in Model.OnlineWatchingUrls)
                 {
-                    <a href="@url" class="btn btn-primary btn-sm mt-1">Watch</a>
+                    <a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank">Watch</a>
                 }
                 <a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1">Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
                 <br />

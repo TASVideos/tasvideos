@@ -11,7 +11,7 @@
                 <div class="pull-left pr-3 pb-1" style="max-width: 80%">
                     <img class="pb-1" src="~/media/@Model.Screenshot.Path" alt="@Model.Screenshot.Description" />
                     <br />
-                    <a href="@Model.OnlineWatchingUrl" class="btn btn-primary">Watch</a>
+                    <a href="@Model.OnlineWatchingUrl" class="btn btn-primary" target="_blank">Watch</a>
                 </div>
 			</pub-link>
 			@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
