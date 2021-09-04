@@ -1,4 +1,4 @@
-@import "variables.scss";
+﻿@import "variables.scss";
 
 a[disabled] {
 	pointer-events: none;
@@ -11,8 +11,16 @@ body {
 }
 
 #banner {
-	border-bottom: 4px solid #371682;
 	background: #110931 url(/images/tasvideosbg.png) no-repeat;
+
+	.site-icon {
+		position: absolute;
+		left: -4.75rem;
+		top: -2rem;
+		background: url(/images/logo-light.png) no-repeat;
+		width: 200px;
+		height: 100px;
+	}
 
 	#mantra {
 		margin-left: 54px;
@@ -62,10 +70,15 @@ h1 {
 	background: $primary;
 	color: $white;
 	width: 95%;
-
 	// box-shadow: inset 0px 0px 2px 0px #430f76;
-    // background-color: $primary;
-    // border: 1px solid #430f76;
+	// background-color: $primary;
+	// border: 1px solid #430f76;
+
+	&.publication-header {
+		border-radius: 0;
+		border-top-right-radius: .25rem;
+		border-top-left-radius: .25rem;
+	}
 }
 
 .wiki {
