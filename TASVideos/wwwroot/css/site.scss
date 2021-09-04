@@ -1,4 +1,4 @@
-﻿@import "variables.scss";
+@import "variables.scss";
 
 a[disabled] {
 	pointer-events: none;
@@ -308,10 +308,16 @@ article.wiki table {
 
 .forum-profile-section {
 	border-right: solid 1px #eaeaea;
+	padding-right: 0;
 }
 
 .forum-post-highlight {
 	border: solid 3px;
 	border-color: $info;
 	box-shadow: #c2d4fc 0px 8px 16px;
+}
+
+.pixelart-image {
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
 }
