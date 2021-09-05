@@ -48,7 +48,7 @@ namespace TASVideos.ForumEngine
 					[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
 					|
 					%[A-Fa-f0-9]{2}
-				)*				
+				)+
 			)?
 			(
 				\#
@@ -56,7 +56,7 @@ namespace TASVideos.ForumEngine
 					[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
 					|
 					%[A-Fa-f0-9]{2}
-				)*				
+				)+
 			)?
 		", RegexOptions.IgnorePatternWhitespace);
 
