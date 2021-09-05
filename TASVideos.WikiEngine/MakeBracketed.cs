@@ -243,7 +243,7 @@ namespace TASVideos.WikiEngine
 			return new[] { new Text(charStart, "[" + text + "]") { CharEnd = charEnd } };
 		}
 
-		private static INode MakeLink(int charStart, int charEnd, string text, INode child)
+		internal static INode MakeLink(int charStart, int charEnd, string text, INode child)
 		{
 			var href = NormalizeUrl(text);
 			var attrs = new List<KeyValuePair<string, string>>
