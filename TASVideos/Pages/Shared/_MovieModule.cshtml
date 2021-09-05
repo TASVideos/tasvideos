@@ -42,7 +42,7 @@
             <div class="pixelart-image float-left" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)">
                 <img src="/@Model.TierIconPath" />
             </div>
-            <h4 class="col px-2"><a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></a></h4>
+            <h4 class="col px-2 m-0"><a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></a></h4>
             <div class="float-right">
             @foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
             {
