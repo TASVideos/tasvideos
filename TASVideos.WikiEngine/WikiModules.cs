@@ -7,6 +7,7 @@ namespace TASVideos.WikiEngine
 {
 	public static class WikiModules
 	{
+		public const string Addresses = "addresses";
 		public const string Awards = "awards";
 		public const string BrokenLinks = "brokenlinks";
 		public const string ActiveTab = "activetab";

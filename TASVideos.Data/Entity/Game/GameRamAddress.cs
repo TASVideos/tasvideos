@@ -57,6 +57,8 @@ namespace TASVideos.Data.Entity.Game
 	public class GameRamAddress
 	{
 		public int Id { get; set; }
+
+		public int LegacySetId { get; set; }
 		public long Address { get; set; }
 		public RamAddressType Type { get; set; }
 		public RamAddressSigned Signed { get; set; }
