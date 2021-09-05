@@ -21,6 +21,8 @@ namespace TASVideos.TagHelpers
 			output.TagName = "img";
 			output.Attributes.Clear();
 			output.Attributes.Add("loading", "lazy");
+			output.AddCssClass("mt-2");
+			output.AddCssClass("mb-2");
 
 			string avatarUrl = Avatar;
 
@@ -31,6 +33,12 @@ namespace TASVideos.TagHelpers
 				{
 					output.Attributes.Add("title", $"Mood: {Mood}");
 				}
+			}
+
+			if (string.IsNullOrWhiteSpace(avatarUrl))
+			{
+				output.SuppressOutput();
+				return;
 			}
 
 			output.Attributes.Add("src", avatarUrl);

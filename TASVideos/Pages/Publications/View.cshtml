@@ -4,7 +4,9 @@
 	ViewData["Title"] = $"Movie #{Model.Id}";
 }
 @section PageTitle {
-	<h1>@Model.Publication.Title</h1>
+	<div class="container">
+		<h1 class="m-0 w-100 publication-header">Publication @Model.Publication.Id</h1>
+	</div>
 }
 
 <partial name="_MovieModule" model="Model.Publication" />

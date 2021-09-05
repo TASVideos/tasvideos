@@ -37,31 +37,31 @@
 	}
 }
 
-<div condition="@Model.ObsoletedById.HasValue" class="text-danger mb-2">
-	<h4>This movie has been obsoleted!</h4>
-	<pub-link id="Model.ObsoletedById!.Value" class="btn btn-primary">Obsoleting Movie</pub-link>
+<div condition="@Model.ObsoletedById.HasValue" class="card-header text-danger pt-2 pb-2 bg-white">
+	<pub-link id="@Model.ObsoletedById!.Value" class="btn btn-sm btn-primary bg-danger border-danger">This movie has been obsoleted</pub-link>
 </div>
-<card>
-	<cardheader>
-		<img condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@Model.TierIconPath" /> <span>@Model.Title</span>
+<card class="border-0 rounded-bottom">
+	<cardheader class="d-flex flex-row align-items-center">
+		<img class="pixelart-image" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@Model.TierIconPath" />
+        <h4 class="m-0 ml-2 mr-2">@Model.Title</h4>
 		<div class="pull-right">
 			@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
 			{
 				<a href="@flag.LinkPath">
-					<img title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
+					<img class="pixelart-image" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
 				</a>
 			}
 		</div>
 	</cardheader>
 	<cardbody>
 		<row>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div>
 					<img src="~/media/@Model.Screenshot.Path"
 						 alt="@Model.Screenshot.Description"
 						 title="@Model.Screenshot.Description"
-						 loading="lazy"
-						 style="max-width: 100%" />
+						 class="w-100 pixelart-image"
+						 loading="lazy" />
 				</div>
 				@foreach (var url in Model.OnlineWatchingUrls)
 				{
@@ -96,7 +96,7 @@
 					Logs
 				</a>
 			</div>
-			<div class="col-md-5">
+			<div class="col-md-7">
 				<row>
 					<div class="col-lg-4">
 						<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id">Movie file (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
