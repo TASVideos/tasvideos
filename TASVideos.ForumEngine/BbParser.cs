@@ -38,14 +38,14 @@ namespace TASVideos.ForumEngine
 		private static readonly Regex Url = new (@"\G
 			https?:\/\/
 			(
-				[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
+				[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
 				|
 				%[A-Fa-f0-9]{2}
 			)+
 			(
 				\?
 				(
-					[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
+					[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
 					|
 					%[A-Fa-f0-9]{2}
 				)+
@@ -53,7 +53,7 @@ namespace TASVideos.ForumEngine
 			(
 				\#
 				(
-					[A-Za-z0-9\-._~!$&'()*+,;=:@ \/]
+					[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
 					|
 					%[A-Fa-f0-9]{2}
 				)+

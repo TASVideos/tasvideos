@@ -63,6 +63,18 @@ namespace TASVideos.WikiEngine
 			return true;
 		}
 
+		private string? Eat(Regex r)
+		{
+			var match = r.Match(_input, _index);
+			if (!match.Success)
+			{
+				return null;
+			}
+			var ret = match.Value;
+			_index += ret.Length;
+			return ret;
+		}
+
 		private char Eat()
 		{
 			return _input[_index++];
@@ -467,9 +479,35 @@ namespace TASVideos.WikiEngine
 			_parsingInline = false;
 		}
 
+		private static readonly Regex Url = new (@"\G
+			https?:\/\/
+			(
+				[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+				|
+				%[A-Fa-f0-9]{2}
+			)+
+			(
+				\?
+				(
+					[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+					|
+					%[A-Fa-f0-9]{2}
+				)+
+			)?
+			(
+				\#
+				(
+					[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+					|
+					%[A-Fa-f0-9]{2}
+				)+
+			)?
+		", RegexOptions.IgnorePatternWhitespace);
+
 		private void ParseInlineText()
 		{
 			int tmp;
+			string? url;
 
 			if (Eat("__"))
 			{
@@ -593,6 +631,10 @@ namespace TASVideos.WikiEngine
 			{
 				AddText('\n');
 				SwitchToLine();
+			}
+			else if ((url = Eat(Url)) != null)
+			{
+				AddNonChild(Builtins.MakeLink(_index - url.Length, _index, url, new Text(_index - url.Length, url) { CharEnd = _index }));
 			}
 			else
 			{
