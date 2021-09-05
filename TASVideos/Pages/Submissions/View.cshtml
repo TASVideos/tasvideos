@@ -1,4 +1,4 @@
-﻿@page "{id}"
+@page "{id}"
 @using TASVideos.Pages.Submissions.Models
 @model ViewModel
 @{
@@ -109,30 +109,30 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<table class="table table-bordered table-condensed">
 			<tr>
-				<th><label asp-for="Submission.SystemDisplayName"></label></th>
+				<th>@SubmissionDisplayModel.GetDisplayName("SystemDisplayName")</th>
 				<td>@Model.Submission.SystemDisplayName</td>
-				<th><label asp-for="Submission.Emulator"></label></th>
+				<th>@SubmissionDisplayModel.GetDisplayName("Emulator")</th>
 				<td>@Model.Submission.Emulator</td>
 			</tr>
 			<tr>
-				<th><label asp-for="Submission.GameVersion"></label></th>
+				<th>@SubmissionDisplayModel.GetDisplayName("GameVersion")</th>
 				<td>@Model.Submission.GameVersion</td>
-				<th><label asp-for="Submission.FrameCount"></label></th>
+				<th>@SubmissionDisplayModel.GetDisplayName("FrameCount")</th>
 				<td>@Model.Submission.FrameCount</td>
 			</tr>
 			<tr>
-				<th><label asp-for="Submission.RomName"></label></th>
+				<th>@SubmissionDisplayModel.GetDisplayName("RomName")</th>
 				<td>@Model.Submission.RomName</td>
-				<th><label asp-for="Submission.FrameRate"></label></th>
+				<th>@SubmissionDisplayModel.GetDisplayName("FrameRate")</th>
 				<td>@Model.Submission.FrameRate</td>
 			</tr>
 			<tr>
-				<th><label asp-for="Submission.Branch"></label></th>
+				<th>@SubmissionDisplayModel.GetDisplayName("Branch")</th>
 				<td>@Model.Submission.Branch</td>
-				<th><label asp-for="Submission.RerecordCount"></label></th>
+				<th>@SubmissionDisplayModel.GetDisplayName("RerecordCount")</th>
 				<td>@Model.Submission.RerecordCount</td>
 			</tr>
 			<tr>

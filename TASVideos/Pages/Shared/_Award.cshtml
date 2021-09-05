@@ -4,5 +4,5 @@
 	int year = Model.Year > 2018 ? Model.Year - 2000 : Model.Year;
 }
 <a href="/Awards/@(year.ToString())#@(Model.ShortName)_@(year)" title="Award - @Model.Description">
-	<img style="max-height: 32px; max-width: 32px" src="/awards/@($"{Model.ShortName}_{year.ToString()}.png")" alt="@Model.Description" loading="lazy" />
+	<img style="max-width: 48px;"class="pixelart-image" src="/awards/@($"{Model.ShortName}_{year.ToString()}.png")" alt="@Model.Description" loading="lazy" />
 </a>
