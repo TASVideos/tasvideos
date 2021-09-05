@@ -42,6 +42,7 @@ namespace TASVideos.Legacy.Imports
 				.Select(l => new GameRamAddress
 				{
 					Id = l.address.Id,
+					LegacySetId = l.address.AddressSetId,
 					Address = l.address.Address,
 					Type = ToType(l.address.Type),
 					Signed = ToSigned(l.address.Signed),
@@ -57,6 +58,7 @@ namespace TASVideos.Legacy.Imports
 			var addressColumns = new[]
 			{
 				nameof(GameRamAddress.Id),
+				nameof(GameRamAddress.LegacySetId),
 				nameof(GameRamAddress.Address),
 				nameof(GameRamAddress.Type),
 				nameof(GameRamAddress.Signed),
