@@ -10,7 +10,7 @@
 <fullrow class="mt-2">
 	<label asp-for="Publication.Tier"></label>:
 	<a href="/@Model.Publication.TierLink">
-		<img src="/@Model.Publication.TierIconPath" />
+		<img class="pixelart-image" src="/@Model.Publication.TierIconPath" />
 	</a>
 	<label class="form-control-label">@Model.Publication.Tier</label>
 	<a permission="SetTier" class="btn btn-secondary btn-sm" asp-page="EditTier" asp-route-id="@Model.Id">Edit</a>
