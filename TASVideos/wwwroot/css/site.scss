@@ -11,21 +11,32 @@ body {
 }
 
 #banner {
-	background: #110931 url(/images/tasvideosbg.png) no-repeat;
+	background: #110931;
+	overflow: hidden;
+
+	.site-banner {
+		position: absolute;
+		top:0;
+		left:0;
+	}
 
 	.site-icon {
 		position: absolute;
-		left: -4.75rem;
-		top: -2rem;
-		background: url(/images/logo-light.png) no-repeat;
-		width: 200px;
-		height: 100px;
+		left: -3.5rem;
+		top: -1rem;
+		z-index: 1;
+	}
+
+	@media (min-width: 768px) {
+		#mantra {
+			margin-left: 54px;
+		}
 	}
 
 	#mantra {
-		margin-left: 54px;
 		font-weight: bold;
 		font-family: Verdana;
+		z-index: 1;
 
 		#brand {
 			color: $white;
@@ -42,6 +53,10 @@ body {
 			color: #CCD;
 			font-size: 9px;
 		}
+	}
+
+	.navbar-toggler, .navbar-collapse {
+		z-index: 1;
 	}
 }
 

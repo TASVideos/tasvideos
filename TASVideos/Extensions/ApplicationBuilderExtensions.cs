@@ -47,6 +47,7 @@ namespace TASVideos.Extensions
 		{
 			var provider = new FileExtensionContentTypeProvider();
 			provider.Mappings[".torrent"] = "application/x-bittorrent";
+			provider.Mappings[".avif"] = "image/avif";
 			return app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
 		}
 
