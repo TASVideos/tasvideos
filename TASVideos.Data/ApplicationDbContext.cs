@@ -436,7 +436,7 @@ namespace TASVideos.Data
 			builder.Entity<UserMaintenanceLog>(entity =>
 			{
 				entity.HasOne(e => e.Editor);
-				entity.HasOne(e => e.User).WithMany(e => e.UserMaintenanceLogs);
+				entity.HasOne(e => e.User).WithMany(e => e!.UserMaintenanceLogs);
 			});
 		}
 
