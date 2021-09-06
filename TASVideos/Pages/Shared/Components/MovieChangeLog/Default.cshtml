@@ -1,0 +1,27 @@
+﻿@model MovieHistoryModel
+<div>
+    @foreach (var pubGroup in Model.MovieHistory.OrderByDescending(p => p.Date))
+    {
+        <h4>@pubGroup.Date.ToShortDateString()</h4>
+        foreach (var pub in pubGroup.Pubs)
+        {
+                <div class="ml-2"><a href="/@(pub.Id + "M")">
+                        @pub.Name
+                    </a>
+                @if (pub.IsNewGame)
+                {
+                    <span>(new game)</span>
+                }
+                else if (pub.IsNewBranch)
+                {
+                    <span>(new branch)</span>
+                }
+                else
+                {
+                    <span>(improvement)</span>
+                }
+                <br />
+                </div>
+        }
+    }
+</div>
