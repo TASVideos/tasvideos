@@ -13,7 +13,7 @@ namespace TASVideos.ViewComponents
 			public int Id { get; init; }
 			public string Title { get; init; } = "";
 			public IEnumerable<string> Authors { get; init; } = new List<string>();
-			public string TierIconPath { get; init; } = "";
+			public string? TierIconPath { get; init; } = "";
 		}
 	}
 }

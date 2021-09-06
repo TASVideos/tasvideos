@@ -70,6 +70,7 @@ namespace TASVideos.WikiEngine
 			{
 				return null;
 			}
+
 			var ret = match.Value;
 			_index += ret.Length;
 			return ret;

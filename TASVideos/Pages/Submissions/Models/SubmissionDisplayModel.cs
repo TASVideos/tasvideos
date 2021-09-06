@@ -95,8 +95,7 @@ namespace TASVideos.Pages.Submissions.Models
 			MemberInfo? property = typeof(SubmissionDisplayModel).GetProperty(propertyName);
 			if (property != null)
 			{
-				var propertyDisplayAttribute = property.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
-				if (propertyDisplayAttribute != null && propertyDisplayAttribute.Name != null)
+				if (property.GetCustomAttribute(typeof(DisplayAttribute)) is DisplayAttribute propertyDisplayAttribute && propertyDisplayAttribute.Name != null)
 				{
 					return propertyDisplayAttribute.Name;
 				}

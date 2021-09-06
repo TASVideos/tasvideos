@@ -17,7 +17,7 @@ namespace TASVideos.Core.Services.Youtube
 		bool IsYoutubeUrl(string? url);
 		Task SyncYouTubeVideo(YoutubeVideo video);
 		Task UnlistVideo(string url);
-		string ConvertToEmbedLink(string? url);
+		string? ConvertToEmbedLink(string? url);
 	}
 
 	internal class YouTubeSync : IYoutubeSync
@@ -124,14 +124,14 @@ namespace TASVideos.Core.Services.Youtube
 			return !string.IsNullOrWhiteSpace(url) && (url.Contains("youtube.com") || url.Contains("youtu.be"));
 		}
 
-		public string ConvertToEmbedLink(string? url)
+		public string? ConvertToEmbedLink(string? url)
 		{
 			if (!IsYoutubeUrl(url))
 			{
 				return url;
 			}
 
-			var videoId = VideoId(url);
+			var videoId = VideoId(url!);
 
 			if (string.IsNullOrWhiteSpace(videoId))
 			{
