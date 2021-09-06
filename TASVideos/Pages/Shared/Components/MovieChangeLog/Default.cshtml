@@ -5,9 +5,7 @@
         <h4>@pubGroup.Date.ToShortDateString()</h4>
         foreach (var pub in pubGroup.Pubs)
         {
-                <div class="ml-2"><a asp-page="/Publications/View" asp-route-id="@(pub.Id)">
-                        @pub.Name
-                    </a>
+                <div class="ml-2"><pub-link id="pub.Id">@pub.Name</pub-link>
                 @if (pub.IsNewGame)
                 {
                     <span>(new game)</span>
