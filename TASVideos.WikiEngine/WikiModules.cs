@@ -27,6 +27,7 @@ namespace TASVideos.WikiEngine
 		public const string ListParents = "listparents";
 		public const string ListSubPages = "listsubpages";
 		public const string MediaPosts = "mediaposts";
+		public const string MovieChangeLog = "moviechangelog";
 		public const string MoviesByAuthor = "moviesbyplayer";
 		public const string MoviesGameList = "moviesgamelist";
 		public const string MoviesList = "movieslist";
