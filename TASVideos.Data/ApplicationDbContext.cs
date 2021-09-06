@@ -91,6 +91,8 @@ namespace TASVideos.Data
 
 		public DbSet<IpBan> IpBans { get; set; } = null!;
 
+		public DbSet<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = null!;
+
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
 			PerformTrackingUpdates();
@@ -429,6 +431,12 @@ namespace TASVideos.Data
 			builder.Entity<IpBan>(entity =>
 			{
 				entity.HasIndex(e => e.Mask).IsUnique();
+			});
+
+			builder.Entity<UserMaintenanceLog>(entity =>
+			{
+				entity.HasOne(e => e.Editor);
+				entity.HasOne(e => e.User).WithMany(e => e.UserMaintenanceLogs);
 			});
 		}
 

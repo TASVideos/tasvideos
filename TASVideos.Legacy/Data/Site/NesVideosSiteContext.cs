@@ -44,6 +44,7 @@ namespace TASVideos.Legacy.Data.Site
 		public DbSet<RamAddressDomain> RamAddressDomains { get; set; } = null!;
 		public DbSet<RamAddress> RamAddresses { get; set; } = null!;
 		public DbSet<RamAddressSet> RamAddressSets { get; set; } = null!;
+		public DbSet<UserMaintenanceLogs> UserMaintenanceLogs { get; set; } = null!;
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -112,6 +113,7 @@ namespace TASVideos.Legacy.Data.Site
 			modelBuilder.Entity<RamAddressDomain>().ToTable("ramaddresses_domains");
 			modelBuilder.Entity<RamAddress>().ToTable("ramaddresses");
 			modelBuilder.Entity<RamAddressSet>().ToTable("ramaddresses_sets");
+			modelBuilder.Entity<UserMaintenanceLogs>().ToTable("user_maintenancelog");
 		}
 	}
 }

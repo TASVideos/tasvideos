@@ -59,6 +59,7 @@ namespace TASVideos.Legacy
 			Run("RamAddresses", () => RamAddressImporter.Import(_db, _legacySiteDb));
 
 			Run("Users", () => UserImporter.Import(_db, _legacySiteDb, _legacyForumDb));
+			Run("UserMaintenanceLogs", () => UserMaintenanceLogImporter.Import(_db, _legacySiteDb));
 			Run("UserDisallows", () => DisallowImporter.Import(_legacyForumDb));
 			Run("Award", () => AwardImporter.Import(_db, _legacySiteDb));
 

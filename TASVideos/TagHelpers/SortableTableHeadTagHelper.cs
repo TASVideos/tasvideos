@@ -26,6 +26,7 @@ namespace TASVideos.TagHelpers
 
 		public ISortable Sorting { get; set; } = null!;
 		public Type ModelType { get; set; } = null!;
+		public string? PageOverride { get; set; }
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
@@ -92,7 +93,7 @@ namespace TASVideos.TagHelpers
 		private string ComputeHref(string sortStr)
 		{
 			// TODO: Probably need some URL escaping in here
-			var page = ViewContext.ActionDescriptor.DisplayName;
+			var page = PageOverride ?? ViewContext.ActionDescriptor.DisplayName;
 			return $"{page}?Sort={sortStr}{AdditionalParams()}";
 		}
 

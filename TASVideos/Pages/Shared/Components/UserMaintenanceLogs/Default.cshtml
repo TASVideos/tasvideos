@@ -1,0 +1,30 @@
+﻿@using TASVideos.Core
+@model TASVideos.Core.PageOf<UserMaintenanceLogEntry>
+@{
+	PagingModel pagingModel = (PagingModel)ViewData["PagingModel"];
+}
+<div condition="@Model.Any()">
+	<fullrow class="mt-2">
+		<partial name="_Pager" model="Model" />
+	</fullrow>
+	<table>
+		<sortable-table-head sorting="@pagingModel" model-type="typeof(UserMaintenanceLogEntry)" page-override="@ViewData["CurrentPage"]" />
+		@foreach(var entry in Model)
+		{
+			<tr>
+				<td>
+					<profile-link username="@entry.User"></profile-link>
+				</td>
+				<td>
+					<profile-link username="@entry.Editor"></profile-link>
+				</td>
+				<td>
+					<timezone-convert asp-for="@entry.TimeStamp" />
+				</td>
+				<td>
+					@entry.Log
+				</td>
+			</tr>
+		}
+	</table>
+</div>

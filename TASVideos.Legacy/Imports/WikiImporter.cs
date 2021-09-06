@@ -187,7 +187,6 @@ namespace TASVideos.Legacy.Imports
 			"ZH/SubmitMovie",
 			"PT/SubmitMovie",
 			"Privileges",
-			"UserMaintenanceLog",
 
 			"SystemDiffLineLengthNote",
 			"SystemUserEditRank",
