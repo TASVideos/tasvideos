@@ -28,7 +28,7 @@
 					@foreach (var pub in author.Pubs)
 					{
 						<li>
-							<img condition="Model.ShowTiers" src="/@pub.TierIconPath" />
+							<img class="pixelart-image" condition="Model.ShowTiers" src="/@pub.TierIconPath" />
 							<a href="@(pub.Id)M"> @pub.Title </a>
 						</li>
 					}
