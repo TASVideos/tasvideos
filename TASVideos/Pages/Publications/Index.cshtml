@@ -8,6 +8,8 @@
 @foreach (var movie in Model.Movies)
 {
 	<partial name="_MovieModule" model="movie" />
-	<hr />
+	<br />
 }
-@await Component.RenderWiki("System/MovieLinkInstruction")
+<div class="text-muted">
+    @await Component.RenderWiki("System/MovieLinkInstruction")
+</div>

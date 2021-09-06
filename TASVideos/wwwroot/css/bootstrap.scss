@@ -18,6 +18,8 @@ $theme-colors: (
 	"light": 		$light,
 	"muted": 		$muted,
 	"white": 		$white,
+	"bgprimary":    #acd,
+	"bgsecondary":  #cde,
 );
 
 @import "../lib/twitter-bootstrap/scss/root";
