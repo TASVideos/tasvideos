@@ -28,6 +28,7 @@ namespace TASVideos.Pages.Account
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IReCaptchaService _reCaptchaService;
 		private readonly IWebHostEnvironment _env;
+		private readonly IUserMaintenanceLogger _userMaintenanceLogger;
 
 		public RegisterModel(
 			ApplicationDbContext db,
@@ -36,7 +37,8 @@ namespace TASVideos.Pages.Account
 			IEmailService emailService,
 			ExternalMediaPublisher publisher,
 			IReCaptchaService reCaptchaService,
-			IWebHostEnvironment env)
+			IWebHostEnvironment env,
+			IUserMaintenanceLogger userMaintenanceLogger)
 		{
 			_db = db;
 			_userManager = userManager;
@@ -45,6 +47,7 @@ namespace TASVideos.Pages.Account
 			_publisher = publisher;
 			_reCaptchaService = reCaptchaService;
 			_env = env;
+			_userMaintenanceLogger = userMaintenanceLogger;
 		}
 
 		[BindProperty]
@@ -143,6 +146,7 @@ namespace TASVideos.Pages.Account
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					await _publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName);
+					await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 					return BaseReturnUrlRedirect();
 				}
 

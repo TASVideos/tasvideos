@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -20,15 +21,18 @@ namespace TASVideos.Pages.Users
 		private readonly ApplicationDbContext _db;
 		private readonly IMapper _mapper;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IUserMaintenanceLogger _userMaintenanceLogger;
 
 		public EditModel(
 			ApplicationDbContext db,
 			IMapper mapper,
-			ExternalMediaPublisher publisher)
+			ExternalMediaPublisher publisher,
+			IUserMaintenanceLogger userMaintenanceLogger)
 		{
 			_db = db;
 			_mapper = mapper;
 			_publisher = publisher;
+			_userMaintenanceLogger = userMaintenanceLogger;
 		}
 
 		[FromRoute]
@@ -119,7 +123,9 @@ namespace TASVideos.Pages.Users
 
 			if (userNameChange != null)
 			{
-				await _publisher.SendUserManagement($"User {userNameChange} name changed to {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName!);
+				string message = $"User {userNameChange} name changed to {user.UserName}";
+				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
+				await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			}
 
 			// Announce Role change
@@ -148,6 +154,7 @@ namespace TASVideos.Pages.Users
 				}
 
 				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
+				await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			}
 
 			SuccessStatusMessage($"User {user.UserName} updated");
