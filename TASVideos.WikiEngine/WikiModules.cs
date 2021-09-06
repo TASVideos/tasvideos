@@ -42,6 +42,7 @@ namespace TASVideos.WikiEngine
 		public const string TopicFeed = "topicfeed";
 		public const string UnmirroredMovies = "unmirroredmovies";
 		public const string UserGetWikiName = "usergetwikiname";
+		public const string UserMaintenanceLogs = "usermaintlog";
 		public const string UserMovies = "usermovies";
 		public const string UserName = "user_name";
 		public const string Welcome = "welcome";

@@ -71,6 +71,9 @@ namespace TASVideos.Data.Entity
 		public virtual ICollection<UserFileComment> UserFileComments { get; set; } = new HashSet<UserFileComment>();
 
 		public virtual ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = new HashSet<PublicationMaintenanceLog>();
+
+		public virtual ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = new HashSet<UserMaintenanceLog>();
+		public virtual ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = new HashSet<UserMaintenanceLog>();
 	}
 
 	public static class UserExtensions
