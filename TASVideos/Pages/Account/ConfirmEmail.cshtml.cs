@@ -13,15 +13,18 @@ namespace TASVideos.Pages.Account
 		private readonly UserManager _userManager;
 		private readonly SignInManager _signInManager;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IUserMaintenanceLogger _userMaintenanceLogger;
 
 		public ConfirmEmailModel(
 			UserManager userManager,
 			SignInManager signInManager,
-			ExternalMediaPublisher publisher)
+			ExternalMediaPublisher publisher,
+			IUserMaintenanceLogger userMaintenanceLogger)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_publisher = publisher;
+			_userMaintenanceLogger = userMaintenanceLogger;
 		}
 
 		public async Task<IActionResult> OnGet(string? userId, string? code)
@@ -45,6 +48,7 @@ namespace TASVideos.Pages.Account
 
 			await _signInManager.SignInAsync(user, isPersistent: false);
 			await _publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName);
+			await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 			return Page();
 		}
 	}

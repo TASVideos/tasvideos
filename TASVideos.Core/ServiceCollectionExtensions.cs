@@ -89,6 +89,7 @@ namespace TASVideos.Core
 			services.AddScoped<IYoutubeSync, YouTubeSync>();
 			services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 			services.AddScoped<IPublicationMaintenanceLogger, PublicationMaintenanceLogger>();
+			services.AddScoped<IUserMaintenanceLogger, UserMaintenanceLogger>();
 
 			return services;
 		}
