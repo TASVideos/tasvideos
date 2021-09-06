@@ -2,7 +2,7 @@
 @{
 	var highlight = Model.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
 }
-<img condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@Model.TierIconPath" />
+<img class="pixelart-image" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@Model.TierIconPath" />
 <pub-link class="@highlight" id="@Model.Id">@Model.Title</pub-link>
 @if (Model.Obsoletes.Any())
 {
