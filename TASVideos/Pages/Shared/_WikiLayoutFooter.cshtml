@@ -30,7 +30,7 @@ else
 	condition="@canEdit"
 	asp-page="/Wiki/Edit"
 	asp-route-path="@Model.PageName"
-	class="btn btn-primary btn-sm">
+	class="btn bg-primary text-white btn-sm">
 	Edit
 </a>
 <a
@@ -46,7 +46,7 @@ else
 	class="btn btn-danger btn-sm">
 	Delete
 </delete-button>
-<a class="btn btn-info btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@Model.PageName">Page History</a>
-<a class="btn btn-info btn-sm" asp-page="/Wiki/Diff" asp-route-path="@Model.PageName">Last diff</a>
-<a class="btn btn-info btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@Model.PageName">List referrers</a>
-<a class="btn btn-info btn-sm" asp-page="/Wiki/ViewSource" asp-route-path="@Model.PageName">View Source</a>
+<a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@Model.PageName">Page History</a>
+<a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/Diff" asp-route-path="@Model.PageName">Last diff</a>
+<a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@Model.PageName">List referrers</a>
+<a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/ViewSource" asp-route-path="@Model.PageName">View Source</a>

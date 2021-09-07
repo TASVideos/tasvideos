@@ -161,9 +161,7 @@ namespace TASVideos.TagHelpers
 			{
 				output.AddCssClass("alert-dismissible");
 				output.Content.SetHtmlContent(
-$@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""close"">
-	<span aria-hidden=""true"">&times;</span>
-</button>
+$@"<button type=""button"" class=""btn-close float-end"" data-dismiss=""alert"" aria-label=""close""></button>
 {content}");
 			}
 		}
@@ -224,7 +222,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 		<div class='modal-content'>
 			<div class='modal-header'>
 				<h5 class='modal-title text-danger'>Delete Warning!</h5>
-				<button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span></button>
+				<button type='button' class='btn-close float-end' data-dismiss='modal'><span aria-hidden='true'>&times;</span></button>
 			</div>
 			<div class='modal-body'>
 				<p>{Text(WarningMessage)}</p>
@@ -234,7 +232,7 @@ $@"<button type=""button"" class=""close"" data-dismiss=""alert"" aria-label=""c
 					{antiForgeryToken}
 					<button type='submit' class='text-center btn btn-danger'>Yes</button>
 				</form>
-				<button type='button' class='btn btn-secondary' data-dismiss='modal'>No</button>
+				<button type='button' class='btn bg-secondary text-white' data-dismiss='modal'>No</button>
 			</div>
 		</div>
 	</div>

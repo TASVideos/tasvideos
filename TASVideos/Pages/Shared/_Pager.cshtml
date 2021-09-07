@@ -2,7 +2,7 @@
 @model IPaged
 
 <row class="mb-1">
-	<div class="col-md-4 float-left" condition="@Model.LastPage() > 1">
+	<div class="col-md-4 float-start" condition="@Model.LastPage() > 1">
 		<a
 			disable="@Model.CurrentPage == 1"
 			asp-page="@ViewContext.Page()"
@@ -10,7 +10,7 @@
 			asp-route-CurrentPage="1"
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-Sort="@Model.Sort"
-			class="btn btn-secondary btn-sm" title="First Page">
+			class="btn bg-secondary text-white btn-sm" title="First Page">
 			<span class="fa fa-fast-backward"></span>
 		</a>
 		<a
@@ -20,7 +20,7 @@
 			asp-route-CurrentPage="@(Model.CurrentPage - 1)"
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-Sort="@Model.Sort"
-			class="btn btn-secondary btn-sm" title="Previous Page">
+			class="btn bg-secondary text-white btn-sm" title="Previous Page">
 			<span class="fa fa-chevron-left"></span>
 		</a>
 		<a
@@ -30,7 +30,7 @@
 			asp-route-CurrentPage="@(Model.CurrentPage + 1)"
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-Sort="@Model.Sort"
-			class="btn btn-secondary btn-sm" title="Next Page">
+			class="btn bg-secondary text-white btn-sm" title="Next Page">
 			<span class="fa fa-chevron-right"></span>
 		</a>
 		<a
@@ -40,15 +40,15 @@
 			asp-route-CurrentPage="@Model.LastPage()"
 			asp-route-PageSize="@Model.PageSize"
 			asp-route-Sort="@Model.Sort"
-			class="btn btn-secondary btn-sm" title="Last Page">
+			class="btn bg-secondary text-white btn-sm" title="Last Page">
 			<span class="fa fa-fast-forward"></span>
 		</a>
-		<a asp-page="@ViewContext.Page()" class="btn btn-secondary btn-sm">Reset</a>
+		<a asp-page="@ViewContext.Page()" class="btn bg-secondary text-white btn-sm">Reset</a>
 	</div>
-	<div class="@(Model.LastPage() <= 1 ? "ml-3" : "") @(Model.LastPage() > 1 ? "col-md-4 text-md-center" : "text-md-right")">
+	<div class="@(Model.LastPage() <= 1 ? "ml-3" : "") @(Model.LastPage() > 1 ? "col-md-4 text-md-center" : "text-md-end")">
 		<label>Showing @(Model.Offset() + 1) - @Model.LastRow() of @Model.RowCount</label>
 	</div>
-	<div class="col-md-4 text-md-right" condition="@Model.LastPage() > 1">
+	<div class="col-md-4 text-md-end" condition="@Model.LastPage() > 1">
 		<form method="GET" asp-page="@ViewContext.Page()">
 			@foreach (var prop in Model.AdditionalProperties())
 			{
@@ -57,7 +57,7 @@
 			<input type="hidden" asp-for="PageSize" />
 			<input type="hidden" asp-for="Sort" />
 			<label>Page <input type="number" asp-for="CurrentPage" min="1" max="@Model.LastPage()" class="input-sm" style="height: 23px; padding: 2px 5px; max-width: 65px;"> Of @Model.LastPage()</label>
-			<button type="submit" class="btn btn-secondary btn-sm">Go To</button>
+			<button type="submit" class="btn bg-secondary text-white btn-sm">Go To</button>
 		</form>
 	</div>
 </row>

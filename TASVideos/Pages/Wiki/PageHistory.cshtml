@@ -4,7 +4,7 @@
 @{
 	ViewData["Title"] = "Page History For " + Model.History.PageName;
 }
-<a class="btn btn-secondary" href="/@WikiHelper.ProcessLink(Model.History.PageName)">Back to Page</a>
+<a class="btn bg-secondary text-white" href="/@WikiHelper.ProcessLink(Model.History.PageName)">Back to Page</a>
 <div id="diff-view" class="d-none mt-3 border border-secondary" style="max-height: 400px; overflow-y: auto">
 
 </div>
@@ -34,9 +34,9 @@
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
 				<td style="min-width: 100px">
-					<button disabled="@(!previousId.HasValue)" class="btn btn-secondary btn-sm" onclick="GetDiff(@previousId, @revision.Revision)">Prev</button>
-					<button class="btn btn-info btn-sm" data-from="true" onClick="GetDiff(@revision.Revision, null)">From</button>
-					<button class="btn btn-info btn-sm" data-to="true" onClick="GetDiff(null, @revision.Revision)">To</button>
+					<button disabled="@(!previousId.HasValue)" class="btn bg-secondary text-white btn-sm" onclick="GetDiff(@previousId, @revision.Revision)">Prev</button>
+					<button class="btn bg-info text-dark btn-sm" data-from="true" onClick="GetDiff(@revision.Revision, null)">From</button>
+					<button class="btn bg-info text-dark btn-sm" data-to="true" onClick="GetDiff(null, @revision.Revision)">To</button>
 				</td>
 				<td>
 					<delete-button
@@ -70,24 +70,24 @@
 			.forEach(function (elem) {
 				elem.classList.remove('table-primary');
 				elem.classList.remove('table-info');
-				elem.querySelector("button[data-from]").classList.remove("btn-primary");
-				elem.querySelector("button[data-from]").classList.add("btn-info");
-				elem.querySelector("button[data-to]").classList.remove("btn-primary");
-				elem.querySelector("button[data-to]").classList.add("btn-info");
+				elem.querySelector("button[data-from]").classList.remove("bg-primary text-white");
+				elem.querySelector("button[data-from]").classList.add("bg-info text-dark");
+				elem.querySelector("button[data-to]").classList.remove("bg-primary text-white");
+				elem.querySelector("button[data-to]").classList.add("bg-info text-dark");
 			});
 
 		var cur = document.querySelector('tr[data-revision="' + toRevision + '"]');
 		if (cur) {
 			cur.classList.add('table-primary');
-			cur.querySelector("button[data-to]").classList.remove("btn-info");
-			cur.querySelector("button[data-to]").classList.add("btn-primary");
+			cur.querySelector("button[data-to]").classList.remove("bg-info text-dark");
+			cur.querySelector("button[data-to]").classList.add("bg-primary text-white");
 		}
 		
 		var prev = document.querySelector('tr[data-revision="' + fromRevision + '"]');
 		if (prev) {
 			prev.classList.add('table-info');	
-			prev.querySelector("button[data-from]").classList.remove("btn-info");
-			prev.querySelector("button[data-from]").classList.add("btn-primary");
+			prev.querySelector("button[data-from]").classList.remove("bg-info text-dark");
+			prev.querySelector("button[data-from]").classList.add("bg-primary text-white");
 		}
 	}
 

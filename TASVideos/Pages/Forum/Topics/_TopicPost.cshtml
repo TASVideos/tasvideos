@@ -8,7 +8,7 @@
 						id="@Model.Id" 
 						href="/Forum/Posts/@(Model.Id)#@Model.Id" 
 						title="Link to this post" 
-						class="pull-left">
+						class="float-start">
 						<i class="fa fa-bookmark-o mr-1"></i>
 					</a>
 					Posted: <timezone-convert asp-for="@Model.CreateTimestamp" /> 
@@ -18,26 +18,26 @@
 				<small condition="!string.IsNullOrWhiteSpace(Model.Subject)" class="text-center">
 					Post subject: @Model.Subject
 				</small>
-				<small class="pull-right" style="display: inline-block">
+				<small class="float-end" style="display: inline-block">
 					<a
 						condition="User.IsLoggedIn()"
 						asp-page="/Messages/Create"
 						asp-route-defaultToUser="@Model.PosterName"
-						class="btn btn-secondary btn-sm">
+						class="btn bg-secondary text-white btn-sm">
 						PM
 					</a>
 					<a
 						asp-page="/Forum/Posts/Create"
 						asp-route-topicId="@Model.TopicId"
 						asp-route-quoteId="@Model.Id"
-						class="btn btn-secondary btn-sm">
+						class="btn bg-secondary text-white btn-sm">
 						Quote
 					</a>
 					<a
 						condition="Model.IsEditable"
 						asp-page="/Forum/Posts/Edit"
 						asp-route-id="@Model.Id"
-						class="btn btn-primary btn-sm">
+						class="btn bg-primary text-white btn-sm">
 						Edit
 					</a>
 					<delete-button
@@ -59,7 +59,7 @@
 						<profile-link username="@Model.PosterName"></profile-link>
 					</h6>
 				</div>
-				<div class="card-text text-left" style="line-height: 1">
+				<div class="card-text text-start" style="line-height: 1">
 					<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')))
 						<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
 					</small>

@@ -8,21 +8,21 @@
 					<a condition="User.IsLoggedIn()"
 					   asp-page="/Messages/Create"
 					   asp-route-defaultToUser="@Model.UserName"
-					   class="btn btn-secondary btn-sm">
+					   class="btn bg-secondary text-white btn-sm">
 						PM
 					</a>
 					<a permission="EditUsers"
 					   asp-page="/Users/Edit"
 					   asp-route-returnUrl="@Context.ReturnUrl()"
 					   asp-route-id="@Model.Id"
-					   class="btn btn-primary btn-sm">
+					   class="btn bg-primary text-white btn-sm">
 						Edit
 					</a>
 					@Model.UserName
 				</h4>
 			</cardheader>
 			<cardbody>
-				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" style="float: right" />
+				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" class="float-end" />
 				<div class="card-text">
 					<a href="/HomePages/@Model.UserName">Homepage</a>
 					<br />
@@ -73,7 +73,7 @@
 							<a asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning">IP Addresses used</a>
 						</div>
 					</div>
-					<div class="pull-right mt-2">
+					<div class="float-end mt-2">
 						@* ReSharper disable once UnusedVariable *@
 						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 						{
@@ -122,7 +122,7 @@
 		</card>
 	</div>
 	<div class="col-md-6">
-		<card class="text-right">
+		<card class="text-end">
 			<cardheader><h4>Publications</h4></cardheader>
 			<cardbody>
 				<div condition="!Model.AnyPublications" class="card-text">
@@ -140,7 +140,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-right">
+		<card class="text-end">
 			<cardheader><h4>Submissions</h4></cardheader>
 			<cardbody>
 				<div condition="Model.SubmissionCount == 0" class="card-text">
@@ -170,7 +170,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-right">
+		<card class="text-end">
 			<cardheader><h4>Ratings</h4></cardheader>
 			<cardbody>
 				<a class="btn btn-warning btn-sm" a asp-page="/Users/Ratings" asp-route-userName="@Model.UserName">See Ratings</a>
@@ -186,7 +186,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-right" condition="Model.UserFiles.Total > 0">
+		<card class="text-end" condition="Model.UserFiles.Total > 0">
 			<cardheader>
 				<h4>User Files</h4>
 			</cardheader>

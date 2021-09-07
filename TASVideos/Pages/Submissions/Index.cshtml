@@ -5,12 +5,12 @@
 	ViewData["Title"] = "Submissions";
 }
 
-<div permission="SubmitMovies" class="pull-right">
+<div permission="SubmitMovies" class="float-end">
 	<div class="mb-1">
-		<a asp-page="Submit" class="btn btn-primary">Submit a Movie</a>
+		<a asp-page="Submit" class="btn bg-primary text-white">Submit a Movie</a>
 	</div>
 	<div>
-		<a asp-page="Index" asp-route-user="@User.Name()" class="btn btn-secondary">
+		<a asp-page="Index" asp-route-user="@User.Name()" class="btn bg-secondary text-white">
 			My Submissions
 		</a>
 	</div>
@@ -80,7 +80,7 @@
 			<select asp-for="Search.System" asp-items="Model.SystemList" class="form-control"></select>
 		</column>
 	</row>
-	<button type="submit" class="btn btn-secondary mt-1">Filter</button>
+	<button type="submit" class="btn bg-secondary text-white mt-1">Filter</button>
 </form>
 <hr />
 <partial name="_Pager" model="Model.Submissions" />

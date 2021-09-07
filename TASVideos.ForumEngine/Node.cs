@@ -219,7 +219,7 @@ namespace TASVideos.ForumEngine
 						var osplit = Options.Split('.', StringSplitOptions.RemoveEmptyEntries);
 						if (osplit.Length == 2)
 						{
-							w.Write("<a class='btn btn-info code-download' href=");
+							w.Write("<a class='btn bg-info text-dark code-download' href=");
 							Helpers.WriteAttributeValue(w, "data:text/plain," + Uri.EscapeDataString(GetChildText().TrimStart()));
 							w.Write(" download=");
 							Helpers.WriteAttributeValue(w, Options);

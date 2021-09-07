@@ -29,7 +29,7 @@
 						<span asp-validation-for="AvailableGames" class="text-danger"></span>
 					</div>
 					<div class="col-2">
-						<button id="create-game" type="button" class="btn btn-primary">New</button>
+						<button id="create-game" type="button" class="btn bg-primary text-white">New</button>
 					</div>
 				</row>
 			</form-group>
@@ -43,7 +43,7 @@
 						<span asp-validation-for="Catalog.RomId" class="text-danger"></span>
 					</div>
 					<div class="col-2">
-						<button id="create-rom" type="button" class="btn btn-primary" )>New</button>
+						<button id="create-rom" type="button" class="btn bg-primary text-white" )>New</button>
 					</div>
 				</row>
 			</form-group>
@@ -52,8 +52,8 @@
 	<hr/>
 	<row>
 		<div class="text-center col-12">
-			<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
-			<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
+			<button id="submit-btn" type="submit" class="btn bg-primary text-white">Update</button>
+			<a class="btn bg-secondary text-white" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
 		</div>
 	</row>
 </form>

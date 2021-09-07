@@ -4,7 +4,7 @@
     ViewData["Title"] = "Tier List";
 }
 
-<a class="btn btn-primary pull-right mb-3" asp-page="Create">Create</a>
+<a class="btn bg-primary text-white float-end mb-3" asp-page="Create">Create</a>
 
 <table class="table table-striped table-bordered">
     <tr>
@@ -31,7 +31,7 @@
                 @tier.Weight
             </td>
             <th>
-                <a asp-page="/Tiers/Edit" asp-route-id="@tier.Id" class="btn btn-primary">Edit</a>
+                <a asp-page="/Tiers/Edit" asp-route-id="@tier.Id" class="btn bg-primary text-white">Edit</a>
             </th>
         </tr>
     }
