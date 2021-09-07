@@ -16,7 +16,7 @@
 			<navbar>
 				<nav-item activate="Messages">
 					<a class="nav-link" asp-page="/Messages/Inbox">
-						<span condition="notificationCount > 0" class="badge badge-danger">@notificationCount</span>
+						<span condition="notificationCount > 0" class="badge bg-danger text-white">@notificationCount</span>
 						<span condition="notificationCount > 0" class="sr-only">unread messages</span>
 						<span class="fa fa-envelope"></span>
 					</a>

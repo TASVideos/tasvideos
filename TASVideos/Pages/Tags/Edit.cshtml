@@ -4,13 +4,13 @@
 	ViewData["Title"] = $"Editing Tag: {Model.Tag.Code}";
 }
 
-<div class="text-right">
+<div class="text-end">
 	<delete-button condition="!Model.InUse"
 				   asp-href="/Tags/Edit/@(Model.Tag.Id)/Delete"
 				   warning-message="Are you sure you want to remove this tag?">
 		Delete
 	</delete-button>
-	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.Tag.Code">
+	<a class="btn bg-secondary text-white" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.Tag.Code">
 		Tag in Use
 	</a>
 </div>
@@ -29,8 +29,8 @@
 		</column>
 	</row>
 	<div class="text-center mt-3">
-		<submit-button class="btn btn-primary">Save</submit-button>
-		<a class="btn btn-secondary" asp-page="Index">Cancel</a>
+		<submit-button class="btn bg-primary text-white">Save</submit-button>
+		<a class="btn bg-secondary text-white" asp-page="Index">Cancel</a>
 	</div>
 </form>
 

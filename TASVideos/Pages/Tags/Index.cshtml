@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Tag List";
 }
 
-<a class="btn btn-primary pull-right mb-3" asp-page="Create">Create</a>
+<a class="btn bg-primary text-white float-end mb-3" asp-page="Create">Create</a>
 <table class="table table-bordered table-striped table-sm">
 	<tr>
 		<th>Code</th>
@@ -17,7 +17,7 @@
 			<td>@tag.Code</td>
 			<td>@tag.DisplayName</td>
 			<td>
-				<a class="btn btn-primary" asp-page="Edit" asp-route-id="@tag.Id">
+				<a class="btn bg-primary text-white" asp-page="Edit" asp-route-id="@tag.Id">
 					Edit
 				</a>
 			</td>

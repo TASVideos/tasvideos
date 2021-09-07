@@ -113,23 +113,23 @@ namespace TASVideos.TagHelpers
 						<div class='offset-md-3 col-md-6'>
 							<label class='form-control-label'> </label>
 							<div class='row mb-1'>
-								<button type='button' {Attr("id", addBtnName)} class='btn btn-primary btn-sm col-12' aria-label='Add' title='Add'>
+								<button type='button' {Attr("id", addBtnName)} class='btn bg-primary text-white btn-sm col-12' aria-label='Add' title='Add'>
 									<i class='fa fa-chevron-right' aria-hidden='true'></i>
 								</button>
 							</div>
 							<div class='row mb-4'>
-								<button type='button' {Attr("id", addAllBtnName)} class='btn btn-primary btn-sm col-12' aria-label='Add All' title='Add All'>
+								<button type='button' {Attr("id", addAllBtnName)} class='btn bg-primary text-white btn-sm col-12' aria-label='Add All' title='Add All'>
 									<i class='fa fa-chevron-right' aria-hidden='true'></i>
 									<i class='fa fa-chevron-right' aria-hidden='true'></i>
 								</button>
 							</div>
 							<div class='row mb-1'>
-								<button type='button' {Attr("id", removeBtnName)} class='btn btn-primary btn-sm col-12' aria-label='Remove' title='Remove'>
+								<button type='button' {Attr("id", removeBtnName)} class='btn bg-primary text-white btn-sm col-12' aria-label='Remove' title='Remove'>
 									<i class='fa fa-chevron-left' aria-hidden='true'></i>
 								</button>
 							</div>
 							<div class='row'>
-								<button type='button' {Attr("id", removeAllBtnName)} class='btn btn-primary btn-sm col-12' aria-label='Remove All' title='Remove All'>
+								<button type='button' {Attr("id", removeAllBtnName)} class='btn bg-primary text-white btn-sm col-12' aria-label='Remove All' title='Remove All'>
 									<i class='fa fa-chevron-left' aria-hidden='true'></i>
 									<i class='fa fa-chevron-left' aria-hidden='true'></i>
 								</button>

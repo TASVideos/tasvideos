@@ -17,19 +17,19 @@
 <a
 	asp-page="/Wiki/PageHistory"
 	asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
-	class="btn btn-info btn-sm">
+	class="btn bg-info text-dark btn-sm">
 	Page History
 </a>
 <a
 	asp-page="/Wiki/Diff"
 	asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
-	class="btn btn-info btn-sm">
+	class="btn bg-info text-dark btn-sm">
 	Last diff
 </a>
 <a
 	asp-page="/Wiki/Referrers"
 	asp-route-path="@($"{Model.Id}M")"
-	class="btn btn-info btn-sm">
+	class="btn bg-info text-dark btn-sm">
 	List Referrers
 </a>
 

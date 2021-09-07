@@ -38,10 +38,10 @@
 						const string trueId = nameof(Model.Settings.PublicRatings) + "-true";
 						const string falseId = nameof(Model.Settings.PublicRatings) + "-false";
 					}
-					<label for="@trueId" class="btn btn-secondary @(Model.Settings.PublicRatings ? "active" : "")">
+					<label for="@trueId" class="btn bg-secondary text-white @(Model.Settings.PublicRatings ? "active" : "")">
 						<input id="@trueId" type="radio" value="True" asp-for="Settings.PublicRatings" /> Yes
 					</label>
-					<label for="@falseId" class="btn btn-secondary @(!Model.Settings.PublicRatings ? "active" : "")">
+					<label for="@falseId" class="btn bg-secondary text-white @(!Model.Settings.PublicRatings ? "active" : "")">
 						<input id="@falseId-false" type="radio" value="False" asp-for="Settings.PublicRatings" /> No
 					</label>
 				</div>
@@ -66,10 +66,10 @@
 		</column>
 		<column id="avatar-preview" md="6" class="mt-md-0 mt-3" show="!string.IsNullOrWhiteSpace(Model.Settings.Avatar)">
 			<label>Preview</label>
-			<button id="preview-btn" type="button" class="btn btn-secondary btn-sm">
+			<button id="preview-btn" type="button" class="btn bg-secondary text-white btn-sm">
 				<span class="fa fa-refresh"></span>
 			</button><br />
-			<img id="avatar-img" src="@Model.Settings.Avatar" class="pull-left m-2" />
+			<img id="avatar-img" src="@Model.Settings.Avatar" class="float-start m-2" />
 			<small>
 				@await Component.RenderWiki("System/AvatarRequirements")
 			</small>
@@ -137,7 +137,7 @@
 	</fullrow>
 	<hr />
 	<div class="text-center">
-		<button id="submit-btn" type="submit" class="btn btn-secondary">Save</button>
+		<button id="submit-btn" type="submit" class="btn bg-secondary text-white">Save</button>
 	</div>
 </form>
 

@@ -24,11 +24,11 @@
 				<input type="hidden" asp-for="Category.Forums[i].Description" />
 				<input type="hidden" asp-for="Category.Forums[i].Name" />
 				<input type="hidden" asp-for="Category.Forums[i].Ordinal" />
-				<div class="pull-right">
-					<button type="button" class="btn btn-secondary btn-sm" onclick="DecrementOrdinal(this)">
+				<div class="float-end">
+					<button type="button" class="btn bg-secondary text-white btn-sm" onclick="DecrementOrdinal(this)">
 						<i class="fa fa-arrow-up"></i>
 					</button>
-					<button type="button" class="btn btn-secondary btn-sm" onclick="IncrementOrdinal(this)">
+					<button type="button" class="btn bg-secondary text-white btn-sm" onclick="IncrementOrdinal(this)">
 						<i class="fa fa-arrow-down"></i>
 					</button>
 				</div>
@@ -43,8 +43,8 @@
 	</div>
 	<hr />
 	<div class="text-center">
-		<button type="submit" class="btn btn-primary">Update</button>
-		<a asp-page="Index" class="btn btn-secondary">Cancel</a>
+		<button type="submit" class="btn bg-primary text-white">Update</button>
+		<a asp-page="Index" class="btn bg-secondary text-white">Cancel</a>
 	</div>
 </form>
 <script>

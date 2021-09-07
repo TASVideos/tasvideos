@@ -6,7 +6,7 @@
 
 <div condition="Model.IsReply" class="card bg-light mb-3">
 	<div class="card-header">
-		<button type="button" id="quote-btn" class="pull-right btn btn-sm btn-secondary">Quote</button>
+		<button type="button" id="quote-btn" class="float-end btn btn-sm bg-secondary text-white">Quote</button>
 		@Model.ReplyingTo!.Subject
 	</div>
 	<div class="card-body">
@@ -39,9 +39,9 @@
 		</form-group>
 	</row>
 	<div class="text-center">
-		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
-		<button type="submit" class="btn btn-primary">Save</button>
-		<a asp-page="Inbox" class="btn btn-secondary">Cancel</a>
+		<button type="button" class="btn bg-secondary text-white" id="preview-button">Preview</button>
+		<button type="submit" class="btn bg-primary text-white">Save</button>
+		<a asp-page="Inbox" class="btn bg-secondary text-white">Cancel</a>
 	</div>
 </form>
 

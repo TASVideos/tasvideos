@@ -21,8 +21,8 @@
 	<div class="card-header">
 		<h4>
 			#@Model.Id - @Model.Title
-			<span condition="canEdit" class="pull-right">
-				<button class="btn btn-secondary btn-sm">Edit</button>
+			<span condition="canEdit" class="float-end">
+				<button class="btn bg-secondary text-white btn-sm">Edit</button>
 				<delete-button
 					class="btn-sm",
 					warning-message="Are you sure you want to delete this file?"
@@ -93,11 +93,11 @@
 							<form method="POST" asp-page="/UserFiles/Index" asp-route-handler="EditComment" asp-route-returnUrl="@Context.ReturnUrl()">
 								<input type="hidden" name="commentId" value="@comment.Id" />
 								<textarea name="comment" class="form-control">@comment.Text</textarea>
-								<button type="submit" class="btn btn-secondary btn-sm mt-1">Post</button>
+								<button type="submit" class="btn bg-secondary text-white btn-sm mt-1">Post</button>
 							</form>
 						</div>
 						
-						<button type="button" class="btn btn-secondary btn-sm mb-2" onclick="this.classList.add('d-none'); document.getElementById('edit-comment-@comment.Id').classList.remove('d-none'); document.getElementById('view-comment-@comment.Id').classList.add('d-none');">Edit</button>
+						<button type="button" class="btn bg-secondary text-white btn-sm mb-2" onclick="this.classList.add('d-none'); document.getElementById('edit-comment-@comment.Id').classList.remove('d-none'); document.getElementById('view-comment-@comment.Id').classList.add('d-none');">Edit</button>
 						<delete-button
 							class="btn-sm mb-2"
 							asp-href="/UserFiles/Index?handler=DeleteComment&commentId=@comment.Id&returnUrl=@Context.ReturnUrl()"
@@ -116,7 +116,7 @@
 				<input type="hidden" name="fileId" value="@Model.Id "/>
 				<label class="form-control-label">Comment:</label>
 				<textarea class="form-control" name="comment"></textarea>
-				<button type="submit" class="btn btn-secondary mt-1">Post</button>
+				<button type="submit" class="btn bg-secondary text-white mt-1">Post</button>
 			</form>
 			<hr />
 		</div>

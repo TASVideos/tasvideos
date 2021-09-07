@@ -112,9 +112,9 @@
 	</fullrow>
 	<hr />
 	<fullrow class="text-center">
-		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
-		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Submission.Markup.Length > 0 ? "" : "hide")">Update</button>
-		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
+		<button id="preview-button" type="button" class="btn bg-secondary text-white">Preview</button>
+		<button id="submit-btn" type="submit" class="btn bg-primary text-white @(Model.Submission.Markup.Length > 0 ? "" : "hide")">Update</button>
+		<a class="btn bg-secondary text-white" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
 	</fullrow>
 </form>
 

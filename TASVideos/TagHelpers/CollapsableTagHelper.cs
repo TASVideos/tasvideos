@@ -25,7 +25,7 @@ namespace TASVideos.TagHelpers
 				</a>
 				<a
 					data-toggle='collapse'
-					class='collapsed btn btn-default btn-xs text-right'
+					class='collapsed btn btn-default btn-xs text-end'
 					{Attr("href", "#" + BodyId)}
 					{Attr("aria-label", $"Expand/Collapse {BodyId}")}
 					aria-expanded='false'
