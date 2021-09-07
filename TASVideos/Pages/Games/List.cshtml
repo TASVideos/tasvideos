@@ -4,11 +4,11 @@
 	ViewData["Title"] = "Game List" + (!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? "/" + Model.Games.SystemCode : string.Empty);
 }
 
-<a asp-page="Edit" class="btn btn-primary mb-3 pull-right">Create</a>
+<a asp-page="Edit" class="btn bg-primary text-white mb-3 float-end">Create</a>
 <form class="form-inline mb-3">
 	<label asp-for="@Model.Games.SystemCode" class="mr-2"></label>
 	<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="SystemCode" class="form-control mr-2"></select>
-	<button type="Submit" class="btn btn-secondary">Go</button>
+	<button type="Submit" class="btn bg-secondary text-white">Go</button>
 </form>
 
 <partial name="_Pager" model="Model.Games" />
@@ -21,9 +21,9 @@
 			<td>@game.SystemCode</td>
 			<td>@game.DisplayName</td>
 			<td>
-				<a asp-page="Index" asp-route-id="@game.Id" class="btn btn-sm btn-secondary">View</a>
-				<a asp-page="Edit" asp-route-id="@game.Id" class="btn btn-primary btn-sm">Edit</a>
-				<a asp-page="Roms/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm">Roms</a>
+				<a asp-page="Index" asp-route-id="@game.Id" class="btn btn-sm bg-secondary text-white">View</a>
+				<a asp-page="Edit" asp-route-id="@game.Id" class="btn bg-primary text-white btn-sm">Edit</a>
+				<a asp-page="Roms/List" asp-route-gameId="@game.Id" class="btn bg-secondary text-white btn-sm">Roms</a>
 			</td>
 		</tr>
 	}

@@ -23,7 +23,7 @@
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
 				<td>
-					<button class="btn btn-primary" onclick="GetDiff('@revision.PageName', @revision.Revision)">Diff</button>
+					<button class="btn bg-primary text-white" onclick="GetDiff('@revision.PageName', @revision.Revision)">Diff</button>
 					<delete-button
 						permission="DeleteWikiPages"
 						asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(revision.PageName)&revision=@revision.Revision"

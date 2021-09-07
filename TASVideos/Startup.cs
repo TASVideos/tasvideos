@@ -55,7 +55,7 @@ namespace TASVideos
 
 			services.AddWebOptimizer(pipeline =>
 			{
-				pipeline.AddScssBundle("/css/site.css", "css/bootstrap.scss", "css/site.scss");
+				pipeline.AddScssBundle("/css/site.css", "css/site.scss");
 			});
 		}
 

@@ -14,16 +14,16 @@
 	<card>
 		<cardheader>
 			<row>
-				<div class="col-4 border-right">
+				<div class="col-4 border-end">
 					<h5>@Model.UserName</h5>
 				</div>
 				<div class="col-8 pt-0 pb-0">
 					<small style="display: inline-block">
-						<a id="@post.Id" href="/Forum/Post/@(post.Id)#@post.Id" title="Link to this post" class="pull-left"><i class="fa fa-bookmark-o"></i></a>
+						<a id="@post.Id" href="/Forum/Post/@(post.Id)#@post.Id" title="Link to this post" class="float-start"><i class="fa fa-bookmark-o"></i></a>
 						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
 					</small>
-					<small class="pull-right">
+					<small class="pull-end">
 						<a asp-page="/Forum/Subforum" asp-route-id="@post.ForumId">@Html.Raw(post.ForumName)</a>
 						 -> 
 						<a asp-page="/Forum/Topics" asp-route-id="@post.TopicId">@post.TopicTitle</a>
@@ -34,7 +34,7 @@
 		<cardbody>
 			<row>
 				<div class="col-4">
-					<div class="card-text text-right">
+					<div class="card-text text-end">
 						<small>
 							@string.Join(",", Model.UserPosts.Roles)
 							(todo points)
@@ -60,8 +60,8 @@
 					<forum-markup markup=@Model.UserPosts.Signature enable-bb-code="true"></forum-markup>
 				</small>
 				<br />
-				<profile-link class="btn btn-info btn-sm" username="@Model.UserName">Profile</profile-link>
-				<div class="pull-right">
+				<profile-link class="btn bg-info text-dark btn-sm" username="@Model.UserName">Profile</profile-link>
+				<div class="float-end">
 					@* ReSharper disable once UnusedVariable *@
 					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 					{

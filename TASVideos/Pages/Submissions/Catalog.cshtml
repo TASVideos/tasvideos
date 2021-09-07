@@ -27,7 +27,7 @@
 						<select asp-for="Catalog.GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-control"></select>
 					</div>
 					<div class="col-2">
-						<button id="create-game" type="button" class="btn btn-primary">New</button>
+						<button id="create-game" type="button" class="btn bg-primary text-white">New</button>
 					</div>
 				</row>
 			</form-group>
@@ -44,7 +44,7 @@
 							disable="!Model.Catalog.GameId.HasValue || Model.Catalog.GameId == -1" 
 							id="create-rom" 
 							type="button" 
-							class="btn btn-primary">New</button>
+							class="btn bg-primary text-white">New</button>
 					</div>
 				</row>
 			</form-group>
@@ -52,8 +52,8 @@
 	</row>
 	<hr />
 	<fullrow class="text-center">
-		<button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
-		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
+		<button id="submit-btn" type="submit" class="btn bg-primary text-white">Update</button>
+		<a class="btn bg-secondary text-white" asp-page="View" asp-route-id="@Model.Id">Cancel</a>
 	</fullrow>
 </form>
 

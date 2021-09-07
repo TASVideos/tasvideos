@@ -15,7 +15,7 @@
 		condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0"
 		asp-page="PollResults"
 		asp-route-id="@Model.PollId"
-		class="btn btn-info pull-right">
+		class="btn bg-info text-dark float-end">
 		See Votes
 	</a>
 	<forum-markup markup=@Model.Question enable-bb-code=true></forum-markup>

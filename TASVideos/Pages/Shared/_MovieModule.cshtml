@@ -37,23 +37,21 @@
 	}
 }
 <card class="border border-primary">
-	<cardheader class="bg-bgprimary">
-        <row>
-            <div class="pixelart-image float-left" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)">
-                <img src="/@Model.TierIconPath" />
-            </div>
-            <h4 class="col px-2 m-0"><a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></a></h4>
-            <div class="float-right">
-            @foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
-            {
-                <a href="@flag.LinkPath">
-                    <img class="pixelart-image" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
-                </a>
-            }
-            </div>
-        </row>
+	<cardheader class="bg-cardprimary">
+        <div class="pixelart-image float-start" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)">
+            <img src="/@Model.TierIconPath" />
+        </div>
+        <h4 class="col px-2 m-0 float-start"><a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></a></h4>
+        <div class="float-end">
+        @foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
+        {
+            <a href="@flag.LinkPath">
+                <img class="pixelart-image" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
+            </a>
+        }
+        </div>
 	</cardheader>
-    <cardbody class="px-3 py-0">
+    <cardbody class="px-0 py-0">
         <div condition="@Model.ObsoletedById.HasValue" class="col card-subtitle text-danger my-2">
             <row>
                 <b>This movie has been obsoleted!</b>
@@ -62,8 +60,8 @@
                 <pub-link id="Model.ObsoletedById!.Value" class="btn btn-danger btn-sm">Obsoleting Movie</pub-link>
             </row>
         </div>
-        <row class="bg-bgsecondary py-3 mx-n3">
-            <div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-left">
+        <row class="bg-cardsecondary py-3 mx-0">
+            <div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-start">
                 <div>
                     <img src="~/media/@Model.Screenshot.Path"
                          alt="@Model.Screenshot.Description"
@@ -73,35 +71,35 @@
                 </div>
                 @foreach (var url in Model.OnlineWatchingUrls)
                 {
-                    <a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank">Watch</a>
+                    <a href="@url" class="btn bg-primary text-white btn-sm mt-1" target="_blank">Watch</a>
                 }
-                <a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1">Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
+                <a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn bg-primary text-white btn-sm mt-1">Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
                 <br />
-                <a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
+                <a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn bg-secondary text-white btn-sm mt-1">Submission</a>
                 <a condition="@Model.TopicId > 0"
                    asp-page="/Forum/Topics/Index"
                    asp-route-id="@Model.TopicId"
-                   class="btn btn-secondary btn-sm mt-1">
+                   class="btn bg-secondary text-white btn-sm mt-1">
                     Discuss
                 </a>
                 <br />
                 <a permission="EditPublicationMetaData"
                    asp-page="Edit"
                    asp-route-id="@Model.Id"
-                   class="btn btn-secondary btn-sm mt-1">Edit</a>
+                   class="btn bg-secondary text-white btn-sm mt-1">Edit</a>
                 <a permission="CatalogMovies"
                    asp-page="/Publications/Catalog"
                    asp-route-id="@Model.Id"
-                   class="btn btn-secondary btn-sm mt-1">Catalog</a>
+                   class="btn bg-secondary text-white btn-sm mt-1">Catalog</a>
                 <a asp-page="/Games/PublicationHistory"
                    asp-route-id="@Model.GameId"
                    asp-route-highlight="@Model.Id"
-                   class="btn btn-secondary btn-sm mt-1">
+                   class="btn bg-secondary text-white btn-sm mt-1">
                     History
                 </a>
                 <a permission="EditPublicationMetaData"
                    href="/MovieMaintenanceLog?id=@Model.Id"
-                   class="btn btn-secondary btn-sm mt-1">
+                   class="btn bg-secondary text-white btn-sm mt-1">
                     Logs
                 </a>
                 <br />
@@ -139,7 +137,7 @@
                 </column>
             }
         </row>
-        <row class="mb-2">
+        <row class="mx-0 my-2">
             <div condition="Model.GenreTags.Any()" class="col-auto">
                 <small>
                     Genres:<br />

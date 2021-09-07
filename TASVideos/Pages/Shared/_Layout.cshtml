@@ -6,6 +6,7 @@
 	<title>@(ViewData["Title"] != null ? ViewData["Title"] + " - " : "")TASVideos</title>
 
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 	<link rel="stylesheet" href="~/css/site.css" />
 	<link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css"/>
 	
@@ -13,7 +14,7 @@
 	<link href="~/css/prism.css" rel="stylesheet" />
 
 	<script src="~/lib/jquery/jquery.min.js"></script>
-	<script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 	<script src="~/js/site.js"></script>
 
 	@if (IsSectionDefined("Header"))
@@ -23,35 +24,37 @@
 </head>
 <body>
     <nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
-        <picture>
-            <source srcset="/images/tasvideosbg.avif" type="image/avif">
-            <source srcset="/images/tasvideosbg.webp" type="image/webp">
-            <img class="site-banner" src="/images/tasvideosbg.jpg">
-        </picture>
-        <picture>
-            <source srcset="/images/logo-light.webp" type="image/webp">
-            <img class="site-icon pixelart-image" src="/images/logo-light.png">
-        </picture>
-        <div id="mantra">
-            <a id="brand" asp-page="/Index">TASVideos</a>
-            <div id="mantra1">Tool-assisted game movies</div>
-            <div id="mantra2">When human skills are just not enough</div>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="container">
-                <div class="d-lg-flex">
-                    <div class="mr-auto">
-                        <partial name="_NavBarPartial" />
-                    </div>
-                    <div>
-                        <partial name="_LoginPartial" />
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div class="container-fluid">
+			<picture>
+				<source srcset="/images/tasvideosbg.avif" type="image/avif">
+				<source srcset="/images/tasvideosbg.webp" type="image/webp">
+				<img class="site-banner" src="/images/tasvideosbg.jpg">
+			</picture>
+			<picture>
+				<source srcset="/images/logo-light.webp" type="image/webp">
+				<img class="site-icon pixelart-image" src="/images/logo-light.png">
+			</picture>
+			<div id="mantra">
+				<a id="brand" asp-page="/Index">TASVideos</a>
+				<div id="mantra1">Tool-assisted game movies</div>
+				<div id="mantra2">When human skills are just not enough</div>
+			</div>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<div class="container">
+					<div class="d-lg-flex">
+						<div class="mr-auto">
+							<partial name="_NavBarPartial" />
+						</div>
+						<div>
+							<partial name="_LoginPartial" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
     </nav>
 
 	@{

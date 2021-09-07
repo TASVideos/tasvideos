@@ -87,14 +87,14 @@
 			<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit"></textarea>
 			<span asp-validation-for="Create.Markup" class="text-danger"></span>
 			<div>
-				<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
+				<button id="prefill-btn" type="button" class="btn bg-secondary text-white mt-2">Prefill comments</button>
 			</div>
 		</form-group>
 	</fullrow>
 	<hr />
 	<fullrow class="text-center">
-		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
-		<submit-button id="submit-btn" class="btn btn-primary @(Model.Create.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
+		<button id="preview-button" type="button" class="btn bg-secondary text-white">Preview</button>
+		<submit-button id="submit-btn" class="btn bg-primary text-white @(Model.Create.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
 		<br />
 		<br />
 		<div id="submit-blurb" class="text-center alert-info d-none" role="alert">

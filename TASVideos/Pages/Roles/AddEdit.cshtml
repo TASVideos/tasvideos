@@ -7,7 +7,7 @@
 	condition="@(Model.Id.HasValue && ViewData.UserHas(PermissionTo.DeleteRoles) && (bool)ViewData["IsInUse"])"
 	asp-href="@($"/Roles/AddEdit/{Model.Id}/Delete")"
 	warning-message="Are you sure you want to delete this Role? This action cannot be undone!"
-	class="float-right text-center">
+	class="float-end text-center">
 	Delete
 </delete-button>
 <h4>@ViewData["Title"]</h4>
@@ -74,8 +74,8 @@
 		</row>
 	</form-group>
 	<div class="text-center mt-3">
-		<submit-button class="btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</submit-button>
-		<a asp-page="List" class="btn btn-secondary">Cancel</a>
+		<submit-button class="btn bg-primary text-white">@(Model.Id.HasValue ? "Update" : "Save")</submit-button>
+		<a asp-page="List" class="btn bg-secondary text-white">Cancel</a>
 	</div>
 </form>
 <script>
