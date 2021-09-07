@@ -51,9 +51,35 @@
 			</div>
 		</row>
 	</cardheader>
+    <cardbody class="p-1 px-3 row d-md-none align-items-center mx-0" style="background-color: #eaeaea">
+        <avatar class="col-auto px-0 float-left" style="max-height: 5em" avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
+        <div class="col">
+            <h6>
+                <profile-link username="@Model.PosterName"></profile-link><br />
+            </h6>
+            <small>
+                @string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')))
+                <span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
+            </small>
+        </div>
+        <div class="col d-none">
+            <small>
+                Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
+                Posts: @Model.PosterPostCount<br />
+                Location: @Model.PosterLocation
+            </small>
+        </div>
+        <div condition="Model.Awards.Any()" class="col-auto d-none">
+            @* ReSharper disable once UnusedVariable *@
+            @foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
+            {
+                <partial name="_Award" model="award" />
+            }
+        </div>
+    </cardbody>
 	<cardbody class="p-2">
 		<row>
-			<div class="forum-profile-section col-lg-2 col-md-3 col-4">
+			<div class="forum-profile-section col-lg-2 col-md-3 col-4 d-none d-md-block">
 				<div class="text-center" style="margin-left: -.5rem;">
 					<h6>
 						<profile-link username="@Model.PosterName"></profile-link>
@@ -81,7 +107,7 @@
 					}
 				</div>
 			</div>
-			<div class="col-lg-10 col-md-9 col-8 d-flex flex-column">
+			<div class="col-lg-10 col-md-9 col d-flex flex-column">
                 <div class="mb-auto">
                     <forum-markup markup=@Model.Text enable-html=@Model.EnableHtml enable-bb-code=@Model.EnableBbCode></forum-markup>
                 </div>
