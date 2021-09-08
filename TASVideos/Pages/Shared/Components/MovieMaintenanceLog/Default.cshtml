@@ -3,18 +3,20 @@
 <div>
 	<pub-link id="@((int)ViewData["id"])">@ViewData["title"]</pub-link>
 </div>
-<table class="table table-striped table-bordered">
-	<tr>
-		<th>Editor</th>
-		<th>Datetime</th>
-		<th>Log</th>
-	</tr>
-	@foreach (var log in Model.OrderByDescending(m => m.Timestamp))
-	{
+<div class="table-container">
+	<table class="table table-striped table-bordered">
 		<tr>
-			<td><profile-link username="@log.UserName"></profile-link></td>
-			<td><timezone-convert asp-for="@log.Timestamp" /></td>
-			<td>@log.Log</td>
+			<th>Editor</th>
+			<th>Datetime</th>
+			<th>Log</th>
 		</tr>
-	}
-</table>
+		@foreach (var log in Model.OrderByDescending(m => m.Timestamp))
+		{
+			<tr>
+				<td><profile-link username="@log.UserName"></profile-link></td>
+				<td><timezone-convert asp-for="@log.Timestamp" /></td>
+				<td>@log.Log</td>
+			</tr>
+		}
+	</table>
+</div>

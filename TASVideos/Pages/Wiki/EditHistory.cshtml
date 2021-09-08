@@ -6,36 +6,36 @@
 }
 <h4>Edits by <a href="@WikiEngine.Builtins.NormalizeInternalLink("/HomePages/" + Model.UserName)">@Model.UserName</a></h4>
 <hr />
-<table class="table table-striped">
-	<tbody>
-		<tr>
-			<th>@Html.DisplayNameFor(m => m.History.Edits.First().PageName)</th>
-			<th>@Html.DisplayNameFor(m => m.History.Edits.First().CreateTimestamp)</th>
-			<th>@Html.DisplayNameFor(m => m.History.Edits.First().MinorEdit)</th>
-			<th>@Html.DisplayNameFor(m => m.History.Edits.First().RevisionMessage)</th>
-			<th>Actions</th>
-		</tr>
-		@foreach (var revision in Model.History.Edits)
-		{
+<div class="table-container">
+	<table class="table table-striped">
+		<tbody>
 			<tr>
-				<td><a href="/@(revision.PageName)?revision=@revision.Revision">@revision.PageName r@(revision.Revision)</a></td>
-				<td>@revision.CreateTimestamp</td>
-				<td>@revision.MinorEdit</td>
-				<td>@revision.RevisionMessage</td>
-				<td>
-					<button class="btn bg-primary text-white" onclick="GetDiff('@revision.PageName', @revision.Revision)">Diff</button>
-					<delete-button
-						permission="DeleteWikiPages"
-						asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(revision.PageName)&revision=@revision.Revision"
-						warning-message="Are you sure you want to delete this revision?">
-						Delete
-					</delete-button>
-				</td>
+				<th>@Html.DisplayNameFor(m => m.History.Edits.First().PageName)</th>
+				<th>@Html.DisplayNameFor(m => m.History.Edits.First().CreateTimestamp)</th>
+				<th>@Html.DisplayNameFor(m => m.History.Edits.First().MinorEdit)</th>
+				<th>@Html.DisplayNameFor(m => m.History.Edits.First().RevisionMessage)</th>
+				<th>Actions</th>
 			</tr>
-		}
-	</tbody>
-</table>
-
+			@foreach (var revision in Model.History.Edits)
+			{
+				<tr>
+					<td><a href="/@(revision.PageName)?revision=@revision.Revision">@revision.PageName r@(revision.Revision)</a></td>
+					<td>@revision.CreateTimestamp</td>
+					<td>@revision.MinorEdit</td>
+					<td>@revision.RevisionMessage</td>
+					<td>
+						<button class="btn bg-primary text-white" onclick="GetDiff('@revision.PageName', @revision.Revision)">Diff</button>
+						<delete-button permission="DeleteWikiPages"
+									   asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(revision.PageName)&revision=@revision.Revision"
+									   warning-message="Are you sure you want to delete this revision?">
+							Delete
+						</delete-button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
 <input type="hidden" id="left-revision" />
 <input type="hidden" id="right-revision" />
 <div id="diff-options" class="d-none">
