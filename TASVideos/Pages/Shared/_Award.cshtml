@@ -1,8 +1,9 @@
 ﻿@model TASVideos.Core.Services.AwardAssignmentSummary
 @{
 	// TODO: fix file names!
-	int year = Model.Year > 2018 ? Model.Year - 2000 : Model.Year;
+	int shortYear = Model.Year > 2018 ? Model.Year - 2000 : Model.Year;
+	int longYear = Model.Year;
 }
-<a href="/Awards/@(year.ToString())#@(Model.ShortName)_@(year)" title="Award - @Model.Description">
-	<img style="max-width: 48px;"class="pixelart-image" src="/awards/@($"{Model.ShortName}_{year.ToString()}.png")" alt="@Model.Description" loading="lazy" />
+<a href="/Awards/@(longYear.ToString())#@(Model.ShortName)_@(shortYear)" title="Award - @Model.Description">
+	<img style="max-width: 48px;"class="pixelart-image" src="/awards/@($"{Model.ShortName}_{shortYear.ToString()}.png")" alt="@Model.Description" loading="lazy" />
 </a>
