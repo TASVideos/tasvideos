@@ -1,15 +1,16 @@
 ﻿@model IEnumerable<RejectedSubmission>
-
-<table class="table table-striped">
-	<tr>
-		<th>Submission</th>
-		<th>Reason</th>
-	</tr>
-	@foreach (var sub in Model)
-	{
+<div class="table-container">
+	<table class="table table-striped">
 		<tr>
-			<td><sub-link id="sub.Id">@sub.Title</sub-link></td>
-			<td>@sub.Reason</td>
+			<th>Submission</th>
+			<th>Reason</th>
 		</tr>
-	}
-</table>
+		@foreach (var sub in Model)
+		{
+			<tr>
+				<td><sub-link id="sub.Id">@sub.Title</sub-link></td>
+				<td>@sub.Reason</td>
+			</tr>
+		}
+	</table>
+</div>

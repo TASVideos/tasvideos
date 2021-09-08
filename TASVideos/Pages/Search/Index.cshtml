@@ -25,58 +25,64 @@
 <div condition="Model.GameResults.Any()">
 	<hr />
 	<h4>Game Results:</h4>
-	<table class="table table-striped table-bordered">
-		@foreach (var result in Model.GameResults)
-		{
-			<tr>
-				<td>
-					<a asp-page="/Games/Index" asp-route-id="@result.Id">@result.SystemCode @result.DisplayName</a>
-				</td>
-			</tr>
-		}
-	</table>
+	<div class="table-container">
+		<table class="table table-striped table-bordered">
+			@foreach (var result in Model.GameResults)
+			{
+				<tr>
+					<td>
+						<a asp-page="/Games/Index" asp-route-id="@result.Id">@result.SystemCode @result.DisplayName</a>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
 </div>
 
 <div condition="Model.PageResults.Any()">
 	<hr />
 	<h4>Wiki Results:</h4>
-	<table class="table table-striped table-bordered">
-		<tr>
-			<th>Page</th>
-			<td>Content</td>
-		</tr>
-		@foreach (var result in Model.PageResults)
-		{
+	<div class="table-container">
+		<table class="table table-striped table-bordered">
 			<tr>
-				<td>
-					<wiki-link page-name="@result.PageName"></wiki-link>
-				</td>
-				<td>
-					@Html.Raw(result.Highlight)
-				</td>
+				<th>Page</th>
+				<td>Content</td>
 			</tr>
-		}
-	</table>
+			@foreach (var result in Model.PageResults)
+			{
+				<tr>
+					<td>
+						<wiki-link page-name="@result.PageName"></wiki-link>
+					</td>
+					<td>
+						@Html.Raw(result.Highlight)
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
 </div>
 
 <div condition="Model.PostResults.Any()">
 	<hr />
 	<h4>Post Results:</h4>
-	<table class="table table-striped table-bordered">
-		<tr>
-			<th>Post</th>
-			<td>Content</td>
-		</tr>
-		@foreach (var result in Model.PostResults)
-		{
+	<div class="table-container">
+		<table class="table table-striped table-bordered">
 			<tr>
-				<td>
-					<a href="/Forum/Posts/@result.PostId#@result.PostId">@result.TopicName</a>
-				</td>
-				<td>
-					@Html.Raw(result.Highlight)
-				</td>
+				<th>Post</th>
+				<td>Content</td>
 			</tr>
-		}
-	</table>
+			@foreach (var result in Model.PostResults)
+			{
+				<tr>
+					<td>
+						<a href="/Forum/Posts/@result.PostId#@result.PostId">@result.TopicName</a>
+					</td>
+					<td>
+						@Html.Raw(result.Highlight)
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
 </div>

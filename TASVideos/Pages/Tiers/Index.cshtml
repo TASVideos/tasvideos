@@ -1,38 +1,39 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Tier List";
+	ViewData["Title"] = "Tier List";
 }
 
 <a class="btn bg-primary text-white float-end mb-3" asp-page="Create">Create</a>
-
-<table class="table table-striped table-bordered">
-    <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Link</th>
-        <th>Weight</th>
-        <th></th>
-    </tr>
-    @foreach (var tier in Model.Tiers.OrderBy(t => t.Id))
-   {
-        <tr>
-            <td>
-                @tier.Id
-            </td>
-            <td>
-                <img class="pixelart-image" src="/@tier.IconPath" />
-                @tier.Name
-            </td>
-            <td>
-                <a href="/@tier.Link">@tier.Link</a>
-            </td>
-            <td>
-                @tier.Weight
-            </td>
-            <th>
-                <a asp-page="/Tiers/Edit" asp-route-id="@tier.Id" class="btn bg-primary text-white">Edit</a>
-            </th>
-        </tr>
-    }
-</table>
+<div class="table-container">
+	<table class="table table-striped table-bordered">
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Link</th>
+			<th>Weight</th>
+			<th></th>
+		</tr>
+		@foreach (var tier in Model.Tiers.OrderBy(t => t.Id))
+		{
+			<tr>
+				<td>
+					@tier.Id
+				</td>
+				<td>
+					<img class="pixelart-image" src="/@tier.IconPath" />
+					@tier.Name
+				</td>
+				<td>
+					<a href="/@tier.Link">@tier.Link</a>
+				</td>
+				<td>
+					@tier.Weight
+				</td>
+				<th>
+					<a asp-page="/Tiers/Edit" asp-route-id="@tier.Id" class="btn bg-primary text-white">Edit</a>
+				</th>
+			</tr>
+		}
+	</table>
+</div>

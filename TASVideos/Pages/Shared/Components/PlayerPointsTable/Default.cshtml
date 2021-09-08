@@ -1,17 +1,18 @@
 ﻿@model IEnumerable<PlayerPointsModel>
-
-<table class="table table-striped table-bordered">
-	<tr>
-		<th>@Html.DisplayNameFor(m => m.First().Position)</th>
-		<th>@Html.DisplayNameFor(m => m.First().Player)</th>
-		<th>@Html.DisplayNameFor(m => m.First().Points)</th>
-	</tr>
-	@foreach (var item in Model)
-	{
+<div class="table-container">
+	<table class="table table-striped table-bordered">
 		<tr>
-			<td>@item.Position</td>
-			<td>@item.Player</td>
-			<td>@item.Points</td>
+			<th>@Html.DisplayNameFor(m => m.First().Position)</th>
+			<th>@Html.DisplayNameFor(m => m.First().Player)</th>
+			<th>@Html.DisplayNameFor(m => m.First().Points)</th>
 		</tr>
-	}
-</table>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.Position</td>
+				<td>@item.Player</td>
+				<td>@item.Points</td>
+			</tr>
+		}
+	</table>
+</div>
