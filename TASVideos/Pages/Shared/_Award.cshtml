@@ -3,7 +3,12 @@
 	// TODO: fix file names!
 	int shortYear = Model.Year > 2018 ? Model.Year - 2000 : Model.Year;
 	int longYear = Model.Year;
+	string awardName = $"{Model.ShortName}_{shortYear.ToString()}";
 }
 <a href="/Awards/@(longYear.ToString())#@(Model.ShortName)_@(shortYear)" title="Award - @Model.Description">
-	<img style="max-width: 48px;"class="pixelart-image" src="/awards/@($"{Model.ShortName}_{shortYear.ToString()}.png")" alt="@Model.Description" loading="lazy" />
+	<img style="max-height: 32px; max-width: 32px;" 
+		 srcset="/awards/@(awardName).png .5x,
+		 /awards/@(awardName)-2x.png 1x,
+		 /awards/@(awardName)-4x.png 2x"
+		 src="/awards/@(awardName)-2x.png" alt="@Model.Description" loading="lazy" />
 </a>
