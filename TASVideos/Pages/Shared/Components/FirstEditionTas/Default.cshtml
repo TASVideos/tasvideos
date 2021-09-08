@@ -6,10 +6,20 @@
 
 @foreach (var g in groups.OrderByDescending(g => g.Key.TierId))
 {
+	var tierIconPath2x = "";
+	var tierIconPath4x = "";
+	if (g.Key.TierIconPath != null)
+	{
+		tierIconPath2x = $"{g.Key.TierIconPath.Split('.')[0]}-2x.png";
+		tierIconPath4x = $"{g.Key.TierIconPath.Split('.')[0]}-4x.png";
+	}
 	<card>
 		<cardheader>
 			<a href="/@g.Key.TierName">
-				<img class="pixelart-image" src="/@g.Key.TierIconPath" />
+				<img style="width: 18px" src="/@tierIconPath2x"
+					 srcset="/@g.Key.TierIconPath .5x,
+					 /@tierIconPath2x 1x,
+					 /@tierIconPath4x 2x" />
 				<strong>@g.Key.TierName</strong>
 			</a>
 			&nbsp;(@g.Count())
