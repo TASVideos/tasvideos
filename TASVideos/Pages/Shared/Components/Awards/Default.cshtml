@@ -33,7 +33,7 @@
 	string awardName = $"{award.ShortName}_{award.Year.ToString()}";
 	<div class="mb-5">
 		<a id="@(award.ShortName)_@(award.Year)"></a>
-		<img class="float-start mr-2" alt="@award.Description"
+		<img class="float-start me-2" alt="@award.Description"
 			 srcset="/awards/@(awardName).png .5x,
 				/awards/@(awardName)-2x.png 1x,
 				/awards/@(awardName)-4x.png 2x"
