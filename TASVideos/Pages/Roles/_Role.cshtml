@@ -46,7 +46,7 @@
 		<div condition="Model.Users.Any() && Model.Users.Count <= 100">
 			@foreach (var user in Model.Users)
 			{
-				<span class="mr-4 mb-4" style="display: inline-block">
+				<span class="me-4 mb-4" style="display: inline-block">
 					<profile-link username="@user.UserName"></profile-link>
 				</span>
 			}
