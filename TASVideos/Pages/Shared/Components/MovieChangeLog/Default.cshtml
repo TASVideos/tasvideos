@@ -5,7 +5,7 @@
         <h4>@pubGroup.Date.ToShortDateString()</h4>
         foreach (var pub in pubGroup.Pubs)
         {
-                <div class="ml-2"><pub-link id="pub.Id">@pub.Name</pub-link>
+                <div class="ms-2"><pub-link id="pub.Id">@pub.Name</pub-link>
                 @if (pub.IsNewGame)
                 {
                     <span>(new game)</span>
