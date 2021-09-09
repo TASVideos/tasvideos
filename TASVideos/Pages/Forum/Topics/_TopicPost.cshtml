@@ -9,12 +9,12 @@
 						href="/Forum/Posts/@(Model.Id)#@Model.Id" 
 						title="Link to this post" 
 						class="float-start">
-						<i class="fa fa-bookmark-o mr-1"></i>
+						<i class="fa fa-bookmark-o me-1"></i>
 					</a>
 					Posted: <timezone-convert asp-for="@Model.CreateTimestamp" /> 
 				</small>
 			</div>
-			<div class="col-lg-10 col-md-9 col-8 pr-0" >
+			<div class="col-lg-10 col-md-9 col-8 pe-0" >
 				<small condition="!string.IsNullOrWhiteSpace(Model.Subject)" class="text-center">
 					Post subject: @Model.Subject
 				</small>
