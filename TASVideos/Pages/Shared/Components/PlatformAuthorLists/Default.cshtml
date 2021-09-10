@@ -25,8 +25,18 @@
 				<ul style="list-style-type: none;">
 					@foreach (var pub in author.Pubs)
 					{
+						var tierIconPath2x = "";
+						var tierIconPath4x = "";
+						if (pub.TierIconPath != null)
+						{
+							tierIconPath2x = $"{pub.TierIconPath.Split('.')[0]}-2x.png";
+							tierIconPath4x = $"{pub.TierIconPath.Split('.')[0]}-4x.png";
+						}
 						<li>
-							<img class="pixelart-image" condition="Model.ShowTiers" src="/@pub.TierIconPath" />
+							<img style="width: 18px" condition="Model.ShowTiers" src="/@tierIconPath2x"
+								srcset="/@pub.TierIconPath .5x,
+								/@tierIconPath2x 1x,
+								/@tierIconPath4x 2x" />
 							<a href="@(pub.Id)M"> @pub.Title </a>
 						</li>
 					}

@@ -6,8 +6,13 @@
 	{
 		@*TODO: Fix the file names to be consistent*@
 		int year = award.Year > 2018 ? award.Year - 2000 : award.Year;
+		string awardName = $"{award.ShortName}_{year.ToString()}";
 		<div class="col-md-4 col-sm-6 m-3">
-			<img class="float-start" alt="@award.Description" src="/awards/@(award.ShortName)_@(year.ToString()).png" />
+			<img class="float-start" alt="@award.Description"
+				 srcset="/awards/@(awardName).png .5x,
+					/awards/@(awardName)-2x.png 1x,
+					/awards/@(awardName)-4x.png 2x"
+				 src="/awards/@(awardName)-2x.png" loading="lazy" />
 			<div class="float-end">
 				<a id="@(award.ShortName)_@(award.Year)"></a>
 				<strong>@award.Description</strong>
@@ -25,9 +30,14 @@
 <h2>Publication Awards</h2>
 @foreach (var award in Model.Where(m => m.Type == AwardType.Movie).OrderBy(m => m.ShortName))
 {
+	string awardName = $"{award.ShortName}_{award.Year.ToString()}";
 	<div class="mb-5">
 		<a id="@(award.ShortName)_@(award.Year)"></a>
-		<img class="float-start me-2" alt="@award.Description" src="/awards/@(award.ShortName)_@(award.Year.ToString()).png" />
+		<img class="float-start me-2" alt="@award.Description"
+			 srcset="/awards/@(awardName).png .5x,
+				/awards/@(awardName)-2x.png 1x,
+				/awards/@(awardName)-4x.png 2x"
+			 src="/awards/@(awardName)-2x.png" loading="lazy"/>
 		<div>
 			<strong>@award.Description</strong>
 			<br />

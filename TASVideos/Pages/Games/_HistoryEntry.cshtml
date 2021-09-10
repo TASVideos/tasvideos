@@ -1,8 +1,18 @@
 ﻿@model TASVideos.Core.Services.PublicationHistoryNode
 @{
 	var highlight = Model.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
+	var tierIconPath2x = "";
+	var tierIconPath4x = "";
+	if (Model.TierIconPath != null)
+	{
+		tierIconPath2x = $"{Model.TierIconPath.Split('.')[0]}-2x.png";
+		tierIconPath4x = $"{Model.TierIconPath.Split('.')[0]}-4x.png";
+	}
 }
-<img class="pixelart-image" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@Model.TierIconPath" />
+<img style="width: 18px" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@tierIconPath2x"
+	 srcset="/@Model.TierIconPath 1x,
+	 /@tierIconPath2x 2x,
+	 /@tierIconPath4x 4x"/>
 <pub-link class="@highlight" id="@Model.Id">@Model.Title</pub-link>
 @if (Model.Obsoletes.Any())
 {
