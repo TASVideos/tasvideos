@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Search
 {
@@ -50,6 +51,7 @@ namespace TASVideos.Pages.Search
 
 			if (!string.IsNullOrWhiteSpace(SearchTerms))
 			{
+				var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 				var skip = PageSize * (PageNumber - 1);
 				_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 				PageResults = await _db.WikiPages
@@ -63,6 +65,7 @@ namespace TASVideos.Pages.Search
 					.ToListAsync();
 
 				PostResults = await _db.ForumPosts
+					.ExcludeRestricted(seeRestricted)
 					.Where(p => p.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 					.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 					.Skip(skip)
