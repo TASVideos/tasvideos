@@ -40,7 +40,7 @@ namespace TASVideos.Pages
 
 		protected IActionResult AccessDenied() => RedirectToPage("/Account/AccessDenied");
 
-		protected IActionResult Login() => new RedirectToPageResult("Login");
+		protected IActionResult Login() => BasePageRedirect("/Account/Login");
 
 		protected IActionResult BasePageRedirect(string page, object? routeValues = null)
 		{
