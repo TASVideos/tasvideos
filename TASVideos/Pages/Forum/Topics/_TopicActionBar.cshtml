@@ -5,7 +5,7 @@
    asp-route-id="@Model.Id"
    class="btn bg-info text-dark btn-sm"
    title="Watch this topic">
-	<i class="fa fa-search-plus"></i>
+	<i class="fa fa-bell-slash-o"></i>
 </a>
 <a condition="User.IsLoggedIn() && Model.IsWatching"
 	asp-page="Index"
@@ -13,7 +13,7 @@
 	asp-route-id="@Model.Id"
 	class="btn btn-warning btn-sm"
 	title="Stop watching this topic">
-	<i class="fa fa-search-plus"></i>
+	<i class="fa fa-bell-o"></i>
 </a>
 <a permission="SetTopicType"
 	asp-page="SetType"
