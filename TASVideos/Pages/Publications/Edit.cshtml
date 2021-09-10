@@ -2,6 +2,13 @@
 @model EditModel
 @{
 	ViewData["Title"] = $"Edit Movie #{Model.Id}";
+	var tierIconPath2x = "";
+	var tierIconPath4x = "";
+	if (Model.Publication.TierIconPath != null)
+	{
+		tierIconPath2x = $"{Model.Publication.TierIconPath.Split('.')[0]}-2x.png";
+		tierIconPath4x = $"{Model.Publication.TierIconPath.Split('.')[0]}-4x.png";
+	}
 }
 @section PageTitle {
 	<h1>@Model.Publication.Title</h1>
@@ -10,7 +17,10 @@
 <fullrow class="mt-2">
 	<label asp-for="Publication.Tier"></label>:
 	<a href="/@Model.Publication.TierLink">
-		<img class="pixelart-image" src="/@Model.Publication.TierIconPath" />
+		<img style="width: 18px" src="/@tierIconPath2x"
+			 srcset="/@Model.Publication.TierIconPath .5x,
+			 /@tierIconPath2x 1x,
+			 /@tierIconPath4x 2x"/>
 	</a>
 	<label class="form-control-label">@Model.Publication.Tier</label>
 	<a permission="SetTier" class="btn bg-secondary text-white btn-sm" asp-page="EditTier" asp-route-id="@Model.Id">Edit</a>
