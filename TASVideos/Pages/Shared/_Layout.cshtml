@@ -18,12 +18,12 @@
 	<script src="~/js/site.js"></script>
 
 	@if (IsSectionDefined("Header"))
-    {
+	{
 		@await RenderSectionAsync("Header")
-    }
+	}
 </head>
 <body>
-    <nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
+	<nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
 		<div class="container-fluid">
 			<div class="site-banner h-100 w-100 overflow-hidden position-absolute start-0">
 				<picture>
@@ -62,7 +62,7 @@
 				</div>
 			</div>
 		</div>
-    </nav>
+	</nav>
 
 	@{
 		var title = ViewData["Title"]?.ToString();
@@ -77,7 +77,9 @@
 	}
 	else
 	{
-		<h1 class="mb-2 container bg-secondary">@title</h1>
+		<div class="container">
+			<h1 class="mb-2 container bg-secondary">@title</h1>
+		</div>
 	}
 
 <div class="container">
