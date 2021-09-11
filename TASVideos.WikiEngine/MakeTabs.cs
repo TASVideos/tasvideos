@@ -35,7 +35,7 @@ namespace TASVideos.WikiEngine
 						new Element(
 							child.CharStart,
 							"a",
-							new[] { Attr("href", "#" + id), Attr("data-toggle", "tab"), Attr("class", (first ? "active " : "") + aClass) },
+							new[] { Attr("href", "#" + id), Attr("data-bs-toggle", "tab"), Attr("class", (first ? "active " : "") + aClass) },
 							new[]
 							{
 								new Text(child.CharStart, child.Attributes["data-name"])

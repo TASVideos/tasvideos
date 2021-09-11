@@ -216,7 +216,7 @@ $@"<button type=""button"" class=""btn-close float-end"" data-dismiss=""alert"" 
 			var antiForgeryToken = _htmlHelper.AntiForgeryToken().GetString();
 
 			output.Content.SetHtmlContent($@"
-<button type='button' class='btn btn-danger {existingCssClass}' data-toggle='modal' data-target='#areYouSureModal{uniqueId}'>{content}</button>
+<button type='button' class='btn btn-danger {existingCssClass}' data-bs-toggle='modal' data-target='#areYouSureModal{uniqueId}'>{content}</button>
 <div id='areYouSureModal{uniqueId}' class='modal fade' role='dialog'>
 	<div class='modal-dialog'>
 		<div class='modal-content'>
