@@ -15,7 +15,7 @@
 		<cardheader>
 			<row>
 				<div class="col-4 border-end">
-					<h5>@Model.UserName</h5>
+					<h5>@Model.UserName (<a href="/Forum/p/@(post.Id)#@(post.Id)">Actual Post</a>)</h5>
 				</div>
 				<div class="col-8 pt-0 pb-0">
 					<small style="display: inline-block">
@@ -75,4 +75,3 @@
 <fullrow class="mt-2">
 	<partial name="_Pager" model="Model.UserPosts.Posts" />
 </fullrow>
-	
