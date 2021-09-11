@@ -81,35 +81,35 @@
 				</div>
 				@foreach (var url in Model.OnlineWatchingUrls)
 				{
-					<a href="@url" class="btn bg-primary text-white btn-sm mt-1" target="_blank">Watch</a>
+					<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank">Watch</a>
 				}
-				<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn bg-primary text-white btn-sm mt-1">Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
+				<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1">Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 				<br />
-				<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn bg-secondary text-white btn-sm mt-1">Submission</a>
+				<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
 				<a condition="@Model.TopicId > 0"
 				   asp-page="/Forum/Topics/Index"
 				   asp-route-id="@Model.TopicId"
-				   class="btn bg-secondary text-white btn-sm mt-1">
+				   class="btn btn-secondary btn-sm mt-1">
 					Discuss
 				</a>
 				<br />
 				<a permission="EditPublicationMetaData"
 				   asp-page="Edit"
 				   asp-route-id="@Model.Id"
-				   class="btn bg-secondary text-white btn-sm mt-1">Edit</a>
+				   class="btn btn-secondary btn-sm mt-1">Edit</a>
 				<a permission="CatalogMovies"
 				   asp-page="/Publications/Catalog"
 				   asp-route-id="@Model.Id"
-				   class="btn bg-secondary text-white btn-sm mt-1">Catalog</a>
+				   class="btn btn-secondary btn-sm mt-1">Catalog</a>
 				<a asp-page="/Games/PublicationHistory"
 				   asp-route-id="@Model.GameId"
 				   asp-route-highlight="@Model.Id"
-				   class="btn bg-secondary text-white btn-sm mt-1">
+				   class="btn btn-secondary btn-sm mt-1">
 					History
 				</a>
 				<a permission="EditPublicationMetaData"
 				   href="/MovieMaintenanceLog?id=@Model.Id"
-				   class="btn bg-secondary text-white btn-sm mt-1">
+				   class="btn btn-secondary btn-sm mt-1">
 					Logs
 				</a>
 				<br />

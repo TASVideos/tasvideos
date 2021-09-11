@@ -42,7 +42,7 @@ namespace TASVideos.TagHelpers
 		<input type='text' spellcheck='false' class='form-control' {Attr("id", $"{modelId}_{i}_")} {Attr("name", modelName)} {Attr("value", stringList[i])} />
 	</div>
 	<div class='col-2'>
-		<button {(i == 0 ? Attr("id", modelId + "-add-btn") : "")} class='string-list-add-btn btn bg-secondary text-white {(i > 0 ? "d-none" : "")}' type='button'><span class='fa fa-plus-square'></span></button>
+		<button {(i == 0 ? Attr("id", modelId + "-add-btn") : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none" : "")}' type='button'><span class='fa fa-plus-square'></span></button>
 		<button onclick='this.parentElement.parentElement.remove()' class='string-list-remove-btn btn btn-danger {(i == 0 ? "d-none" : "")}' type='button'><span class='fa fa-remove'></span></button>
 	</div>
 </div>");

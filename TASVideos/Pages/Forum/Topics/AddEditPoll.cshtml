@@ -10,7 +10,7 @@
 <form method="post">
 	<partial name="_PollCreate" model="Model.Poll" />
 	<div class="text-center">
-		<button type="submit" class="btn bg-primary text-white">@mode</button>
-		<a asp-page="Index" asp-route-id="@Model.TopicId" class="btn bg-secondary text-white">Cancel</a>
+		<button type="submit" class="btn btn-primary">@mode</button>
+		<a asp-page="Index" asp-route-id="@Model.TopicId" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>

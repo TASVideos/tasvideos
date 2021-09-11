@@ -87,3 +87,28 @@
 NodeList.prototype.toArray = function () {
 	return Array.prototype.slice.call(this);
 };
+
+function loadDarkMode() {
+	var newElement = document.createElement('link');
+	newElement.rel = "stylesheet";
+	newElement.id = "DarkmodeCSS";
+	newElement.href = "/css/darkmode.css";
+	document.head.appendChild(newElement);
+}
+
+function toggleDarkMode() {
+	let darkModeStylesheet = document.getElementById("DarkmodeCSS");
+	let initialDarkModeStylesheet = document.getElementById("DarkmodeInitial");
+	if (initialDarkModeStylesheet) {
+		initialDarkModeStylesheet.parentElement.removeChild(initialDarkModeStylesheet);
+		if (!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+			loadDarkMode();
+		}
+	} else {
+		if (darkModeStylesheet) {
+			darkModeStylesheet.parentElement.removeChild(darkModeStylesheet);
+		} else {
+			loadDarkMode();
+		}
+	}
+}

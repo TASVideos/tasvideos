@@ -5,13 +5,13 @@
 }
 
 <div class="mb-1">
-	<a permissions="new[] { PermissionTo.SendPrivateMessages }" class="float-end btn bg-primary text-white" asp-page="Create">
+	<a permissions="new[] { PermissionTo.SendPrivateMessages }" class="float-end btn btn-primary" asp-page="Create">
 		<span class="fa fa-envelope"></span> Create
 	</a>
-	<a class="btn bg-secondary text-white" asp-page="Savebox">
+	<a class="btn btn-secondary" asp-page="Savebox">
 		<span class="fa fa-check-square"></span> Savebox
 	</a>
-	<a class="btn bg-secondary text-white" asp-page="Sentbox">
+	<a class="btn btn-secondary" asp-page="Sentbox">
 		<span class="fa fa-arrow-right"></span> Sentbox
 	</a>
 </div>
@@ -40,7 +40,7 @@
 			<td>@entry.SendDate</td>
 			<td>
 				<form method="post" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id" style="display: inline-block">
-					<button type="submit" class="btn bg-primary text-white btn-sm">Save</button>
+					<button type="submit" class="btn btn-primary btn-sm">Save</button>
 				</form>
 				<delete-button
 					asp-href="/Messages/InBox/@entry.Id/Delete"
