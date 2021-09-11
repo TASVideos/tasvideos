@@ -117,7 +117,7 @@ namespace TASVideos.Core
 			}
 
 			services.AddSingleton<IPostDistributor, IrcDistributor>();
-			services.AddSingleton<IPostDistributor, DiscordDistributor>();
+			services.AddScoped<IPostDistributor, DiscordDistributor>();
 			services.AddSingleton<IPostDistributor, TwitterDistributor>();
 			services.AddScoped<IPostDistributor, DistributorStorage>();
 

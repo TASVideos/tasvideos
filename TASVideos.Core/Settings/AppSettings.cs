@@ -47,11 +47,8 @@ namespace TASVideos.Core.Settings
 		public class DiscordConnection
 		{
 			public string AccessToken { get; set; } = "";
-			public string ApiBase { get; set; } = "";
-			public string AuthEndpoint { get; set; } = "";
 			public string PublicChannelId { get; set; } = "";
 			public string PrivateChannelId { get; set; } = "";
-			public string Scopes { get; set; } = "bot";
 
 			public bool IsEnabled() => !string.IsNullOrWhiteSpace(AccessToken)
 				&& !string.IsNullOrWhiteSpace(PublicChannelId);
