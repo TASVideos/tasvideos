@@ -13,7 +13,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 	{
 		private readonly HttpClient _client;
 		private readonly AppSettings.DiscordConnection _settings;
-		private readonly ILogger _logger;
+		private readonly ILogger<DiscordDistributor> _logger;
 
 		public DiscordDistributor(
 			AppSettings appSettings,
