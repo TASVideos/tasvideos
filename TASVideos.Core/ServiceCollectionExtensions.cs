@@ -118,7 +118,7 @@ namespace TASVideos.Core
 
 			services.AddSingleton<IPostDistributor, IrcDistributor>();
 			services.AddScoped<IPostDistributor, DiscordDistributor>();
-			services.AddSingleton<IPostDistributor, TwitterDistributor>();
+			services.AddScoped<IPostDistributor, TwitterDistributor>();
 			services.AddScoped<IPostDistributor, DistributorStorage>();
 
 			return services.AddTransient<ExternalMediaPublisher>();
