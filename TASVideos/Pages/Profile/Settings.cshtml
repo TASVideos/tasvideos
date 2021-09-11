@@ -33,7 +33,7 @@
 			</form-group>
 			<form-group>
 				<label asp-for="Settings.PublicRatings"></label>
-				<div class="btn-group btn-group-toggle" data-toggle="buttons">
+				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
 					@{
 						const string trueId = nameof(Model.Settings.PublicRatings) + "-true";
 						const string falseId = nameof(Model.Settings.PublicRatings) + "-false";

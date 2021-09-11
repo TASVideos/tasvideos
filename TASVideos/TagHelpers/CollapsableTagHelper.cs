@@ -20,11 +20,11 @@ namespace TASVideos.TagHelpers
 
 			// TODO: sr and aria tags could use something more informative than BodyId
 			output.Content.AppendHtml($@"
-				<a class='collapsed' data-toggle='collapse' {Attr("href", "#" + BodyId)} aria-expanded='false' aria-controls='collapse1' role='button'>
+				<a class='collapsed' data-bs-toggle='collapse' {Attr("href", "#" + BodyId)} aria-expanded='false' aria-controls='collapse1' role='button'>
 					{content}
 				</a>
 				<a
-					data-toggle='collapse'
+					data-bs-toggle='collapse'
 					class='collapsed btn btn-default btn-xs text-end'
 					{Attr("href", "#" + BodyId)}
 					{Attr("aria-label", $"Expand/Collapse {BodyId}")}
