@@ -1,4 +1,4 @@
-@model TopicFeedModel
+﻿@model TopicFeedModel
 
 <div class="@(Model.RightAlign ? "right-align-topic" : "")">
 	<h3 condition="!string.IsNullOrWhiteSpace(Model.Heading)" class="card-header topic-header">@Model.Heading</h3>
@@ -30,12 +30,12 @@
 		overflow-y: auto;
 		border: 1px solid #CCC;
 		border-radius: 5px;
-		margin-left: 20px;
 		margin-top: 15px;
 	}
 
 	@@media (min-width: 768px) {
 		.right-align-topic {
+			margin-left: 20px;
 			float: right;
 			width: 33%;
 		}
