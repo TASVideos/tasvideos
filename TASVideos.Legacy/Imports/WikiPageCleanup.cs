@@ -39,11 +39,11 @@ namespace TASVideos.Legacy.Imports
 			context.SaveChanges();
 		}
 
-		private static string ReplaceCssWithImages(string markup, string cssPath, string imagesPath)
+		private static string ReplaceIfContains(string markup, string orig, string newStr)
 		{
-			if (markup.Contains(cssPath))
+			if (markup.Contains(orig))
 			{
-				return markup.Replace(cssPath, imagesPath);
+				return markup.Replace(orig, newStr);
 			}
 
 			return markup;
@@ -75,20 +75,23 @@ namespace TASVideos.Legacy.Imports
 				markup = markup.Replace("[module:GoogleFlavor]", "");
 			}
 
-			markup = ReplaceCssWithImages(markup, "=css/fastest-completion.png", "=images/fastest-completion.png");
-			markup = ReplaceCssWithImages(markup, "=css/vaulttier.png", "=images/vaulttier.png");
-			markup = ReplaceCssWithImages(markup, "=css/moontier.png", "=images/moontier.png");
-			markup = ReplaceCssWithImages(markup, "=css/favourite.png", "=images/startier.png");
-			markup = ReplaceCssWithImages(markup, "=/css/vaulttier.png", "=images/vaulttier.png");
-			markup = ReplaceCssWithImages(markup, "=/css/moontier.png", "=images/moontier.png");
-			markup = ReplaceCssWithImages(markup, "=/css/favourite.png", "=images/startier.png");
-			markup = ReplaceCssWithImages(markup, "=/css/newbierec.gif", "=images/newbierec.gif");
-			markup = ReplaceCssWithImages(markup, "=/css/bolt.png", "=images/notable.png");
-			markup = ReplaceCssWithImages(markup, "=/css/verified.png", "=images/verified.png");
+			markup = ReplaceIfContains(markup, "=css/fastest-completion.png", "=images/fastest-completion.png");
+			markup = ReplaceIfContains(markup, "=css/vaulttier.png", "=images/vaulttier.png");
+			markup = ReplaceIfContains(markup, "=css/moontier.png", "=images/moontier.png");
+			markup = ReplaceIfContains(markup, "=css/favourite.png", "=images/startier.png");
+			markup = ReplaceIfContains(markup, "=/css/vaulttier.png", "=images/vaulttier.png");
+			markup = ReplaceIfContains(markup, "=/css/moontier.png", "=images/moontier.png");
+			markup = ReplaceIfContains(markup, "=/css/favourite.png", "=images/startier.png");
+			markup = ReplaceIfContains(markup, "=/css/newbierec.gif", "=images/newbierec.gif");
+			markup = ReplaceIfContains(markup, "=/css/bolt.png", "=images/notable.png");
+			markup = ReplaceIfContains(markup, "=/css/verified.png", "=images/verified.png");
 
 			// These are automatic now
 			markup = Regex.Replace(markup, "\\[module:gameheader\\]", "", RegexOptions.IgnoreCase);
 			markup = Regex.Replace(markup, "\\[module:gamefooter\\]", "", RegexOptions.IgnoreCase);
+
+			markup = ReplaceIfContains(markup, "http://files.tasvideos.org/1853/site_images", "=/images");
+			markup = ReplaceIfContains(markup, "http://files.tasvideos.org/common/Wiki", "=/images");
 
 			// Mitigate unnecessary ListParent module calls, if they are at the beginning, wipe them.
 			// We can't remove all instances because of pages like Interviews/Phil/GEE2005
