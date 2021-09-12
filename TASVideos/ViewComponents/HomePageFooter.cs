@@ -33,7 +33,7 @@ namespace TASVideos.ViewComponents
 				{
 					Id = user.Id,
 					UserName = user.UserName,
-					EditCount = _wikiPages.Query.Count(wp => wp.CreateUserName == userName),
+					EditCount = _wikiPages.Query.ThatAreNotDeleted().Count(wp => wp.CreateUserName == userName),
 					MovieCount = _db.Publications
 						.Count(p => p.Authors
 							.Select(sa => sa.Author!.UserName)
