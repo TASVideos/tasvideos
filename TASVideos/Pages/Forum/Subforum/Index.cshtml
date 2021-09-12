@@ -38,8 +38,15 @@
 					</a>
 				</td>
 				<td>@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
-				<td>@topic.CreateUserName</td>
-				<td><timezone-convert asp-for="@topic.LastPostDateTime" /></td>
+				<td> <profile-link username="@topic.CreateUserName"></profile-link></td>
+                <td>
+                    @if (topic.LastPost != null)
+                    {
+                        <timezone-convert asp-for="@topic.LastPostDateTime" /> <br />
+						<profile-link username="@topic.LastPostUserName"></profile-link>
+                        <a class="fa fa-arrow-circle-right" href="/Forum/p/@topic.LastPostId#@topic.LastPostId"/>
+                    }
+                    </td>
 			</tr>
 		}
 	</table>
