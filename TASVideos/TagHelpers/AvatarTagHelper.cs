@@ -19,10 +19,7 @@ namespace TASVideos.TagHelpers
 			}
 
 			output.TagName = "img";
-			output.Attributes.Clear();
 			output.Attributes.Add("loading", "lazy");
-			output.AddCssClass("mt-2");
-			output.AddCssClass("mb-2");
 
 			string avatarUrl = Avatar;
 
