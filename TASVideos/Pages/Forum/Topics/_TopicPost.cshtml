@@ -23,19 +23,19 @@
                     <a condition="User.IsLoggedIn()"
                        asp-page="/Messages/Create"
                        asp-route-defaultToUser="@Model.PosterName"
-                       class="btn bg-secondary text-white btn-sm">
+                       class="btn btn-secondary btn-sm">
                         PM
                     </a>
                     <a asp-page="/Forum/Posts/Create"
                        asp-route-topicId="@Model.TopicId"
                        asp-route-quoteId="@Model.Id"
-                       class="btn bg-secondary text-white btn-sm">
+                       class="btn btn-secondary btn-sm">
                         Quote
                     </a>
                     <a condition="Model.IsEditable"
                        asp-page="/Forum/Posts/Edit"
                        asp-route-id="@Model.Id"
-                       class="btn bg-primary text-white btn-sm">
+                       class="btn btn-primary btn-sm">
                         Edit
                     </a>
                     <delete-button condition="Model.IsDeletable"
