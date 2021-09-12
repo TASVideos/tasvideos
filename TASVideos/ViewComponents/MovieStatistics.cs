@@ -43,22 +43,22 @@ namespace TASVideos.ViewComponents
 
 		public readonly Dictionary<string, MovieStatisticComparison> ParameterList = new Dictionary<string, MovieStatisticComparison>
 		{
-			{ string.Empty, MovieStatisticComparison.None },
-			{ "length", MovieStatisticComparison.Length },
-			{ "filererecords", MovieStatisticComparison.Rerecords },
-			{ "rerecsPerLength", MovieStatisticComparison.RerecordsPerLength },
-			{ "daysPublished", MovieStatisticComparison.DaysPublished },
-			{ "alength", MovieStatisticComparison.EncodeLength },
-			{ "asize", MovieStatisticComparison.EncodeSize },
-			{ "encodeRatio", MovieStatisticComparison.EncodeRatio },
-			{ "alengthPerLength", MovieStatisticComparison.EncodeLengthRatio },
-			{ "alengthMinusLength", MovieStatisticComparison.LongestEnding },
-			{ "desclen", MovieStatisticComparison.DescriptionLength },
-			{ "udesclen", MovieStatisticComparison.SubmissionDescriptionLength },
-			{ "averageRating", MovieStatisticComparison.AverageRating },
-			{ "entertainmentRating", MovieStatisticComparison.EntertainmentRating },
-			{ "qualityRating", MovieStatisticComparison.TechnicalRating },
-			{ "numberOfVotes", MovieStatisticComparison.VoteCount },
+			[string.Empty] = MovieStatisticComparison.None,
+			["length"] = MovieStatisticComparison.Length,
+			["filererecords"] = MovieStatisticComparison.Rerecords,
+			["rerecsPerLength"] = MovieStatisticComparison.RerecordsPerLength,
+			["daysPublished"] = MovieStatisticComparison.DaysPublished,
+			["alength"] = MovieStatisticComparison.EncodeLength,
+			["asize"] = MovieStatisticComparison.EncodeSize,
+			["encodeRatio"] = MovieStatisticComparison.EncodeRatio,
+			["alengthPerLength"] = MovieStatisticComparison.EncodeLengthRatio,
+			["alengthMinusLength"] = MovieStatisticComparison.LongestEnding,
+			["desclen"] = MovieStatisticComparison.DescriptionLength,
+			["udesclen"] = MovieStatisticComparison.SubmissionDescriptionLength,
+			["averageRating"] = MovieStatisticComparison.AverageRating,
+			["entertainmentRating"] = MovieStatisticComparison.EntertainmentRating,
+			["qualityRating"] = MovieStatisticComparison.TechnicalRating,
+			["numberOfVotes"] = MovieStatisticComparison.VoteCount
 		};
 
 		private readonly ApplicationDbContext _db;
@@ -126,7 +126,7 @@ namespace TASVideos.ViewComponents
 							Title = p.Title,
 
 							// the hackiest of workarounds but just calling Time() makes it explode for hardly fathomable reasons
-							TimeSpanValue = TimeSpan.FromMilliseconds(Math.Round(p.Frames / p.SystemFrameRate.FrameRate * 100, MidpointRounding.AwayFromZero) * 10)
+							TimeSpanValue = TimeSpan.FromMilliseconds(Math.Round(p.Frames / p.SystemFrameRate!.FrameRate * 100, MidpointRounding.AwayFromZero) * 10)
 						})
 						.ToListAsync();
 					break;
@@ -200,7 +200,7 @@ namespace TASVideos.ViewComponents
 						{
 							Id = p.Id,
 							Title = p.Title,
-							IntValue = p.WikiContent.Markup.Length
+							IntValue = p.WikiContent!.Markup.Length
 						})
 						.ToListAsync();
 					break;
@@ -215,7 +215,7 @@ namespace TASVideos.ViewComponents
 						{
 							Id = p.Id,
 							Title = p.Title,
-							IntValue = p.Submission.WikiContent.Markup.Length
+							IntValue = p.Submission!.WikiContent!.Markup.Length
 						})
 						.ToListAsync();
 					break;
