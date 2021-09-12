@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TASVideos.Common;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.ViewComponents
 {
@@ -28,8 +28,8 @@ namespace TASVideos.ViewComponents
 
 		public class MovieStatisticsFloatEntry : MovieStatisticsEntry
 		{
-			public float FloatValue { get; init; }
-			public override string DisplayValue => FloatValue.ToString();
+			public double FloatValue { get; init; }
+			public override string DisplayValue => FloatValue.ToString(CultureInfo.InvariantCulture);
 			public override IComparable Comparable => FloatValue;
 		}
 
