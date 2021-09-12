@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.WikiEngine;
 
@@ -13,11 +14,16 @@ namespace TASVideos.ViewComponents
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IVcsRssParser _parser;
+		private readonly ILogger<FeedLog> _logger;
 
-		public FeedLog(IHttpClientFactory httpClientFactory, IVcsRssParser parser)
+		public FeedLog(
+			IHttpClientFactory httpClientFactory,
+			IVcsRssParser parser,
+			ILogger<FeedLog> logger)
 		{
 			_httpClientFactory = httpClientFactory;
 			_parser = parser;
+			_logger = logger;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(string url, string type)
@@ -45,8 +51,9 @@ namespace TASVideos.ViewComponents
 					return View(entries);
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				_logger.LogError("Unable to process feed log for {url} ex: {ex}", url, ex.ToString());
 				return new ContentViewComponentResult($"An error occurred attempting to retrieve data from {url}.");
 			}
 
