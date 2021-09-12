@@ -41,7 +41,7 @@ namespace TASVideos.ViewComponents
 			VoteCount
 		}
 
-		public readonly Dictionary<string, MovieStatisticComparison> ParameterList = new Dictionary<string, MovieStatisticComparison>
+		public readonly Dictionary<string, MovieStatisticComparison> ParameterList = new ()
 		{
 			[string.Empty] = MovieStatisticComparison.None,
 			["length"] = MovieStatisticComparison.Length,
@@ -73,7 +73,7 @@ namespace TASVideos.ViewComponents
 			string comparisonParameter = comp ?? string.Empty;
 			int count = top ?? 10;
 
-			// these are only uesd for rating statistics
+			// these are only used for rating statistics
 			int minimumVotes = minVotes ?? 1;
 			int minimumAge = minAge ?? 0;
 			DateTime minimumAgeTime = DateTime.Now.AddDays(-minimumAge);
@@ -85,9 +85,9 @@ namespace TASVideos.ViewComponents
 			}
 
 			var comparisonMetric = ParameterList.GetValueOrDefault(comparisonParameter);
-			string fieldHeader = "";
+			string fieldHeader;
 
-			List<MovieStatisticsModel.MovieStatisticsEntry> movieList = new List<MovieStatisticsModel.MovieStatisticsEntry>();
+			List<MovieStatisticsModel.MovieStatisticsEntry> movieList;
 
 			switch (comparisonMetric)
 			{
@@ -224,7 +224,7 @@ namespace TASVideos.ViewComponents
 					fieldHeader = "Rating";
 					movieList = await _db.Publications
 						.ThatAreCurrent()
-						.Where(p => p.PublicationRatings != null && p.PublicationRatings.Count >= minimumVotes)
+						.Where(p => p.PublicationRatings.Count >= minimumVotes)
 						.Select(p =>
 						(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
 						{
@@ -242,7 +242,7 @@ namespace TASVideos.ViewComponents
 					fieldHeader = "Entertainment rating";
 					movieList = await _db.Publications
 						.ThatAreCurrent()
-						.Where(p => p.PublicationRatings != null && p.PublicationRatings.Count >= minimumVotes)
+						.Where(p => p.PublicationRatings.Count >= minimumVotes)
 						.Select(p =>
 						(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
 						{
@@ -258,7 +258,7 @@ namespace TASVideos.ViewComponents
 					fieldHeader = "Technical rating";
 					movieList = await _db.Publications
 						.ThatAreCurrent()
-						.Where(p => p.PublicationRatings != null && p.PublicationRatings.Count >= minVotes)
+						.Where(p => p.PublicationRatings.Count >= minVotes)
 						.Select(p =>
 						(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
 						{
@@ -274,13 +274,13 @@ namespace TASVideos.ViewComponents
 					fieldHeader = "Ratings";
 					movieList = await _db.Publications
 						.ThatAreCurrent()
-						.Where(p => p.PublicationRatings != null && p.CreateTimestamp <= minimumAgeTime)
+						.Where(p => p.CreateTimestamp <= minimumAgeTime)
 						.Select(p =>
 						(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
 						{
 							Id = p.Id,
 							Title = p.Title,
-							FloatValue = p.PublicationRatings.Count / 2f
+							FloatValue = p.PublicationRatings.Count / 2.0
 						})
 						.ToListAsync();
 					break;
