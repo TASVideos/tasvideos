@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
 
@@ -106,9 +107,9 @@ namespace TASVideos.Extensions
 			});
 		}
 
-		public static IApplicationBuilder UseApiRequestLogging(this IApplicationBuilder app)
+		public static IApplicationBuilder UseLogging(this IApplicationBuilder app)
 		{
-			return app.UseMiddleware<ApiRequestLoggingMiddleware>();
+			return app.UseSerilogRequestLogging();
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -13,11 +14,13 @@ namespace TASVideos.Pages.Wiki
 	{
 		private readonly IWikiPages _wikiPages;
 		private readonly ApplicationDbContext _db;
+		private readonly ILogger<RenderModel> _logger;
 
-		public RenderModel(IWikiPages wikiPages, ApplicationDbContext db)
+		public RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<RenderModel> logger)
 		{
 			_wikiPages = wikiPages;
 			_db = db;
+			_logger = logger;
 		}
 
 		public string Markup { get; set; } = "";
@@ -53,9 +56,9 @@ namespace TASVideos.Pages.Wiki
 			}
 
 			var wikiPage = await _wikiPages.Page(url, revision);
-
 			if (wikiPage != null)
 			{
+				_logger.LogInformation("Rendering WikiPage {wikiPage}", wikiPage.PageName);
 				WikiPage = wikiPage;
 				ViewData["WikiPage"] = WikiPage;
 				ViewData["Title"] = WikiPage.PageName;

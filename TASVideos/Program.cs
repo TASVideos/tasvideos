@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using TASVideos.Core.Data;
 using TASVideos.Extensions;
 
@@ -18,6 +19,14 @@ namespace TASVideos
 
 			using (var scope = host.Services.CreateScope())
 			{
+				var configuration = new ConfigurationBuilder()
+					.AddJsonFile("appsettings.json")
+					.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"}.json", true)
+					.Build();
+				Log.Logger = new LoggerConfiguration()
+					.ReadFrom.Configuration(configuration)
+					.CreateLogger();
+
 				var services = scope.ServiceProvider;
 
 				try
@@ -43,6 +52,7 @@ namespace TASVideos
 			return WebHost.CreateDefaultBuilder(args)
 				.UseConfiguration(config)
 				.UseStartup<Startup>()
+				.UseSerilog()
 				.ConfigureAppConfiguration((hostContext, builder) =>
 				{
 					if (hostContext.HostingEnvironment.IsDevelopment() || hostContext.HostingEnvironment.IsDemo())
