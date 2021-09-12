@@ -6,7 +6,7 @@
 <card>
 	<cardbody>
 		<div class="card-title">
-			<a class="btn bg-primary text-white " asp-page="Catalog" asp-route-id="@Model.Id">Catalog</a>
+			<a class="btn btn-primary " asp-page="Catalog" asp-route-id="@Model.Id">Catalog</a>
 		</div>
 		<row>
 			<column lg="6">
@@ -129,8 +129,8 @@
 	<hr />
 	@await Component.RenderWiki("System/FilesEditingHelp")
 	<fullrow class="text-center">
-		<submit-button class="btn bg-primary text-white">Publish</submit-button>
-		<a asp-page="View" asp-route-id="@Model.Id" class="btn bg-secondary text-white">Cancel</a>
+		<submit-button class="btn btn-primary">Publish</submit-button>
+		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
 	</fullrow>
 </form>
 

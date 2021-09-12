@@ -2,7 +2,7 @@
 
 <card class="mb-2">
 	<cardheader>
-		<a permission="EditCategories" asp-page="Edit" asp-route-id="@Model.Id" class="btn bg-primary text-white btn-sm float-end">Edit</a>
+		<a permission="EditCategories" asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm float-end">Edit</a>
 		<h4>@Model.Title</h4>
 		@if (!string.IsNullOrWhiteSpace(Model.Description))
 		{

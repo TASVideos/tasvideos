@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<IGrouping<ParentPublicationMaintenanceEntry, PublicationMaintenanceLogEntry>>
 <br /><br />
 
-<a asp-page="" asp-route-begin="@ViewData["next"]" class="btn bg-primary text-white float-end mb-2">Next</a>
+<a asp-page="" asp-route-begin="@ViewData["next"]" class="btn btn-primary float-end mb-2">Next</a>
 @foreach (var pub in Model)
 {
 	<pub-link id="pub.Key.Id">@pub.Key.Title</pub-link>

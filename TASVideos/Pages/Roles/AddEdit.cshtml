@@ -74,8 +74,8 @@
 		</row>
 	</form-group>
 	<div class="text-center mt-3">
-		<submit-button class="btn bg-primary text-white">@(Model.Id.HasValue ? "Update" : "Save")</submit-button>
-		<a asp-page="List" class="btn bg-secondary text-white">Cancel</a>
+		<submit-button class="btn btn-primary">@(Model.Id.HasValue ? "Update" : "Save")</submit-button>
+		<a asp-page="List" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>
 <script>

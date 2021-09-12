@@ -8,7 +8,7 @@
 
 <form method="post">
 	<div permission="CreateForumPolls">
-		<button id="add-poll-btn" type="button" class="btn bg-primary text-white btn-sm">Add Poll</button>
+		<button id="add-poll-btn" type="button" class="btn btn-primary btn-sm">Add Poll</button>
 		<div id="poll-container" class="alert alert-dark d-none">
 			<button id="poll-close" type="button" class="btn-close float-end" aria-label="Close"></button>
 			<h4>Poll</h4>
@@ -65,9 +65,9 @@
 		<span asp-validation-for="Topic.Post" class="text-danger"></span>
 	</form-group>
 	<div class="text-center">
-		<button type="button" class="btn bg-secondary text-white" id="preview-button">Preview</button>
-		<button type="submit" class="btn bg-primary text-white">Save</button>
-		<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId" class="btn bg-secondary text-white">Cancel</a>
+		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>
 

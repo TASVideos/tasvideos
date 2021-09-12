@@ -4,7 +4,7 @@
 	ViewData["Title"] = $"Saved messages for {User.Name()}";
 }
 
-<a asp-page="Inbox" class="btn bg-secondary text-white mb-1"><span class="fa fa-arrow-left"></span> Inbox</a>
+<a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span> Inbox</a>
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.SentBox.First().Subject)</th>

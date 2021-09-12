@@ -1,0 +1,97 @@
+﻿@import "partials/colors";
+
+:root {
+	--tasvideos-bg: #{$tasvideos-bg-dark};
+	--bs-body-color: #{$light};
+	--cardprimary: #{$card-primary-dark};
+	--cardsecondary: #{$card-secondary-dark};
+	--bs-info: #{$info-dark};
+	--bs-info-rgb: #{$info-dark-rgb};
+	--bs-dark: #{$light};
+	--bs-dark-rgb: #{$light-rgb};
+	--bs-light: #{$dark};
+	--bs-light-rgb: #{$dark-rgb};
+	--bs-white: #{$dark};
+	--bs-white-rgb: #{$dark-rgb};
+	--bs-gray-200: #{$dark};
+	--tasvideos-bg-gradient: #{$banner};
+	--tab-content-bg: #{$bs-table-striped-bg-dark};
+}
+
+a {
+	color: #{$primary-dark};
+}
+
+.table {
+	color: #{$light};
+	--bs-table-bg: #{$dark};
+	--bs-table-striped-bg: #{$bs-table-striped-bg-dark};
+	--bs-table-striped-color: #{$white};
+	--bs-table-active-bg: #{$bs-table-active-bg-dark};
+	--bs-table-active-color: #{$white};
+	--bs-table-hover-bg: #{$bs-table-hover-bg-dark};
+	--bs-table-hover-color: #{$white};
+}
+
+.alert-success {
+	background-color: $card-secondary-dark;
+	color: $light;
+	border-color: $card-primary-dark;
+}
+
+.card {
+	background-color: $bs-table-striped-bg-dark;
+	border: 2px solid rgba(255, 255, 255, .125);
+
+	&-header {
+		border-bottom: 2px solid rgba(255, 255, 255, .125);
+	}
+}
+
+.dropdown-menu {
+	color: #dee2e6;
+	background-color: #343a40;
+	border-color: rgba(0,0,0,.15);
+}
+
+.dropdown-item {
+	color: #dee2e6;
+}
+
+.form-control {
+	color: var(--bs-dark);
+	background-color: $bs-table-striped-bg-dark;
+}
+
+.site-icon {
+	left: -2rem;
+	top: -.75rem;
+
+	&-light {
+		display: none;
+	}
+
+	&-dark {
+		display: block;
+	}
+}
+
+.text-muted {
+	color: $text-muted-dark!important;
+}
+
+$banner-height: 235px;
+
+body {
+	background: var(--tasvideos-bg) linear-gradient(var(--tasvideos-bg-gradient) $banner-height, var(--tasvideos-bg) 735px) repeat-x;
+}
+
+#banner {
+	background: none;
+
+	.site-banner {
+		height: $banner-height!important;
+		background: $banner;
+		z-index: -1;
+	}
+}
