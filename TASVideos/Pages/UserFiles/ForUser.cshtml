@@ -5,8 +5,8 @@
 	ViewData["Title"] = "User Files for " + Model.UserName;
 }
 
-<a asp-page="Index" class="btn bg-secondary text-white btn-sm mb-2">All User Files</a>
-<a asp-page="/UserFiles/Upload" class="btn bg-secondary text-white btn-sm float-end">Upload</a>
+<a asp-page="Index" class="btn btn-secondary btn-sm mb-2">All User Files</a>
+<a asp-page="/UserFiles/Upload" class="btn btn-secondary btn-sm float-end">Upload</a>
 <partial name="_Pager" model="Model.Files" />
 
 @* ReSharper disable once UnusedVariable *@

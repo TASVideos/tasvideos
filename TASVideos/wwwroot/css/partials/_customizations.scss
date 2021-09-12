@@ -1,0 +1,283 @@
+﻿/// <reference path="colors.scss" />
+
+:root {
+	--cardprimary: #{$card-primary};
+	--cardsecondary: #{$card-secondary};
+	--tasvideos-bg: #{$tasvideos-bg};
+	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient};
+	--tab-content-bg: #{$white};
+}
+
+body {
+	font-family: helvetica, sans-serif;
+	font-size: 14px;
+	background: var(--tasvideos-bg) linear-gradient(var(--tasvideos-bg-gradient) 0, var(--tasvideos-bg) 250px) repeat-x;
+}
+
+.btn-separator::after {
+	content: ' ';
+	display: block;
+	float: left;
+	background: var(--bs-gray-500);
+	margin: 0 10px;
+	height: 34px;
+	width: 1px;
+}
+
+.embed {
+	border: 0;
+
+	&left {
+		margin-right: 10px;
+		border: 0;
+		float: left;
+	}
+
+	&right {
+		margin-left: 10px;
+		border: 0;
+		float: right;
+	}
+}
+
+.table-container {
+	overflow-x: auto;
+}
+
+/* Wiki Tables */
+article.wiki table {
+	width: 100%;
+	margin-bottom: 1rem;
+	color: var(--bs-dark);
+	border-collapse: collapse;
+
+	th, td {
+		padding: 0.3rem;
+		vertical-align: top;
+		border: 1px solid var(--bs-gray-600);
+	}
+
+	tbody th {
+		background-color: rgba(var(--bs-black-rgb), 0.05);
+	}
+
+	tbody + tbody {
+		border-top: 2px solid #dee2e6;
+	}
+}
+
+.wiki {
+	h1 {
+		margin-left: 0;
+		margin-bottom: 1rem;
+	}
+
+	div.p {
+		margin-top: 0;
+		margin-bottom: 1rem;
+	}
+
+	&-edit {
+		font-family: courier,"courier new",monospace;
+	}
+}
+
+
+.module-error {
+	color: var(--bs-danger);
+	border: 1px solid var(--bs-danger);
+	border-radius: 5px;
+	background-color: #f8d7da;
+	padding: .75rem 1.25rem;
+}
+
+.error-code {
+	border: 2px solid var(--bs-danger);
+	background-color: var(--bs-white);
+	padding: 20px;
+}
+
+.error-marker {
+	position: relative;
+	border: 2px solid var(--bs-danger);
+
+	span {
+		position: absolute;
+		background-color: var(--bs-white);
+		padding: 4px;
+		border: 1px solid var(--bs-danger);
+		color: var(--bs-danger);
+		bottom: 13px;
+		opacity: 0.2;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+}
+
+.forum-signature {
+	font-style: italic;
+	background-color: var(--bs-gray-200);
+	border-top: solid 1px var(--bs-gray-400);
+	padding: .5rem;
+}
+
+.forum-profile-section {
+	border-right: solid 1px var(--bs-gray-200);
+	padding-right: 0;
+}
+
+.forum-post-highlight {
+	border: solid 3px;
+	border-color: var(--bs-info);
+	box-shadow: var(--bs-gray-400) 0px 8px 16px;
+}
+
+.pixelart-image {
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+}
+
+.spoiler {
+	background-color: var(--bs-dark);
+	color: var(--bs-dark);
+
+	&:hover {
+		color: var(--bs-white);
+	}
+}
+
+.hiddenifmodule {
+	display: none;
+}
+
+.quotecontainer {
+	margin: 0.75rem;
+	padding: .25rem;
+	background-color: var(--bs-gray-200);
+	border-radius: 0.25rem;
+	border: 1px dashed var(--bs-gray-700);
+}
+
+.postbody {
+	white-space: pre-wrap;
+
+	.a-l {
+		text-align: left;
+	}
+
+	.a-c {
+		text-align: center;
+	}
+
+	.a-r {
+		text-align: right;
+	}
+
+	.warning {
+		border: 2px solid var(--bs-danger);
+		border-radius: 2px;
+		padding: 2px;
+
+		&::before {
+			content: "Warning: ";
+			color: var(--bs-danger);
+			font-weight: bold;
+		}
+	}
+
+	.forumline {
+		border: 2px solid var(--bs-primary);
+		border-radius: 2px;
+		padding: 2px;
+	}
+
+	.highlight {
+		background-color: var(--bs-light);
+	}
+}
+
+.tab-content {
+	background-color: var(--tab-content-bg);
+}
+
+.tab-pane {
+	padding: 10px;
+}
+
+.form-control-label {
+	font-weight: bold;
+}
+
+.topic-header {
+	background-color: var(--bs-gray-200);
+}
+
+/* Firefox fix for file inputs */
+@-moz-document url-prefix() {
+	input[type="file"].form-control {
+		height: auto;
+	}
+}
+
+.bg-cardprimary {
+	background-color: var(--cardprimary) !important;
+}
+
+.bg-cardsecondary {
+	background-color: var(--cardsecondary) !important;
+}
+
+.site-icon {
+	position: absolute;
+	left: -3.5rem;
+	top: -1rem;
+	z-index: 1;
+	width: 121px;
+
+	&-dark {
+		display: none;
+	}
+}
+
+#banner {
+	background: $banner;
+
+	.site-banner {
+		top: 0;
+		left: 0;
+	}
+
+	@media (min-width: 768px) {
+		#mantra {
+			margin-left: 3.5rem;
+		}
+	}
+
+	#mantra {
+		font-weight: bold;
+		font-family: Verdana;
+		z-index: 1;
+
+		#brand {
+			color: $light;
+			font-size: 17px;
+			font-family: helvetica,arial,sans-serif
+		}
+
+		#mantra1 {
+			color: $light;
+			font-size: 10px;
+		}
+
+		#mantra2 {
+			color: $light;
+			font-size: 9px;
+		}
+	}
+
+	.navbar-toggler, .navbar-collapse {
+		z-index: 1;
+	}
+}

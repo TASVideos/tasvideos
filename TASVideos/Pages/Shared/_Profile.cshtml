@@ -8,14 +8,14 @@
 					<a condition="User.IsLoggedIn()"
 					   asp-page="/Messages/Create"
 					   asp-route-defaultToUser="@Model.UserName"
-					   class="btn bg-secondary text-white btn-sm">
+					   class="btn btn-secondary btn-sm">
 						PM
 					</a>
 					<a permission="EditUsers"
 					   asp-page="/Users/Edit"
 					   asp-route-returnUrl="@Context.ReturnUrl()"
 					   asp-route-id="@Model.Id"
-					   class="btn bg-primary text-white btn-sm">
+					   class="btn btn-primary btn-sm">
 						Edit
 					</a>
 					@Model.UserName

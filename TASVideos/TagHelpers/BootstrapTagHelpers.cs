@@ -232,7 +232,7 @@ $@"<button type=""button"" class=""btn-close float-end"" data-dismiss=""alert"" 
 					{antiForgeryToken}
 					<button type='submit' class='text-center btn btn-danger'>Yes</button>
 				</form>
-				<button type='button' class='btn bg-secondary text-white' data-dismiss='modal'>No</button>
+				<button type='button' class='btn btn-secondary' data-dismiss='modal'>No</button>
 			</div>
 		</div>
 	</div>

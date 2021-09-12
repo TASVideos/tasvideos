@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8" />
@@ -7,9 +7,10 @@
 
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-	<link rel="stylesheet" href="~/css/site.css" />
-	<link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css"/>
-	
+	<link rel="stylesheet" href="/css/site.css" />
+	<link rel="stylesheet" id="DarkmodeInitial" href="/css/darkmode-initial.css" />
+	<link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+
 	<link rel="stylesheet" href="~/css/diffview.css" />
 	<link href="~/css/prism.css" rel="stylesheet" />
 
@@ -37,9 +38,20 @@
 						/images/logo-light-2x.webp 1x,
 						/images/logo-light-4x.webp 2x"
 						type="image/webp">
-				<img class="site-icon" src="/images/logo-light-2x.png" srcset="/images/logo-light.png .5x,
+				<img class="site-icon site-icon-light" src="/images/logo-light-2x.png"
+					 srcset="/images/logo-light.png .5x,
 						/images/logo-light-2x.png 1x,
-						/images/logo-light-4x.png 2x">
+						/images/logo-light-4x.png 2x" loading="lazy">
+			</picture>
+			<picture>
+				<source srcset="/images/logo-dark.webp .5x,
+						/images/logo-dark-2x.webp 1x,
+						/images/logo-dark-4x.webp 2x"
+						type="image/webp">
+				<img class="site-icon site-icon-dark"
+					 srcset="/images/logo-dark.png .5x,
+						/images/logo-dark-2x.png 1x,
+						/images/logo-dark-4x.png 2x" loading="lazy">
 			</picture>
 			<div id="mantra">
 				<a id="brand" asp-page="/Index">TASVideos</a>
@@ -78,7 +90,7 @@
 	else
 	{
 		<div class="container">
-			<h1 class="mb-2 container bg-secondary">@title</h1>
+			<h1 class="mb-2 container">@title</h1>
 		</div>
 	}
 
@@ -88,8 +100,11 @@
 	</alert>
 	@RenderBody()
 	<hr/>
-	<footer>
-		<p>&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/adelikat/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a></p>
+	<footer class="mb-3">
+		<row class="justify-content-start align-items-center">
+			<p class="col-auto my-auto">&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/adelikat/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a></p>
+			<button class="btn btn-secondary btn-sm col-auto" id="ToggleDarkMode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+		</row>
 	</footer>
 </div>
 	@await RenderSectionAsync("Scripts", required: false)
