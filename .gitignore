@@ -13,3 +13,4 @@ TASVideos/Properties/serviceDependencies.local.json
 TASVideos.sln.personal.DotSettings
 TASVideos.Data/SampleData/SampleData-MsSql.sql
 TASVideos.Data/SampleData/SampleData-Postgres.sql
+TASVideos/logs/
