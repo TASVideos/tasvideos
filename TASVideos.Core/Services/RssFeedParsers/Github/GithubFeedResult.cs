@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace TASVideos.Core.Services.RssFeedParsers.Github
 {
 	[XmlRoot(ElementName="feed", Namespace="http://www.w3.org/2005/Atom")]
-	internal class GithubFeedResult
+	public class GithubFeedResult
 	{
 		[XmlElement(ElementName="id", Namespace="http://www.w3.org/2005/Atom")]
 		public string? Id { get; set; }
