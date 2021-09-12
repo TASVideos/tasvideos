@@ -31,6 +31,7 @@ namespace TASVideos.WikiEngine
 		public const string MoviesByAuthor = "moviesbyplayer";
 		public const string MoviesGameList = "moviesgamelist";
 		public const string MoviesList = "movieslist";
+		public const string MovieStatistics = "moviestatistics";
 		public const string MovieMaintenanceLog = "moviemaintlog";
 		public const string NoGameName = "nogamename";
 		public const string PlatformAuthorList = "platformtaserlists";
