@@ -97,18 +97,29 @@ function loadDarkMode() {
 }
 
 function toggleDarkMode() {
-	let darkModeStylesheet = document.getElementById("DarkmodeCSS");
 	let initialDarkModeStylesheet = document.getElementById("DarkmodeInitial");
 	if (initialDarkModeStylesheet) {
 		initialDarkModeStylesheet.parentElement.removeChild(initialDarkModeStylesheet);
-		if (!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+		let userHasSystemDarkTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+		if (!userHasSystemDarkTheme) {
 			loadDarkMode();
 		}
+		localStorage.setItem("TASVideosDarkMode", !userHasSystemDarkTheme);
 	} else {
+		let darkModeStylesheet = document.getElementById("DarkmodeCSS");
 		if (darkModeStylesheet) {
 			darkModeStylesheet.parentElement.removeChild(darkModeStylesheet);
 		} else {
 			loadDarkMode();
 		}
+		localStorage.setItem("TASVideosDarkMode", !darkModeStylesheet);
+	}
+}
+
+if (localStorage.getItem("TASVideosDarkMode") !== null) {
+	let initialDarkModeStylesheet = document.getElementById("DarkmodeInitial");
+	initialDarkModeStylesheet.parentElement.removeChild(initialDarkModeStylesheet);
+	if (localStorage.getItem("TASVideosDarkMode") === "true") {
+		loadDarkMode();
 	}
 }
