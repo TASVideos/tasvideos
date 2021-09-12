@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using TASVideos.Core.Services;
@@ -21,7 +22,7 @@ namespace TASVideos.RazorPages.Tests.Pages.Wiki
 		{
 			_mockWikiPages = new Mock<IWikiPages>();
 			_db = TestDbContext.Create();
-			_model = new RenderModel(_mockWikiPages.Object, _db)
+			_model = new RenderModel(_mockWikiPages.Object, _db, NullLogger<RenderModel>.Instance)
 			{
 				PageContext = TestPageContext()
 			};
