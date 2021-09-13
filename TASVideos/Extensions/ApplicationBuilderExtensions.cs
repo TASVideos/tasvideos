@@ -79,6 +79,7 @@ namespace TASVideos.Extensions
 
 			app.UseRouting();
 			app.UseAuthorization();
+			app.UseHsts();
 			return app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();
