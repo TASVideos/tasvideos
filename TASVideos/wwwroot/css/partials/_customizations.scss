@@ -243,9 +243,6 @@ article.wiki table {
 #banner {
 	background: $banner;
 
-	.site-banner {
-		height: 100%;
-	}
 
 	@media (min-width: 768px) {
 		#mantra {
@@ -257,20 +254,19 @@ article.wiki table {
 		font-weight: bold;
 		font-family: Verdana;
 		z-index: 1;
+		color: $light;
 
 		#brand {
 			color: $light;
 			font-size: 17px;
-			font-family: helvetica,arial,sans-serif
+			font-family: helvetica,arial,sans-serif;
 		}
 
-		#mantra1 {
-			color: $light;
+		&-1 {
 			font-size: 10px;
 		}
 
-		#mantra2 {
-			color: $light;
+		&-2 {
 			font-size: 9px;
 		}
 	}
@@ -278,4 +274,8 @@ article.wiki table {
 	.navbar-toggler, .navbar-collapse {
 		z-index: 1;
 	}
+}
+
+.site-banner {
+	height: 100%;
 }

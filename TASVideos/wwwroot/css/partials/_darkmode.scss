@@ -87,10 +87,10 @@ body {
 
 #banner {
 	background: none;
+}
 
-	.site-banner {
-		height: $banner-height;
-		background: $banner;
-		z-index: -1;
-	}
+.site-banner {
+	height: $banner-height;
+	background: $banner;
+	z-index: -1;
 }

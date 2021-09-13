@@ -91,35 +91,35 @@ NodeList.prototype.toArray = function () {
 function loadDarkMode() {
 	var newElement = document.createElement('link');
 	newElement.rel = "stylesheet";
-	newElement.id = "DarkmodeCSS";
+	newElement.id = "style-dark";
 	newElement.href = "/css/darkmode.css";
 	document.head.appendChild(newElement);
 }
 
 function toggleDarkMode() {
-	let initialDarkModeStylesheet = document.getElementById("DarkmodeInitial");
+	let initialDarkModeStylesheet = document.getElementById("style-dark-initial");
 	if (initialDarkModeStylesheet) {
 		initialDarkModeStylesheet.parentElement.removeChild(initialDarkModeStylesheet);
 		let userHasSystemDarkTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
 		if (!userHasSystemDarkTheme) {
 			loadDarkMode();
 		}
-		localStorage.setItem("TASVideosDarkMode", !userHasSystemDarkTheme);
+		localStorage.setItem("style-dark", !userHasSystemDarkTheme);
 	} else {
-		let darkModeStylesheet = document.getElementById("DarkmodeCSS");
+		let darkModeStylesheet = document.getElementById("style-dark");
 		if (darkModeStylesheet) {
 			darkModeStylesheet.parentElement.removeChild(darkModeStylesheet);
 		} else {
 			loadDarkMode();
 		}
-		localStorage.setItem("TASVideosDarkMode", !darkModeStylesheet);
+		localStorage.setItem("style-dark", !darkModeStylesheet);
 	}
 }
 
-if (localStorage.getItem("TASVideosDarkMode") !== null) {
-	let initialDarkModeStylesheet = document.getElementById("DarkmodeInitial");
+if (localStorage.getItem("style-dark") !== null) {
+	let initialDarkModeStylesheet = document.getElementById("style-dark-initial");
 	initialDarkModeStylesheet.parentElement.removeChild(initialDarkModeStylesheet);
-	if (localStorage.getItem("TASVideosDarkMode") === "true") {
+	if (localStorage.getItem("style-dark") === "true") {
 		loadDarkMode();
 	}
 }
