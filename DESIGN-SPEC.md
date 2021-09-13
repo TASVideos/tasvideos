@@ -11,6 +11,8 @@ Stylesheets in the root of `TASVideos/wwwroot/css/` are 3rd party libraries and 
 - `darkmode-initial.scss`, the darkmode stylesheet loaded initially by the site if the user has not manually toggled dark mode.
 - `darkmode.scss`, the stylesheet used when forcing darkmode with the toggle to override system settings.
 
+These bundles need to be defined in `TASVideos/Startup.cs` in the call to `services.AddWebOptimizer()` to be compiled and served on the site.
+
 ### Third Party Bundles
 - `prism.css`, a library used for code syntax highlighting
 - `diffview.css`, a library used for diff highlighting
@@ -73,6 +75,6 @@ Per [issue #399](https://github.com/adelikat/tasvideos/issues/399), developers s
 
 Clickable buttons that act as links should be visibly differentiable from informational elements like titles. This may be possible simply by removing our override of bootstrap's text-decoration: underline on anchor elements as we don't use underline elsewhere on the site, but in any event link buttons should have some visual separation besides just usage of the accent theme colors. These buttons should also maintain the default border radius set by bootstrap for a consistent rounding look across the site.
 
-Some custom icons are used for an 8 bit retro theme, for example the movie tier labels including the star, moon, and verification icons. these icons have an additional 2x and 4x exact prescale, enabling browsers to pick the appropriate image size to get crisp 8 bit edges with the use of responsive image sourcesets. All other icons needed should be pulled from the third party Font Awesome library which is included across the site (version 4.7.0).
+Some custom icons are used for an 8 bit retro theme, for example the movie tier labels including the star, moon, and verification icons. these icons have an additional 2x and 4x exact prescale, enabling browsers to pick the appropriate image size to get crisp 8 bit edges with the use of responsive image sourcesets. All other icons needed should be pulled from the third party Font Awesome library which is included across the site.
 
-Seperate components should be differentiated with the use of outlines in the primary accent color (this needs extensive work for consistency, main compliant examples are forum posts and movie lists).
+Separate components should be differentiated with the use of outlines in the primary accent color (this needs extensive work for consistency, main compliant examples are forum posts and movie lists).
