@@ -68,7 +68,7 @@ namespace TASVideos.Extensions
 				context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
 				context.Response.Headers["x-powered-by"] = "";
 				context.Response.Headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
-				context.Response.Headers["Upgrade-Insecure-Requests"] = "1";
+				context.Response.Headers["Content-Security-Policy"] = "upgrade-insecure-requests";
 				await next();
 			});
 
