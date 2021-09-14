@@ -142,6 +142,7 @@ namespace TASVideos.MovieParsers.Tests
 		[DataRow("2frameswithsub.lsmv", MovieStartType.PowerOn)]
 		[DataRow("savestate.anchor.lsmv", MovieStartType.Savestate)]
 		[DataRow("moviesram.lsmv", MovieStartType.Sram)]
+		[DataRow("moviesram-zerosrm.lsmv", MovieStartType.PowerOn)]
 		public async Task StartType(string file, MovieStartType expectedStartType)
 		{
 			var result = await _lsmvParser.Parse(Embedded(file));
