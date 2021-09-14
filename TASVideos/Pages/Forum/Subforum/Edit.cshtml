@@ -26,11 +26,10 @@
 		<textarea asp-for="Forum.Description" class="form-control" rows="4"></textarea>
 		<span asp-validation-for="Forum.Description" class="text-danger"></span>
 	</fullrow>
-	<hr />
-	<div class="text-center">
+	<form-button-bar>
 		<button type="submit" class="btn btn-primary">Update</button>
 		<a asp-page="Index" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
-	</div>
+	</form-button-bar>
 </form>
 
 @section Scripts {
