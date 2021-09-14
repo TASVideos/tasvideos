@@ -34,10 +34,12 @@ a {
 	--bs-table-hover-color: #{$white};
 }
 
-.alert-success {
-	background-color: $card-secondary-dark;
-	color: $light;
-	border-color: $card-primary-dark;
+.alert {
+	&-info, &-dark, &-success {
+		color: $light;
+		background-color: $card-secondary-dark;
+		border-color: $card-primary-dark;
+	}
 }
 
 .card {
