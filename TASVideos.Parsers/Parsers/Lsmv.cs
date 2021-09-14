@@ -39,7 +39,7 @@ namespace TASVideos.MovieParsers.Parsers
 			{
 				result.StartType = MovieStartType.Savestate;
 			}
-			else if (archive.Entry(Sram) is not null)
+			else if (archive.Entry(Sram)?.Length > 0)
 			{
 				result.StartType = MovieStartType.Sram;
 			}
