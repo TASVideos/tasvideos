@@ -114,6 +114,7 @@
 		<EmbeddedResource Include="LsmvSampleFiles\gametype-snespal.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\gametype-sufamiturbo.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\invalidrerecordentry.lsmv" />
+		<EmbeddedResource Include="LsmvSampleFiles\moviesram-zerosrm.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\moviesram.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\noinputlog.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\norerecordentry.lsmv" />
