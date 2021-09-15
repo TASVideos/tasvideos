@@ -206,7 +206,8 @@ namespace TASVideos.Core.Services
 			if (model is not null)
 			{
 				model.Submissions = await _db.Submissions
-					.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id))
+					.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id)
+						|| s.Submitter != null && s.SubmitterId == model.Id)
 					.GroupBy(s => s.Status)
 					.Select(g => new UserProfile.SubmissionEntry
 					{
