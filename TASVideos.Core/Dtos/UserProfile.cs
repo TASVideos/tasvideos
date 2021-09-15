@@ -89,8 +89,6 @@ namespace TASVideos.Core.Services
 
 		public class RatingSummary
 		{
-			// TODO: obsolete vs non-obsolete
-			// TODO: percentage of total non-obsolete
 			public int TotalMoviesRated { get; set; }
 		}
 
