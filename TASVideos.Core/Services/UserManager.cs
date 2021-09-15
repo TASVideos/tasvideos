@@ -247,6 +247,7 @@ namespace TASVideos.Core.Services
 				if (model.PublicRatings)
 				{
 					model.Ratings.TotalMoviesRated = await _db.PublicationRatings
+						.Where(p => p.Publication!.ObsoletedById == null)
 						.Where(p => p.UserId == model.Id)
 						.Distinct()
 						.CountAsync();
