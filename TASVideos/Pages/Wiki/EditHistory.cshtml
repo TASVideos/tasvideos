@@ -5,7 +5,9 @@
 	ViewData["Title"] = "Edit History For User " + Model.UserName;
 }
 <h4>Edits by <a href="@WikiEngine.Builtins.NormalizeInternalLink("/HomePages/" + Model.UserName)">@Model.UserName</a></h4>
-<hr />
+<div id="diff-view" class="d-none">
+
+</div>
 <div class="table-container">
 	<table class="table table-striped">
 		<tbody>
@@ -42,9 +44,6 @@
 	<hr />
 	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff(1)" /> Inline</label>
 	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff(0)" /> Side by Side</label>
-</div>
-<div id="diff-view" class="d-none">
-
 </div>
 
 <script>
