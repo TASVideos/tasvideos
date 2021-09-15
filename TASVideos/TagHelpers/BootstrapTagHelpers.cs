@@ -216,13 +216,13 @@ $@"<button type=""button"" class=""btn-close float-end"" data-dismiss=""alert"" 
 			var antiForgeryToken = _htmlHelper.AntiForgeryToken().GetString();
 
 			output.Content.SetHtmlContent($@"
-<button type='button' class='btn btn-danger {existingCssClass}' data-bs-toggle='modal' data-target='#areYouSureModal{uniqueId}'>{content}</button>
+<button type='button' class='btn btn-danger {existingCssClass}' data-bs-toggle='modal' data-bs-target='#areYouSureModal{uniqueId}'>{content}</button>
 <div id='areYouSureModal{uniqueId}' class='modal fade' role='dialog'>
 	<div class='modal-dialog'>
 		<div class='modal-content'>
 			<div class='modal-header'>
 				<h5 class='modal-title text-danger'>Delete Warning!</h5>
-				<button type='button' class='btn-close float-end' data-dismiss='modal'><span aria-hidden='true'>&times;</span></button>
+				<button type='button' class='btn-close float-end' data-bs-dismiss='modal'><span aria-hidden='true'>&times;</span></button>
 			</div>
 			<div class='modal-body'>
 				<p>{Text(WarningMessage)}</p>
@@ -232,7 +232,7 @@ $@"<button type=""button"" class=""btn-close float-end"" data-dismiss=""alert"" 
 					{antiForgeryToken}
 					<button type='submit' class='text-center btn btn-danger'>Yes</button>
 				</form>
-				<button type='button' class='btn btn-secondary' data-dismiss='modal'>No</button>
+				<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>No</button>
 			</div>
 		</div>
 	</div>
