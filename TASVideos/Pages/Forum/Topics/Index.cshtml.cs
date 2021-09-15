@@ -149,7 +149,7 @@ namespace TASVideos.Pages.Forum.Topics
 			foreach (var post in Topic.Posts)
 			{
 				post.IsEditable = User.Has(PermissionTo.EditForumPosts)
-					|| (userId.HasValue && post.PosterId == userId.Value && post.IsLastPost);
+					|| (userId.HasValue && post.PosterId == userId.Value);
 				post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts)
 					|| (userId.HasValue && post.PosterId == userId && post.IsLastPost);
 			}
