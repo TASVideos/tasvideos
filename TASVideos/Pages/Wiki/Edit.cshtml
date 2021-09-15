@@ -31,7 +31,7 @@
 		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary">Cancel</a>
 		<a condition="string.IsNullOrWhiteSpace(returnUrl)" href="/@Model.Path" class="btn btn-secondary">Cancel</a>
 	</div>
-	<div class="text-center alert-info" role="alert">
+	<div class="text-center alert-info mt-2" role="alert">
 		<label class="alert-info">
 			@await Component.RenderWiki("System/WikiEditNote")
 		</label>
