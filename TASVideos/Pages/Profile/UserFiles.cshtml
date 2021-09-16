@@ -4,7 +4,7 @@
 @{
 	ViewData["Title"] = "My Files";
 	ViewData.AddActivePage(ProfileNavPages.UserFiles);
-	var used = Model.Files.Sum(f => f.FileSize);
+	var used = Model.Files.Sum(f => f.FileSizeCompressed);
 }
 
 <fullrow>

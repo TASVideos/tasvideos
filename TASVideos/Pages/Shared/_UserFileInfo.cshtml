@@ -121,7 +121,7 @@
 			<hr />
 		</div>
 		<a asp-page="/UserFiles/Info" asp-page-handler="Download" asp-route-id="@Model.Id" class="card-link">
-			Download (@Model.FileSize.ToSizeString())
+			Download (@Model.FileSizeUncompressed.ToSizeString())
 		</a>
 
 		<a asp-page="/UserFiles/Info" asp-route-id="@Model.Id" class="card-link">
