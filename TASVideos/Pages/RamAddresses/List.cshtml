@@ -16,8 +16,8 @@
 				<td>@entry.GameName</td>
 				<td>@entry.SystemCode</td>
 				<td>
-					<a asp-page="Index" asp-route-id="@entry.GameId" class="btn btn-secondary">View</a>
-					<a asp-page="Edit" asp-route-id="@entry.GameId" permission="EditRamAddresses" class="btn btn-primary">Edit</a>
+					<a asp-page="Index" asp-route-id="@entry.GameId" class="btn btn-secondary"><i class="fa fa-eye"></i> View</a>
+					<a asp-page="Edit" asp-route-id="@entry.GameId" permission="EditRamAddresses" class="btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 				</td>
 			</tr>
 		}

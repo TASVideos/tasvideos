@@ -6,7 +6,7 @@
 }
 
 <partial Name="_ForumHeader" />
-<a permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="float-end btn btn-primary btn-sm">Edit</a>
+<a permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="float-end btn btn-primary btn-sm border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 <a permission="CreateForumTopics" asp-page="/Forum/Topics/Create" asp-route-forumId="@Model.Forum.Id" class="me-2 float-end btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
 <h4>
 	<a asp-page="/Forum/Index">Forum</a> -> @Model.Forum.Name

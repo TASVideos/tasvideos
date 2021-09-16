@@ -9,9 +9,9 @@
 		<div class="card-body bg-cardsecondary">
 			<pub-link id="Model.Id">
                 <div class="float-start pe-3 pb-1" style="max-width: 80%">
-                    <img class="pb-1" src="~/media/@Model.Screenshot.Path" alt="@Model.Screenshot.Description" />
+                    <img class="w-100 pixelart-image pb-1" src="~/media/@Model.Screenshot.Path" alt="@Model.Screenshot.Description" />
                     <br />
-                    <a href="@Model.OnlineWatchingUrl" class="btn btn-primary" target="_blank">Watch</a>
+					<a href="@Model.OnlineWatchingUrl" class="btn btn-primary" target="_blank"><i class="fa fa-external-link"></i> Watch</a>
                 </div>
 			</pub-link>
 			@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
