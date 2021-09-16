@@ -70,7 +70,8 @@ namespace TASVideos
 
 			CreateMap<UserFile, UserFileModel>()
 				.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author!.UserName))
-				.ForMember(dest => dest.FileSize, opt => opt.MapFrom(src => src.LogicalLength))
+				.ForMember(dest => dest.FileSizeUncompressed, opt => opt.MapFrom(src => src.LogicalLength))
+				.ForMember(dest => dest.FileSizeCompressed, opt => opt.MapFrom(src => src.PhysicalLength))
 				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
 				.ForMember(dest => dest.GameSystem, opt => opt.MapFrom(src => src.Game != null ? src.Game.System!.Code : ""))
