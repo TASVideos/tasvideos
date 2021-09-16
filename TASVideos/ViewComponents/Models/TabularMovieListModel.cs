@@ -19,6 +19,7 @@ namespace TASVideos.ViewComponents
 		public int? PreviousId { get; set; }
 
 		public string Game { get; set; } = "";
+		public string? Branch { get; set; }
 		public string Authors { get; set; } = "";
 
 		public ScreenshotFile Screenshot { get; set; } = new ();

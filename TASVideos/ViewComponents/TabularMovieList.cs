@@ -59,6 +59,7 @@ namespace TASVideos.ViewComponents
 					Frames = p.Frames,
 					FrameRate = p.SystemFrameRate!.FrameRate,
 					Game = p.Game!.DisplayName,
+					Branch = p.Branch,
 					Authors = string.Join(", ", p.Authors.Select(pa => pa.Author!.UserName)),
 					Screenshot = p.Files
 						.Where(f => f.Type == FileType.Screenshot)
