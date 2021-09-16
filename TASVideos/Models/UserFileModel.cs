@@ -17,7 +17,8 @@ namespace TASVideos.Models
 		public int Downloads { get; set; }
 		public bool Hidden { get; set; }
 		public string? FileName { get; set; }
-		public int FileSize { get; set; }
+		public int FileSizeUncompressed { get; set; }
+		public int FileSizeCompressed { get; set; }
 		public int? GameId { get; set; }
 		public string? GameName { get; set; }
 		public string? GameSystem { get; set; }
