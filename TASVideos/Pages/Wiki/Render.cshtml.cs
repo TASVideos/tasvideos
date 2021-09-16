@@ -44,11 +44,6 @@ namespace TASVideos.Pages.Wiki
 				}
 			}
 
-			if (url.EndsWith(".png") || url.EndsWith(".jpg"))
-			{
-				return Redirect("fallback.png");
-			}
-
 			if (!WikiHelper.IsValidWikiPageName(url))
 			{
 				// Support legacy links like [adelikat] that should have been [user:adelikat]
