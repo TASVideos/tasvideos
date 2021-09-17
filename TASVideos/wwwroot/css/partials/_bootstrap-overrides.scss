@@ -51,6 +51,11 @@ h4 {
 
 .form-control {
 	font-size: .875rem;
+
+	&, &:focus {
+		color: var(--bs-dark);
+		background-color: var(--bs-light);
+	}
 }
 
 .btn {
