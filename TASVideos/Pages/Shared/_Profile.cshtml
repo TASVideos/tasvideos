@@ -9,14 +9,14 @@
 					   asp-page="/Messages/Create"
 					   asp-route-defaultToUser="@Model.UserName"
 					   class="btn btn-secondary btn-sm">
-						PM
+						<i class="fa fa-quote-right"></i> PM
 					</a>
 					<a permission="EditUsers"
 					   asp-page="/Users/Edit"
 					   asp-route-returnUrl="@Context.ReturnUrl()"
 					   asp-route-id="@Model.Id"
-					   class="btn btn-primary btn-sm">
-						Edit
+					   class="btn btn-primary btn-sm border border-warning">
+						<i class="fa fa-pencil"></i> Edit
 					</a>
 					@Model.UserName
 				</h4>

@@ -20,10 +20,9 @@
 					<td>@file.FileName</td>
 					<td>@file.Description</td>
 					<td>
-						<delete-button
-							warning-message="Are you sure you want to remove this movie file?"
-							asp-href="/Publications/AdditionalMovies/@Model.Id/Delete/@file.Id">
-							Delete
+						<delete-button warning-message="Are you sure you want to remove this movie file?"
+									   asp-href="/Publications/AdditionalMovies/@Model.Id/Delete/@file.Id">
+							<span class="fa fa-times"></span> Delete
 						</delete-button>
 					</td>
 				</tr>
@@ -51,8 +50,8 @@
 				<span asp-validation-for="AdditionalMovieFile" class="text-danger"></span>
 			</form-group>
 			<div class="text-center mt-3">
-				<submit-button class="btn btn-primary">Add</submit-button>
-				<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Back To Edit</a>
+				<submit-button class="btn btn-primary"><span class="fa fa-plus"></span> Add</submit-button>
+				<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back To Edit</a>
 			</div>
 		</column>
 	</row>

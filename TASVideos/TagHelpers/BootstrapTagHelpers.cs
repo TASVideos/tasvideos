@@ -230,9 +230,9 @@ $@"<button type=""button"" class=""btn-close float-end"" data-dismiss=""alert"" 
 			<div class='modal-footer'>
 				<form action='{WebUtility.UrlDecode(AspHref)}' method='post'>
 					{antiForgeryToken}
-					<button type='submit' class='text-center btn btn-danger'>Yes</button>
+					<button type='submit' class='text-center btn btn-danger'>Delete</button>
 				</form>
-				<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>No</button>
+				<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancel</button>
 			</div>
 		</div>
 	</div>

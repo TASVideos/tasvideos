@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Game List" + (!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? "/" + Model.Games.SystemCode : string.Empty);
 }
 
-<a asp-page="Edit" class="btn btn-primary mb-3 float-end">Create</a>
+<a asp-page="Edit" class="btn btn-primary mb-3 float-end"><i class="fa fa-plus"></i> Create</a>
 <form class="form-inline mb-3">
 	<label asp-for="@Model.Games.SystemCode" class="me-2"></label>
 	<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="SystemCode" class="form-control me-2"></select>
@@ -21,9 +21,9 @@
 			<td>@game.SystemCode</td>
 			<td>@game.DisplayName</td>
 			<td>
-				<a asp-page="Index" asp-route-id="@game.Id" class="btn btn-sm btn-secondary">View</a>
-				<a asp-page="Edit" asp-route-id="@game.Id" class="btn btn-primary btn-sm">Edit</a>
-				<a asp-page="Roms/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm">Roms</a>
+				<a asp-page="Index" asp-route-id="@game.Id" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i> View</a>
+				<a asp-page="Edit" asp-route-id="@game.Id" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Edit</a>
+				<a asp-page="Roms/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm"><i class="fa fa-pencil"></i> Roms</a>
 			</td>
 		</tr>
 	}

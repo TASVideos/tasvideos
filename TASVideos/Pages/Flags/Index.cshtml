@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Flag List";
 }
 
-<a class="btn btn-primary float-end mb-3" asp-page="Create">Create</a>
+<a class="btn btn-primary float-end mb-3" asp-page="Create"><i class="fa fa-plus"></i> Create</a>
 
 <table class="table table-bordered table-striped table-sm">
 	<tr>
@@ -25,7 +25,7 @@
 			<td>@flag.PermissionRestriction</td>
 			<td>
 				<a class="btn btn-primary" asp-page="Edit" asp-route-id="@flag.Id">
-					Edit
+					<i class="fa fa-pencil"></i> Edit
 				</a>
 			</td>
 		</tr>
