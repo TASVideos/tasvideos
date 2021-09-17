@@ -23,11 +23,11 @@
 			 /@tierIconPath4x 2x"/>
 	</a>
 	<label class="form-control-label">@Model.Publication.Tier</label>
-	<a permission="SetTier" class="btn btn-secondary btn-sm" asp-page="EditTier" asp-route-id="@Model.Id">Edit</a>
+	<a permission="SetTier" class="btn btn-secondary btn-sm" asp-page="EditTier" asp-route-id="@Model.Id"><span class="fa fa-pencil"></span> Edit</a>
 </fullrow>
 <hr />
-<a permission="CreateAdditionalMovieFiles" asp-page="AdditionalMovies" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mb-2 float-end ms-2">Additional Movie Files</a>
-<a permission="EditPublicationFiles" asp-page="EditFiles" asp-route-id="@Model.Id" class="float-end btn btn-primary btn-sm mb-2">Edit</a>
+<a permission="CreateAdditionalMovieFiles" asp-page="AdditionalMovies" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mb-2 float-end ms-2"><span class="fa fa-plus"></span> Additional Movie Files</a>
+<a permission="EditPublicationFiles" asp-page="EditFiles" asp-route-id="@Model.Id" class="float-end btn btn-primary btn-sm mb-2"><span class="fa fa-pencil"></span> Edit</a>
 <table class="table table-bordered table-sm">
 	<tr>
 		<th>File Name</th>
@@ -49,7 +49,7 @@
 	}
 </table>
 <hr />
-<a permission="EditPublicationFiles" asp-page="EditUrls" asp-route-id="@Model.Id" class="float-end btn btn-primary btn-sm mb-2">Edit</a>
+<a permission="EditPublicationFiles" asp-page="EditUrls" asp-route-id="@Model.Id" class="float-end btn btn-primary btn-sm mb-2"><span class="fa fa-pencil"></span> Edit</a>
 <table class="table table-bordered table-sm">
 	<tr>
 		<th>Url</th>
@@ -123,9 +123,9 @@
 		</form-group>
 	</fullrow>
 	<div class="text-center mt-3">
-		<button id="preview-button" type="button" class="btn btn-secondary">Preview</button>
-		<submit-button class="btn btn-primary">Update</submit-button>
-		<pub-link id="Model.Id" class="btn btn-secondary">Cancel</pub-link>
+		<button id="preview-button" type="button" class="btn btn-secondary"><span class="fa fa-eye"></span> Preview</button>
+		<submit-button class="btn btn-primary"><span class="fa fa-save"></span> Update</submit-button>
+		<pub-link id="Model.Id" class="btn btn-secondary"><span class="fa fa-times"></span> Cancel</pub-link>
 	</div>
 </form>
 

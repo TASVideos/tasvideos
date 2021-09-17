@@ -27,10 +27,10 @@
 					</a>
 				</nav-item>
 				<nav-item>
-					<button type="submit" class="btn btn-link navbar-btn nav-link">Log out</button>
+					<button type="submit" class="btn btn-link navbar-btn nav-link"><i class="fa fa-sign-out"></i> Log out</button>
 				</nav-item>
 				<nav-item activate="Search">
-					<a class="nav-link" asp-page="/Search/Index">Search</a>
+					<a class="nav-link" asp-page="/Search/Index"><i class="fa fa-search"></i> Search</a>
 				</nav-item>
 			</navbar>
 		</form>
@@ -42,10 +42,10 @@
 				<a class="nav-link" asp-page="/Account/Register">Register</a>
 			</nav-item>
 			<nav-item activate="Login">
-				<a class="nav-link" asp-page="/Account/Login" asp-route-returnUrl="@Context.ReturnUrl()">Log in</a>
+				<a class="nav-link" asp-page="/Account/Login" asp-route-returnUrl="@Context.ReturnUrl()"><i class="fa fa-sign-in"></i> Log in</a>
 			</nav-item>
 			<nav-item activate="Search">
-				<a class="nav-link" asp-page="/Search/Index">Search</a>
+				<a class="nav-link" asp-page="/Search/Index"><i class="fa fa-search"></i> Search</a>
 			</nav-item>
 		</navbar>
 	}

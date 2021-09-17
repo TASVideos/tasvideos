@@ -81,30 +81,30 @@
 				</div>
 				@foreach (var url in Model.OnlineWatchingUrls)
 				{
-					<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank">Watch</a>
+					<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> Watch</a>
 				}
-				<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1">Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
+			<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 				<br />
-				<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1">Submission</a>
+				<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Submission</a>
 				<a condition="@Model.TopicId > 0"
 				   asp-page="/Forum/Topics/Index"
 				   asp-route-id="@Model.TopicId"
 				   class="btn btn-secondary btn-sm mt-1">
-					Discuss
+					<i class="fa fa-comments-o"></i> Discuss
 				</a>
 				<br />
 				<a permission="EditPublicationMetaData"
 				   asp-page="Edit"
 				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm mt-1">Edit</a>
+				   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
 				<a permission="CatalogMovies"
 				   asp-page="/Publications/Catalog"
 				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm mt-1">Catalog</a>
+				   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
 				<a permission="EditPublicationMetaData"
 				   href="/MovieMaintenanceLog?id=@Model.Id"
-				   class="btn btn-secondary btn-sm mt-1">
-					Logs
+				   class="btn btn-secondary btn-sm border border-warning mt-1">
+					<i class="fa fa-history"></i> Logs
 				</a>
 				<br />
 				<div>
