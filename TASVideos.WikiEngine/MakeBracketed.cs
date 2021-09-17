@@ -290,6 +290,14 @@ namespace TASVideos.WikiEngine
 				{
 					attrs.Add(Attr("alt", s[4..]));
 				}
+				else if (s.StartsWith("height="))
+				{
+					attrs.Add(Attr("height", s[7..]));
+				}
+				else if (s.StartsWith("width="))
+				{
+					attrs.Add(Attr("width", s[6..]));
+				}
 			}
 
 			if (!classSet)
