@@ -951,7 +951,7 @@ namespace TASVideos.WikiEngine
 				e => Builtins.MakeToc(n, e.CharStart));
 		}
 
-		private static readonly Regex Whitespace = new ("\\s+");
+		private static readonly Regex AllowedIdChars = new("[^a-zA-Z0-9 ]+");
 
 		private static void AddIdsToHeadings(IEnumerable<INode> n)
 		{
@@ -961,11 +961,11 @@ namespace TASVideos.WikiEngine
 				.Cast<Element>();
 			foreach (var h in headings)
 			{
-				var id = Whitespace.Replace(h.InnerText(NullWriterHelper.Instance), "");
-				if (id.Length > 0)
-				{
-					id = char.ToUpperInvariant(id[0]) + id[1..];
-				}
+				var originalText = h.InnerText(NullWriterHelper.Instance);
+				var filteredText = AllowedIdChars.Replace(originalText, " ");
+				var splitByWord = filteredText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+				var cased = splitByWord.Select(s => s.Length > 0 ? char.ToUpperInvariant(s[0]) + s.ToLowerInvariant()[1..] : "");
+				var id = string.Join("", cased);
 
 				h.Attributes.Add("id", id);
 			}
