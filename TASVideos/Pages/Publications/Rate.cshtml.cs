@@ -54,11 +54,6 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnPost()
 		{
-			if (!Rating.EntertainmentRating.HasValue && !Rating.TechRating.HasValue)
-			{
-				ModelState.AddModelError("", "At least one rating must be set");
-			}
-
 			if (!ModelState.IsValid)
 			{
 				return Page();
