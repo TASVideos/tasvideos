@@ -1,0 +1,88 @@
+﻿@page "{id}"
+@model EditModel
+
+@{
+	ViewData["Title"] = $"Edit User file {Model.Id}";
+	string cancelUrl = PageContext.HttpContext.Request.ReturnUrl();
+	if (string.IsNullOrWhiteSpace(cancelUrl))
+	{
+		cancelUrl = $"/UserFiles/Info/{Model.Id}";
+	}
+}
+
+<fullrow class="mt-2 mb-2">
+	<label>Author: <profile-link username="@Model.UserFile.UserName"></profile-link></label>
+</fullrow>
+<form method="post" enctype="multipart/form-data">
+	<row>
+		<column>
+			<input type="hidden" asp-for="UserFile.UserId" />
+			<input type="hidden" asp-for="UserFile.UserName" />
+			<form-group>
+				<label asp-for="UserFile.Title" class="form-control-label"></label>
+				<input asp-for="UserFile.Title" type="text" class="form-control" />
+				<span asp-validation-for="UserFile.Title" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="UserFile.Description" class="form-control-label"></label>
+				<textarea asp-for="UserFile.Description" rows="6" class="form-control wiki-edit"></textarea>
+				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" asp-for="UserFile.Hidden">
+					<label class="form-check-label form-control-label" asp-for="UserFile.Hidden"></label>
+				</div>
+			</form-group>
+			<hr />
+			<form-group>
+				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
+				<select asp-for="UserFile.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
+				<span asp-validation-for="UserFile.SystemId" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="UserFile.GameId" class="form-control-label"></label>
+				<select asp-for="UserFile.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
+				<span asp-validation-for="UserFile.GameId" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<fullrow class="text-center">
+		@await Component.RenderWiki("System/WikiEditNote")
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Update</submit-button>
+		<a href="@cancelUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+	</fullrow>
+</form>
+
+<script>
+	var systemModel = document.getElementById('@Html.IdFor(m => m.UserFile.SystemId)');
+	var gameModel = document.getElementById('@Html.IdFor(m => m.UserFile.GameId)');
+
+	systemModel.onchange = function() {
+		if (this.value) {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+					if (xmlhttp.status === 200) {
+						gameModel.innerHTML = xmlhttp.responseText;
+					}
+				}
+			};
+
+			xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
+			xmlhttp.send();
+		} else {
+			document.querySelectorAll('#@Html.IdFor(m => m.UserFile.GameId) option')
+				.toArray()
+				.forEach(function (elem) {
+					if (elem.value) {
+						elem.remove();
+					}
+				});
+		}
+	}
+</script>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
