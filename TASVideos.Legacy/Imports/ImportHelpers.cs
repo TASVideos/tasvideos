@@ -110,13 +110,14 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			using var targetStream = new MemoryStream();
-			using var gzipStream = new GZipStream(targetStream, CompressionLevel.Optimal);
-			using var sourceStream = new MemoryStream(content);
-			using var xzStream = new XZStream(sourceStream);
-			xzStream.CopyTo(gzipStream);
-			var result = targetStream.ToArray();
+			using (var gzipStream = new GZipStream(targetStream, CompressionLevel.Optimal))
+			{
+				using var sourceStream = new MemoryStream(content);
+				using var xzStream = new XZStream(sourceStream);
+				xzStream.CopyTo(gzipStream);
+			}
 
-			return result;
+			return targetStream.ToArray();
 		}
 
 		public static string? IpFromHex(this string? hexIp)
