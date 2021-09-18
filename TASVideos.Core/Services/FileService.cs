@@ -21,12 +21,14 @@ namespace TASVideos.Core.Services
 		public async Task<CompressedFile> Compress(byte[] contents)
 		{
 			await using var compressedStream = new MemoryStream();
-			await using var gzipStream = new GZipStream(compressedStream, CompressionLevel.Optimal);
-			await using var originalStream = new MemoryStream(contents);
+			await using (var gzipStream = new GZipStream(compressedStream, CompressionLevel.Optimal))
+			{
+				await using var originalStream = new MemoryStream(contents);
 
-			// This is the default buffer size used by CopyTo
-			const int bufferSize = 81920;
-			await originalStream.CopyToAsync(gzipStream, bufferSize);
+				// This is the default buffer size used by CopyTo
+				const int bufferSize = 81920;
+				await originalStream.CopyToAsync(gzipStream, bufferSize);
+			}
 
 			byte[] gzipContents = compressedStream.ToArray();
 
