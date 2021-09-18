@@ -22,7 +22,7 @@
 		<h4>
 			#@Model.Id - @Model.Title
 			<span condition="canEdit" class="float-end">
-				<button class="btn btn-primary btn-sm border border-warning"><i class="fa fa-pencil"></i> Edit</button>
+				<a asp-page="/UserFiles/Edit" asp-route-id="@Model.Id" asp-route-returnUrl="@Context.ReturnUrl()" class="btn btn-primary btn-sm border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 				<delete-button
 					class="btn-sm",
 					warning-message="Are you sure you want to delete this file?"
