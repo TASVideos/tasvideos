@@ -955,18 +955,34 @@ namespace TASVideos.WikiEngine
 
 		private static void AddIdsToHeadings(IEnumerable<INode> n)
 		{
+			IEnumerable<string> GeneratePossibleIds(IList<string> words)
+			{
+				if (words.Count > 0 && (words[0] == "The" || words[0] == "A"))
+				{
+					yield return string.Join("", words.Skip(1));
+				}
+				yield return string.Join("", words);
+				for (var i = 2;; i++)
+				{
+					yield return string.Join("", words) + "_" + i;
+				}
+			}
+
 			var headings = NodeUtils.Find(
-				n,
-				e => e.Type == NodeType.Element && Builtins.TocHeadings.Contains(((Element)e).Tag))
+					n,
+					e => e.Type == NodeType.Element && Builtins.TocHeadings.Contains(((Element)e).Tag))
 				.Cast<Element>();
+			var ids = new HashSet<string>();
+
 			foreach (var h in headings)
 			{
 				var originalText = h.InnerText(NullWriterHelper.Instance);
 				var filteredText = AllowedIdChars.Replace(originalText, " ");
 				var splitByWord = filteredText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-				var cased = splitByWord.Select(s => s.Length > 0 ? char.ToUpperInvariant(s[0]) + s.ToLowerInvariant()[1..] : "");
-				var id = string.Join("", cased);
+				var titleCased = splitByWord.Select(s => s.Length > 0 ? char.ToUpperInvariant(s[0]) + s.ToLowerInvariant()[1..] : "");
 
+				var id = GeneratePossibleIds(titleCased.ToList()).First(s => !ids.Contains(s));
+				ids.Add(id);
 				h.Attributes.Add("id", id);
 			}
 		}
