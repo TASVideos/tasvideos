@@ -52,6 +52,8 @@ namespace TASVideos.Legacy.Imports
 				.Select(p => p.First(g => g.CreateTimestamp == p.Min(pp => pp.CreateTimestamp)))
 				.ToList();
 
+			var forumTopics = context.ForumTopics.Where(t => t.SubmissionId.HasValue).ToList();
+
 			var systems = context.GameSystems.ToList();
 
 			var lSubsWithSystem = (from ls in legacySubmissions
@@ -67,7 +69,9 @@ namespace TASVideos.Legacy.Imports
 				from p in pp.DefaultIfEmpty()
 				join r in rejectionReasons on ls.Id equals r.Id into rr
 				from r in rr.DefaultIfEmpty()
-				select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimestamp, Rejection = r })
+				join t in forumTopics on ls.Id equals t.SubmissionId into tt
+				from t in tt.DefaultIfEmpty()
+				select new { Sub = ls, System = s, Wiki = w, Submitter = u, Judge = j, Publisher = p, PubDate = pub?.CreateTimestamp, Rejection = r, Topic = t })
 				.ToList();
 
 			foreach (var legacySubmission in lSubsWithSystem)
@@ -109,6 +113,7 @@ namespace TASVideos.Legacy.Imports
 					MovieExtension = movieExtension,
 					RejectionReasonId = legacySubmission.Rejection?.Reason,
 					MovieStartType = ParseAlertsToStartType(legacySubmission.Sub.Alerts),
+					TopicId = legacySubmission.Topic?.Id,
 					LegacyTime = legacySubmission.Sub.Length,
 					ImportedTime = 0.0M,
 					LegacyAlerts = ImportHelper.ConvertLatin1String(legacySubmission.Sub.Alerts).NullIfWhiteSpace(),
@@ -205,6 +210,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.RejectionReasonId),
 				nameof(Submission.AdditionalAuthors),
 				nameof(Submission.MovieStartType),
+				nameof(Submission.TopicId),
 				nameof(Submission.LegacyTime),
 				nameof(Submission.ImportedTime),
 				nameof(Submission.LegacyAlerts)

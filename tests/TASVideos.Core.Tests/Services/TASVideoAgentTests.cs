@@ -50,7 +50,7 @@ namespace TASVideos.Core.Tests.Services
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
-			Assert.AreEqual(LinkConstants.SubmissionWikiPage + SubmissionId, actual.PageName);
+			Assert.AreEqual(SubmissionId, actual.SubmissionId);
 			Assert.AreEqual(SubmissionTitle, actual.Title);
 			Assert.AreEqual(ForumConstants.WorkBenchForumId, actual.ForumId);
 		}
@@ -112,7 +112,7 @@ namespace TASVideos.Core.Tests.Services
 			_db.ForumTopics.Add(new ForumTopic
 			{
 				Title = "Title",
-				PageName = LinkConstants.SubmissionWikiPage + SubmissionId
+				SubmissionId = SubmissionId
 			});
 			await _db.SaveChangesAsync();
 

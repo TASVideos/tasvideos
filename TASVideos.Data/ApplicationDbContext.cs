@@ -143,11 +143,6 @@ namespace TASVideos.Data
 				builder.HasPostgresExtension("pg_trgm");
 			}
 
-			builder.Entity<ForumTopic>(entity =>
-			{
-				entity.HasIndex(e => e.PageName).IsUnique();
-			});
-
 			builder.Entity<User>(entity =>
 			{
 				entity.HasIndex(e => e.NormalizedUserName).IsUnique();
@@ -353,6 +348,10 @@ namespace TASVideos.Data
 				entity.Property(e => e.LegacyTime).HasDefaultValue(0);
 				entity.Property(e => e.ImportedTime).HasColumnType("decimal(16, 4)");
 				entity.Property(e => e.LegacyTime).HasColumnType("decimal(16, 4)");
+
+				entity.HasOne(p => p.Topic)
+					.WithOne(t => t!.Submission!)
+					.HasForeignKey<ForumTopic>(t => t.PollId);
 			});
 
 			builder.Entity<UserFile>(entity =>

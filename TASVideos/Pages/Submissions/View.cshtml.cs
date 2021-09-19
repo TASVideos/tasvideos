@@ -34,7 +34,6 @@ namespace TASVideos.Pages.Submissions
 		[FromRoute]
 		public int Id { get; set; }
 
-		public int TopicId { get; set; }
 		public int PublicationId { get; set; }
 
 		public bool IsPublished => PublicationId > 0;
@@ -81,7 +80,8 @@ namespace TASVideos.Pages.Submissions
 						.Where(sa => sa.SubmissionId == Id)
 						.Select(sa => sa.Author!.UserName)
 						.ToList(),
-					AdditionalAuthors = s.AdditionalAuthors
+					AdditionalAuthors = s.AdditionalAuthors,
+					TopicId = s.TopicId
 				})
 				.SingleOrDefaultAsync();
 
@@ -93,8 +93,6 @@ namespace TASVideos.Pages.Submissions
 			CanEdit = !string.IsNullOrWhiteSpace(User.Name())
 				&& (User.Name() == Submission.Submitter
 					|| Submission.Authors.Contains(User.Name()));
-			var submissionPageName = LinkConstants.SubmissionWikiPage + Id;
-			TopicId = (await _db.ForumTopics.SingleOrDefaultAsync(t => t.PageName == submissionPageName))?.Id ?? 0;
 
 			if (Submission.Status == SubmissionStatus.Published)
 			{
