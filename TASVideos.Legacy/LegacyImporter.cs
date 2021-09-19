@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using TASVideos.Data;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Forum.Entity;
@@ -24,6 +25,7 @@ namespace TASVideos.Legacy
 		private readonly ApplicationDbContext _db;
 		private readonly NesVideosSiteContext _legacySiteDb;
 		private readonly NesVideosForumContext _legacyForumDb;
+		private readonly ILogger<LegacyImporter> _logger;
 
 		private static readonly Dictionary<string, long> ImportDurations = new ();
 
@@ -31,16 +33,20 @@ namespace TASVideos.Legacy
 			IWebHostEnvironment env,
 			ApplicationDbContext db,
 			NesVideosSiteContext legacySiteDb,
-			NesVideosForumContext legacyForumDb)
+			NesVideosForumContext legacyForumDb,
+			ILogger<LegacyImporter> logger)
 		{
 			_env = env;
 			_db = db;
 			_legacySiteDb = legacySiteDb;
 			_legacyForumDb = legacyForumDb;
+			_logger = logger;
 		}
 
 		public void RunLegacyImport()
 		{
+			_logger.LogInformation("Beginning Import");
+
 			string connectionStr = _db.Database.GetConnectionString();
 			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -93,11 +99,11 @@ namespace TASVideos.Legacy
 
 			var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
 			stopwatch.Stop();
-			Console.WriteLine($"Import finished. Total time: {elapsedMilliseconds / 1000.0} seconds");
-			Console.WriteLine("Import breakdown:");
+			_logger.LogInformation($"Import finished. Total time: {elapsedMilliseconds / 1000.0} seconds");
+			_logger.LogInformation("Import breakdown:");
 			foreach ((var key, long value) in ImportDurations)
 			{
-				Console.WriteLine($"{key}: {value}");
+				_logger.LogInformation($"{key}: {value}");
 			}
 		}
 
