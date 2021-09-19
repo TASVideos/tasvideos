@@ -44,11 +44,6 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
-			var pageName = LinkConstants.SubmissionWikiPage + Publication.SubmissionId;
-			Publication.TopicId = (await _db.ForumTopics
-					.SingleOrDefaultAsync(t => t.PageName == pageName))
-					?.Id ?? 0;
-
 			Publication.OverallRating = (await _pointsService.PublicationRating(Id))
 				.Overall;
 

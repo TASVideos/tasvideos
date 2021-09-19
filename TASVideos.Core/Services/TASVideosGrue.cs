@@ -37,7 +37,7 @@ namespace TASVideos.Core.Services
 
 		public async Task PostSubmissionRejection(int submissionId)
 		{
-			var topic = await _db.ForumTopics.SingleOrDefaultAsync(f => f.PageName == LinkConstants.SubmissionWikiPage + submissionId);
+			var topic = await _db.ForumTopics.SingleOrDefaultAsync(f => f.SubmissionId == submissionId);
 
 			// We intentionally silently fail here.
 			// Otherwise we would leave submission rejection in a partial state

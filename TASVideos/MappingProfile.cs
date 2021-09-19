@@ -91,6 +91,7 @@ namespace TASVideos
 				.ForMember(dest => dest.OnlineWatchingUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Streaming && pu.Url != null).Select(pu => pu.Url)))
 				.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count / 2.0))
 				.ForMember(dest => dest.TierIconPath, opt => opt.MapFrom(src => src.Tier!.IconPath))
+				.ForMember(dest => dest.TopicId, opt => opt.MapFrom(src => src.Submission!.TopicId))
 				.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files
 					.Select(f => new PublicationDisplayModel.FileModel
 					{

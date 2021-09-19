@@ -160,7 +160,7 @@
 			<a condition="@canClaimAsJudge" asp-page="View" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success mt-2 me-1">Claim</a>
 			<a condition="@ViewData.UserHas(PermissionTo.PublishMovies) && Model.Submission.Status == SubmissionStatus.Accepted" asp-page="View" asp-route-id="@Model.Id" asp-page-handler="ClaimForPublishing" class="btn btn-success mt-2 me-1">Claim</a>
 			<a asp-page="View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary mt-2"><i class="fa fa-download"></i> Download</a>
-			<a condition="@Model.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId" class="btn btn-secondary ms-1 mt-2"><i class="fa fa-comments-o"></i> Discuss and Vote</a>
+			<a condition="@Model.Submission.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary ms-1 mt-2"><i class="fa fa-comments-o"></i> Discuss and Vote</a>
 			<span permission="EditSubmissions" class="btn-separator mt-2"></span>
 			<a condition="@canEdit" asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary border border-warning mt-2"><i class="fa fa-pencil"></i> Edit</a>
 			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="ms-1 btn bg-info text-dark border border-warning mt-2"><i class="fa fa-book"></i> Catalog</a>

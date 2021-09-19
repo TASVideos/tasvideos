@@ -35,8 +35,8 @@ namespace TASVideos.Data.Entity.Forum
 		public int? PollId { get; set; }
 		public virtual ForumPoll? Poll { get; set; }
 
-		[StringLength(200)]
-		public string? PageName { get; set; }
+		public int? SubmissionId { get; set; }
+		public virtual Submission? Submission { get; set; }
 	}
 
 	public static class ForumTopicQueryableExtensions

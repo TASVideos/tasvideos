@@ -70,7 +70,7 @@ namespace TASVideos.Pages.Forum.Topics
 					ForumName = t.Forum!.Name,
 					IsLocked = t.IsLocked,
 					LastPostId = t.ForumPosts.Any() ? t.ForumPosts.OrderByDescending(p => p.CreateTimestamp).First().Id : -1,
-					PageName = t.PageName,
+					SubmissionId = t.SubmissionId,
 					Poll = t.PollId.HasValue
 						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll!.Question }
 						: null
@@ -82,9 +82,9 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			if (!string.IsNullOrWhiteSpace(Topic.PageName))
+			if (Topic.SubmissionId.HasValue)
 			{
-				WikiPage = await _wikiPages.Page(Topic.PageName);
+				WikiPage = await _wikiPages.Page(LinkConstants.SubmissionWikiPage + Topic.SubmissionId.Value);
 			}
 
 			Topic.Posts = await _db.ForumPosts

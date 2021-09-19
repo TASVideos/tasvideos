@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using TASVideos.Common;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 
@@ -24,6 +25,9 @@ namespace TASVideos.Data.Entity
 
 		public int? WikiContentId { get; set; }
 		public virtual WikiPage? WikiContent { get; set; }
+
+		public int? TopicId { get; set; }
+		public virtual ForumTopic? Topic { get; set; }
 
 		// TODO: don't make this nullable! Need to fix the importer for this to work
 		public int? SubmitterId { get; set; }

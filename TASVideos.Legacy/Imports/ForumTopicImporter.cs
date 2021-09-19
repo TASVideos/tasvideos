@@ -26,7 +26,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					t.TopicStatus,
 					Author = t.PosterId > 0 ? t.Poster!.UserName : "Unknown",
 					PollId = t.Poll != null ? t.Poll.Id : (int?)null,
-					PageName = t.SubmissionId > 0 ? "InternalSystem/SubmissionContent/S" + t.SubmissionId : null
+					t.SubmissionId
 				})
 				.ToList();
 
@@ -46,7 +46,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					Type = (ForumTopicType)t.Type,
 					PollId = t.PollId,
 					IsLocked = t.TopicStatus == 1,
-					PageName = t.PageName
+					SubmissionId = t.SubmissionId
 				})
 				.ToList();
 
@@ -63,7 +63,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 				nameof(ForumTopic.Type),
 				nameof(ForumTopic.PollId),
 				nameof(ForumTopic.IsLocked),
-				nameof(ForumTopic.PageName)
+				nameof(ForumTopic.SubmissionId)
 			};
 
 			topics.BulkInsert(columns, nameof(ApplicationDbContext.ForumTopics));
