@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles
@@ -76,7 +77,7 @@ namespace TASVideos.Pages.UserFiles
 
 			if (file.Hidden)
 			{
-				if (!User.IsLoggedIn() || file.AuthorId != User.GetUserId())
+				if (!User.IsLoggedIn() || (file.AuthorId != User.GetUserId() && !User.Has(PermissionTo.EditUserFiles)))
 				{
 					return NotFound();
 				}
@@ -86,9 +87,17 @@ namespace TASVideos.Pages.UserFiles
 
 			await _db.TrySaveChangesAsync();
 
-			var stream = new GZipStream(
-				new MemoryStream(file.Content),
-				CompressionMode.Decompress);
+			Stream stream;
+			if (file.CompressionType == Compression.Gzip)
+			{
+				stream = new GZipStream(
+					new MemoryStream(file.Content),
+					CompressionMode.Decompress);
+			}
+			else
+			{
+				stream = new MemoryStream(file.Content);
+			}
 
 			return new FileStreamResult(stream, "application/x-" + file.Type)
 			{
