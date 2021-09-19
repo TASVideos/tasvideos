@@ -36,7 +36,7 @@ namespace TASVideos.Core.Tests.Services
 			_db.ForumTopics.Add(new ForumTopic
 			{
 				Title = "Title",
-				PageName = LinkConstants.SubmissionWikiPage + SubmissionId
+				SubmissionId = SubmissionId
 			});
 			await _db.SaveChangesAsync();
 
@@ -60,7 +60,7 @@ namespace TASVideos.Core.Tests.Services
 			{
 				CreateTimestamp = DateTime.Now.AddYears(-1),
 				Title = "Title",
-				PageName = LinkConstants.SubmissionWikiPage + SubmissionId
+				SubmissionId = SubmissionId
 			});
 			await _db.SaveChangesAsync();
 
