@@ -107,12 +107,14 @@ namespace TASVideos.Legacy
 			}
 		}
 
-		private static void Run(string name, Action import)
+		private void Run(string name, Action import)
 		{
 			var stopwatch = Stopwatch.StartNew();
 			try
 			{
+				_logger.LogInformation($"Beginning {name} import");
 				import();
+				_logger.LogInformation($"Finished {name} import");
 			}
 			catch (Exception ex)
 			{
