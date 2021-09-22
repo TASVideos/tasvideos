@@ -243,36 +243,35 @@ article.wiki table {
 #banner {
 	background: $banner;
 
-
-	@media (min-width: 768px) {
-		#mantra {
-			margin-left: 3.5rem;
-		}
-	}
-
-	#mantra {
-		font-weight: bold;
-		font-family: Verdana;
-		z-index: 1;
-		color: $light;
-
-		#brand {
-			color: $light;
-			font-size: 17px;
-			font-family: helvetica,arial,sans-serif;
-		}
-
-		&-1 {
-			font-size: 10px;
-		}
-
-		&-2 {
-			font-size: 9px;
-		}
-	}
-
 	.navbar-toggler, .navbar-collapse {
 		z-index: 1;
+	}
+}
+
+#brand {
+	color: $light;
+	font-size: 17px;
+	font-family: helvetica,arial,sans-serif;
+}
+
+#mantra {
+	font-weight: bold;
+	font-family: Verdana;
+	z-index: 1;
+	color: $light;
+
+	&-1 {
+		font-size: 10px;
+	}
+
+	&-2 {
+		font-size: 9px;
+	}
+}
+
+@media (min-width: 768px) {
+	#mantra {
+		margin-left: 3.5rem;
 	}
 }
 
