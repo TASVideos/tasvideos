@@ -88,38 +88,54 @@ NodeList.prototype.toArray = function () {
 	return Array.prototype.slice.call(this);
 };
 
-function loadDarkMode() {
+function forceDarkMode() {
+	removeAutoDarkMode();
+
 	var newElement = document.createElement('link');
 	newElement.rel = "stylesheet";
 	newElement.id = "style-dark";
 	newElement.href = "/css/darkmode.css";
 	document.head.appendChild(newElement);
+
+	localStorage.setItem("style-dark", "true");
 }
 
-function toggleDarkMode() {
+function forceLightMode() {
+	removeForcedDarkMode();
+	removeAutoDarkMode();
+
+	localStorage.setItem("style-dark", "false");
+}
+
+function autoDarkMode () {
+	removeForcedDarkMode();
+
+	var newElement = document.createElement('link');
+	newElement.rel = "stylesheet";
+	newElement.id = "style-dark-initial";
+	newElement.href = "/css/darkmode-initial.css";
+	document.head.appendChild(newElement);
+
+	localStorage.removeItem("style-dark");
+}
+
+function removeForcedDarkMode() {
+	let DarkModeStylesheet = document.getElementById("style-dark");
+	if (DarkModeStylesheet) {
+		DarkModeStylesheet.parentElement.removeChild(DarkModeStylesheet);
+	}
+}
+
+function removeAutoDarkMode () {
 	let initialDarkModeStylesheet = document.getElementById("style-dark-initial");
 	if (initialDarkModeStylesheet) {
 		initialDarkModeStylesheet.parentElement.removeChild(initialDarkModeStylesheet);
-		let userHasSystemDarkTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-		if (!userHasSystemDarkTheme) {
-			loadDarkMode();
-		}
-		localStorage.setItem("style-dark", !userHasSystemDarkTheme);
-	} else {
-		let darkModeStylesheet = document.getElementById("style-dark");
-		if (darkModeStylesheet) {
-			darkModeStylesheet.parentElement.removeChild(darkModeStylesheet);
-		} else {
-			loadDarkMode();
-		}
-		localStorage.setItem("style-dark", !darkModeStylesheet);
 	}
 }
 
 if (localStorage.getItem("style-dark") !== null) {
-	let initialDarkModeStylesheet = document.getElementById("style-dark-initial");
-	initialDarkModeStylesheet.parentElement.removeChild(initialDarkModeStylesheet);
+	removeAutoDarkMode();
 	if (localStorage.getItem("style-dark") === "true") {
-		loadDarkMode();
+		forceDarkMode();
 	}
 }
