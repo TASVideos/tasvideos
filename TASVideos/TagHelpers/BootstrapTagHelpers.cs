@@ -78,22 +78,22 @@ namespace TASVideos.TagHelpers
 
 		private void Validate()
 		{
-			if (Xs.HasValue && (Xs < 1 || Xs > 12))
+			if (Xs is < 1 or > 12)
 			{
 				throw new ArgumentException($"{nameof(Xs)} must be in the range of 1-12");
 			}
 
-			if (Sm.HasValue && (Sm < 1 || Sm > 12))
+			if (Sm is < 1 or > 12)
 			{
 				throw new ArgumentException($"{nameof(Sm)} must be in the range of 1-12");
 			}
 
-			if (Xs.HasValue && (Md < 1 || Md > 12))
+			if (Md is < 1 or > 12)
 			{
 				throw new ArgumentException($"{nameof(Md)} must be in the range of 1-12");
 			}
 
-			if (Xs.HasValue && (Lg < 1 || Lg > 12))
+			if (Lg is < 1 or > 12)
 			{
 				throw new ArgumentException($"{nameof(Lg)} must be in the range of 1-12");
 			}
