@@ -45,4 +45,10 @@
 		<a class="dropdown-item" href="/System">System Pages</a>
 		<a permission="SeeDeletedWikiPages" asp-page="/Wiki/DeletedPages" class="dropdown-item">Deleted Pages</a>
 	</nav-dropdown>
+	<nav-dropdown activate='<i class="fa fa-adjust"></i>'>
+		<button class="dropdown-item" onclick="forceDarkMode()"><i class="fa fa-moon-o"></i> Dark</button>
+		<button class="dropdown-item" onclick="forceLightMode()"><i class="fa fa-sun-o"></i> Light</button>
+		<button class="dropdown-item" onclick="autoDarkMode()">Auto</button>
+	</nav-dropdown>
+	
 </navbar>
