@@ -161,7 +161,7 @@ namespace TASVideos.TagHelpers
 			{
 				output.AddCssClass("alert-dismissible");
 				output.Content.SetHtmlContent(
-$@"<button type=""button"" class=""btn-close float-end"" data-dismiss=""alert"" aria-label=""close""></button>
+$@"<button type=""button"" class=""btn-close float-end"" data-bs-dismiss=""alert"" aria-label=""close""></button>
 {content}");
 			}
 		}
