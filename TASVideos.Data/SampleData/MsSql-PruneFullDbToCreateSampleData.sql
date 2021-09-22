@@ -118,6 +118,12 @@ INSERT INTO @Submissions
 	FROM Submissions s
 	JOIN @Publications p on s.Id = p.SubmissionId
 
+UPDATE f
+	SET SubmissionId = null
+	FROM ForumTopics f
+	LEFT JOIN @Submissions isu on f.SubmissionId = isu.Id
+	WHERE isu.ID IS NULL
+
 DELETE s
 	FROM Submissions s
 	LEFT JOIN @Submissions isu ON s.Id = isu.Id
@@ -227,6 +233,12 @@ DELETE p
 FROM ForumPosts p
 LEFT JOIN @Posts iposts on p.Id = iposts.Id
 WHERE iposts.Id IS NULL
+
+UPDATE
+Submissions
+SET TopicId = NULL
+FROM Submissions
+JOIN @Topics t ON  Submissions.TopicId = t.Id
 
 DELETE t
 FROM ForumTopics t
