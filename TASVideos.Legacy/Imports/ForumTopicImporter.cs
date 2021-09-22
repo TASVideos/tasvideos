@@ -26,7 +26,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 					t.TopicStatus,
 					Author = t.PosterId > 0 ? t.Poster!.UserName : "Unknown",
 					PollId = t.Poll != null ? t.Poll.Id : (int?)null,
-					t.SubmissionId
+					SubmissionId = t.SubmissionId > 0 ? t.SubmissionId : (int?)null
 				})
 				.ToList();
 

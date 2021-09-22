@@ -351,7 +351,7 @@ namespace TASVideos.Data
 
 				entity.HasOne(p => p.Topic)
 					.WithOne(t => t!.Submission!)
-					.HasForeignKey<ForumTopic>(t => t.PollId);
+					.HasForeignKey<ForumTopic>(t => t.SubmissionId);
 			});
 
 			builder.Entity<UserFile>(entity =>
