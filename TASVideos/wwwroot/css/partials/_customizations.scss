@@ -45,28 +45,29 @@ body {
 	overflow-x: auto;
 }
 
-/* Wiki Tables */
-article.wiki table {
-	width: 100%;
-	margin-bottom: 1rem;
-	color: var(--bs-dark);
-	border-collapse: collapse;
+/* Wiki and Forum Tables */
+article.wiki , .postbody {
+	table {
+		width: 100%;
+		margin-bottom: 1rem;
+		color: var(--bs-dark);
+		border-collapse: collapse;
 
-	th, td {
-		padding: 0.3rem;
-		vertical-align: top;
-		border: 1px solid var(--bs-gray-600);
-	}
+		th, td {
+			padding: 0.3rem;
+			vertical-align: top;
+			border: 1px solid var(--bs-gray-600);
+		}
 
-	tbody th {
-		background-color: rgba(var(--bs-black-rgb), 0.05);
-	}
+		tbody th {
+			background-color: rgba(var(--bs-black-rgb), 0.05);
+		}
 
-	tbody + tbody {
-		border-top: 2px solid #dee2e6;
+		tbody + tbody {
+			border-top: 2px solid #dee2e6;
+		}
 	}
 }
-
 .wiki {
 	h1 {
 		margin-left: 0;
@@ -82,30 +83,6 @@ article.wiki table {
 		font-family: courier,"courier new",monospace;
 	}
 }
-
-/* Forum Tables */
-.postbody table {
-	width: 100%;
-	margin-bottom: 1rem;
-	color: var(--bs-dark);
-	border-collapse: collapse;
-}
-
-.postbody th, td {
-		padding: 0.3rem;
-		vertical-align: top;
-		border: 1px solid var(--bs-gray-600);
-}
-
-.postbody tbody th {
-		background-color: rgba(var(--bs-black-rgb), 0.05);
-}
-
-.postbody tbody + tbody {
-		border-top: 2px solid #dee2e6;
-}
-
-
 
 .module-error {
 	color: var(--bs-danger);
