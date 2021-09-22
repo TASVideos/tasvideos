@@ -120,7 +120,13 @@ INSERT INTO _submissions
 	SELECT s.id, s.wiki_content_id
 	FROM public.submissions s
 	JOIN _publications p on s.id = p.submission_id;
-	
+
+UPDATE forum_topics
+	SET submission_id = null
+	FROM forum_topics f
+	LEFT JOIN _submissions isu on f.submission_id = isu.id
+	WHERE isu.id IS NULL;
+
 DELETE
 FROM public.submissions s
 WHERE s.id NOT IN (SELECT id from _submissions);
