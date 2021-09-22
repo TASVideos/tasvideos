@@ -239,6 +239,8 @@ LEFT JOIN @Polls ip on p.Id = ip.Id
 WHERE ip.ID IS NULL
 
 -- Delete Users who have not contributed to any current data, and have no roles
+DELETE FROM UserMaintenanceLogs
+
 DECLARE @ActiveUsers As Table (Id int primary key)
 INSERT INTO @ActiveUsers
 	SELECT u.Id

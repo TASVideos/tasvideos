@@ -233,6 +233,7 @@ FROM public.forum_polls p
 WHERE p.id NOT IN (SELECT id from _polls);
 
 -- Delete Users who have not contributed to any current data, and have no roles
+TRUNCATE TABLE user_maintenance_logs;
 DROP TABLE IF EXISTS _active_users;
 CREATE TEMPORARY TABLE _active_users (id int primary key);
 INSERT INTO _active_users
