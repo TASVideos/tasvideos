@@ -9,7 +9,7 @@
 					   title="Link to this post"
 					   class="float-start text-decoration-none text-dark">
 						<i class="fa fa-bookmark-o"></i>
-						Posted: <timezone-convert asp-for="@Model.CreateTimestamp" />
+						Posted: <timezone-convert asp-for="@Model.CreateTimestamp" relative-time="true" />
 					</a>
 				</small>
 			</div>
