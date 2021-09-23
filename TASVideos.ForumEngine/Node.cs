@@ -396,7 +396,11 @@ namespace TASVideos.ForumEngine
 
 								for (var i = 0; i < parsedQuery.Count; i++)
 								{
-									pp.QueryParams[parsedQuery.Keys[i]!] = parsedQuery.GetValues(i)![0];
+									var key = parsedQuery.Keys[i];
+									if (key != null)
+									{
+										pp.QueryParams[key] = parsedQuery.GetValues(i)![0];
+									}
 								}
 							}
 
