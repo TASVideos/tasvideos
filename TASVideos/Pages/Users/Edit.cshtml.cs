@@ -48,7 +48,7 @@ namespace TASVideos.Pages.Users
 		{
 			if (User.GetUserId() == Id)
 			{
-				return BasePageRedirect("/Profile/Settings");
+				return RedirectToPage("/Profile/Settings");
 			}
 
 			UserToEdit = await _mapper.ProjectTo<UserEditModel>(
