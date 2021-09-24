@@ -1,0 +1,17 @@
+﻿@using System.Globalization
+@model TASVideos.Pages.RssFeeds.Models.RssSubmission
+@{
+	var baseUrl = ViewData["BaseUrl"];
+	var subUrl = $"{baseUrl}/{Model.Id}S";
+}
+<item>
+	<title>@Model.Title</title>
+	<link>@subUrl</link>
+	<description>
+		<wiki-markup markup=@Model.Wiki.Markup page-data=@Model.Wiki></wiki-markup>
+	</description>
+	<comments condition="@Model.TopicId.HasValue">@(baseUrl)/Forum/Topics/@Model.TopicId</comments>
+	<enclosure url="@(subUrl)?handler=Download" />
+	<guid>@subUrl</guid>
+	<pubDate>@Model.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
+</item>

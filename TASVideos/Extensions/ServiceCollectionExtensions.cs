@@ -109,6 +109,9 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
 					options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
 					options.Conventions.AddPageRoute("/RamAddresses/List", "Addresses-List");
+
+					options.Conventions.AddPageRoute("/RssFeeds/Publications", "/publications.rss");
+					options.Conventions.AddPageRoute("/RssFeeds/Submissions", "/submissions.rss");
 				})
 				.AddRazorRuntimeCompilation();
 

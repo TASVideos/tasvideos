@@ -1,0 +1,26 @@
+﻿@using System.Globalization
+@model (string Title, string Link)
+@{
+	var baseUrl = ViewData["BaseUrl"];
+}
+<title>@Model.Title</title>
+<link>@(baseUrl)/@Model.Link</link>
+<description>The TASVideos site is a place for movies of various console games being played extraordinarily using an emulator as a tool to get over humanly limits such as "skill" and "reaction".</description>
+<language>en</language>
+<copyright>(C) TASVideos and its authors</copyright>
+<managingEditor>adelikat@tasvideos.org (adelikat)</managingEditor>
+<webMaster>adelikat@tasvideos.org (adelikat)</webMaster>
+<pubDate>@DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture)</pubDate>
+<lastBuildDate>@DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture)</lastBuildDate>
+<category>Emulators</category>
+<category>Console games</category>
+<category>Game movies</category>
+<category>Video games</category>
+<generator>TASVideos RSS Generator</generator>
+<docs>http://www.rssboard.org/rss-specification</docs>
+<ttl>60</ttl>
+<image>
+	<title>@Model.Title</title>
+	<link>@(baseUrl)/NewMovies.html</link>
+	<url>@(baseUrl)/images/tasvideos_rss.png</url>
+</image>

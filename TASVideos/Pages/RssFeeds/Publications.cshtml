@@ -1,0 +1,20 @@
+﻿@page
+@model PublicationsModel
+@using System.Globalization
+@{
+	Layout = null;
+	ViewData["BaseUrl"] = Model.BaseUrl;
+	string title = "TASVideos Publications";
+	string link = "NewMovies";
+}
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+	<channel>
+		<partial model="@((title, link))" name="_RssChannel" />
+		<atom:link href="@(Model.BaseUrl)/publications.rss" rel="self" type="application/rss+xml" xmlns="atom" />
+		@foreach (var pub in Model.Publications)
+		{
+			<partial model="pub" name="_RssPublication"/>
+		}
+	</channel>
+</rss>
