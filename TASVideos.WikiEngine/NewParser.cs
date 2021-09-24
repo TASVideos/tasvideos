@@ -951,7 +951,7 @@ namespace TASVideos.WikiEngine
 				e => Builtins.MakeToc(n, e.CharStart));
 		}
 
-		private static readonly Regex AllowedIdChars = new("[^a-zA-Z0-9 ]+");
+		private static readonly Regex AllowedIdChars = new ("[^a-zA-Z0-9 ]+");
 
 		private static void AddIdsToHeadings(IEnumerable<INode> n)
 		{
@@ -961,8 +961,9 @@ namespace TASVideos.WikiEngine
 				{
 					yield return string.Join("", words.Skip(1));
 				}
+
 				yield return string.Join("", words);
-				for (var i = 2;; i++)
+				for (var i = 2; ; i++)
 				{
 					yield return string.Join("", words) + "_" + i;
 				}
