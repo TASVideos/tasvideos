@@ -87,6 +87,11 @@ body, div { margin:0; padding:0; overflow:hidden; }
 width=$$w$$ height=$$h$$ frameborder=0></iframe>
 ";
 
+		private static readonly string ArchiveOrg =
+@"<iframe src=""https://archive.org/embed/$$id$$""
+width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullscreen=true allowfullscreen></iframe>
+";
+
 		public static void Write(TextWriter w, VideoParameters pp)
 		{
 			int width = pp.Width ?? 480;
@@ -143,7 +148,12 @@ width=$$w$$ height=$$h$$ frameborder=0></iframe>
 						DoTemplate(sw, NicoVideoDocument, width, height, vid);
 						DoTemplate(w, NicoVideo, width, height, Convert.ToBase64String(Encoding.UTF8.GetBytes(sw.ToString())));
 					}
-
+					break;
+				case "archive.org": // https://archive.org/download/megamanpc-tas-1_48_083/megamanpc-tas-1_48_083-soundhack.mp4
+					if (pp.Path.StartsWith("/download/") && pp.Path.Length > 10)
+					{
+						DoTemplate(w, ArchiveOrg, width, height, pp.Path.Split("/")[2]);
+					}
 					break;
 			}
 		}
