@@ -1,7 +1,7 @@
 ﻿@model MiniMovieModel
 
-<div condition="Model != null" style="max-height: 440px; overflow-y: auto">
-	<div class="card">
+<div condition="Model != null">
+	<div class="card minimovie">
 		<div class="card-header bg-cardprimary">
 			<h5><span class="float-end badge bg-info text-dark m-1">Featured</span></h5>
             <h4><pub-link id="Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></pub-link></h4>
@@ -17,6 +17,14 @@
 			@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 		</div>
 	</div>
+	<style>
+		@@media (min-width: 768px) {
+			.minimovie {
+				max-height: 440px;
+				overflow-y: auto
+			}
+		}
+	</style>
 </div>
 
 
