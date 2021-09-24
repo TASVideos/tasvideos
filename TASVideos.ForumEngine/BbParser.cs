@@ -12,7 +12,7 @@ namespace TASVideos.ForumEngine
 				[^\p{C}\[\]=\/]+
 			)
 			# Optional attribute value
-			(=
+			([= ]
 				(
 					(
 						(?'open'\[)
