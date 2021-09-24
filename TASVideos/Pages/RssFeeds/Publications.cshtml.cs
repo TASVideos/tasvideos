@@ -12,6 +12,7 @@ using TASVideos.Pages.RssFeeds.Models;
 
 namespace TASVideos.Pages.RssFeeds
 {
+	[ResponseCache(Duration = 1200)]
 	public class PublicationsModel : PageModel
 	{
 		private readonly ApplicationDbContext _db;
