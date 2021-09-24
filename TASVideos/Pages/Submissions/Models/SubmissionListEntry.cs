@@ -14,7 +14,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? System { get; set; }
 
 		[Sortable]
-		[Display(Name = "Title")]
+		[Display(Name = "Game")]
 		public string? GameName { get; set; }
 
 		[Sortable]
@@ -23,11 +23,11 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Time")]
 		public TimeSpan Time => this.Time();
 
-		[Display(Name = "Author")]
+		[Display(Name = "By")]
 		public string Author { get; set; } = "";
 
 		[Sortable]
-		[Display(Name = "Submitted")]
+		[Display(Name = "Date")]
 		public DateTime Submitted { get; set; }
 
 		[Sortable]
