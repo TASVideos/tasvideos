@@ -27,6 +27,7 @@ namespace TASVideos.TagHelpers
 
 		public bool DateOnly { get; set; }
 		public bool RelativeTime { get; set; } = true;
+		public bool InLine { get; set; }
 
 		public DateTime ConvertedDateTime => (DateTime)AspFor.Model;
 
@@ -80,6 +81,10 @@ namespace TASVideos.TagHelpers
 				dateStr = DateOnly
 					? dateTime.ToShortDateString()
 					: dateTime.ToString("g");
+				if (InLine)
+				{
+					dateStr = "on " + dateStr;
+				}
 			}
 
 			output.TagName = "span";

@@ -34,7 +34,7 @@
 						<a asp-page="Info" asp-route-id="@file.Id">@file.FileName</a>
 						<br />
 						<small class="ms-3">
-							by <profile-link username="@file.Author"></profile-link> on <timezone-convert asp-for="@file.UploadTimestamp" />
+							by <profile-link username="@file.Author"></profile-link> <timezone-convert asp-for="@file.UploadTimestamp" in-line="true" />
 						</small>
 					</div>
 				}
