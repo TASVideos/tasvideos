@@ -950,7 +950,7 @@ namespace TASVideos.WikiEngine
 		{
 			NodeUtils.Replace(
 				n,
-				e => e.Type == NodeType.Element && (((Element)e).Tag == "htabs" || ((Element)e).Tag == "vtabs"),
+				e => e.Type == NodeType.Element && ((Element)e).Tag is "htabs" or "vtabs",
 				e => Builtins.MakeTabs((Element)e));
 		}
 

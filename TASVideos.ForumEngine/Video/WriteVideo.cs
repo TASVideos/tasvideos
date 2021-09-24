@@ -150,12 +150,14 @@ width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullsc
 						DoTemplate(sw, NicoVideoDocument, width, height, vid);
 						DoTemplate(w, NicoVideo, width, height, Convert.ToBase64String(Encoding.UTF8.GetBytes(sw.ToString())));
 					}
+
 					break;
 				case "archive.org": // https://archive.org/download/megamanpc-tas-1_48_083/megamanpc-tas-1_48_083-soundhack.mp4
 					if (pp.Path.StartsWith("/download/") && pp.Path.Length > 10)
 					{
 						DoTemplate(w, ArchiveOrg, width, height, pp.Path.Split("/")[2]);
 					}
+
 					break;
 			}
 		}
