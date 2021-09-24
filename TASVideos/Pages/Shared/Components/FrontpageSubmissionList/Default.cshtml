@@ -16,7 +16,7 @@
 				<td>@item.Branch</td>
 				<td>@(item.Time.ToStringWithOptionalDaysAndHours())</td>
 				<td>@item.Author</td>
-				<td><timezone-convert asp-for="@item.Submitted" date-only="true" relative-time="true" /></td>
+				<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>
 				<td>@item.Status.EnumDisplayName()</td>
 			</tr>
 		}

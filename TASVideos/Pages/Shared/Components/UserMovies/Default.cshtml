@@ -11,7 +11,7 @@
 		@foreach (var item in Model)
 		{
 			<tr>
-				<td><timezone-convert asp-for="@item.UploadTimestamp" date-only="true" relative-time="true" /></td>
+				<td><timezone-convert asp-for="@item.UploadTimestamp" date-only="true" /></td>
 				<td>@item.Author</td>
 				<td><a asp-page="/Userfiles/Info" asp-route-id="@item.Id">@item.FileName</a></td>
 				<td>@item.Title</td>

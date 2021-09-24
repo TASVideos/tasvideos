@@ -26,7 +26,7 @@ namespace TASVideos.TagHelpers
 		public ModelExpression AspFor { get; set; } = null!;
 
 		public bool DateOnly { get; set; }
-		public bool RelativeTime { get; set; }
+		public bool RelativeTime { get; set; } = true;
 
 		public DateTime ConvertedDateTime => (DateTime)AspFor.Model;
 
@@ -60,7 +60,7 @@ namespace TASVideos.TagHelpers
 			}
 			else
 			{
-				output.Attributes.Add("title", dateTime.ToString());
+				output.Attributes.Add("title", dateTime.ToString() + " UTC");
 			}
 
 			string dateStr;
@@ -68,7 +68,7 @@ namespace TASVideos.TagHelpers
 			TimeSpan? relativeTime = null;
 			if (RelativeTime)
 			{
-				relativeTime = DateTime.Now - dateTime;
+				relativeTime = DateTime.UtcNow - ConvertedDateTime;
 			}
 
 			if (relativeTime?.Days < 30)
