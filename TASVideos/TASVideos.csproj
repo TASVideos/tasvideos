@@ -89,6 +89,15 @@
 		<Content Update="Pages\Publications\AdditionalMovies.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
+		<Content Update="Pages\RssFeeds\_RssChannel.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Pages\RssFeeds\_RssSubmission.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Pages\RssFeeds\_RssPublication.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
 		<Content Update="Pages\Shared\Components\FirstEditionTas\Default.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
