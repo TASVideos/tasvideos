@@ -97,7 +97,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditPublicationFiles,
 			PermissionTo.EditUserFiles,
 			PermissionTo.ViewPrivateUserData,
-			PermissionTo.BanIpAddresses
+			PermissionTo.BanIpAddresses,
+			PermissionTo.SeePrivateRatings
 		}).ToArray();
 
 		private static readonly PermissionTo[] ExperiencedForumUserPermissions =
