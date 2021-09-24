@@ -46,5 +46,41 @@ namespace TASVideos.Common
 
 			return timeSpan.ToString(@"mm\:ss\.ff");
 		}
+
+		public static string ToRelativeString(this TimeSpan relativeTime)
+		{
+			if (relativeTime.TotalSeconds < 5)
+			{
+				return "Now";
+			}
+			else if (relativeTime.TotalSeconds < 60)
+			{
+				return $"{relativeTime.Seconds} seconds ago";
+			}
+			else if (relativeTime.TotalMinutes < 2)
+			{
+				return "1 minute ago";
+			}
+			else if (relativeTime.TotalMinutes < 60)
+			{
+				return $"{relativeTime.Minutes} minutes ago";
+			}
+			else if (relativeTime.TotalHours < 2)
+			{
+				return "1 hour ago";
+			}
+			else if (relativeTime.TotalHours < 24)
+			{
+				return $"{relativeTime.Hours} hours ago";
+			}
+			else if (relativeTime.TotalDays < 2)
+			{
+				return "1 day ago";
+			}
+			else
+			{
+				return $"{relativeTime.Days} days ago";
+			}
+		}
 	}
 }
