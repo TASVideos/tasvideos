@@ -59,6 +59,26 @@ namespace TASVideos.Core.Tests.Services
 		}
 
 		[TestMethod]
+		public void PlayerPoints_NegativeRating()
+		{
+			var publications = new[]
+			{
+				new PointsCalculator.Publication
+				{
+					AverageRating = -100,
+					RatingCount = 6,
+					TierWeight = 0.75,
+					Obsolete = false,
+					AuthorCount = 1
+				}
+			};
+
+			var expected = PlayerPointConstants.MinimumPlayerPointsForPublication;
+			var actual = PointsCalculator.PlayerPoints(publications, AverageRatingsPerMovie);
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
 		[DataRow(-1, "")]
 		[DataRow(0, "")]
 		[DataRow(0.0001, PlayerRanks.FormerPlayer)]
