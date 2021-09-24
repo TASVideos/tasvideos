@@ -45,9 +45,10 @@ namespace TASVideos.Core.Services
 
 		internal static double PlayerPointsForMovie(Publication publication, double averageRatingCount)
 		{
+			averageRatingCount = Math.Max(averageRatingCount, 0);
 			var exp = RatingExponent(publication.RatingCount, averageRatingCount);
 
-			var rawPoints = Math.Pow(publication.AverageRating, exp);
+			var rawPoints = Math.Pow(Math.Max(publication.AverageRating, 0), exp);
 			var authorMultiplier = Math.Pow(publication.AuthorCount, -0.5);
 			var actual = rawPoints * authorMultiplier * publication.TierWeight;
 
