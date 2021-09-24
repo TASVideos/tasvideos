@@ -461,7 +461,7 @@ namespace TASVideos.Data
 
 					if (trackable.LastUpdateTimestamp.Year == 1)
 					{
-						trackable.LastUpdateTimestamp = DateTime.UtcNow;
+						trackable.LastUpdateTimestamp = trackable.CreateTimestamp;
 					}
 
 					if (string.IsNullOrWhiteSpace(trackable.LastUpdateUserName))

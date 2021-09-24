@@ -97,6 +97,7 @@ namespace TASVideos.Pages.Forum.Topics
 					EnableBbCode = p.EnableBbCode,
 					PosterId = p.PosterId,
 					CreateTimestamp = p.CreateTimestamp,
+					LastUpdateTimestamp = p.LastUpdateTimestamp,
 					PosterName = p.Poster!.UserName,
 					PosterAvatar = p.Poster.Avatar,
 					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,

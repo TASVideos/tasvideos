@@ -46,6 +46,7 @@ namespace TASVideos.Pages.Forum.Posts
 				{
 					Id = p.Id,
 					CreateTimestamp = p.CreateTimestamp,
+					LastUpdateTimestamp = p.LastUpdateTimestamp,
 					EnableBbCode = p.EnableBbCode,
 					EnableHtml = p.EnableHtml,
 					Text = p.Text,

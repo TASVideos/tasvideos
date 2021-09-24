@@ -32,6 +32,7 @@ namespace TASVideos.Pages.Forum.Posts.Models
 
 		[Sortable]
 		public DateTime CreateTimestamp { get; set; }
+		public DateTime LastUpdateTimestamp { get; set; }
 
 		public bool IsLastPost { get; set; }
 		public bool IsEditable { get; set; }
