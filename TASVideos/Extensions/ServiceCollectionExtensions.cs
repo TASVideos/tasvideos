@@ -112,6 +112,7 @@ namespace TASVideos.Extensions
 
 					options.Conventions.AddPageRoute("/RssFeeds/Publications", "/publications.rss");
 					options.Conventions.AddPageRoute("/RssFeeds/Submissions", "/submissions.rss");
+					options.Conventions.AddPageRoute("/RssFeeds/Wiki", "/wiki.rss");
 				})
 				.AddRazorRuntimeCompilation();
 
