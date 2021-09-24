@@ -1,0 +1,15 @@
+﻿@model TASVideos.Pages.RssFeeds.Models.RssNews
+@{
+	var baseUrl = ViewData["BaseUrl"];
+	var postUrl = $"{baseUrl}/forum/p/{Model.PostId}#{Model.PostId}";
+}
+<item>
+	<title>@Model.Subject</title>
+	<link>@postUrl</link>
+	<description>
+		<forum-markup markup="@Model.Text" enable-html="@Model.EnableHtml" enable-bb-code="@Model.EnableBbCode"></forum-markup>
+	</description>
+	<comments>@postUrl</comments>
+	<guid>@postUrl</guid>
+	<pubDate>@Model.PubDate</pubDate>
+</item>

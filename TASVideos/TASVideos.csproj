@@ -92,6 +92,9 @@
 		<Content Update="Pages\RssFeeds\_RssChannel.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
+		<Content Update="Pages\RssFeeds\_RssNews.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
 		<Content Update="Pages\RssFeeds\_RssWiki.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
