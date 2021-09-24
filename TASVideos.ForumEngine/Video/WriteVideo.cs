@@ -152,10 +152,13 @@ width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullsc
 					}
 
 					break;
-				case "archive.org": // https://archive.org/download/megamanpc-tas-1_48_083/megamanpc-tas-1_48_083-soundhack.mp4
-					if (pp.Path.StartsWith("/download/") && pp.Path.Length > 10)
+				case "archive.org":
+					if (pp.Path.StartsWith("/download/") // https://archive.org/download/megamanpc-tas-1_48_083/megamanpc-tas-1_48_083-soundhack.mp4
+						|| pp.Path.StartsWith("/details/")) // https://archive.org/details/popeye_taxi-turvey
 					{
-						DoTemplate(w, ArchiveOrg, width, height, pp.Path.Split("/")[2]);
+						var vid = pp.Path.Split("/")[2];
+						if (vid.Length > 0)
+							DoTemplate(w, ArchiveOrg, width, height, pp.Path.Split("/")[2]);
 					}
 
 					break;
