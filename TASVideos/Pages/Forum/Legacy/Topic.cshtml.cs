@@ -45,8 +45,8 @@ namespace TASVideos.Pages.Forum.Legacy
 					new
 					{
 						Id = model.TopicId,
-						Highlight = P,
-						CurrentPage = model.Page
+						CurrentPage = model.Page,
+						Highlight = P
 					});
 			}
 

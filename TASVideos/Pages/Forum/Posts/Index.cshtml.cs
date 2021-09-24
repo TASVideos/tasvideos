@@ -32,8 +32,8 @@ namespace TASVideos.Pages.Forum.Posts
 				new
 				{
 					Id = model.TopicId,
-					Highlight = Id,
-					CurrentPage = model.Page
+					CurrentPage = model.Page,
+					Highlight = Id
 				});
 		}
 	}
