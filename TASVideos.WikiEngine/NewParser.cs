@@ -633,6 +633,17 @@ namespace TASVideos.WikiEngine
 				AddText('\n');
 				SwitchToLine();
 			}
+			else if (Eat('!'))
+			{
+				if ((url = Eat(Url)) != null)
+				{
+					AddText(url);
+				}
+				else
+				{
+					AddText('!');
+				}
+			}
 			else if ((url = Eat(Url)) != null)
 			{
 				AddNonChild(Builtins.MakeLink(_index - url.Length, _index, url, new Text(_index - url.Length, url) { CharEnd = _index }));
