@@ -63,7 +63,8 @@ namespace TASVideos.Legacy.Imports
 							ImportHelper.ConvertLatin1String(p.Text!
 								.Replace(":1:" + p.BbCodeUid, "")
 								.Replace(":" + p.BbCodeUid, "")
-								.Replace("[/list:u]", "[/list]")) ?? "");
+								.Replace("[/list:u]", "[/list]")
+								.Replace("[/list:o]", "[/list]")) ?? "");
 
 						enableHtml = p.EnableHtml && BbParser.ContainsHtml(fixedText, p.EnableBbCode);
 					}
