@@ -9,7 +9,7 @@
 					   asp-page="/Messages/Create"
 					   asp-route-defaultToUser="@Model.UserName"
 					   class="btn btn-secondary btn-sm">
-						<i class="fa fa-quote-right"></i> PM
+						<i class="fa fa-envelope"></i> PM
 					</a>
 					<a permission="EditUsers"
 					   asp-page="/Users/Edit"
@@ -122,7 +122,7 @@
 		</card>
 	</div>
 	<div class="col-md-6">
-		<card class="text-end">
+		<card class="text-start text-md-end">
 			<cardheader><h4>Publications</h4></cardheader>
 			<cardbody>
 				<div condition="!Model.AnyPublications" class="card-text">
@@ -140,7 +140,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-end">
+		<card class="text-start text-md-end">
 			<cardheader><h4>Submissions</h4></cardheader>
 			<cardbody>
 				<div condition="Model.SubmissionCount == 0" class="card-text">
@@ -170,7 +170,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-end">
+		<card class="text-start text-md-end">
 			<cardheader><h4>Ratings</h4></cardheader>
 			<cardbody>
 				<a class="btn btn-warning btn-sm" a asp-page="/Users/Ratings" asp-route-userName="@Model.UserName">See Ratings</a>
@@ -188,7 +188,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-end" condition="Model.UserFiles.Total > 0">
+		<card class="text-start text-md-end" condition="Model.UserFiles.Total > 0">
 			<cardheader>
 				<h4>User Files</h4>
 			</cardheader>

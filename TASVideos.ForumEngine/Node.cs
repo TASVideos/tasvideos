@@ -264,6 +264,7 @@ namespace TASVideos.ForumEngine
 
 						w.Write(" src=");
 						Helpers.WriteAttributeValue(w, GetChildText());
+						w.Write(" class=\"mw-100\"");
 						w.Write('>');
 					}
 

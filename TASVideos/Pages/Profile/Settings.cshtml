@@ -42,7 +42,7 @@
 						<input id="@trueId" type="radio" value="True" asp-for="Settings.PublicRatings" /> Yes
 					</label>
 					<label for="@falseId" class="btn btn-secondary @(!Model.Settings.PublicRatings ? "active" : "")">
-						<input id="@falseId-false" type="radio" value="False" asp-for="Settings.PublicRatings" /> No
+						<input id="@falseId" type="radio" value="False" asp-for="Settings.PublicRatings" /> No
 					</label>
 				</div>
 			</form-group>

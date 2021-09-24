@@ -51,24 +51,26 @@ namespace TASVideos.ForumEngine
 src=""https://www.youtube.com/embed/$$id$$""
 frameborder=0
 allow=""accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture""
-allowfullscreen></iframe>
+allowfullscreen
+class=""mw-100""></iframe>
 ";
 		private static readonly string YouTubePlaylist =
 @"<iframe width=$$w$$ height=$$h$$
 src=""https://www.youtube.com/embed/videoseries?list=$$id$$""
 frameborder=0
 allow=""accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture""
-allowfullscreen></iframe>
+allowfullscreen
+class=""mw-100""></iframe>
 ";
 		private static readonly string DailyMotion =
 @"<iframe
 frameborder=0 width=$$w$$ height=$$h$$
-src=""https://www.dailymotion.com/embed/video/$$id$$"" allowfullscreen allow=autoplay></iframe>
+src=""https://www.dailymotion.com/embed/video/$$id$$"" allowfullscreen allow=autoplay class=""mw-100""></iframe>
 ";
 		private static readonly string Vimeo =
-@"<iframe src=""https://player.vimeo.com/video/49142543""
+@"<iframe src=""https://player.vimeo.com/video/$$id$$""
 width=$$w$$ height=$$h$$ frameborder=0
-allow=""autoplay; fullscreen"" allowfullscreen></iframe>
+allow=""autoplay; fullscreen"" allowfullscreen class=""mw-100""></iframe>
 ";
 
 		private static readonly string NicoVideoDocument =
@@ -84,7 +86,7 @@ body, div { margin:0; padding:0; overflow:hidden; }
 ";
 		private static readonly string NicoVideo =
 @"<iframe src=""data:text/html;base64,$$id$$""
-width=$$w$$ height=$$h$$ frameborder=0></iframe>
+width=$$w$$ height=$$h$$ frameborder=0 class=""mw-100""></iframe>
 ";
 
 		private static readonly string ArchiveOrg =
