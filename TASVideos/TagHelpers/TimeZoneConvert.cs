@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using TASVideos.Common;
 using TASVideos.Core.Services;
 
 namespace TASVideos.TagHelpers
@@ -25,6 +26,8 @@ namespace TASVideos.TagHelpers
 		public ModelExpression AspFor { get; set; } = null!;
 
 		public bool DateOnly { get; set; }
+		public bool RelativeTime { get; set; } = true;
+		public bool InLine { get; set; }
 
 		public DateTime ConvertedDateTime => (DateTime)AspFor.Model;
 
@@ -35,16 +38,13 @@ namespace TASVideos.TagHelpers
 			var user = await _userManager.GetUserAsync(_claimsPrincipal);
 
 			var dateTime = ConvertedDateTime;
-			if (DateOnly)
-			{
-				dateTime = dateTime.Date;
-			}
+			TimeZoneInfo? userTimeZone = null;
 
 			if (user is not null)
 			{
 				try
 				{
-					var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+					userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
 					dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
 				}
 				catch
@@ -54,9 +54,39 @@ namespace TASVideos.TagHelpers
 				}
 			}
 
-			var dateStr = DateOnly
-				? dateTime.ToShortDateString()
-				: dateTime.ToString("g", CultureInfo.CurrentCulture);
+			if (userTimeZone is not null)
+			{
+				var offset = userTimeZone.GetUtcOffset(dateTime);
+				output.Attributes.Add("title", dateTime.ToString() + " UTC" + (offset < TimeSpan.Zero ? "-" : "+") + offset.ToString(@"hh\:mm"));
+			}
+			else
+			{
+				output.Attributes.Add("title", dateTime.ToString() + " UTC");
+			}
+
+			string dateStr;
+
+			TimeSpan? relativeTime = null;
+			if (RelativeTime)
+			{
+				relativeTime = DateTime.UtcNow - ConvertedDateTime;
+			}
+
+			if (relativeTime?.Days < 30)
+			{
+				dateStr = ((TimeSpan)relativeTime).ToRelativeString();
+			}
+			else
+			{
+				dateStr = DateOnly
+					? dateTime.ToShortDateString()
+					: dateTime.ToString("g");
+				if (InLine)
+				{
+					dateStr = "on " + dateStr;
+				}
+			}
+
 			output.TagName = "span";
 			output.TagMode = TagMode.StartTagAndEndTag;
 			output.Content.AppendHtml(TagHelperExtensions.Text(dateStr));
