@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -105,7 +106,7 @@ namespace TASVideos.Pages.Publications
 						PublicationId = id,
 						UserId = userId,
 						Type = type,
-						Value = value.Value
+						Value = Math.Round(value.Value, 1)
 					});
 				}
 
