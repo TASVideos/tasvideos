@@ -69,7 +69,7 @@ namespace TASVideos.Pages.Forum.Posts
 			Post.IsLastPost = Id == lastPostId;
 
 			if (!User.Has(PermissionTo.EditForumPosts)
-				&& !(Post.IsLastPost && Post.PosterId == User.GetUserId()))
+				&& Post.PosterId != User.GetUserId())
 			{
 				return AccessDenied();
 			}
