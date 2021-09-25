@@ -51,15 +51,13 @@ namespace TASVideos.Core.Services
 			_wikiPages = wikiPages;
 		}
 
-		// Adds a distinct list of user permissions to their claims so they can be stored
-		// and retrieved from their cookie
+		// Clears the user claims, and adds a distinct list of user permissions
+		// so they can be stored and retrieved from their cookie
 		public async Task AddUserPermissionsToClaims(User user)
 		{
-			var existingClaims = await GetClaimsAsync(user);
-			if (existingClaims.Any(c => c.Type == CustomClaimTypes.Permission))
-			{
-				return;
-			}
+			var existingClaims = (await GetClaimsAsync(user))
+				.Where(c => c.Type == CustomClaimTypes.Permission);
+			await RemoveClaimsAsync(user, existingClaims);
 
 			var permissions = await GetUserPermissionsById(user.Id);
 			await AddClaimsAsync(user, permissions
