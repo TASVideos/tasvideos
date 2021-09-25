@@ -38,7 +38,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditHomePage,
 			PermissionTo.SubmitMovies,
 			PermissionTo.CreateForumPosts,
-			PermissionTo.UploadUserFiles
+			PermissionTo.UploadUserFiles,
+			PermissionTo.SendPrivateMessages
 		};
 
 		private static readonly PermissionTo[] EditorPermissions =
