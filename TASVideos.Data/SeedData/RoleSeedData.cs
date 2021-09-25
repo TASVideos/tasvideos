@@ -285,7 +285,7 @@ namespace TASVideos.Data.SeedData
 			{
 				Role = SeniorJudge,
 				PermissionId = p,
-				CanAssign = EditorPermissions.Contains(p)
+				CanAssign = JudgePermissions.Contains(p)
 			}).ToArray(),
 			RoleLinks = new List<RoleLink>
 			{
@@ -314,7 +314,7 @@ namespace TASVideos.Data.SeedData
 			{
 				Role = SeniorPublisher,
 				PermissionId = p,
-				CanAssign = EditorPermissions.Contains(p)
+				CanAssign = PublisherPermissions.Contains(p)
 			}).ToArray(),
 			RoleLinks = new List<RoleLink>
 			{
