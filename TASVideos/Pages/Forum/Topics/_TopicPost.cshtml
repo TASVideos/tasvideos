@@ -24,7 +24,7 @@
 					<a condition="User.IsLoggedIn()"
 					   asp-page="/Messages/Create"
 					   asp-route-defaultToUser="@Model.PosterName"
-					   class="btn btn-secondary btn-sm">
+					   class="btn btn-secondary btn-sm d-none d-md-inline-block">
 						<i class="fa fa-envelope"></i> PM
 					</a>
 					<a asp-page="/Forum/Posts/Create"
