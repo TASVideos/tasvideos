@@ -46,10 +46,12 @@
 				<input asp-for="From" type="text" class="form-control" />
 				<span asp-validation-for="From" class="text-danger"></span>
 			</form-group>
-			<form-group>
-				<label asp-for="COPPA"></label>
-				<input asp-for="COPPA" type="checkbox" class="form-control" />
-				<span asp-validation-for="COPPA" class="text-danger"></span>
+			<form-group class="mt-3">
+				<div class="form-check">
+					<label asp-for="Coppa" class="form-check-label"></label>
+					<input asp-for="Coppa" type="checkbox" class="form-check-input"/>
+				</div>
+				<span asp-validation-for="Coppa" class="text-danger"></span>
 			</form-group>
 			<environment exclude="Development">
 				<form-group>

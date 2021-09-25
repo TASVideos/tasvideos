@@ -86,9 +86,9 @@ namespace TASVideos.Pages.Account
 
 		[BindProperty]
 		[Required]
-		[MustBeTrue]
+		[MustBeTrue(ErrorMessage = "You must certify that you are a13 years of age or older")]
 		[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
-		public bool COPPA { get; set; }
+		public bool Coppa { get; set; }
 
 		public async Task<IActionResult> OnPost()
 		{
