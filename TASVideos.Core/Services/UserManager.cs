@@ -53,15 +53,19 @@ namespace TASVideos.Core.Services
 
 		// Clears the user claims, and adds a distinct list of user permissions
 		// so they can be stored and retrieved from their cookie
-		public async Task AddUserPermissionsToClaims(User user)
+		public async Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user)
 		{
 			var existingClaims = (await GetClaimsAsync(user))
 				.Where(c => c.Type == CustomClaimTypes.Permission);
 			await RemoveClaimsAsync(user, existingClaims);
 
 			var permissions = await GetUserPermissionsById(user.Id);
-			await AddClaimsAsync(user, permissions
-				.Select(p => new Claim(CustomClaimTypes.Permission, ((int)p).ToString())));
+
+			var claims = permissions
+				.Select(p => new Claim(CustomClaimTypes.Permission, ((int)p).ToString()))
+				.ToList();
+			await AddClaimsAsync(user, claims);
+			return claims;
 		}
 
 		/// <summary>

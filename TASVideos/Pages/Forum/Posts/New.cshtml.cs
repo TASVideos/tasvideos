@@ -13,6 +13,7 @@ using TASVideos.Pages.Forum.Posts.Models;
 namespace TASVideos.Pages.Forum.Posts
 {
 	[Authorize]
+	[RequireCurrentPermissions]
 	public class NewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;

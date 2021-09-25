@@ -15,6 +15,7 @@ using TASVideos.Pages.Forum.Topics.Models;
 namespace TASVideos.Pages.Forum.Topics
 {
 	[AllowAnonymous]
+	[RequireCurrentPermissions]
 	public class IndexModel : BaseForumModel
 	{
 		private readonly ApplicationDbContext _db;
@@ -58,6 +59,7 @@ namespace TASVideos.Pages.Forum.Topics
 				: null;
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
+			var test = User.Permissions().ToList();
 			Topic = await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
 				.Select(t => new ForumTopicModel
