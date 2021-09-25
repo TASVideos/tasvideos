@@ -5,10 +5,12 @@
 }
 
 <a asp-page="Edit" class="btn btn-primary mb-3 float-end"><i class="fa fa-plus"></i> Create</a>
-<form class="form-inline mb-3">
-	<label asp-for="@Model.Games.SystemCode" class="me-2"></label>
-	<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="SystemCode" class="form-control me-2"></select>
-	<button type="Submit" class="btn btn-secondary">Go</button>
+<form class="mb-3 d-flex align-items-center">
+	<div class="input-group">
+		<label asp-for="@Model.Games.SystemCode" class="input-group-text"></label>
+		<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="SystemCode" class="form-control"></select>
+		<button type="Submit" class="btn btn-secondary">Go</button>
+	</div>
 </form>
 
 <partial name="_Pager" model="Model.Games" />
