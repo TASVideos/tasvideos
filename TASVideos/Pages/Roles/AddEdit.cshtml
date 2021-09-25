@@ -81,7 +81,6 @@
 <script>
 	(function() {
 		var emptyAssignableRoles = "None";
-		var assignRoles = '@((int)PermissionTo.AssignRoles)';
 		var selectedAssignablePermissionsModelId = '@Html.NameFor(m => m.Role.SelectedAssignablePermissions)';
 		var selectedPermissionsListId = 'Selected@(Html.IdFor(m => m.Role.SelectedPermissions))';
 		var availableAssignableListId = '@Html.NameFor(m => m.AvailableAssignablePermissions)';
@@ -90,17 +89,11 @@
 		function shouldShowAssignRoles() {
 			var hasAssign = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
 				.toArray()
-				.filter(function(i) {
-					return i.value === assignRoles;
-				})
 				.length >
 				0;
 
 			var hasAtLastOneOtherPerm = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
 				.toArray()
-				.filter(function(i) {
-					return i.value !== assignRoles;
-				})
 				.length >
 				0;
 
@@ -109,10 +102,7 @@
 
 		function syncAssignablePerms() {
 			var selectedPerms = document.querySelectorAll('#' + selectedPermissionsListId + ' option')
-				.toArray()
-				.filter(function(elem) {
-					return elem.value !== assignRoles;
-				});
+				.toArray();
 
 			var aggregatedAssignablePerms = document.querySelectorAll('#' + availableAssignableListId + ' option')
 				.toArray()
@@ -140,9 +130,7 @@
 			var selectedAssignableElem = document.getElementById(selectedAssignableListId);
 
 			addedPerms.forEach(function(elem) {
-				if (elem.value !== assignRoles) {
-					availAssignableElem.appendChild(elem.cloneNode(true));
-				}
+				availAssignableElem.appendChild(elem.cloneNode(true));
 			});
 
 			removedPerms.forEach(function(elem) {
