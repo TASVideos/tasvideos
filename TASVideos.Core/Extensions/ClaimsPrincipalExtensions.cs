@@ -46,5 +46,27 @@ namespace TASVideos
 		{
 			return user.Permissions().Contains(permission);
 		}
+
+		public static void ReplacePermissionClaims(this ClaimsPrincipal? user, IEnumerable<Claim> permissions)
+		{
+			if (user == null || !user.IsLoggedIn())
+			{
+				return;
+			}
+
+			if (user.Identity is not ClaimsIdentity ci)
+			{
+				return;
+			}
+
+			foreach (var claim in user.Claims
+				.Where(c => c.Type == CustomClaimTypes.Permission)
+				.ToList())
+			{
+				ci.RemoveClaim(claim);
+			}
+
+			ci.AddClaims(permissions);
+		}
 	}
 }

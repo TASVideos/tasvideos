@@ -13,6 +13,7 @@ using TASVideos.Pages.Forum.Subforum.Models;
 namespace TASVideos.Pages.Forum.Subforum
 {
 	[AllowAnonymous]
+	[RequireCurrentPermissions]
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
