@@ -253,8 +253,7 @@ namespace TASVideos.Data.SeedData
 			RolePermission = VestedEditorPermissions.Select(p => new RolePermission
 			{
 				Role = VestedEditor,
-				PermissionId = p,
-				CanAssign = EditorPermissions.Contains(p)
+				PermissionId = p
 			}).ToArray(),
 			RoleLinks = new List<RoleLink>
 			{
