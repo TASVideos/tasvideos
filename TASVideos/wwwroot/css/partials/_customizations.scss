@@ -64,10 +64,11 @@ article.wiki, .postbody {
 		}
 
 		tbody + tbody {
-			border-top: 2px solid #dee2e6;
+			border-top: 2px solid var(--border-separator-color);
 		}
 	}
 }
+
 .wiki {
 	h1 {
 		margin-left: 0;

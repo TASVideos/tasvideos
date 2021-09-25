@@ -9,6 +9,8 @@
 	--bs-secondary-hover: #{$secondary-dark};
 	--bs-info: #{$info};
 	--bs-info-rgb: #{$info-rgb};
+	--border-color: #{$border-light};
+	--border-separator-color: #{$dropdown-text-dark};
 }
 
 a {
@@ -51,11 +53,18 @@ h4 {
 
 .form-control {
 	font-size: .875rem;
+	border-color: var(--border-color);
 
 	&, &:focus {
 		color: var(--bs-dark);
 		background-color: var(--bs-light);
 	}
+}
+
+.input-group-text {
+	background: var(--bs-light);
+	border-color: var(--border-color);
+	color: var(--bs-dark);
 }
 
 .btn {
