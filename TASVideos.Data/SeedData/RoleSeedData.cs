@@ -52,41 +52,39 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.SeeDeletedWikiPages,
 			PermissionTo.DeleteWikiPages,
 			PermissionTo.EditSystemPages,
-			PermissionTo.EditUsers,
-			PermissionTo.AssignRoles,
 			PermissionTo.MoveWikiPages,
 			PermissionTo.EditPublicationMetaData
 		}).ToArray();
 
-		private static readonly PermissionTo[] JudgePermissions = EditorPermissions.Concat(new[]
+		private static readonly PermissionTo[] JudgePermissions = VestedEditorPermissions.Concat(new[]
 		{
 			PermissionTo.EditSubmissions,
 			PermissionTo.JudgeSubmissions,
 			PermissionTo.ReplaceSubmissionMovieFile,
 			PermissionTo.CatalogMovies,
-			PermissionTo.EditPublicationMetaData,
 			PermissionTo.SeeRestrictedForums
 		}).ToArray();
 
 		private static readonly PermissionTo[] SeniorJudgePermissions = JudgePermissions.Concat(new[]
 		{
 			PermissionTo.AssignRoles,
+			PermissionTo.EditUsers,
 			PermissionTo.OverrideSubmissionStatus
 		}).ToArray();
 
-		private static readonly PermissionTo[] PublisherPermissions = EditorPermissions.Concat(new[]
+		private static readonly PermissionTo[] PublisherPermissions = VestedEditorPermissions.Concat(new[]
 		{
 			PermissionTo.PublishMovies,
 			PermissionTo.CatalogMovies,
 			PermissionTo.EditSubmissions,
-			PermissionTo.EditPublicationMetaData,
 			PermissionTo.EditPublicationFiles,
 			PermissionTo.SeeRestrictedForums
 		}).ToArray();
 
 		private static readonly PermissionTo[] SeniorPublisherPermissions = PublisherPermissions.Concat(new[]
 		{
-			PermissionTo.AssignRoles
+			PermissionTo.AssignRoles,
+			PermissionTo.EditUsers
 		}).ToArray();
 
 		private static readonly PermissionTo[] AdminAssistantPermissions = VestedEditorPermissions.Concat(new[]
@@ -98,7 +96,9 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.EditUserFiles,
 			PermissionTo.ViewPrivateUserData,
 			PermissionTo.BanIpAddresses,
-			PermissionTo.SeePrivateRatings
+			PermissionTo.SeePrivateRatings,
+			PermissionTo.EditUsers,
+			PermissionTo.AssignRoles
 		}).ToArray();
 
 		private static readonly PermissionTo[] ExperiencedForumUserPermissions =
