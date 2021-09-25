@@ -11,7 +11,7 @@ using TASVideos.Models;
 
 namespace TASVideos.Pages.Messages
 {
-	[Authorize]
+	[RequirePermission(PermissionTo.SendPrivateMessages)]
 	public class CreateModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
