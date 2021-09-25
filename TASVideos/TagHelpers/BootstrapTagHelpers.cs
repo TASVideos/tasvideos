@@ -100,12 +100,13 @@ namespace TASVideos.TagHelpers
 		}
 	}
 
+	// TODO: rename me
 	public class FormGroupTagHelper : TagHelper
 	{
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			output.TagName = "fieldset";
-			output.AddCssClass("form-group");
+			output.AddCssClass("mb-3");
 		}
 	}
 
