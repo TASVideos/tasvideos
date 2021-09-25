@@ -2,12 +2,18 @@
 @using TASVideos.Data.Helpers
 @model IndexModel
 @{
-	ViewData["Title"] = $"TASVideos Forum {Model.Topic.Title}";
+	ViewData["Title"] = $"{Model.Topic.Title} - Topic {Model.Topic.Id}";
+}
+@section PageTitle {
+	<div class="container mb-2">
+		<h1 class="fs-4">@(Model.Topic.Title)</h1>
+		<h6 condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</h6>
+	</div>
 }
 <partial Name="_ForumHeader" />
 <fullrow>
-	<partial name="_TopicActionBar" model="Model.Topic" />
 	<partial name="_TopicCrumbs" model="Model.Topic" />
+	<partial name="_TopicActionBar" model="Model.Topic" />
 	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
 		|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
 	   asp-page="/Forum/Posts/Create"

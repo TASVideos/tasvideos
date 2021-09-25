@@ -4,7 +4,9 @@
 	ViewData["Title"] = $"Ratings for #{Model.Publication.PublicationTitle}";
 }
 @section PageTitle {
-	<h1>Rating Details for @Model.Publication.PublicationTitle</h1>
+	<div class="container mb-2">
+		<h1>Rating Details for @Model.Publication.PublicationTitle</h1>
+	</div>
 }
 
 @if (Model.Publication.Ratings.Any())
