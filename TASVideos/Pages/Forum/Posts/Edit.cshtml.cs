@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
@@ -12,7 +11,12 @@ using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Posts
 {
-	[Authorize]
+	[RequirePermission(
+		true,
+		PermissionTo.SeeRestrictedForums,
+		PermissionTo.CreateForumPosts,
+		PermissionTo.DeleteForumPosts,
+		PermissionTo.EditForumPosts)]
 	public class EditModel : BaseForumModel
 	{
 		private readonly ApplicationDbContext _db;
