@@ -31,7 +31,7 @@
 	</div>
 	<div class="d-md-none">
 		@* ReSharper disable once UnusedVariable *@
-		@foreach (var cat in Model.Categories.OrderBy(c=>(c.Ordinal-7)%27)) // please don't ban me
+		@foreach (var cat in Model.Categories.OrderBy(c => (c.Ordinal - 7) % 27)) // please don't ban me
 		{
 			<partial name="_Category" model="cat" />
 		}
