@@ -57,11 +57,11 @@ namespace TASVideos.TagHelpers
 			if (userTimeZone is not null)
 			{
 				var offset = userTimeZone.GetUtcOffset(dateTime);
-				output.Attributes.Add("title", dateTime.ToString() + " UTC" + (offset < TimeSpan.Zero ? "-" : "+") + offset.ToString(@"hh\:mm"));
+				output.Attributes.Add("title", dateTime + " UTC" + (offset < TimeSpan.Zero ? "-" : "+") + offset.ToString(@"hh\:mm"));
 			}
 			else
 			{
-				output.Attributes.Add("title", dateTime.ToString() + " UTC");
+				output.Attributes.Add("title", dateTime + " UTC");
 			}
 
 			string dateStr;
