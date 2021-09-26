@@ -7,7 +7,7 @@ namespace TASVideos.Core.Services
 {
 	public interface ITASVideoAgent
 	{
-		Task PostSubmissionTopic(int submissionId, string postTitle);
+		Task<int> PostSubmissionTopic(int submissionId, string postTitle);
 		Task PostSubmissionPublished(int submissionId, int publicationId);
 	}
 
@@ -20,7 +20,7 @@ namespace TASVideos.Core.Services
 			_db = db;
 		}
 
-		public async Task PostSubmissionTopic(int submissionId, string title)
+		public async Task<int> PostSubmissionTopic(int submissionId, string title)
 		{
 			var poll = new ForumPoll
 			{
@@ -68,6 +68,8 @@ namespace TASVideos.Core.Services
 			poll.TopicId = topic.Id;
 			poll.LastUpdateUserName = SiteGlobalConstants.TASVideoAgent; // Necessary for LastUpdatedUser to not change
 			await _db.SaveChangesAsync();
+
+			return topic.Id;
 		}
 
 		public async Task PostSubmissionPublished(int submissionId, int publicationId)
