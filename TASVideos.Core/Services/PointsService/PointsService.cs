@@ -57,28 +57,32 @@ namespace TASVideos.Core.Services
 
 			var publications = await _db.Publications
 				.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId))
-				.Select(p => new
+				.Select(p => new PublicationRatingDto
 				{
-					Publication = new PointsCalculator.Publication
-					{
-						Id = p.Id,
-						AuthorCount = p.Authors.Count,
-						Obsolete = p.ObsoletedById.HasValue,
-						TierWeight = p.Tier!.Weight,
-						RatingCount = p.PublicationRatings.Count
-					},
-					p.PublicationRatings
+					Id = p.Id,
+					Obsolete = p.ObsoletedById.HasValue,
+					TierWeight = p.Tier!.Weight,
+					AuthorCount = p.Authors.Count,
+					PublicationRatings = p.PublicationRatings
+						.Select(r => new Rating(r.Type, r.Value))
+						.ToList()
 				})
 				.ToListAsync();
 
-			foreach (var pub in publications)
-			{
-				pub.Publication.AverageRating = Rate(pub.PublicationRatings).Overall ?? 0;
-			}
+			var pubsForCalculation = publications
+				.Select(pub => new PointsCalculator.Publication
+				{
+					Id = pub.Id,
+					AuthorCount = pub.AuthorCount,
+					Obsolete = pub.Obsolete,
+					TierWeight = pub.TierWeight,
+					RatingCount = pub.PublicationRatings.Count,
+					AverageRating = Rate(pub.PublicationRatings).Overall ?? 0
+				})
+				.ToList();
 
 			var averageRatings = await AverageNumberOfRatingsPerPublication();
-			var pubsForCalculations = publications.Select(p => p.Publication).ToList();
-			playerPoints = Math.Round(PointsCalculator.PlayerPoints(pubsForCalculations, averageRatings), 1);
+			playerPoints = Math.Round(PointsCalculator.PlayerPoints(pubsForCalculation, averageRatings), 1);
 
 			_cache.Set(cacheKey, playerPoints);
 			return playerPoints;
@@ -96,6 +100,7 @@ namespace TASVideos.Core.Services
 				.ForPublication(id)
 				.ThatAreNotFromAnAuthor()
 				.ThatCanBeUsedToRate()
+				.Select(r => new Rating(r.Type, r.Value))
 				.ToListAsync();
 
 			rating = Rate(ratings);
@@ -126,7 +131,9 @@ namespace TASVideos.Core.Services
 			{
 				var cacheKey = MovieCacheKey(pub.Key);
 				var pubRatings = pub.ToList();
-				var rating = Rate(pubRatings);
+				var rating = Rate(pubRatings
+					.Select(r => new Rating(r.Type, r.Value))
+					.ToList());
 				_cache.Set(cacheKey, rating);
 				ratings.Add(pub.Key, rating);
 			}
@@ -136,7 +143,7 @@ namespace TASVideos.Core.Services
 
 		private static string MovieCacheKey(int id) => MovieRatingKey + id;
 
-		private static RatingDto Rate(ICollection<PublicationRating> ratings)
+		private static RatingDto Rate(ICollection<Rating> ratings)
 		{
 			var entRatings = ratings
 				.Where(r => r.Type == PublicationRatingType.Entertainment)
@@ -192,5 +199,16 @@ namespace TASVideos.Core.Services
 			_cache.Set(AverageNumberOfRatingsKey, avg);
 			return avg;
 		}
+
+		private class PublicationRatingDto
+		{
+			public int Id { get; init; }
+			public bool Obsolete { get; init; }
+			public double TierWeight { get; init; }
+			public int AuthorCount { get; init; }
+			public ICollection<Rating> PublicationRatings { get; init; } = new List<Rating>();
+		}
+
+		private record Rating(PublicationRatingType Type, double Value);
 	}
 }
