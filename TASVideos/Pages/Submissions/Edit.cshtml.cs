@@ -307,6 +307,13 @@ namespace TASVideos.Pages.Submissions
 			submission.GenerateTitle();
 			await Db.SaveChangesAsync();
 
+			var topic = await Db.ForumTopics.FirstOrDefaultAsync(t => t.Id == submission.TopicId);
+			if (topic is not null)
+			{
+				topic.Title = submission.Title;
+				await Db.SaveChangesAsync();
+			}
+
 			if (submission.Status == SubmissionStatus.Rejected)
 			{
 				await _tasvideosGrue.PostSubmissionRejection(submission.Id);

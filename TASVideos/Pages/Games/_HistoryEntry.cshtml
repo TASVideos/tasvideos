@@ -13,10 +13,11 @@
 	 srcset="/@Model.TierIconPath 1x,
 	 /@tierIconPath2x 2x,
 	 /@tierIconPath4x 4x"/>
-<pub-link class="@highlight" id="@Model.Id">@Model.Title</pub-link>
+<pub-link class="@highlight text-decoration-line-through" id="@Model.Id">@Model.Title</pub-link>
+<span>(<timezone-convert asp-for="@Model.CreateTimestamp" date-only="true" />)</span>
 @if (Model.Obsoletes.Any())
 {
-	<ul style="text-decoration: line-through">
+	<ul>
 		@foreach (var node in Model.Obsoletes)
 		{
 			<li>

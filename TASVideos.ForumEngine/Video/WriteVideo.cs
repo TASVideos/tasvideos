@@ -91,7 +91,7 @@ width=$$w$$ height=$$h$$ frameborder=0 class=""mw-100""></iframe>
 
 		private static readonly string ArchiveOrg =
 @"<iframe src=""https://archive.org/embed/$$id$$""
-width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullscreen=true allowfullscreen></iframe>
+width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullscreen=true allowfullscreen class=""mw-100""></iframe>
 ";
 
 		public static void Write(TextWriter w, VideoParameters pp)

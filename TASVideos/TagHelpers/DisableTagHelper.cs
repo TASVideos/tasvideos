@@ -21,6 +21,7 @@ namespace TASVideos.TagHelpers
 				}
 
 				output.Attributes.Add("tabindex", "-1");
+				output.AddCssClass("disabled");
 			}
 		}
 	}
