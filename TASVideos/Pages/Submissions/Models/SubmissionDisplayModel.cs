@@ -47,7 +47,7 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Frame Count")]
 		public int FrameCount { get; set; }
 
-		[Display(Name = "FrameRate")]
+		[Display(Name = "Frame Rate")]
 		public double FrameRate { get; set; }
 
 		[Display(Name = "Rerecord Count")]
