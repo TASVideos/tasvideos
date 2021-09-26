@@ -175,7 +175,7 @@ namespace TASVideos.Core.Services
 		// total ratings / (2 * total publications)
 		private async ValueTask<double> AverageNumberOfRatingsPerPublication()
 		{
-			if (_cache.TryGetValue(AverageNumberOfRatingsKey, out int playerPoints))
+			if (_cache.TryGetValue(AverageNumberOfRatingsKey, out double playerPoints))
 			{
 				return playerPoints;
 			}
