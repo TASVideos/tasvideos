@@ -1,5 +1,5 @@
 ﻿/*
-// These tests error on a query that the in memory database can not project, but a real database provider can
+// As of v5.0.10, These tests error on a query that the in memory database can not project, but a real database provider can
 // Try these out on a newer in memory nuget package and see if the bug is fixed
 using System.Linq;
 using System.Threading.Tasks;
