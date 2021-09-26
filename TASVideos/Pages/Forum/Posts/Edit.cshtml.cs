@@ -192,21 +192,5 @@ namespace TASVideos.Pages.Forum.Posts
 				? BasePageRedirect("/Forum/Subforum/Index", new { id = post.Topic!.ForumId })
 				: BasePageRedirect("/Forum/Topics/Index", new { id = post.TopicId });
 		}
-
-		private async Task<bool> CanEdit(ForumPost post, int userId)
-		{
-			if (post.PosterId != userId)
-			{
-				return false;
-			}
-
-			var lastPostId = await _db.ForumPosts
-				.ForTopic(post.TopicId ?? 0)
-				.ByMostRecent()
-				.Select(p => p.Id)
-				.FirstAsync();
-
-			return post.Id == lastPostId;
-		}
 	}
 }
