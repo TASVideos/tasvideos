@@ -40,6 +40,7 @@ namespace TASVideos.Core.Services.PublicationChain
 					Id = p.Id,
 					Title = p.Title,
 					Branch = p.Branch,
+					CreateTimestamp = p.CreateTimestamp,
 					ObsoletedById = p.ObsoletedById,
 					TierIconPath = p.Tier!.IconPath
 				})

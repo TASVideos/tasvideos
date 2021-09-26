@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TASVideos.Core.Services
 {
@@ -14,6 +15,7 @@ namespace TASVideos.Core.Services
 		public int Id { get; init; }
 		public string Title { get; init; } = "";
 		public string? Branch { get; init; }
+		public DateTime CreateTimestamp { get; set; }
 
 		public string? TierIconPath { get; set; }
 
