@@ -95,15 +95,5 @@ namespace TASVideos.Extensions
 					IntendedTier = s.IntendedTier != null ? s.IntendedTier.Name : null
 				});
 		}
-
-		public static string ToTitleHtml(this ForumTopicType type, string title)
-		{
-			return type switch
-			{
-				ForumTopicType.Sticky => "<b>Sticky: </b> " + title,
-				ForumTopicType.Announcement => "<b>Announcement: </b> " + title,
-				_ => title
-			};
-		}
 	}
 }
