@@ -108,7 +108,6 @@ namespace TASVideos.Pages.Forum.Posts
 				return Page();
 			}
 
-
 			if (!string.IsNullOrWhiteSpace(Post.TopicTitle))
 			{
 				var firstPostId = (await _db.ForumPosts

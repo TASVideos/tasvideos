@@ -158,7 +158,9 @@ width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullsc
 					{
 						var vid = pp.Path.Split("/")[2];
 						if (vid.Length > 0)
+						{
 							DoTemplate(w, ArchiveOrg, width, height, pp.Path.Split("/")[2]);
+						}
 					}
 
 					break;
