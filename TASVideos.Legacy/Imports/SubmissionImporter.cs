@@ -45,7 +45,6 @@ namespace TASVideos.Legacy.Imports
 
 			var publicationWikis = context.WikiPages
 				.ThatAreNotDeleted()
-				.WithNoChildren()
 				.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
 				.ToList()
 				.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimestamp, gvalue.CreateUserName, gvalue.PageName })
