@@ -53,7 +53,6 @@ namespace TASVideos.Core.Services
 				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 				Topic = topic,
 				PosterId = SiteGlobalConstants.TASVideoAgentId,
-				Subject = title,
 				Text = SiteGlobalConstants.NewSubmissionPost + $"[submission]{submissionId}[/submission]",
 				EnableHtml = false,
 				EnableBbCode = true,
