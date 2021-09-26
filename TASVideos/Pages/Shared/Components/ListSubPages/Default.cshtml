@@ -14,20 +14,22 @@
 			<strong>Subpages for @ViewData["Parent"]</strong>
 		</collapsablecontent-header>
 	</div>
-	<collapsablecontent-body class="card-body" id="collapse-content-@pageId" start-shown="@show">
-		<ul>
-			@foreach (var pageGroup in pageGrouping.OrderBy(g => g.Key))
-			{
-				<li>
-					<a href="/@($"{parent}/{pageGroup.Key}")">@pageGroup.Key?.Replace($"{parent}/", "")</a>
-					<ul condition="pageGroup.Count() > 1">
-						@foreach (var subpage in pageGroup.Where(pg => pg != $"{parent}/{pageGroup.Key}").OrderBy(pg => pg))
-						{
-							<li><a href="/@subpage">@subpage.Replace($"{parent}/{pageGroup.Key}/", "")</a></li>
-						}
-					</ul>
-				</li>
-			}
-		</ul>
+	<collapsablecontent-body id="collapse-content-@pageId" start-shown="@show">
+		<div class="card-body">
+			<ul>
+				@foreach (var pageGroup in pageGrouping.OrderBy(g => g.Key))
+				{
+					<li>
+						<a href="/@($"{parent}/{pageGroup.Key}")">@pageGroup.Key?.Replace($"{parent}/", "")</a>
+						<ul condition="pageGroup.Count() > 1">
+							@foreach (var subpage in pageGroup.Where(pg => pg != $"{parent}/{pageGroup.Key}").OrderBy(pg => pg))
+							{
+								<li><a href="/@subpage">@subpage.Replace($"{parent}/{pageGroup.Key}/", "")</a></li>
+							}
+						</ul>
+					</li>
+				}
+			</ul>
+		</div>
 	</collapsablecontent-body>
 </div>
