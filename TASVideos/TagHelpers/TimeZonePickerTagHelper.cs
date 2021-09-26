@@ -45,11 +45,10 @@ namespace TASVideos.TagHelpers
 				{
 					t.BaseUtcOffset,
 					t.Id,
-					Selected = t.Id == modelValue,
-					t.StandardName
+					Selected = t.Id == modelValue
 				})
 				.OrderBy(t => t.BaseUtcOffset)
-				.ThenBy(t => t.StandardName)
+				.ThenBy(t => t.Id)
 				.ToList();
 
 			foreach (var optgroup in groups)
@@ -62,7 +61,7 @@ namespace TASVideos.TagHelpers
 				{
 					output.Content.AppendHtml($@"
 						<option {(option.Selected ? "selected" : "")} {Attr("value", option.Id)} {Attr("data-offset", option.BaseUtcOffset.TotalMinutes.ToString())}>
-							{Text(option.StandardName)}
+							{Text(option.Id)}
 						</option>
 					");
 				}
