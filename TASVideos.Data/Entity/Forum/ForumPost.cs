@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Newtonsoft.Json;
 using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity.Forum
@@ -28,6 +29,7 @@ namespace TASVideos.Data.Entity.Forum
 
 		public ForumPostMood PosterMood { get; set; }
 
+		[JsonIgnore]
 		public NpgsqlTsVector SearchVector { get; set; } = null!;
 	}
 
