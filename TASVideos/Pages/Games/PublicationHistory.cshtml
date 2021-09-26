@@ -3,7 +3,7 @@
 @{
 	ViewData["Title"] = $"Publication History of {Model.Game.DisplayName}";
 	ViewData["Highlight"] = Model.Highlight;
-	ViewData["HighlightClass"] = "font-weight-bold font-italic border border-info p-1";
+	ViewData["HighlightClass"] = "fw-bold fst-italic border border-info p-1";
 }
 @section PageTitle {
 	<div class="container mb-2">
@@ -15,16 +15,17 @@
 @foreach (var node in Model.History.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
 {
 	var highlight = node.Id == Model.Highlight ? ViewData["HighlightClass"] : "";
-
-	<label>Current: <strong>@node.Branch</strong></label><br />
-	<pub-link class="@highlight" id="@node.Id">@node.Title</pub-link>
-	@foreach (var obsoletion in node.Obsoletes)
-	{
-		<ul>
-			<li style="text-decoration: line-through">
-				<partial name="_HistoryEntry" model="obsoletion" view-data="ViewData" />
-			</li>
-		</ul>
-	}
-	<br /><br />
+	<div class="mb-4">
+		<label>Current: <strong>@node.Branch</strong></label><br />
+		<pub-link class="@highlight" id="@node.Id">@node.Title</pub-link>
+		<span>(<timezone-convert asp-for="@node.CreateTimestamp" date-only="true" />)</span>
+		@foreach (var obsoletion in node.Obsoletes)
+		{
+			<ul class="mb-0">
+				<li>
+					<partial name="_HistoryEntry" model="obsoletion" view-data="ViewData" />
+				</li>
+			</ul>
+		}
+	</div>
 }
