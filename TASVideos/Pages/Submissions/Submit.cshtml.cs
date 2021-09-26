@@ -101,7 +101,9 @@ namespace TASVideos.Pages.Submissions
 
 			submission.GenerateTitle();
 
-			await _tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
+			submission.TopicId = await _tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
+			await Db.SaveChangesAsync();
+
 			await _publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S", User.Name());
 
 			return BaseRedirect($"/{submission.Id}S");
