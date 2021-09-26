@@ -76,6 +76,7 @@ namespace TASVideos.Core.Settings
 		{
 			public string CacheType { get; set; } = "NoCache";
 			public int CacheDurationInSeconds { get; set; }
+			public string ConnectionString { get; set; } = "";
 		}
 
 		public class Connections

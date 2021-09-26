@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -100,6 +101,10 @@ namespace TASVideos.Core
 			{
 				services.AddMemoryCache();
 				services.AddSingleton<ICacheService, MemoryCacheService>();
+			}
+			else if (cacheSettings.CacheType == "Redis")
+			{
+				services.AddScoped<ICacheService, RedisCacheService>();
 			}
 			else
 			{
