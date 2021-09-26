@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using TASVideos.WikiEngine.AST;
 
@@ -267,20 +268,18 @@ namespace TASVideos.WikiEngine
 		private static INode MakeImage(int charStart, int charEnd, string[] pp, int index)
 		{
 			var attrs = new List<KeyValuePair<string, string>>();
-			var classSet = false;
 			attrs.Add(Attr("src", NormalizeImageUrl(pp[index++])));
+			StringBuilder classString = new ("embed");
 			for (; index < pp.Length; index++)
 			{
 				var s = pp[index];
 				if (s == "left")
 				{
-					attrs.Add(Attr("class", "embedleft"));
-					classSet = true;
+					classString.Append("left");
 				}
 				else if (s == "right")
 				{
-					attrs.Add(Attr("class", "embedright"));
-					classSet = true;
+					classString.Append("right");
 				}
 				else if (s.StartsWith("title="))
 				{
@@ -300,10 +299,9 @@ namespace TASVideos.WikiEngine
 				}
 			}
 
-			if (!classSet)
-			{
-				attrs.Add(Attr("class", "embed"));
-			}
+			classString.Append(" mw-100");
+
+			attrs.Add(Attr("class", classString.ToString()));
 
 			return new Element(charStart, "img", attrs, Array.Empty<INode>()) { CharEnd = charEnd };
 		}
