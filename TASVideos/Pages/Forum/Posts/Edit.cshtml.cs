@@ -64,13 +64,13 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			var lastPostId = (await _db.ForumPosts
+			var firstPostId = (await _db.ForumPosts
 				.ForTopic(Post.TopicId)
-				.ByMostRecent()
+				.OldestToNewest()
 				.FirstAsync())
 				.Id;
 
-			Post.IsLastPost = Id == lastPostId;
+			Post.IsFirstPost = Id == firstPostId;
 
 			if (!User.Has(PermissionTo.EditForumPosts)
 				&& Post.PosterId != User.GetUserId())
@@ -101,12 +101,24 @@ namespace TASVideos.Pages.Forum.Posts
 				return NotFound();
 			}
 
-			if (!User.Has(PermissionTo.EditForumPosts))
+			if (!User.Has(PermissionTo.EditForumPosts)
+				&& forumPost.PosterId != User.GetUserId())
 			{
-				if (!await CanEdit(forumPost, User.GetUserId()))
+				ModelState.AddModelError("", "Unable to edit post.");
+				return Page();
+			}
+
+
+			if (!string.IsNullOrWhiteSpace(Post.TopicTitle))
+			{
+				var firstPostId = (await _db.ForumPosts
+					.ForTopic(forumPost.Topic!.Id)
+					.OldestToNewest()
+					.FirstAsync())
+					.Id;
+				if (Id == firstPostId)
 				{
-					ModelState.AddModelError("", "Unable to edit post. It is no longer the latest post.");
-					return Page();
+					forumPost.Topic!.Title = Post.TopicTitle;
 				}
 			}
 
@@ -183,22 +195,6 @@ namespace TASVideos.Pages.Forum.Posts
 			return topicDeleted
 				? BasePageRedirect("/Forum/Subforum/Index", new { id = post.Topic!.ForumId })
 				: BasePageRedirect("/Forum/Topics/Index", new { id = post.TopicId });
-		}
-
-		private async Task<bool> CanEdit(ForumPost post, int userId)
-		{
-			if (post.PosterId != userId)
-			{
-				return false;
-			}
-
-			var lastPostId = await _db.ForumPosts
-				.ForTopic(post.TopicId ?? 0)
-				.ByMostRecent()
-				.Select(p => p.Id)
-				.FirstAsync();
-
-			return post.Id == lastPostId;
 		}
 	}
 }

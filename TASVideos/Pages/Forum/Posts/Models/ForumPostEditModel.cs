@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 using TASVideos.Data.Entity.Forum;
@@ -15,6 +16,9 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public bool EnableHtml { get; set; }
 
 		public int TopicId { get; set; }
+
+		[DisplayName("Topic Title")]
+		[StringLength(500)]
 		public string TopicTitle { get; set; } = "";
 
 		[StringLength(500)]
@@ -23,7 +27,7 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		[Required]
 		public string Text { get; set; } = "";
 
-		public bool IsLastPost { get; set; }
+		public bool IsFirstPost { get; set; }
 
 		public ForumPostMood Mood { get; set; } = ForumPostMood.Normal;
 	}
