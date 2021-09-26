@@ -9,7 +9,7 @@ namespace TASVideos.Core.Services
 	{
 		public IEnumerable<string> SystemCodes { get; init; } = new List<string>();
 		public IEnumerable<string> Tiers { get; init; } = new List<string>();
-		public IEnumerable<int> Years { get; init; } = Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1);
+		public IEnumerable<int> Years { get; init; } = Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1).ToList();
 		public IEnumerable<string> Tags { get; init; } = new List<string>();
 		public IEnumerable<string> Genres { get; init; } = new List<string>();
 		public IEnumerable<string> Flags { get; init; } = new List<string>();
