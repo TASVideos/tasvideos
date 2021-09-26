@@ -65,8 +65,8 @@ namespace TASVideos.Pages.Forum.Subforum
 					PostCount = ft.ForumPosts.Count,
 					LastPost = ft.ForumPosts.OrderByDescending(fp => fp.CreateTimestamp).First()
 				})
-				.OrderByDescending(ft => ft.Type == ForumTopicType.Sticky)
-				.ThenByDescending(ft => ft.Type == ForumTopicType.Announcement)
+				.OrderByDescending(ft => ft.Type == ForumTopicType.Announcement)
+				.ThenByDescending(ft => ft.Type == ForumTopicType.Sticky)
 				.ThenByDescending(ft => ft.LastPost)
 				.Skip(rowsToSkip)
 				.Take(Search.PageSize ?? ForumConstants.TopicsPerForum)

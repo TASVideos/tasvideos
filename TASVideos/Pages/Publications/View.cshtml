@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model ViewModel
 @{
-	ViewData["Title"] = $"Movie #{Model.Id}";
+	ViewData["Title"] = $"{Model.Publication.Title} - Movie #{Model.Id}";
 }
 @section PageTitle { }
 

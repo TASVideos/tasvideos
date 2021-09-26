@@ -6,7 +6,9 @@
 	ViewData["HighlightClass"] = "font-weight-bold font-italic border border-info p-1";
 }
 @section PageTitle {
-	<h1>@ViewData["Title"]</h1>
+	<div class="container mb-2">
+		<h1>@ViewData["Title"]</h1>
+	</div>
 }
 
 <h4><a asp-page="Index" asp-route-id="@Model.Id">@Model.Game.DisplayName</a></h4>
