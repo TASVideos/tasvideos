@@ -15,7 +15,7 @@
 				<div class="col-8 pt-0 pb-0">
 					<small>
 						Posted: <timezone-convert asp-for="@Model.Post.CreateTimestamp" /> 
-						<span condition="!string.IsNullOrWhiteSpace(Model.Post.Subject)">Post subject: @Model.Post.Subject</span>
+						<span condition="!Model.Post.IsFirstPost && !string.IsNullOrWhiteSpace(Model.Post.Subject)">Post subject: @Model.Post.Subject</span>
 					</small>
 				</div>
 			</row>
@@ -27,15 +27,18 @@
 </div>
 <hr />
 <form method="post">
-	<input type="hidden" asp-for="Post.TopicId" />
-	<input type="hidden" asp-for="Post.TopicTitle" />
 	<input type="hidden" asp-for="Post.EnableBbCode" />
 	<input type="hidden" asp-for="Post.EnableHtml" />
 	<row>
-		<column md="6">
+		<column condition="!Model.Post.IsFirstPost" md="6">
 			<label asp-for="Post.Subject" class="form-control-label"></label>
 			<input type="text" asp-for="Post.Subject" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Post.Subject" class="text-danger"></span>
+		</column>
+		<column condition="Model.Post.IsFirstPost" md="6">
+			<label asp-for="Post.TopicTitle" class="form-control-label"></label>
+			<input type="text" asp-for="Post.TopicTitle" class="form-control" autocomplete="off" />
+			<span asp-validation-for="Post.TopicTitle" class="text-danger"></span>
 		</column>
 		<column md="6">
 			<label asp-for="Post.Mood" class="form-control-label"></label>
