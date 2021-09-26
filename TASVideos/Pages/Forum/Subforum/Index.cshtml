@@ -24,7 +24,6 @@
 <div class="table-container">
 	<table class="table table-striped table-bordered">
 		<tr>
-			<th></th>
 			<th>Topics</th>
 			<th>Replies</th>
 			<th>Author</th>
@@ -34,13 +33,9 @@
 		{
 			<tr>
 				<td>
-					<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fa fa-sticky-note"></span>
-					<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fa fa-bullhorn"></span>
-				</td>
-				<td>
-					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id">
-						@Html.Raw(topic.Type.ToTitleHtml(topic.Title))
-					</a>
+					<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fw-bold"><i class="fa fa-bullhorn"></i> Announcement: </span>
+					<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fw-bold"><i class="fa fa-sticky-note"></i> Sticky: </span>
+					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id">@topic.Title</a>
 				</td>
 				<td>@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
 				<td> <profile-link username="@topic.CreateUserName"></profile-link></td>
