@@ -78,6 +78,9 @@
 		<EmbeddedResource Include="DtmSampleFiles\savestate.dtm" />
 		<EmbeddedResource Include="DtmSampleFiles\sram.dtm" />
 		<EmbeddedResource Include="DtmSampleFiles\wrongheader.dtm" />
+		<EmbeddedResource Include="FbmSampleFiles\basictest.fbm" />
+		<EmbeddedResource Include="FbmSampleFiles\missinginput.fbm" />
+		<EmbeddedResource Include="FbmSampleFiles\wrongmarker.fbm" />
 		<EmbeddedResource Include="Fm2SampleFiles\fds.fm2" />
 		<EmbeddedResource Include="Fm2SampleFiles\negativererecords.fm2" />
 		<EmbeddedResource Include="Fm2SampleFiles\norerecords.fm2" />
