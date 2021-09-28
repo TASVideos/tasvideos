@@ -134,10 +134,8 @@
 				<div condition="Model.AnyPublications">
 					<p>@Html.DisplayNameFor(m => m.PlayerPoints) @Model.PlayerPoints</p>
 					<p>
-						<a href="/Movies-Author@(Model.Id)">@Model.PublicationActiveCount</a>
-						Active,
-						<a href="/Movies-Author@(Model.Id)-obs">@Model.PublicationObsoleteCount</a>
-						obsolete
+						<a href="/Movies-Author@(Model.Id)">@Model.PublicationActiveCount Active</a>,
+						<a href="/Movies-Author@(Model.Id)-obs">@(Model.PublicationActiveCount + Model.PublicationObsoleteCount) Total</a> (including obsoleted)
 					</p>
 					<p>Has published movies on these systems: @string.Join(", ", Model.PublishedSystems)</p>
 				</div>
