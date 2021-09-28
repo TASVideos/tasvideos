@@ -314,7 +314,7 @@ namespace TASVideos.Pages.Submissions
 				await Db.SaveChangesAsync();
 			}
 
-			if (submission.Status == SubmissionStatus.Rejected)
+			if (submission.Status == SubmissionStatus.Rejected && statusHasChanged)
 			{
 				await _tasvideosGrue.PostSubmissionRejection(submission.Id);
 			}
