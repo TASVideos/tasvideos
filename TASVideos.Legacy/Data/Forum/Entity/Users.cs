@@ -56,5 +56,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("user_mood_avatar")]
 		public string? MoodAvatar { get; set; }
+
+		[Column("user_gender")]
+		public string? Gender { get; set; }
 	}
 }

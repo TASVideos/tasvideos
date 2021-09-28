@@ -68,7 +68,8 @@ namespace TASVideos.Pages.Forum.Posts
 					PosterJoined = p.Poster.CreateTimestamp,
 					PosterPostCount = p.Poster.Posts.Count,
 					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
-					PosterMood = p.PosterMood
+					PosterMood = p.PosterMood,
+					PosterPronouns = p.Poster.PreferredPronouns
 				})
 				.OrderBy(p => p.CreateTimestamp)
 				.PageOf(Search);

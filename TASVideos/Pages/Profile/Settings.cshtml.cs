@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Pages.Profile.Models;
 
 namespace TASVideos.Pages.Profile
@@ -29,6 +32,16 @@ namespace TASVideos.Pages.Profile
 			_db = db;
 		}
 
+		public static readonly IEnumerable<SelectListItem> AvailablePronouns = Enum
+			.GetValues(typeof(PreferredPronounTypes))
+			.Cast<PreferredPronounTypes>()
+			.Select(m => new SelectListItem
+			{
+				Value = ((int)m).ToString(),
+				Text = m.EnumDisplayName()
+			})
+			.ToList();
+
 		[BindProperty]
 		public ProfileSettingsModel Settings { get; set; } = new ();
 
@@ -46,6 +59,7 @@ namespace TASVideos.Pages.Profile
 				Signature = user.Signature,
 				Avatar = user.Avatar,
 				MoodAvatar = user.MoodAvatarUrlBase,
+				PreferredPronouns = user.PreferredPronouns,
 				Roles = await _db.Users
 					.Where(u => u.Id == user.Id)
 					.SelectMany(u => u.UserRoles)
@@ -86,6 +100,7 @@ namespace TASVideos.Pages.Profile
 			user.Signature = Settings.Signature;
 			user.Avatar = Settings.Avatar;
 			user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? Settings.MoodAvatar : null;
+			user.PreferredPronouns = Settings.PreferredPronouns;
 			await _db.SaveChangesAsync();
 
 			SuccessStatusMessage("Your profile has been updated");

@@ -103,6 +103,7 @@ namespace TASVideos.Pages.Forum.Topics
 					PosterName = p.Poster!.UserName,
 					PosterAvatar = p.Poster.Avatar,
 					PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
+					PosterPronouns = p.Poster.PreferredPronouns,
 					PosterLocation = p.Poster.From,
 					PosterRoles = p.Poster.UserRoles
 						.Where(ur => !ur.Role!.IsDefault)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TASVideos.Core;
 using TASVideos.Core.Services;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Posts.Models
@@ -20,6 +21,7 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public DateTime PosterJoined { get; set; }
 		public string? PosterMoodUrlBase { get; set; }
 		public ForumPostMood PosterMood { get; set; }
+		public PreferredPronounTypes PosterPronouns { get; set; }
 		public IEnumerable<string> PosterRoles { get; set; } = new List<string>();
 		public string Text { get; set; } = "";
 		public string? Subject { get; set; }

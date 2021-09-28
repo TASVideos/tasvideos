@@ -57,8 +57,14 @@
 				<input asp-for="Settings.From" class="form-control" />
 				<span asp-validation-for="Settings.From"></span>
 			</form-group>
+			<form-group>
+				<label asp-for="Settings.PreferredPronouns"></label>
+				<select asp-for="Settings.PreferredPronouns" asp-items="@SettingsModel.AvailablePronouns" class="form-control"></select>
+				<span asp-validation-for="Settings.PreferredPronouns"></span>
+			</form-group>
 		</column>
 	</row>
+	<hr />
 	<row>
 		<column md="6">
 			<label asp-for="Settings.Avatar"></label>

@@ -33,6 +33,9 @@
 					<label condition="Model.LastLoggedInTimeStamp.HasValue"><timezone-convert asp-for="@lastLoggedIn" date-only="true" /></label>
 					<label condition="!Model.LastLoggedInTimeStamp.HasValue">Never</label>
 					<br />
+					<label asp-for="PreferredPronouns"></label>
+					<label>@Html.DisplayFor(m => m.PreferredPronouns)</label>
+					<br />
 					<label asp-for="Location"></label>
 					<label>@Html.DisplayFor(m => m.Location)</label>
 					<br />

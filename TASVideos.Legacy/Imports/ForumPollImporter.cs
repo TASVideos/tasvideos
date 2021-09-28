@@ -86,6 +86,7 @@ namespace TASVideos.Legacy.Imports
 			var forumPollOptionVotes =
 				(from v in legForumVoters
 				join po in newForumOptions on new { PollId = v.Id, Ordinal = v.OptionId } equals new { po.PollId, po.Ordinal }
+				where v.UserId != 8762 // This user was deleted but had votes, just remove them and fill them in below
 				select new ForumPollOptionVote
 				{
 					PollOptionId = po.Id,

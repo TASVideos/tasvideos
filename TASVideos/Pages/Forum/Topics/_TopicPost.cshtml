@@ -66,7 +66,8 @@
 			<small>
 				Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
 				Posts: @Model.PosterPostCount<br />
-				Location: @Model.PosterLocation
+				Location: @Model.PosterLocation<br />
+				Preferred Pronouns: @Model.PosterPronouns
 			</small>
 		</div>
 		<div condition="Model.Awards.Any()" class="col-auto d-none">
@@ -96,7 +97,8 @@
 					<small>
 						Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
 						Posts: @Model.PosterPostCount<br />
-						Location: @Model.PosterLocation
+						Location: @Model.PosterLocation<br />
+						Preferred Pronouns: @Model.PosterPronouns
 					</small>
 				</div>
 				<div class="mt-1">

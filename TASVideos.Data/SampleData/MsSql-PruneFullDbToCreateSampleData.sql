@@ -7,7 +7,7 @@
 --		- Go to Advanced -> Types of data to script, and change from Schema only to Data only
 --		- Save as SampleData.sql
 --		- Run
---		- zip SampleData.sql and replace SampleData-MsSql.zip
+--		- zip SampleData-MsSql.sql and replace SampleData-MsSql.zip
 
 use [TASVideos]
 
@@ -267,6 +267,7 @@ INSERT INTO @ActiveUsers
 	OR EXISTS (SELECT 1 FROM PublicationRatings pr WHERE pr.UserId = u.id)
 	OR EXISTS (SELECT 1 FROM ForumPosts fp WHERE fp.PosterId = u.Id)
 	OR EXISTS (SELECT 1 FROM ForumTopics ft WHERE ft.PosterId = u.Id)
+	OR EXISTS (SELECT 1 FROM ForumPollOptionVotes ft WHERE ft.UserId = u.Id)
 	
 DELETE ur
 	FROM UserRoles ur
