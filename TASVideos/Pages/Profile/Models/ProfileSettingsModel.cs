@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TASVideos.Core.Services;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Profile.Models
 {
@@ -32,6 +33,9 @@ namespace TASVideos.Pages.Profile.Models
 		[Url]
 		[Display(Name = "Mood-variant avatar URL")]
 		public string? MoodAvatar { get; set; }
+
+		[Display(Name = "Preferred Pronouns")]
+		public PreferredPronounTypes PreferredPronouns { get; set; }
 
 		public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 	}

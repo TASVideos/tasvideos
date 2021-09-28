@@ -190,6 +190,7 @@ namespace TASVideos.Core.Services
 						.Count(p => p.Publication!.ObsoletedById.HasValue),
 					Email = u.Email,
 					EmailConfirmed = u.EmailConfirmed,
+					PreferredPronouns = u.PreferredPronouns,
 					Roles = u.UserRoles
 						.Select(ur => new RoleDto
 						{

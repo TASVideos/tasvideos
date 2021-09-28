@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
@@ -89,7 +90,8 @@ namespace TASVideos.Legacy.Imports
 							IsModerator = ug != null,
 							IsForumAdmin = u.UserLevel == 1,
 							IsEmuCoder = e != null,
-							u.MoodAvatar
+							u.MoodAvatar,
+							u.Gender
 						})
 						.ToList();
 
@@ -122,7 +124,8 @@ namespace TASVideos.Legacy.Imports
 					TimeZoneId = timeZones.FirstOrDefault(t => t.BaseUtcOffset.TotalMinutes / 60 == (double)u.TimeZoneOffset)?.StandardName ?? utc,
 					SecurityStamp = Guid.NewGuid().ToString("D"),
 					UseRatings = !u.IsBanned && !UserRatingBanList.Contains(u.Id),
-					MoodAvatarUrlBase = u.MoodAvatar.NullIfWhiteSpace()
+					MoodAvatarUrlBase = u.MoodAvatar.NullIfWhiteSpace(),
+					PreferredPronouns = MapPronoun(u.Gender)
 				})
 				.ToList();
 
@@ -313,7 +316,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(User.TimeZoneId),
 				nameof(User.SecurityStamp),
 				nameof(User.UseRatings),
-				nameof(User.MoodAvatarUrlBase)
+				nameof(User.MoodAvatarUrlBase),
+				nameof(User.PreferredPronouns)
 			};
 
 			var userRoleColumns = new[]
@@ -345,6 +349,26 @@ namespace TASVideos.Legacy.Imports
 				"admin" => roles.Single(r => r.Name == RoleSeedNames.Admin),
 				_ => null
 			};
+		}
+
+		private static PreferredPronounTypes MapPronoun(string? gender)
+		{
+			if (string.IsNullOrWhiteSpace(gender))
+			{
+				return PreferredPronounTypes.Unspecified;
+			}
+
+			var result = gender.ToLower() switch
+			{
+				"â™‚" => PreferredPronounTypes.HeHim, // Male
+				"â™€" => PreferredPronounTypes.SheHer, // Female
+				"âš¥" => PreferredPronounTypes.Any, // Male & Female
+				"âšª" => PreferredPronounTypes.TheyThem, // Genderless
+				"?" => PreferredPronounTypes.Other, // Other
+				_ => PreferredPronounTypes.Unspecified
+			};
+
+			return result;
 		}
 	}
 }

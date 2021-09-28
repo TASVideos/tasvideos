@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 
@@ -46,6 +44,8 @@ namespace TASVideos.Data.Entity
 		/// </summary>
 		public bool UseRatings { get; set; } = true;
 
+		public PreferredPronounTypes PreferredPronouns { get; set; } = PreferredPronounTypes.Unspecified;
+
 		[StringLength(32)]
 		public string? LegacyPassword { get; set; }
 
@@ -74,6 +74,32 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = new HashSet<UserMaintenanceLog>();
 		public virtual ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = new HashSet<UserMaintenanceLog>();
+	}
+
+	public enum PreferredPronounTypes
+	{
+		Unspecified,
+
+		[Display(Name = "He/Him")]
+		HeHim,
+		[Display(Name = "She/Her")]
+		SheHer,
+
+		[Display(Name = "They/Them")]
+		TheyThem,
+
+		[Display(Name = "He/They")]
+		HeThey,
+
+		[Display(Name = "She/They")]
+		SheThey,
+
+		[Display(Name = "It/Its")]
+		ItIts,
+
+		Any,
+
+		Other
 	}
 
 	public static class UserExtensions

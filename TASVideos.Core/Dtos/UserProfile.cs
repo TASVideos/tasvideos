@@ -45,6 +45,9 @@ namespace TASVideos.Core.Services
 		[Display(Name = "TimeZone:")]
 		public string? TimeZone { get; set; }
 
+		[Display(Name = "Preferred Pronouns:")]
+		public PreferredPronounTypes PreferredPronouns { get; set; }
+
 		// Private info
 		[Display(Name = "Email:")]
 		public string? Email { get; set; }
