@@ -53,21 +53,16 @@
 		<div class="col-2 float-left text-center">
 			<avatar class="img-fluid" avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
 		</div>
-		<div class="col-10 px-2">
-			<h6>
-				<profile-link username="@Model.PosterName"></profile-link><br />
+		<div class="col-10 ps-2 pe-0">
+			<h6 class="row">
+				<profile-link username="@Model.PosterName" class="col"></profile-link>
+				<span class="float-end col-auto">
+					<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-muted">@Html.DisplayFor(m => m.PosterPronouns)</small>
+				</span>
 			</h6>
 			<small>
 				@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')))
 				<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
-			</small>
-		</div>
-		<div class="col d-none">
-			<small>
-				Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
-				Posts: @Model.PosterPostCount<br />
-				Location: @Model.PosterLocation<br />
-				Preferred Pronouns: @Model.PosterPronouns
 			</small>
 		</div>
 		<div condition="Model.Awards.Any()" class="col-auto d-none">
@@ -81,10 +76,11 @@
 	<cardbody class="px-2 py-0">
 		<row class="gx-3">
 			<div class="col-lg-2 col-md-3 col-4 d-none d-md-block py-2" style="background-color: var(--bs-gray-200)">
-				<div class="text-center" style="margin-left: -.5rem;">
-					<h6>
+				<div class="text-center mb-2">
+					<h6 class="m-0">
 						<profile-link username="@Model.PosterName"></profile-link>
 					</h6>
+					<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-muted">@Html.DisplayFor(m => m.PosterPronouns)</small>
 				</div>
 				<div class="card-text text-start" style="line-height: 1">
 					<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')))
@@ -97,8 +93,7 @@
 					<small>
 						Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
 						Posts: @Model.PosterPostCount<br />
-						Location: @Model.PosterLocation<br />
-						Preferred Pronouns: @Model.PosterPronouns
+						Location: @Model.PosterLocation
 					</small>
 				</div>
 				<div class="mt-1">
