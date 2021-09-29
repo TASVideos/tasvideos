@@ -53,8 +53,29 @@ namespace TASVideos.MovieParsers.Tests
 		{
 			var result = await _fbmParser.Parse(Embedded("basictest.fbm"));
 			Assert.IsTrue(result.Success);
+			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 			AssertNoWarningsOrErrors(result);
 			Assert.AreEqual(49064, result.Frames);
+		}
+
+		[TestMethod]
+		public async Task PowerOn()
+		{
+			var result = await _fbmParser.Parse(Embedded("basictest.fbm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+		}
+
+		[TestMethod]
+		public async Task Savestate()
+		{
+			var result = await _fbmParser.Parse(Embedded("savestate.fbm"));
+			Assert.IsTrue(result.Success);
+			AssertNoWarningsOrErrors(result);
+			Assert.AreEqual(MovieStartType.Savestate, result.StartType);
+			Assert.AreEqual(4544, result.Frames);
+			Assert.AreEqual(0, result.RerecordCount);
 		}
 	}
 }
