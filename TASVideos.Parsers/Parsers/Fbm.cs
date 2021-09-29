@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 using TASVideos.MovieParsers.Result;
 
@@ -33,7 +29,14 @@ namespace TASVideos.MovieParsers.Parsers
 			var nextHeader = new string(br.ReadChars(4));
 			if (nextHeader == "FS1 ")
 			{
-				return new ErrorResult("Savestate movies not supported yet!");
+				result.StartType = MovieStartType.Savestate;
+				br.ReadBytes(16);
+				int stateLength = br.ReadInt32();
+				br.ReadBytes(32); // Name of the game
+				br.ReadBytes(4); // Number of frames before savestate
+				br.ReadBytes(12); // Reserved
+				br.ReadBytes(stateLength);
+				nextHeader = new string(br.ReadChars(4));
 			}
 
 			if (nextHeader != "FR1 ")
