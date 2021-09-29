@@ -64,10 +64,11 @@ article.wiki, .postbody {
 		}
 
 		tbody + tbody {
-			border-top: 2px solid #dee2e6;
+			border-top: 2px solid var(--border-separator-color);
 		}
 	}
 }
+
 .wiki {
 	h1 {
 		margin-left: 0;
@@ -287,4 +288,21 @@ article.wiki, .postbody {
 	h1, h2, h3, h4, h5, h6 {
 		margin-bottom: 0;
 	}
+}
+
+.card-userinfo {
+	font-size: .75rem;
+	display: inline-block;
+	border: solid 1px var(--cardsecondary);
+	margin: 3px;
+	border-radius: 3px;
+}
+
+.card-header-userinfo {
+	background-color: var(--cardsecondary);
+	padding: 3px;
+}
+
+.card-body-userinfo {
+	padding: 3px;
 }

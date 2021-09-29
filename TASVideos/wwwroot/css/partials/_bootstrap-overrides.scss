@@ -9,6 +9,8 @@
 	--bs-secondary-hover: #{$secondary-dark};
 	--bs-info: #{$info};
 	--bs-info-rgb: #{$info-rgb};
+	--border-color: #{$border-light};
+	--border-separator-color: #{$dropdown-text-dark};
 }
 
 a {
@@ -51,11 +53,22 @@ h4 {
 
 .form-control {
 	font-size: .875rem;
+	border-color: var(--border-color);
 
 	&, &:focus {
 		color: var(--bs-dark);
 		background-color: var(--bs-light);
 	}
+
+	:disabled, [read-only] {
+		background-color: var(--bs-light);
+	}
+}
+
+.input-group-text {
+	background: var(--bs-light);
+	border-color: var(--border-color);
+	color: var(--bs-dark);
 }
 
 .btn {
@@ -111,4 +124,16 @@ h4 {
 
 .card:not(.bg-info):not(.bg-danger):not(.bg-success):not(.bg-warning):not(.bg-light):not(.bg-dark) .card-header {
 	background-color: var(--bs-gray-200);
+}
+
+.modal-content {
+	background-color: var(--bs-white);
+}
+
+.modal-header {
+	border-bottom-color: var(--border-separator-color);
+}
+
+.modal-footer {
+	border-top-color: var(--border-separator-color);
 }

@@ -4,6 +4,8 @@
 :root {
 	--tasvideos-bg: #{$tasvideos-bg-dark};
 	--bs-body-color: #{$light};
+	--border-color: #{$border-dark};
+	--border-separator-color: #{$border-separator-dark};
 	--cardprimary: #{$card-primary-dark};
 	--cardsecondary: #{$card-secondary-dark};
 	--bs-info: #{$info-dark};
@@ -14,6 +16,7 @@
 	--bs-light-rgb: #{$dark-rgb};
 	--bs-white: #{$dark};
 	--bs-white-rgb: #{$dark-rgb};
+	--bs-border-light: #{$border-dark};
 	--bs-gray-200: #{$dark};
 	--tasvideos-bg-gradient: #{$banner};
 	--tab-content-bg: #{$bs-table-striped-bg-dark};
@@ -25,7 +28,8 @@ a {
 }
 
 .table {
-	color: #{$light};
+	color: $light;
+	border-color: $border-dark;
 	--bs-table-bg: #{$dark};
 	--bs-table-striped-bg: #{$bs-table-striped-bg-dark};
 	--bs-table-striped-color: #{$white};
@@ -55,7 +59,7 @@ a {
 .dropdown-menu {
 	color: $dropdown-text-dark;
 	background-color: $dropdown-background-dark;
-	border-color: rgba(0,0,0,.15);
+	border-color: rgba(0, 0, 0, .15);
 }
 
 .dropdown-item {
