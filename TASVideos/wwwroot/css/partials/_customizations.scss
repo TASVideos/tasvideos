@@ -289,3 +289,20 @@ article.wiki, .postbody {
 		margin-bottom: 0;
 	}
 }
+
+.card-userinfo {
+	font-size: .75rem;
+	display: inline-block;
+	border: solid 1px var(--cardsecondary);
+	margin: 3px;
+	border-radius: 3px;
+}
+
+.card-header-userinfo {
+	background-color: var(--cardsecondary);
+	padding: 3px;
+}
+
+.card-body-userinfo {
+	padding: 3px;
+}

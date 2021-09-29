@@ -59,6 +59,10 @@ h4 {
 		color: var(--bs-dark);
 		background-color: var(--bs-light);
 	}
+
+	:disabled, [read-only] {
+		background-color: var(--bs-light);
+	}
 }
 
 .input-group-text {
@@ -120,4 +124,16 @@ h4 {
 
 .card:not(.bg-info):not(.bg-danger):not(.bg-success):not(.bg-warning):not(.bg-light):not(.bg-dark) .card-header {
 	background-color: var(--bs-gray-200);
+}
+
+.modal-content {
+	background-color: var(--bs-white);
+}
+
+.modal-header {
+	border-bottom-color: var(--border-separator-color);
+}
+
+.modal-footer {
+	border-top-color: var(--border-separator-color);
 }
