@@ -3,12 +3,12 @@
 @{
 	ViewData["Title"] = "User List";
 }
-
-<div class="float-end">
-	<partial name="_UserSearch" />
+<div class="row justify-content-end">
+	<div class="col-auto">
+		<partial name="_UserSearch" />
+	</div>
 </div>
-<h4>@ViewData["Title"]</h4>
-<hr />
+<hr>
 <partial name="_Pager" model="Model.Users" />
 <table class="table table-bordered table-striped">
 	<sortable-table-head sorting="@Model.Search" model-type="typeof(TASVideos.Pages.Users.Models.UserListModel)" />
