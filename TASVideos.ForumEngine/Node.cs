@@ -102,24 +102,25 @@ namespace TASVideos.ForumEngine
 			w.Write(close);
 		}
 
-		private bool TryParseSize(out int w, out int h)
+		private void TryParseSize(out int? w, out int? h)
 		{
+			int? TryParse(string s)
+			{
+				return int.TryParse(s, out var i) ? i : null;
+			}
+
 			var ss = Options.Split('x');
-			w = 0;
-			h = 0;
-			if (ss.Length != 2)
-			{
-				return false;
-			}
+			w = null;
+			h = null;
 
-			var ret = int.TryParse(ss[0], out w) && int.TryParse(ss[1], out h);
-			if (!ret)
-			{
-				w = 0;
-				h = 0;
-			}
+			if (ss.Length > 2)
+				return;
 
-			return ret;
+			if (ss.Length > 1)
+				h = TryParse(ss[1]);
+
+			if (ss.Length > 0)
+				w = TryParse(ss[0]);
 		}
 
 		private async Task WriteHref(TextWriter w, IWriterHelper h, Func<string, string> transformUrl, Func<string, Task<string>> transformUrlText)
@@ -254,12 +255,16 @@ namespace TASVideos.ForumEngine
 				case "img":
 					{
 						w.Write("<img");
-						if (TryParseSize(out var width, out var height))
+						TryParseSize(out var width, out var height);
+						if (width != null)
 						{
 							w.Write(" width=");
-							Helpers.WriteAttributeValue(w, width.ToString());
+							Helpers.WriteAttributeValue(w, width.ToString()!);
+						}
+						if (height != null)
+						{
 							w.Write(" height=");
-							Helpers.WriteAttributeValue(w, height.ToString());
+							Helpers.WriteAttributeValue(w, height.ToString()!);
 						}
 
 						w.Write(" src=");
@@ -405,7 +410,8 @@ namespace TASVideos.ForumEngine
 								}
 							}
 
-							if (TryParseSize(out var width, out var height))
+							TryParseSize(out var width, out var height);
+							if (width != null && height != null)
 							{
 								pp.Width = width;
 								pp.Height = height;
