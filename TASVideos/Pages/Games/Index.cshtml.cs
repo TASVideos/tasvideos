@@ -25,11 +25,18 @@ namespace TASVideos.Pages.Games
 
 		public GameDisplayModel Game { get; set; } = new ();
 
-		public async Task OnGet()
+		public async Task<IActionResult> OnGet()
 		{
 			Game = await _mapper
 				.ProjectTo<GameDisplayModel>(_db.Games)
 				.SingleOrDefaultAsync(g => g.Id == Id);
+
+			if (Game == null)
+			{
+				return NotFound();
+			}
+
+			return Page();
 		}
 	}
 }
