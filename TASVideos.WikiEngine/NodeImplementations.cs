@@ -436,7 +436,8 @@ namespace TASVideos.WikiEngine.AST
 			}
 			else if (WikiModules.IsModule(Name))
 			{
-				// TODO: Modules in text.  We do need this
+				// It's the caller's responsibility to provide a view component runner that will create text output.
+				await ctx.Helper.RunViewComponentAsync(writer, Name, Parameters);
 			}
 			else
 			{
