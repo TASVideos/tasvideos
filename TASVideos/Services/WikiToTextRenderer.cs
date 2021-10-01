@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Namotion.Reflection;
 using TASVideos.Core.Services.Youtube;
@@ -28,6 +27,13 @@ namespace TASVideos.Services
 			_serviceProvider = serviceProvider;
 		}
 
+		public static readonly IDictionary<string, Type> TextComponents = Assembly
+			.GetAssembly(typeof(WikiModuleAttribute))
+			!.GetTypes()
+			.Where(t => t.GetCustomAttribute(typeof(WikiModuleAttribute)) != null)
+			.Where(t => t.GetCustomAttribute(typeof(TextModuleAttribute)) != null)
+			.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue, StringComparer.InvariantCultureIgnoreCase);
+
 		public async Task<string> RenderWikiForYoutube(WikiPage page)
 		{
 			var sw = new StringWriter();
@@ -37,13 +43,6 @@ namespace TASVideos.Services
 
 		private class WriterHelper : IWriterHelper
 		{
-			private static readonly IDictionary<string, Type> TextComponents = Assembly
-				.GetAssembly(typeof(WikiModuleAttribute))
-				!.GetTypes()
-				.Where(t => t.GetCustomAttribute(typeof(WikiModuleAttribute)) != null)
-				.Where(t => t.GetCustomAttribute(typeof(TextModuleAttribute)) != null)
-				.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue, StringComparer.InvariantCultureIgnoreCase);
-
 			private static readonly Dictionary<Type, WikiMarkup.IModuleParameterTypeAdapter> ParamTypeAdapters = typeof(WikiMarkup)
 				.Assembly
 				.GetTypes()
