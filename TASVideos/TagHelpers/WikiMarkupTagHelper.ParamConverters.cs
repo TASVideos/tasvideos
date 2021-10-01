@@ -24,12 +24,12 @@ namespace TASVideos.TagHelpers
 				t => t.BaseType!.GetGenericArguments()[0],
 				t => (IModuleParameterTypeAdapter)Activator.CreateInstance(t)!);
 
-		private interface IModuleParameterTypeAdapter
+		public interface IModuleParameterTypeAdapter
 		{
 			object? Convert(string? input);
 		}
 
-		private abstract class ModuleParameterTypeAdapter<T> : IModuleParameterTypeAdapter
+		public abstract class ModuleParameterTypeAdapter<T> : IModuleParameterTypeAdapter
 		{
 			public abstract T Convert(string? input);
 			object? IModuleParameterTypeAdapter.Convert(string? input)
