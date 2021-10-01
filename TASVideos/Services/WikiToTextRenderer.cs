@@ -43,15 +43,15 @@ namespace TASVideos.Services
 
 		private class WriterHelper : IWriterHelper
 		{
-			private static readonly Dictionary<Type, WikiMarkup.IModuleParameterTypeAdapter> ParamTypeAdapters = typeof(WikiMarkup)
+			private static readonly Dictionary<Type, IModuleParameterTypeAdapter> ParamTypeAdapters = typeof(WikiMarkup)
 				.Assembly
 				.GetTypes()
 				.Where(t => t.BaseType != null
 					&& t.BaseType.IsGenericType
-					&& t.BaseType.GetGenericTypeDefinition() == typeof(WikiMarkup.ModuleParameterTypeAdapter<>))
+					&& t.BaseType.GetGenericTypeDefinition() == typeof(ModuleParameterTypeAdapter<>))
 				.ToDictionary(
 					t => t.BaseType!.GetGenericArguments()[0],
-					t => (WikiMarkup.IModuleParameterTypeAdapter)Activator.CreateInstance(t)!);
+					t => (IModuleParameterTypeAdapter)Activator.CreateInstance(t)!);
 
 			private readonly string _host;
 			private readonly IServiceProvider _serviceProvider;

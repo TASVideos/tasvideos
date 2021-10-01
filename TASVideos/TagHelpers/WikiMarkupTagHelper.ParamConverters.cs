@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TASVideos.Services;
 
 namespace TASVideos.TagHelpers
 {
@@ -23,20 +24,6 @@ namespace TASVideos.TagHelpers
 			.ToDictionary(
 				t => t.BaseType!.GetGenericArguments()[0],
 				t => (IModuleParameterTypeAdapter)Activator.CreateInstance(t)!);
-
-		public interface IModuleParameterTypeAdapter
-		{
-			object? Convert(string? input);
-		}
-
-		public abstract class ModuleParameterTypeAdapter<T> : IModuleParameterTypeAdapter
-		{
-			public abstract T Convert(string? input);
-			object? IModuleParameterTypeAdapter.Convert(string? input)
-			{
-				return (object?)Convert(input);
-			}
-		}
 
 		private class StringConverter : ModuleParameterTypeAdapter<string?>
 		{
