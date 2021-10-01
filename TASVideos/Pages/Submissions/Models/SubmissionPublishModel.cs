@@ -48,7 +48,7 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Torrent file", Description = "(The tracker URL must be http://tracker.tasvideos.org:6969/announce.)")]
 		public IFormFile? TorrentFile { get; set; }
 
-		[Display(Name = "Submisison description (for quoting, reference, etc)")]
+		[Display(Name = "Submission description (for quoting, reference, etc)")]
 		public string? Markup { get; set; }
 
 		[Display(Name = "System")]
