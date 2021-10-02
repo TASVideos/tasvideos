@@ -88,12 +88,18 @@ namespace TASVideos.Pages.Wiki
 
 			var page = new WikiPage
 			{
+				CreateTimestamp = PageToEdit.EditStart,
 				PageName = Path.Trim('/'),
 				Markup = PageToEdit.Markup,
 				MinorEdit = PageToEdit.MinorEdit,
 				RevisionMessage = PageToEdit.RevisionMessage
 			};
-			await _wikiPages.Add(page);
+			var result = await _wikiPages.Add(page);
+			if (!result)
+			{
+				ModelState.AddModelError("", "Unable to save. The content on this page may have been modified by another user.");
+				return Page();
+			}
 
 			if (page.Revision == 1 || !PageToEdit.MinorEdit)
 			{

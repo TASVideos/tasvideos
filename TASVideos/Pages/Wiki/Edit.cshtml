@@ -4,18 +4,19 @@
 	ViewData["Title"] = $"Editing {Model.Path}";
 	var returnUrl = HttpContext.Request.ReturnUrl();
 }
-
+<div asp-validation-summary="All" class="text-danger"></div>
 <form method="POST">
+	<input type="hidden" asp-for="PageToEdit.EditStart" />
 	<form-group class="col-lg-6">
 		<row>
 			<div class="form-check">
-				<input type="checkbox" class="form-check-input" asp-for="PageToEdit.MinorEdit" />
+				<input type="checkbox" class="form-check-input" asp-for="PageToEdit.MinorEdit"/>
 				<label asp-for="PageToEdit.MinorEdit" class="form-check-label"></label>
 			</div>
 		</row>
 		<row>
 			<label asp-for="PageToEdit.RevisionMessage" class="form-control-label"></label>
-			<input type="text" asp-for="PageToEdit.RevisionMessage" class="form-control" autocomplete="off" />
+			<input type="text" asp-for="PageToEdit.RevisionMessage" class="form-control" autocomplete="off"/>
 			<span>@Html.DescriptionFor(m => m.PageToEdit.RevisionMessage)</span>
 			<span asp-validation-for="PageToEdit.RevisionMessage" class="text-danger"></span>
 		</row>
