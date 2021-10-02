@@ -137,13 +137,3 @@ h4 {
 .modal-footer {
 	border-top-color: var(--border-separator-color);
 }
-
-.nav-tabs {
-	border-color: var(--bs-light);
-
-	.nav-item.show .nav-link, .nav-link.active {
-		color: color: var(--bs-dark);
-		background-color: var(--bs-white);
-		border-color: var(--bs-light) var(--bs-light) var(--bs-white);
-	}
-}
