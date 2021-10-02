@@ -248,6 +248,18 @@ namespace TASVideos.Core.Services
 					model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimestamp);
 				}
 
+				model.Publishing = new UserProfile.PublishingSummary
+				{
+					TotalPublished = await _db.Submissions
+						.CountAsync(s => s.PublisherId == model.Id)
+				};
+
+				model.Judgments = new UserProfile.JudgingSummary
+				{
+					TotalJudgments = await _db.Submissions
+						.CountAsync(s => s.JudgeId == model.Id)
+				};
+
 				if (model.PublicRatings)
 				{
 					model.Ratings.TotalMoviesRated = await _db.PublicationRatings
