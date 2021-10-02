@@ -34,7 +34,13 @@ namespace TASVideos.Pages.RssFeeds.Models
 					.Where(r => r.Type == PublicationRatingType.TechQuality)
 					.Select(r => r.Value);
 
-				return Math.Round(ent.Concat(ent).Concat(tech).Average(), 2);
+				var all = ent.Concat(ent).Concat(tech).ToList();
+				if (all.Any())
+				{
+					return Math.Round(all.Average(), 2);
+				}
+
+				return 0;
 			}
 		}
 
