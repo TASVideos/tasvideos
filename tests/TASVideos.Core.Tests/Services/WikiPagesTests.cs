@@ -108,7 +108,7 @@ namespace TASVideos.Core.Tests.Services
 			Assert.AreEqual(1, _cache.PageCache.Count, "Cache should have  1 record");
 			Assert.AreEqual(existingPage, _cache.PageCache.First().PageName, "Cache should match page checked");
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(existingPage, actual!.PageName);
+			Assert.AreEqual(existingPage, actual.PageName);
 		}
 
 		[TestMethod]
@@ -152,7 +152,7 @@ namespace TASVideos.Core.Tests.Services
 
 			var actual = await _wikiPages.Page("/" + existingPage + "/");
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(existingPage, actual!.PageName);
+			Assert.AreEqual(existingPage, actual.PageName);
 		}
 
 		[TestMethod]
@@ -168,7 +168,7 @@ namespace TASVideos.Core.Tests.Services
 
 			var actual = await _wikiPages.Page(pageName);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(1, actual!.Revision);
+			Assert.AreEqual(1, actual.Revision);
 			Assert.IsNull(actual.ChildId);
 			Assert.AreEqual(pageName, actual.PageName);
 		}
@@ -188,7 +188,7 @@ namespace TASVideos.Core.Tests.Services
 
 			var actual = await _wikiPages.Page(pageName);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(1, actual!.Revision);
+			Assert.AreEqual(1, actual.Revision);
 			Assert.IsNull(actual.ChildId);
 			Assert.AreEqual(pageName, actual.PageName);
 		}
@@ -204,7 +204,7 @@ namespace TASVideos.Core.Tests.Services
 
 			var actual = await _wikiPages.Page(page);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(2, actual!.Revision);
+			Assert.AreEqual(2, actual.Revision);
 		}
 
 		[TestMethod]
@@ -228,8 +228,9 @@ namespace TASVideos.Core.Tests.Services
 		{
 			string newPage = "New Page";
 			string anotherPage = "AnotherPage";
-			await _wikiPages.Add(new WikiPage { PageName = newPage, Markup = $"[{anotherPage}]" });
+			var result = await _wikiPages.Add(new WikiPage { PageName = newPage, Markup = $"[{anotherPage}]" });
 
+			Assert.IsTrue(result);
 			Assert.AreEqual(1, _db.WikiPages.Count());
 			Assert.AreEqual(newPage, _db.WikiPages.Single().PageName);
 			Assert.AreEqual(1, _db.WikiPages.Single().Revision);
@@ -246,6 +247,28 @@ namespace TASVideos.Core.Tests.Services
 		}
 
 		[TestMethod]
+		public async Task Add_OverridesTimestampWithCurrent()
+		{
+			var origTime = DateTime.UtcNow.AddHours(-1);
+			var revision = new WikiPage { PageName = "Test", CreateTimestamp = origTime };
+			var result = await _wikiPages.Add(revision);
+			Assert.IsTrue(result);
+			Assert.IsTrue(revision.CreateTimestamp > origTime);
+		}
+
+		[TestMethod]
+		public async Task Add_NewPage_TimestampConflict_ReturnsFalse()
+		{
+			const string pageName = "TestPage";
+			var firstToStartEditing = new WikiPage { PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-2) };
+			var secondToStartEditing = new WikiPage { PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-1) };
+			await _wikiPages.Add(secondToStartEditing);
+
+			var result = await _wikiPages.Add(firstToStartEditing);
+			Assert.IsFalse(result);
+		}
+
+		[TestMethod]
 		public async Task Add_RevisionToExistingPage()
 		{
 			string oldLink = "OldPage";
@@ -257,21 +280,27 @@ namespace TASVideos.Core.Tests.Services
 			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(existingPage);
 
-			await _wikiPages.Add(new WikiPage { PageName = existingPageName, Markup = $"[{newLink}]" });
+			var result = await _wikiPages.Add(new WikiPage
+			{
+				PageName = existingPageName,
+				Markup = $"[{newLink}]",
+				CreateTimestamp = DateTime.UtcNow
+			});
 
+			Assert.IsTrue(result);
 			Assert.AreEqual(2, _db.WikiPages.Count());
 			var previous = _db.WikiPages.SingleOrDefault(wp => wp.PageName == existingPageName && wp.ChildId != null);
 			var current = _db.WikiPages.SingleOrDefault(wp => wp.PageName == existingPageName && wp.ChildId == null);
 
 			Assert.IsNotNull(previous);
 			Assert.IsNotNull(current);
-			Assert.AreEqual(1, previous!.Revision);
-			Assert.AreEqual(current!.Id, previous!.ChildId);
-			Assert.AreEqual(2, current!.Revision);
-			Assert.IsNull(current!.ChildId);
+			Assert.AreEqual(1, previous.Revision);
+			Assert.AreEqual(current.Id, previous.ChildId);
+			Assert.AreEqual(2, current.Revision);
+			Assert.IsNull(current.ChildId);
 
 			Assert.AreEqual(1, _cache.PageCache.Count);
-			Assert.AreEqual(current!.Id, _cache.PageCache.Single().Id);
+			Assert.AreEqual(current.Id, _cache.PageCache.Single().Id);
 
 			Assert.AreEqual(1, _db.WikiReferrals.Count());
 			Assert.AreEqual(existingPageName, _db.WikiReferrals.Single().Referrer);
@@ -295,8 +324,14 @@ namespace TASVideos.Core.Tests.Services
 			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision1);
 
-			await _wikiPages.Add(new WikiPage { PageName = pageName, Markup = $"[{revision3Link}]" });
+			var result = await _wikiPages.Add(new WikiPage
+			{
+				PageName = pageName,
+				Markup = $"[{revision3Link}]",
+				CreateTimestamp = DateTime.UtcNow
+			});
 
+			Assert.IsTrue(result);
 			Assert.AreEqual(3, _db.WikiPages.Count());
 
 			var first = _db.WikiPages.OrderBy(wp => wp.Id).First();
@@ -335,8 +370,9 @@ namespace TASVideos.Core.Tests.Services
 			await _db.SaveChangesAsync();
 			_cache.PageCache.Add(revision1);
 
-			await _wikiPages.Add(new WikiPage { PageName = pageName, Markup = $"[{revision4Link}]" });
+			var result = await _wikiPages.Add(new WikiPage { PageName = pageName, Markup = $"[{revision4Link}]", CreateTimestamp = DateTime.UtcNow });
 
+			Assert.IsTrue(result);
 			Assert.AreEqual(4, _db.WikiPages.Count());
 
 			var first = _db.WikiPages.OrderBy(wp => wp.Id).First();
@@ -353,6 +389,15 @@ namespace TASVideos.Core.Tests.Services
 			Assert.AreEqual(1, _db.WikiReferrals.Count());
 			Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
 			Assert.AreEqual(revision4Link, _db.WikiReferrals.Single().Referral);
+		}
+
+		[TestMethod]
+		public async Task Add_ConcurrencyError_ReturnsFalse()
+		{
+			var revision = new WikiPage { PageName = "Test" };
+			_db.CreateConcurrentUpdateConflict();
+			var result = await _wikiPages.Add(revision);
+			Assert.IsFalse(result);
 		}
 
 		[TestMethod]
@@ -1166,7 +1211,7 @@ namespace TASVideos.Core.Tests.Services
 
 			var actual = await _wikiPages.SystemPage(suffix);
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(systemPageName, actual!.PageName);
+			Assert.AreEqual(systemPageName, actual.PageName);
 		}
 
 		[TestMethod]

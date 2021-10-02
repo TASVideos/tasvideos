@@ -39,9 +39,11 @@ namespace TASVideos.Core.Services
 		Task<WikiPage> Revision(int dbId);
 
 		/// <summary>
-		/// Creates a new revision of a wiki page
+		/// Creates a new revision of a wiki page.
+		/// If the create timestamp is less than the latest revision, the revision will nto be added
 		/// </summary>
-		Task Add(WikiPage revision);
+		/// <return>true if the revision as successfully added, false if it was unable to add</return>
+		Task<bool> Add(WikiPage revision);
 
 		/// <summary>
 		/// Renames the given wiki page to the destination name
@@ -243,20 +245,27 @@ namespace TASVideos.Core.Services
 			return page;
 		}
 
-		public async Task Add(WikiPage revision)
+		public async Task<bool> Add(WikiPage revision)
 		{
 			if (string.IsNullOrWhiteSpace(revision.PageName))
 			{
 				throw new InvalidOperationException($"{nameof(revision.PageName)} must have a value.");
 			}
 
-			_db.WikiPages.Add(revision);
-
 			var currentRevision = await _db.WikiPages
 				.ForPage(revision.PageName)
 				.ThatAreNotDeleted()
 				.WithNoChildren()
 				.SingleOrDefaultAsync();
+
+			if (currentRevision is not null
+				&& revision.CreateTimestamp < currentRevision.CreateTimestamp)
+			{
+				return false;
+			}
+
+			revision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded
+			_db.WikiPages.Add(revision);
 
 			if (currentRevision is not null)
 			{
@@ -271,10 +280,18 @@ namespace TASVideos.Core.Services
 				revision.Revision = maxRevision + 1;
 			}
 
-			await GenerateReferrals(revision.PageName, revision.Markup);
+			try
+			{
+				await GenerateReferrals(revision.PageName, revision.Markup);
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return false;
+			}
 
 			ClearCache(revision.PageName);
 			this[revision.PageName] = revision;
+			return true;
 		}
 
 		public async Task<bool> Move(string originalName, string destinationName)
