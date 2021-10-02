@@ -90,12 +90,10 @@ namespace TASVideos.Services
 					.GetParameterData(w, name, invokeMethod, _wikiPage, pp);
 
 				var module = _serviceProvider.GetRequiredService(textComponent);
-				var x = paramObject.Values.ToArray();
-				var task = (Task)invokeMethod.Invoke(module, x)!;
+				var task = (Task)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
 				await task;
 				var resultProperty = task.GetType().GetProperty("Result")!;
-				var str = resultProperty.GetValue(task);
-				w.Write(str);
+				w.Write(resultProperty.GetValue(task));
 			}
 
 			public string AbsoluteUrl(string url)
