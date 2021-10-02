@@ -65,7 +65,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			UserPosts.Posts = await _db.ForumPosts
-				.CreatedBy(UserName)
+				.Where(p => p.PosterId == UserPosts.Id)
 				.ExcludeRestricted(seeRestricted)
 				.Select(p => new UserPostsModel.Post
 				{
