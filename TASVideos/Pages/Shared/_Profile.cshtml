@@ -106,13 +106,24 @@
 				}
 			</cardbody>
 		</card>
+		<card>
+			<cardheader condition="Model.Judgments.TotalJudgments > 0"><h4>Judgments</h4></cardheader>
+			<cardbody>
+				<p>Total movies published: <a asp-page="/Activity/Judges" asp-route-username="@Model.UserName">@Model.Judgments.TotalJudgments</a></p>
+			</cardbody>
+		</card>
+		<card>
+			<cardheader condition="Model.Publishing.TotalPublished > 0"><h4>Publishing</h4></cardheader>
+			<cardbody>
+				<p>Total movies published: <a asp-page="/Activity/Publishers" asp-route-username="@Model.UserName">@Model.Publishing.TotalPublished</a></p>
+			</cardbody>
+		</card>
 		<card condition="Model.WikiEdits.TotalEdits > 0">
 			<cardheader><h4>Wiki</h4></cardheader>
 			<cardbody>
 				<div>
 					<p>
-						<a
-						   asp-page="/Wiki/EditHistory"
+						<a asp-page="/Wiki/EditHistory"
 						   asp-route-username="@Model.UserName">
 							@Model.WikiEdits.TotalEdits
 						</a> Total Edits

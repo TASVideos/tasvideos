@@ -64,6 +64,8 @@ namespace TASVideos.Core.Services
 		public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
 
 		public WikiEdit WikiEdits { get; set; } = new ();
+		public PublishingSummary Publishing { get; set; } = new ();
+		public JudgingSummary Judgments { get; set; } = new ();
 
 		public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 		public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
@@ -99,6 +101,18 @@ namespace TASVideos.Core.Services
 		{
 			public int Total { get; set; }
 			public IEnumerable<string> Systems { get; set; } = new List<string>();
+		}
+
+		// TODO: more data points
+		public class PublishingSummary
+		{
+			public int TotalPublished { get; set; }
+		}
+
+		// TODO: more data points
+		public class JudgingSummary
+		{
+			public int TotalJudgments { get; set; }
 		}
 	}
 }

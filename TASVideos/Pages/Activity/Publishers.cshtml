@@ -2,7 +2,7 @@
 @{ ViewData["Title"] = $"Publisher Activity for {Model.UserName}"; }
 @model PublishersModel
 
-<p>Movies published by @Model.UserName</p>
+<p>Movies published by <profile-link username="@Model.UserName"></profile-link></p>
 <hr />
 @foreach (var pub in Model.Publications.OrderBy(p => p.Id))
 {
