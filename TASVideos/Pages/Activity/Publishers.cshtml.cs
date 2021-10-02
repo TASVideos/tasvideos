@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Activity.Model;
 
 namespace TASVideos.Pages.Activity
@@ -28,16 +25,29 @@ namespace TASVideos.Pages.Activity
 		[FromRoute]
 		public string UserName { get; set; } = "";
 
-		public async Task OnGet()
+		public async Task<IActionResult> OnGet()
 		{
+			if (string.IsNullOrWhiteSpace(UserName))
+			{
+				return NotFound();
+			}
+
+			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
+			if (user == null)
+			{
+				return NotFound();
+			}
+
 			Publications = await _db.Publications
-				.CreatedBy(UserName)
+				.Where(p => p.Submission!.PublisherId == user.Id)
 				.Select(s => new MovieEntryModel
 				{
 					Id = s.Id,
 					Title = s.Title
 				})
 				.ToListAsync();
+
+			return Page();
 		}
 	}
 }
