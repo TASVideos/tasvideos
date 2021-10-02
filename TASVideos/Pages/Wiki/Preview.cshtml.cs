@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
-using TASVideos.Core.Services.Youtube;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Wiki
@@ -14,12 +13,10 @@ namespace TASVideos.Pages.Wiki
 	public class PreviewModel : BasePageModel
 	{
 		private readonly IWikiPages _pages;
-		private readonly IWikiToTextRenderer _renderer;
 
-		public PreviewModel(IWikiPages pages, IWikiToTextRenderer renderer)
+		public PreviewModel(IWikiPages pages)
 		{
 			_pages = pages;
-			_renderer = renderer;
 		}
 
 		public string Markup { get; set; } = "";
@@ -33,15 +30,12 @@ namespace TASVideos.Pages.Wiki
 		{
 			Markup = await new StreamReader(Request.Body, Encoding.UTF8).ReadToEndAsync();
 
-			var str = await _renderer.RenderWikiForYoutube(new WikiPage { Markup = Markup });
-			return new ContentResult { Content = str };
+			if (Id.HasValue)
+			{
+				PageData = await _pages.Revision(Id.Value);
+			}
 
-			////if (Id.HasValue)
-			////{
-			////	PageData = await _pages.Revision(Id.Value);
-			////}
-
-			////return Page();
+			return Page();
 		}
 	}
 }
