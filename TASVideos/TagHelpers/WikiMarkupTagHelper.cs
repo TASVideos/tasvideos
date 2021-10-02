@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Namotion.Reflection;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Services;
@@ -62,54 +60,10 @@ namespace TASVideos.TagHelpers
 				throw new InvalidOperationException($"Could not find an Invoke method on ViewComponent {viewComponent}");
 			}
 
-			var paramObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
-			{
-				{ "pageData", PageData }
-			};
-
-			var paramCandidates = invokeMethod
-				.GetParameters()
-				.Where(p => !paramObject.ContainsKey(p.Name!)); // filter out any already supplied parameters
-
-			foreach (var paramCandidate in paramCandidates)
-			{
-				var paramType = paramCandidate.ParameterType;
-				var adapterKeyType = paramType;
-				var doNullableWrap = paramType.IsValueType
-					&& (!paramType.IsGenericType || paramType.GetGenericTypeDefinition() != typeof(Nullable<>));
-
-				if (doNullableWrap)
-				{
-					adapterKeyType = typeof(Nullable<>).MakeGenericType(adapterKeyType);
-				}
-
-				if (!ModuleParamHelpers.ParamTypeAdapters.TryGetValue(adapterKeyType, out var adapter))
-				{
-					// These should all exist at compile time.
-					throw new InvalidOperationException($"Unknown ViewComponent Argument Type: {adapterKeyType}");
-				}
-
-				pp.TryGetValue(paramCandidate.Name!, out var ppvalue);
-				var result = adapter.Convert(ppvalue);
-
-				if (result == null)
-				{
-					// Conversion failed.  See if the parameter type is a failable type.
-					var needsNonNull = paramType.IsValueType && doNullableWrap
-						|| !paramType.IsValueType && paramType.ToContextualType().Nullability == Nullability.NotNullable;
-					if (needsNonNull)
-					{
-						// TODO: Better styling, or something
-						w.Write($"MODULE ERROR for `{name}`: Missing parameter value for {paramCandidate.Name}");
-						return;
-					}
-				}
-
-				paramObject[paramCandidate.Name!] = result;
-			}
+			var paramObject = ModuleParamHelpers
+				.GetParameterData(w, name, invokeMethod, PageData, pp);
 
 			var content = await _viewComponentHelper.InvokeAsync(viewComponent, paramObject);
-
 			content.WriteTo(w, HtmlEncoder.Default);
 		}
 
