@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -15,7 +11,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Namotion.Reflection;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
-using TASVideos.ViewComponents;
+using TASVideos.Services;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
@@ -50,24 +46,13 @@ namespace TASVideos.TagHelpers
 			return HtmlExtensions.WikiCondition(ViewContext, condition);
 		}
 
-		private static readonly IDictionary<string, Type> ViewComponents = Assembly
-			.GetAssembly(typeof(WikiModuleAttribute))
-			!.GetTypes()
-			.Where(t => t.GetCustomAttribute(typeof(WikiModuleAttribute)) != null)
-			.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue, StringComparer.InvariantCultureIgnoreCase);
-
 		async Task IWriterHelper.RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 		{
-			var componentExists = ViewComponents.TryGetValue(name, out Type? viewComponent);
+			var componentExists = ModuleParamHelpers.ViewComponents.TryGetValue(name, out Type? viewComponent);
 			if (!componentExists)
 			{
 				throw new InvalidOperationException($"Unknown ViewComponent: {name}");
 			}
-
-			var paramObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
-			{
-				{ "pageData", PageData }
-			};
 
 			var invokeMethod = viewComponent!.GetMethod("InvokeAsync")
 				?? viewComponent.GetMethod("Invoke");
@@ -76,6 +61,11 @@ namespace TASVideos.TagHelpers
 			{
 				throw new InvalidOperationException($"Could not find an Invoke method on ViewComponent {viewComponent}");
 			}
+
+			var paramObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+			{
+				{ "pageData", PageData }
+			};
 
 			var paramCandidates = invokeMethod
 				.GetParameters()
@@ -93,7 +83,7 @@ namespace TASVideos.TagHelpers
 					adapterKeyType = typeof(Nullable<>).MakeGenericType(adapterKeyType);
 				}
 
-				if (!ParamTypeAdapters.TryGetValue(adapterKeyType, out var adapter))
+				if (!ModuleParamHelpers.ParamTypeAdapters.TryGetValue(adapterKeyType, out var adapter))
 				{
 					// These should all exist at compile time.
 					throw new InvalidOperationException($"Unknown ViewComponent Argument Type: {adapterKeyType}");

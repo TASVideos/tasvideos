@@ -126,7 +126,7 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddTextModules(this IServiceCollection services)
 		{
-			foreach (var component in WikiToTextRenderer.TextComponents.Values)
+			foreach (var component in ModuleParamHelpers.TextComponents.Values)
 			{
 				services.AddScoped(component);
 			}

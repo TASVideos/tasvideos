@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Namotion.Reflection;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
-using TASVideos.TagHelpers;
-using TASVideos.ViewComponents;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
@@ -27,13 +24,6 @@ namespace TASVideos.Services
 			_serviceProvider = serviceProvider;
 		}
 
-		public static readonly IDictionary<string, Type> TextComponents = Assembly
-			.GetAssembly(typeof(WikiModuleAttribute))
-			!.GetTypes()
-			.Where(t => t.GetCustomAttribute(typeof(WikiModuleAttribute)) != null)
-			.Where(t => t.GetCustomAttribute(typeof(TextModuleAttribute)) != null)
-			.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue, StringComparer.InvariantCultureIgnoreCase);
-
 		public async Task<string> RenderWikiForYoutube(WikiPage page)
 		{
 			var sw = new StringWriter();
@@ -43,16 +33,6 @@ namespace TASVideos.Services
 
 		private class WriterHelper : IWriterHelper
 		{
-			private static readonly Dictionary<Type, IModuleParameterTypeAdapter> ParamTypeAdapters = typeof(WikiMarkup)
-				.Assembly
-				.GetTypes()
-				.Where(t => t.BaseType != null
-					&& t.BaseType.IsGenericType
-					&& t.BaseType.GetGenericTypeDefinition() == typeof(ModuleParameterTypeAdapter<>))
-				.ToDictionary(
-					t => t.BaseType!.GetGenericArguments()[0],
-					t => (IModuleParameterTypeAdapter)Activator.CreateInstance(t)!);
-
 			private readonly string _host;
 			private readonly IServiceProvider _serviceProvider;
 			private readonly WikiPage _wikiPage;
@@ -89,17 +69,11 @@ namespace TASVideos.Services
 
 			public async Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 			{
-				var componentExists = TextComponents.TryGetValue(name, out Type? textComponent);
+				var componentExists = ModuleParamHelpers.TextComponents.TryGetValue(name, out Type? textComponent);
 				if (!componentExists)
 				{
 					return;
 				}
-
-				// TODO: copy-pasta from WikiMarkupTagHelper
-				var paramObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
-				{
-					{ "pageData", _wikiPage }
-};
 
 				var invokeMethod = textComponent!.GetMethod("RenderTextAsync");
 				//?? textComponent.GetMethod("RenderText"); // TODO
@@ -108,6 +82,11 @@ namespace TASVideos.Services
 				{
 					throw new InvalidOperationException($"Could not find an RenderText method on ViewComponent {textComponent}");
 				}
+
+				var paramObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+				{
+					{ "pageData", _wikiPage }
+				};
 
 				var paramCandidates = invokeMethod
 					.GetParameters()
@@ -125,7 +104,7 @@ namespace TASVideos.Services
 						adapterKeyType = typeof(Nullable<>).MakeGenericType(adapterKeyType);
 					}
 
-					if (!ParamTypeAdapters.TryGetValue(adapterKeyType, out var adapter))
+					if (!ModuleParamHelpers.ParamTypeAdapters.TryGetValue(adapterKeyType, out var adapter))
 					{
 						// These should all exist at compile time.
 						throw new InvalidOperationException($"Unknown ViewComponent Argument Type: {adapterKeyType}");

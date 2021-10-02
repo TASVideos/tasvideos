@@ -12,18 +12,9 @@ namespace TASVideos.TagHelpers
 		/// </summary>
 		public static T ConvertParameter<T>(string? input)
 		{
-			return ((ModuleParameterTypeAdapter<T>)ParamTypeAdapters[typeof(T)]).Convert(input);
+			return ((ModuleParameterTypeAdapter<T>)ModuleParamHelpers
+				.ParamTypeAdapters[typeof(T)]).Convert(input);
 		}
-
-		private static readonly Dictionary<Type, IModuleParameterTypeAdapter> ParamTypeAdapters = typeof(WikiMarkup)
-			.Assembly
-			.GetTypes()
-			.Where(t => t.BaseType != null
-				&& t.BaseType.IsGenericType
-				&& t.BaseType.GetGenericTypeDefinition() == typeof(ModuleParameterTypeAdapter<>))
-			.ToDictionary(
-				t => t.BaseType!.GetGenericArguments()[0],
-				t => (IModuleParameterTypeAdapter)Activator.CreateInstance(t)!);
 
 		private class StringConverter : ModuleParameterTypeAdapter<string?>
 		{
