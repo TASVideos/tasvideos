@@ -75,7 +75,11 @@ namespace TASVideos.Services
 				}
 
 				var invokeMethod = textComponent!.GetMethod("RenderTextAsync");
-				//?? textComponent.GetMethod("RenderText"); // TODO
+
+				if (invokeMethod == null && textComponent.GetMethod("RenderText") != null)
+				{
+					throw new NotImplementedException("Sync method not supported yet");
+				}
 
 				if (invokeMethod == null)
 				{
