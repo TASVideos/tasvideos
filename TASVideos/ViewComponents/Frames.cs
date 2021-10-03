@@ -11,6 +11,7 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.Frames)]
+	[TextModule]
 	public class Frames : ViewComponent
 	{
 		private const string CacheKey = "FramesModule";
@@ -21,6 +22,17 @@ namespace TASVideos.ViewComponents
 		{
 			_db = db;
 			_cache = cache;
+		}
+
+		public async Task<string> RenderTextAsync(WikiPage pageData, double? fps, int amount)
+		{
+			var model = new FramesModel
+			{
+				Amount = amount,
+				Fps = fps ?? await GuessFps(pageData.PageName)
+			};
+
+			return model.TimeSpan.ToCondensedString();
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, double? fps, int amount)

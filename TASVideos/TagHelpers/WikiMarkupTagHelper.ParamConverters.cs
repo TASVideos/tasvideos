@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TASVideos.Services;
 
 namespace TASVideos.TagHelpers
 {
@@ -11,31 +12,8 @@ namespace TASVideos.TagHelpers
 		/// </summary>
 		public static T ConvertParameter<T>(string? input)
 		{
-			return ((ModuleParameterTypeAdapter<T>)ParamTypeAdapters[typeof(T)]).Convert(input);
-		}
-
-		private static readonly Dictionary<Type, IModuleParameterTypeAdapter> ParamTypeAdapters = typeof(WikiMarkup)
-			.Assembly
-			.GetTypes()
-			.Where(t => t.BaseType != null
-				&& t.BaseType.IsGenericType
-				&& t.BaseType.GetGenericTypeDefinition() == typeof(ModuleParameterTypeAdapter<>))
-			.ToDictionary(
-				t => t.BaseType!.GetGenericArguments()[0],
-				t => (IModuleParameterTypeAdapter)Activator.CreateInstance(t)!);
-
-		private interface IModuleParameterTypeAdapter
-		{
-			object? Convert(string? input);
-		}
-
-		private abstract class ModuleParameterTypeAdapter<T> : IModuleParameterTypeAdapter
-		{
-			public abstract T Convert(string? input);
-			object? IModuleParameterTypeAdapter.Convert(string? input)
-			{
-				return (object?)Convert(input);
-			}
+			return ((ModuleParameterTypeAdapter<T>)ModuleParamHelpers
+				.ParamTypeAdapters[typeof(T)]).Convert(input);
 		}
 
 		private class StringConverter : ModuleParameterTypeAdapter<string?>

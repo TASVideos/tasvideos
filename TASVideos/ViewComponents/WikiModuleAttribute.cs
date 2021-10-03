@@ -12,4 +12,9 @@ namespace TASVideos.ViewComponents
 
 		public string Name { get; }
 	}
+
+	[AttributeUsage(AttributeTargets.Class)]
+	public class TextModuleAttribute : Attribute
+	{
+	}
 }
