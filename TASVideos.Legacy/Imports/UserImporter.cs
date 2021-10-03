@@ -373,7 +373,7 @@ namespace TASVideos.Legacy.Imports
 			mapping[3270] = 7170; // Tounet01 became Doc Skellington
 			mapping[6584] = 8671; // Fencypo became Snodeca
 			mapping[1419] = 3737; // mega_man_3 became GlitchMan
-			mapping[1855] = 4501; // dex88 became DarkMoon
+			mapping[1974] = 4501; // DJSecret became DarkMoon
 
 			return mapping;
 		}
