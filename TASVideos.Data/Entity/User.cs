@@ -74,6 +74,8 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = new HashSet<UserMaintenanceLog>();
 		public virtual ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = new HashSet<UserMaintenanceLog>();
+
+		public virtual ICollection<WikiPage> WikiRevisions { get; set; } = new HashSet<WikiPage>();
 	}
 
 	public enum PreferredPronounTypes

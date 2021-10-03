@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Legacy.Data.Site;
@@ -7,7 +8,9 @@ namespace TASVideos.Legacy.Imports
 {
 	internal static class AwardImporter
 	{
-		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
+		public static void Import(
+			NesVideosSiteContext legacySiteContext,
+			IReadOnlyDictionary<int, int> userIdMapping)
 		{
 			var awards = legacySiteContext.AwardClasses
 				.Select(ac => new Award
@@ -21,34 +24,13 @@ namespace TASVideos.Legacy.Imports
 				})
 				.ToList();
 
-			var userAwardsDto = legacySiteContext.Awards
+			var userAwards = legacySiteContext.Awards
 				.Where(a => a.UserId > 0)
 				.Select(a => new
 				{
 					a.AwardId,
-					a.User!.Name,
+					UserId = userIdMapping[a.UserId],
 					Year = 2000 + a.Year
-				})
-				.ToList();
-
-			var usersWithAwards = userAwardsDto
-				.Select(u => u.Name)
-				.Distinct()
-				.ToList();
-
-			// Match the user by username to get the user id (legacy awards are off site user id, but the new system uses the forum user id)
-			var users = context.Users
-				.Where(u => usersWithAwards.Contains(u.UserName))
-				.Select(u => new { u.Id, u.UserName })
-				.ToList();
-
-			var userAwards = (from ua in userAwardsDto
-				join u in users on ua.Name.ToLower() equals u.UserName.ToLower()
-				select new UserAward
-				{
-					AwardId = ua.AwardId,
-					Year = ua.Year,
-					UserId = u.Id
 				})
 				.ToList();
 

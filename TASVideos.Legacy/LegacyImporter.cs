@@ -64,10 +64,10 @@ namespace TASVideos.Legacy
 			Run("GameGenre", () => GameGenreImport.Import(_legacySiteDb));
 			Run("RamAddresses", () => RamAddressImporter.Import(_db, _legacySiteDb));
 
-			Run("Users", () => UserImporter.Import(_db, _legacySiteDb, _legacyForumDb));
-			Run("UserMaintenanceLogs", () => UserMaintenanceLogImporter.Import(_db, _legacySiteDb));
+			var userIdMapping = RunUserImport();
+			Run("UserMaintenanceLogs", () => UserMaintenanceLogImporter.Import(_legacySiteDb, userIdMapping));
 			Run("UserDisallows", () => DisallowImporter.Import(_legacyForumDb));
-			Run("Award", () => AwardImporter.Import(_db, _legacySiteDb));
+			Run("Award", () => AwardImporter.Import(_legacySiteDb, userIdMapping));
 
 			Run("Forum Categories", () => ForumCategoriesImporter.Import(_legacyForumDb));
 			Run("Forums", () => ForumImporter.Import(_legacyForumDb));
@@ -82,20 +82,20 @@ namespace TASVideos.Legacy
 				Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(_legacyForumDb));
 			}
 
-			Run("Wiki", () => WikiImporter.Import(_legacySiteDb));
+			Run("Wiki", () => WikiImporter.Import(_legacySiteDb, userIdMapping));
 			Run("WikiCleanup", () => WikiPageCleanup.Fix(_db, _legacySiteDb));
 			Run("WikiReferral", () => WikiReferralGenerator.Generate(_db));
-			Run("Submissions", () => SubmissionImporter.Import(_db, _legacySiteDb));
+			Run("Submissions", () => SubmissionImporter.Import(_db, _legacySiteDb, userIdMapping));
 			Run("Submissions Framerate", () => SubmissionFrameRateImporter.Import(_db));
 			Run("Publications", () => PublicationImporter.Import(_db, _legacySiteDb));
 			Run("PublicationUrls", () => PublicationUrlImporter.Import(_legacySiteDb));
-			Run("Publication Ratings", () => PublicationRatingImporter.Import(_db, _legacySiteDb));
+			Run("Publication Ratings", () => PublicationRatingImporter.Import(_legacySiteDb, userIdMapping));
 			Run("Publication Flags", () => PublicationFlagImporter.Import(_legacySiteDb));
 			Run("Publication Tags", () => PublicationTagImporter.Import(_db, _legacySiteDb));
 			Run("Published Author Generator", () => PublishedAuthorGenerator.Generate(_db));
-			Run("Publication Maintenance Logs", () => PublicationMaintenanceLogImporter.Import(_db, _legacySiteDb));
+			Run("Publication Maintenance Logs", () => PublicationMaintenanceLogImporter.Import(_legacySiteDb, userIdMapping));
 
-			Run("User files", () => UserFileImporter.Import(_db, _legacySiteDb));
+			Run("User files", () => UserFileImporter.Import(_legacySiteDb, userIdMapping));
 
 			var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
 			stopwatch.Stop();
@@ -105,6 +105,26 @@ namespace TASVideos.Legacy
 			{
 				_logger.LogInformation($"{key}: {value}");
 			}
+		}
+
+		private IReadOnlyDictionary<int, int> RunUserImport()
+		{
+			IReadOnlyDictionary<int, int> result;
+			var stopwatch = Stopwatch.StartNew();
+			try
+			{
+				_logger.LogInformation("Beginning User import");
+				result = UserImporter.Import(_db, _legacySiteDb, _legacyForumDb);
+				_logger.LogInformation("Finished User import");
+			}
+			catch (Exception ex)
+			{
+				throw new ImportException("User", ex);
+			}
+
+			ImportDurations.Add("User import", stopwatch.ElapsedMilliseconds);
+			stopwatch.Stop();
+			return result;
 		}
 
 		private void Run(string name, Action import)

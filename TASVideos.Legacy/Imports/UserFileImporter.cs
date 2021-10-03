@@ -13,22 +13,17 @@ namespace TASVideos.Legacy.Imports
 {
 	internal static class UserFileImporter
 	{
-		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext, IReadOnlyDictionary<int, int> userIdMapping)
 		{
-			var userIdsByName = context.Users.ToDictionary(
-				user => user.UserName,
-				user => user.Id,
-				StringComparer.OrdinalIgnoreCase);
-
 			var userFiles = legacySiteContext.UserFiles
 				.Include(userFile => userFile.User)
 				.ToList()
-				.Select(userFile => Convert(userFile, userIdsByName))
+				.Select(userFile => Convert(userFile, userIdMapping))
 				.ToList();
 
 			var userFileComments = legacySiteContext.UserFileComments
 				.Include(comment => comment.User)
-				.Select(comment => Convert(comment, userIdsByName))
+				.Select(comment => Convert(comment, userIdMapping))
 				.ToList();
 
 			var userFileColumns = new[]
@@ -74,7 +69,7 @@ namespace TASVideos.Legacy.Imports
 
 		private static UserFileComment Convert(
 			LegacyComment legacyComment,
-			IReadOnlyDictionary<string, int> userIdsByName)
+			IReadOnlyDictionary<int, int> userIdMapping)
 		{
 			return new ()
 			{
@@ -84,22 +79,18 @@ namespace TASVideos.Legacy.Imports
 				ParentId = legacyComment.ParentId,
 				Text = legacyComment.Text,
 				Title = ImportHelper.ConvertNotNullLatin1String(legacyComment.Title),
-				UserId = userIdsByName.TryGetValue(legacyComment.User!.Name, out var userId)
-				? userId
-				: -1,
+				UserId = userIdMapping[legacyComment.User!.Id],
 				UserFileId = legacyComment.FileId
 			};
 		}
 
 		private static UserFile Convert(
 			LegacyUserFile legacyFile,
-			IReadOnlyDictionary<string, int> userIdsByName)
+			IReadOnlyDictionary<int, int> userIdMapping)
 		{
 			return new ()
 			{
-				AuthorId = userIdsByName.TryGetValue(legacyFile.User!.Name, out var userId)
-					? userId
-					: -1,
+				AuthorId = userIdMapping[legacyFile.User!.Id],
 				Class = string.Equals(legacyFile.Class, "m", StringComparison.OrdinalIgnoreCase)
 					? UserFileClass.Movie
 					: UserFileClass.Support,
