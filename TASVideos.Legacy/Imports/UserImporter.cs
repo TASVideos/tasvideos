@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +28,6 @@ namespace TASVideos.Legacy.Imports
 			NesVideosSiteContext legacySiteContext,
 			NesVideosForumContext legacyForumContext)
 		{
-			// TODO:
-			// gender?
 			// TODO: what to do about these??
 			// var wikiNoForum = legacyUsers
 			// .Select(u => u.Name)
