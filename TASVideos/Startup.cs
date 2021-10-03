@@ -35,7 +35,8 @@ namespace TASVideos
 				.AddCookieConfiguration(Environment)
 				.AddGzipCompression(Settings)
 				.AddAutoMapperWithProjections()
-				.AddSwagger(Settings);
+				.AddSwagger(Settings)
+				.AddTextModules();
 
 			// Internal Libraries
 			services

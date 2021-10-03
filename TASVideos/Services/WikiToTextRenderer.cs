@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
@@ -13,23 +15,34 @@ namespace TASVideos.Services
 	public class WikiToTextRenderer : IWikiToTextRenderer
 	{
 		private readonly AppSettings _settings;
+		private readonly IServiceProvider _serviceProvider;
 
-		public WikiToTextRenderer(AppSettings settings)
+		public WikiToTextRenderer(AppSettings settings, IServiceProvider serviceProvider)
 		{
 			_settings = settings;
+			_serviceProvider = serviceProvider;
 		}
 
 		public async Task<string> RenderWikiForYoutube(WikiPage page)
 		{
 			var sw = new StringWriter();
-			await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(_settings.BaseUrl));
+			await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(_settings.BaseUrl, _serviceProvider, page));
 			return sw.ToString();
 		}
 
 		private class WriterHelper : IWriterHelper
 		{
 			private readonly string _host;
-			public WriterHelper(string host) { _host = host; }
+			private readonly IServiceProvider _serviceProvider;
+			private readonly WikiPage _wikiPage;
+
+			public WriterHelper(string host, IServiceProvider serviceProvider, WikiPage wikiPage)
+			{
+				_host = host;
+				_serviceProvider = serviceProvider;
+				_wikiPage = wikiPage;
+			}
+
 			public bool CheckCondition(string condition)
 			{
 				bool result = false;
@@ -53,10 +66,34 @@ namespace TASVideos.Services
 				return result;
 			}
 
-			public Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
+			public async Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 			{
-				// TODO: This needs to be handled in concert with Wiki changes
-				return Task.CompletedTask;
+				var componentExists = ModuleParamHelpers.TextComponents.TryGetValue(name, out Type? textComponent);
+				if (!componentExists)
+				{
+					return;
+				}
+
+				var invokeMethod = textComponent!.GetMethod("RenderTextAsync");
+
+				if (invokeMethod == null && textComponent.GetMethod("RenderText") != null)
+				{
+					throw new NotImplementedException("Sync method not supported yet");
+				}
+
+				if (invokeMethod == null)
+				{
+					throw new InvalidOperationException($"Could not find an RenderText method on ViewComponent {textComponent}");
+				}
+
+				var paramObject = ModuleParamHelpers
+					.GetParameterData(w, name, invokeMethod, _wikiPage, pp);
+
+				var module = _serviceProvider.GetRequiredService(textComponent);
+				var task = (Task)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
+				await task;
+				var resultProperty = task.GetType().GetProperty("Result")!;
+				w.Write(resultProperty.GetValue(task));
 			}
 
 			public string AbsoluteUrl(string url)

@@ -22,6 +22,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
+using TASVideos.Services;
 
 namespace TASVideos.Extensions
 {
@@ -119,6 +120,17 @@ namespace TASVideos.Extensions
 
 			services.AddHttpContext();
 			services.AddMvc(options => options.ValueProviderFactories.AddDelimitedValueProviderFactory('|'));
+
+			return services;
+		}
+
+		public static IServiceCollection AddTextModules(this IServiceCollection services)
+		{
+			foreach (var component in ModuleParamHelpers.TextComponents.Values)
+			{
+				services.AddScoped(component);
+			}
+
 			return services;
 		}
 
