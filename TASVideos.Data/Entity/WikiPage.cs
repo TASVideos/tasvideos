@@ -59,7 +59,7 @@ namespace TASVideos.Data.Entity
 
 		public static IQueryable<WikiPage> CreatedBy(this IQueryable<WikiPage> list, string userName)
 		{
-			return list.Where(t => t.CreateUserName == userName);
+			return list.Where(t => t.Author!.UserName == userName);
 		}
 
 		/// <summary>
