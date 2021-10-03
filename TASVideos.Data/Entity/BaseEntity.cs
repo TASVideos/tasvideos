@@ -23,12 +23,6 @@ namespace TASVideos.Data.Entity
 
 	public static class TrackableQueryableExtensions
 	{
-		public static IQueryable<T> CreatedBy<T>(this IQueryable<T> list, string userName)
-			where T : ITrackable
-		{
-			return list.Where(t => t.CreateUserName == userName);
-		}
-
 		public static IQueryable<T> OldestToNewest<T>(this IQueryable<T> list)
 			where T : ITrackable
 		{
