@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -7,7 +8,7 @@ namespace TASVideos.ForumEngine
 	public class BbParser
 	{
 		private static readonly Regex OpeningTag = new (@"\G
-			# Tag mame
+			# Tag name
 			(
 				[^\p{C}\[\]=\/]+
 			)
@@ -309,22 +310,16 @@ namespace TASVideos.ForumEngine
 					else if ((m = ClosingTag.Match(_input, _index)).Success)
 					{
 						var name = m.Groups[1].Value;
-						var topName = _stack.Peek().Name;
-						if (topName == name)
+						var matching = _stack.Reverse().FirstOrDefault(elt => elt.Name == name);
+						if (matching != null)
 						{
 							FlushText();
 							_index += m.Length;
-							_stack.Pop();
-							continue;
-						}
-
-						if (topName == "*" && name == "list")
-						{
-							// pop a list
-							FlushText();
-							_index += m.Length;
-							_stack.Pop();
-							_stack.Pop();
+							while (true)
+							{
+								if (_stack.Pop() == matching)
+									break;
+							}
 							continue;
 						}
 						else
