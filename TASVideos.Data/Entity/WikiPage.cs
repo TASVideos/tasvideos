@@ -54,6 +54,11 @@ namespace TASVideos.Data.Entity
 			return list.Where(w => !w.MinorEdit);
 		}
 
+		public static IQueryable<WikiPage> CreatedBy(this IQueryable<WikiPage> list, string userName)
+		{
+			return list.Where(t => t.CreateUserName == userName);
+		}
+
 		/// <summary>
 		/// Filters the list of wiki pages to only pages that are nest beneath the given page.
 		/// If no pageName is provided, then a master list of subpages is provided
