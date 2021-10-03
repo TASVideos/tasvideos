@@ -134,10 +134,11 @@ namespace TASVideos.Legacy.Imports
 
 			var userRoles = new List<UserRole>();
 
-			var joinedUsers = from user in users
-					join su in legacyUsers on user.UserName equals su.Name into lsu
+			var joinedUsers = (from user in users
+					join su in legacyUsers on user.UserName.ToLower() equals su.Name.ToLower() into lsu
 					from su in lsu.DefaultIfEmpty()
-					select new { User = user, SiteUser = su };
+					select new { User = user, SiteUser = su })
+				.ToList();
 
 			foreach (var user in joinedUsers)
 			{
