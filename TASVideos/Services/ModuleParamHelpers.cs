@@ -81,6 +81,7 @@ namespace TASVideos.Services
 					if (needsNonNull)
 					{
 						// TODO: Better styling, or something
+						// TODO: do not pass in TextWriter and this isn't how it should report that failure. We should return some failure state to the caller which can then handle output
 						w.Write($"MODULE ERROR for `{name}`: Missing parameter value for {paramCandidate.Name}");
 						return new Dictionary<string, object?>();
 					}
