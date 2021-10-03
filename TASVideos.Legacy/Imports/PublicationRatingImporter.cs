@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Legacy.Data.Site;
@@ -7,39 +8,36 @@ namespace TASVideos.Legacy.Imports
 {
 	internal static class PublicationRatingImporter
 	{
-		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
+		public static void Import(NesVideosSiteContext legacySiteContext, IReadOnlyDictionary<int, int> userIdMapping)
 		{
-			var ratingsDto = legacySiteContext.MovieRating
+			// TODO: there are a lot of ratings for users with no forum account, these votes are getting lost here
+			var raw = legacySiteContext.MovieRating
 				.Select(mr => new
 				{
-					UserName = mr.User!.Name,
+					mr.UserId,
 					PublicationId = mr.MovieId,
-					Type = mr.RatingName == "Entertainment"
-						? PublicationRatingType.Entertainment
-						: PublicationRatingType.TechQuality,
+					mr.RatingName,
 					mr.Value
 				})
 				.ToList();
 
-			var usersWithRatings = ratingsDto
-				.Select(u => u.UserName)
-				.Distinct()
-				.ToList();
-
-			var users = context.Users
-				.Where(u => usersWithRatings.Contains(u.UserName))
-				.Select(u => new { u.Id, u.UserName })
-				.ToList();
-
-			var ratings = (from r in ratingsDto
-				join u in users on r.UserName.ToLower() equals u.UserName.ToLower()
-				select new PublicationRating
+			// GroupBy shenanigans is to tease out duplicates caused by consolidating user accounts
+			// that voted on the same movie with multiple accounts
+			var ratingsHack = raw
+				.Where(r => userIdMapping.ContainsKey(r.UserId))
+				.Select(mr => new PublicationRating
 				{
-					UserId = u.Id,
-					PublicationId = r.PublicationId,
-					Type = r.Type,
-					Value = (double)r.Value
-				})
+					UserId = userIdMapping[mr.UserId],
+					PublicationId = mr.PublicationId,
+					Type = mr.RatingName == "Entertainment"
+						? PublicationRatingType.Entertainment
+						: PublicationRatingType.TechQuality,
+					Value = (double)mr.Value
+				}).ToList();
+
+			var ratings = ratingsHack
+				.GroupBy(g => new { g.UserId, g.PublicationId, g.Type }, gv => gv)
+				.Select(g => g.First())
 				.ToList();
 
 			var columns = new[]

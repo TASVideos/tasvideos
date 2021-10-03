@@ -30,6 +30,9 @@ namespace TASVideos.Data.Entity
 
 		[JsonIgnore]
 		public NpgsqlTsVector SearchVector { get; set; } = null!;
+
+		public int? AuthorId { get; set; }
+		public virtual User? Author { get; set; }
 	}
 
 	public static class WikiQueryableExtensions

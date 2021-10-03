@@ -18,7 +18,9 @@ namespace TASVideos.Legacy.Imports
 			public string HomePage { get; init; } = "";
 		}
 
-		public static void Import(NesVideosSiteContext legacySiteContext)
+		public static void Import(
+			NesVideosSiteContext legacySiteContext,
+			IReadOnlyDictionary<int, int> userIdMapping)
 		{
 			var blacklist = ObsoletePages.Concat(ObsoletePages.Select(p => "DeletedPages/" + p));
 
@@ -56,7 +58,8 @@ namespace TASVideos.Legacy.Imports
 					CreateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimestamp),
 					CreateUserName = legacyPage.Site.User?.Name,
 					LastUpdateTimestamp = ImportHelper.UnixTimeStampToDateTime(legacyPage.Site.CreateTimestamp),
-					LastUpdateUserName = legacyPage.Site.User?.Name
+					LastUpdateUserName = legacyPage.Site.User?.Name,
+					AuthorId = userIdMapping[legacyPage.Site.UserId]
 				});
 			}
 
@@ -88,7 +91,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(WikiPage.MinorEdit),
 				nameof(WikiPage.PageName),
 				nameof(WikiPage.Revision),
-				nameof(WikiPage.RevisionMessage)
+				nameof(WikiPage.RevisionMessage),
+				nameof(WikiPage.AuthorId)
 			};
 
 			pages.BulkInsert(wikiColumns, nameof(ApplicationDbContext.WikiPages));

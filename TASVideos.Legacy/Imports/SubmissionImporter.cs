@@ -15,7 +15,10 @@ namespace TASVideos.Legacy.Imports
 	{
 		private static readonly string[] ValidSubmissionFileExtensions = { "fmv", "vmv", "fcm", "smv", "dtm", "mcm", "gmv", "dof", "dsm", "bkm", "mcm", "fm2", "vbm", "m64", "mmv", "zmv", "pxm", "fbm", "mc2", "ymv", "jrsr", "gz", "omr", "pjm", "wtf", "tas", "lsmv", "fm3", "bk2", "lmp", "mcm", "mar", "ltm" };
 
-		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
+		public static void Import(
+			ApplicationDbContext context,
+			NesVideosSiteContext legacySiteContext,
+			IReadOnlyDictionary<int, int> userIdMapping)
 		{
 			var legacySubmissions = legacySiteContext.Submissions
 				.Include(s => s.User)
@@ -58,9 +61,9 @@ namespace TASVideos.Legacy.Imports
 			var lSubsWithSystem = (from ls in legacySubmissions
 				join s in systems on ls.SystemId equals s.Id
 				join w in submissionWikis on LinkConstants.SubmissionWikiPage + ls.Id equals w.PageName
-				join u in users on ImportHelper.ConvertNotNullLatin1String(ls.User!.Name).ToLower() equals u.UserName.ToLower() into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
+				join u in users on userIdMapping[ls.UserId] equals u.Id into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
 				from u in uu.DefaultIfEmpty()
-				join j in users on ImportHelper.ConvertNotNullLatin1String(ls.Judge!.Name).ToLower() equals j.UserName.ToLower() into ju
+				join j in users on userIdMapping[ls.UserId] equals j.Id into ju
 				from j in ju.DefaultIfEmpty()
 				join pub in publicationWikis on LinkConstants.PublicationWikiPage + (ls.Movie?.Id ?? -1) equals pub.PageName into pubs
 				from pub in pubs.DefaultIfEmpty()
@@ -259,7 +262,7 @@ namespace TASVideos.Legacy.Imports
 		{
 			return currentStatus switch
 			{
-				SubmissionStatus.New => throw new NotImplementedException($"Submission Import: Have not handled scenario: Has judge is in {currentStatus} status"),
+				SubmissionStatus.New => SubmissionStatus.JudgingUnderWay, // Assume Judge must have claimed it at some point
 				SubmissionStatus.PublicationUnderway => SubmissionStatus.Accepted,
 				SubmissionStatus.Rejected => SubmissionStatus.Rejected,
 				SubmissionStatus.Accepted => SubmissionStatus.Accepted,

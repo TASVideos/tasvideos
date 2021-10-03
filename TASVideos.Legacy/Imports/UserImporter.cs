@@ -10,6 +10,8 @@ using TASVideos.Extensions;
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
 
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
 namespace TASVideos.Legacy.Imports
 {
 	internal static class UserImporter
@@ -23,7 +25,7 @@ namespace TASVideos.Legacy.Imports
 		// Dup accounts we do not want to migrate over
 		private static readonly int[] BlackList = { 4079, 4854, 6177 };
 
-		public static void Import(
+		public static IReadOnlyDictionary<int, int> Import(
 			ApplicationDbContext context,
 			NesVideosSiteContext legacySiteContext,
 			NesVideosForumContext legacyForumContext)
@@ -134,6 +136,10 @@ namespace TASVideos.Legacy.Imports
 
 			var userRoles = new List<UserRole>();
 
+			// User's site name is chinese characters, but forum name is not
+			var xipo = legacyUsers.Single(u => u.Id == 1057);
+			xipo.Name = "xipo";
+
 			var joinedUsers = (from user in users
 					join su in legacyUsers on user.UserName.ToLower() equals su.Name.ToLower() into lsu
 					from su in lsu.DefaultIfEmpty()
@@ -151,7 +157,7 @@ namespace TASVideos.Legacy.Imports
 					{
 						if (!user.User.IsBanned)
 						{
-							if (user.SiteUser.UserRoles.Any(ur => ur!.Role!.Name == "limited"))
+							if (user.SiteUser.UserRoles.Any(ur => ur.Role!.Name == "limited"))
 							{
 								userRoles.Add(new UserRole
 								{
@@ -274,8 +280,11 @@ namespace TASVideos.Legacy.Imports
 				"megaman",
 				"Oguz",
 				"Vlass14",
-				"dex88",
-				"VladimirContreras"
+				"VladimirContreras",
+				"Anonymous6327",
+
+				// Was an editor at one point, but no forum account??
+				"DJSecret"
 			};
 
 			var portedPlayers = portedPlayerNames.Select(p => new User
@@ -329,6 +338,44 @@ namespace TASVideos.Legacy.Imports
 
 			var playerColumns = userColumns.Where(p => p != nameof(User.Id)).ToArray();
 			portedPlayers.BulkInsert(playerColumns, nameof(ApplicationDbContext.Users));
+
+			var mapping = joinedUsers
+				.Where(u => u.SiteUser != null)
+				.ToDictionary(tkey => tkey.SiteUser!.Id, tvalue => tvalue.User.Id);
+
+			// Add specific users added above that have submissions, so we need them in the mapping
+			var user43 = context.Users.Single(u => u.UserName == "ScouSin").Id;
+			mapping[43] = user43;
+			var user394 = context.Users.Single(u => u.UserName == "KMFDManic").Id;
+			mapping[394] = user394;
+			var user577 = context.Users.Single(u => u.UserName == "KennyBoy").Id;
+			mapping[577] = user577;
+			var user634 = context.Users.Single(u => u.UserName == "Deathray").Id;
+			mapping[634] = user634;
+			var user636 = context.Users.Single(u => u.UserName == "Ginger").Id;
+			mapping[636] = user636;
+			var user664 = context.Users.Single(u => u.UserName == "megaman").Id;
+			mapping[664] = user664;
+			var user1806 = context.Users.Single(u => u.UserName == "Vlass14").Id;
+			mapping[1806] = user1806;
+
+			mapping[1867] = user1806; // Vlass alt account
+
+			var user1971 = context.Users.Single(u => u.UserName == "DJSecret").Id;
+			mapping[1971] = user1971;
+
+			var user2889 = context.Users.Single(u => u.UserName == "Anonymous6327").Id;
+			mapping[2889] = user2889;
+
+			mapping[391] = 1835; // super ninja, already has another wiki account
+			mapping[5094] = 6227; // FitterSpace
+
+			mapping[3270] = 7170; // Tounet01 became Doc Skellington
+			mapping[6584] = 8671; // Fencypo became Snodeca
+			mapping[1419] = 3737; // mega_man_3 became GlitchMan
+			mapping[1855] = 4501; // dex88 became DarkMoon
+
+			return mapping;
 		}
 
 		private static Role? GetRoleFromLegacy(string role, IEnumerable<Role> roles)
