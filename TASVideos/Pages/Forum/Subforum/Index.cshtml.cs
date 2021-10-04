@@ -67,7 +67,7 @@ namespace TASVideos.Pages.Forum.Subforum
 				})
 				.OrderByDescending(ft => ft.Type == ForumTopicType.Announcement)
 				.ThenByDescending(ft => ft.Type == ForumTopicType.Sticky)
-				.ThenByDescending(ft => ft.LastPost)
+				.ThenByDescending(ft => ft.LastPost == null ? DateTime.MinValue : ft.LastPost.CreateTimestamp)
 				.Skip(rowsToSkip)
 				.Take(Search.PageSize ?? ForumConstants.TopicsPerForum)
 				.ToListAsync();
