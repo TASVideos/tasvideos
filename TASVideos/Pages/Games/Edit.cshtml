@@ -5,7 +5,7 @@
 	ViewData["Title"] = Model.Id.HasValue
 	? $"Editing Game #{Model.Id} {Model.Game.DisplayName}"
 		: "Create a new Game entry";
-	string returnUrl = HttpContext.ReturnUrl();
+	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 <form-group>
 	<delete-button condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>

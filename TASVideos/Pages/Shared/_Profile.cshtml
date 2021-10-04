@@ -13,7 +13,7 @@
 					</a>
 					<a permission="EditUsers"
 					   asp-page="/Users/Edit"
-					   asp-route-returnUrl="@Context.ReturnUrl()"
+					   asp-route-returnUrl="@Context.CurrentPathToReturnUrl()"
 					   asp-route-id="@Model.Id"
 					   class="btn btn-primary btn-sm border border-warning">
 						<i class="fa fa-pencil"></i> Edit

@@ -37,7 +37,7 @@
 			</form-group>
 			<form-group>
 				<p><a asp-page="ForgotPassword">Forgot your password?</a></p>
-				<p><a asp-page="Register" asp-route-returnurl="@HttpContext.ReturnUrl()">Register as a new user?</a></p>
+				<p><a asp-page="Register" asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()">Register as a new user?</a></p>
 			</form-group>
 		</form>
 	</section>

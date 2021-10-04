@@ -9,7 +9,7 @@
 <card>
 	<cardheader>
 		<span class="float-end">
-			<a condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@HttpContext.ReturnUrl()" class="btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
+			<a condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 		</span>
 		<h4>Description</h4>
 	</cardheader>
@@ -20,7 +20,7 @@
 	</cardbody>
 </card>
 <hr />
-<a permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.ReturnUrl()" class="float-end btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
+<a permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="float-end btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 <row>
 	<column md="6">
 		<ul>
@@ -88,7 +88,7 @@
 	<a permission="CatalogMovies"
 	   asp-page="/Games/Roms/List"
 	   asp-route-gameId="@Model.Game.Id"
-	   asp-route-returnUrl="@HttpContext.ReturnUrl()"
+	   asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
 	   class="float-end btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 </h4>
 
