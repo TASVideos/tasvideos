@@ -282,9 +282,7 @@ namespace TASVideos.Legacy.Imports
 				"Vlass14",
 				"VladimirContreras",
 				"Anonymous6327",
-
-				// Was an editor at one point, but no forum account??
-				"DJSecret"
+				"dex88"
 			};
 
 			var portedPlayers = portedPlayerNames.Select(p => new User
@@ -358,11 +356,10 @@ namespace TASVideos.Legacy.Imports
 			mapping[664] = user664;
 			var user1806 = context.Users.Single(u => u.UserName == "Vlass14").Id;
 			mapping[1806] = user1806;
+			var user1855 = context.Users.Single(u => u.UserName == "dex88").Id;
+			mapping[1855] = user1855;
 
 			mapping[1867] = user1806; // Vlass alt account
-
-			var user1971 = context.Users.Single(u => u.UserName == "DJSecret").Id;
-			mapping[1971] = user1971;
 
 			var user2889 = context.Users.Single(u => u.UserName == "Anonymous6327").Id;
 			mapping[2889] = user2889;
@@ -373,7 +370,7 @@ namespace TASVideos.Legacy.Imports
 			mapping[3270] = 7170; // Tounet01 became Doc Skellington
 			mapping[6584] = 8671; // Fencypo became Snodeca
 			mapping[1419] = 3737; // mega_man_3 became GlitchMan
-			mapping[1974] = 4501; // DJSecret became DarkMoon
+			mapping[1971] = 4501; // DJSecret became DarkMoon
 
 			return mapping;
 		}
