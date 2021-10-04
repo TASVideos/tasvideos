@@ -9,7 +9,6 @@ using TASVideos.Tests.Base;
 
 namespace TASVideos.Core.Tests.Services
 {
-	// TODO: update and concurrency exceptions on Add
 	[TestClass]
 	public class WikiPagesTests
 	{
