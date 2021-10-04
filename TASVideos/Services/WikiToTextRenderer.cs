@@ -90,9 +90,7 @@ namespace TASVideos.Services
 					.GetParameterData(w, name, invokeMethod, _wikiPage, pp);
 
 				var module = _serviceProvider.GetRequiredService(textComponent);
-				var task = (Task<string>)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
-				await task;
-				var result = task.Result;
+				var result = await (Task<string>)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
 				w.Write(result);
 			}
 
