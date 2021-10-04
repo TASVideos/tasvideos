@@ -260,7 +260,8 @@ namespace TASVideos.Pages.Publications
 					PageName = $"{LinkConstants.PublicationWikiPage}{id}",
 					Markup = model.Markup,
 					MinorEdit = model.MinorEdit,
-					RevisionMessage = model.RevisionMessage
+					RevisionMessage = model.RevisionMessage,
+					AuthorId = User.GetUserId()
 				};
 
 				await _wikiPages.Add(revision);

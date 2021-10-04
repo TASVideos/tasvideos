@@ -158,7 +158,8 @@ namespace TASVideos.Pages.Submissions
 			{
 				PageName = submission.WikiContent!.PageName,
 				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: {message}",
-				RevisionMessage = $"Claimed for {action}"
+				RevisionMessage = $"Claimed for {action}",
+				AuthorId = User.GetUserId()
 			};
 			await _wikiPages.Add(wikiPage);
 			submission.WikiContentId = wikiPage.Id;

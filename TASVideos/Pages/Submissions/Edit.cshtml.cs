@@ -287,7 +287,8 @@ namespace TASVideos.Pages.Submissions
 				PageName = $"{LinkConstants.SubmissionWikiPage}{Id}",
 				Markup = Submission.Markup,
 				MinorEdit = Submission.MinorEdit,
-				RevisionMessage = Submission.RevisionMessage
+				RevisionMessage = Submission.RevisionMessage,
+				AuthorId = User.GetUserId()
 			};
 			await _wikiPages.Add(revision);
 

@@ -92,7 +92,8 @@ namespace TASVideos.Pages.Wiki
 				PageName = Path.Trim('/'),
 				Markup = PageToEdit.Markup,
 				MinorEdit = PageToEdit.MinorEdit,
-				RevisionMessage = PageToEdit.RevisionMessage
+				RevisionMessage = PageToEdit.RevisionMessage,
+				AuthorId = User.GetUserId()
 			};
 			var result = await _wikiPages.Add(page);
 			if (!result)
