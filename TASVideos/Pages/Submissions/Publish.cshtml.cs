@@ -164,7 +164,8 @@ namespace TASVideos.Pages.Submissions
 				RevisionMessage = $"Auto-generated from Movie #{publication.Id}",
 				PageName = LinkConstants.PublicationWikiPage + publication.Id,
 				MinorEdit = false,
-				Markup = Submission.MovieMarkup
+				Markup = Submission.MovieMarkup,
+				AuthorId = User.GetUserId()
 			};
 
 			await _wikiPages.Add(wikiPage);
