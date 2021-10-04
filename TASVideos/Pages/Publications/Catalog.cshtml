@@ -156,7 +156,7 @@
 
 		document.getElementById('create-game').onclick = function () {
 			var systemId = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)').value;
-			document.location = '/Games/Edit?returnUrl=@HttpContext.ReturnUrl()&systemId=' + systemId;
+			document.location = '/Games/Edit?returnUrl=@HttpContext.CurrentPathToReturnUrl()&systemId=' + systemId;
 		}
 	})()
 </script>

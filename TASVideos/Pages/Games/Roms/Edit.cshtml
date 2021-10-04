@@ -5,7 +5,7 @@
 		? $"Editing Rom #{Model.Id} {Model.Rom.Name}"
 		: "Create A New Rom Entry";
 	var deleteLink = $"/Games/{Model.GameId}/Roms/Edit/{Model.Id ?? 0}/Delete";
-	string returnUrl = HttpContext.ReturnUrl();
+	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 
 <div class="text-danger">

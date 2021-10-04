@@ -130,7 +130,7 @@ namespace TASVideos.Pages.Games.Roms
 				return Page();
 			}
 
-			return string.IsNullOrWhiteSpace(HttpContext.ReturnUrl())
+			return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
 				? RedirectToPage("List", new { gameId = GameId })
 				: BaseReturnUrlRedirect($"?GameId={GameId}&RomId={rom.Id}");
 		}
