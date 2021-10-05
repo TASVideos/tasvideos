@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using TASVideos.Common;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.ViewComponents
+﻿namespace TASVideos.ViewComponents
 {
 	public class MovieGeneralStatisticsModel
 	{
