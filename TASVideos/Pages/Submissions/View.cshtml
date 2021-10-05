@@ -67,11 +67,11 @@
 			@*Populates the youtube player after the API script is ready*@
 			if (!player) {
 				@{
-				if (!String.IsNullOrEmpty(Model.Submission!.EncodeEmbedLink)){
+				if (!string.IsNullOrEmpty(Model.Submission.EncodeEmbedLink)){
 					<text>
 						window.onYouTubeIframeAPIReady = () => {
 							player = new YT.Player('ytplayer', {
-								videoId: "@Model.Submission!.EncodeEmbedLink.Split("/").Last()"
+								videoId: "@Model.Submission.EncodeEmbedLink.Split("/").Last()"
 							});
 						}
 					</text>
@@ -80,7 +80,7 @@
 			}
 		</script>
 		<br />
-		<a href="@Model.Submission!.EncodeEmbedLink">(Link to video)</a>
+		<a href="@Model.Submission.EncodeEmbedLink">(Link to video)</a>
 	</div>
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
 		<div class="alert alert-@(statusColor)" role="alert">

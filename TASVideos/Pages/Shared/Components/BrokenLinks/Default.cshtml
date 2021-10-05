@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<WikiPageReferral>
-@inject ILanguages Languages
+@inject ILanguages _languages
 
 @{
 	var brokenLinks = new List<WikiPageReferral>();
@@ -7,7 +7,7 @@
 
 	foreach (var link in Model)
 	{
-		if (await Languages.IsLanguagePage(link.Referral))
+		if (await _languages.IsLanguagePage(link.Referral))
 		{
 			missingTranslations.Add(link);
 		}

@@ -2,7 +2,7 @@
 @{
 	var tierIconPath2x = "";
 	var tierIconPath4x = "";
-	if (Model.TierIconPath != null)
+	if (string.IsNullOrWhiteSpace(Model.TierIconPath))
 	{
 		tierIconPath2x = $"{Model.TierIconPath.Split('.')[0]}-2x.png";
 		tierIconPath4x = $"{Model.TierIconPath.Split('.')[0]}-4x.png";
@@ -15,7 +15,7 @@
 }
 
 @functions {
-	string TorrentRemark(string link, int id)
+	string TorrentRemark(string? link, int id)
 	{
 		if (link == null)
 		{

@@ -81,7 +81,7 @@ namespace TASVideos.TagHelpers
 
 		public string Username { get; set; } = "";
 
-		public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			var innerContent = await output.GetChildContentAsync();
 			if (innerContent.IsEmptyOrWhiteSpace)
