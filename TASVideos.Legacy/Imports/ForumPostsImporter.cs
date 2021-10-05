@@ -63,7 +63,7 @@ namespace TASVideos.Legacy.Imports
 						// Submission subjects always start like #1234:
 						var submissionId = p.Subject[1..p.Subject.IndexOf(":")];
 
-						fixedText = SiteGlobalConstants.NewSubmissionPost + $"[submission]{submissionId}[/submission]";
+						fixedText = $"{SiteGlobalConstants.NewSubmissionPost}[submission]{submissionId}[/submission]";
 					}
 					else
 					{
