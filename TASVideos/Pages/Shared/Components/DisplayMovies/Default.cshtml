@@ -6,7 +6,6 @@
 
 <div condition="Model.Any()">
 	<label condition="Model.Count > 1">Movies: @Model.Count</label>
-	@* ReSharper disable once UnusedVariable *@
 	@foreach (var movie in Model)
 	{
 		<partial name="_MovieModule" model="movie"/>

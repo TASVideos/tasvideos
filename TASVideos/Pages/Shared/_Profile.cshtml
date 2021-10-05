@@ -80,7 +80,6 @@
 						</div>
 					</div>
 					<div class="float-end mt-2">
-						@* ReSharper disable once UnusedVariable *@
 						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 						{
 							<partial name="_Award" model="award" />

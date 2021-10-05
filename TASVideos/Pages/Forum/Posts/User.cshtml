@@ -62,7 +62,6 @@
 				<br />
 				<profile-link class="btn bg-info text-dark btn-sm" username="@Model.UserName">Profile</profile-link>
 				<div class="float-end">
-					@* ReSharper disable once UnusedVariable *@
 					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 					{
 						<partial name="_Award" model="award" />
