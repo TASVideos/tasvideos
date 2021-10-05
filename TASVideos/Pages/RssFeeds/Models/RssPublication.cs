@@ -19,8 +19,8 @@ namespace TASVideos.Pages.RssFeeds.Models
 		public string ScreenshotPath => Files.First(f => f.Type == FileType.Screenshot).Path;
 
 		public double RatingCount => Ratings.Count / 2.0;
-		public double RatingMin => Ratings.Min(r => r.Value);
-		public double RatingMax => Ratings.Max(r => r.Value);
+		public double RatingMin => Ratings.Any() ? Ratings.Min(r => r.Value) : 0;
+		public double RatingMax => Ratings.Any() ? Ratings.Max(r => r.Value) : 0;
 		public double RatingAverage
 		{
 			get
