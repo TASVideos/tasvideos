@@ -9,7 +9,7 @@ namespace TASVideos.Models.ValidationAttributes
 	{
 		public override bool IsValid(object? value)
 		{
-			return value is bool and true;
+			return value is true;
 		}
 	}
 }

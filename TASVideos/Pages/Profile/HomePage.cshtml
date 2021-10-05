@@ -1,11 +1,11 @@
 ﻿@page
-@inject IWikiPages WikiPages
+@inject IWikiPages _wikiPages
 
 @{
 	ViewData["Title"] = "Home Page";
 	ViewData.AddActivePage(ProfileNavPages.HomePage);
 	var homePage = $"HomePages/{User.Name()}";
-	bool pageExists = await WikiPages.Exists(homePage);
+	bool pageExists = await _wikiPages.Exists(homePage);
 }
 <br />
 @if (ViewData.UserHas(PermissionTo.EditHomePage))

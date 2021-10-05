@@ -32,12 +32,12 @@ namespace TASVideos.ViewComponents
 					Date = p.CreateTimestamp.Date,
 					Pubs = new List<MovieHistoryModel.PublicationEntry>
 					{
-						new MovieHistoryModel.PublicationEntry
+						new ()
 						{
 							Id = p.Id,
 							Name = p.Title,
 							IsNewGame = p.Game != null && p.Game.Publications.FirstOrDefault() == p,
-							IsNewBranch = p.ObsoletedMovies == null || p.ObsoletedMovies.Count == 0
+							IsNewBranch = p.ObsoletedMovies.Count == 0
 						}
 					}
 				})
