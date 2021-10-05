@@ -14,9 +14,7 @@ namespace TASVideos.Legacy.Imports
 		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			// TODO: posts without a corresponding post text
-			const int tvaId = 505;
 			var posts = legacyForumContext.Posts
-				.Where(p => p.PosterId != tvaId || !p.PostText!.Text!.StartsWith("This is an automatically posted message for discussing submission:"))
 				.Select(p => new
 				{
 					p.Id,
@@ -56,6 +54,16 @@ namespace TASVideos.Legacy.Imports
 						var publicationId = int.Parse(digitsOnly.Replace(temp, ""));
 
 						fixedText = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publicationId.ToString());
+					}
+					else if (p.PosterId == SiteGlobalConstants.TASVideoAgentId && p.Text is not null && p.Text.StartsWith("This is an automatically posted message for discussing submission:"))
+					{
+						enableBbCode = true;
+						enableHtml = false;
+
+						// Submission subjects always start like #1234:
+						var submissionId = p.Subject[1..p.Subject.IndexOf(":")];
+
+						fixedText = SiteGlobalConstants.NewSubmissionPost + $"[submission]{submissionId}[/submission]";
 					}
 					else
 					{
