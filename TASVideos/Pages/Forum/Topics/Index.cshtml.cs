@@ -59,7 +59,6 @@ namespace TASVideos.Pages.Forum.Topics
 				: null;
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			var test = User.Permissions().ToList();
 			Topic = await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
 				.Select(t => new ForumTopicModel
