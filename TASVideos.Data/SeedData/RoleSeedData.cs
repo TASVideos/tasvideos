@@ -116,6 +116,7 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.MoveTopics,
 			PermissionTo.SetTopicType,
 			PermissionTo.MergeTopics,
+			PermissionTo.SplitTopics,
 			PermissionTo.ViewPrivateUserData,
 			PermissionTo.BanIpAddresses,
 			PermissionTo.EditUserFiles
