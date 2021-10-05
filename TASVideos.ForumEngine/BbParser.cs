@@ -318,8 +318,11 @@ namespace TASVideos.ForumEngine
 							while (true)
 							{
 								if (_stack.Pop() == matching)
+								{
 									break;
+								}
 							}
+
 							continue;
 						}
 						else

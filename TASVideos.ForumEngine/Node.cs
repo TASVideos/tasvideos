@@ -114,13 +114,19 @@ namespace TASVideos.ForumEngine
 			h = null;
 
 			if (ss.Length > 2)
+			{
 				return;
+			}
 
 			if (ss.Length > 1)
+			{
 				h = TryParse(ss[1]);
+			}
 
 			if (ss.Length > 0)
+			{
 				w = TryParse(ss[0]);
+			}
 		}
 
 		private async Task WriteHref(TextWriter w, IWriterHelper h, Func<string, string> transformUrl, Func<string, Task<string>> transformUrlText)
@@ -261,6 +267,7 @@ namespace TASVideos.ForumEngine
 							w.Write(" width=");
 							Helpers.WriteAttributeValue(w, width.ToString()!);
 						}
+
 						if (height != null)
 						{
 							w.Write(" height=");
