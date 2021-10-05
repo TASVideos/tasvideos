@@ -85,7 +85,7 @@ namespace TASVideos.Pages.Forum.Topics
 			var destinationTopic = await _db.ForumTopics
 				.Include(t => t.Forum)
 				.ExcludeRestricted(seeRestricted)
-				.SingleOrDefaultAsync(t => t.Id == Topic.DestinationForumId);
+				.SingleOrDefaultAsync(t => t.Id == Topic.DestinationTopicId);
 
 			if (destinationTopic == null)
 			{
