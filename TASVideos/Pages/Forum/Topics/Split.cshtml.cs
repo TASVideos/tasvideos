@@ -95,7 +95,7 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			var destinationForum = _db.Forums
+			var destinationForum = await _db.Forums
 				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(f => f.Id == Topic.SplitToForumId);
 
@@ -137,7 +137,7 @@ namespace TASVideos.Pages.Forum.Topics
 			var newForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == topic.ForumId);
 
 			await _publisher.SendForum(
-				topic.Forum!.Restricted,
+				destinationForum.Restricted || topic.Forum!.Restricted,
 				$"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Name()} from {Topic.ForumName}: {Topic.Title}",
 				"",
 				$"Forum/Topics/{newTopic.Id}",
