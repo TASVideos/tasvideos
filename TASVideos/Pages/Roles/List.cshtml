@@ -10,7 +10,6 @@
 <p condition="User.IsLoggedIn()">See the <a asp-page="/Permissions/Index">Permission List</a> for details on individual permissions</p>
 <p>For a more detailed description of roles, see <a href="/Roles/Details">Role Details</a></p>
 
-@* ReSharper disable once UnusedVariable *@
 @foreach (var role in Model.Roles.OrderBy(m => m.Permissions.Count()))
 {
 	<partial name="_Role", model="role" />

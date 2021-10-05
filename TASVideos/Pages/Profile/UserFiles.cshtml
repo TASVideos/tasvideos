@@ -14,7 +14,6 @@
 <hr />
 <partial name="_StorageUsed" model="used" />
 
-@* ReSharper disable once UnusedVariable *@
 @foreach (var file in Model.Files.OrderByDescending(f => f.UploadTimestamp))
 {
 	<partial name="_UserFileInfo" model="file" />

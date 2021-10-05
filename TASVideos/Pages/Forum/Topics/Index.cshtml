@@ -47,7 +47,6 @@
 	<partial name="_Pager" model="Model.Topic.Posts" />
 </fullrow>
 
-@* ReSharper disable once UnusedVariable *@
 @foreach (var post in Model.Topic.Posts.OrderBy(p => p.CreateTimestamp).ToList())
 {
 	<partial name="_TopicPost" model="post" />

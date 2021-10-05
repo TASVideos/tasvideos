@@ -68,7 +68,6 @@
 			</small>
 		</div>
 		<div condition="Model.Awards.Any()" class="col-auto d-none">
-			@* ReSharper disable once UnusedVariable *@
 			@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 			{
 				<partial name="_Award" model="award" />
@@ -99,7 +98,6 @@
 					</small>
 				</div>
 				<div class="mt-1">
-					@* ReSharper disable once UnusedVariable *@
 					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 					{<partial name="_Award" model="award" />}
 				</div>
