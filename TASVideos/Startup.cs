@@ -66,6 +66,7 @@ namespace TASVideos
 		{
 			app
 				.UseRobots()
+				.UseMiddleware<Middleware.HtmlRedirectionMiddleware>()
 				.UseRequestLocalization()
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
