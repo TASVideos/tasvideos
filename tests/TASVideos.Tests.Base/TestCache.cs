@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using TASVideos.Core.Services;
 
 namespace TASVideos.Tests.Base
@@ -8,18 +9,22 @@ namespace TASVideos.Tests.Base
 	/// </summary>
 	public class TestCache : ICacheService
 	{
-		private readonly Dictionary<string, object?> _cache = new ();
+		private readonly Dictionary<string, string> _cache = new ();
 
 		public bool TryGetValue<T>(string key, out T value)
 		{
-			var result = _cache.TryGetValue(key, out object? cached);
-			value = (T)cached!;
+			var result = _cache.TryGetValue(key, out string? cached);
+			value = result
+				? JsonConvert.DeserializeObject<T>(cached ?? "")!
+				: default!;
+
 			return result;
 		}
 
 		public void Set(string key, object? data, int? cacheTime = null)
 		{
-			_cache[key] = data;
+			var str = JsonConvert.SerializeObject(data);
+			_cache[key] = str;
 		}
 
 		public void Remove(string key) => _cache.Remove(key);
