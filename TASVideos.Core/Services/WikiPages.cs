@@ -258,7 +258,8 @@ namespace TASVideos.Core.Services
 				.WithNoChildren()
 				.SingleOrDefaultAsync();
 
-			if (currentRevision is not null
+			if (revision.CreateTimestamp != DateTime.MinValue
+				&& currentRevision is not null
 				&& revision.CreateTimestamp < currentRevision.CreateTimestamp)
 			{
 				return false;
