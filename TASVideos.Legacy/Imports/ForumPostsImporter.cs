@@ -14,9 +14,7 @@ namespace TASVideos.Legacy.Imports
 		public static void Import(NesVideosForumContext legacyForumContext)
 		{
 			// TODO: posts without a corresponding post text
-			const int tvaId = 505;
 			var posts = legacyForumContext.Posts
-				.Where(p => p.PosterId != tvaId || !p.PostText!.Text!.StartsWith("This is an automatically posted message for discussing submission:"))
 				.Select(p => new
 				{
 					p.Id,
@@ -39,8 +37,9 @@ namespace TASVideos.Legacy.Imports
 				{
 					bool enableBbCode = p.EnableBbCode;
 					bool enableHtml;
-
 					string fixedText;
+					string? decodedSubject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject));
+
 					if (p.PosterId == SiteGlobalConstants.TASVideoAgentId && p.Subject == SiteGlobalConstants.NewPublicationPostSubject)
 					{
 						enableBbCode = true;
@@ -56,6 +55,23 @@ namespace TASVideos.Legacy.Imports
 						var publicationId = int.Parse(digitsOnly.Replace(temp, ""));
 
 						fixedText = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publicationId.ToString());
+					}
+					else if (p.PosterId == SiteGlobalConstants.TASVideoAgentId && p.Text is not null && p.Text.StartsWith("This is an automatically posted message for discussing submission:"))
+					{
+						enableBbCode = true;
+						enableHtml = false;
+
+						string submissionId = "";
+
+						// Two posts (Ids: 222420, 295274) with their topics deleted have an empty subject line and link to no submission
+						if (!string.IsNullOrEmpty(decodedSubject))
+						{
+							// Submission subjects always start like #1234:
+							submissionId = decodedSubject[1..decodedSubject.IndexOf(":")];
+						}
+
+						fixedText = $"{SiteGlobalConstants.NewSubmissionPost}[submission]{submissionId}[/submission]";
+						decodedSubject = null;
 					}
 					else
 					{
@@ -79,7 +95,7 @@ namespace TASVideos.Legacy.Imports
 						TopicId = p.TopicId,
 						PosterId = p.PosterId,
 						IpAddress = p.IpAddress.IpFromHex(),
-						Subject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject)),
+						Subject = decodedSubject,
 						Text = fixedText,
 						EnableBbCode = enableBbCode,
 						EnableHtml = enableHtml,

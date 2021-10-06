@@ -73,7 +73,6 @@ namespace TASVideos.Legacy
 			Run("Forums", () => ForumImporter.Import(_legacyForumDb));
 			Run("Forum Topics", () => ForumTopicImporter.Import(_legacyForumDb));
 			Run("Forum Posts", () => ForumPostsImporter.Import(_legacyForumDb));
-			Run("Forum Topic Fixer", () => ForumTopicFixer.Fix(_db));
 			Run("Forum Private Messages", () => ForumPrivateMessagesImporter.Import(_legacyForumDb));
 			Run("Forum Polls", () => ForumPollImporter.Import(_db, _legacyForumDb));
 
