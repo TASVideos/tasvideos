@@ -37,8 +37,9 @@ namespace TASVideos.Legacy.Imports
 				{
 					bool enableBbCode = p.EnableBbCode;
 					bool enableHtml;
-
 					string fixedText;
+					string? decodedSubject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject));
+
 					if (p.PosterId == SiteGlobalConstants.TASVideoAgentId && p.Subject == SiteGlobalConstants.NewPublicationPostSubject)
 					{
 						enableBbCode = true;
@@ -60,10 +61,17 @@ namespace TASVideos.Legacy.Imports
 						enableBbCode = true;
 						enableHtml = false;
 
-						// Submission subjects always start like #1234:
-						var submissionId = p.Subject[1..p.Subject.IndexOf(":")];
+						string submissionId = "";
+
+						// Two posts (Ids: 222420, 295274) with their topics deleted have an empty subject line and link to no submission
+						if (!string.IsNullOrEmpty(decodedSubject))
+						{
+							// Submission subjects always start like #1234:
+							submissionId = decodedSubject[1..decodedSubject.IndexOf(":")];
+						}
 
 						fixedText = $"{SiteGlobalConstants.NewSubmissionPost}[submission]{submissionId}[/submission]";
+						decodedSubject = null;
 					}
 					else
 					{
@@ -87,7 +95,7 @@ namespace TASVideos.Legacy.Imports
 						TopicId = p.TopicId,
 						PosterId = p.PosterId,
 						IpAddress = p.IpAddress.IpFromHex(),
-						Subject = WebUtility.HtmlDecode(ImportHelper.ConvertLatin1String(p.Subject)),
+						Subject = decodedSubject,
 						Text = fixedText,
 						EnableBbCode = enableBbCode,
 						EnableHtml = enableHtml,
