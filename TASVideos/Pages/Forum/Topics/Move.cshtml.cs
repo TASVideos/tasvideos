@@ -72,6 +72,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var seeRestricted = CanSeeRestricted;
 			var topic = await _db.ForumTopics
+				.Include(t => t.Forum)
 				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(t => t.Id == Id);
 
@@ -80,12 +81,13 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
+			var topicWasRestricted = topic.Forum?.Restricted ?? false;
 			topic.ForumId = Topic.ForumId;
 			await _db.SaveChangesAsync();
 
 			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
 			await _publisher.SendForum(
-				forum.Restricted,
+				topicWasRestricted || forum.Restricted,
 				$"Topic {Topic.TopicTitle} moved by {User.Name()} from {Topic.ForumName} to {forum.Name}",
 				"",
 				$"Forum/Topics/{Id}",

@@ -74,6 +74,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var seeRestricted = CanSeeRestricted;
 			var originalTopic = await _db.ForumTopics
+				.Include(f => f.Forum)
 				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(t => t.Id == Id);
 
@@ -107,7 +108,7 @@ namespace TASVideos.Pages.Forum.Topics
 			if (result)
 			{
 				await _publisher.SendForum(
-					destinationTopic.Forum!.Restricted,
+					originalTopic.Forum!.Restricted || destinationTopic.Forum!.Restricted,
 					$"Topic {originalTopic.Title} merged into {destinationTopic.Title} by {User.Name()}",
 					"",
 					$"Forum/Topics/{destinationTopic.Id}",
