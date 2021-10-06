@@ -2,7 +2,7 @@
 @{
 	var tierIconPath2x = "";
 	var tierIconPath4x = "";
-	if (string.IsNullOrWhiteSpace(Model.TierIconPath))
+	if (!string.IsNullOrWhiteSpace(Model.TierIconPath))
 	{
 		tierIconPath2x = $"{Model.TierIconPath.Split('.')[0]}-2x.png";
 		tierIconPath4x = $"{Model.TierIconPath.Split('.')[0]}-4x.png";
