@@ -1,0 +1,9 @@
+﻿@model IEnumerable<TASVideos.Data.Entity.Tag>
+<ul>
+	@foreach (var tag in Model)
+	{
+		<li>
+			<a href="/Movies-@tag.Code">@tag.DisplayName</a>
+		</li>
+	}
+</ul>
