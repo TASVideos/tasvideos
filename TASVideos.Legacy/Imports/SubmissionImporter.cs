@@ -58,12 +58,15 @@ namespace TASVideos.Legacy.Imports
 
 			var systems = context.GameSystems.ToList();
 
+			Dictionary<int, int?> judgeWithNegative = userIdMapping.ToDictionary(tkey => tkey.Key, tvalue => (int?)tvalue.Value);
+			judgeWithNegative.Add(-1, null);
+
 			var lSubsWithSystem = (from ls in legacySubmissions
 				join s in systems on ls.SystemId equals s.Id
 				join w in submissionWikis on LinkConstants.SubmissionWikiPage + ls.Id equals w.PageName
 				join u in users on userIdMapping[ls.UserId] equals u.Id into uu // Some wiki users were never in the forums, and therefore could not be imported (no password for instance)
 				from u in uu.DefaultIfEmpty()
-				join j in users on userIdMapping[ls.UserId] equals j.Id into ju
+				join j in users on judgeWithNegative[ls.JudgeId] equals j.Id into ju
 				from j in ju.DefaultIfEmpty()
 				join pub in publicationWikis on LinkConstants.PublicationWikiPage + (ls.Movie?.Id ?? -1) equals pub.PageName into pubs
 				from pub in pubs.DefaultIfEmpty()
