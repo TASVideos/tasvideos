@@ -349,6 +349,74 @@ namespace TASVideos.Pages.Submissions
 			return BaseRedirect($"/{Id}S");
 		}
 
+		public async Task<IActionResult> OnGetClaimForJudging()
+		{
+			if (!User.Has(PermissionTo.JudgeSubmissions))
+			{
+				return AccessDenied();
+			}
+
+			return await Claim(SubmissionStatus.New, SubmissionStatus.JudgingUnderWay, "judging", "Claiming for judging.", true);
+		}
+
+		public async Task<IActionResult> OnGetClaimForPublishing()
+		{
+			if (!User.Has(PermissionTo.PublishMovies))
+			{
+				return AccessDenied();
+			}
+
+			return await Claim(SubmissionStatus.Accepted, SubmissionStatus.PublicationUnderway, "publication", "Processing...", false);
+		}
+
+		private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message, bool isJudge)
+		{
+			var submission = await Db.Submissions
+				.Include(s => s.WikiContent)
+				.SingleOrDefaultAsync(s => s.Id == Id);
+
+			if (submission == null)
+			{
+				return NotFound();
+			}
+
+			if (submission.Status != requiredStatus)
+			{
+				return BadRequest("Submission can not be claimed");
+			}
+
+			submission.Status = newStatus;
+			var wikiPage = new WikiPage
+			{
+				PageName = submission.WikiContent!.PageName,
+				Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: {message}",
+				RevisionMessage = $"Claimed for {action}",
+				AuthorId = User.GetUserId()
+			};
+			await _wikiPages.Add(wikiPage);
+			submission.WikiContentId = wikiPage.Id;
+
+			if (isJudge)
+			{
+				submission.JudgeId = User.GetUserId();
+			}
+			else
+			{
+				submission.PublisherId = User.GetUserId();
+			}
+
+			var result = await ConcurrentSave(Db, "", "Unable to claim");
+			if (result)
+			{
+				await _publisher.SendSubmissionEdit(
+					$"Submission {submission.Title} set to {newStatus.EnumDisplayName()} by {User.Name()}",
+					$"{Id}S",
+					User.Name());
+			}
+
+			return RedirectToPage("View", new { Id });
+		}
+
 		private async Task PopulateDropdowns()
 		{
 			AvailableTiers = await Db.Tiers
