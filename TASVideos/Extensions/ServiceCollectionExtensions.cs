@@ -95,10 +95,8 @@ namespace TASVideos.Extensions
 					options.Conventions.AddPageRoute("/Submissions/Index", "Subs-{query}");
 					options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");
 					options.Conventions.AddPageRoute("/Submissions/View", "{id:int}S");
-					options.Conventions.AddPageRoute("/Submissions/LegacyView", "{id:int}S.html");
 					options.Conventions.AddPageRoute("/Publications/Index", "Movies-{query}");
 					options.Conventions.AddPageRoute("/Publications/View", "{id:int}M");
-					options.Conventions.AddPageRoute("/Publications/LegacyView", "{id:int}M.html");
 					options.Conventions.AddPageRoute("/Publications/Authors", "Players-List");
 					options.Conventions.AddPageRoute("/Forum/Posts/Index", "forum/p/{id:int}");
 					options.Conventions.AddPageRoute("/Submissions/Submit", "SubmitMovie");
