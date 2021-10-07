@@ -93,8 +93,10 @@
 					</div>
 					<small>
 						Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
-						Posts: @Model.PosterPostCount<br />
-						Location: @Model.PosterLocation
+						Posts: @Model.PosterPostCount
+						<span condition="!string.IsNullOrWhiteSpace(Model.PosterLocation)">
+							<br />Location: @Model.PosterLocation
+						</span>
 					</small>
 				</div>
 				<div class="mt-1">
