@@ -346,7 +346,7 @@ namespace TASVideos.Pages.Submissions
 				await _publisher.SendSubmissionEdit(title, $"{Id}S", userName);
 			}
 
-			return BaseRedirect($"/{Id}S");
+			return RedirectToPage("View", new { Id });
 		}
 
 		public async Task<IActionResult> OnGetClaimForJudging()
