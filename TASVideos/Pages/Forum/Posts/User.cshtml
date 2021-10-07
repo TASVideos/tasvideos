@@ -44,8 +44,10 @@
 						<br />
 						<small>
 							Joined: <timezone-convert asp-for="@Model.UserPosts.Joined" date-only="true"/><br />
-							Posts: @Model.UserPosts.Posts.RowCount<br />
-							Location: @Model.UserPosts.Location
+							Posts: @Model.UserPosts.Posts.RowCount
+							<span condition="!string.IsNullOrWhiteSpace(Model.UserPosts.Location)">
+                                				<br />Location: @Model.UserPosts.Location
+							</span>
 						</small>
 					</div>
 				</div>
