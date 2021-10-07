@@ -54,19 +54,5 @@ namespace TASVideos.RazorPages.Tests.Pages.Wiki
 			Assert.IsNotNull(result);
 			Assert.IsInstanceOfType(result, typeof(PageResult));
 		}
-
-		[TestMethod]
-		public async Task Render_HtmlExtension_StillFindsPage()
-		{
-			const string existingPage = "Test";
-			_mockWikiPages
-				.Setup(m => m.Page(existingPage, null))
-				.ReturnsAsync(new WikiPage { PageName = existingPage });
-
-			var result = await _model.OnGet(existingPage + ".html");
-
-			Assert.IsNotNull(result);
-			Assert.IsInstanceOfType(result, typeof(PageResult));
-		}
 	}
 }
