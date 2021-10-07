@@ -12,6 +12,10 @@ namespace TASVideos.Core.Services.Cache
 		private static IDatabase _cache = null!;
 		private static Lazy<ConnectionMultiplexer>? _connection;
 		private readonly int _cacheDurationInSeconds;
+		private static readonly JsonSerializerSettings SerializerSettings = new ()
+		{
+			ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+		};
 
 		public RedisCacheService(AppSettings settings, ILogger<RedisCacheService> logger)
 		{
@@ -56,7 +60,7 @@ namespace TASVideos.Core.Services.Cache
 
 		public void Set(string key, object? data, int? cacheTime = null)
 		{
-			var serializedData = JsonConvert.SerializeObject(data);
+			var serializedData = JsonConvert.SerializeObject(data, SerializerSettings);
 			var timeout = TimeSpan.FromSeconds(_cacheDurationInSeconds);
 			_cache.StringSet(key, serializedData, timeout);
 		}
