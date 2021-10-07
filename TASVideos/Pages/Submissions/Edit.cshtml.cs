@@ -385,6 +385,14 @@ namespace TASVideos.Pages.Submissions
 				return BadRequest("Submission can not be claimed");
 			}
 
+			var history = new SubmissionStatusHistory
+			{
+				SubmissionId = submission.Id,
+				Status = Submission.Status
+			};
+
+			Db.SubmissionStatusHistory.Add(history);
+
 			submission.Status = newStatus;
 			var wikiPage = new WikiPage
 			{
