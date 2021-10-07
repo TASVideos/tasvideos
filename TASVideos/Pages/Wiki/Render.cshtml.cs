@@ -29,7 +29,6 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnGet(string? url, int? revision = null)
 		{
-			throw new System.NotImplementedException("What is a wiki?");
 			url = url?.Trim('/') ?? "";
 			if (url.ToLower() == "frontpage")
 			{
