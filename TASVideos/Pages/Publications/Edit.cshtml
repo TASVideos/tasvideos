@@ -18,7 +18,7 @@
 
 <fullrow class="mt-2">
 	<label asp-for="Publication.Tier"></label>:
-	<a condition="string.IsNullOrWhiteSpace(Model.Publication.TierIconPath)" href="/@Model.Publication.TierLink">
+	<a condition="!string.IsNullOrWhiteSpace(Model.Publication.TierIconPath)" href="/@Model.Publication.TierLink">
 		<img style="width: 18px" src="/@tierIconPath2x"
 			 srcset="/@Model.Publication.TierIconPath .5x,
 			 /@tierIconPath2x 1x,
