@@ -9,6 +9,11 @@ namespace TASVideos.Tests.Base
 	/// </summary>
 	public class TestCache : ICacheService
 	{
+		private static readonly JsonSerializerSettings SerializerSettings = new ()
+		{
+			ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+		};
+
 		private readonly Dictionary<string, string> _cache = new ();
 
 		public bool TryGetValue<T>(string key, out T value)
@@ -23,7 +28,7 @@ namespace TASVideos.Tests.Base
 
 		public void Set(string key, object? data, int? cacheTime = null)
 		{
-			var str = JsonConvert.SerializeObject(data);
+			var str = JsonConvert.SerializeObject(data, SerializerSettings);
 			_cache[key] = str;
 		}
 
