@@ -261,7 +261,7 @@ namespace TASVideos.Pages.Submissions
 					SubmissionId = submission.Id,
 					Status = Submission.Status
 				};
-				submission.History.Add(history);
+
 				Db.SubmissionStatusHistory.Add(history);
 
 				submission.RejectionReasonId = Submission.Status == SubmissionStatus.Rejected
