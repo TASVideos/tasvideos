@@ -24,23 +24,23 @@ namespace TASVideos.ViewComponents
 			_cache = cache;
 		}
 
-		public async Task<string> RenderTextAsync(WikiPage pageData, double? fps, int amount)
+		public async Task<string> RenderTextAsync(WikiPage? pageData, double? fps, int amount)
 		{
 			var model = new FramesModel
 			{
 				Amount = amount,
-				Fps = fps ?? await GuessFps(pageData.PageName)
+				Fps = fps ?? await GuessFps(pageData?.PageName)
 			};
 
 			return model.TimeSpan.ToCondensedString();
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, double? fps, int amount)
+		public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData, double? fps, int amount)
 		{
 			var model = new FramesModel
 			{
 				Amount = amount,
-				Fps = fps ?? await GuessFps(pageData.PageName)
+				Fps = fps ?? await GuessFps(pageData?.PageName)
 			};
 
 			return View(model);
