@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -290,9 +291,13 @@ namespace TASVideos.Pages.Submissions
 				RevisionMessage = Submission.RevisionMessage,
 				AuthorId = User.GetUserId()
 			};
-			await _wikiPages.Add(revision);
+			var addResult = await _wikiPages.Add(revision);
+			if (!addResult)
+			{
+				throw new InvalidOperationException("Unable to save wiki revision!");
+			}
 
-			submission.WikiContent = revision;
+			submission.WikiContentId = revision.Id;
 
 			submission.SubmissionAuthors.Clear();
 			submission.SubmissionAuthors.AddRange(await Db.Users
