@@ -11,7 +11,7 @@ namespace TASVideos.Tests.Base
 	{
 		private static readonly JsonSerializerSettings SerializerSettings = new ()
 		{
-			ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+			ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 		};
 
 		private readonly Dictionary<string, string> _cache = new ();

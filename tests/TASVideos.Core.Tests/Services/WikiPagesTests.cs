@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -407,6 +406,18 @@ namespace TASVideos.Core.Tests.Services
 		public async Task Add_NoPageName_Throws(string pageName)
 		{
 			await _wikiPages.Add(new WikiPage { PageName = pageName });
+		}
+
+		[TestMethod]
+		public async Task Add_SelfReference_DoesNotCrash()
+		{
+			var author = new User { UserName = "Test" };
+			var wiki = new WikiPage { PageName = "TestPage" };
+			author.WikiRevisions.Add(wiki);
+			wiki.Author = author;
+
+			var result = await _wikiPages.Add(wiki);
+			Assert.IsTrue(result);
 		}
 
 		#endregion
@@ -1416,55 +1427,6 @@ namespace TASVideos.Core.Tests.Services
 			}
 
 			return wp.Id;
-		}
-	}
-
-	internal class WikiTestCache : ICacheService
-	{
-		private readonly Dictionary<string, object?> _cache = new ();
-
-		public List<WikiPage> PageCache { get; set; } = new ();
-
-		public void Remove(string key)
-		{
-			var page = PageCache.SingleOrDefault(p => p.PageName == key.Split('-').Last());
-			if (page != null)
-			{
-				PageCache.Remove(page);
-			}
-
-			_cache.Remove(key);
-		}
-
-		public void Set(string key, object? data, int? cacheTime = null)
-		{
-			if (data is WikiPage page)
-			{
-				// This is to ensure that reference equality fails
-				// In a real world scenario, we would not expect the cached version
-				// to be the same copy as those returned by EF queries
-				PageCache.Add(new WikiPage
-				{
-					Id = page.Id,
-					PageName = page.PageName,
-					Markup = page.Markup,
-					Revision = page.Revision,
-					MinorEdit = page.MinorEdit,
-					RevisionMessage = page.RevisionMessage,
-					ChildId = page.ChildId,
-					Child = page.Child,
-					IsDeleted = page.IsDeleted
-				});
-			}
-
-			_cache[key] = data;
-		}
-
-		public bool TryGetValue<T>(string key, out T value)
-		{
-			var result = _cache.TryGetValue(key, out object? cached);
-			value = (T)cached!;
-			return result;
 		}
 	}
 }
