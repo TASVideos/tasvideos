@@ -325,7 +325,7 @@ namespace TASVideos.Pages.Submissions
 				string title;
 				if (statusHasChanged)
 				{
-					string statusStr = Submission.Status.ToString();
+					string statusStr = ""; //Submission.Status.ToString();
 					if (Submission.Status == SubmissionStatus.Accepted)
 					{
 						var tier = (await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name;
