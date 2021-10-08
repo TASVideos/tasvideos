@@ -14,7 +14,7 @@ namespace TASVideos.Core.Services.Cache
 		private readonly int _cacheDurationInSeconds;
 		private static readonly JsonSerializerSettings SerializerSettings = new ()
 		{
-			ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+			ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 		};
 
 		public RedisCacheService(AppSettings settings, ILogger<RedisCacheService> logger)
