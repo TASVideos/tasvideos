@@ -28,13 +28,13 @@ namespace TASVideos.Pages.Submissions.Models
 		[Url]
 		[Required]
 		[Display(Name = "Online-watching URL")]
-		[StringLength(100)]
+		[StringLength(500)]
 		public string OnlineWatchingUrl { get; set; } = "";
 
 		[Url]
 		[Required]
 		[Display(Name = "Mirror site URL")]
-		[StringLength(100)]
+		[StringLength(500)]
 		public string MirrorSiteUrl { get; set; } = "";
 
 		[Required]
