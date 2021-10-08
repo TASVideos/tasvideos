@@ -19,7 +19,7 @@ Goals of this rewrite include:
 - Ability to store and facilitate console verification knowledge and verification data/files
 
 A demo server has been set up for this project:
-https://tasvideos.mistflux.net/
+https://demo.tasvideos.org/
 
 This demo updates with production days once a day, and updates with the latest code twice a day.
 
