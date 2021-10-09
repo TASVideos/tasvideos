@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -90,7 +91,8 @@ namespace TASVideos.Pages.UserFiles
 						UserFileId = fileId,
 						Text = comment,
 						UserId = User.GetUserId(),
-						Ip = IpAddress
+						Ip = IpAddress,
+						CreationTimeStamp = DateTime.UtcNow
 					});
 
 					await _db.SaveChangesAsync();
