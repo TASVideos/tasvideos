@@ -2,7 +2,7 @@
 @{
 	int totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
 	bool canVote = false;
-	int userId = - 1;
+	int userId = -1;
 	if (User.IsLoggedIn())
 	{
 		userId = User.GetUserId();
@@ -11,13 +11,6 @@
 }
 
 <info-alert>
-	<a
-		condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0"
-		asp-page="PollResults"
-		asp-route-id="@Model.PollId"
-		class="btn bg-info text-dark float-end">
-		See Votes
-	</a>
 	<forum-markup markup=@Model.Question enable-bb-code=true></forum-markup>
 	<form asp-page="Index" asp-page-handler="Vote">
 		<input type="hidden" asp-for="@Model.PollId" />
@@ -29,11 +22,24 @@
 				percent = (int)(option.Voters.Count / (double)totalVotes * 100);
 			}
 
-			<div>
-				<span condition="option.Voters.Any(v => v == userId)" class="fa fa-check text-success"></span>
-				<span condition="canVote"><input type="radio" name="ordinal" id="_@option.Ordinal" value="@option.Ordinal"/></span>
-				<label for="_@option.Ordinal">@option.Text (@option.Voters.Count @(percent)%)</label>
-			</div>
+			<row class="align-items-center my-3">
+				<div class="col-12 col-md-3 col-lg-4 p-0 text-md-end">
+					<label for="_@option.Ordinal">
+						<span condition="option.Voters.Any(v => v == userId)" class="fa fa-check text-success"></span>
+						<span condition="canVote"><input type="radio" name="ordinal" id="_@option.Ordinal" value="@option.Ordinal" /></span>
+						@option.Text
+					</label>
+				</div>
+				<div class="col-12 col-md-9 col-lg-8">
+					<row class="align-items-center justify-content-center">
+						<div class="col-6 col-md-8 col-lg-6"><span class="progress"><span class="progress-bar" role="progressbar" style="width: @(percent)%" aria-valuenow="@(percent)" aria-valuemin="0" aria-valuemax="100"></span></span></div>
+						<div class="col-3 col-md-4 col-lg-6 p-0 text-center text-md-start">
+							<span class="fw-bold">@(percent)%</span>
+							<span>[ @option.Voters.Count ]</span>
+						</div>
+					</row>
+				</div>
+			</row>
 		}
 		<script condition="canVote">
 			(function () {
@@ -47,5 +53,11 @@
 		</script>
 		<button condition="canVote" hidden="hidden" type="submit" class="btn btn-sm btn-success" id="vote-btn">Vote!</button>
 	</form>
+	<a condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0"
+		asp-page="PollResults"
+		asp-route-id="@Model.PollId"
+		class="btn btn-sm bg-info text-dark mt-2">
+		See All Votes
+	</a>
 </info-alert>
 
