@@ -1,6 +1,7 @@
 @page
 @{
 	ViewData["Title"] = "DoesNotExist";
+	HttpContext.Response.StatusCode = 404;
 }
 
 <h2>This user does not exist.</h2>
