@@ -128,34 +128,9 @@ namespace TASVideos.Legacy.Imports
 				return null;
 			}
 
-			// IPv4
-			if (hexIp.Length == 8)
-			{
-				// Bytes are stored in reverse order
-				var reversed = LittleEndian(hexIp);
-				var num = int.Parse(reversed, NumberStyles.AllowHexSpecifier);
-				var bytes = BitConverter.GetBytes(num);
-				var ipv4 = new IPAddress(bytes);
-				return ipv4.ToString();
-			}
-
-			// IPv6
 			var hex = ParseHex(hexIp);
-			var ipv6 = new IPAddress(hex);
-			return ipv6.ToString();
-		}
-
-		private static string LittleEndian(string num)
-		{
-			var number = Convert.ToInt32(num, 16);
-			byte[] bytes = BitConverter.GetBytes(number);
-			string reversed = "";
-			foreach (var b in bytes)
-			{
-				reversed += b.ToString("X2");
-			}
-
-			return reversed;
+			var ip = new IPAddress(hex);
+			return ip.ToString();
 		}
 
 		private static byte[] ParseHex(string hex)
