@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using FastMember;
 using SharpCompress.Compressors.Xz;
 using TASVideos.Extensions;
 
@@ -130,7 +131,11 @@ namespace TASVideos.Legacy.Imports
 			// IPv4
 			if (hexIp.Length == 8)
 			{
-				var ipv4 = new IPAddress(long.Parse(hexIp, NumberStyles.AllowHexSpecifier));
+				// Bytes are stored in reverse order
+				var reversed = LittleEndian(hexIp);
+				var num = int.Parse(reversed, NumberStyles.AllowHexSpecifier);
+				var bytes = BitConverter.GetBytes(num);
+				var ipv4 = new IPAddress(bytes);
 				return ipv4.ToString();
 			}
 
@@ -138,6 +143,19 @@ namespace TASVideos.Legacy.Imports
 			var hex = ParseHex(hexIp);
 			var ipv6 = new IPAddress(hex);
 			return ipv6.ToString();
+		}
+
+		private static string LittleEndian(string num)
+		{
+			var number = Convert.ToInt32(num, 16);
+			byte[] bytes = BitConverter.GetBytes(number);
+			string reversed = "";
+			foreach (var b in bytes)
+			{
+				reversed += b.ToString("X2");
+			}
+
+			return reversed;
 		}
 
 		private static byte[] ParseHex(string hex)
