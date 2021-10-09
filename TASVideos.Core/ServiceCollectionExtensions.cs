@@ -47,10 +47,10 @@ namespace TASVideos.Core
 					client.BaseAddress = new Uri("https://www.googleapis.com/youtube/v3/");
 				});
 
-			return services.AddServices(isDevelopment);
+			return services.AddServices(settings);
 		}
 
-		private static IServiceCollection AddServices(this IServiceCollection services, bool isDevelopment)
+		private static IServiceCollection AddServices(this IServiceCollection services, AppSettings settings)
 		{
 			services.AddScoped<UserManager>();
 			services.AddScoped<SignInManager>();
@@ -70,7 +70,7 @@ namespace TASVideos.Core
 
 			services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 
-			if (isDevelopment)
+			if (string.IsNullOrWhiteSpace(settings.SendGridKey))
 			{
 				services.AddTransient<IEmailSender, EmailLogger>();
 			}

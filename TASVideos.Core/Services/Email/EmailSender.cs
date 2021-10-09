@@ -25,13 +25,16 @@ namespace TASVideos.Core.Services.Email
 	{
 		private readonly AppSettings _settings;
 		private readonly IWebHostEnvironment _env;
+		private readonly ILogger<SendGridSender> _logger;
 
 		public SendGridSender(
 			IWebHostEnvironment environment,
-			AppSettings settings)
+			AppSettings settings,
+			ILogger<SendGridSender> logger)
 		{
 			_settings = settings;
 			_env = environment;
+			_logger = logger;
 		}
 
 		public Task SendEmail(IEmail email)
@@ -39,12 +42,12 @@ namespace TASVideos.Core.Services.Email
 			return Execute(email);
 		}
 
-		private Task Execute(IEmail email)
+		private async Task Execute(IEmail email)
 		{
 			string apiKey = _settings.SendGridKey;
 			if (string.IsNullOrWhiteSpace(_settings.SendGridKey) || string.IsNullOrWhiteSpace(_settings.SendGridFrom))
 			{
-				return Task.CompletedTask;
+				return;
 			}
 
 			string from = "noreply";
@@ -72,7 +75,12 @@ namespace TASVideos.Core.Services.Email
 			// Disable click tracking. See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
 			msg.SetClickTracking(false, false);
 
-			return client.SendEmailAsync(msg);
+			var result = await client.SendEmailAsync(msg);
+			if (!result.IsSuccessStatusCode)
+			{
+				var body = await result.Body.ReadAsStringAsync();
+				_logger.LogError($"Unable to send email. {body}");
+			}
 		}
 	}
 
