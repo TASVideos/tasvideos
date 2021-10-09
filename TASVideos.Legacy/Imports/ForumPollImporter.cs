@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Forum;
@@ -54,17 +55,24 @@ namespace TASVideos.Legacy.Imports
 				.ToList();
 
 			var forumPollOptions = legForumPollOptions
-			.Select(r => new ForumPollOption
+			.Select(r => new
 				{
 					Text = r.VoteOptionText,
 					PollId = r.Id,
 					Ordinal = r.VoteOptionId,
-					CreateTimestamp = DateTime.UtcNow,
-					LastUpdateTimestamp = DateTime.UtcNow,
-					CreateUserName = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown",
-					LastUpdateUserName = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown"
+					Voter = r.VoteDescription?.Topic?.Poster?.UserName ?? "Unknown"
 				})
-				.ToList();
+				.ToList()
+			.Select(po => new ForumPollOption
+			{
+				Text = HttpUtility.HtmlDecode(ImportHelper.ConvertNotNullLatin1String(po.Text)),
+				PollId = po.PollId,
+				Ordinal = po.Ordinal,
+				CreateTimestamp = DateTime.UtcNow,
+				LastUpdateTimestamp = DateTime.UtcNow,
+				CreateUserName = po.Voter,
+				LastUpdateUserName = po.Voter
+			});
 
 			var pollOptionColumns = new[]
 			{
