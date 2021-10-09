@@ -7,7 +7,7 @@
 
 	var choices = UiDefaults.DefaultEntry.Concat(Enumerable
 		.Range(0, 21)
-		.Select(r => (r / 2.0).ToString(CultureInfo.InvariantCulture))
+		.Select(r => (r / 2.0).ToString(CultureInfo.CurrentCulture))
 		.Select(r => new SelectListItem
 		{
 			Text = r,
