@@ -1,6 +1,7 @@
 ﻿@page
 @{
 	ViewData["Title"] = "Not Found";
+	HttpContext.Response.StatusCode = 404;
 }
 <partial Name="_ForumHeader" />
 <h4><a asp-page="Index">Forum Index</a></h4>
