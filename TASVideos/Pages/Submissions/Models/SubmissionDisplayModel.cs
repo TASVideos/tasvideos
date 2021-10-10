@@ -86,10 +86,10 @@ namespace TASVideos.Pages.Submissions.Models
 		public bool WarnStartType => StartType.HasValue && StartType != MovieStartType.PowerOn;
 
 		public int? TopicId { get; set; }
+		public int? GameId { get; set; }
 
 		internal int? SystemId { get; set; }
 		internal int? SystemFrameRateId { get; set; }
-		internal int? GameId { get; set; }
 		internal int? RomId { get; set; }
 	}
 }

@@ -151,6 +151,10 @@
 					</small>
 				</td>
 			</tr>
+			<tr condition="Model.Submission.GameId.HasValue">
+				<th>Game</th>
+				<td><game-link id="Model.Submission.GameId!.Value">@Model.Submission.GameName</game-link></td>
+			</tr>
 		</table>
 		<small>
 			Submission edited by @Model.Submission.Submitter on @Model.Submission.Submitted
