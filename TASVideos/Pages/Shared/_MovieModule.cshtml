@@ -144,9 +144,10 @@
 		</row>
 		<row class="border-bottom my-2 gx-3">
 			<small class="mb-2">
+				<game-link id="@Model.GameId">@Model.GameName</game-link> | 
 				<a asp-page="/Games/PublicationHistory"
-				   asp-route-id="@Model.GameId"
-				   asp-route-highlight="@Model.Id">
+					asp-route-id="@Model.GameId"
+					asp-route-highlight="@Model.Id">
 					See full obsoletion history
 				</a>
 			</small>
