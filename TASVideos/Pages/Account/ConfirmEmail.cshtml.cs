@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Account
 				return Home();
 			}
 
-			var result = await _userManager.ConfirmEmailAsync(user, WebUtility.UrlDecode(code));
+			var result = await _userManager.ConfirmEmailAsync(user, code);
 			if (!result.Succeeded)
 			{
 				return RedirectToPage("/Error");
