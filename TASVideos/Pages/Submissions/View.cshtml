@@ -111,27 +111,27 @@
 
 		<table class="table table-bordered table-condensed">
 			<tr>
-				<th>@SubmissionDisplayModel.GetDisplayName("SystemDisplayName")</th>
+				<th>@Html.DisplayNameFor(m => m.Submission.SystemDisplayName)</th>
 				<td>@Model.Submission.SystemDisplayName</td>
-				<th>@SubmissionDisplayModel.GetDisplayName("Emulator")</th>
+				<th>@Html.DisplayNameFor(m => m.Submission.Emulator)</th>
 				<td>@Model.Submission.Emulator</td>
 			</tr>
 			<tr>
-				<th>@SubmissionDisplayModel.GetDisplayName("GameVersion")</th>
+				<th>@Html.DisplayNameFor(m => m.Submission.GameVersion)</th>
 				<td>@Model.Submission.GameVersion</td>
-				<th>@SubmissionDisplayModel.GetDisplayName("FrameCount")</th>
+				<th>@Html.DisplayNameFor(m => m.Submission.FrameCount)</th>
 				<td>@Model.Submission.FrameCount</td>
 			</tr>
 			<tr>
-				<th>@SubmissionDisplayModel.GetDisplayName("RomName")</th>
+				<th>@Html.DisplayNameFor(m => m.Submission.RomName)</th>
 				<td>@Model.Submission.RomName</td>
-				<th>@SubmissionDisplayModel.GetDisplayName("FrameRate")</th>
+				<th>@Html.DisplayNameFor(m => m.Submission.FrameRate)</th>
 				<td>@Model.Submission.FrameRate</td>
 			</tr>
 			<tr>
-				<th>@SubmissionDisplayModel.GetDisplayName("Branch")</th>
+				<th>@Html.DisplayNameFor(m => m.Submission.Branch)</th>
 				<td>@Model.Submission.Branch</td>
-				<th>@SubmissionDisplayModel.GetDisplayName("RerecordCount")</th>
+				<th>@Html.DisplayNameFor(m => m.Submission.RerecordCount)</th>
 				<td>@Model.Submission.RerecordCount</td>
 			</tr>
 			<tr>
