@@ -9,6 +9,7 @@ namespace TASVideos.Pages.Publications.Models
 	{
 		public int Id { get; set; }
 		public int GameId { get; set; }
+		public string GameName { get; set; } = "";
 		public DateTime CreateTimestamp { get; set; }
 		public DateTime LastUpdateTimestamp { get; set; }
 		public string? LastUpdateUser { get; set; }
