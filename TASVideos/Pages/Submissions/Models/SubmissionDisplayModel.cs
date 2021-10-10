@@ -91,19 +91,5 @@ namespace TASVideos.Pages.Submissions.Models
 		internal int? SystemFrameRateId { get; set; }
 		internal int? GameId { get; set; }
 		internal int? RomId { get; set; }
-
-		public static string GetDisplayName(string propertyName)
-		{
-			MemberInfo? property = typeof(SubmissionDisplayModel).GetProperty(propertyName);
-			if (property != null)
-			{
-				if (property.GetCustomAttribute(typeof(DisplayAttribute)) is DisplayAttribute propertyDisplayAttribute && propertyDisplayAttribute.Name != null)
-				{
-					return propertyDisplayAttribute.Name;
-				}
-			}
-
-			return "";
-		}
 	}
 }
