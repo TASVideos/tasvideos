@@ -2,7 +2,7 @@
 @using TASVideos.Pages.Submissions.Models
 @model ViewModel
 @{
-	ViewData["Title"] = $"{Model.Submission.Title} - Submission #{Model.Id}";
+	ViewData["Title"] = $"Submission {Model.Submission.Title}";
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
 	bool canEdit = ViewData.UserHas(PermissionTo.EditSubmissions)
 		|| (Model.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
@@ -42,12 +42,6 @@
 				return "warning";
 		}
 	}
-}
-
-@section PageTitle {
-	<div class="container mb-2">
-		<h1>@($"Submission {Model.Submission.Title}")</h1>
-	</div>
 }
 
 <row class="mt-2">
