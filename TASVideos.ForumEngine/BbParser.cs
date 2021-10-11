@@ -310,7 +310,7 @@ namespace TASVideos.ForumEngine
 					else if ((m = ClosingTag.Match(_input, _index)).Success)
 					{
 						var name = m.Groups[1].Value;
-						var matching = _stack.Reverse().FirstOrDefault(elt => elt.Name == name);
+						var matching = _stack.FirstOrDefault(elt => elt.Name == name);
 						if (matching != null)
 						{
 							FlushText();
