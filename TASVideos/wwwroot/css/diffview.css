@@ -81,7 +81,3 @@ table.diff th.author {
 	border-top:1px solid #BBC;
 	background:#EFEFEF
 }
-
-table.diff .noselect {
-	user-select: none;
-}
