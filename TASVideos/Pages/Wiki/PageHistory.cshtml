@@ -35,9 +35,11 @@
 					<td>@revision.MinorEdit</td>
 					<td>@revision.RevisionMessage</td>
 					<td style="min-width: 100px">
-						<button disabled="@(!previousId.HasValue)" class="btn btn-secondary btn-sm" onclick="GetDiff(@previousId, @revision.Revision)">Prev</button>
-						<button class="btn bg-info text-dark btn-sm" data-from="true" onClick="GetDiff(@revision.Revision, null)">From</button>
-						<button class="btn bg-info text-dark btn-sm" data-to="true" onClick="GetDiff(null, @revision.Revision)">To</button>
+						<div class="btn-group" role="button" aria-label="diff picker">
+							<button disabled="@(!previousId.HasValue)" class="btn btn-secondary btn-sm" onclick="GetDiff(@previousId, @revision.Revision)">Prev</button>
+							<button class="btn bg-info text-dark btn-sm" data-from="true" onClick="GetDiff(@revision.Revision, null)">From</button>
+							<button class="btn bg-info text-dark btn-sm" data-to="true" onClick="GetDiff(null, @revision.Revision)">To</button>
+						</div>
 					</td>
 					<td>
 						<delete-button
@@ -152,5 +154,4 @@
 @section Scripts {
 	<script src="~/js/difflib.js"></script>
 	<script src="~/js/diffview.js"></script>
-	<link rel="stylesheet" href="~/css/diffview.css" />
 }

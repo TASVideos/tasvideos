@@ -18,8 +18,12 @@
 	--bs-white-rgb: #{$dark-rgb};
 	--bs-border-light: #{$border-dark};
 	--bs-gray-200: #{$dark};
+	--bs-gray-400: #{$dropdown-background-dark};
 	--tasvideos-bg-gradient: #{$banner};
 	--tab-content-bg: #{$bs-table-striped-bg-dark};
+	--diff-replace: #{$diff-replace-dark};
+	--diff-delete: #{$diff-delete-dark};
+	--diff-insert: #{$diff-insert-dark};
 	color-scheme: dark;
 }
 
