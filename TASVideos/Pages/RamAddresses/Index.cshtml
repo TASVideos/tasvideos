@@ -27,7 +27,6 @@
 	}
 }
 
-<a asp-page="Edit" asp-route-id="@Model.Id" permission="EditRamAddresses" class="btn btn-primary border border-warning float-end mb-2"><i class="fa fa-pencil"></i> Edit</a>
 <div class="table-container">
 	<table class="table table-striped table-bordered">
 		<tr>
@@ -37,6 +36,7 @@
 			<th>Signed</th>
 			<th>Endian</th>
 			<th>Description</th>
+			<th>Actions</th>
 		</tr>
 		@foreach (var address in Model.Addresses.OrderBy(a => a.Address))
 		{
@@ -47,7 +47,18 @@
 				<td>@address.Signed</td>
 				<td>@address.Endian</td>
 				<td>@address.Description</td>
+				<td>
+					<a asp-page="/RamAddresses/Edit" asp-route-id="@address.Id" class="btn btn-primary btn-sm"><i fa fa-pencil></i> Edit</a>
+					<delete-button
+						permission="EditRamAddresses"
+						asp-href="/RamAddresses/Edit/@(address.Id)?handler=Delete"
+						warning-message="Are you sure you want to delete this address?"
+						class="btn-sm">
+						<i class="fa fa-remove"></i>
+					</delete-button>
+				</td>
 			</tr>
 		}
 	</table>
 </div>
+<a asp-page="Add" asp-route-gameId="@Model.Id" class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
