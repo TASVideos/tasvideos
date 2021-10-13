@@ -55,6 +55,24 @@ namespace TASVideos.Legacy.Imports
 				})
 				.ToList();
 
+			// Squash sets into the appropriate game
+			var flintStones = new[] { 24, 25, 26 };
+			foreach (var addr in ramAddresses)
+			{
+				if (flintStones.Contains(addr.LegacySetId))
+				{
+					addr.GameId = 1219;
+				}
+				else if (addr.LegacySetId == 83)
+				{
+					addr.GameId = 1460;
+				}
+				else if (addr.LegacySetId == 117)
+				{
+					addr.GameId = 1481;
+				}
+			}
+
 			var addressColumns = new[]
 			{
 				nameof(GameRamAddress.Id),
