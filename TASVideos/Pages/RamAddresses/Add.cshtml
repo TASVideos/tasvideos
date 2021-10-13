@@ -1,11 +1,12 @@
-﻿@page  "{id}"
-@model EditModel
+﻿@page "{GameId}"
+@model AddModel
 @{
-	ViewData["Title"] = $"Editing RAM Addresses for {Model.Address.FormattedAddress} ({Model.Address.SystemCode} {Model.Address.GameName})";
+	ViewData["Title"] = $"Adding RAM Addresses for {Model.Address.FormattedAddress} ({Model.Address.SystemCode} {Model.Address.GameName})";
 }
 
 <form method="post">
-	<input type="hidden" asp-for="Address.GameId" />
+	<input type="hidden" asp-for="GameId" />
+	<input type="hidden" asp-for="SystemId" />
 	<row>
 		<column lg="6">
 			<form-group>
@@ -45,6 +46,6 @@
 	</row>
 	<form-button-bar>
 		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-		<a asp-page="/RamAddresses/Index" asp-route-id="@Model.Address.GameId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a asp-page="/RamAddresses/Index" asp-route-id="@Model.GameId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>
 </form>

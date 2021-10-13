@@ -9,6 +9,7 @@ using TASVideos.Models;
 using TASVideos.Pages.Games.Models;
 using TASVideos.Pages.Games.Roms.Models;
 using TASVideos.Pages.Publications.Models;
+using TASVideos.Pages.RamAddresses.Models;
 using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.UserFiles.Models;
@@ -188,6 +189,9 @@ namespace TASVideos
 			CreateMap<GameRom, GamesResponse.GameRom>();
 
 			CreateMap<WikiPage, UserWikiEditHistoryModel.EditEntry>();
+			CreateMap<GameRamAddress, AddressEditModel>()
+				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.GoodName))
+				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code));
 		}
 	}
 }
