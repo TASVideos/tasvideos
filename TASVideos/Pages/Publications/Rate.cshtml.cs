@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -44,11 +45,14 @@ namespace TASVideos.Pages.Publications
 				Title = publication.Title,
 				TechRating = ratings
 					.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality)
-					?.Value,
+					?.Value.ToString(CultureInfo.InvariantCulture),
 				EntertainmentRating = ratings
 					.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment)
-					?.Value
+					?.Value.ToString(CultureInfo.InvariantCulture)
 			};
+
+			Rating.TechUnrated = Rating.TechRating == null;
+			Rating.EntertainmentUnrated = Rating.EntertainmentRating == null;
 
 			return Page();
 		}
@@ -73,32 +77,32 @@ namespace TASVideos.Pages.Publications
 			var entertainment = ratings
 				.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment);
 
-			UpdateRating(tech, Id, userId, PublicationRatingType.TechQuality, Rating.TechRating);
-			UpdateRating(entertainment, Id, userId, PublicationRatingType.Entertainment, Rating.EntertainmentRating);
+			UpdateRating(tech, Id, userId, PublicationRatingType.TechQuality, PublicationRateModel.RatingString.AsRatingDouble(Rating.TechRating), Rating.TechUnrated);
+			UpdateRating(entertainment, Id, userId, PublicationRatingType.Entertainment, PublicationRateModel.RatingString.AsRatingDouble(Rating.EntertainmentRating), Rating.EntertainmentUnrated);
 
 			await _db.SaveChangesAsync();
 
-			return BasePageRedirect("/Profile/Ratings");
+			return BasePageRedirect("/Ratings/Index", new { Id });
 		}
 
-		private void UpdateRating(PublicationRating? rating, int id, int userId, PublicationRatingType type, double? value)
+		private void UpdateRating(PublicationRating? rating, int id, int userId, PublicationRatingType type, double? value, bool remove)
 		{
 			if (rating is not null)
 			{
-				if (value.HasValue)
-				{
-					// Update
-					rating.Value = value.Value;
-				}
-				else
+				if (remove)
 				{
 					// Remove
 					_db.PublicationRatings.Remove(rating);
 				}
+				else if (value.HasValue)
+				{
+					// Update
+					rating.Value = value.Value;
+				}
 			}
 			else
 			{
-				if (value.HasValue)
+				if (value.HasValue && !remove)
 				{
 					// Add
 					_db.PublicationRatings.Add(new PublicationRating

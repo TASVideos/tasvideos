@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Ratings
 
 		public IEnumerable<PublicationRatingsModel.RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
 			? Publication.Ratings
-			: Publication.Ratings.Where(r => r.IsPublic);
+			: Publication.Ratings.Where(r => r.IsPublic || r.UserName == User.Name());
 
 		// TODO: refactor to use pointsService for calculations
 		public async Task<IActionResult> OnGet()
