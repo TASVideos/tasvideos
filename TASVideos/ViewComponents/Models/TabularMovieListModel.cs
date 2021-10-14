@@ -18,6 +18,7 @@ namespace TASVideos.ViewComponents
 		public TimeSpan? PreviousTime { get; set; }
 		public int? PreviousId { get; set; }
 
+		public string System { get; set; } = "";
 		public string Game { get; set; } = "";
 		public string? Branch { get; set; }
 		public string Authors { get; set; } = "";

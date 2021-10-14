@@ -24,7 +24,7 @@
 					{
 						<tr>
 							<td><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></td>
-							<td>@pub.Game<span condition="!string.IsNullOrWhiteSpace(pub.Branch)"> "@(pub.Branch)"</span></td>
+							<td>@pub.System @pub.Game<span condition="!string.IsNullOrWhiteSpace(pub.Branch)"> "@(pub.Branch)"</span></td>
 							<td>
 								<pub-link id="pub.Id">@(pub.Time().ToStringWithOptionalDaysAndHours())</pub-link>
 								<span condition="pub.ObsoletedMovie != null">

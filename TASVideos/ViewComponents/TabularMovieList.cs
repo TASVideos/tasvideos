@@ -58,6 +58,7 @@ namespace TASVideos.ViewComponents
 					CreateTimestamp = p.CreateTimestamp,
 					Frames = p.Frames,
 					FrameRate = p.SystemFrameRate!.FrameRate,
+					System = p.System!.Code,
 					Game = p.Game!.DisplayName,
 					Branch = p.Branch,
 					Authors = string.Join(", ", p.Authors.Select(pa => pa.Author!.UserName)),
