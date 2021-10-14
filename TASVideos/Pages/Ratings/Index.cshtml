@@ -44,5 +44,5 @@ else
 	<warning-alert>No Ratings</warning-alert>
 }
 <form-button-bar>
-	<a class="btn btn-secondary" href="/@(Model.Id)M"><span class="fa fa-arrow-left"></span> Back To Publication</a>
+	<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back To Publication</a>
 </form-button-bar>
