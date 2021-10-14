@@ -3,35 +3,60 @@
 @model RateModel
 @{
 	ViewData["Title"] = $"Movie #{Model.Id} - {Model.Rating.Title}";
-
-
-	var choices = UiDefaults.DefaultEntry.Concat(Enumerable
-		.Range(0, 21)
-		.Select(r => (r / 2.0).ToString(CultureInfo.CurrentCulture))
-		.Select(r => new SelectListItem
-		{
-			Text = r,
-			Value = r
-		}));
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
 	<input type="hidden" asp-for="Rating.Title" />
 	<row>
-		<div class="col-md-6">
+		<div class="col-12 text-center text-md-start">
 			<form-group>
-				<label asp-for="Rating.EntertainmentRating"></label>
-				<select asp-for="Rating.EntertainmentRating" asp-items="choices" class="form-control"></select>
+				<span class="fs-4">@Html.DisplayNameFor(m => m.Rating.EntertainmentRating)</span>
+				<span class="text-nowrap">
+					( <input asp-for="Rating.EntertainmentUnrated" />
+					<label asp-for="Rating.EntertainmentUnrated">Unrated</label> )
+				</span>
+				<br />
+				<input asp-for="Rating.EntertainmentRating" type="number" class="form-control fs-4 d-inline-block" style="width:4em;" min="0" max="10" value="@Model.Rating.EntertainmentRating" step="0.1" />
+				<input id="entertainmentSlider" type="range" class="form-range mw-100 h-auto" style="width:15rem;" min="0" max="10" value="@Model.Rating.EntertainmentRating" step="0.1" />
 			</form-group>
 			<form-group>
-				<label asp-for="Rating.TechRating"></label>
-				<select asp-for="Rating.TechRating" asp-items="choices" class="form-control"></select>
+				<span class="fs-4">@Html.DisplayNameFor(m => m.Rating.TechRating)</span>
+				<span class="text-nowrap">
+					( <input asp-for="Rating.TechUnrated" />
+					<label asp-for="Rating.TechUnrated">Unrated</label> )
+				</span>
+				<br />
+				<input asp-for="Rating.TechRating" type="number" class="form-control fs-4 d-inline-block" style="width:4em;" min="0" max="10" value="@Model.Rating.TechRating" step="0.1" />
+				<input id="techSlider" type="range" class="form-range mw-100 h-auto" style="width:15rem;" min="0" max="10" value="@Model.Rating.TechRating" step="0.1" />
 			</form-group>
 		</div>
+		<script>
+			function ratingConnect(checkbox, textbox, slider)
+			{
+				checkbox.onchange = function () {
+					if (checkbox.checked) {
+						textbox.value = '';
+					}
+				};
+				textbox.oninput = function () {
+					slider.value = textbox.value;
+					checkbox.checked = false;
+				};
+				slider.oninput = function () {
+					slider.value = Math.round(Number(this.value) * 2) / 2;
+					textbox.value = slider.value;
+					checkbox.checked = false;
+				};
+			}
+			ratingConnect(document.getElementById('Rating_EntertainmentUnrated'), document.getElementById('Rating_EntertainmentRating'), document.getElementById('entertainmentSlider'));
+			ratingConnect(document.getElementById('Rating_TechUnrated'), document.getElementById('Rating_TechRating'), document.getElementById('techSlider'));
+		</script>
+	</row>
+	<row>
 	</row>
 	<form-button-bar>
 		<button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Rate</button>
-		<a class="btn btn-secondary" href="/@(Model.Id)M"><span class="fa fa-arrow-left"></span> Back</a>
+		<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back to Publication</a>
 	</form-button-bar>
 </form>
 <hr />
