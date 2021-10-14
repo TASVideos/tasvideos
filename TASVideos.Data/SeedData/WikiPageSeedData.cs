@@ -12,6 +12,12 @@ namespace TASVideos.Data.SeedData
 		{
 			new ()
 			{
+				PageName = "Donate",
+				RevisionMessage = Import,
+				Markup = "Thank you for your consideration, but we are not accepting donations at this time."
+			},
+			new ()
+			{
 				PageName = "SystemPages",
 				RevisionMessage = Import,
 				Markup = @"This page is obsolete. Use [System] instead.
