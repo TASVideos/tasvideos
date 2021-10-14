@@ -11,21 +11,4 @@
 	</div>
 }
 
-<h4><a asp-page="Index" asp-route-id="@Model.Id">@Model.Game.DisplayName</a></h4>
-@foreach (var node in Model.History.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
-{
-	var highlight = node.Id == Model.Highlight ? ViewData["HighlightClass"] : "";
-	<div class="mb-4">
-		<label>Current: <strong>@node.Branch</strong></label><br />
-		<pub-link class="@highlight" id="@node.Id">@node.Title</pub-link>
-		<span>(<timezone-convert asp-for="@node.CreateTimestamp" date-only="true" />)</span>
-		@foreach (var obsoletion in node.Obsoletes)
-		{
-			<ul class="mb-0">
-				<li>
-					<partial name="_HistoryEntry" model="obsoletion" view-data="ViewData" />
-				</li>
-			</ul>
-		}
-	</div>
-}
+<partial name="_PublicationHistory" model="Model.History" />

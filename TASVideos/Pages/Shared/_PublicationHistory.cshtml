@@ -1,0 +1,19 @@
+﻿@model PublicationHistoryGroup
+
+@foreach (var node in Model.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
+{
+	var highlight = node.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
+	<div class="mb-4">
+		<label>Current: <strong>@node.Branch</strong></label><br />
+		<pub-link class="@highlight" id="@node.Id">@node.Title</pub-link>
+		<span>(<timezone-convert asp-for="@node.CreateTimestamp" date-only="true" />)</span>
+		@foreach (var obsoletion in node.Obsoletes)
+		{
+			<ul class="mb-0">
+				<li>
+					<partial name="_HistoryEntry" model="obsoletion" view-data="ViewData" />
+				</li>
+			</ul>
+		}
+	</div>
+}
