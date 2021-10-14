@@ -95,7 +95,8 @@ namespace TASVideos.Pages.Submissions
 				.Select(u => new SubmissionAuthor
 				{
 					SubmissionId = submission.Id,
-					UserId = u.Id
+					UserId = u.Id,
+					Author = u
 				})
 				.ToListAsync());
 
