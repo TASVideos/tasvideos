@@ -52,6 +52,8 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public WikiPage? WikiPage { get; set; }
 
+		public string? EncodeEmbedLink { get; set; }
+
 		public async Task<IActionResult> OnGet()
 		{
 			int? userId = User.IsLoggedIn()
@@ -86,6 +88,10 @@ namespace TASVideos.Pages.Forum.Topics
 			if (Topic.SubmissionId.HasValue)
 			{
 				WikiPage = await _wikiPages.Page(LinkConstants.SubmissionWikiPage + Topic.SubmissionId.Value);
+				EncodeEmbedLink = await _db.Submissions
+					.Where(s => s.Id == Topic.SubmissionId.Value)
+					.Select(s => s.EncodeEmbedLink)
+					.SingleOrDefaultAsync();
 			}
 
 			Topic.Posts = await _db.ForumPosts

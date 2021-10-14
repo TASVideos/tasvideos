@@ -31,9 +31,43 @@
 @*TODO: WikiPage is generic but the html assumes it will be a submission*@
 @if (Model.WikiPage is not null)
 {
+	<div condition="@(!string.IsNullOrWhiteSpace(Model.EncodeEmbedLink))" class="d-flex justify-content-center">
+		<div class="col-12 col-lg-6">
+			@*Boilerplate bootstrap stuff *@
+			<div class="ratio ratio-16x9">
+				<div id="ytplayer"></div>
+			</div>
+			<script>
+				const youtubeScriptId = 'youtube-api';
+				let youtubeScript = document.getElementById(youtubeScriptId);
+				let player;
+				@*Loads the scripts which run the Youtube Player API asynchronously*@
+				if (youtubeScript === null) {
+					let tag = document.createElement('script');
+					let firstScript = document.getElementsByTagName('script')[0];
+
+					tag.src = 'https://www.youtube.com/iframe_api';
+					tag.id = youtubeScriptId;
+					firstScript.parentNode.insertBefore(tag, firstScript);
+				}
+				@*Populates the youtube player after the API script is ready*@
+				if (!player) {
+					window.onYouTubeIframeAPIReady = () => {
+						player = new YT.Player('ytplayer', {
+							videoId: "@Model.EncodeEmbedLink!.Split("/").Last()"
+						});
+					}
+				}
+			</script>
+			<a href="@Model.EncodeEmbedLink">(Link to video)</a>
+		</div>
+	</div>
 	<card class="mt-2 mb-2">
 		<cardheader>
-			Submission Text <small>(<sub-link id="@SubmissionHelper.SubmissionId(Model.WikiPage.PageName)">See Actual Submission</sub-link>)</small>
+			<row class="align-items-center row">
+				<span class="col-auto fs-5">Submission Text</span>
+				<sub-link class="col-auto btn btn-secondary btn-sm" id="@SubmissionHelper.SubmissionId(Model.WikiPage.PageName)"><i class="fa fa-info-circle"></i> Full Submission Page</sub-link>
+			</row>
 		</cardheader>
 		<cardbody style="max-height: 600px; overflow-y: scroll">
 			<wiki-markup markup="@Model.WikiPage.Markup" page-data="Model.WikiPage"></wiki-markup>
