@@ -17,6 +17,8 @@ namespace TASVideos.Data.Entity.Forum
 
 		public DateTime? CloseDate { get; set; }
 
+		public bool MultiSelect { get; set; }
+
 		public virtual ICollection<ForumPollOption> PollOptions { get; set; } = new HashSet<ForumPollOption>();
 	}
 }
