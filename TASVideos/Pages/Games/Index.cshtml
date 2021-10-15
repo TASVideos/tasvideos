@@ -62,9 +62,11 @@
 				<a href="/Movies-List-@(Model.Game.Id)G">
 					@Model.Game.PublicationCount Publications
 				</a>
-				(<a href="/Movies-List-@(Model.Game.Id)G-Obs">
-					@Model.Game.ObsoletePublicationCount Obsolete
-				</a>)
+				<span condition="Model.Game.ObsoletePublicationCount > 0">
+					(<a href="/Movies-List-@(Model.Game.Id)G-Obs">
+						@(Model.Game.PublicationCount + Model.Game.ObsoletePublicationCount) Total
+					</a>)
+				</span>
 			</li>
 			<li>
 				<a asp-page="PublicationHistory" asp-route-id="@Model.Game.Id">Publication History</a>
