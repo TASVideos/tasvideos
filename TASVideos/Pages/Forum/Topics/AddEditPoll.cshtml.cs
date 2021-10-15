@@ -60,6 +60,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 				Poll = new PollCreateModel
 				{
+					MultiSelect = topic.Poll.MultiSelect,
 					Question = topic.Poll.Question,
 					DaysOpen = topic.Poll.CloseDate.HasValue
 						? (int)(topic.Poll.CloseDate.Value - DateTime.Now).TotalDays
@@ -114,6 +115,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 				if (!AnyVotes)
 				{
+					topic.Poll.MultiSelect = Poll.MultiSelect;
 					topic.Poll.Question = Poll.Question ?? "";
 					topic.Poll.PollOptions.Clear();
 					topic.Poll.PollOptions.AddRange(Poll.PollOptions

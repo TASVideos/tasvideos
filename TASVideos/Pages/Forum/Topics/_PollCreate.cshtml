@@ -30,5 +30,12 @@
 				<input asp-for="PollOptions[i]" type="hidden" />
 			}
 		</form-group>
+		<form-group>
+			<div class="form-check">
+				<label asp-for="MultiSelect" class="form-check-label"></label>
+				<input disable="restricted" asp-for="MultiSelect" type="checkbox" class="form-check-input"/>
+			</div>
+			<span asp-validation-for="MultiSelect" class="text-danger"></span>
+		</form-group>
 	</column>
 </row>
