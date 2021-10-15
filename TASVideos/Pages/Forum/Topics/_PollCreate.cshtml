@@ -1,21 +1,34 @@
 ﻿@model TASVideos.Pages.Forum.Topics.Models.PollCreateModel
+@{
+	bool restricted = ViewData["Restricted"] != null && (bool)ViewData["Restricted"];
+}
+
+<h4 class="text-danger" condition="restricted">This poll has votes! Some options have been restricted</h4>
 
 <row>
 	<column lg="6">
 		<form-group>
 			<label asp-for="Question"></label>
-			<input type="text" asp-for="Question" class="form-control" />
+			<input condition="!restricted" type="text" asp-for="Question" class="form-control" />
+			<input condition="restricted" disabled placeholder="@Model.Question" type="text" class="form-control" />
 			<span asp-validation-for="Question" class="text-danger"></span>
 		</form-group>
 		<form-group>
 			<label asp-for="DaysOpen"></label>
-			<input asp-for="DaysOpen" type="number" min="0" max="365" class="form-control" placeholder="@Html.DescriptionFor(m => m.DaysOpen)" />
+			<input asp-for="DaysOpen" type="number" max="365" class="form-control" placeholder="@Html.DescriptionFor(m => m.DaysOpen)" />
 			<span asp-validation-for="DaysOpen" class="text-danger"></span>
 		</form-group>
-		<form-group>
+		<form-group condition="!restricted">
 			<label asp-for="PollOptions"></label>
 			<string-list asp-for="PollOptions" />
 			<span asp-validation-for="PollOptions" class="text-danger"></span>
+		</form-group>
+		<form-group condition="restricted">
+			@for (int i = 0; i < Model.PollOptions.Count; i++)
+			{
+				<input disabled type="text" placeholder="@Model.PollOptions[i]" class="form-control" />
+				<input asp-for="PollOptions[i]" type="hidden" />
+			}
 		</form-group>
 	</column>
 </row>
