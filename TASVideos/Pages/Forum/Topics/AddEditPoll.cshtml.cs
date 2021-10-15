@@ -7,6 +7,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics
@@ -28,6 +29,8 @@ namespace TASVideos.Pages.Forum.Topics
 		public string TopicTitle { get; set; } = "";
 
 		public int? PollId { get; set; }
+
+		public bool AnyVotes { get; set; }
 
 		[BindProperty]
 		public PollCreateModel Poll { get; set; } = new ();
@@ -53,10 +56,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (topic.Poll is not null)
 			{
-				if (topic.Poll.PollOptions.SelectMany(o => o.Votes).Any())
-				{
-					return BadRequest("A poll with existing votes can not be modified");
-				}
+				AnyVotes = topic.Poll.PollOptions.SelectMany(o => o.Votes).Any();
 
 				Poll = new PollCreateModel
 				{
@@ -106,22 +106,27 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (topic.Poll is not null)
 			{
-				if (topic.Poll.PollOptions.SelectMany(o => o.Votes).Any())
-				{
-					return BadRequest("A poll with existing votes can not be modified");
-				}
+				AnyVotes = topic.Poll.PollOptions.SelectMany(o => o.Votes).Any();
 
-				topic.Poll.Question = Poll.Question ?? "";
 				topic.Poll.CloseDate = Poll.DaysOpen.HasValue
 					? DateTime.UtcNow.AddDays(Poll.DaysOpen.Value)
 					: null;
 
-				topic.Poll.PollOptions.Clear();
-				topic.Poll = null;
-			}
+				if (!AnyVotes)
+				{
+					topic.Poll.Question = Poll.Question ?? "";
+					topic.Poll.PollOptions.Clear();
+					topic.Poll.PollOptions.AddRange(Poll.PollOptions
+						.Select((po, i) => new ForumPollOption
+						{
+							Text = po,
+							Ordinal = i
+						}));
+				}
 
-			var result = await ConcurrentSave(_db, "Poll edited", "Unable to clear existing poll");
-			if (result)
+				await ConcurrentSave(_db, "Poll edited", "Unable to clear existing poll");
+			}
+			else
 			{
 				await CreatePoll(topic, Poll);
 			}

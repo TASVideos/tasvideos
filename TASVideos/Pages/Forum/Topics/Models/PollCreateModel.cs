@@ -14,7 +14,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public int? DaysOpen { get; set; }
 
 		[Display(Name = "Options")]
-		public IEnumerable<string> PollOptions { get; set; } = new List<string> { "", "" };
+		public IList<string> PollOptions { get; set; } = new List<string> { "", "" };
 
 		public bool IsValid =>
 			!string.IsNullOrWhiteSpace(Question)

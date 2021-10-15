@@ -3,6 +3,7 @@
 @{
 	var mode = Model.PollId.HasValue ? "Edit" : "Add";
 	ViewData["Title"] = $"{mode}ing Poll for Topic {Model.TopicTitle}";
+	ViewData["Restricted"] = Model.AnyVotes;
 }
 
 <partial Name="_ForumHeader" />

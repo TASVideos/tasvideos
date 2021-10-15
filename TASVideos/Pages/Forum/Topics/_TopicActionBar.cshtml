@@ -68,7 +68,7 @@
 	title="Reset poll results">
 	<i>0</i>
 </delete-button>
-<a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls) && !Model.AnyVotes"
+<a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls)"
 	asp-page="AddEditPoll"
 	asp-route-topicId="@Model.Id"
 	class="btn btn-warning btn-sm"
