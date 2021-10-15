@@ -12,6 +12,7 @@ namespace TASVideos.Legacy.Imports
 	{
 		public static void Import(ApplicationDbContext context, NesVideosForumContext legacyForumContext)
 		{
+			const int awardForumId = 21;
 			var legacyVoteDescriptions = legacyForumContext.VoteDescription
 				.Include(v => v.Topic)
 				.ThenInclude(t => t!.Poster)
@@ -31,7 +32,8 @@ namespace TASVideos.Legacy.Imports
 					LastUpdateUserName = v.Topic?.Poster?.UserName ?? "Unknown",
 					CloseDate = v.VoteLength == 0
 						? null
-						: ImportHelper.UnixTimeStampToDateTime(v.VoteStart + v.VoteLength)
+						: ImportHelper.UnixTimeStampToDateTime(v.VoteStart + v.VoteLength),
+					MultiSelect = v.Topic!.ForumId == awardForumId
 				})
 				.ToList();
 
@@ -41,6 +43,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPoll.TopicId),
 				nameof(ForumPoll.Question),
 				nameof(ForumPoll.CloseDate),
+				nameof(ForumPoll.MultiSelect),
 				nameof(ForumPoll.CreateTimestamp),
 				nameof(ForumPoll.CreateUserName),
 				nameof(ForumPoll.LastUpdateTimestamp),
