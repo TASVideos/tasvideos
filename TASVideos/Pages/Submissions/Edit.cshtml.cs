@@ -264,11 +264,11 @@ namespace TASVideos.Pages.Submissions
 				};
 
 				Db.SubmissionStatusHistory.Add(history);
-
-				submission.RejectionReasonId = Submission.Status == SubmissionStatus.Rejected
-					? Submission.RejectionReason
-					: null;
 			}
+
+			submission.RejectionReasonId = Submission.Status == SubmissionStatus.Rejected
+				? Submission.RejectionReason
+				: null;
 
 			submission.IntendedTier = Submission.TierId.HasValue
 				? await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId.Value)
