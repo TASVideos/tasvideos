@@ -34,7 +34,19 @@ namespace TASVideos.Pages
 			MessageType = null;
 		}
 
-		public string IpAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+		public string IpAddress
+		{
+			get
+			{
+				var forwardedIp = Request.Headers["X-Forwarded-For"];
+				if (!string.IsNullOrWhiteSpace(forwardedIp))
+				{
+					return forwardedIp;
+				}
+
+				return Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+			}
+		}
 
 		protected IActionResult Home() => RedirectToPage("/Index");
 
