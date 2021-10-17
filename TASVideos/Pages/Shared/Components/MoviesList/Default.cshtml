@@ -19,14 +19,14 @@
 		{
 			<tr>
 				<td>
-					<a href="/Movies-@string.Join(",", pubGroup.Where(g => !g.IsObsolete).Select(g => g.Id + "M"))">
+					<a href="/Movies-@string.Join("-", pubGroup.Where(g => !g.IsObsolete).Select(g => g.Id + "M"))">
 						@pubGroup.Key
 					</a>
 					(@pubGroup.Count(g => !g.IsObsolete))
 				</td>
 				<td>
 					<span condition="pubGroup.Any(g => g.IsObsolete)">
-						<a href="/Movies-@string.Join(",", pubGroup.Select(g => g.Id + "M"))">
+						<a href="/Movies-@string.Join("-", pubGroup.Select(g => g.Id + "M"))">
 							All (@pubGroup.Count())
 						</a>
 					</span>

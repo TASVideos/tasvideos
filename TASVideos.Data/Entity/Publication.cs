@@ -121,7 +121,7 @@ namespace TASVideos.Data.Entity
 
 			Title =
 				$"{System.Code} {Game.DisplayName}"
-				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\" " : "")
+				+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\"" : "")
 				+ $" by {string.Join(", ", authorList)}"
 				+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 		}

@@ -22,7 +22,7 @@
 				</a>
 			</td>
 			<td>
-				<a condition="game.PublicationIds.Any()" href="/Movies-@string.Join(",", game.PublicationIds.Select(p => p + "M"))">
+				<a condition="game.PublicationIds.Any()" href="/Movies-@string.Join("-", game.PublicationIds.Select(p => p + "M"))">
 					@game.PublicationIds.Count Publication(s)
 				</a>
 				<label condition="!game.PublicationIds.Any()">
