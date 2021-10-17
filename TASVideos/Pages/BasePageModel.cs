@@ -34,7 +34,7 @@ namespace TASVideos.Pages
 			MessageType = null;
 		}
 
-		protected string IpAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+		public string IpAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
 
 		protected IActionResult Home() => RedirectToPage("/Index");
 
