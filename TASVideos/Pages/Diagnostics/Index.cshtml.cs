@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Diagnostics
 {
 	[RequirePermission(PermissionTo.SeeDiagnostics)]
-	public class IndexModel : PageModel
+	public class IndexModel : BasePageModel
 	{
 		public void OnGet()
 		{

@@ -28,3 +28,22 @@
 	<tr><td>Total Memory Usage</td><td>@GetProcessInfo()</td></tr>
 	<tr><td>Database Provider</td><td>@db.Database.ProviderName</td></tr>
 </table>
+
+<hr />
+
+<table class="table table-bordered table-striped">
+	<tr>
+		<td>Ip Address</td>
+		<td>@this.Model.IpAddress</td>
+	</tr>
+</table>
+<hr />
+<h4>Request headers</h4>
+<ul>
+	@foreach(var kvp in Request.Headers)
+	{
+		<li>
+			@kvp.Key : @kvp.Value
+		</li>
+	}
+</ul>
