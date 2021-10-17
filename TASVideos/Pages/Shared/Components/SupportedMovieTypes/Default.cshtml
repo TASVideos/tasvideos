@@ -1,2 +1,8 @@
-﻿@model IEnumerable<string>
-<div>@string.Join(", ", Model)</div>
+﻿@model IReadOnlyDictionary<string, DeprecatedMovieFormat?>
+@{ 
+	var entries = Model.Select(m => $"{m.Key}{(m.Value?.Deprecated == true ? " (not submittable) " : "")}");
+}
+<div>@string.Join(", ", entries)</div>
+<div>
+	<a Permission="DeprecateMovieParsers" asp-page="/Submissions/DeprecateMovieFormats" class="btn btn-primary btn-sm mt-2">Deprecate Movies</a>
+</div>

@@ -93,6 +93,8 @@ namespace TASVideos.Data
 
 		public DbSet<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = null!;
 
+		public DbSet<DeprecatedMovieFormat> DeprecatedMovieFormats { get; set; } = null!;
+
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
 			PerformTrackingUpdates();
@@ -436,6 +438,11 @@ namespace TASVideos.Data
 			{
 				entity.HasOne(e => e.Editor);
 				entity.HasOne(e => e.User).WithMany(e => e!.UserMaintenanceLogs);
+			});
+
+			builder.Entity<DeprecatedMovieFormat>(entity =>
+			{
+				entity.HasIndex(e => e.FileExtension).IsUnique();
 			});
 		}
 

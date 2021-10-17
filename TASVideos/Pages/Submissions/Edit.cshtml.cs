@@ -20,23 +20,27 @@ namespace TASVideos.Pages.Submissions
 	[RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 	public class EditModel : SubmissionBasePageModel
 	{
+		private readonly string _fileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEditModel.MovieFile)}";
 		private readonly IMovieParser _parser;
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ITASVideosGrue _tasvideosGrue;
+		private readonly IMovieFormatDepcrecator _deprecator;
 
 		public EditModel(
 			ApplicationDbContext db,
 			IMovieParser parser,
 			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher,
-			ITASVideosGrue tasvideosGrue)
+			ITASVideosGrue tasvideosGrue,
+			IMovieFormatDepcrecator deprecator)
 			: base(db)
 		{
 			_parser = parser;
 			_wikiPages = wikiPages;
 			_publisher = publisher;
 			_tasvideosGrue = tasvideosGrue;
+			_deprecator = deprecator;
 		}
 
 		[FromRoute]
@@ -125,14 +129,12 @@ namespace TASVideos.Pages.Submissions
 			{
 				if (!Submission.MovieFile.IsZip())
 				{
-					ModelState.AddModelError(nameof(SubmissionCreateModel.MovieFile), "Not a valid .zip file");
+					ModelState.AddModelError(_fileFieldName, "Not a valid .zip file");
 				}
 
 				if (!Submission.MovieFile.LessThanMovieSizeLimit())
 				{
-					ModelState.AddModelError(
-						nameof(SubmissionCreateModel.MovieFile),
-						".zip is too big, are you sure this is a valid movie file?");
+					ModelState.AddModelError(_fileFieldName, ".zip is too big, are you sure this is a valid movie file?");
 				}
 			}
 			else if (!User.Has(PermissionTo.ReplaceSubmissionMovieFile))
@@ -217,8 +219,12 @@ namespace TASVideos.Pages.Submissions
 
 			if (Submission.MovieFile is not null)
 			{
-				// TODO: check warnings
 				var parseResult = await _parser.ParseZip(Submission.MovieFile.OpenReadStream());
+				var deprecated = await _deprecator.IsDepcrecated("." + parseResult.FileExtension);
+				{
+					ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");
+				}
+
 				await MapParsedResult(parseResult, submission);
 
 				if (!ModelState.IsValid)

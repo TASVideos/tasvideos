@@ -17,12 +17,14 @@ namespace TASVideos.Pages.Submissions
 	[RequirePermission(PermissionTo.SubmitMovies)]
 	public class SubmitModel : SubmissionBasePageModel
 	{
+		private readonly string _fileFieldName = $"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}";
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IMovieParser _parser;
 		private readonly UserManager _userManager;
 		private readonly ITASVideoAgent _tasVideoAgent;
 		private readonly IYoutubeSync _youtubeSync;
+		private readonly IMovieFormatDepcrecator _deprecator;
 
 		public SubmitModel(
 			ApplicationDbContext db,
@@ -31,7 +33,8 @@ namespace TASVideos.Pages.Submissions
 			IMovieParser parser,
 			UserManager userManager,
 			ITASVideoAgent tasVideoAgent,
-			IYoutubeSync youtubeSync)
+			IYoutubeSync youtubeSync,
+			IMovieFormatDepcrecator deprecator)
 			: base(db)
 		{
 			_publisher = publisher;
@@ -40,6 +43,7 @@ namespace TASVideos.Pages.Submissions
 			_userManager = userManager;
 			_tasVideoAgent = tasVideoAgent;
 			_youtubeSync = youtubeSync;
+			_deprecator = deprecator;
 		}
 
 		[BindProperty]
@@ -73,8 +77,15 @@ namespace TASVideos.Pages.Submissions
 				AdditionalAuthors = Create.AdditionalAuthors
 			};
 
-			// TODO: check warnings
 			var parseResult = await _parser.ParseZip(Create.MovieFile!.OpenReadStream());
+
+			var deprecated = await _deprecator.IsDepcrecated("." + parseResult.FileExtension);
+			if (deprecated)
+			{
+				ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");
+				return Page();
+			}
+
 			await MapParsedResult(parseResult, submission);
 
 			if (!ModelState.IsValid)
@@ -131,12 +142,12 @@ namespace TASVideos.Pages.Submissions
 
 			if (!Create.MovieFile.IsZip())
 			{
-				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}", "Not a valid .zip file");
+				ModelState.AddModelError(_fileFieldName, "Not a valid .zip file");
 			}
 
 			if (!Create.MovieFile.LessThanMovieSizeLimit())
 			{
-				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}", ".zip is too big, are you sure this is a valid movie file?");
+				ModelState.AddModelError(_fileFieldName, ".zip is too big, are you sure this is a valid movie file?");
 			}
 
 			foreach (var author in Create.Authors)
