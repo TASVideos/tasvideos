@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.MovieParsers;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core.Services;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents
@@ -7,16 +8,16 @@ namespace TASVideos.ViewComponents
 	[WikiModule(WikiModules.SupportedMovieTypes)]
 	public class SupportedMovieTypes : ViewComponent
 	{
-		private readonly IMovieParser _movieParser;
+		private readonly IMovieFormatDepcrecator _depcrecator;
 
-		public SupportedMovieTypes(IMovieParser movieParser)
+		public SupportedMovieTypes(IMovieFormatDepcrecator depcrecator)
 		{
-			_movieParser = movieParser;
+			_depcrecator = depcrecator;
 		}
 
-		public IViewComponentResult Invoke()
+		public async Task<IViewComponentResult> InvokeAsync()
 		{
-			return View(_movieParser.SupportedMovieExtensions);
+			return View(await _depcrecator.GetAll());
 		}
 	}
 }

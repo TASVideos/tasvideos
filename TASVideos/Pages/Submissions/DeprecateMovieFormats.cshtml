@@ -1,0 +1,42 @@
+﻿@page
+@using System.Globalization
+@model DeprecateMovieFormatsModel
+@{
+	ViewData["Title"] = "Deprecrate Movie Formats";
+}
+
+<h4>Supported formats</h4>
+<table class="table table-bordered table-sm">
+	<tr>
+		<th>Format</th>
+		<th>Status</th>
+		<th>Actions</th>
+		<th>Changed On</th>
+		<th>Changed By</th>
+	</tr>
+	@foreach (var format in Model.MovieExtensions)
+	{
+		var deprecated = format.Value?.Deprecated ?? false;
+		<tr class="@(deprecated ? "text-danger" : "")">
+			<td>@format.Key</td>
+			<td>
+				<i condition="!deprecated" class="fa fa-check text-success"></i>
+				<i condition="deprecated" class="fa fa-remove text-danger"></i>
+			</td>
+			<td>
+				<form condition="!deprecated" method="post">
+					<input type="hidden" value="@format.Key" name="extension" />
+					<input type="hidden" value="true" name="deprecate"/>
+					<button class="btn btn-danger btn-sm">Deprecate</button>
+				</form>
+				<form condition="deprecated" method="post">
+					<input type="hidden" value="@format.Key" name="extension" />
+					<input type="hidden" value="false" name="deprecate" />
+					<button class="btn btn-success btn-sm">Allow</button>
+				</form>
+			</td>
+			<td>@(format.Value?.LastUpdateTimestamp.ToString(CultureInfo.CurrentCulture) ?? "")</td>
+			<td>@(format.Value?.LastUpdateUserName ?? "")</td>
+		</tr>
+	}
+</table>

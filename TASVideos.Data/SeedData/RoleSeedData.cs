@@ -70,7 +70,8 @@ namespace TASVideos.Data.SeedData
 		{
 			PermissionTo.AssignRoles,
 			PermissionTo.EditUsers,
-			PermissionTo.OverrideSubmissionStatus
+			PermissionTo.OverrideSubmissionStatus,
+			PermissionTo.DeprecateMovieParsers
 		}).ToArray();
 
 		private static readonly PermissionTo[] PublisherPermissions = VestedEditorPermissions.Concat(new[]
@@ -99,7 +100,8 @@ namespace TASVideos.Data.SeedData
 			PermissionTo.BanIpAddresses,
 			PermissionTo.SeePrivateRatings,
 			PermissionTo.EditUsers,
-			PermissionTo.AssignRoles
+			PermissionTo.AssignRoles,
+			PermissionTo.DeprecateMovieParsers
 		}).ToArray();
 
 		private static readonly PermissionTo[] ExperiencedForumUserPermissions =

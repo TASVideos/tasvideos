@@ -114,6 +114,10 @@ namespace TASVideos.Data.Entity
 		[Description("The ability to set a submission status regardless of condition (exception: published submissions)")]
 		OverrideSubmissionStatus = 204,
 
+		[Group("Queue Maintenance")]
+		[Description("The ability to deprecate an existing movie parser. When deprecated, a movie will no longer be eligible for submission")]
+		DeprecateMovieParsers = 205,
+
 		#endregion
 
 		#region Publication Maintenance 300
