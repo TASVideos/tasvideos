@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
@@ -49,6 +50,8 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		{
 			public int PollId { get; set; }
 			public string Question { get; set; } = "";
+			public DateTime? CloseDate { get; set; }
+			public bool MultiSelect { get; set; }
 
 			public IEnumerable<PollOptionModel> Options { get; set; } = new List<PollOptionModel>();
 

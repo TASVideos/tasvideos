@@ -6,7 +6,10 @@
 	if (User.IsLoggedIn())
 	{
 		userId = User.GetUserId();
-		canVote = !Model.Options.Any(o => o.Voters.Any(v => v == userId)) && ViewData.UserHas(PermissionTo.VoteInPolls);
+		bool votePermission = ViewData.UserHas(PermissionTo.VoteInPolls);
+		bool hasAlreadyVoted = Model.Options.Any(o => o.Voters.Any(v => v == userId));
+		bool pollIsClosed = Model.CloseDate <= DateTime.UtcNow;
+		canVote = votePermission && !hasAlreadyVoted && !pollIsClosed;
 	}
 }
 
@@ -26,7 +29,7 @@
 				<div class="col-12 col-md-3 col-lg-4 p-0 text-md-end">
 					<label for="_@option.Ordinal">
 						<span condition="option.Voters.Any(v => v == userId)" class="fa fa-check text-success"></span>
-						<span condition="canVote"><input type="radio" name="ordinal" id="_@option.Ordinal" value="@option.Ordinal" /></span>
+						<span condition="canVote"><input type="@(Model.MultiSelect ? "checkbox" : "radio")" name="ordinal" id="_@option.Ordinal" value="@option.Ordinal" /></span>
 						@option.Text
 					</label>
 				</div>
