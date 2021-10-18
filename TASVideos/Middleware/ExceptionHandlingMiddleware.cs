@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-
 using TASVideos.Extensions;
 
 namespace TASVideos.Middleware

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 
@@ -75,6 +76,21 @@ namespace TASVideos.Extensions
 			}
 
 			return null;
+		}
+
+		public static IPAddress? ActualIpAddress(this HttpContext context)
+		{
+			var forwardedIp = context.Request.Headers["X-Forwarded-For"];
+			if (!string.IsNullOrWhiteSpace(forwardedIp))
+			{
+				var result = IPAddress.TryParse(forwardedIp, out var address);
+				if (result)
+				{
+					return address;
+				}
+			}
+
+			return context.Connection.RemoteIpAddress;
 		}
 	}
 }
