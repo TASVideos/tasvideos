@@ -63,7 +63,7 @@ namespace TASVideos.Pages.Forum.Subforum
 					CreateTimestamp = ft.CreateTimestamp,
 					Type = ft.Type,
 					PostCount = ft.ForumPosts.Count,
-					LastPost = ft.ForumPosts.OrderByDescending(fp => fp.CreateTimestamp).First()
+					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.CreateTimestamp == ft.ForumPosts.Max(fp => fp.CreateTimestamp))
 				})
 				.OrderByDescending(ft => ft.Type == ForumTopicType.Announcement)
 				.ThenByDescending(ft => ft.Type == ForumTopicType.Sticky)
