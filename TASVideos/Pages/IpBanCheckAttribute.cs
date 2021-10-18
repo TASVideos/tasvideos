@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services;
 using TASVideos.Extensions;
 
@@ -16,10 +17,13 @@ namespace TASVideos.Pages
 		{
 			var banService = context.HttpContext.RequestServices.GetRequiredService<IIpBanService>();
 
-			var banned = await banService.IsBanned(context.HttpContext.Connection.RemoteIpAddress);
+			var ip = context.HttpContext.ActualIpAddress();
+			var banned = await banService.IsBanned(ip);
 
 			if (banned)
 			{
+				var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<IpBanCheckAttribute>>();
+				logger.LogWarning($"An attempt to use banned ip {ip} was made");
 				Denied(context);
 			}
 			else
