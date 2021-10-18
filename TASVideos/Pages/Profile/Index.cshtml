@@ -11,7 +11,10 @@
 	</p>
 	<p>
 		You should have already received a confirmation email. If you did not recieve it, try checking your spam folder or you can resend the email confirmation
-		<br /><a class="btn btn-warning">Resend Confirmation Email</a>
+		<br />
 	</p>
+	<form method="post" asp-page="/Account/SendConfirmationEmail">
+		<button type="submit" class="btn btn-warning">Resend Confirmation Email</button>
+	</form>
 </warning-alert>
 <partial name="_Profile" model="Model.Profile" />
