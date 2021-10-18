@@ -255,7 +255,8 @@ INSERT INTO _active_users
 	OR EXISTS (SELECT 1 FROM public.publication_ratings pr WHERE pr.user_id = u.id)
 	OR EXISTS (SELECT 1 FROM public.forum_posts fp WHERE fp.poster_id = u.id)
 	OR EXISTS (SELECT 1 FROM public.forum_topics ft WHERE ft.poster_id = u.id)
-	OR EXISTS (SELECT 1 FROM public.forum_poll_option_votes v WHERE v.user_id = u.id);
+	OR EXISTS (SELECT 1 FROM public.forum_poll_option_votes v WHERE v.user_id = u.id)
+	OR EXISTS (SELECT 1 FROM public.wiki_pages wp WHERE wp.author_id = u.id);
 
 DELETE
 FROM public.user_roles ur
