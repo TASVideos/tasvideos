@@ -133,48 +133,36 @@ namespace TASVideos.Pages.Account
 				var result = await _userManager.CreateAsync(user, Password);
 				if (result.Succeeded)
 				{
-					await AddStandardRoles(user.Id);
-					await _userManager.AddUserPermissionsToClaims(user);
-
 					if (_userManager.Options.SignIn.RequireConfirmedEmail)
 					{
 						var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 						var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
 						await _emailService.EmailConfirmation(Email, callbackUrl);
-						return RedirectToPage("EmailConfirmationSent");
+					}
+					else
+					{
+						await _userManager.AddStandardRoles(user.Id);
+						await _userManager.AddUserPermissionsToClaims(user);
 					}
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					await _publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName);
 					await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
-					return BaseReturnUrlRedirect();
+
+					if (_userManager.Options.SignIn.RequireConfirmedEmail)
+					{
+						return RedirectToPage("EmailConfirmationSent");
+					}
+					else
+					{
+						return BaseReturnUrlRedirect();
+					}
 				}
 
 				AddErrors(result);
 			}
 
 			return Page();
-		}
-
-		public async Task AddStandardRoles(int userId)
-		{
-			var user = await _db.Users.SingleAsync(u => u.Id == userId);
-			var roles = await _db.Roles
-				.ThatAreDefault()
-				.ToListAsync();
-
-			foreach (var role in roles)
-			{
-				var userRole = new UserRole
-				{
-					UserId = user.Id,
-					RoleId = role.Id
-				};
-				_db.UserRoles.Add(userRole);
-				user.UserRoles.Add(userRole);
-			}
-
-			await _db.SaveChangesAsync();
 		}
 	}
 }

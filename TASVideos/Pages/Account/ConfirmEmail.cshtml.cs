@@ -46,9 +46,11 @@ namespace TASVideos.Pages.Account
 				return RedirectToPage("/Error");
 			}
 
+			await _userManager.AddStandardRoles(user.Id);
+			await _userManager.AddUserPermissionsToClaims(user);
 			await _signInManager.SignInAsync(user, isPersistent: false);
-			await _publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName);
-			await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
+			await _publisher.SendUserManagement($"User {user.UserName} activated", "", $"Users/Profile/{user.UserName}", user.UserName);
+			await _userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
 			return Page();
 		}
 	}
