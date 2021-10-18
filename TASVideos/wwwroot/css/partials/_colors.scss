@@ -1,4 +1,35 @@
-﻿$primary: #105cb6;
+﻿//bootstrap defined colors
+$bs-white: #fff;
+$bs-gray-100: #f8f9fa;
+$bs-gray-100-rgb: 248,249,250;
+$bs-gray-200: #e9ecef;
+$bs-gray-300: #dee2e6;
+$bs-gray-400: #ced4da;
+$bs-gray-600: #6c757d;
+$bs-gray-700: #495057;
+$bs-gray-800: #343a40;
+$bs-dark: #212529;
+$bs-dark-rgb: 33, 37, 41;
+$bs-table-striped-bg-dark: #2c3034;
+$bs-table-active-bg-dark: #373b3e;
+$bs-table-hover-bg-dark: #323539;
+
+//diff library defined colors
+$diff-replace: #fd8;
+$diff-delete: #e99;
+$diff-insert: #9e9;
+
+//custom tasvideos colors
+
+//custom banner and site background colors
+$banner: #110931;
+$tasvideos-bg: $bs-gray-200;
+$tasvideos-bg-gradient: #c2d4fc;
+$tasvideos-bg-dark: #1c1d2b;
+$tasvideos-bg-gradient-dark: #311a59;
+
+//custom theme colors and semantic button/border colors
+$primary: #105cb6;
 $primary-rgb: 16, 92, 182;
 $primary-dark: #4893ef;
 $primary-dark-rgb: 72, 147, 239;
@@ -10,34 +41,15 @@ $info: #c2d4fc;
 $info-rgb: 194, 212, 252;
 $info-dark: #03163f;
 $info-dark-rgb: 3, 22, 63;
-$white: #fff;
-$light: #f8f9fa;
-$light-rgb: 248,249,250;
-$dark: #212529;
-$dark-rgb: 33, 37, 41;
-$border-light: #ced4da;
-$border-dark: #495057;
-$border-separator-dark: #6c757d;
-$dropdown-text-dark: #dee2e6;
-$dropdown-background-dark: #343a40;
-$banner: #110931;
-$tasvideos-bg: #e9ecef;
-$tasvideos-bg-gradient: #c2d4fc;
-$tasvideos-bg-dark: #1c1d2b;
-$tasvideos-bg-gradient-dark: #311a59;
 $card-primary: #acd;
 $card-primary-dark: #214354;
 $card-secondary: #cde;
 $card-secondary-dark: #112132;
 $card-link-hover-rgb: 9, 30, 66;
-$bs-table-striped-bg-dark: #2c3034;
-$bs-table-active-bg-dark: #373b3e;
-$bs-table-hover-bg-dark: #323539;
 $text-muted-dark: #818a92;
 $module-error-color: #f8d7da;
-$diff-replace: #fd8;
+
+//custom diff dark mode colors
 $diff-replace-dark: #dba400;
-$diff-delete: #e99;
 $diff-delete-dark: #dc3545;
-$diff-insert: #9e9;
 $diff-insert-dark: #198754;
