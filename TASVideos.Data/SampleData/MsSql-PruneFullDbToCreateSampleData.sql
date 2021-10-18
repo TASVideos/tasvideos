@@ -268,6 +268,7 @@ INSERT INTO @ActiveUsers
 	OR EXISTS (SELECT 1 FROM ForumPosts fp WHERE fp.PosterId = u.Id)
 	OR EXISTS (SELECT 1 FROM ForumTopics ft WHERE ft.PosterId = u.Id)
 	OR EXISTS (SELECT 1 FROM ForumPollOptionVotes ft WHERE ft.UserId = u.Id)
+	OR EXISTS (SELECT 1 FROM WikiPages wp WHERE wp.AuthorId = u.Id)
 	
 DELETE ur
 	FROM UserRoles ur
