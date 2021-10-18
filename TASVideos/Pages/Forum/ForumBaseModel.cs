@@ -109,6 +109,7 @@ namespace TASVideos.Pages.Forum
 				CloseDate = model.DaysOpen.HasValue
 					? DateTime.UtcNow.AddDays(model.DaysOpen.Value)
 					: null,
+				MultiSelect = model.MultiSelect,
 				PollOptions = model.PollOptions.Select((po, i) => new ForumPollOption
 				{
 					Text = po,

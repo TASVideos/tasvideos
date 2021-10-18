@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -75,7 +77,13 @@ namespace TASVideos.Pages.Forum.Topics
 					LastPostId = t.ForumPosts.Any() ? t.ForumPosts.OrderByDescending(p => p.CreateTimestamp).First().Id : -1,
 					SubmissionId = t.SubmissionId,
 					Poll = t.PollId.HasValue
-						? new ForumTopicModel.PollModel { PollId = t.PollId.Value, Question = t.Poll!.Question }
+						? new ForumTopicModel.PollModel
+						{
+							PollId = t.PollId.Value,
+							Question = t.Poll!.Question,
+							CloseDate = t.Poll!.CloseDate,
+							MultiSelect = t.Poll!.MultiSelect
+						}
 						: null
 				})
 				.SingleOrDefaultAsync(t => t.Id == Id);
@@ -171,32 +179,58 @@ namespace TASVideos.Pages.Forum.Topics
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPostVote(int pollId, int ordinal)
+		public async Task<IActionResult> OnPostVote(int pollId, List<int> ordinal)
 		{
 			if (!User.Has(PermissionTo.VoteInPolls))
 			{
 				return AccessDenied();
 			}
 
-			var pollOption = await _db.ForumPollOptions
+			var pollOptions = await _db.ForumPollOptions
 				.Include(o => o.Poll)
 				.Include(o => o.Votes)
-				.SingleOrDefaultAsync(o => o.PollId == pollId && o.Ordinal == ordinal);
+				.Where(o => o.PollId == pollId)
+				.ToListAsync();
 
-			if (pollOption == null)
+			if (pollOptions.Count == 0 || pollOptions.First().Poll == null)
 			{
 				return NotFound();
 			}
 
-			var userId = User.GetUserId();
-			if (pollOption.Votes.All(v => v.UserId != userId))
+			var nowTimestamp = DateTime.UtcNow;
+
+			if (pollOptions.First().Poll!.CloseDate <= nowTimestamp)
 			{
-				pollOption.Votes.Add(new ForumPollOptionVote
+				ErrorStatusMessage("Poll is already closed.");
+				return RedirectToTopic();
+			}
+
+			var selectedOptions = pollOptions.Where(o => ordinal.Contains(o.Ordinal));
+
+			if (selectedOptions.Count() == 0)
+			{
+				return RedirectToTopic();
+			}
+
+			if (!pollOptions.First().Poll!.MultiSelect && selectedOptions.Count() != 1)
+			{
+				ErrorStatusMessage("Poll only allows 1 selection.");
+				return RedirectToTopic();
+			}
+
+			var userId = User.GetUserId();
+			if (pollOptions.All(o => o.Votes.All(v => v.UserId != userId)))
+			{
+				foreach (var selectedOption in selectedOptions)
 				{
-					UserId = User.GetUserId(),
-					IpAddress = IpAddress
-				});
-				await _db.SaveChangesAsync();
+					selectedOption.Votes.Add(new ForumPollOptionVote
+					{
+						UserId = User.GetUserId(),
+						CreateTimestamp = nowTimestamp,
+						IpAddress = IpAddress
+					});
+					await _db.SaveChangesAsync();
+				}
 			}
 
 			return RedirectToTopic();
