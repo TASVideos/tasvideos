@@ -133,17 +133,9 @@ namespace TASVideos.Pages.Account
 				var result = await _userManager.CreateAsync(user, Password);
 				if (result.Succeeded)
 				{
-					if (_userManager.Options.SignIn.RequireConfirmedEmail)
-					{
-						var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-						var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
-						await _emailService.EmailConfirmation(Email, callbackUrl);
-					}
-					else
-					{
-						await _userManager.AddStandardRoles(user.Id);
-						await _userManager.AddUserPermissionsToClaims(user);
-					}
+					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
+					await _emailService.EmailConfirmation(Email, callbackUrl);
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					await _publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName);
