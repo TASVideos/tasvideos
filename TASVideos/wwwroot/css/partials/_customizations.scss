@@ -6,7 +6,7 @@
 	--cardsecondary: #{$card-secondary};
 	--tasvideos-bg: #{$tasvideos-bg};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient};
-	--tab-content-bg: #{$white};
+	--tab-content-bg: #{$bs-white};
 }
 
 body {
@@ -250,7 +250,7 @@ article.wiki, .postbody {
 }
 
 #brand {
-	color: $light;
+	color: $bs-gray-100;
 	font-size: 17px;
 	font-family: helvetica,arial,sans-serif;
 }
@@ -259,7 +259,7 @@ article.wiki, .postbody {
 	font-weight: bold;
 	font-family: Verdana;
 	z-index: 1;
-	color: $light;
+	color: $bs-gray-100;
 
 	&-1 {
 		font-size: 10px;

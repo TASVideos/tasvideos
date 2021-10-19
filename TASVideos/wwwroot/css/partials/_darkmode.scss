@@ -3,22 +3,22 @@
 
 :root {
 	--tasvideos-bg: #{$tasvideos-bg-dark};
-	--bs-body-color: #{$light};
-	--border-color: #{$border-dark};
-	--border-separator-color: #{$border-separator-dark};
+	--bs-body-color: #{$bs-gray-100};
+	--border-color: #{$bs-gray-700};
+	--border-separator-color: #{$bs-gray-700};
 	--cardprimary: #{$card-primary-dark};
 	--cardsecondary: #{$card-secondary-dark};
 	--bs-info: #{$info-dark};
 	--bs-info-rgb: #{$info-dark-rgb};
-	--bs-dark: #{$light};
-	--bs-dark-rgb: #{$light-rgb};
-	--bs-light: #{$dark};
-	--bs-light-rgb: #{$dark-rgb};
-	--bs-white: #{$dark};
-	--bs-white-rgb: #{$dark-rgb};
-	--bs-border-light: #{$border-dark};
-	--bs-gray-200: #{$dark};
-	--bs-gray-400: #{$dropdown-background-dark};
+	--bs-dark: #{$bs-gray-100};
+	--bs-dark-rgb: #{$bs-gray-100-rgb};
+	--bs-light: #{$bs-dark};
+	--bs-light-rgb: #{$bs-dark-rgb};
+	--bs-white: #{$bs-dark};
+	--bs-white-rgb: #{$bs-dark-rgb};
+	--bs-border-light: #{$bs-gray-700};
+	--bs-gray-200: #{$bs-dark};
+	--bs-gray-400: #{$bs-gray-800};
 	--tasvideos-bg-gradient: #{$banner};
 	--tab-content-bg: #{$bs-table-striped-bg-dark};
 	--diff-replace: #{$diff-replace-dark};
@@ -32,20 +32,20 @@ a {
 }
 
 .table {
-	color: $light;
-	border-color: $border-dark;
-	--bs-table-bg: #{$dark};
+	color: $bs-gray-100;
+	border-color: $bs-gray-700;
+	--bs-table-bg: #{$bs-dark};
 	--bs-table-striped-bg: #{$bs-table-striped-bg-dark};
-	--bs-table-striped-color: #{$white};
+	--bs-table-striped-color: #{$bs-white};
 	--bs-table-active-bg: #{$bs-table-active-bg-dark};
-	--bs-table-active-color: #{$white};
+	--bs-table-active-color: #{$bs-white};
 	--bs-table-hover-bg: #{$bs-table-hover-bg-dark};
-	--bs-table-hover-color: #{$white};
+	--bs-table-hover-color: #{$bs-white};
 }
 
 .alert {
 	&-info, &-dark, &-success {
-		color: $light;
+		color: $bs-gray-100;
 		background-color: $card-secondary-dark;
 		border-color: $card-primary-dark;
 	}
@@ -61,13 +61,13 @@ a {
 }
 
 .dropdown-menu {
-	color: $dropdown-text-dark;
-	background-color: $dropdown-background-dark;
+	color: $bs-gray-300;
+	background-color: $bs-gray-800;
 	border-color: rgba(0, 0, 0, .15);
 }
 
 .dropdown-item {
-	color: $dropdown-text-dark;
+	color: $bs-gray-300;
 }
 
 .site-icon {
