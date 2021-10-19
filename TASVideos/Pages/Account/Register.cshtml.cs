@@ -133,8 +133,8 @@ namespace TASVideos.Pages.Account
 				var result = await _userManager.CreateAsync(user, Password);
 				if (result.Succeeded)
 				{
-					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
+					var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
 					await _emailService.EmailConfirmation(Email, callbackUrl);
 
 					await _signInManager.SignInAsync(user, isPersistent: false);

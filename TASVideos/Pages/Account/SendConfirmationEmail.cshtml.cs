@@ -22,8 +22,8 @@ namespace TASVideos.Pages.Account
 		public async Task<IActionResult> OnPost()
 		{
 			var user = await _userManager.GetUserAsync(User);
-			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
+			var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
 			await _emailService.EmailConfirmation(user.Email, callbackUrl);
 
 			return RedirectToPage("EmailConfirmationSent");
