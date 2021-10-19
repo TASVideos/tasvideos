@@ -23,7 +23,7 @@
 				<br />
 				@foreach (var permission in Model.Permissions)
 				{
-					<div class="ml-md-0 ml-sm-4">@permission</div>
+					<div class="ml-md-0 ml-sm-4">@permission.ToString().SplitCamelCase()</div>
 				}
 			</div>
 			<div condition="@Model.Links.Any()" class="col-lg-3 col-md-12">
