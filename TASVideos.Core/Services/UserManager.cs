@@ -163,6 +163,27 @@ namespace TASVideos.Core.Services
 			return model;
 		}
 
+		public async Task AddStandardRoles(int userId)
+		{
+			var user = await _db.Users.SingleAsync(u => u.Id == userId);
+			var roles = await _db.Roles
+				.ThatAreDefault()
+				.ToListAsync();
+
+			foreach (var role in roles)
+			{
+				var userRole = new UserRole
+				{
+					UserId = user.Id,
+					RoleId = role.Id
+				};
+				_db.UserRoles.Add(userRole);
+				user.UserRoles.Add(userRole);
+			}
+
+			await _db.SaveChangesAsync();
+		}
+
 		/// <summary>
 		/// Returns publicly available user profile information
 		/// for the <see cref="User"/> with the given <see cref="userName"/>
