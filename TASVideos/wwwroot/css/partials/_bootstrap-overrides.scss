@@ -4,13 +4,14 @@
 :root {
 	--bs-primary: #{$primary};
 	--bs-primary-rgb: #{$primary-rgb};
+	--bs-primary-hover: #{$primary-dark};
 	--bs-secondary: #{$secondary};
 	--bs-secondary-rgb: #{$secondary-rgb};
 	--bs-secondary-hover: #{$secondary-dark};
 	--bs-info: #{$info};
 	--bs-info-rgb: #{$info-rgb};
-	--border-color: #{$border-light};
-	--border-separator-color: #{$dropdown-text-dark};
+	--border-color: #{$bs-gray-400};
+	--border-separator-color: #{$bs-gray-300};
 }
 
 a {
@@ -32,7 +33,7 @@ h1 {
 	font-size: 1.25em;
 	line-height: 1.5;
 	background: var(--bs-secondary);
-	color: $white;
+	color: $bs-white;
 }
 
 h2 {
@@ -81,13 +82,18 @@ h4 {
 	&-primary {
 		background-color: var(--bs-primary);
 		border-color: var(--bs-primary);
+
+		&active, &:hover {
+			background-color: var(--bs-primary-hover);
+			border-color: var(--bs-primary-hover);
+		}
 	}
 
 	&-secondary {
 		background-color: var(--bs-secondary);
 		border-color: var(--bs-secondary);
 
-		&:hover {
+		&active, &:hover {
 			background-color: var(--bs-secondary-hover);
 			border-color: var(--bs-secondary-hover);
 		}
