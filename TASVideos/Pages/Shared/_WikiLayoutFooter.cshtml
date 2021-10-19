@@ -11,10 +11,6 @@ else if (Model.IsGameResourcesPage())
 {
 	@await Component.GameResourcesFooter(Model)
 }
-else if (Model.IsHomePage())
-{
-	@await Component.HomePageFooter(Model)
-}
 else
 {
 	@await Component.ListSubPages(Model)
