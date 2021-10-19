@@ -61,11 +61,6 @@ namespace TASVideos.Extensions
 			return await component.InvokeAsync(nameof(ViewComponents.HomePageHeader), new { pageData });
 		}
 
-		public static async Task<IHtmlContent> HomePageFooter(this IViewComponentHelper component, WikiPage pageData)
-		{
-			return await component.InvokeAsync(nameof(ViewComponents.HomePageFooter), new { pageData });
-		}
-
 		public static async Task<IHtmlContent> GameResourcesHeader(this IViewComponentHelper component, WikiPage pageData)
 		{
 			return await component.InvokeAsync(nameof(ViewComponents.GameResourcesHeader), new { pageData });
