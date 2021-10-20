@@ -26,5 +26,6 @@ namespace TASVideos.Legacy.Data.Site.Entity
 		public int CreateTimestamp { get; set; }
 
 		public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
+		public virtual ICollection<UserPlayer> UserPlayers { get; set; } = new HashSet<UserPlayer>();
 	}
 }
