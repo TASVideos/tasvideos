@@ -45,6 +45,7 @@ namespace TASVideos.Pages.UserFiles
 		{
 			var file = await _db.UserFiles
 				.Include(uf => uf.Comments)
+				.ThenInclude(c => c.User)
 				.Include(uf => uf.Author)
 				.Include(uf => uf.Game)
 				.ThenInclude(g => g!.System)
