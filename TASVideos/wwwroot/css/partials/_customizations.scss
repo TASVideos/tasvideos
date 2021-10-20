@@ -97,6 +97,11 @@ article.wiki, .postbody {
 	border: 2px solid var(--bs-danger);
 	background-color: var(--bs-white);
 	padding: 20px;
+
+	.info {
+		color: var(--bs-danger);
+		font-weight: bold;
+	}
 }
 
 .error-marker {
