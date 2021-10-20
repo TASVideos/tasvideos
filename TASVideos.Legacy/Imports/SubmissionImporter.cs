@@ -141,7 +141,8 @@ namespace TASVideos.Legacy.Imports
 						SubmissionId = submission.Id,
 						Submission = submission,
 						UserId = u.Id,
-						Author = u
+						Author = u,
+						Ordinal = authorNames.IndexOf(u.UserName.ToLower())
 					})
 					.ToList();
 
@@ -226,7 +227,8 @@ namespace TASVideos.Legacy.Imports
 			var subAuthorColumns = new[]
 			{
 				nameof(SubmissionAuthor.UserId),
-				nameof(SubmissionAuthor.SubmissionId)
+				nameof(SubmissionAuthor.SubmissionId),
+				nameof(SubmissionAuthor.Ordinal)
 			};
 
 			submissionAuthors.BulkInsert(subAuthorColumns, nameof(ApplicationDbContext.SubmissionAuthors));

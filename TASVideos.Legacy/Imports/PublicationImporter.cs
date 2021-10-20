@@ -104,7 +104,8 @@ namespace TASVideos.Legacy.Imports
 						UserId = u!.Id,
 						Author = u,
 						PublicationId = pub.Movie.Id,
-						Publication = publication
+						Publication = publication,
+						Ordinal = 0 // TODO: import the order of publication authors, because they're not the same as submissions
 					})
 					.ToList();
 
@@ -182,7 +183,8 @@ namespace TASVideos.Legacy.Imports
 			var pubAuthorColumns = new[]
 			{
 				nameof(PublicationAuthor.UserId),
-				nameof(PublicationAuthor.PublicationId)
+				nameof(PublicationAuthor.PublicationId),
+				nameof(PublicationAuthor.Ordinal)
 			};
 
 			publicationAuthors.BulkInsert(pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors));
