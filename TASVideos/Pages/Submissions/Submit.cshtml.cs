@@ -103,11 +103,12 @@ namespace TASVideos.Pages.Submissions
 
 			Db.SubmissionAuthors.AddRange(await Db.Users
 				.Where(u => Create.Authors.Contains(u.UserName))
-				.Select(u => new SubmissionAuthor
+				.Select((u, i) => new SubmissionAuthor
 				{
 					SubmissionId = submission.Id,
 					UserId = u.Id,
-					Author = u
+					Author = u,
+					Ordinal = i
 				})
 				.ToListAsync());
 

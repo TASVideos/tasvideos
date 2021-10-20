@@ -146,7 +146,8 @@ namespace TASVideos.Pages.Submissions
 				.Select(sa => new PublicationAuthor
 				{
 					Publication = publication,
-					Author = sa.Author
+					Author = sa.Author,
+					Ordinal = sa.Ordinal
 				}));
 
 			publication.Submission = submission;

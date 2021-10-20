@@ -122,6 +122,7 @@ namespace TASVideos.Data.Entity
 			}
 
 			var authorList = SubmissionAuthors
+				.OrderBy(sa => sa.Ordinal)
 				.Select(sa => sa.Author?.UserName)
 				.Where(sa => !string.IsNullOrWhiteSpace(sa));
 

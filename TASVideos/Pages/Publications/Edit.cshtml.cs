@@ -211,11 +211,12 @@ namespace TASVideos.Pages.Publications
 			publication.Authors.Clear();
 			publication.Authors.AddRange(await _db.Users
 				.Where(u => Publication.Authors.Contains(u.UserName))
-				.Select(u => new PublicationAuthor
+				.Select((u, i) => new PublicationAuthor
 				{
 					PublicationId = publication.Id,
 					UserId = u.Id,
-					Author = u
+					Author = u,
+					Ordinal = i
 				})
 				.ToListAsync());
 
