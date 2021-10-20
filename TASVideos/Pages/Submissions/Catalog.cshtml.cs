@@ -112,6 +112,10 @@ namespace TASVideos.Pages.Submissions
 					submission.SystemId = Catalog.SystemId.Value;
 				}
 			}
+			else
+			{
+				submission.SystemId = null;
+			}
 
 			if (Catalog.SystemFrameRateId.HasValue)
 			{
@@ -124,6 +128,10 @@ namespace TASVideos.Pages.Submissions
 				{
 					submission.SystemFrameRateId = Catalog.SystemFrameRateId.Value;
 				}
+			}
+			else
+			{
+				submission.SystemFrameRateId = null;
 			}
 
 			if (Catalog.GameId.HasValue)
@@ -138,6 +146,10 @@ namespace TASVideos.Pages.Submissions
 					submission.GameId = Catalog.GameId.Value;
 				}
 			}
+			else if (submission.GameId.HasValue)
+			{
+				submission.GameId = null;
+			}
 
 			if (Catalog.RomId.HasValue)
 			{
@@ -150,6 +162,10 @@ namespace TASVideos.Pages.Submissions
 				{
 					submission.RomId = Catalog.RomId.Value;
 				}
+			}
+			else
+			{
+				submission.RomId = null;
 			}
 
 			if (!ModelState.IsValid)
