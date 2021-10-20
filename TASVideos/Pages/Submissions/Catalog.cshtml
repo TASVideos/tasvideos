@@ -124,6 +124,7 @@
 		gameModel.onchange = function () {
 			if (this.value) {
 				createRomBtn.removeAttribute('disabled');
+				createRomBtn.classList.remove('disabled');
 
 				var xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
@@ -138,6 +139,7 @@
 				xmlhttp.send();
 			} else {
 				createRomBtn.setAttribute('disabled', 'disabled');
+				createRomBtn.classList.add('disabled');
 				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option')
 					.toArray()
 					.forEach(function (elem) {
