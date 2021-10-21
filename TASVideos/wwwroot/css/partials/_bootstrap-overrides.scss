@@ -83,7 +83,7 @@ h4 {
 		background-color: var(--bs-primary);
 		border-color: var(--bs-primary);
 
-		&:active, &:hover {
+		&.active, &:active, &:hover {
 			background-color: var(--bs-primary-hover);
 			border-color: var(--bs-primary-hover);
 		}
@@ -93,7 +93,7 @@ h4 {
 		background-color: var(--bs-secondary);
 		border-color: var(--bs-secondary);
 
-		&:active, &:hover {
+		&.active, &:active, &:hover {
 			background-color: var(--bs-secondary-hover);
 			border-color: var(--bs-secondary-hover);
 		}
