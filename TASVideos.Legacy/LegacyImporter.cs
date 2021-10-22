@@ -87,7 +87,7 @@ namespace TASVideos.Legacy
 			Run("WikiReferral", () => WikiReferralGenerator.Generate(_db));
 			Run("Submissions", () => SubmissionImporter.Import(_db, _legacySiteDb, userIdMapping));
 			Run("Submissions Framerate", () => SubmissionFrameRateImporter.Import(_db));
-			Run("Publications", () => PublicationImporter.Import(_db, _legacySiteDb));
+			Run("Publications", () => PublicationImporter.Import(_db, _legacySiteDb, userIdMapping));
 			Run("PublicationUrls", () => PublicationUrlImporter.Import(_legacySiteDb));
 			Run("Publication Ratings", () => PublicationRatingImporter.Import(_legacySiteDb, userIdMapping));
 			Run("Publication Flags", () => PublicationFlagImporter.Import(_legacySiteDb));

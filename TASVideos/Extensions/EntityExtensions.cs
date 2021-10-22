@@ -86,7 +86,7 @@ namespace TASVideos.Extensions
 					Frames = s.Frames,
 					FrameRate = s.SystemFrameRate!.FrameRate,
 					Branch = s.Branch,
-					Author = string.Join(" & ", s.SubmissionAuthors.Select(sa => sa.Author!.UserName).ToList()),
+					Author = string.Join(" & ", s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName).ToList()),
 					Submitted = s.CreateTimestamp,
 					Status = s.Status,
 					Judge = s.Judge != null ? s.Judge.UserName : null,

@@ -107,7 +107,8 @@ namespace TASVideos.Pages.Submissions
 				{
 					SubmissionId = submission.Id,
 					UserId = u.Id,
-					Author = u
+					Author = u,
+					Ordinal = Create.Authors.IndexOf(u.UserName)
 				})
 				.ToListAsync());
 

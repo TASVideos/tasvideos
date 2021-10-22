@@ -38,7 +38,7 @@ namespace TASVideos.ViewComponents
 					{
 						Id = p.Id,
 						Title = p.Title,
-						Authors = p.Authors.Select(pa => pa.Author!.UserName),
+						Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 						TierIconPath = p.Tier!.IconPath
 					})
 					.ToListAsync()
