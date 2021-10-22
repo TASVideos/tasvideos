@@ -211,7 +211,6 @@ namespace TASVideos.Pages.Publications
 				: model.AdditionalAuthors;
 
 			publication.Authors.Clear();
-			var i = 0;
 			publication.Authors.AddRange(await _db.Users
 				.Where(u => Publication.Authors.Contains(u.UserName))
 				.Select(u => new PublicationAuthor
