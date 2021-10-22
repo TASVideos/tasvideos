@@ -212,7 +212,7 @@ namespace TASVideos.Pages.Submissions
 					publication.Title,
 					wikiPage,
 					submission.System.Code,
-					publication.Authors.Select(pa => pa.Author!.UserName),
+					publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 					submission.Game.SearchKey,
 					null);
 				await _youtubeSync.SyncYouTubeVideo(video);
@@ -231,7 +231,7 @@ namespace TASVideos.Pages.Submissions
 						toObsolete.Title,
 						toObsolete.WikiContent!,
 						toObsolete.System!.Code,
-						toObsolete.Authors.Select(pa => pa.Author!.UserName),
+						toObsolete.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 						toObsolete.Game!.SearchKey,
 						publication.Id);
 

@@ -48,7 +48,6 @@ namespace TASVideos.Legacy.Imports
 					s.Frames,
 					s.RerecordCount,
 					s.GameId,
-					Authors = s.SubmissionAuthors.Select(sa => sa.Author),
 					s.AdditionalAuthors,
 					s.System,
 					s.SystemFrameRate,

@@ -284,7 +284,7 @@ namespace TASVideos.Pages.Publications
 						publication.Title,
 						publication.WikiContent,
 						publication.System!.Code,
-						publication.Authors.Select(a => a.Author!.UserName),
+						publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
 						publication.Game!.SearchKey,
 						publication.ObsoletedById));
 				}
