@@ -105,6 +105,7 @@ namespace TASVideos.Pages.Publications
 
 			Publication.Authors = await _db.PublicationAuthors
 				.Where(pa => pa.PublicationId == Id)
+				.OrderBy(pa => pa.Ordinal)
 				.Select(pa => pa.Author!.UserName)
 				.ToListAsync();
 
@@ -181,9 +182,10 @@ namespace TASVideos.Pages.Publications
 			}
 
 			// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
-			Publication.Authors = Publication.Authors
+			var pubAuthors = Publication.Authors
 				.Where(a => !string.IsNullOrWhiteSpace(a))
 				.ToList();
+			Publication.Authors = pubAuthors;
 
 			if (publication.Branch != model.Branch)
 			{
@@ -209,14 +211,15 @@ namespace TASVideos.Pages.Publications
 				: model.AdditionalAuthors;
 
 			publication.Authors.Clear();
+			var i = 0;
 			publication.Authors.AddRange(await _db.Users
 				.Where(u => Publication.Authors.Contains(u.UserName))
-				.Select((u, i) => new PublicationAuthor
+				.Select(u => new PublicationAuthor
 				{
 					PublicationId = publication.Id,
 					UserId = u.Id,
 					Author = u,
-					Ordinal = i
+					Ordinal = pubAuthors.IndexOf(u.UserName)
 				})
 				.ToListAsync());
 
