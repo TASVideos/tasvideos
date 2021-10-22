@@ -80,6 +80,16 @@ INSERT INTO _publication_wikis
 	LEFT JOIN _publications p on wp.id = p.wiki_content_id
 	WHERE p.id IS NULL;
 
+DROP TABLE IF EXISTS _publication_ratings;
+CREATE TEMPORARY TABLE _publication_ratings (user_id int, publication_id int);
+INSERT INTO _publication_ratings
+	SELECT pr.user_id, pr.publication_id
+	FROM public.publication_ratings pr
+	JOIN public.users u on pr.user_id = u.id
+	LEFT JOIN _publications p on pr.publication_id = p.id
+	WHERE p is NULL
+	OR u.public_ratings = true;
+
 DELETE
 FROM public.publications p
 WHERE p.id NOT IN (SELECT id from _publications);
@@ -106,8 +116,9 @@ FROM public.publication_flags pf
 WHERE pf.publication_id NOT IN (SELECT Id from _publications);
 
 DELETE
-FROM public.publication_ratings pf
-WHERE pf.publication_Id NOT IN (SELECT Id from _publications);
+FROM public.publication_ratings pr
+USING _publication_ratings prr
+WHERE pr.user_id = prr.user_id AND pr.publication_id = prr.publication_id;
 
 DELETE
 FROM public.publication_urls pu
@@ -269,4 +280,5 @@ WHERE u.id NOT IN (SELECT id FROM _active_users);
 UPDATE public.users 
 	SET signature = NULL,
 		legacy_password = 'caecb26de1c989826750c7c478a9401d', -- We don't want to make the real password public
-		email = null; -- We dont' want to make these public either
+		email = null,
+		normalized_email = null; -- We dont' want to make these public either
