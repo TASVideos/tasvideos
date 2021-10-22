@@ -729,19 +729,25 @@ namespace TASVideos.WikiEngine
 			}
 			else if (Eat("%%QUOTE_END"))
 			{
-				if (!TryPop("quote"))
+				if (!TryPop("sillyquote"))
 				{
 					Abort("Mismatched %%QUOTE_END", _index);
 				}
 			}
 			else if (Eat("%%QUOTE"))
 			{
+				var authorBlock = new Element(_index, "cite");
+				authorBlock.Attributes["class"] = "author";
 				var author = EatClassText();
+
 				ClearBlockTags();
-				var e = new Element(_index, "quote");
+
+				var e = new Element(_index, "sillyquote");
+				e.Attributes["class"] = "quotecontainer";
 				if (author != "")
 				{
-					e.Attributes["data-author"] = author;
+					authorBlock.Children.Add(new Text(authorBlock.CharStart, "Quoting " + author));
+					e.Children.Add(authorBlock);
 				}
 
 				Push(e);

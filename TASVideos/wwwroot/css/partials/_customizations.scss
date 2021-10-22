@@ -83,14 +83,18 @@ article.wiki, .postbody {
 	&-edit {
 		font-family: courier,"courier new",monospace;
 	}
-}
 
-.module-error {
-	color: var(--bs-danger);
-	border: 1px solid var(--bs-danger);
-	border-radius: 5px;
-	background-color: $module-error-color;
-	padding: .75rem 1.25rem;
+	.module-error {
+		color: var(--bs-danger);
+		border: 1px solid var(--bs-danger);
+		border-radius: 5px;
+		background-color: $module-error-color;
+		padding: .75rem 1.25rem;
+	}
+
+	sillyquote {
+		display: block;
+	}
 }
 
 .error-code {
