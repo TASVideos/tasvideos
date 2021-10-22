@@ -104,8 +104,10 @@ DELETE pf
 
 DELETE pr
 	FROM PublicationRatings pr
+	JOIN Users u on pr.UserId = u.Id
 	LEFT JOIN @Publications ipu on pr.PublicationId = ipu.Id
 	WHERE ipu.Id IS NULL
+	OR u.PublicRatings = 1
 
 DELETE pu
 	FROM PublicationUrls pu	
@@ -283,4 +285,5 @@ DELETE u
 UPDATE Users 
 	SET Signature = NULL,
 		LegacyPassword = 'caecb26de1c989826750c7c478a9401d', -- We don't want to make these public
-		Email = null -- We dont' want to make these public either
+		Email = null, -- We dont' want to make these public either
+		NormalizedEmail = null
