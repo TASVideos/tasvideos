@@ -508,6 +508,7 @@ namespace TASVideos.Legacy.Imports
 				"smbbot" => "happylee",
 				"fusionvaria" => "itspersonnal",
 				"duault" => "zekann",
+				"sjoerdh" => "sjoerd",
 				_ => nickName
 			};
 		}

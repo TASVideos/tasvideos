@@ -264,7 +264,6 @@ namespace TASVideos.Legacy.Imports
 				"qcommand",
 				"Mana.",
 				"RaverMeister",
-				"SjoerdH",
 				"snark",
 				"ToT",
 
