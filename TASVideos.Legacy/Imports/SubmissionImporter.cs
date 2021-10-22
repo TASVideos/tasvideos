@@ -129,9 +129,12 @@ namespace TASVideos.Legacy.Imports
 					legacySubmission.Sub.Author = "DJ FozzBozz & RaverMeister";
 				}
 
-				var authorNames = legacySubmission.Sub.Author
+				var authorNamesOriginal = legacySubmission.Sub.Author
 					.ParseUserNames()
-					.Select(a => NickCleanup(ImportHelper.ConvertNotNullLatin1String(a).ToLower().Trim()))
+					.Select(a => ImportHelper.ConvertNotNullLatin1String(a))
+					.ToList();
+				var authorNames = authorNamesOriginal
+					.Select(a => NickCleanup(a.ToLower().Trim()))
 					.ToList();
 
 				var authors = users
@@ -146,7 +149,8 @@ namespace TASVideos.Legacy.Imports
 					})
 					.ToList();
 
-				var additionalAuthors = authorNames.Except(authors.Select(a => a.Author!.UserName.ToLower())).ToList();
+				var additionalAuthors = authorNamesOriginal.Where(ano => !authors.Select(a => a.Author!.UserName.ToLower()).Any(a => a == NickCleanup(ano.ToLower().Trim()))).ToList();
+
 				if (additionalAuthors.Any())
 				{
 					submission.AdditionalAuthors = string.Join(",", additionalAuthors);
@@ -405,7 +409,7 @@ namespace TASVideos.Legacy.Imports
 				"blj" => "backwardlongjump",
 				"bagofmagicfood" => "bag of magic food",
 				"brookman" => "the brookman",
-				"solon" => "boct1584",
+				"solon" => "bigboct",
 				"msteinfield" => "aroduc",
 				"lightblueyoshi" => "bbkaizo",
 				"bobwhoops" => "bob whoops",
@@ -437,7 +441,6 @@ namespace TASVideos.Legacy.Imports
 				"igorsantos777" => "igoroliveira666",
 				"lag.com" => "lagdotcom",
 				"vidar" => "meepers",
-				"toonlucas22" => "limo",
 				"p.dot" => "dashiznawz",
 				"undo" => "jonathangm",
 				"superhappy" => "josh l.",
