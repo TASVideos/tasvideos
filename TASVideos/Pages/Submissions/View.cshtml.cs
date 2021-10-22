@@ -68,6 +68,7 @@ namespace TASVideos.Pages.Submissions
 						: null,
 					Authors = s.SubmissionAuthors
 						.Where(sa => sa.SubmissionId == Id)
+						.OrderBy(sa => sa.Ordinal)
 						.Select(sa => sa.Author!.UserName)
 						.ToList(),
 					AdditionalAuthors = s.AdditionalAuthors,

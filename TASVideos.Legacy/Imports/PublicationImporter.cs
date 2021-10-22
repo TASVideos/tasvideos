@@ -11,16 +11,25 @@ namespace TASVideos.Legacy.Imports
 {
 	internal class PublicationImporter
 	{
-		public static void Import(ApplicationDbContext context, NesVideosSiteContext legacySiteContext)
+		public static void Import(
+			ApplicationDbContext context,
+			NesVideosSiteContext legacySiteContext,
+			IReadOnlyDictionary<int, int> userIdMapping)
 		{
 			var publications = new List<Publication>();
 			var publicationAuthors = new List<PublicationAuthor>();
 			var publicationFiles = new List<PublicationFile>();
+			var allUsersWithPlayers = legacySiteContext.Users
+				.Include(u => u.UserPlayers)
+				.ThenInclude(up => up.Player)
+				.ToList();
+			var allUsersPlusAdded = context.Users.ToList();
 
 			var legacyMovies = legacySiteContext.Movies
 				.Include(m => m.MovieFiles)
 				.ThenInclude(mf => mf.Storage)
 				.Include(m => m.Publisher)
+				.Include(m => m.Player)
 				.Where(m => m.Id > 0)
 				.ToList();
 
@@ -39,7 +48,6 @@ namespace TASVideos.Legacy.Imports
 					s.Frames,
 					s.RerecordCount,
 					s.GameId,
-					Authors = s.SubmissionAuthors.Select(sa => sa.Author),
 					s.AdditionalAuthors,
 					s.System,
 					s.SystemFrameRate,
@@ -94,17 +102,53 @@ namespace TASVideos.Legacy.Imports
 					SystemId = pub.Movie.SystemId,
 					System = pub.Sub.System,
 					Branch = pub.Movie.Branch.NullIfWhiteSpace(),
-					AdditionalAuthors = pub.Sub.AdditionalAuthors,
 					EmulatorVersion = pub.Sub.EmulatorVersion
 				};
 
-				var pubAuthors = pub.Sub.Authors
+				var userplayerAuthors = allUsersWithPlayers
+					.Where(u => u.UserPlayers.Any(up => up.PlayerId == pub.Movie.Player!.Id) && u.Id != 2355) // user 2355 MICKEY has two accounts, proper one will be added back later
+					.ToList();
+
+				var pubTitleAuthorsOriginal = pub.Movie.Player!.Name
+					.ParseUserNames()
+					.ToList();
+				var pubTitleAuthorsConverted = pubTitleAuthorsOriginal
+					.Select(a => NickCleanup(a.ToLower()))
+					.ToList();
+
+				var accountAuthors = allUsersPlusAdded.Where(u => userplayerAuthors.Any(up => userIdMapping[up.Id] == u.Id)).ToList();
+				List<string> additionalAuthors = new ();
+
+				var missingUsers = pubTitleAuthorsConverted.Where(user => userplayerAuthors.All(u => u!.Name.ToLower() != user)).ToList();
+				if (missingUsers.Count != 0)
+				{
+					foreach (var missingUser in missingUsers)
+					{
+						var foundUser = allUsersPlusAdded.SingleOrDefault(u => u.UserName.ToLower() == missingUser);
+						if (foundUser != null)
+						{
+							accountAuthors.Add(foundUser);
+						}
+						else
+						{
+							additionalAuthors.Add(pubTitleAuthorsOriginal[pubTitleAuthorsConverted.IndexOf(missingUser)]);
+						}
+					}
+				}
+
+				if (additionalAuthors.Any())
+				{
+					publication.AdditionalAuthors = string.Join(",", additionalAuthors);
+				}
+
+				var pubAuthors = accountAuthors
 					.Select(u => new PublicationAuthor
 					{
 						UserId = u!.Id,
 						Author = u,
 						PublicationId = pub.Movie.Id,
-						Publication = publication
+						Publication = publication,
+						Ordinal = pubTitleAuthorsConverted.IndexOf(u.UserName.ToLower())
 					})
 					.ToList();
 
@@ -182,7 +226,8 @@ namespace TASVideos.Legacy.Imports
 			var pubAuthorColumns = new[]
 			{
 				nameof(PublicationAuthor.UserId),
-				nameof(PublicationAuthor.PublicationId)
+				nameof(PublicationAuthor.PublicationId),
+				nameof(PublicationAuthor.Ordinal)
 			};
 
 			publicationAuthors.BulkInsert(pubAuthorColumns, nameof(ApplicationDbContext.PublicationAuthors));
@@ -201,6 +246,70 @@ namespace TASVideos.Legacy.Imports
 			};
 
 			publicationFiles.BulkInsert(pubFileColumns, nameof(ApplicationDbContext.PublicationFiles));
+		}
+
+		// Like in the submission importer, but a different list as publication nicknames can be different from their submission
+		private static string NickCleanup(string nickName)
+		{
+			return nickName switch
+			{
+				"sjoerdh" => "sjoerd",
+				"cherrymay" => "cherry",
+				"a.neuhaus" => "alexis_neuhaus",
+				"alex_penev" => "alexpenev",
+				"bobwhoops" => "bob whoops",
+				"ziplock" => "-ziplock-",
+				"slash_star_dash" => "/*-",
+				"legendofmart" => "mart",
+				"michael f" => "michael fried",
+				"arnethegreat" => "arne_the_great",
+				"samhain-grim" => "vandal",
+				"superhappy" => "josh l.",
+				"solon" => "bigboct",
+				"terrotim" => "trt",
+				"ggheysjr" => "ggg",
+				"a jesus fan" => "teh noj",
+				"snc" => "snc76976",
+				"parrot14green" => "parrot14gree",
+				"brandon evans" => "brandon",
+				"error1" => "errror1",
+				"soulcal umbreon" => "soulcal",
+				"hƒthor" => "ha›thor",
+				"qwerty" => "qwerty6000",
+				"k80may" => "heplooner",
+				"kien" => "kien_",
+				"igorsantos777" => "igoroliveira666",
+				"zakky the goatragon" => "zakkydraggy",
+				"usta2877" => "bihan",
+				"brookman" => "the brookman",
+				"mcwave" => "pikachuman",
+				"aleckermit" => "alec kermit",
+				"akagitsuneyuki" => "akagitsune yukimura",
+				"arcree" => "arcree2",
+				"the packle" => "thepackle",
+				"n?k" => "xxnkxx",
+				"david fifield" => "sand",
+				"heyhorhey" => "heyhorhey91",
+				"lucas wills" => "lucaswills",
+				"twistedeye" => "twisted eye",
+				"r.bin" => "r-bin2",
+				"austin cannon" => "nami",
+				"j.y" => "mzscla",
+				"le hulk" => "lehulk",
+				"moltov" => "moltovm",
+				"mickey/vis" => "mickey_vis11189",
+				"scaredsim" => "simon sternis",
+				"vidar" => "meepers",
+				"feeuzz" => "feeuzz22",
+				"auxeras" => "th2o",
+				"alkdcy" => "alkdc",
+				"4232nis" => "nis",
+				"01garland01" => "garland",
+				"euniversecat" => "euni",
+				"zallard1" => "zallard",
+				"joka" => "jokaah",
+				_ => nickName
+			};
 		}
 	}
 }

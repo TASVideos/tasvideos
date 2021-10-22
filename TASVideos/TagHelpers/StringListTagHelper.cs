@@ -28,7 +28,7 @@ namespace TASVideos.TagHelpers
 			List<string> stringList = (AspFor.Model as IEnumerable<string>)?.ToList() ?? new List<string>();
 			stringList = stringList.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
 
-			// We need at least an add button, todo: refactor so this doesn't force the server side to strip out empty strings
+			// We need at least one line to clone, todo: refactor so this doesn't force the server side to strip out empty strings
 			if (stringList.Count == 0)
 			{
 				stringList.Add("");
@@ -36,17 +36,21 @@ namespace TASVideos.TagHelpers
 
 			for (int i = 0; i < stringList.Count; i++)
 			{
-				output.Content.AppendHtml($@"
-<div class='author-row row mb-1' data-index='{i}'>
-	<div class='col-10'>
+				output.Content.AppendHtml(
+$@"<div class='author-row row mb-1' data-index='{i}'>
+	<div class='col'>
 		<input type='text' spellcheck='false' class='form-control' {Attr("id", $"{modelId}_{i}_")} {Attr("name", modelName)} {Attr("value", stringList[i])} />
 	</div>
-	<div class='col-2'>
-		<button {(i == 0 ? Attr("id", modelId + "-add-btn") : "")} class='string-list-add-btn btn btn-secondary {(i > 0 ? "d-none" : "")}' type='button'><span class='fa fa-plus-square'></span></button>
-		<button onclick='this.parentElement.parentElement.remove()' class='string-list-remove-btn btn btn-danger {(i == 0 ? "d-none" : "")}' type='button'><span class='fa fa-remove'></span></button>
+	<div class='col-auto'>
+		<button onclick='var fec=""firstElementChild"";var cur=this.parentElement.parentElement;var prv=cur.previousElementSibling;if(prv&&prv.classList.contains(""author-row"")){{var tmp=cur[fec][fec].value;cur[fec][fec].value=prv[fec][fec].value;prv[fec][fec].value=tmp;}}' class='btn btn-secondary' type='button'><i class='fa fa-chevron-up'></i></button>
+		<button onclick='var fec=""firstElementChild"";var cur=this.parentElement.parentElement;var nxt=cur.nextElementSibling;if(nxt&&nxt.classList.contains(""author-row"")){{var tmp=cur[fec][fec].value;cur[fec][fec].value=nxt[fec][fec].value;nxt[fec][fec].value=tmp;}}' class='btn btn-secondary' type='button'><i class='fa fa-chevron-down'></i></button>
+		<button onclick='if(document.querySelectorAll({JsValue($"#{parentContainerName} .author-row")}).length>1){{this.parentElement.parentElement.remove();}}' class='btn btn-danger' type='button'><i class='fa fa-remove'></i></button>
 	</div>
 </div>");
 			}
+
+			output.Content.AppendHtml(
+$@"<button {Attr("id", modelId + "-add-btn")} class='string-list-add-btn btn btn-secondary' type='button'><i class='fa fa-plus-square'></i></button>");
 
 			output.Content.AppendHtml(
 $@"<script>
@@ -67,18 +71,11 @@ $@"<script>
 			var input = newElem.querySelector('input');
 			input.value = '';
 			input.id = 'Authors_' + newIndex + '_';
-			var addBtn = newElem.querySelector('.string-list-add-btn');
-			addBtn.id = '';
-			addBtn.classList.add('d-none');
 
-			var removeBtn = newElem.querySelector('.string-list-remove-btn');
-			removeBtn.classList.remove('d-none');
-
-			document.querySelector({JsValue($@"#{parentContainerName} div[class=""string-list-container""]")}).appendChild(newElem);
+			document.querySelector({JsValue($@"#{parentContainerName} div[class=""string-list-container""]")}).insertBefore(newElem,addBtn);
 		}}
 	}})();
-</script>
-");
+</script>");
 			output.Content.AppendHtml("</div>");
 		}
 

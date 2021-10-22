@@ -96,7 +96,7 @@ namespace TASVideos.Pages.Publications
 					p.PublicationUrls,
 					SystemCode = p.System!.Code,
 					p.WikiContent,
-					Authors = p.Authors.Select(pa => pa.Author!.UserName),
+					Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 					p.Game!.SearchKey,
 					p.ObsoletedById
 				})

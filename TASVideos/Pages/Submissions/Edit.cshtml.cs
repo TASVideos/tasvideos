@@ -95,6 +95,7 @@ namespace TASVideos.Pages.Submissions
 
 			Submission.Authors = await Db.SubmissionAuthors
 				.Where(sa => sa.SubmissionId == Id)
+				.OrderBy(sa => sa.Ordinal)
 				.Select(sa => sa.Author!.UserName)
 				.ToListAsync();
 
@@ -143,9 +144,10 @@ namespace TASVideos.Pages.Submissions
 			}
 
 			// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
-			Submission.Authors = Submission.Authors
+			var subAuthors = Submission.Authors
 				.Where(a => !string.IsNullOrWhiteSpace(a))
 				.ToList();
+			Submission.Authors = subAuthors;
 
 			var userName = User.Name();
 
@@ -312,7 +314,8 @@ namespace TASVideos.Pages.Submissions
 				{
 					SubmissionId = submission.Id,
 					UserId = u.Id,
-					Author = u
+					Author = u,
+					Ordinal = subAuthors.IndexOf(u.UserName)
 				})
 				.ToListAsync());
 

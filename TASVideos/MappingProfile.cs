@@ -167,14 +167,14 @@ namespace TASVideos
 				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.Tier!.Name))
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate!.FrameRate))
-				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.Author!.UserName).ToList()))
+				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName).ToList()))
 				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags.Select(a => a.Tag!.Code).ToList()))
 				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
 					.Select(a => a.Flag!.Token)
 					.ToList()));
 
 			CreateMap<Submission, SubmissionsResponse>()
-				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.SubmissionAuthors.Select(a => a.Author!.UserName).ToList()))
+				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(a => a.Author!.UserName).ToList()))
 				.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
 				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.IntendedTier != null ? src.IntendedTier.Name : null))
 				.ForMember(dest => dest.Judge, opt => opt.MapFrom(src => src.Judge != null ? src.Judge.UserName : null))

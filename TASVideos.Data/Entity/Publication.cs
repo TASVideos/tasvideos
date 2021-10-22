@@ -101,6 +101,7 @@ namespace TASVideos.Data.Entity
 		public void GenerateTitle()
 		{
 			var authorList = Authors
+				.OrderBy(sa => sa.Ordinal)
 				.Select(sa => sa.Author?.UserName)
 				.Where(sa => !string.IsNullOrWhiteSpace(sa));
 

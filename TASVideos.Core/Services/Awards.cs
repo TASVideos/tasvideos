@@ -129,7 +129,7 @@ namespace TASVideos.Core.Services
 					pa.Year,
 					pa.PublicationId,
 					pa.Publication!.Title,
-					Authors = pa.Publication.Authors.Select(a => new { a.UserId, a.Author!.UserName })
+					Authors = pa.Publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => new { a.UserId, a.Author!.UserName })
 				})
 				.ToListAsync();
 
