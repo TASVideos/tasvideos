@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using TASVideos.Common;
 using TASVideos.ForumEngine;
 
 namespace TASVideos.TagHelpers
@@ -22,7 +23,9 @@ namespace TASVideos.TagHelpers
 			var parsed = PostParser.Parse(Markup, EnableBbCode, EnableHtml);
 			output.TagName = "div";
 			output.AddCssClass("postbody");
-			await parsed.WriteHtml(new TagHelperTextWriter(output.Content), _helper);
+			var htmlWriter = new HtmlWriter(new TagHelperTextWriter(output.Content));
+			await parsed.WriteHtml(htmlWriter, _helper);
+			htmlWriter.AssertFinished();
 		}
 	}
 }
