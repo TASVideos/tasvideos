@@ -23,33 +23,34 @@ https://demo.tasvideos.org/
 
 This demo updates with production days once a day, and updates with the latest code twice a day.
 
-# Local Development set up
+# Local Development Setup
+
+## Prerequisites
+- .NET Core 5.0 SDK
+- VSCode or VS recommended for best development experience
+- MSSQL from VS or postgres installed for the local database
 
 ## Windows
-* Install latest Visual Studio (Community 2019) from https://visualstudio.microsoft.com/
-* Run Visual Studio installer
-* Select the followings:
-** ASP.NET and web development
-** .NET desktop development
-* Clone repository from https://github.com/adelikat/tasvideos.git
-* Open TASVideos.sln
-* Select profile "Dev MsSql (Sample Data)"
-** Note that once you run once with Sample Data, the profile "Dev MySql (No Recreate)" can be used for quicker start up times
-*** Optionally
-* Install the latest postgres and use the "Dev Postgres" profiles instead.  This will better mimic deployed environments (which will always use postgres)
+- Install Visual Studio Community 2019 from https://visualstudio.microsoft.com/
+- Run Visual Studio installer
+- Select the following:
+	- ASP.NET and web development
+	- .NET desktop development
+- Clone repository from https://github.com/adelikat/tasvideos.git
+- Open TASVideos.sln
+- For MSSQL
+	- Select profile "Dev MsSql (Sample Data)"
+		- Note that once you run once with Sample Data, the profile "Dev MySql (No Recreate)" can be used for quicker start up times
+- For postgres
+	- Use the "Dev Postgres" profiles instead.  This will better mimic deployed environments (which will always use postgres)
 
 ## Mac
-* Install latest Visual Studio for Mac
-* Install postgres
-* Install .net 5 (unless already installed from Visual Studio)
-* Clone repository from https://github.com/adelikat/tasvideos.git
-* Open TASVideos.sln
-* Select profile "Dev Postgres (Sample Data)"
-** Note that once you run once with Sample Data, the profile "Dev Postgres (No Recreate)" can be used for quicker start up times
+- Clone repository from https://github.com/adelikat/tasvideos.git
+- Open TASVideos.sln
+- Select profile "Dev Postgres (Sample Data)"
+	- Note that once you run once with Sample Data, the profile "Dev Postgres (No Recreate)" can be used for quicker start up times
 
 ## Linux
-* Install VSCode
-* Install postgres
-* Install .net 5
-* Clone repository from https://github.com/adelikat/tasvideos.git
-* TODO: better document how to pick the postgres Sample Data profile
+- Clone repository from https://github.com/adelikat/tasvideos.git
+- TODO: better document how to pick the postgres Sample Data profile
+- Adjust the VSCode launch.json to boot the postgres sample data profile
