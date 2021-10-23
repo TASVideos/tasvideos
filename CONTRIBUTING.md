@@ -4,11 +4,15 @@ Welcome! The TASVideos staff have set up links here to help guide new developers
 
 ## Directing Contributions
 
-Please feel free to file issues for any bugs observed! The maintainers will aim to confirm and mark them with a milestone based on their severity. We also welcome creating PRs directly if the solution is available and a maintainer will review the pull request and merge it. Any contributions will be [licensed under GPL v3](License).
+Please feel free to file issues for any bugs observed! The maintainers will aim to confirm and mark them with a milestone based on their severity. We also welcome creating PRs directly if the solution is readily available and a maintainer will review the pull request and merge it. Developers who submit more complex or frequent PRs are encouraged to join the [site discord](http://tasvideos.org/DiscordServer.html) and ask for a site developer role. Any contributions will be [licensed under GPL v3](License).
+
+## Code of Conduct
+
+Contributors are expected to uphold a basic [code of conduct](CODE_OF_CONDUCT) in all interactions inside and outside of the project.
 
 ## Developer Setup
 
-See [Local Development Setup](Readme.md#local-development-setup) in the readme for instructions on running the site locally for development.
+See [Local Development Setup](README#local-development-setup) in the readme for instructions on running the site locally for development.
 
 ## Code Style
 
