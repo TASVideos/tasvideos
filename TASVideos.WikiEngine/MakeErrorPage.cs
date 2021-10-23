@@ -17,7 +17,10 @@ namespace TASVideos.WikiEngine
 			{
 				var ret = new Element(at, "span");
 				if (clazz != null)
+				{
 					ret.Attributes.Add("class", clazz);
+				}
+
 				ret.Children.Add(new Text(at, content));
 				return ret;
 			}
