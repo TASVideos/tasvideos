@@ -223,8 +223,10 @@ namespace TASVideos.Pages.Submissions
 			{
 				var parseResult = await _parser.ParseZip(Submission.MovieFile.OpenReadStream());
 				var deprecated = await _deprecator.IsDepcrecated("." + parseResult.FileExtension);
+				if (deprecated)
 				{
 					ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");
+					return Page();
 				}
 
 				await MapParsedResult(parseResult, submission);
