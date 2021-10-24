@@ -108,7 +108,7 @@ namespace TASVideos.Core.Tests.Services
 		[TestMethod]
 		public async Task PostSubmissionPublished_TopicCreated()
 		{
-			_db.ForumTopics.Add(new ForumTopic
+			var topic = _db.ForumTopics.Add(new ForumTopic
 			{
 				Title = "Title",
 				SubmissionId = SubmissionId
@@ -119,6 +119,7 @@ namespace TASVideos.Core.Tests.Services
 			var actual = await _db.ForumPosts.LastOrDefaultAsync();
 
 			Assert.IsNotNull(actual);
+			Assert.AreEqual(SiteGlobalConstants.PublishedMoviesForumId, topic.Entity.ForumId);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
