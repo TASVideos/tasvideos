@@ -89,34 +89,40 @@ NodeList.prototype.toArray = function () {
 };
 
 function forceDarkMode() {
-	removeAutoDarkMode();
+	if (localStorage.getItem("style-dark") !== "true") {
+		removeAutoDarkMode();
 
-	var newElement = document.createElement('link');
-	newElement.rel = "stylesheet";
-	newElement.id = "style-dark";
-	newElement.href = "/css/darkmode.css";
-	document.head.appendChild(newElement);
+		var newElement = document.createElement('link');
+		newElement.rel = "stylesheet";
+		newElement.id = "style-dark";
+		newElement.href = "/css/darkmode.css";
+		document.head.appendChild(newElement);
 
-	localStorage.setItem("style-dark", "true");
+		localStorage.setItem("style-dark", "true");
+	}
 }
 
 function forceLightMode() {
-	removeForcedDarkMode();
-	removeAutoDarkMode();
+	if (localStorage.getItem("style-dark") !== "false") {
+		removeForcedDarkMode();
+		removeAutoDarkMode();
 
-	localStorage.setItem("style-dark", "false");
+		localStorage.setItem("style-dark", "false");
+	}
 }
 
-function autoDarkMode () {
-	removeForcedDarkMode();
+function autoDarkMode() {
+	if (localStorage.getItem("style-dark") !== null) {
+		removeForcedDarkMode();
 
-	var newElement = document.createElement('link');
-	newElement.rel = "stylesheet";
-	newElement.id = "style-dark-initial";
-	newElement.href = "/css/darkmode-initial.css";
-	document.head.appendChild(newElement);
+		var newElement = document.createElement('link');
+		newElement.rel = "stylesheet";
+		newElement.id = "style-dark-initial";
+		newElement.href = "/css/darkmode-initial.css";
+		document.head.appendChild(newElement);
 
-	localStorage.removeItem("style-dark");
+		localStorage.removeItem("style-dark");
+	}
 }
 
 function removeForcedDarkMode() {
