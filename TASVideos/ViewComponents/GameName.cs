@@ -35,8 +35,9 @@ namespace TASVideos.ViewComponents
 			}
 			else
 			{
+				var baseGame = string.Join("/", path.Split('/').Take(3));
 				gameList = await _db.Games
-					.Where(g => g.GameResourcesPage == path)
+					.Where(g => g.GameResourcesPage == baseGame)
 					.Select(g => new GameNameModel
 					{
 						GameId = g.Id,
