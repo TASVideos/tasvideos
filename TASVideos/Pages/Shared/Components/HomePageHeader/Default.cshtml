@@ -1,6 +1,6 @@
 ﻿@model WikiPage
 @{
-	var user = Model.PageName.Split("/").Skip(1).FirstOrDefault();
+    var user = Model.PageName.Split("/").Skip(1).FirstOrDefault();
     bool isSubPage = Model.PageName.Split("/").Length != 2;
 
 }
