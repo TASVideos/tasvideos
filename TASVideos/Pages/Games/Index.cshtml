@@ -26,11 +26,11 @@
 		<ul>
 			<li>Platform: @Model.Game.SystemCode</li>
 			<li>Abbreviation: @Model.Game.Abbreviation</li>
-			<li>DisplayName: @Model.Game.DisplayName</li>
-			<li>Good tools name: @Model.Game.GoodName</li>
-			<li>Game resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
+			<li>Display Name: @Model.Game.DisplayName</li>
+			<li>GoodTools Name: @Model.Game.GoodName</li>
+			<li>Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
 			<li condition="Model.Game.GameGroups.Any()">
-				Game groups:<br />
+				Game Groups:<br />
 				<ul>
 					@foreach (var group in Model.Game.GameGroups)
 					{
