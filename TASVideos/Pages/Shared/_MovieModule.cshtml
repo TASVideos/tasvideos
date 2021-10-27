@@ -139,22 +139,27 @@
 		</row>
 		<row class="border-bottom my-2 gx-3">
 			<small class="mb-2">
-				<game-link id="@Model.GameId">@Model.GameName</game-link> | 
 				<a asp-page="/Games/PublicationHistory"
 					asp-route-id="@Model.GameId"
 					asp-route-highlight="@Model.Id">
-					See full obsoletion history
+					See full publication history
 				</a>
 			</small>
 		</row>
 		<row class="my-2 gx-3">
-			<div condition="Model.GenreTags.Any()" class="col-auto">
+			<div class="col-auto">
 				<small>
-					Genres:<br />
-					@foreach (var genre in Model.GenreTags)
-					{
-						<a href="/Movies-@genre.Code" class="ms-2">@genre.DisplayName</a><br />
-					}
+					<span>
+						Game:<br />
+						<game-link id="@Model.GameId" class="ms-2">@Model.GameName</game-link>
+					</span>
+					<span condition="Model.GenreTags.Any()">
+						<br />Genres:<br />
+						@foreach (var genre in Model.GenreTags)
+						{
+							<a href="/Movies-@genre.Code" class="ms-2">@genre.DisplayName</a><br />
+						}
+					</span>
 				</small>
 			</div>
 			<div condition="Model.Tags.Any()" class="col-auto">
