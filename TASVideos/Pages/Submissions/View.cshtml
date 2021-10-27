@@ -156,7 +156,7 @@
 			</tr>
 		</table>
 		<small>
-			Submission edited by @Model.Submission.Submitter on @Model.Submission.Submitted
+			Submitted by @Model.Submission.Submitter on @Model.Submission.Submitted
 		</small>
 		<div class="btn-toolbar">
 			<a condition="@canClaimAsJudge" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success mt-2 me-1">Claim</a>
@@ -184,7 +184,7 @@
 </card>
 <hr />
 <small>
-	last edited by @Model.Submission.LastUpdateUser on @Model.Submission.LastUpdateTimestamp
+	Last Edited by @Model.Submission.LastUpdateUser on @Model.Submission.LastUpdateTimestamp
 </small>
 <br />
 <a asp-page="/Wiki/PageHistory"
