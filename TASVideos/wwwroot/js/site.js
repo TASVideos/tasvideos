@@ -89,7 +89,8 @@ NodeList.prototype.toArray = function () {
 };
 
 function forceDarkMode() {
-	if (localStorage.getItem("style-dark") !== "true") {
+	let DarkModeStylesheet = document.getElementById("style-dark");
+	if (!DarkModeStylesheet) {
 		removeAutoDarkMode();
 
 		var newElement = document.createElement('link');
@@ -103,16 +104,15 @@ function forceDarkMode() {
 }
 
 function forceLightMode() {
-	if (localStorage.getItem("style-dark") !== "false") {
-		removeForcedDarkMode();
-		removeAutoDarkMode();
+	removeForcedDarkMode();
+	removeAutoDarkMode();
 
-		localStorage.setItem("style-dark", "false");
-	}
+	localStorage.setItem("style-dark", "false");
 }
 
 function autoDarkMode() {
-	if (localStorage.getItem("style-dark") !== null) {
+	let initialDarkModeStylesheet = document.getElementById("style-dark-initial");
+	if (!initialDarkModeStylesheet) {
 		removeForcedDarkMode();
 
 		var newElement = document.createElement('link');
