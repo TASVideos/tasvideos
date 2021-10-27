@@ -79,46 +79,42 @@
 						 class="w-100 pixelart-image"
 						 loading="lazy" />
 				</div>
-				@foreach (var url in Model.OnlineWatchingUrls)
-				{
-					<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> Watch</a>
-				}
-			<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
-				<br />
-				<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Submission</a>
-				<a condition="@Model.TopicId > 0"
-				   asp-page="/Forum/Topics/Index"
-				   asp-route-id="@Model.TopicId"
-				   class="btn btn-secondary btn-sm mt-1">
-					<i class="fa fa-comments-o"></i> Discuss
-				</a>
-				<br />
-				<a permission="EditPublicationMetaData"
-				   asp-page="Edit"
-				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
-				<a permission="CatalogMovies"
-				   asp-page="/Publications/Catalog"
-				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
-				<a permission="EditPublicationMetaData"
-				   href="/MovieMaintenanceLog?id=@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1">
-					<i class="fa fa-history"></i> Logs
-				</a>
-				<br />
 				<div>
-					<span permission="RateMovies">
-						<a asp-page="/Publications/Rate"
-						   asp-route-id="@Model.Id">
-							Rating
-						</a>: &nbsp;
-					</span>
-					<span condition="!ViewData.UserHas(PermissionTo.RateMovies)">Rating:</span>
-					<span condition="Model.RatingCount > 2">@Math.Round(Model.OverallRating ?? 0, 2)</span>
-					<span condition="Model.RatingCount <= 2">(Not enough votes)</span>
-					<span condition="Model.RatingCount == 1">(<a asp-page="/Ratings/Index" asp-route-id="@Model.Id">1 vote</a>)</span>
-					<span condition="Model.RatingCount != 1">(<a asp-page="/Ratings/Index" asp-route-id="@Model.Id">@Model.RatingCount votes</a>)</span>
+					@foreach (var url in Model.OnlineWatchingUrls)
+					{
+						<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> Watch</a>
+					}
+					<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
+				</div>
+				<div>
+					<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Submission</a>
+					<a condition="@Model.TopicId > 0"
+					   asp-page="/Forum/Topics/Index"
+					   asp-route-id="@Model.TopicId"
+					   class="btn btn-secondary btn-sm mt-1">
+						<i class="fa fa-comments-o"></i> Discuss
+					</a>
+				</div>
+				<div>
+					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
+						<i class="fa fa-star-o"></i> @Math.Round(Model.OverallRating ?? 0, 2, MidpointRounding.AwayFromZero) / 10
+					</a>
+					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: @Model.RatingCount</a>
+				</div>
+				<div>
+					<a permission="EditPublicationMetaData"
+					   asp-page="Edit"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
+					<a permission="CatalogMovies"
+					   asp-page="/Publications/Catalog"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
+					<a permission="EditPublicationMetaData"
+					   href="/MovieMaintenanceLog?id=@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1">
+						<i class="fa fa-history"></i> Logs
+					</a>
 				</div>
 				@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
 				{
