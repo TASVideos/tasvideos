@@ -92,7 +92,7 @@ namespace TASVideos
 				.ForMember(dest => dest.OnlineWatchingUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Streaming && pu.Url != null).Select(pu => pu.Url)))
 				.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count / 2.0))
 				.ForMember(dest => dest.TierIconPath, opt => opt.MapFrom(src => src.Tier!.IconPath))
-				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.GoodName))
+				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.DisplayName))
 				.ForMember(dest => dest.TopicId, opt => opt.MapFrom(src => src.Submission!.TopicId))
 				.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files
 					.Select(f => new PublicationDisplayModel.FileModel
@@ -156,7 +156,7 @@ namespace TASVideos
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 				.ForMember(dest => dest.SystemId, opt => opt.MapFrom(src => src.SystemId ?? 0))
 				.ForMember(dest => dest.SystemRegion, opt => opt.MapFrom(src => src.SystemFrameRate!.RegionCode + " " + src.SystemFrameRate.FrameRate))
-				.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game!.GoodName))
+				.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game!.DisplayName))
 				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.GameId ?? 0))
 				.ForMember(dest => dest.RomId, opt => opt.MapFrom(src => src.RomId ?? 0))
 				.ForMember(dest => dest.Rom, opt => opt.MapFrom(src => src.Rom!.Name))
@@ -190,7 +190,7 @@ namespace TASVideos
 
 			CreateMap<WikiPage, UserWikiEditHistoryModel.EditEntry>();
 			CreateMap<GameRamAddress, AddressEditModel>()
-				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.GoodName))
+				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.DisplayName))
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code));
 		}
 	}
