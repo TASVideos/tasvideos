@@ -289,13 +289,13 @@ namespace TASVideos.WikiEngine
 				{
 					attrs.Add(Attr("alt", s[4..]));
 				}
-				else if (s.StartsWith("height="))
+				else if (s.StartsWith("h="))
 				{
-					attrs.Add(Attr("height", s[7..]));
+					attrs.Add(Attr("height", s[2..]));
 				}
-				else if (s.StartsWith("width="))
+				else if (s.StartsWith("w="))
 				{
-					attrs.Add(Attr("width", s[6..]));
+					attrs.Add(Attr("width", s[2..]));
 				}
 			}
 
