@@ -249,6 +249,10 @@ DELETE
 FROM public.forum_polls p
 WHERE p.id NOT IN (SELECT id from _polls);
 
+ --No reason to make this data available
+UPDATE forum_posts SET ip_address = '8.8.8.8';
+UPDATE forum_poll_option_votes SET ip_address = '8.8.8.8';
+
 -- Delete Users who have not contributed to any current data, and have no roles
 TRUNCATE TABLE user_maintenance_logs;
 DROP TABLE IF EXISTS _active_users;
@@ -281,4 +285,6 @@ UPDATE public.users
 	SET signature = NULL,
 		legacy_password = 'caecb26de1c989826750c7c478a9401d', -- We don't want to make the real password public
 		email = null,
-		normalized_email = null; -- We dont' want to make these public either
+		normalized_email = null, -- We dont' want to make these public either
+		last_logged_in_time_stamp = NOW(),
+		time_zone_iD = 'UTC';
