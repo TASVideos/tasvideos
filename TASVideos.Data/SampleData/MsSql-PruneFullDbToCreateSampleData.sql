@@ -236,6 +236,10 @@ FROM ForumPosts p
 LEFT JOIN @Posts iposts on p.Id = iposts.Id
 WHERE iposts.Id IS NULL
 
+--
+UPDATE ForumPosts SET IpAddress = '8.8.8.8' --No reason to make this data available
+UPDATE ForumPollOptionVotes SET IpAddress = '8.8.8.8'
+
 UPDATE
 Submissions
 SET TopicId = NULL
@@ -286,4 +290,6 @@ UPDATE Users
 	SET Signature = NULL,
 		LegacyPassword = 'caecb26de1c989826750c7c478a9401d', -- We don't want to make these public
 		Email = null, -- We dont' want to make these public either
-		NormalizedEmail = null
+		NormalizedEmail = null,
+		LastLoggedInTimeStamp = GETDATE(),
+		TimeZoneID = 'UTC'
