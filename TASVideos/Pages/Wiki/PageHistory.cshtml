@@ -74,22 +74,22 @@
 				elem.classList.remove('table-primary');
 				elem.classList.remove('table-info');
 				elem.querySelector("button[data-from]").classList.remove("btn-primary");
-				elem.querySelector("button[data-from]").classList.add("bg-info text-dark");
+				elem.querySelector("button[data-from]").classList.add("bg-info","text-dark");
 				elem.querySelector("button[data-to]").classList.remove("btn-primary");
-				elem.querySelector("button[data-to]").classList.add("bg-info text-dark");
+				elem.querySelector("button[data-to]").classList.add("bg-info","text-dark");
 			});
 
 		var cur = document.querySelector('tr[data-revision="' + toRevision + '"]');
 		if (cur) {
 			cur.classList.add('table-primary');
-			cur.querySelector("button[data-to]").classList.remove("bg-info text-dark");
+			cur.querySelector("button[data-to]").classList.remove("bg-info","text-dark");
 			cur.querySelector("button[data-to]").classList.add("btn-primary");
 		}
 		
 		var prev = document.querySelector('tr[data-revision="' + fromRevision + '"]');
 		if (prev) {
 			prev.classList.add('table-info');	
-			prev.querySelector("button[data-from]").classList.remove("bg-info text-dark");
+			prev.querySelector("button[data-from]").classList.remove("bg-info","text-dark");
 			prev.querySelector("button[data-from]").classList.add("btn-primary");
 		}
 	}
