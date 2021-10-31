@@ -22,18 +22,23 @@ namespace TASVideos.ViewComponents
 			_wikiPages = wikiPages;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage pageData, bool isTranslation)
+		public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData, bool isTranslation)
 		{
-			// This was originally done to put the header with a link back to the english page
-			// Now we always put the parent module on the page which will handle this
-			if (isTranslation)
+			if (string.IsNullOrWhiteSpace(pageData?.PageName))
 			{
 				return new ContentViewComponentResult("");
 			}
 
-			if (string.IsNullOrWhiteSpace(pageData.PageName))
+			string pageName = pageData.PageName;
+			if (isTranslation)
 			{
-				return new ContentViewComponentResult("");
+				// Actual translation pages should be nested from the language page
+				if (!pageName.Contains('/'))
+				{
+					return new ContentViewComponentResult("");
+				}
+
+				pageName = string.Join("", pageName.Split('/').Skip(1));
 			}
 
 			var languages = (await _languages.AvailableLanguages())
@@ -41,7 +46,7 @@ namespace TASVideos.ViewComponents
 				{
 					LanguageCode = l.Code,
 					LanguageDisplayName = l.DisplayName,
-					Path = l.Code + "/" + pageData.PageName
+					Path = l.Code + "/" + pageName
 				})
 				.ToList();
 
