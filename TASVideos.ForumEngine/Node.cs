@@ -368,7 +368,17 @@ namespace TASVideos.ForumEngine
 					w.Write("<span style=");
 
 					// TODO: More fully featured anti-style injection
-					Helpers.WriteAttributeValue(w, "font-size: " + Options.Split(';')[0]);
+					var sizeStr = Options.Split(';')[0];
+					if (double.TryParse(sizeStr, out double sizeDouble))
+					{
+						// default font size of the old site was 12px, so if size was given without a unit, divide by 12 and use em
+						Helpers.WriteAttributeValue(w, "font-size: " + (sizeDouble / 12) + "em");
+					}
+					else
+					{
+						Helpers.WriteAttributeValue(w, "font-size: " + sizeStr);
+					}
+
 					w.Write('>');
 					await WriteChildren(w, h);
 					w.Write("</span>");
