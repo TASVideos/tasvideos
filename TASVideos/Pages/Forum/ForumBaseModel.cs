@@ -78,11 +78,12 @@ namespace TASVideos.Pages.Forum
 			};
 		}
 
-		protected async Task<int> CreatePost(int topicId, ForumPostModel model, int userId, string ipAddress)
+		protected async Task<int> CreatePost(int topicId, int forumId, ForumPostModel model, int userId, string ipAddress)
 		{
 			var forumPost = new ForumPost
 			{
 				TopicId = topicId,
+				ForumId = forumId,
 				PosterId = userId,
 				IpAddress = ipAddress,
 				Subject = model.Subject,

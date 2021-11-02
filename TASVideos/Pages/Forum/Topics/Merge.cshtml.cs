@@ -100,6 +100,7 @@ namespace TASVideos.Pages.Forum.Topics
 			foreach (var post in oldPosts)
 			{
 				post.TopicId = Topic.DestinationTopicId;
+				post.ForumId = destinationTopic.ForumId;
 			}
 
 			_db.ForumTopics.Remove(originalTopic);

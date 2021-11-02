@@ -12,6 +12,9 @@ namespace TASVideos.Data.Entity.Forum
 		public int? TopicId { get; set; }
 		public virtual ForumTopic? Topic { get; set; }
 
+		public int ForumId { get; set; }
+		public virtual Forum? Forum { get; set; }
+
 		public int PosterId { get; set; }
 		public virtual User? Poster { get; set; }
 

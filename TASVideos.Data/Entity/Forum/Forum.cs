@@ -12,6 +12,7 @@ namespace TASVideos.Data.Entity.Forum
 		public virtual ForumCategory? Category { get; set; }
 
 		public virtual ICollection<ForumTopic> ForumTopics { get; set; } = new HashSet<ForumTopic>();
+		public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
 
 		[Required]
 		[StringLength(50)]
