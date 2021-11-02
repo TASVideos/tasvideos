@@ -81,11 +81,27 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
+			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
+
+			if (forum == null)
+			{
+				return NotFound();
+			}
+
 			var topicWasRestricted = topic.Forum?.Restricted ?? false;
 			topic.ForumId = Topic.ForumId;
+
+			var postsToMove = await _db.ForumPosts
+				.Where(p => p.TopicId == topic.Id)
+				.ToListAsync();
+
+			foreach (var post in postsToMove)
+			{
+				post.ForumId = forum.Id;
+			}
+
 			await _db.SaveChangesAsync();
 
-			var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
 			await _publisher.SendForum(
 				topicWasRestricted || forum.Restricted,
 				$"Topic {Topic.TopicTitle} moved by {User.Name()} from {Topic.ForumName} to {forum.Name}",

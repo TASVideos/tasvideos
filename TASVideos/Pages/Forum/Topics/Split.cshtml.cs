@@ -130,6 +130,7 @@ namespace TASVideos.Pages.Forum.Topics
 			foreach (var post in splitPosts)
 			{
 				post.TopicId = newTopic.Id;
+				post.ForumId = destinationForum.Id;
 			}
 
 			await _db.SaveChangesAsync();

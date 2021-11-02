@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Data.Entity.Forum;
+using TASVideos.Pages.Forum.Models;
 
 namespace TASVideos.Pages.Forum
 {
@@ -17,12 +19,30 @@ namespace TASVideos.Pages.Forum
 			_db = db;
 		}
 
-		public ICollection<ForumCategory> Categories { get; set; } = new List<ForumCategory>();
+		public ICollection<ForumCategoryModel> Categories { get; set; } = new List<ForumCategoryModel>();
 
 		public async Task OnGet()
 		{
 			Categories = await _db.ForumCategories
-				.Include(c => c.Forums)
+				.Select(c => new ForumCategoryModel
+				{
+					Id = c.Id,
+					Ordinal = c.Ordinal,
+					Title = c.Title,
+					Description = c.Title,
+					Forums = c.Forums
+						.Select(f => new ForumCategoryModel.Forum
+						{
+							Id = f.Id,
+							Ordinal = f.Ordinal,
+							Restricted = f.Restricted,
+							Name = f.Name,
+							Description = f.Description ?? "",
+							LastPost = f.ForumPosts
+								.SingleOrDefault(fp => fp.Id == f.ForumPosts.Max(fpp => fpp.Id))
+						})
+						.ToList()
+				})
 				.ToListAsync();
 		}
 	}

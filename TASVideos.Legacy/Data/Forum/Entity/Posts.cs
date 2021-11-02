@@ -11,6 +11,7 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("topic_id")]
 		public int TopicId { get; set; }
+		public virtual Topics? Topic { get; set; }
 
 		[Column("poster_id")]
 		public int PosterId { get; set; }
@@ -44,5 +45,8 @@ namespace TASVideos.Legacy.Data.Forum.Entity
 
 		[Column("enable_avatar")]
 		public int MoodAvatar { get; set; }
+
+		[Column("forum_id")]
+		public int ForumId { get; set; }
 	}
 }

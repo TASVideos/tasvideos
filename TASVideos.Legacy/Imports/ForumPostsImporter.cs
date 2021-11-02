@@ -30,7 +30,8 @@ namespace TASVideos.Legacy.Imports
 					p.PostText.BbCodeUid,
 					p.PosterId,
 					PosterName = p.Poster!.UserName,
-					p.MoodAvatar
+					p.MoodAvatar,
+					p.Topic!.ForumId
 				})
 				.ToList()
 				.Select(p =>
@@ -108,7 +109,8 @@ namespace TASVideos.Legacy.Imports
 							: !string.IsNullOrWhiteSpace(p.PosterName)
 								? p.PosterName
 								: "Unknown",
-						PosterMood = (ForumPostMood)moodAvatar
+						PosterMood = (ForumPostMood)moodAvatar,
+						ForumId = p.ForumId
 					};
 				});
 
@@ -126,7 +128,8 @@ namespace TASVideos.Legacy.Imports
 				nameof(ForumPost.LastUpdateUserName),
 				nameof(ForumPost.EnableHtml),
 				nameof(ForumPost.EnableBbCode),
-				nameof(ForumPost.PosterMood)
+				nameof(ForumPost.PosterMood),
+				nameof(ForumPost.ForumId)
 			};
 
 			posts.BulkInsert(columns, nameof(ApplicationDbContext.ForumPosts));

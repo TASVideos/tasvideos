@@ -95,7 +95,7 @@ namespace TASVideos.Pages.Forum.Topics
 				Mood = Topic.Mood
 			};
 
-			await CreatePost(topic.Id, forumPostModel, userId, IpAddress);
+			await CreatePost(topic.Id, ForumId, forumPostModel, userId, IpAddress);
 
 			if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
 			{
