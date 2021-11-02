@@ -19,7 +19,8 @@ namespace TASVideos.Middleware
 			var request = context.Request;
 
 			var path = request.Path.Value;
-			if (path == null || !path.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+			if (path == null || !path.EndsWith(".html", StringComparison.OrdinalIgnoreCase)
+			|| string.Equals(path, "/api/index.html", StringComparison.OrdinalIgnoreCase))
 			{
 				return _next(context);
 			}

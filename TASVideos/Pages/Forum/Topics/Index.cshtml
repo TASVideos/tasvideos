@@ -11,7 +11,7 @@
 	</div>
 }
 <partial Name="_ForumHeader" />
-<fullrow>
+<fullrow class="mb-2">
 	<partial name="_TopicCrumbs" model="Model.Topic" />
 	<partial name="_TopicActionBar" model="Model.Topic" />
 	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
@@ -86,8 +86,12 @@
 }
 
 <fullrow class="mt-2">
+	<partial name="_Pager" model="Model.Topic.Posts" />
+</fullrow>
+<hr class="mb-1"/>
+
+<fullrow class="mt-2">
 	<partial name="_TopicActionBar" model="Model.Topic" />
-	<partial name="_TopicCrumbs" model="Model.Topic" />
 	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
 		|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
 	   asp-page="/Forum/Posts/Create"
@@ -95,8 +99,5 @@
 	   class="btn btn-primary btn-sm float-end">
 		<span class="fa fa-plus"></span> Post
 	</a>
-</fullrow>
-<hr />
-<fullrow class="mt-2">
-	<partial name="_Pager" model="Model.Topic.Posts" />
+	<partial name="_TopicCrumbs" model="Model.Topic" />
 </fullrow>

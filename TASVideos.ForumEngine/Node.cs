@@ -354,7 +354,16 @@ namespace TASVideos.ForumEngine
 				case "size":
 					w.OpenTag("span");
 					// TODO: More fully featured anti-style injection
-					w.Attribute("style", "font-size: " + Options.Split(';')[0]);
+					var sizeStr = Options.Split(';')[0];
+					if (double.TryParse(sizeStr, out var sizeDouble))
+					{
+						// default font size of the old site was 12px, so if size was given without a unit, divide by 12 and use em
+						w.Attribute("style", $"font-size: {(sizeDouble / 12)} em");
+					}
+					else
+					{
+						w.Attribute("style", $"font-size: {sizeStr}");
+					}
 					await WriteChildren(w, h);
 					w.CloseTag("span");
 					break;

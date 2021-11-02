@@ -25,7 +25,7 @@ namespace TASVideos.ViewComponents
 		{
 			if (!before.HasValue || !after.HasValue || platforms.Count == 0)
 			{
-				return new ContentViewComponentResult("Invalid paramters.");
+				return new ContentViewComponentResult("Invalid parameters.");
 			}
 
 			var model = new PlatformAuthorListModel

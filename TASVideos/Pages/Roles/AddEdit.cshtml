@@ -87,12 +87,12 @@
 		var selectedAssignableListId = 'Selected@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))';
 		
 		function shouldShowAssignRoles() {
-			var hasAssign = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
+			const hasAssign = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
 				.toArray()
 				.length >
 				0;
 
-			var hasAtLastOneOtherPerm = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
+			const hasAtLastOneOtherPerm = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
 				.toArray()
 				.length >
 				0;
@@ -108,7 +108,7 @@
 				.toArray()
 				.concat(document.querySelectorAll('#' + selectedAssignableListId + ' option').toArray());
 
-			var addedPerms = selectedPerms
+			const addedPerms = selectedPerms
 				.filter(function(elem) {
 					return !(aggregatedAssignablePerms
 						.map(function(e) {
@@ -117,7 +117,7 @@
 						.includes(elem.value));
 				});
 
-			var removedPerms = aggregatedAssignablePerms
+			const removedPerms = aggregatedAssignablePerms
 				.filter(function(elem) {
 					return !(selectedPerms
 						.map(function(e) {
@@ -134,7 +134,7 @@
 			});
 
 			removedPerms.forEach(function(elem) {
-				var id = document.querySelector('[name="' + selectedAssignablePermissionsModelId + '"][v="' + elem.value + '"]');
+				const id = document.querySelector('[name="' + selectedAssignablePermissionsModelId + '"][v="' + elem.value + '"]');
 				if (id) {
 					id.remove();
 				}
@@ -151,8 +151,8 @@
 		}
 
 		function showRolesCurrentlyAssignable() {
-			var selector = '[name="' + selectedAssignablePermissionsModelId + '"]';
-			var permissions = document.querySelectorAll(selector)
+			const selector = '[name="' + selectedAssignablePermissionsModelId + '"]';
+			const permissions = document.querySelectorAll(selector)
 				.toArray()
 				.map(function(elem) {
 					return elem.value;
@@ -163,7 +163,7 @@
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {
-							var data = JSON.parse(xmlhttp.responseText);
+							const data = JSON.parse(xmlhttp.responseText);
 							if (data) {
 								document.getElementById("assignable-roles").textContent = data.join(', ');
 							} else {
@@ -173,8 +173,8 @@
 					}
 				};
 
-				var getStr = '';
-				for (var i in permissions) {
+				let getStr = '';
+				for (let i in permissions) {
 					if (permissions.hasOwnProperty(i)) {
 						getStr += 'ids=' + permissions[i] + '&';
 					}

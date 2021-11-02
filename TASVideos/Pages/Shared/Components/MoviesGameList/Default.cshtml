@@ -17,9 +17,9 @@
 	{
 		<tr>
 			<td>
-				<a href="@(game.Id)G">
+				<game-link id="game.Id">
 					@game.Name (@Model.SystemCode)
-				</a>
+				</game-link>
 			</td>
 			<td>
 				<a condition="game.PublicationIds.Any()" href="/Movies-@string.Join("-", game.PublicationIds.Select(p => p + "M"))">

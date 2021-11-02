@@ -9,7 +9,7 @@ namespace TASVideos.Core.Services
 {
 	public interface ITASVideosGrue
 	{
-		Task PostSubmissionRejection(int submissionId);
+		Task RejectAndMove(int submissionId);
 	}
 
 	internal class TASVideosGrue : ITASVideosGrue
@@ -35,7 +35,7 @@ namespace TASVideos.Core.Services
 			_db = db;
 		}
 
-		public async Task PostSubmissionRejection(int submissionId)
+		public async Task RejectAndMove(int submissionId)
 		{
 			var topic = await _db.ForumTopics.SingleOrDefaultAsync(f => f.SubmissionId == submissionId);
 
@@ -44,6 +44,7 @@ namespace TASVideos.Core.Services
 			// which would be worse than a missing forum post
 			if (topic is not null)
 			{
+				topic.ForumId = SiteGlobalConstants.GrueFoodForumId;
 				_db.ForumPosts.Add(new ForumPost
 				{
 					TopicId = topic.Id,

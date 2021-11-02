@@ -80,6 +80,7 @@ namespace TASVideos.Core.Services
 			// which would be worse than a missing forum post
 			if (topic is not null)
 			{
+				topic.ForumId = SiteGlobalConstants.PublishedMoviesForumId;
 				_db.ForumPosts.Add(new ForumPost
 				{
 					TopicId = topic.Id,

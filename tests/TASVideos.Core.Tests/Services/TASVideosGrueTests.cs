@@ -13,7 +13,7 @@ namespace TASVideos.Core.Tests.Services
 	{
 		private const int SubmissionId = 1;
 
-		private readonly ITASVideosGrue _tasVideosGrue;
+		private readonly TASVideosGrue _tasVideosGrue;
 		private readonly TestDbContext _db;
 
 		public TASVideosGrueTests()
@@ -25,7 +25,7 @@ namespace TASVideos.Core.Tests.Services
 		[TestMethod]
 		public async Task PostSubmissionRejection_NoTopic_DoesNotPost()
 		{
-			await _tasVideosGrue.PostSubmissionRejection(SubmissionId);
+			await _tasVideosGrue.RejectAndMove(SubmissionId);
 			var actual = await _db.ForumPosts.LastOrDefaultAsync();
 			Assert.IsNull(actual);
 		}
@@ -33,17 +33,18 @@ namespace TASVideos.Core.Tests.Services
 		[TestMethod]
 		public async Task PostSubmissionRejection_TopicCreated()
 		{
-			_db.ForumTopics.Add(new ForumTopic
+			var topic = _db.ForumTopics.Add(new ForumTopic
 			{
 				Title = "Title",
 				SubmissionId = SubmissionId
 			});
 			await _db.SaveChangesAsync();
 
-			await _tasVideosGrue.PostSubmissionRejection(SubmissionId);
+			await _tasVideosGrue.RejectAndMove(SubmissionId);
 			var actual = await _db.ForumPosts.LastOrDefaultAsync();
 
 			Assert.IsNotNull(actual);
+			Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, topic.Entity.ForumId);
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.CreateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.LastUpdateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrueId, actual.PosterId);
@@ -56,7 +57,7 @@ namespace TASVideos.Core.Tests.Services
 		[TestMethod]
 		public async Task PostSubmissionRejection_StaleIfOld()
 		{
-			_db.ForumTopics.Add(new ForumTopic
+			var topic = _db.ForumTopics.Add(new ForumTopic
 			{
 				CreateTimestamp = DateTime.Now.AddYears(-1),
 				Title = "Title",
@@ -64,10 +65,11 @@ namespace TASVideos.Core.Tests.Services
 			});
 			await _db.SaveChangesAsync();
 
-			await _tasVideosGrue.PostSubmissionRejection(SubmissionId);
+			await _tasVideosGrue.RejectAndMove(SubmissionId);
 			var actual = await _db.ForumPosts.LastOrDefaultAsync();
 
 			Assert.IsNotNull(actual);
+			Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, topic.Entity.ForumId);
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.CreateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.LastUpdateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrueId, actual.PosterId);

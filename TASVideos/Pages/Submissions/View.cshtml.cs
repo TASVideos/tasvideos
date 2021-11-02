@@ -41,7 +41,7 @@ namespace TASVideos.Pages.Submissions
 					StartType = (MovieStartType?)s.MovieStartType,
 					SystemDisplayName = s.System!.DisplayName,
 					SystemCode = s.System.Code,
-					GameName = s.GameId != null ? s.Game!.GoodName : s.GameName,
+					GameName = s.GameId != null ? s.Game!.DisplayName : s.GameName,
 					GameVersion = s.GameVersion,
 					RomName = s.RomName,
 					Branch = s.Branch,

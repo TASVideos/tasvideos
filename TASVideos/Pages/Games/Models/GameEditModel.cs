@@ -11,7 +11,7 @@ namespace TASVideos.Pages.Games.Models
 		public string SystemCode { get; set; } = "";
 
 		[Required]
-		[Display(Name = "Good Name")]
+		[Display(Name = "GoodTools Name")]
 		[StringLength(250)]
 		public string GoodName { get; set; } = "";
 
