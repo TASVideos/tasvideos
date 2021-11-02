@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Models
@@ -17,9 +19,15 @@ namespace TASVideos.Pages.Forum.Models
 			public int Ordinal { get; init; }
 			public bool Restricted { get; init; }
 			public string Name { get; init; } = "";
-			public string Description { get; init; } = "";
+			public string? Description { get; init; } = "";
 
-			public ForumPost? LastPost { get; init; } = new ();
+			public Post? LastPost { get; init; } = new ();
+			public class Post
+			{
+				public int Id { get; init; }
+				public DateTime CreateTimestamp { get; init; }
+				public string? CreateUserName { get; init; } = "";
+			}
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace TASVideos.Pages.Forum
 					Id = c.Id,
 					Ordinal = c.Ordinal,
 					Title = c.Title,
-					Description = c.Title,
+					Description = c.Description,
 					Forums = c.Forums
 						.Select(f => new ForumCategoryModel.Forum
 						{
@@ -39,6 +39,12 @@ namespace TASVideos.Pages.Forum
 							Name = f.Name,
 							Description = f.Description ?? "",
 							LastPost = f.ForumPosts
+								.Select(fp => new ForumCategoryModel.Forum.Post
+								{
+									Id = fp.Id,
+									CreateTimestamp = fp.CreateTimestamp,
+									CreateUserName = fp.CreateUserName
+								})
 								.SingleOrDefault(fp => fp.Id == f.ForumPosts.Max(fpp => fpp.Id))
 						})
 						.ToList()
