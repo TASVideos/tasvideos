@@ -127,7 +127,7 @@ namespace TASVideos.Core.Services
 				return page;
 			}
 
-			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName}", value, Durations.OneYearInSeconds);
+			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName}", value, Durations.OneDayInSeconds);
 		}
 
 		public async Task<IEnumerable<WikiOrphan>> Orphans() => await _db.WikiPages
