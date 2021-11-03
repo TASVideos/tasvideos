@@ -46,13 +46,10 @@ namespace TASVideos.Extensions
 
 		public static IServiceCollection AddCookieConfiguration(this IServiceCollection services, IWebHostEnvironment env)
 		{
-			if (env.IsDevelopment())
+			services.ConfigureApplicationCookie(options =>
 			{
-				services.ConfigureApplicationCookie(options =>
-				{
-					options.ExpireTimeSpan = TimeSpan.FromDays(90);
-				});
-			}
+				options.ExpireTimeSpan = TimeSpan.FromDays(90);
+			});
 
 			return services;
 		}
