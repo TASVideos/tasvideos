@@ -342,7 +342,7 @@ namespace TASVideos.Data.SeedData
 		public static readonly Role ForumAdmin = new ()
 		{
 			Name = RoleSeedNames.ForumAdmin,
-			Description = "Form Administrators manage forums and permissions. Administrators can also assign Moderators.",
+			Description = "Forum Administrators manage forums and permissions. Administrators can also assign Moderators.",
 			RolePermission = ForumAdminPermissions.Select(p => new RolePermission
 			{
 				Role = ForumAdmin,
