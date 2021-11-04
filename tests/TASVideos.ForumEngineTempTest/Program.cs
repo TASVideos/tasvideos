@@ -1,4 +1,5 @@
 ﻿using System;
+using TASVideos.Common;
 using TASVideos.ForumEngine;
 
 namespace TASVideos.ForumEngineTempTest
@@ -19,7 +20,9 @@ namespace TASVideos.ForumEngineTempTest
 			var parsed = PostParser.Parse(content, true, containsHtml);
 
 			Console.WriteLine(containsHtml);
-			parsed.WriteHtml(Console.Out, NullWriterHelper.Instance).RunSynchronously();
+			var htmlWriter = new HtmlWriter(Console.Out);
+			parsed.WriteHtml(htmlWriter, NullWriterHelper.Instance).RunSynchronously();
+			htmlWriter.AssertFinished();
 		}
 
 		public static void MainDa(string[] args)

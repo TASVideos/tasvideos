@@ -41,15 +41,15 @@ namespace TASVideos.ForumEngine
 
 	public interface INode
 	{
-		Task WriteHtml(TextWriter w, IWriterHelper h);
+		Task WriteHtml(HtmlWriter w, IWriterHelper h);
 	}
 
 	public class Text : INode
 	{
 		public string Content { get; set; } = "";
-		public Task WriteHtml(TextWriter w, IWriterHelper h)
+		public Task WriteHtml(HtmlWriter w, IWriterHelper h)
 		{
-			Helpers.WriteText(w, Content);
+			w.Text(Content);
 			return Task.CompletedTask;
 		}
 	}
@@ -70,7 +70,7 @@ namespace TASVideos.ForumEngine
 			return sb.ToString();
 		}
 
-		private async Task WriteChildren(TextWriter w, IWriterHelper h)
+		private async Task WriteChildren(HtmlWriter w, IWriterHelper h)
 		{
 			foreach (var c in Children)
 			{
@@ -78,28 +78,25 @@ namespace TASVideos.ForumEngine
 			}
 		}
 
-		private async Task WriteSimpleTag(TextWriter w, IWriterHelper h, string t)
+		private async Task WriteSimpleTag(HtmlWriter w, IWriterHelper h, string t)
 		{
-			w.Write('<');
-			w.Write(t);
-			w.Write('>');
+			w.OpenTag(t);
 			await WriteChildren(w, h);
-			w.Write("</");
-			w.Write(t);
-			w.Write('>');
+			w.CloseTag(t);
 		}
 
-		private async Task WriteSimpleHtmlTag(TextWriter w, IWriterHelper h, string t)
+		private async Task WriteSimpleHtmlTag(HtmlWriter w, IWriterHelper h, string t)
 		{
 			// t looks like `html:b`
 			await WriteSimpleTag(w, h, t[5..]);
 		}
 
-		private async Task WriteComplexTag(TextWriter w, IWriterHelper h, string open, string close)
+		private async Task WriteClassyTag(HtmlWriter w, IWriterHelper h, string tag, string clazz)
 		{
-			w.Write(open);
+			w.OpenTag(tag);
+			w.Attribute("class", clazz);
 			await WriteChildren(w, h);
-			w.Write(close);
+			w.CloseTag(tag);
 		}
 
 		private void TryParseSize(out int? w, out int? h)
@@ -129,12 +126,11 @@ namespace TASVideos.ForumEngine
 			}
 		}
 
-		private async Task WriteHref(TextWriter w, IWriterHelper h, Func<string, string> transformUrl, Func<string, Task<string>> transformUrlText)
+		private async Task WriteHref(HtmlWriter w, IWriterHelper h, Func<string, string> transformUrl, Func<string, Task<string>> transformUrlText)
 		{
-			w.Write("<a href=");
+			w.OpenTag("a");
 			var href = transformUrl(Options != "" ? Options : GetChildText());
-			Helpers.WriteAttributeValue(w, href);
-			w.Write('>');
+			w.Attribute("href", href);
 			if (Options != "")
 			{
 				await WriteChildren(w, h);
@@ -143,14 +139,12 @@ namespace TASVideos.ForumEngine
 			{
 				// these were all parsed as ChildTagsIfParam, so we're guaranteed to have a single text child
 				var text = Children.Cast<Text>().Single();
-				Helpers.WriteText(w, await transformUrlText(text.Content));
+				w.Text(await transformUrlText(text.Content));
 			}
-
-			w.Write("</a>");
+			w.CloseTag("a");
 		}
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-		public async Task WriteHtml(TextWriter w, IWriterHelper h)
+		public async Task WriteHtml(HtmlWriter w, IWriterHelper h)
 		{
 			switch (Name)
 			{
@@ -186,38 +180,41 @@ namespace TASVideos.ForumEngine
 					await WriteSimpleHtmlTag(w, h, Name);
 					break;
 				case "left":
-					await WriteComplexTag(w, h, "<div class=a-l>", "</div>");
+					await WriteClassyTag(w, h, "div", "a-l");
 					break;
 				case "center":
-					await WriteComplexTag(w, h, "<div class=a-c>", "</div>");
+					await WriteClassyTag(w, h, "div", "a-c");
 					break;
 				case "right":
-					await WriteComplexTag(w, h, "<div class=a-r>", "</div>");
+					await WriteClassyTag(w, h, "div", "a-r");
 					break;
 				case "spoiler":
-					await WriteComplexTag(w, h, "<span class=spoiler>", "</span>");
+					await WriteClassyTag(w, h, "span", "spoiler");
 					break;
 				case "warning":
-					await WriteComplexTag(w, h, "<div class=warning>", "</div>");
+					await WriteClassyTag(w, h, "div", "warning");
 					break;
 				case "note":
-					await WriteComplexTag(w, h, "<div class=forumline>", "</div>");
+					await WriteClassyTag(w, h, "div", "forumline");
 					break;
 				case "highlight":
-					await WriteComplexTag(w, h, "<span class=highlight>", "</span>");
+					await WriteClassyTag(w, h, "span", "highlight");
 					break;
 				case "quote":
-					w.Write("<div class=quotecontainer>");
+					w.OpenTag("div");
+					w.Attribute("class", "quotecontainer");
 					if (Options != "")
 					{
-						w.Write("<cite>");
+						w.OpenTag("cite");
 						await BbParser.Parse(Options, false, true).WriteHtml(w, h);
-						w.Write(" wrote:</cite>");
+						w.Text(" wrote:");
+						w.CloseTag("cite");
 					}
 
-					w.Write("<blockquote>");
+					w.OpenTag("blockquote");
 					await WriteChildren(w, h);
-					w.Write("</blockquote></div>");
+					w.CloseTag("blockquote");
+					w.CloseTag("div");
 					break;
 				case "code":
 					{
@@ -226,16 +223,16 @@ namespace TASVideos.ForumEngine
 						var osplit = Options.Split('.', StringSplitOptions.RemoveEmptyEntries);
 						if (osplit.Length == 2)
 						{
-							w.Write("<a class='btn bg-info text-dark code-download' href=");
-							Helpers.WriteAttributeValue(w, "data:text/plain," + Uri.EscapeDataString(GetChildText().TrimStart()));
-							w.Write(" download=");
-							Helpers.WriteAttributeValue(w, Options);
-							w.Write(">Download ");
-							Helpers.WriteText(w, Options);
-							w.Write("</a>");
+							w.OpenTag("a");
+							w.Attribute("class", "btn bg-info text-dark code-download");
+							w.Attribute("href", "data:text/plain," + Uri.EscapeDataString(GetChildText().TrimStart()));
+							w.Attribute("download", Options);
+							w.Text("Download ");
+							w.Text(Options);
+							w.CloseTag("a");
 						}
 
-						w.Write("<pre>");
+						w.OpenTag("pre");
 
 						// "text" is not a supported language for prism,
 						// so it will just get the same text formatting as languages, but no syntax highlighting.
@@ -243,41 +240,37 @@ namespace TASVideos.ForumEngine
 
 						if (lang != "text")
 						{
-							w.Write("<div>Language: <cite>");
-							Helpers.WriteText(w, lang);
-							w.Write("</cite></div><hr>");
+							w.OpenTag("div");
+							w.Text("Language: ");
+							w.OpenTag("cite");
+							w.Text(lang);
+							w.CloseTag("cite");
+							w.CloseTag("div");
+							w.VoidTag("hr");
 						}
 
-						w.Write("<code");
-						w.Write(" class=");
-						Helpers.WriteAttributeValue(w, $"language-{lang}");
-
-						w.Write('>');
+						w.OpenTag("code");
+						w.Attribute("class", $"language-{lang}");
 						await WriteChildren(w, h);
-						w.Write("</code></pre>");
+						w.CloseTag("code");
+						w.CloseTag("pre");
 					}
 
 					break;
 				case "img":
 					{
-						w.Write("<img");
+						w.VoidTag("img");
 						TryParseSize(out var width, out var height);
 						if (width != null)
 						{
-							w.Write(" width=");
-							Helpers.WriteAttributeValue(w, width.ToString()!);
+							w.Attribute("width", width.ToString()!);
 						}
-
 						if (height != null)
 						{
-							w.Write(" height=");
-							Helpers.WriteAttributeValue(w, height.ToString()!);
+							w.Attribute("height", height.ToString()!);
 						}
-
-						w.Write(" src=");
-						Helpers.WriteAttributeValue(w, GetChildText());
-						w.Write(" class=\"mw-100\"");
-						w.Write('>');
+						w.Attribute("src", GetChildText());
+						w.Attribute("class", "mw-100");
 					}
 
 					break;
@@ -338,50 +331,41 @@ namespace TASVideos.ForumEngine
 						};
 						var time = timeable.Time().ToStringWithOptionalDaysAndHours();
 
-						w.Write("<abbr title=");
-						Helpers.WriteAttributeValue(w, $"{n} Frames @{fps} FPS");
-						w.Write('>');
-						w.Write(time);
-						w.Write("</abbr>");
+						w.OpenTag("abbr");
+						w.Attribute("title", $"{n} Frames @{fps} FPS");
+						w.Text(time);
+						w.CloseTag("abbr");
 						break;
 					}
-
 				case "color":
-					w.Write("<span style=");
-
+					w.OpenTag("span");
 					// TODO: More fully featured anti-style injection
-					Helpers.WriteAttributeValue(w, "color: " + Options.Split(';')[0]);
-					w.Write('>');
+					w.Attribute("style", "color: " + Options.Split(';')[0]);
 					await WriteChildren(w, h);
-					w.Write("</span>");
+					w.CloseTag("span");
 					break;
 				case "bgcolor":
-					w.Write("<span style=");
-
+					w.OpenTag("span");
 					// TODO: More fully featured anti-style injection
-					Helpers.WriteAttributeValue(w, "background-color: " + Options.Split(';')[0]);
-					w.Write('>');
+					w.Attribute("style", "background-color: " + Options.Split(';')[0]);
 					await WriteChildren(w, h);
-					w.Write("</span>");
+					w.CloseTag("span");
 					break;
 				case "size":
-					w.Write("<span style=");
-
+					w.OpenTag("span");
 					// TODO: More fully featured anti-style injection
 					var sizeStr = Options.Split(';')[0];
-					if (double.TryParse(sizeStr, out double sizeDouble))
+					if (double.TryParse(sizeStr, out var sizeDouble))
 					{
 						// default font size of the old site was 12px, so if size was given without a unit, divide by 12 and use em
-						Helpers.WriteAttributeValue(w, "font-size: " + (sizeDouble / 12) + "em");
+						w.Attribute("style", $"font-size: {(sizeDouble / 12)} em");
 					}
 					else
 					{
-						Helpers.WriteAttributeValue(w, "font-size: " + sizeStr);
+						w.Attribute("style", $"font-size: {sizeStr}");
 					}
-
-					w.Write('>');
 					await WriteChildren(w, h);
-					w.Write("</span>");
+					w.CloseTag("span");
 					break;
 				case "noparse":
 					await WriteChildren(w, h);
@@ -389,19 +373,17 @@ namespace TASVideos.ForumEngine
 				case "google":
 					if (Options == "images")
 					{
-						w.Write("<a href=");
-						Helpers.WriteAttributeValue(w, "//www.google.com/images?q=" + Uri.EscapeDataString(GetChildText()));
-						w.Write('>');
-						Helpers.WriteText(w, "Google Images Search: " + GetChildText());
-						w.Write("</a>");
+						w.OpenTag("a");
+						w.Attribute("href", "//www.google.com/images?q=" + Uri.EscapeDataString(GetChildText()));
+						w.Text("Google Images Search: " + GetChildText());
+						w.CloseTag("a");
 					}
 					else
 					{
-						w.Write("<a href=");
-						Helpers.WriteAttributeValue(w, "//www.google.com/search?q=" + Uri.EscapeDataString(GetChildText()));
-						w.Write('>');
-						Helpers.WriteText(w, "Google Search: " + GetChildText());
-						w.Write("</a>");
+						w.OpenTag("a");
+						w.Attribute("href", "//www.google.com/search?q=" + Uri.EscapeDataString(GetChildText()));
+						w.Text("Google Search: " + GetChildText());
+						w.CloseTag("a");
 					}
 
 					break;
@@ -434,12 +416,13 @@ namespace TASVideos.ForumEngine
 								pp.Height = height;
 							}
 
-							WriteVideo.Write(w, pp);
+							WriteVideo.Write(w.BaseWriter, pp);
 						}
 
-						w.Write("<a href=");
-						Helpers.WriteAttributeValue(w, href);
-						w.Write(">Link to video</a>");
+						w.OpenTag("a");
+						w.Attribute("href", href);
+						w.Text("Link to video");
+						w.CloseTag("a");
 						break;
 					}
 
@@ -451,10 +434,10 @@ namespace TASVideos.ForumEngine
 					await WriteSimpleTag(w, h, Options == "1" ? "ol" : "ul");
 					break;
 				case "html:br":
-					w.Write("<br>");
+					w.VoidTag("br");
 					break;
 				case "html:hr":
-					w.Write("<hr>");
+					w.VoidTag("hr");
 					break;
 
 				default:
