@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -9,7 +9,7 @@ namespace TASVideos.Common
 	{
 		private static readonly Regex AllowedTagNames = new ("^[a-z0-9]+$");
 		private static readonly Regex AllowedAttributeNames = new ("^[a-z\\-]+$");
-		private static readonly HashSet<string> VoidTags = new HashSet<string>(
+		private static readonly HashSet<string> VoidTags = new (
 			new[]
 			{
 				"area", "base", "br", "col", "embed", "hr", "img", "input",
@@ -20,10 +20,9 @@ namespace TASVideos.Common
 
 		private readonly TextWriter _w;
 		private bool _inTagOpen = false;
-		private readonly Stack<string> _openTags = new();
+		private readonly Stack<string> _openTags = new ();
 
 		private bool InForeignContent => _openTags.TryPeek(out var tag) && (tag == "script" || tag == "style");
-
 
 		public HtmlWriter(TextWriter w)
 		{
@@ -36,10 +35,12 @@ namespace TASVideos.Common
 			{
 				throw new InvalidOperationException("New tag not allowed at this time");
 			}
+
 			if (!AllowedTagNames.IsMatch(tagName))
 			{
 				throw new InvalidOperationException($"Invalid tag name {tagName}");
 			}
+
 			if (VoidTags.Contains(tagName))
 			{
 				throw new InvalidOperationException("Can't open a void tag");
@@ -63,6 +64,7 @@ namespace TASVideos.Common
 			{
 				throw new InvalidOperationException("No open tags!");
 			}
+
 			if (!tagName.Equals(_openTags.Peek(), StringComparison.OrdinalIgnoreCase))
 			{
 				throw new InvalidOperationException($"Opened tag {_openTags.Peek()} but closing tag {tagName}");
@@ -87,10 +89,12 @@ namespace TASVideos.Common
 			{
 				throw new InvalidOperationException("New tag not allowed at this time");
 			}
+
 			if (!AllowedTagNames.IsMatch(tagName))
 			{
 				throw new InvalidOperationException($"Invalid tag name {tagName}");
 			}
+
 			if (!VoidTags.Contains(tagName))
 			{
 				throw new InvalidOperationException("Can't void an open tag");
@@ -153,10 +157,12 @@ namespace TASVideos.Common
 				{
 					throw new InvalidOperationException("Can't unescape something that looks like closing tag here!");
 				}
+
 				if (_inTagOpen)
 				{
 					_w.Write('>');
 				}
+
 				_w.Write(text);
 			}
 			else
@@ -182,6 +188,7 @@ namespace TASVideos.Common
 					}
 				}
 			}
+
 			_inTagOpen = false;
 		}
 
@@ -191,6 +198,7 @@ namespace TASVideos.Common
 			{
 				throw new InvalidOperationException("Tags still open!");
 			}
+
 			if (_inTagOpen)
 			{
 				_w.Write('>');
@@ -198,6 +206,7 @@ namespace TASVideos.Common
 		}
 
 		/// <summary>
+		/// Gets the underlying writer
 		/// Do not use this unless you're very careful with escaping!
 		/// </summary>
 		public TextWriter BaseWriter => _w;
