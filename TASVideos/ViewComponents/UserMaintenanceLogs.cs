@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Core;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.WikiEngine;
 
@@ -20,6 +22,11 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync()
 		{
+			if (!HttpContext.User.Has(PermissionTo.ViewPrivateUserData))
+			{
+				return new ContentViewComponentResult("No access to this resource");
+			}
+
 			var paging = new PagingModel
 			{
 				Sort = HttpContext.Request.QueryStringValue("Sort"),
