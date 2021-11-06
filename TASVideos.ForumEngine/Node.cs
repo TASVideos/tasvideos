@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +55,7 @@ namespace TASVideos.ForumEngine
 
 	public class Element : INode
 	{
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 		public string Name { get; set; } = "";
 		public string Options { get; set; } = "";
 		public List<INode> Children { get; set; } = new ();
@@ -101,7 +101,7 @@ namespace TASVideos.ForumEngine
 
 		private void TryParseSize(out int? w, out int? h)
 		{
-			int? TryParse(string s)
+			static int? TryParse(string s)
 			{
 				return int.TryParse(s, out var i) ? i : null;
 			}
@@ -141,6 +141,7 @@ namespace TASVideos.ForumEngine
 				var text = Children.Cast<Text>().Single();
 				w.Text(await transformUrlText(text.Content));
 			}
+
 			w.CloseTag("a");
 		}
 
@@ -265,10 +266,12 @@ namespace TASVideos.ForumEngine
 						{
 							w.Attribute("width", width.ToString()!);
 						}
+
 						if (height != null)
 						{
 							w.Attribute("height", height.ToString()!);
 						}
+
 						w.Attribute("src", GetChildText());
 						w.Attribute("class", "mw-100");
 					}
@@ -337,8 +340,10 @@ namespace TASVideos.ForumEngine
 						w.CloseTag("abbr");
 						break;
 					}
+
 				case "color":
 					w.OpenTag("span");
+
 					// TODO: More fully featured anti-style injection
 					w.Attribute("style", "color: " + Options.Split(';')[0]);
 					await WriteChildren(w, h);
@@ -346,6 +351,7 @@ namespace TASVideos.ForumEngine
 					break;
 				case "bgcolor":
 					w.OpenTag("span");
+
 					// TODO: More fully featured anti-style injection
 					w.Attribute("style", "background-color: " + Options.Split(';')[0]);
 					await WriteChildren(w, h);
@@ -353,17 +359,19 @@ namespace TASVideos.ForumEngine
 					break;
 				case "size":
 					w.OpenTag("span");
+
 					// TODO: More fully featured anti-style injection
 					var sizeStr = Options.Split(';')[0];
 					if (double.TryParse(sizeStr, out var sizeDouble))
 					{
 						// default font size of the old site was 12px, so if size was given without a unit, divide by 12 and use em
-						w.Attribute("style", $"font-size: {(sizeDouble / 12)}em");
+						w.Attribute("style", $"font-size: {sizeDouble / 12}em");
 					}
 					else
 					{
 						w.Attribute("style", $"font-size: {sizeStr}");
 					}
+
 					await WriteChildren(w, h);
 					w.CloseTag("span");
 					break;

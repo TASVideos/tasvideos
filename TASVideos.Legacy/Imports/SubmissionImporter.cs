@@ -50,7 +50,9 @@ namespace TASVideos.Legacy.Imports
 				.ThatAreNotDeleted()
 				.Where(w => w.PageName.StartsWith(LinkConstants.PublicationWikiPage))
 				.ToList()
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
 				.GroupBy(gkey => gkey.PageName, gvalue => new { gvalue.CreateTimestamp, gvalue.CreateUserName, gvalue.PageName })
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
 				.Select(p => p.First(g => g.CreateTimestamp == p.Min(pp => pp.CreateTimestamp)))
 				.ToList();
 

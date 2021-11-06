@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +28,7 @@ namespace TASVideos.Pages.Forum
 					Id = c.Id,
 					Ordinal = c.Ordinal,
 					Title = c.Title,
-					Description = c.Description,
+					Description = c.Description ?? "",
 					Forums = c.Forums
 						.Select(f => new ForumCategoryModel.Forum
 						{

@@ -1,4 +1,4 @@
-﻿@model IReadOnlyDictionary<string, DeprecatedMovieFormat?>
+﻿@model IReadOnlyDictionary<string, DeprecatedMovieFormat>
 @{ 
 	var entries = Model.Select(m => $"{m.Key}{(m.Value?.Deprecated == true ? " (not submittable) " : "")}");
 }
