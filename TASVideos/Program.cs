@@ -55,13 +55,10 @@ namespace TASVideos
 				.UseSerilog()
 				.ConfigureAppConfiguration((hostContext, builder) =>
 				{
-					if (hostContext.HostingEnvironment.IsDevelopment() || hostContext.HostingEnvironment.IsDemo())
-					{
-						// We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
-						// This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.AddUserSecrets<T>() will not work.
-						// Manually specify the secret id (matching the csproj) here as a workaround.
-						builder.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152");
-					}
+					// We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
+					// This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.AddUserSecrets<T>() will not work.
+					// Manually specify the secret id (matching the csproj) here as a workaround.
+					builder.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152");
 				})
 				.Build();
 		}
