@@ -37,7 +37,6 @@
           <e p="UrlHelperExtensions.cs" t="Include" />
           <e p="WikiHelper.cs" t="Include" />
         </e>
-        <e p="libman.json" t="Include" />
         <e p="MappingProfile.cs" t="Include" />
         <e p="Models" t="Include">
           <e p="CommaSeparatedModelBinder.cs" t="Include" />
