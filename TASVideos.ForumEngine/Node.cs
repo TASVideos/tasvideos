@@ -358,7 +358,7 @@ namespace TASVideos.ForumEngine
 					if (double.TryParse(sizeStr, out var sizeDouble))
 					{
 						// default font size of the old site was 12px, so if size was given without a unit, divide by 12 and use em
-						w.Attribute("style", $"font-size: {(sizeDouble / 12)} em");
+						w.Attribute("style", $"font-size: {(sizeDouble / 12)}em");
 					}
 					else
 					{
