@@ -1,4 +1,4 @@
-![.NET Core](https://github.com/adelikat/tasvideos/workflows/.NET%20Core/badge.svg)
+![.NET Core](https://github.com/TASVideos/tasvideos/workflows/.NET%20Core/badge.svg)
 
 # TASVideos 2.0
 This is a rewrite attempt of the tasvideos website.
@@ -30,13 +30,15 @@ This demo updates with production days once a day, and updates with the latest c
 - VSCode or VS recommended for best development experience
 - MSSQL from VS or postgres installed for the local database
 
-## Windows
+## Quick-Start Instructions
+
+### Visual Studio (Windows)
 - Install Visual Studio Community 2019 from https://visualstudio.microsoft.com/
 - Run Visual Studio installer
 - Select the following:
 	- ASP.NET and web development
 	- .NET desktop development
-- Clone repository from https://github.com/adelikat/tasvideos.git
+- Clone repository from https://github.com/TASVideos/tasvideos.git
 - Open TASVideos.sln
 - For MSSQL
 	- Select profile "Dev MsSql (Sample Data)"
@@ -44,13 +46,15 @@ This demo updates with production days once a day, and updates with the latest c
 - For postgres
 	- Use the "Dev Postgres" profiles instead.  This will better mimic deployed environments (which will always use postgres)
 
-## Mac
-- Clone repository from https://github.com/adelikat/tasvideos.git
+### Visual Studio (macOS)
+- Clone repository from https://github.com/TASVideos/tasvideos.git
 - Open TASVideos.sln
 - Select profile "Dev Postgres (Sample Data)"
 	- Note that once you run once with Sample Data, the profile "Dev Postgres (No Recreate)" can be used for quicker start up times
 
-## Linux
-- Clone repository from https://github.com/adelikat/tasvideos.git
-- TODO: better document how to pick the postgres Sample Data profile
-- Adjust the VSCode launch.json to boot the postgres sample data profile
+### VSCode (Windows, macOS, Linux)
+- Install VSCode from https://code.visualstudio.com/
+- Install .NET 5.0 SDK from https://dotnet.microsoft.com/download
+- Clone repository from https://github.com/TASVideos/tasvideos.git
+- Open the repository in VSCode
+- TODO: Document database setup and how to choose the right thing in launch.json
