@@ -55,6 +55,8 @@ This demo updates with production days once a day, and updates with the latest c
 ### VSCode (Windows, macOS, Linux)
 - Install VSCode from https://code.visualstudio.com/
 - Install .NET 5.0 SDK from https://dotnet.microsoft.com/download
-- Clone repository from https://github.com/TASVideos/tasvideos.git
-- Open the repository in VSCode
-- TODO: Document database setup and how to choose the right thing in launch.json
+- Clone repository from https://github.com/TASVideos/tasvideos.git or download and extract https://github.com/TASVideos/tasvideos/archive/refs/heads/master.zip
+- Open the folder of repository in VSCode (required to make sure your current working directory is set to make the predefined launch.json and tasks.json to work)
+- Install C# for Visual Studio Code (pops up after visiting your local tasvideos folder)
+- Select TASVideos to run first
+- TODO: Document database setup and elaborate how to choose the right thing in launch.json
