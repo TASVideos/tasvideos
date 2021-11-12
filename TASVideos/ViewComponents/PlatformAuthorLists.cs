@@ -30,7 +30,7 @@ namespace TASVideos.ViewComponents
 
 			var model = new PlatformAuthorListModel
 			{
-				ShowTiers = showTiers,
+				ShowClasses = showTiers,
 				Publications = await _db.Publications
 					.ForDateRange(before.Value, after.Value)
 					.Where(p => platforms.Contains(p.SystemId))
@@ -39,7 +39,7 @@ namespace TASVideos.ViewComponents
 						Id = p.Id,
 						Title = p.Title,
 						Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-						TierIconPath = p.Tier!.IconPath
+						ClassIconPath = p.PublicationClass!.IconPath
 					})
 					.ToListAsync()
 			};

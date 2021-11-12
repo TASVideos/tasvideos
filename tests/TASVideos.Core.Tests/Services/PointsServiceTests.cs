@@ -4,9 +4,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Services;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.Test.Services
 {
@@ -46,11 +47,11 @@ namespace TASVideos.Test.Services
 			int numMovies = 2;
 
 			_db.Users.Add(Player);
-			var tier = new Tier { Weight = 1, Name = "Test" };
-			_db.Tiers.Add(tier);
+			var publicationClass = new PublicationClass { Weight = 1, Name = "Test" };
+			_db.PublicationClasses.Add(publicationClass);
 			for (int i = 0; i < numMovies; i++)
 			{
-				_db.Publications.Add(new Publication { Tier = tier });
+				_db.Publications.Add(new Publication { PublicationClass = publicationClass });
 			}
 
 			await _db.SaveChangesAsync();

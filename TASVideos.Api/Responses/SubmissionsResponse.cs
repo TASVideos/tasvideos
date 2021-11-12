@@ -14,7 +14,7 @@ namespace TASVideos.Api.Responses
 		public string Title { get; init; } = "";
 
 		[Sortable]
-		public string Tier { get; init; } = "";
+		public string IntendedClass { get; init; } = "";
 
 		[Sortable]
 		public string Judge { get; init; } = "";

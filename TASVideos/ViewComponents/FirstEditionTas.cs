@@ -22,8 +22,8 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, bool splitbyplatform)
 		{
-			// TODO: add tier argument, default to moon,stars,
-			// we want to avoid baking in "business logic" like which tiers are award eligible
+			// TODO: add publicationClass argument, default to moon,stars,
+			// we want to avoid baking in "business logic" like which classes are award eligible
 			var beforeYear = before ?? new DateTime(DateTime.UtcNow.Year, 1, 1);
 			var afterYear = after ?? new DateTime(DateTime.UtcNow.AddYears(1).Year, 1, 1);
 
@@ -61,7 +61,7 @@ namespace TASVideos.ViewComponents
 			}
 
 			var query = _db.Publications
-				.Where(p => p.Tier!.Weight >= 1) // Exclude Vault
+				.Where(p => p.PublicationClass!.Weight >= 1) // Exclude Vault
 				.Where(p => p.CreateTimestamp >= afterYear)
 				.Where(p => p.CreateTimestamp < beforeYear);
 
@@ -83,9 +83,9 @@ namespace TASVideos.ViewComponents
 					Id = p.Id,
 					Title = p.Title,
 					GameId = p.GameId,
-					TierId = p.TierId,
-					TierIconPath = p.Tier!.IconPath,
-					TierName = p.Tier.Name,
+					PublicationClassId = p.PublicationClassId,
+					PublicationClassIconPath = p.PublicationClass!.IconPath,
+					PublicationClassName = p.PublicationClass.Name,
 					PublicationDate = p.CreateTimestamp
 				})
 				.ToListAsync();

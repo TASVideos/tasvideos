@@ -4,7 +4,7 @@ namespace TASVideos.ViewComponents
 {
 	public class PlatformAuthorListModel
 	{
-		public bool ShowTiers { get; init; }
+		public bool ShowClasses { get; init; }
 
 		public IEnumerable<PublicationEntry> Publications { get; init; } = new List<PublicationEntry>();
 
@@ -13,7 +13,7 @@ namespace TASVideos.ViewComponents
 			public int Id { get; init; }
 			public string Title { get; init; } = "";
 			public IEnumerable<string> Authors { get; init; } = new List<string>();
-			public string? TierIconPath { get; init; } = "";
+			public string? ClassIconPath { get; init; } = "";
 		}
 	}
 }

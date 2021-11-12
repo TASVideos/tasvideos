@@ -1,25 +1,25 @@
 ﻿@model IEnumerable<TASVideos.ViewComponents.Models.FirstEditionModel>
 
 @{
-	var groups = Model.GroupBy(gkey => new  { gkey.TierId, gkey.TierIconPath, gkey.TierName });
+	var groups = Model.GroupBy(gkey => new { gkey.PublicationClassId, gkey.PublicationClassIconPath, gkey.PublicationClassName });
 }
 
-@foreach (var g in groups.OrderByDescending(g => g.Key.TierId))
+@foreach (var g in groups.OrderByDescending(g => g.Key.PublicationClassId))
 {
 	<card>
 		<cardheader>
-			<a href="/@g.Key.TierName">
-				@if (g.Key.TierIconPath != null)
+			<a href="/@g.Key.PublicationClassName">
+				@if (g.Key.PublicationClassIconPath != null)
 				{
-					var tierIconPath2x = $"{g.Key.TierIconPath.Split('.')[0]}-2x.png";
-					var tierIconPath4x = $"{g.Key.TierIconPath.Split('.')[0]}-4x.png";
-					<img style="width: 18px" src="/@tierIconPath2x"
-						srcset="/@g.Key.TierIconPath .5x,
-						/@tierIconPath2x 1x,
-						/@tierIconPath4x 2x" />
+					var classIconPath2X = $"{g.Key.PublicationClassIconPath.Split('.')[0]}-2x.png";
+					var classIconPath4X = $"{g.Key.PublicationClassIconPath.Split('.')[0]}-4x.png";
+					<img style="width: 18px" src="/@classIconPath2X"
+						 srcset="/@g.Key.PublicationClassIconPath .5x,
+						/@classIconPath2X 1x,
+						/@classIconPath4X 2x" />
 				}
-                		<strong>@g.Key.TierName</strong>
-            		</a>
+				<strong>@g.Key.PublicationClassName</strong>
+			</a>
 			&nbsp;(@g.Count())
 		</cardheader>
 		<cardbody>

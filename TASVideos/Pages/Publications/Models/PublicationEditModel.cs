@@ -19,10 +19,10 @@ namespace TASVideos.Pages.Publications.Models
 		[Display(Name = "Author")]
 		public IEnumerable<string> Authors { get; set; } = new List<string>();
 
-		[Display(Name = "Tier")]
-		public string Tier { get; set; } = "";
-		public string? TierIconPath { get; set; } = "";
-		public string TierLink { get; set; } = "";
+		[Display(Name = "Publication Class")]
+		public string Class { get; set; } = "";
+		public string? ClassIconPath { get; set; } = "";
+		public string ClassLink { get; set; } = "";
 
 		[Display(Name = "Obsoleted By")]
 		public int? ObsoletedBy { get; set; }

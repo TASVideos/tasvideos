@@ -70,10 +70,10 @@ namespace TASVideos.Pages.Publications
 					.Where(p => p.Id == Id)
 					.Select(p => new PublicationEditModel
 					{
-						Tier = p.Tier!.Name,
+						Class = p.PublicationClass!.Name,
 						MovieFileName = p.MovieFileName,
-						TierIconPath = p.Tier.IconPath,
-						TierLink = p.Tier.Link,
+						ClassIconPath = p.PublicationClass.IconPath,
+						ClassLink = p.PublicationClass.Link,
 						SystemCode = p.System!.Code,
 						Title = p.Title,
 						ObsoletedBy = p.ObsoletedById,

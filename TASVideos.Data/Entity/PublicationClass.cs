@@ -2,7 +2,7 @@
 
 namespace TASVideos.Data.Entity
 {
-	public class Tier
+	public class PublicationClass
 	{
 		public int Id { get; set; }
 

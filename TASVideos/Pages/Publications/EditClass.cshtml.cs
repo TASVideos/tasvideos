@@ -13,14 +13,14 @@ using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications
 {
-	[RequirePermission(PermissionTo.SetTier)]
-	public class EditTierModel : BasePageModel
+	[RequirePermission(PermissionTo.SetPublicationClass)]
+	public class EditClassModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
 
-		public EditTierModel(
+		public EditClassModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
 			IPublicationMaintenanceLogger publicationMaintenanceLogger)
@@ -34,21 +34,21 @@ namespace TASVideos.Pages.Publications
 		public int Id { get; set; }
 
 		[BindProperty]
-		public PublicationTierEditModel Publication { get; set; } = new ();
+		public PublicationClassEditModel Publication { get; set; } = new ();
 
 		[BindProperty]
 		public string Title { get; set; } = "";
 
-		public IEnumerable<SelectListItem> AvailableTiers { get; set; } = new List<SelectListItem>();
+		public IEnumerable<SelectListItem> AvailableClasses { get; set; } = new List<SelectListItem>();
 
 		public async Task<IActionResult> OnGet()
 		{
 			Publication = await _db.Publications
 				.Where(p => p.Id == Id)
-				.Select(p => new PublicationTierEditModel
+				.Select(p => new PublicationClassEditModel
 				{
 					Title = p.Title,
-					TierId = p.TierId
+					ClassId = p.PublicationClassId
 				})
 				.SingleOrDefaultAsync();
 
@@ -58,7 +58,7 @@ namespace TASVideos.Pages.Publications
 			}
 
 			Title = Publication.Title;
-			await PopulateAvailableTiers();
+			await PopulateAvailableClasses();
 			return Page();
 		}
 
@@ -66,12 +66,12 @@ namespace TASVideos.Pages.Publications
 		{
 			if (!ModelState.IsValid)
 			{
-				await PopulateAvailableTiers();
+				await PopulateAvailableClasses();
 				return Page();
 			}
 
 			var publication = await _db.Publications
-				.Include(p => p.Tier)
+				.Include(p => p.PublicationClass)
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
 			if (publication == null)
@@ -79,23 +79,23 @@ namespace TASVideos.Pages.Publications
 				return NotFound();
 			}
 
-			var tier = await _db.Tiers
-				.SingleOrDefaultAsync(t => t.Id == Publication.TierId);
+			var publicationClass = await _db.PublicationClasses
+				.SingleOrDefaultAsync(t => t.Id == Publication.ClassId);
 
-			if (tier == null)
+			if (publicationClass == null)
 			{
 				return NotFound();
 			}
 
-			if (publication.TierId != Publication.TierId)
+			if (publication.PublicationClassId != Publication.ClassId)
 			{
-				var originalTier = publication.Tier!.Name;
-				publication.TierId = Publication.TierId;
+				var originalClass = publication.PublicationClass!.Name;
+				publication.PublicationClassId = Publication.ClassId;
 
-				var log = $"Tier changed from {originalTier} to {tier.Name}";
+				var log = $"Publication Class changed from {originalClass} to {publicationClass.Name}";
 				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 
-				var result = await ConcurrentSave(_db, log, "Unable to update tier");
+				var result = await ConcurrentSave(_db, log, "Unable to update Publication Class");
 				if (result)
 				{
 					await _publisher.SendPublicationEdit(
@@ -108,9 +108,9 @@ namespace TASVideos.Pages.Publications
 			return RedirectToPage("Edit", new { Id });
 		}
 
-		private async Task PopulateAvailableTiers()
+		private async Task PopulateAvailableClasses()
 		{
-			AvailableTiers = await _db.Tiers
+			AvailableClasses = await _db.PublicationClasses
 				.ToDropdown()
 				.ToListAsync();
 		}

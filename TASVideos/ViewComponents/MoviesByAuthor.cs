@@ -33,7 +33,7 @@ namespace TASVideos.ViewComponents
 			var model = new MoviesByAuthorModel
 			{
 				MarkNewbies = newbieFlag == "show",
-				ShowTiers = showtiers,
+				ShowClasses = showtiers,
 				Publications = await _db.Publications
 					.ForDateRange(before.Value, after.Value)
 					.Select(p => new MoviesByAuthorModel.PublicationEntry
@@ -41,7 +41,7 @@ namespace TASVideos.ViewComponents
 						Id = p.Id,
 						Title = p.Title,
 						Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-						TierIconPath = p.Tier!.IconPath
+						PublicationClassIconPath = p.PublicationClass!.IconPath
 					})
 					.ToListAsync()
 			};

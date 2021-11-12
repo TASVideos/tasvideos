@@ -57,7 +57,7 @@ namespace TASVideos.Pages.Submissions
 					EncodeEmbedLink = s.EncodeEmbedLink,
 					Judge = s.Judge != null ? s.Judge.UserName : "",
 					Title = s.Title,
-					TierName = s.IntendedTier != null ? s.IntendedTier.Name : "",
+					ClassName = s.IntendedClass != null ? s.IntendedClass.Name : "",
 					Publisher = s.Publisher != null ? s.Publisher.UserName : "",
 					SystemId = s.SystemId,
 					SystemFrameRateId = s.SystemFrameRateId,

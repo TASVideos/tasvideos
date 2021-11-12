@@ -7,7 +7,7 @@
 	bool canEdit = ViewData.UserHas(PermissionTo.EditSubmissions)
 		|| (Model.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
 	bool hasJudgeOrPublisher = !string.IsNullOrWhiteSpace(Model.Submission.Judge) || !string.IsNullOrWhiteSpace(Model.Submission.Publisher);
-	bool showTier = !string.IsNullOrWhiteSpace(Model.Submission.TierName) && Model.Submission.Status != SubmissionStatus.Rejected && Model.Submission.TierName != "Standard";
+	bool showPublicationClass = !string.IsNullOrWhiteSpace(Model.Submission.ClassName) && Model.Submission.Status != SubmissionStatus.Rejected && Model.Submission.ClassName != "Standard";
 	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
 		&& Model.Submission.IsCataloged
@@ -100,10 +100,10 @@
 				<label asp-for="Submission.Publisher"></label>:
 				<profile-link username="@Model.Submission.Publisher"></profile-link>
 			</span>
-			<div condition="showTier">
+			<div condition="showPublicationClass">
 				<hr>
 				<p class="mb-0">
-					<label asp-for="Submission.TierName" class="mb-0"></label>: <a href="/@Model.Submission.TierName">@Model.Submission.TierName</a>
+					<label asp-for="Submission.ClassName" class="mb-0"></label>: <a href="/@Model.Submission.ClassName">@Model.Submission.ClassName</a>
 				</p>
 			</div>
 		</div>

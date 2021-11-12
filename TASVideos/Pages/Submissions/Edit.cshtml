@@ -35,9 +35,9 @@
 	<row permission="JudgeSubmissions" condition="Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted)">
 		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Submission.TierId" class="form-control-label"></label>
-				<select asp-for="Submission.TierId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableTiers)" class="form-control"></select>
-				<span asp-validation-for="Submission.TierId" class="text-danger"></span>
+				<label asp-for="Submission.PublicationClassId" class="form-control-label"></label>
+				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-control"></select>
+				<span asp-validation-for="Submission.PublicationClassId" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>

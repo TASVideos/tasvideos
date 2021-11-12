@@ -17,8 +17,8 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Start Type")]
 		public MovieStartType? StartType { get; set; }
 
-		[Display(Name = "For Tier")]
-		public string? TierName { get; set; }
+		[Display(Name = "For Publication Class")]
+		public string? ClassName { get; set; }
 
 		[Display(Name = "Console")]
 		public string? SystemDisplayName { get; set; }

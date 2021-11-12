@@ -50,7 +50,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? Publisher { get; set; }
 
 		[TableIgnore]
-		public string? IntendedTier { get; set; }
+		public string? IntendedClass { get; set; }
 	}
 
 	public class SubmissionPageOf<T> : PageOf<T>

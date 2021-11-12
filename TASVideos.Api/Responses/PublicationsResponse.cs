@@ -23,7 +23,7 @@ namespace TASVideos.Api.Responses
 		public string EmulatorVersion { get; init; } = "";
 
 		[Sortable]
-		public string Tier { get; init; } = "";
+		public string Class { get; init; } = "";
 
 		[Sortable]
 		public string SystemCode { get; init; } = "";

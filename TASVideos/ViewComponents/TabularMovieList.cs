@@ -29,7 +29,7 @@ namespace TASVideos.ViewComponents
 
 			if (tier.Count > 0)
 			{
-				search.Tiers = tier;
+				search.PublicationClasses = tier;
 			}
 
 			ViewData["flink"] = flink;
@@ -49,7 +49,7 @@ namespace TASVideos.ViewComponents
 		private async Task<IEnumerable<TabularMovieListResultModel>> MovieList(TabularMovieListSearchModel searchCriteria)
 		{
 			var results = await _db.Publications
-				.Where(p => !searchCriteria.Tiers.Any() || searchCriteria.Tiers.Contains(p.Tier!.Name))
+				.Where(p => !searchCriteria.PublicationClasses.Any() || searchCriteria.PublicationClasses.Contains(p.PublicationClass!.Name))
 				.ByMostRecent()
 				.Take(searchCriteria.Limit)
 				.Select(p => new TabularMovieListResultModel

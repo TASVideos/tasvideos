@@ -2,9 +2,9 @@
 
 namespace TASVideos.Data.SeedData
 {
-	public static class TierSeedData
+	public static class PublicationClassSeedData
 	{
-		public static readonly Tier[] Tiers =
+		public static readonly PublicationClass[] Classes =
 		{
 			new ()
 			{
@@ -18,7 +18,7 @@ namespace TASVideos.Data.SeedData
 				Id = 2,
 				Name = "Moons",
 				Weight = 1,
-				IconPath = "images/moontier.png",
+				IconPath = "images/moon.png",
 				Link = "Moons"
 			},
 			new ()
@@ -26,7 +26,7 @@ namespace TASVideos.Data.SeedData
 				Id = 3,
 				Name = "Stars",
 				Weight = 1.5,
-				IconPath = "images/startier.png",
+				IconPath = "images/star.png",
 				Link = "Stars"
 			}
 		};

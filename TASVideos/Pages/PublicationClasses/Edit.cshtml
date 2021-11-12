@@ -1,0 +1,53 @@
+﻿@page "{id}/{handler?}"
+@model EditModel
+@{
+	ViewData["Title"] = $"Editing PublicationClass: {Model.PublicationClass.Name}";
+}
+
+<div class="text-end">
+	<delete-button condition="!Model.InUse"
+				   asp-href="/PublicationClasses/Edit/@(Model.PublicationClass.Id)/Delete"
+				   warning-message="Are you sure you want to remove this Publication Class?">
+		Delete
+	</delete-button>
+	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.PublicationClass.Name">
+		Publication Class in Use
+	</a>
+</div>
+
+<form method="POST">
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="PublicationClass.Name"></label>
+				<input type="text" asp-for="PublicationClass.Name" class="form-control" />
+				<span asp-validation-for="PublicationClass.Name" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="PublicationClass.Link"></label>
+				<input type="text" asp-for="PublicationClass.Link" class="form-control" />
+				<span asp-validation-for="PublicationClass.Link" class="text-danger"></span>
+			</form-group>
+		</column>
+		<column lg="6">
+			<form-group>
+				<label asp-for="PublicationClass.Weight"></label>
+				<input type="text" asp-for="PublicationClass.Weight" class="form-control" />
+				<span asp-validation-for="PublicationClass.Weight" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="PublicationClass.IconPath"></label>
+				<input type="text" asp-for="PublicationClass.IconPath" class="form-control" />
+				<span asp-validation-for="PublicationClass.IconPath" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<a class="btn btn-secondary" asp-page="Index"><i class="fa fa-times"></i> Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

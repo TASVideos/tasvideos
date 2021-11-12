@@ -61,7 +61,7 @@ namespace TASVideos.Core.Services
 				{
 					Id = p.Id,
 					Obsolete = p.ObsoletedById.HasValue,
-					TierWeight = p.Tier!.Weight,
+					ClassWeight = p.PublicationClass!.Weight,
 					AuthorCount = p.Authors.Count,
 					PublicationRatings = p.PublicationRatings
 						.Select(r => new Rating(r.Type, r.Value))
@@ -75,7 +75,7 @@ namespace TASVideos.Core.Services
 					Id = pub.Id,
 					AuthorCount = pub.AuthorCount,
 					Obsolete = pub.Obsolete,
-					TierWeight = pub.TierWeight,
+					ClassWeight = pub.ClassWeight,
 					RatingCount = pub.PublicationRatings.Count,
 					AverageRating = Rate(pub.PublicationRatings).Overall ?? 0
 				})
@@ -204,7 +204,7 @@ namespace TASVideos.Core.Services
 		{
 			public int Id { get; init; }
 			public bool Obsolete { get; init; }
-			public double TierWeight { get; init; }
+			public double ClassWeight { get; init; }
 			public int AuthorCount { get; init; }
 			public ICollection<Rating> PublicationRatings { get; init; } = new List<Rating>();
 		}
