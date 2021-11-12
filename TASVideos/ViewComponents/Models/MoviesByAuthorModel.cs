@@ -5,7 +5,7 @@ namespace TASVideos.ViewComponents.Models
 	public class MoviesByAuthorModel
 	{
 		public bool MarkNewbies { get; set; }
-		public bool ShowTiers { get; set; }
+		public bool ShowClasses { get; set; }
 
 		public ICollection<string> NewbieAuthors { get; set; } = new List<string>();
 
@@ -16,7 +16,7 @@ namespace TASVideos.ViewComponents.Models
 			public int Id { get; set; }
 			public string Title { get; set; } = "";
 			public IEnumerable<string> Authors { get; set; } = new List<string>();
-			public string? TierIconPath { get; set; } = "";
+			public string? PublicationClassIconPath { get; set; } = "";
 		}
 	}
 }

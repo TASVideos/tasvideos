@@ -89,7 +89,7 @@
 		<sortable-table-head model-type="typeof(SubmissionListEntry)" sorting="Model.Search" />
 		@foreach (var item in Model.Submissions)
 		{
-			var showTier = !string.IsNullOrWhiteSpace(item.IntendedTier) && item.IntendedTier != "Standard";
+			var showPublicationClass = !string.IsNullOrWhiteSpace(item.IntendedClass) && item.IntendedClass != "Standard";
 			<tr>
 				<td>@item.System</td>
 				<td><sub-link id="item.Id">@item.GameName</sub-link></td>
@@ -99,8 +99,8 @@
 				<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>
 				<td>
 					@item.Status.EnumDisplayName()
-					<small condition="showTier">
-						(@item.IntendedTier)
+					<small condition="showPublicationClass">
+						(@item.IntendedClass)
 					</small>
 					<small condition="item.Judge != null && item.Publisher == null">
 						<br /><profile-link username="@item.Judge"></profile-link>

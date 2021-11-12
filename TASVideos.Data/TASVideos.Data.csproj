@@ -7,6 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="SampleData\SampleData-MsSql.sql" />
+	  <None Remove="SampleData\SampleData-Postgres.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<EmbeddedResource Include="SampleData\SampleData-Postgres.zip" />
 		<EmbeddedResource Include="SampleData\SampleData-MsSql.zip" />
 	</ItemGroup>

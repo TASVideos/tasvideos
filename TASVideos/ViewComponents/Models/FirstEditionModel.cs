@@ -7,9 +7,9 @@ namespace TASVideos.ViewComponents.Models
 		public int Id { get; init; }
 		public int GameId { get; init; }
 		public string Title { get; init; } = "";
-		public int TierId { get; init; }
-		public string? TierIconPath { get; init; } = "";
-		public string TierName { get; init; } = "";
+		public int PublicationClassId { get; init; }
+		public string? PublicationClassIconPath { get; init; } = "";
+		public string PublicationClassName { get; init; } = "";
 		public DateTime PublicationDate { get; init; }
 	}
 }

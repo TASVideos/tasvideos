@@ -3,12 +3,12 @@
 namespace TASVideos.Api.Requests
 {
 	/// <summary>
-	/// Represents a publication tier to add or update
+	/// Represents a publication class to add or update
 	/// </summary>
-	public class TierAddEditRequest
+	public class ClassAddEditRequest
 	{
 		/// <summary>
-		/// Gets the name of the tier, must be a unique value
+		/// Gets the name of the publication class, must be a unique value
 		/// </summary>
 		[Required]
 		public string Name { get; init; } = "";
@@ -27,7 +27,7 @@ namespace TASVideos.Api.Requests
 		public string IconPath { get; init; } = "";
 
 		/// <summary>
-		/// Gets the wiki page to link to, that will document the tier
+		/// Gets the wiki page to link to, that will document the publication class
 		/// </summary>
 		[Required]
 		[StringLength(100)]

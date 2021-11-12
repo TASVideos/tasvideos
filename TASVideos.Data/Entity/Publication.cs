@@ -17,7 +17,7 @@ namespace TASVideos.Data.Entity
 	public interface IPublicationTokens
 	{
 		IEnumerable<string> SystemCodes { get; }
-		IEnumerable<string> Tiers { get; }
+		IEnumerable<string> Classes { get; }
 		IEnumerable<int> Years { get; }
 		IEnumerable<string> Tags { get; }
 		IEnumerable<string> Genres { get; }
@@ -61,8 +61,8 @@ namespace TASVideos.Data.Entity
 		public int RomId { get; set; }
 		public virtual GameRom? Rom { get; set; }
 
-		public int TierId { get; set; }
-		public virtual Tier? Tier { get; set; }
+		public int PublicationClassId { get; set; }
+		public virtual PublicationClass? PublicationClass { get; set; }
 
 		public int SubmissionId { get; set; }
 		public virtual Submission? Submission { get; set; }
@@ -182,9 +182,9 @@ namespace TASVideos.Data.Entity
 				query = query.Where(p => p.Game!.GameGroups.Any(gg => tokens.GameGroups.Contains(gg.GameGroupId)));
 			}
 
-			if (tokens.Tiers.Any())
+			if (tokens.Classes.Any())
 			{
-				query = query.Where(p => tokens.Tiers.Contains(p.Tier!.Name));
+				query = query.Where(p => tokens.Classes.Contains(p.PublicationClass!.Name));
 			}
 
 			if (!tokens.ShowObsoleted)

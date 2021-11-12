@@ -50,7 +50,7 @@ namespace TASVideos.Core.Services
 
 			var rawPoints = Math.Pow(Math.Max(publication.AverageRating, 0), exp);
 			var authorMultiplier = Math.Pow(publication.AuthorCount, -0.5);
-			var actual = rawPoints * authorMultiplier * publication.TierWeight;
+			var actual = rawPoints * authorMultiplier * publication.ClassWeight;
 
 			if (actual < PlayerPointConstants.MinimumPlayerPointsForPublication)
 			{
@@ -93,7 +93,7 @@ namespace TASVideos.Core.Services
 			public bool Obsolete { get; init; }
 			public double AverageRating { get; init; }
 			public int RatingCount { get; init; }
-			public double TierWeight { get; init; }
+			public double ClassWeight { get; init; }
 			public int AuthorCount { get; init; }
 		}
 	}

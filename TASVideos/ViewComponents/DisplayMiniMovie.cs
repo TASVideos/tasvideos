@@ -29,15 +29,15 @@ namespace TASVideos.ViewComponents
 			return View(movie);
 		}
 
-		private async Task<IEnumerable<int>> FrontPageMovieCandidates(string? tier, IList<string> flagsArr)
+		private async Task<IEnumerable<int>> FrontPageMovieCandidates(string? publicationClass, IList<string> flagsArr)
 		{
 			var query = _db.Publications
 				.ThatAreCurrent()
 				.AsQueryable();
 
-			if (!string.IsNullOrWhiteSpace(tier))
+			if (!string.IsNullOrWhiteSpace(publicationClass))
 			{
-				query = query.Where(p => p.Tier!.Name == tier);
+				query = query.Where(p => p.PublicationClass!.Name == publicationClass);
 			}
 
 			if (flagsArr.Count > 0)

@@ -17,7 +17,7 @@ namespace TASVideos.Core.Services
 		public string? Branch { get; init; }
 		public DateTime CreateTimestamp { get; set; }
 
-		public string? TierIconPath { get; set; }
+		public string? ClassIconPath { get; set; }
 
 		public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 

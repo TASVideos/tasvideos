@@ -45,7 +45,7 @@ namespace TASVideos.ViewComponents
 
 			var searchModel = new PublicationSearchModel
 			{
-				Tiers = tokenLookup.Tiers.Where(tier.Contains),
+				Classes = tokenLookup.Classes.Where(tier.Contains),
 				SystemCodes = tokenLookup.SystemCodes.Where(systemCode.Contains),
 				ShowObsoleted = obs,
 				Years = tokenLookup.Years.Where(year.Contains),

@@ -2,12 +2,12 @@
 @model EditModel
 @{
 	ViewData["Title"] = $"Edit Movie #{Model.Id}";
-	var tierIconPath2x = "";
-	var tierIconPath4x = "";
-	if (Model.Publication.TierIconPath != null)
+	var classIconPath2X = "";
+	var classIconPath4X = "";
+	if (Model.Publication.ClassIconPath != null)
 	{
-		tierIconPath2x = $"{Model.Publication.TierIconPath.Split('.')[0]}-2x.png";
-		tierIconPath4x = $"{Model.Publication.TierIconPath.Split('.')[0]}-4x.png";
+		classIconPath2X = $"{Model.Publication.ClassIconPath.Split('.')[0]}-2x.png";
+		classIconPath4X = $"{Model.Publication.ClassIconPath.Split('.')[0]}-4x.png";
 	}
 }
 @section PageTitle {
@@ -17,15 +17,15 @@
 }
 
 <fullrow class="mt-2">
-	<label asp-for="Publication.Tier"></label>:
-	<a condition="!string.IsNullOrWhiteSpace(Model.Publication.TierIconPath)" href="/@Model.Publication.TierLink">
-		<img style="width: 18px" src="/@tierIconPath2x"
-			 srcset="/@Model.Publication.TierIconPath .5x,
-			 /@tierIconPath2x 1x,
-			 /@tierIconPath4x 2x"/>
+	<label asp-for="Publication.Class"></label>:
+	<a condition="!string.IsNullOrWhiteSpace(Model.Publication.ClassIconPath)" href="/@Model.Publication.ClassLink">
+		<img style="width: 18px" src="/@classIconPath2X"
+			 srcset="/@Model.Publication.ClassIconPath .5x,
+			 /@classIconPath2X 1x,
+			 /@classIconPath4X 2x"/>
 	</a>
-	<label class="form-control-label">@Model.Publication.Tier</label>
-	<a permission="SetTier" class="btn btn-secondary btn-sm" asp-page="EditTier" asp-route-id="@Model.Id"><span class="fa fa-pencil"></span> Edit</a>
+	<label class="form-control-label">@Model.Publication.Class</label>
+	<a permission="SetPublicationClass" class="btn btn-secondary btn-sm" asp-page="EditClass" asp-route-id="@Model.Id"><span class="fa fa-pencil"></span> Edit</a>
 </fullrow>
 <hr />
 <a permission="CreateAdditionalMovieFiles" asp-page="AdditionalMovies" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mb-2 float-end ms-2"><span class="fa fa-plus"></span> Additional Movie Files</a>

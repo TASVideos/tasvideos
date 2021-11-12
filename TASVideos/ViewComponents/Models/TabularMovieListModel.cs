@@ -7,7 +7,7 @@ namespace TASVideos.ViewComponents
 	public class TabularMovieListSearchModel
 	{
 		public int Limit { get; set; } = 10;
-		public IEnumerable<string> Tiers { get; set; } = new List<string>();
+		public IEnumerable<string> PublicationClasses { get; set; } = new List<string>();
 	}
 
 	public class TabularMovieListResultModel : ITimeable

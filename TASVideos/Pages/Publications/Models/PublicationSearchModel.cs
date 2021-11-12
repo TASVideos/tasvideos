@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Publications.Models
 	public class PublicationSearchModel : IPublicationTokens
 	{
 		public IEnumerable<string> SystemCodes { get; set; } = new List<string>();
-		public IEnumerable<string> Tiers { get; set; } = new List<string>();
+		public IEnumerable<string> Classes { get; set; } = new List<string>();
 		public IEnumerable<int> Years { get; set; } = Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1);
 		public IEnumerable<string> Tags { get; set; } = new List<string>();
 		public IEnumerable<string> Genres { get; set; } = new List<string>();
@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Publications.Models
 		public IEnumerable<int> GameGroups { get; set; } = new List<int>();
 
 		public bool IsEmpty => !SystemCodes.Any()
-			&& !Tiers.Any()
+			&& !Classes.Any()
 			&& !Years.Any()
 			&& !Flags.Any()
 			&& !Tags.Any()

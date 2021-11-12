@@ -25,7 +25,7 @@ namespace TASVideos.Core.Tests.Services
 				new PointsCalculator.Publication
 				{
 					Obsolete = false,
-					TierWeight = 0,
+					ClassWeight = 0,
 					RatingCount = 0,
 					AverageRating = 0,
 					AuthorCount = 1
@@ -46,7 +46,7 @@ namespace TASVideos.Core.Tests.Services
 				{
 					AverageRating = 4.45166667,
 					RatingCount = 6,
-					TierWeight = 0.75,
+					ClassWeight = 0.75,
 					Obsolete = false,
 					AuthorCount = 1
 				}
@@ -67,7 +67,7 @@ namespace TASVideos.Core.Tests.Services
 				{
 					AverageRating = -100,
 					RatingCount = 6,
-					TierWeight = 0.75,
+					ClassWeight = 0.75,
 					Obsolete = false,
 					AuthorCount = 1
 				}

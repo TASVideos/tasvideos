@@ -15,7 +15,7 @@ namespace TASVideos.Core.Tests.Services
 		private readonly TestDbContext _db;
 
 		#region Test Data
-		private static readonly Tier Tier = new () { Id = 1 };
+		private static readonly PublicationClass PublicationClass = new () { Id = 1 };
 		private static Game Smb => new () { Id = 1 };
 		private static Game Smb2j => new () { Id = 2 };
 
@@ -25,7 +25,7 @@ namespace TASVideos.Core.Tests.Services
 			GameId = Smb.Id,
 			Title = "Smb in less than 5 minutes",
 			Branch = "Warps",
-			Tier = Tier
+			PublicationClass = PublicationClass
 		};
 
 		private static Publication SmbWarpsObsolete => new ()
@@ -35,7 +35,7 @@ namespace TASVideos.Core.Tests.Services
 			Title = "Smb in 5 minutes",
 			Branch = "Warps",
 			ObsoletedById = SmbWarps.Id,
-			Tier = Tier
+			PublicationClass = PublicationClass
 		};
 
 		private static Publication SmbWarpsObsoleteObsolete => new ()
@@ -45,7 +45,7 @@ namespace TASVideos.Core.Tests.Services
 			Title = "Smb in 5.5 minutes",
 			Branch = "Warps",
 			ObsoletedById = SmbWarpsObsolete.Id,
-			Tier = Tier
+			PublicationClass = PublicationClass
 		};
 
 		private static Publication SmbWarpsObsoleteBranch => new ()
@@ -55,7 +55,7 @@ namespace TASVideos.Core.Tests.Services
 			Title = "Smb in 6 minutes without using glitches",
 			Branch = "Warps",
 			ObsoletedById = SmbWarps.Id,
-			Tier = Tier
+			PublicationClass = PublicationClass
 		};
 
 		private static Publication SmbWarpless => new ()
@@ -64,7 +64,7 @@ namespace TASVideos.Core.Tests.Services
 			GameId = Smb.Id,
 			Title = "Smb in about 20 minutes",
 			Branch = "No Warps",
-			Tier = Tier
+			PublicationClass = PublicationClass
 		};
 
 		private static Publication Smb2jWarps => new ()
@@ -73,7 +73,7 @@ namespace TASVideos.Core.Tests.Services
 			GameId = Smb2j.Id,
 			Title = "Smb2j in about 8 minutes",
 			Branch = "Warps",
-			Tier = Tier
+			PublicationClass = PublicationClass
 		};
 
 		#endregion
@@ -117,7 +117,7 @@ namespace TASVideos.Core.Tests.Services
 		[TestMethod]
 		public async Task ForGame_FiltersByGame()
 		{
-			_db.Add(Tier);
+			_db.Add(PublicationClass);
 			_db.Add(Smb);
 			_db.Add(SmbWarps);
 

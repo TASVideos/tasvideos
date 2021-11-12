@@ -65,8 +65,8 @@ namespace TASVideos.Pages.Submissions.Models
 		public string? Rom { get; set; }
 		public int RomId { get; set; }
 
-		[Display(Name = "Tier")]
-		public string? Tier { get; set; }
+		[Display(Name = "PublicationClass")]
+		public string? PublicationClass { get; set; }
 
 		public string? MovieExtension { get; set; }
 
@@ -80,7 +80,7 @@ namespace TASVideos.Pages.Submissions.Models
 			&& SystemFrameRateId.HasValue
 			&& GameId > 0
 			&& RomId > 0
-			&& !string.IsNullOrEmpty(Tier)
+			&& !string.IsNullOrEmpty(PublicationClass)
 			&& Status == SubmissionStatus.PublicationUnderway;
 	}
 }

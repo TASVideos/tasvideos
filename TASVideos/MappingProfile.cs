@@ -91,7 +91,7 @@ namespace TASVideos
 			CreateMap<Publication, PublicationDisplayModel>()
 				.ForMember(dest => dest.OnlineWatchingUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Streaming && pu.Url != null).Select(pu => pu.Url)))
 				.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count / 2.0))
-				.ForMember(dest => dest.TierIconPath, opt => opt.MapFrom(src => src.Tier!.IconPath))
+				.ForMember(dest => dest.ClassIconPath, opt => opt.MapFrom(src => src.PublicationClass!.IconPath))
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.DisplayName))
 				.ForMember(dest => dest.TopicId, opt => opt.MapFrom(src => src.Submission!.TopicId))
 				.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files
@@ -160,11 +160,11 @@ namespace TASVideos
 				.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.GameId ?? 0))
 				.ForMember(dest => dest.RomId, opt => opt.MapFrom(src => src.RomId ?? 0))
 				.ForMember(dest => dest.Rom, opt => opt.MapFrom(src => src.Rom!.Name))
-				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.IntendedTier != null ? src.IntendedTier.Name : ""));
+				.ForMember(dest => dest.PublicationClass, opt => opt.MapFrom(src => src.IntendedClass != null ? src.IntendedClass.Name : ""));
 
 			// API
 			CreateMap<Publication, PublicationsResponse>()
-				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.Tier!.Name))
+				.ForMember(dest => dest.Class, opt => opt.MapFrom(src => src.PublicationClass!.Name))
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 				.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate!.FrameRate))
 				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName).ToList()))
@@ -176,7 +176,7 @@ namespace TASVideos
 			CreateMap<Submission, SubmissionsResponse>()
 				.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(a => a.Author!.UserName).ToList()))
 				.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
-				.ForMember(dest => dest.Tier, opt => opt.MapFrom(src => src.IntendedTier != null ? src.IntendedTier.Name : null))
+				.ForMember(dest => dest.IntendedClass, opt => opt.MapFrom(src => src.IntendedClass != null ? src.IntendedClass.Name : null))
 				.ForMember(dest => dest.Judge, opt => opt.MapFrom(src => src.Judge != null ? src.Judge.UserName : null))
 				.ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher != null ? src.Publisher!.UserName : null))
 				.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System != null ? src.System.Code : null))

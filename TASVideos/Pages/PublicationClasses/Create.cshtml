@@ -1,0 +1,42 @@
+﻿@page
+@model CreateModel
+@{
+	ViewData["Title"] = "Creating a new PublicationClass";
+}
+
+<form method="POST">
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="PublicationClass.Name"></label>
+				<input type="text" asp-for="PublicationClass.Name" class="form-control" />
+				<span asp-validation-for="PublicationClass.Name" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="PublicationClass.Link"></label>
+				<input type="text" asp-for="PublicationClass.Link" class="form-control" />
+				<span asp-validation-for="PublicationClass.Link" class="text-danger"></span>
+			</form-group>
+		</column>
+		<column lg="6">
+			<form-group>
+				<label asp-for="PublicationClass.Weight"></label>
+				<input type="text" asp-for="PublicationClass.Weight" class="form-control" />
+				<span asp-validation-for="PublicationClass.Weight" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="PublicationClass.IconPath"></label>
+				<input type="text" asp-for="PublicationClass.IconPath" class="form-control" />
+				<span asp-validation-for="PublicationClass.IconPath" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<a asp-page="Index" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
