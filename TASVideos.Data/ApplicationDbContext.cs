@@ -40,7 +40,7 @@ namespace TASVideos.Data
 		public DbSet<SubmissionStatusHistory> SubmissionStatusHistory { get; set; } = null!;
 		public DbSet<SubmissionRejectionReason> SubmissionRejectionReasons { get; set; } = null!;
 
-		public DbSet<Tier> Tiers { get; set; } = null!;
+		public DbSet<PublicationClass> PublicationClasses { get; set; } = null!;
 
 		public DbSet<Publication> Publications { get; set; } = null!;
 		public DbSet<PublicationAuthor> PublicationAuthors { get; set; } = null!;
@@ -170,7 +170,7 @@ namespace TASVideos.Data
 					.OnDelete(DeleteBehavior.Restrict);
 			});
 
-			builder.Entity<Tier>(entity =>
+			builder.Entity<PublicationClass>(entity =>
 			{
 				entity.Property(e => e.Id)
 					.ValueGeneratedNever()

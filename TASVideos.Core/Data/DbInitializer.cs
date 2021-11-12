@@ -96,7 +96,7 @@ namespace TASVideos.Core.Data
 			context.Roles.AddRange(RoleSeedData.AllRoles);
 			context.GameSystems.AddRange(SystemSeedData.Systems);
 			context.GameSystemFrameRates.AddRange(SystemSeedData.SystemFrameRates);
-			context.Tiers.AddRange(TierSeedData.Tiers);
+			context.PublicationClasses.AddRange(PublicationClassSeedData.Classes);
 			context.Genres.AddRange(GenreSeedData.Genres);
 			context.Flags.AddRange(FlagSeedData.Flags);
 			context.SubmissionRejectionReasons.AddRange(RejectionReasonsSeedData.RejectionReasons);

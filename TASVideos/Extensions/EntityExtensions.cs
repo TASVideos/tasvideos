@@ -32,7 +32,7 @@ namespace TASVideos.Extensions
 				});
 		}
 
-		public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Tier> query)
+		public static IQueryable<SelectListItem> ToDropdown(this IQueryable<PublicationClass> query)
 		{
 			return query
 				.Select(s => new SelectListItem
@@ -91,7 +91,7 @@ namespace TASVideos.Extensions
 					Status = s.Status,
 					Judge = s.Judge != null ? s.Judge.UserName : null,
 					Publisher = s.Publisher != null ? s.Publisher.UserName : null,
-					IntendedTier = s.IntendedTier != null ? s.IntendedTier.Name : null
+					IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null
 				});
 		}
 	}

@@ -108,7 +108,7 @@ namespace TASVideos.Legacy.Imports
 					RomName = legacySubmission.Sub.RomName,
 					RerecordCount = legacySubmission.Sub.Rerecord,
 					MovieFile = fileData,
-					IntendedTierId = legacySubmission.Sub.IntendedTier,
+					IntendedClassId = legacySubmission.Sub.IntendedTier,
 					GameId = legacySubmission.Sub.GameNameId ?? -1, // Placeholder game if not present
 					RomId = -1, // Legacy system had no notion of Rom for submissions
 					EmulatorVersion = CleanAndGuessEmuVersion(legacySubmission.Sub.Id, legacySubmission.Sub.EmulatorVersion, movieExtension),
@@ -210,7 +210,7 @@ namespace TASVideos.Legacy.Imports
 				nameof(Submission.RomName),
 				nameof(Submission.RerecordCount),
 				nameof(Submission.MovieFile),
-				nameof(Submission.IntendedTierId),
+				nameof(Submission.IntendedClassId),
 				nameof(Submission.Title),
 				nameof(Submission.GameId),
 				nameof(Submission.RomId),

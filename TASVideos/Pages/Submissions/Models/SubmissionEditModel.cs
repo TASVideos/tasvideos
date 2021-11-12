@@ -21,8 +21,8 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile? MovieFile { get; set; }
 
-		[Display(Name = "Intended Tier")]
-		public int? TierId { get; set; }
+		[Display(Name = "Intended Publication Class")]
+		public int? PublicationClassId { get; set; }
 
 		[Display(Name = "Reason")]
 		public int? RejectionReason { get; set; }
@@ -35,8 +35,8 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Start Type")]
 		public MovieStartType? StartType { get; set; }
 
-		[Display(Name = "For tier")]
-		public string? TierName { get; set; }
+		[Display(Name = "For publication Class")]
+		public string? PublicationClass { get; set; }
 
 		[Display(Name = "Console")]
 		public string? SystemDisplayName { get; set; }

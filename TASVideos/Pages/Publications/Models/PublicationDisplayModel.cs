@@ -16,7 +16,7 @@ namespace TASVideos.Pages.Publications.Models
 
 		public int? ObsoletedById { get; set; }
 		public string Title { get; set; } = "";
-		public string TierIconPath { get; set; } = "";
+		public string ClassIconPath { get; set; } = "";
 		public string MovieFileName { get; set; } = "";
 		public int SubmissionId { get; set; }
 		public IEnumerable<string> OnlineWatchingUrls { get; set; } = new List<string>();

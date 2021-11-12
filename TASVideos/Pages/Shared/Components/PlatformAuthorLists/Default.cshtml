@@ -26,21 +26,20 @@
 					@foreach (var pub in author.Pubs)
 					{
 						<li>
-							@if (pub.TierIconPath != null)
+							@if (pub.ClassIconPath != null)
 							{
-								var tierIconPath2x = $"{pub.TierIconPath.Split('.')[0]}-2x.png";
-								var tierIconPath4x = $"{pub.TierIconPath.Split('.')[0]}-4x.png";
-								<img style="width: 18px" condition="Model.ShowTiers" src="/@tierIconPath2x"
-									 srcset="/@pub.TierIconPath .5x,
-									/@tierIconPath2x 1x,
-									/@tierIconPath4x 2x" />
+								var classIconPath2X = $"{pub.ClassIconPath.Split('.')[0]}-2x.png";
+								var classIconPath4X = $"{pub.ClassIconPath.Split('.')[0]}-4x.png";
+								<img style="width: 18px" condition="Model.ShowClasses" src="/@classIconPath2X"
+									 srcset="/@pub.ClassIconPath .5x,
+									/@classIconPath2X 1x,
+									/@classIconPath4X 2x" />
 							}
 							<pub-link id="pub.Id"> @pub.Title </pub-link>
 						</li>
-                    }
+					}
 				</ul>
 			</cardbody>
 		</card>
-
 	}
 </div>

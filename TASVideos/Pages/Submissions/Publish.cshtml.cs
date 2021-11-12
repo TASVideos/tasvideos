@@ -102,7 +102,7 @@ namespace TASVideos.Pages.Submissions
 			// if it is doing left joins or sub-queries, then we need to null check the usages of nullable
 			// tables such as game, rom, etc and throw if those are null
 			var submission = await _db.Submissions
-				.Include(s => s.IntendedTier)
+				.Include(s => s.IntendedClass)
 				.Include(s => s.System)
 				.Include(s => s.SystemFrameRate)
 				.Include(s => s.Game)
@@ -113,7 +113,7 @@ namespace TASVideos.Pages.Submissions
 
 			var publication = new Publication
 			{
-				TierId = submission.IntendedTier!.Id,
+				PublicationClassId = submission.IntendedClass!.Id,
 				SystemId = submission.System!.Id,
 				SystemFrameRateId = submission.SystemFrameRate!.Id,
 				GameId = submission.Game!.Id,

@@ -42,7 +42,7 @@ namespace TASVideos.Core.Services.PublicationChain
 					Branch = p.Branch,
 					CreateTimestamp = p.CreateTimestamp,
 					ObsoletedById = p.ObsoletedById,
-					TierIconPath = p.Tier!.IconPath
+					ClassIconPath = p.PublicationClass!.IconPath
 				})
 				.ToListAsync();
 

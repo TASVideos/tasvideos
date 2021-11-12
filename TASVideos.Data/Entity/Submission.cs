@@ -35,8 +35,8 @@ namespace TASVideos.Data.Entity
 
 		public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
 
-		public int? IntendedTierId { get; set; }
-		public virtual Tier? IntendedTier { get; set; }
+		public int? IntendedClassId { get; set; }
+		public virtual PublicationClass? IntendedClass { get; set; }
 
 		public int? JudgeId { get; set; }
 		public virtual User? Judge { get; set; }

@@ -164,7 +164,7 @@
 		<Content Update="Pages\Publications\Authors.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Publications\EditTier.cshtml">
+		<Content Update="Pages\Publications\EditClass.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 		<Content Update="Pages\Shared\Components\GameSubPages\Default.cshtml">

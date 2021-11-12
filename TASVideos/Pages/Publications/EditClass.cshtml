@@ -1,7 +1,7 @@
 ﻿@page "{id}"
-@model EditTierModel
+@model EditClassModel
 @{
-	ViewData["Title"] = $"Edit Tier for {Model.Publication.Title}";
+	ViewData["Title"] = $"Edit PublicationClass for {Model.Publication.Title}";
 }
 
 <form method="post">
@@ -9,9 +9,9 @@
 	<row>
 		<div class="col-lg-4 col-sm-6">
 			<form-group>
-				<label asp-for="Publication.TierId"></label>
-				<select class="form-control" asp-for="Publication.TierId" asp-items="@Model.AvailableTiers"></select>
-				<span asp-validation-for="Publication.TierId" class="text-danger"></span>
+				<label asp-for="Publication.ClassId"></label>
+				<select class="form-control" asp-for="Publication.ClassId" asp-items="@Model.AvailableClasses"></select>
+				<span asp-validation-for="Publication.ClassId" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>

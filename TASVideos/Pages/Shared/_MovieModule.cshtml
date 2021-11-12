@@ -1,11 +1,11 @@
 ﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
 @{
-	var tierIconPath2x = "";
-	var tierIconPath4x = "";
-	if (!string.IsNullOrWhiteSpace(Model.TierIconPath))
+	var classIconPath2X = "";
+	var classIconPath4X = "";
+	if (!string.IsNullOrWhiteSpace(Model.ClassIconPath))
 	{
-		tierIconPath2x = $"{Model.TierIconPath.Split('.')[0]}-2x.png";
-		tierIconPath4x = $"{Model.TierIconPath.Split('.')[0]}-4x.png";
+		classIconPath2X = $"{Model.ClassIconPath.Split('.')[0]}-2x.png";
+		classIconPath4X = $"{Model.ClassIconPath.Split('.')[0]}-4x.png";
 	}
 }
 
@@ -48,11 +48,11 @@
 <card class="border border-primary">
 	<cardheader class="bg-cardprimary p-2">
 		<row class="gx-3">
-			<div class="col-auto pe-0" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)">
-				<img style="width: 18px" src="/@tierIconPath2x"
-					 srcset="/@Model.TierIconPath .5x,
-					 /@tierIconPath2x 1x,
-					 /@tierIconPath4x 2x" />
+			<div class="col-auto pe-0" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)">
+				<img style="width: 18px" src="/@classIconPath2X"
+					 srcset="/@Model.ClassIconPath .5x,
+					 /@classIconPath2X 1x,
+					 /@classIconPath4X 2x" />
 			</div>
 			<h4 class="col m-0"><a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></a></h4>
 			<div class="col-auto ps-0">

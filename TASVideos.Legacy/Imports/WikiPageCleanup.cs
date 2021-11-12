@@ -76,12 +76,12 @@ namespace TASVideos.Legacy.Imports
 			}
 
 			markup = ReplaceIfContains(markup, "=css/fastest-completion.png", "=images/fastest-completion.png");
-			markup = ReplaceIfContains(markup, "=css/vaulttier.png", "=images/vaulttier.png");
-			markup = ReplaceIfContains(markup, "=css/moontier.png", "=images/moontier.png");
-			markup = ReplaceIfContains(markup, "=css/favourite.png", "=images/startier.png");
-			markup = ReplaceIfContains(markup, "=/css/vaulttier.png", "=images/vaulttier.png");
-			markup = ReplaceIfContains(markup, "=/css/moontier.png", "=images/moontier.png");
-			markup = ReplaceIfContains(markup, "=/css/favourite.png", "=images/startier.png");
+			markup = ReplaceIfContains(markup, "=css/vaulttier.png", "=images/vault.png");
+			markup = ReplaceIfContains(markup, "=css/moontier.png", "=images/moon.png");
+			markup = ReplaceIfContains(markup, "=css/favourite.png", "=images/star.png");
+			markup = ReplaceIfContains(markup, "=/css/vaulttier.png", "=images/vault.png");
+			markup = ReplaceIfContains(markup, "=/css/moontier.png", "=images/moon.png");
+			markup = ReplaceIfContains(markup, "=/css/favourite.png", "=images/star.png");
 			markup = ReplaceIfContains(markup, "=/css/newbierec.gif", "=images/newbierec.gif");
 			markup = ReplaceIfContains(markup, "=/css/bolt.png", "=images/notable.png");
 			markup = ReplaceIfContains(markup, "=/css/verified.png", "=images/verified.png");

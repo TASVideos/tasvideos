@@ -16,9 +16,9 @@ namespace TASVideos.Api.Requests
 		public string? Systems { get; init; }
 
 		/// <summary>
-		/// Gets the publication tier codes to filter by.
+		/// Gets the publication class codes to filter by.
 		/// </summary>
-		public string? TierNames { get; init; }
+		public string? ClassNames { get; init; }
 
 		/// <summary>
 		/// Gets the start year to filter by.
@@ -66,7 +66,7 @@ namespace TASVideos.Api.Requests
 		public string? GameGroupIds { get; init; }
 
 		IEnumerable<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
-		IEnumerable<string> IPublicationTokens.Tiers => TierNames.CsvToStrings();
+		IEnumerable<string> IPublicationTokens.Classes => ClassNames.CsvToStrings();
 		IEnumerable<int> IPublicationTokens.Years => StartYear.YearRange(EndYear);
 		IEnumerable<string> IPublicationTokens.Genres => GenreNames.CsvToStrings();
 		IEnumerable<string> IPublicationTokens.Tags => TagNames.CsvToStrings();

@@ -31,7 +31,7 @@ namespace TASVideos.Core.Services
 
 			var result = new MovieTokens
 			{
-				Tiers = await _db.Tiers.Select(t => t.Name.ToLower()).ToListAsync(),
+				Classes = await _db.PublicationClasses.Select(t => t.Name.ToLower()).ToListAsync(),
 				SystemCodes = await _db.GameSystems.Select(s => s.Code.ToLower()).ToListAsync(),
 				Tags = await _db.Tags.Select(t => t.Code.ToLower()).ToListAsync(),
 				Genres = await _db.Genres.Select(g => g.DisplayName.ToLower()).ToListAsync(),

@@ -123,8 +123,8 @@ namespace TASVideos.Data.Entity
 		#region Publication Maintenance 300
 
 		[Group("Publication Maintenance")]
-		[Description("The ability to set a published movie's movie tier")]
-		SetTier = 300,
+		[Description("The ability to set a published movie's class")]
+		SetPublicationClass = 300,
 
 		[Group("Publication Maintenance")]
 		[Description("The ability to edit the game, system, and rom information for movies")]
@@ -159,8 +159,8 @@ namespace TASVideos.Data.Entity
 		FlagMaintenance = 391,
 
 		[Group("Publication Maintenance")]
-		[Description("The ability to add, edit, and remove the publication tiers")]
-		TierMaintenance = 392,
+		[Description("The ability to add, edit, and remove the publication classes")]
+		ClassMaintenance = 392,
 
 		#endregion
 

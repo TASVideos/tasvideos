@@ -52,7 +52,7 @@ namespace TASVideos.Pages.Submissions
 		[Display(Name = "Status")]
 		public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
 
-		public IEnumerable<SelectListItem> AvailableTiers { get; set; } = new List<SelectListItem>();
+		public IEnumerable<SelectListItem> AvailableClasses { get; set; } = new List<SelectListItem>();
 
 		public IEnumerable<SelectListItem> AvailableRejectionReasons { get; set; } = new List<SelectListItem>();
 
@@ -82,7 +82,7 @@ namespace TASVideos.Pages.Submissions
 					Markup = s.WikiContent.Markup,
 					Judge = s.Judge != null ? s.Judge.UserName : "",
 					Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-					TierId = s.IntendedTierId,
+					PublicationClassId = s.IntendedClassId,
 					RejectionReason = s.RejectionReasonId,
 					AdditionalAuthors = s.AdditionalAuthors
 				})
@@ -155,12 +155,12 @@ namespace TASVideos.Pages.Submissions
 			// but if we treat null as no choice, then we have no way to unset these values
 			if (!User.Has(PermissionTo.JudgeSubmissions))
 			{
-				Submission.TierId = null;
+				Submission.PublicationClassId = null;
 			}
-			else if (Submission.TierId == null &&
+			else if (Submission.PublicationClassId == null &&
 				Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
 			{
-				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TierId)}", "A submission can not be accepted without a Tier");
+				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.PublicationClassId)}", "A submission can not be accepted without a PublicationClass");
 			}
 
 			var subInfo = await Db.Submissions
@@ -287,8 +287,8 @@ namespace TASVideos.Pages.Submissions
 				? Submission.RejectionReason
 				: null;
 
-			submission.IntendedTier = Submission.TierId.HasValue
-				? await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId.Value)
+			submission.IntendedClass = Submission.PublicationClassId.HasValue
+				? await Db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId.Value)
 				: null;
 
 			submission.GameVersion = Submission.GameVersion;
@@ -351,11 +351,11 @@ namespace TASVideos.Pages.Submissions
 					string statusStr = Submission.Status.ToString();
 					if (Submission.Status == SubmissionStatus.Accepted)
 					{
-						var tier = (await Db.Tiers.SingleAsync(t => t.Id == Submission.TierId)).Name;
+						var publicationClass = (await Db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId)).Name;
 
-						if (tier != "Standard")
+						if (publicationClass != "Standard")
 						{
-							statusStr += $" to {tier}";
+							statusStr += $" to {publicationClass}";
 						}
 					}
 
@@ -450,7 +450,7 @@ namespace TASVideos.Pages.Submissions
 
 		private async Task PopulateDropdowns()
 		{
-			AvailableTiers = await Db.Tiers
+			AvailableClasses = await Db.PublicationClasses
 				.ToDropdown()
 				.ToListAsync();
 

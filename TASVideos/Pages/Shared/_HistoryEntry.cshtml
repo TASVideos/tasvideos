@@ -1,18 +1,18 @@
 ﻿@model TASVideos.Core.Services.PublicationHistoryNode
 @{
 	var highlight = Model.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
-	var tierIconPath2x = "";
-	var tierIconPath4x = "";
-	if (Model.TierIconPath != null)
+	var classIconPath2X = "";
+	var classIconPath4X = "";
+	if (Model.ClassIconPath != null)
 	{
-		tierIconPath2x = $"{Model.TierIconPath.Split('.')[0]}-2x.png";
-		tierIconPath4x = $"{Model.TierIconPath.Split('.')[0]}-4x.png";
+		classIconPath2X = $"{Model.ClassIconPath.Split('.')[0]}-2x.png";
+		classIconPath4X = $"{Model.ClassIconPath.Split('.')[0]}-4x.png";
 	}
 }
-<img style="width: 18px" condition="!string.IsNullOrWhiteSpace(Model.TierIconPath)" src="/@tierIconPath2x"
-	 srcset="/@Model.TierIconPath 1x,
-	 /@tierIconPath2x 2x,
-	 /@tierIconPath4x 4x"/>
+<img style="width: 18px" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)" src="/@classIconPath2X"
+	 srcset="/@Model.ClassIconPath 1x,
+	 /@classIconPath2X 2x,
+	 /@classIconPath4X 4x"/>
 <pub-link class="@highlight text-decoration-line-through" id="@Model.Id">@Model.Title</pub-link>
 <span>(<timezone-convert asp-for="@Model.CreateTimestamp" date-only="true" />)</span>
 @if (Model.Obsoletes.Any())
