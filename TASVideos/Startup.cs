@@ -70,7 +70,6 @@ namespace TASVideos
 				.UseRequestLocalization()
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
-				.UseHttpsRedirection()
 				.UseWebOptimizer()
 				.UseStaticFilesWithTorrents()
 				.UseAuthorization()
@@ -78,6 +77,11 @@ namespace TASVideos
 				.UseSwaggerUi(Environment)
 				.UseLogging()
 				.UseMvcWithOptions();
+
+			if (env.IsDevelopment() || env.IsDemo())
+			{
+				app.UseHttpsRedirection();
+			}
 		}
 	}
 }
