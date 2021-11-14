@@ -35,7 +35,7 @@
 				<td>
 					<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fw-bold"><i class="fa fa-bullhorn"></i> Announcement: </span>
 					<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fw-bold"><i class="fa fa-sticky-note"></i> Sticky: </span>
-					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Title</a>
+					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold thread-link">@topic.Title</a>
 					<div class="ms-2">
 						@{
 							var totalPages = (topic.PostCount - 1) / ForumConstants.PostsPerPage + 1;
@@ -70,7 +70,7 @@
 					{
 						<timezone-convert asp-for="@topic.LastPostDateTime" /> <br />
 						<profile-link username="@topic.LastPostUserName"></profile-link>
-						<a href="/Forum/Posts/@topic.LastPostId#@topic.LastPostId" class="fa fa-arrow-circle-right" />
+						<a href="/Forum/Posts/@topic.LastPostId#@topic.LastPostId" class="fa fa-arrow-circle-right thread-link" />
 					}
 				</td>
 			</tr>
