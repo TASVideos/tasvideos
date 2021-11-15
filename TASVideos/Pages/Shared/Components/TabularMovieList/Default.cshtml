@@ -9,10 +9,6 @@
 	<div class="col-lg-9 col-md-8">
 		<div class="table-container">
 			<table class="table table-striped table-sm hidden-lg-down">
-				@if (!string.IsNullOrWhiteSpace(flink))
-				{
-					<caption><a href="/@flink">@footer</a></caption>
-				}
 				<tbody>
 					<tr>
 						<th>Date</th>
@@ -35,6 +31,10 @@
 						</tr>
 					}
 				</tbody>
+				@if (!string.IsNullOrWhiteSpace(flink))
+				{
+					<caption><a href="/@flink">@footer</a></caption>
+				}
 			</table>
 		</div>
 	</div>
