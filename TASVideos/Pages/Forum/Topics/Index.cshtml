@@ -11,7 +11,7 @@
 	</div>
 }
 <partial Name="_ForumHeader" />
-<fullrow class="mb-2">
+<fullrow>
 	<partial name="_TopicCrumbs" model="Model.Topic" />
 	<partial name="_TopicActionBar" model="Model.Topic" />
 	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
@@ -75,7 +75,7 @@
 	</card>
 }
 
-<hr class="mt-1" />
+<hr class="my-0" />
 <fullrow>
 	<partial name="_Pager" model="Model.Topic.Posts" />
 </fullrow>
