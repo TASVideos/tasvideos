@@ -323,3 +323,27 @@ article.wiki, .postbody {
 .border-card {
 	border-color: var(--bs-gray-400) !important;
 }
+
+.right-align-topic {
+	border: 1px solid var(--border-color);
+	border-radius: 5px;
+	margin-top: 15px;
+
+	&:last-child {
+		border: none;
+	}
+
+	.card {
+		border: none;
+		border-radius: 0;
+		border-bottom: 2px solid var (--border-color);
+	}
+}
+
+@media (min-width: 768px) {
+	.right-align-topic {
+		margin-left: 20px;
+		float: right;
+		width: 33%;
+	}
+}
