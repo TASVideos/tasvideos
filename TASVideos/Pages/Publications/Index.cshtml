@@ -4,6 +4,8 @@
 	ViewData["Title"] = $"Tool-assisted movies ({Model.Movies.Count()})";
 }
 
+<a asp-page="Filter" class="btn btn-primary mb-2">Filter</a>
+
 @foreach (var movie in Model.Movies)
 {
 	<partial name="_MovieModule" model="movie" />

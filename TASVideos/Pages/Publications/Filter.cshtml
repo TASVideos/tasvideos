@@ -1,0 +1,53 @@
+﻿@page
+@model FilterModel
+@{
+	ViewData["Title"] = "Tool-assisted movies filter";
+}
+
+<form method="post">
+	<row>
+		<column md="4">
+			<form-group>
+				<label asp-for="Search.Classes"></label>
+				<select asp-for="Search.Classes" asp-items="Model.Tokens.Classes.Select(c => new SelectListItem(c, c))" class="form-control"></select>
+			</form-group>
+			<form-group>
+				<label asp-for="Search.Years"></label>
+				<select asp-for="Search.Years" asp-items="Model.Tokens.Years.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
+			</form-group>
+		</column>
+		<column md="4">
+			<form-group>
+				<label asp-for="Search.Flags"></label>
+				<select asp-for="Search.Flags" asp-items="Model.Tokens.Flags.Select(c => new SelectListItem(c, c))" class="form-control"></select>
+			</form-group>
+			<form-group>
+				<label asp-for="Search.GameGroups"></label>
+				<select asp-for="Search.GameGroups" asp-items="Model.AvailableGameGroups" class="form-control"></select>
+			</form-group>
+		</column>
+		<column md="4">
+			<form-group>
+				<label asp-for="Search.SystemCodes"></label>
+				<select asp-for="Search.SystemCodes" asp-items="Model.Tokens.SystemCodes.Select(c => new SelectListItem(c, c))" class="form-control"></select>
+			</form-group>
+			<form-group>
+				<label asp-for="Search.Tags"></label>
+				<select asp-for="Search.Tags" asp-items="Model.AvailableTags" class="form-control"></select>
+			</form-group>
+		</column>
+	</row>
+	<row>
+		<column>
+			<form-group>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" asp-for="Search.ShowObsoleted">
+					<label class="form-check-label" asp-for="Search.ShowObsoleted"></label>
+				</div>
+			</form-group>
+		</column>
+	</row>
+	<form-button-bar>
+		<button type="submit" class="btn btn-primary">Filter</button>
+	</form-button-bar>
+</form>
