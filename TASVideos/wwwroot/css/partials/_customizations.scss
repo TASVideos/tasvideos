@@ -328,6 +328,16 @@ article.wiki, .postbody {
 	border: 1px solid var(--border-color);
 	border-radius: 5px;
 	margin-top: 15px;
+
+	&:last-child {
+		border: none;
+	}
+
+	.card {
+		border: none;
+		border-radius: 0;
+		border-bottom: 2px solid var (--border-color);
+	}
 }
 
 @media (min-width: 768px) {
