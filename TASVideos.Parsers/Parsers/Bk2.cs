@@ -156,7 +156,8 @@ namespace TASVideos.MovieParsers.Parsers
 			["a78"] = SystemCodes.Atari7800,
 			["uze"] = SystemCodes.UzeBox,
 			["vb"] = SystemCodes.VirtualBoy,
-			["zxspectrum"] = SystemCodes.ZxSpectrum
+			["zxspectrum"] = SystemCodes.ZxSpectrum,
+			["nds"] = SystemCodes.Ds
 		};
 
 		private static class Keys

@@ -104,6 +104,7 @@ namespace TASVideos.MovieParsers.Tests
 		[DataRow("System-Gba.bk2", SystemCodes.Gba)]
 		[DataRow("System-Gbc.bk2", SystemCodes.Gbc)]
 		[DataRow("System-Genesis.bk2", SystemCodes.Genesis)]
+		[DataRow("System-Nds.bk2", SystemCodes.Ds)]
 		[DataRow("System-Ngb.bk2", SystemCodes.Ngb)]
 		[DataRow("System-SegaCd.bk2", SystemCodes.SegaCd)]
 		[DataRow("System-32x.bk2", SystemCodes.X32)]
