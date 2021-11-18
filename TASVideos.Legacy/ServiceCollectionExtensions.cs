@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-
 using TASVideos.Legacy.Data.Forum;
 using TASVideos.Legacy.Data.Site;
 
@@ -25,10 +24,10 @@ namespace TASVideos.Legacy.Extensions
 				string forumConnectionString = mySqlForumConnection ?? DefaultMySqlForumConnection;
 
 				services.AddDbContext<NesVideosSiteContext>(options =>
-					options.UseMySql(siteConnectionString, ServerVersion.AutoDetect(siteConnectionString)));
+					options.UseMySql(siteConnectionString, ServerVersion.AutoDetect(siteConnectionString), o => o.EnableRetryOnFailure()));
 
 				services.AddDbContext<NesVideosForumContext>(options =>
-					options.UseMySql(forumConnectionString, ServerVersion.AutoDetect(forumConnectionString)));
+					options.UseMySql(forumConnectionString, ServerVersion.AutoDetect(forumConnectionString), o => o.EnableRetryOnFailure()));
 			}
 
 			return services;
