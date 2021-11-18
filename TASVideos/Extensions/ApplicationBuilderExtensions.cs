@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using TASVideos.Core.Settings;
@@ -50,7 +52,13 @@ namespace TASVideos.Extensions
 			var provider = new FileExtensionContentTypeProvider();
 			provider.Mappings[".torrent"] = "application/x-bittorrent";
 			provider.Mappings[".avif"] = "image/avif";
-			return app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
+			return app.UseStaticFiles(new StaticFileOptions
+			{
+				ContentTypeProvider = provider,
+				FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/.well-known")),
+				RequestPath = new PathString("/.well-known"),
+				ServeUnknownFileTypes = true
+			});
 		}
 
 		public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app)
