@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Hosting
 @inject ApplicationDbContext _db
 @inject IWebHostEnvironment _env
+@inject ICacheService _cache
 @functions {
 	private string GetProcessInfo()
 	{
@@ -17,6 +18,13 @@
 		{
 			return "Platform Not Supported";
 		}
+	}
+
+	private bool TestCache()
+	{
+		var key = Guid.NewGuid().ToString();
+		_cache.Set(key, "CacheTest", 60);
+		return _cache.TryGetValue(key, out string _);
 	}
 }
 <ul>
@@ -35,6 +43,17 @@
 	<tr><td>Processor Count</td><td>@Environment.ProcessorCount</td></tr>
 	<tr><td>Total Memory Usage</td><td>@GetProcessInfo()</td></tr>
 	<tr><td>Database Provider</td><td>@_db.Database.ProviderName</td></tr>
+	<tr>
+		<td>Cache Provider</td>
+		<td>
+			@_cache.GetType().Name
+			@{
+				bool cacheWorks = TestCache();
+			}
+			<span condition="cacheWorks" class="text-success"><i class="fa fa-check"></i> Working as expected</span>
+			<span condition="!cacheWorks" class="text-danger"><i class="fa fa-exclamation"></i> Failing to cache</span>
+		</td>
+	</tr>
 </table>
 
 <hr />
