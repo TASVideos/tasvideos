@@ -45,8 +45,11 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-Dgb.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Fds.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Gb.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Gb3x.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Gb4x.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Gba.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Gbc.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Gbl.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Genesis.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Gg.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Intellivision.bk2" />
