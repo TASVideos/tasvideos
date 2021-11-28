@@ -88,6 +88,24 @@ NodeList.prototype.toArray = function () {
 	return Array.prototype.slice.call(this);
 };
 
+function showHideScrollToTop() {
+	if (window.scrollY > 20) {
+		document.getElementById("button-scrolltop").classList.remove("d-none");
+	} else {
+		document.getElementById("button-scrolltop").classList.add("d-none");
+	}
+}
+
+function scrollToTop() {
+	window.scroll({
+		top: 0,
+		behavior: 'smooth'
+	})
+}
+
+window.addEventListener("scroll", showHideScrollToTop);
+document.getElementById("button-scrolltop").addEventListener("click", scrollToTop);
+
 function forceDarkMode() {
 	let DarkModeStylesheet = document.getElementById("style-dark");
 	if (!DarkModeStylesheet) {

@@ -22,14 +22,6 @@
 	<link rel="alternate" href="/publications.rss" type="application/rss+xml" title="TASVideos RSS Publication Feed">
 	<link rel="alternate" href="/wiki.rss" type="application/rss+xml" title="TASVideos RSS Wiki Feed">
 
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
-			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-			crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-			crossorigin="anonymous"></script>
-	<script src="~/js/site.js"></script>
-
 	@if (IsSectionDefined("Header"))
 	{
 		@await RenderSectionAsync("Header")
@@ -113,12 +105,17 @@
 	@RenderBody()
 	<hr/>
 	<footer class="mb-3">
+		<button id="button-scrolltop" class="d-none position-fixed px-3 py-1 m-2 bottom-0 end-0 btn btn-primary fa fa-caret-up"></button>
 		<row class="justify-content-start align-items-center">
 			<p class="col-auto my-auto">&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/TASVideos/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a></p>
 		</row>
 	</footer>
 </div>
 	@await RenderSectionAsync("Scripts", required: false)
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+			crossorigin="anonymous"></script>
+	<script src="~/js/site.js"></script>
 	<script src="~/js/prism.js"></script>
 </body>
 </html>
