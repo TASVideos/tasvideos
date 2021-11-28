@@ -535,11 +535,11 @@ namespace TASVideos.WikiEngine
 			}
 			else if (Eat("{{"))
 			{
-				Push("tt");
+				Push("code");
 			}
 			else if (Eat("}}"))
 			{
-				if (!TryPop("tt"))
+				if (!TryPop("code"))
 				{
 					AddText("}}");
 				}
