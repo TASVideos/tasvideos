@@ -22,12 +22,25 @@ namespace TASVideos.Pages.Diagnostics
 
 		public async Task OnGet()
 		{
-			Statuses.YoutubeEnabled = _googleAuthService.IsEnabled();
+			Statuses.YoutubeEnabled = _googleAuthService.IsYoutubeEnabled();
 			if (Statuses.YoutubeEnabled)
 			{
 				try
 				{
-					Statuses.YoutubeAccessSuccessful = !string.IsNullOrWhiteSpace(await _googleAuthService.GetAccessToken());
+					Statuses.YoutubeAccessSuccessful = !string.IsNullOrWhiteSpace(await _googleAuthService.GetYoutubeAccessToken());
+				}
+				catch
+				{
+					// Do nothing;
+				}
+			}
+
+			Statuses.GmailEnabled = _googleAuthService.IsGmailEnabled();
+			if (Statuses.GmailEnabled)
+			{
+				try
+				{
+					Statuses.GmailAccessSuccessful = !string.IsNullOrWhiteSpace(await _googleAuthService.GetGmailAccessToken());
 				}
 				catch
 				{
@@ -46,6 +59,8 @@ namespace TASVideos.Pages.Diagnostics
 		{
 			public bool YoutubeEnabled { get; set; }
 			public bool? YoutubeAccessSuccessful { get; set; }
+			public bool GmailEnabled { get; set; }
+			public bool? GmailAccessSuccessful { get; set; }
 			public bool IrcEnabled { get; set; }
 			public bool SecureIrcEnabled { get; set; }
 			public bool DiscordEnabled { get; set; }

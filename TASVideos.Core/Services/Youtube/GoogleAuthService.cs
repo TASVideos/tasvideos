@@ -10,13 +10,17 @@ namespace TASVideos.Core.Services.Youtube
 {
 	public interface IGoogleAuthService
 	{
-		bool IsEnabled();
-		Task<string> GetAccessToken();
+		bool IsYoutubeEnabled();
+		Task<string> GetYoutubeAccessToken();
+
+		bool IsGmailEnabled();
+		Task<string> GetGmailAccessToken();
 	}
 
 	internal class GoogleAuthService : IGoogleAuthService
 	{
-		private const string CacheKey = "GoogleAuthAccessTokenCache";
+		private const string YoutubeCacheKey = "GoogleAuthAccessTokenCacheForYoutube";
+		private const string GmailCacheKey = "GoogleAuthAccessTokenCacheForYoutube";
 		private readonly HttpClient _client;
 		private readonly ICacheService _cache;
 		private readonly AppSettings _settings;
@@ -35,40 +39,41 @@ namespace TASVideos.Core.Services.Youtube
 			_logger = logger;
 		}
 
-		public bool IsEnabled()
-		{
-			return !string.IsNullOrWhiteSpace(_settings.YouTube.RefreshToken)
-				&& !string.IsNullOrWhiteSpace(_settings.YouTube.ClientId)
-				&& !string.IsNullOrWhiteSpace(_settings.YouTube.ClientSecret);
-		}
+		public bool IsYoutubeEnabled() => _settings.YouTube.IsEnabled();
 
-		public async Task<string> GetAccessToken()
+		public async Task<string> GetYoutubeAccessToken() => await GetAccessToken(_settings.YouTube, YoutubeCacheKey);
+
+		public bool IsGmailEnabled() => _settings.Gmail.IsEnabled();
+
+		public async Task<string> GetGmailAccessToken() => await GetAccessToken(_settings.Gmail, GmailCacheKey);
+
+		private async Task<string> GetAccessToken(AppSettings.GoogleAuthSettings settings, string cacheKey)
 		{
-			if (_cache.TryGetValue(CacheKey, out string accessToken))
+			if (_cache.TryGetValue(cacheKey, out string accessToken))
 			{
 				return accessToken;
 			}
 
 			var body = new AccessTokenRequest
 			{
-				ClientId = _settings.YouTube.ClientId,
-				ClientSecret = _settings.YouTube.ClientSecret,
-				RefreshToken = _settings.YouTube.RefreshToken
+				ClientId = settings.ClientId,
+				ClientSecret = settings.ClientSecret,
+				RefreshToken = settings.RefreshToken
 			}.ToStringContent();
 
 			var response = await _client.PostAsync("token", body);
-			
+
 			if (!response.IsSuccessStatusCode)
 			{
 				var errorResponse = await response.Content.ReadAsStringAsync();
-				_logger.LogError("Unable to authorize google apis: " + errorResponse);
+				_logger.LogError($"Unable to authorize google apis for clientId: {settings.ClientId}: " + errorResponse);
 				return "";
 			}
 
 			var tokenResponse = await response.ReadAsync<AccessTokenResponse>();
 
 			// Subtract a bit of time to ensure it does not expire between the time of accessing and using it
-			_cache.Set(CacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
+			_cache.Set(cacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
 
 			return tokenResponse.AccessToken;
 		}

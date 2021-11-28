@@ -45,6 +45,18 @@
 				</td>
 			</tr>
 			<tr>
+				<td>Gmail Enabled</td>
+				<td>
+					@Html.Raw(ToIcon(Model.Statuses.GmailEnabled))
+				</td>
+			</tr>
+			<tr>
+				<td>Gmail Access Successful</td>
+				<td>
+					@Html.Raw(ToIcon(Model.Statuses.GmailAccessSuccessful))
+				</td>
+			</tr>
+			<tr>
 				<td>Irc</td>
 				<td>@Html.Raw(ToIcon(Model.Statuses.IrcEnabled))</td>
 			</tr>
