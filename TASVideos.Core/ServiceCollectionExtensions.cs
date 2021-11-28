@@ -71,13 +71,13 @@ namespace TASVideos.Core
 
 			services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 
-			if (string.IsNullOrWhiteSpace(settings.SendGridKey))
+			if (settings.Gmail.IsEnabled())
 			{
-				services.AddTransient<IEmailSender, EmailLogger>();
+				services.AddTransient<IEmailSender, GmailSender>();
 			}
 			else
 			{
-				services.AddTransient<IEmailSender, SendGridSender>();
+				services.AddTransient<IEmailSender, EmailLogger>();
 			}
 
 			services.AddTransient<IEmailService, EmailService>();

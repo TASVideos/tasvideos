@@ -48,7 +48,7 @@ namespace TASVideos.Core.Services.Youtube
 				return;
 			}
 
-			if (!_googleAuthService.IsEnabled())
+			if (!_googleAuthService.IsYoutubeEnabled())
 			{
 				return;
 			}
@@ -94,7 +94,7 @@ namespace TASVideos.Core.Services.Youtube
 				return;
 			}
 
-			if (!_googleAuthService.IsEnabled())
+			if (!_googleAuthService.IsYoutubeEnabled())
 			{
 				return;
 			}
@@ -169,7 +169,7 @@ namespace TASVideos.Core.Services.Youtube
 
 		private async Task SetAccessToken()
 		{
-			var accessToken = await _googleAuthService.GetAccessToken();
+			var accessToken = await _googleAuthService.GetYoutubeAccessToken();
 			_client.SetBearerToken(accessToken);
 		}
 

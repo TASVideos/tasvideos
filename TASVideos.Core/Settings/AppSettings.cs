@@ -16,12 +16,10 @@ namespace TASVideos.Core.Settings
 		public DiscordConnection Discord { get; set; } = new ();
 		public TwitterConnection Twitter { get; set; } = new ();
 		public JwtSettings Jwt { get; set; } = new ();
-		public YouTubeSyncSettings YouTube { get; set; } = new();
+		public GoogleAuthSettings YouTube { get; set; } = new();
+		public GmailAuthSettings Gmail { get; set; } = new();
 
 		public string StartupStrategy { get; set; } = "";
-
-		public string SendGridKey { get; set; } = "";
-		public string SendGridFrom { get; set; } = "";
 		public bool UsePostgres { get; set; } = true;
 
 		public string SampleDataPassword { get; set; } = "Password1234!@#$";
@@ -93,11 +91,26 @@ namespace TASVideos.Core.Settings
 			public int ExpiresInMinutes { get; set; }
 		}
 
-		public class YouTubeSyncSettings
+		public class GoogleAuthSettings
 		{
 			public string ClientId { get; set; } = "";
 			public string ClientSecret { get; set; } = "";
 			public string RefreshToken { get; set; } = "";
+
+			public virtual bool IsEnabled() =>
+				!string.IsNullOrWhiteSpace(ClientId)
+				&& !string.IsNullOrWhiteSpace(ClientSecret)
+				&& !string.IsNullOrWhiteSpace(RefreshToken);
+		}
+
+		public class GmailAuthSettings : GoogleAuthSettings
+		{
+			public string From { get; set; } = "";
+
+			public override bool IsEnabled()
+			{
+				return !string.IsNullOrWhiteSpace(From) && base.IsEnabled();
+			}
 		}
 	}
 

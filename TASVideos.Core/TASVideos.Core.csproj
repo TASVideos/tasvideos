@@ -6,8 +6,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="IPAddressRange" Version="4.2.0" />
+		<PackageReference Include="MailKit" Version="2.15.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
-		<PackageReference Include="SendGrid" Version="9.23.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.2.50" />
 	</ItemGroup>
 	<ItemGroup>
