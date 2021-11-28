@@ -15,13 +15,17 @@ namespace TASVideos.Core.Services.Youtube
 	public interface IYoutubeSync
 	{
 		bool IsYoutubeUrl(string? url);
+		string VideoId(string youtubeUrl);
+
 		Task SyncYouTubeVideo(YoutubeVideo video);
 		Task UnlistVideo(string url);
 		string? ConvertToEmbedLink(string? url);
+		Task<IEnumerable<YoutubeVideoResponseItem>> GetPublicInfo(IEnumerable<string> videoIds);
 	}
 
 	internal class YouTubeSync : IYoutubeSync
 	{
+		private const int BatchSize = 50;
 		private static readonly string[] BaseTags = { "TAS", "TASVideos", "Tool-Assisted", "Video Game" };
 		private readonly HttpClient _client;
 		private readonly IGoogleAuthService _googleAuthService;
@@ -87,6 +91,45 @@ namespace TASVideos.Core.Services.Youtube
 			response.EnsureSuccessStatusCode();
 		}
 
+		public async Task<IEnumerable<YoutubeVideoResponseItem>> GetPublicInfo(IEnumerable<string> videoIds)
+		{
+			
+			if (!_googleAuthService.IsYoutubeEnabled())
+			{
+				return Enumerable.Empty<YoutubeVideoResponseItem>();
+			}
+
+			await SetAccessToken();
+
+			var items = new List<YoutubeVideoResponseItem>();
+
+			var batches = videoIds.Batch(BatchSize);
+			foreach (var batch in batches)
+			{
+				var newItems = await GetBatchPublicInfo(batch.ToList());
+				items.AddRange(newItems);
+			}
+
+			return items;
+		}
+
+		private async Task<IEnumerable<YoutubeVideoResponseItem>> GetBatchPublicInfo(ICollection<string> videoIds)
+		{
+			if (videoIds.Count > BatchSize)
+			{
+				throw new InvalidOperationException($"Attempting to batch {videoIds.Count} records, max batch size is {BatchSize}");
+			}
+
+			var response = await _client.GetAsync($"videos?id={string.Join(",", videoIds)}&part=snippet");
+			if (!response.IsSuccessStatusCode)
+			{
+				return Enumerable.Empty<YoutubeVideoResponseItem>();
+			}
+
+			var data = await response.ReadAsync<YoutubeVideoResponse>();
+			return data.Items;
+		}
+
 		public async Task UnlistVideo(string url)
 		{
 			if (!IsYoutubeUrl(url))
@@ -141,7 +184,7 @@ namespace TASVideos.Core.Services.Youtube
 			return $"https://www.youtube.com/embed/{videoId}";
 		}
 
-		internal static string VideoId(string youtubeUrl)
+		public string VideoId(string youtubeUrl)
 		{
 			if (string.IsNullOrWhiteSpace(youtubeUrl))
 			{
@@ -173,7 +216,7 @@ namespace TASVideos.Core.Services.Youtube
 			_client.SetBearerToken(accessToken);
 		}
 
-		private async Task<YoutubeVideoSnippet?> HasAccessToChannel(string videoId)
+		private async Task<YoutubeVideoSnippetResult?> HasAccessToChannel(string videoId)
 		{
 			await SetAccessToken();
 

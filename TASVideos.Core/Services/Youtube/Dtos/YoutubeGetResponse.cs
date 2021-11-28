@@ -11,7 +11,7 @@ namespace TASVideos.Core.Services.Youtube.Dtos
 		public class Item
 		{
 			[JsonProperty("snippet")]
-			public YoutubeVideoSnippet Snippet { get; set; } = new();
+			public YoutubeVideoSnippetResult Snippet { get; set; } = new();
 		}
 	}
 }

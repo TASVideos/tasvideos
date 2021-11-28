@@ -33,7 +33,7 @@ namespace TASVideos.Core.Tests.Services
 		[DataRow("https://youtu.be/12345", "12345")]
 		public void VideoId(string url, string expected)
 		{
-			var actual = YouTubeSync.VideoId(url);
+			var actual = _youTubeSync.VideoId(url);
 			Assert.AreEqual(expected, actual);
 		}
 
