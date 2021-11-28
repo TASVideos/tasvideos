@@ -21,6 +21,11 @@ namespace TASVideos.Data.Entity
 
 	public static class PublicationUrlExtensions
 	{
+		public static IQueryable<PublicationUrl> ThatAreStreaming(this IQueryable<PublicationUrl> urls)
+		{
+			return urls.Where(u => u.Type == PublicationUrlType.Streaming);
+		}
+
 		public static IEnumerable<PublicationUrl> ThatAreStreaming(this IEnumerable<PublicationUrl> urls)
 		{
 			return urls.Where(u => u.Type == PublicationUrlType.Streaming);

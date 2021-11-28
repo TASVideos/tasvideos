@@ -1,0 +1,58 @@
+﻿@page
+@using System.Linq
+@model YoutubeUploadersModel
+@{
+	const string tvc = "TASVideosChannel";
+
+	ViewData["Title"] = "Youtube Uploaders";
+	var groups = Model.Videos
+		.GroupBy(g => g.ChannelTitle)
+		.OrderByDescending(g => g.Count())
+		.ToList();
+
+	var tvcData = groups.Single(g => g.Key == tvc);
+}
+
+<h4>@tvc</h4>
+<label>Current: @tvcData.Count(d => !d.IsObsolete)</label>
+<br />
+<label>Obsolete: @tvcData.Count(d => d.IsObsolete)</label>
+<br />
+<br />
+
+<table class="table table-sm table-bordered">
+	<tr>
+		<th>Youtube Channel</th>
+		<th>Current Uploads</th>
+		<th>Obsolete Uploads</th>
+	</tr>
+	@foreach (var channel in groups.Where(g => g.Key != tvc))
+	{
+		var obsoleteCount = channel.Count(c => c.IsObsolete);
+		var currentCount = channel.Count(c => !c.IsObsolete);
+		<tr>
+			<td condition="!string.IsNullOrWhiteSpace(channel.Key)">
+				@channel.Key
+			</td>
+			<td condition="string.IsNullOrWhiteSpace(channel.Key)">
+				<span class="text-danger"><i class="fa fa-exclamation"></i> Unknown user with private videos</span>
+			</td>
+			<td condition="currentCount > 0">
+				<a href="/Movies-@(string.Join("-", channel.Where(c => !c.IsObsolete).Select(c => $"{c.PublicationId}M")))">
+					@currentCount
+				</a>
+			</td>
+			<td condition="currentCount == 0">
+				0
+			</td>
+			<td condition="obsoleteCount > 0">
+				<a href="/Movies-@(string.Join("-", channel.Where(c => c.IsObsolete).Select(c => $"{c.PublicationId}M")))">
+					@obsoleteCount
+				</a>
+			</td>
+			<td condition="obsoleteCount == 0">
+				0
+			</td>
+		</tr>
+	}
+</table>

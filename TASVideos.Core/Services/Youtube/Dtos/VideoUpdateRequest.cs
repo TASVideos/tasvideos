@@ -14,7 +14,7 @@ namespace TASVideos.Core.Services.Youtube.Dtos
 		public VideoStatus Status { get; init; } = new();
 
 		[JsonProperty("snippet")]
-		public YoutubeVideoSnippet Snippet { get; set; } = new ();
+		public YoutubeVideoSnippetResult Snippet { get; set; } = new ();
 
 		internal class VideoStatus
 		{
