@@ -64,10 +64,19 @@ namespace TASVideos.Core.Services.Email
 				message.Bcc.Add(new MailboxAddress(recipient, recipient));
 			}
 
-			message.Body = new TextPart("plain")
+			var bodyBuilder = new BodyBuilder();
+
+			if (email.ContainsHtml)
 			{
-				Text = email.Message
-			};
+				bodyBuilder.HtmlBody = email.Message;
+			}
+			else
+			{
+				bodyBuilder.TextBody = email.Message;
+			}
+			
+			message.Body = bodyBuilder.ToMessageBody();
+
 			message.Subject = email.Subject;
 
 			return message;
