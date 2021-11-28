@@ -21,9 +21,9 @@
 	<link rel="alternate" href="/submissions.rss" type="application/rss+xml" title="TASVideos RSS Submission Feed">
 	<link rel="alternate" href="/publications.rss" type="application/rss+xml" title="TASVideos RSS Publication Feed">
 	<link rel="alternate" href="/wiki.rss" type="application/rss+xml" title="TASVideos RSS Wiki Feed">
+	<script src="~/js/extensions.js"></script>
 
-	@if (IsSectionDefined("Header"))
-	{
+	@if (IsSectionDefined("Header")) {
 		@await RenderSectionAsync("Header")
 	}
 </head>
