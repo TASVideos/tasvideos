@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
@@ -10,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
-using Org.BouncyCastle.Cms;
 
 namespace TASVideos.Core.Services.Email
 {
