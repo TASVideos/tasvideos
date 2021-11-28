@@ -32,7 +32,8 @@ namespace TASVideos.Core.Services.Email
 			{
 				Recipient = recipient,
 				Subject = "Reset Password",
-				Message = $"Please reset your password by clicking here: <a href='{link}'>link</a>"
+				Message = $"Please reset your password by clicking here: <a href='{link}'>link</a>",
+				ContainsHtml = true
 			});
 		}
 
@@ -42,7 +43,8 @@ namespace TASVideos.Core.Services.Email
 			{
 				Recipient = recipient,
 				Subject = "Confirm your email",
-				Message = $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>"
+				Message = $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>",
+				ContainsHtml = true
 			});
 		}
 
@@ -79,7 +81,8 @@ on behalf of TASVideos staff";
 			{
 				Recipients = recipientsList,
 				Subject = subject,
-				Message = message
+				Message = message,
+				ContainsHtml = false
 			});
 		}
 	}

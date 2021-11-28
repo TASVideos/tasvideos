@@ -22,6 +22,11 @@ namespace TASVideos.Core.Services.Email
 		/// Gets the contents of the email
 		/// </summary>
 		string Message { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether or not the <see cref="Message" /> contains HTML content
+		/// </summary>
+		bool ContainsHtml { get; }
 	}
 
 	public class SingleEmail : IEmail
@@ -30,6 +35,7 @@ namespace TASVideos.Core.Services.Email
 		public IEnumerable<string> Recipients => new[] { Recipient };
 		public string Subject { get; init; } = "";
 		public string Message { get; init; } = "";
+		public bool ContainsHtml { get; init; }
 	}
 
 	public class StandardEmail : IEmail
@@ -37,5 +43,6 @@ namespace TASVideos.Core.Services.Email
 		public IEnumerable<string> Recipients { get; init; } = Array.Empty<string>();
 		public string Subject { get; init; } = "";
 		public string Message { get; init; } = "";
+		public bool ContainsHtml { get; init; }
 	}
 }
