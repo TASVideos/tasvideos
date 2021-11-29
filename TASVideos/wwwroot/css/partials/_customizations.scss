@@ -352,6 +352,13 @@ article.wiki, .postbody {
 	font-size: 28px;
 }
 
+tt {
+	font-family: var(--bs-font-monospace);
+	font-size: 1em;
+	direction: ltr;
+	unicode-bidi: bidi-override;
+}
+
 tt, code, kbd, pre, samp {
 	background: var(--bs-gray-400);
 	border-radius: 5px;
