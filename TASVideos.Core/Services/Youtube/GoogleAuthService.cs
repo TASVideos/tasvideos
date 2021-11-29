@@ -72,8 +72,11 @@ namespace TASVideos.Core.Services.Youtube
 
 			var tokenResponse = await response.ReadAsync<AccessTokenResponse>();
 
-			// Subtract a bit of time to ensure it does not expire between the time of accessing and using it
-			_cache.Set(cacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
+			if (tokenResponse.ExpiresAt > 10)
+			{
+				// Subtract a bit of time to ensure it does not expire between the time of accessing and using it
+				_cache.Set(cacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
+			}
 
 			return tokenResponse.AccessToken;
 		}
