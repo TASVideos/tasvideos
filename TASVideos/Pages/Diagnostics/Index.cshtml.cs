@@ -1,4 +1,5 @@
-﻿using TASVideos.Data.Entity;
+﻿using System;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Diagnostics
 {
@@ -7,6 +8,11 @@ namespace TASVideos.Pages.Diagnostics
 	{
 		public void OnGet()
 		{
+		}
+
+		public void OnPostMake500()
+		{
+			throw new Exception("Testing 500 exceptions from Diagnostics page.");
 		}
 	}
 }

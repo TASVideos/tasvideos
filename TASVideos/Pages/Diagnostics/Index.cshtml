@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{handler?}"
 @{ ViewData["Title"] = "System Information"; }
 @model IndexModel
 @using System.Diagnostics
@@ -74,3 +74,8 @@
 		</li>
 	}
 </ul>
+
+<h4>Debugging</h4>
+<form method="post" asp-page-handler="Make500">
+	<button type="submit" class="btn btn-danger">Make a 500 Error</button>
+</form>
