@@ -15,3 +15,4 @@ TASVideos.Data/SampleData/SampleData-MsSql.sql
 TASVideos.Data/SampleData/SampleData-Postgres.sql
 TASVideos/logs/
 TASVideos/nohup.out
+TASVideos/tasvideos.pid
