@@ -15,10 +15,6 @@ body {
 	background: var(--tasvideos-bg) linear-gradient(var(--tasvideos-bg-gradient) 0, var(--tasvideos-bg) 250px) repeat-x;
 }
 
-a.thread-link:visited {
-	color: $secondary-dark;
-}
-
 .btn-separator::after {
 	content: ' ';
 	display: block;
