@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TASVideos.Data.Entity;
 
@@ -20,14 +21,18 @@ namespace TASVideos.Pages.Diagnostics
 
 		public void OnPostMake500()
 		{
+			throw new Exception("Testing 500 exceptions from Diagnostics page.");
+		}
+
+		public IActionResult OnGetTestLogLevels()
+		{
 			_logger.LogTrace("This is a trace log.");
 			_logger.LogDebug("This is a debug log.");
 			_logger.LogInformation("This in an information log.");
 			_logger.LogWarning("This is a warning log.");
 			_logger.LogError("This is an error log.");
 			_logger.LogCritical("This is a critical log.");
-
-			throw new Exception("Testing 500 exceptions from Diagnostics page.");
+			return BasePageRedirect("Index");
 		}
 	}
 }
