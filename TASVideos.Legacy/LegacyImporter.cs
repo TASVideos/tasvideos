@@ -115,15 +115,19 @@ namespace TASVideos.Legacy
 			{
 				_logger.LogInformation("Beginning User import");
 				result = UserImporter.Import(_db, _legacySiteDb, _legacyForumDb);
-				_logger.LogInformation("Finished User import");
 			}
 			catch (Exception ex)
 			{
 				throw new ImportException("User", ex);
 			}
+			finally
+			{
+				var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+				_logger.LogInformation($"Exited User import {elapsedMilliseconds}");
+				ImportDurations.Add("User import", elapsedMilliseconds);
+				stopwatch.Stop();
+			}
 
-			ImportDurations.Add("User import", stopwatch.ElapsedMilliseconds);
-			stopwatch.Stop();
 			return result;
 		}
 
@@ -134,15 +138,18 @@ namespace TASVideos.Legacy
 			{
 				_logger.LogInformation($"Beginning {name} import");
 				import();
-				_logger.LogInformation($"Finished {name} import");
 			}
 			catch (Exception ex)
 			{
 				throw new ImportException(name, ex);
 			}
-
-			ImportDurations.Add($"{name} import", stopwatch.ElapsedMilliseconds);
-			stopwatch.Stop();
+			finally
+			{
+				var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+				_logger.LogInformation($"Exited {name} import, Total time: {elapsedMilliseconds}");
+				ImportDurations.Add($"{name} import", elapsedMilliseconds);
+				stopwatch.Stop();
+			}
 		}
 
 		public class ImportException : Exception
