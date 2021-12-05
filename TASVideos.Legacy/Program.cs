@@ -46,7 +46,7 @@ namespace TASVideos.Legacy
 				{
 					DbInitializer.Initialize(context);
 					DbInitializer.PreMigrateSeedData(context);
-					cache.Set(ImportSteps.InitializeAndSeed, true);
+					cache.Set(ImportSteps.InitializeAndSeed, true, Durations.OneDayInSeconds);
 				}
 				else
 				{
@@ -58,7 +58,7 @@ namespace TASVideos.Legacy
 				if (!cache.TryGetValue(ImportSteps.PostMigrate, out bool _))
 				{
 					DbInitializer.PostMigrateSeedData(context);
-					cache.Set(ImportSteps.PostMigrate, true);
+					cache.Set(ImportSteps.PostMigrate, true, Durations.OneDayInSeconds);
 				}
 				else
 				{
@@ -68,7 +68,7 @@ namespace TASVideos.Legacy
 				if (!cache.TryGetValue(ImportSteps.GenerateDevUsers, out bool _))
 				{
 					await DbInitializer.GenerateDevTestUsers(context, userManager, settings);
-					cache.Set(ImportSteps.GenerateDevUsers, true);
+					cache.Set(ImportSteps.GenerateDevUsers, true, Durations.OneDayInSeconds);
 				}
 				else
 				{

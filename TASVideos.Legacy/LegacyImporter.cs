@@ -69,7 +69,7 @@ namespace TASVideos.Legacy
 				Run("GameGroup", () => GameGroupImporter.Import(_legacySiteDb));
 				Run("GameGenre", () => GameGenreImport.Import(_legacySiteDb));
 				Run("RamAddresses", () => RamAddressImporter.Import(_db, _legacySiteDb));
-				_cache.Set(ImportSteps.SmallTables, true);
+				_cache.Set(ImportSteps.SmallTables, true, Durations.OneDayInSeconds);
 			}
 			else
 			{
@@ -86,7 +86,7 @@ namespace TASVideos.Legacy
 				Run("UserMaintenanceLogs", () => UserMaintenanceLogImporter.Import(_legacySiteDb, userIdMapping));
 				Run("UserDisallows", () => DisallowImporter.Import(_legacyForumDb));
 				Run("Awards", () => AwardImporter.Import(_legacySiteDb, userIdMapping));
-				_cache.Set(ImportSteps.Users, userIdMapping);
+				_cache.Set(ImportSteps.Users, userIdMapping, Durations.OneDayInSeconds);
 			}
 
 			if (!_cache.TryGetValue(ImportSteps.Forum, out bool _))
@@ -103,7 +103,7 @@ namespace TASVideos.Legacy
 					Run("Forum Topic Watch", () => ForumTopicWatchImporter.Import(_legacyForumDb));
 				}
 
-				_cache.Set(ImportSteps.Forum, true);
+				_cache.Set(ImportSteps.Forum, true, Durations.OneDayInSeconds);
 			}
 			else
 			{
@@ -113,7 +113,7 @@ namespace TASVideos.Legacy
 			if (!_cache.TryGetValue(ImportSteps.ForumPosts, out bool _))
 			{
 				Run("Forum Posts", () => ForumPostsImporter.Import(_legacyForumDb));
-				_cache.Set(ImportSteps.ForumPosts, true);
+				_cache.Set(ImportSteps.ForumPosts, true, Durations.OneDayInSeconds);
 			}
 			else
 			{
@@ -125,7 +125,7 @@ namespace TASVideos.Legacy
 				Run("Wiki", () => WikiImporter.Import(_legacySiteDb, userIdMapping));
 				Run("WikiCleanup", () => WikiPageCleanup.Fix(_db, _legacySiteDb));
 				Run("WikiReferral", () => WikiReferralGenerator.Generate(_db));
-				_cache.Set(ImportSteps.Wiki, true);
+				_cache.Set(ImportSteps.Wiki, true, Durations.OneDayInSeconds);
 			}
 			else
 			{
@@ -136,7 +136,7 @@ namespace TASVideos.Legacy
 			{
 				Run("Submissions", () => SubmissionImporter.Import(_db, _legacySiteDb, userIdMapping));
 				Run("Submissions Framerate", () => SubmissionFrameRateImporter.Import(_db));
-				_cache.Set(ImportSteps.Submissions, true);
+				_cache.Set(ImportSteps.Submissions, true, Durations.OneDayInSeconds);
 			}
 			else
 			{
@@ -152,7 +152,7 @@ namespace TASVideos.Legacy
 				Run("Publication Tags", () => PublicationTagImporter.Import(_db, _legacySiteDb));
 				Run("Published Author Generator", () => PublishedAuthorGenerator.Generate(_db));
 				Run("Publication Maintenance Logs", () => PublicationMaintenanceLogImporter.Import(_legacySiteDb, userIdMapping));
-				_cache.Set(ImportSteps.Publications, true);
+				_cache.Set(ImportSteps.Publications, true, Durations.OneDayInSeconds);
 			}
 			else
 			{
@@ -162,7 +162,7 @@ namespace TASVideos.Legacy
 			if (!_cache.TryGetValue(ImportSteps.UserFiles, out bool _))
 			{
 				Run("User files", () => UserFileImporter.Import(_legacySiteDb, userIdMapping));
-				_cache.Set(ImportSteps.UserFiles, true);
+				_cache.Set(ImportSteps.UserFiles, true, Durations.OneDayInSeconds);
 			}
 			else
 			{
