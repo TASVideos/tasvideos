@@ -61,7 +61,7 @@ namespace TASVideos.Core.Services.Cache
 		public void Set(string key, object? data, int? cacheTime = null)
 		{
 			var serializedData = JsonConvert.SerializeObject(data, SerializerSettings);
-			var timeout = TimeSpan.FromSeconds(_cacheDurationInSeconds);
+			var timeout = TimeSpan.FromSeconds(cacheTime ?? _cacheDurationInSeconds);
 			_cache.StringSet(key, serializedData, timeout);
 		}
 
