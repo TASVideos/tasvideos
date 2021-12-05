@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using TASVideos.Core;
 using TASVideos.Core.Data;
 using TASVideos.Core.Services;
@@ -38,12 +39,41 @@ namespace TASVideos.Legacy
 				var context = services.GetRequiredService<ApplicationDbContext>();
 				var userManager = services.GetRequiredService<UserManager>();
 				var legacyImporter = services.GetRequiredService<ILegacyImporter>();
+				var cache = services.GetRequiredService<ICacheService>();
+				var logger = services.GetRequiredService<ILogger<Program>>();
 
-				DbInitializer.Initialize(context);
-				DbInitializer.PreMigrateSeedData(context);
+				if (!cache.TryGetValue(ImportSteps.InitializeAndSeed, out bool _))
+				{
+					DbInitializer.Initialize(context);
+					DbInitializer.PreMigrateSeedData(context);
+					cache.Set(ImportSteps.InitializeAndSeed, true);
+				}
+				else
+				{
+					logger.LogInformation($"Skipping import step: {ImportSteps.InitializeAndSeed}");
+				}
+
 				legacyImporter.RunLegacyImport();
-				DbInitializer.PostMigrateSeedData(context);
-				await DbInitializer.GenerateDevTestUsers(context, userManager, settings);
+
+				if (!cache.TryGetValue(ImportSteps.PostMigrate, out bool _))
+				{
+					DbInitializer.PostMigrateSeedData(context);
+					cache.Set(ImportSteps.PostMigrate, true);
+				}
+				else
+				{
+					logger.LogInformation($"Skipping import step: {ImportSteps.PostMigrate}");
+				}
+
+				if (!cache.TryGetValue(ImportSteps.GenerateDevUsers, out bool _))
+				{
+					await DbInitializer.GenerateDevTestUsers(context, userManager, settings);
+					cache.Set(ImportSteps.GenerateDevUsers, true);
+				}
+				else
+				{
+					logger.LogInformation($"Skipping import step: {ImportSteps.GenerateDevUsers}");
+				}
 			}
 
 			await host.RunAsync();
