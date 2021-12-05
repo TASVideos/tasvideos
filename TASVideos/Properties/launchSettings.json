@@ -36,17 +36,6 @@
         "StartupStrategy": "Sample"
       }
     },
-    "Dev MsSql (Import)": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "https://localhost:44385/",
-      "environmentVariables": {
-        "UsePostgres": "False",
-        "ASPNETCORE_preventHostingStartup": "True",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "StartupStrategy": "Import"
-      }
-    },
     "Dev Postgres (No recreate)": {
       "commandName": "IISExpress",
       "launchBrowser": true,
@@ -67,17 +56,6 @@
         "ASPNETCORE_preventHostingStartup": "True",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "StartupStrategy": "Sample"
-      }
-    },
-    "Dev Postgres (Import)": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "https://localhost:44385/",
-      "environmentVariables": {
-        "UsePostgres": "True",
-        "ASPNETCORE_preventHostingStartup": "True",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "StartupStrategy": "Import"
       }
     },
     "Dev Postgres (Migrate)": {

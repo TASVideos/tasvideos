@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,7 +20,7 @@ namespace TASVideos.Legacy
 
 	public class LegacyImporter : ILegacyImporter
 	{
-		private readonly IWebHostEnvironment _env;
+		private readonly IHostEnvironment _env;
 		private readonly ApplicationDbContext _db;
 		private readonly NesVideosSiteContext _legacySiteDb;
 		private readonly NesVideosForumContext _legacyForumDb;
@@ -30,7 +29,7 @@ namespace TASVideos.Legacy
 		private static readonly Dictionary<string, long> ImportDurations = new ();
 
 		public LegacyImporter(
-			IWebHostEnvironment env,
+			IHostEnvironment env,
 			ApplicationDbContext db,
 			NesVideosSiteContext legacySiteDb,
 			NesVideosForumContext legacyForumDb,

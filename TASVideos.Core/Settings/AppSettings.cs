@@ -131,8 +131,5 @@ namespace TASVideos.Core.Settings
 
 			return StartupStrategy.Minimal;
 		}
-
-		public static bool UsesImportStartStrategy(this AppSettings settings)
-			=> settings.GetStartupStrategy() == StartupStrategy.Import;
 	}
 }

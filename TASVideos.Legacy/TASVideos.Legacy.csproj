@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
+		<OutputType>Exe</OutputType>
 		<TargetFramework>net5.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
+		<UserSecretsId>311196ad-c7d0-4870-80e3-1b31c11fb136</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -13,6 +15,7 @@
 		<PackageReference Include="FastMember.NetCore" Version="1.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
 		<PackageReference Include="Npgsql" Version="5.0.3" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
 		<PackageReference Include="SharpCompress" Version="0.29.0" />
@@ -24,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\TASVideos.Core\TASVideos.Core.csproj" />
 		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
 		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
 		<ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />

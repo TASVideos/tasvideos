@@ -12,7 +12,6 @@ using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
-using TASVideos.Legacy;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Core.Data
@@ -29,9 +28,6 @@ namespace TASVideos.Core.Data
 					break;
 				case StartupStrategy.Sample:
 					SampleStrategy(services);
-					break;
-				case StartupStrategy.Import:
-					ImportStrategy(services);
 					break;
 				case StartupStrategy.Migrate:
 					MigrationStrategy(services);
@@ -57,19 +53,6 @@ namespace TASVideos.Core.Data
 			GenerateDevSampleData(context).Wait();
 		}
 
-		private static void ImportStrategy(IServiceProvider services)
-		{
-			var context = services.GetRequiredService<ApplicationDbContext>();
-			var userManager = services.GetRequiredService<UserManager>();
-			var legacyImporter = services.GetRequiredService<ILegacyImporter>();
-			var settings = services.GetRequiredService<AppSettings>();
-			Initialize(context);
-			PreMigrateSeedData(context);
-			legacyImporter.RunLegacyImport();
-			PostMigrateSeedData(context);
-			GenerateDevTestUsers(context, userManager, settings).Wait();
-		}
-
 		private static void MigrationStrategy(IServiceProvider services)
 		{
 			var context = services.GetRequiredService<ApplicationDbContext>();
@@ -80,7 +63,7 @@ namespace TASVideos.Core.Data
 		/// Creates the database and seeds it with necessary seed data
 		/// Seed data is necessary data for a production release.
 		/// </summary>
-		private static void Initialize(DbContext context)
+		public static void Initialize(DbContext context)
 		{
 			// For now, always delete then recreate the database
 			// When the database is more mature we will move towards the Migrations process
@@ -91,7 +74,7 @@ namespace TASVideos.Core.Data
 		/// <summary>
 		/// Adds data necessary for production, should be run before legacy migration processes.
 		/// </summary>
-		private static void PreMigrateSeedData(ApplicationDbContext context)
+		public static void PreMigrateSeedData(ApplicationDbContext context)
 		{
 			context.Roles.AddRange(RoleSeedData.AllRoles);
 			context.GameSystems.AddRange(SystemSeedData.Systems);
@@ -104,7 +87,7 @@ namespace TASVideos.Core.Data
 			context.SaveChanges();
 		}
 
-		private static void PostMigrateSeedData(ApplicationDbContext context)
+		public static void PostMigrateSeedData(ApplicationDbContext context)
 		{
 			foreach (var wikiPage in WikiPageSeedData.NewRevisions)
 			{
@@ -139,7 +122,7 @@ namespace TASVideos.Core.Data
 		/// Roles must already exist before running this
 		/// DO NOT run this on production environments! This generates users with high level access and a default and public password.
 		/// </summary>
-		private static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager userManager, AppSettings settings)
+		public static async Task GenerateDevTestUsers(ApplicationDbContext context, UserManager userManager, AppSettings settings)
 		{
 			// Add users for each Role for testing purposes
 			var roles = await context.Roles.ToListAsync();
