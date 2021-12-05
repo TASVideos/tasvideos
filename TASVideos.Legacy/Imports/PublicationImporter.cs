@@ -27,11 +27,26 @@ namespace TASVideos.Legacy.Imports
 
 			var legacyMovies = legacySiteContext.Movies
 				.Include(m => m.MovieFiles)
-				.ThenInclude(mf => mf.Storage)
 				.Include(m => m.Publisher)
 				.Include(m => m.Player)
 				.Where(m => m.Id > 0)
 				.ToList();
+
+			var movieStorage = legacySiteContext.MovieFileStorage
+				.ToList()
+				.ToDictionary(tkey => tkey.FileName);
+
+			foreach (var movie in legacyMovies)
+			{
+				foreach (var file in movie.MovieFiles)
+				{
+					var result = movieStorage.TryGetValue(file.FileName, out var storage);
+					if (result)
+					{
+						file.Storage = storage;
+					}
+				}
+			}
 
 			var publicationWikis = context.WikiPages
 				.ThatAreNotDeleted()
