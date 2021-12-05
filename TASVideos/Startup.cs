@@ -8,7 +8,6 @@ using TASVideos.Core;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Extensions;
-using TASVideos.Legacy.Extensions;
 using TASVideos.Services;
 
 namespace TASVideos
@@ -42,10 +41,6 @@ namespace TASVideos
 			services
 				.AddTasvideosData(Configuration, Settings.UsePostgres)
 				.AddTasvideosCore<WikiToTextRenderer>(Environment.IsDevelopment(), Settings)
-				.AddTasVideosLegacy(
-					Settings.ConnectionStrings.LegacySiteConnection,
-					Settings.ConnectionStrings.LegacyForumConnection,
-					Settings.UsesImportStartStrategy())
 				.AddMovieParser();
 
 			// 3rd Party

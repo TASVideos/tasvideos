@@ -14,7 +14,6 @@
 		<ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
 		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
 		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
-		<ProjectReference Include="..\TASVideos.Legacy\TASVideos.Legacy.csproj" />
 		<ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
 		<ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
 	</ItemGroup>
