@@ -1,0 +1,20 @@
+﻿@page
+@using Microsoft.Extensions.Logging
+@model LoggingModel
+@inject ILogger<LoggingModel> _logger;
+@{
+	ViewData["Title"] = "Loggging";
+}
+<a class="btn btn-primary mb-2" asp-page-handler="TestLogLevels">Test log levels</a>
+<table class="table table-sm table-striped">
+	<tr>
+		<th>Log Level</th>
+		<th>Enabled</th>
+	</tr>
+	<tr><td>Trace</td><td>@_logger.IsEnabled(LogLevel.Trace)</td></tr>
+	<tr><td>Debug</td><td>@_logger.IsEnabled(LogLevel.Debug)</td></tr>
+	<tr><td>Debug</td><td>@_logger.IsEnabled(LogLevel.Information)</td></tr>
+	<tr><td>Debug</td><td>@_logger.IsEnabled(LogLevel.Warning)</td></tr>
+	<tr><td>Debug</td><td>@_logger.IsEnabled(LogLevel.Error)</td></tr>
+	<tr><td>Debug</td><td>@_logger.IsEnabled(LogLevel.Critical)</td></tr>
+</table>
