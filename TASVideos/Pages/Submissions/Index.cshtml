@@ -31,31 +31,31 @@
 			<datalist id="@Html.IdFor(m => m.Search.User)-autocomplete"></datalist>
 			@*TODO: Turn into a component, this is nearly the same code as the user list search box, and could come in handy in other places*@
 			<script>
-				(function () {
-					var searchBox = document.getElementById('@Html.IdFor(m => m.Search.User)');
+				{
+					let searchBox = document.getElementById('@Html.IdFor(m => m.Search.User)');
 					searchBox.onkeyup = function () {
-						var searchVal = searchBox.value.trim();
-						var dataListId = '@Html.IdFor(m => m.Search.User)-autocomplete-' + searchVal;
+						const searchVal = searchBox.value.trim();
+						const dataListId = '@Html.IdFor(m => m.Search.User)-autocomplete-' + searchVal;
 						if (searchVal.length > 2) {
-							var existingList = document.getElementById(dataListId);
+							const existingList = document.getElementById(dataListId);
 							if (existingList) {
 								searchBox.setAttribute('list', dataListId);
 								return;
 							}
 
-							var xmlhttp = new XMLHttpRequest();
+							let xmlhttp = new XMLHttpRequest();
 
 							xmlhttp.onreadystatechange = function() {
 								if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 									if (xmlhttp.status === 200) {
-										var newSearchList = document.createElement('datalist');
+										let newSearchList = document.createElement('datalist');
 										newSearchList.id = dataListId;
 
-										var data = JSON.parse(xmlhttp.responseText);
+										const data = JSON.parse(xmlhttp.responseText);
 
-										for (var i in data) {
+										for (const i in data) {
 											if (data.hasOwnProperty(i)) {
-												var option = document.createElement('option');
+												let option = document.createElement('option');
 												option.innerHTML = data[i];
 
 												newSearchList.appendChild(option);
@@ -74,7 +74,7 @@
 							xmlhttp.send();
 						}
 					};
-				})();
+				}
 			</script>
 			<label asp-for="Search.System" class="form-control-label"></label>
 			<select asp-for="Search.System" asp-items="Model.SystemList" class="form-control"></select>

@@ -14,7 +14,7 @@ namespace TASVideos.TagHelpers
 			output.PostElement.AppendHtml($@"
 <script>
 	document.querySelector('[data-submit-id=""{guid}""]').onclick = function () {{
-		var btn = this;
+		let btn = this;
 		setTimeout(function () {{ btn.disabled = true }}, 0);
 		setTimeout(function () {{ btn.disabled = false }}, 750);
 	}}

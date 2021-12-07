@@ -6,33 +6,33 @@
 	</div>
 	<datalist id="search-username-list"></datalist>
 	<script>
-		(function () {
-			var searchBox = document.getElementById('search-username-box');
+		{
+			let searchBox = document.getElementById('search-username-box');
 			searchBox.onkeyup = function () {
 				
-				var goButton = document.getElementById('go-button');
-				var searchVal = searchBox.value.trim();
-				var dataListId = 'search-username-list-' + searchVal;
+				let goButton = document.getElementById('go-button');
+				const searchVal = searchBox.value.trim();
+				const dataListId = 'search-username-list-' + searchVal;
 				if (searchVal.length > 2) {
-					var existingList = document.getElementById(dataListId);
+					const existingList = document.getElementById(dataListId);
 					if (existingList) {
 						searchBox.setAttribute('list', dataListId);
 						return;
 					}
 
-					var xmlhttp = new XMLHttpRequest();
+					let xmlhttp = new XMLHttpRequest();
 
 					xmlhttp.onreadystatechange = function() {
 						if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 							if (xmlhttp.status === 200) {
-								var newSearchList = document.createElement('datalist');
+								let newSearchList = document.createElement('datalist');
 								newSearchList.id = dataListId;
 
-								var data = JSON.parse(xmlhttp.responseText);
+								const data = JSON.parse(xmlhttp.responseText);
 
-								for (var i in data) {
+								for (const i in data) {
 									if (data.hasOwnProperty(i)) {
-										var option = document.createElement('option');
+										let option = document.createElement('option');
 										option.innerHTML = data[i];
 
 										newSearchList.appendChild(option);
@@ -54,6 +54,6 @@
 					goButton.setAttribute('disabled', 'disabled');
 				}
 			};
-		})();
+		}
 	</script>
 </form>

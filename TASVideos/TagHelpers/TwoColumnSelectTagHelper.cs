@@ -161,8 +161,8 @@ namespace TASVideos.TagHelpers
 			output.Content.AppendHtml("</div>");
 
 			// Script Tag
-			string script = $@"<script>(function() {{
-				var twoColumnChangeEvent = new CustomEvent({JsValue(modelName + "Changed")}, {{ bubbles: true }});
+			string script = $@"<script>{{
+				const twoColumnChangeEvent = new CustomEvent({JsValue(modelName + "Changed")}, {{ bubbles: true }});
 
 				document.getElementById({JsValue(parentContainerName)}).listChangedCallback = null;
 
@@ -175,9 +175,9 @@ namespace TASVideos.TagHelpers
 				}});
 
 				document.getElementById({JsValue(addBtnName)}).addEventListener('click', function () {{
-					var aopts = document.querySelectorAll({JsValue($"#{availableListName} option:checked")});
+					const aopts = document.querySelectorAll({JsValue($"#{availableListName} option:checked")});
 					aopts.forEach(function (elem) {{
-						var newInp = document.createElement('input')
+						let newInp = document.createElement('input')
 						newInp.name = {JsValue(modelName)};
 						newInp.type = 'hidden';
 						newInp.value = elem.value;
@@ -195,9 +195,9 @@ namespace TASVideos.TagHelpers
 				}});
 
 				document.getElementById({JsValue(addAllBtnName)}).addEventListener('click', function () {{
-					var aopts = document.querySelectorAll({JsValue($"#{availableListName} option:not(:disabled)")});
+					const aopts = document.querySelectorAll({JsValue($"#{availableListName} option:not(:disabled)")});
 					aopts.forEach(function (elem) {{
-						var newInp = document.createElement('input')
+						let newInp = document.createElement('input')
 						newInp.name = {JsValue(modelName)};
 						newInp.type = 'hidden';
 						newInp.value = elem.value;
@@ -215,7 +215,7 @@ namespace TASVideos.TagHelpers
 				}});
 
 				document.getElementById({JsValue(removeBtnName)}).addEventListener('click', function () {{
-					var sopts = document.querySelectorAll({JsValue($"#{selectedListName} option:checked")});
+					const sopts = document.querySelectorAll({JsValue($"#{selectedListName} option:checked")});
 					sopts.forEach(function (elem) {{
 						document.getElementById({JsValue(availableListName)}).appendChild(elem.cloneNode(true));
 						document.getElementById({JsValue(selectedListName)}).removeChild(elem);
@@ -231,14 +231,14 @@ namespace TASVideos.TagHelpers
 				}});
 
 				document.getElementById({JsValue(removeAllBtnName)}).addEventListener('click', function () {{
-					var sopts = document.querySelectorAll({JsValue($"#{selectedListName} option:not(:disabled)")});
+					const sopts = document.querySelectorAll({JsValue($"#{selectedListName} option:not(:disabled)")});
 					sopts.forEach(function (elem) {{
 						document.getElementById({JsValue(availableListName)}).appendChild(elem.cloneNode(true));
 						document.getElementById({JsValue(selectedListName)}).removeChild(elem);
 						
 					}});
 
-					var container = document.getElementById({JsValue(modelContainer)});
+					let container = document.getElementById({JsValue(modelContainer)});
 					while (container.lastChild) {{
 						container.removeChild(container.lastChild);
 					}}
@@ -256,18 +256,18 @@ namespace TASVideos.TagHelpers
 				}}
 
 				function sortSelect(elem) {{
-					var tmpAry = [];
-					var selectedValue = elem[elem.selectedIndex] != undefined ? elem[elem.selectedIndex] : null
-					for (var i = 0; i < elem.options.length;i++) tmpAry.push(elem.options[i]);
+					let tmpAry = [];
+					let selectedValue = elem[elem.selectedIndex] != undefined ? elem[elem.selectedIndex] : null
+					for (let i = 0; i < elem.options.length;i++) tmpAry.push(elem.options[i]);
 					tmpAry.sort(function(a, b){{ return (parseInt(a.value) < parseInt(b.value)) ? -1 : 1; }});
 					while (elem.options.length > 0) elem.options[0] = null;
-					for (var i = 0; i < tmpAry.length; i++) {{
+					for (let i = 0; i < tmpAry.length; i++) {{
 						elem.options[i] = tmpAry[i];
 					}}
 
 					return;
 				}}
-			}})();
+			}}
 			</script>";
 
 			output.Content.AppendHtml(script);

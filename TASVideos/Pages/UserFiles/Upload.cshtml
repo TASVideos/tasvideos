@@ -56,12 +56,12 @@
 </form>
 
 <script>
-	var systemModel = document.getElementById('@Html.IdFor(m => m.UserFile.SystemId)');
-	var gameModel = document.getElementById('@Html.IdFor(m => m.UserFile.GameId)');
+	let systemModel = document.getElementById('@Html.IdFor(m => m.UserFile.SystemId)');
+	let gameModel = document.getElementById('@Html.IdFor(m => m.UserFile.GameId)');
 
 	systemModel.onchange = function() {
 		if (this.value) {
-			var xmlhttp = new XMLHttpRequest();
+			let xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {
@@ -73,12 +73,9 @@
 			xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
 			xmlhttp.send();
 		} else {
-			document.querySelectorAll('#@Html.IdFor(m => m.UserFile.GameId) option')
-				.toArray()
-				.forEach(function (elem) {
-					if (elem.value) {
-						elem.remove();
-					}
+			Array.from(document.querySelectorAll('#@Html.IdFor(m => m.UserFile.GameId) option'))
+				.forEach(element => {
+					if (element.value) element.remove();
 				});
 		}
 	}

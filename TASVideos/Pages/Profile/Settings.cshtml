@@ -81,18 +81,18 @@
 			</small>
 		</column>
 		<script>
-			(function () {
-				var avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Settings.Avatar)');
-				var previewElem = document.getElementById('avatar-preview');
+			{
+				let avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Settings.Avatar)');
+				let previewElem = document.getElementById('avatar-preview');
 
 				document.addEventListener("DOMContentLoaded", validateAvatar);
 				avatarBoxElem.addEventListener('blur', toggleAvatarPreview);
 				document.getElementById('preview-btn').addEventListener('click', toggleAvatarPreview);
 
-				var avatarImgElem = document.getElementById('avatar-img');
+				let avatarImgElem = document.getElementById('avatar-img');
 
 				function toggleAvatarPreview() {
-					var avatar = document.getElementById('@Html.IdFor(m => m.Settings.Avatar)').value;
+					const avatar = document.getElementById('@Html.IdFor(m => m.Settings.Avatar)').value;
 					if (avatar) {
 						avatarImgElem.onload = validateAvatar;
 						avatarImgElem.src = avatar;
@@ -103,8 +103,8 @@
 				}
 
 				function validateAvatar() {
-					var maxWidth = @AvatarRequirements.Width;
-					var maxHeight = @AvatarRequirements.Height;
+					const maxWidth = @AvatarRequirements.Width;
+					const maxHeight = @AvatarRequirements.Height;
 
 					var tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
 					if (tooBig) {
@@ -123,7 +123,7 @@
 				function preventSave(prevent) {
 					document.getElementById('submit-btn').disabled = prevent;
 				}
-			})();
+			}
 		</script>
 	</row>
 	<row permission="UseMoodAvatars">

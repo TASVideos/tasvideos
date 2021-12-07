@@ -45,14 +45,12 @@
 			</row>
 		}
 		<script condition="canVote">
-			(function () {
-				document.querySelectorAll('[name="ordinal"]').toArray().forEach(function (elem) {
-					elem.addEventListener('change',
-						function () {
-							document.getElementById('vote-btn').removeAttribute('hidden');
-						});
+			Array.from(document.querySelectorAll('[name="ordinal"]'))
+				.forEach(element => {
+					elem.addEventListener('change', () => {
+						document.getElementById('vote-btn').removeAttribute('hidden');
+					});
 				});
-			})();
 		</script>
 		<button condition="canVote" hidden="hidden" type="submit" class="btn btn-sm btn-success" id="vote-btn">Vote!</button>
 	</form>
