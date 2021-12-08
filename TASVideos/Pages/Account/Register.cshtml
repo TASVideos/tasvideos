@@ -17,22 +17,22 @@
 		<column md="6">
 			<form-group>
 				<label asp-for="UserName"></label>
-				<input asp-for="UserName" class="form-control" />
+				<input asp-for="UserName" class="form-control" autocomplete="username" />
 				<span asp-validation-for="UserName" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Email"></label>
-				<input asp-for="Email" class="form-control" />
+				<input asp-for="Email" class="form-control" autocomplete="email" />
 				<span asp-validation-for="Email" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Password"></label>
-				<input asp-for="Password" class="form-control" />
+				<input asp-for="Password" class="form-control" autocomplete="new-password" />
 				<span asp-validation-for="Password" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="ConfirmPassword"></label>
-				<input asp-for="ConfirmPassword" class="form-control" />
+				<input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
 				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 			</form-group>
 		</column>
