@@ -85,10 +85,10 @@
 				<div>
 					@foreach (var url in Model.OnlineWatchingUrls)
 					{
-						YouTube: <a>Embed here</a><a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> New tab</a>
+						YouTube: <a>Watch here</a><a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> New tab</a>
 					}
 				</div>
-				<div>Video .mp4: <a>Embed here</a><a condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl" class="ms-2"> Video file via Mirror<br /></a>
+				<div>Video .mp4: <a>Watch here</a><a condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl" class="ms-2"> Video file via Mirror<br /></a>
 				</div>
 				@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
 				{
