@@ -1,4 +1,4 @@
-﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
+@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
 @{
 	var classIconPath2X = "";
 	var classIconPath4X = "";
@@ -79,28 +79,40 @@
 						 class="w-100 pixelart-image"
 						 loading="lazy" />
 				</div>
+				<div align="center">Watching options</div>
+				<div>Movie file: <a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download @System.IO.Path.GetExtension(Model.MovieFileName)</a><a>Download @Model.EmulatorVersion</a>
+				</div>
 				<div>
 					@foreach (var url in Model.OnlineWatchingUrls)
 					{
-						<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> Watch</a>
+						YouTube: <a>Embed here</a><a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> New tab</a>
 					}
-					<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 				</div>
-				<div>
-					<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Submission</a>
-					<a condition="@Model.TopicId > 0"
-					   asp-page="/Forum/Topics/Index"
-					   asp-route-id="@Model.TopicId"
-					   class="btn btn-secondary btn-sm mt-1">
-						<i class="fa fa-comments-o"></i> Discuss
-					</a>
+				<div>Video .mp4: <a>Embed here</a><a condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl" class="ms-2"> Video file via Mirror<br /></a>
 				</div>
-				<div>
-					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
-						<i class="fa fa-star-o"></i> @Math.Round(Model.OverallRating ?? 0, 2, MidpointRounding.AwayFromZero) / 10
-					</a>
-					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: @Model.RatingCount</a>
-				</div>
+				@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
+				{
+					<partial name="_Award" model="award" />
+				}
+			</div>
+			<div class="col-md">
+				<fullrow>
+					<div>
+						<small>Published on @Model.CreateTimestamp.Date.ToShortDateString() </small>
+						<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Submission</a>
+						<a condition="@Model.TopicId > 0"
+						   asp-page="/Forum/Topics/Index"
+						   asp-route-id="@Model.TopicId"
+						   class="btn btn-secondary btn-sm mt-1">
+							<i class="fa fa-comments-o"></i> Discuss
+						</a>
+						<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
+							<i class="fa fa-star-o"></i> @Math.Round(Model.OverallRating ?? 0, 2, MidpointRounding.AwayFromZero) / 10
+						</a>
+						<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: @Model.RatingCount</a>
+					</div>
+					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
+				</fullrow>
 				<div>
 					<a permission="EditPublicationMetaData"
 					   asp-page="Edit"
@@ -116,16 +128,6 @@
 						<i class="fa fa-history"></i> Logs
 					</a>
 				</div>
-				@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
-				{
-					<partial name="_Award" model="award" />
-				}
-			</div>
-			<div class="col-md">
-				<fullrow>
-					<div><small>@Model.CreateTimestamp.Date.ToShortDateString()</small></div>
-					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
-				</fullrow>
 			</div>
 		</row>
 		<row condition="Model.ObsoletedMovies.Any()" class="my-2 gx-3">
@@ -173,12 +175,12 @@
 			</div>
 			<div class="col-auto">
 				<small condition="!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl) || Model.TorrentLinks.Any()">
-					A/V files:<br />
-					<a condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl" class="ms-2">A/V file via Mirror<br /></a>
+					Video files download:<br />
+					<a condition="@(!string.IsNullOrWhiteSpace(Model.MirrorSiteUrl))" href="@Model.MirrorSiteUrl" class="ms-2">Video file via Mirror<br /></a>
 					<span condition="Model.TorrentLinks.Any()">
 						@foreach (var torrent in Model.TorrentLinks)
 						{
-							<a href="~/torrent/@torrent.Path" class="ms-2">A/V file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
+							<a href="~/torrent/@torrent.Path" class="ms-2">Video file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
 							<br />
 						}
 					</span>
