@@ -13,12 +13,12 @@
 			<div asp-validation-summary="All" class="text-danger"></div>
 			<form-group>
 				<label asp-for="UserName"></label>
-				<input asp-for="UserName" class="form-control" />
+				<input asp-for="UserName" class="form-control" autocomplete="username" />
 				<span asp-validation-for="UserName" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Password"></label>
-				<input asp-for="Password" class="form-control" />
+				<input asp-for="Password" class="form-control" autocomplete="current-password" />
 				<span asp-validation-for="Password" class="text-danger"></span>
 			</form-group>
 			<form-group>
