@@ -3,7 +3,7 @@
 # TASVideos 2.0
 Rewrite of the original tasvideos website.
 
-Aims to bring the site up to modern standards with updated technologies and a more maintainable and managable code.
+Aims to bring the site up to modern standards with updated technologies and a more maintainable and managable codebase.
 
 Goals of this project include:
 - Ability to run as HTTP/SSL (HTTP redirects to HTTPS)
