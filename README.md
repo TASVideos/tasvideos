@@ -18,6 +18,8 @@ Goals of this project include:
 - Ability to store and facilitate console verification knowledge and verification data/files
 
 # Try it out!
-https://staging.tasvideos.org/
+Wiki page for setting up local development: https://github.com/TASVideos/tasvideos/wiki/Local-Development-Setup
+
+Current demo website: https://staging.tasvideos.org/
 
 This website updates with production days once a day, and updates with the latest code twice a day.
