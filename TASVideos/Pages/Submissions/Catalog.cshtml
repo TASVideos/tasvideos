@@ -62,16 +62,16 @@
 }
 
 	<script>
-	(function () {
-		var systemModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)');
-		var frameRateModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemFrameRateId)');
-		var gameModel = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)');
-		var romModel = document.getElementById('@Html.IdFor(m => m.Catalog.RomId)');
-		var createRomBtn = document.getElementById('create-rom');
+	{
+		let systemModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)');
+		let frameRateModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemFrameRateId)');
+		let gameModel = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)');
+		let romModel = document.getElementById('@Html.IdFor(m => m.Catalog.RomId)');
+		let createRomBtn = document.getElementById('create-rom');
 
 		systemModel.onchange = function() {
 			if (this.value) {
-				var xmlhttp = new XMLHttpRequest();
+				let xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {
@@ -83,7 +83,7 @@
 				xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
 				xmlhttp.send();
 
-				var xmlhttp2 = new XMLHttpRequest();
+				let xmlhttp2 = new XMLHttpRequest();
 				xmlhttp2.onreadystatechange = function() {
 					if (xmlhttp2.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp2.status === 200) {
@@ -95,30 +95,21 @@
 				xmlhttp2.open("GET", "/Games/List/FrameRateDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
 				xmlhttp2.send();
 			} else {
-				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.GameId) option')
-					.toArray()
-					.forEach(function (elem) {
-						if (elem.value) {
-							elem.remove();
-						}
+				Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.GameId) option'))
+					.forEach(element => {
+						if (element.value) element.remove();
 					});
 
-				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.SystemFrameRateId) option')
-					.toArray()
-					.forEach(function (elem) {
-						if (elem.value) {
-							elem.remove();
-						}
+				Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.SystemFrameRateId) option'))
+					.forEach(element => {
+						if (element.value) element.remove();
 					});
 			}
 
-			document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option')
-					.toArray()
-					.forEach(function (elem) {
-						if (elem.value) {
-							elem.remove();
-						}
-					});
+			Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option'))
+				.forEach(element => {
+					if (element.value) element.remove();
+				});
 		}
 
 		gameModel.onchange = function () {
@@ -126,7 +117,7 @@
 				createRomBtn.removeAttribute('disabled');
 				createRomBtn.classList.remove('disabled');
 
-				var xmlhttp = new XMLHttpRequest();
+				let xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {
@@ -140,24 +131,21 @@
 			} else {
 				createRomBtn.setAttribute('disabled', 'disabled');
 				createRomBtn.classList.add('disabled');
-				document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option')
-					.toArray()
-					.forEach(function (elem) {
-						if (elem.value) {
-							elem.remove();
-						}
+				Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option'))
+					.forEach(element => {
+						if (element.value) element.remove();
 					});
 			}
 		}
 
 		document.getElementById('create-rom').onclick = function () {
-			var gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
+			const gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
 			document.location = '/Games/' + gameId + '/Roms/Edit?returnUrl=@HttpContext.Request.Path';
 		}
 
 		document.getElementById('create-game').onclick = function () {
-			var systemId = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)').value;
+			const systemId = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)').value;
 			document.location = '/Games/Edit?returnUrl=@HttpContext.CurrentPathToReturnUrl()&systemId=' + systemId;
 		}
-	})()
+	}
 	</script>

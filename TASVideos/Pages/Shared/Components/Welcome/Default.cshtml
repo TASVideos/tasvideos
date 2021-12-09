@@ -2,18 +2,18 @@
 	<button id="welcome-header-dismiss" type="button" class="btn-close float-end" data-dismiss="alert" aria-label="close"></button>
 	@await Component.RenderWiki("System/WelcomeText")
 	<script>
-		(function () {
-			var welcomeHeader = document.getElementById("welcome-header");
-			var dismissBtn = document.getElementById("welcome-header-dismiss");
-			var dismiss = window.localStorage.getItem("DismissWelcomeHeader");
+		{
+			let welcomeHeader = document.getElementById("welcome-header");
+			let dismissBtn = document.getElementById("welcome-header-dismiss");
+			const dismiss = localStorage.getItem("DismissWelcomeHeader");
 			if (dismiss !== "true") {
 				welcomeHeader.classList.remove("d-none");
 			}
 
 			dismissBtn.onclick = function () {
-				window.localStorage.setItem("DismissWelcomeHeader", true);
+				localStorage.setItem("DismissWelcomeHeader", true);
 				welcomeHeader.classList.add("d-none");
 			}
-		})();
+		}
 	</script>
 </alert>

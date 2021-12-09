@@ -112,18 +112,18 @@
 }
 
 <script>
-	(function () {
+	{
 		document.getElementById('prefill-btn').onclick = function () {
-			var markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
+			const markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
 			if (markup) {
 				return;
 			}
 
-			var xmlhttp = new XMLHttpRequest();
+			let xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {
-						var data = JSON.parse(xmlhttp.responseText);
+						const data = JSON.parse(xmlhttp.responseText);
 						document.getElementById('@Html.IdFor(m => m.Create.Markup)').value = data.text;
 					}
 				}
@@ -139,5 +139,5 @@
 			document.getElementById('submit-btn').classList.remove('d-none');
 			document.getElementById('submit-blurb').classList.remove('d-none');
 		});
-	})()
+	}
 </script>

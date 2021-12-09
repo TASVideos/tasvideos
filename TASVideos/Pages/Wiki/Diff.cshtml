@@ -25,25 +25,24 @@
 		generateDiff(1, false);
 	});
 
-	document.querySelectorAll('[name="diff-type"]')
-		.toArray()
-		.forEach(function (elem) {
-			elem.addEventListener('click', onRadioChange);
-		});
+	Array.from(document.querySelectorAll('[name="diff-type"]'))
+		.forEach(element =>
+			element.addEventListener('click', onRadioChange)
+		);
 
 	function onRadioChange() {
-		var type = document.querySelector('[name="diff-type"]:checked').value;
+		const type = document.querySelector('[name="diff-type"]:checked').value;
 		generateDiff(parseInt(type));
 	}
 
 	function generateDiff(viewType) {
-		var leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
-		var rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
-		var diffElem = document.getElementById('ResultMarkup');
+		const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
+		const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
+		let diffElem = document.getElementById('ResultMarkup');
 
-		var base = difflib.stringAsLines(leftMarkup);
-		var newTxt = difflib.stringAsLines(rightMarkup);
-		var opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes();
+		const base = difflib.stringAsLines(leftMarkup);
+		const newTxt = difflib.stringAsLines(rightMarkup);
+		const opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes();
 		diffElem.innerHTML = "";
 
 		diffElem.appendChild(diffview.buildView({

@@ -15,12 +15,12 @@
 		We also have a <a href="https://discordapp.com/invite/GySG2b6">Discord server</a> and an IRC channel <a href="https://kiwiirc.com/nextclient/irc.libera.chat:+6697/#tasvideos">#tasvideos at irc.libera.chat...</a>
 	</small>
 	<script>
-		(function() {
-			var forumHeader = document.getElementById("forum-header");
-			var forumHeaderRestore = document.getElementById("forum-header-restore");
-			var dismissBtn = document.getElementById("forum-header-dismiss");
+		{
+			let forumHeader = document.getElementById("forum-header");
+			let forumHeaderRestore = document.getElementById("forum-header-restore");
+			let dismissBtn = document.getElementById("forum-header-dismiss");
 
-			var dismiss = window.localStorage.getItem("DismissForumHeader");
+			const dismiss = localStorage.getItem("DismissForumHeader");
 			if (dismiss !== "true") {
 				forumHeader.classList.remove("d-none");
 				forumHeaderRestore.classList.add("d-none");
@@ -29,16 +29,16 @@
 			}
 
 			dismissBtn.onclick = function () {
-				window.localStorage.setItem("DismissForumHeader", true);
+				localStorage.setItem("DismissForumHeader", true);
 				forumHeader.classList.add("d-none");
 				forumHeaderRestore.classList.remove("d-none");
 			}
 
 			forumHeaderRestore.onclick = function () {
-				window.localStorage.clear('DismissForumHeader');
+				localStorage.clear('DismissForumHeader');
 				forumHeaderRestore.classList.add("d-none");
 				forumHeader.classList.remove("d-none");
 			}
-		})();
+		}
 	</script>
 </info-alert>

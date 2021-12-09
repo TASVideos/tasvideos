@@ -11,11 +11,11 @@
 </div>
 
 <script>
-	(function () {
+	{
 		document.getElementById('preview-button').onclick = function () {
-			var markup = document.getElementById('@Model.ElementId').value;
+			const markup = document.getElementById('@Model.ElementId').value;
 			document.getElementById('preview-container').classList.remove('d-none');
-			var xmlhttp = new XMLHttpRequest();
+			let xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {
@@ -30,5 +30,5 @@
 			xmlhttp.open("POST", "@Model.PreviewPath");
 			xmlhttp.send(markup);
 		}
-	})();
+	}
 </script>

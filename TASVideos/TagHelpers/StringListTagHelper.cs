@@ -54,27 +54,25 @@ $@"<button {Attr("id", modelId + "-add-btn")} class='string-list-add-btn btn btn
 
 			output.Content.AppendHtml(
 $@"<script>
-	(function() {{
-		var addBtn = document.getElementById({JsValue($"{modelId}-add-btn")});
+	{{
+		let addBtn = document.getElementById({JsValue($"{modelId}-add-btn")});
 		addBtn.onclick = function() {{
-			var lastIndex = Math.max.apply(null, document.querySelectorAll({JsValue($"#{parentContainerName} .author-row")})
-				.toArray()
-				.map(function(elem) {{
-					return parseInt(elem.getAttribute('data-index'));
-				}}));
+			let lastIndex = Math.max.apply(null, Array.from(document.querySelectorAll({JsValue($"#{parentContainerName} .author-row")}))
+				.map(element => parseInt(elem.getAttribute('data-index')))
+			);
 
-			var lastElem = document.querySelector({JsValue($"#{parentContainerName} ")} + '[data-index=""' + lastIndex + '""]');
+			let lastElem = document.querySelector({JsValue($"#{parentContainerName} ")} + '[data-index=""' + lastIndex + '""]');
 
-			var newIndex = lastIndex + 1;
-			var newElem = lastElem.cloneNode(true);
+			const newIndex = lastIndex + 1;
+			let newElem = lastElem.cloneNode(true);
 			newElem.setAttribute('data-index', newIndex);
-			var input = newElem.querySelector('input');
+			let input = newElem.querySelector('input');
 			input.value = '';
 			input.id = 'Authors_' + newIndex + '_';
 
 			document.querySelector({JsValue($@"#{parentContainerName} div[class=""string-list-container""]")}).insertBefore(newElem,addBtn);
 		}}
-	}})();
+	}}
 </script>");
 			output.Content.AppendHtml("</div>");
 		}

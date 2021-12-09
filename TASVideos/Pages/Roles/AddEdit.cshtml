@@ -79,59 +79,43 @@
 	</div>
 </form>
 <script>
-	(function() {
-		var emptyAssignableRoles = "None";
-		var selectedAssignablePermissionsModelId = '@Html.NameFor(m => m.Role.SelectedAssignablePermissions)';
-		var selectedPermissionsListId = 'Selected@(Html.IdFor(m => m.Role.SelectedPermissions))';
-		var availableAssignableListId = '@Html.NameFor(m => m.AvailableAssignablePermissions)';
-		var selectedAssignableListId = 'Selected@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))';
+	{
+		let emptyAssignableRoles = "None";
+		let selectedAssignablePermissionsModelId = '@Html.NameFor(m => m.Role.SelectedAssignablePermissions)';
+		let selectedPermissionsListId = 'Selected@(Html.IdFor(m => m.Role.SelectedPermissions))';
+		let availableAssignableListId = '@Html.NameFor(m => m.AvailableAssignablePermissions)';
+		let selectedAssignableListId = 'Selected@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))';
 		
 		function shouldShowAssignRoles() {
-			const hasAssign = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
-				.toArray()
-				.length >
-				0;
+			const hasAssign = Array.from(document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']"))
+				.length > 0;
 
-			const hasAtLastOneOtherPerm = document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']")
-				.toArray()
-				.length >
-				0;
+			const hasAtLastOneOtherPerm = Array.from(document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']"))
+				.length > 0;
 
 			return hasAssign && hasAtLastOneOtherPerm;
 		}
 
 		function syncAssignablePerms() {
-			var selectedPerms = document.querySelectorAll('#' + selectedPermissionsListId + ' option')
-				.toArray();
+			let selectedPerms = Array.from(document.querySelectorAll('#' + selectedPermissionsListId + ' option'));
 
-			var aggregatedAssignablePerms = document.querySelectorAll('#' + availableAssignableListId + ' option')
-				.toArray()
-				.concat(document.querySelectorAll('#' + selectedAssignableListId + ' option').toArray());
+			let aggregatedAssignablePerms = Array.from(document.querySelectorAll('#' + availableAssignableListId + ' option'))
+				.concat(Array.from(document.querySelectorAll('#' + selectedAssignableListId + ' option')));
 
-			const addedPerms = selectedPerms
-				.filter(function(elem) {
-					return !(aggregatedAssignablePerms
-						.map(function(e) {
-							return e.value;
-						})
-						.includes(elem.value));
-				});
+			const addedPerms = selectedPerms.filter(element =>
+				!(aggregatedAssignablePerms.map(e => e.value).includes(element.value))
+			);
 
-			const removedPerms = aggregatedAssignablePerms
-				.filter(function(elem) {
-					return !(selectedPerms
-						.map(function(e) {
-							return e.value;
-						})
-						.includes(elem.value));
-				});
+			const removedPerms = aggregatedAssignablePerms.filter(element =>
+				!(selectedPerms.map(e => e.value).includes(element.value))
+			);
 
-			var availAssignableElem = document.getElementById(availableAssignableListId);
-			var selectedAssignableElem = document.getElementById(selectedAssignableListId);
+			let availAssignableElem = document.getElementById(availableAssignableListId);
+			let selectedAssignableElem = document.getElementById(selectedAssignableListId);
 
-			addedPerms.forEach(function(elem) {
-				availAssignableElem.appendChild(elem.cloneNode(true));
-			});
+			addedPerms.forEach(element =>
+				availAssignableElem.appendChild(element.cloneNode(true))
+			);
 
 			removedPerms.forEach(function(elem) {
 				const id = document.querySelector('[name="' + selectedAssignablePermissionsModelId + '"][v="' + elem.value + '"]');
@@ -140,9 +124,9 @@
 				}
 
 
-				if (availAssignableElem.childNodes.toArray().includes(elem)) {
+				if (Array.from(availAssignableElem.childNodes).includes(elem)) {
 					availAssignableElem.removeChild(elem);
-				} else if (selectedAssignableElem.childNodes.toArray().includes(elem)) {
+				} else if (Array.from(selectedAssignableElem.childNodes).includes(elem)) {
 					selectedAssignableElem.removeChild(elem);
 				}
 			});
@@ -152,14 +136,10 @@
 
 		function showRolesCurrentlyAssignable() {
 			const selector = '[name="' + selectedAssignablePermissionsModelId + '"]';
-			const permissions = document.querySelectorAll(selector)
-				.toArray()
-				.map(function(elem) {
-					return elem.value;
-				});
+			const permissions = Array.from(document.querySelectorAll(selector)).map(element => element.value);
 
 			if (permissions.length > 0) {
-				var xmlhttp = new XMLHttpRequest();
+				let xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {
@@ -174,7 +154,7 @@
 				};
 
 				let getStr = '';
-				for (let i in permissions) {
+				for (const i in permissions) {
 					if (permissions.hasOwnProperty(i)) {
 						getStr += 'ids=' + permissions[i] + '&';
 					}
@@ -205,7 +185,7 @@
 
 		document.getElementById('@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))-two-column-select')
 			.addEventListener('@Html.NameFor(m => m.Role.SelectedAssignablePermissions)Changed', showRolesCurrentlyAssignable);
-	})();
+	}
 </script>
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

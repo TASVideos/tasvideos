@@ -64,12 +64,10 @@
 <input type="hidden" id="right-revision" />
 
 <script>
-	var fromRevision, toRevision;
+	let fromRevision, toRevision;
 
 	function updateTableStyling() {
-		document
-			.querySelectorAll('tbody[data-hasrevisions] tr')
-			.toArray()
+		Array.from(document.querySelectorAll('tbody[data-hasrevisions] tr'))
 			.forEach(function (elem) {
 				elem.classList.remove('table-primary');
 				elem.classList.remove('table-info');
@@ -79,14 +77,14 @@
 				elem.querySelector("button[data-to]").classList.add("bg-info","text-dark");
 			});
 
-		var cur = document.querySelector('tr[data-revision="' + toRevision + '"]');
+		let cur = document.querySelector('tr[data-revision="' + toRevision + '"]');
 		if (cur) {
 			cur.classList.add('table-primary');
 			cur.querySelector("button[data-to]").classList.remove("bg-info","text-dark");
 			cur.querySelector("button[data-to]").classList.add("btn-primary");
 		}
 
-		var prev = document.querySelector('tr[data-revision="' + fromRevision + '"]');
+		let prev = document.querySelector('tr[data-revision="' + fromRevision + '"]');
 		if (prev) {
 			prev.classList.add('table-info');
 			prev.querySelector("button[data-from]").classList.remove("bg-info","text-dark");
@@ -95,8 +93,8 @@
 	}
 
 	function GetDiff(fromId, toId) {
-		var baseUrl = '/Wiki/Diff?handler=DiffData';
-		var path = '@Model.History.PageName';
+		const baseUrl = '/Wiki/Diff?handler=DiffData';
+		const path = '@Model.History.PageName';
 		if (fromId != null) {
 			fromRevision = fromId;
 		}
@@ -109,15 +107,15 @@
 			return;
 		}
 
-		var ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
+		const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
 
-		var xmlhttp = new XMLHttpRequest();
+		let xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 				document.getElementById("diff-view").classList.remove("d-none");
 				document.getElementById("diff-options").classList.remove("d-none");
 				if (xmlhttp.status === 200) {
-					var data = JSON.parse(xmlhttp.responseText);
+					const data = JSON.parse(xmlhttp.responseText);
 					document.getElementById("left-revision").value = data.leftMarkup;
 					document.getElementById("right-revision").value = data.rightMarkup;
 					generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
@@ -131,8 +129,8 @@
 	}
 
 	function generateDiff(viewType) {
-		var diffView = document.getElementById("diff-view");
-		var base = difflib.stringAsLines(document.getElementById("left-revision").value),
+		let diffView = document.getElementById("diff-view");
+		let base = difflib.stringAsLines(document.getElementById("left-revision").value),
 			newTxt = difflib.stringAsLines(document.getElementById("right-revision").value),
 			opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes(),
 			diffOutputDiv = diffView;
