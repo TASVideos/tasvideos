@@ -50,14 +50,14 @@
 </div>
 <script>
 	document.addEventListener("DOMContentLoaded", function installButtonEvents() {
-		var buttons = document.querySelectorAll("button[data-fmt]");
-		var textArea = document.getElementById('@Model');
+		let buttons = document.querySelectorAll("button[data-fmt]");
+		let textArea = document.getElementById('@Model');
 
 		function applyFormatting(s) {
-			var ss = s.split(",");
-			var val = textArea.value;
-			var i = textArea.selectionStart;
-			var j = textArea.selectionEnd;
+			const ss = s.split(",");
+			let val = textArea.value;
+			const i = textArea.selectionStart;
+			const j = textArea.selectionEnd;
 			if (val.slice(i - ss[0].length, i) === ss[0] && val.slice(j, j + ss[1].length) === ss[1]) {
 				val = val.slice(0, i - ss[0].length) + val.slice(i, j) + val.slice(j + ss[1].length);
 				textArea.value = val;
@@ -71,7 +71,7 @@
 			}
 		}
 
-		for (var i = 0; i < buttons.length; i++) {
+		for (let i = 0; i < buttons.length; i++) {
 			buttons[i].addEventListener("click", function listener() {
 				applyFormatting(this.getAttribute("data-fmt"));
 				textArea.focus();
@@ -79,7 +79,7 @@
 		}
 
 		textArea.addEventListener("keydown", function listener(ev) {
-			var button;
+			let button;
 			if (ev.altKey) {
 				button = document.querySelector("button[data-fmt][data-akey='" + ev.key + "']");
 			} else if (ev.ctrlKey && ev.shiftKey) {
