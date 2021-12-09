@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Diagnostics
 {
+	[RequirePermission(PermissionTo.SeeDiagnostics)]
 	public class LoggingModel : BasePageModel
 	{
 		private readonly ILogger<ILogger> _logger;
