@@ -3,9 +3,11 @@
 @model IndexModel
 @using System.Diagnostics
 @using Microsoft.AspNetCore.Hosting
+@using TASVideos.Core.Settings
 @inject ApplicationDbContext _db
 @inject IWebHostEnvironment _env
 @inject ICacheService _cache
+@inject AppSettings _settings;
 @functions {
 	private string GetProcessInfo()
 	{
@@ -44,7 +46,8 @@
 	<tr><td>OS Version</td><td>@Environment.OSVersion.ToString()</td></tr>
 	<tr><td>Processor Count</td><td>@Environment.ProcessorCount</td></tr>
 	<tr><td>Total Memory Usage</td><td>@GetProcessInfo()</td></tr>
-	<tr><td>Database Provider</td><td>@_db.Database.ProviderName</td></tr>
+    <tr><td>Database Provider</td><td>@_db.Database.ProviderName</td></tr>
+    <tr><td>Startup Strategy</td><td>@_settings.StartupStrategy</td></tr>
 	<tr>
 		<td>Cache Provider</td>
 		<td>
