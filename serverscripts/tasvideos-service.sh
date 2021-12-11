@@ -49,7 +49,7 @@ start() {
   echo 'Starting TASVideos website with' $ENV 'profile.' >&2
 
   su -c "start-stop-daemon -SbmCv -x /usr/bin/nohup -p \"$PIDFILE_TEMP\" -d \"$ACTIVE_DIRECTORY\" -- ./TASVideos --urls \"http://127.0.0.1:5000\" --environment \"$ENV\" --StartupStrategy \"Minimal\" -c \"Release\"" $ACTIVE_USER
-  cp $PIDFILE_TEMP $PIDFILE
+  mv $PIDFILE_TEMP $PIDFILE
   chown root:root $PIDFILE
 
   echo 'Website started.' >&2
