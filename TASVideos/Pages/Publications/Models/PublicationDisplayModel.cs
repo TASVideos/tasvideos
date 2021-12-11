@@ -20,7 +20,7 @@ namespace TASVideos.Pages.Publications.Models
 		public string MovieFileName { get; set; } = "";
 		public int SubmissionId { get; set; }
 		public IEnumerable<string> OnlineWatchingUrls { get; set; } = new List<string>();
-		public string? MirrorSiteUrl { get; set; }
+		public IEnumerable<string> MirrorSiteUrls { get; set; } = new List<string>();
 		public int TopicId { get; set; }
 		public string? EmulatorVersion { get; set; }
 

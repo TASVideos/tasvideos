@@ -90,7 +90,7 @@ namespace TASVideos
 
 			CreateMap<Publication, PublicationDisplayModel>()
 				.ForMember(dest => dest.OnlineWatchingUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Streaming && pu.Url != null).Select(pu => pu.Url)))
-				.ForMember(dest => dest.MirrorSiteUrl, opt => opt.MapFrom(src => src.PublicationUrls.FirstOrDefault(pu => pu.Type == PublicationUrlType.Mirror && pu.Url != null)?.Url))
+				.ForMember(dest => dest.MirrorSiteUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Mirror && pu.Url != null).Select(pu => pu.Url)))
 				.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count / 2.0))
 				.ForMember(dest => dest.ClassIconPath, opt => opt.MapFrom(src => src.PublicationClass!.IconPath))
 				.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.DisplayName))
