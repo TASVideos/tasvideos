@@ -52,6 +52,7 @@ namespace TASVideos.Core.Services
 				CreateUserName = SiteGlobalConstants.TASVideoAgent,
 				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 				Topic = topic,
+				ForumId = ForumConstants.WorkBenchForumId,
 				PosterId = SiteGlobalConstants.TASVideoAgentId,
 				Text = SiteGlobalConstants.NewSubmissionPost + $"[submission]{submissionId}[/submission]",
 				EnableHtml = false,
