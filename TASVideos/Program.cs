@@ -3,11 +3,9 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using TASVideos.Core.Data;
-using TASVideos.Extensions;
 
 namespace TASVideos
 {
@@ -19,9 +17,10 @@ namespace TASVideos
 
 			using (var scope = host.Services.CreateScope())
 			{
+				var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 				var configuration = new ConfigurationBuilder()
 					.AddJsonFile("appsettings.json")
-					.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"}.json", true)
+					.AddJsonFile($"appsettings.{env.EnvironmentName ?? "Development"}.json", true)
 					.Build();
 				Log.Logger = new LoggerConfiguration()
 					.ReadFrom.Configuration(configuration)

@@ -220,3 +220,6 @@ dotnet_naming_style._fieldname.required_prefix = _
 dotnet_naming_style._fieldname.required_suffix = 
 dotnet_naming_style._fieldname.word_separator = 
 dotnet_naming_style._fieldname.capitalization = camel_case
+
+[*.{cs,vb}]
+indent_style=tab
