@@ -91,9 +91,10 @@ cleanup() {
   rm -rf $TEMP_DIRECTORY
 }
 
-# Copy script files (.js) into the live directories.
-copy-scripts() {
+# Copy script files (.js and .css) into the live directories.
+copy_scripts() {
   # TODO: Write this code.
+  echo 'Script not done.'
 }
 
 case "$1" in
@@ -115,7 +116,8 @@ case "$1" in
     cleanup
     ;;
   update-scripts)
-    copy-scripts
+    copy_scripts
+    ;;
   *)
     echo "Usage: $0 {build|restart|start|stop|update-scripts}"
 esac
