@@ -87,7 +87,7 @@ namespace TASVideos.Legacy
 				.AddIdentity<User, Role>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
-			services.AddTasvideosData(configuration, usePostgres: true);
+			services.AddTasvideosData(settings.ConnectionStrings.PostgresConnection);
 			services.AddTasvideosCore<NullTextRenderer>(true, settings);
 			services.AddTasVideosLegacy(
 				settings.ConnectionStrings.LegacySiteConnection,

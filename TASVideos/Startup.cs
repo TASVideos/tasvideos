@@ -39,7 +39,7 @@ namespace TASVideos
 
 			// Internal Libraries
 			services
-				.AddTasvideosData(Configuration, Settings.UsePostgres)
+				.AddTasvideosData(Settings.ConnectionStrings.PostgresConnection)
 				.AddTasvideosCore<WikiToTextRenderer>(Environment.IsDevelopment(), Settings)
 				.AddMovieParser();
 

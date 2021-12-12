@@ -29,7 +29,6 @@ namespace TASVideos.WikiEngine.Snapshots
 		{
 			public string? ConnectionString { get; init; }
 			public string? OutDir { get; init; }
-			public bool UsePostgres { get; init; } = true;
 		}
 
 		public static int Main(string[] args)
@@ -49,7 +48,7 @@ namespace TASVideos.WikiEngine.Snapshots
 
 			
 			var serviceProvider = new ServiceCollection()
-				.RegisterDbContext(settings.ConnectionString, settings.UsePostgres)
+				.AddTasvideosData(settings.ConnectionString)
 				.BuildServiceProvider();
 
 			var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
@@ -138,16 +137,6 @@ namespace TASVideos.WikiEngine.Snapshots
 			Console.Write("{0,8}", progress++);
 			Console.WriteLine();
 			return 0;
-		}
-	}
-
-	public static class ServiceCollectionExtensions
-	{
-		public static IServiceCollection RegisterDbContext(this IServiceCollection services, string connectionString, bool usePostgres)
-		{
-			return usePostgres
-				? services.AddPostgresServerDbContext(connectionString)
-				: services.AddSqlServerDbContext(connectionString);
 		}
 	}
 }

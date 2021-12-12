@@ -20,7 +20,6 @@ namespace TASVideos.Core.Settings
 		public GmailAuthSettings Gmail { get; set; } = new();
 
 		public string StartupStrategy { get; set; } = "";
-		public bool UsePostgres { get; set; } = true;
 
 		public string SampleDataPassword { get; set; } = "Password1234!@#$";
 
@@ -79,7 +78,6 @@ namespace TASVideos.Core.Settings
 
 		public class Connections
 		{
-			public string DefaultConnection { get; set; } = "";
 			public string PostgresConnection { get; set; } = "";
 			public string? LegacySiteConnection { get; set; }
 			public string? LegacyForumConnection { get; set; }

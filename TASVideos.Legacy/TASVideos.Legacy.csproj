@@ -12,10 +12,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FastMember.NetCore" Version="1.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Npgsql" Version="5.0.3" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
 		<PackageReference Include="SharpCompress" Version="0.29.0" />

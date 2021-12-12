@@ -59,7 +59,7 @@ namespace TASVideos.Legacy
 			_legacyForumDb.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
 			var stopwatch = Stopwatch.StartNew();
-			SqlBulkImporter.BeginImport(connectionStr, _db.Database.IsSqlServer());
+			SqlBulkImporter.BeginImport(connectionStr);
 
 			if (!_cache.TryGetValue(ImportSteps.SmallTables, out bool _))
 			{
