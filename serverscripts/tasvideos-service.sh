@@ -6,7 +6,7 @@
 # Should-Stop:          $local_fs $network
 # Default-Start:        3 4 5
 # Default-Stop:         0 1 2 6
-# Short-Description:    TASVideos website server 
+# Short-Description:    TASVideos website server
 # Description:          TASVideos website server, .net and Kestrel, v2
 ### END INIT INFO
 
@@ -49,7 +49,7 @@ start() {
   echo 'Starting TASVideos website with' $ENV 'profile.' >&2
 
   su -c "start-stop-daemon -SbmCv -x /usr/bin/nohup -p \"$PIDFILE_TEMP\" -d \"$ACTIVE_DIRECTORY\" -- ./TASVideos --urls \"http://127.0.0.1:5000\" --environment \"$ENV\" --StartupStrategy \"Minimal\" -c \"Release\"" $ACTIVE_USER
-  mv $PIDFILE_TEMP $PIDFILE
+  cp $PIDFILE_TEMP $PIDFILE
   chown root:root $PIDFILE
 
   echo 'Website started.' >&2
@@ -61,7 +61,10 @@ stop() {
     echo 'Website not running' >&2
     return 1
   fi
+
   echo 'Stopping website...' >&2
+  return 25;
+
   su -c "start-stop-daemon -K -p \"$PIDFILE\"" $WWW_USER
   rm -f "$PIDFILE"
   echo 'Website stopped.' >&2
@@ -105,15 +108,10 @@ case "$1" in
     stop
     ;;
   restart)
-    stop
-    start
+    stop && start
     ;;
   build)
-    build
-    stop
-    deploy
-    start
-    cleanup
+    build && stop && deploy && start && cleanup
     ;;
   update-scripts)
     copy_scripts
@@ -121,5 +119,11 @@ case "$1" in
   *)
     echo "Usage: $0 {build|restart|start|stop|update-scripts}"
 esac
+
+EC=$?
+
+if [ $EC -ne 0 ]; then
+  echo 'Error code' $EC 'received during' $1 '. Some step failed.'
+fi
 
 export runlevel=$TMP_SAVE_runlevel_VAR
