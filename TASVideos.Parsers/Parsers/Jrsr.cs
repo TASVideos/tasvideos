@@ -36,8 +36,7 @@ namespace TASVideos.MovieParsers.Parsers
 			bool beginHeader = false;
 			bool beginEvents = false;
 			bool missingRerecordCount = true;
-			string lastInputLine = "";
-
+			long totalNanoSeconds = 0L;
 			foreach (var line in lines)
 			{
 				if (line == "!BEGIN header")
@@ -79,7 +78,7 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					if (line.StartsWith("+"))
 					{
-						lastInputLine = line;
+						totalNanoSeconds += GetTime(line) ?? 0;
 					}
 				}
 			}
@@ -89,15 +88,10 @@ namespace TASVideos.MovieParsers.Parsers
 				return new ErrorResult("No header found");
 			}
 
-			if (!string.IsNullOrWhiteSpace(lastInputLine))
+			if (totalNanoSeconds > 0)
 			{
-				var nanoSeconds = GetTime(lastInputLine);
-
-				if (nanoSeconds.HasValue)
-				{
-					result.Frames = (int)(nanoSeconds.Value / 16666667);
-					result.FrameRateOverride = result.Frames / (nanoSeconds / 1000000000L);
-				}
+				result.Frames = (int)(totalNanoSeconds / 16666667);
+				result.FrameRateOverride = result.Frames / (totalNanoSeconds / 1000000000L);
 			}
 
 			if (missingRerecordCount)
