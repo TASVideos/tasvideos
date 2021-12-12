@@ -3,7 +3,7 @@
 	public static class ImportSteps
 	{
 		public const string InitializeAndSeed = "LegacyImport-Initialize";
-		public const string SmallTables = "LeagcyImport-SmallTables";
+		public const string SmallTables = "LegacyImport-SmallTables";
 		public const string Users = "LegacyImport-Users";
 		public const string Forum = "LegacyImport-Forum";
 		public const string ForumPosts = "LegacyImport-ForumPosts";
