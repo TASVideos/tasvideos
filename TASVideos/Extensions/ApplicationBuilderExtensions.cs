@@ -25,7 +25,7 @@ namespace TASVideos.Extensions
 
 		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			if (env.IsDevelopment() || env.IsDemo())
+			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
 			}

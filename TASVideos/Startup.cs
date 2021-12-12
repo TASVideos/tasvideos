@@ -73,7 +73,7 @@ namespace TASVideos
 				.UseLogging()
 				.UseMvcWithOptions();
 
-			if (env.IsDevelopment() || env.IsDemo())
+			if (env.IsDevelopment())
 			{
 				app.UseHttpsRedirection();
 			}
