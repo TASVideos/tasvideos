@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FastMember;
 using Npgsql;
 using TASVideos.Extensions;
 
@@ -9,37 +8,12 @@ namespace TASVideos.Legacy
 {
 	internal static class SqlBulkImporter
 	{
-		public static void BeginImport(string connectionString, bool isMsSql)
+		public static void BeginImport(string connectionString)
 		{
 			ConnectionString = connectionString;
-			IsMsSql = isMsSql;
 		}
 
 		private static string ConnectionString { get; set; } = "";
-
-		public static bool IsMsSql { get; set; }
-
-		public static void BulkInsertMssql<T>(IEnumerable<T> data, string[] columnsToCopy, string tableName)
-		{
-			var keepIdentity = columnsToCopy.Contains("Id");
-			var options = keepIdentity
-				? Microsoft.Data.SqlClient.SqlBulkCopyOptions.KeepIdentity
-				: Microsoft.Data.SqlClient.SqlBulkCopyOptions.Default;
-			using var sqlCopy = new Microsoft.Data.SqlClient.SqlBulkCopy(ConnectionString, options)
-			{
-				DestinationTableName = tableName,
-				BatchSize = 10000,
-				BulkCopyTimeout = 1200
-			};
-
-			foreach (var param in columnsToCopy)
-			{
-				sqlCopy.ColumnMappings.Add(param, param);
-			}
-
-			using var reader = ObjectReader.Create(data, columnsToCopy);
-			sqlCopy.WriteToServer(reader);
-		}
 
 		public static void BulkInsertPostgres<T>(
 			IEnumerable<T> data,

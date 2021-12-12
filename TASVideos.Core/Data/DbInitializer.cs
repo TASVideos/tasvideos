@@ -164,15 +164,10 @@ namespace TASVideos.Core.Data
 		{
 			await using (await context.Database.BeginTransactionAsync())
 			{
-				var isMsSql = context.Database.IsSqlServer();
-				var embeddedFile = isMsSql
-					? "TASVideos.Data.SampleData.SampleData-MsSql.zip"
-					: "TASVideos.Data.SampleData.SampleData-Postgres.zip";
+				var embeddedFile = "TASVideos.Data.SampleData.SampleData-Postgres.zip";
 
 				var sql = EmbeddedSampleSqlFile(embeddedFile);
-				var commands = isMsSql
-					? sql.Split("\nGO")
-					: new[] { sql };
+				var commands = new[] { sql };
 
 				foreach (var c in commands)
 				{

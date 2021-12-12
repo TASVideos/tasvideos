@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using FastMember;
 using SharpCompress.Compressors.Xz;
 using TASVideos.Extensions;
 
@@ -66,14 +64,7 @@ namespace TASVideos.Legacy.Imports
 
 		public static void BulkInsert<T>(this IEnumerable<T> data, string[] columnsToCopy, string tableName)
 		{
-			if (SqlBulkImporter.IsMsSql)
-			{
-				SqlBulkImporter.BulkInsertMssql(data, columnsToCopy, tableName);
-			}
-			else
-			{
-				SqlBulkImporter.BulkInsertPostgres(data, columnsToCopy, tableName);
-			}
+			SqlBulkImporter.BulkInsertPostgres(data, columnsToCopy, tableName);
 		}
 
 		public static IEnumerable<string> ParseUserNames(this string authors)
