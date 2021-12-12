@@ -107,7 +107,7 @@ namespace TASVideos.MovieParsers.Tests
 		{
 			var result = await _jrsrParser.Parse(Embedded("frames.jrsr"));
 			Assert.IsTrue(result.Success);
-			Assert.AreEqual(73900, result.Frames);
+			Assert.AreEqual(147789, result.Frames);
 			Assert.AreEqual(60, result.FrameRateOverride);
 			AssertNoWarningsOrErrors(result);
 		}
