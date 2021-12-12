@@ -8,12 +8,6 @@
     }
   },
   "profiles": {
-    "Demo": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Demo"
-      }
-    },
     "Staging": {
       "commandName": "Project",
       "environmentVariables": {

@@ -37,7 +37,7 @@ namespace TASVideos.Middleware
 			if (context.Request.Path.ToString().Contains("/api/"))
 			{
 				string result;
-				if (env.IsDevelopment() || env.IsDemo())
+				if (env.IsDevelopment())
 				{
 					result = JsonConvert.SerializeObject(new
 					{
