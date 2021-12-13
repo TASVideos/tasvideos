@@ -63,7 +63,6 @@ stop() {
   fi
 
   echo 'Stopping website...' >&2
-  return 25;
 
   su -c "start-stop-daemon -K -p \"$PIDFILE\"" $WWW_USER
   rm -f "$PIDFILE"
