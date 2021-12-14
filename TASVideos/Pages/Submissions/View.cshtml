@@ -25,8 +25,8 @@
 		&& Model.Submission.Status == SubmissionStatus.Accepted;
 
 	HttpRequest request = HttpContext.Request;
-	string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
-	string currentUrl = $"{request.Scheme}://{request.Host}{request.PathBase}{request.Path}";
+	string baseUrl = $"https://{request.Host}{request.PathBase}";
+	string currentUrl = $"https://{request.Host}{request.PathBase}{request.Path}";
 }
 
 @functions{
