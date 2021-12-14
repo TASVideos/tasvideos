@@ -109,7 +109,7 @@ namespace TASVideos.MovieParsers.Tests
 			var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
-			Assert.AreEqual(240, result.Frames);
+			Assert.AreEqual(283, result.Frames);
 		}
 
 		[TestMethod]
@@ -118,7 +118,7 @@ namespace TASVideos.MovieParsers.Tests
 			var result = await _dtmParser.Parse(Embedded("2frames-wii.dtm"));
 			Assert.IsTrue(result.Success);
 			AssertNoWarningsOrErrors(result);
-			Assert.AreEqual(180, result.Frames);
+			Assert.AreEqual(189, result.Frames);
 		}
 	}
 }

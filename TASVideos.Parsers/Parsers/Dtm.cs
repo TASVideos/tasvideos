@@ -8,8 +8,8 @@ namespace TASVideos.MovieParsers.Parsers
 	[FileExtension("dtm")]
 	internal class Dtm : ParserBase, IParser
 	{
-		private const int GameCubeHertz = 486000000;
-		private const int WiiHertz = 729000000;
+		private const decimal GameCubeHertz = 486000000.0M;
+		private const decimal WiiHertz = 729000000.0M;
 		public override string FileExtension => "dtm";
 
 		public async Task<IParseResult> Parse(Stream file)
@@ -73,7 +73,7 @@ namespace TASVideos.MovieParsers.Parsers
 			if (result.CycleCount != 0)
 			{
 				var hertz = isWii ? WiiHertz : GameCubeHertz;
-				result.Frames = (int)Math.Ceiling((decimal)(result.CycleCount / hertz * 60));
+				result.Frames = (int)Math.Ceiling((decimal)result.CycleCount / hertz * 60.0M);
 			}
 			else
 			{
