@@ -1,5 +1,6 @@
 @page "{id}"
 @using TASVideos.Pages.Submissions.Models
+@using Microsoft.AspNetCore.Http
 @model ViewModel
 @{
 	ViewData["Title"] = $"{Model.Submission.Title} - Submission #{Model.Id}";
@@ -22,6 +23,10 @@
 	bool canClaimAsPublisher = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& ViewData.UserHas(PermissionTo.EditSubmissions)
 		&& Model.Submission.Status == SubmissionStatus.Accepted;
+
+	HttpRequest request = HttpContext.Request;
+	string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+	string currentUrl = $"{request.Scheme}://{request.Host}{request.PathBase}{request.Path}";
 }
 
 @functions{
@@ -42,6 +47,14 @@
 				return "warning";
 		}
 	}
+}
+
+@section Header {
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="TASVideos" />
+	<meta property="og:description" content="@(ViewData["Title"])" />
+	<meta property="og:url" content="@(currentUrl)" />
+	<meta property="og:image" content="@($"{baseUrl}/images/logo-light-4x.png")" />
 }
 
 @section PageTitle {
