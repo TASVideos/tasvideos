@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
 @{
 	HttpRequest request = Context.Request;
-	string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
-	string currentUrl = $"{request.Scheme}://{request.Host}{request.PathBase}{request.Path}";
+	string baseUrl = $"https://{request.Host}{request.PathBase}";
+	string currentUrl = $"https://{request.Host}{request.PathBase}{request.Path}";
 }
 <!DOCTYPE html>
 <html>
@@ -36,7 +36,7 @@
 	} else
 	{
 		{
-			<meta property="og:type" content="article" />
+			<meta property="og:type" content="website" />
 			<meta property="og:title" content="TASVideos" />
 			<meta property="og:description" content="Tool-assisted game movies - When human skills are just not enough" />
 			<meta property="og:url" content="@(currentUrl)" />
