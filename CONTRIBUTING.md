@@ -14,7 +14,7 @@ Contributors are expected to uphold a basic [code of conduct](CODE_OF_CONDUCT.md
 
 ## Developer Setup
 
-See [Local Development Setup](wiki/Local-Development-Setup) in the readme for instructions on running the site locally for development.
+See [Local Development Setup](https://github.com/TASVideos/tasvideos/wiki/Local-Development-Setup) in the readme for instructions on running the site locally for development.
 
 ## Code Style
 
