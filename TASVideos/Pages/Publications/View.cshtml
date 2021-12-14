@@ -4,12 +4,12 @@
 @{
 	ViewData["Title"] = $"{Model.Publication.Title} - Movie #{Model.Id}";
     HttpRequest request = HttpContext.Request;
-	string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
-	string currentUrl = $"{request.Scheme}://{request.Host}{request.PathBase}{request.Path}";
+	string baseUrl = $"https://{request.Host}{request.PathBase}";
+	string currentUrl = $"https://{request.Host}{request.PathBase}{request.Path}";
 }
 
 @section Header {
-	<meta property="og:type" content="article" />
+	<meta property="og:type" content="website" />
 	<meta property="og:title" content="TASVideos" />
 	<meta property="og:description" content="@(ViewData["Title"])" />
 	<meta property="og:url" content="@(currentUrl)" />
