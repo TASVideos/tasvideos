@@ -25,6 +25,7 @@ namespace TASVideos.Pages.Submissions
 				Text = s.EnumDisplayName(),
 				Value = ((int)s).ToString()
 			})
+			.OrderBy(s => s.Text)
 			.ToList();
 
 		private readonly ApplicationDbContext _db;
@@ -52,6 +53,7 @@ namespace TASVideos.Pages.Submissions
 		{
 			SystemList = UiDefaults.DefaultEntry.Concat(
 				await _db.GameSystems
+				.OrderBy(s => s.Code)
 				.ToDropdown()
 				.ToListAsync());
 
