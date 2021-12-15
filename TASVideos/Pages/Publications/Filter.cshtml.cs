@@ -69,6 +69,7 @@ namespace TASVideos.Pages.Publications
 					Value = gg.Id.ToString(),
 					Text = gg.Name
 				})
+				.OrderBy(gg => gg.Text)
 				.ToListAsync();
 			return Page();
 		}
