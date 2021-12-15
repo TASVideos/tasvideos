@@ -16,7 +16,13 @@ namespace TASVideos.Legacy.Imports
 					Name = g.Name,
 					SearchKey = g.SearchKey
 				})
-				.ToList();
+				.ToList()
+				.Select(g => new GameGroup
+				{
+					Id = g.Id,
+					Name = ImportHelper.ConvertNotNullLatin1String(g.Name),
+					SearchKey = g.SearchKey
+				});
 
 			var groupColumns = new[]
 			{
