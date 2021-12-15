@@ -51,9 +51,9 @@ namespace TASVideos.Extensions
 			return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
 		}
 
-		public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData, string pp = "")
+		public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData, bool show)
 		{
-			return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData, pp });
+			return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData, show });
 		}
 
 		public static async Task<IHtmlContent> HomePageHeader(this IViewComponentHelper component, WikiPage pageData)
