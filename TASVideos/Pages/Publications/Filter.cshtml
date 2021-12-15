@@ -19,7 +19,7 @@
 		<column md="4">
 			<form-group>
 				<label asp-for="Search.Flags"></label>
-				<select asp-for="Search.Flags" asp-items="Model.Tokens.Flags.Select(c => new SelectListItem(c, c))" class="form-control"></select>
+				<select asp-for="Search.Flags" asp-items="Model.AvailableFlags" class="form-control"></select>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.GameGroups"></label>
@@ -29,7 +29,7 @@
 		<column md="4">
 			<form-group>
 				<label asp-for="Search.SystemCodes"></label>
-				<select asp-for="Search.SystemCodes" asp-items="Model.Tokens.SystemCodes.Select(c => new SelectListItem(c, c))" class="form-control"></select>
+				<select asp-for="Search.SystemCodes" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).Select(c => new SelectListItem(c, c))" class="form-control"></select>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.Tags"></label>
