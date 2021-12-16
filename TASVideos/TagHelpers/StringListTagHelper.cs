@@ -58,7 +58,7 @@ $@"<script>
 		let addBtn = document.getElementById({JsValue($"{modelId}-add-btn")});
 		addBtn.onclick = function() {{
 			let lastIndex = Math.max.apply(null, Array.from(document.querySelectorAll({JsValue($"#{parentContainerName} .author-row")}))
-				.map(element => parseInt(elem.getAttribute('data-index')))
+				.map(element => parseInt(element.getAttribute('data-index')))
 			);
 
 			let lastElem = document.querySelector({JsValue($"#{parentContainerName} ")} + '[data-index=""' + lastIndex + '""]');
