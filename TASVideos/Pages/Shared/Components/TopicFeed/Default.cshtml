@@ -8,7 +8,7 @@
 		<div class="card">
 			<div class="card-body">
 				<h5 condition="!Model.HideContent" class="card-title">@post.Subject</h5>
-				<h5 condition="Model.HideContent"><a data-bs-toggle="collapse" href="#@collapseId" role="button" aria-expanded="false">@post.Subject</a></h5>
+				<h5 condition="Model.HideContent"><a data-bs-toggle="collapse" href="/Forum/Posts/@(post.Id)#@(post.Id)" data-bs-target="#@collapseId" role="button" aria-expanded="false">@post.Subject</a></h5>
 				<h6 class="card-subtitle mb-2 text-muted">
 					<small>
 						posted by @post.PosterName <timezone-convert asp-for="@post.CreateTimestamp" in-line="true" />

@@ -73,3 +73,8 @@ if (localStorage.getItem("style-dark") !== null) {
 		forceDarkMode();
 	}
 }
+
+if (location.hash != null && location.hash != "") {
+	document.querySelector(`[href='${location.hash}']`).setAttribute("aria-expanded", "true");
+	document.querySelector(location.hash + '.collapse').classList.add("show");
+}
