@@ -36,7 +36,7 @@ namespace TASVideos.Pages.UserFiles
 			Data = new UserFileIndexModel
 			{
 				UsersWithMovies = await _db.UserFiles
-					.Where(uf => !uf.Hidden)
+					.ThatArePublic()
 					.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp).Select(
 						uf => new UserFileIndexModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 					.ToListAsync(),

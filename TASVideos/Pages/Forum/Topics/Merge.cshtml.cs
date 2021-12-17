@@ -94,7 +94,7 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 
 			var oldPosts = await _db.ForumPosts
-				.Where(p => p.TopicId == Id)
+				.ForTopic(Id)
 				.ToListAsync();
 
 			foreach (var post in oldPosts)
@@ -150,7 +150,7 @@ namespace TASVideos.Pages.Forum.Topics
 			var seeRestricted = CanSeeRestricted;
 			return await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
-				.Where(t => t.ForumId == forumId)
+				.ForForum(forumId)
 				.Select(t => new SelectListItem
 				{
 					Text = t.Title,

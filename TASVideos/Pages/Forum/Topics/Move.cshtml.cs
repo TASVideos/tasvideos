@@ -92,7 +92,7 @@ namespace TASVideos.Pages.Forum.Topics
 			topic.ForumId = Topic.ForumId;
 
 			var postsToMove = await _db.ForumPosts
-				.Where(p => p.TopicId == topic.Id)
+				.ForTopic(topic.Id)
 				.ToListAsync();
 
 			foreach (var post in postsToMove)
