@@ -189,7 +189,7 @@ namespace TASVideos.Pages.Forum.Topics
 			var pollOptions = await _db.ForumPollOptions
 				.Include(o => o.Poll)
 				.Include(o => o.Votes)
-				.Where(o => o.PollId == pollId)
+				.ForPoll(pollId)
 				.ToListAsync();
 
 			if (pollOptions.Count == 0 || pollOptions.First().Poll == null)
