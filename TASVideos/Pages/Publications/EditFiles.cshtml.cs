@@ -81,7 +81,7 @@ namespace TASVideos.Pages.Publications
 			}
 
 			Files = await _db.PublicationFiles
-				.Where(f => f.PublicationId == Id)
+				.ForPublication(Id)
 				.ToListAsync();
 
 			return Page();
@@ -92,7 +92,7 @@ namespace TASVideos.Pages.Publications
 			if (!ModelState.IsValid)
 			{
 				Files = await _db.PublicationFiles
-					.Where(f => f.PublicationId == Id)
+					.ForPublication(Id)
 					.ToListAsync();
 
 				return Page();
