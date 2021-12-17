@@ -74,7 +74,13 @@ if (localStorage.getItem("style-dark") !== null) {
 	}
 }
 
-if (location.hash != null && location.hash != "") {
-	document.querySelector(`[href='${location.hash}']`).setAttribute("aria-expanded", "true");
-	document.querySelector(location.hash + '.collapse').classList.add("show");
+if (location.hash) {
+	let expandButton = document.querySelector(`[href='${location.hash}']`);
+	if (expandButton) {
+		expandButton.setAttribute("aria-expanded", "true");
+	}
+	let expandedContent = document.querySelector(location.hash + '.collapse');
+	if (expandedContent) {
+		expandedContent.classList.add("show");
+	}
 }
