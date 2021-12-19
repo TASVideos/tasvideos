@@ -1,10 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http
-@{
-	HttpRequest request = Context.Request;
-	string baseUrl = $"https://{request.Host}{request.PathBase}";
-	string currentUrl = $"https://{request.Host}{request.PathBase}{request.Path}";
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8" />
@@ -31,17 +25,17 @@
 	<link rel="alternate" href="/publications.rss" type="application/rss+xml" title="TASVideos RSS Publication Feed">
 	<link rel="alternate" href="/wiki.rss" type="application/rss+xml" title="TASVideos RSS Wiki Feed">
 
-	@if (IsSectionDefined("Header")) {
-		@await RenderSectionAsync("Header")
-	} else
+	@if (IsSectionDefined("Header"))
 	{
-		{
-			<meta property="og:type" content="website" />
-			<meta property="og:title" content="TASVideos" />
-			<meta property="og:description" content="Tool-assisted game movies - When human skills are just not enough" />
-			<meta property="og:url" content="@(currentUrl)" />
-			<meta property="og:image" content="@($"{baseUrl}/images/logo-light-4x.png")" />
-		}
+		@await RenderSectionAsync("Header")
+	}
+	else
+	{
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="TASVideos" />
+		<meta property="og:description" content="Tool-assisted game movies - When human skills are just not enough" />
+		<meta property="og:url" content="@Context.Request.ToUrl()" />
+		<meta property="og:image" content="@($"{Context.Request.ToBaseUrl()}/images/logo-light-4x.png")" />
 	}
 </head>
 <body>

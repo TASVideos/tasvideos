@@ -92,5 +92,15 @@ namespace TASVideos.Extensions
 
 			return context.Connection.RemoteIpAddress;
 		}
+
+		public static string ToBaseUrl(this HttpRequest request)
+		{
+			return $"https://{request.Host}{request.PathBase}";
+		}
+
+		public static string ToUrl(this HttpRequest request)
+		{
+			return $"https://{request.Host}{request.PathBase}{request.Path}";
+		}
 	}
 }

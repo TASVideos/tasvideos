@@ -1,19 +1,15 @@
 ﻿@page "{id}"
-@using Microsoft.AspNetCore.Http
 @model ViewModel
 @{
 	ViewData["Title"] = $"{Model.Publication.Title} - Movie #{Model.Id}";
-    HttpRequest request = HttpContext.Request;
-	string baseUrl = $"https://{request.Host}{request.PathBase}";
-	string currentUrl = $"https://{request.Host}{request.PathBase}{request.Path}";
 }
 
 @section Header {
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content="TASVideos" />
 	<meta property="og:description" content="@(ViewData["Title"])" />
-	<meta property="og:url" content="@(currentUrl)" />
-	<meta property="og:image" content="@($"{baseUrl}/media/{Model.Publication.Screenshot.Path}")" />
+	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
+	<meta property="og:image" content="@($"{HttpContext.Request.ToBaseUrl()}/media/{Model.Publication.Screenshot.Path}")" />
 }
 
 @section PageTitle { }

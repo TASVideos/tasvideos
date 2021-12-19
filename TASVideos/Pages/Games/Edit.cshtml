@@ -1,7 +1,6 @@
 ﻿@page "{id?}"
 @model EditModel
 @{
-	string baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 	ViewData["Title"] = Model.Id.HasValue
 	? $"Editing Game #{Model.Id} {Model.Game.DisplayName}"
 		: "Create a new Game entry";
@@ -54,10 +53,9 @@
 				<label asp-for="Game.GameResourcesPage"></label>
 				<div class="input-group">
 					<div class="input-group-prepend">
-						<span class="input-group-text">@(baseUrl)/</span>
+						<span class="input-group-text">@(Request.ToBaseUrl())/</span>
 					</div>
 					<input type="text" asp-for="Game.GameResourcesPage" class="form-control" autocomplete="off" spellcheck="false" />
-
 				</div>
 				<span asp-validation-for="Game.GameResourcesPage" class="text-danger"></span>
 			</form-group>
