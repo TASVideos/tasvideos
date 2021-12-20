@@ -79,6 +79,7 @@ namespace TASVideos.Core.Settings
 		public class Connections
 		{
 			public string PostgresConnection { get; set; } = "";
+			public string PostgresSampleDataConnection { get; set; } = "";
 			public string? LegacySiteConnection { get; set; }
 			public string? LegacyForumConnection { get; set; }
 		}
