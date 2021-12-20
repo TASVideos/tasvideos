@@ -11,10 +11,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="SampleData\SampleData-Postgres.zip" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 

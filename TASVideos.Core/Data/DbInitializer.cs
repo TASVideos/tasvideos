@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +12,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.SeedData;
 using TASVideos.WikiEngine;
+using SharpCompress.Compressors;
 
 namespace TASVideos.Core.Data
 {
@@ -162,11 +162,9 @@ namespace TASVideos.Core.Data
 		/// </summary>
 		private static async Task GenerateDevSampleData(DbContext context)
 		{
+			var sql = await GetSampleDataScript();
 			await using (await context.Database.BeginTransactionAsync())
 			{
-				var embeddedFile = "TASVideos.Data.SampleData.SampleData-Postgres.zip";
-
-				var sql = EmbeddedSampleSqlFile(embeddedFile);
 				var commands = new[] { sql };
 
 				foreach (var c in commands)
@@ -183,21 +181,49 @@ namespace TASVideos.Core.Data
 			}
 		}
 
-		private static string EmbeddedSampleSqlFile(string sampleDataFile)
+		private static async Task<string> GetSampleDataScript()
 		{
-			var stream = Assembly.GetAssembly(typeof(ApplicationDbContext))
-				?.GetManifestResourceStream(sampleDataFile);
+			var bytes = await GetSampleDataFile();
+			await using var ms = new MemoryStream(bytes);
+			await using var gz = new SharpCompress.Compressors.Deflate.GZipStream(ms, CompressionMode.Decompress);
+			using var unzip = new StreamReader(gz);
+			return await unzip.ReadToEndAsync();
+		}
 
-			if (stream == null)
+		private static async Task<byte[]> GetSampleDataFile()
+		{
+			byte[] bytes;
+			string sampleDataPath = Path.Combine(Path.GetTempPath(), "sample-data.sql.gz");
+			if (!File.Exists(sampleDataPath))
 			{
-				throw new InvalidOperationException($"Can not find resource: {sampleDataFile}");
+				bytes = await DownloadSampleDataFile();
+				await File.WriteAllBytesAsync(sampleDataPath, bytes);
+			}
+			else
+			{
+				var createDate = File.GetLastWriteTimeUtc(sampleDataPath);
+				if (createDate < DateTime.UtcNow.AddDays(-1))
+				{
+					bytes = await DownloadSampleDataFile();
+					await File.WriteAllBytesAsync(sampleDataPath, bytes);
+				}
+				else
+				{
+					bytes = await File.ReadAllBytesAsync(sampleDataPath);
+				}
 			}
 
-			var archive = new ZipArchive(stream);
-			var entry = archive.Entries.Single();
+			return bytes;
+		}
 
-			using var tr = new StreamReader(entry.Open());
-			return tr.ReadToEnd();
+		private static async Task<byte[]> DownloadSampleDataFile()
+		{
+			// TODO: remove staging after go-live
+			const string url = "https://staging.tasvideos.org/sample-data/sample-data.sql.gz";
+			using var client = new HttpClient();
+			using var result = await client.GetAsync(url);
+			result.EnsureSuccessStatusCode();
+			return await result.Content.ReadAsByteArrayAsync();
 		}
 	}
 }
