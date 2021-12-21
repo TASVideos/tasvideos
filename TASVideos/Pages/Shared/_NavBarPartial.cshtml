@@ -1,29 +1,25 @@
 <navbar class="flex-wrap me-2 me-md-0 fw-bold">
-	<nav-dropdown id="HomeDropdown" activate="Home">
-		<a id="Home" class="dropdown-item" href="/">Home</a>
-		<a id="Welcome" class="dropdown-item" href="/WelcomeToTASVideos">Welcome</a>
-		<a id="News" class="dropdown-item" href="/News">News</a>
+	<nav-item activate="Home">
+		<a id="Home" class="nav-link" href="/">Home</a>
+	</nav-item>
+	<nav-dropdown id="MoviesDropdown" activate="Movies">
+		<a id="Publications" class="dropdown-item" href="/Movies">Publications</a>
+		<a id="Submissions" class="dropdown-item" asp-page="/Submissions/Index">Submissions</a>
+		<a id="Userfiles" class="dropdown-item" href="/Userfiles">User Files</a>
 	</nav-dropdown>
-	<nav-item activate="Movies">
-		<a id="Movies" class="nav-link" href="/Movies">Movies</a>
-	</nav-item>
-	<nav-item activate="Game Resources">
-		<a id="GameResources" class="nav-link" href="/GameResources">Game&nbsp;Resources</a>
-	</nav-item>
-	<nav-item activate="ArticleIndex">
-		<a id="Articles" class="nav-link" href="/ArticleIndex">Articles</a>
-	</nav-item>
-	<nav-item activate="Emulators">
-		<a id="Emulators" class="nav-link" href="/EmulatorResources">Emulators</a>
-	</nav-item>
-	<nav-item activate="Submissions">
-		<a id="Submissions" class="nav-link" asp-page="/Submissions/Index">Submissions</a>
-	</nav-item>
 	<nav-item activate="Forum">
 		<a id="Forum" class="nav-link" asp-page="/Forum/Index">Forum</a>
 	</nav-item>
+	<nav-dropdown id="ArticlesDropdown" activate="Articles">
+		<a id="Articles" class="dropdown-item" href="/ArticleIndex">Article Index</a>
+		<a id="GameResources" class="dropdown-item" href="/GameResources">Game Resources</a>
+		<a id="Emulators" class="dropdown-item" href="/EmulatorResources">Emulators</a>
+	</nav-dropdown>
 	<nav-item activate="Staff">
 		<a id="Staff" class="nav-link" href="/Users">Staff</a>
+	</nav-item>
+	<nav-item activate="About">
+		<a id="Welcome" class="nav-link" href="/WelcomeToTASVideos">About</a>
 	</nav-item>
 	<nav-dropdown id="AdminDropdown" activate="Admin"
 				  permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers, PermissionTo.EditRoles, PermissionTo.TagMaintenance, PermissionTo.CatalogMovies }">
