@@ -261,21 +261,20 @@ article.wiki, .postbody {
 #brand {
 	color: $bs-gray-100;
 	font-size: 17px;
-	font-family: helvetica,arial,sans-serif;
 }
 
 #mantra {
 	font-weight: bold;
-	font-family: Verdana;
 	z-index: 1;
 	color: $bs-gray-100;
 
 	&-1 {
-		font-size: 10px;
+		font-size: 11px;
+		margin-top: -2px;
 	}
 
 	&-2 {
-		font-size: 9px;
+		font-size: 10px;
 	}
 }
 
