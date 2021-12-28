@@ -14,6 +14,37 @@
 	var publicationAwards = await Awards.ForPublication(Model.Id);
 }
 
+@functions {
+	string TorrentRemark(string? link, int id)
+	{
+		if (link == null)
+		{
+			return "";
+		}
+
+		if (link.Contains("_10bit444"))
+		{
+			return "(Modern HQ)";
+		}
+
+		if (link.Contains("_512kb"))
+		{
+			return "(Compatibility)";
+		}
+
+		if (link.Contains("_hq"))
+		{
+			return "(Very High Quality)";
+		}
+
+		if (id > 20200) // Shenanigans!!!
+		{
+			return "Modern HQ";
+		}
+
+		return "";
+	}
+}
 <card class="border border-primary">
 	<cardheader class="bg-cardprimary p-2">
 		<row class="gx-3">
@@ -31,12 +62,6 @@
 				</a>
 			}
 			<a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title </span></a>
-			<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1" style="vertical-align:18%">
-				<i class="fa fa-star-o"></i> @Math.Round(Model.OverallRating ?? 0, 2, MidpointRounding.AwayFromZero) / 10
-			</a>
-			<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1" style="vertical-align:18%">
-				<i class="fa fa-list-ul"></i> Votes: @Model.RatingCount
-			</a>
 			</h4>
 		</row>
 	</cardheader>
@@ -54,29 +79,14 @@
 						 class="w-100 pixelart-image"
 						 loading="lazy" />
 				</div>
-				<div style="text-align:center">
+				<div>
 					@foreach (var url in Model.OnlineWatchingUrls)
 					{
-						<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> YouTube</a>
+						<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> Watch</a>
 					}
-					@foreach (var url in Model.MirrorSiteUrls)
-					{
-						<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-download"></i> Download</a>
-					}
+					<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 				</div>
-			</div>
-			<div class="col-md">
-				<fullrow>
-					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
-				</fullrow>
-				<div style="float:left">
-					<br /><small>Published on @Model.CreateTimestamp.Date.ToShortDateString()</small>
-				</div>
-				<div style="text-align:right">
-					@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
-					{
-						<partial name="_Award" model="award" />
-					}
+				<div>
 					<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Author notes</a>
 					<a condition="@Model.TopicId > 0"
 					   asp-page="/Forum/Topics/Index"
@@ -85,6 +95,22 @@
 						<i class="fa fa-comments-o"></i> Discuss
 					</a>
 				</div>
+				<div>
+					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
+						<i class="fa fa-star-o"></i> @Math.Round(Model.OverallRating ?? 0, 2, MidpointRounding.AwayFromZero) / 10
+					</a>
+					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: @Model.RatingCount</a>
+				</div>
+				@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
+				{
+					<partial name="_Award" model="award" />
+				}
+			</div>
+			<div class="col-md">
+				<fullrow>
+					<div><small>@Model.CreateTimestamp.Date.ToShortDateString()</small></div>
+					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
+				</fullrow>
 			</div>
 		</row>
 		<row condition="Model.ObsoletedMovies.Any()" class="my-2 gx-3">
@@ -131,34 +157,35 @@
 				</small>
 			</div>
 			<div class="col-auto">
-				<small condition="Model.MirrorSiteUrls.Any()">
+				<small condition="Model.MirrorSiteUrls.Any() || Model.TorrentLinks.Any()">
 					A/V files:<br />
 					<span condition="Model.MirrorSiteUrls.Any()">
 						@foreach (var url in Model.MirrorSiteUrls)
 						{
-							<a href="@url" class="ms-2">A/V file via Mirror</a><br />
+							<a href="@url" class="ms-2">A/V file via Mirror<br /></a>
+						}
+					</span>
+					<span condition="Model.TorrentLinks.Any()">
+						@foreach (var torrent in Model.TorrentLinks)
+						{
+							<a href="~/torrent/@torrent.Path" class="ms-2">A/V file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
+							<br />
 						}
 					</span>
 				</small>
 			</div>
 			<div class="col-auto">
+				<small condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
+					Emulator Version:<br /><span class="ms-2">@Model.EmulatorVersion</span>
+				</small>
+			</div>
+			<div condition="Model.MovieFileLinks.Any()" class="col-auto">
 				<small>
-					<span condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
-						Emulator Version:<br />
-							<span class="ms-2">@Model.EmulatorVersion</span>
-					</span>
-					<span>
-						<br />Movie file:<br />
-							<a href="?handler=Download" class="ms-2">Download @System.IO.Path.GetExtension(Model.MovieFileName)</a>
-						<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> @System.IO.Path.GetExtension(Model.MovieFileName) file</a>
-					</span>
-					<span condition="Model.MovieFileLinks.Any()">
-						<br />Additional Downloads:<br />
-						@foreach (var file in Model.MovieFileLinks)
-						{
-							<a class="ms-2" title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a><br />
-						}
-					</span>
+					Additional Downloads:<br />
+					@foreach (var file in Model.MovieFileLinks)
+					{
+						<a class="ms-2" title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a>
+					}
 				</small>
 			</div>
 			<div class="col-auto">
