@@ -70,13 +70,13 @@
 					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 				</fullrow>
 				<div style="float:left">
-					<small>Published on @Model.CreateTimestamp.Date.ToShortDateString()</small>
+					<br /><small>Published on @Model.CreateTimestamp.Date.ToShortDateString()</small>
+				</div>
+				<div style="text-align:right">
 					@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
 					{
 						<partial name="_Award" model="award" />
 					}
-				</div>
-				<div style="text-align:right">
 					<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Author notes</a>
 					<a condition="@Model.TopicId > 0"
 					   asp-page="/Forum/Topics/Index"
