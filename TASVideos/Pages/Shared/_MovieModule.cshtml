@@ -190,20 +190,22 @@
 					}
 				</small>
 			</div>
-			<div class="col-auto">
-				<a permission="EditPublicationMetaData"
-				   asp-page="Edit"
-				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
-				<a permission="CatalogMovies"
-				   asp-page="/Publications/Catalog"
-				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
-				<a permission="EditPublicationMetaData"
-				   href="/MovieMaintenanceLog?id=@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1">
-					<i class="fa fa-history"></i> Logs
-				</a>
+			<div class="col">
+				<div class="float-end">
+					<a permission="EditPublicationMetaData"
+					   asp-page="Edit"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
+					<a permission="CatalogMovies"
+					   asp-page="/Publications/Catalog"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
+					<a permission="EditPublicationMetaData"
+					   href="/MovieMaintenanceLog?id=@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1">
+						<i class="fa fa-history"></i> Logs
+					</a>
+				</div>
 			</div>
 		</row>
 	</cardbody>
