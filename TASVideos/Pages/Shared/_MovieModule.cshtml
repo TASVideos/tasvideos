@@ -47,21 +47,25 @@
 }
 <card class="border border-primary">
 	<cardheader class="bg-cardprimary p-2">
-		<row class="gx-3">
+		<div class="gx-3 clearfix">
+			<div class="float-start" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)">
+				<img  class="me-1" width="18" src="/@classIconPath2X"
+					srcset="/@Model.ClassIconPath .5x,
+					/@classIconPath2X 1x,
+					/@classIconPath4X 2x" />
+			</div>
+			<div class="float-end">
+				@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
+				{
+					<a href="@flag.LinkPath">
+						<img class="ms-1" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
+					</a>
+				}
+			</div>
 			<h4>
-			<img condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)" style="vertical-align:1%" width="18" src="/@classIconPath2X"
-				srcset="/@Model.ClassIconPath .5x,
-				/@classIconPath2X 1x,
-				/@classIconPath4X 2x" />
-			@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
-			{
-				<a href="@flag.LinkPath">
-					<img class="embedright" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
-				</a>
-			}
-			<a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title </span></a>
+				<a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title </span></a>
 			</h4>
-		</row>
+		</div>
 	</cardheader>
 	<cardbody class="px-2 py-0">
 		<div condition="@Model.ObsoletedById.HasValue" class="col card-subtitle text-dark my-2">
