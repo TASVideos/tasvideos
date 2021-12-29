@@ -2,7 +2,7 @@
 -- Run a full import
 -- Run this script
 -- In PgAdmin, right click on the database and click Backup.
---		Enter SampleData-Postgres.sql in the SampleData folder as the filename
+--		Enter sample-data.sql in the SampleData folder as the filename
 --		Select Plain as the Format
 --		Select UTF8 as the encoding
 --		In the Dump options tab
@@ -11,7 +11,7 @@
 --			Use column inserts - Yes
 --			Use Insert Commands - Yes
 --		Run
---		zip SampleData-Postgres.sql and replace SampleData-Postgres.zip
+--		gzip sample-data.sql.gz and replace temp file
 
 DELETE FROM public.game_ram_address_domains;
 DELETE FROM public.game_ram_addresses;
@@ -288,3 +288,5 @@ UPDATE public.users
 		normalized_email = null, -- We dont' want to make these public either
 		last_logged_in_time_stamp = NOW(),
 		time_zone_iD = 'UTC';
+
+TRUNCATE TABLE public.user_claims;
