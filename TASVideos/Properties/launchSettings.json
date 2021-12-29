@@ -8,10 +8,14 @@
     }
   },
   "profiles": {
-    "Staging": {
-      "commandName": "Project",
+    "Dev Postgres (Sample Data)": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost:44385/",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging"
+        "ASPNETCORE_preventHostingStartup": "True",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "StartupStrategy": "Sample"
       }
     },
     "Dev Postgres (No recreate)": {
@@ -24,16 +28,6 @@
         "StartupStrategy": "Minimal"
       }
     },
-    "Dev Postgres (Sample Data)": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "https://localhost:44385/",
-      "environmentVariables": {
-        "ASPNETCORE_preventHostingStartup": "True",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "StartupStrategy": "Sample"
-      }
-    },
     "Dev Postgres (Migrate)": {
       "commandName": "IISExpress",
       "launchBrowser": true,
@@ -42,6 +36,12 @@
         "ASPNETCORE_preventHostingStartup": "True",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "StartupStrategy": "Migrate"
+      }
+    },
+    "Staging": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Staging"
       }
     }
   }
