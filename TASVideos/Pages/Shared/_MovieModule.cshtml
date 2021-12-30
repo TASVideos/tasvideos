@@ -47,21 +47,25 @@
 }
 <card class="border border-primary">
 	<cardheader class="bg-cardprimary p-2">
-		<row class="gx-3">
+		<div class="gx-3 clearfix">
+			<div class="float-start" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)">
+				<img  class="me-1" width="18" src="/@classIconPath2X"
+					srcset="/@Model.ClassIconPath .5x,
+					/@classIconPath2X 1x,
+					/@classIconPath4X 2x" />
+			</div>
+			<div class="float-end">
+				@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
+				{
+					<a href="@flag.LinkPath">
+						<img class="ms-1" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
+					</a>
+				}
+			</div>
 			<h4>
-			<img condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)" style="vertical-align:1%" width="18" src="/@classIconPath2X"
-				srcset="/@Model.ClassIconPath .5x,
-				/@classIconPath2X 1x,
-				/@classIconPath4X 2x" />
-			@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
-			{
-				<a href="@flag.LinkPath">
-					<img class="embedright" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
-				</a>
-			}
-			<a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title </span></a>
+				<a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title </span></a>
 			</h4>
-		</row>
+		</div>
 	</cardheader>
 	<cardbody class="px-2 py-0">
 		<div condition="@Model.ObsoletedById.HasValue" class="col card-subtitle text-dark my-2">
@@ -186,20 +190,22 @@
 					}
 				</small>
 			</div>
-			<div class="col-auto">
-				<a permission="EditPublicationMetaData"
-				   asp-page="Edit"
-				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
-				<a permission="CatalogMovies"
-				   asp-page="/Publications/Catalog"
-				   asp-route-id="@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
-				<a permission="EditPublicationMetaData"
-				   href="/MovieMaintenanceLog?id=@Model.Id"
-				   class="btn btn-secondary btn-sm border border-warning mt-1">
-					<i class="fa fa-history"></i> Logs
-				</a>
+			<div class="col">
+				<div class="float-end">
+					<a permission="EditPublicationMetaData"
+					   asp-page="Edit"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
+					<a permission="CatalogMovies"
+					   asp-page="/Publications/Catalog"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
+					<a permission="EditPublicationMetaData"
+					   href="/MovieMaintenanceLog?id=@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1">
+						<i class="fa fa-history"></i> Logs
+					</a>
+				</div>
 			</div>
 		</row>
 	</cardbody>
