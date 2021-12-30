@@ -159,19 +159,12 @@
 				</small>
 			</div>
 			<div class="col-auto">
-				<small condition="Model.MirrorSiteUrls.Any() || Model.TorrentLinks.Any()">
+				<small condition="Model.MirrorSiteUrls.Any()">
 					A/V files:<br />
 					<span condition="Model.MirrorSiteUrls.Any()">
 						@foreach (var url in Model.MirrorSiteUrls)
 						{
 							<a href="@url" class="ms-2">A/V file via Mirror<br /></a>
-						}
-					</span>
-					<span condition="Model.TorrentLinks.Any()">
-						@foreach (var torrent in Model.TorrentLinks)
-						{
-							<a href="~/torrent/@torrent.Path" class="ms-2">A/V file via BitTorrent @TorrentRemark(torrent.Path, torrent.Id)</a>
-							<br />
 						}
 					</span>
 				</small>

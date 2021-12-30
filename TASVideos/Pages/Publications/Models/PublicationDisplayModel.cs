@@ -33,9 +33,6 @@ namespace TASVideos.Pages.Publications.Models
 
 		public FileModel Screenshot => Files.First(f => f.Type == FileType.Screenshot);
 
-		public IEnumerable<FileModel> TorrentLinks => Files
-			.Where(f => f.Type == FileType.Torrent);
-
 		public IEnumerable<FileModel> MovieFileLinks => Files
 			.Where(f => f.Type == FileType.MovieFile);
 
