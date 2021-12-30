@@ -98,14 +98,10 @@ namespace TASVideos.Pages.Publications
 				return Page();
 			}
 
-			string path;
+			string path = "";
 			if (Type == FileType.Screenshot)
 			{
 				path = await _uploader.UploadScreenshot(Id, NewFile!, Description);
-			}
-			else
-			{
-				path = await _uploader.UploadTorrent(Id, NewFile!);
 			}
 
 			string log = $"added {Type} file {path}";
