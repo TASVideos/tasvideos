@@ -28,19 +28,15 @@
 		<Compile Remove="logs\**" />
 		<Compile Remove="wwwroot\lib\**" />
 		<Compile Remove="wwwroot\media\**" />
-		<Compile Remove="wwwroot\torrent\**" />
 		<Content Remove="logs\**" />
 		<Content Remove="wwwroot\lib\**" />
 		<Content Remove="wwwroot\media\**" />
-		<Content Remove="wwwroot\torrent\**" />
 		<EmbeddedResource Remove="logs\**" />
 		<EmbeddedResource Remove="wwwroot\lib\**" />
 		<EmbeddedResource Remove="wwwroot\media\**" />
-		<EmbeddedResource Remove="wwwroot\torrent\**" />
 		<None Remove="logs\**" />
 		<None Remove="wwwroot\lib\**" />
 		<None Remove="wwwroot\media\**" />
-		<None Remove="wwwroot\torrent\**" />
 	</ItemGroup>
 
 	<ItemGroup>
