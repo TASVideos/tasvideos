@@ -3,7 +3,6 @@
 @{
 	var baseUrl = ViewData["BaseUrl"];
 	var movieUrl = $"{baseUrl}/{Model.Id}M";
-	var primaryTorrent = Model.TorrentLinks.FirstOrDefault(t => !t.Contains("_512kb.mp4"));
 
 	var primaryStreaming = Model.StreamingUrls.FirstOrDefault(u => u.Contains("youtube"));
 	var secondaryStreaming = Model.StreamingUrls.Where(u => u != primaryStreaming);
@@ -21,11 +20,6 @@
 	<media:group>
 		<media:content url="@(movieUrl)?handler=Download" fileSize="@Model.MovieFileSize" type="application/zip" medium="document" />
 		<media:thumbnail url="@(baseUrl)/@Model.ScreenshotPath" />
-		<media:content condition="primaryTorrent != null" url="@primaryTorrent" medium="video" isDefault="true" />
-		@foreach (var torrent in Model.TorrentLinks)
-		{
-			<media:peerLink type="application/x-bittorrent" href="@torrent" />
-		}
 		@foreach (var url in secondaryStreaming)
 		{
 			<media:content url="@url" type="video" medium="video" />
@@ -34,7 +28,6 @@
 		<media:community>
 			<media:starRating average="@Model.RatingAverage" count="@Model.RatingCount" min="@Model.RatingMin" max="@Model.RatingMax" />
 		</media:community>
-		<enclosure condition="@primaryTorrent != null" url="@primaryTorrent" type="application/x-bittorrent" />
 		<guid>@movieUrl</guid>
 		<pubDate>@Model.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
 	</media:group>
