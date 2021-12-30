@@ -14,37 +14,6 @@
 	var publicationAwards = await Awards.ForPublication(Model.Id);
 }
 
-@functions {
-	string TorrentRemark(string? link, int id)
-	{
-		if (link == null)
-		{
-			return "";
-		}
-
-		if (link.Contains("_10bit444"))
-		{
-			return "(Modern HQ)";
-		}
-
-		if (link.Contains("_512kb"))
-		{
-			return "(Compatibility)";
-		}
-
-		if (link.Contains("_hq"))
-		{
-			return "(Very High Quality)";
-		}
-
-		if (id > 20200) // Shenanigans!!!
-		{
-			return "Modern HQ";
-		}
-
-		return "";
-	}
-}
 <card class="border border-primary">
 	<cardheader class="bg-cardprimary p-2">
 		<div class="gx-3 clearfix">
