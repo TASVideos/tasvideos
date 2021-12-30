@@ -81,7 +81,7 @@ namespace TASVideos.Core.Services
 
 			if (file is not null)
 			{
-				string path = Path.Combine(_env.WebRootPath, "torrent", file.Path);
+				string path = Path.Combine(_env.WebRootPath, file.Path);
 				File.Delete(path);
 
 				_db.PublicationFiles.Remove(file);
