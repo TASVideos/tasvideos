@@ -86,7 +86,6 @@
 					{
 						<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> Watch</a>
 					}
-					<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 				</div>
 				<div>
 					<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Author notes</a>
@@ -177,17 +176,23 @@
 				</small>
 			</div>
 			<div class="col-auto">
-				<small condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
-					Emulator Version:<br /><span class="ms-2">@Model.EmulatorVersion</span>
-				</small>
-			</div>
-			<div condition="Model.MovieFileLinks.Any()" class="col-auto">
 				<small>
-					Additional Downloads:<br />
-					@foreach (var file in Model.MovieFileLinks)
-					{
-						<a class="ms-2" title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a>
-					}
+					<span condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
+						Emulator Version:<br />
+							<span class="ms-2">@Model.EmulatorVersion</span>
+					</span>
+					<span>
+						<br />Movie file:<br />
+							<a href="?handler=Download" class="ms-2">Download @System.IO.Path.GetExtension(Model.MovieFileName)</a>
+						<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> @System.IO.Path.GetExtension(Model.MovieFileName) file</a>
+					</span>
+					<span condition="Model.MovieFileLinks.Any()">
+						<br />Additional Downloads:<br />
+						@foreach (var file in Model.MovieFileLinks)
+						{
+							<a class="ms-2" title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a><br />
+						}
+					</span>
 				</small>
 			</div>
 			<div class="col">
