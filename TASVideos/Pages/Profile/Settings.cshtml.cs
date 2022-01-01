@@ -84,7 +84,7 @@ namespace TASVideos.Pages.Profile
 			var user = await _userManager.GetUserAsync(User);
 
 			var email = user.Email;
-			if (Settings.Email != email)
+			if (string.Equals(Settings.Email, email, StringComparison.CurrentCultureIgnoreCase))
 			{
 				var setEmailResult = await _userManager.SetEmailAsync(user, Settings.Email);
 
