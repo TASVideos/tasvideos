@@ -31,7 +31,7 @@ namespace TASVideos.Core.Services.Email
 			await _emailSender.SendEmail(new SingleEmail
 			{
 				Recipient = recipient,
-				Subject = "Reset Password",
+				Subject = "TASVideos - Reset Password",
 				Message = $"Please reset your password by clicking here: <a href='{link}'>link</a>",
 				ContainsHtml = true
 			});
@@ -42,7 +42,7 @@ namespace TASVideos.Core.Services.Email
 			await _emailSender.SendEmail(new SingleEmail
 			{
 				Recipient = recipient,
-				Subject = "Confirm your email",
+				Subject = "TASVideos - Confirm your email",
 				Message = $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>",
 				ContainsHtml = true
 			});
