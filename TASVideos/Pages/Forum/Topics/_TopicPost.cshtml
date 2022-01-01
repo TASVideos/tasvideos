@@ -63,7 +63,7 @@
 				</span>
 			</div>
 			<small>
-				@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')))
+				@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')).OrderBy(s => s))
 				<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
 			</small>
 		</div>
@@ -84,7 +84,7 @@
 					<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-muted">@Html.DisplayFor(m => m.PosterPronouns)</small>
 				</div>
 				<div class="card-text text-start" style="line-height: 1">
-					<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')))
+					<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')).OrderBy(s => s))
 						<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
 					</small>
 					<br />
