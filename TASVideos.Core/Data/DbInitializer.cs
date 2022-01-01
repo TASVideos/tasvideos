@@ -219,7 +219,7 @@ namespace TASVideos.Core.Data
 		private static async Task<byte[]> DownloadSampleDataFile()
 		{
 			// TODO: remove staging after go-live
-			const string url = "https://staging.tasvideos.org/sample-data/sample-data.sql.gz";
+			const string url = "https://tasvideos.org/sample-data/sample-data.sql.gz";
 			using var client = new HttpClient();
 			using var result = await client.GetAsync(url);
 			result.EnsureSuccessStatusCode();
