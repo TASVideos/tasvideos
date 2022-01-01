@@ -132,7 +132,7 @@ namespace TASVideos.Pages.Forum.Posts
 					forumPost.Topic!.Forum!.Restricted,
 					$"Post edited by {User.Name()} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
 					"",
-					$"p/{Id}#{Id}",
+					$"Forum/p/{Id}#{Id}",
 					User.Name());
 			}
 
