@@ -138,7 +138,7 @@ namespace TASVideos.Extensions
 		{
 			services.AddIdentity<User, Role>(config =>
 				{
-					config.SignIn.RequireConfirmedEmail = false;
+					config.SignIn.RequireConfirmedEmail = env.IsProduction() || env.IsStaging();
 					config.Password.RequiredLength = 12;
 					config.Password.RequireDigit = false;
 					config.Password.RequireLowercase = false;
