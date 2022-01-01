@@ -73,7 +73,7 @@ namespace TASVideos.Core.Services.Youtube
 			}
 
 			descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
-			var renderedDescription = _textRenderer.RenderWikiForYoutube(video.WikiPage);
+			var renderedDescription = await _textRenderer.RenderWikiForYoutube(video.WikiPage);
 
 			var requestBody = new VideoUpdateRequest
 			{
