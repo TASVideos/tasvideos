@@ -18,7 +18,7 @@ namespace TASVideos.Pages.Roles.Models
 		public bool IsDefault { get; set; }
 
 		[Required]
-		[StringLength(200)]
+		[StringLength(300)]
 		public string Description { get; set; } = "";
 
 		[Range(1, 9999)]
