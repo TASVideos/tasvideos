@@ -145,6 +145,7 @@ namespace TASVideos.Extensions
 					config.Password.RequireNonAlphanumeric = false;
 					config.Password.RequiredUniqueChars = 4;
 					config.User.RequireUniqueEmail = true;
+					config.User.AllowedUserNameCharacters = "āâãáéëöú#£*--._ "; // The space is intentional
 				})
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
