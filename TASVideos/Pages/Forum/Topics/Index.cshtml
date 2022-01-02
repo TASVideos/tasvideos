@@ -12,15 +12,17 @@
 }
 <partial Name="_ForumHeader" />
 <div class="row mb-2">
-	<partial name="_TopicCrumbs" model="Model.Topic" />
-	<partial name="_TopicActionBar" model="Model.Topic" />
-	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
-		|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
-	   asp-page="/Forum/Posts/Create"
-	   asp-route-topicId="@Model.Id"
-	   class="btn btn-primary btn-sm float-end">
-		<span class="fa fa-plus"></span> Post
-	</a>
+	<div class="col-12">
+		<partial name="_TopicCrumbs" model="Model.Topic" />
+		<partial name="_TopicActionBar" model="Model.Topic" />
+		<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
+			|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
+		   asp-page="/Forum/Posts/Create"
+		   asp-route-topicId="@Model.Id"
+		   class="btn btn-primary btn-sm float-end">
+			<span class="fa fa-plus"></span> Post
+		</a>
+	</div>
 </div>
 
 @if (Model.Topic.Poll is not null)
