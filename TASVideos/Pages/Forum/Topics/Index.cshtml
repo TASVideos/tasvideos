@@ -11,7 +11,7 @@
 	</div>
 }
 <partial Name="_ForumHeader" />
-<fullrow>
+<div class="row mb-2">
 	<partial name="_TopicCrumbs" model="Model.Topic" />
 	<partial name="_TopicActionBar" model="Model.Topic" />
 	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
@@ -21,7 +21,7 @@
 	   class="btn btn-primary btn-sm float-end">
 		<span class="fa fa-plus"></span> Post
 	</a>
-</fullrow>
+</div>
 
 @if (Model.Topic.Poll is not null)
 {
