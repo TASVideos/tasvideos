@@ -123,15 +123,15 @@ namespace TASVideos.Core.Services
 		{
 			get
 			{
-				_cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName}", out WikiPage page);
+				_cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", out WikiPage page);
 				return page;
 			}
 
-			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName}", value, Durations.OneDayInSeconds);
+			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
 		}
 
 		private void RemovePageFromCache(string pageName) =>
-			_cache.Remove($"{CacheKeys.CurrentWikiCache}-{pageName}");
+			_cache.Remove($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}");
 		
 
 		public async Task<IEnumerable<WikiOrphan>> Orphans() => await _db.WikiPages
@@ -531,7 +531,7 @@ namespace TASVideos.Core.Services
 
 		private void ClearCache(string pageName)
 		{
-			_cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName);
+			_cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName.ToLower());
 		}
 
 		private async Task GenerateReferrals(string pageName, string markup)

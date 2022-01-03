@@ -110,6 +110,19 @@ namespace TASVideos.Core.Tests.Services
 		}
 
 		[TestMethod]
+		public async Task Page_CaseInsensitive_CachesCorrectPage()
+		{
+			string existingPage = "Exists";
+			AddPage(existingPage, cache: true);
+
+			var actual = await _wikiPages.Page(existingPage.ToUpper());
+			Assert.AreEqual(1, _cache.PageCache().Count, "Cache should have  1 record");
+			Assert.AreEqual(existingPage, _cache.PageCache().First().PageName, "Cache should match page checked");
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(existingPage, actual.PageName);
+		}
+
+		[TestMethod]
 		public async Task Page_PageDoesNotExist_ReturnsNull()
 		{
 			string existingPage = "Exists";
@@ -1422,7 +1435,7 @@ namespace TASVideos.Core.Tests.Services
 
 			if (cache)
 			{
-				_cache.Set(wp.PageName, wp);
+				_cache.AddPage(wp);
 			}
 
 			return wp.Id;

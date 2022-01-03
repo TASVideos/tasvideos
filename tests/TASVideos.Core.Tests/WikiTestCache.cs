@@ -18,7 +18,7 @@ namespace TASVideos.Core.Tests
 
 		public void AddPage(WikiPage page)
 		{
-			Set($"{CacheKeys.CurrentWikiCache}-{page.PageName}", page);
+			Set($"{CacheKeys.CurrentWikiCache}-{page.PageName.ToLower()}", page);
 		}
 
 		public List<WikiPage> PageCache()
