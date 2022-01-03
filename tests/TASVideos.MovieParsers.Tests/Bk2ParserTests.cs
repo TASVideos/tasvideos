@@ -98,6 +98,7 @@ namespace TASVideos.MovieParsers.Tests
 		[DataRow("System-Lynx.bk2", SystemCodes.Lynx)]
 		[DataRow("System-Nes.bk2", SystemCodes.Nes)]
 		[DataRow("System-Fds.bk2",  SystemCodes.Fds)]
+		[DataRow("System-Vs.bk2", SystemCodes.Arcade)]
 		[DataRow("System-Gb.bk2", SystemCodes.GameBoy)]
 		[DataRow("System-Dgb.bk2", SystemCodes.GameBoy)]
 		[DataRow("System-Gb3x.bk2", SystemCodes.GameBoy)]

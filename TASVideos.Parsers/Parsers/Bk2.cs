@@ -90,7 +90,8 @@ namespace TASVideos.MovieParsers.Parsers
 				}
 				else if (header.GetValueFor(Keys.ModeVs).ToBool())
 				{
-					platform = SystemCodes.Vs;
+					platform = SystemCodes.Arcade;
+					result.FrameRateOverride = 60.0988138974405;
 				}
 
 				result.SystemCode = platform;
