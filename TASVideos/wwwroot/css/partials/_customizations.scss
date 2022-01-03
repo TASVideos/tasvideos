@@ -157,6 +157,16 @@ article.wiki, .postbody {
 	}
 }
 
+[data-bs-toggle="collapse"] {
+	.fa::before {
+		content: "\f139";
+	}
+
+	&.collapsed .fa::before {
+		content: "\f13a";
+	}
+}
+
 .hiddenifmodule {
 	display: none;
 }
