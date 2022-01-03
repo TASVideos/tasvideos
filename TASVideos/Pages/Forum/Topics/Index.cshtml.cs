@@ -56,6 +56,8 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public string? EncodeEmbedLink { get; set; }
 
+		public ForumPostEntry? HighlightedPost { get; set; }
+
 		public async Task<IActionResult> OnGet()
 		{
 			int? userId = User.IsLoggedIn()
@@ -156,10 +158,10 @@ namespace TASVideos.Pages.Forum.Topics
 
 			if (Search.Highlight.HasValue)
 			{
-				var post = Topic.Posts.SingleOrDefault(p => p.Id == Search.Highlight);
-				if (post is not null)
+				HighlightedPost = Topic.Posts.SingleOrDefault(p => p.Id == Search.Highlight);
+				if (HighlightedPost is not null)
 				{
-					post.Highlight = true;
+					HighlightedPost.Highlight = true;
 				}
 			}
 

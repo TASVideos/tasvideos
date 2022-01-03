@@ -4,12 +4,39 @@
 @{
 	ViewData["Title"] = $"{Model.Topic.Title} - Topic {Model.Topic.Id}";
 }
+
+@if (Model.HighlightedPost is not null)
+{
+	var description = $"Thread Topic: {Model.Topic.Title}";
+	if (!String.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
+	{
+		description += $" - Reply Subject: {Model.HighlightedPost.Subject}";
+	}
+	@section Header {
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="@($"Forum Reply by {Model.HighlightedPost.PosterName}")" />
+		<meta property="og:description" content="@description" />
+		<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
+		<meta property="og:image" content="@Model.HighlightedPost.PosterAvatar" />
+	}
+} else
+{
+	@section Header {
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="TASVideos Forum Thread" />
+		<meta property="og:description" content="@Model.Topic.Title" />
+		<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
+		<meta property="og:image" content="@Model.Topic.Posts.FirstOrDefault()?.PosterAvatar" />
+	}
+}
+
 @section PageTitle {
 	<div class="container mb-2">
 		<h1 class="fs-4">@(Model.Topic.Title)</h1>
 		<h6 condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</h6>
 	</div>
 }
+
 <partial Name="_ForumHeader" />
 <div class="row mb-2">
 	<div class="col-12">

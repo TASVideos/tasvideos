@@ -7,7 +7,19 @@
 		? "Game Resources"
 		: pageData.PageName;
 }
-
+@section Header {
+	@{
+		var description = "";
+		if (pageData.Author is not null && pageData.RevisionMessage is not null) {
+			description = $"Last Edited By {pageData.Author.UserName} - {pageData.RevisionMessage}";
+		}
+	}
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="@pageData.PageName" />
+	<meta property="og:description" content="@description" />
+	<meta property="og:url" content="@Context.Request.ToUrl()" />
+	<meta property="og:image" content="@($"{Context.Request.ToBaseUrl()}/images/logo-light-4x.png")" />
+}
 <partial name="_WikiLayoutHeader" model="pageData" />
 @RenderBody()
 <partial name="_WikiLayoutFooter" model="pageData" />
