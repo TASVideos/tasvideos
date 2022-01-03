@@ -7,8 +7,8 @@
 		var collapseId = $"collapse-content-{post.Id}";
 		<div class="card">
 			<div class="card-body">
-				<h5 condition="!Model.HideContent" class="card-title">@post.Subject</h5>
-				<h5 condition="Model.HideContent"><a data-bs-toggle="collapse" href="/Forum/Posts/@(post.Id)#@(post.Id)" data-bs-target="#@collapseId" role="button" aria-expanded="false">@post.Subject</a></h5>
+				<h5 condition="!Model.HideContent"><a href="/Forum/Posts/@(post.Id)#@(post.Id)">@post.Subject</a></h5>
+				<h5 condition="Model.HideContent"><a class="collapsed" data-bs-toggle="collapse" href="/Forum/Posts/@(post.Id)#@(post.Id)" data-bs-target="#@collapseId" role="button" aria-expanded="false"><i class="fa fa-chevron-circle-down"></i> @post.Subject</a></h5>
 				<h6 class="card-subtitle mb-2 text-muted">
 					<small>
 						posted by <a href="/@post.PosterName">@post.PosterName</a> <timezone-convert asp-for="@post.CreateTimestamp" in-line="true" />
