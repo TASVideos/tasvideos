@@ -130,6 +130,10 @@ namespace TASVideos.Core.Services
 			set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName}", value, Durations.OneDayInSeconds);
 		}
 
+		private void RemovePageFromCache(string pageName) =>
+			_cache.Remove($"{CacheKeys.CurrentWikiCache}-{pageName}");
+		
+
 		public async Task<IEnumerable<WikiOrphan>> Orphans() => await _db.WikiPages
 				.ThatAreNotDeleted()
 				.WithNoChildren()
@@ -349,10 +353,13 @@ namespace TASVideos.Core.Services
 			// broken and it is important to keep them listed as broken so they
 			// can show up in the Broken Links module for editors to see and fix.
 			// Anyone doing a move operation should know to check broken links afterwards
+			
 			var cachedRevision = this[originalName];
 			if (cachedRevision is not null)
 			{
+				RemovePageFromCache(originalName);
 				cachedRevision.PageName = destinationName;
+				_cache.Set(destinationName, cachedRevision);
 			}
 
 			return true;
