@@ -43,6 +43,7 @@
 		public const string WSwan = "wswan";
 		public const string X32 = "32x";
 		public const string Vectrex = "vec";
+		public const string Vs = "vs";
 		public const string ZxSpectrum = "zxs";
 	}
 }
