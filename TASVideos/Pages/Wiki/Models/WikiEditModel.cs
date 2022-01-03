@@ -14,7 +14,7 @@ namespace TASVideos.Pages.Wiki.Models
 		public bool MinorEdit { get; set; }
 
 		[Display(Name = "Edit Comments", Description = "Please enter a descriptive summary of your change. Leaving this blank is discouraged.")]
-		[MaxLength(100)]
+		[MaxLength(500)]
 		public string? RevisionMessage { get; set; }
 	}
 }
