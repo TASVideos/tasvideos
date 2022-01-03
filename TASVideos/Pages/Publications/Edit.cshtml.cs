@@ -109,7 +109,7 @@ namespace TASVideos.Pages.Publications
 				.Select(pa => pa.Author!.UserName)
 				.ToListAsync();
 
-			await PopulateDropdowns(Publication.SystemCode);
+			await PopulateDropdowns(Publication.SystemCode, Publication.ObsoletedBy);
 			return Page();
 		}
 
@@ -117,7 +117,7 @@ namespace TASVideos.Pages.Publications
 		{
 			if (!ModelState.IsValid)
 			{
-				await PopulateDropdowns(Publication.SystemCode);
+				await PopulateDropdowns(Publication.SystemCode, Publication.ObsoletedBy);
 				return Page();
 			}
 
@@ -125,7 +125,7 @@ namespace TASVideos.Pages.Publications
 			return RedirectToPage("View", new { Id });
 		}
 
-		private async Task PopulateDropdowns(string systemCode)
+		private async Task PopulateDropdowns(string systemCode, int? obsoletedById)
 		{
 			var userPermissions = User.Permissions();
 			AvailableFlags = await _db.Flags
@@ -145,7 +145,7 @@ namespace TASVideos.Pages.Publications
 				})
 				.ToListAsync();
 			AvailableMoviesForObsoletedBy = await _db.Publications
-				.ThatAreCurrent()
+				.Where(p => p.ObsoletedById == null || p.Id == obsoletedById)
 				.Where(p => p.System!.Code == systemCode)
 				.Where(p => p.Id != Id)
 				.Select(p => new SelectListItem
