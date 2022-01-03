@@ -45,13 +45,13 @@ namespace TASVideos.ViewComponents
 
 			var searchModel = new PublicationSearchModel
 			{
-				Classes = tokenLookup.Classes.Where(tier.Contains),
-				SystemCodes = tokenLookup.SystemCodes.Where(systemCode.Contains),
+				Classes = tokenLookup.Classes.Where(c => tier.Select(tt => tt.ToLower()).Contains(c)),
+				SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Select(c => c.ToLower()).Contains(s)),
 				ShowObsoleted = obs,
 				Years = tokenLookup.Years.Where(year.Contains),
-				Tags = tokenLookup.Tags.Where(tag.Contains),
-				Genres = tokenLookup.Genres.Where(tag.Contains),
-				Flags = tokenLookup.Flags.Where(flag.Contains),
+				Tags = tokenLookup.Tags.Where(t => tag.Select(tt => tt.ToLower()).Contains(t)),
+				Genres = tokenLookup.Genres.Where(g => tag.Select(tt => tt.ToLower()).Contains(g)),
+				Flags = tokenLookup.Flags.Where(f => flag.Select(ff => ff.ToLower()).Contains(f)),
 				MovieIds = id,
 				Games = game,
 				GameGroups = group,
