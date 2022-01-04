@@ -102,7 +102,7 @@ namespace TASVideos.TagHelpers
 
 			switch (Activate)
 			{
-				case "Home" when pageGroup == "Home":
+				case "Home" when page == "/Index":
 				case "Movies" when new[] { "Publications", "Submissions", "UserFiles" }.Contains(pageGroup):
 				case "Articles" when new[] { "ArticleIndex", "Game Resources", "EmulatorResources" }.Contains(viewActiveTab):
 				case "Admin" when new[] { "Roles", "Users", "Permissions" }.Contains(pageGroup):
