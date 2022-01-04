@@ -55,7 +55,7 @@
 			},
 			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Development",
-				"StartupStrategy": "Minimal"
+				"StartupStrategy": "Sample"
 			},
 			"sourceFileMap": {
 				"/Views": "${workspaceFolder}/Views"
