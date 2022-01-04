@@ -19,6 +19,9 @@ namespace TASVideos.Pages.Publications.Models
 		[Display(Name = "Show Obsoleted")]
 		public bool ShowObsoleted { get; set; }
 
+		[Display(Name = "Only Obsoleted")]
+		public bool OnlyObsoleted { get; set; }
+
 		public IEnumerable<int> Authors { get; set; } = new List<int>();
 
 		public IEnumerable<int> MovieIds { get; set; } = new List<int>();
@@ -78,7 +81,11 @@ namespace TASVideos.Pages.Publications.Models
 				sb.Append('-').Append(string.Join("-", GameGroups.Select(gg => $"group{gg}")));
 			}
 
-			if (ShowObsoleted && !IsEmpty)
+			if (OnlyObsoleted && !IsEmpty)
+			{
+				sb.Append("-ObsOnly");
+			}
+			else if (ShowObsoleted && !IsEmpty)
 			{
 				sb.Append("-Obs");
 			}

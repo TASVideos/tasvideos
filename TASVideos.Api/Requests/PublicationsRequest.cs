@@ -51,9 +51,14 @@ namespace TASVideos.Api.Requests
 		public string? AuthorIds { get; init; }
 
 		/// <summary>
-		/// Gets a value indicating whether or not to show obsoleted movies.
+		/// Gets a value indicating whether or not to show obsoleted in addition to current movies.
 		/// </summary>
 		public bool ShowObsoleted { get; init; }
+
+		/// <summary>
+		/// Gets a value indicating whether or not to only show obsoleted movies (and exclude current)
+		/// </summary>
+		public bool OnlyObsoleted { get; init; }
 
 		/// <summary>
 		/// Gets the list of Game Ids to filter by.

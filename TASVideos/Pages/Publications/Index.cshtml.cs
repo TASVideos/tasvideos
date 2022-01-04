@@ -49,6 +49,7 @@ namespace TASVideos.Pages.Publications
 				Classes = tokenLookup.Classes.Where(t => tokens.Contains(t)),
 				SystemCodes = tokenLookup.SystemCodes.Where(s => tokens.Contains(s)),
 				ShowObsoleted = tokens.Contains("obs"),
+				OnlyObsoleted = tokens.Contains("obsonly"),
 				Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)),
 				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t)),
 				Genres = tokenLookup.Genres.Where(g => tokens.Contains(g)),

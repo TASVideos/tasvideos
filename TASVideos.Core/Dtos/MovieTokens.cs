@@ -15,6 +15,7 @@ namespace TASVideos.Core.Services
 		public IEnumerable<string> Flags { get; init; } = new List<string>();
 
 		public bool ShowObsoleted { get; set; }
+		public bool OnlyObsoleted { get; set; }
 
 		public IEnumerable<int> Authors { get; init; } = new List<int>();
 
