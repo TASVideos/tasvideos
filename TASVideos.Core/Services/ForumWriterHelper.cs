@@ -14,7 +14,16 @@ namespace TASVideos.Core.Services
 			_db = db;
 		}
 
-		public async Task<string?> GetMovieTitle(int id) => (await _db.Publications.FirstOrDefaultAsync(p => p.Id == id))?.Title;
+		public async Task<string?> GetMovieTitle(int id)
+		{
+			var publication = await _db.Publications.FirstOrDefaultAsync(p => p.Id == id);
+			if (publication is not null)
+			{
+				return $"[{publication.Id}] {publication.Title}";
+			}
+			return null;
+		}
+
 		public async Task<string?> GetSubmissionTitle(int id) => (await _db.Submissions.FirstOrDefaultAsync(s => s.Id == id))?.Title;
 	}
 }
