@@ -17,11 +17,7 @@ namespace TASVideos.Core.Services
 		public async Task<string?> GetMovieTitle(int id)
 		{
 			var publication = await _db.Publications.FirstOrDefaultAsync(p => p.Id == id);
-			if (publication is not null)
-			{
-				return $"[{publication.Id}] {publication.Title}";
-			}
-			return null;
+			return publication is not null ? $"[{publication.Id}] {publication.Title}" : null;
 		}
 
 		public async Task<string?> GetSubmissionTitle(int id) => (await _db.Submissions.FirstOrDefaultAsync(s => s.Id == id))?.Title;
