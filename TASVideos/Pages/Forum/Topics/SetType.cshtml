@@ -4,7 +4,7 @@
 	ViewData["Title"] = $"Setting type for topic for: {Model.TopicTitle}";
 }
 <partial Name="_ForumHeader" />
-<h4>Setting type for topic: <a asp-page="/Forum/Subforum" asp-route-id="@Model.ForumId">@Model.ForumName</a></h4>
+<h4>Setting type for topic: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a></h4>
 
 
 <form method="post">

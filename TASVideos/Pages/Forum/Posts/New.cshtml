@@ -14,8 +14,8 @@
 		<fullrow class="pt-2">
 			<small>
 				<a asp-page="/Forum/Index">Forum</a> →
-				<a asp-page="/Forum/Subforum" asp-route-id="@post.ForumId">@post.ForumName</a> →
-				<a asp-page="/Forum/Topics" asp-route-id="@post.TopicId">@post.TopicTitle</a>
+				<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a> →
+				<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicTitle</a>
 			</small>
 		</fullrow>
 		<partial name="Forum/Topics/_TopicPost" model="post" />
