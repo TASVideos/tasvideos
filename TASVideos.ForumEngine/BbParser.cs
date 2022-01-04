@@ -68,86 +68,93 @@ namespace TASVideos.ForumEngine
 
 		private static readonly Regex HtmlVoid = new (@"\G\s*([a-zA-Z]+)\s*\/?\s*>");
 
-		/// <summary>
-		/// What content is legal at this time.
-		/// </summary>
-		private enum ParseState
+		private class TagInfo
 		{
-			/// <summary>
-			/// text and bbcode tags are legal
-			/// </summary>
-			ChildTags,
+			public enum ChildrenAllowed
+			{
+				/// <summary>
+				/// This tag can have children.
+				/// </summary>
+				Yes,
+				/// <summary>
+				/// This tag cannot have children and potential children should be parsed as raw text.
+				/// </summary>
+				No,
+				/// <summary>
+				/// If this tag has a non-empty parameter, behaves like Yes, otherwise, like No.
+				/// </summary>
+				IfParam,
+			}
+			public ChildrenAllowed Children;
 
-			/// <summary>
-			/// if the parent bbcode tag has a parameter, text and bbcode tags are legal.  otherwise, raw text only
-			/// </summary>
-			ChildTagsIfParam,
+			public enum SelfNestingAllowed
+			{
+				/// <summary>
+				/// This tag can nest in itself freely.
+				/// </summary>
+				Yes,
+				/// <summary>
+				/// This tag cannot nest in itself, and should autoclose any existing instances of itself at any level.
+				/// </summary>
+				No,
+				/// <summary>
+				/// This tag can nest in itself, but it can't be an immediate child of itself.
+				/// </summary>
+				NoImmediate,
+			}
 
-			/// <summary>
-			/// everything except a matching bbcode end tag is raw text
-			/// </summary>
-			NoChildTags,
-
-			/// <summary>
-			/// Like ChildTags, but this element cannot nest itself
-			/// </summary>
-			ChildTagsNoNest,
-
-			/// <summary>
-			/// Like ChildTags, but this element cannot nest directly in itself
-			/// </summary>
-			ChildTagsNoImmediateNest
+			public SelfNestingAllowed SelfNesting;
 		}
 
-		private static readonly Dictionary<string, ParseState> KnownTags = new ()
+		private static readonly Dictionary<string, TagInfo> KnownTags = new ()
 		{
 			// basic text formatting, no params, and body is content
-			{ "b", ParseState.ChildTags },
-			{ "i", ParseState.ChildTags },
-			{ "u", ParseState.ChildTags },
-			{ "s", ParseState.ChildTags },
-			{ "sub", ParseState.ChildTags },
-			{ "sup", ParseState.ChildTags },
-			{ "tt", ParseState.ChildTags },
-			{ "left", ParseState.ChildTags },
-			{ "right", ParseState.ChildTags },
-			{ "center", ParseState.ChildTags },
-			{ "spoiler", ParseState.ChildTags },
-			{ "warning", ParseState.ChildTags },
-			{ "note", ParseState.ChildTags },
-			{ "highlight", ParseState.ChildTags },
+			{ "b", new() },
+			{ "i", new() },
+			{ "u", new() },
+			{ "s", new() },
+			{ "sub", new() },
+			{ "sup", new() },
+			{ "tt", new() },
+			{ "left", new() },
+			{ "right", new() },
+			{ "center", new() },
+			{ "spoiler", new() },
+			{ "warning", new() },
+			{ "note", new() },
+			{ "highlight", new() },
 
 			// with optional params
-			{ "quote", ParseState.ChildTags }, // optional author
-			{ "code", ParseState.NoChildTags }, // optional language
-			{ "img", ParseState.NoChildTags }, // optional size
-			{ "url", ParseState.ChildTagsIfParam }, // optional url.  if not given, url in body
-			{ "email", ParseState.ChildTagsIfParam }, // like url
-			{ "video", ParseState.NoChildTags }, // like img
-			{ "google", ParseState.NoChildTags }, // search query in body.  optional param `images`
-			{ "thread", ParseState.ChildTagsIfParam }, // like url, but the link is a number
-			{ "post", ParseState.ChildTagsIfParam }, // like thread
-			{ "movie", ParseState.ChildTagsIfParam }, // like thread
-			{ "submission", ParseState.ChildTagsIfParam }, // like thread
-			{ "userfile", ParseState.ChildTagsIfParam }, // like thread
-			{ "wip", ParseState.ChildTagsIfParam }, // like thread (in fact, identical to userfile except for text output)
-			{ "wiki", ParseState.ChildTagsIfParam }, // like thread, but the link is a page name
+			{ "quote", new() }, // optional author
+			{ "code", new() { Children = TagInfo.ChildrenAllowed.No } }, // optional language
+			{ "img", new() { Children = TagInfo.ChildrenAllowed.No } }, // optional size
+			{ "url", new() { Children = TagInfo.ChildrenAllowed.IfParam, SelfNesting = TagInfo.SelfNestingAllowed.No } }, // optional url.  if not given, url in body
+			{ "email", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like url
+			{ "video", new() { Children = TagInfo.ChildrenAllowed.No } }, // like img
+			{ "google", new() { Children = TagInfo.ChildrenAllowed.No } }, // search query in body.  optional param `images`
+			{ "thread", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like url, but the link is a number
+			{ "post", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+			{ "movie", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+			{ "submission", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+			{ "userfile", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+			{ "wip", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread (in fact, identical to userfile except for text output)
+			{ "wiki", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread, but the link is a page name
 
 			// other stuff
-			{ "frames", ParseState.NoChildTags }, // no params.  body is something like `200` or `200@60.1`
-			{ "color", ParseState.ChildTags }, // param is a css (?) color
-			{ "bgcolor", ParseState.ChildTags }, // like color
-			{ "size", ParseState.ChildTags }, // param is something relating to font size TODO: what are the values?
-			{ "noparse", ParseState.NoChildTags },
+			{ "frames", new() { Children = TagInfo.ChildrenAllowed.No } }, // no params.  body is something like `200` or `200@60.1`
+			{ "color", new() }, // param is a css (?) color
+			{ "bgcolor", new() }, // like color
+			{ "size", new() }, // param is something relating to font size TODO: what are the values?
+			{ "noparse", new() { Children = TagInfo.ChildrenAllowed.No } },
 
 			// list related stuff
-			{ "list", ParseState.ChildTags }, // OLs have a param with value ??
-			{ "*", ParseState.ChildTagsNoImmediateNest },
+			{ "list", new() }, // OLs have a param with value ??
+			{ "*", new() { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate } },
 
 			// tables
-			{ "table", ParseState.ChildTagsNoNest },
-			{ "tr", ParseState.ChildTagsNoNest },
-			{ "td", ParseState.ChildTagsNoNest }
+			{ "table", new() { SelfNesting = TagInfo.SelfNestingAllowed.No } },
+			{ "tr", new() { SelfNesting = TagInfo.SelfNestingAllowed.No } },
+			{ "td", new() { SelfNesting = TagInfo.SelfNestingAllowed.No } }
 		};
 
 		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new ()
@@ -223,11 +230,11 @@ namespace TASVideos.ForumEngine
 		{
 			if (KnownTags.TryGetValue(_stack.Peek().Name, out var state))
 			{
-				return state switch
+				return state.Children switch
 				{
-					ParseState.NoChildTags => false,
-					ParseState.ChildTagsIfParam => _stack.Peek().Options != "",
-					_ => true,
+					TagInfo.ChildrenAllowed.No => false,
+					TagInfo.ChildrenAllowed.IfParam => _stack.Peek().Options != "",
+					TagInfo.ChildrenAllowed.Yes => true,
 				};
 			}
 
@@ -241,7 +248,11 @@ namespace TASVideos.ForumEngine
 			{
 				{
 					Match m;
-					if (_allowBb && ChildrenExpected() && (m = Url.Match(_input, _index)).Success)
+					if (_allowBb
+						&& ChildrenExpected()
+						&& (m = Url.Match(_input, _index)).Success
+						&& !_stack.Any(element => element.Name == "url")
+					)
 					{
 						FlushText();
 						Push(new Element { Name = "url" });
@@ -271,7 +282,7 @@ namespace TASVideos.ForumEngine
 							var e = new Element { Name = name, Options = options };
 							FlushText();
 							_index += m.Length;
-							if (state == ParseState.ChildTagsNoNest)
+							if (state.SelfNesting == TagInfo.SelfNestingAllowed.No)
 							{
 								// try to pop a matching tag
 								foreach (var node in _stack)
@@ -290,7 +301,7 @@ namespace TASVideos.ForumEngine
 									}
 								}
 							}
-							else if (state == ParseState.ChildTagsNoImmediateNest)
+							else if (state.SelfNesting == TagInfo.SelfNestingAllowed.NoImmediate)
 							{
 								// try to pop a matching tag but only at this level
 								if (_stack.Peek().Name == name)
