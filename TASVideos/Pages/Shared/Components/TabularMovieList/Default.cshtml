@@ -27,7 +27,7 @@
 									(Was <pub-link id="pub.ObsoletedMovie!.Id">@(pub.ObsoletedMovie!.Time().ToStringWithOptionalDaysAndHours())</pub-link>)
 								</span>
 							</td>
-							<td>@pub.Authors</td>
+							<td>@(string.Join(", ",(pub.Authors ?? Enumerable.Empty<string>()).Concat((pub.AdditionalAuthors ?? "").SplitWithEmpty(","))).LastCommaToAmpersand())</td>
 						</tr>
 					}
 				</tbody>

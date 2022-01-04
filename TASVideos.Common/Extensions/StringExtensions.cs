@@ -188,5 +188,17 @@ namespace TASVideos.Extensions
 				.Concat(str.Select((s, i) => i > 0 && char.IsUpper(s) ? "_" + s : s.ToString()))
 				.ToLower();
 		}
+
+		public static string LastCommaToAmpersand(this string commaString)
+		{
+			int lastComma = commaString.LastIndexOf(",");
+
+			if (lastComma == -1)
+			{
+				return commaString;
+			}
+
+			return commaString[..lastComma] + " &" + commaString[(lastComma + 1)..];
+		}
 	}
 }

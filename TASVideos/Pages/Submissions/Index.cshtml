@@ -95,7 +95,7 @@
 				<td><sub-link id="item.Id">@item.GameName</sub-link></td>
 				<td>@item.Branch</td>
 				<td>@(item.Time.ToStringWithOptionalDaysAndHours())</td>
-				<td>@item.Author</td>
+				<td>@(string.Join(", ",(item.Authors ?? Enumerable.Empty<string>()).Concat((item.AdditionalAuthors ?? "").SplitWithEmpty(","))).LastCommaToAmpersand())</td>
 				<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>
 				<td>
 					@item.Status.EnumDisplayName()

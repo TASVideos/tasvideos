@@ -21,7 +21,8 @@ namespace TASVideos.ViewComponents
 		public string System { get; set; } = "";
 		public string Game { get; set; } = "";
 		public string? Branch { get; set; }
-		public string Authors { get; set; } = "";
+		public IEnumerable<string>? Authors { get; set; }
+		public string? AdditionalAuthors { get; set; }
 
 		public ScreenshotFile Screenshot { get; set; } = new ();
 

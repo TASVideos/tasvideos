@@ -5,7 +5,7 @@
 			<th>@Html.DisplayNameFor(m => m.First().Submitted)</th>
 			<th>@Html.DisplayNameFor(m => m.First().GameName)</th>
 			<th>@Html.DisplayNameFor(m => m.First().Time)</th>
-			<th>@Html.DisplayNameFor(m => m.First().Author)</th>
+			<th>@Html.DisplayNameFor(m => m.First().Authors)</th>
 			<th>@Html.DisplayNameFor(m => m.First().Status)</th>
 		</tr>
 		@foreach (var item in Model)
@@ -14,7 +14,7 @@
 				<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>
 				<td>@item.System @item.GameName @(!string.IsNullOrWhiteSpace(item.Branch) ? $"\"{item.Branch}\"" : "")</td>
 				<td><sub-link id="item.Id">@(item.Time.ToStringWithOptionalDaysAndHours())</sub-link></td>
-				<td>@item.Author</td>
+				<td>@(string.Join(", ",(item.Authors ?? Enumerable.Empty<string>()).Concat((item.AdditionalAuthors ?? "").SplitWithEmpty(","))).LastCommaToAmpersand())</td>
 				<td>@item.Status.EnumDisplayName()</td>
 			</tr>
 		}

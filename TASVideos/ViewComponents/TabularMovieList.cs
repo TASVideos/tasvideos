@@ -61,7 +61,8 @@ namespace TASVideos.ViewComponents
 					System = p.System!.Code,
 					Game = p.Game!.DisplayName,
 					Branch = p.Branch,
-					Authors = string.Join(", ", p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName)),
+					Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
+					AdditionalAuthors = p.AdditionalAuthors,
 					Screenshot = p.Files
 						.Where(f => f.Type == FileType.Screenshot)
 						.Select(f => new TabularMovieListResultModel.ScreenshotFile
