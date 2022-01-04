@@ -25,6 +25,7 @@ namespace TASVideos.Pages.Submissions.Models
 
 		[Display(Name = "By")]
 		public IEnumerable<string>? Authors { get; set; }
+		[TableIgnore]
 		public string? AdditionalAuthors { get; set; }
 
 		[Sortable]
