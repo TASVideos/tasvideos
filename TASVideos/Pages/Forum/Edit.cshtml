@@ -31,7 +31,7 @@
 						<i class="fa fa-arrow-down"></i>
 					</button>
 				</div>
-				<strong><a asp-page="/Forum/Subforum" asp-route-id="@Model.Category.Forums[i].Id">@Model.Category.Forums[i].Name</a></strong>
+				<strong><a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Category.Forums[i].Id">@Model.Category.Forums[i].Name</a></strong>
 				<div class="mb-2 ps-3">
 					<small>
 						@Html.Raw(Model.Category.Forums[i].Description)
