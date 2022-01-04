@@ -707,7 +707,7 @@ namespace TASVideos.WikiEngine
 
 			if (nue.Length > 0)
 			{
-				if (nue == old)
+				if (keep == nue.Length)
 				{
 					Pop("li");
 					Push("li");
