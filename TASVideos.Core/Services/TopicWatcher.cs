@@ -38,6 +38,11 @@ namespace TASVideos.Core.Services
 		/// Removes a topic from the user's watched topic list.
 		/// </summary>
 		Task UnwatchTopic(int topicId, int userId);
+
+		/// <summary>
+		/// Returns whether the user watches a specific topic.
+		/// </summary>
+		Task<bool> IsWatchingTopic(int topicId, int userId);
 	}
 
 	internal class TopicWatcher : ITopicWatcher
@@ -163,6 +168,12 @@ namespace TASVideos.Core.Services
 					//        However, this would be an nice to have one day
 				}
 			}
+		}
+
+		public async Task<bool> IsWatchingTopic(int topicId, int userId)
+		{
+			return (await _db.ForumTopicWatches
+				.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId)) is not null;
 		}
 	}
 
