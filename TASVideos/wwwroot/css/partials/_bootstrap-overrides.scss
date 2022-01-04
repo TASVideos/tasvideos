@@ -155,3 +155,7 @@ h4 {
 		border-color: var(--bs-light) var(--bs-light) var(--bs-white);
 	}
 }
+
+.navbar-dark .navbar-nav .nav-link {
+	color: RGBA(255,255,255,.6);
+}
