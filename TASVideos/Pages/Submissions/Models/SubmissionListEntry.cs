@@ -24,7 +24,8 @@ namespace TASVideos.Pages.Submissions.Models
 		public TimeSpan Time => this.Time();
 
 		[Display(Name = "By")]
-		public string Author { get; set; } = "";
+		public IEnumerable<string>? Authors { get; set; }
+		public string? AdditionalAuthors { get; set; }
 
 		[Sortable]
 		[Display(Name = "Date")]
