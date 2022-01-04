@@ -154,7 +154,7 @@
 						<profile-link username="@author"></profile-link><span condition="author != Model.Submission.Authors.Last()">,</span>
 					}
 					<small condition="!string.IsNullOrWhiteSpace(Model.Submission.AdditionalAuthors)">
-						<br />(Additional: @Model.Submission.AdditionalAuthors)
+						<br />(Additionally: @(string.Join(", ",Model.Submission.AdditionalAuthors!.SplitWithEmpty(","))))
 					</small>
 				</td>
 			</tr>
