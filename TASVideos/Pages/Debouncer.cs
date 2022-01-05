@@ -21,17 +21,21 @@ namespace TASVideos.Pages
 		{
 			if (context.HandlerMethod?.HttpMethod == "Post")
 			{
+				const string tokenName = "__RequestVerificationToken";
 				var cache = context.HttpContext.RequestServices.GetRequiredService<ICacheService>();
-				var token = context.HttpContext.Request.Form["__RequestVerificationToken"].ToString();
-				if (cache.TryGetValue(token, out bool _))
+				if (context.HttpContext.Request.HasFormContentType && context.HttpContext.Request.Form.ContainsKey(tokenName))
 				{
-					// Block request as a duplicate
-					var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Debouncer>>();
-					logger.LogWarning($"Blocked duplicate POST request {context.HttpContext.Request.Path}");
-					return;
-				}
+					var token = context.HttpContext.Request.Form["__RequestVerificationToken"].ToString();
+					if (cache.TryGetValue(token, out bool _))
+					{
+						// Block request as a duplicate
+						var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Debouncer>>();
+						logger.LogWarning($"Blocked duplicate POST request {context.HttpContext.Request.Path}");
+						return;
+					}
 
-				cache.Set(token, true, Durations.OneMinuteInSeconds);
+					cache.Set(token, true, Durations.OneMinuteInSeconds);
+				}
 			}
 
 			await next.Invoke();
