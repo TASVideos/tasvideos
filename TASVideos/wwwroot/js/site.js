@@ -21,8 +21,11 @@ if (location.hash) {
 	if (expandButton) {
 		expandButton.setAttribute("aria-expanded", "true");
 	}
-	let expandedContent = document.querySelector(location.hash + '.collapse');
-	if (expandedContent) {
-		expandedContent.classList.add("show");
+	validIdRegex = /^[A-Za-z][-A-Za-z0-9_:.]*$/
+	if (validIdRegex.test(location.hash)) {
+		let expandedContent = document.querySelector(location.hash + '.collapse');
+		if (expandedContent) {
+			expandedContent.classList.add("show");
+		}
 	}
 }
