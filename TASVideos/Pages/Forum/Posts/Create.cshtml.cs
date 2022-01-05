@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -79,6 +80,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnPost()
 		{
+			Thread.Sleep(10000);
 			var user = await _userManager.GetUserAsync(User);
 			if (!ModelState.IsValid)
 			{
