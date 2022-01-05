@@ -78,7 +78,7 @@ namespace TASVideos.Pages.Forum
 			};
 		}
 
-		protected async Task<int> CreatePost(int topicId, int forumId, ForumPostModel model, int userId, string ipAddress)
+		protected async Task<int> CreatePost(int topicId, int forumId, ForumPostModel model, int userId, string ipAddress, bool watchTopic)
 		{
 			var forumPost = new ForumPost
 			{
@@ -97,7 +97,15 @@ namespace TASVideos.Pages.Forum
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
-			await _topicWatcher.WatchTopic(topicId, userId, canSeeRestricted: true);
+			if (watchTopic)
+			{
+				await _topicWatcher.WatchTopic(topicId, userId, canSeeRestricted: true);
+			}
+			else
+			{
+				await _topicWatcher.UnwatchTopic(topicId, userId);
+			}
+
 			return forumPost.Id;
 		}
 

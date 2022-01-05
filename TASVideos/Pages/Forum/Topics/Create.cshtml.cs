@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,10 @@ namespace TASVideos.Pages.Forum.Topics
 
 		[BindProperty]
 		public TopicCreateModel Topic { get; set; } = new ();
+
+		[BindProperty]
+		[DisplayName("Watch Topic for Replies")]
+		public bool WatchTopic { get; set; } = true;
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -95,7 +100,7 @@ namespace TASVideos.Pages.Forum.Topics
 				Mood = Topic.Mood
 			};
 
-			await CreatePost(topic.Id, ForumId, forumPostModel, userId, IpAddress);
+			await CreatePost(topic.Id, ForumId, forumPostModel, userId, IpAddress, WatchTopic);
 
 			if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
 			{
