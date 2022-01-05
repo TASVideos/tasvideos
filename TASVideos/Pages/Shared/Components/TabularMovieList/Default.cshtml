@@ -45,7 +45,7 @@
 				<pub-link id="first.Id">
 					<img src="~/media/@first.Screenshot.Path" alt="@first.Screenshot.Description" style="max-width: 100%">
 				</pub-link>
-				<figcaption class="figure-caption">@first.Game by @first.Authors</figcaption>
+				<figcaption class="figure-caption">@first.Game by @(string.Join(", ",(first.Authors ?? Enumerable.Empty<string>()).Concat((first.AdditionalAuthors ?? "").SplitWithEmpty(","))).LastCommaToAmpersand())</figcaption>
 			}
 		</figure>
 	</div>
