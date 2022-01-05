@@ -21,14 +21,18 @@ namespace TASVideos.TagHelpers
 
 	public class NavItemTagHelper : NavItemBase
 	{
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
+			var content = (await output.GetChildContentAsync()).GetContent();
+
 			output.TagName = "li";
 			output.AddCssClass("nav-item");
 			if (IsActive())
 			{
-				output.AddCssClass("active");
+				content = content.Replace("nav-link", "nav-link active");
 			}
+
+			output.Content.SetHtmlContent(content);
 		}
 	}
 
@@ -42,9 +46,10 @@ namespace TASVideos.TagHelpers
 
 			output.TagName = "li";
 			output.AddCssClass("nav-item dropdown");
+			string addClass = "nav-link dropdown-toggle";
 			if (IsActive())
 			{
-				output.AddCssClass("active");
+				addClass += " active";
 			}
 
 			if (string.IsNullOrWhiteSpace(Name))
@@ -53,7 +58,7 @@ namespace TASVideos.TagHelpers
 			}
 
 			output.Content.SetHtmlContent(
-				$"<a href='#' class='nav-link dropdown-toggle' data-bs-toggle='dropdown'>{Name ?? ""}<span class='caret'></span></a>");
+				$"<a href='#' class='{addClass}' data-bs-toggle='dropdown'>{Name ?? ""}<span class='caret'></span></a>");
 
 			output.Content.AppendHtml($"<div class='dropdown-menu'>{content}</div>");
 		}
@@ -97,11 +102,10 @@ namespace TASVideos.TagHelpers
 
 			switch (Activate)
 			{
-				case "Home" when pageGroup == "Home" || new[] { "WelcomeToTASVideos", "News" }.Contains(viewActiveTab):
-				case "Movies" when pageGroup == "Publications":
-				case "Admin" when pageGroup == "Roles":
-				case "Admin" when pageGroup == "Users":
-				case "Admin" when pageGroup == "Permissions":
+				case "Home" when page == "/Index":
+				case "Movies" when new[] { "Publications", "Submissions", "UserFiles" }.Contains(pageGroup):
+				case "Articles" when new[] { "ArticleIndex", "Game Resources", "EmulatorResources" }.Contains(viewActiveTab):
+				case "Admin" when new[] { "Roles", "Users", "Permissions" }.Contains(pageGroup):
 				case "Register" when page == "/Account/Register":
 				case "Login" when page == "/Account/Login":
 					return true;
