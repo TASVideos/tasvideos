@@ -81,6 +81,13 @@ namespace TASVideos.Pages.Profile
 				return Page();
 			}
 
+			var exists = await _userManager.FindByEmailAsync(Settings.Email);
+			if (exists != null)
+			{
+				ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.Email)}", "This email cannot be used.");
+				return Page();
+			}
+
 			var user = await _userManager.GetUserAsync(User);
 
 			var email = user.Email;
