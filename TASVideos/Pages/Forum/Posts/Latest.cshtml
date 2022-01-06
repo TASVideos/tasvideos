@@ -1,0 +1,31 @@
+﻿@page
+@model LatestModel
+@{
+	ViewData["Title"] = "Latest Forum Posts";
+}
+
+<div condition="@Model.Posts.Any()">
+	<partial Name="_ForumHeader" />
+	<fullrow>
+		<partial name="_Pager" model="Model.Posts" />
+	</fullrow>
+	@foreach (var post in Model.Posts)
+	{
+		<fullrow class="pt-2">
+			<small>
+				<a asp-page="/Forum/Index">Forum</a> →
+				<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a> →
+				<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicTitle</a>
+			</small>
+		</fullrow>
+		<partial name="Forum/Topics/_TopicPost" model="post" />
+	}
+	<fullrow class="mt-2">
+		<partial name="_Pager" model="Model.Posts" />
+	</fullrow>
+</div>
+<div condition="!Model.Posts.Any()">
+	<div class="alert alert-info mt-3 text-center">
+		<h4>No posts since last visit</h4>
+	</div>
+</div>
