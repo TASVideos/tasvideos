@@ -102,7 +102,8 @@ namespace TASVideos.Pages.UserFiles
 					? UserFileClass.Support
 					: UserFileClass.Movie,
 				Type = fileExt.Replace(".", ""),
-				FileName = UserFile.File.FileName
+				FileName = UserFile.File.FileName,
+				Hidden = UserFile.Hidden
 			};
 
 			if (_parser.SupportedMovieExtensions.Contains(fileExt))
