@@ -17,12 +17,15 @@ window.addEventListener("scroll", showHideScrollToTop);
 document.getElementById("button-scrolltop").addEventListener("click", scrollToTop);
 
 if (location.hash) {
-	let expandButton = document.querySelector(`[href='${location.hash}']`);
+	let expandButton = document.querySelector(`[data-bs-target='${location.hash}']`);
 	if (expandButton) {
+		expandButton.classList.remove("collapsed");
 		expandButton.setAttribute("aria-expanded", "true");
 	}
-	let expandedContent = document.querySelector(location.hash + '.collapse');
-	if (expandedContent) {
-		expandedContent.classList.add("show");
+	if (isNaN(parseInt(location.hash.substr(1)))) {
+		let expandedContent = document.querySelector(location.hash + '.collapse');
+		if (expandedContent) {
+			expandedContent.classList.add("show");
+		}
 	}
 }
