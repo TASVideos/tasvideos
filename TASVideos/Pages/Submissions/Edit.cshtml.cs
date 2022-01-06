@@ -277,6 +277,7 @@ namespace TASVideos.Pages.Submissions
 				Db.SubmissionStatusHistory.Add(history);
 
 				if (Submission.Status != SubmissionStatus.Rejected &&
+					Submission.Status != SubmissionStatus.Cancelled &&
 					submission.Topic!.ForumId == SiteGlobalConstants.GrueFoodForumId)
 				{
 					submission.Topic.ForumId = SiteGlobalConstants.WorkbenchForumId;
@@ -338,7 +339,7 @@ namespace TASVideos.Pages.Submissions
 				await Db.SaveChangesAsync();
 			}
 
-			if (submission.Status == SubmissionStatus.Rejected && statusHasChanged)
+			if ((submission.Status == SubmissionStatus.Rejected || submission.Status == SubmissionStatus.Cancelled) && statusHasChanged)
 			{
 				await _tasvideosGrue.RejectAndMove(submission.Id);
 			}
