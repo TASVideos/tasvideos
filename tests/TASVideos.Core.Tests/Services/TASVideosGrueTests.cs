@@ -48,6 +48,7 @@ namespace TASVideos.Core.Tests.Services
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.CreateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.LastUpdateUserName);
 			Assert.AreEqual(SiteGlobalConstants.TASVideosGrueId, actual.PosterId);
+			Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, actual.ForumId);
 			Assert.IsFalse(actual.EnableHtml);
 			Assert.IsFalse(actual.EnableBbCode);
 			Assert.IsNotNull(actual.Text);

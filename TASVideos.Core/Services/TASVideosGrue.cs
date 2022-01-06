@@ -48,6 +48,7 @@ namespace TASVideos.Core.Services
 				_db.ForumPosts.Add(new ForumPost
 				{
 					TopicId = topic.Id,
+					ForumId = topic.ForumId,
 					CreateUserName = SiteGlobalConstants.TASVideosGrue,
 					LastUpdateUserName = SiteGlobalConstants.TASVideosGrue,
 					PosterId = SiteGlobalConstants.TASVideosGrueId,
