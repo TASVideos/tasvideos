@@ -1,9 +1,8 @@
 ﻿@page "{id}"
 @model TASVideos.Pages.GamesGroups.IndexModel
-
-<h4>
-	Games for Group: @Model.Name
-</h4>
+@{
+	ViewData["Title"] = $"Games for Group: {Model.Name}";
+}
 
 <warning-alert condition="!Model.Games.Any()">
 	No Games Listed for this Game Group
