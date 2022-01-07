@@ -10,34 +10,34 @@ namespace TASVideos.Pages.Submissions
 	[RequirePermission(PermissionTo.DeprecateMovieParsers)]
 	public class DeprecateMovieFormatsModel : BasePageModel
 	{
-		private readonly IMovieFormatDepcrecator _depcrecator;
+		private readonly IMovieFormatDeprecator _deprecator;
 		private readonly ExternalMediaPublisher _publisher;
 
 		public IReadOnlyDictionary<string, DeprecatedMovieFormat?> MovieExtensions { get; set; } = new Dictionary<string, DeprecatedMovieFormat?>();
 
 		public DeprecateMovieFormatsModel(
-			IMovieFormatDepcrecator depcrecator,
+			IMovieFormatDeprecator deprecator,
 			ExternalMediaPublisher publisher)
 		{
-			_depcrecator = depcrecator;
+			_deprecator = deprecator;
 			_publisher = publisher;
 		}
 
 		public async Task OnGet()
 		{
-			MovieExtensions = await _depcrecator.GetAll();
+			MovieExtensions = await _deprecator.GetAll();
 		}
 
 		public async Task<IActionResult> OnPost(string extension, bool deprecate)
 		{
-			if (!_depcrecator.IsMovieExtension(extension))
+			if (!_deprecator.IsMovieExtension(extension))
 			{
 				return BadRequest($"Invalid format {extension}");
 			}
 
 			var result = deprecate
-				? await _depcrecator.Deprecate(extension)
-				: await _depcrecator.Allow(extension);
+				? await _deprecator.Deprecate(extension)
+				: await _deprecator.Allow(extension);
 
 			if (result)
 			{

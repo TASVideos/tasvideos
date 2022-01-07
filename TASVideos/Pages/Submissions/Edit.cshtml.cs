@@ -25,7 +25,7 @@ namespace TASVideos.Pages.Submissions
 		private readonly IWikiPages _wikiPages;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ITASVideosGrue _tasvideosGrue;
-		private readonly IMovieFormatDepcrecator _deprecator;
+		private readonly IMovieFormatDeprecator _deprecator;
 
 		public EditModel(
 			ApplicationDbContext db,
@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Submissions
 			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher,
 			ITASVideosGrue tasvideosGrue,
-			IMovieFormatDepcrecator deprecator)
+			IMovieFormatDeprecator deprecator)
 			: base(db)
 		{
 			_parser = parser;

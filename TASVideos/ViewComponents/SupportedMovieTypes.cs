@@ -8,16 +8,16 @@ namespace TASVideos.ViewComponents
 	[WikiModule(WikiModules.SupportedMovieTypes)]
 	public class SupportedMovieTypes : ViewComponent
 	{
-		private readonly IMovieFormatDepcrecator _depcrecator;
+		private readonly IMovieFormatDeprecator _deprecator;
 
-		public SupportedMovieTypes(IMovieFormatDepcrecator depcrecator)
+		public SupportedMovieTypes(IMovieFormatDeprecator deprecator)
 		{
-			_depcrecator = depcrecator;
+			_deprecator = deprecator;
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync()
 		{
-			return View(await _depcrecator.GetAll());
+			return View(await _deprecator.GetAll());
 		}
 	}
 }

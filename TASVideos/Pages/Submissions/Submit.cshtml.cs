@@ -24,7 +24,7 @@ namespace TASVideos.Pages.Submissions
 		private readonly UserManager _userManager;
 		private readonly ITASVideoAgent _tasVideoAgent;
 		private readonly IYoutubeSync _youtubeSync;
-		private readonly IMovieFormatDepcrecator _deprecator;
+		private readonly IMovieFormatDeprecator _deprecator;
 
 		public SubmitModel(
 			ApplicationDbContext db,
@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Submissions
 			UserManager userManager,
 			ITASVideoAgent tasVideoAgent,
 			IYoutubeSync youtubeSync,
-			IMovieFormatDepcrecator deprecator)
+			IMovieFormatDeprecator deprecator)
 			: base(db)
 		{
 			_publisher = publisher;

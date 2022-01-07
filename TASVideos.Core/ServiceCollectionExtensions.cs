@@ -67,7 +67,7 @@ namespace TASVideos.Core
 			services.AddScoped<ITagService, TagService>();
 			services.AddScoped<IFlagService, FlagService>();
 			services.AddScoped<IClassService, ClassService>();
-			services.AddScoped<IMovieFormatDepcrecator, MovieFormatDepcrecator>();
+			services.AddScoped<IMovieFormatDeprecator, MovieFormatDeprecator>();
 
 			services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 

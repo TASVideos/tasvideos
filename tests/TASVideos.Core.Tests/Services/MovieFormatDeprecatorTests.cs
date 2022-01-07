@@ -10,17 +10,18 @@ using TASVideos.Tests.Base;
 namespace TASVideos.Core.Tests.Services
 {
 	[TestClass]
-	public class MovieFormatDepcrecatorTests
+	public class MovieFormatDeprecatorTests
 	{
 		private readonly TestDbContext _db;
-		private readonly MovieFormatDepcrecator _depcrecator;
+		private readonly MovieFormatDeprecator _deprecator;
 		private readonly Mock<IMovieParser> _mockParser;
 
-		public MovieFormatDepcrecatorTests()
+		public MovieFormatDeprecatorTests()
 		{
+			var doaohickey = 0;
 			_db = TestDbContext.Create();
 			_mockParser = new Mock<IMovieParser>();
-			_depcrecator = new MovieFormatDepcrecator(_db, _mockParser.Object);
+			_deprecator = new MovieFormatDeprecator(_db, _mockParser.Object);
 		}
 
 		#region GetAll
@@ -30,7 +31,7 @@ namespace TASVideos.Core.Tests.Services
 		{
 			_mockParser.Setup(p => p.SupportedMovieExtensions).Returns(Enumerable.Empty<string>());
 
-			var actual = await _depcrecator.GetAll();
+			var actual = await _deprecator.GetAll();
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(0, actual.Count);
 		}
@@ -41,7 +42,7 @@ namespace TASVideos.Core.Tests.Services
 			var formats = new string[] { ".test1", ".test2", ".test3" };
 			_mockParser.Setup(p => p.SupportedMovieExtensions).Returns(formats);
 
-			var actual = await _depcrecator.GetAll();
+			var actual = await _deprecator.GetAll();
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(formats.Length, actual.Count);
 			foreach (string format in formats)
@@ -73,7 +74,7 @@ namespace TASVideos.Core.Tests.Services
 			});
 			await _db.SaveChangesAsync();
 
-			var actual = await _depcrecator.GetAll();
+			var actual = await _deprecator.GetAll();
 
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(formats.Length, actual.Count);
@@ -100,7 +101,7 @@ namespace TASVideos.Core.Tests.Services
 			const string existingExtension = ".test";
 			_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingExtension });
 
-			var actual = _depcrecator.IsMovieExtension(existingExtension);
+			var actual = _deprecator.IsMovieExtension(existingExtension);
 			Assert.IsTrue(actual);
 		}
 
@@ -110,7 +111,7 @@ namespace TASVideos.Core.Tests.Services
 			const string existingExtension = ".test";
 			_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingExtension });
 
-			var actual = _depcrecator.IsMovieExtension("not exists");
+			var actual = _deprecator.IsMovieExtension("not exists");
 			Assert.IsFalse(actual);
 		}
 
@@ -120,7 +121,7 @@ namespace TASVideos.Core.Tests.Services
 			const string existingExtension = ".TEST";
 			_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingExtension });
 
-			var actual = _depcrecator.IsMovieExtension(existingExtension.ToLower());
+			var actual = _deprecator.IsMovieExtension(existingExtension.ToLower());
 			Assert.IsFalse(actual);
 		}
 
@@ -130,7 +131,7 @@ namespace TASVideos.Core.Tests.Services
 
 		public async Task IsDeprecated_ReturnsFalse_IfNoEntry()
 		{
-			var actual = await _depcrecator.IsDepcrecated("does not exist");
+			var actual = await _deprecator.IsDepcrecated("does not exist");
 			Assert.IsFalse(actual);
 		}
 
@@ -145,7 +146,7 @@ namespace TASVideos.Core.Tests.Services
 			});
 			await _db.SaveChangesAsync();
 
-			var actual = await _depcrecator.IsDepcrecated(ext);
+			var actual = await _deprecator.IsDepcrecated(ext);
 			Assert.IsFalse(actual);
 		}
 
@@ -160,7 +161,7 @@ namespace TASVideos.Core.Tests.Services
 			});
 			await _db.SaveChangesAsync();
 
-			var actual = await _depcrecator.IsDepcrecated(ext);
+			var actual = await _deprecator.IsDepcrecated(ext);
 			Assert.IsTrue(actual);
 		}
 
@@ -173,7 +174,7 @@ namespace TASVideos.Core.Tests.Services
 		{
 			_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { ".test1" });
 
-			var actual = await _depcrecator.Allow("invalid");
+			var actual = await _deprecator.Allow("invalid");
 			Assert.IsFalse(actual);
 			Assert.AreEqual(0, _db.DeprecatedMovieFormats.Count());
 		}
@@ -191,7 +192,7 @@ namespace TASVideos.Core.Tests.Services
 			await _db.SaveChangesAsync();
 			_db.CreateConcurrentUpdateConflict();
 
-			var actual = await _depcrecator.Allow(existingFormat);
+			var actual = await _deprecator.Allow(existingFormat);
 			Assert.IsFalse(actual);
 		}
 
@@ -208,7 +209,7 @@ namespace TASVideos.Core.Tests.Services
 			await _db.SaveChangesAsync();
 			_db.CreateUpdateConflict();
 
-			var actual = await _depcrecator.Allow(existingFormat);
+			var actual = await _deprecator.Allow(existingFormat);
 			Assert.IsFalse(actual);
 		}
 
@@ -218,7 +219,7 @@ namespace TASVideos.Core.Tests.Services
 			const string existingFormat = ".test1";
 			_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
 
-			var actual = await _depcrecator.Allow(existingFormat);
+			var actual = await _deprecator.Allow(existingFormat);
 			Assert.IsTrue(actual);
 			Assert.AreEqual(0, _db.DeprecatedMovieFormats.Count());
 		}
@@ -235,7 +236,7 @@ namespace TASVideos.Core.Tests.Services
 			});
 			await _db.SaveChangesAsync();
 
-			var actual = await _depcrecator.Allow(existingFormat);
+			var actual = await _deprecator.Allow(existingFormat);
 			Assert.IsTrue(actual);
 			Assert.AreEqual(1, _db.DeprecatedMovieFormats.Count());
 			var record = _db.DeprecatedMovieFormats.Single();
@@ -255,7 +256,7 @@ namespace TASVideos.Core.Tests.Services
 			});
 			await _db.SaveChangesAsync();
 
-			var actual = await _depcrecator.Allow(existingFormat);
+			var actual = await _deprecator.Allow(existingFormat);
 			Assert.IsTrue(actual);
 			Assert.AreEqual(1, _db.DeprecatedMovieFormats.Count());
 			var record = _db.DeprecatedMovieFormats.Single();
@@ -272,7 +273,7 @@ namespace TASVideos.Core.Tests.Services
 		{
 			_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { ".test1" });
 
-			var actual = await _depcrecator.Deprecate("invalid");
+			var actual = await _deprecator.Deprecate("invalid");
 			Assert.IsFalse(actual);
 			Assert.AreEqual(0, _db.DeprecatedMovieFormats.Count());
 		}
@@ -290,7 +291,7 @@ namespace TASVideos.Core.Tests.Services
 			await _db.SaveChangesAsync();
 			_db.CreateConcurrentUpdateConflict();
 
-			var actual = await _depcrecator.Deprecate(existingFormat);
+			var actual = await _deprecator.Deprecate(existingFormat);
 			Assert.IsFalse(actual);
 		}
 
@@ -307,7 +308,7 @@ namespace TASVideos.Core.Tests.Services
 			await _db.SaveChangesAsync();
 			_db.CreateUpdateConflict();
 
-			var actual = await _depcrecator.Deprecate(existingFormat);
+			var actual = await _deprecator.Deprecate(existingFormat);
 			Assert.IsFalse(actual);
 		}
 
@@ -323,7 +324,7 @@ namespace TASVideos.Core.Tests.Services
 			});
 			await _db.SaveChangesAsync();
 
-			var actual = await _depcrecator.Deprecate(existingFormat);
+			var actual = await _deprecator.Deprecate(existingFormat);
 			Assert.IsTrue(actual);
 			Assert.AreEqual(1, _db.DeprecatedMovieFormats.Count());
 			var record = _db.DeprecatedMovieFormats.Single();
@@ -343,7 +344,7 @@ namespace TASVideos.Core.Tests.Services
 			});
 			await _db.SaveChangesAsync();
 
-			var actual = await _depcrecator.Deprecate(existingFormat);
+			var actual = await _deprecator.Deprecate(existingFormat);
 			Assert.IsTrue(actual);
 			Assert.AreEqual(1, _db.DeprecatedMovieFormats.Count());
 			var record = _db.DeprecatedMovieFormats.Single();
@@ -357,7 +358,7 @@ namespace TASVideos.Core.Tests.Services
 			const string existingFormat = ".test1";
 			_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
 
-			var actual = await _depcrecator.Deprecate(existingFormat);
+			var actual = await _deprecator.Deprecate(existingFormat);
 			Assert.IsTrue(actual);
 			Assert.AreEqual(1, _db.DeprecatedMovieFormats.Count());
 			var record = _db.DeprecatedMovieFormats.Single();

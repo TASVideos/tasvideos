@@ -8,7 +8,7 @@ using TASVideos.MovieParsers;
 
 namespace TASVideos.Core.Services
 {
-	public interface IMovieFormatDepcrecator
+	public interface IMovieFormatDeprecator
 	{
 		Task<IReadOnlyDictionary<string, DeprecatedMovieFormat?>> GetAll();
 		bool IsMovieExtension(string extension);
@@ -17,12 +17,12 @@ namespace TASVideos.Core.Services
 		Task<bool> Allow(string extension);
 	}
 
-	public class MovieFormatDepcrecator : IMovieFormatDepcrecator
+	public class MovieFormatDeprecator : IMovieFormatDeprecator
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IMovieParser _parser;
 
-		public MovieFormatDepcrecator(ApplicationDbContext db, IMovieParser parser)
+		public MovieFormatDeprecator(ApplicationDbContext db, IMovieParser parser)
 		{
 			_db = db;
 			_parser = parser;
