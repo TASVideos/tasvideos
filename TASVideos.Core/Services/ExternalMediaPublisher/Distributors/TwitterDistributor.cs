@@ -37,7 +37,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				return;
 			}
 
-			// Generate the Twitter message.  This can easily be configured later to better represent the way we want posts to look.
+			// Generate the Twitter message letting Twitter take care of the Embed from Open Graph Metadata
 			string twitterMessage = GenerateTwitterMessage(post);
 
 			string nonce = GenerateNonce();
@@ -70,7 +70,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 		{
 			return post.Group switch
 			{
-				PostGroups.Submission => $"{post.Title} - {post.Link}",
+				PostGroups.Submission => $"{post.Announcement}\n{post.Link}",
 				_ => ""
 			};
 		}
