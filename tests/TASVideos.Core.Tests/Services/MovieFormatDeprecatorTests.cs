@@ -18,7 +18,6 @@ namespace TASVideos.Core.Tests.Services
 
 		public MovieFormatDeprecatorTests()
 		{
-			var doaohickey = 0;
 			_db = TestDbContext.Create();
 			_mockParser = new Mock<IMovieParser>();
 			_deprecator = new MovieFormatDeprecator(_db, _mockParser.Object);
