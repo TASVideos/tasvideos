@@ -49,6 +49,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
+				Announcement = "New User File",
 				Type = PostType.General,
 				Group = PostGroups.UserFiles,
 				Title = title,
@@ -62,6 +63,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
+				Announcement = "New Submission!",
 				Type = PostType.Announcement,
 				Group = PostGroups.Submission,
 				Title = $"New Submission! Go and see {title}",
@@ -75,6 +77,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
+				Announcement = "Submission Edited",
 				Type = PostType.General,
 				Group = PostGroups.Submission,
 				Title = title,
@@ -88,6 +91,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
+				Announcement = "New Movie Published!",
 				Type = PostType.Announcement,
 				Group = PostGroups.Submission,
 				Title = $"New movie published! Go and see {title}",
@@ -101,6 +105,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
+				Announcement = "Movie Edited",
 				Type = PostType.General,
 				Group = PostGroups.Publication,
 				Title = title,
@@ -110,10 +115,11 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink, string user = "")
+		public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink, string user = "", string announcement = "")
 		{
 			await publisher.Send(new Post
 			{
+				Announcement = announcement,
 				Type = restricted
 					? PostType.Administrative
 					: PostType.General,
