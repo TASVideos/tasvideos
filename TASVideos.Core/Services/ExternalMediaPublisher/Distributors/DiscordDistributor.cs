@@ -52,51 +52,14 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 		private class DiscordMessage
 		{
+			// Generate the Discord message letting Discord take care of the Embed from Open Graph Metadata
 			public DiscordMessage(IPostable post)
 			{
-				Content = GenerateContentMessage(post.Group, post.User);
-				Embed = new()
-				{
-					Title = post.Title,
-					Url = post.Link,
-					Description = post.Body
-				};
+				Content = $"{post.Announcement}\n{post.Link}";
 			}
 
 			[JsonProperty("content")]
 			public string Content { get; }
-
-			[JsonProperty("embed")]
-			public EmbedData Embed { get; }
-
-			public class EmbedData
-			{
-				[JsonProperty("title")]
-				public string Title { get; init; } = "";
-
-				[JsonProperty("description")]
-				public string Description { get; init; } = "";
-
-				[JsonProperty("url")]
-				public string Url { get; init; } = "";
-			}
-
-			private static string GenerateContentMessage(string? group, string? user)
-			{
-				string message = group switch
-				{
-					PostGroups.Forum => "Forum Update",
-					PostGroups.Submission => "Submission Update",
-					PostGroups.UserFiles => "Userfile Update",
-					PostGroups.UserManagement => "User Update",
-					PostGroups.Wiki => "Wiki Update",
-					_ => "Update"
-				};
-
-				return !string.IsNullOrWhiteSpace(user)
-					? message + $" from {user}"
-					: message;
-			}
 		}
 	}
 }

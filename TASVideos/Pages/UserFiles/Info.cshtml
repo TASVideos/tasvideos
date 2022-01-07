@@ -2,7 +2,14 @@
 @model InfoModel
 
 @{
-	ViewData["Title"] = "User movie #" + Model.Id;
+	ViewData["Title"] = $"User movie #{Model.Id}";
 }
-
+@section Header {
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="TASVideos" />
+	<meta property="og:title" content="@ViewData["Title"]" />
+	<meta property="og:description" content="@(Model.UserFile.Title)" />
+	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
+	<meta property="og:image" content="@($"{HttpContext.Request.ToBaseUrl()}/images/logo-light-4x.png")" />
+}
 <partial name="_UserFileInfo" model="Model.UserFile" />

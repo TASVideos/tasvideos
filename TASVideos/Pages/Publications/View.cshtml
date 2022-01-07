@@ -6,8 +6,9 @@
 
 @section Header {
 	<meta property="og:type" content="website" />
-	<meta property="og:title" content="TASVideos" />
-	<meta property="og:description" content="@(ViewData["Title"])" />
+	<meta property="og:site_name" content="TASVideos" />
+	<meta property="og:title" content="@($"Movie #{Model.Id}")" />
+	<meta property="og:description" content="@Model.Publication.Title" />
 	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
 	<meta property="og:image" content="@($"{HttpContext.Request.ToBaseUrl()}/media/{Model.Publication.Screenshot.Path}")" />
 }

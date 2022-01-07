@@ -7,6 +7,11 @@
 	public interface IPostable
 	{
 		/// <summary>
+		/// Gets the post announcement message
+		/// </summary>
+		string Announcement { get; }
+
+		/// <summary>
 		/// Gets the post title
 		/// </summary>
 		string Title { get; }
@@ -44,6 +49,7 @@
 	/// </summary>
 	public class Post : IPostable
 	{
+		public string Announcement { get; set; } = "";
 		public string Title { get; init; } = "";
 		public string Link { get; init; } = "";
 		public string Body { get; init; } = "";
