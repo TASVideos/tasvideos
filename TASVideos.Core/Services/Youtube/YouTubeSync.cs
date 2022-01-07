@@ -80,7 +80,7 @@ namespace TASVideos.Core.Services.Youtube
 				VideoId = videoId,
 				Snippet = new ()
 				{
-					Title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted]" : "")} {video.Title}",
+					Title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted] " : "")}{video.Title}",
 					Description = descriptionBase + renderedDescription,
 					CategoryId = videoDetails.CategoryId,
 					Tags = BaseTags.Concat(video.Tags).ToList()
