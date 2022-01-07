@@ -57,7 +57,11 @@ namespace TASVideos.Pages.Wiki
 			var wikiPage = await _wikiPages.Page(url, revision);
 			if (wikiPage != null)
 			{
-				_logger.LogInformation("Rendering WikiPage {wikiPage}", wikiPage.PageName);
+				if (_logger.IsEnabled(LogLevel.Information))
+				{
+					_logger.LogInformation("Rendering WikiPage {wikiPage}", wikiPage.PageName);
+				}
+
 				WikiPage = wikiPage;
 				ViewData["WikiPage"] = WikiPage;
 				ViewData["Title"] = WikiPage.PageName;
