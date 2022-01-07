@@ -49,7 +49,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
-				Announcement = "New User File",
+				Announcement = "",
 				Type = unlisted
 					? PostType.Administrative
 					: PostType.General,
@@ -79,7 +79,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
-				Announcement = "Submission Edited",
+				Announcement = "",
 				Type = PostType.General,
 				Group = PostGroups.Submission,
 				Title = title,
@@ -107,7 +107,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
-				Announcement = "Movie Edited",
+				Announcement = "",
 				Type = PostType.General,
 				Group = PostGroups.Publication,
 				Title = title,
@@ -137,6 +137,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
+				Announcement = "",
 				Type = PostType.General,
 				Group = PostGroups.Wiki,
 				Title = $"{title} by {user}",
@@ -150,6 +151,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 		{
 			await publisher.Send(new Post
 			{
+				Announcement = "",
 				Type = PostType.Administrative,
 				Group = PostGroups.UserManagement,
 				Title = title,
