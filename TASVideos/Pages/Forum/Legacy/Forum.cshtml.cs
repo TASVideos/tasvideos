@@ -10,14 +10,17 @@ namespace TASVideos.Pages.Forum.Legacy
 		[FromQuery]
 		public int? F { get; set; }
 
+		[FromRoute]
+		public int? Id { get; set; }
+
 		public IActionResult OnGet()
 		{
-			if (!F.HasValue)
+			if (!F.HasValue && !Id.HasValue)
 			{
 				return NotFound();
 			}
 
-			return RedirectToPage("/Forum/Subforum/Index", new { Id = F.Value });
+			return RedirectToPage("/Forum/Subforum/Index", new { Id = F ?? Id!.Value });
 		}
 	}
 }
