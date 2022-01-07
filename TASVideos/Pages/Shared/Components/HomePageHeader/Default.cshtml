@@ -1,15 +1,10 @@
 ﻿@model WikiPage
 @{
     var user = Model.PageName.Split("/").Skip(1).FirstOrDefault();
-    bool isSubPage = Model.PageName.Split("/").Length != 2;
-
 }
 <info-alert>
     <row>
-        <div class="col-md-4" condition="isSubPage">
-            @await Component.ListParents(Model)
-        </div>
-        <div class="@(isSubPage ? "col-sm-8" : "")">
+        <div class="col-12">
             <h5 class="mb-0">This is a <a href="/HomePages">Homepage</a> for <profile-link username="@user"></profile-link></h5>
             <small>By default, all registered users can create and maintain a homepage if they choose.</small>
             <small>Note: Opinions expressed on homepages of our users are the personal opinions of those people, and don't necessarily represent the opinion of the whole TASVideos community.</small>

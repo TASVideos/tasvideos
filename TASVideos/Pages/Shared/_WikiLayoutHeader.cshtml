@@ -6,10 +6,9 @@
 <!-- Eventually we will show available translations here-->
 @if (canEdit)
 {
-	<div class="text-end">
+	<div class="text-end mb-2">
 		<a asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 	</div>
-	<hr />
 }
 
 @if (Model.IsSystemPage())
@@ -23,8 +22,4 @@ else if (Model.IsGameResourcesPage())
 else if (Model.IsHomePage())
 {
 	@await Component.HomePageHeader(Model)
-}
-else
-{
-	@await Component.ListParents(Model)
 }
