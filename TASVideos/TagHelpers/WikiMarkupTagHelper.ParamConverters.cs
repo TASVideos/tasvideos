@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TASVideos.Services;
 
@@ -50,7 +51,7 @@ namespace TASVideos.TagHelpers
 		{
 			public override double? Convert(string? input)
 			{
-				return double.TryParse(input, out var tmp) ? tmp : null;
+				return double.TryParse(input, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var tmp) ? tmp : null;
 			}
 		}
 
