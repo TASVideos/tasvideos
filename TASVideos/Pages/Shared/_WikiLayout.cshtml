@@ -32,9 +32,9 @@
 					foreach (var item in allPages.Take(allPages.Length - 1))
 					{
 						runningPath += $"/{item}";
-						<li class="breadcrumb-item" style="color: #fff;"><a href="@runningPath">@item</a></li>
+						<li class="breadcrumb-item" style="color: #fff;"><a href="@runningPath">@item.SplitCamelCase()</a></li>
 					}
-					<li class="breadcrumb-item active" aria-current="page" style="color: #fff;">@allPages.Last()</li>
+					<li class="breadcrumb-item active" aria-current="page" style="color: #fff;">@allPages.Last().SplitCamelCase()</li>
 				}
 			</ol>
 		</nav>
