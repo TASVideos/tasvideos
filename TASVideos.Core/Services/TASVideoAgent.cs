@@ -85,6 +85,7 @@ namespace TASVideos.Core.Services
 				_db.ForumPosts.Add(new ForumPost
 				{
 					TopicId = topic.Id,
+					ForumId = topic.ForumId,
 					CreateUserName = SiteGlobalConstants.TASVideoAgent,
 					LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 					PosterId = SiteGlobalConstants.TASVideoAgentId,
