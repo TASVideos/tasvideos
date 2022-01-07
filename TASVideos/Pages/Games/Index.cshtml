@@ -6,55 +6,92 @@
 	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
 
-<card>
-	<cardheader>
-		<span class="float-end">
-			<a condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
-		</span>
-		<h4>Description</h4>
-	</cardheader>
-	<cardbody>
-		<div class="card-text">
-			@await Component.RenderWiki(wiki)
-		</div>
-	</cardbody>
-</card>
-<hr />
-<a permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="float-end btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 <row>
-	<column md="6">
-		<ul>
-			<li>Platform: @Model.Game.SystemCode</li>
-			<li>Abbreviation: @Model.Game.Abbreviation</li>
-			<li>Display Name: @Model.Game.DisplayName</li>
-			<li>GoodTools Name: @Model.Game.GoodName</li>
-			<li>Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
-			<li condition="Model.Game.GameGroups.Any()">
-				Game Groups:<br />
-				<ul>
-					@foreach (var group in Model.Game.GameGroups)
-					{
-						<li>
-							<a asp-page="/GameGroups/Index" asp-route-id="@group.Id">
-								@group.Name
-							</a>
-						</li>
-					}
-				</ul>
-			</li>
-		</ul>
-	</column>
-	<column md="6">
-		<label>Genre:</label>
-		<ul>
-			@foreach (var genre in Model.Game.Genres)
-			{
-				<li>@genre</li>
-			}
-		</ul>
-	</column>
+	<div class="col-12 col-md-6">
+		<card>
+			<cardheader>
+				<span class="float-end">
+					<a condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
+				</span>
+				<h4>Description</h4>
+			</cardheader>
+			<cardbody>
+				<div class="card-text">
+					@await Component.RenderWiki(wiki)
+				</div>
+			</cardbody>
+		</card>
+	</div>
+	<div class="col-12 col-md-6">
+		<card>
+			<cardheader>
+				<a permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="float-end btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
+				<h4>Details</h4>
+			</cardheader>
+			<cardbody>
+				<row>
+					<column md="6">
+						<ul>
+							<li>Platform: @Model.Game.SystemCode</li>
+							<li>Abbreviation: @Model.Game.Abbreviation</li>
+							<li>Display Name: @Model.Game.DisplayName</li>
+							<li>GoodTools Name: @Model.Game.GoodName</li>
+							<li>Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
+							<li condition="Model.Game.GameGroups.Any()">
+								Game Groups:<br />
+								<ul>
+									@foreach (var group in Model.Game.GameGroups)
+									{
+										<li>
+											<a asp-page="/GameGroups/Index" asp-route-id="@group.Id">
+												@group.Name
+											</a>
+										</li>
+									}
+								</ul>
+							</li>
+						</ul>
+					</column>
+					<column md="6">
+						<label>Genre:</label>
+						<ul>
+							@foreach (var genre in Model.Game.Genres)
+							{
+								<li>@genre</li>
+							}
+						</ul>
+					</column>
+				</row>
+			</cardbody>
+		</card>
+	</div>
 </row>
 <hr />
+<h3>Publications</h3>
+<div condition="!Model.Movies.Any()">
+	None
+	<hr />
+</div>
+<div condition="Model.Movies.Any()">
+	<div class="">
+		<ul class="nav nav-tabs" role="tablist">
+			@foreach (var movie in Model.Movies)
+			{
+				<li class="nav-item">
+					<a class="nav-link@(movie==Model.Movies.First() ? " active" : "")" href="#tab-@(movie.Id)M" data-bs-toggle="tab">@(string.IsNullOrWhiteSpace(movie.Branch) ? "(branchless)" : $@"""{movie.Branch}""")</a>
+				</li>
+			}
+		</ul>
+	</div>
+	<div class="tab-content">
+		@foreach (var movie in Model.Movies)
+		{
+			<div id="tab-@(movie.Id)M" class="tab-pane@(movie==Model.Movies.First() ? " active" : " fade")">
+				<partial name="_MovieModule" model="movie" />
+			</div>
+		}
+	</div>
+</div>
 <row>
 	<column md="6">
 		<ul>

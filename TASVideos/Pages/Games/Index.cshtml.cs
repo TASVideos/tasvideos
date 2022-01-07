@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Pages.Games.Models;
+using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Games
 {
@@ -25,6 +28,8 @@ namespace TASVideos.Pages.Games
 
 		public GameDisplayModel Game { get; set; } = new ();
 
+		public IEnumerable<PublicationDisplayModel> Movies { get; set; } = new List<PublicationDisplayModel>();
+
 		public async Task<IActionResult> OnGet()
 		{
 			Game = await _mapper
@@ -35,6 +40,12 @@ namespace TASVideos.Pages.Games
 			{
 				return NotFound();
 			}
+
+			Movies = await _mapper.ProjectTo<PublicationDisplayModel>(
+				_db.Publications
+					.Where(p => p.GameId == Id && p.ObsoletedById == null))
+					.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
+				.ToListAsync();
 
 			return Page();
 		}
