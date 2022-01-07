@@ -35,12 +35,6 @@ namespace TASVideos.Pages.UserFiles
 
 		public UserFileModel UserFile { get; set; } = new ();
 
-		private bool ShouldFileBeHidden([NotNullWhen(returnValue: false)]UserFile? file)
-		{
-			return file == null
-				|| file.Hidden && (!User.IsLoggedIn() || file.AuthorId != User.GetUserId() && !User.Has(PermissionTo.EditUserFiles));
-		}
-
 		public async Task<IActionResult> OnGet()
 		{
 			var file = await _db.UserFiles
@@ -53,7 +47,7 @@ namespace TASVideos.Pages.UserFiles
 				.Where(userFile => userFile.Id == Id)
 				.SingleOrDefaultAsync();
 
-			if (ShouldFileBeHidden(file))
+			if (file == null)
 			{
 				return NotFound();
 			}
@@ -78,7 +72,7 @@ namespace TASVideos.Pages.UserFiles
 				.Where(userFile => userFile.Id == Id)
 				.SingleOrDefaultAsync();
 
-			if (ShouldFileBeHidden(file))
+			if (file == null)
 			{
 				return NotFound();
 			}
