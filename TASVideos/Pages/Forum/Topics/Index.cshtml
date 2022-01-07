@@ -17,7 +17,7 @@
 		<meta property="og:site_name" content="TASVideos" />
 		<meta property="og:title" content="@($"Forum Reply by {Model.HighlightedPost.PosterName}")" />
 		<meta property="og:description" content="@description" />
-		<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
+		<meta property="og:url" content="@($"{HttpContext.Request.ToUrl()}{HttpContext.Request.QueryString}#{Model.HighlightedPost.Id}")" />
 		<meta property="og:image" content="@Model.HighlightedPost.PosterAvatar" />
 	}
 } else
