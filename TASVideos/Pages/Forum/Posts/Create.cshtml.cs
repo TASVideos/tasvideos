@@ -138,7 +138,7 @@ namespace TASVideos.Pages.Forum.Posts
 				topic.Forum.Restricted,
 				$"New reply by {user.UserName}{mood}",
 				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
-				$"Forum/p/{id}#{id}",
+				$"Forum/Posts/{id}#{id}",
 				$"{user.UserName}{mood}",
 				"New Forum Post");
 
@@ -147,7 +147,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			await _userManager.AssignAutoAssignableRolesByPost(user);
 
-			return BaseRedirect($"/forum/p/{id}#{id}");
+			return BaseRedirect($"/Forum/Posts/{id}#{id}");
 		}
 	}
 }

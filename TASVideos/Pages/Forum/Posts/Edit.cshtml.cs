@@ -137,12 +137,12 @@ namespace TASVideos.Pages.Forum.Posts
 					forumPost.Topic!.Forum!.Restricted,
 					$"Post edited by {User.Name()} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
 					"",
-					$"Forum/p/{Id}#{Id}",
+					$"Forum/Posts/{Id}#{Id}",
 					User.Name(),
 					$"Forum Post Edited by {User.Name()}");
 			}
 
-			return BaseRedirect($"/forum/p/{Id}#{Id}");
+			return BaseRedirect($"/Forum/Posts/{Id}#{Id}");
 		}
 
 		public async Task<IActionResult> OnPostDelete()
