@@ -79,7 +79,7 @@ namespace TASVideos.TagHelpers
 				return false;
 			}
 
-			var viewActiveTab = (string)ViewContext.ViewData["ActiveTab"];
+			var viewActiveTab = ((string?)ViewContext.ViewData["ActiveTab"] ?? "").SplitWithEmpty("/").FirstOrDefault();
 			if (Activate == viewActiveTab)
 			{
 				return true;
