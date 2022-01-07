@@ -21,6 +21,25 @@
 	<meta property="og:url" content="@Context.Request.ToUrl()" />
 	<meta property="og:image" content="@($"{Context.Request.ToBaseUrl()}/images/logo-light-4x.png")" />
 }
+
+@section PageTitle {
+	<div class="container mb-2">
+		<nav aria-label="breadcrumb" class="bg-secondary" style="font-size: 1.25em; padding: 5px 10px; border-radius: 5px;">
+			<ol class="breadcrumb m-0">
+				@{
+					var allPages = pageData.PageName.Split("/");
+					var runningPath = "";
+					foreach (var item in allPages.Take(allPages.Length - 1))
+					{
+						runningPath += $"/{item}";
+						<li class="breadcrumb-item" style="color: #fff;"><a href="@runningPath">@item</a></li>
+					}
+					<li class="breadcrumb-item active" aria-current="page" style="color: #fff;">@allPages.Last()</li>
+				}
+			</ol>
+		</nav>
+	</div>
+}
 <partial name="_WikiLayoutHeader" model="pageData" />
 @RenderBody()
 <partial name="_WikiLayoutFooter" model="pageData" />
