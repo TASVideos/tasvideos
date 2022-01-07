@@ -45,12 +45,14 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 
 	public static class ExternalMediaPublisherExtensions
 	{
-		public static async Task SendUserFile(this ExternalMediaPublisher publisher, string title, string relativeLink, string body = "", string user = "")
+		public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string title, string relativeLink, string body = "", string user = "")
 		{
 			await publisher.Send(new Post
 			{
 				Announcement = "New User File",
-				Type = PostType.General,
+				Type = unlisted
+					? PostType.Administrative
+					: PostType.General,
 				Group = PostGroups.UserFiles,
 				Title = title,
 				Body = body,
