@@ -14,6 +14,7 @@
 	}
 	@section Header {
 		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="TASVideos" />
 		<meta property="og:title" content="@($"Forum Reply by {Model.HighlightedPost.PosterName}")" />
 		<meta property="og:description" content="@description" />
 		<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
@@ -22,11 +23,17 @@
 } else
 {
 	@section Header {
+		@{
+			var firstPost = @Model.Topic.Posts.FirstOrDefault();
+			var ogTitle = firstPost is not null ? $"Forum Thread by {firstPost.PosterName}" : "Forum Thread";
+			var ogImage = firstPost is not null ? firstPost.PosterAvatar : $"{HttpContext.Request.ToBaseUrl()}/images/logo-light-4x.png";
+		}
 		<meta property="og:type" content="website" />
-		<meta property="og:title" content="TASVideos Forum Thread" />
+		<meta property="og:site_name" content="TASVideos" />
+		<meta property="og:title" content="@ogTitle" />
 		<meta property="og:description" content="@Model.Topic.Title" />
 		<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
-		<meta property="og:image" content="@Model.Topic.Posts.FirstOrDefault()?.PosterAvatar" />
+		<meta property="og:image" content="@ogImage" />
 	}
 }
 
