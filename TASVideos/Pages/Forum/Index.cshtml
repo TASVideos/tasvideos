@@ -6,6 +6,9 @@
 <partial Name="_ForumHeader" />
 <fullrow class="pb-2 pt-2">
 	<div class="float-end">
+		<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm">
+			Latest Posts
+		</a>
 		<a asp-page="/Forum/Posts/New" condition="@User.IsLoggedIn()" class="btn btn-secondary btn-sm">
 			Posts since last visit
 		</a>
