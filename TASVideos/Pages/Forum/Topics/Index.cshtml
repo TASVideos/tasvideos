@@ -18,7 +18,7 @@
 		<meta property="og:title" content="@($"Forum Reply by {Model.HighlightedPost.PosterName}")" />
 		<meta property="og:description" content="@description" />
 		<meta property="og:url" content="@($"{HttpContext.Request.ToUrl()}{HttpContext.Request.QueryString}#{Model.HighlightedPost.Id}")" />
-		<meta property="og:image" content="@Model.HighlightedPost.PosterAvatar" />
+		<meta property="og:image" content="@Model.HighlightedPost.GetCurrentAvatar()" />
 	}
 } else
 {
@@ -26,7 +26,7 @@
 		@{
 			var firstPost = @Model.Topic.Posts.FirstOrDefault();
 			var ogTitle = firstPost is not null ? $"Forum Thread by {firstPost.PosterName}" : "Forum Thread";
-			var ogImage = firstPost is not null ? firstPost.PosterAvatar : $"{HttpContext.Request.ToBaseUrl()}/images/logo-light-4x.png";
+			var ogImage = firstPost is not null ? firstPost.GetCurrentAvatar() : $"{HttpContext.Request.ToBaseUrl()}/images/logo-light-4x.png";
 		}
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="TASVideos" />
