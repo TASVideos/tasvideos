@@ -82,22 +82,24 @@ namespace TASVideos.Pages.Profile
 			}
 
 			var exists = await _userManager.FindByEmailAsync(Settings.Email);
-			if (exists != null)
-			{
-				ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.Email)}", "This email cannot be used.");
-				return Page();
-			}
-
 			var user = await _userManager.GetUserAsync(User);
+			var currentEmail = user.Email;
 
-			var email = user.Email;
-			if (!string.Equals(Settings.Email, email, StringComparison.CurrentCultureIgnoreCase))
+			if (!string.Equals(Settings.Email, currentEmail, StringComparison.CurrentCultureIgnoreCase))
 			{
-				var setEmailResult = await _userManager.SetEmailAsync(user, Settings.Email);
-
-				if (!setEmailResult.Succeeded)
+				if (exists != null)
 				{
-					throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
+					ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.Email)}", "This email cannot be used.");
+					return Page();
+				}
+				else
+				{
+					var setEmailResult = await _userManager.SetEmailAsync(user, Settings.Email);
+
+					if (!setEmailResult.Succeeded)
+					{
+						throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
+					}
 				}
 			}
 
