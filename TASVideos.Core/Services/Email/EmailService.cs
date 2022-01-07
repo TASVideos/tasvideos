@@ -67,7 +67,7 @@ namespace TASVideos.Core.Services.Email
 
 You are receiving this email because you are watching the topic, ""{template.TopicTitle}"" at {siteName}. This topic has received a reply since your last visit. You can use the following link to view the replies made, no more notifications will be sent until you visit the topic.
 
-{template.BaseUrl}/Forum/p/{template.PostId}#{template.PostId}
+{template.BaseUrl}/Forum/Posts/{template.PostId}#{template.PostId}
 
 If you no longer wish to watch this topic you can either click the ""Stop watching this topic link"" found at the top of the topic above, or by clicking the following link:
 
