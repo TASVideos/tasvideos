@@ -17,8 +17,8 @@ namespace TASVideos.MovieParsers.Extensions
 				return Array.Empty<string>();
 			}
 
-			return str.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(s => s.TrimEnd('\r'))
+			return str
+				.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
 				.ToArray();
 		}
 
