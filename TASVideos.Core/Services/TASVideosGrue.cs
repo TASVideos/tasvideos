@@ -62,7 +62,7 @@ namespace TASVideos.Core.Services
 		private static string RejectionMessage(DateTime createTimeStamp)
 		{
 			string message = "om, nom, nom";
-			message += (DateTime.Now - createTimeStamp).TotalDays >= 365
+			message += (DateTime.UtcNow - createTimeStamp).TotalDays >= 365
 				? "... blech, stale!"
 				: RandomMessages.AtRandom();
 
