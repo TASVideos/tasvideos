@@ -157,7 +157,7 @@ namespace TASVideos.Pages.Forum.Posts
 			{
 				// emails are currently somewhat unstable
 				// we want to continue the request even if the email fails, so eat the exception
-				_logger.LogWarning($"Email notification failed on new reply creation");
+				_logger.LogWarning("Email notification failed on new reply creation");
 			}
 
 			return BaseRedirect($"/Forum/Posts/{id}#{id}");
