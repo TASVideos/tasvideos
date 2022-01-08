@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RejectedSubmission>
+﻿@model ICollection<RejectedSubmission>
 @{ 
 	var totalCounts = Model.Select(rs => rs.Reason).GroupBy(r => r).OrderByDescending(group => group.Count());
 }
@@ -17,7 +17,7 @@
 		}
 	</table>
 	<div>
-		Total: @Model.Count()<br />
+		Total: @Model.Count<br />
 		@foreach (var count in totalCounts)
 		{
 			<text>@count.Key: @count.Count()<br /></text>
