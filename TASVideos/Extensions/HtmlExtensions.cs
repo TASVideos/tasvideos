@@ -149,10 +149,5 @@ namespace TASVideos.Extensions
 
 			return validImageTypes.Contains(formFile?.ContentType);
 		}
-
-		public static bool IsValidTorrent(this IFormFile? formFile)
-		{
-			return formFile is not null && formFile.FileName.EndsWith(".torrent");
-		}
 	}
 }

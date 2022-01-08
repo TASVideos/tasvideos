@@ -86,11 +86,6 @@ namespace TASVideos.Pages.Submissions
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Screenshot)}", "Invalid file type. Must be .png or .jpg");
 			}
 
-			if (!Submission.TorrentFile.IsValidTorrent())
-			{
-				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.TorrentFile)}", "Invalid file type. Must be a .torrent file");
-			}
-
 			if (!ModelState.IsValid)
 			{
 				await PopulateAvailableMoviesToObsolete(Submission.SystemId);
@@ -157,7 +152,6 @@ namespace TASVideos.Pages.Submissions
 			publication.GenerateTitle();
 
 			await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
-			await _uploader.UploadTorrent(publication.Id, Submission.TorrentFile!);
 
 			// Create a wiki page corresponding to this submission
 			var wikiPage = new WikiPage

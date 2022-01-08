@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using static TASVideos.Data.Entity.PublicationUrlType;
 
@@ -74,11 +73,7 @@ namespace TASVideos.ViewComponents
 				.Select(p => new UnmirroredMovieEntry
 				{
 					Id = p.Id,
-					Title = p.Title,
-					EncodePaths = p.Files
-						.Where(f => f.Type == FileType.Torrent)
-						.Select(f => f.Path)
-						.ToList()
+					Title = p.Title
 				})
 				.ToListAsync();
 

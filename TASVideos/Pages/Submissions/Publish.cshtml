@@ -101,12 +101,6 @@
 				<div>@Html.DescriptionFor(m => m.Submission.ScreenshotDescription)</div>
 				<span asp-validation-for="Submission.ScreenshotDescription" class="text-danger"></span>
 			</form-group>
-			<form-group>
-				<label asp-for="Submission.TorrentFile" class="form-control-label"></label>
-				<input type="file" asp-for="Submission.TorrentFile" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.Submission.TorrentFile)</div>
-				<span asp-validation-for="Submission.TorrentFile" class="text-danger"></span>
-			</form-group>
 		</column>
 	</row>
 	<hr />

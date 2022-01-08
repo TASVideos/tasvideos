@@ -44,10 +44,6 @@ namespace TASVideos.Pages.RssFeeds.Models
 			}
 		}
 
-		public IEnumerable<string> TorrentLinks => Files
-			.Where(f => f.Type == FileType.Torrent)
-			.Select(f => f.Path);
-
 		public ICollection<string> StreamingUrls { get; init; } = new List<string>();
 
 		internal ICollection<File> Files { get; init; } = new List<File>();

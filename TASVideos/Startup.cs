@@ -71,7 +71,7 @@ namespace TASVideos
 				.UseExceptionHandlers(env)
 				.UseGzipCompression(Settings)
 				.UseWebOptimizer()
-				.UseStaticFilesWithTorrents()
+				.UseStaticFilesWithExtensionMapping()
 				.UseAuthorization()
 				.UseAuthentication()
 				.UseSwaggerUi(Environment)

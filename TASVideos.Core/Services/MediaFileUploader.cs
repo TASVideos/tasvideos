@@ -14,7 +14,6 @@ namespace TASVideos.Core.Services
 	public interface IMediaFileUploader
 	{
 		Task<string> UploadScreenshot(int publicationId, IFormFile screenshot, string? description);
-		Task<string> UploadTorrent(int publicationId, IFormFile torrent);
 		Task<DeletedFile?> DeleteFile(int publicationFileId);
 	}
 
@@ -75,27 +74,6 @@ namespace TASVideos.Core.Services
 			return screenshotFileName;
 		}
 
-		public async Task<string> UploadTorrent(int publicationId, IFormFile torrent)
-		{
-			await using var memoryStream = new MemoryStream();
-			await torrent.CopyToAsync(memoryStream);
-			var torrentBytes = memoryStream.ToArray();
-
-			string torrentFileName = torrent.FileName;
-			string torrentPath = Path.Combine(_env.WebRootPath, "torrent", torrentFileName);
-			await File.WriteAllBytesAsync(torrentPath, torrentBytes);
-
-			var torrentFile = new PublicationFile
-			{
-				PublicationId = publicationId,
-				Path = torrentFileName,
-				Type = FileType.Torrent
-			};
-			_db.PublicationFiles.Add(torrentFile);
-			await _db.SaveChangesAsync();
-			return torrentFileName;
-		}
-
 		public async Task<DeletedFile?> DeleteFile(int publicationFileId)
 		{
 			var file = await _db.PublicationFiles
@@ -103,7 +81,7 @@ namespace TASVideos.Core.Services
 
 			if (file is not null)
 			{
-				string path = Path.Combine(_env.WebRootPath, "torrent", file.Path);
+				string path = Path.Combine(_env.WebRootPath, file.Path);
 				File.Delete(path);
 
 				_db.PublicationFiles.Remove(file);

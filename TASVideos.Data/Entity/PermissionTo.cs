@@ -143,7 +143,7 @@ namespace TASVideos.Data.Entity
 		EditRecommendation = 304,
 
 		[Group("Publication Maintenance")]
-		[Description("The ability to add/remove publication files such as screenshots and torrents")]
+		[Description("The ability to add/remove publication files such as screenshots")]
 		EditPublicationFiles = 305,
 
 		[Group("Publication Maintenance")]
