@@ -35,7 +35,7 @@
 			}
 
 			forumHeaderRestore.onclick = function () {
-				localStorage.clear('DismissForumHeader');
+				localStorage.removeItem('DismissForumHeader');
 				forumHeaderRestore.classList.add("d-none");
 				forumHeader.classList.remove("d-none");
 			}
