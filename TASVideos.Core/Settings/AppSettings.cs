@@ -23,6 +23,9 @@ namespace TASVideos.Core.Settings
 
 		public string SampleDataPassword { get; set; } = "Password1234!@#$";
 
+		// Minimum number of hours before a judge can set a submission to accepted/rejected
+		public int MinimumHoursBeforeJudgment { get; set; }
+
 		public class IrcConnection
 		{
 			public string Server { get; set; } = "";

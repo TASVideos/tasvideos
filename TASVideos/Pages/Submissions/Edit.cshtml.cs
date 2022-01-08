@@ -26,6 +26,7 @@ namespace TASVideos.Pages.Submissions
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly ITASVideosGrue _tasvideosGrue;
 		private readonly IMovieFormatDeprecator _deprecator;
+		private readonly ISubmissionService _submissionService;
 
 		public EditModel(
 			ApplicationDbContext db,
@@ -33,7 +34,8 @@ namespace TASVideos.Pages.Submissions
 			IWikiPages wikiPages,
 			ExternalMediaPublisher publisher,
 			ITASVideosGrue tasvideosGrue,
-			IMovieFormatDeprecator deprecator)
+			IMovieFormatDeprecator deprecator,
+			ISubmissionService submissionService)
 			: base(db)
 		{
 			_parser = parser;
@@ -41,6 +43,7 @@ namespace TASVideos.Pages.Submissions
 			_publisher = publisher;
 			_tasvideosGrue = tasvideosGrue;
 			_deprecator = deprecator;
+			_submissionService = submissionService;
 		}
 
 		[FromRoute]
@@ -113,7 +116,7 @@ namespace TASVideos.Pages.Submissions
 
 			await PopulateDropdowns();
 
-			AvailableStatuses = SubmissionHelper.AvailableStatuses(
+			AvailableStatuses = _submissionService.AvailableStatuses(
 				Submission.Status,
 				User.Permissions(),
 				Submission.CreateTimestamp,
@@ -180,7 +183,7 @@ namespace TASVideos.Pages.Submissions
 				return NotFound();
 			}
 
-			var availableStatus = SubmissionHelper.AvailableStatuses(
+			var availableStatus = _submissionService.AvailableStatuses(
 				subInfo.CurrentStatus,
 				User.Permissions(),
 				subInfo.CreateDate,

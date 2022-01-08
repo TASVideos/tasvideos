@@ -2,29 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TASVideos.Core.Services;
+using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Helpers;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
-namespace TASVideos.Data.Tests.Helpers
+namespace TASVideos.Core.Tests.Services
 {
 	[TestClass]
-	public class AvailableStatusesTests
+	public class SubmissionServiceTests
 	{
-		private static DateTime OldEnoughToBeJudged
-			=> DateTime.UtcNow.AddHours(-1 - SiteGlobalConstants.MinimumHoursBeforeJudgment);
+		private const int MinimumHoursBeforeJudgment = 72;
+		private readonly SubmissionService _submissionService;
 
 		private static DateTime TooNewToJudge => DateTime.UtcNow;
+
+		private static DateTime OldEnoughToBeJudged
+			=> DateTime.UtcNow.AddHours(-1 - MinimumHoursBeforeJudgment);
 
 		private static readonly IEnumerable<PermissionTo> BasicUserPerms = new[] { PermissionTo.SubmitMovies };
 		private static readonly IEnumerable<PermissionTo> JudgePerms = new[] { PermissionTo.SubmitMovies, PermissionTo.JudgeSubmissions };
 		private static readonly IEnumerable<PermissionTo> PublisherPerms = new[] { PermissionTo.SubmitMovies, PermissionTo.PublishMovies };
 		private static readonly IEnumerable<PermissionTo> Override = new[] { PermissionTo.OverrideSubmissionStatus };
 
+		public SubmissionServiceTests()
+		{
+			var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
+			_submissionService = new SubmissionService(settings);
+		}
+
 		[TestMethod]
 		public void Published_CanNotChange()
 		{
-			var result = SubmissionHelper.AvailableStatuses(
+			var result = _submissionService.AvailableStatuses(
 				Published,
 				Override,
 				OldEnoughToBeJudged,
@@ -49,7 +59,7 @@ namespace TASVideos.Data.Tests.Helpers
 		public void Submitter_BasicPerms(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo).ToList();
-			var result = SubmissionHelper.AvailableStatuses(
+			var result = _submissionService.AvailableStatuses(
 				current,
 				BasicUserPerms,
 				OldEnoughToBeJudged,
@@ -77,7 +87,7 @@ namespace TASVideos.Data.Tests.Helpers
 		public void Submitter_IsJudge(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo).ToList();
-			var result = SubmissionHelper.AvailableStatuses(
+			var result = _submissionService.AvailableStatuses(
 				current,
 				JudgePerms,
 				OldEnoughToBeJudged,
@@ -105,7 +115,7 @@ namespace TASVideos.Data.Tests.Helpers
 		public void Submitter_IsPublisher(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo).ToList();
-			var result = SubmissionHelper.AvailableStatuses(
+			var result = _submissionService.AvailableStatuses(
 				current,
 				PublisherPerms,
 				OldEnoughToBeJudged,
@@ -133,7 +143,7 @@ namespace TASVideos.Data.Tests.Helpers
 		public void Judge_ButNotSubmitter_BeforeAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo).ToList();
-			var result = SubmissionHelper.AvailableStatuses(
+			var result = _submissionService.AvailableStatuses(
 				current,
 				JudgePerms,
 				TooNewToJudge,
@@ -161,7 +171,7 @@ namespace TASVideos.Data.Tests.Helpers
 		public void Judge_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo).ToList();
-			var result = SubmissionHelper.AvailableStatuses(
+			var result = _submissionService.AvailableStatuses(
 				current,
 				JudgePerms,
 				OldEnoughToBeJudged,
@@ -189,7 +199,7 @@ namespace TASVideos.Data.Tests.Helpers
 		public void Publisher_ButNotSubmitter_BeforeAllowedJudgmentWindow_CanNotChangeStatus(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo).ToList();
-			var result = SubmissionHelper.AvailableStatuses(
+			var result = _submissionService.AvailableStatuses(
 				current,
 				PublisherPerms,
 				TooNewToJudge,
@@ -217,7 +227,7 @@ namespace TASVideos.Data.Tests.Helpers
 		public void Publisher_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 		{
 			var expected = new[] { current }.Concat(canChangeTo).ToList();
-			var result = SubmissionHelper.AvailableStatuses(
+			var result = _submissionService.AvailableStatuses(
 				current,
 				PublisherPerms,
 				OldEnoughToBeJudged,
@@ -244,7 +254,7 @@ namespace TASVideos.Data.Tests.Helpers
 
 			foreach (var current in exceptPublished)
 			{
-				var result = SubmissionHelper.AvailableStatuses(
+				var result = _submissionService.AvailableStatuses(
 					current,
 					Override,
 					TooNewToJudge,
