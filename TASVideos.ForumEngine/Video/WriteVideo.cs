@@ -153,13 +153,19 @@ width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullsc
 
 					break;
 				case "archive.org":
-					if (pp.Path.StartsWith("/download/") // https://archive.org/download/megamanpc-tas-1_48_083/megamanpc-tas-1_48_083-soundhack.mp4
-						|| pp.Path.StartsWith("/details/")) // https://archive.org/details/popeye_taxi-turvey
+					// https://blog.archive.org/2011/03/31/how-archive-org-items-are-structured/
+					string[] prefixes = { "/details/", "/download/" };
+					foreach (var prefix in prefixes)
 					{
-						var vid = pp.Path.Split("/")[2];
-						if (vid.Length > 0)
+						if (pp.Path.StartsWith(prefix))
 						{
-							DoTemplate(w, ArchiveOrg, width, height, pp.Path.Split("/")[2]);
+							var vid = pp.Path[prefix.Length..];
+							if (vid.Length > 0)
+							{
+								// Retain everything after the prefix, which is an identifer and optional filename.
+								DoTemplate(w, ArchiveOrg, width, height, vid);
+								break;
+							}
 						}
 					}
 
