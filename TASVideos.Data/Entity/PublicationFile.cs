@@ -5,7 +5,7 @@ namespace TASVideos.Data.Entity
 {
 	public enum FileType
 	{
-		Screenshot, MovieFile, Torrent
+		Screenshot, MovieFile
 	}
 
 	public class PublicationFile : BaseEntity

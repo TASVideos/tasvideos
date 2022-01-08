@@ -188,15 +188,15 @@ namespace TASVideos.Legacy.Imports
 					FileData = null
 				});
 
-				publicationFiles.AddRange(torrentUrls.Select(t => new PublicationFile
-				{
-					PublicationId = pub.Movie.Id,
-					Type = FileType.Torrent,
-					Path = t.FileName,
-					CreateTimestamp = DateTime.UtcNow,
-					LastUpdateTimestamp = DateTime.UtcNow,
-					FileData = null
-				}));
+				//publicationFiles.AddRange(torrentUrls.Select(t => new PublicationFile
+				//{
+				//	PublicationId = pub.Movie.Id,
+				//	Type = FileType.Torrent,
+				//	Path = t.FileName,
+				//	CreateTimestamp = DateTime.UtcNow,
+				//	LastUpdateTimestamp = DateTime.UtcNow,
+				//	FileData = null
+				//}));
 
 				publicationFiles.AddRange(movieFiles.Skip(1).Select(m => new PublicationFile
 				{
