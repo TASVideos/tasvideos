@@ -34,9 +34,9 @@ namespace TASVideos.Pages.Forum.Posts
 		public async Task OnGet()
 		{
 			var allowRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			var numberOfPosts = 100;
 			Posts = await _db.ForumPosts
 				.ExcludeRestricted(allowRestricted)
+				.Where(p => p.CreateTimestamp > DateTime.UtcNow.AddDays(-3))
 				.Select(p => new LatestPostsModel
 				{
 					Id = p.Id,
@@ -66,7 +66,6 @@ namespace TASVideos.Pages.Forum.Posts
 					PosterPronouns = p.Poster.PreferredPronouns
 				})
 				.OrderByDescending(p => p.CreateTimestamp)
-				.Take(numberOfPosts)
 				.PageOf(Search);
 
 			foreach (var post in Posts)
