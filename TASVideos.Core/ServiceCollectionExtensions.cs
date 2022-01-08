@@ -92,6 +92,7 @@ namespace TASVideos.Core
 			services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 			services.AddScoped<IPublicationMaintenanceLogger, PublicationMaintenanceLogger>();
 			services.AddScoped<IUserMaintenanceLogger, UserMaintenanceLogger>();
+			services.AddScoped<ISubmissionService, SubmissionService>();
 
 			return services;
 		}
