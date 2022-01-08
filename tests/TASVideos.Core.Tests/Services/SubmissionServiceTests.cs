@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Core.Services;
+using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
@@ -11,9 +12,13 @@ namespace TASVideos.Core.Tests.Services
 	[TestClass]
 	public class SubmissionServiceTests
 	{
+		private const int MinimumHoursBeforeJudgment = 72;
 		private readonly SubmissionService _submissionService;
 
 		private static DateTime TooNewToJudge => DateTime.UtcNow;
+
+		private static DateTime OldEnoughToBeJudged
+			=> DateTime.UtcNow.AddHours(-1 - MinimumHoursBeforeJudgment);
 
 		private static readonly IEnumerable<PermissionTo> BasicUserPerms = new[] { PermissionTo.SubmitMovies };
 		private static readonly IEnumerable<PermissionTo> JudgePerms = new[] { PermissionTo.SubmitMovies, PermissionTo.JudgeSubmissions };
@@ -22,11 +27,9 @@ namespace TASVideos.Core.Tests.Services
 
 		public SubmissionServiceTests()
 		{
-			_submissionService = new SubmissionService();
+			var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
+			_submissionService = new SubmissionService(settings);
 		}
-
-		private static DateTime OldEnoughToBeJudged
-			=> DateTime.UtcNow.AddHours(-1 - SubmissionService.MinimumHoursBeforeJudgment);
 
 		[TestMethod]
 		public void Published_CanNotChange()
