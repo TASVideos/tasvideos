@@ -29,7 +29,7 @@ namespace TASVideos.Pages.RssFeeds
 		public string BaseUrl { get; set; }
 		public async Task<IActionResult> OnGet()
 		{
-			var minTimestamp = DateTime.Now.AddDays(-60);
+			var minTimestamp = DateTime.UtcNow.AddDays(-60);
 			Publications = await _db.Publications
 				.ByMostRecent()
 				.Where(p => p.CreateTimestamp >= minTimestamp)

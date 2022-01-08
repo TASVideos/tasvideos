@@ -38,7 +38,7 @@ namespace TASVideos.Extensions
 				throw new ArgumentNullException($"{nameof(collection)} can not be null");
 			}
 
-			var randomIndex = new Random(DateTime.Now.Millisecond).Next(0, collection.Count);
+			var randomIndex = new Random(DateTime.UtcNow.Millisecond).Next(0, collection.Count);
 			return collection.ElementAt(randomIndex);
 		}
 

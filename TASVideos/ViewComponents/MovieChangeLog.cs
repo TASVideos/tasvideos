@@ -71,7 +71,7 @@ namespace TASVideos.ViewComponents
 
 		private async Task<IList<MovieHistoryModel.MovieHistoryEntry>> GetRecentPublications(int maxDays)
 		{
-			var minTimestamp = DateTime.Now.AddDays(-maxDays);
+			var minTimestamp = DateTime.UtcNow.AddDays(-maxDays);
 			var results = await _db.Publications
 				.Where(p => p.CreateTimestamp >= minTimestamp)
 				.Select(p => new MovieHistoryModel.MovieHistoryEntry

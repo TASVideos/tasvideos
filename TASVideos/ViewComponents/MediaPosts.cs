@@ -23,7 +23,7 @@ namespace TASVideos.ViewComponents
 
 		public async Task<IViewComponentResult> InvokeAsync(int? days, int? limit)
 		{
-			var startDate = DateTime.Now.AddDays(-(days ?? 7));
+			var startDate = DateTime.UtcNow.AddDays(-(days ?? 7));
 			var model = await GetPosts(startDate, limit ?? 50);
 
 			return View(model);

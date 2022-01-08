@@ -63,7 +63,7 @@ namespace TASVideos.Pages.Forum.Topics
 					MultiSelect = topic.Poll.MultiSelect,
 					Question = topic.Poll.Question,
 					DaysOpen = topic.Poll.CloseDate.HasValue
-						? (int)(topic.Poll.CloseDate.Value - DateTime.Now).TotalDays
+						? (int)(topic.Poll.CloseDate.Value - DateTime.UtcNow).TotalDays
 						: null,
 					PollOptions = topic.Poll.PollOptions
 						.OrderBy(o => o.Ordinal)

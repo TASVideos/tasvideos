@@ -76,7 +76,7 @@ namespace TASVideos.ViewComponents
 			// these are only used for rating statistics
 			int minimumVotes = minVotes ?? 1;
 			int minimumAge = minAge ?? 0;
-			DateTime minimumAgeTime = DateTime.Now.AddDays(-minimumAge);
+			DateTime minimumAgeTime = DateTime.UtcNow.AddDays(-minimumAge);
 
 			bool reverse = comparisonParameter.StartsWith("-");
 			if (reverse)
@@ -172,7 +172,7 @@ namespace TASVideos.ViewComponents
 						{
 							Id = p.Id,
 							Title = p.Title,
-							IntValue = (int)Math.Round((DateTime.Now - p.CreateTimestamp).TotalDays)
+							IntValue = (int)Math.Round((DateTime.UtcNow - p.CreateTimestamp).TotalDays)
 						})
 						.ToListAsync();
 					break;

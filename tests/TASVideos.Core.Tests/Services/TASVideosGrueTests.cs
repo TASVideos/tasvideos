@@ -60,7 +60,7 @@ namespace TASVideos.Core.Tests.Services
 		{
 			var topic = _db.ForumTopics.Add(new ForumTopic
 			{
-				CreateTimestamp = DateTime.Now.AddYears(-1),
+				CreateTimestamp = DateTime.UtcNow.AddYears(-1),
 				Title = "Title",
 				SubmissionId = SubmissionId
 			});

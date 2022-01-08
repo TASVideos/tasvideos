@@ -152,7 +152,7 @@ namespace TASVideos.Data.Tests.Context
 
 			await _db.SaveChangesAsync();
 
-			Assert.AreEqual(DateTime.Now.Year, flag.LastUpdateTimestamp.Year);
+			Assert.AreEqual(DateTime.UtcNow.Year, flag.LastUpdateTimestamp.Year);
 		}
 
 		[TestMethod]
