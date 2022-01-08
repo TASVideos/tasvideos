@@ -24,6 +24,7 @@ namespace TASVideos.ViewComponents
 		{
 			var model = await _db.Submissions
 				.ThatAreRejected()
+				.OrderBy(s => s.Id)
 				.Select(s => new RejectedSubmission
 				{
 					Id = s.Id,
