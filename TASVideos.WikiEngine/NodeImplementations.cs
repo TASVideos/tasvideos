@@ -452,7 +452,15 @@ namespace TASVideos.WikiEngine.AST
 
 		public string InnerText(IWriterHelper h)
 		{
-			// could actually run the module here... but no.
+			// Too hard to run modules here, and not useful.
+			// But, for the specific case of __wikiLink, it "feels" like a link and not a module
+			// to the end user.  TODO:  __wikiLink really needs to be its own AST type.
+			if (Name == "__wikiLink")
+			{
+				Parameters.TryGetValue("displaytext", out var ret);
+				return ret ?? "";
+			}
+
 			return "";
 		}
 
@@ -474,6 +482,13 @@ namespace TASVideos.WikiEngine.AST
 
 		public IEnumerable<INode> CloneForToc()
 		{
+			// See comment above
+			if (Name == "__wikiLink")
+			{
+				Parameters.TryGetValue("displaytext", out var content);
+				return new[] { new Text(CharStart, content ?? "") { CharEnd = CharEnd } };
+			}
+
 			return Enumerable.Empty<INode>();
 		}
 	}
