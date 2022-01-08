@@ -40,7 +40,8 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public bool IsEditable { get; set; }
 		public bool IsDeletable { get; set; }
 
-		public string? GetCurrentAvatar() {
+		public string? GetCurrentAvatar()
+		{
 			var currentAvatar = PosterAvatar;
 
 			if (PosterMood != ForumPostMood.None && !string.IsNullOrWhiteSpace(PosterMoodUrlBase))
