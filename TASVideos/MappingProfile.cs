@@ -172,6 +172,12 @@ namespace TASVideos
 				.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags.Select(a => a.Tag!.Code).ToList()))
 				.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
 					.Select(a => a.Flag!.Token)
+					.ToList()))
+				.ForMember(dest => dest.Urls, opt => opt.MapFrom(src => src.PublicationUrls
+					.Select(u => u.Url)
+					.ToList()))
+				.ForMember(dest => dest.FilePaths, opt => opt.MapFrom(src => src.Files
+					.Select(u => u.Path)
 					.ToList()));
 
 			CreateMap<Submission, SubmissionsResponse>()

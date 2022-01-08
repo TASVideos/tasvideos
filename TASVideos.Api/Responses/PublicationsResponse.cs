@@ -55,5 +55,8 @@ namespace TASVideos.Api.Responses
 		public IEnumerable<string> Authors { get; init; } = Array.Empty<string>();
 		public IEnumerable<string> Tags { get; init; } = Array.Empty<string>();
 		public IEnumerable<string> Flags { get; init; } = Array.Empty<string>();
+
+		public IEnumerable<string> Urls { get; init; } = Array.Empty<string>();
+		public IEnumerable<string> FilePaths { get; init; } = Array.Empty<string>();
 	}
 }
