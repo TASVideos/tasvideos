@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TASVideos.Common;
 using TASVideos.Core;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models

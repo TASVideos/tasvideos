@@ -1,6 +1,7 @@
 ﻿@page
 @using TASVideos.Pages.Submissions.Models
 @model IndexModel
+@inject ISubmissionService _submissionService
 @{
 	ViewData["Title"] = "Submissions";
 }
@@ -108,8 +109,8 @@
 					<small condition="item.Publisher != null">
 						<br /><profile-link username="@item.Publisher"></profile-link>
 					</small>
-					<small condition="item.HoursRemainingForJudging() > 0">
-						<br />(Available for judging in @item.HoursRemainingForJudging() hours)
+					<small condition="_submissionService.HoursRemainingForJudging(item) > 0">
+						<br />(Available for judging in @_submissionService.HoursRemainingForJudging(item) hours)
 					</small>
 				</td>
 			</tr>

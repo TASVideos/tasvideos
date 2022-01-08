@@ -24,10 +24,14 @@ namespace TASVideos.Core.Services
 			bool isAuthorOrSubmitter,
 			bool isJudge,
 			bool isPublisher);
+
+		int HoursRemainingForJudging(ISubmissionDisplay submission);
 	}
 
 	internal class SubmissionService : ISubmissionService
 	{
+		internal const int MinimumHoursBeforeJudgment = 72; // Minimum number of hours before a judge can set a submission to accepted/rejected
+
 		public IEnumerable<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
 			IEnumerable<PermissionTo> userPermissions,
 			DateTime submitDate,
@@ -57,7 +61,7 @@ namespace TASVideos.Core.Services
 
 			var canJudge = perms.Contains(PermissionTo.JudgeSubmissions);
 			var canPublish = perms.Contains(PermissionTo.PublishMovies);
-			var isAfterJudgmentWindow = submitDate < DateTime.UtcNow.AddHours(-SiteGlobalConstants.MinimumHoursBeforeJudgment);
+			var isAfterJudgmentWindow = submitDate < DateTime.UtcNow.AddHours(-MinimumHoursBeforeJudgment);
 
 			if (isJudge && currentStatus == JudgingUnderWay // The judge can set back to new if they claimed the submission and are now opting out
 				|| currentStatus == Rejected && isJudge // A judge can revive a rejected submission by setting it to new
@@ -123,6 +127,17 @@ namespace TASVideos.Core.Services
 			}
 
 			return list;
+		}
+
+		public int HoursRemainingForJudging(ISubmissionDisplay submission)
+		{
+			if (submission.Status.CanBeJudged())
+			{
+				var diff = (DateTime.UtcNow - submission.Submitted).TotalHours;
+				return MinimumHoursBeforeJudgment - (int)diff;
+			}
+
+			return 0;
 		}
 	}
 }

@@ -26,7 +26,7 @@ namespace TASVideos.Core.Tests.Services
 		}
 
 		private static DateTime OldEnoughToBeJudged
-			=> DateTime.UtcNow.AddHours(-1 - SiteGlobalConstants.MinimumHoursBeforeJudgment);
+			=> DateTime.UtcNow.AddHours(-1 - SubmissionService.MinimumHoursBeforeJudgment);
 
 		[TestMethod]
 		public void Published_CanNotChange()
