@@ -142,10 +142,18 @@ namespace TASVideos.Pages.Forum.Posts
 				$"{user.UserName}{mood}",
 				"New Forum Post");
 
-			await _topicWatcher.NotifyNewPost(new TopicNotification(
-				id, topic.Id, topic.Title, user.Id));
-
 			await _userManager.AssignAutoAssignableRolesByPost(user);
+
+			try
+			{
+				await _topicWatcher.NotifyNewPost(new TopicNotification(
+					id, topic.Id, topic.Title, user.Id));
+			}
+			catch
+			{
+				// emails are currently somewhat unstable
+				// we want to continue the request even if the email fails, so eat the exception
+			}
 
 			return BaseRedirect($"/Forum/Posts/{id}#{id}");
 		}
