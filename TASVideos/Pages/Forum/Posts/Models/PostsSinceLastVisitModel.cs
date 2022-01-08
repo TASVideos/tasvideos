@@ -39,6 +39,17 @@ namespace TASVideos.Pages.Forum.Posts.Models
 		public bool IsLastPost { get; set; }
 		public bool IsEditable { get; set; }
 		public bool IsDeletable { get; set; }
+
+		public string? GetCurrentAvatar() {
+			var currentAvatar = PosterAvatar;
+
+			if (PosterMood != ForumPostMood.None && !string.IsNullOrWhiteSpace(PosterMoodUrlBase))
+			{
+				currentAvatar = PosterMoodUrlBase.Replace("$", ((int)PosterMood).ToString());
+			}
+
+			return currentAvatar;
+		}
 	}
 
 	public class PostsSinceLastVisitModel : ForumPostEntry
