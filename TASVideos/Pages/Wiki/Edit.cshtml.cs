@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Helpers;
 using TASVideos.Extensions;
 using TASVideos.Pages.Wiki.Models;
 
@@ -100,6 +102,28 @@ namespace TASVideos.Pages.Wiki
 			{
 				ModelState.AddModelError("", "Unable to save. The content on this page may have been modified by another user.");
 				return Page();
+			}
+
+			var subId = WikiHelper.IsSubmissionPage(page.PageName);
+			if (subId.HasValue)
+			{
+				var sub = await _db.Submissions.SingleOrDefaultAsync(s => s.Id == subId.Value);
+				if (sub != null)
+				{
+					sub.WikiContentId = page.Id;
+					await _db.SaveChangesAsync();
+				}
+			}
+
+			var pubId = WikiHelper.IsPublicationPage(page.PageName);
+			if (pubId.HasValue)
+			{
+				var pub = await _db.Publications.SingleOrDefaultAsync(p => p.Id == pubId.Value);
+				if (pub != null)
+				{
+					pub.WikiContentId = page.Id;
+					await _db.SaveChangesAsync();
+				}
 			}
 
 			if (page.Revision == 1 || !PageToEdit.MinorEdit)
