@@ -13,5 +13,4 @@
 	<a href="/@Model.WikiPage.PageName" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back to Page</a>
 </div>
 <hr />
-@Html.Raw(Model.WikiPage.Markup.Replace("\n", "<br />"))
-
+<pre>@Html.Raw(Model.WikiPage.Markup.Replace("\n", "<br />"))</pre>
