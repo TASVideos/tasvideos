@@ -222,16 +222,8 @@ INSERT INTO _poll_options
 	FROM public.forum_poll_options po
 	JOIN _polls p on po.poll_id = p.id;
 
-DROP TABLE IF EXISTS _poll_option_votes;
-CREATE TEMPORARY TABLE _poll_option_votes (id int primary key);
-INSERT INTO _poll_option_votes
-	SELECT pov.Id
-	FROM public.forum_poll_option_votes pov
-	JOIN _poll_options po on pov.poll_option_id = po.id;
-	
 DELETE
-FROM public.forum_poll_option_votes pov
-WHERE pov.id NOT IN (SELECT id from _poll_option_votes);
+FROM public.forum_poll_option_votes pov;
 
 DELETE
 FROM public.forum_poll_options po
