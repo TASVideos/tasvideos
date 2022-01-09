@@ -95,7 +95,13 @@ namespace TASVideos.Pages.Publications
 				return Page();
 			}
 
-			var publication = await _db.Publications.SingleOrDefaultAsync(s => s.Id == Id);
+			var publication = await _db.Publications
+				.Include(p => p.System)
+				.Include(p => p.SystemFrameRate)
+				.Include(p => p.Game)
+				.Include(p => p.Authors)
+				.ThenInclude(pa => pa.Author)
+				.SingleOrDefaultAsync(s => s.Id == Id);
 			if (publication == null)
 			{
 				return NotFound();
@@ -109,6 +115,7 @@ namespace TASVideos.Pages.Publications
 			else
 			{
 				publication.SystemId = Catalog.SystemId;
+				publication.System = system;
 			}
 
 			var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId);
@@ -119,6 +126,7 @@ namespace TASVideos.Pages.Publications
 			else
 			{
 				publication.SystemFrameRateId = Catalog.SystemFrameRateId;
+				publication.SystemFrameRate = systemFramerate;
 			}
 
 			var game = await _db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId);
@@ -129,6 +137,7 @@ namespace TASVideos.Pages.Publications
 			else
 			{
 				publication.GameId = Catalog.GameId;
+				publication.Game = game;
 			}
 
 			var rom = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId);
@@ -139,6 +148,7 @@ namespace TASVideos.Pages.Publications
 			else
 			{
 				publication.RomId = Catalog.RomId;
+				publication.Rom = rom;
 			}
 
 			if (!ModelState.IsValid)
@@ -146,6 +156,8 @@ namespace TASVideos.Pages.Publications
 				await PopulateCatalogDropDowns(Catalog.GameId, Catalog.SystemId);
 				return Page();
 			}
+
+			publication.GenerateTitle();
 
 			var result = await ConcurrentSave(_db, $"{Id}M catalog updated", $"Unable to save {Id}M catalog");
 			if (result)
