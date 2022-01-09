@@ -38,7 +38,7 @@
 	<div class="card-body">
 		<div class="card-text">
 			<p>@Model.FileName</p>
-			<p>Uploaded <timezone-convert asp-for="@Model.UploadTimestamp" /> by <profile-link username="@Model.Author"></profile-link></p>
+			<p>Uploaded <timezone-convert asp-for="@Model.UploadTimestamp" /> by <profile-link username="@Model.Author"></profile-link> (<a href="/UserFiles/ForUser/@Model.Author">@Model.AuthorUserFilesCount</a> files)</p>
 
 			@if (Model.GameId.HasValue)
 			{
