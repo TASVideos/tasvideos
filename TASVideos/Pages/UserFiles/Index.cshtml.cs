@@ -47,7 +47,7 @@ namespace TASVideos.Pages.UserFiles
 						.Take(10)
 					.ToListAsync(),
 				GamesWithMovies = await _db.Games
-					.Where(g => g.UserFiles.Any())
+					.Where(g => g.UserFiles.Any(uf => !uf.Hidden))
 					.OrderBy(g => g.System!.Code)
 					.ThenBy(g => g.DisplayName)
 					.Select(g => new UserFileIndexModel.GameWithMovie

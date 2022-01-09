@@ -20,7 +20,7 @@
 <div class="card mb-3">
 	<div class="card-header">
 		<h4>
-			#@Model.Id - @Model.Title
+			#@Model.Id <span condition="Model.Hidden"><i>(unlisted)</i> </span>- @Model.Title
 			<span condition="canEdit" class="float-end">
 				<a asp-page="/UserFiles/Edit" asp-route-id="@Model.Id" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()" class="btn btn-primary btn-sm border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 				<delete-button
@@ -38,7 +38,7 @@
 	<div class="card-body">
 		<div class="card-text">
 			<p>@Model.FileName</p>
-			<p>Uploaded <timezone-convert asp-for="@Model.UploadTimestamp" /> by <profile-link username="@Model.Author"></profile-link></p>
+			<p>Uploaded <timezone-convert asp-for="@Model.UploadTimestamp" /> by <profile-link username="@Model.Author"></profile-link> (<a href="/UserFiles/ForUser/@Model.Author">@Model.AuthorUserFilesCount</a> files)</p>
 
 			@if (Model.GameId.HasValue)
 			{
