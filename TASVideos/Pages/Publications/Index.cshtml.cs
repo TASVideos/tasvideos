@@ -44,6 +44,16 @@ namespace TASVideos.Pages.Publications
 
 			var tokens = Query.ToTokens();
 
+			var limitStr = tokens
+					.Where(t => t.StartsWith("limit"))
+					.Select(t => t.Replace("limit", ""))
+					.FirstOrDefault();
+			int? limit = null;
+			if (int.TryParse(limitStr, out int l))
+			{
+				limit = l;
+			}
+
 			var searchModel = new PublicationSearchModel
 			{
 				Classes = tokenLookup.Classes.Where(t => tokens.Contains(t)),
@@ -51,6 +61,7 @@ namespace TASVideos.Pages.Publications
 				ShowObsoleted = tokens.Contains("obs"),
 				OnlyObsoleted = tokens.Contains("obsonly"),
 				SortBy = tokens.Where(t => t.StartsWith("sort")).Select(t => t.Replace("sort", "")).FirstOrDefault() ?? "",
+				Limit = l,
 				Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)),
 				Tags = tokenLookup.Tags.Where(t => tokens.Contains(t)),
 				Genres = tokenLookup.Genres.Where(g => tokens.Contains(g)),

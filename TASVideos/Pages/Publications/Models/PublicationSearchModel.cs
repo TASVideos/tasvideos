@@ -23,6 +23,7 @@ namespace TASVideos.Pages.Publications.Models
 		public bool OnlyObsoleted { get; set; }
 
 		public string SortBy { get; set; } = "";
+		public int? Limit { get; set; }
 
 		public IEnumerable<int> Authors { get; set; } = new List<int>();
 

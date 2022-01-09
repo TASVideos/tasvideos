@@ -42,7 +42,8 @@ namespace TASVideos.ViewComponents
 			IList<int> id,
 			IList<int> game,
 			IList<int> author,
-			string sort)
+			string sort,
+			int? limit)
 		{
 			var tokenLookup = await _tokens.GetTokens();
 
@@ -53,6 +54,7 @@ namespace TASVideos.ViewComponents
 				ShowObsoleted = obs,
 				OnlyObsoleted = obsonly,
 				SortBy = sort,
+				Limit = limit,
 				Years = tokenLookup.Years.Where(year.Contains),
 				Tags = tokenLookup.Tags.Where(t => tag.Select(tt => tt.ToLower()).Contains(t)),
 				Genres = tokenLookup.Genres.Where(g => tag.Select(tt => tt.ToLower()).Contains(g)),
