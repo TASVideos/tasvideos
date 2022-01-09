@@ -15,6 +15,10 @@
 				<label asp-for="Search.Years"></label>
 				<select asp-for="Search.Years" asp-items="Model.Tokens.Years.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
 			</form-group>
+			<form-group>
+				<label asp-for="Search.Genres"></label>
+				<select asp-for="Search.Genres" asp-items="Model.Tokens.Genres.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
+			</form-group>
 		</column>
 		<column md="4">
 			<form-group>
