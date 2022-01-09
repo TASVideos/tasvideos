@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +33,7 @@ namespace TASVideos.Pages.Profile
 				_db.UserFiles
 					.ForAuthor(UserName)
 					.FilterByHidden(includeHidden: true))
+					.OrderByDescending(uf => uf.UploadTimestamp)
 				.ToListAsync();
 		}
 	}

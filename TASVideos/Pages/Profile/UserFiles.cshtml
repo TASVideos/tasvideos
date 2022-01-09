@@ -14,7 +14,7 @@
 <hr />
 <partial name="_StorageUsed" model="used" />
 
-@foreach (var file in Model.Files.OrderByDescending(f => f.UploadTimestamp))
+@foreach (var file in Model.Files)
 {
 	<partial name="_UserFileInfo" model="file" />
 }
