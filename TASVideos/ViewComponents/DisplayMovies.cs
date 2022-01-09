@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -40,7 +41,8 @@ namespace TASVideos.ViewComponents
 			IList<int> group,
 			IList<int> id,
 			IList<int> game,
-			IList<int> author)
+			IList<int> author,
+			string sort)
 		{
 			var tokenLookup = await _tokens.GetTokens();
 
@@ -50,6 +52,7 @@ namespace TASVideos.ViewComponents
 				SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Select(c => c.ToLower()).Contains(s)),
 				ShowObsoleted = obs,
 				OnlyObsoleted = obsonly,
+				SortBy = sort,
 				Years = tokenLookup.Years.Where(year.Contains),
 				Tags = tokenLookup.Tags.Where(t => tag.Select(tt => tt.ToLower()).Contains(t)),
 				Genres = tokenLookup.Genres.Where(g => tag.Select(tt => tt.ToLower()).Contains(g)),
@@ -67,8 +70,6 @@ namespace TASVideos.ViewComponents
 
 			var results = await _mapper.ProjectTo<PublicationDisplayModel>(
 				_db.Publications
-					.OrderBy(p => p.System!.Code)
-					.ThenBy(p => p.Game!.DisplayName)
 					.FilterByTokens(searchModel))
 				.ToListAsync();
 			return View(results);

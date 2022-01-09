@@ -22,6 +22,8 @@ namespace TASVideos.Pages.Publications.Models
 		[Display(Name = "Only Obsoleted")]
 		public bool OnlyObsoleted { get; set; }
 
+		public string SortBy { get; set; } = "";
+
 		public IEnumerable<int> Authors { get; set; } = new List<int>();
 
 		public IEnumerable<int> MovieIds { get; set; } = new List<int>();

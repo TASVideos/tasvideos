@@ -16,6 +16,7 @@ namespace TASVideos.Core.Services
 
 		public bool ShowObsoleted { get; set; }
 		public bool OnlyObsoleted { get; set; }
+		public string SortBy { get; set; } = "";
 
 		public IEnumerable<int> Authors { get; init; } = new List<int>();
 
