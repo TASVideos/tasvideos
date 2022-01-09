@@ -100,21 +100,14 @@ namespace TASVideos.Pages.Submissions
 				return NotFound();
 			}
 
-			if (Catalog.SystemId.HasValue)
+			var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId!.Value);
+			if (system == null)
 			{
-				var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId.Value);
-				if (system == null)
-				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId.Value}");
-				}
-				else
-				{
-					submission.SystemId = Catalog.SystemId.Value;
-				}
+				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId!.Value}");
 			}
 			else
 			{
-				submission.SystemId = null;
+				submission.SystemId = Catalog.SystemId!.Value;
 			}
 
 			if (Catalog.SystemFrameRateId.HasValue)

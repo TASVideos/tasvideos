@@ -13,6 +13,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public int? GameId { get; set; }
 
 		[Display(Name = "System")]
+		[Required]
 		public int? SystemId { get; set; }
 
 		[Display(Name = "System Framerate")]

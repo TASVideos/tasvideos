@@ -10,7 +10,7 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Catalog.SystemId" class="form-control-label"></label>
-				<select asp-for="Catalog.SystemId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableSystems)" class="form-control"></select>
+				<select asp-for="Catalog.SystemId" asp-items="Model.AvailableSystems" class="form-control"></select>
 			</form-group>
 			<form-group>
 				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
