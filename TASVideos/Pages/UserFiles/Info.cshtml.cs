@@ -41,6 +41,7 @@ namespace TASVideos.Pages.UserFiles
 				.Include(uf => uf.Comments)
 				.ThenInclude(c => c.User)
 				.Include(uf => uf.Author)
+				.ThenInclude(a => a!.UserFiles)
 				.Include(uf => uf.Game)
 				.ThenInclude(g => g!.System)
 				.Include(uf => uf.System)
