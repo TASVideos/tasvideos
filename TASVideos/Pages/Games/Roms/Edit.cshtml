@@ -42,9 +42,9 @@
 		</div>
 		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Rom.RomType"></label>
-				<select asp-for="Rom.RomType" asp-items="@Model.AvailableRomTypes.OrderBy(s => s.Value)" class="form-control"></select>
-				<span asp-validation-for="Rom.RomType" class="text-danger"></span>
+				<label asp-for="Rom.Type"></label>
+				<select asp-for="Rom.Type" asp-items="@Model.AvailableRomTypes.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Rom.Type" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Rom.Version"></label>

@@ -33,6 +33,6 @@ namespace TASVideos.Pages.Games.Roms.Models
 
 		[Required]
 		[Display(Name = "Type")]
-		public RomTypes RomType { get; set; }
+		public RomTypes Type { get; set; }
 	}
 }
