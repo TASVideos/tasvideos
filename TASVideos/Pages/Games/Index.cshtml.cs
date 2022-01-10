@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.Games.Models;
-using TASVideos.Pages.Publications.Models;
+using TASVideos.ViewComponents;
 
 namespace TASVideos.Pages.Games
 {
@@ -28,7 +29,7 @@ namespace TASVideos.Pages.Games
 
 		public GameDisplayModel Game { get; set; } = new ();
 
-		public IEnumerable<PublicationDisplayModel> Movies { get; set; } = new List<PublicationDisplayModel>();
+		public IEnumerable<MiniMovieModel> Movies { get; set; } = new List<MiniMovieModel>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -41,10 +42,24 @@ namespace TASVideos.Pages.Games
 				return NotFound();
 			}
 
-			Movies = await _mapper.ProjectTo<PublicationDisplayModel>(
-				_db.Publications
-					.Where(p => p.GameId == Id && p.ObsoletedById == null))
-					.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
+			Movies = await _db.Publications
+				.Where(p => p.GameId == Id && p.ObsoletedById == null)
+				.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
+				.Select(p => new MiniMovieModel
+				{
+					Id = p.Id,
+					Title = p.Title,
+					Branch = p.Branch ?? "",
+					Screenshot = p.Files
+						.Where(f => f.Type == FileType.Screenshot)
+						.Select(f => new MiniMovieModel.ScreenshotFile
+						{
+							Path = f.Path,
+							Description = f.Description
+						})
+						.First(),
+					OnlineWatchingUrl = p.PublicationUrls.First(u => u.Type == PublicationUrlType.Streaming).Url
+				})
 				.ToListAsync();
 
 			return Page();

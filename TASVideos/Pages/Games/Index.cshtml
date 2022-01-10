@@ -6,8 +6,11 @@
 	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
 }
 
+<div class="float-md-end text-center mb-2" condition="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any())">
+	<img class="img-fluid" src="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) ? Model.Game.ScreenshotUrl : $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Movies.First().Screenshot.Path}")" />
+</div>
 <row>
-	<div class="col-12 col-md-6">
+	<div class="col-12 col-xl-6 mb-2">
 		<card>
 			<cardheader>
 				<span class="float-end">
@@ -16,13 +19,13 @@
 				<h4>Description</h4>
 			</cardheader>
 			<cardbody>
-				<div class="card-text">
+				<div class="card-text clearfix">
 					@await Component.RenderWiki(wiki)
 				</div>
 			</cardbody>
 		</card>
 	</div>
-	<div class="col-12 col-md-6">
+	<div class="col-12 col-xl-6">
 		<card>
 			<cardheader>
 				<a permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="float-end btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
@@ -53,7 +56,7 @@
 						</ul>
 					</column>
 					<column md="6">
-						<label>Genre:</label>
+						<label>Genres:</label>
 						<ul>
 							@foreach (var genre in Model.Game.Genres)
 							{
@@ -66,11 +69,10 @@
 		</card>
 	</div>
 </row>
-<hr />
+<hr style="clear: right;"/>
 <h3>Publications</h3>
 <div condition="!Model.Movies.Any()">
 	None
-	<hr />
 </div>
 <div condition="Model.Movies.Any()">
 	<div class="">
@@ -87,11 +89,12 @@
 		@foreach (var movie in Model.Movies)
 		{
 			<div id="tab-@(movie.Id)M" class="tab-pane@(movie==Model.Movies.First() ? " active" : " fade")">
-				<partial name="_MovieModule" model="movie" />
+				<partial name="Components/DisplayMiniMovie/Default" model="movie" />
 			</div>
 		}
 	</div>
 </div>
+<hr />
 <row>
 	<column md="6">
 		<ul>
@@ -144,16 +147,16 @@
 			<th>Sha1</th>
 			<th>Md5</th>
 		</tr>
-		<tr>
-			@foreach (var rom in Model.Game.Roms)
-			{
+		@foreach (var rom in Model.Game.Roms)
+		{
+			<tr>
 				<td>@rom.Type.ToString()</td>
 				<td>@rom.Name</td>
 				<td>@rom.Region</td>
 				<td>@rom.Version</td>
 				<td>@rom.Sha1</td>
 				<td>@rom.Md5</td>
-			}
-		</tr>
+			</tr>
+		}
 	</table>
 </div>
