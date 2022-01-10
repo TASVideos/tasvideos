@@ -1,0 +1,33 @@
+﻿@model TASVideos.ViewComponents.Models.MissingRomModel
+
+@if (Model.Publications.Any())
+{
+	<h4>Publications With Missing Roms (@Model.Publications.Count)</h4>
+	<ul>
+		@foreach (var pub in Model.Publications)
+		{
+			<li>
+				<pub-link id="pub.Id">@pub.Title</pub-link>
+			</li>
+		}
+	</ul>
+}
+
+@if (Model.Publications.Any() && Model.Submissions.Any())
+{
+	<hr />
+}
+
+@if (Model.Submissions.Any())
+{
+	
+	<h4>Submissions With Missing Roms (@Model.Submissions.Count)</h4>
+	<ul>
+		@foreach (var sub in Model.Submissions)
+		{
+			<li>
+				<sub-link id="sub.Id">@sub.Title</sub-link>
+			</li>
+		}
+	</ul>
+}

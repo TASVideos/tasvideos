@@ -33,6 +33,7 @@ namespace TASVideos.WikiEngine
 		public const string MovieStatistics = "moviestatistics";
 		public const string MovieMaintenanceLog = "moviemaintlog";
 		public const string NoGameName = "nogamename";
+		public const string NoRom = "norom";
 		public const string PlatformAuthorList = "platformtaserlists";
 		public const string PlatformFramerates = "platformframerates";
 		public const string PlayerPointsTable = "playerpointstable";
