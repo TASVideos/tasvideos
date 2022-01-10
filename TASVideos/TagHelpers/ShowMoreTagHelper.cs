@@ -12,6 +12,7 @@ namespace TASVideos.TagHelpers
 			output.TagName = "div";
 			output.Content.SetHtmlContent($@"<div style=""overflow-y: scroll; max-height: {MaxHeight};"" id=""{context.UniqueId}"">{content}</div>");
 			output.Content.AppendHtml($@"<div class=""p-2 text-center d-none border border-primary rounded"" id=""show-{context.UniqueId}""><a href=""#"" onclick=""return false;""><h4 class=""m-0""><i class=""fa fa-chevron-down""></i> Show more</h4></a></div>");
+			output.Content.AppendHtml($@"<div class=""p-2 text-center d-none border border-primary rounded"" id=""hide-{context.UniqueId}""><a href=""#"" onclick=""return false;""><h4 class=""m-0""><i class=""fa fa-chevron-up""></i> Hide</h4></a></div>");
 			output.Content.AppendHtml($@"
 <script>
 	{{
@@ -19,6 +20,9 @@ namespace TASVideos.TagHelpers
 		if (content.scrollHeight > content.clientHeight)
 			{{
 				let show = document.getElementById('show-{context.UniqueId}');
+				let hide = document.getElementById('hide-{context.UniqueId}');
+				let height = content.style.maxHeight;
+				let offset = content.scrollHeight - content.clientHeight;
 				content.style.overflowY = 'hidden'
 				show.classList.remove('d-none');
 				show.onclick = function()
@@ -26,6 +30,15 @@ namespace TASVideos.TagHelpers
 					content.style.overflowY = null;
 					content.style.maxHeight = null;
 					show.classList.add('d-none');
+					hide.classList.remove('d-none');
+				}}
+				hide.onclick = function()
+				{{
+					window.scrollBy({{top: -offset, left: 0, behavior: 'instant'}});
+					content.style.overflowY = 'hidden';
+					content.style.maxHeight = height;
+					hide.classList.add('d-none');
+					show.classList.remove('d-none');
 				}}
 			}}
 	}}
