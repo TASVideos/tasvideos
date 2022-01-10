@@ -22,7 +22,7 @@ namespace TASVideos.TagHelpers
 				let show = document.getElementById('show-{context.UniqueId}');
 				let hide = document.getElementById('hide-{context.UniqueId}');
 				let height = content.style.maxHeight;
-				let offset = content.scrollHeight - content.clientHeight;
+				let clHeight = content.clientHeight;
 				content.style.overflowY = 'hidden'
 				show.classList.remove('d-none');
 				show.onclick = function()
@@ -34,7 +34,7 @@ namespace TASVideos.TagHelpers
 				}}
 				hide.onclick = function()
 				{{
-					window.scrollBy({{top: -offset, left: 0, behavior: 'instant'}});
+					window.scrollBy({{top: clHeight - content.scrollHeight, left: 0, behavior: 'instant'}});
 					content.style.overflowY = 'hidden';
 					content.style.maxHeight = height;
 					hide.classList.add('d-none');
