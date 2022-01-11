@@ -8,11 +8,11 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents
 {
 	[WikiModule(WikiModules.NoGameName)]
-	public class SubmissionsWithNoGames : ViewComponent
+	public class NoGame : ViewComponent
 	{
 		private readonly ApplicationDbContext _db;
 
-		public SubmissionsWithNoGames(ApplicationDbContext db)
+		public NoGame(ApplicationDbContext db)
 		{
 			_db = db;
 		}
