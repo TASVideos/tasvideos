@@ -10,6 +10,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Submissions.Models;
+using static TASVideos.Core.Services.AwardAssignment;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -94,71 +95,97 @@ namespace TASVideos.Pages.Submissions
 				return Page();
 			}
 
-			var submission = await _db.Submissions.SingleOrDefaultAsync(s => s.Id == Id);
+			var submission = await _db.Submissions
+				.Include(s => s.System)
+				.Include(s => s.SystemFrameRate)
+				.Include(s => s.Game)
+				.Include(s => s.Rom)
+				.SingleOrDefaultAsync(s => s.Id == Id);
 			if (submission == null)
 			{
 				return NotFound();
 			}
 
-			var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId!.Value);
-			if (system == null)
-			{
-				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId!.Value}");
-			}
-			else
-			{
-				submission.SystemId = Catalog.SystemId!.Value;
-			}
+			var externalMessages = new List<string>();
 
-			if (Catalog.SystemFrameRateId.HasValue)
+			if (submission.SystemId != Catalog.SystemId)
 			{
-				var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId.Value);
-				if (systemFramerate == null)
+				var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId!.Value);
+				if (system == null)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Id: {Catalog.SystemFrameRateId.Value}");
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId!.Value}");
 				}
 				else
 				{
-					submission.SystemFrameRateId = Catalog.SystemFrameRateId.Value;
+					externalMessages.Add($"System changed from {submission.System?.Code ?? ""} to {system.Code}");
+					submission.SystemId = Catalog.SystemId!.Value;
 				}
 			}
-			else
-			{
-				submission.SystemFrameRateId = null;
-			}
 
-			if (Catalog.GameId.HasValue)
+			if (submission.SystemFrameRateId != Catalog.SystemFrameRateId)
 			{
-				var game = await _db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId.Value);
-				if (game == null)
+				if (Catalog.SystemFrameRateId.HasValue)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameId)}", $"Unknown System Id: {Catalog.GameId.Value}");
+					var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId.Value);
+					if (systemFramerate == null)
+					{
+						ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Framerate Id: {Catalog.SystemFrameRateId.Value}");
+					}
+					else
+					{
+						externalMessages.Add($"Framerate changed from {submission.SystemFrameRate?.FrameRate ?? 0.0} to {systemFramerate.FrameRate}");
+						submission.SystemFrameRateId = Catalog.SystemFrameRateId.Value;
+					}
 				}
 				else
 				{
-					submission.GameId = Catalog.GameId.Value;
+					externalMessages.Add("Framerate removed");
+					submission.SystemFrameRateId = null;
 				}
 			}
-			else if (submission.GameId.HasValue)
+
+			if (submission.GameId != Catalog.GameId)
 			{
-				submission.GameId = null;
+				if (Catalog.GameId.HasValue)
+				{
+					var game = await _db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId.Value);
+					if (game == null)
+					{
+						ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameId)}", $"Unknown Game Id: {Catalog.GameId.Value}");
+					}
+					else
+					{
+						externalMessages.Add($"Game changed from {submission.Game?.DisplayName ?? "\"\""} to {game.DisplayName}");
+						submission.GameId = Catalog.GameId.Value;
+					}
+				}
+				else if (submission.GameId.HasValue)
+				{
+					externalMessages.Add("Game removed");
+					submission.GameId = null;
+				}
 			}
 
-			if (Catalog.RomId.HasValue)
+			if (submission.RomId != Catalog.RomId)
 			{
-				var rom = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId.Value);
-				if (rom == null)
+				if (Catalog.RomId.HasValue)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown System Id: {Catalog.RomId.Value}");
+					var rom = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId.Value);
+					if (rom == null)
+					{
+						ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown Rom Id: {Catalog.RomId.Value}");
+					}
+					else
+					{
+						externalMessages.Add($"Rom Hash changed from {submission.Rom?.Name ?? "\"\""} to {rom.Name}");
+						submission.RomId = Catalog.RomId.Value;
+					}
 				}
 				else
 				{
-					submission.RomId = Catalog.RomId.Value;
+					externalMessages.Add("Rom removed");
+					submission.RomId = null;
 				}
-			}
-			else
-			{
-				submission.RomId = null;
 			}
 
 			if (!ModelState.IsValid)
@@ -170,7 +197,7 @@ namespace TASVideos.Pages.Submissions
 			var result = await ConcurrentSave(_db, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
 			if (result)
 			{
-				await _publisher.SendSubmissionEdit($"{Id}S Catalogging Info Updated", $"{Id}S", User.Name());
+				await _publisher.SendSubmissionEdit($"{Id}S Catalogging Info Updated: {string.Join(", ", externalMessages)}", $"{Id}S", User.Name());
 			}
 
 			return RedirectToPage("View", new { Id });

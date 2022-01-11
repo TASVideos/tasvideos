@@ -110,7 +110,6 @@ namespace TASVideos.Pages.Publications
 
 			var externalMessages = new List<string>();
 
-
 			if (publication.SystemId != Catalog.SystemId)
 			{
 				var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId);
