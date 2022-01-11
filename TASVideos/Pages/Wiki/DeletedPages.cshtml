@@ -24,17 +24,13 @@
 					@if (ViewData.UserHas(PermissionTo.DeleteWikiPages))
 					{
 						<delete-button condition="@item.HasExistingRevisions"
-									   asp-href="/Wiki/DeletedPages/Undelete?path=@item.PageName"
-									   warning-message="This page already exists. Undeleting these revisions will merge them into the history of the existing page. Continue?">
+										asp-href="/Wiki/DeletedPages/Undelete?path=@item.PageName"
+										warning-message="This page already exists. Undeleting these revisions will merge them into the history of the existing page. Continue?">
 							Undelete
 						</delete-button>
-						<a condition="!item.HasExistingRevisions"
-						   asp-page="DeletedPages"
-						   asp-page-handler="Undelete"
-						   asp-route-path="@item.PageName"
-						   class="btn btn-primary">
-							Undelete
-						</a>
+						<form method="post" asp-page="/Wiki/DeletedPages" asp-page-handler="Undelete">
+							<button type="submit" class="btn btn-primary">Undelete</button>
+						</form>
 					}
 				</td>
 			</tr>
