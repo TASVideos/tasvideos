@@ -137,7 +137,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var newForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == topic.ForumId);
 
-			var announcement = $"Topic {newForum.Name}: {newTopic.Title} SPLIT by {User.Name()} from {Topic.ForumName}: {Topic.Title}";
+			var announcement = $"Topic {newForum.Name}: {newTopic.Title} SPLIT from {Topic.ForumName}: {Topic.Title}";
 			await _publisher.SendForum(
 				destinationForum.Restricted || topic.Forum!.Restricted,
 				announcement,

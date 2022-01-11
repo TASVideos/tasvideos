@@ -444,7 +444,7 @@ namespace TASVideos.Pages.Submissions
 			if (result)
 			{
 				await _publisher.SendSubmissionEdit(
-					$"Submission {submission.Title} set to {newStatus.EnumDisplayName()} by {User.Name()}",
+					$"Submission {submission.Title} set to {newStatus.EnumDisplayName()}",
 					$"{Id}S",
 					User.Name());
 			}
