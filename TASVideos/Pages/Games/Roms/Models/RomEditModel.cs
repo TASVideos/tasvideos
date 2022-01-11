@@ -32,7 +32,6 @@ namespace TASVideos.Pages.Games.Roms.Models
 		public string? Region { get; set; }
 
 		[Required]
-		[Display(Name = "Type")]
 		public RomTypes Type { get; set; }
 	}
 }
