@@ -35,16 +35,10 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			{
 				return;
 			}
-			StringContent messageContent;
 
-			if (String.IsNullOrWhiteSpace(post.Announcement))
-			{
-				messageContent = new CustomDiscordMessage(post).ToStringContent();
-			}
-			else
-			{
-				messageContent = new DiscordMessage(post).ToStringContent();
-			}
+			var messageContent = string.IsNullOrWhiteSpace(post.Announcement)
+				? new CustomDiscordMessage(post).ToStringContent()
+				: new DiscordMessage(post).ToStringContent();
 
 			string channel = post.Type == PostType.Administrative
 				? _settings.PrivateChannelId
