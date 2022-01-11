@@ -76,6 +76,7 @@
 			<form-group>
 				<label asp-for="Submission.Emulator" class="form-control-label"></label>
 				<input asp-for="Submission.Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Emulator)" />
+				<div>@Html.DescriptionFor(m => m.Submission.Emulator)</div>
 				<span asp-validation-for="Submission.Emulator" class="text-danger"></span>
 			</form-group>
 		</div>

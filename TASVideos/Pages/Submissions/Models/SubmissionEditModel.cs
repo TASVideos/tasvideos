@@ -55,7 +55,7 @@ namespace TASVideos.Pages.Submissions.Models
 		[Display(Name = "Branch")]
 		public string? Branch { get; set; }
 
-		[Display(Name = "Emulator")]
+		[Display(Name = "Emulator", Description = "Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author.")]
 		public string? Emulator { get; set; }
 
 		[Url]
