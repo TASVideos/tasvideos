@@ -133,7 +133,7 @@ namespace TASVideos.Pages.Roles
 			var result = await ConcurrentSave(_db, $"Role {Id} deleted", $"Unable to delete Role {Id}");
 			if (result)
 			{
-				await _publisher.SendUserManagement($"Role {Id} deleted by {User.Name()}", "", "Roles/List", User.Name());
+				await _publisher.SendUserManagement($"Role {Id} deleted", "", "Roles/List", User.Name());
 			}
 
 			return BasePageRedirect("List");
@@ -169,13 +169,13 @@ namespace TASVideos.Pages.Roles
 				_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role!.Id == Id));
 				await _db.SaveChangesAsync();
 
-				await _publisher.SendUserManagement($"Role {model.Name} updated by {User.Name()}", "", $"Roles/Index?role={model.Name}", User.Name());
+				await _publisher.SendUserManagement($"Role {model.Name} updated", "", $"Roles/Index?role={model.Name}", User.Name());
 			}
 			else
 			{
 				role = new Role();
 				_db.Roles.Attach(role);
-				await _publisher.SendUserManagement($"New Role added: {model.Name} by {User.Name()}", "", $"Roles/Index?role={model.Name}", User.Name());
+				await _publisher.SendUserManagement($"New Role added: {model.Name}", "", $"Roles/Index?role={model.Name}", User.Name());
 			}
 
 			role.Name = model.Name;

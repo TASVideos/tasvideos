@@ -140,7 +140,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 				Announcement = "",
 				Type = PostType.General,
 				Group = PostGroups.Wiki,
-				Title = $"{title} by {user}",
+				Title = $"{title}",
 				Body = body,
 				Link = publisher.ToAbsolute(relativeLink),
 				User = user

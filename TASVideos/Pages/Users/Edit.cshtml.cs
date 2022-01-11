@@ -142,7 +142,7 @@ namespace TASVideos.Pages.Users
 				.ToList();
 			if (addedRoles.Any() || removedRoles.Any())
 			{
-				var message = $"user {user.UserName} roles modified by {User.Name()},";
+				var message = $"user {user.UserName} roles modified,";
 				if (addedRoles.Any())
 				{
 					message += " added: " + string.Join(",", addedRoles);

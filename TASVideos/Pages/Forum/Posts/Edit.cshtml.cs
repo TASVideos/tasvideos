@@ -135,11 +135,11 @@ namespace TASVideos.Pages.Forum.Posts
 			{
 				await _publisher.SendForum(
 					forumPost.Topic!.Forum!.Restricted,
-					$"Post edited by {User.Name()} ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
+					$"Post edited ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
 					"",
 					$"Forum/Posts/{Id}#{Id}",
 					User.Name(),
-					$"Forum Post Edited by {User.Name()}");
+					"Forum Post Edited");
 			}
 
 			return BaseRedirect($"/Forum/Posts/{Id}#{Id}");
@@ -190,7 +190,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (result)
 			{
-				var announcement = $"Post DELETED by {User.Name()} ({post.Topic!.Forum!.ShortName}: {post.Topic.Title})";
+				var announcement = $"Post DELETED ({post.Topic!.Forum!.ShortName}: {post.Topic.Title})";
 				await _publisher.SendForum(
 					post.Topic.Forum.Restricted,
 					announcement,
