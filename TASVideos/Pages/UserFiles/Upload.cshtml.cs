@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -24,15 +25,18 @@ namespace TASVideos.Pages.UserFiles
 		private readonly ApplicationDbContext _db;
 		private readonly IMovieParser _parser;
 		private readonly IFileService _fileService;
+		private readonly ExternalMediaPublisher _publisher;
 
 		public UploadModel(
 			ApplicationDbContext db,
 			IMovieParser parser,
-			IFileService fileService)
+			IFileService fileService,
+			ExternalMediaPublisher publisher)
 		{
 			_db = db;
 			_parser = parser;
 			_fileService = fileService;
+			_publisher = publisher;
 		}
 
 		[BindProperty]
@@ -150,6 +154,8 @@ namespace TASVideos.Pages.UserFiles
 
 			_db.UserFiles.Add(userFile);
 			await _db.SaveChangesAsync();
+
+			await _publisher.SendUserFile(userFile.Hidden, "New Userfile Uploaded", $"/UserFiles/Info/{userFile.Id}");
 
 			return BasePageRedirect("/Profile/UserFiles");
 		}
