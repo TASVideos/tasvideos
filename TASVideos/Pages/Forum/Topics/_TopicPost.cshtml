@@ -1,4 +1,8 @@
 ﻿@model TASVideos.Pages.Forum.Posts.Models.ForumPostEntry
+@{
+	var userHasAvatar = Model.GetCurrentAvatar() is not null;
+	//TODO: This page isn't using responsive design, the markup is repeated for mobile and desktop
+}
 <card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning border-2" : "border-primary") border mb-2">
 	<cardheader class="px-2 py-1">
 		<row class="align-items-center">
@@ -49,10 +53,10 @@
 		</row>
 	</cardheader>
 	<cardbody class="row p-2 d-md-none align-items-center mx-0 gx-2" style="background-color: var(--bs-gray-200)">
-		<div class="col-2 float-left text-center p-0">
+		<div condition=@userHasAvatar class="col-2 float-left text-center p-0">
 			<avatar class="img-fluid" avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
 		</div>
-		<div class="col-10 ps-2 pe-0">
+		<div class="@($"{(userHasAvatar ? "col-10" : "col-12")} ps-2 pe-0")">
 			<div class="row mb-2">
 				<h6 class="col mb-0">
 					<profile-link username="@Model.PosterName"></profile-link>
