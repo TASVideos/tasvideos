@@ -228,7 +228,7 @@ namespace TASVideos.WikiEngine.AST
 					if (Attributes.TryGetValue("href", out var href))
 					{
 						writer.Write(" (");
-						writer.Write(ctx.Helper.AbsoluteUrl(href));
+						writer.Write(ctx.Helper.AbsoluteUrl(href).Replace(" ", "%20"));
 						writer.Write(')');
 					}
 
