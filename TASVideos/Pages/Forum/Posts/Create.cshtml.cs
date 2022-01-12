@@ -140,7 +140,7 @@ namespace TASVideos.Pages.Forum.Posts
 			var mood = Post.Mood != ForumPostMood.Normal ? $" Mood: ({Post.Mood})" : "";
 			await _publisher.SendForum(
 				topic.Forum.Restricted,
-				$"New reply by {user.UserName}{mood}",
+				"New reply",
 				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
 				$"Forum/Posts/{id}#{id}",
 				$"{user.UserName}{mood}",
