@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
@@ -55,13 +56,21 @@ namespace TASVideos.Core.Services.Email
 
 		private MimeMessage BccList(IEmail email)
 		{
+			var recipients = email.Recipients.ToList();
 			var from = _env.IsProduction() ? "noreply" : $"TASVideos {_env.EnvironmentName} environment noreply";
 			var message = new MimeMessage();
 			message.From.Add(new MailboxAddress(from, _settings.Gmail.From));
-			
-			foreach (var recipient in email.Recipients)
+
+			if (recipients.Count == 1)
 			{
-				message.Bcc.Add(new MailboxAddress(recipient, recipient));
+				message.To.Add(new MailboxAddress(recipients[0], recipients[0]));
+			}
+			else
+			{
+				foreach (var recipient in email.Recipients)
+				{
+					message.Bcc.Add(new MailboxAddress(recipient, recipient));
+				}
 			}
 
 			var bodyBuilder = new BodyBuilder();
