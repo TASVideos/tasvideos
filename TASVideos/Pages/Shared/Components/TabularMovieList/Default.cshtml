@@ -27,7 +27,9 @@
 									(Was <pub-link id="pub.ObsoletedMovie!.Id">@(pub.ObsoletedMovie!.Time().ToStringWithOptionalDaysAndHours())</pub-link>)
 								</span>
 							</td>
-							<td>@(string.Join(", ",(pub.Authors ?? Enumerable.Empty<string>()).Concat((pub.AdditionalAuthors ?? "").SplitWithEmpty(","))).LastCommaToAmpersand())</td>
+							<td>
+								<author-list authors="pub.Authors" additional-authors="@pub.AdditionalAuthors"></author-list>
+							</td>
 						</tr>
 					}
 				</tbody>
@@ -45,7 +47,9 @@
 				<pub-link id="first.Id">
 					<img src="~/media/@first.Screenshot.Path" alt="@first.Screenshot.Description" style="max-width: 100%">
 				</pub-link>
-				<figcaption class="figure-caption">@first.Game by @(string.Join(", ",(first.Authors ?? Enumerable.Empty<string>()).Concat((first.AdditionalAuthors ?? "").SplitWithEmpty(","))).LastCommaToAmpersand())</figcaption>
+				<figcaption class="figure-caption">
+					@first.Game by <author-list authors="first.Authors" additional-authors="@first.AdditionalAuthors"></author-list>
+				</figcaption>
 			}
 		</figure>
 	</div>
