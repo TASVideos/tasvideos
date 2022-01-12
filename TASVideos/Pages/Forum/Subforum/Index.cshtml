@@ -23,12 +23,7 @@
 <partial name="_Pager" model="Model.Forum.Topics" />
 <div class="table-container">
 	<table class="table table-striped table-bordered">
-		<tr>
-			<th>Topics</th>
-			<th class="d-none d-md-table-cell">Replies</th>
-			<th class="d-none d-md-table-cell">Author</th>
-			<td>Last Post</td>
-		</tr>
+		<sortable-table-head sorting="@Model.Search" model-type="typeof(Models.ForumDisplayModel.ForumTopicEntry)" page-override="@HttpContext.Request.Path"/>
 		@foreach (var topic in Model.Forum.Topics)
 		{
 			<tr>

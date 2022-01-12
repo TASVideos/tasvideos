@@ -17,4 +17,12 @@ namespace TASVideos.Core
 	public class TableIgnoreAttribute : Attribute
 	{
 	}
+
+	/// <summary>
+	/// Indicates that a property should be hidden in mobile widths when building a dynamic table.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property)]
+	public class MobileHideAttribute : Attribute
+	{
+	}
 }

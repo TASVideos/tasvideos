@@ -49,10 +49,12 @@ namespace TASVideos.TagHelpers
 					continue;
 				}
 
-				output.Content.AppendHtml("<th>");
 				var isSortable = property.GetCustomAttribute<SortableAttribute>() is not null;
 				var displayName = property.DisplayName();
 				var propertyName = property.Name;
+				var isMobileHide = property.GetCustomAttribute<MobileHideAttribute>() is not null;
+
+				output.Content.AppendHtml(isMobileHide ? "<th class='d-none d-md-table-cell'>" : "<th>");
 
 				if (isSortable)
 				{
@@ -73,10 +75,10 @@ namespace TASVideos.TagHelpers
 					if (isSort)
 					{
 						var direction = isDescending
-							? "up"
-							: "down";
+							? "desc"
+							: "asc";
 
-						output.Content.AppendHtml($"<span class='fa fa-arrow-{direction}'></span>");
+						output.Content.AppendHtml($" <span class='fa fa-sort-{direction}'></span>");
 					}
 
 					output.Content.AppendHtml("</a>");
