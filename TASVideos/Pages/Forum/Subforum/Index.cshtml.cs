@@ -48,11 +48,6 @@ namespace TASVideos.Pages.Forum.Subforum
 				return NotFound();
 			}
 
-			var rowsToSkip = Search.Offset();
-			var rowCount = await _db.ForumTopics
-				.ForForum(Id)
-				.CountAsync();
-
 			Forum.Topics = await _db.ForumTopics
 				.ForForum(Id)
 				.Select(ft => new ForumDisplayModel.ForumTopicEntry
