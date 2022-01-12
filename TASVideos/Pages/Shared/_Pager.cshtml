@@ -8,7 +8,7 @@
 			<i class="fa fa-sort"> <i class="fa fa-times-circle"></i></i>
 		</a>
 	</div>
-	<div class="col-12 text-center">
+	<div condition="Model.LastPage() > 1" class="col-12 text-center">
 		<div class="btn-group flex-wrap" role="group">
 			@{
 				var pagerClass = "btn btn-secondary border-dark flex-grow-0";
@@ -26,7 +26,7 @@
 
 			@{
 				var totalPages = Model.LastPage();
-				var currentPage = Model.CurrentPage ?? 1;
+				var currentPage = Model.CurrentPage ?? 0;
 				var pageList = Enumerable.Range(1, totalPages).ToList();
 				var leftShown = pageList.Where(p => p <= 2);
 				var leftHidden = pageList.Where(p => 2 < p && p < currentPage - 1).ToList();
