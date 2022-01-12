@@ -105,9 +105,11 @@
 				<sub-link class="col-auto btn btn-secondary btn-sm" id="@SubmissionHelper.SubmissionId(Model.WikiPage.PageName)"><i class="fa fa-info-circle"></i> Full Submission Page</sub-link>
 			</row>
 		</cardheader>
-		<cardbody style="max-height: 600px; overflow-y: scroll">
-			<wiki-markup markup="@Model.WikiPage.Markup" page-data="Model.WikiPage"></wiki-markup>
-		</cardbody>
+		<show-more max-height="38rem">
+			<cardbody>
+				<wiki-markup markup="@Model.WikiPage.Markup" page-data="Model.WikiPage"></wiki-markup>
+			</cardbody>
+		</show-more>
 	</card>
 }
 
