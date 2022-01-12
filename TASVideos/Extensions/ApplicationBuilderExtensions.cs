@@ -52,7 +52,7 @@ namespace TASVideos.Extensions
 			return app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
 		}
 
-		public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app)
+		public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app, IHostEnvironment env)
 		{
 			// Note: out of the box, this middleware will set cache-control
 			// public only when user is logged out, else no-cache
@@ -78,7 +78,12 @@ namespace TASVideos.Extensions
 
 			app.UseRouting();
 			app.UseAuthorization();
-			app.UseHsts();
+
+			if (!env.IsProduction() && !env.IsStaging())
+			{
+				app.UseHsts();
+			}
+
 			return app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();
