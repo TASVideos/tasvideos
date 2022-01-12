@@ -5,7 +5,14 @@
 	ViewData.AddActivePage(ProfileNavPages.Topics);
 }
 
-<h3>You Are Watching the following @Model.Watches.Count() Topics:</h3>
+<h3 class="mb-3">
+	You Are Watching the following @Model.Watches.Count() Topics:
+	<delete-button
+		class="pull-right"
+		asp-href="/Profile/WatchedTopics?handler=StopAllWatching"
+		warning-message="Are you sure you want to remove all topic watches?"><i class="fa fa-remove"></i> All</delete-button>
+</h3>
+
 <div class="table-container">
 	<table class="table table-striped">
 		<tr>
