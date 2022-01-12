@@ -229,11 +229,12 @@ namespace TASVideos.Core.Tests.Services
 			Assert.AreEqual(0, _db.ForumTopicWatches.Count());
 		}
 
+		[TestMethod]
 		public async Task UnwatchAllTopics_RemovesAllTopics()
 		{
 			int userId = 1;
 			int topic1Id = 1;
-			int topic2Id = 1;
+			int topic2Id = 2;
 			_db.Users.Add(new User { Id = userId });
 			_db.ForumTopics.Add(new ForumTopic { Id = topic1Id });
 			_db.ForumTopics.Add(new ForumTopic { Id = topic2Id });
