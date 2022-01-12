@@ -4,13 +4,17 @@
 <row class="my-2 align-items-center">
 	<div class="col-12">
 		<div class="btn-group flex-wrap" role="group">
+			@{ 
+				var pagerClass = "btn btn-secondary border-dark flex-grow-0";
+				var ellipsisClass = "btn btn-outline-secondary border-dark flex-grow-0";
+			}
 			<a disable="@Model.CurrentPage == 1"
 			   asp-page="@ViewContext.Page()"
 			   asp-all-route-data="@Model.AdditionalProperties()"
 			   asp-route-CurrentPage="@(Model.CurrentPage - 1)"
 			   asp-route-PageSize="@Model.PageSize"
 			   asp-route-Sort="@Model.Sort"
-			   type="button" class="btn btn-primary border-dark flex-grow-0">
+			   type="button" class="@pagerClass">
 				<span class="fa fa-chevron-left"></span>
 			</a>
 
@@ -18,11 +22,11 @@
 				var totalPages = Model.LastPage();
 				var currentPage = Model.CurrentPage ?? 1;
 				var pageList = Enumerable.Range(1, totalPages).ToList();
-				var leftShown = pageList.Where(p => p <= 2 && p < currentPage - 1);
+				var leftShown = pageList.Where(p => p <= 2);
 				var leftHidden = pageList.Where(p => 2 < p && p < currentPage - 1).ToList();
-				var middleShown = pageList.Where(p => currentPage - 1 <= p && p <= currentPage + 1);
+				var middleShown = pageList.Where(p => 2 < p && currentPage - 1 <= p && p <= currentPage + 1 && p < totalPages - 1);
 				var rightHidden = pageList.Where(p => currentPage + 1 < p && p < totalPages - 1).ToList();
-				var rightShown = pageList.Where(p => currentPage + 1 < p && totalPages - 1 <= p);
+				var rightShown = pageList.Where(p => totalPages - 1 <= p);
 				foreach (var iteratorPage in leftShown)
 				{
 					<a asp-page="@ViewContext.Page()"
@@ -30,7 +34,7 @@
 					   asp-route-CurrentPage="@iteratorPage"
 					   asp-route-PageSize="@Model.PageSize"
 					   asp-route-Sort="@Model.Sort"
-					   type="button" class="btn btn-primary border-dark flex-grow-0">@iteratorPage</a>
+					   type="button" class="@pagerClass @(iteratorPage == currentPage ? "active" : "")">@iteratorPage</a>
 				}
 				if (leftHidden.Count == 1)
 				{
@@ -39,11 +43,11 @@
 					   asp-route-CurrentPage="@leftHidden.First()"
 					   asp-route-PageSize="@Model.PageSize"
 					   asp-route-Sort="@Model.Sort"
-					   type="button" class="btn btn-primary border-dark flex-grow-0">@leftHidden.First()</a>
+					   type="button" class="@pagerClass">@leftHidden.First()</a>
 
 				}
 				<div condition="leftHidden.Count > 1" class="btn-group" role="group">
-					<button type="button" class="btn btn-outline-primary" data-bs-toggle="dropdown">...</button>
+					<button type="button" class="@ellipsisClass" data-bs-toggle="dropdown">...</button>
 					<ul class="dropdown-menu">
 						@foreach (var iteratorPage in leftHidden)
 						{
@@ -65,7 +69,7 @@
 					   asp-route-CurrentPage="@iteratorPage"
 					   asp-route-PageSize="@Model.PageSize"
 					   asp-route-Sort="@Model.Sort"
-					   type="button" class="btn btn-primary border-dark flex-grow-0 @(iteratorPage == currentPage ? "active" : "")">@iteratorPage</a>
+					   type="button" class="@pagerClass @(iteratorPage == currentPage ? "active" : "")">@iteratorPage</a>
 				}
 				if (rightHidden.Count == 1)
 				{
@@ -74,10 +78,10 @@
 					   asp-route-CurrentPage="@rightHidden.First()"
 					   asp-route-PageSize="@Model.PageSize"
 					   asp-route-Sort="@Model.Sort"
-					   type="button" class="btn btn-primary border-dark flex-grow-0">@rightHidden.First()</a>
+					   type="button" class="@pagerClass">@rightHidden.First()</a>
 				}
 				<div condition="rightHidden.Count > 1" class="btn-group" role="group">
-					<button type="button" class="btn btn-outline-primary" data-bs-toggle="dropdown">...</button>
+					<button type="button" class="@ellipsisClass" data-bs-toggle="dropdown">...</button>
 					<ul class="dropdown-menu">
 						@foreach (var iteratorPage in rightHidden)
 						{
@@ -99,7 +103,7 @@
 					   asp-route-CurrentPage="@iteratorPage"
 					   asp-route-PageSize="@Model.PageSize"
 					   asp-route-Sort="@Model.Sort"
-					   type="button" class="btn btn-primary border-dark flex-grow-0">@iteratorPage</a>
+					   type="button" class="@pagerClass @(iteratorPage == currentPage ? "active" : "")">@iteratorPage</a>
 				}
 			}
 			<a disable="@Model.CurrentPage == Model.LastPage()"
@@ -108,7 +112,7 @@
 			   asp-route-CurrentPage="@(Model.CurrentPage + 1)"
 			   asp-route-PageSize="@Model.PageSize"
 			   asp-route-Sort="@Model.Sort"
-			   type="button" class="btn btn-primary border-dark flex-grow-0">
+			   type="button" class="@pagerClass">
 				<span class="fa fa-chevron-right"></span>
 			</a>
 		</div>
