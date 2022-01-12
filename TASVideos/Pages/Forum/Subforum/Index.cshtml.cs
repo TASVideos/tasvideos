@@ -48,12 +48,7 @@ namespace TASVideos.Pages.Forum.Subforum
 				return NotFound();
 			}
 
-			var rowsToSkip = Search.Offset();
-			var rowCount = await _db.ForumTopics
-				.ForForum(Id)
-				.CountAsync();
-
-			var results = await _db.ForumTopics
+			Forum.Topics = await _db.ForumTopics
 				.ForForum(Id)
 				.Select(ft => new ForumDisplayModel.ForumTopicEntry
 				{
@@ -63,22 +58,10 @@ namespace TASVideos.Pages.Forum.Subforum
 					CreateTimestamp = ft.CreateTimestamp,
 					Type = ft.Type,
 					PostCount = ft.ForumPosts.Count,
-					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
+					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id)),
+					LastPostDateTime = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))!.CreateTimestamp
 				})
-				.OrderByDescending(ft => ft.Type == ForumTopicType.Announcement)
-				.ThenByDescending(ft => ft.Type == ForumTopicType.Sticky)
-				.ThenByDescending(ft => ft.LastPost == null ? DateTime.MinValue : ft.LastPost.CreateTimestamp)
-				.Skip(rowsToSkip)
-				.Take(Search.PageSize ?? ForumConstants.TopicsPerForum)
-				.ToListAsync();
-
-			Forum.Topics = new PageOf<ForumDisplayModel.ForumTopicEntry>(results)
-			{
-				PageSize = Search.PageSize,
-				CurrentPage = Search.CurrentPage,
-				RowCount = rowCount,
-				Sort = Search.Sort
-			};
+				.SortedPageOf(Search);
 
 			return Page();
 		}
