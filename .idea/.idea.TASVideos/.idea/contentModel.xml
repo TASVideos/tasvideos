@@ -339,9 +339,6 @@
               <e p="BrokenLinks" t="Include">
                 <e p="Default.cshtml" t="Include" />
               </e>
-              <e p="CurrentEditLink" t="Include">
-                <e p="Default.cshtml" t="Include" />
-              </e>
               <e p="DisplayMiniMovie" t="Include">
                 <e p="Default.cshtml" t="Include" />
               </e>
@@ -600,7 +597,6 @@
           <e p="ActiveTab.cs" t="Include" />
           <e p="Awards.cs" t="Include" />
           <e p="BrokenLinks.cs" t="Include" />
-          <e p="CurrentEditLink.cs" t="Include" />
           <e p="DisplayMiniMovie.cs" t="Include" />
           <e p="FirstEditionTas.cs" t="Include" />
           <e p="Frames.cs" t="Include" />

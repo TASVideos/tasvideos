@@ -34,8 +34,6 @@ namespace TASVideos.WikiEngine
 					return new[] { new Text(charStart, ":") { CharEnd = charEnd } };
 				case "expr:UserGetWikiName":
 					return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
-				case "expr:WikiGetCurrentEditLink":
-					return MakeModuleInternal(charStart, charEnd, "WikiGetCurrentEditLink");
 			}
 
 			Match match;
