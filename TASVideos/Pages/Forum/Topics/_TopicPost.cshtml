@@ -48,60 +48,44 @@
 			</div>
 		</row>
 	</cardheader>
-	<cardbody class="row p-2 d-md-none align-items-center mx-0 gx-2" style="background-color: var(--bs-gray-200)">
-		<div class="col-2 float-left text-center p-0">
-			<avatar class="img-fluid" avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
-		</div>
-		<div class="col-10 ps-2 pe-0">
-			<div class="row mb-2">
-				<h6 class="col mb-0">
-					<profile-link username="@Model.PosterName"></profile-link>
-				</h6>
-				<span condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="float-end col-auto">
-					<small class="text-muted">@Html.DisplayFor(m => m.PosterPronouns)</small>
-				</span>
-			</div>
-			<small>
-				@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')).OrderBy(s => s))
-				<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
-			</small>
-		</div>
-		<div condition="Model.Awards.Any()" class="col-auto d-none">
-			@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
-			{
-				<partial name="_Award" model="award" />
-			}
-		</div>
-	</cardbody>
 	<cardbody class="px-2 py-0">
 		<row class="gx-3">
-			<div class="col-lg-2 col-md-3 col-4 d-none d-md-block py-2" style="background-color: var(--bs-gray-200)">
-				<div class="text-center mb-2">
-					<h6 class="m-0">
-						<profile-link username="@Model.PosterName"></profile-link>
-					</h6>
-					<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-muted">@Html.DisplayFor(m => m.PosterPronouns)</small>
-				</div>
-				<div class="card-text text-start" style="line-height: 1">
-					<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')).OrderBy(s => s))
-						<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
-					</small>
-					<br />
-					<div class="mt-3 mb-3 text-center">
-						<avatar avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
+			<div class="col-lg-2 col-md-3 py-2" style="background-color: var(--bs-gray-200)">
+				<row class="gx-0">
+					<div class="col-10 col-md-12">
+						<row class="my-auto my-md-0 h-100 justify-content-center align-items-center">
+							<div class="col">
+								<row class="text-center mb-2 gx-1">
+									<h6 class="col-auto col-md-12 ms-2 ms-md-0 me-auto my-0">
+										<profile-link username="@Model.PosterName"></profile-link>
+									</h6>
+									<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-muted col-auto col-md-12" style="line-height: 22px;">@Html.DisplayFor(m => m.PosterPronouns)</small>
+								</row>
+								<div class="ms-2 ms-md-0" style="line-height: 1">
+									<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')).OrderBy(s => s))
+										<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
+									</small>
+								</div>
+							</div>
+						</row>
 					</div>
-					<small>
-						Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
-						Posts: @Model.PosterPostCount
-						<span condition="!string.IsNullOrWhiteSpace(Model.PosterLocation)">
-							<br />Location: @Model.PosterLocation
-						</span>
-					</small>
-				</div>
-				<div class="mt-1">
-					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
-					{<partial name="_Award" model="award" />}
-				</div>
+					<div class="col-2 col-md-12 order-first order-md-0 my-md-3 text-center">
+						<avatar class="img-fluid" avatar="@Model.PosterAvatar" mood-avatar-base="@Model.PosterMoodUrlBase" mood="@Model.PosterMood" />
+					</div>
+					<div class="d-none d-md-block" style="line-height: 1">
+						<small>
+							Joined: <timezone-convert asp-for="@Model.PosterJoined" date-only="true" /><br />
+							Posts: @Model.PosterPostCount
+							<span condition="!string.IsNullOrWhiteSpace(Model.PosterLocation)">
+								<br />Location: @Model.PosterLocation
+							</span>
+						</small>
+					</div>
+					<div class="mt-1 d-none d-md-block">
+						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
+						{<partial name="_Award" model="award" />}
+					</div>
+				</row>
 			</div>
 			<div class="col-lg-10 col-md-9 col d-flex flex-column py-2">
 				<div class="mb-auto">
