@@ -76,7 +76,7 @@ namespace TASVideos
 				.UseAuthentication()
 				.UseSwaggerUi(Environment)
 				.UseLogging()
-				.UseMvcWithOptions();
+				.UseMvcWithOptions(env);
 
 			if (env.IsDevelopment())
 			{
