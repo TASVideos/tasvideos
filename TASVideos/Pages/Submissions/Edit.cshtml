@@ -23,17 +23,7 @@
 				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
 			</form-group>
 		</div>
-		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
-			<form-group>
-				<label asp-for="Submission.MovieFile" class="form-control-label"></label>
-				<input type="file" asp-for="Submission.MovieFile" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.Submission.MovieFile)</div>
-				<span asp-validation-for="Submission.MovieFile" class="text-danger"></span>
-			</form-group>
-		</div>
-	</row>
-	<row permission="JudgeSubmissions" condition="Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted)">
-		<div class="col-lg-6">
+		<div permission="JudgeSubmissions" condition="Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted)" class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.PublicationClassId" class="form-control-label"></label>
 				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-control"></select>
@@ -42,22 +32,25 @@
 		</div>
 	</row>
 	<row>
+		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.MovieFile" class="form-control-label"></label>
+				<input type="file" asp-for="Submission.MovieFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Submission.MovieFile)</div>
+				<span asp-validation-for="Submission.MovieFile" class="text-danger"></span>
+			</form-group>
+		</div>
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.Authors" class="form-control-label"></label>
 				<string-list asp-for="Submission.Authors" />
 				<span asp-validation-for="Submission.Authors" class="text-danger"></span>
 			</form-group>
-		</div>
-		<div class="col-lg-6">
 			<form-group>
-				<div class="form-check">
-					<input type="checkbox" class="form-check-input" asp-for="Submission.MinorEdit" />
-					<label asp-for="Submission.MinorEdit" class="form-check-label"></label>
-				</div>
-				<label asp-for="Submission.RevisionMessage" class="form-control-label"></label>
-				<input asp-for="Submission.RevisionMessage" class="form-control" />
-				<span asp-validation-for="Submission.RevisionMessage" class="text-danger"></span>
+				<label asp-for="Submission.AdditionalAuthors" class="form-control-label"></label>
+				<input asp-for="Submission.AdditionalAuthors" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.Submission.AdditionalAuthors)</div>
+				<span asp-validation-for="Submission.AdditionalAuthors" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
@@ -96,12 +89,6 @@
 				<input asp-for="Submission.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.EncodeEmbedLink)" />
 				<span asp-validation-for="Submission.EncodeEmbedLink" class="text-danger"></span>
 			</form-group>
-			<form-group>
-				<label asp-for="Submission.AdditionalAuthors" class="form-control-label"></label>
-				<input asp-for="Submission.AdditionalAuthors" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.Submission.AdditionalAuthors)</div>
-				<span asp-validation-for="Submission.AdditionalAuthors" class="text-danger"></span>
-			</form-group>
 		</div>
 	</row>
 	<fullrow>
@@ -111,7 +98,21 @@
 			<span asp-validation-for="Submission.Markup" class="text-danger"></span>
 		</form-group>
 	</fullrow>
-	<hr />
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.RevisionMessage" class="form-control-label"></label>
+				<div class="input-group">
+					<input asp-for="Submission.RevisionMessage" class="form-control" />
+					<div class="input-group-text">
+						<input type="checkbox" class="form-check-input me-1" asp-for="Submission.MinorEdit" />
+						<label asp-for="Submission.MinorEdit" class="form-check-label"></label>
+					</div>
+				</div>
+				<span asp-validation-for="Submission.RevisionMessage" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
 	<fullrow class="text-center">
 		<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
 		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Submission.Markup.Length > 0 ? "" : "hide")"><i class="fa fa-save"></i> Update</button>

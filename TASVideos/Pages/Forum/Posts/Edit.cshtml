@@ -47,16 +47,16 @@
 		</column>
 	</row>
 	<fullrow class="mt-3">
-		<input asp-for="MinorEdit" />
-		<label asp-for="MinorEdit"></label>
-	</fullrow>
-	<fullrow class="mt-3">
 		<partial name="_CreatePostHelper" model="@("Post_Text")" />
 	</fullrow>
 	<form-group>
 		<textarea asp-for="Post.Text" class="form-control" rows="20"></textarea>
 		<span asp-validation-for="Post.Text" class="text-danger"></span>
 	</form-group>
+	<fullrow class="mt-3">
+		<input asp-for="MinorEdit" />
+		<label asp-for="MinorEdit"></label>
+	</fullrow>
 	<form-button-bar>
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
 		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
