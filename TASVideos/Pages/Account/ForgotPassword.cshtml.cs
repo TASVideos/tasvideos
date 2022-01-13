@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Account
 				}
 
 				var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-				var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, Request.Scheme);
+				var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
 				await _emailService.ResetPassword(Email, callbackUrl);
 
 				return RedirectToPage("ForgotPasswordConfirmation");

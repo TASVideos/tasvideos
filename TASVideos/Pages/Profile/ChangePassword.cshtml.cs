@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Profile
 {
@@ -10,13 +11,16 @@ namespace TASVideos.Pages.Profile
 	public class ChangePasswordModel : BasePageModel
 	{
 		private readonly UserManager _userManager;
+		private readonly IEmailService _emailService;
 		private readonly SignInManager _signInManager;
 
 		public ChangePasswordModel(
 			SignInManager signInManager,
-			UserManager userManager)
+			UserManager userManager,
+			IEmailService emailService)
 		{
 			_userManager = userManager;
+			_emailService = emailService;
 			_signInManager = signInManager;
 		}
 
@@ -69,8 +73,11 @@ namespace TASVideos.Pages.Profile
 			}
 
 			await _signInManager.SignInAsync(user, isPersistent: false);
+			var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+			var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
+			await _emailService.PasswordResetConfirmation(user.Email, callbackUrl);
 			SuccessStatusMessage("Your password has been changed.");
-			return BasePageRedirect("ChangePassword");
+			return BasePageRedirect("Index");
 		}
 	}
 }
