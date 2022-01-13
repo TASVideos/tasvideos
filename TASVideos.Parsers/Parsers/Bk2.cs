@@ -88,6 +88,11 @@ namespace TASVideos.MovieParsers.Parsers
 				{
 					platform = SystemCodes.Sg;
 				}
+				else if (header.GetValueFor(Keys.ModeVs).ToBool())
+				{
+					platform = SystemCodes.Arcade;
+					result.FrameRateOverride = 60.0988138974405;
+				}
 
 				result.SystemCode = platform;
 
@@ -176,6 +181,7 @@ namespace TASVideos.MovieParsers.Parsers
 			public const string ModeSegaCd = "issegacdmode";
 			public const string ModeGg = "isggmode";
 			public const string ModeSg = "issgmode";
+			public const string ModeVs = "isvs";
 			public const string VBlankCount = "vblankcount";
 			public const string CycleCount = "cyclecount";
 			public const string Core = "core";
