@@ -104,19 +104,6 @@
 	<two-column-select id-list="Publication.SelectedTags" available-list="AvailableTags" />
 	@await Component.RenderWiki("System/ClassEditingHelp")
 	<hr />
-	<row>
-		<div class="col-lg-6">
-			<form-group>
-				<div class="form-check">
-					<input type="checkbox" class="form-check-input" asp-for="Publication.MinorEdit" />
-					<label asp-for="Publication.MinorEdit" class="form-check-label"></label>
-				</div>
-				<label asp-for="Publication.RevisionMessage" class="form-control-label"></label>
-				<input asp-for="Publication.RevisionMessage" class="form-control" />
-				<span asp-validation-for="Publication.RevisionMessage" class="text-danger"></span>
-			</form-group>
-		</div>
-	</row>
 	<fullrow>
 		<form-group>
 			<label asp-for="Publication.Markup" class="form-control-label"></label>
@@ -124,6 +111,21 @@
 			<span asp-validation-for="Publication.Markup" class="text-danger"></span>
 		</form-group>
 	</fullrow>
+	<row>
+		<div class="col-12">
+			<form-group>
+				<label asp-for="Publication.RevisionMessage" class="form-control-label"></label>
+				<div class="input-group">
+					<input asp-for="Publication.RevisionMessage" class="form-control" />
+					<div class="input-group-text">
+						<input type="checkbox" class="form-check-input me-1 mt-0" asp-for="Publication.MinorEdit" />
+						<label asp-for="Publication.MinorEdit" class="form-check-label"></label>
+					</div>
+				</div>
+				<span asp-validation-for="Publication.RevisionMessage" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
 	<div class="text-center mt-3">
 		<button id="preview-button" type="button" class="btn btn-secondary"><span class="fa fa-eye"></span> Preview</button>
 		<submit-button class="btn btn-primary"><span class="fa fa-save"></span> Update</submit-button>
