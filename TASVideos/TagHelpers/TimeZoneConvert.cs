@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -13,6 +14,10 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement("timezone-convert", TagStructure = TagStructure.WithoutEndTag, Attributes = "asp-for")]
 	public class TimeZoneConvert : TagHelper
 	{
+		private static IReadOnlyDictionary<string, TimeZoneInfo> _timezones = TimeZoneInfo
+			.GetSystemTimeZones()
+			.ToDictionary(tkey => tkey.Id);
+
 		private readonly ClaimsPrincipal _claimsPrincipal;
 		private readonly UserManager _userManager;
 
@@ -39,14 +44,16 @@ namespace TASVideos.TagHelpers
 			var user = await _userManager.GetUserAsync(_claimsPrincipal);
 
 			var dateTime = ConvertedDateTime;
-			TimeZoneInfo? userTimeZone = null;
 
+			TimeZoneInfo? userTimeZone = null;
 			if (user is not null)
 			{
-				var timeZones = TimeZoneInfo.GetSystemTimeZones();
-				userTimeZone = timeZones.FirstOrDefault(t => t.Id == user.TimeZoneId);
-
 				// Simply do not convert, if the user has no known timezone;
+				if (_timezones.TryGetValue(user.TimeZoneId, out userTimeZone))
+				{
+					dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
+				}
+
 				if (userTimeZone != null)
 				{
 					dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
