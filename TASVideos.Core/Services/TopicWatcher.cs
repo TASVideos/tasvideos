@@ -40,6 +40,11 @@ namespace TASVideos.Core.Services
 		Task UnwatchTopic(int topicId, int userId);
 
 		/// <summary>
+		/// Removes every topic from the user's watched topic list.
+		/// </summary>
+		Task UnwatchAllTopics(int userId);
+
+		/// <summary>
 		/// Returns whether the user watches a specific topic.
 		/// </summary>
 		Task<bool> IsWatchingTopic(int topicId, int userId);
@@ -167,6 +172,23 @@ namespace TASVideos.Core.Services
 					//        An error would only be modestly helpful anyway, and wouldn't save clicks
 					//        However, this would be an nice to have one day
 				}
+			}
+		}
+
+		public async Task UnwatchAllTopics(int userId)
+		{
+			var watches = await _db.ForumTopicWatches
+				.Where(w => w.UserId == userId)
+				.ToListAsync();
+			_db.ForumTopicWatches.RemoveRange(watches);
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				// Do nothing
+				// See UnwatchTopic for why
 			}
 		}
 
