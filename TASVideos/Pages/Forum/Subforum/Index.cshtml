@@ -32,6 +32,7 @@
 				<td>
 					<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fw-bold"><i class="fa fa-bullhorn"></i> Announcement: </span>
 					<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fw-bold"><i class="fa fa-sticky-note"></i> Sticky: </span>
+					<span condition="@topic.IsLocked" class="text-danger"><i class="fa fa-lock"></i></span>
 					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Title</a>
 					<div class="ms-2">
 						@{

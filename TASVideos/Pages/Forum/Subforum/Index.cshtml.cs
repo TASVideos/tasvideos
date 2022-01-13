@@ -57,6 +57,7 @@ namespace TASVideos.Pages.Forum.Subforum
 					CreateUserName = ft.CreateUserName,
 					CreateTimestamp = ft.CreateTimestamp,
 					Type = ft.Type,
+					IsLocked = ft.IsLocked,
 					PostCount = ft.ForumPosts.Count,
 					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id)),
 					LastPostDateTime = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))!.CreateTimestamp

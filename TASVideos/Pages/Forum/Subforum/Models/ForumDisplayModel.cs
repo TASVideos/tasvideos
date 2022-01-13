@@ -40,6 +40,9 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 			public ForumTopicType Type { get; set; }
 
 			[TableIgnore]
+			public bool IsLocked { get; set; }
+
+			[TableIgnore]
 			public ForumPost? LastPost { get; set; }
 
 			[Sortable]
