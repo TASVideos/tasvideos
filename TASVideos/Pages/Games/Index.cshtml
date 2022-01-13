@@ -80,7 +80,7 @@
 			@foreach (var movie in Model.Movies)
 			{
 				<li class="nav-item">
-					<a class="nav-link@(movie==Model.Movies.First() ? " active" : "")" href="#tab-@(movie.Id)M" data-bs-toggle="tab">@(string.IsNullOrWhiteSpace(movie.Branch) ? "(branchless)" : $@"""{movie.Branch}""")</a>
+					<a class="nav-link@(movie==Model.Movies.First() ? " active" : "")@(string.IsNullOrWhiteSpace(movie.Branch) ? "" : " fw-bold")" href="#tab-@(movie.Id)M" data-bs-toggle="tab">@(string.IsNullOrWhiteSpace(movie.Branch) ? "(baseline)" : $@"""{movie.Branch}""")</a>
 				</li>
 			}
 		</ul>
@@ -93,6 +93,7 @@
 			</div>
 		}
 	</div>
+	<small condition="@string.IsNullOrWhiteSpace(Model.Movies.First().Branch)" class="text-muted">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
 </div>
 <hr />
 <row>
