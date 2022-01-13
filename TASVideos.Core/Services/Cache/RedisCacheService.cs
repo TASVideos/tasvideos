@@ -45,24 +45,26 @@ namespace TASVideos.Core.Services.Cache
 				value = JsonConvert.DeserializeObject<T>(data) ?? default!;
 				return true;
 			}
-			catch (Exception ex)
+			catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)
 			{
-				if (ex is RedisConnectionException or RedisTimeoutException)
-				{
-					_logger.LogWarning($"Redis failure on key {key}, silently falling back to uncached");
-					value = default!;
-					return false;
-				}
-
-				throw;
+				_logger.LogWarning($"Redis failure on key {key}, silently falling back to uncached");
+				value = default!;
+				return false;
 			}
 		}
 
 		public void Set(string key, object? data, int? cacheTime = null)
 		{
-			var serializedData = JsonConvert.SerializeObject(data, SerializerSettings);
-			var timeout = TimeSpan.FromSeconds(cacheTime ?? _cacheDurationInSeconds);
-			_cache.StringSet(key, serializedData, timeout);
+			try
+			{
+				var serializedData = JsonConvert.SerializeObject(data, SerializerSettings);
+				var timeout = TimeSpan.FromSeconds(cacheTime ?? _cacheDurationInSeconds);
+				_cache.StringSet(key, serializedData, timeout);
+			}
+			catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)
+			{
+				_logger.LogWarning($"Redis failure on setting key {key}, silently falling back and not adding to cache");
+			}
 		}
 
 		public void Remove(string key)
