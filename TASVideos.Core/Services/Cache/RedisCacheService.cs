@@ -60,9 +60,22 @@ namespace TASVideos.Core.Services.Cache
 
 		public void Set(string key, object? data, int? cacheTime = null)
 		{
-			var serializedData = JsonConvert.SerializeObject(data, SerializerSettings);
-			var timeout = TimeSpan.FromSeconds(cacheTime ?? _cacheDurationInSeconds);
-			_cache.StringSet(key, serializedData, timeout);
+			try
+			{
+				var serializedData = JsonConvert.SerializeObject(data, SerializerSettings);
+				var timeout = TimeSpan.FromSeconds(cacheTime ?? _cacheDurationInSeconds);
+				_cache.StringSet(key, serializedData, timeout);
+			}
+			catch (Exception ex)
+			{
+				if (ex is RedisConnectionException or RedisTimeoutException)
+				{
+					_logger.LogWarning($"Redis failure on setting key {key}, silently falling back and not adding to cache");
+					return;
+				}
+
+				throw;
+			}
 		}
 
 		public void Remove(string key)
