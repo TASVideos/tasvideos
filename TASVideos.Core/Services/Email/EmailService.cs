@@ -12,6 +12,7 @@ namespace TASVideos.Core.Services.Email
 	{
 		Task ResetPassword(string recipient, string link);
 		Task EmailConfirmation(string recipient, string link);
+		Task PasswordResetConfirmation(string recipient);
 		Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template);
 	}
 
@@ -45,6 +46,17 @@ namespace TASVideos.Core.Services.Email
 				Subject = "TASVideos - Confirm your email",
 				Message = $"Please confirm the e-mail address for your TASVideos user account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>",
 				ContainsHtml = true
+			});
+		}
+
+		public async Task PasswordResetConfirmation(string recipient)
+		{
+			await _emailSender.SendEmail(new SingleEmail
+			{
+				Recipient = recipient,
+				Subject = "TASVideos - Your Password Was Changed",
+				Message = "This email is to inform you that your TASVideos user account password was changed.",
+				ContainsHtml = false
 			});
 		}
 
