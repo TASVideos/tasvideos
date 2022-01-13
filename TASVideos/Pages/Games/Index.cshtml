@@ -93,7 +93,7 @@
 			</div>
 		}
 	</div>
-	<small condition="@string.IsNullOrWhiteSpace(Model.Movies.First().Branch)" class="text-muted">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
+	<small condition="@Model.Movies.Any(m => string.IsNullOrWhiteSpace(m.Branch))" class="text-muted">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
 </div>
 <hr />
 <row>
