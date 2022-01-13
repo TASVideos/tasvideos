@@ -27,10 +27,12 @@ namespace TASVideos.TagHelpers
 				show.classList.remove('d-none');
 				show.onclick = function()
 				{{
+					let scroll = content.scrollTop;
 					content.style.overflowY = null;
 					content.style.maxHeight = null;
 					show.classList.add('d-none');
 					hide.classList.remove('d-none');
+					window.scrollBy({{top: scroll, left: 0, behavior: 'instant'}});
 				}}
 				hide.onclick = function()
 				{{
@@ -39,6 +41,7 @@ namespace TASVideos.TagHelpers
 					content.style.maxHeight = height;
 					hide.classList.add('d-none');
 					show.classList.remove('d-none');
+					content.scrollTop = 0;
 				}}
 			}}
 	}}
