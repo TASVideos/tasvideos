@@ -12,7 +12,7 @@
 		<span asp-validation-for="PageToEdit.Markup" class="text-danger"></span>
 		@await Component.RenderWiki("System/WikiEditHelp")
 	</form-group>
-	<form-group class="col-lg-6">
+	<form-group class="col-12">
 		<label asp-for="PageToEdit.RevisionMessage" class="form-control-label"></label>
 		<div class="input-group">
 			<input type="text" asp-for="PageToEdit.RevisionMessage" class="form-control" autocomplete="off" />
