@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -44,20 +45,26 @@ namespace TASVideos.Core.Services.Email
 
 			if (string.IsNullOrWhiteSpace(token))
 			{
-				_logger.LogError($"Unable to acquire get gmail token, skipping email: subject: {email.Subject} message: {email.Message}");
+				_logger.LogError("Unable to acquire get gmail token, skipping email: subject: {0} message: {1}", email.Subject, email.Message);
 				return;
 			}
 
-			using var client = new SmtpClient();
-			await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+			try
+			{
+				using var client = new SmtpClient();
+				await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-			// use the access token
-			var oauth2 = new SaslMechanismOAuth2(_settings.Gmail.From, token);
-			await client.AuthenticateAsync(oauth2);
-
-			var message = BccList(email);
-			await client.SendAsync(message);
-			await client.DisconnectAsync(true);
+				// use the access token
+				var oauth2 = new SaslMechanismOAuth2(_settings.Gmail.From, token);
+				await client.AuthenticateAsync(oauth2);
+				var message = BccList(email);
+				await client.SendAsync(message);
+				await client.DisconnectAsync(true);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Unable to authenticate email, skipping email: subject: {0} message: {1} exception: {2}", email.Subject, email.Message, ex);
+			}
 		}
 
 		private MimeMessage BccList(IEmail email)
