@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using TASVideos.Core.Services.RssFeedParsers.Github;
 
 namespace TASVideos.Core.Services.Email
 {
@@ -12,7 +13,7 @@ namespace TASVideos.Core.Services.Email
 	{
 		Task ResetPassword(string recipient, string link);
 		Task EmailConfirmation(string recipient, string link);
-		Task PasswordResetConfirmation(string recipient);
+		Task PasswordResetConfirmation(string recipient, string resetLink);
 		Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template);
 	}
 
@@ -49,14 +50,14 @@ namespace TASVideos.Core.Services.Email
 			});
 		}
 
-		public async Task PasswordResetConfirmation(string recipient)
+		public async Task PasswordResetConfirmation(string recipient, string resetLink)
 		{
 			await _emailSender.SendEmail(new SingleEmail
 			{
 				Recipient = recipient,
 				Subject = "TASVideos - Your Password Was Changed",
-				Message = "This email is to inform you that your TASVideos user account password was changed.",
-				ContainsHtml = false
+				Message = $"This email is to inform you that your TASVideos user account password was changed. If you have received this message in error, you can reset your password and reclaim your account with this <a href='{HtmlEncoder.Default.Encode(resetLink)}'>link</a>",
+				ContainsHtml = true
 			});
 		}
 

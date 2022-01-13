@@ -73,7 +73,9 @@ namespace TASVideos.Pages.Profile
 			}
 
 			await _signInManager.SignInAsync(user, isPersistent: false);
-			await _emailService.PasswordResetConfirmation(user.Email);
+			var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+			var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
+			await _emailService.PasswordResetConfirmation(user.Email, callbackUrl);
 			SuccessStatusMessage("Your password has been changed.");
 			return BasePageRedirect("Index");
 		}
