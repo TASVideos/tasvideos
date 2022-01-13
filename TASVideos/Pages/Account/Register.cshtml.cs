@@ -148,21 +148,16 @@ namespace TASVideos.Pages.Account
 					{
 						await _emailService.EmailConfirmation(Email, callbackUrl);
 					}
-					catch
+					catch (Exception ex)
 					{
 						// emails are currently somewhat unstable
 						// TODO: this should never fail, but it does, at least notify the user about the email problem somehow
-						_logger.LogWarning("Email confirmation sending failed on account creation");
+						_logger.LogWarning("Email confirmation sending failed on account creation, {0}", ex.ToString());
 					}
 
-					if (_userManager.Options.SignIn.RequireConfirmedEmail)
-					{
-						return RedirectToPage("EmailConfirmationSent");
-					}
-					else
-					{
-						return BaseReturnUrlRedirect();
-					}
+					return _userManager.Options.SignIn.RequireConfirmedEmail
+						? RedirectToPage("EmailConfirmationSent")
+						: BaseReturnUrlRedirect();
 				}
 
 				AddErrors(result);
