@@ -42,6 +42,12 @@ namespace TASVideos.Core.Services.Email
 
 			var token = await _googleAuthService.GetGmailAccessToken();
 
+			if (string.IsNullOrWhiteSpace(token))
+			{
+				_logger.LogError($"Unable to acquire get gmail token, skipping email: subject: {email.Subject} message: {email.Message}");
+				return;
+			}
+
 			using var client = new SmtpClient();
 			await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
