@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -42,15 +43,13 @@ namespace TASVideos.TagHelpers
 
 			if (user is not null)
 			{
-				try
+				var timeZones = TimeZoneInfo.GetSystemTimeZones();
+				userTimeZone = timeZones.FirstOrDefault(t => t.Id == user.TimeZoneId);
+
+				// Simply do not convert, if the user has no known timezone;
+				if (userTimeZone != null)
 				{
-					userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
 					dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
-				}
-				catch
-				{
-					// TimeZoneInfo throws an exception if it can not find the timezone
-					// Eat the exception and simply don't convert
 				}
 			}
 
