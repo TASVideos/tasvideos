@@ -18,22 +18,22 @@
 	</div>
 </fullrow>
 <row>
-	<div class="d-none d-md-block col-md-6">
+	<div class="col-md-6">
 		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
 		{
 			<partial name="_Category" model="cat" />
 		}
 	</div>
-	<div class="d-none d-md-block col-md-6">
+	<div class="col-md-6">
 		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).SecondHalf())
 		{
 			<partial name="_Category" model="cat" />
 		}
 	</div>
-	<div class="d-md-none">
+	@*<div class="d-md-none">
 		@foreach (var cat in Model.Categories.OrderBy(c => (c.Ordinal - 7) % 27)) // please don't ban me
 		{
 			<partial name="_Category" model="cat" />
 		}
-	</div>
+	</div>*@
 </row>
