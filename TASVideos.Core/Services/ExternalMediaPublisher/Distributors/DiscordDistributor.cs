@@ -88,6 +88,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				string message = group switch
 				{
 					PostGroups.Forum => "Forum Update",
+					PostGroups.Publication => "Publication Update",
 					PostGroups.Submission => "Submission Update",
 					PostGroups.UserFiles => "Userfile Update",
 					PostGroups.UserManagement => "User Update",
