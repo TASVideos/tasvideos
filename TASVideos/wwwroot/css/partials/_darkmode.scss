@@ -100,3 +100,11 @@ body {
 	background: $banner;
 	z-index: -1;
 }
+
+.btn-close {
+	filter: invert(1) grayscale(100%) brightness(200%);
+
+	&-white {
+		filter: none;
+	}
+}
