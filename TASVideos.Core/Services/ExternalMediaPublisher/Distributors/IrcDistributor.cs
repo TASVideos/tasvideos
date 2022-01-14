@@ -70,7 +70,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 			public void AddMessage(string channel, string item)
 			{
-				_work.Enqueue($"PRIVMSG {channel} :{item}");
+				_work.Enqueue($"PRIVMSG {channel} :{item}".NewlinesToSpaces());
 			}
 
 			private async Task ConnectToServer()
