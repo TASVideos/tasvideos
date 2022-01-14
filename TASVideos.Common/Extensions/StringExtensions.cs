@@ -200,5 +200,14 @@ namespace TASVideos.Extensions
 
 			return commaString[..lastComma] + " &" + commaString[(lastComma + 1)..];
 		}
+
+		/// <summary>
+		/// Replaces all types of newlines with spaces.
+		/// Multiple newlines will be replaced with multiple spaces.
+		/// </summary>
+		public static string NewlinesToSpaces(this string s)
+		{
+			return Regex.Replace(s, @"\r\n?|\n", " ");
+		}
 	}
 }
