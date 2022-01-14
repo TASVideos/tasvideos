@@ -137,9 +137,9 @@ namespace TASVideos.ForumEngine
 			}
 			else
 			{
-				// these were all parsed as ChildTagsIfParam, so we're guaranteed to have a single text child
-				var text = Children.Cast<Text>().Single();
-				w.Text(await transformUrlText(text.Content));
+				// these were all parsed as ChildTagsIfParam, so we're guaranteed to have zero or one text children.
+				var text = Children.Cast<Text>().SingleOrDefault()?.Content ?? "";
+				w.Text(await transformUrlText(text));
 			}
 
 			w.CloseTag("a");
