@@ -73,6 +73,7 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-Uze.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Vb.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Vectrex.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Vs.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Wswan.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Zxs.bk2" />
 		<EmbeddedResource Include="DsmSampleFiles\0frames.dsm" />
