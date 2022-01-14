@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
@@ -31,18 +32,21 @@ namespace TASVideos.Core.Services.Youtube
 		private readonly IGoogleAuthService _googleAuthService;
 		private readonly IWikiToTextRenderer _textRenderer;
 		private readonly AppSettings _settings;
+		private readonly ILogger<YouTubeSync> _logger;
 
 		public YouTubeSync(
 			IHttpClientFactory httpClientFactory,
 			IGoogleAuthService googleAuthService,
 			IWikiToTextRenderer textRenderer,
-			AppSettings settings)
+			AppSettings settings,
+			ILogger<YouTubeSync> logger)
 		{
 			_client = httpClientFactory.CreateClient(HttpClients.Youtube)
 				?? throw new InvalidOperationException($"Unable to initalize {HttpClients.Youtube} client");
 			_googleAuthService = googleAuthService;
 			_textRenderer = textRenderer;
 			_settings = settings;
+			_logger = logger;
 		}
 
 		public async Task SyncYouTubeVideo(YoutubeVideo video)
@@ -159,7 +163,13 @@ namespace TASVideos.Core.Services.Youtube
 			}.ToStringContent();
 
 			var response = await _client.PutAsync("videos?part=status", requestBody);
-			response.EnsureSuccessStatusCode();
+
+			if (!response.IsSuccessStatusCode)
+			{
+				var message = await response.Content.ReadAsStringAsync();
+				_logger.LogError($"{DateTime.Now} An error occurred sending a request to YouTube");
+				_logger.LogError($"Response: {message}");
+			}
 		}
 
 		public bool IsYoutubeUrl(string? url)

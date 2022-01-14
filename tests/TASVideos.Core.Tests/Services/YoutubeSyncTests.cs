@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using TASVideos.Core.Services.Youtube;
@@ -17,7 +18,7 @@ namespace TASVideos.Core.Tests.Services
 		{
 			var clientFactoryMock = HttpClientFactoryMock.Create();
 			var mockAuth = new Mock<IGoogleAuthService>();
-			_youTubeSync = new (clientFactoryMock.Object, mockAuth.Object, new TestWikiToTextRenderer(), new AppSettings());
+			_youTubeSync = new (clientFactoryMock.Object, mockAuth.Object, new TestWikiToTextRenderer(), new AppSettings(), NullLogger<YouTubeSync>.Instance);
 		}
 
 		[TestMethod]
