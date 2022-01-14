@@ -71,7 +71,7 @@ namespace TASVideos.Extensions
 				.Select(g => new SelectListItem
 				{
 					Value = g.Id.ToString(),
-					Text = g.RegionCode + " " + Math.Round(g.FrameRate, 4) + (g.Obsolete ? " (Obsolete)" : "")
+					Text = g.RegionCode + " " + g.FrameRate + (g.Obsolete ? " (Obsolete)" : "")
 				});
 		}
 
