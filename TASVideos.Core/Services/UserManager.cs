@@ -55,9 +55,11 @@ namespace TASVideos.Core.Services
 		// so they can be stored and retrieved from their cookie
 		public async Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user)
 		{
-			var existingClaims = (await GetClaimsAsync(user))
-				.Where(c => c.Type == CustomClaimTypes.Permission);
-			await RemoveClaimsAsync(user, existingClaims);
+			var existingClaims = await _db.UserClaims
+				.Where(u => u.UserId == user.Id)
+				.Where(c => c.ClaimType == CustomClaimTypes.Permission)
+				.ToListAsync();
+			_db.UserClaims.RemoveRange(existingClaims);
 
 			var permissions = await GetUserPermissionsById(user.Id);
 

@@ -26,8 +26,8 @@ namespace TASVideos.Pages
 			if (user.IsLoggedIn())
 			{
 				var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager>();
-				var claims = await userManager.AddUserPermissionsToClaims(
-					await userManager.GetUserAsync(user));
+				var userEntity = await userManager.GetUserAsync(user);
+				var claims = await userManager.AddUserPermissionsToClaims(userEntity);
 
 				user.ReplacePermissionClaims(claims);
 			}
