@@ -14,7 +14,7 @@ namespace TASVideos.TagHelpers
 	[HtmlTargetElement("timezone-convert", TagStructure = TagStructure.WithoutEndTag, Attributes = "asp-for")]
 	public class TimeZoneConvert : TagHelper
 	{
-		private static IReadOnlyDictionary<string, TimeZoneInfo> _timezones = TimeZoneInfo
+		private static readonly IReadOnlyDictionary<string, TimeZoneInfo> Timezones = TimeZoneInfo
 			.GetSystemTimeZones()
 			.ToDictionary(tkey => tkey.Id);
 
@@ -49,7 +49,7 @@ namespace TASVideos.TagHelpers
 			if (user is not null)
 			{
 				// Simply do not convert, if the user has no known timezone;
-				if (_timezones.TryGetValue(user.TimeZoneId, out userTimeZone))
+				if (Timezones.TryGetValue(user.TimeZoneId, out userTimeZone))
 				{
 					dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
 				}

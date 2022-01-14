@@ -76,15 +76,18 @@ namespace TASVideos.ForumEngine
 				/// This tag can have children.
 				/// </summary>
 				Yes,
+
 				/// <summary>
 				/// This tag cannot have children and potential children should be parsed as raw text.
 				/// </summary>
 				No,
+
 				/// <summary>
 				/// If this tag has a non-empty parameter, behaves like Yes, otherwise, like No.
 				/// </summary>
 				IfParam,
 			}
+
 			public ChildrenAllowed Children;
 
 			public enum SelfNestingAllowed
@@ -93,10 +96,12 @@ namespace TASVideos.ForumEngine
 				/// This tag can nest in itself freely.
 				/// </summary>
 				Yes,
+
 				/// <summary>
 				/// This tag cannot nest in itself, and should autoclose any existing instances of itself at any level.
 				/// </summary>
 				No,
+
 				/// <summary>
 				/// This tag can nest in itself, but it can't be an immediate child of itself.
 				/// </summary>
@@ -109,52 +114,52 @@ namespace TASVideos.ForumEngine
 		private static readonly Dictionary<string, TagInfo> KnownTags = new ()
 		{
 			// basic text formatting, no params, and body is content
-			{ "b", new() },
-			{ "i", new() },
-			{ "u", new() },
-			{ "s", new() },
-			{ "sub", new() },
-			{ "sup", new() },
-			{ "tt", new() },
-			{ "left", new() },
-			{ "right", new() },
-			{ "center", new() },
-			{ "spoiler", new() },
-			{ "warning", new() },
-			{ "note", new() },
-			{ "highlight", new() },
+			{ "b", new () },
+			{ "i", new () },
+			{ "u", new () },
+			{ "s", new () },
+			{ "sub", new () },
+			{ "sup", new () },
+			{ "tt", new () },
+			{ "left", new () },
+			{ "right", new () },
+			{ "center", new () },
+			{ "spoiler", new () },
+			{ "warning", new () },
+			{ "note", new () },
+			{ "highlight", new () },
 
 			// with optional params
-			{ "quote", new() }, // optional author
-			{ "code", new() { Children = TagInfo.ChildrenAllowed.No } }, // optional language
-			{ "img", new() { Children = TagInfo.ChildrenAllowed.No } }, // optional size
-			{ "url", new() { Children = TagInfo.ChildrenAllowed.IfParam, SelfNesting = TagInfo.SelfNestingAllowed.No } }, // optional url.  if not given, url in body
-			{ "email", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like url
-			{ "video", new() { Children = TagInfo.ChildrenAllowed.No } }, // like img
-			{ "google", new() { Children = TagInfo.ChildrenAllowed.No } }, // search query in body.  optional param `images`
-			{ "thread", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like url, but the link is a number
-			{ "post", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
-			{ "movie", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
-			{ "submission", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
-			{ "userfile", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
-			{ "wip", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread (in fact, identical to userfile except for text output)
-			{ "wiki", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread, but the link is a page name
+			{ "quote", new () }, // optional author
+			{ "code", new () { Children = TagInfo.ChildrenAllowed.No } }, // optional language
+			{ "img", new () { Children = TagInfo.ChildrenAllowed.No } }, // optional size
+			{ "url", new () { Children = TagInfo.ChildrenAllowed.IfParam, SelfNesting = TagInfo.SelfNestingAllowed.No } }, // optional url.  if not given, url in body
+			{ "email", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like url
+			{ "video", new () { Children = TagInfo.ChildrenAllowed.No } }, // like img
+			{ "google", new () { Children = TagInfo.ChildrenAllowed.No } }, // search query in body.  optional param `images`
+			{ "thread", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like url, but the link is a number
+			{ "post", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+			{ "movie", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+			{ "submission", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+			{ "userfile", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+			{ "wip", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread (in fact, identical to userfile except for text output)
+			{ "wiki", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread, but the link is a page name
 
 			// other stuff
-			{ "frames", new() { Children = TagInfo.ChildrenAllowed.No } }, // no params.  body is something like `200` or `200@60.1`
-			{ "color", new() }, // param is a css (?) color
-			{ "bgcolor", new() }, // like color
-			{ "size", new() }, // param is something relating to font size TODO: what are the values?
-			{ "noparse", new() { Children = TagInfo.ChildrenAllowed.No } },
+			{ "frames", new () { Children = TagInfo.ChildrenAllowed.No } }, // no params.  body is something like `200` or `200@60.1`
+			{ "color", new () }, // param is a css (?) color
+			{ "bgcolor", new () }, // like color
+			{ "size", new () }, // param is something relating to font size TODO: what are the values?
+			{ "noparse", new () { Children = TagInfo.ChildrenAllowed.No } },
 
 			// list related stuff
-			{ "list", new() }, // OLs have a param with value ??
-			{ "*", new() { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate } },
+			{ "list", new () }, // OLs have a param with value ??
+			{ "*", new () { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate } },
 
 			// tables
-			{ "table", new() { SelfNesting = TagInfo.SelfNestingAllowed.No } },
-			{ "tr", new() { SelfNesting = TagInfo.SelfNestingAllowed.No } },
-			{ "td", new() { SelfNesting = TagInfo.SelfNestingAllowed.No } }
+			{ "table", new () { SelfNesting = TagInfo.SelfNestingAllowed.No } },
+			{ "tr", new () { SelfNesting = TagInfo.SelfNestingAllowed.No } },
+			{ "td", new () { SelfNesting = TagInfo.SelfNestingAllowed.No } }
 		};
 
 		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new ()

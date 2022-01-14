@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Serilog;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
-using Microsoft.Net.Http.Headers;
 
 namespace TASVideos.Extensions
 {
