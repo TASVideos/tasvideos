@@ -8,6 +8,8 @@
 	--border-separator-color: #{$bs-gray-700};
 	--cardprimary: #{$card-primary-dark};
 	--cardsecondary: #{$card-secondary-dark};
+	--bs-warning: #{$warning-dark};
+	--bs-warning-rgb: #{$warning-dark-rgb};
 	--bs-info: #{$info-dark};
 	--bs-info-rgb: #{$info-dark-rgb};
 	--bs-dark: #{$bs-gray-100};
@@ -99,4 +101,12 @@ body {
 	height: $banner-height;
 	background: $banner;
 	z-index: -1;
+}
+
+.btn-close {
+	filter: invert(1) grayscale(100%) brightness(200%);
+
+	&-white {
+		filter: none;
+	}
 }

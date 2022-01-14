@@ -223,7 +223,7 @@ $@"<button type=""button"" class=""btn-close float-end"" data-bs-dismiss=""alert
 		<div class='modal-content'>
 			<div class='modal-header'>
 				<h5 class='modal-title text-danger'>Delete Warning!</h5>
-				<button type='button' class='btn-close float-end' data-bs-dismiss='modal'><span aria-hidden='true'>&times;</span></button>
+				<button type='button' class='btn-close' data-bs-dismiss='modal'></button>
 			</div>
 			<div class='modal-body'>
 				<p>{Text(WarningMessage)}</p>

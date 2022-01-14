@@ -17,23 +17,11 @@
 		</a>
 	</div>
 </div>
-<row>
-	<div class="col-md-6">
-		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
-		{
+<div class="clearfix flex-wrap d-flex d-md-block">
+	@foreach (var cat in Model.Categories.OrderBy(c => ((c.Ordinal + 21) % 31) % 22)) // please don't ban me
+	{
+		<div class="col-12 col-md-6 @(cat.Ordinal <= 30 ? "float-start ps-md-0 pe-md-2" : "float-end ps-md-2 pe-md-0") order-@(((cat.Ordinal + 6) % 37) % 8)" style="@(cat.Ordinal <= 30 ? "clear: left;" : "")">
 			<partial name="_Category" model="cat" />
-		}
-	</div>
-	<div class="col-md-6">
-		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).SecondHalf())
-		{
-			<partial name="_Category" model="cat" />
-		}
-	</div>
-	@*<div class="d-md-none">
-		@foreach (var cat in Model.Categories.OrderBy(c => (c.Ordinal - 7) % 27)) // please don't ban me
-		{
-			<partial name="_Category" model="cat" />
-		}
-	</div>*@
-</row>
+		</div>
+	}
+</div>

@@ -47,7 +47,7 @@ namespace TASVideos.Pages.Submissions.Models
 		public string Markup { get; set; } = "";
 
 		[Required]
-		[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
+		[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 500k)")]
 		public IFormFile? MovieFile { get; set; }
 	}
 }
