@@ -3,9 +3,9 @@
 @{
 	ViewData["Title"] = "Forum";
 }
-<partial Name="_ForumHeader" />
-<fullrow class="pb-2">
-	<div class="float-end">
+<div class="clearfix">
+	<partial Name="_ForumHeader" />
+	<div class="float-end pb-2">
 		<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm">
 			Latest Posts
 		</a>
@@ -16,7 +16,7 @@
 			Unanswered Posts
 		</a>
 	</div>
-</fullrow>
+</div>
 <row>
 	<div class="col-md-6">
 		@foreach (var cat in Model.Categories.OrderBy(c => c.Ordinal).FirstHalf())
