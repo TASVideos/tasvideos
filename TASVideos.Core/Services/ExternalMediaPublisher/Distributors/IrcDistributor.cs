@@ -49,7 +49,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				? _settings.SecureChannel
 				: _settings.Channel;
 
-			var s = $"({post.User}) {post.Title.NewlinesToSpaces().CapAndEllipse(150)} {post.Body.NewlinesToSpaces().CapAndEllipse(75)} {post.Link}";
+			var s = $"({post.User}) {post.Title.CapAndEllipse(150)} {post.Body.CapAndEllipse(75)} {post.Link}";
 			await Task.Run(() => _bot.AddMessage(channel, s));
 		}
 
@@ -70,7 +70,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 			public void AddMessage(string channel, string item)
 			{
-				_work.Enqueue($"PRIVMSG {channel} :{item}");
+				_work.Enqueue($"PRIVMSG {channel} :{item}".NewlinesToSpaces());
 			}
 
 			private async Task ConnectToServer()
