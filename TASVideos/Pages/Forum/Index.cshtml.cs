@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Pages.Forum.Models;
@@ -9,6 +10,7 @@ using TASVideos.Pages.Forum.Models;
 namespace TASVideos.Pages.Forum
 {
 	[AllowAnonymous]
+	[ResponseCache(Duration = 30)]
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
