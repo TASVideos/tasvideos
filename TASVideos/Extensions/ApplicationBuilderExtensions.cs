@@ -31,7 +31,11 @@ namespace TASVideos.Extensions
 				app.UseExceptionHandler("/Error");
 			}
 
-			return app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+			// TODO: we want to use some middle ware so we can dynamically decide to return json for the API
+			// However, registering this in combination with the pages above causes a request to happen a second time
+			// when there is is an unhandled exception, which is very bad
+			return app;
+				//.UseMiddleware(typeof(ErrorHandlingMiddleware));
 		}
 
 		public static IApplicationBuilder UseGzipCompression(this IApplicationBuilder app, AppSettings settings)
