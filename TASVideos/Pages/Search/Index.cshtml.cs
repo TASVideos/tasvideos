@@ -78,6 +78,7 @@ namespace TASVideos.Pages.Search
 
 				GameResults = await _db.Games
 					.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation + " || " + g.System!.Code).Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
+					.OrderBy(g => g.DisplayName)
 					.Skip(skip)
 					.Take(PageSize)
 					.Select(g => new GameSearchModel(g.Id, g.System!.Code, g.DisplayName))
