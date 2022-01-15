@@ -67,6 +67,7 @@ namespace TASVideos.Pages.Publications
 		public async Task<IActionResult> OnGet()
 		{
 			Publication = await _db.Publications
+					.AsSingleQuery()
 					.Where(p => p.Id == Id)
 					.Select(p => new PublicationEditModel
 					{

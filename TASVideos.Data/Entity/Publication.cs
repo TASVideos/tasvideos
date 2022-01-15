@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Common;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
@@ -163,6 +164,7 @@ namespace TASVideos.Data.Entity
 
 		public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
 		{
+			publications.AsSingleQuery();
 			if (tokens.MovieIds.Any())
 			{
 				return publications.Where(p => tokens.MovieIds.Contains(p.Id));
