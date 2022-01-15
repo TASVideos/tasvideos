@@ -124,7 +124,7 @@ namespace TASVideos.Pages.Users
 			if (userNameChange != null)
 			{
 				string message = $"User {userNameChange} name changed to {user.UserName}";
-				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
+				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", User.Name());
 				await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			}
 
@@ -153,7 +153,7 @@ namespace TASVideos.Pages.Users
 					message += " removed: " + string.Join(",", removedRoles);
 				}
 
-				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", user.UserName!);
+				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", User.Name());
 				await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			}
 
