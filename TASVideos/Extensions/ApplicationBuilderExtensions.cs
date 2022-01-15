@@ -22,14 +22,14 @@ namespace TASVideos.Extensions
 
 		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostEnvironment env)
 		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
-			else
-			{
+			//if (env.IsDevelopment())
+			//{
+			//	app.UseDeveloperExceptionPage();
+			//}
+			//else
+			//{
 				app.UseExceptionHandler("/Error");
-			}
+			//}
 
 			return app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 		}

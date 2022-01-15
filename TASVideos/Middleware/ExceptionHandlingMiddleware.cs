@@ -32,7 +32,7 @@ namespace TASVideos.Middleware
 		}
 
 		// https://stackoverflow.com/questions/38630076/asp-net-core-web-api-exception-handling
-		private static Task HandleExceptionAsync(HttpContext context, Exception exception, IHostEnvironment env, ILogger logger, RequestDelegate next)
+		private static async Task HandleExceptionAsync(HttpContext context, Exception exception, IHostEnvironment env, ILogger logger, RequestDelegate next)
 		{
 			if (context.Request.Path.ToString().Contains("/api/"))
 			{
@@ -57,11 +57,12 @@ namespace TASVideos.Middleware
 
 				context.Response.ContentType = "application/json";
 				context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-				return context.Response.WriteAsync(result);
+				await context.Response.WriteAsync(result);
 			}
 
 			logger.LogError(exception, "An unhandled exception occurred.");
-			return next(context);
+			//return next(context);
+			context.Response.Redirect("/Error");
 		}
 	}
 }

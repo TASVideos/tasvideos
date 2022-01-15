@@ -9,3 +9,8 @@
 <p condition="Model.ShowRequestId">
 	<strong>Request ID:</strong> <code>@Model.RequestId</code>
 </p>
+
+<div condition="Model.Exception != null">
+	<h4>Exception</h4>
+	<p>@Model.Exception!.ToString()</p>
+</div>

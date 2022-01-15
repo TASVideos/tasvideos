@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,6 +30,7 @@ namespace TASVideos.Pages.Wiki
 
 		public async Task<IActionResult> OnGet(string? url, int? revision = null)
 		{
+			throw new Exception("Uh oh");
 			url = url?.Trim('/') ?? "";
 			if (url.ToLower() == "frontpage")
 			{
