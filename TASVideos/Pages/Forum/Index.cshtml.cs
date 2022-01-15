@@ -10,7 +10,6 @@ using TASVideos.Pages.Forum.Models;
 namespace TASVideos.Pages.Forum
 {
 	[AllowAnonymous]
-	[ResponseCache(Duration = 30)]
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
