@@ -1,10 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Net.Http.Headers;
 using Serilog;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
@@ -23,7 +20,7 @@ namespace TASVideos.Extensions
 				});
 		}
 
-		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IWebHostEnvironment env)
+		public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
@@ -89,7 +86,7 @@ namespace TASVideos.Extensions
 
 		public static IApplicationBuilder UseSwaggerUi(
 			this IApplicationBuilder app,
-			IWebHostEnvironment env)
+			IHostEnvironment env)
 		{
 			// Append environment to app name when in non-production environments
 			var appName = "TASVideos";

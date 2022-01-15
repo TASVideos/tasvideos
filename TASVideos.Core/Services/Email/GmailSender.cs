@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Youtube;
@@ -17,12 +16,12 @@ namespace TASVideos.Core.Services.Email
 	/// </summary>
 	internal class GmailSender : IEmailSender
 	{
-		private readonly IWebHostEnvironment _env;
+		private readonly IHostEnvironment _env;
 		private readonly AppSettings _settings;
 		private readonly ILogger<GmailSender> _logger;
 		private readonly IGoogleAuthService _googleAuthService;
 
-		public GmailSender(IWebHostEnvironment env,
+		public GmailSender(IHostEnvironment env,
 			AppSettings settings,
 			ILogger<GmailSender> logger,
 			IGoogleAuthService googleAuthService)

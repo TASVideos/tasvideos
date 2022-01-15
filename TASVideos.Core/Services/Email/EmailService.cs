@@ -2,10 +2,7 @@
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using TASVideos.Core.Services.RssFeedParsers.Github;
 
 namespace TASVideos.Core.Services.Email
 {
@@ -19,10 +16,10 @@ namespace TASVideos.Core.Services.Email
 
 	internal class EmailService : IEmailService
 	{
-		private readonly IWebHostEnvironment _env;
+		private readonly IHostEnvironment _env;
 		private readonly IEmailSender _emailSender;
 
-		public EmailService(IWebHostEnvironment env, IEmailSender emailSender)
+		public EmailService(IHostEnvironment env, IEmailSender emailSender)
 		{
 			_env = env;
 			_emailSender = emailSender;
