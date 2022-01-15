@@ -19,7 +19,7 @@
 				</div>
 				<div class="col-8 pt-0 pb-0">
 					<small style="display: inline-block">
-						<a href="/Forum/Posts/@(post.Id)#@post.Id" title="Link to this post" class="float-start"><i class="fa fa-bookmark-o"></i></a>
+						<a href="/Forum/Posts/@(post.Id)" title="Link to this post" class="float-start"><i class="fa fa-bookmark-o"></i></a>
 						Posted: @post.CreateTimestamp
 						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
 					</small>

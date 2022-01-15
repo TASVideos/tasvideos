@@ -287,7 +287,7 @@ namespace TASVideos.ForumEngine
 					await WriteHref(w, h, s => "/Forum/Topics/" + s, async s => "Thread #" + s);
 					break;
 				case "post":
-					await WriteHref(w, h, s => "/Forum/Posts/" + s + "#" + s, async s => "Post #" + s);
+					await WriteHref(w, h, s => "/Forum/Posts/" + s, async s => "Post #" + s);
 					break;
 				case "movie":
 					await WriteHref(
