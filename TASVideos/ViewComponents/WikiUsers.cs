@@ -18,12 +18,10 @@ namespace TASVideos.ViewComponents
 			_db = db;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(string? roles)
+		public async Task<IViewComponentResult> InvokeAsync(string? role)
 		{
-			var role = roles ?? "";
-
 			var model = await _db.Users
-				.ThatHaveRole(role)
+				.ThatHaveRole(role ?? "")
 				.Select(u => new WikiUserEntry
 				{
 					UserName = u.UserName,
