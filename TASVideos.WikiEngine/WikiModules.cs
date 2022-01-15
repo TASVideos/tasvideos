@@ -7,11 +7,10 @@ namespace TASVideos.WikiEngine
 {
 	public static class WikiModules
 	{
+		public const string ActiveTab = "activetab";
 		public const string Addresses = "addresses";
 		public const string Awards = "awards";
 		public const string BrokenLinks = "brokenlinks";
-		public const string ActiveTab = "activetab";
-		public const string AviEncodes = "aviencodes";
 		public const string DisplayGameName = "displaygamename";
 		public const string DisplayMiniMovie = "displayminimovie";
 		public const string DisplayMovies = "displaymovie";
@@ -25,12 +24,12 @@ namespace TASVideos.WikiEngine
 		public const string ListLanguages = "listlanguages";
 		public const string MediaPosts = "mediaposts";
 		public const string MovieChangeLog = "moviechangelog";
+		public const string MovieMaintenanceLog = "moviemaintlog";
 		public const string MoviesByAuthor = "moviesbyplayer";
 		public const string MoviesByCategory = "moviesearch_category";
 		public const string MoviesGameList = "moviesgamelist";
 		public const string MoviesList = "movieslist";
 		public const string MovieStatistics = "moviestatistics";
-		public const string MovieMaintenanceLog = "moviemaintlog";
 		public const string NoEmulator = "noemulator";
 		public const string NoGameName = "nogame";
 		public const string NoRom = "norom";
