@@ -11,7 +11,7 @@
 <div condition="@Model.Any()" class="card">
 	<div class="card-header">
 		<collapsablecontent-header body-id="collapse-content-@pageId">
-			<i class="fa fa-chevron-circle-down"></i> <strong>Subpages for @ViewData["Parent"]</strong>
+			<i class="fa fa-chevron-circle-down"></i> <strong>Subpages for @ViewData["Parent"].ToString().SplitCamelCase()</strong>
 		</collapsablecontent-header>
 	</div>
 	<collapsablecontent-body id="collapse-content-@pageId" start-shown="@show">
@@ -20,11 +20,11 @@
 				@foreach (var pageGroup in pageGrouping.OrderBy(g => g.Key))
 				{
 					<li>
-						<a href="/@($"{parent}/{pageGroup.Key}")">@pageGroup.Key?.Replace($"{parent}/", "")</a>
+						<a href="/@($"{parent}/{pageGroup.Key}")">@pageGroup.Key?.Replace($"{parent}/", "").SplitCamelCase()</a>
 						<ul condition="pageGroup.Count() > 1">
 							@foreach (var subpage in pageGroup.Where(pg => pg != $"{parent}/{pageGroup.Key}").OrderBy(pg => pg))
 							{
-								<li><a href="/@subpage">@subpage.Replace($"{parent}/{pageGroup.Key}/", "")</a></li>
+								<li><a href="/@subpage">@subpage.Replace($"{parent}/{pageGroup.Key}/", "").SplitCamelCase()</a></li>
 							}
 						</ul>
 					</li>
