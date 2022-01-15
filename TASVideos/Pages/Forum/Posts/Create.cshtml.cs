@@ -142,7 +142,7 @@ namespace TASVideos.Pages.Forum.Posts
 				topic.Forum.Restricted,
 				"New reply",
 				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
-				$"Forum/Posts/{id}#{id}",
+				$"Forum/Posts/{id}",
 				$"{user.UserName}{mood}",
 				"New Forum Post");
 
@@ -160,7 +160,7 @@ namespace TASVideos.Pages.Forum.Posts
 				_logger.LogWarning("Email notification failed on new reply creation");
 			}
 
-			return BaseRedirect($"/Forum/Posts/{id}#{id}");
+			return BaseRedirect($"/Forum/Posts/{id}");
 		}
 	}
 }

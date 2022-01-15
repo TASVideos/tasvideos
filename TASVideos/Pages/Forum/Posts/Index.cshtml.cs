@@ -29,12 +29,14 @@ namespace TASVideos.Pages.Forum.Posts
 
 			return RedirectToPage(
 				"/Forum/Topics/Index",
+				null,
 				new
 				{
 					Id = model.TopicId,
 					CurrentPage = model.Page,
 					Highlight = Id
-				});
+				},
+				Id.ToString());
 		}
 	}
 }
