@@ -44,7 +44,7 @@ namespace TASVideos.Extensions
 			});
 		}
 
-		public static IServiceCollection AddCookieConfiguration(this IServiceCollection services, IWebHostEnvironment env)
+		public static IServiceCollection AddCookieConfiguration(this IServiceCollection services)
 		{
 			services.ConfigureApplicationCookie(options =>
 			{
@@ -73,7 +73,7 @@ namespace TASVideos.Extensions
 			return services.AddSingleton<IMovieParser, MovieParser>();
 		}
 
-		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services, IWebHostEnvironment env)
+		public static IServiceCollection AddMvcWithOptions(this IServiceCollection services, IHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
@@ -138,7 +138,7 @@ namespace TASVideos.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddIdentity(this IServiceCollection services, IWebHostEnvironment env)
+		public static IServiceCollection AddIdentity(this IServiceCollection services, IHostEnvironment env)
 		{
 			services.AddIdentity<User, Role>(config =>
 				{

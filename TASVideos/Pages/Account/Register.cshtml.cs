@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +26,7 @@ namespace TASVideos.Pages.Account
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
 		private readonly IReCaptchaService _reCaptchaService;
-		private readonly IWebHostEnvironment _env;
+		private readonly IHostEnvironment _env;
 		private readonly IUserMaintenanceLogger _userMaintenanceLogger;
 
 		public RegisterModel(
@@ -37,7 +36,7 @@ namespace TASVideos.Pages.Account
 			IEmailService emailService,
 			ExternalMediaPublisher publisher,
 			IReCaptchaService reCaptchaService,
-			IWebHostEnvironment env,
+			IHostEnvironment env,
 			IUserMaintenanceLogger userMaintenanceLogger)
 		{
 			_db = db;
