@@ -51,7 +51,21 @@ namespace TASVideos.Core.Services
 
 			return allAwards
 				.Where(a => a.Users.Select(u => u.Id).Contains(userId))
-				.Select(ua => new AwardAssignmentSummary(ua.ShortName, ua.Description, ua.Year))
+				.Select(a => new
+				{
+					a.Description,
+					a.ShortName,
+					a.Year,
+					UserCount = a.Users.Count(u => u.Id == userId)
+				}) 
+				.SelectMany(ua =>
+				{ 
+					var ret = new List<AwardAssignmentSummary>();
+					for (var i = 0; i < ua.UserCount; i++) {
+						ret.Add(new AwardAssignmentSummary(ua.ShortName, ua.Description, ua.Year));
+					}
+					return ret;
+				})
 				.ToList();
 		}
 
@@ -81,10 +95,10 @@ namespace TASVideos.Core.Services
 
 		private async ValueTask<IEnumerable<AwardAssignment>> AllAwards()
 		{
-			if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))
+			/*if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))
 			{
 				return awards;
-			}
+			}*/
 
 			var userLists = await _db.UserAwards
 				.Select(ua => new
