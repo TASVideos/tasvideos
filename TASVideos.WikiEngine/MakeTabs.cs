@@ -22,6 +22,10 @@ namespace TASVideos.WikiEngine
 			var index = 0;
 			foreach (var child in tabset.Children.Cast<Element>())
 			{
+				if (child.Tag != "tab")
+				{
+					throw new NewParser.SyntaxException("Non-tab content inside a tabset", child.CharStart);
+				}
 				var id = "tabs-" + tabset.CharStart + "-" + index++;
 				nav.Add(new Element(
 					child.CharStart,
