@@ -51,7 +51,9 @@ namespace TASVideos.Core.Services
 
 			return allAwards
 				.Where(a => a.Users.Select(u => u.Id).Contains(userId))
-				.Select(ua => new AwardAssignmentSummary(ua.ShortName, ua.Description, ua.Year))
+				.SelectMany(a => a.Users
+					.Where(u => u.Id == userId)
+					.Select(u => new AwardAssignmentSummary(a.ShortName, a.Description, a.Year)))
 				.ToList();
 		}
 

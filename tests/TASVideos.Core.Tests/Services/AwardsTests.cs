@@ -89,6 +89,22 @@ namespace TASVideos.Core.Tests.Services
 		}
 
 		[TestMethod]
+		public async Task ForUser_AuthorOfTwoPublicationsWithIdenticalAward_ReturnsTwoAwards()
+		{
+			var publicationAward = CreatePublicationAward();
+			var author = CreateUser();
+			var pub1 = CreatePublication(author);
+			var pub2 = CreatePublication(author);
+			GivePublicationAnAward(pub1, publicationAward);
+			GivePublicationAnAward(pub2, publicationAward);
+
+			var actual = await _awards.ForUser(author.Id);
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(2, actual.Count());
+		}
+
+		[TestMethod]
 		public async Task ForYear_YearDoesNotExist_ReturnsEmptyList()
 		{
 			var actual = await _awards.ForYear(int.MaxValue);
