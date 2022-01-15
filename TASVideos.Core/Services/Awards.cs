@@ -83,10 +83,10 @@ namespace TASVideos.Core.Services
 
 		private async ValueTask<IEnumerable<AwardAssignment>> AllAwards()
 		{
-			/*if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))
+			if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))
 			{
 				return awards;
-			}*/
+			}
 
 			var userLists = await _db.UserAwards
 				.Select(ua => new
