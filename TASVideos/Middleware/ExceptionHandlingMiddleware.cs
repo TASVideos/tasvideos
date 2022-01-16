@@ -19,7 +19,7 @@ namespace TASVideos.Middleware
 			_next = next;
 		}
 
-		public async Task Invoke(HttpContext context, IWebHostEnvironment env, ILogger<ErrorHandlingMiddleware> logger)
+		public async Task Invoke(HttpContext context, IHostEnvironment env, ILogger<ErrorHandlingMiddleware> logger)
 		{
 			try
 			{
@@ -32,7 +32,7 @@ namespace TASVideos.Middleware
 		}
 
 		// https://stackoverflow.com/questions/38630076/asp-net-core-web-api-exception-handling
-		private static Task HandleExceptionAsync(HttpContext context, Exception exception, IWebHostEnvironment env, ILogger logger, RequestDelegate next)
+		private static Task HandleExceptionAsync(HttpContext context, Exception exception, IHostEnvironment env, ILogger logger, RequestDelegate next)
 		{
 			if (context.Request.Path.ToString().Contains("/api/"))
 			{

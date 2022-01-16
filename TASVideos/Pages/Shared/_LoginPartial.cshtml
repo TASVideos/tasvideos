@@ -12,7 +12,7 @@
 <div class="d-md-flex">
 	@if (isSignedIn)
 	{
-		<form asp-page="/Account/Logout" method="post" id="logoutForm">
+		<form asp-page="/Account/Logout" method="post" id="logoutForm" asp-antiforgery="false">
 			<navbar>
 				<nav-item activate="Messages">
 					<a id="Inbox" class="nav-link text-nowrap" asp-page="/Messages/Inbox">

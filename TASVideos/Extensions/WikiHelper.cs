@@ -280,8 +280,8 @@ namespace TASVideos.Extensions
 
 			var paths = pageName.SplitWithEmpty("/");
 
-			// Must begin with a capital letter, with one exception, if the path is a year. But only years between 2000-2099 for now. This is to support awards pages: Awards/2007, Awards/2008 etc
-			return paths.All(p => char.IsUpper(p[0]) || (p.Length == 4 && p.StartsWith("20")));
+			// Must begin with a capital letter, or a number
+			return paths.All(p => char.IsUpper(p[0]) || char.IsNumber(p[0]));
 		}
 	}
 }

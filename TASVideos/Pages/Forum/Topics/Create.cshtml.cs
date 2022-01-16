@@ -115,8 +115,7 @@ namespace TASVideos.Pages.Forum.Topics
 				User.Name(),
 				"New Forum Topic");
 
-			var user = await _userManager.GetUserAsync(User);
-			await _userManager.AssignAutoAssignableRolesByPost(user);
+			await _userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
 
 			return RedirectToPage("Index", new { topic.Id });
 		}

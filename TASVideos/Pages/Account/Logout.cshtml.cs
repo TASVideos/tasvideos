@@ -6,6 +6,7 @@ using TASVideos.Core.Services;
 namespace TASVideos.Pages.Account
 {
 	[Authorize]
+	[IgnoreAntiforgeryToken]
 	public class LogoutModel : BasePageModel
 	{
 		private readonly SignInManager _signInManager;

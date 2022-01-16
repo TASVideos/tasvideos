@@ -92,7 +92,11 @@ namespace TASVideos.Core.Services.Youtube
 			}.ToStringContent();
 
 			var response = await _client.PutAsync("videos?part=status,snippet", requestBody);
-			response.EnsureSuccessStatusCode();
+			if (!response.IsSuccessStatusCode)
+			{
+				_logger.LogError($"[{DateTime.Now}] An error occurred syncing data to Youtube.");
+				_logger.LogError(await response.Content.ReadAsStringAsync());
+			}
 		}
 
 		public async Task<IEnumerable<YoutubeVideoResponseItem>> GetPublicInfo(IEnumerable<string> videoIds)
@@ -153,7 +157,7 @@ namespace TASVideos.Core.Services.Youtube
 			}
 
 			await SetAccessToken();
-			var requestBody = new VideoUpdateRequest
+			var requestBody = new UnlistRequest
 			{
 				VideoId = videoId,
 				Status = new ()
@@ -166,9 +170,8 @@ namespace TASVideos.Core.Services.Youtube
 
 			if (!response.IsSuccessStatusCode)
 			{
-				var message = await response.Content.ReadAsStringAsync();
 				_logger.LogError($"{DateTime.Now} An error occurred sending a request to YouTube");
-				_logger.LogError($"Response: {message}");
+				_logger.LogError($"Response: {await response.Content.ReadAsStringAsync()}");
 			}
 		}
 
@@ -233,13 +236,15 @@ namespace TASVideos.Core.Services.Youtube
 			// fileDetails require authorization to see, so this serves as a way to determine access
 			// there may be a more intended strategy to use
 			var result = await _client.GetAsync($"videos?id={videoId}&part=snippet,fileDetails");
-			if (result.IsSuccessStatusCode)
+			if (!result.IsSuccessStatusCode)
 			{
-				var getResponse = await result.ReadAsync<YoutubeGetResponse>();
-				return getResponse.Items.First().Snippet;
+				_logger.LogError($"{DateTime.Now} An error occurred requesting data for video {videoId} from YouTube");
+				_logger.LogError($"Response: {await result.Content.ReadAsStringAsync()}");
+				return null;
 			}
 
-			return null;
+			var getResponse = await result.ReadAsync<YoutubeGetResponse>();
+			return getResponse.Items.First().Snippet;
 		}
 	}
 
