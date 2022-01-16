@@ -1,0 +1,19 @@
+﻿<script>
+    const textarea = document.querySelector('textarea.wiki-edit');
+    const textareaCacheKey = textarea.getAttribute('cacheKey');
+    const revertButton = document.getElementById('revert-button');
+    if (localStorage.getItem(textareaCacheKey) !== null) {
+        textarea.value = localStorage.getItem(textareaCacheKey);
+    }
+    function cacheTextarea() {
+        localStorage.setItem(textareaCacheKey,textarea.value);
+    }
+    setInterval(cacheTextarea, 5000);
+    function clearTextareaCache() {
+        localStorage.removeItem(textareaCacheKey);
+        location.reload();
+    }
+    if (revertButton) {
+        revertButton.addEventListener('click', clearTextareaCache);
+    }
+</script>

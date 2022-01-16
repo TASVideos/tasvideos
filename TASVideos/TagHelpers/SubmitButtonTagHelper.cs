@@ -17,6 +17,10 @@ namespace TASVideos.TagHelpers
 		let btn = this;
 		setTimeout(function () {{ btn.disabled = true }}, 0);
 		setTimeout(function () {{ btn.disabled = false }}, 750);
+		let textarea = document.querySelector('textarea.wiki-edit');
+		if (textarea) {{
+			localStorage.removeItem(textarea.getAttribute('cacheKey'));
+		}}
 	}}
 </script>");
 		}

@@ -5,6 +5,8 @@ namespace TASVideos.Pages.Wiki.Models
 {
 	public class WikiEditModel
 	{
+		public string PageName { get; set; } = "";
+
 		public DateTime EditStart { get; set; } = DateTime.UtcNow;
 
 		[Required]
@@ -16,5 +18,7 @@ namespace TASVideos.Pages.Wiki.Models
 		[Display(Name = "Edit Comments", Description = "Please enter a descriptive summary of your change. Leaving this blank is discouraged.")]
 		[MaxLength(500)]
 		public string? RevisionMessage { get; set; }
+
+		public DateTime? RevisionTimestamp { get; set; }
 	}
 }

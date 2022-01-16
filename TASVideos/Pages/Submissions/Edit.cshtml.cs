@@ -65,6 +65,7 @@ namespace TASVideos.Pages.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 				{
+					Id = s.Id,
 					SystemDisplayName = s.System!.DisplayName,
 					SystemCode = s.System.Code,
 					GameName = s.GameName,

@@ -9,6 +9,8 @@ namespace TASVideos.Pages.Submissions.Models
 {
 	public class SubmissionEditModel
 	{
+		public int Id { get; set; }
+
 		public string Markup { get; set; } = "";
 
 		[StringLength(1000)]

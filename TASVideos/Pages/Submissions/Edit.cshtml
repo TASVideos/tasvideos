@@ -94,7 +94,7 @@
 	<fullrow>
 		<form-group>
 			<label asp-for="Submission.Markup" class="form-control-label"></label>
-			<textarea asp-for="Submission.Markup" rows="12" class="form-control"></textarea>
+			<textarea asp-for="Submission.Markup" rows="12" class="form-control wiki-edit" cacheKey="@($"textarea-submission-{Model.Submission.Id}-{Model.Submission.LastUpdateTimestamp.ToString()}")"></textarea>
 			<span asp-validation-for="Submission.Markup" class="text-danger"></span>
 		</form-group>
 	</fullrow>
@@ -116,25 +116,26 @@
 	<fullrow class="text-center">
 		<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
 		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Submission.Markup.Length > 0 ? "" : "hide")"><i class="fa fa-save"></i> Update</button>
+		<button type="button" class="btn btn-secondary" id="revert-button"><i class="fa fa-refresh"></i>Revert</button>
 		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id"><i class="fa fa-times"></i> Cancel</a>
 	</fullrow>
 </form>
 
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
 
-<script>
-	{
-		document.getElementById('@Html.IdFor(m => m.Submission.Status)').addEventListener("change", function () {
-			const reject = '@((int)SubmissionStatus.Rejected)';
-			if (this.value === reject) {
-				document.getElementById('rejection-reason').classList.remove('d-none');
-			} else {
-				document.getElementById('rejection-reason').classList.add('d-none');
-			}
-		});
-	}
-</script>
-
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<partial name="_TextareaCacheScriptPartial" />
+	<script>
+		{
+			document.getElementById('@Html.IdFor(m => m.Submission.Status)').addEventListener("change", function () {
+				const reject = '@((int)SubmissionStatus.Rejected)';
+				if (this.value === reject) {
+					document.getElementById('rejection-reason').classList.remove('d-none');
+				} else {
+					document.getElementById('rejection-reason').classList.add('d-none');
+				}
+			});
+		}
+	</script>
 }

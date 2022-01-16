@@ -57,7 +57,9 @@ namespace TASVideos.Pages.Wiki
 
 			PageToEdit = new WikiEditModel
 			{
-				Markup = page?.Markup ?? ""
+				PageName = page?.PageName ?? "",
+				Markup = page?.Markup ?? "",
+				RevisionTimestamp = page?.LastUpdateTimestamp
 			};
 			Id = page?.Id;
 
