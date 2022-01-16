@@ -107,13 +107,13 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			// Generate the Discord message letting Discord take care of the Embed from Open Graph Metadata
 			public DiscordMessage(IPostable post)
 			{
-				if (post.Announcement == "New Forum Topic" || post.Announcement == "New Forum Post")
+				if (post.Announcement is "New Forum Topic" or "New Forum Post")
 				{
 					Content = post.Link;
 				}
 				else
 				{
-					Content = $"{post.Announcement}\n{post.Link}";
+					Content = $"{post.Announcement} {post.Link}";
 				}
 			}
 
