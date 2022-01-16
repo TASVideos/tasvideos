@@ -1,4 +1,5 @@
-﻿using TASVideos.Core;
+﻿using System.ComponentModel.DataAnnotations;
+using TASVideos.Core;
 
 namespace TASVideos.Pages.Games.Models
 {
@@ -11,5 +12,7 @@ namespace TASVideos.Pages.Games.Models
 		}
 
 		public string? SystemCode { get; set; }
+
+		public string? SearchTerms { get; set; }
 	}
 }

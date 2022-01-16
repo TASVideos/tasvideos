@@ -13,10 +13,11 @@
 			@{
 				var pagerClass = "btn btn-secondary border-dark flex-grow-0";
 				var ellipsisClass = "btn btn-outline-secondary border-dark flex-grow-0";
+				var additionalProperties = Model.AdditionalProperties();
 			}
 			<a disable="@Model.CurrentPage == 1"
 				asp-page="@ViewContext.Page()"
-				asp-all-route-data="@Model.AdditionalProperties()"
+				asp-all-route-data="@additionalProperties"
 				asp-route-CurrentPage="@(Model.CurrentPage - 1)"
 				asp-route-PageSize="@Model.PageSize"
 				asp-route-Sort="@Model.Sort"
@@ -36,7 +37,7 @@
 				foreach (var iteratorPage in leftShown)
 				{
 					<a asp-page="@ViewContext.Page()"
-						asp-all-route-data="@Model.AdditionalProperties()"
+						asp-all-route-data="@additionalProperties"
 						asp-route-CurrentPage="@iteratorPage"
 						asp-route-PageSize="@Model.PageSize"
 						asp-route-Sort="@Model.Sort"
@@ -45,7 +46,7 @@
 				if (leftHidden.Count == 1)
 				{
 					<a asp-page="@ViewContext.Page()"
-						asp-all-route-data="@Model.AdditionalProperties()"
+						asp-all-route-data="@additionalProperties"
 						asp-route-CurrentPage="@leftHidden.First()"
 						asp-route-PageSize="@Model.PageSize"
 						asp-route-Sort="@Model.Sort"
@@ -59,7 +60,7 @@
 						{
 							<li>
 								<a asp-page="@ViewContext.Page()"
-									asp-all-route-data="@Model.AdditionalProperties()"
+									asp-all-route-data="@additionalProperties"
 									asp-route-CurrentPage="@iteratorPage"
 									asp-route-PageSize="@Model.PageSize"
 									asp-route-Sort="@Model.Sort"
@@ -71,7 +72,7 @@
 				foreach (var iteratorPage in middleShown)
 				{
 					<a asp-page="@ViewContext.Page()"
-						asp-all-route-data="@Model.AdditionalProperties()"
+						asp-all-route-data="@additionalProperties"
 						asp-route-CurrentPage="@iteratorPage"
 						asp-route-PageSize="@Model.PageSize"
 						asp-route-Sort="@Model.Sort"
@@ -80,7 +81,7 @@
 				if (rightHidden.Count == 1)
 				{
 					<a asp-page="@ViewContext.Page()"
-						asp-all-route-data="@Model.AdditionalProperties()"
+						asp-all-route-data="@additionalProperties"
 						asp-route-CurrentPage="@rightHidden.First()"
 						asp-route-PageSize="@Model.PageSize"
 						asp-route-Sort="@Model.Sort"
@@ -93,7 +94,7 @@
 						{
 							<li>
 								<a asp-page="@ViewContext.Page()"
-									asp-all-route-data="@Model.AdditionalProperties()"
+									asp-all-route-data="@additionalProperties"
 									asp-route-CurrentPage="@iteratorPage"
 									asp-route-PageSize="@Model.PageSize"
 									asp-route-Sort="@Model.Sort"
@@ -105,7 +106,7 @@
 				foreach (var iteratorPage in rightShown)
 				{
 					<a asp-page="@ViewContext.Page()"
-						asp-all-route-data="@Model.AdditionalProperties()"
+						asp-all-route-data="@additionalProperties"
 						asp-route-CurrentPage="@iteratorPage"
 						asp-route-PageSize="@Model.PageSize"
 						asp-route-Sort="@Model.Sort"
@@ -114,7 +115,7 @@
 			}
 			<a disable="@Model.CurrentPage == Model.LastPage()"
 				asp-page="@ViewContext.Page()"
-				asp-all-route-data="@Model.AdditionalProperties()"
+				asp-all-route-data="@additionalProperties"
 				asp-route-CurrentPage="@(Model.CurrentPage + 1)"
 				asp-route-PageSize="@Model.PageSize"
 				asp-route-Sort="@Model.Sort"

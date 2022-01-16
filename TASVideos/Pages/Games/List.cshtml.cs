@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,11 @@ namespace TASVideos.Pages.Games
 		}
 
 		[FromQuery]
+		[StringLength(50, MinimumLength = 5)]
+		[Display(Name = "Search")]
+		public string? SearchTerms { get; set; }
+
+		[FromQuery]
 		public GameListRequest Search { get; set; } = new ();
 
 		public SystemPageOf<GameListModel> Games { get; set; } = SystemPageOf<GameListModel>.Empty();
@@ -34,7 +41,12 @@ namespace TASVideos.Pages.Games
 
 		public async Task OnGet()
 		{
-			Games = await GetPageOfGames(Search);
+			if (ModelState.IsValid)
+			{
+				Search.SearchTerms = SearchTerms;
+				Games = await GetPageOfGames(Search);
+			}
+
 			SystemList = await _db.GameSystems
 				.ToDropdown()
 				.ToListAsync();
@@ -111,19 +123,38 @@ namespace TASVideos.Pages.Games
 
 		private async Task<SystemPageOf<GameListModel>> GetPageOfGames(GameListRequest paging)
 		{
-			var data = await _db.Games
-				.ForSystemCode(paging.SystemCode)
-				.Select(g => new GameListModel
-				{
-					Id = g.Id,
-					DisplayName = g.DisplayName,
-					SystemCode = g.System!.Code
-				})
-				.SortedPageOf(paging);
+			PageOf<GameListModel> data;
+			if (!string.IsNullOrWhiteSpace(paging.SearchTerms))
+			{
+				_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
+				data = await _db.Games
+					.ForSystemCode(paging.SystemCode)
+					.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation + " || " + g.System!.Code).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
+					.Select(g => new GameListModel
+					{
+						Id = g.Id,
+						DisplayName = g.DisplayName,
+						SystemCode = g.System!.Code
+					})
+					.SortedPageOf(paging);
+			}
+			else
+			{
+				data = await _db.Games
+					.ForSystemCode(paging.SystemCode)
+					.Select(g => new GameListModel
+					{
+						Id = g.Id,
+						DisplayName = g.DisplayName,
+						SystemCode = g.System!.Code
+					})
+					.SortedPageOf(paging);
+			}
 
 			return new SystemPageOf<GameListModel>(data)
 			{
 				SystemCode = paging.SystemCode,
+				SearchTerms = paging.SearchTerms,
 				PageSize = data.PageSize,
 				CurrentPage = data.CurrentPage,
 				RowCount = data.RowCount,
