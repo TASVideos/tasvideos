@@ -80,11 +80,7 @@ namespace TASVideos.Extensions
 				return str;
 			}
 
-			var strings = str
-				.SplitWithEmpty("/")
-				.Select(s => s.SplitCamelCaseInternal());
-
-			return string.Join(" / ", strings);
+			return str.SplitCamelCaseInternal();
 		}
 
 		/// <summary>
@@ -131,13 +127,14 @@ namespace TASVideos.Extensions
 
 		private static string SplitCamelCaseInternal(this string? str)
 		{
-			return Regex.Replace(
-				Regex.Replace(
-					str ?? "",
-					@"(\P{Ll})(\P{Ll}\p{Ll})",
-					"$1 $2"),
-				@"(\p{Ll})(\P{Ll})",
-				"$1 $2");
+			if (!string.IsNullOrWhiteSpace(str))
+			{
+				return Regex.Replace(str, @"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])", "$1$2$3$4$5 ");
+			}
+			else
+			{
+				return "";
+			}
 		}
 
 		public static string UnicodeAwareSubstring(this string s, int startIndex)
