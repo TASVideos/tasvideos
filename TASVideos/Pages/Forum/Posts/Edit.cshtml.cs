@@ -190,12 +190,12 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (result)
 			{
-				var announcement = $"Post DELETED ({post.Topic!.Forum!.ShortName}: {post.Topic.Title})";
+				var announcement = $"{(topicDeleted ? "Topic" : "Post")} DELETED ({post.Topic!.Forum!.ShortName}: {post.Topic.Title})";
 				await _publisher.SendForum(
 					post.Topic.Forum.Restricted,
 					announcement,
 					"",
-					$"Forum/Topics/{post.Topic.Id}",
+					topicDeleted ? "" : $"Forum/Topics/{post.Topic.Id}",
 					User.Name(),
 					announcement);
 			}
