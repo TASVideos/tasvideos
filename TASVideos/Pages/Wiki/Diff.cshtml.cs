@@ -40,9 +40,26 @@ namespace TASVideos.Pages.Wiki
 				return NotFound();
 			}
 
-			Diff = FromRevision.HasValue && ToRevision.HasValue
-				? await GetPageDiff(Path, FromRevision.Value, ToRevision.Value)
-				: await GetLatestPageDiff(Path);
+			if (FromRevision.HasValue && ToRevision.HasValue)
+			{
+				var diff = await GetPageDiff(Path, FromRevision.Value, ToRevision.Value);
+				if (diff == null)
+				{
+					return NotFound();
+				}
+
+				Diff = diff;
+			}
+			else
+			{
+				var diff = await GetLatestPageDiff(Path);
+				if (diff == null)
+				{
+					return NotFound();
+				}
+
+				Diff = diff;
+			}
 
 			return Page();
 		}
@@ -53,7 +70,7 @@ namespace TASVideos.Pages.Wiki
 			return new JsonResult(data);
 		}
 
-		private async Task<WikiDiffModel> GetPageDiff(string pageName, int fromRevision, int toRevision)
+		private async Task<WikiDiffModel?> GetPageDiff(string pageName, int fromRevision, int toRevision)
 		{
 			var revisions = await _wikiPages.Query
 				.ForPage(pageName)
@@ -63,7 +80,7 @@ namespace TASVideos.Pages.Wiki
 
 			if (revisions.Count != (fromRevision == toRevision ? 1 : 2))
 			{
-				throw new InvalidOperationException($"Page \"{pageName}\" or revisions {fromRevision}-{toRevision} could not be found");
+				return null;
 			}
 
 			return new WikiDiffModel
@@ -76,7 +93,7 @@ namespace TASVideos.Pages.Wiki
 			};
 		}
 
-		private async Task<WikiDiffModel> GetLatestPageDiff(string pageName)
+		private async Task<WikiDiffModel?> GetLatestPageDiff(string pageName)
 		{
 			var revisions = await _wikiPages.Query
 				.ForPage(pageName)
@@ -87,7 +104,7 @@ namespace TASVideos.Pages.Wiki
 
 			if (!revisions.Any())
 			{
-				throw new InvalidOperationException($"Page \"{pageName}\" could not be found");
+				return null;
 			}
 
 			// If count is 1, it must be a new page with no history, so compare against nothing
