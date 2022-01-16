@@ -46,6 +46,7 @@ namespace TASVideos.Data.Entity
 
 		public PreferredPronounTypes PreferredPronouns { get; set; } = PreferredPronounTypes.Unspecified;
 
+		// TODO: migration to remove this column
 		[StringLength(32)]
 		public string? LegacyPassword { get; set; }
 
