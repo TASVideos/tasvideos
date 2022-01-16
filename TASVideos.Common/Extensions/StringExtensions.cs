@@ -129,27 +129,7 @@ namespace TASVideos.Extensions
 		{
 			if (!string.IsNullOrWhiteSpace(str))
 			{
-				var chars = str.ToCharArray();
-				var outStr = chars[0].ToString();
-				for (int i = 1; i < chars.Length; i++)
-				{
-					var thisChar = chars[i - 1].ToString();
-					var nextChar = chars[i].ToString();
-					var uppercaseLetters = new Regex("[A-Z]");
-					var separators = new Regex("[/.]");
-					if ((uppercaseLetters.IsMatch(nextChar) && !(uppercaseLetters.IsMatch(thisChar) || separators.IsMatch(thisChar))) || separators.IsMatch(nextChar))
-					{
-						outStr += " ";
-					}
-
-					outStr += nextChar;
-					if (separators.IsMatch(nextChar))
-					{
-						outStr += " ";
-					}
-				}
-
-				return outStr;
+				return Regex.Replace(str, @"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])", "$1$2$3$4$5 ");
 			}
 			else
 			{

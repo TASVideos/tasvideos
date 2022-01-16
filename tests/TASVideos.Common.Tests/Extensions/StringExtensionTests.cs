@@ -48,6 +48,7 @@ namespace TASVideos.Common.Tests.Extensions
 		[DataRow("ABCTest", "ABCTest")]
 		[DataRow("PCem", "PCem")]
 		[DataRow("TASVideos", "TASVideos")]
+		[DataRow("NumbersGet1Space", "Numbers Get 1 Space")]
 		[DataRow("Special.Characters.Get.Spaces", "Special . Characters . Get . Spaces")]
 		[DataRow("GameResources/NES/SuperMarioBros", "Game Resources / NES / Super Mario Bros")]
 		[DataRow("HomePages/adelikat", "Home Pages / adelikat")]
