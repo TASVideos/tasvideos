@@ -157,7 +157,7 @@ namespace TASVideos.Core.Services.Youtube
 			}
 
 			await SetAccessToken();
-			var requestBody = new VideoUpdateRequest
+			var requestBody = new UnlistRequest
 			{
 				VideoId = videoId,
 				Status = new ()
