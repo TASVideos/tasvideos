@@ -342,16 +342,16 @@ namespace TASVideos.Core.Services
 		/// property, that the user does not already have. Note that the role
 		/// won't assigned if the user already has all permissions assigned to that role
 		/// </summary>
-		public async Task AssignAutoAssignableRolesByPost(User user)
+		public async Task AssignAutoAssignableRolesByPost(int userId)
 		{
-			var postCount = await _db.ForumPosts.CountAsync(p => p.PosterId == user.Id);
+			var postCount = await _db.ForumPosts.CountAsync(p => p.PosterId == userId);
 
 			if (postCount == 0)
 			{
 				return;
 			}
 
-			var userPermissions = (await GetUserPermissionsById(user.Id)).ToList();
+			var userPermissions = (await GetUserPermissionsById(userId)).ToList();
 
 			var assignableRoles = await _db.Roles
 				.Include(r => r.RolePermission)
@@ -371,7 +371,7 @@ namespace TASVideos.Core.Services
 				{
 					_db.UserRoles.Add(new UserRole
 					{
-						UserId = user.Id,
+						UserId = userId,
 						RoleId = role.Id
 					});
 
@@ -392,47 +392,59 @@ namespace TASVideos.Core.Services
 		/// that the user does not already have. Note that the role won't assigned
 		/// if the user already has all permissions assigned to that role
 		/// </summary>
-		public async Task AssignAutoAssignableRolesByPublication(User user)
+		public async Task AssignAutoAssignableRolesByPublication(IEnumerable<int> userIds)
 		{
-			var hasPublication = await _db.PublicationAuthors.AnyAsync(pa => pa.UserId == user.Id);
-			if (!hasPublication)
+			var ids = userIds.ToList();
+
+			if (!ids.Any())
 			{
 				return;
 			}
-
-			var userPermissions = (await GetUserPermissionsById(user.Id)).ToList();
 
 			var assignableRoles = await _db.Roles
 				.Include(r => r.RolePermission)
 				.Where(r => r.AutoAssignPublications)
 				.ToListAsync();
 
-			foreach (var role in assignableRoles)
+			foreach (var userId in ids)
 			{
-				var newRolePermissions = role.RolePermission
-					.Select(rp => rp.PermissionId)
-					.ToList();
-
-				// If the new role has any permission the user does not have
-				// then assign the role. Indirectly this also ensures that
-				// the user will not already have the role
-				if (newRolePermissions.Any(p => !userPermissions.Contains(p)))
+				var hasPublication = await _db.PublicationAuthors.AnyAsync(pa => pa.UserId == userId);
+				if (!hasPublication)
 				{
-					_db.UserRoles.Add(new UserRole
-					{
-						UserId = user.Id,
-						RoleId = role.Id
-					});
+					continue;
+				}
 
-					try
+				var userPermissions = (await GetUserPermissionsById(userId)).ToList();
+
+				foreach (var role in assignableRoles)
+				{
+					var newRolePermissions = role.RolePermission
+						.Select(rp => rp.PermissionId)
+						.ToList();
+
+					// If the new role has any permission the user does not have
+					// then assign the role. Indirectly this also ensures that
+					// the user will not already have the role
+					if (newRolePermissions.Any(p => !userPermissions.Contains(p)))
 					{
-						await _db.SaveChangesAsync();
-					}
-					catch (DbUpdateConcurrencyException)
-					{
-						// Do nothing for now, this can be added manually, in the unlikely situation, that this fails
+						_db.UserRoles.Add(new UserRole
+						{
+							UserId = userId,
+							RoleId = role.Id
+						});
+
+						
 					}
 				}
+			}
+
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				// Do nothing for now, this can be added manually, in the unlikely situation, that this fails
 			}
 		}
 	}

@@ -146,7 +146,7 @@ namespace TASVideos.Pages.Forum.Posts
 				$"{user.UserName}{mood}",
 				"New Forum Post");
 
-			await _userManager.AssignAutoAssignableRolesByPost(user);
+			await _userManager.AssignAutoAssignableRolesByPost(user.Id);
 
 			try
 			{
