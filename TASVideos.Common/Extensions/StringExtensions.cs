@@ -80,11 +80,7 @@ namespace TASVideos.Extensions
 				return str;
 			}
 
-			var strings = str
-				.SplitWithEmpty("/")
-				.Select(s => s.SplitCamelCaseInternal());
-
-			return string.Join(" / ", strings);
+			return str.SplitCamelCaseInternal();
 		}
 
 		/// <summary>
@@ -131,13 +127,34 @@ namespace TASVideos.Extensions
 
 		private static string SplitCamelCaseInternal(this string? str)
 		{
-			return Regex.Replace(
-				Regex.Replace(
-					str ?? "",
-					@"(\P{Ll})(\P{Ll}\p{Ll})",
-					"$1 $2"),
-				@"(\p{Ll})(\P{Ll})",
-				"$1 $2");
+			if (!string.IsNullOrWhiteSpace(str))
+			{
+				var chars = str.ToCharArray();
+				var outStr = chars[0].ToString();
+				for (int i = 1; i < chars.Length; i++)
+				{
+					var thisChar = chars[i - 1].ToString();
+					var nextChar = chars[i].ToString();
+					var uppercaseLetters = new Regex("[A-Z]");
+					var separators = new Regex("[/.]");
+					if ((uppercaseLetters.IsMatch(nextChar) && !(uppercaseLetters.IsMatch(thisChar) || separators.IsMatch(thisChar))) || separators.IsMatch(nextChar))
+					{
+						outStr += " ";
+					}
+
+					outStr += nextChar;
+					if (separators.IsMatch(nextChar))
+					{
+						outStr += " ";
+					}
+				}
+
+				return outStr;
+			}
+			else
+			{
+				return "";
+			}
 		}
 
 		public static string UnicodeAwareSubstring(this string s, int startIndex)
