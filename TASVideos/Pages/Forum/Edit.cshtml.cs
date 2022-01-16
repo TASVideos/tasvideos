@@ -83,7 +83,7 @@ namespace TASVideos.Pages.Forum
 			}
 
 			await _db.SaveChangesAsync();
-			return BaseReturnUrlRedirect("Index");
+			return BasePageRedirect("Index");
 		}
 	}
 }
