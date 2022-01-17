@@ -43,7 +43,6 @@ namespace TASVideos.Pages.Games
 			}
 
 			Movies = await _db.Publications
-				.AsSingleQuery()
 				.Where(p => p.GameId == Id && p.ObsoletedById == null)
 				.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
 				.ThenBy(p => p.Frames)

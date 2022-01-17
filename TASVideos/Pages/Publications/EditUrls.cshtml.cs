@@ -88,7 +88,6 @@ namespace TASVideos.Pages.Publications
 		public async Task<IActionResult> OnPost()
 		{
 			var publication = await _db.Publications
-				.AsSingleQuery()
 				.Where(p => p.Id == Id)
 				.Select(p => new
 				{
