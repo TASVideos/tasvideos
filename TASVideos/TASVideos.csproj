@@ -87,7 +87,10 @@
 
 	<ItemGroup>
 		<Content Update="Pages\Forum\Posts\Latest.cshtml">
-		  <Pack>$(IncludeRazorContentInPack)</Pack>
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Pages\Forum\Posts\_TopicMiniPost.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 		<Content Update="Pages\Forum\Topics\Merge.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>

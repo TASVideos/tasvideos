@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,7 @@ namespace TASVideos.Pages.Forum.Posts
 		[BindProperty]
 		[DisplayName("Minor Edit")]
 		public bool MinorEdit { get; set; } = false;
+		public IEnumerable<MiniPostModel> PreviousPosts { get; set; } = new List<MiniPostModel>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -82,6 +84,23 @@ namespace TASVideos.Pages.Forum.Posts
 			{
 				return AccessDenied();
 			}
+
+			PreviousPosts = await _db.ForumPosts
+				.ForTopic(Post.TopicId)
+				.Where(fp => fp.CreateTimestamp < Post.CreateTimestamp)
+				.Select(fp => new MiniPostModel
+				{
+					CreateTimestamp = fp.CreateTimestamp,
+					PosterName = fp.Poster!.UserName,
+					PosterPronouns = fp.Poster.PreferredPronouns,
+					Text = fp.Text,
+					EnableBbCode = fp.EnableBbCode,
+					EnableHtml = fp.EnableHtml
+				})
+				.OrderByDescending(fp => fp.CreateTimestamp)
+				.Take(10)
+				.Reverse()
+				.ToListAsync();
 
 			return Page();
 		}
