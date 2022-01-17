@@ -107,19 +107,19 @@
 		for (const i in sections) {
 			let ord = sections[i].querySelectorAll('[id$="Ordinal"]')[0];
 			ord.setAttribute('id', 'Category_Forums_' + i + '__Ordinal');
-			ord.setAttribute('name', 'Category_Forums[' + i + '].Ordinal');
+			ord.setAttribute('name', 'Category.Forums[' + i + '].Ordinal');
 
 			let id = sections[i].querySelectorAll('[id$="Id"]')[0];
 			id.setAttribute('id', 'Category_Forums_' + i + '__Id');
-			id.setAttribute('name', 'Category_Forums[' + i + '].Id');
+			id.setAttribute('name', 'Category.Forums[' + i + '].Id');
 
 			let name = sections[i].querySelectorAll('[id$="Name"]')[0];
 			name.setAttribute('id', 'Category_Forums_' + i + '__Name');
-			name.setAttribute('name', 'Category_Forums[' + i + '].Name');
+			name.setAttribute('name', 'Category.Forums[' + i + '].Name');
 
 			let description = sections[i].querySelectorAll('[id$="Description"]')[0];
 			description.setAttribute('id', 'Category_Forums_' + i + '__Description');
-			description.setAttribute('name', 'Category_Forums[' + i + '].Description');
+			description.setAttribute('name', 'Category.Forums[' + i + '].Description');
 
 			container.appendChild(sections[i]);
 		}
