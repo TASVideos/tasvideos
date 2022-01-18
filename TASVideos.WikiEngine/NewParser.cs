@@ -737,16 +737,15 @@ namespace TASVideos.WikiEngine
 			else if (Eat("%%QUOTE"))
 			{
 				var authorBlock = new Element(_index, "figcaption");
-				authorBlock.Attributes["class"] = "author blockquote-footer";
+				authorBlock.Attributes["class"] = "author";
 				var author = EatClassText();
 
 				ClearBlockTags();
 
 				var e = new Element(_index, "figure");
-				e.Attributes["class"] = "row";
 				if (author != "")
 				{
-					authorBlock.Children.Add(new Text(authorBlock.CharStart, author));
+					authorBlock.Children.Add(new Text(authorBlock.CharStart, "Quoting " + author));
 					e.Children.Add(authorBlock);
 				}
 
