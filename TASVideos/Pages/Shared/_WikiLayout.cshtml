@@ -27,7 +27,7 @@
 		<nav aria-label="breadcrumb" class="bg-secondary" style="font-size: 1.25em; padding: 5px 10px; border-radius: 5px;">
 			<ol class="breadcrumb m-0">
 				@{
-					var allPages = pageData.PageName.Split("/");
+					var allPages = pageData.PageName.Split('/');
 					var runningPath = "";
 					foreach (var item in allPages.Take(allPages.Length - 1))
 					{
