@@ -170,7 +170,7 @@ article.wiki, .postbody {
 	display: none;
 }
 
-.quotecontainer {
+figure {
 	margin: 0.75rem;
 	padding: .25rem;
 	background-color: var(--bs-gray-200);
@@ -368,24 +368,27 @@ tt {
 	unicode-bidi: bidi-override;
 }
 
-tt, code, kbd, pre, samp, blockquote {
+tt, code, kbd, pre, samp, .wiki blockquote {
 	background: var(--bs-gray-400);
+}
+
+tt, code, kbd, pre, samp, dt, .wiki blockquote {
 	border-radius: 5px;
 	padding: 0.125rem 0.375rem;
 	font-size: 85%;
 }
+dt, .wiki blockquote {
+	display: inline-block;
+}
 
-blockquote {
+dt {
+	background: var(--cardprimary);
+}
+
+.wiki blockquote {
 	font-style: italic;
 }
 
 pre code {
 	padding: 0;
-}
-
-dt {
-	background: var(--cardsecondary);
-	border-radius: 5px;
-	padding: 0.125rem 0.375rem;
-	font-size: 85%;
 }
