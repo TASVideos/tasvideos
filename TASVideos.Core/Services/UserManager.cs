@@ -166,13 +166,21 @@ namespace TASVideos.Core.Services
 
 		public async Task AddStandardRoles(int userId)
 		{
-			var user = await _db.Users.SingleAsync(u => u.Id == userId);
+			var user = await _db.Users
+				.Include(u => u.UserRoles)
+				.SingleAsync(u => u.Id == userId);
 			var roles = await _db.Roles
 				.ThatAreDefault()
 				.ToListAsync();
 
 			foreach (var role in roles)
 			{
+				// Check if user already has role
+				if (user.UserRoles.Any(ur => ur.RoleId == role.Id))
+				{
+					continue;
+				}
+
 				var userRole = new UserRole
 				{
 					UserId = user.Id,
