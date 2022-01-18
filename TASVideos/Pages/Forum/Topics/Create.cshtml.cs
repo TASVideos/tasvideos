@@ -107,13 +107,10 @@ namespace TASVideos.Pages.Forum.Topics
 				await CreatePoll(topic, poll);
 			}
 
-			await _publisher.SendForum(
-				forum.Restricted,
-				$"New Topic ({forum.ShortName}: {Topic.Title})",
-				Topic.Post.CapAndEllipse(50),
-				$"Forum/Topics/{topic.Id}",
-				User.Name(),
-				"New Forum Topic");
+			await _publisher.AnnounceForum(
+				$"New Topic by {User.Name()}",
+				$"{forum.ShortName}: {Topic.Title}",
+				$"Forum/Topics/{topic.Id}");
 
 			await _userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
 

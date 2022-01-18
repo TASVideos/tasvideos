@@ -156,14 +156,23 @@ namespace TASVideos.Pages.Forum.Posts
 
 			var id = await CreatePost(TopicId, topic.ForumId, Post, user.Id, IpAddress, WatchTopic);
 
-			var mood = Post.Mood != ForumPostMood.Normal ? $" Mood: ({Post.Mood})" : "";
-			await _publisher.SendForum(
-				topic.Forum.Restricted,
-				"New reply",
-				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
-				$"Forum/Posts/{id}",
-				$"{user.UserName}{mood}",
-				"New Forum Post");
+			var mood = Post.Mood != ForumPostMood.Normal ? $" (Mood: {Post.Mood})" : "";
+			var subject = string.IsNullOrWhiteSpace(Post.Subject) ? "" : $" ({Post.Subject})";
+			if (TopicId == ForumConstants.NewsTopicId)
+			{
+				await _publisher.AnnounceForum(
+					$"News Post by {user.UserName}{mood}",
+					$"{topic.Forum.ShortName}: {topic.Title}{subject}",
+					$"Forum/Posts/{id}");
+			}
+			else
+			{
+				await _publisher.SendForum(
+					topic.Forum.Restricted,
+					$"New Post by {user.UserName}{mood}",
+					$"{topic.Forum.ShortName}: {topic.Title}{subject}",
+					$"Forum/Posts/{id}");
+			}
 
 			await _userManager.AssignAutoAssignableRolesByPost(user.Id);
 

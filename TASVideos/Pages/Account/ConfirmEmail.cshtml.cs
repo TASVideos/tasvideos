@@ -48,7 +48,10 @@ namespace TASVideos.Pages.Account
 			await _userManager.AddStandardRoles(user.Id);
 			await _userManager.AddUserPermissionsToClaims(user);
 			await _signInManager.SignInAsync(user, isPersistent: false);
-			await _publisher.SendUserManagement($"User {user.UserName} activated", "", $"Users/Profile/{user.UserName}", user.UserName);
+			await _publisher.SendUserManagement(
+				$"User {user.UserName} activated",
+				"",
+				$"Users/Profile/{user.UserName}");
 			await _userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
 			return Page();
 		}

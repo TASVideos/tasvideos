@@ -98,10 +98,9 @@ namespace TASVideos.Pages.UserFiles
 					await _db.SaveChangesAsync();
 					await _publisher.SendUserFile(
 						userFile.Hidden,
-						$"New comment on ({userFile.Title} (WIP))",
+						$@"New user file comment by {User.Name()}",
 						$"UserFiles/Info/{fileId}",
-						comment,
-						User.Name());
+						$"{userFile.Title}");
 				}
 			}
 
@@ -126,10 +125,9 @@ namespace TASVideos.Pages.UserFiles
 					{
 						await _publisher.SendUserFile(
 							fileComment.UserFile!.Hidden,
-							$"Comment edited on ({fileComment.UserFile!.Title} (WIP))",
+							$"User file comment edited by {User.Name()}",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
-							comment,
-							User.Name());
+							$"{fileComment.UserFile!.Title}");
 					}
 				}
 			}
@@ -154,10 +152,9 @@ namespace TASVideos.Pages.UserFiles
 					{
 						await _publisher.SendUserFile(
 							fileComment.UserFile!.Hidden,
-							$"Comment on ({fileComment.UserFile!.Title} (WIP)) deleted",
+							$"User file comment DELETED by {User.Name()}",
 							$"UserFiles/Info/{fileComment.UserFile.Id}",
-							"",
-							User.Name());
+							$"{fileComment.UserFile!.Title}");
 					}
 				}
 			}

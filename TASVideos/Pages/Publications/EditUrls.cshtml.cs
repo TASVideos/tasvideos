@@ -128,15 +128,15 @@ namespace TASVideos.Pages.Publications
 
 			_db.PublicationUrls.Add(publicationUrl);
 
-			string log = $"added {UrlType} url {PublicationUrl}";
+			string log = $"Added {UrlType} url {PublicationUrl}";
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			var result = await ConcurrentSave(_db, log, "Unable to add url.");
 			if (result)
 			{
 				await _publisher.SendPublicationEdit(
-					$"Publication {Id} {Title} added {UrlType} url {PublicationUrl}",
-					$"{Id}M",
-					User.Name());
+					$"{Id}M edited by {User.Name()}",
+					$"Added {UrlType} url",
+					$"{Id}M");
 
 				if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
 				{
@@ -165,15 +165,15 @@ namespace TASVideos.Pages.Publications
 			if (url != null)
 			{
 				_db.PublicationUrls.Remove(url);
-				string log = $"deleted {url.Type} url {url.Url}";
+				string log = $"Deleted {url.Type} url {url.Url}";
 				await _publicationMaintenanceLogger.Log(url.PublicationId, User.GetUserId(), log);
 				var result = await ConcurrentSave(_db, log, "Unable to remove url.");
 				if (result)
 				{
 					await _publisher.SendPublicationEdit(
-						$"Publication {Id} {log}",
-						$"{Id}M",
-						User.Name());
+						$"{Id}M edited by {User.Name()}",
+						$"Deleted {url.Type} url",
+						$"{Id}M");
 
 					await _youtubeSync.UnlistVideo(url.Url!);
 				}

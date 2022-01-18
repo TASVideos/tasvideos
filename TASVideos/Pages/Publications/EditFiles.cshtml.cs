@@ -104,13 +104,13 @@ namespace TASVideos.Pages.Publications
 				path = await _uploader.UploadScreenshot(Id, NewFile!, Description);
 			}
 
-			string log = $"added {Type} file {path}";
+			string log = $"Added {Type} file {path}";
 			SuccessStatusMessage(log);
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			await _publisher.SendPublicationEdit(
-				$"Publication {Id} {Title} added {log}",
-				$"{Id}M",
-				User.Name());
+				$"{Id}M edited by {User.Name()}",
+				log,
+				$"{Id}M");
 
 			return RedirectToPage("EditFiles", new { Id });
 		}
@@ -121,13 +121,13 @@ namespace TASVideos.Pages.Publications
 
 			if (file is not null)
 			{
-				string log = $"deleted {file.Type} file {file.Path}";
+				string log = $"Deleted {file.Type} file {file.Path}";
 				SuccessStatusMessage(log);
 				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 				await _publisher.SendPublicationEdit(
-					$"Publication {Id} {log}",
-					$"{Id}M",
-					User.Name());
+					$"{Id}M edited by {User.Name()}",
+					log,
+					$"{Id}M");
 			}
 
 			return RedirectToPage("EditFiles", new { Id });

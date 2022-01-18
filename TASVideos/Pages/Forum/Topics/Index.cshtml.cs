@@ -258,14 +258,11 @@ namespace TASVideos.Pages.Forum.Topics
 				var result = await ConcurrentSave(_db, $"Topic set to locked {lockedState}", $"Unable to set status of {lockedState}");
 				if (result)
 				{
-					var announcement = $"Topic {topicTitle} {lockedState}";
 					await _publisher.SendForum(
 						topic.Forum!.Restricted,
-						announcement,
-						"",
-						$"Forum/Topics/{Id}",
-						User.Name(),
-						announcement);
+						$"Topic {lockedState} by {User.Name()}",
+						$"{topic.Forum.ShortName}: {topic.Title}",
+						$"Forum/Topics/{Id}");
 				}
 			}
 

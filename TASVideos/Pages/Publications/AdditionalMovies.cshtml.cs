@@ -107,15 +107,15 @@ namespace TASVideos.Pages.Publications
 
 			_db.PublicationFiles.Add(publicationFile);
 
-			string log = $"added new movie file: {DisplayName}";
+			string log = $"Added new movie file: {DisplayName}";
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			var result = await ConcurrentSave(_db, log, "Unable to add file");
 			if (result)
 			{
 				await _publisher.SendPublicationEdit(
-					$"Publication {Id} {PublicationTitle} {log}",
-					$"{Id}M",
-					User.Name());
+					$"{Id}M edited by {User.Name()}",
+					log,
+					$"{Id}M");
 			}
 
 			return RedirectToPage("AdditionalMovies", new { Id });
@@ -130,16 +130,16 @@ namespace TASVideos.Pages.Publications
 			{
 				_db.PublicationFiles.Remove(file);
 
-				string log = $"removed movie file {file.Path}";
+				string log = $"Removed movie file {file.Path}";
 				await _publicationMaintenanceLogger.Log(file.PublicationId, User.GetUserId(), log);
 				var result = await ConcurrentSave(_db, log, "Unable to delete file");
 
 				if (result)
 				{
 					await _publisher.SendPublicationEdit(
-						$"Publication {Id} {PublicationTitle} {log}",
-						$"{Id}M",
-						User.Name());
+						$"{Id}M edited by {User.Name()}",
+						log,
+						$"{Id}M");
 				}
 			}
 

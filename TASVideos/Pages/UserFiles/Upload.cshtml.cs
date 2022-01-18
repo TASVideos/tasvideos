@@ -155,7 +155,11 @@ namespace TASVideos.Pages.UserFiles
 			_db.UserFiles.Add(userFile);
 			await _db.SaveChangesAsync();
 
-			await _publisher.SendUserFile(userFile.Hidden, "New Userfile Uploaded", $"/UserFiles/Info/{userFile.Id}", user: User.Name());
+			await _publisher.SendUserFile(
+				userFile.Hidden,
+				$"New user file uploaded by {User.Name()}",
+				$"/UserFiles/Info/{userFile.Id}",
+				$"{userFile.Title}");
 
 			return BasePageRedirect("/Profile/UserFiles");
 		}

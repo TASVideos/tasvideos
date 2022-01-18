@@ -296,7 +296,10 @@ namespace TASVideos.Pages.Publications
 			{
 				foreach (var message in externalMessages)
 				{
-					await _publisher.SendPublicationEdit($"{publication.Title} edited: " + message, $"{Id}M", User.Name());
+					await _publisher.SendPublicationEdit(
+						$"{Id}M edited by {User.Name()}",
+						string.Join(", ", externalMessages),
+						$"{Id}M");
 				}
 			}
 		}

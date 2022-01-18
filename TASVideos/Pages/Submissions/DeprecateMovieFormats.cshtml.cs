@@ -54,7 +54,10 @@ namespace TASVideos.Pages.Submissions
 
 		private async Task SendAnnouncement(string extension, bool deprecate)
 		{
-			await _publisher.SendSubmissionEdit($"{extension} depcrecated status set to {deprecate}", "", User.Name());
+			await _publisher.SendSubmissionEdit(
+				$"{extension} deprecation status set to {deprecate} by {User.Name()}",
+				"",
+				"");
 		}
 	}
 }
