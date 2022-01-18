@@ -22,6 +22,12 @@
 	bool canClaimAsPublisher = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& ViewData.UserHas(PermissionTo.EditSubmissions)
 		&& Model.Submission.Status == SubmissionStatus.Accepted;
+	string youtubeEmbedImage = "";
+	if (Model.Submission.EncodeEmbedLink is not null)
+	{
+		youtubeEmbedImage = "https://i.ytimg.com/vi/" + Model.Submission.EncodeEmbedLink.Split("/").Last() + "/hqdefault.jpg";
+	}
+	string openGraphEmbedImage = string.IsNullOrWhiteSpace(youtubeEmbedImage) ? $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png" : youtubeEmbedImage;
 }
 
 @functions{
@@ -50,7 +56,10 @@
 	<meta property="og:title" content="@($"Submission #{Model.Id}")" />
 	<meta property="og:description" content="@(Model.Submission.Title)" />
 	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
-	<meta property="og:image" content="@($"{HttpContext.Request.ToBaseUrl()}/images/logo-light-4x.png")" />
+	<meta property="og:image" content="@openGraphEmbedImage" />
+	@if (!string.IsNullOrWhiteSpace(youtubeEmbedImage)) {
+		<meta property="twitter:card" content="summary_large_image" />
+	}
 }
 
 @section PageTitle {
