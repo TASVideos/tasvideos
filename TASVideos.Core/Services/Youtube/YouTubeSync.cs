@@ -86,7 +86,7 @@ namespace TASVideos.Core.Services.Youtube
 			if (title.Length > YoutubeTitleMaxLength)
 			{
 				description = title + "\n" + descriptionBase + renderedDescription;
-				title = title.CapAndEllipse(100);
+				title = title.CapAndEllipse(YoutubeTitleMaxLength);
 			}
 
 			var updateRequest = new VideoUpdateRequest
