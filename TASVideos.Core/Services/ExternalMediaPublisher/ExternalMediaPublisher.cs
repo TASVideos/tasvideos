@@ -117,11 +117,10 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 			});
 		}
 
-		public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink, string user = "", string announcement = "")
+		public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink)
 		{
 			await publisher.Send(new Post
 			{
-				Announcement = announcement,
 				Type = restricted
 					? PostType.Administrative
 					: PostType.General,
@@ -129,7 +128,6 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 				Title = title,
 				Body = body,
 				Link = publisher.ToAbsolute(relativeLink),
-				User = user
 			});
 		}
 

@@ -102,14 +102,11 @@ namespace TASVideos.Pages.Forum.Topics
 
 			await _db.SaveChangesAsync();
 
-			var announcement = $"Topic {Topic.TopicTitle} moved from {Topic.ForumName} to {forum.Name}";
 			await _publisher.SendForum(
 				topicWasRestricted || forum.Restricted,
-				announcement,
+				$@"Topic ""{Topic.TopicTitle}"" MOVED from {Topic.ForumName} to {forum.Name} by {User.Name()}",
 				"",
-				$"Forum/Topics/{Id}",
-				User.Name(),
-				announcement);
+				$"Forum/Topics/{Id}");
 
 			return RedirectToPage("Index", new { Id });
 		}

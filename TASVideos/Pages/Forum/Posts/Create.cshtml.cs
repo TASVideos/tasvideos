@@ -156,14 +156,13 @@ namespace TASVideos.Pages.Forum.Posts
 
 			var id = await CreatePost(TopicId, topic.ForumId, Post, user.Id, IpAddress, WatchTopic);
 
-			var mood = Post.Mood != ForumPostMood.Normal ? $" Mood: ({Post.Mood})" : "";
+			var mood = Post.Mood != ForumPostMood.Normal ? $" (Mood: {Post.Mood})" : "";
+			var subject = string.IsNullOrWhiteSpace(Post.Subject) ? "" : $" ({Post.Subject})";
 			await _publisher.SendForum(
 				topic.Forum.Restricted,
-				"New reply",
-				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
-				$"Forum/Posts/{id}",
-				$"{user.UserName}{mood}",
-				"New Forum Post");
+				$"New post by {user.UserName}{mood}",
+				$"{topic.Forum.ShortName}: {topic.Title}{subject}",
+				$"Forum/Posts/{id}");
 
 			await _userManager.AssignAutoAssignableRolesByPost(user.Id);
 
