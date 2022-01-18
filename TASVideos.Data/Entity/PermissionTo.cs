@@ -44,7 +44,11 @@ namespace TASVideos.Data.Entity
 
 		[Group("User")]
 		[Description("The ability to upload movie and related files for personal storage.")]
-		UploadUserFiles,
+		UploadUserFiles = 13,
+
+		[Group("User")]
+		[Description("Grants the ability to log into the site. Without this permissions, a user account is effectively banned.")]
+		Login = 14,
 
 		[Group("User")]
 		[Description("The ability to send private messages.")]
