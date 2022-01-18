@@ -27,6 +27,7 @@ namespace TASVideos.Core.Services.Youtube
 
 	internal class YouTubeSync : IYoutubeSync
 	{
+		private const int YoutubeTitleMaxLength = 100;
 		private const int BatchSize = 50;
 		private static readonly string[] BaseTags = { "TAS", "TASVideos", "Tool-Assisted", "Video Game" };
 		private readonly HttpClient _client;
@@ -80,13 +81,21 @@ namespace TASVideos.Core.Services.Youtube
 			descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
 			var renderedDescription = await _textRenderer.RenderWikiForYoutube(video.WikiPage);
 
+			string title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted] " : "")}{video.Title}";
+			string description = descriptionBase + renderedDescription;
+			if (title.Length > YoutubeTitleMaxLength)
+			{
+				description = title + "\n" + descriptionBase + renderedDescription;
+				title = title.CapAndEllipse(100);
+			}
+
 			var updateRequest = new VideoUpdateRequest
 			{
 				VideoId = videoId,
 				Snippet = new ()
 				{
-					Title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted] " : "")}{video.Title}",
-					Description = descriptionBase + renderedDescription,
+					Title = title,
+					Description = description,
 					CategoryId = videoDetails.CategoryId,
 					Tags = BaseTags.Concat(video.Tags).ToList()
 				}
