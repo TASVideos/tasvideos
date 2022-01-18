@@ -202,20 +202,19 @@ namespace TASVideos.ForumEngine
 					await WriteClassyTag(w, h, "span", "highlight");
 					break;
 				case "quote":
-					w.OpenTag("div");
-					w.Attribute("class", "quotecontainer");
-					if (Options != "")
-					{
-						w.OpenTag("cite");
-						await BbParser.Parse(Options, false, true).WriteHtml(w, h);
-						w.Text(" wrote:");
-						w.CloseTag("cite");
-					}
-
+					w.OpenTag("figure");
 					w.OpenTag("blockquote");
 					await WriteChildren(w, h);
 					w.CloseTag("blockquote");
-					w.CloseTag("div");
+					if (Options != "")
+					{
+						w.OpenTag("figcaption");
+						w.Attribute("class", "blockquote-footer");
+						await BbParser.Parse(Options, false, true).WriteHtml(w, h);
+						w.CloseTag("figcaption");
+					}
+
+					w.CloseTag("figure");
 					break;
 				case "code":
 					{
