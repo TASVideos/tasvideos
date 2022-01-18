@@ -6,7 +6,7 @@
 
 <h4>System: @Model.Roms.SystemCode</h4>
 <h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.Roms.GameDisplayName</a></h4>
-<a asp-page="Edit" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-plus"></i> Create</a>
+<a asp-page="Edit" permission="CatalogMovies" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-plus"></i> Create</a>
 <hr />
 <table class="table table-bordered table-striped">
 	<tr>
@@ -28,7 +28,7 @@
 			<td>@rom.Md5</td>
 			<td>@rom.Sha1</td>
 			<td>
-				<a asp-page="Edit" asp-route-id="@rom.Id" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@rom.Id" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
 			</td>
 		</tr>
 	}

@@ -9,14 +9,12 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Games.Models;
 
 namespace TASVideos.Pages.Games
 {
-	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class ListModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;

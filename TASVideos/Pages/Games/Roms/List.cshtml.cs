@@ -3,12 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Games.Roms.Models;
 
 namespace TASVideos.Pages.Games.Roms
 {
-	[RequirePermission(PermissionTo.CatalogMovies)]
 	public class ListModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
