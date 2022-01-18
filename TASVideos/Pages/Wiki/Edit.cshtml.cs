@@ -129,10 +129,9 @@ namespace TASVideos.Pages.Wiki
 			if (page.Revision == 1 || !PageToEdit.MinorEdit)
 			{
 				await _publisher.SendGeneralWiki(
-					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")}",
-					$"({PageToEdit.RevisionMessage}): ",
-					Path,
-					User.Name());
+					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
+					$"{PageToEdit.RevisionMessage}",
+					Path);
 			}
 
 			return BaseRedirect("/" + page.PageName);

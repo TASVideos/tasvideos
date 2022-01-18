@@ -49,7 +49,17 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				? _settings.SecureChannel
 				: _settings.Channel;
 
-			var s = $"({post.User}) {post.Title.CapAndEllipse(150)} {post.Body.CapAndEllipse(75)} {post.Link}";
+			string content;
+			if (string.IsNullOrWhiteSpace(post.Body))
+			{
+				content = post.Title.CapAndEllipse(150 + 200 + 3);
+			}
+			else
+			{
+				content = $"{post.Title.CapAndEllipse(150)} ({post.Body.CapAndEllipse(200)})";
+			}
+
+			var s = $"{content}{(string.IsNullOrWhiteSpace(post.Link) ? "" : $" {post.Link}")}";
 			await Task.Run(() => _bot.AddMessage(channel, s));
 		}
 

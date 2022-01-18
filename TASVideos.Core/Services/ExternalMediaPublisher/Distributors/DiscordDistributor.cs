@@ -36,9 +36,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				return;
 			}
 
-			var messageContent = string.IsNullOrWhiteSpace(post.Announcement)
-				? new CustomDiscordMessage(post).ToStringContent()
-				: new DiscordMessage(post).ToStringContent();
+			var messageContent = new DiscordMessage(post).ToStringContent();
 
 			string channel = post.Type == PostType.Administrative
 				? _settings.PrivateChannelId
@@ -107,14 +105,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			// Generate the Discord message letting Discord take care of the Embed from Open Graph Metadata
 			public DiscordMessage(IPostable post)
 			{
-				if (post.Announcement is "New Forum Topic" or "New Forum Post")
-				{
-					Content = post.Link;
-				}
-				else
-				{
-					Content = $"{post.Announcement} {post.Link}";
-				}
+				var body = string.IsNullOrWhiteSpace(post.Body) ? "" : $" ({post.Body})";
+				var link = string.IsNullOrWhiteSpace(post.Link) ? "" : post.Type == PostType.Announcement ? $" {post.Link}" : $" <{post.Link}>";
+				Content = $"{post.Title}{body}{link}";
 			}
 
 			[JsonProperty("content")]

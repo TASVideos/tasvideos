@@ -353,6 +353,17 @@ namespace TASVideos.Pages.Submissions
 				if (statusHasChanged)
 				{
 					string statusStr = Submission.Status.ToString();
+
+					// CAPS on a judge decision
+					if (Submission.Status == SubmissionStatus.Accepted ||
+						Submission.Status == SubmissionStatus.Rejected ||
+						Submission.Status == SubmissionStatus.Cancelled ||
+						Submission.Status == SubmissionStatus.Delayed ||
+						Submission.Status == SubmissionStatus.NeedsMoreInfo)
+					{
+						statusStr = statusStr.ToUpper();
+					}
+
 					if (Submission.Status == SubmissionStatus.Accepted)
 					{
 						var publicationClass = (await Db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId)).Name;
@@ -362,15 +373,24 @@ namespace TASVideos.Pages.Submissions
 							statusStr += $" to {publicationClass}";
 						}
 					}
+					else if (Submission.Status == SubmissionStatus.NeedsMoreInfo ||
+						Submission.Status == SubmissionStatus.New ||
+						Submission.Status == SubmissionStatus.PublicationUnderway)
+					{
+						statusStr = "set to " + statusStr;
+					}
 
-					title = $"{userName} set Submission {statusStr} on {submission.Title}";
+					title = $"Submission {statusStr} by {userName}";
 				}
 				else
 				{
-					title = $"{userName} edited Submission {submission.Title}";
+					title = $"Submission edited by {userName}";
 				}
 
-				await _publisher.SendSubmissionEdit(title, $"{Id}S", userName);
+				await _publisher.SendSubmissionEdit(
+					title,
+					submission.Title,
+					$"{Id}S");
 			}
 
 			return RedirectToPage("View", new { Id });
@@ -443,10 +463,11 @@ namespace TASVideos.Pages.Submissions
 			var result = await ConcurrentSave(Db, "", "Unable to claim");
 			if (result)
 			{
+				string statusPrefix = newStatus == SubmissionStatus.JudgingUnderWay ? "" : "set to ";
 				await _publisher.SendSubmissionEdit(
-					$"Submission {submission.Title} set to {newStatus.EnumDisplayName()}",
-					$"{Id}S",
-					User.Name());
+					$"Submission {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}",
+					$"{submission.Title}",
+					$"{Id}S");
 			}
 
 			return RedirectToPage("View", new { Id });

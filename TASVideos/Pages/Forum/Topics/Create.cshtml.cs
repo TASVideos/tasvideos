@@ -107,8 +107,7 @@ namespace TASVideos.Pages.Forum.Topics
 				await CreatePoll(topic, poll);
 			}
 
-			await _publisher.SendForum(
-				forum.Restricted,
+			await _publisher.AnnounceForum(
 				$"New Topic by {User.Name()}",
 				$"{forum.ShortName}: {Topic.Title}",
 				$"Forum/Topics/{topic.Id}");

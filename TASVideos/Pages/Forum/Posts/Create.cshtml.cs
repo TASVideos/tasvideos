@@ -158,11 +158,21 @@ namespace TASVideos.Pages.Forum.Posts
 
 			var mood = Post.Mood != ForumPostMood.Normal ? $" (Mood: {Post.Mood})" : "";
 			var subject = string.IsNullOrWhiteSpace(Post.Subject) ? "" : $" ({Post.Subject})";
-			await _publisher.SendForum(
-				topic.Forum.Restricted,
-				$"New post by {user.UserName}{mood}",
-				$"{topic.Forum.ShortName}: {topic.Title}{subject}",
-				$"Forum/Posts/{id}");
+			if (TopicId == ForumConstants.NewsTopicId)
+			{
+				await _publisher.AnnounceForum(
+					$"News Post by {user.UserName}{mood}",
+					$"{topic.Forum.ShortName}: {topic.Title}{subject}",
+					$"Forum/Posts/{id}");
+			}
+			else
+			{
+				await _publisher.SendForum(
+					topic.Forum.Restricted,
+					$"New Post by {user.UserName}{mood}",
+					$"{topic.Forum.ShortName}: {topic.Title}{subject}",
+					$"Forum/Posts/{id}");
+			}
 
 			await _userManager.AssignAutoAssignableRolesByPost(user.Id);
 

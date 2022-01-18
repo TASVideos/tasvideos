@@ -110,8 +110,8 @@ namespace TASVideos.Pages.Forum.Topics
 			{
 				await _publisher.SendForum(
 					originalTopic.Forum!.Restricted || destinationTopic.Forum!.Restricted,
-					$@"Topic ""{originalTopic.Title}"" MERGED into ""{destinationTopic.Title}"" by {User.Name()}",
-					"",
+					$"Topics MERGED by {User.Name()}",
+					$@"""{originalTopic.Title}"" into ""{destinationTopic.Title}""",
 					$"Forum/Topics/{destinationTopic.Id}");
 			}
 

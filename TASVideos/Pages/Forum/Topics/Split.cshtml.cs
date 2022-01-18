@@ -139,8 +139,8 @@ namespace TASVideos.Pages.Forum.Topics
 
 			await _publisher.SendForum(
 				destinationForum.Restricted || topic.Forum!.Restricted,
-				$@"Topic ""{newTopic.Title}"" SPLIT from ""{Topic.Title}"" by {User.Name()}",
-				"",
+				$"Topic SPLIT by {User.Name()}",
+				$@"""{newTopic.Title}"" from ""{Topic.Title}""",
 				$"Forum/Topics/{newTopic.Id}");
 
 			return RedirectToPage("Index", new { id = newTopic.Id });

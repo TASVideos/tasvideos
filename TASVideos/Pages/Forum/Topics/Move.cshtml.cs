@@ -104,8 +104,8 @@ namespace TASVideos.Pages.Forum.Topics
 
 			await _publisher.SendForum(
 				topicWasRestricted || forum.Restricted,
-				$@"Topic ""{Topic.TopicTitle}"" MOVED from {Topic.ForumName} to {forum.Name} by {User.Name()}",
-				"",
+				$"Topic MOVED by {User.Name()}",
+				$@"""{Topic.TopicTitle}"" from {Topic.ForumName} to {forum.Name}",
 				$"Forum/Topics/{Id}");
 
 			return RedirectToPage("Index", new { Id });

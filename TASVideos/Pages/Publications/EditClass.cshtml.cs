@@ -92,16 +92,16 @@ namespace TASVideos.Pages.Publications
 				var originalClass = publication.PublicationClass!.Name;
 				publication.PublicationClassId = Publication.ClassId;
 
-				var log = $"Publication Class changed from {originalClass} to {publicationClass.Name}";
+				var log = $"{Id}M Class changed from {originalClass} to {publicationClass.Name}";
 				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 
 				var result = await ConcurrentSave(_db, log, "Unable to update Publication Class");
 				if (result)
 				{
 					await _publisher.SendPublicationEdit(
-						$"Publication {Id} {Title} {log}",
-						$"{Id}M",
-						User.Name());
+						$"{log} by {User.Name()}",
+						Title,
+						$"{Id}M");
 				}
 			}
 
