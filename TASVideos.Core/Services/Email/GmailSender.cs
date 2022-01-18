@@ -59,10 +59,11 @@ namespace TASVideos.Core.Services.Email
 				var message = BccList(email);
 				await client.SendAsync(message);
 				await client.DisconnectAsync(true);
+				_logger.LogError("(Not an email error) Email successfully sent, subject: {0}, message: {1}", email.Subject, email.Message);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Unable to authenticate email, skipping email: subject: {0} message: {1} exception: {2}", email.Subject, email.Message, ex);
+				_logger.LogError("Unable to send email, subject: {0} message: {1} exception: {2}", email.Subject, email.Message, ex);
 			}
 		}
 
