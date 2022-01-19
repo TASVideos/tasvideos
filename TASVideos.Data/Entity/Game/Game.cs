@@ -51,6 +51,11 @@ namespace TASVideos.Data.Entity.Game
 
 	public static class GameExtensions
 	{
+		public static IQueryable<Game> ForGroup(this IQueryable<Game> query, int gameGroupId)
+		{
+			return query.Where(g => g.GameGroups.Any(gg => gg.GameGroupId == gameGroupId));
+		}
+
 		public static IQueryable<Game> ForSystem(this IQueryable<Game> query, int systemId)
 		{
 			return query.Where(g => g.SystemId == systemId);
