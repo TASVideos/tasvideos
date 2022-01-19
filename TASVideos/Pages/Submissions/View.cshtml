@@ -25,7 +25,7 @@
 	string youtubeEmbedImage = "";
 	if (Model.Submission.EncodeEmbedLink is not null)
 	{
-		youtubeEmbedImage = "https://i.ytimg.com/vi/" + Model.Submission.EncodeEmbedLink.Split("/").Last() + "/hqdefault.jpg";
+		youtubeEmbedImage = "https://i.ytimg.com/vi/" + Model.Submission.EncodeEmbedLink.Split('/').Last() + "/hqdefault.jpg";
 	}
 	string openGraphEmbedImage = string.IsNullOrWhiteSpace(youtubeEmbedImage) ? $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png" : youtubeEmbedImage;
 }
@@ -91,7 +91,7 @@
 			if (!player) {
 				window.onYouTubeIframeAPIReady = () => {
 					player = new YT.Player('ytplayer', {
-						videoId: "@Model.Submission.EncodeEmbedLink!.Split("/").Last()"
+						videoId: "@Model.Submission.EncodeEmbedLink!.Split('/').Last()"
 					});
 				}
 			}

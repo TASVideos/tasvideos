@@ -60,7 +60,7 @@ namespace TASVideos.TagHelpers
 			public override IList<string> Convert(string? input)
 			{
 				return (input ?? "")
-					.Split(",")
+					.Split(',')
 					.Where(s => !string.IsNullOrWhiteSpace(s))
 					.Select(s => s.Trim())
 					.ToList();
