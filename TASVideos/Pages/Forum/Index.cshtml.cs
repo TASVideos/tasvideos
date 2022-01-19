@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Pages.Forum.Models;
@@ -29,7 +28,7 @@ namespace TASVideos.Pages.Forum
 					Id = c.Id,
 					Ordinal = c.Ordinal,
 					Title = c.Title,
-					Description = c.Description ?? "",
+					Description = c.Description,
 					Forums = c.Forums
 						.Select(f => new ForumCategoryModel.Forum
 						{
@@ -37,7 +36,7 @@ namespace TASVideos.Pages.Forum
 							Ordinal = f.Ordinal,
 							Restricted = f.Restricted,
 							Name = f.Name,
-							Description = f.Description ?? "",
+							Description = f.Description,
 							LastPost = f.ForumPosts
 								.Select(fp => new ForumCategoryModel.Forum.Post
 								{
@@ -47,7 +46,6 @@ namespace TASVideos.Pages.Forum
 								})
 								.SingleOrDefault(fp => fp.Id == f.ForumPosts.Max(fpp => fpp.Id))
 						})
-						.ToList()
 				})
 				.ToListAsync();
 		}
