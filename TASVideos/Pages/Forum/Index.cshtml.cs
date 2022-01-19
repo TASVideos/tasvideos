@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Pages.Forum.Models;
 
@@ -12,42 +13,53 @@ namespace TASVideos.Pages.Forum
 	public class IndexModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ICacheService _cache;
 
-		public IndexModel(ApplicationDbContext db)
+		public IndexModel(ApplicationDbContext db, ICacheService cache)
 		{
 			_db = db;
+			_cache = cache;
 		}
 
 		public ICollection<ForumCategoryModel> Categories { get; set; } = new List<ForumCategoryModel>();
 
 		public async Task OnGet()
 		{
-			Categories = await _db.ForumCategories
-				.Select(c => new ForumCategoryModel
-				{
-					Id = c.Id,
-					Ordinal = c.Ordinal,
-					Title = c.Title,
-					Description = c.Description,
-					Forums = c.Forums
-						.Select(f => new ForumCategoryModel.Forum
-						{
-							Id = f.Id,
-							Ordinal = f.Ordinal,
-							Restricted = f.Restricted,
-							Name = f.Name,
-							Description = f.Description,
-							LastPost = f.ForumPosts
-								.Select(fp => new ForumCategoryModel.Forum.Post
-								{
-									Id = fp.Id,
-									CreateTimestamp = fp.CreateTimestamp,
-									CreateUserName = fp.CreateUserName
-								})
-								.SingleOrDefault(fp => fp.Id == f.ForumPosts.Max(fpp => fpp.Id))
-						})
-				})
-				.ToListAsync();
+			if (_cache.TryGetValue("ForumIndex", out ICollection<ForumCategoryModel> categories))
+			{
+				Categories = categories;
+			}
+			else
+			{
+				Categories = await _db.ForumCategories
+					.Select(c => new ForumCategoryModel
+					{
+						Id = c.Id,
+						Ordinal = c.Ordinal,
+						Title = c.Title,
+						Description = c.Description,
+						Forums = c.Forums
+							.Select(f => new ForumCategoryModel.Forum
+							{
+								Id = f.Id,
+								Ordinal = f.Ordinal,
+								Restricted = f.Restricted,
+								Name = f.Name,
+								Description = f.Description,
+								LastPost = f.ForumPosts
+									.Select(fp => new ForumCategoryModel.Forum.Post
+									{
+										Id = fp.Id,
+										CreateTimestamp = fp.CreateTimestamp,
+										CreateUserName = fp.CreateUserName
+									})
+									.SingleOrDefault(fp => fp.Id == f.ForumPosts.Max(fpp => fpp.Id))
+							})
+					})
+					.ToListAsync();
+
+				_cache.Set("ForumIndex", Categories, Durations.ThirtySecondsInSeconds);
+			}
 		}
 	}
 }
