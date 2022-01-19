@@ -75,8 +75,7 @@ namespace TASVideos.Core.Services.Youtube
 			if (tokenResponse.ExpiresAt > 10)
 			{
 				// Subtract a bit of time to ensure it does not expire between the time of accessing and using it
-				// Experimental hack for now, it seems tokens can expire much sooner than the cache time, caching enough that it will get reused during request, but hopefully short enough that they do not expire
-				_cache.Set(cacheKey, tokenResponse.AccessToken, Durations.ThirtySecondsInSeconds);
+				_cache.Set(cacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
 			}
 
 			return tokenResponse.AccessToken;
