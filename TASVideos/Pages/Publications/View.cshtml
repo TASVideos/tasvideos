@@ -8,7 +8,7 @@
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="TASVideos" />
 	<meta property="og:title" content="@Model.Publication.Title")" />
-	<meta property="og:description" content=@($"Publication [{Model.Id}] from {Model.Publication.CreateTimestamp.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}") />
+	<meta property="og:description" content="@($"Publication [{Model.Id}] from {Model.Publication.CreateTimestamp.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}")" />
 	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
 	<meta property="og:image" content="@($"{HttpContext.Request.ToBaseUrl()}/media/{Model.Publication.Screenshot.Path}")" />
 	<meta property="twitter:card" content="summary_large_image" />
