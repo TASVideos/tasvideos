@@ -127,14 +127,9 @@ namespace TASVideos.Extensions
 
 		private static string SplitCamelCaseInternal(this string? str)
 		{
-			if (!string.IsNullOrWhiteSpace(str))
-			{
-				return Regex.Replace(str, @"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])", "$1$2$3$4$5 ");
-			}
-			else
-			{
-				return "";
-			}
+			return !string.IsNullOrWhiteSpace(str)
+				? Regex.Replace(str, @"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])", "$1$2$3$4$5 ")
+				: "";
 		}
 
 		public static string UnicodeAwareSubstring(this string s, int startIndex)
@@ -177,13 +172,6 @@ namespace TASVideos.Extensions
 			}
 
 			return s[startIndex..endIndex];
-		}
-
-		public static string ToSnakeCase(this string str)
-		{
-			return string
-				.Concat(str.Select((s, i) => i > 0 && char.IsUpper(s) ? "_" + s : s.ToString()))
-				.ToLower();
 		}
 
 		public static string LastCommaToAmpersand(this string commaString)
