@@ -24,7 +24,6 @@ namespace TASVideos.Pages.Forum.Topics
 			UserManager userManager,
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			ITopicWatcher watcher,
 			IForumService forumService)
 		{
 			_userManager = userManager;
