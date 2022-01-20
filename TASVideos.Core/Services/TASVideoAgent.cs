@@ -14,10 +14,12 @@ namespace TASVideos.Core.Services
 	internal class TASVideoAgent : ITASVideoAgent
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IForumService _forumService;
 
-		public TASVideoAgent(ApplicationDbContext db)
+		public TASVideoAgent(ApplicationDbContext db, IForumService forumService)
 		{
 			_db = db;
+			_forumService = forumService;
 		}
 
 		public async Task<int> PostSubmissionTopic(int submissionId, string title)
@@ -68,6 +70,11 @@ namespace TASVideos.Core.Services
 			poll.TopicId = topic.Id;
 			poll.LastUpdateUserName = SiteGlobalConstants.TASVideoAgent; // Necessary for LastUpdatedUser to not change
 			await _db.SaveChangesAsync();
+
+			_forumService.CacheLatestPost(
+				ForumConstants.WorkBenchForumId,
+				topic.Id,
+				new LatestPost(post.Id, post.CreateTimestamp, SiteGlobalConstants.TASVideoAgent));
 
 			return topic.Id;
 		}

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Tests.Base;
@@ -21,7 +22,8 @@ namespace TASVideos.Core.Tests.Services
 		public TASVideoAgentTests()
 		{
 			_db = TestDbContext.Create();
-			_tasVideoAgent = new TASVideoAgent(_db);
+			var mockForumService = new Mock<IForumService>();
+			_tasVideoAgent = new TASVideoAgent(_db, mockForumService.Object);
 		}
 
 		[TestMethod]

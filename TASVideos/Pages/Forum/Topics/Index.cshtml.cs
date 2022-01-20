@@ -33,8 +33,9 @@ namespace TASVideos.Pages.Forum.Topics
 			IAwards awards,
 			IPointsService pointsService,
 			ITopicWatcher topicWatcher,
-			IWikiPages wikiPages)
-			: base(db, topicWatcher)
+			IWikiPages wikiPages,
+			IForumService forumService)
+			: base(db, topicWatcher, forumService)
 		{
 			_db = db;
 			_publisher = publisher;

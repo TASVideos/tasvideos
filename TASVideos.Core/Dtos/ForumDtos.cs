@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TASVideos.Pages.Forum.Models
+namespace TASVideos.Core.Services
 {
-	public class ForumCategoryModel
+	public record LatestPost(int Id, DateTime Timestamp, string PosterName);
+
+	public class ForumCategoryDisplayDto
 	{
 		public int Id { get; init; }
 		public int Ordinal { get; init; }
@@ -18,14 +20,7 @@ namespace TASVideos.Pages.Forum.Models
 			public bool Restricted { get; init; }
 			public string Name { get; init; } = "";
 			public string? Description { get; init; }
-
-			public Post? LastPost { get; init; } = new ();
-			public class Post
-			{
-				public int Id { get; init; }
-				public DateTime CreateTimestamp { get; init; }
-				public string? CreateUserName { get; init; } = "";
-			}
+			public LatestPost? LastPost { get; set; }
 		}
 	}
 }

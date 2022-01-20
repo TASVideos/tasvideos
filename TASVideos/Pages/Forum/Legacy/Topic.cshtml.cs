@@ -11,8 +11,8 @@ namespace TASVideos.Pages.Forum.Legacy
 	[AllowAnonymous]
 	public class TopicModel : BaseForumModel
 	{
-		public TopicModel(ApplicationDbContext db, ITopicWatcher watcher)
-			: base(db, watcher)
+		public TopicModel(ApplicationDbContext db, ITopicWatcher watcher, IForumService forumService)
+			: base(db, watcher, forumService)
 		{
 		}
 

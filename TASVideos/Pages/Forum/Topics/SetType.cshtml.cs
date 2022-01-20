@@ -16,8 +16,9 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public SetTypeModel(
 			ApplicationDbContext db,
-			ITopicWatcher watcher)
-			: base(db, watcher)
+			ITopicWatcher watcher,
+			IForumService forumService)
+			: base(db, watcher, forumService)
 		{
 			_db = db;
 		}

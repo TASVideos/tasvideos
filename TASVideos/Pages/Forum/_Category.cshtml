@@ -1,4 +1,4 @@
-﻿@model TASVideos.Pages.Forum.Models.ForumCategoryModel
+﻿@model ForumCategoryDisplayDto
 
 <card class="mb-2">
 	<cardheader>
@@ -36,8 +36,8 @@
 			@if (forum.LastPost != null)
 			{
 				<div class="col-4 align-items-center">
-					<timezone-convert asp-for="@forum.LastPost.CreateTimestamp" /> <br />
-					<profile-link username="@forum.LastPost.CreateUserName"></profile-link>
+					<timezone-convert asp-for="@forum.LastPost.Timestamp" /> <br />
+					<profile-link username="@forum.LastPost.PosterName"></profile-link>
 					<a href="/Forum/Posts/@forum.LastPost.Id" class="fa fa-arrow-circle-right"></a>
 				</div>
 			}

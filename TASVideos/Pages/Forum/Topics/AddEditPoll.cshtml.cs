@@ -17,8 +17,8 @@ namespace TASVideos.Pages.Forum.Topics
 	{
 		private readonly ApplicationDbContext _db;
 
-		public AddEditPollModel(ApplicationDbContext db, ITopicWatcher watcher)
-			: base(db, watcher)
+		public AddEditPollModel(ApplicationDbContext db, ITopicWatcher watcher, IForumService forumService)
+			: base(db, watcher, forumService)
 		{
 			_db = db;
 		}

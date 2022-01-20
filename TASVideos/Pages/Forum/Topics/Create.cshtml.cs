@@ -8,7 +8,6 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Extensions;
 using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
 
@@ -25,8 +24,9 @@ namespace TASVideos.Pages.Forum.Topics
 			UserManager userManager,
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			ITopicWatcher watcher)
-			: base(db, watcher)
+			ITopicWatcher watcher,
+			IForumService forumService)
+			: base(db, watcher, forumService)
 		{
 			_userManager = userManager;
 			_db = db;
@@ -100,7 +100,7 @@ namespace TASVideos.Pages.Forum.Topics
 				Mood = Topic.Mood
 			};
 
-			await CreatePost(topic.Id, ForumId, forumPostModel, userId, IpAddress, WatchTopic);
+			await CreatePost(topic.Id, ForumId, forumPostModel, userId, User.Name(), IpAddress, WatchTopic);
 
 			if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
 			{

@@ -27,8 +27,9 @@ namespace TASVideos.Pages.Forum.Posts
 		public EditModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			ITopicWatcher watcher)
-			: base(db, watcher)
+			ITopicWatcher watcher,
+			IForumService forumService)
+			: base(db, watcher, forumService)
 		{
 			_db = db;
 			_publisher = publisher;

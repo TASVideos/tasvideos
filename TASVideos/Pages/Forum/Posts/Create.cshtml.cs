@@ -28,8 +28,9 @@ namespace TASVideos.Pages.Forum.Posts
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
 			ITopicWatcher topicWatcher,
-			ILogger<CreateModel> logger)
-			: base(db, topicWatcher)
+			ILogger<CreateModel> logger,
+			IForumService forumService)
+			: base(db, topicWatcher, forumService)
 		{
 			_userManager = userManager;
 			_publisher = publisher;
@@ -154,7 +155,7 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			var id = await CreatePost(TopicId, topic.ForumId, Post, user.Id, IpAddress, WatchTopic);
+			var id = await CreatePost(TopicId, topic.ForumId, Post, user.Id, user.UserName, IpAddress, WatchTopic);
 
 			var mood = Post.Mood != ForumPostMood.Normal ? $" (Mood: {Post.Mood})" : "";
 			var subject = string.IsNullOrWhiteSpace(Post.Subject) ? "" : $" ({Post.Subject})";

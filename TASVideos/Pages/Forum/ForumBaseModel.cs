@@ -41,14 +41,19 @@ namespace TASVideos.Pages.Forum
 
 		private readonly ApplicationDbContext _db;
 		private readonly ITopicWatcher _topicWatcher;
+		private readonly IForumService _forumService;
 
 		private static readonly SelectListGroup StandardGroup = new () { Name = "Standard" };
 		private static readonly SelectListGroup AltGroup = new () { Name = "Alternate" };
 
-		public BaseForumModel(ApplicationDbContext db, ITopicWatcher topicWatcher)
+		public BaseForumModel(
+			ApplicationDbContext db,
+			ITopicWatcher topicWatcher,
+			IForumService forumService)
 		{
 			_db = db;
 			_topicWatcher = topicWatcher;
+			_forumService = forumService;
 		}
 
 		public IEnumerable<SelectListItem> Moods => MoodList;
@@ -78,7 +83,7 @@ namespace TASVideos.Pages.Forum
 			};
 		}
 
-		protected async Task<int> CreatePost(int topicId, int forumId, ForumPostModel model, int userId, string ipAddress, bool watchTopic)
+		protected async Task<int> CreatePost(int topicId, int forumId, ForumPostModel model, int userId, string userName, string ipAddress, bool watchTopic)
 		{
 			var forumPost = new ForumPost
 			{
@@ -97,6 +102,8 @@ namespace TASVideos.Pages.Forum
 
 			_db.ForumPosts.Add(forumPost);
 			await _db.SaveChangesAsync();
+			_forumService.CacheLatestPost(forumId, topicId, new LatestPost(forumPost.Id, forumPost.CreateTimestamp, userName));
+
 			if (watchTopic)
 			{
 				await _topicWatcher.WatchTopic(topicId, userId, canSeeRestricted: true);

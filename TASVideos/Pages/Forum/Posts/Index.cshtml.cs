@@ -11,8 +11,8 @@ namespace TASVideos.Pages.Forum.Posts
 	[AllowAnonymous]
 	public class IndexModel : BaseForumModel
 	{
-		public IndexModel(ApplicationDbContext db, ITopicWatcher watcher)
-			: base(db, watcher)
+		public IndexModel(ApplicationDbContext db, ITopicWatcher watcher, IForumService forumService)
+			: base(db, watcher, forumService)
 		{
 		}
 
