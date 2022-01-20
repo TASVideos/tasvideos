@@ -60,14 +60,6 @@
 		</span>
 	</button>
 </form>
-<delete-button
-	condition="ViewData.UserHas(PermissionTo.ResetPollResults) && Model.AnyVotes"
-	asp-href="/Forum/Topics/@Model.Id?handler=Reset"
-	warning-message="Resetting the poll is permanent. Are you sure you want to do this?"
-	class="btn-sm"
-	title="Reset poll results">
-	<i>0</i>
-</delete-button>
 <a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls)"
 	asp-page="AddEditPoll"
 	asp-route-topicId="@Model.Id"

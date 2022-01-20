@@ -292,29 +292,6 @@ namespace TASVideos.Pages.Forum.Topics
 			return RedirectToTopic();
 		}
 
-		public async Task<IActionResult> OnPostReset()
-		{
-			var topic = await _db.ForumTopics
-				.Include(t => t.Poll)
-				.ThenInclude(p => p!.PollOptions)
-				.ThenInclude(o => o.Votes)
-				.Where(t => t.Id == Id)
-				.SingleOrDefaultAsync();
-
-			if (topic?.Poll == null)
-			{
-				return NotFound();
-			}
-
-			foreach (var option in topic.Poll.PollOptions)
-			{
-				option.Votes.Clear();
-			}
-
-			await ConcurrentSave(_db, "Poll reset", "Unable to reset poll results");
-			return RedirectToTopic();
-		}
-
 		private IActionResult RedirectToTopic()
 		{
 			return RedirectToPage("Index", new { Id });
