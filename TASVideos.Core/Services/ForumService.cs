@@ -20,7 +20,7 @@ namespace TASVideos.Core.Services
 
 	internal class ForumService : IForumService
 	{
-		private const string LatestPostCacheKey = "Forum-LatestPost-Mapping";
+		internal const string LatestPostCacheKey = "Forum-LatestPost-Mapping";
 		private readonly ApplicationDbContext _db;
 		private readonly ICacheService _cacheService;
 		private readonly ITopicWatcher _topicWatcher;
