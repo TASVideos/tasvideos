@@ -109,7 +109,7 @@ namespace TASVideos.Pages.Publications
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			await _publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
-				log,
+				$"{log} | {Title}",
 				$"{Id}M");
 
 			return RedirectToPage("EditFiles", new { Id });
@@ -126,7 +126,7 @@ namespace TASVideos.Pages.Publications
 				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 				await _publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
-					log,
+					$"{log} | {Title}",
 					$"{Id}M");
 			}
 

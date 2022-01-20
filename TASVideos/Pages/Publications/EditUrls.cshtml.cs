@@ -135,7 +135,7 @@ namespace TASVideos.Pages.Publications
 			{
 				await _publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
-					$"Added {UrlType} url",
+					$"Added {UrlType} url | {Title}",
 					$"{Id}M");
 
 				if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
@@ -172,7 +172,7 @@ namespace TASVideos.Pages.Publications
 				{
 					await _publisher.SendPublicationEdit(
 						$"{Id}M edited by {User.Name()}",
-						$"Deleted {url.Type} url",
+						$"Deleted {url.Type} url | {Title}",
 						$"{Id}M");
 
 					await _youtubeSync.UnlistVideo(url.Url!);
