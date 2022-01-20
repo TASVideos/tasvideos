@@ -76,7 +76,7 @@ The posts before this message apply to the submission, and posts after this mess
 	public static class ForumConstants
 	{
 		public const int PostsPerPage = 25;
-		public const int TopicsPerForum = 50;
+		public const int TopicsPerForum = 25;
 
 		public const int WorkBenchForumId = 7;
 		public const int NewsTopicId = 8694;
