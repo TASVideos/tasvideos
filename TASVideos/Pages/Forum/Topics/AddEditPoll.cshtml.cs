@@ -16,11 +16,12 @@ namespace TASVideos.Pages.Forum.Topics
 	public class AddEditPollModel : BaseForumModel
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly IForumService _forumService;
 
-		public AddEditPollModel(ApplicationDbContext db, ITopicWatcher watcher, IForumService forumService)
-			: base(db, watcher, forumService)
+		public AddEditPollModel(ApplicationDbContext db, IForumService forumService)
 		{
 			_db = db;
+			_forumService = forumService;
 		}
 
 		[FromRoute]
@@ -130,7 +131,9 @@ namespace TASVideos.Pages.Forum.Topics
 			}
 			else
 			{
-				await CreatePoll(topic, Poll);
+				await _forumService.CreatePoll(
+					topic,
+					new PollCreateDto(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
 			}
 
 			return RedirectToPage("Index", new { Id = TopicId });

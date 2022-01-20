@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -19,7 +20,8 @@ namespace TASVideos.Core.Tests.Services
 		{
 			_db = TestDbContext.Create();
 			_cache = new TestCache();
-			_forumService = new ForumService(_db, _cache);
+			var watcher = new Mock<ITopicWatcher>();
+			_forumService = new ForumService(_db, _cache, watcher.Object);
 		}
 
 		[TestMethod]

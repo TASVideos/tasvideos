@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Forum.Legacy
@@ -11,9 +10,11 @@ namespace TASVideos.Pages.Forum.Legacy
 	[AllowAnonymous]
 	public class TopicModel : BaseForumModel
 	{
-		public TopicModel(ApplicationDbContext db, ITopicWatcher watcher, IForumService forumService)
-			: base(db, watcher, forumService)
+		private readonly IForumService _forumService;
+
+		public TopicModel(IForumService forumService)
 		{
+			_forumService = forumService;
 		}
 
 		[FromQuery]
@@ -34,7 +35,7 @@ namespace TASVideos.Pages.Forum.Legacy
 
 			if (P.HasValue)
 			{
-				var model = await GetPostPosition(P.Value, User.Has(PermissionTo.SeeRestrictedForums));
+				var model = await _forumService.GetPostPosition(P.Value, User.Has(PermissionTo.SeeRestrictedForums));
 				if (model == null)
 				{
 					return NotFound();

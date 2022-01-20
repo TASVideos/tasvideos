@@ -22,6 +22,7 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly ApplicationDbContext _db;
 		private readonly ITopicWatcher _topicWatcher;
 		private readonly ILogger<CreateModel> _logger;
+		private readonly IForumService _forumService;
 
 		public CreateModel(
 			UserManager userManager,
@@ -30,13 +31,13 @@ namespace TASVideos.Pages.Forum.Posts
 			ITopicWatcher topicWatcher,
 			ILogger<CreateModel> logger,
 			IForumService forumService)
-			: base(db, topicWatcher, forumService)
 		{
 			_userManager = userManager;
 			_publisher = publisher;
-			_topicWatcher = topicWatcher;
 			_db = db;
+			_topicWatcher = topicWatcher;
 			_logger = logger;
+			_forumService = forumService;
 		}
 
 		[FromRoute]
@@ -155,7 +156,16 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			var id = await CreatePost(TopicId, topic.ForumId, Post, user.Id, user.UserName, IpAddress, WatchTopic);
+			var id = await _forumService.CreatePost(new PostCreateDto(
+				topic.ForumId,
+				TopicId,
+				Post.Subject,
+				Post.Text,
+				user.Id,
+				user.UserName,
+				Post.Mood,
+				IpAddress,
+				WatchTopic));
 
 			var mood = Post.Mood != ForumPostMood.Normal ? $" (Mood: {Post.Mood})" : "";
 			var subject = string.IsNullOrWhiteSpace(Post.Subject) ? "" : $" ({Post.Subject})";

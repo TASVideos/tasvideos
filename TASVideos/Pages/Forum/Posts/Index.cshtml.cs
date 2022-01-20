@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Forum.Posts
@@ -11,9 +10,10 @@ namespace TASVideos.Pages.Forum.Posts
 	[AllowAnonymous]
 	public class IndexModel : BaseForumModel
 	{
-		public IndexModel(ApplicationDbContext db, ITopicWatcher watcher, IForumService forumService)
-			: base(db, watcher, forumService)
+		private readonly IForumService _forumService;
+		public IndexModel(IForumService forumService)
 		{
+			_forumService = forumService;
 		}
 
 		[FromRoute]
@@ -21,7 +21,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			var model = await GetPostPosition(Id, User.Has(PermissionTo.SeeRestrictedForums));
+			var model = await _forumService.GetPostPosition(Id, User.Has(PermissionTo.SeeRestrictedForums));
 			if (model == null)
 			{
 				return NotFound();

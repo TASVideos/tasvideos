@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Services
 {
@@ -23,4 +24,18 @@ namespace TASVideos.Core.Services
 			public LatestPost? LastPost { get; set; }
 		}
 	}
+
+	public record PostPositionDto(int Page, int TopicId);
+
+	public record PollCreateDto(string? Question, int? DaysOpen, bool MultiSelect, IEnumerable<string> Options);
+	public record PostCreateDto(
+		int ForumId,
+		int TopicId,
+		string? Subject,
+		string Text,
+		int PosterId,
+		string PosterName,
+		ForumPostMood Mood,
+		string IpAddress,
+		bool WatchTopic);
 }

@@ -8,7 +8,6 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics
@@ -19,6 +18,7 @@ namespace TASVideos.Pages.Forum.Topics
 		private readonly UserManager _userManager;
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IForumService _forumService;
 
 		public CreateModel(
 			UserManager userManager,
@@ -26,11 +26,11 @@ namespace TASVideos.Pages.Forum.Topics
 			ExternalMediaPublisher publisher,
 			ITopicWatcher watcher,
 			IForumService forumService)
-			: base(db, watcher, forumService)
 		{
 			_userManager = userManager;
 			_db = db;
 			_publisher = publisher;
+			_forumService = forumService;
 		}
 
 		[FromRoute]
@@ -93,18 +93,22 @@ namespace TASVideos.Pages.Forum.Topics
 			// TODO: catch DbConcurrencyException
 			await _db.SaveChangesAsync();
 
-			var forumPostModel = new ForumPostModel
-			{
-				Subject = null,
-				Text = Topic.Post,
-				Mood = Topic.Mood
-			};
-
-			await CreatePost(topic.Id, ForumId, forumPostModel, userId, User.Name(), IpAddress, WatchTopic);
+			await _forumService.CreatePost(new PostCreateDto(
+				ForumId,
+				topic.Id,
+				null,
+				Topic.Post,
+				userId,
+				User.Name(),
+				Topic.Mood,
+				IpAddress,
+				WatchTopic));
 
 			if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
 			{
-				await CreatePoll(topic, poll);
+				await _forumService.CreatePoll(
+					topic,
+					new PollCreateDto(poll.Question, poll.DaysOpen, poll.MultiSelect, poll.PollOptions));
 			}
 
 			await _publisher.AnnounceForum(
