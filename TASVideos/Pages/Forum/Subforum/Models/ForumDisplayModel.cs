@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
 
@@ -18,9 +17,11 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 		{
 			[TableIgnore]
 			public int Id { get; set; }
+
 			[Sortable]
 			[DisplayName("Topics")]
 			public string Title { get; set; } = "";
+
 			[MobileHide]
 			[Sortable]
 			[DisplayName("Replies")]
@@ -51,8 +52,9 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 
 			[TableIgnore]
 			public int? LastPostId => LastPost?.Id ?? 0;
+
 			[TableIgnore]
-			public string? LastPostUserName => LastPost?.CreateUserName ?? string.Empty;
+			public string LastPostUserName => LastPost?.CreateUserName ?? string.Empty;
 		}
 	}
 }
