@@ -206,14 +206,16 @@ namespace TASVideos.Pages.Forum.Topics
 				return RedirectToTopic();
 			}
 
-			var selectedOptions = pollOptions.Where(o => ordinal.Contains(o.Ordinal));
+			var selectedOptions = pollOptions
+				.Where(o => ordinal.Contains(o.Ordinal))
+				.ToList();
 
-			if (selectedOptions.Count() == 0)
+			if (!selectedOptions.Any())
 			{
 				return RedirectToTopic();
 			}
 
-			if (!pollOptions.First().Poll!.MultiSelect && selectedOptions.Count() != 1)
+			if (!pollOptions.First().Poll!.MultiSelect && selectedOptions.Count != 1)
 			{
 				ErrorStatusMessage("Poll only allows 1 selection.");
 				return RedirectToTopic();
