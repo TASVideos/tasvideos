@@ -212,6 +212,16 @@ namespace TASVideos.Core.Tests.Services
 		}
 
 		[TestMethod]
+		public void ClearCache()
+		{
+			_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
+
+			_forumService.ClearCache();
+
+			Assert.IsFalse(_cache.ContainsKey(ForumService.LatestPostCacheKey));
+		}
+
+		[TestMethod]
 		public async Task CreatePoll_AddsPollToTopic()
 		{
 			int topicId = 2;

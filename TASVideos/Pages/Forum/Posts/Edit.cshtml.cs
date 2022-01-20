@@ -23,13 +23,16 @@ namespace TASVideos.Pages.Forum.Posts
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IForumService _forumService;
 
 		public EditModel(
 			ApplicationDbContext db,
-			ExternalMediaPublisher publisher)
+			ExternalMediaPublisher publisher,
+			IForumService forumService)
 		{
 			_db = db;
 			_publisher = publisher;
+			_forumService = forumService;
 		}
 
 		[FromRoute]
@@ -205,6 +208,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (result)
 			{
+				_forumService.ClearCache();
 				await _publisher.SendForum(
 					post.Topic!.Forum!.Restricted,
 					$"{(topicDeleted ? "Topic" : "Post")} DELETED by {User.Name()}",

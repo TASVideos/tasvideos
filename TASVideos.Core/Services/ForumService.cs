@@ -14,6 +14,7 @@ namespace TASVideos.Core.Services
 		Task<PostPositionDto?> GetPostPosition(int postId, bool seeRestricted);
 		Task<ICollection<ForumCategoryDisplayDto>> GetAllCategories();
 		void CacheLatestPost(int forumId, int topicId, LatestPost post);
+		void ClearCache();
 		Task CreatePoll(ForumTopic topic, PollCreateDto poll);
 		Task<int> CreatePost(PostCreateDto post);
 	}
@@ -94,6 +95,11 @@ namespace TASVideos.Core.Services
 				dict[forumId] = post;
 				_cacheService.Set(LatestPostCacheKey, dict);
 			}
+		}
+
+		public void ClearCache()
+		{
+			_cacheService.Remove(LatestPostCacheKey);
 		}
 
 		public async Task CreatePoll(ForumTopic topic, PollCreateDto pollDto)
