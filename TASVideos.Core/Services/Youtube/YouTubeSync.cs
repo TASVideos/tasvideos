@@ -104,12 +104,7 @@ namespace TASVideos.Core.Services.Youtube
 			var response = await _client.PutAsync("videos?part=status,snippet", updateRequest.ToStringContent());
 			if (!response.IsSuccessStatusCode)
 			{
-				_logger.LogError($"[{DateTime.Now}] An error occurred syncing data to Youtube. Request: {JsonConvert.SerializeObject(updateRequest)}");
-				_logger.LogError(await response.Content.ReadAsStringAsync());
-			}
-			else
-			{
-				_logger.LogError($"(Not an error) Successful sync to Youtube. Request: {JsonConvert.SerializeObject(updateRequest)}");
+				_logger.LogError($"[{DateTime.Now}] An error occurred syncing data to Youtube. Request: {JsonConvert.SerializeObject(updateRequest)} Response: {await response.Content.ReadAsStringAsync()}");
 			}
 		}
 
@@ -188,10 +183,6 @@ namespace TASVideos.Core.Services.Youtube
 				_logger.LogError($"{DateTime.Now} An error occurred sending a request to YouTube. Request: {JsonConvert.SerializeObject(unlistRequest)}");
 				_logger.LogError($"Response: {await response.Content.ReadAsStringAsync()}");
 			}
-			else
-			{
-				_logger.LogError($"(Not an error) Successfully unlisted video. Request: {JsonConvert.SerializeObject(unlistRequest)}");
-			}
 		}
 
 		public bool IsYoutubeUrl(string? url)
@@ -260,10 +251,6 @@ namespace TASVideos.Core.Services.Youtube
 				_logger.LogError($"{DateTime.Now} Unable to request data for video {videoId} from YouTube");
 				_logger.LogError($"Response: {await result.Content.ReadAsStringAsync()}");
 				return null;
-			}
-			else
-			{
-				_logger.LogError($"(Not an error) Requesting data for video {videoId} successful.");
 			}
 
 			var getResponse = await result.ReadAsync<YoutubeGetResponse>();
