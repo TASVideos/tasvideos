@@ -1,8 +1,6 @@
 ﻿@model IList<GameNameModel>
 @if (Model.Any(g => g.IsSystem))
-{
-	<span>@Model.First().System</span>
-}
+{<span>@Model.First().System</span>}
 else
 {
 	for (int i = 0; i < Model.Count; i++)
