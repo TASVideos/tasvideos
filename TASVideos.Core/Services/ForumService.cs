@@ -93,7 +93,7 @@ namespace TASVideos.Core.Services
 			if (_cacheService.TryGetValue(LatestPostCacheKey, out Dictionary<int, LatestPost?> dict))
 			{
 				dict[forumId] = post;
-				_cacheService.Set(LatestPostCacheKey, dict);
+				_cacheService.Set(LatestPostCacheKey, dict, Durations.OneDayInSeconds);
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace TASVideos.Core.Services
 					tvalue.LatestPost.CreateTimestamp,
 					tvalue.LatestPost.UserName ?? ""));
 
-			_cacheService.Set(LatestPostCacheKey, dict);
+			_cacheService.Set(LatestPostCacheKey, dict, Durations.OneDayInSeconds);
 
 			return dict;
 		}
