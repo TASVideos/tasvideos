@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using TASVideos.Core.Data;
 
@@ -17,7 +16,7 @@ namespace TASVideos
 
 			using (var scope = host.Services.CreateScope())
 			{
-				var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+				var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
 				var configuration = new ConfigurationBuilder()
 					.AddJsonFile("appsettings.json")
 					.AddJsonFile($"appsettings.{env.EnvironmentName ?? "Development"}.json", true)
@@ -28,15 +27,7 @@ namespace TASVideos
 
 				var services = scope.ServiceProvider;
 
-				try
-				{
-					DbInitializer.InitializeDatabase(services);
-				}
-				catch (Exception ex)
-				{
-					var logger = services.GetRequiredService<ILogger<Program>>();
-					logger.LogError(ex, "An error occurred while seeding the database.");
-				}
+				DbInitializer.InitializeDatabase(services);
 			}
 
 			host.Run();
