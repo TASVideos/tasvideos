@@ -43,6 +43,7 @@
 		<PackageReference Include="AspNetCore.ReCaptcha" Version="1.1.0" />
 		<PackageReference Include="AutoMapper" Version="10.1.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
 		<PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

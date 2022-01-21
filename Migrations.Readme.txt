@@ -1,4 +1,12 @@
 To add a migration:
 First you must have EF cli installed (run dotnet ef to check)
-In the PackageManagerConsole window of Visual Studio (or powershell window) navigate to the TASVideos directory and run this:
+Go to the PackageManagerConsole (or powershell window)
+Change directory to the /TASVideos project, it must be here for it to access the startup logic
 dotnet ef migrations add [NameOfMigration] --project ../TASVideos.Data
+
+Migration Best practices:
+Always inspect your migration to see if it could result in data loss!
+Never remove a column or table in the same release as you remove references for it.
+	-Remove all references to the table or column first and release
+	-Then add a migration that removes the dead column/table
+	-This will ensure there is no moment during the deploy where new code code is referencing an old database or vice versa
