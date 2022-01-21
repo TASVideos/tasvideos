@@ -12,6 +12,9 @@
 			<form-group>
 				<label asp-for="Settings.Username"></label>
 				<input asp-for="Settings.Username" class="form-control" disabled />
+				<div class="text-warning">
+					@await Component.RenderWiki("System/NameChanges")
+				</div>
 			</form-group>
 			<form-group>
 				<label asp-for="Settings.Email"></label>
