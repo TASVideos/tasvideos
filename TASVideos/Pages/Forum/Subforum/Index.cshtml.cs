@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Subforum.Models;
 
@@ -33,7 +32,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		public async Task<IActionResult> OnGet()
 		{
 			Forum = await _db.Forums
-				.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
+				.ExcludeRestricted(false)
 				.Select(f => new ForumDisplayModel
 				{
 					Id = f.Id,

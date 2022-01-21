@@ -10,7 +10,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Submissions.Models;
-using static TASVideos.Core.Services.AwardAssignment;
 
 namespace TASVideos.Pages.Submissions
 {
