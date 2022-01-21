@@ -172,6 +172,7 @@ namespace TASVideos.Pages.UserFiles
 				.SumAsync(uf => uf.PhysicalLength);
 
 			AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
+				.OrderBy(s => s.Code)
 				.Select(s => new SelectListItem
 				{
 					Value = s.Id.ToString(),
