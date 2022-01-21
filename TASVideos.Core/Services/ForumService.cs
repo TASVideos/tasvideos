@@ -82,7 +82,11 @@ namespace TASVideos.Core.Services
 
 			foreach (var forum in dto.SelectMany(c => c.Forums))
 			{
-				forum.LastPost = latestPostMappings[forum.Id];
+				if (latestPostMappings.TryGetValue(forum.Id, out var lastPost))
+				{
+					forum.LastPost = lastPost;
+
+				}
 			}
 
 			return dto;
