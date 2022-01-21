@@ -114,7 +114,7 @@ namespace TASVideos.Pages.Publications
 			{
 				await _publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
-					log,
+					$"{log} | {PublicationTitle}",
 					$"{Id}M");
 			}
 
@@ -138,7 +138,7 @@ namespace TASVideos.Pages.Publications
 				{
 					await _publisher.SendPublicationEdit(
 						$"{Id}M edited by {User.Name()}",
-						log,
+						$"{log} | {PublicationTitle}",
 						$"{Id}M");
 				}
 			}

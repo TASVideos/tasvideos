@@ -298,7 +298,7 @@ namespace TASVideos.Pages.Publications
 				{
 					await _publisher.SendPublicationEdit(
 						$"{Id}M edited by {User.Name()}",
-						string.Join(", ", externalMessages),
+						$"{string.Join(", ", externalMessages)} | {publication.Title}",
 						$"{Id}M");
 				}
 			}
