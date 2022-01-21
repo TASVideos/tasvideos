@@ -12,7 +12,7 @@ using TASVideos.Data;
 namespace TASVideos.Data.Migrations
 {
 	[DbContext(typeof(ApplicationDbContext))]
-	[Migration("20220121170630_InitalCreate")]
+	[Migration("20220121170630_InitialCreate")]
 	partial class InitialCreate
 	{
 		protected override void BuildTargetModel(ModelBuilder modelBuilder)
