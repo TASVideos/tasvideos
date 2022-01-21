@@ -97,6 +97,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 
 				await writer.WriteLineAsync($"PRIVMSG NickServ :identify {_settings.Nick} {_settings.Password}");
 				await writer.FlushAsync();
+				await Task.Delay(5000);
 
 				while (true)
 				{
