@@ -58,10 +58,11 @@ namespace TASVideos.Pages.Forum.Subforum
 					Type = ft.Type,
 					IsLocked = ft.IsLocked,
 					PostCount = ft.ForumPosts.Count,
-					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id)),
-					LastPostDateTime = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))!.CreateTimestamp
+					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
 				})
-				.SortedPageOf(Search);
+				.OrderByDescending(ft => ft.Type)
+				.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
+				.PageOf(Search);
 
 			return Page();
 		}

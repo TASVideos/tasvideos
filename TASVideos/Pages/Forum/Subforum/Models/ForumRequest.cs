@@ -7,7 +7,6 @@ namespace TASVideos.Pages.Forum.Subforum.Models
 		public ForumRequest()
 		{
 			PageSize = ForumConstants.TopicsPerForum;
-			Sort = $"-{nameof(ForumDisplayModel.ForumTopicEntry.Type)},-{nameof(ForumDisplayModel.ForumTopicEntry.LastPostDateTime)}";
 		}
 	}
 }

@@ -64,9 +64,9 @@
 				<td>
 					@if (topic.LastPost != null)
 					{
-						<timezone-convert asp-for="@topic.LastPostDateTime" /> <br />
-						<profile-link username="@topic.LastPostUserName"></profile-link>
-						<a href="/Forum/Posts/@topic.LastPostId" class="fa fa-arrow-circle-right" />
+						<timezone-convert asp-for="@topic.LastPost.CreateTimestamp" /> <br />
+						<profile-link username="@topic.LastPost.CreateUserName"></profile-link>
+						<a href="/Forum/Posts/@topic.LastPost.Id" class="fa fa-arrow-circle-right" />
 					}
 				</td>
 			</tr>
