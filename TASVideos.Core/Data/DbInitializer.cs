@@ -43,7 +43,7 @@ namespace TASVideos.Core.Data
 		{
 			var context = services.GetRequiredService<ApplicationDbContext>();
 			context.Database.EnsureDeleted();
-			context.Database.Migrate();
+			context.Database.EnsureCreated();
 
 			// Note: We specifically do not want to run seed data
 			// This data is already baked into the sample data file
