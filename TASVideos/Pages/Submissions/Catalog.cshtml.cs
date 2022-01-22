@@ -198,7 +198,7 @@ namespace TASVideos.Pages.Submissions
 			{
 				await _publisher.SendSubmissionEdit(
 					$"{Id}S Catalog edited by {User.Name()}",
-					string.Join(", ", externalMessages),
+					$"{string.Join(", ", externalMessages)} | {submission.Title}",
 					$"{Id}S");
 			}
 

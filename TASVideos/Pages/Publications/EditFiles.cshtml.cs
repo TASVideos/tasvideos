@@ -126,7 +126,7 @@ namespace TASVideos.Pages.Publications
 				await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 				await _publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
-					$"{log} | {Title}",
+					$"{log}",
 					$"{Id}M");
 			}
 
