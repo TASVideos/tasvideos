@@ -162,6 +162,11 @@ namespace TASVideos.Data.Entity
 				.Where(p => p.CreateTimestamp >= after);
 		}
 
+		public static IQueryable<Publication> ThatHaveBeenPublishedBy(this IQueryable<Publication> publications, int userId)
+		{
+			return publications.Where(p => p.Submission!.PublisherId == userId);
+		}
+
 		public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
 		{
 			if (tokens.MovieIds.Any())

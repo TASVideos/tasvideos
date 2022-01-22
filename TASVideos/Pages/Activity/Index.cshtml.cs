@@ -38,7 +38,7 @@ namespace TASVideos.Pages.Activity
 				.ToListAsync();
 
 			Publishers = await _db.Publications
-				.GroupBy(p => p.CreateUserName)
+				.GroupBy(p => p.Submission!.Publisher!.UserName)
 				.Select(p => new ActivitySummaryModel
 				{
 					UserName = p.Key,

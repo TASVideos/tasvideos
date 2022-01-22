@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.Activity.Model;
 
 namespace TASVideos.Pages.Activity
@@ -39,6 +40,7 @@ namespace TASVideos.Pages.Activity
 			}
 
 			Publications = await _db.Publications
+				.ThatHaveBeenPublishedBy(user.Id)
 				.Where(p => p.Submission!.PublisherId == user.Id)
 				.Select(s => new MovieEntryModel
 				{
