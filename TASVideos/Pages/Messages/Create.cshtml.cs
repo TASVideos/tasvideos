@@ -124,7 +124,8 @@ namespace TASVideos.Pages.Messages
 				ToUserId = toUserId,
 				Subject = Subject,
 				Text = Text,
-				IpAddress = IpAddress
+				IpAddress = IpAddress,
+				EnableBbCode = true
 			};
 
 			_db.PrivateMessages.Add(message);
