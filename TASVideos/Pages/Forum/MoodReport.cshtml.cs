@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,19 +26,28 @@ namespace TASVideos.Pages.Forum
 			_db = db;
 		}
 
+		[FromRoute]
+		public string? UserName { get; set; }
+
 		public IEnumerable<MoodReportEntry> MoodyUsers { get; set; } = new List<MoodReportEntry>();
 
 		public async Task OnGet()
 		{
-			MoodyUsers = await _db.Users
+			var query = _db.Users
 				.ThatHavePermission(PermissionTo.UseMoodAvatars)
 				.Where(u => u.MoodAvatarUrlBase != null)
 				.Select(u => new MoodReportEntry
 				{
 					UserName = u.UserName,
 					MoodAvatarUrl = u.MoodAvatarUrlBase!
-				})
-				.ToListAsync();
+				});
+
+			if (!string.IsNullOrWhiteSpace(UserName))
+			{
+				query = query.Where(q => q.UserName == UserName);
+			}
+
+			MoodyUsers = await query.ToListAsync();
 		}
 
 		public class MoodReportEntry

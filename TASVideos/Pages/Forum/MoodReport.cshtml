@@ -1,8 +1,12 @@
-﻿@page
+﻿@page "{userName?}"
 @model TASVideos.Pages.Forum.MoodReportModel
-
-<p>These are peoples mood avatars</p>
-@foreach (var user in Model.MoodyUsers)
+@{
+	ViewData["Title"] = string.IsNullOrWhiteSpace(Model.UserName)
+		? "These are all user's mood avatars"
+		: "Mood avatars";
+}
+<p condition="string.IsNullOrWhiteSpace(Model.UserName)">These are peoples mood avatars</p>
+@foreach (var user in Model.MoodyUsers.Where(m => m.UserName == "adelikat"))
 {
 	<card>
 		<cardheader>

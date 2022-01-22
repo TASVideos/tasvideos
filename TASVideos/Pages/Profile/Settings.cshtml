@@ -133,6 +133,7 @@
 		<column md="6">
 			<label asp-for="Settings.MoodAvatar"></label>
 			<input type="text" asp-for="Settings.MoodAvatar" class="form-control" />
+			<a asp-page="/Forum/MoodReport" asp-route-username="@Model.Settings.Username">Check Mood Avatars</a>
 		</column>
 		<column md="6">
 			<small>
