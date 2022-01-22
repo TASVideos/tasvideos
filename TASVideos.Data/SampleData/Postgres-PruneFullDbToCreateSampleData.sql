@@ -18,7 +18,7 @@ DELETE FROM public.game_ram_addresses;
 DELETE FROM public.ip_bans;
 DELETE FROM public.media_posts;
 DELETE FROM public.user_disallows;
-
+DELETE FROM public."__EFMigrationsHistory";
 -- Trim user files
 DELETE FROM public.user_file_comments;
 
@@ -45,7 +45,7 @@ CREATE TEMPORARY TABLE _wiki_pages_to_delete (id int primary key);
 INSERT INTO _wiki_pages_to_delete
 	SELECT id
 	FROM public.wiki_pages
-	WHERE is_deleted = true
+	WHERE is_deleted = true and child_id IS NOT NULL
 	OR (page_name NOT LIKE 'InternalSystem%' AND LENGTH(markup) < 18);
 	
 DELETE

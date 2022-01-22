@@ -42,7 +42,8 @@ namespace TASVideos.Core.Data
 		private static void SampleStrategy(IServiceProvider services)
 		{
 			var context = services.GetRequiredService<ApplicationDbContext>();
-			Initialize(context);
+			context.Database.EnsureDeleted();
+			context.Database.Migrate();
 
 			// Note: We specifically do not want to run seed data
 			// This data is already baked into the sample data file
@@ -53,18 +54,6 @@ namespace TASVideos.Core.Data
 		{
 			var context = services.GetRequiredService<ApplicationDbContext>();
 			context.Database.Migrate();
-		}
-
-		/// <summary>
-		/// Creates the database and seeds it with necessary seed data
-		/// Seed data is necessary data for a production release.
-		/// </summary>
-		public static void Initialize(DbContext context)
-		{
-			// For now, always delete then recreate the database
-			// When the database is more mature we will move towards the Migrations process
-			context.Database.EnsureDeleted();
-			context.Database.EnsureCreated();
 		}
 
 		/// <summary>
