@@ -92,14 +92,11 @@ namespace TASVideos.Pages.Profile
 					ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.Email)}", "This email cannot be used.");
 					return Page();
 				}
-				else
-				{
-					var setEmailResult = await _userManager.SetEmailAsync(user, Settings.Email);
 
-					if (!setEmailResult.Succeeded)
-					{
-						throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
-					}
+				var setEmailResult = await _userManager.SetEmailAsync(user, Settings.Email);
+				if (!setEmailResult.Succeeded)
+				{
+					throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
 				}
 			}
 
