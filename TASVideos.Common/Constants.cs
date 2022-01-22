@@ -109,7 +109,7 @@ The posts before this message apply to the submission, and posts after this mess
 
 	public static class AvatarRequirements
 	{
-		public const int Width = 100;
-		public const int Height = 100;
+		public const int Width = 125;
+		public const int Height = 125;
 	}
 }
