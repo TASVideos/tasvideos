@@ -225,7 +225,7 @@ namespace TASVideos.ForumEngine
 						{
 							w.OpenTag("a");
 							w.Attribute("class", "btn bg-info text-dark code-download");
-							w.Attribute("href", "data:text/plain," + Uri.EscapeDataString(GetChildText().TrimStart()));
+							w.Attribute("href", "data:text/plain," + Uri.EscapeDataString(GetChildText()));
 							w.Attribute("download", Options);
 							w.Text("Download ");
 							w.Text(Options);

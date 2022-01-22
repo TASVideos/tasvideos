@@ -61,6 +61,9 @@ namespace TASVideos.ForumEngine
 			)?
 		", RegexOptions.IgnorePatternWhitespace);
 
+		private static readonly Regex BlockTrimAfterEntering = new ("\\G[ \t]*\r?\n?");
+		private static readonly Regex BlockTrimAfterLeaving = new ("\\G[ \t]*\r?\n?");
+
 		// The old system does support attributes in html tags, but only a few that we probably don't want,
 		// and it doesn't even support the full html syntax for them.  So forget attributes for now
 		private static readonly Regex HtmlOpening = new (@"\G\s*([a-zA-Z]+)\s*>");
@@ -109,6 +112,11 @@ namespace TASVideos.ForumEngine
 			}
 
 			public SelfNestingAllowed SelfNesting;
+
+			/// <summary>
+			/// If true, the tag will be rendered as block level content, and we should try to do some HTML-ish whitespace elision on it.
+			/// </summary>
+			public bool IsBlock;
 		}
 
 		private static readonly Dictionary<string, TagInfo> KnownTags = new ()
@@ -121,17 +129,17 @@ namespace TASVideos.ForumEngine
 			{ "sub", new () },
 			{ "sup", new () },
 			{ "tt", new () },
-			{ "left", new () },
-			{ "right", new () },
-			{ "center", new () },
+			{ "left", new () { IsBlock = true } },
+			{ "right", new () { IsBlock = true } },
+			{ "center", new () { IsBlock = true } },
 			{ "spoiler", new () },
-			{ "warning", new () },
-			{ "note", new () },
+			{ "warning", new () { IsBlock = true } },
+			{ "note", new () { IsBlock = true } },
 			{ "highlight", new () },
 
 			// with optional params
-			{ "quote", new () }, // optional author
-			{ "code", new () { Children = TagInfo.ChildrenAllowed.No } }, // optional language
+			{ "quote", new () { IsBlock = true } }, // optional author
+			{ "code", new () { Children = TagInfo.ChildrenAllowed.No, IsBlock = true } }, // optional language
 			{ "img", new () { Children = TagInfo.ChildrenAllowed.No } }, // optional size
 			{ "url", new () { Children = TagInfo.ChildrenAllowed.IfParam, SelfNesting = TagInfo.SelfNestingAllowed.No } }, // optional url.  if not given, url in body
 			{ "email", new () { Children = TagInfo.ChildrenAllowed.IfParam } }, // like url
@@ -153,13 +161,13 @@ namespace TASVideos.ForumEngine
 			{ "noparse", new () { Children = TagInfo.ChildrenAllowed.No } },
 
 			// list related stuff
-			{ "list", new () }, // OLs have a param with value ??
-			{ "*", new () { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate } },
+			{ "list", new () { IsBlock = true } }, // OLs have a param with value ??
+			{ "*", new () { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate, IsBlock = true } },
 
 			// tables
-			{ "table", new () { SelfNesting = TagInfo.SelfNestingAllowed.No } },
-			{ "tr", new () { SelfNesting = TagInfo.SelfNestingAllowed.No } },
-			{ "td", new () { SelfNesting = TagInfo.SelfNestingAllowed.No } }
+			{ "table", new () { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
+			{ "tr", new () { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
+			{ "td", new () { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
 		};
 
 		private static readonly HashSet<string> KnownNonEmptyHtmlTags = new ()
@@ -315,6 +323,15 @@ namespace TASVideos.ForumEngine
 								}
 							}
 
+							if (state.IsBlock)
+							{
+								Match n;
+								if ((n = BlockTrimAfterEntering.Match(_input, _index)).Success)
+								{
+									_index += n.Length;
+								}
+							}
+
 							Push(e);
 							continue;
 						}
@@ -336,6 +353,15 @@ namespace TASVideos.ForumEngine
 								if (_stack.Pop() == matching)
 								{
 									break;
+								}
+							}
+
+							if (KnownTags.TryGetValue(matching.Name, out var oldState) && oldState.IsBlock)
+							{
+								Match n;
+								if ((n = BlockTrimAfterLeaving.Match(_input, _index)).Success)
+								{
+									_index += n.Length;
 								}
 							}
 
