@@ -613,7 +613,6 @@
           <e p="MediaPosts.cs" t="Include" />
           <e p="Models" t="Include">
             <e p="FirstEditionModel.cs" t="Include" />
-            <e p="FramesModel.cs" t="Include" />
             <e p="GameNameModel.cs" t="Include" />
             <e p="GameSubpageModel.cs" t="Include" />
             <e p="LanguageEntry.cs" t="Include" />

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Common;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -26,21 +27,21 @@ namespace TASVideos.ViewComponents
 
 		public async Task<string> RenderTextAsync(WikiPage? pageData, double? fps, int amount)
 		{
-			var model = new FramesModel
+			var model = new Timeable
 			{
-				Amount = amount,
-				Fps = fps ?? await GuessFps(pageData?.PageName)
+				Frames = amount,
+				FrameRate = fps ?? await GuessFps(pageData?.PageName)
 			};
 
-			return model.TimeSpan.ToCondensedString();
+			return model.Time().ToStringWithOptionalDaysAndHours();
 		}
 
 		public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData, double? fps, int amount)
 		{
-			var model = new FramesModel
+			var model = new Timeable
 			{
-				Amount = amount,
-				Fps = fps ?? await GuessFps(pageData?.PageName)
+				Frames = amount,
+				FrameRate = fps ?? await GuessFps(pageData?.PageName)
 			};
 
 			return View(model);
