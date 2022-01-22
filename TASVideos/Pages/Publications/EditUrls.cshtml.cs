@@ -172,7 +172,7 @@ namespace TASVideos.Pages.Publications
 				{
 					await _publisher.SendPublicationEdit(
 						$"{Id}M edited by {User.Name()}",
-						$"Deleted {url.Type} url | {Title}",
+						$"Deleted {url.Type} url",
 						$"{Id}M");
 
 					await _youtubeSync.UnlistVideo(url.Url!);
