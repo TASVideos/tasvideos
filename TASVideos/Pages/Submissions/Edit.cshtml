@@ -116,7 +116,7 @@
 	<fullrow class="text-center">
 		<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
 		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Submission.Markup.Length > 0 ? "" : "hide")"><i class="fa fa-save"></i> Update</button>
-		<button type="button" class="btn btn-secondary" id="revert-button"><i class="fa fa-refresh"></i>Revert</button>
+		<button type="button" class="btn btn-secondary" id="restore-button"><i class="fa fa-refresh"></i> Restore Edited Text</button>
 		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id"><i class="fa fa-times"></i> Cancel</a>
 	</fullrow>
 </form>

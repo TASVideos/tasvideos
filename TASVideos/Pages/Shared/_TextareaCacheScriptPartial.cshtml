@@ -1,19 +1,20 @@
 ﻿<script>
-    const textarea = document.querySelector('textarea.wiki-edit');
-    const textareaCacheKey = textarea.getAttribute('cacheKey');
-    const revertButton = document.getElementById('revert-button');
-    if (localStorage.getItem(textareaCacheKey) !== null) {
-        textarea.value = localStorage.getItem(textareaCacheKey);
-    }
-    function cacheTextarea() {
-        localStorage.setItem(textareaCacheKey,textarea.value);
-    }
-    setInterval(cacheTextarea, 5000);
-    function clearTextareaCache() {
-        localStorage.removeItem(textareaCacheKey);
-        location.reload();
-    }
-    if (revertButton) {
-        revertButton.addEventListener('click', clearTextareaCache);
+	const textarea = document.querySelector('textarea.wiki-edit');
+	const textareaCacheKey = textarea.getAttribute('cacheKey');
+	const restoreButton = document.getElementById('restore-button');
+
+	function cacheTextarea() {
+		localStorage.setItem(textareaCacheKey,textarea.value);
+		localStorage.setItem(textareaCacheKey + "-time", Date.now())
+	}
+	setInterval(cacheTextarea, 5000);
+	function restoreCachedTextarea() {
+		textarea.value = localStorage.getItem(textareaCacheKey);
+	}
+	if (restoreButton && localStorage.getItem(textareaCacheKey) !== null) {
+		restoreButton.addEventListener('click', restoreCachedTextarea);
+		const storedTime = new Date(parseInt(localStorage.getItem(textareaCacheKey + "-time"))).toLocaleDateString();
+		restoreButton.innerText += ` from ${storedTime}`;
+		restoreButton.classList.remove("d-none");
     }
 </script>

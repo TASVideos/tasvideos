@@ -8,7 +8,7 @@
 <form method="POST">
 	<input type="hidden" asp-for="PageToEdit.EditStart" />
 	<form-group>
-		<textarea asp-for="PageToEdit.Markup" class="form-control wiki-edit" rows="20" cacheKey="@($"textarea-wikipage-{Model.PageToEdit.}-{Model.PageToEdit.RevisionTimestamp.ToString()}")"></textarea>
+		<textarea asp-for="PageToEdit.Markup" class="form-control wiki-edit" rows="20" cacheKey="@($"textarea-wikipage-{Model.PageToEdit.PageName}-{Model.PageToEdit.RevisionTimestamp.ToString()}")"></textarea>
 		<span asp-validation-for="PageToEdit.Markup" class="text-danger"></span>
 		@await Component.RenderWiki("System/WikiEditHelp")
 	</form-group>
@@ -27,7 +27,7 @@
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
 		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
-		<button type="button" class="btn btn-secondary" id="revert-button"><i class="fa fa-refresh"></i>Revert</button>
+		<button type="button" class="btn btn-secondary" id="restore-button"><i class="fa fa-refresh"></i> Restore Edited Text</button>
 		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 		<a condition="string.IsNullOrWhiteSpace(returnUrl)" href="/@Model.Path" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</div>
