@@ -10,7 +10,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
 using TASVideos.Pages.Submissions.Models;
-using static TASVideos.Core.Services.AwardAssignment;
 
 namespace TASVideos.Pages.Submissions
 {
@@ -197,7 +196,10 @@ namespace TASVideos.Pages.Submissions
 			var result = await ConcurrentSave(_db, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
 			if (result)
 			{
-				await _publisher.SendSubmissionEdit($"{Id}S Catalogging Info Updated: {string.Join(", ", externalMessages)}", $"{Id}S", User.Name());
+				await _publisher.SendSubmissionEdit(
+					$"{Id}S Catalog edited by {User.Name()}",
+					string.Join(", ", externalMessages),
+					$"{Id}S");
 			}
 
 			return RedirectToPage("View", new { Id });

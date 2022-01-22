@@ -87,7 +87,6 @@ namespace TASVideos.Pages.Publications
 			Movies = await _mapper.ProjectTo<PublicationDisplayModel>(
 				_db.Publications
 					.FilterByTokens(searchModel))
-					.AsSingleQuery() // TODO: Supposedly you can configure this on the DbContextOptionsBuilder but I wasn't smart enough to find it, or it isn't in the version we have, even though our version says to se it
 					.ToListAsync();
 
 			var ratings = (await _points.PublicationRatings(Movies.Select(m => m.Id)))

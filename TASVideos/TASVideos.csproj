@@ -43,6 +43,7 @@
 		<PackageReference Include="AspNetCore.ReCaptcha" Version="1.1.0" />
 		<PackageReference Include="AutoMapper" Version="10.1.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
 		<PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -87,7 +88,10 @@
 
 	<ItemGroup>
 		<Content Update="Pages\Forum\Posts\Latest.cshtml">
-		  <Pack>$(IncludeRazorContentInPack)</Pack>
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Pages\Forum\Posts\_TopicMiniPost.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 		<Content Update="Pages\Forum\Topics\Merge.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>

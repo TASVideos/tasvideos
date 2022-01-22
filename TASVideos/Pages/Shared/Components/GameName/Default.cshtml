@@ -1,7 +1,7 @@
 ﻿@model IList<GameNameModel>
 @if (Model.Any(g => g.IsSystem))
 {
-	<span>@Model.First().System</span>
+	<text><span>@Model.First().System</span></text>
 }
 else
 {

@@ -85,10 +85,9 @@ h4 {
 		background-color: var(--bs-primary);
 		border-color: var(--bs-primary);
 
-		.btn-check:focus+&, .btn-check:active+&, .btn-check:checked+&, &.active, &:focus, &:active, &:hover, &:active:focus, .show>&.dropdown-toggle {
+		.btn-check:focus + &, .btn-check:active + &, .btn-check:checked + &, &.active, &:active, .show > &.dropdown-toggle {
 			background-color: var(--bs-primary-hover);
 			border-color: var(--bs-primary-hover);
-			box-shadow: 0 0 0 0.25rem RGBA(var(--bs-primary-rgb), 50%);
 		}
 	}
 
@@ -96,12 +95,19 @@ h4 {
 		background-color: var(--bs-secondary);
 		border-color: var(--bs-secondary);
 
-		.btn-check:focus+&, .btn-check:active+&, .btn-check:checked+&, &.active, &:focus, &:active, &:hover, &:active:focus, .show>&.dropdown-toggle {
+		.btn-check:focus + &, .btn-check:active + &, .btn-check:checked + &, &.active, &:focus, &:active, &:hover, &:active:focus, .show > &.dropdown-toggle {
 			background-color: var(--bs-secondary-hover);
 			border-color: var(--bs-secondary-hover);
-			box-shadow: 0 0 0 0.25rem RGBA(var(--bs-secondary-rgb), 50%);
 		}
 	}
+}
+
+.btn-check:active + .btn-primary:focus, .btn-check:checked + .btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show > .btn-primary.dropdown-toggle:focus, .btn-primary:hover {
+	box-shadow: 0 0 0 0.25rem RGBA(var(--bs-primary-rgb), 50%);
+}
+
+.btn-check:active + .btn-secondary:focus, .btn-check:checked + .btn-secondary:focus, .btn-secondary.active:focus, .btn-secondary:active:focus, .show > .btn-secondary.dropdown-toggle:focus, .btn-secondary:hover {
+	box-shadow: 0 0 0 0.25rem RGBA(var(--bs-secondary-rgb), 50%);
 }
 
 /* Card Link */

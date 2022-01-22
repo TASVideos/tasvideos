@@ -20,7 +20,7 @@ namespace TASVideos.Core.Services.Youtube
 	internal class GoogleAuthService : IGoogleAuthService
 	{
 		private const string YoutubeCacheKey = "GoogleAuthAccessTokenCacheForYoutube";
-		private const string GmailCacheKey = "GoogleAuthAccessTokenCacheForYoutube";
+		private const string GmailCacheKey = "GoogleAuthAccessTokenCacheForGmail";
 		private readonly HttpClient _client;
 		private readonly ICacheService _cache;
 		private readonly AppSettings _settings;

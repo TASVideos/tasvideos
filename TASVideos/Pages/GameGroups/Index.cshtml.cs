@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Groups.Models;
 
 namespace TASVideos.Pages.GamesGroups
@@ -37,7 +38,7 @@ namespace TASVideos.Pages.GamesGroups
 			Name = gameGroup.Name;
 
 			Games = await _db.Games
-				.Where(g => g.GameGroups.Any(gg => gg.GameGroupId == Id))
+				.ForGroup(Id)
 				.Select(g => new GameListEntry
 				{
 					Id = g.Id,

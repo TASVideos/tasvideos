@@ -137,14 +137,11 @@ namespace TASVideos.Pages.Forum.Topics
 
 			var newForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == topic.ForumId);
 
-			var announcement = $"Topic {newForum.Name}: {newTopic.Title} SPLIT from {Topic.ForumName}: {Topic.Title}";
 			await _publisher.SendForum(
 				destinationForum.Restricted || topic.Forum!.Restricted,
-				announcement,
-				"",
-				$"Forum/Topics/{newTopic.Id}",
-				User.Name(),
-				announcement);
+				$"Topic SPLIT by {User.Name()}",
+				$@"""{newTopic.Title}"" from ""{Topic.Title}""",
+				$"Forum/Topics/{newTopic.Id}");
 
 			return RedirectToPage("Index", new { id = newTopic.Id });
 		}

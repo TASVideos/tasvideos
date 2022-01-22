@@ -67,7 +67,6 @@ namespace TASVideos.Pages.Publications
 		public async Task<IActionResult> OnGet()
 		{
 			Publication = await _db.Publications
-					.AsSingleQuery()
 					.Where(p => p.Id == Id)
 					.Select(p => new PublicationEditModel
 					{
@@ -297,7 +296,10 @@ namespace TASVideos.Pages.Publications
 			{
 				foreach (var message in externalMessages)
 				{
-					await _publisher.SendPublicationEdit($"{publication.Title} edited: " + message, $"{Id}M", User.Name());
+					await _publisher.SendPublicationEdit(
+						$"{Id}M edited by {User.Name()}",
+						$"{string.Join(", ", externalMessages)} | {publication.Title}",
+						$"{Id}M");
 				}
 			}
 		}

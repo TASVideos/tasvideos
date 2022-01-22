@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -15,9 +14,7 @@ namespace TASVideos.Pages.Forum.Topics
 		private readonly ApplicationDbContext _db;
 
 		public SetTypeModel(
-			ApplicationDbContext db,
-			ITopicWatcher watcher)
-			: base(db, watcher)
+			ApplicationDbContext db)
 		{
 			_db = db;
 		}

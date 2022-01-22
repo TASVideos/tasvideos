@@ -164,7 +164,6 @@ namespace TASVideos.Data.Entity
 
 		public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
 		{
-			publications.AsSingleQuery();
 			if (tokens.MovieIds.Any())
 			{
 				return publications.Where(p => tokens.MovieIds.Contains(p.Id));

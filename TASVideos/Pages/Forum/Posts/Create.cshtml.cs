@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,20 +22,22 @@ namespace TASVideos.Pages.Forum.Posts
 		private readonly ApplicationDbContext _db;
 		private readonly ITopicWatcher _topicWatcher;
 		private readonly ILogger<CreateModel> _logger;
+		private readonly IForumService _forumService;
 
 		public CreateModel(
 			UserManager userManager,
 			ExternalMediaPublisher publisher,
 			ApplicationDbContext db,
 			ITopicWatcher topicWatcher,
-			ILogger<CreateModel> logger)
-			: base(db, topicWatcher)
+			ILogger<CreateModel> logger,
+			IForumService forumService)
 		{
 			_userManager = userManager;
 			_publisher = publisher;
-			_topicWatcher = topicWatcher;
 			_db = db;
+			_topicWatcher = topicWatcher;
 			_logger = logger;
+			_forumService = forumService;
 		}
 
 		[FromRoute]
@@ -49,6 +52,8 @@ namespace TASVideos.Pages.Forum.Posts
 		[BindProperty]
 		[DisplayName("Watch Topic for Replies")]
 		public bool WatchTopic { get; set; }
+
+		public IEnumerable<MiniPostModel> PreviousPosts { get; set; } = new List<MiniPostModel>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -84,6 +89,22 @@ namespace TASVideos.Pages.Forum.Posts
 			}
 
 			WatchTopic = await _topicWatcher.IsWatchingTopic(TopicId, User.GetUserId());
+
+			PreviousPosts = await _db.ForumPosts
+				.ForTopic(TopicId)
+				.Select(fp => new MiniPostModel
+				{
+					CreateTimestamp = fp.CreateTimestamp,
+					PosterName = fp.Poster!.UserName,
+					PosterPronouns = fp.Poster.PreferredPronouns,
+					Text = fp.Text,
+					EnableBbCode = fp.EnableBbCode,
+					EnableHtml = fp.EnableHtml
+				})
+				.OrderByDescending(fp => fp.CreateTimestamp)
+				.Take(10)
+				.Reverse()
+				.ToListAsync();
 
 			return Page();
 		}
@@ -135,16 +156,34 @@ namespace TASVideos.Pages.Forum.Posts
 				return AccessDenied();
 			}
 
-			var id = await CreatePost(TopicId, topic.ForumId, Post, user.Id, IpAddress, WatchTopic);
+			var id = await _forumService.CreatePost(new PostCreateDto(
+				topic.ForumId,
+				TopicId,
+				Post.Subject,
+				Post.Text,
+				user.Id,
+				user.UserName,
+				Post.Mood,
+				IpAddress,
+				WatchTopic));
 
-			var mood = Post.Mood != ForumPostMood.Normal ? $" Mood: ({Post.Mood})" : "";
-			await _publisher.SendForum(
-				topic.Forum.Restricted,
-				"New reply",
-				$"({topic.Forum.ShortName}: {topic.Title}) ({Post.Subject})",
-				$"Forum/Posts/{id}",
-				$"{user.UserName}{mood}",
-				"New Forum Post");
+			var mood = Post.Mood != ForumPostMood.Normal ? $" (Mood: {Post.Mood})" : "";
+			var subject = string.IsNullOrWhiteSpace(Post.Subject) ? "" : $" ({Post.Subject})";
+			if (TopicId == ForumConstants.NewsTopicId)
+			{
+				await _publisher.AnnounceForum(
+					$"News Post by {user.UserName}{mood}",
+					$"{topic.Forum.ShortName}: {topic.Title}{subject}",
+					$"Forum/Posts/{id}");
+			}
+			else
+			{
+				await _publisher.SendForum(
+					topic.Forum.Restricted,
+					$"New Post by {user.UserName}{mood}",
+					$"{topic.Forum.ShortName}: {topic.Title}{subject}",
+					$"Forum/Posts/{id}");
+			}
 
 			await _userManager.AssignAutoAssignableRolesByPost(user.Id);
 

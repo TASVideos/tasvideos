@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Subforum.Models;
 
@@ -34,7 +32,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		public async Task<IActionResult> OnGet()
 		{
 			Forum = await _db.Forums
-				.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
+				.ExcludeRestricted(false)
 				.Select(f => new ForumDisplayModel
 				{
 					Id = f.Id,
@@ -59,10 +57,11 @@ namespace TASVideos.Pages.Forum.Subforum
 					Type = ft.Type,
 					IsLocked = ft.IsLocked,
 					PostCount = ft.ForumPosts.Count,
-					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id)),
-					LastPostDateTime = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))!.CreateTimestamp
+					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
 				})
-				.SortedPageOf(Search);
+				.OrderByDescending(ft => ft.Type)
+				.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
+				.PageOf(Search);
 
 			return Page();
 		}

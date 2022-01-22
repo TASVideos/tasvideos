@@ -11,5 +11,7 @@ namespace TASVideos.Pages.Games.Models
 		}
 
 		public string? SystemCode { get; set; }
+
+		public string? SearchTerms { get; set; }
 	}
 }

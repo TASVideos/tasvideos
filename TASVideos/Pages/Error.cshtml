@@ -1,11 +1,5 @@
 ﻿@page
-@model ErrorModel
 @{
-	ViewData["Title"] = "Error";
+	ViewData["Title"] = "System Error";
 }
-
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-<p condition="Model.ShowRequestId">
-	<strong>Request ID:</strong> <code>@Model.RequestId</code>
-</p>
+@await Component.RenderWiki("System/Error")

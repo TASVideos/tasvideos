@@ -194,7 +194,7 @@ namespace TASVideos.Pages.Submissions
 			await _userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId));
 
 			await _tasVideosAgent.PostSubmissionPublished(submission.Id, publication.Id);
-			await _publisher.AnnouncePublication(publication.Title, $"{publication.Id}M", User.Name());
+			await _publisher.AnnouncePublication(publication.Title, $"{publication.Id}M");
 
 			if (_youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
 			{

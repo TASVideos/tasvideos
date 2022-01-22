@@ -36,7 +36,7 @@ namespace TASVideos.Pages.Publications
 		public async Task<IActionResult> OnGet()
 		{
 			Publication = await _mapper
-				.ProjectTo<PublicationDisplayModel>(_db.Publications.AsSingleQuery())
+				.ProjectTo<PublicationDisplayModel>(_db.Publications)
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
 			if (Publication == null)

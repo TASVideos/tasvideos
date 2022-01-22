@@ -32,14 +32,14 @@ Disallow: /submissions/
 Disallow: /media/
 Disallow: /MovieMaintenanceLog
 Disallow: /UserMaintenanceLog
+Disallow: /InternalSystem/
 
 User-agent: Mediapartners-Google
 Allow: /forum/
 
 User-agent: Fasterfox
 Disallow: /
-
-Sitemap: http://tasvideos.org/sitemap.xml");
+");
 			}
 			else
 			{

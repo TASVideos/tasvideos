@@ -45,7 +45,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 
 	public static class ExternalMediaPublisherExtensions
 	{
-		public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string title, string relativeLink, string body = "", string user = "")
+		public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string title, string relativeLink, string body)
 		{
 			await publisher.Send(new Post
 			{
@@ -56,12 +56,11 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 				Group = PostGroups.UserFiles,
 				Title = title,
 				Body = body,
-				Link = publisher.ToAbsolute(relativeLink),
-				User = user
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static async Task AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static async Task AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string relativeLink)
 		{
 			await publisher.Send(new Post
 			{
@@ -70,12 +69,11 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 				Group = PostGroups.Submission,
 				Title = $"New Submission! Go and see {title}",
 				Body = "",
-				Link = publisher.ToAbsolute(relativeLink),
-				User = user
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
 		{
 			await publisher.Send(new Post
 			{
@@ -83,13 +81,12 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 				Type = PostType.General,
 				Group = PostGroups.Submission,
 				Title = title,
-				Body = "",
-				Link = publisher.ToAbsolute(relativeLink),
-				User = user
+				Body = body,
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static async Task AnnouncePublication(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static async Task AnnouncePublication(this ExternalMediaPublisher publisher, string title, string relativeLink)
 		{
 			await publisher.Send(new Post
 			{
@@ -98,12 +95,11 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 				Group = PostGroups.Submission,
 				Title = $"New movie published! Go and see {title}",
 				Body = "",
-				Link = publisher.ToAbsolute(relativeLink),
-				User = user
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string relativeLink, string user = "")
+		public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
 		{
 			await publisher.Send(new Post
 			{
@@ -111,43 +107,52 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 				Type = PostType.General,
 				Group = PostGroups.Publication,
 				Title = title,
-				Body = "",
-				Link = publisher.ToAbsolute(relativeLink),
-				User = user
+				Body = body,
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink, string user = "", string announcement = "")
+		public static async Task AnnounceForum(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
 		{
 			await publisher.Send(new Post
 			{
-				Announcement = announcement,
+				Announcement = "News Post!",
+				Type = PostType.Announcement,
+				Group = PostGroups.Forum,
+				Title = title,
+				Body = body,
+				Link = publisher.ToAbsolute(relativeLink)
+			});
+		}
+
+		public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink)
+		{
+			await publisher.Send(new Post
+			{
 				Type = restricted
 					? PostType.Administrative
 					: PostType.General,
 				Group = PostGroups.Forum,
 				Title = title,
 				Body = body,
-				Link = publisher.ToAbsolute(relativeLink),
-				User = user
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static async Task SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user)
+		public static async Task SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
 		{
 			await publisher.Send(new Post
 			{
 				Announcement = "",
 				Type = PostType.General,
 				Group = PostGroups.Wiki,
-				Title = $"{title}",
+				Title = title,
 				Body = body,
-				Link = publisher.ToAbsolute(relativeLink),
-				User = user
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 
-		public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink, string user = "")
+		public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
 		{
 			await publisher.Send(new Post
 			{
@@ -156,8 +161,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher
 				Group = PostGroups.UserManagement,
 				Title = title,
 				Body = body,
-				Link = publisher.ToAbsolute(relativeLink),
-				User = user
+				Link = publisher.ToAbsolute(relativeLink)
 			});
 		}
 	}

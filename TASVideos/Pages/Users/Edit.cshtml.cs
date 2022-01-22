@@ -123,8 +123,11 @@ namespace TASVideos.Pages.Users
 
 			if (userNameChange != null)
 			{
-				string message = $"User {userNameChange} name changed to {user.UserName}";
-				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", User.Name());
+				string message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
+				await _publisher.SendUserManagement(
+					message,
+					"",
+					$"Users/Profile/{user.UserName}");
 				await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			}
 
@@ -140,20 +143,31 @@ namespace TASVideos.Pages.Users
 				.Where(r => currentRoleIds.Except(newRoleIds).Contains(r.Id))
 				.Select(r => r.Name)
 				.ToList();
-			if (addedRoles.Any() || removedRoles.Any())
+
+			var anyAddedRoles = addedRoles.Any();
+			var anyRemovedRoles = removedRoles.Any();
+			if (anyAddedRoles || anyRemovedRoles)
 			{
-				var message = $"user {user.UserName} roles modified,";
-				if (addedRoles.Any())
+				var message = "";
+				if (anyAddedRoles)
 				{
-					message += " added: " + string.Join(",", addedRoles);
+					message += "Added roles: " + string.Join(", ", addedRoles);
 				}
 
-				if (removedRoles.Any())
+				if (anyAddedRoles && anyRemovedRoles)
 				{
-					message += " removed: " + string.Join(",", removedRoles);
+					message += " | ";
 				}
 
-				await _publisher.SendUserManagement(message, "", $"Users/Profile/{user.UserName}", User.Name());
+				if (anyRemovedRoles)
+				{
+					message += "Removed roles: " + string.Join(", ", removedRoles);
+				}
+
+				await _publisher.SendUserManagement(
+					$"User {user.UserName} edited by {User.Name()}",
+					message,
+					$"Users/Profile/{user.UserName}");
 				await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			}
 

@@ -31,7 +31,6 @@ namespace TASVideos.Pages.RssFeeds
 		{
 			var minTimestamp = DateTime.UtcNow.AddDays(-60);
 			Publications = await _db.Publications
-				.AsSingleQuery()
 				.ByMostRecent()
 				.Where(p => p.CreateTimestamp >= minTimestamp)
 				.Select(p => new RssPublication

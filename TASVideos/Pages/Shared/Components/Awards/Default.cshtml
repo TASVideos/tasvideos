@@ -4,9 +4,7 @@
 <row>
 	@foreach (var award in Model.Where(m => m.Type == AwardType.User).OrderBy(m => m.ShortName))
 	{
-		@*TODO: Fix the file names to be consistent*@
-		int year = award.Year > 2018 ? award.Year - 2000 : award.Year;
-		string awardName = $"{award.ShortName}_{year.ToString()}";
+		string awardName = $"{award.ShortName}_{award.Year.ToString()}";
 		<div class="col-md-4 col-sm-6 mt-3">
 			<img alt="@award.Description"
 				 srcset="/awards/@(awardName).png .5x,

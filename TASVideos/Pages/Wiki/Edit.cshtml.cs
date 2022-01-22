@@ -5,7 +5,6 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Helpers;
 using TASVideos.Extensions;
 using TASVideos.Pages.Wiki.Models;
 
@@ -129,10 +128,9 @@ namespace TASVideos.Pages.Wiki
 			if (page.Revision == 1 || !PageToEdit.MinorEdit)
 			{
 				await _publisher.SendGeneralWiki(
-					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")}",
-					$"({PageToEdit.RevisionMessage}): ",
-					Path,
-					User.Name());
+					$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
+					$"{PageToEdit.RevisionMessage}",
+					Path);
 			}
 
 			return BaseRedirect("/" + page.PageName);

@@ -108,14 +108,11 @@ namespace TASVideos.Pages.Forum.Topics
 			var result = await ConcurrentSave(_db, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
 			if (result)
 			{
-				var announcement = $"Topic {originalTopic.Title} merged into {destinationTopic.Title}";
 				await _publisher.SendForum(
 					originalTopic.Forum!.Restricted || destinationTopic.Forum!.Restricted,
-					announcement,
-					"",
-					$"Forum/Topics/{destinationTopic.Id}",
-					User.Name(),
-					announcement);
+					$"Topics MERGED by {User.Name()}",
+					$@"""{originalTopic.Title}"" into ""{destinationTopic.Title}""",
+					$"Forum/Topics/{destinationTopic.Id}");
 			}
 
 			return RedirectToPage("Index", new { id = Topic.DestinationTopicId });

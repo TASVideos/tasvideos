@@ -62,7 +62,7 @@ namespace TASVideos.Core.Services.Email
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Unable to authenticate email, skipping email: subject: {0} message: {1} exception: {2}", email.Subject, email.Message, ex);
+				_logger.LogError("Unable to send email, subject: {0} message: {1} exception: {2}", email.Subject, email.Message, ex);
 			}
 		}
 

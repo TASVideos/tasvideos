@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -22,15 +23,16 @@ namespace TASVideos.Pages.Forum.Posts
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly ExternalMediaPublisher _publisher;
+		private readonly IForumService _forumService;
 
 		public EditModel(
 			ApplicationDbContext db,
 			ExternalMediaPublisher publisher,
-			ITopicWatcher watcher)
-			: base(db, watcher)
+			IForumService forumService)
 		{
 			_db = db;
 			_publisher = publisher;
+			_forumService = forumService;
 		}
 
 		[FromRoute]
@@ -42,6 +44,7 @@ namespace TASVideos.Pages.Forum.Posts
 		[BindProperty]
 		[DisplayName("Minor Edit")]
 		public bool MinorEdit { get; set; } = false;
+		public IEnumerable<MiniPostModel> PreviousPosts { get; set; } = new List<MiniPostModel>();
 
 		public async Task<IActionResult> OnGet()
 		{
@@ -82,6 +85,23 @@ namespace TASVideos.Pages.Forum.Posts
 			{
 				return AccessDenied();
 			}
+
+			PreviousPosts = await _db.ForumPosts
+				.ForTopic(Post.TopicId)
+				.Where(fp => fp.CreateTimestamp < Post.CreateTimestamp)
+				.Select(fp => new MiniPostModel
+				{
+					CreateTimestamp = fp.CreateTimestamp,
+					PosterName = fp.Poster!.UserName,
+					PosterPronouns = fp.Poster.PreferredPronouns,
+					Text = fp.Text,
+					EnableBbCode = fp.EnableBbCode,
+					EnableHtml = fp.EnableHtml
+				})
+				.OrderByDescending(fp => fp.CreateTimestamp)
+				.Take(10)
+				.Reverse()
+				.ToListAsync();
 
 			return Page();
 		}
@@ -135,11 +155,9 @@ namespace TASVideos.Pages.Forum.Posts
 			{
 				await _publisher.SendForum(
 					forumPost.Topic!.Forum!.Restricted,
-					$"Post edited ({forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title})",
-					"",
-					$"Forum/Posts/{Id}",
-					User.Name(),
-					"Forum Post Edited");
+					$"Post edited by {User.Name()}",
+					$"{forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title}",
+					$"Forum/Posts/{Id}");
 			}
 
 			return BaseRedirect($"/Forum/Posts/{Id}");
@@ -190,14 +208,12 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (result)
 			{
-				var announcement = $"Post DELETED ({post.Topic!.Forum!.ShortName}: {post.Topic.Title})";
+				_forumService.ClearCache();
 				await _publisher.SendForum(
-					post.Topic.Forum.Restricted,
-					announcement,
-					"",
-					$"Forum/Topics/{post.Topic.Id}",
-					User.Name(),
-					announcement);
+					post.Topic!.Forum!.Restricted,
+					$"{(topicDeleted ? "Topic" : "Post")} DELETED by {User.Name()}",
+					$"{post.Topic!.Forum!.ShortName}: {post.Topic.Title}",
+					topicDeleted ? "" : $"Forum/Topics/{post.Topic.Id}");
 			}
 
 			return topicDeleted

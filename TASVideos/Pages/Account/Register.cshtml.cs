@@ -136,7 +136,10 @@ namespace TASVideos.Pages.Account
 					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
-					await _publisher.SendUserManagement($"New User joined! {user.UserName}", "", $"Users/Profile/{user.UserName}", user.UserName);
+					await _publisher.SendUserManagement(
+						$"New User joined! {user.UserName}",
+						"",
+						$"Users/Profile/{user.UserName}");
 					await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 					await _emailService.EmailConfirmation(Email, callbackUrl);
 

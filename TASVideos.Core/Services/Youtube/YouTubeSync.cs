@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
@@ -26,6 +27,7 @@ namespace TASVideos.Core.Services.Youtube
 
 	internal class YouTubeSync : IYoutubeSync
 	{
+		private const int YoutubeTitleMaxLength = 100;
 		private const int BatchSize = 50;
 		private static readonly string[] BaseTags = { "TAS", "TASVideos", "Tool-Assisted", "Video Game" };
 		private readonly HttpClient _client;
@@ -79,23 +81,30 @@ namespace TASVideos.Core.Services.Youtube
 			descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
 			var renderedDescription = await _textRenderer.RenderWikiForYoutube(video.WikiPage);
 
-			var requestBody = new VideoUpdateRequest
+			string title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted] " : "")}{video.Title}";
+			string description = descriptionBase + renderedDescription;
+			if (title.Length > YoutubeTitleMaxLength)
+			{
+				description = title + "\n" + descriptionBase + renderedDescription;
+				title = title.CapAndEllipse(YoutubeTitleMaxLength);
+			}
+
+			var updateRequest = new VideoUpdateRequest
 			{
 				VideoId = videoId,
 				Snippet = new ()
 				{
-					Title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted] " : "")}{video.Title}",
-					Description = descriptionBase + renderedDescription,
+					Title = title,
+					Description = description,
 					CategoryId = videoDetails.CategoryId,
 					Tags = BaseTags.Concat(video.Tags).ToList()
 				}
-			}.ToStringContent();
+			};
 
-			var response = await _client.PutAsync("videos?part=status,snippet", requestBody);
+			var response = await _client.PutAsync("videos?part=status,snippet", updateRequest.ToStringContent());
 			if (!response.IsSuccessStatusCode)
 			{
-				_logger.LogError($"[{DateTime.Now}] An error occurred syncing data to Youtube.");
-				_logger.LogError(await response.Content.ReadAsStringAsync());
+				_logger.LogError($"[{DateTime.Now}] An error occurred syncing data to Youtube. Request: {JsonConvert.SerializeObject(updateRequest)} Response: {await response.Content.ReadAsStringAsync()}");
 			}
 		}
 
@@ -157,20 +166,21 @@ namespace TASVideos.Core.Services.Youtube
 			}
 
 			await SetAccessToken();
-			var requestBody = new UnlistRequest
+
+			var unlistRequest = new UnlistRequest
 			{
 				VideoId = videoId,
 				Status = new ()
 				{
 					PrivacyStatus = "unlisted"
 				}
-			}.ToStringContent();
+			};
 
-			var response = await _client.PutAsync("videos?part=status", requestBody);
+			var response = await _client.PutAsync("videos?part=status", unlistRequest.ToStringContent());
 
 			if (!response.IsSuccessStatusCode)
 			{
-				_logger.LogError($"{DateTime.Now} An error occurred sending a request to YouTube");
+				_logger.LogError($"{DateTime.Now} An error occurred sending a request to YouTube. Request: {JsonConvert.SerializeObject(unlistRequest)}");
 				_logger.LogError($"Response: {await response.Content.ReadAsStringAsync()}");
 			}
 		}
@@ -238,7 +248,7 @@ namespace TASVideos.Core.Services.Youtube
 			var result = await _client.GetAsync($"videos?id={videoId}&part=snippet,fileDetails");
 			if (!result.IsSuccessStatusCode)
 			{
-				_logger.LogError($"{DateTime.Now} An error occurred requesting data for video {videoId} from YouTube");
+				_logger.LogError($"{DateTime.Now} Unable to request data for video {videoId} from YouTube");
 				_logger.LogError($"Response: {await result.Content.ReadAsStringAsync()}");
 				return null;
 			}

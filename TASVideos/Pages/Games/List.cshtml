@@ -1,21 +1,34 @@
 ﻿@page "{handler?}"
 @model ListModel
 @{
-	ViewData["Title"] = "Game List" + (!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? "/" + Model.Games.SystemCode : string.Empty);
+	ViewData["Title"] = "Game List" +
+		(!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? " - " + Model.Games.SystemCode : string.Empty) +
+		(!string.IsNullOrWhiteSpace(Model.Games.SearchTerms) ? " - " + $@"""{Model.Games.SearchTerms}""" : string.Empty);
 }
 
-<a asp-page="Edit" class="btn btn-primary mb-3 float-end"><i class="fa fa-plus"></i> Create</a>
-<form class="mb-3 d-flex align-items-center">
-	<div class="input-group">
-		<label asp-for="@Model.Games.SystemCode" class="input-group-text"></label>
-		<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="SystemCode" class="form-control"></select>
+<a asp-page="Edit" permission="CatalogMovies" class="btn btn-primary mb-3 float-end"><i class="fa fa-plus"></i> Create</a>
+<form class="row">
+	<div class="col-lg-5 col-12 mb-1">
+		<div class="input-group">
+			<label asp-for="SearchTerms" class="input-group-text"></label>
+			<input type="text" asp-for="SearchTerms" class="form-control" />
+		</div>
+		<span asp-validation-for="SearchTerms" class="text-danger"></span>
+	</div>
+	<div class="col-lg-5 col-12 mb-1">
+		<div class="input-group">
+			<label asp-for="@Model.Games.SystemCode" class="input-group-text"></label>
+			<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="SystemCode" class="form-control"></select>
+		</div>
+	</div>
+	<div class="col-2">
 		<button type="Submit" class="btn btn-secondary">Go</button>
 	</div>
 </form>
 
 <partial name="_Pager" model="Model.Games" />
 <table class="table table-bordered table-striped table-sm">
-	<sortable-table-head sorting="@Model.Search" model-type="typeof(TASVideos.Pages.Games.Models.GameListModel)" />
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(Models.GameListModel)" />
 	@foreach (var game in Model.Games)
 	{
 		<tr>
@@ -24,7 +37,7 @@
 			<td>@game.DisplayName</td>
 			<td>
 				<a asp-page="Index" asp-route-id="@game.Id" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i> View</a>
-				<a asp-page="Edit" asp-route-id="@game.Id" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Edit</a>
+				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@game.Id" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Edit</a>
 				<a asp-page="Roms/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm"><i class="fa fa-pencil"></i> Roms</a>
 			</td>
 		</tr>

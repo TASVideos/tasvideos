@@ -35,7 +35,7 @@ namespace TASVideos.Extensions
 			// However, registering this in combination with the pages above causes a request to happen a second time
 			// when there is is an unhandled exception, which is very bad
 			return app;
-				//.UseMiddleware(typeof(ErrorHandlingMiddleware));
+				////.UseMiddleware(typeof(ErrorHandlingMiddleware));
 		}
 
 		public static IApplicationBuilder UseGzipCompression(this IApplicationBuilder app, AppSettings settings)

@@ -7,15 +7,15 @@
 
 @if (Model.HighlightedPost is not null)
 {
-	var description = $"Thread Topic: {Model.Topic.Title}";
+	var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";
 	if (!String.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
 	{
-		description += $" - Reply Subject: {Model.HighlightedPost.Subject}";
+		description += $"\nSubject: {Model.HighlightedPost.Subject}";
 	}
 	@section Header {
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="TASVideos" />
-		<meta property="og:title" content="@($"Forum Reply by {Model.HighlightedPost.PosterName}")" />
+		<meta property="og:title" content="@($"Post by {Model.HighlightedPost.PosterName}")" />
 		<meta property="og:description" content="@description" />
 		<meta property="og:url" content="@($"{HttpContext.Request.ToBaseUrl()}/Forum/Posts/{Model.HighlightedPost.Id}")" />
 		<meta property="og:image" content="@Model.HighlightedPost.GetCurrentAvatar()" />
@@ -25,13 +25,13 @@
 	@section Header {
 		@{
 			var firstPost = @Model.Topic.Posts.FirstOrDefault();
-			var ogTitle = firstPost is not null ? $"Forum Thread by {firstPost.PosterName}" : "Forum Thread";
-			var ogImage = firstPost is not null ? firstPost.GetCurrentAvatar() : $"{HttpContext.Request.ToBaseUrl()}/images/logo-light-4x.png";
+			var ogTitle = firstPost is not null ? $"Topic by {firstPost.PosterName}" : "Forum Topic";
+			var ogImage = firstPost is not null ? firstPost.GetCurrentAvatar() : $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png";
 		}
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="TASVideos" />
 		<meta property="og:title" content="@ogTitle" />
-		<meta property="og:description" content="@Model.Topic.Title" />
+		<meta property="og:description" content="@($"{Model.Topic.ForumName} → {Model.Topic.Title}")" />
 		<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
 		<meta property="og:image" content="@ogImage" />
 	}
@@ -90,7 +90,7 @@
 				if (!player) {
 					window.onYouTubeIframeAPIReady = () => {
 						player = new YT.Player('ytplayer', {
-							videoId: "@Model.EncodeEmbedLink!.Split("/").Last()"
+							videoId: "@Model.EncodeEmbedLink!.Split('/').Last()"
 						});
 					}
 				}
