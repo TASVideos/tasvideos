@@ -139,7 +139,7 @@ namespace TASVideos.Core.Services
 				PosterId = post.PosterId,
 				IpAddress = post.IpAddress,
 				Subject = post.Subject,
-				Text = post.Text,
+				Text = post.Text.Replace("\r", ""),
 				PosterMood = post.Mood,
 
 				// New posts are always bbcode = true, html = false

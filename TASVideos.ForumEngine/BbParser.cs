@@ -61,8 +61,8 @@ namespace TASVideos.ForumEngine
 			)?
 		", RegexOptions.IgnorePatternWhitespace);
 
-		private static readonly Regex BlockTrimAfterEntering = new("\\G[ \t]*\n?");
-		private static readonly Regex BlockTrimAfterLeaving = new("\\G[ \t]*\n?");
+		private static readonly Regex BlockTrimAfterEntering = new ("\\G[ \t]*\r?\n?");
+		private static readonly Regex BlockTrimAfterLeaving = new ("\\G[ \t]*\r?\n?");
 
 		// The old system does support attributes in html tags, but only a few that we probably don't want,
 		// and it doesn't even support the full html syntax for them.  So forget attributes for now
