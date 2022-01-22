@@ -6,6 +6,8 @@ namespace TASVideos.Extensions
 	{
 		public static string ToCondensedString(this TimeSpan timeSpan)
 		{
+			// round to nearest 0.01s
+			timeSpan = new TimeSpan((timeSpan.Ticks + 50000) / 100000 * 100000);
 			if (timeSpan.Days > 0)
 			{
 				return timeSpan.ToString("d\\.hh\\:mm\\:ss\\.ff");
