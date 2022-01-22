@@ -10,20 +10,16 @@ namespace TASVideos.Pages.Account
 	public class LogoutModel : BasePageModel
 	{
 		private readonly SignInManager _signInManager;
-		private readonly UserManager _userManager;
 
-		public LogoutModel(
-			SignInManager signInManager,
-			UserManager userManager)
+		public LogoutModel(SignInManager signInManager)
 		{
 			_signInManager = signInManager;
-			_userManager = userManager;
 		}
 
 		public async Task<IActionResult> OnPost()
 		{
-			var user = await _userManager.GetUserAsync(User);
-			await _userManager.RemoveClaimsAsync(user, User.Claims);
+			var user = await _signInManager.UserManager.GetUserAsync(User);
+			await _signInManager.UserManager.RemoveClaimsAsync(user, User.Claims);
 			await _signInManager.SignOutAsync();
 			return Login();
 		}

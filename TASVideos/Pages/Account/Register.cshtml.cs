@@ -21,7 +21,6 @@ namespace TASVideos.Pages.Account
 	public class RegisterModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
-		private readonly UserManager _userManager;
 		private readonly SignInManager _signInManager;
 		private readonly IEmailService _emailService;
 		private readonly ExternalMediaPublisher _publisher;
@@ -31,7 +30,6 @@ namespace TASVideos.Pages.Account
 
 		public RegisterModel(
 			ApplicationDbContext db,
-			UserManager userManager,
 			SignInManager signInManager,
 			IEmailService emailService,
 			ExternalMediaPublisher publisher,
@@ -40,7 +38,6 @@ namespace TASVideos.Pages.Account
 			IUserMaintenanceLogger userMaintenanceLogger)
 		{
 			_db = db;
-			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailService = emailService;
 			_publisher = publisher;
@@ -129,10 +126,10 @@ namespace TASVideos.Pages.Account
 					TimeZoneId = SelectedTimeZone ?? TimeZoneInfo.Utc.Id,
 					From = From
 				};
-				var result = await _userManager.CreateAsync(user, Password);
+				var result = await _signInManager.UserManager.CreateAsync(user, Password);
 				if (result.Succeeded)
 				{
-					var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+					var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
 					var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
@@ -143,7 +140,7 @@ namespace TASVideos.Pages.Account
 					await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 					await _emailService.EmailConfirmation(Email, callbackUrl);
 
-					return _userManager.Options.SignIn.RequireConfirmedEmail
+					return _signInManager.UserManager.Options.SignIn.RequireConfirmedEmail
 						? RedirectToPage("EmailConfirmationSent")
 						: BaseReturnUrlRedirect();
 				}
