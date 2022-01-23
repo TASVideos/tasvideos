@@ -48,31 +48,33 @@
 					<img src="/images/tasvideosbg.jpg">
 				</picture>
 			</div>
-			<picture>
-				<source srcset="/images/logo-light.webp .5x,
-						/images/logo-light-2x.webp 1x,
-						/images/logo-light-4x.webp 2x"
-						type="image/webp">
-				<img class="site-icon site-icon-light" src="/images/logo-light-2x.png"
-					 srcset="/images/logo-light.png .5x,
-						/images/logo-light-2x.png 1x,
-						/images/logo-light-4x.png 2x" loading="lazy">
-			</picture>
-			<picture>
-				<source srcset="/images/logo-dark.webp .5x,
-						/images/logo-dark-2x.webp 1x,
-						/images/logo-dark-4x.webp 2x"
-						type="image/webp">
-				<img class="site-icon site-icon-dark"
-					 srcset="/images/logo-dark.png .5x,
-						/images/logo-dark-2x.png 1x,
-						/images/logo-dark-4x.png 2x" loading="lazy">
-			</picture>
-			<div id="mantra">
-				<a id="brand" asp-page="/Index">TASVideos</a>
+			<a id="icon" asp-page="/Index">
+				<picture>
+					<source srcset="/images/logo-light.webp .5x,
+							/images/logo-light-2x.webp 1x,
+							/images/logo-light-4x.webp 2x"
+							type="image/webp">
+					<img class="site-icon site-icon-light" src="/images/logo-light-2x.png"
+						 srcset="/images/logo-light.png .5x,
+							/images/logo-light-2x.png 1x,
+							/images/logo-light-4x.png 2x" loading="lazy">
+				</picture>
+				<picture>
+					<source srcset="/images/logo-dark.webp .5x,
+							/images/logo-dark-2x.webp 1x,
+							/images/logo-dark-4x.webp 2x"
+							type="image/webp">
+					<img class="site-icon site-icon-dark"
+						 srcset="/images/logo-dark.png .5x,
+							/images/logo-dark-2x.png 1x,
+							/images/logo-dark-4x.png 2x" loading="lazy">
+				</picture>
+			</a>
+			<a id="mantra" asp-page="/Index">
+				<div id="brand">TASVideos</div>
 				<div id="mantra-1">Tool-assisted game movies</div>
 				<div id="mantra-2">When human skills are just not enough</div>
-			</div>
+			</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
