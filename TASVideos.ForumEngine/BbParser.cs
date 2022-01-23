@@ -248,6 +248,7 @@ namespace TASVideos.ForumEngine
 					TagInfo.ChildrenAllowed.No => false,
 					TagInfo.ChildrenAllowed.IfParam => _stack.Peek().Options != "",
 					TagInfo.ChildrenAllowed.Yes => true,
+					_ => true,
 				};
 			}
 
