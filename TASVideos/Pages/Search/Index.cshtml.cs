@@ -16,7 +16,7 @@ namespace TASVideos.Pages.Search
 	[AllowAnonymous]
 	public class IndexModel : PageModel
 	{
-		private const int PageSize = 10;
+		public const int PageSize = 10;
 		private readonly ApplicationDbContext _db;
 
 		public IndexModel(ApplicationDbContext db)
@@ -60,7 +60,7 @@ namespace TASVideos.Pages.Search
 					.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 					.OrderByDescending(w => EF.Functions.ToTsVector(w.Markup).Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 					.Skip(skip)
-					.Take(PageSize)
+					.Take(PageSize + 1)
 					.Select(w => new PageSearchModel(EF.Functions.WebSearchToTsQuery(SearchTerms).GetResultHeadline(w.Markup), w.PageName))
 					.ToListAsync();
 
@@ -69,7 +69,7 @@ namespace TASVideos.Pages.Search
 					.Where(p => p.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 					.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 					.Skip(skip)
-					.Take(PageSize)
+					.Take(PageSize + 1)
 					.Select(p => new PostSearchModel(
 						EF.Functions.WebSearchToTsQuery(SearchTerms).GetResultHeadline(p.Text),
 						p.Topic!.Title,
@@ -80,7 +80,7 @@ namespace TASVideos.Pages.Search
 					.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation + " || " + g.System!.Code).Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 					.OrderBy(g => g.DisplayName)
 					.Skip(skip)
-					.Take(PageSize)
+					.Take(PageSize + 1)
 					.Select(g => new GameSearchModel(g.Id, g.System!.Code, g.DisplayName))
 					.ToListAsync();
 			}
