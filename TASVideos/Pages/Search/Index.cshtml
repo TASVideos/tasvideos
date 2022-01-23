@@ -17,7 +17,7 @@
 			</form-group>
 			<button type="submit" class="btn btn-primary">Search</button>
 			<a condition="Model.PageNumber > 1" asp-page="/Search/Index" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber - 1)">Prev</a>
-			<a condition="Model.PageResults.Any() || Model.PostResults.Any() || Model.GameResults.Any()" asp-page="/Search/Index" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber + 1)">Next</a>
+			<a condition="Model.PageResults.Count > IndexModel.PageSize || Model.PostResults.Count > IndexModel.PageSize || Model.GameResults.Count > IndexModel.PageSize" asp-page="/Search/Index" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber + 1)">Next</a>
 		</column>
 	</row>
 </form>
@@ -27,7 +27,7 @@
 	<h4>Game Results:</h4>
 	<div class="table-container">
 		<table class="table table-striped table-bordered">
-			@foreach (var result in Model.GameResults)
+			@foreach (var result in Model.GameResults.Take(IndexModel.PageSize))
 			{
 				<tr>
 					<td>
@@ -48,7 +48,7 @@
 				<th>Page</th>
 				<td>Content</td>
 			</tr>
-			@foreach (var result in Model.PageResults)
+			@foreach (var result in Model.PageResults.Take(IndexModel.PageSize))
 			{
 				<tr>
 					<td>
@@ -72,7 +72,7 @@
 				<th>Post</th>
 				<td>Content</td>
 			</tr>
-			@foreach (var result in Model.PostResults)
+			@foreach (var result in Model.PostResults.Take(IndexModel.PageSize))
 			{
 				<tr>
 					<td>
