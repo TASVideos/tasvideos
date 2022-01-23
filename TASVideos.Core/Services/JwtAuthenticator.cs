@@ -36,7 +36,7 @@ namespace TASVideos.Core.Services
 
 		public async Task<string> Authenticate(string userName, string password)
 		{
-			var result = await _signInManager.SignInWithLegacySupport(userName, password);
+			var result = await _signInManager.SignIn(userName, password);
 			if (!result.Succeeded)
 			{
 				return "";

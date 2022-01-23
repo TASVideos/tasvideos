@@ -39,7 +39,7 @@ namespace TASVideos.Core.Services
 			_userManager = userManager;
 		}
 
-		public async Task<SignInResult> SignInWithLegacySupport(string userName, string password, bool rememberMe = false)
+		public async Task<SignInResult> SignIn(string userName, string password, bool rememberMe = false)
 		{
 			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
 			if (user == null)

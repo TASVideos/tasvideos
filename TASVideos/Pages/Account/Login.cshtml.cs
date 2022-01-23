@@ -44,7 +44,7 @@ namespace TASVideos.Pages.Account
 				return Page();
 			}
 
-			var result = await _signInManager.SignInWithLegacySupport(UserName, Password, RememberMe);
+			var result = await _signInManager.SignIn(UserName, Password, RememberMe);
 
 			if (result.Succeeded)
 			{
