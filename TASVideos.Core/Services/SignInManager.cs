@@ -56,6 +56,8 @@ namespace TASVideos.Core.Services
 
 			if (result.Succeeded)
 			{
+				var canLogIn = await _userManager.HasPermissionTo(user.Id, PermissionTo.Login);
+
 				user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
 				// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
