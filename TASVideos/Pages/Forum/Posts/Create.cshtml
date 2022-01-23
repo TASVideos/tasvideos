@@ -24,12 +24,18 @@
 			<input type="text" asp-for="Post.Subject" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Post.Subject" class="text-danger"></span>
 		</column>
-		<column md="6" permission="UseMoodAvatars">
+		<column md="4" permission="UseMoodAvatars" condition="@Model.UserAvatars.HasMoods">
 			<label asp-for="Post.Mood" class="form-control-label"></label>
 			<select asp-for="Post.Mood" asp-items="@Model.Moods" class="form-control"></select>
 			<span asp-validation-for="Post.Mood" class="text-danger"></span>
 		</column>
+		<column md="2">
+			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Post.Mood), Model.Post.Mood, Model.UserAvatars)" />
+		</column>
 	</row>
+	<fullrow condition="@Model.UserAvatars.HasAvatar">
+		<img id="avatar-img" src="@Model.UserAvatars.Avatar"/>
+	</fullrow>
 	<fullrow class="mt-3">
 		<partial name="_CreatePostHelper" model="@("Post_Text")" />
 	</fullrow>

@@ -2,6 +2,7 @@
 @model EditModel
 @{
 	ViewData["Title"] = $"Editing Post in Topic: {Model.Post.TopicTitle}";
+	bool isUserEdit = Model.Post.PosterId == User.GetUserId();
 }
 
 @section PageTitle {
@@ -50,10 +51,14 @@
 			<input type="text" asp-for="Post.TopicTitle" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Post.TopicTitle" class="text-danger"></span>
 		</column>
-		<column md="6">
+		<column md="4">
 			<label asp-for="Post.Mood" class="form-control-label"></label>
-			<select asp-for="Post.Mood" asp-items="@Model.Moods" class="form-control"></select>
+			<input condition="!isUserEdit" type="text" readonly asp-for="Post.Mood" class="form-control" />
+			<select condition="isUserEdit" asp-for="Post.Mood" asp-items="@Model.Moods" class="form-control"></select>
 			<span asp-validation-for="Post.Mood" class="text-danger"></span>
+		</column>
+		<column md="2">
+			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Post.Mood), Model.Post.Mood, Model.UserAvatars)" />
 		</column>
 	</row>
 	<fullrow class="mt-3">

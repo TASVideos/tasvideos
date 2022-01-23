@@ -46,6 +46,8 @@ namespace TASVideos.Pages.Forum.Posts
 		public bool MinorEdit { get; set; } = false;
 		public IEnumerable<MiniPostModel> PreviousPosts { get; set; } = new List<MiniPostModel>();
 
+		public AvatarUrls UserAvatars { get; set; } = new (null, null);
+
 		public async Task<IActionResult> OnGet()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
@@ -89,6 +91,7 @@ namespace TASVideos.Pages.Forum.Posts
 			PreviousPosts = await _db.ForumPosts
 				.ForTopic(Post.TopicId)
 				.Where(fp => fp.CreateTimestamp < Post.CreateTimestamp)
+				.ByMostRecent()
 				.Select(fp => new MiniPostModel
 				{
 					CreateTimestamp = fp.CreateTimestamp,
@@ -98,10 +101,17 @@ namespace TASVideos.Pages.Forum.Posts
 					EnableBbCode = fp.EnableBbCode,
 					EnableHtml = fp.EnableHtml
 				})
-				.OrderByDescending(fp => fp.CreateTimestamp)
 				.Take(10)
 				.Reverse()
 				.ToListAsync();
+
+			if (Post.PosterId == User.GetUserId())
+			{
+				UserAvatars = await _db.Users
+					.Where(u => u.Id == User.GetUserId())
+					.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
+					.SingleAsync();
+			}
 
 			return Page();
 		}
@@ -110,6 +120,14 @@ namespace TASVideos.Pages.Forum.Posts
 		{
 			if (!ModelState.IsValid)
 			{
+				if (Post.PosterId == User.GetUserId())
+				{
+					UserAvatars = await _db.Users
+						.Where(u => u.Id == User.GetUserId())
+						.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
+						.SingleAsync();
+				}
+
 				return Page();
 			}
 

@@ -1,0 +1,18 @@
+﻿@using TASVideos.Data.Entity.Forum;
+@using TASVideos.Pages.Forum.Posts.Models;
+@model (string FormId, ForumPostMood Mood, AvatarUrls Avatar)
+
+@if (User.Has(PermissionTo.UseMoodAvatars) && Model.Avatar.HasMoods)
+{
+	<img class="mt-2" id="mood-img" src="@(Model.Avatar.MoodBase!.Replace("$", ((int)Model.Mood).ToString()))" />
+	<script>
+		const moodBase = "@Model.Avatar.MoodBase";
+		const moodDropdown = document.getElementById('@Model.FormId');
+		moodDropdown.onchange = function () {
+			const moodImgElem = document.getElementById("mood-img");
+			const val = moodDropdown.value;
+			const replaced = moodBase.replace("$", val);
+			moodImgElem.setAttribute("src", replaced);
+		};
+	</script>
+}

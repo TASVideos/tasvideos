@@ -41,14 +41,21 @@
 			<label asp-for="Topic.Title" class="form-control-label"></label>
 			<input type="text" asp-for="Topic.Title" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Topic.Title" class="text-danger"></span>
-			<label asp-for="Topic.Mood" class="form-control-label"></label>
-			<select asp-for="Topic.Mood" asp-items="@Model.Moods" class="form-control"></select>
-			<span asp-validation-for="Topic.Mood" class="text-danger"></span>
 		</column>
 		<column permission="SetTopicType" md="6">
 			<label asp-for="Topic.Type" class="form-control-label"></label>
 			<select asp-for="Topic.Type" asp-items="Model.TopicTypes" class="form-control"></select>
 			<span asp-validation-for="Topic.Type" class="text-danger"></span>
+		</column>
+	</row>
+	<row>
+		<column md="4">
+			<label asp-for="Topic.Mood" class="form-control-label"></label>
+			<select asp-for="Topic.Mood" asp-items="@Model.Moods" class="form-control"></select>
+			<span asp-validation-for="Topic.Mood" class="text-danger"></span>
+		</column>
+		<column md="2">
+			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Topic.Mood), Model.Topic.Mood, Model.UserAvatars)"/>
 		</column>
 	</row>
 	<fullrow class="mt-3">

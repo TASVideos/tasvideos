@@ -8,6 +8,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics
@@ -42,6 +43,8 @@ namespace TASVideos.Pages.Forum.Topics
 		[DisplayName("Watch Topic for Replies")]
 		public bool WatchTopic { get; set; } = true;
 
+		public AvatarUrls UserAvatars { get; set; } = new (null, null);
+
 		public async Task<IActionResult> OnGet()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
@@ -54,15 +57,28 @@ namespace TASVideos.Pages.Forum.Topics
 				})
 				.SingleOrDefaultAsync();
 
-			return Topic == null
-				? NotFound()
-				: Page();
+			if (Topic == null)
+			{
+				return NotFound();
+			}
+
+			UserAvatars = await _db.Users
+				.Where(u => u.Id == User.GetUserId())
+				.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
+				.SingleAsync();
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPost(PollCreateModel poll)
 		{
 			if (!ModelState.IsValid)
 			{
+				UserAvatars = await _db.Users
+					.Where(u => u.Id == User.GetUserId())
+					.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
+					.SingleAsync();
+
 				return Page();
 			}
 

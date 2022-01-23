@@ -55,6 +55,8 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public IEnumerable<MiniPostModel> PreviousPosts { get; set; } = new List<MiniPostModel>();
 
+		public AvatarUrls UserAvatars { get; set; } = new (null, null);
+
 		public async Task<IActionResult> OnGet()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
@@ -106,6 +108,11 @@ namespace TASVideos.Pages.Forum.Posts
 				.Reverse()
 				.ToListAsync();
 
+			UserAvatars = await _db.Users
+				.Where(u => u.Id == User.GetUserId())
+				.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
+				.SingleAsync();
+
 			return Page();
 		}
 
@@ -133,6 +140,8 @@ namespace TASVideos.Pages.Forum.Posts
 					UserSignature = user.Signature,
 					Mood = User.Has(PermissionTo.UseMoodAvatars) ? Post.Mood : ForumPostMood.Normal
 				};
+
+				UserAvatars = new AvatarUrls(user.Avatar, user.MoodAvatarUrlBase);
 
 				return Page();
 			}
