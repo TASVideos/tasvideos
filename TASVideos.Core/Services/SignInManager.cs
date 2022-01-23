@@ -47,7 +47,7 @@ namespace TASVideos.Core.Services
 				return SignInResult.Failed;
 			}
 
-			
+			await _userManager.AddUserPermissionsToClaims(user);
 			var result = await base.PasswordSignInAsync(
 				userName,
 				password,
