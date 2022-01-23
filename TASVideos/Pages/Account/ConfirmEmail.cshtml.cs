@@ -39,6 +39,12 @@ namespace TASVideos.Pages.Account
 				return Home();
 			}
 
+			if (user.EmailConfirmed)
+			{
+				// If user has already clicked the email link, no reason to do all the work of confirming
+				return Home();
+			}
+
 			var result = await _userManager.ConfirmEmailAsync(user, code);
 			if (!result.Succeeded)
 			{
