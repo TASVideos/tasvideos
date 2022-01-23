@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TASVideos.Core.Extensions;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -47,7 +49,14 @@ namespace TASVideos.Core.Services
 				return SignInResult.Failed;
 			}
 
-			await _userManager.AddUserPermissionsToClaims(user);
+			var claims = await _userManager.AddUserPermissionsToClaims(user);
+			var canLogIn = claims.Permissions().Contains(PermissionTo.Login);
+
+			if (!canLogIn)
+			{
+				return SignInResult.NotAllowed;
+			}
+
 			var result = await base.PasswordSignInAsync(
 				userName,
 				password,
@@ -56,8 +65,6 @@ namespace TASVideos.Core.Services
 
 			if (result.Succeeded)
 			{
-				var canLogIn = await _userManager.HasPermissionTo(user.Id, PermissionTo.Login);
-
 				user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
 				// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too

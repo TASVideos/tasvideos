@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using TASVideos.Core.Extensions;
 using TASVideos.Data.Entity;
 
 namespace TASVideos
@@ -36,10 +37,7 @@ namespace TASVideos
 				return Enumerable.Empty<PermissionTo>();
 			}
 
-			return user.Claims
-				.Where(c => c.Type == CustomClaimTypes.Permission)
-				.Select(c => Enum.Parse<PermissionTo>(c.Value))
-				.ToList();
+			return user.Claims.Permissions();
 		}
 
 		public static bool Has(this ClaimsPrincipal user, PermissionTo permission)
@@ -60,7 +58,7 @@ namespace TASVideos
 			}
 
 			foreach (var claim in user.Claims
-				.Where(c => c.Type == CustomClaimTypes.Permission)
+				.ThatArePermissions()
 				.ToList())
 			{
 				ci.RemoveClaim(claim);

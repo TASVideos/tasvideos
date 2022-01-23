@@ -69,12 +69,6 @@ namespace TASVideos.Core.Services
 			return claims;
 		}
 
-		public async Task<bool> HasPermissionTo(int userId, PermissionTo perm)
-		{
-			var perms = await GetUserPermissionsById(userId);
-			return perms.Any(p => p == perm);
-		}
-
 		/// <summary>
 		/// Returns a list of all permissions of the <seea cref="User"/> with the given id
 		/// </summary>
