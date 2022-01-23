@@ -56,6 +56,11 @@ namespace TASVideos.Pages.Account
 				return RedirectToPage("/Account/Lockout");
 			}
 
+			if (result.IsNotAllowed)
+			{
+				return AccessDenied();
+			}
+
 			ModelState.AddModelError(string.Empty, "Invalid login attempt.");
 			return Page();
 		}
