@@ -89,12 +89,15 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 				await using var stream = irc.GetStream();
 				using var reader = new StreamReader(stream);
 				await using var writer = new StreamWriter(stream);
+
+				await Task.Delay(10000);
 				await writer.WriteLineAsync($"NICK {_settings.Nick}");
 				await writer.FlushAsync();
 
 				await writer.WriteLineAsync($"USER {_settings.Nick} 0 * :This is TASVideos bot in development");
 				await writer.FlushAsync();
 
+				await Task.Delay(5000);
 				await writer.WriteLineAsync($"PRIVMSG NickServ :identify {_settings.Nick} {_settings.Password}");
 				await writer.FlushAsync();
 				await Task.Delay(5000);
