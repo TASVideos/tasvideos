@@ -10,16 +10,13 @@ namespace TASVideos.Pages.Profile
 	[Authorize]
 	public class ChangePasswordModel : BasePageModel
 	{
-		private readonly UserManager _userManager;
 		private readonly IEmailService _emailService;
 		private readonly SignInManager _signInManager;
 
 		public ChangePasswordModel(
 			SignInManager signInManager,
-			UserManager userManager,
 			IEmailService emailService)
 		{
-			_userManager = userManager;
 			_emailService = emailService;
 			_signInManager = signInManager;
 		}
@@ -45,9 +42,9 @@ namespace TASVideos.Pages.Profile
 
 		public async Task<IActionResult> OnGet()
 		{
-			var user = await _userManager.GetUserAsync(User);
+			var user = await _signInManager.UserManager.GetUserAsync(User);
 
-			var hasPassword = await _userManager.HasPasswordAsync(user);
+			var hasPassword = await _signInManager.UserManager.HasPasswordAsync(user);
 			if (!hasPassword)
 			{
 				return RedirectToPage("SetPassword");
@@ -63,9 +60,9 @@ namespace TASVideos.Pages.Profile
 				return Page();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
+			var user = await _signInManager.UserManager.GetUserAsync(User);
 
-			var changePasswordResult = await _userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
+			var changePasswordResult = await _signInManager.UserManager.ChangePasswordAsync(user, OldPassword, NewPassword);
 			if (!changePasswordResult.Succeeded)
 			{
 				AddErrors(changePasswordResult);
@@ -73,7 +70,7 @@ namespace TASVideos.Pages.Profile
 			}
 
 			await _signInManager.SignInAsync(user, isPersistent: false);
-			var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+			var code = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
 			var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
 			await _emailService.PasswordResetConfirmation(user.Email, callbackUrl);
 			SuccessStatusMessage("Your password has been changed.");
