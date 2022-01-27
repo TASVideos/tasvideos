@@ -134,7 +134,7 @@ namespace TASVideos.Pages.Account
 
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					await _publisher.SendUserManagement(
-						$"New User joined! {user.UserName}",
+						$"New User registered! {user.UserName}",
 						"",
 						$"Users/Profile/{user.UserName}");
 					await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
