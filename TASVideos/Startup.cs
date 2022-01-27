@@ -39,7 +39,7 @@ namespace TASVideos
 				.AddTextModules();
 
 			// Internal Libraries
-			string dbConnection = Settings.GetStartupStrategy() == StartupStrategy.Sample
+			string dbConnection = Settings.UseSampleDatabase
 				? Settings.ConnectionStrings.PostgresSampleDataConnection
 				: Settings.ConnectionStrings.PostgresConnection;
 

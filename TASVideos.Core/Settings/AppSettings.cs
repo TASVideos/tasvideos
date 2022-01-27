@@ -20,8 +20,7 @@ namespace TASVideos.Core.Settings
 		public GmailAuthSettings Gmail { get; set; } = new();
 
 		public string StartupStrategy { get; set; } = "";
-
-		public string SampleDataPassword { get; set; } = "Password1234!@#$";
+		public bool UseSampleDatabase { get; set; }
 
 		// Minimum number of hours before a judge can set a submission to accepted/rejected
 		public int MinimumHoursBeforeJudgment { get; set; }
@@ -83,8 +82,6 @@ namespace TASVideos.Core.Settings
 		{
 			public string PostgresConnection { get; set; } = "";
 			public string PostgresSampleDataConnection { get; set; } = "";
-			public string? LegacySiteConnection { get; set; }
-			public string? LegacyForumConnection { get; set; }
 		}
 
 		public class JwtSettings
