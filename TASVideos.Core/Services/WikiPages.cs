@@ -84,12 +84,6 @@ namespace TASVideos.Core.Services
 		Task FlushCache();
 
 		/// <summary>
-		/// Populates the cache with likely accessed latest revisions
-		/// of wiki pages, such as publications and commonly accessed pages
-		/// </summary>
-		void PrePopulateCache();
-
-		/// <summary>
 		/// Returns a collection of wiki pages that are not not linked
 		/// by any other wiki page. These pages are effectively "orphans"
 		/// since they can navigated to
@@ -512,20 +506,6 @@ namespace TASVideos.Core.Services
 			foreach (var page in allPages)
 			{
 				ClearCache(page);
-			}
-		}
-
-		public void PrePopulateCache()
-		{
-			var currentPages = _db.WikiPages
-				.ThatAreNotDeleted()
-				.WithNoChildren()
-				.Where(wp => wp.PageName.StartsWith("InternalSystem/PublicationContent") || !wp.PageName.Contains("/"))
-				.ToList();
-
-			foreach (var page in currentPages)
-			{
-				this[page.PageName] = page;
 			}
 		}
 
