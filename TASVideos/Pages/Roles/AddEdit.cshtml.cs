@@ -175,7 +175,7 @@ namespace TASVideos.Pages.Roles
 				await _publisher.SendUserManagement(
 					$"Role {model.Name} updated by {User.Name()}",
 					"",
-					$"Roles/Index?role={model.Name}");
+					$"Roles/{model.Name}");
 			}
 			else
 			{
@@ -184,7 +184,7 @@ namespace TASVideos.Pages.Roles
 				await _publisher.SendUserManagement(
 					$"New Role {model.Name} added by {User.Name()}",
 					"",
-					$"Roles/Index?role={model.Name}");
+					$"Roles/{model.Name}");
 			}
 
 			role.Name = model.Name;
