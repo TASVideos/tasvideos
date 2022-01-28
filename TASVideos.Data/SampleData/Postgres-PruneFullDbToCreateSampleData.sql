@@ -275,9 +275,9 @@ WHERE u.id NOT IN (SELECT id FROM _active_users);
 
 UPDATE public.users 
 	SET signature = NULL,
-		legacy_password = 'caecb26de1c989826750c7c478a9401d', -- We don't want to make the real password public
-		email = null,
-		normalized_email = null, -- We dont' want to make these public either
+		password_hash = 'AQAAAAEAACcQAAAAEJ0432uxp/JdMT51+b1SqQRq52JyKAiumPqKr/LO7Z73Kctz/eu5GZLonouiGmo0ww==', -- We don't want to make the real password public
+		email = 'tasvideos@example.com', --We don't want these public, but a valid email address is necessary for many user operations
+		normalized_email = null, -- We don't want to make these public either
 		last_logged_in_time_stamp = NOW(),
 		time_zone_iD = 'UTC';
 
