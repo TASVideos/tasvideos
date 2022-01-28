@@ -16,41 +16,26 @@ namespace TASVideos.Core.Data
 		public static void InitializeDatabase(IServiceProvider services)
 		{
 			var settings = services.GetRequiredService<IOptions<AppSettings>>();
+			var context = services.GetRequiredService<ApplicationDbContext>();
 			switch (settings.Value.GetStartupStrategy())
 			{
 				case StartupStrategy.Minimal:
-					MinimalStrategy(services);
-					break;
-				case StartupStrategy.Sample:
-					SampleStrategy(services);
+					context.Database.EnsureCreated();
 					break;
 				case StartupStrategy.Migrate:
-					MigrationStrategy(services);
+					context.Database.Migrate();
+					break;
+				case StartupStrategy.Sample:
+					SampleStrategy(context);
 					break;
 			}
 		}
 
-		private static void MinimalStrategy(IServiceProvider services)
+		private static void SampleStrategy(DbContext context)
 		{
-			var context = services.GetRequiredService<ApplicationDbContext>();
-			context.Database.EnsureCreated();
-		}
-
-		private static void SampleStrategy(IServiceProvider services)
-		{
-			var context = services.GetRequiredService<ApplicationDbContext>();
 			context.Database.EnsureDeleted();
 			context.Database.EnsureCreated();
-
-			// Note: We specifically do not want to run seed data
-			// This data is already baked into the sample data file
 			GenerateDevSampleData(context).Wait();
-		}
-
-		private static void MigrationStrategy(IServiceProvider services)
-		{
-			var context = services.GetRequiredService<ApplicationDbContext>();
-			context.Database.Migrate();
 		}
 
 		// Adds optional sample data for testing purposes (would not be apart of a production release)
