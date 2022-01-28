@@ -56,10 +56,7 @@ namespace TASVideos.Core.Data
 			context.Database.Migrate();
 		}
 
-		/// <summary>
-		/// Adds optional sample data
-		/// Unlike seed data, sample data is arbitrary data for testing purposes and would not be apart of a production release.
-		/// </summary>
+		// Adds optional sample data for testing purposes (would not be apart of a production release)
 		private static async Task GenerateDevSampleData(DbContext context)
 		{
 			var sql = await GetSampleDataScript();
