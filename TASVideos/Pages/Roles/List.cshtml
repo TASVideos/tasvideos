@@ -8,7 +8,6 @@
 <p>These are a list of the site roles</p>
 <hr />
 <p condition="User.IsLoggedIn()">See the <a asp-page="/Permissions/Index">Permission List</a> for details on individual permissions</p>
-<p>For a more detailed description of roles, see <a href="/Roles/Details">Role Details</a></p>
 
 @foreach (var role in Model.Roles.OrderBy(m => m.Permissions.Count()))
 {
