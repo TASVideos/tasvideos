@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,7 @@ namespace TASVideos
 {
 	public class Program
 	{
-		public static void Main(string[] args)
+		public static async Task Main(string[] args)
 		{
 			var host = BuildWebHost(args);
 
@@ -27,10 +28,10 @@ namespace TASVideos
 
 				var services = scope.ServiceProvider;
 
-				DbInitializer.InitializeDatabase(services);
+				await DbInitializer.InitializeDatabase(services);
 			}
 
-			host.Run();
+			await host.RunAsync();
 		}
 
 		public static IWebHost BuildWebHost(string[] args)

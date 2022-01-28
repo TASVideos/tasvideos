@@ -13,29 +13,29 @@ namespace TASVideos.Core.Data
 {
 	public static class DbInitializer
 	{
-		public static void InitializeDatabase(IServiceProvider services)
+		public static async Task InitializeDatabase(IServiceProvider services)
 		{
 			var settings = services.GetRequiredService<IOptions<AppSettings>>();
 			var context = services.GetRequiredService<ApplicationDbContext>();
 			switch (settings.Value.GetStartupStrategy())
 			{
 				case StartupStrategy.Minimal:
-					context.Database.EnsureCreated();
+					await context.Database.EnsureCreatedAsync();
 					break;
 				case StartupStrategy.Migrate:
-					context.Database.Migrate();
+					await context.Database.MigrateAsync();
 					break;
 				case StartupStrategy.Sample:
-					SampleStrategy(context);
+					await SampleStrategy(context);
 					break;
 			}
 		}
 
-		private static void SampleStrategy(DbContext context)
+		private static async Task SampleStrategy(DbContext context)
 		{
-			context.Database.EnsureDeleted();
-			context.Database.EnsureCreated();
-			GenerateDevSampleData(context).Wait();
+			await context.Database.EnsureDeletedAsync();
+			await context.Database.EnsureCreatedAsync();
+			await GenerateDevSampleData(context);
 		}
 
 		// Adds optional sample data for testing purposes (would not be apart of a production release)
