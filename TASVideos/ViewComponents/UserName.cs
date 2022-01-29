@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.ViewComponents;
+
+public class UserName : ViewComponent
 {
-	public class UserName : ViewComponent
+	public IViewComponentResult Invoke()
 	{
-		public IViewComponentResult Invoke()
-		{
-			return View();
-		}
+		return View();
 	}
 }

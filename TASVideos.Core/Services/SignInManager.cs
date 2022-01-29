@@ -12,79 +12,78 @@ using TASVideos.Core.Extensions;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Core.Services
+namespace TASVideos.Core.Services;
+
+public class SignInManager : SignInManager<User>
 {
-	public class SignInManager : SignInManager<User>
+	private readonly ApplicationDbContext _db;
+	private readonly UserManager _userManager;
+
+	public SignInManager(
+		ApplicationDbContext db,
+		UserManager userManager,
+		IHttpContextAccessor contextAccessor,
+		IUserClaimsPrincipalFactory<User> claimsFactory,
+		IOptions<IdentityOptions> optionsAccessor,
+		ILogger<SignInManager<User>> logger,
+		IAuthenticationSchemeProvider schemes,
+		IUserConfirmation<User> confirmation)
+		: base(
+			userManager,
+			contextAccessor,
+			claimsFactory,
+			optionsAccessor,
+			logger,
+			schemes,
+			confirmation)
 	{
-		private readonly ApplicationDbContext _db;
-		private readonly UserManager _userManager;
+		_db = db;
+		_userManager = userManager;
+	}
 
-		public SignInManager(
-			ApplicationDbContext db,
-			UserManager userManager,
-			IHttpContextAccessor contextAccessor,
-			IUserClaimsPrincipalFactory<User> claimsFactory,
-			IOptions<IdentityOptions> optionsAccessor,
-			ILogger<SignInManager<User>> logger,
-			IAuthenticationSchemeProvider schemes,
-			IUserConfirmation<User> confirmation)
-			: base(
-				userManager,
-				contextAccessor,
-				claimsFactory,
-				optionsAccessor,
-				logger,
-				schemes,
-				confirmation)
+	public async Task<SignInResult> SignIn(string userName, string password, bool rememberMe = false)
+	{
+		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
+		if (user == null)
 		{
-			_db = db;
-			_userManager = userManager;
+			return SignInResult.Failed;
 		}
 
-		public async Task<SignInResult> SignIn(string userName, string password, bool rememberMe = false)
+		var claims = await _userManager.AddUserPermissionsToClaims(user);
+		var canLogIn = claims.Permissions().Contains(PermissionTo.Login);
+
+		if (!canLogIn)
 		{
-			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
-			if (user == null)
-			{
-				return SignInResult.Failed;
-			}
-
-			var claims = await _userManager.AddUserPermissionsToClaims(user);
-			var canLogIn = claims.Permissions().Contains(PermissionTo.Login);
-
-			if (!canLogIn)
-			{
-				return SignInResult.NotAllowed;
-			}
-
-			var result = await base.PasswordSignInAsync(
-				userName,
-				password,
-				rememberMe,
-				lockoutOnFailure: true);
-
-			if (result.Succeeded)
-			{
-				user.LastLoggedInTimeStamp = DateTime.UtcNow;
-
-				// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
-				await _userManager.AddUserPermissionsToClaims(user);
-			}
-
-			return result;
+			return SignInResult.NotAllowed;
 		}
 
-		public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
+		var result = await base.PasswordSignInAsync(
+			userName,
+			password,
+			rememberMe,
+			lockoutOnFailure: true);
+
+		if (result.Succeeded)
 		{
-			var user = await UserManager.GetUserAsync(principal);
-			var result = await UserManager.AddPasswordAsync(user, newPassword);
+			user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
-			if (result.Succeeded)
-			{
-				await SignInAsync(user, isPersistent: false);
-			}
-
-			return result;
+			// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
+			await _userManager.AddUserPermissionsToClaims(user);
 		}
+
+		return result;
+	}
+
+	public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
+	{
+		var user = await UserManager.GetUserAsync(principal);
+		var result = await UserManager.AddPasswordAsync(user, newPassword);
+
+		if (result.Succeeded)
+		{
+			await SignInAsync(user, isPersistent: false);
+		}
+
+		return result;
 	}
 }

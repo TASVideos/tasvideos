@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TASVideos.Pages.RamAddresses
+namespace TASVideos.Pages.RamAddresses;
+
+public class LegacyListModel : BasePageModel
 {
-	public class LegacyListModel : BasePageModel
+	public IActionResult OnGet()
 	{
-		public IActionResult OnGet()
-		{
-			return BasePageRedirect("/RamAddresses/List");
-		}
+		return BasePageRedirect("/RamAddresses/List");
 	}
 }

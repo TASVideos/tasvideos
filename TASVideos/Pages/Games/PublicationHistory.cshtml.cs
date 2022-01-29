@@ -7,43 +7,42 @@ using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Pages.Games
+namespace TASVideos.Pages.Games;
+
+[AllowAnonymous]
+public class PublicationHistoryModel : BasePageModel
 {
-	[AllowAnonymous]
-	public class PublicationHistoryModel : BasePageModel
+	private readonly ApplicationDbContext _db;
+	private readonly IPublicationHistory _history;
+
+	public PublicationHistoryModel(
+		ApplicationDbContext db,
+		IPublicationHistory history)
 	{
-		private readonly ApplicationDbContext _db;
-		private readonly IPublicationHistory _history;
+		_history = history;
+		_db = db;
+	}
 
-		public PublicationHistoryModel(
-			ApplicationDbContext db,
-			IPublicationHistory history)
+	[FromRoute]
+	public int Id { get; set; }
+
+	public PublicationHistoryGroup History { get; set; } = new();
+	public Game Game { get; set; } = new();
+
+	[FromQuery]
+	public int? Highlight { get; set; }
+
+	public async Task<IActionResult> OnGet()
+	{
+		var game = await _db.Games.SingleOrDefaultAsync(p => p.Id == Id);
+
+		if (game == null)
 		{
-			_history = history;
-			_db = db;
+			return NotFound();
 		}
 
-		[FromRoute]
-		public int Id { get; set; }
-
-		public PublicationHistoryGroup History { get; set; } = new ();
-		public Game Game { get; set; } = new ();
-
-		[FromQuery]
-		public int? Highlight { get; set; }
-
-		public async Task<IActionResult> OnGet()
-		{
-			var game = await _db.Games.SingleOrDefaultAsync(p => p.Id == Id);
-
-			if (game == null)
-			{
-				return NotFound();
-			}
-
-			Game = game;
-			History = await _history.ForGame(Id) ?? new PublicationHistoryGroup();
-			return Page();
-		}
+		Game = game;
+		History = await _history.ForGame(Id) ?? new PublicationHistoryGroup();
+		return Page();
 	}
 }

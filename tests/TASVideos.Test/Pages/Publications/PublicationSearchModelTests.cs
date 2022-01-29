@@ -2,341 +2,340 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Pages.Publications.Models;
 
-namespace TASVideos.RazorPages.Tests.Pages.Publications
+namespace TASVideos.RazorPages.Tests.Pages.Publications;
+
+[TestClass]
+public class PublicationSearchModelTests
 {
-	[TestClass]
-	public class PublicationSearchModelTests
+	[TestMethod]
+	public void Empty()
 	{
-		[TestMethod]
-		public void Empty()
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Years = Array.Empty<int>()
-			};
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("", actual);
+	}
 
-		[TestMethod]
-		public void Class()
+	[TestMethod]
+	public void Class()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Classes = new[] { "Standard" },
-				Years = Array.Empty<int>()
-			};
+			Classes = new[] { "Standard" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("Standard", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("Standard", actual);
+	}
 
-		[TestMethod]
-		public void Classes()
+	[TestMethod]
+	public void Classes()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Classes = new[] { "Standard", "Stars" },
-				Years = Array.Empty<int>()
-			};
+			Classes = new[] { "Standard", "Stars" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("Standard-Stars", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("Standard-Stars", actual);
+	}
 
-		[TestMethod]
-		public void SystemCode()
+	[TestMethod]
+	public void SystemCode()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				SystemCodes = new[] { "NES" },
-				Years = Array.Empty<int>()
-			};
+			SystemCodes = new[] { "NES" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("NES", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("NES", actual);
+	}
 
-		[TestMethod]
-		public void Systems()
+	[TestMethod]
+	public void Systems()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				SystemCodes = new[] { "NES", "N64" },
-				Years = Array.Empty<int>()
-			};
+			SystemCodes = new[] { "NES", "N64" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("NES-N64", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("NES-N64", actual);
+	}
 
-		[TestMethod]
-		public void ClassesAndSystems()
+	[TestMethod]
+	public void ClassesAndSystems()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Classes = new[] { "Standard", "Stars" },
-				SystemCodes = new[] { "NES", "N64" },
-				Years = Array.Empty<int>()
-			};
+			Classes = new[] { "Standard", "Stars" },
+			SystemCodes = new[] { "NES", "N64" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("Standard-Stars-NES-N64", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("Standard-Stars-NES-N64", actual);
+	}
 
-		[TestMethod]
-		public void Year()
+	[TestMethod]
+	public void Year()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Years = new[] { 2000 }
-			};
+			Years = new[] { 2000 }
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("Y2000", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("Y2000", actual);
+	}
 
-		[TestMethod]
-		public void Years()
+	[TestMethod]
+	public void Years()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Years = new[] { 2000, 2001 }
-			};
+			Years = new[] { 2000, 2001 }
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("Y2000-Y2001", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("Y2000-Y2001", actual);
+	}
 
-		[TestMethod]
-		public void YearsAndClasses()
+	[TestMethod]
+	public void YearsAndClasses()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Classes = new[] { "Standard", "Stars" },
-				Years = new[] { 2000, 2001 }
-			};
+			Classes = new[] { "Standard", "Stars" },
+			Years = new[] { 2000, 2001 }
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("Standard-Stars-Y2000-Y2001", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("Standard-Stars-Y2000-Y2001", actual);
+	}
 
-		[TestMethod]
-		public void YearsAndSystemsAndClasses()
+	[TestMethod]
+	public void YearsAndSystemsAndClasses()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Classes = new[] { "Standard", "Stars" },
-				SystemCodes = new[] { "NES", "N64" },
-				Years = new[] { 2000, 2001 }
-			};
+			Classes = new[] { "Standard", "Stars" },
+			SystemCodes = new[] { "NES", "N64" },
+			Years = new[] { 2000, 2001 }
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("Standard-Stars-NES-N64-Y2000-Y2001", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("Standard-Stars-NES-N64-Y2000-Y2001", actual);
+	}
 
-		[TestMethod]
-		public void Tag()
+	[TestMethod]
+	public void Tag()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Tags = new[] { "1p" },
-				Years = Array.Empty<int>()
-			};
+			Tags = new[] { "1p" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("1p", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("1p", actual);
+	}
 
-		[TestMethod]
-		public void Tags()
+	[TestMethod]
+	public void Tags()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Tags = new[] { "1p", "2p" },
-				Years = Array.Empty<int>()
-			};
+			Tags = new[] { "1p", "2p" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("1p-2p", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("1p-2p", actual);
+	}
 
-		[TestMethod]
-		public void TagsAndYears()
+	[TestMethod]
+	public void TagsAndYears()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Tags = new[] { "1p", "2p" },
-				Years = new[] { 2000, 2001 }
-			};
+			Tags = new[] { "1p", "2p" },
+			Years = new[] { 2000, 2001 }
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("Y2000-Y2001-1p-2p", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("Y2000-Y2001-1p-2p", actual);
+	}
 
-		[TestMethod]
-		public void TagsAndSystemsAndYears()
+	[TestMethod]
+	public void TagsAndSystemsAndYears()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Tags = new[] { "1p", "2p" },
-				SystemCodes = new[] { "NES", "N64" },
-				Years = new[] { 2000, 2001 }
-			};
+			Tags = new[] { "1p", "2p" },
+			SystemCodes = new[] { "NES", "N64" },
+			Years = new[] { 2000, 2001 }
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("NES-N64-Y2000-Y2001-1p-2p", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("NES-N64-Y2000-Y2001-1p-2p", actual);
+	}
 
-		[TestMethod]
-		public void Genres()
+	[TestMethod]
+	public void Genres()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Genres = new[] { "action", "adventure" },
-				Years = Array.Empty<int>()
-			};
+			Genres = new[] { "action", "adventure" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("action-adventure", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("action-adventure", actual);
+	}
 
-		[TestMethod]
-		public void TagsAndGenres()
+	[TestMethod]
+	public void TagsAndGenres()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Tags = new[] { "1p", "2p" },
-				Genres = new[] { "action", "adventure" },
-				Years = Array.Empty<int>()
-			};
+			Tags = new[] { "1p", "2p" },
+			Genres = new[] { "action", "adventure" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("1p-2p-action-adventure", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("1p-2p-action-adventure", actual);
+	}
 
-		[TestMethod]
-		public void Flags()
+	[TestMethod]
+	public void Flags()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Flags = new[] { "atlas", "verified" },
-				Years = Array.Empty<int>()
-			};
+			Flags = new[] { "atlas", "verified" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("atlas-verified", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("atlas-verified", actual);
+	}
 
-		[TestMethod]
-		public void SystemsAndFlags()
+	[TestMethod]
+	public void SystemsAndFlags()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Flags = new[] { "atlas", "verified" },
-				SystemCodes = new[] { "NES", "N64" },
-				Years = Array.Empty<int>()
-			};
+			Flags = new[] { "atlas", "verified" },
+			SystemCodes = new[] { "NES", "N64" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("NES-N64-atlas-verified", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("NES-N64-atlas-verified", actual);
+	}
 
-		[TestMethod]
-		public void SystemsAndTagsAndGenres()
+	[TestMethod]
+	public void SystemsAndTagsAndGenres()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				SystemCodes = new[] { "NES", "N64" },
-				Tags = new[] { "1p", "2p" },
-				Genres = new[] { "action", "adventure" },
-				Years = Array.Empty<int>()
-			};
+			SystemCodes = new[] { "NES", "N64" },
+			Tags = new[] { "1p", "2p" },
+			Genres = new[] { "action", "adventure" },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("NES-N64-1p-2p-action-adventure", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("NES-N64-1p-2p-action-adventure", actual);
+	}
 
-		[TestMethod]
-		public void Games()
+	[TestMethod]
+	public void Games()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Games = new[] { 1, 2 },
-				Years = Array.Empty<int>()
-			};
+			Games = new[] { 1, 2 },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("1g-2g", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("1g-2g", actual);
+	}
 
-		[TestMethod]
-		public void GenresAndGame()
+	[TestMethod]
+	public void GenresAndGame()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Genres = new[] { "action", "adventure" },
-				Games = new[] { 1, 2 },
-				Years = Array.Empty<int>()
-			};
+			Genres = new[] { "action", "adventure" },
+			Games = new[] { 1, 2 },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("action-adventure-1g-2g", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("action-adventure-1g-2g", actual);
+	}
 
-		[TestMethod]
-		public void GameGroups()
+	[TestMethod]
+	public void GameGroups()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				GameGroups = new[] { 1, 2 },
-				Years = Array.Empty<int>()
-			};
+			GameGroups = new[] { 1, 2 },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("group1-group2", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("group1-group2", actual);
+	}
 
-		[TestMethod]
-		public void GamesAndGameGroups()
+	[TestMethod]
+	public void GamesAndGameGroups()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				Games = new[] { 3, 4 },
-				GameGroups = new[] { 1, 2 },
-				Years = Array.Empty<int>()
-			};
+			Games = new[] { 3, 4 },
+			GameGroups = new[] { 1, 2 },
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("3g-4g-group1-group2", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("3g-4g-group1-group2", actual);
+	}
 
-		[TestMethod]
-		public void ShowObsolete_Empty()
+	[TestMethod]
+	public void ShowObsolete_Empty()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				ShowObsoleted = true,
-				Years = Array.Empty<int>()
-			};
+			ShowObsoleted = true,
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("", actual);
+	}
 
-		[TestMethod]
-		public void SystemAndObsolete()
+	[TestMethod]
+	public void SystemAndObsolete()
+	{
+		var model = new PublicationSearchModel
 		{
-			var model = new PublicationSearchModel
-			{
-				SystemCodes = new[] { "NES", "N64" },
-				ShowObsoleted = true,
-				Years = Array.Empty<int>()
-			};
+			SystemCodes = new[] { "NES", "N64" },
+			ShowObsoleted = true,
+			Years = Array.Empty<int>()
+		};
 
-			var actual = model.ToUrl();
-			Assert.AreEqual("NES-N64-Obs", actual);
-		}
+		var actual = model.ToUrl();
+		Assert.AreEqual("NES-N64-Obs", actual);
 	}
 }

@@ -8,33 +8,32 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 
-namespace TASVideos.Pages.Profile
+namespace TASVideos.Pages.Profile;
+
+[Authorize]
+public class UserFilesModel : BasePageModel
 {
-	[Authorize]
-	public class UserFilesModel : BasePageModel
+	private readonly ApplicationDbContext _db;
+	private readonly IMapper _mapper;
+
+	public UserFilesModel(ApplicationDbContext db, IMapper mapper)
 	{
-		private readonly ApplicationDbContext _db;
-		private readonly IMapper _mapper;
+		_db = db;
+		_mapper = mapper;
+	}
 
-		public UserFilesModel(ApplicationDbContext db, IMapper mapper)
-		{
-			_db = db;
-			_mapper = mapper;
-		}
+	public string UserName { get; set; } = "";
 
-		public string UserName { get; set; } = "";
+	public IEnumerable<UserFileModel> Files { get; set; } = new List<UserFileModel>();
 
-		public IEnumerable<UserFileModel> Files { get; set; } = new List<UserFileModel>();
-
-		public async Task OnGet()
-		{
-			UserName = User!.Identity!.Name!;
-			Files = await _mapper.ProjectTo<UserFileModel>(
-				_db.UserFiles
-					.ForAuthor(UserName)
-					.FilterByHidden(includeHidden: true))
-					.OrderByDescending(uf => uf.UploadTimestamp)
-				.ToListAsync();
-		}
+	public async Task OnGet()
+	{
+		UserName = User!.Identity!.Name!;
+		Files = await _mapper.ProjectTo<UserFileModel>(
+			_db.UserFiles
+				.ForAuthor(UserName)
+				.FilterByHidden(includeHidden: true))
+				.OrderByDescending(uf => uf.UploadTimestamp)
+			.ToListAsync();
 	}
 }
