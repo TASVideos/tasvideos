@@ -21,12 +21,14 @@ namespace TASVideos.Extensions
 
 		public static bool UserHas(this ViewDataDictionary viewData, PermissionTo permission)
 		{
-			return ((IEnumerable<PermissionTo>)viewData["UserPermissions"]).Contains(permission);
+			var userPerm = viewData["UserPermissions"];
+			return userPerm != null && ((IEnumerable<PermissionTo>)userPerm).Contains(permission);
 		}
 
 		public static bool UserHasAny(this ViewDataDictionary viewData, IEnumerable<PermissionTo> permissions)
 		{
-			return permissions.Any(permission => ((IEnumerable<PermissionTo>)viewData["UserPermissions"]).Contains(permission));
+			var userPerm = viewData["UserPermissions"];
+			return userPerm != null && permissions.Any(permission => ((IEnumerable<PermissionTo>)userPerm).Contains(permission));
 		}
 
 		public static string Page(this ViewContext viewContext)

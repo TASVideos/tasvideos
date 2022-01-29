@@ -33,15 +33,16 @@ namespace TASVideos.Pages.Games
 
 		public async Task<IActionResult> OnGet()
 		{
-			Game = await _mapper
+			var game = await _mapper
 				.ProjectTo<GameDisplayModel>(_db.Games)
 				.SingleOrDefaultAsync(g => g.Id == Id);
 
-			if (Game == null)
+			if (game == null)
 			{
 				return NotFound();
 			}
 
+			Game = game;
 			Movies = await _db.Publications
 				.Where(p => p.GameId == Id && p.ObsoletedById == null)
 				.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)

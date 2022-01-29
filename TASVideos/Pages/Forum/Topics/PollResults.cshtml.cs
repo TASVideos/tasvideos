@@ -25,7 +25,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnGet()
 		{
-			Poll = await _db.ForumPolls
+			var poll = await _db.ForumPolls
 				.Where(p => p.Id == Id)
 				.Select(p => new PollResultModel
 				{
@@ -47,11 +47,12 @@ namespace TASVideos.Pages.Forum.Topics
 				})
 				.SingleOrDefaultAsync();
 
-			if (Poll == null)
+			if (poll == null)
 			{
 				return NotFound();
 			}
 
+			Poll = poll;
 			return Page();
 		}
 

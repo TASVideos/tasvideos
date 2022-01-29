@@ -66,7 +66,7 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			Publication = await _db.Publications
+			var publication = await _db.Publications
 					.Where(p => p.Id == Id)
 					.Select(p => new PublicationEditModel
 					{
@@ -99,11 +99,12 @@ namespace TASVideos.Pages.Publications
 					})
 					.SingleOrDefaultAsync();
 
-			if (Publication == null)
+			if (publication == null)
 			{
 				return NotFound();
 			}
 
+			Publication = publication;
 			Publication.Authors = await _db.PublicationAuthors
 				.Where(pa => pa.PublicationId == Id)
 				.OrderBy(pa => pa.Ordinal)

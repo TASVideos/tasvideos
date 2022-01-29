@@ -48,7 +48,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public async Task<IActionResult> OnGet()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			Topic = await _db.Forums
+			var topic = await _db.Forums
 				.ExcludeRestricted(seeRestricted)
 				.Where(f => f.Id == ForumId)
 				.Select(f => new TopicCreateModel
@@ -57,11 +57,12 @@ namespace TASVideos.Pages.Forum.Topics
 				})
 				.SingleOrDefaultAsync();
 
-			if (Topic == null)
+			if (topic == null)
 			{
 				return NotFound();
 			}
 
+			Topic = topic;
 			UserAvatars = await _db.Users
 				.Where(u => u.Id == User.GetUserId())
 				.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))

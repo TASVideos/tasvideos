@@ -42,7 +42,7 @@ namespace TASVideos.Pages.Forum.Topics
 		public async Task<IActionResult> OnGet()
 		{
 			bool seeRestricted = CanSeeRestricted;
-			Topic = await _db.ForumTopics
+			var topic = await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
 				.Where(t => t.Id == Id)
 				.Select(t => new MergeTopicModel
@@ -53,11 +53,12 @@ namespace TASVideos.Pages.Forum.Topics
 				})
 				.SingleOrDefaultAsync();
 
-			if (Topic == null)
+			if (topic == null)
 			{
 				return NotFound();
 			}
 
+			Topic = topic;
 			Topic.DestinationForumId = Topic.ForumId;
 			await PopulateAvailableForums();
 

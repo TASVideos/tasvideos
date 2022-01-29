@@ -50,11 +50,11 @@ namespace TASVideos.Pages.Roles
 				})
 				.ToList();
 
-		public async Task OnGet()
+		public async Task<IActionResult> OnGet()
 		{
 			if (Id.HasValue)
 			{
-				Role = await _db.Roles
+				var role = await _db.Roles
 					.Where(r => r.Id == Id.Value)
 					.Select(r => new RoleEditModel
 					{
@@ -75,6 +75,13 @@ namespace TASVideos.Pages.Roles
 							.ToList()
 					})
 					.SingleOrDefaultAsync();
+
+				if (role == null)
+				{
+					return NotFound();
+				}
+
+				Role = role;
 				ViewData["IsInUse"] = !await IsInUse(Id.Value);
 				SetAvailableAssignablePermissions();
 			}
@@ -82,6 +89,8 @@ namespace TASVideos.Pages.Roles
 			{
 				ViewData["IsInUse"] = false;
 			}
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPost()

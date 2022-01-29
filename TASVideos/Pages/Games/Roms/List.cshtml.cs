@@ -23,7 +23,7 @@ namespace TASVideos.Pages.Games.Roms
 
 		public async Task<IActionResult> OnGet()
 		{
-			Roms = await _db.Games
+			var roms = await _db.Games
 				.Where(g => g.Id == GameId)
 				.Select(g => new RomListModel
 				{
@@ -44,11 +44,12 @@ namespace TASVideos.Pages.Games.Roms
 				})
 				.SingleOrDefaultAsync();
 
-			if (Roms == null)
+			if (roms == null)
 			{
 				return NotFound();
 			}
 
+			Roms = roms;
 			return Page();
 		}
 	}

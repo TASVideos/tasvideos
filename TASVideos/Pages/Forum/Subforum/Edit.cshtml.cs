@@ -27,7 +27,7 @@ namespace TASVideos.Pages.Forum.Subforum
 
 		public async Task<IActionResult> OnGet()
 		{
-			Forum = await _db.Forums
+			var forum = await _db.Forums
 				.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 				.Where(f => f.Id == Id)
 				.Select(f => new ForumEditModel
@@ -38,11 +38,12 @@ namespace TASVideos.Pages.Forum.Subforum
 				})
 				.SingleOrDefaultAsync();
 
-			if (Forum is null)
+			if (forum is null)
 			{
 				return NotFound();
 			}
 
+			Forum = forum;
 			return Page();
 		}
 

@@ -43,7 +43,7 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			Publication = await _db.Publications
+			var publication = await _db.Publications
 				.Where(p => p.Id == Id)
 				.Select(p => new PublicationClassEditModel
 				{
@@ -52,11 +52,12 @@ namespace TASVideos.Pages.Publications
 				})
 				.SingleOrDefaultAsync();
 
-			if (Publication == null)
+			if (publication == null)
 			{
 				return NotFound();
 			}
 
+			Publication = publication;
 			Title = Publication.Title;
 			await PopulateAvailableClasses();
 			return Page();

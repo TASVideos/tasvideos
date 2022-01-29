@@ -30,16 +30,17 @@ namespace TASVideos.Pages.Roles
 				return BasePageRedirect("/Roles/List");
 			}
 
-			Role = await _mapper
+			var roleModel = await _mapper
 				.ProjectTo<RoleDisplayModel>(
 					_db.Roles.Where(r => r.Name == role))
 				.SingleOrDefaultAsync();
 
-			if (Role == null)
+			if (roleModel == null)
 			{
 				return NotFound();
 			}
 
+			Role = roleModel;
 			return Page();
 		}
 	}

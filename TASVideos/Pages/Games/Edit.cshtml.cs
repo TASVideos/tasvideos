@@ -51,14 +51,16 @@ namespace TASVideos.Pages.Games
 		{
 			if (Id.HasValue)
 			{
-				Game = await _mapper.ProjectTo<GameEditModel>(
+				var game = await _mapper.ProjectTo<GameEditModel>(
 					_db.Games.Where(g => g.Id == Id))
 					.SingleOrDefaultAsync();
 
-				if (Game == null)
+				if (game == null)
 				{
 					return NotFound();
 				}
+
+				Game = game;
 			}
 			else if (SystemId.HasValue)
 			{
@@ -98,14 +100,15 @@ namespace TASVideos.Pages.Games
 			Game game;
 			if (Id.HasValue)
 			{
-				game = await _db.Games
+				var gameEntity = await _db.Games
 					.Include(g => g.GameGenres)
 					.SingleOrDefaultAsync(g => g.Id == Id.Value);
-				if (game == null)
+				if (gameEntity == null)
 				{
 					return NotFound();
 				}
 
+				game = gameEntity;
 				game.GameGenres.Clear();
 				_mapper.Map(Game, game);
 			}

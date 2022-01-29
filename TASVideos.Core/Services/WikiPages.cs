@@ -36,7 +36,7 @@ namespace TASVideos.Core.Services
 		/// Returns details about a Wiki page with the given id
 		/// </summary>
 		/// <returns>A model representing the Wiki page if it exists else null</returns>
-		Task<WikiPage> Revision(int dbId);
+		Task<WikiPage?> Revision(int dbId);
 
 		/// <summary>
 		/// Creates a new revision of a wiki page.
@@ -229,7 +229,7 @@ namespace TASVideos.Core.Services
 			return page;
 		}
 
-		public async Task<WikiPage> Revision(int dbId)
+		public async Task<WikiPage?> Revision(int dbId)
 		{
 			var page = await _db.WikiPages
 				.ThatAreNotDeleted()
@@ -237,7 +237,7 @@ namespace TASVideos.Core.Services
 
 			if (page.IsCurrent())
 			{
-				this[page.PageName] = page;
+				this[page!.PageName] = page;
 			}
 
 			return page;

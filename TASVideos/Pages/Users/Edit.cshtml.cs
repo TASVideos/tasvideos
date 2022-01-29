@@ -51,15 +51,16 @@ namespace TASVideos.Pages.Users
 				return RedirectToPage("/Profile/Settings");
 			}
 
-			UserToEdit = await _mapper.ProjectTo<UserEditModel>(
+			var userToEdit = await _mapper.ProjectTo<UserEditModel>(
 					_db.Users.Where(u => u.Id == Id))
 				.SingleOrDefaultAsync();
 
-			if (UserToEdit == null)
+			if (userToEdit == null)
 			{
 				return NotFound();
 			}
 
+			UserToEdit = userToEdit;
 			AvailableRoles = await GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
 			return Page();
 		}

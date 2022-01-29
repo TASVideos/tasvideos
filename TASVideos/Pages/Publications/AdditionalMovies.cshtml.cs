@@ -51,16 +51,17 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			PublicationTitle = await _db.Publications
+			var publicationTitle = await _db.Publications
 				.Where(p => p.Id == Id)
 				.Select(p => p.Title)
 				.SingleOrDefaultAsync();
 
-			if (PublicationTitle == null)
+			if (publicationTitle == null)
 			{
 				return NotFound();
 			}
 
+			PublicationTitle = publicationTitle;
 			await PopulateAvailableMovieFiles();
 			return Page();
 		}

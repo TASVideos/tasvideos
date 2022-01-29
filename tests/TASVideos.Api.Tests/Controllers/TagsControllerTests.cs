@@ -56,7 +56,7 @@ namespace TASVideos.Api.Tests.Controllers
 			var okResult = (OkObjectResult)result;
 			Assert.AreEqual(200, okResult.StatusCode);
 			Assert.IsInstanceOfType(okResult.Value, typeof(Tag));
-			var tag = (Tag)okResult.Value;
+			var tag = (Tag)okResult.Value!;
 			Assert.AreEqual(tag.Code, code);
 			Assert.AreEqual(tag.DisplayName, displayName);
 		}
@@ -92,7 +92,7 @@ namespace TASVideos.Api.Tests.Controllers
 			var conflictResult = (ConflictObjectResult)result;
 			Assert.AreEqual(409, conflictResult.StatusCode);
 			Assert.IsInstanceOfType(conflictResult.Value, typeof(SerializableError));
-			var error = (SerializableError)conflictResult.Value;
+			var error = (SerializableError)conflictResult.Value!;
 			Assert.IsTrue(error.Count == 1);
 			Assert.IsTrue(error.ContainsKey(nameof(TagAddEditRequest.Code)));
 		}
@@ -153,7 +153,7 @@ namespace TASVideos.Api.Tests.Controllers
 			Assert.AreEqual(409, ((ConflictObjectResult)result).StatusCode);
 			var conflictResult = (ConflictObjectResult)result;
 			Assert.IsInstanceOfType(conflictResult.Value, typeof(SerializableError));
-			var error = (SerializableError)conflictResult.Value;
+			var error = (SerializableError)conflictResult.Value!;
 			Assert.IsTrue(error.Count == 1);
 			Assert.IsTrue(error.ContainsKey(nameof(TagAddEditRequest.Code)));
 		}
@@ -200,7 +200,7 @@ namespace TASVideos.Api.Tests.Controllers
 			Assert.AreEqual(409, ((ConflictObjectResult)result).StatusCode);
 			var conflictResult = (ConflictObjectResult)result;
 			Assert.IsInstanceOfType(conflictResult.Value, typeof(SerializableError));
-			var error = (SerializableError)conflictResult.Value;
+			var error = (SerializableError)conflictResult.Value!;
 			Assert.IsTrue(error.Count == 1);
 		}
 

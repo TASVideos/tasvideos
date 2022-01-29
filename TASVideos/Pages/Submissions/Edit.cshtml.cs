@@ -61,7 +61,7 @@ namespace TASVideos.Pages.Submissions
 		public async Task<IActionResult> OnGet()
 		{
 			// TODO: set up auto-mapper and use ProjectTo<>
-			Submission = await Db.Submissions
+			var submission = await Db.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 				{
@@ -90,11 +90,12 @@ namespace TASVideos.Pages.Submissions
 				})
 				.SingleOrDefaultAsync();
 
-			if (Submission == null)
+			if (submission == null)
 			{
 				return NotFound();
 			}
 
+			Submission = submission;
 			Submission.Authors = await Db.SubmissionAuthors
 				.Where(sa => sa.SubmissionId == Id)
 				.OrderBy(sa => sa.Ordinal)

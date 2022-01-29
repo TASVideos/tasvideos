@@ -46,7 +46,7 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			Catalog = await _db.Publications
+			var catalog = await _db.Publications
 					.Where(p => p.Id == Id)
 					.Select(p => new PublicationCatalogModel
 					{
@@ -58,11 +58,12 @@ namespace TASVideos.Pages.Publications
 					})
 					.SingleOrDefaultAsync();
 
-			if (Catalog == null)
+			if (catalog == null)
 			{
 				return NotFound();
 			}
 
+			Catalog = catalog;
 			if (GameId.HasValue)
 			{
 				var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId && g.SystemId == Catalog.SystemId);

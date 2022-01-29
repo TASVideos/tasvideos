@@ -28,7 +28,7 @@ namespace TASVideos.Pages.Forum
 
 		public async Task<IActionResult> OnGet()
 		{
-			Category = await _db.ForumCategories
+			var category = await _db.ForumCategories
 				.Where(c => c.Id == Id)
 				.Select(c => new CategoryEditModel
 				{
@@ -47,11 +47,12 @@ namespace TASVideos.Pages.Forum
 				})
 				.SingleOrDefaultAsync();
 
-			if (Category == null)
+			if (category == null)
 			{
 				return NotFound();
 			}
 
+			Category = category;
 			return Page();
 		}
 

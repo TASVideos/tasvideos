@@ -39,7 +39,7 @@ namespace TASVideos.Pages.Forum.Posts
 
 		public async Task<IActionResult> OnGet()
 		{
-			UserPosts = await _db.Users
+			var userPosts = await _db.Users
 				.Where(u => u.UserName == UserName)
 				.Select(u => new UserPostsModel
 				{
@@ -56,11 +56,12 @@ namespace TASVideos.Pages.Forum.Posts
 				})
 				.SingleOrDefaultAsync();
 
-			if (UserPosts == null)
+			if (userPosts == null)
 			{
 				return NotFound();
 			}
 
+			UserPosts = userPosts;
 			Awards = await _awards.ForUser(UserPosts.Id);
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);

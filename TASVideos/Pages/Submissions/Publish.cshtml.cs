@@ -60,15 +60,17 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnGet()
 		{
-			Submission = await _mapper
+			var submission = await _mapper
 				.ProjectTo<SubmissionPublishModel>(
 					_db.Submissions.Where(s => s.Id == Id))
 				.SingleOrDefaultAsync();
 
-			if (Submission == null)
+			if (submission == null)
 			{
 				return NotFound();
 			}
+
+			Submission = submission;
 
 			if (!Submission.CanPublish)
 			{

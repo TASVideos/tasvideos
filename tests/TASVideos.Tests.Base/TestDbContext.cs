@@ -95,7 +95,7 @@ namespace TASVideos.Tests.Base
 
 	internal class TestUpdateEntry : IUpdateEntry
 	{
-		public void SetOriginalValue(IProperty property, object value)
+		public void SetOriginalValue(IProperty property, object? value)
 		{
 		}
 
@@ -138,7 +138,7 @@ namespace TASVideos.Tests.Base
 			throw new NotImplementedException();
 		}
 
-		public void SetStoreGeneratedValue(IProperty property, object value)
+		public void SetStoreGeneratedValue(IProperty property, object? value)
 		{
 		}
 
@@ -163,10 +163,10 @@ namespace TASVideos.Tests.Base
 		}
 
 		// ReSharper disable once UnassignedGetOnlyAutoProperty
-		public IEntityType? EntityType { get; }
+		public IEntityType EntityType => null!;
 		public EntityState EntityState { get; set; }
 
 		// ReSharper disable once UnassignedGetOnlyAutoProperty
-		public IUpdateEntry? SharedIdentityEntry { get; }
+		public IUpdateEntry SharedIdentityEntry => null!;
 	}
 }

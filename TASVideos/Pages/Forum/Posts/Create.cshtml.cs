@@ -60,7 +60,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public async Task<IActionResult> OnGet()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			Post = await _db.ForumTopics
+			var post = await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
 				.Where(t => t.Id == TopicId)
 				.Select(t => new ForumPostCreateModel
@@ -70,11 +70,12 @@ namespace TASVideos.Pages.Forum.Posts
 				})
 				.SingleOrDefaultAsync();
 
-			if (Post == null)
+			if (post == null)
 			{
 				return NotFound();
 			}
 
+			Post = post;
 			if (Post.IsLocked && !User.Has(PermissionTo.PostInLockedTopics))
 			{
 				return AccessDenied();
@@ -82,12 +83,15 @@ namespace TASVideos.Pages.Forum.Posts
 
 			if (QuoteId.HasValue)
 			{
-				var post = await _db.ForumPosts
+				var qPost = await _db.ForumPosts
 					.Include(p => p.Poster)
 					.Where(p => p.Id == QuoteId)
 					.SingleOrDefaultAsync();
 
-				Post.Text = $"[quote=\"{post.Poster!.UserName}\"]{post.Text}[/quote]";
+				if (qPost != null)
+				{
+					Post.Text = $"[quote=\"{qPost.Poster!.UserName}\"]{qPost.Text}[/quote]";
+				}
 			}
 
 			WatchTopic = await _topicWatcher.IsWatchingTopic(TopicId, User.GetUserId());

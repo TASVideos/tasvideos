@@ -51,7 +51,7 @@ namespace TASVideos.Pages.Forum.Posts
 		public async Task<IActionResult> OnGet()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			Post = await _db.ForumPosts
+			var post = await _db.ForumPosts
 				.ExcludeRestricted(seeRestricted)
 				.Where(p => p.Id == Id)
 				.Select(p => new ForumPostEditModel
@@ -69,11 +69,12 @@ namespace TASVideos.Pages.Forum.Posts
 				})
 				.SingleOrDefaultAsync();
 
-			if (Post == null)
+			if (post == null)
 			{
 				return NotFound();
 			}
 
+			Post = post;
 			var firstPostId = (await _db.ForumPosts
 				.ForTopic(Post.TopicId)
 				.OldestToNewest()

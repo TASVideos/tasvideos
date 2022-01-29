@@ -64,7 +64,7 @@ namespace TASVideos.Pages.Forum.Topics
 				: null;
 
 			bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			Topic = await _db.ForumTopics
+			var topic = await _db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
 				.Select(t => new ForumTopicModel
 				{
@@ -89,11 +89,12 @@ namespace TASVideos.Pages.Forum.Topics
 				})
 				.SingleOrDefaultAsync(t => t.Id == Id);
 
-			if (Topic == null)
+			if (topic == null)
 			{
 				return NotFound();
 			}
 
+			Topic = topic;
 			if (Topic.SubmissionId.HasValue)
 			{
 				WikiPage = await _wikiPages.Page(LinkConstants.SubmissionWikiPage + Topic.SubmissionId.Value);

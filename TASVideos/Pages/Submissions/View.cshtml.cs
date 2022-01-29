@@ -34,7 +34,7 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnGet()
 		{
-			Submission = await _db.Submissions
+			var submission = await _db.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
 				{
@@ -76,11 +76,12 @@ namespace TASVideos.Pages.Submissions
 				})
 				.SingleOrDefaultAsync();
 
-			if (Submission == null)
+			if (submission == null)
 			{
 				return NotFound();
 			}
 
+			Submission = submission;
 			CanEdit = !string.IsNullOrWhiteSpace(User.Name())
 				&& (User.Name() == Submission.Submitter
 					|| Submission.Authors.Contains(User.Name()));

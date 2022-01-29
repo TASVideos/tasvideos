@@ -50,7 +50,7 @@ namespace TASVideos.ViewComponents
 				.ToListAsync();
 		}
 
-		private async Task<MiniMovieModel> GetPublicationMiniMovie(int id)
+		private async Task<MiniMovieModel?> GetPublicationMiniMovie(int id)
 		{
 			// TODO: id == 0 means there are no publications, which is an out of the box problem only, make this scenario more clear and simpler
 			if (id != 0)

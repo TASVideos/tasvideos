@@ -34,15 +34,15 @@ namespace TASVideos.Pages.Games
 
 		public async Task<IActionResult> OnGet()
 		{
-			Game = await _db.Games.SingleOrDefaultAsync(p => p.Id == Id);
+			var game = await _db.Games.SingleOrDefaultAsync(p => p.Id == Id);
 
-			if (Game == null)
+			if (game == null)
 			{
 				return NotFound();
 			}
 
+			Game = game;
 			History = await _history.ForGame(Id) ?? new PublicationHistoryGroup();
-
 			return Page();
 		}
 	}

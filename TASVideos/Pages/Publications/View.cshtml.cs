@@ -35,14 +35,16 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			Publication = await _mapper
+			var publication = await _mapper
 				.ProjectTo<PublicationDisplayModel>(_db.Publications)
 				.SingleOrDefaultAsync(p => p.Id == Id);
 
-			if (Publication == null)
+			if (publication == null)
 			{
 				return NotFound();
 			}
+
+			Publication = publication;
 
 			Publication.OverallRating = (await _pointsService.PublicationRating(Id))
 				.Overall;
@@ -72,7 +74,7 @@ namespace TASVideos.Pages.Publications
 				.Select(pf => new { pf.FileData, pf.Path })
 				.SingleOrDefaultAsync();
 
-			if (file == null)
+			if (file?.FileData == null)
 			{
 				return NotFound();
 			}

@@ -46,7 +46,7 @@ namespace TASVideos.Pages.Submissions
 
 		public async Task<IActionResult> OnGet()
 		{
-			Catalog = await _db.Submissions
+			var catalog = await _db.Submissions
 				.Where(s => s.Id == Id)
 				.Select(s => new SubmissionCatalogModel
 				{
@@ -58,11 +58,12 @@ namespace TASVideos.Pages.Submissions
 				})
 				.SingleOrDefaultAsync();
 
-			if (Catalog == null)
+			if (catalog == null)
 			{
 				return NotFound();
 			}
 
+			Catalog = catalog;
 			if (GameId.HasValue)
 			{
 				var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId && g.SystemId == Catalog.SystemId);

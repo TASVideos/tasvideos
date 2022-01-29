@@ -33,7 +33,7 @@ namespace TASVideos.Pages.Forum.Subforum
 		public async Task<IActionResult> OnGet()
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			Forum = await _db.Forums
+			var forum = await _db.Forums
 				.ExcludeRestricted(seeRestricted)
 				.Select(f => new ForumDisplayModel
 				{
@@ -43,11 +43,12 @@ namespace TASVideos.Pages.Forum.Subforum
 				})
 				.SingleOrDefaultAsync(f => f.Id == Id);
 
-			if (Forum == null)
+			if (forum == null)
 			{
 				return NotFound();
 			}
 
+			Forum = forum;
 			Forum.Topics = await _db.ForumTopics
 				.ForForum(Id)
 				.Select(ft => new ForumDisplayModel.ForumTopicEntry

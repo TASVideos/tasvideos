@@ -44,7 +44,7 @@ namespace TASVideos.Api.Tests.Controllers
 			var okResult = (OkObjectResult)result;
 			Assert.AreEqual(200, okResult.StatusCode);
 			Assert.IsInstanceOfType(okResult.Value, typeof(ICollection<PublicationClass>));
-			var classes = (ICollection<PublicationClass>)okResult.Value;
+			var classes = (ICollection<PublicationClass>)okResult.Value!;
 			Assert.AreEqual(0, classes.Count);
 		}
 
@@ -77,7 +77,7 @@ namespace TASVideos.Api.Tests.Controllers
 			var okResult = (OkObjectResult)result;
 			Assert.AreEqual(200, okResult.StatusCode);
 			Assert.IsInstanceOfType(okResult.Value, typeof(PublicationClass));
-			var publicationClass = (PublicationClass)okResult.Value;
+			var publicationClass = (PublicationClass)okResult.Value!;
 			Assert.AreEqual(name, publicationClass.Name);
 			Assert.AreEqual(link, publicationClass.Link);
 			Assert.AreEqual(icon, publicationClass.IconPath);
@@ -115,7 +115,7 @@ namespace TASVideos.Api.Tests.Controllers
 			var conflictResult = (ConflictObjectResult)result;
 			Assert.AreEqual(409, conflictResult.StatusCode);
 			Assert.IsInstanceOfType(conflictResult.Value, typeof(SerializableError));
-			var error = (SerializableError)conflictResult.Value;
+			var error = (SerializableError)conflictResult.Value!;
 			Assert.IsTrue(error.Count == 1);
 			Assert.IsTrue(error.ContainsKey(nameof(ClassAddEditRequest.Name)));
 		}
@@ -176,7 +176,7 @@ namespace TASVideos.Api.Tests.Controllers
 			Assert.AreEqual(409, ((ConflictObjectResult)result).StatusCode);
 			var conflictResult = (ConflictObjectResult)result;
 			Assert.IsInstanceOfType(conflictResult.Value, typeof(SerializableError));
-			var error = (SerializableError)conflictResult.Value;
+			var error = (SerializableError)conflictResult.Value!;
 			Assert.IsTrue(error.Count == 1);
 			Assert.IsTrue(error.ContainsKey(nameof(ClassAddEditRequest.Name)));
 		}
@@ -223,7 +223,7 @@ namespace TASVideos.Api.Tests.Controllers
 			Assert.AreEqual(409, ((ConflictObjectResult)result).StatusCode);
 			var conflictResult = (ConflictObjectResult)result;
 			Assert.IsInstanceOfType(conflictResult.Value, typeof(SerializableError));
-			var error = (SerializableError)conflictResult.Value;
+			var error = (SerializableError)conflictResult.Value!;
 			Assert.IsTrue(error.Count == 1);
 			Assert.IsTrue(error.ContainsKey(""));
 		}

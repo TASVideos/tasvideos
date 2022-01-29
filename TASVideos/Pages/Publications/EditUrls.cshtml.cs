@@ -73,16 +73,17 @@ namespace TASVideos.Pages.Publications
 
 		public async Task<IActionResult> OnGet()
 		{
-			Title = await _db.Publications
+			var title = await _db.Publications
 				.Where(p => p.Id == Id)
 				.Select(p => p.Title)
 				.SingleOrDefaultAsync();
 
-			if (Title == null)
+			if (title == null)
 			{
 				return NotFound();
 			}
 
+			Title = title;
 			CurrentUrls = await _db.PublicationUrls
 				.Where(u => u.PublicationId == Id)
 				.ToListAsync();

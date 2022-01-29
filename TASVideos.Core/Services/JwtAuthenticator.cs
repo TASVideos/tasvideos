@@ -43,6 +43,11 @@ namespace TASVideos.Core.Services
 			}
 
 			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
+			if (user == null)
+			{
+				return "";
+			}
+
 			var claims = await _userManager.GetClaimsAsync(user);
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var tokenKey = Encoding.ASCII.GetBytes(_settings.SecretKey);

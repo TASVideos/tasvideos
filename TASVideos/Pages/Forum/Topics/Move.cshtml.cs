@@ -40,7 +40,7 @@ namespace TASVideos.Pages.Forum.Topics
 		{
 			var seeRestricted = CanSeeRestricted;
 
-			Topic = await _db.ForumTopics
+			var topic = await _db.ForumTopics
 				.Where(t => t.Id == Id)
 				.Include(t => t.Forum)
 				.ExcludeRestricted(seeRestricted)
@@ -52,11 +52,12 @@ namespace TASVideos.Pages.Forum.Topics
 				})
 				.SingleOrDefaultAsync();
 
-			if (Topic == null)
+			if (topic == null)
 			{
 				return NotFound();
 			}
 
+			Topic = topic;
 			await PopulateAvailableForums();
 
 			return Page();

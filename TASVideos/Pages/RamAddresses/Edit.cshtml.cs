@@ -28,17 +28,18 @@ namespace TASVideos.Pages.RamAddresses
 
 		public async Task<IActionResult> OnGet()
 		{
-			Address = await _mapper.ProjectTo<AddressEditModel>(_db.GameRamAddresses
+			var address = await _mapper.ProjectTo<AddressEditModel>(_db.GameRamAddresses
 				.Include(r => r.System)
 				.Include(r => r.Game)
 				.Where(r => r.Id == Id))
 				.SingleOrDefaultAsync();
 
-			if (Address is null)
+			if (address is null)
 			{
 				return NotFound();
 			}
 
+			Address = address;
 			await PopulateDropdowns(Address.SystemId);
 
 			return Page();

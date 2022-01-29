@@ -131,14 +131,17 @@ namespace TASVideos.Pages.UserFiles
 				else
 				{
 					var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Code == parseResult.SystemCode);
-					var frameRateData = await _db.GameSystemFrameRates
-						.ForSystem(system.Id)
-						.ForRegion(parseResult.Region.ToString())
-						.FirstOrDefaultAsync();
-
-					if (frameRateData is not null)
+					if (system != null)
 					{
-						frameRate = (decimal)frameRateData.FrameRate;
+						var frameRateData = await _db.GameSystemFrameRates
+							.ForSystem(system.Id)
+							.ForRegion(parseResult.Region.ToString())
+							.FirstOrDefaultAsync();
+
+						if (frameRateData is not null)
+						{
+							frameRate = (decimal)frameRateData.FrameRate;
+						}
 					}
 				}
 
