@@ -181,7 +181,19 @@ namespace TASVideos.MovieParsers.Parsers
 									throw new FormatException($"Unknown {eventClass} parameter {tokens[2]}");
 								}
 							}
-							else if (!JrsrSectionParser.IsSpecialEventClass(eventClass))
+							else if (eventClass == "SAVESTATE")
+							{
+								// Just check the syntax.
+								if (tokens.Count != 4)
+								{
+									throw new FormatException($"Bad format for {eventClass} special event");
+								}
+							}
+							else if (JrsrSectionParser.IsSpecialEventClass(eventClass))
+							{
+								throw new FormatException($"Unknown special event class {eventClass}");
+							}
+							else
 							{
 								lastNonSpecialTimestamp = lastTimestamp;
 							}

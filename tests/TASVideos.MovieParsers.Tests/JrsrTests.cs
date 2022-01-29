@@ -311,6 +311,14 @@ namespace TASVideos.MovieParsers.Tests
 +3333333400 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
 +-1 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
 ")]
+		// Unknown special event is an error.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 SPECIAL foobar
+!END
+")]
 		public async Task EventTimestampsError(string contents)
 		{
 			var result = await ParseFromString(contents);
