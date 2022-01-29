@@ -93,7 +93,7 @@ namespace TASVideos.Core.Services
 			try
 			{
 				string processed = "";
-				if (mask.Contains("*"))
+				if (mask.Contains('*'))
 				{
 					if (mask.EndsWith("*.*.*"))
 					{

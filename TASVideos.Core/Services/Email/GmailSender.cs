@@ -44,7 +44,7 @@ namespace TASVideos.Core.Services.Email
 
 			if (string.IsNullOrWhiteSpace(token))
 			{
-				_logger.LogError("Unable to acquire get gmail token, skipping email: subject: {0} message: {1}", email.Subject, email.Message);
+				_logger.LogError("Unable to acquire get gmail token, skipping email: subject: {subject} message: {message}", email.Subject, email.Message);
 				return;
 			}
 
@@ -62,7 +62,7 @@ namespace TASVideos.Core.Services.Email
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Unable to send email, subject: {0} message: {1} exception: {2}", email.Subject, email.Message, ex);
+				_logger.LogError("Unable to send email, subject: {subject} message: {message} exception: {ex}", email.Subject, email.Message, ex);
 			}
 		}
 

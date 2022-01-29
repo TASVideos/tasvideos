@@ -135,7 +135,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
 			var outputString = new StringBuilder();
 			for (int i = 0; i < 32; ++i)
 			{
-				outputString.Append(nonceCharacters.Substring(Rng.Next(0, nonceCharacters.Length), 1));
+				outputString.Append(nonceCharacters.AsSpan(Rng.Next(0, nonceCharacters.Length), 1));
 			}
 
 			return outputString.ToString();
