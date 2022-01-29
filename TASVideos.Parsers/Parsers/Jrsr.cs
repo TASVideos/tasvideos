@@ -68,7 +68,8 @@ namespace TASVideos.MovieParsers.Parsers
 			};
 
 			var sectionsSeen = new HashSet<string>();
-			bool missingRerecordCount = true;
+			bool hasRerecordCount = false;
+			bool hasValidRerecordCount = false;
 			long lastTimestamp = 0L;
 			long lastNonSpecialTimestamp = 0L;
 			bool optionRelative = false; // "By default [timestamps] are relative to initial poweron."
@@ -101,15 +102,22 @@ namespace TASVideos.MovieParsers.Parsers
 
 							if (tokens[0] == Keys.RerecordCount)
 							{
-								if (tokens.Count < 2)
+								if (hasRerecordCount)
 								{
-									continue;
+									throw new FormatException($"More than one {sectionName}.{tokens[0]} line");
+								}
+
+								hasRerecordCount = true;
+
+								if (tokens.Count != 2)
+								{
+									throw new FormatException($"Bad format for {sectionName}.{tokens[0]} line");
 								}
 
 								if (tokens[1].ToPositiveInt() is int rerecordValue)
 								{
 									result.RerecordCount = rerecordValue;
-									missingRerecordCount = false;
+									hasValidRerecordCount = true;
 								}
 							}
 							else if (tokens[0] == Keys.StartsFromSavestate)
@@ -195,7 +203,7 @@ namespace TASVideos.MovieParsers.Parsers
 				result.FrameRateOverride = result.Frames / (lastNonSpecialTimestamp / 1000000000L);
 			}
 
-			if (missingRerecordCount)
+			if (!hasValidRerecordCount)
 			{
 				result.WarnNoRerecords();
 			}

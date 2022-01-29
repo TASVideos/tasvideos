@@ -135,6 +135,50 @@ namespace TASVideos.MovieParsers.Tests
 			return await new Jrsr().Parse(reader);
 		}
 
+		// It should be an error if RERECORDS appears more than once, even if
+		// some of the appearances do not parse correctly.
+		[TestMethod]
+		[DataRow(
+@"JRSR
+!BEGIN header
++RERECORDS 100
++RERECORDS 100
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
++RERECORDS
++RERECORDS 100
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
++RERECORDS 100
++RERECORDS
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
++RERECORDS -123
++RERECORDS 100
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
++RERECORDS 100
++RERECORDS -123
+!END
+")]
+		public async Task RerecordsMultiplicity(string contents)
+		{
+			var result = await ParseFromString(contents);
+			Assert.IsFalse(result.Success);
+		}
+
 		[TestMethod]
 		// No events section.
 		[DataRow(
