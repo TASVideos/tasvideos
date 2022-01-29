@@ -53,7 +53,9 @@
 				<div>
 					@foreach (var url in Model.OnlineWatchingUrls)
 					{
-						<a href="@url" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> Watch</a>
+						<a href="@url.Url" class="btn btn-primary btn-sm mt-1" target="_blank">
+							<i class="fa fa-external-link"></i> Watch @(!string.IsNullOrWhiteSpace(url.DisplayName) ? $"{url.DisplayName}" : "")
+						</a>
 					}
 					<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 				</div>
@@ -133,7 +135,10 @@
 					<span condition="Model.MirrorSiteUrls.Any()">
 						@foreach (var url in Model.MirrorSiteUrls)
 						{
-							<a href="@url" class="ms-2">A/V file via Mirror<br /></a>
+							<a href="@url.Url" class="ms-2">
+								@(string.IsNullOrWhiteSpace(url.DisplayName) ? "A/V file" : url.DisplayName) via Mirror
+								<br/>
+							</a>
 						}
 					</span>
 				</small>

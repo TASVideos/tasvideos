@@ -19,8 +19,8 @@ namespace TASVideos.Pages.Publications.Models
 		public string ClassIconPath { get; set; } = "";
 		public string MovieFileName { get; set; } = "";
 		public int SubmissionId { get; set; }
-		public IEnumerable<string> OnlineWatchingUrls { get; set; } = new List<string>();
-		public IEnumerable<string> MirrorSiteUrls { get; set; } = new List<string>();
+		public IEnumerable<PublicationUrl> OnlineWatchingUrls { get; set; } = new List<PublicationUrl>();
+		public IEnumerable<PublicationUrl> MirrorSiteUrls { get; set; } = new List<PublicationUrl>();
 		public int TopicId { get; set; }
 		public string? EmulatorVersion { get; set; }
 
@@ -65,5 +65,7 @@ namespace TASVideos.Pages.Publications.Models
 			public int Id { get; set; }
 			public string Title { get; set; } = "";
 		}
+
+		public record PublicationUrl(string Url, string? DisplayName);
 	}
 }
