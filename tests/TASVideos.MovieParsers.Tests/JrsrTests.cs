@@ -119,10 +119,10 @@ namespace TASVideos.MovieParsers.Tests
 		public async Task NegativeRerecords()
 		{
 			var result = await _jrsrParser.Parse(Embedded("negativererecords.jrsr"));
-			Assert.IsTrue(result.Success);
-			Assert.AreEqual(0, result.RerecordCount, "Rerecord count assumed to be 0");
-			AssertNoErrors(result);
-			Assert.AreEqual(1, result.Warnings.Count());
+			Assert.IsFalse(result.Success);
+			Assert.AreEqual(-1, result.RerecordCount, "Rerecord count assumed to be -1");
+			AssertNoWarnings(result);
+			Assert.AreEqual(1, result.Errors.Count());
 		}
 
 		/// <summary>
@@ -250,6 +250,51 @@ namespace TASVideos.MovieParsers.Tests
 +0 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
 !END
 ", 100)]
+		// Event parameters may be empty.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++1666666700 org.jpc.emulator.PC$ResetButton
+!END
+", 100)]
+		// Just short of overflow in event timestamps. 9223372036854775807 is
+		// 2**63 - 1. Use special events here to avoid conflation with overflow
+		// that occurs while computing result.Frames.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++9223372036854775807 SAVESTATE aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 0
+!END
+", 0)]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++9223372036854775806 SAVESTATE aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 0
++1 SAVESTATE aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab 1
+!END
+", 0)]
+		// Just short of overflow in frame count. 35791394849161215 is
+		// (2**31) * 16666667 - 1.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++35791394849161215 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 0x7fffffff)]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++35791394849161214 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++1 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 0x7fffffff)]
 		public async Task EventTimestamps(string contents, int expected)
 		{
 			var result = await ParseFromString(contents);
@@ -317,6 +362,86 @@ namespace TASVideos.MovieParsers.Tests
 !BEGIN header
 !BEGIN events
 +0 SPECIAL foobar
+!END
+")]
+		// Do not permit whitespace, base prefixes, decimal points, etc. in
+		// timestamps.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++( 1666666700 ) org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++\ 1666666700\  org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0x1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++1666666700.0 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++1666666700e0 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++1,666,666,700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+")]
+		// Overflow in event timestamps. 9223372036854775808 is 2**63. Use
+		// special events here to avoid conflation with overflow that occurs
+		// while computing result.Frames.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++9223372036854775808 SAVESTATE aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 0
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++9223372036854775807 SAVESTATE aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 0
++1 SAVESTATE aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab 1
+!END
+")]
+		// Overflow in frame count. 35791394849161216 is (2**31) * 16666667.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++35791394849161216 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+")]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++35791394849161215 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++1 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
 !END
 ")]
 		public async Task EventTimestampsError(string contents)

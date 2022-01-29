@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -57,6 +58,14 @@ namespace TASVideos.MovieParsers.Parsers
 		// Safety limit on the length of JRSR section names and lines.
 		private const int LengthLimit = 10000;
 
+		// Permissible formats for parsing integers. "All integers are written
+		// using Unicode codepoints DIGIT ZERO - DIGIT NINE (and prefixed with
+		// HYPHEN-MINUS if negative)." We want to exclude things like leading
+		// and trailing whitespace. AllowLeadingSign permits a '+' prefix as
+		// well as '-', but JPC-RR uses e.g. Java's Long.parseLong, which also
+		// permits a '+' prefix.
+		private const NumberStyles IntegerStyle = NumberStyles.AllowLeadingSign;
+
 		private const string FileExtension = "jrsr";
 		public async Task<IParseResult> Parse(Stream file)
 		{
@@ -69,7 +78,6 @@ namespace TASVideos.MovieParsers.Parsers
 
 			var sectionsSeen = new HashSet<string>();
 			bool hasRerecordCount = false;
-			bool hasValidRerecordCount = false;
 			long lastTimestamp = 0L;
 			long lastNonSpecialTimestamp = 0L;
 			bool optionRelative = false; // "By default [timestamps] are relative to initial poweron."
@@ -114,11 +122,13 @@ namespace TASVideos.MovieParsers.Parsers
 									throw new FormatException($"Bad format for {sectionName}.{tokens[0]} line");
 								}
 
-								if (tokens[1].ToPositiveInt() is int rerecordValue)
+								int rerecordValue;
+								if (!int.TryParse(tokens[1], IntegerStyle, null, out rerecordValue) || rerecordValue < 0)
 								{
-									result.RerecordCount = rerecordValue;
-									hasValidRerecordCount = true;
+									throw new FormatException($"Invalid {sectionName}.{tokens[0]} count {tokens[1]}");
 								}
+
+								result.RerecordCount = rerecordValue;
 							}
 							else if (tokens[0] == Keys.StartsFromSavestate)
 							{
@@ -138,18 +148,18 @@ namespace TASVideos.MovieParsers.Parsers
 							}
 							else if (tokens.Count < 2)
 							{
-								continue;
+								throw new FormatException("Missing event timestamp and class");
 							}
 
 							long timestamp;
-							if (!long.TryParse(tokens[0], out timestamp))
+							if (!long.TryParse(tokens[0], IntegerStyle, null, out timestamp) || timestamp < 0)
 							{
-								continue;
+								throw new FormatException($"Cannot parse timestamp {tokens[0]}");
 							}
 
 							if (optionRelative)
 							{
-								timestamp = lastTimestamp + timestamp;
+								timestamp = checked(lastTimestamp + timestamp);
 							}
 
 							// "Events must be in time order from first to last."
@@ -202,8 +212,23 @@ namespace TASVideos.MovieParsers.Parsers
 
 					// initialization, diskinfo-*, others are ignored.
 				}
+
+				// "When computing movie length, it is customary to ignore all
+				// special events."
+				if (lastNonSpecialTimestamp > 0)
+				{
+					checked
+					{
+						result.Frames = (int)(lastNonSpecialTimestamp / 16666667);
+						result.FrameRateOverride = result.Frames / (lastNonSpecialTimestamp / 1000000000L);
+					}
+				}
 			}
 			catch (FormatException ex)
+			{
+				return new ErrorResult(ex.Message);
+			}
+			catch (OverflowException ex)
 			{
 				return new ErrorResult(ex.Message);
 			}
@@ -213,15 +238,7 @@ namespace TASVideos.MovieParsers.Parsers
 				return new ErrorResult("No header found");
 			}
 
-			// "When computing movie length, it is customary to ignore all
-			// special events."
-			if (lastNonSpecialTimestamp > 0)
-			{
-				result.Frames = (int)(lastNonSpecialTimestamp / 16666667);
-				result.FrameRateOverride = result.Frames / (lastNonSpecialTimestamp / 1000000000L);
-			}
-
-			if (!hasValidRerecordCount)
+			if (!hasRerecordCount)
 			{
 				result.WarnNoRerecords();
 			}
