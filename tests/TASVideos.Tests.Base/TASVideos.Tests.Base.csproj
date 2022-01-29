@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
-		<Nullable>enable</Nullable>
+		<TargetFramework>net6.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<CodeAnalysisRuleSet>$(ProjectDir)../../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
@@ -12,7 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />
 		<PackageReference Include="Moq" Version="4.16.1" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>

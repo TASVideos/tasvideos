@@ -94,7 +94,7 @@ namespace TASVideos.Pages.Account
 			}
 
 			string encodedResponse = Request.Form["g-recaptcha-response"];
-			bool isCaptchaValid = await _reCaptchaService.Verify(encodedResponse);
+			bool isCaptchaValid = await _reCaptchaService.VerifyAsync(encodedResponse);
 
 			if (!_env.IsDevelopment() && !isCaptchaValid)
 			{
