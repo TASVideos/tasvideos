@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Npgsql;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using SharpCompress.Compressors;
@@ -34,8 +35,20 @@ namespace TASVideos.Core.Data
 		private static async Task SampleStrategy(DbContext context)
 		{
 			await context.Database.EnsureDeletedAsync();
-			await context.Database.EnsureCreatedAsync();
+			await context.Database.MigrateAsync();
+
 			await GenerateDevSampleData(context);
+
+			// https://github.com/npgsql/npgsql/issues/2366
+			// For NpgSql specifically, if we drop and create SCHEMA while running the application
+			// we must reload types, as the connector will not do itself and will get an error when querying data
+			await using var conn = context.Database.GetDbConnection();
+			if (conn is NpgsqlConnection nConn)
+			{
+				await nConn.OpenAsync();
+				nConn.ReloadTypes();
+				await nConn.CloseAsync();
+			}
 		}
 
 		// Adds optional sample data for testing purposes (would not be apart of a production release)
