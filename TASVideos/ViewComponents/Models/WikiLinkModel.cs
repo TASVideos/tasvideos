@@ -1,8 +1,7 @@
-﻿namespace TASVideos.ViewComponents
+﻿namespace TASVideos.ViewComponents;
+
+public class WikiLinkModel
 {
-	public class WikiLinkModel
-	{
-		public string Href { get; set; } = "";
-		public string DisplayText { get; set; } = "";
-	}
+	public string Href { get; set; } = "";
+	public string DisplayText { get; set; } = "";
 }

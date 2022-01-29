@@ -9,50 +9,49 @@ using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki;
 using TASVideos.Tests.Base;
 
-namespace TASVideos.RazorPages.Tests.Pages.Wiki
+namespace TASVideos.RazorPages.Tests.Pages.Wiki;
+
+[TestClass]
+public class RenderModelTests : BasePageModelTests
 {
-	[TestClass]
-	public class RenderModelTests : BasePageModelTests
+	private readonly Mock<IWikiPages> _mockWikiPages;
+	private readonly TestDbContext _db;
+	private readonly RenderModel _model;
+
+	public RenderModelTests()
 	{
-		private readonly Mock<IWikiPages> _mockWikiPages;
-		private readonly TestDbContext _db;
-		private readonly RenderModel _model;
-
-		public RenderModelTests()
+		_mockWikiPages = new Mock<IWikiPages>();
+		_db = TestDbContext.Create();
+		_model = new RenderModel(_mockWikiPages.Object, _db, NullLogger<RenderModel>.Instance)
 		{
-			_mockWikiPages = new Mock<IWikiPages>();
-			_db = TestDbContext.Create();
-			_model = new RenderModel(_mockWikiPages.Object, _db, NullLogger<RenderModel>.Instance)
-			{
-				PageContext = TestPageContext()
-			};
-		}
+			PageContext = TestPageContext()
+		};
+	}
 
-		[TestMethod]
-		[DataRow(null)]
-		[DataRow("")]
-		[DataRow(" ")]
-		public async Task Render_NullUrl_Redirects(string url)
-		{
-			var result = await _model.OnGet(url);
-			Assert.IsNotNull(result);
-			Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-			var redirect = (RedirectToPageResult)result;
-			Assert.AreEqual("/Wiki/PageNotFound", redirect.PageName);
-		}
+	[TestMethod]
+	[DataRow(null)]
+	[DataRow("")]
+	[DataRow(" ")]
+	public async Task Render_NullUrl_Redirects(string url)
+	{
+		var result = await _model.OnGet(url);
+		Assert.IsNotNull(result);
+		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		var redirect = (RedirectToPageResult)result;
+		Assert.AreEqual("/Wiki/PageNotFound", redirect.PageName);
+	}
 
-		[TestMethod]
-		public async Task Render_ExistingPage_FindsPage()
-		{
-			const string existingPage = "Test";
-			_mockWikiPages
-				.Setup(m => m.Page(existingPage, null))
-				.ReturnsAsync(new WikiPage { PageName = existingPage });
+	[TestMethod]
+	public async Task Render_ExistingPage_FindsPage()
+	{
+		const string existingPage = "Test";
+		_mockWikiPages
+			.Setup(m => m.Page(existingPage, null))
+			.ReturnsAsync(new WikiPage { PageName = existingPage });
 
-			var result = await _model.OnGet(existingPage);
+		var result = await _model.OnGet(existingPage);
 
-			Assert.IsNotNull(result);
-			Assert.IsInstanceOfType(result, typeof(PageResult));
-		}
+		Assert.IsNotNull(result);
+		Assert.IsInstanceOfType(result, typeof(PageResult));
 	}
 }

@@ -2,33 +2,32 @@
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace TASVideos.Core.Services
-{
-	public class ListDiff
-	{
-		public ListDiff(ICollection<string> currentItems, ICollection<string> newItems)
-		{
-			Added = newItems.Except(currentItems).ToImmutableList();
-			Removed = currentItems.Except(newItems).ToImmutableList();
-		}
+namespace TASVideos.Core.Services;
 
-		public IReadOnlyCollection<string> Added { get; init; }
-		public IReadOnlyCollection<string> Removed { get; init; }
+public class ListDiff
+{
+	public ListDiff(ICollection<string> currentItems, ICollection<string> newItems)
+	{
+		Added = newItems.Except(currentItems).ToImmutableList();
+		Removed = currentItems.Except(newItems).ToImmutableList();
 	}
 
-	public static class ListDiffExtensions
-	{
-		public static IEnumerable<string> ToMessages(this ListDiff diff, string name)
-		{
-			if (diff.Added.Any())
-			{
-				yield return $"Added {name}: {string.Join(", ", diff.Added.OrderBy(s => s))}";
-			}
+	public IReadOnlyCollection<string> Added { get; init; }
+	public IReadOnlyCollection<string> Removed { get; init; }
+}
 
-			if (diff.Removed.Any())
-			{
-				yield return $"Removed {name}: {string.Join(", ", diff.Removed.OrderBy(s => s))}";
-			}
+public static class ListDiffExtensions
+{
+	public static IEnumerable<string> ToMessages(this ListDiff diff, string name)
+	{
+		if (diff.Added.Any())
+		{
+			yield return $"Added {name}: {string.Join(", ", diff.Added.OrderBy(s => s))}";
+		}
+
+		if (diff.Removed.Any())
+		{
+			yield return $"Removed {name}: {string.Join(", ", diff.Removed.OrderBy(s => s))}";
 		}
 	}
 }

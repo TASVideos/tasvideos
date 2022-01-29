@@ -1,45 +1,44 @@
 ﻿using System.Linq;
 
-namespace TASVideos.Data.Entity
+namespace TASVideos.Data.Entity;
+
+public enum PublicationRatingType
 {
-	public enum PublicationRatingType
+	Entertainment, TechQuality
+}
+
+public class PublicationRating
+{
+	public int UserId { get; set; }
+	public virtual User? User { get; set; }
+
+	public int PublicationId { get; set; }
+	public virtual Publication? Publication { get; set; }
+
+	public PublicationRatingType Type { get; set; }
+
+	public double Value { get; set; }
+}
+
+public static class PublicationRatingExtensions
+{
+	public static IQueryable<PublicationRating> ForPublication(this IQueryable<PublicationRating> query, int publicationId)
 	{
-		Entertainment, TechQuality
+		return query.Where(pr => pr.PublicationId == publicationId);
 	}
 
-	public class PublicationRating
+	public static IQueryable<PublicationRating> ForUser(this IQueryable<PublicationRating> query, int userId)
 	{
-		public int UserId { get; set; }
-		public virtual User? User { get; set; }
-
-		public int PublicationId { get; set; }
-		public virtual Publication? Publication { get; set; }
-
-		public PublicationRatingType Type { get; set; }
-
-		public double Value { get; set; }
+		return query.Where(pr => pr.UserId == userId);
 	}
 
-	public static class PublicationRatingExtensions
+	public static IQueryable<PublicationRating> ThatAreNotFromAnAuthor(this IQueryable<PublicationRating> query)
 	{
-		public static IQueryable<PublicationRating> ForPublication(this IQueryable<PublicationRating> query, int publicationId)
-		{
-			return query.Where(pr => pr.PublicationId == publicationId);
-		}
+		return query.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId));
+	}
 
-		public static IQueryable<PublicationRating> ForUser(this IQueryable<PublicationRating> query, int userId)
-		{
-			return query.Where(pr => pr.UserId == userId);
-		}
-
-		public static IQueryable<PublicationRating> ThatAreNotFromAnAuthor(this IQueryable<PublicationRating> query)
-		{
-			return query.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId));
-		}
-
-		public static IQueryable<PublicationRating> ThatCanBeUsedToRate(this IQueryable<PublicationRating> query)
-		{
-			return query.Where(pr => pr.User!.UseRatings);
-		}
+	public static IQueryable<PublicationRating> ThatCanBeUsedToRate(this IQueryable<PublicationRating> query)
+	{
+		return query.Where(pr => pr.User!.UseRatings);
 	}
 }

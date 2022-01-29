@@ -1,7 +1,6 @@
-﻿namespace TASVideos.Api
+﻿namespace TASVideos.Api;
+
+internal static class ApiConstants
 {
-	internal static class ApiConstants
-	{
-		public const int MaxPageSize = 1000;
-	}
+	public const int MaxPageSize = 1000;
 }

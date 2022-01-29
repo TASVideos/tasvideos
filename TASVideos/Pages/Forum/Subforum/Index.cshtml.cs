@@ -9,64 +9,63 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Subforum.Models;
 
-namespace TASVideos.Pages.Forum.Subforum
+namespace TASVideos.Pages.Forum.Subforum;
+
+[AllowAnonymous]
+[RequireCurrentPermissions]
+public class IndexModel : BasePageModel
 {
-	[AllowAnonymous]
-	[RequireCurrentPermissions]
-	public class IndexModel : BasePageModel
+	private readonly ApplicationDbContext _db;
+
+	public IndexModel(ApplicationDbContext db)
 	{
-		private readonly ApplicationDbContext _db;
+		_db = db;
+	}
 
-		public IndexModel(ApplicationDbContext db)
-		{
-			_db = db;
-		}
+	[FromQuery]
+	public ForumRequest Search { get; set; } = new();
 
-		[FromQuery]
-		public ForumRequest Search { get; set; } = new ();
+	[FromRoute]
+	public int Id { get; set; }
 
-		[FromRoute]
-		public int Id { get; set; }
+	public ForumDisplayModel Forum { get; set; } = new();
 
-		public ForumDisplayModel Forum { get; set; } = new ();
-
-		public async Task<IActionResult> OnGet()
-		{
-			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			var forum = await _db.Forums
-				.ExcludeRestricted(seeRestricted)
-				.Select(f => new ForumDisplayModel
-				{
-					Id = f.Id,
-					Name = f.Name,
-					Description = f.Description
-				})
-				.SingleOrDefaultAsync(f => f.Id == Id);
-
-			if (forum == null)
+	public async Task<IActionResult> OnGet()
+	{
+		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
+		var forum = await _db.Forums
+			.ExcludeRestricted(seeRestricted)
+			.Select(f => new ForumDisplayModel
 			{
-				return NotFound();
-			}
+				Id = f.Id,
+				Name = f.Name,
+				Description = f.Description
+			})
+			.SingleOrDefaultAsync(f => f.Id == Id);
 
-			Forum = forum;
-			Forum.Topics = await _db.ForumTopics
-				.ForForum(Id)
-				.Select(ft => new ForumDisplayModel.ForumTopicEntry
-				{
-					Id = ft.Id,
-					Title = ft.Title,
-					CreateUserName = ft.CreateUserName,
-					CreateTimestamp = ft.CreateTimestamp,
-					Type = ft.Type,
-					IsLocked = ft.IsLocked,
-					PostCount = ft.ForumPosts.Count,
-					LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
-				})
-				.OrderByDescending(ft => ft.Type)
-				.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
-				.PageOf(Search);
-
-			return Page();
+		if (forum == null)
+		{
+			return NotFound();
 		}
+
+		Forum = forum;
+		Forum.Topics = await _db.ForumTopics
+			.ForForum(Id)
+			.Select(ft => new ForumDisplayModel.ForumTopicEntry
+			{
+				Id = ft.Id,
+				Title = ft.Title,
+				CreateUserName = ft.CreateUserName,
+				CreateTimestamp = ft.CreateTimestamp,
+				Type = ft.Type,
+				IsLocked = ft.IsLocked,
+				PostCount = ft.ForumPosts.Count,
+				LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
+			})
+			.OrderByDescending(ft => ft.Type)
+			.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
+			.PageOf(Search);
+
+		return Page();
 	}
 }

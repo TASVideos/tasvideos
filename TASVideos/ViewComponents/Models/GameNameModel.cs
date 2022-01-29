@@ -1,12 +1,11 @@
-﻿namespace TASVideos.ViewComponents
+﻿namespace TASVideos.ViewComponents;
+
+public class GameNameModel
 {
-	public class GameNameModel
-	{
-		public int GameId { get; init; }
-		public string DisplayName { get; init; } = "";
+	public int GameId { get; init; }
+	public string DisplayName { get; init; } = "";
 
-		public string? System { get; init; }
+	public string? System { get; init; }
 
-		public bool IsSystem => !string.IsNullOrWhiteSpace(System);
-	}
+	public bool IsSystem => !string.IsNullOrWhiteSpace(System);
 }

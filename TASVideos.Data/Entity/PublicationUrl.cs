@@ -2,36 +2,35 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace TASVideos.Data.Entity
+namespace TASVideos.Data.Entity;
+
+public enum PublicationUrlType { Streaming, Mirror }
+
+public class PublicationUrl : BaseEntity
 {
-	public enum PublicationUrlType { Streaming, Mirror }
+	public int Id { get; set; }
+	public int PublicationId { get; set; }
+	public virtual Publication? Publication { get; set; }
 
-	public class PublicationUrl : BaseEntity
+	[Required]
+	[StringLength(500)]
+	public string? Url { get; set; }
+
+	public PublicationUrlType Type { get; set; } = PublicationUrlType.Streaming;
+
+	[StringLength(100)]
+	public string? DisplayName { get; set; }
+}
+
+public static class PublicationUrlExtensions
+{
+	public static IQueryable<PublicationUrl> ThatAreStreaming(this IQueryable<PublicationUrl> urls)
 	{
-		public int Id { get; set; }
-		public int PublicationId { get; set; }
-		public virtual Publication? Publication { get; set; }
-
-		[Required]
-		[StringLength(500)]
-		public string? Url { get; set; }
-
-		public PublicationUrlType Type { get; set; } = PublicationUrlType.Streaming;
-
-		[StringLength(100)]
-		public string? DisplayName { get; set; }
+		return urls.Where(u => u.Type == PublicationUrlType.Streaming);
 	}
 
-	public static class PublicationUrlExtensions
+	public static IEnumerable<PublicationUrl> ThatAreStreaming(this IEnumerable<PublicationUrl> urls)
 	{
-		public static IQueryable<PublicationUrl> ThatAreStreaming(this IQueryable<PublicationUrl> urls)
-		{
-			return urls.Where(u => u.Type == PublicationUrlType.Streaming);
-		}
-
-		public static IEnumerable<PublicationUrl> ThatAreStreaming(this IEnumerable<PublicationUrl> urls)
-		{
-			return urls.Where(u => u.Type == PublicationUrlType.Streaming);
-		}
+		return urls.Where(u => u.Type == PublicationUrlType.Streaming);
 	}
 }

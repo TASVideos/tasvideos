@@ -1,4 +1,3 @@
-﻿namespace TASVideos.ViewComponents
-{
-	public record SubmissionsWithNoGamesModel(int Id, string Title);
-}
+﻿namespace TASVideos.ViewComponents;
+
+public record SubmissionsWithNoGamesModel(int Id, string Title);

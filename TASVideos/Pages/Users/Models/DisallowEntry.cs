@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Users.Models
-{
-	public class DisallowEntry
-	{
-		public int Id { get; set; }
+namespace TASVideos.Pages.Users.Models;
 
-		[Required]
-		public string? RegexPattern { get; set; }
-	}
+public class DisallowEntry
+{
+	public int Id { get; set; }
+
+	[Required]
+	public string? RegexPattern { get; set; }
 }

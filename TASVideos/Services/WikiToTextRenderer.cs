@@ -10,104 +10,103 @@ using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
-namespace TASVideos.Services
+namespace TASVideos.Services;
+
+public class WikiToTextRenderer : IWikiToTextRenderer
 {
-	public class WikiToTextRenderer : IWikiToTextRenderer
+	private readonly AppSettings _settings;
+	private readonly IServiceProvider _serviceProvider;
+
+	public WikiToTextRenderer(AppSettings settings, IServiceProvider serviceProvider)
 	{
-		private readonly AppSettings _settings;
+		_settings = settings;
+		_serviceProvider = serviceProvider;
+	}
+
+	public async Task<string> RenderWikiForYoutube(WikiPage page)
+	{
+		var sw = new StringWriter();
+		await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(_settings.BaseUrl, _serviceProvider, page));
+		return sw.ToString();
+	}
+
+	private class WriterHelper : IWriterHelper
+	{
+		private readonly string _host;
 		private readonly IServiceProvider _serviceProvider;
+		private readonly WikiPage _wikiPage;
 
-		public WikiToTextRenderer(AppSettings settings, IServiceProvider serviceProvider)
+		public WriterHelper(string host, IServiceProvider serviceProvider, WikiPage wikiPage)
 		{
-			_settings = settings;
+			_host = host;
 			_serviceProvider = serviceProvider;
+			_wikiPage = wikiPage;
 		}
 
-		public async Task<string> RenderWikiForYoutube(WikiPage page)
+		public bool CheckCondition(string condition)
 		{
-			var sw = new StringWriter();
-			await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(_settings.BaseUrl, _serviceProvider, page));
-			return sw.ToString();
+			bool result = false;
+
+			if (condition.StartsWith('!'))
+			{
+				result = true;
+				condition = condition.TrimStart('!');
+			}
+
+			switch (condition)
+			{
+				case "1":
+					result ^= true;
+					break;
+				default:
+					result ^= false;
+					break;
+			}
+
+			return result;
 		}
 
-		private class WriterHelper : IWriterHelper
+		public async Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 		{
-			private readonly string _host;
-			private readonly IServiceProvider _serviceProvider;
-			private readonly WikiPage _wikiPage;
-
-			public WriterHelper(string host, IServiceProvider serviceProvider, WikiPage wikiPage)
+			var componentExists = ModuleParamHelpers.TextComponents.TryGetValue(name, out Type? textComponent);
+			if (!componentExists)
 			{
-				_host = host;
-				_serviceProvider = serviceProvider;
-				_wikiPage = wikiPage;
+				return;
 			}
 
-			public bool CheckCondition(string condition)
+			var invokeMethod = textComponent!.GetMethod("RenderTextAsync");
+
+			if (invokeMethod == null && textComponent.GetMethod("RenderText") != null)
 			{
-				bool result = false;
-
-				if (condition.StartsWith('!'))
-				{
-					result = true;
-					condition = condition.TrimStart('!');
-				}
-
-				switch (condition)
-				{
-					case "1":
-						result ^= true;
-						break;
-					default:
-						result ^= false;
-						break;
-				}
-
-				return result;
+				throw new NotImplementedException("Sync method not supported yet");
 			}
 
-			public async Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
+			if (invokeMethod == null)
 			{
-				var componentExists = ModuleParamHelpers.TextComponents.TryGetValue(name, out Type? textComponent);
-				if (!componentExists)
-				{
-					return;
-				}
-
-				var invokeMethod = textComponent!.GetMethod("RenderTextAsync");
-
-				if (invokeMethod == null && textComponent.GetMethod("RenderText") != null)
-				{
-					throw new NotImplementedException("Sync method not supported yet");
-				}
-
-				if (invokeMethod == null)
-				{
-					throw new InvalidOperationException($"Could not find an RenderText method on ViewComponent {textComponent}");
-				}
-
-				var paramObject = ModuleParamHelpers
-					.GetParameterData(w, name, invokeMethod, _wikiPage, pp);
-
-				var module = _serviceProvider.GetRequiredService(textComponent);
-				var result = await (Task<string>)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
-				w.Write(result);
+				throw new InvalidOperationException($"Could not find an RenderText method on ViewComponent {textComponent}");
 			}
 
-			public string AbsoluteUrl(string url)
+			var paramObject = ModuleParamHelpers
+				.GetParameterData(w, name, invokeMethod, _wikiPage, pp);
+
+			var module = _serviceProvider.GetRequiredService(textComponent);
+			var result = await (Task<string>)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
+			w.Write(result);
+		}
+
+		public string AbsoluteUrl(string url)
+		{
+			if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsed))
 			{
-				if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsed))
-				{
-					return url;
-				}
-
-				if (!parsed.IsAbsoluteUri)
-				{
-					return _host.TrimEnd('/') + url;
-				}
-
 				return url;
 			}
+
+			if (!parsed.IsAbsoluteUri)
+			{
+				return _host.TrimEnd('/') + url;
+			}
+
+			return url;
 		}
 	}
 }

@@ -1,8 +1,7 @@
-﻿namespace TASVideos.Pages.Forum.Posts.Models
+﻿namespace TASVideos.Pages.Forum.Posts.Models;
+
+public record AvatarUrls(string? Avatar, string? MoodBase)
 {
-	public record AvatarUrls(string? Avatar, string? MoodBase)
-	{
-		public bool HasMoods => !string.IsNullOrWhiteSpace(MoodBase);
-		public bool HasAvatar => !HasMoods && !string.IsNullOrWhiteSpace(Avatar);
-	}
+	public bool HasMoods => !string.IsNullOrWhiteSpace(MoodBase);
+	public bool HasAvatar => !HasMoods && !string.IsNullOrWhiteSpace(Avatar);
 }

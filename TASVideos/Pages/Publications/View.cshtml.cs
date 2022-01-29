@@ -9,77 +9,76 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Pages.Publications.Models;
 
-namespace TASVideos.Pages.Publications
+namespace TASVideos.Pages.Publications;
+
+[AllowAnonymous]
+public class ViewModel : BasePageModel
 {
-	[AllowAnonymous]
-	public class ViewModel : BasePageModel
+	private readonly ApplicationDbContext _db;
+	private readonly IMapper _mapper;
+	private readonly IPointsService _pointsService;
+
+	public ViewModel(
+		ApplicationDbContext db,
+		IMapper mapper,
+		IPointsService pointsService)
 	{
-		private readonly ApplicationDbContext _db;
-		private readonly IMapper _mapper;
-		private readonly IPointsService _pointsService;
+		_db = db;
+		_mapper = mapper;
+		_pointsService = pointsService;
+	}
 
-		public ViewModel(
-			ApplicationDbContext db,
-			IMapper mapper,
-			IPointsService pointsService)
+	[FromRoute]
+	public int Id { get; set; }
+
+	public PublicationDisplayModel Publication { get; set; } = new();
+
+	public async Task<IActionResult> OnGet()
+	{
+		var publication = await _mapper
+			.ProjectTo<PublicationDisplayModel>(_db.Publications)
+			.SingleOrDefaultAsync(p => p.Id == Id);
+
+		if (publication == null)
 		{
-			_db = db;
-			_mapper = mapper;
-			_pointsService = pointsService;
+			return NotFound();
 		}
 
-		[FromRoute]
-		public int Id { get; set; }
+		Publication = publication;
 
-		public PublicationDisplayModel Publication { get; set; } = new ();
+		Publication.OverallRating = (await _pointsService.PublicationRating(Id))
+			.Overall;
 
-		public async Task<IActionResult> OnGet()
+		return Page();
+	}
+
+	public async Task<IActionResult> OnGetDownload()
+	{
+		var pub = await _db.Publications
+			.Where(s => s.Id == Id)
+			.Select(s => new { s.MovieFile, s.MovieFileName })
+			.SingleOrDefaultAsync();
+
+		if (pub == null)
 		{
-			var publication = await _mapper
-				.ProjectTo<PublicationDisplayModel>(_db.Publications)
-				.SingleOrDefaultAsync(p => p.Id == Id);
-
-			if (publication == null)
-			{
-				return NotFound();
-			}
-
-			Publication = publication;
-
-			Publication.OverallRating = (await _pointsService.PublicationRating(Id))
-				.Overall;
-
-			return Page();
+			return NotFound();
 		}
 
-		public async Task<IActionResult> OnGetDownload()
+		return File(pub.MovieFile, MediaTypeNames.Application.Octet, $"{pub.MovieFileName}.zip");
+	}
+
+	public async Task<IActionResult> OnGetDownloadAdditional(int fileId)
+	{
+		var file = await _db.PublicationFiles
+			.Where(pf => pf.Id == fileId)
+			.Select(pf => new { pf.FileData, pf.Path })
+			.SingleOrDefaultAsync();
+
+		if (file?.FileData == null)
 		{
-			var pub = await _db.Publications
-				.Where(s => s.Id == Id)
-				.Select(s => new { s.MovieFile, s.MovieFileName })
-				.SingleOrDefaultAsync();
-
-			if (pub == null)
-			{
-				return NotFound();
-			}
-
-			return File(pub.MovieFile, MediaTypeNames.Application.Octet, $"{pub.MovieFileName}.zip");
+			return NotFound();
 		}
 
-		public async Task<IActionResult> OnGetDownloadAdditional(int fileId)
-		{
-			var file = await _db.PublicationFiles
-				.Where(pf => pf.Id == fileId)
-				.Select(pf => new { pf.FileData, pf.Path })
-				.SingleOrDefaultAsync();
-
-			if (file?.FileData == null)
-			{
-				return NotFound();
-			}
-
-			return File(file.FileData, MediaTypeNames.Application.Octet, $"{file.Path}.zip");
-		}
+		return File(file.FileData, MediaTypeNames.Application.Octet, $"{file.Path}.zip");
 	}
 }

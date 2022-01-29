@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace TASVideos.TagHelpers
-{
-	[HtmlTargetElement(Attributes = nameof(Show))]
-	public class ShowTagHelper : TagHelper
-	{
-		public bool Show { get; set; }
+namespace TASVideos.TagHelpers;
 
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+[HtmlTargetElement(Attributes = nameof(Show))]
+public class ShowTagHelper : TagHelper
+{
+	public bool Show { get; set; }
+
+	public override void Process(TagHelperContext context, TagHelperOutput output)
+	{
+		if (!Show)
 		{
-			if (!Show)
-			{
-				output.AddCssClass("d-none");
-			}
+			output.AddCssClass("d-none");
 		}
 	}
 }

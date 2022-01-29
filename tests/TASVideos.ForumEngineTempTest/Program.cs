@@ -2,13 +2,13 @@
 using TASVideos.Common;
 using TASVideos.ForumEngine;
 
-namespace TASVideos.ForumEngineTempTest
+namespace TASVideos.ForumEngineTempTest;
+
+public class Program
 {
-	public class Program
+	public static void Main()
 	{
-		public static void Main()
-		{
-			var content = @"
+		var content = @"
 			[video]https://www.youtube.com/watch?v=yLORZbc-PZw[/video]
 			[video]https://youtu.be/yLORZbc-PZw[/video]
 			[video]http://www.youtube.com/view_play_list?p=76E50B82FA870C1D[/video]
@@ -16,48 +16,47 @@ namespace TASVideos.ForumEngineTempTest
 			[video]http://vimeo.com/49142543[/video]
 			[video]https://www.nicovideo.jp/watch/sm35061034[/video]
 			";
-			var containsHtml = BbParser.ContainsHtml(content, true);
-			var parsed = PostParser.Parse(content, true, containsHtml);
+		var containsHtml = BbParser.ContainsHtml(content, true);
+		var parsed = PostParser.Parse(content, true, containsHtml);
 
-			Console.WriteLine(containsHtml);
-			var htmlWriter = new HtmlWriter(Console.Out);
-			parsed.WriteHtml(htmlWriter, NullWriterHelper.Instance).RunSynchronously();
-			htmlWriter.AssertFinished();
-		}
+		Console.WriteLine(containsHtml);
+		var htmlWriter = new HtmlWriter(Console.Out);
+		parsed.WriteHtml(htmlWriter, NullWriterHelper.Instance).RunSynchronously();
+		htmlWriter.AssertFinished();
+	}
 
-		public static void MainDa(string[] args)
+	public static void MainDa(string[] args)
+	{
+		/*var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+			.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TASVideos;Trusted_Connection=True;MultipleActiveResultSets=true") // TODO: app settings
+			.Options;
+
+		using (var context = new ApplicationDbContext(options, null))
 		{
-			/*var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TASVideos;Trusted_Connection=True;MultipleActiveResultSets=true") // TODO: app settings
-				.Options;
+			var posts = context.ForumPosts.Take(500).ToList();
 
-			using (var context = new ApplicationDbContext(options, null))
+			var htmlCount = 0;
+			foreach (var post in posts)
 			{
-				var posts = context.ForumPosts.Take(500).ToList();
-
-				var htmlCount = 0;
-				foreach (var post in posts)
+				try
 				{
-					try
+					var parsed = PostParser.Parse(post.Text, post.EnableBbCode, post.EnableHtml);
+					parsed.WriteHtml(Console.Out);
+					if (post.EnableHtml && HtmlParser.ContainsHtml(post.Text))
 					{
-						var parsed = PostParser.Parse(post.Text, post.EnableBbCode, post.EnableHtml);
-						parsed.WriteHtml(Console.Out);
-						if (post.EnableHtml && HtmlParser.ContainsHtml(post.Text))
-						{
-							htmlCount++;
-						}
-					}
-					catch (Exception e)
-					{
-						Console.WriteLine(post.Text);
-						Console.WriteLine("#####" + post.Id);
-						Console.WriteLine(e.Message);
-						return;
+						htmlCount++;
 					}
 				}
+				catch (Exception e)
+				{
+					Console.WriteLine(post.Text);
+					Console.WriteLine("#####" + post.Id);
+					Console.WriteLine(e.Message);
+					return;
+				}
+			}
 
-				Console.WriteLine(htmlCount);
-			}*/
-		}
+			Console.WriteLine(htmlCount);
+		}*/
 	}
 }

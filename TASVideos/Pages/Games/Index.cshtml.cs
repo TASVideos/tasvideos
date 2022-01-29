@@ -10,61 +10,60 @@ using TASVideos.Data.Entity;
 using TASVideos.Pages.Games.Models;
 using TASVideos.ViewComponents;
 
-namespace TASVideos.Pages.Games
+namespace TASVideos.Pages.Games;
+
+[AllowAnonymous]
+public class IndexModel : BasePageModel
 {
-	[AllowAnonymous]
-	public class IndexModel : BasePageModel
+	private readonly ApplicationDbContext _db;
+	private readonly IMapper _mapper;
+
+	public IndexModel(ApplicationDbContext db, IMapper mapper)
 	{
-		private readonly ApplicationDbContext _db;
-		private readonly IMapper _mapper;
+		_db = db;
+		_mapper = mapper;
+	}
 
-		public IndexModel(ApplicationDbContext db, IMapper mapper)
+	[FromRoute]
+	public int Id { get; set; }
+
+	public GameDisplayModel Game { get; set; } = new();
+
+	public IEnumerable<MiniMovieModel> Movies { get; set; } = new List<MiniMovieModel>();
+
+	public async Task<IActionResult> OnGet()
+	{
+		var game = await _mapper
+			.ProjectTo<GameDisplayModel>(_db.Games)
+			.SingleOrDefaultAsync(g => g.Id == Id);
+
+		if (game == null)
 		{
-			_db = db;
-			_mapper = mapper;
+			return NotFound();
 		}
 
-		[FromRoute]
-		public int Id { get; set; }
-
-		public GameDisplayModel Game { get; set; } = new ();
-
-		public IEnumerable<MiniMovieModel> Movies { get; set; } = new List<MiniMovieModel>();
-
-		public async Task<IActionResult> OnGet()
-		{
-			var game = await _mapper
-				.ProjectTo<GameDisplayModel>(_db.Games)
-				.SingleOrDefaultAsync(g => g.Id == Id);
-
-			if (game == null)
+		Game = game;
+		Movies = await _db.Publications
+			.Where(p => p.GameId == Id && p.ObsoletedById == null)
+			.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
+			.ThenBy(p => p.Frames)
+			.Select(p => new MiniMovieModel
 			{
-				return NotFound();
-			}
+				Id = p.Id,
+				Title = p.Title,
+				Branch = p.Branch ?? "",
+				Screenshot = p.Files
+					.Where(f => f.Type == FileType.Screenshot)
+					.Select(f => new MiniMovieModel.ScreenshotFile
+					{
+						Path = f.Path,
+						Description = f.Description
+					})
+					.First(),
+				OnlineWatchingUrl = p.PublicationUrls.First(u => u.Type == PublicationUrlType.Streaming).Url
+			})
+			.ToListAsync();
 
-			Game = game;
-			Movies = await _db.Publications
-				.Where(p => p.GameId == Id && p.ObsoletedById == null)
-				.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
-				.ThenBy(p => p.Frames)
-				.Select(p => new MiniMovieModel
-				{
-					Id = p.Id,
-					Title = p.Title,
-					Branch = p.Branch ?? "",
-					Screenshot = p.Files
-						.Where(f => f.Type == FileType.Screenshot)
-						.Select(f => new MiniMovieModel.ScreenshotFile
-						{
-							Path = f.Path,
-							Description = f.Description
-						})
-						.First(),
-					OnlineWatchingUrl = p.PublicationUrls.First(u => u.Type == PublicationUrlType.Streaming).Url
-				})
-				.ToListAsync();
-
-			return Page();
-		}
+		return Page();
 	}
 }

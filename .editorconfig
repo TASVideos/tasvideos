@@ -223,3 +223,7 @@ dotnet_naming_style._fieldname.capitalization = camel_case
 
 [*.{cs,vb}]
 indent_style=tab
+
+[*.cs] 
+csharp_style_namespace_declarations = file_scoped:warning 
+dotnet_diagnostic.IDE0161.severity = error 

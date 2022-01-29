@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Data.Entity
-{
-	public class IpBan : BaseEntity
-	{
-		public int Id { get; set; }
+namespace TASVideos.Data.Entity;
 
-		[Required]
-		[StringLength(40)]
-		public string Mask { get; set; } = "";
-	}
+public class IpBan : BaseEntity
+{
+	public int Id { get; set; }
+
+	[Required]
+	[StringLength(40)]
+	public string Mask { get; set; } = "";
 }
