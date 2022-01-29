@@ -8,6 +8,7 @@
 <row condition="Model.CurrentUrls.Any()">
 	<table class="table table-bordered">
 		<tr>
+			<td>Name</td>
 			<td>Url</td>
 			<td>Type</td>
 			<td></td>
@@ -15,6 +16,7 @@
 		@foreach (var url in Model.CurrentUrls.OrderBy(u => u.Type))
 		{
 			<tr>
+				<td>@url.DisplayName</td>
 				<td>@url.Url</td>
 				<td>@url.Type</td>
 				<td>
@@ -33,8 +35,13 @@
 	<row>
 		<column lg="6">
 			<form-group>
+				<label asp-for="DisplayName"></label>
+				<input type="text" asp-for="DisplayName" class="form-control" />
+				<span asp-validation-for="DisplayName" class="text-danger"></span>
+			</form-group>
+			<form-group>
 				<label asp-for="PublicationUrl"></label>
-				<input type="text" asp-for="PublicationUrl" class="form-control" />
+				<input type="text" asp-for="PublicationUrl" class="form-control"/>
 				<span asp-validation-for="PublicationUrl" class="text-danger"></span>
 			</form-group>
 			<form-group>

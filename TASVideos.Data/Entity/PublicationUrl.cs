@@ -17,6 +17,9 @@ namespace TASVideos.Data.Entity
 		public string? Url { get; set; }
 
 		public PublicationUrlType Type { get; set; } = PublicationUrlType.Streaming;
+
+		[StringLength(100)]
+		public string? DisplayName { get; set; }
 	}
 
 	public static class PublicationUrlExtensions

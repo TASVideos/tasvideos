@@ -176,5 +176,17 @@ namespace TASVideos.Common.Tests.Extensions
 				Assert.AreEqual(expected, actual);
 			}
 		}
+
+		[DataRow(null, null)]
+		[DataRow("", null)]
+		[DataRow(" ", null)]
+		[DataRow("\n", null)]
+		[DataRow("Test", "Test")]
+		[DataRow("Test\n", "Test\n")]
+		public void NullIfWhitespace(string s, string expected)
+		{
+			var actual = s.NullIfWhitespace();
+			Assert.AreEqual(expected, actual);
+		}
 	}
 }

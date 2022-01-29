@@ -11,7 +11,7 @@
 	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
 		&& Model.Submission.IsCataloged
-		&& Model.Submission.Publisher == User.Name();
+		&& (Model.Submission.Publisher == User.Name() || ViewData.UserHas(PermissionTo.OverrideSubmissionStatus));
 	string statusColor = StatusColor(Model.Submission.Status);
 
 	bool canClaimAsJudge = ViewData.UserHas(PermissionTo.JudgeSubmissions)

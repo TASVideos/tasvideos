@@ -194,5 +194,16 @@ namespace TASVideos.Extensions
 		{
 			return Regex.Replace(s, @"\r\n?|\n", " ");
 		}
+
+		/// <summary>
+		/// If the string is null, empty, or white space, null is returned.
+		/// Else the original string is returned
+		/// </summary>
+		public static string? NullIfWhitespace(this string? s)
+		{
+			return string.IsNullOrWhiteSpace(s)
+				? null
+				: s;
+		}
 	}
 }

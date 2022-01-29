@@ -123,6 +123,7 @@ namespace TASVideos.Pages.Submissions
 
 			publication.PublicationUrls.Add(new PublicationUrl
 			{
+				DisplayName = Submission.OnlineWatchUrlName.NullIfWhitespace(),
 				Url = Submission.OnlineWatchingUrl,
 				Type = PublicationUrlType.Streaming
 			});

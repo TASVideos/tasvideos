@@ -85,7 +85,8 @@ namespace TASVideos.Pages.Publications
 							{
 								Id = u.Id,
 								Url = u.Url!,
-								Type = u.Type
+								Type = u.Type,
+								DisplayName = u.DisplayName
 							})
 							.ToList(),
 						SelectedFlags = p.PublicationFlags

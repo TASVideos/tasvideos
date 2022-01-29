@@ -63,5 +63,6 @@ namespace TASVideos.Pages.Publications.Models
 		public int Id { get; set; }
 		public string Url { get; set; } = "";
 		public PublicationUrlType Type { get; set; }
+		public string? DisplayName { get; set; }
 	}
 }

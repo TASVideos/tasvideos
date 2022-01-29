@@ -55,6 +55,11 @@ namespace TASVideos.Pages.Publications
 
 		public ICollection<PublicationUrl> CurrentUrls { get; set; } = new List<PublicationUrl>();
 
+		[StringLength(100)]
+		[Display(Name = "Name")]
+		[BindProperty]
+		public string? DisplayName { get; set; }
+
 		[Required]
 		[BindProperty]
 		[Url]
@@ -123,12 +128,13 @@ namespace TASVideos.Pages.Publications
 			{
 				PublicationId = Id,
 				Url = PublicationUrl,
-				Type = UrlType
+				Type = UrlType,
+				DisplayName = DisplayName
 			};
 
 			_db.PublicationUrls.Add(publicationUrl);
 
-			string log = $"Added {UrlType} url {PublicationUrl}";
+			string log = $"Added {DisplayName} {UrlType} url {PublicationUrl}";
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			var result = await ConcurrentSave(_db, log, "Unable to add url.");
 			if (result)
@@ -165,7 +171,7 @@ namespace TASVideos.Pages.Publications
 			if (url != null)
 			{
 				_db.PublicationUrls.Remove(url);
-				string log = $"Deleted {url.Type} url {url.Url}";
+				string log = $"Deleted {url.DisplayName} {url.Type} url {url.Url}";
 				await _publicationMaintenanceLogger.Log(url.PublicationId, User.GetUserId(), log);
 				var result = await ConcurrentSave(_db, log, "Unable to remove url.");
 				if (result)

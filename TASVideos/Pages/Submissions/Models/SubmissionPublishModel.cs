@@ -31,6 +31,10 @@ namespace TASVideos.Pages.Submissions.Models
 		[StringLength(500)]
 		public string OnlineWatchingUrl { get; set; } = "";
 
+		[StringLength(100)]
+		[Display(Name = "Online-watching URL Display Name (Optional)")]
+		public string? OnlineWatchUrlName { get; set; }
+
 		[Url]
 		[Required]
 		[Display(Name = "Mirror site URL")]
