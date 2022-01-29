@@ -67,7 +67,7 @@ namespace TASVideos.MovieParsers.Parsers
 				SystemCode = SystemCodes.Dos
 			};
 
-			bool hasHeader = false;
+			var sectionsSeen = new HashSet<string>();
 			bool missingRerecordCount = true;
 			long lastTimestamp = 0L;
 			long lastNonSpecialTimestamp = 0L;
@@ -77,6 +77,13 @@ namespace TASVideos.MovieParsers.Parsers
 				using var parser = await JrsrSectionParser.CreateAsync(file, LengthLimit);
 				while (await parser.NextSection() is string sectionName)
 				{
+					if (sectionsSeen.Contains(sectionName))
+					{
+						throw new FormatException($"Duplicate section {sectionName}");
+					}
+
+					sectionsSeen.Add(sectionName);
+
 					if (sectionName == "savestate")
 					{
 						return new ErrorResult("File contains a savestate");
@@ -84,7 +91,6 @@ namespace TASVideos.MovieParsers.Parsers
 					else if (sectionName == "header")
 					{
 						// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#HeaderSection
-						hasHeader = true;
 						while (await parser.NextLine() is string line)
 						{
 							var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
@@ -176,7 +182,7 @@ namespace TASVideos.MovieParsers.Parsers
 				return new ErrorResult(ex.Message);
 			}
 
-			if (!hasHeader)
+			if (!sectionsSeen.Contains("header"))
 			{
 				return new ErrorResult("No header found");
 			}

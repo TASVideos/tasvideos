@@ -196,6 +196,17 @@ namespace TASVideos.MovieParsers.Tests
 		}
 
 		[TestMethod]
+		// More than one events section.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+!BEGIN events
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+")]
 		// Missing parameter to OPTION.
 		[DataRow(
 @"JRSR
