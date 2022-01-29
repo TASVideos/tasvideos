@@ -81,7 +81,9 @@ namespace TASVideos.Core.Services.Youtube
 			descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
 			var renderedDescription = await _textRenderer.RenderWikiForYoutube(video.WikiPage);
 
-			string title = $"[TAS] {(video.ObsoletedBy.HasValue ? "[Obsoleted] " : "")}{video.Title}";
+			var obsoleteStr = video.ObsoletedBy.HasValue ? " [Obsoleted] " : "";
+			var displayStr = !string.IsNullOrWhiteSpace(video.UrlDisplayName) ? $" [{video.UrlDisplayName}] " : "";
+			string title = $"[TAS]{obsoleteStr}{displayStr}{video.Title}";
 			string description = descriptionBase + renderedDescription;
 			if (title.Length > YoutubeTitleMaxLength)
 			{
@@ -262,6 +264,7 @@ namespace TASVideos.Core.Services.Youtube
 		int Id,
 		DateTime PublicationDate,
 		string Url,
+		string? UrlDisplayName,
 		string Title,
 		WikiPage WikiPage,
 		string SystemCode,

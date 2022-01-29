@@ -282,6 +282,7 @@ namespace TASVideos.Pages.Publications
 						Id,
 						publication.CreateTimestamp,
 						url.Url!,
+						url.DisplayName,
 						publication.Title,
 						publication.WikiContent,
 						publication.System!.Code,

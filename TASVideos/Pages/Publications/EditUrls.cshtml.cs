@@ -150,6 +150,7 @@ namespace TASVideos.Pages.Publications
 						Id,
 						publication.CreateTimestamp,
 						PublicationUrl,
+						DisplayName,
 						publication.Title,
 						publication.WikiContent!,
 						publication.SystemCode,
