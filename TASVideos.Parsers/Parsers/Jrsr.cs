@@ -129,7 +129,7 @@ namespace TASVideos.MovieParsers.Parsers
 		private static class Keys
 		{
 			public const string RerecordCount = "+RERECORDS";
-			public const string StartsFromSavestate = "!SAVESTATEID";
+			public const string StartsFromSavestate = "+SAVESTATEID";
 		}
 	}
 }
