@@ -4,131 +4,132 @@ using TASVideos.Extensions;
 using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
-namespace TASVideos.MovieParsers.Parsers;
-
-[FileExtension("jrsr")]
-public class Jrsr : IParser
+namespace TASVideos.MovieParsers.Parsers
 {
-	private const string FileExtension = "jrsr";
-	public async Task<IParseResult> Parse(Stream file)
+	[FileExtension("jrsr")]
+	public class Jrsr : IParser
 	{
-		using var reader = new StreamReader(file);
-		var result = new ParseResult
+		private const string FileExtension = "jrsr";
+		public async Task<IParseResult> Parse(Stream file)
 		{
-			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
-			SystemCode = SystemCodes.Dos
-		};
+			using var reader = new StreamReader(file);
+			var result = new ParseResult
+			{
+				Region = RegionType.Ntsc,
+				FileExtension = FileExtension,
+				SystemCode = SystemCodes.Dos
+			};
 
-		var lines = (await reader.ReadToEndAsync()).LineSplit();
+			var lines = (await reader.ReadToEndAsync()).LineSplit();
 
-		if (lines.Length == 0)
-		{
-			return new ErrorResult("File is empty.");
-		}
+			if (lines.Length == 0)
+			{
+				return new ErrorResult("File is empty.");
+			}
 
-		if (lines[0] != "JRSR")
-		{
-			return new ErrorResult("Invalid .jrsr file.");
-		}
+			if (lines[0] != "JRSR")
+			{
+				return new ErrorResult("Invalid .jrsr file.");
+			}
 
-		bool hasHeader = false;
-		bool beginHeader = false;
-		bool beginEvents = false;
-		bool missingRerecordCount = true;
-		long totalNanoSeconds = 0L;
-		foreach (var line in lines)
-		{
-			if (line == "!BEGIN header")
+			bool hasHeader = false;
+			bool beginHeader = false;
+			bool beginEvents = false;
+			bool missingRerecordCount = true;
+			long totalNanoSeconds = 0L;
+			foreach (var line in lines)
 			{
-				beginHeader = true;
-				hasHeader = true;
-			}
-			else if (line == "!BEGIN events")
-			{
-				beginHeader = false;
-				beginEvents = true;
-			}
-			else if (line == "!BEGIN savestate")
-			{
-				return new ErrorResult("File contains a savestate");
-			}
-			else if (line.StartsWith("!BEGIN")) // DiskInfo and possibly other header sections
-			{
-				beginHeader = false;
-				beginEvents = false;
-			}
-			else if (beginHeader)
-			{
-				if (line.StartsWith(Keys.RerecordCount))
+				if (line == "!BEGIN header")
 				{
-					var rerecordValue = line.GetValue().ToPositiveInt();
-					if (rerecordValue.HasValue)
+					beginHeader = true;
+					hasHeader = true;
+				}
+				else if (line == "!BEGIN events")
+				{
+					beginHeader = false;
+					beginEvents = true;
+				}
+				else if (line == "!BEGIN savestate")
+				{
+					return new ErrorResult("File contains a savestate");
+				}
+				else if (line.StartsWith("!BEGIN")) // DiskInfo and possibly other header sections
+				{
+					beginHeader = false;
+					beginEvents = false;
+				}
+				else if (beginHeader)
+				{
+					if (line.StartsWith(Keys.RerecordCount))
 					{
-						result.RerecordCount = rerecordValue.Value;
-						missingRerecordCount = false;
+						var rerecordValue = line.GetValue().ToPositiveInt();
+						if (rerecordValue.HasValue)
+						{
+							result.RerecordCount = rerecordValue.Value;
+							missingRerecordCount = false;
+						}
+					}
+					else if (line.StartsWith(Keys.StartsFromSavestate))
+					{
+						result.StartType = MovieStartType.Savestate;
 					}
 				}
-				else if (line.StartsWith(Keys.StartsFromSavestate))
+				else if (beginEvents)
 				{
-					result.StartType = MovieStartType.Savestate;
+					if (line.StartsWith("+"))
+					{
+						totalNanoSeconds += GetTime(line) ?? 0;
+					}
 				}
 			}
-			else if (beginEvents)
+
+			if (!hasHeader)
 			{
-				if (line.StartsWith("+"))
-				{
-					totalNanoSeconds += GetTime(line) ?? 0;
-				}
+				return new ErrorResult("No header found");
 			}
+
+			if (totalNanoSeconds > 0)
+			{
+				result.Frames = (int)(totalNanoSeconds / 16666667);
+				result.FrameRateOverride = result.Frames / (totalNanoSeconds / 1000000000L);
+			}
+
+			if (missingRerecordCount)
+			{
+				result.WarnNoRerecords();
+			}
+
+			return result;
 		}
 
-		if (!hasHeader)
+		internal static long? GetTime(string str)
 		{
-			return new ErrorResult("No header found");
-		}
+			if (string.IsNullOrWhiteSpace(str))
+			{
+				return null;
+			}
 
-		if (totalNanoSeconds > 0)
-		{
-			result.Frames = (int)(totalNanoSeconds / 16666667);
-			result.FrameRateOverride = result.Frames / (totalNanoSeconds / 1000000000L);
-		}
+			if (!str.StartsWith("+"))
+			{
+				return null;
+			}
 
-		if (missingRerecordCount)
-		{
-			result.WarnNoRerecords();
-		}
+			var split = str.SplitWithEmpty(" ");
+			var lineStr = split[0].Trim('+');
 
-		return result;
-	}
+			var result = long.TryParse(lineStr, out long val);
+			if (result)
+			{
+				return val;
+			}
 
-	internal static long? GetTime(string str)
-	{
-		if (string.IsNullOrWhiteSpace(str))
-		{
 			return null;
 		}
 
-		if (!str.StartsWith("+"))
+		private static class Keys
 		{
-			return null;
+			public const string RerecordCount = "+RERECORDS";
+			public const string StartsFromSavestate = "+SAVESTATEID";
 		}
-
-		var split = str.SplitWithEmpty(" ");
-		var lineStr = split[0].Trim('+');
-
-		var result = long.TryParse(lineStr, out long val);
-		if (result)
-		{
-			return val;
-		}
-
-		return null;
-	}
-
-	private static class Keys
-	{
-		public const string RerecordCount = "+RERECORDS";
-		public const string StartsFromSavestate = "+SAVESTATEID";
 	}
 }
