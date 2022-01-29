@@ -149,6 +149,16 @@ namespace TASVideos.MovieParsers.Tests
 !BEGIN events
 !END
 ", 0)]
+		// Special events should not count towards frame count.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION ABSOLUTE
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++3333333400 SAVESTATE aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 0
+!END
+", 100)]
 		// Timestamps are absolute by default.
 		[DataRow(
 @"JRSR
@@ -677,6 +687,19 @@ JRSR
 		public void DecodeComponentFormatException(string line)
 		{
 			JrsrSectionParser.DecodeComponent(line).ToList();
+		}
+
+		[TestMethod]
+		[DataRow("", false)]
+		[DataRow("OPTION", true)]
+		[DataRow("SAVESTATE", true)]
+		[DataRow("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", true)]
+		[DataRow("org.jpc.emulator.peripheral.Keyboard", false)]
+		[DataRow("OPTION SAVESTATE", false)]
+		[DataRow("OPTIO\u0418", false)] // Capital letter but not ASCII.
+		public void IsSpecialEventClass(string eventClass, bool expected)
+		{
+			Assert.AreEqual(expected, JrsrSectionParser.IsSpecialEventClass(eventClass));
 		}
 	}
 }

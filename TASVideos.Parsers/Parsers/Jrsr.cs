@@ -69,7 +69,8 @@ namespace TASVideos.MovieParsers.Parsers
 
 			bool hasHeader = false;
 			bool missingRerecordCount = true;
-			long totalNanoSeconds = 0L;
+			long lastTimestamp = 0L;
+			long lastNonSpecialTimestamp = 0L;
 			bool optionRelative = false; // "By default [timestamps] are relative to initial poweron."
 			try
 			{
@@ -134,10 +135,10 @@ namespace TASVideos.MovieParsers.Parsers
 
 							if (optionRelative)
 							{
-								timestamp = totalNanoSeconds + timestamp;
+								timestamp = lastTimestamp + timestamp;
 							}
 
-							totalNanoSeconds = timestamp;
+							lastTimestamp = timestamp;
 
 							var eventClass = tokens[1];
 							if (eventClass == "OPTION")
@@ -160,6 +161,10 @@ namespace TASVideos.MovieParsers.Parsers
 									throw new FormatException($"Unknown {eventClass} parameter {tokens[2]}");
 								}
 							}
+							else if (!JrsrSectionParser.IsSpecialEventClass(eventClass))
+							{
+								lastNonSpecialTimestamp = lastTimestamp;
+							}
 						}
 					}
 
@@ -176,10 +181,12 @@ namespace TASVideos.MovieParsers.Parsers
 				return new ErrorResult("No header found");
 			}
 
-			if (totalNanoSeconds > 0)
+			// "When computing movie length, it is customary to ignore all
+			// special events."
+			if (lastNonSpecialTimestamp > 0)
 			{
-				result.Frames = (int)(totalNanoSeconds / 16666667);
-				result.FrameRateOverride = result.Frames / (totalNanoSeconds / 1000000000L);
+				result.Frames = (int)(lastNonSpecialTimestamp / 16666667);
+				result.FrameRateOverride = result.Frames / (lastNonSpecialTimestamp / 1000000000L);
 			}
 
 			if (missingRerecordCount)
@@ -786,6 +793,19 @@ namespace TASVideos.MovieParsers.Parsers
 				yield return token.ToString();
 				token.Clear();
 			}
+		}
+
+		/// <summary>
+		/// Returns true if and only if <paramref name="eventClass"/> is
+		/// non-empty and consists only of characters 'A'-'Z' and '0'-'9'.
+		/// </summary>
+		public static bool IsSpecialEventClass(string eventClass)
+		{
+			// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#EventsSection
+			// "If $class consists only of 'A-Z' and '0-9' (capital letters and
+			// numbers) then it is either special event or reserved (error)."
+			return eventClass != string.Empty && eventClass.All(c =>
+				(c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'));
 		}
 	}
 }
